@@ -11,6 +11,51 @@ type ModuleId =
   | "peripheral";
 type ViewMode = "main" | "module";
 
+type IconComponent = () => JSX.Element;
+type KpiVariant = "default" | "success" | "warning" | "danger" | "info";
+type PatientPriority = "High" | "Medium" | "Low";
+type PatientStatus = "Active" | "Review" | "Follow-up";
+type PatientQueueVariant = "default" | "warning" | "danger" | "success";
+
+interface Module {
+  id: ModuleId;
+  name: string;
+  shortName: string;
+  description: string;
+  functional: boolean;
+  patients: number;
+  procedures: number;
+  revenue: number;
+  qualityScore: number;
+  icon: IconComponent;
+  features: string[];
+}
+
+interface KpiCardProps {
+  label: string;
+  value: React.ReactNode;
+  icon: IconComponent;
+  variant?: KpiVariant;
+  trend?: number;
+  onClick?: () => void;
+}
+
+interface ModuleKpi extends KpiCardProps {
+  variant: KpiVariant;
+}
+
+interface Patient {
+  id: string;
+  name: string;
+  age: number;
+  physician: string;
+  priority: PatientPriority;
+  status: PatientStatus;
+}
+
+type ModuleKpiMap = Record<ModuleId, Record<Role, ModuleKpi[]>>;
+type ModulePatients = Record<ModuleId, Patient[]>;
+
 // Icons
 const Icons = {
   Users: () => (
@@ -245,14 +290,14 @@ const Icons = {
 };
 
 // Utility Functions
-const formatMoney = (amount) => {
+const formatMoney = (amount: number): string => {
   if (amount >= 1000000) return `$${(amount / 1000000).toFixed(1)}M`;
   if (amount >= 1000) return `$${Math.round(amount / 1000)}K`;
   return `$${amount.toLocaleString()}`;
 };
 
 // Module Data
-const MODULES = [
+const MODULES: Module[] = [
   {
     id: "hf",
     name: "Heart Failure",
@@ -364,7 +409,10 @@ const MODULES = [
 ];
 
 // Sample patient data generator
-const generateSamplePatients = (moduleId, count = 20) => {
+const generateSamplePatients = (
+  moduleId: ModuleId,
+  count = 20
+): Patient[] => {
   const names = [
     "John Smith",
     "Jane Doe",
@@ -382,19 +430,21 @@ const generateSamplePatients = (moduleId, count = 20) => {
     "Dr. Ahmed",
     "Dr. Thompson",
   ];
+  const priorities: PatientPriority[] = ["High", "Medium", "Low"];
+  const statuses: PatientStatus[] = ["Active", "Review", "Follow-up"];
 
   return Array.from({ length: count }, (_, i) => ({
     id: `${moduleId.toUpperCase()}${(i + 1).toString().padStart(4, "0")}`,
     name: names[Math.floor(Math.random() * names.length)],
     age: 50 + Math.floor(Math.random() * 40),
     physician: physicians[Math.floor(Math.random() * physicians.length)],
-    priority: ["High", "Medium", "Low"][Math.floor(Math.random() * 3)],
-    status: ["Active", "Review", "Follow-up"][Math.floor(Math.random() * 3)],
+    priority: priorities[Math.floor(Math.random() * priorities.length)],
+    status: statuses[Math.floor(Math.random() * statuses.length)],
   }));
 };
 
 // UI Components
-const KpiCard = ({
+const KpiCard: React.FC<KpiCardProps> = ({
   label,
   value,
   icon: Icon,
@@ -402,15 +452,15 @@ const KpiCard = ({
   trend,
   onClick,
 }) => {
-  const getVariantColors = (variant) => {
-    const variants = {
+  const getVariantColors = (variant: KpiVariant): string => {
+    const variants: Record<KpiVariant, string> = {
       default: "bg-white/70 border-slate-200/70 text-slate-900",
       success: "bg-emerald-50/70 border-emerald-200/70 text-emerald-900",
       warning: "bg-amber-50/70 border-amber-200/70 text-amber-900",
       danger: "bg-rose-50/70 border-rose-200/70 text-rose-900",
       info: "bg-blue-50/70 border-blue-200/70 text-blue-900",
     };
-    return variants[variant] || variants.default;
+    return variants[variant];
   };
 
   return (
@@ -433,7 +483,7 @@ const KpiCard = ({
           )}
           <span className="text-sm font-bold text-slate-800">{label}</span>
         </div>
-        {trend && (
+        {trend !== undefined && (
           <div
             className={`text-xs font-semibold ${
               trend > 0 ? "text-emerald-600" : "text-rose-600"
@@ -448,8 +498,18 @@ const KpiCard = ({
   );
 };
 
-const RoleToggle = ({ value, onChange }) => {
-  const roles = [
+interface RoleToggleProps {
+  value: Role;
+  onChange: (role: Role) => void;
+}
+
+const RoleToggle: React.FC<RoleToggleProps> = ({ value, onChange }) => {
+  const roles: Array<{
+    id: Role;
+    label: string;
+    desc: string;
+    color: string;
+  }> = [
     {
       id: "Executive",
       label: "Executive",
@@ -492,7 +552,12 @@ const RoleToggle = ({ value, onChange }) => {
   );
 };
 
-const ModuleTile = ({ module, onClick }) => {
+interface ModuleTileProps {
+  module: Module;
+  onClick: () => void;
+}
+
+const ModuleTile: React.FC<ModuleTileProps> = ({ module, onClick }) => {
   const Icon = module.icon;
 
   return (
@@ -576,13 +641,20 @@ const ModuleTile = ({ module, onClick }) => {
   );
 };
 
-const PatientQueue = ({
+interface PatientQueueProps {
+  title: string;
+  patients: Patient[];
+  variant?: PatientQueueVariant;
+  maxItems?: number;
+}
+
+const PatientQueue: React.FC<PatientQueueProps> = ({
   title,
   patients,
   variant = "default",
   maxItems = 6,
 }) => {
-  const getVariantStyle = (variant) => {
+  const getVariantStyle = (variant: PatientQueueVariant): string => {
     switch (variant) {
       case "warning":
         return "bg-amber-50 border-amber-200";
@@ -636,8 +708,8 @@ const PatientQueue = ({
 };
 
 // Module KPIs based on role
-const getModuleKPIs = (moduleId, role) => {
-  const kpiData = {
+const getModuleKPIs = (moduleId: ModuleId, role: Role): ModuleKpi[] => {
+  const kpiData: ModuleKpiMap = {
     hf: {
       Executive: [
         {
@@ -1163,21 +1235,22 @@ const getModuleKPIs = (moduleId, role) => {
     },
   };
 
-  return kpiData[moduleId]?.[role] || [];
+  return kpiData[moduleId]?.[role] ?? [];
 };
 
 // Main Dashboard Component
-export default function CompleteTailrdPlatform() {
-  const [viewMode, setViewMode] = useState("main");
-  const [activeModule, setActiveModule] = useState("hf");
-  const [moduleRole, setModuleRole] = useState("Executive");
+export default function CompleteTailrdPlatform(): JSX.Element {
+  const [viewMode, setViewMode] = useState<ViewMode>("main");
+  const [activeModule, setActiveModule] = useState<ModuleId>("hf");
+  const [moduleRole, setModuleRole] = useState<Role>("Executive");
 
   // Generate sample data for all modules
-  const [modulePatients] = useState(() => {
-    const data = {};
-    MODULES.forEach((module) => {
-      data[module.id] = generateSamplePatients(module.id, 25);
-    });
+  const [modulePatients] = useState<ModulePatients>(() => {
+    const data = MODULES.reduce<ModulePatients>((acc, module) => {
+      acc[module.id] = generateSamplePatients(module.id, 25);
+      return acc;
+    }, {} as ModulePatients);
+
     return data;
   });
 
@@ -1203,7 +1276,7 @@ export default function CompleteTailrdPlatform() {
     };
   }, []);
 
-  const openModule = useCallback((moduleId) => {
+  const openModule = useCallback((moduleId: ModuleId) => {
     setActiveModule(moduleId);
     setViewMode("module");
   }, []);
@@ -1294,11 +1367,28 @@ export default function CompleteTailrdPlatform() {
 
   // Module View
   const currentModule = MODULES.find((m) => m.id === activeModule);
-  const patients = modulePatients[activeModule] || [];
+  const patients = modulePatients[activeModule];
   const moduleKPIs = getModuleKPIs(activeModule, moduleRole);
 
-  const RoleBanner = ({ role }) => {
-    const getRoleStyle = (role) => {
+  const patientsCount = currentModule
+    ? currentModule.patients.toLocaleString()
+    : "N/A";
+  const proceduresCount = currentModule
+    ? currentModule.procedures.toLocaleString()
+    : "N/A";
+  const qualityScoreDisplay = currentModule
+    ? `${currentModule.qualityScore}%`
+    : "N/A";
+  const revenueDisplay = currentModule
+    ? formatMoney(currentModule.revenue)
+    : formatMoney(0);
+
+  interface RoleBannerProps {
+    role: Role;
+  }
+
+  const RoleBanner: React.FC<RoleBannerProps> = ({ role }) => {
+    const getRoleStyle = (role: Role): string => {
       switch (role) {
         case "Executive":
           return "bg-gradient-to-r from-indigo-50 to-blue-50 border-indigo-200 text-indigo-800";
@@ -1408,25 +1498,25 @@ export default function CompleteTailrdPlatform() {
               <div className="flex justify-between items-center">
                 <span className="text-slate-600">Total Patients</span>
                 <span className="font-bold text-xl">
-                  {currentModule?.patients.toLocaleString()}
+                  {patientsCount}
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-slate-600">Annual Procedures</span>
                 <span className="font-bold text-xl">
-                  {currentModule?.procedures.toLocaleString()}
+                  {proceduresCount}
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-slate-600">Quality Score</span>
                 <span className="font-bold text-xl text-emerald-600">
-                  {currentModule?.qualityScore}%
+                  {qualityScoreDisplay}
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-slate-600">Annual Revenue</span>
                 <span className="font-bold text-xl text-blue-600">
-                  {formatMoney(currentModule?.revenue)}
+                  {revenueDisplay}
                 </span>
               </div>
             </div>
