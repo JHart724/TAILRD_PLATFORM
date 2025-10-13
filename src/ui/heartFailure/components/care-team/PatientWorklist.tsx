@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TrendingUp, AlertCircle, Calendar, ExternalLink, Filter } from 'lucide-react';
+import PatientDetailPanel from './PatientDetailPanel';
 
 interface WorklistPatient {
   id: string;
@@ -21,6 +22,7 @@ const PatientWorklist: React.FC = () => {
   const [filterPriority, setFilterPriority] = useState<string>('all');
   const [filterGDMT, setFilterGDMT] = useState<boolean>(false);
   const [filterDevice, setFilterDevice] = useState<boolean>(false);
+  const [selectedPatient, setSelectedPatient] = useState<WorklistPatient | null>(null);
 
   const patients: WorklistPatient[] = [
     {
@@ -226,7 +228,10 @@ const PatientWorklist: React.FC = () => {
             )}
 
             <div className="flex gap-2">
-              <button className="px-4 py-2 bg-slate-700 text-white text-sm rounded-lg hover:bg-slate-800 transition-colors flex items-center gap-2 font-medium">
+              <button 
+                onClick={() => setSelectedPatient(patient)}
+                className="px-4 py-2 bg-slate-700 text-white text-sm rounded-lg hover:bg-slate-800 transition-colors flex items-center gap-2 font-medium"
+              >
                 <TrendingUp className="w-4 h-4" />
                 Review Patient
               </button>
@@ -239,6 +244,12 @@ const PatientWorklist: React.FC = () => {
         ))}
       </div>
     </div>
+    {selectedPatient && (
+        <PatientDetailPanel 
+          patient={selectedPatient} 
+          onClose={() => setSelectedPatient(null)} 
+        />
+      )}
   );
 };
 
