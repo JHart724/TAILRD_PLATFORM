@@ -14,7 +14,7 @@ const DeviceFunnel: React.FC<DeviceFunnelProps> = ({ data }) => {
   if (!data) return null;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-lg">
+    <div className="bg-white/55 backdrop-blur-lg rounded-xl shadow-glass border border-white/20 p-6">
       <div className="space-y-6">
         {data.map((device) => {
           const referralRate = (device.referred / device.eligible) * 100;

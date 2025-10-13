@@ -30,7 +30,7 @@ const ROIWaterfall: React.FC<ROIWaterfallProps> = ({ data }) => {
   const realizationRate = ((data.realized_revenue / data.total_revenue) * 100).toFixed(1);
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-lg">
+    <div <div className="bg-white/55 backdrop-blur-lg rounded-2xl border border-white/20 p-8 shadow-glass">
       <div className="flex items-center justify-between mb-6">
         <div>
           <div className="text-sm text-slate-600 mb-1">Total Opportunity</div>

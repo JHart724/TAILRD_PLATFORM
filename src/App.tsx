@@ -247,7 +247,7 @@ const KpiCard: React.FC<KpiCardProps> = ({ label, value, icon: Icon, variant = "
   };
 
   return (
-    <div className={`w-full text-left rounded-2xl p-6 border shadow-lg transition-all duration-300 ${getVariantColors(variant)} ${onClick ? "cursor-pointer hover:shadow-xl hover:-translate-y-1 hover:scale-105" : ""} backdrop-blur-sm`} onClick={onClick}>
+    <div className={`w-full text-left rounded-2xl p-6 border transition-all duration-300 bg-white/55 backdrop-blur-lg border-white/20 shadow-glass ${getVariantColors(variant)} ${onClick ? "cursor-pointer hover:shadow-glass-hover hover:-translate-y-1 hover:scale-105 hover:bg-white/70" : ""}`}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
           {Icon && (<div className="p-2 rounded-lg bg-white/50"><Icon /></div>)}
@@ -288,7 +288,7 @@ interface ModuleTileProps { module: Module; onClick: () => void; }
 const ModuleTile: React.FC<ModuleTileProps> = ({ module, onClick }) => {
   const Icon = module.icon;
   return (
-    <button onClick={onClick} className="relative rounded-3xl p-8 text-left transition-all duration-300 border group bg-white/90 border-slate-200/70 hover:bg-white hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:border-blue-300/50 backdrop-blur-sm">
+    <button onClick={onClick} className="relative rounded-3xl p-8 text-left transition-all duration-300 border group bg-white/55 backdrop-blur-lg border-white/20 shadow-glass hover:bg-white/70 hover:shadow-glass-hover hover:-translate-y-2 hover:scale-[1.02] cursor-pointer hover:border-white/30"
       <div className="flex items-start justify-between mb-6">
         <div className="p-4 rounded-2xl transition-all duration-300 bg-gradient-to-br from-blue-50 to-indigo-100 group-hover:from-blue-100 group-hover:to-indigo-200"><Icon /></div>
         <span className="text-xs px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded-full font-medium border border-emerald-200">Active</span>

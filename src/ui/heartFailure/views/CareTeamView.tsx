@@ -4,7 +4,7 @@ import ReferralTracker from '../components/care-team/ReferralTracker';
 
 const CareTeamView: React.FC = () => {
   return (
-    <div className="min-h-screen bg-slate-50 p-6">
+    <div <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900">Care Team Dashboard</h1>

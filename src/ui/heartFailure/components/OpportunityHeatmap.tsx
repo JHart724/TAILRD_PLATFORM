@@ -20,7 +20,7 @@ const OpportunityHeatmap: React.FC<OpportunityHeatmapProps> = ({ data }) => {
   const maxRevenue = Math.max(...data.map((d) => d.opp_revenue));
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-lg">
+    <div <div className="bg-white/55 backdrop-blur-lg rounded-2xl border border-white/20 p-8 shadow-glass">
       <div className="space-y-4">
         {data.map((site) => {
           const percentage = (site.opp_revenue / maxRevenue) * 100;
