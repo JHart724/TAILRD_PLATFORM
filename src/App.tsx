@@ -288,7 +288,7 @@ interface ModuleTileProps { module: Module; onClick: () => void; }
 const ModuleTile: React.FC<ModuleTileProps> = ({ module, onClick }) => {
   const Icon = module.icon;
   return (
-    <button onClick={onClick} className="relative rounded-3xl p-8 text-left transition-all duration-300 border group bg-white/55 backdrop-blur-lg border-white/20 shadow-glass hover:bg-white/70 hover:shadow-glass-hover hover:-translate-y-2 hover:scale-[1.02] cursor-pointer hover:border-white/30"
+    <button onClick={onClick} className="relative rounded-3xl p-8 text-left transition-all duration-300 border group bg-white/55 backdrop-blur-lg border-white/20 shadow-glass hover:bg-white/70 hover:shadow-glass-hover hover:-translate-y-2 hover:scale-[1.02] cursor-pointer hover:border-white/30">
       <div className="flex items-start justify-between mb-6">
         <div className="p-4 rounded-2xl transition-all duration-300 bg-gradient-to-br from-blue-50 to-indigo-100 group-hover:from-blue-100 group-hover:to-indigo-200"><Icon /></div>
         <span className="text-xs px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded-full font-medium border border-emerald-200">Active</span>

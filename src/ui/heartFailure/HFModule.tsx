@@ -17,7 +17,7 @@ const HFModule: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Navigation Bar */}
-      <div <div className="bg-white/95 backdrop-blur-md border-b border-white/20 shadow-glass">
+      <div className="bg-white/95 backdrop-blur-md border-b border-white/20 shadow-glass">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between">
             {/* Logo - Clickable back to home */}

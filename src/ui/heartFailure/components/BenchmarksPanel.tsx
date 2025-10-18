@@ -76,7 +76,7 @@ const BenchmarksPanel: React.FC = () => {
   };
 
   return (
-    <div <div className="bg-white/55 backdrop-blur-lg rounded-xl shadow-glass border border-white/20 p-6">
+    <div className="bg-white/55 backdrop-blur-lg rounded-xl shadow-glass border border-white/20 p-6">
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-slate-900">National Benchmarks</h3>
         <p className="text-sm text-slate-600 mt-1">Mount Sinai vs National Percentiles (2025 Data)</p>

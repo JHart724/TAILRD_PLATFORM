@@ -115,7 +115,7 @@ const PhenotypeDetection: React.FC = () => {
   );
 
   return (
-    <div <div className="bg-white/55 backdrop-blur-lg rounded-xl shadow-glass border border-white/20 p-6">
+    <div className="bg-white/55 backdrop-blur-lg rounded-xl shadow-glass border border-white/20 p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-lg font-semibold text-slate-900">Beyond-GDMT Phenotype Detection</h3>

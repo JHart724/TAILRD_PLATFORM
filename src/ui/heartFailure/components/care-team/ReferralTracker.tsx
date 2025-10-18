@@ -110,7 +110,7 @@ const ReferralTracker: React.FC = () => {
   };
 
   return (
-    <div className="bg-white/55 backdrop-blur-lg rounded-xl shadow-glass border border-white/20 overflow-hidden">
+    <div className="bg-white rounded-xl shadow-sm border border-slate-300">
       <div className="px-6 py-4 border-b border-slate-300 bg-slate-50">
         <h3 className="text-lg font-semibold text-slate-900 mb-4">Referral Tracker</h3>
         

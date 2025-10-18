@@ -24,10 +24,10 @@ const GDMTByPhysicianTable: React.FC<GDMTByPhysicianTableProps> = ({ data }) => 
   };
 
   return (
-    <div <div className="bg-white/55 backdrop-blur-lg rounded-xl shadow-glass border border-white/20 overflow-hidden">
+    <div className="bg-white/55 backdrop-blur-lg rounded-xl shadow-glass border border-white/20 overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead <thead className="bg-white/30 backdrop-blur-sm border-b border-white/20">
+          <thead className="bg-white/30 backdrop-blur-sm border-b border-white/20">
             <tr>
               <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Physician</th>
               <th className="px-6 py-4 text-center text-xs font-bold text-slate-700 uppercase tracking-wider">Patients</th>

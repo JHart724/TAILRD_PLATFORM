@@ -119,7 +119,7 @@ const PatientWorklist: React.FC = () => {
   };
 
   return (
-    <div <div className="bg-white/55 backdrop-blur-lg rounded-xl shadow-glass border border-white/20 overflow-hidden">
+    <div className="bg-white/55 backdrop-blur-lg rounded-xl shadow-glass border border-white/20 overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-300 bg-slate-50">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-slate-900">Care Team Worklist</h3>
@@ -163,7 +163,7 @@ const PatientWorklist: React.FC = () => {
         </div>
       </div>
 
-      <div <div className="divide-y divide-white/20">
+      <div className="divide-y divide-white/20">
         {filteredPatients.map((patient) => (
           <div key={patient.id} className="px-6 py-4 hover:bg-slate-50 transition-colors">
             <div className="flex items-start justify-between mb-3">
