@@ -3,7 +3,75 @@
 @tailwind utilities;
 
 @layer base {
+  /* Apple San Francisco Fonts */
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
   body {
-    @apply bg-slate-50 text-slate-900 min-h-screen;
+    @apply font-sf bg-retina-surface text-steel-900 min-h-screen;
+    /* Apple-style smooth scrolling */
+    scroll-behavior: smooth;
+    /* Retina-optimized text rendering */
+    text-rendering: optimizeLegibility;
+  }
+  
+  /* Medical typography hierarchy */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sf;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+  }
+  
+  /* Code elements use SF Mono */
+  code, pre, kbd, samp {
+    @apply font-sf-mono;
+  }
+}
+
+@layer components {
+  /* Retina Card Component */
+  .retina-card {
+    @apply bg-retina-float backdrop-blur-retina border border-glass-border-medical shadow-medical-card rounded-2xl transition-all duration-300 ease-apple;
+  }
+  
+  .retina-card:hover {
+    @apply shadow-medical-hover -translate-y-1 scale-[1.02];
+  }
+  
+  /* Medical Button Components */
+  .btn-medical-primary {
+    @apply bg-medical-blue-500 hover:bg-medical-blue-600 text-white font-medium px-6 py-3 rounded-xl shadow-interactive hover:shadow-interactive-hover transition-all duration-200 ease-medical;
+  }
+  
+  .btn-medical-secondary {
+    @apply bg-steel-100 hover:bg-steel-200 text-steel-700 font-medium px-6 py-3 rounded-xl shadow-retina-2 hover:shadow-retina-3 transition-all duration-200 ease-medical;
+  }
+  
+  /* Floating Screen Effects */
+  .floating-screen {
+    @apply bg-retina-float backdrop-blur-retina border border-glass-border rounded-3xl shadow-retina-4 transition-all duration-300 ease-apple;
+  }
+  
+  .floating-screen:hover {
+    @apply shadow-retina-5 -translate-y-2 scale-[1.01];
+  }
+  
+  /* Medical Status Indicators */
+  .status-success {
+    @apply bg-medical-green-50 text-medical-green-700 border border-medical-green-200;
+  }
+  
+  .status-warning {
+    @apply bg-medical-amber-50 text-medical-amber-700 border border-medical-amber-200;
+  }
+  
+  .status-error {
+    @apply bg-medical-red-50 text-medical-red-700 border border-medical-red-200;
+  }
+  
+  .status-info {
+    @apply bg-medical-blue-50 text-medical-blue-700 border border-medical-blue-200;
   }
 }

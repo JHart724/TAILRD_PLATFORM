@@ -247,15 +247,18 @@ const KpiCard: React.FC<KpiCardProps> = ({ label, value, icon: Icon, variant = "
   };
 
   return (
-    <div className={`w-full text-left rounded-2xl p-6 border transition-all duration-300 bg-white/55 backdrop-blur-lg border-white/20 shadow-glass ${getVariantColors(variant)} ${onClick ? "cursor-pointer hover:shadow-glass-hover hover:-translate-y-1 hover:scale-105 hover:bg-white/70" : ""}`}
+    <div 
+      className={`retina-card ${getVariantColors(variant)} ${onClick ? "cursor-pointer" : ""}`}
+      onClick={onClick}
+    >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
-          {Icon && (<div className="p-2 rounded-lg bg-white/50"><Icon /></div>)}
-          <span className="text-sm font-bold text-slate-800">{label}</span>
+          {Icon && (<div className="p-2 rounded-lg bg-steel-50 shadow-retina-1"><Icon /></div>)}
+          <span className="text-sm font-semibold text-steel-800">{label}</span>
         </div>
-        {trend !== undefined && (<div className={`text-xs font-semibold ${trend > 0 ? "text-emerald-600" : "text-rose-600"}`}>{trend > 0 ? "↗" : "↘"} {Math.abs(trend)}%</div>)}
+        {trend !== undefined && (<div className={`text-xs font-semibold ${trend > 0 ? "text-medical-green-600" : "text-medical-red-600"}`}>{trend > 0 ? "↗" : "↘"} {Math.abs(trend)}%</div>)}
       </div>
-      <div className="text-3xl font-bold text-slate-900 mb-1">{value}</div>
+      <div className="text-3xl font-bold text-steel-900 mb-1">{value}</div>
     </div>
   );
 };
@@ -288,7 +291,7 @@ interface ModuleTileProps { module: Module; onClick: () => void; }
 const ModuleTile: React.FC<ModuleTileProps> = ({ module, onClick }) => {
   const Icon = module.icon;
   return (
-    <button onClick={onClick} className="relative rounded-3xl p-8 text-left transition-all duration-300 border group bg-white/55 backdrop-blur-lg border-white/20 shadow-glass hover:bg-white/70 hover:shadow-glass-hover hover:-translate-y-2 hover:scale-[1.02] cursor-pointer hover:border-white/30">
+    <button onClick={onClick} className="floating-screen p-8 text-left group cursor-pointer">
       <div className="flex items-start justify-between mb-6">
         <div className="p-4 rounded-2xl transition-all duration-300 bg-gradient-to-br from-blue-50 to-indigo-100 group-hover:from-blue-100 group-hover:to-indigo-200"><Icon /></div>
         <span className="text-xs px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded-full font-medium border border-emerald-200">Active</span>
@@ -320,10 +323,10 @@ const PatientQueue: React.FC<PatientQueueProps> = ({ title, patients, variant = 
   };
 
   return (
-    <div className="rounded-3xl border border-slate-200/70 bg-white/90 backdrop-blur-sm p-8 shadow-lg">
+    <div className="floating-screen p-8">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-bold text-slate-900">{title}</h3>
-        <span className="text-lg font-bold text-slate-600">{patients.length}</span>
+        <h3 className="text-xl font-bold text-steel-900">{title}</h3>
+        <span className="text-lg font-bold text-steel-600">{patients.length}</span>
       </div>
       <div className="space-y-4 max-h-80 overflow-y-auto">
         {patients.slice(0, maxItems).map((patient) => (
@@ -452,14 +455,14 @@ function MainDashboard(): JSX.Element {
   const moduleKPIs = getModuleKPIs(activeModule, moduleRole);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-8">
+    <div className="min-h-screen bg-liquid-medical p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button onClick={backToMain} className="p-3 rounded-2xl bg-white/80 border border-slate-200/70 shadow-lg hover:shadow-xl transition-all duration-200 backdrop-blur-sm"><Icons.ArrowLeft /></button>
+            <button onClick={backToMain} className="btn-medical-secondary"><Icons.ArrowLeft /></button>
             <div>
-              <h1 className="text-4xl font-bold text-slate-900 mb-2">{currentModule?.name}</h1>
-              <p className="text-lg text-slate-600">{currentModule?.description}</p>
+              <h1 className="text-4xl font-bold text-steel-900 mb-2">{currentModule?.name}</h1>
+              <p className="text-lg text-steel-600">{currentModule?.description}</p>
             </div>
           </div>
           <RoleToggle value={moduleRole} onChange={setModuleRole} />
