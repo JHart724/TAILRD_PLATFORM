@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { TrendingUp, AlertCircle, Calendar, ExternalLink, Filter } from 'lucide-react';
-import PatientDetailPanel from './care-team/PatientDetailPanel';
 
 interface WorklistPatient {
   id: string;
@@ -19,64 +18,64 @@ interface WorklistPatient {
 }
 
 const PatientWorklist: React.FC = () => {
+  const [selectedPatient, setSelectedPatient] = useState<WorklistPatient | null>(null);
   const [filterPriority, setFilterPriority] = useState<string>('all');
   const [filterGDMT, setFilterGDMT] = useState<boolean>(false);
   const [filterDevice, setFilterDevice] = useState<boolean>(false);
-  const [selectedPatient, setSelectedPatient] = useState<WorklistPatient | null>(null);
 
   const patients: WorklistPatient[] = [
     {
       id: 'P001',
-      name: 'Johnson, Maria',
+      name: 'Smith, John',
       mrn: '123456',
-      age: 67,
-      ef: 28,
+      age: 65,
+      ef: 25,
       nyhaClass: 'III',
-      riskScore: 82,
+      riskScore: 85,
       gdmtGaps: 3,
-      deviceEligible: ['CRT-D', 'CardioMEMS'],
-      phenotypeFlags: ['Amyloid Risk', 'Iron Deficiency'],
-      nextAppt: '2025-10-15',
-      assignedProvider: 'Dr. Smith',
+      deviceEligible: ['CRT-D', 'ICD'],
+      phenotypeFlags: ['Amyloidosis', 'Iron Deficiency'],
+      nextAppt: '2025-10-21',
+      assignedProvider: 'Dr. Johnson',
       priority: 'high'
     },
     {
       id: 'P002',
-      name: 'Williams, Robert',
-      mrn: '789012',
-      age: 54,
+      name: 'Johnson, Mary',
+      mrn: '234567',
+      age: 72,
       ef: 35,
       nyhaClass: 'II',
-      riskScore: 65,
+      riskScore: 64,
       gdmtGaps: 1,
       deviceEligible: ['ICD'],
       phenotypeFlags: [],
       nextAppt: '2025-10-18',
-      assignedProvider: 'Dr. Jones',
+      assignedProvider: 'Dr. Smith',
       priority: 'medium'
     },
     {
       id: 'P003',
-      name: 'Davis, Linda',
+      name: 'Williams, Robert',
       mrn: '345678',
-      age: 71,
-      ef: 22,
-      nyhaClass: 'III',
-      riskScore: 88,
-      gdmtGaps: 4,
-      deviceEligible: ['CRT-D', 'LVAD', 'CardioMEMS'],
-      phenotypeFlags: ['HCM', 'Tachy-CM'],
-      nextAppt: '2025-10-12',
-      assignedProvider: 'Dr. Smith',
-      priority: 'high'
+      age: 58,
+      ef: 42,
+      nyhaClass: 'II',
+      riskScore: 45,
+      gdmtGaps: 2,
+      deviceEligible: [],
+      phenotypeFlags: ['HCM'],
+      nextAppt: '2025-10-19',
+      assignedProvider: 'Dr. Davis',
+      priority: 'low'
     },
     {
       id: 'P004',
-      name: 'Martinez, Carlos',
+      name: 'Brown, Susan',
       mrn: '456789',
-      age: 62,
-      ef: 31,
-      nyhaClass: 'II',
+      age: 68,
+      ef: 28,
+      nyhaClass: 'III',
       riskScore: 58,
       gdmtGaps: 2,
       deviceEligible: ['ICD'],
@@ -243,13 +242,6 @@ const PatientWorklist: React.FC = () => {
           </div>
         ))}
       </div>
-      
-      {selectedPatient && (
-        <PatientDetailPanel 
-          patient={selectedPatient} 
-          onClose={() => setSelectedPatient(null)} 
-        />
-      )}
     </div>
   );
 };

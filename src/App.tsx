@@ -253,7 +253,7 @@ const KpiCard: React.FC<KpiCardProps> = ({ label, value, icon: Icon, variant = "
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
-          {Icon && (<div className="p-2 rounded-lg bg-steel-50 shadow-retina-1"><Icon /></div>)}
+          {Icon && (<div className="p-2 rounded-lg bg-steel-50 shadow-retina-1"><Icon className="w-5 h-5 text-steel-700" /></div>)}
           <span className="text-sm font-semibold text-steel-800">{label}</span>
         </div>
         {trend !== undefined && (<div className={`text-xs font-semibold ${trend > 0 ? "text-medical-green-600" : "text-medical-red-600"}`}>{trend > 0 ? "↗" : "↘"} {Math.abs(trend)}%</div>)}
