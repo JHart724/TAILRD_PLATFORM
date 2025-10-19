@@ -1,8 +1,13 @@
 import React, { useState, useMemo, useCallback, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 
-// Lazy load HF module
+// Lazy load all modules
 const HFModule = lazy(() => import("./ui/heartFailure/HFModule"));
+const EPModule = lazy(() => import("./ui/electrophysiology/EPModule"));
+const StructuralHeartModule = lazy(() => import("./ui/structuralHeart/StructuralHeartModule"));
+const CoronaryInterventionModule = lazy(() => import("./ui/coronaryIntervention/CoronaryInterventionModule"));
+const ValvularDiseaseModule = lazy(() => import("./ui/valvularDisease/ValvularDiseaseModule"));
+const PeripheralVascularModule = lazy(() => import("./ui/peripheralVascular/PeripheralVascularModule"));
 
 // Core Types
 type Role = "Executive" | "Service Line" | "Care Team";
@@ -253,7 +258,7 @@ const KpiCard: React.FC<KpiCardProps> = ({ label, value, icon: Icon, variant = "
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
-          {Icon && (<div className="p-2 rounded-lg bg-steel-50 shadow-retina-1"><Icon className="w-5 h-5 text-steel-700" /></div>)}
+          {Icon && (<div className="p-2 rounded-lg bg-steel-50 shadow-retina-1"><Icon /></div>)}
           <span className="text-sm font-semibold text-steel-800">{label}</span>
         </div>
         {trend !== undefined && (<div className={`text-xs font-semibold ${trend > 0 ? "text-medical-green-600" : "text-medical-red-600"}`}>{trend > 0 ? "↗" : "↘"} {Math.abs(trend)}%</div>)}
@@ -408,11 +413,28 @@ function MainDashboard(): JSX.Element {
   }, []);
 
   const openModule = useCallback((moduleId: ModuleId) => {
-    if (moduleId === "hf") {
-      navigate("/hf/executive");
-    } else {
-      setActiveModule(moduleId);
-      setViewMode("module");
+    switch (moduleId) {
+      case "hf":
+        navigate("/hf");
+        break;
+      case "ep":
+        navigate("/ep");
+        break;
+      case "structural":
+        navigate("/structural");
+        break;
+      case "coronary":
+        navigate("/coronary");
+        break;
+      case "valvular":
+        navigate("/valvular");
+        break;
+      case "peripheral":
+        navigate("/peripheral");
+        break;
+      default:
+        setActiveModule(moduleId);
+        setViewMode("module");
     }
   }, [navigate]);
 
@@ -487,6 +509,11 @@ export default function App(): JSX.Element {
         <Routes>
           <Route path="/" element={<MainDashboard />} />
           <Route path="/hf/*" element={<HFModule />} />
+          <Route path="/ep/*" element={<EPModule />} />
+          <Route path="/structural/*" element={<StructuralHeartModule />} />
+          <Route path="/coronary/*" element={<CoronaryInterventionModule />} />
+          <Route path="/valvular/*" element={<ValvularDiseaseModule />} />
+          <Route path="/peripheral/*" element={<PeripheralVascularModule />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

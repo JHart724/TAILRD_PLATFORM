@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TrendingUp, AlertCircle, Calendar, ExternalLink, Filter } from 'lucide-react';
+import PatientDetailPanel from './PatientDetailPanel';
 
 interface WorklistPatient {
   id: string;
@@ -242,6 +243,12 @@ const PatientWorklist: React.FC = () => {
           </div>
         ))}
       </div>
+      {selectedPatient && (
+        <PatientDetailPanel 
+          patient={selectedPatient} 
+          onClose={() => setSelectedPatient(null)} 
+        />
+      )}
     </div>
   );
 };
