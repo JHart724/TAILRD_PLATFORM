@@ -119,7 +119,6 @@ const PatientWorklist: React.FC = () => {
   };
 
   return (
-    <>
     <div className="bg-white/55 backdrop-blur-lg rounded-xl shadow-glass border border-white/20 overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-300 bg-slate-50">
         <div className="flex items-center justify-between mb-4">
@@ -244,14 +243,14 @@ const PatientWorklist: React.FC = () => {
           </div>
         ))}
       </div>
-    </div>
-    {selectedPatient && (
+      
+      {selectedPatient && (
         <PatientDetailPanel 
           patient={selectedPatient} 
           onClose={() => setSelectedPatient(null)} 
         />
       )}
-    </>
+    </div>
   );
 };
 
