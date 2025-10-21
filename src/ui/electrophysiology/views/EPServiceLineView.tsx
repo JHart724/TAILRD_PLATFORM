@@ -439,7 +439,7 @@ const EPServiceLineView: React.FC = () => {
           {procedures.map((procedure) => (
             <div
               key={procedure.name}
-              className="p-6 bg-white rounded-xl border border-steel-200 hover:shadow-retina-2 transition-all duration-300"
+              className="retina-card p-6"
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
@@ -535,7 +535,7 @@ const EPServiceLineView: React.FC = () => {
               {procedures.map((procedure) => (
                 <div
                   key={procedure.name}
-                  className="p-6 bg-white rounded-xl border border-steel-200 hover:shadow-retina-2 transition-all duration-300"
+                  className="retina-card p-6"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div>

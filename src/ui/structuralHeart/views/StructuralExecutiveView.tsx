@@ -278,7 +278,7 @@ const StructuralExecutiveView: React.FC = () => {
             <div className="flex items-center justify-between p-3 bg-steel-50 rounded-lg">
               <div>
                 <div className="font-medium text-steel-900">TAVR 30-Day Mortality</div>
-                <div className="text-sm text-steel-600">Society Benchmark: <2%</div>
+                <div className="text-sm text-steel-600">Society Benchmark: &lt;2%</div>
               </div>
               <div className="text-2xl font-bold text-medical-green-600">1.4%</div>
             </div>
@@ -351,7 +351,7 @@ const StructuralExecutiveView: React.FC = () => {
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="p-4 bg-medical-green-50 rounded-xl border border-medical-green-200">
-            <h4 className="font-semibold text-medical-green-800 mb-3">Low Risk (STS <4%)</h4>
+            <h4 className="font-semibold text-medical-green-800 mb-3">Low Risk (STS &lt;4%)</h4>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span>TAVR Volume:</span>
@@ -387,7 +387,7 @@ const StructuralExecutiveView: React.FC = () => {
           </div>
 
           <div className="p-4 bg-medical-red-50 rounded-xl border border-medical-red-200">
-            <h4 className="font-semibold text-medical-red-800 mb-3">High Risk (STS >8%)</h4>
+            <h4 className="font-semibold text-medical-red-800 mb-3">High Risk (STS &gt;8%)</h4>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span>TAVR Volume:</span>

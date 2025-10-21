@@ -84,7 +84,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
     if (patientData.vascularDisease) score += 1;
     if (patientData.gender === 'female') score += 1;
 
-    const riskThreshold = patientData.gender === 'male' ? 2 : 3;
+    const riskThreshold = patientData.gender === 'male' ? 1 : 2;
     const risk = score >= riskThreshold ? 'High' : score >= 1 ? 'Moderate' : 'Low';
     
     const strokeRisks = [0, 1.3, 2.2, 3.2, 4.0, 6.7, 9.8, 15.2, 15.2, 15.2];
@@ -120,12 +120,13 @@ const EPClinicalDecisionSupport: React.FC = () => {
     const rationale: string[] = [];
     const contraindications: string[] = [];
 
-    // CHA2DS2-VASc ≥3 required for CMS coverage
-    if (cha2ds2vasc.score >= 3) {
-      rationale.push(`CHA₂DS₂-VASc score ${cha2ds2vasc.score} meets CMS coverage criteria (≥3)`);
+    // CHA2DS2-VASc ≥2 for males, ≥3 for females per 2020 ESC Guidelines
+    const cmsThreshold = patientData.gender === 'male' ? 2 : 3;
+    if (cha2ds2vasc.score >= cmsThreshold) {
+      rationale.push(`CHA₂DS₂-VASc score ${cha2ds2vasc.score} meets clinical criteria (≥${cmsThreshold} for ${patientData.gender}s)`);
       confidence += 30;
     } else {
-      contraindications.push(`CHA₂DS₂-VASc score ${cha2ds2vasc.score} below CMS threshold (requires ≥3)`);
+      contraindications.push(`CHA₂DS₂-VASc score ${cha2ds2vasc.score} below threshold (requires ≥${cmsThreshold} for ${patientData.gender}s)`);
     }
 
     // Appropriate rationales
@@ -181,9 +182,9 @@ const EPClinicalDecisionSupport: React.FC = () => {
 
     rationale.push(...appropriateRationales);
 
-    if (cha2ds2vasc.score >= 3 && appropriateRationales.length > 0) {
+    if (cha2ds2vasc.score >= cmsThreshold && appropriateRationales.length > 0) {
       eligibility = confidence >= 70 ? 'Eligible' : 'Consider';
-    } else if (cha2ds2vasc.score >= 2 && appropriateRationales.length >= 2) {
+    } else if (cha2ds2vasc.score >= 1 && appropriateRationales.length >= 2) {
       eligibility = 'Consider';
       confidence = Math.min(confidence, 60);
     }
@@ -308,8 +309,9 @@ const EPClinicalDecisionSupport: React.FC = () => {
       factors.push('Diabetes: -5%');
     }
 
-    // AF duration (simulated)
-    const afDuration = Math.random() > 0.5 ? 'paroxysmal' : 'persistent';
+    // AF duration (based on patient profile - simplified)
+    // In practice, this would come from patient history
+    const afDuration = patientData.age < 65 && !patientData.chf ? 'paroxysmal' : 'persistent';
     if (afDuration === 'paroxysmal') {
       score += 15;
       factors.push('Paroxysmal AF: +15%');

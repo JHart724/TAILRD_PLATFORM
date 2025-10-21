@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Users, Calendar, AlertTriangle, Clock, Heart, Zap, Phone, MessageSquare } from 'lucide-react';
+import { Users, Calendar, AlertTriangle, Clock, Heart, Zap, Phone, MessageSquare, Shield } from 'lucide-react';
+import AnticoagulationSafetyChecker from '../components/AnticoagulationSafetyChecker';
 
 interface EPPatient {
   id: string;
@@ -33,7 +34,7 @@ interface EPTask {
 }
 
 const EPCareTeamView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'patients' | 'tasks' | 'schedule'>('patients');
+  const [activeTab, setActiveTab] = useState<'patients' | 'tasks' | 'schedule' | 'safety'>('patients');
   const [selectedPatient, setSelectedPatient] = useState<EPPatient | null>(null);
 
   const patients: EPPatient[] = [
@@ -190,6 +191,7 @@ const EPCareTeamView: React.FC = () => {
         {[
           { id: 'patients', label: 'Patient Census', icon: Heart },
           { id: 'tasks', label: 'Task Management', icon: Clock },
+          { id: 'safety', label: 'Safety Screening', icon: Shield },
           { id: 'schedule', label: 'Team Schedule', icon: Calendar }
         ].map((tab) => {
           const IconComponent = tab.icon;
@@ -295,11 +297,11 @@ const EPCareTeamView: React.FC = () => {
               )}
 
               <div className="mt-4 flex gap-2">
-                <button className="flex-1 px-3 py-2 bg-medical-blue-500 text-white text-xs rounded-lg hover:bg-medical-blue-600 transition-colors flex items-center justify-center gap-1">
+                <button className="flex-1 px-3 py-2 bg-gradient-to-r from-medical-blue-600 to-medical-blue-700 text-white text-xs rounded-lg hover:from-medical-blue-700 hover:to-medical-blue-800 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-1 backdrop-blur border border-white/20">
                   <Phone className="w-3 h-3" />
                   Call
                 </button>
-                <button className="flex-1 px-3 py-2 bg-steel-200 text-steel-800 text-xs rounded-lg hover:bg-steel-300 transition-colors flex items-center justify-center gap-1">
+                <button className="flex-1 px-3 py-2 bg-gradient-to-r from-steel-100/80 to-steel-200/80 text-steel-800 text-xs rounded-lg hover:from-steel-200/90 hover:to-steel-300/90 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-1 backdrop-blur border border-steel-300/40">
                   <MessageSquare className="w-3 h-3" />
                   Message
                 </button>
@@ -320,7 +322,7 @@ const EPCareTeamView: React.FC = () => {
                 return (
                   <div
                     key={task.id}
-                    className="p-4 bg-white rounded-lg border border-steel-200 hover:shadow-retina-2 transition-all duration-300"
+                    className="retina-card p-4 data-focus"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3">
@@ -480,6 +482,13 @@ const EPCareTeamView: React.FC = () => {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Safety Screening Tab */}
+      {activeTab === 'safety' && (
+        <div className="space-y-6">
+          <AnticoagulationSafetyChecker />
         </div>
       )}
     </div>

@@ -25,19 +25,19 @@ const ExecutiveKPICard: React.FC<ExecutiveKPICardProps> = ({
   const getStatusClasses = () => {
     switch (status) {
       case 'optimal':
-        return 'border-l-medical-green-400 bg-medical-green-50/50';
+        return 'border-l-deep-green-600 bg-white';
       case 'warning':
-        return 'border-l-medical-amber-400 bg-medical-amber-50/50';
+        return 'border-l-deep-amber-600 bg-white';
       case 'critical':
-        return 'border-l-medical-red-400 bg-medical-red-50/50';
+        return 'border-l-deep-red-600 bg-white';
       default:
-        return 'border-l-medical-blue-400 bg-medical-blue-50/50';
+        return 'border-l-deep-blue-600 bg-white';
     }
   };
 
   const getTrendColor = () => {
-    if (trend?.direction === 'up') return 'text-medical-green-600';
-    return 'text-medical-red-600';
+    if (trend?.direction === 'up') return 'text-deep-green-600';
+    return 'text-deep-red-600';
   };
 
   return (
@@ -47,7 +47,7 @@ const ExecutiveKPICard: React.FC<ExecutiveKPICardProps> = ({
           <div className="text-sm font-semibold text-steel-600 uppercase tracking-wider mb-2">
             {label}
           </div>
-          <div className="text-4xl font-bold text-steel-900 mb-1 font-sf">
+          <div className="text-3xl font-bold text-steel-900 mb-1 font-sf">
             {value}
           </div>
           {subvalue && (
@@ -55,8 +55,8 @@ const ExecutiveKPICard: React.FC<ExecutiveKPICardProps> = ({
           )}
         </div>
         {Icon && (
-          <div className="ml-4 p-3 rounded-xl bg-white/70">
-            <Icon className="w-6 h-6 text-medical-blue-500" />
+          <div className="ml-4 p-3 rounded-xl bg-white/70 icon-float">
+            <Icon className="w-6 h-6 text-steel-600 drop-shadow-sm" />
           </div>
         )}
       </div>
@@ -69,7 +69,7 @@ const ExecutiveKPICard: React.FC<ExecutiveKPICardProps> = ({
             <TrendingDown className="w-4 h-4" />
           )}
           <span>{trend.value}</span>
-          <span className="text-steel-500 font-normal ml-1">{trend.label}</span>
+          <span className="text-steel-400 font-normal ml-1">{trend.label}</span>
         </div>
       )}
     </div>

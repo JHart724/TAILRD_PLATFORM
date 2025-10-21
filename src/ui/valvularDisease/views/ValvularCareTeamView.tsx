@@ -44,11 +44,11 @@ const ValvularCareTeamView: React.FC = () => {
       age: 85,
       diagnosis: 'Severe Mitral Regurgitation',
       sts_score: 8.7,
-      status: 'TAVR Recommended',
+      status: 'Surgical Evaluation',
       urgency: 'urgent',
       referringMD: 'Dr. Lopez',
       scheduledDate: '2024-03-12',
-      recommendation: 'TAVR'
+      recommendation: 'Surgical Repair'
     },
     {
       id: '3',
@@ -57,11 +57,11 @@ const ValvularCareTeamView: React.FC = () => {
       age: 72,
       diagnosis: 'Moderate-Severe MR',
       sts_score: 4.1,
-      status: 'MitraClip Candidate',
+      status: 'Surgical Candidate',
       urgency: 'moderate',
       referringMD: 'Dr. Kim',
       scheduledDate: '2024-03-18',
-      recommendation: 'MitraClip'
+      recommendation: 'Surgical Repair'
     }
   ];
 
@@ -70,22 +70,22 @@ const ValvularCareTeamView: React.FC = () => {
     {
       time: '07:30 AM',
       patient: 'James Wilson',
-      procedure: 'TAVR - Edwards SAPIEN 3',
-      room: 'Hybrid OR 1',
+      procedure: 'Surgical AVR - Bioprosthetic',
+      room: 'OR 1',
       operator: 'Dr. Mitchell',
-      team: ['Dr. Chen (Surgery)', 'Sarah RN', 'Mike RT'],
+      team: ['Dr. Chen (Anesthesia)', 'Sarah RN', 'Alex Perfusion'],
       status: 'prep',
-      duration: '90 min'
+      duration: '180 min'
     },
     {
       time: '09:30 AM',
       patient: 'Linda Brown',
-      procedure: 'MitraClip G4',
-      room: 'Cath Lab 2',
+      procedure: 'Mitral Valve Repair',
+      room: 'OR 2',
       operator: 'Dr. Rodriguez',
-      team: ['Dr. Park (Echo)', 'Jennifer RN', 'Tom RT'],
+      team: ['Dr. Park (Anesthesia)', 'Jennifer RN', 'Tom Perfusion'],
       status: 'scheduled',
-      duration: '120 min'
+      duration: '210 min'
     },
     {
       time: '12:00 PM',
@@ -100,12 +100,12 @@ const ValvularCareTeamView: React.FC = () => {
     {
       time: '02:30 PM',
       patient: 'Patricia Davis',
-      procedure: 'TAVR - Medtronic Evolut',
-      room: 'Hybrid OR 1',
+      procedure: 'Ross Procedure',
+      room: 'OR 3',
       operator: 'Dr. Park',
-      team: ['Dr. Martinez (Surgery)', 'Lisa RN', 'John RT'],
+      team: ['Dr. Martinez (Anesthesia)', 'Lisa RN', 'John Perfusion'],
       status: 'scheduled',
-      duration: '85 min'
+      duration: '285 min'
     }
   ];
 
@@ -113,13 +113,13 @@ const ValvularCareTeamView: React.FC = () => {
   const heartTeamMembers = [
     {
       name: 'Dr. Mitchell',
-      role: 'Interventional Cardiologist',
-      specialty: 'TAVR/Structural',
+      role: 'Cardiac Surgeon',
+      specialty: 'Aortic Valve Surgery',
       status: 'Available',
-      location: 'Hybrid OR 1',
+      location: 'OR 1',
       cases: 3,
       phone: '(555) 0101',
-      next: '07:30 AM - TAVR'
+      next: '07:30 AM - Surgical AVR'
     },
     {
       name: 'Dr. Chen',
@@ -129,17 +129,17 @@ const ValvularCareTeamView: React.FC = () => {
       location: 'Conference Room A',
       cases: 2,
       phone: '(555) 0102',
-      next: '12:00 PM - Surgical AVR'
+      next: '12:00 PM - Complex Valve Surgery'
     },
     {
       name: 'Dr. Rodriguez',
-      role: 'Interventional Cardiologist',
-      specialty: 'MitraClip/Structural',
+      role: 'Cardiac Surgeon',
+      specialty: 'Mitral Valve Surgery',
       status: 'Available',
-      location: 'Cath Lab 2',
+      location: 'OR 2',
       cases: 2,
       phone: '(555) 0103',
-      next: '09:30 AM - MitraClip'
+      next: '09:30 AM - Mitral Repair'
     },
     {
       name: 'Dr. Kim',
@@ -178,8 +178,8 @@ const ValvularCareTeamView: React.FC = () => {
       age: 82,
       diagnosis: 'Severe AS',
       sts_score: 6.8,
-      decision: 'TAVR',
-      rationale: 'High surgical risk, good anatomy',
+      decision: 'Surgical AVR',
+      rationale: 'Suitable for surgical intervention',
       outcome: 'Successful',
       date: '2024-03-10'
     },
@@ -198,8 +198,8 @@ const ValvularCareTeamView: React.FC = () => {
       age: 79,
       diagnosis: 'Moderate-Severe MR',
       sts_score: 7.2,
-      decision: 'MitraClip',
-      rationale: 'High surgical risk, suitable anatomy',
+      decision: 'Surgical Repair',
+      rationale: 'Suitable for valve repair',
       outcome: 'Successful',
       date: '2024-03-05'
     }

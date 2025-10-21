@@ -13,10 +13,13 @@ import {
   Timer,
   Award,
   Footprints,
-  Heart
+  Heart,
+  Search
 } from 'lucide-react';
+import LimbSalvageScreening from '../components/LimbSalvageScreening';
 
 const PeripheralServiceLineView: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'procedures' | 'screening'>('procedures');
   const [selectedTimeframe, setSelectedTimeframe] = useState('month');
 
   // PAD Program Metrics
@@ -60,12 +63,12 @@ const PeripheralServiceLineView: React.FC = () => {
     infectionRate: 7.2
   };
 
-  // Risk Stratification
+  // WIfI Risk Stratification (proper matrix)
   const riskStratification = [
-    { risk: 'Low Risk (WIfI 0-1)', count: 78, percentage: 41.7, amputation: 1.3 },
-    { risk: 'Moderate Risk (WIfI 2)', count: 64, percentage: 34.2, amputation: 4.7 },
-    { risk: 'High Risk (WIfI 3)', count: 32, percentage: 17.1, amputation: 12.5 },
-    { risk: 'Very High Risk (WIfI 4)', count: 13, percentage: 7.0, amputation: 23.1 }
+    { risk: 'Clinical Stage 1 (WIfI 0)', count: 78, percentage: 41.7, amputation: 2.0 },
+    { risk: 'Clinical Stage 2 (WIfI 1)', count: 64, percentage: 34.2, amputation: 5.0 },
+    { risk: 'Clinical Stage 3 (WIfI 2)', count: 32, percentage: 17.1, amputation: 15.0 },
+    { risk: 'Clinical Stage 4 (WIfI 3)', count: 13, percentage: 7.0, amputation: 35.0 }
   ];
 
   // Device Performance
@@ -108,7 +111,34 @@ const PeripheralServiceLineView: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header Metrics */}
+      {/* Tab Navigation */}
+      <div className="flex gap-4 border-b border-steel-200">
+        {[
+          { id: 'procedures', label: 'Procedure Analytics', icon: Activity },
+          { id: 'screening', label: 'Limb Salvage Screening', icon: Search }
+        ].map((tab) => {
+          const IconComponent = tab.icon;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`px-6 py-3 border-b-2 transition-all duration-200 flex items-center gap-2 ${
+                activeTab === tab.id
+                  ? 'border-medical-teal-500 text-medical-teal-600 bg-medical-teal-50'
+                  : 'border-transparent text-steel-600 hover:text-steel-800 hover:bg-steel-50'
+              }`}
+            >
+              <IconComponent className="w-5 h-5" />
+              <span className="font-semibold">{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Procedure Analytics Tab */}
+      {activeTab === 'procedures' && (
+        <div className="space-y-6">
+          {/* Header Metrics */}
       <div className="grid grid-cols-4 gap-4">
         <div className="bg-white rounded-xl border border-steel-200 p-6 shadow-retina-2">
           <div className="flex items-center justify-between mb-2">
@@ -194,7 +224,7 @@ const PeripheralServiceLineView: React.FC = () => {
         {/* Risk Stratification */}
         <div className="bg-white rounded-xl border border-steel-200 p-6 shadow-retina-2">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-steel-900 font-sf">WIfI Risk Stratification</h3>
+            <h3 className="text-lg font-semibold text-steel-900 font-sf">WIfI Clinical Staging</h3>
             <Target className="w-5 h-5 text-steel-400" />
           </div>
           
@@ -430,6 +460,13 @@ const PeripheralServiceLineView: React.FC = () => {
           ))}
         </div>
       </div>
+        </div>
+      )}
+
+      {/* Limb Salvage Screening Tab */}
+      {activeTab === 'screening' && (
+        <LimbSalvageScreening />
+      )}
     </div>
   );
 };

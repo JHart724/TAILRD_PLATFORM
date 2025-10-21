@@ -19,47 +19,47 @@ import {
 const ValvularServiceLineView: React.FC = () => {
   const [selectedTimeframe, setSelectedTimeframe] = useState('month');
 
-  // TAVR Program Metrics
-  const tavrMetrics = {
-    totalCases: 131,
-    successRate: 98.5,
-    avgProcedureTime: 72,
-    avgLengthOfStay: 2.3,
-    mortalityRate: 1.5,
-    strokeRate: 1.2,
-    majorBleeding: 2.8,
-    vascularComplications: 3.1
+  // Surgical Valve Program Metrics
+  const surgicalValveMetrics = {
+    totalCases: 89,
+    successRate: 97.2,
+    avgProcedureTime: 158,
+    avgLengthOfStay: 5.8,
+    mortalityRate: 1.8,
+    strokeRate: 1.4,
+    majorBleeding: 3.2,
+    reoperationRate: 2.1
   };
 
-  // Surgical AVR Metrics
-  const surgicalAvrMetrics = {
-    totalCases: 47,
-    successRate: 96.8,
-    avgProcedureTime: 185,
-    avgLengthOfStay: 6.8,
-    mortalityRate: 2.1,
-    strokeRate: 1.9,
-    afibrillation: 18.5,
-    reoperationRate: 2.3
+  // Ross Procedure Metrics
+  const rossMetrics = {
+    totalCases: 23,
+    successRate: 95.7,
+    avgProcedureTime: 245,
+    avgLengthOfStay: 7.2,
+    mortalityRate: 2.6,
+    strokeRate: 1.3,
+    afibrillation: 15.2,
+    reoperationRate: 1.8
   };
 
-  // Valve Type Distribution
+  // Surgical Valve Type Distribution
   const valveTypes = [
-    { type: 'Medtronic CoreValve Evolut', count: 42, percentage: 32.1, outcomes: 98.5 },
-    { type: 'Edwards SAPIEN 3', count: 38, percentage: 29.0, outcomes: 98.7 },
-    { type: 'Boston Scientific Lotus', count: 28, percentage: 21.4, outcomes: 97.8 },
-    { type: 'Abbott Portico', count: 23, percentage: 17.5, outcomes: 98.1 }
+    { type: 'Mechanical Aortic (St. Jude)', count: 28, percentage: 31.5, outcomes: 96.8 },
+    { type: 'Bioprosthetic Aortic (Edwards)', count: 24, percentage: 27.0, outcomes: 97.5 },
+    { type: 'Ross Procedure (Autograft)', count: 23, percentage: 25.8, outcomes: 95.7 },
+    { type: 'Mitral Repair/Replacement', count: 14, percentage: 15.7, outcomes: 97.1 }
   ];
 
-  // MitraClip Program
-  const mitraClipMetrics = {
-    totalCases: 34,
-    technicalSuccess: 97.1,
-    clinicalSuccess: 91.2,
-    avgProcedureTime: 95,
-    avgLengthOfStay: 1.8,
-    mrReduction: 88.2,
-    functionalImprovement: 82.4
+  // Mitral Valve Surgery Program
+  const mitralSurgeryMetrics = {
+    totalCases: 18,
+    repairSuccess: 94.4,
+    clinicalSuccess: 92.8,
+    avgProcedureTime: 195,
+    avgLengthOfStay: 6.2,
+    regurgitationReduction: 89.5,
+    functionalImprovement: 88.1
   };
 
   // Risk Score Analysis
@@ -72,39 +72,39 @@ const ValvularServiceLineView: React.FC = () => {
 
   // Quality Metrics Comparison
   const qualityMetrics = [
-    { metric: 'Device Success Rate', tavr: 98.5, surgical: 96.8, benchmark: 95.0, unit: '%' },
-    { metric: 'Length of Stay', tavr: 2.3, surgical: 6.8, benchmark: 4.5, unit: 'days' },
-    { metric: '30-Day Mortality', tavr: 1.5, surgical: 2.1, benchmark: 2.8, unit: '%' },
-    { metric: 'Stroke Rate', tavr: 1.2, surgical: 1.9, benchmark: 2.5, unit: '%' },
-    { metric: 'Major Bleeding', tavr: 2.8, surgical: 4.2, benchmark: 5.1, unit: '%' },
-    { metric: 'Readmission Rate', tavr: 6.1, surgical: 8.7, benchmark: 12.3, unit: '%' }
+    { metric: 'Surgical Success Rate', aortic: 97.2, mitral: 94.4, benchmark: 95.0, unit: '%' },
+    { metric: 'Length of Stay', aortic: 5.8, mitral: 6.2, benchmark: 6.5, unit: 'days' },
+    { metric: '30-Day Mortality', aortic: 1.8, mitral: 2.2, benchmark: 2.8, unit: '%' },
+    { metric: 'Stroke Rate', aortic: 1.4, mitral: 1.6, benchmark: 2.5, unit: '%' },
+    { metric: 'Major Bleeding', aortic: 3.2, mitral: 3.8, benchmark: 5.1, unit: '%' },
+    { metric: 'Reoperation Rate', aortic: 2.1, mitral: 2.4, benchmark: 3.5, unit: '%' }
   ];
 
-  // Operator Performance
-  const operatorPerformance = [
-    { name: 'Dr. Mitchell', specialty: 'TAVR/Structural', cases: 78, successRate: 99.2, avgTime: 68, complexity: 'High' },
-    { name: 'Dr. Chen', specialty: 'Cardiac Surgery', cases: 45, successRate: 97.8, avgTime: 178, complexity: 'Complex' },
-    { name: 'Dr. Rodriguez', specialty: 'TAVR/MitraClip', cases: 52, successRate: 98.1, avgTime: 75, complexity: 'Mixed' },
-    { name: 'Dr. Thompson', specialty: 'Cardiac Surgery', cases: 38, successRate: 96.3, avgTime: 192, complexity: 'Standard' },
-    { name: 'Dr. Park', specialty: 'TAVR/Structural', cases: 41, successRate: 98.7, avgTime: 71, complexity: 'High' }
+  // Surgeon Performance
+  const surgeonPerformance = [
+    { name: 'Dr. Chen', specialty: 'Aortic Surgery', cases: 45, successRate: 97.8, avgTime: 178, complexity: 'Complex' },
+    { name: 'Dr. Thompson', specialty: 'Mitral Surgery', cases: 28, successRate: 96.3, avgTime: 192, complexity: 'Standard' },
+    { name: 'Dr. Williams', specialty: 'Ross Procedure', cases: 23, successRate: 95.7, avgTime: 245, complexity: 'High' },
+    { name: 'Dr. Garcia', specialty: 'Valve Repair', cases: 31, successRate: 98.1, avgTime: 165, complexity: 'Mixed' },
+    { name: 'Dr. Kumar', specialty: 'Complex Valve', cases: 18, successRate: 94.4, avgTime: 220, complexity: 'High' }
   ];
 
-  // Heart Team Decisions
-  const heartTeamDecisions = [
-    { indication: 'Severe Aortic Stenosis', total: 156, tavr: 89, surgical: 67, recommendation: 'TAVR preferred for age >75' },
-    { indication: 'Aortic Regurgitation', total: 28, tavr: 8, surgical: 20, recommendation: 'Surgical preferred' },
-    { indication: 'Mitral Regurgitation', total: 45, mitraClip: 34, surgical: 11, recommendation: 'MitraClip first-line' },
-    { indication: 'Tricuspid Regurgitation', total: 12, transcatheter: 7, surgical: 5, recommendation: 'Case-by-case' }
+  // Surgical Team Decisions
+  const surgicalDecisions = [
+    { indication: 'Severe Aortic Stenosis', total: 67, mechanical: 28, bioprosthetic: 39, ross: 0, recommendation: 'Age and lifestyle-based valve selection' },
+    { indication: 'Aortic Regurgitation', total: 28, surgical: 13, ross: 15, recommendation: 'Ross procedure preferred for young patients with AR' },
+    { indication: 'Mitral Regurgitation', total: 18, repair: 14, replacement: 4, recommendation: 'Repair preferred when feasible' },
+    { indication: 'Bicuspid Aortic Valve with AR', total: 23, ross: 15, conventional: 8, recommendation: 'Ross procedure for young patients with AR' }
   ];
 
-  // Device Utilization Trends
-  const deviceTrends = [
-    { month: 'Jan', medtronic: 12, edwards: 8, boston: 6, abbott: 4 },
-    { month: 'Feb', medtronic: 14, edwards: 10, boston: 5, abbott: 6 },
-    { month: 'Mar', medtronic: 11, edwards: 12, boston: 7, abbott: 5 },
-    { month: 'Apr', medtronic: 13, edwards: 9, boston: 8, abbott: 4 },
-    { month: 'May', medtronic: 15, edwards: 11, boston: 6, abbott: 7 },
-    { month: 'Jun', medtronic: 16, edwards: 13, boston: 8, abbott: 5 }
+  // Surgical Volume Trends
+  const surgicalTrends = [
+    { month: 'Jan', aortic: 12, mitral: 4, ross: 3, complex: 2 },
+    { month: 'Feb', aortic: 14, mitral: 5, ross: 4, complex: 3 },
+    { month: 'Mar', aortic: 11, mitral: 6, ross: 4, complex: 2 },
+    { month: 'Apr', aortic: 13, mitral: 3, ross: 5, complex: 1 },
+    { month: 'May', aortic: 15, mitral: 7, ross: 2, complex: 4 },
+    { month: 'Jun', aortic: 16, mitral: 5, ross: 5, complex: 3 }
   ];
 
   return (
@@ -116,9 +116,9 @@ const ValvularServiceLineView: React.FC = () => {
             <div className="p-2 rounded-lg bg-medical-purple-100">
               <Heart className="w-5 h-5 text-medical-purple-600" />
             </div>
-            <span className="text-sm text-steel-600">TAVR Cases</span>
+            <span className="text-sm text-steel-600">Surgical Cases</span>
           </div>
-          <div className="text-2xl font-bold text-steel-900 font-sf">{tavrMetrics.totalCases}</div>
+          <div className="text-2xl font-bold text-steel-900 font-sf">{surgicalValveMetrics.totalCases}</div>
           <div className="text-sm text-steel-600">This Month</div>
           <div className="text-xs text-emerald-600 mt-1">+18.2% from last month</div>
         </div>
@@ -128,10 +128,10 @@ const ValvularServiceLineView: React.FC = () => {
             <div className="p-2 rounded-lg bg-emerald-100">
               <CheckCircle2 className="w-5 h-5 text-emerald-600" />
             </div>
-            <span className="text-sm text-steel-600">Device Success</span>
+            <span className="text-sm text-steel-600">Surgical Success</span>
           </div>
-          <div className="text-2xl font-bold text-steel-900 font-sf">{tavrMetrics.successRate}%</div>
-          <div className="text-sm text-steel-600">TAVR Program</div>
+          <div className="text-2xl font-bold text-steel-900 font-sf">{surgicalValveMetrics.successRate}%</div>
+          <div className="text-sm text-steel-600">Valve Surgery</div>
           <div className="text-xs text-emerald-600 mt-1">Above benchmark</div>
         </div>
 
@@ -142,8 +142,8 @@ const ValvularServiceLineView: React.FC = () => {
             </div>
             <span className="text-sm text-steel-600">Avg Procedure</span>
           </div>
-          <div className="text-2xl font-bold text-steel-900 font-sf">{tavrMetrics.avgProcedureTime}min</div>
-          <div className="text-sm text-steel-600">TAVR Duration</div>
+          <div className="text-2xl font-bold text-steel-900 font-sf">{surgicalValveMetrics.avgProcedureTime}min</div>
+          <div className="text-sm text-steel-600">Surgery Duration</div>
           <div className="text-xs text-emerald-600 mt-1">8min improvement</div>
         </div>
 
@@ -154,7 +154,7 @@ const ValvularServiceLineView: React.FC = () => {
             </div>
             <span className="text-sm text-steel-600">Length of Stay</span>
           </div>
-          <div className="text-2xl font-bold text-steel-900 font-sf">{tavrMetrics.avgLengthOfStay}</div>
+          <div className="text-2xl font-bold text-steel-900 font-sf">{surgicalValveMetrics.avgLengthOfStay}</div>
           <div className="text-sm text-steel-600">Days (avg)</div>
           <div className="text-xs text-emerald-600 mt-1">Below target</div>
         </div>
@@ -164,7 +164,7 @@ const ValvularServiceLineView: React.FC = () => {
         {/* TAVR vs Surgical Comparison */}
         <div className="col-span-2 bg-white rounded-xl border border-steel-200 p-6 shadow-retina-2">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-steel-900 font-sf">TAVR vs Surgical AVR Quality Metrics</h3>
+            <h3 className="text-lg font-semibold text-steel-900 font-sf">Aortic vs Mitral Surgery Quality Metrics</h3>
             <BarChart3 className="w-5 h-5 text-steel-400" />
           </div>
           
@@ -178,17 +178,17 @@ const ValvularServiceLineView: React.FC = () => {
                 
                 <div className="grid grid-cols-3 gap-4">
                   <div className="text-center p-3 rounded-lg bg-medical-purple-50 border border-medical-purple-200">
-                    <div className="text-lg font-semibold text-medical-purple-700">{metric.tavr}{metric.unit}</div>
-                    <div className="text-xs text-medical-purple-600">TAVR</div>
+                    <div className="text-lg font-semibold text-medical-purple-700">{metric.aortic}{metric.unit}</div>
+                    <div className="text-xs text-medical-purple-600">Aortic</div>
                   </div>
                   
                   <div className="text-center p-3 rounded-lg bg-medical-blue-50 border border-medical-blue-200">
-                    <div className="text-lg font-semibold text-medical-blue-700">{metric.surgical}{metric.unit}</div>
-                    <div className="text-xs text-medical-blue-600">Surgical</div>
+                    <div className="text-lg font-semibold text-medical-blue-700">{metric.mitral}{metric.unit}</div>
+                    <div className="text-xs text-medical-blue-600">Mitral</div>
                   </div>
                   
                   <div className="flex items-center justify-center">
-                    {metric.tavr < metric.benchmark && metric.surgical < metric.benchmark ? (
+                    {metric.aortic < metric.benchmark && metric.mitral < metric.benchmark ? (
                       <CheckCircle2 className="w-5 h-5 text-emerald-500" />
                     ) : (
                       <AlertCircle className="w-5 h-5 text-orange-500" />
@@ -238,7 +238,7 @@ const ValvularServiceLineView: React.FC = () => {
         {/* Valve Device Performance */}
         <div className="bg-white rounded-xl border border-steel-200 p-6 shadow-retina-2">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-steel-900 font-sf">TAVR Device Performance</h3>
+            <h3 className="text-lg font-semibold text-steel-900 font-sf">Surgical Valve Performance</h3>
             <Shield className="w-5 h-5 text-steel-400" />
           </div>
           
@@ -269,12 +269,12 @@ const ValvularServiceLineView: React.FC = () => {
         {/* Operator Performance */}
         <div className="bg-white rounded-xl border border-steel-200 p-6 shadow-retina-2">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-steel-900 font-sf">Operator Performance</h3>
+            <h3 className="text-lg font-semibold text-steel-900 font-sf">Surgeon Performance</h3>
             <Users className="w-5 h-5 text-steel-400" />
           </div>
           
           <div className="space-y-3">
-            {operatorPerformance.map((operator, index) => (
+            {surgeonPerformance.map((operator, index) => (
               <div key={index} className="p-4 rounded-lg border border-steel-100 hover:bg-steel-50 transition-colors">
                 <div className="flex items-center justify-between mb-2">
                   <div>
@@ -312,49 +312,49 @@ const ValvularServiceLineView: React.FC = () => {
         </div>
       </div>
 
-      {/* MitraClip Program Performance */}
+      {/* Mitral Surgery Program Performance */}
       <div className="bg-white rounded-xl border border-steel-200 p-6 shadow-retina-2">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-steel-900 font-sf">MitraClip Program Performance</h3>
+          <h3 className="text-lg font-semibold text-steel-900 font-sf">Mitral Surgery Program Performance</h3>
           <Activity className="w-5 h-5 text-steel-400" />
         </div>
         
         <div className="grid grid-cols-4 gap-6">
           <div className="text-center p-4 rounded-lg bg-emerald-50 border border-emerald-200">
-            <div className="text-2xl font-bold text-emerald-600 font-sf">{mitraClipMetrics.totalCases}</div>
+            <div className="text-2xl font-bold text-emerald-600 font-sf">{mitralSurgeryMetrics.totalCases}</div>
             <div className="text-sm text-emerald-700 font-medium">Total Cases</div>
             <div className="text-xs text-emerald-600 mt-1">This Quarter</div>
           </div>
           
           <div className="text-center p-4 rounded-lg bg-medical-blue-50 border border-medical-blue-200">
-            <div className="text-2xl font-bold text-medical-blue-600 font-sf">{mitraClipMetrics.technicalSuccess}%</div>
-            <div className="text-sm text-medical-blue-700 font-medium">Technical Success</div>
-            <div className="text-xs text-medical-blue-600 mt-1">Device Deployment</div>
+            <div className="text-2xl font-bold text-medical-blue-600 font-sf">{mitralSurgeryMetrics.repairSuccess}%</div>
+            <div className="text-sm text-medical-blue-700 font-medium">Repair Success</div>
+            <div className="text-xs text-medical-blue-600 mt-1">Surgical Repair</div>
           </div>
           
           <div className="text-center p-4 rounded-lg bg-medical-purple-50 border border-medical-purple-200">
-            <div className="text-2xl font-bold text-medical-purple-600 font-sf">{mitraClipMetrics.clinicalSuccess}%</div>
+            <div className="text-2xl font-bold text-medical-purple-600 font-sf">{mitralSurgeryMetrics.clinicalSuccess}%</div>
             <div className="text-sm text-medical-purple-700 font-medium">Clinical Success</div>
             <div className="text-xs text-medical-purple-600 mt-1">30-Day Outcomes</div>
           </div>
           
           <div className="text-center p-4 rounded-lg bg-medical-amber-50 border border-medical-amber-200">
-            <div className="text-2xl font-bold text-medical-amber-600 font-sf">{mitraClipMetrics.mrReduction}%</div>
+            <div className="text-2xl font-bold text-medical-amber-600 font-sf">{mitralSurgeryMetrics.regurgitationReduction}%</div>
             <div className="text-sm text-medical-amber-700 font-medium">MR Reduction</div>
             <div className="text-xs text-medical-amber-600 mt-1">≤ Moderate MR</div>
           </div>
         </div>
       </div>
 
-      {/* Heart Team Decision Analytics */}
+      {/* Surgical Team Decision Analytics */}
       <div className="bg-white rounded-xl border border-steel-200 p-6 shadow-retina-2">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-steel-900 font-sf">Heart Team Decision Patterns</h3>
+          <h3 className="text-lg font-semibold text-steel-900 font-sf">Surgical Team Decision Patterns</h3>
           <Stethoscope className="w-5 h-5 text-steel-400" />
         </div>
         
         <div className="space-y-4">
-          {heartTeamDecisions.map((decision, index) => (
+          {surgicalDecisions.map((decision, index) => (
             <div key={index} className="p-4 rounded-lg border border-steel-100">
               <div className="flex items-center justify-between mb-3">
                 <div className="font-medium text-steel-900">{decision.indication}</div>
@@ -362,10 +362,22 @@ const ValvularServiceLineView: React.FC = () => {
               </div>
               
               <div className="grid grid-cols-3 gap-4 mb-2">
-                {decision.tavr && (
+                {decision.mechanical && (
                   <div className="text-center p-2 rounded bg-medical-purple-50">
-                    <div className="text-lg font-semibold text-medical-purple-700">{decision.tavr}</div>
-                    <div className="text-xs text-medical-purple-600">TAVR</div>
+                    <div className="text-lg font-semibold text-medical-purple-700">{decision.mechanical}</div>
+                    <div className="text-xs text-medical-purple-600">Mechanical</div>
+                  </div>
+                )}
+                {decision.bioprosthetic && (
+                  <div className="text-center p-2 rounded bg-medical-blue-50">
+                    <div className="text-lg font-semibold text-medical-blue-700">{decision.bioprosthetic}</div>
+                    <div className="text-xs text-medical-blue-600">Bioprosthetic</div>
+                  </div>
+                )}
+                {decision.ross && (
+                  <div className="text-center p-2 rounded bg-emerald-50">
+                    <div className="text-lg font-semibold text-emerald-700">{decision.ross}</div>
+                    <div className="text-xs text-emerald-600">Ross</div>
                   </div>
                 )}
                 {decision.surgical && (
@@ -374,16 +386,22 @@ const ValvularServiceLineView: React.FC = () => {
                     <div className="text-xs text-medical-blue-600">Surgical</div>
                   </div>
                 )}
-                {decision.mitraClip && (
+                {decision.repair && (
                   <div className="text-center p-2 rounded bg-emerald-50">
-                    <div className="text-lg font-semibold text-emerald-700">{decision.mitraClip}</div>
-                    <div className="text-xs text-emerald-600">MitraClip</div>
+                    <div className="text-lg font-semibold text-emerald-700">{decision.repair}</div>
+                    <div className="text-xs text-emerald-600">Repair</div>
                   </div>
                 )}
-                {decision.transcatheter && (
+                {decision.replacement && (
                   <div className="text-center p-2 rounded bg-medical-amber-50">
-                    <div className="text-lg font-semibold text-medical-amber-700">{decision.transcatheter}</div>
-                    <div className="text-xs text-medical-amber-600">Transcatheter</div>
+                    <div className="text-lg font-semibold text-medical-amber-700">{decision.replacement}</div>
+                    <div className="text-xs text-medical-amber-600">Replacement</div>
+                  </div>
+                )}
+                {decision.conventional && (
+                  <div className="text-center p-2 rounded bg-medical-blue-50">
+                    <div className="text-lg font-semibold text-medical-blue-700">{decision.conventional}</div>
+                    <div className="text-xs text-medical-blue-600">Conventional</div>
                   </div>
                 )}
               </div>

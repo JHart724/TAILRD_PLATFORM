@@ -40,6 +40,47 @@
     @apply shadow-medical-hover -translate-y-1 scale-[1.02];
   }
   
+  /* Subtle Clinical Icon Enhancement */
+  .icon-float {
+    animation: subtleFloat 6s ease-in-out infinite;
+  }
+  
+  .icon-float:nth-child(odd) {
+    animation-delay: -3s;
+  }
+  
+  @keyframes subtleFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-2px); }
+  }
+  
+  /* Professional Skeleton Loading */
+  .clinical-skeleton {
+    background: linear-gradient(90deg, 
+      rgba(100, 116, 139, 0.06) 0%, 
+      rgba(100, 116, 139, 0.12) 50%, 
+      rgba(100, 116, 139, 0.06) 100%);
+    background-size: 200% 100%;
+    animation: clinicalShimmer 1.8s ease-in-out infinite;
+    border-radius: 6px;
+  }
+  
+  @keyframes clinicalShimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  
+  /* Subtle Data Focus Effect */
+  .data-focus {
+    transition: all 0.2s ease-out;
+  }
+  
+  .data-focus:hover {
+    background: rgba(59, 130, 246, 0.04);
+    border-color: rgba(59, 130, 246, 0.2);
+    transform: translateX(2px);
+  }
+  
   /* Medical Button Components */
   .btn-medical-primary {
     @apply bg-medical-blue-500 hover:bg-medical-blue-600 text-white font-medium px-6 py-3 rounded-xl shadow-interactive hover:shadow-interactive-hover transition-all duration-200 ease-medical;

@@ -84,7 +84,7 @@ const ReferralTracker: React.FC = () => {
       pending: <Clock className="w-4 h-4 text-amber-700" />,
       scheduled: <CheckCircle className="w-4 h-4 text-indigo-700" />,
       completed: <CheckCircle className="w-4 h-4 text-teal-700" />,
-      cancelled: <XCircle className="w-4 h-4 text-slate-500" />,
+      cancelled: <XCircle className="w-4 h-4 text-steel-500" />,
       overdue: <AlertTriangle className="w-4 h-4 text-red-700" />
     };
     return icons[status as keyof typeof icons];
@@ -95,7 +95,7 @@ const ReferralTracker: React.FC = () => {
       pending: 'bg-amber-100 text-amber-900 border-amber-400',
       scheduled: 'bg-indigo-100 text-indigo-900 border-indigo-400',
       completed: 'bg-teal-100 text-teal-900 border-teal-400',
-      cancelled: 'bg-slate-100 text-slate-700 border-slate-400',
+      cancelled: 'bg-steel-100 text-steel-700 border-steel-400',
       overdue: 'bg-red-100 text-red-900 border-red-400'
     };
     return colors[status as keyof typeof colors];
@@ -110,9 +110,9 @@ const ReferralTracker: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-300">
-      <div className="px-6 py-4 border-b border-slate-300 bg-slate-50">
-        <h3 className="text-lg font-semibold text-slate-900 mb-4">Referral Tracker</h3>
+    <div className="retina-card">
+      <div className="px-6 py-4 border-b border-steel-200 bg-gradient-to-r from-steel-50/80 to-medical-blue-50/40">
+        <h3 className="text-lg font-semibold text-steel-900 mb-4">Referral Tracker</h3>
         
         <div className="grid grid-cols-5 gap-3">
           {[
@@ -127,12 +127,14 @@ const ReferralTracker: React.FC = () => {
               onClick={() => setFilterStatus(key)}
               className={`p-3 rounded-lg border-2 transition-all ${
                 filterStatus === key
-                  ? 'border-slate-700 bg-slate-100'
-                  : 'border-slate-300 bg-white hover:border-slate-400'
+                  ? 'border-medical-blue-600 bg-medical-blue-50'
+                  : 'border-steel-300 bg-white/60 hover:border-medical-blue-300 backdrop-blur'
               }`}
             >
-              <div className="text-2xl font-bold text-slate-900">{count}</div>
-              <div className="text-xs text-slate-700 mt-1 font-medium">{label}</div>
+              <div className="text-2xl font-bold text-steel-900">
+                {count}
+              </div>
+              <div className="text-xs text-steel-700 mt-1 font-medium">{label}</div>
             </button>
           ))}
         </div>
@@ -140,7 +142,7 @@ const ReferralTracker: React.FC = () => {
 
       <div className="divide-y divide-slate-200">
         {filteredReferrals.map((referral) => (
-          <div key={referral.id} className="px-6 py-4 hover:bg-slate-50 transition-colors">
+          <div key={referral.id} className="px-6 py-4 data-focus transition-all duration-200 border-l-2 border-transparent">
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-start gap-3">
                 {getStatusIcon(referral.status)}
@@ -214,12 +216,12 @@ const ReferralTracker: React.FC = () => {
             )}
 
             <div className="flex gap-2">
-              <button className="px-4 py-2 bg-slate-700 text-white text-sm rounded-lg hover:bg-slate-800 transition-colors flex items-center gap-2 font-medium">
+              <button className="px-4 py-2 bg-gradient-to-r from-medical-blue-600 to-medical-blue-700 text-white text-sm rounded-lg hover:from-medical-blue-700 hover:to-medical-blue-800 transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center gap-2 font-medium backdrop-blur border border-white/20">
                 <Send className="w-4 h-4" />
                 Follow Up
               </button>
               {referral.status === 'pending' && (
-                <button className="px-4 py-2 bg-teal-100 text-teal-900 text-sm rounded-lg hover:bg-teal-200 transition-colors font-medium">
+                <button className="px-4 py-2 bg-gradient-to-r from-medical-green-100/80 to-medical-green-200/80 text-medical-green-800 text-sm rounded-lg hover:from-medical-green-200/90 hover:to-medical-green-300/90 transition-all duration-300 transform hover:scale-105 hover:shadow-md font-medium backdrop-blur border border-medical-green-300/40">
                   Mark Scheduled
                 </button>
               )}

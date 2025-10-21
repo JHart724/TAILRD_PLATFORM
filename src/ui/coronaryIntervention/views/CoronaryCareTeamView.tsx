@@ -16,11 +16,50 @@ import {
   Zap,
   UserCheck,
   Stethoscope,
-  Building2
+  Building2,
+  Calculator,
+  Shield
 } from 'lucide-react';
+
+// Import clinical calculators and safety screening
+import GRACEScoreCalculator from '../components/GRACEScoreCalculator';
+import TIMIScoreCalculator from '../components/TIMIScoreCalculator';
+import SYNTAXScoreCalculator from '../components/SYNTAXScoreCalculator';
+import CoronarySafetyScreening from '../components/CoronarySafetyScreening';
 
 const CoronaryCareTeamView: React.FC = () => {
   const [activeTab, setActiveTab] = useState('acute-care');
+  const [selectedCalculator, setSelectedCalculator] = useState<'grace' | 'timi' | 'syntax'>('grace');
+
+  // High-Risk Patient Queue (Surgical candidates requiring multidisciplinary evaluation)
+  const surgicalCandidates = [
+    {
+      id: '1',
+      mrn: 'MRN-CAB001',
+      name: 'David Martinez',
+      age: 72,
+      diagnosis: 'Triple Vessel CAD',
+      syntaxScore: 28,
+      euroscore: 4.2,
+      recommendation: 'CABG preferred',
+      status: 'Heart Team Review',
+      urgency: 'elective',
+      riskFactors: ['DM', 'CKD']
+    },
+    {
+      id: '2',
+      mrn: 'MRN-CAB002',
+      name: 'Patricia Kim',
+      age: 68,
+      diagnosis: 'LAD + Aortic Stenosis',
+      syntaxScore: 32,
+      euroscore: 6.8,
+      recommendation: 'CABG + AVR',
+      status: 'Surgical Consultation',
+      urgency: 'urgent',
+      riskFactors: ['Age >65', 'AS']
+    }
+  ];
 
   // Acute Care Queue
   const acuteCareQueue = [
@@ -109,7 +148,7 @@ const CoronaryCareTeamView: React.FC = () => {
     }
   ];
 
-  // Team Members
+  // Team Members (Combined Interventional + Surgical)
   const teamMembers = [
     {
       name: 'Dr. Rodriguez',
@@ -130,6 +169,24 @@ const CoronaryCareTeamView: React.FC = () => {
       phone: '(555) 0102'
     },
     {
+      name: 'Dr. Mitchell',
+      role: 'Cardiac Surgeon',
+      status: 'Pre-op',
+      location: 'OR 2 Prep',
+      availability: 'Surgery at 7:00 AM',
+      caseLoad: 2,
+      phone: '(555) 0104'
+    },
+    {
+      name: 'Dr. Thompson',
+      role: 'Cardiac Surgeon',
+      status: 'In Surgery',
+      location: 'OR 1',
+      availability: 'Busy until 1:15 PM',
+      caseLoad: 1,
+      phone: '(555) 0105'
+    },
+    {
       name: 'Dr. Park',
       role: 'Interventional Cardiologist',
       status: 'In Procedure',
@@ -148,6 +205,15 @@ const CoronaryCareTeamView: React.FC = () => {
       phone: '(555) 0201'
     },
     {
+      name: 'Jennifer Park, RN',
+      role: 'OR Coordinator',
+      status: 'Available',
+      location: 'OR Central',
+      availability: 'Coordinating surgical cases',
+      caseLoad: 3,
+      phone: '(555) 0202'
+    },
+    {
       name: 'Mike Thompson, RT',
       role: 'Cath Lab Technologist',
       status: 'Available',
@@ -160,9 +226,9 @@ const CoronaryCareTeamView: React.FC = () => {
 
   // Performance Metrics
   const performanceMetrics = [
-    { metric: 'Avg Door-to-Balloon', value: '72 min', target: '< 90 min', status: 'good' },
-    { metric: 'Team Utilization', value: '87%', target: '> 80%', status: 'good' },
-    { metric: 'Case Turnover Time', value: '23 min', target: '< 30 min', status: 'good' },
+    { metric: 'Avg Door-to-Balloon', value: '72 min', target: '< 60 min', status: 'needs_improvement' },
+    { metric: 'PCI Success Rate', value: '97.2%', target: '> 95%', status: 'good' },
+    { metric: '30-Day Readmission', value: '4.2%', target: '< 5%', status: 'good' },
     { metric: 'Patient Satisfaction', value: '4.7/5', target: '> 4.5', status: 'good' }
   ];
 
@@ -207,6 +273,8 @@ const CoronaryCareTeamView: React.FC = () => {
       case 'turnover': return 'bg-orange-100 text-orange-700 border-orange-200';
       case 'available': return 'bg-emerald-100 text-emerald-700 border-emerald-200';
       case 'In Procedure': return 'bg-red-100 text-red-700 border-red-200';
+      case 'In Surgery': return 'bg-red-100 text-red-700 border-red-200';
+      case 'Pre-op': return 'bg-orange-100 text-orange-700 border-orange-200';
       case 'Available': return 'bg-emerald-100 text-emerald-700 border-emerald-200';
       default: return 'bg-steel-100 text-steel-700 border-steel-200';
     }
@@ -214,6 +282,9 @@ const CoronaryCareTeamView: React.FC = () => {
 
   const tabs = [
     { id: 'acute-care', label: 'Acute Care Queue', icon: AlertTriangle },
+    { id: 'surgical-candidates', label: 'Surgical Candidates', icon: Heart },
+    { id: 'clinical-tools', label: 'Clinical Tools', icon: Calculator },
+    { id: 'safety-screening', label: 'Safety Screening', icon: Shield },
     { id: 'cath-labs', label: 'Cath Lab Status', icon: Activity },
     { id: 'team', label: 'Team Coordination', icon: Users },
     { id: 'performance', label: 'Performance Metrics', icon: TrendingUp }
@@ -301,6 +372,105 @@ const CoronaryCareTeamView: React.FC = () => {
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {activeTab === 'surgical-candidates' && (
+        <div className="space-y-6">
+          {/* Queue Header */}
+          <div className="bg-white rounded-xl border border-steel-200 p-6 shadow-retina-2">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-steel-900 font-sf">Surgical Candidates - Heart Team Review</h3>
+              <div className="flex items-center gap-4">
+                <div className="text-sm text-steel-600">
+                  Pending Review: <span className="font-semibold text-steel-900">{surgicalCandidates.length}</span>
+                </div>
+                <button className="px-4 py-2 bg-medical-amber-500 text-white rounded-lg hover:bg-medical-amber-600 transition-colors">
+                  Schedule Heart Team
+                </button>
+              </div>
+            </div>
+            
+            {/* Surgical Candidates */}
+            <div className="space-y-3">
+              {surgicalCandidates.map((patient) => (
+                <div key={patient.id} className="p-4 rounded-lg border border-steel-200 hover:shadow-retina-2 transition-shadow">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor('', patient.urgency)}`}>
+                        {patient.urgency.toUpperCase()}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-steel-900">{patient.name}</div>
+                        <div className="text-sm text-steel-600">{patient.mrn} • Age {patient.age}</div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-6">
+                      <div className="text-center">
+                        <div className="text-sm font-medium text-steel-900">{patient.diagnosis}</div>
+                        <div className="text-xs text-steel-600">SYNTAX: {patient.syntaxScore} • EuroSCORE: {patient.euroscore}%</div>
+                      </div>
+                      
+                      <div className="text-center">
+                        <div className="text-sm font-medium text-steel-900">{patient.recommendation}</div>
+                        <div className="text-xs text-steel-600">Risk Factors: {patient.riskFactors.join(', ')}</div>
+                      </div>
+                      
+                      <div className="text-center">
+                        <div className="text-sm font-medium text-steel-900">{patient.status}</div>
+                        <div className="text-xs text-steel-600">Multidisciplinary Review</div>
+                      </div>
+                      
+                      <button className="p-2 text-medical-amber-600 hover:bg-medical-amber-50 rounded-lg transition-colors">
+                        <FileText className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'clinical-tools' && (
+        <div className="space-y-6">
+          {/* Calculator Selection */}
+          <div className="bg-white rounded-xl border border-steel-200 p-6 shadow-retina-2">
+            <h3 className="text-lg font-semibold text-steel-900 font-sf mb-4">Clinical Risk Calculators</h3>
+            <div className="flex space-x-2 mb-6">
+              {[
+                { id: 'grace' as const, label: 'GRACE Score', description: 'ACS Risk Assessment' },
+                { id: 'timi' as const, label: 'TIMI Score', description: 'UA/NSTEMI Risk' },
+                { id: 'syntax' as const, label: 'SYNTAX Score', description: 'Lesion Complexity' }
+              ].map((calc) => (
+                <button
+                  key={calc.id}
+                  onClick={() => setSelectedCalculator(calc.id)}
+                  className={`px-4 py-3 rounded-lg border-2 transition-all flex-1 text-left ${
+                    selectedCalculator === calc.id
+                      ? 'border-medical-amber-400 bg-medical-amber-50 text-medical-amber-800'
+                      : 'border-steel-200 hover:border-steel-300 text-steel-700'
+                  }`}
+                >
+                  <div className="font-semibold">{calc.label}</div>
+                  <div className="text-sm opacity-80">{calc.description}</div>
+                </button>
+              ))}
+            </div>
+            
+            {/* Selected Calculator */}
+            {selectedCalculator === 'grace' && <GRACEScoreCalculator />}
+            {selectedCalculator === 'timi' && <TIMIScoreCalculator />}
+            {selectedCalculator === 'syntax' && <SYNTAXScoreCalculator />}
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'safety-screening' && (
+        <div className="space-y-6">
+          <CoronarySafetyScreening />
         </div>
       )}
 

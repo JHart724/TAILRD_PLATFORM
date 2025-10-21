@@ -17,8 +17,8 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
         name: 'ARNi/ACEi/ARB', 
         status: 'optimal', 
         medication: 'Sacubitril/valsartan', 
-        dose: '24/26mg BID', 
-        targetDose: '24/26mg BID',
+        dose: '97/103mg BID', 
+        targetDose: '97/103mg BID',
         icon: CheckCircle 
       },
       { 
@@ -27,7 +27,7 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
         medication: 'Carvedilol', 
         dose: '12.5mg BID', 
         targetDose: '25mg BID',
-        recommendation: 'Titrate to 25mg BID',
+        recommendation: 'Titrate to target dose',
         icon: AlertCircle 
       },
       { 
@@ -43,8 +43,8 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
         status: 'missing', 
         medication: null, 
         dose: null, 
-        targetDose: 'Spironolactone 25mg daily',
-        recommendation: 'Start spironolactone 25mg daily',
+        targetDose: 'Spironolactone 25-50mg daily',
+        recommendation: 'Start spironolactone 25mg daily, check K+ and Cr',
         icon: XCircle 
       }
     ]

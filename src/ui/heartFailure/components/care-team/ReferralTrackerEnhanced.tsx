@@ -291,7 +291,7 @@ const ReferralTrackerEnhanced: React.FC = () => {
             key={referral.id}
             className={`retina-card border-l-4 transition-all duration-300 hover:shadow-retina-3 cursor-pointer ${
               referral.status === 'overdue' ? 'border-l-medical-red-400' :
-              referral.status === 'urgent' ? 'border-l-medical-amber-400' :
+              referral.priority === 'urgent' ? 'border-l-medical-amber-400' :
               'border-l-medical-blue-400'
             }`}
             onClick={() => setSelectedReferral(selectedReferral?.id === referral.id ? null : referral)}

@@ -21,16 +21,16 @@ const ValvularExecutiveView: React.FC = () => {
   const executiveKPIs = [
     {
       title: 'Total Valve Procedures',
-      value: '2,847',
-      change: '+14.8%',
+      value: '1,414',
+      change: '+11.2%',
       trend: 'up',
       icon: Heart,
       color: 'medical-purple'
     },
     {
       title: 'Program Revenue',
-      value: '$18.2M',
-      change: '+22.3%',
+      value: '$10.8M',
+      change: '+15.8%',
       trend: 'up',
       icon: DollarSign,
       color: 'emerald'
@@ -56,14 +56,6 @@ const ValvularExecutiveView: React.FC = () => {
   // Procedure Volume by Type
   const procedureVolumes = [
     { 
-      procedure: 'TAVR (Transcatheter Aortic Valve Replacement)', 
-      volume: 1247, 
-      revenue: '$9.8M', 
-      growth: '+18.5%',
-      margin: 34.2,
-      riskScore: 1.8 
-    },
-    { 
       procedure: 'Surgical Aortic Valve Replacement', 
       volume: 523, 
       revenue: '$4.2M', 
@@ -80,37 +72,45 @@ const ValvularExecutiveView: React.FC = () => {
       riskScore: 3.2 
     },
     { 
-      procedure: 'MitraClip (Transcatheter Mitral Repair)', 
-      volume: 342, 
-      revenue: '$1.8M', 
-      growth: '+28.7%',
-      margin: 38.9,
-      riskScore: 2.1 
-    },
-    { 
-      procedure: 'Tricuspid Valve Procedures', 
+      procedure: 'Ross Procedure (Autograft)', 
       volume: 186, 
-      revenue: '$0.8M', 
+      revenue: '$1.8M', 
       growth: '+15.2%',
       margin: 29.3,
+      riskScore: 2.5 
+    },
+    { 
+      procedure: 'Tricuspid Valve Surgery', 
+      volume: 131, 
+      revenue: '$0.8M', 
+      growth: '+6.4%',
+      margin: 26.8,
       riskScore: 4.1 
     },
     { 
       procedure: 'Pulmonary Valve Replacement', 
-      volume: 131, 
+      volume: 89, 
       revenue: '$0.5M', 
-      growth: '+6.4%',
-      margin: 26.8,
-      riskScore: 2.5 
+      growth: '+4.2%',
+      margin: 24.8,
+      riskScore: 3.1 
+    },
+    { 
+      procedure: 'Complex Valve Surgery', 
+      volume: 67, 
+      revenue: '$0.6M', 
+      growth: '+8.7%',
+      margin: 22.4,
+      riskScore: 5.2 
     }
   ];
 
   // Risk Stratification Distribution
   const riskDistribution = [
-    { risk: 'Low Risk (STS <4%)', patients: 1847, percentage: 64.8, color: 'bg-emerald-500' },
-    { risk: 'Intermediate Risk (STS 4-8%)', patients: 687, percentage: 24.1, color: 'bg-medical-amber-500' },
-    { risk: 'High Risk (STS 8-15%)', patients: 234, percentage: 8.2, color: 'bg-orange-500' },
-    { risk: 'Prohibitive Risk (STS >15%)', patients: 79, percentage: 2.8, color: 'bg-red-500' }
+    { risk: 'Low Risk (STS <4%)', patients: 892, percentage: 63.1, color: 'bg-emerald-500' },
+    { risk: 'Intermediate Risk (STS 4-8%)', patients: 341, percentage: 24.1, color: 'bg-medical-amber-500' },
+    { risk: 'High Risk (STS 8-15%)', patients: 134, percentage: 9.5, color: 'bg-orange-500' },
+    { risk: 'Prohibitive Risk (STS >15%)', patients: 47, percentage: 3.3, color: 'bg-red-500' }
   ];
 
   // Quality Outcomes
@@ -125,22 +125,22 @@ const ValvularExecutiveView: React.FC = () => {
 
   // Financial Performance
   const financialMetrics = [
-    { category: 'TAVR Program', revenue: 9800000, margin: 34.2, volume: 1247 },
     { category: 'Surgical AVR', revenue: 4200000, margin: 28.7, volume: 523 },
     { category: 'Mitral Program', revenue: 2900000, margin: 31.5, volume: 418 },
-    { category: 'MitraClip', revenue: 1800000, margin: 38.9, volume: 342 },
-    { category: 'Tricuspid', revenue: 800000, margin: 29.3, volume: 186 },
-    { category: 'Pulmonary', revenue: 500000, margin: 26.8, volume: 131 }
+    { category: 'Ross Procedure', revenue: 1800000, margin: 29.3, volume: 186 },
+    { category: 'Tricuspid Surgery', revenue: 800000, margin: 26.8, volume: 131 },
+    { category: 'Pulmonary', revenue: 500000, margin: 24.8, volume: 89 },
+    { category: 'Complex Valve', revenue: 600000, margin: 22.4, volume: 67 }
   ];
 
   // Program Growth Trends
   const growthTrends = [
-    { month: 'Jan', tavr: 95, surgical: 42, mitral: 31, mitraclip: 23 },
-    { month: 'Feb', tavr: 108, surgical: 38, mitral: 35, mitraclip: 28 },
-    { month: 'Mar', tavr: 112, surgical: 45, mitral: 33, mitraclip: 31 },
-    { month: 'Apr', tavr: 119, surgical: 41, mitral: 38, mitraclip: 29 },
-    { month: 'May', tavr: 125, surgical: 47, mitral: 36, mitraclip: 34 },
-    { month: 'Jun', tavr: 131, surgical: 44, mitral: 39, mitraclip: 32 }
+    { month: 'Jan', aortic: 42, mitral: 31, ross: 12, tricuspid: 8 },
+    { month: 'Feb', aortic: 38, mitral: 35, ross: 15, tricuspid: 11 },
+    { month: 'Mar', aortic: 45, mitral: 33, ross: 14, tricuspid: 9 },
+    { month: 'Apr', aortic: 41, mitral: 38, ross: 16, tricuspid: 12 },
+    { month: 'May', aortic: 47, mitral: 36, ross: 18, tricuspid: 10 },
+    { month: 'Jun', aortic: 44, mitral: 39, ross: 17, tricuspid: 13 }
   ];
 
   return (
@@ -211,7 +211,7 @@ const ValvularExecutiveView: React.FC = () => {
                   <div className="w-full bg-steel-100 rounded-full h-2 mt-4">
                     <div 
                       className="h-2 rounded-full bg-medical-purple-500"
-                      style={{ width: `${(procedure.volume / 1247) * 100}%` }}
+                      style={{ width: `${(procedure.volume / 523) * 100}%` }}
                     />
                   </div>
                 </div>
@@ -296,9 +296,9 @@ const ValvularExecutiveView: React.FC = () => {
           
           <div className="mt-6 p-4 bg-emerald-50 rounded-lg border border-emerald-200">
             <div className="text-center">
-              <div className="text-2xl font-bold text-emerald-700 font-sf">$19.0M</div>
+              <div className="text-2xl font-bold text-emerald-700 font-sf">$10.8M</div>
               <div className="text-sm text-emerald-600">Total Program Revenue</div>
-              <div className="text-xs text-emerald-600 mt-1">32.1% Average Margin</div>
+              <div className="text-xs text-emerald-600 mt-1">27.2% Average Margin</div>
             </div>
           </div>
         </div>
@@ -317,16 +317,16 @@ const ValvularExecutiveView: React.FC = () => {
               <div className="text-sm font-medium text-steel-900 mb-3">{trend.month}</div>
               <div className="space-y-2">
                 <div className="text-xs text-steel-600">
-                  TAVR: <span className="font-semibold text-medical-purple-600">{trend.tavr}</span>
+                  Aortic: <span className="font-semibold text-medical-purple-600">{trend.aortic}</span>
                 </div>
                 <div className="text-xs text-steel-600">
-                  Surgical: <span className="font-semibold text-medical-blue-600">{trend.surgical}</span>
+                  Mitral: <span className="font-semibold text-medical-blue-600">{trend.mitral}</span>
                 </div>
                 <div className="text-xs text-steel-600">
-                  Mitral: <span className="font-semibold text-medical-amber-600">{trend.mitral}</span>
+                  Ross: <span className="font-semibold text-medical-amber-600">{trend.ross}</span>
                 </div>
                 <div className="text-xs text-steel-600">
-                  MitraClip: <span className="font-semibold text-emerald-600">{trend.mitraclip}</span>
+                  Tricuspid: <span className="font-semibold text-emerald-600">{trend.tricuspid}</span>
                 </div>
               </div>
             </div>

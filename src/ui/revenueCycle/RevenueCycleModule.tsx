@@ -1,39 +1,41 @@
 import React, { useState } from 'react';
+import { DollarSign, Users, BarChart3, AlertTriangle, TrendingUp, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { BarChart3, Users, Heart } from 'lucide-react';
-import ExecutiveView from './views/ExecutiveView';
-import ServiceLineView from './views/ServiceLineView';
-import CareTeamView from './views/CareTeamView';
 
-type HFViewType = 'executive' | 'service-line' | 'care-team';
+// Import Revenue Cycle views
+import RCExecutiveView from './views/RCExecutiveView';
+import RCOperationsView from './views/RCOperationsView';
+import RCCDIView from './views/RCCDIView';
 
-const HFModule: React.FC = () => {
+type RCViewType = 'executive' | 'operations' | 'cdi';
+
+const RevenueCycleModule: React.FC = () => {
   const navigate = useNavigate();
-  const [activeView, setActiveView] = useState<HFViewType>('executive');
+  const [activeView, setActiveView] = useState<RCViewType>('executive');
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const views = [
     {
-      id: 'executive' as HFViewType,
+      id: 'executive' as RCViewType,
       label: 'Executive Dashboard',
       icon: BarChart3,
-      description: 'Financial metrics and strategic insights',
+      description: 'Financial performance and DRG optimization',
     },
     {
-      id: 'service-line' as HFViewType,
-      label: 'Service Line Analytics',
-      icon: Heart,
-      description: 'GDMT optimization and quality metrics',
+      id: 'operations' as RCViewType,
+      label: 'Operations Analytics',
+      icon: TrendingUp,
+      description: 'Claims processing and denial management',
     },
     {
-      id: 'care-team' as HFViewType,
-      label: 'Care Team Operations',
-      icon: Users,
-      description: 'Patient flow and care coordination',
+      id: 'cdi' as RCViewType,
+      label: 'CDI Intelligence',
+      icon: FileText,
+      description: 'Clinical documentation improvement opportunities',
     },
   ];
 
-  const handleViewChange = async (viewId: HFViewType) => {
+  const handleViewChange = async (viewId: RCViewType) => {
     if (viewId === activeView) return;
     setIsLoading(true);
     // Add delay to show loading animation for view processing
@@ -45,13 +47,13 @@ const HFModule: React.FC = () => {
   const renderActiveView = () => {
     switch (activeView) {
       case 'executive':
-        return <ExecutiveView />;
-      case 'service-line':
-        return <ServiceLineView />;
-      case 'care-team':
-        return <CareTeamView />;
+        return <RCExecutiveView />;
+      case 'operations':
+        return <RCOperationsView />;
+      case 'cdi':
+        return <RCCDIView />;
       default:
-        return <ExecutiveView />;
+        return <RCExecutiveView />;
     }
   };
 
@@ -59,48 +61,54 @@ const HFModule: React.FC = () => {
     <div className="min-h-screen bg-gradient-medical-liquid relative">
       {/* Loading Overlay */}
       {isLoading && (
-        <div className="fixed inset-0 bg-gradient-medical-liquid z-[100] flex items-center justify-center">
+        <div className="fixed inset-0 bg-gradient-medical-liquid z-50 flex items-center justify-center">
           <div className="text-center">
             {/* Loading animation */}
             <div className="mb-8">
               <div className="relative w-16 h-16 mx-auto">
-                <div className="absolute inset-0 border-4 border-medical-blue-200 rounded-full"></div>
-                <div className="absolute inset-0 border-4 border-medical-blue-600 rounded-full border-t-transparent animate-spin"></div>
+                <div className="absolute inset-0 border-4 border-medical-green-200 rounded-full"></div>
+                <div className="absolute inset-0 border-4 border-medical-green-600 rounded-full border-t-transparent animate-spin"></div>
               </div>
             </div>
             
             {/* Brand */}
             <h1 className="text-3xl font-light mb-2">
               <span className="text-slate-700 font-extralight tracking-wide">TAILRD</span>
-              <span className="text-medical-blue-400 mx-2 font-thin">•</span>
-              <span className="bg-gradient-to-r from-medical-blue-600 to-medical-blue-700 bg-clip-text text-transparent font-medium">Heart</span>
+              <span className="text-medical-green-400 mx-2 font-thin">•</span>
+              <span className="bg-gradient-to-r from-medical-green-600 to-medical-green-700 bg-clip-text text-transparent font-medium">Heart</span>
             </h1>
             
             {/* Loading message */}
-            <p className="text-lg text-slate-600 font-light mb-4">Processing Heart Failure Analytics...</p>
+            <p className="text-lg text-slate-600 font-light mb-4">Processing Revenue Cycle Analytics...</p>
             
             {/* Animated dots */}
             <div className="flex justify-center space-x-1">
-              <div className="w-2 h-2 bg-medical-blue-400 rounded-full animate-pulse" style={{animationDelay: '0ms'}}></div>
-              <div className="w-2 h-2 bg-medical-blue-500 rounded-full animate-pulse" style={{animationDelay: '150ms'}}></div>
-              <div className="w-2 h-2 bg-medical-blue-600 rounded-full animate-pulse" style={{animationDelay: '300ms'}}></div>
+              <div className="w-2 h-2 bg-medical-green-400 rounded-full animate-pulse" style={{animationDelay: '0ms'}}></div>
+              <div className="w-2 h-2 bg-medical-green-500 rounded-full animate-pulse" style={{animationDelay: '150ms'}}></div>
+              <div className="w-2 h-2 bg-medical-green-600 rounded-full animate-pulse" style={{animationDelay: '300ms'}}></div>
             </div>
             
             {/* Subtitle */}
             <p className="text-sm text-slate-500 mt-6">
-              GDMT Optimization • Quality Metrics • Patient Flow
+              DRG Optimization • Claims Analytics • CDI Intelligence
             </p>
           </div>
         </div>
       )}
       
       {/* Module Header */}
-      <div className="bg-white border-b border-steel-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          {/* Header Layout */}
-          <div className="flex items-start justify-between">
-            <div className="space-y-4">
-              {/* TAILRD Brand */}
+      <div className="bg-white border-b border-steel-200 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="p-3 rounded-xl bg-medical-green-100 hover:bg-medical-green-200 transition-colors cursor-pointer"
+                title="Return to Dashboard"
+              >
+                <DollarSign className="w-8 h-8 text-medical-green-600" />
+              </button>
+              <div className="text-xs text-steel-500 mt-1 text-center">← Dashboard</div>
               <div>
                 <button
                   onClick={() => navigate('/dashboard')}
@@ -108,29 +116,18 @@ const HFModule: React.FC = () => {
                 >
                   TAILRD | Heart
                 </button>
-                <div className="text-xs text-steel-500 hover:text-steel-700 cursor-pointer mt-1" onClick={() => navigate('/dashboard')}>
-                  ← Dashboard
-                </div>
-              </div>
-              
-              {/* Module Branding */}
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-medical-blue-100">
-                  <Heart className="w-8 h-8 text-medical-blue-600" />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold text-blue-950 mb-1">Heart Failure</h1>
-                  <p className="text-steel-600 text-sm">
-                    Population screening to individual GDMT optimization across PCP-Cardiology continuum
-                  </p>
+                <p className="text-steel-600">
+                  Revenue Cycle Intelligence - UB04 analytics to DRG optimization across claims lifecycle
+                </p>
+                <div className="mt-2 flex items-center gap-4 text-xs text-steel-500">
+                  <span className="bg-blue-50 px-2 py-1 rounded-full border border-blue-200">DRG • ICD-10 • CPT Analytics</span>
+                  <span className="bg-emerald-50 px-2 py-1 rounded-full border border-emerald-200">Claims • CDI • Denial Management</span>
                 </div>
               </div>
             </div>
-            
-            {/* Patient Count */}
             <div className="text-right">
-              <div className="text-sm text-steel-600">Active Patients</div>
-              <div className="text-2xl font-bold text-medical-blue-600 font-sf">1,247</div>
+              <div className="text-sm text-steel-600">Total Claims Value</div>
+              <div className="text-2xl font-bold text-medical-green-600 font-sf">$24.8M</div>
             </div>
           </div>
         </div>
@@ -147,14 +144,14 @@ const HFModule: React.FC = () => {
                 key={view.id}
                 onClick={() => handleViewChange(view.id)}
                 className={`relative transition-all duration-300 ${
-                  isActive ? 'z-30' : 'z-20'
+                  isActive ? 'z-10' : 'z-0'
                 }`}
                 style={{ marginLeft: index > 0 ? '-8px' : '0' }}
               >
                 {/* Folder Tab Shape */}
                 <div className={`relative px-6 py-4 transition-all duration-300 ${
                   isActive 
-                    ? 'bg-white border-2 border-medical-blue-400 border-b-white shadow-lg' 
+                    ? 'bg-white border-2 border-medical-green-400 border-b-white shadow-lg' 
                     : 'bg-slate-100 border-2 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
                 }`}
                 style={{
@@ -165,20 +162,20 @@ const HFModule: React.FC = () => {
                 }}>
                   <div className="flex items-center gap-3">
                     <div className={`p-2 rounded-lg transition-colors ${
-                      isActive ? 'bg-medical-blue-100' : 'bg-white'
+                      isActive ? 'bg-medical-green-100' : 'bg-white'
                     }`}>
                       <IconComponent className={`w-5 h-5 transition-colors ${
-                        isActive ? 'text-medical-blue-600' : 'text-steel-600'
+                        isActive ? 'text-medical-green-600' : 'text-steel-600'
                       }`} />
                     </div>
                     <div className="text-left">
                       <div className={`font-bold text-base transition-colors ${
-                        isActive ? 'text-medical-blue-900' : 'text-blue-950'
+                        isActive ? 'text-medical-green-900' : 'text-blue-950'
                       }`}>
                         {view.label}
                       </div>
                       <div className={`text-xs mt-1 transition-colors ${
-                        isActive ? 'text-medical-blue-700' : 'text-steel-600'
+                        isActive ? 'text-medical-green-700' : 'text-steel-600'
                       }`}>
                         {view.description}
                       </div>
@@ -188,7 +185,7 @@ const HFModule: React.FC = () => {
                 
                 {/* Active tab highlight bar */}
                 {isActive && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-medical-blue-500 rounded-t-full"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-medical-green-500 rounded-t-full"></div>
                 )}
               </button>
             );
@@ -204,4 +201,4 @@ const HFModule: React.FC = () => {
   );
 };
 
-export default HFModule;
+export default RevenueCycleModule;

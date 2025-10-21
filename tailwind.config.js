@@ -97,6 +97,134 @@ module.exports = {
             700: '#b45309',
             800: '#92400e',
             900: '#78350f'
+          },
+          
+          // Purple for valvular
+          purple: {
+            50: '#faf5ff',
+            100: '#f3e8ff',
+            200: '#e9d5ff',
+            300: '#d8b4fe',
+            400: '#c084fc',
+            500: '#a855f7',  // Primary purple
+            600: '#9333ea',
+            700: '#7c3aed',
+            800: '#6b21a8',
+            900: '#581c87'
+          },
+          
+          // Teal for peripheral vascular
+          teal: {
+            50: '#f0fdfa',
+            100: '#ccfbf1',
+            200: '#99f6e4',
+            300: '#5eead4',
+            400: '#2dd4bf',
+            500: '#14b8a6',  // Primary teal
+            600: '#0d9488',
+            700: '#0f766e',
+            800: '#115e59',
+            900: '#134e4a'
+          }
+        },
+        
+        // Darker, matte variants for module interfaces
+        'matte': {
+          // Darker steel variants
+          steel: {
+            600: '#3a4553',  // Darker than medical-steel-600
+            700: '#2c3440',  // Darker than medical-steel-700  
+            800: '#1f242e',  // Darker than medical-steel-800
+            900: '#161a22'   // Darker than medical-steel-900
+          },
+          
+          // Matte medical colors
+          blue: {
+            600: '#1e3a8a',
+            700: '#1e40af', 
+            800: '#1d4ed8',
+            900: '#172554'
+          },
+          
+          green: {
+            600: '#065f46',
+            700: '#064e3b',
+            800: '#022c22',
+            900: '#14532d'
+          },
+          
+          red: {
+            600: '#991b1b',
+            700: '#7f1d1d',
+            800: '#6b1e1e',
+            900: '#4c1d1d'
+          },
+          
+          amber: {
+            600: '#92400e',
+            700: '#78350f',
+            800: '#5b2c0f',
+            900: '#3c1a0b'
+          }
+        },
+        
+        // Deep color variants for charts and graphs
+        'deep': {
+          // Deep medical colors for data visualization
+          red: {
+            500: '#b91c1c',  // Deeper than medical-red-500
+            600: '#991b1b',  
+            700: '#7f1d1d',
+            800: '#6b1e1e'
+          },
+          
+          blue: {
+            500: '#1d4ed8',  // Deeper than medical-blue-500
+            600: '#1e40af',
+            700: '#1e3a8a',
+            800: '#172554'
+          },
+          
+          green: {
+            500: '#15803d',  // Deeper than medical-green-500
+            600: '#16a34a',
+            700: '#14532d',
+            800: '#0f2a1a'
+          },
+          
+          amber: {
+            500: '#d97706',  // Deeper than medical-amber-500
+            600: '#b45309',
+            700: '#92400e',
+            800: '#78350f'
+          },
+          
+          purple: {
+            500: '#7c3aed',  // Deeper than medical-purple-500
+            600: '#6b21a8',
+            700: '#581c87',
+            800: '#4c1d95'
+          },
+          
+          teal: {
+            500: '#0f766e',  // Deeper than medical-teal-500
+            600: '#0d9488',
+            700: '#115e59',
+            800: '#134e4a'
+          },
+          
+          orange: {
+            500: '#ea580c',  // New deep orange
+            600: '#dc2626',
+            700: '#c2410c',
+            800: '#9a3412'
+          },
+          
+          emerald: {
+            500: '#059669',  // New deep emerald
+            600: '#047857',
+            700: '#065f46',
+            800: '#064e3b'
           }
         },
         

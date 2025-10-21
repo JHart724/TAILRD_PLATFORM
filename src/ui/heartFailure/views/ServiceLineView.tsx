@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Stethoscope, Users, BarChart3, Target } from 'lucide-react';
+import { Stethoscope, Users, BarChart3, Target, Search, Shield } from 'lucide-react';
 
 // Import new Phase 3 components
 import ProviderScorecard from '../components/service-line/ProviderScorecard';
 import GDMTAnalyticsDashboard from '../components/service-line/GDMTAnalyticsDashboard';
 import DevicePathwayFunnel from '../components/service-line/DevicePathwayFunnel';
 import QualityMetricsDashboard from '../components/service-line/QualityMetricsDashboard';
+import HFPhenotypeClassification from '../components/clinical/HFPhenotypeClassification';
+import GDMTContraindicationChecker from '../components/clinical/GDMTContraindicationChecker';
 
-type ServiceLineTab = 'providers' | 'gdmt' | 'devices' | 'quality';
+type ServiceLineTab = 'providers' | 'gdmt' | 'devices' | 'quality' | 'phenotypes' | 'safety';
 
 const ServiceLineView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ServiceLineTab>('providers');
@@ -24,6 +26,18 @@ const ServiceLineView: React.FC = () => {
       label: 'GDMT Analytics',
       icon: Target,
       description: '4-pillar optimization by therapy class',
+    },
+    {
+      id: 'phenotypes' as ServiceLineTab,
+      label: 'Phenotype Classification',
+      icon: Search,
+      description: 'Iron deficiency & sleep apnea assessment',
+    },
+    {
+      id: 'safety' as ServiceLineTab,
+      label: 'Safety Screening',
+      icon: Shield,
+      description: 'GDMT contraindication checker',
     },
     {
       id: 'devices' as ServiceLineTab,
@@ -45,6 +59,10 @@ const ServiceLineView: React.FC = () => {
         return <ProviderScorecard />;
       case 'gdmt':
         return <GDMTAnalyticsDashboard />;
+      case 'phenotypes':
+        return <HFPhenotypeClassification />;
+      case 'safety':
+        return <GDMTContraindicationChecker />;
       case 'devices':
         return <DevicePathwayFunnel />;
       case 'quality':
@@ -77,7 +95,7 @@ const ServiceLineView: React.FC = () => {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-6 gap-4">
           {tabs.map((tab) => {
             const IconComponent = tab.icon;
             return (

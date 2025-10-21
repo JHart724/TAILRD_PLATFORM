@@ -109,15 +109,15 @@ const CoronaryExecutiveView: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     const colors = {
-      optimal: 'border-l-medical-green-400 bg-medical-green-50/50',
-      warning: 'border-l-medical-amber-400 bg-medical-amber-50/50',
-      critical: 'border-l-medical-red-400 bg-medical-red-50/50',
+      optimal: 'border-l-deep-green-600 bg-medical-green-50/50',
+      warning: 'border-l-deep-amber-600 bg-medical-amber-50/50',
+      critical: 'border-l-deep-red-600 bg-medical-red-50/50',
     };
     return colors[status as keyof typeof colors] || colors.optimal;
   };
 
   const getTrendColor = (direction: string) => {
-    return direction === 'up' ? 'text-medical-green-600' : 'text-medical-red-600';
+    return direction === 'up' ? 'text-deep-green-600' : 'text-deep-red-600';
   };
 
   const getComplexityColor = (complexity: string) => {
@@ -175,7 +175,7 @@ const CoronaryExecutiveView: React.FC = () => {
                 <div className={`flex items-center gap-2 text-sm font-semibold ${getTrendColor(metric.trend.direction)}`}>
                   <TrendingUp className={`w-4 h-4 ${metric.trend.direction === 'down' ? 'rotate-180' : ''}`} />
                   <span>{metric.trend.value}</span>
-                  <span className="text-steel-500 font-normal ml-1">{metric.trend.label}</span>
+                  <span className="text-steel-400 font-normal ml-1">{metric.trend.label}</span>
                 </div>
               )}
             </div>
@@ -258,15 +258,15 @@ const CoronaryExecutiveView: React.FC = () => {
                 <div className="grid grid-cols-3 gap-3 text-xs">
                   <div className="text-center">
                     <div className="text-steel-600">Mortality</div>
-                    <div className="font-bold text-medical-red-600">{procedure.outcomes.mortality}%</div>
+                    <div className="font-bold text-deep-red-700">{procedure.outcomes.mortality}%</div>
                   </div>
                   <div className="text-center">
                     <div className="text-steel-600">MI</div>
-                    <div className="font-bold text-medical-amber-600">{procedure.outcomes.mi}%</div>
+                    <div className="font-bold text-deep-amber-700">{procedure.outcomes.mi}%</div>
                   </div>
                   <div className="text-center">
                     <div className="text-steel-600">TVR</div>
-                    <div className="font-bold text-medical-amber-600">{procedure.outcomes.tvr}%</div>
+                    <div className="font-bold text-deep-amber-700">{procedure.outcomes.tvr}%</div>
                   </div>
                 </div>
               </div>
@@ -275,7 +275,7 @@ const CoronaryExecutiveView: React.FC = () => {
               <div className="mt-4">
                 <div className="w-full bg-steel-100 rounded-full h-2">
                   <div
-                    className="h-2 bg-medical-amber-500 rounded-full transition-all duration-300"
+                    className="h-2 bg-deep-amber-600 rounded-full transition-all duration-300"
                     style={{ width: `${(procedure.volume / Math.max(...procedureVolumes.map(p => p.volume))) * 100}%` }}
                   ></div>
                 </div>
@@ -295,66 +295,66 @@ const CoronaryExecutiveView: React.FC = () => {
             <div className="flex items-center justify-between p-3 bg-steel-50 rounded-lg">
               <div>
                 <div className="font-medium text-steel-900">Door-to-Balloon Time</div>
-                <div className="text-sm text-steel-600">STEMI patients (Goal: <90min)</div>
+                <div className="text-sm text-steel-600">STEMI patients (Goal: &lt;90min)</div>
               </div>
-              <div className="text-2xl font-bold text-medical-green-600">67min</div>
+              <div className="text-2xl font-bold text-deep-green-700">67min</div>
             </div>
             <div className="flex items-center justify-between p-3 bg-steel-50 rounded-lg">
               <div>
                 <div className="font-medium text-steel-900">PCI Success Rate</div>
                 <div className="text-sm text-steel-600">TIMI 3 flow restoration</div>
               </div>
-              <div className="text-2xl font-bold text-medical-green-600">97.2%</div>
+              <div className="text-2xl font-bold text-deep-green-700">97.2%</div>
             </div>
             <div className="flex items-center justify-between p-3 bg-steel-50 rounded-lg">
               <div>
                 <div className="font-medium text-steel-900">Contrast Volume</div>
                 <div className="text-sm text-steel-600">Average per case</div>
               </div>
-              <div className="text-2xl font-bold text-medical-blue-600">187mL</div>
+              <div className="text-2xl font-bold text-deep-blue-700">187mL</div>
             </div>
             <div className="flex items-center justify-between p-3 bg-steel-50 rounded-lg">
               <div>
                 <div className="font-medium text-steel-900">Radiation Dose</div>
                 <div className="text-sm text-steel-600">DAP (Gy·cm²)</div>
               </div>
-              <div className="text-2xl font-bold text-medical-green-600">42.8</div>
+              <div className="text-2xl font-bold text-deep-green-700">42.8</div>
             </div>
           </div>
         </div>
 
         <div className="retina-card p-6">
           <h3 className="text-xl font-bold text-steel-900 mb-4 font-sf">
-            Operational Excellence
+            Patient Outcomes & Satisfaction
           </h3>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 bg-steel-50 rounded-lg">
-              <div>
-                <div className="font-medium text-steel-900">Cath Lab Utilization</div>
-                <div className="text-sm text-steel-600">Average across 4 labs</div>
-              </div>
-              <div className="text-2xl font-bold text-medical-blue-600">84.7%</div>
-            </div>
             <div className="flex items-center justify-between p-3 bg-steel-50 rounded-lg">
               <div>
                 <div className="font-medium text-steel-900">Same-Day Discharge</div>
                 <div className="text-sm text-steel-600">Elective PCI patients</div>
               </div>
-              <div className="text-2xl font-bold text-medical-green-600">68.4%</div>
+              <div className="text-2xl font-bold text-deep-green-700">68.4%</div>
             </div>
             <div className="flex items-center justify-between p-3 bg-steel-50 rounded-lg">
               <div>
                 <div className="font-medium text-steel-900">Patient Satisfaction</div>
                 <div className="text-sm text-steel-600">HCAHPS scores</div>
               </div>
-              <div className="text-2xl font-bold text-medical-green-600">9.1/10</div>
+              <div className="text-2xl font-bold text-deep-green-700">9.1/10</div>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-steel-50 rounded-lg">
+              <div>
+                <div className="font-medium text-steel-900">30-Day Readmission Rate</div>
+                <div className="text-sm text-steel-600">All PCI procedures</div>
+              </div>
+              <div className="text-2xl font-bold text-deep-green-700">4.2%</div>
             </div>
             <div className="flex items-center justify-between p-3 bg-steel-50 rounded-lg">
               <div>
                 <div className="font-medium text-steel-900">Staff Engagement</div>
                 <div className="text-sm text-steel-600">Team satisfaction</div>
               </div>
-              <div className="text-2xl font-bold text-medical-green-600">8.8/10</div>
+              <div className="text-2xl font-bold text-deep-green-700">8.8/10</div>
             </div>
           </div>
         </div>
@@ -368,7 +368,7 @@ const CoronaryExecutiveView: React.FC = () => {
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="p-4 bg-medical-green-50 rounded-xl border border-medical-green-200">
-            <h4 className="font-semibold text-medical-green-800 mb-3">Door-to-Balloon <60min</h4>
+            <h4 className="font-semibold text-medical-green-800 mb-3">Door-to-Balloon &lt;60min</h4>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span>Cases:</span>
@@ -404,7 +404,7 @@ const CoronaryExecutiveView: React.FC = () => {
           </div>
 
           <div className="p-4 bg-medical-red-50 rounded-xl border border-medical-red-200">
-            <h4 className="font-semibold text-medical-red-800 mb-3">Door-to-Balloon >90min</h4>
+            <h4 className="font-semibold text-medical-red-800 mb-3">Door-to-Balloon &gt;90min</h4>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span>Cases:</span>

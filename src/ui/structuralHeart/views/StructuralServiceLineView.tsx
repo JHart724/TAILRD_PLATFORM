@@ -374,7 +374,7 @@ const StructuralServiceLineView: React.FC = () => {
                 <div className="space-y-4">
                   <div className="p-4 bg-medical-green-50 rounded-lg border border-medical-green-200">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="font-semibold text-medical-green-800">Low Risk (STS <4%)</span>
+                      <span className="font-semibold text-medical-green-800">Low Risk (STS &lt;4%)</span>
                       <span className="text-sm text-steel-600">186 cases</span>
                     </div>
                     <div className="grid grid-cols-3 gap-2 text-sm">
@@ -416,7 +416,7 @@ const StructuralServiceLineView: React.FC = () => {
 
                   <div className="p-4 bg-medical-red-50 rounded-lg border border-medical-red-200">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="font-semibold text-medical-red-800">High Risk (STS >8%)</span>
+                      <span className="font-semibold text-medical-red-800">High Risk (STS &gt;8%)</span>
                       <span className="text-sm text-steel-600">34 cases</span>
                     </div>
                     <div className="grid grid-cols-3 gap-2 text-sm">

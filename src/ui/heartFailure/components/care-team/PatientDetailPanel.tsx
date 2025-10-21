@@ -1,24 +1,33 @@
 import React from 'react';
 import { X } from 'lucide-react';
 
-interface Patient {
+interface WorklistPatient {
   id: string;
   name: string;
   mrn: string;
   age: number;
-  ef: number;
-  nyhaClass: string;
-  riskScore: number;
-  gdmtGaps: number;
-  deviceEligible: string[];
-  phenotypeFlags: string[];
-  nextAppt: string;
-  assignedProvider: string;
+  gender: 'M' | 'F';
+  lvef: number;
+  nyhaClass: 'I' | 'II' | 'III' | 'IV';
   priority: 'high' | 'medium' | 'low';
+  gdmtGaps: string[];
+  deviceEligible: boolean;
+  lastVisit: string;
+  nextAppointment?: string;
+  assignedProvider: string;
+  recentAdmission: boolean;
+  actionItems: {
+    category: 'GDMT' | 'Device' | 'Lab' | 'Follow-up';
+    description: string;
+    dueDate: string;
+    urgent: boolean;
+  }[];
+  riskScore: number;
+  phenotype?: string;
 }
 
 interface PatientDetailPanelProps {
-  patient: Patient;
+  patient: WorklistPatient;
   onClose: () => void;
 }
 
@@ -52,7 +61,7 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
             </div>
             <div>
               <div className="text-sm text-steel-600">Ejection Fraction</div>
-              <div className="font-semibold text-steel-900">{patient.ef}%</div>
+              <div className="font-semibold text-steel-900">{patient.lvef}%</div>
             </div>
             <div>
               <div className="text-sm text-steel-600">NYHA Class</div>
@@ -64,26 +73,35 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
             </div>
           </div>
           
-          {patient.deviceEligible.length > 0 && (
+          {patient.deviceEligible && (
             <div className="mt-6">
               <div className="text-sm text-steel-600 mb-2">Device Eligibility</div>
               <div className="flex flex-wrap gap-2">
-                {patient.deviceEligible.map(device => (
-                  <span key={device} className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
-                    {device}
-                  </span>
-                ))}
+                <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
+                  Device Eligible
+                </span>
               </div>
             </div>
           )}
           
-          {patient.phenotypeFlags.length > 0 && (
+          {patient.phenotype && (
             <div className="mt-6">
-              <div className="text-sm text-steel-600 mb-2">Phenotype Flags</div>
+              <div className="text-sm text-steel-600 mb-2">Phenotype</div>
               <div className="flex flex-wrap gap-2">
-                {patient.phenotypeFlags.map(flag => (
-                  <span key={flag} className="px-3 py-1 bg-red-100 text-red-800 text-sm rounded-full">
-                    {flag}
+                <span className="px-3 py-1 bg-red-100 text-red-800 text-sm rounded-full">
+                  {patient.phenotype}
+                </span>
+              </div>
+            </div>
+          )}
+          
+          {patient.gdmtGaps.length > 0 && (
+            <div className="mt-6">
+              <div className="text-sm text-steel-600 mb-2">GDMT Gaps</div>
+              <div className="flex flex-wrap gap-2">
+                {patient.gdmtGaps.map(gap => (
+                  <span key={gap} className="px-3 py-1 bg-amber-100 text-amber-800 text-sm rounded-full">
+                    {gap}
                   </span>
                 ))}
               </div>
