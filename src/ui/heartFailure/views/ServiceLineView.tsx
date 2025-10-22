@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Stethoscope, Users, BarChart3, Target, Search, Shield } from 'lucide-react';
+import { Stethoscope, Users, BarChart3, Target, Search, Shield, Activity, Heart } from 'lucide-react';
 
 // Import new Phase 3 components
 import ProviderScorecard from '../components/service-line/ProviderScorecard';
@@ -8,8 +8,10 @@ import DevicePathwayFunnel from '../components/service-line/DevicePathwayFunnel'
 import QualityMetricsDashboard from '../components/service-line/QualityMetricsDashboard';
 import HFPhenotypeClassification from '../components/clinical/HFPhenotypeClassification';
 import GDMTContraindicationChecker from '../components/clinical/GDMTContraindicationChecker';
+import SpecialtyPhenotypesDashboard from '../components/clinical/SpecialtyPhenotypesDashboard';
+import AdvancedDeviceTracker from '../components/clinical/AdvancedDeviceTracker';
 
-type ServiceLineTab = 'providers' | 'gdmt' | 'devices' | 'quality' | 'phenotypes' | 'safety';
+type ServiceLineTab = 'providers' | 'gdmt' | 'devices' | 'quality' | 'phenotypes' | 'safety' | 'advanced-phenotypes' | 'advanced-devices';
 
 const ServiceLineView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ServiceLineTab>('providers');
@@ -28,8 +30,20 @@ const ServiceLineView: React.FC = () => {
       description: '4-pillar optimization by therapy class',
     },
     {
+      id: 'advanced-phenotypes' as ServiceLineTab,
+      label: 'Specialty Phenotypes',
+      icon: Heart,
+      description: 'Beyond GDMT: 12 rare HF conditions',
+    },
+    {
+      id: 'advanced-devices' as ServiceLineTab,
+      label: 'Advanced Devices',
+      icon: Activity,
+      description: 'Underutilized high-value interventions',
+    },
+    {
       id: 'phenotypes' as ServiceLineTab,
-      label: 'Phenotype Classification',
+      label: 'Basic Phenotypes',
       icon: Search,
       description: 'Iron deficiency & sleep apnea assessment',
     },
@@ -59,6 +73,10 @@ const ServiceLineView: React.FC = () => {
         return <ProviderScorecard />;
       case 'gdmt':
         return <GDMTAnalyticsDashboard />;
+      case 'advanced-phenotypes':
+        return <SpecialtyPhenotypesDashboard />;
+      case 'advanced-devices':
+        return <AdvancedDeviceTracker />;
       case 'phenotypes':
         return <HFPhenotypeClassification />;
       case 'safety':
@@ -95,7 +113,7 @@ const ServiceLineView: React.FC = () => {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="grid grid-cols-6 gap-4">
+        <div className="grid grid-cols-4 lg:grid-cols-8 gap-4">
           {tabs.map((tab) => {
             const IconComponent = tab.icon;
             return (
