@@ -59,7 +59,7 @@ const HFModule: React.FC = () => {
     <div className="min-h-screen bg-gradient-medical-liquid relative">
       {/* Loading Overlay */}
       {isLoading && (
-        <div className="fixed inset-0 bg-gradient-medical-liquid z-[100] flex items-center justify-center">
+        <div className="fixed inset-0 bg-white bg-opacity-95 backdrop-blur-sm z-[100] flex items-center justify-center">
           <div className="text-center">
             {/* Loading animation */}
             <div className="mb-8">

@@ -14,7 +14,7 @@ import AdvancedDeviceTracker from '../components/clinical/AdvancedDeviceTracker'
 type ServiceLineTab = 'providers' | 'gdmt' | 'devices' | 'quality' | 'phenotypes' | 'safety' | 'advanced-phenotypes' | 'advanced-devices';
 
 const ServiceLineView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<ServiceLineTab>('providers');
+  const [activeTab, setActiveTab] = useState<ServiceLineTab>('advanced-phenotypes');
 
   const tabs = [
     {
