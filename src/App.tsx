@@ -78,12 +78,12 @@ const Icons = {
     </svg>
   ),
   Activity: () => (
-    <svg className="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M22 12h-4l-3 9L9 3l-3 9H2" />
     </svg>
   ),
   Monitor: () => (
-    <svg className="h-8 w-8 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <g strokeWidth={2}>
         <rect x="3" y="4" width="18" height="12" rx="2" />
         <path d="M8 21h8M12 16v5" />
@@ -92,17 +92,17 @@ const Icons = {
     </svg>
   ),
   Heart: () => (
-    <svg className="h-8 w-8 text-red-700" fill="currentColor" viewBox="0 0 24 24">
+    <svg className="h-8 w-8 text-blue-700" fill="currentColor" viewBox="0 0 24 24">
       <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
     </svg>
   ),
   Zap: () => (
-    <svg className="h-8 w-8 text-yellow-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+    <svg className="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
     </svg>
   ),
   Valve: () => (
-    <svg className="h-8 w-8 text-steel-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <circle cx="12" cy="12" r="9" strokeWidth={2} />
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 7v10M7 12h10" />
       <circle cx="12" cy="12" r="3" strokeWidth={2} fill="currentColor" fillOpacity="0.3" />
@@ -162,7 +162,7 @@ const Icons = {
     </svg>
   ),
   DollarChart: () => (
-    <svg className="h-8 w-8 text-medical-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="h-8 w-8 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3v18h18" />
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l3-3 3 3 5-5" />
