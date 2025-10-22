@@ -14,4 +14,4 @@ The dev server runs at <http://localhost:3000>. Hot reload is enabled.
 ## Useful scripts
 
 - `npx tsc --noEmit` – type check
-- `npm run build` – production bundle in `build/`
+- `npm run build` – production bundle in `build/`// Trigger redeploy Tue Oct 21 18:55:04 PDT 2025
