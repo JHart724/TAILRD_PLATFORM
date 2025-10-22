@@ -400,7 +400,7 @@ const SYNTAXScoreCalculator: React.FC = () => {
                     onChange={(e) => updateInput('lengthOver20mm', e.target.checked)}
                     className="rounded text-medical-purple-600"
                   />
-                  <span className="text-sm font-medium text-steel-700">Length &gt;20mm</span>
+                  <span className="text-sm font-medium text-steel-700">Length {'>'}20mm</span>
                 </label>
 
                 <label className="flex items-center space-x-3 p-3 bg-white rounded-lg cursor-pointer">

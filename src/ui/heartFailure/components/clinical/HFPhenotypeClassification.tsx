@@ -466,7 +466,7 @@ const HFPhenotypeClassification: React.FC = () => {
                 <div className="font-semibold mb-2">Clinical Significance</div>
                 <div className="space-y-1 text-xs">
                   <div>• Iron deficiency affects 30-50% of HF patients</div>
-                  <div>• Sleep apnea prevalence &gt;50% in HF patients</div>
+                  <div>• Sleep apnea prevalence {'>'}50% in HF patients</div>
                   <div>• Both conditions independently worsen outcomes</div>
                   <div>• Treatment can improve symptoms and reduce hospitalizations</div>
                 </div>
