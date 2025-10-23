@@ -2,6 +2,8 @@ import React, { useState, useMemo, useCallback, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import CountUp from 'react-countup';
 import TailrdLogo from './components/TailrdLogo';
+import UserMenu from './components/UserMenu';
+import { Heart, Activity, Zap, Stethoscope, GitBranch, CircuitBoard } from 'lucide-react';
 
 // Add custom animations for Web3Background effects
 const customStyles = `
@@ -223,7 +225,7 @@ const MODULES: Module[] = [
     procedures: 892,
     revenue: 804780,
     qualityScore: 94,
-    icon: Icons.Monitor,
+    icon: () => <Heart className="w-5 h-5" />,
     features: ["GDMT Analytics", "Specialty Screening", "Advanced Therapies", "340B Revenue"],
   },
   {
@@ -236,7 +238,7 @@ const MODULES: Module[] = [
     procedures: 1234,
     revenue: 3250000,
     qualityScore: 96,
-    icon: Icons.Zap,
+    icon: () => <Zap className="w-5 h-5" />,
     features: ["Ablation Procedures", "Device Management", "LAAC (Watchman/Amulet)", "AI Risk Stratification"],
   },
   {
@@ -249,7 +251,7 @@ const MODULES: Module[] = [
     procedures: 945,
     revenue: 1704220,
     qualityScore: 96,
-    icon: Icons.Valve,
+    icon: () => <Stethoscope className="w-5 h-5" />,
     features: ["TAVR Program", "TEER (MitraClip)", "Balloon Valvuloplasty", "ASD/PFO Closure"],
   },
   {
@@ -262,7 +264,7 @@ const MODULES: Module[] = [
     procedures: 4567,
     revenue: 4012440,
     qualityScore: 95,
-    icon: Icons.Coronary,
+    icon: () => <GitBranch className="w-5 h-5" />,
     features: ["Complex PCI/CTO", "Protected PCI (Impella)", "CABG Program", "SYNTAX Score Integration"],
   },
   {
@@ -275,7 +277,7 @@ const MODULES: Module[] = [
     procedures: 1234,
     revenue: 1908130,
     qualityScore: 93,
-    icon: Icons.Activity,
+    icon: () => <CircuitBoard className="w-5 h-5" />,
     features: ["Ross Procedure", "Mitral Valve Repair", "Bicuspid Aortic Repair", "Complex Valve Surgery"],
   },
   {
@@ -288,7 +290,7 @@ const MODULES: Module[] = [
     procedures: 876,
     revenue: 1055770,
     qualityScore: 91,
-    icon: Icons.Peripheral,
+    icon: () => <Activity className="w-5 h-5" />,
     features: ["PAD Management", "Access Optimization", "Risk Stratification", "Wound Care"],
   },
 ];
@@ -642,11 +644,12 @@ function MainDashboard(): JSX.Element {
                 <TailrdLogo size="large" variant="light" className="mb-3" />
                 <p className="text-lg text-slate-600 font-light">Precision Cardiovascular Care Platform</p>
               </div>
-              <div className="text-right">
-                <div className="bg-gradient-to-br from-white/80 to-blue-50/80 backdrop-blur-sm border border-blue-200/50 rounded-xl p-4 shadow-lg shadow-blue-200/10">
-                  <div className="text-xs text-blue-600 mb-1 font-medium">Last Updated</div>
-                  <div className="text-lg font-medium text-slate-700">{new Date().toLocaleDateString()}</div>
-                </div>
+              <div className="flex items-center gap-4">
+                <UserMenu 
+                  userName="Dr. Sarah Williams"
+                  userRole="Cardiology Director"
+                  userEmail="sarah.williams@hospital.com"
+                />
               </div>
             </div>
             
@@ -687,6 +690,14 @@ function MainDashboard(): JSX.Element {
               <h2 className="text-2xl font-light text-slate-700 mb-6">Clinical Modules</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {MODULES.map((module) => (<ModuleTile key={module.id} module={module} onClick={() => openModule(module.id)} />))}
+              </div>
+              
+              {/* Last Updated Info - Bottom Right */}
+              <div className="flex justify-end mt-8">
+                <div className="bg-gradient-to-br from-white/80 to-blue-50/80 backdrop-blur-sm border border-blue-200/50 rounded-xl p-4 shadow-lg shadow-blue-200/10">
+                  <div className="text-xs text-blue-600 mb-1 font-medium">Last Updated</div>
+                  <div className="text-lg font-medium text-slate-700">{new Date().toLocaleDateString()}</div>
+                </div>
               </div>
             </div>
           </div>
