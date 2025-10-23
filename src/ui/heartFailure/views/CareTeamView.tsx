@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, MessageCircle, AlertTriangle, ClipboardList, FileText } from 'lucide-react';
+import { Users, MessageCircle, AlertTriangle, ClipboardList, FileText, Bell } from 'lucide-react';
 
 // Import enhanced Phase 4 components
 import PatientWorklistEnhanced from '../components/care-team/PatientWorklistEnhanced';
@@ -8,11 +8,12 @@ import TeamCollaborationPanel from '../components/care-team/TeamCollaborationPan
 import CareGapAnalyzer from '../components/care-team/CareGapAnalyzer';
 import CDIDocumentationPrompt from '../../../components/shared/CDIDocumentationPrompt';
 import { CDIAlert } from '../../../components/shared/CDIDocumentationPrompt';
+import RealTimeHospitalAlerts from '../components/care-team/RealTimeHospitalAlerts';
 
-type CareTeamTab = 'patients' | 'referrals' | 'collaboration' | 'gaps' | 'cdi';
+type CareTeamTab = 'hospital-alerts' | 'patients' | 'referrals' | 'collaboration' | 'gaps' | 'cdi';
 
 const CareTeamView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<CareTeamTab>('patients');
+  const [activeTab, setActiveTab] = useState<CareTeamTab>('hospital-alerts');
 
   // Heart Failure CDI Alerts for Care Team
   const hfCDIAlerts: CDIAlert[] = [
@@ -74,6 +75,12 @@ const CareTeamView: React.FC = () => {
 
   const tabs = [
     {
+      id: 'hospital-alerts' as CareTeamTab,
+      label: 'ED/Hospital Alerts',
+      icon: Bell,
+      description: 'Real-time GDMT gap alerts',
+    },
+    {
       id: 'patients' as CareTeamTab,
       label: 'Patient Worklist',
       icon: Users,
@@ -107,6 +114,8 @@ const CareTeamView: React.FC = () => {
 
   const renderActiveComponent = () => {
     switch (activeTab) {
+      case 'hospital-alerts':
+        return <RealTimeHospitalAlerts />;
       case 'patients':
         return <PatientWorklistEnhanced />;
       case 'cdi':
@@ -150,7 +159,7 @@ const CareTeamView: React.FC = () => {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="grid grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {tabs.map((tab) => {
             const IconComponent = tab.icon;
             return (

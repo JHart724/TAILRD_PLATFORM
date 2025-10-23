@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import TailrdLogo from './TailrdLogo';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -16,12 +17,8 @@ const Login: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-steel-50 via-steel-100 to-steel-200 flex items-center justify-center p-4">
       <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-retina-4 p-8 w-full max-w-md border border-white/20">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold">
-            <span className="text-steel-700">TAILRD</span>
-            <span className="text-steel-400 mx-2">|</span>
-            <span className="text-medical-red-600">HEART</span>
-          </h1>
+        <div className="flex justify-center mb-8">
+          <TailrdLogo size="large" variant="light" />
         </div>
 
         {/* Login Form */}

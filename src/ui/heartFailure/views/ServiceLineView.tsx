@@ -113,34 +113,34 @@ const ServiceLineView: React.FC = () => {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="grid grid-cols-4 lg:grid-cols-8 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
           {tabs.map((tab) => {
             const IconComponent = tab.icon;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`p-4 rounded-xl border-2 transition-all duration-300 text-left ${
+                className={`p-3 rounded-xl border-2 transition-all duration-300 text-left min-h-[120px] ${
                   activeTab === tab.id
                     ? 'border-medical-blue-400 bg-medical-blue-50 shadow-retina-3'
                     : 'border-steel-200 hover:border-steel-300 hover:shadow-retina-2 bg-white'
                 }`}
               >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className={`p-2 rounded-lg ${
+                <div className="flex items-start gap-3 mb-2">
+                  <div className={`p-2 rounded-lg flex-shrink-0 ${
                     activeTab === tab.id ? 'bg-medical-blue-100' : 'bg-steel-100'
                   }`}>
-                    <IconComponent className={`w-5 h-5 ${
+                    <IconComponent className={`w-4 h-4 ${
                       activeTab === tab.id ? 'text-medical-blue-600' : 'text-steel-600'
                     }`} />
                   </div>
-                  <span className={`font-semibold ${
+                  <span className={`font-semibold text-sm leading-tight ${
                     activeTab === tab.id ? 'text-medical-blue-900' : 'text-steel-900'
                   }`}>
                     {tab.label}
                   </span>
                 </div>
-                <p className={`text-sm ${
+                <p className={`text-xs leading-relaxed ${
                   activeTab === tab.id ? 'text-medical-blue-700' : 'text-steel-600'
                 }`}>
                   {tab.description}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Heart, Users, BarChart3, Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import TailrdLogo from '../../components/TailrdLogo';
 
 // Import Valvular Disease views
 import ValvularExecutiveView from './views/ValvularExecutiveView';
@@ -51,31 +52,32 @@ const ValvularDiseaseModule: React.FC = () => {
     <div className="min-h-screen bg-gradient-medical-liquid">
       {/* Module Header */}
       <div className="bg-white border-b border-steel-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-6">
+        <div className="max-w-7xl mx-auto px-6 py-3">
           {/* Header Layout */}
           <div className="flex items-start justify-between">
-            <div className="space-y-4">
+            {/* Left side - TAILRD logo top, module info below */}
+            <div>
               {/* TAILRD Brand */}
-              <div>
-                <button
+              <div className="flex items-center gap-2 mb-3">
+                <div
                   onClick={() => navigate('/dashboard')}
-                  className="text-2xl font-bold text-blue-950 font-sf hover:text-blue-800 transition-colors"
+                  className="cursor-pointer"
                 >
-                  TAILRD | Heart
-                </button>
-                <div className="text-xs text-steel-500 hover:text-steel-700 cursor-pointer mt-1" onClick={() => navigate('/dashboard')}>
+                  <TailrdLogo size="small" variant="light" />
+                </div>
+                <div className="text-xs text-steel-500 hover:text-steel-700 cursor-pointer" onClick={() => navigate('/dashboard')}>
                   ← Dashboard
                 </div>
               </div>
               
               {/* Module Branding */}
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-medical-purple-100">
-                  <Heart className="w-8 h-8 text-medical-purple-600" />
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-medical-purple-100">
+                  <Heart className="w-6 h-6 text-medical-purple-600" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-blue-950 mb-1">Valvular Surgery</h1>
-                  <p className="text-steel-600 text-sm">
+                  <h1 className="text-xl font-bold text-blue-950">Valvular Surgery</h1>
+                  <p className="text-steel-600 text-xs">
                     Surgical valve repair and replacement program
                   </p>
                 </div>
@@ -84,15 +86,15 @@ const ValvularDiseaseModule: React.FC = () => {
             
             {/* Patient Count */}
             <div className="text-right">
-              <div className="text-sm text-steel-600">Active Patients</div>
-              <div className="text-2xl font-bold text-medical-purple-600 font-sf">892</div>
+              <div className="text-xs text-steel-600">Active Patients</div>
+              <div className="text-xl font-bold text-medical-purple-600 font-sf">892</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* View Navigation - Folder Tabs */}
-      <div className="max-w-7xl mx-auto px-6 py-6">
+      <div className="max-w-7xl mx-auto px-6 py-3">
         <div className="flex gap-2 mb-6">
           {views.map((view, index) => {
             const IconComponent = view.icon;

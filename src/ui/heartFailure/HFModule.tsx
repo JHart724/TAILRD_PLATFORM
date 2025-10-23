@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BarChart3, Users, Heart } from 'lucide-react';
+import TailrdLogo from '../../components/TailrdLogo';
 import ExecutiveView from './views/ExecutiveView';
 import ServiceLineView from './views/ServiceLineView';
 import CareTeamView from './views/CareTeamView';
@@ -70,11 +71,9 @@ const HFModule: React.FC = () => {
             </div>
             
             {/* Brand */}
-            <h1 className="text-3xl font-light mb-2">
-              <span className="text-slate-700 font-extralight tracking-wide">TAILRD</span>
-              <span className="text-medical-blue-400 mx-2 font-thin">•</span>
-              <span className="bg-gradient-to-r from-medical-blue-600 to-medical-blue-700 bg-clip-text text-transparent font-medium">Heart</span>
-            </h1>
+            <div className="mb-2">
+              <TailrdLogo size="medium" variant="light" />
+            </div>
             
             {/* Loading message */}
             <p className="text-lg text-slate-600 font-light mb-4">Processing Heart Failure Analytics...</p>
@@ -96,31 +95,32 @@ const HFModule: React.FC = () => {
       
       {/* Module Header */}
       <div className="bg-white border-b border-steel-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-6">
+        <div className="max-w-7xl mx-auto px-6 py-3">
           {/* Header Layout */}
           <div className="flex items-start justify-between">
-            <div className="space-y-4">
+            {/* Left side - TAILRD logo top, module info below */}
+            <div>
               {/* TAILRD Brand */}
-              <div>
-                <button
+              <div className="flex items-center gap-2 mb-3">
+                <div
                   onClick={() => navigate('/dashboard')}
-                  className="text-2xl font-bold text-blue-950 font-sf hover:text-blue-800 transition-colors"
+                  className="cursor-pointer"
                 >
-                  TAILRD | Heart
-                </button>
-                <div className="text-xs text-steel-500 hover:text-steel-700 cursor-pointer mt-1" onClick={() => navigate('/dashboard')}>
+                  <TailrdLogo size="small" variant="light" />
+                </div>
+                <div className="text-xs text-steel-500 hover:text-steel-700 cursor-pointer" onClick={() => navigate('/dashboard')}>
                   ← Dashboard
                 </div>
               </div>
               
               {/* Module Branding */}
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-medical-blue-100">
-                  <Heart className="w-8 h-8 text-medical-blue-600" />
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-medical-blue-100">
+                  <Heart className="w-6 h-6 text-medical-blue-600" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-blue-950 mb-1">Heart Failure</h1>
-                  <p className="text-steel-600 text-sm">
+                  <h1 className="text-xl font-bold text-blue-950">Heart Failure</h1>
+                  <p className="text-steel-600 text-xs">
                     Population screening to individual GDMT optimization across PCP-Cardiology continuum
                   </p>
                 </div>
@@ -129,8 +129,8 @@ const HFModule: React.FC = () => {
             
             {/* Patient Count */}
             <div className="text-right">
-              <div className="text-sm text-steel-600">Active Patients</div>
-              <div className="text-2xl font-bold text-medical-blue-600 font-sf">1,247</div>
+              <div className="text-xs text-steel-600">Active Patients</div>
+              <div className="text-xl font-bold text-medical-blue-600 font-sf">1,247</div>
             </div>
           </div>
         </div>

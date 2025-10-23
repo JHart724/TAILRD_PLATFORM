@@ -1,6 +1,42 @@
 import React, { useState, useMemo, useCallback, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import CountUp from 'react-countup';
+import TailrdLogo from './components/TailrdLogo';
+
+// Add custom animations for Web3Background effects
+const customStyles = `
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px) rotate(45deg);
+    }
+    50% {
+      transform: translateY(-30px) rotate(45deg);
+    }
+  }
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 0.2;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.3;
+      transform: scale(1.1);
+    }
+  }
+  @keyframes shimmer {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+  }
+`;
+
+// Inject styles
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style');
+  styleSheet.type = 'text/css';
+  styleSheet.innerText = customStyles;
+  document.head.appendChild(styleSheet);
+}
 
 // Lazy load all modules
 const Login = lazy(() => import("./components/Login"));
@@ -335,29 +371,29 @@ const ModuleTile: React.FC<ModuleTileProps> = ({ module, onClick }) => {
       onClick={onClick} 
       className="relative group cursor-pointer w-full h-full"
     >
-      {/* Liquid metal glow */}
-      <div className="absolute -inset-0.5 bg-gradient-to-br from-slate-400/15 via-slate-500/15 to-slate-600/15 rounded-2xl blur opacity-0 group-hover:opacity-80 transition-opacity duration-300"></div>
+      {/* Floating glow effect */}
+      <div className="absolute -inset-1 bg-gradient-to-br from-white/30 via-white/20 to-white/15 rounded-2xl blur opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
       
-      <div className="relative bg-gradient-to-br from-blue-50/60 via-white/70 to-blue-50/60 backdrop-blur-sm border border-blue-200/40 rounded-2xl p-6 transition-all duration-300 group-hover:from-blue-100/60 group-hover:via-white/80 group-hover:to-blue-100/60 group-hover:shadow-xl group-hover:shadow-blue-200/20 group-hover:scale-[1.02] group-hover:border-blue-300/60">
-        {/* Metallic shine effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-300/8 via-transparent to-slate-400/3 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      <div className="relative bg-white/60 backdrop-blur-lg border border-white/30 rounded-2xl p-6 shadow-lg shadow-white/10 transition-all duration-500 group-hover:bg-white/70 group-hover:backdrop-blur-xl group-hover:shadow-2xl group-hover:shadow-white/20 group-hover:scale-[1.03] group-hover:border-white/50 group-hover:-translate-y-1">
+        {/* Enhanced shine effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         
         <div className="relative space-y-4">
-          {/* Enhanced icon container */}
+          {/* Icon container - no blue background on hover */}
           <div className="w-fit">
-            <div className="p-4 rounded-xl bg-gradient-to-br from-slate-600/80 to-slate-500/80 border border-slate-400/30 group-hover:from-slate-500/80 group-hover:to-slate-400/80 group-hover:border-slate-300/50 group-hover:shadow-lg group-hover:shadow-slate-300/10 transition-all duration-300">
+            <div className="p-4 rounded-xl bg-white/50 backdrop-blur-sm border border-white/40 transition-all duration-500 group-hover:bg-white/70 group-hover:border-white/60 group-hover:shadow-lg">
               <Icon />
             </div>
           </div>
           
           <div className="space-y-2">
-            <h3 className="text-xl font-medium text-slate-700 group-hover:text-blue-400 transition-colors duration-300">{module.name}</h3>
-            <p className="text-sm text-slate-300 leading-relaxed">{module.description}</p>
+            <h3 className="text-xl font-semibold text-slate-800 transition-colors duration-300 group-hover:text-slate-900">{module.name}</h3>
+            <p className="text-sm text-slate-600 leading-relaxed group-hover:text-slate-700 transition-colors duration-300">{module.description}</p>
           </div>
           
-          {/* Enhanced arrow indicator */}
-          <div className="flex justify-end opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-1 group-hover:translate-x-0">
-            <div className="p-2 rounded-lg bg-gradient-to-br from-slate-600 to-slate-500 border border-slate-400/50 shadow-sm">
+          {/* Arrow indicator */}
+          <div className="flex justify-end opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-2 group-hover:translate-x-0">
+            <div className="p-2 rounded-lg bg-white/60 backdrop-blur-sm border border-white/40 shadow-lg">
               <Icons.ArrowRight />
             </div>
           </div>
@@ -501,74 +537,120 @@ function MainDashboard(): JSX.Element {
 
   if (viewMode === "main") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-slate-100 to-blue-100 relative overflow-hidden">
+      <div className="min-h-screen relative overflow-hidden" style={{
+        background: 'linear-gradient(135deg, rgba(150, 175, 200, 1) 0%, rgba(197, 217, 232, 1) 30%, rgba(224, 235, 245, 1) 60%, rgba(240, 245, 250, 1) 100%)'
+      }}>
         {/* Loading Overlay */}
         {isLoading && (
-          <div className="fixed inset-0 bg-gradient-to-br from-blue-50 via-slate-100 to-blue-100 z-[100] flex items-center justify-center">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center" style={{
+            background: 'linear-gradient(135deg, rgba(150, 175, 200, 1) 0%, rgba(197, 217, 232, 1) 30%, rgba(224, 235, 245, 1) 60%, rgba(240, 245, 250, 1) 100%)'
+          }}>
             <div className="text-center">
               {/* Loading animation */}
               <div className="mb-8">
                 <div className="relative w-16 h-16 mx-auto">
-                  <div className="absolute inset-0 border-4 border-blue-200 rounded-full"></div>
-                  <div className="absolute inset-0 border-4 border-blue-600 rounded-full border-t-transparent animate-spin"></div>
+                  <div className="absolute inset-0 border-4 border-white/40 rounded-full"></div>
+                  <div className="absolute inset-0 border-4 border-white/80 rounded-full border-t-transparent animate-spin"></div>
                 </div>
               </div>
               
               {/* Brand */}
-              <h1 className="text-3xl font-light mb-2">
-                <span className="text-slate-700 font-extralight tracking-wide">TAILRD</span>
-                <span className="text-blue-400 mx-2 font-thin">•</span>
-                <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent font-medium">Heart</span>
-              </h1>
+              <div className="mb-2">
+                <TailrdLogo size="medium" variant="light" />
+              </div>
               
               {/* Loading message */}
-              <p className="text-lg text-slate-600 font-light mb-4">Processing Analytics...</p>
+              <p className="text-lg text-white font-light mb-4" style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)' }}>Processing Analytics...</p>
               
               {/* Animated dots */}
               <div className="flex justify-center space-x-1">
-                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{animationDelay: '0ms'}}></div>
-                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '150ms'}}></div>
-                <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" style={{animationDelay: '300ms'}}></div>
+                <div className="w-2 h-2 bg-white/80 rounded-full animate-pulse" style={{animationDelay: '0ms'}}></div>
+                <div className="w-2 h-2 bg-white/90 rounded-full animate-pulse" style={{animationDelay: '150ms'}}></div>
+                <div className="w-2 h-2 bg-white rounded-full animate-pulse" style={{animationDelay: '300ms'}}></div>
               </div>
               
               {/* Subtitle */}
-              <p className="text-sm text-slate-600 mt-6">
+              <p className="text-sm text-white mt-6" style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)' }}>
                 Population • Panel • Patient Analytics
               </p>
             </div>
           </div>
         )}
         
-        {/* Liquid metallic pattern overlay */}
-        <div className="absolute inset-0 opacity-[0.04]" style={{
-          backgroundImage: `radial-gradient(circle at 30% 20%, #1e40af 2px, transparent 2px), radial-gradient(circle at 70% 80%, #0ea5e9 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
-        }}></div>
-        
-        {/* Subtle metallic shine effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-slate-600/5"></div>
+        {/* Web3Background-style floating particles and patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Glassmorphic overlays matching Web3Background */}
+          <div 
+            className="absolute top-20 left-20 w-96 h-96 rounded-full opacity-40 blur-3xl animate-pulse"
+            style={{
+              background: 'radial-gradient(circle, rgba(240, 245, 250, 0.8) 0%, rgba(197, 217, 232, 0.5) 50%, transparent 70%)',
+              animation: 'pulse 8s ease-in-out infinite'
+            }}
+          />
+          <div 
+            className="absolute bottom-20 right-20 w-96 h-96 rounded-full opacity-45 blur-3xl"
+            style={{
+              background: 'radial-gradient(circle, rgba(255, 255, 255, 0.7) 0%, rgba(240, 245, 250, 0.4) 50%, transparent 70%)',
+              animation: 'pulse 10s ease-in-out infinite reverse'
+            }}
+          />
+          <div 
+            className="absolute top-1/2 left-1/2 w-96 h-96 rounded-full opacity-35 blur-3xl"
+            style={{
+              background: 'radial-gradient(circle, rgba(197, 217, 232, 0.7) 0%, rgba(224, 235, 245, 0.5) 50%, transparent 70%)',
+              animation: 'pulse 12s ease-in-out infinite',
+              transform: 'translate(-50%, -50%)'
+            }}
+          />
+        </div>
+
+        {/* Geometric floating shapes */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div 
+            className="absolute top-1/4 left-1/4 w-32 h-32 border-2 border-white/60 rounded-lg backdrop-blur-sm"
+            style={{
+              background: 'linear-gradient(135deg, rgba(240, 245, 250, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%)',
+              boxShadow: '0 0 50px rgba(240, 245, 250, 0.6), inset 0 0 25px rgba(255, 255, 255, 0.3)',
+              animation: 'float 20s ease-in-out infinite',
+              transform: 'rotate(45deg)'
+            }}
+          />
+          <div 
+            className="absolute top-1/2 right-1/3 w-24 h-24 border-2 border-white/50 rounded-full backdrop-blur-sm"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(224, 235, 245, 0.2) 100%)',
+              boxShadow: '0 0 40px rgba(255, 255, 255, 0.5), inset 0 0 20px rgba(240, 245, 250, 0.35)',
+              animation: 'float 15s ease-in-out infinite reverse'
+            }}
+          />
+          <div 
+            className="absolute bottom-1/4 left-1/2 w-40 h-40 border-2 border-white/55 backdrop-blur-sm"
+            style={{
+              background: 'linear-gradient(135deg, rgba(224, 235, 245, 0.25) 0%, rgba(197, 217, 232, 0.18) 100%)',
+              boxShadow: '0 0 60px rgba(224, 235, 245, 0.7), inset 0 0 30px rgba(255, 255, 255, 0.25)',
+              animation: 'float 18s ease-in-out infinite',
+              clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
+            }}
+          />
+        </div>
         
         <div className="relative z-10 min-h-screen p-8">
           <div className="max-w-7xl mx-auto space-y-8">
             {/* Clean Professional Medical Header */}
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-5xl font-light mb-3">
-                  <span className="text-slate-700 font-extralight tracking-wide">TAILRD</span>
-                  <span className="text-blue-400 mx-3 font-thin">•</span>
-                  <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent font-medium">Heart</span>
-                </h1>
+                <TailrdLogo size="large" variant="light" className="mb-3" />
                 <p className="text-lg text-slate-600 font-light">Precision Cardiovascular Care Platform</p>
               </div>
               <div className="text-right">
-                <div className="bg-gradient-to-br from-slate-700/80 to-slate-600/80 backdrop-blur-sm border border-slate-500/50 rounded-xl p-4 shadow-lg shadow-slate-500/10">
-                  <div className="text-xs text-blue-400 mb-1 font-medium">Last Updated</div>
+                <div className="bg-gradient-to-br from-white/80 to-blue-50/80 backdrop-blur-sm border border-blue-200/50 rounded-xl p-4 shadow-lg shadow-blue-200/10">
+                  <div className="text-xs text-blue-600 mb-1 font-medium">Last Updated</div>
                   <div className="text-lg font-medium text-slate-700">{new Date().toLocaleDateString()}</div>
                 </div>
               </div>
             </div>
             
-            {/* Cardiovascular Service Line - Porsche Liquid Metal Chrome Blue */}
+            {/* Cardiovascular Service Line - Slightly darker than modules */}
             <div className="flex justify-center mb-8">
               <button 
                 onClick={async () => {
@@ -580,19 +662,19 @@ function MainDashboard(): JSX.Element {
                 }}
                 className="relative group"
               >
-                {/* Metallic glow effect */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-slate-500 via-slate-400 to-slate-600 rounded-3xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
+                {/* Subtle glow effect */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-white/20 via-white/15 to-white/10 rounded-3xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
                 
-                <div className="relative px-12 py-6 bg-gradient-to-br from-slate-700 via-slate-600 to-slate-800 text-white rounded-2xl backdrop-blur-xl border border-slate-400/30 shadow-xl transition-all duration-300 group-hover:shadow-2xl group-hover:scale-[1.02]">
-                  {/* Liquid metal shine */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-slate-300/5 to-transparent rounded-2xl"></div>
+                <div className="relative px-12 py-6 bg-gradient-to-br from-white/70 via-white/80 to-white/70 text-slate-700 rounded-2xl backdrop-blur-xl border border-white/40 shadow-xl transition-all duration-300 group-hover:shadow-2xl group-hover:scale-[1.02] group-hover:from-white/80 group-hover:via-white/90 group-hover:to-white/80">
+                  {/* Subtle shine */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div className="relative flex items-center gap-4">
-                    <div className="p-3 rounded-xl bg-white/20 backdrop-blur border border-white/20">
+                    <div className="p-3 rounded-xl bg-medical-blue-100 border border-medical-blue-200">
                       <Icons.Chart />
                     </div>
                     <div className="text-left">
                       <div className="text-2xl font-medium">Cardiovascular Service Line</div>
-                      <div className="text-sm opacity-90 font-light">Population • Panel • Patient - PCP to Specialty Care</div>
+                      <div className="text-sm opacity-80 font-light">Population • Panel • Patient - PCP to Specialty Care</div>
                     </div>
                     <Icons.ArrowRight />
                   </div>
@@ -630,11 +712,9 @@ function MainDashboard(): JSX.Element {
               </div>
               
               {/* Brand */}
-              <h1 className="text-3xl font-light mb-2">
-                <span className="text-slate-700 font-extralight tracking-wide">TAILRD</span>
-                <span className="text-blue-400 mx-2 font-thin">•</span>
-                <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent font-medium">Heart</span>
-              </h1>
+              <div className="mb-2">
+                <TailrdLogo size="medium" variant="light" />
+              </div>
               
               {/* Loading message */}
               <p className="text-lg text-slate-600 font-light mb-4">Processing Service Line Analytics...</p>
@@ -673,11 +753,7 @@ function MainDashboard(): JSX.Element {
                   <Icons.ArrowLeft />
                 </button>
                 <div>
-                  <h1 className="text-3xl font-light">
-                    <span className="text-slate-700 font-extralight">TAILRD</span>
-                    <span className="text-blue-400 mx-2 font-thin">•</span>
-                    <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent font-medium">Heart</span>
-                  </h1>
+                  <TailrdLogo size="medium" variant="light" />
                   <h2 className="text-xl font-medium text-slate-800 mb-2">Precision Cardiovascular Care Platform</h2>
                   <p className="text-slate-600 font-light mb-3">Comprehensive Service Line Analytics Dashboard</p>
                   
@@ -1128,11 +1204,9 @@ export default function App(): JSX.Element {
               </div>
               
               {/* Brand */}
-              <h1 className="text-3xl font-light mb-2">
-                <span className="text-slate-700 font-extralight tracking-wide">TAILRD</span>
-                <span className="text-blue-400 mx-2 font-thin">•</span>
-                <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent font-medium">Heart</span>
-              </h1>
+              <div className="mb-2">
+                <TailrdLogo size="medium" variant="light" />
+              </div>
               
               {/* Loading message */}
               <p className="text-lg text-slate-600 font-light mb-4">Processing Analytics...</p>
