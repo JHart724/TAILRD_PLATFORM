@@ -3,8 +3,38 @@ import BaseExecutiveView from '../../../components/shared/BaseExecutiveView';
 import { structuralHeartConfig } from '../config/executiveConfig';
 import ExportButton from '../../../components/shared/ExportButton';
 import { ExportData } from '../../../utils/dataExport';
+import ZipHeatMap from '../../../components/shared/ZipHeatMap';
 
 const StructuralExecutiveView: React.FC = () => {
+  // Sample ZIP code data for severe AS/MR density
+  const structuralZipData = [
+    { zipCode: "10001", patientCount: 42, riskScore: 8.3, riskLevel: "High" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10002", patientCount: 35, riskScore: 7.1, riskLevel: "High" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10003", patientCount: 28, riskScore: 5.4, riskLevel: "Medium" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10009", patientCount: 31, riskScore: 6.8, riskLevel: "Medium" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10010", patientCount: 25, riskScore: 4.2, riskLevel: "Medium" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10011", patientCount: 22, riskScore: 3.9, riskLevel: "Low" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10012", patientCount: 38, riskScore: 7.5, riskLevel: "High" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10013", patientCount: 29, riskScore: 5.8, riskLevel: "Medium" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10014", patientCount: 33, riskScore: 6.2, riskLevel: "Medium" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10016", patientCount: 27, riskScore: 4.6, riskLevel: "Medium" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10017", patientCount: 24, riskScore: 4.1, riskLevel: "Low" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10018", patientCount: 30, riskScore: 5.7, riskLevel: "Medium" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10019", patientCount: 26, riskScore: 4.8, riskLevel: "Medium" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10021", patientCount: 19, riskScore: 3.2, riskLevel: "Low" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10022", patientCount: 21, riskScore: 3.7, riskLevel: "Low" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10023", patientCount: 34, riskScore: 6.4, riskLevel: "Medium" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10024", patientCount: 28, riskScore: 5.1, riskLevel: "Medium" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10025", patientCount: 32, riskScore: 6.0, riskLevel: "Medium" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10026", patientCount: 40, riskScore: 7.8, riskLevel: "High" as const, conditionType: "Severe AS/MR" },
+    { zipCode: "10027", patientCount: 36, riskScore: 7.2, riskLevel: "High" as const, conditionType: "Severe AS/MR" }
+  ];
+
+  const handleZipClick = (zipCode: string) => {
+    console.log(`Drilling down to patient list for ZIP ${zipCode}`);
+    // TODO: Navigate to patient list view filtered by ZIP code
+  };
+
   // Generate export data
   const generateExportData = (): ExportData => {
     return {
@@ -55,6 +85,18 @@ const StructuralExecutiveView: React.FC = () => {
             className="shadow-lg hover:shadow-xl transition-all duration-300"
           />
         </header>
+
+        {/* Geographic Heat Map */}
+        <div className="mb-6">
+          <ZipHeatMap
+            title="Severe AS/MR Geographic Distribution"
+            data={structuralZipData}
+            onZipClick={handleZipClick}
+            centerLat={40.7589}
+            centerLng={-73.9851}
+            zoom={12}
+          />
+        </div>
 
         {/* Base Executive View - Consolidated Component */}
         <BaseExecutiveView config={structuralHeartConfig} />

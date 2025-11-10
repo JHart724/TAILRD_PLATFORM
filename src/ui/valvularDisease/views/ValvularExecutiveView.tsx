@@ -3,8 +3,38 @@ import BaseExecutiveView from '../../../components/shared/BaseExecutiveView';
 import { valvularDiseaseConfig } from '../config/executiveConfig';
 import ExportButton from '../../../components/shared/ExportButton';
 import { ExportData } from '../../../utils/dataExport';
+import ZipHeatMap from '../../../components/shared/ZipHeatMap';
 
 const ValvularExecutiveView: React.FC = () => {
+  // Sample ZIP code data for valve disease gaps
+  const valvularZipData = [
+    { zipCode: "10001", patientCount: 38, riskScore: 7.9, riskLevel: "High" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10002", patientCount: 32, riskScore: 6.8, riskLevel: "Medium" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10003", patientCount: 25, riskScore: 5.1, riskLevel: "Medium" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10009", patientCount: 29, riskScore: 6.4, riskLevel: "Medium" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10010", patientCount: 22, riskScore: 4.0, riskLevel: "Low" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10011", patientCount: 20, riskScore: 3.6, riskLevel: "Low" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10012", patientCount: 35, riskScore: 7.2, riskLevel: "High" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10013", patientCount: 26, riskScore: 5.5, riskLevel: "Medium" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10014", patientCount: 31, riskScore: 5.9, riskLevel: "Medium" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10016", patientCount: 24, riskScore: 4.3, riskLevel: "Medium" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10017", patientCount: 21, riskScore: 3.8, riskLevel: "Low" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10018", patientCount: 28, riskScore: 5.4, riskLevel: "Medium" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10019", patientCount: 23, riskScore: 4.5, riskLevel: "Medium" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10021", patientCount: 17, riskScore: 2.9, riskLevel: "Low" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10022", patientCount: 19, riskScore: 3.4, riskLevel: "Low" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10023", patientCount: 30, riskScore: 6.1, riskLevel: "Medium" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10024", patientCount: 25, riskScore: 4.8, riskLevel: "Medium" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10025", patientCount: 27, riskScore: 5.7, riskLevel: "Medium" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10026", patientCount: 37, riskScore: 7.5, riskLevel: "High" as const, conditionType: "Valve Disease Gap" },
+    { zipCode: "10027", patientCount: 33, riskScore: 6.9, riskLevel: "Medium" as const, conditionType: "Valve Disease Gap" }
+  ];
+
+  const handleZipClick = (zipCode: string) => {
+    console.log(`Drilling down to valve disease gap patients for ZIP ${zipCode}`);
+    // TODO: Navigate to patient list view filtered by ZIP code
+  };
+
   // Generate export data
   const generateExportData = (): ExportData => {
     return {
@@ -55,6 +85,18 @@ const ValvularExecutiveView: React.FC = () => {
             className="shadow-lg hover:shadow-xl transition-all duration-300"
           />
         </header>
+
+        {/* Geographic Heat Map */}
+        <div className="mb-6">
+          <ZipHeatMap
+            title="Valve Disease Care Gap Geographic Distribution"
+            data={valvularZipData}
+            onZipClick={handleZipClick}
+            centerLat={40.7589}
+            centerLng={-73.9851}
+            zoom={12}
+          />
+        </div>
 
         {/* Base Executive View - Consolidated Component */}
         <BaseExecutiveView config={valvularDiseaseConfig} />
