@@ -6,7 +6,7 @@ import DRGOptimizationAlert from '../../../components/shared/DRGOptimizationAler
 import { heartFailureConfig } from '../config/executiveConfig';
 import ExportButton from '../../../components/shared/ExportButton';
 import FinancialROIWaterfall from '../components/executive/FinancialROIWaterfall';
-import GeographicHeatMap from '../components/executive/GeographicHeatMap';
+import ZipHeatMap from '../../../components/shared/ZipHeatMap';
 import ROIWaterfall from '../components/ROIWaterfall';
 import BenchmarksPanel from '../components/BenchmarksPanel';
 import ProjectedVsRealizedChart from '../components/ProjectedVsRealizedChart';
@@ -14,6 +14,35 @@ import OpportunityHeatmap from '../components/OpportunityHeatmap';
 import { ExportData } from '../../../utils/dataExport';
 
 const ExecutiveView: React.FC = () => {
+  // Sample ZIP code data for decompensation risk & readmission hotspots
+  const heartFailureZipData = [
+    { zipCode: "10001", patientCount: 64, riskScore: 8.9, riskLevel: "High" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10002", patientCount: 58, riskScore: 8.4, riskLevel: "High" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10003", patientCount: 45, riskScore: 6.7, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10009", patientCount: 52, riskScore: 7.8, riskLevel: "High" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10010", patientCount: 41, riskScore: 6.2, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10011", patientCount: 38, riskScore: 5.6, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10012", patientCount: 59, riskScore: 8.6, riskLevel: "High" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10013", patientCount: 46, riskScore: 7.1, riskLevel: "High" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10014", patientCount: 50, riskScore: 7.5, riskLevel: "High" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10016", patientCount: 43, riskScore: 6.5, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10017", patientCount: 37, riskScore: 5.4, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10018", patientCount: 47, riskScore: 7.2, riskLevel: "High" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10019", patientCount: 42, riskScore: 6.3, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10021", patientCount: 33, riskScore: 4.8, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10022", patientCount: 35, riskScore: 5.1, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10023", patientCount: 49, riskScore: 7.6, riskLevel: "High" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10024", patientCount: 44, riskScore: 6.8, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10025", patientCount: 46, riskScore: 7.0, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10026", patientCount: 61, riskScore: 9.2, riskLevel: "High" as const, conditionType: "HF Decompensation Risk" },
+    { zipCode: "10027", patientCount: 55, riskScore: 8.7, riskLevel: "High" as const, conditionType: "HF Decompensation Risk" }
+  ];
+
+  const handleZipClick = (zipCode: string) => {
+    console.log(`Drilling down to HF decompensation risk patients for ZIP ${zipCode}`);
+    // TODO: Navigate to patient list view filtered by ZIP code
+  };
+
   // Generate export data
   const generateExportData = (): ExportData => {
     return {
@@ -170,14 +199,15 @@ const ExecutiveView: React.FC = () => {
         </div>
 
         {/* #6: Geographic Heat Map */}
-        <div className="retina-card card-web3-hover relative z-10 mb-6">
-          <div className="px-6 py-4 border-b border-white/30 bg-gradient-to-r from-white/60 to-blue-50/40 backdrop-blur-md">
-            <h3 className="text-lg font-semibold text-steel-900 mb-1">Geographic Distribution</h3>
-            <p className="text-sm text-steel-600">Patient population by region</p>
-          </div>
-          <div className="p-6">
-            <GeographicHeatMap />
-          </div>
+        <div className="mb-6">
+          <ZipHeatMap
+            title="HF Decompensation Risk & Readmission Hotspots"
+            data={heartFailureZipData}
+            onZipClick={handleZipClick}
+            centerLat={40.7589}
+            centerLng={-73.9851}
+            zoom={12}
+          />
         </div>
 
         {/* #7: DRG Information - Immediate Opportunities and Financial Performance */}
