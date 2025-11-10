@@ -3,6 +3,8 @@ import { Users, Calendar, AlertTriangle, Clock, Heart, Shield } from 'lucide-rea
 import { apiService } from '../../../services/apiService';
 import { CareTeamViewConfig } from '../../../components/shared/BaseCareTeamView';
 import { StandardTabConfig } from '../../../components/shared/StandardInterfaces';
+import CRTICDEligibilityCalculator from '../../../components/riskCalculators/CRTICDEligibilityCalculator';
+import { featureFlags } from '../../../config/featureFlags';
 
 // Import Heart Failure specific components
 import PatientWorklistEnhanced from '../components/care-team/PatientWorklistEnhanced';
@@ -529,6 +531,22 @@ const HFClinicalCollaboration: React.FC = () => (
               </button>
             </div>
           </div>
+          
+          {/* CRT/ICD Eligibility Calculator */}
+          {featureFlags.riskCalculators.crtIcdEligibility && (
+            <CRTICDEligibilityCalculator 
+              ejectionFraction={28}
+              nyhaClass="III"
+              qrsDuration={155}
+              qrsMorphology="LBBB"
+              optimalMedicalTherapy={true}
+              lifeExpectancy=">1 year"
+              priorSCD={false}
+              ischemicCardiomyopathy={true}
+              atriallFibrillation={false}
+              kidneyFunction="Mild"
+            />
+          )}
         </div>
       </div>
     </div>

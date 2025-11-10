@@ -3,5 +3,6 @@ export const featureFlags = {
     cha2ds2vasc: true,
     hasbled: true,
     syntaxScore: true,
+    crtIcdEligibility: true,
   },
 };
