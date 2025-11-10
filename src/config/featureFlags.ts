@@ -4,5 +4,6 @@ export const featureFlags = {
     hasbled: true,
     syntaxScore: true,
     crtIcdEligibility: true,
+    wifiClassification: true,
   },
 };

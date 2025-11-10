@@ -6,6 +6,8 @@ import WIfIClassification from '../components/WIfIClassification';
 import LimbSalvageScreening from '../components/LimbSalvageScreening';
 import PADReportingSystem from '../components/PADReportingSystem';
 import PVWoundCareNetworkVisualization from '../components/PVWoundCareNetworkVisualization';
+import WIFIClassificationCalculator from '../../../components/riskCalculators/WIFIClassificationCalculator';
+import { featureFlags } from '../../../config/featureFlags';
 
 // Sample PAD patient data
 const padPatients = [
@@ -436,6 +438,15 @@ const PeripheralClinicalCollaboration: React.FC = () => (
               </button>
             </div>
           </div>
+          
+          {/* WIfI Classification Calculator */}
+          {featureFlags.riskCalculators.wifiClassification && (
+            <WIFIClassificationCalculator 
+              woundGrade={2}
+              ischemiaGrade={3}
+              footInfectionGrade={1}
+            />
+          )}
         </div>
       </div>
     </div>
