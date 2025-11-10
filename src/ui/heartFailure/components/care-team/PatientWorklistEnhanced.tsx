@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TrendingUp, AlertCircle, Calendar, ExternalLink, Filter, User, Heart, Clock, Target, CheckCircle, XCircle, AlertTriangle, ChevronUp, ChevronRight, Pill, Activity } from 'lucide-react';
 import PatientDetailPanel from './PatientDetailPanel';
+import ReferralOriginBadge from '../../../../components/shared/ReferralOriginBadge';
 
 interface WorklistPatient {
   id: string;
@@ -8,6 +9,7 @@ interface WorklistPatient {
   mrn: string;
   age: number;
   gender: 'M' | 'F';
+  referralOrigin: 'upstream' | 'standard';
   lvef: number;
   nyhaClass: 'I' | 'II' | 'III' | 'IV';
   priority: 'high' | 'medium' | 'low';
@@ -152,6 +154,7 @@ const PatientWorklistEnhanced: React.FC = () => {
       mrn: '123456789',
       age: 67,
       gender: 'F',
+      referralOrigin: 'upstream',
       lvef: 28,
       nyhaClass: 'III',
       priority: 'high',
@@ -268,6 +271,7 @@ const PatientWorklistEnhanced: React.FC = () => {
     },
     {
       id: 'PT002',
+      referralOrigin: 'standard',
       name: 'Williams, Robert',
       mrn: '987654321',
       age: 72,
@@ -325,6 +329,7 @@ const PatientWorklistEnhanced: React.FC = () => {
     },
     {
       id: 'PT003',
+      referralOrigin: 'upstream',
       name: 'Davis, Linda',
       mrn: '456789123',
       age: 58,
@@ -388,6 +393,7 @@ const PatientWorklistEnhanced: React.FC = () => {
     },
     {
       id: 'PT004',
+      referralOrigin: 'standard',
       name: 'Brown, Charles',
       mrn: '789123456',
       age: 45,
@@ -446,6 +452,7 @@ const PatientWorklistEnhanced: React.FC = () => {
     },
     {
       id: 'PT005',
+      referralOrigin: 'upstream',
       name: 'Anderson, Sarah',
       mrn: '321654987',
       age: 81,
@@ -641,7 +648,13 @@ const PatientWorklistEnhanced: React.FC = () => {
                   </div>
                   <div>
                     <div className="flex items-center gap-3 mb-1">
-                      <h3 className="text-lg font-bold text-steel-900">{patient.name}</h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-lg font-bold text-steel-900">{patient.name}</h3>
+                        <ReferralOriginBadge 
+                          originType={patient.referralOrigin} 
+                          size="sm"
+                        />
+                      </div>
                       <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getRiskColor(patient.riskScore)}`}>
                         Risk: {patient.riskScore.toFixed(1)}
                       </span>
