@@ -2,6 +2,8 @@ import React from 'react';
 import { Users, Calendar, AlertTriangle, Clock, Heart, Shield, Activity, FileText, Download, UserCheck, Gauge, Target, TrendingUp } from 'lucide-react';
 import { CareTeamViewConfig } from '../../../components/shared/BaseCareTeamView';
 import { StandardTabConfig } from '../../../components/shared/StandardInterfaces';
+import CHA2DS2VAScCalculator from '../../../components/riskCalculators/CHA2DS2VAScCalculator';
+import { featureFlags } from '../../../config/featureFlags';
 
 // Import Structural Heart specific components
 import TAVRAnalyticsDashboard from '../components/TAVRAnalyticsDashboard';
@@ -660,6 +662,19 @@ const StructuralClinicalCollaboration: React.FC = () => (
               </button>
             </div>
           </div>
+          
+          {/* CHA2DS2VASc Calculator */}
+          {featureFlags.riskCalculators.cha2ds2vasc && (
+            <CHA2DS2VAScCalculator 
+              age={72}
+              sex="female"
+              hasCHF={true}
+              hasHypertension={true}
+              hasStrokeHistory={false}
+              hasVascularDisease={true}
+              hasDiabetes={false}
+            />
+          )}
         </div>
       </div>
     </div>
