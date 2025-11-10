@@ -5,5 +5,6 @@ export const featureFlags = {
     syntaxScore: true,
     crtIcdEligibility: true,
     wifiClassification: true,
+    stsRisk: true,
   },
 };
