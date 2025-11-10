@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, TrendingUp, TrendingDown, Award, AlertTriangle } from 'lucide-react';
+import { User, TrendingUp, TrendingDown, Award, AlertTriangle, X, Users, Calendar, FileText, Activity, ChevronRight } from 'lucide-react';
 
 interface ProviderData {
   id: string;
@@ -17,9 +17,23 @@ interface ProviderData {
   caseComplexity: 'low' | 'medium' | 'high';
 }
 
+interface ProviderPatientData {
+  id: string;
+  name: string;
+  age: number;
+  ejectionFraction: number;
+  gdmtPillars: number;
+  riskScore: number;
+  lastVisit: Date;
+  diagnoses: string[];
+  nextSteps: string[];
+}
+
 const ProviderScorecard: React.FC = () => {
   const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<keyof ProviderData>('qualityScore');
+  const [showPatientPanel, setShowPatientPanel] = useState(false);
+  const [selectedProviderForPanel, setSelectedProviderForPanel] = useState<string | null>(null);
 
   // Mock provider data - will be replaced with real API data
   const providerData: ProviderData[] = [
@@ -27,8 +41,8 @@ const ProviderScorecard: React.FC = () => {
       id: 'DR001',
       name: 'Dr. Sarah Rivera',
       title: 'Interventional Cardiologist',
-      patients: 187,
-      gdmtOptimal: 142,
+      patients: 374,
+      gdmtOptimal: 284,
       gdmtRate: 75.9,
       readmissionRate: 8.2,
       lvefImprovement: 12.4,
@@ -42,8 +56,8 @@ const ProviderScorecard: React.FC = () => {
       id: 'DR002',
       name: 'Dr. Michael Chen',
       title: 'Heart Failure Specialist',
-      patients: 234,
-      gdmtOptimal: 167,
+      patients: 468,
+      gdmtOptimal: 334,
       gdmtRate: 71.4,
       readmissionRate: 9.1,
       lvefImprovement: 14.7,
@@ -57,8 +71,8 @@ const ProviderScorecard: React.FC = () => {
       id: 'DR003',
       name: 'Dr. Amanda Foster',
       title: 'General Cardiologist',
-      patients: 156,
-      gdmtOptimal: 98,
+      patients: 312,
+      gdmtOptimal: 196,
       gdmtRate: 62.8,
       readmissionRate: 11.7,
       lvefImprovement: 8.9,
@@ -72,8 +86,8 @@ const ProviderScorecard: React.FC = () => {
       id: 'DR004',
       name: 'Dr. James Park',
       title: 'Electrophysiologist',
-      patients: 98,
-      gdmtOptimal: 71,
+      patients: 196,
+      gdmtOptimal: 142,
       gdmtRate: 72.4,
       readmissionRate: 7.8,
       lvefImprovement: 11.2,
@@ -87,8 +101,8 @@ const ProviderScorecard: React.FC = () => {
       id: 'DR005',
       name: 'Dr. Lisa Martinez',
       title: 'Heart Failure Specialist',
-      patients: 203,
-      gdmtOptimal: 154,
+      patients: 406,
+      gdmtOptimal: 308,
       gdmtRate: 75.9,
       readmissionRate: 8.9,
       lvefImprovement: 13.1,
@@ -99,6 +113,32 @@ const ProviderScorecard: React.FC = () => {
       caseComplexity: 'high',
     },
   ];
+
+  // Mock patient data for each provider
+  const providerPatients: Record<string, ProviderPatientData[]> = {
+    'DR001': [
+      { id: 'P001', name: 'Johnson, Mary', age: 67, ejectionFraction: 25, gdmtPillars: 4, riskScore: 85, lastVisit: new Date('2024-10-20'), diagnoses: ['HFrEF', 'Diabetes', 'CKD'], nextSteps: ['Continue current therapy', 'Monitor labs'] },
+      { id: 'P002', name: 'Smith, Robert', age: 72, ejectionFraction: 30, gdmtPillars: 3, riskScore: 78, lastVisit: new Date('2024-10-18'), diagnoses: ['HFrEF', 'AFib'], nextSteps: ['Add SGLT2 inhibitor', 'Cardiology follow-up'] },
+      { id: 'P003', name: 'Davis, Patricia', age: 59, ejectionFraction: 35, gdmtPillars: 2, riskScore: 65, lastVisit: new Date('2024-10-22'), diagnoses: ['HFrEF', 'HTN'], nextSteps: ['Optimize MRA dosing', 'Add beta-blocker'] }
+    ],
+    'DR002': [
+      { id: 'P004', name: 'Wilson, James', age: 70, ejectionFraction: 28, gdmtPillars: 4, riskScore: 82, lastVisit: new Date('2024-10-19'), diagnoses: ['HFrEF', 'CAD', 'Diabetes'], nextSteps: ['Continue optimal therapy', 'Device evaluation'] },
+      { id: 'P005', name: 'Brown, Linda', age: 65, ejectionFraction: 32, gdmtPillars: 3, riskScore: 75, lastVisit: new Date('2024-10-21'), diagnoses: ['HFrEF', 'COPD'], nextSteps: ['Add fourth pillar', 'Pulmonary consultation'] },
+      { id: 'P006', name: 'Miller, David', age: 68, ejectionFraction: 26, gdmtPillars: 4, riskScore: 88, lastVisit: new Date('2024-10-23'), diagnoses: ['HFrEF', 'CKD', 'AFib'], nextSteps: ['ICD evaluation', 'Continue therapy'] }
+    ],
+    'DR003': [
+      { id: 'P007', name: 'Garcia, Maria', age: 63, ejectionFraction: 40, gdmtPillars: 2, riskScore: 58, lastVisit: new Date('2024-10-17'), diagnoses: ['HFpEF', 'Diabetes'], nextSteps: ['Optimize GDMT', 'Diabetes management'] },
+      { id: 'P008', name: 'Taylor, John', age: 71, ejectionFraction: 38, gdmtPillars: 1, riskScore: 72, lastVisit: new Date('2024-10-16'), diagnoses: ['HFrEF', 'HTN'], nextSteps: ['Initiate GDMT therapy', 'Cardiology referral'] }
+    ],
+    'DR004': [
+      { id: 'P009', name: 'Anderson, Susan', age: 66, ejectionFraction: 29, gdmtPillars: 3, riskScore: 79, lastVisit: new Date('2024-10-24'), diagnoses: ['HFrEF', 'AFib'], nextSteps: ['Device therapy assessment', 'Rhythm management'] },
+      { id: 'P010', name: 'Thomas, Michael', age: 69, ejectionFraction: 33, gdmtPillars: 4, riskScore: 76, lastVisit: new Date('2024-10-22'), diagnoses: ['HFrEF', 'VT'], nextSteps: ['ICD follow-up', 'Continue therapy'] }
+    ],
+    'DR005': [
+      { id: 'P011', name: 'Martinez, Carlos', age: 58, ejectionFraction: 22, gdmtPillars: 4, riskScore: 92, lastVisit: new Date('2024-10-25'), diagnoses: ['HFrEF', 'LVAD candidate'], nextSteps: ['LVAD evaluation', 'Transplant assessment'] },
+      { id: 'P012', name: 'Lee, Jennifer', age: 64, ejectionFraction: 27, gdmtPillars: 4, riskScore: 86, lastVisit: new Date('2024-10-20'), diagnoses: ['HFrEF', 'CKD'], nextSteps: ['Continue therapy', 'Monitor renal function'] }
+    ]
+  };
 
   const sortedProviders = [...providerData].sort((a, b) => {
     if (typeof a[sortBy] === 'number' && typeof b[sortBy] === 'number') {
@@ -138,6 +178,18 @@ const ProviderScorecard: React.FC = () => {
   };
 
   const selectedProviderData = providerData.find(p => p.id === selectedProvider);
+  const panelProviderData = providerData.find(p => p.id === selectedProviderForPanel);
+  const panelPatients = selectedProviderForPanel ? providerPatients[selectedProviderForPanel] || [] : [];
+
+  const handleProviderPanelClick = (providerId: string) => {
+    setSelectedProviderForPanel(providerId);
+    setShowPatientPanel(true);
+  };
+
+  const closeProviderPanel = () => {
+    setShowPatientPanel(false);
+    setSelectedProviderForPanel(null);
+  };
 
   return (
     <div className="retina-card p-8">
@@ -147,7 +199,7 @@ const ProviderScorecard: React.FC = () => {
             Provider Performance Scorecard
           </h2>
           <p className="text-steel-600">
-            GDMT adoption and quality metrics by physician
+            GDMT adoption and quality metrics by physician • Click provider cards for patient details
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -172,7 +224,7 @@ const ProviderScorecard: React.FC = () => {
             onClick={() => setSelectedProvider(
               selectedProvider === provider.id ? null : provider.id
             )}
-            className={`p-4 rounded-xl border-2 transition-all duration-300 text-left ${
+            className={`p-4 rounded-xl border-2 transition-all duration-300 text-left group ${
               selectedProvider === provider.id
                 ? 'border-medical-blue-400 shadow-retina-3 bg-medical-blue-50/30'
                 : 'border-steel-200 hover:border-steel-300 hover:shadow-retina-2'
@@ -230,6 +282,21 @@ const ProviderScorecard: React.FC = () => {
                   {specialty}
                 </span>
               ))}
+            </div>
+
+            {/* View Patients Button */}
+            <div className="mt-3 pt-3 border-t border-steel-200">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleProviderPanelClick(provider.id);
+                }}
+                className="w-full flex items-center justify-center gap-2 py-2 px-3 bg-medical-blue-500 text-white rounded-lg hover:bg-medical-blue-600 transition-colors text-sm font-medium"
+              >
+                <Users className="w-4 h-4" />
+                View {providerPatients[provider.id]?.length || 0} Patients
+                <ChevronRight className="w-4 h-4" />
+              </button>
             </div>
           </button>
         ))}
@@ -331,6 +398,185 @@ const ProviderScorecard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Provider Patient Panel */}
+      {showPatientPanel && panelProviderData && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
+          <div className="w-full max-w-3xl bg-white h-full overflow-y-auto shadow-2xl">
+            {/* Panel Header */}
+            <div className="sticky top-0 bg-white border-b border-steel-200 p-6 z-10">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-2xl font-bold text-steel-900">{panelProviderData.name}</h3>
+                  <p className="text-steel-600 mt-1">
+                    {panelProviderData.title} \u2022 {panelPatients.length} patients
+                  </p>
+                </div>
+                <button
+                  onClick={closeProviderPanel}
+                  className="p-2 rounded-lg hover:bg-steel-100 transition-colors"
+                >
+                  <X className="w-5 h-5 text-steel-600" />
+                </button>
+              </div>
+            </div>
+
+            {/* Panel Content */}
+            <div className="p-6">
+              {/* Provider Summary */}
+              <div className="grid grid-cols-4 gap-4 mb-6">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl">
+                  <div className="text-sm text-blue-700 font-medium">Total Patients</div>
+                  <div className="text-2xl font-bold text-blue-800">{panelProviderData.patients}</div>
+                </div>
+                <div className={`p-4 rounded-xl ${
+                  panelProviderData.gdmtRate >= 70 ? 'bg-gradient-to-br from-green-50 to-green-100' : 'bg-gradient-to-br from-amber-50 to-amber-100'
+                }`}>
+                  <div className={`text-sm font-medium ${
+                    panelProviderData.gdmtRate >= 70 ? 'text-green-700' : 'text-amber-700'
+                  }`}>GDMT Rate</div>
+                  <div className={`text-2xl font-bold ${
+                    panelProviderData.gdmtRate >= 70 ? 'text-green-800' : 'text-amber-800'
+                  }`}>{panelProviderData.gdmtRate.toFixed(1)}%</div>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl">
+                  <div className="text-sm text-purple-700 font-medium">Quality Score</div>
+                  <div className="text-2xl font-bold text-purple-800">{panelProviderData.qualityScore.toFixed(0)}</div>
+                </div>
+                <div className={`p-4 rounded-xl ${
+                  panelProviderData.readmissionRate <= 8 ? 'bg-gradient-to-br from-green-50 to-green-100' : 'bg-gradient-to-br from-red-50 to-red-100'
+                }`}>
+                  <div className={`text-sm font-medium ${
+                    panelProviderData.readmissionRate <= 8 ? 'text-green-700' : 'text-red-700'
+                  }`}>Readmission Rate</div>
+                  <div className={`text-2xl font-bold ${
+                    panelProviderData.readmissionRate <= 8 ? 'text-green-800' : 'text-red-800'
+                  }`}>{panelProviderData.readmissionRate.toFixed(1)}%</div>
+                </div>
+              </div>
+
+              {/* Patient List */}
+              <div className="space-y-4">
+                <h4 className="text-lg font-semibold text-steel-900 flex items-center gap-2">
+                  <Users className="w-5 h-5" />
+                  Patient Details
+                </h4>
+                
+                {panelPatients.map((patient) => (
+                  <div key={patient.id} className="border border-steel-200 rounded-xl p-4 bg-white hover:shadow-md transition-shadow">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm ${
+                          patient.riskScore >= 80 ? 'bg-red-500' :
+                          patient.riskScore >= 60 ? 'bg-amber-500' : 'bg-green-500'
+                        }`}>
+                          {patient.name.split(' ').map(n => n[0]).join('')}
+                        </div>
+                        <div>
+                          <div className="font-semibold text-steel-900">{patient.name}</div>
+                          <div className="text-sm text-steel-600">
+                            Age {patient.age} \u2022 EF {patient.ejectionFraction}% \u2022 Risk Score: {patient.riskScore}
+                          </div>
+                        </div>
+                      </div>
+                      <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        patient.riskScore >= 80 ? 'bg-red-100 text-red-700' :
+                        patient.riskScore >= 60 ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'
+                      }`}>
+                        {patient.riskScore >= 80 ? 'HIGH RISK' : patient.riskScore >= 60 ? 'MODERATE RISK' : 'LOW RISK'}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                      <div>
+                        <div className="text-sm font-medium text-steel-700 mb-2 flex items-center gap-1">
+                          <Activity className="w-3 h-3" />
+                          GDMT Status
+                        </div>
+                        <div className={`text-sm px-2 py-1 rounded-full ${
+                          patient.gdmtPillars === 4 ? 'bg-green-100 text-green-700' :
+                          patient.gdmtPillars >= 2 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
+                        }`}>
+                          {patient.gdmtPillars}/4 pillars active
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium text-steel-700 mb-2 flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          Last Visit
+                        </div>
+                        <div className="text-sm text-steel-600">
+                          {patient.lastVisit.toLocaleDateString()}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium text-steel-700 mb-2">Diagnoses</div>
+                        <div className="flex flex-wrap gap-1">
+                          {patient.diagnoses.slice(0, 2).map((diagnosis, idx) => (
+                            <span key={idx} className="px-2 py-1 bg-medical-blue-100 text-medical-blue-700 text-xs rounded-full">
+                              {diagnosis}
+                            </span>
+                          ))}
+                          {patient.diagnoses.length > 2 && (
+                            <span className="px-2 py-1 bg-steel-100 text-steel-600 text-xs rounded-full">
+                              +{patient.diagnoses.length - 2} more
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="text-sm font-medium text-steel-700 mb-2 flex items-center gap-1">
+                        <FileText className="w-3 h-3" />
+                        Next Steps
+                      </div>
+                      <div className="space-y-1">
+                        {patient.nextSteps.map((step, idx) => (
+                          <div key={idx} className="text-sm text-steel-600 flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 bg-medical-blue-500 rounded-full flex-shrink-0"></div>
+                            {step}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {panelPatients.length === 0 && (
+                  <div className="text-center py-8 text-steel-500">
+                    No patient data available for this provider.
+                  </div>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 mt-6 pt-6 border-t border-steel-200">
+                <button 
+                  className="flex-1 bg-medical-blue-500 text-white py-3 px-4 rounded-lg hover:bg-medical-blue-600 transition-colors font-medium"
+                  onClick={() => {
+                    console.log('Opening provider report');
+                    // TODO: Implement provider report modal
+                    alert('View Provider Report - Detailed provider performance report will open');
+                  }}
+                >
+                  View Provider Report
+                </button>
+                <button 
+                  className="flex-1 bg-white border border-steel-300 text-steel-700 py-3 px-4 rounded-lg hover:bg-steel-50 transition-colors font-medium"
+                  onClick={() => {
+                    console.log('Scheduling team meeting');
+                    // TODO: Implement team meeting scheduler
+                    alert('Schedule Team Meeting - Meeting scheduler will open');
+                  }}
+                >
+                  Schedule Team Meeting
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

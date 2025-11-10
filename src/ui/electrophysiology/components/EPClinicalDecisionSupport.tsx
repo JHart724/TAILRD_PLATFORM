@@ -378,7 +378,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
               onClick={() => setActiveTab(tab.id as any)}
               className={`px-6 py-3 border-b-2 transition-all duration-200 flex items-center gap-2 ${
                 activeTab === tab.id
-                  ? 'border-medical-blue-500 text-medical-blue-600 bg-medical-blue-50'
+                  ? 'border-medical-green-500 text-medical-green-600 bg-medical-green-50'
                   : 'border-transparent text-steel-600 hover:text-steel-800 hover:bg-steel-50'
               }`}
             >
@@ -421,10 +421,10 @@ const EPClinicalDecisionSupport: React.FC = () => {
               ))}
             </div>
 
-            <div className="p-4 bg-medical-blue-50 rounded-xl border border-medical-blue-200">
+            <div className="p-4 bg-medical-green-50 rounded-xl border border-medical-green-200">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-semibold text-steel-900">CHA₂DS₂-VASc Score</span>
-                <span className="text-2xl font-bold text-medical-blue-600">{cha2ds2vasc.score}</span>
+                <span className="text-2xl font-bold text-medical-green-600">{cha2ds2vasc.score}</span>
               </div>
               <div className="text-sm text-steel-600 mb-1">Stroke Risk: {cha2ds2vasc.risk}</div>
               <div className="text-sm text-steel-600">Annual Risk: {cha2ds2vasc.yearlyStrokeRisk}%</div>
@@ -478,7 +478,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
       {activeTab === 'watchman' && (
         <div className="retina-card p-8">
           <h2 className="text-2xl font-bold text-steel-900 mb-6 font-sf flex items-center gap-2">
-            <Shield className="w-8 h-8 text-medical-blue-500" />
+            <Shield className="w-8 h-8 text-medical-green-500" />
             WATCHMAN/LAAC Eligibility Assessment
           </h2>
 
@@ -501,7 +501,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-6 bg-medical-blue-50 rounded-xl border border-medical-blue-200">
+            <div className="p-6 bg-medical-green-50 rounded-xl border border-medical-green-200">
               <h4 className="font-semibold text-steel-900 mb-3">Rationale</h4>
               <ul className="text-sm text-steel-700 space-y-1">
                 {watchmanRec.rationale.map((item, index) => (
@@ -518,7 +518,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
               <ul className="text-sm text-steel-700 space-y-1">
                 {watchmanRec.nextSteps.map((step, index) => (
                   <li key={index} className="flex items-start gap-2">
-                    <div className="w-4 h-4 bg-medical-blue-500 rounded-full text-white text-xs flex items-center justify-center mt-0.5 flex-shrink-0">
+                    <div className="w-4 h-4 bg-medical-green-500 rounded-full text-white text-xs flex items-center justify-center mt-0.5 flex-shrink-0">
                       {index + 1}
                     </div>
                     {step}
@@ -552,7 +552,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
       {activeTab === 'ablation' && (
         <div className="retina-card p-8">
           <h2 className="text-2xl font-bold text-steel-900 mb-6 font-sf flex items-center gap-2">
-            <Zap className="w-8 h-8 text-medical-blue-500" />
+            <Zap className="w-8 h-8 text-medical-green-500" />
             AF Ablation Eligibility Assessment
           </h2>
 
@@ -575,7 +575,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-6 bg-medical-blue-50 rounded-xl border border-medical-blue-200">
+            <div className="p-6 bg-medical-green-50 rounded-xl border border-medical-green-200">
               <h4 className="font-semibold text-steel-900 mb-3">Supporting Factors</h4>
               <ul className="text-sm text-steel-700 space-y-1">
                 {ablationRec.rationale.map((item, index) => (
@@ -592,7 +592,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
               <ul className="text-sm text-steel-700 space-y-1">
                 {ablationRec.nextSteps.map((step, index) => (
                   <li key={index} className="flex items-start gap-2">
-                    <div className="w-4 h-4 bg-medical-blue-500 rounded-full text-white text-xs flex items-center justify-center mt-0.5 flex-shrink-0">
+                    <div className="w-4 h-4 bg-medical-green-500 rounded-full text-white text-xs flex items-center justify-center mt-0.5 flex-shrink-0">
                       {index + 1}
                     </div>
                     {step}
@@ -609,7 +609,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
         <div className="space-y-6">
           <div className="retina-card p-8">
             <h2 className="text-2xl font-bold text-steel-900 mb-6 font-sf flex items-center gap-2">
-              <Brain className="w-8 h-8 text-medical-blue-500" />
+              <Brain className="w-8 h-8 text-medical-green-500" />
               Mount Sinai Licensed Algorithms
             </h2>
             <p className="text-steel-600 mb-6">
@@ -620,7 +620,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
               {getMountSinaiAlgorithms().map((algorithm, index) => (
                 <div key={index} className="p-6 bg-white rounded-xl border border-steel-200 hover:shadow-retina-2 transition-all duration-300">
                   <div className="flex items-center gap-3 mb-4">
-                    <Award className="w-6 h-6 text-medical-blue-500" />
+                    <Award className="w-6 h-6 text-medical-green-500" />
                     <h3 className="font-bold text-steel-900">{algorithm.name}</h3>
                   </div>
                   
@@ -629,11 +629,11 @@ const EPClinicalDecisionSupport: React.FC = () => {
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-semibold text-steel-700">Algorithm Score</span>
-                      <span className="text-lg font-bold text-medical-blue-600">{algorithm.score}%</span>
+                      <span className="text-lg font-bold text-medical-green-600">{algorithm.score}%</span>
                     </div>
                     <div className="w-full bg-steel-200 rounded-full h-2">
                       <div 
-                        className="h-2 bg-medical-blue-500 rounded-full transition-all duration-300"
+                        className="h-2 bg-medical-green-500 rounded-full transition-all duration-300"
                         style={{ width: `${algorithm.score}%` }}
                       ></div>
                     </div>

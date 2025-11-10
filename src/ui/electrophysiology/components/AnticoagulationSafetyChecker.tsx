@@ -281,7 +281,7 @@ const AnticoagulationSafetyChecker: React.FC = () => {
     switch (status) {
       case 'contraindicated': return 'text-red-800 bg-red-100 border-red-300';
       case 'caution': return 'text-medical-amber-800 bg-medical-amber-100 border-medical-amber-300';
-      case 'monitor': return 'text-medical-blue-800 bg-medical-blue-100 border-medical-blue-300';
+      case 'monitor': return 'text-medical-green-800 bg-medical-green-100 border-medical-green-300';
       case 'safe': return 'text-medical-green-800 bg-medical-green-100 border-medical-green-300';
       default: return 'text-steel-600 bg-steel-50 border-steel-200';
     }
@@ -519,11 +519,11 @@ const AnticoagulationSafetyChecker: React.FC = () => {
           </div>
 
           {/* Clinical Recommendation */}
-          <div className="p-6 bg-medical-blue-50 border border-medical-blue-200 rounded-xl">
-            <h3 className="text-lg font-semibold text-medical-blue-800 mb-4">Clinical Recommendation</h3>
-            <div className="text-sm text-medical-blue-700">
+          <div className="p-6 bg-medical-green-50 border border-medical-green-200 rounded-xl">
+            <h3 className="text-lg font-semibold text-medical-green-800 mb-4">Clinical Recommendation</h3>
+            <div className="text-sm text-medical-green-700">
               {patientData.chaidsVascScore >= 2 && !patientData.hasActiveBleeding && (
-                <div className="font-semibold text-medical-blue-800">
+                <div className="font-semibold text-medical-green-800">
                   Anticoagulation RECOMMENDED - Stroke risk outweighs bleeding risk
                 </div>
               )}

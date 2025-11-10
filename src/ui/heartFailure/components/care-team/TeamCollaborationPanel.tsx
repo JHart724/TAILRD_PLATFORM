@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MessageCircle, Users, Bell, Send, Clock, CheckCircle, AlertTriangle, User, Phone, Video } from 'lucide-react';
+import { MessageCircle, Users, Bell, Send, Clock, CheckCircle, AlertTriangle, User, Phone, Video, ExternalLink, X, Heart, Thermometer, Droplets, Shield, Pill, FileText, Calendar, Activity } from 'lucide-react';
 
 interface TeamMember {
   id: string;
@@ -47,11 +47,60 @@ interface Alert {
   assignedTo: string;
 }
 
+interface PatientInfo {
+  mrn: string;
+  name: string;
+  age: number;
+  gender: 'M' | 'F';
+  lvef: number;
+  nyhaClass: 'I' | 'II' | 'III' | 'IV';
+  priority: 'high' | 'medium' | 'low';
+  recentAdmission: boolean;
+  fullChart: {
+    vitals: {
+      bp: string;
+      hr: number;
+      temp: number;
+      o2sat: number;
+      weight: number;
+    };
+    labs: {
+      creatinine: number;
+      bun: number;
+      sodium: number;
+      potassium: number;
+      hemoglobin: number;
+      bnp?: number;
+      troponin?: number;
+    };
+    medications: {
+      name: string;
+      dose: string;
+      frequency: string;
+    }[];
+    provider: {
+      attending: string;
+      resident?: string;
+      nurse: string;
+    };
+    notes: string[];
+    allergies: string[];
+    gdmtStatus: {
+      betaBlocker: boolean;
+      aceArb: boolean;
+      mra: boolean;
+      sglt2: boolean;
+    };
+  };
+}
+
 const TeamCollaborationPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'messages' | 'team' | 'alerts'>('messages');
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [messageFilter, setMessageFilter] = useState<'all' | 'urgent' | 'unread'>('all');
+  const [showPatientPanel, setShowPatientPanel] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState<PatientInfo | null>(null);
 
   const teamMembers: TeamMember[] = [
     {
@@ -208,6 +257,272 @@ const TeamCollaborationPanel: React.FC = () => {
       assignedTo: 'Sarah Johnson, NP',
     },
   ];
+
+  // Mock patient data for collaboration context
+  const patientDatabase: PatientInfo[] = [
+    {
+      mrn: '123456789',
+      name: 'Johnson, Maria',
+      age: 67,
+      gender: 'F',
+      lvef: 28,
+      nyhaClass: 'III',
+      priority: 'high',
+      recentAdmission: true,
+      fullChart: {
+        vitals: {
+          bp: '138/82',
+          hr: 94,
+          temp: 98.4,
+          o2sat: 93,
+          weight: 175.2
+        },
+        labs: {
+          creatinine: 1.3,
+          bun: 28,
+          sodium: 136,
+          potassium: 4.2,
+          hemoglobin: 11.8,
+          bnp: 2400
+        },
+        medications: [
+          { name: 'Carvedilol', dose: '25mg', frequency: 'BID' },
+          { name: 'Lisinopril', dose: '20mg', frequency: 'Daily' },
+          { name: 'Furosemide', dose: '40mg', frequency: 'Daily' }
+        ],
+        provider: {
+          attending: 'Dr. Michael Chen',
+          resident: 'Dr. Thompson',
+          nurse: 'Sarah Johnson, NP'
+        },
+        notes: [
+          'Patient reports increased dyspnea with minimal exertion',
+          'BNP significantly elevated from 800 to 2,400',
+          'Considering IV diuretics per Dr. Chen recommendation',
+          'CRT evaluation scheduled'
+        ],
+        allergies: ['Sulfa drugs'],
+        gdmtStatus: {
+          betaBlocker: true,
+          aceArb: true,
+          mra: false,
+          sglt2: false
+        }
+      }
+    },
+    {
+      mrn: '456789123',
+      name: 'Davis, Linda',
+      age: 58,
+      gender: 'F',
+      lvef: 22,
+      nyhaClass: 'IV',
+      priority: 'high',
+      recentAdmission: true,
+      fullChart: {
+        vitals: {
+          bp: '98/62',
+          hr: 110,
+          temp: 99.2,
+          o2sat: 89,
+          weight: 162.8
+        },
+        labs: {
+          creatinine: 2.1,
+          bun: 58,
+          sodium: 132,
+          potassium: 5.1,
+          hemoglobin: 9.8,
+          bnp: 3850
+        },
+        medications: [
+          { name: 'Carvedilol', dose: '12.5mg', frequency: 'BID' },
+          { name: 'Lisinopril', dose: '5mg', frequency: 'Daily' },
+          { name: 'Spironolactone', dose: '25mg', frequency: 'Daily' }
+        ],
+        provider: {
+          attending: 'Dr. Martinez',
+          resident: 'Dr. Wilson',
+          nurse: 'Angela Davis, RN'
+        },
+        notes: [
+          'Advanced heart failure with frequent hospitalizations',
+          'Drug interaction monitoring between spironolactone and ACE inhibitor',
+          'K+ elevated at 5.1 - close monitoring required',
+          'Candidate for advanced heart failure interventions'
+        ],
+        allergies: ['Penicillin'],
+        gdmtStatus: {
+          betaBlocker: true,
+          aceArb: true,
+          mra: true,
+          sglt2: false
+        }
+      }
+    },
+    {
+      mrn: '987654321',
+      name: 'Williams, Robert',
+      age: 72,
+      gender: 'M',
+      lvef: 35,
+      nyhaClass: 'II',
+      priority: 'medium',
+      recentAdmission: false,
+      fullChart: {
+        vitals: {
+          bp: '124/76',
+          hr: 68,
+          temp: 98.6,
+          o2sat: 97,
+          weight: 189.5
+        },
+        labs: {
+          creatinine: 1.1,
+          bun: 22,
+          sodium: 140,
+          potassium: 4.5,
+          hemoglobin: 13.2,
+          bnp: 680
+        },
+        medications: [
+          { name: 'Metoprolol XL', dose: '50mg', frequency: 'Daily' },
+          { name: 'Lisinopril', dose: '10mg', frequency: 'Daily' },
+          { name: 'Atorvastatin', dose: '40mg', frequency: 'Daily' }
+        ],
+        provider: {
+          attending: 'Dr. Rivera',
+          nurse: 'David Park, RN'
+        },
+        notes: [
+          'Stable heart failure with good functional capacity',
+          'Post-cath stable, moving to step-down unit',
+          'Continue current medications',
+          'Follow-up echo scheduled for morning'
+        ],
+        allergies: ['NKDA'],
+        gdmtStatus: {
+          betaBlocker: true,
+          aceArb: true,
+          mra: false,
+          sglt2: false
+        }
+      }
+    },
+    {
+      mrn: '321654987',
+      name: 'Anderson, Sarah',
+      age: 81,
+      gender: 'F',
+      lvef: 31,
+      nyhaClass: 'III',
+      priority: 'high',
+      recentAdmission: false,
+      fullChart: {
+        vitals: {
+          bp: '108/68',
+          hr: 58,
+          temp: 98.8,
+          o2sat: 95,
+          weight: 156.3
+        },
+        labs: {
+          creatinine: 1.6,
+          bun: 42,
+          sodium: 139,
+          potassium: 4.6,
+          hemoglobin: 10.9,
+          bnp: 890,
+          troponin: 15.2
+        },
+        medications: [
+          { name: 'Diltiazem', dose: '120mg', frequency: 'Daily' },
+          { name: 'Lisinopril', dose: '2.5mg', frequency: 'Daily' },
+          { name: 'Furosemide', dose: '20mg', frequency: 'Daily' }
+        ],
+        provider: {
+          attending: 'Dr. Rivera',
+          nurse: 'Michael Chen, RN'
+        },
+        notes: [
+          'CRITICAL: Troponin significantly elevated at 15.2',
+          'Elderly patient with multiple comorbidities',
+          'Beta-blocker intolerance due to bradycardia',
+          'Requires immediate cardiology evaluation'
+        ],
+        allergies: ['Beta-blockers', 'NSAIDs'],
+        gdmtStatus: {
+          betaBlocker: false,
+          aceArb: true,
+          mra: false,
+          sglt2: false
+        }
+      }
+    },
+    {
+      mrn: '789123456',
+      name: 'Brown, Charles',
+      age: 45,
+      gender: 'M',
+      lvef: 42,
+      nyhaClass: 'II',
+      priority: 'medium',
+      recentAdmission: false,
+      fullChart: {
+        vitals: {
+          bp: '142/88',
+          hr: 72,
+          temp: 98.1,
+          o2sat: 98,
+          weight: 201.5
+        },
+        labs: {
+          creatinine: 0.9,
+          bun: 18,
+          sodium: 142,
+          potassium: 4.1,
+          hemoglobin: 14.2,
+          bnp: 180
+        },
+        medications: [
+          { name: 'Amlodipine', dose: '5mg', frequency: 'Daily' },
+          { name: 'Losartan', dose: '50mg', frequency: 'Daily' },
+          { name: 'HCTZ', dose: '25mg', frequency: 'Daily' }
+        ],
+        provider: {
+          attending: 'Dr. Foster',
+          nurse: 'Lisa Martinez, PharmD'
+        },
+        notes: [
+          'Medication allergy alert triggered',
+          'Patient allergic to lisinopril - ACE inhibitor ordered',
+          'Stable heart failure with preserved ejection fraction',
+          'Pharmacy intervention successful'
+        ],
+        allergies: ['Lisinopril', 'ACE inhibitors'],
+        gdmtStatus: {
+          betaBlocker: false,
+          aceArb: false,
+          mra: false,
+          sglt2: false
+        }
+      }
+    }
+  ];
+
+  // Function to get patient data by MRN
+  const getPatientByMRN = (mrn: string): PatientInfo | undefined => {
+    return patientDatabase.find(patient => patient.mrn === mrn);
+  };
+
+  // Function to open patient chart
+  const openPatientChart = (mrn: string) => {
+    const patient = getPatientByMRN(mrn);
+    if (patient) {
+      setSelectedPatient(patient);
+      setShowPatientPanel(true);
+    }
+  };
 
   const filteredMessages = messages.filter(msg => {
     if (messageFilter === 'urgent') return msg.priority === 'urgent';
@@ -380,9 +695,18 @@ const TeamCollaborationPanel: React.FC = () => {
                 </div>
                 
                 {message.patientContext && (
-                  <div className="mb-2 p-2 bg-steel-100 rounded text-sm">
-                    <span className="font-medium">Patient:</span> {message.patientContext.name} 
-                    <span className="text-steel-600 ml-2">MRN: {message.patientContext.mrn}</span>
+                  <div 
+                    className="mb-2 p-2 bg-steel-100 rounded text-sm cursor-pointer hover:bg-steel-200 transition-colors flex items-center justify-between"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openPatientChart(message.patientContext!.mrn);
+                    }}
+                  >
+                    <div>
+                      <span className="font-medium">Patient:</span> {message.patientContext.name} 
+                      <span className="text-steel-600 ml-2">MRN: {message.patientContext.mrn}</span>
+                    </div>
+                    <ExternalLink className="w-4 h-4 text-steel-600" />
                   </div>
                 )}
                 
@@ -497,8 +821,15 @@ const TeamCollaborationPanel: React.FC = () => {
                     <div className="font-semibold text-steel-900">
                       {alert.type.replace('_', ' ').toUpperCase()}
                     </div>
-                    <div className="text-sm text-steel-600">
+                    <div 
+                      className="text-sm text-steel-600 cursor-pointer hover:text-medical-blue-600 flex items-center gap-1"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openPatientChart(alert.mrn);
+                      }}
+                    >
                       {alert.patient} (MRN: {alert.mrn})
+                      <ExternalLink className="w-3 h-3" />
                     </div>
                   </div>
                 </div>
@@ -521,6 +852,270 @@ const TeamCollaborationPanel: React.FC = () => {
               )}
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Patient Detail Side Panel */}
+      {showPatientPanel && selectedPatient && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
+          <div className="bg-white w-1/2 h-full overflow-y-auto shadow-2xl">
+            {/* Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 z-10">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">{selectedPatient.name}</h2>
+                  <p className="text-gray-600">
+                    MRN: {selectedPatient.mrn} | Age: {selectedPatient.age}{selectedPatient.gender}
+                  </p>
+                  <div className="flex items-center gap-3 mt-2">
+                    <span className={`px-3 py-1 rounded-lg border-l-4 font-medium text-sm ${
+                      selectedPatient.priority === 'high' ? 'border-red-500 bg-red-50 text-red-700' :
+                      selectedPatient.priority === 'medium' ? 'border-orange-500 bg-orange-50 text-orange-700' :
+                      'border-green-500 bg-green-50 text-green-700'
+                    }`}>
+                      {selectedPatient.priority.toUpperCase()} Priority
+                    </span>
+                    {selectedPatient.recentAdmission && (
+                      <span className="px-2 py-1 bg-red-100 text-red-700 rounded text-sm font-medium">
+                        Recent Admission
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowPatientPanel(false);
+                    setSelectedPatient(null);
+                  }}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* Clinical Overview */}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="bg-blue-50 rounded-lg p-4 text-center">
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <Heart className="w-5 h-5 text-blue-600" />
+                    <span className="text-2xl font-bold text-gray-900">{selectedPatient.lvef}%</span>
+                  </div>
+                  <p className="text-sm text-gray-600">LVEF</p>
+                </div>
+                <div className="bg-purple-50 rounded-lg p-4 text-center">
+                  <div className="text-xl font-bold text-purple-600 mb-2">NYHA {selectedPatient.nyhaClass}</div>
+                  <p className="text-sm text-gray-600">Functional Class</p>
+                </div>
+                <div className="bg-amber-50 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-amber-600 mb-2">
+                    {Object.values(selectedPatient.fullChart.gdmtStatus).filter(status => !status).length}
+                  </div>
+                  <p className="text-sm text-gray-600">GDMT Gaps</p>
+                </div>
+              </div>
+
+              {/* Vital Signs */}
+              <div className="bg-blue-50 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <Thermometer className="w-5 h-5 text-blue-600" />
+                  Current Vital Signs
+                </h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <span className="text-sm text-gray-600">Blood Pressure</span>
+                    <p className="font-medium">{selectedPatient.fullChart.vitals.bp} mmHg</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">Heart Rate</span>
+                    <p className="font-medium">{selectedPatient.fullChart.vitals.hr} bpm</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">Temperature</span>
+                    <p className="font-medium">{selectedPatient.fullChart.vitals.temp}°F</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">O2 Saturation</span>
+                    <p className="font-medium">{selectedPatient.fullChart.vitals.o2sat}%</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">Weight</span>
+                    <p className="font-medium">{selectedPatient.fullChart.vitals.weight} lbs</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Laboratory Results */}
+              <div className="bg-green-50 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <Droplets className="w-5 h-5 text-green-600" />
+                  Laboratory Results
+                </h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <span className="text-sm text-gray-600">Creatinine</span>
+                    <p className="font-medium">{selectedPatient.fullChart.labs.creatinine} mg/dL</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">BUN</span>
+                    <p className="font-medium">{selectedPatient.fullChart.labs.bun} mg/dL</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">Sodium</span>
+                    <p className="font-medium">{selectedPatient.fullChart.labs.sodium} mEq/L</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">Potassium</span>
+                    <p className="font-medium">{selectedPatient.fullChart.labs.potassium} mEq/L</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">Hemoglobin</span>
+                    <p className="font-medium">{selectedPatient.fullChart.labs.hemoglobin} g/dL</p>
+                  </div>
+                  {selectedPatient.fullChart.labs.bnp && (
+                    <div>
+                      <span className="text-sm text-gray-600">BNP</span>
+                      <p className="font-medium">{selectedPatient.fullChart.labs.bnp} pg/mL</p>
+                    </div>
+                  )}
+                  {selectedPatient.fullChart.labs.troponin && (
+                    <div>
+                      <span className="text-sm text-gray-600">Troponin</span>
+                      <p className={`font-medium ${selectedPatient.fullChart.labs.troponin > 0.04 ? 'text-red-600' : ''}`}>
+                        {selectedPatient.fullChart.labs.troponin} ng/mL
+                        {selectedPatient.fullChart.labs.troponin > 0.04 && (
+                          <span className="text-xs text-red-600 block">CRITICAL</span>
+                        )}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Current Medications */}
+              <div className="bg-purple-50 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <Pill className="w-5 h-5 text-purple-600" />
+                  Current Medications
+                </h3>
+                <div className="space-y-2">
+                  {selectedPatient.fullChart.medications.map((med, idx) => (
+                    <div key={idx} className="flex justify-between items-center bg-white p-2 rounded">
+                      <span className="font-medium">{med.name}</span>
+                      <span className="text-sm text-gray-600">{med.dose} {med.frequency}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* GDMT Status */}
+              <div className="bg-medical-blue-50 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <Heart className="w-5 h-5 text-medical-blue-600" />
+                  GDMT Status
+                </h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-3 h-3 rounded-full ${
+                      selectedPatient.fullChart.gdmtStatus.betaBlocker ? 'bg-green-500' : 'bg-red-500'
+                    }`}></div>
+                    <span className="text-sm">Beta Blocker</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-3 h-3 rounded-full ${
+                      selectedPatient.fullChart.gdmtStatus.aceArb ? 'bg-green-500' : 'bg-red-500'
+                    }`}></div>
+                    <span className="text-sm">ACE/ARB/ARNi</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-3 h-3 rounded-full ${
+                      selectedPatient.fullChart.gdmtStatus.mra ? 'bg-green-500' : 'bg-red-500'
+                    }`}></div>
+                    <span className="text-sm">MRA</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-3 h-3 rounded-full ${
+                      selectedPatient.fullChart.gdmtStatus.sglt2 ? 'bg-green-500' : 'bg-red-500'
+                    }`}></div>
+                    <span className="text-sm">SGLT2i</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Care Team */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <Users className="w-5 h-5 text-gray-600" />
+                  Care Team
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Attending Physician</span>
+                    <span className="font-medium">{selectedPatient.fullChart.provider.attending}</span>
+                  </div>
+                  {selectedPatient.fullChart.provider.resident && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Resident</span>
+                      <span className="font-medium">{selectedPatient.fullChart.provider.resident}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Primary Nurse</span>
+                    <span className="font-medium">{selectedPatient.fullChart.provider.nurse}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Clinical Notes */}
+              <div className="bg-yellow-50 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-yellow-600" />
+                  Recent Clinical Notes
+                </h3>
+                <div className="space-y-2">
+                  {selectedPatient.fullChart.notes.map((note, idx) => (
+                    <div key={idx} className="flex items-start gap-2">
+                      <Activity className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">{note}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Allergies */}
+              <div className="bg-red-50 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <Shield className="w-5 h-5 text-red-600" />
+                  Allergies
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {selectedPatient.fullChart.allergies.map((allergy, idx) => (
+                    <span key={idx} className="px-2 py-1 bg-red-100 text-red-700 rounded text-sm">
+                      {allergy}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-4 border-t border-gray-200">
+                <button className="flex-1 px-4 py-3 bg-medical-blue-600 text-white rounded-lg font-medium hover:bg-medical-blue-700 transition-colors">
+                  <MessageCircle className="w-4 h-4 inline mr-2" />
+                  Message Team About Patient
+                </button>
+                <button
+                  className="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+                  onClick={() => {
+                    setShowPatientPanel(false);
+                    setSelectedPatient(null);
+                  }}
+                >
+                  Close Chart
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -381,10 +381,24 @@ const AdvancedDeviceTracker: React.FC = () => {
 
             {/* Action Buttons */}
             <div className="flex gap-2">
-              <button className="flex-1 px-3 py-2 bg-medical-blue-500 text-white text-sm font-semibold rounded-lg hover:bg-medical-blue-600 transition-colors">
+              <button 
+                className="flex-1 px-3 py-2 bg-medical-blue-500 text-white text-sm font-semibold rounded-lg hover:bg-medical-blue-600 transition-colors"
+                onClick={() => {
+                  console.log('Opening patient screening for device candidacy');
+                  // TODO: Implement patient screening workflow
+                  alert('Screen Patients - Device candidacy patient screening tool will open');
+                }}
+              >
                 Screen Patients
               </button>
-              <button className="px-3 py-2 border border-steel-300 text-steel-700 text-sm font-semibold rounded-lg hover:bg-steel-50 transition-colors">
+              <button 
+                className="px-3 py-2 border border-steel-300 text-steel-700 text-sm font-semibold rounded-lg hover:bg-steel-50 transition-colors"
+                onClick={() => {
+                  console.log('Opening device therapy guidelines');
+                  // TODO: Implement guidelines reference modal
+                  alert('Guidelines - Device therapy guidelines and protocols will open');
+                }}
+              >
                 Guidelines
               </button>
             </div>

@@ -58,10 +58,10 @@ const RevenueCycleModule: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-medical-liquid relative">
+    <div className="min-h-screen bg-liquid-porsche-blue relative">
       {/* Loading Overlay */}
       {isLoading && (
-        <div className="fixed inset-0 bg-gradient-medical-liquid z-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-liquid-porsche-blue z-50 flex items-center justify-center">
           <div className="text-center">
             {/* Loading animation */}
             <div className="mb-8">
@@ -97,7 +97,7 @@ const RevenueCycleModule: React.FC = () => {
       )}
       
       {/* Module Header */}
-      <div className="bg-white border-b border-steel-200 sticky top-0 z-10">
+      <div className="bg-blue-50/20 backdrop-blur-md border-b border-blue-200/20 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">

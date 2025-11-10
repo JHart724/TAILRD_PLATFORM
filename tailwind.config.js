@@ -257,11 +257,21 @@ module.exports = {
       backgroundImage: {
         'liquid-crystal': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         'liquid-medical': 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)',
+        'liquid-porsche-blue': 'linear-gradient(to bottom right, #eff6ff 0%, #f1f5f9 50%, #dbeafe 100%)',
         'liquid-steel': 'linear-gradient(135deg, #64748b 0%, #475569 50%, #334155 100%)',
         'liquid-heart': 'linear-gradient(135deg, #fee2e2 0%, #fecaca 50%, #fca5a5 100%)',
         'liquid-clinical': 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%)',
         'retina-surface': 'linear-gradient(145deg, rgba(248,250,252,0.9) 0%, rgba(241,245,249,0.8) 50%, rgba(226,232,240,0.7) 100%)',
-        'retina-float': 'linear-gradient(145deg, rgba(255,255,255,0.6) 0%, rgba(248,250,252,0.4) 100%)'
+        'retina-float': 'linear-gradient(145deg, rgba(255,255,255,0.6) 0%, rgba(248,250,252,0.4) 100%)',
+        
+        // Web 3.0 Background Gradients
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'glass-gradient': 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
+        'web3-primary': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        'web3-medical': 'linear-gradient(135deg, #42a5f5 0%, #478ed1 50%, #4a90e2 100%)',
+        'web3-success': 'linear-gradient(135deg, #66bb6a 0%, #43a047 100%)',
+        'web3-warning': 'linear-gradient(135deg, #ffa726 0%, #ff9800 100%)',
+        'web3-danger': 'linear-gradient(135deg, #ef5350 0%, #e53935 100%)'
       },
       
       // Enhanced backdrop blur
@@ -293,7 +303,15 @@ module.exports = {
         
         // Interactive shadows
         'interactive': '0 4px 14px rgba(59, 130, 246, 0.15), 0 1px 3px rgba(59, 130, 246, 0.1)',
-        'interactive-hover': '0 8px 25px rgba(59, 130, 246, 0.18), 0 3px 10px rgba(59, 130, 246, 0.12)'
+        'interactive-hover': '0 8px 25px rgba(59, 130, 246, 0.18), 0 3px 10px rgba(59, 130, 246, 0.12)',
+        
+        // Enhanced Glow Effects
+        'glow-sm': '0 0 10px rgba(59, 130, 246, 0.4)',
+        'glow-md': '0 0 20px rgba(59, 130, 246, 0.5)',
+        'glow-lg': '0 0 30px rgba(59, 130, 246, 0.6)',
+        'glow-emerald': '0 0 20px rgba(16, 185, 129, 0.4)',
+        'glow-amber': '0 0 20px rgba(245, 158, 11, 0.4)',
+        'glow-red': '0 0 20px rgba(239, 68, 68, 0.4)'
       },
       
       // Animation timing for smooth interactions
@@ -310,6 +328,53 @@ module.exports = {
         '104': '26rem',   // 416px
         '112': '28rem',   // 448px
         '128': '32rem'    // 512px
+      },
+
+      // Web 3.0 Gradient Animations
+      keyframes: {
+        'gradient-x': {
+          '0%, 100%': {
+            'background-size': '200% 200%',
+            'background-position': 'left center'
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center'
+          },
+        },
+        'float': {
+          '0%, 100%': {
+            transform: 'translateY(0px) rotate(0deg)',
+          },
+          '50%': {
+            transform: 'translateY(-10px) rotate(1deg)',
+          },
+        },
+        'pulse-glow': {
+          '0%, 100%': {
+            opacity: '0.4',
+            transform: 'scale(1)',
+          },
+          '50%': {
+            opacity: '0.8',
+            transform: 'scale(1.05)',
+          },
+        },
+        'shimmer': {
+          '0%': {
+            'background-position': '-200% center',
+          },
+          '100%': {
+            'background-position': '200% center',
+          },
+        },
+      },
+
+      animation: {
+        'gradient-x': 'gradient-x 15s ease infinite',
+        'float': 'float 6s ease-in-out infinite',
+        'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+        'shimmer': 'shimmer 2s linear infinite',
       }
     },
   },

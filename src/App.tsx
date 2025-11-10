@@ -4,6 +4,10 @@ import CountUp from 'react-countup';
 import TailrdLogo from './components/TailrdLogo';
 import UserMenu from './components/UserMenu';
 import { Heart, Activity, Zap, Stethoscope, GitBranch, CircuitBoard } from 'lucide-react';
+import { ErrorBoundary } from './components/shared/ErrorFallback';
+import { ToastContainer } from './components/shared/Toast';
+import { errorHandler } from './utils/ErrorHandler';
+import { AuthProvider } from './auth/AuthContext';
 
 // Add custom animations for Web3Background effects
 const customStyles = `
@@ -42,6 +46,8 @@ if (typeof document !== 'undefined') {
 
 // Lazy load all modules
 const Login = lazy(() => import("./components/Login"));
+const Logout = lazy(() => import("./components/Logout"));
+const ProtectedRoute = lazy(() => import("./auth/ProtectedRoute"));
 const HFModule = lazy(() => import("./ui/heartFailure/HFModule"));
 const EPModule = lazy(() => import("./ui/electrophysiology/EPModule"));
 const StructuralHeartModule = lazy(() => import("./ui/structuralHeart/StructuralHeartModule"));
@@ -135,7 +141,7 @@ const Icons = {
     </svg>
   ),
   Zap: () => (
-    <svg className="h-8 w-8 text-medical-blue-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+    <svg className="h-8 w-8 text-medical-green-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
     </svg>
   ),
@@ -206,6 +212,11 @@ const Icons = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l3-3 3 3 5-5" />
     </svg>
   ),
+  TrendingUp: () => (
+    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l3-3 3 3 5-5M21 12h-4M17 8l4 4-4 4" />
+    </svg>
+  ),
 };
 
 const formatMoney = (amount: number): string => {
@@ -221,9 +232,9 @@ const MODULES: Module[] = [
     shortName: "HF",
     description: "Population screening to individual GDMT optimization across PCP-Cardiology continuum",
     functional: true,
-    patients: 1247,
-    procedures: 892,
-    revenue: 804780,
+    patients: 7700,
+    procedures: 1784,
+    revenue: 1609560,
     qualityScore: 94,
     icon: () => <Heart className="w-5 h-5" />,
     features: ["GDMT Analytics", "Specialty Screening", "Advanced Therapies", "340B Revenue"],
@@ -232,14 +243,14 @@ const MODULES: Module[] = [
     id: "ep",
     name: "Electrophysiology",
     shortName: "EP",
-    description: "Population AFib screening to complex EP procedures across all care settings",
+    description: "Enhanced automated AFib screening to LAAC procedures with AI-powered risk assessment",
     functional: true,
-    patients: 2156,
-    procedures: 1234,
-    revenue: 3250000,
-    qualityScore: 96,
+    patients: 4312,
+    procedures: 3684,
+    revenue: 9500000,
+    qualityScore: 97,
     icon: () => <Zap className="w-5 h-5" />,
-    features: ["Ablation Procedures", "Device Management", "LAAC (Watchman/Amulet)", "AI Risk Stratification"],
+    features: ["Automated LAAC Risk Screening", "Multi-patient Analytics", "2025 WATCHMAN Guidelines", "Enhanced Care Team Dashboard"],
   },
   {
     id: "structural",
@@ -247,9 +258,9 @@ const MODULES: Module[] = [
     shortName: "Structural",
     description: "Population valve disease detection to complex transcatheter interventions",
     functional: true,
-    patients: 1876,
-    procedures: 945,
-    revenue: 1704220,
+    patients: 2570,
+    procedures: 312,
+    revenue: 13500000,
     qualityScore: 96,
     icon: () => <Stethoscope className="w-5 h-5" />,
     features: ["TAVR Program", "TEER (MitraClip)", "Balloon Valvuloplasty", "ASD/PFO Closure"],
@@ -260,9 +271,9 @@ const MODULES: Module[] = [
     shortName: "Coronary",
     description: "Population CAD screening to complex revascularization across PCP-Cardiology-Surgery",
     functional: true,
-    patients: 8234,
-    procedures: 4567,
-    revenue: 4012440,
+    patients: 16468,
+    procedures: 9134,
+    revenue: 8024880,
     qualityScore: 95,
     icon: () => <GitBranch className="w-5 h-5" />,
     features: ["Complex PCI/CTO", "Protected PCI (Impella)", "CABG Program", "SYNTAX Score Integration"],
@@ -271,27 +282,27 @@ const MODULES: Module[] = [
     id: "valvular",
     name: "Valvular Surgery",
     shortName: "Valvular",
-    description: "Population valve screening to complex surgical repair across care continuum",
+    description: "Enhanced surgical valve analytics with comprehensive forecasting and strategic initiatives",
     functional: true,
-    patients: 2156,
-    procedures: 1234,
-    revenue: 1908130,
-    qualityScore: 93,
+    patients: 1642,
+    procedures: 234,
+    revenue: 10240000,
+    qualityScore: 96,
     icon: () => <CircuitBoard className="w-5 h-5" />,
-    features: ["Ross Procedure", "Mitral Valve Repair", "Bicuspid Aortic Repair", "Complex Valve Surgery"],
+    features: ["Surgical-Only Focus", "AI Market Forecasting", "Ross Procedure Excellence", "Advanced Analytics Dashboard"],
   },
   {
     id: "peripheral",
     name: "Peripheral Vascular",
     shortName: "Peripheral",
-    description: "Population PAD screening to complex interventions across PCP-Cardiology continuum",
+    description: "Comprehensive PAD and limb salvage programs with advanced wound care tracking",
     functional: true,
-    patients: 1892,
-    procedures: 876,
-    revenue: 1055770,
-    qualityScore: 91,
+    patients: 3784,
+    procedures: 3684,
+    revenue: 2560000,
+    qualityScore: 94,
     icon: () => <Activity className="w-5 h-5" />,
-    features: ["PAD Management", "Access Optimization", "Risk Stratification", "Wound Care"],
+    features: ["94.3% Limb Salvage Rate", "WIfI Clinical Staging", "Device Performance Analytics", "Multi-tab Care Coordination"],
   },
 ];
 
@@ -672,7 +683,7 @@ function MainDashboard(): JSX.Element {
                   {/* Subtle shine */}
                   <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div className="relative flex items-center gap-4">
-                    <div className="p-3 rounded-xl bg-medical-blue-100 border border-medical-blue-200">
+                    <div className="p-3 rounded-xl bg-medical-green-100 border border-medical-green-200">
                       <Icons.Chart />
                     </div>
                     <div className="text-left">
@@ -687,7 +698,7 @@ function MainDashboard(): JSX.Element {
             
             {/* Clinical Modules */}
             <div>
-              <h2 className="text-2xl font-light text-slate-700 mb-6">Clinical Modules</h2>
+              <h2 className="text-3xl font-bold text-slate-800 mb-6">Clinical Modules</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {MODULES.map((module) => (<ModuleTile key={module.id} module={module} onClick={() => openModule(module.id)} />))}
               </div>
@@ -814,6 +825,35 @@ function MainDashboard(): JSX.Element {
               </div>
             </div>
             
+            {/* Real-Time Operational Status */}
+            <div className="bg-gradient-to-br from-emerald-50/60 via-white/70 to-emerald-50/60 backdrop-blur-sm border border-emerald-200/40 rounded-xl p-4 mb-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
+                    <span className="text-lg font-semibold text-emerald-800">All Systems Operational</span>
+                  </div>
+                  <div className="text-sm text-slate-600">
+                    Data Current: {new Date().toLocaleTimeString()} EST
+                  </div>
+                </div>
+                <div className="flex items-center gap-6 text-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <span className="text-slate-700">EHR: Online</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                    <span className="text-slate-700">Analytics: Active</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                    <span className="text-slate-700">Monitoring: 24/7</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Executive Summary KPIs */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-gradient-to-br from-blue-50/60 via-white/70 to-blue-50/60 backdrop-blur-sm border border-blue-200/40 rounded-xl p-4">
@@ -860,6 +900,123 @@ function MainDashboard(): JSX.Element {
                   <div>
                     <div className="text-2xl font-bold text-blue-600">4.8/5.0</div>
                     <div className="text-sm text-slate-600">CMS Star Rating</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Quality & Safety Alerts + Capacity Dashboard */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Quality & Safety Alerts */}
+              <div className="bg-gradient-to-br from-blue-50/60 via-white/70 to-blue-50/60 backdrop-blur-sm border border-blue-200/40 rounded-xl p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                    <Icons.Alert />
+                    Quality & Safety Dashboard
+                  </h3>
+                  <div className="text-xs text-emerald-600 bg-emerald-100 px-2 py-1 rounded-full">
+                    All Clear
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 bg-emerald-50/50 rounded-lg border border-emerald-200/50">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                      <div>
+                        <div className="font-medium text-slate-800">CMS Quality Metrics</div>
+                        <div className="text-sm text-slate-600">All targets achieved</div>
+                      </div>
+                    </div>
+                    <div className="text-emerald-600 font-semibold">98.2%</div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-blue-50/50 rounded-lg border border-blue-200/50">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <div>
+                        <div className="font-medium text-slate-800">30-Day Readmissions</div>
+                        <div className="text-sm text-slate-600">Below national average</div>
+                      </div>
+                    </div>
+                    <div className="text-blue-600 font-semibold">8.7%</div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-purple-50/50 rounded-lg border border-purple-200/50">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                      <div>
+                        <div className="font-medium text-slate-800">Safety Events</div>
+                        <div className="text-sm text-slate-600">Zero preventable events</div>
+                      </div>
+                    </div>
+                    <div className="text-purple-600 font-semibold">0</div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-medical-amber-50/50 rounded-lg border border-medical-amber-200/50">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-medical-amber-500 rounded-full"></div>
+                      <div>
+                        <div className="font-medium text-slate-800">Patient Satisfaction</div>
+                        <div className="text-sm text-slate-600">HCAHPS top quartile</div>
+                      </div>
+                    </div>
+                    <div className="text-medical-amber-600 font-semibold">92%</div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Capacity & Utilization */}
+              <div className="bg-gradient-to-br from-slate-50/60 via-white/70 to-slate-50/60 backdrop-blur-sm border border-slate-200/40 rounded-xl p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                    <Icons.Activity />
+                    Capacity & Utilization
+                  </h3>
+                  <div className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+                    Real-time
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-slate-700">Cath Lab Utilization</span>
+                      <span className="text-sm font-semibold text-slate-900">78%</span>
+                    </div>
+                    <div className="w-full bg-slate-100 rounded-full h-2">
+                      <div className="h-2 rounded-full bg-blue-500" style={{ width: '78%' }}></div>
+                    </div>
+                    <div className="text-xs text-slate-600 mt-1">3 labs active, 1 available</div>
+                  </div>
+                  
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-slate-700">OR Utilization</span>
+                      <span className="text-sm font-semibold text-slate-900">85%</span>
+                    </div>
+                    <div className="w-full bg-slate-100 rounded-full h-2">
+                      <div className="h-2 rounded-full bg-emerald-500" style={{ width: '85%' }}></div>
+                    </div>
+                    <div className="text-xs text-slate-600 mt-1">2 cardiac ORs in use</div>
+                  </div>
+                  
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-slate-700">Provider Availability</span>
+                      <span className="text-sm font-semibold text-slate-900">12/15</span>
+                    </div>
+                    <div className="text-xs text-slate-600">Available today across all services</div>
+                  </div>
+                  
+                  <div className="pt-3 border-t border-slate-200/50">
+                    <div className="text-sm font-medium text-slate-700 mb-2">Next Available Appointments</div>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div>EP: <span className="font-semibold">2 days</span></div>
+                      <div>Cath: <span className="font-semibold">1 day</span></div>
+                      <div>Surgery: <span className="font-semibold">5 days</span></div>
+                      <div>Echo: <span className="font-semibold">Same day</span></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1001,101 +1158,311 @@ function MainDashboard(): JSX.Element {
               </div>
             </div>
             
-            {/* Comprehensive Module Performance */}
-            <div>
-              <h3 className="text-xl font-medium text-slate-800 mb-4">Complete Module Performance Analysis</h3>
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-                {MODULES.map((module) => {
-                  const Icon = module.icon;
-                  const revenuePercentage = (module.revenue / totalMetrics.totalRevenue) * 100;
-                  const patientShare = (module.patients / totalMetrics.totalPatients) * 100;
-                  
-                  // Evidence-based quality benchmarks from clinical literature
-                  const qualityBenchmarks = {
-                    hf: { benchmark: 85, metric: "GDMT Adherence (AHA/ACC Guidelines)" },
-                    ep: { benchmark: 92, metric: "Composite Device Success (HRS Standards)" },
-                    structural: { benchmark: 90, metric: "TAVR 30-day Mortality (STS Registry)" },
-                    coronary: { benchmark: 88, metric: "Door-to-Balloon <90min (AHA Mission)" },
-                    valvular: { benchmark: 93, metric: "Mitral Repair Success (STS Database)" },
-                    peripheral: { benchmark: 87, metric: "Limb Salvage Rate (SVS Guidelines)" }
-                  };
-                  
-                  const benchmark = qualityBenchmarks[module.id as keyof typeof qualityBenchmarks];
-                  
-                  return (
-                    <div key={module.id} className="bg-gradient-to-br from-blue-50/60 via-white/70 to-blue-50/60 backdrop-blur-sm border border-blue-200/40 rounded-xl p-4">
-                      {/* Module Header */}
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 rounded-lg bg-gradient-to-br from-slate-100/90 to-blue-50/90 border border-blue-200/30">
-                          <Icon />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="text-lg font-medium text-slate-800">{module.name}</h4>
-                          <p className="text-xs text-slate-600">{module.description}</p>
-                        </div>
-                        <div className="text-right">
-                          <div className={`text-sm font-bold ${
-                            module.qualityScore >= benchmark.benchmark ? 'text-blue-600' : 'text-slate-600'
-                          }`}>
-                            {module.qualityScore}%
-                          </div>
-                          <div className="text-xs text-slate-500">Quality</div>
-                        </div>
+            {/* Patient Flow Intelligence Dashboard */}
+            <div className="bg-gradient-to-br from-violet-50/60 via-white/70 to-violet-50/60 backdrop-blur-sm border border-violet-200/40 rounded-xl p-6 mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-medium text-slate-800 flex items-center gap-3">
+                  <Icons.Activity />
+                  <span>Patient Flow Intelligence</span>
+                </h3>
+                <div className="text-sm font-medium text-violet-700 bg-violet-100 px-3 py-1 rounded-full">
+                  Real-time Throughput
+                </div>
+              </div>
+              
+              {/* Current Flow Metrics */}
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
+                <div className="bg-white/70 rounded-xl p-4 border border-violet-200/50">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="text-sm font-medium text-violet-800">ED to Cath Lab</div>
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  </div>
+                  <div className="text-2xl font-bold text-violet-700 mb-1">
+                    <CountUp start={0} end={67} duration={1.2} useEasing={true} /> min
+                  </div>
+                  <div className="text-xs text-slate-600">Target: 90 min • -23 min vs target</div>
+                </div>
+                
+                <div className="bg-white/70 rounded-xl p-4 border border-violet-200/50">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="text-sm font-medium text-violet-800">Bed Turnover</div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                  </div>
+                  <div className="text-2xl font-bold text-violet-700 mb-1">
+                    <CountUp start={0} end={142} duration={1.0} useEasing={true} /> min
+                  </div>
+                  <div className="text-xs text-slate-600">Average today • 12% improvement vs yesterday</div>
+                </div>
+                
+                <div className="bg-white/70 rounded-xl p-4 border border-violet-200/50">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="text-sm font-medium text-violet-800">Discharge Process</div>
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
+                  </div>
+                  <div className="text-2xl font-bold text-violet-700 mb-1">
+                    <CountUp start={0} end={3.2} decimals={1} duration={1.0} useEasing={true} /> hrs
+                  </div>
+                  <div className="text-xs text-slate-600">Avg from decision to discharge • +0.3 hrs vs target</div>
+                </div>
+                
+                <div className="bg-white/70 rounded-xl p-4 border border-violet-200/50">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="text-sm font-medium text-violet-800">OR Utilization</div>
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  </div>
+                  <div className="text-2xl font-bold text-violet-700 mb-1">
+                    <CountUp start={0} end={87} duration={1.0} useEasing={true} />%
+                  </div>
+                  <div className="text-xs text-slate-600">Current shift • 13 of 15 rooms active</div>
+                </div>
+              </div>
+              
+              {/* Flow Insights */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-white/70 rounded-xl p-4 border border-violet-200/50">
+                  <h4 className="text-lg font-semibold text-violet-800 mb-3">Current Bottlenecks</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-2 bg-red-50/70 rounded-lg border-l-4 border-red-400">
+                      <div>
+                        <div className="font-medium text-red-800">ICU Capacity</div>
+                        <div className="text-sm text-red-600">23 of 24 beds occupied • 2 pending transfers</div>
                       </div>
-                      
-                      {/* Key Metrics Grid */}
-                      <div className="grid grid-cols-2 gap-3 mb-4">
-                        <div className="bg-slate-50/50 rounded-lg p-2">
-                          <div className="text-lg font-bold text-slate-800">{module.patients.toLocaleString()}</div>
-                          <div className="text-xs text-slate-600">Active Patients</div>
-                          <div className="text-xs text-blue-600">{patientShare.toFixed(1)}% of total</div>
-                        </div>
-                        <div className="bg-slate-50/50 rounded-lg p-2">
-                          <div className="text-lg font-bold text-slate-800">{module.procedures.toLocaleString()}</div>
-                          <div className="text-xs text-slate-600">Annual Procedures</div>
-                          <div className="text-xs text-slate-600">+8.2% YoY</div>
-                        </div>
-                        <div className="bg-slate-50/50 rounded-lg p-2">
-                          <div className="text-lg font-bold text-blue-600">{formatMoney(module.revenue)}</div>
-                          <div className="text-xs text-slate-600">Annual Revenue</div>
-                          <div className="text-xs text-slate-600">{revenuePercentage.toFixed(1)}% of total</div>
-                        </div>
-                        <div className="bg-slate-50/50 rounded-lg p-2">
-                          <div className="text-lg font-bold text-slate-700">{(module.revenue / module.procedures).toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</div>
-                          <div className="text-xs text-slate-600">Revenue/Procedure</div>
-                          <div className="text-xs text-slate-600">+5.1% YoY</div>
-                        </div>
+                      <div className="text-red-600 font-bold">96%</div>
+                    </div>
+                    <div className="flex items-center justify-between p-2 bg-yellow-50/70 rounded-lg border-l-4 border-yellow-400">
+                      <div>
+                        <div className="font-medium text-yellow-800">Transport Delays</div>
+                        <div className="text-sm text-yellow-600">3 patients waiting &gt;30 min for transport</div>
                       </div>
-                      
-                      {/* Quality Detail */}
-                      <div className="bg-slate-50/50 rounded-lg p-3">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-medium text-slate-700">Primary Quality Metric</span>
-                          <span className={`text-sm font-bold ${
-                            module.qualityScore >= benchmark.benchmark ? 'text-blue-600' : 'text-slate-600'
-                          }`}>
-                            {module.qualityScore >= benchmark.benchmark ? 'Above Benchmark' : 'Below Benchmark'}
-                          </span>
+                      <div className="text-yellow-600 font-bold">47 min</div>
+                    </div>
+                    <div className="flex items-center justify-between p-2 bg-blue-50/70 rounded-lg border-l-4 border-blue-400">
+                      <div>
+                        <div className="font-medium text-blue-800">Lab Processing</div>
+                        <div className="text-sm text-blue-600">Cardiac enzymes: 15 min avg TAT today</div>
+                      </div>
+                      <div className="text-blue-600 font-bold">15 min</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white/70 rounded-xl p-4 border border-violet-200/50">
+                  <h4 className="text-lg font-semibold text-violet-800 mb-3">Optimization Opportunities</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-2 bg-green-50/70 rounded-lg border-l-4 border-green-400">
+                      <div>
+                        <div className="font-medium text-green-800">Pre-procedure Prep</div>
+                        <div className="text-sm text-green-600">Reduce prep time by 12 min via checklist optimization</div>
+                      </div>
+                      <div className="text-green-600 font-bold">-12 min</div>
+                    </div>
+                    <div className="flex items-center justify-between p-2 bg-emerald-50/70 rounded-lg border-l-4 border-emerald-400">
+                      <div>
+                        <div className="font-medium text-emerald-800">Discharge Planning</div>
+                        <div className="text-sm text-emerald-600">Earlier social work consults could save 0.8 hrs</div>
+                      </div>
+                      <div className="text-emerald-600 font-bold">-48 min</div>
+                    </div>
+                    <div className="flex items-center justify-between p-2 bg-teal-50/70 rounded-lg border-l-4 border-teal-400">
+                      <div>
+                        <div className="font-medium text-teal-800">Scheduling Efficiency</div>
+                        <div className="text-sm text-teal-600">Block scheduling could increase utilization 8%</div>
+                      </div>
+                      <div className="text-teal-600 font-bold">+8%</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Predictive Analytics Dashboard */}
+            <div className="bg-gradient-to-br from-amber-50/60 via-white/70 to-amber-50/60 backdrop-blur-sm border border-amber-200/40 rounded-xl p-6 mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-medium text-slate-800 flex items-center gap-3">
+                  <Icons.TrendingUp />
+                  <span>Predictive Analytics & Risk Assessment</span>
+                </h3>
+                <div className="text-sm font-medium text-amber-700 bg-amber-100 px-3 py-1 rounded-full">
+                  AI-Powered Insights
+                </div>
+              </div>
+              
+              {/* Risk Predictions */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <div className="bg-white/70 rounded-xl p-4 border border-amber-200/50">
+                  <h4 className="text-lg font-semibold text-amber-800 mb-3 flex items-center gap-2">
+                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                    High Risk Alerts (Next 48h)
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-2 bg-red-50/70 rounded-lg">
+                      <div>
+                        <div className="font-medium text-red-800">Readmission Risk</div>
+                        <div className="text-sm text-red-600">14 patients &gt;80% probability</div>
+                      </div>
+                      <div className="text-red-600 font-bold">14</div>
+                    </div>
+                    <div className="flex items-center justify-between p-2 bg-orange-50/70 rounded-lg">
+                      <div>
+                        <div className="font-medium text-orange-800">Cardiac Event Risk</div>
+                        <div className="text-sm text-orange-600">8 patients requiring intervention</div>
+                      </div>
+                      <div className="text-orange-600 font-bold">8</div>
+                    </div>
+                    <div className="flex items-center justify-between p-2 bg-yellow-50/70 rounded-lg">
+                      <div>
+                        <div className="font-medium text-yellow-800">Medication Non-adherence</div>
+                        <div className="text-sm text-yellow-600">23 patients flagged by ML model</div>
+                      </div>
+                      <div className="text-yellow-600 font-bold">23</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white/70 rounded-xl p-4 border border-amber-200/50">
+                  <h4 className="text-lg font-semibold text-amber-800 mb-3 flex items-center gap-2">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                    Capacity Forecasting
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-2 bg-blue-50/70 rounded-lg">
+                      <div>
+                        <div className="font-medium text-blue-800">Cath Lab Demand</div>
+                        <div className="text-sm text-blue-600">Peak at 2:30 PM (+3 cases predicted)</div>
+                      </div>
+                      <div className="text-blue-600 font-bold">+18%</div>
+                    </div>
+                    <div className="flex items-center justify-between p-2 bg-teal-50/70 rounded-lg">
+                      <div>
+                        <div className="font-medium text-teal-800">ICU Beds Needed</div>
+                        <div className="text-sm text-teal-600">Evening: 26 of 24 beds (surge plan)</div>
+                      </div>
+                      <div className="text-teal-600 font-bold">108%</div>
+                    </div>
+                    <div className="flex items-center justify-between p-2 bg-indigo-50/70 rounded-lg">
+                      <div>
+                        <div className="font-medium text-indigo-800">Staffing Optimization</div>
+                        <div className="text-sm text-indigo-600">+2 RNs recommended night shift</div>
+                      </div>
+                      <div className="text-indigo-600 font-bold">+2</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white/70 rounded-xl p-4 border border-amber-200/50">
+                  <h4 className="text-lg font-semibold text-amber-800 mb-3 flex items-center gap-2">
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    Quality Predictions
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-2 bg-green-50/70 rounded-lg">
+                      <div>
+                        <div className="font-medium text-green-800">Door-to-Balloon</div>
+                        <div className="text-sm text-green-600">97% cases will meet &lt;90min target</div>
+                      </div>
+                      <div className="text-green-600 font-bold">97%</div>
+                    </div>
+                    <div className="flex items-center justify-between p-2 bg-emerald-50/70 rounded-lg">
+                      <div>
+                        <div className="font-medium text-emerald-800">Infection Risk</div>
+                        <div className="text-sm text-emerald-600">3 procedures flagged high risk</div>
+                      </div>
+                      <div className="text-emerald-600 font-bold">0.8%</div>
+                    </div>
+                    <div className="flex items-center justify-between p-2 bg-teal-50/70 rounded-lg">
+                      <div>
+                        <div className="font-medium text-teal-800">Length of Stay</div>
+                        <div className="text-sm text-teal-600">Avg 0.3 days below benchmark</div>
+                      </div>
+                      <div className="text-teal-600 font-bold">-0.3d</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* AI Insights & Recommendations */}
+              <div className="bg-gradient-to-r from-amber-50/70 to-orange-50/70 rounded-xl p-4 border border-amber-200/50">
+                <h4 className="text-lg font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                  <Icons.Zap />
+                  AI-Generated Recommendations
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-3 h-3 bg-purple-600 rounded-full"></div>
+                      <span className="font-semibold text-purple-800">Clinical Decision Support</span>
+                    </div>
+                    <ul className="text-sm text-slate-700 space-y-1">
+                      <li>• Consider early discharge for 12 stable HF patients</li>
+                      <li>• Initiate GDMT optimization for 8 underutilized patients</li>
+                      <li>• Schedule 6 high-risk patients for remote monitoring</li>
+                      <li>• Flag 4 patients for pharmacist medication review</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-3 h-3 bg-indigo-600 rounded-full"></div>
+                      <span className="font-semibold text-indigo-800">Operational Optimization</span>
+                    </div>
+                    <ul className="text-sm text-slate-700 space-y-1">
+                      <li>• Shift 3 elective procedures to avoid peak hours</li>
+                      <li>• Deploy mobile echo unit to reduce transport delays</li>
+                      <li>• Prepare surge capacity protocol for tomorrow 4-6 PM</li>
+                      <li>• Cross-train 2 staff members for EP procedures</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Clinical Modules - Clickable Cards */}
+            <div className="bg-gradient-to-br from-slate-50/60 via-white/70 to-slate-50/60 backdrop-blur-sm border border-slate-200/40 rounded-xl p-6 mb-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-medium text-slate-800">Clinical Modules</h3>
+                <div className="text-sm text-slate-600">Click to explore individual modules</div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {MODULES.map((module) => (
+                  <button
+                    key={module.id}
+                    onClick={() => openModule(module.id)}
+                    className="text-left p-4 bg-white/70 border border-slate-200/50 rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-300 hover:border-medical-teal-300 group"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="p-2 rounded-lg bg-medical-teal-100 group-hover:bg-medical-teal-200 transition-colors">
+                        {React.createElement(module.icon)}
+                      </div>
+                      <div className="text-xs text-emerald-600 bg-emerald-100 px-2 py-1 rounded-full">
+                        {module.qualityScore}% Quality
+                      </div>
+                    </div>
+                    <div className="font-semibold text-slate-900 mb-1">{module.name}</div>
+                    <div className="text-sm text-slate-600 mb-3">{module.description}</div>
+                    
+                    <div className="grid grid-cols-2 gap-3 text-xs">
+                      <div>
+                        <div className="text-slate-500">Patients</div>
+                        <div className="font-semibold text-slate-900">{module.patients.toLocaleString()}</div>
+                      </div>
+                      <div>
+                        <div className="text-slate-500">Procedures</div>
+                        <div className="font-semibold text-slate-900">{module.procedures.toLocaleString()}</div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-3 pt-3 border-t border-slate-200/50">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-xs text-slate-500">Revenue</div>
+                          <div className="font-semibold text-blue-600">{formatMoney(module.revenue)}</div>
                         </div>
-                        <div className="text-xs text-slate-600 mb-2">{benchmark.metric}</div>
-                        <div className="w-full bg-slate-200 rounded-full h-2">
-                          <div 
-                            className={`h-2 rounded-full transition-all duration-500 ${
-                              module.qualityScore >= benchmark.benchmark 
-                                ? 'bg-gradient-to-r from-blue-400 to-blue-600' 
-                                : 'bg-gradient-to-r from-slate-400 to-slate-600'
-                            }`}
-                            style={{ width: `${(module.qualityScore / 100) * 100}%` }}
-                          ></div>
-                        </div>
-                        <div className="flex justify-between mt-1 text-xs text-slate-500">
-                          <span>Current: {module.qualityScore}%</span>
-                          <span>Target: {benchmark.benchmark}%</span>
+                        <div className="text-medical-teal-600 group-hover:translate-x-1 transition-transform">
+                          <Icons.ArrowRight />
                         </div>
                       </div>
                     </div>
-                  );
-                })}
+                  </button>
+                ))}
               </div>
             </div>
             
@@ -1108,21 +1475,21 @@ function MainDashboard(): JSX.Element {
                   <div className="flex justify-between items-center p-2 bg-blue-50/50 rounded-lg">
                     <div>
                       <div className="font-medium text-slate-800">Electrophysiology</div>
-                      <div className="text-sm text-slate-600">96% Composite Score • $3.25M Revenue • 1,234 Procedures</div>
+                      <div className="text-sm text-slate-600">97% Composite Score • $4.75M Revenue • 1,842 Procedures</div>
                     </div>
                     <div className="text-blue-600 font-bold">#1</div>
                   </div>
                   <div className="flex justify-between items-center p-2 bg-blue-50/30 rounded-lg">
                     <div>
-                      <div className="font-medium text-slate-800">Heart Failure</div>
-                      <div className="text-sm text-slate-600">94% GDMT Compliance • $805K Revenue • 892 Admissions</div>
+                      <div className="font-medium text-slate-800">Valvular Surgery</div>
+                      <div className="text-sm text-slate-600">96% Quality Score • $2.8M Revenue • 1,842 Procedures</div>
                     </div>
                     <div className="text-blue-600 font-bold">#2</div>
                   </div>
                   <div className="flex justify-between items-center p-2 bg-blue-50/20 rounded-lg">
                     <div>
-                      <div className="font-medium text-slate-800">Structural Heart</div>
-                      <div className="text-sm text-slate-600">96% TAVR Success • $1.70M Revenue • 945 Procedures</div>
+                      <div className="font-medium text-slate-800">Peripheral Vascular</div>
+                      <div className="text-sm text-slate-600">94% Limb Salvage • $1.28M Revenue • 1,842 Procedures</div>
                     </div>
                     <div className="text-blue-600 font-bold">#3</div>
                   </div>
@@ -1142,17 +1509,17 @@ function MainDashboard(): JSX.Element {
                   </div>
                   <div className="flex justify-between items-center p-2 bg-slate-50/30 rounded-lg">
                     <div>
-                      <div className="font-medium text-slate-800">Peripheral Vascular</div>
-                      <div className="text-sm text-slate-600">Limb salvage: 91% vs 94% SVS benchmark</div>
+                      <div className="font-medium text-slate-800">Heart Failure</div>
+                      <div className="text-sm text-slate-600">GDMT optimization: 94% vs 96% target</div>
                     </div>
-                    <div className="text-slate-600 font-bold">92%</div>
+                    <div className="text-slate-600 font-bold">94%</div>
                   </div>
                   <div className="flex justify-between items-center p-2 bg-slate-50/20 rounded-lg">
                     <div>
-                      <div className="font-medium text-slate-800">Valvular Disease</div>
-                      <div className="text-sm text-slate-600">Mitral repair: 93% vs 95% STS benchmark</div>
+                      <div className="font-medium text-slate-800">Structural Heart</div>
+                      <div className="text-sm text-slate-600">TAVR outcomes: 96% vs 98% target</div>
                     </div>
-                    <div className="text-slate-600 font-bold">93%</div>
+                    <div className="text-slate-600 font-bold">96%</div>
                   </div>
                 </div>
               </div>
@@ -1168,7 +1535,7 @@ function MainDashboard(): JSX.Element {
   const moduleKPIs = getModuleKPIs(activeModule, moduleRole);
 
   return (
-    <div className="min-h-screen bg-liquid-medical p-8">
+    <div className="min-h-screen bg-liquid-porsche-blue p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -1195,8 +1562,11 @@ function MainDashboard(): JSX.Element {
 
 export default function App(): JSX.Element {
   return (
-    <BrowserRouter>
-      <Suspense fallback={
+    <ErrorBoundary module="Application" component="App">
+      <AuthProvider>
+        <BrowserRouter>
+          <ToastContainer position="top-right" />
+          <Suspense fallback={
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-slate-100 to-blue-100 relative overflow-hidden">
           {/* Background pattern */}
           <div className="absolute inset-0 opacity-[0.04]" style={{
@@ -1239,15 +1609,46 @@ export default function App(): JSX.Element {
       }>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/dashboard" element={<MainDashboard />} />
-          <Route path="/hf/*" element={<HFModule />} />
-          <Route path="/ep/*" element={<EPModule />} />
-          <Route path="/structural/*" element={<StructuralHeartModule />} />
-          <Route path="/coronary/*" element={<CoronaryInterventionModule />} />
-          <Route path="/valvular/*" element={<ValvularDiseaseModule />} />
-          <Route path="/peripheral/*" element={<PeripheralVascularModule />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <MainDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/hf/*" element={
+            <ProtectedRoute>
+              <HFModule />
+            </ProtectedRoute>
+          } />
+          <Route path="/ep/*" element={
+            <ProtectedRoute>
+              <EPModule />
+            </ProtectedRoute>
+          } />
+          <Route path="/structural/*" element={
+            <ProtectedRoute>
+              <StructuralHeartModule />
+            </ProtectedRoute>
+          } />
+          <Route path="/coronary/*" element={
+            <ProtectedRoute>
+              <CoronaryInterventionModule />
+            </ProtectedRoute>
+          } />
+          <Route path="/valvular/*" element={
+            <ProtectedRoute>
+              <ValvularDiseaseModule />
+            </ProtectedRoute>
+          } />
+          <Route path="/peripheral/*" element={
+            <ProtectedRoute>
+              <PeripheralVascularModule />
+            </ProtectedRoute>
+          } />
         </Routes>
-      </Suspense>
-    </BrowserRouter>
+          </Suspense>
+        </BrowserRouter>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }

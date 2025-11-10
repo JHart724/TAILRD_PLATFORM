@@ -363,10 +363,24 @@ const SpecialtyPhenotypesDashboard: React.FC = () => {
 
             {/* Action Buttons */}
             <div className="flex gap-2 mt-4">
-              <button className="flex-1 px-3 py-2 bg-medical-blue-500 text-white text-sm font-semibold rounded-lg hover:bg-medical-blue-600 transition-colors">
+              <button 
+                className="flex-1 px-3 py-2 bg-medical-blue-500 text-white text-sm font-semibold rounded-lg hover:bg-medical-blue-600 transition-colors"
+                onClick={() => {
+                  console.log('Opening phenotype patient screening');
+                  // TODO: Implement phenotype patient screening workflow
+                  alert('Screen Patients - Specialty phenotype patient screening tool will open');
+                }}
+              >
                 Screen Patients
               </button>
-              <button className="px-3 py-2 border border-steel-300 text-steel-700 text-sm font-semibold rounded-lg hover:bg-steel-50 transition-colors">
+              <button 
+                className="px-3 py-2 border border-steel-300 text-steel-700 text-sm font-semibold rounded-lg hover:bg-steel-50 transition-colors"
+                onClick={() => {
+                  console.log('Opening phenotype protocol');
+                  // TODO: Implement phenotype protocol viewer
+                  alert('View Protocol - Specialty phenotype screening protocol will open');
+                }}
+              >
                 View Protocol
               </button>
             </div>
@@ -378,22 +392,50 @@ const SpecialtyPhenotypesDashboard: React.FC = () => {
       <div className="retina-card p-6">
         <h3 className="text-xl font-bold text-steel-900 mb-4">Quick Actions</h3>
         <div className="grid grid-cols-4 gap-4">
-          <button className="p-4 border-2 border-deep-red-200 rounded-lg hover:bg-deep-red-50 transition-colors">
+          <button 
+            className="p-4 border-2 border-deep-red-200 rounded-lg hover:bg-deep-red-50 transition-colors"
+            onClick={() => {
+              console.log('Opening high-risk patient alerts');
+              // TODO: Implement high-risk alerts dashboard
+              alert('High-Risk Alerts - Critical patient alerts requiring immediate attention');
+            }}
+          >
             <AlertTriangle className="w-6 h-6 text-deep-red-600 mx-auto mb-2" />
             <div className="text-sm font-semibold text-deep-red-800">High-Risk Alerts</div>
             <div className="text-xs text-deep-red-600">3 patients need immediate screening</div>
           </button>
-          <button className="p-4 border-2 border-medical-blue-200 rounded-lg hover:bg-medical-blue-50 transition-colors">
+          <button 
+            className="p-4 border-2 border-medical-blue-200 rounded-lg hover:bg-medical-blue-50 transition-colors"
+            onClick={() => {
+              console.log('Opening population screening tool');
+              // TODO: Implement population screening workflow
+              alert('Population Screening - Bulk phenotype analysis tool will open');
+            }}
+          >
             <Users className="w-6 h-6 text-medical-blue-600 mx-auto mb-2" />
             <div className="text-sm font-semibold text-medical-blue-800">Population Screening</div>
             <div className="text-xs text-medical-blue-600">Run bulk phenotype analysis</div>
           </button>
-          <button className="p-4 border-2 border-medical-green-200 rounded-lg hover:bg-medical-green-50 transition-colors">
+          <button 
+            className="p-4 border-2 border-medical-green-200 rounded-lg hover:bg-medical-green-50 transition-colors"
+            onClick={() => {
+              console.log('Generating revenue opportunity report');
+              // TODO: Implement revenue report generator
+              alert('Revenue Report - Phenotype opportunity analysis report will be generated');
+            }}
+          >
             <DollarSign className="w-6 h-6 text-medical-green-600 mx-auto mb-2" />
             <div className="text-sm font-semibold text-medical-green-800">Revenue Report</div>
             <div className="text-xs text-medical-green-600">Generate opportunity analysis</div>
           </button>
-          <button className="p-4 border-2 border-deep-amber-200 rounded-lg hover:bg-deep-amber-50 transition-colors">
+          <button 
+            className="p-4 border-2 border-deep-amber-200 rounded-lg hover:bg-deep-amber-50 transition-colors"
+            onClick={() => {
+              console.log('Opening protocol builder');
+              // TODO: Implement protocol builder tool
+              alert('Protocol Builder - Custom screening workflow builder will open');
+            }}
+          >
             <Activity className="w-6 h-6 text-deep-amber-600 mx-auto mb-2" />
             <div className="text-sm font-semibold text-deep-amber-800">Protocol Builder</div>
             <div className="text-xs text-deep-amber-600">Create screening workflows</div>

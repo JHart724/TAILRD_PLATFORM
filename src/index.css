@@ -34,6 +34,10 @@
   /* Retina Card Component */
   .retina-card {
     @apply bg-retina-float backdrop-blur-retina border border-glass-border-medical shadow-medical-card rounded-2xl transition-all duration-300 ease-apple;
+    /* Performance optimizations */
+    transform: translateZ(0);
+    will-change: transform, opacity;
+    isolation: isolate;
   }
   
   .retina-card:hover {
@@ -114,5 +118,145 @@
   
   .status-info {
     @apply bg-medical-blue-50 text-medical-blue-700 border border-medical-blue-200;
+  }
+  
+  /* Accessibility utilities */
+  .sr-only {
+    @apply absolute w-px h-px p-0 m-0 overflow-hidden whitespace-nowrap border-0;
+    clip: rect(0, 0, 0, 0);
+  }
+  
+  .sr-only-focusable:focus {
+    @apply static w-auto h-auto p-4 m-0 overflow-visible whitespace-normal;
+    clip: auto;
+  }
+  
+  /* Focus indicators for keyboard navigation */
+  .focus-medical {
+    @apply focus:outline-none focus:ring-2 focus:ring-medical-blue-500 focus:ring-offset-2 focus:ring-offset-white;
+  }
+  
+  /* High contrast focus for accessibility */
+  .focus-high-contrast {
+    @apply focus:outline-none focus:ring-2 focus:ring-steel-900 focus:ring-offset-2 focus:ring-offset-white;
+  }
+  
+  /* Skip navigation link */
+  .skip-nav {
+    @apply sr-only bg-medical-blue-600 text-white px-4 py-2 rounded-md font-medium z-50;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+  }
+  
+  .skip-nav:focus {
+    @apply static w-auto h-auto p-4 m-0 overflow-visible whitespace-normal;
+    clip: auto;
+  }
+  
+  /* Ensure minimum contrast ratios */
+  .text-accessible {
+    @apply text-steel-800;
+  }
+  
+  .text-accessible-muted {
+    @apply text-steel-600;
+  }
+
+  /* Web 3.0 Button Variants */
+  .btn-web3-primary {
+    @apply bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-blue-500/30 hover:shadow-xl hover:scale-105 active:scale-[0.98] transition-all duration-300;
+  }
+
+  .btn-web3-secondary {
+    @apply bg-gradient-to-r from-steel-100 to-steel-200 text-steel-800 font-semibold px-6 py-3 rounded-xl shadow-md hover:shadow-lg hover:scale-105 active:scale-[0.98] transition-all duration-300;
+  }
+
+  .btn-web3-ghost {
+    @apply bg-white/60 backdrop-blur-md border border-white/30 text-steel-700 font-semibold px-6 py-3 rounded-xl shadow-md hover:shadow-lg hover:bg-white/80 hover:scale-105 active:scale-[0.98] transition-all duration-300;
+  }
+
+  /* Web 3.0 Input Fields */
+  .input-web3 {
+    @apply bg-white/60 backdrop-blur-md border border-white/40 rounded-xl px-4 py-3 text-steel-900 placeholder-steel-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400/50 transition-all duration-200;
+  }
+
+  /* Web 3.0 Modal */
+  .modal-web3 {
+    @apply bg-white/80 backdrop-blur-xl border border-white/30 rounded-3xl shadow-2xl p-8;
+  }
+
+  /* Web 3.0 Badge */
+  .badge-web3 {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 border border-blue-200/50;
+  }
+
+  /* Web 3.0 Skeleton Loading */
+  .skeleton-web3 {
+    @apply bg-gradient-to-r from-steel-100 via-steel-200 to-steel-100 bg-[length:200%_100%] animate-shimmer rounded-xl;
+  }
+
+  /* Web 3.0 Card Hover Effects */
+  .card-web3-hover {
+    @apply hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] transition-all duration-500 ease-out;
+    /* Performance optimizations */
+    transform: translateZ(0);
+    will-change: transform, opacity, box-shadow;
+    contain: layout style paint;
+  }
+}
+
+@layer utilities {
+  /* Performance optimizations for demo */
+  .backdrop-blur-xl, .backdrop-blur-md, .backdrop-blur-retina {
+    transform: translateZ(0);
+    isolation: isolate;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  .animate-pulse, .animate-float, .animate-shimmer {
+    transform: translateZ(0);
+    will-change: transform, opacity;
+  }
+
+  /* GPU acceleration for smooth demo experience */
+  .floating-screen, .glass-gradient, .web3-primary {
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  /* Reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    
+    .icon-float {
+      animation: none !important;
+    }
+    
+    .clinical-skeleton {
+      animation: none !important;
+    }
+  }
+  
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .retina-card {
+      border-width: 2px;
+      @apply border-steel-400;
+    }
+    
+    .btn-medical-primary {
+      @apply border-2 border-medical-blue-700;
+    }
+    
+    .btn-medical-secondary {
+      @apply border-2 border-steel-400;
+    }
   }
 }

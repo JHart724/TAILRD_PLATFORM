@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext';
 import { 
   User, 
   Settings, 
@@ -14,7 +16,8 @@ import {
   Lock,
   Palette,
   Database,
-  Clock
+  Clock,
+  UserCog
 } from 'lucide-react';
 
 interface UserMenuProps {
@@ -32,6 +35,8 @@ const UserMenu: React.FC<UserMenuProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const { logout } = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -65,6 +70,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
     {
       title: 'System',
       items: [
+        { icon: UserCog, label: 'Super Admin', badge: 'ADMIN', badgeColor: 'bg-purple-500', action: () => navigate('/admin') },
         { icon: Shield, label: 'Privacy & Security', badge: null, action: () => console.log('Security') },
         { icon: Database, label: 'Data Preferences', badge: null, action: () => console.log('Data') },
         { icon: Palette, label: 'Display Settings', badge: null, action: () => console.log('Display') },
@@ -178,9 +184,10 @@ const UserMenu: React.FC<UserMenuProps> = ({
           {/* Sign Out */}
           <div className="border-t border-steel-200 p-2">
             <button
-              onClick={() => {
-                console.log('Sign out');
+              onClick={async () => {
                 setIsOpen(false);
+                await logout();
+                navigate('/', { replace: true });
               }}
               className="w-full px-4 py-2 flex items-center gap-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-150"
             >

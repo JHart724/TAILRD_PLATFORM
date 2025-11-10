@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send, CheckCircle, Clock, XCircle, AlertTriangle, User, Calendar, MapPin, MessageCircle } from 'lucide-react';
+import { Send, CheckCircle, Clock, XCircle, AlertTriangle, User, Calendar, MapPin, MessageCircle, ExternalLink, X, Heart, Thermometer, Droplets, Shield, Pill, FileText, Activity } from 'lucide-react';
 
 interface Referral {
   id: string;
@@ -29,10 +29,55 @@ interface Referral {
   };
 }
 
+interface PatientInfo {
+  mrn: string;
+  name: string;
+  age: number;
+  gender: 'M' | 'F';
+  fullChart: {
+    vitals: {
+      bp: string;
+      hr: number;
+      temp: number;
+      o2sat: number;
+      weight: number;
+    };
+    labs: {
+      creatinine: number;
+      bun: number;
+      sodium: number;
+      potassium: number;
+      hemoglobin: number;
+      bnp?: number;
+      hba1c?: number;
+    };
+    medications: {
+      name: string;
+      dose: string;
+      frequency: string;
+    }[];
+    provider: {
+      attending: string;
+      resident?: string;
+      nurse: string;
+    };
+    notes: string[];
+    allergies: string[];
+    referralHistory: {
+      date: string;
+      specialty: string;
+      provider: string;
+      outcome: string;
+    }[];
+  };
+}
+
 const ReferralTrackerEnhanced: React.FC = () => {
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterPriority, setFilterPriority] = useState<string>('all');
   const [selectedReferral, setSelectedReferral] = useState<Referral | null>(null);
+  const [showPatientPanel, setShowPatientPanel] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState<PatientInfo | null>(null);
 
   const referrals: Referral[] = [
     {
@@ -161,6 +206,247 @@ const ReferralTrackerEnhanced: React.FC = () => {
       },
     },
   ];
+
+  // Mock patient data for referral context
+  const patientDatabase: PatientInfo[] = [
+    {
+      mrn: '123456789',
+      name: 'Johnson, Maria',
+      age: 67,
+      gender: 'F',
+      fullChart: {
+        vitals: {
+          bp: '138/82',
+          hr: 94,
+          temp: 98.4,
+          o2sat: 93,
+          weight: 175.2
+        },
+        labs: {
+          creatinine: 1.3,
+          bun: 28,
+          sodium: 136,
+          potassium: 4.2,
+          hemoglobin: 11.8,
+          bnp: 2400,
+          hba1c: 8.1
+        },
+        medications: [
+          { name: 'Carvedilol', dose: '25mg', frequency: 'BID' },
+          { name: 'Lisinopril', dose: '20mg', frequency: 'Daily' },
+          { name: 'Spironolactone', dose: '12.5mg', frequency: 'Daily' },
+          { name: 'Furosemide', dose: '40mg', frequency: 'Daily' }
+        ],
+        provider: {
+          attending: 'Dr. Rivera',
+          resident: 'Dr. Thompson',
+          nurse: 'Maria Santos, RN'
+        },
+        notes: [
+          'CRT-D evaluation scheduled for optimal heart failure management',
+          'Patient reports increased dyspnea with minimal exertion',
+          'QRS 152ms with LBBB morphology - strong CRT candidate',
+          'Insurance approval obtained for device therapy'
+        ],
+        allergies: ['Sulfa drugs'],
+        referralHistory: [
+          { date: '2025-10-05', specialty: 'Electrophysiology', provider: 'Dr. Anderson', outcome: 'CRT-D evaluation pending' },
+          { date: '2025-08-15', specialty: 'Endocrinology', provider: 'Dr. Davis', outcome: 'Diabetes management optimized' }
+        ]
+      }
+    },
+    {
+      mrn: '987654321',
+      name: 'Williams, Robert',
+      age: 72,
+      gender: 'M',
+      fullChart: {
+        vitals: {
+          bp: '124/76',
+          hr: 68,
+          temp: 98.6,
+          o2sat: 97,
+          weight: 189.5
+        },
+        labs: {
+          creatinine: 1.1,
+          bun: 22,
+          sodium: 140,
+          potassium: 4.5,
+          hemoglobin: 13.2,
+          bnp: 680
+        },
+        medications: [
+          { name: 'Metoprolol XL', dose: '50mg', frequency: 'Daily' },
+          { name: 'Lisinopril', dose: '10mg', frequency: 'Daily' },
+          { name: 'Atorvastatin', dose: '40mg', frequency: 'Daily' },
+          { name: 'Aspirin', dose: '81mg', frequency: 'Daily' }
+        ],
+        provider: {
+          attending: 'Dr. Chen',
+          nurse: 'Robert Kim, RN'
+        },
+        notes: [
+          'Cardiac amyloidosis workup in progress',
+          'Red flags: age >65, unexplained LVH, peripheral neuropathy',
+          'Stable heart failure with preserved ejection fraction',
+          'Awaiting technetium pyrophosphate scan results'
+        ],
+        allergies: ['NKDA'],
+        referralHistory: [
+          { date: '2025-10-08', specialty: 'Advanced Heart Failure', provider: 'Dr. Martinez', outcome: 'Amyloid workup initiated' },
+          { date: '2025-07-20', specialty: 'Neurology', provider: 'Dr. Wilson', outcome: 'Neuropathy evaluation completed' }
+        ]
+      }
+    },
+    {
+      mrn: '456789123',
+      name: 'Davis, Linda',
+      age: 58,
+      gender: 'F',
+      fullChart: {
+        vitals: {
+          bp: '98/62',
+          hr: 110,
+          temp: 99.2,
+          o2sat: 89,
+          weight: 162.8
+        },
+        labs: {
+          creatinine: 2.1,
+          bun: 58,
+          sodium: 132,
+          potassium: 5.1,
+          hemoglobin: 9.8,
+          bnp: 3850
+        },
+        medications: [
+          { name: 'Carvedilol', dose: '12.5mg', frequency: 'BID' },
+          { name: 'Lisinopril', dose: '5mg', frequency: 'Daily' },
+          { name: 'Torsemide', dose: '80mg', frequency: 'BID' },
+          { name: 'Digoxin', dose: '0.125mg', frequency: 'Daily' }
+        ],
+        provider: {
+          attending: 'Dr. Martinez',
+          resident: 'Dr. Wilson',
+          nurse: 'Angela Davis, RN'
+        },
+        notes: [
+          'Advanced heart failure - LVAD evaluation urgent',
+          'Inotrope-dependent, transplant candidate',
+          'Family initially declined evaluation but now supportive',
+          'Bridge to transplant vs destination therapy assessment needed'
+        ],
+        allergies: ['Penicillin'],
+        referralHistory: [
+          { date: '2025-09-28', specialty: 'Cardiac Surgery', provider: 'Dr. Thompson', outcome: 'LVAD evaluation overdue' },
+          { date: '2025-08-10', specialty: 'Nephrology', provider: 'Dr. Lopez', outcome: 'CKD stage 4 management' }
+        ]
+      }
+    },
+    {
+      mrn: '789123456',
+      name: 'Brown, Charles',
+      age: 45,
+      gender: 'M',
+      fullChart: {
+        vitals: {
+          bp: '142/88',
+          hr: 72,
+          temp: 98.1,
+          o2sat: 98,
+          weight: 201.5
+        },
+        labs: {
+          creatinine: 0.9,
+          bun: 18,
+          sodium: 142,
+          potassium: 4.1,
+          hemoglobin: 14.2,
+          bnp: 180
+        },
+        medications: [
+          { name: 'Amlodipine', dose: '5mg', frequency: 'Daily' },
+          { name: 'Losartan', dose: '50mg', frequency: 'Daily' },
+          { name: 'HCTZ', dose: '25mg', frequency: 'Daily' },
+          { name: 'Multivitamin', dose: '1 tablet', frequency: 'Daily' }
+        ],
+        provider: {
+          attending: 'Dr. Foster',
+          nurse: 'Patricia Lee, RN'
+        },
+        notes: [
+          'Hypertrophic cardiomyopathy with strong family history',
+          'Genetic testing and counseling completed',
+          'Age <50 with HCM phenotype - high genetic yield',
+          'Cascade screening recommended for family members'
+        ],
+        allergies: ['NKDA'],
+        referralHistory: [
+          { date: '2025-09-15', specialty: 'Medical Genetics', provider: 'Dr. Wilson', outcome: 'Genetic counseling completed' },
+          { date: '2025-07-05', specialty: 'Sports Medicine', provider: 'Dr. Taylor', outcome: 'Exercise restrictions discussed' }
+        ]
+      }
+    },
+    {
+      mrn: '321654987',
+      name: 'Anderson, Sarah',
+      age: 81,
+      gender: 'F',
+      fullChart: {
+        vitals: {
+          bp: '108/68',
+          hr: 58,
+          temp: 98.8,
+          o2sat: 95,
+          weight: 156.3
+        },
+        labs: {
+          creatinine: 1.6,
+          bun: 42,
+          sodium: 139,
+          potassium: 4.6,
+          hemoglobin: 10.9,
+          bnp: 890
+        },
+        medications: [
+          { name: 'Diltiazem', dose: '120mg', frequency: 'Daily' },
+          { name: 'Lisinopril', dose: '2.5mg', frequency: 'Daily' },
+          { name: 'Furosemide', dose: '20mg', frequency: 'Daily' },
+          { name: 'Warfarin', dose: '2mg', frequency: 'Daily' }
+        ],
+        provider: {
+          attending: 'Dr. Park',
+          nurse: 'Susan Garcia, RN'
+        },
+        notes: [
+          'CardioMEMS evaluation for recurrent HF hospitalizations',
+          'Elderly patient with multiple comorbidities',
+          'Remote monitoring may reduce hospital readmissions',
+          'Insurance approval obtained for hemodynamic monitoring'
+        ],
+        allergies: ['Beta-blockers', 'NSAIDs'],
+        referralHistory: [
+          { date: '2025-10-12', specialty: 'Interventional Cardiology', provider: 'Dr. Park', outcome: 'CardioMEMS evaluation scheduled' },
+          { date: '2025-09-01', specialty: 'Geriatrics', provider: 'Dr. Brown', outcome: 'Comprehensive geriatric assessment' }
+        ]
+      }
+    }
+  ];
+
+  // Function to get patient data by MRN
+  const getPatientByMRN = (mrn: string): PatientInfo | undefined => {
+    return patientDatabase.find(patient => patient.mrn === mrn);
+  };
+
+  // Function to open patient chart
+  const openPatientChart = (mrn: string) => {
+    const patient = getPatientByMRN(mrn);
+    if (patient) {
+      setSelectedPatient(patient);
+      setShowPatientPanel(true);
+    }
+  };
 
   const filteredReferrals = referrals.filter(r => {
     if (filterStatus !== 'all' && r.status !== filterStatus) return false;
@@ -305,9 +591,26 @@ const ReferralTrackerEnhanced: React.FC = () => {
                   </div>
                   <div>
                     <div className="flex items-center gap-3 mb-1">
-                      <h3 className="text-lg font-bold text-steel-900">{referral.patientName}</h3>
+                      <h3 
+                        className="text-lg font-bold text-steel-900 cursor-pointer hover:text-medical-blue-600 flex items-center gap-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openPatientChart(referral.mrn);
+                        }}
+                      >
+                        {referral.patientName}
+                        <ExternalLink className="w-4 h-4" />
+                      </h3>
                       <span className="text-sm text-steel-600">Age {referral.age}</span>
-                      <span className="text-sm text-steel-600">MRN: {referral.mrn}</span>
+                      <span 
+                        className="text-sm text-steel-600 cursor-pointer hover:text-medical-blue-600"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openPatientChart(referral.mrn);
+                        }}
+                      >
+                        MRN: {referral.mrn}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-steel-700">{referral.referralType}</span>
@@ -478,6 +781,216 @@ const ReferralTrackerEnhanced: React.FC = () => {
           </div>
         ))}
       </div>
+
+      {/* Patient Detail Side Panel */}
+      {showPatientPanel && selectedPatient && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
+          <div className="bg-white w-1/2 h-full overflow-y-auto shadow-2xl">
+            {/* Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 z-10">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">{selectedPatient.name}</h2>
+                  <p className="text-gray-600">
+                    MRN: {selectedPatient.mrn} | Age: {selectedPatient.age}{selectedPatient.gender}
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowPatientPanel(false);
+                    setSelectedPatient(null);
+                  }}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* Vital Signs */}
+              <div className="bg-blue-50 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <Thermometer className="w-5 h-5 text-blue-600" />
+                  Current Vital Signs
+                </h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <span className="text-sm text-gray-600">Blood Pressure</span>
+                    <p className="font-medium">{selectedPatient.fullChart.vitals.bp} mmHg</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">Heart Rate</span>
+                    <p className="font-medium">{selectedPatient.fullChart.vitals.hr} bpm</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">Temperature</span>
+                    <p className="font-medium">{selectedPatient.fullChart.vitals.temp}°F</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">O2 Saturation</span>
+                    <p className="font-medium">{selectedPatient.fullChart.vitals.o2sat}%</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">Weight</span>
+                    <p className="font-medium">{selectedPatient.fullChart.vitals.weight} lbs</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Laboratory Results */}
+              <div className="bg-green-50 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <Droplets className="w-5 h-5 text-green-600" />
+                  Laboratory Results
+                </h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <span className="text-sm text-gray-600">Creatinine</span>
+                    <p className="font-medium">{selectedPatient.fullChart.labs.creatinine} mg/dL</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">BUN</span>
+                    <p className="font-medium">{selectedPatient.fullChart.labs.bun} mg/dL</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">Sodium</span>
+                    <p className="font-medium">{selectedPatient.fullChart.labs.sodium} mEq/L</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">Potassium</span>
+                    <p className="font-medium">{selectedPatient.fullChart.labs.potassium} mEq/L</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">Hemoglobin</span>
+                    <p className="font-medium">{selectedPatient.fullChart.labs.hemoglobin} g/dL</p>
+                  </div>
+                  {selectedPatient.fullChart.labs.bnp && (
+                    <div>
+                      <span className="text-sm text-gray-600">BNP</span>
+                      <p className="font-medium">{selectedPatient.fullChart.labs.bnp} pg/mL</p>
+                    </div>
+                  )}
+                  {selectedPatient.fullChart.labs.hba1c && (
+                    <div>
+                      <span className="text-sm text-gray-600">HbA1c</span>
+                      <p className="font-medium">{selectedPatient.fullChart.labs.hba1c}%</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Current Medications */}
+              <div className="bg-purple-50 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <Pill className="w-5 h-5 text-purple-600" />
+                  Current Medications
+                </h3>
+                <div className="space-y-2">
+                  {selectedPatient.fullChart.medications.map((med, idx) => (
+                    <div key={idx} className="flex justify-between items-center bg-white p-2 rounded">
+                      <span className="font-medium">{med.name}</span>
+                      <span className="text-sm text-gray-600">{med.dose} {med.frequency}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Care Team */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <User className="w-5 h-5 text-gray-600" />
+                  Care Team
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Attending Physician</span>
+                    <span className="font-medium">{selectedPatient.fullChart.provider.attending}</span>
+                  </div>
+                  {selectedPatient.fullChart.provider.resident && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Resident</span>
+                      <span className="font-medium">{selectedPatient.fullChart.provider.resident}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Primary Nurse</span>
+                    <span className="font-medium">{selectedPatient.fullChart.provider.nurse}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Clinical Notes */}
+              <div className="bg-yellow-50 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-yellow-600" />
+                  Recent Clinical Notes
+                </h3>
+                <div className="space-y-2">
+                  {selectedPatient.fullChart.notes.map((note, idx) => (
+                    <div key={idx} className="flex items-start gap-2">
+                      <Activity className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">{note}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Allergies */}
+              <div className="bg-red-50 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <Shield className="w-5 h-5 text-red-600" />
+                  Allergies
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {selectedPatient.fullChart.allergies.map((allergy, idx) => (
+                    <span key={idx} className="px-2 py-1 bg-red-100 text-red-700 rounded text-sm">
+                      {allergy}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Referral History */}
+              <div className="bg-indigo-50 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <Calendar className="w-5 h-5 text-indigo-600" />
+                  Referral History
+                </h3>
+                <div className="space-y-3">
+                  {selectedPatient.fullChart.referralHistory.map((referral, idx) => (
+                    <div key={idx} className="bg-white p-3 rounded border">
+                      <div className="flex justify-between items-start mb-1">
+                        <span className="font-medium text-gray-900">{referral.specialty}</span>
+                        <span className="text-xs text-gray-500">{new Date(referral.date).toLocaleDateString()}</span>
+                      </div>
+                      <div className="text-sm text-gray-600 mb-1">Provider: {referral.provider}</div>
+                      <div className="text-sm text-gray-700">{referral.outcome}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-4 border-t border-gray-200">
+                <button className="flex-1 px-4 py-3 bg-medical-blue-600 text-white rounded-lg font-medium hover:bg-medical-blue-700 transition-colors">
+                  <Send className="w-4 h-4 inline mr-2" />
+                  Create New Referral
+                </button>
+                <button
+                  className="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+                  onClick={() => {
+                    setShowPatientPanel(false);
+                    setSelectedPatient(null);
+                  }}
+                >
+                  Close Chart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

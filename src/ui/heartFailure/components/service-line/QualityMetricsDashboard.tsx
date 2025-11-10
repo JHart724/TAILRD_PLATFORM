@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Target, TrendingUp, Award, AlertTriangle, Users, Calendar } from 'lucide-react';
+import { Target, TrendingUp, Award, AlertTriangle, Users, Calendar, ChevronDown, ChevronRight, Eye, FileText, Activity, Clock } from 'lucide-react';
 
 interface QualityMetric {
   id: string;
@@ -20,11 +20,23 @@ interface QualityMetric {
     impact: number;
     difficulty: 'Low' | 'Medium' | 'High';
   }[];
+  patientCohorts?: {
+    name: string;
+    count: number;
+    percentage: number;
+    riskLevel: 'high' | 'medium' | 'low';
+  }[];
+  trendData?: {
+    period: string;
+    value: number;
+    change: number;
+  }[];
 }
 
 const QualityMetricsDashboard: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<QualityMetric['category']>('Core');
   const [selectedMetric, setSelectedMetric] = useState<string | null>(null);
+  const [showDetailedView, setShowDetailedView] = useState<string | null>(null);
 
   // Mock quality metrics data - will be replaced with real API data
   const qualityMetrics: QualityMetric[] = [
@@ -39,13 +51,25 @@ const QualityMetricsDashboard: React.FC = () => {
       trendValue: 5.2,
       unit: '%',
       riskAdjusted: true,
-      patientCount: 1247,
+      patientCount: 2494,
       lastUpdated: '2024-01-15',
       description: 'Percentage of eligible HFrEF patients on optimal GDMT across all 4 pillars',
       opportunities: [
         { description: 'SGLT2i initiation in eligible patients', impact: 23, difficulty: 'Low' },
         { description: 'MRA optimization in stable patients', impact: 18, difficulty: 'Medium' },
         { description: 'ARNi transition from ACEi/ARB', impact: 15, difficulty: 'Medium' },
+      ],
+      patientCohorts: [
+        { name: 'HFrEF patients on optimal ARNi', count: 1042, percentage: 41.8, riskLevel: 'low' },
+        { name: 'HFrEF patients missing SGLT2i', count: 734, percentage: 29.4, riskLevel: 'high' },
+        { name: 'Suboptimal beta-blocker dosing', count: 468, percentage: 18.8, riskLevel: 'medium' },
+        { name: 'MRA contraindicated/intolerant', count: 250, percentage: 10.0, riskLevel: 'medium' },
+      ],
+      trendData: [
+        { period: 'Q1 2024', value: 58.2, change: -2.1 },
+        { period: 'Q2 2024', value: 61.4, change: 3.2 },
+        { period: 'Q3 2024', value: 65.1, change: 3.7 },
+        { period: 'Q4 2024', value: 68.4, change: 3.3 },
       ],
     },
     {
@@ -59,7 +83,7 @@ const QualityMetricsDashboard: React.FC = () => {
       trendValue: -2.3,
       unit: '%',
       riskAdjusted: true,
-      patientCount: 892,
+      patientCount: 1784,
       lastUpdated: '2024-01-15',
       description: 'Risk-adjusted 30-day all-cause readmission rate for HF patients',
       opportunities: [
@@ -79,7 +103,7 @@ const QualityMetricsDashboard: React.FC = () => {
       trendValue: 0.1,
       unit: '%',
       riskAdjusted: true,
-      patientCount: 2134,
+      patientCount: 4268,
       lastUpdated: '2024-01-15',
       description: 'Risk-adjusted 1-year mortality rate for HF patients',
       opportunities: [
@@ -99,7 +123,7 @@ const QualityMetricsDashboard: React.FC = () => {
       trendValue: 3.4,
       unit: '%',
       riskAdjusted: false,
-      patientCount: 876,
+      patientCount: 1752,
       lastUpdated: '2024-01-15',
       description: 'Percentage of patients achieving ≥5% LVEF improvement at 6 months',
       opportunities: [
@@ -119,7 +143,7 @@ const QualityMetricsDashboard: React.FC = () => {
       trendValue: 4.1,
       unit: '%',
       riskAdjusted: false,
-      patientCount: 743,
+      patientCount: 1486,
       lastUpdated: '2024-01-15',
       description: 'Kansas City Cardiomyopathy Questionnaire (KCCQ) improvement',
       opportunities: [
@@ -139,7 +163,7 @@ const QualityMetricsDashboard: React.FC = () => {
       trendValue: -8.7,
       unit: 'ratio',
       riskAdjusted: true,
-      patientCount: 1456,
+      patientCount: 2912,
       lastUpdated: '2024-01-15',
       description: 'Risk-adjusted total cost of care per patient per year',
       opportunities: [
@@ -159,7 +183,7 @@ const QualityMetricsDashboard: React.FC = () => {
       trendValue: 6.8,
       unit: '%',
       riskAdjusted: true,
-      patientCount: 2456,
+      patientCount: 4912,
       lastUpdated: '2024-01-15',
       description: 'Weighted composite of all core and supplemental quality metrics',
       opportunities: [
@@ -301,6 +325,20 @@ const QualityMetricsDashboard: React.FC = () => {
                 }`}>
                   {metric.trend !== 'stable' && (metric.trendValue > 0 ? '+' : '')}{metric.trendValue}%
                 </span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowDetailedView(showDetailedView === metric.id ? null : metric.id);
+                  }}
+                  className="ml-2 p-1 rounded-lg hover:bg-steel-100 transition-colors"
+                  title="View detailed breakdown"
+                >
+                  {showDetailedView === metric.id ? (
+                    <ChevronDown className="w-4 h-4 text-steel-600" />
+                  ) : (
+                    <ChevronRight className="w-4 h-4 text-steel-600" />
+                  )}
+                </button>
               </div>
             </div>
 
@@ -339,6 +377,102 @@ const QualityMetricsDashboard: React.FC = () => {
                 }}
               ></div>
             </div>
+
+            {/* Detailed Breakdown - Expandable */}
+            {showDetailedView === metric.id && metric.patientCohorts && (
+              <div className="mt-4 p-4 bg-steel-50 rounded-lg border border-steel-200">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  {/* Patient Cohorts */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Users className="w-4 h-4 text-medical-blue-600" />
+                      <h4 className="font-semibold text-steel-900">Patient Cohorts</h4>
+                    </div>
+                    <div className="space-y-2">
+                      {metric.patientCohorts.map((cohort, index) => (
+                        <div key={index} className="flex items-center justify-between p-2 bg-white rounded border">
+                          <div className="flex items-center gap-2">
+                            <div className={`w-3 h-3 rounded-full ${
+                              cohort.riskLevel === 'high' ? 'bg-medical-red-500' :
+                              cohort.riskLevel === 'medium' ? 'bg-medical-amber-500' :
+                              'bg-medical-green-500'
+                            }`}></div>
+                            <span className="text-sm text-steel-800">{cohort.name}</span>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-sm font-semibold text-steel-900">{cohort.count}</div>
+                            <div className="text-xs text-steel-600">{cohort.percentage}%</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Trend Data */}
+                  {metric.trendData && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <Activity className="w-4 h-4 text-medical-green-600" />
+                        <h4 className="font-semibold text-steel-900">Quarterly Trends</h4>
+                      </div>
+                      <div className="space-y-2">
+                        {metric.trendData.map((trend, index) => (
+                          <div key={index} className="flex items-center justify-between p-2 bg-white rounded border">
+                            <span className="text-sm text-steel-800">{trend.period}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-semibold text-steel-900">
+                                {formatValue(trend.value, metric.unit)}
+                              </span>
+                              <span className={`text-xs px-2 py-1 rounded-full ${
+                                trend.change > 0 ? 'bg-medical-green-100 text-medical-green-700' :
+                                trend.change < 0 ? 'bg-medical-red-100 text-medical-red-700' :
+                                'bg-steel-100 text-steel-600'
+                              }`}>
+                                {trend.change > 0 ? '+' : ''}{trend.change}%
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Quick Actions */}
+                <div className="flex gap-2 pt-3 border-t border-steel-200">
+                  <button 
+                    onClick={() => {
+                      console.log('Viewing patient list for metric:', metric.name, 'Patient count:', metric.patientCount);
+                      alert('View Patient List\n\nThis would display a detailed patient list for the ' + metric.name + ' metric.\n\n• ' + metric.patientCount.toLocaleString() + ' patients included\n• Filterable by performance status\n• Sortable by risk factors\n• Clickable for individual charts\n• Exportable patient cohorts\n\nTODO: Implement patient list view with advanced filtering and drill-down capabilities');
+                    }}
+                    className="flex items-center gap-2 px-3 py-2 bg-medical-blue-600 text-white text-xs rounded-lg hover:bg-medical-blue-700 transition-colors"
+                  >
+                    <Eye className="w-3 h-3" />
+                    View Patient List
+                  </button>
+                  <button 
+                    onClick={() => {
+                      console.log('Exporting report for metric:', metric.name, 'Category:', metric.category);
+                      alert('Export Quality Report\n\nThis would generate a comprehensive report for the ' + metric.name + ' metric.\n\n• Performance trend analysis\n• Benchmark comparisons\n• Patient cohort breakdowns\n• Improvement opportunities\n• Actionable recommendations\n• Executive summary\n\nTODO: Implement report generation with PDF/Excel export options');
+                    }}
+                    className="flex items-center gap-2 px-3 py-2 bg-steel-600 text-white text-xs rounded-lg hover:bg-steel-700 transition-colors"
+                  >
+                    <FileText className="w-3 h-3" />
+                    Export Report
+                  </button>
+                  <button 
+                    onClick={() => {
+                      console.log('Setting alert for metric:', metric.name, 'Current value:', metric.currentValue, 'Target:', metric.targetValue);
+                      alert('Set Quality Alert\n\nThis would configure monitoring alerts for the ' + metric.name + ' metric.\n\n• Performance threshold alerts\n• Trend deviation notifications\n• Target achievement milestones\n• Care team notifications\n• Automated reporting triggers\n\nTODO: Implement alert configuration system with customizable thresholds and notification preferences');
+                    }}
+                    className="flex items-center gap-2 px-3 py-2 bg-medical-green-600 text-white text-xs rounded-lg hover:bg-medical-green-700 transition-colors"
+                  >
+                    <Clock className="w-3 h-3" />
+                    Set Alert
+                  </button>
+                </div>
+              </div>
+            )}
 
             <div className="flex items-center justify-between text-xs text-steel-600">
               <div className="flex items-center gap-1">
