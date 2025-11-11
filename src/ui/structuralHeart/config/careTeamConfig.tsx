@@ -665,15 +665,7 @@ const StructuralClinicalCollaboration: React.FC = () => (
           
           {/* CHA2DS2VASc Calculator */}
           {featureFlags.riskCalculators.cha2ds2vasc && (
-            <CHA2DS2VAScCalculator 
-              age={72}
-              sex="female"
-              hasCHF={true}
-              hasHypertension={true}
-              hasStrokeHistory={false}
-              hasVascularDisease={true}
-              hasDiabetes={false}
-            />
+            <CHA2DS2VAScCalculator />
           )}
         </div>
       </div>
