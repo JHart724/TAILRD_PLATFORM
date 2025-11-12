@@ -1,6 +1,10 @@
 import React from 'react';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
+interface BenchmarksPanelProps {
+  onBenchmarkClick?: (benchmarkMetric: string) => void;
+}
+
 interface BenchmarkMetric {
   metric: string;
   ourValue: number;
@@ -10,7 +14,7 @@ interface BenchmarkMetric {
   percentile: number;
 }
 
-const BenchmarksPanel: React.FC = () => {
+const BenchmarksPanel: React.FC<BenchmarksPanelProps> = ({ onBenchmarkClick }) => {
   const benchmarks: BenchmarkMetric[] = [
     {
       metric: 'Quadruple Therapy Rate',
@@ -63,16 +67,16 @@ const BenchmarksPanel: React.FC = () => {
   ];
 
   const getTrendIcon = (trend: string) => {
-    if (trend === 'up') return <TrendingUp className="w-4 h-4 text-teal-700" />;
-    if (trend === 'down') return <TrendingDown className="w-4 h-4 text-red-800" />;
+    if (trend === 'up') return <TrendingUp className="w-4 h-4 text-emerald-600" />;
+    if (trend === 'down') return <TrendingDown className="w-4 h-4 text-red-600" />;
     return <Minus className="w-4 h-4 text-slate-500" />;
   };
 
   const getTrendColor = (trend: string, metric: string) => {
     if (metric.includes('Readmission')) {
-      return trend === 'down' ? 'text-teal-700' : 'text-red-800';
+      return trend === 'down' ? 'text-emerald-600' : 'text-red-600';
     }
-    return trend === 'up' ? 'text-teal-700' : trend === 'down' ? 'text-red-800' : 'text-slate-700';
+    return trend === 'up' ? 'text-emerald-600' : trend === 'down' ? 'text-red-600' : 'text-slate-700';
   };
 
   return (
@@ -88,7 +92,13 @@ const BenchmarksPanel: React.FC = () => {
           const isGood = benchmark.metric.includes('Readmission') ? delta < 0 : delta > 0;
 
           return (
-            <div key={benchmark.metric} className="p-4 border border-slate-300 rounded-lg hover:border-slate-400 transition-colors bg-slate-50">
+            <div 
+              key={benchmark.metric} 
+              className={`p-4 border border-slate-300 rounded-lg hover:border-slate-400 transition-colors bg-slate-50 ${
+                onBenchmarkClick ? 'cursor-pointer hover:shadow-md' : ''
+              }`}
+              onClick={() => onBenchmarkClick && onBenchmarkClick(benchmark.metric)}
+            >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
                   <div className="text-sm font-medium text-slate-800 mb-1">{benchmark.metric}</div>
@@ -115,7 +125,7 @@ const BenchmarksPanel: React.FC = () => {
 
               <div className="mt-3 w-full bg-slate-200 rounded-full h-2 overflow-hidden">
                 <div 
-                  className={`h-full rounded-full transition-all ${isGood ? 'bg-teal-600' : 'bg-amber-600'}`}
+                  className={`h-full rounded-full transition-all ${isGood ? 'bg-emerald-500' : 'bg-amber-500'}`}
                   style={{ width: `${benchmark.percentile}%` }}
                 />
               </div>

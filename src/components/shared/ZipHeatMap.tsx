@@ -387,6 +387,7 @@ const ZipHeatMap: React.FC<ZipHeatMapProps> = ({
           <MapContainer
             center={[centerLat, centerLng]}
             zoom={zoom}
+            scrollWheelZoom={false}
             style={{ height: '100%', width: '100%' }}
           >
             <TileLayer
