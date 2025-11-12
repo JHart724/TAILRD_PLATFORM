@@ -7,6 +7,8 @@ import { StandardTabConfig } from '../../../components/shared/StandardInterfaces
 import ValvePatientHeatmap from '../components/ValvePatientHeatmap';
 import ValvularSurgicalNetworkVisualization from '../components/ValvularSurgicalNetworkVisualization';
 import { apiService } from '../../../services/apiService';
+import STSRiskCalculator from '../../../components/riskCalculators/STSRiskCalculator';
+import { featureFlags } from '../../../config/featureFlags';
 
 // Valvular Disease Dashboard Component
 const ValvularDashboard: React.FC = () => (
@@ -615,6 +617,25 @@ const ValvularClinicalCollaboration: React.FC = () => (
               </button>
             </div>
           </div>
+          
+          {/* STS Risk Calculator */}
+          {featureFlags.riskCalculators.stsRisk && (
+            <STSRiskCalculator 
+              age={68}
+              sex="female"
+              hasDiabetes={false}
+              hasDialysis={false}
+              hasHypertension={true}
+              hasPriorCardiacSurgery={true}
+              ejectionFraction={45}
+              procedureType="Surgical AVR"
+              hasChronicLungDisease={true}
+              hasCarotidDisease={false}
+              hasPVD={false}
+              creatinine={1.1}
+              nyhaClass="II"
+            />
+          )}
         </div>
       </div>
     </div>

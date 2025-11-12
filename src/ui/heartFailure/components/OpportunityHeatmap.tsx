@@ -6,6 +6,7 @@ interface OpportunityHeatmapProps {
     opp_revenue: number;
     rank: number;
   }> | null;
+  onFacilityClick?: (facilityName: string) => void;
 }
 
 const formatMoney = (amount: number): string => {
@@ -14,7 +15,7 @@ const formatMoney = (amount: number): string => {
   return `$${amount.toLocaleString()}`;
 };
 
-const OpportunityHeatmap: React.FC<OpportunityHeatmapProps> = ({ data }) => {
+const OpportunityHeatmap: React.FC<OpportunityHeatmapProps> = ({ data, onFacilityClick }) => {
   if (!data) return null;
 
   const maxRevenue = Math.max(...data.map((d) => d.opp_revenue));
@@ -32,7 +33,13 @@ const OpportunityHeatmap: React.FC<OpportunityHeatmapProps> = ({ data }) => {
           const percentage = (site.opp_revenue / maxRevenue) * 100;
 
           return (
-            <div key={site.site_id} className="bg-slate-50/50 rounded-lg p-4">
+            <div 
+              key={site.site_id} 
+              className={`bg-slate-50/50 rounded-lg p-4 transition-all ${
+                onFacilityClick ? 'cursor-pointer hover:bg-slate-100/70 hover:shadow-md' : ''
+              }`}
+              onClick={() => onFacilityClick && onFacilityClick(site.site_id)}
+            >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-4">
                   <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold">

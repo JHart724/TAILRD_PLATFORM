@@ -3,6 +3,8 @@ import { Users, Calendar, AlertTriangle, Clock, Heart, Shield, Activity, FileTex
 import { CareTeamViewConfig } from '../../../components/shared/BaseCareTeamView';
 import { StandardTabConfig } from '../../../components/shared/StandardInterfaces';
 import CHA2DS2VAScCalculator from '../../../components/riskCalculators/CHA2DS2VAScCalculator';
+import HASBLEDCalculator from '../../../components/riskCalculators/HASBLEDCalculator';
+import STSRiskCalculator from '../../../components/riskCalculators/STSRiskCalculator';
 import { featureFlags } from '../../../config/featureFlags';
 
 // Import Structural Heart specific components
@@ -666,6 +668,38 @@ const StructuralClinicalCollaboration: React.FC = () => (
           {/* CHA2DS2VASc Calculator */}
           {featureFlags.riskCalculators.cha2ds2vasc && (
             <CHA2DS2VAScCalculator />
+          )}
+          
+          {/* HAS-BLED Calculator */}
+          {featureFlags.riskCalculators.hasbled && (
+            <HASBLEDCalculator 
+              hasHypertension={true}
+              hasAbnormalRenalLiverFunction={false}
+              hasStrokeHistory={false}
+              hasBleedingHistory={true}
+              hasLabileINR={false}
+              isElderly={true}
+              takesDrugsAlcohol={false}
+            />
+          )}
+          
+          {/* STS Risk Calculator */}
+          {featureFlags.riskCalculators.stsRisk && (
+            <STSRiskCalculator 
+              age={75}
+              sex="male"
+              hasDiabetes={true}
+              hasDialysis={false}
+              hasHypertension={true}
+              hasPriorCardiacSurgery={false}
+              ejectionFraction={35}
+              procedureType="TAVR"
+              hasChronicLungDisease={false}
+              hasCarotidDisease={false}
+              hasPVD={true}
+              creatinine={1.4}
+              nyhaClass="III"
+            />
           )}
         </div>
       </div>

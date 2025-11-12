@@ -3,6 +3,8 @@ import { Users, Calendar, AlertTriangle, Clock, Zap, Shield, Activity, FileText,
 import { CareTeamViewConfig } from '../../../components/shared/BaseCareTeamView';
 import { StandardTabConfig } from '../../../components/shared/StandardInterfaces';
 import { apiService } from '../../../services/apiService';
+import CRTICDEligibilityCalculator from '../../../components/riskCalculators/CRTICDEligibilityCalculator';
+import { featureFlags } from '../../../config/featureFlags';
 
 // Import Electrophysiology specific components
 import PatientDetailPanel from '../components/PatientDetailPanel';
@@ -513,6 +515,22 @@ const EPClinicalCollaboration: React.FC = () => (
               </button>
             </div>
           </div>
+          
+          {/* CRT/ICD Eligibility Calculator */}
+          {featureFlags.riskCalculators.crtIcdEligibility && (
+            <CRTICDEligibilityCalculator 
+              ejectionFraction={32}
+              nyhaClass="II"
+              qrsDuration={145}
+              qrsMorphology="LBBB"
+              optimalMedicalTherapy={true}
+              lifeExpectancy=">1 year"
+              priorSCD={true}
+              ischemicCardiomyopathy={false}
+              atriallFibrillation={true}
+              kidneyFunction="Normal"
+            />
+          )}
         </div>
       </div>
     </div>

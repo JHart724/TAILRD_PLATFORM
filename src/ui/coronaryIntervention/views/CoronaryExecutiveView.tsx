@@ -3,8 +3,38 @@ import BaseExecutiveView from '../../../components/shared/BaseExecutiveView';
 import { coronaryInterventionConfig } from '../config/executiveConfig';
 import ExportButton from '../../../components/shared/ExportButton';
 import { ExportData } from '../../../utils/dataExport';
+import ZipHeatMap from '../../../components/shared/ZipHeatMap';
 
 const CoronaryExecutiveView: React.FC = () => {
+  // Sample ZIP code data for high-risk CAD/diabetes + chest pain distribution
+  const coronaryZipData = [
+    { zipCode: "10001", patientCount: 58, riskScore: 8.9, riskLevel: "High" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10002", patientCount: 51, riskScore: 8.1, riskLevel: "High" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10003", patientCount: 42, riskScore: 6.4, riskLevel: "Medium" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10009", patientCount: 45, riskScore: 7.3, riskLevel: "High" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10010", patientCount: 39, riskScore: 6.0, riskLevel: "Medium" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10011", patientCount: 36, riskScore: 5.4, riskLevel: "Medium" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10012", patientCount: 54, riskScore: 8.5, riskLevel: "High" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10013", patientCount: 43, riskScore: 6.8, riskLevel: "Medium" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10014", patientCount: 47, riskScore: 7.2, riskLevel: "High" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10016", patientCount: 40, riskScore: 6.1, riskLevel: "Medium" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10017", patientCount: 35, riskScore: 5.3, riskLevel: "Medium" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10018", patientCount: 44, riskScore: 7.0, riskLevel: "Medium" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10019", patientCount: 38, riskScore: 5.8, riskLevel: "Medium" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10021", patientCount: 31, riskScore: 4.5, riskLevel: "Medium" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10022", patientCount: 33, riskScore: 4.9, riskLevel: "Medium" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10023", patientCount: 46, riskScore: 7.4, riskLevel: "High" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10024", patientCount: 41, riskScore: 6.3, riskLevel: "Medium" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10025", patientCount: 43, riskScore: 6.7, riskLevel: "Medium" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10026", patientCount: 55, riskScore: 8.7, riskLevel: "High" as const, conditionType: "High-Risk CAD/DM + Chest Pain" },
+    { zipCode: "10027", patientCount: 50, riskScore: 7.9, riskLevel: "High" as const, conditionType: "High-Risk CAD/DM + Chest Pain" }
+  ];
+
+  const handleZipClick = (zipCode: string) => {
+    console.log(`Drilling down to high-risk CAD/DM + chest pain patients for ZIP ${zipCode}`);
+    // TODO: Navigate to patient list view filtered by ZIP code
+  };
+
   // Generate export data
   const generateExportData = (): ExportData => {
     return {
@@ -55,6 +85,18 @@ const CoronaryExecutiveView: React.FC = () => {
             className="shadow-lg hover:shadow-xl transition-all duration-300"
           />
         </header>
+
+        {/* Geographic Heat Map */}
+        <div className="mb-6">
+          <ZipHeatMap
+            title="High-Risk CAD/DM + Chest Pain Geographic Distribution"
+            data={coronaryZipData}
+            onZipClick={handleZipClick}
+            centerLat={40.7589}
+            centerLng={-73.9851}
+            zoom={12}
+          />
+        </div>
 
         {/* Base Executive View - Consolidated Component */}
         <BaseExecutiveView config={coronaryInterventionConfig} />

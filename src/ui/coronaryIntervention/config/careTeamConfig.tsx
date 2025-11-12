@@ -8,7 +8,8 @@ import PCINetworkVisualization from '../components/PCINetworkVisualization';
 import CoronarySafetyScreening from '../components/CoronarySafetyScreening';
 import GRACEScoreCalculator from '../components/GRACEScoreCalculator';
 import TIMIScoreCalculator from '../components/TIMIScoreCalculator';
-import SYNTAXScoreCalculator from '../components/SYNTAXScoreCalculator';
+import SYNTAXScoreCalculator from '../../../components/riskCalculators/SYNTAXScoreCalculator';
+import { featureFlags } from '../../../config/featureFlags';
 
 // Coronary Intervention Dashboard Component
 const CoronaryDashboard: React.FC = () => (
@@ -146,7 +147,24 @@ const CoronaryPatients: React.FC = () => (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <GRACEScoreCalculator />
       <TIMIScoreCalculator />
-      <SYNTAXScoreCalculator />
+      {featureFlags.riskCalculators.syntaxScore && (
+        <SYNTAXScoreCalculator 
+          dominance="right"
+          lmStenosis={0}
+          proxLadStenosis={85}
+          midLadStenosis={70}
+          proxLcxStenosis={75}
+          midLcxStenosis={0}
+          proxRcaStenosis={90}
+          midRcaStenosis={0}
+          hasBifurcationLesions={true}
+          hasOcclusions={false}
+          hasTrifurcationLesions={false}
+          hasCalcification={true}
+          hasThrombus={false}
+          hasTortuosity={false}
+        />
+      )}
     </div>
   </div>
 );

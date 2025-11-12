@@ -20,13 +20,15 @@ interface DRGOptimizationAlertProps {
   title?: string;
   maxVisible?: number;
   showPatientInfo?: boolean;
+  onOpportunityClick?: (opportunity: DRGOpportunity) => void;
 }
 
 const DRGOptimizationAlert: React.FC<DRGOptimizationAlertProps> = ({ 
   opportunities, 
   title = "DRG Optimization Opportunities",
   maxVisible = 3,
-  showPatientInfo = false
+  showPatientInfo = false,
+  onOpportunityClick
 }) => {
   if (opportunities.length === 0) return null;
 
@@ -68,7 +70,13 @@ const DRGOptimizationAlert: React.FC<DRGOptimizationAlertProps> = ({
       
       <div className="p-6 space-y-4">
         {opportunities.slice(0, maxVisible).map((opportunity, index) => (
-          <div key={index} className={`rounded-lg p-4 border-2 ${getPriorityColor(opportunity.priority)}`}>
+          <div 
+            key={index} 
+            className={`rounded-lg p-4 border-2 ${getPriorityColor(opportunity.priority)} ${
+              onOpportunityClick ? 'cursor-pointer hover:bg-gray-50 transition-colors' : ''
+            }`}
+            onClick={() => onOpportunityClick && onOpportunityClick(opportunity)}
+          >
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1">
                 {showPatientInfo && opportunity.patientName && (

@@ -3,8 +3,38 @@ import BaseExecutiveView from '../../../components/shared/BaseExecutiveView';
 import { valvularDiseaseConfig } from '../config/executiveConfig';
 import ExportButton from '../../../components/shared/ExportButton';
 import { ExportData } from '../../../utils/dataExport';
+import ZipHeatMap from '../../../components/shared/ZipHeatMap';
 
 const ValvularExecutiveView: React.FC = () => {
+  // Sample ZIP code data for stage C/D valve disease gaps
+  const valvularZipData = [
+    { zipCode: "10001", patientCount: 41, riskScore: 8.2, riskLevel: "High" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10002", patientCount: 35, riskScore: 7.1, riskLevel: "High" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10003", patientCount: 28, riskScore: 5.3, riskLevel: "Medium" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10009", patientCount: 32, riskScore: 6.6, riskLevel: "Medium" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10010", patientCount: 25, riskScore: 4.2, riskLevel: "Medium" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10011", patientCount: 23, riskScore: 3.8, riskLevel: "Low" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10012", patientCount: 38, riskScore: 7.4, riskLevel: "High" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10013", patientCount: 29, riskScore: 5.7, riskLevel: "Medium" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10014", patientCount: 34, riskScore: 6.1, riskLevel: "Medium" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10016", patientCount: 27, riskScore: 4.5, riskLevel: "Medium" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10017", patientCount: 24, riskScore: 4.0, riskLevel: "Low" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10018", patientCount: 31, riskScore: 5.6, riskLevel: "Medium" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10019", patientCount: 26, riskScore: 4.7, riskLevel: "Medium" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10021", patientCount: 20, riskScore: 3.1, riskLevel: "Low" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10022", patientCount: 22, riskScore: 3.6, riskLevel: "Low" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10023", patientCount: 33, riskScore: 6.3, riskLevel: "Medium" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10024", patientCount: 28, riskScore: 5.0, riskLevel: "Medium" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10025", patientCount: 30, riskScore: 5.9, riskLevel: "Medium" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10026", patientCount: 40, riskScore: 7.7, riskLevel: "High" as const, conditionType: "Stage C/D Valve Disease Gap" },
+    { zipCode: "10027", patientCount: 36, riskScore: 7.1, riskLevel: "High" as const, conditionType: "Stage C/D Valve Disease Gap" }
+  ];
+
+  const handleZipClick = (zipCode: string) => {
+    console.log(`Drilling down to stage C/D valve disease gap patients for ZIP ${zipCode}`);
+    // TODO: Navigate to patient list view filtered by ZIP code
+  };
+
   // Generate export data
   const generateExportData = (): ExportData => {
     return {
@@ -55,6 +85,18 @@ const ValvularExecutiveView: React.FC = () => {
             className="shadow-lg hover:shadow-xl transition-all duration-300"
           />
         </header>
+
+        {/* Geographic Heat Map */}
+        <div className="mb-6">
+          <ZipHeatMap
+            title="Stage C/D Valve Disease Care Gap Distribution"
+            data={valvularZipData}
+            onZipClick={handleZipClick}
+            centerLat={40.7589}
+            centerLng={-73.9851}
+            zoom={12}
+          />
+        </div>
 
         {/* Base Executive View - Consolidated Component */}
         <BaseExecutiveView config={valvularDiseaseConfig} />

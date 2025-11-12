@@ -1,6 +1,16 @@
 import React from 'react';
 
-const ProjectedVsRealizedChart: React.FC = () => {
+interface MonthData {
+  month: string;
+  projected: number;
+  realized: number;
+}
+
+interface ProjectedVsRealizedChartProps {
+  onMonthClick?: (monthData: MonthData) => void;
+}
+
+const ProjectedVsRealizedChart: React.FC<ProjectedVsRealizedChartProps> = ({ onMonthClick }) => {
   const monthlyData = [
     { month: 'Jan', projected: 850000, realized: 520000 },
     { month: 'Feb', projected: 920000, realized: 610000 },
@@ -33,9 +43,9 @@ const ProjectedVsRealizedChart: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="p-4 bg-slate-100 rounded-lg border border-slate-300">
-          <div className="text-xs text-slate-700 font-medium mb-1">Total Projected</div>
-          <div className="text-xl font-bold text-slate-900">
+        <div className="p-4 bg-blue-50 rounded-lg border border-blue-300">
+          <div className="text-xs text-blue-800 font-medium mb-1">Total Projected</div>
+          <div className="text-xl font-bold text-blue-900">
             ${(totalProjected / 1000000).toFixed(1)}M
           </div>
         </div>
@@ -59,20 +69,24 @@ const ProjectedVsRealizedChart: React.FC = () => {
           const realizedWidth = (data.realized / maxValue) * 100;
 
           return (
-            <div key={data.month} className="flex items-center gap-3">
+            <div 
+              key={data.month} 
+              className={`flex items-center gap-3 ${onMonthClick ? 'cursor-pointer hover:bg-slate-50 rounded-lg p-2 -m-2' : ''}`}
+              onClick={() => onMonthClick && onMonthClick(data)}
+            >
               <div className="w-12 text-xs font-medium text-slate-700">{data.month}</div>
               
               <div className="flex-1 relative">
                 <div className="h-8 bg-slate-200 rounded-lg overflow-hidden">
                   <div 
-                    className="h-full bg-slate-300 rounded-lg transition-all"
+                    className={`h-full bg-blue-400 rounded-lg transition-all ${onMonthClick ? 'hover:bg-blue-500' : ''}`}
                     style={{ width: `${projectedWidth}%` }}
                   />
                 </div>
                 
                 <div className="absolute inset-0 h-8 overflow-hidden">
                   <div 
-                    className="h-full bg-teal-600 rounded-lg transition-all"
+                    className={`h-full bg-teal-600 rounded-lg transition-all ${onMonthClick ? 'hover:bg-teal-700' : ''}`}
                     style={{ width: `${realizedWidth}%` }}
                   />
                 </div>
@@ -93,7 +107,7 @@ const ProjectedVsRealizedChart: React.FC = () => {
 
       <div className="flex items-center gap-6 mt-6 pt-4 border-t border-slate-300">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-slate-300 rounded"></div>
+          <div className="w-4 h-4 bg-blue-400 rounded"></div>
           <span className="text-sm text-slate-700">Projected Opportunity</span>
         </div>
         <div className="flex items-center gap-2">
