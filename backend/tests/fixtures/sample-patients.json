@@ -1,0 +1,3416 @@
+[
+  {
+    "id": "patient-hfref-gdmt-gap-maximum",
+    "description": "Patient with HFrEF on 0/4 GDMT pillars (maximum gap)",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-hfref-gdmt-gap-max",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-001",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Johnson",
+                "given": ["Robert", "M"]
+              }
+            ],
+            "telecom": [
+              {
+                "system": "phone",
+                "value": "555-0001",
+                "use": "home"
+              }
+            ],
+            "gender": "male",
+            "birthDate": "1958-03-15",
+            "address": [
+              {
+                "use": "home",
+                "line": ["123 Main St"],
+                "city": "Anytown",
+                "state": "CA",
+                "postalCode": "90210"
+              }
+            ]
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-hfref-001",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "verificationStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                  "code": "confirmed"
+                }
+              ]
+            },
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/condition-category",
+                    "code": "encounter-diagnosis"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "84114007",
+                  "display": "Heart failure"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-001"
+            },
+            "onsetDateTime": "2020-06-15"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-ef-001",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "imaging"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "10230-1",
+                  "display": "Left ventricular Ejection fraction"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-001"
+            },
+            "effectiveDateTime": "2024-01-15",
+            "valueQuantity": {
+              "value": 25,
+              "unit": "%",
+              "system": "http://unitsofmeasure.org",
+              "code": "%"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-nyha-001",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "clinical"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "420816009",
+                  "display": "New York Heart Association Classification"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-001"
+            },
+            "effectiveDateTime": "2024-01-15",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "420300004",
+                  "display": "New York Heart Association Class III"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-bnp-001",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "laboratory"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "33762-6",
+                  "display": "Natriuretic peptide.B prohormone N-Terminal [Mass/volume] in Serum or Plasma"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-001"
+            },
+            "effectiveDateTime": "2024-01-15",
+            "valueQuantity": {
+              "value": 2850,
+              "unit": "pg/mL",
+              "system": "http://unitsofmeasure.org",
+              "code": "pg/mL"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-creatinine-001",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "laboratory"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "2160-0",
+                  "display": "Creatinine [Mass/volume] in Serum or Plasma"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-001"
+            },
+            "effectiveDateTime": "2024-01-15",
+            "valueQuantity": {
+              "value": 1.8,
+              "unit": "mg/dL",
+              "system": "http://unitsofmeasure.org",
+              "code": "mg/dL"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-potassium-001",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "laboratory"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "2823-3",
+                  "display": "Potassium [Moles/volume] in Serum or Plasma"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-001"
+            },
+            "effectiveDateTime": "2024-01-15",
+            "valueQuantity": {
+              "value": 5.2,
+              "unit": "mEq/L",
+              "system": "http://unitsofmeasure.org",
+              "code": "mEq/L"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-hfref-gdmt-optimal",
+    "description": "Patient with HFrEF on 4/4 GDMT at target doses (gold standard)",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-hfref-gdmt-optimal",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-002",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Williams",
+                "given": ["Sarah", "E"]
+              }
+            ],
+            "gender": "female",
+            "birthDate": "1962-08-22"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-hfref-002",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "verificationStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                  "code": "confirmed"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "84114007",
+                  "display": "Heart failure"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-002"
+            },
+            "onsetDateTime": "2019-11-10"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-ef-002",
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "10230-1",
+                  "display": "Left ventricular Ejection fraction"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-002"
+            },
+            "effectiveDateTime": "2024-01-15",
+            "valueQuantity": {
+              "value": 35,
+              "unit": "%",
+              "system": "http://unitsofmeasure.org",
+              "code": "%"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "MedicationRequest",
+            "id": "med-arni-002",
+            "status": "active",
+            "intent": "order",
+            "medicationCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                  "code": "1656349",
+                  "display": "sacubitril 97 MG / valsartan 103 MG Oral Tablet"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-002"
+            },
+            "authoredOn": "2024-01-01",
+            "dosageInstruction": [
+              {
+                "text": "97/103 mg orally twice daily",
+                "timing": {
+                  "repeat": {
+                    "frequency": 2,
+                    "period": 1,
+                    "periodUnit": "d"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "MedicationRequest",
+            "id": "med-bb-002",
+            "status": "active",
+            "intent": "order",
+            "medicationCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                  "code": "866924",
+                  "display": "metoprolol succinate 200 MG Extended Release Oral Tablet"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-002"
+            },
+            "authoredOn": "2024-01-01",
+            "dosageInstruction": [
+              {
+                "text": "200 mg orally once daily",
+                "timing": {
+                  "repeat": {
+                    "frequency": 1,
+                    "period": 1,
+                    "periodUnit": "d"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "MedicationRequest",
+            "id": "med-mra-002",
+            "status": "active",
+            "intent": "order",
+            "medicationCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                  "code": "9997",
+                  "display": "spironolactone 50 MG Oral Tablet"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-002"
+            },
+            "authoredOn": "2024-01-01",
+            "dosageInstruction": [
+              {
+                "text": "50 mg orally once daily",
+                "timing": {
+                  "repeat": {
+                    "frequency": 1,
+                    "period": 1,
+                    "periodUnit": "d"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "MedicationRequest",
+            "id": "med-sglt2i-002",
+            "status": "active",
+            "intent": "order",
+            "medicationCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                  "code": "1545653",
+                  "display": "empagliflozin 25 MG Oral Tablet"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-002"
+            },
+            "authoredOn": "2024-01-01",
+            "dosageInstruction": [
+              {
+                "text": "25 mg orally once daily",
+                "timing": {
+                  "repeat": {
+                    "frequency": 1,
+                    "period": 1,
+                    "periodUnit": "d"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-af-cha2ds2vasc-high-no-anticoag",
+    "description": "Patient with AF + CHA2DS2-VASc of 4 on no anticoagulation (critical gap)",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-af-high-risk-no-anticoag",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-003",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Davis",
+                "given": ["Margaret", "A"]
+              }
+            ],
+            "gender": "female",
+            "birthDate": "1950-12-05"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-af-003",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "49436004",
+                  "display": "Atrial fibrillation"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-003"
+            },
+            "onsetDateTime": "2021-03-20"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-htn-003",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "38341003",
+                  "display": "Hypertensive disorder"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-003"
+            },
+            "onsetDateTime": "2015-05-10"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-dm-003",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "44054006",
+                  "display": "Diabetes mellitus type 2"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-003"
+            },
+            "onsetDateTime": "2018-09-15"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-cha2ds2vasc-003",
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "443490004",
+                  "display": "CHA2DS2-VASc score"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-003"
+            },
+            "effectiveDateTime": "2024-01-15",
+            "valueInteger": 4,
+            "component": [
+              {
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "424144002",
+                      "display": "Current chronological age"
+                    }
+                  ]
+                },
+                "valueInteger": 1
+              },
+              {
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "263495000",
+                      "display": "Gender"
+                    }
+                  ]
+                },
+                "valueInteger": 1
+              },
+              {
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "38341003",
+                      "display": "Hypertensive disorder"
+                    }
+                  ]
+                },
+                "valueInteger": 1
+              },
+              {
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "44054006",
+                      "display": "Diabetes mellitus"
+                    }
+                  ]
+                },
+                "valueInteger": 1
+              }
+            ]
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-ecg-003",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "procedure"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "11524-6",
+                  "display": "EKG study"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-003"
+            },
+            "effectiveDateTime": "2024-01-15",
+            "component": [
+              {
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "251120003",
+                      "display": "Heart rhythm"
+                    }
+                  ]
+                },
+                "valueCodeableConcept": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "49436004",
+                      "display": "Atrial fibrillation"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-severe-as-tavr-candidate",
+    "description": "Patient with severe AS, symptoms, low surgical risk (TAVR candidate)",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-severe-as-tavr",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-004",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Miller",
+                "given": ["James", "R"]
+              }
+            ],
+            "gender": "male",
+            "birthDate": "1945-04-18"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-as-004",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "60573004",
+                  "display": "Aortic valve stenosis"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-004"
+            },
+            "onsetDateTime": "2020-08-15",
+            "stage": [
+              {
+                "summary": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "24484000",
+                      "display": "Severe"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-dyspnea-004",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "267036007",
+                  "display": "Dyspnea on exertion"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-004"
+            },
+            "onsetDateTime": "2023-10-01"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-echo-av-area-004",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "imaging"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "18153-7",
+                  "display": "Aortic valve area by US"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-004"
+            },
+            "effectiveDateTime": "2024-01-10",
+            "valueQuantity": {
+              "value": 0.8,
+              "unit": "cm2",
+              "system": "http://unitsofmeasure.org",
+              "code": "cm2"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-echo-av-gradient-004",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "imaging"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "20216-8",
+                  "display": "Aortic valve Mean gradient by US"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-004"
+            },
+            "effectiveDateTime": "2024-01-10",
+            "valueQuantity": {
+              "value": 48,
+              "unit": "mm[Hg]",
+              "system": "http://unitsofmeasure.org",
+              "code": "mm[Hg]"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-sts-score-004",
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "444208001",
+                  "display": "Society of Thoracic Surgeons risk score"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-004"
+            },
+            "effectiveDateTime": "2024-01-10",
+            "valueQuantity": {
+              "value": 2.5,
+              "unit": "%",
+              "system": "http://unitsofmeasure.org",
+              "code": "%"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-hfpef-amyloid-suspect",
+    "description": "Patient with HFpEF + bilateral CTS + unexplained LVH (amyloidosis suspect)",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-hfpef-amyloid-suspect",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-005",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Anderson",
+                "given": ["William", "T"]
+              }
+            ],
+            "gender": "male",
+            "birthDate": "1938-07-12"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-hfpef-005",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "441530006",
+                  "display": "Chronic diastolic heart failure"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-005"
+            },
+            "onsetDateTime": "2022-05-15"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-cts-bilateral-005",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "57406009",
+                  "display": "Carpal tunnel syndrome"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-005"
+            },
+            "onsetDateTime": "2018-02-10",
+            "bodySite": [
+              {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "51636004",
+                    "display": "Bilateral"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-ef-005",
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "10230-1",
+                  "display": "Left ventricular Ejection fraction"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-005"
+            },
+            "effectiveDateTime": "2024-01-10",
+            "valueQuantity": {
+              "value": 55,
+              "unit": "%",
+              "system": "http://unitsofmeasure.org",
+              "code": "%"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-lvh-005",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "imaging"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "77905-1",
+                  "display": "Left ventricular wall thickness"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-005"
+            },
+            "effectiveDateTime": "2024-01-10",
+            "valueQuantity": {
+              "value": 18,
+              "unit": "mm",
+              "system": "http://unitsofmeasure.org",
+              "code": "mm"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-ecg-low-voltage-005",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "procedure"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "11524-6",
+                  "display": "EKG study"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-005"
+            },
+            "effectiveDateTime": "2024-01-10",
+            "component": [
+              {
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "251259004",
+                      "display": "Low voltage electrocardiogram"
+                    }
+                  ]
+                },
+                "valueBoolean": true
+              }
+            ]
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-bnp-005",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "laboratory"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "33762-6",
+                  "display": "Natriuretic peptide.B prohormone N-Terminal [Mass/volume] in Serum or Plasma"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-005"
+            },
+            "effectiveDateTime": "2024-01-10",
+            "valueQuantity": {
+              "value": 3200,
+              "unit": "pg/mL",
+              "system": "http://unitsofmeasure.org",
+              "code": "pg/mL"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-hcm-family-hx-scd",
+    "description": "Patient with HCM + family history of SCD (ICD evaluation needed)",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-hcm-family-scd",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-006",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Thompson",
+                "given": ["Michael", "J"]
+              }
+            ],
+            "gender": "male",
+            "birthDate": "1985-11-30"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-hcm-006",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "29406002",
+                  "display": "Hypertrophic cardiomyopathy"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-006"
+            },
+            "onsetDateTime": "2020-09-25"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "FamilyMemberHistory",
+            "id": "fmh-scd-006",
+            "status": "completed",
+            "patient": {
+              "reference": "Patient/patient-006"
+            },
+            "date": "2024-01-15",
+            "relationship": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+                  "code": "FTH",
+                  "display": "father"
+                }
+              ]
+            },
+            "condition": [
+              {
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "95281009",
+                      "display": "Sudden cardiac death"
+                    }
+                  ]
+                },
+                "onsetAge": {
+                  "value": 45,
+                  "unit": "a",
+                  "system": "http://unitsofmeasure.org",
+                  "code": "a"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-septal-thickness-006",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "imaging"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "29468-8",
+                  "display": "Interventricular septal thickness by US"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-006"
+            },
+            "effectiveDateTime": "2024-01-10",
+            "valueQuantity": {
+              "value": 22,
+              "unit": "mm",
+              "system": "http://unitsofmeasure.org",
+              "code": "mm"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-lvot-gradient-006",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "imaging"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "33878-0",
+                  "display": "Left ventricular outflow tract peak systolic velocity by US"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-006"
+            },
+            "effectiveDateTime": "2024-01-10",
+            "valueQuantity": {
+              "value": 85,
+              "unit": "mm[Hg]",
+              "system": "http://unitsofmeasure.org",
+              "code": "mm[Hg]"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-hcm-risk-scd-006",
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "225599009",
+                  "display": "Risk assessment"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-006"
+            },
+            "effectiveDateTime": "2024-01-15",
+            "valueInteger": 6,
+            "note": [
+              {
+                "text": "HCM Risk-SCD score: 6.2% (5-year risk of sudden cardiac death)"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-post-mi-incomplete-prevention",
+    "description": "Patient with post-MI on incomplete secondary prevention",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-post-mi-incomplete",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-007",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Garcia",
+                "given": ["Carlos", "M"]
+              }
+            ],
+            "gender": "male",
+            "birthDate": "1968-03-22"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-stemi-007",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "401314000",
+                  "display": "ST elevation myocardial infarction"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-007"
+            },
+            "onsetDateTime": "2023-08-15"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Procedure",
+            "id": "proc-pci-007",
+            "status": "completed",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "415070008",
+                  "display": "Percutaneous coronary intervention"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-007"
+            },
+            "performedDateTime": "2023-08-15"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "MedicationRequest",
+            "id": "med-aspirin-007",
+            "status": "active",
+            "intent": "order",
+            "medicationCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                  "code": "1191",
+                  "display": "aspirin 81 MG Oral Tablet"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-007"
+            },
+            "authoredOn": "2023-08-16"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "MedicationRequest",
+            "id": "med-clopidogrel-007",
+            "status": "active",
+            "intent": "order",
+            "medicationCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                  "code": "32968",
+                  "display": "clopidogrel 75 MG Oral Tablet"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-007"
+            },
+            "authoredOn": "2023-08-16"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-ldl-007",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "laboratory"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "18262-6",
+                  "display": "Cholesterol.LDL [Mass/volume] in Serum or Plasma"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-007"
+            },
+            "effectiveDateTime": "2024-01-15",
+            "valueQuantity": {
+              "value": 145,
+              "unit": "mg/dL",
+              "system": "http://unitsofmeasure.org",
+              "code": "mg/dL"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-crt-eligible-no-device",
+    "description": "Patient with CRT eligible (EF≤35, LBBB, QRS≥150ms) but no device",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-crt-eligible-no-device",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-008",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Brown",
+                "given": ["Linda", "K"]
+              }
+            ],
+            "gender": "female",
+            "birthDate": "1960-10-08"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-hfref-008",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "84114007",
+                  "display": "Heart failure"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-008"
+            },
+            "onsetDateTime": "2021-04-20"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-ef-008",
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "10230-1",
+                  "display": "Left ventricular Ejection fraction"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-008"
+            },
+            "effectiveDateTime": "2024-01-10",
+            "valueQuantity": {
+              "value": 28,
+              "unit": "%",
+              "system": "http://unitsofmeasure.org",
+              "code": "%"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-ecg-lbbb-008",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "procedure"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "11524-6",
+                  "display": "EKG study"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-008"
+            },
+            "effectiveDateTime": "2024-01-10",
+            "component": [
+              {
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "164909002",
+                      "display": "Left bundle branch block"
+                    }
+                  ]
+                },
+                "valueBoolean": true
+              },
+              {
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://loinc.org",
+                      "code": "8625-6",
+                      "display": "QRS duration"
+                    }
+                  ]
+                },
+                "valueQuantity": {
+                  "value": 165,
+                  "unit": "ms",
+                  "system": "http://unitsofmeasure.org",
+                  "code": "ms"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-nyha-008",
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "420816009",
+                  "display": "New York Heart Association Classification"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-008"
+            },
+            "effectiveDateTime": "2024-01-10",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "421704003",
+                  "display": "New York Heart Association Class II"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "MedicationRequest",
+            "id": "med-gdmt-complete-008",
+            "status": "active",
+            "intent": "order",
+            "medicationCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                  "code": "1656349",
+                  "display": "sacubitril 97 MG / valsartan 103 MG Oral Tablet"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-008"
+            },
+            "authoredOn": "2023-06-01",
+            "note": [
+              {
+                "text": "Patient on optimal GDMT for 3+ months, still symptomatic, CRT candidate"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-iron-deficiency-hf",
+    "description": "Patient with iron deficiency (ferritin<100) + HF",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-iron-deficiency-hf",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-009",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Wilson",
+                "given": ["Patricia", "L"]
+              }
+            ],
+            "gender": "female",
+            "birthDate": "1972-06-14"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-hf-009",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "84114007",
+                  "display": "Heart failure"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-009"
+            },
+            "onsetDateTime": "2022-11-08"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-iron-deficiency-009",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "35240004",
+                  "display": "Iron deficiency"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-009"
+            },
+            "onsetDateTime": "2024-01-15"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-ef-009",
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "10230-1",
+                  "display": "Left ventricular Ejection fraction"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-009"
+            },
+            "effectiveDateTime": "2024-01-10",
+            "valueQuantity": {
+              "value": 42,
+              "unit": "%",
+              "system": "http://unitsofmeasure.org",
+              "code": "%"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-ferritin-009",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "laboratory"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "2276-4",
+                  "display": "Ferritin [Mass/volume] in Serum or Plasma"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-009"
+            },
+            "effectiveDateTime": "2024-01-15",
+            "valueQuantity": {
+              "value": 85,
+              "unit": "ng/mL",
+              "system": "http://unitsofmeasure.org",
+              "code": "ng/mL"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-tsat-009",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "laboratory"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "2571-8",
+                  "display": "Transferrin saturation [Ratio] in Serum or Plasma"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-009"
+            },
+            "effectiveDateTime": "2024-01-15",
+            "valueQuantity": {
+              "value": 16,
+              "unit": "%",
+              "system": "http://unitsofmeasure.org",
+              "code": "%"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-hemoglobin-009",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "laboratory"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "718-7",
+                  "display": "Hemoglobin [Mass/volume] in Blood"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-009"
+            },
+            "effectiveDateTime": "2024-01-15",
+            "valueQuantity": {
+              "value": 10.8,
+              "unit": "g/dL",
+              "system": "http://unitsofmeasure.org",
+              "code": "g/dL"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-af-high-bleeding-risk-warfarin",
+    "description": "Patient with AF + high bleeding risk (HAS-BLED 4) on warfarin (DOAC switch candidate)",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-af-high-bleeding-warfarin",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-010",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Martinez",
+                "given": ["Rosa", "C"]
+              }
+            ],
+            "gender": "female",
+            "birthDate": "1943-12-18"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-af-010",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "49436004",
+                  "display": "Atrial fibrillation"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-010"
+            },
+            "onsetDateTime": "2019-06-12"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-htn-010",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "38341003",
+                  "display": "Hypertensive disorder"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-010"
+            },
+            "onsetDateTime": "2010-03-05"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-ckd-010",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "431855005",
+                  "display": "Chronic kidney disease"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-010"
+            },
+            "onsetDateTime": "2018-09-20"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-falls-010",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "129839007",
+                  "display": "At risk for falls"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-010"
+            },
+            "onsetDateTime": "2023-05-15"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "MedicationRequest",
+            "id": "med-warfarin-010",
+            "status": "active",
+            "intent": "order",
+            "medicationCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                  "code": "11289",
+                  "display": "warfarin sodium"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-010"
+            },
+            "authoredOn": "2019-07-01",
+            "dosageInstruction": [
+              {
+                "text": "Variable dose based on INR monitoring"
+              }
+            ]
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-inr-010",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "laboratory"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "6301-6",
+                  "display": "INR in Platelet poor plasma by Coagulation assay"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-010"
+            },
+            "effectiveDateTime": "2024-01-10",
+            "valueQuantity": {
+              "value": 1.8,
+              "system": "http://unitsofmeasure.org",
+              "code": "1"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-has-bled-010",
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "443508008",
+                  "display": "HAS-BLED score"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-010"
+            },
+            "effectiveDateTime": "2024-01-15",
+            "valueInteger": 4,
+            "component": [
+              {
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "38341003",
+                      "display": "Hypertension"
+                    }
+                  ]
+                },
+                "valueInteger": 1
+              },
+              {
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "424144002",
+                      "display": "Current chronological age"
+                    }
+                  ]
+                },
+                "valueInteger": 1
+              },
+              {
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "431855005",
+                      "display": "Renal disease"
+                    }
+                  ]
+                },
+                "valueInteger": 1
+              },
+              {
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "129839007",
+                      "display": "Falls"
+                    }
+                  ]
+                },
+                "valueInteger": 1
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-device-pacemaker",
+    "description": "Patient with pacemaker for complete heart block",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-device-pacemaker",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-011",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Taylor",
+                "given": ["David", "R"]
+              }
+            ],
+            "gender": "male",
+            "birthDate": "1955-01-25"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-chb-011",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "27885002",
+                  "display": "Complete atrioventricular block"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-011"
+            },
+            "onsetDateTime": "2023-03-10"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Device",
+            "id": "device-pacemaker-011",
+            "deviceName": [
+              {
+                "name": "Medtronic Advisa SR MRI SureScan",
+                "type": "model-name"
+              }
+            ],
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "14106009",
+                  "display": "Cardiac pacemaker"
+                }
+              ]
+            },
+            "patient": {
+              "reference": "Patient/patient-011"
+            },
+            "status": "active"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Procedure",
+            "id": "proc-pacemaker-implant-011",
+            "status": "completed",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "236961002",
+                  "display": "Implantation of cardiac pacemaker"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-011"
+            },
+            "performedDateTime": "2023-03-15",
+            "focalDevice": [
+              {
+                "action": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "71388002",
+                      "display": "Procedure by method"
+                    }
+                  ]
+                },
+                "manipulated": {
+                  "reference": "Device/device-pacemaker-011"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-cabg-post-op",
+    "description": "Patient post-CABG with suboptimal lipid control",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-cabg-post-op",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-012",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Lee",
+                "given": ["Jennifer", "S"]
+              }
+            ],
+            "gender": "female",
+            "birthDate": "1963-09-07"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-cad-012",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "53741008",
+                  "display": "Coronary artery disease"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-012"
+            },
+            "onsetDateTime": "2022-01-15"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Procedure",
+            "id": "proc-cabg-012",
+            "status": "completed",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "232717009",
+                  "display": "Coronary artery bypass grafting"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-012"
+            },
+            "performedDateTime": "2022-02-20"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "MedicationRequest",
+            "id": "med-statin-low-012",
+            "status": "active",
+            "intent": "order",
+            "medicationCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                  "code": "36567",
+                  "display": "simvastatin 20 MG Oral Tablet"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-012"
+            },
+            "authoredOn": "2022-02-25"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-ldl-high-012",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "laboratory"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "18262-6",
+                  "display": "Cholesterol.LDL [Mass/volume] in Serum or Plasma"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-012"
+            },
+            "effectiveDateTime": "2024-01-10",
+            "valueQuantity": {
+              "value": 125,
+              "unit": "mg/dL",
+              "system": "http://unitsofmeasure.org",
+              "code": "mg/dL"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-watchman-device",
+    "description": "Patient with WATCHMAN device for AF stroke prevention",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-watchman-device",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-013",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Clark",
+                "given": ["Thomas", "W"]
+              }
+            ],
+            "gender": "male",
+            "birthDate": "1947-05-30"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-af-013",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "49436004",
+                  "display": "Atrial fibrillation"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-013"
+            },
+            "onsetDateTime": "2018-11-22"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-gi-bleeding-013",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "resolved"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "74474003",
+                  "display": "Gastrointestinal hemorrhage"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-013"
+            },
+            "onsetDateTime": "2021-08-10"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Device",
+            "id": "device-watchman-013",
+            "deviceName": [
+              {
+                "name": "WATCHMAN FLX Left Atrial Appendage Closure Device",
+                "type": "model-name"
+              }
+            ],
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "468063009",
+                  "display": "Left atrial appendage occluder"
+                }
+              ]
+            },
+            "patient": {
+              "reference": "Patient/patient-013"
+            },
+            "status": "active"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Procedure",
+            "id": "proc-watchman-implant-013",
+            "status": "completed",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "609151008",
+                  "display": "Transcatheter implantation of left atrial appendage closure device"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-013"
+            },
+            "performedDateTime": "2023-04-12",
+            "reasonReference": [
+              {
+                "reference": "Condition/condition-gi-bleeding-013"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-cardiomems-device",
+    "description": "Patient with CardioMEMS device for HF monitoring",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-cardiomems-device",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-014",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Rodriguez",
+                "given": ["Maria", "E"]
+              }
+            ],
+            "gender": "female",
+            "birthDate": "1958-12-03"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-hf-014",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "84114007",
+                  "display": "Heart failure"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-014"
+            },
+            "onsetDateTime": "2019-05-18"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Device",
+            "id": "device-cardiomems-014",
+            "deviceName": [
+              {
+                "name": "CardioMEMS HF System",
+                "type": "model-name"
+              }
+            ],
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "706635000",
+                  "display": "Implantable pulmonary artery pressure sensor"
+                }
+              ]
+            },
+            "patient": {
+              "reference": "Patient/patient-014"
+            },
+            "status": "active"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-pa-pressure-014",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "vital-signs"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "8440-0",
+                  "display": "Pulmonary artery Mean pressure"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-014"
+            },
+            "effectiveDateTime": "2024-01-15",
+            "valueQuantity": {
+              "value": 28,
+              "unit": "mm[Hg]",
+              "system": "http://unitsofmeasure.org",
+              "code": "mm[Hg]"
+            },
+            "device": {
+              "reference": "Device/device-cardiomems-014"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-icd-primary-prevention",
+    "description": "Patient with ICD for primary prevention (EF 30%, optimal medical therapy)",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-icd-primary-prevention",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-015",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "White",
+                "given": ["Robert", "J"]
+              }
+            ],
+            "gender": "male",
+            "birthDate": "1965-08-19"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-icm-015",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "414545008",
+                  "display": "Ischemic cardiomyopathy"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-015"
+            },
+            "onsetDateTime": "2020-09-12"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Device",
+            "id": "device-icd-015",
+            "deviceName": [
+              {
+                "name": "Medtronic Viva Quad CRT-D",
+                "type": "model-name"
+              }
+            ],
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360129009",
+                  "display": "Implantable cardioverter defibrillator"
+                }
+              ]
+            },
+            "patient": {
+              "reference": "Patient/patient-015"
+            },
+            "status": "active"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-ef-015",
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "10230-1",
+                  "display": "Left ventricular Ejection fraction"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-015"
+            },
+            "effectiveDateTime": "2023-06-10",
+            "valueQuantity": {
+              "value": 30,
+              "unit": "%",
+              "system": "http://unitsofmeasure.org",
+              "code": "%"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Procedure",
+            "id": "proc-icd-implant-015",
+            "status": "completed",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "233174007",
+                  "display": "Implantation of automatic cardioverter defibrillator"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-015"
+            },
+            "performedDateTime": "2023-07-15"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-valve-mr-severe",
+    "description": "Patient with severe mitral regurgitation, high surgical risk",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-valve-mr-severe",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-016",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Jackson",
+                "given": ["Dorothy", "M"]
+              }
+            ],
+            "gender": "female",
+            "birthDate": "1940-03-28"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-mr-016",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "48724000",
+                  "display": "Mitral valve regurgitation"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-016"
+            },
+            "onsetDateTime": "2018-04-15",
+            "stage": [
+              {
+                "summary": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "24484000",
+                      "display": "Severe"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-echo-mr-grade-016",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "imaging"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "33746-9",
+                  "display": "Mitral valve regurgitation severity by US"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-016"
+            },
+            "effectiveDateTime": "2024-01-08",
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "24484000",
+                  "display": "Severe"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-sts-score-016",
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "444208001",
+                  "display": "Society of Thoracic Surgeons risk score"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-016"
+            },
+            "effectiveDateTime": "2024-01-08",
+            "valueQuantity": {
+              "value": 8.5,
+              "unit": "%",
+              "system": "http://unitsofmeasure.org",
+              "code": "%"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-diabetes-cv-risk",
+    "description": "Patient with diabetes and cardiovascular risk factors",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-diabetes-cv-risk",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-017",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Harris",
+                "given": ["Kevin", "L"]
+              }
+            ],
+            "gender": "male",
+            "birthDate": "1970-07-16"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-dm2-017",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "44054006",
+                  "display": "Diabetes mellitus type 2"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-017"
+            },
+            "onsetDateTime": "2015-03-20"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-cad-017",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "53741008",
+                  "display": "Coronary artery disease"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-017"
+            },
+            "onsetDateTime": "2022-11-05"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-hba1c-017",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "laboratory"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "4548-4",
+                  "display": "Hemoglobin A1c/Hemoglobin.total in Blood"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-017"
+            },
+            "effectiveDateTime": "2024-01-10",
+            "valueQuantity": {
+              "value": 8.5,
+              "unit": "%",
+              "system": "http://unitsofmeasure.org",
+              "code": "%"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "MedicationRequest",
+            "id": "med-sglt2i-cv-017",
+            "status": "active",
+            "intent": "order",
+            "medicationCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                  "code": "1545653",
+                  "display": "empagliflozin 25 MG Oral Tablet"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-017"
+            },
+            "authoredOn": "2023-12-01",
+            "reasonReference": [
+              {
+                "reference": "Condition/condition-cad-017"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-pulmonary-hypertension",
+    "description": "Patient with pulmonary arterial hypertension on targeted therapy",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-pulmonary-hypertension",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-018",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Young",
+                "given": ["Lisa", "A"]
+              }
+            ],
+            "gender": "female",
+            "birthDate": "1978-10-12"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-pah-018",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "274101007",
+                  "display": "Primary pulmonary hypertension"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-018"
+            },
+            "onsetDateTime": "2021-06-25"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-rhc-018",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "procedure"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "8440-0",
+                  "display": "Pulmonary artery Mean pressure"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-018"
+            },
+            "effectiveDateTime": "2024-01-05",
+            "valueQuantity": {
+              "value": 45,
+              "unit": "mm[Hg]",
+              "system": "http://unitsofmeasure.org",
+              "code": "mm[Hg]"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "MedicationRequest",
+            "id": "med-era-018",
+            "status": "active",
+            "intent": "order",
+            "medicationCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                  "code": "847252",
+                  "display": "ambrisentan 10 MG Oral Tablet"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-018"
+            },
+            "authoredOn": "2021-07-01"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-crt-d-implant",
+    "description": "Patient with CRT-D for heart failure and arrhythmia",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-crt-d-implant",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-019",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "King",
+                "given": ["Charles", "D"]
+              }
+            ],
+            "gender": "male",
+            "birthDate": "1952-04-07"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-hfref-019",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "84114007",
+                  "display": "Heart failure"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-019"
+            },
+            "onsetDateTime": "2019-08-30"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Device",
+            "id": "device-crt-d-019",
+            "deviceName": [
+              {
+                "name": "Boston Scientific RESONATE X4 CRT-D",
+                "type": "model-name"
+              }
+            ],
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "706224008",
+                  "display": "Cardiac resynchronization therapy defibrillator"
+                }
+              ]
+            },
+            "patient": {
+              "reference": "Patient/patient-019"
+            },
+            "status": "active"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-ef-post-crt-019",
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "10230-1",
+                  "display": "Left ventricular Ejection fraction"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-019"
+            },
+            "effectiveDateTime": "2024-01-08",
+            "valueQuantity": {
+              "value": 42,
+              "unit": "%",
+              "system": "http://unitsofmeasure.org",
+              "code": "%"
+            },
+            "note": [
+              {
+                "text": "Improved from 25% pre-CRT implantation"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "patient-aortic-regurgitation",
+    "description": "Patient with chronic severe aortic regurgitation, asymptomatic",
+    "bundle": {
+      "resourceType": "Bundle",
+      "id": "bundle-aortic-regurgitation",
+      "type": "transaction",
+      "entry": [
+        {
+          "resource": {
+            "resourceType": "Patient",
+            "id": "patient-020",
+            "active": true,
+            "name": [
+              {
+                "use": "official",
+                "family": "Scott",
+                "given": ["Steven", "M"]
+              }
+            ],
+            "gender": "male",
+            "birthDate": "1975-11-22"
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Condition",
+            "id": "condition-ar-020",
+            "clinicalStatus": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                  "code": "active"
+                }
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "60234000",
+                  "display": "Aortic valve regurgitation"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-020"
+            },
+            "onsetDateTime": "2018-09-10",
+            "stage": [
+              {
+                "summary": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "code": "24484000",
+                      "display": "Severe"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-lv-dimension-020",
+            "status": "final",
+            "category": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "imaging"
+                  }
+                ]
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "29466-2",
+                  "display": "Left ventricular End systolic dimension by US"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-020"
+            },
+            "effectiveDateTime": "2024-01-12",
+            "valueQuantity": {
+              "value": 4.2,
+              "unit": "cm",
+              "system": "http://unitsofmeasure.org",
+              "code": "cm"
+            }
+          }
+        },
+        {
+          "resource": {
+            "resourceType": "Observation",
+            "id": "obs-ef-020",
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "10230-1",
+                  "display": "Left ventricular Ejection fraction"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "Patient/patient-020"
+            },
+            "effectiveDateTime": "2024-01-12",
+            "valueQuantity": {
+              "value": 58,
+              "unit": "%",
+              "system": "http://unitsofmeasure.org",
+              "code": "%"
+            }
+          }
+        }
+      ]
+    }
+  }
+]

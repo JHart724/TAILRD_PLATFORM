@@ -1,0 +1,418 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  TAILRD Platform - WAF, Shield, CloudTrail
+  Web application firewall rules for HIPAA, API abuse prevention,
+  and full AWS API audit trail.
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: production
+    AllowedValues: [production, staging, development]
+
+  AccountId:
+    Type: String
+    Description: AWS Account ID
+
+  ALBArn:
+    Type: String
+    Description: ARN of the Application Load Balancer to protect
+    Default: ''
+
+Conditions:
+  HasALB: !Not [!Equals [!Ref ALBArn, '']]
+
+Resources:
+  # ------ WAF Web ACL ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  WAFWebACL:
+    Type: AWS::WAFv2::WebACL
+    Properties:
+      Name: !Sub tailrd-${EnvironmentName}-waf
+      Scope: REGIONAL
+      DefaultAction:
+        Allow: {}
+      Description: TAILRD Platform WAF --- blocks common attack vectors
+      VisibilityConfig:
+        SampledRequestsEnabled: true
+        CloudWatchMetricsEnabled: true
+        MetricName: !Sub tailrd-${EnvironmentName}-waf
+      Rules:
+        # Rule 1: AWS Managed --- Common attack patterns (SQLi, XSS, etc.)
+        - Name: AWSManagedRulesCommonRuleSet
+          Priority: 1
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesCommonRuleSet
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: CommonRuleSet
+
+        # Rule 2: AWS Managed --- Known bad inputs
+        - Name: AWSManagedRulesKnownBadInputsRuleSet
+          Priority: 2
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesKnownBadInputsRuleSet
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: KnownBadInputs
+
+        # Rule 3: AWS Managed --- SQL injection protection
+        - Name: AWSManagedRulesSQLiRuleSet
+          Priority: 3
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesSQLiRuleSet
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: SQLiRuleSet
+
+        # Rule 4: AWS Managed --- IP reputation (known malicious IPs)
+        - Name: AWSManagedRulesAmazonIpReputationList
+          Priority: 4
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesAmazonIpReputationList
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: IpReputationList
+
+        # Rule 5: Rate limiting --- 2000 requests per 5 min per IP
+        - Name: RateLimitPerIP
+          Priority: 5
+          Action:
+            Block: {}
+          Statement:
+            RateBasedStatement:
+              Limit: 2000
+              AggregateKeyType: IP
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: RateLimitPerIP
+
+        # Rule 6: Block requests with oversized bodies (>10MB)
+        - Name: BlockOversizedRequests
+          Priority: 6
+          Action:
+            Block: {}
+          Statement:
+            SizeConstraintStatement:
+              FieldToMatch:
+                Body:
+                  OversizeHandling: MATCH
+              ComparisonOperator: GT
+              Size: 10485760  # 10MB --- matches Express body parser limit
+              TextTransformations:
+                - Priority: 0
+                  Type: NONE
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: OversizedRequests
+
+        # Rule 7: Block non-US geographic regions (optional --- enable if needed)
+        # Uncomment if you want to restrict to US-only access
+        # - Name: GeoRestriction
+        #   Priority: 7
+        #   Action:
+        #     Block: {}
+        #   Statement:
+        #     NotStatement:
+        #       Statement:
+        #         GeoMatchStatement:
+        #           CountryCodes: [US]
+        #   VisibilityConfig:
+        #     SampledRequestsEnabled: true
+        #     CloudWatchMetricsEnabled: true
+        #     MetricName: GeoBlock
+
+      Tags:
+        - Key: Environment
+          Value: !Ref EnvironmentName
+        - Key: HIPAA
+          Value: 'true'
+
+  # Associate WAF with ALB (only if ALB ARN provided)
+  WAFALBAssociation:
+    Type: AWS::WAFv2::WebACLAssociation
+    Condition: HasALB
+    Properties:
+      ResourceArn: !Ref ALBArn
+      WebACLArn: !GetAtt WAFWebACL.Arn
+
+  # WAF logging to CloudWatch
+  WAFLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub aws-waf-logs-tailrd-${EnvironmentName}
+      RetentionInDays: 365
+      Tags:
+        - Key: HIPAA
+          Value: 'true'
+
+  WAFLoggingConfiguration:
+    Type: AWS::WAFv2::LoggingConfiguration
+    Properties:
+      ResourceArn: !GetAtt WAFWebACL.Arn
+      LogDestinationConfigs:
+        - !Sub arn:aws:logs:${AWS::Region}:${AccountId}:log-group:aws-waf-logs-tailrd-${EnvironmentName}
+
+  # ------ CloudTrail ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  CloudTrailBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub tailrd-${EnvironmentName}-cloudtrail-${AccountId}
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: ArchiveOldTrails
+            Status: Enabled
+            Transitions:
+              - TransitionInDays: 90
+                StorageClass: STANDARD_IA
+              - TransitionInDays: 365
+                StorageClass: GLACIER
+            ExpirationInDays: 2557  # 7 years
+      Tags:
+        - Key: HIPAA
+          Value: 'true'
+
+  CloudTrailBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref CloudTrailBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AWSCloudTrailAclCheck
+            Effect: Allow
+            Principal:
+              Service: cloudtrail.amazonaws.com
+            Action: s3:GetBucketAcl
+            Resource: !GetAtt CloudTrailBucket.Arn
+          - Sid: AWSCloudTrailWrite
+            Effect: Allow
+            Principal:
+              Service: cloudtrail.amazonaws.com
+            Action: s3:PutObject
+            Resource: !Sub ${CloudTrailBucket.Arn}/AWSLogs/${AccountId}/*
+            Condition:
+              StringEquals:
+                s3:x-amz-acl: bucket-owner-full-control
+          - Sid: DenyUnencryptedTransport
+            Effect: Deny
+            Principal: '*'
+            Action: s3:*
+            Resource:
+              - !GetAtt CloudTrailBucket.Arn
+              - !Sub ${CloudTrailBucket.Arn}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+
+  CloudTrailLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /tailrd/${EnvironmentName}/cloudtrail
+      RetentionInDays: 365
+      Tags:
+        - Key: HIPAA
+          Value: 'true'
+
+  CloudTrailRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub tailrd-${EnvironmentName}-cloudtrail-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: cloudtrail.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CloudTrailToCloudWatch
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !GetAtt CloudTrailLogGroup.Arn
+
+  TailrdCloudTrail:
+    Type: AWS::CloudTrail::Trail
+    DependsOn: CloudTrailBucketPolicy
+    Properties:
+      TrailName: !Sub tailrd-${EnvironmentName}-trail
+      IsLogging: true
+      IsMultiRegionTrail: false
+      EnableLogFileValidation: true  # Detect tampering
+      S3BucketName: !Ref CloudTrailBucket
+      CloudWatchLogsLogGroupArn: !GetAtt CloudTrailLogGroup.Arn
+      CloudWatchLogsRoleArn: !GetAtt CloudTrailRole.Arn
+      IncludeGlobalServiceEvents: true
+      EventSelectors:
+        # Log all management events (IAM changes, security group changes, etc.)
+        - ReadWriteType: All
+          IncludeManagementEvents: true
+        # Log S3 data events for PHI bucket (who accessed what)
+        - ReadWriteType: All
+          IncludeManagementEvents: false
+          DataResources:
+            - Type: AWS::S3::Object
+              Values:
+                - !Sub arn:aws:s3:::tailrd-${EnvironmentName}-phi-documents-${AccountId}/
+      Tags:
+        - Key: HIPAA
+          Value: 'true'
+
+  # ------ CloudWatch Alarms ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  # Alarm: Unauthorized API calls
+  UnauthorizedAPICallsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub tailrd-${EnvironmentName}-unauthorized-api-calls
+      AlarmDescription: Alert on unauthorized AWS API calls (potential security breach)
+      MetricName: UnauthorizedAPICalls
+      Namespace: CloudTrailMetrics
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 5
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+
+  # Alarm: Root account usage
+  RootAccountUsageAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub tailrd-${EnvironmentName}-root-account-usage
+      AlarmDescription: Alert when root account is used (should never happen)
+      MetricName: RootAccountUsage
+      Namespace: CloudTrailMetrics
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+
+  # Alarm: Security group changes
+  SecurityGroupChangesAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub tailrd-${EnvironmentName}-security-group-changes
+      AlarmDescription: Alert on security group modifications
+      MetricName: SecurityGroupChanges
+      Namespace: CloudTrailMetrics
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+
+  # Alarm: IAM policy changes
+  IAMPolicyChangesAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub tailrd-${EnvironmentName}-iam-policy-changes
+      AlarmDescription: Alert on IAM policy modifications
+      MetricName: IAMPolicyChanges
+      Namespace: CloudTrailMetrics
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+
+  # ------ CloudWatch Log Groups for Application ------------------------------------------------------------------------------------------------------
+
+  ApplicationLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /tailrd/${EnvironmentName}/application
+      RetentionInDays: 30
+      Tags:
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  AuditLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /tailrd/${EnvironmentName}/audit
+      RetentionInDays: 2557  # 7 years HIPAA
+      Tags:
+        - Key: HIPAA
+          Value: 'true'
+        - Key: RetentionYears
+          Value: '7'
+
+  SecurityLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /tailrd/${EnvironmentName}/security
+      RetentionInDays: 365
+      Tags:
+        - Key: HIPAA
+          Value: 'true'
+
+Outputs:
+  WAFWebACLArn:
+    Description: WAF Web ACL ARN
+    Value: !GetAtt WAFWebACL.Arn
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-waf-arn
+
+  CloudTrailArn:
+    Description: CloudTrail ARN
+    Value: !GetAtt TailrdCloudTrail.Arn
+
+  CloudTrailBucketName:
+    Value: !Ref CloudTrailBucket
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-cloudtrail-bucket
+
+  ApplicationLogGroupName:
+    Value: !Ref ApplicationLogGroup
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-app-log-group
+
+  AuditLogGroupName:
+    Value: !Ref AuditLogGroup
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-audit-log-group

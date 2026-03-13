@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  /* Premium Background Gradients with Glow Effects */
+  .bg-premium-green {
+    @apply bg-gradient-to-br from-green-900 via-green-600 to-green-400;
+    box-shadow: 0 0 20px rgba(22, 163, 74, 0.4), 0 0 40px rgba(22, 163, 74, 0.2);
+  }
+  
+  .bg-premium-amber {
+    @apply bg-gradient-to-br from-amber-900 via-amber-600 to-amber-400;
+    box-shadow: 0 0 20px rgba(217, 119, 6, 0.4), 0 0 40px rgba(217, 119, 6, 0.2);
+  }
+  
+  .bg-premium-gold {
+    @apply bg-gradient-to-br from-gold-900 via-gold-600 to-gold-400;
+    box-shadow: 0 0 20px rgba(220, 38, 38, 0.4), 0 0 40px rgba(220, 38, 38, 0.2);
+  }
+  
+  .bg-premium-teal {
+    @apply bg-gradient-to-br from-teal-900 via-teal-600 to-teal-400;
+    box-shadow: 0 0 20px rgba(13, 148, 136, 0.4), 0 0 40px rgba(13, 148, 136, 0.2);
+  }
+  
+  .bg-premium-blue {
+    @apply bg-gradient-to-br from-blue-900 via-blue-600 to-blue-400;
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.4), 0 0 40px rgba(37, 99, 235, 0.2);
+  }
+  
+  .bg-premium-burgundy {
+    @apply bg-gradient-to-br from-burgundy-900 to-burgundy-800;
+    box-shadow: 0 0 20px rgba(153, 27, 27, 0.4), 0 0 40px rgba(153, 27, 27, 0.2);
+  }
+
+  /* Premium Text Gradients */
+  .text-gradient-green {
+    background: linear-gradient(135deg, #14532d 0%, #16a34a 50%, #4ade80 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+  }
+  
+  .text-gradient-teal {
+    background: linear-gradient(135deg, #134e4a 0%, #0d9488 50%, #2dd4bf 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+  }
+  
+  .text-gradient-blue {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+  }
+  
+  .text-gradient-amber {
+    background: linear-gradient(135deg, #78350f 0%, #d97706 50%, #fbbf24 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+  }
+  
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #7c2d12 0%, #dc2626 50%, #f59e0b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+  }
+  
+  .text-gradient-burgundy {
+    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+  }
+
+  /* Premium Interactive Effects */
+  .premium-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .premium-hover:hover {
+    transform: translateY(-2px) scale(1.02);
+  }
+
+  /* Premium Glass Effects */
+  .premium-glass {
+    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .premium-glass-dark {
+    backdrop-filter: blur(12px);
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Premium Animation Utilities */
+  .animate-premium-glow {
+    animation: premium-glow 3s ease-in-out infinite;
+  }
+  
+  .animate-premium-shimmer {
+    animation: premium-shimmer 2.5s linear infinite;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    background-size: 200% 100%;
+  }
+}

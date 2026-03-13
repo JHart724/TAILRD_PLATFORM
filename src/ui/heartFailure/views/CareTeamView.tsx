@@ -1,0 +1,339 @@
+import React, { useState } from 'react';
+import { DEMO_PATIENT_CONTEXT } from '../../../types/shared';
+import { Users, Calendar, AlertTriangle, Clock, Heart, Shield, Activity, FileText, Download, UserCheck, Stethoscope } from 'lucide-react';
+
+// Import Heart Failure Care Team components
+import PatientWorklistEnhanced from '../components/care-team/PatientWorklistEnhanced';
+import ReferralTrackerEnhanced from '../components/care-team/ReferralTrackerEnhanced';
+import TeamCollaborationPanel from '../components/care-team/TeamCollaborationPanel';
+import CareGapAnalyzer from '../components/care-team/CareGapAnalyzer';
+import RealTimeHospitalAlerts from '../components/care-team/RealTimeHospitalAlerts';
+
+// Import clinical intelligence components
+import HFPhenotypeClassification from '../components/clinical/HFPhenotypeClassification';
+import GDMTContraindicationChecker from '../components/clinical/GDMTContraindicationChecker';
+import MAGGICScoreCalculator from '../components/clinical/MAGGICScoreCalculator';
+import SpecialtyPhenotypesDashboard from '../components/clinical/SpecialtyPhenotypesDashboard';
+import AdvancedDeviceTracker from '../components/clinical/AdvancedDeviceTracker';
+
+// Clinical Intelligence sub-tab panel
+const ClinicalToolsPanel: React.FC<{ activeToolTab?: string; onToolTabChange?: (tab: string) => void }> = ({ activeToolTab: externalToolTab, onToolTabChange }) => {
+  const [internalToolTab, setInternalToolTab] = useState('phenotype');
+  const activeToolTab = externalToolTab || internalToolTab;
+  const setActiveToolTab = (tab: string) => { setInternalToolTab(tab); onToolTabChange?.(tab); };
+
+  const tools = [
+ { id: 'phenotype', label: 'HF Phenotype Classification', component: HFPhenotypeClassification },
+ { id: 'risk-calc', label: 'MAGGIC Risk Score', component: MAGGICScoreCalculator },
+ { id: 'contraindication', label: 'GDMT Contraindications', component: GDMTContraindicationChecker },
+ { id: 'phenotypes-dashboard', label: 'Specialty Phenotypes', component: SpecialtyPhenotypesDashboard },
+ { id: 'devices', label: 'Device Tracker', component: AdvancedDeviceTracker },
+  ];
+
+  const ActiveTool = tools.find(t => t.id === activeToolTab)?.component;
+
+  return (
+ <div className="space-y-6">
+ <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
+ <h3 className="text-xl font-bold text-titanium-900 mb-4 flex items-center gap-2">
+ <Stethoscope className="w-6 h-6 text-porsche-600" />
+ Clinical Intelligence Tools
+ </h3>
+ <div className="flex flex-wrap gap-2">
+ {tools.map(tool => (
+ <button
+ key={tool.id}
+ onClick={() => setActiveToolTab(tool.id)}
+ className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+ activeToolTab === tool.id
+ ? 'bg-porsche-600 text-white shadow-lg'
+ : 'bg-white text-titanium-600 hover:bg-white border border-titanium-200'
+ }`}
+ >
+ {tool.label}
+ </button>
+ ))}
+ </div>
+ </div>
+ {ActiveTool && <ActiveTool patientData={DEMO_PATIENT_CONTEXT} />}
+ </div>
+  );
+};
+
+type TabId = 'dashboard' | 'patients' | 'workflow' | 'safety' | 'team' | 'documentation' | 'clinicaltools';
+
+const CareTeamView: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<TabId>('dashboard');
+  const [activeToolTab, setActiveToolTab] = useState<string>('phenotype');
+  const [docTemplateFeedback, setDocTemplateFeedback] = useState<string | null>(null);
+  const [expandedSafetyCard, setExpandedSafetyCard] = useState<string | null>(null);
+
+  const tabs = [
+ { id: 'dashboard', label: 'Dashboard', icon: Activity, description: 'Care team overview & alerts' },
+ { id: 'patients', label: 'Patients', icon: Users, description: 'Enhanced patient worklist' },
+ { id: 'workflow', label: 'Workflow', icon: Calendar, description: 'GDMT optimization workflow' },
+ { id: 'safety', label: 'Safety', icon: Shield, description: 'Risk assessment & monitoring' },
+ { id: 'team', label: 'Team', icon: UserCheck, description: 'Team collaboration & communication' },
+ { id: 'documentation', label: 'Documentation', icon: FileText, description: 'Clinical documentation tools' },
+ { id: 'clinicaltools', label: 'Clinical Intelligence', icon: Stethoscope, description: 'Phenotype classification, risk calculators, and clinical decision support' }
+  ];
+
+  const renderTabContent = () => {
+ switch (activeTab) {
+ case 'dashboard':
+ return (
+ <div className="space-y-6">
+ <RealTimeHospitalAlerts />
+ <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+ <CareGapAnalyzer />
+ <TeamCollaborationPanel />
+ </div>
+ </div>
+ );
+ case 'patients':
+ return (
+ <div className="space-y-6">
+ <PatientWorklistEnhanced />
+ </div>
+ );
+ case 'workflow':
+ return (
+ <div className="space-y-6">
+ <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
+ <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
+ <Heart className="w-5 h-5 text-porsche-600" />
+ GDMT Optimization Workflow
+ </h3>
+ <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+ <div className="bg-white p-6 rounded-xl border border-titanium-200">
+ <h4 className="font-semibold text-titanium-900 mb-4">4-Pillar GDMT Optimization</h4>
+ <div className="space-y-3">
+ {[
+ { pillar: 'ACE/ARB/ARNI', current: '89.2%', target: '≥95%', status: 'amber' },
+ { pillar: 'Beta Blockers', current: '91.7%', target: '≥95%', status: 'amber' },
+ { pillar: 'MRA', current: '76.4%', target: '≥85%', status: 'red' },
+ { pillar: 'SGLT2i', current: '62.1%', target: '≥75%', status: 'red' }
+ ].map((item, index) => (
+ <div key={index} className={`p-3 rounded-lg border ${
+ item.status === 'red' ? 'bg-red-50 border-red-200' :
+ item.status === 'amber' ? 'bg-amber-50 border-amber-200' : 'bg-green-50 border-green-200'
+ }`}>
+ <div className="flex justify-between items-center">
+ <span className="font-medium text-titanium-900">{item.pillar}</span>
+ <div className="text-right">
+ <div className="font-semibold text-titanium-900">{item.current}</div>
+ <div className="text-xs text-titanium-600">{item.target}</div>
+ </div>
+ </div>
+ </div>
+ ))}
+ </div>
+ </div>
+ <div className="bg-white p-6 rounded-xl border border-titanium-200">
+ <h4 className="font-semibold text-titanium-900 mb-4">Workflow Actions</h4>
+ <div className="space-y-2">
+ <button onClick={() => { setActiveTab('clinicaltools'); setActiveToolTab('contraindication'); }} className="w-full text-left p-3 rounded-lg bg-chrome-50 border border-chrome-200 hover:bg-chrome-100 transition-colors">
+ <div className="font-medium text-chrome-900">Review MRA Eligibility</div>
+ <div className="text-sm text-chrome-600">23 patients pending review</div>
+ </button>
+ <button onClick={() => { setActiveTab('clinicaltools'); setActiveToolTab('contraindication'); }} className="w-full text-left p-3 rounded-lg bg-purple-50 border border-purple-200 hover:bg-purple-100 transition-colors">
+ <div className="font-medium text-purple-900">SGLT2i Assessment</div>
+ <div className="text-sm text-purple-600">31 patients for evaluation</div>
+ </button>
+ <button onClick={() => { setActiveTab('clinicaltools'); setActiveToolTab('contraindication'); }} className="w-full text-left p-3 rounded-lg bg-green-50 border border-green-200 hover:bg-green-100 transition-colors">
+ <div className="font-medium text-green-900">Dose Optimization</div>
+ <div className="text-sm text-green-600">18 patients ready for titration</div>
+ </button>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ );
+ case 'safety':
+ return (
+ <div className="space-y-6">
+ <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
+ <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
+ <Shield className="w-5 h-5 text-red-600" />
+ Safety Monitoring
+ </h3>
+ <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+ {[
+ { alert: 'High K+', count: 7, color: 'red', id: 'high-k', patients: ['Johnson, Mary - K+ 5.8', 'Smith, Robert - K+ 6.1', 'Davis, Carol - K+ 5.6'] },
+ { alert: 'Low BP', count: 12, color: 'amber', id: 'low-bp', patients: ['Brown, James - BP 88/52', 'Wilson, Sarah - BP 90/58', 'Taylor, Mark - BP 85/50'] },
+ { alert: 'Renal Function', count: 5, color: 'red', id: 'renal', patients: ['Anderson, Lisa - Cr 2.4', 'Thomas, John - Cr 2.1', 'Jackson, Amy - GFR 22'] },
+ { alert: 'Drug Interactions', count: 3, color: 'amber', id: 'drug-interactions', patients: ['White, David - NSAID + ACEi', 'Harris, Susan - K-sparing + MRA', 'Martin, Paul - Digoxin + Amiodarone'] },
+ { alert: 'Contraindications', count: 8, color: 'red', id: 'contraindications', patients: ['Clark, Nancy - ARNI + ACEi <36hr', 'Lewis, Rick - Bilateral RAS + ACEi', 'Walker, Jane - Angioedema hx + ACEi'] },
+ { alert: 'Side Effects', count: 15, color: 'amber', id: 'side-effects', patients: ['Hall, Mike - Cough (ACEi)', 'Allen, Beth - Dizziness (BB)', 'Young, Tom - Gynecomastia (Spironolactone)'] }
+ ].map((item, index) => (
+ <div key={index}>
+ <div
+ onClick={() => setExpandedSafetyCard(expandedSafetyCard === item.id ? null : item.id)}
+ className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 hover:shadow-md ${
+ item.color === 'red' ? 'bg-red-50 border-red-200 hover:bg-red-100' : 'bg-amber-50 border-amber-200 hover:bg-amber-100'
+ } ${expandedSafetyCard === item.id ? 'ring-2 ring-offset-1 ' + (item.color === 'red' ? 'ring-red-400' : 'ring-amber-400') : ''}`}
+ >
+ <div className="text-center">
+ <div className={`text-2xl font-bold ${
+ item.color === 'red' ? 'text-red-600' : 'text-amber-600'
+ }`}>{item.count}</div>
+ <div className="text-sm font-medium text-titanium-700">{item.alert}</div>
+ <div className="text-xs text-titanium-500 mt-1">{expandedSafetyCard === item.id ? 'Click to collapse' : 'Click to view patients'}</div>
+ </div>
+ </div>
+ {expandedSafetyCard === item.id && (
+ <div className={`mt-2 p-3 rounded-lg border text-sm ${
+ item.color === 'red' ? 'bg-red-50 border-red-100' : 'bg-amber-50 border-amber-100'
+ }`}>
+ <div className="font-medium text-titanium-800 mb-2">Affected Patients (showing 3 of {item.count}):</div>
+ {item.patients.map((patient, pIdx) => (
+ <div key={pIdx} className="py-1 px-2 text-titanium-700 border-b border-titanium-100 last:border-b-0">
+ {patient}
+ </div>
+ ))}
+ </div>
+ )}
+ </div>
+ ))}
+ </div>
+ </div>
+ </div>
+ );
+ case 'team':
+ return (
+ <div className="space-y-6">
+ <TeamCollaborationPanel />
+ </div>
+ );
+ case 'documentation':
+ return (
+ <div className="space-y-6">
+ <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
+ <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
+ <FileText className="w-5 h-5 text-porsche-600" />
+ Clinical Documentation
+ </h3>
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+ <div className="bg-white p-6 rounded-xl border border-titanium-200">
+ <h4 className="font-semibold text-titanium-900 mb-4">Recent Notes</h4>
+ <div className="space-y-3">
+ {[
+ { patient: 'Johnson, Mary', type: 'GDMT Review', time: '2 hours ago' },
+ { patient: 'Smith, John', type: 'Follow-up', time: '4 hours ago' },
+ { patient: 'Davis, Sarah', type: 'Medication Change', time: '6 hours ago' }
+ ].map((note, index) => (
+ <div key={index} className="p-3 bg-chrome-50 rounded-lg border border-chrome-200">
+ <div className="font-medium text-titanium-900">{note.patient}</div>
+ <div className="text-sm text-chrome-600">{note.type}</div>
+ <div className="text-xs text-titanium-500">{note.time}</div>
+ </div>
+ ))}
+ </div>
+ </div>
+ <div className="bg-white p-6 rounded-xl border border-titanium-200">
+ <h4 className="font-semibold text-titanium-900 mb-4">Documentation Tools</h4>
+ <div className="space-y-2">
+ <button onClick={() => { setDocTemplateFeedback('gdmt'); setTimeout(() => setDocTemplateFeedback(null), 2000); }} className="w-full text-left p-3 rounded-lg bg-green-50 border border-green-200 hover:bg-green-100 transition-colors">
+ <div className="font-medium text-green-900">{docTemplateFeedback === 'gdmt' ? '✓ Template Loaded' : 'GDMT Template'}</div>
+ <div className="text-sm text-green-600">Standardized assessment form</div>
+ </button>
+ <button onClick={() => { setDocTemplateFeedback('discharge'); setTimeout(() => setDocTemplateFeedback(null), 2000); }} className="w-full text-left p-3 rounded-lg bg-chrome-50 border border-chrome-200 hover:bg-chrome-100 transition-colors">
+ <div className="font-medium text-chrome-900">{docTemplateFeedback === 'discharge' ? '✓ Template Loaded' : 'Discharge Planning'}</div>
+ <div className="text-sm text-chrome-600">Heart failure discharge checklist</div>
+ </button>
+ <button onClick={() => { setDocTemplateFeedback('quality'); setTimeout(() => setDocTemplateFeedback(null), 2000); }} className="w-full text-left p-3 rounded-lg bg-purple-50 border border-purple-200 hover:bg-purple-100 transition-colors">
+ <div className="font-medium text-purple-900">{docTemplateFeedback === 'quality' ? '✓ Template Loaded' : 'Quality Metrics'}</div>
+ <div className="text-sm text-purple-600">Performance documentation</div>
+ </button>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ );
+ case 'clinicaltools':
+ return <ClinicalToolsPanel activeToolTab={activeToolTab} onToolTabChange={setActiveToolTab} />;
+ default:
+ return (
+ <div className="space-y-6">
+ <RealTimeHospitalAlerts />
+ <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+ <CareGapAnalyzer />
+ <TeamCollaborationPanel />
+ </div>
+ </div>
+ );
+ }
+  };
+
+  return (
+ <div className="min-h-screen bg-gradient-to-br from-chrome-50 via-indigo-50/30 to-purple-50 p-6 relative overflow-hidden">
+ {/* Web 3.0 Background Elements */}
+ <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-chrome-100 via-transparent to-transparent" />
+ <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-purple-400 to-pink-400/10 rounded-full blur-3xl animate-pulse" />
+ <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-chrome-400 to-cyan-400/10 rounded-full blur-3xl animate-pulse delay-1000" />
+
+ <div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
+ {/* Page Header */}
+ <header className="metal-card bg-white border border-titanium-200 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+ <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-chrome-400 to-purple-400 rounded-full blur-2xl" />
+ <div className="relative z-10 flex items-center justify-between">
+ <div>
+ <h1 className="text-4xl font-bold bg-gradient-to-r from-titanium-900 via-titanium-800 to-titanium-900 bg-clip-text text-transparent mb-2 font-sf">
+ Care Team Command Center
+ </h1>
+ <p className="text-lg text-titanium-600 font-medium">
+ Enhanced Patient Management & Clinical Decision Support
+ </p>
+ </div>
+ <div className="flex items-center gap-4">
+ <div className="p-4 rounded-2xl bg-porsche-50 border-porsche-200 border shadow-lg">
+ <Heart className="w-8 h-8 text-porsche-600" />
+ </div>
+ </div>
+ </div>
+ </header>
+
+ {/* Tab Navigation */}
+ <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6 shadow-xl">
+ <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+ {tabs.map((tab) => {
+ const Icon = tab.icon;
+ const isActive = activeTab === tab.id;
+
+ return (
+ <button
+ key={tab.id}
+ onClick={() => setActiveTab(tab.id as TabId)}
+ className={`group relative p-4 rounded-xl border transition-all duration-300 ${
+ isActive
+ ? 'bg-porsche-50 border-porsche-200 text-porsche-600 shadow-lg scale-105'
+ : 'bg-white border-titanium-200 text-titanium-600 hover:bg-white hover:scale-105 hover:shadow-lg'
+ }`}
+ >
+ <div className="flex flex-col items-center gap-2">
+ <Icon className={`w-6 h-6 ${isActive ? 'text-porsche-600' : 'text-titanium-600 group-hover:text-titanium-800'}`} />
+ <span className={`text-sm font-semibold ${isActive ? 'text-porsche-600' : 'text-titanium-600 group-hover:text-titanium-800'}`}>
+ {tab.label}
+ </span>
+ </div>
+ {isActive && (
+ <div className="absolute inset-0 bg-gradient-to-r from-porsche-400 to-porsche-500 rounded-xl opacity-50" />
+ )}
+ </button>
+ );
+ })}
+ </div>
+ </div>
+
+ {/* Tab Content */}
+ <div className="space-y-6">
+ {renderTabContent()}
+ </div>
+ </div>
+ </div>
+  );
+};
+
+export default CareTeamView;

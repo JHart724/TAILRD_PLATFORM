@@ -1,0 +1,72 @@
+=== HF MODULE GOLD STANDARD AUDIT ===
+
+=== 1. FILE STRUCTURE ===
+./src/components/heartFailure/HFBenchmarkDetailModal.tsx
+./src/components/heartFailure/HFDRGDetailModal.tsx
+./src/components/heartFailure/HFExecutiveSummary.tsx
+./src/components/heartFailure/HFFacilityDetailModal.tsx
+./src/components/heartFailure/HFGeographicHeatMap.tsx
+./src/components/heartFailure/HFGeographicHeatMapSimple.tsx
+./src/components/heartFailure/HFMonthDetailModal.tsx
+./src/components/heartFailure/HFRevenueOpportunityModal.tsx
+./src/components/heartFailure/HFRevenueWaterfallModal.tsx
+./src/components/heartFailure/HFRiskAlerts.tsx
+./src/ui/heartFailure/HFModule.tsx
+./src/ui/heartFailure/components/BenchmarksPanel.tsx
+./src/ui/heartFailure/components/DeviceFunnel.tsx
+./src/ui/heartFailure/components/EquityGapDashboard.tsx
+./src/ui/heartFailure/components/GDMTByPhysicianTable.tsx
+./src/ui/heartFailure/components/GDMTHeatmap.tsx
+./src/ui/heartFailure/components/OpportunityHeatmap.tsx
+./src/ui/heartFailure/components/PhenotypeDetectionChart.tsx
+./src/ui/heartFailure/components/ProjectedVsRealizedChart.tsx
+./src/ui/heartFailure/components/ROIWaterfall.tsx
+./src/ui/heartFailure/components/care-team/CareGapAnalyzer.tsx
+./src/ui/heartFailure/components/care-team/PatientDetailPanel.tsx
+./src/ui/heartFailure/components/care-team/PatientWorklist.tsx
+./src/ui/heartFailure/components/care-team/PatientWorklistEnhanced.tsx
+./src/ui/heartFailure/components/care-team/RealTimeHospitalAlerts.tsx
+./src/ui/heartFailure/components/care-team/ReferralTracker.tsx
+./src/ui/heartFailure/components/care-team/ReferralTrackerEnhanced.tsx
+./src/ui/heartFailure/components/care-team/TeamCollaborationPanel.tsx
+./src/ui/heartFailure/components/care-team/care-team/PatientDetailPanel.tsx
+./src/ui/heartFailure/components/care-team/care-team/ReferralTracker.tsx
+./src/ui/heartFailure/components/clinical/AdvancedDeviceTracker.tsx
+./src/ui/heartFailure/components/clinical/GDMTContraindicationChecker.tsx
+./src/ui/heartFailure/components/clinical/HFPhenotypeClassification.tsx
+./src/ui/heartFailure/components/clinical/MAGGICScoreCalculator.tsx
+./src/ui/heartFailure/components/clinical/SpecialtyPhenotypesDashboard.tsx
+./src/ui/heartFailure/components/executive/ExecutiveKPICard.tsx
+./src/ui/heartFailure/components/executive/FinancialROIWaterfall.tsx
+./src/ui/heartFailure/components/executive/GeographicHeatMap.tsx
+./src/ui/heartFailure/components/service-line/DevicePathwayFunnel.tsx
+./src/ui/heartFailure/components/service-line/GDMTAnalyticsDashboard.tsx
+./src/ui/heartFailure/components/service-line/HFCareNetworkVisualization.tsx
+./src/ui/heartFailure/components/service-line/ProviderScorecard.tsx
+./src/ui/heartFailure/components/service-line/QualityMetricsDashboard.tsx
+./src/ui/heartFailure/config/careTeamConfig.tsx
+./src/ui/heartFailure/config/executiveConfig.ts
+./src/ui/heartFailure/config/executiveConfig.tsx
+./src/ui/heartFailure/config/serviceLineConfig.tsx
+./src/ui/heartFailure/views/CareTeamView.tsx
+./src/ui/heartFailure/views/ExecutiveView.backup.tsx
+./src/ui/heartFailure/views/ExecutiveView.tsx
+./src/ui/heartFailure/views/ServiceLineView.tsx
+./tailrd/tailrd-ui/src/ui/heartFailure/components/care-team/PatientWorklist.tsx
+./tailrd/tailrd-ui/src/ui/heartFailure/components/care-team/ReferralTracker.tsx
+./tailrd/tailrd-ui/src/ui/heartFailure/components/shared/EquityToggle.tsx
+
+=== 2. VIEWS ===
+./src/ui/heartFailure/views/ServiceLineView.tsx
+./src/ui/heartFailure/views/ExecutiveView.tsx
+./src/ui/heartFailure/views/ExecutiveView.backup.tsx
+./src/ui/heartFailure/views/CareTeamView.tsx
+
+=== 3. INTERACTION PATTERNS ===
+onClick handlers: 135
+Modal/Drawer: 48
+Filters: 194
+Maps: 8
+
+=== 4. GDMT CLINICAL SPECIFICS ===
+GDMT references: 486

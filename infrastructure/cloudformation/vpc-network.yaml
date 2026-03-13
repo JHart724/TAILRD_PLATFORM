@@ -1,0 +1,524 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  TAILRD Platform - VPC & Network Infrastructure
+  HIPAA-compliant network with public/private subnet separation,
+  NAT gateway, and security groups for healthcare data isolation.
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: production
+    AllowedValues: [production, staging, development]
+    Description: Environment name for tagging
+
+  VpcCIDR:
+    Type: String
+    Default: 10.0.0.0/16
+    Description: CIDR block for the VPC
+
+  PublicSubnet1CIDR:
+    Type: String
+    Default: 10.0.1.0/24
+    Description: CIDR for public subnet in AZ-a (ALB, NAT Gateway)
+
+  PublicSubnet2CIDR:
+    Type: String
+    Default: 10.0.2.0/24
+    Description: CIDR for public subnet in AZ-b (ALB redundancy)
+
+  PrivateSubnet1CIDR:
+    Type: String
+    Default: 10.0.10.0/24
+    Description: CIDR for private subnet in AZ-a (Application servers)
+
+  PrivateSubnet2CIDR:
+    Type: String
+    Default: 10.0.11.0/24
+    Description: CIDR for private subnet in AZ-b (Application redundancy)
+
+  DatabaseSubnet1CIDR:
+    Type: String
+    Default: 10.0.20.0/24
+    Description: CIDR for database subnet in AZ-a (RDS/PostgreSQL)
+
+  DatabaseSubnet2CIDR:
+    Type: String
+    Default: 10.0.21.0/24
+    Description: CIDR for database subnet in AZ-b (RDS standby)
+
+Resources:
+  # ------ VPC ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCIDR
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-vpc
+        - Key: Environment
+          Value: !Ref EnvironmentName
+        - Key: HIPAA
+          Value: 'true'
+
+  # ------ Internet Gateway (public subnet internet access) ---------------------------------------------------------------------
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-igw
+
+  InternetGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+
+  # ------ Public Subnets (ALB, NAT Gateway --- NO application servers here) ------------------------
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [0, !GetAZs '']
+      CidrBlock: !Ref PublicSubnet1CIDR
+      MapPublicIpOnLaunch: false  # No auto-public IPs
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-public-1a
+        - Key: Tier
+          Value: public
+
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [1, !GetAZs '']
+      CidrBlock: !Ref PublicSubnet2CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-public-1b
+        - Key: Tier
+          Value: public
+
+  # ------ Private Subnets (Application servers --- outbound via NAT only) ------------------------------
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [0, !GetAZs '']
+      CidrBlock: !Ref PrivateSubnet1CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-private-1a
+        - Key: Tier
+          Value: application
+
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [1, !GetAZs '']
+      CidrBlock: !Ref PrivateSubnet2CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-private-1b
+        - Key: Tier
+          Value: application
+
+  # ------ Database Subnets (Most isolated --- no internet access at all) ---------------------------------
+  DatabaseSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [0, !GetAZs '']
+      CidrBlock: !Ref DatabaseSubnet1CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-database-1a
+        - Key: Tier
+          Value: database
+
+  DatabaseSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [1, !GetAZs '']
+      CidrBlock: !Ref DatabaseSubnet2CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-database-1b
+        - Key: Tier
+          Value: database
+
+  # ------ NAT Gateway (private subnet outbound internet) ---------------------------------------------------------------------------
+  NatGatewayEIP:
+    Type: AWS::EC2::EIP
+    DependsOn: InternetGatewayAttachment
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-nat-eip
+
+  NatGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NatGatewayEIP.AllocationId
+      SubnetId: !Ref PublicSubnet1
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-nat
+
+  # ------ Route Tables ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  # Public route table --- routes to Internet Gateway
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-public-rt
+
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  PublicSubnet1RouteAssoc:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet1
+
+  PublicSubnet2RouteAssoc:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet2
+
+  # Private route table --- routes to NAT Gateway (outbound only)
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-private-rt
+
+  PrivateRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NatGateway
+
+  PrivateSubnet1RouteAssoc:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet1
+
+  PrivateSubnet2RouteAssoc:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet2
+
+  # Database route table --- NO internet access
+  DatabaseRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-database-rt
+
+  DatabaseSubnet1RouteAssoc:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref DatabaseRouteTable
+      SubnetId: !Ref DatabaseSubnet1
+
+  DatabaseSubnet2RouteAssoc:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref DatabaseRouteTable
+      SubnetId: !Ref DatabaseSubnet2
+
+  # ------ VPC Flow Logs (HIPAA audit requirement) ------------------------------------------------------------------------------------------------
+  VPCFlowLogsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub tailrd-${EnvironmentName}-vpc-flow-logs-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: vpc-flow-logs.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: VPCFlowLogsPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - logs:DescribeLogGroups
+                  - logs:DescribeLogStreams
+                Resource: '*'
+
+  VPCFlowLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /tailrd/${EnvironmentName}/vpc-flow-logs
+      RetentionInDays: 365  # 1 year for HIPAA network audit
+      Tags:
+        - Key: HIPAA
+          Value: 'true'
+
+  VPCFlowLog:
+    Type: AWS::EC2::FlowLog
+    Properties:
+      DeliverLogsPermissionArn: !GetAtt VPCFlowLogsRole.Arn
+      LogGroupName: !Ref VPCFlowLogsGroup
+      ResourceId: !Ref VPC
+      ResourceType: VPC
+      TrafficType: ALL
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-vpc-flow-log
+
+  # ------ Security Groups (created without cross-references to avoid cycles) ---------------
+
+  ALBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: ALB - HTTPS ingress from internet
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+          Description: HTTPS from internet
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+          Description: HTTP redirect to HTTPS
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-alb-sg
+
+  AppSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Application servers - ALB ingress only
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-app-sg
+
+  DatabaseSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: PostgreSQL - application server ingress only
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-database-sg
+
+  RedisSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Redis - application server ingress only
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-redis-sg
+
+  # ------ Security Group Rules (separate resources to break circular deps) ---------------------
+
+  # ALB -> App (egress)
+  ALBToAppEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref ALBSecurityGroup
+      IpProtocol: tcp
+      FromPort: 3001
+      ToPort: 3001
+      DestinationSecurityGroupId: !Ref AppSecurityGroup
+      Description: Forward to application servers
+
+  # App -< ALB (ingress)
+  AppFromALBIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref AppSecurityGroup
+      IpProtocol: tcp
+      FromPort: 3001
+      ToPort: 3001
+      SourceSecurityGroupId: !Ref ALBSecurityGroup
+      Description: From ALB only
+
+  # App -> Database (egress)
+  AppToDBEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref AppSecurityGroup
+      IpProtocol: tcp
+      FromPort: 5432
+      ToPort: 5432
+      DestinationSecurityGroupId: !Ref DatabaseSecurityGroup
+      Description: To PostgreSQL
+
+  # App -> Redis (egress)
+  AppToRedisEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref AppSecurityGroup
+      IpProtocol: tcp
+      FromPort: 6379
+      ToPort: 6379
+      DestinationSecurityGroupId: !Ref RedisSecurityGroup
+      Description: To Redis
+
+  # App -> Internet (egress, for Redox/AWS APIs)
+  AppToInternetEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref AppSecurityGroup
+      IpProtocol: tcp
+      FromPort: 443
+      ToPort: 443
+      CidrIp: 0.0.0.0/0
+      Description: Outbound HTTPS (Redox, AWS APIs, etc.)
+
+  # Database -< App (ingress)
+  DBFromAppIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref DatabaseSecurityGroup
+      IpProtocol: tcp
+      FromPort: 5432
+      ToPort: 5432
+      SourceSecurityGroupId: !Ref AppSecurityGroup
+      Description: From application servers only
+
+  # Redis -< App (ingress)
+  RedisFromAppIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref RedisSecurityGroup
+      IpProtocol: tcp
+      FromPort: 6379
+      ToPort: 6379
+      SourceSecurityGroupId: !Ref AppSecurityGroup
+      Description: From application servers only
+
+  # ------ DB Subnet Group (for RDS) ---------------------------------------------------------------------------------------------------------------------------------------
+  DatabaseSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: TAILRD database subnets (isolated, no internet)
+      SubnetIds:
+        - !Ref DatabaseSubnet1
+        - !Ref DatabaseSubnet2
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-db-subnet-group
+
+  # ------ ElastiCache Subnet Group (for Redis) ------------------------------------------------------------------------------------------------------
+  RedisSubnetGroup:
+    Type: AWS::ElastiCache::SubnetGroup
+    Properties:
+      Description: TAILRD Redis subnets (isolated)
+      SubnetIds:
+        - !Ref DatabaseSubnet1
+        - !Ref DatabaseSubnet2
+
+Outputs:
+  VpcId:
+    Description: VPC ID
+    Value: !Ref VPC
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-vpc-id
+
+  PublicSubnet1Id:
+    Description: Public Subnet 1 (AZ-a)
+    Value: !Ref PublicSubnet1
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-public-subnet-1
+
+  PublicSubnet2Id:
+    Description: Public Subnet 2 (AZ-b)
+    Value: !Ref PublicSubnet2
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-public-subnet-2
+
+  PrivateSubnet1Id:
+    Description: Private Subnet 1 (AZ-a)
+    Value: !Ref PrivateSubnet1
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-private-subnet-1
+
+  PrivateSubnet2Id:
+    Description: Private Subnet 2 (AZ-b)
+    Value: !Ref PrivateSubnet2
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-private-subnet-2
+
+  DatabaseSubnet1Id:
+    Value: !Ref DatabaseSubnet1
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-database-subnet-1
+
+  DatabaseSubnet2Id:
+    Value: !Ref DatabaseSubnet2
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-database-subnet-2
+
+  ALBSecurityGroupId:
+    Value: !Ref ALBSecurityGroup
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-alb-sg
+
+  AppSecurityGroupId:
+    Value: !Ref AppSecurityGroup
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-app-sg
+
+  DatabaseSecurityGroupId:
+    Value: !Ref DatabaseSecurityGroup
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-database-sg
+
+  RedisSecurityGroupId:
+    Value: !Ref RedisSecurityGroup
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-redis-sg
+
+  DatabaseSubnetGroupName:
+    Value: !Ref DatabaseSubnetGroup
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-db-subnet-group
+
+  RedisSubnetGroupName:
+    Value: !Ref RedisSubnetGroup
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-redis-subnet-group

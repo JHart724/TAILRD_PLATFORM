@@ -1,0 +1,357 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  TAILRD Platform - S3 Buckets & KMS Encryption Keys
+  HIPAA-compliant storage with server-side encryption, versioning,
+  lifecycle policies, and access logging.
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: production
+    AllowedValues: [production, staging, development]
+
+  AccountId:
+    Type: String
+    Description: AWS Account ID (for bucket policy principals)
+
+Resources:
+  # ------ KMS Keys ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  # Master key for PHI encryption (database-level, application-level)
+  PHIEncryptionKey:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: TAILRD PHI encryption key --- used for patient data at rest
+      Enabled: true
+      EnableKeyRotation: true  # HIPAA requirement --- automatic annual rotation
+      KeyPolicy:
+        Version: '2012-10-17'
+        Statement:
+          # Root account full access (required for key management)
+          - Sid: RootAccountAccess
+            Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::${AccountId}:root
+            Action: kms:*
+            Resource: '*'
+          # App role gets KMS access via its own IAM policy (app-role-policy.json)
+          # No principal-based grant here --- avoids dependency on role existing first
+          # Deny all external principals
+          - Sid: DenyExternalAccess
+            Effect: Deny
+            Principal: '*'
+            Action: kms:*
+            Resource: '*'
+            Condition:
+              StringNotEquals:
+                aws:PrincipalAccount: !Ref AccountId
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-phi-key
+        - Key: HIPAA
+          Value: 'true'
+        - Key: DataClassification
+          Value: PHI
+
+  PHIEncryptionKeyAlias:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName: !Sub alias/tailrd-${EnvironmentName}-phi
+      TargetKeyId: !Ref PHIEncryptionKey
+
+  # Separate key for S3 bucket encryption
+  S3EncryptionKey:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: TAILRD S3 bucket encryption key
+      Enabled: true
+      EnableKeyRotation: true
+      KeyPolicy:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: RootAccountAccess
+            Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::${AccountId}:root
+            Action: kms:*
+            Resource: '*'
+          # App role gets KMS access via its own IAM policy (app-role-policy.json)
+          # S3 service uses bucket keys, so S3 itself calls KMS via the root account grant
+      Tags:
+        - Key: Name
+          Value: !Sub tailrd-${EnvironmentName}-s3-key
+
+  S3EncryptionKeyAlias:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName: !Sub alias/tailrd-${EnvironmentName}-s3
+      TargetKeyId: !Ref S3EncryptionKey
+
+  # ------ S3 Buckets ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  # Access logging bucket (must exist before other buckets reference it)
+  AccessLogsBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub tailrd-${EnvironmentName}-access-logs-${AccountId}
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256  # S3-managed for log bucket
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: ExpireOldLogs
+            Status: Enabled
+            ExpirationInDays: 365
+          - Id: TransitionToIA
+            Status: Enabled
+            Transitions:
+              - TransitionInDays: 90
+                StorageClass: STANDARD_IA
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+      Tags:
+        - Key: Purpose
+          Value: access-logging
+
+  AccessLogsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref AccessLogsBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: S3ServerAccessLogsPolicy
+            Effect: Allow
+            Principal:
+              Service: logging.s3.amazonaws.com
+            Action: s3:PutObject
+            Resource: !Sub ${AccessLogsBucket.Arn}/*
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref AccountId
+          - Sid: DenyUnencryptedTransport
+            Effect: Deny
+            Principal: '*'
+            Action: s3:*
+            Resource:
+              - !GetAtt AccessLogsBucket.Arn
+              - !Sub ${AccessLogsBucket.Arn}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+
+  # PHI Documents bucket --- patient reports, clinical docs, exports
+  PHIDocumentsBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub tailrd-${EnvironmentName}-phi-documents-${AccountId}
+      VersioningConfiguration:
+        Status: Enabled  # HIPAA --- version all PHI documents
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: !Ref S3EncryptionKey
+            BucketKeyEnabled: true  # Reduces KMS API calls
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LoggingConfiguration:
+        DestinationBucketName: !Ref AccessLogsBucket
+        LogFilePrefix: phi-documents/
+      LifecycleConfiguration:
+        Rules:
+          # Move old versions to cheaper storage after 90 days
+          - Id: ArchiveOldVersions
+            Status: Enabled
+            NoncurrentVersionTransitions:
+              - TransitionInDays: 90
+                StorageClass: STANDARD_IA
+              - TransitionInDays: 365
+                StorageClass: GLACIER
+            NoncurrentVersionExpirationInDays: 2557  # 7 years HIPAA retention
+          # Auto-expire incomplete multipart uploads
+          - Id: CleanupIncompleteUploads
+            Status: Enabled
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 1
+      ObjectLockEnabled: true  # WORM compliance for audit documents
+      Tags:
+        - Key: HIPAA
+          Value: 'true'
+        - Key: DataClassification
+          Value: PHI
+        - Key: RetentionYears
+          Value: '7'
+
+  PHIDocumentsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref PHIDocumentsBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          # Force HTTPS --- deny all HTTP
+          - Sid: DenyUnencryptedTransport
+            Effect: Deny
+            Principal: '*'
+            Action: s3:*
+            Resource:
+              - !GetAtt PHIDocumentsBucket.Arn
+              - !Sub ${PHIDocumentsBucket.Arn}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+          # Force KMS encryption on all uploads
+          - Sid: DenyUnencryptedUploads
+            Effect: Deny
+            Principal: '*'
+            Action: s3:PutObject
+            Resource: !Sub ${PHIDocumentsBucket.Arn}/*
+            Condition:
+              StringNotEquals:
+                s3:x-amz-server-side-encryption: aws:kms
+          # App role gets S3 access via its own IAM policy (app-role-policy.json)
+          # No bucket-level Allow needed --- IAM policy grants are sufficient
+
+  # Audit exports bucket --- compliance reports, audit log exports
+  AuditExportsBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub tailrd-${EnvironmentName}-audit-exports-${AccountId}
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: !Ref S3EncryptionKey
+            BucketKeyEnabled: true
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LoggingConfiguration:
+        DestinationBucketName: !Ref AccessLogsBucket
+        LogFilePrefix: audit-exports/
+      LifecycleConfiguration:
+        Rules:
+          - Id: LongTermRetention
+            Status: Enabled
+            Transitions:
+              - TransitionInDays: 90
+                StorageClass: STANDARD_IA
+              - TransitionInDays: 365
+                StorageClass: GLACIER
+            # 7-year HIPAA retention
+            ExpirationInDays: 2557
+      Tags:
+        - Key: HIPAA
+          Value: 'true'
+        - Key: DataClassification
+          Value: audit
+
+  AuditExportsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref AuditExportsBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: DenyUnencryptedTransport
+            Effect: Deny
+            Principal: '*'
+            Action: s3:*
+            Resource:
+              - !GetAtt AuditExportsBucket.Arn
+              - !Sub ${AuditExportsBucket.Arn}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+          - Sid: DenyUnencryptedUploads
+            Effect: Deny
+            Principal: '*'
+            Action: s3:PutObject
+            Resource: !Sub ${AuditExportsBucket.Arn}/*
+            Condition:
+              StringNotEquals:
+                s3:x-amz-server-side-encryption: aws:kms
+
+  # Application assets bucket --- non-PHI (templates, configs, static assets)
+  AppAssetsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub tailrd-${EnvironmentName}-app-assets-${AccountId}
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: DataClassification
+          Value: internal
+
+Outputs:
+  PHIEncryptionKeyId:
+    Description: KMS Key ID for PHI encryption
+    Value: !Ref PHIEncryptionKey
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-phi-key-id
+
+  PHIEncryptionKeyArn:
+    Description: KMS Key ARN for PHI encryption
+    Value: !GetAtt PHIEncryptionKey.Arn
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-phi-key-arn
+
+  S3EncryptionKeyId:
+    Value: !Ref S3EncryptionKey
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-s3-key-id
+
+  PHIDocumentsBucketName:
+    Description: S3 bucket for PHI documents
+    Value: !Ref PHIDocumentsBucket
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-phi-bucket
+
+  PHIDocumentsBucketArn:
+    Value: !GetAtt PHIDocumentsBucket.Arn
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-phi-bucket-arn
+
+  AuditExportsBucketName:
+    Value: !Ref AuditExportsBucket
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-audit-bucket
+
+  AppAssetsBucketName:
+    Value: !Ref AppAssetsBucket
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-assets-bucket
+
+  AccessLogsBucketName:
+    Value: !Ref AccessLogsBucket
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-access-logs-bucket

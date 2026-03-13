@@ -1,0 +1,940 @@
+import React, { useState } from 'react';
+import { TrendingUp, AlertCircle, Calendar, ExternalLink, Filter, User, Heart, Clock, Target, CheckCircle, XCircle, AlertTriangle, ChevronUp, ChevronRight, Pill, Activity } from 'lucide-react';
+import SHPatientDetailPanel from './SHPatientDetailPanel';
+import ReferralOriginBadge from '../../../../components/shared/ReferralOriginBadge';
+
+interface SHWorklistPatient {
+  id: string;
+  name: string;
+  mrn: string;
+  age: number;
+  gender: 'M' | 'F';
+  referralOrigin: 'upstream' | 'standard';
+  diseaseStage: number;
+  valveStage: 'I' | 'II' | 'III' | 'IV';
+  priority: 'high' | 'medium' | 'low';
+  therapyGaps: string[];
+  procedureEligible: boolean;
+  lastVisit: string;
+  nextAppointment?: string;
+  assignedProvider: string;
+  recentAdmission: boolean;
+  actionItems: {
+ category: 'Valve Therapy' | 'Procedure' | 'Lab' | 'Follow-up';
+ description: string;
+ dueDate: string;
+ urgent: boolean;
+  }[];
+  riskScore: number;
+  phenotype?: string;
+  fullChart?: {
+ vitals: {
+ bp: string;
+ hr: number;
+ temp: number;
+ o2sat: number;
+ weight: number;
+ };
+ labs: {
+ creatinine: number;
+ bun: number;
+ sodium: number;
+ potassium: number;
+ hemoglobin: number;
+ bnp?: number;
+ hba1c?: number;
+ };
+ medications: {
+ name: string;
+ dose: string;
+ frequency: string;
+ adherence?: number;
+ }[];
+ provider: {
+ attending: string;
+ resident?: string;
+ nurse: string;
+ coordinator?: string;
+ };
+ notes: string[];
+ allergies: string[];
+ recentHospitalizations: {
+ date: string;
+ reason: string;
+ los: number;
+ }[];
+ valveTherapy?: {
+ overallScore: number;
+ pillars: {
+ medicalManagement: {
+ status: 'optimal' | 'suboptimal' | 'contraindicated' | 'not_started';
+ currentDrug?: string;
+ currentDose?: string;
+ targetDose?: string;
+ reason?: string;
+ nextAction?: string;
+ };
+ anticoagulation: {
+ status: 'optimal' | 'suboptimal' | 'contraindicated' | 'not_started';
+ currentDrug?: string;
+ currentDose?: string;
+ targetDose?: string;
+ reason?: string;
+ nextAction?: string;
+ };
+ tavrReferral: {
+ status: 'optimal' | 'suboptimal' | 'contraindicated' | 'not_started';
+ currentDrug?: string;
+ currentDose?: string;
+ targetDose?: string;
+ reason?: string;
+ nextAction?: string;
+ };
+ diuretics: {
+ status: 'optimal' | 'suboptimal' | 'contraindicated' | 'not_started';
+ currentDrug?: string;
+ currentDose?: string;
+ targetDose?: string;
+ reason?: string;
+ nextAction?: string;
+ };
+ };
+ lastReview: string;
+ nextReview: string;
+ barriers: string[];
+ opportunities: {
+ pillar: string;
+ action: string;
+ priority: 'high' | 'medium' | 'low';
+ timeframe: string;
+ }[];
+ };
+  };
+}
+
+const SHPatientWorklistEnhanced: React.FC = () => {
+  const [selectedPatient, setSelectedPatient] = useState<SHWorklistPatient | null>(null);
+  const [chartFeedback, setChartFeedback] = useState<string | null>(null);
+  const [filterPriority, setFilterPriority] = useState<string>('all');
+  const [filterValveTherapy, setFilterValveTherapy] = useState<boolean>(false);
+  const [filterProcedure, setFilterProcedure] = useState<boolean>(false);
+  const [sortBy, setSortBy] = useState<keyof SHWorklistPatient>('riskScore');
+  const [expandedValveTherapy, setExpandedValveTherapy] = useState<string | null>(null);
+
+  const getValveTherapyStatusIcon = (status: string) => {
+ switch(status) {
+ case 'optimal': return <CheckCircle className="w-3 h-3" />;
+ case 'suboptimal': return <Clock className="w-3 h-3" />;
+ case 'contraindicated': return <XCircle className="w-3 h-3" />;
+ case 'not_started': return <AlertTriangle className="w-3 h-3" />;
+ default: return <AlertTriangle className="w-3 h-3" />;
+ }
+  };
+
+  const getValveTherapyStatusColor = (status: string) => {
+ switch(status) {
+ case 'optimal': return 'text-green-600';
+ case 'suboptimal': return 'text-yellow-600';
+ case 'contraindicated': return 'text-red-600';
+ case 'not_started': return 'text-gray-600';
+ default: return 'text-gray-600';
+ }
+  };
+
+  const getValveTherapyScoreColor = (score: number) => {
+ if (score >= 80) return 'text-green-600 bg-green-100';
+ if (score >= 60) return 'text-yellow-600 bg-yellow-100';
+ return 'text-red-600 bg-red-100';
+  };
+
+  // Enhanced mock data with comprehensive patient information
+  const patients: SHWorklistPatient[] = [
+ {
+ id: 'PT001',
+ name: 'Johnson, Maria',
+ mrn: '123456789',
+ age: 67,
+ gender: 'F',
+ referralOrigin: 'upstream',
+ diseaseStage: 28,
+ valveStage: 'III',
+ priority: 'high',
+ therapyGaps: ['TAVR Referral not started', 'Diuretics suboptimal dose'],
+ procedureEligible: true,
+ lastVisit: '2025-10-12',
+ nextAppointment: '2025-10-25',
+ assignedProvider: 'Dr. Rivera',
+ recentAdmission: true,
+ riskScore: 8.7,
+ phenotype: 'Severe AS',
+ actionItems: [
+ { category: 'Valve Therapy', description: 'Initiate TAVR Referral therapy', dueDate: '2025-10-20', urgent: true },
+ { category: 'Procedure', description: 'TAVR evaluation', dueDate: '2025-10-22', urgent: true },
+ { category: 'Lab', description: 'BNP trending', dueDate: '2025-10-18', urgent: false },
+ ],
+ fullChart: {
+ vitals: {
+ bp: '138/82',
+ hr: 94,
+ temp: 98.4,
+ o2sat: 93,
+ weight: 175.2
+ },
+ labs: {
+ creatinine: 1.3,
+ bun: 28,
+ sodium: 136,
+ potassium: 4.2,
+ hemoglobin: 11.8,
+ bnp: 1240,
+ hba1c: 8.1
+ },
+ medications: [
+ { name: 'Carvedilol', dose: '25mg', frequency: 'BID', adherence: 85 },
+ { name: 'Lisinopril', dose: '20mg', frequency: 'Daily', adherence: 90 },
+ { name: 'Spironolactone', dose: '12.5mg', frequency: 'Daily', adherence: 78 },
+ { name: 'Furosemide', dose: '40mg', frequency: 'Daily', adherence: 88 }
+ ],
+ provider: {
+ attending: 'Dr. Rivera',
+ resident: 'Dr. Thompson',
+ nurse: 'Maria Santos, RN',
+ coordinator: 'Jennifer Lee, NP'
+ },
+ notes: [
+ 'Patient reports increased dyspnea with minimal exertion',
+ 'Bilateral lower extremity edema present',
+ 'Medication adherence challenges with complex regimen',
+ 'Recent 30-day readmission for valve disease exacerbation'
+ ],
+ allergies: ['Sulfa drugs', 'Shellfish'],
+ recentHospitalizations: [
+ { date: '2025-09-15', reason: 'Valve disease exacerbation', los: 4 },
+ { date: '2025-07-22', reason: 'Acute decompensated valve disease', los: 6 }
+ ],
+ valveTherapy: {
+ overallScore: 62,
+ pillars: {
+ medicalManagement: {
+ status: 'suboptimal',
+ currentDrug: 'Lisinopril',
+ currentDose: '20mg daily',
+ targetDose: 'Sacubitril/valsartan 97/103mg BID',
+ reason: 'Can transition to Medical Management for better outcomes',
+ nextAction: 'Transition to Medical Management after washout period'
+ },
+ anticoagulation: {
+ status: 'optimal',
+ currentDrug: 'Carvedilol',
+ currentDose: '25mg BID',
+ targetDose: '25mg BID',
+ reason: 'At maximum tolerated dose'
+ },
+ tavrReferral: {
+ status: 'not_started',
+ reason: 'Not initiated despite DM and Severe AS indication',
+ nextAction: 'Start dapagliflozin 10mg daily'
+ },
+ diuretics: {
+ status: 'suboptimal',
+ currentDrug: 'Spironolactone',
+ currentDose: '12.5mg daily',
+ targetDose: '25mg daily',
+ reason: 'Dose can be increased with K+ monitoring',
+ nextAction: 'Increase to 25mg daily if K+ <5.0'
+ }
+ },
+ lastReview: '2025-10-12',
+ nextReview: '2025-10-25',
+ barriers: ['Complex medication regimen', 'Adherence challenges', 'Diabetes management'],
+ opportunities: [
+ {
+ pillar: 'TAVR Referral',
+ action: 'Initiate dapagliflozin for dual diabetes and valve disease benefit',
+ priority: 'high',
+ timeframe: '1-2 weeks'
+ },
+ {
+ pillar: 'Diuretics',
+ action: 'Uptitrate spironolactone with lab monitoring',
+ priority: 'medium',
+ timeframe: '2-4 weeks'
+ },
+ {
+ pillar: 'Medical Management',
+ action: 'Transition Anticoagulation to Medical Management for mortality benefit',
+ priority: 'medium',
+ timeframe: '4-6 weeks'
+ }
+ ]
+ }
+ }
+ },
+ {
+ id: 'PT002',
+ referralOrigin: 'standard',
+ name: 'Williams, Robert',
+ mrn: '987654321',
+ age: 72,
+ gender: 'M',
+ diseaseStage: 35,
+ valveStage: 'II',
+ priority: 'medium',
+ therapyGaps: ['Anticoagulation not at target dose'],
+ procedureEligible: false,
+ lastVisit: '2025-10-08',
+ nextAppointment: '2025-11-05',
+ assignedProvider: 'Dr. Chen',
+ recentAdmission: false,
+ riskScore: 6.2,
+ phenotype: 'Severe AS',
+ actionItems: [
+ { category: 'Valve Therapy', description: 'Uptitrate metoprolol', dueDate: '2025-10-28', urgent: false },
+ { category: 'Follow-up', description: 'Exercise stress test', dueDate: '2025-11-01', urgent: false },
+ ],
+ fullChart: {
+ vitals: {
+ bp: '124/76',
+ hr: 68,
+ temp: 98.6,
+ o2sat: 97,
+ weight: 189.5
+ },
+ labs: {
+ creatinine: 1.1,
+ bun: 22,
+ sodium: 140,
+ potassium: 4.5,
+ hemoglobin: 13.2,
+ bnp: 680
+ },
+ medications: [
+ { name: 'Metoprolol XL', dose: '50mg', frequency: 'Daily', adherence: 95 },
+ { name: 'Lisinopril', dose: '10mg', frequency: 'Daily', adherence: 92 },
+ { name: 'Atorvastatin', dose: '40mg', frequency: 'Daily', adherence: 88 },
+ { name: 'Aspirin', dose: '81mg', frequency: 'Daily', adherence: 96 }
+ ],
+ provider: {
+ attending: 'Dr. Chen',
+ nurse: 'Robert Kim, RN'
+ },
+ notes: [
+ 'Stable valve disease with good functional capacity',
+ 'Anticoagulation dose can be further optimized',
+ 'Patient walks 30 minutes daily without symptoms',
+ 'Excellent medication adherence and self-monitoring'
+ ],
+ allergies: ['NKDA'],
+ recentHospitalizations: []
+ }
+ },
+ {
+ id: 'PT003',
+ referralOrigin: 'upstream',
+ name: 'Davis, Linda',
+ mrn: '456789123',
+ age: 58,
+ gender: 'F',
+ diseaseStage: 22,
+ valveStage: 'IV',
+ priority: 'high',
+ therapyGaps: ['Medical Management not started', 'Diuretics contraindicated'],
+ procedureEligible: true,
+ lastVisit: '2025-10-15',
+ assignedProvider: 'Dr. Martinez',
+ recentAdmission: true,
+ riskScore: 9.4,
+ phenotype: 'Advanced Valve Disease',
+ actionItems: [
+ { category: 'Valve Therapy', description: 'Medical Management transition plan', dueDate: '2025-10-17', urgent: true },
+ { category: 'Procedure', description: 'TriClip evaluation', dueDate: '2025-10-20', urgent: true },
+ { category: 'Follow-up', description: 'Transplant consultation', dueDate: '2025-10-19', urgent: true },
+ ],
+ fullChart: {
+ vitals: {
+ bp: '98/62',
+ hr: 110,
+ temp: 99.2,
+ o2sat: 89,
+ weight: 162.8
+ },
+ labs: {
+ creatinine: 2.1,
+ bun: 58,
+ sodium: 132,
+ potassium: 4.8,
+ hemoglobin: 9.8,
+ bnp: 3850
+ },
+ medications: [
+ { name: 'Carvedilol', dose: '12.5mg', frequency: 'BID', adherence: 82 },
+ { name: 'Lisinopril', dose: '5mg', frequency: 'Daily', adherence: 85 },
+ { name: 'Torsemide', dose: '80mg', frequency: 'BID', adherence: 90 },
+ { name: 'Digoxin', dose: '0.125mg', frequency: 'Daily', adherence: 88 }
+ ],
+ provider: {
+ attending: 'Dr. Martinez',
+ resident: 'Dr. Wilson',
+ nurse: 'Angela Davis, RN',
+ coordinator: 'Michael Brown, NP'
+ },
+ notes: [
+ 'Advanced valve disease with frequent hospitalizations',
+ 'Refractory to standard medical therapy',
+ 'Candidate for advanced structural heart interventions',
+ 'Family meeting scheduled to discuss options'
+ ],
+ allergies: ['Penicillin'],
+ recentHospitalizations: [
+ { date: '2025-10-05', reason: 'Cardiogenic shock', los: 8 },
+ { date: '2025-08-18', reason: 'Acute decompensated valve disease', los: 12 },
+ { date: '2025-06-10', reason: 'Valve disease exacerbation', los: 5 }
+ ]
+ }
+ },
+ {
+ id: 'PT004',
+ referralOrigin: 'standard',
+ name: 'Brown, Charles',
+ mrn: '789123456',
+ age: 45,
+ gender: 'M',
+ diseaseStage: 42,
+ valveStage: 'II',
+ priority: 'low',
+ therapyGaps: [],
+ procedureEligible: false,
+ lastVisit: '2025-09-28',
+ nextAppointment: '2025-12-15',
+ assignedProvider: 'Dr. Foster',
+ recentAdmission: false,
+ riskScore: 4.1,
+ phenotype: 'Severe TR',
+ actionItems: [
+ { category: 'Lab', description: 'Annual lab panel', dueDate: '2025-11-15', urgent: false },
+ { category: 'Follow-up', description: 'Routine follow-up', dueDate: '2025-12-15', urgent: false },
+ ],
+ fullChart: {
+ vitals: {
+ bp: '142/88',
+ hr: 72,
+ temp: 98.1,
+ o2sat: 98,
+ weight: 201.5
+ },
+ labs: {
+ creatinine: 0.9,
+ bun: 18,
+ sodium: 142,
+ potassium: 4.1,
+ hemoglobin: 14.2,
+ bnp: 180,
+ hba1c: 5.8
+ },
+ medications: [
+ { name: 'Amlodipine', dose: '5mg', frequency: 'Daily', adherence: 94 },
+ { name: 'Losartan', dose: '50mg', frequency: 'Daily', adherence: 96 },
+ { name: 'HCTZ', dose: '25mg', frequency: 'Daily', adherence: 91 },
+ { name: 'Multivitamin', dose: '1 tablet', frequency: 'Daily', adherence: 88 }
+ ],
+ provider: {
+ attending: 'Dr. Foster',
+ nurse: 'Patricia Lee, RN'
+ },
+ notes: [
+ 'Stable valve disease with preserved ejection fraction',
+ 'Well-controlled blood pressure and diabetes',
+ 'Regular exercise and diet compliance',
+ 'Annual monitoring appropriate'
+ ],
+ allergies: ['NKDA'],
+ recentHospitalizations: []
+ }
+ },
+ {
+ id: 'PT005',
+ referralOrigin: 'upstream',
+ name: 'Anderson, Sarah',
+ mrn: '321654987',
+ age: 81,
+ gender: 'F',
+ diseaseStage: 31,
+ valveStage: 'III',
+ priority: 'medium',
+ therapyGaps: ['TAVR Referral age consideration', 'Anticoagulation intolerance'],
+ procedureEligible: true,
+ lastVisit: '2025-10-10',
+ nextAppointment: '2025-10-30',
+ assignedProvider: 'Dr. Park',
+ recentAdmission: false,
+ riskScore: 7.3,
+ phenotype: 'Severe AS',
+ actionItems: [
+ { category: 'Valve Therapy', description: 'Review TAVR Referral risks/benefits', dueDate: '2025-10-25', urgent: false },
+ { category: 'Procedure', description: 'MitraClip consideration', dueDate: '2025-11-10', urgent: false },
+ ],
+ fullChart: {
+ vitals: {
+ bp: '108/68',
+ hr: 58,
+ temp: 98.8,
+ o2sat: 95,
+ weight: 156.3
+ },
+ labs: {
+ creatinine: 1.6,
+ bun: 42,
+ sodium: 139,
+ potassium: 4.6,
+ hemoglobin: 10.9,
+ bnp: 890
+ },
+ medications: [
+ { name: 'Diltiazem', dose: '120mg', frequency: 'Daily', adherence: 89 },
+ { name: 'Lisinopril', dose: '2.5mg', frequency: 'Daily', adherence: 91 },
+ { name: 'Furosemide', dose: '20mg', frequency: 'Daily', adherence: 94 },
+ { name: 'Warfarin', dose: '2mg', frequency: 'Daily', adherence: 96 }
+ ],
+ provider: {
+ attending: 'Dr. Park',
+ nurse: 'Susan Garcia, RN',
+ coordinator: 'David Kim, NP'
+ },
+ notes: [
+ 'Elderly patient with multiple comorbidities',
+ 'Anticoagulation intolerance due to bradycardia',
+ 'Cautious approach to Valve Therapy optimization',
+ 'Fall risk assessment completed'
+ ],
+ allergies: ['Anticoagulations', 'NSAIDs'],
+ recentHospitalizations: [
+ { date: '2025-08-05', reason: 'Valve disease exacerbation', los: 3 }
+ ]
+ }
+ },
+  ];
+
+  const filteredPatients = patients.filter(patient => {
+ if (filterPriority !== 'all' && patient.priority !== filterPriority) return false;
+ if (filterValveTherapy && patient.therapyGaps.length === 0) return false;
+ if (filterProcedure && !patient.procedureEligible) return false;
+ return true;
+  });
+
+  const sortedPatients = [...filteredPatients].sort((a, b) => {
+ if (typeof a[sortBy] === 'number' && typeof b[sortBy] === 'number') {
+ return (b[sortBy] as number) - (a[sortBy] as number);
+ }
+ return 0;
+  });
+
+  const getPriorityColor = (priority: string) => {
+ const colors = {
+ high: 'border-l-medical-red-400 bg-medical-red-50/50',
+ medium: 'border-l-medical-amber-400 bg-medical-amber-50',
+ low: 'border-l-medical-green-400 bg-medical-green-50',
+ };
+ return colors[priority as keyof typeof colors];
+  };
+
+  const getRiskColor = (riskScore: number) => {
+ if (riskScore >= 8) return 'text-medical-red-600 bg-medical-red-100';
+ if (riskScore >= 6) return 'text-medical-amber-600 bg-medical-amber-100';
+ return 'text-medical-green-600 bg-medical-green-100';
+  };
+
+  const getValveStageColor = (valveStage: string) => {
+ const colors = {
+ 'I': 'text-medical-green-600 bg-medical-green-100',
+ 'II': 'text-porsche-600 bg-porsche-100',
+ 'III': 'text-medical-amber-600 bg-medical-amber-100',
+ 'IV': 'text-medical-red-600 bg-medical-red-100',
+ };
+ return colors[valveStage as keyof typeof colors];
+  };
+
+  const urgentActions = sortedPatients.reduce((total, patient) => 
+ total + patient.actionItems.filter(item => item.urgent).length, 0
+  );
+
+  return (
+ <div className="metal-card p-6">
+ {/* Header */}
+ <div className="flex items-start justify-between mb-6">
+ <div>
+ <h2 className="text-2xl font-bold text-titanium-900 mb-2 font-sf">
+ Patient Care Worklist
+ </h2>
+ <p className="text-titanium-600">
+ Prioritized patient list with care gaps and action items
+ </p>
+ </div>
+ <div className="text-right">
+ <div className="text-sm text-titanium-600 mb-1">Urgent Actions</div>
+ <div className="text-3xl font-bold text-medical-red-600 font-sf">
+ {urgentActions}
+ </div>
+ <div className="text-sm text-titanium-600">
+ Require immediate attention
+ </div>
+ </div>
+ </div>
+
+ {/* Filters and Controls */}
+ <div className="flex items-center justify-between mb-6 p-4 bg-titanium-50 rounded-xl border border-titanium-200">
+ <div className="flex items-center gap-4">
+ <div className="flex items-center gap-2">
+ <Filter className="w-4 h-4 text-titanium-600" />
+ <span className="text-sm font-medium text-titanium-700">Filters:</span>
+ </div>
+ 
+ <select
+ value={filterPriority}
+ onChange={(e) => setFilterPriority(e.target.value)}
+ className="px-3 py-2 text-sm border border-titanium-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-porsche-500"
+ >
+ <option value="all">All Priority</option>
+ <option value="high">High Priority</option>
+ <option value="medium">Medium Priority</option>
+ <option value="low">Low Priority</option>
+ </select>
+
+ <label className="flex items-center gap-2 px-3 py-2 bg-white border border-titanium-300 rounded-lg cursor-pointer hover:bg-titanium-50">
+ <input
+ type="checkbox"
+ checked={filterValveTherapy}
+ onChange={(e) => setFilterValveTherapy(e.target.checked)}
+ className="rounded"
+ />
+ <span className="text-sm text-titanium-800">Valve Therapy Gaps Only</span>
+ </label>
+
+ <label className="flex items-center gap-2 px-3 py-2 bg-white border border-titanium-300 rounded-lg cursor-pointer hover:bg-titanium-50">
+ <input
+ type="checkbox"
+ checked={filterProcedure}
+ onChange={(e) => setFilterProcedure(e.target.checked)}
+ className="rounded"
+ />
+ <span className="text-sm text-titanium-800">Procedure Eligible</span>
+ </label>
+ </div>
+
+ <select
+ value={sortBy}
+ onChange={(e) => setSortBy(e.target.value as keyof SHWorklistPatient)}
+ className="px-3 py-2 text-sm border border-titanium-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-porsche-500"
+ >
+ <option value="riskScore">Sort by Risk Score</option>
+ <option value="lastVisit">Sort by Last Visit</option>
+ <option value="age">Sort by Age</option>
+ <option value="diseaseStage">Sort by Disease Stage</option>
+ </select>
+ </div>
+
+ {/* Patient Cards */}
+ <div className="space-y-4">
+ {sortedPatients.map((patient) => (
+ <div
+ key={patient.id}
+ className={`metal-card border-l-4 transition-all duration-300 hover:shadow-chrome-elevated cursor-pointer ${getPriorityColor(patient.priority)}`}
+ onClick={() => setSelectedPatient(patient)}
+ >
+ <div className="p-4">
+ {/* Patient Header */}
+ <div className="flex items-start justify-between mb-4">
+ <div className="flex items-center gap-4">
+ <div className="p-3 rounded-xl bg-porsche-100">
+ <User className="w-6 h-6 text-porsche-600" />
+ </div>
+ <div>
+ <div className="flex items-center gap-3 mb-1">
+ <div className="flex items-center gap-2">
+ <h3 className="text-lg font-bold text-titanium-900">{patient.name}</h3>
+ <ReferralOriginBadge 
+ originType={patient.referralOrigin} 
+ size="sm"
+ />
+ </div>
+ <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getRiskColor(patient.riskScore)}`}>
+ Risk: {patient.riskScore.toFixed(1)}
+ </span>
+ {patient.recentAdmission && (
+ <span className="px-2 py-1 text-xs font-semibold bg-medical-red-100 text-medical-red-700 rounded-full">
+ Recent Admission
+ </span>
+ )}
+ </div>
+ <div className="flex items-center gap-4 text-sm text-titanium-600">
+ <span>MRN: {patient.mrn}</span>
+ <span>Age: {patient.age}{patient.gender}</span>
+ <span>Provider: {patient.assignedProvider}</span>
+ </div>
+ </div>
+ </div>
+ <div className="text-right">
+ <div className="text-sm text-titanium-600 mb-1">Priority</div>
+ <div className={`inline-block px-3 py-1 rounded-lg font-semibold text-sm ${
+ patient.priority === 'high' ? 'bg-medical-red-100 text-medical-red-700' :
+ patient.priority === 'medium' ? 'bg-medical-amber-100 text-medical-amber-700' :
+ 'bg-medical-green-100 text-medical-green-700'
+ }`}>
+ {patient.priority.toUpperCase()}
+ </div>
+ </div>
+ </div>
+
+ {/* Clinical Metrics */}
+ <div className="grid grid-cols-4 gap-4 mb-4">
+ <div className="text-center p-3 bg-white rounded-lg border border-titanium-200">
+ <div className="flex items-center justify-center gap-1 mb-1">
+ <Heart className="w-4 h-4 text-medical-red-600" />
+ <span className="text-2xl font-bold text-titanium-900">{patient.diseaseStage}%</span>
+ </div>
+ <div className="text-xs text-titanium-600">Disease Stage</div>
+ </div>
+ <div className="text-center p-3 bg-white rounded-lg border border-titanium-200">
+ <div className={`text-lg font-bold px-2 py-1 rounded ${getValveStageColor(patient.valveStage)}`}>
+ Valve Stage {patient.valveStage}
+ </div>
+ <div className="text-xs text-titanium-600 mt-1">Functional Class</div>
+ </div>
+ <div className="text-center p-3 bg-white rounded-lg border border-titanium-200">
+ <div className="text-2xl font-bold text-titanium-900">{patient.therapyGaps.length}</div>
+ <div className="text-xs text-titanium-600">Valve Therapy Gaps</div>
+ </div>
+ <div className="text-center p-3 bg-white rounded-lg border border-titanium-200">
+ <div className="text-2xl font-bold text-titanium-900">
+ {patient.actionItems.filter(item => item.urgent).length}
+ </div>
+ <div className="text-xs text-titanium-600">Urgent Actions</div>
+ </div>
+ </div>
+
+ {/* Valve Therapy 4-Pillar Status */}
+ {patient.fullChart?.valveTherapy && (
+ <div className="mb-4">
+ <button 
+ onClick={(e) => {
+ e.stopPropagation();
+ setExpandedValveTherapy(expandedValveTherapy === patient.id ? null : patient.id);
+ }}
+ className="w-full flex items-center justify-between mb-2 p-2 rounded-lg hover:bg-titanium-50 transition-colors"
+ >
+ <div className="text-sm font-semibold text-titanium-700 flex items-center gap-2">
+ <Target className="w-4 h-4 text-porsche-600" />
+ Valve Therapy 4-Pillar Status
+ {expandedValveTherapy === patient.id ? (
+ <ChevronUp className="w-4 h-4 text-titanium-500" />
+ ) : (
+ <ChevronRight className="w-4 h-4 text-titanium-500" />
+ )}
+ </div>
+ <span className={`px-2 py-1 rounded text-sm font-medium ${getValveTherapyScoreColor(patient.fullChart.valveTherapy.overallScore)}`}>
+ {patient.fullChart.valveTherapy.overallScore}%
+ </span>
+ </button>
+ <div className="grid grid-cols-4 gap-2">
+ {Object.entries(patient.fullChart.valveTherapy.pillars).map(([pillar, data]) => (
+ <div key={pillar} className={`p-2 rounded border text-center ${getValveTherapyStatusColor(data.status)}`}>
+ <div className="flex items-center justify-center mb-1">
+ {getValveTherapyStatusIcon(data.status)}
+ </div>
+ <div className="text-xs font-medium">
+ {pillar === 'medicalManagement' ? 'Med Mgmt' : 
+ pillar === 'anticoagulation' ? 'Anticoag' :
+ pillar === 'tavrReferral' ? 'TAVR Ref' :
+ pillar === 'diuretics' ? 'Diuretics' : pillar}
+ </div>
+ </div>
+ ))}
+ </div>
+
+ {/* Expanded Valve Therapy Details */}
+ {expandedValveTherapy === patient.id && (
+ <div className="mt-4 p-4 bg-titanium-50 rounded-lg border border-titanium-200">
+ <div className="space-y-4">
+ {Object.entries(patient.fullChart.valveTherapy.pillars).map(([pillar, data]) => (
+ <div key={pillar} className="bg-white rounded-lg p-4 border border-titanium-200">
+ <div className="flex items-center justify-between mb-3">
+ <div className="flex items-center gap-2">
+ <Pill className="w-4 h-4 text-porsche-600" />
+ <h4 className="font-semibold text-titanium-900">
+ {pillar === 'medicalManagement' ? 'Medical Management' : 
+ pillar === 'anticoagulation' ? 'Anticoagulation' :
+ pillar === 'tavrReferral' ? 'TAVR Referral' :
+ pillar === 'diuretics' ? 'Diuretics' : pillar}
+ </h4>
+ </div>
+ <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+ data.status === 'optimal' ? 'bg-medical-green-100 text-medical-green-700' :
+ data.status === 'suboptimal' ? 'bg-medical-amber-100 text-medical-amber-700' :
+ data.status === 'not_started' ? 'bg-medical-red-100 text-medical-red-700' :
+ 'bg-titanium-100 text-titanium-600'
+ }`}>
+ {data.status.replace('_', ' ').toUpperCase()}
+ </span>
+ </div>
+
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+ {data.currentDrug && (
+ <div>
+ <span className="text-titanium-600">Current:</span>
+ <div className="font-semibold text-titanium-900">{data.currentDrug} {data.currentDose}</div>
+ </div>
+ )}
+ 
+ {data.targetDose && (
+ <div>
+ <span className="text-titanium-600">Target:</span>
+ <div className="font-semibold text-porsche-900">{data.targetDose}</div>
+ </div>
+ )}
+
+ {data.reason && (
+ <div className="md:col-span-2">
+ <span className="text-titanium-600">Clinical Note:</span>
+ <div className="text-titanium-800">{data.reason}</div>
+ </div>
+ )}
+
+ {data.nextAction && (
+ <div className="md:col-span-2">
+ <span className="text-titanium-600">Next Action:</span>
+ <div className="font-semibold text-medical-green-900">{data.nextAction}</div>
+ </div>
+ )}
+ </div>
+ </div>
+ ))}
+
+ {/* Valve Therapy Optimization Opportunities */}
+ {patient.fullChart.valveTherapy.opportunities && (
+ <div className="bg-porsche-50 rounded-lg p-4 border border-porsche-200">
+ <div className="flex items-center gap-2 mb-3">
+ <Activity className="w-4 h-4 text-porsche-600" />
+ <h4 className="font-semibold text-porsche-900">Optimization Opportunities</h4>
+ </div>
+ <div className="space-y-2">
+ {patient.fullChart.valveTherapy.opportunities.map((opportunity, index) => (
+ <div key={index} className="flex items-start justify-between p-3 bg-white rounded border">
+ <div className="flex-1">
+ <div className="font-semibold text-titanium-900 mb-1">{opportunity.pillar} Enhancement</div>
+ <div className="text-sm text-titanium-700">{opportunity.action}</div>
+ </div>
+ <div className="ml-4 text-right">
+ <div className={`px-2 py-1 rounded text-xs font-semibold ${
+ opportunity.priority === 'high' ? 'bg-medical-red-100 text-medical-red-700' :
+ opportunity.priority === 'medium' ? 'bg-medical-amber-100 text-medical-amber-700' :
+ 'bg-medical-green-100 text-medical-green-700'
+ }`}>
+ {opportunity.priority.toUpperCase()}
+ </div>
+ <div className="text-xs text-titanium-600 mt-1">{opportunity.timeframe}</div>
+ </div>
+ </div>
+ ))}
+ </div>
+ </div>
+ )}
+ </div>
+ </div>
+ )}
+ </div>
+ )}
+
+ {/* Valve Therapy Gaps */}
+ {patient.therapyGaps.length > 0 && (
+ <div className="mb-4">
+ <div className="text-sm font-semibold text-titanium-700 mb-2">Valve Therapy Gaps:</div>
+ <div className="flex flex-wrap gap-2">
+ {patient.therapyGaps.map((gap, index) => (
+ <span
+ key={index}
+ className="px-3 py-1 bg-medical-amber-50 text-medical-amber-800 text-sm rounded-lg border border-medical-amber-200"
+ >
+ {gap}
+ </span>
+ ))}
+ </div>
+ </div>
+ )}
+
+ {/* Action Items */}
+ <div className="mb-4">
+ <div className="text-sm font-semibold text-titanium-700 mb-2">Action Items:</div>
+ <div className="space-y-2">
+ {patient.actionItems.slice(0, 3).map((item, index) => (
+ <div
+ key={index}
+ className={`flex items-center justify-between p-2 rounded-lg border ${
+ item.urgent 
+ ? 'bg-medical-red-50 border-medical-red-200' 
+ : 'bg-titanium-50 border-titanium-200'
+ }`}
+ >
+ <div className="flex items-center gap-2">
+ {item.urgent && <AlertCircle className="w-4 h-4 text-medical-red-600" />}
+ <span className={`text-sm ${item.urgent ? 'text-medical-red-800' : 'text-titanium-800'}`}>
+ {item.description}
+ </span>
+ </div>
+ <div className="flex items-center gap-2">
+ <Clock className="w-3 h-3 text-titanium-500" />
+ <span className="text-xs text-titanium-600">
+ {new Date(item.dueDate).toLocaleDateString()}
+ </span>
+ </div>
+ </div>
+ ))}
+ {patient.actionItems.length > 3 && (
+ <div className="text-xs text-titanium-600 text-center">
+ +{patient.actionItems.length - 3} more items
+ </div>
+ )}
+ </div>
+ </div>
+
+ {/* Footer */}
+ <div className="flex items-center justify-between pt-3 border-t border-titanium-200">
+ <div className="flex items-center gap-4 text-sm text-titanium-600">
+ <div className="flex items-center gap-1">
+ <Calendar className="w-4 h-4" />
+ <span>Last: {new Date(patient.lastVisit).toLocaleDateString()}</span>
+ </div>
+ {patient.nextAppointment && (
+ <div className="flex items-center gap-1">
+ <Calendar className="w-4 h-4" />
+ <span>Next: {new Date(patient.nextAppointment).toLocaleDateString()}</span>
+ </div>
+ )}
+ </div>
+ <button 
+ onClick={(e) => {
+ e.stopPropagation();
+ // Opening patient chart for detailed view
+ setChartFeedback(patient.name);
+ setTimeout(() => setChartFeedback(null), 2000);
+ }}
+ className="flex items-center gap-2 px-4 py-2 bg-porsche-600 text-white text-sm rounded-lg hover:bg-porsche-700 transition-colors"
+ >
+ <ExternalLink className="w-4 h-4" />
+ {chartFeedback === patient.name ? 'Opening chart...' : 'Open Chart'}
+ </button>
+ </div>
+ </div>
+ </div>
+ ))}
+ </div>
+ 
+ {selectedPatient && (
+ <SHPatientDetailPanel 
+ patient={selectedPatient} 
+ onClose={() => setSelectedPatient(null)} 
+ />
+ )}
+ </div>
+  );
+};
+
+export default SHPatientWorklistEnhanced;

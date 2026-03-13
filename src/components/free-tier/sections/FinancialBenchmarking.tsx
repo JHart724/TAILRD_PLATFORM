@@ -1,0 +1,250 @@
+import React, { useState, useMemo } from 'react';
+import SectionCard from '../../../design-system/SectionCard';
+import Badge from '../../../design-system/Badge';
+import { DRGRow, FinancialSummary, MarginOpportunity } from '../types';
+import { formatCurrency, formatNumber } from '../utils';
+import { TrendingUp, TrendingDown, ArrowRight, ChevronUp, ChevronDown } from 'lucide-react';
+import CountUp from 'react-countup';
+
+interface FinancialBenchmarkingProps {
+  hasUploadedFiles: boolean;
+  financialSummary: FinancialSummary[];
+  drgData: DRGRow[];
+  marginOpportunities: MarginOpportunity[];
+}
+
+type SortField = 'code' | 'description' | 'volume' | 'avgLOS' | 'reimbursement' | 'margin';
+type SortDirection = 'asc' | 'desc';
+
+const FinancialBenchmarking: React.FC<FinancialBenchmarkingProps> = ({
+  hasUploadedFiles,
+  financialSummary,
+  drgData,
+  marginOpportunities,
+}) => {
+  const [sortField, setSortField] = useState<SortField>('volume');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortField(field);
+      setSortDirection('desc');
+    }
+  };
+
+  const sortedDrgData = useMemo(() => {
+    const sorted = [...drgData].sort((a, b) => {
+      const aVal = a[sortField];
+      const bVal = b[sortField];
+      if (typeof aVal === 'string' && typeof bVal === 'string') {
+        return sortDirection === 'asc'
+          ? aVal.localeCompare(bVal)
+          : bVal.localeCompare(aVal);
+      }
+      if (typeof aVal === 'number' && typeof bVal === 'number') {
+        return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+      }
+      return 0;
+    });
+    return sorted;
+  }, [drgData, sortField, sortDirection]);
+
+  const SortIndicator: React.FC<{ field: SortField }> = ({ field }) => {
+    if (sortField !== field) return null;
+    return sortDirection === 'asc' ? (
+      <ChevronUp className="w-3 h-3 inline-block ml-0.5" />
+    ) : (
+      <ChevronDown className="w-3 h-3 inline-block ml-0.5" />
+    );
+  };
+
+  const getMarginColor = (margin: number): string => {
+    if (margin >= 15) return 'text-emerald-600';
+    if (margin >= 8) return 'text-amber-600';
+    return 'text-arterial-600';
+  };
+
+  const columns: { label: string; field: SortField; align: 'left' | 'right' }[] = [
+    { label: 'DRG Code', field: 'code', align: 'left' },
+    { label: 'Description', field: 'description', align: 'left' },
+    { label: 'Volume', field: 'volume', align: 'right' },
+    { label: 'Avg LOS', field: 'avgLOS', align: 'right' },
+    { label: 'Reimbursement', field: 'reimbursement', align: 'right' },
+    { label: 'Margin', field: 'margin', align: 'right' },
+  ];
+
+  return (
+    <SectionCard
+      title="Financial Benchmarking"
+      subtitle="Revenue & Margin Analysis"
+      headerRight={
+        <Badge variant={hasUploadedFiles ? 'verified' : 'estimate'} />
+      }
+    >
+      {/* Sub-section 1: CFO Summary Strip */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        {financialSummary.map((item, index) => {
+          const value = hasUploadedFiles ? item.stateBValue : item.stateAValue;
+          const isPositive = item.trend.direction === 'up';
+
+          return (
+            <div
+              key={index}
+              className="bg-chrome-50 rounded-xl p-4 text-center"
+            >
+              <div className="font-data text-xl font-bold text-titanium-800">
+                {item.unit === 'currency' ? (
+                  value >= 1_000_000 ? (
+                    <CountUp
+                      end={value / 1_000_000}
+                      decimals={1}
+                      prefix="$"
+                      suffix="M"
+                      duration={1.5}
+                      preserveValue
+                    />
+                  ) : (
+                    <CountUp
+                      end={value / 1_000}
+                      decimals={0}
+                      prefix="$"
+                      suffix="K"
+                      duration={1.5}
+                      preserveValue
+                    />
+                  )
+                ) : (
+                  <CountUp
+                    end={value}
+                    decimals={1}
+                    suffix="%"
+                    duration={1.5}
+                    preserveValue
+                  />
+                )}
+              </div>
+              <div className="text-xs font-body text-titanium-500 mt-1">
+                {item.label}
+              </div>
+              <div className="flex items-center justify-center gap-1 mt-1.5">
+                {isPositive ? (
+                  <TrendingUp className="w-3 h-3 text-emerald-600" />
+                ) : (
+                  <TrendingDown className="w-3 h-3 text-arterial-600" />
+                )}
+                <span
+                  className={`text-xs font-body font-medium ${
+                    isPositive ? 'text-emerald-600' : 'text-arterial-600'
+                  }`}
+                >
+                  {item.trend.value}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Sub-section 2: DRG Mix Table */}
+      <div className="mb-6">
+        <h3 className="text-sm font-body font-semibold text-titanium-700 mb-3">
+          DRG Volume & Reimbursement
+        </h3>
+        <div className="w-full rounded-lg overflow-hidden border border-chrome-200">
+          <table className="w-full">
+            <thead>
+              <tr className="bg-chrome-50">
+                {columns.map((col) => (
+                  <th
+                    key={col.field}
+                    onClick={() => handleSort(col.field)}
+                    className={`text-xs font-body font-semibold uppercase tracking-wider text-titanium-500 px-4 py-3 cursor-pointer select-none hover:text-titanium-700 transition-colors ${
+                      col.align === 'right' ? 'text-right' : 'text-left'
+                    }`}
+                  >
+                    {col.label}
+                    <SortIndicator field={col.field} />
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {sortedDrgData.map((row, index) => (
+                <tr
+                  key={row.code}
+                  className={index % 2 === 0 ? 'bg-white' : 'bg-chrome-50/50'}
+                >
+                  <td className="text-sm font-data font-semibold text-chrome-700 px-4 py-3">
+                    {row.code}
+                  </td>
+                  <td className="text-sm font-body text-titanium-700 px-4 py-3">
+                    {row.description}
+                  </td>
+                  <td className="text-sm font-data text-right text-titanium-800 px-4 py-3">
+                    {formatNumber(row.volume)}
+                  </td>
+                  <td className="text-sm font-data text-right text-titanium-800 px-4 py-3">
+                    {row.avgLOS} days
+                  </td>
+                  <td className="text-sm font-data text-right text-titanium-800 px-4 py-3">
+                    {formatCurrency(row.reimbursement)}
+                  </td>
+                  <td
+                    className={`text-sm font-data text-right px-4 py-3 font-medium ${getMarginColor(
+                      row.margin
+                    )}`}
+                  >
+                    {row.margin}%
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Sub-section 3: Margin Opportunity Cards */}
+      <div>
+        <h3 className="text-sm font-body font-semibold text-titanium-700 mb-3">
+          Margin Improvement Opportunities
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {marginOpportunities.map((opp, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-xl border border-chrome-200 p-4"
+            >
+              <div className="text-sm font-body font-semibold text-titanium-800">
+                {opp.title}
+              </div>
+              <div className="flex items-center justify-between mt-3">
+                <div className="text-center">
+                  <div className="text-xs text-titanium-500">Current</div>
+                  <div className="font-data text-lg font-bold text-titanium-700">
+                    {opp.currentMargin}%
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-chrome-400" />
+                <div className="text-center">
+                  <div className="text-xs text-titanium-500">Target</div>
+                  <div className="font-data text-lg font-bold text-emerald-600">
+                    {opp.targetMargin}%
+                  </div>
+                </div>
+              </div>
+              <div className="mt-2 bg-emerald-50 rounded-lg px-3 py-1.5 text-center">
+                <span className="text-sm font-data font-semibold text-emerald-700">
+                  &uarr; {formatCurrency(opp.potentialUplift)} potential uplift
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </SectionCard>
+  );
+};
+
+export default FinancialBenchmarking;

@@ -1,0 +1,22 @@
+=== MODULE GAP ANALYSIS VS HF GOLD STANDARD ===
+
+HF BASELINE (Gold Standard):
+  Files: 54
+  onClick: 135
+  Modal/Drawer: 48
+  Filters: 194
+  Maps: 8
+  GDMT: 486
+
+=== GAP ANALYSIS BY MODULE ===
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MODULE: electrophysiology
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+| Metric | HF (Target) | EP | % of HF | Gap | Status |
+|--------|-------------|----|---------|----|--------|
+| Files | 54 | 22 | 41% | 32 | ❌ |
+| onClick | 135 | 68 | 50% | 67 | ❌ |
+| Modal/Drawer | 48 | 22 | - | - | ❌ |
+| Maps | 8 | 3 | - | - | ❌ |

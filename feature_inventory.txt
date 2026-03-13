@@ -1,0 +1,479 @@
+=== EXISTING FEATURES INVENTORY ===
+
+=== DRILL-DOWN HANDLERS ===
+src//ui/peripheralVascular/config/careTeamConfig.tsx:353:                onClick={() => {
+src//ui/peripheralVascular/config/careTeamConfig.tsx:381:                onClick={() => {
+src//ui/peripheralVascular/config/careTeamConfig.tsx:408:                onClick={() => {
+src//ui/peripheralVascular/components/LimbSalvageScreening.tsx:194:              onClick={() => setActiveTab(tab.id as any)}
+src//ui/peripheralVascular/components/care-team/LimbSalvageChecklist.tsx:310:            onClick={generateLimbSalvagePlan}
+src//ui/peripheralVascular/components/care-team/LimbSalvageChecklist.tsx:339:                  onClick={() => updateWiFI('wound', option.value as 0 | 1 | 2 | 3)}
+src//ui/peripheralVascular/components/care-team/LimbSalvageChecklist.tsx:365:                  onClick={() => updateWiFI('ischemia', option.value as 0 | 1 | 2 | 3)}
+src//ui/peripheralVascular/components/care-team/LimbSalvageChecklist.tsx:391:                  onClick={() => updateWiFI('infection', option.value as 0 | 1 | 2 | 3)}
+src//ui/peripheralVascular/components/care-team/LimbSalvageChecklist.tsx:448:                    onClick={() => updateTASC('grade', grade)}
+src//ui/peripheralVascular/components/care-team/LimbSalvageChecklist.tsx:484:                    onClick={() => setSalvagePlan(prev => ({
+src//ui/peripheralVascular/components/care-team/LimbSalvageChecklist.tsx:506:                    onClick={() => setSalvagePlan(prev => ({
+src//ui/peripheralVascular/components/care-team/LimbSalvageChecklist.tsx:553:                  onClick={() => setSalvagePlan(prev => ({
+src//ui/peripheralVascular/components/care-team/LimbSalvageChecklist.tsx:575:                  onClick={() => setSalvagePlan(prev => ({
+src//ui/peripheralVascular/components/care-team/LimbSalvageChecklist.tsx:640:                onClick={() => setSalvagePlan(prev => ({ ...prev, infectionControl: status }))}
+src//ui/peripheralVascular/components/care-team/LimbSalvageChecklist.tsx:727:              onClick={() => setSalvagePlan(prev => ({ ...prev, status: 'Planning' }))}
+src//ui/peripheralVascular/components/care-team/LimbSalvageChecklist.tsx:733:              onClick={() => setSalvagePlan(prev => ({ ...prev, status: 'Approved' }))}
+src//ui/peripheralVascular/components/care-team/CasePlanningWorksheet.tsx:202:              onClick={finalizeCasePlan}
+src//ui/peripheralVascular/components/care-team/CasePlanningWorksheet.tsx:226:                  onClick={() => updateLesion('tascGrade', grade)}
+src//ui/peripheralVascular/components/care-team/CasePlanningWorksheet.tsx:270:                  onClick={() => updateLesion('calcification', level)}
+src//ui/peripheralVascular/components/care-team/CasePlanningWorksheet.tsx:310:                  onClick={() => setCasePlan(prev => ({ ...prev, primaryStrategy: strategy }))}
+src//ui/peripheralVascular/components/care-team/CasePlanningWorksheet.tsx:728:              onClick={() => setCasePlan(prev => ({ ...prev, status: 'Reviewed' }))}
+src//ui/peripheralVascular/components/care-team/CasePlanningWorksheet.tsx:734:              onClick={() => setCasePlan(prev => ({ ...prev, status: 'Approved' }))}
+src//ui/peripheralVascular/components/care-team/PeripheralWorklist.tsx:488:                onClick={() => setActiveTab(tab.id as WorklistTab)}
+src//ui/peripheralVascular/components/care-team/PeripheralWorklist.tsx:527:            onClick={exportToCSV}
+src//ui/peripheralVascular/components/care-team/PeripheralWorklist.tsx:542:              onClick={bulkScheduleVascularLab}
+src//ui/peripheralVascular/components/care-team/PeripheralWorklist.tsx:548:              onClick={bulkReferToWoundCare}
+src//ui/peripheralVascular/components/care-team/PeripheralWorklist.tsx:573:                  onClick={() => handleSort('name')}
+src//ui/peripheralVascular/components/care-team/PeripheralWorklist.tsx:579:                  onClick={() => handleSort('diseaseSeverity')}
+src//ui/peripheralVascular/components/care-team/PeripheralWorklist.tsx:585:                  onClick={() => handleSort('lesionLocation')}
+src//ui/peripheralVascular/components/care-team/PeripheralWorklist.tsx:591:                  onClick={() => handleSort('procedure')}
+src//ui/peripheralVascular/components/care-team/PeripheralWorklist.tsx:597:                  onClick={() => handleSort('scheduledDate')}
+src//ui/peripheralVascular/components/care-team/PeripheralWorklist.tsx:658:                          onClick={() => setExpandedPatient(expandedPatient === patient.id ? null : patient.id)}
+src//ui/peripheralVascular/components/care-team/WoundCareIntegration.tsx:308:            onClick={updateWoundStatus}
+src//ui/peripheralVascular/components/care-team/WoundCareIntegration.tsx:353:                  onClick={() => updateWound('depth', depth)}
+src//ui/peripheralVascular/components/care-team/WoundCareIntegration.tsx:412:            onClick={() => setShowPhotoUpload(!showPhotoUpload)}
+src//ui/peripheralVascular/components/care-team/WoundCareIntegration.tsx:448:                    onClick={() => updateInfection('status', status)}
+src//ui/peripheralVascular/components/care-team/WoundCareIntegration.tsx:517:                    onClick={() => setPatient(prev => ({
+src//ui/peripheralVascular/components/care-team/WoundCareIntegration.tsx:564:                  onClick={() => updateVascular('phase', phase)}
+src//ui/peripheralVascular/components/PADReportingSystem.tsx:200:              onClick={() => generateInstantReport('all')}
+src//ui/peripheralVascular/components/PADReportingSystem.tsx:226:                onClick={() => setActiveTab(tab.id as any)}
+src//ui/peripheralVascular/components/PADReportingSystem.tsx:321:                    onClick={() => generateInstantReport(reportType.type)}
+src//ui/peripheralVascular/components/PADReportingSystem.tsx:439:                        onClick={() => sendTestReport(schedule)}
+src//ui/peripheralVascular/components/PADReportingSystem.tsx:445:                        onClick={() => toggleScheduleStatus(schedule.id)}
+src//ui/peripheralVascular/components/PVWoundCareNetworkVisualization.tsx:760:            onClick={exportNetworkData}
+src//ui/peripheralVascular/components/PVWoundCareNetworkVisualization.tsx:905:                    onClick={() => handleNodeClick(node)}
+src//ui/peripheralVascular/components/PVWoundCareNetworkVisualization.tsx:1115:                onClick={() => {
+src//ui/peripheralVascular/views/PeripheralServiceLineView.tsx:314:                  onClick={() => setActiveTab(tab.id as PeripheralServiceLineTab)}
+src//ui/peripheralVascular/views/PeripheralCareTeamView.tsx:187:                  onClick={() => setActiveTab(tab.id as PeripheralCareTeamTab)}
+src//ui/revenueCycle/RevenueCycleModule.tsx:105:                onClick={() => navigate('/dashboard')}
+src//ui/revenueCycle/RevenueCycleModule.tsx:114:                  onClick={() => navigate('/dashboard')}
+src//ui/revenueCycle/RevenueCycleModule.tsx:145:                onClick={() => handleViewChange(view.id)}
+src//ui/admin/SuperAdminDashboard_backup.tsx:294:            onClick={fetchHealthMetrics}
+src//ui/admin/SuperAdminDashboard_backup.tsx:636:              onClick={() => runBackup('incremental')}
+src//ui/admin/SuperAdminDashboard_backup.tsx:643:              onClick={() => runBackup('full')}
+src//ui/admin/SuperAdminDashboard_backup.tsx:985:                onClick={() => setActiveTab(tab.id)}
+src//ui/admin/SuperAdminDashboard_backup.tsx:1231:            onClick={() => setMaintenanceMode(!maintenanceMode)}
+src//ui/admin/SuperAdminDashboard_backup.tsx:1316:                    onClick={() => toggleFeatureFlag(flag.id)}
+src//ui/admin/SuperAdminDashboard_backup.tsx:1519:                  onClick={() => setActiveTab(tab.id)}
+src//ui/admin/SuperAdminDashboard.tsx:76:              <button onClick={() => navigate('/dashboard')} className="hover:opacity-75 transition-opacity">
+src//ui/admin/SuperAdminDashboard.tsx:214:            onClick={() => navigate('/heart-failure')}
+src//ui/admin/SuperAdminDashboard.tsx:223:            onClick={() => navigate('/electrophysiology')}
+src//ui/admin/SuperAdminDashboard.tsx:232:            onClick={() => navigate('/coronary-intervention')}
+src//ui/admin/GodView/GodView.tsx:135:            onClick={fetchGodViewData}
+src//ui/admin/GodView/GodView.tsx:191:                    onClick={() => setSelectedTimeRange(range)}
+src//ui/admin/GodView/GodView.tsx:210:                onClick={fetchGodViewData}
+src//ui/admin/GodView/GlobalSearch.tsx:163:        onClick={() => setIsOpen(true)}
+src//ui/admin/GodView/GlobalSearch.tsx:195:            onClick={() => setIsOpen(false)}
+src//ui/admin/GodView/GlobalSearch.tsx:223:                onClick={() => setIsOpen(false)}
+src//ui/admin/GodView/GlobalSearch.tsx:242:                        onClick={() => handleSelectResult(result)}
+src//ui/admin/GodView/CrossModuleAnalytics.tsx:140:              onClick={() => setSelectedView(key as any)}
+src//ui/admin/SuperAdminDashboard_broken.tsx:190:            onClick={() => navigate('/heart-failure')}
+src//ui/admin/SuperAdminDashboard_broken.tsx:199:            onClick={() => navigate('/electrophysiology')}
+src//ui/admin/SuperAdminDashboard_broken.tsx:208:            onClick={() => navigate('/coronary-intervention')}
+src//ui/admin/SuperAdminDashboard_corrupted.tsx:190:            onClick={() => navigate('/heart-failure')}
+src//ui/admin/SuperAdminDashboard_corrupted.tsx:199:            onClick={() => navigate('/electrophysiology')}
+src//ui/admin/SuperAdminDashboard_corrupted.tsx:208:            onClick={() => navigate('/coronary-intervention')}
+src//ui/heartFailure/config/careTeamConfig.tsx:82:              onClick={async () => {
+src//ui/heartFailure/config/careTeamConfig.tsx:121:              onClick={async () => {
+src//ui/heartFailure/config/careTeamConfig.tsx:164:              onClick={async () => {
+src//ui/heartFailure/config/careTeamConfig.tsx:434:                onClick={async () => {
+src//ui/heartFailure/config/careTeamConfig.tsx:468:                onClick={async () => {
+src//ui/heartFailure/config/careTeamConfig.tsx:512:                onClick={() => {
+src//ui/heartFailure/config/careTeamConfig.tsx:523:                onClick={() => {
+src//ui/heartFailure/config/careTeamConfig.tsx:608:              onClick={() => {
+src//ui/heartFailure/config/careTeamConfig.tsx:619:              onClick={() => {
+src//ui/heartFailure/config/careTeamConfig.tsx:630:              onClick={() => {
+src//ui/heartFailure/config/careTeamConfig.tsx:641:              onClick={() => {
+src//ui/heartFailure/components/ProjectedVsRealizedChart.tsx:75:              onClick={() => onMonthClick && onMonthClick(data)}
+src//ui/heartFailure/components/service-line/HFCareNetworkVisualization.tsx:642:            onClick={exportNetworkData}
+src//ui/heartFailure/components/service-line/HFCareNetworkVisualization.tsx:777:                    onClick={() => handleNodeClick(node)}
+src//ui/heartFailure/components/service-line/HFCareNetworkVisualization.tsx:959:                onClick={() => {
+src//ui/heartFailure/components/service-line/QualityMetricsDashboard.tsx:275:              onClick={() => {
+src//ui/heartFailure/components/service-line/QualityMetricsDashboard.tsx:300:            onClick={() => setSelectedMetric(selectedMetric === metric.id ? null : metric.id)}
+src//ui/heartFailure/components/service-line/QualityMetricsDashboard.tsx:329:                  onClick={(e) => {
+src//ui/heartFailure/components/service-line/QualityMetricsDashboard.tsx:444:                    onClick={() => {
+src//ui/heartFailure/components/service-line/QualityMetricsDashboard.tsx:454:                    onClick={() => {
+src//ui/heartFailure/components/service-line/QualityMetricsDashboard.tsx:464:                    onClick={() => {
+src//ui/heartFailure/components/service-line/GDMTAnalyticsDashboard.tsx:215:              onClick={() => setIsLiveMode(!isLiveMode)}
+src//ui/heartFailure/components/service-line/GDMTAnalyticsDashboard.tsx:224:              onClick={exportData}
+src//ui/heartFailure/components/service-line/GDMTAnalyticsDashboard.tsx:238:            onClick={() => setActiveView('real-time')}
+src//ui/heartFailure/components/service-line/GDMTAnalyticsDashboard.tsx:247:            onClick={() => setActiveView('pillars')}
+src//ui/heartFailure/components/service-line/GDMTAnalyticsDashboard.tsx:253:            onClick={() => setActiveView('types')}
+src//ui/heartFailure/components/service-line/GDMTAnalyticsDashboard.tsx:259:            onClick={() => setActiveView('providers')}
+src//ui/heartFailure/components/service-line/GDMTAnalyticsDashboard.tsx:408:                  onClick={() => handlePillarClick(pillars)}
+src//ui/heartFailure/components/service-line/GDMTAnalyticsDashboard.tsx:496:                  onClick={() => {
+src//ui/heartFailure/components/service-line/GDMTAnalyticsDashboard.tsx:513:                    onClick={() => setSelectedHFType(hfType.type)}
+src//ui/heartFailure/components/service-line/GDMTAnalyticsDashboard.tsx:695:                  onClick={closePillarPanel}
+src//ui/heartFailure/components/service-line/DevicePathwayFunnel.tsx:350:              onClick={() => {
+src//ui/heartFailure/components/service-line/DevicePathwayFunnel.tsx:382:                onClick={() => setSelectedStage(isSelected ? null : stage.stage)}
+src//ui/heartFailure/components/service-line/DevicePathwayFunnel.tsx:430:                    onClick={() => handleMetricClick(stage.stage, 'eligible')}
+src//ui/heartFailure/components/service-line/DevicePathwayFunnel.tsx:440:                    onClick={() => handleMetricClick(stage.stage, 'implanted')}
+src//ui/heartFailure/components/service-line/DevicePathwayFunnel.tsx:450:                    onClick={() => handleMetricClick(stage.stage, 'pending')}
+src//ui/heartFailure/components/service-line/DevicePathwayFunnel.tsx:460:                    onClick={() => handleMetricClick(stage.stage, 'contraindicated')}
+src//ui/heartFailure/components/service-line/DevicePathwayFunnel.tsx:555:                  onClick={closePatientPanel}
+src//ui/heartFailure/components/service-line/DevicePathwayFunnel.tsx:686:                  onClick={() => {
+src//ui/heartFailure/components/service-line/DevicePathwayFunnel.tsx:695:                  onClick={() => {
+src//ui/heartFailure/components/service-line/ProviderScorecard.tsx:224:            onClick={() => setSelectedProvider(
+src//ui/heartFailure/components/service-line/ProviderScorecard.tsx:290:                onClick={(e) => {
+src//ui/heartFailure/components/service-line/ProviderScorecard.tsx:416:                  onClick={closeProviderPanel}
+src//ui/heartFailure/components/service-line/ProviderScorecard.tsx:557:                  onClick={() => {
+src//ui/heartFailure/components/service-line/ProviderScorecard.tsx:567:                  onClick={() => {
+src//ui/heartFailure/components/ROIWaterfall.tsx:60:                  onClick={() => onCategoryClick && onCategoryClick(cat.label)}
+src//ui/heartFailure/components/BenchmarksPanel.tsx:100:              onClick={() => onBenchmarkClick && onBenchmarkClick(benchmark.metric)}
+src//ui/heartFailure/components/care-team/RealTimeHospitalAlerts.tsx:392:            onClick={() => setFilter('all')}
+src//ui/heartFailure/components/care-team/RealTimeHospitalAlerts.tsx:402:            onClick={() => setFilter('critical')}
+src//ui/heartFailure/components/care-team/RealTimeHospitalAlerts.tsx:412:            onClick={() => setFilter('ED')}
+src//ui/heartFailure/components/care-team/RealTimeHospitalAlerts.tsx:432:            onClick={() => setSelectedAlert(alert)}
+src//ui/heartFailure/components/care-team/RealTimeHospitalAlerts.tsx:565:                  onClick={(e) => {
+src//ui/heartFailure/components/care-team/RealTimeHospitalAlerts.tsx:575:                  onClick={(e) => {
+src//ui/heartFailure/components/care-team/RealTimeHospitalAlerts.tsx:613:                  onClick={() => {
+src//ui/heartFailure/components/care-team/RealTimeHospitalAlerts.tsx:808:                  onClick={() => {
+src//ui/heartFailure/components/care-team/RealTimeHospitalAlerts.tsx:818:                  onClick={() => {
+src//ui/heartFailure/components/care-team/TeamCollaborationPanel.tsx:606:              onClick={() => setActiveTab(tab.id as 'messages' | 'team' | 'alerts')}
+src//ui/heartFailure/components/care-team/TeamCollaborationPanel.tsx:644:                  onClick={() => setMessageFilter(filter as 'all' | 'urgent' | 'unread')}
+src//ui/heartFailure/components/care-team/TeamCollaborationPanel.tsx:670:                onClick={() => setSelectedMessage(selectedMessage?.id === message.id ? null : message)}
+src//ui/heartFailure/components/care-team/TeamCollaborationPanel.tsx:700:                    onClick={(e) => {
+src//ui/heartFailure/components/care-team/TeamCollaborationPanel.tsx:826:                      onClick={(e) => {
+src//ui/heartFailure/components/care-team/TeamCollaborationPanel.tsx:886:                  onClick={() => {
+src//ui/heartFailure/components/care-team/TeamCollaborationPanel.tsx:1109:                  onClick={() => {
+src//ui/heartFailure/components/care-team/PatientWorklistEnhanced.tsx:640:            onClick={() => setSelectedPatient(patient)}
+src//ui/heartFailure/components/care-team/PatientWorklistEnhanced.tsx:717:                    onClick={(e) => {
+src//ui/heartFailure/components/care-team/PatientWorklistEnhanced.tsx:912:                  onClick={(e) => {
+src//ui/heartFailure/components/care-team/ReferralTracker.tsx:127:              onClick={() => setFilterStatus(key)}
+src//ui/heartFailure/components/care-team/care-team/ReferralTracker.tsx:127:              onClick={() => setFilterStatus(key)}
+src//ui/heartFailure/components/care-team/care-team/PatientDetailPanel.tsx:72:        onClick={onClose}
+src//ui/heartFailure/components/care-team/care-team/PatientDetailPanel.tsx:90:              onClick={onClose}
+src//ui/heartFailure/components/care-team/care-team/PatientDetailPanel.tsx:123:                  onClick={() => setActiveTab(tab.id as TabType)}
+src//ui/heartFailure/components/care-team/PatientDetailPanel.tsx:327:              onClick={onClose}
+src//ui/heartFailure/components/care-team/PatientDetailPanel.tsx:746:              onClick={() => {
+src//ui/heartFailure/components/care-team/PatientDetailPanel.tsx:757:              onClick={onClose}
+src//ui/heartFailure/components/care-team/PatientWorklist.tsx:227:                  onClick={() => setSelectedPatient(patient)}
+src//ui/heartFailure/components/care-team/CareGapAnalyzer.tsx:681:            onClick={() => setViewMode('grid')}
+src//ui/heartFailure/components/care-team/CareGapAnalyzer.tsx:689:            onClick={() => setViewMode('priority')}
+src//ui/heartFailure/components/care-team/CareGapAnalyzer.tsx:705:            onClick={() => setSelectedGap(selectedGap?.id === gap.id ? null : gap)}
+src//ui/heartFailure/components/care-team/CareGapAnalyzer.tsx:731:                    onClick={(e) => {
+src//ui/heartFailure/components/care-team/CareGapAnalyzer.tsx:853:                onClick={closePatientsForGap}
+src//ui/heartFailure/components/care-team/CareGapAnalyzer.tsx:868:                          onClick={() => {
+src//ui/heartFailure/components/care-team/CareGapAnalyzer.tsx:925:                onClick={closePatientChart}
+src//ui/heartFailure/components/care-team/CareGapAnalyzer.tsx:1136:                onClick={() => {
+src//ui/heartFailure/components/care-team/CareGapAnalyzer.tsx:1146:                onClick={() => {
+src//ui/heartFailure/components/care-team/CareGapAnalyzer.tsx:1156:                onClick={() => {
+src//ui/heartFailure/components/care-team/ReferralTrackerEnhanced.tsx:532:            onClick={() => setFilterStatus(key)}
+src//ui/heartFailure/components/care-team/ReferralTrackerEnhanced.tsx:583:            onClick={() => setSelectedReferral(selectedReferral?.id === referral.id ? null : referral)}
+src//ui/heartFailure/components/care-team/ReferralTrackerEnhanced.tsx:596:                        onClick={(e) => {
+src//ui/heartFailure/components/care-team/ReferralTrackerEnhanced.tsx:607:                        onClick={(e) => {
+src//ui/heartFailure/components/care-team/ReferralTrackerEnhanced.tsx:799:                  onClick={() => {
+src//ui/heartFailure/components/care-team/ReferralTrackerEnhanced.tsx:982:                  onClick={() => {
+src//ui/heartFailure/components/clinical/SpecialtyPhenotypesDashboard.tsx:368:                onClick={() => {
+src//ui/heartFailure/components/clinical/SpecialtyPhenotypesDashboard.tsx:378:                onClick={() => {
+src//ui/heartFailure/components/clinical/SpecialtyPhenotypesDashboard.tsx:397:            onClick={() => {
+src//ui/heartFailure/components/clinical/SpecialtyPhenotypesDashboard.tsx:409:            onClick={() => {
+src//ui/heartFailure/components/clinical/SpecialtyPhenotypesDashboard.tsx:421:            onClick={() => {
+src//ui/heartFailure/components/clinical/SpecialtyPhenotypesDashboard.tsx:433:            onClick={() => {
+src//ui/heartFailure/components/clinical/AdvancedDeviceTracker.tsx:386:                onClick={() => {
+src//ui/heartFailure/components/clinical/AdvancedDeviceTracker.tsx:396:                onClick={() => {
+src//ui/heartFailure/components/OpportunityHeatmap.tsx:41:              onClick={() => onFacilityClick && onFacilityClick(site.site_id)}
+src//ui/heartFailure/components/executive/GeographicHeatMap.tsx:85:            onClick={() => setSelectedZip(selectedZip === data.zip ? null : data.zip)}
+src//ui/heartFailure/components/executive/FinancialROIWaterfall.tsx:113:              onClick={() => setSelectedCategory(
+src//ui/heartFailure/views/ServiceLineView.tsx:94:                  onClick={() => setActiveTab(tab.id as TabId)}
+src//ui/heartFailure/views/ExecutiveView.tsx:539:            onClick={() => setShowOpportunityModal(true)}
+src//ui/heartFailure/views/ExecutiveView.tsx:594:                  onClick={() => {
+src//ui/heartFailure/views/CareTeamView.tsx:232:                  onClick={() => setActiveTab(tab.id as TabId)}
+src//ui/coronaryIntervention/config/careTeamConfig.tsx:445:                onClick={() => {
+src//ui/coronaryIntervention/config/careTeamConfig.tsx:474:                onClick={() => {
+src//ui/coronaryIntervention/config/careTeamConfig.tsx:661:                onClick={() => {
+src//ui/coronaryIntervention/config/careTeamConfig.tsx:695:                onClick={() => {
+src//ui/coronaryIntervention/components/care-team/ProtectedPCIChecklist.tsx:345:              onClick={() => toggleChecklistItem(section, item.id)}
+src//ui/coronaryIntervention/components/care-team/ProtectedPCIChecklist.tsx:397:              onClick={exportChecklist}
+src//ui/coronaryIntervention/components/care-team/ProtectedPCIChecklist.tsx:409:              onClick={startProcedure}
+src//ui/coronaryIntervention/components/care-team/ProtectedPCIChecklist.tsx:420:                onClick={pauseProcedure}
+src//ui/coronaryIntervention/components/care-team/ProtectedPCIChecklist.tsx:427:                onClick={completeProcedure}
+src//ui/coronaryIntervention/components/care-team/ProtectedPCIChecklist.tsx:438:              onClick={resumeProcedure}
+src//ui/coronaryIntervention/components/care-team/ProtectedPCIChecklist.tsx:528:                      onClick={() => togglePhaseItem(phase.id, item.id)}
+src//ui/coronaryIntervention/components/care-team/CoronaryWorklist.tsx:472:                onClick={() => setActiveTab(tab.id as WorklistTab)}
+src//ui/coronaryIntervention/components/care-team/CoronaryWorklist.tsx:523:            onClick={exportToCSV}
+src//ui/coronaryIntervention/components/care-team/CoronaryWorklist.tsx:538:              onClick={bulkScheduleCathLab}
+src//ui/coronaryIntervention/components/care-team/CoronaryWorklist.tsx:544:              onClick={bulkOrderCardiacRehab}
+src//ui/coronaryIntervention/components/care-team/CoronaryWorklist.tsx:569:                  onClick={() => handleSort('name')}
+src//ui/coronaryIntervention/components/care-team/CoronaryWorklist.tsx:575:                  onClick={() => handleSort('lesionComplexity')}
+src//ui/coronaryIntervention/components/care-team/CoronaryWorklist.tsx:581:                  onClick={() => handleSort('procedureType')}
+src//ui/coronaryIntervention/components/care-team/CoronaryWorklist.tsx:587:                  onClick={() => handleSort('scheduledDate')}
+src//ui/coronaryIntervention/components/care-team/CoronaryWorklist.tsx:594:                  onClick={() => handleSort('priority')}
+src//ui/coronaryIntervention/components/care-team/CoronaryWorklist.tsx:652:                          onClick={() => setExpandedPatient(expandedPatient === patient.id ? null : patient.id)}
+src//ui/coronaryIntervention/components/care-team/CasePlanningTool.tsx:548:            onClick={() => setShowCasePlan(true)}
+src//ui/coronaryIntervention/components/care-team/CasePlanningTool.tsx:554:            onClick={generateCasePlan}
+src//ui/coronaryIntervention/components/care-team/CasePlanningTool.tsx:568:                onClick={() => setShowCasePlan(false)}
+src//ui/coronaryIntervention/components/PCINetworkVisualization.tsx:489:            onClick={exportNetworkData}
+src//ui/coronaryIntervention/components/PCINetworkVisualization.tsx:624:                    onClick={() => handleNodeClick(node)}
+src//ui/coronaryIntervention/components/PCINetworkVisualization.tsx:802:                onClick={() => {
+src//ui/coronaryIntervention/views/CoronaryCareTeamView.tsx:177:                  onClick={() => setActiveTab(tab.id as CoronaryCareTeamTab)}
+src//ui/coronaryIntervention/views/CoronaryServiceLineView.tsx:301:                  onClick={() => setActiveTab(tab.id as TabId)}
+src//ui/valvularDisease/config/careTeamConfig.tsx:572:                onClick={async () => {
+src//ui/valvularDisease/components/ValvePatientHeatmap.tsx:264:            onClick={exportHeatmapData}
+src//ui/valvularDisease/components/ValvularSurgicalNetworkVisualization.tsx:781:            onClick={exportNetworkData}
+src//ui/valvularDisease/components/ValvularSurgicalNetworkVisualization.tsx:916:                    onClick={() => handleNodeClick(node)}
+src//ui/valvularDisease/components/ValvularSurgicalNetworkVisualization.tsx:1119:                onClick={() => {
+src//ui/valvularDisease/views/ValvularCareTeamView.tsx:233:                  onClick={() => setActiveTab(tab.id as TabId)}
+src//ui/valvularDisease/views/ValvularServiceLineView.tsx:337:                  onClick={() => setActiveTab(tab.id as TabId)}
+src//ui/structuralHeart/config/careTeamConfig.tsx:619:                onClick={async () => {
+src//ui/structuralHeart/components/StructuralReferralNetworkVisualization.tsx:653:            onClick={exportNetworkData}
+src//ui/structuralHeart/components/StructuralReferralNetworkVisualization.tsx:788:                    onClick={() => handleNodeClick(node)}
+src//ui/structuralHeart/components/StructuralReferralNetworkVisualization.tsx:972:                onClick={() => {
+src//ui/structuralHeart/components/TAVRAnalyticsDashboard.tsx:304:              onClick={() => setIsLiveMode(!isLiveMode)}
+src//ui/structuralHeart/components/TAVRAnalyticsDashboard.tsx:313:              onClick={exportClinicalReport}
+src//ui/structuralHeart/components/TAVRAnalyticsDashboard.tsx:328:            onClick={() => setActiveView('real-time')}
+src//ui/structuralHeart/components/TAVRAnalyticsDashboard.tsx:337:            onClick={() => setActiveView('risk-analysis')}
+src//ui/structuralHeart/components/TAVRAnalyticsDashboard.tsx:346:            onClick={() => setActiveView('outcomes')}
+src//ui/structuralHeart/components/TAVRAnalyticsDashboard.tsx:355:            onClick={() => setActiveView('geography')}
+src//ui/structuralHeart/views/StructuralServiceLineView.tsx:220:                  onClick={() => setActiveTab(tab.id as TabId)}
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:471:            onClick={() => setShowOpportunityModal(true)}
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:525:                  onClick={() => {
+src//ui/structuralHeart/views/StructuralCareTeamView.tsx:347:                  onClick={() => setActiveTab(tab.id as TabId)}
+src//ui/electrophysiology/config/careTeamConfig.tsx:82:            onClick={() => {
+src//ui/electrophysiology/config/careTeamConfig.tsx:350:                onClick={async () => {
+src//ui/electrophysiology/config/careTeamConfig.tsx:385:                onClick={async () => {
+src//ui/electrophysiology/config/careTeamConfig.tsx:421:                onClick={async () => {
+src//ui/electrophysiology/config/careTeamConfig.tsx:472:                onClick={async () => {
+src//ui/electrophysiology/config/careTeamConfig.tsx:635:                  onClick={async () => {
+src//ui/electrophysiology/config/careTeamConfig.tsx:732:                onClick={() => {
+src//ui/electrophysiology/config/careTeamConfig.tsx:743:                onClick={() => {
+src//ui/electrophysiology/config/careTeamConfig.tsx:754:                onClick={() => {
+src//ui/electrophysiology/config/careTeamConfig.tsx:765:                onClick={() => {
+src//ui/electrophysiology/components/EPROICalculator.tsx:409:              onClick={runEPScenarioAnalysis}
+src//ui/electrophysiology/components/EPROICalculator.tsx:422:              onClick={exportEPROIReport}
+src//ui/electrophysiology/components/BenchmarksPanel.tsx:110:              onClick={() => {
+src//ui/electrophysiology/components/EPDeviceNetworkVisualization.tsx:722:            onClick={exportNetworkData}
+src//ui/electrophysiology/components/EPDeviceNetworkVisualization.tsx:858:                    onClick={() => handleNodeClick(node)}
+src//ui/electrophysiology/components/EPDeviceNetworkVisualization.tsx:1073:                onClick={() => {
+src//ui/electrophysiology/components/care-team/AblationPlanningChecklist.tsx:321:              onClick={exportAblationPlan}
+src//ui/electrophysiology/components/care-team/AblationPlanningChecklist.tsx:415:                onClick={() => updateAblationType(type.type)}
+src//ui/electrophysiology/components/care-team/AblationPlanningChecklist.tsx:465:                    onClick={() => updateAssessmentStatus(assessment.id, 'complete')}
+src//ui/electrophysiology/components/care-team/AblationPlanningChecklist.tsx:475:                    onClick={() => updateAssessmentStatus(assessment.id, 'pending')}
+src//ui/electrophysiology/components/care-team/AblationPlanningChecklist.tsx:485:                    onClick={() => updateAssessmentStatus(assessment.id, 'missing')}
+src//ui/electrophysiology/components/care-team/AblationPlanningChecklist.tsx:509:            onClick={() => setShowAntiarrhythmicForm(true)}
+src//ui/electrophysiology/components/care-team/AblationPlanningChecklist.tsx:597:                onClick={addAntiarrhythmic}
+src//ui/electrophysiology/components/care-team/AblationPlanningChecklist.tsx:603:                onClick={() => {
+src//ui/electrophysiology/components/care-team/AblationPlanningChecklist.tsx:631:              onClick={scheduleAblation}
+src//ui/electrophysiology/components/care-team/DeviceImplantChecklist.tsx:293:            onClick={generateImplantPlan}
+src//ui/electrophysiology/components/care-team/DeviceImplantChecklist.tsx:418:              onClick={() => updateLeadStrategy(strategy)}
+src//ui/electrophysiology/components/care-team/DeviceImplantChecklist.tsx:621:              onClick={() => setImplantPlan(prev => ({ ...prev, status: 'approved' }))}
+src//ui/electrophysiology/components/care-team/DeviceImplantChecklist.tsx:627:              onClick={() => setImplantPlan(prev => ({ ...prev, status: 'scheduled' }))}
+src//ui/electrophysiology/components/care-team/OACManagementPanel.tsx:315:          onClick={() => generateBridgingPlan(patient)}
+src//ui/electrophysiology/components/care-team/OACManagementPanel.tsx:349:              onClick={() => setShowBridgingGuide(!showBridgingGuide)}
+src//ui/electrophysiology/components/care-team/OACManagementPanel.tsx:364:              onClick={() => setShowBridgingGuide(false)}
+src//ui/electrophysiology/components/care-team/OACManagementPanel.tsx:519:                onClick={() => updateOACPlan(patient.id)}
+src//ui/electrophysiology/components/care-team/OACManagementPanel.tsx:525:                onClick={() => setSelectedPatient(selectedPatient === patient.id ? null : patient.id)}
+src//ui/electrophysiology/components/care-team/EPWorklist.tsx:594:                onClick={() => setActiveTab(tab.id as WorklistTab)}
+src//ui/electrophysiology/components/care-team/EPWorklist.tsx:647:            onClick={exportToCSV}
+src//ui/electrophysiology/components/care-team/EPWorklist.tsx:662:              onClick={bulkScheduleRemoteMonitoring}
+src//ui/electrophysiology/components/care-team/EPWorklist.tsx:668:              onClick={bulkOrderEcho}
+src//ui/electrophysiology/components/care-team/EPWorklist.tsx:693:                  onClick={() => handleSort('name')}
+src//ui/electrophysiology/components/care-team/EPWorklist.tsx:699:                  onClick={() => handleSort('currentRhythm')}
+src//ui/electrophysiology/components/care-team/EPWorklist.tsx:705:                  onClick={() => handleSort('procedureType')}
+src//ui/electrophysiology/components/care-team/EPWorklist.tsx:711:                  onClick={() => handleSort('scheduledDate')}
+src//ui/electrophysiology/components/care-team/EPWorklist.tsx:718:                  onClick={() => handleSort('priority')}
+src//ui/electrophysiology/components/care-team/EPWorklist.tsx:772:                          onClick={() => setExpandedPatient(expandedPatient === patient.id ? null : patient.id)}
+src//ui/electrophysiology/components/PatientDetailPanel.tsx:207:              onClick={onClose}
+src//ui/electrophysiology/components/PatientDetailPanel.tsx:742:              onClick={() => {
+src//ui/electrophysiology/components/PatientDetailPanel.tsx:754:                onClick={() => {
+src//ui/electrophysiology/components/PatientDetailPanel.tsx:767:                onClick={() => {
+src//ui/electrophysiology/components/PatientDetailPanel.tsx:779:              onClick={onClose}
+src//ui/electrophysiology/components/EPAutomatedClinicalSupport.tsx:407:                onClick={() => setActiveTab(tab.id as any)}
+src//ui/electrophysiology/components/EPAutomatedClinicalSupport.tsx:547:                    onClick={() => setFilterEligibility(filter.id as any)}
+src//ui/electrophysiology/components/EPAutomatedClinicalSupport.tsx:574:                onClick={() => setSelectedAssessment(selectedAssessment === assessment.id ? null : assessment.id)}
+src//ui/electrophysiology/components/EPAutomatedClinicalSupport.tsx:581:                        onClick={(e) => {
+src//ui/electrophysiology/components/EPAutomatedClinicalSupport.tsx:759:                    onClick={() => {
+src//ui/electrophysiology/components/EPAutomatedClinicalSupport.tsx:770:                    onClick={() => {
+src//ui/electrophysiology/components/EPClinicalDecisionSupport.tsx:378:              onClick={() => setActiveTab(tab.id as any)}
+src//ui/electrophysiology/components/LAACRiskDashboard.tsx:489:                onClick={() => setExpandedPatient(expandedPatient === patient.patientId ? null : patient.patientId)}
+src//ui/electrophysiology/views/EPServiceLineView.tsx:289:                  onClick={() => setActiveTab(tab.id as EPServiceLineTab)}
+src//ui/electrophysiology/views/EPExecutiveView.tsx:562:                      onClick={() => console.log(`EP ${category.label} clicked`)}
+src//ui/electrophysiology/views/EPExecutiveView.tsx:640:                  onClick={() => setSelectedFacility(facility)}
+src//ui/electrophysiology/views/EPExecutiveView.tsx:682:            onClick={() => setSelectedRevenueOpportunity(true)}
+src//ui/electrophysiology/views/EPExecutiveView.tsx:732:                onClick={() => setShowDRGDetails(!showDRGDetails)}
+src//ui/electrophysiology/views/EPExecutiveView.tsx:791:                        onClick={() => setSelectedDRG(drg)}
+src//ui/electrophysiology/views/EPCareTeamView.tsx:187:                  onClick={() => setActiveTab(tab.id as EPCareTeamTab)}
+src//App.tsx:89:  onClick?: () => void;
+src//App.tsx:326:const KpiCard: React.FC<KpiCardProps> = ({ label, value, icon: Icon, variant = "default", trend, onClick }) => {
+src//App.tsx:340:      className={`retina-card ${getVariantColors(variant)} ${onClick ? "cursor-pointer" : ""}`}
+src//App.tsx:341:      onClick={onClick}
+src//App.tsx:367:        <button key={role.id} onClick={() => onChange(role.id)} className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${value === role.id ? `${role.color} shadow-sm transform scale-105` : "text-steel-700 hover:text-steel-900 hover:bg-steel-50"}`}>
+src//App.tsx:378:interface ModuleTileProps { module: Module; onClick: () => void; }
+src//App.tsx:380:const ModuleTile: React.FC<ModuleTileProps> = ({ module, onClick }) => {
+src//App.tsx:385:      onClick={onClick} 
+src//App.tsx:671:                onClick={async () => {
+src//App.tsx:704:                {MODULES.map((module) => (<ModuleTile key={module.id} module={module} onClick={() => openModule(module.id)} />))}
+src//App.tsx:773:                  onClick={backToMain}
+src//App.tsx:1429:                    onClick={() => openModule(module.id)}
+src//App.tsx:1543:            <button onClick={backToMain} className="btn-medical-secondary"><Icons.ArrowLeft /></button>
+src//auth/ProtectedRoute.tsx:109:                  onClick={() => window.history.back()}
+src//auth/ProtectedRoute.tsx:115:                  onClick={() => window.location.href = '/dashboard'}
+src//components/reporting/AutomatedReportingSystem.tsx:144:              onClick={() => generateInstantReport('all')}
+src//components/reporting/AutomatedReportingSystem.tsx:170:                onClick={() => setActiveTab(tab.id as any)}
+src//components/reporting/AutomatedReportingSystem.tsx:224:                    onClick={() => generateInstantReport(reportType.type)}
+src//components/reporting/AutomatedReportingSystem.tsx:273:                onClick={() => {
+src//components/reporting/AutomatedReportingSystem.tsx:302:                        onClick={() => sendTestReport(schedule)}
+src//components/reporting/AutomatedReportingSystem.tsx:308:                        onClick={() => toggleScheduleStatus(schedule.id)}
+src//components/reporting/AutomatedReportingSystem.tsx:319:                        onClick={() => {
+src//components/reporting/AutomatedReportingSystem.tsx:366:                onClick={() => {
+src//components/reporting/AutomatedReportingSystem.tsx:402:                  onClick={() => {
+src//components/Login.tsx:78:                      onClick={() => handleDemoLogin('executive@hospital.com')}
+src//components/Login.tsx:84:                      onClick={() => handleDemoLogin('serviceline@hospital.com')}
+src//components/Login.tsx:90:                      onClick={() => handleDemoLogin('careteam@hospital.com')}
+src//components/Login.tsx:100:                onClick={() => setShowDemoCredentials(false)}
+src//components/Login.tsx:144:                onClick={() => setShowPassword(!showPassword)}
+src//components/financial/ROICalculationEngine.tsx:258:              onClick={runScenarioAnalysis}
+src//components/financial/ROICalculationEngine.tsx:271:              onClick={exportROIReport}
+src//components/UserMenu.tsx:97:        onClick={() => setIsOpen(!isOpen)}
+src//components/UserMenu.tsx:159:                        onClick={() => {
+src//components/UserMenu.tsx:187:              onClick={async () => {
+src//components/shared/CDIDocumentationPrompt.tsx:160:                        onClick={() => {
+src//components/shared/CDIDocumentationPrompt.tsx:170:                        onClick={() => {
+src//components/shared/FinancialSummary.tsx:77:            onClick={() => setShowAssumptions(!showAssumptions)}
+src//components/shared/FinancialSummary.tsx:178:            onClick={() => setShowDRGDetails(!showDRGDetails)}
+src//components/shared/ModuleLayout.tsx:97:                onClick={handleBackToDashboard}
+src//components/shared/ModuleLayout.tsx:130:                onClick={() => handleViewChange(view.id)}
+src//components/shared/ExportButton.tsx:90:        onClick={() => handleExport(defaultFormat)}
+src//components/shared/ExportButton.tsx:119:        onClick={() => setIsOpen(!isOpen)}
+src//components/shared/ExportButton.tsx:153:            onClick={() => setIsOpen(false)}
+src//components/shared/ExportButton.tsx:163:                onClick={() => handleExport('excel')}
+src//components/shared/ExportButton.tsx:173:                onClick={() => handleExport('csv')}
+src//components/shared/ExportButton.tsx:182:                onClick={() => handleExport('pdf')}
+src//components/shared/ErrorFallback.tsx:182:                  onClick={this.handleRetry}
+src//components/shared/ErrorFallback.tsx:190:                  onClick={this.handleReload}
+src//components/shared/ErrorFallback.tsx:198:                  onClick={this.handleGoHome}
+src//components/shared/ErrorFallback.tsx:206:                  onClick={this.handleReportBug}
+src//components/shared/DRGOptimizationAlert.tsx:78:            onClick={() => onOpportunityClick && onOpportunityClick(opportunity)}
+src//components/shared/BaseCareTeamView.tsx:130:                  onClick={() => setActiveTab(tab.id)}
+src//components/shared/Toast.tsx:12:    onClick: () => void;
+src//components/shared/Toast.tsx:139:                    onClick={action.onClick}
+src//components/shared/Toast.tsx:155:              onClick={handleDismiss}
+src//components/shared/Toast.tsx:213:          onClick: () => {
+src//components/shared/ErrorBoundary.tsx:96:                onClick={this.handleRetry}
+src//components/shared/ErrorBoundary.tsx:104:                onClick={this.handleGoHome}
+src//components/shared/BaseServiceLineView.tsx:128:                onClick={() => setActiveTab(tab.id)}
+src//components/visualizations/BaseTable.tsx:23:  onRowClick?: (row: any) => void;
+src//components/visualizations/BaseTable.tsx:42:  onRowClick,
+src//components/visualizations/BaseTable.tsx:157:                  onClick={() => setFilterOpen(!filterOpen)}
+src//components/visualizations/BaseTable.tsx:167:                  onClick={() => {
+src//components/visualizations/BaseTable.tsx:193:                  onClick={() => handleSort(column.key)}
+src//components/visualizations/BaseTable.tsx:215:                    onRowClick ? 'cursor-pointer' : ''
+src//components/visualizations/BaseTable.tsx:217:                  onClick={() => onRowClick?.(row)}
+src//components/visualizations/BaseTable.tsx:245:              onClick={() => pagination.onPageChange(pagination.currentPage - 1)}
+src//components/visualizations/BaseTable.tsx:255:              onClick={() => pagination.onPageChange(pagination.currentPage + 1)}
+src//components/visualizations/PatientRiskHeatmap.tsx:205:            onClick={exportHeatmapData}
+src//components/visualizations/PatientRiskHeatmap.tsx:318:              onClick={() => handlePatientClick(patient)}
+src//components/visualizations/PatientRiskHeatmap.tsx:379:                  onClick={closePatientPanel}
+src//components/visualizations/BaseChart.tsx:301:                  onClick={() => {
+src//components/visualizations/CareTeamNetworkGraph.tsx:151:            onClick={exportNetworkData}
+src//components/visualizations/CareTeamNetworkGraph.tsx:208:                    onClick={() => handleNodeClick(node)}
+src//components/visualizations/CareTeamNetworkGraph.tsx:304:                onClick={() => {
+src//components/heartFailure/HFRevenueWaterfallModal.tsx:136:            onClick={onClose}
+src//components/heartFailure/HFRevenueWaterfallModal.tsx:228:              onClick={onClose}
+src//components/heartFailure/HFGeographicHeatMapSimple.tsx:176:                  onClick={() => setSelectedZIP(zip)}
+src//components/heartFailure/HFGeographicHeatMapSimple.tsx:295:                onClick={() => setSelectedZIP(null)}
+src//components/heartFailure/HFExecutiveSummary.tsx:153:                onClick={() => setSelectedKPI(kpi)}
+src//components/heartFailure/HFExecutiveSummary.tsx:184:                onClick={() => setSelectedKPI(null)}
+src//components/heartFailure/HFRiskAlerts.tsx:78:            onClick={() => setSelectedAlert(alert)}
+src//components/heartFailure/HFRiskAlerts.tsx:104:                onClick={() => setSelectedAlert(null)}
+src//components/heartFailure/HFDRGDetailModal.tsx:150:            onClick={onClose}
+src//components/heartFailure/HFDRGDetailModal.tsx:337:                      onClick={() => handleSort('caseId')}
+src//components/heartFailure/HFDRGDetailModal.tsx:346:                      onClick={() => handleSort('ageRange')}
+src//components/heartFailure/HFDRGDetailModal.tsx:355:                      onClick={() => handleSort('los')}
+src//components/heartFailure/HFDRGDetailModal.tsx:364:                      onClick={() => handleSort('cost')}
+src//components/heartFailure/HFDRGDetailModal.tsx:373:                      onClick={() => handleSort('revenue')}
+src//components/heartFailure/HFDRGDetailModal.tsx:382:                      onClick={() => handleSort('margin')}
+src//components/heartFailure/HFDRGDetailModal.tsx:391:                      onClick={() => handleSort('marginPercent')}
+src//components/heartFailure/HFDRGDetailModal.tsx:426:              onClick={onClose}
+src//components/heartFailure/HFGeographicHeatMap.tsx:198:                    onClick={() => setSelectedZIP(zip)}
+src//components/heartFailure/HFGeographicHeatMap.tsx:311:                onClick={() => setSelectedZIP(null)}
+src//components/heartFailure/HFBenchmarkDetailModal.tsx:110:            onClick={onClose}
+src//components/heartFailure/HFBenchmarkDetailModal.tsx:261:              onClick={onClose}
+src//components/heartFailure/HFMonthDetailModal.tsx:84:            onClick={onClose}
+src//components/heartFailure/HFMonthDetailModal.tsx:168:              onClick={onClose}
+src//components/heartFailure/HFRevenueOpportunityModal.tsx:154:            onClick={onClose}
+src//components/heartFailure/HFRevenueOpportunityModal.tsx:338:              onClick={onClose}
+src//components/heartFailure/HFRevenueOpportunityModal.tsx:345:                onClick={onViewDetails}
+src//components/heartFailure/HFFacilityDetailModal.tsx:95:            onClick={onClose}
+src//components/heartFailure/HFFacilityDetailModal.tsx:279:              onClick={onClose}
+src//components/riskCalculators/CHA2DS2VAScCalculator.tsx:110:                onClick={() => setSex('male')}
+src//components/riskCalculators/CHA2DS2VAScCalculator.tsx:120:                onClick={() => setSex('female')}
+src//components/electrophysiology/EPBenchmarkDetailModal.tsx:57:            onClick={onClose}
+src//components/electrophysiology/EPBenchmarkDetailModal.tsx:139:                onClick={onClose}
+src//components/electrophysiology/EPExecutiveSummary.tsx:124:                  onClick={() => setSelectedKPI(kpi)}
+src//components/electrophysiology/EPExecutiveSummary.tsx:170:                onClick={() => setSelectedKPI(null)}
+
+=== MODALS/DRAWERS ===
+src//ui/admin/GodView/GlobalSearch.tsx:188:      {/* Search Modal */}
+src//ui/heartFailure/components/care-team/CareGapAnalyzer.tsx:844:      {/* Patient List Modal */}
+src//ui/heartFailure/components/care-team/CareGapAnalyzer.tsx:915:      {/* Patient Chart Modal */}
+src//ui/heartFailure/views/ExecutiveView.tsx:15:import { HFRevenueWaterfallModal } from '../../../components/heartFailure/HFRevenueWaterfallModal';
+src//ui/heartFailure/views/ExecutiveView.tsx:16:import HFMonthDetailModal from '../../../components/heartFailure/HFMonthDetailModal';
+src//ui/heartFailure/views/ExecutiveView.tsx:17:import HFBenchmarkDetailModal from '../../../components/heartFailure/HFBenchmarkDetailModal';
+src//ui/heartFailure/views/ExecutiveView.tsx:18:import HFFacilityDetailModal from '../../../components/heartFailure/HFFacilityDetailModal';
+src//ui/heartFailure/views/ExecutiveView.tsx:19:import HFRevenueOpportunityModal from '../../../components/heartFailure/HFRevenueOpportunityModal';
+src//ui/heartFailure/views/ExecutiveView.tsx:20:import HFDRGDetailModal from '../../../components/heartFailure/HFDRGDetailModal';
+src//ui/heartFailure/views/ExecutiveView.tsx:27:  const [showOpportunityModal, setShowOpportunityModal] = useState(false);
+src//ui/heartFailure/views/ExecutiveView.tsx:300:    setShowOpportunityModal(true);
+src//ui/heartFailure/views/ExecutiveView.tsx:539:            onClick={() => setShowOpportunityModal(true)}
+src//ui/heartFailure/views/ExecutiveView.tsx:650:      {/* Revenue Waterfall Modal */}
+src//ui/heartFailure/views/ExecutiveView.tsx:652:        <HFRevenueWaterfallModal
+src//ui/heartFailure/views/ExecutiveView.tsx:660:      {/* Month Detail Modal */}
+src//ui/heartFailure/views/ExecutiveView.tsx:662:        <HFMonthDetailModal
+src//ui/heartFailure/views/ExecutiveView.tsx:671:      {/* Benchmark Detail Modal */}
+src//ui/heartFailure/views/ExecutiveView.tsx:673:        <HFBenchmarkDetailModal
+src//ui/heartFailure/views/ExecutiveView.tsx:679:      {/* Facility Detail Modal */}
+src//ui/heartFailure/views/ExecutiveView.tsx:681:        <HFFacilityDetailModal
+src//ui/heartFailure/views/ExecutiveView.tsx:687:      {/* Revenue Opportunity Modal */}
+src//ui/heartFailure/views/ExecutiveView.tsx:688:      {showOpportunityModal && (
+src//ui/heartFailure/views/ExecutiveView.tsx:689:        <HFRevenueOpportunityModal
+src//ui/heartFailure/views/ExecutiveView.tsx:715:          onClose={() => setShowOpportunityModal(false)}
+src//ui/heartFailure/views/ExecutiveView.tsx:718:            setShowOpportunityModal(false);
+src//ui/heartFailure/views/ExecutiveView.tsx:723:      {/* DRG Detail Modal */}
+src//ui/heartFailure/views/ExecutiveView.tsx:725:        <HFDRGDetailModal
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:12:import { HFRevenueWaterfallModal } from '../../../components/heartFailure/HFRevenueWaterfallModal';
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:13:import HFMonthDetailModal from '../../../components/heartFailure/HFMonthDetailModal';
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:14:import HFBenchmarkDetailModal from '../../../components/heartFailure/HFBenchmarkDetailModal';
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:15:import HFFacilityDetailModal from '../../../components/heartFailure/HFFacilityDetailModal';
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:16:import HFRevenueOpportunityModal from '../../../components/heartFailure/HFRevenueOpportunityModal';
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:17:import HFDRGDetailModal from '../../../components/heartFailure/HFDRGDetailModal';
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:28:  const [showOpportunityModal, setShowOpportunityModal] = useState(false);
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:320:    setShowOpportunityModal(true);
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:471:            onClick={() => setShowOpportunityModal(true)}
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:580:      {/* Revenue Waterfall Modal */}
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:582:        <HFRevenueWaterfallModal
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:590:      {/* Month Detail Modal */}
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:592:        <HFMonthDetailModal
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:601:      {/* Benchmark Detail Modal */}
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:603:        <HFBenchmarkDetailModal
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:609:      {/* Facility Detail Modal */}
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:611:        <HFFacilityDetailModal
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:617:      {/* Revenue Opportunity Modal */}
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:618:      {showOpportunityModal && (
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:619:        <HFRevenueOpportunityModal
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:645:          onClose={() => setShowOpportunityModal(false)}
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:648:            setShowOpportunityModal(false);
+src//ui/structuralHeart/views/StructuralExecutiveView.tsx:653:      {/* DRG Detail Modal */}
+
+=== GEOGRAPHIC MAPS ===
+src//components/shared/ZipHeatMap.tsx:2:import { MapContainer, TileLayer, GeoJSON, Tooltip } from 'react-leaflet';
+src//components/shared/ZipHeatMap.tsx:30:// Sample NYC ZIP code boundaries (simplified GeoJSON)
+src//components/shared/ZipHeatMap.tsx:31:const nycZipGeoJSON = {
+src//components/shared/ZipHeatMap.tsx:397:            <GeoJSON
+src//components/shared/ZipHeatMap.tsx:398:              data={nycZipGeoJSON}
+
+=== GDMT COMPONENTS ===
+src//ui/peripheralVascular/config/executiveConfig.tsx:13:    gdmtOptimization: '62%',
+src//ui/peripheralVascular/config/executiveConfig.tsx:14:    gdmtOptimizationSub: 'Patients on optimal PAD therapy',
+src//ui/peripheralVascular/config/executiveConfig.ts:68:    gdmtOptimization: '62%',
+src//ui/peripheralVascular/config/executiveConfig.ts:69:    gdmtOptimizationSub: 'Optimal therapy rate',
+src//ui/peripheralVascular/views/PeripheralExecutiveView.tsx:47:        ['Optimal Therapy Rate', peripheralVascularConfig.kpiData.gdmtOptimization, '75%', '-13%'],
+src//ui/revenueCycle/views/RCExecutiveView.tsx:14:    gdmtOptimization: '84%',
+src//ui/revenueCycle/views/RCExecutiveView.tsx:15:    gdmtOptimizationSub: 'Claims accuracy rate',
+src//ui/revenueCycle/views/RCExecutiveView.tsx:118:            value={kpiData.gdmtOptimization}
+src//ui/revenueCycle/views/RCExecutiveView.tsx:119:            subvalue={kpiData.gdmtOptimizationSub}
+src//ui/admin/SuperAdminDashboard.tsx:219:            <p className="text-sm text-steel-600">Access GDMT analytics and care team dashboards</p>
