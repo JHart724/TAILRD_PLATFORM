@@ -55,16 +55,16 @@ interface DRGDetail {
 
 const DRG_DETAILS: Record<string, DRGDetail> = {
   'DRG 291': {
-    context: 'Heart Failure with Major Complication/Comorbidity (MCC) is the highest-weighted HF DRG — proper documentation of MCCs directly impacts reimbursement.',
-    reimbursementRange: '$8,200 – $14,500 per case (CMS 2024 IPPS national average)',
+    context: 'Heart Failure with Major Complication/Comorbidity (MCC) is the highest-weighted HF DRG. Proper documentation of MCCs directly impacts reimbursement.',
+    reimbursementRange: '$8,200 - $14,500 per case (CMS 2024 IPPS national average)',
   },
   'DRG 292': {
-    context: 'Heart Failure with Complication/Comorbidity (CC) — secondary diagnoses like AKI or hyponatremia can elevate cases from DRG 293 to this higher-weighted tier.',
-    reimbursementRange: '$5,800 – $9,200 per case (CMS 2024 IPPS national average)',
+    context: 'Heart Failure with Complication/Comorbidity (CC). Secondary diagnoses like AKI or hyponatremia can elevate cases from DRG 293 to this higher-weighted tier.',
+    reimbursementRange: '$5,800 - $9,200 per case (CMS 2024 IPPS national average)',
   },
   'DRG 247': {
-    context: 'Percutaneous Coronary Intervention without MCC — the most common PCI DRG, volume driven by same-day cath lab workflow efficiency.',
-    reimbursementRange: '$12,400 – $18,800 per case (CMS 2024 IPPS national average)',
+    context: 'Percutaneous Coronary Intervention without MCC. The most common PCI DRG, volume driven by same-day cath lab workflow efficiency.',
+    reimbursementRange: '$12,400 - $18,800 per case (CMS 2024 IPPS national average)',
   },
 };
 
