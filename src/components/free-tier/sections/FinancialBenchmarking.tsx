@@ -3,7 +3,7 @@ import SectionCard from '../../../design-system/SectionCard';
 import Badge from '../../../design-system/Badge';
 import { DRGRow, FinancialSummary, MarginOpportunity } from '../types';
 import { formatCurrency, formatNumber } from '../utils';
-import { TrendingUp, TrendingDown, ArrowRight, ChevronUp, ChevronDown } from 'lucide-react';
+import { TrendingUp, TrendingDown, ArrowRight, ChevronUp, ChevronDown, Lock } from 'lucide-react';
 import CountUp from 'react-countup';
 
 interface FinancialBenchmarkingProps {
@@ -145,6 +145,39 @@ const FinancialBenchmarking: React.FC<FinancialBenchmarkingProps> = ({
             </div>
           );
         })}
+      </div>
+
+      {/* Sub-section 1.5: Payer Mix */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-body font-semibold text-titanium-700">Payer Mix</h3>
+          <span className="inline-flex items-center gap-1 text-xs text-titanium-400 bg-chrome-50 border border-chrome-200 rounded-full px-2 py-0.5">
+            <Lock className="w-3 h-3" />
+            Contract performance detail requires Premium
+          </span>
+        </div>
+        <div className="bg-chrome-50 rounded-xl p-4">
+          {/* Bar chart */}
+          <div className="space-y-2.5">
+            {[
+              { label: 'Medicare', pct: 48, color: 'bg-chrome-500' },
+              { label: 'Medicaid', pct: 22, color: 'bg-amber-400' },
+              { label: 'Commercial', pct: 24, color: 'bg-emerald-500' },
+              { label: 'Self-Pay / Other', pct: 6, color: 'bg-titanium-300' },
+            ].map(({ label, pct, color }) => (
+              <div key={label} className="flex items-center gap-3">
+                <div className="w-28 text-xs text-titanium-600 font-body text-right shrink-0">{label}</div>
+                <div className="flex-1 bg-chrome-200 rounded-full h-3">
+                  <div className={`${color} h-3 rounded-full transition-all duration-700`} style={{ width: `${pct}%` }} />
+                </div>
+                <div className="w-10 text-xs font-data font-semibold text-titanium-700 text-right">{pct}%</div>
+              </div>
+            ))}
+          </div>
+          <p className="text-[10px] text-titanium-400 font-body mt-3 text-center">
+            CMS estimate · Upgrade to see underpayment analysis, contract variance, and denial rates by payer
+          </p>
+        </div>
       </div>
 
       {/* Sub-section 2: DRG Mix Table */}

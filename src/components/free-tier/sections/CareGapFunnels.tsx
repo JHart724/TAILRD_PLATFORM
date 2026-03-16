@@ -12,6 +12,7 @@ interface CareGapFunnelsProps {
 const WIDTHS = ['w-full', 'w-[85%]', 'w-[70%]', 'w-[55%]'] as const;
 const BG_COLORS = ['bg-chrome-100', 'bg-chrome-200', 'bg-chrome-300', 'bg-chrome-400'] as const;
 const TEXT_COLORS = ['text-chrome-800', 'text-chrome-800', 'text-chrome-800', 'text-white'] as const;
+const FUNNEL_VALUES = ['est. $480K quality bonus', 'est. $320K stroke prevention', 'est. $580K Star Rating uplift', 'est. $240K incentive payments'];
 
 const CareGapFunnels: React.FC<CareGapFunnelsProps> = ({
   funnels,
@@ -68,6 +69,12 @@ const CareGapFunnels: React.FC<CareGapFunnelsProps> = ({
                   {lastStage.percentage}% {lastStage.label.toLowerCase()}
                 </div>
               )}
+
+              {/* Dollar opportunity */}
+              <div className="mt-2 bg-emerald-50 border border-emerald-100 rounded-lg px-2 py-1.5 text-center">
+                <div className="text-[10px] text-emerald-600 font-body">Closing gap =</div>
+                <div className="text-xs font-data font-bold text-emerald-700">{FUNNEL_VALUES[funnelIndex]}</div>
+              </div>
             </div>
           );
         })}
