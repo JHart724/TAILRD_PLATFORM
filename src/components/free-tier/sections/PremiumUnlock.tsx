@@ -48,10 +48,13 @@ const PremiumUnlock: React.FC = () => {
               571 patients need intervention today. Connect your EHR to see exactly who, and put your care team in motion.
             </p>
           </div>
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3">
             <button className="inline-flex items-center gap-2 px-8 py-3.5 text-white font-body font-bold text-base rounded-xl transition-all duration-200 hover:-translate-y-0.5" style={{ background: 'linear-gradient(145deg, #8C1F32 0%, #9B2438 40%, #7A1A2E 100%)', boxShadow: '0 1px 4px rgba(0,0,0,0.2), 0 1px 0 rgba(255,255,255,0.14) inset', border: 'none' }}>
-              Book a 20-Minute Demo →
+              Connect EHR &amp; See Your Patients →
               <ArrowRight className="w-5 h-5" />
+            </button>
+            <button className="inline-flex items-center gap-2 px-8 py-3.5 font-body font-semibold text-base rounded-xl transition-all duration-200 hover:bg-white/10" style={{ border: '1px solid rgba(255,255,255,0.25)', color: 'rgba(220,235,250,0.85)', background: 'transparent' }}>
+              Book a 20-Minute Demo
             </button>
           </div>
         </div>

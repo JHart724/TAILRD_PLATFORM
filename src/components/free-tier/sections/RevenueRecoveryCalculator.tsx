@@ -211,9 +211,16 @@ const SliderRow: React.FC<{
   );
 };
 
+const LEVER_DEFAULTS: Record<string, number> = {
+  readmission: 13.5,
+  gdmt: 70,
+  referral: 38,
+  ablation: 22,
+};
+
 const RevenueRecoveryCalculator: React.FC = () => {
   const [values, setValues] = useState<Record<string, number>>(
-    Object.fromEntries(LEVERS.map((l) => [l.id, l.current]))
+    Object.fromEntries(LEVERS.map((l) => [l.id, LEVER_DEFAULTS[l.id] ?? l.current]))
   );
   const [expandedLever, setExpandedLever] = useState<string | null>(null);
 

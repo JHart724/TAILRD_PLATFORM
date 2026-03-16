@@ -9,6 +9,8 @@ interface InsightCard {
   title: string;
   description: string;
   impact: string;
+  buttonLabel: string;
+  overlayCount: string;
 }
 
 const INSIGHTS: InsightCard[] = [
@@ -20,6 +22,8 @@ const INSIGHTS: InsightCard[] = [
     description:
       'Eligible for medication up-titration with no provider contact in 90+ days',
     impact: '$1.2M quality opportunity',
+    buttonLabel: '287 Patients',
+    overlayCount: '287 patients',
   },
   {
     category: 'Risk',
@@ -27,8 +31,10 @@ const INSIGHTS: InsightCard[] = [
     count: '143 patients',
     title: 'Anticoagulation Gap — AF',
     description:
-      'Atrial fibrillation patients with CHA₂DS₂-VASc ≥2 not on anticoagulation therapy',
+      'Atrial fibrillation patients with CHA2DS2-VASc >=2 not on anticoagulation therapy',
     impact: '$890K stroke prevention value',
+    buttonLabel: '143 Patients',
+    overlayCount: '143 patients',
   },
   {
     category: 'Growth',
@@ -38,6 +44,8 @@ const INSIGHTS: InsightCard[] = [
     description:
       'Severe aortic stenosis meeting ACC/AHA criteria for TAVR — no procedure scheduled',
     impact: '$2.7M procedure revenue',
+    buttonLabel: '52 Patients',
+    overlayCount: '52 patients',
   },
   {
     category: 'Gap',
@@ -47,6 +55,8 @@ const INSIGHTS: InsightCard[] = [
     description:
       'HF patients with EF <35% meeting device therapy criteria without referral',
     impact: '$1.4M device revenue',
+    buttonLabel: '89 Patients',
+    overlayCount: '89 patients',
   },
   {
     category: 'Revenue',
@@ -56,6 +66,8 @@ const INSIGHTS: InsightCard[] = [
     description:
       'Billing analysis identifies documentation gaps causing systematic DRG undercoding across 340 encounters',
     impact: '$1.2M revenue recovery',
+    buttonLabel: '340 Encounters',
+    overlayCount: '340 encounters',
   },
   {
     category: 'Market',
@@ -65,6 +77,8 @@ const INSIGHTS: InsightCard[] = [
     description:
       'Estimated share of CV cases originating in your catchment area going to competing health systems',
     impact: '$3.8M market recapture',
+    buttonLabel: 'Leakage Report',
+    overlayCount: 'the leaking referral sources',
   },
 ];
 
@@ -75,19 +89,19 @@ const INSIGHT_DETAILS: Record<string, { learnMore: string }> = {
   },
   'Anticoagulation Gap — AF': {
     learnMore:
-      'The CHA₂DS₂-VASc scoring tool is the ACC/AHA standard for stroke risk stratification in non-valvular AF. Patients scoring ≥2 have a >2.2% annual stroke risk and are guideline-indicated for oral anticoagulation. This gap is identified through claims cross-reference with documented AF diagnosis codes in the absence of active anticoagulant prescriptions.',
+      'The CHA2DS2-VASc scoring tool is the ACC/AHA standard for stroke risk stratification in non-valvular AF. Patients scoring >=2 have a >2.2% annual stroke risk and are guideline-indicated for oral anticoagulation. This gap is identified through claims cross-reference with documented AF diagnosis codes in the absence of active anticoagulant prescriptions.',
   },
   'Unscheduled TAVR Candidates': {
     learnMore:
-      'Transcatheter Aortic Valve Replacement (TAVR) is indicated for severe symptomatic aortic stenosis across all surgical risk categories per 2021 ACC/AHA guidelines. These 52 patients have echocardiographic findings consistent with severe AS (AVA <1.0 cm² or mean gradient >40 mmHg) but no TAVR or SAVR procedure scheduled in the next 90 days.',
+      'Transcatheter Aortic Valve Replacement (TAVR) is indicated for severe symptomatic aortic stenosis across all surgical risk categories per 2021 ACC/AHA guidelines. These 52 patients have echocardiographic findings consistent with severe AS (AVA <1.0 cm2 or mean gradient >40 mmHg) but no TAVR or SAVR procedure scheduled in the next 90 days.',
   },
   'ICD/CRT Eligibility Unmet': {
     learnMore:
-      'ACC/AHA Class I indication for ICD implantation applies to HF patients with EF ≤35% and NYHA Class II-III symptoms on optimal medical therapy. CRT-D is additionally indicated when QRS duration ≥150ms with LBBB morphology. These patients are identified by their most recent documented EF reading without an active device therapy referral or existing device in claims.',
+      'ACC/AHA Class I indication for ICD implantation applies to HF patients with EF <=35% and NYHA Class II-III symptoms on optimal medical therapy. CRT-D is additionally indicated when QRS duration >=150ms with LBBB morphology. These patients are identified by their most recent documented EF reading without an active device therapy referral or existing device in claims.',
   },
   'Undercoded DRG Detected': {
     learnMore:
-      'DRG undercoding occurs when clinical documentation does not capture the full severity of a patient\'s condition, resulting in a lower-weighted DRG assignment than clinically appropriate. TAILRD\'s NLP engine scans clinical notes for secondary diagnoses (e.g., malnutrition, acute kidney injury) that were present on admission but not coded — the 340 encounters represent a systematic documentation pattern.',
+      "DRG undercoding occurs when clinical documentation does not capture the full severity of a patient's condition, resulting in a lower-weighted DRG assignment than clinically appropriate. TAILRD's NLP engine scans clinical notes for secondary diagnoses (e.g., malnutrition, acute kidney injury) that were present on admission but not coded.",
   },
   'Referral Leakage Rate': {
     learnMore:
@@ -131,7 +145,10 @@ const AIInsightCards: React.FC = () => {
           return (
             <div
               key={insight.title}
-              className="bg-white border border-chrome-200 rounded-xl p-4 flex flex-col gap-2"
+              className="bg-white border border-chrome-200 rounded-xl p-4 flex flex-col gap-2 relative overflow-hidden"
+              onClick={() => {
+                if (isLockedOpen) setActiveLockedCard(null);
+              }}
             >
               {/* Top row: category pill + lock icon */}
               <div className="flex items-center justify-between">
@@ -170,9 +187,12 @@ const AIInsightCards: React.FC = () => {
                   <button
                     type="button"
                     className="text-[11px] text-chrome-500 hover:text-chrome-700 cursor-pointer w-fit"
-                    onClick={() => setExpandedCard(prev => prev === insight.title ? null : insight.title)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setExpandedCard(prev => prev === insight.title ? null : insight.title);
+                    }}
                   >
-                    {isLearnMoreOpen ? '↑ Hide' : 'Learn more →'}
+                    {isLearnMoreOpen ? 'Hide ↑' : 'Learn more →'}
                   </button>
                   {isLearnMoreOpen && (
                     <div className="bg-chrome-50 rounded-lg p-3 text-xs text-titanium-500 leading-snug">
@@ -182,30 +202,49 @@ const AIInsightCards: React.FC = () => {
                 </>
               )}
 
-              {/* View patient list — triggers inline lock panel */}
+              {/* See [N] Patients — Carmona Red CTA */}
               <button
                 type="button"
-                className="flex items-center gap-1 text-xs text-chrome-500 hover:text-chrome-700 w-fit mt-1 transition-colors"
-                onClick={() => setActiveLockedCard(prev => prev === insight.title ? null : insight.title)}
+                className="w-full py-2 rounded-lg text-xs font-semibold text-white hover:opacity-90 transition-opacity mt-1"
+                style={carmonaGradient}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveLockedCard(prev => prev === insight.title ? null : insight.title);
+                }}
               >
-                <Lock className="w-3 h-3" />
-                View Patient List →
+                {isLockedOpen ? 'Hide ↑' : `See ${insight.buttonLabel} \u2192`}
               </button>
 
-              {/* Inline lock panel */}
+              {/* Lock overlay — covers lower portion of card */}
               {isLockedOpen && (
-                <div className="bg-chrome-50 border border-chrome-200 rounded-lg p-3 mt-2 text-xs text-center space-y-2">
-                  <div className="flex items-center justify-center gap-2">
-                    <Lock className="w-4 h-4 text-titanium-400" />
-                    <span className="text-titanium-600 font-medium">Patient-level data requires Premium</span>
+                <div
+                  className="absolute bottom-0 left-0 right-0 rounded-b-xl z-10 p-4"
+                  style={{ background: 'rgba(255,255,255,0.97)', borderTop: '1px solid #E5E7EB' }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex flex-col items-center gap-2.5">
+                    <Lock className="w-5 h-5 text-titanium-400" />
+                    <p className="text-xs text-titanium-600 text-center leading-snug">
+                      Connect your EHR to see the {insight.overlayCount} behind this opportunity
+                    </p>
+                    <button
+                      type="button"
+                      className="w-full py-2 rounded-lg text-xs font-semibold text-white hover:opacity-90 transition-opacity"
+                      style={carmonaGradient}
+                    >
+                      Connect EHR →
+                    </button>
+                    {/* Ghost patient rows */}
+                    <div
+                      className="w-full space-y-1.5 mt-1"
+                      style={{ filter: 'blur(4px)', pointerEvents: 'none', userSelect: 'none' }}
+                      aria-hidden="true"
+                    >
+                      {[1, 2, 3, 4].map((i) => (
+                        <div key={i} className="h-5 bg-chrome-100 rounded-md" />
+                      ))}
+                    </div>
                   </div>
-                  <button
-                    type="button"
-                    className="px-4 py-2 rounded-lg text-xs font-semibold text-white hover:opacity-90 transition-opacity"
-                    style={carmonaGradient}
-                  >
-                    Unlock Patient Access →
-                  </button>
                 </div>
               )}
             </div>

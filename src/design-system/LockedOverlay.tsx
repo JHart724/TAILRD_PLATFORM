@@ -4,12 +4,14 @@ import { Lock } from 'lucide-react';
 interface LockedOverlayProps {
   title?: string;
   ctaText?: string;
+  bodyText?: string;
   children: React.ReactNode;
 }
 
 const LockedOverlay: React.FC<LockedOverlayProps> = ({
   title = 'Premium Feature',
   ctaText = 'Upgrade to Unlock',
+  bodyText = 'Unlock this feature with TAILRD Premium for real-time analytics and AI-powered insights.',
   children,
 }) => {
   return (
@@ -37,7 +39,7 @@ const LockedOverlay: React.FC<LockedOverlayProps> = ({
             {title}
           </h3>
           <p className="text-sm text-titanium-500 font-body">
-            Unlock this feature with TAILRD Premium for real-time analytics and AI-powered insights.
+            {bodyText}
           </p>
           <button className="mt-2 btn-primary text-sm">
             {ctaText}

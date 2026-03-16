@@ -19,18 +19,18 @@ const OpportunityBanner: React.FC = () => {
           </p>
 
           {/* Micro-stats row */}
-          <div className="flex gap-4 mt-4">
+          <div className="flex flex-wrap gap-6 mt-4">
             <div>
               <span className="font-data font-semibold text-titanium-700">571 patients</span>
-              <p className="text-[10px] text-titanium-400 uppercase tracking-wider">patients identified</p>
+              <p className="text-[10px] text-titanium-400 uppercase tracking-wider">identified across 6 modules</p>
             </div>
             <div>
-              <span className="font-data font-semibold text-titanium-700">6 gaps</span>
-              <p className="text-[10px] text-titanium-400 uppercase tracking-wider">AI-detected gaps</p>
+              <span className="font-data font-semibold text-titanium-700">287 patients</span>
+              <p className="text-[10px] text-titanium-400 uppercase tracking-wider">care gaps with no provider contact in 90+ days</p>
             </div>
             <div>
-              <span className="font-data font-semibold text-titanium-700">CMS 2024</span>
-              <p className="text-[10px] text-titanium-400 uppercase tracking-wider">benchmark source</p>
+              <span className="font-data font-semibold text-titanium-700">$2.7M</span>
+              <p className="text-[10px] text-titanium-400 uppercase tracking-wider">in procedure revenue unscheduled</p>
             </div>
           </div>
         </div>

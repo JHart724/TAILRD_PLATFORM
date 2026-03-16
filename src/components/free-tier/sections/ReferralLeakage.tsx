@@ -18,7 +18,8 @@ const ReferralLeakage: React.FC<ReferralLeakageProps> = () => {
   return (
     <LockedOverlay
       title="Referral Leakage Analysis"
-      ctaText="Connect your EHR to see which patients are leaking to competitors — and recover them"
+      bodyText="You are losing an estimated $3.8M annually to competing health systems. Connect your EHR to see which referral sources are leaking, which physicians are sending cases out, and which ZIP codes you are losing."
+      ctaText="Unlock Referral Intelligence →"
     >
       <SectionCard title="Referral Leakage Intelligence" subtitle="Network Retention Analysis">
         {/* Summary Stats */}

@@ -142,7 +142,7 @@ const DRGProcedureLOS: React.FC<DRGProcedureLOSProps> = ({ hasUploadedFiles }) =
           {/* Locked DRG rows */}
           <div className="relative">
             <div
-              style={{ filter: 'blur(3px)', pointerEvents: 'none' }}
+              style={{ filter: 'blur(6px)', pointerEvents: 'none', userSelect: 'none' }}
               aria-hidden="true"
               className="space-y-2"
             >
@@ -164,10 +164,18 @@ const DRGProcedureLOS: React.FC<DRGProcedureLOSProps> = ({ hasUploadedFiles }) =
               ))}
             </div>
 
-            {/* Lock badge */}
-            <div className="absolute bottom-2 right-2 bg-chrome-50 border border-chrome-200 rounded-lg px-2 py-1 text-xs flex items-center gap-1 text-titanium-500">
-              <Lock className="w-3 h-3" />
-              5 more DRGs — Premium
+            {/* Full lock overlay */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2.5 bg-white/75 rounded-lg px-4 py-3 text-center">
+              <Lock className="w-4 h-4 text-titanium-400" />
+              <p className="text-xs text-titanium-600 leading-snug">
+                Connect your EHR to see full DRG breakdown, underpayment analysis, and denial rates by payer across all 8 DRGs.
+              </p>
+              <button
+                type="button"
+                className="px-4 py-1.5 rounded-lg text-xs font-semibold border border-chrome-300 text-titanium-600 hover:bg-chrome-50 transition-colors"
+              >
+                Unlock Full DRG Analysis →
+              </button>
             </div>
           </div>
         </div>
