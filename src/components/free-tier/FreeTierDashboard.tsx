@@ -37,7 +37,7 @@ import DataSources from './sections/DataSources';
 import PremiumUnlock from './sections/PremiumUnlock';
 
 interface FreeTierDashboardProps {
-  backToMain: () => void;
+  backToMain?: () => void;
 }
 
 const FreeTierDashboard: React.FC<FreeTierDashboardProps> = ({ backToMain }) => {

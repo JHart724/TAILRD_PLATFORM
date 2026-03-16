@@ -14,6 +14,7 @@ const MODULE_NAME_MAP: Record<string, string> = {
   coronary: 'Coronary Revascularization',
   valvular: 'Valvular Surgery',
   peripheral: 'Peripheral Vascular',
+  'service-line': 'Cardiovascular Service Line',
 };
 
 function useModuleName(): string | undefined {

@@ -11,6 +11,7 @@ import {
   ChevronRight,
   Settings,
   UserCircle,
+  LayoutDashboard,
 } from 'lucide-react';
 
 const STORAGE_KEY = 'tailrd-sidebar-expanded';
@@ -103,6 +104,30 @@ export default function Sidebar() {
 
       {/* Module Navigation */}
       <nav className="flex-1 py-3 px-2 space-y-1 overflow-y-auto relative z-[1]">
+        {/* Home / Main Dashboard */}
+        <button
+          onClick={() => navigate('/')}
+          title={!expanded ? 'Dashboard' : undefined}
+          className={`
+            flex items-center w-full rounded-lg transition-all duration-200 mb-2
+            ${expanded ? 'px-3 py-2.5 gap-3' : 'justify-center px-0 py-2.5'}
+            ${location.pathname === '/' || location.pathname === '/dashboard' ? 'sidebar-nav-item-active' : 'sidebar-nav-item'}
+          `}
+        >
+          {(location.pathname === '/' || location.pathname === '/dashboard') && (
+            <span
+              className="w-1.5 h-1.5 rounded-full shrink-0"
+              style={{
+                background: '#9B2438',
+                boxShadow: '0 0 6px rgba(155, 36, 56, 0.6), 0 0 12px rgba(155, 36, 56, 0.3)',
+              }}
+            />
+          )}
+          <LayoutDashboard size={18} className="shrink-0" />
+          {expanded && <span className="text-sm font-medium truncate">Dashboard</span>}
+        </button>
+        <div className="border-t border-white/[0.06] mb-2" />
+
         {moduleNavItems.map((item) => {
           const active = isActive(item.path);
           const Icon = item.icon;

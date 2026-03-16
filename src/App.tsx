@@ -520,7 +520,6 @@ function MainDashboard(): JSX.Element {
   }, [navigate]);
 
   const backToMain = useCallback(() => { setViewMode("main"); }, []);
-  const [aggregateView, setAggregateView] = useState<'executive' | 'service-line'>('executive');
 
   if (viewMode === "main") {
  return (
@@ -579,13 +578,12 @@ function MainDashboard(): JSX.Element {
  
  {/* Cardiovascular Service Line - Slightly darker than modules */}
  <div className="flex justify-center mb-8">
- <button 
+ <button
  onClick={async () => {
  setIsLoading(true);
- // Add delay to show loading animation for comprehensive analytics
- await new Promise(resolve => setTimeout(resolve, 1200));
- setViewMode('aggregate');
+ await new Promise(resolve => setTimeout(resolve, 800));
  setIsLoading(false);
+ navigate('/service-line');
  }}
  className="relative group"
  >
@@ -628,12 +626,6 @@ function MainDashboard(): JSX.Element {
  </div>
  </div>
  );
-  }
-
-
-  // Comprehensive Cardiovascular Service Line Dashboard
-  if (viewMode === "aggregate") {
-    return <FreeTierDashboard backToMain={backToMain} />;
   }
 
 
@@ -760,6 +752,11 @@ export default function App(): JSX.Element {
  <Route path="/peripheral/*" element={
  <AppShell>
  <ErrorBoundary module="Peripheral Vascular" component="PeripheralVascularModule"><PeripheralVascularModule /></ErrorBoundary>
+ </AppShell>
+ } />
+ <Route path="/service-line" element={
+ <AppShell>
+ <FreeTierDashboard />
  </AppShell>
  } />
  <Route path="/settings" element={
