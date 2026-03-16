@@ -193,7 +193,20 @@ jobs:
         working-directory: backend
         run: npm run build
 
+      - name: Check production database configured
+        id: db-check
+        env:
+          DB_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+        run: |
+          if [ -n "$DB_URL" ]; then
+            echo "available=true" >> $GITHUB_OUTPUT
+          else
+            echo "available=false" >> $GITHUB_OUTPUT
+            echo "::warning::PRODUCTION_DATABASE_URL secret not set — skipping migrations"
+          fi
+
       - name: Run production migrations
+        if: steps.db-check.outputs.available == 'true'
         working-directory: backend
         run: npx prisma migrate deploy
         env:
