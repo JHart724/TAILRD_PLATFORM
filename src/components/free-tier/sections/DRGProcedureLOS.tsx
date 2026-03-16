@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SectionCard from '../../../design-system/SectionCard';
 import Badge from '../../../design-system/Badge';
+import { Lock } from 'lucide-react';
 import {
   BarChart,
   Bar,
@@ -47,6 +48,26 @@ const losData = [
   { day: 9, facility: 1, national: 1 },
 ];
 
+interface DRGDetail {
+  context: string;
+  reimbursementRange: string;
+}
+
+const DRG_DETAILS: Record<string, DRGDetail> = {
+  'DRG 291': {
+    context: 'Heart Failure with Major Complication/Comorbidity (MCC) is the highest-weighted HF DRG — proper documentation of MCCs directly impacts reimbursement.',
+    reimbursementRange: '$8,200 – $14,500 per case (CMS 2024 IPPS national average)',
+  },
+  'DRG 292': {
+    context: 'Heart Failure with Complication/Comorbidity (CC) — secondary diagnoses like AKI or hyponatremia can elevate cases from DRG 293 to this higher-weighted tier.',
+    reimbursementRange: '$5,800 – $9,200 per case (CMS 2024 IPPS national average)',
+  },
+  'DRG 247': {
+    context: 'Percutaneous Coronary Intervention without MCC — the most common PCI DRG, volume driven by same-day cath lab workflow efficiency.',
+    reimbursementRange: '$12,400 – $18,800 per case (CMS 2024 IPPS national average)',
+  },
+};
+
 // ---------- Props ----------
 
 interface DRGProcedureLOSProps {
@@ -56,6 +77,11 @@ interface DRGProcedureLOSProps {
 // ---------- Component ----------
 
 const DRGProcedureLOS: React.FC<DRGProcedureLOSProps> = ({ hasUploadedFiles }) => {
+  const [expandedDRG, setExpandedDRG] = useState<string | null>(null);
+
+  const visibleDRGs = drgVolumeData.slice(0, 3);
+  const lockedDRGs = drgVolumeData.slice(3);
+
   return (
     <SectionCard
       title="DRG / Procedure / Length of Stay"
@@ -70,34 +96,80 @@ const DRGProcedureLOS: React.FC<DRGProcedureLOSProps> = ({ hasUploadedFiles }) =
           <p className="text-sm font-body font-semibold text-titanium-700 mb-3">
             Top DRGs by Volume
           </p>
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart
-              data={drgVolumeData}
-              layout="vertical"
-              margin={{ top: 5, right: 20, bottom: 5, left: 60 }}
+
+          {/* Visible clickable DRG rows */}
+          <div className="space-y-2 mb-2">
+            {visibleDRGs.map((drg) => {
+              const isExpanded = expandedDRG === drg.name;
+              const detail = DRG_DETAILS[drg.name];
+
+              return (
+                <div key={drg.name}>
+                  <div
+                    className="bg-white border border-chrome-100 rounded-lg p-3 cursor-pointer hover:border-chrome-300 transition-all"
+                    onClick={() => setExpandedDRG(prev => prev === drg.name ? null : drg.name)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="font-data font-semibold text-chrome-700 text-sm">{drg.name}</span>
+                        <span className="text-xs text-titanium-500 ml-2">{drg.label}</span>
+                      </div>
+                      <span className="bg-chrome-100 text-chrome-700 text-xs font-data font-semibold px-2 py-0.5 rounded-full">
+                        {drg.volume.toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Expanded DRG detail */}
+                  {isExpanded && detail && (
+                    <div className="bg-chrome-50 border border-chrome-100 rounded-lg p-3 mt-1 text-xs space-y-2">
+                      <p className="text-titanium-600 leading-snug">{detail.context}</p>
+                      <p className="text-titanium-700 font-medium">
+                        <span className="text-titanium-500">Est. reimbursement: </span>
+                        {detail.reimbursementRange}
+                      </p>
+                      <div className="flex items-center gap-1.5 text-titanium-400">
+                        <Lock className="w-3 h-3" />
+                        <span>View facility-specific data →</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Locked DRG rows */}
+          <div className="relative">
+            <div
+              style={{ filter: 'blur(3px)', pointerEvents: 'none' }}
+              aria-hidden="true"
+              className="space-y-2"
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="#D8DDE6" />
-              <XAxis
-                type="number"
-                tick={{ fontSize: 11, fill: '#636D80', fontFamily: 'IBM Plex Mono' }}
-              />
-              <YAxis
-                type="category"
-                dataKey="label"
-                tick={{ fontSize: 10, fill: '#636D80', fontFamily: 'DM Sans' }}
-                width={80}
-              />
-              <Tooltip
-                contentStyle={{ fontFamily: 'DM Sans', fontSize: 12 }}
-              />
-              <Bar
-                dataKey="volume"
-                fill="#3D6F94"
-                radius={[0, 4, 4, 0]}
-                barSize={16}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+              {lockedDRGs.map((drg) => (
+                <div
+                  key={drg.name}
+                  className="bg-white border border-chrome-100 rounded-lg p-3"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="font-data font-semibold text-chrome-700 text-sm">{drg.name}</span>
+                      <span className="text-xs text-titanium-500 ml-2">{drg.label}</span>
+                    </div>
+                    <span className="bg-chrome-100 text-chrome-700 text-xs font-data font-semibold px-2 py-0.5 rounded-full">
+                      {drg.volume.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Lock badge */}
+            <div className="absolute bottom-2 right-2 bg-chrome-50 border border-chrome-200 rounded-lg px-2 py-1 text-xs flex items-center gap-1 text-titanium-500">
+              <Lock className="w-3 h-3" />
+              5 more DRGs — Premium
+            </div>
+          </div>
         </div>
 
         {/* ---- Column 2: Procedure Mix ---- */}

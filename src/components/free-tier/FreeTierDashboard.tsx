@@ -31,6 +31,9 @@ import RevenueRecoveryCalculator from './sections/RevenueRecoveryCalculator';
 import AIInsightCards from './sections/AIInsightCards';
 import PhysicianVarianceTeaser from './sections/PhysicianVarianceTeaser';
 import CompetitorMarketShare from './sections/CompetitorMarketShare';
+import OpportunityBanner from './sections/OpportunityBanner';
+import ClinicalTrialEnrollment from './sections/ClinicalTrialEnrollment';
+import RegistryEligibility from './sections/RegistryEligibility';
 
 interface FreeTierDashboardProps {
   backToMain?: () => void;
@@ -49,6 +52,9 @@ const FreeTierDashboard: React.FC<FreeTierDashboardProps> = ({ backToMain }) => 
       <div className="max-w-[120rem] mx-auto space-y-6">
         {/* 1. Header */}
         <Header hasUploadedFiles={false} onBackToMain={backToMain} />
+
+        {/* 1b. Opportunity Banner */}
+        <OpportunityBanner />
 
         {/* 2. KPI Strip */}
         <KPIStrip hasUploadedFiles={hasUploadedFiles} kpis={CMS_KPIS} />
@@ -94,6 +100,12 @@ const FreeTierDashboard: React.FC<FreeTierDashboardProps> = ({ backToMain }) => 
 
         {/* 13. Competitor Market Share */}
         <CompetitorMarketShare />
+
+        {/* 13b. Clinical Trial Enrollment */}
+        <ClinicalTrialEnrollment />
+
+        {/* 13c. Registry Eligibility */}
+        <RegistryEligibility />
 
         {/* 14. Population & Clinical Impact */}
         <PopulationImpact

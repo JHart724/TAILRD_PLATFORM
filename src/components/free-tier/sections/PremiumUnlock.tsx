@@ -5,23 +5,23 @@ const PremiumUnlock: React.FC = () => {
   const features = [
     {
       icon: Zap,
-      title: 'Real-time EHR Integration',
-      description: 'Connect directly to your EHR for live data feeds and automated analytics',
+      title: 'EHR Integration',
+      description: 'Verify your $11.2M estimate with real patient data — replace CMS benchmarks with your actual population',
     },
     {
       icon: Brain,
-      title: 'AI-Powered Predictions',
-      description: 'Machine learning models for readmission risk, LOS prediction, and resource optimization',
+      title: 'Patient-Level AI',
+      description: 'See the 571 patients behind every gap by name, risk score, PCP, and last contact date',
     },
     {
       icon: BarChart3,
-      title: 'Custom Reporting',
-      description: 'Build custom dashboards, automated reports, and board-ready presentations',
+      title: 'Physician Coaching',
+      description: 'Close the 2.4× performance gap — identify which of your 47 physicians need support and generate coaching plans',
     },
     {
       icon: Shield,
-      title: 'Full Module Access',
-      description: 'Unlock all 6 clinical modules with Executive, Service Line, and Care Team views',
+      title: 'Market Recapture',
+      description: 'Recover the $3.8M in annual revenue lost to competitor health systems in your catchment area',
     },
   ];
 
@@ -39,18 +39,18 @@ const PremiumUnlock: React.FC = () => {
           <div>
             <div className="inline-flex items-center gap-2 bg-white/10 rounded-full px-3 py-1 mb-4">
               <Zap className="w-4 h-4 text-amber-400" />
-              <span className="text-xs font-body font-semibold text-amber-300 uppercase tracking-wider">Premium Platform</span>
+              <span className="text-xs font-body font-semibold text-amber-300 uppercase tracking-wider">TAILRD PREMIUM</span>
             </div>
             <h2 className="text-2xl md:text-3xl font-display font-bold mb-2" style={{ color: '#ffffff', textShadow: '0 0 20px rgba(180,210,240,0.25), 0 1px 0 rgba(0,0,0,0.4)', fontWeight: 600, letterSpacing: '-0.3px' }}>
-              Unlock the Full TAILRD Platform
+              You have $11.2M in identified opportunity — act on it
             </h2>
             <p className="font-body max-w-lg" style={{ color: 'rgba(200,220,240,0.75)', fontSize: '13px', fontWeight: 400, lineHeight: 1.5 }}>
-              Transform your cardiovascular service line with real-time analytics, AI predictions, and comprehensive clinical intelligence.
+              571 patients need intervention today. Connect your EHR to see exactly who, and put your care team in motion.
             </p>
           </div>
           <div className="flex-shrink-0">
             <button className="inline-flex items-center gap-2 px-8 py-3.5 text-white font-body font-bold text-base rounded-xl transition-all duration-200 hover:-translate-y-0.5" style={{ background: 'linear-gradient(145deg, #8C1F32 0%, #9B2438 40%, #7A1A2E 100%)', boxShadow: '0 1px 4px rgba(0,0,0,0.2), 0 1px 0 rgba(255,255,255,0.14) inset', border: 'none' }}>
-              Schedule Demo
+              Book a 20-Minute Demo →
               <ArrowRight className="w-5 h-5" />
             </button>
           </div>
@@ -58,7 +58,7 @@ const PremiumUnlock: React.FC = () => {
 
         {/* Features grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {features.map((feature, index) => {
+          {features.map((feature) => {
             const Icon = feature.icon;
             return (
               <div

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Lock } from 'lucide-react';
 import SectionCard from '../../../design-system/SectionCard';
 
@@ -27,6 +27,8 @@ const BLURRED_ROWS = [
 ];
 
 const PhysicianVarianceTeaser: React.FC = () => {
+  const [expandedQuartile, setExpandedQuartile] = useState<'top' | 'bottom' | null>(null);
+
   return (
     <SectionCard
       title="Physician Performance Variance"
@@ -44,7 +46,10 @@ const PhysicianVarianceTeaser: React.FC = () => {
       {/* Quartile comparison cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         {/* Top quartile */}
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+        <div
+          className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 cursor-pointer"
+          onClick={() => setExpandedQuartile(prev => prev === 'top' ? null : 'top')}
+        >
           <p className="text-sm font-semibold text-emerald-700 mb-3">Top Quartile</p>
           <div className="space-y-2">
             {QUARTILE_METRICS.map((m) => (
@@ -54,10 +59,24 @@ const PhysicianVarianceTeaser: React.FC = () => {
               </div>
             ))}
           </div>
+
+          {/* Expanded top quartile panel */}
+          {expandedQuartile === 'top' && (
+            <div className="border-t border-emerald-200 pt-3 mt-3 text-xs text-emerald-700 space-y-1">
+              <p>Common traits: Regular GDMT reviews, structured care protocols, MDT weekly rounds</p>
+              <div className="flex items-center gap-1.5 cursor-not-allowed text-emerald-600">
+                <Lock className="w-3 h-3" />
+                <span>View top physicians →</span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Bottom quartile */}
-        <div className="bg-arterial-50 border border-arterial-200 rounded-xl p-4">
+        <div
+          className="bg-arterial-50 border border-arterial-200 rounded-xl p-4 cursor-pointer"
+          onClick={() => setExpandedQuartile(prev => prev === 'bottom' ? null : 'bottom')}
+        >
           <p className="text-sm font-semibold text-arterial-700 mb-3">Bottom Quartile</p>
           <div className="space-y-2">
             {QUARTILE_METRICS.map((m) => (
@@ -67,6 +86,17 @@ const PhysicianVarianceTeaser: React.FC = () => {
               </div>
             ))}
           </div>
+
+          {/* Expanded bottom quartile panel */}
+          {expandedQuartile === 'bottom' && (
+            <div className="border-t border-arterial-200 pt-3 mt-3 text-xs text-arterial-700 space-y-1">
+              <p>Coaching opportunity: Structured peer review and protocol adherence program</p>
+              <div className="flex items-center gap-1.5 cursor-not-allowed text-arterial-600">
+                <Lock className="w-3 h-3" />
+                <span>View coaching plan →</span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -94,7 +124,7 @@ const PhysicianVarianceTeaser: React.FC = () => {
 
         {/* Blurred rows */}
         <div
-          style={{ filter: 'blur(4px)', userSelect: 'none', pointerEvents: 'none' }}
+          style={{ filter: 'blur(8px)', userSelect: 'none', pointerEvents: 'none' }}
           aria-hidden="true"
         >
           <table className="w-full">

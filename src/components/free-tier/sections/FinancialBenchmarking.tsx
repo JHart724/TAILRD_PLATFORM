@@ -16,6 +16,34 @@ interface FinancialBenchmarkingProps {
 type SortField = 'code' | 'description' | 'volume' | 'avgLOS' | 'reimbursement' | 'margin';
 type SortDirection = 'asc' | 'desc';
 
+interface MarginDetail {
+  drivers: string[];
+}
+
+const MARGIN_DETAILS: Record<string, MarginDetail> = {
+  'HF Readmission Reduction': {
+    drivers: [
+      'CMS HRRP penalty avoidance: each 1% readmission rate reduction saves ~$340K in penalties',
+      'Transitional care management billing (TCM codes 99495/99496) for discharged HF patients',
+      'Reduced variable cost per discharge through shorter re-admission stays',
+    ],
+  },
+  'GDMT Protocol Compliance': {
+    drivers: [
+      'MIPS quality bonus improvement: GDMT composite is worth up to 40 MIPS points',
+      'Risk-adjusted outcomes improvement reduces downstream hospitalization costs per patient',
+      'Potential ACO shared savings from reduced total cost of care across aligned patients',
+    ],
+  },
+  'Cath Lab Throughput': {
+    drivers: [
+      'Incremental case volume from improved scheduling efficiency and add-on case capacity',
+      'DRG upgrade opportunities through complete documentation of co-morbidities (MCC vs. CC)',
+      'Reduction in case cancellations and day-of delays through pre-procedure protocol compliance',
+    ],
+  },
+};
+
 const FinancialBenchmarking: React.FC<FinancialBenchmarkingProps> = ({
   hasUploadedFiles,
   financialSummary,
@@ -24,6 +52,7 @@ const FinancialBenchmarking: React.FC<FinancialBenchmarkingProps> = ({
 }) => {
   const [sortField, setSortField] = useState<SortField>('volume');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+  const [expandedOpportunity, setExpandedOpportunity] = useState<string | null>(null);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -85,7 +114,7 @@ const FinancialBenchmarking: React.FC<FinancialBenchmarkingProps> = ({
     >
       {/* Sub-section 1: CFO Summary Strip */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        {financialSummary.map((item, index) => {
+        {financialSummary.map((item) => {
           const value = hasUploadedFiles ? item.stateBValue : item.stateAValue;
           const isPositive = item.trend.direction === 'up';
 
@@ -244,36 +273,68 @@ const FinancialBenchmarking: React.FC<FinancialBenchmarkingProps> = ({
           Margin Improvement Opportunities
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {marginOpportunities.map((opp, index) => (
-            <div
-              key={opp.title}
-              className="bg-white rounded-xl border border-chrome-200 p-4"
-            >
-              <div className="text-sm font-body font-semibold text-titanium-800">
-                {opp.title}
-              </div>
-              <div className="flex items-center justify-between mt-3">
-                <div className="text-center">
-                  <div className="text-xs text-titanium-500">Current</div>
-                  <div className="font-data text-lg font-bold text-titanium-700">
-                    {opp.currentMargin}%
+          {marginOpportunities.map((opp) => {
+            const isExpanded = expandedOpportunity === opp.title;
+            const detail = MARGIN_DETAILS[opp.title];
+
+            return (
+              <div
+                key={opp.title}
+                className="bg-white rounded-xl border border-chrome-200 p-4 cursor-pointer hover:shadow-md transition-all"
+                onClick={() => setExpandedOpportunity(prev => prev === opp.title ? null : opp.title)}
+              >
+                <div className="text-sm font-body font-semibold text-titanium-800">
+                  {opp.title}
+                </div>
+                <div className="flex items-center justify-between mt-3">
+                  <div className="text-center">
+                    <div className="text-xs text-titanium-500">Current</div>
+                    <div className="font-data text-lg font-bold text-titanium-700">
+                      {opp.currentMargin}%
+                    </div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-chrome-400" />
+                  <div className="text-center">
+                    <div className="text-xs text-titanium-500">Target</div>
+                    <div className="font-data text-lg font-bold text-emerald-600">
+                      {opp.targetMargin}%
+                    </div>
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-chrome-400" />
-                <div className="text-center">
-                  <div className="text-xs text-titanium-500">Target</div>
-                  <div className="font-data text-lg font-bold text-emerald-600">
-                    {opp.targetMargin}%
-                  </div>
+                <div className="mt-2 bg-emerald-50 rounded-lg px-3 py-1.5 text-center">
+                  <span className="text-sm font-data font-semibold text-emerald-700">
+                    &uarr; {formatCurrency(opp.potentialUplift)} potential uplift
+                  </span>
                 </div>
+
+                {/* Expanded detail */}
+                {isExpanded && detail && (
+                  <div className="border-t border-chrome-100 pt-3 mt-3 text-xs space-y-2">
+                    <p className="font-semibold text-titanium-700">Key drivers:</p>
+                    <ul className="space-y-1">
+                      {detail.drivers.map((driver, i) => (
+                        <li key={i} className="flex items-start gap-1.5 text-titanium-500">
+                          <span className="text-chrome-400 mt-0.5">•</span>
+                          <span>{driver}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="bg-chrome-50 border border-chrome-200 rounded-lg px-3 py-2 flex items-center gap-2 mt-2">
+                      <Lock className="w-3.5 h-3.5 text-titanium-400 flex-shrink-0" />
+                      <span className="text-titanium-500 flex-1">Connect EHR to verify with your actual cost data</span>
+                      <button
+                        type="button"
+                        className="text-chrome-600 font-semibold text-xs whitespace-nowrap"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Connect →
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
-              <div className="mt-2 bg-emerald-50 rounded-lg px-3 py-1.5 text-center">
-                <span className="text-sm font-data font-semibold text-emerald-700">
-                  &uarr; {formatCurrency(opp.potentialUplift)} potential uplift
-                </span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </SectionCard>

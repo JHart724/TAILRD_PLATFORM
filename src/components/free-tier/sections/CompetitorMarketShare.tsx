@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Lock, TrendingUp } from 'lucide-react';
 import SectionCard from '../../../design-system/SectionCard';
 
@@ -8,25 +8,25 @@ const carmonaGradient: React.CSSProperties = {
 
 interface CompetitorBar {
   share: number;
-  blurredName: string;
+  name: string;
 }
 
 const COMPETITORS: CompetitorBar[] = [
-  { share: 28, blurredName: '███████ Health' },
-  { share: 19, blurredName: '██████████ Medical Center' },
-  { share: 14, blurredName: '████████ Regional' },
-  { share: 5, blurredName: '██████ Community' },
+  { share: 28, name: 'Competitor A' },
+  { share: 19, name: 'Competitor B' },
+  { share: 14, name: 'Competitor C' },
+  { share: 5, name: 'Competitor D' },
 ];
 
 const PREMIUM_FEATURES = [
-  'Competitor names and system affiliations revealed',
-  'Real-time market share trend analysis (12-month)',
-  'Physician referral network mapping',
-  'Growth opportunity scoring by ZIP code',
+  'Named competitors and health system affiliations',
+  '12-month market share trend by service line',
+  'Physician referral network mapping by ZIP code',
+  'Growth opportunity scoring and white space analysis',
 ];
 
 const CompetitorMarketShare: React.FC = () => {
-  const maxShare = 34; // your share is the max visible bar reference
+  const [showYourDetail, setShowYourDetail] = useState(false);
 
   return (
     <SectionCard
@@ -55,34 +55,47 @@ const CompetitorMarketShare: React.FC = () => {
           Market Share by System
         </p>
 
-        {/* Your bar — fully visible */}
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-medium text-titanium-700 w-44 flex-shrink-0">
-            Your Health System
-          </span>
-          <div className="flex-1 h-7 bg-chrome-100 rounded-md overflow-hidden">
-            <div
-              className="h-full bg-chrome-600 rounded-md flex items-center pl-2"
-              style={{ width: `${(34 / 34) * 100}%` }}
-            >
-              <span className="text-[11px] font-bold text-white">34%</span>
+        {/* Your bar — clickable */}
+        <div>
+          <div
+            className="flex items-center gap-3 cursor-pointer"
+            onClick={() => setShowYourDetail(prev => !prev)}
+          >
+            <span className="text-sm font-medium text-titanium-700 w-44 flex-shrink-0">
+              Your Health System
+            </span>
+            <div className="flex-1 h-7 bg-chrome-100 rounded-md overflow-hidden">
+              <div
+                className="h-full bg-chrome-600 rounded-md flex items-center pl-2"
+                style={{ width: `${(34 / 34) * 100}%` }}
+              >
+                <span className="text-[11px] font-bold text-white">34%</span>
+              </div>
             </div>
+            <span className="text-sm font-data font-semibold text-chrome-700 w-8 text-right">
+              34%
+            </span>
           </div>
-          <span className="text-sm font-data font-semibold text-chrome-700 w-8 text-right">
-            34%
-          </span>
+
+          {/* Expanded your bar detail */}
+          {showYourDetail && (
+            <div className="bg-chrome-50 border border-chrome-100 rounded-lg p-3 mt-2 text-xs space-y-1.5 ml-44">
+              <p className="text-titanium-600">Service areas: Primary (12 ZIPs), Secondary (8 ZIPs)</p>
+              <p className="text-titanium-600">YoY change: <span className="text-emerald-600 font-semibold">+2.1%</span> vs prior year</p>
+              <p className="text-titanium-600">Strongest segment: <span className="font-semibold text-titanium-700">Heart Failure (41% share)</span></p>
+              <div className="flex items-center gap-1.5 text-titanium-400">
+                <Lock className="w-3 h-3" />
+                <span>Competitor breakdown by service line requires Premium</span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Competitor bars */}
         {COMPETITORS.map((comp, i) => (
           <div key={i} className="flex items-center gap-3">
-            {/* Blurred competitor name */}
-            <span
-              className="text-sm font-medium text-titanium-700 w-44 flex-shrink-0"
-              style={{ filter: 'blur(5px)', userSelect: 'none' }}
-              aria-hidden="true"
-            >
-              {comp.blurredName}
+            <span className="text-sm font-medium text-titanium-700 w-44 flex-shrink-0">
+              {comp.name}
             </span>
             <div className="flex-1 h-7 bg-chrome-100 rounded-md overflow-hidden">
               <div
@@ -111,9 +124,9 @@ const CompetitorMarketShare: React.FC = () => {
             <Lock className="w-4 h-4 text-white" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-white">Premium Market Intelligence</p>
+            <p className="text-sm font-semibold text-white">Reveal Your Competitive Landscape</p>
             <p className="text-xs text-titanium-400 mt-0.5">
-              Unlock the full competitive landscape for your service area
+              See named health systems, market trends, and referral network maps
             </p>
           </div>
         </div>
