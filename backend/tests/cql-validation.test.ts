@@ -177,7 +177,7 @@ class MockCQLEngine {
         )
       )?.valueQuantity?.value;
 
-      if (!hasMRA && (!potassium || potassium < 5.0) && (!creatinine || creatinine < 2.5)) {
+      if (!hasMRA && (!potassium || potassium < 5.5) && (!creatinine || creatinine < 2.5)) {
         results.push({
           ruleId: '03',
           ruleName: 'HFrEF MRA Gap',
@@ -502,6 +502,12 @@ class MockCQLEngine {
     }
 
     // Rule 25: Iron Deficiency in HF
+    const hfCondition = context.conditions.find(c =>
+      c.code?.coding?.some((coding: any) =>
+        ['84114007', '441530006', '414545008'].includes(coding.code)
+      )
+    );
+
     const ironDefCondition = context.conditions.find(c =>
       c.code?.coding?.some((coding: any) => coding.code === '35240004')
     );
@@ -516,7 +522,7 @@ class MockCQLEngine {
     );
     const tsat = tsatObs?.valueQuantity?.value;
 
-    if (hfpefCondition) {
+    if (hfpefCondition || hfCondition) {
       if ((ferritin && ferritin < 100) || (ferritin && ferritin < 300 && tsat && tsat < 20)) {
         results.push({
           ruleId: '25',
@@ -818,7 +824,7 @@ describe('CQL Rule Validation Suite', () => {
               c.system === 'http://snomed.info/sct'
             );
             if (snomedCoding) {
-              expect(snomedCoding.code).toMatch(/^\\d+$/); // Should be numeric
+              expect(snomedCoding.code).toMatch(/^\d+$/); // Should be numeric
               expect(snomedCoding.display).toBeDefined();
             }
           }
@@ -851,7 +857,7 @@ describe('CQL Rule Validation Suite', () => {
               c.system === 'http://www.nlm.nih.gov/research/umls/rxnorm'
             );
             if (rxnormCoding) {
-              expect(rxnormCoding.code).toMatch(/^\\d+$/); // Should be numeric
+              expect(rxnormCoding.code).toMatch(/^\d+$/); // Should be numeric
               expect(rxnormCoding.display).toBeDefined();
             }
           }
