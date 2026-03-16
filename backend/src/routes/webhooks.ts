@@ -1,0 +1,284 @@
+import { Router } from 'express';
+import crypto from 'crypto';
+import { RedoxWebhookPayload, APIResponse } from '../types';
+import { processPatientData } from '../services/patientService';
+import { processObservationData } from '../services/observationService';
+import { processEncounterData } from '../services/encounterService';
+import {
+  deriveIdempotencyKey,
+  checkDuplicate,
+  createWebhookRecord,
+  markCompleted,
+  markFailed,
+  getDeadLetterEvents,
+} from '../services/webhookPipeline';
+import prisma from '../lib/prisma';
+import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
+import { createLogger } from 'winston';
+
+const router = Router();
+const logger = createLogger({ defaultMeta: { service: 'webhook-handler' } });
+
+// ── Resolve hospitalId from Redox source ────────────────────────────────────
+// Redox payloads include Source.ID which maps to Hospital.redoxSourceId.
+
+async function resolveHospitalId(payload: RedoxWebhookPayload): Promise<string> {
+  const sourceId = payload.Source?.ID || payload.Meta?.Source?.ID;
+  if (!sourceId) {
+    throw new Error('Webhook payload has no Source.ID — cannot resolve hospital');
+  }
+
+  const hospital = await prisma.hospital.findUnique({
+    where: { redoxSourceId: sourceId },
+    select: { id: true },
+  });
+
+  if (!hospital) {
+    throw new Error(`No hospital found for Redox source ID: ${sourceId}`);
+  }
+
+  return hospital.id;
+}
+
+// ── Ensure patient exists in DB before processing encounters/observations ──
+// If no Patient section in payload, try to look up by FHIR id within hospital.
+
+async function ensurePatientId(
+  payload: RedoxWebhookPayload,
+  hospitalId: string,
+): Promise<string> {
+  if (payload.Patient) {
+    const result = await processPatientData(payload.Patient, payload.EventType, hospitalId);
+    return result.patientId;
+  }
+
+  // No Patient in payload — this shouldn't happen per Redox spec, but handle gracefully
+  throw new Error('Webhook payload has no Patient section — cannot resolve patientId');
+}
+
+// ── HMAC-SHA256 signature verification ──────────────────────────────────────
+
+const verifyRedoxSignature = (req: any, res: any, next: any) => {
+  const signature = req.headers['x-redox-signature'];
+  const webhookSecret = process.env.REDOX_WEBHOOK_SECRET;
+
+  if (!webhookSecret) {
+    logger.error('REDOX_WEBHOOK_SECRET not configured');
+    return res.status(500).json({
+      success: false,
+      error: 'Webhook verification not configured',
+      timestamp: new Date().toISOString()
+    } as APIResponse);
+  }
+
+  if (!signature) {
+    logger.warn('Missing Redox signature in webhook request');
+    return res.status(401).json({
+      success: false,
+      error: 'Missing webhook signature',
+      timestamp: new Date().toISOString()
+    } as APIResponse);
+  }
+
+  const rawBody = JSON.stringify(req.body);
+  const expectedSignature = crypto
+    .createHmac('sha256', webhookSecret)
+    .update(rawBody, 'utf8')
+    .digest('hex');
+
+  const providedSignature = signature.replace('sha256=', '');
+
+  if (!crypto.timingSafeEqual(
+    Buffer.from(expectedSignature, 'hex'),
+    Buffer.from(providedSignature, 'hex')
+  )) {
+    logger.warn('Invalid Redox webhook signature');
+    return res.status(401).json({
+      success: false,
+      error: 'Invalid webhook signature',
+      timestamp: new Date().toISOString()
+    } as APIResponse);
+  }
+
+  next();
+};
+
+// ── Main webhook endpoint ───────────────────────────────────────────────────
+
+router.post('/redox', verifyRedoxSignature, async (req, res) => {
+  try {
+    const payload: RedoxWebhookPayload = req.body;
+
+    logger.info('Received Redox webhook', {
+      eventType: payload.EventType,
+      eventDateTime: payload.EventDateTime,
+      isTest: payload.Test,
+      source: payload.Source?.Name,
+    });
+
+    // Test webhooks: acknowledge immediately, don't process
+    if (payload.Test) {
+      logger.info('Test webhook received — no processing');
+      return res.status(200).json({
+        success: true,
+        message: 'Test webhook received successfully',
+        timestamp: new Date().toISOString()
+      } as APIResponse);
+    }
+
+    // Resolve the hospital from the Redox source ID
+    const hospitalId = await resolveHospitalId(payload);
+
+    // ── Idempotency check ────────────────────────────────────────────────
+    const idempotencyKey = deriveIdempotencyKey(payload);
+    const { isDuplicate, existingId, existingStatus } = await checkDuplicate(idempotencyKey);
+
+    if (isDuplicate) {
+      return res.status(200).json({
+        success: true,
+        message: `Duplicate event — already processed (${existingId})`,
+        timestamp: new Date().toISOString(),
+      } as APIResponse);
+    }
+
+    // Archive the raw payload for audit/replay (WebhookEvent table)
+    const webhookEventId = await createWebhookRecord(
+      idempotencyKey, hospitalId, payload, existingId,
+    );
+
+    try {
+      switch (payload.EventType) {
+        case 'NewPatient':
+        case 'PatientUpdate': {
+          if (payload.Patient) {
+            const { patientId } = await processPatientData(payload.Patient, payload.EventType, hospitalId);
+            logger.info(`Processed ${payload.EventType}`, { patientId, hospitalId });
+          }
+          break;
+        }
+
+        case 'Results':
+        case 'NewResults': {
+          if (payload.Results && payload.Results.length > 0) {
+            const patientId = await ensurePatientId(payload, hospitalId);
+            for (const result of payload.Results) {
+              await processObservationData(result, payload.Patient, hospitalId, patientId);
+            }
+            logger.info(`Processed ${payload.Results.length} lab results`, { hospitalId, patientId });
+          }
+          break;
+        }
+
+        case 'NewVisit':
+        case 'VisitUpdate':
+        case 'Discharge': {
+          if (payload.Visit) {
+            const patientId = await ensurePatientId(payload, hospitalId);
+            const { encounterId } = await processEncounterData(
+              payload.Visit, payload.Patient, payload.EventType, hospitalId, patientId,
+            );
+            logger.info(`Processed ${payload.EventType}`, { encounterId, hospitalId, patientId });
+          }
+          break;
+        }
+
+        case 'NewOrder':
+        case 'OrderUpdate': {
+          if (payload.Orders && payload.Orders.length > 0) {
+            logger.info(`Received ${payload.Orders.length} orders — order persistence not yet implemented`);
+          }
+          break;
+        }
+
+        default:
+          logger.warn(`Unhandled event type: ${payload.EventType}`);
+      }
+
+      // Mark webhook as completed
+      await markCompleted(webhookEventId);
+    } catch (processingError: any) {
+      // Mark failed with retry logic (exponential backoff, dead-letter after 5 attempts)
+      const { shouldRetry } = await markFailed(webhookEventId, processingError);
+      if (!shouldRetry) {
+        logger.error('Webhook dead-lettered', { webhookEventId, error: processingError.message });
+      }
+      // Re-throw so the outer catch can log it
+      throw processingError;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Webhook processed successfully for event: ${payload.EventType}`,
+      timestamp: new Date().toISOString()
+    } as APIResponse);
+
+  } catch (error: any) {
+    logger.error('Error processing Redox webhook:', {
+      error: error.message,
+      stack: error.stack,
+    });
+
+    res.status(500).json({
+      success: false,
+      error: 'Failed to process webhook',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    } as APIResponse);
+  }
+});
+
+// ── Test endpoint (no signature verification) ───────────────────────────────
+
+router.post('/redox/test', (req, res) => {
+  logger.info('Test webhook endpoint called');
+  res.status(200).json({
+    success: true,
+    message: 'Test webhook endpoint is working',
+    timestamp: new Date().toISOString(),
+    receivedData: req.body
+  } as APIResponse);
+});
+
+// ── Dead-letter queue (admin only) ──────────────────────────────────────────
+
+router.get('/dead-letter',
+  authenticateToken,
+  authorizeRole(['super-admin']),
+  async (req: AuthenticatedRequest, res) => {
+    try {
+      const hospitalId = req.query.hospitalId as string | undefined;
+      const events = await getDeadLetterEvents(hospitalId);
+      res.json({
+        success: true,
+        data: events,
+        message: `${events.length} dead-letter events`,
+        timestamp: new Date().toISOString(),
+      } as APIResponse);
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message,
+        timestamp: new Date().toISOString(),
+      } as APIResponse);
+    }
+  }
+);
+
+// ── Status endpoint ─────────────────────────────────────────────────────────
+
+router.get('/redox/status', (req, res) => {
+  res.status(200).json({
+    success: true,
+    data: {
+      status: 'active',
+      webhookUrl: `${process.env.API_BASE_URL}/webhooks/redox`,
+      testUrl: `${process.env.API_BASE_URL}/webhooks/redox/test`,
+      signatureVerification: !!process.env.REDOX_WEBHOOK_SECRET,
+      lastUpdated: new Date().toISOString()
+    },
+    message: 'Redox webhook endpoints are configured and ready',
+    timestamp: new Date().toISOString()
+  } as APIResponse);
+});
+
+export = router;

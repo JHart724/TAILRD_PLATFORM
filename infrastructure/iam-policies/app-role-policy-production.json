@@ -1,0 +1,111 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "S3PHIBucketAccess",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:ListBucket",
+        "s3:GetObjectVersion"
+      ],
+      "Resource": [
+        "arn:aws:s3:::tailrd-production-phi-documents-863518424332",
+        "arn:aws:s3:::tailrd-production-phi-documents-863518424332/*"
+      ]
+    },
+    {
+      "Sid": "S3AuditBucketAccess",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::tailrd-production-audit-exports-863518424332",
+        "arn:aws:s3:::tailrd-production-audit-exports-863518424332/*"
+      ]
+    },
+    {
+      "Sid": "S3AssetsBucketAccess",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::tailrd-production-app-assets-863518424332",
+        "arn:aws:s3:::tailrd-production-app-assets-863518424332/*"
+      ]
+    },
+    {
+      "Sid": "KMSEncryptDecrypt",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:GenerateDataKey",
+        "kms:GenerateDataKeyWithoutPlaintext",
+        "kms:DescribeKey"
+      ],
+      "Resource": [
+        "arn:aws:kms:us-east-1:863518424332:key/*"
+      ]
+    },
+    {
+      "Sid": "CloudWatchLogs",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogStreams"
+      ],
+      "Resource": [
+        "arn:aws:logs:us-east-1:863518424332:log-group:/tailrd/production/*"
+      ]
+    },
+    {
+      "Sid": "CloudWatchMetrics",
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:PutMetricData"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "cloudwatch:namespace": "TailrdBackend"
+        }
+      }
+    },
+    {
+      "Sid": "SecretsManagerRead",
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetSecretValue"
+      ],
+      "Resource": [
+        "arn:aws:secretsmanager:us-east-1:863518424332:secret:tailrd/production/*"
+      ]
+    },
+    {
+      "Sid": "DenyDestructiveActions",
+      "Effect": "Deny",
+      "Action": [
+        "iam:*",
+        "organizations:*",
+        "account:*",
+        "s3:DeleteBucket",
+        "s3:PutBucketPolicy",
+        "kms:ScheduleKeyDeletion",
+        "kms:DisableKey",
+        "cloudtrail:StopLogging",
+        "cloudtrail:DeleteTrail"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

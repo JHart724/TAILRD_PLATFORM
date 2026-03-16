@@ -1,0 +1,5 @@
+=== COMPONENT PARITY MATRIX ===
+
+=== VIEWS ===
+| Component | HF | EP | Structural | Coronary | Valvular | Peripheral |
+|-----------|----|----|------------|----------|----------|------------|

@@ -1,0 +1,116 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "FullS3Access",
+      "Effect": "Allow",
+      "Action": "s3:*",
+      "Resource": [
+        "arn:aws:s3:::tailrd-*",
+        "arn:aws:s3:::tailrd-*/*"
+      ]
+    },
+    {
+      "Sid": "KMSManagement",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Create*",
+        "kms:Describe*",
+        "kms:Enable*",
+        "kms:List*",
+        "kms:Put*",
+        "kms:Update*",
+        "kms:Get*",
+        "kms:Tag*",
+        "kms:Untag*",
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:GenerateDataKey*"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringLike": {
+          "kms:RequestAlias": "alias/tailrd-*"
+        }
+      }
+    },
+    {
+      "Sid": "CloudFormationManagement",
+      "Effect": "Allow",
+      "Action": "cloudformation:*",
+      "Resource": [
+        "arn:aws:cloudformation:*:${ACCOUNT_ID}:stack/tailrd-*",
+        "arn:aws:cloudformation:*:${ACCOUNT_ID}:stackset/tailrd-*"
+      ]
+    },
+    {
+      "Sid": "ECSManagement",
+      "Effect": "Allow",
+      "Action": "ecs:*",
+      "Resource": [
+        "arn:aws:ecs:*:${ACCOUNT_ID}:cluster/tailrd-*",
+        "arn:aws:ecs:*:${ACCOUNT_ID}:service/tailrd-*/*",
+        "arn:aws:ecs:*:${ACCOUNT_ID}:task/tailrd-*/*",
+        "arn:aws:ecs:*:${ACCOUNT_ID}:task-definition/tailrd-*:*"
+      ]
+    },
+    {
+      "Sid": "RDSReadOnly",
+      "Effect": "Allow",
+      "Action": [
+        "rds:Describe*",
+        "rds:List*"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "CloudWatchFullAccess",
+      "Effect": "Allow",
+      "Action": [
+        "logs:*",
+        "cloudwatch:*"
+      ],
+      "Resource": [
+        "arn:aws:logs:*:${ACCOUNT_ID}:log-group:/tailrd/*",
+        "arn:aws:logs:*:${ACCOUNT_ID}:log-group:aws-waf-logs-tailrd-*"
+      ]
+    },
+    {
+      "Sid": "WAFReadOnly",
+      "Effect": "Allow",
+      "Action": [
+        "wafv2:Get*",
+        "wafv2:List*",
+        "wafv2:Describe*"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "CloudTrailReadOnly",
+      "Effect": "Allow",
+      "Action": [
+        "cloudtrail:Describe*",
+        "cloudtrail:Get*",
+        "cloudtrail:List*",
+        "cloudtrail:LookupEvents"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "DenyDestructiveActions",
+      "Effect": "Deny",
+      "Action": [
+        "kms:ScheduleKeyDeletion",
+        "kms:DisableKey",
+        "cloudtrail:StopLogging",
+        "cloudtrail:DeleteTrail",
+        "rds:DeleteDBInstance",
+        "rds:DeleteDBCluster",
+        "s3:DeleteBucket",
+        "organizations:LeaveOrganization",
+        "account:CloseAccount"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

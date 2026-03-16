@@ -1,0 +1,237 @@
+import React, { useState } from 'react';
+import { Send, CheckCircle, Clock, XCircle, AlertTriangle } from 'lucide-react';
+
+interface Referral {
+  id: string;
+  patientName: string;
+  mrn: string;
+  referralType: string;
+  targetSpecialty: string;
+  indication: string;
+  status: 'pending' | 'scheduled' | 'completed' | 'cancelled' | 'overdue';
+  sentDate: string;
+  scheduledDate?: string;
+  completedDate?: string;
+  sentBy: string;
+  priority: 'urgent' | 'routine';
+  notes?: string;
+}
+
+const ReferralTracker: React.FC = () => {
+  const [filterStatus, setFilterStatus] = useState<string>('all');
+
+  // Mock data - replace with Redux selector
+  const referrals: Referral[] = [
+    {
+      id: 'REF001',
+      patientName: 'Johnson, Maria',
+      mrn: '123456',
+      referralType: 'CRT-D Evaluation',
+      targetSpecialty: 'Electrophysiology',
+      indication: 'EF 28%, NYHA III, QRS 152ms, LBBB',
+      status: 'scheduled',
+      sentDate: '2025-10-05',
+      scheduledDate: '2025-10-15',
+      sentBy: 'Dr. Smith',
+      priority: 'urgent'
+    },
+    {
+      id: 'REF002',
+      patientName: 'Williams, Robert',
+      mrn: '789012',
+      referralType: 'Amyloid Workup',
+      targetSpecialty: 'Cardiology - Advanced HF',
+      indication: 'Amyloid risk flags: age >65, unexplained LVH, neuropathy',
+      status: 'pending',
+      sentDate: '2025-10-08',
+      sentBy: 'Dr. Jones',
+      priority: 'routine'
+    },
+    {
+      id: 'REF003',
+      patientName: 'Davis, Linda',
+      mrn: '345678',
+      referralType: 'LVAD Evaluation',
+      targetSpecialty: 'Cardiac Surgery',
+      indication: 'EF 22%, NYHA III, inotrope-dependent, transplant candidate',
+      status: 'overdue',
+      sentDate: '2025-09-28',
+      sentBy: 'Dr. Smith',
+      priority: 'urgent',
+      notes: 'Patient declined initial consult, rescheduling needed'
+    },
+    {
+      id: 'REF004',
+      patientName: 'Brown, John',
+      mrn: '901234',
+      referralType: 'Genetic Testing',
+      targetSpecialty: 'Medical Genetics',
+      indication: 'HCM phenotype, family history',
+      status: 'completed',
+      sentDate: '2025-09-15',
+      scheduledDate: '2025-09-25',
+      completedDate: '2025-09-25',
+      sentBy: 'Dr. Jones',
+      priority: 'routine'
+    }
+  ];
+
+  const filteredReferrals = referrals.filter(r => 
+    filterStatus === 'all' || r.status === filterStatus
+  );
+
+  const getStatusIcon = (status: string) => {
+    const icons = {
+      pending: <Clock className="w-4 h-4 text-amber-500" />,
+      scheduled: <CheckCircle className="w-4 h-4 text-blue-500" />,
+      completed: <CheckCircle className="w-4 h-4 text-emerald-500" />,
+      cancelled: <XCircle className="w-4 h-4 text-slate-400" />,
+      overdue: <AlertTriangle className="w-4 h-4 text-rose-500" />
+    };
+    return icons[status as keyof typeof icons];
+  };
+
+  const getStatusBadge = (status: string) => {
+    const colors = {
+      pending: 'bg-amber-100 text-amber-700 border-amber-200',
+      scheduled: 'bg-blue-100 text-blue-700 border-blue-200',
+      completed: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+      cancelled: 'bg-slate-100 text-slate-600 border-slate-200',
+      overdue: 'bg-rose-100 text-rose-700 border-rose-200'
+    };
+    return colors[status as keyof typeof colors];
+  };
+
+  const statusCounts = {
+    all: referrals.length,
+    pending: referrals.filter(r => r.status === 'pending').length,
+    scheduled: referrals.filter(r => r.status === 'scheduled').length,
+    overdue: referrals.filter(r => r.status === 'overdue').length,
+    completed: referrals.filter(r => r.status === 'completed').length
+  };
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-slate-200">
+      {/* Header with Stats */}
+      <div className="px-6 py-4 border-b border-slate-200 bg-slate-50">
+        <h3 className="text-lg font-semibold text-slate-800 mb-4">Referral Tracker</h3>
+        
+        <div className="grid grid-cols-5 gap-3">
+          {[
+            { key: 'all', label: 'All', count: statusCounts.all },
+            { key: 'pending', label: 'Pending', count: statusCounts.pending },
+            { key: 'scheduled', label: 'Scheduled', count: statusCounts.scheduled },
+            { key: 'overdue', label: 'Overdue', count: statusCounts.overdue },
+            { key: 'completed', label: 'Completed', count: statusCounts.completed }
+          ].map(({ key, label, count }) => (
+            <button
+              key={key}
+              onClick={() => setFilterStatus(key)}
+              className={`p-3 rounded-lg border-2 transition-all ${
+                filterStatus === key
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-slate-200 bg-white hover:border-slate-300'
+              }`}
+            >
+              <div className="text-2xl font-bold text-slate-800">{count}</div>
+              <div className="text-xs text-slate-600 mt-1">{label}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Referral List */}
+      <div className="divide-y divide-slate-100">
+        {filteredReferrals.map((referral) => (
+          <div key={referral.id} className="px-6 py-4 hover:bg-slate-50 transition-colors">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start gap-3">
+                {getStatusIcon(referral.status)}
+                <div>
+                  <div className="font-semibold text-slate-800 mb-1">{referral.patientName}</div>
+                  <div className="text-sm text-slate-500">MRN: {referral.mrn}</div>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                {referral.priority === 'urgent' && (
+                  <span className="px-2 py-1 bg-rose-100 text-rose-700 text-xs rounded-md border border-rose-200 font-medium">
+                    URGENT
+                  </span>
+                )}
+                <span className={`px-2 py-1 text-xs rounded-md border font-medium ${getStatusBadge(referral.status)}`}>
+                  {referral.status.toUpperCase()}
+                </span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 mb-3">
+              <div>
+                <div className="text-xs text-slate-500 mb-1">Referral Type</div>
+                <div className="font-medium text-slate-700">{referral.referralType}</div>
+              </div>
+              <div>
+                <div className="text-xs text-slate-500 mb-1">Target Specialty</div>
+                <div className="font-medium text-slate-700">{referral.targetSpecialty}</div>
+              </div>
+            </div>
+
+            <div className="mb-3">
+              <div className="text-xs text-slate-500 mb-1">Clinical Indication</div>
+              <div className="text-sm text-slate-700 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                {referral.indication}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4 mb-3 text-sm">
+              <div>
+                <span className="text-slate-500">Sent:</span>{' '}
+                <span className="font-medium text-slate-700">
+                  {new Date(referral.sentDate).toLocaleDateString()}
+                </span>
+              </div>
+              {referral.scheduledDate && (
+                <div>
+                  <span className="text-slate-500">Scheduled:</span>{' '}
+                  <span className="font-medium text-blue-600">
+                    {new Date(referral.scheduledDate).toLocaleDateString()}
+                  </span>
+                </div>
+              )}
+              {referral.completedDate && (
+                <div>
+                  <span className="text-slate-500">Completed:</span>{' '}
+                  <span className="font-medium text-emerald-600">
+                    {new Date(referral.completedDate).toLocaleDateString()}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {referral.notes && (
+              <div className="mb-3">
+                <div className="text-xs text-slate-500 mb-1">Notes</div>
+                <div className="text-sm text-amber-700 bg-amber-50 p-3 rounded-lg border border-amber-100">
+                  {referral.notes}
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+                <Send className="w-4 h-4" />
+                Follow Up
+              </button>
+              {referral.status === 'pending' && (
+                <button className="px-4 py-2 bg-emerald-100 text-emerald-700 text-sm rounded-lg hover:bg-emerald-200 transition-colors">
+                  Mark Scheduled
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ReferralTracker;

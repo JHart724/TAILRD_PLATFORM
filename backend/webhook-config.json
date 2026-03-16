@@ -1,0 +1,34 @@
+{
+  "webhook": {
+    "url": "http://localhost:3001/api/webhooks/redox",
+    "secret": "your_webhook_verification_secret",
+    "events": [
+      "PatientAdmin.Admission",
+      "PatientAdmin.Discharge",
+      "PatientAdmin.Transfer",
+      "Results.NewResult",
+      "Orders.NewOrder",
+      "ClinicalSummary.PatientPush",
+      "Notes.New",
+      "Scheduling.New"
+    ]
+  },
+  "dataModels": {
+    "PatientAdmin": {
+      "eventTypes": ["Admission", "Discharge", "Transfer"],
+      "description": "Patient admission, discharge, and transfer events"
+    },
+    "Results": {
+      "eventTypes": ["NewResult"],
+      "description": "Lab results and diagnostic reports"
+    },
+    "Orders": {
+      "eventTypes": ["NewOrder"],
+      "description": "Medication and lab orders"
+    },
+    "ClinicalSummary": {
+      "eventTypes": ["PatientPush"],
+      "description": "Clinical summary documents"
+    }
+  }
+}

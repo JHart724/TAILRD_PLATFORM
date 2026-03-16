@@ -1,0 +1,2026 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Multi-tenant hospital model
+model Hospital {
+  id           String       @id @default(cuid())
+  name         String
+  system       String? // Health system name if part of larger network
+  npi          String?      @unique
+  patientCount Int
+  bedCount     Int
+  hospitalType HospitalType
+
+  // Address
+  street  String
+  city    String
+  state   String
+  zipCode String
+  country String @default("USA")
+
+  // Redox Configuration
+  redoxSourceId      String  @unique
+  redoxDestinationId String  @unique
+  redoxWebhookUrl    String
+  redoxIsActive      Boolean @default(true)
+
+  // Module Subscriptions
+  moduleHeartFailure         Boolean @default(false)
+  moduleElectrophysiology    Boolean @default(false)
+  moduleStructuralHeart      Boolean @default(false)
+  moduleCoronaryIntervention Boolean @default(false)
+  modulePeripheralVascular   Boolean @default(false)
+  moduleValvularDisease      Boolean @default(false)
+
+  // Subscription Details
+  subscriptionTier   SubscriptionTier
+  subscriptionStart  DateTime
+  subscriptionEnd    DateTime?
+  subscriptionActive Boolean          @default(true)
+  maxUsers           Int
+
+  // Relationships
+  users         User[]
+  patients      Patient[]
+  loginSessions LoginSession[]
+  webhookEvents WebhookEvent[]
+
+  // Core clinical relationships (tenant-scoped)
+  encounters   Encounter[]
+  observations Observation[]
+  orders       Order[]
+  alerts       Alert[]
+
+  // Clinical Decision Support relationships
+  cqlResults                  CQLResult[]
+  therapyGaps                 TherapyGap[]
+  phenotypes                  Phenotype[]
+  crossReferrals              CrossReferral[]
+  drugTitrations              DrugTitration[]
+  qualityMeasures             QualityMeasure[]
+  deviceEligibility           DeviceEligibility[]
+  riskScoreAssessments        RiskScoreAssessment[]
+  interventionTracking        InterventionTracking[]
+  contraindicationAssessments ContraindicationAssessment[]
+
+  // New clinical models
+  medications Medication[]
+  conditions  Condition[]
+  carePlans   CarePlan[]
+  auditLogs   AuditLog[]
+
+  // Operations relationships
+  onboardingSteps Onboarding[]
+  internalNotes   InternalNote[]
+
+  // Analytics relationships
+  userActivities     UserActivity[]
+  featureUsages      FeatureUsage[]
+  performanceMetrics PerformanceMetric[]
+  businessMetrics    BusinessMetric[]
+  reportGenerations  ReportGeneration[]
+  errorLogs          ErrorLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("hospitals")
+}
+
+// User model with role-based permissions
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String // Hashed password for production
+  firstName    String
+  lastName     String
+  title        String?
+  department   String?
+  npi          String? // For physicians
+  role         UserRole
+
+  // Hospital association
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Module Permissions
+  permHeartFailure         Boolean @default(false)
+  permElectrophysiology    Boolean @default(false)
+  permStructuralHeart      Boolean @default(false)
+  permCoronaryIntervention Boolean @default(false)
+  permPeripheralVascular   Boolean @default(false)
+  permValvularDisease      Boolean @default(false)
+
+  // View Permissions
+  permExecutiveView   Boolean @default(false)
+  permServiceLineView Boolean @default(false)
+  permCareTeamView    Boolean @default(false)
+
+  // Action Permissions
+  permViewReports     Boolean @default(true)
+  permExportData      Boolean @default(false)
+  permManageUsers     Boolean @default(false)
+  permConfigureAlerts Boolean @default(false)
+  permAccessPHI       Boolean @default(false)
+
+  isActive  Boolean   @default(true)
+  lastLogin DateTime?
+
+  // Password reset
+  resetToken       String?   @unique
+  resetTokenExpiry DateTime?
+
+  // Relationships
+  loginSessions   LoginSession[]
+  alerts          Alert[]
+  recommendations Recommendation[]
+
+  // Analytics relationships
+  userActivities    UserActivity[]
+  featureUsages     FeatureUsage[]
+  reportGenerations ReportGeneration[]
+  errorLogs         ErrorLog[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("users")
+}
+
+// Patient model with EHR integration
+model Patient {
+  id String @id @default(cuid())
+
+  // Hospital association for multi-tenancy
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Patient Demographics
+  mrn         String // Medical Record Number from EHR
+  firstName   String
+  lastName    String
+  dateOfBirth DateTime
+  gender      Gender
+  phone       String?
+  email       String?
+
+  // Address
+  street  String?
+  city    String?
+  state   String?
+  zipCode String?
+
+  // Clinical Status
+  isActive       Boolean       @default(true)
+  riskScore      Float?
+  riskCategory   RiskCategory?
+  lastAssessment DateTime?
+
+  // Module Associations
+  heartFailurePatient       Boolean @default(false)
+  electrophysiologyPatient  Boolean @default(false)
+  structuralHeartPatient    Boolean @default(false)
+  coronaryPatient           Boolean @default(false)
+  peripheralVascularPatient Boolean @default(false)
+  valvularDiseasePatient    Boolean @default(false)
+
+  // EHR Integration
+  fhirPatientId String? // FHIR Patient resource ID
+  lastEHRSync   DateTime?
+
+  // Relationships
+  encounters      Encounter[]
+  observations    Observation[]
+  orders          Order[]
+  alerts          Alert[]
+  recommendations Recommendation[]
+
+  // Clinical Decision Support relationships
+  cqlResults                  CQLResult[]
+  therapyGaps                 TherapyGap[]
+  phenotypes                  Phenotype[]
+  crossReferrals              CrossReferral[]
+  drugTitrations              DrugTitration[]
+  deviceEligibility           DeviceEligibility[]
+  riskScoreAssessments        RiskScoreAssessment[]
+  interventionTracking        InterventionTracking[]
+  contraindicationAssessments ContraindicationAssessment[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // New clinical model relationships
+  medications Medication[]
+  conditions  Condition[]
+  carePlans   CarePlan[]
+
+  @@unique([hospitalId, mrn]) // MRN is unique within each hospital
+  @@index([fhirPatientId])
+  @@index([email])
+  @@index([lastName, firstName])
+  @@map("patients")
+}
+
+// Encounter model (visits, admissions)
+model Encounter {
+  id String @id @default(cuid())
+
+  // Patient association
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  // Hospital association (tenant isolation)
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Encounter Details
+  encounterNumber String // From EHR
+  encounterType   EncounterType
+  status          EncounterStatus
+
+  startDateTime DateTime
+  endDateTime   DateTime?
+
+  // Location and Provider
+  department        String?
+  location          String?
+  attendingProvider String?
+
+  // Clinical Details
+  chiefComplaint   String?
+  primaryDiagnosis String?
+  diagnosisCodes   Json? // ICD-10 codes
+
+  // EHR Integration
+  fhirEncounterId String? @unique
+
+  // Relationships
+  observations Observation[]
+  orders       Order[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([hospitalId, startDateTime])
+  @@index([patientId, startDateTime])
+  @@map("encounters")
+}
+
+// Observation model (lab results, vitals, clinical findings)
+model Observation {
+  id String @id @default(cuid())
+
+  // Patient and Encounter association
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  encounterId String?
+  encounter   Encounter? @relation(fields: [encounterId], references: [id], onDelete: SetNull)
+
+  // Hospital association (tenant isolation)
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Observation Details
+  observationType String // LOINC code or custom type
+  observationName String // Human readable name
+  category        ObservationCategory
+
+  // Values (only one should be populated)
+  valueNumeric Float?
+  valueText    String?
+  valueBoolean Boolean?
+
+  // Units and References
+  unit               String?
+  referenceRangeLow  Float?
+  referenceRangeHigh Float?
+  isAbnormal         Boolean @default(false)
+
+  // Timing
+  observedDateTime DateTime
+  resultDateTime   DateTime?
+
+  // Clinical Context
+  orderingProvider String?
+  performingLab    String?
+
+  // EHR Integration
+  fhirObservationId String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([hospitalId, observedDateTime])
+  @@index([patientId, observationType])
+  @@index([fhirObservationId])
+  @@index([observationType, observedDateTime])
+  @@map("observations")
+}
+
+// Order model (procedures, medications, lab orders)
+model Order {
+  id String @id @default(cuid())
+
+  // Patient and Encounter association
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  encounterId String?
+  encounter   Encounter? @relation(fields: [encounterId], references: [id], onDelete: SetNull)
+
+  // Hospital association (tenant isolation)
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Order Details
+  orderType OrderType
+  orderCode String? // CPT, HCPCS, or internal codes
+  orderName String
+  status    OrderStatus
+  priority  OrderPriority
+
+  // Timing
+  orderedDateTime   DateTime
+  scheduledDateTime DateTime?
+  completedDateTime DateTime?
+
+  // Provider and Location
+  orderingProvider     String
+  performingDepartment String?
+
+  // Clinical Details
+  indication   String?
+  instructions String?
+
+  // EHR Integration
+  fhirOrderId String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([hospitalId, orderedDateTime])
+  @@index([patientId, orderType])
+  @@index([fhirOrderId])
+  @@map("orders")
+}
+
+// Alert model for clinical decision support
+model Alert {
+  id String @id @default(cuid())
+
+  // Patient association
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  // Hospital association (tenant isolation)
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // User assignment (optional)
+  assignedUserId String?
+  assignedUser   User?   @relation(fields: [assignedUserId], references: [id], onDelete: SetNull)
+
+  // Alert Details
+  alertType  AlertType
+  severity   AlertSeverity
+  title      String
+  message    String
+  moduleType ModuleType
+
+  actionRequired Boolean @default(false)
+  isAcknowledged Boolean @default(false)
+
+  // Timing
+  triggeredAt    DateTime  @default(now())
+  acknowledgedAt DateTime?
+  resolvedAt     DateTime?
+  expiresAt      DateTime?
+
+  // Metadata
+  triggerData Json? // Additional context data
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([hospitalId, severity])
+  @@index([patientId, moduleType])
+  @@map("alerts")
+}
+
+// Recommendation model for clinical guidance
+model Recommendation {
+  id String @id @default(cuid())
+
+  // Patient association
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  // User assignment (optional)
+  assignedUserId String?
+  assignedUser   User?   @relation(fields: [assignedUserId], references: [id], onDelete: SetNull)
+
+  // Recommendation Details
+  recommendationType RecommendationType
+  priority           RecommendationPriority
+  title              String
+  description        String
+  evidence           String?
+  moduleType         ModuleType
+
+  // Implementation
+  isImplemented       Boolean   @default(false)
+  implementedAt       DateTime?
+  implementationNotes String?
+
+  // Timing
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expiresAt DateTime?
+
+  // Metadata
+  evidenceLevel   String? // A, B, C, etc.
+  guidelineSource String? // ACC/AHA, ESC, etc.
+
+  @@map("recommendations")
+}
+
+// Login session tracking for security
+model LoginSession {
+  id String @id @default(cuid())
+
+  // User and Hospital association
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+
+  // Session Details
+  sessionToken String  @unique
+  ipAddress    String
+  userAgent    String?
+
+  // Timing
+  loginTime    DateTime @default(now())
+  lastActivity DateTime @default(now())
+  expiresAt    DateTime
+  isActive     Boolean  @default(true)
+
+  // Location (optional)
+  location String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("login_sessions")
+}
+
+// Webhook event tracking for EHR integration
+model WebhookEvent {
+  id String @id @default(cuid())
+
+  // Hospital association
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Event Details
+  eventType    String // NewPatient, Results, Visits, Orders
+  eventId      String // Unique event ID from Redox
+  sourceSystem String // Source EHR system
+
+  // Processing Status
+  status       WebhookStatus
+  processedAt  DateTime?
+  errorMessage String?
+  retryCount   Int           @default(0)
+
+  // Data
+  rawPayload    Json // Original webhook payload
+  processedData Json? // Transformed data
+
+  // Timing
+  receivedAt    DateTime @default(now())
+  eventDateTime DateTime // When the event occurred in the source system
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("webhook_events")
+}
+
+// Enums
+enum HospitalType {
+  COMMUNITY
+  ACADEMIC
+  SPECIALTY
+  CRITICAL_ACCESS
+  FEDERAL
+}
+
+enum SubscriptionTier {
+  BASIC
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  HOSPITAL_ADMIN
+  PHYSICIAN
+  NURSE_MANAGER
+  QUALITY_DIRECTOR
+  ANALYST
+  VIEWER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  UNKNOWN
+}
+
+enum RiskCategory {
+  LOW
+  MODERATE
+  HIGH
+  CRITICAL
+}
+
+enum EncounterType {
+  INPATIENT
+  OUTPATIENT
+  EMERGENCY
+  OBSERVATION
+  DAY_SURGERY
+  TELEHEALTH
+}
+
+enum EncounterStatus {
+  PLANNED
+  ARRIVED
+  TRIAGED
+  IN_PROGRESS
+  ON_LEAVE
+  FINISHED
+  CANCELLED
+}
+
+enum ObservationCategory {
+  VITAL_SIGNS
+  LABORATORY
+  IMAGING
+  PROCEDURE
+  SURVEY
+  EXAM
+  THERAPY
+}
+
+enum OrderType {
+  LABORATORY
+  IMAGING
+  PROCEDURE
+  MEDICATION
+  CONSULT
+  THERAPY
+  DIET
+  NURSING
+}
+
+enum OrderStatus {
+  DRAFT
+  ACTIVE
+  ON_HOLD
+  REVOKED
+  COMPLETED
+  ENTERED_IN_ERROR
+  UNKNOWN
+}
+
+enum OrderPriority {
+  ROUTINE
+  URGENT
+  ASAP
+  STAT
+}
+
+enum AlertType {
+  CLINICAL
+  ADMINISTRATIVE
+  TECHNICAL
+  SAFETY
+}
+
+enum AlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum RecommendationType {
+  MEDICATION
+  PROCEDURE
+  FOLLOWUP
+  LIFESTYLE
+  MONITORING
+  REFERRAL
+}
+
+enum RecommendationPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum ModuleType {
+  HEART_FAILURE
+  ELECTROPHYSIOLOGY
+  STRUCTURAL_HEART
+  CORONARY_INTERVENTION
+  PERIPHERAL_VASCULAR
+  VALVULAR_DISEASE
+}
+
+enum WebhookStatus {
+  RECEIVED
+  PROCESSING
+  COMPLETED
+  FAILED
+  RETRYING
+}
+
+// Analytics Models for Usage Tracking
+
+// User activity tracking
+model UserActivity {
+  id String @id @default(cuid())
+
+  // User and Hospital association
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Session tracking
+  sessionId String
+  ipAddress String
+  userAgent String?
+
+  // Activity details
+  activityType ActivityType
+  action       String // Specific action taken (e.g., "view_patient", "generate_report")
+  resourceType String? // Type of resource accessed (e.g., "patient", "report", "dashboard")
+  resourceId   String? // ID of specific resource
+  moduleType   ModuleType?
+
+  // Context and metadata
+  path     String // URL path
+  method   String // HTTP method (GET, POST, etc.)
+  duration Int? // Time spent in milliseconds
+  metadata Json? // Additional context data
+
+  // Performance metrics
+  responseTime Int? // API response time in ms
+  success      Boolean @default(true)
+  errorMessage String?
+
+  // Location and device info
+  country     String?
+  region      String?
+  city        String?
+  deviceType  String? // desktop, mobile, tablet
+  browserName String?
+  osName      String?
+
+  timestamp DateTime @default(now())
+
+  @@index([hospitalId, timestamp])
+  @@index([userId, timestamp])
+  @@index([sessionId])
+  @@index([activityType, timestamp])
+  @@map("user_activities")
+}
+
+// Feature usage tracking
+model FeatureUsage {
+  id String @id @default(cuid())
+
+  // Hospital and user association
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Feature details
+  featureName String // e.g., "patient_search", "alert_dashboard", "report_export"
+  moduleType  ModuleType?
+  category    FeatureCategory
+
+  // Usage metrics
+  usageCount    Int      @default(1)
+  totalDuration Int      @default(0) // Total time spent in ms
+  lastUsed      DateTime @default(now())
+
+  // Aggregation period
+  period      String // "daily", "weekly", "monthly"
+  periodStart DateTime
+  periodEnd   DateTime
+
+  // Metadata
+  metadata Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([hospitalId, userId, featureName, period, periodStart])
+  @@index([hospitalId, period, periodStart])
+  @@index([featureName, period])
+  @@map("feature_usage")
+}
+
+// Performance metrics tracking
+model PerformanceMetric {
+  id String @id @default(cuid())
+
+  // Hospital association
+  hospitalId String?
+  hospital   Hospital? @relation(fields: [hospitalId], references: [id], onDelete: SetNull)
+
+  // Metric details
+  metricType MetricType
+  endpoint   String? // API endpoint
+  operation  String // Operation name
+
+  // Performance data
+  responseTime    Float // Average response time in ms
+  throughput      Float? // Requests per second
+  errorRate       Float? // Error percentage
+  p95ResponseTime Float? // 95th percentile response time
+  p99ResponseTime Float? // 99th percentile response time
+
+  // Volume metrics
+  requestCount Int // Number of requests
+  errorCount   Int @default(0)
+
+  // Resource usage
+  cpuUsage    Float?
+  memoryUsage Float?
+  dbQueries   Int?
+
+  // Time period
+  period      String // "hourly", "daily", "weekly"
+  periodStart DateTime
+  periodEnd   DateTime
+
+  timestamp DateTime @default(now())
+
+  @@index([metricType, period, periodStart])
+  @@index([hospitalId, period])
+  @@map("performance_metrics")
+}
+
+// Business intelligence metrics
+model BusinessMetric {
+  id String @id @default(cuid())
+
+  // Hospital association
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Metric details
+  metricName String // e.g., "patient_engagement", "alert_response_time", "module_adoption"
+  category   BusinessCategory
+  moduleType ModuleType?
+
+  // Metric values
+  value         Float
+  target        Float? // Target value if applicable
+  previousValue Float? // Previous period value for comparison
+
+  // Dimensions for grouping
+  dimension1      String? // e.g., "user_role", "department"
+  dimension1Value String?
+  dimension2      String?
+  dimension2Value String?
+
+  // Time period
+  period      String // "daily", "weekly", "monthly", "quarterly"
+  periodStart DateTime
+  periodEnd   DateTime
+
+  // Metadata
+  unit        String? // Unit of measurement (e.g., "minutes", "count", "percentage")
+  description String?
+  metadata    Json?
+
+  createdAt DateTime @default(now())
+
+  @@unique([hospitalId, metricName, period, periodStart, dimension1Value, dimension2Value])
+  @@index([hospitalId, category, period])
+  @@index([metricName, period])
+  @@map("business_metrics")
+}
+
+// Report generation tracking
+model ReportGeneration {
+  id String @id @default(cuid())
+
+  // User and hospital association
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Report details
+  reportType String // e.g., "patient_summary", "quality_metrics", "utilization_report"
+  reportName String
+  moduleType ModuleType?
+
+  // Parameters and filters
+  dateRange  Json? // Start and end dates
+  filters    Json? // Applied filters
+  parameters Json? // Report parameters
+
+  // Generation metrics
+  generationTime Int // Time to generate in ms
+  recordCount    Int? // Number of records in report
+  fileSize       Int? // File size in bytes
+  exportFormat   String? // PDF, Excel, CSV, etc.
+
+  // Status
+  status       ReportStatus
+  errorMessage String?
+
+  // File info
+  fileName      String?
+  filePath      String?
+  downloadCount Int       @default(0)
+  expiresAt     DateTime?
+
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@index([hospitalId, createdAt])
+  @@index([userId, createdAt])
+  @@index([reportType, createdAt])
+  @@map("report_generations")
+}
+
+// Error and exception tracking
+model ErrorLog {
+  id String @id @default(cuid())
+
+  // Hospital and user context
+  hospitalId String?
+  hospital   Hospital? @relation(fields: [hospitalId], references: [id], onDelete: SetNull)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Error details
+  errorType    String // e.g., "validation_error", "database_error", "external_api_error"
+  errorCode    String?
+  errorMessage String
+  stackTrace   String?
+
+  // Request context
+  endpoint  String?
+  method    String?
+  requestId String?
+  userAgent String?
+  ipAddress String?
+
+  // Technical details
+  serverInstance String?
+  environment    String? // "development", "staging", "production"
+  version        String?
+
+  // Error metadata
+  severity   ErrorSeverity
+  isResolved Boolean       @default(false)
+  resolvedAt DateTime?
+  resolvedBy String?
+
+  // Grouping and tracking
+  errorHash       String? // Hash of error for grouping similar errors
+  occurrenceCount Int      @default(1)
+  firstOccurrence DateTime @default(now())
+  lastOccurrence  DateTime @default(now())
+
+  timestamp DateTime @default(now())
+
+  @@index([errorType, timestamp])
+  @@index([hospitalId, timestamp])
+  @@index([errorHash])
+  @@index([severity, isResolved])
+  @@map("error_logs")
+}
+
+// Note: Analytics relationships are added to existing Hospital and User models
+// These relationships will be added to the existing model definitions above
+
+// Analytics Enums
+enum ActivityType {
+  LOGIN
+  LOGOUT
+  PAGE_VIEW
+  API_REQUEST
+  SEARCH
+  FILTER
+  EXPORT
+  CREATE
+  UPDATE
+  DELETE
+  DOWNLOAD
+  PRINT
+  SHARE
+}
+
+enum FeatureCategory {
+  DASHBOARD
+  PATIENT_MANAGEMENT
+  CLINICAL_DECISION_SUPPORT
+  REPORTING
+  ANALYTICS
+  ADMINISTRATION
+  COMMUNICATION
+  DATA_EXPORT
+  ALERTS
+  WORKFLOWS
+}
+
+enum MetricType {
+  API_PERFORMANCE
+  DATABASE_PERFORMANCE
+  UI_PERFORMANCE
+  SYSTEM_HEALTH
+  NETWORK_LATENCY
+  ERROR_TRACKING
+  RESOURCE_UTILIZATION
+}
+
+enum BusinessCategory {
+  USER_ENGAGEMENT
+  CLINICAL_OUTCOMES
+  OPERATIONAL_EFFICIENCY
+  QUALITY_METRICS
+  UTILIZATION
+  ADOPTION
+  SATISFACTION
+  COMPLIANCE
+}
+
+enum ReportStatus {
+  PENDING
+  GENERATING
+  COMPLETED
+  FAILED
+  EXPIRED
+}
+
+enum ErrorSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+// Clinical Decision Support Models
+
+// CQL Rules for clinical logic
+model CQLRule {
+  id             String     @id @default(cuid())
+  name           String
+  version        String
+  module         ModuleType
+  category       String // e.g., "phenotyping", "quality_measures", "drug_titration"
+  filePath       String // Path to CQL file
+  isActive       Boolean    @default(true)
+  lastExecuted   DateTime?
+  executionCount Int        @default(0)
+
+  // Rule metadata
+  description     String?
+  authoredBy      String?
+  evidenceLevel   String? // A, B, C
+  guidelineSource String? // ACC/AHA, ESC, etc.
+
+  // Relationships
+  cqlResults CQLResult[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, version])
+  @@map("cql_rules")
+}
+
+// Results from CQL rule execution
+model CQLResult {
+  id String @id @default(cuid())
+
+  // Patient and hospital association
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Rule association
+  ruleId String
+  rule   CQLRule @relation(fields: [ruleId], references: [id], onDelete: Restrict)
+
+  // Result data
+  result         Json // CQL execution result
+  severity       AlertSeverity
+  recommendation String?
+
+  // Acknowledgment tracking
+  acknowledgedAt DateTime?
+  acknowledgedBy String?
+
+  createdAt DateTime @default(now())
+
+  @@index([patientId, createdAt])
+  @@index([ruleId, createdAt])
+  @@map("cql_results")
+}
+
+// Therapy gaps identified by CQL rules
+model TherapyGap {
+  id String @id @default(cuid())
+
+  // Patient and hospital association
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Gap details
+  gapType       TherapyGapType
+  module        ModuleType
+  medication    String? // Drug name if medication gap
+  device        String? // Device type if device gap
+  currentStatus String
+  targetStatus  String
+
+  // Tracking
+  identifiedAt DateTime  @default(now())
+  resolvedAt   DateTime?
+  resolvedBy   String?
+
+  // Additional context
+  barriers        Json? // Barriers to optimal therapy
+  recommendations Json? // Specific recommendations
+
+  @@index([patientId, identifiedAt])
+  @@index([module, gapType])
+  @@map("therapy_gaps")
+}
+
+// Phenotype detection and tracking
+model Phenotype {
+  id String @id @default(cuid())
+
+  // Patient and hospital association
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Phenotype details
+  phenotypeName PhenotypeType
+  status        PhenotypeStatus
+  confidence    Float // 0.0 to 1.0
+  evidence      Json // Supporting evidence data
+
+  // Tracking
+  detectedAt  DateTime  @default(now())
+  confirmedAt DateTime?
+  confirmedBy String? // User ID who confirmed
+
+  // Risk scoring
+  riskScore   Float?
+  riskFactors Json?
+
+  @@index([patientId, phenotypeName])
+  @@index([phenotypeName, status])
+  @@map("phenotypes")
+}
+
+// Cross-module referrals
+model CrossReferral {
+  id String @id @default(cuid())
+
+  // Patient and hospital association
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Referral details
+  fromModule ModuleType
+  toModule   ModuleType
+  reason     String
+  urgency    ReferralUrgency
+  status     ReferralStatus
+
+  // Tracking
+  triggeredAt DateTime  @default(now())
+  reviewedAt  DateTime?
+  reviewedBy  String?
+  acceptedAt  DateTime?
+  acceptedBy  String?
+  completedAt DateTime?
+  completedBy String?
+
+  // Additional data
+  triggerData Json? // Data that triggered the referral
+  notes       String?
+
+  @@index([patientId, status])
+  @@index([fromModule, toModule])
+  @@map("cross_referrals")
+}
+
+// Drug titration tracking for GDMT
+model DrugTitration {
+  id String @id @default(cuid())
+
+  // Patient and hospital association
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Drug details
+  drugClass        HFPillarType? // Heart failure pillars (optional for non-HF)
+  generalDrugClass DrugClassType? // General drug class for all modules
+  module           ModuleType     @default(HEART_FAILURE)
+  drugName         String
+  currentDose      Float
+  currentDoseUnit  String
+  targetDose       Float
+  targetDoseUnit   String
+
+  // Titration plan
+  nextStepDate  DateTime?
+  nextStepDose  Float?
+  titrationStep Int       @default(1)
+
+  // Barriers and monitoring
+  barriers       Json? // Lab values, side effects, etc.
+  monitoringPlan Json? // Required labs, vitals, etc.
+
+  // Status tracking
+  isActive     Boolean   @default(true)
+  pausedReason String?
+  completedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([patientId, drugClass])
+  @@index([nextStepDate])
+  @@map("drug_titrations")
+}
+
+// CMS Quality Measures tracking
+model QualityMeasure {
+  id String @id @default(cuid())
+
+  // Hospital association
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Measure details
+  measureCode        String // CMS144, CMS145, etc.
+  measureName        String
+  measureDescription String?
+
+  // Performance data
+  numerator   Int // Patients meeting measure
+  denominator Int // Eligible patients
+  rate        Float // Performance rate (0.0 to 1.0)
+
+  // Reporting period
+  reportingPeriod String // e.g., "2024-Q1"
+  periodStart     DateTime
+  periodEnd       DateTime
+
+  // Benchmark data
+  nationalBenchmark Float?
+  target            Float?
+  previousRate      Float?
+
+  // Additional context
+  exclusions       Int? // Excluded patients
+  exclusionReasons Json?
+
+  createdAt DateTime @default(now())
+
+  @@unique([hospitalId, measureCode, reportingPeriod])
+  @@index([measureCode, periodStart])
+  @@map("quality_measures")
+}
+
+// Device eligibility tracking
+model DeviceEligibility {
+  id String @id @default(cuid())
+
+  // Patient and hospital association
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Device details
+  deviceType  DeviceType
+  deviceModel String?
+
+  // Eligibility assessment
+  eligible         Boolean
+  eligibilityScore Float? // 0.0 to 1.0
+  criteria         Json // Criteria met/not met
+  barriers         Json? // Barriers to implantation
+
+  // Clinical context
+  indication        String?
+  contraindications Json?
+
+  // Tracking
+  evaluatedAt DateTime  @default(now())
+  evaluatedBy String?
+  reviewedAt  DateTime?
+  reviewedBy  String?
+
+  // Outcome
+  implanted      Boolean   @default(false)
+  implantedAt    DateTime?
+  declinedReason String?
+
+  @@index([patientId, deviceType])
+  @@index([evaluatedAt])
+  @@map("device_eligibility")
+}
+
+// New Enums for Clinical Models
+
+enum TherapyGapType {
+  MEDICATION_MISSING
+  MEDICATION_UNDERDOSED
+  MEDICATION_CONTRAINDICATED
+  DEVICE_ELIGIBLE
+  DEVICE_UPGRADE_DUE
+  MONITORING_OVERDUE
+  FOLLOWUP_OVERDUE
+}
+
+enum PhenotypeType {
+  CARDIAC_AMYLOIDOSIS
+  CARDIAC_SARCOIDOSIS
+  HCM
+  ARVC
+  LVNC
+  FABRY_DISEASE
+  IRON_DEFICIENCY_HF
+  PERIPARTUM_CARDIOMYOPATHY
+  CHEMOTHERAPY_CARDIOMYOPATHY
+  CHAGAS_CARDIOMYOPATHY
+  TACHYCARDIA_CARDIOMYOPATHY
+  AUTOIMMUNE_MYOCARDITIS
+  // Coronary phenotypes
+  CMD
+  SCAD
+  CORONARY_ECTASIA
+  VASOSPASTIC_ANGINA
+  IN_STENT_RESTENOSIS
+  THROMBOTIC_CAD
+  CALCIFIC_CAD
+  LEFT_MAIN_DISEASE
+  MYOCARDIAL_BRIDGING
+  CORONARY_FISTULA
+  // Valvular phenotypes
+  LFLG_AORTIC_STENOSIS
+  BPV_DEGENERATION
+  INFECTIVE_ENDOCARDITIS
+  RHEUMATIC_VALVE
+  MARFAN_VALVE
+  PARAVALVULAR_LEAK
+  RADIATION_VALVE
+  CARCINOID_VALVE
+  // Peripheral phenotypes
+  CLTI
+  DIABETIC_FOOT
+  BLUE_TOE_SYNDROME
+  POPLITEAL_ENTRAPMENT
+  FMD
+  BUERGER_DISEASE
+  ADVENTITIAL_CYSTIC
+  MALS
+}
+
+enum PhenotypeStatus {
+  DETECTED
+  SUSPECTED
+  RULED_OUT
+  CONFIRMED
+  MONITORING
+}
+
+enum ReferralUrgency {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ReferralStatus {
+  TRIGGERED
+  REVIEWED
+  ACCEPTED
+  DECLINED
+  COMPLETED
+  EXPIRED
+}
+
+enum HFPillarType {
+  ACE_ARB_ARNI
+  BETA_BLOCKER
+  MRA
+  SGLT2_INHIBITOR
+}
+
+enum DeviceType {
+  ICD
+  CRT_P
+  CRT_D
+  PACEMAKER
+  WATCHMAN
+  MITRACLIP
+  LVAD
+  HEART_MATE
+  // Coronary devices/interventions
+  DES
+  BMS
+  IVUS_CATHETER
+  OCT_CATHETER
+  FFR_WIRE
+  IVL_CATHETER
+  IMPELLA
+  ROTABLATOR
+  // Valvular devices
+  TAVR_VALVE
+  SAVR_PROSTHESIS
+  TEER_DEVICE
+  TMVR_DEVICE
+  // Peripheral devices
+  PERIPHERAL_STENT
+  DCB
+  ATHERECTOMY_DEVICE
+  BYPASS_GRAFT
+}
+
+// ============================================
+// Group B Clinical Intelligence Enums
+// ============================================
+
+enum DrugClassType {
+  // Coronary
+  ANTIPLATELET
+  P2Y12_INHIBITOR
+  ANTICOAGULANT_CORONARY
+  STATIN
+  NITRATE
+  CCB_ANTIANGINAL
+  RANOLAZINE
+  // Valvular
+  ANTICOAGULANT_VALVE
+  ANTIHYPERTENSIVE_VALVE
+  DIURETIC_VALVE
+  // Peripheral
+  CILOSTAZOL
+  ANTIPLATELET_PAD
+  STATIN_PAD
+  PENTOXIFYLLINE
+  PROSTANOID
+  // General HF (mirrors HFPillarType for cross-module use)
+  ACE_ARB_ARNI_GENERAL
+  BETA_BLOCKER_GENERAL
+  MRA_GENERAL
+  SGLT2I_GENERAL
+}
+
+enum RiskScoreType {
+  // Heart Failure
+  MAGGIC
+  SHFM // Seattle Heart Failure Model
+  // Electrophysiology
+  CHA2DS2_VASC
+  HAS_BLED
+  // Structural Heart
+  STS_SCORE
+  EUROSCORE_II
+  // Coronary
+  GRACE
+  SYNTAX
+  TIMI
+  HEART_SCORE
+  DUKE_JEOPARDY
+  // Peripheral
+  ABI_ASSESSMENT
+  FONTAINE
+  RUTHERFORD
+  WIFI // Wound, Ischemia, Foot Infection
+  // Valvular (shared with SH)
+  STS_PROM // STS Predicted Risk of Mortality
+  EUROSCORE_LOG // Logistic EuroSCORE
+  // GDMT
+  GDMT_OPTIMIZATION // HF Guideline-Directed Medical Therapy score
+}
+
+enum InterventionCategory {
+  PERCUTANEOUS
+  SURGICAL
+  DIAGNOSTIC
+  IMAGING
+  THERAPEUTIC
+  PHARMACOLOGIC
+  DEVICE_IMPLANT
+  MONITORING
+}
+
+enum InterventionStatus {
+  ELIGIBLE
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  DEFERRED
+  CONTRAINDICATED
+}
+
+enum ContraindicationLevel {
+  SAFE
+  MONITOR
+  CAUTION
+  RELATIVE
+  ABSOLUTE
+}
+
+// ============================================
+// Group B Clinical Intelligence Models
+// ============================================
+
+// Risk score assessments across all modules
+model RiskScoreAssessment {
+  id String @id @default(cuid())
+
+  // Patient and hospital association
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Score details
+  scoreType    RiskScoreType
+  module       ModuleType
+  totalScore   Float
+  riskCategory RiskCategory
+
+  // Score components (breakdown)
+  components Json // Individual factor scores: { "age": 3, "killip": 2, ... }
+  inputData  Json // Raw input values used for calculation
+
+  // Interpretation
+  interpretation String // Clinical interpretation text
+  recommendation String? // Recommended clinical pathway
+  mortality      Float? // Predicted mortality percentage
+  eventRisk      Float? // Predicted event risk percentage
+
+  // Clinical context
+  calculatedBy    String? // User who ran the calculation
+  clinicalContext String? // e.g., "Pre-PCI assessment", "Surgical evaluation"
+
+  // Tracking
+  calculatedAt DateTime  @default(now())
+  validUntil   DateTime? // Score may need recalculation after this date
+
+  createdAt DateTime @default(now())
+
+  @@index([patientId, scoreType])
+  @@index([scoreType, module])
+  @@index([hospitalId, calculatedAt])
+  @@map("risk_score_assessments")
+}
+
+// Intervention/procedure tracking across all modules
+model InterventionTracking {
+  id String @id @default(cuid())
+
+  // Patient and hospital association
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Intervention details
+  interventionName String // e.g., "DES Implantation", "TAVR", "Endovascular Revascularization"
+  category         InterventionCategory
+  module           ModuleType
+  status           InterventionStatus
+
+  // Coding
+  cptCode           String? // CPT procedure code
+  icd10Code         String? // ICD-10 procedure code
+  reimbursementCode String? // HCPCS or DRG
+
+  // Timing
+  scheduledAt DateTime?
+  performedAt DateTime?
+  completedAt DateTime?
+
+  // Provider
+  performingProvider String?
+  referringProvider  String?
+  facility           String?
+
+  // Clinical details
+  indication    String?
+  technique     String? // Specific technique used
+  findings      Json? // Procedural findings
+  complications Json? // Any complications
+
+  // Outcome
+  outcome        String? // Successful, Partially successful, Failed
+  followUpPlan   String?
+  nextAssessment DateTime?
+
+  // Financial
+  estimatedReimbursement Float?
+  actualReimbursement    Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([patientId, module])
+  @@index([module, category])
+  @@index([hospitalId, performedAt])
+  @@index([status, module])
+  @@map("intervention_tracking")
+}
+
+// Contraindication assessment records
+model ContraindicationAssessment {
+  id String @id @default(cuid())
+
+  // Patient and hospital association
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Assessment details
+  module      ModuleType
+  therapyName String // Drug or intervention name
+  therapyType String // "medication" or "procedure"
+
+  // Result
+  level        ContraindicationLevel
+  reasons      Json // Array of contraindication reasons
+  alternatives Json? // Alternative therapies
+  monitoring   Json? // Required monitoring if proceeding
+  dosing       Json? // Recommended dosing adjustments
+
+  // Clinical context
+  assessedBy     String? // User who performed assessment
+  overriddenBy   String? // If contraindication was overridden
+  overrideReason String? // Clinical justification for override
+
+  // Tracking
+  assessedAt   DateTime  @default(now())
+  validUntil   DateTime? // Reassessment needed after this date
+  supersededBy String? // ID of newer assessment that replaces this one
+
+  createdAt DateTime @default(now())
+
+  @@index([patientId, module])
+  @@index([therapyName, level])
+  @@index([hospitalId, assessedAt])
+  @@map("contraindication_assessments")
+}
+
+// ════════════════════════════════════════════════════════════════════════════════
+// NEW CLINICAL MODELS — Added to support full FHIR data model
+// ════════════════════════════════════════════════════════════════════════════════
+
+// Medication / MedicationStatement — patient medication lists
+model Medication {
+  id String @id @default(cuid())
+
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Medication details
+  medicationName String
+  genericName    String?
+  rxNormCode     String?
+  ndc            String?
+  drugClass      String? // e.g., "ACEi", "Beta-Blocker", "SGLT2i", "ARNI"
+
+  // Dosing
+  dose      String? // e.g., "25 mg"
+  doseValue Float?
+  doseUnit  String?
+  route     String? // e.g., "oral", "IV"
+  frequency String? // e.g., "BID", "daily"
+
+  // Status
+  status             MedicationStatus @default(ACTIVE)
+  startDate          DateTime?
+  endDate            DateTime?
+  discontinuedReason String?
+
+  // Prescriber
+  prescribedBy   String?
+  prescribedDate DateTime?
+
+  // Target dose tracking (for GDMT optimization)
+  targetDose      String?
+  targetDoseValue Float?
+  atTargetDose    Boolean @default(false)
+  percentOfTarget Float? // 0.0 - 1.0
+
+  // FHIR
+  fhirMedicationId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([patientId, drugClass])
+  @@index([hospitalId, status])
+  @@index([rxNormCode])
+  @@map("medications")
+}
+
+enum MedicationStatus {
+  ACTIVE
+  DISCONTINUED
+  ON_HOLD
+  COMPLETED
+  ENTERED_IN_ERROR
+}
+
+// Condition / ProblemList — structured diagnoses with ICD-10 codes
+model Condition {
+  id String @id @default(cuid())
+
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Condition details
+  conditionName      String
+  icd10Code          String? // e.g., "I50.22" (HFrEF)
+  snomedCode         String?
+  category           ConditionCategory           @default(PROBLEM_LIST)
+  clinicalStatus     ConditionClinicalStatus     @default(ACTIVE)
+  verificationStatus ConditionVerificationStatus @default(CONFIRMED)
+  severity           String? // mild, moderate, severe
+
+  // Timing
+  onsetDate     DateTime?
+  abatementDate DateTime?
+  recordedDate  DateTime?
+
+  // Clinical context
+  recordedBy String?
+  bodySite   String?
+
+  // FHIR
+  fhirConditionId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([patientId, clinicalStatus])
+  @@index([hospitalId, icd10Code])
+  @@index([icd10Code])
+  @@map("conditions")
+}
+
+enum ConditionCategory {
+  PROBLEM_LIST
+  ENCOUNTER_DIAGNOSIS
+  HEALTH_CONCERN
+}
+
+enum ConditionClinicalStatus {
+  ACTIVE
+  RECURRENCE
+  RELAPSE
+  INACTIVE
+  REMISSION
+  RESOLVED
+}
+
+enum ConditionVerificationStatus {
+  UNCONFIRMED
+  PROVISIONAL
+  DIFFERENTIAL
+  CONFIRMED
+  REFUTED
+  ENTERED_IN_ERROR
+}
+
+// CarePlan — clinical care pathways
+model CarePlan {
+  id String @id @default(cuid())
+
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Plan details
+  title       String
+  description String?
+  status      CarePlanStatus @default(ACTIVE)
+  intent      String         @default("plan") // plan, order, option
+  category    String? // e.g., "hf-gdmt", "anticoagulation", "device-eval"
+  moduleType  ModuleType?
+
+  // Timing
+  periodStart DateTime?
+  periodEnd   DateTime?
+
+  // Goals and activities (stored as JSON for flexibility)
+  goals      Json? // Array of goal objects
+  activities Json? // Array of planned activities
+
+  // Care team
+  author   String?
+  careTeam Json? // Array of care team member objects
+
+  // FHIR
+  fhirCarePlanId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([patientId, status])
+  @@index([hospitalId, moduleType])
+  @@map("care_plans")
+}
+
+enum CarePlanStatus {
+  DRAFT
+  ACTIVE
+  ON_HOLD
+  REVOKED
+  COMPLETED
+  ENTERED_IN_ERROR
+}
+
+// AuditLog — HIPAA-required PHI access tracking
+model AuditLog {
+  id String @id @default(cuid())
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Who
+  userId    String
+  userEmail String
+  userRole  String
+  ipAddress String?
+
+  // What
+  action       String // "view", "create", "update", "delete", "export", "print"
+  resourceType String // "Patient", "Observation", "Order", etc.
+  resourceId   String?
+  patientId    String? // If action involves specific patient PHI
+
+  // Details
+  description    String?
+  previousValues Json? // For update actions: what changed
+  newValues      Json?
+  metadata       Json?
+
+  // When
+  timestamp DateTime @default(now())
+
+  @@index([hospitalId, timestamp])
+  @@index([userId, timestamp])
+  @@index([patientId, timestamp])
+  @@index([action, resourceType])
+  @@map("audit_logs")
+}
+
+// Onboarding — per-step hospital onboarding workflow tracking
+model Onboarding {
+  id          String           @id @default(cuid())
+  hospitalId  String
+  hospital    Hospital         @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  stepName    String // BAA_EXECUTION, CREDENTIAL_DELIVERY, REDOX_SETUP, DATA_VALIDATION, etc.
+  status      OnboardingStatus @default(PENDING)
+  stepData    Json? // Flexible data per step (signatory info, delivery details, etc.)
+  notes       String?
+  completedAt DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([hospitalId, stepName])
+  @@index([status])
+  @@map("onboarding")
+}
+
+enum OnboardingStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  EXPIRED
+  TERMINATED
+  BLOCKED
+}
+
+// InternalNote — internal team notes per hospital
+model InternalNote {
+  id         String   @id @default(cuid())
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  noteType   String // ONBOARDING, SUPPORT, CLINICAL, BILLING, TECHNICAL
+  title      String
+  content    String
+  priority   String   @default("MEDIUM") // LOW, MEDIUM, HIGH
+  isInternal Boolean  @default(true)
+  createdBy  String // userId of author
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([hospitalId, createdAt])
+  @@index([noteType])
+  @@map("internal_notes")
+}
+
+// ─── Breach Notification & Incident Response ─────────────────────────────────
+
+model BreachIncident {
+  id         String  @id @default(cuid())
+  hospitalId String? // Null if platform-wide
+
+  // Discovery details
+  discoveredAt DateTime
+  discoveredBy String // userId who identified
+  incidentType BreachType
+  severity     BreachSeverity
+
+  // Scope
+  description        String
+  affectedRecords    Int? // Number of PHI records affected
+  affectedFields     String[] // e.g., ["name", "DOB", "MRN"]
+  affectedPatientIds String[] // Specific patients impacted
+
+  // HIPAA 60-day timeline
+  investigationStarted    DateTime?
+  riskAssessmentCompleted DateTime?
+  hhsNotifiedAt           DateTime? // HHS OCR notification
+  individualsNotifiedAt   DateTime? // Affected individual notification
+  mediaNotifiedAt         DateTime? // Required if >500 records
+
+  // Investigation
+  rootCause          String?
+  containmentActions String?
+  remediationPlan    String?
+
+  // Status tracking
+  status        BreachStatus @default(DISCOVERED)
+  statusHistory Json? // Array of { status, timestamp, updatedBy, notes }
+
+  // Documentation
+  internalNotes   String?
+  legalReview     Boolean   @default(false)
+  legalReviewedBy String?
+  legalReviewedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([severity])
+  @@index([discoveredAt])
+  @@map("breach_incidents")
+}
+
+enum BreachType {
+  UNAUTHORIZED_ACCESS
+  UNAUTHORIZED_DISCLOSURE
+  LOSS_OF_DATA
+  THEFT_OF_DATA
+  IMPROPER_DISPOSAL
+  HACKING_IT_INCIDENT
+  OTHER
+}
+
+enum BreachSeverity {
+  LOW // Minimal risk, <10 records
+  MEDIUM // Moderate risk, 10-499 records
+  HIGH // Significant risk, 500+ records
+  CRITICAL // Imminent harm, systematic failure
+}
+
+enum BreachStatus {
+  DISCOVERED
+  INVESTIGATING
+  CONTAINED
+  RISK_ASSESSED
+  HHS_NOTIFIED
+  INDIVIDUALS_NOTIFIED
+  REMEDIATED
+  CLOSED
+}
+
+// ─── Patient Data Requests (HIPAA Access/Amendment/Deletion) ────────────────
+
+model PatientDataRequest {
+  id         String @id @default(cuid())
+  hospitalId String
+  patientId  String
+
+  requestType       DataRequestType
+  requestedBy       String // Name of requester
+  requestorEmail    String?
+  requestorRelation String? // Patient, legal guardian, authorized representative
+
+  status DataRequestStatus @default(PENDING)
+  notes  String?
+
+  // Processing
+  assignedTo    String? // userId handling the request
+  processedAt   DateTime?
+  responseNotes String?
+  denialReason  String?
+
+  // HIPAA timelines (30 days for access, one 30-day extension)
+  dueDate          DateTime
+  extensionGranted Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([hospitalId, status])
+  @@index([patientId])
+  @@index([dueDate])
+  @@map("patient_data_requests")
+}
+
+enum DataRequestType {
+  ACCESS // Patient wants copy of their records
+  DELETION // Patient wants records deleted
+  AMENDMENT // Patient wants records corrected
+  RESTRICTION // Patient wants restrictions on use
+  ACCOUNTING // Patient wants accounting of disclosures
+}
+
+enum DataRequestStatus {
+  PENDING
+  IN_REVIEW
+  APPROVED
+  DENIED
+  COMPLETED
+  EXPIRED
+}

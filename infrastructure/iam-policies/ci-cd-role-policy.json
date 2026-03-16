@@ -1,0 +1,103 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ECRPushPull",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:PutImage",
+        "ecr:InitiateLayerUpload",
+        "ecr:UploadLayerPart",
+        "ecr:CompleteLayerUpload",
+        "ecr:GetAuthorizationToken"
+      ],
+      "Resource": [
+        "arn:aws:ecr:*:${ACCOUNT_ID}:repository/tailrd-*"
+      ]
+    },
+    {
+      "Sid": "ECRAuth",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetAuthorizationToken"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ECSDeployOnly",
+      "Effect": "Allow",
+      "Action": [
+        "ecs:UpdateService",
+        "ecs:DescribeServices",
+        "ecs:DescribeTaskDefinition",
+        "ecs:RegisterTaskDefinition",
+        "ecs:ListTasks",
+        "ecs:DescribeTasks"
+      ],
+      "Resource": [
+        "arn:aws:ecs:*:${ACCOUNT_ID}:service/tailrd-*",
+        "arn:aws:ecs:*:${ACCOUNT_ID}:task-definition/tailrd-*:*"
+      ]
+    },
+    {
+      "Sid": "PassRoleForECS",
+      "Effect": "Allow",
+      "Action": "iam:PassRole",
+      "Resource": [
+        "arn:aws:iam::${ACCOUNT_ID}:role/tailrd-*-task-role",
+        "arn:aws:iam::${ACCOUNT_ID}:role/tailrd-*-execution-role"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "iam:PassedToService": "ecs-tasks.amazonaws.com"
+        }
+      }
+    },
+    {
+      "Sid": "S3DeployArtifacts",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::tailrd-${ENV}-app-assets-${ACCOUNT_ID}",
+        "arn:aws:s3:::tailrd-${ENV}-app-assets-${ACCOUNT_ID}/*"
+      ]
+    },
+    {
+      "Sid": "CloudFormationReadOnly",
+      "Effect": "Allow",
+      "Action": [
+        "cloudformation:DescribeStacks",
+        "cloudformation:DescribeStackEvents",
+        "cloudformation:GetTemplate"
+      ],
+      "Resource": [
+        "arn:aws:cloudformation:*:${ACCOUNT_ID}:stack/tailrd-*"
+      ]
+    },
+    {
+      "Sid": "DenyDangerousActions",
+      "Effect": "Deny",
+      "Action": [
+        "iam:CreateUser",
+        "iam:CreateRole",
+        "iam:AttachRolePolicy",
+        "iam:PutRolePolicy",
+        "s3:DeleteBucket",
+        "s3:PutBucketPolicy",
+        "kms:*",
+        "cloudtrail:*",
+        "organizations:*",
+        "rds:DeleteDBInstance",
+        "rds:DeleteDBCluster"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

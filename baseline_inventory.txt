@@ -1,0 +1,198 @@
+=== BASELINE INVENTORY - Tue Dec  9 13:19:18 PST 2025 ===
+FILE COUNTS:
+  heartFailure: 54 files
+  electrophysiology: 22 files
+  structuralHeart: 11 files
+  coronaryIntervention: 16 files
+  valvularDisease: 10 files
+  peripheralVascular: 16 files
+
+TOTAL LINES OF CODE:
+   84406 total
+
+ROUTES:
+src//ui/admin/GodView/ModuleCard.tsx:41:    path: '/hf',
+src//ui/admin/GodView/ModuleCard.tsx:48:    path: '/structural-heart',
+src//ui/admin/GodView/ModuleCard.tsx:55:    path: '/electrophysiology',
+src//ui/admin/GodView/ModuleCard.tsx:62:    path: '/peripheral-vascular',
+src//ui/admin/GodView/ModuleCard.tsx:69:    path: '/valvular',
+src//ui/admin/GodView/ModuleCard.tsx:76:    path: '/coronary',
+src//ui/admin/GodView/ModuleCard.tsx:83:    path: '/revenue-cycle',
+
+ALL COMPONENT FILES:
+./src/App.tsx
+./src/auth/AuthContext.tsx
+./src/auth/ProtectedRoute.tsx
+./src/components/Login.tsx
+./src/components/Logout.tsx
+./src/components/PrivateRoute.tsx
+./src/components/TailrdLogo.tsx
+./src/components/UserMenu.tsx
+./src/components/electrophysiology/EPBenchmarkDetailModal.tsx
+./src/components/electrophysiology/EPExecutiveSummary.tsx
+./src/components/financial/ROICalculationEngine.tsx
+./src/components/heartFailure/HFBenchmarkDetailModal.tsx
+./src/components/heartFailure/HFDRGDetailModal.tsx
+./src/components/heartFailure/HFExecutiveSummary.tsx
+./src/components/heartFailure/HFFacilityDetailModal.tsx
+./src/components/heartFailure/HFGeographicHeatMap.tsx
+./src/components/heartFailure/HFGeographicHeatMapSimple.tsx
+./src/components/heartFailure/HFMonthDetailModal.tsx
+./src/components/heartFailure/HFRevenueOpportunityModal.tsx
+./src/components/heartFailure/HFRevenueWaterfallModal.tsx
+./src/components/heartFailure/HFRiskAlerts.tsx
+./src/components/reporting/AutomatedReportingSystem.tsx
+./src/components/riskCalculators/CHA2DS2VAScCalculator.tsx
+./src/components/riskCalculators/CRTICDEligibilityCalculator.tsx
+./src/components/riskCalculators/HASBLEDCalculator.tsx
+./src/components/riskCalculators/STSRiskCalculator.tsx
+./src/components/riskCalculators/SYNTAXScoreCalculator.tsx
+./src/components/riskCalculators/WIFIClassificationCalculator.tsx
+./src/components/shared/BaseCareTeamView.tsx
+./src/components/shared/BaseExecutiveView.tsx
+./src/components/shared/BaseServiceLineView.tsx
+./src/components/shared/CDIDocumentationPrompt.tsx
+./src/components/shared/DRGOptimizationAlert.tsx
+./src/components/shared/ErrorBoundary.tsx
+./src/components/shared/ErrorFallback.tsx
+./src/components/shared/ExportButton.tsx
+./src/components/shared/FinancialSummary.tsx
+./src/components/shared/KPICard.tsx
+./src/components/shared/ModuleLayout.tsx
+./src/components/shared/ReferralOriginBadge.tsx
+./src/components/shared/Toast.tsx
+./src/components/shared/ZipHeatMap.tsx
+./src/components/test/PremiumColorTest.tsx
+./src/components/visualizations/BaseChart.tsx
+./src/components/visualizations/BaseTable.tsx
+./src/components/visualizations/CareTeamNetworkGraph.tsx
+./src/components/visualizations/PatientRiskHeatmap.tsx
+./src/index.tsx
+./src/ui/admin/GodView/CrossModuleAnalytics.tsx
+./src/ui/admin/GodView/GlobalSearch.tsx
+./src/ui/admin/GodView/GodView.tsx
+./src/ui/admin/GodView/ModuleCard.tsx
+./src/ui/admin/GodView/SystemHealthPanel.tsx
+./src/ui/admin/SuperAdminDashboard.tsx
+./src/ui/admin/SuperAdminDashboard_backup.tsx
+./src/ui/admin/SuperAdminDashboard_broken.tsx
+./src/ui/admin/SuperAdminDashboard_corrupted.tsx
+./src/ui/coronaryIntervention/CoronaryInterventionModule.tsx
+./src/ui/coronaryIntervention/components/CoronarySafetyScreening.tsx
+./src/ui/coronaryIntervention/components/GRACEScoreCalculator.tsx
+./src/ui/coronaryIntervention/components/PCINetworkVisualization.tsx
+./src/ui/coronaryIntervention/components/SYNTAXScoreCalculator.tsx
+./src/ui/coronaryIntervention/components/TIMIScoreCalculator.tsx
+./src/ui/coronaryIntervention/components/care-team/CasePlanningTool.tsx
+./src/ui/coronaryIntervention/components/care-team/CoronaryWorklist.tsx
+./src/ui/coronaryIntervention/components/care-team/ProtectedPCIChecklist.tsx
+./src/ui/coronaryIntervention/config/careTeamConfig.tsx
+./src/ui/coronaryIntervention/config/executiveConfig.tsx
+./src/ui/coronaryIntervention/config/serviceLineConfig.tsx
+./src/ui/coronaryIntervention/views/CoronaryCareTeamView.tsx
+./src/ui/coronaryIntervention/views/CoronaryExecutiveView.tsx
+./src/ui/coronaryIntervention/views/CoronaryServiceLineView.tsx
+./src/ui/electrophysiology/EPModule.tsx
+./src/ui/electrophysiology/components/AnticoagulationSafetyChecker.tsx
+./src/ui/electrophysiology/components/BenchmarksPanel.tsx
+./src/ui/electrophysiology/components/EPAutomatedClinicalSupport.tsx
+./src/ui/electrophysiology/components/EPClinicalDecisionSupport.tsx
+./src/ui/electrophysiology/components/EPDeviceNetworkVisualization.tsx
+./src/ui/electrophysiology/components/EPROICalculator.tsx
+./src/ui/electrophysiology/components/LAACRiskDashboard.tsx
+./src/ui/electrophysiology/components/PatientDetailPanel.tsx
+./src/ui/electrophysiology/components/care-team/AblationPlanningChecklist.tsx
+./src/ui/electrophysiology/components/care-team/DeviceImplantChecklist.tsx
+./src/ui/electrophysiology/components/care-team/EPWorklist.tsx
+./src/ui/electrophysiology/components/care-team/OACManagementPanel.tsx
+./src/ui/electrophysiology/config/careTeamConfig.tsx
+./src/ui/electrophysiology/config/executiveConfig.tsx
+./src/ui/electrophysiology/config/serviceLineConfig.tsx
+./src/ui/electrophysiology/views/EPCareTeamView.tsx
+./src/ui/electrophysiology/views/EPExecutiveView.tsx
+./src/ui/electrophysiology/views/EPServiceLineView.tsx
+./src/ui/heartFailure/HFModule.tsx
+./src/ui/heartFailure/components/BenchmarksPanel.tsx
+./src/ui/heartFailure/components/DeviceFunnel.tsx
+./src/ui/heartFailure/components/EquityGapDashboard.tsx
+./src/ui/heartFailure/components/GDMTByPhysicianTable.tsx
+./src/ui/heartFailure/components/GDMTHeatmap.tsx
+./src/ui/heartFailure/components/OpportunityHeatmap.tsx
+./src/ui/heartFailure/components/PhenotypeDetectionChart.tsx
+./src/ui/heartFailure/components/ProjectedVsRealizedChart.tsx
+./src/ui/heartFailure/components/ROIWaterfall.tsx
+./src/ui/heartFailure/components/care-team/CareGapAnalyzer.tsx
+./src/ui/heartFailure/components/care-team/PatientDetailPanel.tsx
+./src/ui/heartFailure/components/care-team/PatientWorklist.tsx
+./src/ui/heartFailure/components/care-team/PatientWorklistEnhanced.tsx
+./src/ui/heartFailure/components/care-team/RealTimeHospitalAlerts.tsx
+./src/ui/heartFailure/components/care-team/ReferralTracker.tsx
+./src/ui/heartFailure/components/care-team/ReferralTrackerEnhanced.tsx
+./src/ui/heartFailure/components/care-team/TeamCollaborationPanel.tsx
+./src/ui/heartFailure/components/care-team/care-team/PatientDetailPanel.tsx
+./src/ui/heartFailure/components/care-team/care-team/ReferralTracker.tsx
+./src/ui/heartFailure/components/clinical/AdvancedDeviceTracker.tsx
+./src/ui/heartFailure/components/clinical/GDMTContraindicationChecker.tsx
+./src/ui/heartFailure/components/clinical/HFPhenotypeClassification.tsx
+./src/ui/heartFailure/components/clinical/MAGGICScoreCalculator.tsx
+./src/ui/heartFailure/components/clinical/SpecialtyPhenotypesDashboard.tsx
+./src/ui/heartFailure/components/executive/ExecutiveKPICard.tsx
+./src/ui/heartFailure/components/executive/FinancialROIWaterfall.tsx
+./src/ui/heartFailure/components/executive/GeographicHeatMap.tsx
+./src/ui/heartFailure/components/service-line/DevicePathwayFunnel.tsx
+./src/ui/heartFailure/components/service-line/GDMTAnalyticsDashboard.tsx
+./src/ui/heartFailure/components/service-line/HFCareNetworkVisualization.tsx
+./src/ui/heartFailure/components/service-line/ProviderScorecard.tsx
+./src/ui/heartFailure/components/service-line/QualityMetricsDashboard.tsx
+./src/ui/heartFailure/config/careTeamConfig.tsx
+./src/ui/heartFailure/config/executiveConfig.tsx
+./src/ui/heartFailure/config/serviceLineConfig.tsx
+./src/ui/heartFailure/views/CareTeamView.tsx
+./src/ui/heartFailure/views/ExecutiveView.backup.tsx
+./src/ui/heartFailure/views/ExecutiveView.tsx
+./src/ui/heartFailure/views/ServiceLineView.tsx
+./src/ui/peripheralVascular/PeripheralVascularModule.tsx
+./src/ui/peripheralVascular/components/LimbSalvageScreening.tsx
+./src/ui/peripheralVascular/components/PADReportingSystem.tsx
+./src/ui/peripheralVascular/components/PVWoundCareNetworkVisualization.tsx
+./src/ui/peripheralVascular/components/WIfIClassification.tsx
+./src/ui/peripheralVascular/components/care-team/CasePlanningWorksheet.tsx
+./src/ui/peripheralVascular/components/care-team/LimbSalvageChecklist.tsx
+./src/ui/peripheralVascular/components/care-team/PeripheralWorklist.tsx
+./src/ui/peripheralVascular/components/care-team/WoundCareIntegration.tsx
+./src/ui/peripheralVascular/config/careTeamConfig.tsx
+./src/ui/peripheralVascular/config/executiveConfig.tsx
+./src/ui/peripheralVascular/config/serviceLineConfig.tsx
+./src/ui/peripheralVascular/views/PeripheralCareTeamView.tsx
+./src/ui/peripheralVascular/views/PeripheralExecutiveView.tsx
+./src/ui/peripheralVascular/views/PeripheralServiceLineView.tsx
+./src/ui/revenueCycle/RevenueCycleModule.tsx
+./src/ui/revenueCycle/views/RCCDIView.tsx
+./src/ui/revenueCycle/views/RCExecutiveView.tsx
+./src/ui/revenueCycle/views/RCOperationsView.tsx
+./src/ui/structuralHeart/StructuralHeartModule.tsx
+./src/ui/structuralHeart/components/STSRiskCalculator.tsx
+./src/ui/structuralHeart/components/StructuralReferralNetworkVisualization.tsx
+./src/ui/structuralHeart/components/TAVRAnalyticsDashboard.tsx
+./src/ui/structuralHeart/config/careTeamConfig.tsx
+./src/ui/structuralHeart/config/executiveConfig.tsx
+./src/ui/structuralHeart/config/serviceLineConfig.tsx
+./src/ui/structuralHeart/views/StructuralCareTeamView.tsx
+./src/ui/structuralHeart/views/StructuralExecutiveView.tsx
+./src/ui/structuralHeart/views/StructuralServiceLineView.tsx
+./src/ui/valvularDisease/ValvularDiseaseModule.tsx
+./src/ui/valvularDisease/components/ValvePatientHeatmap.tsx
+./src/ui/valvularDisease/components/ValvularSurgicalNetworkVisualization.tsx
+./src/ui/valvularDisease/config/careTeamConfig.tsx
+./src/ui/valvularDisease/config/executiveConfig.tsx
+./src/ui/valvularDisease/config/serviceLineConfig.tsx
+./src/ui/valvularDisease/views/ValvularCareTeamView.tsx
+./src/ui/valvularDisease/views/ValvularExecutiveView.tsx
+./src/ui/valvularDisease/views/ValvularServiceLineView.tsx
+./tailrd/tailrd-ui/src/components/ColorTest.tsx
+./tailrd/tailrd-ui/src/ui/heartFailure/components/care-team/PatientWorklist.tsx
+./tailrd/tailrd-ui/src/ui/heartFailure/components/care-team/ReferralTracker.tsx
+./tailrd/tailrd-ui/src/ui/heartFailure/components/shared/EquityToggle.tsx
+
+EXPORT COUNT:
+     339
