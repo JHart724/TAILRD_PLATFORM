@@ -259,7 +259,7 @@ router.patch('/hospitals/:hospitalId/onboarding/:step',
       const { completed, notes } = req.body;
 
       // Handle different onboarding steps
-      let updateData: any = {};
+      const updateData: any = {};
 
       switch (step) {
         case 'redox-setup':

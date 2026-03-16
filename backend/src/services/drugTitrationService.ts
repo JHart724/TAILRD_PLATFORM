@@ -616,7 +616,7 @@ export class DrugTitrationService {
     const barriers = await this.checkTitrationBarriers(patientId, drugClass, currentDose);
     const hasBarriers = barriers.some(b => b.blocking);
 
-    let nextStepDate = new Date();
+    const nextStepDate = new Date();
     
     if (hasBarriers) {
       nextStepDate.setDate(nextStepDate.getDate() + 14); // 2 weeks if barriers
