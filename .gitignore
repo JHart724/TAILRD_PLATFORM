@@ -1,6 +1,9 @@
 # Dependencies
 node_modules/
+
+# Keep root lockfile ignored, but allow backend lockfile
 package-lock.json
+!backend/package-lock.json
 
 # Build output
 build/
