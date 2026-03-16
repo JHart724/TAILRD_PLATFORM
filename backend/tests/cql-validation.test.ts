@@ -516,7 +516,7 @@ class MockCQLEngine {
     );
     const tsat = tsatObs?.valueQuantity?.value;
 
-    if (hfpefCondition || hfCondition) {
+    if (hfpefCondition) {
       if ((ferritin && ferritin < 100) || (ferritin && ferritin < 300 && tsat && tsat < 20)) {
         results.push({
           ruleId: '25',
