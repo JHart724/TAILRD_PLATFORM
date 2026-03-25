@@ -73,7 +73,7 @@ export const modulesClinicalData = {
  // For HFFacilityDetailModal - ALL required fields
  facilities: [
  {
- name: 'Mount Sinai Hospital - Main EP Lab',
+ name: 'Main Campus Medical Center - Main EP Lab',
  location: '1468 Madison Ave, Manhattan, NY 10029',
  totalRevenue: 3200000,
  patientCount: 456,
@@ -91,7 +91,7 @@ export const modulesClinicalData = {
  ]
  },
  {
- name: 'Mount Sinai West - EP Suite',
+ name: 'West Campus Medical Center - EP Suite',
  location: '1000 10th Ave, Manhattan, NY 10019',
  totalRevenue: 2800000,
  patientCount: 378,
@@ -108,7 +108,7 @@ export const modulesClinicalData = {
  ]
  },
  {
- name: 'Mount Sinai Morningside - EP Lab',
+ name: 'North Campus Hospital - EP Lab',
  location: '1111 Amsterdam Ave, Manhattan, NY 10025',
  totalRevenue: 1400000,
  patientCount: 234,
@@ -124,7 +124,7 @@ export const modulesClinicalData = {
  ]
  },
  {
- name: 'Mount Sinai Brooklyn - EP Unit',
+ name: 'Community Medical Center - EP Unit',
  location: '3201 Kings Hwy, Brooklyn, NY 11234',
  totalRevenue: 980000,
  patientCount: 179,
@@ -414,7 +414,7 @@ export const modulesClinicalData = {
  
  facilities: [
  {
- name: 'Mount Sinai Hospital - Structural Heart Lab',
+ name: 'Main Campus Medical Center - Structural Heart Lab',
  location: '1468 Madison Ave, Manhattan, NY 10029',
  totalRevenue: 4500000,
  patientCount: 412,
@@ -429,7 +429,7 @@ export const modulesClinicalData = {
  ]
  },
  {
- name: 'Mount Sinai West',
+ name: 'West Campus Medical Center',
  location: '1000 10th Ave, Manhattan, NY 10019',
  totalRevenue: 3400000,
  patientCount: 289,
@@ -443,7 +443,7 @@ export const modulesClinicalData = {
  ]
  },
  {
- name: 'Mount Sinai Morningside',
+ name: 'North Campus Hospital',
  location: '1111 Amsterdam Ave, Manhattan, NY 10025',
  totalRevenue: 1800000,
  patientCount: 134,
@@ -457,7 +457,7 @@ export const modulesClinicalData = {
  ]
  },
  {
- name: 'Mount Sinai Brooklyn',
+ name: 'Community Medical Center',
  location: '3201 Kings Hwy, Brooklyn, NY 11234',
  totalRevenue: 620000,
  patientCount: 57,
@@ -550,7 +550,7 @@ export const modulesClinicalData = {
  facilities: [
  {
  id: 'msmc-coronary',
- name: 'Mount Sinai Medical Center',
+ name: 'Main Campus Medical Center',
  address: '1 Gustave L. Levy Pl, New York, NY 10029',
  totalProcedures: 1456,
  avgRiskScore: 5.8,
@@ -563,7 +563,7 @@ export const modulesClinicalData = {
  },
  {
  id: 'mswh-coronary',
- name: 'Mount Sinai West',
+ name: 'West Campus Medical Center',
  address: '1000 10th Ave, New York, NY 10019',
  totalProcedures: 1123,
  avgRiskScore: 5.4,
@@ -576,7 +576,7 @@ export const modulesClinicalData = {
  },
  {
  id: 'msbi-coronary',
- name: 'Mount Sinai Beth Israel',
+ name: 'East Campus Hospital',
  address: '281 1st Ave, New York, NY 10003',
  totalProcedures: 987,
  avgRiskScore: 5.6,
@@ -589,7 +589,7 @@ export const modulesClinicalData = {
  },
  {
  id: 'mssl-coronary',
- name: 'Mount Sinai St. Luke\'s',
+ name: 'North Campus Hospital',
  address: '1111 Amsterdam Ave, New York, NY 10025',
  totalProcedures: 678,
  avgRiskScore: 5.2,
@@ -783,7 +783,7 @@ export const modulesClinicalData = {
  facilities: [
  {
  id: 'msmc-valvular',
- name: 'Mount Sinai Medical Center',
+ name: 'Main Campus Medical Center',
  address: '1 Gustave L. Levy Pl, New York, NY 10029',
  totalProcedures: 623,
  avgRiskScore: 8.1,
@@ -796,7 +796,7 @@ export const modulesClinicalData = {
  },
  {
  id: 'mswh-valvular',
- name: 'Mount Sinai West',
+ name: 'West Campus Medical Center',
  address: '1000 10th Ave, New York, NY 10019',
  totalProcedures: 445,
  avgRiskScore: 7.8,
@@ -809,7 +809,7 @@ export const modulesClinicalData = {
  },
  {
  id: 'msbi-valvular',
- name: 'Mount Sinai Beth Israel',
+ name: 'East Campus Hospital',
  address: '281 1st Ave, New York, NY 10003',
  totalProcedures: 312,
  avgRiskScore: 7.5,
@@ -822,7 +822,7 @@ export const modulesClinicalData = {
  },
  {
  id: 'mssl-valvular',
- name: 'Mount Sinai St. Luke\'s',
+ name: 'North Campus Hospital',
  address: '1111 Amsterdam Ave, New York, NY 10025',
  totalProcedures: 198,
  avgRiskScore: 7.2,
@@ -1016,7 +1016,7 @@ export const modulesClinicalData = {
  facilities: [
  {
  id: 'msmc-peripheral',
- name: 'Mount Sinai Medical Center',
+ name: 'Main Campus Medical Center',
  address: '1 Gustave L. Levy Pl, New York, NY 10029',
  totalProcedures: 743,
  avgRiskScore: 6.4,
@@ -1029,7 +1029,7 @@ export const modulesClinicalData = {
  },
  {
  id: 'mswh-peripheral',
- name: 'Mount Sinai West',
+ name: 'West Campus Medical Center',
  address: '1000 10th Ave, New York, NY 10019',
  totalProcedures: 567,
  avgRiskScore: 6.1,
@@ -1042,7 +1042,7 @@ export const modulesClinicalData = {
  },
  {
  id: 'msbi-peripheral',
- name: 'Mount Sinai Beth Israel',
+ name: 'East Campus Hospital',
  address: '281 1st Ave, New York, NY 10003',
  totalProcedures: 423,
  avgRiskScore: 5.9,
@@ -1055,7 +1055,7 @@ export const modulesClinicalData = {
  },
  {
  id: 'mssl-peripheral',
- name: 'Mount Sinai St. Luke\'s',
+ name: 'North Campus Hospital',
  address: '1111 Amsterdam Ave, New York, NY 10025',
  totalProcedures: 289,
  avgRiskScore: 5.6,

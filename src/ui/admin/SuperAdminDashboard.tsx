@@ -212,7 +212,7 @@ const SuperAdminDashboard: React.FC = () => {
  {/* Quick Actions */}
  <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
  <button 
- onClick={() => navigate('/heart-failure')}
+ onClick={() => navigate('/hf')}
  className="p-6 bg-white rounded-lg shadow hover:shadow-md transition-shadow border border-gray-200"
  >
  <BarChart3 className="w-8 h-8 text-porsche-500 mb-3" />
@@ -221,7 +221,7 @@ const SuperAdminDashboard: React.FC = () => {
  </button>
 
  <button 
- onClick={() => navigate('/electrophysiology')}
+ onClick={() => navigate('/ep')}
  className="p-6 bg-white rounded-lg shadow hover:shadow-md transition-shadow border border-gray-200"
  >
  <Activity className="w-8 h-8 text-arterial-500 mb-3" />
@@ -230,7 +230,7 @@ const SuperAdminDashboard: React.FC = () => {
  </button>
 
  <button 
- onClick={() => navigate('/coronary-intervention')}
+ onClick={() => navigate('/coronary')}
  className="p-6 bg-white rounded-lg shadow hover:shadow-md transition-shadow border border-gray-200"
  >
  <TrendingUp className="w-8 h-8 text-green-500 mb-3" />

@@ -10,7 +10,7 @@ import { roundTo } from './utils/formatters';
 import { AuthProvider } from './auth/AuthContext';
 import { initializeTheme } from './theme';
 import AppShell from './design-system/AppShell';
-import FreeTierDashboard from './components/free-tier/FreeTierDashboard';
+
 
 // Custom animations removed — provided by Tailwind config
 
@@ -825,7 +825,7 @@ export default function App(): JSX.Element {
  } />
  <Route path="/service-line" element={
  <ProtectedRoute>
- <AppShell><FreeTierDashboard /></AppShell>
+ <AppShell><MainDashboard /></AppShell>
  </ProtectedRoute>
  } />
  <Route path="/data" element={
