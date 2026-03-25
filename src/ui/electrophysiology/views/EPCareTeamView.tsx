@@ -83,7 +83,12 @@ const ClinicalToolsPanel: React.FC = () => {
 
 const EPCareTeamView: React.FC = () => {
   const [selectedPatientId, setSelectedPatientId] = useState<string>('P001');
-  const [activeTab, setActiveTab] = useState<EPViewMode>('dashboard');
+  const [activeTab, _setActiveTab] = useState<EPViewMode>('dashboard');
+  const setActiveTab = (tab: EPViewMode) => {
+    _setActiveTab(tab);
+    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
+    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   const [quickActionFeedback, setQuickActionFeedback] = useState<string | null>(null);
 
   const tabs = [

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
-import TailrdLogo from './TailrdLogo';
 import { Eye, EyeOff, Lock } from 'lucide-react';
 import { toast } from '../components/shared/Toast';
 
@@ -15,211 +14,220 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
-  // Redirect if already authenticated (demo auto-login from AuthContext will trigger this)
+  // Redirect if already authenticated
   useEffect(() => {
- if (state.isAuthenticated) {
- const from = (location.state as any)?.from?.pathname || '/dashboard';
- navigate(from, { replace: true });
- }
-  }, [state.isAuthenticated, navigate, location]);
+    if (state.isAuthenticated) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [state.isAuthenticated, navigate]);
 
   // Show account locked message
   useEffect(() => {
- if (state.isLocked) {
- toast.error(
- 'Account Locked',
- 'Too many failed login attempts. Contact IT Support at ext. 4357.',
- { duration: 10000 }
- );
- }
+    if (state.isLocked) {
+      toast.error(
+        'Account Locked',
+        'Too many failed login attempts. Contact IT Support at ext. 4357.',
+        { duration: 10000 }
+      );
+    }
   }, [state.isLocked]);
 
   const handleSubmit = async (e: React.FormEvent) => {
- e.preventDefault();
+    e.preventDefault();
 
- if (!email || !password) {
- toast.warning('Missing Information', 'Please enter both email and password');
- return;
- }
+    if (!email || !password) {
+      toast.warning('Missing Information', 'Please enter both email and password');
+      return;
+    }
 
- try {
- const success = await login(email, password);
+    try {
+      const success = await login(email, password);
 
- if (success) {
- const from = (location.state as any)?.from?.pathname || '/dashboard';
- toast.success('Login Successful', `Welcome back!`);
- navigate(from, { replace: true });
- }
- } catch (err: any) {
- // Surface specific backend error messages
- const message = err?.message || 'Login failed. Please check your credentials.';
- toast.error('Login Failed', message);
- }
+      if (success) {
+        toast.success('Login Successful', `Welcome back!`);
+        navigate('/dashboard', { replace: true });
+      }
+    } catch (err: any) {
+      const message = err?.message || 'Login failed. Please check your credentials.';
+      toast.error('Login Failed', message);
+    }
   };
 
   return (
- <div className="min-h-screen flex">
- {/* Left Panel - Dark Chrome Gradient Branding */}
- <div
- className="hidden lg:flex lg:w-[55%] relative items-center justify-center p-12"
- style={{
- background: 'linear-gradient(135deg, #0D2640 0%, #3D6F94 100%)',
- }}
- >
- {/* Subtle decorative elements */}
- <div className="absolute inset-0 overflow-hidden">
- <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-white opacity-[0.05]" />
- <div className="absolute bottom-12 right-12 w-72 h-72 rounded-full bg-white opacity-[0.05]" />
- <div className="absolute top-1/2 left-1/3 w-48 h-48 rounded-full bg-white/[0.03]" />
- </div>
+    <div
+      className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
+      style={{
+        background: 'linear-gradient(160deg, #F0F4F8 0%, #F8FAFB 35%, #F0F3F6 65%, #EEF1F5 100%)',
+      }}
+    >
+      {/* Subtle background radial accents — matching website */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `
+            radial-gradient(ellipse 80% 60% at 10% 20%, rgba(44, 74, 96, 0.06) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 50% at 90% 80%, rgba(44, 74, 96, 0.04) 0%, transparent 60%)
+          `,
+        }}
+      />
 
- <div className="relative z-10 text-center max-w-md">
- <div className="mb-8">
- <TailrdLogo size="large" variant="dark" />
- </div>
- <h1 className="font-display text-4xl font-bold text-white mb-4 tracking-tight">
- TAILRD
- </h1>
- <p className="font-body text-lg text-chrome-200 leading-relaxed">
- Cardiovascular Intelligence Platform
- </p>
- <div className="mt-8 w-16 h-0.5 bg-white mx-auto rounded-full" />
- <p className="mt-6 font-body text-sm text-chrome-300/70">
- Evidence-driven insights for cardiovascular care teams
- </p>
- </div>
- </div>
+      {/* Subtle grain texture overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        }}
+      />
 
- {/* Right Panel - White Form Area */}
- <div className="flex-1 flex items-center justify-center bg-white p-6 sm:p-8 lg:p-12">
- <div className="w-full max-w-md">
- {/* Mobile Logo (visible only on small screens) */}
- <div className="flex justify-center mb-8 lg:hidden">
- <TailrdLogo size="large" variant="light" />
- </div>
+      {/* Main content */}
+      <div className="relative z-10 w-full max-w-lg px-6">
+        {/* Brand header — matching website typography */}
+        <div className="text-center mb-10">
+          <h1 className="text-5xl font-black tracking-tight mb-3" style={{ letterSpacing: '-1.5px' }}>
+            <span style={{ color: '#1A2F4A' }}>TAILRD</span>
+            <span className="mx-3 text-3xl font-light" style={{ color: '#CBD5E1' }}>|</span>
+            <span
+              style={{
+                background: 'linear-gradient(135deg, #5C1A1A 0%, #7A1A2E 50%, #B85858 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              HEART
+            </span>
+          </h1>
+          <p className="text-sm text-gray-400 tracking-widest uppercase" style={{ letterSpacing: '2px' }}>
+            Cardiovascular Intelligence Platform
+          </p>
+        </div>
 
- {/* Form Card */}
- <div className="bg-white rounded-xl shadow-chrome-card border border-titanium-200 p-8">
- {/* Sign In Heading */}
- <h2 className="font-display text-2xl font-bold text-titanium-900 mb-1">
- Sign In
- </h2>
- <p className="font-body text-sm text-titanium-500 mb-8">
- Access your cardiovascular analytics dashboard
- </p>
+        {/* Glassmorphic login card */}
+        <div
+          className="rounded-2xl p-8 sm:p-10"
+          style={{
+            background: 'rgba(255, 255, 255, 0.72)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.8)',
+            boxShadow: '0 8px 32px rgba(26, 47, 74, 0.08), 0 2px 8px rgba(26, 47, 74, 0.04)',
+          }}
+        >
+          <h2 className="text-xl font-bold text-gray-900 mb-1">Sign In</h2>
+          <p className="text-sm text-gray-500 mb-7">Access your cardiovascular analytics dashboard</p>
 
- {/* Login Form */}
- <form onSubmit={handleSubmit} className="space-y-5">
- <div>
- <label htmlFor="email" className="block text-sm font-medium text-titanium-700 mb-2 font-body">
- Email Address
- </label>
- <input
- id="email"
- type="email"
- placeholder="Enter your email"
- value={email}
- onChange={(e) => setEmail(e.target.value)}
- className="w-full px-4 py-3 border border-titanium-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-chrome-600 focus:border-chrome-600 bg-white text-titanium-900 placeholder-titanium-400 transition-colors font-body"
- required
- disabled={state.isLoading}
- />
- </div>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                Email Address
+              </label>
+              <input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:border-transparent bg-white/80 text-gray-900 placeholder-gray-400 transition-all"
+                style={{ outlineColor: '#1A2F4A' }}
+                required
+                disabled={state.isLoading}
+              />
+            </div>
 
- <div>
- <label htmlFor="password" className="block text-sm font-medium text-titanium-700 mb-2 font-body">
- Password
- </label>
- <div className="relative">
- <input
- id="password"
- type={showPassword ? 'text' : 'password'}
- placeholder="Enter your password"
- value={password}
- onChange={(e) => setPassword(e.target.value)}
- className="w-full px-4 py-3 pr-12 border border-titanium-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-chrome-600 focus:border-chrome-600 bg-white text-titanium-900 placeholder-titanium-400 transition-colors font-body"
- required
- disabled={state.isLoading}
- />
- <button
- type="button"
- onClick={() => setShowPassword(!showPassword)}
- className="absolute inset-y-0 right-0 pr-3 flex items-center text-titanium-400 hover:text-titanium-600 transition-colors"
- disabled={state.isLoading}
- >
- {showPassword ? (
- <EyeOff className="w-5 h-5" />
- ) : (
- <Eye className="w-5 h-5" />
- )}
- </button>
- </div>
- </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 pr-12 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:border-transparent bg-white/80 text-gray-900 placeholder-gray-400 transition-all"
+                  required
+                  disabled={state.isLoading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                  disabled={state.isLoading}
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
 
- <div className="flex items-center justify-between">
- <label className="flex items-center">
- <input
- type="checkbox"
- checked={rememberMe}
- onChange={(e) => setRememberMe(e.target.checked)}
- className="h-4 w-4 text-chrome-600 focus:ring-chrome-600 border-titanium-300 rounded"
- disabled={state.isLoading}
- />
- <span className="ml-2 text-sm text-titanium-600 font-body">Remember me</span>
- </label>
- <button
- type="button"
- onClick={() => toast.info('Password Reset', 'Contact IT Support at ext. 4357 to reset your password.')}
- className="text-sm text-chrome-600 hover:text-chrome-700 transition-colors font-body bg-transparent border-0 p-0 cursor-pointer"
- >
- Forgot password?
- </button>
- </div>
+            <div className="flex items-center justify-between">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="h-4 w-4 rounded border-gray-300"
+                  style={{ accentColor: '#1A2F4A' }}
+                  disabled={state.isLoading}
+                />
+                <span className="ml-2 text-sm text-gray-600">Remember me</span>
+              </label>
+              <button
+                type="button"
+                onClick={() => toast.info('Password Reset', 'Contact your administrator to reset your password.')}
+                className="text-sm font-medium hover:opacity-80 transition-opacity bg-transparent border-0 p-0 cursor-pointer"
+                style={{ color: '#1A2F4A' }}
+              >
+                Forgot password?
+              </button>
+            </div>
 
- {state.isLocked && (
- <div className="bg-arterial-50 border border-arterial-200 rounded-lg p-3 flex items-start">
- <Lock className="w-5 h-5 text-arterial-600 mt-0.5 mr-3 flex-shrink-0" />
- <div>
- <p className="text-sm text-arterial-800 font-medium font-body">Account Locked</p>
- <p className="text-sm text-arterial-700 mt-1 font-body">
- Too many failed attempts. Contact IT Support at ext. 4357.
- </p>
- </div>
- </div>
- )}
+            {state.isLocked && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-start">
+                <Lock className="w-5 h-5 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
+                <div>
+                  <p className="text-sm text-red-800 font-medium">Account Locked</p>
+                  <p className="text-sm text-red-700 mt-1">
+                    Too many failed attempts. Contact your administrator.
+                  </p>
+                </div>
+              </div>
+            )}
 
- <button
- type="submit"
- disabled={state.isLoading || state.isLocked}
- className="w-full py-3 px-4 bg-chrome-600 hover:bg-chrome-700 disabled:bg-titanium-400 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors duration-200 shadow-chrome-card flex items-center justify-center font-body"
- >
- {state.isLoading ? (
- <>
- <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
- Signing in...
- </>
- ) : (
- 'Sign In'
- )}
- </button>
- </form>
+            <button
+              type="submit"
+              disabled={state.isLoading || state.isLocked}
+              className="w-full py-3.5 px-4 text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                background: 'linear-gradient(135deg, #1A2F4A 0%, #2C4A60 100%)',
+                boxShadow: '0 4px 14px rgba(26, 47, 74, 0.3)',
+              }}
+              onMouseEnter={(e) => {
+                (e.target as HTMLElement).style.transform = 'translateY(-2px)';
+                (e.target as HTMLElement).style.boxShadow = '0 6px 20px rgba(26, 47, 74, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                (e.target as HTMLElement).style.transform = 'translateY(0)';
+                (e.target as HTMLElement).style.boxShadow = '0 4px 14px rgba(26, 47, 74, 0.3)';
+              }}
+            >
+              {state.isLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Signing in...
+                </>
+              ) : (
+                'Sign In'
+              )}
+            </button>
+          </form>
+        </div>
 
- <div className="mt-6 text-center">
- <p className="text-titanium-500 font-body text-sm">
- Don't have an account?{' '}
- <button
- type="button"
- onClick={() => toast.info('Account Registration', 'Contact your administrator to request a TAILRD account.')}
- className="text-chrome-600 hover:text-chrome-700 font-semibold transition-colors bg-transparent border-0 p-0 cursor-pointer"
- >
- Register here today.
- </button>
- </p>
- </div>
- </div>
- </div>
- </div>
- </div>
+        {/* Footer text */}
+        <p className="text-center text-xs text-gray-400 mt-8">
+          Secure access for authorized cardiovascular care teams
+        </p>
+      </div>
+    </div>
   );
 };
 

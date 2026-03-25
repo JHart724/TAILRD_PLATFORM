@@ -56,61 +56,61 @@ const GDMTAnalyticsDashboard: React.FC = () => {
   const [selectedHFType, setSelectedHFType] = useState<'HFrEF' | 'HFpEF' | 'HFmrEF' | null>(null);
   const [selectedNYHAClass, setSelectedNYHAClass] = useState<'I' | 'II' | 'III' | 'IV' | null>(null);
   const [gdmtMetrics, setGdmtMetrics] = useState<MetricData[]>([
- { value: 13.8, trend: 2.1, timestamp: new Date() },
- { value: 27.3, trend: -1.4, timestamp: new Date() },
- { value: 31.9, trend: 3.7, timestamp: new Date() },
- { value: 19.8, trend: 1.2, timestamp: new Date() },
- { value: 7.1, trend: -0.8, timestamp: new Date() }
+ { value: 8.2, trend: -1.8, timestamp: new Date() },
+ { value: 22.4, trend: -2.1, timestamp: new Date() },
+ { value: 33.6, trend: 1.4, timestamp: new Date() },
+ { value: 24.1, trend: 3.2, timestamp: new Date() },
+ { value: 11.7, trend: 2.8, timestamp: new Date() }
   ]);
 
   const [providers, setProviders] = useState<ProviderMetric[]>([
- { name: 'Dr. Sarah Williams', specialty: 'Cardiology', score: 92.1, rate: 42.2, trend: 8.4, patients: 178, riskAdjusted: 94.3 },
- { name: 'Dr. Michael Chen', specialty: 'Cardiology', score: 88.7, rate: 38.9, trend: 5.2, patients: 254, riskAdjusted: 91.2 },
- { name: 'Dr. Jennifer Martinez', specialty: 'Internal Medicine', score: 67.3, rate: 18.5, trend: 12.1, patients: 406, riskAdjusted: 73.8 },
- { name: 'Dr. Robert Thompson', specialty: 'Cardiology', score: 85.4, rate: 34.7, trend: -2.3, patients: 312, riskAdjusted: 87.9 },
- { name: 'Dr. Lisa Park', specialty: 'Internal Medicine', score: 71.2, rate: 22.8, trend: 6.7, patients: 356, riskAdjusted: 76.5 }
+ { name: 'Dr. Sarah Williams', specialty: 'Cardiology', score: 92.1, rate: 42.2, trend: 8.4, patients: 824, riskAdjusted: 94.3 },
+ { name: 'Dr. Michael Chen', specialty: 'Cardiology', score: 88.7, rate: 38.9, trend: 5.2, patients: 1156, riskAdjusted: 91.2 },
+ { name: 'Dr. Jennifer Martinez', specialty: 'Internal Medicine', score: 67.3, rate: 18.5, trend: 12.1, patients: 2340, riskAdjusted: 73.8 },
+ { name: 'Dr. Robert Thompson', specialty: 'Cardiology', score: 85.4, rate: 34.7, trend: -2.3, patients: 1478, riskAdjusted: 87.9 },
+ { name: 'Dr. Lisa Park', specialty: 'Internal Medicine', score: 71.2, rate: 22.8, trend: 6.7, patients: 1890, riskAdjusted: 76.5 }
   ]);
 
   // Enhanced HF Type Analytics Data
   const [hfTypeData] = useState<HFTypeData[]>([
  {
  type: 'HFrEF',
- totalPatients: 1694,
- fourPillarRate: 18.2,
- avgPillars: 2.4,
+ totalPatients: 7200,
+ fourPillarRate: 11.7,
+ avgPillars: 2.1,
  nyhaBreakdown: {
- I: { count: 178, avgPillars: 3.2, fourPillarRate: 34.8 },
- II: { count: 624, avgPillars: 2.7, fourPillarRate: 21.5 },
- III: { count: 756, avgPillars: 2.1, fourPillarRate: 14.3 },
- IV: { count: 136, avgPillars: 1.6, fourPillarRate: 8.8 }
+ I: { count: 864, avgPillars: 3.1, fourPillarRate: 28.4 },
+ II: { count: 2880, avgPillars: 2.4, fourPillarRate: 14.2 },
+ III: { count: 2808, avgPillars: 1.8, fourPillarRate: 7.6 },
+ IV: { count: 648, avgPillars: 1.3, fourPillarRate: 3.1 }
  },
- pillarDistribution: [12.3, 23.8, 31.2, 22.5, 10.2]
+ pillarDistribution: [8.2, 22.4, 33.6, 24.1, 11.7]
  },
  {
  type: 'HFpEF',
- totalPatients: 596,
- fourPillarRate: 8.9,
- avgPillars: 1.8,
+ totalPatients: 9000,
+ fourPillarRate: 4.8,
+ avgPillars: 1.6,
  nyhaBreakdown: {
- I: { count: 134, avgPillars: 2.3, fourPillarRate: 16.4 },
- II: { count: 284, avgPillars: 1.9, fourPillarRate: 9.2 },
- III: { count: 156, avgPillars: 1.4, fourPillarRate: 5.1 },
- IV: { count: 22, avgPillars: 1.1, fourPillarRate: 0.0 }
+ I: { count: 1980, avgPillars: 2.1, fourPillarRate: 12.3 },
+ II: { count: 4140, avgPillars: 1.7, fourPillarRate: 5.4 },
+ III: { count: 2520, avgPillars: 1.2, fourPillarRate: 2.1 },
+ IV: { count: 360, avgPillars: 0.8, fourPillarRate: 0.0 }
  },
- pillarDistribution: [34.2, 28.5, 22.1, 10.7, 4.5]
+ pillarDistribution: [28.4, 32.1, 24.6, 10.1, 4.8]
  },
  {
  type: 'HFmrEF',
- totalPatients: 204,
- fourPillarRate: 12.1,
- avgPillars: 2.1,
+ totalPatients: 1800,
+ fourPillarRate: 8.4,
+ avgPillars: 1.9,
  nyhaBreakdown: {
- I: { count: 46, avgPillars: 2.8, fourPillarRate: 26.1 },
- II: { count: 90, avgPillars: 2.2, fourPillarRate: 13.3 },
- III: { count: 58, avgPillars: 1.7, fourPillarRate: 6.9 },
- IV: { count: 10, avgPillars: 1.2, fourPillarRate: 0.0 }
+ I: { count: 396, avgPillars: 2.6, fourPillarRate: 18.2 },
+ II: { count: 792, avgPillars: 2.0, fourPillarRate: 9.8 },
+ III: { count: 522, avgPillars: 1.5, fourPillarRate: 4.2 },
+ IV: { count: 90, avgPillars: 1.0, fourPillarRate: 0.0 }
  },
- pillarDistribution: [18.6, 29.4, 27.5, 16.7, 7.8]
+ pillarDistribution: [14.2, 26.8, 30.4, 20.2, 8.4]
  }
   ]);
 

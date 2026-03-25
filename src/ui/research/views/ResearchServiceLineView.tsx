@@ -501,7 +501,12 @@ function sponsorLabel(type: string): string {
 // ── Component ───────────────────────────────────────────────
 
 const ResearchServiceLineView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<MainTab>('registry');
+  const [activeTab, _setActiveTab] = useState<MainTab>('registry');
+  const setActiveTab = (tab: MainTab) => {
+    _setActiveTab(tab);
+    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
+    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   const [activeRegistry, setActiveRegistry] = useState<RegistryTab>('cathpci');
   const [selectedCase, setSelectedCase] = useState<string | null>('CP-001');
   const [selectedTrial, setSelectedTrial] = useState<string | null>(null);

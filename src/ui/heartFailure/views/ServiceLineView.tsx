@@ -27,7 +27,13 @@ interface TabGroup {
 }
 
 const ServiceLineView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabId>('gap-detection');
+  const [activeTab, _setActiveTab] = useState<TabId>('gap-detection');
+  const setActiveTab = (tab: TabId) => {
+    _setActiveTab(tab);
+    // Scroll content area to top when switching tabs
+    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
+    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const tabGroups: TabGroup[] = [
  {

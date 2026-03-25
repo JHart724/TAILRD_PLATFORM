@@ -74,7 +74,12 @@ const ClinicalToolsPanel: React.FC = () => {
 };
 
 const StructuralCareTeamView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabId>('dashboard');
+  const [activeTab, _setActiveTab] = useState<TabId>('dashboard');
+  const setActiveTab = (tab: TabId) => {
+    _setActiveTab(tab);
+    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
+    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const tabs = [
  { id: 'dashboard', label: 'Dashboard', icon: Activity, description: 'Structural heart metrics overview' },

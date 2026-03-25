@@ -119,7 +119,12 @@ type PeripheralCareTeamTab =
   | 'clinical-gaps';
 
 const PeripheralCareTeamView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<PeripheralCareTeamTab>('dashboard');
+  const [activeTab, _setActiveTab] = useState<PeripheralCareTeamTab>('dashboard');
+  const setActiveTab = (tab: PeripheralCareTeamTab) => {
+    _setActiveTab(tab);
+    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
+    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Extended configuration with our new components
   const config: PeripheralCareTeamViewConfig = {

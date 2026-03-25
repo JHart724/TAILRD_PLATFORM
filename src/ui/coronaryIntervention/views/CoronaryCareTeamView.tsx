@@ -118,7 +118,12 @@ type CoronaryCareTeamTab =
   | 'clinical-gaps';
 
 const CoronaryCareTeamView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<CoronaryCareTeamTab>('dashboard');
+  const [activeTab, _setActiveTab] = useState<CoronaryCareTeamTab>('dashboard');
+  const setActiveTab = (tab: CoronaryCareTeamTab) => {
+    _setActiveTab(tab);
+    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
+    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Extended configuration with our new components
   const config: CoronaryCareTeamViewConfig = {

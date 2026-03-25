@@ -21,7 +21,12 @@ interface TabGroup {
 }
 
 const StructuralServiceLineView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabId>('tavr');
+  const [activeTab, _setActiveTab] = useState<TabId>('tavr');
+  const setActiveTab = (tab: TabId) => {
+    _setActiveTab(tab);
+    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
+    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   const [generatingReport, setGeneratingReport] = useState<string | null>(null);
   const [exportingFormat, setExportingFormat] = useState<string | null>(null);
 

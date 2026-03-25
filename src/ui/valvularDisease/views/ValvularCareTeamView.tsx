@@ -69,7 +69,12 @@ const ClinicalToolsPanel: React.FC = () => {
 };
 
 const ValvularCareTeamView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabId>('dashboard');
+  const [activeTab, _setActiveTab] = useState<TabId>('dashboard');
+  const setActiveTab = (tab: TabId) => {
+    _setActiveTab(tab);
+    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
+    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);

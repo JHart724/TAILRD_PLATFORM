@@ -194,7 +194,12 @@ interface TabGroup {
 }
 
 const EPServiceLineView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<EPServiceLineTab>('analytics');
+  const [activeTab, _setActiveTab] = useState<EPServiceLineTab>('analytics');
+  const setActiveTab = (tab: EPServiceLineTab) => {
+    _setActiveTab(tab);
+    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
+    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const tabGroups: TabGroup[] = [
  {

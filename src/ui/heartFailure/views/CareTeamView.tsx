@@ -89,7 +89,12 @@ const ClinicalToolsPanel: React.FC<{ activeToolTab?: string; onToolTabChange?: (
 type TabId = 'dashboard' | 'patients' | 'workflow' | 'safety' | 'hospital-alerts' | 'team' | 'documentation' | 'clinicaltools' | 'clinical-gaps';
 
 const CareTeamView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabId>('dashboard');
+  const [activeTab, _setActiveTab] = useState<TabId>('dashboard');
+  const setActiveTab = (tab: TabId) => {
+    _setActiveTab(tab);
+    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
+    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   const [activeToolTab, setActiveToolTab] = useState<string>('phenotype');
   const [docTemplateFeedback, setDocTemplateFeedback] = useState<string | null>(null);
   const [expandedSafetyCard, setExpandedSafetyCard] = useState<string | null>(null);

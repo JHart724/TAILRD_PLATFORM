@@ -232,7 +232,12 @@ interface TabGroup {
 }
 
 const PeripheralServiceLineView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<PeripheralServiceLineTab>('analytics');
+  const [activeTab, _setActiveTab] = useState<PeripheralServiceLineTab>('analytics');
+  const setActiveTab = (tab: PeripheralServiceLineTab) => {
+    _setActiveTab(tab);
+    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
+    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const tabGroups: TabGroup[] = [
     {
