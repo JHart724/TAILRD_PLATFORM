@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
+import { toast } from './shared/Toast';
 import { 
   User, 
   Settings, 
@@ -53,35 +54,35 @@ const UserMenu: React.FC<UserMenuProps> = ({
  {
  title: 'Account',
  items: [
- { icon: User, label: 'My Profile', badge: null, action: () => {} },
- { icon: Settings, label: 'Preferences', badge: null, action: () => {} },
- { icon: Bell, label: 'Notifications', badge: '3', badgeColor: 'bg-red-500', action: () => {} },
+ { icon: User, label: 'My Profile', badge: null, action: () => navigate('/profile') },
+ { icon: Settings, label: 'Preferences', badge: null, action: () => navigate('/settings') },
+ { icon: Bell, label: 'Notifications', badge: '3', badgeColor: 'bg-red-500', action: () => toast.info('Notifications', 'You have 3 unread notifications.') },
  ]
  },
  {
  title: 'Clinical Tools',
  items: [
- { icon: Activity, label: 'My Patients', badge: '47', badgeColor: 'bg-porsche-500', action: () => {} },
- { icon: FileText, label: 'Reports & Analytics', badge: null, action: () => {} },
- { icon: Users, label: 'Care Teams', badge: null, action: () => {} },
- { icon: Clock, label: 'Recent Activity', badge: null, action: () => {} },
+ { icon: Activity, label: 'My Patients', badge: '47', badgeColor: 'bg-porsche-500', action: () => navigate('/dashboard') },
+ { icon: FileText, label: 'Reports & Analytics', badge: null, action: () => navigate('/dashboard') },
+ { icon: Users, label: 'Care Teams', badge: null, action: () => navigate('/dashboard') },
+ { icon: Clock, label: 'Recent Activity', badge: null, action: () => toast.info('Recent Activity', 'Activity log coming in a future update.') },
  ]
  },
  {
  title: 'System',
  items: [
  { icon: UserCog, label: 'Super Admin', badge: 'ADMIN', badgeColor: 'bg-arterial-500', action: () => navigate('/admin') },
- { icon: Shield, label: 'Privacy & Security', badge: null, action: () => {} },
- { icon: Database, label: 'Data Preferences', badge: null, action: () => {} },
- { icon: Palette, label: 'Display Settings', badge: null, action: () => {} },
- { icon: Lock, label: 'Access Controls', badge: null, action: () => {} },
+ { icon: Shield, label: 'Privacy & Security', badge: null, action: () => navigate('/settings') },
+ { icon: Database, label: 'Data Preferences', badge: null, action: () => navigate('/settings') },
+ { icon: Palette, label: 'Display Settings', badge: null, action: () => navigate('/settings') },
+ { icon: Lock, label: 'Access Controls', badge: null, action: () => toast.info('Access Controls', 'Contact your administrator to manage access permissions.') },
  ]
  },
  {
  title: 'Support',
  items: [
- { icon: HelpCircle, label: 'Help Center', badge: null, action: () => {} },
- { icon: Mail, label: 'Contact Support', badge: null, action: () => {} },
+ { icon: HelpCircle, label: 'Help Center', badge: null, action: () => toast.info('Help Center', 'Contact TAILRD support at support@tailrd.com for assistance.') },
+ { icon: Mail, label: 'Contact Support', badge: null, action: () => toast.info('Contact Support', 'Reach us at support@tailrd.com or call ext. 4357.') },
  ]
  }
   ];
@@ -120,7 +121,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
 
  {/* Dropdown Menu */}
  {isOpen && (
- <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-titanium-200 z-50 overflow-hidden" style={{ transform: 'translateX(20px)' }}>
+ <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-titanium-200 z-50 overflow-hidden">
  {/* User Header */}
  <div className="p-4 bg-gradient-to-r from-porsche-50 to-porsche-100 border-b border-titanium-200">
  <div className="flex items-center gap-3">

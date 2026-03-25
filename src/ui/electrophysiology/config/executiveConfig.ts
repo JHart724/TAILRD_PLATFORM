@@ -1,5 +1,6 @@
 import { ExecutiveViewConfig } from '../../../components/shared/BaseExecutiveView';
 import { DRGOpportunity } from '../../../components/shared/DRGOptimizationAlert';
+import { PLATFORM_TOTALS, formatDollars, formatPatients } from '../../../data/platformTotals';
 
 // Electrophysiology DRG 241-244 Optimization Opportunities
 const epDRGOpportunities: DRGOpportunity[] = [
@@ -48,10 +49,10 @@ export const electrophysiologyConfig: ExecutiveViewConfig = {
   moduleName: 'Electrophysiology',
   description: '• Device Optimization • Ablation Analytics • LAAC Outcomes',
   kpiData: {
- totalOpportunity: '$78.2M',
- totalOpportunitySub: 'Annual revenue potential',
- totalPatients: '3,000',
- totalPatientsSub: 'Active EP care panel (20% of AF population)',
+ totalOpportunity: formatDollars(PLATFORM_TOTALS.modules.ep.opportunity),
+ totalOpportunitySub: 'Annual revenue potential (+$6.9M from 87-gap initiative: adds Persistent AF Rhythm, Cryptogenic Stroke ILR, Dofetilide REMS, Dronedarone Contraindication, IST Ivabradine, Flutter Ablation, Device Battery EOL, PVC Cardiomyopathy, LQTS Beta-Blocker to existing EP gaps; OAC Monotherapy cross-module counted in CAD)',
+ totalPatients: formatPatients(PLATFORM_TOTALS.modules.ep.patients),
+ totalPatientsSub: 'Active EP care panel — includes 845 gap patients (407 original + 438 new: Persistent AF 123, Cryptogenic Stroke 67, Dofetilide REMS 12, Dronedarone CI 28, IST 34, Flutter Ablation 78, Device EOL 23, PVC-CM 44, LQTS 29; OAC Monotherapy cross-module 143 counted in CAD module)',
  gdmtOptimization: '87%',
  gdmtOptimizationSub: 'Anticoagulation optimization rate',
  avgRoi: '$5,213',

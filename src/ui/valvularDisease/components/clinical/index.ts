@@ -3,3 +3,4 @@ export { default as ValveTherapyContraindicationChecker } from './ValveTherapyCo
 export { default as ValveRiskScoreCalculator } from './ValveRiskScoreCalculator';
 export { default as ValveSpecialtyPhenotypesDashboard } from './ValveSpecialtyPhenotypesDashboard';
 export { default as AdvancedValveProcedureTracker } from './AdvancedValveProcedureTracker';
+export { default as VDClinicalGapDetectionDashboard } from './VDClinicalGapDetectionDashboard';

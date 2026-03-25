@@ -22,7 +22,7 @@ const BenchmarksPanel: React.FC<BenchmarksPanelProps> = ({
 }) => (
   <SharedBenchmarksPanel
  benchmarks={customBenchmarks || epDefaultBenchmarks}
- subtitle="Mount Sinai vs National Percentiles (2025 Data)"
+ subtitle="Your System vs National Percentiles (2025 Data)"
  dataSource={dataSource || 'HRS/EHRA Guidelines, Calkins et al. 2024, Kusumoto et al. 2025'}
  lastUpdated={lastUpdated || 'October 2025'}
  onBenchmarkClick={onBenchmarkClick}

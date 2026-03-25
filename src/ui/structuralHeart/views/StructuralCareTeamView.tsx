@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DEMO_PATIENT_CONTEXT } from '../../../types/shared';
+import { DEMO_PATIENT_CONTEXT, DEMO_PATIENT_ROSTER } from '../../../types/shared';
 import { Users, Calendar, AlertTriangle, Clock, Heart, Shield, Activity, FileText, Download, UserCheck, Gauge, Target, TrendingUp, Stethoscope } from 'lucide-react';
 
 // Import SH Valve Risk Score Calculator - the key calculator for this module
@@ -10,16 +10,21 @@ import SHValvePhenotypeClassification from '../components/clinical/SHValvePhenot
 import SHValveTherapyContraindicationChecker from '../components/clinical/SHValveTherapyContraindicationChecker';
 import SHAdvancedProcedureTracker from '../components/clinical/SHAdvancedProcedureTracker';
 import SHSpecialtyPhenotypesDashboard from '../components/clinical/SHSpecialtyPhenotypesDashboard';
+import SHClinicalGapDetectionDashboard from '../components/clinical/SHClinicalGapDetectionDashboard';
+import SHRealTimeHospitalAlerts from '../components/care-team/SHRealTimeHospitalAlerts';
+import AmyloidosisScreener from '../../../components/phenotypeDetection/AmyloidosisScreener';
 
 // Import Structural Heart specific components
 import TAVRAnalyticsDashboard from '../components/TAVRAnalyticsDashboard';
 import StructuralReferralNetworkVisualization from '../components/StructuralReferralNetworkVisualization';
 
-type TabId = 'dashboard' | 'patients' | 'workflow' | 'safety' | 'team' | 'documentation' | 'calculator' | 'clinicaltools';
+type TabId = 'dashboard' | 'patients' | 'workflow' | 'safety' | 'team' | 'documentation' | 'calculator' | 'clinicaltools' | 'clinical-gaps' | 'hospital-alerts';
 
 // Clinical Intelligence sub-tab panel (includes all 5 tools, with risk calc as default)
 const ClinicalToolsPanel: React.FC = () => {
   const [activeToolTab, setActiveToolTab] = useState('phenotype');
+  const [selectedPatientIdx, setSelectedPatientIdx] = useState(4);
+  const selectedPatient = DEMO_PATIENT_ROSTER[selectedPatientIdx]?.context || DEMO_PATIENT_CONTEXT;
 
   const tools = [
  { id: 'phenotype', label: 'Phenotype Classification', component: SHValvePhenotypeClassification },
@@ -27,6 +32,7 @@ const ClinicalToolsPanel: React.FC = () => {
  { id: 'contraindication', label: 'Contraindication Checker', component: SHValveTherapyContraindicationChecker },
  { id: 'interventions', label: 'Procedure Tracker', component: SHAdvancedProcedureTracker },
  { id: 'specialty', label: 'Specialty Phenotypes', component: SHSpecialtyPhenotypesDashboard },
+ { id: 'amyloidosis', label: 'Amyloidosis Screener', component: AmyloidosisScreener },
   ];
 
   const ActiveTool = tools.find(t => t.id === activeToolTab)?.component;
@@ -34,10 +40,18 @@ const ClinicalToolsPanel: React.FC = () => {
   return (
  <div className="space-y-6">
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
- <h3 className="text-xl font-bold text-titanium-900 mb-4 flex items-center gap-2">
- <Stethoscope className="w-6 h-6 text-arterial-600" />
- Clinical Intelligence Tools
- </h3>
+ <div className="flex items-center justify-between mb-4">
+   <h3 className="text-xl font-bold text-titanium-900 flex items-center gap-2">
+     <Stethoscope className="w-6 h-6 text-arterial-600" />
+     Clinical Intelligence Tools
+   </h3>
+   <div className="flex items-center gap-2">
+     <Users className="w-4 h-4 text-titanium-500" />
+     <select value={selectedPatientIdx} onChange={(e) => setSelectedPatientIdx(Number(e.target.value))} className="text-sm border border-titanium-200 rounded-lg px-3 py-1.5 bg-white text-titanium-800 focus:outline-none focus:ring-2 focus:ring-porsche-300">
+       {DEMO_PATIENT_ROSTER.map((p, i) => (<option key={p.context.patientId} value={i}>{p.label}</option>))}
+     </select>
+   </div>
+ </div>
  <div className="flex flex-wrap gap-2">
  {tools.map(tool => (
  <button
@@ -54,7 +68,7 @@ const ClinicalToolsPanel: React.FC = () => {
  ))}
  </div>
  </div>
- {ActiveTool && <ActiveTool patientData={DEMO_PATIENT_CONTEXT} />}
+ {ActiveTool && <ActiveTool patientData={selectedPatient} />}
  </div>
   );
 };
@@ -66,11 +80,13 @@ const StructuralCareTeamView: React.FC = () => {
  { id: 'dashboard', label: 'Dashboard', icon: Activity, description: 'Structural heart metrics overview' },
  { id: 'patients', label: 'Patients', icon: Users, description: 'TAVR and structural heart patients' },
  { id: 'workflow', label: 'Workflow', icon: Calendar, description: 'Heart team workflows' },
+ { id: 'hospital-alerts', label: 'Hospital Alerts', icon: Heart, description: 'Real-time structural heart hospital alerts' },
  { id: 'safety', label: 'Safety', icon: Shield, description: 'Risk assessment & monitoring' },
  { id: 'calculator', label: 'STS Risk Score', icon: Gauge, description: 'Surgical risk calculator' },
  { id: 'clinicaltools', label: 'Clinical Intelligence', icon: Stethoscope, description: 'Phenotype classification, contraindication checking, and procedure tracking' },
  { id: 'team', label: 'Team', icon: UserCheck, description: 'Heart team collaboration' },
- { id: 'documentation', label: 'Documentation', icon: FileText, description: 'Clinical documentation' }
+ { id: 'documentation', label: 'Documentation', icon: FileText, description: 'Clinical documentation' },
+ { id: 'clinical-gaps', label: 'Clinical Gaps', icon: AlertTriangle, description: 'SH clinical gap detection dashboard' }
   ];
 
   const renderTabContent = () => {
@@ -176,6 +192,10 @@ const StructuralCareTeamView: React.FC = () => {
  );
  case 'clinicaltools':
  return <ClinicalToolsPanel />;
+ case 'clinical-gaps':
+ return <SHClinicalGapDetectionDashboard />;
+ case 'hospital-alerts':
+ return <SHRealTimeHospitalAlerts />;
  case 'workflow':
  return (
  <div className="space-y-6">

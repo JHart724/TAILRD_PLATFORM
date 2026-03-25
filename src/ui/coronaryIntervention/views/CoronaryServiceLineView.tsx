@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, Users, Calculator, Shield, Activity, Target, BarChart3, FileText, TrendingUp, Scissors, Route, Gauge } from 'lucide-react';
+import { Heart, Users, Calculator, Shield, Activity, Target, BarChart3, FileText, TrendingUp, Scissors, Route, Gauge, Search } from 'lucide-react';
 
 // Import Coronary Intervention components
 import GRACEScoreCalculator from '../components/GRACEScoreCalculator';
@@ -7,27 +7,68 @@ import TIMIScoreCalculator from '../components/TIMIScoreCalculator';
 import SYNTAXScoreCalculator from '../components/SYNTAXScoreCalculator';
 import CoronarySafetyScreening from '../components/CoronarySafetyScreening';
 import PCINetworkVisualization from '../components/PCINetworkVisualization';
+import CADClinicalGapDetectionDashboard from '../components/clinical/CADClinicalGapDetectionDashboard';
+import SAQOutcomesPanel from '../components/service-line/SAQOutcomesPanel';
+import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHeatmap';
+import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
+import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
+import CrossReferralEngine from '../../../components/crossReferral/CrossReferralEngine';
 
-type TabId = 'cabg-vs-pci' | 'protected-pci' | 'multi-arterial' | 'on-off-pump' | 'grace' | 'timi' | 'syntax' | 'safety' | 'network' | 'analytics' | 'outcomes' | 'reporting';
+type TabId = 'cabg-vs-pci' | 'protected-pci' | 'multi-arterial' | 'on-off-pump' | 'grace' | 'timi' | 'syntax' | 'safety' | 'network' | 'analytics' | 'outcomes' | 'reporting' | 'gap-detection' | 'saq-outcomes' | 'risk-heatmap' | 'care-network' | 'cross-referral';
+
+interface TabGroup {
+  label: string;
+  tabs: Array<{ id: string; label: string; icon: React.ElementType; description: string }>;
+}
 
 const CoronaryServiceLineView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabId>('cabg-vs-pci');
+  const [activeTab, setActiveTab] = useState<TabId>('gap-detection');
   const [generatingReport, setGeneratingReport] = useState<string | null>(null);
   const [exportingFormat, setExportingFormat] = useState<string | null>(null);
 
-  const tabs = [
+  const tabGroups: TabGroup[] = [
+ {
+ label: 'Clinical Analytics',
+ tabs: [
+ { id: 'analytics', label: 'Procedure Analytics', icon: BarChart3, description: 'Advanced coronary analytics' },
+ { id: 'risk-heatmap', label: 'Patient Risk Heatmap', icon: Target, description: 'Interactive coronary risk visualization matrix' },
+ { id: 'saq-outcomes', label: 'PRO-Outcomes (SAQ)', icon: Activity, description: 'Seattle Angina Questionnaire outcomes tracking' },
+ ],
+ },
+ {
+ label: 'Risk Assessment',
+ tabs: [
+ { id: 'grace', label: 'GRACE Score', icon: Calculator, description: 'GRACE risk calculator' },
+ { id: 'timi', label: 'TIMI Score', icon: Gauge, description: 'TIMI risk calculator' },
+ { id: 'syntax', label: 'SYNTAX Score', icon: BarChart3, description: 'SYNTAX score calculator' },
  { id: 'cabg-vs-pci', label: 'CABG vs PCI', icon: Route, description: 'CABG vs PCI decision tool' },
  { id: 'protected-pci', label: 'Protected PCI', icon: Shield, description: 'Protected PCI planner' },
  { id: 'multi-arterial', label: 'Multi-Arterial', icon: Target, description: 'Multi-arterial graft calculator' },
  { id: 'on-off-pump', label: 'On/Off Pump', icon: Activity, description: 'On-pump vs off-pump decision' },
- { id: 'grace', label: 'GRACE Score', icon: Calculator, description: 'GRACE risk calculator' },
- { id: 'timi', label: 'TIMI Score', icon: Gauge, description: 'TIMI risk calculator' },
- { id: 'syntax', label: 'SYNTAX Score', icon: BarChart3, description: 'SYNTAX score calculator' },
- { id: 'safety', label: 'Safety Screening', icon: Shield, description: 'Coronary safety screening' },
- { id: 'network', label: 'PCI Network', icon: Users, description: 'PCI referral network' },
- { id: 'analytics', label: 'Analytics', icon: BarChart3, description: 'Advanced coronary analytics' },
+ ],
+ },
+ {
+ label: 'Gap & Opportunity',
+ tabs: [
+ { id: 'gap-detection', label: 'Gap Detection (31-Gap)', icon: Search, description: 'CAD clinical gap detection' },
+ ],
+ },
+ {
+ label: 'Care Coordination',
+ tabs: [
+ { id: 'network', label: 'Referral Network', icon: Users, description: 'PCI referral network' },
+ { id: 'care-network', label: 'Care Team Network', icon: Users, description: 'Coronary care team collaboration and referral patterns' },
+ { id: 'cross-referral', label: 'Cross-Referral Engine', icon: Heart, description: 'Cross-specialty referral pathways and coordination' },
+ ],
+ },
+ {
+ label: 'Outcomes & Reporting',
+ tabs: [
  { id: 'outcomes', label: 'Outcomes', icon: TrendingUp, description: 'Procedural outcomes' },
- { id: 'reporting', label: 'Reporting', icon: FileText, description: 'Automated reports' }
+ { id: 'safety', label: 'Safety Screening', icon: Shield, description: 'Coronary safety screening' },
+ { id: 'reporting', label: 'Automated Reports', icon: FileText, description: 'Automated reports' },
+ ],
+ },
   ];
 
   const renderTabContent = () => {
@@ -567,94 +608,17 @@ const CoronaryServiceLineView: React.FC = () => {
  </div>
  );
  case 'reporting':
- return (
- <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-8">
- <h3 className="text-2xl font-bold text-titanium-900 mb-6 flex items-center gap-3">
- <FileText className="w-8 h-8 text-porsche-600" />
- Coronary Service Line Reports
- </h3>
- <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- {/* Available Reports */}
- <div className="space-y-4">
- <h4 className="font-semibold text-titanium-900 mb-2">Available Reports</h4>
- {[
- { name: 'Monthly PCI Volume & Outcomes', frequency: 'Monthly', lastRun: 'Feb 28, 2026', status: 'Ready' },
- { name: 'CABG Quality Dashboard (STS Format)', frequency: 'Quarterly', lastRun: 'Jan 15, 2026', status: 'Ready' },
- { name: 'STEMI System Report', frequency: 'Monthly', lastRun: 'Feb 28, 2026', status: 'Ready' },
- { name: 'Door-to-Balloon Time Analysis', frequency: 'Weekly', lastRun: 'Mar 7, 2026', status: 'Ready' },
- { name: 'Operator Volume Report (ACCF/SCAI)', frequency: 'Annual', lastRun: 'Jan 1, 2026', status: 'Ready' },
- { name: 'Cath Lab Utilization Report', frequency: 'Monthly', lastRun: 'Feb 28, 2026', status: 'Ready' },
- { name: 'Device Utilization (DES/BMS/DCB)', frequency: 'Quarterly', lastRun: 'Jan 15, 2026', status: 'Ready' },
- { name: 'Appropriate Use Criteria (AUC) Report', frequency: 'Quarterly', lastRun: 'Jan 15, 2026', status: 'Ready' }
- ].map((report, index) => (
- <div key={report.name} className="flex items-center justify-between p-4 bg-white rounded-xl border border-titanium-200 hover:shadow-md transition-shadow">
- <div>
- <div className="font-medium text-titanium-900">{report.name}</div>
- <div className="text-xs text-titanium-500">{report.frequency} | Last: {report.lastRun}</div>
- </div>
- <button onClick={() => {
- setGeneratingReport(report.name);
- setTimeout(() => setGeneratingReport(null), 2000);
- }} className="px-3 py-1.5 bg-porsche-50 text-porsche-600 rounded-lg text-sm font-medium border border-porsche-200 hover:bg-porsche-100 transition-colors">
- {generatingReport === report.name ? '✓ Generated' : 'Generate'}
- </button>
- </div>
- ))}
- </div>
-
- {/* Regulatory Submissions */}
- <div className="space-y-4">
- <h4 className="font-semibold text-titanium-900 mb-2">Regulatory & Registry Submissions</h4>
- {[
- { name: 'NCDR CathPCI Registry', deadline: 'Q1 2026 - Mar 31', status: 'In Progress', statusColor: 'bg-amber-100 text-amber-700' },
- { name: 'STS Adult Cardiac Surgery', deadline: 'Q1 2026 - Mar 31', status: 'In Progress', statusColor: 'bg-amber-100 text-amber-700' },
- { name: 'ACC Chest Pain - MI Registry', deadline: 'Q1 2026 - Mar 31', status: 'Complete', statusColor: 'bg-green-100 text-green-700' },
- { name: 'CMS STEMI Core Measures', deadline: 'Annual - Jun 30', status: 'Not Due', statusColor: 'bg-titanium-100 text-titanium-600' }
- ].map((item, index) => (
- <div key={item.name} className="p-4 bg-white rounded-xl border border-titanium-200">
- <div className="flex justify-between items-start mb-2">
- <div className="font-medium text-titanium-900">{item.name}</div>
- <span className={`text-xs px-2 py-1 rounded-full ${item.statusColor}`}>{item.status}</span>
- </div>
- <div className="text-xs text-titanium-500">Deadline: {item.deadline}</div>
- </div>
- ))}
-
- <div className="mt-6 p-4 bg-chrome-50 rounded-xl border border-chrome-200">
- <h4 className="font-semibold text-chrome-900 mb-2">Quick Export</h4>
- <div className="grid grid-cols-2 gap-3">
- {['PDF Summary', 'Excel Data', 'CSV Raw Data', 'PowerPoint Deck'].map((format, index) => (
- <button key={format} onClick={() => {
- setExportingFormat(format);
- setTimeout(() => setExportingFormat(null), 2000);
- }} className="px-3 py-2 bg-white text-chrome-700 rounded-lg text-sm font-medium border border-chrome-200 hover:bg-chrome-100 transition-colors">
- {exportingFormat === format ? '✓ Exported' : format}
- </button>
- ))}
- </div>
- </div>
-
- <div className="p-4 bg-arterial-50 rounded-xl border border-arterial-200">
- <h4 className="font-semibold text-arterial-900 mb-2">Scheduled Reports</h4>
- <div className="space-y-2 text-sm">
- <div className="flex justify-between">
- <span className="text-arterial-800">Weekly D2B Summary</span>
- <span className="text-arterial-600">Every Monday 6:00 AM</span>
- </div>
- <div className="flex justify-between">
- <span className="text-arterial-800">Monthly PCI Dashboard</span>
- <span className="text-arterial-600">1st of month</span>
- </div>
- <div className="flex justify-between">
- <span className="text-arterial-800">Quarterly STS Submission</span>
- <span className="text-arterial-600">End of quarter</span>
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
- );
+ return <AutomatedReportingSystem />;
+ case 'gap-detection':
+ return <CADClinicalGapDetectionDashboard />;
+ case 'saq-outcomes':
+ return <SAQOutcomesPanel />;
+ case 'risk-heatmap':
+ return <PatientRiskHeatmap />;
+ case 'care-network':
+ return <CareTeamNetworkGraph />;
+ case 'cross-referral':
+ return <CrossReferralEngine />;
  default:
  return <GRACEScoreCalculator />;
  }
@@ -664,13 +628,18 @@ const CoronaryServiceLineView: React.FC = () => {
  <div className="min-h-screen p-6 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #EAEFF4 0%, #F2F5F8 50%, #ECF0F4 100%)' }}>
 
  <div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
- {/* Tab Navigation */}
+ {/* Tab Navigation — Grouped */}
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6 shadow-xl">
- <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4">
- {tabs.map((tab) => {
+ {tabGroups.map((group, groupIdx) => (
+ <div key={group.label}>
+ {groupIdx > 0 && <div className="border-t border-titanium-100 my-4" />}
+ <div className="mb-3">
+ <span className="text-xs font-semibold uppercase tracking-wider text-titanium-400">{group.label}</span>
+ </div>
+ <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 gap-3 mb-2">
+ {group.tabs.map((tab) => {
  const Icon = tab.icon;
  const isActive = activeTab === tab.id;
-
  return (
  <button
  key={tab.id}
@@ -683,7 +652,7 @@ const CoronaryServiceLineView: React.FC = () => {
  >
  <div className="flex flex-col items-center gap-2">
  <Icon className={`w-6 h-6 ${isActive ? 'text-medical-red-600' : 'text-titanium-600 group-hover:text-titanium-800'}`} />
- <span className={`text-sm font-semibold ${isActive ? 'text-medical-red-600' : 'text-titanium-600 group-hover:text-titanium-800'}`}>
+ <span className={`text-xs font-semibold text-center leading-tight ${isActive ? 'text-medical-red-600' : 'text-titanium-600 group-hover:text-titanium-800'}`}>
  {tab.label}
  </span>
  </div>
@@ -694,6 +663,8 @@ const CoronaryServiceLineView: React.FC = () => {
  );
  })}
  </div>
+ </div>
+ ))}
  </div>
 
  {/* Tab Content */}

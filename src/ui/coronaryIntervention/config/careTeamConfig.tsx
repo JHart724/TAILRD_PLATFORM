@@ -10,6 +10,8 @@ import GRACEScoreCalculator from '../components/GRACEScoreCalculator';
 import TIMIScoreCalculator from '../components/TIMIScoreCalculator';
 import SYNTAXScoreCalculator from '../../../components/riskCalculators/SYNTAXScoreCalculator';
 import { featureFlags } from '../../../config/featureFlags';
+import CADClinicalGapDetectionDashboard from '../components/clinical/CADClinicalGapDetectionDashboard';
+import CoronaryRiskScoreCalculator from '../components/clinical/CoronaryRiskScoreCalculator';
 
 // Coronary Intervention Dashboard Component
 const CoronaryDashboard: React.FC = () => (
@@ -297,6 +299,9 @@ const CoronarySafety: React.FC = () => (
   <div className="space-y-6">
  {/* Coronary Safety Screening */}
  <CoronarySafetyScreening />
+
+ {/* Coronary Risk Score Calculator */}
+ <CoronaryRiskScoreCalculator />
   </div>
 );
 
@@ -650,6 +655,11 @@ const CoronaryDocumentation: React.FC = () => (
   </div>
 );
 
+// CAD Clinical Gaps wrapper
+const CADClinicalGaps: React.FC = () => (
+  <CADClinicalGapDetectionDashboard />
+);
+
 // Coronary Intervention Care Team Tab Configuration
 const coronaryTabs: StandardTabConfig[] = [
   {
@@ -666,19 +676,19 @@ const coronaryTabs: StandardTabConfig[] = [
   },
   {
  id: 'workflow',
- label: 'CABG Optimization',
+ label: 'Workflow',
  icon: Heart,
  description: 'Coronary bypass optimization'
   },
   {
  id: 'safety',
- label: 'Clinical Screening',
+ label: 'Safety',
  icon: Shield,
  description: 'Coronary clinical screening'
   },
   {
  id: 'team',
- label: 'Clinical Collaboration',
+ label: 'Team',
  icon: Users,
  description: 'Clinical consultation and decision support'
   },
@@ -687,6 +697,12 @@ const coronaryTabs: StandardTabConfig[] = [
  label: 'Documentation',
  icon: AlertTriangle,
  description: 'Coronary documentation'
+  },
+  {
+ id: 'clinical-gaps',
+ label: 'Clinical Gaps',
+ icon: AlertTriangle,
+ description: 'SGLT2i-CKD, Dual Pathway, PCSK9 inhibitor gaps'
   }
 ];
 
@@ -703,6 +719,7 @@ export const coronaryCareTeamConfig: CareTeamViewConfig = {
  workflow: CoronaryWorkflow,
  safety: CoronarySafety,
  team: CoronaryClinicalCollaboration,
- documentation: CoronaryDocumentation
+ documentation: CoronaryDocumentation,
+ 'clinical-gaps': CADClinicalGaps
   }
 };

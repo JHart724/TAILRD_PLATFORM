@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Bell } from 'lucide-react';
 import { NotificationPanel } from '../components/notifications';
+import UserMenu from '../components/UserMenu';
+import { useAuth } from '../auth/AuthContext';
 
 interface TopBarProps {
   moduleName?: string;
@@ -9,6 +11,8 @@ interface TopBarProps {
 
 export default function TopBar({ moduleName, viewName }: TopBarProps) {
   const [notifOpen, setNotifOpen] = useState(false);
+  const { state } = useAuth();
+  const user = state.user;
   const segments: { label: string; isLast: boolean }[] = [];
 
   if (!moduleName) {
@@ -76,13 +80,11 @@ export default function TopBar({ moduleName, viewName }: TopBarProps) {
               }}
             />
           </button>
-          <div className="flex items-center gap-2">
-            <span className="text-sm" style={{ color: '#0A1828' }}>Dr. Smith</span>
-            <div
-              className="w-8 h-8 rounded-full sidebar-avatar"
-              aria-label="User avatar"
-            />
-          </div>
+          <UserMenu
+            userName={user ? `${user.firstName}${user.lastName ? ' ' + user.lastName : ''}` : 'Superuser'}
+            userRole={user?.title || user?.department || 'Cardiology Director'}
+            userEmail={user?.email || ''}
+          />
         </div>
       </header>
       <NotificationPanel isOpen={notifOpen} onClose={() => setNotifOpen(false)} />

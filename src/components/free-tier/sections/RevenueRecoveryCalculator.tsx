@@ -283,6 +283,24 @@ const RevenueRecoveryCalculator: React.FC = () => {
           <p className="text-[11px] text-titanium-400 mt-1">
             Annualised estimate · connect EHR data to verify
           </p>
+
+          {/* This Quarter vs Full Year */}
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <div className="bg-blue-50/70 border border-blue-100 rounded-lg p-3 text-center">
+              <div className="text-xs text-blue-600 font-semibold uppercase tracking-wide">This Quarter</div>
+              <div className="text-lg font-bold text-blue-700">
+                {formatDollar(Math.round(totalOpportunity * 0.35))}
+              </div>
+              <div className="text-xs text-blue-500">Immediate + near-term patients</div>
+            </div>
+            <div className="bg-titanium-50/70 border border-titanium-100 rounded-lg p-3 text-center">
+              <div className="text-xs text-titanium-600 font-semibold uppercase tracking-wide">Full Year</div>
+              <div className="text-lg font-bold text-titanium-700">
+                {formatDollar(totalOpportunity)}
+              </div>
+              <div className="text-xs text-titanium-500">All identified opportunities</div>
+            </div>
+          </div>
         </div>
 
         <button

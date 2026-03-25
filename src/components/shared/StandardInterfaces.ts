@@ -15,13 +15,14 @@ export interface StandardExecutiveMetric {
 }
 
 // Standard Care Team Tab Types
-export type StandardCareTeamTab = 
+export type StandardCareTeamTab =
   | 'dashboard' // Module-specific overview/alerts
   | 'patients' // Patient census and management
   | 'workflow' // Module-specific clinical workflows
   | 'safety' // Safety alerts and quality metrics
   | 'team' // Team coordination and schedules
-  | 'documentation'; // CDI and clinical documentation
+  | 'documentation' // CDI and clinical documentation
+  | 'clinical-gaps'; // 15-gap clinical gap detection dashboard
 
 // Standard Patient Base Interface
 export interface StandardPatientBase {

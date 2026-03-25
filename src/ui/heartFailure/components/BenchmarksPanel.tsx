@@ -17,7 +17,7 @@ const hfBenchmarks: BenchmarkMetric[] = [
 const BenchmarksPanel: React.FC<BenchmarksPanelProps> = ({ onBenchmarkClick }) => (
   <SharedBenchmarksPanel
  benchmarks={hfBenchmarks}
- subtitle="Mount Sinai vs National Percentiles (2025 Data)"
+ subtitle="Your System vs National Percentiles (2025 Data)"
  dataSource="Greene et al. 2024, Lala et al. 2025, ACC/AHA Guidelines"
  lastUpdated="October 2025"
  onBenchmarkClick={onBenchmarkClick}

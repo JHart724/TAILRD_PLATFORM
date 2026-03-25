@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DollarSign, Users, TrendingUp, Target, ChevronRight } from 'lucide-react';
+import { DollarSign, Users, TrendingUp, Target, ChevronRight, Zap, Search } from 'lucide-react';
 import BaseExecutiveView from '../../../components/shared/BaseExecutiveView';
 import KPICard from '../../../components/shared/KPICard';
 import ExportButton from '../../../components/shared/ExportButton';
@@ -18,6 +18,10 @@ import EPDRGDetailModal from '../components/EPDRGDetailModal';
 import { modulesClinicalData } from '../../../config/allModulesClinicalData';
 import { getOrdinalSuffix, formatMillions, toFixed, roundTo } from '../../../utils/formatters';
 import BaseDetailModal from '../../../components/shared/BaseDetailModal';
+import GapIntelligenceCard from '../../../components/shared/GapIntelligenceCard';
+import PredictiveMetricsBanner from '../../../components/shared/PredictiveMetricsBanner';
+import { RevenuePipelineCard, RevenueAtRiskCard, TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
+import type { RevenuePipelineData, RevenueAtRiskData, TrajectoryTrendsData } from '../../../components/shared/ForwardLookingCards';
 import { Heart } from 'lucide-react';
 
 // Get electrophysiology data
@@ -174,6 +178,84 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 
 	// Fallback electrophysiology specific benchmarks
 	const benchmarkDetails: Record<string, any> = {
+	'AF Ablation Success': {
+	benchmarkName: 'AF Ablation Success',
+	description: 'Freedom from AF recurrence at 12 months post-catheter ablation',
+	ourValue: 95,
+	nationalValue: 88,
+	percentile: 82,
+	unit: '%',
+	trendData: [
+	{ month: 'Jun', value: 91 }, { month: 'Jul', value: 92 }, { month: 'Aug', value: 93 },
+	{ month: 'Sep', value: 94 }, { month: 'Oct', value: 94 }, { month: 'Nov', value: 95 }
+	],
+	comparisonData: { top10: 97, top25: 94, top50: 91, national: 88 }
+	},
+	'LAAC Device Success': {
+	benchmarkName: 'LAAC Device Success',
+	description: 'Successful left atrial appendage closure device implantation without major complications',
+	ourValue: 97,
+	nationalValue: 95,
+	percentile: 88,
+	unit: '%',
+	trendData: [
+	{ month: 'Jun', value: 95 }, { month: 'Jul', value: 95 }, { month: 'Aug', value: 96 },
+	{ month: 'Sep', value: 96 }, { month: 'Oct', value: 97 }, { month: 'Nov', value: 97 }
+	],
+	comparisonData: { top10: 99, top25: 97, top50: 96, national: 95 }
+	},
+	'Pacemaker Complications': {
+	benchmarkName: 'Pacemaker Complications',
+	description: 'Rate of major complications within 30 days of pacemaker implantation (lower is better)',
+	ourValue: 2.1,
+	nationalValue: 3.2,
+	percentile: 78,
+	unit: '%',
+	trendData: [
+	{ month: 'Jun', value: 3.0 }, { month: 'Jul', value: 2.8 }, { month: 'Aug', value: 2.6 },
+	{ month: 'Sep', value: 2.4 }, { month: 'Oct', value: 2.2 }, { month: 'Nov', value: 2.1 }
+	],
+	comparisonData: { top10: 1.2, top25: 1.8, top50: 2.5, national: 3.2 }
+	},
+	'ICD Appropriate Therapy': {
+	benchmarkName: 'ICD Appropriate Therapy',
+	description: 'Percentage of ICD patients receiving appropriate therapy for ventricular arrhythmias',
+	ourValue: 18,
+	nationalValue: 15,
+	percentile: 72,
+	unit: '%',
+	trendData: [
+	{ month: 'Jun', value: 14 }, { month: 'Jul', value: 15 }, { month: 'Aug', value: 16 },
+	{ month: 'Sep', value: 17 }, { month: 'Oct', value: 17 }, { month: 'Nov', value: 18 }
+	],
+	comparisonData: { top10: 24, top25: 20, top50: 17, national: 15 }
+	},
+	'Lead Extraction Success': {
+	benchmarkName: 'Lead Extraction Success',
+	description: 'Successful transvenous lead extraction rate including complete and clinical success',
+	ourValue: 96,
+	nationalValue: 91,
+	percentile: 85,
+	unit: '%',
+	trendData: [
+	{ month: 'Jun', value: 92 }, { month: 'Jul', value: 93 }, { month: 'Aug', value: 94 },
+	{ month: 'Sep', value: 95 }, { month: 'Oct', value: 95 }, { month: 'Nov', value: 96 }
+	],
+	comparisonData: { top10: 99, top25: 97, top50: 94, national: 91 }
+	},
+	'CRT Response Rate': {
+	benchmarkName: 'CRT Response Rate',
+	description: 'Percentage of CRT recipients demonstrating clinical response (LVEF improvement >=5% or NYHA class improvement)',
+	ourValue: 78,
+	nationalValue: 65,
+	percentile: 89,
+	unit: '%',
+	trendData: [
+	{ month: 'Jun', value: 70 }, { month: 'Jul', value: 72 }, { month: 'Aug', value: 74 },
+	{ month: 'Sep', value: 75 }, { month: 'Oct', value: 77 }, { month: 'Nov', value: 78 }
+	],
+	comparisonData: { top10: 85, top25: 78, top50: 72, national: 65 }
+	},
 	'Ablation 30-Day Mortality': {
 	benchmarkName: 'Ablation 30-Day Mortality',
 	description: '30-day all-cause mortality post-Ablation',
@@ -193,7 +275,7 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 	},
 	'LAAC Technical Success': {
 	benchmarkName: 'LAAC Technical Success',
-	description: 'MR reduction to ≤2+ post-procedure',
+	description: 'MR reduction to <=2+ post-procedure',
 	ourValue: 96,
 	nationalValue: 92,
 	percentile: 83,
@@ -404,6 +486,67 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 	className="shadow-lg hover:shadow-xl transition-all duration-300"
 	/>
 	</div>
+
+		{/* Clinical Gap Intelligence */}
+	<GapIntelligenceCard data={{
+	  totalGaps: 20,
+	  categories: [
+	    { name: 'Therapy', patients: 680, color: '#3b82f6' },
+	    { name: 'Safety', patients: 290, color: '#ef4444' },
+	    { name: 'Growth', patients: 350, color: '#8b5cf6' },
+	    { name: 'Quality', patients: 410, color: '#f59e0b' },
+	  ],
+	  topGaps: [
+	    { name: 'LAAC Candidates', patients: 185, opportunity: '$4.1M' },
+	    { name: 'CSP/CRT Upgrade', patients: 120, opportunity: '$2.6M' },
+	    { name: 'Dofetilide REMS', patients: 95, opportunity: '$2.1M' },
+	    { name: 'PFA Re-ablation', patients: 78, opportunity: '$1.8M' },
+	    { name: 'Device Battery', patients: 62, opportunity: '$1.4M' },
+	  ],
+	  safetyAlert: 'CRITICAL: 134 patients \u00b7 HIGH: 156 patients',
+	}} />
+
+	{/* Forward-Looking Executive Cards */}
+	<RevenuePipelineCard data={{
+	  quarters: [
+	    { quarter: 'Q1 2026', revenue: 3200000, procedures: 28, confidence: 'high' },
+	    { quarter: 'Q2 2026', revenue: 2400000, procedures: 21, confidence: 'moderate' },
+	    { quarter: 'Q3 2026', revenue: 1900000, procedures: 16, confidence: 'moderate' },
+	    { quarter: 'Q4 2026', revenue: 1400000, procedures: 12, confidence: 'low' },
+	  ],
+	  totalProjected12Month: 8900000,
+	}} />
+	<RevenueAtRiskCard data={{
+	  immediatePatients: 134,
+	  immediateRevenue: 4100000,
+	  deferralRevenue: 2600000,
+	  cumulativeRisk12Month: 8400000,
+	  deferralCostPerMonth: 680000,
+	}} />
+	<TrajectoryTrendsCard data={{
+	  worseningRapidPct: 22,
+	  worseningRapidCount: 290,
+	  meanDeclineRate: 'QTc trend monitoring',
+	  declineMetric: 'EP',
+	  thresholdIn30Days: 8,
+	  totalFlaggedPatients: 730,
+	  keyInsights: [
+	    '134 LAAC candidates with CHA2DS2-VASc >= 4 -- anticoagulation-related bleeding trajectory increasing',
+	    'PVC burden trending above ablation threshold in 12 patients -- reversibility window narrowing',
+	    '8 patients with QTc > 480ms and worsening electrolyte trends -- immediate review needed',
+	  ],
+	}} />
+
+	{/* Predictive Metrics Banner */}
+	<PredictiveMetricsBanner data={{
+	  thresholdIn90Days: 42,
+	  quarterlyActionableRevenue: 4100000,
+	  totalIdentifiedRevenue: 12800000,
+	  rapidDeteriorationCount: 134,
+	  avgTimeToEvent: 7,
+	  projectedRevenueCurrentRate: 4800000,
+	  projectedRevenueSystematic: 10200000,
+	}} />
 
 	{/* #2: Revenue Opportunity Waterfall */}
 	<div className="metal-card relative z-10 mb-6">

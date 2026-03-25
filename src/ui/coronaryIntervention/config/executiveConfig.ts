@@ -1,5 +1,6 @@
 import { ExecutiveViewConfig } from '../../../components/shared/BaseExecutiveView';
 import { DRGOpportunity } from '../../../components/shared/DRGOptimizationAlert';
+import { PLATFORM_TOTALS, formatDollars, formatPatients } from '../../../data/platformTotals';
 
 // Coronary Intervention DRG Optimization Opportunities
 const coronaryDRGOpportunities: DRGOpportunity[] = [
@@ -48,10 +49,10 @@ export const coronaryInterventionConfig: ExecutiveViewConfig = {
   moduleName: 'Coronary Intervention',
   description: '• PCI Analytics • STEMI/NSTEMI Outcomes • Stent Optimization',
   kpiData: {
- totalOpportunity: '$165.3M',
- totalOpportunitySub: 'Annual revenue potential',
- totalPatients: '4,650',
- totalPatientsSub: 'Active intervention panel (15% of CAD population)',
+ totalOpportunity: formatDollars(PLATFORM_TOTALS.modules.cad.opportunity),
+ totalOpportunitySub: 'Annual revenue potential (+$20.6M from 87-gap initiative: adds Heart Team Review, Complete Revasc, CTO PCI, Intravascular Imaging, DAPT Safety, FFR/iFR, Post-ACS PCSK9i, OAC Monotherapy, CCTA, Ranolazine Refractory, BB Deprescribing, INOCA, Bempedoic Acid, Icosapent Ethyl, Post-CABG Surveillance, Vasospastic Angina, hs-TnT, Bilateral IMA to existing CAD gaps)',
+ totalPatients: formatPatients(PLATFORM_TOTALS.modules.cad.patients),
+ totalPatientsSub: 'Active intervention panel — includes 3,495 newly identified gap patients (1,534 original + 1,961 new 87-gap: Heart Team 134, Complete Revasc 89, CTO 47, IV Imaging 112, DAPT 67, FFR/iFR 78, Post-ACS PCSK9i 58, OAC Mono 143, CCTA 167, Ranolazine 89, BB Deprescribing 198, INOCA 78, Bempedoic 67, Icosapent 134, CABG Surveillance 112, Vasospasm 43, hs-TnT 89, BIMA 56)',
  gdmtOptimization: '94%',
  gdmtOptimizationSub: 'Procedural success rate',
  avgRoi: '$5,332',

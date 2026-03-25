@@ -1,0 +1,1478 @@
+import React, { useState } from 'react';
+import { AlertTriangle, CheckCircle, DollarSign, Users, ChevronDown, ChevronUp, Target, Heart, Activity, Pill, Stethoscope, TrendingUp, Zap, Info, Search, Radio, FileText } from 'lucide-react';
+import { classifyASSeverity } from '../../../../utils/clinicalCalculators';
+import { computeTrajectory, computeTimeHorizon, projectASProgression, projectBAVProgression, trajectoryDisplay, timeHorizonDisplay, formatDollar, type TrajectoryResult, type TrajectoryDistribution } from '../../../../utils/predictiveCalculators';
+
+// ============================================================
+// CLINICAL GAP DETECTION — STRUCTURAL HEART MODULE
+// Gaps: 3 (Asymptomatic Severe AS), 5 (Functional MR + COAPT),
+//       8 (Tricuspid Intervention)
+//       79 (Moderate AS Surveillance), 80 (Post-TAVR Echo), 81 (Rheumatic MS Warfarin),
+//       82 (BAV Aortopathy), 83 (Endocarditis Prophylaxis)
+// ============================================================
+
+export interface SHClinicalGap {
+  id: string;
+  name: string;
+  category: 'Gap' | 'Growth' | 'Safety' | 'Quality' | 'Discovery';
+  safetyNote?: string;
+  patientCount: number;
+  dollarOpportunity: number;
+  evidence: string;
+  cta: string;
+  priority: 'high' | 'medium' | 'low';
+  detectionCriteria: string[];
+  patients: SHGapPatient[];
+  subcategories?: { label: string; count: number }[];
+  ctaMap?: Record<string, string>;
+  tag?: string;
+  whyMissed?: string;
+  whyTailrd?: string;
+  methodologyNote?: string;
+}
+
+export interface SHGapPatient {
+  id: string;
+  name: string;
+  mrn: string;
+  age: number;
+  signals: string[];
+  keyValues: Record<string, string | number>;
+  subflag?: string;
+}
+
+// ============================================================
+// GAP 3: ASYMPTOMATIC SEVERE AS
+// ============================================================
+const asSeverePatients: SHGapPatient[] = [
+  {
+    id: 'SH-AS-001',
+    name: 'Josephine Larkin',
+    mrn: 'MRN-SH-33201',
+    age: 77,
+    signals: [
+      'Severe AS: Vmax 4.4 m/s on echo',
+      'Mean gradient 48 mmHg',
+      'AVA 0.82 cm2',
+      'Asymptomatic — no exertional dyspnea, no syncope',
+      'No TAVR/SAVR in past 12 months',
+      'No heart team consult in > 6 months',
+    ],
+    keyValues: {
+      'Vmax': '4.4 m/s',
+      'Prior Vmax': 4.1,
+      'Vmax Date': '2025-07-01',
+      'Mean Gradient': '48 mmHg',
+      'AVA': '0.82 cm2',
+      'Symptoms': 'None (asymptomatic)',
+      'Last Echo': '4 months ago',
+      'Heart Team Consult': 'None in 8 months',
+    },
+  },
+  {
+    id: 'SH-AS-002',
+    name: 'Reginald Thorne',
+    mrn: 'MRN-SH-33348',
+    age: 72,
+    signals: [
+      'Severe AS: Vmax 4.1 m/s',
+      'Mean gradient 42 mmHg',
+      'AVA 0.91 cm2',
+      'Asymptomatic — active, walks 2 miles daily',
+      'No intervention or referral in past 12 months',
+    ],
+    keyValues: {
+      'Vmax': '4.1 m/s',
+      'Mean Gradient': '42 mmHg',
+      'AVA': '0.91 cm2',
+      'Symptoms': 'None',
+      'Last Echo': '6 months ago',
+      'Heart Team Consult': 'None in > 12 months',
+    },
+  },
+  {
+    id: 'SH-AS-003',
+    name: 'Cecilia Norwood',
+    mrn: 'MRN-SH-33475',
+    age: 80,
+    signals: [
+      'Severe AS: Vmax 4.7 m/s (very severe)',
+      'Mean gradient 55 mmHg',
+      'AVA 0.74 cm2',
+      'Reports occasional mild fatigue (may be emerging symptoms)',
+      'No heart team discussion documented in 9 months',
+    ],
+    keyValues: {
+      'Vmax': '4.7 m/s',
+      'Prior Vmax': 4.3,
+      'Vmax Date': '2025-05-01',
+      'Mean Gradient': '55 mmHg',
+      'AVA': '0.74 cm2',
+      'Symptoms': 'Equivocal — mild fatigue',
+      'Last Echo': '3 months ago',
+      'Heart Team Consult': 'None in 9 months',
+    },
+  },
+];
+
+// ============================================================
+// GAP 5: FUNCTIONAL MR + COAPT CRITERIA
+// ============================================================
+const functionalMRPatients: SHGapPatient[] = [
+  {
+    id: 'SH-FMR-001',
+    name: 'Marvin Delacroix',
+    mrn: 'MRN-SH-45201',
+    age: 66,
+    signals: [
+      'Functional MR + HFrEF (LVEF 35%)',
+      'Missing GDMT pillar: NOT on SGLT2i',
+      'Sub-flag 5a: GDMT not optimized before MR intervention',
+    ],
+    keyValues: {
+      'LVEF': '35%',
+      'LVESD': '55mm',
+      'EROA': '0.28 cm2',
+      'MR Grade': 'Moderate-severe (3+)',
+      'Missing GDMT': 'SGLT2i not prescribed',
+      'Current GDMT': 'ARNI, BB, MRA (3 of 4 pillars)',
+    },
+    subflag: '5a: GDMT Not Optimized',
+  },
+  {
+    id: 'SH-FMR-002',
+    name: 'Norma Espinoza',
+    mrn: 'MRN-SH-45338',
+    age: 71,
+    signals: [
+      'Functional MR — COAPT criteria met (Sub-flag 5b)',
+      'LVEF 32% (20-50%)',
+      'LVESD 58mm (<= 70mm)',
+      'EROA 0.38 cm2 (>= 0.3 cm2)',
+      'On optimized GDMT (all 4 pillars)',
+      'No MitraClip in past 12 months',
+    ],
+    keyValues: {
+      'LVEF': '32%',
+      'LVESD': '58mm',
+      'EROA': '0.38 cm2',
+      'GDMT Status': 'Fully optimized (all 4 pillars)',
+      'MitraClip': 'None in 12 months',
+      'Missing GDMT': 'None',
+    },
+    subflag: '5b: COAPT Criteria Met',
+  },
+  {
+    id: 'SH-FMR-003',
+    name: 'Terrence Oluwa',
+    mrn: 'MRN-SH-45467',
+    age: 63,
+    signals: [
+      'Functional MR — COAPT criteria met',
+      'LVEF 28%',
+      'LVESD 62mm',
+      'EROA 0.35 cm2',
+      'On optimized GDMT',
+      'Heart team review not yet performed',
+    ],
+    keyValues: {
+      'LVEF': '28%',
+      'LVESD': '62mm',
+      'EROA': '0.35 cm2',
+      'GDMT Status': 'Fully optimized',
+      'MitraClip': 'None',
+      'Missing GDMT': 'None',
+    },
+    subflag: '5b: COAPT Criteria Met',
+  },
+  {
+    id: 'SH-FMR-004',
+    name: 'Adelaide Frost',
+    mrn: 'MRN-SH-45583',
+    age: 69,
+    signals: [
+      'Functional MR + HFrEF (LVEF 38%)',
+      'Missing GDMT pillars: NOT on MRA or SGLT2i',
+      'Sub-flag 5a: Must optimize GDMT before considering intervention',
+    ],
+    keyValues: {
+      'LVEF': '38%',
+      'LVESD': '52mm',
+      'EROA': '0.25 cm2',
+      'MR Grade': 'Moderate (2-3+)',
+      'Missing GDMT': 'MRA and SGLT2i',
+      'Current GDMT': 'ARNI, BB (2 of 4 pillars)',
+    },
+    subflag: '5a: GDMT Not Optimized',
+  },
+];
+
+// ============================================================
+// GAP 8: TRICUSPID INTERVENTION
+// ============================================================
+const tricuspidPatients: SHGapPatient[] = [
+  {
+    id: 'SH-TR-001',
+    name: 'Lavinia Combs',
+    mrn: 'MRN-SH-56201',
+    age: 74,
+    signals: [
+      'TR >= moderate-severe (vena contracta 8mm)',
+      'NYHA Class III',
+      'On loop diuretic (furosemide 80mg)',
+      'No TV intervention in 12 months',
+      'No structural referral in > 6 months',
+    ],
+    keyValues: {
+      'TR Grade': 'Severe (4+)',
+      'Vena Contracta': '8mm',
+      'EROA': '48mm2',
+      'NYHA Class': 'III',
+      'Loop Diuretic': 'Furosemide 80mg daily',
+      'Structural Referral': 'None in 8 months',
+    },
+  },
+  {
+    id: 'SH-TR-002',
+    name: 'Clifton Hays',
+    mrn: 'MRN-SH-56338',
+    age: 79,
+    signals: [
+      'TR moderate-severe (vena contracta 7mm)',
+      'NYHA Class II-III',
+      'Loop diuretic dependent',
+      'T-TEER candidate (TriClip anatomy favorable)',
+      'No intervention performed',
+    ],
+    keyValues: {
+      'TR Grade': 'Moderate-Severe (3-4+)',
+      'Vena Contracta': '7mm',
+      'EROA': '42mm2',
+      'NYHA Class': 'II-III',
+      'Loop Diuretic': 'Torsemide 20mg daily',
+      'Candidate Type': 'T-TEER (TriClip)',
+    },
+  },
+  {
+    id: 'SH-TR-003',
+    name: 'Eulalia Prescott',
+    mrn: 'MRN-SH-56465',
+    age: 72,
+    signals: [
+      'Massive/torrential TR (vena contracta 11mm)',
+      'NYHA Class III',
+      'Severe diuretic dependence',
+      'TTVR candidate (EVOQUE — large annulus)',
+      'No structural evaluation in 7 months',
+    ],
+    keyValues: {
+      'TR Grade': 'Massive/Torrential (5+)',
+      'Vena Contracta': '11mm',
+      'EROA': '68mm2',
+      'NYHA Class': 'III',
+      'Loop Diuretic': 'Furosemide 120mg BID',
+      'Candidate Type': 'TTVR (EVOQUE)',
+    },
+  },
+];
+
+// ============================================================
+// MASTER GAP DATA
+// ============================================================
+export const SH_CLINICAL_GAPS: SHClinicalGap[] = [
+  {
+    id: 'sh-gap-3-asymp-severe-as',
+    name: 'Asymptomatic Severe AS — Heart Team Review Overdue',
+    category: 'Growth',
+    patientCount: 26,
+    dollarOpportunity: 1872000,
+    methodologyNote: "[Source: Demo Health System / National Benchmark]. Patient count: 380 TAVR/year x 20% asymptomatic screening pool x 50% referral gap x 35% market share = ~13/year. 2-year pipeline = 26. Dollar opportunity: $72,000 TAVR DRG x 26 patients = $1,872,000 (full procedural DRG — EARLY TAVR candidates who convert generate full facility revenue). EARLY TAVR trial (Genereux, NEJM 2024).",
+    evidence:
+      'EARLY TAVR trial (Genereux, NEJM 2024): early TAVR vs surveillance reduced primary composite by 50% (HR 0.50, P<0.001). FDA approved Sapien 3 for asymptomatic severe AS patients in 2025.',
+    cta: 'Refer for Heart Team Review',
+    priority: 'high',
+    detectionCriteria: [
+      'Severe AS: Vmax >= 4.0 m/s OR mean gradient >= 40 mmHg OR AVA < 1.0 cm2',
+      'No current symptoms (no dyspnea on exertion, no syncope, no angina)',
+      'No TAVR or SAVR performed in past 12 months',
+      'No documented heart team consult in past 6 months',
+    ],
+    patients: asSeverePatients,
+    whyMissed: 'Asymptomatic severe AS monitoring requires connecting echo severity with Heart Team review scheduling — patients with severe AS are known but review timing is not systematically tracked.',
+    whyTailrd: 'TAILRD connected echo-confirmed severe AS with absence of Heart Team review documentation to identify this overdue evaluation.',
+  },
+  {
+    id: 'sh-gap-5-functional-mr',
+    name: 'Functional MR — TEER Eligibility Unassessed',
+    category: 'Gap',
+    patientCount: 56,
+    dollarOpportunity: 1540000,
+    methodologyNote: "[Source: Demo Health System / National Benchmark]. Patient count: 4,000 valve patients x 15% MR candidates = 600. Unassessed ~48% = 288 x 35% market share x 13% ID window = 56. Dollar opportunity: $55,000 TEER DRG x 50% conversion x 56 = $1,540,000 (COAPT-eligible patients with optimized GDMT have high conversion to TEER). COAPT trial (Stone, NEJM 2018).",
+    evidence:
+      'COAPT trial (Stone, NEJM 2018): MitraClip + GDMT. HF hospitalization: 35.8% vs 67.9%/yr (HR 0.53). All-cause death: 29.1% vs 46.1% (HR 0.62). RESHAPE-HF2 (2024): only 7% of patients on SGLT2i at baseline.',
+    cta: 'Refer for Heart Team Review',
+    priority: 'high',
+    detectionCriteria: [
+      'Sub-flag 5a (GDMT Not Optimized): Functional MR + HFrEF + missing at least 1 GDMT pillar — optimize GDMT first',
+      'Sub-flag 5b (COAPT Criteria Met): LVEF 20-50% + LVESD <= 70mm + EROA >= 0.3 cm2 + on optimized GDMT + no MitraClip in 12 months',
+    ],
+    patients: functionalMRPatients,
+    whyMissed: 'TEER eligibility assessment requires connecting MR severity with LVEF, LV dimensions, and GDMT optimization — data from echo, medication records, and clinical notes.',
+    whyTailrd: 'TAILRD assembled MR severity from echo with LVEF, LV dimensions, and GDMT status to identify this patient\'s TEER eligibility.',
+    subcategories: [
+      { label: '5a: GDMT Not Optimized (optimize first)', count: 37 },
+      { label: '5b: COAPT Criteria Met (refer for TEER)', count: 19 },
+    ],
+    ctaMap: {
+      '5a: GDMT Not Optimized': 'Optimize GDMT First',
+      '5b: COAPT Criteria Met': 'Refer for Heart Team Review',
+    },
+  },
+  {
+    id: 'sh-gap-8-tricuspid',
+    name: 'Significant TR — Transcatheter Intervention Unassessed',
+    category: 'Growth',
+    patientCount: 31,
+    dollarOpportunity: 1705000,
+    methodologyNote: "[Source: Demo Health System / National Benchmark]. Patient count: 4,000 valve patients x 4% significant TR x 55% not referred x 35% market share = 31. Dollar opportunity: $55,000 TEER DRG x 31 patients = $1,705,000 (full procedural DRG — new program ramp with 100% of identified patients as addressable market). TRILUMINATE / TRISCEND II data.",
+    evidence:
+      'TriClip FDA approved (TRILUMINATE). EVOQUE FDA approved (TRISCEND II): TR reduced to mild or less in 94% of patients. Both devices commercially available.',
+    cta: 'Refer for Structural Heart Evaluation',
+    priority: 'high',
+    detectionCriteria: [
+      'TR >= moderate-severe: vena contracta >= 7mm OR EROA >= 40mm2',
+      'NYHA Class >= II despite medical therapy',
+      'On loop diuretic',
+      'No TV intervention in past 12 months',
+      'No structural heart referral in past 6 months',
+      'Sub-classify: T-TEER candidate (TriClip), TTVR candidate (EVOQUE), or needs assessment',
+    ],
+    patients: tricuspidPatients,
+    whyMissed: 'Significant TR assessment for transcatheter intervention is a new treatment paradigm. Standard echo reports document TR severity but no system flags interventional candidacy.',
+    whyTailrd: 'TAILRD connected TR severity from echo with symptom documentation and right heart assessment to identify this patient for transcatheter tricuspid evaluation.',
+  },
+  // ── GAPS 79-83: NEW CLINICAL GAP DETECTION RULES ─────────────────────────
+  {
+    id: 'sh-gap-79-moderate-as-surveillance',
+    name: 'Moderate AS — Echo Surveillance Overdue',
+    category: 'Gap',
+    patientCount: 120,
+    dollarOpportunity: 561600,
+    methodologyNote: "[Source: Demo Health System / National Benchmark]. Patient count: 380 TAVR/year x 2.5 moderate AS in surveillance = 950. 36% overdue at any point = 120. Dollar opportunity: echo $450 x 70% completion x 120 = $37,800 + downstream TAVR pipeline: 30% will progress to severe AS within 3 years, creating ~36 TAVR candidates x $72,000 x 20% first-year capture = $518,400. Total ~$561,600 (surveillance echo + downstream TAVR pipeline). ACC/AHA surveillance interval compliance.",
+    priority: 'high',
+    subcategories: [
+      { label: 'Last echo >2 years ago — HIGH PRIORITY (possible progression to severe)', count: 48 },
+      { label: 'Last echo 12-24 months ago — surveillance due', count: 72 },
+    ],
+    evidence:
+      'Moderate AS progression: 0.1-0.3 m/s/year increase in Vmax. 30-50% progress from moderate to severe within 5 years. AHA/ACC: echo every 1-2 years for moderate AS. When moderate AS progresses to severe (Vmax >=4.0) it triggers the EARLY TAVR flag (Gap 3). Annual echo if moderate AS + symptoms or high-risk features.',
+    cta: 'Schedule Surveillance Echocardiogram',
+    detectionCriteria: [
+      'Moderate AS on prior echo (Vmax 3.0-3.9 m/s OR mean gradient 20-39 mmHg OR AVA 1.0-1.5 cm2)',
+      'No follow-up echo in past 12 months',
+      'No TAVR or SAVR performed',
+    ],
+    patients: [
+      {
+        id: 'SH-MAS-001',
+        name: 'Theodore Blackwood',
+        mrn: 'MRN-SH-79001',
+        age: 74,
+        signals: [
+          'Moderate AS on echo 28 months ago: Vmax 3.4 m/s, mean gradient 28 mmHg',
+          'No follow-up echo in 28 months',
+          'Possible progression to severe — EARLY TAVR criteria may now be met',
+        ],
+        keyValues: {
+          'Last Echo': '28 months ago',
+          'Vmax (Last Echo)': '3.7 m/s',
+          'Vmax': 3.7,
+          'Prior Vmax': 3.35,
+          'Vmax Date': '2026-01-15',
+          'Prior Vmax Date': '2025-04-15',
+          'Mean Gradient': '28 mmHg',
+          'AVA': '1.2 cm2',
+          'Current Symptoms': 'Mildly symptomatic',
+          'Surveillance Due': 'Overdue by 16 months',
+        },
+      },
+      {
+        id: 'SH-MAS-002',
+        name: 'Gloria Sampson',
+        mrn: 'MRN-SH-79002',
+        age: 68,
+        signals: [
+          'Moderate AS: Vmax 3.5 m/s on echo 14 months ago',
+          'Annual echo recommended — not performed',
+          'Asymptomatic — surveillance especially important to detect symptom onset',
+        ],
+        keyValues: {
+          'Last Echo': '14 months ago',
+          'Vmax (Last Echo)': '3.5 m/s',
+          'Vmax': 3.5,
+          'Prior Vmax': 3.2,
+          'Vmax Date': '2026-02-01',
+          'Prior Vmax Date': '2025-05-01',
+          'Mean Gradient': '22 mmHg',
+          'AVA': '1.4 cm2',
+          'Symptoms': 'Asymptomatic',
+          'Surveillance Due': 'Overdue by 2 months',
+        },
+      },
+      {
+        id: 'SH-MAS-003',
+        name: 'Franklin Osborne',
+        mrn: 'MRN-SH-79003',
+        age: 80,
+        signals: [
+          'Moderate AS: Vmax 3.7 m/s — high end of moderate, near severe threshold',
+          'Last echo 18 months ago — overdue',
+          'Age 80 + Vmax 3.7: high probability of crossing Vmax 4.0 threshold',
+        ],
+        keyValues: {
+          'Last Echo': '18 months ago',
+          'Vmax (Last Echo)': '3.7 m/s (near severe threshold)',
+          'Vmax': 3.7,
+          'Prior Vmax': 3.4,
+          'Vmax Date': '2025-05-01',
+          'Mean Gradient': '36 mmHg',
+          'AVA': '1.05 cm2',
+          'Risk': 'Near severe — urgent surveillance',
+          'Symptoms': 'Exertional dyspnea (mild)',
+        },
+      },
+    ],
+    whyMissed: 'Moderate AS surveillance requires tracking echo intervals against disease severity — patients with moderate disease are known but progression monitoring intervals are not systematically enforced.',
+    whyTailrd: 'TAILRD connected moderate AS diagnosis with echo surveillance timing to identify this overdue progression monitoring.',
+  },
+  {
+    id: 'sh-gap-80-post-tavr-echo',
+    name: 'Post-TAVR Baseline Echo Missing',
+    category: 'Quality',
+    patientCount: 27,
+    dollarOpportunity: 8505,
+    priority: 'high',
+    tag: 'Quality Gap | VARC-3 | TVT Registry',
+    evidence:
+      'Post-TAVR 30-day TTE: standard of care quality metric. Assesses: post-TAVR gradient (should be <20 mmHg mean), paravalvular leak (PVL >=mild associated with worse outcomes), LVEF recovery, wall motion abnormalities. VARC-3 outcomes definition requires post-procedure echo. STS/ACC TVT Registry: 30-day echo completion is a quality metric for TAVR programs.',
+    cta: 'Schedule 30-Day Post-TAVR Echocardiogram',
+    detectionCriteria: [
+      'TAVR (CPT 33361-33369) in past 90 days',
+      'No echo after TAVR procedure date',
+      'Patient alive and not re-hospitalized for TAVR complication',
+    ],
+    patients: [
+      {
+        id: 'SH-TAVR-001',
+        name: 'Irene Whitmore',
+        mrn: 'MRN-SH-80001',
+        age: 81,
+        signals: [
+          'TAVR (SAPIEN 3) 35 days ago — no post-TAVR echo performed',
+          'VARC-3: 30-day echo is standard outcome measure',
+          'Post-TAVR gradient and PVL not assessed',
+          'TVT Registry quality metric not met',
+        ],
+        keyValues: {
+          'TAVR Date': '35 days ago',
+          'Valve Type': 'SAPIEN 3 (23mm)',
+          'Post-TAVR Echo': 'Not performed',
+          'VARC-3 Compliance': 'Non-compliant',
+          'TVT Registry': 'Quality metric gap',
+          'Current Status': 'Alive, no complications',
+          'Outcome Note': '30-day echo caught significant PVL — early re-intervention planned, excellent outcome',
+        },
+      },
+      {
+        id: 'SH-TAVR-002',
+        name: 'Alvin Mackenzie',
+        mrn: 'MRN-SH-80002',
+        age: 77,
+        signals: [
+          'TAVR (EVOLUT R) 55 days ago — no follow-up echo',
+          'No post-procedural gradient assessment',
+          'PVL not evaluated — >=mild PVL is adverse outcome predictor',
+          'LVEF recovery post-TAVR not documented',
+        ],
+        keyValues: {
+          'TAVR Date': '55 days ago',
+          'Valve Type': 'EVOLUT R (29mm)',
+          'Post-TAVR Echo': 'Not scheduled',
+          'PVL Assessment': 'Not performed',
+          'LVEF Recovery': 'Not documented',
+          'TVT Registry': 'Quality gap',
+        },
+      },
+      {
+        id: 'SH-TAVR-003',
+        name: 'Margaret Yuen',
+        mrn: 'MRN-SH-80003',
+        age: 84,
+        signals: [
+          'TAVR 22 days ago — in 30-day window, echo not yet scheduled',
+          'High-risk TAVR candidate: bicuspid aortic valve + calcification',
+          'Post-TAVR echo especially important in complex cases',
+          'VARC-3: 30-day outcomes require echo documentation',
+        ],
+        keyValues: {
+          'TAVR Date': '22 days ago',
+          'Complexity': 'Bicuspid + heavy calcification',
+          'Post-TAVR Echo': 'Not scheduled',
+          'VARC-3 Window': '30 days — 8 days remaining',
+          'Quality Metric': 'At risk of non-compliance',
+          'Valve Type': 'SAPIEN 3 (26mm)',
+        },
+      },
+    ],
+    whyMissed: 'Post-TAVR echo scheduling falls in the post-procedural transition between structural heart proceduralists and outpatient follow-up — a process gap in care handoffs.',
+    whyTailrd: 'TAILRD connected TAVR procedure date with absence of baseline post-TAVR echocardiography to flag this post-procedural surveillance gap.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 380 TAVR/year x 7% missing 30-day echo = 27. Dollar opportunity: echo $450 x 70% completion x 27 = $8,505. VARC-3 / TVT Registry quality metrics.',
+  },
+  {
+    id: 'sh-gap-81-rheumatic-ms-warfarin',
+    name: 'Rheumatic MS — Warfarin Not Prescribed',
+    category: 'Gap',
+    patientCount: 22,
+    dollarOpportunity: 0,
+    priority: 'high',
+    tag: 'INVICTUS | Warfarin Required',
+    safetyNote:
+      'IMPORTANT: DOACs are NOT appropriate for rheumatic MS. INVICTUS trial (2022): rivaroxaban inferior to warfarin in rheumatic AF with valve disease (HR 1.25 for death + stroke + embolism). Patients on DOAC for rheumatic MS must be switched to warfarin.',
+    evidence:
+      'Rheumatic MS anticoagulation: Class I for CHA2DS2-VASc >=2 regardless of rhythm. Warfarin specifically required — DOACs not validated. INVICTUS trial (2022): rivaroxaban inferior to warfarin in rheumatic AF with valve disease — HR 1.25 for death + stroke + systemic embolism. Target TTR >65%.',
+    cta: 'Switch to Warfarin — DOACs Not Appropriate for Rheumatic MS',
+    detectionCriteria: [
+      'Rheumatic MS (I05.0) AND CHA2DS2-VASc >=2',
+      'NOT on warfarin',
+      'On DOAC (flag specifically — DOACs not validated for rheumatic MS) OR on no anticoagulation',
+    ],
+    patients: [
+      {
+        id: 'SH-RMS-001',
+        name: 'Amelia Subramaniam',
+        mrn: 'MRN-SH-81001',
+        age: 62,
+        signals: [
+          'Rheumatic MS (I05.0) + AF — CHA2DS2-VASc 5',
+          'On apixaban 5mg BID — DOAC not appropriate for rheumatic MS',
+          'INVICTUS: rivaroxaban HR 1.25 vs warfarin — DOAC inferior',
+          'Must switch to warfarin — target TTR >65%',
+        ],
+        keyValues: {
+          'Diagnosis': 'Rheumatic MS (I05.0) + AF',
+          'Current AC': 'Apixaban 5mg BID — INAPPROPRIATE',
+          'CHA2DS2-VASc': '5',
+          'INVICTUS Finding': 'DOAC inferior (HR 1.25)',
+          'Required': 'Warfarin — target TTR >65%',
+          'MVA': '1.2 cm2 (moderate-severe MS)',
+        },
+      },
+      {
+        id: 'SH-RMS-002',
+        name: 'Priscilla Augustin',
+        mrn: 'MRN-SH-81002',
+        age: 55,
+        signals: [
+          'Rheumatic MS — mitral valve area 0.9 cm2 (severe)',
+          'Sinus rhythm, CHA2DS2-VASc 3 — anticoagulation indicated',
+          'On rivaroxaban 20mg — INVICTUS: inferior to warfarin in this population',
+          'Warfarin required — Class I regardless of rhythm in rheumatic MS',
+        ],
+        keyValues: {
+          'Diagnosis': 'Rheumatic MS (severe)',
+          'MVA': '0.9 cm2',
+          'Rhythm': 'Sinus',
+          'Current AC': 'Rivaroxaban 20mg — INAPPROPRIATE',
+          'CHA2DS2-VASc': '3',
+          'Required': 'Warfarin (Class I for rheumatic MS)',
+        },
+      },
+      {
+        id: 'SH-RMS-003',
+        name: 'Fatima Osei-Bonsu',
+        mrn: 'MRN-SH-81003',
+        age: 48,
+        signals: [
+          'Rheumatic MS (I05.0) — on no anticoagulation despite CHA2DS2-VASc 4',
+          'Stroke risk without anticoagulation: high in rheumatic MS + CHA2DS2-VASc >=2',
+          'Class I: warfarin (not DOAC) for rheumatic MS + CHA2DS2-VASc >=2',
+        ],
+        keyValues: {
+          'Diagnosis': 'Rheumatic MS (I05.0)',
+          'CHA2DS2-VASc': '4',
+          'Current AC': 'None — undertreated',
+          'MVA': '1.1 cm2',
+          'Rhythm': 'AF',
+          'Required': 'Warfarin initiation',
+        },
+      },
+    ],
+    whyMissed: 'Rheumatic MS anticoagulation requires connecting valve diagnosis with medication list — DOAC prescribing is increasingly default, but is contraindicated in rheumatic MS.',
+    whyTailrd: 'TAILRD connected rheumatic mitral stenosis diagnosis with current anticoagulation to identify DOAC use where warfarin is specifically required.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 4,000 valve/structural panel x 0.8% rheumatic MS (I05.0) x CHA2DS2-VASc >=2 x 70% not on warfarin = 22. Dollar opportunity: $0 direct revenue. Safety gap — warfarin required, DOACs contraindicated. INVICTUS trial. Diverse metro population.',
+  },
+  {
+    id: 'sh-gap-82-bav-aortopathy',
+    name: 'BAV Aortopathy — Aortic Imaging Overdue',
+    category: 'Gap',
+    patientCount: 36,
+    dollarOpportunity: 20160,
+    priority: 'high',
+    subcategories: [
+      { label: 'Prior aortic measurement >=4.5cm — URGENT (annual imaging required)', count: 12 },
+      { label: 'Prior measurement <4.5cm — surveillance overdue', count: 24 },
+    ],
+    evidence:
+      'BAV aortopathy affects 50-80% of BAV patients — ascending aorta dilation independent of valve hemodynamics. Intervention thresholds: elective repair >=5.5cm (or >=5.0cm with rapid growth, family history, planned pregnancy). Annual surveillance when >=4.5cm. BAV dissection risk 8x higher than general population.',
+    cta: 'Order Aortic Root/Ascending Aorta Imaging',
+    detectionCriteria: [
+      'BAV (Q23.0) AND no aortic root or ascending aorta imaging in past 2 years',
+      'No prior aortic surgery',
+      'Sub-classify by prior aortic dimension: >=4.5cm URGENT vs <4.5cm HIGH',
+    ],
+    patients: [
+      {
+        id: 'SH-BAV-001',
+        name: 'Christopher Dunbar',
+        mrn: 'MRN-SH-82001',
+        age: 42,
+        signals: [
+          'BAV (Q23.0) — aortic root 4.6cm on last echo 2.5 years ago',
+          'URGENT: >=4.5cm requires annual imaging',
+          'No imaging in 2.5 years — possible progression to intervention threshold',
+          'Dissection risk 8x general population',
+        ],
+        keyValues: {
+          'BAV Diagnosis': 'Q23.0 confirmed',
+          'Last Aortic Measurement': '4.4cm (2.5 years ago)',
+          'Aortic Root': 4.4,
+          'Prior Aortic Root': 4.0,
+          'Root Measure Date': '2026-01-01',
+          'Prior Root Date': '2025-04-01',
+          'Aortic Root Date': '2025-05-01',
+          'Imaging Frequency': 'Annual required (>=4.5cm)',
+          'Last Imaging': '2.5 years ago — OVERDUE',
+          'Intervention Threshold': '5.5cm (or 5.0cm with risk factors)',
+          'Priority': 'URGENT',
+        },
+      },
+      {
+        id: 'SH-BAV-002',
+        name: 'Rebecca Halvorsen',
+        mrn: 'MRN-SH-82002',
+        age: 35,
+        signals: [
+          'BAV with known aortopathy — ascending aorta 4.1cm (3 years ago)',
+          'No follow-up imaging in 3 years',
+          '2-year surveillance indicated — overdue by 1 year',
+          'Family history of aortic dissection',
+        ],
+        keyValues: {
+          'BAV Diagnosis': 'Q23.0',
+          'Last Aortic Measurement': '4.1cm (3 years ago)',
+          'Family History': 'Aortic dissection (sibling)',
+          'Last Imaging': '3 years ago',
+          'Recommended Frequency': 'Every 2 years (or annual given family history)',
+          'Priority': 'HIGH',
+        },
+      },
+      {
+        id: 'SH-BAV-003',
+        name: 'Nathan Forsythe',
+        mrn: 'MRN-SH-82003',
+        age: 48,
+        signals: [
+          'BAV — aortic root 4.8cm on last imaging 2 years ago',
+          'URGENT: >=4.5cm + 2 years without imaging',
+          'Rapid growth possible — may now be approaching 5.0-5.5cm range',
+          'Elective surgery indicated at >=5.5cm (or 5.0 with risk factors)',
+        ],
+        keyValues: {
+          'BAV Diagnosis': 'Q23.0',
+          'Last Aortic Measurement': '4.6cm (2 years ago)',
+          'Aortic Root': 4.6,
+          'Prior Aortic Root': 4.3,
+          'Root Measure Date': '2025-12-01',
+          'Prior Root Date': '2025-03-01',
+          'Aortic Root Date': '2025-05-01',
+          'Current Estimated Range': '5.0-5.3cm (possible)',
+          'Last Imaging': '2 years ago',
+          'Intervention Threshold': '5.5cm (or 5.0cm + risk factors)',
+          'Priority': 'URGENT',
+        },
+      },
+    ],
+    whyMissed: 'BAV aortopathy surveillance requires connecting valve morphology with aortic root imaging intervals — the aortopathy risk is often overlooked when valve function is the primary focus.',
+    whyTailrd: 'TAILRD connected bicuspid valve morphology with aortic root dimension history to identify overdue aortopathy surveillance.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 4,000 valve/structural panel x 2% BAV (Q23.0) x 60% aortopathy x 15% surveillance gap = 5, plus broader echo database yields ~36. Dollar opportunity: CTA aorta $800 x 70% completion x 36 = $20,160. ACC/AHA 2022 surveillance criteria.',
+  },
+  {
+    id: 'sh-gap-83-endocarditis-prophylaxis',
+    name: 'High-Risk Cardiac Condition — Endocarditis Prophylaxis Protocol Absent',
+    category: 'Gap',
+    patientCount: 63,
+    dollarOpportunity: 19845,
+    priority: 'medium',
+    evidence:
+      'AHA 2007 Endocarditis Prevention Guidelines (reaffirmed 2021): Prophylaxis for highest-risk: prosthetic cardiac valve, prior IE, certain CHD, cardiac transplant with valvulopathy. Regimen: amoxicillin 2g PO 30-60 min before dental. Clindamycin no longer recommended (C. diff risk). Alternatives: cephalexin 2g, azithromycin 500mg for penicillin allergy.',
+    cta: 'Document Endocarditis Prophylaxis Protocol',
+    detectionCriteria: [
+      'Prosthetic heart valve (Z95.2-Z95.4) OR prior endocarditis (I33.x) OR complex CHD (Q20-Q26)',
+      'No dental prophylaxis protocol documented in chart',
+      'Dental visit documented in past 12 months without prophylaxis note',
+    ],
+    patients: [
+      {
+        id: 'SH-IE-001',
+        name: 'Dorothy Stafford',
+        mrn: 'MRN-SH-83001',
+        age: 72,
+        signals: [
+          'Prosthetic aortic valve (Z95.2) — TAVR 3 years ago',
+          'Dental visit 4 months ago — no prophylaxis protocol in chart',
+          'AHA: highest-risk category — prophylaxis required before dental procedures',
+          'Amoxicillin 2g PO 30-60 min before dental: standard regimen',
+        ],
+        keyValues: {
+          'Condition': 'Prosthetic aortic valve (TAVR)',
+          'Risk Category': 'Highest (AHA)',
+          'Dental Visit': '4 months ago',
+          'Prophylaxis Protocol': 'Not documented',
+          'Required Regimen': 'Amoxicillin 2g PO pre-procedure',
+          'IE Risk Without Prophylaxis': 'High',
+        },
+      },
+      {
+        id: 'SH-IE-002',
+        name: 'Roland Adeyemi',
+        mrn: 'MRN-SH-83002',
+        age: 58,
+        signals: [
+          'Prior infective endocarditis (I33.0) — 5 years ago',
+          'Dental cleanings x2 in past 12 months — no prophylaxis noted',
+          'Prior IE: highest-risk category per AHA guidelines',
+          'No allergy to penicillin — amoxicillin 2g regimen indicated',
+        ],
+        keyValues: {
+          'Condition': 'Prior IE (I33.0)',
+          'Risk Category': 'Highest (AHA)',
+          'Dental Visits': '2 in past 12 months',
+          'Prophylaxis Protocol': 'Not documented',
+          'Penicillin Allergy': 'No',
+          'Required Regimen': 'Amoxicillin 2g PO',
+        },
+      },
+      {
+        id: 'SH-IE-003',
+        name: 'Sylvia Okafor',
+        mrn: 'MRN-SH-83003',
+        age: 45,
+        signals: [
+          'Prosthetic mitral valve (Z95.3) — surgical MVR 8 years ago',
+          'Dental extraction 6 months ago — no pre-procedure prophylaxis documented',
+          'Highest-risk category: mechanical prosthetic valve',
+          'Clindamycin no longer recommended (C. diff risk) — use cephalexin if penicillin allergy',
+        ],
+        keyValues: {
+          'Condition': 'Prosthetic mitral valve (mechanical MVR)',
+          'Risk Category': 'Highest (AHA)',
+          'Dental Extraction': '6 months ago',
+          'Prophylaxis': 'Not documented',
+          'Penicillin Allergy': 'Yes — cephalexin 2g alternative',
+          'Required Regimen': 'Cephalexin 2g (penicillin allergy)',
+        },
+      },
+    ],
+    whyMissed: 'Endocarditis prophylaxis documentation requires connecting high-risk cardiac conditions with dental/procedural encounters — information in separate clinical systems.',
+    whyTailrd: 'TAILRD connected high-risk cardiac condition (prosthetic valve, prior endocarditis) with absence of documented endocarditis prophylaxis protocol.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 4,000 valve/structural panel x 15% prosthetic valve = 600 x 15% dental visits without prophylaxis doc x 70% identifiable = 63. Dollar opportunity: echo surveillance $450 x 70% completion x 63 = $19,845. AHA 2007/2021 guidelines.',
+  },
+];
+
+// ============================================================
+// ENHANCED DISPLAY HELPERS
+// ============================================================
+
+/** Gap 3 + Gap 79: AS Severity display from echocardiographic data */
+const renderASSeverityDisplay = (pt: SHGapPatient) => {
+  const vmaxRaw = pt.keyValues['Vmax'] || pt.keyValues['Vmax (Last Echo)'] || '';
+  const meanGradRaw = pt.keyValues['Mean Gradient'] || '';
+  const avaRaw = pt.keyValues['AVA'] || '';
+
+  const vmaxNum = parseFloat(String(vmaxRaw));
+  const meanGradNum = parseFloat(String(meanGradRaw));
+  const avaNum = parseFloat(String(avaRaw));
+
+  const asResult = classifyASSeverity({
+    vmaxAortic: isNaN(vmaxNum) ? undefined : vmaxNum,
+    meanGradientAortic: isNaN(meanGradNum) ? undefined : meanGradNum,
+    avaAortic: isNaN(avaNum) ? undefined : avaNum,
+  });
+
+  return (
+    <div className="mt-3 bg-blue-50 border border-blue-200 rounded-xl p-3 space-y-2">
+      <div className="text-sm font-semibold text-blue-900">
+        AS Severity: {asResult.severity} &mdash; Vmax {asResult.parameters['Vmax'] || String(vmaxRaw)} &middot; Gradient {asResult.parameters['Mean gradient'] || String(meanGradRaw)} &middot; AVA {asResult.parameters['AVA'] || String(avaRaw)}
+      </div>
+      {asResult.meetsCriteria.length > 0 && (
+        <div className="text-xs text-blue-700">Criteria met: {asResult.meetsCriteria.join(', ')}</div>
+      )}
+      <div className="flex items-center gap-1.5 text-xs text-blue-600">
+        <Zap className="w-3 h-3 flex-shrink-0" />
+        Auto-classified from echocardiographic data
+      </div>
+    </div>
+  );
+};
+
+/** Gap 5: COAPT Eligibility checker */
+const renderCOAPTEligibility = (pt: SHGapPatient) => {
+  const parsePctNum = (val: string | number | undefined): number => {
+    if (val === undefined) return NaN;
+    const s = String(val).replace('%', '').replace('mm', '').replace('cm2', '').trim();
+    return parseFloat(s);
+  };
+
+  const lvef = parsePctNum(pt.keyValues['LVEF']);
+  const lvesd = parsePctNum(pt.keyValues['LVESD']);
+  const eroa = parsePctNum(pt.keyValues['EROA']);
+
+  const gdmtStatus = String(pt.keyValues['GDMT Status'] || pt.keyValues['Missing GDMT'] || '').toLowerCase();
+  const gdmtOptimized = gdmtStatus.includes('fully optimized') || gdmtStatus === 'none';
+  const signals_lower = pt.signals.map(s => s.toLowerCase()).join(' ');
+  const gdmtFromSignals = signals_lower.includes('optimized gdmt') || signals_lower.includes('all 4 pillars');
+
+  const lvefMet = !isNaN(lvef) && lvef >= 20 && lvef <= 50;
+  const lvesdMet = !isNaN(lvesd) && lvesd <= 70;
+  const eroaMet = !isNaN(eroa) && eroa >= 0.3;
+  const gdmtMet = gdmtOptimized || gdmtFromSignals;
+
+  const checkIcon = (met: boolean) => met
+    ? <CheckCircle className="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
+    : <AlertTriangle className="w-3.5 h-3.5 text-red-500 flex-shrink-0" />;
+
+  return (
+    <div className="mt-3 bg-green-50 border border-green-200 rounded-xl p-3 space-y-2">
+      <div className="text-xs font-semibold text-green-800 uppercase tracking-wide mb-1">COAPT Eligibility Criteria</div>
+      <div className="space-y-1">
+        <div className="flex items-center gap-2 text-sm">
+          {checkIcon(lvefMet)}
+          <span className={lvefMet ? 'text-green-800' : 'text-red-700'}>LVEF 20-50%: {!isNaN(lvef) ? `${lvef}%` : 'N/A'}</span>
+        </div>
+        <div className="flex items-center gap-2 text-sm">
+          {checkIcon(lvesdMet)}
+          <span className={lvesdMet ? 'text-green-800' : 'text-red-700'}>LVESD &le;70mm: {!isNaN(lvesd) ? `${lvesd}mm` : 'N/A'}</span>
+        </div>
+        <div className="flex items-center gap-2 text-sm">
+          {checkIcon(eroaMet)}
+          <span className={eroaMet ? 'text-green-800' : 'text-red-700'}>EROA &ge;0.3cm&sup2;: {!isNaN(eroa) ? `${eroa} cm2` : 'N/A'}</span>
+        </div>
+        <div className="flex items-center gap-2 text-sm">
+          {checkIcon(gdmtMet)}
+          <span className={gdmtMet ? 'text-green-800' : 'text-red-700'}>GDMT optimized: {gdmtMet ? 'Yes' : 'No — optimize first'}</span>
+        </div>
+      </div>
+      <div className="flex items-center gap-1.5 text-xs text-blue-600 mt-1">
+        <Zap className="w-3 h-3 flex-shrink-0" />
+        Auto-assessed from echo measurements and medication records
+      </div>
+    </div>
+  );
+};
+
+/** Gap 42: ATTR-CM + AS co-detection (dual detection) */
+const renderATTRCoDetection = (pt: SHGapPatient) => {
+  const vmax = pt.keyValues['Vmax'] || '';
+  const meanGrad = pt.keyValues['Mean Gradient'] || '';
+  const ava = pt.keyValues['AVA'] || '';
+  const attrSignals = pt.signals.filter(s => s.toLowerCase().includes('attr'));
+  return (
+    <div className="mt-3 bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
+      <div className="text-xs font-semibold text-slate-800 uppercase tracking-wide mb-1">Dual Detection: Severe AS + ATTR-CM</div>
+      <div className="text-sm text-slate-900 font-medium">
+        Severe AS confirmed: Vmax {vmax} · Mean gradient {meanGrad} · AVA {ava}
+      </div>
+      <div className="text-sm text-slate-900 font-medium">
+        AND ATTR-CM signals present: {attrSignals.length > 0 ? attrSignals.join('; ') : pt.signals.join('; ')}
+      </div>
+      <div className="flex items-center gap-1.5 text-xs text-slate-600 mt-1">
+        <Zap className="w-3 h-3 flex-shrink-0" />
+        Cross-module dual detection — unique to TAILRD
+      </div>
+    </div>
+  );
+};
+
+/** Gap 81: Rheumatic MS on DOAC — RED safety alert */
+const renderRheumaticMSSafetyAlert = (pt: SHGapPatient) => {
+  const currentAC = String(pt.keyValues['Current AC'] || '');
+  return (
+    <div className="mt-3 bg-red-50 border-2 border-red-200 rounded-xl p-3 space-y-2">
+      <div className="flex items-center gap-2 text-sm font-bold text-red-800">
+        <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" />
+        INVICTUS 2022: DOACs inferior to warfarin in rheumatic valve disease
+      </div>
+      <div className="text-sm text-red-700">
+        Current anticoagulant: <span className="font-semibold">{currentAC}</span>
+      </div>
+      <div className="text-sm font-semibold text-red-800">
+        Switch to warfarin — target INR 2.0-3.0
+      </div>
+      <div className="flex items-center gap-1.5 text-xs text-blue-600 mt-1">
+        <Zap className="w-3 h-3 flex-shrink-0" />
+        Auto-detected from diagnosis and medication data
+      </div>
+    </div>
+  );
+};
+
+// ---------------------------------------------------------------------------
+// PREDICTIVE INTELLIGENCE — Trajectory + Time Horizon + Projected Events
+// ---------------------------------------------------------------------------
+
+const getSHTrajectoryBadges = (gap: SHClinicalGap, pt: SHGapPatient) => {
+  const kv = pt.keyValues;
+  let trajectory: TrajectoryResult | null = null;
+
+  // For AS patients: increasing Vmax = worsening, so negate for computeTrajectory (which treats declining as worsening)
+  const currentVmaxRaw = typeof kv['Vmax'] === 'number' ? kv['Vmax'] : parseFloat(String(kv['Vmax'] || ''));
+  const priorVmaxRaw = typeof kv['Prior Vmax'] === 'number' ? kv['Prior Vmax'] : parseFloat(String(kv['Prior Vmax'] || ''));
+  const currentRoot = typeof kv['Aortic Root'] === 'number' ? kv['Aortic Root'] : parseFloat(String(kv['Aortic Root'] || ''));
+  const priorRoot = typeof kv['Prior Aortic Root'] === 'number' ? kv['Prior Aortic Root'] : parseFloat(String(kv['Prior Aortic Root'] || ''));
+
+  if (!isNaN(currentVmaxRaw) && !isNaN(priorVmaxRaw) && priorVmaxRaw > 0) {
+    // Negate: increasing Vmax is worsening, but computeTrajectory treats declining as worsening
+    trajectory = computeTrajectory({ currentValue: -currentVmaxRaw, priorValue: -priorVmaxRaw, daysBetween: 180 });
+  } else if (!isNaN(currentRoot) && !isNaN(priorRoot) && priorRoot > 0) {
+    // Increasing root = worsening, so negate
+    trajectory = computeTrajectory({ currentValue: -currentRoot, priorValue: -priorRoot, daysBetween: 180 });
+  }
+
+  if (!trajectory) return null;
+
+  const traj = trajectoryDisplay(trajectory.direction);
+  const horizon = computeTimeHorizon({
+    predictedMonths: null,
+    gapCategory: gap.category as 'Safety' | 'Gap' | 'Growth' | 'Quality',
+    trajectoryDirection: trajectory.direction,
+  });
+  const hDisp = timeHorizonDisplay(horizon.horizon);
+
+  return (
+    <>
+      <span className={`ml-2 text-xs px-2 py-0.5 rounded-full font-medium ${
+        trajectory.direction === 'worsening_rapid' ? 'bg-red-100 text-red-700' :
+        trajectory.direction === 'worsening_slow' ? 'bg-amber-100 text-amber-700' :
+        trajectory.direction === 'improving' ? 'bg-green-100 text-green-700' :
+        'bg-gray-100 text-gray-600'
+      }`}>
+        {traj.arrow} {traj.label}
+      </span>
+      <span className={`ml-1 text-xs px-2 py-0.5 rounded-full font-medium ${hDisp.bgClass} ${hDisp.textClass}`}>
+        {hDisp.icon} {hDisp.label}
+      </span>
+    </>
+  );
+};
+
+const renderSHPredictiveDetail = (gap: SHClinicalGap, pt: SHGapPatient) => {
+  const gapId = gap.id.toLowerCase();
+  const kv = pt.keyValues;
+  const elements: React.ReactNode[] = [];
+
+  // Gap 3 (Severe AS) and Gap 79 (Moderate AS) — AS Progression projection
+  if (gapId.includes('severe-as') || gapId.includes('gap-3') || gapId.includes('moderate-as') || gapId.includes('gap-79')) {
+    const currentVmax = typeof kv['Vmax'] === 'number' ? kv['Vmax'] : parseFloat(String(kv['Vmax'] || ''));
+    const priorVmax = typeof kv['Prior Vmax'] === 'number' ? kv['Prior Vmax'] : undefined;
+    if (!isNaN(currentVmax)) {
+      const prog = projectASProgression({ currentVmax, priorVmax: priorVmax, monthsBetween: priorVmax != null ? 6 : undefined });
+      if (gapId.includes('gap-3') || gapId.includes('severe-as')) {
+        elements.push(
+          <div key="as-prog" className="mt-3 bg-indigo-50 border border-indigo-200 rounded-xl p-3 space-y-1">
+            <div className="flex items-center gap-2 text-sm font-bold text-indigo-800">
+              <TrendingUp className="w-4 h-4 text-indigo-600 flex-shrink-0" />
+              Predictive Intelligence — AS Progression
+            </div>
+            <div className="text-sm text-indigo-700">
+              Already at severe threshold — intervention window active.
+              {priorVmax != null && (
+                <> Current Vmax: {currentVmax.toFixed(1)} m/s · Previous: {priorVmax.toFixed(1)} m/s (6 months ago) · Rate: {prog.annualizedRate.toFixed(2)} m/s/year ({prog.progressionCategory})</>
+              )}
+            </div>
+            <div className="flex items-center gap-1.5 text-xs text-blue-600 mt-1">
+              <Zap className="w-3 h-3 flex-shrink-0" />
+              Trajectory-aware · Forward-looking · Auto-computed from serial echocardiography
+            </div>
+          </div>
+        );
+      } else {
+        // Gap 79 — when will moderate become severe?
+        elements.push(
+          <div key="as-prog" className="mt-3 bg-indigo-50 border border-indigo-200 rounded-xl p-3 space-y-1">
+            <div className="flex items-center gap-2 text-sm font-bold text-indigo-800">
+              <TrendingUp className="w-4 h-4 text-indigo-600 flex-shrink-0" />
+              Predictive Intelligence — AS Progression to Severe
+            </div>
+            <div className="text-sm text-indigo-700">
+              Current Vmax: {currentVmax.toFixed(1)} m/s
+              {priorVmax != null && <> · Previous: {priorVmax.toFixed(1)} m/s (6 months ago)</>}
+              {' '}· Rate: {prog.annualizedRate.toFixed(2)} m/s/year ({prog.progressionCategory})
+              {prog.monthsToSevere != null && prog.monthsToSevere > 0 && (
+                <> · Predicted severe threshold (4.0 m/s): ~{prog.monthsToSevere} months ({prog.predictedSevereDate})</>
+              )}
+              {prog.monthsToSevere === 0 && <> · Already at severe threshold</>}
+            </div>
+            <div className="text-xs text-indigo-600 italic">Confidence: {prog.confidence} — {prog.basisNote}</div>
+            <div className="flex items-center gap-1.5 text-xs text-blue-600 mt-1">
+              <Zap className="w-3 h-3 flex-shrink-0" />
+              Trajectory-aware · Forward-looking · Auto-computed from serial echocardiography
+            </div>
+          </div>
+        );
+      }
+    }
+  }
+
+  // Gap 82 (BAV Aortopathy) — Aortic Root growth projection via projectBAVProgression
+  if (gapId.includes('bav') || gapId.includes('gap-82') || gapId.includes('aortopathy')) {
+    const rootCurrent = typeof kv['Aortic Root'] === 'number' ? kv['Aortic Root'] : parseFloat(String(kv['Aortic Root'] || '0'));
+    const rootPrior = typeof kv['Prior Aortic Root'] === 'number' ? kv['Prior Aortic Root'] : parseFloat(String(kv['Prior Aortic Root'] || '0'));
+    // Compute months between from dates if available, else use 9
+    let bavMonths = 9;
+    const rootDate = kv['Root Measure Date'] || kv['Aortic Root Date'];
+    const priorRootDate = kv['Prior Root Date'];
+    if (rootDate && priorRootDate) {
+      const d1 = new Date(String(priorRootDate));
+      const d2 = new Date(String(rootDate));
+      const diffMs = d2.getTime() - d1.getTime();
+      if (diffMs > 0) bavMonths = Math.round(diffMs / (30.44 * 24 * 60 * 60 * 1000));
+    }
+    if (!isNaN(rootCurrent) && rootCurrent > 0) {
+      const bavResult = projectBAVProgression({
+        currentRootCm: rootCurrent,
+        priorRootCm: !isNaN(rootPrior) && rootPrior > 0 ? rootPrior : undefined,
+        monthsBetween: bavMonths,
+      });
+      elements.push(
+        <div key="bav-growth" className="mt-2 px-3 py-2 bg-slate-50/70 border border-slate-200 rounded-lg">
+          <div className="text-xs font-semibold text-slate-800 mb-1">Aortopathy Progression Forecast</div>
+          <div className="text-xs text-slate-700">
+            Current root: {rootCurrent.toFixed(1)}cm · Prior: {(!isNaN(rootPrior) && rootPrior > 0) ? rootPrior.toFixed(1) : 'N/A'}cm
+          </div>
+          <div className="text-xs text-slate-700">
+            Growth rate: {bavResult.annualizedGrowthRate.toFixed(2)}cm/year — <span className="font-bold">{bavResult.riskCategory}</span>
+          </div>
+          {bavResult.monthsToSurgicalThreshold != null && bavResult.monthsToSurgicalThreshold > 0 && (
+            <div className="text-xs text-slate-800 font-semibold mt-0.5">
+              Predicted surgical threshold ({bavResult.surgicalThreshold}cm): ~{bavResult.monthsToSurgicalThreshold} months ({bavResult.predictedThresholdDate})
+            </div>
+          )}
+          {bavResult.monthsToSurgicalThreshold === 0 && (
+            <div className="text-xs text-red-700 font-bold mt-0.5">Already at or above surgical threshold</div>
+          )}
+          <div className="text-xs text-slate-500 mt-0.5 italic">{bavResult.basisNote}</div>
+          <div className="flex items-center gap-1.5 text-xs text-blue-600 mt-1">
+            <Zap className="w-3 h-3 flex-shrink-0" />
+            Trajectory-aware · Forward-looking · Auto-computed from serial imaging
+          </div>
+        </div>
+      );
+    }
+  }
+
+  return elements.length > 0 ? <>{elements}</> : null;
+};
+
+/** Determine which enhanced display to render for a given gap + patient */
+const renderSHEnhancedDisplay = (gap: SHClinicalGap, pt: SHGapPatient) => {
+  const gapId = gap.id.toLowerCase();
+
+  // Gap 3: Severe AS
+  if (gapId.includes('severe-as') || gapId.includes('gap-3')) {
+    return renderASSeverityDisplay(pt);
+  }
+
+  // Gap 5: COAPT / Functional MR
+  if (gapId.includes('functional-mr') || gapId.includes('coapt') || gapId.includes('gap-5')) {
+    return renderCOAPTEligibility(pt);
+  }
+
+  // Gap 42: ATTR-CM + AS co-detection
+  if ((gapId.includes('attr') && gapId.includes('as')) || gapId.includes('co-detection')) {
+    return renderATTRCoDetection(pt);
+  }
+
+  // Gap 79: Moderate AS surveillance — reuse AS severity classifier
+  if (gapId.includes('moderate-as') || gapId.includes('gap-79')) {
+    return renderASSeverityDisplay(pt);
+  }
+
+  // Gap 81: Rheumatic MS on DOAC
+  if (gapId.includes('rheumatic') || gapId.includes('gap-81')) {
+    return renderRheumaticMSSafetyAlert(pt);
+  }
+
+  return null;
+};
+
+// ============================================================
+// GAP-LEVEL TRAJECTORY DATA
+// ============================================================
+const getSHGapTrajectoryData = (_gapId: string, patientCount: number, category: string): TrajectoryDistribution => {
+  const isSafety = category === 'Safety';
+  const isGrowth = category === 'Growth';
+  if (isSafety) {
+    return { worseningRapid: Math.round(patientCount * 0.31), worseningSlow: Math.round(patientCount * 0.34), stable: Math.round(patientCount * 0.23), improving: Math.round(patientCount * 0.12), total: patientCount };
+  }
+  if (isGrowth) {
+    return { worseningRapid: Math.round(patientCount * 0.10), worseningSlow: Math.round(patientCount * 0.15), stable: Math.round(patientCount * 0.44), improving: Math.round(patientCount * 0.31), total: patientCount };
+  }
+  return { worseningRapid: Math.round(patientCount * 0.17), worseningSlow: Math.round(patientCount * 0.28), stable: Math.round(patientCount * 0.36), improving: Math.round(patientCount * 0.19), total: patientCount };
+};
+
+// ============================================================
+// COMPONENT
+// ============================================================
+const SHClinicalGapDetectionDashboard: React.FC = () => {
+  const [expandedGap, setExpandedGap] = useState<string | null>(null);
+  const [expandedPatient, setExpandedPatient] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<'priority' | 'patients' | 'opportunity'>('priority');
+  const [showMethodology, setShowMethodology] = useState<string | null>(null);
+
+  const totalPatients = SH_CLINICAL_GAPS.reduce((sum, g) => sum + g.patientCount, 0);
+  const totalOpportunity = SH_CLINICAL_GAPS.reduce((sum, g) => sum + g.dollarOpportunity, 0);
+
+  const priorityOrder: Record<string, number> = { high: 0, medium: 1, low: 2 };
+  const categoryOrder: Record<string, number> = { Safety: 0, Discovery: 1, Gap: 2, Growth: 3, Quality: 2 };
+  const sortedGaps = [...SH_CLINICAL_GAPS].sort((a, b) => {
+    const catDiff = (categoryOrder[a.category] ?? 3) - (categoryOrder[b.category] ?? 3);
+    if (catDiff !== 0) return catDiff;
+    switch (sortBy) {
+      case 'patients': return b.patientCount - a.patientCount;
+      case 'opportunity': return b.dollarOpportunity - a.dollarOpportunity;
+      default: return (priorityOrder[a.priority] ?? 2) - (priorityOrder[b.priority] ?? 2);
+    }
+  });
+
+  const priorityColor = (p: string) => {
+    if (p === 'high') return 'bg-red-50 border-red-300 text-red-700';
+    if (p === 'medium') return 'bg-amber-50 border-amber-300 text-amber-700';
+    return 'bg-green-50 border-green-300 text-green-700';
+  };
+
+  const categoryColor = (c: string) =>
+    c === 'Discovery'
+      ? 'bg-indigo-100 text-indigo-800'
+      : c === 'Gap'
+      ? 'bg-red-100 text-red-800'
+      : c === 'Safety'
+      ? 'bg-rose-200 text-rose-900'
+      : c === 'Quality'
+      ? 'bg-amber-100 text-amber-800'
+      : 'bg-blue-100 text-blue-800';
+
+  const subflagColor = (sf?: string) => {
+    if (!sf) return '';
+    if (sf.includes('5a')) return 'bg-amber-100 text-amber-700';
+    if (sf.includes('5b')) return 'bg-blue-100 text-blue-700';
+    return 'bg-titanium-100 text-titanium-700';
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header summary */}
+      <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
+        <h3 className="text-lg font-semibold text-titanium-900 mb-1 flex items-center gap-2">
+          <Heart className="w-5 h-5 text-medical-red-600" />
+          Clinical Gap Detection — Structural Heart Module
+        </h3>
+        <p className="text-sm text-titanium-600 mb-4">
+          AI-driven detection of evidence-based structural heart therapy gaps and growth opportunities.
+          Gaps 3, 5, 8 — 15-gap initiative.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Users className="w-4 h-4 text-red-600" />
+              <span className="text-xs font-semibold text-red-700 uppercase tracking-wide">Affected Patients</span>
+            </div>
+            <div className="text-2xl font-bold text-red-800">{totalPatients.toLocaleString()}</div>
+          </div>
+          <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-1">
+              <DollarSign className="w-4 h-4 text-green-600" />
+              <span className="text-xs font-semibold text-green-700 uppercase tracking-wide">Total Opportunity</span>
+            </div>
+            <div className="text-2xl font-bold text-green-800">
+              ${(totalOpportunity / 1000000).toFixed(1)}M
+            </div>
+          </div>
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-1">
+              <TrendingUp className="w-4 h-4 text-blue-600" />
+              <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Active Gaps</span>
+            </div>
+            <div className="text-2xl font-bold text-blue-800">{SH_CLINICAL_GAPS.length}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sort control */}
+      <div className="flex items-center gap-3">
+        <span className="text-xs font-semibold text-titanium-600 uppercase tracking-wide">Sort by:</span>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value as 'priority' | 'patients' | 'opportunity')}
+          className="px-3 py-1.5 text-sm border border-titanium-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"
+        >
+          <option value="priority">Priority</option>
+          <option value="patients">Patient Count</option>
+          <option value="opportunity">Dollar Opportunity</option>
+        </select>
+      </div>
+
+      {/* Gap list */}
+      <div className="space-y-4">
+        {sortedGaps.map((gap) => {
+          const isOpen = expandedGap === gap.id;
+          return (
+            <div key={gap.id} className="metal-card bg-white border border-titanium-200 rounded-2xl overflow-hidden">
+              <button
+                className="w-full text-left p-5 flex items-start justify-between hover:bg-titanium-50 transition-colors"
+                onClick={() => setExpandedGap(isOpen ? null : gap.id)}
+              >
+                <div className="flex-1">
+                  <div className="flex flex-wrap items-center gap-2 mb-1">
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${categoryColor(gap.category)}`}>
+                      {gap.category}
+                    </span>
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${priorityColor(gap.priority)}`}>
+                      {gap.priority.toUpperCase()} PRIORITY
+                    </span>
+                    {gap.tag && (
+                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                        {gap.tag}
+                      </span>
+                    )}
+                  </div>
+                  {gap.category === 'Discovery' && (
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <span className="text-xs font-semibold text-indigo-600">{'\u2B21'} Discovery — Net new patients · Never previously identified</span>
+                    </div>
+                  )}
+                  <div className="font-semibold text-titanium-900 text-base">{gap.name}</div>
+                  {gap.whyMissed && (
+                    <div className="mt-2 text-xs text-titanium-500 italic flex items-start gap-1.5">
+                      <Search className="w-3 h-3 text-indigo-400 flex-shrink-0 mt-0.5" />
+                      <span>Why standard systems miss this: {gap.whyMissed}</span>
+                    </div>
+                  )}
+                  <div className="flex gap-6 mt-2">
+                    <span className="text-sm text-titanium-600">
+                      <span className="font-semibold text-titanium-900">{gap.patientCount}</span> patients
+                    </span>
+                    <span className="text-sm text-titanium-600">
+                      <span className="font-semibold text-green-700">${(gap.dollarOpportunity / 1000000).toFixed(1)}M</span> opportunity
+                    </span>
+                  </div>
+                  {gap.subcategories && (
+                    <div className="flex flex-wrap gap-3 mt-2">
+                      {gap.subcategories.map((sub) => (
+                        <span key={sub.label} className="text-xs bg-titanium-100 text-titanium-700 px-2 py-1 rounded-lg">
+                          {sub.label}: <strong>{sub.count}</strong>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="ml-4 mt-1 flex-shrink-0">
+                  {isOpen ? <ChevronUp className="w-5 h-5 text-titanium-500" /> : <ChevronDown className="w-5 h-5 text-titanium-500" />}
+                </div>
+              </button>
+
+              {isOpen && (
+                <div className="border-t border-titanium-200 p-5 space-y-5">
+                  {/* Trajectory Summary — Forward-looking */}
+                  {(() => {
+                    const dist = getSHGapTrajectoryData(gap.id, gap.patientCount, gap.category);
+                    const q1Rev = Math.round(gap.dollarOpportunity * (dist.worseningRapid / Math.max(dist.total, 1)));
+                    return (
+                      <div className="px-4 py-3 bg-gradient-to-r from-titanium-50/80 to-white border border-titanium-100 rounded-xl">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-xs font-semibold text-titanium-600 uppercase tracking-wide">Patient Trajectory</span>
+                          <span className="text-xs bg-slate-50 text-slate-600 px-1.5 py-0.5 rounded font-medium">Forward-looking</span>
+                        </div>
+                        <div className="flex items-center gap-4 text-xs">
+                          <span className="text-red-600 font-medium">{'\u2193'} {dist.worseningRapid} worsening rapidly</span>
+                          <span className="text-amber-600 font-medium">{'\u2198'} {dist.worseningSlow} worsening slowly</span>
+                          <span className="text-gray-500 font-medium">{'\u2192'} {dist.stable} stable</span>
+                          <span className="text-green-600 font-medium">{'\u2197'} {dist.improving} improving</span>
+                        </div>
+                        <div className="flex h-2 rounded-full overflow-hidden mt-2">
+                          <div className="bg-red-400" style={{ width: `${(dist.worseningRapid / dist.total) * 100}%` }} />
+                          <div className="bg-amber-400" style={{ width: `${(dist.worseningSlow / dist.total) * 100}%` }} />
+                          <div className="bg-gray-300" style={{ width: `${(dist.stable / dist.total) * 100}%` }} />
+                          <div className="bg-green-400" style={{ width: `${(dist.improving / dist.total) * 100}%` }} />
+                        </div>
+                        <div className="flex items-center gap-4 mt-2 text-xs text-titanium-600">
+                          <span>Q1 opportunity: <span className="font-bold text-emerald-700">{formatDollar(q1Rev)}</span> ({dist.worseningRapid} patients -- highest urgency)</span>
+                          <span>Full population: <span className="font-bold text-emerald-700">{formatDollar(gap.dollarOpportunity)}</span></span>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  <div>
+                    <h4 className="font-semibold text-titanium-800 mb-2 flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 text-amber-500" />
+                      Detection Criteria
+                    </h4>
+                    <ul className="space-y-1">
+                      {gap.detectionCriteria.map((c) => (
+                        <li key={c} className="text-sm text-titanium-700 flex gap-2">
+                          <CheckCircle className="w-3.5 h-3.5 text-green-500 flex-shrink-0 mt-0.5" />
+                          {c}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                    <h4 className="font-semibold text-blue-800 mb-1 flex items-center gap-2">
+                      <Stethoscope className="w-4 h-4" />
+                      Clinical Evidence
+                    </h4>
+                    <p className="text-sm text-blue-700">{gap.evidence}</p>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <Target className="w-4 h-4 text-medical-red-600" />
+                    <span className="font-semibold text-medical-red-700">Recommended Action:</span>
+                    <span className="text-sm font-medium bg-medical-red-50 border border-medical-red-200 px-3 py-1 rounded-lg text-medical-red-800">
+                      {gap.cta}
+                    </span>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold text-titanium-800 mb-2 flex items-center gap-2">
+                      <Users className="w-4 h-4 text-titanium-600" />
+                      Sample Flagged Patients ({gap.patients.length} shown of {gap.patientCount})
+                    </h4>
+                    <div className="space-y-2">
+                      {gap.patients.map((pt) => {
+                        const ptOpen = expandedPatient === pt.id;
+                        return (
+                          <div key={pt.id} className="border border-titanium-200 rounded-xl overflow-hidden">
+                            <button
+                              className="w-full text-left px-4 py-3 bg-titanium-50 hover:bg-titanium-100 transition-colors flex items-center justify-between"
+                              onClick={() => setExpandedPatient(ptOpen ? null : pt.id)}
+                            >
+                              <div>
+                                <span className="font-medium text-titanium-900">{pt.name}</span>
+                                <span className="text-sm text-titanium-500 ml-2">
+                                  {pt.mrn} • Age {pt.age}
+                                </span>
+                                {pt.subflag && (
+                                  <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${subflagColor(pt.subflag)}`}>
+                                    {pt.subflag}
+                                  </span>
+                                )}
+                                {gap.ctaMap && pt.subflag && gap.ctaMap[pt.subflag] && (
+                                  <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+                                    {gap.ctaMap[pt.subflag]}
+                                  </span>
+                                )}
+                                {gap.category === 'Discovery' && (
+                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow. TAILRD identified this patient by assembling disconnected signals across care settings.">
+                                    <Radio className="w-3 h-3" />
+                                    First identified by TAILRD
+                                  </span>
+                                )}
+                                {getSHTrajectoryBadges(gap, pt)}
+                              </div>
+                              {ptOpen ? <ChevronUp className="w-4 h-4 text-titanium-400" /> : <ChevronDown className="w-4 h-4 text-titanium-400" />}
+                            </button>
+                            {ptOpen && (
+                              <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                  <h5 className="text-xs font-semibold text-titanium-600 uppercase mb-2">Triggered Signals</h5>
+                                  <ul className="space-y-1">
+                                    {pt.signals.map((sig) => (
+                                      <li key={sig} className="text-sm text-red-700 flex gap-2">
+                                        <AlertTriangle className="w-3 h-3 flex-shrink-0 mt-0.5" />
+                                        {sig}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                                <div>
+                                  <h5 className="text-xs font-semibold text-titanium-600 uppercase mb-2">Key Clinical Values</h5>
+                                  <dl className="space-y-1">
+                                    {Object.entries(pt.keyValues).map(([k, v]) => (
+                                      <div key={k} className="flex justify-between text-sm">
+                                        <dt className="text-titanium-600">{k}:</dt>
+                                        <dd className="font-medium text-titanium-900" title="Automatically calculated from EHR-sourced data via Redox integration. No manual entry required.">{v}<span title="Automatically calculated from EHR-sourced data via Redox integration. No manual entry required."><Info className="w-3 h-3 text-blue-400 inline-block ml-1 cursor-help" /></span></dd>
+                                      </div>
+                                    ))}
+                                  </dl>
+                                </div>
+                              </div>
+                            )}
+                            {ptOpen && renderSHEnhancedDisplay(gap, pt) && (
+                              <div className="px-4">
+                                {renderSHEnhancedDisplay(gap, pt)}
+                              </div>
+                            )}
+                            {ptOpen && renderSHPredictiveDetail(gap, pt) && (
+                              <div className="px-4">
+                                {renderSHPredictiveDetail(gap, pt)}
+                              </div>
+                            )}
+                            {ptOpen && gap.whyTailrd && (
+                              <div className="px-4">
+                                <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-3 mt-2">
+                                  <p className="text-xs font-semibold text-indigo-700 mb-1">Why TAILRD identified this patient:</p>
+                                  <p className="text-sm text-indigo-600">{gap.whyTailrd}</p>
+                                </div>
+                              </div>
+                            )}
+                            {ptOpen && (
+                              <div className="px-4 pb-3">
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Methodology & Data Sources */}
+                  {gap.methodologyNote && (
+                    <div className="mt-4 border-t border-titanium-100 pt-3">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setShowMethodology(showMethodology === gap.id ? null : gap.id); }}
+                        className="flex items-center gap-2 text-xs text-titanium-500 hover:text-titanium-700 transition-colors"
+                      >
+                        <FileText className="w-3.5 h-3.5" />
+                        <span className="font-medium">Methodology & Data Sources</span>
+                        <span className="text-[10px]">{showMethodology === gap.id ? '\u25BC' : '\u25B6'}</span>
+                      </button>
+                      {showMethodology === gap.id && (
+                        <div className="mt-2 pl-5 text-xs text-titanium-600 space-y-1">
+                          <p>{gap.methodologyNote}</p>
+                          <p className="italic text-titanium-400 text-[10px]">Numbers calibrated to representative cardiovascular program based on national benchmarks</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export default SHClinicalGapDetectionDashboard;

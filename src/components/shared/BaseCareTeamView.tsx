@@ -15,6 +15,7 @@ export interface CareTeamViewConfig {
  safety: React.ComponentType<any>;
  team: React.ComponentType<any>;
  documentation: React.ComponentType<any>;
+ 'clinical-gaps'?: React.ComponentType<any>;
   };
 }
 

@@ -5,6 +5,7 @@ import { CareTeamViewConfig } from '../../../components/shared/BaseCareTeamView'
 import { StandardTabConfig } from '../../../components/shared/StandardInterfaces';
 import CRTICDEligibilityCalculator from '../../../components/riskCalculators/CRTICDEligibilityCalculator';
 import { featureFlags } from '../../../config/featureFlags';
+import ClinicalGapDetectionDashboard from '../components/clinical/ClinicalGapDetectionDashboard';
 
 // Import Heart Failure specific components
 import PatientWorklistEnhanced from '../components/care-team/PatientWorklistEnhanced';
@@ -631,6 +632,11 @@ const HFDocumentation: React.FC = () => (
 );
 
 
+// HF Clinical Gaps wrapper
+const HFClinicalGaps: React.FC = () => (
+  <ClinicalGapDetectionDashboard />
+);
+
 // Heart Failure Care Team Tab Configuration
 const heartFailureTabs: StandardTabConfig[] = [
   {
@@ -668,6 +674,12 @@ const heartFailureTabs: StandardTabConfig[] = [
  label: 'Documentation',
  icon: AlertTriangle,
  description: 'CDI and clinical documentation'
+  },
+  {
+ id: 'clinical-gaps',
+ label: 'Clinical Gaps',
+ icon: AlertTriangle,
+ description: '23-gap detection: ATTR-CM, iron deficiency, finerenone, GLP-1/HFpEF, HCM myosin inhibitor, CardioMEMS, CASTLE-AF, ivabradine, vericiguat, H-ISDN, cardiac rehab, undiagnosed HFpEF, DANISH ICD, OSA-HF, RPM, ARNi underdosing, loop-without-MRA, hyponatremia, NT-proBNP monitoring, cardiac MRI, palliative care, diuretic resistance, predischarge NT-proBNP'
   }
 ];
 
@@ -684,6 +696,7 @@ export const heartFailureCareTeamConfig: CareTeamViewConfig = {
  workflow: HFWorkflow,
  safety: HFSafety,
  team: HFClinicalCollaboration,
- documentation: HFDocumentation
+ documentation: HFDocumentation,
+ 'clinical-gaps': HFClinicalGaps
   }
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { DEMO_PATIENT_CONTEXT } from '../../../types/shared';
-import { Users, Calendar, Shield, Activity, FileText, Heart, Scissors, ListTodo, Eye, Stethoscope, Search } from 'lucide-react';
+import { DEMO_PATIENT_CONTEXT, DEMO_PATIENT_ROSTER } from '../../../types/shared';
+import { Users, Calendar, Shield, Activity, FileText, Heart, Scissors, ListTodo, Eye, Stethoscope, Search, AlertTriangle } from 'lucide-react';
 
 // Import Valvular Disease components
 import ValvePatientHeatmap from '../components/ValvePatientHeatmap';
@@ -12,12 +12,15 @@ import ValveTherapyContraindicationChecker from '../components/clinical/ValveThe
 import ValveRiskScoreCalculator from '../components/clinical/ValveRiskScoreCalculator';
 import ValveSpecialtyPhenotypesDashboard from '../components/clinical/ValveSpecialtyPhenotypesDashboard';
 import AdvancedValveProcedureTracker from '../components/clinical/AdvancedValveProcedureTracker';
+import VDClinicalGapDetectionDashboard from '../components/clinical/VDClinicalGapDetectionDashboard';
 
-type TabId = 'dashboard' | 'patients' | 'surgical-planning' | 'surveillance' | 'worklist' | 'safety' | 'team' | 'documentation' | 'clinicaltools';
+type TabId = 'dashboard' | 'patients' | 'clinical-gaps' | 'surgical-planning' | 'surveillance' | 'worklist' | 'safety' | 'team' | 'documentation' | 'clinicaltools';
 
 // Clinical Intelligence sub-tab panel
 const ClinicalToolsPanel: React.FC = () => {
   const [activeToolTab, setActiveToolTab] = useState('phenotype');
+  const [selectedPatientIdx, setSelectedPatientIdx] = useState(4);
+  const selectedPatient = DEMO_PATIENT_ROSTER[selectedPatientIdx]?.context || DEMO_PATIENT_CONTEXT;
 
   const tools = [
  { id: 'phenotype', label: 'Phenotype Classification', component: ValvePhenotypeClassification },
@@ -32,10 +35,18 @@ const ClinicalToolsPanel: React.FC = () => {
   return (
  <div className="space-y-6">
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
- <h3 className="text-xl font-bold text-titanium-900 mb-4 flex items-center gap-2">
- <Stethoscope className="w-6 h-6 text-porsche-600" />
- Clinical Intelligence Tools
- </h3>
+ <div className="flex items-center justify-between mb-4">
+   <h3 className="text-xl font-bold text-titanium-900 flex items-center gap-2">
+     <Stethoscope className="w-6 h-6 text-porsche-600" />
+     Clinical Intelligence Tools
+   </h3>
+   <div className="flex items-center gap-2">
+     <Users className="w-4 h-4 text-titanium-500" />
+     <select value={selectedPatientIdx} onChange={(e) => setSelectedPatientIdx(Number(e.target.value))} className="text-sm border border-titanium-200 rounded-lg px-3 py-1.5 bg-white text-titanium-800 focus:outline-none focus:ring-2 focus:ring-porsche-300">
+       {DEMO_PATIENT_ROSTER.map((p, i) => (<option key={p.context.patientId} value={i}>{p.label}</option>))}
+     </select>
+   </div>
+ </div>
  <div className="flex flex-wrap gap-2">
  {tools.map(tool => (
  <button
@@ -52,7 +63,7 @@ const ClinicalToolsPanel: React.FC = () => {
  ))}
  </div>
  </div>
- {ActiveTool && <ActiveTool patientData={DEMO_PATIENT_CONTEXT} />}
+ {ActiveTool && <ActiveTool patientData={selectedPatient} />}
  </div>
   );
 };
@@ -82,6 +93,7 @@ const ValvularCareTeamView: React.FC = () => {
   const tabs = [
  { id: 'dashboard', label: 'Dashboard', icon: Activity, description: 'Valve care team overview' },
  { id: 'patients', label: 'Patients', icon: Users, description: 'Valve patient management' },
+ { id: 'clinical-gaps', label: 'Clinical Gaps', icon: AlertTriangle, description: 'AI-driven clinical gap detection' },
  { id: 'surgical-planning', label: 'Surgical Planning', icon: Scissors, description: 'Surgical planning checklist' },
  { id: 'surveillance', label: 'Valve Surveillance', icon: Eye, description: 'Repaired valve surveillance' },
  { id: 'worklist', label: 'Valve Worklist', icon: ListTodo, description: 'Comprehensive valve worklist' },
@@ -197,6 +209,10 @@ const ValvularCareTeamView: React.FC = () => {
  </div>
  </div>
  );
+ case 'clinical-gaps':
+ return (
+ <VDClinicalGapDetectionDashboard />
+ );
  case 'surgical-planning':
  return (
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-8">
@@ -287,7 +303,7 @@ const ValvularCareTeamView: React.FC = () => {
  <div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
  {/* Tab Navigation */}
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6 shadow-xl">
- <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-9 gap-4">
+ <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-10 gap-4">
  {tabs.map((tab) => {
  const Icon = tab.icon;
  const isActive = activeTab === tab.id;

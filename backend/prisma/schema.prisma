@@ -28,9 +28,9 @@ model Hospital {
   country String @default("USA")
 
   // Redox Configuration
-  redoxSourceId      String  @unique
-  redoxDestinationId String  @unique
-  redoxWebhookUrl    String
+  redoxSourceId      String?  @unique
+  redoxDestinationId String?  @unique
+  redoxWebhookUrl    String?
   redoxIsActive      Boolean @default(true)
 
   // Module Subscriptions
@@ -89,6 +89,10 @@ model Hospital {
   businessMetrics    BusinessMetric[]
   reportGenerations  ReportGeneration[]
   errorLogs          ErrorLog[]
+
+  // Upload & invite relationships
+  uploadJobs   UploadJob[]
+  inviteTokens InviteToken[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -149,6 +153,15 @@ model User {
   featureUsages     FeatureUsage[]
   reportGenerations ReportGeneration[]
   errorLogs         ErrorLog[]
+
+  // Upload & invite relationships
+  uploadJobs     UploadJob[]
+  createdInvites InviteToken[] @relation("InviteCreator")
+
+  // MFA & session relationships
+  mfa           UserMFA?
+  sessions      UserSession[]
+  ipAllowlist   IPAllowlist[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -2023,4 +2036,209 @@ enum DataRequestStatus {
   DENIED
   COMPLETED
   EXPIRED
+}
+
+// =============================================================================
+// TERMINOLOGY MODELS — Clinical ValueSet Infrastructure
+// =============================================================================
+
+model TermICD10 {
+  code        String   @id
+  description String
+  category    String
+  isLeaf      Boolean  @default(true)
+  parentCode  String?
+  createdAt   DateTime @default(now())
+
+  @@map("term_icd10")
+}
+
+model TermRxNorm {
+  rxcui       String   @id
+  name        String
+  termType    String
+  drugClasses String[]
+  brandNames  String[]
+  createdAt   DateTime @default(now())
+
+  @@map("term_rxnorm")
+}
+
+model TermLOINC {
+  loincNum    String   @id
+  component   String
+  system      String
+  scaleType   String
+  className   String
+  unit        String   @default("")
+  createdAt   DateTime @default(now())
+
+  @@map("term_loinc")
+}
+
+model TermCPT {
+  code        String   @id
+  description String
+  category    String
+  createdAt   DateTime @default(now())
+
+  @@map("term_cpt")
+}
+
+model TermMSDRG {
+  drgCode     String   @id
+  description String
+  mdc         String
+  type        String
+  avgPayment  Float
+  relWeight   Float
+  fiscalYear  Int      @default(2025)
+  createdAt   DateTime @default(now())
+
+  @@map("term_msdrg")
+}
+
+// ─── Upload Job tracking ──────────────────────────────────────────────────────
+model UploadJob {
+  id String @id @default(cuid())
+
+  // Hospital association (tenant isolation)
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  // Uploader
+  uploadedBy String
+  uploader   User @relation(fields: [uploadedBy], references: [id], onDelete: Restrict)
+
+  // File metadata
+  fileName String
+  fileSize Int
+  s3Key    String?
+  moduleId String
+
+  // Processing status
+  status        UploadJobStatus @default(PENDING)
+  startedAt     DateTime?
+  completedAt   DateTime?
+  errorMessage  String?
+  phiDetected   Boolean         @default(false)
+
+  // Row-level stats
+  totalRows      Int @default(0)
+  processedRows  Int @default(0)
+  errorRows      Int @default(0)
+
+  // Output stats
+  patientsCreated Int @default(0)
+  patientsUpdated Int @default(0)
+  gapFlagsCreated Int @default(0)
+
+  // Validation error details (JSON array of first N errors)
+  validationErrors Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([hospitalId, createdAt])
+  @@index([status])
+  @@map("upload_jobs")
+}
+
+enum UploadJobStatus {
+  PENDING
+  VALIDATING
+  PROCESSING
+  DETECTING_GAPS
+  COMPLETE
+  FAILED
+  REJECTED_PHI
+}
+
+// ─── Invite Token (hospital user invitations) ────────────────────────────────
+model InviteToken {
+  id String @id @default(cuid())
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  createdById String
+  createdBy   User   @relation("InviteCreator", fields: [createdById], references: [id], onDelete: Restrict)
+
+  email     String
+  role      UserRole
+  token     String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([token])
+  @@index([hospitalId])
+  @@map("invite_tokens")
+}
+
+model TermGapValueSet {
+  gapId             String   @id
+  gapName           String
+  module            String
+  diagnosisCodes    String[]
+  exclusionCodes    String[]
+  procedureCodes    String[]
+  medicationCodes   String[]
+  labCodes          String[]
+  labThresholds     Json     @default("[]")
+  deviceCodes       String[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("term_gap_valueset")
+}
+
+// ─── MFA & Session Models ────────────────────────────────────────────────────
+
+model UserMFA {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id])
+  secret          String
+  enabled         Boolean   @default(false)
+  enabledAt       DateTime?
+  backupCodes     String[]
+  backupCodesUsed Int       @default(0)
+  lastUsedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("user_mfa")
+}
+
+model UserSession {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  tokenHash     String   @unique
+  ipAddress     String
+  userAgent     String
+  lastActivity  DateTime @default(now())
+  expiresAt     DateTime
+  mfaVerified   Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("user_sessions")
+}
+
+model IPAllowlist {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id])
+  ipAddress  String
+  label      String
+  createdAt  DateTime  @default(now())
+  lastUsedAt DateTime?
+
+  @@index([userId])
+  @@map("ip_allowlist")
 }

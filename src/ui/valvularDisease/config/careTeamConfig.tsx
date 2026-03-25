@@ -9,6 +9,8 @@ import ValvularSurgicalNetworkVisualization from '../components/ValvularSurgical
 import { apiService } from '../../../services/apiService';
 import STSRiskCalculator from '../../../components/riskCalculators/STSRiskCalculator';
 import { featureFlags } from '../../../config/featureFlags';
+import ValveRiskScoreCalculator from '../components/clinical/ValveRiskScoreCalculator';
+import VDClinicalGapDetectionDashboard from '../components/clinical/VDClinicalGapDetectionDashboard';
 
 // Valvular Disease Dashboard Component
 const ValvularDashboard: React.FC = () => (
@@ -277,6 +279,9 @@ const ValvularWorkflow: React.FC = () => (
 // Valvular Safety Component
 const ValvularSafety: React.FC = () => (
   <div className="space-y-6">
+ {/* Valve Risk Score Calculator */}
+ <ValveRiskScoreCalculator />
+
  {/* Safety Screening & Risk Management */}
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
@@ -788,6 +793,11 @@ const ValvularDocumentation: React.FC = () => (
   </div>
 );
 
+// VD Clinical Gaps wrapper
+const VDClinicalGaps: React.FC = () => (
+  <VDClinicalGapDetectionDashboard />
+);
+
 // Valvular Disease Care Team Tab Configuration
 const valvularTabs: StandardTabConfig[] = [
   {
@@ -801,6 +811,12 @@ const valvularTabs: StandardTabConfig[] = [
  label: 'Patients',
  icon: Users,
  description: 'Valvular disease patients'
+  },
+  {
+ id: 'clinical-gaps',
+ label: 'Clinical Gaps',
+ icon: Target,
+ description: 'AI-driven clinical gap detection for valvular disease'
   },
   {
  id: 'workflow',
@@ -838,6 +854,7 @@ export const valvularCareTeamConfig: CareTeamViewConfig = {
   tabContent: {
  dashboard: ValvularDashboard,
  patients: ValvularPatients,
+ 'clinical-gaps': VDClinicalGaps,
  workflow: ValvularWorkflow,
  safety: ValvularSafety,
  team: ValvularClinicalCollaboration,

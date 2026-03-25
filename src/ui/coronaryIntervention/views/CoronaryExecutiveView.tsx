@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DollarSign, Users, TrendingUp, Target, Activity, Heart } from 'lucide-react';
+import { DollarSign, Users, TrendingUp, Target, Activity, Heart, Zap, Search } from 'lucide-react';
 import BaseExecutiveView from '../../../components/shared/BaseExecutiveView';
 import { coronaryInterventionConfig } from '../config/executiveConfig';
 import ExportButton from '../../../components/shared/ExportButton';
@@ -9,6 +9,10 @@ import SharedBenchmarksPanel from '../../../components/shared/SharedBenchmarksPa
 import SharedProjectedVsRealized from '../../../components/shared/SharedProjectedVsRealized';
 import BaseDetailModal from '../../../components/shared/BaseDetailModal';
 import CADFinancialWaterfall from '../components/executive/CADFinancialWaterfall';
+import GapIntelligenceCard from '../../../components/shared/GapIntelligenceCard';
+import PredictiveMetricsBanner from '../../../components/shared/PredictiveMetricsBanner';
+import { RevenuePipelineCard, RevenueAtRiskCard, TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
+import type { RevenuePipelineData, RevenueAtRiskData, TrajectoryTrendsData } from '../../../components/shared/ForwardLookingCards';
 import { ExportData } from '../../../utils/dataExport';
 import { getOrdinalSuffix, formatMillions, toFixed, roundTo } from '../../../utils/formatters';
 
@@ -182,6 +186,103 @@ const CoronaryExecutiveView: React.FC = () => {
  />
  </div>
 
+ {/* SAQ Patient-Reported Outcomes Executive Card */}
+ <div className="metal-card relative z-10 mb-6">
+   <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
+     <div className="flex items-center justify-between">
+       <div>
+         <h3 className="text-lg font-semibold text-titanium-900 mb-1">Patient-Reported Outcomes (SAQ)</h3>
+         <p className="text-sm text-titanium-600">Seattle Angina Questionnaire &mdash; developed by Dr. John Spertus, Saint Luke&rsquo;s Mid America Heart Institute / UMKC</p>
+       </div>
+       <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-100 rounded-lg px-3 py-1.5">
+         <Zap className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+         <span className="text-xs text-blue-700 font-medium">Auto-calculated from EHR data via Redox</span>
+       </div>
+     </div>
+   </div>
+   <div className="p-6">
+     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+       <div className="bg-white rounded-xl p-4 border border-titanium-200 shadow-sm">
+         <div className="text-sm text-titanium-600 mb-1">Mean SAQ Angina Frequency</div>
+         <div className="text-3xl font-bold text-titanium-900">61.8</div>
+         <div className="text-xs text-titanium-500 mt-1">Population average</div>
+       </div>
+       <div className="bg-white rounded-xl p-4 border border-green-200 shadow-sm">
+         <div className="text-sm text-titanium-600 mb-1">Mean Improvement (Post-Revasc)</div>
+         <div className="text-3xl font-bold text-green-600">+18.4</div>
+         <div className="text-xs text-green-500 mt-1">pts at 90 days post-intervention</div>
+       </div>
+       <div className="bg-white rounded-xl p-4 border border-red-200 shadow-sm">
+         <div className="text-sm text-titanium-600 mb-1">Severe Angina Burden (SAQ &lt;50)</div>
+         <div className="text-3xl font-bold text-red-600">234</div>
+         <div className="text-xs text-red-500 mt-1">Intervention evaluation needed</div>
+       </div>
+     </div>
+   </div>
+ </div>
+
+ {/* Clinical Gap Intelligence */}
+ <GapIntelligenceCard data={{
+   totalGaps: 26,
+   categories: [
+     { name: 'Therapy', patients: 900, color: '#3b82f6' },
+     { name: 'Safety', patients: 340, color: '#ef4444' },
+     { name: 'Growth', patients: 280, color: '#8b5cf6' },
+     { name: 'Quality', patients: 620, color: '#f59e0b' },
+     { name: 'Deprescribing', patients: 190, color: '#f97316' },
+   ],
+   topGaps: [
+     { name: 'Heart Team Review', patients: 180, opportunity: '$3.4M' },
+     { name: 'Complete Revasc', patients: 145, opportunity: '$2.8M' },
+     { name: 'PCSK9i Post-ACS', patients: 210, opportunity: '$2.2M' },
+     { name: 'CTO Referral', patients: 95, opportunity: '$1.9M' },
+     { name: 'Statin Intensity', patients: 340, opportunity: '$1.6M' },
+   ],
+   safetyAlert: 'CRITICAL: 156 patients \u00b7 HIGH: 184 patients',
+ }} />
+
+ {/* Forward-Looking Executive Cards */}
+ <RevenuePipelineCard data={{
+   quarters: [
+     { quarter: 'Q1 2026', revenue: 2400000, procedures: 32, confidence: 'high' },
+     { quarter: 'Q2 2026', revenue: 1800000, procedures: 24, confidence: 'moderate' },
+     { quarter: 'Q3 2026', revenue: 1400000, procedures: 18, confidence: 'moderate' },
+     { quarter: 'Q4 2026', revenue: 1000000, procedures: 14, confidence: 'low' },
+   ],
+   totalProjected12Month: 6600000,
+ }} />
+ <RevenueAtRiskCard data={{
+   immediatePatients: 156,
+   immediateRevenue: 3400000,
+   deferralRevenue: 2200000,
+   cumulativeRisk12Month: 7800000,
+   deferralCostPerMonth: 570000,
+ }} />
+ <TrajectoryTrendsCard data={{
+   worseningRapidPct: 15,
+   worseningRapidCount: 234,
+   meanDeclineRate: '1.8 pts/month SAQ decline',
+   declineMetric: 'CAD',
+   thresholdIn30Days: 6,
+   totalFlaggedPatients: 900,
+   keyInsights: [
+     '156 post-ACS patients without PCSK9i -- LDL trajectory shows continued elevation',
+     'SAQ declining in 34% of chronic angina patients -- intervention conversion window narrowing',
+     'Post-CABG graft surveillance gap: 23 patients >8 years out with >40% SVG failure probability',
+   ],
+ }} />
+
+ {/* Predictive Metrics Banner */}
+ <PredictiveMetricsBanner data={{
+   thresholdIn90Days: 38,
+   quarterlyActionableRevenue: 3400000,
+   totalIdentifiedRevenue: 11200000,
+   rapidDeteriorationCount: 156,
+   avgTimeToEvent: 10,
+   projectedRevenueCurrentRate: 4100000,
+   projectedRevenueSystematic: 8800000,
+ }} />
+
  {/* KPI Summary Cards */}
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
  <div className="metal-card p-6">
@@ -253,7 +354,7 @@ const CoronaryExecutiveView: React.FC = () => {
  <div className="p-6">
  <SharedBenchmarksPanel
  benchmarks={benchmarks}
- subtitle="Mount Sinai vs National Percentiles (2025 Data)"
+ subtitle="Your System vs National Percentiles (2025 Data)"
  dataSource="ACC NCDR CathPCI Registry 2024"
  lastUpdated="October 2025"
  onBenchmarkClick={(metric) => setSelectedBenchmark(getBenchmarkDetails(metric))}

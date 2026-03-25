@@ -270,6 +270,7 @@ const ModuleDetailPanel: React.FC<ModuleDetailPanelProps> = ({
           {moduleName} <span className="text-titanium-500 font-body font-normal">&mdash; Detail View</span>
         </h2>
         <button
+          type="button"
           onClick={onClose}
           className="p-1.5 rounded-lg hover:bg-chrome-100 transition-colors text-titanium-500 hover:text-titanium-700"
           aria-label="Close detail panel"

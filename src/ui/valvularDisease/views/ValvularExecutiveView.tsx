@@ -9,6 +9,11 @@ import SharedBenchmarksPanel, { BenchmarkMetric } from '../../../components/shar
 import SharedProjectedVsRealized, { MonthData } from '../../../components/shared/SharedProjectedVsRealized';
 import BaseDetailModal from '../../../components/shared/BaseDetailModal';
 import { getOrdinalSuffix, formatMillions, toFixed, roundTo } from '../../../utils/formatters';
+import GapIntelligenceCard from '../../../components/shared/GapIntelligenceCard';
+import PredictiveMetricsBanner from '../../../components/shared/PredictiveMetricsBanner';
+import { RevenuePipelineCard, RevenueAtRiskCard, TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
+import type { RevenuePipelineData, RevenueAtRiskData, TrajectoryTrendsData } from '../../../components/shared/ForwardLookingCards';
+import { Zap, Search } from 'lucide-react';
 
 // ── Icons ──────────────────────────────────────────────────────────
 const HeartIcon = () => (
@@ -172,6 +177,65 @@ const ValvularExecutiveView: React.FC = () => {
  className="shadow-lg hover:shadow-xl transition-all duration-300"
  />
  </div>
+
+ {/* Clinical Gap Intelligence */}
+ <GapIntelligenceCard data={{
+   totalGaps: 6,
+   categories: [
+     { name: 'Quality', patients: 313, color: '#f59e0b' },
+     { name: 'Safety', patients: 59, color: '#ef4444' },
+   ],
+   topGaps: [
+     { name: 'Moderate AS Surveillance', patients: 134, opportunity: '$1.8M' },
+     { name: 'BAV Aortopathy', patients: 56, opportunity: '$1.2M' },
+     { name: 'HALT Screening', patients: 31, opportunity: '$620K' },
+     { name: 'Post-TAVR Echo', patients: 34, opportunity: '$420K' },
+     { name: 'Rheumatic MS', patients: 28, opportunity: '$340K' },
+   ],
+   safetyAlert: 'CRITICAL: 31 patients \u00b7 HIGH: 28 patients',
+ }} />
+
+ {/* Forward-Looking Executive Cards */}
+ <RevenuePipelineCard data={{
+   quarters: [
+     { quarter: 'Q1 2026', revenue: 1200000, procedures: 12, confidence: 'high' },
+     { quarter: 'Q2 2026', revenue: 900000, procedures: 9, confidence: 'moderate' },
+     { quarter: 'Q3 2026', revenue: 600000, procedures: 6, confidence: 'moderate' },
+     { quarter: 'Q4 2026', revenue: 400000, procedures: 4, confidence: 'low' },
+   ],
+   totalProjected12Month: 3100000,
+ }} />
+ <RevenueAtRiskCard data={{
+   immediatePatients: 31,
+   immediateRevenue: 1800000,
+   deferralRevenue: 600000,
+   cumulativeRisk12Month: 2800000,
+   deferralCostPerMonth: 300000,
+ }} />
+ <TrajectoryTrendsCard data={{
+   worseningRapidPct: 14,
+   worseningRapidCount: 52,
+   meanDeclineRate: 'AS Vmax progression',
+   declineMetric: 'VD',
+   thresholdIn30Days: 2,
+   totalFlaggedPatients: 372,
+   keyInsights: [
+     '134 moderate AS patients -- 18 with rapid Vmax progression projected to reach severe within 12 months',
+     '31 post-TAVR patients with potential HALT -- neurologic trajectory monitoring active',
+     'BAV aortopathy: 56 patients under surveillance, 6 approaching surgical threshold',
+   ],
+ }} />
+
+ {/* Predictive Metrics Banner */}
+ <PredictiveMetricsBanner data={{
+   thresholdIn90Days: 18,
+   quarterlyActionableRevenue: 1800000,
+   totalIdentifiedRevenue: 5300000,
+   rapidDeteriorationCount: 31,
+   avgTimeToEvent: 12,
+   projectedRevenueCurrentRate: 1900000,
+   projectedRevenueSystematic: 4100000,
+ }} />
 
  {/* ── KPI Summary Cards ─────────────────────────────────── */}
  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">

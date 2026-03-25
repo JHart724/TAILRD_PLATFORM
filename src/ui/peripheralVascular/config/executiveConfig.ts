@@ -1,5 +1,6 @@
 import { ExecutiveViewConfig } from '../../../components/shared/BaseExecutiveView';
 import { DRGOpportunity } from '../../../components/shared/DRGOptimizationAlert';
+import { PLATFORM_TOTALS, formatDollars, formatPatients } from '../../../data/platformTotals';
 
 // Peripheral Vascular DRG Optimization Opportunities
 const peripheralVascularDRGOpportunities: DRGOpportunity[] = [
@@ -61,10 +62,10 @@ export const peripheralVascularConfig: ExecutiveViewConfig = {
   moduleName: 'Peripheral Vascular',
   description: '• PAD • Critical Limb Ischemia • Limb Salvage Analytics',
   kpiData: {
- totalOpportunity: '$212.5M',
- totalOpportunitySub: 'Annual revenue potential',
- totalPatients: '6,375',
- totalPatientsSub: 'Active PAD care panel (15% of PAD population)',
+ totalOpportunity: formatDollars(PLATFORM_TOTALS.modules.pv.opportunity),
+ totalOpportunitySub: 'Annual revenue potential (+$3.0M from 87-gap initiative: adds Chronic Venous Ulcer, Unprovoked VTE Extended AC, IVC Filter Safety, May-Thurner to existing peripheral vascular gaps)',
+ totalPatients: formatPatients(PLATFORM_TOTALS.modules.pv.patients),
+ totalPatientsSub: 'Active PAD care panel — includes 961 new gap patients (768 original + 193 new: Venous Ulcer 47, Unprovoked VTE 89, IVC Filter 34, May-Thurner 23); COMPASS polyvascular (112) counted in CAD module',
  gdmtOptimization: '62%',
  gdmtOptimizationSub: 'Optimal therapy rate',
  avgRoi: '$5,000',

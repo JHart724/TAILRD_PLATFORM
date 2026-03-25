@@ -105,7 +105,7 @@ function signToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
     iat: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // 24 hours
   };
-  return jwt.sign(fullPayload, process.env.JWT_SECRET || '');
+  return jwt.sign(fullPayload, process.env.JWT_SECRET!);
 }
 
 // ─── POST /api/auth/login ──────────────────────────────────────────────────────
@@ -287,7 +287,7 @@ router.post('/refresh', async (req: Request, res: Response) => {
   try {
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET || 'dev-secret-change-me'
+      process.env.JWT_SECRET!
     ) as JWTPayload;
 
     // Issue a fresh token with same payload
@@ -338,7 +338,7 @@ router.post('/verify', (req: Request, res: Response) => {
     } as APIResponse);
   }
 
-  jwt.verify(token, process.env.JWT_SECRET || 'dev-secret-change-me', (err: any, decoded: any) => {
+  jwt.verify(token, process.env.JWT_SECRET!, (err: any, decoded: any) => {
     if (err) {
       return res.status(403).json({
         success: false,

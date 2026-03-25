@@ -222,6 +222,89 @@ export interface PatientContext {
  * Mock patient context for demo auto-fill.
  * Represents a typical HF patient with multiple comorbidities.
  */
+/**
+ * Demo patient roster — realistic patients that appear across gap detection and clinical tools.
+ * Selecting a patient in Clinical Intelligence auto-populates their data into calculators.
+ */
+export const DEMO_PATIENT_ROSTER: { label: string; context: PatientContext }[] = [
+  {
+    label: 'Simmons, Harold — Age 74 · HFrEF · AF · CKD',
+    context: {
+      patientId: 'HF-44201', age: 74, gender: 'male', weight: 92, height: 178, bmi: 29.0,
+      systolicBP: 118, diastolicBP: 68, heartRate: 82, creatinine: 1.6, eGFR: 42, potassium: 4.5,
+      hemoglobin: 11.8, ferritin: 65, transferrinSaturation: 16, platelets: 178, inr: 2.1,
+      bnp: 890, ldl: 78, hba1c: 6.8, lvef: 28, lvedd: 66, lvesd: 52, paSystolicPressure: 48,
+      diabetes: true, hypertension: true, atrialFibrillation: true, chf: true, copd: false,
+      cad: true, pvd: false, priorStroke: false, priorMI: true, priorCardiacSurgery: false,
+      nyhaClass: 3, symptomatic: true,
+      onBetaBlocker: true, onACEiARB: false, onARNi: true, onMRA: true, onSGLT2i: false,
+      onStatin: true, onAnticoagulant: true,
+      chadsVascScore: 5, hasbledScore: 3, stsScore: 4.2, euroScore: 3.8, frailtyIndex: 3,
+    },
+  },
+  {
+    label: 'Caldwell, Ruth — Age 78 · HFpEF · DM · Obesity',
+    context: {
+      patientId: 'HF-44238', age: 78, gender: 'female', weight: 98, height: 162, bmi: 37.3,
+      systolicBP: 142, diastolicBP: 78, heartRate: 74, creatinine: 1.2, eGFR: 48, potassium: 4.0,
+      hemoglobin: 13.2, ferritin: 120, transferrinSaturation: 24, platelets: 210, inr: 1.0,
+      bnp: 520, ldl: 104, hba1c: 7.8, lvef: 55, lvedd: 48, lvesd: 32, paSystolicPressure: 38,
+      diabetes: true, hypertension: true, atrialFibrillation: false, chf: true, copd: true,
+      cad: false, pvd: false, priorStroke: false, priorMI: false, priorCardiacSurgery: false,
+      nyhaClass: 2, symptomatic: true,
+      onBetaBlocker: true, onACEiARB: true, onMRA: false, onSGLT2i: false,
+      onStatin: true, onAnticoagulant: false,
+      stsScore: 2.8, euroScore: 2.1, frailtyIndex: 4,
+    },
+  },
+  {
+    label: 'Martinez, Carlos — Age 58 · VT · NICM · ICD',
+    context: {
+      patientId: 'EP-MRN003', age: 58, gender: 'male', weight: 85, height: 180, bmi: 26.2,
+      systolicBP: 112, diastolicBP: 72, heartRate: 68, creatinine: 1.1, eGFR: 78, potassium: 4.3,
+      hemoglobin: 14.1, ferritin: 180, transferrinSaturation: 28, platelets: 225, inr: 1.0,
+      bnp: 340, ldl: 88, hba1c: 5.6, lvef: 30, lvedd: 64, lvesd: 50, paSystolicPressure: 35,
+      diabetes: false, hypertension: false, atrialFibrillation: false, chf: true, copd: false,
+      cad: false, pvd: false, priorStroke: false, priorMI: false, priorCardiacSurgery: false,
+      nyhaClass: 2, symptomatic: false,
+      onBetaBlocker: true, onACEiARB: false, onARNi: true, onMRA: true, onSGLT2i: true,
+      onStatin: false, onAnticoagulant: false,
+      chadsVascScore: 1, hasbledScore: 0,
+      rhythmType: 'VT',
+    },
+  },
+  {
+    label: 'Thompson, James — Age 68 · Post-STEMI · 3V CAD',
+    context: {
+      patientId: 'CAD-MRN007', age: 68, gender: 'male', weight: 95, height: 175, bmi: 31.0,
+      systolicBP: 134, diastolicBP: 82, heartRate: 72, creatinine: 1.3, eGFR: 58, potassium: 4.1,
+      hemoglobin: 13.5, ferritin: 145, transferrinSaturation: 22, platelets: 198, inr: 1.0,
+      bnp: 180, ldl: 112, hba1c: 7.4, lvef: 42, lvedd: 56, lvesd: 40, paSystolicPressure: 32,
+      diabetes: true, hypertension: true, atrialFibrillation: false, chf: false, copd: false,
+      cad: true, pvd: true, priorStroke: false, priorMI: true, priorCardiacSurgery: false,
+      nyhaClass: 1, symptomatic: false,
+      onBetaBlocker: true, onACEiARB: true, onMRA: false, onSGLT2i: true,
+      onStatin: true, onAnticoagulant: false, onAntiplatelet: true,
+      stsScore: 2.1, euroScore: 1.8,
+    },
+  },
+  {
+    label: 'Williams, Dorothy — Age 82 · Severe AS · AF',
+    context: {
+      patientId: 'SH-MRN005', age: 82, gender: 'female', weight: 65, height: 158, bmi: 26.0,
+      systolicBP: 148, diastolicBP: 72, heartRate: 78, creatinine: 1.5, eGFR: 38, potassium: 4.6,
+      hemoglobin: 11.4, ferritin: 95, transferrinSaturation: 20, platelets: 165, inr: 2.4,
+      bnp: 680, ldl: 72, hba1c: 5.9, lvef: 48, lvedd: 50, lvesd: 34, paSystolicPressure: 52,
+      diabetes: false, hypertension: true, atrialFibrillation: true, chf: true, copd: true,
+      cad: true, pvd: false, priorStroke: true, priorMI: false, priorCardiacSurgery: false,
+      nyhaClass: 3, symptomatic: true,
+      onBetaBlocker: false, onACEiARB: true, onMRA: false, onSGLT2i: false,
+      onStatin: true, onAnticoagulant: true,
+      chadsVascScore: 7, hasbledScore: 4, stsScore: 6.8, euroScore: 5.4, frailtyIndex: 5,
+    },
+  },
+];
+
 export const DEMO_PATIENT_CONTEXT: PatientContext = {
   patientId: 'DEMO-001',
   age: 72,

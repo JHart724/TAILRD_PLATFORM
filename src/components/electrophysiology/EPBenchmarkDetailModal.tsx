@@ -67,7 +67,7 @@ const EPBenchmarkDetailModal: React.FC<EPBenchmarkDetailModalProps> = ({
  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
  <div className="bg-chrome-50 rounded-lg p-4 text-center">
  <div className="text-2xl font-bold text-chrome-900">{ourValue}{unit}</div>
- <div className="text-sm text-chrome-700">Mount Sinai</div>
+ <div className="text-sm text-chrome-700">Your System</div>
  </div>
  <div className="bg-gray-50 rounded-lg p-4 text-center">
  <div className="text-2xl font-bold text-gray-900">{nationalValue}{unit}</div>

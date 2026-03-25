@@ -41,7 +41,7 @@ const LockedOverlay: React.FC<LockedOverlayProps> = ({
           <p className="text-sm text-titanium-500 font-body">
             {bodyText}
           </p>
-          <button className="mt-2 btn-primary text-sm">
+          <button type="button" className="mt-2 btn-primary text-sm">
             {ctaText}
           </button>
         </div>

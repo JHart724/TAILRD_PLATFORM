@@ -101,7 +101,7 @@ const BaseServiceLineView: React.FC<BaseServiceLineViewProps> = ({ config }) => 
 
  {/* Navigation Tabs */}
  <nav 
- className="flex gap-4 border-b border-titanium-200 overflow-x-auto"
+ className="flex flex-wrap gap-2 border-b border-titanium-200 pb-1"
  role="tablist"
  aria-label={`${moduleName} service line analytics sections`}
  >

@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import TailrdLogo from './TailrdLogo';
-import { Eye, EyeOff, Shield, Lock, AlertCircle, CheckCircle, X } from 'lucide-react';
+import { Eye, EyeOff, Lock } from 'lucide-react';
 import { toast } from '../components/shared/Toast';
-
-const isDemoMode = process.env.REACT_APP_DEMO_MODE === 'true';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -16,7 +14,6 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [showDemoCredentials, setShowDemoCredentials] = useState(true);
 
   // Redirect if already authenticated (demo auto-login from AuthContext will trigger this)
   useEffect(() => {
@@ -58,11 +55,6 @@ const Login: React.FC = () => {
  const message = err?.message || 'Login failed. Please check your credentials.';
  toast.error('Login Failed', message);
  }
-  };
-
-  const handleDemoLogin = (demoEmail: string) => {
- setEmail(demoEmail);
- setPassword('demo123');
   };
 
   return (
@@ -115,56 +107,6 @@ const Login: React.FC = () => {
  <p className="font-body text-sm text-titanium-500 mb-8">
  Access your cardiovascular analytics dashboard
  </p>
-
- {/* Demo Credentials Banner — only visible in demo mode */}
- {isDemoMode && showDemoCredentials && (
- <div className="mb-6 bg-chrome-50 border border-chrome-200 rounded-xl p-4">
- <div className="flex items-start justify-between">
- <div className="flex">
- <Shield className="w-5 h-5 text-chrome-600 mt-0.5 mr-3 flex-shrink-0" />
- <div>
- <h3 className="text-sm font-semibold text-chrome-900 mb-2 font-body">Demo Accounts</h3>
- <div className="space-y-1.5">
- <button
- onClick={() => handleDemoLogin('admin@stmarys.org')}
- className="flex items-center gap-2 w-full text-left"
- >
- <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-chrome-100 text-chrome-700 hover:bg-chrome-200 transition-colors font-body">
- Admin
- </span>
- <span className="text-xs text-chrome-600 font-body">admin@stmarys.org</span>
- </button>
- <button
- onClick={() => handleDemoLogin('cardio@stmarys.org')}
- className="flex items-center gap-2 w-full text-left"
- >
- <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-chrome-100 text-chrome-700 hover:bg-chrome-200 transition-colors font-body">
- Physician
- </span>
- <span className="text-xs text-chrome-600 font-body">cardio@stmarys.org</span>
- </button>
- <button
- onClick={() => handleDemoLogin('admin@community.org')}
- className="flex items-center gap-2 w-full text-left"
- >
- <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-chrome-100 text-chrome-700 hover:bg-chrome-200 transition-colors font-body">
- Quality Dir.
- </span>
- <span className="text-xs text-chrome-600 font-body">admin@community.org</span>
- </button>
- </div>
- <p className="text-xs text-chrome-500 mt-2 font-body">Password: demo123</p>
- </div>
- </div>
- <button
- onClick={() => setShowDemoCredentials(false)}
- className="text-chrome-400 hover:text-chrome-600 ml-4 transition-colors"
- >
- <X className="w-4 h-4" />
- </button>
- </div>
- </div>
- )}
 
  {/* Login Form */}
  <form onSubmit={handleSubmit} className="space-y-5">
@@ -225,9 +167,13 @@ const Login: React.FC = () => {
  />
  <span className="ml-2 text-sm text-titanium-600 font-body">Remember me</span>
  </label>
- <a href="#" className="text-sm text-chrome-600 hover:text-chrome-700 transition-colors font-body">
+ <button
+ type="button"
+ onClick={() => toast.info('Password Reset', 'Contact IT Support at ext. 4357 to reset your password.')}
+ className="text-sm text-chrome-600 hover:text-chrome-700 transition-colors font-body bg-transparent border-0 p-0 cursor-pointer"
+ >
  Forgot password?
- </a>
+ </button>
  </div>
 
  {state.isLocked && (
@@ -261,9 +207,13 @@ const Login: React.FC = () => {
  <div className="mt-6 text-center">
  <p className="text-titanium-500 font-body text-sm">
  Don't have an account?{' '}
- <a href="#" className="text-chrome-600 hover:text-chrome-700 font-semibold transition-colors">
+ <button
+ type="button"
+ onClick={() => toast.info('Account Registration', 'Contact your administrator to request a TAILRD account.')}
+ className="text-chrome-600 hover:text-chrome-700 font-semibold transition-colors bg-transparent border-0 p-0 cursor-pointer"
+ >
  Register here today.
- </a>
+ </button>
  </p>
  </div>
  </div>

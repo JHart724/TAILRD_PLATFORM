@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { DEMO_PATIENT_CONTEXT } from '../../../types/shared';
-import { Heart, Users, Workflow, Shield, FileText, Calculator, ClipboardCheck, ListTodo, Stethoscope } from 'lucide-react';
+import { DEMO_PATIENT_CONTEXT, DEMO_PATIENT_ROSTER } from '../../../types/shared';
+import { Heart, Users, Workflow, Shield, FileText, Calculator, ClipboardCheck, ListTodo, Stethoscope, AlertTriangle } from 'lucide-react';
 
 // Import our new components
 import CasePlanningTool from '../components/care-team/CasePlanningTool';
@@ -14,12 +14,19 @@ import CoronaryRiskScoreCalculator from '../components/clinical/CoronaryRiskScor
 import CoronarySpecialtyPhenotypesDashboard from '../components/clinical/CoronarySpecialtyPhenotypesDashboard';
 import AdvancedInterventionTracker from '../components/clinical/AdvancedInterventionTracker';
 
+// Import clinical gap detection dashboard
+import CADClinicalGapDetectionDashboard from '../components/clinical/CADClinicalGapDetectionDashboard';
+import FRAMINGHAMHFCalculator from '../../../components/riskCalculators/FRAMINGHAMHFCalculator';
+import SharedGRACEScoreCalculator from '../../../components/riskCalculators/GRACEScoreCalculator';
+
 // Import existing components from config
 import { coronaryCareTeamConfig } from '../config/careTeamConfig';
 
 // Clinical Intelligence sub-tab panel
 const ClinicalToolsPanel: React.FC = () => {
   const [activeToolTab, setActiveToolTab] = useState('phenotype');
+  const [selectedPatientIdx, setSelectedPatientIdx] = useState(3);
+  const selectedPatient = DEMO_PATIENT_ROSTER[selectedPatientIdx]?.context || DEMO_PATIENT_CONTEXT;
 
   const tools = [
  { id: 'phenotype', label: 'Phenotype Classification', component: CoronaryPhenotypeClassification },
@@ -27,6 +34,8 @@ const ClinicalToolsPanel: React.FC = () => {
  { id: 'contraindication', label: 'Contraindication Checker', component: AntiplateletContraindicationChecker },
  { id: 'interventions', label: 'Intervention Tracker', component: AdvancedInterventionTracker },
  { id: 'specialty', label: 'Specialty Phenotypes', component: CoronarySpecialtyPhenotypesDashboard },
+ { id: 'framingham', label: 'Framingham HF Score', component: FRAMINGHAMHFCalculator },
+ { id: 'grace-calc', label: 'GRACE Score', component: SharedGRACEScoreCalculator },
   ];
 
   const ActiveTool = tools.find(t => t.id === activeToolTab)?.component;
@@ -34,10 +43,18 @@ const ClinicalToolsPanel: React.FC = () => {
   return (
  <div className="space-y-6">
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
- <h3 className="text-xl font-bold text-titanium-900 mb-4 flex items-center gap-2">
- <Stethoscope className="w-6 h-6 text-porsche-600" />
- Clinical Intelligence Tools
- </h3>
+ <div className="flex items-center justify-between mb-4">
+   <h3 className="text-xl font-bold text-titanium-900 flex items-center gap-2">
+     <Stethoscope className="w-6 h-6 text-porsche-600" />
+     Clinical Intelligence Tools
+   </h3>
+   <div className="flex items-center gap-2">
+     <Users className="w-4 h-4 text-titanium-500" />
+     <select value={selectedPatientIdx} onChange={(e) => setSelectedPatientIdx(Number(e.target.value))} className="text-sm border border-titanium-200 rounded-lg px-3 py-1.5 bg-white text-titanium-800 focus:outline-none focus:ring-2 focus:ring-porsche-300">
+       {DEMO_PATIENT_ROSTER.map((p, i) => (<option key={p.context.patientId} value={i}>{p.label}</option>))}
+     </select>
+   </div>
+ </div>
  <div className="flex flex-wrap gap-2">
  {tools.map(tool => (
  <button
@@ -54,7 +71,7 @@ const ClinicalToolsPanel: React.FC = () => {
  ))}
  </div>
  </div>
- {ActiveTool && <ActiveTool patientData={DEMO_PATIENT_CONTEXT} />}
+ {ActiveTool && <ActiveTool patientData={selectedPatient} />}
  </div>
   );
 };
@@ -82,6 +99,7 @@ interface CoronaryCareTeamViewConfig {
  checklist: React.ComponentType<any>;
  worklist: React.ComponentType<any>;
  clinicaltools: React.ComponentType<any>;
+ 'clinical-gaps': React.ComponentType<any>;
   };
 }
 
@@ -96,7 +114,8 @@ type CoronaryCareTeamTab =
   | 'planning'
   | 'checklist'
   | 'worklist'
-  | 'clinicaltools';
+  | 'clinicaltools'
+  | 'clinical-gaps';
 
 const CoronaryCareTeamView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<CoronaryCareTeamTab>('dashboard');
@@ -105,7 +124,14 @@ const CoronaryCareTeamView: React.FC = () => {
   const config: CoronaryCareTeamViewConfig = {
  ...coronaryCareTeamConfig,
  tabs: [
- ...coronaryCareTeamConfig.tabs,
+ ...coronaryCareTeamConfig.tabs.filter(t => t.id !== 'clinical-gaps').slice(0, 2),
+ {
+ id: 'clinical-gaps',
+ label: 'Clinical Gaps',
+ icon: AlertTriangle,
+ description: 'CAD clinical gap detection dashboard'
+ },
+ ...coronaryCareTeamConfig.tabs.filter(t => t.id !== 'clinical-gaps').slice(2),
  {
  id: 'planning',
  label: 'Case Planning',
@@ -136,7 +162,8 @@ const CoronaryCareTeamView: React.FC = () => {
  planning: CasePlanningTool,
  checklist: ProtectedPCIChecklist,
  worklist: CoronaryWorklist,
- clinicaltools: ClinicalToolsPanel
+ clinicaltools: ClinicalToolsPanel,
+ 'clinical-gaps': CADClinicalGapDetectionDashboard
  }
   };
 

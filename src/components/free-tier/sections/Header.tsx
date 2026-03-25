@@ -28,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({ hasUploadedFiles }) => {
       </div>
 
       {/* Right side */}
-      <button className="inline-flex items-center gap-1.5 border border-chrome-300 text-chrome-700 hover:bg-chrome-50 px-3 py-1.5 rounded-lg text-sm font-body font-medium transition-colors duration-150">
+      <button type="button" className="inline-flex items-center gap-1.5 border border-chrome-300 text-chrome-700 hover:bg-chrome-50 px-3 py-1.5 rounded-lg text-sm font-body font-medium transition-colors duration-150">
         <Download className="w-4 h-4" />
         Export
       </button>

@@ -1,5 +1,7 @@
 import { ExecutiveViewConfig } from '../../../components/shared/BaseExecutiveView';
 import { DRGOpportunity } from '../../../components/shared/DRGOptimizationAlert';
+import { PLATFORM_TOTALS, formatDollars, formatPatients } from '../../../data/platformTotals';
+// ProSummaryCard is used via ExecutiveViewConfig.proSummary
 
 // Heart Failure DRG 291-293 Optimization Opportunities
 const hfDRGOpportunities: DRGOpportunity[] = [
@@ -61,10 +63,10 @@ export const heartFailureConfig: ExecutiveViewConfig = {
   moduleName: 'Heart Failure',
   description: '• GDMT Optimization • HFrEF/HFpEF Analytics',
   kpiData: {
- totalOpportunity: '$42.8M',
- totalOpportunitySub: 'Annual revenue potential',
- totalPatients: '7,700',
- totalPatientsSub: 'Active HF care panel (70% of diagnosed HF patients)',
+ totalOpportunity: formatDollars(PLATFORM_TOTALS.modules.hf.opportunity),
+ totalOpportunitySub: 'Annual revenue potential (+$4.6M from 87-gap initiative: adds Hyponatremia, NP Monitoring, Cardiac MRI New CM, Stage D Palliative Care, Diuretic Resistance, Predischarge NT-proBNP to existing HF gaps)',
+ totalPatients: formatPatients(PLATFORM_TOTALS.modules.hf.patients),
+ totalPatientsSub: 'Active HF care panel — includes 2,946 newly identified gap patients across 23 HF gaps (2,354 original + 592 new: Hyponatremia 89, NP Monitoring 234, Cardiac MRI 67, Stage D Palliative 34, Diuretic Resistance 56, Predischarge NP 112)',
  gdmtOptimization: '38%',
  gdmtOptimizationSub: 'At quadruple therapy (4,180 eligible)',
  avgRoi: '$3,891',
@@ -102,5 +104,14 @@ export const heartFailureConfig: ExecutiveViewConfig = {
  variance: '-$2.1K below national average',
  isPositive: false
  }
-  ]
+  ],
+  proSummary: {
+ title: 'Patient-Reported Outcomes (KCCQ)',
+ metrics: [
+ { label: 'Population Mean KCCQ', value: '47.3', isPositive: true },
+ { label: 'Patients Below Threshold (<60)', value: '312', isPositive: false },
+ { label: 'Mean Improvement — Actioned', value: '+14.2 pts', isPositive: true },
+ { label: 'Trend vs Prior Quarter', value: '\u2191 Improving', isPositive: true },
+ ],
+  }
 };

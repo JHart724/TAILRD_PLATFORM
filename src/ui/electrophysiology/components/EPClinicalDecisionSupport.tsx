@@ -32,7 +32,7 @@ interface PatientData {
 }
 
 interface ClinicalRecommendation {
-  type: 'WATCHMAN' | 'Ablation' | 'Device' | 'Anticoagulation' | 'MountSinai';
+  type: 'WATCHMAN' | 'Ablation' | 'Device' | 'Anticoagulation' | 'TAILRD';
   eligibility: 'Eligible' | 'Consider' | 'Not Eligible';
   confidence: number;
   rationale: string[];
@@ -42,7 +42,7 @@ interface ClinicalRecommendation {
 }
 
 const EPClinicalDecisionSupport: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'calculators' | 'watchman' | 'ablation' | 'mount-sinai'>('calculators');
+  const [activeTab, setActiveTab] = useState<'calculators' | 'watchman' | 'ablation' | 'tailrd-algorithms'>('calculators');
   const [patientData, setPatientData] = useState<PatientData>({
  age: 70,
  gender: 'male',
@@ -203,7 +203,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
   };
 
   const evaluateAblationEligibility = (): ClinicalRecommendation => {
- // Mount Sinai AF Ablation Algorithm
+ // TAILRD AF Ablation Algorithm
  let eligibility: 'Eligible' | 'Consider' | 'Not Eligible' = 'Not Eligible';
  let confidence = 0;
  const rationale: string[] = [];
@@ -240,18 +240,18 @@ const EPClinicalDecisionSupport: React.FC = () => {
  confidence -= 5;
  }
 
- // Mount Sinai Success Prediction Algorithm
- const mountSinaiScore = calculateMountSinaiAblationScore();
- if (mountSinaiScore >= 75) {
- rationale.push(`Mount Sinai success score: ${mountSinaiScore}% - Excellent candidate`);
+ // TAILRD Success Prediction Algorithm
+ const tailrdScore = calculateTAILRDAblationScore();
+ if (tailrdScore >= 75) {
+ rationale.push(`TAILRD success score: ${tailrdScore}% - Excellent candidate`);
  confidence += 25;
  eligibility = 'Eligible';
- } else if (mountSinaiScore >= 60) {
- rationale.push(`Mount Sinai success score: ${mountSinaiScore}% - Good candidate`);
+ } else if (tailrdScore >= 60) {
+ rationale.push(`TAILRD success score: ${tailrdScore}% - Good candidate`);
  confidence += 15;
  eligibility = 'Consider';
  } else {
- contraindications.push(`Mount Sinai success score: ${mountSinaiScore}% - Poor candidate`);
+ contraindications.push(`TAILRD success score: ${tailrdScore}% - Poor candidate`);
  confidence -= 20;
  }
 
@@ -268,7 +268,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
  };
   };
 
-  const calculateMountSinaiAblationSuccess = (): { score: number; factors: string[] } => {
+  const calculateTAILRDAblationSuccess = (): { score: number; factors: string[] } => {
  let score = 60; // Base success rate
  const factors: string[] = [];
 
@@ -323,17 +323,17 @@ const EPClinicalDecisionSupport: React.FC = () => {
  return { score: Math.max(20, Math.min(95, score)), factors };
   };
 
-  const calculateMountSinaiAblationScore = (): number => {
- return calculateMountSinaiAblationSuccess().score;
+  const calculateTAILRDAblationScore = (): number => {
+ return calculateTAILRDAblationSuccess().score;
   };
 
-  const getMountSinaiAlgorithms = () => {
- const ablationSuccess = calculateMountSinaiAblationSuccess();
+  const getTAILRDAlgorithms = () => {
+ const ablationSuccess = calculateTAILRDAblationSuccess();
  
  return [
  {
  name: 'AF Ablation Success Predictor',
- description: 'Proprietary Mount Sinai algorithm for predicting ablation success rates',
+ description: 'Proprietary TAILRD algorithm for predicting ablation success rates',
  score: ablationSuccess.score,
  factors: ablationSuccess.factors,
  recommendation: ablationSuccess.score >= 75 ? 'Excellent candidate' : 
@@ -341,17 +341,17 @@ const EPClinicalDecisionSupport: React.FC = () => {
  },
  {
  name: 'LAAC Anatomical Suitability',
- description: 'Mount Sinai LAA morphology assessment algorithm',
+ description: 'TAILRD LAA morphology assessment algorithm',
  score: 85,
  factors: ['LAA depth >20mm', 'Single lobe morphology', 'No prominent pectinate muscles'],
  recommendation: 'Excellent WATCHMAN candidate'
  },
  {
  name: 'Post-Ablation Monitoring Protocol',
- description: 'Mount Sinai evidence-based post-ablation care pathway',
+ description: 'TAILRD evidence-based post-ablation care pathway',
  score: 92,
  factors: ['7-day Holter at 3 months', 'ECG monitoring protocol', 'Anticoagulation decision tree'],
- recommendation: 'Follow Mount Sinai protocol'
+ recommendation: 'Follow institutional protocol'
  }
  ];
   };
@@ -369,7 +369,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
  { id: 'calculators', label: 'Risk Calculators', icon: Calculator },
  { id: 'watchman', label: 'WATCHMAN/LAAC', icon: Shield },
  { id: 'ablation', label: 'Ablation Eligibility', icon: Zap },
- { id: 'mount-sinai', label: 'Mount Sinai Algorithms', icon: Brain }
+ { id: 'tailrd-algorithms', label: 'TAILRD Algorithms', icon: Brain }
  ].map((tab) => {
  const IconComponent = tab.icon;
  return (
@@ -604,20 +604,20 @@ const EPClinicalDecisionSupport: React.FC = () => {
  </div>
  )}
 
- {/* Mount Sinai Algorithms Tab */}
- {activeTab === 'mount-sinai' && (
+ {/* TAILRD Algorithms Tab */}
+ {activeTab === 'tailrd-algorithms' && (
  <div className="space-y-6">
  <div className="metal-card p-8">
  <h2 className="text-2xl font-bold text-titanium-900 mb-6 font-sf flex items-center gap-2">
  <Brain className="w-8 h-8 text-medical-green-500" />
- Mount Sinai Licensed Algorithms
+ TAILRD Clinical Algorithms
  </h2>
  <p className="text-titanium-600 mb-6">
- Proprietary clinical decision support algorithms licensed from Mount Sinai Health System
+ Proprietary clinical decision support algorithms developed by the TAILRD clinical team
  </p>
 
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
- {getMountSinaiAlgorithms().map((algorithm, index) => (
+ {getTAILRDAlgorithms().map((algorithm, index) => (
  <div key={algorithm.name || `algorithm-${index}`} className="p-6 bg-white rounded-xl border border-titanium-200 hover:shadow-chrome-card-hover transition-all duration-300">
  <div className="flex items-center gap-3 mb-4">
  <Award className="w-6 h-6 text-medical-green-500" />

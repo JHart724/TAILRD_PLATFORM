@@ -1,9 +1,8 @@
-import React, { useState, useMemo, useCallback, lazy, Suspense, useEffect } from "react";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+﻿import React, { useState, useMemo, useCallback, lazy, Suspense, useEffect } from "react";
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import CountUp from 'react-countup';
 import TailrdLogo from './components/TailrdLogo';
-import UserMenu from './components/UserMenu';
-import { Heart, Activity, Zap, Stethoscope, GitBranch, CircuitBoard } from 'lucide-react';
+import { Heart, Activity, Zap, Stethoscope, GitBranch, CircuitBoard, FlaskConical } from 'lucide-react';
 import { ErrorBoundary } from './components/shared/ErrorFallback';
 import { ToastContainer } from './components/shared/Toast';
 import { errorHandler } from './utils/ErrorHandler';
@@ -25,13 +24,27 @@ const StructuralHeartModule = lazy(() => import("./ui/structuralHeart/Structural
 const CoronaryInterventionModule = lazy(() => import("./ui/coronaryIntervention/CoronaryInterventionModule"));
 const ValvularDiseaseModule = lazy(() => import("./ui/valvularDisease/ValvularDiseaseModule"));
 const PeripheralVascularModule = lazy(() => import("./ui/peripheralVascular/PeripheralVascularModule"));
+const ResearchModule = lazy(() => import("./ui/research/ResearchModule"));
+const DataManagementPortal = lazy(() => import("./ui/dataManagement/DataManagementPortal"));
 const SettingsPage = lazy(() => import("./ui/SettingsPage"));
 const ProfilePage = lazy(() => import("./ui/ProfilePage"));
 const NotFoundPage = lazy(() => import("./ui/NotFoundPage"));
+const AcceptInvite = lazy(() => import("./ui/auth/AcceptInvite"));
+const SuperAdminLogin = lazy(() => import("./ui/auth/SuperAdminLogin"));
+const SuperAdminConsole = lazy(() => import("./ui/admin/SuperAdminConsole"));
+
+// Scroll to top on route change
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
 
 // Core Types
 type Role = "Executive" | "Service Line" | "Care Team";
-type ModuleId = "hf" | "ep" | "structural" | "coronary" | "valvular" | "peripheral";
+type ModuleId = "hf" | "ep" | "structural" | "coronary" | "valvular" | "peripheral" | "research";
 type ViewMode = "main" | "module" | "aggregate";
 type IconComponent = () => JSX.Element;
 type KpiVariant = "default" | "success" | "warning" | "danger" | "info";
@@ -278,6 +291,19 @@ const MODULES: Module[] = [
  icon: () => <Activity className="w-5 h-5" />,
  features: ["94.3% Limb Salvage Rate", "WIfI Clinical Staging", "Device Performance Analytics", "Multi-tab Care Coordination"],
   },
+  {
+ id: "research",
+ name: "Clinical Research Assist",
+ shortName: "CRA",
+ description: "Registry pre-population \u00b7 Trial eligibility screening \u00b7 Research workflow automation",
+ functional: true,
+ patients: 443,
+ procedures: 159,
+ revenue: 0,
+ qualityScore: 80,
+ icon: () => <FlaskConical className="w-5 h-5" />,
+ features: ["Registry Assist", "Trial Eligibility"],
+  },
 ];
 
 const generateSamplePatients = (moduleId: ModuleId, count = 20): Patient[] => {
@@ -454,6 +480,7 @@ const getModuleKPIs = (moduleId: ModuleId, role: Role): ModuleKpi[] => {
  coronary: { Executive: [], "Service Line": [], "Care Team": [] },
  valvular: { Executive: [], "Service Line": [], "Care Team": [] },
  peripheral: { Executive: [], "Service Line": [], "Care Team": [] },
+ research: { Executive: [], "Service Line": [], "Care Team": [] },
   };
   return kpiData[moduleId]?.[role] ?? [];
 };
@@ -512,6 +539,9 @@ function MainDashboard(): JSX.Element {
  case "peripheral":
  navigate("/peripheral");
  break;
+ case "research":
+ navigate("/research");
+ break;
  default:
  setActiveModule(moduleId);
  setViewMode("module");
@@ -562,18 +592,9 @@ function MainDashboard(): JSX.Element {
   <div className="relative z-10 min-h-screen p-8">
  <div className="max-w-7xl mx-auto space-y-8">
  {/* Clean Professional Medical Header */}
- <div className="flex items-center justify-between">
  <div>
  <TailrdLogo size="large" variant="light" className="mb-3" />
  <p className="text-lg text-titanium-600 font-light">Precision Cardiovascular Care Platform</p>
- </div>
- <div className="flex items-center gap-4">
- <UserMenu 
- userName="Dr. Sarah Williams"
- userRole="Cardiology Director"
- userEmail="sarah.williams@hospital.com"
- />
- </div>
  </div>
  
  {/* Cardiovascular Service Line - Slightly darker than modules */}
@@ -606,14 +627,36 @@ function MainDashboard(): JSX.Element {
  </div>
  </button>
  </div>
- 
  {/* Clinical Modules */}
  <div>
  <h2 className="text-3xl font-bold font-display text-titanium-800 mb-6">Clinical Modules</h2>
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
- {MODULES.map((module) => (<ModuleTile key={module.id} module={module} onClick={() => openModule(module.id)} />))}
+ {MODULES.filter(m => m.id !== 'research').map((module) => (<ModuleTile key={module.id} module={module} onClick={() => openModule(module.id)} />))}
  </div>
- 
+
+ {/* Clinical Research Assist — separate tile matching Service Line style */}
+ <div className="flex justify-center mt-8">
+ <button
+ onClick={() => openModule('research' as ModuleId)}
+ className="relative group"
+ >
+ <div className="absolute -inset-1 bg-white rounded-3xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
+ <div className="relative px-12 py-6 bg-white text-titanium-700 rounded-2xl border border-titanium-200 shadow-xl transition-all duration-300 group-hover:shadow-2xl group-hover:scale-[1.02]">
+ <div className="absolute inset-0 bg-gradient-to-br from-white via-transparent to-white rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+ <div className="relative flex items-center gap-4">
+ <div className="p-3 rounded-xl bg-titanium-100 border border-titanium-200">
+ <FlaskConical className="w-5 h-5 text-titanium-600" />
+ </div>
+ <div className="text-left">
+ <div className="text-2xl font-medium font-display flex items-center gap-3">Clinical Research Assist <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Beta</span></div>
+ <div className="text-sm opacity-80 font-light">Registry pre-population · Trial eligibility screening · Research workflow automation</div>
+ </div>
+ <Icons.ArrowRight />
+ </div>
+ </div>
+ </button>
+ </div>
+
  {/* Last Updated Info - Bottom Right */}
  <div className="flex justify-end mt-8">
  <div className="bg-gradient-to-br from-white to-chrome-50 border border-chrome-200 rounded-xl p-4 shadow-chrome-card">
@@ -669,6 +712,7 @@ export default function App(): JSX.Element {
  <ErrorBoundary module="Application" component="App">
  <AuthProvider>
  <BrowserRouter>
+ <ScrollToTop />
  <ToastContainer position="bottom-right" />
  <Suspense fallback={
  <div className="min-h-screen bg-chrome-50 relative overflow-hidden">
@@ -712,67 +756,97 @@ export default function App(): JSX.Element {
  </div>
  }>
  <Routes>
- <Route path="/" element={
- <AppShell>
- <MainDashboard />
- </AppShell>
- } />
+ {/* Public routes */}
+ <Route path="/" element={<Login />} />
  <Route path="/login" element={<Login />} />
  <Route path="/logout" element={<Logout />} />
+ <Route path="/invite/:token" element={<AcceptInvite />} />
+ <Route path="/superadmin-login" element={<SuperAdminLogin />} />
+ <Route path="/admin" element={
+   <ProtectedRoute>
+     <SuperAdminConsole />
+   </ProtectedRoute>
+ } />
+
+ {/* Protected routes */}
  <Route path="/dashboard" element={
- <AppShell>
- <MainDashboard />
- </AppShell>
+ <ProtectedRoute>
+ <AppShell><MainDashboard /></AppShell>
+ </ProtectedRoute>
  } />
  <Route path="/hf/*" element={
+ <ProtectedRoute>
  <AppShell>
  <ErrorBoundary module="Heart Failure" component="HFModule"><HFModule /></ErrorBoundary>
  </AppShell>
+ </ProtectedRoute>
  } />
  <Route path="/ep/*" element={
+ <ProtectedRoute>
  <AppShell>
  <ErrorBoundary module="Electrophysiology" component="EPModule"><EPModule /></ErrorBoundary>
  </AppShell>
+ </ProtectedRoute>
  } />
  <Route path="/structural/*" element={
+ <ProtectedRoute>
  <AppShell>
  <ErrorBoundary module="Structural Heart" component="StructuralHeartModule"><StructuralHeartModule /></ErrorBoundary>
  </AppShell>
+ </ProtectedRoute>
  } />
  <Route path="/coronary/*" element={
+ <ProtectedRoute>
  <AppShell>
  <ErrorBoundary module="Coronary" component="CoronaryInterventionModule"><CoronaryInterventionModule /></ErrorBoundary>
  </AppShell>
+ </ProtectedRoute>
  } />
  <Route path="/valvular/*" element={
+ <ProtectedRoute>
  <AppShell>
  <ErrorBoundary module="Valvular" component="ValvularDiseaseModule"><ValvularDiseaseModule /></ErrorBoundary>
  </AppShell>
+ </ProtectedRoute>
  } />
  <Route path="/peripheral/*" element={
+ <ProtectedRoute>
  <AppShell>
  <ErrorBoundary module="Peripheral Vascular" component="PeripheralVascularModule"><PeripheralVascularModule /></ErrorBoundary>
  </AppShell>
+ </ProtectedRoute>
+ } />
+ <Route path="/research/*" element={
+ <ProtectedRoute>
+ <AppShell>
+ <ErrorBoundary module="Clinical Research Assist" component="ResearchModule"><ResearchModule /></ErrorBoundary>
+ </AppShell>
+ </ProtectedRoute>
  } />
  <Route path="/service-line" element={
- <AppShell>
- <FreeTierDashboard />
- </AppShell>
+ <ProtectedRoute>
+ <AppShell><FreeTierDashboard /></AppShell>
+ </ProtectedRoute>
+ } />
+ <Route path="/data" element={
+ <ProtectedRoute>
+ <AppShell><DataManagementPortal /></AppShell>
+ </ProtectedRoute>
  } />
  <Route path="/settings" element={
- <AppShell>
- <SettingsPage />
- </AppShell>
+ <ProtectedRoute>
+ <AppShell><SettingsPage /></AppShell>
+ </ProtectedRoute>
  } />
  <Route path="/profile" element={
- <AppShell>
- <ProfilePage />
- </AppShell>
+ <ProtectedRoute>
+ <AppShell><ProfilePage /></AppShell>
+ </ProtectedRoute>
  } />
  <Route path="*" element={
- <AppShell>
- <NotFoundPage />
- </AppShell>
+ <ProtectedRoute>
+ <AppShell><NotFoundPage /></AppShell>
+ </ProtectedRoute>
  } />
  </Routes>
  </Suspense>

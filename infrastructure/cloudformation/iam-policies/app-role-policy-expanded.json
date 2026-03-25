@@ -1,0 +1,103 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "RegistryExportsS3Access",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:ListBucket",
+        "s3:DeleteObject",
+        "s3:GetObjectVersion",
+        "s3:ListBucketVersions"
+      ],
+      "Resource": [
+        "arn:aws:s3:::tailrd-${Environment}-registry-exports",
+        "arn:aws:s3:::tailrd-${Environment}-registry-exports/*"
+      ]
+    },
+    {
+      "Sid": "EHRStagingS3Access",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:ListBucket",
+        "s3:DeleteObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::tailrd-${Environment}-ehr-staging",
+        "arn:aws:s3:::tailrd-${Environment}-ehr-staging/*"
+      ]
+    },
+    {
+      "Sid": "ResearchDataS3Access",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:ListBucket",
+        "s3:DeleteObject",
+        "s3:GetObjectVersion",
+        "s3:ListBucketVersions"
+      ],
+      "Resource": [
+        "arn:aws:s3:::tailrd-${Environment}-research-data",
+        "arn:aws:s3:::tailrd-${Environment}-research-data/*"
+      ]
+    },
+    {
+      "Sid": "ExistingKMSKeyAccess",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:GenerateDataKey",
+        "kms:GenerateDataKeyWithoutPlaintext",
+        "kms:ReEncryptFrom",
+        "kms:ReEncryptTo",
+        "kms:DescribeKey"
+      ],
+      "Resource": [
+        "${ExistingKMSKeyArn}"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "kms:ViaService": "s3.${AWS::Region}.amazonaws.com"
+        }
+      }
+    },
+    {
+      "Sid": "ResearchDataKMSKeyAccess",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:GenerateDataKey",
+        "kms:GenerateDataKeyWithoutPlaintext",
+        "kms:ReEncryptFrom",
+        "kms:ReEncryptTo",
+        "kms:DescribeKey"
+      ],
+      "Resource": [
+        "${ResearchDataKMSKeyArn}"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "kms:ViaService": "s3.${AWS::Region}.amazonaws.com"
+        }
+      }
+    },
+    {
+      "Sid": "EHRStagingEventNotification",
+      "Effect": "Allow",
+      "Action": [
+        "lambda:InvokeFunction"
+      ],
+      "Resource": [
+        "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tailrd-${Environment}-fhir-processor"
+      ]
+    }
+  ]
+}

@@ -6,11 +6,14 @@ import SHValveRiskScoreCalculator from '../components/clinical/SHValveRiskScoreC
 import HASBLEDCalculator from '../../../components/riskCalculators/HASBLEDCalculator';
 import STSRiskCalculator from '../../../components/riskCalculators/STSRiskCalculator';
 import { featureFlags } from '../../../config/featureFlags';
+import SHClinicalGapDetectionDashboard from '../components/clinical/SHClinicalGapDetectionDashboard';
 
 // Import Structural Heart specific components
 import TAVRAnalyticsDashboard from '../components/TAVRAnalyticsDashboard';
 import StructuralReferralNetworkVisualization from '../components/StructuralReferralNetworkVisualization';
 import { apiService } from '../../../services/apiService';
+import SHRealTimeHospitalAlerts from '../components/care-team/SHRealTimeHospitalAlerts';
+import SHSTSRiskCalculator from '../components/STSRiskCalculator';
 
 // Structural Heart Dashboard Component
 const StructuralDashboard: React.FC = () => (
@@ -57,6 +60,9 @@ const StructuralDashboard: React.FC = () => (
  
  {/* TAVR Analytics Dashboard */}
  <TAVRAnalyticsDashboard />
+
+ {/* Real-Time Hospital Alerts */}
+ <SHRealTimeHospitalAlerts />
   </div>
 );
 
@@ -669,9 +675,9 @@ const StructuralClinicalCollaboration: React.FC = () => (
  />
  )}
  
- {/* STS Risk Calculator */}
+ {/* STS Risk Calculator (shared) */}
  {featureFlags.riskCalculators.stsRisk && (
- <STSRiskCalculator 
+ <STSRiskCalculator
  age={75}
  sex="male"
  hasDiabetes={true}
@@ -687,6 +693,9 @@ const StructuralClinicalCollaboration: React.FC = () => (
  nyhaClass="III"
  />
  )}
+
+ {/* STS Risk Calculator (Structural Heart component version) */}
+ <SHSTSRiskCalculator />
  </div>
  </div>
  </div>
@@ -856,6 +865,11 @@ const StructuralDocumentation: React.FC = () => (
   </div>
 );
 
+// SH Clinical Gaps wrapper
+const SHClinicalGaps: React.FC = () => (
+  <SHClinicalGapDetectionDashboard />
+);
+
 // Structural Heart Care Team Tab Configuration
 const structuralTabs: StandardTabConfig[] = [
   {
@@ -893,6 +907,12 @@ const structuralTabs: StandardTabConfig[] = [
  label: 'Documentation',
  icon: AlertTriangle,
  description: 'Structural documentation'
+  },
+  {
+ id: 'clinical-gaps',
+ label: 'Clinical Gaps',
+ icon: AlertTriangle,
+ description: 'Severe AS, Functional MR/COAPT, Significant TR'
   }
 ];
 
@@ -909,6 +929,7 @@ export const structuralCareTeamConfig: CareTeamViewConfig = {
  workflow: StructuralWorkflow,
  safety: StructuralSafety,
  team: StructuralClinicalCollaboration,
- documentation: StructuralDocumentation
+ documentation: StructuralDocumentation,
+ 'clinical-gaps': SHClinicalGaps
   }
 };

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { DEMO_PATIENT_CONTEXT } from '../../../types/shared';
-import { Heart, Users, Workflow, Shield, FileText, Scissors, Route, Bandage, ListTodo, Stethoscope } from 'lucide-react';
+import { DEMO_PATIENT_CONTEXT, DEMO_PATIENT_ROSTER } from '../../../types/shared';
+import { Heart, Users, Workflow, Shield, FileText, Scissors, Route, Bandage, ListTodo, Stethoscope, AlertTriangle } from 'lucide-react';
 
 // Import our new components
 import LimbSalvageChecklist from '../components/care-team/LimbSalvageChecklist';
@@ -15,12 +15,18 @@ import PADRiskScoreCalculator from '../components/clinical/PADRiskScoreCalculato
 import PADSpecialtyPhenotypesDashboard from '../components/clinical/PADSpecialtyPhenotypesDashboard';
 import AdvancedInterventionTracker from '../components/clinical/AdvancedInterventionTracker';
 
+// Import clinical gap detection dashboard
+import PVClinicalGapDetectionDashboard from '../components/clinical/PVClinicalGapDetectionDashboard';
+import WellsPECalculator from '../../../components/riskCalculators/WellsPECalculator';
+
 // Import existing components from config
 import { peripheralCareTeamConfig } from '../config/careTeamConfig';
 
 // Clinical Intelligence sub-tab panel
 const ClinicalToolsPanel: React.FC = () => {
   const [activeToolTab, setActiveToolTab] = useState('phenotype');
+  const [selectedPatientIdx, setSelectedPatientIdx] = useState(3);
+  const selectedPatient = DEMO_PATIENT_ROSTER[selectedPatientIdx]?.context || DEMO_PATIENT_CONTEXT;
 
   const tools = [
  { id: 'phenotype', label: 'Phenotype Classification', component: PADPhenotypeClassification },
@@ -28,6 +34,7 @@ const ClinicalToolsPanel: React.FC = () => {
  { id: 'contraindication', label: 'Contraindication Checker', component: InterventionContraindicationChecker },
  { id: 'interventions', label: 'Intervention Tracker', component: AdvancedInterventionTracker },
  { id: 'specialty', label: 'Specialty Phenotypes', component: PADSpecialtyPhenotypesDashboard },
+ { id: 'wells-pe', label: 'Wells PE Score', component: WellsPECalculator },
   ];
 
   const ActiveTool = tools.find(t => t.id === activeToolTab)?.component;
@@ -35,10 +42,18 @@ const ClinicalToolsPanel: React.FC = () => {
   return (
  <div className="space-y-6">
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
- <h3 className="text-xl font-bold text-titanium-900 mb-4 flex items-center gap-2">
- <Stethoscope className="w-6 h-6 text-porsche-600" />
- Clinical Intelligence Tools
- </h3>
+ <div className="flex items-center justify-between mb-4">
+   <h3 className="text-xl font-bold text-titanium-900 flex items-center gap-2">
+     <Stethoscope className="w-6 h-6 text-porsche-600" />
+     Clinical Intelligence Tools
+   </h3>
+   <div className="flex items-center gap-2">
+     <Users className="w-4 h-4 text-titanium-500" />
+     <select value={selectedPatientIdx} onChange={(e) => setSelectedPatientIdx(Number(e.target.value))} className="text-sm border border-titanium-200 rounded-lg px-3 py-1.5 bg-white text-titanium-800 focus:outline-none focus:ring-2 focus:ring-porsche-300">
+       {DEMO_PATIENT_ROSTER.map((p, i) => (<option key={p.context.patientId} value={i}>{p.label}</option>))}
+     </select>
+   </div>
+ </div>
  <div className="flex flex-wrap gap-2">
  {tools.map(tool => (
  <button
@@ -55,7 +70,7 @@ const ClinicalToolsPanel: React.FC = () => {
  ))}
  </div>
  </div>
- {ActiveTool && <ActiveTool patientData={DEMO_PATIENT_CONTEXT} />}
+ {ActiveTool && <ActiveTool patientData={selectedPatient} />}
  </div>
   );
 };
@@ -84,6 +99,7 @@ interface PeripheralCareTeamViewConfig {
  woundcare: React.ComponentType<any>;
  worklist: React.ComponentType<any>;
  clinicaltools: React.ComponentType<any>;
+ 'clinical-gaps': React.ComponentType<any>;
   };
 }
 
@@ -99,7 +115,8 @@ type PeripheralCareTeamTab =
   | 'caseplanning'
   | 'woundcare'
   | 'worklist'
-  | 'clinicaltools';
+  | 'clinicaltools'
+  | 'clinical-gaps';
 
 const PeripheralCareTeamView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<PeripheralCareTeamTab>('dashboard');
@@ -138,6 +155,12 @@ const PeripheralCareTeamView: React.FC = () => {
  label: 'Clinical Intelligence',
  icon: Stethoscope,
  description: 'Phenotype classification, risk calculators, contraindication checking, and intervention tracking'
+ },
+ {
+ id: 'clinical-gaps',
+ label: 'Clinical Gaps',
+ icon: AlertTriangle,
+ description: 'PV clinical gap detection dashboard'
  }
  ],
  tabContent: {
@@ -146,7 +169,8 @@ const PeripheralCareTeamView: React.FC = () => {
  caseplanning: CasePlanningWorksheet,
  woundcare: WoundCareIntegration,
  worklist: PeripheralWorklist,
- clinicaltools: ClinicalToolsPanel
+ clinicaltools: ClinicalToolsPanel,
+ 'clinical-gaps': PVClinicalGapDetectionDashboard
  }
   };
 

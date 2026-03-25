@@ -1,5 +1,6 @@
 import { ExecutiveViewConfig } from '../../../components/shared/BaseExecutiveView';
 import { DRGOpportunity } from '../../../components/shared/DRGOptimizationAlert';
+import { PLATFORM_TOTALS, formatDollars, formatPatients } from '../../../data/platformTotals';
 
 // Valvular Disease DRG Optimization Opportunities
 const valvularDiseaseDRGOpportunities: DRGOpportunity[] = [
@@ -61,9 +62,9 @@ export const valvularDiseaseConfig: ExecutiveViewConfig = {
   moduleName: 'Valvular Disease',
   description: '• SAVR • Mitral Interventions • Aortic Valve Procedures',
   kpiData: {
- totalOpportunity: '$78.1M',
+ totalOpportunity: formatDollars(PLATFORM_TOTALS.modules.vd.opportunity),
  totalOpportunitySub: 'Annual revenue potential',
- totalPatients: '1,875',
+ totalPatients: formatPatients(PLATFORM_TOTALS.modules.vd.patients),
  totalPatientsSub: 'Active valvular care panel (15% of severe valvular patients)',
  gdmtOptimization: '71%',
  gdmtOptimizationSub: 'Optimal therapy rate',

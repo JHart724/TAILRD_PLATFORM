@@ -7,11 +7,14 @@ import {
   GitBranch,
   CircuitBoard,
   Activity,
+  FlaskConical,
   ChevronLeft,
   ChevronRight,
   Settings,
   UserCircle,
-  LayoutDashboard,
+  BarChart3,
+  Upload,
+  ChevronDown,
 } from 'lucide-react';
 
 const STORAGE_KEY = 'tailrd-sidebar-expanded';
@@ -34,6 +37,7 @@ const moduleNavItems: NavItem[] = [
   { label: 'Coronary',             icon: GitBranch,     path: '/coronary',   glowColor: '#5CAA72', accentBg: 'rgba(26, 74, 46, 0.15)' },
   { label: 'Valvular',             icon: CircuitBoard,  path: '/valvular',   glowColor: '#D4B85C', accentBg: 'rgba(139, 105, 20, 0.15)' },
   { label: 'Peripheral Vascular',  icon: Activity,      path: '/peripheral', glowColor: '#7B8698', accentBg: 'rgba(46, 52, 64, 0.15)' },
+  { label: 'Clinical Research',    icon: FlaskConical,  path: '/research',   glowColor: '#7B8698', accentBg: 'rgba(46, 52, 64, 0.15)' },
 ];
 
 function getInitialExpanded(): boolean {
@@ -48,6 +52,7 @@ function getInitialExpanded(): boolean {
 
 export default function Sidebar() {
   const [expanded, setExpanded] = useState<boolean>(getInitialExpanded);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -104,17 +109,17 @@ export default function Sidebar() {
 
       {/* Module Navigation */}
       <nav className="flex-1 py-3 px-2 space-y-1 overflow-y-auto relative z-[1]">
-        {/* Home / Main Dashboard */}
+        {/* Service Line */}
         <button
-          onClick={() => navigate('/')}
-          title={!expanded ? 'Dashboard' : undefined}
+          onClick={() => navigate('/service-line')}
+          title={!expanded ? 'Service Line' : undefined}
           className={`
             flex items-center w-full rounded-lg transition-all duration-200 mb-2
             ${expanded ? 'px-3 py-2.5 gap-3' : 'justify-center px-0 py-2.5'}
-            ${location.pathname === '/' || location.pathname === '/dashboard' ? 'sidebar-nav-item-active' : 'sidebar-nav-item'}
+            ${isActive('/service-line') ? 'sidebar-nav-item-active' : 'sidebar-nav-item'}
           `}
         >
-          {(location.pathname === '/' || location.pathname === '/dashboard') && (
+          {isActive('/service-line') && (
             <span
               className="w-1.5 h-1.5 rounded-full shrink-0"
               style={{
@@ -123,69 +128,107 @@ export default function Sidebar() {
               }}
             />
           )}
-          <LayoutDashboard size={18} className="shrink-0" />
-          {expanded && <span className="text-sm font-medium truncate">Dashboard</span>}
+          <BarChart3 size={18} className="shrink-0" />
+          {expanded && <span className="text-sm font-medium truncate">Service Line</span>}
         </button>
         <div className="border-t border-white/[0.06] mb-2" />
 
-        {moduleNavItems.map((item) => {
+        {moduleNavItems.map((item, index) => {
           const active = isActive(item.path);
           const Icon = item.icon;
+          const isResearch = item.path === '/research';
 
           return (
-            <button
-              key={item.path}
-              onClick={() => navigate(item.path)}
-              title={!expanded ? item.label : undefined}
-              className={`
-                flex items-center w-full rounded-lg transition-all duration-200
-                ${expanded ? 'px-3 py-2.5 gap-3' : 'justify-center px-0 py-2.5'}
-                ${active ? 'sidebar-nav-item-active' : 'sidebar-nav-item'}
-              `}
-            >
-              {/* Glow dot for active module — Carmona Red */}
-              {active && (
-                <span
-                  className="w-1.5 h-1.5 rounded-full shrink-0"
-                  style={{
-                    background: '#9B2438',
-                    boxShadow: '0 0 6px rgba(155, 36, 56, 0.6), 0 0 12px rgba(155, 36, 56, 0.3)',
-                  }}
-                />
+            <React.Fragment key={item.path}>
+              {/* Separator before Research Infrastructure section */}
+              {isResearch && (
+                <div className="pt-2 pb-1">
+                  <div className="border-t border-white/[0.06]" />
+                  {expanded && (
+                    <div className="px-3 pt-2">
+                      <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'rgba(180,210,240,0.35)' }}>
+                        Research Infrastructure
+                      </span>
+                    </div>
+                  )}
+                </div>
               )}
-              <Icon size={18} className="shrink-0" />
-              {expanded && (
-                <span className="text-sm font-medium truncate">{item.label}</span>
-              )}
-            </button>
+              <button
+                onClick={() => navigate(item.path)}
+                title={!expanded ? item.label : undefined}
+                className={`
+                  flex items-center w-full rounded-lg transition-all duration-200
+                  ${expanded ? 'px-3 py-2.5 gap-3' : 'justify-center px-0 py-2.5'}
+                  ${active ? 'sidebar-nav-item-active' : 'sidebar-nav-item'}
+                `}
+              >
+                {/* Glow dot for active module — Carmona Red */}
+                {active && (
+                  <span
+                    className="w-1.5 h-1.5 rounded-full shrink-0"
+                    style={{
+                      background: '#9B2438',
+                      boxShadow: '0 0 6px rgba(155, 36, 56, 0.6), 0 0 12px rgba(155, 36, 56, 0.3)',
+                    }}
+                  />
+                )}
+                <Icon size={18} className="shrink-0" />
+                {expanded && (
+                  <span className="text-sm font-medium truncate">{item.label}</span>
+                )}
+              </button>
+            </React.Fragment>
           );
         })}
+
       </nav>
 
       {/* Bottom Section */}
       <div className="border-t border-white/[0.08] py-3 px-2 space-y-1 relative z-[1]">
-        <button
-          onClick={() => navigate('/settings')}
-          className={`
-            flex items-center rounded-lg transition-colors w-full
-            ${expanded ? 'px-3 py-2 gap-3' : 'justify-center py-2'}
-            ${isActive('/settings') ? 'sidebar-nav-item-active' : 'sidebar-nav-item'}
-          `}
-        >
-          <Settings size={18} className="shrink-0" />
-          {expanded && <span className="text-sm">Settings</span>}
-        </button>
-        <button
-          onClick={() => navigate('/profile')}
-          className={`
-            flex items-center rounded-lg transition-colors w-full
-            ${expanded ? 'px-3 py-2 gap-3' : 'justify-center py-2'}
-            ${isActive('/profile') ? 'sidebar-nav-item-active' : 'sidebar-nav-item'}
-          `}
-        >
-          <UserCircle size={18} className="shrink-0" />
-          {expanded && <span className="text-sm">Profile</span>}
-        </button>
+        {/* Settings with dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => setSettingsOpen((prev) => !prev)}
+            title={!expanded ? 'Settings' : undefined}
+            className={`
+              flex items-center rounded-lg transition-colors w-full
+              ${expanded ? 'px-3 py-2 gap-3' : 'justify-center py-2'}
+              ${isActive('/settings') || isActive('/data') || isActive('/profile') ? 'sidebar-nav-item-active' : 'sidebar-nav-item'}
+            `}
+          >
+            <Settings size={18} className="shrink-0" />
+            {expanded && (
+              <>
+                <span className="text-sm flex-1 text-left">Settings</span>
+                <ChevronDown size={14} className={`shrink-0 transition-transform duration-200 ${settingsOpen ? 'rotate-180' : ''}`} style={{ opacity: 0.5 }} />
+              </>
+            )}
+          </button>
+          {settingsOpen && expanded && (
+            <div className="ml-4 mt-1 space-y-0.5">
+              <button
+                onClick={() => navigate('/data')}
+                className={`
+                  flex items-center w-full rounded-md px-3 py-1.5 gap-2.5 transition-colors
+                  ${isActive('/data') ? 'sidebar-nav-item-active' : 'sidebar-nav-item'}
+                `}
+              >
+                <Upload size={15} className="shrink-0" />
+                <span className="text-xs">Data Management</span>
+              </button>
+              <button
+                onClick={() => navigate('/profile')}
+                className={`
+                  flex items-center w-full rounded-md px-3 py-1.5 gap-2.5 transition-colors
+                  ${isActive('/profile') ? 'sidebar-nav-item-active' : 'sidebar-nav-item'}
+                `}
+              >
+                <UserCircle size={15} className="shrink-0" />
+                <span className="text-xs">Profile</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </aside>
   );

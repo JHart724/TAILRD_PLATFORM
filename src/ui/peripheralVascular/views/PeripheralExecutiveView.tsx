@@ -9,6 +9,11 @@ import SharedBenchmarksPanel, { BenchmarkMetric } from '../../../components/shar
 import SharedProjectedVsRealized, { MonthData } from '../../../components/shared/SharedProjectedVsRealized';
 import BaseDetailModal from '../../../components/shared/BaseDetailModal';
 import { getOrdinalSuffix, formatMillions, toFixed, roundTo } from '../../../utils/formatters';
+import { Zap, Search } from 'lucide-react';
+import GapIntelligenceCard from '../../../components/shared/GapIntelligenceCard';
+import PredictiveMetricsBanner from '../../../components/shared/PredictiveMetricsBanner';
+import { RevenuePipelineCard, RevenueAtRiskCard, TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
+import type { RevenuePipelineData, RevenueAtRiskData, TrajectoryTrendsData } from '../../../components/shared/ForwardLookingCards';
 
 // ── Icons ──────────────────────────────────────────────────────────
 const VascularIcon = () => (
@@ -170,6 +175,67 @@ const PeripheralExecutiveView: React.FC = () => {
 	className="shadow-lg hover:shadow-xl transition-all duration-300"
 	/>
 	</div>
+
+	{/* Clinical Gap Intelligence */}
+	<GapIntelligenceCard data={{
+	  totalGaps: 12,
+	  categories: [
+	    { name: 'Therapy', patients: 320, color: '#3b82f6' },
+	    { name: 'Safety', patients: 110, color: '#ef4444' },
+	    { name: 'Growth', patients: 180, color: '#8b5cf6' },
+	    { name: 'Quality', patients: 540, color: '#f59e0b' },
+	  ],
+	  topGaps: [
+	    { name: 'ABI Screening', patients: 280, opportunity: '$2.4M' },
+	    { name: 'AAA Screening', patients: 195, opportunity: '$2.1M' },
+	    { name: 'TCAR/Carotid', patients: 85, opportunity: '$1.8M' },
+	    { name: 'VTE Extended AC', patients: 120, opportunity: '$1.2M' },
+	    { name: 'IVC Filter Retrieval', patients: 65, opportunity: '$890K' },
+	  ],
+	  safetyAlert: 'CRITICAL: 48 patients \u00b7 HIGH: 62 patients',
+	}} />
+
+	{/* Forward-Looking Executive Cards */}
+	<RevenuePipelineCard data={{
+	  quarters: [
+	    { quarter: 'Q1 2026', revenue: 1800000, procedures: 22, confidence: 'high' },
+	    { quarter: 'Q2 2026', revenue: 1300000, procedures: 16, confidence: 'moderate' },
+	    { quarter: 'Q3 2026', revenue: 1000000, procedures: 12, confidence: 'moderate' },
+	    { quarter: 'Q4 2026', revenue: 700000, procedures: 9, confidence: 'low' },
+	  ],
+	  totalProjected12Month: 4800000,
+	}} />
+	<RevenueAtRiskCard data={{
+	  immediatePatients: 48,
+	  immediateRevenue: 2400000,
+	  deferralRevenue: 1200000,
+	  cumulativeRisk12Month: 4200000,
+	  deferralCostPerMonth: 400000,
+	}} />
+	<TrajectoryTrendsCard data={{
+	  worseningRapidPct: 16,
+	  worseningRapidCount: 110,
+	  meanDeclineRate: 'ABI decline 0.08/year',
+	  declineMetric: 'PV',
+	  thresholdIn30Days: 3,
+	  totalFlaggedPatients: 690,
+	  keyInsights: [
+	    '48 critical limb ischemia patients with ABI declining below 0.4 -- intervention window narrowing',
+	    'VTE recurrence risk: 23 patients with HERDOO2 >= 2 on anticoagulation reassessment timeline',
+	    'AAA screening gap: 12 patients with aortic diameter approaching 5.5cm threshold',
+	  ],
+	}} />
+
+	{/* Predictive Metrics Banner */}
+	<PredictiveMetricsBanner data={{
+	  thresholdIn90Days: 22,
+	  quarterlyActionableRevenue: 2400000,
+	  totalIdentifiedRevenue: 8200000,
+	  rapidDeteriorationCount: 48,
+	  avgTimeToEvent: 9,
+	  projectedRevenueCurrentRate: 2800000,
+	  projectedRevenueSystematic: 6400000,
+	}} />
 
 	{/* ── KPI Summary Cards ─────────────────────────────────── */}
 	<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">

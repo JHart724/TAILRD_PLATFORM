@@ -920,4 +920,321 @@ function getDefaultPermissionsByRole(role: string, hospital: any) {
   return permissions;
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// Super Admin Console Endpoints (mock data for frontend console)
+// ═══════════════════════════════════════════════════════════════════════════
+
+// GET /api/admin/overview — Platform overview KPIs + activity feed
+router.get('/overview',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (_req: AuthenticatedRequest, res: Response) => {
+    res.json({
+      success: true,
+      data: {
+        kpis: {
+          totalHealthSystems: 3,
+          totalActiveUsers: 12,
+          totalPatients: 10660,
+          totalGapFlags: 104,
+          dataUploadsThisMonth: 7,
+          platformUptime: 99.97,
+        },
+        healthSystems: [
+          { name: 'Baylor Scott & White', abbr: 'BSW', status: 'Active', tier: 'Enterprise', users: 4, patients: 5280, location: 'Temple, TX' },
+          { name: 'Mount Sinai Health System', abbr: 'MSH', status: 'Active', tier: 'Standard', users: 5, patients: 3540, location: 'New York, NY' },
+          { name: 'Memorial Hermann', abbr: 'MH', status: 'Trial', tier: 'Trial', users: 3, patients: 1840, location: 'Houston, TX' },
+        ],
+        recentActivity: [
+          { id: 'e01', timestamp: new Date(Date.now() - 2 * 60000).toISOString(), type: 'login', user: 'Dr. Sarah Chen', hospital: 'BSW', description: 'Signed in to Care Team view' },
+          { id: 'e02', timestamp: new Date(Date.now() - 8 * 60000).toISOString(), type: 'gap_action', user: 'Dr. James Wilson', hospital: 'Mount Sinai', description: 'Resolved 3 HF gaps for patient cohort' },
+          { id: 'e03', timestamp: new Date(Date.now() - 15 * 60000).toISOString(), type: 'upload', user: 'Admin Thompson', hospital: 'BSW', description: 'Uploaded Q1 2026 patient registry' },
+          { id: 'e04', timestamp: new Date(Date.now() - 22 * 60000).toISOString(), type: 'login', user: 'Dr. Maria Rodriguez', hospital: 'Memorial Hermann', description: 'Signed in to Executive view' },
+          { id: 'e05', timestamp: new Date(Date.now() - 35 * 60000).toISOString(), type: 'gap_action', user: 'NM Lisa Park', hospital: 'Mount Sinai', description: 'Flagged 5 EP patients for device follow-up' },
+        ],
+      },
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+);
+
+// GET /api/admin/health-systems — list of health systems for console
+router.get('/health-systems',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (_req: AuthenticatedRequest, res: Response) => {
+    res.json({
+      success: true,
+      data: [
+        { id: 'hs-001', name: 'Baylor Scott & White', status: 'Active', tier: 'Enterprise', modules: ['HF','EP','SH','CAD','PV','VD'], users: 4, location: 'Temple, TX', contactEmail: 'admin@bswhealth.med', contractStart: '2025-06-01', mrr: 42000 },
+        { id: 'hs-002', name: 'Mount Sinai Health System', status: 'Active', tier: 'Standard', modules: ['HF','EP','SH','CAD','PV','VD'], users: 5, location: 'New York, NY', contactEmail: 'admin@mountsinai.org', contractStart: '2025-09-15', mrr: 28000 },
+        { id: 'hs-003', name: 'Memorial Hermann', status: 'Trial', tier: 'Trial', modules: ['HF','CAD','SH'], users: 3, location: 'Houston, TX', trialDaysRemaining: 14, contactEmail: 'admin@memhermann.org', contractStart: '2026-03-08', mrr: 0 },
+      ],
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+);
+
+// POST /api/admin/health-systems — add health system (mock)
+router.post('/health-systems',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (req: AuthenticatedRequest, res: Response) => {
+    res.status(201).json({
+      success: true,
+      data: { id: `hs-${Date.now()}`, name: req.body.name || 'New Health System', status: 'Active', tier: req.body.tier || 'Standard' },
+      message: 'Health system created successfully',
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+);
+
+// PUT /api/admin/health-systems/:id — update health system (mock)
+router.put('/health-systems/:id',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (req: AuthenticatedRequest, res: Response) => {
+    res.json({
+      success: true,
+      data: { id: req.params.id, ...req.body },
+      message: 'Health system updated',
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+);
+
+// GET /api/admin/health-systems/:id/detail — health system detail (mock)
+router.get('/health-systems/:id/detail',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (req: AuthenticatedRequest, res: Response) => {
+    res.json({
+      success: true,
+      data: { id: req.params.id, name: 'Baylor Scott & White', status: 'Active', tier: 'Enterprise', users: 4, patients: 5280, modules: ['HF','EP','SH','CAD','PV','VD'], location: 'Temple, TX', dataQualityScore: 87 },
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+);
+
+// POST /api/admin/users/invite — invite user (mock)
+router.post('/users/invite',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (req: AuthenticatedRequest, res: Response) => {
+    res.status(201).json({
+      success: true,
+      data: { inviteId: `inv-${Date.now()}`, email: req.body.email, role: req.body.role },
+      message: 'Invitation sent',
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+);
+
+// GET /api/admin/users/:id/activity — user activity detail (mock)
+router.get('/users/:id/activity',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (req: AuthenticatedRequest, res: Response) => {
+    res.json({
+      success: true,
+      data: {
+        userId: req.params.id,
+        loginHistory: [
+          { timestamp: '2026-03-22 08:15:23', ip: '10.0.1.42', success: true },
+          { timestamp: '2026-03-21 17:30:11', ip: '10.0.1.42', success: true },
+          { timestamp: '2026-03-20 09:05:47', ip: '192.168.1.100', success: true },
+          { timestamp: '2026-03-19 08:45:02', ip: '10.0.1.42', success: false },
+          { timestamp: '2026-03-18 14:22:38', ip: '10.0.1.42', success: true },
+        ],
+        recentActions: [
+          { timestamp: '2026-03-22 08:20', action: 'Viewed Dashboard', detail: 'Heart Failure Executive View' },
+          { timestamp: '2026-03-22 08:18', action: 'Exported Report', detail: 'Q1 Gap Analysis PDF' },
+          { timestamp: '2026-03-21 16:45', action: 'Resolved Gap', detail: 'HF-042: LVEF Documentation' },
+          { timestamp: '2026-03-21 15:30', action: 'Viewed Patient', detail: 'Patient ID #4521' },
+          { timestamp: '2026-03-21 14:10', action: 'Updated Alert', detail: 'EP Device Follow-up' },
+          { timestamp: '2026-03-20 11:25', action: 'Viewed Dashboard', detail: 'Structural Heart Service Line' },
+          { timestamp: '2026-03-20 09:15', action: 'Resolved Gap', detail: 'CAD-018: Statin Therapy' },
+          { timestamp: '2026-03-19 16:40', action: 'Exported Report', detail: 'Monthly KPI Summary' },
+        ],
+      },
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+);
+
+// GET /api/admin/config — platform configuration (mock)
+router.get('/config',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (_req: AuthenticatedRequest, res: Response) => {
+    res.json({
+      success: true,
+      data: {
+        moduleConfig: {
+          'hs-001': { hf: true, ep: true, sh: true, cad: true, pv: true, vd: true },
+          'hs-002': { hf: true, ep: true, sh: true, cad: true, pv: true, vd: true },
+          'hs-003': { hf: true, ep: false, sh: true, cad: true, pv: false, vd: false },
+        },
+        featureFlags: { demoMode: false, clinicalTrials: true, registryAssist: true, predictiveLayer: false, mfaEnforcement: true },
+        maintenanceMode: false,
+        rateLimits: {
+          'hs-001': { requestsPerMinute: 120, uploadsPerDay: 10 },
+          'hs-002': { requestsPerMinute: 100, uploadsPerDay: 8 },
+          'hs-003': { requestsPerMinute: 60, uploadsPerDay: 3 },
+        },
+        billing: [
+          { hospitalId: 'hs-001', tier: 'Enterprise', contractStart: '2025-06-01', contractEnd: '2026-05-31', mrr: 42000 },
+          { hospitalId: 'hs-002', tier: 'Standard', contractStart: '2025-09-15', contractEnd: '2026-09-14', mrr: 28000 },
+          { hospitalId: 'hs-003', tier: 'Trial', contractStart: '2026-03-08', contractEnd: '2026-04-07', mrr: 0 },
+        ],
+      },
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+);
+
+// PUT /api/admin/config/modules/:hospitalId
+router.put('/config/modules/:hospitalId',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (req: AuthenticatedRequest, res: Response) => {
+    res.json({ success: true, data: { hospitalId: req.params.hospitalId, modules: req.body }, message: 'Module configuration updated', timestamp: new Date().toISOString() } as APIResponse);
+  }
+);
+
+// PUT /api/admin/config/feature-flags
+router.put('/config/feature-flags',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (req: AuthenticatedRequest, res: Response) => {
+    res.json({ success: true, data: req.body, message: 'Feature flags updated', timestamp: new Date().toISOString() } as APIResponse);
+  }
+);
+
+// PUT /api/admin/config/maintenance
+router.put('/config/maintenance',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (req: AuthenticatedRequest, res: Response) => {
+    res.json({ success: true, data: { maintenanceMode: req.body.enabled, scheduledEnd: req.body.scheduledEnd }, message: req.body.enabled ? 'Maintenance mode activated' : 'Maintenance mode deactivated', timestamp: new Date().toISOString() } as APIResponse);
+  }
+);
+
+// GET /api/admin/audit — audit + security overview (mock)
+router.get('/audit',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (_req: AuthenticatedRequest, res: Response) => {
+    res.json({
+      success: true,
+      data: {
+        securitySummary: { failedLogins: 3, suspiciousIPs: 1, phiRejections: 0 },
+        mfaStatus: { enabled: 7, disabled: 5, total: 12, adoptionRate: 58 },
+        ipAllowlist: ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'],
+      },
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+);
+
+// GET /api/admin/security/failed-logins
+router.get('/security/failed-logins',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (_req: AuthenticatedRequest, res: Response) => {
+    res.json({
+      success: true,
+      data: [
+        { id: 'fl-1', email: 'unknown@external.com', ip: '203.0.113.42', timestamp: '2026-03-22 03:14:22', reason: 'Invalid credentials' },
+        { id: 'fl-2', email: 'sarah.chen@bswhealth.med', ip: '10.0.1.42', timestamp: '2026-03-21 08:45:11', reason: 'Wrong password (1/5)' },
+        { id: 'fl-3', email: 'admin@test.com', ip: '198.51.100.77', timestamp: '2026-03-20 22:30:05', reason: 'Account not found' },
+      ],
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+);
+
+// GET /api/admin/security/active-sessions
+router.get('/security/active-sessions',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (_req: AuthenticatedRequest, res: Response) => {
+    res.json({
+      success: true,
+      data: [
+        { id: 'as-1', user: 'Sarah Chen', hospital: 'BSW', ip: '10.0.1.42', startedAt: '2026-03-22 08:15', lastActivity: '2 min ago' },
+        { id: 'as-2', user: 'James Wilson', hospital: 'Mount Sinai', ip: '172.16.5.88', startedAt: '2026-03-22 08:45', lastActivity: '5 min ago' },
+        { id: 'as-3', user: 'Maria Rodriguez', hospital: 'Memorial Hermann', ip: '192.168.10.12', startedAt: '2026-03-22 06:20', lastActivity: '15 min ago' },
+        { id: 'as-4', user: 'Platform Admin', hospital: 'TAILRD', ip: '10.0.0.1', startedAt: '2026-03-22 09:00', lastActivity: 'Now' },
+      ],
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+);
+
+// GET /api/admin/security/mfa-status
+router.get('/security/mfa-status',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (_req: AuthenticatedRequest, res: Response) => {
+    res.json({
+      success: true,
+      data: { enabled: 7, disabled: 5, total: 12, adoptionRate: 58, byHospital: { BSW: { enabled: 3, total: 4 }, 'Mount Sinai': { enabled: 3, total: 5 }, 'Memorial Hermann': { enabled: 1, total: 3 } } },
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+);
+
+// GET /api/admin/customer-success
+router.get('/customer-success',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (_req: AuthenticatedRequest, res: Response) => {
+    res.json({
+      success: true,
+      data: {
+        platformSummary: { totalGapsIdentified: 10660, totalGapsActioned: 3624, actionRate: 34, estimatedRevenueRecovered: 47200000 },
+        hospitals: [
+          { id: 'hs-001', name: 'Baylor Scott & White', gapClosureRate: 42, avgTimeToAction: '2.3 days', physicianEngagement: '3/4', revenueRecovered: 22400000 },
+          { id: 'hs-002', name: 'Mount Sinai', gapClosureRate: 34, avgTimeToAction: '3.1 days', physicianEngagement: '4/5', revenueRecovered: 18200000 },
+          { id: 'hs-003', name: 'Memorial Hermann', gapClosureRate: 18, avgTimeToAction: '5.7 days', physicianEngagement: '2/3', revenueRecovered: 6600000 },
+        ],
+      },
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+);
+
+// GET /api/admin/data-quality
+router.get('/data-quality',
+  authenticateToken,
+  authorizeRole(['super-admin', 'SUPER_ADMIN']),
+  async (_req: AuthenticatedRequest, res: Response) => {
+    res.json({
+      success: true,
+      data: {
+        hospitals: [
+          { id: 'hs-001', name: 'Baylor Scott & White', abbr: 'BSW', totalPatients: 5280, observations: 42240, gapFlags: 52, storageUsedMB: 2840, lastUpload: '2026-03-22', dataQualityScore: 87 },
+          { id: 'hs-002', name: 'Mount Sinai Health System', abbr: 'MSH', totalPatients: 3540, observations: 28320, gapFlags: 38, storageUsedMB: 1920, lastUpload: '2026-03-21', dataQualityScore: 72 },
+          { id: 'hs-003', name: 'Memorial Hermann', abbr: 'MH', totalPatients: 1840, observations: 11040, gapFlags: 14, storageUsedMB: 680, lastUpload: '2026-03-18', dataQualityScore: 45 },
+        ],
+        fieldCompleteness: [
+          { field: 'LVEF Populated', bsw: 94, msh: 78, mh: 45 },
+          { field: 'Medications', bsw: 91, msh: 65, mh: 38 },
+          { field: 'Lab Results (BNP)', bsw: 88, msh: 71, mh: 42 },
+          { field: 'Procedure Dates', bsw: 96, msh: 82, mh: 55 },
+          { field: 'Device Serial Numbers', bsw: 82, msh: 58, mh: 22 },
+          { field: 'Follow-up Scheduling', bsw: 78, msh: 61, mh: 35 },
+        ],
+        recommendations: [
+          { hospital: 'Memorial Hermann', field: 'Device Serial Numbers', currentRate: 22, suggestion: 'Implement barcode scanning at device implant.' },
+          { hospital: 'Memorial Hermann', field: 'Medications', currentRate: 38, suggestion: 'Enable Redox medication reconciliation feed.' },
+          { hospital: 'Mount Sinai', field: 'Device Serial Numbers', currentRate: 58, suggestion: 'Cross-reference implant registry with device tracking module.' },
+        ],
+      },
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+);
+
 export = router;

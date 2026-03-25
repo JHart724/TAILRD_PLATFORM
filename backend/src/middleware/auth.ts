@@ -5,7 +5,7 @@ import { FULL_ACCESS_PERMISSIONS, MODULE_KEY_MAP } from '../config/rolePermissio
 
 const isDemoMode = process.env.DEMO_MODE === 'true';
 // Startup validation in server.ts ensures JWT_SECRET is set when not in demo mode.
-const JWT_SECRET = process.env.JWT_SECRET || '';
+const JWT_SECRET = process.env.JWT_SECRET!;
 
 interface AuthenticatedRequest extends Request {
   user?: JWTPayload;

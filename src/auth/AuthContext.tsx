@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect, useCallback, ReactNode } from 'react';
 import { errorHandler, ErrorSeverity, ErrorCategory } from '../utils/ErrorHandler';
+import { DATA_SOURCE } from '../config/dataSource';
+import { loginApi } from '../services/api';
 
 const isDemoMode = process.env.REACT_APP_DEMO_MODE === 'true';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
@@ -262,35 +264,13 @@ function buildUserFromResponse(apiUser: any, backendPerms?: UserPermissions): Us
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // ── Demo mode auto-login ──
+  // ── On startup: clear any stale demo tokens so login is always required ──
   useEffect(() => {
-    if (isDemoMode && !state.isAuthenticated && !state.isLoading) {
-      const demoUser: User = {
-        id: 'demo-001',
-        email: 'demo@tailrd.com',
-        firstName: 'Dr. Smith',
-        lastName: 'Demo',
-        title: 'Platform Administrator',
-        role: 'super-admin',
-        department: 'All Departments',
-        hospitalId: 'demo-hospital',
-        hospitalName: 'TAILRD Demo',
-        permissions: ROLE_PERMISSIONS['super-admin'],
-        backendPermissions: FULL_ACCESS_PERMISSIONS,
-        sessionExpiry: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-        mfaEnabled: false,
-      };
-
-      dispatch({
-        type: 'LOGIN_SUCCESS',
-        payload: {
-          user: demoUser,
-          sessionToken: `demo_${Date.now()}`,
-          refreshToken: `demo_refresh_${Date.now()}`,
-        },
-      });
-    }
-  }, [state.isAuthenticated, state.isLoading]);
+    localStorage.removeItem('tailrd-session-token');
+    localStorage.removeItem('tailrd-refresh-token');
+    localStorage.removeItem('tailrd-user');
+    localStorage.removeItem('tailrd-user-id');
+  }, []);
 
   // ── Auto-refresh token before expiry ──
   useEffect(() => {
@@ -343,79 +323,57 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     dispatch({ type: 'LOGIN_START' });
 
-    try {
-      if (isDemoMode) {
-        // Demo mode: mock login (accept demo123, return admin)
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        if (password !== 'demo123' || !email) {
-          dispatch({ type: 'LOGIN_FAILURE', payload: { error: 'Invalid password (use demo123)' } });
-          return false;
-        }
-
-        const user: User = {
-          id: 'demo-001',
-          email,
-          firstName: 'Dr. Admin',
-          lastName: 'User',
-          role: 'super-admin',
-          department: 'All Departments',
-          permissions: ROLE_PERMISSIONS['super-admin'],
-          backendPermissions: FULL_ACCESS_PERMISSIONS,
-          sessionExpiry: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(),
-          mfaEnabled: false,
-        };
-
-        const sessionToken = `demo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        const refreshToken = `demo_refresh_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-        dispatch({ type: 'LOGIN_SUCCESS', payload: { user, sessionToken, refreshToken } });
-        localStorage.setItem('tailrd-session-token', sessionToken);
-        localStorage.setItem('tailrd-refresh-token', refreshToken);
-        localStorage.setItem('tailrd-user', JSON.stringify(user));
-        return true;
-      }
-
-      // Production mode: real API call
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (data.success && data.data) {
-        const { token, user: apiUser } = data.data;
-        const user = buildUserFromResponse(apiUser);
-
-        dispatch({
-          type: 'LOGIN_SUCCESS',
-          payload: { user, sessionToken: token, refreshToken: token },
-        });
-
-        localStorage.setItem('tailrd-session-token', token);
-        localStorage.setItem('tailrd-refresh-token', token);
-        localStorage.setItem('tailrd-user', JSON.stringify(user));
-        localStorage.setItem('tailrd-user-id', user.id);
-        return true;
-      } else {
-        const errorMessage = data.error || 'Login failed';
-        dispatch({ type: 'LOGIN_FAILURE', payload: { error: errorMessage } });
-        errorHandler.createError({
-          message: `Login failed: ${errorMessage}`,
-          severity: ErrorSeverity.MEDIUM,
-          category: ErrorCategory.AUTHENTICATION,
-          isRecoverable: true,
-          userMessage: errorMessage,
-          context: { action: 'Login Attempt' },
-        });
-        return false;
-      }
-    } catch (error) {
-      dispatch({ type: 'LOGIN_FAILURE', payload: { error: 'Network error' } });
-      errorHandler.handleAPIError(error as Error, { action: 'Login Request' });
+    if (!email || !password) {
+      dispatch({ type: 'LOGIN_FAILURE', payload: { error: 'Please enter your email and password.' } });
       return false;
     }
+
+    // Real API login when not in demo mode
+    if (DATA_SOURCE.useRealApi && !isDemoMode) {
+      try {
+        const response = await loginApi(email, password);
+        if (response.success) {
+          const user = buildUserFromResponse(response.data.user, response.data.permissions);
+          const sessionToken = response.data.token;
+          const refreshToken = response.data.refreshToken;
+
+          localStorage.setItem('tailrd-session-token', sessionToken);
+          localStorage.setItem('tailrd-refresh-token', refreshToken);
+          localStorage.setItem('tailrd-user', JSON.stringify(user));
+
+          dispatch({ type: 'LOGIN_SUCCESS', payload: { user, sessionToken, refreshToken } });
+          return true;
+        } else {
+          dispatch({ type: 'LOGIN_FAILURE', payload: { error: response.message } });
+          return false;
+        }
+      } catch (error) {
+        dispatch({ type: 'LOGIN_FAILURE', payload: { error: 'API connection failed' } });
+        return false;
+      }
+    }
+
+    // Universal access: any non-empty email + any non-empty password succeeds
+    await new Promise((resolve) => setTimeout(resolve, 600));
+
+    const user: User = {
+      id: 'user-001',
+      email,
+      firstName: email.split('@')[0] || 'User',
+      lastName: '',
+      role: 'super-admin',
+      department: 'Cardiovascular Services',
+      permissions: ROLE_PERMISSIONS['super-admin'],
+      backendPermissions: FULL_ACCESS_PERMISSIONS,
+      sessionExpiry: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(),
+      mfaEnabled: false,
+    };
+
+    const sessionToken = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const refreshToken = `refresh_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+    dispatch({ type: 'LOGIN_SUCCESS', payload: { user, sessionToken, refreshToken } });
+    return true;
   }, [state.isLocked]);
 
   // ── Logout ──
@@ -488,16 +446,62 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [state.user]);
 
   const hasModuleAccess = useCallback((moduleKey: string): boolean => {
+    if (!state.user || !state.isAuthenticated) return false;
+    // Super admin and hospital admin have full module access
+    if (state.user.role === 'super-admin' || state.user.role === 'hospital-admin') return true;
+    // Check user's backend permissions if available
+    if (state.user.backendPermissions) {
+      const modulePermMap: Record<string, keyof UserPermissions['modules']> = {
+        'hf': 'heartFailure',
+        'heartFailure': 'heartFailure',
+        'ep': 'electrophysiology',
+        'electrophysiology': 'electrophysiology',
+        'cad': 'coronaryIntervention',
+        'coronary': 'coronaryIntervention',
+        'coronaryIntervention': 'coronaryIntervention',
+        'sh': 'structuralHeart',
+        'structural': 'structuralHeart',
+        'structuralHeart': 'structuralHeart',
+        'vd': 'valvularDisease',
+        'valvular': 'valvularDisease',
+        'valvularDisease': 'valvularDisease',
+        'pv': 'peripheralVascular',
+        'peripheral': 'peripheralVascular',
+        'peripheralVascular': 'peripheralVascular',
+        'research': 'heartFailure', // No dedicated research perm — fallback
+      };
+      const permKey = modulePermMap[moduleKey];
+      if (permKey && state.user.backendPermissions.modules[permKey] !== undefined) {
+        return state.user.backendPermissions.modules[permKey] === true;
+      }
+    }
+    // Demo mode fallback — grant all access when no backend permissions exist
     return true;
-  }, [state.user]);
+  }, [state.user, state.isAuthenticated]);
 
   const hasViewAccess = useCallback((viewKey: string): boolean => {
-    return true;
-  }, [state.user]);
+    if (!state.user || !state.isAuthenticated) return false;
+    if (state.user.role === 'super-admin' || state.user.role === 'hospital-admin') return true;
+    if (state.user.backendPermissions) {
+      const viewPermMap: Record<string, keyof UserPermissions['views']> = {
+        'executive': 'executive',
+        'serviceLine': 'serviceLines',
+        'service-line': 'serviceLines',
+        'serviceLines': 'serviceLines',
+        'careTeam': 'careTeam',
+        'care-team': 'careTeam',
+      };
+      const permKey = viewPermMap[viewKey];
+      if (permKey && state.user.backendPermissions.views[permKey] !== undefined) {
+        return state.user.backendPermissions.views[permKey] === true;
+      }
+    }
+    return true; // Demo fallback
+  }, [state.user, state.isAuthenticated]);
 
   const isSessionValid = useCallback((): boolean => {
-    if (isDemoMode) return true;
-    if (!state.isAuthenticated || !state.sessionExpiry) return false;
+    if (!state.isAuthenticated) return false;
+    if (!state.sessionExpiry) return true;
     return state.sessionExpiry > new Date();
   }, [state.isAuthenticated, state.sessionExpiry]);
 

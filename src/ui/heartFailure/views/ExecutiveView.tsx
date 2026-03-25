@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DollarSign, Users, TrendingUp, Target, ChevronRight } from 'lucide-react';
+import { DollarSign, Users, TrendingUp, Target, ChevronRight, Zap, Info, Search } from 'lucide-react';
 import BaseExecutiveView from '../../../components/shared/BaseExecutiveView';
 import KPICard from '../../../components/shared/KPICard';
 import { heartFailureConfig } from '../config/executiveConfig';
@@ -13,6 +13,10 @@ import OpportunityHeatmap from '../components/OpportunityHeatmap';
 import { ExportData } from '../../../utils/dataExport';
 import { toFixed } from '../../../utils/formatters';
 import { HFExecutiveSummary } from '../../../components/heartFailure/HFExecutiveSummary';
+import GapIntelligenceCard from '../../../components/shared/GapIntelligenceCard';
+import PredictiveMetricsBanner from '../../../components/shared/PredictiveMetricsBanner';
+import { RevenuePipelineCard, RevenueAtRiskCard, TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
+import type { RevenuePipelineData, RevenueAtRiskData, TrajectoryTrendsData } from '../../../components/shared/ForwardLookingCards';
 import { HFRevenueWaterfallModal } from '../../../components/heartFailure/HFRevenueWaterfallModal';
 import HFMonthDetailModal from '../../../components/heartFailure/HFMonthDetailModal';
 import HFBenchmarkDetailModal from '../../../components/heartFailure/HFBenchmarkDetailModal';
@@ -203,8 +207,8 @@ const ExecutiveView: React.FC = () => {
   // Generate facility detail data
   const getFacilityData = (facilityName: string) => {
  const facilities: Record<string, any> = {
- 'Mount Sinai Hospital - HF Clinic': {
- facilityName: 'Mount Sinai Hospital - HF Clinic',
+ 'Main Campus - HF Clinic': {
+ facilityName: 'Main Campus - HF Clinic',
  location: '1468 Madison Ave, Manhattan, NY 10029',
  totalRevenue: 2100000, // $2.1M (34%)
  patientCount: 1050,
@@ -224,8 +228,8 @@ const ExecutiveView: React.FC = () => {
  { name: 'Dr. Lisa Wang', patients: 125, gdmtRate: 62, revenueImpact: 148000 }
  ]
  },
- 'Mount Sinai Morningside - HF Clinic': {
- facilityName: 'Mount Sinai Morningside - HF Clinic',
+ 'North Campus - HF Clinic': {
+ facilityName: 'North Campus - HF Clinic',
  location: '1111 Amsterdam Ave, Manhattan, NY 10025',
  totalRevenue: 1600000, // $1.6M (26%)
  patientCount: 820,
@@ -245,8 +249,8 @@ const ExecutiveView: React.FC = () => {
  { name: 'Dr. Kevin Park', patients: 105, gdmtRate: 65, revenueImpact: 125000 }
  ]
  },
- 'Mount Sinai West - HF Center': {
- facilityName: 'Mount Sinai West - HF Center',
+ 'West Campus - HF Center': {
+ facilityName: 'West Campus - HF Center',
  location: '1000 10th Ave, Manhattan, NY 10019',
  totalRevenue: 1800000, // $1.8M (29%)
  patientCount: 950,
@@ -266,8 +270,8 @@ const ExecutiveView: React.FC = () => {
  { name: 'Dr. Rachel Brown', patients: 128, gdmtRate: 70, revenueImpact: 162000 }
  ]
  },
- 'Mount Sinai Brooklyn - HF Unit': {
- facilityName: 'Mount Sinai Brooklyn - HF Unit',
+ 'Community Medical Center - HF Unit': {
+ facilityName: 'Community Medical Center - HF Unit',
  location: '3201 Kings Hwy, Brooklyn, NY 11234',
  totalRevenue: 700000, // $0.7M (11%)
  patientCount: 380,
@@ -455,6 +459,107 @@ const ExecutiveView: React.FC = () => {
  {/* #1: Enhanced Interactive Executive Summary */}
  <HFExecutiveSummary />
 
+ {/* KCCQ Patient-Reported Outcomes Executive Card */}
+ <div className="metal-card relative z-10 mb-6">
+   <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
+     <div className="flex items-center justify-between">
+       <div>
+         <h3 className="text-lg font-semibold text-titanium-900 mb-1">Patient-Reported Outcomes (KCCQ)</h3>
+         <p className="text-sm text-titanium-600">Kansas City Cardiomyopathy Questionnaire &mdash; developed by Dr. John Spertus, Saint Luke&rsquo;s Mid America Heart Institute / UMKC</p>
+       </div>
+       <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-100 rounded-lg px-3 py-1.5">
+         <Zap className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+         <span className="text-xs text-blue-700 font-medium">Auto-calculated from EHR data via Redox</span>
+       </div>
+     </div>
+   </div>
+   <div className="p-6">
+     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+       <div className="bg-white rounded-xl p-4 border border-titanium-200 shadow-sm">
+         <div className="text-sm text-titanium-600 mb-1">Population Mean KCCQ</div>
+         <div className="text-3xl font-bold text-titanium-900">54.2</div>
+         <div className="text-xs text-titanium-500 mt-1">Overall Summary Score</div>
+       </div>
+       <div className="bg-white rounded-xl p-4 border border-red-200 shadow-sm">
+         <div className="text-sm text-titanium-600 mb-1">Below Threshold (&lt;60)</div>
+         <div className="text-3xl font-bold text-red-600">487</div>
+         <div className="text-xs text-red-500 mt-1">Intervention recommended</div>
+       </div>
+       <div className="bg-white rounded-xl p-4 border border-green-200 shadow-sm">
+         <div className="text-sm text-titanium-600 mb-1">Mean Improvement (Actioned)</div>
+         <div className="text-3xl font-bold text-green-600">+14.2</div>
+         <div className="text-xs text-green-500 mt-1">pts at 90 days</div>
+       </div>
+       <div className="bg-white rounded-xl p-4 border border-amber-200 shadow-sm">
+         <div className="text-sm text-titanium-600 mb-1">Showing Decline</div>
+         <div className="text-3xl font-bold text-amber-600">134</div>
+         <div className="text-xs text-amber-500 mt-1">&gt;5 pt drop from prior</div>
+       </div>
+     </div>
+   </div>
+ </div>
+
+ {/* Clinical Gap Intelligence */}
+ <GapIntelligenceCard data={{
+   totalGaps: 23,
+   categories: [
+     { name: 'Therapy', patients: 1200, color: '#3b82f6' },
+     { name: 'Safety', patients: 180, color: '#ef4444' },
+     { name: 'Growth', patients: 420, color: '#8b5cf6' },
+     { name: 'Quality', patients: 850, color: '#f59e0b' },
+   ],
+   topGaps: [
+     { name: 'ATTR-CM Detection', patients: 105, opportunity: '$4.2M' },
+     { name: 'CardioMEMS', patients: 80, opportunity: '$3.8M' },
+     { name: 'Undiagnosed HFpEF', patients: 290, opportunity: '$2.9M' },
+     { name: 'ARNI Underdosing', patients: 340, opportunity: '$2.1M' },
+     { name: 'Cardiac Rehab', patients: 420, opportunity: '$1.8M' },
+   ],
+   safetyAlert: 'CRITICAL: 89 patients \u00b7 HIGH: 91 patients',
+ }} />
+
+ {/* Forward-Looking Executive Cards */}
+ <RevenuePipelineCard data={{
+   quarters: [
+     { quarter: 'Q1 2026', revenue: 2800000, procedures: 23, confidence: 'high' },
+     { quarter: 'Q2 2026', revenue: 2100000, procedures: 18, confidence: 'moderate' },
+     { quarter: 'Q3 2026', revenue: 1600000, procedures: 14, confidence: 'moderate' },
+     { quarter: 'Q4 2026', revenue: 1200000, procedures: 10, confidence: 'low' },
+   ],
+   totalProjected12Month: 7700000,
+ }} />
+ <RevenueAtRiskCard data={{
+   immediatePatients: 89,
+   immediateRevenue: 4200000,
+   deferralRevenue: 2800000,
+   cumulativeRisk12Month: 9100000,
+   deferralCostPerMonth: 700000,
+ }} />
+ <TrajectoryTrendsCard data={{
+   worseningRapidPct: 18,
+   worseningRapidCount: 216,
+   meanDeclineRate: '2.3 pts/month KCCQ',
+   declineMetric: 'HF',
+   thresholdIn30Days: 4,
+   totalFlaggedPatients: 1200,
+   keyInsights: [
+     '89 ATTR-CM patients identified with 7-signal detection -- 23 with rapid cardiac biomarker trajectory',
+     'KCCQ below 45 (hospitalization threshold) projected for 4 patients within 30 days',
+     'CardioMEMS-eligible patients averaging 2.1 hospitalizations/year -- trajectory predicts 3.4/year without intervention',
+   ],
+ }} />
+
+ {/* Predictive Metrics Banner */}
+ <PredictiveMetricsBanner data={{
+   thresholdIn90Days: 47,
+   quarterlyActionableRevenue: 4200000,
+   totalIdentifiedRevenue: 14000000,
+   rapidDeteriorationCount: 216,
+   avgTimeToEvent: 8,
+   projectedRevenueCurrentRate: 5200000,
+   projectedRevenueSystematic: 11200000,
+ }} />
+
  {/* #2: Revenue Opportunity Waterfall */}
  <div className="metal-card relative z-10 mb-6">
  <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
@@ -510,10 +615,10 @@ const ExecutiveView: React.FC = () => {
  <div className="p-6">
  <OpportunityHeatmap 
  data={[
- { site_id: 'Mount Sinai Hospital - HF Clinic', opp_revenue: 2100000, rank: 1 },
- { site_id: 'Mount Sinai West - HF Center', opp_revenue: 1800000, rank: 2 },
- { site_id: 'Mount Sinai Morningside - HF Clinic', opp_revenue: 1600000, rank: 3 },
- { site_id: 'Mount Sinai Brooklyn - HF Unit', opp_revenue: 700000, rank: 4 }
+ { site_id: 'Main Campus - HF Clinic', opp_revenue: 2100000, rank: 1 },
+ { site_id: 'West Campus - HF Center', opp_revenue: 1800000, rank: 2 },
+ { site_id: 'North Campus - HF Clinic', opp_revenue: 1600000, rank: 3 },
+ { site_id: 'Community Medical Center - HF Unit', opp_revenue: 700000, rank: 4 }
  ]}
  onFacilityClick={handleFacilityClick}
  />

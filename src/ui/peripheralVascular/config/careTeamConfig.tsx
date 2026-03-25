@@ -8,6 +8,9 @@ import PADReportingSystem from '../components/PADReportingSystem';
 import PVWoundCareNetworkVisualization from '../components/PVWoundCareNetworkVisualization';
 import WIFIClassificationCalculator from '../../../components/riskCalculators/WIFIClassificationCalculator';
 import { featureFlags } from '../../../config/featureFlags';
+import PVClinicalGapDetectionDashboard from '../components/clinical/PVClinicalGapDetectionDashboard';
+import InterventionContraindicationChecker from '../components/clinical/InterventionContraindicationChecker';
+import PADRiskScoreCalculator from '../components/clinical/PADRiskScoreCalculator';
 
 // Sample PAD patient data
 const padPatients = [
@@ -202,6 +205,12 @@ const PeripheralSafety: React.FC = () => (
  </h3>
  <LimbSalvageScreening />
  </div>
+
+ {/* PAD Risk Score Calculator */}
+ <PADRiskScoreCalculator />
+
+ {/* Intervention Contraindication Checker */}
+ <InterventionContraindicationChecker />
   </div>
 );
 
@@ -470,6 +479,11 @@ const PeripheralDocumentation: React.FC = () => (
   </div>
 );
 
+// PV Clinical Gaps wrapper
+const PVClinicalGaps: React.FC = () => (
+  <PVClinicalGapDetectionDashboard />
+);
+
 // Peripheral Vascular Care Team Tab Configuration
 const peripheralTabs: StandardTabConfig[] = [
   {
@@ -486,19 +500,19 @@ const peripheralTabs: StandardTabConfig[] = [
   },
   {
  id: 'workflow',
- label: 'PAD Optimization',
+ label: 'Workflow',
  icon: Target,
  description: 'PAD workflow optimization'
   },
   {
  id: 'safety',
- label: 'Limb Salvage',
+ label: 'Safety',
  icon: Shield,
- description: 'Limb salvage protocols'
+ description: 'Safety screening and alerts'
   },
   {
  id: 'team',
- label: 'Clinical Collaboration',
+ label: 'Team',
  icon: Users,
  description: 'Clinical consultation and multidisciplinary care'
   },
@@ -507,6 +521,12 @@ const peripheralTabs: StandardTabConfig[] = [
  label: 'Documentation',
  icon: AlertTriangle,
  description: 'Peripheral documentation'
+  },
+  {
+ id: 'clinical-gaps',
+ label: 'Clinical Gaps',
+ icon: AlertTriangle,
+ description: 'Polyvascular dual pathway therapy gap'
   }
 ];
 
@@ -523,6 +543,7 @@ export const peripheralCareTeamConfig: CareTeamViewConfig = {
  workflow: PeripheralWorkflow,
  safety: PeripheralSafety,
  team: PeripheralClinicalCollaboration,
- documentation: PeripheralDocumentation
+ documentation: PeripheralDocumentation,
+ 'clinical-gaps': PVClinicalGaps
   }
 };

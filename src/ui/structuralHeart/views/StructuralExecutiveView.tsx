@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DollarSign, Users, TrendingUp, Target, ChevronRight } from 'lucide-react';
+import { DollarSign, Users, TrendingUp, Target, ChevronRight, Zap, Search } from 'lucide-react';
 import BaseExecutiveView from '../../../components/shared/BaseExecutiveView';
 import KPICard from '../../../components/shared/KPICard';
 import ExportButton from '../../../components/shared/ExportButton';
@@ -18,6 +18,10 @@ import SHDRGDetailModal from '../components/SHDRGDetailModal';
 import { modulesClinicalData } from '../../../config/allModulesClinicalData';
 import { getOrdinalSuffix, formatMillions, toFixed, roundTo } from '../../../utils/formatters';
 import BaseDetailModal from '../../../components/shared/BaseDetailModal';
+import GapIntelligenceCard from '../../../components/shared/GapIntelligenceCard';
+import PredictiveMetricsBanner from '../../../components/shared/PredictiveMetricsBanner';
+import { RevenuePipelineCard, RevenueAtRiskCard, TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
+import type { RevenuePipelineData, RevenueAtRiskData, TrajectoryTrendsData } from '../../../components/shared/ForwardLookingCards';
 import { Heart } from 'lucide-react';
 
 // Get structural heart data
@@ -174,6 +178,84 @@ const StructuralExecutiveView: React.FC = () => {
 
 	// Fallback structural heart specific benchmarks
 	const benchmarkDetails: Record<string, any> = {
+	'Quadruple Therapy Rate': {
+	benchmarkName: 'Quadruple Therapy Rate',
+	description: 'Percentage of eligible HF patients on all 4 GDMT pillars (ARNI/ACEi/ARB + BB + MRA + SGLT2i)',
+	ourValue: 68,
+	nationalValue: 52,
+	percentile: 78,
+	unit: '%',
+	trendData: [
+	{ month: 'Jun', value: 58 }, { month: 'Jul', value: 60 }, { month: 'Aug', value: 62 },
+	{ month: 'Sep', value: 64 }, { month: 'Oct', value: 66 }, { month: 'Nov', value: 68 }
+	],
+	comparisonData: { top10: 82, top25: 72, top50: 60, national: 52 }
+	},
+	'TAVR Utilization': {
+	benchmarkName: 'TAVR Utilization',
+	description: 'Percentage of severe AS patients evaluated and treated with transcatheter aortic valve replacement',
+	ourValue: 45,
+	nationalValue: 38,
+	percentile: 72,
+	unit: '%',
+	trendData: [
+	{ month: 'Jun', value: 38 }, { month: 'Jul', value: 39 }, { month: 'Aug', value: 41 },
+	{ month: 'Sep', value: 42 }, { month: 'Oct', value: 44 }, { month: 'Nov', value: 45 }
+	],
+	comparisonData: { top10: 58, top25: 50, top50: 42, national: 38 }
+	},
+	'Target Dose Medical Management': {
+	benchmarkName: 'Target Dose Medical Management',
+	description: 'Percentage of structural heart patients on guideline-directed target doses of medical therapy',
+	ourValue: 71,
+	nationalValue: 65,
+	percentile: 68,
+	unit: '%',
+	trendData: [
+	{ month: 'Jun', value: 65 }, { month: 'Jul', value: 66 }, { month: 'Aug', value: 68 },
+	{ month: 'Sep', value: 69 }, { month: 'Oct', value: 70 }, { month: 'Nov', value: 71 }
+	],
+	comparisonData: { top10: 82, top25: 76, top50: 69, national: 65 }
+	},
+	'TAVR Referral Adoption': {
+	benchmarkName: 'TAVR Referral Adoption',
+	description: 'Percentage of eligible patients referred for TAVR evaluation from cardiology and primary care',
+	ourValue: 64,
+	nationalValue: 48,
+	percentile: 82,
+	unit: '%',
+	trendData: [
+	{ month: 'Jun', value: 52 }, { month: 'Jul', value: 55 }, { month: 'Aug', value: 58 },
+	{ month: 'Sep', value: 60 }, { month: 'Oct', value: 62 }, { month: 'Nov', value: 64 }
+	],
+	comparisonData: { top10: 78, top25: 68, top50: 55, national: 48 }
+	},
+	'30-Day Readmission': {
+	benchmarkName: '30-Day Readmission',
+	description: 'Percentage of structural heart patients readmitted within 30 days of discharge',
+	ourValue: 18,
+	nationalValue: 23,
+	percentile: 71,
+	unit: '%',
+	trendData: [
+	{ month: 'Jun', value: 22 }, { month: 'Jul', value: 21 }, { month: 'Aug', value: 20 },
+	{ month: 'Sep', value: 19 }, { month: 'Oct', value: 18 }, { month: 'Nov', value: 18 }
+	],
+	comparisonData: { top10: 12, top25: 15, top50: 20, national: 23 }
+	},
+	'Phenotype Detection Rate': {
+	benchmarkName: 'Phenotype Detection Rate',
+	description: 'Percentage of structural heart patients with identified specific phenotypes (amyloid, bicuspid, etc.)',
+	ourValue: 12,
+	nationalValue: 8,
+	percentile: 85,
+	unit: '%',
+	trendData: [
+	{ month: 'Jun', value: 8 }, { month: 'Jul', value: 9 }, { month: 'Aug', value: 10 },
+	{ month: 'Sep', value: 10 }, { month: 'Oct', value: 11 }, { month: 'Nov', value: 12 }
+	],
+	comparisonData: { top10: 18, top25: 14, top50: 10, national: 8 }
+	},
 	'TAVR 30-Day Mortality': {
 	benchmarkName: 'TAVR 30-Day Mortality',
 	description: '30-day all-cause mortality post-TAVR',
@@ -193,7 +275,7 @@ const StructuralExecutiveView: React.FC = () => {
 	},
 	'MitraClip Technical Success': {
 	benchmarkName: 'MitraClip Technical Success',
-	description: 'MR reduction to ≤2+ post-procedure',
+	description: 'MR reduction to <=2+ post-procedure',
 	ourValue: 96,
 	nationalValue: 92,
 	percentile: 83,
@@ -404,6 +486,67 @@ const StructuralExecutiveView: React.FC = () => {
 	className="shadow-lg hover:shadow-xl transition-all duration-300"
 	/>
 	</div>
+
+	{/* Clinical Gap Intelligence */}
+	<GapIntelligenceCard data={{
+	  totalGaps: 8,
+	  categories: [
+	    { name: 'Therapy', patients: 180, color: '#3b82f6' },
+	    { name: 'Safety', patients: 90, color: '#ef4444' },
+	    { name: 'Growth', patients: 220, color: '#8b5cf6' },
+	    { name: 'Quality', patients: 340, color: '#f59e0b' },
+	  ],
+	  topGaps: [
+	    { name: 'Severe AS Heart Team', patients: 124, opportunity: '$3.2M' },
+	    { name: 'Moderate AS Surveillance', patients: 134, opportunity: '$1.8M' },
+	    { name: 'Post-TAVR Echo', patients: 156, opportunity: '$1.4M' },
+	    { name: 'BAV Aortopathy', patients: 56, opportunity: '$1.2M' },
+	    { name: 'ATTR+AS Co-Detection', patients: 45, opportunity: '$980K' },
+	  ],
+	  safetyAlert: 'CRITICAL: 28 patients \u00b7 HIGH: 62 patients',
+	}} />
+
+	{/* Forward-Looking Executive Cards */}
+	<RevenuePipelineCard data={{
+	  quarters: [
+	    { quarter: 'Q1 2026', revenue: 4100000, procedures: 18, confidence: 'high' },
+	    { quarter: 'Q2 2026', revenue: 3000000, procedures: 13, confidence: 'moderate' },
+	    { quarter: 'Q3 2026', revenue: 2200000, procedures: 10, confidence: 'moderate' },
+	    { quarter: 'Q4 2026', revenue: 1600000, procedures: 7, confidence: 'low' },
+	  ],
+	  totalProjected12Month: 10900000,
+	}} />
+	<RevenueAtRiskCard data={{
+	  immediatePatients: 28,
+	  immediateRevenue: 3200000,
+	  deferralRevenue: 1800000,
+	  cumulativeRisk12Month: 6200000,
+	  deferralCostPerMonth: 530000,
+	}} />
+	<TrajectoryTrendsCard data={{
+	  worseningRapidPct: 20,
+	  worseningRapidCount: 166,
+	  meanDeclineRate: '0.18 m/s/year Vmax progression',
+	  declineMetric: 'SH',
+	  thresholdIn30Days: 5,
+	  totalFlaggedPatients: 830,
+	  keyInsights: [
+	    '28 patients with rapid AS progression (>0.2 m/s/year) -- projected severe threshold within 12 months',
+	    '134 moderate AS patients under surveillance -- 23 projected to reach severe threshold this year',
+	    'BAV aortopathy: 8 patients with growth rate >0.4cm/year approaching surgical threshold',
+	  ],
+	}} />
+
+	{/* Predictive Metrics Banner */}
+	<PredictiveMetricsBanner data={{
+	  thresholdIn90Days: 28,
+	  quarterlyActionableRevenue: 3200000,
+	  totalIdentifiedRevenue: 10900000,
+	  rapidDeteriorationCount: 90,
+	  avgTimeToEvent: 11,
+	  projectedRevenueCurrentRate: 3600000,
+	  projectedRevenueSystematic: 8400000,
+	}} />
 
 	{/* #2: Revenue Opportunity Waterfall */}
 	<div className="metal-card relative z-10 mb-6">

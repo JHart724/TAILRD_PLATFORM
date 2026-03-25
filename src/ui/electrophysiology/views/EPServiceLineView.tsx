@@ -1,28 +1,25 @@
 import React, { useState } from 'react';
-import { Zap, Target, Grid3X3, BarChart3, Users, Activity, Heart, Shield, Network, Brain, Award, DollarSign, FileText, TrendingUp, PieChart, Table2 } from 'lucide-react';
+import { Zap, Target, Grid3X3, BarChart3, Users, Activity, Heart, Shield, Network, Award, FileText, TrendingUp, PieChart, Search } from 'lucide-react';
 import ExportButton from '../../../components/shared/ExportButton';
 
 // Import EP components
 import EPAutomatedClinicalSupport from '../components/EPAutomatedClinicalSupport';
-import EPROICalculator from '../components/EPROICalculator';
 import EPDeviceNetworkVisualization from '../components/EPDeviceNetworkVisualization';
-import EPClinicalDecisionSupport from '../components/EPClinicalDecisionSupport';
 import AnticoagulationSafetyChecker from '../components/AnticoagulationSafetyChecker';
 import LAACRiskDashboard from '../components/LAACRiskDashboard';
-import PatientDetailPanel from '../components/PatientDetailPanel';
-
-// Import new Service Line components
-import EPGapAnalysisPanel from '../components/service-line/EPGapAnalysisPanel';
 import EPPhysicianPerformanceHeatmap from '../components/service-line/EPPhysicianPerformanceHeatmap';
 import EPEquityAnalysis from '../components/service-line/EPEquityAnalysis';
 import EPOutcomesByCohort from '../components/service-line/EPOutcomesByCohort';
-import EPPatientPanelTable from '../components/service-line/EPPatientPanelTable';
 
 // Import shared components
 import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHeatmap';
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
 import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
 
+import EPClinicalGapDetectionDashboard from '../components/clinical/EPClinicalGapDetectionDashboard';
+import EPPhenotypeDetectionChart from '../components/EPPhenotypeDetectionChart';
+import EPOutcomesTrends from '../components/executive/EPOutcomesTrends';
+import EPRiskStratification from '../components/executive/EPRiskStratification';
 import { electrophysiologyServiceLineConfig } from '../config/serviceLineConfig';
 
 // Electrophysiology Analytics Dashboard
@@ -170,52 +167,80 @@ const EPQualityMetrics: React.FC = () => (
   </div>
 );
 
-type EPServiceLineTab = 
+type EPServiceLineTab =
   | 'analytics'
-  | 'heatmap' 
+  | 'heatmap'
   | 'procedures'
   | 'providers'
+  | 'physician-heatmap'
+  | 'gap-detection'
+  | 'outcomes-trends'
+  | 'risk-stratification'
+  | 'phenotype-detection'
   | 'arrhythmia'
   | 'laac-risk'
-  | 'patient-details'
   | 'safety'
+  | 'automated-support'
   | 'device-network'
   | 'network'
-  | 'clinical-support'
-  | 'automated-support'
   | 'quality'
-  | 'roi-calculator'
-  | 'reporting'
-  | 'gap-analysis'
-  | 'physician-heatmap'
   | 'equity-analysis'
   | 'outcomes-cohort'
-  | 'patient-panel';
+  | 'reporting';
+
+interface TabGroup {
+  label: string;
+  tabs: Array<{ id: string; label: string; icon: React.ElementType; description: string }>;
+}
 
 const EPServiceLineView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<EPServiceLineTab>('analytics');
 
-  const tabs = [
+  const tabGroups: TabGroup[] = [
+ {
+ label: 'Clinical Analytics',
+ tabs: [
  { id: 'analytics', label: 'EP Analytics', icon: Target, description: 'Comprehensive electrophysiology analytics dashboard' },
  { id: 'heatmap', label: 'Patient Risk Heatmap', icon: Grid3X3, description: 'EP patient risk visualization matrix' },
  { id: 'procedures', label: 'Procedure Analytics', icon: BarChart3, description: 'AFib ablation, LAAC, and device procedure metrics' },
  { id: 'providers', label: 'Provider Performance', icon: Users, description: 'Electrophysiologist performance metrics and outcomes' },
+ { id: 'physician-heatmap', label: 'Provider Heatmap', icon: TrendingUp, description: 'EP physician performance visualization matrix' },
+ ],
+ },
+ {
+ label: 'Gap & Opportunity',
+ tabs: [
+ { id: 'gap-detection', label: 'Gap Detection (21-Gap)', icon: Search, description: 'AI-driven EP clinical gap detection' },
+ { id: 'outcomes-trends', label: 'Outcomes Trends', icon: TrendingUp, description: 'EP outcomes trends and longitudinal analysis' },
+ { id: 'risk-stratification', label: 'Risk Stratification', icon: Target, description: 'EP patient risk stratification dashboard' },
+ { id: 'phenotype-detection', label: 'Phenotype Detection', icon: Search, description: 'EP phenotype prevalence and detection rates' },
+ ],
+ },
+ {
+ label: 'Clinical Tools',
+ tabs: [
  { id: 'arrhythmia', label: 'Arrhythmia Management', icon: Activity, description: 'Comprehensive arrhythmia treatment optimization' },
  { id: 'laac-risk', label: 'LAAC Risk Dashboard', icon: Heart, description: 'Left atrial appendage closure risk assessment' },
- { id: 'patient-details', label: 'Patient Detail Panel', icon: Users, description: 'Individual patient EP assessment and tracking' },
  { id: 'safety', label: 'Safety Screening', icon: Shield, description: 'Anticoagulation safety and contraindication screening' },
+ { id: 'automated-support', label: 'Clinical Automation', icon: Zap, description: 'Automated EP clinical support and recommendations' },
+ ],
+ },
+ {
+ label: 'Care Coordination',
+ tabs: [
  { id: 'device-network', label: 'Device Network', icon: Network, description: 'EP device utilization and network analysis' },
  { id: 'network', label: 'Care Team Network', icon: Network, description: 'EP care team collaboration and referral patterns' },
- { id: 'clinical-support', label: 'Clinical Decision Support', icon: Brain, description: 'AI-powered EP clinical decision support tools' },
- { id: 'automated-support', label: 'Automated Support', icon: Zap, description: 'Automated EP clinical support and recommendations' },
+ ],
+ },
+ {
+ label: 'Outcomes & Reporting',
+ tabs: [
  { id: 'quality', label: 'Quality Metrics', icon: Award, description: 'EP quality indicators and outcome measures' },
- { id: 'roi-calculator', label: 'ROI Calculator', icon: DollarSign, description: 'EP program financial impact and ROI calculator' },
- { id: 'reporting', label: 'Automated Reports', icon: FileText, description: 'Scheduled reporting and data exports' },
- { id: 'gap-analysis', label: 'Gap Analysis', icon: Target, description: 'EP treatment gap identification and prioritization' },
- { id: 'physician-heatmap', label: 'Physician Heatmap', icon: TrendingUp, description: 'EP physician performance visualization matrix' },
  { id: 'equity-analysis', label: 'Equity Analysis', icon: PieChart, description: 'Health equity analysis across patient demographics' },
  { id: 'outcomes-cohort', label: 'Outcomes by Cohort', icon: BarChart3, description: 'Clinical outcomes comparison by patient cohorts' },
- { id: 'patient-panel', label: 'Patient Panel', icon: Table2, description: 'Comprehensive EP patient database and management' }
+ { id: 'reporting', label: 'Automated Reports', icon: FileText, description: 'Scheduled reporting and data exports' },
+ ],
+ },
   ];
 
   const renderTabContent = () => {
@@ -226,42 +251,26 @@ const EPServiceLineView: React.FC = () => {
  case 'providers': return <EPProviderPerformance />;
  case 'arrhythmia': return <ArrhythmiaManagement />;
  case 'laac-risk': return <LAACRiskDashboard />;
- case 'patient-details': return <PatientDetailPanel patient={{
- id: '001',
- name: 'Demo Patient',
- mrn: 'MRN123456',
- age: 65,
- gender: 'M',
- rhythm: 'AFib',
- device: 'ICD',
- lastEP: '2024-01-15',
- nextAppt: '2024-03-15',
- riskLevel: 'medium',
- alerts: ['Device check due'],
- provider: 'Dr. Smith',
- priority: 'medium',
- actionItems: []
- }} onClose={() => {}} />;
  case 'safety': return <AnticoagulationSafetyChecker />;
  case 'device-network': return <EPDeviceNetworkVisualization />;
  case 'network': return <CareTeamNetworkGraph />;
- case 'clinical-support': return <EPClinicalDecisionSupport />;
  case 'automated-support': return <EPAutomatedClinicalSupport />;
  case 'quality': return <EPQualityMetrics />;
- case 'roi-calculator': return <EPROICalculator />;
  case 'reporting': return <AutomatedReportingSystem />;
- case 'gap-analysis': return <EPGapAnalysisPanel />;
  case 'physician-heatmap': return <EPPhysicianPerformanceHeatmap />;
  case 'equity-analysis': return <EPEquityAnalysis />;
  case 'outcomes-cohort': return <EPOutcomesByCohort />;
- case 'patient-panel': return <EPPatientPanelTable />;
+ case 'gap-detection': return <EPClinicalGapDetectionDashboard />;
+ case 'phenotype-detection': return <EPPhenotypeDetectionChart />;
+ case 'outcomes-trends': return <EPOutcomesTrends />;
+ case 'risk-stratification': return <EPRiskStratification />;
  default: return <ElectrophysiologyAnalytics />;
  }
   };
 
   return (
  <div className="min-h-screen p-6 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #EAEFF4 0%, #F2F5F8 50%, #ECF0F4 100%)' }}>
- 
+
  <div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
  {/* Export Action */}
  <div className="flex justify-end">
@@ -278,13 +287,18 @@ const EPServiceLineView: React.FC = () => {
  />
  </div>
 
- {/* Tab Navigation - Grid layout for 20 tabs */}
+ {/* Tab Navigation — Grouped */}
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6 shadow-xl">
- <div className="grid grid-cols-3 lg:grid-cols-5 xl:grid-cols-10 2xl:grid-cols-20 gap-4">
- {tabs.map((tab) => {
+ {tabGroups.map((group, groupIdx) => (
+ <div key={group.label}>
+ {groupIdx > 0 && <div className="border-t border-titanium-100 my-4" />}
+ <div className="mb-3">
+ <span className="text-xs font-semibold uppercase tracking-wider text-titanium-400">{group.label}</span>
+ </div>
+ <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6 gap-3 mb-2">
+ {group.tabs.map((tab) => {
  const Icon = tab.icon;
  const isActive = activeTab === tab.id;
- 
  return (
  <button
  key={tab.id}
@@ -297,7 +311,7 @@ const EPServiceLineView: React.FC = () => {
  >
  <div className="flex flex-col items-center gap-2">
  <Icon className={`w-6 h-6 ${isActive ? 'text-medical-green-600' : 'text-titanium-600 group-hover:text-titanium-800'}`} />
- <span className={`text-sm font-semibold ${isActive ? 'text-medical-green-600' : 'text-titanium-600 group-hover:text-titanium-800'}`}>
+ <span className={`text-xs font-semibold text-center leading-tight ${isActive ? 'text-medical-green-600' : 'text-titanium-600 group-hover:text-titanium-800'}`}>
  {tab.label}
  </span>
  </div>
@@ -308,6 +322,8 @@ const EPServiceLineView: React.FC = () => {
  );
  })}
  </div>
+ </div>
+ ))}
  </div>
 
  {/* Tab Content */}

@@ -1,17 +1,18 @@
 import React from 'react';
 import { Zap, BarChart3, Brain, Shield, ArrowRight } from 'lucide-react';
+import { PLATFORM_TOTALS, formatDollars, formatPatients } from '../../../data/platformTotals';
 
 const PremiumUnlock: React.FC = () => {
   const features = [
     {
       icon: Zap,
       title: 'EHR Integration',
-      description: 'Verify your $11.2M estimate with real patient data — replace CMS benchmarks with your actual population',
+      description: `Verify your ${formatDollars(PLATFORM_TOTALS.modules.hf.opportunity)} estimate with real patient data — replace CMS benchmarks with your actual population`,
     },
     {
       icon: Brain,
       title: 'Patient-Level AI',
-      description: 'See the 571 patients behind every gap by name, risk score, PCP, and last contact date',
+      description: `See the ${formatPatients(PLATFORM_TOTALS.modules.hf.patients)} patients behind every gap by name, risk score, PCP, and last contact date`,
     },
     {
       icon: BarChart3,
@@ -42,18 +43,18 @@ const PremiumUnlock: React.FC = () => {
               <span className="text-xs font-body font-semibold text-amber-300 uppercase tracking-wider">TAILRD PREMIUM</span>
             </div>
             <h2 className="text-2xl md:text-3xl font-display font-bold mb-2" style={{ color: '#ffffff', textShadow: '0 0 20px rgba(180,210,240,0.25), 0 1px 0 rgba(0,0,0,0.4)', fontWeight: 600, letterSpacing: '-0.3px' }}>
-              You have $11.2M in identified opportunity — act on it
+              You have {formatDollars(PLATFORM_TOTALS.modules.hf.opportunity)} in identified opportunity — act on it
             </h2>
             <p className="font-body max-w-lg" style={{ color: 'rgba(200,220,240,0.75)', fontSize: '13px', fontWeight: 400, lineHeight: 1.5 }}>
-              571 patients need intervention today. Connect your EHR to see exactly who, and put your care team in motion.
+              {formatPatients(PLATFORM_TOTALS.modules.hf.patients)} patients need intervention today. Connect your EHR to see exactly who, and put your care team in motion.
             </p>
           </div>
           <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3">
-            <button className="inline-flex items-center gap-2 px-8 py-3.5 text-white font-body font-bold text-base rounded-xl transition-all duration-200 hover:-translate-y-0.5" style={{ background: 'linear-gradient(145deg, #8C1F32 0%, #9B2438 40%, #7A1A2E 100%)', boxShadow: '0 1px 4px rgba(0,0,0,0.2), 0 1px 0 rgba(255,255,255,0.14) inset', border: 'none' }}>
+            <button type="button" className="inline-flex items-center gap-2 px-8 py-3.5 text-white font-body font-bold text-base rounded-xl transition-all duration-200 hover:-translate-y-0.5" style={{ background: 'linear-gradient(145deg, #8C1F32 0%, #9B2438 40%, #7A1A2E 100%)', boxShadow: '0 1px 4px rgba(0,0,0,0.2), 0 1px 0 rgba(255,255,255,0.14) inset', border: 'none' }}>
               Connect EHR &amp; See Your Patients →
               <ArrowRight className="w-5 h-5" />
             </button>
-            <button className="inline-flex items-center gap-2 px-8 py-3.5 font-body font-semibold text-base rounded-xl transition-all duration-200 hover:bg-white/10" style={{ border: '1px solid rgba(255,255,255,0.25)', color: 'rgba(220,235,250,0.85)', background: 'transparent' }}>
+            <button type="button" className="inline-flex items-center gap-2 px-8 py-3.5 font-body font-semibold text-base rounded-xl transition-all duration-200 hover:bg-white/10" style={{ border: '1px solid rgba(255,255,255,0.25)', color: 'rgba(220,235,250,0.85)', background: 'transparent' }}>
               Book a 20-Minute Demo
             </button>
           </div>

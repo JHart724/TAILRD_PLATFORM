@@ -109,13 +109,14 @@ const ModuleLayout: React.FC<ModuleLayoutProps> = ({
   };
 
   return (
- <div className="min-h-full">
- {/* Chrome-styled view tabs — sticky */}
+ <div className="-mt-6 min-h-full">
+ {/* Chrome-styled view tabs — sticky, flush against TopBar */}
  <nav className="px-6 py-2 sticky z-20" style={{ top: '3.5rem', background: 'linear-gradient(180deg, rgba(249,251,254,0.95) 0%, rgba(245,247,249,0.92) 100%)', borderBottom: '1px solid rgba(180,200,215,0.20)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}>
  <div className="max-w-[1800px] mx-auto">
  <div className="tab-switcher flex gap-1">
  {filteredViews.map((view) => (
  <button
+ type="button"
  key={view.id}
  onClick={() => handleViewChange(view.id)}
  className={`flex items-center gap-2 py-2.5 px-5 text-sm transition-all duration-200 rounded-md ${
@@ -132,8 +133,8 @@ const ModuleLayout: React.FC<ModuleLayoutProps> = ({
  </div>
  </nav>
 
- {/* Main Content */}
- <main className="relative">
+ {/* Main Content — pt-6 restores the padding cancelled by -mt-6 on the wrapper */}
+ <main className="relative pt-6">
  {renderActiveView()}
  </main>
  </div>

@@ -71,7 +71,7 @@ const INSIGHTS: InsightCard[] = [
   },
   {
     category: 'Market',
-    categoryStyle: 'bg-violet-100 text-violet-700',
+    categoryStyle: 'bg-slate-100 text-slate-700',
     count: '34%',
     title: 'Referral Leakage Rate',
     description:
@@ -114,7 +114,7 @@ const carmonaGradient: React.CSSProperties = {
 };
 
 const AIPoweredBadge: React.FC = () => (
-  <span className="bg-violet-100 text-violet-700 text-xs font-medium px-2 py-0.5 rounded-full flex items-center gap-1">
+  <span className="bg-slate-100 text-slate-700 text-xs font-medium px-2 py-0.5 rounded-full flex items-center gap-1">
     <Sparkles className="w-3 h-3" />
     AI Powered
   </span>

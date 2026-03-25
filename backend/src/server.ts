@@ -5,7 +5,10 @@ import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import { config } from 'dotenv';
 import { createLogger, format, transports } from 'winston';
+import { PrismaClient } from '@prisma/client';
 import { APIResponse } from './types';
+
+const prisma = new PrismaClient();
 import { analyticsMiddleware } from './middleware/analytics';
 import { csrfCookieSetter, csrfProtection, csrfTokenEndpoint } from './middleware/csrfProtection';
 import { loginRateLimit } from './middleware/authRateLimit';
@@ -81,10 +84,15 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
+const allowedOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',').map(o => o.trim())
+  : (process.env.NODE_ENV === 'production'
+    ? [process.env.FRONTEND_URL || '']
+    : ['http://localhost:3000', 'http://localhost:5173']);
+
 const corsOptions = {
-  origin: function (origin: string | undefined, callback: Function) {
-    const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000'];
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -155,18 +163,27 @@ app.get('/health', (req, res) => {
   } as APIResponse);
 });
 
-app.get('/api/status', (req, res) => {
-  res.status(200).json({
-    success: true,
-    data: {
-      server: 'online',
-      database: 'connected',
-      redis: 'connected',
-      redox: 'configured',
-      timestamp: new Date().toISOString()
-    },
-    message: 'All systems operational'
-  } as APIResponse);
+app.get('/api/status', async (req, res) => {
+  const checks: Record<string, string> = {};
+
+  // Database check
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    checks.database = 'connected';
+  } catch {
+    checks.database = 'disconnected';
+  }
+
+  // Redis check
+  checks.redis = 'not_configured';
+
+  const allHealthy = Object.values(checks).every(v => v === 'connected' || v === 'not_configured');
+  res.status(allHealthy ? 200 : 503).json({
+    status: allHealthy ? 'healthy' : 'degraded',
+    services: checks,
+    timestamp: new Date().toISOString(),
+    version: process.env.npm_package_version || '1.0.0',
+  });
 });
 
 // CSRF token endpoint (SPA calls this to get a token before mutations)
@@ -193,6 +210,11 @@ app.use('/api/data-requests', require('./routes/dataRequests'));
 app.use('/api/breach-incidents', require('./routes/breachNotification'));
 app.use('/api/audit', require('./routes/auditExport'));
 app.use('/api/files', require('./routes/files'));
+app.use('/api/data', require('./routes/upload'));
+app.use('/api/platform', require('./routes/platform').default);
+app.use('/api/gaps', require('./routes/gaps').default);
+app.use('/api/users', require('./routes/invite').default);
+app.use('/api/mfa', require('./routes/mfa').default);
 
 app.use('*', (req, res) => {
   res.status(404).json({

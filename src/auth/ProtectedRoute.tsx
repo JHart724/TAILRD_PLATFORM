@@ -30,8 +30,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const { state, hasPermission, hasModuleAccess, hasViewAccess, isSessionValid, isDemoMode } = useAuth();
   const location = useLocation();
 
-  // Loading state — also covers demo mode before auto-login useEffect fires
-  if (state.isLoading || (isDemoMode && !state.isAuthenticated)) {
+  // Loading state
+  if (state.isLoading) {
     return (
       <div className="min-h-screen app-surface flex items-center justify-center">
         <div className="text-center">

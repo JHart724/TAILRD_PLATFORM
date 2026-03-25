@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DEMO_PATIENT_CONTEXT } from '../../../types/shared';
+import { DEMO_PATIENT_CONTEXT, DEMO_PATIENT_ROSTER } from '../../../types/shared';
 import { Users, Calendar, AlertTriangle, Clock, Heart, Shield, Activity, FileText, Download, UserCheck, Stethoscope } from 'lucide-react';
 
 // Import Heart Failure Care Team components
@@ -15,12 +15,20 @@ import GDMTContraindicationChecker from '../components/clinical/GDMTContraindica
 import MAGGICScoreCalculator from '../components/clinical/MAGGICScoreCalculator';
 import SpecialtyPhenotypesDashboard from '../components/clinical/SpecialtyPhenotypesDashboard';
 import AdvancedDeviceTracker from '../components/clinical/AdvancedDeviceTracker';
+import ClinicalGapDetectionDashboard from '../components/clinical/ClinicalGapDetectionDashboard';
+import MAGGICCalculator from '../../../components/riskCalculators/MAGGICCalculator';
+import INTERMACSCalculator from '../../../components/riskCalculators/INTERMACSCalculator';
+import AmyloidosisScreener from '../../../components/phenotypeDetection/AmyloidosisScreener';
+import PhenotypeScreeningPanel from '../../../components/phenotypeDetection/PhenotypeScreeningPanel';
 
 // Clinical Intelligence sub-tab panel
 const ClinicalToolsPanel: React.FC<{ activeToolTab?: string; onToolTabChange?: (tab: string) => void }> = ({ activeToolTab: externalToolTab, onToolTabChange }) => {
   const [internalToolTab, setInternalToolTab] = useState('phenotype');
+  const [selectedPatientIdx, setSelectedPatientIdx] = useState(0);
   const activeToolTab = externalToolTab || internalToolTab;
   const setActiveToolTab = (tab: string) => { setInternalToolTab(tab); onToolTabChange?.(tab); };
+
+  const selectedPatient = DEMO_PATIENT_ROSTER[selectedPatientIdx]?.context || DEMO_PATIENT_CONTEXT;
 
   const tools = [
  { id: 'phenotype', label: 'HF Phenotype Classification', component: HFPhenotypeClassification },
@@ -28,6 +36,10 @@ const ClinicalToolsPanel: React.FC<{ activeToolTab?: string; onToolTabChange?: (
  { id: 'contraindication', label: 'GDMT Contraindications', component: GDMTContraindicationChecker },
  { id: 'phenotypes-dashboard', label: 'Specialty Phenotypes', component: SpecialtyPhenotypesDashboard },
  { id: 'devices', label: 'Device Tracker', component: AdvancedDeviceTracker },
+ { id: 'maggic-standalone', label: 'MAGGIC Calculator', component: MAGGICCalculator },
+ { id: 'intermacs', label: 'INTERMACS Profile', component: INTERMACSCalculator },
+ { id: 'amyloidosis', label: 'Amyloidosis Screener', component: AmyloidosisScreener },
+ { id: 'phenotype-screening', label: 'Phenotype Screening', component: PhenotypeScreeningPanel },
   ];
 
   const ActiveTool = tools.find(t => t.id === activeToolTab)?.component;
@@ -35,10 +47,24 @@ const ClinicalToolsPanel: React.FC<{ activeToolTab?: string; onToolTabChange?: (
   return (
  <div className="space-y-6">
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
- <h3 className="text-xl font-bold text-titanium-900 mb-4 flex items-center gap-2">
+ <div className="flex items-center justify-between mb-4">
+ <h3 className="text-xl font-bold text-titanium-900 flex items-center gap-2">
  <Stethoscope className="w-6 h-6 text-porsche-600" />
  Clinical Intelligence Tools
  </h3>
+ <div className="flex items-center gap-2">
+ <Users className="w-4 h-4 text-titanium-500" />
+ <select
+ value={selectedPatientIdx}
+ onChange={(e) => setSelectedPatientIdx(Number(e.target.value))}
+ className="text-sm border border-titanium-200 rounded-lg px-3 py-1.5 bg-white text-titanium-800 focus:outline-none focus:ring-2 focus:ring-porsche-300"
+ >
+ {DEMO_PATIENT_ROSTER.map((p, i) => (
+ <option key={p.context.patientId} value={i}>{p.label}</option>
+ ))}
+ </select>
+ </div>
+ </div>
  <div className="flex flex-wrap gap-2">
  {tools.map(tool => (
  <button
@@ -55,12 +81,12 @@ const ClinicalToolsPanel: React.FC<{ activeToolTab?: string; onToolTabChange?: (
  ))}
  </div>
  </div>
- {ActiveTool && <ActiveTool patientData={DEMO_PATIENT_CONTEXT} />}
+ {ActiveTool && <ActiveTool patientData={selectedPatient} />}
  </div>
   );
 };
 
-type TabId = 'dashboard' | 'patients' | 'workflow' | 'safety' | 'team' | 'documentation' | 'clinicaltools';
+type TabId = 'dashboard' | 'patients' | 'workflow' | 'safety' | 'hospital-alerts' | 'team' | 'documentation' | 'clinicaltools' | 'clinical-gaps';
 
 const CareTeamView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('dashboard');
@@ -73,9 +99,11 @@ const CareTeamView: React.FC = () => {
  { id: 'patients', label: 'Patients', icon: Users, description: 'Enhanced patient worklist' },
  { id: 'workflow', label: 'Workflow', icon: Calendar, description: 'GDMT optimization workflow' },
  { id: 'safety', label: 'Safety', icon: Shield, description: 'Risk assessment & monitoring' },
+ { id: 'hospital-alerts', label: 'Hospital Alerts', icon: Heart, description: 'Real-time heart failure hospital alerts' },
  { id: 'team', label: 'Team', icon: UserCheck, description: 'Team collaboration & communication' },
  { id: 'documentation', label: 'Documentation', icon: FileText, description: 'Clinical documentation tools' },
- { id: 'clinicaltools', label: 'Clinical Intelligence', icon: Stethoscope, description: 'Phenotype classification, risk calculators, and clinical decision support' }
+ { id: 'clinicaltools', label: 'Clinical Intelligence', icon: Stethoscope, description: 'Phenotype classification, risk calculators, and clinical decision support' },
+ { id: 'clinical-gaps', label: 'Clinical Gaps', icon: AlertTriangle, description: '25-gap clinical gap detection' }
   ];
 
   const renderTabContent = () => {
@@ -200,6 +228,12 @@ const CareTeamView: React.FC = () => {
  </div>
  </div>
  );
+ case 'hospital-alerts':
+ return (
+ <div className="space-y-6">
+ <RealTimeHospitalAlerts />
+ </div>
+ );
  case 'team':
  return (
  <div className="space-y-6">
@@ -254,6 +288,8 @@ const CareTeamView: React.FC = () => {
  );
  case 'clinicaltools':
  return <ClinicalToolsPanel activeToolTab={activeToolTab} onToolTabChange={setActiveToolTab} />;
+ case 'clinical-gaps':
+ return <ClinicalGapDetectionDashboard />;
  default:
  return (
  <div className="space-y-6">
@@ -273,7 +309,7 @@ const CareTeamView: React.FC = () => {
  <div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
  {/* Tab Navigation */}
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6 shadow-xl">
- <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+ <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-9 gap-4">
  {tabs.map((tab) => {
  const Icon = tab.icon;
  const isActive = activeTab === tab.id;

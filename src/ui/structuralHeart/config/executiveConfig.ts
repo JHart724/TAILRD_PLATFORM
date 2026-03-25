@@ -1,5 +1,6 @@
 import { ExecutiveViewConfig } from '../../../components/shared/BaseExecutiveView';
 import { DRGOpportunity } from '../../../components/shared/DRGOptimizationAlert';
+import { PLATFORM_TOTALS, formatDollars, formatPatients } from '../../../data/platformTotals';
 
 // Structural Heart DRG Optimization Opportunities
 const structuralHeartDRGOpportunities: DRGOpportunity[] = [
@@ -48,10 +49,10 @@ export const structuralHeartConfig: ExecutiveViewConfig = {
   moduleName: 'Structural Heart',
   description: '• TAVR/SAVR Analytics • Mitral Interventions • Aortic Procedures',
   kpiData: {
- totalOpportunity: '$67.8M',
- totalOpportunitySub: 'Annual revenue potential',
- totalPatients: '475',
- totalPatientsSub: 'Active procedure pipeline (annual structural cases)',
+ totalOpportunity: formatDollars(PLATFORM_TOTALS.modules.sh.opportunity),
+ totalOpportunitySub: 'Annual revenue potential (+$4.7M from 87-gap initiative: adds Moderate AS Surveillance, Post-TAVR Echo Quality, Rheumatic MS Warfarin, BAV Aortopathy, Endocarditis Prophylaxis to existing structural heart gaps)',
+ totalPatients: formatPatients(PLATFORM_TOTALS.modules.sh.patients),
+ totalPatientsSub: 'Active procedure pipeline — includes 538 gap patients (197 original: AS 52, MR 78, TR 67 + 341 new: Moderate AS 134, Post-TAVR Echo 34, Rheumatic MS 28, BAV Aortopathy 56, Endocarditis Prophylaxis 89); CIN Prevention (Gap 42) managed in CAD module',
  gdmtOptimization: '92%',
  gdmtOptimizationSub: 'Procedural success rate',
  avgRoi: '$142,737',

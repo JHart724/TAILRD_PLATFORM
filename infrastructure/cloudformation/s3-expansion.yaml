@@ -1,0 +1,229 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'TAILRD Platform - S3 Bucket Expansion (Registry, EHR Staging, Research)'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: production
+    AllowedValues: [production, staging, development]
+
+  ExistingKMSKeyArn:
+    Type: String
+    Description: ARN of existing PHI KMS encryption key from s3-kms.yaml
+
+Resources:
+  # --- Bucket 1: Registry Exports -------------------------------------------------
+  RegistryExportsBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub 'tailrd-${Environment}-registry-exports'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: 'aws:kms'
+              KMSMasterKeyID: !Ref ExistingKMSKeyArn
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: ArchiveOldExports
+            Status: Enabled
+            Transitions:
+              - TransitionInDays: 90
+                StorageClass: STANDARD_IA
+              - TransitionInDays: 365
+                StorageClass: GLACIER
+            ExpirationInDays: 2555  # 7 years HIPAA retention
+      LoggingConfiguration:
+        DestinationBucketName: !Sub 'tailrd-${Environment}-access-logs'
+        LogFilePrefix: registry-exports/
+      Tags:
+        - Key: HIPAA
+          Value: 'true'
+        - Key: DataClassification
+          Value: PHI
+        - Key: Purpose
+          Value: registry-exports
+        - Key: RetentionYears
+          Value: '7'
+
+  RegistryExportsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref RegistryExportsBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: EnforceHTTPS
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:*'
+            Resource:
+              - !GetAtt RegistryExportsBucket.Arn
+              - !Sub '${RegistryExportsBucket.Arn}/*'
+            Condition:
+              Bool:
+                'aws:SecureTransport': 'false'
+          - Sid: EnforceKMSEncryption
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:PutObject'
+            Resource: !Sub '${RegistryExportsBucket.Arn}/*'
+            Condition:
+              StringNotEquals:
+                's3:x-amz-server-side-encryption': 'aws:kms'
+
+  # --- Bucket 2: EHR Data Staging -------------------------------------------------
+  EHRStagingBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub 'tailrd-${Environment}-ehr-staging'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: 'aws:kms'
+              KMSMasterKeyID: !Ref ExistingKMSKeyArn
+      VersioningConfiguration:
+        Status: Disabled  # Staging only, no versioning needed
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteAfter30Days
+            Status: Enabled
+            ExpirationInDays: 30  # Staging data retained 30 days only
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: 's3:ObjectCreated:*'
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: 'fhir-bundles/'
+            Function: !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tailrd-${Environment}-fhir-processor'
+      Tags:
+        - Key: HIPAA
+          Value: 'true'
+        - Key: DataClassification
+          Value: PHI
+        - Key: Purpose
+          Value: ehr-staging
+        - Key: RetentionDays
+          Value: '30'
+
+  EHRStagingBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref EHRStagingBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: EnforceHTTPS
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:*'
+            Resource:
+              - !GetAtt EHRStagingBucket.Arn
+              - !Sub '${EHRStagingBucket.Arn}/*'
+            Condition:
+              Bool:
+                'aws:SecureTransport': 'false'
+
+  # --- Bucket 3: Research Data ----------------------------------------------------
+  # Separate KMS key for research data (different access controls)
+  ResearchDataKMSKey:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: 'TAILRD Research Data Encryption Key'
+      EnableKeyRotation: true
+      KeyPolicy:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowKeyAdministration
+            Effect: Allow
+            Principal:
+              AWS: !Sub 'arn:aws:iam::${AWS::AccountId}:root'
+            Action: 'kms:*'
+            Resource: '*'
+
+  ResearchDataKMSKeyAlias:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName: !Sub 'alias/tailrd-${Environment}-research-data-key'
+      TargetKeyId: !Ref ResearchDataKMSKey
+
+  ResearchDataBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub 'tailrd-${Environment}-research-data'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: 'aws:kms'
+              KMSMasterKeyID: !Ref ResearchDataKMSKey
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: HIPAA
+          Value: conditional
+        - Key: DataClassification
+          Value: RESEARCH
+        - Key: Purpose
+          Value: research-data
+        - Key: IRBRequired
+          Value: 'true'
+
+  ResearchDataBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ResearchDataBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: EnforceHTTPS
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:*'
+            Resource:
+              - !GetAtt ResearchDataBucket.Arn
+              - !Sub '${ResearchDataBucket.Arn}/*'
+            Condition:
+              Bool:
+                'aws:SecureTransport': 'false'
+
+Outputs:
+  RegistryExportsBucketName:
+    Value: !Ref RegistryExportsBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-RegistryExportsBucket'
+
+  EHRStagingBucketName:
+    Value: !Ref EHRStagingBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-EHRStagingBucket'
+
+  ResearchDataBucketName:
+    Value: !Ref ResearchDataBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-ResearchDataBucket'
+
+  ResearchDataKMSKeyArn:
+    Value: !GetAtt ResearchDataKMSKey.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-ResearchDataKMSKeyArn'

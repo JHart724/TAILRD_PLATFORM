@@ -5,6 +5,7 @@ import { StandardTabConfig } from '../../../components/shared/StandardInterfaces
 import { apiService } from '../../../services/apiService';
 import CRTICDEligibilityCalculator from '../../../components/riskCalculators/CRTICDEligibilityCalculator';
 import { featureFlags } from '../../../config/featureFlags';
+import EPClinicalGapDetectionDashboard from '../components/clinical/EPClinicalGapDetectionDashboard';
 
 // Import Electrophysiology specific components
 import PatientDetailPanel from '../components/PatientDetailPanel';
@@ -14,6 +15,10 @@ import EPClinicalDecisionSupport from '../components/EPClinicalDecisionSupport';
 import EPROICalculator from '../components/EPROICalculator';
 import EPDeviceNetworkVisualization from '../components/EPDeviceNetworkVisualization';
 import EPAutomatedClinicalSupport from '../components/EPAutomatedClinicalSupport';
+import EPAlertDashboard from '../components/care-team/EPAlertDashboard';
+import EPRealTimeHospitalAlerts from '../components/care-team/EPRealTimeHospitalAlerts';
+import EPAnticoagulationContraindicationChecker from '../components/clinical/EPAnticoagulationContraindicationChecker';
+import EPRiskStratification from '../components/executive/EPRiskStratification';
 
 // EP Dashboard Component
 const EPDashboard: React.FC = () => (
@@ -60,9 +65,15 @@ const EPDashboard: React.FC = () => (
  
  {/* LAAC Risk Dashboard */}
  <LAACRiskDashboard />
- 
+
  {/* EP Device Network */}
  <EPDeviceNetworkVisualization />
+
+ {/* EP Alert Dashboard */}
+ <EPAlertDashboard />
+
+ {/* EP Real-Time Hospital Alerts */}
+ <EPRealTimeHospitalAlerts />
   </div>
 );
 
@@ -198,12 +209,18 @@ const EPSafety: React.FC = () => (
   <div className="space-y-6">
  {/* Anticoagulation Safety Checker */}
  <AnticoagulationSafetyChecker />
+
+ {/* EP Anticoagulation Contraindication Checker */}
+ <EPAnticoagulationContraindicationChecker />
   </div>
 );
 
 // EP Clinical Collaboration Component
 const EPClinicalCollaboration: React.FC = () => (
   <div className="space-y-6">
+ {/* EP Risk Stratification */}
+ <EPRiskStratification />
+
  {/* Clinical Collaboration & Consultation */}
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
@@ -704,6 +721,11 @@ const EPDocumentation: React.FC = () => (
   </div>
 );
 
+// EP Clinical Gaps wrapper
+const EPClinicalGaps: React.FC = () => (
+  <EPClinicalGapDetectionDashboard />
+);
+
 // Electrophysiology Care Team Tab Configuration
 const electrophysiologyTabs: StandardTabConfig[] = [
   {
@@ -741,6 +763,12 @@ const electrophysiologyTabs: StandardTabConfig[] = [
  label: 'Documentation',
  icon: AlertTriangle,
  description: 'EP clinical documentation'
+  },
+  {
+ id: 'clinical-gaps',
+ label: 'Clinical Gaps',
+ icon: AlertTriangle,
+ description: 'LAAC candidates, CSP evaluation, PFA re-ablation'
   }
 ];
 
@@ -757,6 +785,7 @@ export const electrophysiologyCareTeamConfig: CareTeamViewConfig = {
  workflow: EPWorkflow,
  safety: EPSafety,
  team: EPClinicalCollaboration,
- documentation: EPDocumentation
+ documentation: EPDocumentation,
+ 'clinical-gaps': EPClinicalGaps
   }
 };
