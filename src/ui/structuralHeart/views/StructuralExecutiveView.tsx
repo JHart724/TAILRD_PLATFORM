@@ -493,7 +493,7 @@ const StructuralExecutiveView: React.FC = () => {
 	  categories: [
 	    { name: 'Therapy', patients: 180, color: '#3b82f6' },
 	    { name: 'Safety', patients: 90, color: '#ef4444' },
-	    { name: 'Growth', patients: 220, color: '#8b5cf6' },
+	    { name: 'Growth', patients: 220, color: '#1A4A2E' },
 	    { name: 'Quality', patients: 340, color: '#f59e0b' },
 	  ],
 	  topGaps: [

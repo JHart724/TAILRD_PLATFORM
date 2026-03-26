@@ -493,7 +493,7 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 	  categories: [
 	    { name: 'Therapy', patients: 680, color: '#3b82f6' },
 	    { name: 'Safety', patients: 290, color: '#ef4444' },
-	    { name: 'Growth', patients: 350, color: '#8b5cf6' },
+	    { name: 'Growth', patients: 350, color: '#1A4A2E' },
 	    { name: 'Quality', patients: 410, color: '#f59e0b' },
 	  ],
 	  topGaps: [

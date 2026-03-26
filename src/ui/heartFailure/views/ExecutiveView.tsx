@@ -505,7 +505,7 @@ const ExecutiveView: React.FC = () => {
    categories: [
      { name: 'Therapy', patients: 1200, color: '#3b82f6' },
      { name: 'Safety', patients: 180, color: '#ef4444' },
-     { name: 'Growth', patients: 420, color: '#8b5cf6' },
+     { name: 'Growth', patients: 420, color: '#1A4A2E' },
      { name: 'Quality', patients: 850, color: '#f59e0b' },
    ],
    topGaps: [

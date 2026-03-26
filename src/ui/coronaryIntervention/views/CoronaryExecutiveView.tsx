@@ -227,7 +227,7 @@ const CoronaryExecutiveView: React.FC = () => {
    categories: [
      { name: 'Therapy', patients: 900, color: '#3b82f6' },
      { name: 'Safety', patients: 340, color: '#ef4444' },
-     { name: 'Growth', patients: 280, color: '#8b5cf6' },
+     { name: 'Growth', patients: 280, color: '#1A4A2E' },
      { name: 'Quality', patients: 620, color: '#f59e0b' },
      { name: 'Deprescribing', patients: 190, color: '#f97316' },
    ],

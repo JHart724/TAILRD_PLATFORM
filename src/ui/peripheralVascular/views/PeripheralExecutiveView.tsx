@@ -182,7 +182,7 @@ const PeripheralExecutiveView: React.FC = () => {
 	  categories: [
 	    { name: 'Therapy', patients: 320, color: '#3b82f6' },
 	    { name: 'Safety', patients: 110, color: '#ef4444' },
-	    { name: 'Growth', patients: 180, color: '#8b5cf6' },
+	    { name: 'Growth', patients: 180, color: '#1A4A2E' },
 	    { name: 'Quality', patients: 540, color: '#f59e0b' },
 	  ],
 	  topGaps: [

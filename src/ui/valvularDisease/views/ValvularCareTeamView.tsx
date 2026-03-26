@@ -293,6 +293,45 @@ const ValvularCareTeamView: React.FC = () => {
  return <ValvularSurgicalNetworkVisualization />;
  case 'clinicaltools':
  return <ClinicalToolsPanel />;
+ case 'safety':
+ return (
+ <div className="space-y-6">
+ <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
+ <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2"><Shield className="w-5 h-5 text-red-600" /> Safety Monitoring</h3>
+ <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+ <div className="p-4 bg-red-50 border border-red-200 rounded-xl"><div className="text-2xl font-bold text-red-700">3</div><div className="text-sm text-red-600">Active Safety Alerts</div></div>
+ <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl"><div className="text-2xl font-bold text-amber-700">7</div><div className="text-sm text-amber-600">Overdue Surveillance</div></div>
+ <div className="p-4 bg-green-50 border border-green-200 rounded-xl"><div className="text-2xl font-bold text-green-700">94%</div><div className="text-sm text-green-600">Prophylaxis Documented</div></div>
+ </div>
+ </div>
+ </div>
+ );
+ case 'team':
+ return (
+ <div className="space-y-6">
+ <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
+ <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2"><Users className="w-5 h-5 text-porsche-600" /> Valve Care Team</h3>
+ <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+ {[{name:'Dr. Sarah Mitchell',role:'Cardiac Surgeon',status:'Available'},{name:'Dr. James Park',role:'Interventional Cardiologist',status:'In Procedure'},{name:'Lisa Thompson, NP',role:'Valve Coordinator',status:'Available'}].map((m,i) => (
+ <div key={i} className="p-4 border border-titanium-200 rounded-xl"><div className="font-semibold text-titanium-800">{m.name}</div><div className="text-sm text-titanium-600">{m.role}</div><span className={`mt-2 inline-block px-2 py-0.5 rounded-full text-xs ${m.status === 'Available' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>{m.status}</span></div>
+ ))}
+ </div>
+ </div>
+ </div>
+ );
+ case 'documentation':
+ return (
+ <div className="space-y-6">
+ <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
+ <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2"><FileText className="w-5 h-5 text-porsche-600" /> Clinical Documentation</h3>
+ <div className="space-y-3">
+ {[{title:'Pre-Operative Valve Assessment',type:'Template',status:'Active'},{title:'Post-TAVR Discharge Protocol',type:'Protocol',status:'Active'},{title:'Endocarditis Prophylaxis Guidelines',type:'Guideline',status:'Active'},{title:'Anticoagulation Bridge Protocol',type:'Protocol',status:'Under Review'}].map((d,i) => (
+ <div key={i} className="flex items-center justify-between p-4 border border-titanium-200 rounded-xl hover:bg-titanium-50"><div className="flex items-center gap-3"><FileText className="w-5 h-5 text-titanium-400" /><div><div className="font-medium text-titanium-800">{d.title}</div><div className="text-xs text-titanium-500">{d.type}</div></div></div><span className={`px-2 py-0.5 rounded-full text-xs ${d.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>{d.status}</span></div>
+ ))}
+ </div>
+ </div>
+ </div>
+ );
  default:
  return (
  <div className="space-y-6">
