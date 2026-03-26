@@ -53,9 +53,9 @@
     "analytics"
   ],
   "dependencies": {
-    "@aws-sdk/client-kms": "^3.1008.0",
-    "@aws-sdk/client-s3": "^3.1008.0",
-    "@aws-sdk/s3-request-presigner": "^3.1008.0",
+    "@aws-sdk/client-kms": "^3.1018.0",
+    "@aws-sdk/client-s3": "^3.1018.0",
+    "@aws-sdk/s3-request-presigner": "^3.1018.0",
     "@prisma/client": "^5.22.0",
     "@types/fs-extra": "^11.0.4",
     "axios": "^1.6.0",
