@@ -49,7 +49,7 @@ const ServiceLineView: React.FC = () => {
  {
  label: 'Gap & Opportunity',
  tabs: [
- { id: 'gap-detection', label: 'Gap Detection (26-Gap)', icon: Search, description: 'AI-driven clinical gap detection' },
+ { id: 'gap-detection', label: 'Gap Detection (33-Gap)', icon: Search, description: 'AI-driven clinical gap detection' },
  { id: 'therapy-gaps', label: 'Therapy Gap Analysis', icon: Target, description: 'GDMT and device therapy gap identification' },
  { id: 'gdmt-tracker', label: 'GDMT Optimization', icon: Heart, description: 'GDMT titration tracking and optimization' },
  { id: 'device-underutil', label: 'Device Underutilization', icon: Activity, description: 'Device therapy underutilization analysis' },

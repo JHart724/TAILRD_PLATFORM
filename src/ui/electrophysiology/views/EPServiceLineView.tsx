@@ -215,7 +215,7 @@ const EPServiceLineView: React.FC = () => {
  {
  label: 'Gap & Opportunity',
  tabs: [
- { id: 'gap-detection', label: 'Gap Detection (21-Gap)', icon: Search, description: 'AI-driven EP clinical gap detection' },
+ { id: 'gap-detection', label: 'Gap Detection (27-Gap)', icon: Search, description: 'AI-driven EP clinical gap detection' },
  { id: 'outcomes-trends', label: 'Outcomes Trends', icon: TrendingUp, description: 'EP outcomes trends and longitudinal analysis' },
  { id: 'risk-stratification', label: 'Risk Stratification', icon: Target, description: 'EP patient risk stratification dashboard' },
  { id: 'phenotype-detection', label: 'Phenotype Detection', icon: Search, description: 'EP phenotype prevalence and detection rates' },

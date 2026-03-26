@@ -53,7 +53,7 @@ const StructuralServiceLineView: React.FC = () => {
     {
       label: 'Gap & Opportunity',
       tabs: [
-        { id: 'gap-detection', label: 'Gap Detection (8-Gap)', icon: Search, description: 'AI-driven clinical gap detection across 8 structural heart gaps' },
+        { id: 'gap-detection', label: 'Gap Detection (14-Gap)', icon: Search, description: 'AI-driven clinical gap detection across 14 structural heart gaps' },
       ],
     },
     {

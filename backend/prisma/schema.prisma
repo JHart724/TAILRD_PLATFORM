@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "windows"]
 }
 
 datasource db {
@@ -2242,3 +2243,5 @@ model IPAllowlist {
   @@index([userId])
   @@map("ip_allowlist")
 }
+
+

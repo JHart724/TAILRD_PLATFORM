@@ -37,7 +37,7 @@ const ValvularServiceLineView: React.FC = () => {
     {
       label: 'Gap & Quality',
       tabs: [
-        { id: 'clinical-gap-detection', label: 'Gap Detection (6-Gap)', icon: AlertTriangle, description: 'AI-driven clinical gap detection' },
+        { id: 'clinical-gap-detection', label: 'Gap Detection (21-Gap)', icon: AlertTriangle, description: 'AI-driven clinical gap detection' },
         { id: 'quality', label: 'Quality', icon: Shield, description: 'Quality metrics and benchmarks' },
       ],
     },

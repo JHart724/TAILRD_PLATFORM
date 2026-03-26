@@ -55,7 +55,7 @@ const CoronaryServiceLineView: React.FC = () => {
  {
  label: 'Gap & Opportunity',
  tabs: [
- { id: 'gap-detection', label: 'Gap Detection (31-Gap)', icon: Search, description: 'CAD clinical gap detection' },
+ { id: 'gap-detection', label: 'Gap Detection (39-Gap)', icon: Search, description: 'CAD clinical gap detection' },
  ],
  },
  {

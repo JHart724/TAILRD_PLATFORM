@@ -579,7 +579,7 @@ function renderPredictiveBadges(gap: HFClinicalGap, pt: HFGapPatient): React.Rea
   const trajectory = computeHFPatientTrajectory(pt);
   const display = trajectoryDisplay(trajectory.direction);
 
-  const gapCategory = (gap.category === 'Discovery' ? 'Gap' : gap.category) as 'Safety' | 'Gap' | 'Growth';
+  const gapCategory = (gap.category === 'Discovery' || gap.category === 'Quality' ? 'Gap' : gap.category) as 'Safety' | 'Gap' | 'Growth';
   const timeHorizon = computeTimeHorizon({
     predictedMonths: null,
     gapCategory,
@@ -709,7 +709,7 @@ function renderHFPredictedEvent(gapId: string, pt: HFGapPatient): React.ReactNod
 /** Render revenue timing for Growth and Gap categories */
 function renderHFRevenueTiming(gap: HFClinicalGap, pt: HFGapPatient): React.ReactNode {
   if (gap.dollarOpportunity <= 0) return null;
-  if (gap.category !== 'Growth' && gap.category !== 'Gap' && gap.category !== 'Discovery') return null;
+  if (gap.category !== 'Growth' && gap.category !== 'Gap' && gap.category !== 'Discovery' && gap.category !== 'Quality') return null;
 
   const trajectory = computeHFPatientTrajectory(pt);
   const hasTrendData = trajectory.direction !== 'stable' || trajectory.percentChange !== 0;
@@ -719,7 +719,7 @@ function renderHFRevenueTiming(gap: HFClinicalGap, pt: HFGapPatient): React.Reac
   const revenue = computeRevenueAtRisk({
     gapDollarOpportunity: perPatientOpp,
     monthsToThreshold: null,
-    gapCategory: (gap.category === 'Discovery' ? 'Gap' : gap.category) as 'Gap' | 'Growth',
+    gapCategory: (gap.category === 'Discovery' || gap.category === 'Quality' ? 'Gap' : gap.category) as 'Gap' | 'Growth',
   });
 
   return (

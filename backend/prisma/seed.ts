@@ -256,7 +256,7 @@ async function main() {
       
       await prisma.encounter.create({
         data: {
-          patientId: patient.id,
+          patient: { connect: { id: patient.id } },
           encounterNumber: `ENC${Date.now()}${i}`,
           encounterType: Math.random() > 0.5 ? 'OUTPATIENT' : 'INPATIENT',
           status: 'FINISHED',
@@ -277,7 +277,7 @@ async function main() {
     // Create some lab results
     await prisma.observation.create({
       data: {
-        patientId: patient.id,
+        patient: { connect: { id: patient.id } },
         observationType: 'LOINC:33747-0',
         observationName: 'NT-proBNP',
         category: 'LABORATORY',
@@ -295,7 +295,7 @@ async function main() {
     // Create vital signs
     await prisma.observation.create({
       data: {
-        patientId: patient.id,
+        patient: { connect: { id: patient.id } },
         observationType: 'LOINC:8480-6',
         observationName: 'Systolic Blood Pressure',
         category: 'VITAL_SIGNS',
@@ -617,3 +617,5 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
+
+

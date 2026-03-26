@@ -27,6 +27,7 @@ export interface VDClinicalGap {
   whyMissed?: string;
   whyTailrd?: string;
   methodologyNote?: string;
+  crossModule?: string;
 }
 
 export interface VDGapPatient {
@@ -621,6 +622,1088 @@ const haltScreeningPatients: VDGapPatient[] = [
 ];
 
 // ============================================================
+// GAP VD-7: SEVERE AS NOT REFERRED FOR INTERVENTION
+// ============================================================
+const severeASNotReferredPatients: VDGapPatient[] = [
+  {
+    id: 'VD-SAS-001',
+    name: 'Harold Bergstrom',
+    mrn: 'VD-70701',
+    age: 79,
+    signals: [
+      'Severe AS: AVA 0.8 cm2, mean gradient 48 mmHg, Vmax 4.3 m/s',
+      'LVEF declined from 60% to 45% over 12 months',
+      'No TAVR or SAVR referral in 9 months despite symptoms',
+    ],
+    keyValues: {
+      'AVA': '0.8 cm2',
+      'Mean Gradient': '48 mmHg',
+      'Vmax': '4.3 m/s',
+      'LVEF': '45% (was 60%)',
+      'Symptoms': 'Exertional dyspnea, NYHA III',
+      'Last Echo': '3 months ago',
+      'Referral Status': 'No TAVR/SAVR referral',
+    },
+  },
+  {
+    id: 'VD-SAS-002',
+    name: 'Vivian Caldwell',
+    mrn: 'VD-70702',
+    age: 83,
+    signals: [
+      'Severe AS: AVA 0.7 cm2, mean gradient 52 mmHg',
+      'Two HF admissions in past 6 months',
+      'Not referred for TAVR evaluation despite Class I indication',
+    ],
+    keyValues: {
+      'AVA': '0.7 cm2',
+      'Mean Gradient': '52 mmHg',
+      'Vmax': '4.6 m/s',
+      'LVEF': '40%',
+      'HF Admissions': '2 in 6 months',
+      'Symptoms': 'Dyspnea at rest, NYHA III-IV',
+      'Referral Status': 'None',
+    },
+  },
+  {
+    id: 'VD-SAS-003',
+    name: 'Eugene Whitfield',
+    mrn: 'VD-70703',
+    age: 72,
+    signals: [
+      'Severe AS: AVA 0.9 cm2, mean gradient 44 mmHg',
+      'Symptomatic with syncope on exertion',
+      'Cardiology follow-up but no heart team referral for 8 months',
+    ],
+    keyValues: {
+      'AVA': '0.9 cm2',
+      'Mean Gradient': '44 mmHg',
+      'Vmax': '4.1 m/s',
+      'LVEF': '55%',
+      'Symptoms': 'Exertional syncope',
+      'STS Risk': '3.2%',
+      'Referral Status': 'No heart team referral',
+    },
+  },
+  {
+    id: 'VD-SAS-004',
+    name: 'Dolores Ramirez',
+    mrn: 'VD-70704',
+    age: 88,
+    signals: [
+      'Severe AS: AVA 0.6 cm2, mean gradient 55 mmHg',
+      'Presumed too frail without formal frailty assessment',
+      'No TAVR evaluation despite potential benefit in super-elderly',
+    ],
+    keyValues: {
+      'AVA': '0.6 cm2',
+      'Mean Gradient': '55 mmHg',
+      'Vmax': '4.8 m/s',
+      'LVEF': '50%',
+      'Symptoms': 'Dyspnea, fatigue, NYHA III',
+      'Frailty Assessment': 'Not performed',
+      'Referral Status': 'None &mdash; assumed inoperable',
+    },
+  },
+];
+
+// ============================================================
+// GAP VD-8: MITRAL REPAIR RATE BELOW BENCHMARK
+// ============================================================
+const mitralRepairRatePatients: VDGapPatient[] = [
+  {
+    id: 'VD-MRR-001',
+    name: 'Patricia Thornton',
+    mrn: 'VD-80801',
+    age: 62,
+    signals: [
+      'Degenerative MR &mdash; posterior leaflet prolapse (P2 segment)',
+      'Received mitral valve replacement instead of repair',
+      'No annular calcification &mdash; repair feasibility high',
+    ],
+    keyValues: {
+      'MR Etiology': 'Degenerative &mdash; posterior leaflet prolapse (P2)',
+      'Procedure': 'MVR (bioprosthetic)',
+      'Calcification': 'None',
+      'Repair Feasibility': 'High &mdash; isolated posterior leaflet',
+      'Benchmark': 'Repair rate should be >=95% for P2 prolapse',
+      'Surgeon Volume': '12 MV cases/year',
+    },
+  },
+  {
+    id: 'VD-MRR-002',
+    name: 'Leonard Ashford',
+    mrn: 'VD-80802',
+    age: 58,
+    signals: [
+      'Degenerative MR &mdash; isolated P2 flail with ruptured chordae',
+      'Mitral valve replaced with mechanical prosthesis',
+      'Classic repair anatomy per Carpentier classification',
+    ],
+    keyValues: {
+      'MR Etiology': 'Degenerative &mdash; P2 flail, ruptured chordae',
+      'Procedure': 'MVR (mechanical)',
+      'Calcification': 'Minimal',
+      'Repair Feasibility': 'High &mdash; Carpentier Type II',
+      'Benchmark': 'Reference centers achieve >95% repair',
+      'Patient Age': '58 &mdash; mechanical valve requires lifelong anticoagulation',
+    },
+  },
+  {
+    id: 'VD-MRR-003',
+    name: 'Sandra Kovacs',
+    mrn: 'VD-80803',
+    age: 55,
+    signals: [
+      'Degenerative MR &mdash; bileaflet prolapse, no calcification',
+      'MVR performed at low-volume center',
+      'Repair feasible at experienced reference center',
+    ],
+    keyValues: {
+      'MR Etiology': 'Degenerative &mdash; bileaflet prolapse',
+      'Procedure': 'MVR (bioprosthetic)',
+      'Calcification': 'None',
+      'Center Volume': 'Low (&lt;25 MV cases/year)',
+      'Benchmark': 'Repair recommended at reference center',
+      'Outcome': 'Satisfactory but suboptimal &mdash; repair preferred',
+    },
+  },
+];
+
+// ============================================================
+// GAP VD-9: SEVERE TR NOT ASSESSED FOR TRANSCATHETER INTERVENTION
+// ============================================================
+const severeTRNotAssessedPatients: VDGapPatient[] = [
+  {
+    id: 'VD-TR-001',
+    name: 'Mildred Johansson',
+    mrn: 'VD-90901',
+    age: 74,
+    signals: [
+      'Severe tricuspid regurgitation on echo (vena contracta 9mm)',
+      'Recurrent HF admissions x3 in 12 months',
+      'Not referred for TriClip/TEER evaluation',
+    ],
+    keyValues: {
+      'TR Severity': 'Severe (vena contracta 9mm, EROA 0.55 cm2)',
+      'RV Function': 'TAPSE 14mm (reduced)',
+      'HF Admissions': '3 in 12 months',
+      'Diuretic Dose': 'Furosemide 80mg BID',
+      'Prior Cardiac Surgery': 'MVR 8 years ago',
+      'TEER Assessment': 'Not performed',
+    },
+  },
+  {
+    id: 'VD-TR-002',
+    name: 'Clifford Nguyen',
+    mrn: 'VD-90902',
+    age: 69,
+    signals: [
+      'Moderate-severe functional TR with RV dilation',
+      'Progressive peripheral edema and ascites despite GDMT',
+      'TRILUMINATE Pivotal eligible &mdash; not screened',
+    ],
+    keyValues: {
+      'TR Severity': 'Moderate-severe (functional)',
+      'RV Function': 'TAPSE 15mm, RV dilated',
+      'Symptoms': 'Peripheral edema, ascites, NYHA III',
+      'GDMT': 'Maximized',
+      'TEER Assessment': 'Not performed',
+      'Prior Intervention': 'None',
+    },
+  },
+  {
+    id: 'VD-TR-003',
+    name: 'Beatrice Hoffman',
+    mrn: 'VD-90903',
+    age: 78,
+    signals: [
+      'Severe TR with hepatic congestion (elevated bilirubin, INR)',
+      'Cardiorenal syndrome &mdash; Cr rising from 1.2 to 2.1',
+      'Transcatheter tricuspid intervention not considered',
+    ],
+    keyValues: {
+      'TR Severity': 'Severe (massive)',
+      'RV Function': 'TAPSE 12mm (severely reduced)',
+      'Hepatic Congestion': 'Bilirubin 3.2, INR 1.8',
+      'Renal Function': 'Cr 2.1 (was 1.2)',
+      'HF Admissions': '4 in 12 months',
+      'TEER Assessment': 'Not performed',
+    },
+  },
+  {
+    id: 'VD-TR-004',
+    name: 'Arthur Delacroix',
+    mrn: 'VD-90904',
+    age: 71,
+    signals: [
+      'Severe TR post-pacemaker lead with tethered septal leaflet',
+      'Progressive RV failure, recurrent pleural effusions',
+      'Not assessed for transcatheter tricuspid repair',
+    ],
+    keyValues: {
+      'TR Severity': 'Severe (lead-related)',
+      'Mechanism': 'Pacemaker lead tethering septal leaflet',
+      'RV Function': 'TAPSE 13mm',
+      'Symptoms': 'Recurrent pleural effusions, NYHA III',
+      'TEER Assessment': 'Not performed',
+      'Device': 'Dual-chamber PPM (implanted 6 years ago)',
+    },
+  },
+];
+
+// ============================================================
+// GAP VD-10: FAILING BIOPROSTHETIC VALVE &mdash; VALVE-IN-VALVE TAVR NOT CONSIDERED
+// ============================================================
+const failingBioprostheticPatients: VDGapPatient[] = [
+  {
+    id: 'VD-VIV-001',
+    name: 'Raymond Kowalski',
+    mrn: 'VD-11001',
+    age: 76,
+    signals: [
+      'Bioprosthetic AVR 11 years ago &mdash; rising gradients (mean 38 mmHg)',
+      'New moderate aortic regurgitation through bioprosthesis',
+      'Not evaluated for valve-in-valve TAVR',
+    ],
+    keyValues: {
+      'Original Surgery': 'SAVR (21mm bioprosthetic) 11 years ago',
+      'Current Mean Gradient': '38 mmHg (was 12 mmHg post-op)',
+      'New AI': 'Moderate (through prosthesis)',
+      'LVEF': '50% (declining)',
+      'STS Redo Risk': '8.2%',
+      'VIV-TAVR Assessment': 'Not performed',
+    },
+  },
+  {
+    id: 'VD-VIV-002',
+    name: 'Constance Petrov',
+    mrn: 'VD-11002',
+    age: 81,
+    signals: [
+      'Bioprosthetic AVR 13 years ago &mdash; severe SVD with mean gradient 48 mmHg',
+      'Symptomatic with dyspnea NYHA III',
+      'High surgical risk for redo &mdash; VIV-TAVR ideal candidate',
+    ],
+    keyValues: {
+      'Original Surgery': 'SAVR (23mm Carpentier-Edwards) 13 years ago',
+      'Current Mean Gradient': '48 mmHg',
+      'Symptoms': 'Dyspnea NYHA III',
+      'STS Redo Risk': '11.4%',
+      'LVEF': '45%',
+      'VIV-TAVR Assessment': 'Not performed',
+    },
+  },
+  {
+    id: 'VD-VIV-003',
+    name: 'Frederick Hansen',
+    mrn: 'VD-11003',
+    age: 73,
+    signals: [
+      'Bioprosthetic AVR 9 years ago &mdash; new severe AI through leaflet tear',
+      'Acute decompensation with pulmonary edema',
+      'Urgent VIV-TAVR evaluation needed',
+    ],
+    keyValues: {
+      'Original Surgery': 'SAVR (25mm bioprosthetic) 9 years ago',
+      'Current Finding': 'Severe AI through leaflet tear',
+      'Presentation': 'Acute pulmonary edema',
+      'LVEF': '35%',
+      'STS Redo Risk': '9.6%',
+      'VIV-TAVR Assessment': 'Not performed',
+    },
+  },
+];
+
+// ============================================================
+// GAP VD-11: CONCOMITANT AF + VALVE SURGERY &mdash; MAZE NOT OFFERED
+// ============================================================
+const concomitantAFMazePatients: VDGapPatient[] = [
+  {
+    id: 'VD-MAZ-001',
+    name: 'Geraldine Buchanan',
+    mrn: 'VD-11101',
+    age: 68,
+    signals: [
+      'Persistent AF x3 years prior to elective MVR',
+      'No concomitant surgical ablation (Cox-Maze) performed',
+      'STS guidelines: Class I for concomitant Maze with valve surgery + AF',
+    ],
+    keyValues: {
+      'Valve Surgery': 'MVR (bioprosthetic)',
+      'AF Duration': '3 years (persistent)',
+      'Maze Performed': 'No',
+      'LAAC Performed': 'No',
+      'AF Type': 'Persistent',
+      'CHA2DS2-VASc': '4',
+    },
+  },
+  {
+    id: 'VD-MAZ-002',
+    name: 'Walter Erikson',
+    mrn: 'VD-11102',
+    age: 71,
+    signals: [
+      'Long-standing persistent AF &mdash; underwent elective SAVR',
+      'No Maze or LAAC performed despite AF documentation',
+      'Post-op: remains in AF, on lifelong anticoagulation',
+    ],
+    keyValues: {
+      'Valve Surgery': 'SAVR (bioprosthetic)',
+      'AF Duration': '5 years (long-standing persistent)',
+      'Maze Performed': 'No',
+      'LAAC Performed': 'No',
+      'Post-Op Rhythm': 'AF',
+      'CHA2DS2-VASc': '5',
+    },
+  },
+  {
+    id: 'VD-MAZ-003',
+    name: 'Lorraine Thibault',
+    mrn: 'VD-11103',
+    age: 65,
+    signals: [
+      'Paroxysmal AF &mdash; underwent elective MV repair',
+      'No concomitant ablation despite documented AF episodes',
+      'STS data: Maze adds 15 min to case with 60-70% freedom from AF',
+    ],
+    keyValues: {
+      'Valve Surgery': 'MV repair (degenerative MR)',
+      'AF Type': 'Paroxysmal',
+      'Maze Performed': 'No',
+      'LAAC Performed': 'No',
+      'AF Episodes': '12 in past year',
+      'CHA2DS2-VASc': '3',
+    },
+  },
+  {
+    id: 'VD-MAZ-004',
+    name: 'Douglas Kimura',
+    mrn: 'VD-11104',
+    age: 74,
+    signals: [
+      'Persistent AF + elective AVR + MVR (double valve)',
+      'No concomitant Maze or LAAC despite Class I indication',
+      'High stroke risk post-op without ablation',
+    ],
+    keyValues: {
+      'Valve Surgery': 'AVR + MVR (double valve)',
+      'AF Duration': '4 years (persistent)',
+      'Maze Performed': 'No',
+      'LAAC Performed': 'No',
+      'CHA2DS2-VASc': '6',
+      'Post-Op Rhythm': 'AF',
+    },
+  },
+];
+
+// ============================================================
+// GAP VD-12: TAVR VS SAVR HEART TEAM DISCUSSION NOT DOCUMENTED
+// ============================================================
+const heartTeamDocPatients: VDGapPatient[] = [
+  {
+    id: 'VD-HTD-001',
+    name: 'Josephine Andersson',
+    mrn: 'VD-11201',
+    age: 73,
+    signals: [
+      'Severe AS, STS risk 4.8% &mdash; intermediate risk',
+      'TAVR performed without documented heart team discussion',
+      'ACC/AHA Class I: heart team required for intermediate risk',
+    ],
+    keyValues: {
+      'STS Risk': '4.8% (intermediate)',
+      'Procedure': 'TAVR (SAPIEN 3)',
+      'Heart Team Documentation': 'Not found',
+      'TVT Registry': 'Non-compliant',
+      'Age': '73',
+      'Comorbidities': 'DM, CKD stage 3',
+    },
+  },
+  {
+    id: 'VD-HTD-002',
+    name: 'Robert Castellano',
+    mrn: 'VD-11202',
+    age: 67,
+    signals: [
+      'Severe AS, STS risk 3.5% &mdash; low-intermediate',
+      'SAVR performed without documented heart team discussion',
+      'PARTNER 3 shows TAVR non-inferior &mdash; patient should have had choice',
+    ],
+    keyValues: {
+      'STS Risk': '3.5% (low-intermediate)',
+      'Procedure': 'SAVR',
+      'Heart Team Documentation': 'Not found',
+      'TVT Registry': 'N/A (surgical)',
+      'Age': '67',
+      'Anatomy': 'Tricuspid aortic valve',
+    },
+  },
+  {
+    id: 'VD-HTD-003',
+    name: 'Helen Okonkwo',
+    mrn: 'VD-11203',
+    age: 76,
+    signals: [
+      'Severe AS, STS risk 6.2% &mdash; intermediate risk',
+      'TAVR performed &mdash; heart team note absent from chart',
+      'Required for ACC TVT Registry quality compliance',
+    ],
+    keyValues: {
+      'STS Risk': '6.2% (intermediate)',
+      'Procedure': 'TAVR (Evolut PRO+)',
+      'Heart Team Documentation': 'Absent',
+      'TVT Registry': 'Quality gap',
+      'Age': '76',
+      'Comorbidities': 'Prior CABG, COPD',
+    },
+  },
+];
+
+// ============================================================
+// GAP VD-13: PATIENT-PROSTHESIS MISMATCH POST-VALVE SURGERY
+// ============================================================
+const prosthesisMismatchPatients: VDGapPatient[] = [
+  {
+    id: 'VD-PPM-001',
+    name: 'Bernard Magnusson',
+    mrn: 'VD-11301',
+    age: 64,
+    signals: [
+      'Post-SAVR: indexed EOA 0.78 cm2/m2 (severe PPM)',
+      'BSA 2.1 m2 with 19mm bioprosthesis &mdash; size mismatch',
+      'Not flagged for enhanced surveillance',
+    ],
+    keyValues: {
+      'Indexed EOA': '0.78 cm2/m2 (severe PPM)',
+      'BSA': '2.1 m2',
+      'Valve Size': '19mm bioprosthetic',
+      'Mean Gradient': '28 mmHg (elevated)',
+      'LVEF': '52%',
+      'Surveillance Plan': 'Not documented',
+    },
+  },
+  {
+    id: 'VD-PPM-002',
+    name: 'Ingrid Svensson',
+    mrn: 'VD-11302',
+    age: 59,
+    signals: [
+      'Post-SAVR: indexed EOA 0.62 cm2/m2 (critical PPM)',
+      'BSA 2.3 m2 with 21mm bioprosthesis',
+      'Persistent dyspnea post-operatively &mdash; PPM not considered',
+    ],
+    keyValues: {
+      'Indexed EOA': '0.62 cm2/m2 (critical PPM)',
+      'BSA': '2.3 m2',
+      'Valve Size': '21mm bioprosthetic',
+      'Mean Gradient': '32 mmHg (elevated)',
+      'Symptoms': 'Persistent dyspnea post-op',
+      'Surveillance Plan': 'Not documented',
+    },
+  },
+  {
+    id: 'VD-PPM-003',
+    name: 'Thomas Villarreal',
+    mrn: 'VD-11303',
+    age: 71,
+    signals: [
+      'Post-SAVR: indexed EOA 0.82 cm2/m2 (moderate-severe PPM)',
+      'Small aortic root &mdash; 21mm prosthesis in BSA 2.0 m2',
+      'No hemodynamic assessment ordered',
+    ],
+    keyValues: {
+      'Indexed EOA': '0.82 cm2/m2 (moderate-severe PPM)',
+      'BSA': '2.0 m2',
+      'Valve Size': '21mm bioprosthetic',
+      'Mean Gradient': '24 mmHg',
+      'LVEF': '55%',
+      'Hemodynamic Assessment': 'Not ordered',
+    },
+  },
+];
+
+// ============================================================
+// GAP VD-14: AORTIC ROOT ENLARGEMENT IN SEVERE AS
+// ============================================================
+const aorticRootEnlargementPatients: VDGapPatient[] = [
+  {
+    id: 'VD-ARE-001',
+    name: 'Philip Gustafson',
+    mrn: 'VD-11401',
+    age: 69,
+    signals: [
+      'Severe AS scheduled for isolated SAVR',
+      'Pre-op CT shows aortic root 4.7cm &mdash; above intervention threshold',
+      'No discussion of concurrent root replacement (Bentall)',
+    ],
+    keyValues: {
+      'AS Severity': 'Severe (AVA 0.8 cm2)',
+      'Planned Procedure': 'Isolated SAVR',
+      'Aortic Root': '4.7cm',
+      'CT Aortography': 'Performed &mdash; root dilation noted',
+      'Root Replacement Discussion': 'Not documented',
+      'BSA': '1.9 m2',
+    },
+  },
+  {
+    id: 'VD-ARE-002',
+    name: 'Catherine Morales',
+    mrn: 'VD-11402',
+    age: 65,
+    signals: [
+      'Severe AS + ascending aortic aneurysm 4.8cm',
+      'Scheduled for isolated SAVR without root assessment',
+      'Reoperation risk for future root surgery avoided by concurrent repair',
+    ],
+    keyValues: {
+      'AS Severity': 'Severe (AVA 0.9 cm2)',
+      'Planned Procedure': 'Isolated SAVR',
+      'Ascending Aorta': '4.8cm',
+      'CT Aortography': 'Not ordered pre-op',
+      'Root Replacement Discussion': 'Not documented',
+      'Family History': 'Brother with aortic dissection',
+    },
+  },
+  {
+    id: 'VD-ARE-003',
+    name: 'Edward Blackstone',
+    mrn: 'VD-11403',
+    age: 72,
+    signals: [
+      'BAV with severe AS &mdash; aortic root 4.6cm on last echo',
+      'Referred for isolated SAVR &mdash; root not addressed',
+      'BAV aortopathy: lower threshold (4.5cm) for concurrent intervention',
+    ],
+    keyValues: {
+      'AS Severity': 'Severe (AVA 0.7 cm2)',
+      'Valve Morphology': 'Bicuspid (BAV)',
+      'Aortic Root': '4.6cm',
+      'Planned Procedure': 'Isolated SAVR',
+      'BAV Threshold': '4.5cm for concurrent root surgery',
+      'Root Replacement Discussion': 'Not documented',
+    },
+  },
+];
+
+// ============================================================
+// GAP VD-15: MECHANICAL VALVE INR NOT IN THERAPEUTIC RANGE
+// ============================================================
+const mechanicalValveINRPatients: VDGapPatient[] = [
+  {
+    id: 'VD-INR-001',
+    name: 'Martha Henriksen',
+    mrn: 'VD-11501',
+    age: 61,
+    signals: [
+      'Mechanical mitral valve &mdash; INR 1.6 (target 2.5-3.5)',
+      'Subtherapeutic for >45 days',
+      'Thromboembolic risk 2-4x increased at INR <2.0',
+    ],
+    keyValues: {
+      'Valve Type': 'Mechanical mitral (St. Jude)',
+      'Target INR': '2.5-3.5',
+      'Current INR': '1.6 (subtherapeutic)',
+      'Days Out of Range': '45',
+      'Last INR Check': '12 days ago',
+      'Stroke Risk': 'Elevated (2-4x baseline)',
+    },
+  },
+  {
+    id: 'VD-INR-002',
+    name: 'Anthony Volkov',
+    mrn: 'VD-11502',
+    age: 55,
+    signals: [
+      'Mechanical aortic valve &mdash; INR 4.8 (target 2.0-3.0)',
+      'Supratherapeutic for 30 days &mdash; bleeding risk doubled',
+      'Recent epistaxis and gingival bleeding',
+    ],
+    keyValues: {
+      'Valve Type': 'Mechanical aortic (On-X)',
+      'Target INR': '2.0-3.0',
+      'Current INR': '4.8 (supratherapeutic)',
+      'Days Out of Range': '30',
+      'Bleeding Symptoms': 'Epistaxis, gingival bleeding',
+      'Hemorrhage Risk': 'Doubled',
+    },
+  },
+  {
+    id: 'VD-INR-003',
+    name: 'Rosa Gutierrez',
+    mrn: 'VD-11503',
+    age: 48,
+    signals: [
+      'Mechanical mitral + aortic valves &mdash; INR 1.4 (critically subtherapeutic)',
+      'No INR check in 6 weeks',
+      'Double mechanical: highest thrombotic risk category',
+    ],
+    keyValues: {
+      'Valve Type': 'Double mechanical (mitral + aortic)',
+      'Target INR': '2.5-3.5',
+      'Current INR': '1.4 (critically subtherapeutic)',
+      'Days Out of Range': '42',
+      'Last INR Check': '6 weeks ago',
+      'Thrombotic Risk': 'Critical &mdash; double mechanical',
+    },
+  },
+  {
+    id: 'VD-INR-004',
+    name: 'Chester Yamamoto',
+    mrn: 'VD-11504',
+    age: 67,
+    signals: [
+      'Mechanical aortic valve &mdash; INR 1.8 (below target 2.0-3.0)',
+      'Recently started amiodarone &mdash; warfarin interaction likely',
+      'INR trending down without dose adjustment',
+    ],
+    keyValues: {
+      'Valve Type': 'Mechanical aortic (Medtronic Hall)',
+      'Target INR': '2.0-3.0',
+      'Current INR': '1.8 (subtherapeutic)',
+      'New Medication': 'Amiodarone (started 3 weeks ago)',
+      'Drug Interaction': 'Warfarin-amiodarone interaction',
+      'Dose Adjustment': 'Not performed',
+    },
+  },
+];
+
+// ============================================================
+// GAP VD-16: SEVERE MR &mdash; TEER ELIGIBILITY NOT ASSESSED
+// ============================================================
+const severeMRTEERPatients: VDGapPatient[] = [
+  {
+    id: 'VD-TEER-001',
+    name: 'Eleanor Prescott',
+    mrn: 'VD-11601',
+    age: 72,
+    signals: [
+      'Severe secondary MR (EROA 0.4 cm2) with HFrEF (LVEF 30%)',
+      'On maximized GDMT &mdash; persistent NYHA III symptoms',
+      'COAPT-eligible profile &mdash; not referred for TEER',
+    ],
+    keyValues: {
+      'MR Severity': 'Severe secondary (EROA 0.4 cm2)',
+      'LVEF': '30%',
+      'LVEDV': '220 mL',
+      'GDMT Status': 'Maximized (sacubitril/valsartan, carvedilol, MRA)',
+      'NYHA Class': 'III',
+      'TEER Assessment': 'Not performed',
+    },
+  },
+  {
+    id: 'VD-TEER-002',
+    name: 'Warren Blackwell',
+    mrn: 'VD-11602',
+    age: 68,
+    signals: [
+      'Severe primary MR (flail posterior leaflet) &mdash; surgical risk prohibitive',
+      'STS predicted mortality 9.4% &mdash; TEER preferred',
+      'Not referred to structural heart team',
+    ],
+    keyValues: {
+      'MR Severity': 'Severe primary (flail P2)',
+      'STS Risk': '9.4% (high)',
+      'LVEF': '45%',
+      'Symptoms': 'Dyspnea, NYHA III',
+      'Comorbidities': 'Prior sternotomy, COPD, CKD',
+      'TEER Assessment': 'Not performed',
+    },
+  },
+  {
+    id: 'VD-TEER-003',
+    name: 'Nadine Beaumont',
+    mrn: 'VD-11603',
+    age: 77,
+    signals: [
+      'Severe secondary MR with recurrent HF admissions x4/year',
+      'LVEF 25%, LVEDV 195 mL &mdash; within COAPT criteria',
+      'Guideline-directed: screen for TEER when GDMT insufficient',
+    ],
+    keyValues: {
+      'MR Severity': 'Severe secondary (EROA 0.35 cm2)',
+      'LVEF': '25%',
+      'LVEDV': '195 mL',
+      'HF Admissions': '4 in 12 months',
+      'GDMT Status': 'Maximized + CRT',
+      'TEER Assessment': 'Not performed',
+    },
+  },
+  {
+    id: 'VD-TEER-004',
+    name: 'Cecil Drummond',
+    mrn: 'VD-11604',
+    age: 81,
+    signals: [
+      'Severe MR (mixed etiology) &mdash; declining functional status',
+      'Too frail for surgery per cardiac surgeon assessment',
+      'TEER candidacy not evaluated despite guideline recommendation',
+    ],
+    keyValues: {
+      'MR Severity': 'Severe (mixed &mdash; degenerative + functional)',
+      'LVEF': '35%',
+      'Frailty': 'Present (5-meter walk >7 seconds)',
+      'Surgical Risk': 'Prohibitive per surgeon',
+      'Symptoms': 'Dyspnea, fatigue, NYHA III-IV',
+      'TEER Assessment': 'Not performed',
+    },
+  },
+];
+
+// ============================================================
+// GAP VD-17: PROSTHETIC VALVE ENDOCARDITIS &mdash; DELAYED SURGICAL CONSULTATION
+// ============================================================
+const pveDelayedConsultPatients: VDGapPatient[] = [
+  {
+    id: 'VD-PVE-001',
+    name: 'Reginald Sinclair',
+    mrn: 'VD-11701',
+    age: 70,
+    signals: [
+      'Prosthetic aortic valve endocarditis confirmed (blood cultures + TEE)',
+      'Surgical consultation not obtained within 48 hours',
+      'ESC guidelines: early surgical consultation reduces PVE mortality from 40% to <20%',
+    ],
+    keyValues: {
+      'Diagnosis': 'PVE &mdash; bioprosthetic aortic valve',
+      'Organism': 'Staphylococcus aureus',
+      'TEE Findings': 'Vegetation 12mm, perivalvular abscess',
+      'Surgical Consult': 'Not obtained (Day 5 of admission)',
+      'Antibiotics Started': 'Day 1',
+      'Mortality Risk': '40% without surgery vs <20% with early surgery',
+    },
+  },
+  {
+    id: 'VD-PVE-002',
+    name: 'Yolanda Mbeki',
+    mrn: 'VD-11702',
+    age: 63,
+    signals: [
+      'Mechanical mitral valve endocarditis &mdash; new paravalvular leak',
+      'Surgical consultation delayed >72 hours',
+      'New heart failure symptoms &mdash; urgent surgical indication',
+    ],
+    keyValues: {
+      'Diagnosis': 'PVE &mdash; mechanical mitral valve',
+      'Organism': 'Enterococcus faecalis',
+      'TEE Findings': 'New paravalvular leak, vegetation 8mm',
+      'Surgical Consult': 'Delayed >72 hours',
+      'New HF Symptoms': 'Pulmonary edema',
+      'Guideline': 'ESC 2023: urgent surgery for PVE + HF',
+    },
+  },
+  {
+    id: 'VD-PVE-003',
+    name: 'Maxwell Fontaine',
+    mrn: 'VD-11703',
+    age: 75,
+    signals: [
+      'TAVR prosthesis endocarditis &mdash; persistent bacteremia day 4',
+      'No surgical consultation despite persistent positive cultures',
+      'Persistent bacteremia >5 days is Class I surgical indication',
+    ],
+    keyValues: {
+      'Diagnosis': 'PVE &mdash; TAVR prosthesis',
+      'Organism': 'MRSA',
+      'Bacteremia Duration': 'Persistent day 4',
+      'Surgical Consult': 'Not obtained',
+      'TEE Findings': 'Vegetation on TAVR leaflet 10mm',
+      'Guideline': 'Class I for surgery with persistent bacteremia >5 days',
+    },
+  },
+];
+
+// ============================================================
+// GAP VD-18: POST-TAVR PACEMAKER NEED NOT ANTICIPATED
+// ============================================================
+const postTAVRPacemakerPatients: VDGapPatient[] = [
+  {
+    id: 'VD-PPM-A001',
+    name: 'Stanley Nordstrom',
+    mrn: 'VD-11801',
+    age: 80,
+    signals: [
+      'Pre-TAVR RBBB present &mdash; strongest predictor of post-TAVR PPM (OR 4.5)',
+      'Self-expanding valve used &mdash; higher PPM rate',
+      'New CHB day 3 post-TAVR requiring emergency PPM',
+    ],
+    keyValues: {
+      'Pre-TAVR ECG': 'RBBB (right bundle branch block)',
+      'Valve Type': 'Evolut PRO+ (self-expanding)',
+      'Post-TAVR Event': 'Complete heart block day 3',
+      'PPM Implanted': 'Yes (emergency)',
+      'Pre-Op Risk Flag': 'Not flagged',
+      'Extra Hospital Days': '4 (unplanned)',
+    },
+  },
+  {
+    id: 'VD-PPM-A002',
+    name: 'Lucille Carmichael',
+    mrn: 'VD-11802',
+    age: 77,
+    signals: [
+      'Pre-TAVR first-degree AVB (PR 280ms) + left axis deviation',
+      'Post-TAVR new LBBB progressing to high-grade AVB',
+      'Conduction risk factors not flagged pre-procedurally',
+    ],
+    keyValues: {
+      'Pre-TAVR ECG': 'First-degree AVB (PR 280ms), LAD',
+      'Valve Type': 'SAPIEN 3 (26mm)',
+      'Post-TAVR Event': 'New LBBB then high-grade AVB',
+      'PPM Implanted': 'Yes (day 5)',
+      'Pre-Op Risk Flag': 'Not flagged',
+      'Extra Hospital Days': '3 (unplanned)',
+    },
+  },
+  {
+    id: 'VD-PPM-A003',
+    name: 'Virgil Townsend',
+    mrn: 'VD-11803',
+    age: 84,
+    signals: [
+      'Pre-TAVR RBBB + first-degree AVB &mdash; very high PPM risk',
+      'No EP standby arranged despite dual conduction risk factors',
+      'Post-TAVR complete heart block requiring urgent PPM',
+    ],
+    keyValues: {
+      'Pre-TAVR ECG': 'RBBB + first-degree AVB',
+      'Valve Type': 'Evolut R (29mm, self-expanding)',
+      'Post-TAVR Event': 'CHB requiring urgent PPM',
+      'PPM Implanted': 'Yes (emergency day 1)',
+      'EP Standby': 'Not arranged',
+      'Pre-Op Risk Flag': 'Not flagged despite dual risk factors',
+    },
+  },
+];
+
+// ============================================================
+// GAP VD-19: BIOPROSTHETIC VALVE SURVEILLANCE OVERDUE (>5 YEARS)
+// ============================================================
+const bioprostheticSurveillancePatients: VDGapPatient[] = [
+  {
+    id: 'VD-BVS-001',
+    name: 'Dorothy Lindqvist',
+    mrn: 'VD-11901',
+    age: 73,
+    signals: [
+      'Bioprosthetic AVR 7 years ago &mdash; no echo in 18 months',
+      'SVD typically begins 7-10 years post-implant',
+      'Annual surveillance recommended after year 5',
+    ],
+    keyValues: {
+      'Valve Type': 'Bioprosthetic AVR (23mm Magna Ease)',
+      'Years Since Implant': '7',
+      'Last Echo': '18 months ago',
+      'Last Gradient': '14 mmHg (was 10 post-op)',
+      'Surveillance Status': 'Overdue',
+      'SVD Risk Window': 'Entering high-risk period',
+    },
+  },
+  {
+    id: 'VD-BVS-002',
+    name: 'Kenneth Okafor',
+    mrn: 'VD-11902',
+    age: 68,
+    signals: [
+      'Bioprosthetic MVR 8 years ago &mdash; last echo 2 years ago',
+      'Mitral bioprosthesis: higher SVD rate than aortic',
+      'No surveillance protocol in chart',
+    ],
+    keyValues: {
+      'Valve Type': 'Bioprosthetic MVR (27mm)',
+      'Years Since Implant': '8',
+      'Last Echo': '24 months ago',
+      'Last Finding': 'Mild prosthetic MR',
+      'Surveillance Status': 'Overdue by 12 months',
+      'SVD Risk': 'Higher for mitral position',
+    },
+  },
+  {
+    id: 'VD-BVS-003',
+    name: 'Miriam Stefanovic',
+    mrn: 'VD-11903',
+    age: 78,
+    signals: [
+      'Bioprosthetic AVR 10 years ago &mdash; no echo in 14 months',
+      '10-year mark: peak SVD incidence period',
+      'May need VIV-TAVR planning if SVD detected',
+    ],
+    keyValues: {
+      'Valve Type': 'Bioprosthetic AVR (21mm)',
+      'Years Since Implant': '10',
+      'Last Echo': '14 months ago',
+      'Last Gradient': '18 mmHg (rising from 10 post-op)',
+      'Surveillance Status': 'Overdue',
+      'SVD Risk': 'Peak risk period (10-year mark)',
+    },
+  },
+  {
+    id: 'VD-BVS-004',
+    name: 'Lawrence Pemberton',
+    mrn: 'VD-11904',
+    age: 82,
+    signals: [
+      'Bioprosthetic AVR 12 years ago &mdash; no echo in 20 months',
+      'Beyond expected valve lifespan &mdash; SVD likely present',
+      'Needs urgent assessment for potential VIV-TAVR',
+    ],
+    keyValues: {
+      'Valve Type': 'Bioprosthetic AVR (23mm Carpentier-Edwards)',
+      'Years Since Implant': '12',
+      'Last Echo': '20 months ago',
+      'Last Gradient': '22 mmHg',
+      'Surveillance Status': 'Critically overdue',
+      'Expected Valve Life': '10-15 years &mdash; at 12 years',
+    },
+  },
+];
+
+// ============================================================
+// GAP VD-20: TMVR CANDIDACY NOT SCREENED
+// ============================================================
+const tmvrCandidacyPatients: VDGapPatient[] = [
+  {
+    id: 'VD-TMVR-001',
+    name: 'Isabelle Fournier',
+    mrn: 'VD-12001',
+    age: 79,
+    signals: [
+      'Severe MR &mdash; failed MitraClip (residual severe MR)',
+      'Not surgical candidate (STS 12.3%)',
+      'Not assessed for TMVR trial or compassionate use',
+    ],
+    keyValues: {
+      'MR Severity': 'Severe (residual post-TEER)',
+      'Prior TEER': 'Failed (residual severe MR)',
+      'STS Risk': '12.3% (prohibitive)',
+      'LVEF': '30%',
+      'Symptoms': 'Refractory HF, NYHA IV',
+      'TMVR Assessment': 'Not performed',
+    },
+  },
+  {
+    id: 'VD-TMVR-002',
+    name: 'Gerald Hawthorne',
+    mrn: 'VD-12002',
+    age: 75,
+    signals: [
+      'Severe MR with MAC (mitral annular calcification) &mdash; TEER anatomy unfavorable',
+      'Surgical risk prohibitive due to porcelain aorta',
+      'TMVR may be only viable option',
+    ],
+    keyValues: {
+      'MR Severity': 'Severe with MAC',
+      'TEER Feasibility': 'Unfavorable (MAC, short posterior leaflet)',
+      'Surgical Risk': 'Prohibitive (porcelain aorta)',
+      'LVEF': '40%',
+      'Symptoms': 'Dyspnea, recurrent HF admissions',
+      'TMVR Assessment': 'Not performed',
+    },
+  },
+  {
+    id: 'VD-TMVR-003',
+    name: 'Simone Abernathy',
+    mrn: 'VD-12003',
+    age: 82,
+    signals: [
+      'Severe MR &mdash; TEER attempted but aborted (too wide gap, multiple jets)',
+      'No surgical option (frail, prior sternotomy x2)',
+      'Potential TMVR candidate &mdash; not evaluated',
+    ],
+    keyValues: {
+      'MR Severity': 'Severe (wide coaptation gap)',
+      'Prior TEER Attempt': 'Aborted (anatomy unfavorable)',
+      'Prior Sternotomies': '2',
+      'Frailty': 'Present',
+      'LVEF': '35%',
+      'TMVR Assessment': 'Not performed',
+    },
+  },
+];
+
+// ============================================================
+// GAP VD-21: AS + CAD &mdash; COMBINED VS STAGED STRATEGY NOT DOCUMENTED
+// ============================================================
+const asCADStrategyPatients: VDGapPatient[] = [
+  {
+    id: 'VD-ACS-001',
+    name: 'Norman Kirkpatrick',
+    mrn: 'VD-12101',
+    age: 74,
+    signals: [
+      'Severe AS + 3-vessel CAD (SYNTAX 28)',
+      'Referred for TAVR without documented discussion of combined vs staged approach',
+      'PCI + TAVR vs SAVR + CABG: requires heart team input based on SYNTAX score',
+    ],
+    keyValues: {
+      'AS Severity': 'Severe (AVA 0.8 cm2)',
+      'CAD': '3-vessel (SYNTAX 28)',
+      'Planned Approach': 'TAVR (PCI not discussed)',
+      'Heart Team Discussion': 'Not documented',
+      'STS Risk': '4.5%',
+      'Strategy Documentation': 'Absent',
+    },
+  },
+  {
+    id: 'VD-ACS-002',
+    name: 'Marguerite Dupont',
+    mrn: 'VD-12102',
+    age: 69,
+    signals: [
+      'Severe AS + LAD + RCA disease (SYNTAX 22)',
+      'Scheduled for SAVR without discussion of concomitant CABG',
+      'Combined approach avoids second procedure',
+    ],
+    keyValues: {
+      'AS Severity': 'Severe (AVA 0.9 cm2)',
+      'CAD': '2-vessel (LAD + RCA, SYNTAX 22)',
+      'Planned Approach': 'Isolated SAVR',
+      'CABG Discussion': 'Not documented',
+      'STS Risk': '3.8%',
+      'Strategy Documentation': 'Absent',
+    },
+  },
+  {
+    id: 'VD-ACS-003',
+    name: 'Herbert Morrison',
+    mrn: 'VD-12103',
+    age: 78,
+    signals: [
+      'Severe AS + complex LAD bifurcation lesion + RCA CTO',
+      'TAVR planned &mdash; no PCI strategy discussed',
+      'High SYNTAX score warrants SAVR + CABG consideration',
+    ],
+    keyValues: {
+      'AS Severity': 'Severe (AVA 0.7 cm2)',
+      'CAD': 'Complex (SYNTAX 34 &mdash; high)',
+      'Planned Approach': 'TAVR only',
+      'PCI Discussion': 'Not documented',
+      'STS Risk': '5.2%',
+      'Strategy Documentation': 'Absent',
+    },
+  },
+  {
+    id: 'VD-ACS-004',
+    name: 'Audrey Chen',
+    mrn: 'VD-12104',
+    age: 71,
+    signals: [
+      'Severe AS + significant LAD stenosis (90%)',
+      'Staged TAVR then PCI planned without heart team documentation',
+      'Combined TAVR+PCI vs staged: procedural risk considerations undocumented',
+    ],
+    keyValues: {
+      'AS Severity': 'Severe (AVA 0.85 cm2)',
+      'CAD': 'Significant LAD stenosis (90%)',
+      'Planned Approach': 'Staged TAVR then PCI',
+      'Heart Team Discussion': 'Not documented',
+      'STS Risk': '3.1%',
+      'Strategy Documentation': 'Absent &mdash; staging rationale not recorded',
+    },
+  },
+];
+
+// ============================================================
 // MASTER GAP DATA
 // ============================================================
 export const VD_CLINICAL_GAPS: VDClinicalGap[] = [
@@ -758,6 +1841,314 @@ export const VD_CLINICAL_GAPS: VDClinicalGap[] = [
     whyMissed: 'Subclinical leaflet thrombosis screening requires connecting post-TAVR surveillance with CT imaging protocols — a monitoring step that standard echo-based follow-up doesn\'t address.',
     whyTailrd: 'TAILRD connected post-TAVR status with absence of HALT screening protocol to identify this subclinical thrombosis surveillance gap.',
     methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 380 TAVR/year x 2-year window = 760. HALT prevalence 10-15%. Neurologic symptoms or rising gradients ~6% = 46 x 70% identifiable = 31. Dollar opportunity: $0 direct revenue. Safety gap — CT valve $800 monitoring noted in clinical value only.',
+  },
+  {
+    id: 'vd-gap-7-severe-as-not-referred',
+    name: 'Severe AS Not Referred for Intervention',
+    category: 'Gap',
+    patientCount: 45,
+    dollarOpportunity: 972000,
+    priority: 'high',
+    evidence:
+      '2020 ACC/AHA Valve Guidelines (Otto et al, Circulation 2021, PMID 33332149). Class I recommendation for intervention in symptomatic severe AS (AVA <1.0 cm2, mean gradient >40 mmHg). Untreated symptomatic severe AS carries 50% 2-year mortality.',
+    cta: 'Refer for Heart Team Evaluation',
+    detectionCriteria: [
+      'Severe AS on echo (AVA <1.0 cm2 OR mean gradient >40 mmHg OR Vmax >=4.0 m/s)',
+      'No TAVR or SAVR referral documented in 6+ months',
+      'Symptoms present (dyspnea, syncope, angina) OR declining LVEF (<50%)',
+    ],
+    patients: severeASNotReferredPatients,
+    whyMissed: 'Severe AS patients without explicit referral fall through when follow-up visits are managed by non-valve specialists who may not recognize intervention criteria or assume the patient is already in the pipeline.',
+    whyTailrd: 'TAILRD connected severe AS echocardiographic parameters with absence of structural heart referral and symptom burden to identify patients with Class I indication who are not in the intervention pipeline.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 700 total valve interventions/year. For every intervention, ~15% of severe AS patients sit without referral x catchment adjustment = ~45. Dollar opportunity: $72,000 TAVR DRG x 30% conversion x 45 = ~$972K. ACC/AHA 2020 Valve Guidelines.',
+    crossModule: 'Heart Failure Module — declining LVEF overlap',
+  },
+  {
+    id: 'vd-gap-8-mitral-repair-rate',
+    name: 'Mitral Repair Rate Below Benchmark',
+    category: 'Quality',
+    patientCount: 18,
+    dollarOpportunity: 0,
+    priority: 'high',
+    evidence:
+      'David TE et al, JTCVS 2013 (PMID 23219502): long-term durability of mitral repair superior to replacement. Goldstone AB et al, NEJM 2017 (PMID 28614676): repair associated with superior survival vs replacement in degenerative MR. ACC/STS benchmark: repair rate should be >=95% for degenerative MR at reference centers.',
+    cta: 'Review for Repair Feasibility — Consider Referral to Mitral Specialist',
+    detectionCriteria: [
+      'Mitral valve surgery performed for degenerative MR (posterior leaflet pathology)',
+      'Mitral valve replacement performed instead of repair',
+      'No annular calcification or complex anterior leaflet pathology that would preclude repair',
+    ],
+    patients: mitralRepairRatePatients,
+    whyMissed: 'Repair vs replacement decision is made intraoperatively at the surgeon level — institutional quality programs rarely retrospectively audit repair rates against national benchmarks for specific pathology types.',
+    whyTailrd: 'TAILRD connected operative reports (CPT codes for MVR vs repair) with preoperative echo findings (etiology, leaflet anatomy) to identify cases where repair was feasible but replacement was performed.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 700 valve surgeries x 15% MV x 60% degenerative x 29% replaced instead of repaired (vs benchmark <5%) = ~18. Dollar opportunity: $0 direct revenue — quality gap linked to program reputation, STS star ratings, and referral volume.',
+  },
+  {
+    id: 'vd-gap-9-severe-tr-not-assessed',
+    name: 'Severe TR Not Assessed for Transcatheter Intervention',
+    category: 'Growth',
+    patientCount: 35,
+    dollarOpportunity: 385000,
+    priority: 'high',
+    evidence:
+      'TRILUMINATE Pivotal (Lurz et al, NEJM 2024, PMID 38587239). TriClip showed significant reduction in TR severity and improvement in quality of life vs medical therapy at 1 year. FDA-approved for symptomatic severe TR.',
+    cta: 'Screen for Transcatheter Tricuspid Intervention Eligibility',
+    detectionCriteria: [
+      'Moderate-severe or severe tricuspid regurgitation on echo',
+      'RV dysfunction (TAPSE <17mm) or recurrent HF admissions',
+      'Not referred for transcatheter tricuspid intervention (TriClip/EVOQUE) evaluation',
+    ],
+    patients: severeTRNotAssessedPatients,
+    whyMissed: 'Tricuspid regurgitation has historically been undertreated ("forgotten valve"). Most programs lack a systematic screening pathway for transcatheter TR intervention, and severe TR is often attributed to comorbidities rather than treated as a standalone target.',
+    whyTailrd: 'TAILRD connected echo-derived TR severity with HF admission frequency and RV function metrics to identify patients meeting transcatheter TR intervention criteria who were not in the structural heart pipeline.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: HF panel (~8,000) x 4% significant TR x 30% not referred x 35% market share = ~35. Dollar opportunity: $55,000 TEER x 20% conversion (new program) x 35 = ~$385K. TRILUMINATE Pivotal trial.',
+  },
+  {
+    id: 'vd-gap-10-failing-bioprosthetic-viv',
+    name: 'Failing Bioprosthetic Valve — Valve-in-Valve TAVR Not Considered',
+    category: 'Gap',
+    patientCount: 22,
+    dollarOpportunity: 475000,
+    priority: 'high',
+    evidence:
+      'Webb JG et al, JACC 2017 (PMID 28279291). Valve-in-valve TAVR feasibility >95% with acceptable mortality in high-risk redo patients. VIVID registry data: 30-day mortality 7.6% for VIV vs 9-12% for redo surgery in high-risk patients.',
+    cta: 'Evaluate for Valve-in-Valve TAVR Candidacy',
+    detectionCriteria: [
+      'Prior bioprosthetic AVR or MVR',
+      'Rising transvalvular gradients (mean gradient increase >10 mmHg from baseline) OR new prosthetic regurgitation',
+      'No evaluation for valve-in-valve TAVR documented',
+    ],
+    patients: failingBioprostheticPatients,
+    whyMissed: 'Structural valve deterioration develops gradually and rising gradients may be attributed to patient-prosthesis mismatch or technical factors rather than triggering VIV-TAVR evaluation. Many patients are followed by general cardiologists unfamiliar with VIV-TAVR thresholds.',
+    whyTailrd: 'TAILRD connected serial echocardiographic gradient trends in bioprosthetic valve patients with time since implant and absence of structural heart referral to identify SVD patients missing VIV-TAVR evaluation.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: estimated aging bioprosthetic population x SVD rate 10-15% at 10 years = ~22 candidates. Dollar opportunity: $72,000 VIV-TAVR DRG x 30% conversion x 22 = ~$475K. Webb et al, JACC 2017.',
+  },
+  {
+    id: 'vd-gap-11-concomitant-af-maze',
+    name: 'Concomitant AF + Valve Surgery — Maze Not Offered',
+    category: 'Gap',
+    patientCount: 40,
+    dollarOpportunity: 140000,
+    priority: 'high',
+    evidence:
+      'Badhwar V et al, JTCVS 2017 (PMID 28274557): STS Guidelines recommend concomitant surgical ablation with valve surgery in patients with AF. Class I recommendation. Cox-Maze IV achieves 70-90% freedom from AF at 1 year. LAAC reduces long-term stroke risk.',
+    cta: 'Discuss Concomitant Surgical Ablation with Surgical Team',
+    detectionCriteria: [
+      'Elective valve surgery performed (SAVR, MVR, MV repair)',
+      'Pre-operative AF documented (paroxysmal, persistent, or long-standing persistent)',
+      'No concomitant surgical ablation (Maze) or left atrial appendage closure performed',
+    ],
+    patients: concomitantAFMazePatients,
+    whyMissed: 'Concomitant Maze is considered an add-on procedure and is frequently omitted when the primary surgical plan focuses on the valve alone. AF documentation may be in cardiology notes but not flagged in the surgical planning workflow.',
+    whyTailrd: 'TAILRD connected pre-operative AF diagnosis with valve surgery operative reports to identify patients who underwent valve surgery without concomitant surgical ablation despite Class I indication.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 700 valve surgeries x 25% AF prevalence x 23% Maze non-adoption rate = ~40. Dollar opportunity: $3,500 incremental add-on x 40 = ~$140K. Also significant quality metric for STS reporting. Badhwar et al, JTCVS 2017.',
+  },
+  {
+    id: 'vd-gap-12-heart-team-not-documented',
+    name: 'TAVR vs SAVR Heart Team Discussion Not Documented',
+    category: 'Quality',
+    patientCount: 28,
+    dollarOpportunity: 0,
+    priority: 'high',
+    tag: 'TVT Registry | ACC Quality',
+    evidence:
+      'Leon MB et al, PARTNER 2 (NEJM 2016, PMID 27040324). Mack MJ et al, PARTNER 3 (NEJM 2019, PMID 30883058). Heart team decision-making is Class I recommendation for all intermediate-risk severe AS patients. ACC/STS TVT Registry mandates documented heart team discussion.',
+    cta: 'Document Heart Team Discussion in TVT Registry',
+    detectionCriteria: [
+      'Severe AS with STS risk score 3-8% (intermediate risk)',
+      'TAVR or SAVR performed',
+      'No documented heart team discussion or multidisciplinary note in chart',
+    ],
+    patients: heartTeamDocPatients,
+    whyMissed: 'Heart team discussions often occur informally (hallway conversations, conferences) without structured documentation. TVT Registry compliance requires explicit documentation that is frequently omitted in busy programs.',
+    whyTailrd: 'TAILRD cross-referenced STS risk scores with procedure records and chart notes to identify intermediate-risk patients lacking documented heart team discussion, flagging TVT Registry compliance gaps.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 380 TAVRs x ~20% without documented heart team per national audit data = ~28 (conservative). Dollar opportunity: $0 direct — documentation/quality gap critical for ACC TVT Registry compliance and program accreditation.',
+  },
+  {
+    id: 'vd-gap-13-prosthesis-mismatch',
+    name: 'Patient-Prosthesis Mismatch Post-Valve Surgery',
+    category: 'Quality',
+    patientCount: 15,
+    dollarOpportunity: 4725,
+    priority: 'medium',
+    evidence:
+      'Pibarot P, Dumesnil JG, Heart 2006 (PMID 16365364). Severe patient-prosthesis mismatch (indexed EOA <0.85 cm2/m2) associated with increased mortality, impaired functional recovery, and reduced long-term survival. Affects 2-11% of SAVR patients depending on body size and valve selection.',
+    cta: 'Flag for Enhanced Echo Surveillance — Consider Hemodynamic Assessment',
+    detectionCriteria: [
+      'Surgical AVR performed',
+      'Post-operative indexed EOA <0.85 cm2/m2 (severe) or <0.65 cm2/m2 (critical)',
+      'Not flagged for enhanced surveillance or hemodynamic assessment',
+    ],
+    patients: prosthesisMismatchPatients,
+    whyMissed: 'Patient-prosthesis mismatch requires calculating indexed EOA from post-operative echo and BSA — a computation that is rarely automated in standard echo reporting workflows. Many labs report absolute EOA without indexing.',
+    whyTailrd: 'TAILRD calculated indexed EOA from post-SAVR echo measurements and patient BSA data to automatically flag severe and critical patient-prosthesis mismatch requiring enhanced surveillance.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 700 valve surgeries x 30% AVR x 7% severe PPM rate = ~15. Dollar opportunity: $450 echo x 70% completion x 15 = ~$4,725 (quality metric, not revenue driver). Pibarot & Dumesnil, Heart 2006.',
+  },
+  {
+    id: 'vd-gap-14-aortic-root-enlargement',
+    name: 'Aortic Root Enlargement in Severe AS — Root Replacement Not Considered',
+    category: 'Gap',
+    patientCount: 12,
+    dollarOpportunity: 162000,
+    priority: 'medium',
+    evidence:
+      'Borger MA et al, JTCVS 2004 (PMID 15457154). Concurrent aortic root replacement recommended when root >=4.5cm at time of AVR to avoid reoperation for progressive aortic dilation. 2020 ACC/AHA guidelines support concomitant aortic repair when root >=4.5cm (>=4.5cm for BAV patients).',
+    cta: 'CT Aortography Pre-Op — Evaluate for Root Replacement',
+    detectionCriteria: [
+      'Severe AS scheduled for or recently underwent isolated SAVR',
+      'Aortic root or ascending aorta >=4.5cm on imaging',
+      'No documentation of discussion regarding concurrent root replacement (Bentall or David procedure)',
+    ],
+    patients: aorticRootEnlargementPatients,
+    whyMissed: 'Pre-operative aortic root assessment may not be systematically performed before all SAVR cases, and mild-moderate root dilation may be deferred rather than addressed concomitantly. Surgical planning focuses on the valve without cross-referencing aortic dimensions.',
+    whyTailrd: 'TAILRD connected pre-operative imaging (CT aortography, echo) aortic dimensions with SAVR surgical planning data to identify patients with concurrent root dilation above intervention threshold.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: AVR cases (~210) x 5-8% concurrent root dilation above 4.5cm threshold = ~12. Dollar opportunity: $45,000 additional DRG increment x 30% conversion x 12 = ~$162K. Borger et al, JTCVS 2004.',
+  },
+  {
+    id: 'vd-gap-15-mechanical-valve-inr',
+    name: 'Mechanical Valve INR Not in Therapeutic Range',
+    category: 'Safety',
+    patientCount: 38,
+    dollarOpportunity: 0,
+    priority: 'high',
+    safetyNote:
+      'CRITICAL: Subtherapeutic INR in mechanical valve patients increases thromboembolic risk 2-4x. Supratherapeutic INR doubles hemorrhagic risk. Mechanical valve thrombosis carries 10-15% mortality.',
+    evidence:
+      'Cannegieter SC et al, NEJM 1995 (PMID 7862179). Subtherapeutic INR in mechanical valve patients: thromboembolic risk increased 2-4x. Supratherapeutic INR: bleeding risk doubled. Target INR: 2.5-3.5 for mechanical mitral, 2.0-3.0 for mechanical aortic (On-X may use 1.5-2.0 with aspirin).',
+    cta: 'Urgent Anticoagulation Clinic Referral — INR Optimization',
+    detectionCriteria: [
+      'Mechanical valve prosthesis (mitral or aortic)',
+      'Most recent INR out of position-specific therapeutic range for >=30 days',
+      'No anticoagulation clinic follow-up documented',
+    ],
+    patients: mechanicalValveINRPatients,
+    whyMissed: 'INR monitoring is typically managed by anticoagulation clinics or PCPs disconnected from the valve surgery program. Lapsed INR monitoring in mechanical valve patients is not flagged back to the structural heart team.',
+    whyTailrd: 'TAILRD connected mechanical valve prosthesis records with INR laboratory results to identify patients with out-of-range anticoagulation requiring urgent optimization.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: estimated mechanical valve population (~150) x 25% out-of-range rate at any point = ~38. Dollar opportunity: $0 direct revenue — safety/cost avoidance. Prevents stroke ($50K+ per event) and major hemorrhage. Cannegieter et al, NEJM 1995.',
+  },
+  {
+    id: 'vd-gap-16-severe-mr-teer',
+    name: 'Severe MR — TEER Eligibility Not Assessed',
+    category: 'Growth',
+    patientCount: 55,
+    dollarOpportunity: 907500,
+    priority: 'high',
+    evidence:
+      'Stone GW et al, COAPT (NEJM 2018, PMID 30280640). MitraClip in HFrEF patients with severe secondary MR showed >30% mortality reduction and 50% reduction in HF hospitalizations at 2 years. Abbott MR pathway: TEER is standard of care for appropriately selected patients failing GDMT.',
+    cta: 'Screen for TEER Candidacy — Refer to Structural Heart Team',
+    detectionCriteria: [
+      'Severe primary or secondary MR on echo (EROA >=0.3 cm2 for secondary, >=0.4 cm2 for primary)',
+      'Symptomatic despite guideline-directed medical therapy (NYHA II-IV)',
+      'Not referred to structural heart team for TEER evaluation',
+    ],
+    patients: severeMRTEERPatients,
+    whyMissed: 'Severe MR patients are often managed medically by HF cardiologists without systematic screening for TEER candidacy. COAPT criteria (EROA, LVEDD, GDMT status) require cross-referencing echo, medication, and HF data that are siloed across care settings.',
+    whyTailrd: 'TAILRD connected echo-derived MR severity with HF hospitalization data, GDMT optimization status, and absence of structural heart referral to identify COAPT-eligible patients not in the TEER pipeline.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: HF panel + valve panel x severe MR prevalence x not referred x 35% market share = ~55. Dollar opportunity: $55,000 TEER x 30% conversion x 55 = ~$907,500. COAPT trial (Stone et al, NEJM 2018).',
+    crossModule: 'Heart Failure Module — HFrEF + severe MR overlap',
+  },
+  {
+    id: 'vd-gap-17-pve-delayed-consult',
+    name: 'Prosthetic Valve Endocarditis — Delayed Surgical Consultation',
+    category: 'Safety',
+    patientCount: 8,
+    dollarOpportunity: 0,
+    priority: 'high',
+    safetyNote:
+      'CRITICAL: Prosthetic valve endocarditis without early surgical consultation carries 40% in-hospital mortality. Early surgery reduces mortality to <20%. ESC 2023 guidelines mandate surgical consultation within 48 hours of PVE diagnosis.',
+    evidence:
+      'Habib G et al, ESC Guidelines on IE (EHJ 2023, PMID 37622657). Early surgical consultation in PVE reduces in-hospital mortality from 40% to <20%. Class I recommendation for surgical consultation within 48 hours for all PVE cases. Surgical indications: vegetation >10mm, new paravalvular leak, persistent bacteremia, new HF.',
+    cta: 'URGENT: Surgical Consultation Within 48 Hours',
+    detectionCriteria: [
+      'Prosthetic valve endocarditis (confirmed or suspected) based on modified Duke criteria',
+      'No surgical consultation documented within 48 hours of diagnosis',
+      'Any of: vegetation >10mm, paravalvular abscess, persistent bacteremia, new HF',
+    ],
+    patients: pveDelayedConsultPatients,
+    whyMissed: 'PVE is managed by infectious disease teams who may not automatically trigger surgical consultation. The 48-hour surgical consult window is a guideline recommendation that is not enforced by standard order sets or clinical workflows.',
+    whyTailrd: 'TAILRD connected prosthetic valve endocarditis diagnosis (blood cultures + echo findings) with surgical consultation timing to identify PVE patients with delayed surgical assessment exceeding guideline-recommended windows.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: prosthetic valve population x PVE incidence 0.5%/year x delayed consultation rate (~35%) = ~8. Dollar opportunity: $0 direct revenue — critical safety gap. Avoided mortality and prolonged ICU stays. Habib et al, ESC 2023.',
+  },
+  {
+    id: 'vd-gap-18-post-tavr-pacemaker',
+    name: 'Post-TAVR Pacemaker Need Not Anticipated',
+    category: 'Quality',
+    patientCount: 25,
+    dollarOpportunity: 0,
+    priority: 'medium',
+    evidence:
+      'Auffret V et al, Circulation 2017 (PMID 28400525). Pre-procedural RBBB is the strongest predictor of post-TAVR permanent pacemaker (OR 4.5). Other risk factors: first-degree AVB, left axis deviation, self-expanding valve. Post-TAVR PPM rate: 10-25% depending on valve type and pre-existing conduction disease.',
+    cta: 'Pre-TAVR Conduction Risk Assessment — Consider EP Standby',
+    detectionCriteria: [
+      'TAVR performed with new conduction disturbance requiring PPM within 30 days',
+      'Pre-procedural risk factors present (RBBB, first-degree AVB, self-expanding valve)',
+      'No pre-procedural conduction risk documentation or EP standby planning',
+    ],
+    patients: postTAVRPacemakerPatients,
+    whyMissed: 'Pre-TAVR conduction risk assessment is not systematically performed in all programs. Pre-existing RBBB and AVB are documented on ECG but not consistently flagged as PPM risk factors in the TAVR planning workflow.',
+    whyTailrd: 'TAILRD connected pre-TAVR ECG findings (RBBB, first-degree AVB) with post-TAVR outcomes (new PPM within 30 days) to retrospectively identify patients whose conduction risk was not anticipated pre-procedurally.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 380 TAVRs x 15% PPM rate x 43% with identifiable pre-op risk factors not flagged = ~25. Dollar opportunity: $0 direct — quality metric reducing unplanned hospital days and length of stay. Auffret et al, Circulation 2017.',
+  },
+  {
+    id: 'vd-gap-19-bioprosthetic-surveillance',
+    name: 'Bioprosthetic Valve Surveillance Overdue (>5 Years Post-Op)',
+    category: 'Quality',
+    patientCount: 85,
+    dollarOpportunity: 26775,
+    priority: 'medium',
+    evidence:
+      '2020 ACC/AHA Valve Guidelines: annual echocardiographic surveillance recommended >5 years post bioprosthetic AVR or MVR. SVD typically begins 7-10 years post-implant with 30-50% requiring reintervention by 15 years. Early detection enables elective VIV-TAVR planning.',
+    cta: 'Schedule Annual Surveillance Echocardiogram',
+    detectionCriteria: [
+      'Bioprosthetic valve prosthesis (AVR or MVR) >5 years post-implant',
+      'No echocardiogram in past 12 months',
+      'No documented valve-related follow-up appointment',
+    ],
+    patients: bioprostheticSurveillancePatients,
+    whyMissed: 'Long-term bioprosthetic valve surveillance requires tracking implant dates against echo intervals — patients implanted 5-15 years ago are often lost to follow-up from the surgical team and managed only by PCPs who may not enforce valve surveillance schedules.',
+    whyTailrd: 'TAILRD connected bioprosthetic valve implant records with time since surgery and absence of annual echo to identify patients in the SVD risk window who are overdue for surveillance.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: estimated bioprosthetic population >5 years (~280) x 30% surveillance gap = ~85. Dollar opportunity: $450 echo x 70% completion x 85 = ~$26,775. Also pipeline for VIV-TAVR if SVD detected. ACC/AHA 2020 guidelines.',
+  },
+  {
+    id: 'vd-gap-20-tmvr-candidacy',
+    name: 'TMVR Candidacy Not Screened',
+    category: 'Growth',
+    patientCount: 12,
+    dollarOpportunity: 117000,
+    priority: 'medium',
+    evidence:
+      'Webb JG et al (Tendyne, Intrepid trials). Transcatheter mitral valve replacement (TMVR) offers option for patients with severe symptomatic MR who are not candidates for surgical repair or TEER. FDA pathway advancing for multiple TMVR devices. Early feasibility data shows acceptable safety in no-option patients.',
+    cta: 'Evaluate for TMVR Clinical Trial or Compassionate Use',
+    detectionCriteria: [
+      'Severe symptomatic MR (primary or secondary)',
+      'Not a candidate for surgical repair (high/prohibitive risk)',
+      'Not a candidate for TEER (failed or anatomy unsuitable)',
+      'Not evaluated for TMVR or enrolled in TMVR clinical trial',
+    ],
+    patients: tmvrCandidacyPatients,
+    whyMissed: 'TMVR is an emerging technology and most programs do not have a systematic screening pathway for TMVR candidacy. Patients who fail TEER or are inoperable are often considered no-option without evaluation for emerging transcatheter alternatives.',
+    whyTailrd: 'TAILRD identified patients with severe MR who failed or were ineligible for both surgical repair and TEER, cross-referencing with TMVR trial eligibility criteria to flag potential candidates for this emerging therapy.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: severe MR patients x failed/ineligible for repair or TEER x 35% market share = ~12. Dollar opportunity: $65,000 TMVR x 15% conversion (emerging technology) x 12 = ~$117K. Tendyne/Intrepid trial data.',
+  },
+  {
+    id: 'vd-gap-21-as-cad-combined-strategy',
+    name: 'AS + CAD — Combined vs Staged Strategy Not Documented',
+    category: 'Gap',
+    patientCount: 30,
+    dollarOpportunity: 216000,
+    priority: 'high',
+    evidence:
+      'Barbato B et al, EHJ 2023 (PMID 36721960). Combined TAVR+PCI associated with longer procedures but avoids staged procedural risk. SAVR+CABG preferred for high SYNTAX scores. Decision requires heart team input based on SYNTAX score, STS risk, and coronary anatomy. No randomized trial comparing strategies — individualized decision-making essential.',
+    cta: 'Heart Team Discussion — Combined vs Staged Revascularization Strategy',
+    detectionCriteria: [
+      'Severe AS requiring intervention (TAVR or SAVR)',
+      'Significant concomitant CAD requiring revascularization',
+      'No documented discussion of combined vs staged approach (TAVR+PCI vs SAVR+CABG vs staged)',
+    ],
+    patients: asCADStrategyPatients,
+    whyMissed: 'AS and CAD are often managed by separate subspecialists (structural heart vs interventional cardiology). The combined vs staged strategy decision requires cross-disciplinary heart team input that is frequently not formalized or documented.',
+    whyTailrd: 'TAILRD connected severe AS intervention planning with coronary angiography data showing significant CAD to identify patients lacking documented heart team discussion of combined vs staged revascularization strategy.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 380 TAVRs x 25% concurrent significant CAD x 32% without documented combined strategy discussion = ~30. Dollar opportunity: $24,000 PCI add-on x 30% conversion x 30 = ~$216K incremental. Barbato et al, EHJ 2023.',
   },
 ];
 
@@ -1059,7 +2450,7 @@ const VDClinicalGapDetectionDashboard: React.FC = () => {
         </h3>
         <p className="text-sm text-titanium-600 mb-4">
           AI-driven detection of evidence-based valvular disease therapy gaps, surveillance deficiencies, and safety opportunities.
-          6 active gap rules covering AS surveillance, post-TAVR quality, anticoagulation safety, BAV aortopathy, endocarditis prophylaxis, and HALT screening.
+          21 active gap rules covering AS surveillance, post-TAVR quality, anticoagulation safety, BAV aortopathy, endocarditis prophylaxis, HALT screening, intervention referral, mitral repair quality, tricuspid intervention, valve-in-valve TAVR, concomitant AF, heart team documentation, prosthesis mismatch, aortic root, INR monitoring, TEER eligibility, PVE safety, pacemaker risk, bioprosthetic surveillance, TMVR candidacy, and AS+CAD strategy.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-red-50 border border-red-200 rounded-xl p-4">
