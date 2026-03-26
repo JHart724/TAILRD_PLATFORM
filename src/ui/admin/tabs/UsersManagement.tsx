@@ -46,12 +46,12 @@ const USERS: AdminUser[] = [
   { id: 'u-002', email: 'ahmed.patel@bswhealth.med', firstName: 'Ahmed', lastName: 'Patel', role: 'Physician', hospital: 'BSW', hospitalId: 'hs-001', status: 'Active', lastLogin: '2026-03-22 07:30', mfaEnabled: true },
   { id: 'u-003', email: 'maria.garcia@bswhealth.med', firstName: 'Maria', lastName: 'Garcia', role: 'Quality Director', hospital: 'BSW', hospitalId: 'hs-001', status: 'Active', lastLogin: '2026-03-21 16:45', mfaEnabled: false },
   { id: 'u-004', email: 'james.thompson@bswhealth.med', firstName: 'James', lastName: 'Thompson', role: 'Analyst', hospital: 'BSW', hospitalId: 'hs-001', status: 'Active', lastLogin: '2026-03-20 14:20', mfaEnabled: true },
-  // Mount Sinai (5 users)
-  { id: 'u-005', email: 'rachel.kim@mountsinai.org', firstName: 'Rachel', lastName: 'Kim', role: 'Hospital Admin', hospital: 'Mount Sinai', hospitalId: 'hs-002', status: 'Active', lastLogin: '2026-03-22 09:00', mfaEnabled: true },
-  { id: 'u-006', email: 'james.wilson@mountsinai.org', firstName: 'James', lastName: 'Wilson', role: 'Physician', hospital: 'Mount Sinai', hospitalId: 'hs-002', status: 'Active', lastLogin: '2026-03-22 08:45', mfaEnabled: true },
-  { id: 'u-007', email: 'lisa.park@mountsinai.org', firstName: 'Lisa', lastName: 'Park', role: 'Nurse Manager', hospital: 'Mount Sinai', hospitalId: 'hs-002', status: 'Active', lastLogin: '2026-03-22 07:55', mfaEnabled: false },
-  { id: 'u-008', email: 'emily.foster@mountsinai.org', firstName: 'Emily', lastName: 'Foster', role: 'Physician', hospital: 'Mount Sinai', hospitalId: 'hs-002', status: 'Active', lastLogin: '2026-03-21 17:30', mfaEnabled: true },
-  { id: 'u-009', email: 'mark.davis@mountsinai.org', firstName: 'Mark', lastName: 'Davis', role: 'Analyst', hospital: 'Mount Sinai', hospitalId: 'hs-002', status: 'Active', lastLogin: '2026-03-21 15:10', mfaEnabled: false },
+  // Regional Medical (5 users)
+  { id: 'u-005', email: 'rachel.kim@regionalmed.org', firstName: 'Rachel', lastName: 'Kim', role: 'Hospital Admin', hospital: 'Regional Medical', hospitalId: 'hs-002', status: 'Active', lastLogin: '2026-03-22 09:00', mfaEnabled: true },
+  { id: 'u-006', email: 'james.wilson@regionalmed.org', firstName: 'James', lastName: 'Wilson', role: 'Physician', hospital: 'Regional Medical', hospitalId: 'hs-002', status: 'Active', lastLogin: '2026-03-22 08:45', mfaEnabled: true },
+  { id: 'u-007', email: 'lisa.park@regionalmed.org', firstName: 'Lisa', lastName: 'Park', role: 'Nurse Manager', hospital: 'Regional Medical', hospitalId: 'hs-002', status: 'Active', lastLogin: '2026-03-22 07:55', mfaEnabled: false },
+  { id: 'u-008', email: 'emily.foster@regionalmed.org', firstName: 'Emily', lastName: 'Foster', role: 'Physician', hospital: 'Regional Medical', hospitalId: 'hs-002', status: 'Active', lastLogin: '2026-03-21 17:30', mfaEnabled: true },
+  { id: 'u-009', email: 'mark.davis@regionalmed.org', firstName: 'Mark', lastName: 'Davis', role: 'Analyst', hospital: 'Regional Medical', hospitalId: 'hs-002', status: 'Active', lastLogin: '2026-03-21 15:10', mfaEnabled: false },
   // Memorial Hermann (3 users)
   { id: 'u-010', email: 'john.martinez@memhermann.org', firstName: 'John', lastName: 'Martinez', role: 'Hospital Admin', hospital: 'Memorial Hermann', hospitalId: 'hs-003', status: 'Active', lastLogin: '2026-03-22 08:30', mfaEnabled: true },
   { id: 'u-011', email: 'maria.rodriguez@memhermann.org', firstName: 'Maria', lastName: 'Rodriguez', role: 'Service Line Director', hospital: 'Memorial Hermann', hospitalId: 'hs-003', status: 'Active', lastLogin: '2026-03-22 06:20', mfaEnabled: false },

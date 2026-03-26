@@ -46,7 +46,7 @@ const HOSPITAL_DATA: HospitalDataStats[] = [
   },
   {
     id: 'hs-002',
-    name: 'Mount Sinai Health System',
+    name: 'Regional Medical Center',
     abbr: 'MSH',
     totalPatients: 3540,
     observations: 28320,
@@ -102,8 +102,8 @@ const RECOMMENDATIONS: Recommendation[] = [
   { hospital: 'Memorial Hermann', field: 'Device Serial Numbers', currentRate: 22, suggestion: 'Implement barcode scanning at device implant to auto-populate serial numbers.' },
   { hospital: 'Memorial Hermann', field: 'Medications', currentRate: 38, suggestion: 'Enable Redox medication reconciliation feed from pharmacy system.' },
   { hospital: 'Memorial Hermann', field: 'LVEF Populated', currentRate: 45, suggestion: 'Map echo lab DICOM structured reports to auto-extract LVEF values.' },
-  { hospital: 'Mount Sinai', field: 'Device Serial Numbers', currentRate: 58, suggestion: 'Cross-reference implant registry with device tracking module.' },
-  { hospital: 'Mount Sinai', field: 'Follow-up Scheduling', currentRate: 61, suggestion: 'Integrate follow-up appointment feed from scheduling system.' },
+  { hospital: 'Regional Medical', field: 'Device Serial Numbers', currentRate: 58, suggestion: 'Cross-reference implant registry with device tracking module.' },
+  { hospital: 'Regional Medical', field: 'Follow-up Scheduling', currentRate: 61, suggestion: 'Integrate follow-up appointment feed from scheduling system.' },
 ];
 
 // ─── Quality Score Color ─────────────────────────────────────────────────────
@@ -213,7 +213,7 @@ const DataManagement: React.FC = () => {
               <tr className="border-b border-gray-200">
                 <th className="text-left py-2 text-xs font-semibold text-gray-500 uppercase">Field</th>
                 <th className="text-center py-2 text-xs font-semibold text-gray-500 uppercase">BSW</th>
-                <th className="text-center py-2 text-xs font-semibold text-gray-500 uppercase">Mount Sinai</th>
+                <th className="text-center py-2 text-xs font-semibold text-gray-500 uppercase">Regional Medical</th>
                 <th className="text-center py-2 text-xs font-semibold text-gray-500 uppercase">Memorial Hermann</th>
               </tr>
             </thead>

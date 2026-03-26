@@ -46,7 +46,7 @@ const HOSPITAL_METRICS: HospitalMetrics[] = [
   },
   {
     id: 'hs-002',
-    name: 'Mount Sinai Health System',
+    name: 'Regional Medical Center',
     abbr: 'MSH',
     gapClosureRate: 34,
     gapClosureTrend: [18, 20, 22, 24, 26, 28, 30, 31, 32, 33, 33, 34],

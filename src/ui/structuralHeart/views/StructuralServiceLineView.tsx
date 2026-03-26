@@ -21,7 +21,7 @@ interface TabGroup {
 }
 
 const StructuralServiceLineView: React.FC = () => {
-  const [activeTab, _setActiveTab] = useState<TabId>('tavr');
+  const [activeTab, _setActiveTab] = useState<TabId>('gap-detection');
   const setActiveTab = (tab: TabId) => {
     _setActiveTab(tab);
     const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');

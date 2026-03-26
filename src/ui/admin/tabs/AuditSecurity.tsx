@@ -52,7 +52,7 @@ interface ActiveSession {
 
 const ACTIVE_SESSIONS: ActiveSession[] = [
   { id: 'as-1', user: 'Sarah Chen', hospital: 'BSW', ip: '10.0.1.42', startedAt: '2026-03-22 08:15', lastActivity: '2 min ago' },
-  { id: 'as-2', user: 'James Wilson', hospital: 'Mount Sinai', ip: '172.16.5.88', startedAt: '2026-03-22 08:45', lastActivity: '5 min ago' },
+  { id: 'as-2', user: 'James Wilson', hospital: 'Main Campus', ip: '172.16.5.88', startedAt: '2026-03-22 08:45', lastActivity: '5 min ago' },
   { id: 'as-3', user: 'Maria Rodriguez', hospital: 'Memorial Hermann', ip: '192.168.10.12', startedAt: '2026-03-22 06:20', lastActivity: '15 min ago' },
   { id: 'as-4', user: 'Platform Admin', hospital: 'TAILRD', ip: '10.0.0.1', startedAt: '2026-03-22 09:00', lastActivity: 'Now' },
 ];

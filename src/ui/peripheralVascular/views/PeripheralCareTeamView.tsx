@@ -160,12 +160,6 @@ const PeripheralCareTeamView: React.FC = () => {
  label: 'Clinical Intelligence',
  icon: Stethoscope,
  description: 'Phenotype classification, risk calculators, contraindication checking, and intervention tracking'
- },
- {
- id: 'clinical-gaps',
- label: 'Clinical Gaps',
- icon: AlertTriangle,
- description: 'PV clinical gap detection dashboard'
  }
  ],
  tabContent: {

@@ -499,6 +499,12 @@ const peripheralTabs: StandardTabConfig[] = [
  description: 'Peripheral vascular patients'
   },
   {
+ id: 'clinical-gaps',
+ label: 'Clinical Gaps',
+ icon: AlertTriangle,
+ description: 'Polyvascular dual pathway therapy gap'
+  },
+  {
  id: 'workflow',
  label: 'Workflow',
  icon: Target,
@@ -521,12 +527,6 @@ const peripheralTabs: StandardTabConfig[] = [
  label: 'Documentation',
  icon: AlertTriangle,
  description: 'Peripheral documentation'
-  },
-  {
- id: 'clinical-gaps',
- label: 'Clinical Gaps',
- icon: AlertTriangle,
- description: 'Polyvascular dual pathway therapy gap'
   }
 ];
 

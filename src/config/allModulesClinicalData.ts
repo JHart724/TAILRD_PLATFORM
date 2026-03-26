@@ -74,7 +74,7 @@ export const modulesClinicalData = {
  facilities: [
  {
  name: 'Main Campus Medical Center - Main EP Lab',
- location: '1468 Madison Ave, Manhattan, NY 10029',
+ location: '1000 Medical Center Dr, Suite 100',
  totalRevenue: 3200000,
  patientCount: 456,
  gdmtRate: 85,
@@ -92,7 +92,7 @@ export const modulesClinicalData = {
  },
  {
  name: 'West Campus Medical Center - EP Suite',
- location: '1000 10th Ave, Manhattan, NY 10019',
+ location: '2500 West Medical Blvd, Suite 200',
  totalRevenue: 2800000,
  patientCount: 378,
  gdmtRate: 78,
@@ -109,7 +109,7 @@ export const modulesClinicalData = {
  },
  {
  name: 'North Campus Hospital - EP Lab',
- location: '1111 Amsterdam Ave, Manhattan, NY 10025',
+ location: '4200 North Campus Pkwy, Suite 300',
  totalRevenue: 1400000,
  patientCount: 234,
  gdmtRate: 72,
@@ -125,7 +125,7 @@ export const modulesClinicalData = {
  },
  {
  name: 'Community Medical Center - EP Unit',
- location: '3201 Kings Hwy, Brooklyn, NY 11234',
+ location: '5500 Community Health Blvd, Suite 400',
  totalRevenue: 980000,
  patientCount: 179,
  gdmtRate: 65,
@@ -415,7 +415,7 @@ export const modulesClinicalData = {
  facilities: [
  {
  name: 'Main Campus Medical Center - Structural Heart Lab',
- location: '1468 Madison Ave, Manhattan, NY 10029',
+ location: '1000 Medical Center Dr, Suite 100',
  totalRevenue: 4500000,
  patientCount: 412,
  gdmtRate: 88,
@@ -430,7 +430,7 @@ export const modulesClinicalData = {
  },
  {
  name: 'West Campus Medical Center',
- location: '1000 10th Ave, Manhattan, NY 10019',
+ location: '2500 West Medical Blvd, Suite 200',
  totalRevenue: 3400000,
  patientCount: 289,
  gdmtRate: 82,
@@ -444,7 +444,7 @@ export const modulesClinicalData = {
  },
  {
  name: 'North Campus Hospital',
- location: '1111 Amsterdam Ave, Manhattan, NY 10025',
+ location: '4200 North Campus Pkwy, Suite 300',
  totalRevenue: 1800000,
  patientCount: 134,
  gdmtRate: 76,
@@ -458,7 +458,7 @@ export const modulesClinicalData = {
  },
  {
  name: 'Community Medical Center',
- location: '3201 Kings Hwy, Brooklyn, NY 11234',
+ location: '5500 Community Health Blvd, Suite 400',
  totalRevenue: 620000,
  patientCount: 57,
  gdmtRate: 68,
@@ -551,7 +551,7 @@ export const modulesClinicalData = {
  {
  id: 'msmc-coronary',
  name: 'Main Campus Medical Center',
- address: '1 Gustave L. Levy Pl, New York, NY 10029',
+ address: '1000 Medical Center Dr, Suite 100',
  totalProcedures: 1456,
  avgRiskScore: 5.8,
  complicationRate: 1.2,
@@ -564,7 +564,7 @@ export const modulesClinicalData = {
  {
  id: 'mswh-coronary',
  name: 'West Campus Medical Center',
- address: '1000 10th Ave, New York, NY 10019',
+ address: '2500 West Medical Blvd, Suite 200',
  totalProcedures: 1123,
  avgRiskScore: 5.4,
  complicationRate: 0.9,
@@ -577,7 +577,7 @@ export const modulesClinicalData = {
  {
  id: 'msbi-coronary',
  name: 'East Campus Hospital',
- address: '281 1st Ave, New York, NY 10003',
+ address: '3100 East Campus Way, Suite 150',
  totalProcedures: 987,
  avgRiskScore: 5.6,
  complicationRate: 1.1,
@@ -590,7 +590,7 @@ export const modulesClinicalData = {
  {
  id: 'mssl-coronary',
  name: 'North Campus Hospital',
- address: '1111 Amsterdam Ave, New York, NY 10025',
+ address: '4200 North Campus Pkwy, Suite 300',
  totalProcedures: 678,
  avgRiskScore: 5.2,
  complicationRate: 0.8,
@@ -784,7 +784,7 @@ export const modulesClinicalData = {
  {
  id: 'msmc-valvular',
  name: 'Main Campus Medical Center',
- address: '1 Gustave L. Levy Pl, New York, NY 10029',
+ address: '1000 Medical Center Dr, Suite 100',
  totalProcedures: 623,
  avgRiskScore: 8.1,
  complicationRate: 3.2,
@@ -797,7 +797,7 @@ export const modulesClinicalData = {
  {
  id: 'mswh-valvular',
  name: 'West Campus Medical Center',
- address: '1000 10th Ave, New York, NY 10019',
+ address: '2500 West Medical Blvd, Suite 200',
  totalProcedures: 445,
  avgRiskScore: 7.8,
  complicationRate: 2.9,
@@ -810,7 +810,7 @@ export const modulesClinicalData = {
  {
  id: 'msbi-valvular',
  name: 'East Campus Hospital',
- address: '281 1st Ave, New York, NY 10003',
+ address: '3100 East Campus Way, Suite 150',
  totalProcedures: 312,
  avgRiskScore: 7.5,
  complicationRate: 2.7,
@@ -823,7 +823,7 @@ export const modulesClinicalData = {
  {
  id: 'mssl-valvular',
  name: 'North Campus Hospital',
- address: '1111 Amsterdam Ave, New York, NY 10025',
+ address: '4200 North Campus Pkwy, Suite 300',
  totalProcedures: 198,
  avgRiskScore: 7.2,
  complicationRate: 2.4,
@@ -1017,7 +1017,7 @@ export const modulesClinicalData = {
  {
  id: 'msmc-peripheral',
  name: 'Main Campus Medical Center',
- address: '1 Gustave L. Levy Pl, New York, NY 10029',
+ address: '1000 Medical Center Dr, Suite 100',
  totalProcedures: 743,
  avgRiskScore: 6.4,
  complicationRate: 2.1,
@@ -1030,7 +1030,7 @@ export const modulesClinicalData = {
  {
  id: 'mswh-peripheral',
  name: 'West Campus Medical Center',
- address: '1000 10th Ave, New York, NY 10019',
+ address: '2500 West Medical Blvd, Suite 200',
  totalProcedures: 567,
  avgRiskScore: 6.1,
  complicationRate: 1.8,
@@ -1043,7 +1043,7 @@ export const modulesClinicalData = {
  {
  id: 'msbi-peripheral',
  name: 'East Campus Hospital',
- address: '281 1st Ave, New York, NY 10003',
+ address: '3100 East Campus Way, Suite 150',
  totalProcedures: 423,
  avgRiskScore: 5.9,
  complicationRate: 1.6,
@@ -1056,7 +1056,7 @@ export const modulesClinicalData = {
  {
  id: 'mssl-peripheral',
  name: 'North Campus Hospital',
- address: '1111 Amsterdam Ave, New York, NY 10025',
+ address: '4200 North Campus Pkwy, Suite 300',
  totalProcedures: 289,
  avgRiskScore: 5.6,
  complicationRate: 1.3,

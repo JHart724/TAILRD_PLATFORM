@@ -463,7 +463,7 @@ function sourceChip(src: string): string {
     case 'Structured': return 'bg-slate-100 text-slate-700';
     case 'Calculated': return 'bg-blue-100 text-blue-700';
     case 'Inferred': return 'bg-amber-100 text-amber-700';
-    case 'Manual': return 'bg-purple-100 text-purple-700';
+    case 'Manual': return 'bg-slate-100 text-slate-700';
     default: return 'bg-gray-100 text-gray-600';
   }
 }
@@ -823,7 +823,7 @@ const ResearchServiceLineView: React.FC = () => {
                     { label: 'Structured', count: structured, color: 'bg-slate-500', bgColor: 'bg-slate-100' },
                     { label: 'Calculated', count: calculated, color: 'bg-blue-500', bgColor: 'bg-blue-100' },
                     { label: 'Inferred', count: inferred, color: 'bg-amber-500', bgColor: 'bg-amber-100' },
-                    { label: 'Manual', count: manual, color: 'bg-purple-500', bgColor: 'bg-purple-100' },
+                    { label: 'Manual', count: manual, color: 'bg-slate-500', bgColor: 'bg-slate-100' },
                   ].map((s) => (
                     <div key={s.label} className="flex items-center gap-2">
                       <div className={`w-3 h-3 rounded-sm ${s.color}`} />

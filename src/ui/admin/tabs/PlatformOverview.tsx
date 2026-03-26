@@ -33,7 +33,7 @@ const KPI_CARDS = [
   { label: 'Total Active Users', value: '12', icon: Users, color: '#2563EB' },
   { label: 'Total Patients', value: '10,660', icon: Heart, color: '#059669' },
   { label: 'Total Gap Flags', value: '104', icon: AlertTriangle, color: '#D97706' },
-  { label: 'Data Uploads This Month', value: '7', icon: Upload, color: '#7C3AED' },
+  { label: 'Data Uploads This Month', value: '7', icon: Upload, color: '#2C4A60' },
   { label: 'Platform Uptime', value: '99.97%', icon: Server, color: '#0891B2' },
 ];
 
@@ -50,19 +50,19 @@ interface ActivityEvent {
 
 const ACTIVITY_FEED: ActivityEvent[] = [
   { id: 'e01', timestamp: '2 min ago', type: 'login', user: 'Dr. Sarah Chen', hospital: 'BSW', description: 'Signed in to Care Team view' },
-  { id: 'e02', timestamp: '8 min ago', type: 'gap_action', user: 'Dr. James Wilson', hospital: 'Mount Sinai', description: 'Resolved 3 HF gaps for patient cohort' },
+  { id: 'e02', timestamp: '8 min ago', type: 'gap_action', user: 'Dr. James Wilson', hospital: 'Main Campus', description: 'Resolved 3 HF gaps for patient cohort' },
   { id: 'e03', timestamp: '15 min ago', type: 'upload', user: 'Admin Thompson', hospital: 'BSW', description: 'Uploaded Q1 2026 patient registry (1,240 records)' },
   { id: 'e04', timestamp: '22 min ago', type: 'login', user: 'Dr. Maria Rodriguez', hospital: 'Memorial Hermann', description: 'Signed in to Executive view' },
-  { id: 'e05', timestamp: '35 min ago', type: 'gap_action', user: 'NM Lisa Park', hospital: 'Mount Sinai', description: 'Flagged 5 EP patients for device follow-up' },
+  { id: 'e05', timestamp: '35 min ago', type: 'gap_action', user: 'NM Lisa Park', hospital: 'Main Campus', description: 'Flagged 5 EP patients for device follow-up' },
   { id: 'e06', timestamp: '1 hr ago', type: 'invite', user: 'Admin Johnson', hospital: 'Memorial Hermann', description: 'Invited dr.kumar@memhermann.org as Physician' },
   { id: 'e07', timestamp: '1.5 hrs ago', type: 'export', user: 'QD Martinez', hospital: 'BSW', description: 'Exported Structural Heart quarterly report' },
   { id: 'e08', timestamp: '2 hrs ago', type: 'login', user: 'Dr. Ahmed Patel', hospital: 'BSW', description: 'Signed in to Service Line view' },
-  { id: 'e09', timestamp: '2.5 hrs ago', type: 'gap_action', user: 'Dr. Emily Foster', hospital: 'Mount Sinai', description: 'Acknowledged 8 CAD documentation gaps' },
-  { id: 'e10', timestamp: '3 hrs ago', type: 'upload', user: 'Admin Chen', hospital: 'Mount Sinai', description: 'Uploaded device registry update (890 records)' },
+  { id: 'e09', timestamp: '2.5 hrs ago', type: 'gap_action', user: 'Dr. Emily Foster', hospital: 'Main Campus', description: 'Acknowledged 8 CAD documentation gaps' },
+  { id: 'e10', timestamp: '3 hrs ago', type: 'upload', user: 'Admin Chen', hospital: 'Main Campus', description: 'Uploaded device registry update (890 records)' },
   { id: 'e11', timestamp: '4 hrs ago', type: 'config', user: 'Platform Admin', hospital: 'TAILRD', description: 'Updated Memorial Hermann module access' },
   { id: 'e12', timestamp: '5 hrs ago', type: 'login', user: 'Dr. Robert Kim', hospital: 'Memorial Hermann', description: 'Signed in to Care Team view' },
   { id: 'e13', timestamp: '6 hrs ago', type: 'gap_action', user: 'Dr. Sarah Chen', hospital: 'BSW', description: 'Closed 12 Valvular Disease follow-up gaps' },
-  { id: 'e14', timestamp: '8 hrs ago', type: 'export', user: 'Analyst Davis', hospital: 'Mount Sinai', description: 'Exported full platform analytics CSV' },
+  { id: 'e14', timestamp: '8 hrs ago', type: 'export', user: 'Analyst Davis', hospital: 'Main Campus', description: 'Exported full platform analytics CSV' },
   { id: 'e15', timestamp: '12 hrs ago', type: 'upload', user: 'Admin Thompson', hospital: 'BSW', description: 'Uploaded peripheral vascular outcomes data' },
 ];
 
@@ -77,7 +77,7 @@ const ACTIVITY_ICON_MAP: Record<ActivityEvent['type'], React.ElementType> = {
 
 const ACTIVITY_COLOR_MAP: Record<ActivityEvent['type'], string> = {
   login: '#2563EB',
-  upload: '#7C3AED',
+  upload: '#2C4A60',
   gap_action: '#059669',
   invite: '#D97706',
   config: '#7A1A2E',
@@ -88,7 +88,7 @@ const ACTIVITY_COLOR_MAP: Record<ActivityEvent['type'], string> = {
 
 const HEALTH_SYSTEMS = [
   { name: 'Baylor Scott & White', abbr: 'BSW', status: 'Active', tier: 'Enterprise', users: 4, patients: 5280, location: 'Temple, TX' },
-  { name: 'Mount Sinai Health System', abbr: 'MSH', status: 'Active', tier: 'Standard', users: 5, patients: 3540, location: 'New York, NY' },
+  { name: 'Main Campus Health System', abbr: 'MCH', status: 'Active', tier: 'Standard', users: 5, patients: 3540, location: 'Dallas, TX' },
   { name: 'Memorial Hermann', abbr: 'MH', status: 'Trial', tier: 'Trial', users: 3, patients: 1840, location: 'Houston, TX' },
 ];
 

@@ -194,7 +194,7 @@ interface TabGroup {
 }
 
 const EPServiceLineView: React.FC = () => {
-  const [activeTab, _setActiveTab] = useState<EPServiceLineTab>('analytics');
+  const [activeTab, _setActiveTab] = useState<EPServiceLineTab>('gap-detection');
   const setActiveTab = (tab: EPServiceLineTab) => {
     _setActiveTab(tab);
     const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
