@@ -32,6 +32,7 @@ const NotFoundPage = lazy(() => import("./ui/NotFoundPage"));
 const AcceptInvite = lazy(() => import("./ui/auth/AcceptInvite"));
 const SuperAdminLogin = lazy(() => import("./ui/auth/SuperAdminLogin"));
 const SuperAdminConsole = lazy(() => import("./ui/admin/SuperAdminConsole"));
+const FreeTierDashboard = lazy(() => import("./components/free-tier/FreeTierDashboard"));
 
 // Scroll to top on route change
 function ScrollToTop() {
@@ -797,7 +798,7 @@ export default function App(): JSX.Element {
  } />
  <Route path="/service-line" element={
  <ProtectedRoute>
- <AppShell><MainDashboard /></AppShell>
+ <AppShell><FreeTierDashboard /></AppShell>
  </ProtectedRoute>
  } />
  <Route path="/data" element={
