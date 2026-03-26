@@ -515,38 +515,15 @@ function MainDashboard(): JSX.Element {
  };
   }, []);
 
-  const openModule = useCallback(async (moduleId: ModuleId) => {
- setIsLoading(true);
- // Add a delay to show loading animation for analytics processing
- await new Promise(resolve => setTimeout(resolve, 800));
- 
- switch (moduleId) {
- case "hf":
- navigate("/hf");
- break;
- case "ep":
- navigate("/ep");
- break;
- case "structural":
- navigate("/structural");
- break;
- case "coronary":
- navigate("/coronary");
- break;
- case "valvular":
- navigate("/valvular");
- break;
- case "peripheral":
- navigate("/peripheral");
- break;
- case "research":
- navigate("/research");
- break;
- default:
- setActiveModule(moduleId);
- setViewMode("module");
+  const openModule = useCallback((moduleId: ModuleId) => {
+ const routes: Record<string, string> = {
+ hf: '/hf', ep: '/ep', structural: '/structural',
+ coronary: '/coronary', valvular: '/valvular',
+ peripheral: '/peripheral', research: '/research',
+ };
+ if (routes[moduleId]) {
+ navigate(routes[moduleId]);
  }
- setIsLoading(false);
   }, [navigate]);
 
   const backToMain = useCallback(() => { setViewMode("main"); }, []);
@@ -600,12 +577,7 @@ function MainDashboard(): JSX.Element {
  {/* Cardiovascular Service Line - Slightly darker than modules */}
  <div className="flex justify-center mb-8">
  <button
- onClick={async () => {
- setIsLoading(true);
- await new Promise(resolve => setTimeout(resolve, 800));
- setIsLoading(false);
- navigate('/service-line');
- }}
+ onClick={() => navigate('/service-line')}
  className="relative group"
  >
  {/* Subtle glow effect */}
