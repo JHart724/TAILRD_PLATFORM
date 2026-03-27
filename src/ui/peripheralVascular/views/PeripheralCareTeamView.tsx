@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { DEMO_PATIENT_CONTEXT, DEMO_PATIENT_ROSTER } from '../../../types/shared';
 import { Heart, Users, Workflow, Shield, FileText, Scissors, Route, Bandage, ListTodo, Stethoscope, AlertTriangle } from 'lucide-react';
 
@@ -120,10 +120,12 @@ type PeripheralCareTeamTab =
 
 const PeripheralCareTeamView: React.FC = () => {
   const [activeTab, _setActiveTab] = useState<PeripheralCareTeamTab>('dashboard');
+  const contentRef = useRef<HTMLDivElement>(null);
   const setActiveTab = (tab: PeripheralCareTeamTab) => {
     _setActiveTab(tab);
-    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
-    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   };
 
   // Extended configuration with our new components
@@ -264,7 +266,7 @@ const PeripheralCareTeamView: React.FC = () => {
  </div>
 
  {/* Tab Content */}
- <div className="space-y-6">
+ <div ref={contentRef} className="space-y-6">
  {renderActiveTabContent()}
  </div>
  </div>

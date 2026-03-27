@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Heart, Users, Calendar, Shield, Activity, Target, BarChart3, FileText, TrendingUp, Scissors, Workflow, AlertTriangle } from 'lucide-react';
 
 // Import Valvular Disease components
@@ -16,10 +16,12 @@ interface TabGroup {
 
 const ValvularServiceLineView: React.FC = () => {
   const [activeTab, _setActiveTab] = useState<TabId>('clinical-gap-detection');
+  const contentRef = useRef<HTMLDivElement>(null);
   const setActiveTab = (tab: TabId) => {
     _setActiveTab(tab);
-    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
-    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   };
   const [generatingReport, setGeneratingReport] = useState<string | null>(null);
   const [exportingFormat, setExportingFormat] = useState<string | null>(null);
@@ -37,7 +39,7 @@ const ValvularServiceLineView: React.FC = () => {
     {
       label: 'Gap & Quality',
       tabs: [
-        { id: 'clinical-gap-detection', label: 'Gap Detection (21-Gap)', icon: AlertTriangle, description: 'AI-driven clinical gap detection' },
+        { id: 'clinical-gap-detection', label: 'Gap Detection (28-Gap)', icon: AlertTriangle, description: 'AI-driven clinical gap detection' },
         { id: 'quality', label: 'Quality', icon: Shield, description: 'Quality metrics and benchmarks' },
       ],
     },
@@ -551,7 +553,7 @@ const ValvularServiceLineView: React.FC = () => {
         </div>
 
         {/* Tab Content */}
-        <div className="space-y-6">
+        <div ref={contentRef} className="space-y-6">
           {renderTabContent()}
         </div>
       </div>

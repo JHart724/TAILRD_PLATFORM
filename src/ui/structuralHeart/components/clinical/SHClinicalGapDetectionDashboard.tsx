@@ -11,7 +11,10 @@ import { computeTrajectory, computeTimeHorizon, projectASProgression, projectBAV
 //       82 (BAV Aortopathy), 83 (Endocarditis Prophylaxis),
 //       sh-9 (Low-Flow Low-Gradient AS DSE), sh-10 (Paravalvular Leak Post-TAVR),
 //       sh-11 (TAVR CT Sizing), sh-12 (PFO Closure Cryptogenic Stroke),
-//       sh-13 (TEER COAPT vs MITRA-FR), sh-14 (Cerebral Embolic Protection TAVR)
+//       sh-13 (TEER COAPT vs MITRA-FR), sh-14 (Cerebral Embolic Protection TAVR),
+//       sh-15 (Post-TAVR Antithrombotic), sh-16 (PCI + TAVR Timing),
+//       sh-17 (Alcohol Septal Ablation HCM), sh-18 (Balloon Mitral Commissurotomy),
+//       sh-19 (Post-TEER Antithrombotic), sh-20 (TAVR-in-TAVR Feasibility)
 // ============================================================
 
 export interface SHClinicalGap {
@@ -1277,6 +1280,475 @@ export const SH_CLINICAL_GAPS: SHClinicalGap[] = [
     whyMissed: 'Cerebral embolic protection use requires identifying high-risk anatomic features on pre-TAVR CT and incorporating device into procedure planning — a step not universally part of TAVR protocols.',
     whyTailrd: 'TAILRD analyzed pre-TAVR CT calcium scores and aortic arch morphology to identify high-risk patients who would benefit from cerebral embolic protection during TAVR.',
     methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 380 TAVRs x 20% high-risk features x 40% without CEPD = ~30 patients. Dollar opportunity: $3,500 device add-on x 30 = ~$105K.',
+  },
+  // ============================================================
+  // GAP sh-15: POST-TAVR ANTICOAGULATION NOT STANDARDIZED
+  // ============================================================
+  {
+    id: 'sh-gap-15-post-tavr-antithrombotic',
+    name: 'Post-TAVR Anticoagulation Not Standardized',
+    category: 'Quality',
+    patientCount: 50,
+    dollarOpportunity: 0,
+    priority: 'high',
+    evidence:
+      'Brouwer S et al, POPular TAVI (NEJM 2020, PMID 32223116). Collet JP et al, ATLANTIS (NEJM 2022). Single antiplatelet (aspirin or clopidogrel) preferred. DOAC may benefit select patients (HALT prevention).',
+    cta: 'Apply Standardized Post-TAVR Antithrombotic Protocol',
+    detectionCriteria: [
+      'TAVR performed within past 6 months',
+      'No standardized antithrombotic protocol documented',
+      'Significant variation: single antiplatelet vs DAPT vs DOAC',
+      'No documented rationale for chosen antithrombotic strategy',
+    ],
+    patients: [
+      {
+        id: 'SH-ATH-015-001',
+        name: 'Cornelius Ashford',
+        mrn: 'MRN-SH-15001',
+        age: 82,
+        signals: [
+          'TAVR 2 months ago — on DAPT (aspirin + clopidogrel) without documented rationale',
+          'POPular TAVI: single antiplatelet reduces bleeding without increasing thrombotic events',
+          'No AF — DOAC not indicated, DAPT likely unnecessary',
+          'Standardized protocol needed for post-TAVR antithrombotic management',
+        ],
+        keyValues: {
+          'TAVR Date': '2 months ago',
+          'Current Regimen': 'DAPT (aspirin + clopidogrel)',
+          'AF Status': 'No AF',
+          'POPular TAVI': 'Single antiplatelet preferred',
+          'Protocol': 'Not standardized',
+          'Bleeding Risk': 'Elevated (age 82, DAPT unnecessary)',
+        },
+      },
+      {
+        id: 'SH-ATH-015-002',
+        name: 'Eleanor Whitfield',
+        mrn: 'MRN-SH-15002',
+        age: 78,
+        signals: [
+          'TAVR 3 months ago — on apixaban for AF + aspirin (triple therapy risk)',
+          'No documented plan to drop aspirin — bleeding risk from triple therapy',
+          'ATLANTIS: OAC alone may be sufficient in TAVR + AF patients',
+          'Protocol should specify: OAC mono vs OAC + single antiplatelet × limited duration',
+        ],
+        keyValues: {
+          'TAVR Date': '3 months ago',
+          'Current Regimen': 'Apixaban + aspirin (dual pathway)',
+          'AF Status': 'Persistent AF (CHA₂DS₂-VASc 5)',
+          'Protocol': 'Not standardized',
+          'ATLANTIS': 'OAC-based strategy preferred',
+          'Action': 'Consider dropping aspirin per protocol',
+        },
+      },
+      {
+        id: 'SH-ATH-015-003',
+        name: 'Theodore Langston',
+        mrn: 'MRN-SH-15003',
+        age: 75,
+        signals: [
+          'TAVR 6 weeks ago — on aspirin only (no clopidogrel, no DOAC)',
+          'Recent CT: mild leaflet thickening — early HALT concern',
+          'No protocol for HALT screening or antithrombotic escalation',
+          'Standardized approach: CT at 1 month, antithrombotic based on findings',
+        ],
+        keyValues: {
+          'TAVR Date': '6 weeks ago',
+          'Current Regimen': 'Aspirin 81mg only',
+          'HALT Screening': 'CT shows mild leaflet thickening',
+          'Protocol': 'Not standardized',
+          'Concern': 'Early HALT — may need OAC',
+          'Action': 'Protocol-driven antithrombotic based on CT findings',
+        },
+      },
+    ],
+    whyMissed: 'Post-TAVR antithrombotic management varies between operators and institutions. No single randomized trial provides definitive guidance for all TAVR patients, leading to practice variation.',
+    whyTailrd: 'TAILRD identified post-TAVR patients with non-standardized antithrombotic regimens by analyzing medication prescribing patterns and the absence of protocol-driven documentation.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 380 TAVRs × 38% without standardized protocol ≈ 50. Dollar opportunity: Quality — $0 direct, prevents stroke and bleeding.',
+  },
+  // ============================================================
+  // GAP sh-16: CONCOMITANT PCI + TAVR TIMING NOT DOCUMENTED
+  // ============================================================
+  {
+    id: 'sh-gap-16-pci-tavr-timing',
+    name: 'Concomitant PCI + TAVR Timing Not Documented',
+    category: 'Quality',
+    patientCount: 28,
+    dollarOpportunity: 201600,
+    priority: 'medium',
+    evidence:
+      'Patterson T et al, ACTIVATION (Circulation 2021). Singh V et al, JACC Intv 2019. Timing decision (simultaneous vs staged) should be heart-team driven based on anatomy and clinical urgency.',
+    cta: 'Document Heart Team Decision — Simultaneous vs Staged PCI Strategy',
+    detectionCriteria: [
+      'Severe AS requiring TAVR',
+      'Significant concomitant CAD requiring revascularization',
+      'No documented heart team decision on simultaneous vs staged PCI timing',
+    ],
+    patients: [
+      {
+        id: 'SH-PCI-016-001',
+        name: 'Herbert Donnelly',
+        mrn: 'MRN-SH-16001',
+        age: 79,
+        signals: [
+          'Severe AS (TAVR planned) + 80% proximal LAD stenosis',
+          'No documented discussion of simultaneous PCI vs staged approach',
+          'ACTIVATION: routine PCI before TAVR did not improve outcomes',
+          'Heart team input needed based on anatomy and symptoms',
+        ],
+        keyValues: {
+          'TAVR Status': 'Planned',
+          'CAD': '80% proximal LAD',
+          'PCI Timing': 'Not documented',
+          'ACTIVATION Trial': 'Routine PCI pre-TAVR no benefit',
+          'Heart Team': 'Discussion not documented',
+          'Recommendation': 'Document simultaneous vs staged strategy',
+        },
+      },
+      {
+        id: 'SH-PCI-016-002',
+        name: 'Vivian Carmichael',
+        mrn: 'MRN-SH-16002',
+        age: 84,
+        signals: [
+          'TAVR scheduled — incidental finding of 90% RCA + 75% LCx',
+          'Two-vessel CAD requiring revascularization decision',
+          'Staged PCI post-TAVR vs simultaneous — no documentation',
+          'Complex decision requires heart team with interventional + structural input',
+        ],
+        keyValues: {
+          'TAVR Status': 'Scheduled (2 weeks)',
+          'CAD': '90% RCA + 75% LCx (2-vessel)',
+          'PCI Timing': 'Not documented',
+          'Heart Team': 'Not convened for CAD strategy',
+          'Consideration': 'Staged vs simultaneous approach',
+          'SYNTAX Score': 'Intermediate',
+        },
+      },
+      {
+        id: 'SH-PCI-016-003',
+        name: 'Milton Prescott',
+        mrn: 'MRN-SH-16003',
+        age: 76,
+        signals: [
+          'TAVR candidate with ACS presentation — unstable angina + severe AS',
+          'PCI performed urgently for culprit lesion — TAVR timing unclear',
+          'Post-PCI TAVR timing: 1-3 months vs urgent — no protocol',
+          'Need documented plan for TAVR timing post-ACS PCI',
+        ],
+        keyValues: {
+          'Presentation': 'Unstable angina + severe AS',
+          'PCI': 'Performed (culprit LAD)',
+          'TAVR': 'Needed but timing not documented',
+          'Heart Team': 'Discussion needed for TAVR timing',
+          'Antithrombotic': 'DAPT post-PCI complicates TAVR timing',
+          'Protocol': 'No institutional guideline for ACS + AS',
+        },
+      },
+    ],
+    whyMissed: 'PCI and TAVR are performed by different subspecialists (interventional cardiologist vs structural heart). The timing decision requires cross-specialty heart team coordination that may not be formalized.',
+    whyTailrd: 'TAILRD identified TAVR candidates with concurrent significant CAD by connecting pre-TAVR CT/angiography findings with the absence of documented heart team timing decisions.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 380 TAVRs × 25% concurrent CAD × 30% without timing documentation ≈ 28. Dollar opportunity: $24,000 PCI × 28 × 30% conversion = $201.6K.',
+  },
+  // ============================================================
+  // GAP sh-17: ALCOHOL SEPTAL ABLATION NOT OFFERED — OBSTRUCTIVE HCM
+  // ============================================================
+  {
+    id: 'sh-gap-17-alcohol-septal-ablation',
+    name: 'Alcohol Septal Ablation Not Offered — Obstructive HCM',
+    category: 'Gap',
+    patientCount: 10,
+    dollarOpportunity: 84000,
+    priority: 'medium',
+    evidence:
+      'Liebregts M et al, Circ Intv 2017. ASA: noninferior to myectomy for gradient reduction in selected anatomy. Avoids sternotomy, shorter recovery.',
+    cta: 'Evaluate Septal Perforator Anatomy — Consider Alcohol Septal Ablation',
+    detectionCriteria: [
+      'Obstructive HCM with LVOT gradient ≥50 mmHg',
+      'Symptoms refractory to medical therapy (beta-blocker + disopyramide)',
+      'Suitable septal perforator artery on coronary angiography',
+      'No evaluation for alcohol septal ablation — referred directly for surgical myectomy',
+    ],
+    patients: [
+      {
+        id: 'SH-ASA-017-001',
+        name: 'Nathaniel Blackstone',
+        mrn: 'MRN-SH-17001',
+        age: 68,
+        signals: [
+          'Obstructive HCM — resting LVOT gradient 72 mmHg',
+          'Refractory to metoprolol 200mg + disopyramide 400mg',
+          'Referred for surgical myectomy — ASA not evaluated',
+          'Coronary angiography: suitable first septal perforator',
+        ],
+        keyValues: {
+          'LVOT Gradient': '72 mmHg (resting)',
+          'Septum Thickness': '22mm',
+          'Medical Therapy': 'Metoprolol 200mg + disopyramide 400mg (refractory)',
+          'Septal Perforator': 'Suitable on angiography',
+          'ASA Evaluation': 'Not performed',
+          'Myectomy': 'Referred — but ASA may be preferred',
+        },
+      },
+      {
+        id: 'SH-ASA-017-002',
+        name: 'Barbara Kingsley',
+        mrn: 'MRN-SH-17002',
+        age: 74,
+        signals: [
+          'Obstructive HCM — high surgical risk (STS predicted mortality 5.2%)',
+          'LVOT gradient 65 mmHg despite medical therapy',
+          'ASA: catheter-based alternative avoiding sternotomy',
+          'Not evaluated for ASA despite high surgical risk',
+        ],
+        keyValues: {
+          'LVOT Gradient': '65 mmHg',
+          'STS Risk': '5.2% (elevated)',
+          'Age': 74,
+          'ASA Evaluation': 'Not performed',
+          'Surgical Risk': 'High — ASA preferred',
+          'Septal Perforator': 'Assessment needed',
+        },
+      },
+    ],
+    whyMissed: 'Alcohol septal ablation requires interventional expertise and echo-guided myocardial contrast assessment during the procedure. Not all structural heart programs offer ASA, defaulting to surgical myectomy referral.',
+    whyTailrd: 'TAILRD identified obstructive HCM patients referred for surgical myectomy without documented ASA evaluation — particularly those with high surgical risk where catheter-based approach would be preferred.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: HCM patients with obstruction × suitable anatomy × not offered × 35% market share ≈ 10. Dollar opportunity: $28,000 procedure × 10 × 30% conversion = $84K.',
+  },
+  // ============================================================
+  // GAP sh-18: BALLOON MITRAL COMMISSUROTOMY NOT CONSIDERED
+  // ============================================================
+  {
+    id: 'sh-gap-18-balloon-mitral-commissurotomy',
+    name: 'Balloon Mitral Commissurotomy Not Considered — Rheumatic MS',
+    category: 'Gap',
+    patientCount: 8,
+    dollarOpportunity: 67200,
+    priority: 'medium',
+    evidence:
+      'Iung B et al, EHJ 2002. BMC: equivalent outcomes to surgery for favorable anatomy (Wilkins ≤8). Avoids sternotomy, no prosthesis-related anticoagulation.',
+    cta: 'Assess Wilkins Score — Consider Balloon Mitral Commissurotomy',
+    detectionCriteria: [
+      'Symptomatic rheumatic mitral stenosis (MVA ≤1.5 cm²)',
+      'Wilkins echocardiographic score ≤8 (favorable anatomy)',
+      'No significant mitral regurgitation (≤2+)',
+      'No evaluation for percutaneous BMC — referred directly for surgical MVR',
+    ],
+    patients: [
+      {
+        id: 'SH-BMC-018-001',
+        name: 'Priya Ramaswamy',
+        mrn: 'MRN-SH-18001',
+        age: 45,
+        signals: [
+          'Rheumatic MS — MVA 1.1 cm², mean gradient 14 mmHg',
+          'Wilkins score 6 — favorable anatomy for BMC',
+          'Referred for surgical MVR — BMC not evaluated',
+          'BMC: avoids sternotomy, no prosthetic valve anticoagulation',
+        ],
+        keyValues: {
+          'Valve Area': '1.1 cm² (severe MS)',
+          'Mean Gradient': '14 mmHg',
+          'Wilkins Score': '6 (favorable — ≤8)',
+          'MR Grade': '1+ (mild)',
+          'BMC Evaluation': 'Not performed',
+          'Surgical Plan': 'MVR — but BMC preferred for Wilkins ≤8',
+        },
+      },
+      {
+        id: 'SH-BMC-018-002',
+        name: 'Fatima Al-Rashid',
+        mrn: 'MRN-SH-18002',
+        age: 38,
+        signals: [
+          'Young woman with rheumatic MS — wishes to avoid sternotomy',
+          'MVA 1.3 cm², Wilkins 7 — good candidate for BMC',
+          'BMC preserves native valve — avoids lifetime anticoagulation',
+          'Not offered BMC despite favorable anatomy',
+        ],
+        keyValues: {
+          'Valve Area': '1.3 cm²',
+          'Wilkins Score': '7',
+          'Age': 38,
+          'MR Grade': 'Trace',
+          'BMC Evaluation': 'Not offered',
+          'Benefit': 'Avoids sternotomy + prosthetic valve anticoagulation',
+        },
+      },
+    ],
+    whyMissed: 'Balloon mitral commissurotomy requires specialized interventional skills and experienced echocardiographic guidance. In regions where rheumatic MS is less common, operators may lack BMC experience and default to surgical referral.',
+    whyTailrd: 'TAILRD identified symptomatic rheumatic MS patients with favorable Wilkins scores who were referred for surgical MVR without documented evaluation for percutaneous BMC.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: rheumatic MS × favorable anatomy × not offered × 35% market share ≈ 8. Dollar opportunity: $28,000 procedure × 8 × 30% conversion = $67.2K.',
+  },
+  // ============================================================
+  // GAP sh-19: POST-TEER ANTICOAGULATION NOT PROTOCOLIZED
+  // ============================================================
+  {
+    id: 'sh-gap-19-post-teer-antithrombotic',
+    name: 'Post-TEER Anticoagulation Not Protocolized',
+    category: 'Quality',
+    patientCount: 25,
+    dollarOpportunity: 0,
+    priority: 'medium',
+    evidence:
+      'No randomized trial exists. Expert consensus: DAPT × 1 month then single antiplatelet. Patients with AF should continue OAC. Documentation of rationale required.',
+    cta: 'Document Post-TEER Antithrombotic Protocol',
+    detectionCriteria: [
+      'TEER (mitral or tricuspid) performed within past 6 months',
+      'No standardized post-TEER antithrombotic protocol documented',
+      'Variation in approach: single antiplatelet vs DAPT vs anticoagulation',
+      'No documented rationale for antithrombotic selection',
+    ],
+    patients: [
+      {
+        id: 'SH-TEER-019-001',
+        name: 'Geraldine Pemberton',
+        mrn: 'MRN-SH-19001',
+        age: 76,
+        signals: [
+          'Mitral TEER (MitraClip) 2 months ago — on DAPT indefinitely',
+          'No documented plan to step down to single antiplatelet',
+          'Expert consensus: DAPT × 1 month then single antiplatelet',
+          'Prolonged DAPT: unnecessary bleeding risk',
+        ],
+        keyValues: {
+          'Procedure': 'Mitral TEER (MitraClip)',
+          'Date': '2 months ago',
+          'Current Regimen': 'DAPT (aspirin + clopidogrel)',
+          'AF': 'No',
+          'Protocol': 'Not documented',
+          'Consensus': 'DAPT × 1 month → single antiplatelet',
+        },
+      },
+      {
+        id: 'SH-TEER-019-002',
+        name: 'Walter Drummond',
+        mrn: 'MRN-SH-19002',
+        age: 81,
+        signals: [
+          'Tricuspid TEER 6 weeks ago — on aspirin only',
+          'Concurrent persistent AF — should be on OAC',
+          'No documentation of antithrombotic rationale',
+          'AF patients post-TEER: OAC ± short-course antiplatelet',
+        ],
+        keyValues: {
+          'Procedure': 'Tricuspid TEER',
+          'Date': '6 weeks ago',
+          'Current Regimen': 'Aspirin 81mg only',
+          'AF': 'Persistent AF (CHA₂DS₂-VASc 4)',
+          'OAC': 'Not prescribed — should be on anticoagulation',
+          'Protocol': 'Not documented',
+        },
+      },
+      {
+        id: 'SH-TEER-019-003',
+        name: 'Agnes Rutherford',
+        mrn: 'MRN-SH-19003',
+        age: 72,
+        signals: [
+          'Mitral TEER 3 months ago — on triple therapy (OAC + DAPT)',
+          'Triple therapy: excessive bleeding risk beyond 1 month',
+          'No protocol for de-escalation timeline',
+          'Should be OAC + single antiplatelet or OAC alone by now',
+        ],
+        keyValues: {
+          'Procedure': 'Mitral TEER',
+          'Date': '3 months ago',
+          'Current Regimen': 'Apixaban + aspirin + clopidogrel (triple)',
+          'AF': 'Paroxysmal AF',
+          'Bleeding Risk': 'Excessive on triple therapy at 3 months',
+          'Protocol': 'De-escalation not documented',
+        },
+      },
+    ],
+    whyMissed: 'No randomized trial defines optimal post-TEER antithrombotic therapy. Operators and institutions develop ad hoc approaches without formal protocols, leading to significant variation and some patients on excessive or insufficient therapy.',
+    whyTailrd: 'TAILRD identified post-TEER patients with variable antithrombotic regimens and absent protocol documentation by analyzing procedural dates, medication lists, and AF status.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: (80 TEER mitral + 15 tricuspid) × 65% without protocol × 35% market share ≈ 25. Dollar opportunity: Quality — $0 direct.',
+  },
+  // ============================================================
+  // GAP sh-20: TAVR-IN-TAVR FEASIBILITY NOT ASSESSED
+  // ============================================================
+  {
+    id: 'sh-gap-20-tavr-in-tavr',
+    name: 'TAVR-in-TAVR Feasibility Not Assessed — Failing First TAVR',
+    category: 'Gap',
+    patientCount: 12,
+    dollarOpportunity: 259200,
+    priority: 'high',
+    evidence:
+      'Barbanti M et al, EHJ 2023. TAVR-in-TAVR: CT planning essential for coronary access (virtual THV-to-coronary distance). BASILICA technique may be needed.',
+    cta: 'CT Planning for TAVR-in-TAVR — Assess Coronary Access and Alignment',
+    detectionCriteria: [
+      'Prior TAVR with bioprosthetic valve in situ',
+      'Elevated gradients or new regurgitation suggesting valve failure',
+      'No CT assessment for TAVR-in-TAVR feasibility',
+      'No documentation of coronary access risk or neo-commissural alignment',
+    ],
+    patients: [
+      {
+        id: 'SH-TIT-020-001',
+        name: 'Reginald Worthington',
+        mrn: 'MRN-SH-20001',
+        age: 83,
+        signals: [
+          'TAVR (Evolut R 26mm) 6 years ago — mean gradient risen from 8 to 28 mmHg',
+          'Structural valve deterioration — may need redo intervention',
+          'No CT assessment for TAVR-in-TAVR feasibility',
+          'Coronary access risk: virtual THV-to-coronary distance critical',
+        ],
+        keyValues: {
+          'Prior TAVR': 'Evolut R 26mm (6 years ago)',
+          'Current Gradient': '28 mmHg (baseline was 8)',
+          'Valve Issue': 'Structural deterioration — rising gradients',
+          'CT Assessment': 'Not performed for redo planning',
+          'Coronary Risk': 'Unknown — needs virtual commissural CT',
+          'BASILICA': 'May be needed for coronary protection',
+        },
+      },
+      {
+        id: 'SH-TIT-020-002',
+        name: 'Edith Crowley',
+        mrn: 'MRN-SH-20002',
+        age: 78,
+        signals: [
+          'TAVR (SAPIEN 3 23mm) 5 years ago — new severe AR on echo',
+          'Small SAPIEN in small annulus — redo TAVR may cause coronary obstruction',
+          'No redo feasibility CT — patient being managed medically',
+          'TAVR-in-TAVR vs SAVR decision requires CT planning',
+        ],
+        keyValues: {
+          'Prior TAVR': 'SAPIEN 3 23mm (5 years ago)',
+          'Current Issue': 'Severe paravalvular AR',
+          'Annulus': 'Small — high risk for coronary obstruction on redo',
+          'CT Planning': 'Not performed',
+          'Decision': 'TAVR-in-TAVR vs SAVR vs medical — needs CT data',
+          'STS Risk': '4.8% (intermediate-high for SAVR)',
+        },
+      },
+      {
+        id: 'SH-TIT-020-003',
+        name: 'Arthur Kensington',
+        mrn: 'MRN-SH-20003',
+        age: 86,
+        signals: [
+          'TAVR 7 years ago — endocarditis treated, now valve thrombosis suspected',
+          'Rising gradients + TIA — possible HALT or valve thrombosis',
+          'If valve failure confirmed: TAVR-in-TAVR feasibility assessment needed',
+          'Frail patient — redo SAVR very high risk',
+        ],
+        keyValues: {
+          'Prior TAVR': '7 years ago (valve type not documented)',
+          'Current Gradient': '32 mmHg (rising)',
+          'Suspected Issue': 'Valve thrombosis vs HALT',
+          'CT Planning': 'Not performed for redo assessment',
+          'Frailty': 'Moderate — SAVR very high risk',
+          'Decision': 'OAC trial vs TAVR-in-TAVR vs medical management',
+        },
+      },
+    ],
+    whyMissed: 'TAVR-in-TAVR is a relatively new concept requiring specialized CT planning (virtual THV-to-coronary distance, neo-commissural alignment). Many programs have not yet developed protocols for evaluating failing TAVR patients for redo transcatheter intervention.',
+    whyTailrd: 'TAILRD identified patients with prior TAVR showing echocardiographic evidence of valve failure (rising gradients, new regurgitation) without dedicated CT planning for TAVR-in-TAVR feasibility.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: estimated failing TAVR population × not assessed × 35% market share ≈ 12. Dollar opportunity: $72,000 TAVR × 12 × 30% conversion = $259.2K.',
   },
 ];
 

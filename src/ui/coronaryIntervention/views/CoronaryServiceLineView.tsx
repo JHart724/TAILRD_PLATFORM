@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Heart, Users, Calculator, Shield, Activity, Target, BarChart3, FileText, TrendingUp, Scissors, Route, Gauge, Search } from 'lucide-react';
 
 // Import Coronary Intervention components
@@ -23,10 +23,12 @@ interface TabGroup {
 
 const CoronaryServiceLineView: React.FC = () => {
   const [activeTab, _setActiveTab] = useState<TabId>('gap-detection');
+  const contentRef = useRef<HTMLDivElement>(null);
   const setActiveTab = (tab: TabId) => {
     _setActiveTab(tab);
-    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
-    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   };
   const [generatingReport, setGeneratingReport] = useState<string | null>(null);
   const [exportingFormat, setExportingFormat] = useState<string | null>(null);
@@ -55,7 +57,7 @@ const CoronaryServiceLineView: React.FC = () => {
  {
  label: 'Gap & Opportunity',
  tabs: [
- { id: 'gap-detection', label: 'Gap Detection (39-Gap)', icon: Search, description: 'CAD clinical gap detection' },
+ { id: 'gap-detection', label: 'Gap Detection (71-Gap)', icon: Search, description: 'CAD clinical gap detection' },
  ],
  },
  {
@@ -673,7 +675,7 @@ const CoronaryServiceLineView: React.FC = () => {
  </div>
 
  {/* Tab Content */}
- <div className="space-y-6">
+ <div ref={contentRef} className="space-y-6">
  {renderTabContent()}
  </div>
  </div>

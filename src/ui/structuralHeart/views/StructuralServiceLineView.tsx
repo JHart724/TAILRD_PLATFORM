@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Heart, Users, Calendar, Shield, Gauge, Activity, Target, BarChart3, FileText, TrendingUp, Search } from 'lucide-react';
 
 // Import Structural Heart components
@@ -22,10 +22,12 @@ interface TabGroup {
 
 const StructuralServiceLineView: React.FC = () => {
   const [activeTab, _setActiveTab] = useState<TabId>('gap-detection');
+  const contentRef = useRef<HTMLDivElement>(null);
   const setActiveTab = (tab: TabId) => {
     _setActiveTab(tab);
-    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
-    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   };
   const [generatingReport, setGeneratingReport] = useState<string | null>(null);
   const [exportingFormat, setExportingFormat] = useState<string | null>(null);
@@ -53,7 +55,7 @@ const StructuralServiceLineView: React.FC = () => {
     {
       label: 'Gap & Opportunity',
       tabs: [
-        { id: 'gap-detection', label: 'Gap Detection (14-Gap)', icon: Search, description: 'AI-driven clinical gap detection across 14 structural heart gaps' },
+        { id: 'gap-detection', label: 'Gap Detection (20-Gap)', icon: Search, description: 'AI-driven clinical gap detection across 14 structural heart gaps' },
       ],
     },
     {
@@ -417,7 +419,7 @@ const StructuralServiceLineView: React.FC = () => {
         </div>
 
         {/* Tab Content */}
-        <div className="space-y-6">
+        <div ref={contentRef} className="space-y-6">
           {renderTabContent()}
         </div>
       </div>

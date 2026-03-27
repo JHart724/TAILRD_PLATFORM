@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Activity, Target, Grid3X3, Users, Calculator, MapPin, BarChart3, Heart, Shield, Network, Award, FileText, Search } from 'lucide-react';
 import ExportButton from '../../../components/shared/ExportButton';
 
@@ -233,10 +233,12 @@ interface TabGroup {
 
 const PeripheralServiceLineView: React.FC = () => {
   const [activeTab, _setActiveTab] = useState<PeripheralServiceLineTab>('analytics');
+  const contentRef = useRef<HTMLDivElement>(null);
   const setActiveTab = (tab: PeripheralServiceLineTab) => {
     _setActiveTab(tab);
-    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
-    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   };
 
   const tabGroups: TabGroup[] = [
@@ -262,7 +264,7 @@ const PeripheralServiceLineView: React.FC = () => {
     {
       label: 'Gap & Opportunity',
       tabs: [
-        { id: 'gap-detection', label: 'Gap Detection (19-Gap)', icon: Search, description: 'PV clinical gap detection' },
+        { id: 'gap-detection', label: 'Gap Detection (27-Gap)', icon: Search, description: 'PV clinical gap detection' },
       ],
     },
     {
@@ -361,7 +363,7 @@ const PeripheralServiceLineView: React.FC = () => {
         </div>
 
         {/* Tab Content */}
-        <div className="space-y-6">
+        <div ref={contentRef} className="space-y-6">
           {renderTabContent()}
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Zap, Target, Grid3X3, BarChart3, Users, Activity, Heart, Shield, Network, Award, FileText, TrendingUp, PieChart, Search } from 'lucide-react';
 import ExportButton from '../../../components/shared/ExportButton';
 
@@ -195,10 +195,12 @@ interface TabGroup {
 
 const EPServiceLineView: React.FC = () => {
   const [activeTab, _setActiveTab] = useState<EPServiceLineTab>('gap-detection');
+  const contentRef = useRef<HTMLDivElement>(null);
   const setActiveTab = (tab: EPServiceLineTab) => {
     _setActiveTab(tab);
-    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
-    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   };
 
   const tabGroups: TabGroup[] = [
@@ -215,7 +217,7 @@ const EPServiceLineView: React.FC = () => {
  {
  label: 'Gap & Opportunity',
  tabs: [
- { id: 'gap-detection', label: 'Gap Detection (27-Gap)', icon: Search, description: 'AI-driven EP clinical gap detection' },
+ { id: 'gap-detection', label: 'Gap Detection (38-Gap)', icon: Search, description: 'AI-driven EP clinical gap detection' },
  { id: 'outcomes-trends', label: 'Outcomes Trends', icon: TrendingUp, description: 'EP outcomes trends and longitudinal analysis' },
  { id: 'risk-stratification', label: 'Risk Stratification', icon: Target, description: 'EP patient risk stratification dashboard' },
  { id: 'phenotype-detection', label: 'Phenotype Detection', icon: Search, description: 'EP phenotype prevalence and detection rates' },
@@ -332,7 +334,7 @@ const EPServiceLineView: React.FC = () => {
  </div>
 
  {/* Tab Content */}
- <div className="space-y-6">
+ <div ref={contentRef} className="space-y-6">
  {renderTabContent()}
  </div>
  </div>

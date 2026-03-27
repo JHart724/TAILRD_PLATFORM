@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { DEMO_PATIENT_CONTEXT, DEMO_PATIENT_ROSTER } from '../../../types/shared';
 import { Heart, Users, Target, Shield, FileText, Zap, Clock, Calendar, AlertTriangle, CheckSquare, TrendingDown, Activity, Stethoscope, Brain, UserCheck } from 'lucide-react';
 
@@ -84,10 +84,12 @@ const ClinicalToolsPanel: React.FC = () => {
 const EPCareTeamView: React.FC = () => {
   const [selectedPatientId, setSelectedPatientId] = useState<string>('P001');
   const [activeTab, _setActiveTab] = useState<EPViewMode>('dashboard');
+  const contentRef = useRef<HTMLDivElement>(null);
   const setActiveTab = (tab: EPViewMode) => {
     _setActiveTab(tab);
-    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
-    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   };
   const [quickActionFeedback, setQuickActionFeedback] = useState<string | null>(null);
 
@@ -512,7 +514,7 @@ const EPCareTeamView: React.FC = () => {
  </div>
 
  {/* Tab Content */}
- <div className="space-y-6">
+ <div ref={contentRef} className="space-y-6">
  {renderTabContent()}
  </div>
  </div>

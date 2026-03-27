@@ -728,7 +728,7 @@ const coronaryTabs: ServiceLineTabConfig[] = [
   },
   {
  id: 'cad-clinical-gap-detection',
- label: 'Gap Detection (39-Gap)',
+ label: 'Gap Detection (71-Gap)',
  icon: Target,
  description: 'AI-driven CAD gap detection: SGLT2i/CKD, COMPASS dual-pathway, PCSK9i, cardiac rehab, Lp(a), imaging-guided PCI, DAPT safety, FFR/iFR, CTO, CCTA, INOCA, bempedoic acid, icosapent ethyl, ranolazine, BB deprescribing, bilateral IMA, post-CABG surveillance, vasospastic angina, hs-TnT, OAC monotherapy (cross-module), heart team review +11 more All gap detection criteria, risk scores, and composite calculators are automatically computed from structured EHR data ingested via Redox — no manual data entry or chart review required.'
   },

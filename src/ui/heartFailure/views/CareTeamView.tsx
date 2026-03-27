@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { DEMO_PATIENT_CONTEXT, DEMO_PATIENT_ROSTER } from '../../../types/shared';
 import { Users, Calendar, AlertTriangle, Clock, Heart, Shield, Activity, FileText, Download, UserCheck, Stethoscope } from 'lucide-react';
 
@@ -90,10 +90,12 @@ type TabId = 'dashboard' | 'patients' | 'workflow' | 'safety' | 'hospital-alerts
 
 const CareTeamView: React.FC = () => {
   const [activeTab, _setActiveTab] = useState<TabId>('dashboard');
+  const contentRef = useRef<HTMLDivElement>(null);
   const setActiveTab = (tab: TabId) => {
     _setActiveTab(tab);
-    const scrollContainer = document.querySelector('.overflow-y-auto.h-screen');
-    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   };
   const [activeToolTab, setActiveToolTab] = useState<string>('phenotype');
   const [docTemplateFeedback, setDocTemplateFeedback] = useState<string | null>(null);
@@ -345,7 +347,7 @@ const CareTeamView: React.FC = () => {
  </div>
 
  {/* Tab Content */}
- <div className="space-y-6">
+ <div ref={contentRef} className="space-y-6">
  {renderTabContent()}
  </div>
  </div>

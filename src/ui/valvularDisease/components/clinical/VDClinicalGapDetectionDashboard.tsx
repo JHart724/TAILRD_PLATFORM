@@ -6,7 +6,11 @@ import { computeTrajectory, computeTimeHorizon, projectASProgression, projectBAV
 // CLINICAL GAP DETECTION &mdash; VALVULAR DISEASE MODULE
 // Gaps: VD-1 (Moderate AS Surveillance), VD-2 (Post-TAVR Echo),
 //       VD-3 (Rheumatic MS Warfarin), VD-4 (BAV Aortopathy),
-//       VD-5 (Endocarditis Prophylaxis), VD-6 (HALT Screening)
+//       VD-5 (Endocarditis Prophylaxis), VD-6 (HALT Screening),
+//       VD-22 (Valve-Sparing Root David), VD-23 (Sutureless AVR Small Annulus),
+//       VD-24 (Concomitant Tricuspid Annuloplasty), VD-25 (Min-Invasive Valve),
+//       VD-26 (Redo Sternotomy Risk), VD-27 (Post-Bio AVR AC),
+//       VD-28 (Pre-Op BB POAF Prevention)
 // ============================================================
 
 export interface VDClinicalGap {
@@ -2149,6 +2153,582 @@ export const VD_CLINICAL_GAPS: VDClinicalGap[] = [
     whyMissed: 'AS and CAD are often managed by separate subspecialists (structural heart vs interventional cardiology). The combined vs staged strategy decision requires cross-disciplinary heart team input that is frequently not formalized or documented.',
     whyTailrd: 'TAILRD connected severe AS intervention planning with coronary angiography data showing significant CAD to identify patients lacking documented heart team discussion of combined vs staged revascularization strategy.',
     methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 380 TAVRs x 25% concurrent significant CAD x 32% without documented combined strategy discussion = ~30. Dollar opportunity: $24,000 PCI add-on x 30% conversion x 30 = ~$216K incremental. Barbato et al, EHJ 2023.',
+  },
+  // ============================================================
+  // GAP vd-22: VALVE-SPARING ROOT REPLACEMENT (DAVID) NOT OFFERED
+  // ============================================================
+  {
+    id: 'vd-gap-22-valve-sparing-root',
+    name: 'Valve-Sparing Root Replacement (David) Not Offered',
+    category: 'Gap',
+    patientCount: 12,
+    dollarOpportunity: 162000,
+    priority: 'high',
+    evidence:
+      'David TE et al, JTCVS 2014 — 20-year David procedure results. Valve-sparing: preserves native valve, avoids anticoagulation, superior long-term durability in young patients.',
+    cta: 'Evaluate for Valve-Sparing Root Replacement — David Procedure',
+    detectionCriteria: [
+      'Aortic root aneurysm ≥4.5 cm requiring surgical intervention',
+      'Normal or mildly diseased aortic valve cusps on echo/CT',
+      'Bentall (composite root replacement) planned',
+      'No documented evaluation for valve-sparing root replacement',
+    ],
+    patients: [
+      {
+        id: 'VD-VSRR-022-001',
+        name: 'Jonathan Westbrook',
+        mrn: 'MRN-VD-22001',
+        age: 48,
+        signals: [
+          'Aortic root aneurysm 5.1 cm — Marfan syndrome',
+          'Aortic valve cusps normal on echo — ideal for David procedure',
+          'Bentall with mechanical valve planned — requires lifetime warfarin',
+          'David procedure: preserves native valve, avoids anticoagulation',
+        ],
+        keyValues: {
+          'Root Size': '5.1 cm',
+          'Valve Cusps': 'Normal (no calcification, no prolapse)',
+          'Etiology': 'Marfan syndrome',
+          'Planned Surgery': 'Bentall (mechanical composite)',
+          'David Evaluation': 'Not documented',
+          'Age': 48,
+        },
+      },
+      {
+        id: 'VD-VSRR-022-002',
+        name: 'Rachel Thornton',
+        mrn: 'MRN-VD-22002',
+        age: 42,
+        signals: [
+          'Root aneurysm 4.8 cm — bicuspid aortic valve, mild AI only',
+          'Young woman wanting to avoid anticoagulation (pregnancy plans)',
+          'Bentall with bioprosthetic planned — will need redo in 10-15 years',
+          'David: 20-year durability, no anticoagulation, avoids redo',
+        ],
+        keyValues: {
+          'Root Size': '4.8 cm',
+          'Valve': 'Bicuspid — mild AI, cusps pliable',
+          'Age': 42,
+          'Pregnancy Plans': 'Yes — anticoagulation contraindicated',
+          'Planned Surgery': 'Bentall (bioprosthetic)',
+          'David Benefit': 'No anticoagulation + 20-year durability',
+        },
+      },
+      {
+        id: 'VD-VSRR-022-003',
+        name: 'Gregory Fitzwilliam',
+        mrn: 'MRN-VD-22003',
+        age: 55,
+        signals: [
+          'Aortic root 5.3 cm — degenerative, trileaflet valve with trace AR',
+          'Active lifestyle — warfarin would significantly impact quality of life',
+          'David procedure: ideal for patients with normal cusps + root aneurysm',
+          'Not evaluated for valve-sparing approach',
+        ],
+        keyValues: {
+          'Root Size': '5.3 cm (degenerative)',
+          'Valve': 'Trileaflet — trace AR, normal cusps',
+          'Activity Level': 'Very active (marathon runner)',
+          'Planned Surgery': 'Bentall',
+          'David Evaluation': 'Not performed',
+          'Benefit': 'Avoids anticoagulation + activity restrictions',
+        },
+      },
+    ],
+    whyMissed: 'Valve-sparing root replacement (David procedure) is technically demanding and requires specialized expertise. Not all cardiac surgery programs offer the David procedure, defaulting to Bentall even when cusps are suitable for preservation.',
+    whyTailrd: 'TAILRD identified patients with aortic root aneurysm and normal/near-normal valve cusps on imaging who were scheduled for composite root replacement without documented evaluation for the valve-sparing David procedure.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: root aneurysm cases × eligible cusps × not offered × 35% market share ≈ 12. Dollar opportunity: $45,000 DRG × 12 × 30% conversion = $162K.',
+  },
+  // ============================================================
+  // GAP vd-23: SUTURELESS/RAPID-DEPLOYMENT AVR — SMALL ANNULUS
+  // ============================================================
+  {
+    id: 'vd-gap-23-sutureless-avr',
+    name: 'Sutureless/Rapid-Deployment AVR Not Considered — Small Annulus',
+    category: 'Gap',
+    patientCount: 15,
+    dollarOpportunity: 202500,
+    priority: 'medium',
+    evidence:
+      'Shrestha M et al, JTCVS 2016. Sutureless valves: avoid PPM in small annulus, reduce cross-clamp time by 30-40 minutes, enable min-invasive approach.',
+    cta: 'Consider Sutureless/Rapid-Deployment Valve — Small Annulus',
+    detectionCriteria: [
+      'Surgical AVR planned',
+      'Small aortic annulus ≤21mm on pre-op imaging',
+      'Standard stented bioprosthesis selected',
+      'No documented evaluation for sutureless or rapid-deployment valve',
+    ],
+    patients: [
+      {
+        id: 'VD-SL-023-001',
+        name: 'Dorothy Pemberton',
+        mrn: 'MRN-VD-23001',
+        age: 72,
+        signals: [
+          'Severe AS — surgical AVR planned, annulus 19mm on CT',
+          'Standard 19mm bioprosthesis: high risk of patient-prosthesis mismatch',
+          'Sutureless (Perceval) valve: supra-annular design avoids PPM',
+          'Not evaluated for sutureless option despite small annulus',
+        ],
+        keyValues: {
+          'Annulus Size': '19mm (small)',
+          'PPM Risk': 'High with standard 19mm prosthesis',
+          'Planned Valve': 'Standard stented bioprosthesis',
+          'Sutureless Evaluation': 'Not documented',
+          'BSA': '1.65 (indexed EOA will be borderline)',
+          'Benefit': 'Avoid PPM + shorter cross-clamp time',
+        },
+      },
+      {
+        id: 'VD-SL-023-002',
+        name: 'Lillian Marchetti',
+        mrn: 'MRN-VD-23002',
+        age: 68,
+        signals: [
+          'Severe AS + annulus 20mm — eligible for mini-sternotomy AVR',
+          'Rapid-deployment (Intuity) valve enables min-invasive approach',
+          'Standard valve: requires full sternotomy due to suturing time',
+          'Rapid-deployment: 30-40 minute shorter cross-clamp',
+        ],
+        keyValues: {
+          'Annulus Size': '20mm',
+          'Planned Approach': 'Full sternotomy',
+          'Rapid-Deployment': 'Not evaluated',
+          'Benefit': 'Enables mini-sternotomy + shorter cross-clamp',
+          'Cross-Clamp Reduction': '30-40 minutes',
+          'Recovery': 'Faster with min-invasive approach',
+        },
+      },
+      {
+        id: 'VD-SL-023-003',
+        name: 'Margaret Ainsworth',
+        mrn: 'MRN-VD-23003',
+        age: 78,
+        signals: [
+          'Small annulus 21mm + concomitant CABG — long anticipated cross-clamp',
+          'Standard AVR + CABG: 90+ minutes cross-clamp expected',
+          'Rapid-deployment valve: reduce AVR portion by 30+ minutes',
+          'Elderly patient — shorter cross-clamp = lower mortality risk',
+        ],
+        keyValues: {
+          'Annulus Size': '21mm',
+          'Concomitant': 'CABG × 2 (LAD + OM)',
+          'Cross-Clamp': 'Anticipated 90+ minutes',
+          'Rapid-Deployment': 'Not considered',
+          'Benefit': 'Shorter ischemic time — critical in elderly',
+          'STS Risk': '3.8%',
+        },
+      },
+    ],
+    whyMissed: 'Sutureless and rapid-deployment valves require operator familiarity and institutional stocking decisions. Surgeons experienced with standard sutured prostheses may not consider alternatives even for small annulus cases.',
+    whyTailrd: 'TAILRD identified patients with small aortic annulus (≤21mm) on pre-operative imaging scheduled for standard AVR, flagging the PPM risk and missed opportunity for sutureless/rapid-deployment alternatives.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: AVR cases × 20% small annulus × 50% not considered × 35% market share ≈ 15. Dollar opportunity: $45,000 × 15 × 30% conversion = $202.5K.',
+  },
+  // ============================================================
+  // GAP vd-24: TRICUSPID ANNULOPLASTY NOT PERFORMED CONCOMITANT
+  // ============================================================
+  {
+    id: 'vd-gap-24-concomitant-tricuspid',
+    name: 'Tricuspid Annuloplasty Not Performed Concomitant With Left-Sided Surgery',
+    category: 'Quality',
+    patientCount: 30,
+    dollarOpportunity: 0,
+    priority: 'high',
+    evidence:
+      'Badhwar V et al, STS 2017 Guidelines. Dreyfus GD et al, Ann Thorac Surg 2005. Untreated functional TR progresses in 25-50% of patients post left-sided surgery, requiring late redo.',
+    cta: 'Concomitant Tricuspid Annuloplasty — TR ≥Moderate or Annulus ≥40mm',
+    detectionCriteria: [
+      'Left-sided valve surgery planned or recently performed',
+      'TR ≥moderate on pre-operative echo',
+      'OR tricuspid annular dilation ≥40mm on echo/CT',
+      'No concomitant tricuspid annuloplasty performed or planned',
+    ],
+    patients: [
+      {
+        id: 'VD-TA-024-001',
+        name: 'Beatrice Callahan',
+        mrn: 'MRN-VD-24001',
+        age: 66,
+        signals: [
+          'Mitral valve repair for severe MR — moderate TR on echo',
+          'Tricuspid annulus 44mm (dilated) — annuloplasty indicated',
+          'No concomitant tricuspid annuloplasty planned',
+          'STS Guidelines: annuloplasty for TR ≥moderate or annulus ≥40mm',
+        ],
+        keyValues: {
+          'Left-Sided Surgery': 'MV repair (severe MR)',
+          'TR Grade': 'Moderate',
+          'TV Annulus': '44mm (dilated — ≥40mm)',
+          'Concomitant TV': 'Not planned',
+          'STS Guideline': 'Class I for annulus ≥40mm',
+          'Risk if Untreated': 'TR progression in 25-50% → redo surgery',
+        },
+      },
+      {
+        id: 'VD-TA-024-002',
+        name: 'Philip Worthington',
+        mrn: 'MRN-VD-24002',
+        age: 71,
+        signals: [
+          'AVR for severe AS + moderate-severe TR + AF',
+          'AF causes TV annular dilation — TR will progress without annuloplasty',
+          'Concomitant TV annuloplasty adds 15-20 minutes, minimal additional risk',
+          'Late redo tricuspid surgery: 10% mortality vs <1% added risk now',
+        ],
+        keyValues: {
+          'Left-Sided Surgery': 'AVR (severe AS)',
+          'TR Grade': 'Moderate-severe',
+          'AF': 'Persistent (annular dilation)',
+          'TV Annulus': '48mm',
+          'Concomitant TV': 'Not planned',
+          'Redo Risk': '10% mortality for late isolated TV surgery',
+        },
+      },
+      {
+        id: 'VD-TA-024-003',
+        name: 'Catherine Kensington',
+        mrn: 'MRN-VD-24003',
+        age: 63,
+        signals: [
+          'MV replacement (rheumatic) — TR mild but annulus 42mm',
+          'Dreyfus: annular dilation predicts TR progression even if mild now',
+          'Prophylactic annuloplasty for dilated annulus — STS Class IIa',
+          'Annuloplasty not planned despite dilated annulus criterion met',
+        ],
+        keyValues: {
+          'Left-Sided Surgery': 'MVR (rheumatic MS)',
+          'TR Grade': 'Mild (currently)',
+          'TV Annulus': '42mm (dilated — above 40mm threshold)',
+          'Annuloplasty Planned': 'No',
+          'Dreyfus Study': 'Annular dilation → TR progression in 50%',
+          'STS': 'Class IIa for dilated annulus',
+        },
+      },
+    ],
+    whyMissed: 'Surgeons focused on the primary left-sided pathology may not routinely assess tricuspid annular dimensions or may consider mild TR not worth the added procedural time. The progression data from Dreyfus et al is not universally applied.',
+    whyTailrd: 'TAILRD identified patients undergoing left-sided valve surgery with TR ≥moderate or tricuspid annular dilation ≥40mm who did not have concomitant tricuspid annuloplasty in the surgical plan.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 700 valve surgeries × 20% TR ≥moderate or dilated annulus × 55% without annuloplasty × 35% market share ≈ 30. Dollar opportunity: Quality — $0 direct but prevents reoperation ($50K+ per redo).',
+  },
+  // ============================================================
+  // GAP vd-25: MINIMALLY INVASIVE VALVE SURGERY NOT OFFERED
+  // ============================================================
+  {
+    id: 'vd-gap-25-min-invasive-valve',
+    name: 'Minimally Invasive Valve Surgery Not Offered — Eligible Patient',
+    category: 'Gap',
+    patientCount: 45,
+    dollarOpportunity: 0,
+    priority: 'medium',
+    evidence:
+      'Lamelas J et al, Ann Thorac Surg 2018. Minimally invasive: equivalent outcomes, faster recovery (4 vs 7 days), less blood loss, better cosmesis.',
+    cta: 'Evaluate for Minimally Invasive Approach — Right Mini-Thoracotomy or Robotic',
+    detectionCriteria: [
+      'Isolated valve surgery planned (AVR, MVR, or MV repair)',
+      'Patient anatomically eligible for right mini-thoracotomy or robotic approach',
+      'Conventional full sternotomy planned',
+      'No documented reason why minimally invasive approach is not suitable',
+    ],
+    patients: [
+      {
+        id: 'VD-MIS-025-001',
+        name: 'Stephanie Hargrove',
+        mrn: 'MRN-VD-25001',
+        age: 55,
+        signals: [
+          'Isolated MV repair for degenerative MR — sternotomy planned',
+          'No prior cardiac surgery, normal body habitus — ideal MIS candidate',
+          'Right mini-thoracotomy: 4 vs 7 day recovery, less blood loss',
+          'Minimally invasive not discussed with patient',
+        ],
+        keyValues: {
+          'Surgery': 'MV repair (P2 prolapse, severe MR)',
+          'Approach': 'Full sternotomy planned',
+          'MIS Eligible': 'Yes — no prior surgery, favorable anatomy',
+          'MIS Offered': 'Not documented',
+          'Recovery': '4 days MIS vs 7 days sternotomy',
+          'Cosmesis': 'Important to patient (age 55, female)',
+        },
+      },
+      {
+        id: 'VD-MIS-025-002',
+        name: 'Kenneth Blackwell',
+        mrn: 'MRN-VD-25002',
+        age: 62,
+        signals: [
+          'Isolated AVR for severe AS — good TAVR candidate but chose surgery',
+          'If choosing surgery: should be offered mini-sternotomy or right mini-thoracotomy',
+          'Full sternotomy planned without MIS discussion',
+          'MIS AVR: equivalent outcomes with faster recovery',
+        ],
+        keyValues: {
+          'Surgery': 'AVR (severe AS, low surgical risk)',
+          'Approach': 'Full sternotomy',
+          'MIS Eligible': 'Yes — isolated AVR',
+          'MIS Discussion': 'Not documented',
+          'Patient Preference': 'Chose surgery over TAVR for durability',
+          'MIS Benefit': 'Faster recovery, less pain, better cosmesis',
+        },
+      },
+      {
+        id: 'VD-MIS-025-003',
+        name: 'Alexandra Stavros',
+        mrn: 'MRN-VD-25003',
+        age: 48,
+        signals: [
+          'Robotic MV repair available at institution — not offered to patient',
+          'Isolated posterior leaflet prolapse — ideal robotic MV repair anatomy',
+          'Young active patient — would benefit most from minimally invasive approach',
+          'Institution performs 239 robotic cardiac procedures/year',
+        ],
+        keyValues: {
+          'Surgery': 'MV repair (posterior prolapse)',
+          'Approach': 'Full sternotomy planned',
+          'Robotic Available': 'Yes — 239 robotic cardiac cases/year',
+          'Robotic Offered': 'Not discussed',
+          'Age': 48,
+          'Benefit': 'Fastest recovery, smallest incision, best cosmesis',
+        },
+      },
+    ],
+    whyMissed: 'Not all cardiac surgeons are trained in minimally invasive or robotic approaches. Scheduling, equipment availability, and individual surgeon comfort may drive conventional sternotomy as the default even when MIS is available.',
+    whyTailrd: 'TAILRD identified patients scheduled for isolated valve surgery via full sternotomy at institutions with documented MIS/robotic capability, without documentation of why MIS was not offered.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 700 valve surgeries × 30% eligible for MIS × 45% not offered × 35% market share ≈ 45. Dollar opportunity: Quality/growth — $0 direct but program differentiation.',
+  },
+  // ============================================================
+  // GAP vd-26: RE-DO STERNOTOMY RISK NOT FORMALLY ASSESSED
+  // ============================================================
+  {
+    id: 'vd-gap-26-redo-sternotomy-risk',
+    name: 'Re-Do Sternotomy Risk Not Formally Assessed',
+    category: 'Safety',
+    patientCount: 15,
+    dollarOpportunity: 0,
+    priority: 'high',
+    safetyNote: 'SAFETY: Redo sternotomy without pre-operative CT carries 2-5× higher mortality risk. CT assessment of sternal wires, adhesions, and graft proximity is mandatory. Transcatheter alternatives (TAVR, valve-in-valve) should be discussed.',
+    evidence:
+      'Ellman PI et al, Ann Thorac Surg 2008. Redo sternotomy: 2-5× higher mortality vs primary. Pre-op CT mandatory. Transcatheter alternatives (TAVR, valve-in-valve) may avoid redo sternotomy entirely.',
+    cta: 'Pre-Op CT for Redo Assessment — Consider Transcatheter Alternative',
+    detectionCriteria: [
+      'Prior cardiac surgery (prior sternotomy)',
+      'Redo valve surgery planned',
+      'No pre-operative CT for redo risk assessment',
+      'No documented discussion of transcatheter alternative (TAVR, valve-in-valve)',
+    ],
+    patients: [
+      {
+        id: 'VD-REDO-026-001',
+        name: 'Bernard Worthington',
+        mrn: 'MRN-VD-26001',
+        age: 74,
+        signals: [
+          'Prior CABG × 3 grafts (15 years ago) — now needs AVR for severe AS',
+          'Redo sternotomy: LIMA graft crosses midline — high re-entry risk',
+          'No pre-op CT for redo assessment documented',
+          'TAVR is viable alternative — avoids redo sternotomy entirely',
+        ],
+        keyValues: {
+          'Prior Surgery': 'CABG × 3 (LIMA-LAD, SVG-OM, SVG-RCA)',
+          'Current Need': 'AVR (severe AS)',
+          'Pre-Op CT': 'Not performed',
+          'LIMA Position': 'Crosses midline — high re-entry risk',
+          'TAVR Discussion': 'Not documented',
+          'Redo Risk': '2-5× higher mortality without CT planning',
+        },
+      },
+      {
+        id: 'VD-REDO-026-002',
+        name: 'Virginia Kensington',
+        mrn: 'MRN-VD-26002',
+        age: 69,
+        signals: [
+          'Prior MVR (mechanical) 12 years ago — now failing prosthesis',
+          'Redo sternotomy for re-MVR — no CT for adhesion assessment',
+          'Valve-in-valve TMVR: emerging transcatheter option',
+          'Formal redo risk assessment not documented',
+        ],
+        keyValues: {
+          'Prior Surgery': 'MVR (mechanical, 12 years ago)',
+          'Current Need': 'Redo MVR (prosthetic stenosis)',
+          'Pre-Op CT': 'Not performed',
+          'Redo Risk': 'Dense adhesions expected after 12 years',
+          'Transcatheter Option': 'Valve-in-valve TMVR not discussed',
+          'STS Predicted': '6.2% (elevated for redo)',
+        },
+      },
+    ],
+    whyMissed: 'Redo cardiac surgery planning may not include formal CT assessment at all institutions. The emergence of transcatheter alternatives adds a decision layer that requires heart team discussion not universally implemented for redo cases.',
+    whyTailrd: 'TAILRD identified patients with prior cardiac surgery scheduled for redo valve surgery without documented pre-operative CT for redo risk assessment or heart team discussion of transcatheter alternatives.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: redo valve cases × without formal assessment × 35% market share ≈ 15. Dollar opportunity: Safety — prevents catastrophic re-entry injury.',
+  },
+  // ============================================================
+  // GAP vd-27: ANTICOAGULATION POST-BIOPROSTHETIC AVR NOT STANDARDIZED
+  // ============================================================
+  {
+    id: 'vd-gap-27-post-bio-avr-ac',
+    name: 'Anticoagulation Post-Bioprosthetic AVR Not Standardized',
+    category: 'Quality',
+    patientCount: 40,
+    dollarOpportunity: 0,
+    priority: 'medium',
+    evidence:
+      '2020 ACC/AHA Guidelines: aspirin recommended (Class I). Warfarin × 3 months: Class IIa. DOAC: emerging data but not yet guideline-endorsed for surgical bioprosthetic.',
+    cta: 'Document Antithrombotic Protocol — Post-Bioprosthetic AVR',
+    detectionCriteria: [
+      'Bioprosthetic AVR performed within past 6 months',
+      'No standardized antithrombotic protocol documented',
+      'Variation: aspirin only vs warfarin × 3 months vs DOAC',
+      'No documented rationale for chosen strategy',
+    ],
+    patients: [
+      {
+        id: 'VD-BAC-027-001',
+        name: 'Richard Abernathy',
+        mrn: 'MRN-VD-27001',
+        age: 70,
+        signals: [
+          'Bioprosthetic AVR 6 weeks ago — on warfarin without documented INR target or duration',
+          'ACC/AHA: warfarin × 3 months is Class IIa (INR 2.5)',
+          'No documentation of plan to transition to aspirin at 3 months',
+          'Standardized protocol needed',
+        ],
+        keyValues: {
+          'Surgery': 'Bioprosthetic AVR (6 weeks ago)',
+          'Current Regimen': 'Warfarin (target INR not documented)',
+          'ACC/AHA': 'Warfarin × 3 months Class IIa, aspirin Class I',
+          'Duration Plan': 'Not documented',
+          'Transition': 'No plan to switch to aspirin',
+          'Protocol': 'Not standardized',
+        },
+      },
+      {
+        id: 'VD-BAC-027-002',
+        name: 'Evelyn Whitehurst',
+        mrn: 'MRN-VD-27002',
+        age: 65,
+        signals: [
+          'Post-bioprosthetic AVR 2 months — on aspirin only',
+          'Some evidence supports warfarin × 3 months for leaflet thrombosis prevention',
+          'No documented rationale for aspirin-only strategy',
+          'Either approach acceptable — but documentation of rationale required',
+        ],
+        keyValues: {
+          'Surgery': 'Bioprosthetic AVR (2 months ago)',
+          'Current Regimen': 'Aspirin 81mg only',
+          'Rationale': 'Not documented',
+          'ACC/AHA': 'Aspirin: Class I, Warfarin: Class IIa',
+          'HALT Risk': 'Unknown — no CT screening',
+          'Protocol': 'Not standardized',
+        },
+      },
+      {
+        id: 'VD-BAC-027-003',
+        name: 'Norman Fitzgerald',
+        mrn: 'MRN-VD-27003',
+        age: 73,
+        signals: [
+          'Post-bioprosthetic AVR 3 months — placed on rivaroxaban by PCP',
+          'DOACs: not yet guideline-endorsed for surgical bioprosthetic',
+          'Data from TAVR trials (ATLANTIS) not applicable to surgical bio-AVR',
+          'Should be on warfarin (if AC desired) or aspirin — not DOAC',
+        ],
+        keyValues: {
+          'Surgery': 'Bioprosthetic AVR (3 months ago)',
+          'Current Regimen': 'Rivaroxaban 20mg (off-label)',
+          'Guideline': 'DOACs not endorsed for surgical bioprosthetic',
+          'Appropriate': 'Warfarin or aspirin per ACC/AHA',
+          'PCP Prescribed': 'Rivaroxaban without surgical team input',
+          'Protocol': 'Not standardized — led to inappropriate DOAC use',
+        },
+      },
+    ],
+    whyMissed: 'Post-surgical antithrombotic management transitions from the cardiac surgeon to cardiologist or PCP. Without a standardized protocol, PCPs may apply TAVR data to surgical patients or default to DOAC prescribing.',
+    whyTailrd: 'TAILRD identified post-bioprosthetic AVR patients with variable antithrombotic regimens and absent protocol documentation by analyzing surgical dates and medication prescribing patterns.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: bioprosthetic AVR × without standardized protocol × 35% market share ≈ 40. Dollar opportunity: Quality — $0 direct.',
+  },
+  // ============================================================
+  // GAP vd-28: BETA-BLOCKER NOT INITIATED PRE-OP — VALVE SURGERY POAF
+  // ============================================================
+  {
+    id: 'vd-gap-28-preop-bb-poaf',
+    name: 'Beta-Blocker Not Initiated Pre-Op — Valve Surgery POAF Prevention',
+    category: 'Quality',
+    patientCount: 65,
+    dollarOpportunity: 0,
+    priority: 'high',
+    evidence:
+      'Crystal E et al, Circulation 2002. Arsenault KA et al, Circulation 2013. Pre-op BB: 30-40% POAF reduction. Class I recommendation. Valve surgery POAF rate higher than CABG.',
+    cta: 'Initiate Beta-Blocker ≥24h Before Valve Surgery — POAF Prevention',
+    detectionCriteria: [
+      'Valve surgery scheduled',
+      'Not currently on beta-blocker',
+      'No contraindication to beta-blocker (asthma, severe bradycardia, decompensated HF)',
+      'No pre-operative beta-blocker initiation ≥24 hours before surgery',
+    ],
+    patients: [
+      {
+        id: 'VD-BB-028-001',
+        name: 'Howard Blanchard',
+        mrn: 'MRN-VD-28001',
+        age: 67,
+        signals: [
+          'AVR scheduled in 5 days — not on beta-blocker',
+          'No contraindication to BB (HR 78, SBP 134, no asthma)',
+          'Valve surgery POAF rate: 40-60% — higher than CABG',
+          'Pre-op BB reduces POAF 30-40% — Class I recommendation',
+        ],
+        keyValues: {
+          'Surgery': 'AVR (scheduled in 5 days)',
+          'BB Status': 'Not on beta-blocker',
+          'Resting HR': '78 bpm',
+          'SBP': '134 mmHg',
+          'Contraindication': 'None identified',
+          'POAF Risk': '40-60% without prevention',
+        },
+      },
+      {
+        id: 'VD-BB-028-002',
+        name: 'Janet Drummond',
+        mrn: 'MRN-VD-28002',
+        age: 74,
+        signals: [
+          'MV repair scheduled — age 74, high POAF risk',
+          'On ACEi and statin but no beta-blocker',
+          'BB should be started ≥24 hours pre-op for POAF prevention',
+          'POAF: increases LOS by 3-5 days, adds $15K+ per event',
+        ],
+        keyValues: {
+          'Surgery': 'MV repair',
+          'Age': 74,
+          'BB Status': 'Not prescribed',
+          'Current Meds': 'Lisinopril, atorvastatin',
+          'POAF Risk': 'High (age 74 + valve surgery)',
+          'Cost Impact': 'POAF adds $15K+ in LOS and management',
+        },
+      },
+      {
+        id: 'VD-BB-028-003',
+        name: 'Robert Kensington',
+        mrn: 'MRN-VD-28003',
+        age: 69,
+        signals: [
+          'Combined AVR + CABG — highest POAF risk category',
+          'No BB in pre-op medication list — surgery tomorrow',
+          'Arsenault meta-analysis: BB reduces POAF 30-40%',
+          'Should have been started ≥24 hours pre-op — still time today',
+        ],
+        keyValues: {
+          'Surgery': 'AVR + CABG × 2 (tomorrow)',
+          'BB Status': 'Not ordered pre-op',
+          'POAF Risk': 'Very high (combined valve + CABG)',
+          'Action': 'Start BB today — ≥24h before surgery',
+          'BB Choice': 'Metoprolol 25mg BID (start low)',
+          'Contraindication': 'None',
+        },
+      },
+    ],
+    whyMissed: 'Pre-operative beta-blocker initiation for POAF prevention requires prospective protocol implementation. Without standardized pre-surgical checklists, BB initiation may be overlooked especially for patients not already on beta-blockers.',
+    whyTailrd: 'TAILRD identified valve surgery patients not on beta-blockers by analyzing pre-operative medication lists and surgical schedules, flagging the gap in POAF prevention protocols.',
+    methodologyNote: '[Source: Demo Health System / National Benchmark]. Patient count: 700 valve surgeries × 45% not on pre-op BB × 35% eligible × 35% market share ≈ 65. Dollar opportunity: Quality — reduces POAF ($15K+ per event in added LOS).',
   },
 ];
 
