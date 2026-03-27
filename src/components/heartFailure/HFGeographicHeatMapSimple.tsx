@@ -17,7 +17,7 @@ interface ZIPData {
 
 const zipData: ZIPData[] = [
   {
- zip: '10001',
+ zip: '75009',
  name: 'Chelsea/Flatiron',
  patients: 234,
  riskScore: 7.2,
@@ -29,7 +29,7 @@ const zipData: ZIPData[] = [
  height: 60
   },
   {
- zip: '10003',
+ zip: '75003',
  name: 'East Village',
  patients: 198,
  riskScore: 8.5,
@@ -41,7 +41,7 @@ const zipData: ZIPData[] = [
  height: 55
   },
   {
- zip: '10021',
+ zip: '75005',
  name: 'Upper East Side',
  patients: 312,
  riskScore: 6.1,
@@ -53,7 +53,7 @@ const zipData: ZIPData[] = [
  height: 70
   },
   {
- zip: '10025',
+ zip: '75002',
  name: 'Upper West Side',
  patients: 287,
  riskScore: 5.8,
@@ -65,7 +65,7 @@ const zipData: ZIPData[] = [
  height: 65
   },
   {
- zip: '10029',
+ zip: '75001',
  name: 'East Harlem',
  patients: 456,
  riskScore: 9.3,
@@ -150,7 +150,7 @@ export const HFGeographicHeatMapSimple: React.FC = () => {
  className="w-full h-full"
  onMouseMove={handleMouseMove}
  >
- {/* Manhattan Island Outline */}
+ {/* Metro Area Outline */}
  <path
  d="M 150 50 L 180 45 L 220 40 L 280 35 L 320 40 L 380 45 L 420 55 L 450 70 L 460 100 L 465 150 L 470 200 L 465 250 L 460 300 L 450 340 L 430 370 L 400 385 L 360 390 L 320 385 L 280 380 L 240 375 L 200 370 L 170 360 L 150 340 L 140 300 L 135 250 L 140 200 L 145 150 L 150 100 L 150 50 Z"
  fill="#e0f2fe"

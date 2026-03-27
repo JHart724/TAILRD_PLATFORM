@@ -14,7 +14,7 @@ interface ZIPData {
 
 const zipData: ZIPData[] = [
   {
- zip: '10001',
+ zip: '75009',
  name: 'Chelsea/Flatiron',
  coordinates: [
  [40.7505, -73.9934],
@@ -28,7 +28,7 @@ const zipData: ZIPData[] = [
  gdmtRate: 68
   },
   {
- zip: '10003',
+ zip: '75003',
  name: 'East Village',
  coordinates: [
  [40.7328, -73.9903],
@@ -42,7 +42,7 @@ const zipData: ZIPData[] = [
  gdmtRate: 52
   },
   {
- zip: '10021',
+ zip: '75005',
  name: 'Upper East Side',
  coordinates: [
  [40.7736, -73.9566],
@@ -56,7 +56,7 @@ const zipData: ZIPData[] = [
  gdmtRate: 78
   },
   {
- zip: '10025',
+ zip: '75002',
  name: 'Upper West Side',
  coordinates: [
  [40.7936, -73.9736],
@@ -70,7 +70,7 @@ const zipData: ZIPData[] = [
  gdmtRate: 82
   },
   {
- zip: '10029',
+ zip: '75001',
  name: 'East Harlem',
  coordinates: [
  [40.7936, -73.9436],
@@ -157,7 +157,7 @@ export const HFGeographicHeatMap: React.FC = () => {
  
  {/* Simplified NYC Borough Shapes */}
  <g>
- {/* Manhattan simplified */}
+ {/* Metro area simplified */}
  <polygon 
  points="300,150 320,150 330,200 340,250 345,300 340,350 330,400 320,450 300,480 280,450 270,400 265,350 270,300 275,250 285,200 295,150"
  fill="#e0f2fe" 

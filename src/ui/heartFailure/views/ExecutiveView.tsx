@@ -209,7 +209,7 @@ const ExecutiveView: React.FC = () => {
  const facilities: Record<string, any> = {
  'Main Campus - HF Clinic': {
  facilityName: 'Main Campus - HF Clinic',
- location: '1468 Madison Ave, Manhattan, NY 10029',
+ location: '1000 Medical Center Dr, Suite 100',
  totalRevenue: 2100000, // $2.1M (34%)
  patientCount: 1050,
  gdmtRate: 68,
@@ -230,7 +230,7 @@ const ExecutiveView: React.FC = () => {
  },
  'North Campus - HF Clinic': {
  facilityName: 'North Campus - HF Clinic',
- location: '1111 Amsterdam Ave, Manhattan, NY 10025',
+ location: '2500 West Medical Blvd, Suite 200',
  totalRevenue: 1600000, // $1.6M (26%)
  patientCount: 820,
  gdmtRate: 72,
@@ -251,7 +251,7 @@ const ExecutiveView: React.FC = () => {
  },
  'West Campus - HF Center': {
  facilityName: 'West Campus - HF Center',
- location: '1000 10th Ave, Manhattan, NY 10019',
+ location: '3100 East Campus Way, Suite 150',
  totalRevenue: 1800000, // $1.8M (29%)
  patientCount: 950,
  gdmtRate: 75,
@@ -404,12 +404,12 @@ const ExecutiveView: React.FC = () => {
  { zipCode: "10016", patientCount: 43, riskScore: 6.5, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
  { zipCode: "10017", patientCount: 37, riskScore: 5.4, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
  { zipCode: "10018", patientCount: 47, riskScore: 7.2, riskLevel: "High" as const, conditionType: "HF Decompensation Risk" },
- { zipCode: "10019", patientCount: 42, riskScore: 6.3, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
+ { zipCode: "75003", patientCount: 42, riskScore: 6.3, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
  { zipCode: "10021", patientCount: 33, riskScore: 4.8, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
  { zipCode: "10022", patientCount: 35, riskScore: 5.1, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
  { zipCode: "10023", patientCount: 49, riskScore: 7.6, riskLevel: "High" as const, conditionType: "HF Decompensation Risk" },
  { zipCode: "10024", patientCount: 44, riskScore: 6.8, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
- { zipCode: "10025", patientCount: 46, riskScore: 7.0, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
+ { zipCode: "75002", patientCount: 46, riskScore: 7.0, riskLevel: "Medium" as const, conditionType: "HF Decompensation Risk" },
  { zipCode: "10026", patientCount: 61, riskScore: 9.2, riskLevel: "High" as const, conditionType: "HF Decompensation Risk" },
  { zipCode: "10027", patientCount: 55, riskScore: 8.7, riskLevel: "High" as const, conditionType: "HF Decompensation Risk" }
   ];

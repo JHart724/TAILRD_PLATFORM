@@ -401,7 +401,7 @@ const PhenotypeScreeningPanel: React.FC<PhenotypeScreeningPanelProps> = ({
  <div className="flex gap-3">
  <button 
  onClick={() => {
- console.log('Generating phenotype screening report');
+ 
  {}
  }}
  className="bg-porsche-500 text-white py-3 px-6 rounded-lg hover:bg-porsche-600 transition-colors font-medium"
@@ -410,7 +410,7 @@ const PhenotypeScreeningPanel: React.FC<PhenotypeScreeningPanelProps> = ({
  </button>
  <button 
  onClick={() => {
- console.log('Scheduling phenotype assessments');
+ 
  {}
  }}
  className="bg-white border border-titanium-300 text-titanium-700 py-3 px-6 rounded-lg hover:bg-titanium-50 transition-colors font-medium"
@@ -419,7 +419,7 @@ const PhenotypeScreeningPanel: React.FC<PhenotypeScreeningPanelProps> = ({
  </button>
  <button 
  onClick={() => {
- console.log('Viewing screening analytics');
+ 
  {}
  }}
  className="bg-white border border-titanium-300 text-titanium-700 py-3 px-6 rounded-lg hover:bg-titanium-50 transition-colors font-medium flex items-center gap-2"

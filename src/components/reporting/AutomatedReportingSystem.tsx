@@ -271,7 +271,7 @@ const AutomatedReportingSystem: React.FC = () => {
  <button 
  className="px-4 py-2 bg-porsche-500 text-white rounded-lg hover:bg-porsche-600 transition-colors"
  onClick={() => {
- console.log('Opening Create New Schedule modal');
+ 
  // TODO: Implement Create New Schedule modal
  {}
  }}
@@ -317,7 +317,7 @@ const AutomatedReportingSystem: React.FC = () => {
  <button 
  className="p-2 text-titanium-600 hover:text-titanium-800 hover:bg-titanium-50 rounded-lg transition-colors"
  onClick={() => {
- console.log('Opening schedule settings for:', schedule.name);
+ 
  // TODO: Implement schedule settings modal
  {}
  }}
@@ -364,7 +364,7 @@ const AutomatedReportingSystem: React.FC = () => {
  key={template.id} 
  className="border border-titanium-200 rounded-lg p-4 hover:border-porsche-300 hover:bg-porsche-50 transition-all cursor-pointer"
  onClick={() => {
- console.log('Opening template:', template.name);
+ 
  // TODO: Implement template editor/preview
  {}
  }}
@@ -401,7 +401,7 @@ const AutomatedReportingSystem: React.FC = () => {
  className="p-2 text-titanium-600 hover:text-porsche-600 hover:bg-porsche-50 rounded-lg transition-colors"
  onClick={() => {
  const reportName = ['Weekly GDMT Performance Report', 'Monthly Executive Dashboard', 'Daily Provider Metrics'][i % 3];
- console.log('Downloading report:', reportName);
+ 
  // TODO: Implement report download functionality
  {}
  }}

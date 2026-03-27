@@ -35,7 +35,7 @@ export const hfAPI = {
   async getOpportunityHeatmap() {
  await delay(300);
  return [
- { site_id: "MS-Manhattan", opp_revenue: 1250000, rank: 1 },
+ { site_id: "Main Campus", opp_revenue: 1250000, rank: 1 },
  { site_id: "MS-Brooklyn", opp_revenue: 980000, rank: 2 },
  { site_id: "MS-Queens", opp_revenue: 720000, rank: 3 },
  { site_id: "MS-Bronx", opp_revenue: 650000, rank: 4 },
@@ -67,7 +67,7 @@ export const hfAPI = {
   async getGDMTHeatmap(segment: string) {
  await delay(300);
  return [
- { site_id: "MS-Manhattan", score: 78.5, pct_quadruple: 76.2, opp_revenue: 450000 },
+ { site_id: "Main Campus", score: 78.5, pct_quadruple: 76.2, opp_revenue: 450000 },
  { site_id: "MS-Brooklyn", score: 71.3, pct_quadruple: 69.8, opp_revenue: 580000 },
  { site_id: "MS-Queens", score: 68.7, pct_quadruple: 66.4, opp_revenue: 620000 },
  { site_id: "MS-Bronx", score: 73.2, pct_quadruple: 71.5, opp_revenue: 520000 },

@@ -166,7 +166,7 @@ const nycZipGeoJSON = {
  },
  {
  type: "Feature" as const,
- properties: { ZIPCODE: "10019" },
+ properties: { ZIPCODE: "75003" },
  geometry: {
  type: "Polygon" as const,
  coordinates: [[
@@ -221,7 +221,7 @@ const nycZipGeoJSON = {
  },
  {
  type: "Feature" as const,
- properties: { ZIPCODE: "10025" },
+ properties: { ZIPCODE: "75002" },
  geometry: {
  type: "Polygon" as const,
  coordinates: [[

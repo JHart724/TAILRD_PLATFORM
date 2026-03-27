@@ -439,7 +439,7 @@ const PhenotypeDetailModal: React.FC<PhenotypeDetailModalProps> = ({
  <div className="flex justify-center gap-3 mt-8 pt-6 border-t border-titanium-200">
  <button
  onClick={() => {
- console.log('Updating phenotype status for:', phenotype.id);
+ 
  {}
  }}
  className="bg-porsche-500 text-white py-2 px-4 rounded-lg hover:bg-porsche-600 transition-colors"
@@ -448,7 +448,7 @@ const PhenotypeDetailModal: React.FC<PhenotypeDetailModalProps> = ({
  </button>
  <button
  onClick={() => {
- console.log('Scheduling workup for:', phenotype.name);
+ 
  {}
  }}
  className="bg-white border border-titanium-300 text-titanium-700 py-2 px-4 rounded-lg hover:bg-titanium-50 transition-colors"
@@ -457,7 +457,7 @@ const PhenotypeDetailModal: React.FC<PhenotypeDetailModalProps> = ({
  </button>
  <button
  onClick={() => {
- console.log('Generating phenotype report for:', phenotype.name);
+ 
  {}
  }}
  className="bg-white border border-titanium-300 text-titanium-700 py-2 px-4 rounded-lg hover:bg-titanium-50 transition-colors"

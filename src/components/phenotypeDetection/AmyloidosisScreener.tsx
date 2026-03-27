@@ -357,7 +357,7 @@ const AmyloidosisScreener: React.FC = () => {
  </button>
  <button 
  onClick={() => {
- console.log('Generating amyloidosis screening report');
+ 
  {}
  }}
  className="bg-white border border-titanium-300 text-titanium-700 py-3 px-6 rounded-lg hover:bg-titanium-50 transition-colors font-medium"
@@ -366,7 +366,7 @@ const AmyloidosisScreener: React.FC = () => {
  </button>
  <button 
  onClick={() => {
- console.log('Resetting screening form');
+ 
  setCriteria(criteria.map(c => ({ ...c, present: null })));
  setShowResults(false);
  }}
