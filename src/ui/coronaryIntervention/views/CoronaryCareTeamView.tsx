@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { DEMO_PATIENT_CONTEXT, DEMO_PATIENT_ROSTER } from '../../../types/shared';
 import { Heart, Users, Workflow, Shield, FileText, Calculator, ClipboardCheck, ListTodo, Stethoscope, AlertTriangle } from 'lucide-react';
 
@@ -118,13 +118,12 @@ type CoronaryCareTeamTab =
   | 'clinical-gaps';
 
 const CoronaryCareTeamView: React.FC = () => {
-  const [activeTab, _setActiveTab] = useState<CoronaryCareTeamTab>('dashboard');
-  const contentRef = useRef<HTMLDivElement>(null);
-  const setActiveTab = (tab: CoronaryCareTeamTab) => {
-    _setActiveTab(tab);
-    setTimeout(() => {
-      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
+  const [activeTab, setActiveTab] = useState<CoronaryCareTeamTab>('dashboard');
+
+  const handleTabChange = (tab: CoronaryCareTeamTab) => {
+    setActiveTab(tab);
+    const container = document.getElementById('main-scroll-container');
+    if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
 
   // Extended configuration with our new components
@@ -242,7 +241,7 @@ const CoronaryCareTeamView: React.FC = () => {
  return (
  <button
  key={tab.id}
- onClick={() => setActiveTab(tab.id as CoronaryCareTeamTab)}
+ onClick={() => handleTabChange(tab.id as CoronaryCareTeamTab)}
  className={`group relative p-4 rounded-xl border transition-all duration-300 ${
  isActive
  ? `${colors.bg} ${colors.border} ${colors.text} shadow-lg scale-105`
@@ -265,7 +264,7 @@ const CoronaryCareTeamView: React.FC = () => {
  </div>
 
  {/* Tab Content */}
- <div ref={contentRef} className="space-y-6">
+ <div className="space-y-6">
  {renderActiveTabContent()}
  </div>
  </div>

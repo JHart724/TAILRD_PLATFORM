@@ -464,13 +464,13 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  selectedPhysicianData.inr_control_pct >= 80 ? 'bg-gradient-to-br from-green-50 to-green-100' : 'bg-gradient-to-br from-amber-50 to-amber-100'
  }`}>
  <div className={`text-sm font-medium flex items-center gap-1 ${
- selectedPhysicianData.inr_control_pct >= 80 ? 'text-green-700' : 'text-amber-700'
+ selectedPhysicianData.inr_control_pct >= 80 ? 'text-[#2C4A60]' : 'text-[#6B7280]'
  }`}>
  <Target className="w-4 h-4" />
  INR Control
  </div>
  <div className={`text-2xl font-bold ${
- selectedPhysicianData.inr_control_pct >= 80 ? 'text-green-800' : 'text-amber-800'
+ selectedPhysicianData.inr_control_pct >= 80 ? 'text-[#2C4A60]' : 'text-[#6B7280]'
  }`}>{toFixed(selectedPhysicianData.inr_control_pct, 1)}%</div>
  </div>
  <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-4 rounded-xl">
@@ -495,7 +495,7 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm ${
  patient.strokeRisk >= 7 ? 'bg-red-500' :
- patient.strokeRisk >= 4 ? 'bg-amber-500' : 'bg-green-500'
+ patient.strokeRisk >= 4 ? 'bg-[#F0F5FA]' : 'bg-[#C8D4DC]'
  }`}>
  {patient.name.split(' ').map(n => n[0]).join('')}
  </div>
@@ -511,7 +511,7 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  </div>
  <div className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.strokeRisk >= 7 ? 'bg-red-100 text-red-700' :
- patient.strokeRisk >= 4 ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'
+ patient.strokeRisk >= 4 ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-[#C8D4DC] text-[#2C4A60]'
  }`}>
  {patient.strokeRisk >= 7 ? 'HIGH RISK' : patient.strokeRisk >= 4 ? 'MODERATE RISK' : 'LOW RISK'}
  </div>
@@ -545,12 +545,12 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  <div className="space-y-1">
  {patient.treatmentGaps.length > 0 ? (
  patient.treatmentGaps.map((gap, idx) => (
- <div key={gap} className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded">
+ <div key={gap} className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded">
  {gap}
  </div>
  ))
  ) : (
- <div className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+ <div className="text-xs bg-[#C8D4DC] text-[#2C4A60] px-2 py-1 rounded">
  No gaps identified
  </div>
  )}

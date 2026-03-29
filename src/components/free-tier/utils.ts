@@ -27,16 +27,16 @@ export function formatValue(value: number, unit: string): string {
 
 export function getStatusColor(status: 'above' | 'at' | 'below'): string {
   switch (status) {
-    case 'above': return 'text-emerald-600';
-    case 'at': return 'text-amber-600';
+    case 'above': return 'text-[#2C4A60]';
+    case 'at': return 'text-[#6B7280]';
     case 'below': return 'text-arterial-600';
   }
 }
 
 export function getStatusBg(status: 'above' | 'at' | 'below'): string {
   switch (status) {
-    case 'above': return 'bg-emerald-500';
-    case 'at': return 'bg-amber-500';
+    case 'above': return 'bg-[#F0F5FA]';
+    case 'at': return 'bg-[#F0F5FA]';
     case 'below': return 'bg-arterial-500';
   }
 }
@@ -44,7 +44,7 @@ export function getStatusBg(status: 'above' | 'at' | 'below'): string {
 export function getPriorityColor(priority: 'high' | 'medium' | 'low'): string {
   switch (priority) {
     case 'high': return 'bg-arterial-600';
-    case 'medium': return 'bg-amber-500';
+    case 'medium': return 'bg-[#F0F5FA]';
     case 'low': return 'bg-chrome-500';
   }
 }

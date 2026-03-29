@@ -124,11 +124,11 @@ export const HFExecutiveSummary: React.FC = () => {
   const getColorClasses = (color: string) => {
  const colors: any = {
  blue: { bg: 'bg-chrome-50', border: 'border-chrome-300', text: 'text-chrome-700', icon: 'text-chrome-600', stroke: '#3B82F6' },
- green: { bg: 'bg-emerald-50', border: 'border-emerald-300', text: 'text-emerald-700', icon: 'text-emerald-600', stroke: '#10B981' },
+ green: { bg: 'bg-[#F0F5FA]', border: 'border-[#C8D4DC]', text: 'text-[#2C4A60]', icon: 'text-[#2C4A60]', stroke: '#2C4A60' },
  carmona: { bg: 'bg-arterial-50', border: 'border-arterial-300', text: 'text-arterial-700', icon: 'text-arterial-600', stroke: '#9B2438' },
  red: { bg: 'bg-red-50', border: 'border-red-300', text: 'text-red-700', icon: 'text-red-600', stroke: '#EF4444' },
- orange: { bg: 'bg-amber-50', border: 'border-amber-300', text: 'text-amber-700', icon: 'text-amber-600', stroke: '#F59E0B' },
- teal: { bg: 'bg-teal-50', border: 'border-teal-300', text: 'text-teal-700', icon: 'text-teal-600', stroke: '#14B8A6' }
+ orange: { bg: 'bg-[#F0F5FA]', border: 'border-[#C8D4DC]', text: 'text-[#6B7280]', icon: 'text-[#6B7280]', stroke: '#6B7280' },
+ teal: { bg: 'bg-[#C8D4DC]', border: 'border-[#2C4A60]', text: 'text-[#2C4A60]', icon: 'text-[#2C4A60]', stroke: '#14B8A6' }
  };
  return colors[color] || colors.blue;
   };
@@ -156,7 +156,7 @@ export const HFExecutiveSummary: React.FC = () => {
  <div className="flex items-start justify-between mb-3">
  <Icon className={`${colors.icon} w-8 h-8`} />
  <div className={`flex items-center text-sm font-semibold ${
- kpi.trend >= 0 ? 'text-emerald-600' : 'text-red-600'
+ kpi.trend >= 0 ? 'text-[#2C4A60]' : 'text-red-600'
  }`}>
  <TrendIcon className="w-4 h-4 mr-1" />
  {Math.abs(kpi.trend)}%
@@ -191,7 +191,7 @@ export const HFExecutiveSummary: React.FC = () => {
  <div className="mb-4">
  <div className="text-4xl font-bold mb-2">{selectedKPI.value}</div>
  <div className={`flex items-center text-lg font-semibold ${
- selectedKPI.trend >= 0 ? 'text-emerald-600' : 'text-red-600'
+ selectedKPI.trend >= 0 ? 'text-[#2C4A60]' : 'text-red-600'
  }`}>
  {selectedKPI.trend >= 0 ? <TrendingUp className="w-5 h-5 mr-1" /> : <TrendingDown className="w-5 h-5 mr-1" />}
  {Math.abs(selectedKPI.trend)}% vs last quarter

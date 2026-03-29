@@ -37,10 +37,10 @@ const severityConfig: Record<
   { border: string; bg: string; icon: React.ElementType; iconColor: string }
 > = {
   critical: { border: 'border-l-arterial-600', bg: 'bg-arterial-50', icon: AlertTriangle, iconColor: 'text-arterial-600' },
-  high: { border: 'border-l-amber-600', bg: 'bg-amber-50', icon: AlertTriangle, iconColor: 'text-amber-600' },
-  warning: { border: 'border-l-amber-500', bg: 'bg-amber-50', icon: Info, iconColor: 'text-amber-600' },
+  high: { border: 'border-l-[#6B7280]', bg: 'bg-[#F0F5FA]', icon: AlertTriangle, iconColor: 'text-[#6B7280]' },
+  warning: { border: 'border-l-[#6B7280]', bg: 'bg-[#F0F5FA]', icon: Info, iconColor: 'text-[#6B7280]' },
   info: { border: 'border-l-chrome-500', bg: 'bg-chrome-50', icon: Info, iconColor: 'text-chrome-600' },
-  success: { border: 'border-l-emerald-500', bg: 'bg-emerald-50', icon: CheckCircle, iconColor: 'text-emerald-600' },
+  success: { border: 'border-l-emerald-500', bg: 'bg-[#F0F5FA]', icon: CheckCircle, iconColor: 'text-[#2C4A60]' },
 };
 
 const typeIcons: Record<string, React.ElementType> = {

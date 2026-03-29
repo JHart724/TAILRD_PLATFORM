@@ -44,7 +44,7 @@ const CompetitorMarketShare: React.FC = () => {
           <p className="text-xs text-titanium-500 mt-1 leading-snug">Competitors Identified</p>
         </div>
         <div className="bg-chrome-50 border border-chrome-200 rounded-xl p-4 text-center">
-          <p className="text-2xl font-bold font-data text-emerald-600">$18.4M</p>
+          <p className="text-2xl font-bold font-data text-[#2C4A60]">$18.4M</p>
           <p className="text-xs text-titanium-500 mt-1 leading-snug">Estimated Market Opportunity</p>
         </div>
       </div>
@@ -81,7 +81,7 @@ const CompetitorMarketShare: React.FC = () => {
           {showYourDetail && (
             <div className="bg-chrome-50 border border-chrome-100 rounded-lg p-3 mt-2 text-xs space-y-1.5 ml-44">
               <p className="text-titanium-600">Service areas: Primary (12 ZIPs), Secondary (8 ZIPs)</p>
-              <p className="text-titanium-600">YoY change: <span className="text-emerald-600 font-semibold">+2.1%</span> vs prior year</p>
+              <p className="text-titanium-600">YoY change: <span className="text-[#2C4A60] font-semibold">+2.1%</span> vs prior year</p>
               <p className="text-titanium-600">Strongest segment: <span className="font-semibold text-titanium-700">Heart Failure (41% share)</span></p>
               <div className="flex items-center gap-1.5 text-titanium-400">
                 <Lock className="w-3 h-3" />

@@ -195,8 +195,8 @@ const CoronarySpecialtyPhenotypesDashboard: React.FC = () => {
   const getRiskColor = (risk: string) => {
  switch (risk) {
  case 'high': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
- case 'moderate': return 'text-amber-600 bg-amber-50 border-amber-200';
- case 'low': return 'text-green-600 bg-green-50 border-green-200';
+ case 'moderate': return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
+ case 'low': return 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };
@@ -219,13 +219,13 @@ const CoronarySpecialtyPhenotypesDashboard: React.FC = () => {
  <div className="text-2xl font-bold text-porsche-600 font-sf">{totalEligible}</div>
  <div className="text-sm text-porsche-700">Total Eligible Patients</div>
  </div>
- <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
- <div className="text-2xl font-bold text-green-600 font-sf">{totalIdentified}</div>
- <div className="text-sm text-green-700">Currently Identified</div>
+ <div className="p-4 bg-[#C8D4DC] border border-[#2C4A60] rounded-lg">
+ <div className="text-2xl font-bold text-[#2C4A60] font-sf">{totalIdentified}</div>
+ <div className="text-sm text-[#2C4A60]">Currently Identified</div>
  </div>
- <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
- <div className="text-2xl font-bold text-amber-600 font-sf">{totalEligible - totalIdentified}</div>
- <div className="text-sm text-amber-700">Unidentified Patients</div>
+ <div className="p-4 bg-[#F0F5FA] border border-[#C8D4DC] rounded-lg">
+ <div className="text-2xl font-bold text-[#6B7280] font-sf">{totalEligible - totalIdentified}</div>
+ <div className="text-sm text-[#6B7280]">Unidentified Patients</div>
  </div>
  <div className="p-4 bg-crimson-50 border border-crimson-200 rounded-lg">
  <div className="text-2xl font-bold text-crimson-600 font-sf">${toFixed(totalRevenueGap / 1000000, 1)}M</div>
@@ -286,9 +286,9 @@ const CoronarySpecialtyPhenotypesDashboard: React.FC = () => {
  <div className="text-lg font-bold text-titanium-900">{phenotype.eligiblePatients}</div>
  <div className="text-xs text-titanium-600">Eligible</div>
  </div>
- <div className="text-center p-3 bg-green-50 rounded-lg">
- <div className="text-lg font-bold text-green-600">{phenotype.identifiedPatients}</div>
- <div className="text-xs text-green-700">Identified</div>
+ <div className="text-center p-3 bg-[#C8D4DC] rounded-lg">
+ <div className="text-lg font-bold text-[#2C4A60]">{phenotype.identifiedPatients}</div>
+ <div className="text-xs text-[#2C4A60]">Identified</div>
  </div>
  <div className="text-center p-3 bg-crimson-50 rounded-lg">
  <div className="text-lg font-bold text-crimson-600">{phenotype.eligiblePatients - phenotype.identifiedPatients}</div>
@@ -325,7 +325,7 @@ const CoronarySpecialtyPhenotypesDashboard: React.FC = () => {
  <div className="text-sm font-semibold text-titanium-700 mb-1">Interventions</div>
  <div className="flex flex-wrap gap-1">
  {phenotype.interventions.slice(0, 2).map((intervention) => (
- <span key={intervention} className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">
+ <span key={intervention} className="px-2 py-1 bg-[#C8D4DC] text-[#2C4A60] text-xs rounded">
  {intervention}
  </span>
  ))}
@@ -339,16 +339,16 @@ const CoronarySpecialtyPhenotypesDashboard: React.FC = () => {
  </div>
 
  {/* Revenue Impact */}
- <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+ <div className="flex items-center justify-between p-3 bg-[#C8D4DC] border border-[#2C4A60] rounded-lg">
  <div>
- <div className="text-sm font-semibold text-green-800">Revenue Opportunity</div>
- <div className="text-xs text-green-600">{phenotype.revenue}</div>
+ <div className="text-sm font-semibold text-[#2C4A60]">Revenue Opportunity</div>
+ <div className="text-xs text-[#2C4A60]">{phenotype.revenue}</div>
  </div>
  <div className="text-right">
- <div className="text-lg font-bold text-green-700">
+ <div className="text-lg font-bold text-[#2C4A60]">
  ${phenotype.revenueGap >= 1000000 ? `${toFixed(phenotype.revenueGap / 1000000, 2)}M` : `${toFixed(phenotype.revenueGap / 1000, 0)}K`}
  </div>
- <div className="text-xs text-green-600">Gap</div>
+ <div className="text-xs text-[#2C4A60]">Gap</div>
  </div>
  </div>
 
@@ -426,7 +426,7 @@ const CoronarySpecialtyPhenotypesDashboard: React.FC = () => {
  </div>
  </div>
  <div className="flex items-center gap-3">
- <span className={`text-xs px-2 py-0.5 rounded-full ${pt.risk === 'High' ? 'bg-crimson-100 text-crimson-700' : 'bg-amber-100 text-amber-700'}`}>
+ <span className={`text-xs px-2 py-0.5 rounded-full ${pt.risk === 'High' ? 'bg-crimson-100 text-crimson-700' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>
  {pt.risk}
  </span>
  <span className="text-xs text-titanium-500">{pt.status}</span>
@@ -472,20 +472,20 @@ const CoronarySpecialtyPhenotypesDashboard: React.FC = () => {
  <div className="text-xs text-porsche-600">Run bulk phenotype analysis</div>
  </button>
  <button
- className="p-4 border-2 border-green-200 rounded-lg hover:bg-green-50 transition-colors"
+ className="p-4 border-2 border-[#2C4A60] rounded-lg hover:bg-[#C8D4DC] transition-colors"
  onClick={() => { setQuickActionFeedback('revenue'); setTimeout(() => setQuickActionFeedback(null), 3000); }}
  >
- <DollarSign className="w-6 h-6 text-green-600 mx-auto mb-2" />
- <div className="text-sm font-semibold text-green-800">Revenue Report</div>
- <div className="text-xs text-green-600">Generate opportunity analysis</div>
+ <DollarSign className="w-6 h-6 text-[#2C4A60] mx-auto mb-2" />
+ <div className="text-sm font-semibold text-[#2C4A60]">Revenue Report</div>
+ <div className="text-xs text-[#2C4A60]">Generate opportunity analysis</div>
  </button>
  <button
- className="p-4 border-2 border-amber-200 rounded-lg hover:bg-amber-50 transition-colors"
+ className="p-4 border-2 border-[#C8D4DC] rounded-lg hover:bg-[#F0F5FA] transition-colors"
  onClick={() => { setQuickActionFeedback('builder'); setTimeout(() => setQuickActionFeedback(null), 3000); }}
  >
- <Activity className="w-6 h-6 text-amber-600 mx-auto mb-2" />
- <div className="text-sm font-semibold text-amber-800">Protocol Builder</div>
- <div className="text-xs text-amber-600">Create screening workflows</div>
+ <Activity className="w-6 h-6 text-[#6B7280] mx-auto mb-2" />
+ <div className="text-sm font-semibold text-[#6B7280]">Protocol Builder</div>
+ <div className="text-xs text-[#6B7280]">Create screening workflows</div>
  </button>
  </div>
  </div>

@@ -79,9 +79,9 @@ const DataManagementPortal: React.FC = () => {
 
   const statusBadge = (status: string) => {
     const colors: Record<string, string> = {
-      COMPLETE: 'bg-emerald-100 text-emerald-800',
+      COMPLETE: 'bg-[#F0F5FA] text-[#2C4A60]',
       FAILED: 'bg-red-100 text-red-800',
-      REJECTED_PHI: 'bg-amber-100 text-amber-800',
+      REJECTED_PHI: 'bg-[#F0F5FA] text-[#6B7280]',
       PENDING: 'bg-slate-100 text-slate-600',
       VALIDATING: 'bg-blue-100 text-blue-700',
       PROCESSING: 'bg-blue-100 text-blue-700',
@@ -166,12 +166,12 @@ const DataManagementPortal: React.FC = () => {
             <h2 className="text-lg font-semibold text-slate-800 mb-4">Processing Status</h2>
 
             {currentJob.status === 'REJECTED_PHI' ? (
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <div className="bg-[#F0F5FA] border border-[#C8D4DC] rounded-lg p-4">
                 <div className="flex items-start gap-3">
-                  <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5" />
+                  <AlertTriangle className="w-5 h-5 text-[#6B7280] mt-0.5" />
                   <div>
-                    <p className="font-medium text-amber-800">File Rejected -- Potential PHI Detected</p>
-                    <p className="text-sm text-amber-700 mt-1">Please verify the file is fully de-identified and re-upload.</p>
+                    <p className="font-medium text-[#6B7280]">File Rejected -- Potential PHI Detected</p>
+                    <p className="text-sm text-[#6B7280] mt-1">Please verify the file is fully de-identified and re-upload.</p>
                   </div>
                 </div>
               </div>
@@ -187,7 +187,7 @@ const DataManagementPortal: React.FC = () => {
               </div>
             ) : currentJob.status === 'COMPLETE' ? (
               <div className="space-y-3">
-                <div className="flex items-center gap-2 text-emerald-700">
+                <div className="flex items-center gap-2 text-[#2C4A60]">
                   <CheckCircle className="w-5 h-5" />
                   <span className="font-medium">Processing Complete</span>
                 </div>
@@ -197,7 +197,7 @@ const DataManagementPortal: React.FC = () => {
                     <p className="text-xs text-slate-500">Rows Processed</p>
                   </div>
                   <div className="bg-slate-50 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-bold text-emerald-700">{currentJob.patientsCreated || 0}</p>
+                    <p className="text-2xl font-bold text-[#2C4A60]">{currentJob.patientsCreated || 0}</p>
                     <p className="text-xs text-slate-500">New Patients</p>
                   </div>
                   <div className="bg-slate-50 rounded-lg p-3 text-center">
@@ -210,7 +210,7 @@ const DataManagementPortal: React.FC = () => {
                   </div>
                 </div>
                 {(currentJob.errorRows || 0) > 0 && (
-                  <p className="text-xs text-amber-600">{currentJob.errorRows} rows had validation errors</p>
+                  <p className="text-xs text-[#6B7280]">{currentJob.errorRows} rows had validation errors</p>
                 )}
               </div>
             ) : (
@@ -222,10 +222,10 @@ const DataManagementPortal: React.FC = () => {
                   const active = i === currentIdx;
                   return (
                     <div key={step} className="flex items-center gap-3">
-                      {done ? <CheckCircle className="w-4 h-4 text-emerald-600" /> :
+                      {done ? <CheckCircle className="w-4 h-4 text-[#2C4A60]" /> :
                        active ? <RefreshCw className="w-4 h-4 text-blue-600 animate-spin" /> :
                        <div className="w-4 h-4 rounded-full border-2 border-slate-300" />}
-                      <span className={`text-sm ${active ? 'text-blue-700 font-medium' : done ? 'text-emerald-700' : 'text-slate-400'}`}>
+                      <span className={`text-sm ${active ? 'text-blue-700 font-medium' : done ? 'text-[#2C4A60]' : 'text-slate-400'}`}>
                         {step.replace(/_/g, ' ')}
                       </span>
                     </div>

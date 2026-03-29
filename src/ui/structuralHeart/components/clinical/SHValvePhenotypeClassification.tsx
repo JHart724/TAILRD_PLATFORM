@@ -82,16 +82,16 @@ const SHValvePhenotypeClassification: React.FC<{ patientData?: PatientContext }>
  stCriteria.push(`AVA ${inputs.aorticValveArea} cm\u00B2 (< 1.0)`, `Mean gradient ${inputs.meanGradient} mmHg (< 40)`, `LVEF ${inputs.lvef}% (\u2265 50%) \u2014 preserved EF`);
  stCriteria.push(`SVI ${inputs.strokeVolumeIndex} mL/m\u00B2 (< 35) \u2014 paradoxical low-flow`);
  stCriteria.push('Consider CT calcium scoring (Agatston > 2000 men / > 1200 women supports severe)');
- stenosisSeverity = { grade: 'Severe (Paradoxical Low-Flow, Low-Gradient)', criteria: stCriteria, color: 'text-amber-400' };
+ stenosisSeverity = { grade: 'Severe (Paradoxical Low-Flow, Low-Gradient)', criteria: stCriteria, color: 'text-[#6B7280]' };
  } else if (inputs.aorticValveArea >= 1.0 && inputs.aorticValveArea <= 1.5) {
  stCriteria.push(`AVA ${inputs.aorticValveArea} cm\u00B2 (1.0-1.5)`, `Mean gradient ${inputs.meanGradient} mmHg`);
- stenosisSeverity = { grade: 'Moderate', criteria: stCriteria, color: 'text-yellow-400' };
+ stenosisSeverity = { grade: 'Moderate', criteria: stCriteria, color: 'text-[#6B7280]' };
  } else if (inputs.aorticValveArea > 1.5) {
  stCriteria.push(`AVA ${inputs.aorticValveArea} cm\u00B2 (> 1.5)`);
- stenosisSeverity = { grade: 'Mild', criteria: stCriteria, color: 'text-emerald-400' };
+ stenosisSeverity = { grade: 'Mild', criteria: stCriteria, color: 'text-[#2C4A60]' };
  } else {
  stCriteria.push('Discordant parameters \u2014 requires additional workup');
- stenosisSeverity = { grade: 'Indeterminate', criteria: stCriteria, color: 'text-yellow-400' };
+ stenosisSeverity = { grade: 'Indeterminate', criteria: stCriteria, color: 'text-[#6B7280]' };
  }
  } else if (inputs.valveAffected === 'mitral' && inputs.pathologyType === 'stenosis') {
  // Mitral stenosis: MVA < 1.0 severe, 1.0-1.5 moderate, > 1.5 mild
@@ -99,9 +99,9 @@ const SHValvePhenotypeClassification: React.FC<{ patientData?: PatientContext }>
  stCriteria.push(`MVA ${inputs.aorticValveArea} cm\u00B2 (< 1.0)`, `Mean gradient ${inputs.meanGradient} mmHg`);
  stenosisSeverity = { grade: 'Severe', criteria: stCriteria, color: 'text-red-400' };
  } else if (inputs.aorticValveArea <= 1.5) {
- stenosisSeverity = { grade: 'Moderate', criteria: [`MVA ${inputs.aorticValveArea} cm\u00B2 (1.0-1.5)`], color: 'text-yellow-400' };
+ stenosisSeverity = { grade: 'Moderate', criteria: [`MVA ${inputs.aorticValveArea} cm\u00B2 (1.0-1.5)`], color: 'text-[#6B7280]' };
  } else {
- stenosisSeverity = { grade: 'Mild', criteria: [`MVA ${inputs.aorticValveArea} cm\u00B2 (> 1.5)`], color: 'text-emerald-400' };
+ stenosisSeverity = { grade: 'Mild', criteria: [`MVA ${inputs.aorticValveArea} cm\u00B2 (> 1.5)`], color: 'text-[#2C4A60]' };
  }
  } else {
  stenosisSeverity = { grade: 'N/A', criteria: ['No stenosis evaluation for selected valve/pathology'], color: 'text-titanium-400' };
@@ -129,9 +129,9 @@ const SHValvePhenotypeClassification: React.FC<{ patientData?: PatientContext }>
  regurgitationSeverity = { grade: 'Severe', criteria: regCriteria, color: 'text-red-400' };
  } else if (inputs.eroa >= (severeEROA * 0.5) || inputs.regurgitantVolume >= (severeRVol * 0.5)) {
  regCriteria.push(`EROA ${inputs.eroa} cm\u00B2`, `Regurgitant volume ${inputs.regurgitantVolume} mL`);
- regurgitationSeverity = { grade: 'Moderate', criteria: regCriteria, color: 'text-yellow-400' };
+ regurgitationSeverity = { grade: 'Moderate', criteria: regCriteria, color: 'text-[#6B7280]' };
  } else {
- regurgitationSeverity = { grade: 'Mild', criteria: [`EROA ${inputs.eroa} cm\u00B2`, `RVol ${inputs.regurgitantVolume} mL`], color: 'text-emerald-400' };
+ regurgitationSeverity = { grade: 'Mild', criteria: [`EROA ${inputs.eroa} cm\u00B2`, `RVol ${inputs.regurgitantVolume} mL`], color: 'text-[#2C4A60]' };
  }
 
  if (isMitral && inputs.pathologyType === 'regurgitation') {
@@ -403,7 +403,7 @@ const SHValvePhenotypeClassification: React.FC<{ patientData?: PatientContext }>
  {results.stenosisSeverity.grade !== 'N/A' && (
  <div className="metal-card rounded-2xl p-5 border border-titanium-200">
  <h4 className="text-sm font-semibold text-white font-sf mb-3 flex items-center gap-2">
- <Activity className="w-4 h-4 text-amber-400" /> Stenosis Severity
+ <Activity className="w-4 h-4 text-[#6B7280]" /> Stenosis Severity
  </h4>
  <div className={`text-xl font-bold ${results.stenosisSeverity.color} mb-3`}>{results.stenosisSeverity.grade}</div>
  <ul className="space-y-1">
@@ -457,15 +457,15 @@ const SHValvePhenotypeClassification: React.FC<{ patientData?: PatientContext }>
  {/* Intervention Timing */}
  <div className={`metal-card rounded-2xl p-5 border ${
  results.interventionTiming.urgency === 'Indicated' ? 'border-red-500 bg-red-500' :
- results.interventionTiming.urgency === 'Reasonable' ? 'border-yellow-500/30 bg-yellow-500/5' :
+ results.interventionTiming.urgency === 'Reasonable' ? 'border-[#C8D4DC]/30 bg-[#F0F5FA]/5' :
  'border-titanium-200'
  }`}>
  <h4 className="text-sm font-semibold text-white font-sf mb-3 flex items-center gap-2">
  <Shield className="w-4 h-4 text-porsche-400" /> Intervention Timing
  <span className={`ml-auto text-xs font-bold px-2 py-0.5 rounded ${
  results.interventionTiming.class === 'Class I' ? 'bg-red-500 text-red-400' :
- results.interventionTiming.class === 'Class IIa' ? 'bg-yellow-500/20 text-yellow-400' :
- results.interventionTiming.class === 'Class IIb' ? 'bg-bg-amber-500 text-amber-400' :
+ results.interventionTiming.class === 'Class IIa' ? 'bg-[#F0F5FA]/20 text-[#6B7280]' :
+ results.interventionTiming.class === 'Class IIb' ? 'bg-bg-[#F0F5FA] text-[#6B7280]' :
  'bg-white text-titanium-400'
  }`}>{results.interventionTiming.class}</span>
  </h4>

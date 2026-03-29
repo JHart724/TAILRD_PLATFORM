@@ -959,9 +959,9 @@ const SHCareGapAnalyzer: React.FC = () => {
  </div>
 
  {/* Labs */}
- <div className="bg-green-50 rounded-lg p-4">
+ <div className="bg-[#C8D4DC] rounded-lg p-4">
  <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <Droplets className="w-5 h-5 text-green-600" />
+ <Droplets className="w-5 h-5 text-[#2C4A60]" />
  Laboratory Results
  </h3>
  <div className="grid grid-cols-2 gap-3 text-sm">
@@ -998,8 +998,8 @@ const SHCareGapAnalyzer: React.FC = () => {
  <span className="text-gray-600 ml-2">{med.dose} {med.frequency}</span>
  </div>
  <div className={`px-2 py-1 rounded text-xs font-medium ${
- med.adherence >= 90 ? 'bg-green-100 text-green-800' :
- med.adherence >= 80 ? 'bg-yellow-100 text-yellow-800' :
+ med.adherence >= 90 ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ med.adherence >= 80 ? 'bg-[#F0F5FA] text-[#6B7280]' :
  'bg-red-100 text-red-800'
  }`}>
  {med.adherence}% adherence
@@ -1030,7 +1030,7 @@ const SHCareGapAnalyzer: React.FC = () => {
  <div className="flex items-center gap-2 mb-2">
  <Pill className="w-4 h-4 text-chrome-600" />
  <span className="font-semibold text-chrome-800">Valve Therapy Recommendation</span>
- <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
+ <span className="px-2 py-1 bg-[#C8D4DC] text-[#2C4A60] text-xs rounded-full">
  {valveTherapyRec.evidenceLevel}
  </span>
  </div>
@@ -1047,11 +1047,11 @@ const SHCareGapAnalyzer: React.FC = () => {
  </div>
  
  <div>
- <div className="font-medium text-amber-800 mb-1">Monitoring:</div>
- <ul className="text-amber-700 space-y-1">
+ <div className="font-medium text-[#6B7280] mb-1">Monitoring:</div>
+ <ul className="text-[#6B7280] space-y-1">
  {valveTherapyRec.monitoring.map((item, idx) => (
  <li key={item} className="flex items-start gap-1">
- <div className="w-1 h-1 bg-amber-600 rounded-full mt-2 flex-shrink-0"></div>
+ <div className="w-1 h-1 bg-[#F0F5FA] rounded-full mt-2 flex-shrink-0"></div>
  {item}
  </li>
  ))}
@@ -1059,8 +1059,8 @@ const SHCareGapAnalyzer: React.FC = () => {
  </div>
  
  <div>
- <div className="font-medium text-green-800 mb-1">Economic Impact:</div>
- <div className="text-green-700 font-semibold">{valveTherapyRec.costSavings}</div>
+ <div className="font-medium text-[#2C4A60] mb-1">Economic Impact:</div>
+ <div className="text-[#2C4A60] font-semibold">{valveTherapyRec.costSavings}</div>
  </div>
  </div>
  
@@ -1090,9 +1090,9 @@ const SHCareGapAnalyzer: React.FC = () => {
  </div>
 
  {/* Care Team */}
- <div className="bg-yellow-50 rounded-lg p-4">
+ <div className="bg-[#F0F5FA] rounded-lg p-4">
  <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <Users className="w-5 h-5 text-yellow-600" />
+ <Users className="w-5 h-5 text-[#6B7280]" />
  Care Team
  </h3>
  <div className="space-y-2 text-sm">
@@ -1151,7 +1151,7 @@ const SHCareGapAnalyzer: React.FC = () => {
  setCareActionFeedback('care-gaps');
  setTimeout(() => setCareActionFeedback(null), 2500);
  }}
- className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+ className="bg-[#C8D4DC] text-white px-4 py-2 rounded-lg hover:bg-[#C8D4DC] transition-colors flex items-center gap-2"
  >
  <CheckCircle className="w-4 h-4" />
  Address Gap
@@ -1168,7 +1168,7 @@ const SHCareGapAnalyzer: React.FC = () => {
  </button>
  </div>
  {careActionFeedback && (
- <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm flex items-center gap-2">
+ <div className="mt-3 p-3 bg-[#C8D4DC] border border-[#2C4A60] rounded-lg text-[#2C4A60] text-sm flex items-center gap-2">
  <CheckCircle className="w-4 h-4" />
  {careActionFeedback === 'care-plan' ? '\u2713 Care plan initialized \u2014 loading template...' :
  careActionFeedback === 'care-gaps' ? '\u2713 Gap closure workflow initiated...' :

@@ -89,8 +89,8 @@ export const semantic = {
   primaryHover: '#1A3B5C',
   dangerAction: '#9B2438',
   dangerHover: '#7A1A2E',
-  successAction: '#22C55E',
-  warningAction: '#F59E0B',
+  successAction: '#2C4A60',
+  warningAction: '#6B7280',
 } as const;
 
 // ─── Module Identity Colors (Approved Palette) ──────────────
@@ -130,8 +130,8 @@ export const moduleGlowShadow: Record<string, string> = {
 
 export const statusColors = {
   critical: { color: '#9B2438', glow: 'rgba(155, 36, 56, 0.35)' },
-  warning:  { color: '#F59E0B', glow: 'rgba(245, 158, 11, 0.35)' },
-  healthy:  { color: '#22C55E', glow: 'rgba(34, 197, 94, 0.35)' },
+  warning:  { color: '#6B7280', glow: 'rgba(107, 114, 128, 0.35)' },
+  healthy:  { color: '#2C4A60', glow: 'rgba(44, 74, 96, 0.35)' },
   info:     { color: '#5A8AB0', glow: 'rgba(90, 138, 176, 0.35)' },
 } as const;
 

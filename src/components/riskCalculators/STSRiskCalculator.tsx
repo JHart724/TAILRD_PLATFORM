@@ -182,8 +182,8 @@ const STSRiskCalculator: React.FC<STSRiskCalculatorProps> = ({
 
   const getRiskColor = (category: string): string => {
  switch (category) {
- case 'Low': return 'text-green-600';
- case 'Intermediate': return 'text-yellow-600';
+ case 'Low': return 'text-[#2C4A60]';
+ case 'Intermediate': return 'text-[#6B7280]';
  case 'High': return 'text-red-600';
  default: return 'text-gray-600';
  }
@@ -250,8 +250,8 @@ const STSRiskCalculator: React.FC<STSRiskCalculatorProps> = ({
 
  {protectiveFactors.length > 0 && (
  <div className="mb-4">
- <div className="text-sm font-medium text-green-800 mb-2">Protective Factors:</div>
- <ul className="text-xs text-green-600 list-disc list-inside space-y-1">
+ <div className="text-sm font-medium text-[#2C4A60] mb-2">Protective Factors:</div>
+ <ul className="text-xs text-[#2C4A60] list-disc list-inside space-y-1">
  {protectiveFactors.map((factor, index) => (
  <li key={factor}>{factor}</li>
  ))}

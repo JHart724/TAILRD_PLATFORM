@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { DEMO_PATIENT_CONTEXT, DEMO_PATIENT_ROSTER } from '../../../types/shared';
 import { Users, Calendar, AlertTriangle, Clock, Heart, Shield, Activity, FileText, Download, UserCheck, Gauge, Target, TrendingUp, Stethoscope } from 'lucide-react';
 
@@ -74,13 +74,12 @@ const ClinicalToolsPanel: React.FC = () => {
 };
 
 const StructuralCareTeamView: React.FC = () => {
-  const [activeTab, _setActiveTab] = useState<TabId>('dashboard');
-  const contentRef = useRef<HTMLDivElement>(null);
-  const setActiveTab = (tab: TabId) => {
-    _setActiveTab(tab);
-    setTimeout(() => {
-      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
+  const [activeTab, setActiveTab] = useState<TabId>('dashboard');
+
+  const handleTabChange = (tab: TabId) => {
+    setActiveTab(tab);
+    const container = document.getElementById('main-scroll-container');
+    if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
 
   const tabs = [
@@ -114,7 +113,7 @@ const StructuralCareTeamView: React.FC = () => {
  </div>
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <div className="flex items-center gap-3">
- <Activity className="w-8 h-8 text-green-600" />
+ <Activity className="w-8 h-8 text-[#2C4A60]" />
  <div>
  <div className="text-2xl font-bold text-titanium-900">98.2%</div>
  <div className="text-sm text-titanium-600">Success Rate</div>
@@ -123,7 +122,7 @@ const StructuralCareTeamView: React.FC = () => {
  </div>
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <div className="flex items-center gap-3">
- <Clock className="w-8 h-8 text-amber-600" />
+ <Clock className="w-8 h-8 text-[#6B7280]" />
  <div>
  <div className="text-2xl font-bold text-titanium-900">2.1</div>
  <div className="text-sm text-titanium-600">Avg LOS (days)</div>
@@ -174,8 +173,8 @@ const StructuralCareTeamView: React.FC = () => {
  <td className="p-3 text-titanium-700">{patient.procedure}</td>
  <td className="p-3">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
- patient.risk.includes('Low') ? 'bg-green-100 text-green-700' :
- patient.risk.includes('Moderate') ? 'bg-amber-100 text-amber-700' :
+ patient.risk.includes('Low') ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ patient.risk.includes('Moderate') ? 'bg-[#F0F5FA] text-[#6B7280]' :
  'bg-red-100 text-red-700'
  }`}>
  {patient.risk}
@@ -222,15 +221,15 @@ const StructuralCareTeamView: React.FC = () => {
  ].map((item) => (
  <div key={item.patient} className={`p-3 rounded-lg border ${
  item.urgency === 'High' ? 'bg-red-50 border-red-200' :
- item.urgency === 'Medium' ? 'bg-amber-50 border-amber-200' :
- 'bg-green-50 border-green-200'
+ item.urgency === 'Medium' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
+ 'bg-[#C8D4DC] border-[#2C4A60]'
  }`}>
  <div className="font-medium text-titanium-900">{item.patient}</div>
  <div className="text-sm text-titanium-600">{item.procedure}</div>
  <div className={`text-xs font-medium ${
  item.urgency === 'High' ? 'text-red-600' :
- item.urgency === 'Medium' ? 'text-amber-600' :
- 'text-green-600'
+ item.urgency === 'Medium' ? 'text-[#6B7280]' :
+ 'text-[#2C4A60]'
  }`}>
  {item.urgency} Priority
  </div>
@@ -268,15 +267,15 @@ const StructuralCareTeamView: React.FC = () => {
  ].map((item) => (
  <div key={item.patient} className={`p-3 rounded-lg border ${
  item.status === 'Overdue' ? 'bg-red-50 border-red-200' :
- item.status === 'Due' ? 'bg-amber-50 border-amber-200' :
- 'bg-green-50 border-green-200'
+ item.status === 'Due' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
+ 'bg-[#C8D4DC] border-[#2C4A60]'
  }`}>
  <div className="font-medium text-titanium-900">{item.patient}</div>
  <div className="text-sm text-titanium-600">{item.days}</div>
  <div className={`text-xs font-medium ${
  item.status === 'Overdue' ? 'text-red-600' :
- item.status === 'Due' ? 'text-amber-600' :
- 'text-green-600'
+ item.status === 'Due' ? 'text-[#6B7280]' :
+ 'text-[#2C4A60]'
  }`}>
  {item.status}
  </div>
@@ -304,11 +303,11 @@ const StructuralCareTeamView: React.FC = () => {
  { alert: 'Contraindications', count: 1, color: 'amber' }
  ].map((item) => (
  <div key={item.alert} className={`p-4 rounded-xl border ${
- item.color === 'red' ? 'bg-red-50 border-red-200' : 'bg-amber-50 border-amber-200'
+ item.color === 'red' ? 'bg-red-50 border-red-200' : 'bg-[#F0F5FA] border-[#C8D4DC]'
  }`}>
  <div className="text-center">
  <div className={`text-2xl font-bold ${
- item.color === 'red' ? 'text-red-600' : 'text-amber-600'
+ item.color === 'red' ? 'text-red-600' : 'text-[#6B7280]'
  }`}>{item.count}</div>
  <div className="text-sm font-medium text-titanium-700">{item.alert}</div>
  </div>
@@ -366,9 +365,9 @@ const StructuralCareTeamView: React.FC = () => {
  <div className="font-medium text-chrome-900">Heart Team Note</div>
  <div className="text-sm text-chrome-600">Multidisciplinary decision template</div>
  </button>
- <button className="w-full text-left p-3 rounded-lg bg-green-50 border border-green-200 hover:bg-green-100 transition-colors">
- <div className="font-medium text-green-900">Procedure Note</div>
- <div className="text-sm text-green-600">Standardized operative note</div>
+ <button className="w-full text-left p-3 rounded-lg bg-[#C8D4DC] border border-[#2C4A60] hover:bg-[#C8D4DC] transition-colors">
+ <div className="font-medium text-[#2C4A60]">Procedure Note</div>
+ <div className="text-sm text-[#2C4A60]">Standardized operative note</div>
  </button>
  </div>
  </div>
@@ -399,7 +398,7 @@ const StructuralCareTeamView: React.FC = () => {
  return (
  <button
  key={tab.id}
- onClick={() => setActiveTab(tab.id as TabId)}
+ onClick={() => handleTabChange(tab.id as TabId)}
  className={`group relative p-4 rounded-xl border transition-all duration-300 ${
  isActive
  ? 'bg-arterial-50 border-arterial-200 text-arterial-600 shadow-lg scale-105'
@@ -422,7 +421,7 @@ const StructuralCareTeamView: React.FC = () => {
  </div>
 
  {/* Tab Content */}
- <div ref={contentRef} className="space-y-6">
+ <div className="space-y-6">
  {renderTabContent()}
  </div>
  </div>

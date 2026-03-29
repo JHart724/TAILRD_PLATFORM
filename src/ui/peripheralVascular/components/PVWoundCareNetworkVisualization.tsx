@@ -770,7 +770,7 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Bandage className={`w-6 h-6 ${metrics.overallHealingRate >= 0.85 ? 'text-green-600' : 'text-red-600'}`} />
+ <Bandage className={`w-6 h-6 ${metrics.overallHealingRate >= 0.85 ? 'text-[#2C4A60]' : 'text-red-600'}`} />
  <div>
  <div className="text-lg font-bold text-titanium-900">{toFixed(metrics.overallHealingRate * 100, 1)}%</div>
  <div className="text-xs text-titanium-600">Wound Healing</div>
@@ -780,7 +780,7 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Footprints className="w-6 h-6 text-green-600" />
+ <Footprints className="w-6 h-6 text-[#2C4A60]" />
  <div>
  <div className="text-lg font-bold text-titanium-900">{toFixed(metrics.limbSalvageRate * 100, 1)}%</div>
  <div className="text-xs text-titanium-600">Limb Salvage</div>
@@ -810,7 +810,7 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Timer className="w-6 h-6 text-amber-600" />
+ <Timer className="w-6 h-6 text-[#6B7280]" />
  <div>
  <div className="text-lg font-bold text-titanium-900">{metrics.avgTimeToHealing}</div>
  <div className="text-xs text-titanium-600">Days to Heal</div>
@@ -830,7 +830,7 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Activity className="w-6 h-6 text-teal-600" />
+ <Activity className="w-6 h-6 text-[#2C4A60]" />
  <div>
  <div className="text-lg font-bold text-titanium-900">{metrics.totalWoundPatients}</div>
  <div className="text-xs text-titanium-600">Active Wounds</div>
@@ -980,17 +980,17 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  <span>Limb Salvage Team</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-1 bg-teal-600"></div>
+ <div className="w-4 h-1 bg-[#C8D4DC]"></div>
  <span>Referral Pathways</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-1 bg-teal-600"></div>
+ <div className="w-4 h-1 bg-[#C8D4DC]"></div>
  <span>Wound Monitoring</span>
  </div>
  </div>
  <div className="space-y-2">
  <div className="flex items-center gap-2">
- <div className="w-4 h-1 bg-green-600"></div>
+ <div className="w-4 h-1 bg-[#C8D4DC]"></div>
  <span>Care Coordination</span>
  </div>
  <div className="flex items-center gap-2">
@@ -1002,9 +1002,9 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  <span>High-Risk/Stage 4</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+ <div className="w-2 h-2 bg-[#C8D4DC] rounded-full"></div>
  <span>Available</span>
- <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+ <div className="w-2 h-2 bg-[#F0F5FA] rounded-full"></div>
  <span>Busy</span>
  <div className="w-2 h-2 bg-chrome-500 rounded-full"></div>
  <span>Active</span>
@@ -1030,15 +1030,15 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  )}
  {selectedNode.woundStage && (
  <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${
- selectedNode.woundStage <= 2 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+ selectedNode.woundStage <= 2 ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-red-100 text-red-700'
  }`}>
  STAGE {selectedNode.woundStage}
  </div>
  )}
  {selectedNode.status && (
  <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${
- selectedNode.status === 'active' ? 'bg-green-100 text-green-700' :
- selectedNode.status === 'busy' ? 'bg-yellow-100 text-yellow-700' :
+ selectedNode.status === 'active' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ selectedNode.status === 'busy' ? 'bg-[#F0F5FA] text-[#6B7280]' :
  'bg-gray-100 text-gray-700'
  }`}>
  {selectedNode.status.toUpperCase()}
@@ -1048,27 +1048,27 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  
  <div className="grid grid-cols-2 gap-2">
  {selectedNode.patientVolume && (
- <div className="bg-teal-50 p-3 rounded-lg">
- <div className="text-lg font-bold text-teal-600">{selectedNode.patientVolume}</div>
- <div className="text-xs text-teal-700">Patient Volume</div>
+ <div className="bg-[#C8D4DC] p-3 rounded-lg">
+ <div className="text-lg font-bold text-[#2C4A60]">{selectedNode.patientVolume}</div>
+ <div className="text-xs text-[#2C4A60]">Patient Volume</div>
  </div>
  )}
  {selectedNode.healingRate && (
- <div className={`p-3 rounded-lg ${selectedNode.healingRate >= 0.85 ? 'bg-green-50' : 'bg-yellow-50'}`}>
- <div className={`text-lg font-bold ${selectedNode.healingRate >= 0.85 ? 'text-green-600' : 'text-yellow-600'}`}>
+ <div className={`p-3 rounded-lg ${selectedNode.healingRate >= 0.85 ? 'bg-[#C8D4DC]' : 'bg-[#F0F5FA]'}`}>
+ <div className={`text-lg font-bold ${selectedNode.healingRate >= 0.85 ? 'text-[#2C4A60]' : 'text-[#6B7280]'}`}>
  {toFixed(selectedNode.healingRate * 100, 0)}%
  </div>
- <div className={`text-xs ${selectedNode.healingRate >= 0.85 ? 'text-green-700' : 'text-yellow-700'}`}>
+ <div className={`text-xs ${selectedNode.healingRate >= 0.85 ? 'text-[#2C4A60]' : 'text-[#6B7280]'}`}>
  Healing Rate
  </div>
  </div>
  )}
  {selectedNode.amputationRate && (
- <div className={`p-3 rounded-lg ${selectedNode.amputationRate <= 0.05 ? 'bg-green-50' : 'bg-red-50'}`}>
- <div className={`text-lg font-bold ${selectedNode.amputationRate <= 0.05 ? 'text-green-600' : 'text-red-600'}`}>
+ <div className={`p-3 rounded-lg ${selectedNode.amputationRate <= 0.05 ? 'bg-[#C8D4DC]' : 'bg-red-50'}`}>
+ <div className={`text-lg font-bold ${selectedNode.amputationRate <= 0.05 ? 'text-[#2C4A60]' : 'text-red-600'}`}>
  {toFixed(selectedNode.amputationRate * 100, 1)}%
  </div>
- <div className={`text-xs ${selectedNode.amputationRate <= 0.05 ? 'text-green-700' : 'text-red-700'}`}>
+ <div className={`text-xs ${selectedNode.amputationRate <= 0.05 ? 'text-[#2C4A60]' : 'text-red-700'}`}>
  Amputation Rate
  </div>
  </div>
@@ -1096,7 +1096,7 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  <div className="flex items-center gap-2">
  <span className="text-titanium-500">{conn.patientFlow} pts</span>
  {conn.avgResponseTime && (
- <span className={`text-xs px-1 rounded ${conn.avgResponseTime <= 24 ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'}`}>
+ <span className={`text-xs px-1 rounded ${conn.avgResponseTime <= 24 ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>
  {conn.avgResponseTime < 24 ? `${toFixed(conn.avgResponseTime, 1)}h` : `${toFixed(conn.avgResponseTime / 24, 1)}d`}
  </span>
  )}
@@ -1135,21 +1135,21 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Bandage className="w-5 h-5 text-teal-600" />
+ <Bandage className="w-5 h-5 text-[#2C4A60]" />
  Wound Healing
  </h4>
  <div className="space-y-3">
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Stage 1 Healing</span>
- <span className="font-bold text-green-600">96%</span>
+ <span className="font-bold text-[#2C4A60]">96%</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Stage 2 Healing</span>
- <span className="font-bold text-green-600">89%</span>
+ <span className="font-bold text-[#2C4A60]">89%</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Stage 3 Healing</span>
- <span className="font-bold text-yellow-600">73%</span>
+ <span className="font-bold text-[#6B7280]">73%</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Stage 4 Healing</span>
@@ -1160,13 +1160,13 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Footprints className="w-5 h-5 text-green-600" />
+ <Footprints className="w-5 h-5 text-[#2C4A60]" />
  Limb Salvage
  </h4>
  <div className="space-y-3">
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Success Rate</span>
- <span className="font-bold text-green-600">{toFixed(metrics.limbSalvageRate * 100, 1)}%</span>
+ <span className="font-bold text-[#2C4A60]">{toFixed(metrics.limbSalvageRate * 100, 1)}%</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">High-Risk Cases</span>
@@ -1174,7 +1174,7 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Prevention Rate</span>
- <span className="font-bold text-green-600">{toFixed(metrics.amputationPreventionRate * 100, 1)}%</span>
+ <span className="font-bold text-[#2C4A60]">{toFixed(metrics.amputationPreventionRate * 100, 1)}%</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Team Response</span>
@@ -1195,7 +1195,7 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Avg Response Time</span>
- <span className="font-bold text-amber-600">{toFixed(metrics.avgResponseTime, 1)} hrs</span>
+ <span className="font-bold text-[#6B7280]">{toFixed(metrics.avgResponseTime, 1)} hrs</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Podiatry Referrals</span>
@@ -1228,7 +1228,7 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Home Health</span>
- <span className="font-bold text-green-600">187 pts</span>
+ <span className="font-bold text-[#2C4A60]">187 pts</span>
  </div>
  </div>
  </div>

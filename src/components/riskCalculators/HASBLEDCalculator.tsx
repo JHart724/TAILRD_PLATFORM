@@ -87,9 +87,9 @@ const HASBLEDCalculator: React.FC<HASBLEDProps> = ({
   const getRiskColor = (level: string): string => {
  switch (level) {
  case 'Low':
- return 'text-green-600';
+ return 'text-[#2C4A60]';
  case 'Moderate':
- return 'text-yellow-600';
+ return 'text-[#6B7280]';
  case 'High':
  return 'text-red-600';
  default:
@@ -150,7 +150,7 @@ const HASBLEDCalculator: React.FC<HASBLEDProps> = ({
  ))}
  </ul>
  ) : (
- <p className="text-green-600">No risk factors present (Score: 0)</p>
+ <p className="text-[#2C4A60]">No risk factors present (Score: 0)</p>
  )}
  </div>
  </div>

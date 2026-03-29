@@ -28,8 +28,8 @@ const CoronaryExecutiveView: React.FC = () => {
  { label: 'Complex PCI', value: 24800000, color: 'bg-porsche-500' },
  { label: 'STEMI Protocol', value: 18600000, color: 'bg-crimson-500' },
  { label: 'FFR/iFR Guidance', value: 12400000, color: 'bg-arterial-500' },
- { label: 'Cath Lab Efficiency', value: 8900000, color: 'bg-teal-500' },
- { label: 'Stent Optimization', value: 6200000, color: 'bg-amber-500' },
+ { label: 'Cath Lab Efficiency', value: 8900000, color: 'bg-[#4A6880]' },
+ { label: 'Stent Optimization', value: 6200000, color: 'bg-[#64748b]' },
   ];
 
   // Coronary benchmark metrics
@@ -196,7 +196,7 @@ const CoronaryExecutiveView: React.FC = () => {
        </div>
        <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-100 rounded-lg px-3 py-1.5">
          <Zap className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-         <span className="text-xs text-blue-700 font-medium">Auto-calculated from EHR data via Redox</span>
+         <span className="text-xs text-blue-700 font-medium">Auto-calculated from EHR integration</span>
        </div>
      </div>
    </div>
@@ -207,10 +207,10 @@ const CoronaryExecutiveView: React.FC = () => {
          <div className="text-3xl font-bold text-titanium-900">61.8</div>
          <div className="text-xs text-titanium-500 mt-1">Population average</div>
        </div>
-       <div className="bg-white rounded-xl p-4 border border-green-200 shadow-sm">
+       <div className="bg-white rounded-xl p-4 border border-[#C8D4DC] shadow-sm">
          <div className="text-sm text-titanium-600 mb-1">Mean Improvement (Post-Revasc)</div>
-         <div className="text-3xl font-bold text-green-600">+18.4</div>
-         <div className="text-xs text-green-500 mt-1">pts at 90 days post-intervention</div>
+         <div className="text-3xl font-bold text-[#2C4A60]">+18.4</div>
+         <div className="text-xs text-[#4A6880] mt-1">pts at 90 days post-intervention</div>
        </div>
        <div className="bg-white rounded-xl p-4 border border-red-200 shadow-sm">
          <div className="text-sm text-titanium-600 mb-1">Severe Angina Burden (SAQ &lt;50)</div>
@@ -227,9 +227,9 @@ const CoronaryExecutiveView: React.FC = () => {
    categories: [
      { name: 'Therapy', patients: 900, color: '#3b82f6' },
      { name: 'Safety', patients: 340, color: '#ef4444' },
-     { name: 'Growth', patients: 280, color: '#1A4A2E' },
-     { name: 'Quality', patients: 620, color: '#f59e0b' },
-     { name: 'Deprescribing', patients: 190, color: '#f97316' },
+     { name: 'Growth', patients: 280, color: '#4A6880' },
+     { name: 'Quality', patients: 620, color: '#C8D4DC' },
+     { name: 'Deprescribing', patients: 190, color: '#64748b' },
    ],
    topGaps: [
      { name: 'Heart Team Review', patients: 180, opportunity: '$3.4M' },
@@ -295,7 +295,7 @@ const CoronaryExecutiveView: React.FC = () => {
  </div>
  <div className="metal-card p-6">
  <div className="flex items-center gap-3 mb-3">
- <div className="p-2 bg-green-50 rounded-lg"><DollarSign className="w-6 h-6 text-green-600" /></div>
+ <div className="p-2 bg-[#f0f4f8] rounded-lg"><DollarSign className="w-6 h-6 text-[#2C4A60]" /></div>
  <span className="text-sm font-medium text-titanium-600">Revenue Opportunity</span>
  </div>
  <div className="text-3xl font-bold text-titanium-900">{coronaryInterventionConfig.kpiData.totalOpportunity}</div>
@@ -311,7 +311,7 @@ const CoronaryExecutiveView: React.FC = () => {
  </div>
  <div className="metal-card p-6">
  <div className="flex items-center gap-3 mb-3">
- <div className="p-2 bg-amber-50 rounded-lg"><TrendingUp className="w-6 h-6 text-amber-600" /></div>
+ <div className="p-2 bg-[#fdf0f2] rounded-lg"><TrendingUp className="w-6 h-6 text-[#7A1A2E]" /></div>
  <span className="text-sm font-medium text-titanium-600">Avg Revenue / Patient</span>
  </div>
  <div className="text-3xl font-bold text-titanium-900">{coronaryInterventionConfig.kpiData.avgRoi}</div>
@@ -458,7 +458,7 @@ const CoronaryExecutiveView: React.FC = () => {
  key: 'marginPercent', label: 'Margin %', align: 'right',
  render: (val: any) => (
  <span className={`px-2 py-1 rounded text-sm font-medium ${
- val >= 20 ? 'bg-green-50 text-green-700' : val >= 10 ? 'bg-amber-50 text-amber-700' : 'bg-crimson-50 text-crimson-700'
+ val >= 20 ? 'bg-[#f0f4f8] text-[#2C4A60]' : val >= 10 ? 'bg-[#fdf0f2] text-[#7A1A2E]' : 'bg-crimson-50 text-crimson-700'
  }`}>
  {toFixed(val as number, 1)}%
  </span>

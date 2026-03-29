@@ -73,13 +73,13 @@ const EPDRGDetailModal: React.FC<EPDRGDetailModalProps> = ({
  { 
  category: 'Target', 
  value: targetLos, 
- color: '#10B981',
+ color: '#4A6880',
  label: `Target: ${targetLos} days`
  },
  { 
  category: 'Our Average', 
  value: avgLos, 
- color: avgLos <= targetLos ? '#10B981' : '#EF4444',
+ color: avgLos <= targetLos ? '#4A6880' : '#EF4444',
  label: `Our Average: ${avgLos} days`
  },
  { 
@@ -215,19 +215,19 @@ const EPDRGDetailModal: React.FC<EPDRGDetailModalProps> = ({
  </div>
 
  {/* Margin */}
- <div className="bg-emerald-50 rounded-xl p-6 border border-emerald-200">
+ <div className="bg-[#F0F5FA] rounded-xl p-6 border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center">
- <TrendingUp className="w-8 h-8 text-emerald-600 mr-3" />
+ <TrendingUp className="w-8 h-8 text-[#2C4A60] mr-3" />
  <div>
- <div className="text-lg font-bold text-emerald-900">Margin</div>
+ <div className="text-lg font-bold text-[#2C4A60]">Margin</div>
  </div>
  </div>
  </div>
- <div className="text-3xl font-bold text-emerald-900">
+ <div className="text-3xl font-bold text-[#2C4A60]">
  {toFixed(margin, 1)}%
  </div>
- <div className="text-sm text-emerald-700 mt-1">
+ <div className="text-sm text-[#2C4A60] mt-1">
  Above target
  </div>
  </div>

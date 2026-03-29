@@ -120,9 +120,9 @@ const UserDetailPanel: React.FC<UserDetailPanelProps> = ({ user, onClose }) => {
               <span
                 className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                   user.status === 'Active'
-                    ? 'bg-green-100 text-green-800'
+                    ? 'bg-[#C8D4DC] text-[#2C4A60]'
                     : user.status === 'Pending'
-                    ? 'bg-amber-100 text-amber-800'
+                    ? 'bg-[#F0F5FA] text-[#6B7280]'
                     : 'bg-red-100 text-red-800'
                 }`}
               >
@@ -131,7 +131,7 @@ const UserDetailPanel: React.FC<UserDetailPanelProps> = ({ user, onClose }) => {
             </div>
             <div>
               <div className="text-xs text-gray-500 mb-1">MFA Status</div>
-              <span className={`inline-flex items-center gap-1 text-sm ${user.mfaEnabled ? 'text-green-700' : 'text-amber-600'}`}>
+              <span className={`inline-flex items-center gap-1 text-sm ${user.mfaEnabled ? 'text-[#2C4A60]' : 'text-[#6B7280]'}`}>
                 {user.mfaEnabled ? (
                   <><Shield className="w-3.5 h-3.5" /> Enabled</>
                 ) : (
@@ -155,7 +155,7 @@ const UserDetailPanel: React.FC<UserDetailPanelProps> = ({ user, onClose }) => {
                 >
                   <div className="flex items-center gap-2">
                     {entry.success ? (
-                      <CheckCircle className="w-3.5 h-3.5 text-green-500" />
+                      <CheckCircle className="w-3.5 h-3.5 text-[#2C4A60]" />
                     ) : (
                       <XCircle className="w-3.5 h-3.5 text-red-500" />
                     )}
@@ -299,9 +299,9 @@ const UsersManagement: React.FC = () => {
                   <span
                     className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                       user.status === 'Active'
-                        ? 'bg-green-100 text-green-800'
+                        ? 'bg-[#C8D4DC] text-[#2C4A60]'
                         : user.status === 'Pending'
-                        ? 'bg-amber-100 text-amber-800'
+                        ? 'bg-[#F0F5FA] text-[#6B7280]'
                         : 'bg-red-100 text-red-800'
                     }`}
                   >
@@ -310,7 +310,7 @@ const UsersManagement: React.FC = () => {
                 </td>
                 <td className="px-4 py-3">
                   {user.mfaEnabled ? (
-                    <Shield className="w-4 h-4 text-green-600" />
+                    <Shield className="w-4 h-4 text-[#2C4A60]" />
                   ) : (
                     <XCircle className="w-4 h-4 text-gray-300" />
                   )}

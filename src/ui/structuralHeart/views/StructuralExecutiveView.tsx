@@ -493,8 +493,8 @@ const StructuralExecutiveView: React.FC = () => {
 	  categories: [
 	    { name: 'Therapy', patients: 180, color: '#3b82f6' },
 	    { name: 'Safety', patients: 90, color: '#ef4444' },
-	    { name: 'Growth', patients: 220, color: '#1A4A2E' },
-	    { name: 'Quality', patients: 340, color: '#f59e0b' },
+	    { name: 'Growth', patients: 220, color: '#4A6880' },
+	    { name: 'Quality', patients: 340, color: '#C8D4DC' },
 	  ],
 	  topGaps: [
 	    { name: 'Severe AS Heart Team', patients: 124, opportunity: '$3.2M' },
@@ -620,7 +620,7 @@ const StructuralExecutiveView: React.FC = () => {
 	<div className="text-sm text-titanium-600">{item.procedures} procedures annually</div>
 	</div>
 	<div className="text-right">
-	<div className="font-bold text-emerald-600">{item.opportunity}</div>
+	<div className="font-bold text-[#2C4A60]">{item.opportunity}</div>
 	<div className="text-xs text-titanium-500">{item.current} → {item.potential}</div>
 	</div>
 	</div>
@@ -646,15 +646,15 @@ const StructuralExecutiveView: React.FC = () => {
 	<div className="mb-6">
 	<div
 	onClick={() => setShowOpportunityModal(true)}
-	className="bg-gradient-to-br from-emerald-50 to-chrome-50 rounded-lg border-2 border-emerald-200 p-8 cursor-pointer hover:shadow-lg transition-shadow"
+	className="bg-gradient-to-br from-[#f0f4f8] to-[#e8eef3] rounded-lg border-2 border-[#C8D4DC] p-8 cursor-pointer hover:shadow-lg transition-shadow"
 	>
 	<div className="flex items-start justify-between">
 	<div className="flex-1">
 	<div className="flex items-center mb-3">
-	<TrendingUp className="w-6 h-6 text-emerald-600 mr-2" />
+	<TrendingUp className="w-6 h-6 text-[#2C4A60] mr-2" />
 	<h3 className="text-xl font-bold">Revenue Opportunities Pipeline</h3>
 	</div>
-	<div className="text-5xl font-bold text-emerald-600 mb-2">$127,240</div>
+	<div className="text-5xl font-bold text-[#2C4A60] mb-2">$127,240</div>
 	<div className="text-gray-600 text-lg mb-4">23 high-priority documentation opportunities identified</div>
 
 	<div className="grid grid-cols-3 gap-4 mt-4">
@@ -663,9 +663,9 @@ const StructuralExecutiveView: React.FC = () => {
 	<div className="text-2xl font-bold text-red-600">8</div>
 	<div className="text-sm text-gray-500">$68,600</div>
 	</div>
-	<div className="bg-white rounded-lg p-3 border border-amber-200">
+	<div className="bg-white rounded-lg p-3 border border-[#f5c6cf]">
 	<div className="text-sm text-gray-600">Medium Priority</div>
-	<div className="text-2xl font-bold text-amber-600">12</div>
+	<div className="text-2xl font-bold text-[#7A1A2E]">12</div>
 	<div className="text-sm text-gray-500">$50,240</div>
 	</div>
 	<div className="bg-white rounded-lg p-3 border border-gray-200">
@@ -703,19 +703,19 @@ const StructuralExecutiveView: React.FC = () => {
 	const drgData = getDRGData(drgCode);
 	if (drgData) setSelectedDRG(drgData);
 	}}
-	className="bg-gradient-to-r from-white to-emerald-50 rounded-xl p-4 border border-titanium-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+	className="bg-gradient-to-r from-white to-[#f0f4f8] rounded-xl p-4 border border-titanium-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
 	>
 	<div className="flex items-center gap-3 mb-3">
-	<DollarSign className="w-8 h-8 text-medical-green-600" />
+	<DollarSign className="w-8 h-8 text-[#2C4A60]" />
 	<div>
-	<div className="font-semibold text-medical-green-900">{drg.description || drg.name}</div>
-	<div className="text-2xl font-bold text-medical-green-800">${toFixed((drg.avgReimbursement || drg.reimbursement) / 1000, 0)}K</div>
+	<div className="font-semibold text-[#1e293b]">{drg.description || drg.name}</div>
+	<div className="text-2xl font-bold text-[#2C4A60]">${toFixed((drg.avgReimbursement || drg.reimbursement) / 1000, 0)}K</div>
 	</div>
 	</div>
-	<div className="text-sm text-medical-green-700 mb-2">
+	<div className="text-sm text-[#4A6880] mb-2">
 	{drg.caseCount || drg.cases} cases
 	</div>
-	<div className={`text-sm ${(drg.netMargin || drg.margin) > 30 ? 'text-medical-green-600' : 'text-medical-red-600'}`}>
+	<div className={`text-sm ${(drg.netMargin || drg.margin) > 30 ? 'text-[#2C4A60]' : 'text-[#7A1A2E]'}`}>
 	{toFixed(drg.netMargin || drg.margin || 0, 1)}% margin
 	</div>
 	</div>
@@ -730,22 +730,22 @@ const StructuralExecutiveView: React.FC = () => {
 	<div className="text-center">
 	<div className="text-2xl font-bold text-titanium-900">3.78</div>
 	<div className="text-sm text-titanium-600">Current CMI</div>
-	<div className="text-xs text-medical-green-600">+0.28 vs target</div>
+	<div className="text-xs text-[#2C4A60]">+0.28 vs target</div>
 	</div>
 	<div className="text-center">
-	<div className="text-2xl font-bold text-medical-green-700">$524K</div>
+	<div className="text-2xl font-bold text-[#2C4A60]">$524K</div>
 	<div className="text-sm text-titanium-600">Monthly Opportunity</div>
 	<div className="text-xs text-titanium-500">From DRG optimization</div>
 	</div>
 	<div className="text-center">
-	<div className="text-2xl font-bold text-medical-amber-700">96.2%</div>
+	<div className="text-2xl font-bold text-[#7A1A2E]">96.2%</div>
 	<div className="text-sm text-titanium-600">Documentation Rate</div>
 	<div className="text-xs text-titanium-500">CC/MCC capture</div>
 	</div>
 	<div className="text-center">
 	<div className="text-2xl font-bold text-titanium-900">2.8</div>
 	<div className="text-sm text-titanium-600">Avg LOS</div>
-	<div className="text-xs text-medical-green-600">vs 3.2 benchmark</div>
+	<div className="text-xs text-[#2C4A60]">vs 3.2 benchmark</div>
 	</div>
 	</div>
 	</div>

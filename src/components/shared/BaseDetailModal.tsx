@@ -38,11 +38,11 @@ export interface BaseDetailModalProps<T extends Record<string, any>> {
 
 const colorSchemes = {
   porsche:  { bg: 'bg-porsche-50',  border: 'border-porsche-200',  text: 'text-porsche-900',  sub: 'text-porsche-700',  icon: 'text-porsche-600' },
-  green: { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-900', sub: 'text-green-700', icon: 'text-green-600' },
-  amber: { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-900', sub: 'text-amber-700', icon: 'text-amber-600' },
+  green: { bg: 'bg-[#f0f4f8]', border: 'border-[#C8D4DC]', text: 'text-[#1e293b]', sub: 'text-[#4A6880]', icon: 'text-[#2C4A60]' },
+  amber: { bg: 'bg-[#fdf0f2]', border: 'border-[#f5c6cf]', text: 'text-[#5C1022]', sub: 'text-[#7A1A2E]', icon: 'text-[#7A1A2E]' },
   crimson:  { bg: 'bg-crimson-50',  border: 'border-crimson-200',  text: 'text-crimson-900',  sub: 'text-crimson-700',  icon: 'text-crimson-600' },
   arterial: { bg: 'bg-arterial-50', border: 'border-arterial-200', text: 'text-arterial-900', sub: 'text-arterial-700', icon: 'text-arterial-600' },
-  teal: { bg: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-900', sub: 'text-teal-700', icon: 'text-teal-600' },
+  teal: { bg: 'bg-[#f0f4f8]', border: 'border-[#C8D4DC]', text: 'text-[#1e293b]', sub: 'text-[#4A6880]', icon: 'text-[#2C4A60]' },
   titanium: { bg: 'bg-titanium-50', border: 'border-titanium-200', text: 'text-titanium-900', sub: 'text-titanium-700', icon: 'text-titanium-600' },
 };
 

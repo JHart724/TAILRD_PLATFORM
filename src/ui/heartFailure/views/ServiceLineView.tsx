@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Target, Grid3X3, Stethoscope, BarChart3, Activity, Search, Heart, Network, Users, FileText, Shield } from 'lucide-react';
 
 // Import all Heart Failure Service Line components
@@ -27,13 +27,12 @@ interface TabGroup {
 }
 
 const ServiceLineView: React.FC = () => {
-  const [activeTab, _setActiveTab] = useState<TabId>('gap-detection');
-  const contentRef = useRef<HTMLDivElement>(null);
-  const setActiveTab = (tab: TabId) => {
-    _setActiveTab(tab);
-    setTimeout(() => {
-      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
+  const [activeTab, setActiveTab] = useState<TabId>('gap-detection');
+
+  const handleTabChange = (tab: TabId) => {
+    setActiveTab(tab);
+    const container = document.getElementById('main-scroll-container');
+    if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
 
   const tabGroups: TabGroup[] = [
@@ -50,7 +49,7 @@ const ServiceLineView: React.FC = () => {
  {
  label: 'Gap & Opportunity',
  tabs: [
- { id: 'gap-detection', label: 'Gap Detection (39-Gap)', icon: Search, description: 'AI-driven clinical gap detection' },
+ { id: 'gap-detection', label: 'Gap Detection', icon: Search, description: 'AI-driven clinical gap detection' },
  { id: 'therapy-gaps', label: 'Therapy Gap Analysis', icon: Target, description: 'GDMT and device therapy gap identification' },
  { id: 'gdmt-tracker', label: 'GDMT Optimization', icon: Heart, description: 'GDMT titration tracking and optimization' },
  { id: 'device-underutil', label: 'Device Underutilization', icon: Activity, description: 'Device therapy underutilization analysis' },
@@ -122,7 +121,7 @@ const ServiceLineView: React.FC = () => {
  return (
  <button
  key={tab.id}
- onClick={() => setActiveTab(tab.id as TabId)}
+ onClick={() => handleTabChange(tab.id as TabId)}
  className={`group relative p-4 rounded-xl border transition-all duration-300 ${
  isActive
  ? 'bg-porsche-50 border-porsche-200 text-porsche-600 shadow-lg scale-105'
@@ -147,7 +146,7 @@ const ServiceLineView: React.FC = () => {
  </div>
 
  {/* Tab Content */}
- <div ref={contentRef} className="space-y-6">
+ <div className="space-y-6">
  {renderTabContent()}
  </div>
  </div>

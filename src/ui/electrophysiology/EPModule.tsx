@@ -12,7 +12,7 @@ const EPModule: React.FC = () => {
  name: 'Electrophysiology',
  description: 'Population AFib screening to complex EP procedures across all care settings',
  icon: Zap,
- color: 'text-yellow-600',
+ color: 'text-[#6B7280]',
  patientCount: '1,247',
  views: [
  {

@@ -91,7 +91,7 @@ export const EPExecutiveSummary: React.FC = () => {
   const getColorClasses = (color: string) => {
  switch (color) {
  case 'blue': return 'bg-chrome-500 text-white border-chrome-200';
- case 'green': return 'bg-emerald-500 text-white border-emerald-200';
+ case 'green': return 'bg-[#F0F5FA] text-white border-[#C8D4DC]';
  case 'carmona': return 'bg-arterial-500 text-white border-arterial-200';
  case 'red': return 'bg-red-500 text-white border-red-200';
  default: return 'bg-gray-500 text-white border-gray-200';
@@ -99,7 +99,7 @@ export const EPExecutiveSummary: React.FC = () => {
   };
 
   const getTrendColorClasses = (trend: number) => {
- return trend >= 0 ? 'text-emerald-600' : 'text-red-600';
+ return trend >= 0 ? 'text-[#2C4A60]' : 'text-red-600';
   };
 
   const formatValue = (value: number, id: string) => {
@@ -206,9 +206,9 @@ export const EPExecutiveSummary: React.FC = () => {
  <Line 
  type="monotone" 
  dataKey="value" 
- stroke={selectedKPI.color === 'blue' ? '#3b82f6' : selectedKPI.color === 'green' ? '#10b981' : selectedKPI.color === 'carmona' ? '#9B2438' : '#ef4444'}
+ stroke={selectedKPI.color === 'blue' ? '#3b82f6' : selectedKPI.color === 'green' ? '#2C4A60' : selectedKPI.color === 'carmona' ? '#9B2438' : '#ef4444'}
  strokeWidth={3}
- dot={{ fill: selectedKPI.color === 'blue' ? '#3b82f6' : selectedKPI.color === 'green' ? '#10b981' : selectedKPI.color === 'carmona' ? '#9B2438' : '#ef4444', strokeWidth: 2, r: 5 }}
+ dot={{ fill: selectedKPI.color === 'blue' ? '#3b82f6' : selectedKPI.color === 'green' ? '#2C4A60' : selectedKPI.color === 'carmona' ? '#9B2438' : '#ef4444', strokeWidth: 2, r: 5 }}
  activeDot={{ r: 7 }}
  />
  </LineChart>

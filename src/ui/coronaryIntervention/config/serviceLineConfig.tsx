@@ -27,22 +27,22 @@ const CoronaryInterventionAnalytics: React.FC = () => (
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">PCI Procedures</h4>
  <div className="text-2xl font-bold text-titanium-900">2,847</div>
- <div className="text-sm text-green-600">+8.4% vs last quarter</div>
+ <div className="text-sm text-[#2C4A60]">+8.4% vs last quarter</div>
  </div>
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">CABG Procedures</h4>
  <div className="text-2xl font-bold text-titanium-900">456</div>
- <div className="text-sm text-green-600">+3.2% vs last quarter</div>
+ <div className="text-sm text-[#2C4A60]">+3.2% vs last quarter</div>
  </div>
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">Primary PCI (STEMI)</h4>
  <div className="text-2xl font-bold text-titanium-900">387</div>
- <div className="text-sm text-green-600">+12.1% vs last quarter</div>
+ <div className="text-sm text-[#2C4A60]">+12.1% vs last quarter</div>
  </div>
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">Complex PCI</h4>
  <div className="text-2xl font-bold text-titanium-900">892</div>
- <div className="text-sm text-green-600">+15.7% vs last quarter</div>
+ <div className="text-sm text-[#2C4A60]">+15.7% vs last quarter</div>
  </div>
  </div>
  <div className="metal-card p-8">
@@ -101,7 +101,7 @@ const CoronaryProviderScorecard: React.FC = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="metal-card p-5 border-l-4 border-l-porsche-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total Providers</p><p className="text-3xl font-bold text-titanium-900">6</p><p className="text-xs text-titanium-500 mt-1">Interventional cardiologists &amp; cardiac surgeons</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Avg Success Rate</p><p className="text-3xl font-bold text-green-700">97.7%</p><p className="text-xs text-titanium-500 mt-1">Across all coronary procedures</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Avg Success Rate</p><p className="text-3xl font-bold text-[#2C4A60]">97.7%</p><p className="text-xs text-titanium-500 mt-1">Across all coronary procedures</p></div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total Procedures</p><p className="text-3xl font-bold text-blue-700">1,310</p><p className="text-xs text-titanium-500 mt-1">PCI + CABG this quarter</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
@@ -121,8 +121,8 @@ const CoronaryProviderScorecard: React.FC = () => {
                   <td className="px-4 py-3 text-titanium-600">{p.specialty}</td>
                   <td className="px-4 py-3 text-center font-mono">{p.pci > 0 ? p.pci : '—'}</td>
                   <td className="px-4 py-3 text-center font-mono">{p.cabg > 0 ? p.cabg : '—'}</td>
-                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{p.successRate}</span></td>
-                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">{p.complications}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.successRate}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{p.complications}</span></td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div className="flex-1 bg-titanium-100 rounded-full h-2"><div className="bg-porsche-500 h-2 rounded-full" style={{ width: `${p.quality}%` }} /></div>
@@ -161,10 +161,10 @@ const PCIProcedureAnalytics: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="metal-card p-5 border-l-4 border-l-porsche-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total PCI Volume</p><p className="text-3xl font-bold text-titanium-900">2,847</p><p className="text-xs text-green-600 mt-1">+8.4% vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-porsche-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total PCI Volume</p><p className="text-3xl font-bold text-titanium-900">2,847</p><p className="text-xs text-[#2C4A60] mt-1">+8.4% vs last quarter</p></div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Complex PCI Rate</p><p className="text-3xl font-bold text-blue-700">31.3%</p><p className="text-xs text-titanium-500 mt-1">B2/C lesion complexity</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Overall Success Rate</p><p className="text-3xl font-bold text-green-700">97.8%</p><p className="text-xs text-titanium-500 mt-1">Technical procedural success</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-slate-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">IVUS/OCT Use Rate</p><p className="text-3xl font-bold text-slate-700">42.1%</p><p className="text-xs text-green-600 mt-1">+6.2% vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Overall Success Rate</p><p className="text-3xl font-bold text-[#2C4A60]">97.8%</p><p className="text-xs text-titanium-500 mt-1">Technical procedural success</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-slate-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">IVUS/OCT Use Rate</p><p className="text-3xl font-bold text-slate-700">42.1%</p><p className="text-xs text-[#2C4A60] mt-1">+6.2% vs last quarter</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-titanium-100 flex items-center gap-2">
@@ -179,8 +179,8 @@ const PCIProcedureAnalytics: React.FC = () => {
                 <tr key={i} className="hover:bg-titanium-50">
                   <td className="px-4 py-3 font-medium text-titanium-900">{p.type}</td>
                   <td className="px-4 py-3 font-mono font-semibold text-titanium-800">{p.volume.toLocaleString()}</td>
-                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{p.success}</span></td>
-                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">{p.complications}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.success}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{p.complications}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{p.avgLos}</td>
                   <td className="px-4 py-3 font-mono text-titanium-700">{p.cost}</td>
                 </tr>
@@ -204,10 +204,10 @@ const CABGAnalytics: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="metal-card p-5 border-l-4 border-l-porsche-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total CABG Volume</p><p className="text-3xl font-bold text-titanium-900">456</p><p className="text-xs text-green-600 mt-1">+3.2% vs last quarter</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-red-400"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Risk-Adj. Mortality</p><p className="text-3xl font-bold text-red-700">1.8%</p><p className="text-xs text-green-600 mt-1">Below STS benchmark (2.4%)</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Arterial Graft Rate</p><p className="text-3xl font-bold text-blue-700">84.2%</p><p className="text-xs text-green-600 mt-1">+3.1% vs last quarter</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-slate-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Bilateral IMA Rate</p><p className="text-3xl font-bold text-slate-700">41.3%</p><p className="text-xs text-green-600 mt-1">+8.7% vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-porsche-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total CABG Volume</p><p className="text-3xl font-bold text-titanium-900">456</p><p className="text-xs text-[#2C4A60] mt-1">+3.2% vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-red-400"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Risk-Adj. Mortality</p><p className="text-3xl font-bold text-red-700">1.8%</p><p className="text-xs text-[#2C4A60] mt-1">Below STS benchmark (2.4%)</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Arterial Graft Rate</p><p className="text-3xl font-bold text-blue-700">84.2%</p><p className="text-xs text-[#2C4A60] mt-1">+3.1% vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-slate-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Bilateral IMA Rate</p><p className="text-3xl font-bold text-slate-700">41.3%</p><p className="text-xs text-[#2C4A60] mt-1">+8.7% vs last quarter</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-titanium-100 flex items-center gap-2">
@@ -223,7 +223,7 @@ const CABGAnalytics: React.FC = () => {
                   <td className="px-4 py-3 font-medium text-titanium-900">{d.type}</td>
                   <td className="px-4 py-3 font-mono font-semibold">{d.volume}</td>
                   <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{d.mortality}</span></td>
-                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">{d.stroke}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{d.stroke}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{d.reop}</td>
                   <td className="px-4 py-3 font-mono">{d.grafts}</td>
                   <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">{d.arterial}</span></td>
@@ -255,9 +255,9 @@ const STEMIPathways: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="metal-card p-5 border-l-4 border-l-red-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Primary PCI Volume</p><p className="text-3xl font-bold text-titanium-900">387</p><p className="text-xs text-green-600 mt-1">+12.1% vs last quarter</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Median D2B Time</p><p className="text-3xl font-bold text-green-700">52 min</p><p className="text-xs text-titanium-500 mt-1">ACC/AHA target: ≤90 min</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">D2B ≤90 Min Rate</p><p className="text-3xl font-bold text-blue-700">94.6%</p><p className="text-xs text-green-600 mt-1">Above ACC benchmark (75%)</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-red-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Primary PCI Volume</p><p className="text-3xl font-bold text-titanium-900">387</p><p className="text-xs text-[#2C4A60] mt-1">+12.1% vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Median D2B Time</p><p className="text-3xl font-bold text-[#2C4A60]">52 min</p><p className="text-xs text-titanium-500 mt-1">ACC/AHA target: ≤90 min</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">D2B ≤90 Min Rate</p><p className="text-3xl font-bold text-blue-700">94.6%</p><p className="text-xs text-[#2C4A60] mt-1">Above ACC benchmark (75%)</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl p-6">
         <div className="flex items-center gap-2 mb-4">
@@ -266,13 +266,13 @@ const STEMIPathways: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {metrics.map((m, i) => (
-            <div key={i} className="rounded-xl border bg-green-50 border-green-200 px-4 py-3 flex items-start justify-between">
+            <div key={i} className="rounded-xl border bg-[#C8D4DC] border-[#2C4A60] px-4 py-3 flex items-start justify-between">
               <div>
                 <p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide">{m.label}</p>
                 <p className="text-xl font-bold text-titanium-900 mt-0.5">{m.value}</p>
                 <p className="text-xs text-titanium-500">Target: {m.target}</p>
               </div>
-              <p className="text-xs text-green-700 font-medium text-right ml-2">{m.trend}</p>
+              <p className="text-xs text-[#2C4A60] font-medium text-right ml-2">{m.trend}</p>
             </div>
           ))}
         </div>
@@ -282,7 +282,7 @@ const STEMIPathways: React.FC = () => {
         <table className="w-full text-sm">
           <thead className="bg-titanium-50"><tr>{['Site', 'STEMI Volume', 'Median D2B', 'D2B ≤90 Rate'].map(h => <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-titanium-600 uppercase tracking-wide">{h}</th>)}</tr></thead>
           <tbody className="divide-y divide-titanium-100">
-            {sites.map((s, i) => <tr key={i} className="hover:bg-titanium-50"><td className="px-4 py-3 font-medium text-titanium-900">{s.name}</td><td className="px-4 py-3 font-mono font-semibold">{s.vol}</td><td className="px-4 py-3">{s.d2b}</td><td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{s.rate}</span></td></tr>)}
+            {sites.map((s, i) => <tr key={i} className="hover:bg-titanium-50"><td className="px-4 py-3 font-medium text-titanium-900">{s.name}</td><td className="px-4 py-3 font-mono font-semibold">{s.vol}</td><td className="px-4 py-3">{s.d2b}</td><td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{s.rate}</span></td></tr>)}
           </tbody>
         </table>
       </div>
@@ -307,8 +307,8 @@ const CoronaryQualityMetrics: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="metal-card p-5 border-l-4 border-l-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Above Benchmark</p><p className="text-3xl font-bold text-green-700">8 / 10</p><p className="text-xs text-titanium-500 mt-1">CathPCI + STS registry measures</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-amber-400"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Below Benchmark</p><p className="text-3xl font-bold text-amber-700">2 / 10</p><p className="text-xs text-titanium-500 mt-1">Cardiac rehab + PCSK9i gap</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Above Benchmark</p><p className="text-3xl font-bold text-[#2C4A60]">8 / 10</p><p className="text-xs text-titanium-500 mt-1">CathPCI + STS registry measures</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#6B7280]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Below Benchmark</p><p className="text-3xl font-bold text-[#6B7280]">2 / 10</p><p className="text-xs text-titanium-500 mt-1">Cardiac rehab + PCSK9i gap</p></div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Registry Submissions</p><p className="text-3xl font-bold text-blue-700">100%</p><p className="text-xs text-titanium-500 mt-1">CathPCI, STS, ACC-NCDR current</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
@@ -325,7 +325,7 @@ const CoronaryQualityMetrics: React.FC = () => {
                   <td className="px-4 py-3 font-medium text-titanium-900">{m.measure}</td>
                   <td className="px-4 py-3 font-mono font-semibold text-titanium-800">{m.rate}</td>
                   <td className="px-4 py-3 text-titanium-500">{m.benchmark}</td>
-                  <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${m.above ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{m.above ? 'Above Benchmark' : 'Below / Gap'}</span></td>
+                  <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${m.above ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-red-100 text-red-800'}`}>{m.above ? 'Above Benchmark' : 'Below / Gap'}</span></td>
                   <td className="px-4 py-3 text-titanium-500 text-xs">{m.registry}</td>
                 </tr>
               ))}
@@ -404,7 +404,7 @@ const CADInterventionPipeline: React.FC = () => {
             <ul className="space-y-1 mb-3">
               {p.signals.map((s, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-titanium-700">
-                  <AlertTriangle className="w-3.5 h-3.5 text-amber-500 mt-0.5 flex-shrink-0" />
+                  <AlertTriangle className="w-3.5 h-3.5 text-[#6B7280] mt-0.5 flex-shrink-0" />
                   {s}
                 </li>
               ))}
@@ -501,9 +501,9 @@ const CADInterventionPipeline: React.FC = () => {
           <p className="text-3xl font-bold text-blue-800">{totalHeartTeam}</p>
           <p className="text-xs text-titanium-500 mt-1">Heart team review not documented</p>
         </div>
-        <div className="metal-card p-5 border-l-4 border-l-amber-400">
-          <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-1">Complete Revasc Needed</p>
-          <p className="text-3xl font-bold text-amber-800">{totalRevasc}</p>
+        <div className="metal-card p-5 border-l-4 border-l-[#6B7280]">
+          <p className="text-xs font-semibold text-[#6B7280] uppercase tracking-wide mb-1">Complete Revasc Needed</p>
+          <p className="text-3xl font-bold text-[#6B7280]">{totalRevasc}</p>
           <p className="text-xs text-titanium-500 mt-1">Non-culprit lesion untreated post-ACS</p>
         </div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500">
@@ -541,7 +541,7 @@ const CADInterventionPipeline: React.FC = () => {
           ].map((q, i) => (
             <div key={i} className="px-4 py-3 text-center">
               <div className="text-xs font-semibold text-titanium-500 uppercase">{q.label}</div>
-              <div className="text-lg font-bold text-emerald-700 mt-1">{formatDollar(q.revenue)}</div>
+              <div className="text-lg font-bold text-[#2C4A60] mt-1">{formatDollar(q.revenue)}</div>
               <div className="text-xs text-titanium-500">{q.procedures} procedures</div>
             </div>
           ))}
@@ -565,15 +565,15 @@ const CADInterventionPipeline: React.FC = () => {
       {/* Gap 47 — Complete Revascularization */}
       {renderGapSection(
         completeRevascGap,
-        <Activity className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />,
+        <Activity className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />,
         'Gap 47',
         'HIGH PRIORITY',
-        'bg-amber-100 text-amber-800',
-        'border-amber-200',
-        'bg-amber-50',
-        'border-amber-100',
-        'bg-amber-50',
-        'text-amber-700'
+        'bg-[#F0F5FA] text-[#6B7280]',
+        'border-[#C8D4DC]',
+        'bg-[#F0F5FA]',
+        'border-[#C8D4DC]',
+        'bg-[#F0F5FA]',
+        'text-[#6B7280]'
       )}
 
       {/* Gap 48 — CTO Referral */}
@@ -610,7 +610,7 @@ const CADInterventionPipeline: React.FC = () => {
           <Zap className="w-5 h-5 text-porsche-600 mt-0.5 flex-shrink-0" />
           <div>
             <h3 className="text-base font-semibold text-titanium-900 mb-1">Automated Pipeline Detection</h3>
-            <p className="text-sm text-titanium-600">&#9889; Patients automatically identified from EHR data via Redox</p>
+            <p className="text-sm text-titanium-600">&#9889; Patients automatically identified from EHR integration</p>
           </div>
         </div>
       </div>
@@ -629,9 +629,9 @@ const CADInterventionPipeline: React.FC = () => {
               <div className="text-lg font-bold text-red-600">18 months</div>
               <div className="text-xs text-titanium-400">to clear pipeline</div>
             </div>
-            <div className="bg-emerald-50/70 rounded-lg p-3">
+            <div className="bg-[#F0F5FA]/70 rounded-lg p-3">
               <div className="text-xs text-titanium-500 mb-1">Systematic Closure</div>
-              <div className="text-lg font-bold text-emerald-600">6 months</div>
+              <div className="text-lg font-bold text-[#2C4A60]">6 months</div>
               <div className="text-xs text-titanium-400">with TAILRD protocol</div>
             </div>
             <div className="bg-blue-50/70 rounded-lg p-3">
@@ -730,7 +730,7 @@ const coronaryTabs: ServiceLineTabConfig[] = [
  id: 'cad-clinical-gap-detection',
  label: 'Gap Detection (71-Gap)',
  icon: Target,
- description: 'AI-driven CAD gap detection: SGLT2i/CKD, COMPASS dual-pathway, PCSK9i, cardiac rehab, Lp(a), imaging-guided PCI, DAPT safety, FFR/iFR, CTO, CCTA, INOCA, bempedoic acid, icosapent ethyl, ranolazine, BB deprescribing, bilateral IMA, post-CABG surveillance, vasospastic angina, hs-TnT, OAC monotherapy (cross-module), heart team review +11 more All gap detection criteria, risk scores, and composite calculators are automatically computed from structured EHR data ingested via Redox — no manual data entry or chart review required.'
+ description: 'AI-driven CAD gap detection: SGLT2i/CKD, COMPASS dual-pathway, PCSK9i, cardiac rehab, Lp(a), imaging-guided PCI, DAPT safety, FFR/iFR, CTO, CCTA, INOCA, bempedoic acid, icosapent ethyl, ranolazine, BB deprescribing, bilateral IMA, post-CABG surveillance, vasospastic angina, hs-TnT, OAC monotherapy (cross-module), heart team review +11 more All gap detection criteria, risk scores, and composite calculators are automatically computed from structured EHR data ingested via EHR integration — no manual data entry or chart review required.'
   },
   {
  id: 'pro-outcomes',

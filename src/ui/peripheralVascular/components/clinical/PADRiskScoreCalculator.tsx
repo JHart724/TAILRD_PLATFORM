@@ -42,9 +42,9 @@ const PADRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pa
   const calculateRisk = (): RiskResult => {
  let abiCat: string, abiSev: string, abiInterp: string, abiColor: string;
  if (inputs.ankleIndex > 1.3) { abiCat = 'Non-compressible'; abiSev = 'Indeterminate'; abiInterp = 'Non-compressible vessels (medial calcification). ABI unreliable - use TBI or PVR.'; abiColor = 'text-porsche-600 bg-porsche-50 border-porsche-200'; }
- else if (inputs.ankleIndex >= 1.0) { abiCat = 'Normal'; abiSev = 'Normal'; abiInterp = 'Normal arterial perfusion. No hemodynamically significant PAD.'; abiColor = 'text-green-600 bg-green-50 border-green-200'; }
- else if (inputs.ankleIndex >= 0.9) { abiCat = 'Borderline'; abiSev = 'Borderline'; abiInterp = 'Borderline result. Consider exercise ABI for unmasking.'; abiColor = 'text-amber-600 bg-amber-50 border-amber-200'; }
- else if (inputs.ankleIndex >= 0.7) { abiCat = 'Mild PAD'; abiSev = 'Mild'; abiInterp = 'Mild PAD. Symptom-directed management with risk factor optimization.'; abiColor = 'text-amber-600 bg-amber-50 border-amber-200'; }
+ else if (inputs.ankleIndex >= 1.0) { abiCat = 'Normal'; abiSev = 'Normal'; abiInterp = 'Normal arterial perfusion. No hemodynamically significant PAD.'; abiColor = 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]'; }
+ else if (inputs.ankleIndex >= 0.9) { abiCat = 'Borderline'; abiSev = 'Borderline'; abiInterp = 'Borderline result. Consider exercise ABI for unmasking.'; abiColor = 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]'; }
+ else if (inputs.ankleIndex >= 0.7) { abiCat = 'Mild PAD'; abiSev = 'Mild'; abiInterp = 'Mild PAD. Symptom-directed management with risk factor optimization.'; abiColor = 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]'; }
  else if (inputs.ankleIndex >= 0.4) { abiCat = 'Moderate PAD'; abiSev = 'Moderate'; abiInterp = 'Moderate PAD. Structured exercise program and medical optimization.'; abiColor = 'text-crimson-600 bg-crimson-50 border-crimson-200'; }
  else { abiCat = 'Severe PAD / CLI'; abiSev = 'Severe'; abiInterp = 'Severe PAD consistent with critical limb ischemia. Urgent vascular evaluation.'; abiColor = 'text-red-700 bg-red-50 border-red-200'; }
 
@@ -52,18 +52,18 @@ const PADRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pa
  if (inputs.gangrene || (inputs.tissueLoss && inputs.ankleIndex < 0.4)) { fStage = 'IV'; fDesc = 'Gangrene / tissue necrosis'; fMgmt = 'Urgent revascularization, wound care, amputation risk assessment'; fColor = 'text-red-700 bg-red-50 border-red-200'; }
  else if (inputs.tissueLoss || (inputs.restPain && inputs.ankleIndex < 0.5)) { fStage = 'III-IV'; fDesc = 'Rest pain with tissue loss'; fMgmt = 'Revascularization evaluation, pain management, wound care referral'; fColor = 'text-crimson-600 bg-crimson-50 border-crimson-200'; }
  else if (inputs.restPain) { fStage = 'III'; fDesc = 'Ischemic rest pain'; fMgmt = 'Urgent vascular referral, revascularization assessment, optimize perfusion'; fColor = 'text-crimson-600 bg-crimson-50 border-crimson-200'; }
- else if (inputs.claudication && inputs.walkingDistance < 200) { fStage = 'IIb'; fDesc = 'Moderate-severe claudication (< 200m)'; fMgmt = 'Supervised exercise therapy, cilostazol, consider revascularization'; fColor = 'text-amber-600 bg-amber-50 border-amber-200'; }
- else if (inputs.claudication) { fStage = 'IIa'; fDesc = 'Mild claudication (> 200m)'; fMgmt = 'Risk factor modification, supervised exercise, medical therapy'; fColor = 'text-amber-600 bg-amber-50 border-amber-200'; }
- else { fStage = 'I'; fDesc = 'Asymptomatic PAD'; fMgmt = 'Risk factor optimization, annual ABI monitoring, exercise'; fColor = 'text-green-600 bg-green-50 border-green-200'; }
+ else if (inputs.claudication && inputs.walkingDistance < 200) { fStage = 'IIb'; fDesc = 'Moderate-severe claudication (< 200m)'; fMgmt = 'Supervised exercise therapy, cilostazol, consider revascularization'; fColor = 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]'; }
+ else if (inputs.claudication) { fStage = 'IIa'; fDesc = 'Mild claudication (> 200m)'; fMgmt = 'Risk factor modification, supervised exercise, medical therapy'; fColor = 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]'; }
+ else { fStage = 'I'; fDesc = 'Asymptomatic PAD'; fMgmt = 'Risk factor optimization, annual ABI monitoring, exercise'; fColor = 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]'; }
 
  let rCat: number, rGrade: number, rDesc: string, rMgmt: string, rColor: string;
  if (inputs.gangrene) { rCat = 6; rGrade = 3; rDesc = 'Major tissue loss - Functional foot unsalvageable'; rMgmt = 'Major amputation likely, vascular surgery consultation'; rColor = 'text-red-700 bg-red-50 border-red-200'; }
  else if (inputs.tissueLoss) { rCat = 5; rGrade = 3; rDesc = 'Minor tissue loss - Non-healing ulcer, focal gangrene'; rMgmt = 'Revascularization for limb salvage, wound care'; rColor = 'text-crimson-600 bg-crimson-50 border-crimson-200'; }
  else if (inputs.restPain) { rCat = 4; rGrade = 2; rDesc = 'Ischemic rest pain'; rMgmt = 'Revascularization evaluation, hemodynamic assessment'; rColor = 'text-crimson-600 bg-crimson-50 border-crimson-200'; }
- else if (inputs.claudication && inputs.walkingDistance < 100) { rCat = 3; rGrade = 1; rDesc = 'Severe claudication'; rMgmt = 'Supervised exercise + revascularization consideration'; rColor = 'text-amber-600 bg-amber-50 border-amber-200'; }
- else if (inputs.claudication && inputs.walkingDistance < 200) { rCat = 2; rGrade = 1; rDesc = 'Moderate claudication'; rMgmt = 'Supervised exercise therapy, medical optimization'; rColor = 'text-amber-600 bg-amber-50 border-amber-200'; }
- else if (inputs.claudication) { rCat = 1; rGrade = 1; rDesc = 'Mild claudication'; rMgmt = 'Exercise therapy, risk factor management'; rColor = 'text-amber-600 bg-amber-50 border-amber-200'; }
- else { rCat = 0; rGrade = 0; rDesc = 'Asymptomatic'; rMgmt = 'Risk factor modification, monitoring'; rColor = 'text-green-600 bg-green-50 border-green-200'; }
+ else if (inputs.claudication && inputs.walkingDistance < 100) { rCat = 3; rGrade = 1; rDesc = 'Severe claudication'; rMgmt = 'Supervised exercise + revascularization consideration'; rColor = 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]'; }
+ else if (inputs.claudication && inputs.walkingDistance < 200) { rCat = 2; rGrade = 1; rDesc = 'Moderate claudication'; rMgmt = 'Supervised exercise therapy, medical optimization'; rColor = 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]'; }
+ else if (inputs.claudication) { rCat = 1; rGrade = 1; rDesc = 'Mild claudication'; rMgmt = 'Exercise therapy, risk factor management'; rColor = 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]'; }
+ else { rCat = 0; rGrade = 0; rDesc = 'Asymptomatic'; rMgmt = 'Risk factor modification, monitoring'; rColor = 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]'; }
 
  const rf = [inputs.diabetes, inputs.smoking !== 'never', inputs.hypertension, inputs.cad, inputs.creatinine > 1.5, inputs.age > 70, inputs.priorRevascularization, inputs.ankleIndex < 0.5].filter(Boolean).length;
  const combinedRisk = rf >= 5 ? 'Very High Cardiovascular Risk' : rf >= 3 ? 'High Cardiovascular Risk' : rf >= 1 ? 'Moderate Cardiovascular Risk' : 'Low Cardiovascular Risk';
@@ -161,8 +161,8 @@ const PADRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pa
  )}
  </div>
  </div>
- <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
- <p className="text-sm text-amber-800">
+ <div className="mt-6 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
+ <p className="text-sm text-[#6B7280]">
  <strong>Guidelines:</strong> 2024 ACC/AHA PAD Guideline; WIfI Classification System; Rutherford Classification; TASC II Scoring.
  </p>
  </div>

@@ -71,9 +71,9 @@ const EPOutcomesTrends: React.FC = () => {
   const getMetricColor = (metric: string) => {
  const colors = {
  afAblation: 'bg-chrome-600',
- strokePrevention: 'bg-green-600', 
+ strokePrevention: 'bg-[#C8D4DC]', 
  deviceImplants: 'bg-arterial-600',
- satisfaction: 'bg-amber-600',
+ satisfaction: 'bg-[#F0F5FA]',
  quality: 'bg-chrome-600',
  all: 'bg-titanium-600'
  };
@@ -81,11 +81,11 @@ const EPOutcomesTrends: React.FC = () => {
   };
 
   const getTrendIcon = (trend: string) => {
- return trend === 'up' ? <TrendingUp className="w-4 h-4 text-green-600" /> : <TrendingDown className="w-4 h-4 text-red-600" />;
+ return trend === 'up' ? <TrendingUp className="w-4 h-4 text-[#2C4A60]" /> : <TrendingDown className="w-4 h-4 text-red-600" />;
   };
 
   const getTrendColor = (trend: string) => {
- return trend === 'up' ? 'text-green-600' : 'text-red-600';
+ return trend === 'up' ? 'text-[#2C4A60]' : 'text-red-600';
   };
 
   return (
@@ -211,11 +211,11 @@ const EPOutcomesTrends: React.FC = () => {
  {/* Summary Stats */}
  <div className="grid grid-cols-3 gap-4 mb-4">
  <div 
- className="p-3 bg-green-50 rounded-lg border border-green-200 cursor-pointer hover:bg-green-100 transition-colors"
+ className="p-3 bg-[#C8D4DC] rounded-lg border border-[#2C4A60] cursor-pointer hover:bg-[#C8D4DC] transition-colors"
  onClick={() => console.log('Average performance drill-down:', selectedMetric, toFixed(chartData.reduce((sum, d) => sum + d.value, 0) / chartData.length, 1))}
  >
- <div className="text-xs text-green-800 font-medium mb-1">Average Performance</div>
- <div className="text-lg font-bold text-green-900">
+ <div className="text-xs text-[#2C4A60] font-medium mb-1">Average Performance</div>
+ <div className="text-lg font-bold text-[#2C4A60]">
  {toFixed(chartData.reduce((sum, d) => sum + d.value, 0) / chartData.length, 1)}
  {selectedMetric === 'deviceImplants' ? ' cases' : '%'}
  </div>

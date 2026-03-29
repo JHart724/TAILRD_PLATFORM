@@ -18,9 +18,9 @@ const EPAnticoagulationByPhysicianTable: React.FC<EPAnticoagulationByPhysicianTa
   if (!data) return null;
 
   const getScoreColor = (pct: number): string => {
- if (pct >= 80) return "text-emerald-600 bg-emerald-50";
+ if (pct >= 80) return "text-[#2C4A60] bg-[#F0F5FA]";
  if (pct >= 70) return "text-chrome-600 bg-chrome-50";
- if (pct >= 60) return "text-amber-600 bg-amber-50";
+ if (pct >= 60) return "text-[#6B7280] bg-[#F0F5FA]";
  return "text-arterial-600 bg-arterial-50";
   };
 

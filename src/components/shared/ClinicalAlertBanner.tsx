@@ -44,10 +44,10 @@ const ClinicalAlertBanner: React.FC<ClinicalAlertBannerProps> = ({
  };
  case 'warning':
  return {
- bgColor: 'bg-amber-50 border-amber-200',
- iconColor: 'text-amber-600',
- titleColor: 'text-amber-800',
- messageColor: 'text-amber-700',
+ bgColor: 'bg-[#F0F5FA] border-[#C8D4DC]',
+ iconColor: 'text-[#6B7280]',
+ titleColor: 'text-[#6B7280]',
+ messageColor: 'text-[#6B7280]',
  icon: AlertTriangle,
  accentBorder: 'border-l-amber-500'
  };
@@ -62,10 +62,10 @@ const ClinicalAlertBanner: React.FC<ClinicalAlertBannerProps> = ({
  };
  default:
  return {
- bgColor: 'bg-green-50 border-green-200',
- iconColor: 'text-green-600',
- titleColor: 'text-green-800',
- messageColor: 'text-green-700',
+ bgColor: 'bg-[#C8D4DC] border-[#2C4A60]',
+ iconColor: 'text-[#2C4A60]',
+ titleColor: 'text-[#2C4A60]',
+ messageColor: 'text-[#2C4A60]',
  icon: CheckCircle,
  accentBorder: 'border-l-green-500'
  };
@@ -89,16 +89,16 @@ const ClinicalAlertBanner: React.FC<ClinicalAlertBannerProps> = ({
  : 'bg-arterial-100 hover:bg-arterial-200 text-arterial-800';
  case 'warning':
  return variant === 'primary'
- ? 'bg-amber-600 hover:bg-amber-700 text-white'
- : 'bg-amber-100 hover:bg-amber-200 text-amber-800';
+ ? 'bg-[#F0F5FA] hover:bg-[#F0F5FA] text-white'
+ : 'bg-[#F0F5FA] hover:bg-[#F0F5FA] text-[#6B7280]';
  case 'info':
  return variant === 'primary'
  ? 'bg-chrome-600 hover:bg-chrome-700 text-white'
  : 'bg-chrome-100 hover:bg-chrome-200 text-chrome-800';
  default:
  return variant === 'primary'
- ? 'bg-green-600 hover:bg-green-700 text-white'
- : 'bg-green-100 hover:bg-green-200 text-green-800';
+ ? 'bg-[#C8D4DC] hover:bg-[#C8D4DC] text-white'
+ : 'bg-[#C8D4DC] hover:bg-[#C8D4DC] text-[#2C4A60]';
  }
   };
 

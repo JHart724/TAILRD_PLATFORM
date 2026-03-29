@@ -870,8 +870,8 @@ const SHTeamCollaborationPanel: React.FC = () => {
  <div className="flex items-center gap-3 mt-2">
  <span className={`px-3 py-1 rounded-lg border-l-4 font-medium text-sm ${
  selectedPatient.priority === 'high' ? 'border-red-500 bg-red-50 text-red-700' :
- selectedPatient.priority === 'medium' ? 'border-amber-500 bg-amber-50 text-amber-700' :
- 'border-green-500 bg-green-50 text-green-700'
+ selectedPatient.priority === 'medium' ? 'border-[#C8D4DC] bg-[#F0F5FA] text-[#6B7280]' :
+ 'border-[#2C4A60] bg-[#C8D4DC] text-[#2C4A60]'
  }`}>
  {selectedPatient.priority.toUpperCase()} Priority
  </span>
@@ -908,8 +908,8 @@ const SHTeamCollaborationPanel: React.FC = () => {
  <div className="text-xl font-bold text-arterial-600 mb-2">Valve Stage {selectedPatient.valveStage}</div>
  <p className="text-sm text-gray-600">Functional Class</p>
  </div>
- <div className="bg-amber-50 rounded-lg p-4 text-center">
- <div className="text-2xl font-bold text-amber-600 mb-2">
+ <div className="bg-[#F0F5FA] rounded-lg p-4 text-center">
+ <div className="text-2xl font-bold text-[#6B7280] mb-2">
  {Object.values(selectedPatient.fullChart.valveTherapyStatus).filter(status => !status).length}
  </div>
  <p className="text-sm text-gray-600">Valve Therapy Gaps</p>
@@ -947,9 +947,9 @@ const SHTeamCollaborationPanel: React.FC = () => {
  </div>
 
  {/* Laboratory Results */}
- <div className="bg-green-50 rounded-lg p-4">
+ <div className="bg-[#C8D4DC] rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <Droplets className="w-5 h-5 text-green-600" />
+ <Droplets className="w-5 h-5 text-[#2C4A60]" />
  Laboratory Results
  </h3>
  <div className="grid grid-cols-3 gap-4">
@@ -1018,25 +1018,25 @@ const SHTeamCollaborationPanel: React.FC = () => {
  <div className="grid grid-cols-2 gap-3">
  <div className="flex items-center gap-2">
  <div className={`w-3 h-3 rounded-full ${
- selectedPatient.fullChart.valveTherapyStatus.medicalManagement ? 'bg-green-500' : 'bg-red-500'
+ selectedPatient.fullChart.valveTherapyStatus.medicalManagement ? 'bg-[#C8D4DC]' : 'bg-red-500'
  }`}></div>
  <span className="text-sm">Medical Management</span>
  </div>
  <div className="flex items-center gap-2">
  <div className={`w-3 h-3 rounded-full ${
- selectedPatient.fullChart.valveTherapyStatus.anticoagulation ? 'bg-green-500' : 'bg-red-500'
+ selectedPatient.fullChart.valveTherapyStatus.anticoagulation ? 'bg-[#C8D4DC]' : 'bg-red-500'
  }`}></div>
  <span className="text-sm">Anticoagulation</span>
  </div>
  <div className="flex items-center gap-2">
  <div className={`w-3 h-3 rounded-full ${
- selectedPatient.fullChart.valveTherapyStatus.diuretics ? 'bg-green-500' : 'bg-red-500'
+ selectedPatient.fullChart.valveTherapyStatus.diuretics ? 'bg-[#C8D4DC]' : 'bg-red-500'
  }`}></div>
  <span className="text-sm">Diuretics</span>
  </div>
  <div className="flex items-center gap-2">
  <div className={`w-3 h-3 rounded-full ${
- selectedPatient.fullChart.valveTherapyStatus.tavrReferral ? 'bg-green-500' : 'bg-red-500'
+ selectedPatient.fullChart.valveTherapyStatus.tavrReferral ? 'bg-[#C8D4DC]' : 'bg-red-500'
  }`}></div>
  <span className="text-sm">TAVR Referral</span>
  </div>
@@ -1068,15 +1068,15 @@ const SHTeamCollaborationPanel: React.FC = () => {
  </div>
 
  {/* Clinical Notes */}
- <div className="bg-yellow-50 rounded-lg p-4">
+ <div className="bg-[#F0F5FA] rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <FileText className="w-5 h-5 text-yellow-600" />
+ <FileText className="w-5 h-5 text-[#6B7280]" />
  Recent Clinical Notes
  </h3>
  <div className="space-y-2">
  {selectedPatient.fullChart.notes.map((note, idx) => (
  <div key={`note-${idx}`} className="flex items-start gap-2">
- <Activity className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+ <Activity className="w-4 h-4 text-[#6B7280] mt-0.5 flex-shrink-0" />
  <span className="text-sm text-gray-700">{note}</span>
  </div>
  ))}

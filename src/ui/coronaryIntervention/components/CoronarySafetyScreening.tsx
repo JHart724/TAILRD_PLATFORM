@@ -156,9 +156,9 @@ const CoronarySafetyScreening: React.FC = () => {
 
   const getRiskColor = (risk: string) => {
  switch (risk) {
- case 'low': return 'text-emerald-600 bg-emerald-50 border-emerald-200';
- case 'moderate': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
- case 'high': return 'text-amber-600 bg-amber-50 border-amber-200';
+ case 'low': return 'text-[#2C4A60] bg-[#F0F5FA] border-[#C8D4DC]';
+ case 'moderate': return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
+ case 'high': return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
  case 'contraindicated': return 'text-red-600 bg-red-50 border-red-200';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
@@ -166,9 +166,9 @@ const CoronarySafetyScreening: React.FC = () => {
 
   const getRiskIcon = (risk: string) => {
  switch (risk) {
- case 'low': return <CheckCircle2 className="w-5 h-5 text-emerald-600" />;
- case 'moderate': return <Info className="w-5 h-5 text-yellow-600" />;
- case 'high': return <AlertTriangle className="w-5 h-5 text-amber-600" />;
+ case 'low': return <CheckCircle2 className="w-5 h-5 text-[#2C4A60]" />;
+ case 'moderate': return <Info className="w-5 h-5 text-[#6B7280]" />;
+ case 'high': return <AlertTriangle className="w-5 h-5 text-[#6B7280]" />;
  case 'contraindicated': return <XCircle className="w-5 h-5 text-red-600" />;
  default: return <Info className="w-5 h-5 text-titanium-600" />;
  }
@@ -353,7 +353,7 @@ const CoronarySafetyScreening: React.FC = () => {
  <ul className="space-y-1">
  {daptAssessment.alternatives.map((item) => (
  <li key={item} className="text-sm text-titanium-700 flex items-center gap-2">
- <div className="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+ <div className="w-1.5 h-1.5 bg-[#F0F5FA] rounded-full"></div>
  {item}
  </li>
  ))}
@@ -403,7 +403,7 @@ const CoronarySafetyScreening: React.FC = () => {
  <ul className="space-y-1">
  {contrastAssessment.alternatives.map((item) => (
  <li key={item} className="text-sm text-titanium-700 flex items-center gap-2">
- <div className="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+ <div className="w-1.5 h-1.5 bg-[#F0F5FA] rounded-full"></div>
  {item}
  </li>
  ))}

@@ -29,14 +29,14 @@ type SortDirection = 'asc' | 'desc';
 // ---------- Helpers ----------
 
 const getMarginColor = (margin: number): string => {
-  if (margin >= 50) return 'text-emerald-600';
-  if (margin >= 30) return 'text-amber-600';
+  if (margin >= 50) return 'text-[#2C4A60]';
+  if (margin >= 30) return 'text-[#6B7280]';
   return 'text-arterial-600';
 };
 
 const getVarianceDisplay = (variance: number): { text: string; className: string } => {
   if (variance > 0) {
-    return { text: `+${formatCurrency(variance)}`, className: 'text-emerald-600' };
+    return { text: `+${formatCurrency(variance)}`, className: 'text-[#2C4A60]' };
   }
   if (variance < 0) {
     return { text: `\u2212${formatCurrency(Math.abs(variance))}`, className: 'text-arterial-600' };
@@ -47,7 +47,7 @@ const getVarianceDisplay = (variance: number): { text: string; className: string
 const getStatusStyles = (status: 'Recruiting' | 'Active' | 'Completed'): string => {
   switch (status) {
     case 'Recruiting':
-      return 'bg-emerald-100 text-emerald-700';
+      return 'bg-[#F0F5FA] text-[#2C4A60]';
     case 'Active':
       return 'bg-chrome-100 text-chrome-700';
     case 'Completed':
@@ -59,9 +59,9 @@ const getStatusStyles = (status: 'Recruiting' | 'Active' | 'Completed'): string 
 
 const getRegistryBodyColor = (body: string): string => {
   const normalized = body.toUpperCase();
-  if (normalized.includes('AHA')) return 'text-emerald-600';
+  if (normalized.includes('AHA')) return 'text-[#2C4A60]';
   if (normalized.includes('ACC')) return 'text-chrome-600';
-  if (normalized.includes('STS')) return 'text-amber-600';
+  if (normalized.includes('STS')) return 'text-[#6B7280]';
   if (normalized.includes('SVS')) return 'text-arterial-600';
   return 'text-titanium-600';
 };

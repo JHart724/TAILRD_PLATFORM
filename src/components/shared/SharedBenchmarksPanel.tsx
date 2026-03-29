@@ -26,7 +26,7 @@ const SharedBenchmarksPanel: React.FC<SharedBenchmarksPanelProps> = ({
   title = 'National Benchmarks', subtitle, benchmarks, dataSource, lastUpdated, onBenchmarkClick, className = '',
 }) => {
   const getTrendIcon = (trend: string) => {
- if (trend === 'up') return <TrendingUp className="w-4 h-4 text-green-600" />;
+ if (trend === 'up') return <TrendingUp className="w-4 h-4 text-[#2C4A60]" />;
  if (trend === 'down') return <TrendingDown className="w-4 h-4 text-crimson-600" />;
  return <Minus className="w-4 h-4 text-titanium-500" />;
   };
@@ -66,13 +66,13 @@ const SharedBenchmarksPanel: React.FC<SharedBenchmarksPanelProps> = ({
  {getTrendIcon(bm.trend)}
  </div>
  <div className="flex items-center justify-between text-sm">
- <span className={`font-medium ${positive ? 'text-green-600' : 'text-crimson-600'}`}>
+ <span className={`font-medium ${positive ? 'text-[#2C4A60]' : 'text-crimson-600'}`}>
  {formatDeltaValue(delta, bm.unit)} vs benchmark
  </span>
  <span className="text-titanium-700 font-medium">{formatPercentile(bm.percentile)}</span>
  </div>
  <div className="mt-3 w-full bg-titanium-200 rounded-full h-2 overflow-hidden">
- <div className={`h-full rounded-full transition-all ${positive ? 'bg-green-500' : 'bg-amber-500'}`} style={{ width: `${bm.percentile}%` }} />
+ <div className={`h-full rounded-full transition-all ${positive ? 'bg-[#C8D4DC]' : 'bg-[#F0F5FA]'}`} style={{ width: `${bm.percentile}%` }} />
  </div>
  </div>
  );

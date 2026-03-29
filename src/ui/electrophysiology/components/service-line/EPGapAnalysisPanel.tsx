@@ -263,8 +263,8 @@ const EPGapAnalysisPanel: React.FC = () => {
   const getImpactColor = (impact: string) => {
  const colors = {
  critical: 'text-red-600 bg-red-100 border-red-300',
- high: 'text-amber-600 bg-amber-100 border-amber-300',
- moderate: 'text-amber-600 bg-amber-100 border-amber-300',
+ high: 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]',
+ moderate: 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]',
  };
  return colors[impact as keyof typeof colors];
   };
@@ -272,8 +272,8 @@ const EPGapAnalysisPanel: React.FC = () => {
   const getUrgencyColor = (urgency: string) => {
  const colors = {
  urgent: 'border-l-red-500 bg-red-50',
- soon: 'border-l-amber-500 bg-amber-50',
- routine: 'border-l-green-500 bg-green-50',
+ soon: 'border-l-[#6B7280] bg-[#F0F5FA]',
+ routine: 'border-l-[#2C4A60] bg-[#C8D4DC]',
  };
  return colors[urgency as keyof typeof colors];
   };
@@ -281,7 +281,7 @@ const EPGapAnalysisPanel: React.FC = () => {
   const getCategoryIcon = (category: string) => {
  const icons = {
  Anticoagulation: <Shield className="w-5 h-5 text-chrome-600" />,
- Rate_Control: <Heart className="w-5 h-5 text-green-600" />,
+ Rate_Control: <Heart className="w-5 h-5 text-[#2C4A60]" />,
  Rhythm_Control: <Zap className="w-5 h-5 text-arterial-600" />,
  Device: <Activity className="w-5 h-5 text-chrome-600" />,
  };
@@ -301,7 +301,7 @@ const EPGapAnalysisPanel: React.FC = () => {
  <div className="flex items-start justify-between mb-6">
  <div>
  <h2 className="text-2xl font-bold text-titanium-900 mb-2 flex items-center gap-2">
- <AlertTriangle className="w-6 h-6 text-amber-600" />
+ <AlertTriangle className="w-6 h-6 text-[#6B7280]" />
  EP Treatment Gap Analysis
  </h2>
  <p className="text-titanium-600">
@@ -334,10 +334,10 @@ const EPGapAnalysisPanel: React.FC = () => {
  <div className="text-sm text-titanium-600">Critical</div>
  </div>
  <div 
- className="p-4 text-center bg-amber-50 rounded-lg border border-amber-200 cursor-pointer hover:bg-amber-100 transition-colors"
+ className="p-4 text-center bg-[#F0F5FA] rounded-lg border border-[#C8D4DC] cursor-pointer hover:bg-[#F0F5FA] transition-colors"
  onClick={() => console.log('Urgent gaps drill-down')}
  >
- <div className="text-3xl font-bold text-amber-600 mb-1">{summary.urgent}</div>
+ <div className="text-3xl font-bold text-[#6B7280] mb-1">{summary.urgent}</div>
  <div className="text-sm text-titanium-600">Urgent</div>
  </div>
  <div className="p-4 text-center bg-titanium-50 rounded-lg border border-titanium-200">
@@ -541,7 +541,7 @@ const EPGapAnalysisPanel: React.FC = () => {
  e.stopPropagation();
  console.log('Assign to team:', gap.title);
  }}
- className="px-4 py-2 bg-green-100 text-green-800 text-sm rounded-lg hover:bg-green-200 transition-colors border border-green-300"
+ className="px-4 py-2 bg-[#C8D4DC] text-[#2C4A60] text-sm rounded-lg hover:bg-[#C8D4DC] transition-colors border border-[#2C4A60]"
  >
  Assign to Team
  </button>

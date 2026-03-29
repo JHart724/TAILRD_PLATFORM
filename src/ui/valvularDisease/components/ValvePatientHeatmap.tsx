@@ -117,9 +117,9 @@ const ValvePatientHeatmap: React.FC = () => {
  switch (severity) {
  case 'Critical': return 'bg-red-600';
  case 'Severe': return 'bg-red-500';
- case 'Moderate': return 'bg-amber-500';
- case 'Mild': return 'bg-yellow-500';
- default: return 'bg-green-500';
+ case 'Moderate': return 'bg-[#F0F5FA]';
+ case 'Mild': return 'bg-[#F0F5FA]';
+ default: return 'bg-[#C8D4DC]';
  }
   };
 
@@ -127,8 +127,8 @@ const ValvePatientHeatmap: React.FC = () => {
  switch (risk) {
  case 'Prohibitive': return 'bg-red-600';
  case 'High': return 'bg-red-500';
- case 'Intermediate': return 'bg-amber-500';
- case 'Low': return 'bg-green-500';
+ case 'Intermediate': return 'bg-[#F0F5FA]';
+ case 'Low': return 'bg-[#C8D4DC]';
  default: return 'bg-gray-400';
  }
   };
@@ -137,7 +137,7 @@ const ValvePatientHeatmap: React.FC = () => {
  switch (valveType) {
  case 'Aortic': return 'bg-red-400';
  case 'Mitral': return 'bg-chrome-400';
- case 'Tricuspid': return 'bg-green-400';
+ case 'Tricuspid': return 'bg-[#C8D4DC]';
  case 'Pulmonary': return 'bg-gold-400';
  default: return 'bg-gray-400';
  }
@@ -148,7 +148,7 @@ const ValvePatientHeatmap: React.FC = () => {
  case 'Surgical': return 'bg-red-500';
  case 'Interventional': return 'bg-chrome-500';
  case 'Hybrid': return 'bg-gold-500';
- case 'Medical': return 'bg-green-500';
+ case 'Medical': return 'bg-[#C8D4DC]';
  default: return 'bg-gray-400';
  }
   };
@@ -156,8 +156,8 @@ const ValvePatientHeatmap: React.FC = () => {
   const getStsScoreColor = (score: number) => {
  if (score >= 15) return 'bg-red-600';
  if (score >= 8) return 'bg-red-500';
- if (score >= 4) return 'bg-amber-500';
- return 'bg-green-500';
+ if (score >= 4) return 'bg-[#F0F5FA]';
+ return 'bg-[#C8D4DC]';
   };
 
   const getCellColor = (patient: ValvePatientData) => {
@@ -285,11 +285,11 @@ const ValvePatientHeatmap: React.FC = () => {
  <span className="text-sm">Severe</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-4 bg-amber-500 rounded"></div>
+ <div className="w-4 h-4 bg-[#F0F5FA] rounded"></div>
  <span className="text-sm">Moderate</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-4 bg-yellow-500 rounded"></div>
+ <div className="w-4 h-4 bg-[#F0F5FA] rounded"></div>
  <span className="text-sm">Mild</span>
  </div>
  </div>
@@ -305,11 +305,11 @@ const ValvePatientHeatmap: React.FC = () => {
  <span className="text-sm">High Risk</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-4 bg-amber-500 rounded"></div>
+ <div className="w-4 h-4 bg-[#F0F5FA] rounded"></div>
  <span className="text-sm">Intermediate</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-4 bg-green-500 rounded"></div>
+ <div className="w-4 h-4 bg-[#C8D4DC] rounded"></div>
  <span className="text-sm">Low Risk</span>
  </div>
  </div>
@@ -325,7 +325,7 @@ const ValvePatientHeatmap: React.FC = () => {
  <span className="text-sm">Mitral</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-4 bg-green-400 rounded"></div>
+ <div className="w-4 h-4 bg-[#C8D4DC] rounded"></div>
  <span className="text-sm">Tricuspid</span>
  </div>
  <div className="flex items-center gap-2">
@@ -349,7 +349,7 @@ const ValvePatientHeatmap: React.FC = () => {
  <span className="text-sm">Hybrid</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-4 bg-green-500 rounded"></div>
+ <div className="w-4 h-4 bg-[#C8D4DC] rounded"></div>
  <span className="text-sm">Medical</span>
  </div>
  </div>
@@ -365,11 +365,11 @@ const ValvePatientHeatmap: React.FC = () => {
  <span className="text-sm">High (8-14)</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-4 bg-amber-500 rounded"></div>
+ <div className="w-4 h-4 bg-[#F0F5FA] rounded"></div>
  <span className="text-sm">Intermediate (4-7)</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-4 bg-green-500 rounded"></div>
+ <div className="w-4 h-4 bg-[#C8D4DC] rounded"></div>
  <span className="text-sm">Low (less than 4)</span>
  </div>
  </div>
@@ -379,12 +379,12 @@ const ValvePatientHeatmap: React.FC = () => {
 
  {/* Decision Support Alerts */}
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
- <div className="bg-amber-50 border border-amber-200 p-4 rounded-lg">
- <div className="flex items-center gap-2 text-amber-800">
+ <div className="bg-[#F0F5FA] border border-[#C8D4DC] p-4 rounded-lg">
+ <div className="flex items-center gap-2 text-[#6B7280]">
  <AlertTriangle className="w-5 h-5" />
  <span className="font-semibold">Surgical Candidates</span>
  </div>
- <div className="mt-2 text-amber-700">
+ <div className="mt-2 text-[#6B7280]">
  <div className="text-2xl font-bold">
  {sortedData.filter(p => p.severity === 'Severe' && p.surgicalRisk !== 'Prohibitive').length}
  </div>
@@ -405,12 +405,12 @@ const ValvePatientHeatmap: React.FC = () => {
  </div>
  </div>
 
- <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
- <div className="flex items-center gap-2 text-green-800">
+ <div className="bg-[#C8D4DC] border border-[#2C4A60] p-4 rounded-lg">
+ <div className="flex items-center gap-2 text-[#2C4A60]">
  <TrendingUp className="w-5 h-5" />
  <span className="font-semibold">Repair Candidates</span>
  </div>
- <div className="mt-2 text-green-700">
+ <div className="mt-2 text-[#2C4A60]">
  <div className="text-2xl font-bold">
  {sortedData.filter(p => p.repairVsReplacement === 'Repair').length}
  </div>
@@ -430,7 +430,7 @@ const ValvePatientHeatmap: React.FC = () => {
  >
  {/* Special indicators */}
  {patient.isBicuspid && (
- <div className="absolute top-0 right-0 w-2 h-2 bg-yellow-400 rounded-full"></div>
+ <div className="absolute top-0 right-0 w-2 h-2 bg-[#F0F5FA] rounded-full"></div>
  )}
  {patient.rossProcedureCandidate && (
  <div className="absolute top-0 left-0 w-2 h-2 bg-chrome-400 rounded-full"></div>
@@ -445,7 +445,7 @@ const ValvePatientHeatmap: React.FC = () => {
  <div>Peak Gradient: {toFixed(patient.gradientPeak, 0)} mmHg</div>
  <div>EOA: {toFixed(patient.effectiveOrificeArea, 1)} cm²</div>
  <div>Regurgitation: {patient.regurgitationGrade}</div>
- {patient.isBicuspid && <div className="text-yellow-400">Bicuspid Aortic Valve</div>}
+ {patient.isBicuspid && <div className="text-[#6B7280]">Bicuspid Aortic Valve</div>}
  {patient.rossProcedureCandidate && <div className="text-chrome-400">Ross Candidate</div>}
  <div>Recommendation: {patient.repairVsReplacement}</div>
  <div>Treatment: {patient.treatment}</div>
@@ -471,14 +471,14 @@ const ValvePatientHeatmap: React.FC = () => {
  </div>
  <div className="text-xs text-titanium-600">Severe/Critical</div>
  </div>
- <div className="text-center p-3 bg-amber-50 rounded-lg">
- <div className="text-xl font-bold text-amber-600">
+ <div className="text-center p-3 bg-[#F0F5FA] rounded-lg">
+ <div className="text-xl font-bold text-[#6B7280]">
  {sortedData.filter(p => p.surgicalRisk === 'High' || p.surgicalRisk === 'Prohibitive').length}
  </div>
  <div className="text-xs text-titanium-600">High Risk</div>
  </div>
- <div className="text-center p-3 bg-green-50 rounded-lg">
- <div className="text-xl font-bold text-green-600">
+ <div className="text-center p-3 bg-[#C8D4DC] rounded-lg">
+ <div className="text-xl font-bold text-[#2C4A60]">
  {sortedData.filter(p => p.repairVsReplacement === 'Repair').length}
  </div>
  <div className="text-xs text-titanium-600">Repair Candidates</div>
@@ -489,8 +489,8 @@ const ValvePatientHeatmap: React.FC = () => {
  </div>
  <div className="text-xs text-titanium-600">Ross Candidates</div>
  </div>
- <div className="text-center p-3 bg-yellow-50 rounded-lg">
- <div className="text-xl font-bold text-yellow-600">
+ <div className="text-center p-3 bg-[#F0F5FA] rounded-lg">
+ <div className="text-xl font-bold text-[#6B7280]">
  {sortedData.filter(p => p.isBicuspid).length}
  </div>
  <div className="text-xs text-titanium-600">Bicuspid Valves</div>

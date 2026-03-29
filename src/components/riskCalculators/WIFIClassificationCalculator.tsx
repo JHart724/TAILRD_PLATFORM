@@ -122,24 +122,24 @@ const WIFIClassificationCalculator: React.FC<WIFIClassificationProps> = ({
 
   const getStageColor = (stage: number): string => {
  switch (stage) {
- case 1: return 'text-green-600';
- case 2: return 'text-yellow-600';
- case 3: return 'text-amber-600';
+ case 1: return 'text-[#2C4A60]';
+ case 2: return 'text-[#6B7280]';
+ case 3: return 'text-[#6B7280]';
  case 4: return 'text-red-600';
  default: return 'text-gray-600';
  }
   };
 
   const getRiskColor = (risk: string): string => {
- if (risk === 'Very Low') return 'text-green-600';
- if (risk === 'Low') return 'text-yellow-600';
- if (risk === 'Moderate') return 'text-amber-600';
+ if (risk === 'Very Low') return 'text-[#2C4A60]';
+ if (risk === 'Low') return 'text-[#6B7280]';
+ if (risk === 'Moderate') return 'text-[#6B7280]';
  if (risk === 'High') return 'text-red-600';
  return 'text-gray-600';
   };
 
   const getBenefitColor = (benefit: string): string => {
- if (benefit === 'Low') return 'text-yellow-600';
+ if (benefit === 'Low') return 'text-[#6B7280]';
  if (benefit === 'Moderate') return 'text-chrome-600';
  if (benefit === 'High') return 'text-arterial-600';
  if (benefit === 'Very High') return 'text-red-600';

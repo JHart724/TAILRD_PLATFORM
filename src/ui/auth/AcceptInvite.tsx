@@ -189,8 +189,8 @@ const AcceptInvite: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="bg-white rounded-xl shadow-chrome-card border border-titanium-200 p-8 text-center max-w-md w-full mx-4">
-          <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Check className="w-8 h-8 text-emerald-600" />
+          <div className="w-16 h-16 bg-[#F0F5FA] rounded-full flex items-center justify-center mx-auto mb-6">
+            <Check className="w-8 h-8 text-[#2C4A60]" />
           </div>
           <h2 className="font-display text-2xl font-bold text-titanium-900 mb-3">Account Activated</h2>
           <p className="font-body text-sm text-titanium-500">
@@ -317,7 +317,7 @@ const AcceptInvite: React.FC = () => {
                 </div>
                 {/* Passwords match indicator */}
                 {confirmPassword.length > 0 && (
-                  <div className={`flex items-center mt-2 text-xs font-body ${passwordsMatch ? 'text-emerald-600' : 'text-red-500'}`}>
+                  <div className={`flex items-center mt-2 text-xs font-body ${passwordsMatch ? 'text-[#2C4A60]' : 'text-red-500'}`}>
                     {passwordsMatch ? <Check className="w-3.5 h-3.5 mr-1" /> : <X className="w-3.5 h-3.5 mr-1" />}
                     {passwordsMatch ? 'Passwords match' : 'Passwords do not match'}
                   </div>
@@ -338,11 +338,11 @@ const AcceptInvite: React.FC = () => {
                       {password.length === 0 ? (
                         <div className="w-4 h-4 rounded-full border-2 border-titanium-300 mr-2.5 flex-shrink-0" />
                       ) : check.passed ? (
-                        <Check className="w-4 h-4 text-emerald-600 mr-2.5 flex-shrink-0" />
+                        <Check className="w-4 h-4 text-[#2C4A60] mr-2.5 flex-shrink-0" />
                       ) : (
                         <X className="w-4 h-4 text-red-400 mr-2.5 flex-shrink-0" />
                       )}
-                      <span className={password.length === 0 ? 'text-titanium-500' : check.passed ? 'text-emerald-700' : 'text-red-600'}>
+                      <span className={password.length === 0 ? 'text-titanium-500' : check.passed ? 'text-[#2C4A60]' : 'text-red-600'}>
                         {check.label}
                       </span>
                     </li>

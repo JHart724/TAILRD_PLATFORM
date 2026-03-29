@@ -132,7 +132,7 @@ const SHValveCareNetworkVisualization: React.FC = () => {
  connectionStrength: 0.78, 
  x: 150, 
  y: 320, 
- color: '#059669',
+ color: '#2C4A60',
  status: 'available'
  },
  
@@ -176,7 +176,7 @@ const SHValveCareNetworkVisualization: React.FC = () => {
  connectionStrength: 0.91, 
  x: 250, 
  y: 220, 
- color: '#ea580c',
+ color: '#7A1A2E',
  status: 'available'
  },
  { 
@@ -190,7 +190,7 @@ const SHValveCareNetworkVisualization: React.FC = () => {
  connectionStrength: 0.73, 
  x: 400, 
  y: 280, 
- color: '#16a34a',
+ color: '#4A6880',
  status: 'active'
  },
  
@@ -216,7 +216,7 @@ const SHValveCareNetworkVisualization: React.FC = () => {
  connectionStrength: 0.87, 
  x: 350, 
  y: 40, 
- color: '#ea580c'
+ color: '#7A1A2E'
  },
  { 
  id: 'mra-pathway', 
@@ -265,7 +265,7 @@ const SHValveCareNetworkVisualization: React.FC = () => {
  connectionStrength: 0.88, 
  x: 350, 
  y: 200, 
- color: '#059669'
+ color: '#2C4A60'
  },
  { 
  id: 'lab-monitoring', 
@@ -545,7 +545,7 @@ const SHValveCareNetworkVisualization: React.FC = () => {
  case 'readmission-prevention': return '#b91c1c';
  case 'transition': return '#1d4ed8';
  case 'monitoring': return '#0891b2';
- case 'coordination': return '#059669';
+ case 'coordination': return '#2C4A60';
  case 'follow-up': return '#7A1A2E';
  default: return '#6b7280';
  }
@@ -590,8 +590,8 @@ const SHValveCareNetworkVisualization: React.FC = () => {
   const getNodeStatusIndicator = (node: ValveNetworkNode) => {
  if (!node.status) return null;
  const colors = {
- active: '#22c55e',
- busy: '#f59e0b',
+ active: '#4A6880',
+ busy: '#C8D4DC',
  available: '#6b7280'
  };
  return colors[node.status];
@@ -652,7 +652,7 @@ const SHValveCareNetworkVisualization: React.FC = () => {
  <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Pill className={`w-6 h-6 ${metrics.valveTherapyOptimizationRate >= 0.75 ? 'text-green-600' : 'text-red-600'}`} />
+ <Pill className={`w-6 h-6 ${metrics.valveTherapyOptimizationRate >= 0.75 ? 'text-[#2C4A60]' : 'text-red-600'}`} />
  <div>
  <div className="text-lg font-bold text-titanium-900">{toFixed(metrics.valveTherapyOptimizationRate * 100, 0)}%</div>
  <div className="text-xs text-titanium-600">Valve Therapy Optimized</div>
@@ -692,7 +692,7 @@ const SHValveCareNetworkVisualization: React.FC = () => {
  
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Timer className="w-6 h-6 text-amber-600" />
+ <Timer className="w-6 h-6 text-[#6B7280]" />
  <div>
  <div className="text-lg font-bold text-titanium-900">{toFixed(metrics.avgResponseTime, 1)}h</div>
  <div className="text-xs text-titanium-600">Avg Response</div>
@@ -839,13 +839,13 @@ const SHValveCareNetworkVisualization: React.FC = () => {
  <span>Care Transitions</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-1 bg-teal-600"></div>
+ <div className="w-4 h-1 bg-[#C8D4DC]"></div>
  <span>Remote Monitoring</span>
  </div>
  </div>
  <div className="space-y-2">
  <div className="flex items-center gap-2">
- <div className="w-4 h-1 bg-green-600"></div>
+ <div className="w-4 h-1 bg-[#C8D4DC]"></div>
  <span>Care Coordination</span>
  </div>
  <div className="flex items-center gap-2">
@@ -853,9 +853,9 @@ const SHValveCareNetworkVisualization: React.FC = () => {
  <span>High-Risk Patients</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+ <div className="w-2 h-2 bg-[#C8D4DC] rounded-full"></div>
  <span>Available</span>
- <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+ <div className="w-2 h-2 bg-[#F0F5FA] rounded-full"></div>
  <span>Busy</span>
  <div className="w-2 h-2 bg-chrome-500 rounded-full"></div>
  <span>Active</span>
@@ -881,8 +881,8 @@ const SHValveCareNetworkVisualization: React.FC = () => {
  )}
  {selectedNode.status && (
  <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${
- selectedNode.status === 'active' ? 'bg-green-100 text-green-700' :
- selectedNode.status === 'busy' ? 'bg-yellow-100 text-yellow-700' :
+ selectedNode.status === 'active' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ selectedNode.status === 'busy' ? 'bg-[#F0F5FA] text-[#6B7280]' :
  'bg-gray-100 text-gray-700'
  }`}>
  {selectedNode.status.toUpperCase()}
@@ -898,21 +898,21 @@ const SHValveCareNetworkVisualization: React.FC = () => {
  </div>
  )}
  {selectedNode.valveTherapyOptimizationRate && (
- <div className={`p-3 rounded-lg ${selectedNode.valveTherapyOptimizationRate >= 0.8 ? 'bg-green-50' : 'bg-yellow-50'}`}>
- <div className={`text-lg font-bold ${selectedNode.valveTherapyOptimizationRate >= 0.8 ? 'text-green-600' : 'text-yellow-600'}`}>
+ <div className={`p-3 rounded-lg ${selectedNode.valveTherapyOptimizationRate >= 0.8 ? 'bg-[#C8D4DC]' : 'bg-[#F0F5FA]'}`}>
+ <div className={`text-lg font-bold ${selectedNode.valveTherapyOptimizationRate >= 0.8 ? 'text-[#2C4A60]' : 'text-[#6B7280]'}`}>
  {toFixed(selectedNode.valveTherapyOptimizationRate * 100, 0)}%
  </div>
- <div className={`text-xs ${selectedNode.valveTherapyOptimizationRate >= 0.8 ? 'text-green-700' : 'text-yellow-700'}`}>
+ <div className={`text-xs ${selectedNode.valveTherapyOptimizationRate >= 0.8 ? 'text-[#2C4A60]' : 'text-[#6B7280]'}`}>
  Valve Therapy Optimized
  </div>
  </div>
  )}
  {selectedNode.readmissionRate && (
- <div className={`p-3 rounded-lg ${selectedNode.readmissionRate <= 0.15 ? 'bg-green-50' : 'bg-red-50'}`}>
- <div className={`text-lg font-bold ${selectedNode.readmissionRate <= 0.15 ? 'text-green-600' : 'text-red-600'}`}>
+ <div className={`p-3 rounded-lg ${selectedNode.readmissionRate <= 0.15 ? 'bg-[#C8D4DC]' : 'bg-red-50'}`}>
+ <div className={`text-lg font-bold ${selectedNode.readmissionRate <= 0.15 ? 'text-[#2C4A60]' : 'text-red-600'}`}>
  {toFixed(selectedNode.readmissionRate * 100, 0)}%
  </div>
- <div className={`text-xs ${selectedNode.readmissionRate <= 0.15 ? 'text-green-700' : 'text-red-700'}`}>
+ <div className={`text-xs ${selectedNode.readmissionRate <= 0.15 ? 'text-[#2C4A60]' : 'text-red-700'}`}>
  Readmission Rate
  </div>
  </div>
@@ -940,7 +940,7 @@ const SHValveCareNetworkVisualization: React.FC = () => {
  <div className="flex items-center gap-2">
  <span className="text-titanium-500">{conn.patientFlow} pts</span>
  {conn.avgResponseTime && (
- <span className={`text-xs px-1 rounded ${conn.avgResponseTime <= 24 ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'}`}>
+ <span className={`text-xs px-1 rounded ${conn.avgResponseTime <= 24 ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>
  {conn.avgResponseTime < 24 ? `${toFixed(conn.avgResponseTime, 1)}h` : `${toFixed(conn.avgResponseTime / 24, 1)}d`}
  </span>
  )}
@@ -985,7 +985,7 @@ const SHValveCareNetworkVisualization: React.FC = () => {
  <div className="space-y-3">
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Overall Valve Therapy Rate</span>
- <span className={`font-bold ${metrics.valveTherapyOptimizationRate >= 0.75 ? 'text-green-600' : 'text-red-600'}`}>
+ <span className={`font-bold ${metrics.valveTherapyOptimizationRate >= 0.75 ? 'text-[#2C4A60]' : 'text-red-600'}`}>
  {toFixed(metrics.valveTherapyOptimizationRate * 100, 1)}%
  </span>
  </div>
@@ -1012,11 +1012,11 @@ const SHValveCareNetworkVisualization: React.FC = () => {
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Avg Response Time</span>
- <span className="font-bold text-amber-600">{toFixed(metrics.avgResponseTime, 1)} hrs</span>
+ <span className="font-bold text-[#6B7280]">{toFixed(metrics.avgResponseTime, 1)} hrs</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Remote Monitoring</span>
- <span className="font-bold text-green-600">{toFixed(metrics.remoteMonitoringAdherence * 100, 1)}%</span>
+ <span className="font-bold text-[#2C4A60]">{toFixed(metrics.remoteMonitoringAdherence * 100, 1)}%</span>
  </div>
  </div>
  </div>
@@ -1029,7 +1029,7 @@ const SHValveCareNetworkVisualization: React.FC = () => {
  <div className="space-y-3">
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Reduction Rate</span>
- <span className="font-bold text-green-600">{toFixed(metrics.readmissionRateReduction * 100, 1)}%</span>
+ <span className="font-bold text-[#2C4A60]">{toFixed(metrics.readmissionRateReduction * 100, 1)}%</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">High-Risk Patients</span>

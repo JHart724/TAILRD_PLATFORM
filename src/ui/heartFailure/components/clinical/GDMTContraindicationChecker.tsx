@@ -553,8 +553,8 @@ const GDMTContraindicationChecker: React.FC<{ patientData?: PatientContext }> = 
  )}
  </div>
  </div>
- <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
- <p className="text-sm text-amber-800">
+ <div className="mt-6 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
+ <p className="text-sm text-[#6B7280]">
  <strong>Guidelines:</strong> 2022 AHA/ACC/HFSA Heart Failure Guideline; 2021 ESC Heart Failure Guideline; 2023 ACC Expert Consensus on GDMT Optimization.
  </p>
  </div>

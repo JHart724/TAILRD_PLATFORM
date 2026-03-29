@@ -35,8 +35,8 @@ const PhysicianVarianceTeaser: React.FC = () => {
       subtitle="Quality and utilization patterns across your CV physician panel"
     >
       {/* Alert banner */}
-      <div className="mb-5 bg-amber-50 border border-amber-200 rounded-xl p-4">
-        <p className="text-sm text-amber-800 leading-snug">
+      <div className="mb-5 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
+        <p className="text-sm text-[#6B7280] leading-snug">
           <span className="font-semibold">⚡ 2.4× performance gap detected</span> between your top
           and bottom quartile physicians across GDMT compliance, readmission rate, and length of
           stay.
@@ -47,24 +47,24 @@ const PhysicianVarianceTeaser: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         {/* Top quartile */}
         <div
-          className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 cursor-pointer"
+          className="bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4 cursor-pointer"
           onClick={() => setExpandedQuartile(prev => prev === 'top' ? null : 'top')}
         >
-          <p className="text-sm font-semibold text-emerald-700 mb-3">Top Quartile</p>
+          <p className="text-sm font-semibold text-[#2C4A60] mb-3">Top Quartile</p>
           <div className="space-y-2">
             {QUARTILE_METRICS.map((m) => (
               <div key={m.label} className="flex items-center justify-between">
                 <span className="text-xs text-titanium-500">{m.label}</span>
-                <span className="text-sm font-bold font-data text-emerald-600">{m.top}</span>
+                <span className="text-sm font-bold font-data text-[#2C4A60]">{m.top}</span>
               </div>
             ))}
           </div>
 
           {/* Expanded top quartile panel */}
           {expandedQuartile === 'top' && (
-            <div className="border-t border-emerald-200 pt-3 mt-3 text-xs text-emerald-700 space-y-1">
+            <div className="border-t border-[#C8D4DC] pt-3 mt-3 text-xs text-[#2C4A60] space-y-1">
               <p>Common traits: Regular GDMT reviews, structured care protocols, MDT weekly rounds</p>
-              <div className="flex items-center gap-1.5 cursor-not-allowed text-emerald-600">
+              <div className="flex items-center gap-1.5 cursor-not-allowed text-[#2C4A60]">
                 <Lock className="w-3 h-3" />
                 <span>View top physicians →</span>
               </div>
@@ -138,7 +138,7 @@ const PhysicianVarianceTeaser: React.FC = () => {
                   <td className="px-4 py-3 text-sm font-data text-titanium-700">{row.readmit}</td>
                   <td className="px-4 py-3 text-sm font-data text-titanium-700">{row.los}</td>
                   <td className="px-4 py-3 text-sm font-data text-titanium-700">{row.score}</td>
-                  <td className="px-4 py-3 text-sm text-emerald-500">{row.dot}</td>
+                  <td className="px-4 py-3 text-sm text-[#2C4A60]">{row.dot}</td>
                 </tr>
               ))}
             </tbody>

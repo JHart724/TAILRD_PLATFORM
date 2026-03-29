@@ -28,9 +28,9 @@ interface SHBenchmarkDetailModalProps {
 }
 
 const getPercentileColor = (percentile: number): string => {
-  if (percentile >= 90) return 'bg-emerald-100 text-emerald-800 border-emerald-300';
+  if (percentile >= 90) return 'bg-[#F0F5FA] text-[#2C4A60] border-[#C8D4DC]';
   if (percentile >= 75) return 'bg-chrome-100 text-chrome-800 border-chrome-300';
-  if (percentile >= 50) return 'bg-amber-100 text-amber-800 border-amber-300';
+  if (percentile >= 50) return 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]';
   return 'bg-red-100 text-red-800 border-red-300';
 };
 
@@ -70,7 +70,7 @@ const SHBenchmarkDetailModal: React.FC<SHBenchmarkDetailModalProps> = ({
  return (
  <div className="bg-white p-3 border border-gray-300 rounded-lg shadow-lg">
  <p className="font-semibold text-gray-800">{data.month}</p>
- <p className="text-sm text-teal-600">
+ <p className="text-sm text-[#2C4A60]">
  Value: <span className="font-medium">{data.value}{unit}</span>
  </p>
  </div>
@@ -99,7 +99,7 @@ const SHBenchmarkDetailModal: React.FC<SHBenchmarkDetailModalProps> = ({
  <div className="bg-white rounded-lg max-w-5xl w-full mx-4 max-h-[90vh] overflow-y-auto">
  <div className="flex justify-between items-start p-6 border-b border-gray-200">
  <div className="flex items-center">
- <Target className="w-6 h-6 text-teal-600 mr-3" />
+ <Target className="w-6 h-6 text-[#2C4A60] mr-3" />
  <div>
  <h2 className="text-2xl font-bold text-gray-900">
  {benchmarkName}
@@ -118,14 +118,14 @@ const SHBenchmarkDetailModal: React.FC<SHBenchmarkDetailModalProps> = ({
  <div className="p-6">
  {/* Current Performance Metrics */}
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
- <div className="bg-teal-50 rounded-lg p-6 text-center">
+ <div className="bg-[#C8D4DC] rounded-lg p-6 text-center">
  <div className="flex items-center justify-center mb-3">
- <TrendingUp className="w-8 h-8 text-teal-600" />
+ <TrendingUp className="w-8 h-8 text-[#2C4A60]" />
  </div>
- <div className="text-3xl font-bold text-teal-900 mb-1">
+ <div className="text-3xl font-bold text-[#2C4A60] mb-1">
  {ourValue}{unit}
  </div>
- <div className="text-sm text-teal-700">Our Performance</div>
+ <div className="text-sm text-[#2C4A60]">Our Performance</div>
  </div>
  
  <div className="bg-gray-50 rounded-lg p-6 text-center">
@@ -145,7 +145,7 @@ const SHBenchmarkDetailModal: React.FC<SHBenchmarkDetailModalProps> = ({
  <div className="text-lg font-semibold text-chrome-900 mb-1">
  {getPercentileLabel(percentile)}
  </div>
- <div className={`text-sm font-medium ${isPositive ? 'text-emerald-600' : 'text-red-600'}`}>
+ <div className={`text-sm font-medium ${isPositive ? 'text-[#2C4A60]' : 'text-red-600'}`}>
  {formatDelta(variance, unit)} vs national
  </div>
  </div>

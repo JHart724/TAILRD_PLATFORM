@@ -24,9 +24,9 @@ interface RevenuePipelineCardProps {
 
 export const RevenuePipelineCard: React.FC<RevenuePipelineCardProps> = ({ data }) => {
   const confidenceColors: Record<string, string> = {
-    high: '#10b981',
-    moderate: '#f59e0b',
-    low: '#94a3b8',
+    high: '#2C4A60',
+    moderate: '#4A6880',
+    low: '#C8D4DC',
   };
 
   const chartData = data.quarters.map((q) => ({
@@ -43,7 +43,7 @@ export const RevenuePipelineCard: React.FC<RevenuePipelineCardProps> = ({ data }
           <div>
             <h3 className="text-lg font-semibold text-titanium-900">Revenue Pipeline — Forward Projection</h3>
             <p className="text-sm text-titanium-600">
-              12-month projected: <span className="font-bold text-emerald-700">${(data.totalProjected12Month / 1_000_000).toFixed(1)}M</span> based on patient trajectory
+              12-month projected: <span className="font-bold text-[#2C4A60]">${(data.totalProjected12Month / 1_000_000).toFixed(1)}M</span> based on patient trajectory
             </p>
           </div>
           <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-lg px-3 py-1.5">
@@ -88,11 +88,11 @@ export const RevenuePipelineCard: React.FC<RevenuePipelineCardProps> = ({ data }
                   <div className="text-xs text-titanium-500">{q.procedures} projected procedures</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-bold text-emerald-700">
+                  <div className="text-sm font-bold text-[#2C4A60]">
                     ${q.revenue >= 1_000_000 ? `${(q.revenue / 1_000_000).toFixed(1)}M` : `${(q.revenue / 1_000).toFixed(0)}K`}
                   </div>
                   <div className={`text-xs font-medium ${
-                    q.confidence === 'high' ? 'text-emerald-600' : q.confidence === 'moderate' ? 'text-amber-600' : 'text-titanium-400'
+                    q.confidence === 'high' ? 'text-[#2C4A60]' : q.confidence === 'moderate' ? 'text-[#4A6880]' : 'text-[#64748b]'
                   }`}>
                     {q.confidence === 'high' ? 'High' : q.confidence === 'moderate' ? 'Moderate' : 'Low'} confidence
                   </div>
@@ -153,15 +153,15 @@ export const RevenueAtRiskCard: React.FC<RevenueAtRiskCardProps> = ({ data }) =>
             </div>
           </div>
 
-          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+          <div className="bg-[#fdf0f2] border border-[#f5c6cf] rounded-xl p-4">
             <div className="flex items-center gap-2 mb-2">
-              <TrendingDown className="w-4 h-4 text-amber-500" />
-              <span className="text-xs font-semibold text-amber-700 uppercase tracking-wide">If Deferred Past Q2</span>
+              <TrendingDown className="w-4 h-4 text-[#7A1A2E]" />
+              <span className="text-xs font-semibold text-[#7A1A2E] uppercase tracking-wide">If Deferred Past Q2</span>
             </div>
-            <div className="text-2xl font-bold text-amber-800">
+            <div className="text-2xl font-bold text-[#5C1022]">
               +${(data.deferralRevenue / 1_000_000).toFixed(1)}M
             </div>
-            <div className="text-xs text-amber-600 mt-1">
+            <div className="text-xs text-[#7A1A2E] mt-1">
               additional moves to at-risk category
             </div>
           </div>
@@ -233,9 +233,9 @@ export const TrajectoryTrendsCard: React.FC<TrajectoryTrendsCardProps> = ({ data
               of flagged patients worsening rapidly ({data.worseningRapidCount} patients)
             </div>
           </div>
-          <div className="bg-amber-50/70 border border-amber-100 rounded-xl p-4">
-            <div className="text-lg font-bold text-amber-700">{data.meanDeclineRate}</div>
-            <div className="text-xs text-amber-600 mt-1">
+          <div className="bg-[#fdf0f2] border border-[#f5c6cf] rounded-xl p-4">
+            <div className="text-lg font-bold text-[#7A1A2E]">{data.meanDeclineRate}</div>
+            <div className="text-xs text-[#7A1A2E] mt-1">
               mean decline across {data.declineMetric} gap population
             </div>
           </div>

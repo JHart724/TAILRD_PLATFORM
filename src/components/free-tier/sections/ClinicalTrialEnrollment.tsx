@@ -104,7 +104,7 @@ const ClinicalTrialEnrollment: React.FC = () => {
               <div className="bg-white border border-chrome-200 rounded-xl p-4 flex items-center gap-4">
                 {/* Status + phase badges */}
                 <div className="flex flex-col gap-1.5 flex-shrink-0">
-                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${trial.status === 'Enrolling' ? 'bg-emerald-100 text-emerald-700' : 'bg-chrome-100 text-chrome-700'}`}>
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${trial.status === 'Enrolling' ? 'bg-[#F0F5FA] text-[#2C4A60]' : 'bg-chrome-100 text-chrome-700'}`}>
                     {trial.status}
                   </span>
                   <span className="bg-chrome-100 text-chrome-700 text-[10px] font-semibold px-2 py-0.5 rounded-full">

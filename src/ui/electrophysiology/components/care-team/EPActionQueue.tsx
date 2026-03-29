@@ -64,9 +64,9 @@ const EPActionQueue: React.FC = () => {
   const getPriorityColor = (priority: string) => {
  switch(priority) {
  case 'urgent': return 'bg-red-100 text-red-900 border-red-400';
- case 'high': return 'bg-amber-100 text-amber-900 border-amber-400';
- case 'medium': return 'bg-yellow-100 text-yellow-900 border-yellow-400';
- case 'low': return 'bg-green-100 text-green-900 border-green-400';
+ case 'high': return 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]';
+ case 'medium': return 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]';
+ case 'low': return 'bg-[#C8D4DC] text-[#2C4A60] border-[#2C4A60]';
  default: return 'bg-gray-100 text-gray-900 border-gray-400';
  }
   };

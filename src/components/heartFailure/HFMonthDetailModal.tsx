@@ -52,12 +52,12 @@ const HFMonthDetailModal: React.FC<HFMonthDetailModalProps> = ({
  <span className="font-medium ml-1">{formatMoney(data.projected)}</span>
  </p>
  <p className="text-sm">
- <span className="text-teal-600">Realized:</span> 
+ <span className="text-[#2C4A60]">Realized:</span> 
  <span className="font-medium ml-1">{formatMoney(data.realized)}</span>
  </p>
  <p className="text-sm">
  <span className="text-gray-600">Variance:</span> 
- <span className={`font-medium ml-1 ${data.realized >= data.projected ? 'text-emerald-600' : 'text-red-600'}`}>
+ <span className={`font-medium ml-1 ${data.realized >= data.projected ? 'text-[#2C4A60]' : 'text-red-600'}`}>
  {formatMoney(data.realized - data.projected)}
  </span>
  </p>
@@ -102,31 +102,31 @@ const HFMonthDetailModal: React.FC<HFMonthDetailModalProps> = ({
  <div className="text-sm text-chrome-700">Projected Revenue</div>
  </div>
  
- <div className="bg-teal-50 rounded-lg p-6 text-center">
+ <div className="bg-[#C8D4DC] rounded-lg p-6 text-center">
  <div className="flex items-center justify-center mb-3">
- <TrendingUp className="w-8 h-8 text-teal-600" />
+ <TrendingUp className="w-8 h-8 text-[#2C4A60]" />
  </div>
- <div className="text-2xl font-bold text-teal-900 mb-1">
+ <div className="text-2xl font-bold text-[#2C4A60] mb-1">
  {formatMoney(realized)}
  </div>
- <div className="text-sm text-teal-700">Realized Revenue</div>
+ <div className="text-sm text-[#2C4A60]">Realized Revenue</div>
  </div>
  
- <div className={`rounded-lg p-6 text-center ${isPositive ? 'bg-emerald-50' : 'bg-red-50'}`}>
+ <div className={`rounded-lg p-6 text-center ${isPositive ? 'bg-[#F0F5FA]' : 'bg-red-50'}`}>
  <div className="flex items-center justify-center mb-3">
  {isPositive ? (
- <TrendingUp className="w-8 h-8 text-emerald-600" />
+ <TrendingUp className="w-8 h-8 text-[#2C4A60]" />
  ) : (
  <TrendingDown className="w-8 h-8 text-red-600" />
  )}
  </div>
- <div className={`text-2xl font-bold mb-1 ${isPositive ? 'text-emerald-900' : 'text-red-900'}`}>
+ <div className={`text-2xl font-bold mb-1 ${isPositive ? 'text-[#2C4A60]' : 'text-red-900'}`}>
  {formatMoney(Math.abs(variance))}
  </div>
- <div className={`text-sm ${isPositive ? 'text-emerald-700' : 'text-red-700'}`}>
+ <div className={`text-sm ${isPositive ? 'text-[#2C4A60]' : 'text-red-700'}`}>
  {isPositive ? 'Over Target' : 'Under Target'}
  </div>
- <div className={`text-xs mt-1 font-medium ${isPositive ? 'text-emerald-600' : 'text-red-600'}`}>
+ <div className={`text-xs mt-1 font-medium ${isPositive ? 'text-[#2C4A60]' : 'text-red-600'}`}>
  {formatPercent(variancePercent)}
  </div>
  </div>

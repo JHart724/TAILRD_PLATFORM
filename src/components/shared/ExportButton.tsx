@@ -176,7 +176,7 @@ const ExportButton = React.memo<ExportButtonProps>(({
  role="menuitem"
  aria-label="Export as Excel (.xlsx) - Recommended format"
  >
- <Database className="w-4 h-4 mr-3 text-green-600" aria-hidden="true" />
+ <Database className="w-4 h-4 mr-3 text-[#2C4A60]" aria-hidden="true" />
  Excel (.xlsx)
  <span className="ml-auto text-xs font-body text-titanium-500">Recommended</span>
  </button>

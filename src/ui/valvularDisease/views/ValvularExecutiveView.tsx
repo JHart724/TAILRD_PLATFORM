@@ -53,7 +53,7 @@ const valvularWaterfallCategories: WaterfallCategory[] = [
   { label: 'Valve Severity Assessment', value: 12600000, color: '#095bb5' },
   { label: 'Echo Integration', value: 8200000, color: '#0c6fdb' },
   { label: 'Guideline Implementation', value: 6800000, color: '#0d9488' },
-  { label: 'Follow-up Protocol', value: 4200000, color: '#16a34a' },
+  { label: 'Follow-up Protocol', value: 4200000, color: '#4A6880' },
 ];
 
 // ── Monthly Projected vs Realized ──────────────────────────────────
@@ -161,8 +161,8 @@ const ValvularExecutiveView: React.FC = () => {
   const kpiCards = [
  { label: 'Total Patients', value: config.kpiData.totalPatients, sub: config.kpiData.totalPatientsSub, icon: <HeartIcon />, color: 'text-gold-600' },
  { label: 'Revenue Opportunity', value: config.kpiData.totalOpportunity, sub: config.kpiData.totalOpportunitySub, icon: <DollarIcon />, color: 'text-porsche-600' },
- { label: 'Optimal Therapy Rate', value: config.kpiData.gdmtOptimization, sub: config.kpiData.gdmtOptimizationSub, icon: <ChartIcon />, color: 'text-teal-600' },
- { label: 'Avg Revenue / Patient', value: config.kpiData.avgRoi, sub: config.kpiData.avgRoiSub, icon: <TrendUpIcon />, color: 'text-green-600' },
+ { label: 'Optimal Therapy Rate', value: config.kpiData.gdmtOptimization, sub: config.kpiData.gdmtOptimizationSub, icon: <ChartIcon />, color: 'text-[#2C4A60]' },
+ { label: 'Avg Revenue / Patient', value: config.kpiData.avgRoi, sub: config.kpiData.avgRoiSub, icon: <TrendUpIcon />, color: 'text-[#2C4A60]' },
   ];
 
   return (
@@ -182,7 +182,7 @@ const ValvularExecutiveView: React.FC = () => {
  <GapIntelligenceCard data={{
    totalGaps: 6,
    categories: [
-     { name: 'Quality', patients: 313, color: '#f59e0b' },
+     { name: 'Quality', patients: 313, color: '#C8D4DC' },
      { name: 'Safety', patients: 59, color: '#ef4444' },
    ],
    topGaps: [
@@ -302,7 +302,7 @@ const ValvularExecutiveView: React.FC = () => {
  <div className="text-sm text-titanium-500 mb-1">{drg.title}</div>
  <div className="text-2xl font-bold text-titanium-900 mb-2">{drg.value}</div>
  <div className="text-xs text-titanium-400 mb-1">{drg.caseCount}</div>
- <div className={`text-xs font-medium ${drg.isPositive ? 'text-green-600' : 'text-crimson-600'}`}>
+ <div className={`text-xs font-medium ${drg.isPositive ? 'text-[#2C4A60]' : 'text-crimson-600'}`}>
  {drg.variance}
  </div>
  </button>

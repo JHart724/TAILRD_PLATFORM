@@ -25,9 +25,9 @@ const CADExecutiveKPICard: React.FC<CADExecutiveKPICardProps> = ({
   const getStatusClasses = () => {
  switch (status) {
  case 'optimal':
- return 'border-l-deep-green-600 bg-white';
+ return 'border-l-[#2C4A60] bg-white';
  case 'warning':
- return 'border-l-deep-amber-600 bg-white';
+ return 'border-l-[#6B7280] bg-white';
  case 'critical':
  return 'border-l-deep-red-600 bg-white';
  default:
@@ -36,7 +36,7 @@ const CADExecutiveKPICard: React.FC<CADExecutiveKPICardProps> = ({
   };
 
   const getTrendColor = () => {
- if (trend?.direction === 'up') return 'text-deep-green-600';
+ if (trend?.direction === 'up') return 'text-[#2C4A60]';
  return 'text-deep-red-600';
   };
 

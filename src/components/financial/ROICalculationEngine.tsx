@@ -261,7 +261,7 @@ const ROICalculationEngine: React.FC = () => {
  className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
  isCalculating 
  ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
- : 'bg-green-500 text-white hover:bg-green-600'
+ : 'bg-[#C8D4DC] text-white hover:bg-[#C8D4DC]'
  } transition-colors`}
  >
  <Calculator className="w-4 h-4" />
@@ -281,15 +281,15 @@ const ROICalculationEngine: React.FC = () => {
 
  {/* Key Results Dashboard */}
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
- <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border border-green-200">
+ <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border border-[#2C4A60]">
  <div className="flex items-center gap-3 mb-2">
- <DollarSign className="w-8 h-8 text-green-600" />
+ <DollarSign className="w-8 h-8 text-[#2C4A60]" />
  <div>
- <div className="text-sm text-green-700 font-medium">Net ROI</div>
- <div className="text-3xl font-bold text-green-800">{toFixed(calculateROI.roiPercentage, 0)}%</div>
+ <div className="text-sm text-[#2C4A60] font-medium">Net ROI</div>
+ <div className="text-3xl font-bold text-[#2C4A60]">{toFixed(calculateROI.roiPercentage, 0)}%</div>
  </div>
  </div>
- <div className="text-sm text-green-600">Over {selectedTimeframe}</div>
+ <div className="text-sm text-[#2C4A60]">Over {selectedTimeframe}</div>
  </div>
 
  <div className="bg-gradient-to-br from-chrome-50 to-chrome-100 p-6 rounded-xl border border-chrome-200">
@@ -314,15 +314,15 @@ const ROICalculationEngine: React.FC = () => {
  <div className="text-sm text-arterial-600">Time to recover investment</div>
  </div>
 
- <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-6 rounded-xl border border-amber-200">
+ <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-6 rounded-xl border border-[#C8D4DC]">
  <div className="flex items-center gap-3 mb-2">
- <Target className="w-8 h-8 text-amber-600" />
+ <Target className="w-8 h-8 text-[#6B7280]" />
  <div>
- <div className="text-sm text-amber-700 font-medium">Annual Savings</div>
- <div className="text-3xl font-bold text-amber-800">${toFixed(calculateROI.annualSavings / 1000000, 1)}M</div>
+ <div className="text-sm text-[#6B7280] font-medium">Annual Savings</div>
+ <div className="text-3xl font-bold text-[#6B7280]">${toFixed(calculateROI.annualSavings / 1000000, 1)}M</div>
  </div>
  </div>
- <div className="text-sm text-amber-600">Per year potential</div>
+ <div className="text-sm text-[#6B7280]">Per year potential</div>
  </div>
  </div>
 
@@ -393,7 +393,7 @@ const ROICalculationEngine: React.FC = () => {
  </div>
  </div>
  <div className="text-right">
- <div className="font-bold text-green-600">
+ <div className="font-bold text-[#2C4A60]">
  ${toFixed(saving.annualSaving * saving.probability / 1000, 0)}K
  </div>
  <div className="text-xs text-titanium-500">
@@ -458,7 +458,7 @@ const ROICalculationEngine: React.FC = () => {
  
  <div className="flex items-center">
  {metric.impact > 0 ? 
- <TrendingUp className="w-4 h-4 text-green-500" /> : 
+ <TrendingUp className="w-4 h-4 text-[#2C4A60]" /> : 
  <TrendingDown className="w-4 h-4 text-red-500" />
  }
  </div>
@@ -470,7 +470,7 @@ const ROICalculationEngine: React.FC = () => {
  </div>
  
  <div className="mt-2 flex items-center justify-between">
- <span className={`text-sm font-medium ${metric.impact > 0 ? 'text-green-600' : 'text-red-600'}`}>
+ <span className={`text-sm font-medium ${metric.impact > 0 ? 'text-[#2C4A60]' : 'text-red-600'}`}>
  {metric.impact > 0 ? '+' : ''}{toFixed(metric.impact, 1)}%
  </span>
  <span className="text-xs text-titanium-500">{metric.confidence}% confidence</span>
@@ -492,7 +492,7 @@ const ROICalculationEngine: React.FC = () => {
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  <div>
  <div className="text-sm text-titanium-600">Recommendation</div>
- <div className="text-lg font-bold text-green-600">
+ <div className="text-lg font-bold text-[#2C4A60]">
  {calculateROI.roiPercentage > 200 ? 'Strongly Recommended' : 
  calculateROI.roiPercentage > 100 ? 'Recommended' : 
  calculateROI.roiPercentage > 0 ? 'Consider' : 'Reconsider'}

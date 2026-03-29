@@ -208,8 +208,8 @@ const ValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ 
 
   const getRiskColor = (category: string) => {
  switch (category) {
- case 'Low': return 'text-green-600 bg-green-50 border-green-200';
- case 'Intermediate': return 'text-amber-600 bg-amber-50 border-amber-200';
+ case 'Low': return 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]';
+ case 'Intermediate': return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
  case 'High/Prohibitive': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
@@ -217,8 +217,8 @@ const ValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ 
 
   const getRiskBarColor = (category: string) => {
  switch (category) {
- case 'Low': return 'bg-green-500';
- case 'Intermediate': return 'bg-amber-500';
+ case 'Low': return 'bg-[#C8D4DC]';
+ case 'Intermediate': return 'bg-[#F0F5FA]';
  case 'High/Prohibitive': return 'bg-crimson-500';
  default: return 'bg-titanium-500';
  }
@@ -380,11 +380,11 @@ const ValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ 
  <div className="font-semibold mb-2">Risk Thresholds</div>
  <div className="space-y-1 text-xs">
  <div className="flex items-center gap-2">
- <div className="w-3 h-3 rounded bg-green-500"></div>
+ <div className="w-3 h-3 rounded bg-[#C8D4DC]"></div>
  Low Risk: STS &lt;4% - TAVR or SAVR
  </div>
  <div className="flex items-center gap-2">
- <div className="w-3 h-3 rounded bg-amber-500"></div>
+ <div className="w-3 h-3 rounded bg-[#F0F5FA]"></div>
  Intermediate: STS 4-8% - Heart Team Discussion
  </div>
  <div className="flex items-center gap-2">
@@ -395,10 +395,10 @@ const ValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ 
  </div>
  </div>
 
- <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+ <div className="p-4 bg-[#F0F5FA] border border-[#C8D4DC] rounded-lg">
  <div className="flex items-start gap-2">
- <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
- <div className="text-xs text-amber-800">
+ <AlertTriangle className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />
+ <div className="text-xs text-[#6B7280]">
  <div className="font-semibold mb-1">Clinical Disclaimer</div>
  <p>These are estimated risk scores for educational purposes. Actual STS and EuroSCORE II calculations require the full validated algorithms. Always use the official calculators for clinical decision-making.</p>
  </div>

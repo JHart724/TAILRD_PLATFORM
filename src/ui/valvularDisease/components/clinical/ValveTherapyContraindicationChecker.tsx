@@ -215,9 +215,9 @@ const ValveTherapyContraindicationChecker: React.FC<{ patientData?: PatientConte
   const getStatusColor = (status: ContraindicationResult['status']) => {
  switch (status) {
  case 'contraindicated': return 'text-crimson-800 bg-crimson-100 border-crimson-300';
- case 'caution': return 'text-amber-800 bg-amber-100 border-amber-300';
+ case 'caution': return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
  case 'monitor': return 'text-porsche-800 bg-porsche-100 border-porsche-300';
- case 'safe': return 'text-green-800 bg-green-100 border-green-300';
+ case 'safe': return 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };
@@ -281,8 +281,8 @@ const ValveTherapyContraindicationChecker: React.FC<{ patientData?: PatientConte
  </div>
  </div>
 
- <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
- <h3 className="font-semibold text-amber-800 mb-3">Clinical Conditions</h3>
+ <div className="p-4 bg-[#F0F5FA] border border-[#C8D4DC] rounded-lg">
+ <h3 className="font-semibold text-[#6B7280] mb-3">Clinical Conditions</h3>
  <div className="space-y-3">
  {[
  { key: 'hasActiveEndocarditis', label: 'Active endocarditis' },
@@ -303,7 +303,7 @@ const ValveTherapyContraindicationChecker: React.FC<{ patientData?: PatientConte
  type="checkbox"
  checked={patientData[condition.key as keyof PatientData] as boolean}
  onChange={(e) => updatePatientData(condition.key as keyof PatientData, e.target.checked)}
- className="rounded text-amber-600"
+ className="rounded text-[#6B7280]"
  />
  <span className="text-sm font-medium text-titanium-700">{condition.label}</span>
  </label>
@@ -376,16 +376,16 @@ const ValveTherapyContraindicationChecker: React.FC<{ patientData?: PatientConte
  </div>
 
  {results.some(r => r.alternatives.length > 0) && (
- <div className="p-6 bg-amber-50 border border-amber-200 rounded-xl">
- <h3 className="text-lg font-semibold text-amber-800 mb-4">Alternative Pathways</h3>
+ <div className="p-6 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl">
+ <h3 className="text-lg font-semibold text-[#6B7280] mb-4">Alternative Pathways</h3>
  <div className="space-y-4">
  {results.filter(r => r.alternatives.length > 0).map((result) => (
  <div key={result.therapy}>
- <div className="font-semibold text-amber-800 mb-2">{result.therapy} Alternatives:</div>
- <ul className="text-sm text-amber-700 space-y-1">
+ <div className="font-semibold text-[#6B7280] mb-2">{result.therapy} Alternatives:</div>
+ <ul className="text-sm text-[#6B7280] space-y-1">
  {result.alternatives.map((alt) => (
  <li key={alt} className="flex items-start gap-1">
- <div className="w-1 h-1 bg-amber-600 rounded-full mt-2 flex-shrink-0"></div>
+ <div className="w-1 h-1 bg-[#F0F5FA] rounded-full mt-2 flex-shrink-0"></div>
  {alt}
  </li>
  ))}
@@ -398,8 +398,8 @@ const ValveTherapyContraindicationChecker: React.FC<{ patientData?: PatientConte
  </div>
  </div>
 
- <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
- <p className="text-sm text-amber-800">
+ <div className="mt-6 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
+ <p className="text-sm text-[#6B7280]">
  <strong>Guidelines:</strong> 2020 ACC/AHA Valvular Heart Disease Guideline; 2021 ESC/EACTS Valvular Heart Disease Guideline; STS/ACC TVT Registry Standards.
  </p>
  </div>

@@ -469,7 +469,7 @@ const ExecutiveView: React.FC = () => {
        </div>
        <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-100 rounded-lg px-3 py-1.5">
          <Zap className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-         <span className="text-xs text-blue-700 font-medium">Auto-calculated from EHR data via Redox</span>
+         <span className="text-xs text-blue-700 font-medium">Auto-calculated from EHR integration</span>
        </div>
      </div>
    </div>
@@ -485,15 +485,15 @@ const ExecutiveView: React.FC = () => {
          <div className="text-3xl font-bold text-red-600">487</div>
          <div className="text-xs text-red-500 mt-1">Intervention recommended</div>
        </div>
-       <div className="bg-white rounded-xl p-4 border border-green-200 shadow-sm">
+       <div className="bg-white rounded-xl p-4 border border-[#C8D4DC] shadow-sm">
          <div className="text-sm text-titanium-600 mb-1">Mean Improvement (Actioned)</div>
-         <div className="text-3xl font-bold text-green-600">+14.2</div>
-         <div className="text-xs text-green-500 mt-1">pts at 90 days</div>
+         <div className="text-3xl font-bold text-[#2C4A60]">+14.2</div>
+         <div className="text-xs text-[#4A6880] mt-1">pts at 90 days</div>
        </div>
-       <div className="bg-white rounded-xl p-4 border border-amber-200 shadow-sm">
+       <div className="bg-white rounded-xl p-4 border border-[#f5c6cf] shadow-sm">
          <div className="text-sm text-titanium-600 mb-1">Showing Decline</div>
-         <div className="text-3xl font-bold text-amber-600">134</div>
-         <div className="text-xs text-amber-500 mt-1">&gt;5 pt drop from prior</div>
+         <div className="text-3xl font-bold text-[#7A1A2E]">134</div>
+         <div className="text-xs text-[#7A1A2E] mt-1">&gt;5 pt drop from prior</div>
        </div>
      </div>
    </div>
@@ -505,8 +505,8 @@ const ExecutiveView: React.FC = () => {
    categories: [
      { name: 'Therapy', patients: 1200, color: '#3b82f6' },
      { name: 'Safety', patients: 180, color: '#ef4444' },
-     { name: 'Growth', patients: 420, color: '#1A4A2E' },
-     { name: 'Quality', patients: 850, color: '#f59e0b' },
+     { name: 'Growth', patients: 420, color: '#4A6880' },
+     { name: 'Quality', patients: 850, color: '#C8D4DC' },
    ],
    topGaps: [
      { name: 'ATTR-CM Detection', patients: 105, opportunity: '$4.2M' },
@@ -641,15 +641,15 @@ const ExecutiveView: React.FC = () => {
  <div className="mb-6">
  <div 
  onClick={() => setShowOpportunityModal(true)}
- className="bg-gradient-to-br from-emerald-50 to-chrome-50 rounded-lg border-2 border-emerald-200 p-8 cursor-pointer hover:shadow-lg transition-shadow"
+ className="bg-gradient-to-br from-[#f0f4f8] to-[#e8eef3] rounded-lg border-2 border-[#C8D4DC] p-8 cursor-pointer hover:shadow-lg transition-shadow"
  >
  <div className="flex items-start justify-between">
  <div className="flex-1">
  <div className="flex items-center mb-3">
- <TrendingUp className="w-6 h-6 text-emerald-600 mr-2" />
+ <TrendingUp className="w-6 h-6 text-[#2C4A60] mr-2" />
  <h3 className="text-xl font-bold">Revenue Opportunities Pipeline</h3>
  </div>
- <div className="text-5xl font-bold text-emerald-600 mb-2">$127,240</div>
+ <div className="text-5xl font-bold text-[#2C4A60] mb-2">$127,240</div>
  <div className="text-gray-600 text-lg mb-4">23 high-priority documentation opportunities identified</div>
  
  <div className="grid grid-cols-3 gap-4 mt-4">
@@ -658,9 +658,9 @@ const ExecutiveView: React.FC = () => {
  <div className="text-2xl font-bold text-red-600">8</div>
  <div className="text-sm text-gray-500">$68,600</div>
  </div>
- <div className="bg-white rounded-lg p-3 border border-amber-200">
+ <div className="bg-white rounded-lg p-3 border border-[#f5c6cf]">
  <div className="text-sm text-gray-600">Medium Priority</div>
- <div className="text-2xl font-bold text-amber-600">12</div>
+ <div className="text-2xl font-bold text-[#7A1A2E]">12</div>
  <div className="text-sm text-gray-500">$50,240</div>
  </div>
  <div className="bg-white rounded-lg p-3 border border-gray-200">
@@ -699,19 +699,19 @@ const ExecutiveView: React.FC = () => {
  const drgData = getDRGData(drgCode);
  if (drgData) setSelectedDRG(drgData);
  }}
- className="bg-gradient-to-r from-white to-emerald-50 rounded-xl p-4 border border-titanium-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+ className="bg-gradient-to-r from-white to-[#f0f4f8] rounded-xl p-4 border border-titanium-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
  >
  <div className="flex items-center gap-3 mb-3">
- <DollarSign className="w-8 h-8 text-medical-green-600" />
+ <DollarSign className="w-8 h-8 text-[#2C4A60]" />
  <div>
- <div className="font-semibold text-medical-green-900">{card.title}</div>
- <div className="text-2xl font-bold text-medical-green-800">{card.value}</div>
+ <div className="font-semibold text-[#1e293b]">{card.title}</div>
+ <div className="text-2xl font-bold text-[#2C4A60]">{card.value}</div>
  </div>
  </div>
- <div className="text-sm text-medical-green-700 mb-2">
+ <div className="text-sm text-[#4A6880] mb-2">
  {card.caseCount}
  </div>
- <div className={`text-sm ${card.isPositive ? 'text-medical-green-600' : 'text-medical-red-600'}`}>
+ <div className={`text-sm ${card.isPositive ? 'text-[#2C4A60]' : 'text-medical-red-600'}`}>
  {card.variance}
  </div>
  </div>
@@ -726,22 +726,22 @@ const ExecutiveView: React.FC = () => {
  <div className="text-center">
  <div className="text-2xl font-bold text-titanium-900">{heartFailureConfig.drgMetrics.currentCMI}</div>
  <div className="text-sm text-titanium-600">Current CMI</div>
- <div className="text-xs text-medical-green-600">+0.28 vs target</div>
+ <div className="text-xs text-[#2C4A60]">+0.28 vs target</div>
  </div>
  <div className="text-center">
- <div className="text-2xl font-bold text-medical-green-700">{heartFailureConfig.drgMetrics.monthlyOpportunity}</div>
+ <div className="text-2xl font-bold text-[#2C4A60]">{heartFailureConfig.drgMetrics.monthlyOpportunity}</div>
  <div className="text-sm text-titanium-600">Monthly Opportunity</div>
  <div className="text-xs text-titanium-500">From DRG optimization</div>
  </div>
  <div className="text-center">
- <div className="text-2xl font-bold text-medical-amber-700">{heartFailureConfig.drgMetrics.documentationRate}</div>
+ <div className="text-2xl font-bold text-[#7A1A2E]">{heartFailureConfig.drgMetrics.documentationRate}</div>
  <div className="text-sm text-titanium-600">Documentation Rate</div>
  <div className="text-xs text-titanium-500">CC/MCC capture</div>
  </div>
  <div className="text-center">
  <div className="text-2xl font-bold text-titanium-900">{heartFailureConfig.drgMetrics.avgLOS}</div>
  <div className="text-sm text-titanium-600">Avg LOS</div>
- <div className="text-xs text-medical-green-600">{heartFailureConfig.drgMetrics.losBenchmark}</div>
+ <div className="text-xs text-[#2C4A60]">{heartFailureConfig.drgMetrics.losBenchmark}</div>
  </div>
  </div>
  </div>

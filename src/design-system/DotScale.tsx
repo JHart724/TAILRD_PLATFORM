@@ -29,7 +29,7 @@ const DotScale: React.FC<DotScaleProps> = ({
   const isBetter = lowerIsBetter ? value < nationalAvg : value > nationalAvg;
 
   // Glow colors: emerald for better, amber for worse
-  const dotColor = isBetter ? '#4ADE80' : '#FBBF24';
+  const dotColor = isBetter ? '#2C4A60' : '#6B7280';
   const dotGlow  = isBetter
     ? '0 0 6px rgba(74, 222, 128, 0.5), 0 0 12px rgba(74, 222, 128, 0.2)'
     : '0 0 6px rgba(251, 191, 36, 0.5), 0 0 12px rgba(251, 191, 36, 0.2)';

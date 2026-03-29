@@ -39,8 +39,8 @@ const PremiumUnlock: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
           <div>
             <div className="inline-flex items-center gap-2 bg-white/10 rounded-full px-3 py-1 mb-4">
-              <Zap className="w-4 h-4 text-amber-400" />
-              <span className="text-xs font-body font-semibold text-amber-300 uppercase tracking-wider">TAILRD PREMIUM</span>
+              <Zap className="w-4 h-4 text-[#6B7280]" />
+              <span className="text-xs font-body font-semibold text-[#6B7280] uppercase tracking-wider">TAILRD PREMIUM</span>
             </div>
             <h2 className="text-2xl md:text-3xl font-display font-bold mb-2" style={{ color: '#ffffff', textShadow: '0 0 20px rgba(180,210,240,0.25), 0 1px 0 rgba(0,0,0,0.4)', fontWeight: 600, letterSpacing: '-0.3px' }}>
               You have {formatDollars(PLATFORM_TOTALS.modules.hf.opportunity)} in identified opportunity — act on it

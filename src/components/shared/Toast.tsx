@@ -64,11 +64,11 @@ const Toast: React.FC<ToastProps> = ({ toast, onDismiss }) => {
   const getAccentColor = () => {
  switch (toast.type) {
  case 'success':
- return 'bg-green-500';
+ return 'bg-[#C8D4DC]';
  case 'error':
  return 'bg-arterial-600';
  case 'warning':
- return 'bg-amber-500';
+ return 'bg-[#F0F5FA]';
  case 'info':
  default:
  return 'bg-chrome-500';
@@ -78,11 +78,11 @@ const Toast: React.FC<ToastProps> = ({ toast, onDismiss }) => {
   const getIconColor = () => {
  switch (toast.type) {
  case 'success':
- return 'text-green-600';
+ return 'text-[#2C4A60]';
  case 'error':
  return 'text-arterial-600';
  case 'warning':
- return 'text-amber-600';
+ return 'text-[#6B7280]';
  case 'info':
  default:
  return 'text-chrome-600';

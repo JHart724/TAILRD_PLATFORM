@@ -24,14 +24,14 @@ export const premiumColors = {
  800: '#1F2937', 900: '#111827', 950: '#0A0F1A',
   },
   green: {
- 950: '#052e16', 900: '#0a3d1f', 800: '#116932', 700: '#15803d',
- 600: '#16a34a', 500: '#22c55e', 400: '#4ade80', 300: '#86efac',
+ 950: '#052e16', 900: '#0a3d1f', 800: '#116932', 700: '#2C4A60',
+ 600: '#4A6880', 500: '#4A6880', 400: '#4ade80', 300: '#86efac',
  200: '#bbf7d0', 100: '#dcfce7', 50: '#f0fdf4',
   },
   amber: {
  950: '#451a03', 900: '#78350f', 800: '#92400e', 700: '#b45309',
- 600: '#d97706', 500: '#f59e0b', 400: '#fbbf24', 300: '#fcd34d',
- 200: '#fde68a', 100: '#fef3c7', 50: '#fffbeb',
+ 600: '#6B7280', 500: '#C8D4DC', 400: '#C8D4DC', 300: '#fcd34d',
+ 200: '#fde68a', 100: '#F0F5FA', 50: '#fffbeb',
   },
   crimson: {
  950: '#100306', 900: '#20050C', 800: '#3E0A17', 700: '#5C1022',
@@ -39,7 +39,7 @@ export const premiumColors = {
  200: '#E8A1AD', 100: '#F5D0D6', 50: '#FDF2F3',
   },
   forest: {
- 950: '#0E2A1A', 900: '#0f3d24', 800: '#14532d', 700: '#15803d',
+ 950: '#0E2A1A', 900: '#0f3d24', 800: '#14532d', 700: '#2C4A60',
  600: '#1A4A2E', 500: '#2D7A4A', 400: '#5CAA72', 300: '#86efac',
  200: '#bbf7d0', 100: '#dcfce7', 50: '#f0fdf4',
   },
@@ -67,8 +67,8 @@ export const premiumColors = {
  porsche: 'linear-gradient(135deg, #0D2640 0%, #3D6F94 40%, #5A8AB0 70%, #A8C5DD 100%)',
  porscheDark: 'linear-gradient(135deg, #061525 0%, #1A3B5C 35%, #3D6F94 70%, #7BA3C4 100%)',
  porscheSubtle: 'linear-gradient(135deg, #F0F5FA 0%, #D4E4F0 50%, #A8C5DD 100%)',
- emerald: 'linear-gradient(135deg, #052e16 0%, #16a34a 50%, #4ade80 100%)',
- amber: 'linear-gradient(135deg, #451a03 0%, #d97706 50%, #fbbf24 100%)',
+ emerald: 'linear-gradient(135deg, #1E2D3D 0%, #2C4A60 50%, #C8D4DC 100%)',
+ amber: 'linear-gradient(135deg, #1E2D3D 0%, #6B7280 50%, #C8D4DC 100%)',
  crimson: 'linear-gradient(135deg, #100306 0%, #7A1A2E 50%, #D4707F 100%)',
  forest: 'linear-gradient(135deg, #0E2A1A 0%, #1A4A2E 50%, #5CAA72 100%)',
  gold: 'linear-gradient(135deg, #3A2C08 0%, #8B6914 50%, #D4B85C 100%)',
@@ -98,14 +98,14 @@ export const clinicalColors = {
   critical: premiumColors.crimson[600],
   info: porsche[600],
   opportunity: premiumColors.amber[500],
-  secondary: premiumColors.teal[600],
+  secondary: porsche[600],
 } as const;
 
 export const chartColors = [
-  '#2C4A60', '#7A1A2E', '#1A4A2E',
-  '#8B6914', '#4A6880', '#2E3440',
-  premiumColors.titanium[500], porsche[300], premiumColors.teal[400],
-  premiumColors.green[600],
+  '#2C4A60', '#7A1A2E', '#4A6880',
+  '#6B7280', '#C8D4DC', '#2E3440',
+  premiumColors.titanium[500], porsche[300], porsche[400],
+  porsche[600],
 ] as const;
 
 export const moduleThemes = {

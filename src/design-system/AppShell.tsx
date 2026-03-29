@@ -46,7 +46,7 @@ export default function AppShell({ children }: AppShellProps) {
     <div className="flex min-h-screen app-surface">
       <a href="#main-content" className="skip-nav">Skip to main content</a>
       <Sidebar />
-      <div ref={scrollRef} className="flex flex-col flex-1 min-w-0 overflow-y-auto h-screen">
+      <div ref={scrollRef} id="main-scroll-container" className="flex flex-col flex-1 min-w-0 overflow-y-auto h-screen">
         <TopBar moduleName={moduleName} />
         <main id="main-content" className="flex-1 p-6">
           {children}

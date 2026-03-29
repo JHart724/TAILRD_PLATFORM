@@ -100,7 +100,7 @@ interface Recommendation {
 
 const RECOMMENDATIONS: Recommendation[] = [
   { hospital: 'Memorial Hermann', field: 'Device Serial Numbers', currentRate: 22, suggestion: 'Implement barcode scanning at device implant to auto-populate serial numbers.' },
-  { hospital: 'Memorial Hermann', field: 'Medications', currentRate: 38, suggestion: 'Enable Redox medication reconciliation feed from pharmacy system.' },
+  { hospital: 'Memorial Hermann', field: 'Medications', currentRate: 38, suggestion: 'Enable EHR integration medication reconciliation feed from pharmacy system.' },
   { hospital: 'Memorial Hermann', field: 'LVEF Populated', currentRate: 45, suggestion: 'Map echo lab DICOM structured reports to auto-extract LVEF values.' },
   { hospital: 'Regional Medical', field: 'Device Serial Numbers', currentRate: 58, suggestion: 'Cross-reference implant registry with device tracking module.' },
   { hospital: 'Regional Medical', field: 'Follow-up Scheduling', currentRate: 61, suggestion: 'Integrate follow-up appointment feed from scheduling system.' },
@@ -109,14 +109,14 @@ const RECOMMENDATIONS: Recommendation[] = [
 // ─── Quality Score Color ─────────────────────────────────────────────────────
 
 function qualityColor(score: number): string {
-  if (score >= 80) return '#059669';
-  if (score >= 60) return '#D97706';
+  if (score >= 80) return '#4A6880';
+  if (score >= 60) return '#6B7280';
   return '#DC2626';
 }
 
 function qualityBg(score: number): string {
-  if (score >= 80) return 'bg-green-100 text-green-800';
-  if (score >= 60) return 'bg-amber-100 text-amber-800';
+  if (score >= 80) return 'bg-[#C8D4DC] text-[#2C4A60]';
+  if (score >= 60) return 'bg-[#F0F5FA] text-[#6B7280]';
   return 'bg-red-100 text-red-800';
 }
 
@@ -199,7 +199,7 @@ const DataManagement: React.FC = () => {
             <Legend wrapperStyle={{ fontSize: 12 }} />
             <Bar dataKey="BSW" fill="#7A1A2E" barSize={12} radius={[0, 4, 4, 0]} />
             <Bar dataKey="MSH" fill="#2563EB" barSize={12} radius={[0, 4, 4, 0]} />
-            <Bar dataKey="MH" fill="#059669" barSize={12} radius={[0, 4, 4, 0]} />
+            <Bar dataKey="MH" fill="#4A6880" barSize={12} radius={[0, 4, 4, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -225,7 +225,7 @@ const DataManagement: React.FC = () => {
                     <td key={i} className="py-3 text-center">
                       <span
                         className={`inline-flex items-center gap-1 text-sm font-medium ${
-                          val >= 80 ? 'text-green-700' : val >= 60 ? 'text-amber-600' : 'text-red-600'
+                          val >= 80 ? 'text-[#2C4A60]' : val >= 60 ? 'text-[#6B7280]' : 'text-red-600'
                         }`}
                       >
                         {val >= 80 ? (
@@ -247,7 +247,7 @@ const DataManagement: React.FC = () => {
       {/* Recommendations */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
         <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-1.5">
-          <AlertCircle className="w-4 h-4 text-amber-500" />
+          <AlertCircle className="w-4 h-4 text-[#6B7280]" />
           Improvement Recommendations
         </h3>
         <div className="space-y-3">

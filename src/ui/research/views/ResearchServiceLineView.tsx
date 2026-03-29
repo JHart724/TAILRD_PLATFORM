@@ -441,20 +441,20 @@ const caseFlags: Record<string, Array<{ field: string; issue: string; recommenda
 // ── Helpers ──────────────────────────────────────────────────
 
 function completenessColor(pct: number): string {
-  if (pct >= 85) return 'bg-green-500';
-  if (pct >= 60) return 'bg-amber-500';
+  if (pct >= 85) return 'bg-[#C8D4DC]';
+  if (pct >= 60) return 'bg-[#F0F5FA]';
   return 'bg-red-500';
 }
 
 function completenessTextColor(pct: number): string {
-  if (pct >= 85) return 'text-green-700';
-  if (pct >= 60) return 'text-amber-700';
+  if (pct >= 85) return 'text-[#2C4A60]';
+  if (pct >= 60) return 'text-[#6B7280]';
   return 'text-red-700';
 }
 
 function confidenceDot(pct: number): string {
-  if (pct >= 85) return 'bg-green-500';
-  if (pct >= 60) return 'bg-amber-500';
+  if (pct >= 85) return 'bg-[#C8D4DC]';
+  if (pct >= 60) return 'bg-[#F0F5FA]';
   return 'bg-red-500';
 }
 
@@ -462,7 +462,7 @@ function sourceChip(src: string): string {
   switch (src) {
     case 'Structured': return 'bg-slate-100 text-slate-700';
     case 'Calculated': return 'bg-blue-100 text-blue-700';
-    case 'Inferred': return 'bg-amber-100 text-amber-700';
+    case 'Inferred': return 'bg-[#F0F5FA] text-[#6B7280]';
     case 'Manual': return 'bg-slate-100 text-slate-700';
     default: return 'bg-gray-100 text-gray-600';
   }
@@ -470,9 +470,9 @@ function sourceChip(src: string): string {
 
 function statusChip(status: string): string {
   switch (status) {
-    case 'Approved': return 'bg-green-100 text-green-800';
+    case 'Approved': return 'bg-[#C8D4DC] text-[#2C4A60]';
     case 'Submitted': return 'bg-blue-100 text-blue-800';
-    case 'In Review': return 'bg-amber-100 text-amber-800';
+    case 'In Review': return 'bg-[#F0F5FA] text-[#6B7280]';
     case 'Auto-populated': return 'bg-slate-100 text-slate-600';
     default: return 'bg-gray-100 text-gray-600';
   }
@@ -480,9 +480,9 @@ function statusChip(status: string): string {
 
 function sponsorBadge(type: string): string {
   switch (type) {
-    case 'industry': return 'bg-amber-100 text-amber-800';
+    case 'industry': return 'bg-[#F0F5FA] text-[#6B7280]';
     case 'investigator': return 'bg-slate-100 text-slate-700';
-    case 'nih': return 'bg-green-100 text-green-800';
+    case 'nih': return 'bg-[#C8D4DC] text-[#2C4A60]';
     case 'api': return 'bg-indigo-100 text-indigo-700';
     default: return 'bg-gray-100 text-gray-600';
   }
@@ -731,7 +731,7 @@ const ResearchServiceLineView: React.FC = () => {
                         <div
                           key={f.label}
                           className={`flex items-center justify-between py-1.5 px-2 rounded-md ${
-                            f.confidence < 70 ? 'bg-amber-50 border border-amber-200' : 'hover:bg-slate-50'
+                            f.confidence < 70 ? 'bg-[#F0F5FA] border border-[#C8D4DC]' : 'hover:bg-slate-50'
                           }`}
                         >
                           <div className="flex-1 min-w-0">
@@ -772,13 +772,13 @@ const ResearchServiceLineView: React.FC = () => {
                       />
                     </div>
                     <div className="grid grid-cols-3 gap-2 text-center">
-                      <div className="bg-green-50 rounded-lg p-2">
-                        <div className="text-lg font-bold text-green-700">{highConf}</div>
-                        <div className="text-[10px] text-green-600">High conf.</div>
+                      <div className="bg-[#C8D4DC] rounded-lg p-2">
+                        <div className="text-lg font-bold text-[#2C4A60]">{highConf}</div>
+                        <div className="text-[10px] text-[#2C4A60]">High conf.</div>
                       </div>
-                      <div className="bg-amber-50 rounded-lg p-2">
-                        <div className="text-lg font-bold text-amber-700">{needsReview}</div>
-                        <div className="text-[10px] text-amber-600">Needs review</div>
+                      <div className="bg-[#F0F5FA] rounded-lg p-2">
+                        <div className="text-lg font-bold text-[#6B7280]">{needsReview}</div>
+                        <div className="text-[10px] text-[#6B7280]">Needs review</div>
                       </div>
                       <div className="bg-red-50 rounded-lg p-2">
                         <div className="text-lg font-bold text-red-700">{missing}</div>
@@ -796,7 +796,7 @@ const ResearchServiceLineView: React.FC = () => {
                   Flags ({flags.length})
                 </h3>
                 {flags.length === 0 ? (
-                  <div className="flex items-center gap-2 text-xs text-green-600 py-2">
+                  <div className="flex items-center gap-2 text-xs text-[#2C4A60] py-2">
                     <CheckCircle className="w-4 h-4" />
                     No flags for this case
                   </div>
@@ -822,7 +822,7 @@ const ResearchServiceLineView: React.FC = () => {
                   {[
                     { label: 'Structured', count: structured, color: 'bg-slate-500', bgColor: 'bg-slate-100' },
                     { label: 'Calculated', count: calculated, color: 'bg-blue-500', bgColor: 'bg-blue-100' },
-                    { label: 'Inferred', count: inferred, color: 'bg-amber-500', bgColor: 'bg-amber-100' },
+                    { label: 'Inferred', count: inferred, color: 'bg-[#F0F5FA]', bgColor: 'bg-[#F0F5FA]' },
                     { label: 'Manual', count: manual, color: 'bg-slate-500', bgColor: 'bg-slate-100' },
                   ].map((s) => (
                     <div key={s.label} className="flex items-center gap-2">
@@ -876,9 +876,9 @@ const ResearchServiceLineView: React.FC = () => {
                   className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2E3440]/20 focus:border-[#2E3440]"
                 />
               </div>
-              <div className="flex items-center gap-1.5 bg-green-50 border border-green-200 rounded-full px-3 py-1.5">
-                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-xs font-medium text-green-700">Live: ClinicalTrials.gov</span>
+              <div className="flex items-center gap-1.5 bg-[#C8D4DC] border border-[#2C4A60] rounded-full px-3 py-1.5">
+                <div className="w-2 h-2 rounded-full bg-[#C8D4DC] animate-pulse" />
+                <span className="text-xs font-medium text-[#2C4A60]">Live: ClinicalTrials.gov</span>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -890,7 +890,7 @@ const ResearchServiceLineView: React.FC = () => {
                   className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
                     trialFilter === f.id
                       ? f.id === 'industry'
-                        ? 'bg-amber-100 text-amber-800 ring-1 ring-amber-300'
+                        ? 'bg-[#F0F5FA] text-[#6B7280] ring-1 ring-amber-300'
                         : 'bg-[#2E3440] text-white'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
@@ -905,7 +905,7 @@ const ResearchServiceLineView: React.FC = () => {
                 </span>
               )}
               {apiError && (
-                <span className="ml-auto text-xs text-amber-600">
+                <span className="ml-auto text-xs text-[#6B7280]">
                   Live search temporarily unavailable -- showing curated trials
                 </span>
               )}
@@ -941,7 +941,7 @@ const ResearchServiceLineView: React.FC = () => {
                         {t.phase === 'Registry' ? 'Registry' : `Phase ${t.phase}`}
                       </span>
                       <span className={`px-1.5 py-0.5 rounded font-medium ${
-                        t.status === 'Enrolling' ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700'
+                        t.status === 'Enrolling' ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-[#F0F5FA] text-[#6B7280]'
                       }`}>
                         {t.status}
                       </span>
@@ -973,7 +973,7 @@ const ResearchServiceLineView: React.FC = () => {
                         </div>
                         <div className="flex items-center gap-2 text-xs mt-1">
                           <span className="bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-medium">{t.phase}</span>
-                          <span className="bg-green-50 text-green-700 px-1.5 py-0.5 rounded font-medium">{t.status}</span>
+                          <span className="bg-[#C8D4DC] text-[#2C4A60] px-1.5 py-0.5 rounded font-medium">{t.status}</span>
                           <span className="text-slate-400">{t.nct}</span>
                         </div>
                         <div className="mt-1 text-[10px] text-slate-500 truncate">
@@ -997,9 +997,9 @@ const ResearchServiceLineView: React.FC = () => {
                 <div className="overflow-y-auto max-h-[600px]">
                   {/* Industry warning banner */}
                   {selectedTrialData.sponsorType === 'industry' && (
-                    <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5 flex items-start gap-2">
-                      <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-                      <p className="text-xs text-amber-800">
+                    <div className="bg-[#F0F5FA] border-b border-[#C8D4DC] px-4 py-2.5 flex items-start gap-2">
+                      <AlertTriangle className="w-4 h-4 text-[#6B7280] flex-shrink-0 mt-0.5" />
+                      <p className="text-xs text-[#6B7280]">
                         <span className="font-semibold">Industry-Sponsored Trial</span> -- Enrollment discussions require PI approval before patient contact. Research compliance office notification required.
                       </p>
                     </div>
@@ -1028,7 +1028,7 @@ const ResearchServiceLineView: React.FC = () => {
                         {selectedTrialData.phase === 'Registry' ? 'Registry' : `Phase ${selectedTrialData.phase}`}
                       </span>
                       <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                        selectedTrialData.status === 'Enrolling' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'
+                        selectedTrialData.status === 'Enrolling' ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-[#F0F5FA] text-[#6B7280]'
                       }`}>
                         {selectedTrialData.status}
                       </span>
@@ -1039,14 +1039,14 @@ const ResearchServiceLineView: React.FC = () => {
 
                     {/* Inclusion criteria */}
                     <div>
-                      <h4 className="text-xs font-bold text-green-800 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                      <h4 className="text-xs font-bold text-[#2C4A60] uppercase tracking-wider mb-1.5 flex items-center gap-1">
                         <CheckCircle className="w-3.5 h-3.5" />
                         Inclusion Criteria
                       </h4>
                       <ul className="space-y-1">
                         {selectedTrialData.inclusion.map((c, i) => (
                           <li key={i} className="flex items-start gap-1.5 text-xs text-slate-700">
-                            <ChevronRight className="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5" />
+                            <ChevronRight className="w-3 h-3 text-[#2C4A60] flex-shrink-0 mt-0.5" />
                             {c}
                           </li>
                         ))}

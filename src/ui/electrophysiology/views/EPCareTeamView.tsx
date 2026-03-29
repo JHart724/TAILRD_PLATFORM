@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { DEMO_PATIENT_CONTEXT, DEMO_PATIENT_ROSTER } from '../../../types/shared';
 import { Heart, Users, Target, Shield, FileText, Zap, Clock, Calendar, AlertTriangle, CheckSquare, TrendingDown, Activity, Stethoscope, Brain, UserCheck } from 'lucide-react';
 
@@ -83,13 +83,12 @@ const ClinicalToolsPanel: React.FC = () => {
 
 const EPCareTeamView: React.FC = () => {
   const [selectedPatientId, setSelectedPatientId] = useState<string>('P001');
-  const [activeTab, _setActiveTab] = useState<EPViewMode>('dashboard');
-  const contentRef = useRef<HTMLDivElement>(null);
-  const setActiveTab = (tab: EPViewMode) => {
-    _setActiveTab(tab);
-    setTimeout(() => {
-      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
+  const [activeTab, setActiveTab] = useState<EPViewMode>('dashboard');
+
+  const handleTabChange = (tab: EPViewMode) => {
+    setActiveTab(tab);
+    const container = document.getElementById('main-scroll-container');
+    if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
   const [quickActionFeedback, setQuickActionFeedback] = useState<string | null>(null);
 
@@ -132,19 +131,19 @@ const EPCareTeamView: React.FC = () => {
 
  <div className="metal-card p-6 bg-white border border-titanium-200">
  <div className="flex items-center gap-3 mb-4">
- <Calendar className="w-6 h-6 text-green-600" />
+ <Calendar className="w-6 h-6 text-[#2C4A60]" />
  <h3 className="text-lg font-semibold text-titanium-900">Today's Follow-ups</h3>
  </div>
- <div className="text-3xl font-bold text-green-800 mb-2">15</div>
+ <div className="text-3xl font-bold text-[#2C4A60] mb-2">15</div>
  <div className="text-sm text-titanium-600">Scheduled appointments</div>
  </div>
 
  <div className="metal-card p-6 bg-white border border-titanium-200">
  <div className="flex items-center gap-3 mb-4">
- <CheckSquare className="w-6 h-6 text-amber-600" />
+ <CheckSquare className="w-6 h-6 text-[#6B7280]" />
  <h3 className="text-lg font-semibold text-titanium-900">Pending Actions</h3>
  </div>
- <div className="text-3xl font-bold text-amber-800 mb-2">23</div>
+ <div className="text-3xl font-bold text-[#6B7280] mb-2">23</div>
  <div className="text-sm text-titanium-600">Care team tasks</div>
  </div>
  </div>
@@ -189,7 +188,7 @@ const EPCareTeamView: React.FC = () => {
  <Calendar className="w-4 h-4" />
  {quickActionFeedback === 'ablation' ? '✓ Scheduling Initiated' : 'Schedule Ablation'}
  </button>
- <button onClick={() => { setActiveTab('clinicaltools'); }} className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-lg hover:from-amber-700 hover:to-amber-800 transition-all duration-300 font-medium">
+ <button onClick={() => { handleTabChange('clinicaltools'); }} className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-lg hover:from-amber-700 hover:to-amber-800 transition-all duration-300 font-medium">
  <Activity className="w-4 h-4" />
  Device Interrogation
  </button>
@@ -209,24 +208,24 @@ const EPCareTeamView: React.FC = () => {
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  <div className="p-4 bg-chrome-50 rounded-lg border border-chrome-200">
  <div className="flex items-center gap-2 mb-2">
- <div className="w-3 h-3 rounded-full bg-green-500"></div>
+ <div className="w-3 h-3 rounded-full bg-[#C8D4DC]"></div>
  <span className="font-medium text-chrome-900">Dr. Johnson - EP Attending</span>
  </div>
  <div className="text-sm text-chrome-700">Available for consultation</div>
  </div>
- <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
+ <div className="p-4 bg-[#F0F5FA] rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center gap-2 mb-2">
- <div className="w-3 h-3 rounded-full bg-amber-500"></div>
- <span className="font-medium text-amber-900">EP Lab Team</span>
+ <div className="w-3 h-3 rounded-full bg-[#F0F5FA]"></div>
+ <span className="font-medium text-[#6B7280]">EP Lab Team</span>
  </div>
- <div className="text-sm text-amber-700">2 procedures in progress</div>
+ <div className="text-sm text-[#6B7280]">2 procedures in progress</div>
  </div>
- <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+ <div className="p-4 bg-[#C8D4DC] rounded-lg border border-[#2C4A60]">
  <div className="flex items-center gap-2 mb-2">
- <div className="w-3 h-3 rounded-full bg-green-500"></div>
- <span className="font-medium text-green-900">Device Clinic</span>
+ <div className="w-3 h-3 rounded-full bg-[#C8D4DC]"></div>
+ <span className="font-medium text-[#2C4A60]">Device Clinic</span>
  </div>
- <div className="text-sm text-green-700">Available for urgent checks</div>
+ <div className="text-sm text-[#2C4A60]">Available for urgent checks</div>
  </div>
  </div>
  </div>
@@ -266,7 +265,7 @@ const EPCareTeamView: React.FC = () => {
  <td className="py-3 text-titanium-600">{p.age}</td>
  <td className="py-3 text-titanium-800">{p.dx}</td>
  <td className="py-3 text-titanium-600">{p.device}</td>
- <td className="py-3"><span className={`text-xs px-2 py-0.5 rounded-full font-medium ${p.risk === 'HIGH' ? 'bg-red-100 text-red-800' : p.risk === 'MODERATE' ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800'}`}>{p.risk}</span></td>
+ <td className="py-3"><span className={`text-xs px-2 py-0.5 rounded-full font-medium ${p.risk === 'HIGH' ? 'bg-red-100 text-red-800' : p.risk === 'MODERATE' ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-[#C8D4DC] text-[#2C4A60]'}`}>{p.risk}</span></td>
  <td className="py-3 text-titanium-600">{p.next}</td>
  </tr>
  ))}
@@ -297,7 +296,7 @@ const EPCareTeamView: React.FC = () => {
  <div className="flex-1">
  <div className="flex items-center gap-3 mb-1">
  <span className="font-semibold text-titanium-900 text-sm">{w.patient}</span>
- <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${w.priority === 'HIGH' ? 'bg-red-100 text-red-800' : w.priority === 'MODERATE' ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800'}`}>{w.priority}</span>
+ <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${w.priority === 'HIGH' ? 'bg-red-100 text-red-800' : w.priority === 'MODERATE' ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-[#C8D4DC] text-[#2C4A60]'}`}>{w.priority}</span>
  </div>
  <div className="text-sm text-titanium-700">{w.action}</div>
  </div>
@@ -324,13 +323,13 @@ const EPCareTeamView: React.FC = () => {
  <div className="text-2xl font-bold text-red-800">3</div>
  <div className="text-sm text-red-600">Critical Alerts</div>
  </div>
- <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
- <div className="text-2xl font-bold text-amber-800">7</div>
- <div className="text-sm text-amber-600">Drug Interactions</div>
+ <div className="p-4 bg-[#F0F5FA] rounded-xl border border-[#C8D4DC]">
+ <div className="text-2xl font-bold text-[#6B7280]">7</div>
+ <div className="text-sm text-[#6B7280]">Drug Interactions</div>
  </div>
- <div className="p-4 bg-green-50 rounded-xl border border-green-200">
- <div className="text-2xl font-bold text-green-800">89%</div>
- <div className="text-sm text-green-600">Monitoring Compliant</div>
+ <div className="p-4 bg-[#C8D4DC] rounded-xl border border-[#2C4A60]">
+ <div className="text-2xl font-bold text-[#2C4A60]">89%</div>
+ <div className="text-sm text-[#2C4A60]">Monitoring Compliant</div>
  </div>
  </div>
  <div className="space-y-3">
@@ -341,12 +340,12 @@ const EPCareTeamView: React.FC = () => {
  { patient: 'Chen, Robert', alert: 'Dofetilide — ECG monitoring overdue per REMS', severity: 'HIGH', color: 'amber' },
  { patient: 'Smith, John', alert: 'INR subtherapeutic — 1.4 (target 2.0-3.0)', severity: 'MODERATE', color: 'amber' },
  ].map((a) => (
- <div key={`${a.patient}-${a.alert}`} className={`p-4 rounded-xl border ${a.color === 'red' ? 'bg-red-50 border-red-200' : 'bg-amber-50 border-amber-200'}`}>
+ <div key={`${a.patient}-${a.alert}`} className={`p-4 rounded-xl border ${a.color === 'red' ? 'bg-red-50 border-red-200' : 'bg-[#F0F5FA] border-[#C8D4DC]'}`}>
  <div className="flex items-center justify-between mb-1">
  <span className="font-semibold text-titanium-900 text-sm">{a.patient}</span>
- <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${a.color === 'red' ? 'bg-red-200 text-red-900' : 'bg-amber-200 text-amber-900'}`}>{a.severity}</span>
+ <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${a.color === 'red' ? 'bg-red-200 text-red-900' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>{a.severity}</span>
  </div>
- <div className={`text-sm ${a.color === 'red' ? 'text-red-800' : 'text-amber-800'}`}>{a.alert}</div>
+ <div className={`text-sm ${a.color === 'red' ? 'text-red-800' : 'text-[#6B7280]'}`}>{a.alert}</div>
  </div>
  ))}
  </div>
@@ -377,7 +376,7 @@ const EPCareTeamView: React.FC = () => {
  <div key={m.name} className="p-4 rounded-xl border border-titanium-200 bg-chrome-50">
  <div className="flex items-center justify-between mb-2">
  <span className="font-semibold text-titanium-900 text-sm">{m.name}</span>
- <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${m.sc === 'green' ? 'bg-green-100 text-green-800' : m.sc === 'amber' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'}`}>{m.status}</span>
+ <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${m.sc === 'green' ? 'bg-[#C8D4DC] text-[#2C4A60]' : m.sc === 'amber' ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-blue-100 text-blue-800'}`}>{m.status}</span>
  </div>
  <div className="text-xs text-titanium-500 mb-2">{m.role}</div>
  <div className="text-sm text-titanium-700">Active caseload: <span className="font-semibold">{m.caseload}</span></div>
@@ -416,7 +415,7 @@ const EPCareTeamView: React.FC = () => {
  <span className="text-sm text-titanium-600">{m.metric}</span>
  <div className="flex items-center gap-2">
  <span className="font-semibold text-titanium-900">{m.value}</span>
- <span className={`text-xs font-medium ${m.up ? 'text-green-600' : 'text-blue-600'}`}>{m.trend}</span>
+ <span className={`text-xs font-medium ${m.up ? 'text-[#2C4A60]' : 'text-blue-600'}`}>{m.trend}</span>
  </div>
  </div>
  ))}
@@ -455,10 +454,10 @@ const EPCareTeamView: React.FC = () => {
  <h4 className="font-semibold text-titanium-900 mb-4">Documentation Templates</h4>
  <div className="space-y-2">
  {[
- { name: 'AF Ablation Report', desc: 'PVI, linear lesions, mapping data', bg: 'bg-green-50 border-green-200 hover:bg-green-100', text: 'text-green-900', sub: 'text-green-600' },
+ { name: 'AF Ablation Report', desc: 'PVI, linear lesions, mapping data', bg: 'bg-[#C8D4DC] border-[#2C4A60] hover:bg-[#C8D4DC]', text: 'text-[#2C4A60]', sub: 'text-[#2C4A60]' },
  { name: 'Device Implant Note', desc: 'ICD/PM/CRT implant procedure note', bg: 'bg-chrome-50 border-chrome-200 hover:bg-chrome-100', text: 'text-chrome-900', sub: 'text-chrome-600' },
  { name: 'EP Study Report', desc: 'Diagnostic EP study with findings', bg: 'bg-chrome-50 border-chrome-200 hover:bg-chrome-100', text: 'text-chrome-900', sub: 'text-chrome-600' },
- { name: 'LAAC Procedure Note', desc: 'Watchman implant documentation', bg: 'bg-amber-50 border-amber-200 hover:bg-amber-100', text: 'text-amber-900', sub: 'text-amber-600' },
+ { name: 'LAAC Procedure Note', desc: 'Watchman implant documentation', bg: 'bg-[#F0F5FA] border-[#C8D4DC] hover:bg-[#F0F5FA]', text: 'text-[#6B7280]', sub: 'text-[#6B7280]' },
  { name: 'Device Check Summary', desc: 'Interrogation parameters and thresholds', bg: 'bg-chrome-50 border-chrome-200 hover:bg-chrome-100', text: 'text-chrome-900', sub: 'text-chrome-600' },
  ].map((t) => (
  <button key={t.name} className={`w-full text-left p-3 rounded-lg border transition-colors ${t.bg}`}>
@@ -491,7 +490,7 @@ const EPCareTeamView: React.FC = () => {
  return (
  <button
  key={tab.id}
- onClick={() => setActiveTab(tab.id as EPViewMode)}
+ onClick={() => handleTabChange(tab.id as EPViewMode)}
  className={`group relative p-4 rounded-xl border transition-all duration-300 ${
  isActive
  ? 'bg-porsche-50 border-porsche-200 text-porsche-600 shadow-lg scale-105'
@@ -514,7 +513,7 @@ const EPCareTeamView: React.FC = () => {
  </div>
 
  {/* Tab Content */}
- <div ref={contentRef} className="space-y-6">
+ <div className="space-y-6">
  {renderTabContent()}
  </div>
  </div>

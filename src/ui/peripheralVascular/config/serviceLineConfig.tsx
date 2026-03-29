@@ -24,22 +24,22 @@ const PeripheralVascularAnalytics: React.FC = () => (
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">PAD Interventions</h4>
  <div className="text-2xl font-bold text-titanium-900">1,456</div>
- <div className="text-sm text-green-600">+11.2% vs last quarter</div>
+ <div className="text-sm text-[#2C4A60]">+11.2% vs last quarter</div>
  </div>
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">Limb Salvage Cases</h4>
  <div className="text-2xl font-bold text-titanium-900">287</div>
- <div className="text-sm text-green-600">+18.4% vs last quarter</div>
+ <div className="text-sm text-[#2C4A60]">+18.4% vs last quarter</div>
  </div>
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">CLI Revascularizations</h4>
  <div className="text-2xl font-bold text-titanium-900">392</div>
- <div className="text-sm text-green-600">+15.7% vs last quarter</div>
+ <div className="text-sm text-[#2C4A60]">+15.7% vs last quarter</div>
  </div>
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">Wound Healing Rate</h4>
  <div className="text-2xl font-bold text-titanium-900">78.3%</div>
- <div className="text-sm text-green-600">+4.1% vs last quarter</div>
+ <div className="text-sm text-[#2C4A60]">+4.1% vs last quarter</div>
  </div>
  </div>
  <div className="metal-card p-8">
@@ -100,7 +100,7 @@ const PeripheralVascularProviderScorecard: React.FC = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="metal-card p-5 border-l-4 border-l-medical-arterial-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total Providers</p><p className="text-3xl font-bold text-titanium-900">5</p><p className="text-xs text-titanium-500 mt-1">Vascular surgeons &amp; interventionalists</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Avg Limb Salvage Rate</p><p className="text-3xl font-bold text-green-700">88.6%</p><p className="text-xs text-titanium-500 mt-1">CLI patients at 12 months</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Avg Limb Salvage Rate</p><p className="text-3xl font-bold text-[#2C4A60]">88.6%</p><p className="text-xs text-titanium-500 mt-1">CLI patients at 12 months</p></div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total Procedures</p><p className="text-3xl font-bold text-blue-700">990</p><p className="text-xs text-titanium-500 mt-1">Endovascular + surgical this quarter</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
@@ -118,7 +118,7 @@ const PeripheralVascularProviderScorecard: React.FC = () => {
                   <td className="px-4 py-3 text-titanium-600">{p.specialty}</td>
                   <td className="px-4 py-3 text-center font-mono">{p.endoVol > 0 ? p.endoVol : '—'}</td>
                   <td className="px-4 py-3 text-center font-mono">{p.surgVol > 0 ? p.surgVol : '—'}</td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{p.limbSalvage}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.limbSalvage}</span></td>
                   <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">{p.patency1yr}</span></td>
                   <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="flex-1 bg-titanium-100 rounded-full h-2"><div className="bg-medical-arterial-500 h-2 rounded-full" style={{ width: `${p.quality}%` }} /></div><span className="text-xs font-semibold text-titanium-700">{p.quality}</span></div></td>
                 </tr>
@@ -153,10 +153,10 @@ const PADInterventionAnalytics: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="metal-card p-5 border-l-4 border-l-medical-arterial-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total Interventions</p><p className="text-3xl font-bold text-titanium-900">1,456</p><p className="text-xs text-green-600 mt-1">+11.2% vs last quarter</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Technical Success</p><p className="text-3xl font-bold text-green-700">96.8%</p><p className="text-xs text-titanium-500 mt-1">Across all interventions</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">DCB Use (Fem-Pop)</p><p className="text-3xl font-bold text-blue-700">78.4%</p><p className="text-xs text-green-600 mt-1">+9.3% vs last quarter</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-amber-400"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">CLI Limb Salvage</p><p className="text-3xl font-bold text-amber-700">86.4%</p><p className="text-xs text-green-600 mt-1">+2.1% vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-medical-arterial-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total Interventions</p><p className="text-3xl font-bold text-titanium-900">1,456</p><p className="text-xs text-[#2C4A60] mt-1">+11.2% vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Technical Success</p><p className="text-3xl font-bold text-[#2C4A60]">96.8%</p><p className="text-xs text-titanium-500 mt-1">Across all interventions</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">DCB Use (Fem-Pop)</p><p className="text-3xl font-bold text-blue-700">78.4%</p><p className="text-xs text-[#2C4A60] mt-1">+9.3% vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#6B7280]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">CLI Limb Salvage</p><p className="text-3xl font-bold text-[#6B7280]">86.4%</p><p className="text-xs text-[#2C4A60] mt-1">+2.1% vs last quarter</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-titanium-100 flex items-center gap-2">
@@ -171,9 +171,9 @@ const PADInterventionAnalytics: React.FC = () => {
                 <tr key={i} className="hover:bg-titanium-50">
                   <td className="px-4 py-3 font-medium text-titanium-900">{p.type}</td>
                   <td className="px-4 py-3 font-mono font-semibold">{p.volume}</td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{p.technical}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.technical}</span></td>
                   <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">{p.patency1yr}</span></td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">{p.complications}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{p.complications}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{p.avgLos}</td>
                 </tr>
               ))}
@@ -197,8 +197,8 @@ const CLIManagement: React.FC = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="metal-card p-5 border-l-4 border-l-red-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Active CLI Patients</p><p className="text-3xl font-bold text-red-800">287</p><p className="text-xs text-titanium-500 mt-1">Critical limb ischemia program</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-amber-400"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">WIfI High-Risk</p><p className="text-3xl font-bold text-amber-700">123</p><p className="text-xs text-titanium-500 mt-1">WIfI Stage 3-4 (major amp. risk)</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Limb Salvage Rate</p><p className="text-3xl font-bold text-green-700">86.4%</p><p className="text-xs text-titanium-500 mt-1">12-month amputation-free survival</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#6B7280]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">WIfI High-Risk</p><p className="text-3xl font-bold text-[#6B7280]">123</p><p className="text-xs text-titanium-500 mt-1">WIfI Stage 3-4 (major amp. risk)</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Limb Salvage Rate</p><p className="text-3xl font-bold text-[#2C4A60]">86.4%</p><p className="text-xs text-titanium-500 mt-1">12-month amputation-free survival</p></div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Revascularization Rate</p><p className="text-3xl font-bold text-blue-700">79.1%</p><p className="text-xs text-titanium-500 mt-1">Among evaluated CLI patients</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
@@ -215,7 +215,7 @@ const CLIManagement: React.FC = () => {
                 <td className="px-4 py-3 font-mono font-semibold">{s.patients}</td>
                 <td className="px-4 py-3 font-mono text-red-700">{s.wifiHigh}</td>
                 <td className="px-4 py-3 text-titanium-600">{s.avgWait}</td>
-                <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${s.urgency === 'red' ? 'bg-red-100 text-red-800' : s.urgency === 'amber' ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800'}`}>{s.urgency === 'red' ? 'Urgent' : s.urgency === 'amber' ? 'Active' : 'Monitoring'}</span></td>
+                <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${s.urgency === 'red' ? 'bg-red-100 text-red-800' : s.urgency === 'amber' ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-[#C8D4DC] text-[#2C4A60]'}`}>{s.urgency === 'red' ? 'Urgent' : s.urgency === 'amber' ? 'Active' : 'Monitoring'}</span></td>
               </tr>
             ))}
           </tbody>
@@ -239,8 +239,8 @@ const PADSafetyScreening: React.FC = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="metal-card p-5 border-l-4 border-l-red-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">High-Severity Alerts</p><p className="text-3xl font-bold text-red-800">126</p><p className="text-xs text-titanium-500 mt-1">Requiring immediate action</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-amber-400"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Moderate Alerts</p><p className="text-3xl font-bold text-amber-700">246</p><p className="text-xs text-titanium-500 mt-1">Requiring protocol review</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Screened This Month</p><p className="text-3xl font-bold text-green-700">487</p><p className="text-xs text-titanium-500 mt-1">Pre-procedural safety checks</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#6B7280]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Moderate Alerts</p><p className="text-3xl font-bold text-[#6B7280]">246</p><p className="text-xs text-titanium-500 mt-1">Requiring protocol review</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Screened This Month</p><p className="text-3xl font-bold text-[#2C4A60]">487</p><p className="text-xs text-titanium-500 mt-1">Pre-procedural safety checks</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-titanium-100 flex items-center gap-2">
@@ -255,7 +255,7 @@ const PADSafetyScreening: React.FC = () => {
                 <td className="px-4 py-3 font-medium text-titanium-900">{a.category}</td>
                 <td className="px-4 py-3 font-mono font-semibold">{a.count}</td>
                 <td className="px-4 py-3 text-titanium-600 text-xs">{a.action}</td>
-                <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${a.severity === 'red' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800'}`}>{a.severity === 'red' ? 'High' : 'Moderate'}</span></td>
+                <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${a.severity === 'red' ? 'bg-red-100 text-red-800' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>{a.severity === 'red' ? 'High' : 'Moderate'}</span></td>
               </tr>
             ))}
           </tbody>
@@ -280,7 +280,7 @@ const PADQualityMetrics: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="metal-card p-5 border-l-4 border-l-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Above Benchmark</p><p className="text-3xl font-bold text-green-700">4 / 8</p><p className="text-xs text-titanium-500 mt-1">SVS-VQI quality measures</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Above Benchmark</p><p className="text-3xl font-bold text-[#2C4A60]">4 / 8</p><p className="text-xs text-titanium-500 mt-1">SVS-VQI quality measures</p></div>
         <div className="metal-card p-5 border-l-4 border-l-red-400"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Below Benchmark</p><p className="text-3xl font-bold text-red-700">4 / 8</p><p className="text-xs text-titanium-500 mt-1">Exercise therapy, statin, ABI, compression gaps</p></div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">SVS-VQI Submission</p><p className="text-3xl font-bold text-blue-700">100%</p><p className="text-xs text-titanium-500 mt-1">Vascular Quality Initiative current</p></div>
       </div>
@@ -298,7 +298,7 @@ const PADQualityMetrics: React.FC = () => {
                   <td className="px-4 py-3 font-medium text-titanium-900">{m.measure}</td>
                   <td className="px-4 py-3 font-mono font-semibold text-titanium-800">{m.rate}</td>
                   <td className="px-4 py-3 text-titanium-500">{m.benchmark}</td>
-                  <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${m.above ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{m.above ? 'Above Benchmark' : 'Below Benchmark'}</span></td>
+                  <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${m.above ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-red-100 text-red-800'}`}>{m.above ? 'Above Benchmark' : 'Below Benchmark'}</span></td>
                   <td className="px-4 py-3 text-titanium-500 text-xs">{m.registry}</td>
                 </tr>
               ))}
@@ -361,7 +361,7 @@ const PVVascularPipeline: React.FC = () => {
             <ul className="space-y-1 mb-3">
               {p.signals.map((s, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-titanium-700">
-                  <AlertTriangle className="w-3.5 h-3.5 text-amber-500 mt-0.5 flex-shrink-0" />
+                  <AlertTriangle className="w-3.5 h-3.5 text-[#6B7280] mt-0.5 flex-shrink-0" />
                   {s}
                 </li>
               ))}
@@ -407,7 +407,7 @@ const PVVascularPipeline: React.FC = () => {
       {gap?.subcategories && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
           {gap.subcategories.map((sub, i) => (
-            <div key={i} className={`rounded-lg px-4 py-3 border ${i === 0 ? 'bg-red-50 border-red-200' : 'bg-amber-50 border-amber-200'}`}>
+            <div key={i} className={`rounded-lg px-4 py-3 border ${i === 0 ? 'bg-red-50 border-red-200' : 'bg-[#F0F5FA] border-[#C8D4DC]'}`}>
               <p className="text-sm font-bold text-titanium-900">{sub.count} patients</p>
               <p className="text-xs text-titanium-600">{sub.label}</p>
             </div>
@@ -429,19 +429,19 @@ const PVVascularPipeline: React.FC = () => {
     <div className="space-y-6">
       {/* Pipeline KPI cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <div className="metal-card p-5 border-l-4 border-l-amber-400">
-          <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-1">ABI Screening Needed</p>
-          <p className="text-3xl font-bold text-amber-800">{abiCount}</p>
+        <div className="metal-card p-5 border-l-4 border-l-[#6B7280]">
+          <p className="text-xs font-semibold text-[#6B7280] uppercase tracking-wide mb-1">ABI Screening Needed</p>
+          <p className="text-3xl font-bold text-[#6B7280]">{abiCount}</p>
           <p className="text-xs text-titanium-500 mt-1">PAD patients without documented ABI</p>
         </div>
-        <div className="metal-card p-5 border-l-4 border-l-amber-400">
-          <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-1">AAA Screening Needed</p>
-          <p className="text-3xl font-bold text-amber-800">{aaaCount}</p>
+        <div className="metal-card p-5 border-l-4 border-l-[#6B7280]">
+          <p className="text-xs font-semibold text-[#6B7280] uppercase tracking-wide mb-1">AAA Screening Needed</p>
+          <p className="text-3xl font-bold text-[#6B7280]">{aaaCount}</p>
           <p className="text-xs text-titanium-500 mt-1">Eligible men 65-75 without AAA US</p>
         </div>
-        <div className="metal-card p-5 border-l-4 border-l-amber-400">
-          <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-1">Post-EVAR Surveillance Overdue</p>
-          <p className="text-3xl font-bold text-amber-800">{postEvarCount}</p>
+        <div className="metal-card p-5 border-l-4 border-l-[#6B7280]">
+          <p className="text-xs font-semibold text-[#6B7280] uppercase tracking-wide mb-1">Post-EVAR Surveillance Overdue</p>
+          <p className="text-3xl font-bold text-[#6B7280]">{postEvarCount}</p>
           <p className="text-xs text-titanium-500 mt-1">CTA surveillance overdue per SVS guidelines</p>
         </div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500">
@@ -449,9 +449,9 @@ const PVVascularPipeline: React.FC = () => {
           <p className="text-3xl font-bold text-blue-800">{tcarCount}</p>
           <p className="text-xs text-titanium-500 mt-1">PAD dual-pathway eligible, no CAD</p>
         </div>
-        <div className="metal-card p-5 border-l-4 border-l-amber-400">
-          <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-1">Unprovoked VTE Extended Anticoag</p>
-          <p className="text-3xl font-bold text-amber-800">{vteCount}</p>
+        <div className="metal-card p-5 border-l-4 border-l-[#6B7280]">
+          <p className="text-xs font-semibold text-[#6B7280] uppercase tracking-wide mb-1">Unprovoked VTE Extended Anticoag</p>
+          <p className="text-3xl font-bold text-[#6B7280]">{vteCount}</p>
           <p className="text-xs text-titanium-500 mt-1">Extended anticoagulation assessment needed</p>
         </div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500">
@@ -479,7 +479,7 @@ const PVVascularPipeline: React.FC = () => {
           ].map((q, i) => (
             <div key={i} className="px-4 py-3 text-center">
               <div className="text-xs font-semibold text-titanium-500 uppercase">{q.label}</div>
-              <div className="text-lg font-bold text-emerald-700 mt-1">{formatDollar(q.revenue)}</div>
+              <div className="text-lg font-bold text-[#2C4A60] mt-1">{formatDollar(q.revenue)}</div>
               <div className="text-xs text-titanium-500">{q.procedures} procedures</div>
             </div>
           ))}
@@ -492,7 +492,7 @@ const PVVascularPipeline: React.FC = () => {
           <Zap className="w-5 h-5 text-medical-arterial-600 mt-0.5 flex-shrink-0" />
           <div>
             <h4 className="text-sm font-bold text-titanium-900">Automated Vascular Pipeline Detection</h4>
-            <p className="text-xs text-titanium-600 mt-1">&#9889; Patients automatically identified from EHR data via Redox</p>
+            <p className="text-xs text-titanium-600 mt-1">&#9889; Patients automatically identified from EHR integration</p>
           </div>
         </div>
       </div>
@@ -503,10 +503,10 @@ const PVVascularPipeline: React.FC = () => {
         'Gap 24: ABI Screening -- PAD Patients Without Documented ABI',
         abiGap.patients,
         abiGap.patientCount,
-        'border-amber-200',
-        'bg-amber-50',
-        <Activity className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />,
-        'bg-amber-100 text-amber-800',
+        'border-[#C8D4DC]',
+        'bg-[#F0F5FA]',
+        <Activity className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />,
+        'bg-[#F0F5FA] text-[#6B7280]',
         'SCREENING GAP'
       )}
 
@@ -516,10 +516,10 @@ const PVVascularPipeline: React.FC = () => {
         'Gap 28: AAA Screening -- Eligible Men Without Abdominal Aortic Aneurysm US',
         aaaGap.patients,
         aaaGap.patientCount,
-        'border-amber-200',
-        'bg-amber-50',
-        <Activity className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />,
-        'bg-amber-100 text-amber-800',
+        'border-[#C8D4DC]',
+        'bg-[#F0F5FA]',
+        <Activity className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />,
+        'bg-[#F0F5FA] text-[#6B7280]',
         'SCREENING GAP'
       )}
 
@@ -529,10 +529,10 @@ const PVVascularPipeline: React.FC = () => {
         'Gap 38: Post-EVAR Surveillance -- CTA Imaging Overdue',
         postEvarPatients,
         postEvarCount,
-        'border-amber-200',
-        'bg-amber-50',
-        <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />,
-        'bg-amber-100 text-amber-800',
+        'border-[#C8D4DC]',
+        'bg-[#F0F5FA]',
+        <AlertTriangle className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />,
+        'bg-[#F0F5FA] text-[#6B7280]',
         'SURVEILLANCE'
       )}
 
@@ -555,10 +555,10 @@ const PVVascularPipeline: React.FC = () => {
         'Gap 85: Unprovoked VTE -- Extended Anticoagulation Assessment',
         vteGap.patients,
         vteGap.patientCount,
-        'border-amber-200',
-        'bg-amber-50',
-        <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />,
-        'bg-amber-100 text-amber-800',
+        'border-[#C8D4DC]',
+        'bg-[#F0F5FA]',
+        <AlertTriangle className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />,
+        'bg-[#F0F5FA] text-[#6B7280]',
         'TREATMENT GAP'
       )}
 
@@ -576,9 +576,9 @@ const PVVascularPipeline: React.FC = () => {
               <div className="text-lg font-bold text-red-600">20 months</div>
               <div className="text-xs text-titanium-400">to clear pipeline</div>
             </div>
-            <div className="bg-emerald-50/70 rounded-lg p-3">
+            <div className="bg-[#F0F5FA]/70 rounded-lg p-3">
               <div className="text-xs text-titanium-500 mb-1">Systematic Closure</div>
-              <div className="text-lg font-bold text-emerald-600">7 months</div>
+              <div className="text-lg font-bold text-[#2C4A60]">7 months</div>
               <div className="text-xs text-titanium-400">with TAILRD protocol</div>
             </div>
             <div className="bg-blue-50/70 rounded-lg p-3">
@@ -683,7 +683,7 @@ const peripheralVascularTabs: ServiceLineTabConfig[] = [
  id: 'pv-clinical-gap-detection',
  label: 'Gap Detection (12-Gap)',
  icon: Activity,
- description: 'AI-driven PV gap detection: COMPASS dual-pathway, ABI screening, supervised exercise therapy, AAA screening, PAD dual-pathway no CAD, renal artery stenosis, mesenteric ischemia, cilostazol underuse, venous ulcer compression, unprovoked VTE anticoagulation, IVC filter without AC safety, May-Thurner syndrome All gap detection criteria, risk scores, and composite calculators are automatically computed from structured EHR data ingested via Redox — no manual data entry or chart review required.'
+ description: 'AI-driven PV gap detection: COMPASS dual-pathway, ABI screening, supervised exercise therapy, AAA screening, PAD dual-pathway no CAD, renal artery stenosis, mesenteric ischemia, cilostazol underuse, venous ulcer compression, unprovoked VTE anticoagulation, IVC filter without AC safety, May-Thurner syndrome All gap detection criteria, risk scores, and composite calculators are automatically computed from structured EHR data ingested via EHR integration — no manual data entry or chart review required.'
   }
 ];
 

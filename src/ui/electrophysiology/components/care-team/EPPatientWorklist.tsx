@@ -110,7 +110,7 @@ const EPPatientWorklist: React.FC = () => {
   const getPriorityBadge = (priority: string) => {
  const colors = {
  high: 'bg-red-100 text-red-900 border-red-400',
- medium: 'bg-amber-100 text-amber-900 border-amber-400',
+ medium: 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]',
  low: 'bg-titanium-100 text-titanium-700 border-titanium-400'
  };
  return colors[priority as keyof typeof colors];
@@ -188,7 +188,7 @@ const EPPatientWorklist: React.FC = () => {
  </div>
  <div>
  <div className="text-xs text-titanium-600 mb-1">Anticoagulation Gaps</div>
- <div className="font-medium text-amber-800">{patient.treatmentGaps.length} medications</div>
+ <div className="font-medium text-[#6B7280]">{patient.treatmentGaps.length} medications</div>
  </div>
  <div>
  <div className="text-xs text-titanium-600 mb-1">Next Appointment</div>

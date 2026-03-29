@@ -85,13 +85,13 @@ const SuperAdminDashboard: React.FC = () => {
  <div className="flex items-center gap-2 text-sm">
  {backendConnected ? (
  <>
- <Wifi className="w-4 h-4 text-green-500" />
- <span className="text-green-600">EMR Integration Active</span>
+ <Wifi className="w-4 h-4 text-[#2C4A60]" />
+ <span className="text-[#2C4A60]">EMR Integration Active</span>
  </>
  ) : (
  <>
- <WifiOff className="w-4 h-4 text-amber-500" />
- <span className="text-amber-600">Demo Mode - Mock Data</span>
+ <WifiOff className="w-4 h-4 text-[#6B7280]" />
+ <span className="text-[#6B7280]">Demo Mode - Mock Data</span>
  </>
  )}
  </div>
@@ -113,20 +113,20 @@ const SuperAdminDashboard: React.FC = () => {
  <div>
  <p className="text-sm font-medium text-titanium-600">Connected Hospitals</p>
  <p className="text-3xl font-bold text-titanium-900">{analytics?.totalHospitals || 0}</p>
- <p className="text-sm text-green-600 mt-1">↗ All systems operational</p>
+ <p className="text-sm text-[#2C4A60] mt-1">↗ All systems operational</p>
  </div>
  <Building2 className="w-12 h-12 text-porsche-500" />
  </div>
  </div>
 
- <div className="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+ <div className="bg-white rounded-lg shadow p-6 border-l-4 border-[#2C4A60]">
  <div className="flex items-center justify-between">
  <div>
  <p className="text-sm font-medium text-titanium-600">Active Users</p>
  <p className="text-3xl font-bold text-titanium-900">{analytics?.activeUsers?.toLocaleString() || 0}</p>
- <p className="text-sm text-green-600 mt-1">↗ +{analytics?.monthlyGrowth || 0}% this month</p>
+ <p className="text-sm text-[#2C4A60] mt-1">↗ +{analytics?.monthlyGrowth || 0}% this month</p>
  </div>
- <Users className="w-12 h-12 text-green-500" />
+ <Users className="w-12 h-12 text-[#2C4A60]" />
  </div>
  </div>
 
@@ -137,31 +137,31 @@ const SuperAdminDashboard: React.FC = () => {
  <p className="text-3xl font-bold text-titanium-900">
  ${toFixed(analytics?.platformRevenue / 1000000, 1)}M
  </p>
- <p className="text-sm text-green-600 mt-1">↗ Growing monthly</p>
+ <p className="text-sm text-[#2C4A60] mt-1">↗ Growing monthly</p>
  </div>
  <TrendingUp className="w-12 h-12 text-arterial-500" />
  </div>
  </div>
 
- <div className="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+ <div className="bg-white rounded-lg shadow p-6 border-l-4 border-[#2C4A60]">
  <div className="flex items-center justify-between">
  <div>
  <p className="text-sm font-medium text-titanium-600">System Health</p>
- <p className="text-3xl font-bold text-green-600">{analytics?.systemHealth || 0}%</p>
- <p className="text-sm text-green-600 mt-1">All systems operational</p>
+ <p className="text-3xl font-bold text-[#2C4A60]">{analytics?.systemHealth || 0}%</p>
+ <p className="text-sm text-[#2C4A60] mt-1">All systems operational</p>
  </div>
- <CheckCircle className="w-12 h-12 text-green-500" />
+ <CheckCircle className="w-12 h-12 text-[#2C4A60]" />
  </div>
  </div>
 
- <div className="bg-white rounded-lg shadow p-6 border-l-4 border-amber-500">
+ <div className="bg-white rounded-lg shadow p-6 border-l-4 border-[#C8D4DC]">
  <div className="flex items-center justify-between">
  <div>
  <p className="text-sm font-medium text-titanium-600">Critical Alerts</p>
- <p className="text-3xl font-bold text-amber-600">{analytics?.criticalAlerts || 0}</p>
+ <p className="text-3xl font-bold text-[#6B7280]">{analytics?.criticalAlerts || 0}</p>
  <p className="text-sm text-titanium-600 mt-1">Active monitoring</p>
  </div>
- <AlertTriangle className="w-12 h-12 text-amber-500" />
+ <AlertTriangle className="w-12 h-12 text-[#6B7280]" />
  </div>
  </div>
 
@@ -170,7 +170,7 @@ const SuperAdminDashboard: React.FC = () => {
  <div>
  <p className="text-sm font-medium text-titanium-600">API Performance</p>
  <p className="text-3xl font-bold text-chrome-600">145ms</p>
- <p className="text-sm text-green-600 mt-1">Excellent response time</p>
+ <p className="text-sm text-[#2C4A60] mt-1">Excellent response time</p>
  </div>
  <Activity className="w-12 h-12 text-chrome-500" />
  </div>
@@ -182,28 +182,28 @@ const SuperAdminDashboard: React.FC = () => {
  <h2 className="text-xl font-bold text-titanium-900 mb-4">🚀 Production Status</h2>
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
  <div className="flex items-center gap-3">
- <CheckCircle className="w-5 h-5 text-green-500" />
+ <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
  <span className="text-sm font-medium text-titanium-700">Backend API Ready</span>
  </div>
  <div className="flex items-center gap-3">
- <CheckCircle className="w-5 h-5 text-green-500" />
+ <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
  <span className="text-sm font-medium text-titanium-700">EMR Integration Ready</span>
  </div>
  <div className="flex items-center gap-3">
- <CheckCircle className="w-5 h-5 text-green-500" />
+ <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
  <span className="text-sm font-medium text-titanium-700">HIPAA Compliant</span>
  </div>
  <div className="flex items-center gap-3">
- <CheckCircle className="w-5 h-5 text-green-500" />
+ <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
  <span className="text-sm font-medium text-titanium-700">Revenue Ready</span>
  </div>
  </div>
- <div className="mt-4 p-4 bg-white rounded border border-green-200">
+ <div className="mt-4 p-4 bg-white rounded border border-[#2C4A60]">
  <p className="text-sm text-titanium-700">
  <strong>Status:</strong> Your TAILRD platform is production-ready! 
  Backend running at <code className="px-1 py-0.5 bg-gray-100 rounded text-xs">localhost:3001</code>
  </p>
- <p className="text-sm text-green-600 mt-2">
+ <p className="text-sm text-[#2C4A60] mt-2">
  ✅ Ready for hospital onboarding and revenue generation
  </p>
  </div>
@@ -233,7 +233,7 @@ const SuperAdminDashboard: React.FC = () => {
  onClick={() => navigate('/coronary')}
  className="p-6 bg-white rounded-lg shadow hover:shadow-md transition-shadow border border-gray-200"
  >
- <TrendingUp className="w-8 h-8 text-green-500 mb-3" />
+ <TrendingUp className="w-8 h-8 text-[#2C4A60] mb-3" />
  <h3 className="text-lg font-semibold text-titanium-900 mb-2">PCI & Coronary</h3>
  <p className="text-sm text-titanium-600">Coronary intervention analytics and networks</p>
  </button>

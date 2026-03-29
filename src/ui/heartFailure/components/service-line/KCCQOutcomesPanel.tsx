@@ -60,12 +60,12 @@ const KCCQOutcomesPanel: React.FC = () => {
 
         <div className="metal-card p-5">
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="w-4 h-4 text-green-600" />
+            <TrendingUp className="w-4 h-4 text-[#2C4A60]" />
             <span className="text-xs font-semibold text-titanium-600 uppercase tracking-wide">
               Mean Change — Actioned Patients
             </span>
           </div>
-          <div className="text-3xl font-bold text-green-700">+14.2 pts</div>
+          <div className="text-3xl font-bold text-[#2C4A60]">+14.2 pts</div>
           <div className="text-xs text-titanium-500 mt-1">at 90 days post-intervention</div>
         </div>
 
@@ -134,9 +134,9 @@ const KCCQOutcomesPanel: React.FC = () => {
               />
               <ReferenceLine
                 y={45}
-                stroke="#f97316"
+                stroke="#7A1A2E"
                 strokeDasharray="6 3"
-                label={{ value: 'Severe Impairment', position: 'right', fontSize: 10, fill: '#f97316' }}
+                label={{ value: 'Severe Impairment', position: 'right', fontSize: 10, fill: '#7A1A2E' }}
               />
               <Bar
                 dataKey="score"

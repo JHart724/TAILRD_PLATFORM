@@ -22,10 +22,10 @@ const SHROIWaterfall: React.FC<SHROIWaterfallProps> = ({ data, onCategoryClick }
   );
 
   const categories: WaterfallCategory[] = [
- { label: 'Valve Therapy', value: data.valveTherapy_revenue, color: 'bg-teal-600' },
+ { label: 'Valve Therapy', value: data.valveTherapy_revenue, color: 'bg-[#C8D4DC]' },
  { label: 'Procedures', value: data.procedures_revenue, color: 'bg-arterial-500' },
  { label: 'Phenotypes', value: data.phenotypes_revenue, color: 'bg-porsche-500' },
- { label: '340B', value: data._340b_revenue, color: 'bg-emerald-500' },
+ { label: '340B', value: data._340b_revenue, color: 'bg-[#F0F5FA]' },
   ];
 
   return (

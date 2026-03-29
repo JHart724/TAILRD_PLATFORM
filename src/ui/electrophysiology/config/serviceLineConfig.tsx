@@ -30,27 +30,27 @@ const ElectrophysiologyAnalytics: React.FC = () => (
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">AFib Ablations</h4>
  <div className="text-2xl font-bold text-titanium-900">1,234</div>
- <div className="text-sm text-green-600">+14.7% vs last quarter</div>
+ <div className="text-sm text-[#2C4A60]">+14.7% vs last quarter</div>
  </div>
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">LAAC Procedures</h4>
  <div className="text-2xl font-bold text-titanium-900">456</div>
- <div className="text-sm text-green-600">+28.3% vs last quarter</div>
+ <div className="text-sm text-[#2C4A60]">+28.3% vs last quarter</div>
  </div>
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">Device Implants</h4>
  <div className="text-2xl font-bold text-titanium-900">789</div>
- <div className="text-sm text-green-600">+9.2% vs last quarter</div>
+ <div className="text-sm text-[#2C4A60]">+9.2% vs last quarter</div>
  </div>
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">Lead Extractions</h4>
  <div className="text-2xl font-bold text-titanium-900">123</div>
- <div className="text-sm text-green-600">+6.5% vs last quarter</div>
+ <div className="text-sm text-[#2C4A60]">+6.5% vs last quarter</div>
  </div>
  </div>
  <div className="metal-card p-8">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Target className="w-5 h-5 text-medical-green-600" />
+ <Target className="w-5 h-5 text-[#2C4A60]" />
  Procedure Analytics
  </h3>
  <p className="text-titanium-600 mb-6">Comprehensive electrophysiology analytics including AFib ablations, LAAC procedures, device implantations, arrhythmia management, and anticoagulation optimization.</p>
@@ -59,33 +59,33 @@ const ElectrophysiologyAnalytics: React.FC = () => (
  <div className="bg-white border border-titanium-200 rounded-lg p-5">
    <h4 className="font-bold text-titanium-900 mb-4">AFib Ablation Outcomes</h4>
    <div className="divide-y divide-titanium-100">
-     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">AFib Freedom 1yr</span><span className="text-sm font-semibold text-medical-green-700">73.4%</span></div>
-     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">PFA Adoption</span><span className="text-sm font-semibold text-medical-green-700">31.2%</span></div>
-     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">RF/Cryo Success</span><span className="text-sm font-semibold text-medical-green-700">78.4%</span></div>
-     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">PFA Success</span><span className="text-sm font-semibold text-medical-green-700">82.1%</span></div>
-     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">Complication Rate</span><span className="text-sm font-semibold text-medical-green-700">1.9%</span></div>
+     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">AFib Freedom 1yr</span><span className="text-sm font-semibold text-[#2C4A60]">73.4%</span></div>
+     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">PFA Adoption</span><span className="text-sm font-semibold text-[#2C4A60]">31.2%</span></div>
+     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">RF/Cryo Success</span><span className="text-sm font-semibold text-[#2C4A60]">78.4%</span></div>
+     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">PFA Success</span><span className="text-sm font-semibold text-[#2C4A60]">82.1%</span></div>
+     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">Complication Rate</span><span className="text-sm font-semibold text-[#2C4A60]">1.9%</span></div>
    </div>
  </div>
  {/* Device Metrics */}
  <div className="bg-white border border-titanium-200 rounded-lg p-5">
    <h4 className="font-bold text-titanium-900 mb-4">Device Metrics</h4>
    <div className="divide-y divide-titanium-100">
-     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">PM Implant Success</span><span className="text-sm font-semibold text-medical-green-700">99.6%</span></div>
-     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">ICD/CRT-D Success</span><span className="text-sm font-semibold text-medical-green-700">99.1%</span></div>
-     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">Lead Extraction Success</span><span className="text-sm font-semibold text-medical-green-700">97.6%</span></div>
-     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">Total Implants YTD</span><span className="text-sm font-semibold text-medical-green-700">789</span></div>
-     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">Remote Monitoring Rate</span><span className="text-sm font-semibold text-medical-green-700">94.2%</span></div>
+     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">PM Implant Success</span><span className="text-sm font-semibold text-[#2C4A60]">99.6%</span></div>
+     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">ICD/CRT-D Success</span><span className="text-sm font-semibold text-[#2C4A60]">99.1%</span></div>
+     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">Lead Extraction Success</span><span className="text-sm font-semibold text-[#2C4A60]">97.6%</span></div>
+     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">Total Implants YTD</span><span className="text-sm font-semibold text-[#2C4A60]">789</span></div>
+     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">Remote Monitoring Rate</span><span className="text-sm font-semibold text-[#2C4A60]">94.2%</span></div>
    </div>
  </div>
  {/* LAAC Program */}
  <div className="bg-white border border-titanium-200 rounded-lg p-5">
    <h4 className="font-bold text-titanium-900 mb-4">LAAC Program</h4>
    <div className="divide-y divide-titanium-100">
-     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">Complete Seal</span><span className="text-sm font-semibold text-medical-green-700">98.7%</span></div>
-     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">Eligible Population</span><span className="text-sm font-semibold text-medical-green-700">456</span></div>
-     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">OAC Discontinuation at 45d</span><span className="text-sm font-semibold text-medical-green-700">96.3%</span></div>
-     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">Peri-procedural Leak &lt;5mm</span><span className="text-sm font-semibold text-medical-green-700">1.2%</span></div>
-     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">Complication Rate</span><span className="text-sm font-semibold text-medical-green-700">1.7%</span></div>
+     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">Complete Seal</span><span className="text-sm font-semibold text-[#2C4A60]">98.7%</span></div>
+     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">Eligible Population</span><span className="text-sm font-semibold text-[#2C4A60]">456</span></div>
+     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">OAC Discontinuation at 45d</span><span className="text-sm font-semibold text-[#2C4A60]">96.3%</span></div>
+     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">Peri-procedural Leak &lt;5mm</span><span className="text-sm font-semibold text-[#2C4A60]">1.2%</span></div>
+     <div className="flex justify-between items-center py-2"><span className="text-sm text-titanium-600">Complication Rate</span><span className="text-sm font-semibold text-[#2C4A60]">1.7%</span></div>
    </div>
  </div>
  </div>
@@ -109,14 +109,14 @@ const EPProcedureAnalytics: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="metal-card p-5 border-l-4 border-l-medical-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total EP Procedures</p><p className="text-3xl font-bold text-titanium-900">2,565</p><p className="text-xs text-green-600 mt-1">+11.3% vs last quarter</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">PFA Adoption</p><p className="text-3xl font-bold text-blue-700">31.2%</p><p className="text-xs text-green-600 mt-1">+18% vs last quarter</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">AFib Freedom at 1yr</p><p className="text-3xl font-bold text-green-700">73.4%</p><p className="text-xs text-titanium-500 mt-1">Avg across AFib ablations</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total EP Procedures</p><p className="text-3xl font-bold text-titanium-900">2,565</p><p className="text-xs text-[#2C4A60] mt-1">+11.3% vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">PFA Adoption</p><p className="text-3xl font-bold text-blue-700">31.2%</p><p className="text-xs text-[#2C4A60] mt-1">+18% vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">AFib Freedom at 1yr</p><p className="text-3xl font-bold text-[#2C4A60]">73.4%</p><p className="text-xs text-titanium-500 mt-1">Avg across AFib ablations</p></div>
         <div className="metal-card p-5 border-l-4 border-l-slate-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">LAAC Seal Rate</p><p className="text-3xl font-bold text-slate-700">98.7%</p><p className="text-xs text-titanium-500 mt-1">Complete closure at 45 days</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-titanium-100 flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 text-medical-green-600" />
+          <BarChart3 className="w-5 h-5 text-[#2C4A60]" />
           <h3 className="text-base font-semibold text-titanium-900">EP Procedure Volume &amp; Outcomes</h3>
         </div>
         <div className="overflow-x-auto">
@@ -127,9 +127,9 @@ const EPProcedureAnalytics: React.FC = () => {
                 <tr key={i} className="hover:bg-titanium-50">
                   <td className="px-4 py-3 font-medium text-titanium-900">{p.type}</td>
                   <td className="px-4 py-3 font-mono font-semibold">{p.volume}</td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{p.success}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.success}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{p.free1yr}</td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">{p.complications}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{p.complications}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{p.avgTime}</td>
                 </tr>
               ))}
@@ -154,13 +154,13 @@ const EPProviderPerformance: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="metal-card p-5 border-l-4 border-l-medical-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total EPs</p><p className="text-3xl font-bold text-titanium-900">6</p><p className="text-xs text-titanium-500 mt-1">Board-certified electrophysiologists</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Avg Ablation Success</p><p className="text-3xl font-bold text-green-700">94.6%</p><p className="text-xs text-titanium-500 mt-1">Freedom from arrhythmia at 1 yr</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total EPs</p><p className="text-3xl font-bold text-titanium-900">6</p><p className="text-xs text-titanium-500 mt-1">Board-certified electrophysiologists</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Avg Ablation Success</p><p className="text-3xl font-bold text-[#2C4A60]">94.6%</p><p className="text-xs text-titanium-500 mt-1">Freedom from arrhythmia at 1 yr</p></div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total Procedures</p><p className="text-3xl font-bold text-blue-700">2,299</p><p className="text-xs text-titanium-500 mt-1">Ablations + device implants</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-titanium-100 flex items-center gap-2">
-          <Users className="w-5 h-5 text-medical-green-600" />
+          <Users className="w-5 h-5 text-[#2C4A60]" />
           <h3 className="text-base font-semibold text-titanium-900">EP Provider Performance Scorecard</h3>
         </div>
         <div className="overflow-x-auto">
@@ -173,9 +173,9 @@ const EPProviderPerformance: React.FC = () => {
                   <td className="px-4 py-3 text-titanium-600">{p.specialty}</td>
                   <td className="px-4 py-3 text-center font-mono">{p.ablations}</td>
                   <td className="px-4 py-3 text-center font-mono">{p.devices}</td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{p.successRate}</span></td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">{p.complications}</span></td>
-                  <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="flex-1 bg-titanium-100 rounded-full h-2"><div className="bg-medical-green-500 h-2 rounded-full" style={{ width: `${p.quality}%` }} /></div><span className="text-xs font-semibold text-titanium-700">{p.quality}</span></div></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.successRate}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{p.complications}</span></td>
+                  <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="flex-1 bg-titanium-100 rounded-full h-2"><div className="bg-[#F0F5FA] h-2 rounded-full" style={{ width: `${p.quality}%` }} /></div><span className="text-xs font-semibold text-titanium-700">{p.quality}</span></div></td>
                 </tr>
               ))}
             </tbody>
@@ -198,14 +198,14 @@ const ArrhythmiaManagement: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="metal-card p-5 border-l-4 border-l-medical-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total AFib Patients</p><p className="text-3xl font-bold text-titanium-900">3,686</p><p className="text-xs text-titanium-500 mt-1">Active in program</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total AFib Patients</p><p className="text-3xl font-bold text-titanium-900">3,686</p><p className="text-xs text-titanium-500 mt-1">Active in program</p></div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Anticoagulation Rate</p><p className="text-3xl font-bold text-blue-700">89.4%</p><p className="text-xs text-titanium-500 mt-1">Eligible CHA2DS2-VASc ≥2</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Rhythm Control Rate</p><p className="text-3xl font-bold text-green-700">58.2%</p><p className="text-xs text-titanium-500 mt-1">Across all AFib types</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-slate-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">AFib Ablation Rate</p><p className="text-3xl font-bold text-slate-700">29.3%</p><p className="text-xs text-green-600 mt-1">+4.1% vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Rhythm Control Rate</p><p className="text-3xl font-bold text-[#2C4A60]">58.2%</p><p className="text-xs text-titanium-500 mt-1">Across all AFib types</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-slate-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">AFib Ablation Rate</p><p className="text-3xl font-bold text-slate-700">29.3%</p><p className="text-xs text-[#2C4A60] mt-1">+4.1% vs last quarter</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-titanium-100 flex items-center gap-2">
-          <Activity className="w-5 h-5 text-medical-green-600" />
+          <Activity className="w-5 h-5 text-[#2C4A60]" />
           <h3 className="text-base font-semibold text-titanium-900">Arrhythmia Management by Type</h3>
         </div>
         <div className="overflow-x-auto">
@@ -219,7 +219,7 @@ const ArrhythmiaManagement: React.FC = () => {
                   <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">{d.rhythm}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{d.rate}</td>
                   <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">{d.ablation}</span></td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{d.oac}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{d.oac}</span></td>
                 </tr>
               ))}
             </tbody>
@@ -246,13 +246,13 @@ const EPQualityMetrics: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="metal-card p-5 border-l-4 border-l-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Above Benchmark</p><p className="text-3xl font-bold text-green-700">5 / 9</p><p className="text-xs text-titanium-500 mt-1">Quality measures exceeding targets</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Above Benchmark</p><p className="text-3xl font-bold text-[#2C4A60]">5 / 9</p><p className="text-xs text-titanium-500 mt-1">Quality measures exceeding targets</p></div>
         <div className="metal-card p-5 border-l-4 border-l-red-400"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Below Benchmark</p><p className="text-3xl font-bold text-red-700">4 / 9</p><p className="text-xs text-titanium-500 mt-1">Device, amiodarone, ICD gaps</p></div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">NCDR Submission</p><p className="text-3xl font-bold text-blue-700">100%</p><p className="text-xs text-titanium-500 mt-1">NCDR LAAO + PINNACLE current</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-titanium-100 flex items-center gap-2">
-          <Award className="w-5 h-5 text-medical-green-600" />
+          <Award className="w-5 h-5 text-[#2C4A60]" />
           <h3 className="text-base font-semibold text-titanium-900">EP Quality Measures — Current Performance</h3>
         </div>
         <div className="overflow-x-auto">
@@ -264,7 +264,7 @@ const EPQualityMetrics: React.FC = () => {
                   <td className="px-4 py-3 font-medium text-titanium-900">{m.measure}</td>
                   <td className="px-4 py-3 font-mono font-semibold text-titanium-800">{m.rate}</td>
                   <td className="px-4 py-3 text-titanium-500">{m.benchmark}</td>
-                  <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${m.above ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{m.above ? 'Above' : 'Below / Gap'}</span></td>
+                  <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${m.above ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-red-100 text-red-800'}`}>{m.above ? 'Above' : 'Below / Gap'}</span></td>
                   <td className="px-4 py-3 text-titanium-500 text-xs">{m.source}</td>
                 </tr>
               ))}
@@ -320,7 +320,7 @@ const EPDeviceAblationPipeline: React.FC = () => {
             <ul className="space-y-1 mb-3">
               {p.signals.map((s, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-titanium-700">
-                  <AlertTriangle className="w-3.5 h-3.5 text-amber-500 mt-0.5 flex-shrink-0" />
+                  <AlertTriangle className="w-3.5 h-3.5 text-[#6B7280] mt-0.5 flex-shrink-0" />
                   {s}
                 </li>
               ))}
@@ -376,7 +376,7 @@ const EPDeviceAblationPipeline: React.FC = () => {
               <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-medium">{gap.patientCount} patients</span>
             </div>
             <p className="text-xs text-titanium-600 mt-1">{gap.evidence}</p>
-            <p className="text-xs font-semibold text-medical-green-700 mt-2">Action: {gap.cta}</p>
+            <p className="text-xs font-semibold text-[#2C4A60] mt-2">Action: {gap.cta}</p>
           </div>
         </div>
         {gap.safetyNote && (
@@ -415,9 +415,9 @@ const EPDeviceAblationPipeline: React.FC = () => {
           <p className="text-3xl font-bold text-blue-800">{totalPFA}</p>
           <p className="text-xs text-titanium-500 mt-1">AF recurrence post-ablation candidates</p>
         </div>
-        <div className="metal-card p-5 border-l-4 border-l-amber-400">
-          <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-1">Cryptogenic Stroke ILR</p>
-          <p className="text-3xl font-bold text-amber-800">{totalILR}</p>
+        <div className="metal-card p-5 border-l-4 border-l-[#6B7280]">
+          <p className="text-xs font-semibold text-[#6B7280] uppercase tracking-wide mb-1">Cryptogenic Stroke ILR</p>
+          <p className="text-3xl font-bold text-[#6B7280]">{totalILR}</p>
           <p className="text-xs text-titanium-500 mt-1">ILR not ordered post-cryptogenic stroke</p>
         </div>
       </div>
@@ -457,7 +457,7 @@ const EPDeviceAblationPipeline: React.FC = () => {
           ].map((q, i) => (
             <div key={i} className="px-4 py-3 text-center">
               <div className="text-xs font-semibold text-titanium-500 uppercase">{q.label}</div>
-              <div className="text-lg font-bold text-emerald-700 mt-1">{formatDollar(q.revenue)}</div>
+              <div className="text-lg font-bold text-[#2C4A60] mt-1">{formatDollar(q.revenue)}</div>
               <div className="text-xs text-titanium-500">{q.procedures} procedures</div>
             </div>
           ))}
@@ -491,10 +491,10 @@ const EPDeviceAblationPipeline: React.FC = () => {
         pfaGap,
         'Gap 11: PFA Re-ablation — AF Recurrence Post-Ablation',
         'GROWTH',
-        'bg-green-100 text-green-800',
-        'border-green-200',
-        'bg-green-50',
-        <Zap className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+        'bg-[#C8D4DC] text-[#2C4A60]',
+        'border-[#2C4A60]',
+        'bg-[#C8D4DC]',
+        <Zap className="w-5 h-5 text-[#2C4A60] mt-0.5 flex-shrink-0" />
       )}
 
       {/* Gap 65 — Cryptogenic Stroke ILR */}
@@ -502,10 +502,10 @@ const EPDeviceAblationPipeline: React.FC = () => {
         ilrGap,
         'Gap 65: Cryptogenic Stroke — Implantable Loop Recorder Not Ordered',
         'HIGH PRIORITY',
-        'bg-amber-100 text-amber-800',
-        'border-amber-200',
-        'bg-amber-50',
-        <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+        'bg-[#F0F5FA] text-[#6B7280]',
+        'border-[#C8D4DC]',
+        'bg-[#F0F5FA]',
+        <AlertTriangle className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />
       )}
 
       {/* Gap 69 — Flutter Ablation */}
@@ -533,10 +533,10 @@ const EPDeviceAblationPipeline: React.FC = () => {
       {/* Automation callout */}
       <div className="metal-card bg-titanium-50 border border-titanium-200 rounded-2xl p-6">
         <div className="flex items-start gap-3">
-          <Zap className="w-5 h-5 text-medical-green-600 mt-0.5 flex-shrink-0" />
+          <Zap className="w-5 h-5 text-[#2C4A60] mt-0.5 flex-shrink-0" />
           <div>
             <h3 className="text-base font-semibold text-titanium-900 mb-1">Automated Pipeline Detection</h3>
-            <p className="text-sm text-titanium-600">&#9889; Patients automatically identified from EHR data via Redox</p>
+            <p className="text-sm text-titanium-600">&#9889; Patients automatically identified from EHR integration</p>
           </div>
         </div>
       </div>
@@ -555,9 +555,9 @@ const EPDeviceAblationPipeline: React.FC = () => {
               <div className="text-lg font-bold text-red-600">14 months</div>
               <div className="text-xs text-titanium-400">to clear pipeline</div>
             </div>
-            <div className="bg-emerald-50/70 rounded-lg p-3">
+            <div className="bg-[#F0F5FA]/70 rounded-lg p-3">
               <div className="text-xs text-titanium-500 mb-1">Systematic Closure</div>
-              <div className="text-lg font-bold text-emerald-600">5 months</div>
+              <div className="text-lg font-bold text-[#2C4A60]">5 months</div>
               <div className="text-xs text-titanium-400">with TAILRD protocol</div>
             </div>
             <div className="bg-blue-50/70 rounded-lg p-3">
@@ -692,7 +692,7 @@ const electrophysiologyTabs: ServiceLineTabConfig[] = [
  id: 'ep-clinical-gap-detection',
  label: 'Gap Detection (20-Gap)',
  icon: Zap,
- description: 'AI-driven EP gap detection: LAAC, CSP/CRT, PFA re-ablation, CASTLE-AF, DANISH ICD, OSA-AF, WPW, amiodarone monitoring, OAC monotherapy (cross-module), persistent AF rhythm control, cryptogenic stroke ILR, dofetilide REMS safety, dronedarone contraindication, IST ivabradine, flutter ablation, device battery EOL safety, PVC cardiomyopathy, LQTS beta-blocker, carotid/stroke, Fontan All gap detection criteria, risk scores, and composite calculators are automatically computed from structured EHR data ingested via Redox — no manual data entry or chart review required.'
+ description: 'AI-driven EP gap detection: LAAC, CSP/CRT, PFA re-ablation, CASTLE-AF, DANISH ICD, OSA-AF, WPW, amiodarone monitoring, OAC monotherapy (cross-module), persistent AF rhythm control, cryptogenic stroke ILR, dofetilide REMS safety, dronedarone contraindication, IST ivabradine, flutter ablation, device battery EOL safety, PVC cardiomyopathy, LQTS beta-blocker, carotid/stroke, Fontan All gap detection criteria, risk scores, and composite calculators are automatically computed from structured EHR data ingested via EHR integration — no manual data entry or chart review required.'
   }
 ];
 

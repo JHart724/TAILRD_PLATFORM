@@ -12,19 +12,19 @@ const OnboardingBanner: React.FC<OnboardingBannerProps> = ({ hasUploadedFiles })
   if (!isVisible) return null;
 
   return (
-    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+    <div className="bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
       <div className="flex items-center gap-4">
         {/* Left: Info icon */}
-        <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
-          <Info className="w-10 h-10 text-amber-600" />
+        <div className="w-10 h-10 rounded-full bg-[#F0F5FA] flex items-center justify-center flex-shrink-0">
+          <Info className="w-10 h-10 text-[#6B7280]" />
         </div>
 
         {/* Center: Text content */}
         <div className="flex-1">
-          <h3 className="text-sm font-body font-semibold text-amber-800">
+          <h3 className="text-sm font-body font-semibold text-[#6B7280]">
             Enhance Your Analytics
           </h3>
-          <p className="text-sm text-amber-700 font-body">
+          <p className="text-sm text-[#6B7280] font-body">
             Upload your facility data to unlock verified analytics, personalized
             benchmarking, and premium features. Your data stays in your browser.
           </p>

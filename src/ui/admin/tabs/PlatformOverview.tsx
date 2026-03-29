@@ -31,8 +31,8 @@ import {
 const KPI_CARDS = [
   { label: 'Total Health Systems', value: '3', icon: Building2, color: '#7A1A2E' },
   { label: 'Total Active Users', value: '12', icon: Users, color: '#2563EB' },
-  { label: 'Total Patients', value: '10,660', icon: Heart, color: '#059669' },
-  { label: 'Total Gap Flags', value: '104', icon: AlertTriangle, color: '#D97706' },
+  { label: 'Total Patients', value: '10,660', icon: Heart, color: '#2C4A60' },
+  { label: 'Total Gap Flags', value: '104', icon: AlertTriangle, color: '#6B7280' },
   { label: 'Data Uploads This Month', value: '7', icon: Upload, color: '#2C4A60' },
   { label: 'Platform Uptime', value: '99.97%', icon: Server, color: '#0891B2' },
 ];
@@ -78,8 +78,8 @@ const ACTIVITY_ICON_MAP: Record<ActivityEvent['type'], React.ElementType> = {
 const ACTIVITY_COLOR_MAP: Record<ActivityEvent['type'], string> = {
   login: '#2563EB',
   upload: '#2C4A60',
-  gap_action: '#059669',
-  invite: '#D97706',
+  gap_action: '#2C4A60',
+  invite: '#6B7280',
   config: '#7A1A2E',
   export: '#0891B2',
 };
@@ -155,7 +155,7 @@ const PlatformOverview: React.FC = () => {
               <Legend wrapperStyle={{ fontSize: 12 }} />
               <Line type="monotone" dataKey="BSW" stroke="#7A1A2E" strokeWidth={2} dot={false} />
               <Line type="monotone" dataKey="MSH" stroke="#2563EB" strokeWidth={2} dot={false} />
-              <Line type="monotone" dataKey="MH" stroke="#059669" strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="MH" stroke="#2C4A60" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -187,8 +187,8 @@ const PlatformOverview: React.FC = () => {
                 <span
                   className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                     hs.status === 'Active'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-amber-100 text-amber-800'
+                      ? 'bg-[#C8D4DC] text-[#2C4A60]'
+                      : 'bg-[#F0F5FA] text-[#6B7280]'
                   }`}
                 >
                   {hs.status}

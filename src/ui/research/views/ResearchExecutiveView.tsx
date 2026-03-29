@@ -8,7 +8,7 @@ const registryKPIs = [
   { label: 'Cases Auto-Populated This Month', value: '159', icon: FileText, color: 'border-l-[#2E3440]' },
   { label: 'Average Auto-Fill Rate', value: '80%', icon: TrendingUp, color: 'border-l-emerald-500' },
   { label: 'Abstraction Hours Saved', value: '212', icon: Clock, color: 'border-l-blue-500' },
-  { label: 'Submission-Ready Cases', value: '117', icon: CheckCircle, color: 'border-l-amber-500' },
+  { label: 'Submission-Ready Cases', value: '117', icon: CheckCircle, color: 'border-l-[#6B7280]' },
 ];
 
 const registries = [
@@ -65,7 +65,7 @@ const trialKPIs = [
   { label: 'Patients Screened', value: '284', icon: Users, color: 'border-l-[#2E3440]' },
   { label: 'Eligible Identified', value: '156', icon: CheckCircle, color: 'border-l-emerald-500' },
   { label: 'Active Trials', value: '14', icon: FlaskConical, color: 'border-l-blue-500' },
-  { label: 'Industry-Sponsored', value: '9', icon: AlertTriangle, color: 'border-l-amber-500' },
+  { label: 'Industry-Sponsored', value: '9', icon: AlertTriangle, color: 'border-l-[#6B7280]' },
 ];
 
 const trials = [
@@ -146,10 +146,10 @@ const ResearchExecutiveView: React.FC = () => {
                   <span
                     className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
                       aboveTarget
-                        ? 'bg-emerald-100 text-emerald-700'
+                        ? 'bg-[#F0F5FA] text-[#2C4A60]'
                         : inTarget
                         ? 'bg-blue-100 text-blue-700'
-                        : 'bg-amber-100 text-amber-700'
+                        : 'bg-[#F0F5FA] text-[#6B7280]'
                     }`}
                   >
                     {aboveTarget ? 'Above Target' : inTarget ? 'On Target' : 'Below Target'}
@@ -266,7 +266,7 @@ const ResearchExecutiveView: React.FC = () => {
                         <span
                           className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
                             trial.type === 'Industry'
-                              ? 'bg-amber-100 text-amber-700'
+                              ? 'bg-[#F0F5FA] text-[#6B7280]'
                               : 'bg-slate-100 text-slate-600'
                           }`}
                         >
@@ -277,8 +277,8 @@ const ResearchExecutiveView: React.FC = () => {
                     <td className="py-3 px-4 text-right font-medium text-titanium-800">{trial.eligible.toLocaleString()}</td>
                     <td className="py-3 px-4 text-titanium-600">{trial.phase}</td>
                     <td className="py-3 px-4">
-                      <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      <span className="inline-flex items-center gap-1 text-[#2C4A60] font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#F0F5FA]" />
                         {trial.status}
                       </span>
                     </td>
@@ -291,7 +291,7 @@ const ResearchExecutiveView: React.FC = () => {
 
         {/* Disclosure Note */}
         <div className="flex items-start gap-2 text-xs text-titanium-500 bg-titanium-50 border border-titanium-200 rounded-xl p-3">
-          <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+          <AlertTriangle className="w-4 h-4 text-[#6B7280] mt-0.5 shrink-0" />
           <span>
             Industry-sponsored trials flagged. Eligibility screening is automated — enrollment decisions require PI review.
           </span>

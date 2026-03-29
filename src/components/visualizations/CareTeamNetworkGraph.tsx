@@ -33,15 +33,15 @@ const CareTeamNetworkGraph: React.FC = () => {
  // Providers
  { id: 'sw', name: 'Dr. Sarah Williams', type: 'provider', specialty: 'Cardiology', patientCount: 89, connectionStrength: 0.95, x: 200, y: 150, color: '#ef4444' },
  { id: 'mc', name: 'Dr. Michael Chen', type: 'provider', specialty: 'Cardiology', patientCount: 127, connectionStrength: 0.88, x: 350, y: 100, color: '#3b82f6' },
- { id: 'jm', name: 'Dr. Jennifer Martinez', type: 'provider', specialty: 'Internal Medicine', patientCount: 203, connectionStrength: 0.67, x: 150, y: 300, color: '#10b981' },
+ { id: 'jm', name: 'Dr. Jennifer Martinez', type: 'provider', specialty: 'Internal Medicine', patientCount: 203, connectionStrength: 0.67, x: 150, y: 300, color: '#2C4A60' },
  { id: 'rt', name: 'Dr. Robert Thompson', type: 'provider', specialty: 'Cardiology', patientCount: 156, connectionStrength: 0.85, x: 400, y: 250, color: '#9B2438' },
- { id: 'lp', name: 'Dr. Lisa Park', type: 'provider', specialty: 'Internal Medicine', patientCount: 178, connectionStrength: 0.71, x: 300, y: 350, color: '#f59e0b' },
+ { id: 'lp', name: 'Dr. Lisa Park', type: 'provider', specialty: 'Internal Medicine', patientCount: 178, connectionStrength: 0.71, x: 300, y: 350, color: '#C8D4DC' },
  
  // Departments
  { id: 'cardio', name: 'Cardiology', type: 'department', patientCount: 372, connectionStrength: 0.92, x: 500, y: 150, color: '#dc2626' },
- { id: 'internal', name: 'Internal Medicine', type: 'department', patientCount: 381, connectionStrength: 0.69, x: 100, y: 200, color: '#059669' },
+ { id: 'internal', name: 'Internal Medicine', type: 'department', patientCount: 381, connectionStrength: 0.69, x: 100, y: 200, color: '#2C4A60' },
  { id: 'pharmacy', name: 'Pharmacy', type: 'service', patientCount: 753, connectionStrength: 0.78, x: 250, y: 50, color: '#7A1A2E' },
- { id: 'lab', name: 'Laboratory', type: 'service', patientCount: 650, connectionStrength: 0.82, x: 450, y: 350, color: '#ea580c' },
+ { id: 'lab', name: 'Laboratory', type: 'service', patientCount: 650, connectionStrength: 0.82, x: 450, y: 350, color: '#7A1A2E' },
  
  // Patient Groups
  { id: 'hfref', name: 'HFrEF Patients', type: 'patient-group', patientCount: 847, connectionStrength: 0.73, x: 550, y: 200, color: '#be123c' },
@@ -182,7 +182,7 @@ const CareTeamNetworkGraph: React.FC = () => {
  y1={fromNode.y}
  x2={toNode.x}
  y2={toNode.y}
- stroke={connection.type === 'referral' ? '#10b981' : connection.type === 'collaboration' ? '#3b82f6' : '#f59e0b'}
+ stroke={connection.type === 'referral' ? '#2C4A60' : connection.type === 'collaboration' ? '#3b82f6' : '#C8D4DC'}
  strokeWidth={isHighlighted ? getConnectionWidth(connection) * 2 : getConnectionWidth(connection)}
  opacity={isHighlighted ? 1 : getConnectionOpacity(connection)}
  strokeDasharray={connection.type === 'consultation' ? '5,5' : 'none'}
@@ -240,7 +240,7 @@ const CareTeamNetworkGraph: React.FC = () => {
  {/* Legend */}
  <div className="mt-4 flex items-center gap-6 text-sm">
  <div className="flex items-center gap-2">
- <div className="w-3 h-0.5 bg-green-500"></div>
+ <div className="w-3 h-0.5 bg-[#C8D4DC]"></div>
  <span>Referrals</span>
  </div>
  <div className="flex items-center gap-2">
@@ -248,7 +248,7 @@ const CareTeamNetworkGraph: React.FC = () => {
  <span>Collaborations</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-3 h-0.5 bg-yellow-500" style={{ background: 'repeating-linear-gradient(90deg, #f59e0b, #f59e0b 3px, transparent 3px, transparent 6px)' }}></div>
+ <div className="w-3 h-0.5 bg-[#6B7280]" style={{ background: 'repeating-linear-gradient(90deg, #6B7280, #6B7280 3px, transparent 3px, transparent 6px)' }}></div>
  <span>Consultations</span>
  </div>
  </div>
@@ -276,9 +276,9 @@ const CareTeamNetworkGraph: React.FC = () => {
  <div className="text-lg font-bold text-chrome-600">{selectedNode.patientCount || 0}</div>
  <div className="text-xs text-chrome-700">Patients</div>
  </div>
- <div className="bg-emerald-50 p-3 rounded-lg">
- <div className="text-lg font-bold text-emerald-600">{toFixed(selectedNode.connectionStrength * 100, 0)}%</div>
- <div className="text-xs text-emerald-700">Connection</div>
+ <div className="bg-[#F0F5FA] p-3 rounded-lg">
+ <div className="text-lg font-bold text-[#2C4A60]">{toFixed(selectedNode.connectionStrength * 100, 0)}%</div>
+ <div className="text-xs text-[#2C4A60]">Connection</div>
  </div>
  </div>
  
@@ -334,7 +334,7 @@ const CareTeamNetworkGraph: React.FC = () => {
  
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Building className="w-8 h-8 text-green-600" />
+ <Building className="w-8 h-8 text-[#2C4A60]" />
  <div>
  <div className="text-2xl font-bold text-titanium-900">{nodes.filter(n => n.type === 'department').length + nodes.filter(n => n.type === 'service').length}</div>
  <div className="text-sm text-titanium-600">Departments & Services</div>

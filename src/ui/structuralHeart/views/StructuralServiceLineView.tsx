@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Heart, Users, Calendar, Shield, Gauge, Activity, Target, BarChart3, FileText, TrendingUp, Search } from 'lucide-react';
 
 // Import Structural Heart components
@@ -21,13 +21,12 @@ interface TabGroup {
 }
 
 const StructuralServiceLineView: React.FC = () => {
-  const [activeTab, _setActiveTab] = useState<TabId>('gap-detection');
-  const contentRef = useRef<HTMLDivElement>(null);
-  const setActiveTab = (tab: TabId) => {
-    _setActiveTab(tab);
-    setTimeout(() => {
-      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
+  const [activeTab, setActiveTab] = useState<TabId>('gap-detection');
+
+  const handleTabChange = (tab: TabId) => {
+    setActiveTab(tab);
+    const container = document.getElementById('main-scroll-container');
+    if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
   const [generatingReport, setGeneratingReport] = useState<string | null>(null);
   const [exportingFormat, setExportingFormat] = useState<string | null>(null);
@@ -95,8 +94,8 @@ const StructuralServiceLineView: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {[
                 { stage: 'Screening', patients: 247, rate: '100%', bgColor: 'bg-chrome-50', borderColor: 'border-chrome-200', textColor: 'text-chrome-600' },
-                { stage: 'Suitable', patients: 189, rate: '76.5%', bgColor: 'bg-green-50', borderColor: 'border-green-200', textColor: 'text-green-600' },
-                { stage: 'Scheduled', patients: 156, rate: '82.5%', bgColor: 'bg-amber-50', borderColor: 'border-amber-200', textColor: 'text-amber-600' },
+                { stage: 'Suitable', patients: 189, rate: '76.5%', bgColor: 'bg-[#C8D4DC]', borderColor: 'border-[#2C4A60]', textColor: 'text-[#2C4A60]' },
+                { stage: 'Scheduled', patients: 156, rate: '82.5%', bgColor: 'bg-[#F0F5FA]', borderColor: 'border-[#C8D4DC]', textColor: 'text-[#6B7280]' },
                 { stage: 'Completed', patients: 142, rate: '91.0%', bgColor: 'bg-arterial-50', borderColor: 'border-arterial-200', textColor: 'text-arterial-600' }
               ].map((item, index) => (
                 <div key={item.stage} className={`text-center p-6 rounded-xl ${item.bgColor} border ${item.borderColor}`}>
@@ -110,10 +109,10 @@ const StructuralServiceLineView: React.FC = () => {
               <div className="bg-white p-6 rounded-xl border border-titanium-200">
                 <h4 className="font-semibold text-titanium-900 mb-4">Suitability Criteria</h4>
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between"><span>Moderate-to-severe MR</span><span className="text-green-600">&#10003; Met</span></div>
-                  <div className="flex justify-between"><span>Disease Stage &#8805;20%</span><span className="text-green-600">&#10003; Met</span></div>
-                  <div className="flex justify-between"><span>Appropriate anatomy</span><span className="text-amber-600">Review</span></div>
-                  <div className="flex justify-between"><span>Heart team evaluation</span><span className="text-green-600">&#10003; Met</span></div>
+                  <div className="flex justify-between"><span>Moderate-to-severe MR</span><span className="text-[#2C4A60]">&#10003; Met</span></div>
+                  <div className="flex justify-between"><span>Disease Stage &#8805;20%</span><span className="text-[#2C4A60]">&#10003; Met</span></div>
+                  <div className="flex justify-between"><span>Appropriate anatomy</span><span className="text-[#6B7280]">Review</span></div>
+                  <div className="flex justify-between"><span>Heart team evaluation</span><span className="text-[#2C4A60]">&#10003; Met</span></div>
                 </div>
               </div>
               <div className="bg-white p-6 rounded-xl border border-titanium-200">
@@ -169,11 +168,11 @@ const StructuralServiceLineView: React.FC = () => {
                     { criteria: 'Heart team approval', met: false }
                   ].map((item, index) => (
                     <div key={item.criteria} className={`p-3 rounded-lg border ${
-                      item.met ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
+                      item.met ? 'bg-[#C8D4DC] border-[#2C4A60]' : 'bg-red-50 border-red-200'
                     }`}>
                       <div className="flex items-center justify-between">
                         <span className="text-titanium-900">{item.criteria}</span>
-                        <span className={`font-medium ${item.met ? 'text-green-600' : 'text-red-600'}`}>
+                        <span className={`font-medium ${item.met ? 'text-[#2C4A60]' : 'text-red-600'}`}>
                           {item.met ? '\u2713 Met' : '\u2717 Not Met'}
                         </span>
                       </div>
@@ -190,11 +189,11 @@ const StructuralServiceLineView: React.FC = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-titanium-600">Success Rate</span>
-                    <span className="font-bold text-green-600">94.4%</span>
+                    <span className="font-bold text-[#2C4A60]">94.4%</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-titanium-600">Complication Rate</span>
-                    <span className="font-bold text-amber-600">5.6%</span>
+                    <span className="font-bold text-[#6B7280]">5.6%</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-titanium-600">Avg Procedure Time</span>
@@ -224,11 +223,11 @@ const StructuralServiceLineView: React.FC = () => {
                     { criteria: 'No other stroke etiology', met: false }
                   ].map((item, index) => (
                     <div key={item.criteria} className={`p-3 rounded-lg border ${
-                      item.met ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
+                      item.met ? 'bg-[#C8D4DC] border-[#2C4A60]' : 'bg-red-50 border-red-200'
                     }`}>
                       <div className="flex items-center justify-between">
                         <span className="text-titanium-900">{item.criteria}</span>
-                        <span className={`font-medium ${item.met ? 'text-green-600' : 'text-red-600'}`}>
+                        <span className={`font-medium ${item.met ? 'text-[#2C4A60]' : 'text-red-600'}`}>
                           {item.met ? '\u2713 Met' : '\u2717 Not Met'}
                         </span>
                       </div>
@@ -245,11 +244,11 @@ const StructuralServiceLineView: React.FC = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-titanium-600">Success Rate</span>
-                    <span className="font-bold text-green-600">98.5%</span>
+                    <span className="font-bold text-[#2C4A60]">98.5%</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-titanium-600">Complication Rate</span>
-                    <span className="font-bold text-amber-600">1.5%</span>
+                    <span className="font-bold text-[#6B7280]">1.5%</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-titanium-600">Avg Procedure Time</span>
@@ -276,7 +275,7 @@ const StructuralServiceLineView: React.FC = () => {
                   <h4 className="font-semibold text-titanium-900 mb-2">{item.metric}</h4>
                   <div className="text-3xl font-bold text-arterial-600 mb-1">{item.value}</div>
                   <div className="text-sm text-titanium-600">Benchmark: {item.benchmark}</div>
-                  <div className="text-xs text-green-600">&darr; Better than benchmark</div>
+                  <div className="text-xs text-[#2C4A60]">&darr; Better than benchmark</div>
                 </div>
               ))}
             </div>
@@ -297,10 +296,10 @@ const StructuralServiceLineView: React.FC = () => {
                   { metric: 'Paravalvular Leak', value: '3.4%', benchmark: '<5.0%', met: true },
                   { metric: '30-Day Readmission', value: '8.4%', benchmark: '<12.0%', met: true }
                 ].map((item, index) => (
-                  <div key={item.metric} className={`p-6 rounded-xl border ${item.met ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+                  <div key={item.metric} className={`p-6 rounded-xl border ${item.met ? 'bg-[#C8D4DC] border-[#2C4A60]' : 'bg-red-50 border-red-200'}`}>
                     <div className="text-2xl font-bold text-titanium-900 mb-1">{item.value}</div>
                     <div className="font-medium text-titanium-800 text-sm">{item.metric}</div>
-                    <div className={`text-xs mt-2 ${item.met ? 'text-green-600' : 'text-red-600'}`}>
+                    <div className={`text-xs mt-2 ${item.met ? 'text-[#2C4A60]' : 'text-red-600'}`}>
                       Benchmark: {item.benchmark} {item.met ? '\u2713' : '\u2717'}
                     </div>
                   </div>
@@ -321,7 +320,7 @@ const StructuralServiceLineView: React.FC = () => {
                         <span className="text-titanium-800 text-sm">{item.metric}</span>
                         <div className="flex items-center gap-3">
                           <span className="font-medium text-titanium-900">{item.value}</span>
-                          <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">{item.percentile}</span>
+                          <span className="text-xs px-2 py-1 rounded-full bg-[#C8D4DC] text-[#2C4A60]">{item.percentile}</span>
                         </div>
                       </div>
                     ))}
@@ -342,9 +341,9 @@ const StructuralServiceLineView: React.FC = () => {
                         <div className="flex items-center gap-3">
                           <span className="font-medium text-titanium-900">{item.value}</span>
                           <span className={`text-xs px-2 py-1 rounded-full ${
-                            item.status === 'Excellent' ? 'bg-green-100 text-green-700' :
+                            item.status === 'Excellent' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
                             item.status === 'Good' ? 'bg-chrome-100 text-chrome-700' :
-                            'bg-amber-100 text-amber-700'
+                            'bg-[#F0F5FA] text-[#6B7280]'
                           }`}>{item.status}</span>
                         </div>
                       </div>
@@ -394,7 +393,7 @@ const StructuralServiceLineView: React.FC = () => {
                   return (
                     <button
                       key={tab.id}
-                      onClick={() => setActiveTab(tab.id as TabId)}
+                      onClick={() => handleTabChange(tab.id as TabId)}
                       className={`group relative p-4 rounded-xl border transition-all duration-300 ${
                         isActive
                           ? 'bg-porsche-50 border-porsche-200 text-porsche-600 shadow-lg scale-105'
@@ -419,7 +418,7 @@ const StructuralServiceLineView: React.FC = () => {
         </div>
 
         {/* Tab Content */}
-        <div ref={contentRef} className="space-y-6">
+        <div className="space-y-6">
           {renderTabContent()}
         </div>
       </div>

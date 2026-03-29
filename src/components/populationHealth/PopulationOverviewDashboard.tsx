@@ -263,8 +263,8 @@ const PopulationOverviewDashboard: React.FC<PopulationOverviewDashboardProps> = 
  <Area type="monotone" dataKey="heartFailure" stackId="1" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
  <Area type="monotone" dataKey="structural" stackId="1" stroke="#7A1A2E" fill="#7A1A2E" fillOpacity={0.6} />
  <Area type="monotone" dataKey="ep" stackId="1" stroke="#06b6d4" fill="#06b6d4" fillOpacity={0.6} />
- <Area type="monotone" dataKey="vascular" stackId="1" stroke="#10b981" fill="#10b981" fillOpacity={0.6} />
- <Area type="monotone" dataKey="valvular" stackId="1" stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.6} />
+ <Area type="monotone" dataKey="vascular" stackId="1" stroke="#2C4A60" fill="#2C4A60" fillOpacity={0.6} />
+ <Area type="monotone" dataKey="valvular" stackId="1" stroke="#C8D4DC" fill="#C8D4DC" fillOpacity={0.6} />
  <Area type="monotone" dataKey="coronary" stackId="1" stroke="#ef4444" fill="#ef4444" fillOpacity={0.6} />
  </AreaChart>
  </ResponsiveContainer>
@@ -347,8 +347,8 @@ const PopulationOverviewDashboard: React.FC<PopulationOverviewDashboardProps> = 
  />
  <Bar dataKey="gdmtOptimization" fill="#3b82f6" name="GDMT Optimization" />
  <Bar dataKey="medicationAdheren" fill="#7A1A2E" name="Medication Adherence" />
- <Bar dataKey="deviceTherapy" fill="#10b981" name="Device Therapy" />
- <Bar dataKey="lifestyle" fill="#f59e0b" name="Lifestyle" />
+ <Bar dataKey="deviceTherapy" fill="#2C4A60" name="Device Therapy" />
+ <Bar dataKey="lifestyle" fill="#C8D4DC" name="Lifestyle" />
  </BarChart>
  </ResponsiveContainer>
  </div>
@@ -398,9 +398,9 @@ const PopulationOverviewDashboard: React.FC<PopulationOverviewDashboardProps> = 
  <div className="flex items-center justify-between mb-2">
  <div className="flex items-center gap-3">
  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
- index === 0 ? 'bg-yellow-500' :
+ index === 0 ? 'bg-[#F0F5FA]' :
  index === 1 ? 'bg-gray-400' :
- index === 2 ? 'bg-amber-600' :
+ index === 2 ? 'bg-[#F0F5FA]' :
  'bg-titanium-500'
  }`}>
  {index + 1}

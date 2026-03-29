@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { DEMO_PATIENT_CONTEXT, DEMO_PATIENT_ROSTER } from '../../../types/shared';
 import { Heart, Users, Workflow, Shield, FileText, Scissors, Route, Bandage, ListTodo, Stethoscope, AlertTriangle } from 'lucide-react';
 
@@ -119,13 +119,12 @@ type PeripheralCareTeamTab =
   | 'clinical-gaps';
 
 const PeripheralCareTeamView: React.FC = () => {
-  const [activeTab, _setActiveTab] = useState<PeripheralCareTeamTab>('dashboard');
-  const contentRef = useRef<HTMLDivElement>(null);
-  const setActiveTab = (tab: PeripheralCareTeamTab) => {
-    _setActiveTab(tab);
-    setTimeout(() => {
-      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
+  const [activeTab, setActiveTab] = useState<PeripheralCareTeamTab>('dashboard');
+
+  const handleTabChange = (tab: PeripheralCareTeamTab) => {
+    setActiveTab(tab);
+    const container = document.getElementById('main-scroll-container');
+    if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
 
   // Extended configuration with our new components
@@ -243,7 +242,7 @@ const PeripheralCareTeamView: React.FC = () => {
  return (
  <button
  key={tab.id}
- onClick={() => setActiveTab(tab.id as PeripheralCareTeamTab)}
+ onClick={() => handleTabChange(tab.id as PeripheralCareTeamTab)}
  className={`group relative p-4 rounded-xl border transition-all duration-300 ${
  isActive
  ? `${colors.bg} ${colors.border} ${colors.text} shadow-lg scale-105`
@@ -266,7 +265,7 @@ const PeripheralCareTeamView: React.FC = () => {
  </div>
 
  {/* Tab Content */}
- <div ref={contentRef} className="space-y-6">
+ <div className="space-y-6">
  {renderActiveTabContent()}
  </div>
  </div>

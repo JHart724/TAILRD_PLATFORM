@@ -139,8 +139,8 @@ const EPAnticoagulationContraindicationChecker: React.FC<{ patientData?: Patient
 
   const getStatusIcon = (status: string) => {
  switch (status) {
- case 'safe': return <CheckCircle className="w-5 h-5 text-emerald-400" />;
- case 'caution': return <AlertTriangle className="w-5 h-5 text-yellow-400" />;
+ case 'safe': return <CheckCircle className="w-5 h-5 text-[#2C4A60]" />;
+ case 'caution': return <AlertTriangle className="w-5 h-5 text-[#6B7280]" />;
  case 'monitor': return <Clock className="w-5 h-5 text-chrome-400" />;
  case 'contraindicated': return <XCircle className="w-5 h-5 text-red-400" />;
  default: return null;
@@ -149,8 +149,8 @@ const EPAnticoagulationContraindicationChecker: React.FC<{ patientData?: Patient
 
   const getStatusBg = (status: string) => {
  switch (status) {
- case 'safe': return 'bg-emerald-500 border-emerald-500';
- case 'caution': return 'bg-yellow-500/10 border-yellow-500/30';
+ case 'safe': return 'bg-[#F0F5FA] border-[#C8D4DC]';
+ case 'caution': return 'bg-[#F0F5FA]/10 border-[#C8D4DC]/30';
  case 'contraindicated': return 'bg-red-500 border-red-500';
  default: return 'bg-white border-titanium-200';
  }
@@ -158,8 +158,8 @@ const EPAnticoagulationContraindicationChecker: React.FC<{ patientData?: Patient
 
   const getStatusText = (status: string) => {
  switch (status) {
- case 'safe': return 'text-emerald-400';
- case 'caution': return 'text-yellow-400';
+ case 'safe': return 'text-[#2C4A60]';
+ case 'caution': return 'text-[#6B7280]';
  case 'contraindicated': return 'text-red-400';
  default: return 'text-titanium-400';
  }
@@ -278,7 +278,7 @@ const EPAnticoagulationContraindicationChecker: React.FC<{ patientData?: Patient
  <ul className="space-y-1">
  {activeResult.reasons.map((r, i) => (
  <li key={r} className="text-xs text-titanium-300 flex items-start gap-2">
- <AlertTriangle className="w-3 h-3 text-yellow-400 mt-0.5 flex-shrink-0" />
+ <AlertTriangle className="w-3 h-3 text-[#6B7280] mt-0.5 flex-shrink-0" />
  {r}
  </li>
  ))}
@@ -291,7 +291,7 @@ const EPAnticoagulationContraindicationChecker: React.FC<{ patientData?: Patient
  <h5 className="text-xs font-semibold text-titanium-400 mb-2 uppercase tracking-wider">Alternatives</h5>
  <ul className="space-y-1">
  {activeResult.alternatives.map((a, i) => (
- <li key={a} className="text-xs text-emerald-400 flex items-center gap-2">
+ <li key={a} className="text-xs text-[#2C4A60] flex items-center gap-2">
  <Pill className="w-3 h-3 flex-shrink-0" /> {a}
  </li>
  ))}

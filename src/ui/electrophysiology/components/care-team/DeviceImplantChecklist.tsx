@@ -262,16 +262,16 @@ const DeviceImplantChecklist: React.FC = () => {
   const getRiskColor = (level: string) => {
  switch (level) {
  case 'High': return 'text-red-600 bg-red-100';
- case 'Medium': return 'text-amber-600 bg-amber-100';
- case 'Low': return 'text-green-600 bg-green-100';
+ case 'Medium': return 'text-[#6B7280] bg-[#F0F5FA]';
+ case 'Low': return 'text-[#2C4A60] bg-[#C8D4DC]';
  default: return 'text-titanium-600 bg-titanium-100';
  }
   };
 
   const getRecommendationColor = (level: string) => {
  switch (level) {
- case 'strong': return 'text-green-600 bg-green-100';
- case 'moderate': return 'text-amber-600 bg-amber-100';
+ case 'strong': return 'text-[#2C4A60] bg-[#C8D4DC]';
+ case 'moderate': return 'text-[#6B7280] bg-[#F0F5FA]';
  case 'none': return 'text-red-600 bg-red-100';
  default: return 'text-titanium-600 bg-titanium-100';
  }
@@ -303,7 +303,7 @@ const DeviceImplantChecklist: React.FC = () => {
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  <div className="bg-white rounded-2xl p-6 shadow-chrome-card border border-titanium-200">
  <h3 className="text-lg font-semibold text-titanium-800 mb-4 flex items-center gap-2">
- <Calculator className="w-5 h-5 text-green-500" />
+ <Calculator className="w-5 h-5 text-[#2C4A60]" />
  Device Eligibility Calculator
  </h3>
  
@@ -407,7 +407,7 @@ const DeviceImplantChecklist: React.FC = () => {
  {/* Lead Strategy Selection */}
  <div className="bg-white rounded-2xl p-6 shadow-chrome-card border border-titanium-200">
  <h3 className="text-lg font-semibold text-titanium-800 mb-4 flex items-center gap-2">
- <Zap className="w-5 h-5 text-yellow-500" />
+ <Zap className="w-5 h-5 text-[#6B7280]" />
  Lead Strategy Selection
  </h3>
  
@@ -473,12 +473,12 @@ const DeviceImplantChecklist: React.FC = () => {
 
  <div className="bg-white rounded-2xl p-6 shadow-chrome-card border border-titanium-200">
  <h3 className="text-lg font-semibold text-titanium-800 mb-4 flex items-center gap-2">
- <Battery className="w-5 h-5 text-green-500" />
+ <Battery className="w-5 h-5 text-[#2C4A60]" />
  Battery Life
  </h3>
  
  <div className="text-center">
- <div className="text-4xl font-bold text-green-600 mb-2">
+ <div className="text-4xl font-bold text-[#2C4A60] mb-2">
  {implantPlan.expectedBatteryLife}
  </div>
  <div className="text-titanium-600">Years</div>
@@ -490,7 +490,7 @@ const DeviceImplantChecklist: React.FC = () => {
 
  <div className="bg-white rounded-2xl p-6 shadow-chrome-card border border-titanium-200">
  <h3 className="text-lg font-semibold text-titanium-800 mb-4 flex items-center gap-2">
- <Shield className="w-5 h-5 text-amber-500" />
+ <Shield className="w-5 h-5 text-[#6B7280]" />
  Infection Risk
  </h3>
  
@@ -604,7 +604,7 @@ const DeviceImplantChecklist: React.FC = () => {
  <div className="text-sm text-titanium-600">Infection Risk</div>
  <div className={`font-semibold ${
  overallInfectionRisk === 'High' ? 'text-red-600' :
- overallInfectionRisk === 'Medium' ? 'text-amber-600' : 'text-green-600'
+ overallInfectionRisk === 'Medium' ? 'text-[#6B7280]' : 'text-[#2C4A60]'
  }`}>
  {overallInfectionRisk}
  </div>
@@ -619,7 +619,7 @@ const DeviceImplantChecklist: React.FC = () => {
  <div className="flex gap-3">
  <button
  onClick={() => setImplantPlan(prev => ({ ...prev, status: 'approved' }))}
- className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
+ className="px-4 py-2 bg-[#C8D4DC] text-white rounded-lg hover:bg-[#C8D4DC] transition-colors text-sm"
  >
  Approve Plan
  </button>

@@ -16,7 +16,7 @@ interface InsightCard {
 const INSIGHTS: InsightCard[] = [
   {
     category: 'Gap',
-    categoryStyle: 'bg-amber-100 text-amber-700',
+    categoryStyle: 'bg-[#F0F5FA] text-[#6B7280]',
     count: '287 patients',
     title: 'GDMT Intensification Overdue',
     description:
@@ -49,7 +49,7 @@ const INSIGHTS: InsightCard[] = [
   },
   {
     category: 'Gap',
-    categoryStyle: 'bg-amber-100 text-amber-700',
+    categoryStyle: 'bg-[#F0F5FA] text-[#6B7280]',
     count: '89 patients',
     title: 'ICD/CRT Eligibility Unmet',
     description:
@@ -60,7 +60,7 @@ const INSIGHTS: InsightCard[] = [
   },
   {
     category: 'Revenue',
-    categoryStyle: 'bg-emerald-100 text-emerald-700',
+    categoryStyle: 'bg-[#F0F5FA] text-[#2C4A60]',
     count: '$1.2M',
     title: 'Undercoded DRG Detected',
     description:
@@ -133,7 +133,7 @@ const AIInsightCards: React.FC = () => {
       {/* Section-level summary */}
       <div className="bg-chrome-50 border border-chrome-100 rounded-xl px-4 py-3 mb-4 flex items-center justify-between">
         <span className="text-sm text-titanium-700">571 patients identified across 6 AI-detected gaps</span>
-        <span className="font-data font-semibold text-emerald-600">Est. $11.2M opportunity</span>
+        <span className="font-data font-semibold text-[#2C4A60]">Est. $11.2M opportunity</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -177,7 +177,7 @@ const AIInsightCards: React.FC = () => {
 
               {/* Impact */}
               <div className="flex items-center gap-1.5 mt-auto pt-1">
-                <TrendingUp className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+                <TrendingUp className="w-3.5 h-3.5 text-[#2C4A60] flex-shrink-0" />
                 <span className="text-sm font-bold text-chrome-700">{insight.impact}</span>
               </div>
 

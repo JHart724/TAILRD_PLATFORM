@@ -49,8 +49,8 @@ const EPTreatmentGapQueue: React.FC = () => {
   const getSeverityColor = (severity: string) => {
  switch(severity) {
  case 'high': return 'bg-red-100 text-red-900 border-red-400';
- case 'medium': return 'bg-amber-100 text-amber-900 border-amber-400';
- case 'low': return 'bg-green-100 text-green-900 border-green-400';
+ case 'medium': return 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]';
+ case 'low': return 'bg-[#C8D4DC] text-[#2C4A60] border-[#2C4A60]';
  default: return 'bg-gray-100 text-gray-900 border-gray-400';
  }
   };
@@ -65,7 +65,7 @@ const EPTreatmentGapQueue: React.FC = () => {
  <div className="bg-white rounded-xl shadow-glass border border-titanium-200 overflow-hidden">
  <div className="px-6 py-4 border-b border-titanium-300 bg-titanium-50">
  <h3 className="text-lg font-semibold text-titanium-900 flex items-center gap-2">
- <TrendingDown className="w-5 h-5 text-amber-600" />
+ <TrendingDown className="w-5 h-5 text-[#6B7280]" />
  EP Treatment Gap Queue
  </h3>
  <p className="text-sm text-titanium-600 mt-1">Patients with opportunities for EP care optimization</p>
@@ -76,7 +76,7 @@ const EPTreatmentGapQueue: React.FC = () => {
  <div key={`${gap.category}-${gap.description}`} className="px-6 py-4 hover:bg-titanium-50 transition-colors cursor-pointer">
  <div className="flex items-start justify-between mb-3">
  <div className="flex items-center gap-3">
- <div className="text-amber-600">
+ <div className="text-[#6B7280]">
  {getCategoryIcon(gap.category)}
  </div>
  <div>
@@ -106,7 +106,7 @@ const EPTreatmentGapQueue: React.FC = () => {
  <div className="flex items-center justify-between">
  <div>
  <div className="text-xs text-titanium-600 mb-1">Recommended Action</div>
- <div className="text-sm font-medium text-green-700">{gap.recommendedAction}</div>
+ <div className="text-sm font-medium text-[#2C4A60]">{gap.recommendedAction}</div>
  </div>
  <div className="flex items-center gap-1 text-sm text-porsche-600 hover:text-porsche-700">
  <span>View Patients</span>

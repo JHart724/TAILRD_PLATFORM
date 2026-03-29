@@ -196,8 +196,8 @@ const AmyloidosisScreener: React.FC = () => {
  onClick={() => updateCriterion(criterionIndex, true)}
  className={`flex-1 py-2 px-3 text-sm rounded-lg border-2 transition-all ${
  criterion.present === true
- ? 'border-green-400 bg-green-50 text-green-700'
- : 'border-titanium-200 hover:border-green-300 text-titanium-600'
+ ? 'border-[#2C4A60] bg-[#C8D4DC] text-[#2C4A60]'
+ : 'border-titanium-200 hover:border-[#2C4A60] text-titanium-600'
  }`}
  >
  <CheckCircle className="w-4 h-4 inline mr-1" />
@@ -218,8 +218,8 @@ const AmyloidosisScreener: React.FC = () => {
  onClick={() => updateCriterion(criterionIndex, null)}
  className={`flex-1 py-2 px-3 text-sm rounded-lg border-2 transition-all ${
  criterion.present === null
- ? 'border-amber-400 bg-amber-50 text-amber-700'
- : 'border-titanium-200 hover:border-amber-300 text-titanium-600'
+ ? 'border-[#C8D4DC] bg-[#F0F5FA] text-[#6B7280]'
+ : 'border-titanium-200 hover:border-[#C8D4DC] text-titanium-600'
  }`}
  >
  <Eye className="w-4 h-4 inline mr-1" />

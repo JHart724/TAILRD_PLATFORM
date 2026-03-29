@@ -73,7 +73,7 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
             <ul className="space-y-1 mb-3">
               {p.signals.map((s, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-titanium-700">
-                  <AlertTriangle className="w-3.5 h-3.5 text-amber-500 mt-0.5 flex-shrink-0" />
+                  <AlertTriangle className="w-3.5 h-3.5 text-[#6B7280] mt-0.5 flex-shrink-0" />
                   {s}
                 </li>
               ))}
@@ -93,7 +93,7 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
                   <span className="text-xs text-blue-800 font-medium">
                     KCCQ-OS: {kccqCurrent}
                     {kccqTrend != null && (
-                      <span className={kccqTrend >= 0 ? 'text-green-700 ml-1' : 'text-red-700 ml-1'}>
+                      <span className={kccqTrend >= 0 ? 'text-[#2C4A60] ml-1' : 'text-red-700 ml-1'}>
                         ({kccqTrend >= 0 ? '+' : ''}{kccqTrend} from prior)
                       </span>
                     )}
@@ -155,7 +155,7 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
               <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-medium">{gap.patientCount} patients</span>
             </div>
             <p className="text-xs text-titanium-600 mt-1">{gap.evidence}</p>
-            <p className={`text-xs font-semibold mt-2 ${borderColor.includes('red') ? 'text-red-700' : borderColor.includes('amber') ? 'text-amber-700' : 'text-blue-700'}`}>Action: {gap.cta}</p>
+            <p className={`text-xs font-semibold mt-2 ${borderColor.includes('red') ? 'text-red-700' : borderColor.includes('amber') ? 'text-[#6B7280]' : 'text-blue-700'}`}>Action: {gap.cta}</p>
           </div>
         </div>
         <div className="space-y-2">
@@ -179,9 +179,9 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
           <p className="text-3xl font-bold text-blue-800">{cardiomemsCount}</p>
           <p className="text-xs text-titanium-500 mt-1">NYHA III + HF hospitalization in 12 mo</p>
         </div>
-        <div className="metal-card p-5 border-l-4 border-l-amber-400">
-          <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-1">RPM Enrollment Pending</p>
-          <p className="text-3xl font-bold text-amber-800">{rpmCount}</p>
+        <div className="metal-card p-5 border-l-4 border-l-[#6B7280]">
+          <p className="text-xs font-semibold text-[#6B7280] uppercase tracking-wide mb-1">RPM Enrollment Pending</p>
+          <p className="text-3xl font-bold text-[#6B7280]">{rpmCount}</p>
           <p className="text-xs text-titanium-500 mt-1">HF eligible, not enrolled in RPM</p>
         </div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500">
@@ -219,7 +219,7 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
           ].map((q, i) => (
             <div key={i} className="px-4 py-3 text-center">
               <div className="text-xs font-semibold text-titanium-500 uppercase">{q.label}</div>
-              <div className="text-lg font-bold text-emerald-700 mt-1">{formatDollar(q.revenue)}</div>
+              <div className="text-lg font-bold text-[#2C4A60] mt-1">{formatDollar(q.revenue)}</div>
               <div className="text-xs text-titanium-500">{q.procedures} procedures</div>
             </div>
           ))}
@@ -241,10 +241,10 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
       {renderGapSection(
         rpmGap,
         'RPM Enrollment',
-        'border-amber-200',
-        'bg-amber-50',
-        'bg-amber-100 text-amber-800',
-        <Activity className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />,
+        'border-[#C8D4DC]',
+        'bg-[#F0F5FA]',
+        'bg-[#F0F5FA] text-[#6B7280]',
+        <Activity className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />,
         'GROWTH'
       )}
 
@@ -252,10 +252,10 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
       {renderGapSection(
         diureticResistGap,
         'Diuretic Resistance',
-        'border-amber-200',
-        'bg-amber-50',
-        'bg-amber-100 text-amber-800',
-        <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />,
+        'border-[#C8D4DC]',
+        'bg-[#F0F5FA]',
+        'bg-[#F0F5FA] text-[#6B7280]',
+        <AlertTriangle className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />,
         'HIGH PRIORITY'
       )}
 
@@ -275,7 +275,7 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
         <Zap className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
         <div>
           <h4 className="text-sm font-semibold text-blue-900 mb-1">Automated Advanced Therapy Triage</h4>
-          <p className="text-sm text-blue-800">&#9889; Patients automatically identified from EHR data via Redox</p>
+          <p className="text-sm text-blue-800">&#9889; Patients automatically identified from EHR integration</p>
         </div>
       </div>
 
@@ -293,9 +293,9 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
               <div className="text-lg font-bold text-red-600">16 months</div>
               <div className="text-xs text-titanium-400">to clear pipeline</div>
             </div>
-            <div className="bg-emerald-50/70 rounded-lg p-3">
+            <div className="bg-[#F0F5FA]/70 rounded-lg p-3">
               <div className="text-xs text-titanium-500 mb-1">Systematic Closure</div>
-              <div className="text-lg font-bold text-emerald-600">5 months</div>
+              <div className="text-lg font-bold text-[#2C4A60]">5 months</div>
               <div className="text-xs text-titanium-400">with TAILRD protocol</div>
             </div>
             <div className="bg-blue-50/70 rounded-lg p-3">
@@ -388,7 +388,7 @@ const heartFailureTabs: ServiceLineTabConfig[] = [
  id: 'clinical-gap-detection',
  label: 'Gap Detection (25-Gap)',
  icon: Target,
- description: 'AI-driven HF gap detection: ATTR-CM, iron deficiency, finerenone, GLP-1/HFpEF, HCM myosin inhibitor, CardioMEMS, CASTLE-AF, ivabradine, vericiguat, H-ISDN/A-HeFT, cardiac rehab, undiagnosed HFpEF, DANISH ICD, OSA-HF, RPM, ARNi underdosing, loop-without-MRA, hyponatremia, NT-proBNP monitoring, cardiac MRI, palliative care, diuretic resistance, predischarge NT-proBNP, functional MR/COAPT (cross-module), ATTR-CM+AS co-detection (cross-module). All gap detection criteria, risk scores, and composite calculators are automatically computed from structured EHR data ingested via Redox — no manual data entry or chart review required.'
+ description: 'AI-driven HF gap detection: ATTR-CM, iron deficiency, finerenone, GLP-1/HFpEF, HCM myosin inhibitor, CardioMEMS, CASTLE-AF, ivabradine, vericiguat, H-ISDN/A-HeFT, cardiac rehab, undiagnosed HFpEF, DANISH ICD, OSA-HF, RPM, ARNi underdosing, loop-without-MRA, hyponatremia, NT-proBNP monitoring, cardiac MRI, palliative care, diuretic resistance, predischarge NT-proBNP, functional MR/COAPT (cross-module), ATTR-CM+AS co-detection (cross-module). All gap detection criteria, risk scores, and composite calculators are automatically computed from structured EHR data ingested via EHR integration — no manual data entry or chart review required.'
   },
   {
  id: 'pro-outcomes',

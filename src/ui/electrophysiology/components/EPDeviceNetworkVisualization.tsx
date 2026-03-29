@@ -99,7 +99,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.95, 
  x: 100, 
  y: 150, 
- color: '#059669',
+ color: '#2C4A60',
  status: 'active'
  },
  { 
@@ -153,7 +153,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.98, 
  x: 350, 
  y: 80, 
- color: '#16a34a',
+ color: '#4A6880',
  status: 'active'
  },
  { 
@@ -166,7 +166,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.94, 
  x: 450, 
  y: 100, 
- color: '#15803d',
+ color: '#2C4A60',
  status: 'busy'
  },
  { 
@@ -207,7 +207,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.95, 
  x: 200, 
  y: 50, 
- color: '#22c55e'
+ color: '#4A6880'
  },
  { 
  id: 'crt-d-devices', 
@@ -219,7 +219,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.92, 
  x: 350, 
  y: 40, 
- color: '#16a34a'
+ color: '#4A6880'
  },
  { 
  id: 'pacemaker-devices', 
@@ -231,7 +231,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.89, 
  x: 500, 
  y: 60, 
- color: '#15803d'
+ color: '#2C4A60'
  },
  { 
  id: 'loop-recorders', 
@@ -269,7 +269,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.96, 
  x: 50, 
  y: 250, 
- color: '#22c55e',
+ color: '#4A6880',
  status: 'active'
  },
  { 
@@ -281,7 +281,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.93, 
  x: 150, 
  y: 180, 
- color: '#16a34a',
+ color: '#4A6880',
  status: 'critical'
  },
  { 
@@ -294,7 +294,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.88, 
  x: 350, 
  y: 200, 
- color: '#15803d'
+ color: '#2C4A60'
  },
  
  // Patient Groups
@@ -319,7 +319,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.85, 
  x: 450, 
  y: 350, 
- color: '#ea580c'
+ color: '#7A1A2E'
  },
  { 
  id: 'battery-eol', 
@@ -329,7 +329,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.96, 
  x: 300, 
  y: 380, 
- color: '#f59e0b',
+ color: '#C8D4DC',
  isHighRisk: true
  },
  { 
@@ -354,7 +354,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.87, 
  x: 300, 
  y: 250, 
- color: '#059669'
+ color: '#2C4A60'
  }
   ];
 
@@ -609,13 +609,13 @@ const EPDeviceNetworkVisualization: React.FC = () => {
 
   const getConnectionColor = (connection: EPDeviceNetworkConnection) => {
  switch (connection.type) {
- case 'device-flow': return '#059669';
- case 'monitoring-pathway': return '#16a34a';
+ case 'device-flow': return '#2C4A60';
+ case 'monitoring-pathway': return '#4A6880';
  case 'alert-response': return '#dc2626';
  case 'emergency-pathway': return '#b91c1c';
- case 'anticoag-referral': return '#ea580c';
+ case 'anticoag-referral': return '#7A1A2E';
  case 'coordination': return '#0d9488';
- case 'follow-up': return '#15803d';
+ case 'follow-up': return '#2C4A60';
  default: return '#6b7280';
  }
   };
@@ -659,8 +659,8 @@ const EPDeviceNetworkVisualization: React.FC = () => {
   const getNodeStatusIndicator = (node: EPDeviceNetworkNode) => {
  if (!node.status) return null;
  const colors = {
- active: '#22c55e',
- busy: '#f59e0b',
+ active: '#4A6880',
+ busy: '#C8D4DC',
  available: '#6b7280',
  critical: '#dc2626'
  };
@@ -669,8 +669,8 @@ const EPDeviceNetworkVisualization: React.FC = () => {
 
   const getBatteryStatusColor = (status?: string) => {
  switch (status) {
- case 'good': return '#22c55e';
- case 'warning': return '#f59e0b';
+ case 'good': return '#4A6880';
+ case 'warning': return '#C8D4DC';
  case 'critical': return '#dc2626';
  default: return null;
  }
@@ -752,7 +752,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Timer className="w-6 h-6 text-amber-600" />
+ <Timer className="w-6 h-6 text-[#6B7280]" />
  <div>
  <div className="text-lg font-bold text-titanium-900">{toFixed(metrics.avgAlertResponseTime, 1)}h</div>
  <div className="text-xs text-titanium-600">Alert Response</div>
@@ -772,7 +772,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <AlertTriangle className="w-6 h-6 text-green-600" />
+ <AlertTriangle className="w-6 h-6 text-[#2C4A60]" />
  <div>
  <div className="text-lg font-bold text-titanium-900">{toFixed(metrics.emergencyUtilizationReduction * 100, 0)}%</div>
  <div className="text-xs text-titanium-600">ED Reduction</div>
@@ -930,13 +930,13 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  <span>Alert Response</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-1 bg-amber-600"></div>
+ <div className="w-4 h-1 bg-[#F0F5FA]"></div>
  <span>Anticoagulation Referral</span>
  </div>
  </div>
  <div className="space-y-2">
  <div className="flex items-center gap-2">
- <div className="w-4 h-1 bg-teal-600"></div>
+ <div className="w-4 h-1 bg-[#C8D4DC]"></div>
  <span>Care Coordination</span>
  </div>
  <div className="flex items-center gap-2">
@@ -944,9 +944,9 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  <span>High-Risk Patients</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+ <div className="w-2 h-2 bg-[#C8D4DC] rounded-full"></div>
  <span>Good Battery</span>
- <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+ <div className="w-2 h-2 bg-[#F0F5FA] rounded-full"></div>
  <span>EOL Warning</span>
  <div className="w-2 h-2 bg-red-500 rounded-full"></div>
  <span>Critical</span>
@@ -972,8 +972,8 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  )}
  {selectedNode.status && (
  <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${
- selectedNode.status === 'active' ? 'bg-green-100 text-green-700' :
- selectedNode.status === 'busy' ? 'bg-yellow-100 text-yellow-700' :
+ selectedNode.status === 'active' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ selectedNode.status === 'busy' ? 'bg-[#F0F5FA] text-[#6B7280]' :
  selectedNode.status === 'critical' ? 'bg-red-100 text-red-700' :
  'bg-gray-100 text-gray-700'
  }`}>
@@ -982,8 +982,8 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  )}
  {selectedNode.batteryStatus && (
  <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ml-2 ${
- selectedNode.batteryStatus === 'good' ? 'bg-green-100 text-green-700' :
- selectedNode.batteryStatus === 'warning' ? 'bg-yellow-100 text-yellow-700' :
+ selectedNode.batteryStatus === 'good' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ selectedNode.batteryStatus === 'warning' ? 'bg-[#F0F5FA] text-[#6B7280]' :
  'bg-red-100 text-red-700'
  }`}>
  {selectedNode.batteryStatus.toUpperCase()} BATTERY
@@ -999,21 +999,21 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  </div>
  )}
  {selectedNode.devicePerformance && (
- <div className={`p-3 rounded-lg ${selectedNode.devicePerformance >= 0.9 ? 'bg-green-50' : 'bg-yellow-50'}`}>
- <div className={`text-lg font-bold ${selectedNode.devicePerformance >= 0.9 ? 'text-green-600' : 'text-yellow-600'}`}>
+ <div className={`p-3 rounded-lg ${selectedNode.devicePerformance >= 0.9 ? 'bg-[#C8D4DC]' : 'bg-[#F0F5FA]'}`}>
+ <div className={`text-lg font-bold ${selectedNode.devicePerformance >= 0.9 ? 'text-[#2C4A60]' : 'text-[#6B7280]'}`}>
  {toFixed(selectedNode.devicePerformance * 100, 0)}%
  </div>
- <div className={`text-xs ${selectedNode.devicePerformance >= 0.9 ? 'text-green-700' : 'text-yellow-700'}`}>
+ <div className={`text-xs ${selectedNode.devicePerformance >= 0.9 ? 'text-[#2C4A60]' : 'text-[#6B7280]'}`}>
  Device Performance
  </div>
  </div>
  )}
  {selectedNode.adherenceRate && (
- <div className={`p-3 rounded-lg ${selectedNode.adherenceRate >= 0.8 ? 'bg-green-50' : 'bg-yellow-50'}`}>
- <div className={`text-lg font-bold ${selectedNode.adherenceRate >= 0.8 ? 'text-green-600' : 'text-yellow-600'}`}>
+ <div className={`p-3 rounded-lg ${selectedNode.adherenceRate >= 0.8 ? 'bg-[#C8D4DC]' : 'bg-[#F0F5FA]'}`}>
+ <div className={`text-lg font-bold ${selectedNode.adherenceRate >= 0.8 ? 'text-[#2C4A60]' : 'text-[#6B7280]'}`}>
  {toFixed(selectedNode.adherenceRate * 100, 0)}%
  </div>
- <div className={`text-xs ${selectedNode.adherenceRate >= 0.8 ? 'text-green-700' : 'text-yellow-700'}`}>
+ <div className={`text-xs ${selectedNode.adherenceRate >= 0.8 ? 'text-[#2C4A60]' : 'text-[#6B7280]'}`}>
  Adherence Rate
  </div>
  </div>
@@ -1027,9 +1027,9 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  </div>
  )}
  {selectedNode.alertVolume && (
- <div className="bg-amber-50 p-3 rounded-lg">
- <div className="text-lg font-bold text-amber-600">{selectedNode.alertVolume}</div>
- <div className="text-xs text-amber-700">Alert Volume</div>
+ <div className="bg-[#F0F5FA] p-3 rounded-lg">
+ <div className="text-lg font-bold text-[#6B7280]">{selectedNode.alertVolume}</div>
+ <div className="text-xs text-[#6B7280]">Alert Volume</div>
  </div>
  )}
  </div>
@@ -1049,7 +1049,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  <div className="flex items-center gap-2">
  <span className="text-titanium-500">{conn.patientFlow} pts</span>
  {conn.avgResponseTime && (
- <span className={`text-xs px-1 rounded ${conn.avgResponseTime <= 24 ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'}`}>
+ <span className={`text-xs px-1 rounded ${conn.avgResponseTime <= 24 ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>
  {conn.avgResponseTime < 24 ? `${toFixed(conn.avgResponseTime, 1)}h` : `${toFixed(conn.avgResponseTime / 24, 1)}d`}
  </span>
  )}
@@ -1099,21 +1099,21 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  <div className="space-y-3">
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Overall Performance</span>
- <span className={`font-bold ${metrics.devicePerformanceScore >= 0.9 ? 'text-green-600' : 'text-red-600'}`}>
+ <span className={`font-bold ${metrics.devicePerformanceScore >= 0.9 ? 'text-[#2C4A60]' : 'text-red-600'}`}>
  {toFixed(metrics.devicePerformanceScore * 100, 1)}%
  </span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">ICD Performance</span>
- <span className="font-bold text-green-600">97%</span>
+ <span className="font-bold text-[#2C4A60]">97%</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Pacemaker Performance</span>
- <span className="font-bold text-green-600">98%</span>
+ <span className="font-bold text-[#2C4A60]">98%</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">CRT-D Performance</span>
- <span className="font-bold text-yellow-600">94%</span>
+ <span className="font-bold text-[#6B7280]">94%</span>
  </div>
  </div>
  </div>
@@ -1130,11 +1130,11 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Avg Alert Response</span>
- <span className="font-bold text-amber-600">{toFixed(metrics.avgAlertResponseTime, 1)} hrs</span>
+ <span className="font-bold text-[#6B7280]">{toFixed(metrics.avgAlertResponseTime, 1)} hrs</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Active Patients</span>
- <span className="font-bold text-green-600">2,847</span>
+ <span className="font-bold text-[#2C4A60]">2,847</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Daily Alerts</span>
@@ -1151,11 +1151,11 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  <div className="space-y-3">
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Anticoag Compliance</span>
- <span className="font-bold text-green-600">{toFixed(metrics.anticoagulationCompliance * 100, 1)}%</span>
+ <span className="font-bold text-[#2C4A60]">{toFixed(metrics.anticoagulationCompliance * 100, 1)}%</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">ED Utilization ↓</span>
- <span className="font-bold text-green-600">{toFixed(metrics.emergencyUtilizationReduction * 100, 1)}%</span>
+ <span className="font-bold text-[#2C4A60]">{toFixed(metrics.emergencyUtilizationReduction * 100, 1)}%</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Device Patients</span>
@@ -1163,7 +1163,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Stroke Prevention</span>
- <span className="font-bold text-green-600">94.2%</span>
+ <span className="font-bold text-[#2C4A60]">94.2%</span>
  </div>
  </div>
  </div>

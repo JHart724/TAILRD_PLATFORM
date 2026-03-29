@@ -268,9 +268,9 @@ const TAVRAnalyticsDashboard: React.FC = () => {
 
   const getRiskColor = (category: string) => {
  switch (category) {
- case 'Low': return 'bg-green-500';
- case 'Intermediate': return 'bg-yellow-500';
- case 'High': return 'bg-amber-500';
+ case 'Low': return 'bg-[#C8D4DC]';
+ case 'Intermediate': return 'bg-[#F0F5FA]';
+ case 'High': return 'bg-[#F0F5FA]';
  case 'Prohibitive': return 'bg-red-500';
  default: return 'bg-gray-500';
  }
@@ -278,7 +278,7 @@ const TAVRAnalyticsDashboard: React.FC = () => {
 
   const getOutcomeColor = (outcome: string) => {
  switch (outcome) {
- case 'Success': return 'text-green-600';
+ case 'Success': return 'text-[#2C4A60]';
  case 'Complication': return 'text-red-600';
  case 'Pending': return 'text-gray-600';
  default: return 'text-gray-600';
@@ -297,14 +297,14 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  
  <div className="flex items-center gap-4">
  <div className="flex items-center gap-2 text-sm text-titanium-600">
- <div className={`w-2 h-2 rounded-full ${isLiveMode ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
+ <div className={`w-2 h-2 rounded-full ${isLiveMode ? 'bg-[#C8D4DC] animate-pulse' : 'bg-gray-400'}`}></div>
  {isLiveMode ? 'Live Updates' : 'Paused'}
  </div>
  
  <button
  onClick={() => setIsLiveMode(!isLiveMode)}
  className={`p-2 rounded-lg transition-colors ${
- isLiveMode ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+ isLiveMode ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-gray-100 text-gray-700'
  }`}
  >
  <RefreshCw className={`w-4 h-4 ${isLiveMode ? 'animate-spin' : ''}`} />
@@ -426,13 +426,13 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  
  {/* Key Metrics Row */}
  <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
- <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-4 rounded-xl border border-emerald-200">
+ <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-4 rounded-xl border border-[#C8D4DC]">
  <div className="flex items-center justify-between">
  <div>
- <div className="text-sm text-emerald-700 font-medium">Success Rate</div>
- <div className="text-2xl font-bold text-emerald-800">{toFixed(tavrMetrics[0]?.value, 1)}%</div>
+ <div className="text-sm text-[#2C4A60] font-medium">Success Rate</div>
+ <div className="text-2xl font-bold text-[#2C4A60]">{toFixed(tavrMetrics[0]?.value, 1)}%</div>
  </div>
- <div className={`flex items-center text-sm ${tavrMetrics[0]?.trend > 0 ? 'text-green-600' : 'text-red-600'}`}>
+ <div className={`flex items-center text-sm ${tavrMetrics[0]?.trend > 0 ? 'text-[#2C4A60]' : 'text-red-600'}`}>
  {tavrMetrics[0]?.trend > 0 ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
  {toFixed(Math.abs(tavrMetrics[0]?.trend || 0), 1)}%
  </div>
@@ -445,7 +445,7 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  <div className="text-sm text-red-700 font-medium">30-Day Mortality</div>
  <div className="text-2xl font-bold text-red-800">{toFixed(tavrMetrics[1]?.value, 1)}%</div>
  </div>
- <div className={`flex items-center text-sm ${tavrMetrics[1]?.trend < 0 ? 'text-green-600' : 'text-red-600'}`}>
+ <div className={`flex items-center text-sm ${tavrMetrics[1]?.trend < 0 ? 'text-[#2C4A60]' : 'text-red-600'}`}>
  {tavrMetrics[1]?.trend < 0 ? <TrendingDown className="w-4 h-4" /> : <TrendingUp className="w-4 h-4" />}
  {toFixed(Math.abs(tavrMetrics[1]?.trend || 0), 1)}%
  </div>
@@ -472,13 +472,13 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  </div>
  </div>
  
- <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-xl border border-amber-200">
+ <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-xl border border-[#C8D4DC]">
  <div className="flex items-center justify-between">
  <div>
- <div className="text-sm text-amber-700 font-medium">Procedures MTD</div>
- <div className="text-2xl font-bold text-amber-800">{Math.round(tavrMetrics[4]?.value || 0)}</div>
+ <div className="text-sm text-[#6B7280] font-medium">Procedures MTD</div>
+ <div className="text-2xl font-bold text-[#6B7280]">{Math.round(tavrMetrics[4]?.value || 0)}</div>
  </div>
- <Users className="w-6 h-6 text-amber-600" />
+ <Users className="w-6 h-6 text-[#6B7280]" />
  </div>
  </div>
  </div>
@@ -487,7 +487,7 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  <div>
  <h4 className="text-lg font-semibold mb-4 flex items-center gap-2">
  Recent TAVR Procedures
- {isLiveMode && <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>}
+ {isLiveMode && <div className="w-2 h-2 bg-[#C8D4DC] rounded-full animate-pulse"></div>}
  </h4>
  
  <div className="space-y-3">
@@ -535,16 +535,16 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  </div>
 
  {/* Quality Alerts */}
- <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+ <div className="bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
  <div className="flex items-center gap-2 mb-2">
- <AlertTriangle className="w-5 h-5 text-amber-600" />
- <h4 className="font-semibold text-amber-800">Quality & Safety Alerts</h4>
+ <AlertTriangle className="w-5 h-5 text-[#6B7280]" />
+ <h4 className="font-semibold text-[#6B7280]">Quality & Safety Alerts</h4>
  </div>
  <div className="space-y-2 text-sm">
- <div className="text-green-700">✓ 30-day mortality below national benchmark (2.1% vs 3.0%)</div>
- <div className="text-green-700">✓ Average LOS improved by 0.8 days this month</div>
- <div className="text-amber-700">⚠ Patient P005 (Helen Thompson) had extended LOS - review for optimization</div>
- <div className="text-amber-700">⚠ Stroke rate slightly elevated - monitor next 5 procedures closely</div>
+ <div className="text-[#2C4A60]">✓ 30-day mortality below national benchmark (2.1% vs 3.0%)</div>
+ <div className="text-[#2C4A60]">✓ Average LOS improved by 0.8 days this month</div>
+ <div className="text-[#6B7280]">⚠ Patient P005 (Helen Thompson) had extended LOS - review for optimization</div>
+ <div className="text-[#6B7280]">⚠ Stroke rate slightly elevated - monitor next 5 procedures closely</div>
  </div>
  </div>
  </div>
@@ -565,9 +565,9 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  return (
  <div key={risk} className="p-4 border rounded-lg bg-white shadow-sm">
  <div className={`text-2xl font-bold text-center mb-2 ${
- risk === 'Low' ? 'text-green-600' :
- risk === 'Intermediate' ? 'text-yellow-600' :
- risk === 'High' ? 'text-amber-600' : 'text-red-600'
+ risk === 'Low' ? 'text-[#2C4A60]' :
+ risk === 'Intermediate' ? 'text-[#6B7280]' :
+ risk === 'High' ? 'text-[#6B7280]' : 'text-red-600'
  }`}>
  {count}
  </div>
@@ -628,7 +628,7 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  </div>
  <div className="text-sm">
  <span className="text-titanium-600">Success Rate: </span>
- <span className="font-semibold text-green-600">{toFixed(successRate, 1)}%</span>
+ <span className="font-semibold text-[#2C4A60]">{toFixed(successRate, 1)}%</span>
  </div>
  <div className="text-sm">
  <span className="text-titanium-600">Avg Risk Score: </span>
@@ -661,9 +661,9 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  <div className="text-sm font-medium text-titanium-700">{metric.measure}</div>
  <div className={`px-2 py-1 rounded text-xs font-medium ${
  metric.category === 'Mortality' ? 'bg-red-100 text-red-700' :
- metric.category === 'Morbidity' ? 'bg-amber-100 text-amber-700' :
+ metric.category === 'Morbidity' ? 'bg-[#F0F5FA] text-[#6B7280]' :
  metric.category === 'Efficiency' ? 'bg-chrome-100 text-chrome-700' :
- 'bg-green-100 text-green-700'
+ 'bg-[#C8D4DC] text-[#2C4A60]'
  }`}>
  {metric.category}
  </div>
@@ -676,8 +676,8 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  </div>
  <div className={`flex items-center text-sm ${
  (metric.category === 'Mortality' || metric.category === 'Morbidity') ?
- (metric.trend < 0 ? 'text-green-600' : 'text-red-600') :
- (metric.trend > 0 ? 'text-green-600' : 'text-red-600')
+ (metric.trend < 0 ? 'text-[#2C4A60]' : 'text-red-600') :
+ (metric.trend > 0 ? 'text-[#2C4A60]' : 'text-red-600')
  }`}>
  {((metric.category === 'Mortality' || metric.category === 'Morbidity') ? metric.trend < 0 : metric.trend > 0) ? 
  <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />
@@ -691,7 +691,7 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  <div className="w-full bg-gray-200 rounded-full h-2">
  <div 
  className={`h-2 rounded-full ${
- metric.value <= metric.target ? 'bg-green-500' : 'bg-red-500'
+ metric.value <= metric.target ? 'bg-[#C8D4DC]' : 'bg-red-500'
  }`}
  style={{ width: `${Math.min(100, (metric.value / metric.target) * 100)}%` }}
  ></div>
@@ -722,7 +722,7 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  </div>
  <div className="text-sm">
  <span className="text-titanium-600">Success Rate: </span>
- <span className="font-semibold text-green-600">{toFixed(successRate, 1)}%</span>
+ <span className="font-semibold text-[#2C4A60]">{toFixed(successRate, 1)}%</span>
  </div>
  <div className="text-sm">
  <span className="text-titanium-600">Avg LOS: </span>
@@ -782,7 +782,7 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  </div>
  <div className="flex justify-between">
  <span className="text-titanium-600">Success Rate:</span>
- <span className="font-semibold text-green-600">{toFixed(site.successRate, 1)}%</span>
+ <span className="font-semibold text-[#2C4A60]">{toFixed(site.successRate, 1)}%</span>
  </div>
  <div className="flex justify-between">
  <span className="text-titanium-600">30-Day Mortality:</span>
@@ -824,9 +824,9 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
- siteIndex === 0 ? 'bg-yellow-500' :
+ siteIndex === 0 ? 'bg-[#F0F5FA]' :
  siteIndex === 1 ? 'bg-gray-400' :
- siteIndex === 2 ? 'bg-amber-600' : 'bg-titanium-400'
+ siteIndex === 2 ? 'bg-[#F0F5FA]' : 'bg-titanium-400'
  }`}>
  {siteIndex + 1}
  </div>
@@ -842,7 +842,7 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  <div className="text-xs text-titanium-600">Risk-Adjusted</div>
  </div>
  <div className="text-center">
- <div className="text-lg font-bold text-green-600">{toFixed(site.successRate, 1)}%</div>
+ <div className="text-lg font-bold text-[#2C4A60]">{toFixed(site.successRate, 1)}%</div>
  <div className="text-xs text-titanium-600">Success Rate</div>
  </div>
  <div className="text-center">

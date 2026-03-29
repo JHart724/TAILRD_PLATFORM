@@ -204,9 +204,9 @@ RISK ASSESSMENT:
   const getSyntaxColor = (complexity: string) => {
  switch (complexity) {
  case 'low':
- return 'text-green-700 bg-green-50 border-green-200';
+ return 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]';
  case 'intermediate':
- return 'text-yellow-700 bg-yellow-50 border-yellow-200';
+ return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
  case 'high':
  return 'text-red-700 bg-red-50 border-red-200';
  default:
@@ -256,13 +256,13 @@ RISK ASSESSMENT:
  <div>
  <h3 className="text-lg font-semibold text-titanium-800 mb-3">Conduit Selection</h3>
  <div className="space-y-3">
- <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+ <div className="bg-[#C8D4DC] border border-[#2C4A60] rounded-lg p-3">
  <div className="flex items-center justify-between">
  <div>
- <span className="font-medium text-green-900">LIMA to LAD</span>
- <div className="text-sm text-green-700">Gold standard graft</div>
+ <span className="font-medium text-[#2C4A60]">LIMA to LAD</span>
+ <div className="text-sm text-[#2C4A60]">Gold standard graft</div>
  </div>
- <span className="text-green-600">✓ Auto-selected</span>
+ <span className="text-[#2C4A60]">✓ Auto-selected</span>
  </div>
  </div>
  
@@ -439,10 +439,10 @@ RISK ASSESSMENT:
  </label>
 
  {casePlan.mcsSupport.needed && (
- <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+ <div className="bg-[#F0F5FA] border border-[#C8D4DC] rounded-lg p-4">
  <div className="space-y-3">
  <div>
- <label className="block text-sm font-medium text-amber-900 mb-2">Device Selection</label>
+ <label className="block text-sm font-medium text-[#6B7280] mb-2">Device Selection</label>
  <select
  value={casePlan.mcsSupport.device}
  onChange={(e) => setCasePlan(prev => ({
@@ -452,7 +452,7 @@ RISK ASSESSMENT:
  device: e.target.value as 'impella-cp' | 'impella-5.0' | 'iabp'
  }
  }))}
- className="w-full px-3 py-2 border border-amber-300 rounded-lg bg-white"
+ className="w-full px-3 py-2 border border-[#C8D4DC] rounded-lg bg-white"
  >
  <option value="impella-cp">Impella CP</option>
  <option value="impella-5.0">Impella 5.0</option>
@@ -460,7 +460,7 @@ RISK ASSESSMENT:
  </select>
  </div>
  <div>
- <label className="block text-sm font-medium text-amber-900 mb-1">Indication</label>
+ <label className="block text-sm font-medium text-[#6B7280] mb-1">Indication</label>
  <input
  type="text"
  value={casePlan.mcsSupport.indication || ''}
@@ -471,7 +471,7 @@ RISK ASSESSMENT:
  indication: e.target.value
  }
  }))}
- className="w-full px-3 py-2 border border-amber-300 rounded-lg bg-white"
+ className="w-full px-3 py-2 border border-[#C8D4DC] rounded-lg bg-white"
  placeholder="Enter indication..."
  />
  </div>
@@ -487,8 +487,8 @@ RISK ASSESSMENT:
  <h3 className="text-lg font-semibold text-titanium-800 mb-3">Risk Assessment</h3>
  <div className={`rounded-lg border p-4 ${
  casePlan.complications.riskLevel === 'high' ? 'bg-red-50 border-red-200' :
- casePlan.complications.riskLevel === 'medium' ? 'bg-yellow-50 border-yellow-200' :
- 'bg-green-50 border-green-200'
+ casePlan.complications.riskLevel === 'medium' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
+ 'bg-[#C8D4DC] border-[#2C4A60]'
  }`}>
  <div className="mb-3">
  <label className="block text-sm font-medium mb-2">Risk Level</label>

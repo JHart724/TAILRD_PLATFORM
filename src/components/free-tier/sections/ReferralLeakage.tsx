@@ -27,7 +27,7 @@ const ReferralLeakage: React.FC<ReferralLeakageProps> = () => {
           {[
             { label: 'Leakage Rate', value: '12.4%', color: 'text-arterial-600' },
             { label: 'Lost Revenue', value: '$8.2M', color: 'text-titanium-800' },
-            { label: 'Retained Referrals', value: '87.6%', color: 'text-emerald-600' },
+            { label: 'Retained Referrals', value: '87.6%', color: 'text-[#2C4A60]' },
             { label: 'Top Destinations', value: '14', color: 'text-titanium-800' },
           ].map((stat, i) => (
             <div key={stat.label} className="text-center p-3 bg-chrome-50 rounded-lg">

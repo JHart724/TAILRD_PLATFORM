@@ -25,19 +25,19 @@ const ExecutiveKPICard: React.FC<ExecutiveKPICardProps> = ({
   const getStatusClasses = () => {
  switch (status) {
  case 'optimal':
- return 'border-l-deep-green-600 bg-white';
+ return 'border-l-[#2C4A60] bg-white';
  case 'warning':
- return 'border-l-deep-amber-600 bg-white';
+ return 'border-l-[#6B7280] bg-white';
  case 'critical':
- return 'border-l-deep-red-600 bg-white';
+ return 'border-l-arterial-600 bg-white';
  default:
- return 'border-l-deep-blue-600 bg-white';
+ return 'border-l-[#4A6880] bg-white';
  }
   };
 
   const getTrendColor = () => {
- if (trend?.direction === 'up') return 'text-deep-green-600';
- return 'text-deep-red-600';
+ if (trend?.direction === 'up') return 'text-[#2C4A60]';
+ return 'text-arterial-600';
   };
 
   return (

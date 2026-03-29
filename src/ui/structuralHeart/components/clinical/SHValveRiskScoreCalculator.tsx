@@ -171,9 +171,9 @@ const SHValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = (
 
   const getCategoryColor = (category: string) => {
  switch (category) {
- case 'Low': return 'text-emerald-400';
- case 'Intermediate': return 'text-yellow-400';
- case 'High': return 'text-amber-400';
+ case 'Low': return 'text-[#2C4A60]';
+ case 'Intermediate': return 'text-[#6B7280]';
+ case 'High': return 'text-[#6B7280]';
  case 'Prohibitive': return 'text-red-400';
  default: return 'text-titanium-400';
  }
@@ -181,9 +181,9 @@ const SHValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = (
 
   const getCategoryBg = (category: string) => {
  switch (category) {
- case 'Low': return 'bg-emerald-500 border-emerald-500';
- case 'Intermediate': return 'bg-yellow-500/10 border-yellow-500/30';
- case 'High': return 'bg-bg-amber-500 border-amber-500/30';
+ case 'Low': return 'bg-[#F0F5FA] border-[#C8D4DC]';
+ case 'Intermediate': return 'bg-[#F0F5FA]/10 border-[#C8D4DC]/30';
+ case 'High': return 'bg-bg-[#F0F5FA] border-[#C8D4DC]/30';
  case 'Prohibitive': return 'bg-red-500 border-red-500';
  default: return 'bg-white border-titanium-200';
  }
@@ -294,7 +294,7 @@ const SHValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = (
  { key: 'immunocompromised' as const, label: 'Immunocompromised' },
  ].map(({ key, label }) => (
  <label key={key} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border cursor-pointer transition-all ${
- inputs[key] ? 'bg-bg-amber-500 border-amber-500/30' : 'bg-white border-titanium-200 hover:border-titanium-200'
+ inputs[key] ? 'bg-bg-[#F0F5FA] border-[#C8D4DC]/30' : 'bg-white border-titanium-200 hover:border-titanium-200'
  }`}>
  <input type="checkbox" checked={inputs[key] as boolean} onChange={(e) => updateInput(key, e.target.checked)} className="w-3.5 h-3.5 accent-orange-500" />
  <span className="text-xs text-titanium-300 font-sf">{label}</span>
@@ -315,7 +315,7 @@ const SHValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = (
  <div className="w-full bg-titanium-800 rounded-full h-2">
  <div className="h-2 rounded-full transition-all duration-500"
  style={{ width: `${Math.min(result.stsScore / 20 * 100, 100)}%`,
- background: result.stsScore < 4 ? '#10b981' : result.stsScore < 8 ? '#eab308' : result.stsScore < 15 ? '#f97316' : '#ef4444' }} />
+ background: result.stsScore < 4 ? '#2C4A60' : result.stsScore < 8 ? '#6B7280' : result.stsScore < 15 ? '#7A1A2E' : '#ef4444' }} />
  </div>
  <div className="flex justify-between text-xs text-titanium-500 mt-1">
  <span>Low (&lt;4%)</span><span>Inter (4-8%)</span><span>High (8-15%)</span><span>Prohib (&gt;15%)</span>
@@ -332,7 +332,7 @@ const SHValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = (
  <div className="w-full bg-titanium-800 rounded-full h-2">
  <div className="h-2 rounded-full transition-all duration-500"
  style={{ width: `${Math.min(result.euroScore / 20 * 100, 100)}%`,
- background: result.euroScore < 4 ? '#10b981' : result.euroScore < 8 ? '#eab308' : result.euroScore < 15 ? '#f97316' : '#ef4444' }} />
+ background: result.euroScore < 4 ? '#2C4A60' : result.euroScore < 8 ? '#6B7280' : result.euroScore < 15 ? '#7A1A2E' : '#ef4444' }} />
  </div>
  </div>
 
@@ -352,9 +352,9 @@ const SHValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = (
  <h4 className="text-xs font-semibold text-titanium-400 mb-3 uppercase tracking-wider">2020 ACC/AHA VHD Guideline Thresholds</h4>
  <div className="space-y-2 text-xs">
  {[
- { range: 'STS < 4%', rec: 'Low risk: SAVR or TAVR', color: 'text-emerald-400' },
- { range: 'STS 4-8%', rec: 'Intermediate: Heart Team shared decision', color: 'text-yellow-400' },
- { range: 'STS > 8%', rec: 'High risk: TAVR preferred', color: 'text-amber-400' },
+ { range: 'STS < 4%', rec: 'Low risk: SAVR or TAVR', color: 'text-[#2C4A60]' },
+ { range: 'STS 4-8%', rec: 'Intermediate: Heart Team shared decision', color: 'text-[#6B7280]' },
+ { range: 'STS > 8%', rec: 'High risk: TAVR preferred', color: 'text-[#6B7280]' },
  { range: 'STS > 15% or prohibitive', rec: 'TAVR if feasible, or medical/palliative', color: 'text-red-400' },
  ].map(({ range, rec, color }) => (
  <div key={range} className="flex items-start gap-2">

@@ -32,9 +32,15 @@ const ModuleLayout: React.FC<ModuleLayoutProps> = ({
   const [activeView, setActiveView] = useState<string>(initialView);
   const [isLoading, setIsLoading] = useState(false);
 
+  const scrollToTop = () => {
+    const container = document.getElementById('main-scroll-container');
+    if (container) container.scrollTo({ top: 0, behavior: 'auto' });
+  };
+
   const handleViewChange = async (viewId: string) => {
  if (viewId === activeView) return;
  setIsLoading(true);
+ scrollToTop();
  await new Promise(resolve => setTimeout(resolve, 300));
  setActiveView(viewId);
  setIsLoading(false);

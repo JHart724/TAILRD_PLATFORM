@@ -341,16 +341,16 @@ const EPWorklist: React.FC = () => {
   const getPriorityColor = (priority: string) => {
  switch (priority) {
  case 'Emergent': return 'bg-red-100 text-red-700 border-red-200';
- case 'Urgent': return 'bg-amber-100 text-amber-700 border-amber-200';
- default: return 'bg-green-100 text-green-700 border-green-200';
+ case 'Urgent': return 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]';
+ default: return 'bg-[#C8D4DC] text-[#2C4A60] border-[#2C4A60]';
  }
   };
 
   const getStatusColor = (status: string) => {
  switch (status) {
- case 'Completed': return 'bg-emerald-100 text-emerald-700';
+ case 'Completed': return 'bg-[#F0F5FA] text-[#2C4A60]';
  case 'In Progress': return 'bg-chrome-100 text-chrome-700';
- case 'Pre-procedure': return 'bg-amber-100 text-amber-700';
+ case 'Pre-procedure': return 'bg-[#F0F5FA] text-[#6B7280]';
  case 'Scheduled': return 'bg-titanium-100 text-titanium-700';
  default: return 'bg-red-100 text-red-700';
  }
@@ -358,10 +358,10 @@ const EPWorklist: React.FC = () => {
 
   const getRhythmColor = (rhythm: string) => {
  switch (rhythm) {
- case 'SR': return 'bg-green-100 text-green-700';
+ case 'SR': return 'bg-[#C8D4DC] text-[#2C4A60]';
  case 'AF': case 'AFL': return 'bg-red-100 text-red-700';
  case 'VT': case 'VF': return 'bg-red-100 text-red-700';
- case 'Brady': return 'bg-amber-100 text-amber-700';
+ case 'Brady': return 'bg-[#F0F5FA] text-[#6B7280]';
  case 'SVT': return 'bg-chrome-100 text-chrome-700';
  default: return 'bg-titanium-100 text-titanium-700';
  }
@@ -369,8 +369,8 @@ const EPWorklist: React.FC = () => {
 
   const getBatteryColor = (status: string) => {
  switch (status) {
- case 'Normal': return 'text-green-600';
- case 'ERI': return 'text-amber-600';
+ case 'Normal': return 'text-[#2C4A60]';
+ case 'ERI': return 'text-[#6B7280]';
  case 'EOL': return 'text-red-600';
  default: return 'text-titanium-600';
  }
@@ -390,7 +390,7 @@ const EPWorklist: React.FC = () => {
  <div className="text-sm text-titanium-600">CHA₂DS₂-VASc Score</div>
  <div className={`text-xl font-bold ${
  patient.cha2ds2vasc >= 4 ? 'text-red-600' :
- patient.cha2ds2vasc >= 2 ? 'text-amber-600' : 'text-green-600'
+ patient.cha2ds2vasc >= 2 ? 'text-[#6B7280]' : 'text-[#2C4A60]'
  }`}>
  {patient.cha2ds2vasc}
  </div>
@@ -403,7 +403,7 @@ const EPWorklist: React.FC = () => {
  <div className="text-sm text-titanium-600">HAS-BLED Score</div>
  <div className={`text-xl font-bold ${
  patient.hasbled >= 3 ? 'text-red-600' :
- patient.hasbled >= 2 ? 'text-amber-600' : 'text-green-600'
+ patient.hasbled >= 2 ? 'text-[#6B7280]' : 'text-[#2C4A60]'
  }`}>
  {patient.hasbled}
  </div>
@@ -447,9 +447,9 @@ const EPWorklist: React.FC = () => {
  </div>
  </div>
  {patient.remoteMonitoring && (
- <div className="flex items-center gap-2 p-2 bg-green-50 rounded border border-green-200">
- <Wifi className="w-4 h-4 text-green-600" />
- <span className="text-sm text-green-700">Remote monitoring active</span>
+ <div className="flex items-center gap-2 p-2 bg-[#C8D4DC] rounded border border-[#2C4A60]">
+ <Wifi className="w-4 h-4 text-[#2C4A60]" />
+ <span className="text-sm text-[#2C4A60]">Remote monitoring active</span>
  </div>
  )}
  </div>
@@ -459,7 +459,7 @@ const EPWorklist: React.FC = () => {
  {/* Current Medications */}
  <div>
  <h4 className="font-semibold text-titanium-800 mb-3 flex items-center gap-2">
- <Activity className="w-4 h-4 text-green-500" />
+ <Activity className="w-4 h-4 text-[#2C4A60]" />
  Current Medications
  </h4>
  <div className="space-y-2">
@@ -492,8 +492,8 @@ const EPWorklist: React.FC = () => {
  <div>
  <div className="text-xs text-titanium-600">Ejection Fraction</div>
  <div className={`text-lg font-bold ${
- patient.lastEcho.ef >= 50 ? 'text-green-600' :
- patient.lastEcho.ef >= 35 ? 'text-amber-600' : 'text-red-600'
+ patient.lastEcho.ef >= 50 ? 'text-[#2C4A60]' :
+ patient.lastEcho.ef >= 35 ? 'text-[#6B7280]' : 'text-red-600'
  }`}>
  {patient.lastEcho.ef}%
  </div>
@@ -501,8 +501,8 @@ const EPWorklist: React.FC = () => {
  <div>
  <div className="text-xs text-titanium-600">LA Size</div>
  <div className={`text-lg font-bold ${
- patient.lastEcho.laSize <= 40 ? 'text-green-600' :
- patient.lastEcho.laSize <= 45 ? 'text-amber-600' : 'text-red-600'
+ patient.lastEcho.laSize <= 40 ? 'text-[#2C4A60]' :
+ patient.lastEcho.laSize <= 45 ? 'text-[#6B7280]' : 'text-red-600'
  }`}>
  {patient.lastEcho.laSize}mm
  </div>
@@ -518,7 +518,7 @@ const EPWorklist: React.FC = () => {
  {patient.ablationHistory.length > 0 && (
  <div>
  <h4 className="font-semibold text-titanium-800 mb-3 flex items-center gap-2">
- <Zap className="w-4 h-4 text-yellow-500" />
+ <Zap className="w-4 h-4 text-[#6B7280]" />
  Ablation History
  </h4>
  <div className="space-y-2">
@@ -532,8 +532,8 @@ const EPWorklist: React.FC = () => {
  </div>
  </div>
  <span className={`text-xs px-2 py-1 rounded font-medium ${
- ablation.outcome === 'Success' ? 'bg-green-100 text-green-700' :
- ablation.outcome === 'Partial' ? 'bg-amber-100 text-amber-700' :
+ ablation.outcome === 'Success' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ ablation.outcome === 'Partial' ? 'bg-[#F0F5FA] text-[#6B7280]' :
  'bg-red-100 text-red-700'
  }`}>
  {ablation.outcome}
@@ -666,7 +666,7 @@ const EPWorklist: React.FC = () => {
  </button>
  <button
  onClick={bulkOrderEcho}
- className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors"
+ className="px-3 py-1 bg-[#C8D4DC] text-white rounded text-sm hover:bg-[#C8D4DC] transition-colors"
  >
  Order Echo
  </button>
@@ -779,7 +779,7 @@ const EPWorklist: React.FC = () => {
  </button>
  {patient.remoteMonitoring && (
  <div title="Remote monitoring enabled">
- <Wifi className="w-4 h-4 text-green-500" />
+ <Wifi className="w-4 h-4 text-[#2C4A60]" />
  </div>
  )}
  </div>

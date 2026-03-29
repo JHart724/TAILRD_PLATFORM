@@ -81,9 +81,9 @@ const SHReferralTracker: React.FC = () => {
 
   const getStatusIcon = (status: string) => {
  const icons = {
- pending: <Clock className="w-4 h-4 text-amber-700" />,
+ pending: <Clock className="w-4 h-4 text-[#6B7280]" />,
  scheduled: <CheckCircle className="w-4 h-4 text-chrome-700" />,
- completed: <CheckCircle className="w-4 h-4 text-teal-700" />,
+ completed: <CheckCircle className="w-4 h-4 text-[#2C4A60]" />,
  cancelled: <XCircle className="w-4 h-4 text-titanium-500" />,
  overdue: <AlertTriangle className="w-4 h-4 text-red-700" />
  };
@@ -92,9 +92,9 @@ const SHReferralTracker: React.FC = () => {
 
   const getStatusBadge = (status: string) => {
  const colors = {
- pending: 'bg-amber-100 text-amber-900 border-amber-400',
+ pending: 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]',
  scheduled: 'bg-chrome-100 text-chrome-900 border-chrome-400',
- completed: 'bg-teal-100 text-teal-900 border-teal-400',
+ completed: 'bg-[#C8D4DC] text-[#2C4A60] border-[#2C4A60]',
  cancelled: 'bg-titanium-100 text-titanium-700 border-titanium-400',
  overdue: 'bg-red-100 text-red-900 border-red-400'
  };
@@ -199,7 +199,7 @@ const SHReferralTracker: React.FC = () => {
  {referral.completedDate && (
  <div>
  <span className="text-titanium-600">Completed:</span>{' '}
- <span className="font-medium text-teal-800">
+ <span className="font-medium text-[#2C4A60]">
  {new Date(referral.completedDate).toLocaleDateString()}
  </span>
  </div>
@@ -209,7 +209,7 @@ const SHReferralTracker: React.FC = () => {
  {referral.notes && (
  <div className="mb-3">
  <div className="text-xs text-titanium-600 mb-1">Notes</div>
- <div className="text-sm text-amber-900 bg-amber-50 p-3 rounded-lg border border-amber-300">
+ <div className="text-sm text-[#6B7280] bg-[#F0F5FA] p-3 rounded-lg border border-[#C8D4DC]">
  {referral.notes}
  </div>
  </div>

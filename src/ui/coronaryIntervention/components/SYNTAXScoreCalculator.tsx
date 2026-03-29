@@ -773,8 +773,8 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  )}
 
  {/* References */}
- <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
- <p className="text-sm text-amber-800">
+ <div className="mt-6 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
+ <p className="text-sm text-[#6B7280]">
  <strong>References:</strong> SYNTAX Trial (5-year), SYNTAX II Trial, 2021 ACC/AHA Coronary Revascularization Guideline. SYNTAX II incorporates both anatomical complexity and clinical variables for individualized treatment recommendations.
  </p>
  </div>

@@ -102,7 +102,7 @@ const CustomerSuccess: React.FC = () => {
         </div>
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <div className="flex items-center gap-2 mb-2">
-            <CheckCircle className="w-5 h-5 text-green-600" />
+            <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
             <span className="text-xs text-gray-500 uppercase font-semibold">Gaps Actioned</span>
           </div>
           <div className="text-2xl font-bold text-gray-900">
@@ -114,7 +114,7 @@ const CustomerSuccess: React.FC = () => {
         </div>
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <div className="flex items-center gap-2 mb-2">
-            <DollarSign className="w-5 h-5 text-green-600" />
+            <DollarSign className="w-5 h-5 text-[#2C4A60]" />
             <span className="text-xs text-gray-500 uppercase font-semibold">Revenue Recovered</span>
           </div>
           <div className="text-2xl font-bold text-gray-900">$47.2M</div>
@@ -148,7 +148,7 @@ const CustomerSuccess: React.FC = () => {
             <Legend wrapperStyle={{ fontSize: 12 }} />
             <Line type="monotone" dataKey="BSW" stroke="#7A1A2E" strokeWidth={2} dot={{ r: 3 }} />
             <Line type="monotone" dataKey="MSH" stroke="#2563EB" strokeWidth={2} dot={{ r: 3 }} />
-            <Line type="monotone" dataKey="MH" stroke="#059669" strokeWidth={2} dot={{ r: 3 }} />
+            <Line type="monotone" dataKey="MH" stroke="#2C4A60" strokeWidth={2} dot={{ r: 3 }} />
           </LineChart>
         </ResponsiveContainer>
       </div>

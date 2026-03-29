@@ -116,10 +116,10 @@ const zipData: ZIPData[] = [
 
 const getRiskColor = (riskScore: number) => {
   if (riskScore >= 8.5) return '#dc2626'; // red-600
-  if (riskScore >= 7.0) return '#ea580c'; // orange-600
-  if (riskScore >= 6.0) return '#d97706'; // amber-600
+  if (riskScore >= 7.0) return '#7A1A2E'; // orange-600
+  if (riskScore >= 6.0) return '#6B7280'; // amber-600
   if (riskScore >= 5.0) return '#65a30d'; // lime-600
-  return '#16a34a'; // green-600
+  return '#4A6880'; // green-600
 };
 
 const getRiskLabel = (riskScore: number) => {
@@ -259,7 +259,7 @@ export const HFGeographicHeatMapSimple: React.FC = () => {
  <span className="text-sm font-medium text-gray-700">Risk Score:</span>
  <div className="flex items-center space-x-2">
  <div className="flex items-center space-x-1">
- <div className="w-4 h-4 rounded" style={{ backgroundColor: '#16a34a' }}></div>
+ <div className="w-4 h-4 rounded" style={{ backgroundColor: '#4A6880' }}></div>
  <span className="text-xs text-gray-600">Low (&lt;5.0)</span>
  </div>
  <div className="flex items-center space-x-1">
@@ -267,11 +267,11 @@ export const HFGeographicHeatMapSimple: React.FC = () => {
  <span className="text-xs text-gray-600">Moderate (5.0-5.9)</span>
  </div>
  <div className="flex items-center space-x-1">
- <div className="w-4 h-4 rounded" style={{ backgroundColor: '#d97706' }}></div>
+ <div className="w-4 h-4 rounded" style={{ backgroundColor: '#6B7280' }}></div>
  <span className="text-xs text-gray-600">High (6.0-7.9)</span>
  </div>
  <div className="flex items-center space-x-1">
- <div className="w-4 h-4 rounded" style={{ backgroundColor: '#ea580c' }}></div>
+ <div className="w-4 h-4 rounded" style={{ backgroundColor: '#7A1A2E' }}></div>
  <span className="text-xs text-gray-600">Very High (8.0+)</span>
  </div>
  </div>
@@ -320,13 +320,13 @@ export const HFGeographicHeatMapSimple: React.FC = () => {
  </div>
  </div>
 
- <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+ <div className="bg-[#C8D4DC] rounded-lg p-4 border border-[#2C4A60]">
  <div className="flex items-center mb-2">
- <Heart className="w-5 h-5 text-green-600 mr-2" />
- <span className="text-sm font-medium text-green-800">GDMT Optimized</span>
+ <Heart className="w-5 h-5 text-[#2C4A60] mr-2" />
+ <span className="text-sm font-medium text-[#2C4A60]">GDMT Optimized</span>
  </div>
- <div className="text-2xl font-bold text-green-900">{selectedZIP.gdmtRate}%</div>
- <div className="text-xs text-green-600 mt-1">
+ <div className="text-2xl font-bold text-[#2C4A60]">{selectedZIP.gdmtRate}%</div>
+ <div className="text-xs text-[#2C4A60] mt-1">
  {Math.round((selectedZIP.gdmtRate / 100) * selectedZIP.patients)} patients
  </div>
  </div>
@@ -373,7 +373,7 @@ export const HFGeographicHeatMapSimple: React.FC = () => {
 
  <div className="bg-white border border-gray-200 rounded-lg p-3">
  <div className="text-sm text-gray-600">Medication Gaps</div>
- <div className="text-xl font-bold text-amber-600">
+ <div className="text-xl font-bold text-[#6B7280]">
  {Math.round(selectedZIP.patients * ((100 - selectedZIP.gdmtRate) / 100))}
  </div>
  <div className="text-xs text-gray-500">Sub-optimal GDMT</div>
@@ -381,7 +381,7 @@ export const HFGeographicHeatMapSimple: React.FC = () => {
 
  <div className="bg-white border border-gray-200 rounded-lg p-3">
  <div className="text-sm text-gray-600">Revenue Opportunity</div>
- <div className="text-xl font-bold text-green-600">
+ <div className="text-xl font-bold text-[#2C4A60]">
  ${(selectedZIP.patients * 2.8).toLocaleString()}K
  </div>
  <div className="text-xs text-gray-500">Annual potential</div>

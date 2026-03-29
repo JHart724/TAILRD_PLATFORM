@@ -25,22 +25,22 @@ const StructuralHeartAnalytics: React.FC = () => (
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">TAVR Procedures</h4>
  <div className="text-2xl font-bold text-titanium-900">1,287</div>
- <div className="text-sm text-green-600">+18.4% vs last quarter</div>
+ <div className="text-sm text-[#2C4A60]">+18.4% vs last quarter</div>
  </div>
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">MitraClip Procedures</h4>
  <div className="text-2xl font-bold text-titanium-900">456</div>
- <div className="text-sm text-green-600">+22.7% vs last quarter</div>
+ <div className="text-sm text-[#2C4A60]">+22.7% vs last quarter</div>
  </div>
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">TMVR Procedures</h4>
  <div className="text-2xl font-bold text-titanium-900">89</div>
- <div className="text-sm text-green-600">+45.2% vs last quarter</div>
+ <div className="text-sm text-[#2C4A60]">+45.2% vs last quarter</div>
  </div>
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">PVL Closures</h4>
  <div className="text-2xl font-bold text-titanium-900">67</div>
- <div className="text-sm text-green-600">+12.3% vs last quarter</div>
+ <div className="text-sm text-[#2C4A60]">+12.3% vs last quarter</div>
  </div>
  </div>
  <div className="metal-card p-8">
@@ -129,7 +129,7 @@ const TAVRCandidatePipeline: React.FC = () => {
             <ul className="space-y-1 mb-3">
               {p.signals.map((s, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-titanium-700">
-                  <AlertTriangle className="w-3.5 h-3.5 text-amber-500 mt-0.5 flex-shrink-0" />
+                  <AlertTriangle className="w-3.5 h-3.5 text-[#6B7280] mt-0.5 flex-shrink-0" />
                   {s}
                 </li>
               ))}
@@ -157,14 +157,14 @@ const TAVRCandidatePipeline: React.FC = () => {
           <p className="text-3xl font-bold text-red-800">{totalSevereAS}</p>
           <p className="text-xs text-titanium-500 mt-1">Asymptomatic severe AS, heart team review overdue</p>
         </div>
-        <div className="metal-card p-5 border-l-4 border-l-amber-400">
-          <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-1">Moderate AS — Surveillance Due</p>
-          <p className="text-3xl font-bold text-amber-800">{totalModerateAS}</p>
+        <div className="metal-card p-5 border-l-4 border-l-[#6B7280]">
+          <p className="text-xs font-semibold text-[#6B7280] uppercase tracking-wide mb-1">Moderate AS — Surveillance Due</p>
+          <p className="text-3xl font-bold text-[#6B7280]">{totalModerateAS}</p>
           <p className="text-xs text-titanium-500 mt-1">Echo overdue — risk of undetected progression to severe AS</p>
         </div>
-        <div className="metal-card p-5 border-l-4 border-l-amber-400">
-          <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-1">Post-TAVR Echo Overdue</p>
-          <p className="text-3xl font-bold text-amber-800">{totalPostTavr}</p>
+        <div className="metal-card p-5 border-l-4 border-l-[#6B7280]">
+          <p className="text-xs font-semibold text-[#6B7280] uppercase tracking-wide mb-1">Post-TAVR Echo Overdue</p>
+          <p className="text-3xl font-bold text-[#6B7280]">{totalPostTavr}</p>
           <p className="text-xs text-titanium-500 mt-1">30-day post-TAVR echo not performed (VARC-3)</p>
         </div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500">
@@ -197,7 +197,7 @@ const TAVRCandidatePipeline: React.FC = () => {
           ].map((q, i) => (
             <div key={i} className="px-4 py-3 text-center">
               <div className="text-xs font-semibold text-titanium-500 uppercase">{q.label}</div>
-              <div className="text-lg font-bold text-emerald-700 mt-1">{formatDollar(q.revenue)}</div>
+              <div className="text-lg font-bold text-[#2C4A60] mt-1">{formatDollar(q.revenue)}</div>
               <div className="text-xs text-titanium-500">{q.procedures} procedures</div>
             </div>
           ))}
@@ -234,19 +234,19 @@ const TAVRCandidatePipeline: React.FC = () => {
 
       {/* Gap 79 — Moderate AS Surveillance Pipeline */}
       {moderateASGap && (
-        <div className="metal-card bg-white border border-amber-200 rounded-2xl p-6">
+        <div className="metal-card bg-white border border-[#C8D4DC] rounded-2xl p-6">
           <div className="flex items-start gap-3 mb-4">
-            <Activity className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+            <Activity className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-base font-semibold text-titanium-900">
                   Gap 79: Moderate AS — Echo Surveillance Overdue
                 </h3>
-                <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-medium">SURVEILLANCE</span>
+                <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-0.5 rounded-full font-medium">SURVEILLANCE</span>
                 <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-medium">{totalModerateAS} patients</span>
               </div>
               <p className="text-xs text-titanium-600 mt-1">{moderateASGap.evidence}</p>
-              <p className="text-xs font-semibold text-amber-700 mt-2">Action: {moderateASGap.cta}</p>
+              <p className="text-xs font-semibold text-[#6B7280] mt-2">Action: {moderateASGap.cta}</p>
             </div>
           </div>
           {moderateASGap.subcategories && (
@@ -254,7 +254,7 @@ const TAVRCandidatePipeline: React.FC = () => {
               {moderateASGap.subcategories.map((sub, i) => (
                 <div
                   key={i}
-                  className={`rounded-lg px-4 py-3 border ${i === 0 ? 'bg-red-50 border-red-200' : 'bg-amber-50 border-amber-200'}`}
+                  className={`rounded-lg px-4 py-3 border ${i === 0 ? 'bg-red-50 border-red-200' : 'bg-[#F0F5FA] border-[#C8D4DC]'}`}
                 >
                   <p className="text-sm font-bold text-titanium-900">{sub.count} patients</p>
                   <p className="text-xs text-titanium-600">{sub.label}</p>
@@ -263,7 +263,7 @@ const TAVRCandidatePipeline: React.FC = () => {
             </div>
           )}
           <div className="space-y-2">
-            {moderateASGap.patients.map(p => renderPatient(p, 'border-amber-100', 'bg-amber-50'))}
+            {moderateASGap.patients.map(p => renderPatient(p, 'border-[#C8D4DC]', 'bg-[#F0F5FA]'))}
             {moderateASGap.patientCount > moderateASGap.patients.length && (
               <p className="text-center text-sm text-titanium-500 py-2">
                 +{moderateASGap.patientCount - moderateASGap.patients.length} additional patients in the registry
@@ -275,23 +275,23 @@ const TAVRCandidatePipeline: React.FC = () => {
 
       {/* Gap 80 — Post-TAVR Echo Overdue */}
       {postTavrGap && (
-        <div className="metal-card bg-white border border-amber-200 rounded-2xl p-6">
+        <div className="metal-card bg-white border border-[#C8D4DC] rounded-2xl p-6">
           <div className="flex items-start gap-3 mb-4">
-            <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+            <AlertTriangle className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-base font-semibold text-titanium-900">
                   Gap 80: Post-TAVR Baseline Echo Missing
                 </h3>
-                <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-medium">QUALITY GAP</span>
+                <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-0.5 rounded-full font-medium">QUALITY GAP</span>
                 <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-medium">{totalPostTavr} patients</span>
               </div>
               <p className="text-xs text-titanium-600 mt-1">{postTavrGap.evidence}</p>
-              <p className="text-xs font-semibold text-amber-700 mt-2">Action: {postTavrGap.cta}</p>
+              <p className="text-xs font-semibold text-[#6B7280] mt-2">Action: {postTavrGap.cta}</p>
             </div>
           </div>
           <div className="space-y-2">
-            {postTavrGap.patients.map(p => renderPatient(p, 'border-amber-100', 'bg-amber-50'))}
+            {postTavrGap.patients.map(p => renderPatient(p, 'border-[#C8D4DC]', 'bg-[#F0F5FA]'))}
             {postTavrGap.patientCount > postTavrGap.patients.length && (
               <p className="text-center text-sm text-titanium-500 py-2">
                 +{postTavrGap.patientCount - postTavrGap.patients.length} additional patients in the registry
@@ -347,7 +347,7 @@ const TAVRCandidatePipeline: React.FC = () => {
         <Zap className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
         <div>
           <h4 className="text-sm font-semibold text-blue-900 mb-1">Automated Structural Heart Pipeline Identification</h4>
-          <p className="text-sm text-blue-800">&#9889; Patients automatically identified from EHR data via Redox</p>
+          <p className="text-sm text-blue-800">&#9889; Patients automatically identified from EHR integration</p>
         </div>
       </div>
 
@@ -365,9 +365,9 @@ const TAVRCandidatePipeline: React.FC = () => {
               <div className="text-lg font-bold text-red-600">15 months</div>
               <div className="text-xs text-titanium-400">to clear pipeline</div>
             </div>
-            <div className="bg-emerald-50/70 rounded-lg p-3">
+            <div className="bg-[#F0F5FA]/70 rounded-lg p-3">
               <div className="text-xs text-titanium-500 mb-1">Systematic Closure</div>
-              <div className="text-lg font-bold text-emerald-600">5 months</div>
+              <div className="text-lg font-bold text-[#2C4A60]">5 months</div>
               <div className="text-xs text-titanium-400">with TAILRD protocol</div>
             </div>
             <div className="bg-blue-50/70 rounded-lg p-3">
@@ -396,10 +396,10 @@ const StructuralProcedureAnalytics: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="metal-card p-5 border-l-4 border-l-medical-red-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total Procedures</p><p className="text-3xl font-bold text-titanium-900">1,910</p><p className="text-xs text-green-600 mt-1">+16.2% vs last quarter</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Overall Technical Success</p><p className="text-3xl font-bold text-green-700">97.2%</p><p className="text-xs text-titanium-500 mt-1">Across all structural procedures</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">TAVR Transfemoral Rate</p><p className="text-3xl font-bold text-blue-700">91.7%</p><p className="text-xs text-green-600 mt-1">+2.4% vs last quarter</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-amber-400"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Avg TAVR LOS</p><p className="text-3xl font-bold text-amber-700">2.1d</p><p className="text-xs text-green-600 mt-1">-0.3d vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-medical-red-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total Procedures</p><p className="text-3xl font-bold text-titanium-900">1,910</p><p className="text-xs text-[#2C4A60] mt-1">+16.2% vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Overall Technical Success</p><p className="text-3xl font-bold text-[#2C4A60]">97.2%</p><p className="text-xs text-titanium-500 mt-1">Across all structural procedures</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">TAVR Transfemoral Rate</p><p className="text-3xl font-bold text-blue-700">91.7%</p><p className="text-xs text-[#2C4A60] mt-1">+2.4% vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#6B7280]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Avg TAVR LOS</p><p className="text-3xl font-bold text-[#6B7280]">2.1d</p><p className="text-xs text-[#2C4A60] mt-1">-0.3d vs last quarter</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-titanium-100 flex items-center gap-2">
@@ -414,9 +414,9 @@ const StructuralProcedureAnalytics: React.FC = () => {
                 <tr key={i} className="hover:bg-titanium-50">
                   <td className="px-4 py-3 font-medium text-titanium-900">{p.type}</td>
                   <td className="px-4 py-3 font-mono font-semibold">{p.volume}</td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{p.technical}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.technical}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{p.pvl}</td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">{p.stroke}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{p.stroke}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{p.los}</td>
                   <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{p.mortality}</span></td>
                 </tr>
@@ -440,9 +440,9 @@ const StructuralOutcomesAnalytics: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="metal-card p-5 border-l-4 border-l-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Overall 30d Mortality</p><p className="text-3xl font-bold text-green-700">1.8%</p><p className="text-xs text-titanium-500 mt-1">STS benchmark 2.4%</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Overall 30d Mortality</p><p className="text-3xl font-bold text-[#2C4A60]">1.8%</p><p className="text-xs text-titanium-500 mt-1">STS benchmark 2.4%</p></div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">30d Stroke Rate</p><p className="text-3xl font-bold text-blue-700">2.0%</p><p className="text-xs text-titanium-500 mt-1">Nationwide avg 2.3%</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-amber-400"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Mod/Severe PVL Rate</p><p className="text-3xl font-bold text-amber-700">1.3%</p><p className="text-xs text-green-600 mt-1">-0.2% vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#6B7280]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Mod/Severe PVL Rate</p><p className="text-3xl font-bold text-[#6B7280]">1.3%</p><p className="text-xs text-[#2C4A60] mt-1">-0.2% vs last quarter</p></div>
         <div className="metal-card p-5 border-l-4 border-l-slate-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">New PPM Rate (TAVR)</p><p className="text-3xl font-bold text-slate-700">11.4%</p><p className="text-xs text-titanium-500 mt-1">Post-TAVR pacemaker</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
@@ -459,7 +459,7 @@ const StructuralOutcomesAnalytics: React.FC = () => {
                   <td className="px-4 py-3 font-medium text-titanium-900">{t.risk}</td>
                   <td className="px-4 py-3 font-mono font-semibold">{t.n}</td>
                   <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{t.mortality}</span></td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">{t.stroke}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{t.stroke}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{t.pvl}</td>
                   <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">O/E: {t.oe}</span></td>
                 </tr>
@@ -486,8 +486,8 @@ const StructuralRiskCalculators: React.FC = () => (
           <h4 className="font-semibold text-titanium-900 mb-1">EuroSCORE II</h4>
           <p className="text-sm text-titanium-600 mb-3">European System for Cardiac Operative Risk Evaluation — used alongside STS for valve procedures</p>
           <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="bg-white rounded-lg p-2"><p className="text-titanium-500">Low Risk</p><p className="font-semibold text-green-700">&lt;2%</p></div>
-            <div className="bg-white rounded-lg p-2"><p className="text-titanium-500">Intermediate</p><p className="font-semibold text-amber-700">2–10%</p></div>
+            <div className="bg-white rounded-lg p-2"><p className="text-titanium-500">Low Risk</p><p className="font-semibold text-[#2C4A60]">&lt;2%</p></div>
+            <div className="bg-white rounded-lg p-2"><p className="text-titanium-500">Intermediate</p><p className="font-semibold text-[#6B7280]">2–10%</p></div>
             <div className="bg-white rounded-lg p-2"><p className="text-titanium-500">High Risk</p><p className="font-semibold text-red-700">&gt;10%</p></div>
             <div className="bg-white rounded-lg p-2"><p className="text-titanium-500">Very High</p><p className="font-semibold text-red-900">&gt;20%</p></div>
           </div>
@@ -521,7 +521,7 @@ const StructuralProviderScorecard: React.FC = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="metal-card p-5 border-l-4 border-l-medical-red-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Heart Team Members</p><p className="text-3xl font-bold text-titanium-900">6</p><p className="text-xs text-titanium-500 mt-1">Interventional cardiologists &amp; cardiac surgeons</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-green-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Avg Procedural Success</p><p className="text-3xl font-bold text-green-700">97.4%</p><p className="text-xs text-titanium-500 mt-1">Across TAVR and MitraClip</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Avg Procedural Success</p><p className="text-3xl font-bold text-[#2C4A60]">97.4%</p><p className="text-xs text-titanium-500 mt-1">Across TAVR and MitraClip</p></div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total Procedures</p><p className="text-3xl font-bold text-blue-700">1,357</p><p className="text-xs text-titanium-500 mt-1">TAVR + MitraClip this quarter</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
@@ -539,8 +539,8 @@ const StructuralProviderScorecard: React.FC = () => {
                   <td className="px-4 py-3 text-titanium-600">{p.specialty}</td>
                   <td className="px-4 py-3 text-center font-mono">{p.tavrVol}</td>
                   <td className="px-4 py-3 text-center font-mono">{p.mitraclipVol}</td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{p.successRate}</span></td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">{p.complications}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.successRate}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{p.complications}</span></td>
                   <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="flex-1 bg-titanium-100 rounded-full h-2"><div className="bg-medical-red-500 h-2 rounded-full" style={{ width: `${p.quality}%` }} /></div><span className="text-xs font-semibold text-titanium-700">{p.quality}</span></div></td>
                 </tr>
               ))}
@@ -567,7 +567,7 @@ const StructuralSafetyScreening: React.FC = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="metal-card p-5 border-l-4 border-l-red-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">High-Severity Alerts</p><p className="text-3xl font-bold text-red-800">75</p><p className="text-xs text-titanium-500 mt-1">Requiring immediate action</p></div>
-        <div className="metal-card p-5 border-l-4 border-l-amber-400"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Moderate Alerts</p><p className="text-3xl font-bold text-amber-700">165</p><p className="text-xs text-titanium-500 mt-1">Protocol review required</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-[#6B7280]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Moderate Alerts</p><p className="text-3xl font-bold text-[#6B7280]">165</p><p className="text-xs text-titanium-500 mt-1">Protocol review required</p></div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Pre-Procedural Screens</p><p className="text-3xl font-bold text-blue-700">312</p><p className="text-xs text-titanium-500 mt-1">Completed this month</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
@@ -583,7 +583,7 @@ const StructuralSafetyScreening: React.FC = () => {
                 <td className="px-4 py-3 font-medium text-titanium-900">{a.category}</td>
                 <td className="px-4 py-3 font-mono font-semibold">{a.count}</td>
                 <td className="px-4 py-3 text-titanium-600 text-xs">{a.action}</td>
-                <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${a.severity === 'red' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800'}`}>{a.severity === 'red' ? 'High' : 'Moderate'}</span></td>
+                <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${a.severity === 'red' ? 'bg-red-100 text-red-800' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>{a.severity === 'red' ? 'High' : 'Moderate'}</span></td>
               </tr>
             ))}
           </tbody>
@@ -689,7 +689,7 @@ const structuralHeartTabs: ServiceLineTabConfig[] = [
  id: 'sh-clinical-gap-detection',
  label: 'Gap Detection (8-Gap)',
  icon: Target,
- description: 'AI-driven structural gap detection: Gap 3 (Severe AS), Gap 5 (Functional MR/COAPT), Gap 8 (Tricuspid), Gap 79 (Moderate AS surveillance), Gap 80 (Post-TAVR echo), Gap 81 (Rheumatic MS warfarin safety), Gap 82 (BAV aortopathy), Gap 83 (Endocarditis prophylaxis) All gap detection criteria, risk scores, and composite calculators are automatically computed from structured EHR data ingested via Redox — no manual data entry or chart review required.'
+ description: 'AI-driven structural gap detection: Gap 3 (Severe AS), Gap 5 (Functional MR/COAPT), Gap 8 (Tricuspid), Gap 79 (Moderate AS surveillance), Gap 80 (Post-TAVR echo), Gap 81 (Rheumatic MS warfarin safety), Gap 82 (BAV aortopathy), Gap 83 (Endocarditis prophylaxis) All gap detection criteria, risk scores, and composite calculators are automatically computed from structured EHR data ingested via EHR integration — no manual data entry or chart review required.'
   }
 ];
 

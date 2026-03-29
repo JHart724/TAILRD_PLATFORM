@@ -49,13 +49,13 @@ const SharedProjectedVsRealized: React.FC<SharedProjectedVsRealizedProps> = ({
  <div className="text-xs text-porsche-700 font-medium mb-1">Total Projected</div>
  <div className="text-xl font-bold text-porsche-900">{formatMoney(totalProjected)}</div>
  </div>
- <div className="p-4 bg-green-50 rounded-lg border border-green-200">
- <div className="text-xs text-green-700 font-medium mb-1">Total Realized</div>
- <div className="text-xl font-bold text-green-900">{formatMoney(totalRealized)}</div>
+ <div className="p-4 bg-[#C8D4DC] rounded-lg border border-[#2C4A60]">
+ <div className="text-xs text-[#2C4A60] font-medium mb-1">Total Realized</div>
+ <div className="text-xl font-bold text-[#2C4A60]">{formatMoney(totalRealized)}</div>
  </div>
- <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
- <div className="text-xs text-amber-700 font-medium mb-1">Gap</div>
- <div className="text-xl font-bold text-amber-900">{formatMoney(gap)}</div>
+ <div className="p-4 bg-[#F0F5FA] rounded-lg border border-[#C8D4DC]">
+ <div className="text-xs text-[#6B7280] font-medium mb-1">Gap</div>
+ <div className="text-xl font-bold text-[#6B7280]">{formatMoney(gap)}</div>
  </div>
  </div>
 

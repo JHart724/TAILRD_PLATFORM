@@ -11,20 +11,20 @@ export const semanticTokens = {
  'chart.secondary': '#4A6880', // Chrome Blue Mid
  'chart.tertiary': '#1A4A2E', // Deep Forest Green
  'chart.quaternary': '#8B6914', // Aged Gold
- 'chart.success': '#16a34a', // green.600
- 'chart.warning': '#d97706', // amber.600
+ 'chart.success': '#4A6880', // green.600
+ 'chart.warning': '#6B7280', // amber.600
  'chart.danger': '#7A1A2E', // Carmona Red
  'chart.info': '#2E3440', // Gunmetal
 
  // Risk Stratification
- 'risk.low': '#22c55e',
- 'risk.moderate': '#f59e0b',
+ 'risk.low': '#4A6880',
+ 'risk.moderate': '#C8D4DC',
  'risk.high': '#9B2438', // Carmona Red Mid
  'risk.critical': '#7A1A2E', // Carmona Red
 
  // Status Indicators
- 'status.success': '#16a34a',
- 'status.warning': '#d97706',
+ 'status.success': '#4A6880',
+ 'status.warning': '#6B7280',
  'status.danger': '#7A1A2E', // Carmona Red
  'status.info': '#2C4A60', // Chrome Blue Dark
  'status.neutral': '#636D80', // titanium.500
@@ -56,7 +56,7 @@ export const semanticTokens = {
  'module.coronary': '#1A4A2E', // Deep Forest Green
  'module.valvular': '#8B6914', // Aged Gold
  'module.vascular': '#2E3440', // Gunmetal
- 'module.revenue': '#16a34a', // green.600
+ 'module.revenue': '#4A6880', // green.600
  'module.admin': '#636D80', // titanium.500
   },
 

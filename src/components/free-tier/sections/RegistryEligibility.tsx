@@ -59,7 +59,7 @@ const RegistryEligibility: React.FC = () => {
 
                 {/* Trend + locked button */}
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <span className="bg-emerald-50 text-emerald-600 text-xs font-data px-2 py-0.5 rounded-full">
+                  <span className="bg-[#F0F5FA] text-[#2C4A60] text-xs font-data px-2 py-0.5 rounded-full">
                     {registry.trend}
                   </span>
                   <button

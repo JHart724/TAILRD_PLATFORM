@@ -56,33 +56,33 @@ const PatientRiskHeatmap: React.FC = () => {
 
   const getRiskColor = (score: number) => {
  if (score >= 80) return 'bg-red-500';
- if (score >= 60) return 'bg-amber-500';
- if (score >= 40) return 'bg-yellow-500';
+ if (score >= 60) return 'bg-[#F0F5FA]';
+ if (score >= 40) return 'bg-[#F0F5FA]';
  if (score >= 20) return 'bg-chrome-500';
- return 'bg-green-500';
+ return 'bg-[#C8D4DC]';
   };
 
   const getPillarColor = (pillars: number) => {
- if (pillars === 4) return 'bg-emerald-500';
- if (pillars === 3) return 'bg-green-500';
- if (pillars === 2) return 'bg-yellow-500';
- if (pillars === 1) return 'bg-amber-500';
+ if (pillars === 4) return 'bg-[#F0F5FA]';
+ if (pillars === 3) return 'bg-[#C8D4DC]';
+ if (pillars === 2) return 'bg-[#F0F5FA]';
+ if (pillars === 1) return 'bg-[#F0F5FA]';
  return 'bg-red-500';
   };
 
   const getAgeColor = (age: number) => {
  if (age >= 80) return 'bg-arterial-500';
  if (age >= 70) return 'bg-chrome-500';
- if (age >= 60) return 'bg-teal-500';
- return 'bg-green-500';
+ if (age >= 60) return 'bg-[#C8D4DC]';
+ return 'bg-[#C8D4DC]';
   };
 
   const getEfColor = (ef: number | undefined) => {
  if (ef === undefined) return 'bg-gray-300';
  if (ef < 25) return 'bg-red-500';
- if (ef < 35) return 'bg-amber-500';
- if (ef < 45) return 'bg-yellow-500';
- return 'bg-green-500';
+ if (ef < 35) return 'bg-[#F0F5FA]';
+ if (ef < 45) return 'bg-[#F0F5FA]';
+ return 'bg-[#C8D4DC]';
   };
 
   const getInitials = (name: string) => {
@@ -98,7 +98,7 @@ const PatientRiskHeatmap: React.FC = () => {
  case 'age': return getAgeColor(patient.age);
  case 'provider': 
  const providerIndex = ['Dr. Sarah Williams', 'Dr. Michael Chen', 'Dr. Jennifer Martinez', 'Dr. Robert Thompson', 'Dr. Lisa Park'].indexOf(patient.provider);
- return ['bg-red-400', 'bg-chrome-400', 'bg-green-400', 'bg-arterial-400', 'bg-amber-400'][providerIndex] || 'bg-gray-400';
+ return ['bg-red-400', 'bg-chrome-400', 'bg-[#C8D4DC]', 'bg-arterial-400', 'bg-[#F0F5FA]'][providerIndex] || 'bg-gray-400';
  default: return 'bg-gray-300';
  }
   };
@@ -234,16 +234,16 @@ const PatientRiskHeatmap: React.FC = () => {
  <div>
  <div className="text-xs font-medium text-titanium-600 mb-1.5">Risk Score</div>
  <div className="flex rounded-md overflow-hidden h-5">
- <div className="flex-1 bg-green-500 relative group">
+ <div className="flex-1 bg-[#C8D4DC] relative group">
  <span className="absolute inset-0 flex items-center justify-center text-[10px] text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">0-19</span>
  </div>
  <div className="flex-1 bg-chrome-500 relative group">
  <span className="absolute inset-0 flex items-center justify-center text-[10px] text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">20-39</span>
  </div>
- <div className="flex-1 bg-yellow-500 relative group">
+ <div className="flex-1 bg-[#F0F5FA] relative group">
  <span className="absolute inset-0 flex items-center justify-center text-[10px] text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">40-59</span>
  </div>
- <div className="flex-1 bg-amber-500 relative group">
+ <div className="flex-1 bg-[#F0F5FA] relative group">
  <span className="absolute inset-0 flex items-center justify-center text-[10px] text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">60-79</span>
  </div>
  <div className="flex-1 bg-red-500 relative group">
@@ -262,16 +262,16 @@ const PatientRiskHeatmap: React.FC = () => {
  <div className="flex-1 bg-red-500 relative group">
  <span className="absolute inset-0 flex items-center justify-center text-[10px] text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">0</span>
  </div>
- <div className="flex-1 bg-amber-500 relative group">
+ <div className="flex-1 bg-[#F0F5FA] relative group">
  <span className="absolute inset-0 flex items-center justify-center text-[10px] text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">1</span>
  </div>
- <div className="flex-1 bg-yellow-500 relative group">
+ <div className="flex-1 bg-[#F0F5FA] relative group">
  <span className="absolute inset-0 flex items-center justify-center text-[10px] text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">2</span>
  </div>
- <div className="flex-1 bg-green-500 relative group">
+ <div className="flex-1 bg-[#C8D4DC] relative group">
  <span className="absolute inset-0 flex items-center justify-center text-[10px] text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">3</span>
  </div>
- <div className="flex-1 bg-emerald-500 relative group">
+ <div className="flex-1 bg-[#F0F5FA] relative group">
  <span className="absolute inset-0 flex items-center justify-center text-[10px] text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">4</span>
  </div>
  </div>
@@ -287,13 +287,13 @@ const PatientRiskHeatmap: React.FC = () => {
  <div className="flex-1 bg-red-500 relative group">
  <span className="absolute inset-0 flex items-center justify-center text-[10px] text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">&lt;25</span>
  </div>
- <div className="flex-1 bg-amber-500 relative group">
+ <div className="flex-1 bg-[#F0F5FA] relative group">
  <span className="absolute inset-0 flex items-center justify-center text-[10px] text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">25-34</span>
  </div>
- <div className="flex-1 bg-yellow-500 relative group">
+ <div className="flex-1 bg-[#F0F5FA] relative group">
  <span className="absolute inset-0 flex items-center justify-center text-[10px] text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">35-44</span>
  </div>
- <div className="flex-1 bg-green-500 relative group">
+ <div className="flex-1 bg-[#C8D4DC] relative group">
  <span className="absolute inset-0 flex items-center justify-center text-[10px] text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">45+</span>
  </div>
  </div>
@@ -306,10 +306,10 @@ const PatientRiskHeatmap: React.FC = () => {
  <div>
  <div className="text-xs font-medium text-titanium-600 mb-1.5">Age Group</div>
  <div className="flex rounded-md overflow-hidden h-5">
- <div className="flex-1 bg-green-500 relative group">
+ <div className="flex-1 bg-[#C8D4DC] relative group">
  <span className="absolute inset-0 flex items-center justify-center text-[10px] text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">45-59</span>
  </div>
- <div className="flex-1 bg-teal-500 relative group">
+ <div className="flex-1 bg-[#C8D4DC] relative group">
  <span className="absolute inset-0 flex items-center justify-center text-[10px] text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">60-69</span>
  </div>
  <div className="flex-1 bg-chrome-500 relative group">
@@ -420,8 +420,8 @@ const PatientRiskHeatmap: React.FC = () => {
  </div>
  <div className="text-sm text-titanium-600">High Risk (≥80)</div>
  </div>
- <div className="text-center p-3 bg-emerald-50 rounded-lg">
- <div className="text-2xl font-bold text-emerald-600">
+ <div className="text-center p-3 bg-[#F0F5FA] rounded-lg">
+ <div className="text-2xl font-bold text-[#2C4A60]">
  {sortedData.filter(p => p.gdmtPillars === 4).length}
  </div>
  <div className="text-sm text-titanium-600">4-Pillar Optimal</div>
@@ -463,45 +463,45 @@ const PatientRiskHeatmap: React.FC = () => {
  <div className="grid grid-cols-2 gap-4 mb-6">
  <div className={`p-4 rounded-xl border-2 ${
  selectedPatient.riskScore >= 80 ? 'bg-red-50 border-red-200' :
- selectedPatient.riskScore >= 60 ? 'bg-amber-50 border-amber-200' :
- selectedPatient.riskScore >= 40 ? 'bg-yellow-50 border-yellow-200' :
- 'bg-green-50 border-green-200'
+ selectedPatient.riskScore >= 60 ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
+ selectedPatient.riskScore >= 40 ? 'bg-[#F0F5FA] border-yellow-200' :
+ 'bg-[#C8D4DC] border-[#2C4A60]'
  }`}>
  <div className="flex items-center gap-3">
  <AlertTriangle className={`w-8 h-8 ${
  selectedPatient.riskScore >= 80 ? 'text-red-600' :
- selectedPatient.riskScore >= 60 ? 'text-amber-600' :
- selectedPatient.riskScore >= 40 ? 'text-yellow-600' :
- 'text-green-600'
+ selectedPatient.riskScore >= 60 ? 'text-[#6B7280]' :
+ selectedPatient.riskScore >= 40 ? 'text-[#6B7280]' :
+ 'text-[#2C4A60]'
  }`} />
  <div>
  <div className="text-sm font-medium text-titanium-700">Risk Score</div>
  <div className={`text-2xl font-bold ${
  selectedPatient.riskScore >= 80 ? 'text-red-800' :
- selectedPatient.riskScore >= 60 ? 'text-amber-800' :
- selectedPatient.riskScore >= 40 ? 'text-yellow-800' :
- 'text-green-800'
+ selectedPatient.riskScore >= 60 ? 'text-[#6B7280]' :
+ selectedPatient.riskScore >= 40 ? 'text-[#6B7280]' :
+ 'text-[#2C4A60]'
  }`}>{selectedPatient.riskScore}</div>
  </div>
  </div>
  </div>
 
  <div className={`p-4 rounded-xl border-2 ${
- selectedPatient.gdmtPillars === 4 ? 'bg-emerald-50 border-emerald-200' :
- selectedPatient.gdmtPillars >= 2 ? 'bg-yellow-50 border-yellow-200' :
+ selectedPatient.gdmtPillars === 4 ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
+ selectedPatient.gdmtPillars >= 2 ? 'bg-[#F0F5FA] border-yellow-200' :
  'bg-red-50 border-red-200'
  }`}>
  <div className="flex items-center gap-3">
  <Activity className={`w-8 h-8 ${
- selectedPatient.gdmtPillars === 4 ? 'text-emerald-600' :
- selectedPatient.gdmtPillars >= 2 ? 'text-yellow-600' :
+ selectedPatient.gdmtPillars === 4 ? 'text-[#2C4A60]' :
+ selectedPatient.gdmtPillars >= 2 ? 'text-[#6B7280]' :
  'text-red-600'
  }`} />
  <div>
  <div className="text-sm font-medium text-titanium-700">GDMT Pillars</div>
  <div className={`text-2xl font-bold ${
- selectedPatient.gdmtPillars === 4 ? 'text-emerald-800' :
- selectedPatient.gdmtPillars >= 2 ? 'text-yellow-800' :
+ selectedPatient.gdmtPillars === 4 ? 'text-[#2C4A60]' :
+ selectedPatient.gdmtPillars >= 2 ? 'text-[#6B7280]' :
  'text-red-800'
  }`}>{selectedPatient.gdmtPillars}/4</div>
  </div>

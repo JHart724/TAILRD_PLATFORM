@@ -296,9 +296,9 @@ const EPEquityAnalysis: React.FC = () => {
  case 'significant':
  return 'bg-red-100 text-red-800 border-red-200';
  case 'trending':
- return 'bg-amber-100 text-amber-800 border-amber-200';
+ return 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]';
  default:
- return 'bg-green-100 text-green-800 border-green-200';
+ return 'bg-[#C8D4DC] text-[#2C4A60] border-[#2C4A60]';
  }
   };
 

@@ -92,11 +92,11 @@ const SHRevenueOpportunityModal: React.FC<SHRevenueOpportunityModalProps> = ({
   });
 
   // Colors for charts
-  const drgColors = ['#0EA5E9', '#9B2438', '#10B981', '#F59E0B', '#EF4444'];
+  const drgColors = ['#0EA5E9', '#9B2438', '#4A6880', '#6B7280', '#EF4444'];
   const timelineColors = {
  'Due Today': '#EF4444',
- 'Due This Week': '#F59E0B', 
- 'Due This Month': '#10B981',
+ 'Due This Week': '#6B7280', 
+ 'Due This Month': '#4A6880',
  'Due Later': '#6B7280'
   };
 
@@ -188,7 +188,7 @@ const SHRevenueOpportunityModal: React.FC<SHRevenueOpportunityModalProps> = ({
  </div>
 
  {/* Medium Priority */}
- <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+ <div className="bg-[#F0F5FA] p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center">
  <Clock className="w-8 h-8 text-medical-amber-600 mr-3" />
@@ -211,7 +211,7 @@ const SHRevenueOpportunityModal: React.FC<SHRevenueOpportunityModalProps> = ({
  </div>
 
  {/* Total Potential */}
- <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+ <div className="bg-[#C8D4DC] p-4 rounded-lg border border-[#2C4A60]">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center">
  <DollarSign className="w-8 h-8 text-medical-green-600 mr-3" />

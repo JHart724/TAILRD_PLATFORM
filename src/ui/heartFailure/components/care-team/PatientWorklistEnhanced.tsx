@@ -145,8 +145,8 @@ const PatientWorklistEnhanced: React.FC = () => {
 
   const getGDMTStatusColor = (status: string) => {
  switch(status) {
- case 'optimal': return 'text-green-600';
- case 'suboptimal': return 'text-yellow-600';
+ case 'optimal': return 'text-[#2C4A60]';
+ case 'suboptimal': return 'text-[#6B7280]';
  case 'contraindicated': return 'text-red-600';
  case 'not_started': return 'text-gray-600';
  default: return 'text-gray-600';
@@ -154,8 +154,8 @@ const PatientWorklistEnhanced: React.FC = () => {
   };
 
   const getGDMTScoreColor = (score: number) => {
- if (score >= 80) return 'text-green-600 bg-green-100';
- if (score >= 60) return 'text-yellow-600 bg-yellow-100';
+ if (score >= 80) return 'text-[#2C4A60] bg-[#C8D4DC]';
+ if (score >= 60) return 'text-[#6B7280] bg-[#F0F5FA]';
  return 'text-red-600 bg-red-100';
   };
 

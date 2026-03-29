@@ -628,22 +628,22 @@ const EPPatientPanelTable: React.FC = () => {
  <td className="px-4 py-3">
  <div className="grid grid-cols-2 gap-1 text-xs">
  <div className={`px-1 py-0.5 rounded text-center ${
- patient.currentTreatment.anticoagulation ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+ patient.currentTreatment.anticoagulation ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-red-100 text-red-700'
  }`}>
  OAC
  </div>
  <div className={`px-1 py-0.5 rounded text-center ${
- patient.currentTreatment.rateControl ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+ patient.currentTreatment.rateControl ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-red-100 text-red-700'
  }`}>
  Rate
  </div>
  <div className={`px-1 py-0.5 rounded text-center ${
- patient.currentTreatment.rhythmControl ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+ patient.currentTreatment.rhythmControl ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-red-100 text-red-700'
  }`}>
  Rhythm
  </div>
  <div className={`px-1 py-0.5 rounded text-center ${
- patient.currentTreatment.deviceTherapy ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+ patient.currentTreatment.deviceTherapy ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-gray-100 text-gray-700'
  }`}>
  Device
  </div>
@@ -653,7 +653,7 @@ const EPPatientPanelTable: React.FC = () => {
  {patient.treatmentGaps.length > 0 ? (
  <div className="space-y-1">
  {patient.treatmentGaps.slice(0, 2).map((gap, idx) => (
- <div key={gap} className="px-2 py-1 bg-amber-100 text-amber-800 text-xs rounded">
+ <div key={gap} className="px-2 py-1 bg-[#F0F5FA] text-[#6B7280] text-xs rounded">
  {gap}
  </div>
  ))}
@@ -662,7 +662,7 @@ const EPPatientPanelTable: React.FC = () => {
  )}
  </div>
  ) : (
- <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">
+ <span className="px-2 py-1 bg-[#C8D4DC] text-[#2C4A60] text-xs rounded">
  No gaps identified
  </span>
  )}

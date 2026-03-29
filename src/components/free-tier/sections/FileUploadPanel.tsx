@@ -116,7 +116,7 @@ const FileUploadPanel: React.FC<FileUploadPanelProps> = ({
       {fileInput}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+          <CheckCircle2 className="w-5 h-5 text-[#2C4A60]" />
           <span className="text-sm font-body font-semibold text-titanium-800">
             {uploadedFiles.length} file{uploadedFiles.length !== 1 ? 's' : ''} uploaded
           </span>
@@ -166,7 +166,7 @@ const FileUploadPanel: React.FC<FileUploadPanelProps> = ({
                 {file.uploadedAt.toLocaleTimeString()}
               </p>
             </div>
-            <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[#2C4A60] flex-shrink-0" />
           </div>
         ))}
       </div>

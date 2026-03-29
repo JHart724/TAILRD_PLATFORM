@@ -99,7 +99,7 @@ const GapIntelligenceCard: React.FC<GapIntelligenceCardProps> = ({ data }) => {
                     <div className="text-titanium-800 font-medium truncate">{gap.name}</div>
                     <div className="text-titanium-500">{gap.patients.toLocaleString()} patients</div>
                   </div>
-                  <span className="font-bold text-emerald-700 whitespace-nowrap">{gap.opportunity}</span>
+                  <span className="font-bold text-[#2C4A60] whitespace-nowrap">{gap.opportunity}</span>
                 </div>
               ))}
             </div>

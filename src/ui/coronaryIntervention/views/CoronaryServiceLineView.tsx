@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Heart, Users, Calculator, Shield, Activity, Target, BarChart3, FileText, TrendingUp, Scissors, Route, Gauge, Search } from 'lucide-react';
 
 // Import Coronary Intervention components
@@ -22,13 +22,12 @@ interface TabGroup {
 }
 
 const CoronaryServiceLineView: React.FC = () => {
-  const [activeTab, _setActiveTab] = useState<TabId>('gap-detection');
-  const contentRef = useRef<HTMLDivElement>(null);
-  const setActiveTab = (tab: TabId) => {
-    _setActiveTab(tab);
-    setTimeout(() => {
-      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
+  const [activeTab, setActiveTab] = useState<TabId>('gap-detection');
+
+  const handleTabChange = (tab: TabId) => {
+    setActiveTab(tab);
+    const container = document.getElementById('main-scroll-container');
+    if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
   const [generatingReport, setGeneratingReport] = useState<string | null>(null);
   const [exportingFormat, setExportingFormat] = useState<string | null>(null);
@@ -113,7 +112,7 @@ const CoronaryServiceLineView: React.FC = () => {
  <span className="font-medium text-titanium-900">{item.factor}</span>
  <span className={`text-xs px-2 py-1 rounded-full ${
  item.weight === 'Critical' ? 'bg-red-100 text-red-700' :
- item.weight === 'High' ? 'bg-amber-100 text-amber-700' :
+ item.weight === 'High' ? 'bg-[#F0F5FA] text-[#6B7280]' :
  'bg-chrome-100 text-chrome-700'
  }`}>
  {item.weight}
@@ -181,8 +180,8 @@ const CoronaryServiceLineView: React.FC = () => {
  </div>
  </div>
  </div>
- <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
- <p className="text-sm text-amber-800">
+ <div className="bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
+ <p className="text-sm text-[#6B7280]">
  <strong>Reference:</strong> Based on EXCEL trial (5-year), NOBLE trial, and 2021 ACC/AHA Coronary Revascularization Guidelines.
  Outcomes data are population-level estimates and should be individualized.
  </p>
@@ -195,7 +194,7 @@ const CoronaryServiceLineView: React.FC = () => {
  return (
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-8">
  <h3 className="text-2xl font-bold text-titanium-900 mb-6 flex items-center gap-3">
- <Shield className="w-8 h-8 text-medical-green-600" />
+ <Shield className="w-8 h-8 text-[#2C4A60]" />
  Protected PCI Planner
  </h3>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -204,10 +203,10 @@ const CoronaryServiceLineView: React.FC = () => {
  { type: 'Impella CP', cases: 23, success: '89.7%' },
  { type: 'ECMO', cases: 8, success: '75.0%' }
  ].map((item, index) => (
- <div key={item.type} className="text-center p-6 rounded-xl bg-green-50 border border-green-200">
- <div className="text-3xl font-bold text-green-600 mb-2">{item.cases}</div>
+ <div key={item.type} className="text-center p-6 rounded-xl bg-[#C8D4DC] border border-[#2C4A60]">
+ <div className="text-3xl font-bold text-[#2C4A60] mb-2">{item.cases}</div>
  <div className="font-semibold text-titanium-900">{item.type}</div>
- <div className="text-sm text-green-600">{item.success} success</div>
+ <div className="text-sm text-[#2C4A60]">{item.success} success</div>
  </div>
  ))}
  </div>
@@ -215,10 +214,10 @@ const CoronaryServiceLineView: React.FC = () => {
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">Selection Criteria</h4>
  <div className="space-y-2 text-sm">
- <div className="flex justify-between"><span>EF &lt;35%</span><span className="text-green-600">Indication</span></div>
- <div className="flex justify-between"><span>Unprotected LM</span><span className="text-green-600">Indication</span></div>
- <div className="flex justify-between"><span>Last patent vessel</span><span className="text-green-600">Indication</span></div>
- <div className="flex justify-between"><span>High SYNTAX score</span><span className="text-amber-600">Consider</span></div>
+ <div className="flex justify-between"><span>EF &lt;35%</span><span className="text-[#2C4A60]">Indication</span></div>
+ <div className="flex justify-between"><span>Unprotected LM</span><span className="text-[#2C4A60]">Indication</span></div>
+ <div className="flex justify-between"><span>Last patent vessel</span><span className="text-[#2C4A60]">Indication</span></div>
+ <div className="flex justify-between"><span>High SYNTAX score</span><span className="text-[#6B7280]">Consider</span></div>
  </div>
  </div>
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
@@ -285,9 +284,9 @@ const CoronaryServiceLineView: React.FC = () => {
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">Conduit Selection Algorithm</h4>
  <div className="space-y-4">
- <div className="p-4 bg-green-50 rounded-lg border border-green-200">
- <div className="font-medium text-green-800 mb-1">Step 1: LIMA to LAD</div>
- <div className="text-sm text-green-700">Gold standard - always first choice</div>
+ <div className="p-4 bg-[#C8D4DC] rounded-lg border border-[#2C4A60]">
+ <div className="font-medium text-[#2C4A60] mb-1">Step 1: LIMA to LAD</div>
+ <div className="text-sm text-[#2C4A60]">Gold standard - always first choice</div>
  </div>
  <div className="p-4 bg-chrome-50 rounded-lg border border-chrome-200">
  <div className="font-medium text-chrome-800 mb-1">Step 2: RIMA or Radial to second target</div>
@@ -297,15 +296,15 @@ const CoronaryServiceLineView: React.FC = () => {
  <div className="font-medium text-arterial-800 mb-1">Step 3: Third conduit</div>
  <div className="text-sm text-arterial-700">Radial artery or SVG for remaining targets</div>
  </div>
- <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
- <div className="font-medium text-amber-800 mb-1">SVG only if arterial unavailable</div>
- <div className="text-sm text-amber-700">Higher late failure rate; use no-touch technique</div>
+ <div className="p-4 bg-[#F0F5FA] rounded-lg border border-[#C8D4DC]">
+ <div className="font-medium text-[#6B7280] mb-1">SVG only if arterial unavailable</div>
+ <div className="text-sm text-[#6B7280]">Higher late failure rate; use no-touch technique</div>
  </div>
  </div>
  </div>
  </div>
- <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
- <p className="text-sm text-amber-800">
+ <div className="mt-6 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
+ <p className="text-sm text-[#6B7280]">
  <strong>Reference:</strong> ART Trial (10-year), RADIAL Trial, 2021 ACC/AHA Coronary Revascularization Guidelines.
  Patency data from systematic reviews of angiographic follow-up studies.
  </p>
@@ -316,14 +315,14 @@ const CoronaryServiceLineView: React.FC = () => {
  return (
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-8">
  <h3 className="text-2xl font-bold text-titanium-900 mb-6 flex items-center gap-3">
- <Activity className="w-8 h-8 text-medical-amber-600" />
+ <Activity className="w-8 h-8 text-[#6B7280]" />
  On-Pump vs Off-Pump Decision
  </h3>
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
- <h4 className="font-semibold text-titanium-900 mb-4 text-center text-amber-600">On-Pump CABG</h4>
+ <h4 className="font-semibold text-titanium-900 mb-4 text-center text-[#6B7280]">On-Pump CABG</h4>
  <div className="space-y-3">
- <div className="text-green-600 font-medium">Advantages:</div>
+ <div className="text-[#2C4A60] font-medium">Advantages:</div>
  <ul className="text-sm space-y-1 text-titanium-700">
  <li>Complete revascularization</li>
  <li>Better graft patency</li>
@@ -341,7 +340,7 @@ const CoronaryServiceLineView: React.FC = () => {
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4 text-center text-chrome-600">Off-Pump CABG</h4>
  <div className="space-y-3">
- <div className="text-green-600 font-medium">Advantages:</div>
+ <div className="text-[#2C4A60] font-medium">Advantages:</div>
  <ul className="text-sm space-y-1 text-titanium-700">
  <li>No CPB</li>
  <li>Reduced stroke risk</li>
@@ -385,16 +384,16 @@ const CoronaryServiceLineView: React.FC = () => {
  'Concomitant valve or aortic surgery',
  'Hemodynamic instability'
  ].map((item, index) => (
- <div key={item} className="flex items-start gap-2 p-2 bg-amber-50 rounded-lg">
- <span className="text-amber-500 mt-0.5">&#x2022;</span>
- <span className="text-amber-800">{item}</span>
+ <div key={item} className="flex items-start gap-2 p-2 bg-[#F0F5FA] rounded-lg">
+ <span className="text-[#6B7280] mt-0.5">&#x2022;</span>
+ <span className="text-[#6B7280]">{item}</span>
  </div>
  ))}
  </div>
  </div>
  </div>
- <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
- <p className="text-sm text-amber-800">
+ <div className="mt-6 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
+ <p className="text-sm text-[#6B7280]">
  <strong>Reference:</strong> CORONARY Trial (5-year), ROOBY Trial, GOPCABE Trial.
  Decision should be individualized based on surgeon experience and patient risk profile.
  </p>
@@ -415,13 +414,13 @@ const CoronaryServiceLineView: React.FC = () => {
  { label: 'Total PCI Volume', value: '1,247', change: '+8.3%', period: 'YTD', bgClass: 'bg-chrome-50', borderClass: 'border-chrome-200', textClass: 'text-chrome-600' },
  { label: 'CABG Volume', value: '312', change: '+4.1%', period: 'YTD', bgClass: 'bg-red-50', borderClass: 'border-red-200', textClass: 'text-red-600' },
  { label: 'Diagnostic Cath', value: '2,891', change: '-2.1%', period: 'YTD', bgClass: 'bg-arterial-50', borderClass: 'border-arterial-200', textClass: 'text-arterial-600' },
- { label: 'STEMI Activations', value: '187', change: '+1.6%', period: 'YTD', bgClass: 'bg-amber-50', borderClass: 'border-amber-200', textClass: 'text-amber-600' }
+ { label: 'STEMI Activations', value: '187', change: '+1.6%', period: 'YTD', bgClass: 'bg-[#F0F5FA]', borderClass: 'border-[#C8D4DC]', textClass: 'text-[#6B7280]' }
  ].map((item, index) => (
  <div key={item.label} className={`p-6 rounded-xl ${item.bgClass} border ${item.borderClass}`}>
  <div className={`text-3xl font-bold ${item.textClass} mb-1`}>{item.value}</div>
  <div className="font-medium text-titanium-900">{item.label}</div>
  <div className="text-sm text-titanium-600 mt-1">
- <span className={item.change.startsWith('+') ? 'text-green-600' : 'text-red-600'}>{item.change}</span> vs prior year ({item.period})
+ <span className={item.change.startsWith('+') ? 'text-[#2C4A60]' : 'text-red-600'}>{item.change}</span> vs prior year ({item.period})
  </div>
  </div>
  ))}
@@ -513,22 +512,22 @@ const CoronaryServiceLineView: React.FC = () => {
  <div className="space-y-6">
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-8">
  <h3 className="text-2xl font-bold text-titanium-900 mb-6 flex items-center gap-3">
- <TrendingUp className="w-8 h-8 text-green-600" />
+ <TrendingUp className="w-8 h-8 text-[#2C4A60]" />
  Procedural Outcomes Dashboard
  </h3>
 
  {/* Key Quality Metrics */}
  <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
  {[
- { label: 'PCI In-Hospital Mortality', value: '1.2%', benchmark: '<2.0%', status: 'met', bgClass: 'bg-green-50', borderClass: 'border-green-200' },
- { label: 'CABG 30-Day Mortality', value: '2.1%', benchmark: '<3.0%', status: 'met', bgClass: 'bg-green-50', borderClass: 'border-green-200' },
- { label: 'D2B Time (Median)', value: '58 min', benchmark: '<90 min', status: 'met', bgClass: 'bg-green-50', borderClass: 'border-green-200' },
- { label: 'PCI Complication Rate', value: '3.8%', benchmark: '<5.0%', status: 'met', bgClass: 'bg-green-50', borderClass: 'border-green-200' }
+ { label: 'PCI In-Hospital Mortality', value: '1.2%', benchmark: '<2.0%', status: 'met', bgClass: 'bg-[#C8D4DC]', borderClass: 'border-[#2C4A60]' },
+ { label: 'CABG 30-Day Mortality', value: '2.1%', benchmark: '<3.0%', status: 'met', bgClass: 'bg-[#C8D4DC]', borderClass: 'border-[#2C4A60]' },
+ { label: 'D2B Time (Median)', value: '58 min', benchmark: '<90 min', status: 'met', bgClass: 'bg-[#C8D4DC]', borderClass: 'border-[#2C4A60]' },
+ { label: 'PCI Complication Rate', value: '3.8%', benchmark: '<5.0%', status: 'met', bgClass: 'bg-[#C8D4DC]', borderClass: 'border-[#2C4A60]' }
  ].map((item, index) => (
  <div key={item.label} className={`p-6 rounded-xl ${item.bgClass} border ${item.borderClass}`}>
  <div className="text-2xl font-bold text-titanium-900 mb-1">{item.value}</div>
  <div className="font-medium text-titanium-800 text-sm">{item.label}</div>
- <div className="text-xs text-green-600 mt-2">Benchmark: {item.benchmark}</div>
+ <div className="text-xs text-[#2C4A60] mt-2">Benchmark: {item.benchmark}</div>
  </div>
  ))}
  </div>
@@ -551,7 +550,7 @@ const CoronaryServiceLineView: React.FC = () => {
  <div className="flex items-center gap-3">
  <span className="font-medium text-titanium-900">{item.value}</span>
  <span className={`text-xs px-2 py-1 rounded-full ${
- item.met ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+ item.met ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-red-100 text-red-700'
  }`}>
  {item.met ? 'Met' : 'Gap'}
  </span>
@@ -576,7 +575,7 @@ const CoronaryServiceLineView: React.FC = () => {
  <div className="flex items-center gap-3">
  <span className="font-medium text-titanium-900">{item.value}</span>
  <span className={`text-xs px-2 py-1 rounded-full ${
- item.met ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+ item.met ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-red-100 text-red-700'
  }`}>
  {item.met ? 'Met' : 'Gap'}
  </span>
@@ -604,7 +603,7 @@ const CoronaryServiceLineView: React.FC = () => {
  <div key={item.type} className="p-3 bg-titanium-50 rounded-lg">
  <div className="font-medium text-titanium-900 text-sm">{item.type}</div>
  <div className="text-lg font-bold text-titanium-800">{item.rate}</div>
- <div className={`text-xs ${item.trend === 'Decreasing' ? 'text-green-600' : 'text-titanium-500'}`}>
+ <div className={`text-xs ${item.trend === 'Decreasing' ? 'text-[#2C4A60]' : 'text-titanium-500'}`}>
  {item.trend}
  </div>
  </div>
@@ -650,7 +649,7 @@ const CoronaryServiceLineView: React.FC = () => {
  return (
  <button
  key={tab.id}
- onClick={() => setActiveTab(tab.id as TabId)}
+ onClick={() => handleTabChange(tab.id as TabId)}
  className={`group relative p-4 rounded-xl border transition-all duration-300 ${
  isActive
  ? 'bg-medical-red-50 border-medical-red-200 text-medical-red-600 shadow-lg scale-105'
@@ -675,7 +674,7 @@ const CoronaryServiceLineView: React.FC = () => {
  </div>
 
  {/* Tab Content */}
- <div ref={contentRef} className="space-y-6">
+ <div className="space-y-6">
  {renderTabContent()}
  </div>
  </div>

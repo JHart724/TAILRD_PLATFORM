@@ -343,7 +343,7 @@ const EPRealTimeHospitalAlerts: React.FC = () => {
  case 'ED': return 'bg-red-100 text-red-700 border-red-200';
  case 'ICU': return 'bg-arterial-100 text-arterial-700 border-arterial-200';
  case 'Floor': return 'bg-chrome-100 text-chrome-700 border-chrome-200';
- case 'Tele': return 'bg-green-100 text-green-700 border-green-200';
+ case 'Tele': return 'bg-[#C8D4DC] text-[#2C4A60] border-[#2C4A60]';
  default: return 'bg-gray-100 text-gray-700 border-gray-200';
  }
   };
@@ -351,8 +351,8 @@ const EPRealTimeHospitalAlerts: React.FC = () => {
   const getAlertColor = (level: string) => {
  switch(level) {
  case 'critical': return 'border-red-500 bg-red-50';
- case 'high': return 'border-amber-500 bg-amber-50';
- case 'medium': return 'border-yellow-500 bg-yellow-50';
+ case 'high': return 'border-[#C8D4DC] bg-[#F0F5FA]';
+ case 'medium': return 'border-[#C8D4DC] bg-[#F0F5FA]';
  default: return 'border-gray-300 bg-white';
  }
   };
@@ -378,7 +378,7 @@ const EPRealTimeHospitalAlerts: React.FC = () => {
  <div className="text-xs text-gray-600">Active Alerts</div>
  </div>
  <div className="text-right">
- <div className="text-2xl font-bold text-amber-600">
+ <div className="text-2xl font-bold text-[#6B7280]">
  {alerts.filter(a => a.alertLevel === 'critical').length}
  </div>
  <div className="text-xs text-gray-600">Critical</div>
@@ -472,7 +472,7 @@ const EPRealTimeHospitalAlerts: React.FC = () => {
  </div>
  )}
  <div className="flex items-center gap-1">
- <AlertTriangle className="w-4 h-4 text-amber-500" />
+ <AlertTriangle className="w-4 h-4 text-[#6B7280]" />
  <span className="text-sm">Stroke Risk: {alert.readmissionRisk}%</span>
  </div>
  </div>
@@ -483,25 +483,25 @@ const EPRealTimeHospitalAlerts: React.FC = () => {
  <div className="grid grid-cols-2 gap-2">
  <div className="flex items-center gap-2">
  <div className={`w-3 h-3 rounded-full ${
- alert.currentGDMT.betaBlocker ? 'bg-green-500' : 'bg-red-500'
+ alert.currentGDMT.betaBlocker ? 'bg-[#C8D4DC]' : 'bg-red-500'
  }`}></div>
  <span className="text-sm">Rate Control</span>
  </div>
  <div className="flex items-center gap-2">
  <div className={`w-3 h-3 rounded-full ${
- alert.currentGDMT.aceArb ? 'bg-green-500' : 'bg-red-500'
+ alert.currentGDMT.aceArb ? 'bg-[#C8D4DC]' : 'bg-red-500'
  }`}></div>
  <span className="text-sm">OAC Therapy/ARB/ARNi</span>
  </div>
  <div className="flex items-center gap-2">
  <div className={`w-3 h-3 rounded-full ${
- alert.currentGDMT.mra ? 'bg-green-500' : 'bg-red-500'
+ alert.currentGDMT.mra ? 'bg-[#C8D4DC]' : 'bg-red-500'
  }`}></div>
  <span className="text-sm">Rhythm Control</span>
  </div>
  <div className="flex items-center gap-2">
  <div className={`w-3 h-3 rounded-full ${
- alert.currentGDMT.sglt2 ? 'bg-green-500' : 'bg-red-500'
+ alert.currentGDMT.sglt2 ? 'bg-[#C8D4DC]' : 'bg-red-500'
  }`}></div>
  <span className="text-sm">Ablation Referral</span>
  </div>
@@ -516,7 +516,7 @@ const EPRealTimeHospitalAlerts: React.FC = () => {
  <Pill className="w-5 h-5 text-red-500" />
  <span className="font-semibold text-red-700">Anticoagulation Gaps Identified</span>
  </div>
- <span className="text-sm font-medium text-amber-600">
+ <span className="text-sm font-medium text-[#6B7280]">
  Time to Intervene: {alert.timeToIntervene}
  </span>
  </div>
@@ -524,15 +524,15 @@ const EPRealTimeHospitalAlerts: React.FC = () => {
  <div className="space-y-1 mb-3">
  {alert.gdmtGaps.map((gap, idx) => (
  <div key={gap} className="flex items-center gap-2">
- <AlertCircle className="w-4 h-4 text-amber-500" />
+ <AlertCircle className="w-4 h-4 text-[#6B7280]" />
  <span className="text-sm">{gap}</span>
  </div>
  ))}
  </div>
 
  {alert.contraindications.length > 0 && (
- <div className="mt-2 p-2 bg-yellow-50 rounded">
- <div className="flex items-center gap-2 text-yellow-700 text-sm">
+ <div className="mt-2 p-2 bg-[#F0F5FA] rounded">
+ <div className="flex items-center gap-2 text-[#6B7280] text-sm">
  <Shield className="w-4 h-4" />
  <span className="font-medium">Contraindications:</span>
  {alert.contraindications.join(', ')}
@@ -545,7 +545,7 @@ const EPRealTimeHospitalAlerts: React.FC = () => {
  <ul className="space-y-1">
  {alert.recommendations.slice(0, 3).map((rec, idx) => (
  <li key={rec} className="text-sm text-gray-600 flex items-start gap-2">
- <ChevronRight className="w-4 h-4 text-green-500 mt-0.5" />
+ <ChevronRight className="w-4 h-4 text-[#2C4A60] mt-0.5" />
  {rec}
  </li>
  ))}
@@ -560,7 +560,7 @@ const EPRealTimeHospitalAlerts: React.FC = () => {
  className={`w-full px-4 py-2 rounded-lg font-medium transition-colors ${
  alert.alertLevel === 'critical' 
  ? 'bg-red-600 text-white hover:bg-red-700' 
- : 'bg-amber-600 text-white hover:bg-amber-700'
+ : 'bg-[#F0F5FA] text-white hover:bg-[#F0F5FA]'
  }`}
  onClick={(e) => {
  e.stopPropagation();
@@ -590,7 +590,7 @@ const EPRealTimeHospitalAlerts: React.FC = () => {
  {/* Auto-refresh indicator */}
  <div className="text-center text-sm text-gray-500">
  <div className="flex items-center justify-center gap-2">
- <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+ <div className="w-2 h-2 bg-[#C8D4DC] rounded-full animate-pulse"></div>
  Live monitoring - Auto-refreshes every 60 seconds
  </div>
  </div>
@@ -625,14 +625,14 @@ const EPRealTimeHospitalAlerts: React.FC = () => {
  {/* Alert Status */}
  <div className={`p-4 rounded-lg border-l-4 ${
  selectedPatientForPanel.alertLevel === 'critical' ? 'border-red-500 bg-red-50' :
- selectedPatientForPanel.alertLevel === 'high' ? 'border-amber-500 bg-amber-50' :
- 'border-yellow-500 bg-yellow-50'
+ selectedPatientForPanel.alertLevel === 'high' ? 'border-[#C8D4DC] bg-[#F0F5FA]' :
+ 'border-[#C8D4DC] bg-[#F0F5FA]'
  }`}>
  <div className="flex items-center gap-2 mb-2">
  <AlertTriangle className={`w-5 h-5 ${
  selectedPatientForPanel.alertLevel === 'critical' ? 'text-red-600' :
- selectedPatientForPanel.alertLevel === 'high' ? 'text-amber-600' :
- 'text-yellow-600'
+ selectedPatientForPanel.alertLevel === 'high' ? 'text-[#6B7280]' :
+ 'text-[#6B7280]'
  }`} />
  <span className="font-semibold text-gray-900">
  {selectedPatientForPanel.alertLevel.toUpperCase()} Alert
@@ -677,9 +677,9 @@ const EPRealTimeHospitalAlerts: React.FC = () => {
  </div>
 
  {/* Laboratory Results */}
- <div className="bg-green-50 rounded-lg p-4">
+ <div className="bg-[#C8D4DC] rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <Droplets className="w-5 h-5 text-green-600" />
+ <Droplets className="w-5 h-5 text-[#2C4A60]" />
  Laboratory Results
  </h3>
  <div className="grid grid-cols-2 gap-4">
@@ -753,15 +753,15 @@ const EPRealTimeHospitalAlerts: React.FC = () => {
  </div>
 
  {/* Clinical Notes */}
- <div className="bg-yellow-50 rounded-lg p-4">
+ <div className="bg-[#F0F5FA] rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <FileText className="w-5 h-5 text-yellow-600" />
+ <FileText className="w-5 h-5 text-[#6B7280]" />
  Recent Clinical Notes
  </h3>
  <div className="space-y-2">
  {selectedPatientForPanel.fullChart.notes.map((note, idx) => (
  <div key={`note-${idx}`} className="flex items-start gap-2">
- <ChevronRight className="w-4 h-4 text-yellow-600 mt-0.5" />
+ <ChevronRight className="w-4 h-4 text-[#6B7280] mt-0.5" />
  <span className="text-sm text-gray-700">{note}</span>
  </div>
  ))}

@@ -434,10 +434,10 @@ const SHProviderScorecard: React.FC = () => {
  panelProviderData.valveTherapyRate >= 70 ? 'bg-gradient-to-br from-green-50 to-green-100' : 'bg-gradient-to-br from-amber-50 to-amber-100'
  }`}>
  <div className={`text-sm font-medium ${
- panelProviderData.valveTherapyRate >= 70 ? 'text-green-700' : 'text-amber-700'
+ panelProviderData.valveTherapyRate >= 70 ? 'text-[#2C4A60]' : 'text-[#6B7280]'
  }`}>Valve Therapy Rate</div>
  <div className={`text-2xl font-bold ${
- panelProviderData.valveTherapyRate >= 70 ? 'text-green-800' : 'text-amber-800'
+ panelProviderData.valveTherapyRate >= 70 ? 'text-[#2C4A60]' : 'text-[#6B7280]'
  }`}>{toFixed(panelProviderData.valveTherapyRate, 1)}%</div>
  </div>
  <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-4 rounded-xl">
@@ -448,10 +448,10 @@ const SHProviderScorecard: React.FC = () => {
  panelProviderData.readmissionRate <= 8 ? 'bg-gradient-to-br from-green-50 to-green-100' : 'bg-gradient-to-br from-red-50 to-red-100'
  }`}>
  <div className={`text-sm font-medium ${
- panelProviderData.readmissionRate <= 8 ? 'text-green-700' : 'text-red-700'
+ panelProviderData.readmissionRate <= 8 ? 'text-[#2C4A60]' : 'text-red-700'
  }`}>Readmission Rate</div>
  <div className={`text-2xl font-bold ${
- panelProviderData.readmissionRate <= 8 ? 'text-green-800' : 'text-red-800'
+ panelProviderData.readmissionRate <= 8 ? 'text-[#2C4A60]' : 'text-red-800'
  }`}>{toFixed(panelProviderData.readmissionRate, 1)}%</div>
  </div>
  </div>
@@ -469,7 +469,7 @@ const SHProviderScorecard: React.FC = () => {
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm ${
  patient.riskScore >= 80 ? 'bg-red-500' :
- patient.riskScore >= 60 ? 'bg-amber-500' : 'bg-green-500'
+ patient.riskScore >= 60 ? 'bg-[#F0F5FA]' : 'bg-[#C8D4DC]'
  }`}>
  {patient.name.split(' ').map(n => n[0]).join('')}
  </div>
@@ -482,7 +482,7 @@ const SHProviderScorecard: React.FC = () => {
  </div>
  <div className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.riskScore >= 80 ? 'bg-red-100 text-red-700' :
- patient.riskScore >= 60 ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'
+ patient.riskScore >= 60 ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-[#C8D4DC] text-[#2C4A60]'
  }`}>
  {patient.riskScore >= 80 ? 'HIGH RISK' : patient.riskScore >= 60 ? 'MODERATE RISK' : 'LOW RISK'}
  </div>
@@ -495,8 +495,8 @@ const SHProviderScorecard: React.FC = () => {
  Four Pillar Rate Status
  </div>
  <div className={`text-sm px-2 py-1 rounded-full ${
- patient.fourPillarRate === 4 ? 'bg-green-100 text-green-700' :
- patient.fourPillarRate >= 2 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
+ patient.fourPillarRate === 4 ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ patient.fourPillarRate >= 2 ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-red-100 text-red-700'
  }`}>
  {patient.fourPillarRate}/4 pillars active
  </div>

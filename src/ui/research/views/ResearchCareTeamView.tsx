@@ -56,16 +56,16 @@ type TrialFilter = 'All' | 'New' | 'Industry Sponsored' | 'Referred' | 'Enrolled
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
 function completenessColor(pct: number): string {
-  if (pct >= 85) return 'text-emerald-600 bg-emerald-50';
-  if (pct >= 60) return 'text-amber-600 bg-amber-50';
+  if (pct >= 85) return 'text-[#2C4A60] bg-[#F0F5FA]';
+  if (pct >= 60) return 'text-[#6B7280] bg-[#F0F5FA]';
   return 'text-red-600 bg-red-50';
 }
 
 function registryStatusChip(status: string) {
   const map: Record<string, string> = {
     'Needs Review': 'bg-red-50 text-red-700 border border-red-200',
-    'In Review': 'bg-amber-50 text-amber-700 border border-amber-200',
-    'Ready': 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+    'In Review': 'bg-[#F0F5FA] text-[#6B7280] border border-[#C8D4DC]',
+    'Ready': 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]',
     'Approved': 'bg-blue-50 text-blue-700 border border-blue-200',
     'Submitted': 'bg-titanium-100 text-titanium-600 border border-titanium-200',
   };
@@ -75,9 +75,9 @@ function registryStatusChip(status: string) {
 function trialStatusChip(status: TrialStatus): string {
   const map: Record<TrialStatus, string> = {
     'New': 'bg-blue-50 text-blue-700 border border-blue-200',
-    'In Review': 'bg-amber-50 text-amber-700 border border-amber-200',
-    'Referred': 'bg-emerald-50 text-emerald-700 border border-emerald-200',
-    'Enrolled': 'bg-emerald-100 text-emerald-800 border border-emerald-300',
+    'In Review': 'bg-[#F0F5FA] text-[#6B7280] border border-[#C8D4DC]',
+    'Referred': 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]',
+    'Enrolled': 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]',
     'Screen Failed': 'bg-red-50 text-red-700 border border-red-200',
   };
   return map[status];
@@ -85,8 +85,8 @@ function trialStatusChip(status: TrialStatus): string {
 
 function confidenceBadge(level: 'High' | 'Moderate' | 'Review'): string {
   const map = {
-    High: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
-    Moderate: 'bg-amber-50 text-amber-700 border border-amber-200',
+    High: 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]',
+    Moderate: 'bg-[#F0F5FA] text-[#6B7280] border border-[#C8D4DC]',
     Review: 'bg-red-50 text-red-700 border border-red-200',
   };
   return map[level];
@@ -202,7 +202,7 @@ const ResearchCareTeamView: React.FC = () => {
                   </td>
                   <td className="px-4 py-3 text-center">
                     <span className={`inline-flex items-center gap-1 text-xs font-semibold ${
-                      row.deadline <= 2 ? 'text-red-600' : row.deadline <= 5 ? 'text-amber-600' : 'text-titanium-600'
+                      row.deadline <= 2 ? 'text-red-600' : row.deadline <= 5 ? 'text-[#6B7280]' : 'text-titanium-600'
                     }`}>
                       <Clock className="w-3.5 h-3.5" />
                       {row.deadline}d
@@ -275,14 +275,14 @@ const ResearchCareTeamView: React.FC = () => {
                 <tr
                   key={`${row.name}-${i}`}
                   className={`hover:bg-titanium-25 transition-colors ${
-                    row.sponsorType === 'industry' ? 'border-l-4 border-l-amber-400' : ''
+                    row.sponsorType === 'industry' ? 'border-l-4 border-l-[#6B7280]' : ''
                   }`}
                 >
                   <td className="px-5 py-3 font-medium text-titanium-900 whitespace-nowrap">{row.name}</td>
                   <td className="px-4 py-3 text-titanium-800 font-medium">{row.trial}</td>
                   <td className="px-4 py-3 text-center">
                     {row.sponsorType === 'industry' ? (
-                      <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide bg-amber-50 text-amber-700 border border-amber-200">
+                      <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide bg-[#F0F5FA] text-[#6B7280] border border-[#C8D4DC]">
                         Industry
                       </span>
                     ) : row.sponsorType === 'nih' ? (

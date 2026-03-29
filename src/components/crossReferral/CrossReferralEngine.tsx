@@ -265,7 +265,7 @@ const CrossReferralEngine: React.FC = () => {
  case 'scheduled':
  return 'bg-arterial-100 text-arterial-700 border-arterial-200';
  case 'completed':
- return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+ return 'bg-[#F0F5FA] text-[#2C4A60] border-[#C8D4DC]';
  case 'rejected':
  return 'bg-medical-red-100 text-medical-red-700 border-medical-red-200';
  default:

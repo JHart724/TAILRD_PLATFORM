@@ -52,7 +52,7 @@ const padWaterfallCategories: WaterfallCategory[] = [
   { label: 'Limb Salvage Optimization', value: 12400000, color: '#0d9488' },
   { label: 'Endovascular Intervention', value: 9200000, color: '#0c6fdb' },
   { label: 'PAD Screening Program', value: 8600000, color: '#095bb5' },
-  { label: 'Wound Care Coordination', value: 6800000, color: '#16a34a' },
+  { label: 'Wound Care Coordination', value: 6800000, color: '#4A6880' },
   { label: 'WIfI Classification', value: 3800000, color: '#7A1A2E' },
 ];
 
@@ -157,10 +157,10 @@ const PeripheralExecutiveView: React.FC = () => {
   });
 
   const kpiCards = [
-	{ label: 'Total Patients', value: config.kpiData.totalPatients, sub: config.kpiData.totalPatientsSub, icon: <VascularIcon />, color: 'text-teal-600' },
+	{ label: 'Total Patients', value: config.kpiData.totalPatients, sub: config.kpiData.totalPatientsSub, icon: <VascularIcon />, color: 'text-[#2C4A60]' },
 	{ label: 'Revenue Opportunity', value: config.kpiData.totalOpportunity, sub: config.kpiData.totalOpportunitySub, icon: <DollarIcon />, color: 'text-porsche-600' },
-	{ label: 'Optimal PAD Therapy', value: config.kpiData.gdmtOptimization, sub: config.kpiData.gdmtOptimizationSub, icon: <ChartIcon />, color: 'text-amber-600' },
-	{ label: 'Avg Revenue / Patient', value: config.kpiData.avgRoi, sub: config.kpiData.avgRoiSub, icon: <TrendUpIcon />, color: 'text-green-600' },
+	{ label: 'Optimal PAD Therapy', value: config.kpiData.gdmtOptimization, sub: config.kpiData.gdmtOptimizationSub, icon: <ChartIcon />, color: 'text-[#4A6880]' },
+	{ label: 'Avg Revenue / Patient', value: config.kpiData.avgRoi, sub: config.kpiData.avgRoiSub, icon: <TrendUpIcon />, color: 'text-[#2C4A60]' },
   ];
 
   return (
@@ -182,8 +182,8 @@ const PeripheralExecutiveView: React.FC = () => {
 	  categories: [
 	    { name: 'Therapy', patients: 320, color: '#3b82f6' },
 	    { name: 'Safety', patients: 110, color: '#ef4444' },
-	    { name: 'Growth', patients: 180, color: '#1A4A2E' },
-	    { name: 'Quality', patients: 540, color: '#f59e0b' },
+	    { name: 'Growth', patients: 180, color: '#4A6880' },
+	    { name: 'Quality', patients: 540, color: '#C8D4DC' },
 	  ],
 	  topGaps: [
 	    { name: 'ABI Screening', patients: 280, opportunity: '$2.4M' },
@@ -297,12 +297,12 @@ const PeripheralExecutiveView: React.FC = () => {
 	<button
 	key={drg.title}
 	onClick={() => setActiveModal(`drg-${drg.title}`)}
-	className="text-left p-4 rounded-xl border border-titanium-200 bg-white hover:bg-teal-50 hover:border-teal-300 transition-all duration-200 group"
+	className="text-left p-4 rounded-xl border border-titanium-200 bg-white hover:bg-[#f0f4f8] hover:border-[#C8D4DC] transition-all duration-200 group"
 	>
 	<div className="text-sm text-titanium-500 mb-1">{drg.title}</div>
 	<div className="text-2xl font-bold text-titanium-900 mb-2">{drg.value}</div>
 	<div className="text-xs text-titanium-400 mb-1">{drg.caseCount}</div>
-	<div className={`text-xs font-medium ${drg.isPositive ? 'text-green-600' : 'text-crimson-600'}`}>
+	<div className={`text-xs font-medium ${drg.isPositive ? 'text-[#2C4A60]' : 'text-crimson-600'}`}>
 	{drg.variance}
 	</div>
 	</button>

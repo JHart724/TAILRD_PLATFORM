@@ -90,8 +90,8 @@ const FinancialBenchmarking: React.FC<FinancialBenchmarkingProps> = ({
   };
 
   const getMarginColor = (margin: number): string => {
-    if (margin >= 15) return 'text-emerald-600';
-    if (margin >= 8) return 'text-amber-600';
+    if (margin >= 15) return 'text-[#2C4A60]';
+    if (margin >= 8) return 'text-[#6B7280]';
     return 'text-arterial-600';
   };
 
@@ -159,13 +159,13 @@ const FinancialBenchmarking: React.FC<FinancialBenchmarkingProps> = ({
               </div>
               <div className="flex items-center justify-center gap-1 mt-1.5">
                 {isPositive ? (
-                  <TrendingUp className="w-3 h-3 text-emerald-600" />
+                  <TrendingUp className="w-3 h-3 text-[#2C4A60]" />
                 ) : (
                   <TrendingDown className="w-3 h-3 text-arterial-600" />
                 )}
                 <span
                   className={`text-xs font-body font-medium ${
-                    isPositive ? 'text-emerald-600' : 'text-arterial-600'
+                    isPositive ? 'text-[#2C4A60]' : 'text-arterial-600'
                   }`}
                 >
                   {item.trend.value}
@@ -190,8 +190,8 @@ const FinancialBenchmarking: React.FC<FinancialBenchmarkingProps> = ({
           <div className="space-y-2.5">
             {[
               { label: 'Medicare', pct: 48, color: 'bg-chrome-500' },
-              { label: 'Medicaid', pct: 22, color: 'bg-amber-400' },
-              { label: 'Commercial', pct: 24, color: 'bg-emerald-500' },
+              { label: 'Medicaid', pct: 22, color: 'bg-[#F0F5FA]' },
+              { label: 'Commercial', pct: 24, color: 'bg-[#F0F5FA]' },
               { label: 'Self-Pay / Other', pct: 6, color: 'bg-titanium-300' },
             ].map(({ label, pct, color }) => (
               <div key={label} className="flex items-center gap-3">
@@ -296,13 +296,13 @@ const FinancialBenchmarking: React.FC<FinancialBenchmarkingProps> = ({
                   <ArrowRight className="w-4 h-4 text-chrome-400" />
                   <div className="text-center">
                     <div className="text-xs text-titanium-500">Target</div>
-                    <div className="font-data text-lg font-bold text-emerald-600">
+                    <div className="font-data text-lg font-bold text-[#2C4A60]">
                       {opp.targetMargin}%
                     </div>
                   </div>
                 </div>
-                <div className="mt-2 bg-emerald-50 rounded-lg px-3 py-1.5 text-center">
-                  <span className="text-sm font-data font-semibold text-emerald-700">
+                <div className="mt-2 bg-[#F0F5FA] rounded-lg px-3 py-1.5 text-center">
+                  <span className="text-sm font-data font-semibold text-[#2C4A60]">
                     &uarr; {formatCurrency(opp.potentialUplift)} potential uplift
                   </span>
                 </div>

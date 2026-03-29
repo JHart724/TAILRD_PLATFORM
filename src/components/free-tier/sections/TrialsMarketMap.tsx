@@ -12,7 +12,7 @@ interface TrialsMarketMapProps {
 function getStatusStyles(status: TrialEntry['status']): string {
   switch (status) {
     case 'Recruiting':
-      return 'bg-emerald-100 text-emerald-700';
+      return 'bg-[#F0F5FA] text-[#2C4A60]';
     case 'Active':
       return 'bg-chrome-100 text-chrome-700';
     case 'Completed':

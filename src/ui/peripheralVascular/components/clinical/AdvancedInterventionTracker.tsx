@@ -24,8 +24,8 @@ const AdvancedInterventionTracker: React.FC = () => {
   const BULLET = '\u2022';
   const formatRevenue = (n: number) => n >= 1000000 ? `$${toFixed(n/1000000, 1)}M` : `$${toFixed(n/1000, 0)}K`;
   const getCategoryIcon = (c: string) => { switch(c) { case 'percutaneous': return <Zap className="w-4 h-4" />; case 'surgical': return <Scissors className="w-4 h-4" />; case 'therapeutic': return <Heart className="w-4 h-4" />; case 'pharmacologic': return <Pill className="w-4 h-4" />; case 'diagnostic': return <Monitor className="w-4 h-4" />; default: return <Activity className="w-4 h-4" />; } };
-  const getCategoryColor = (c: string) => { switch(c) { case 'percutaneous': return 'bg-porsche-100 text-porsche-700'; case 'surgical': return 'bg-crimson-100 text-crimson-700'; case 'therapeutic': return 'bg-green-100 text-green-700'; case 'pharmacologic': return 'bg-amber-100 text-amber-700'; case 'diagnostic': return 'bg-chrome-100 text-chrome-700'; default: return 'bg-titanium-100 text-titanium-700'; } };
-  const getUtilizationColor = (u: number) => u < 10 ? 'bg-crimson-500' : u < 20 ? 'bg-amber-500' : 'bg-green-500';
+  const getCategoryColor = (c: string) => { switch(c) { case 'percutaneous': return 'bg-porsche-100 text-porsche-700'; case 'surgical': return 'bg-crimson-100 text-crimson-700'; case 'therapeutic': return 'bg-[#C8D4DC] text-[#2C4A60]'; case 'pharmacologic': return 'bg-[#F0F5FA] text-[#6B7280]'; case 'diagnostic': return 'bg-chrome-100 text-chrome-700'; default: return 'bg-titanium-100 text-titanium-700'; } };
+  const getUtilizationColor = (u: number) => u < 10 ? 'bg-crimson-500' : u < 20 ? 'bg-[#F0F5FA]' : 'bg-[#C8D4DC]';
   return (
  <div className="space-y-6">
  <div className="flex items-center gap-3 mb-2">
@@ -62,7 +62,7 @@ const AdvancedInterventionTracker: React.FC = () => {
  <div className="grid grid-cols-3 gap-2 text-center mb-3">
  <div><div className="text-xs text-titanium-500">Eligible</div><div className="font-bold text-titanium-800">{d.eligiblePatients}</div></div>
  <div><div className="text-xs text-titanium-500">Gap</div><div className="font-bold text-crimson-600"><Users className="w-3 h-3 inline mr-1" />{gap}</div></div>
- <div><div className="text-xs text-titanium-500">Revenue Gap</div><div className="font-bold text-amber-600"><DollarSign className="w-3 h-3 inline" />{formatRevenue(d.revenueGap)}</div></div>
+ <div><div className="text-xs text-titanium-500">Revenue Gap</div><div className="font-bold text-[#6B7280]"><DollarSign className="w-3 h-3 inline" />{formatRevenue(d.revenueGap)}</div></div>
  </div>
  <p className="text-xs text-titanium-500">{d.strategicValue}</p>
  </div>
@@ -78,8 +78,8 @@ const AdvancedInterventionTracker: React.FC = () => {
  <li className="flex items-start gap-2"><span className="text-porsche-500 mt-0.5">{BULLET}</span>Amputation prevention programs address critical quality metrics and limb salvage</li>
  </ul>
  </div>
- <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
- <p className="text-sm text-amber-800">
+ <div className="mt-6 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
+ <p className="text-sm text-[#6B7280]">
  <strong>Guidelines:</strong> 2024 ACC/AHA PAD Guideline; TASC II Classification; Global Vascular Guidelines on CLI/CLTI Management.
  </p>
  </div>

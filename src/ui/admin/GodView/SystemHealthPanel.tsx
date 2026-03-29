@@ -76,8 +76,8 @@ export const SystemHealthPanel: React.FC<SystemHealthPanelProps> = ({
  <div className="flex items-center gap-2">
  <div 
  className={`px-3 py-1 rounded-full text-sm font-medium ${
- qualityMetrics.overallScore >= 0.9 ? 'bg-green-100 text-green-800' :
- qualityMetrics.overallScore >= 0.8 ? 'bg-yellow-100 text-yellow-800' :
+ qualityMetrics.overallScore >= 0.9 ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ qualityMetrics.overallScore >= 0.8 ? 'bg-[#F0F5FA] text-[#6B7280]' :
  'bg-red-100 text-red-800'
  }`}
  >

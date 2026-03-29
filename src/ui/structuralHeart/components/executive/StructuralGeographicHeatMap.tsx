@@ -28,9 +28,9 @@ const StructuralGeographicHeatMap: React.FC = () => {
 
   const getHeatColor = (riskScore: number) => {
  if (riskScore >= 8.5) return 'bg-medical-red-400';
- if (riskScore >= 7.0) return 'bg-medical-amber-400';
+ if (riskScore >= 7.0) return 'bg-[#F0F5FA]';
  if (riskScore >= 5.5) return 'bg-titanium-400';
- return 'bg-medical-green-400';
+ return 'bg-[#F0F5FA]';
   };
 
   const getHeatIntensity = (riskScore: number) => {
@@ -64,11 +64,11 @@ const StructuralGeographicHeatMap: React.FC = () => {
  </div>
  <div className="flex items-center gap-2 text-sm">
  <div className="flex items-center gap-1">
- <div className="w-3 h-3 rounded-full bg-medical-green-400"></div>
+ <div className="w-3 h-3 rounded-full bg-[#F0F5FA]"></div>
  <span className="text-titanium-600">Low</span>
  </div>
  <div className="flex items-center gap-1">
- <div className="w-3 h-3 rounded-full bg-medical-amber-400"></div>
+ <div className="w-3 h-3 rounded-full bg-[#F0F5FA]"></div>
  <span className="text-titanium-600">Medium</span>
  </div>
  <div className="flex items-center gap-1">
@@ -136,14 +136,14 @@ const StructuralGeographicHeatMap: React.FC = () => {
 
  <div className="p-3 bg-white rounded-lg">
  <div className="text-xs text-titanium-600 mb-1">Intervention Rate</div>
- <div className="text-2xl font-bold text-medical-amber-600">
+ <div className="text-2xl font-bold text-[#6B7280]">
  {selectedData.interventionRate}%
  </div>
  </div>
 
  <div className="p-3 bg-white rounded-lg">
  <div className="text-xs text-titanium-600 mb-1">Opportunity</div>
- <div className="text-2xl font-bold text-medical-green-600">
+ <div className="text-2xl font-bold text-[#2C4A60]">
  {formatCurrency(selectedData.opportunityRevenue)}
  </div>
  </div>

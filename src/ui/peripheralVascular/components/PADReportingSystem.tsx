@@ -252,7 +252,7 @@ const PADReportingSystem: React.FC = () => {
  )}
  </div>
  <div className={`flex items-center text-sm ${
- metric.trend === 'up' ? 'text-green-600' : 
+ metric.trend === 'up' ? 'text-[#2C4A60]' : 
  metric.trend === 'down' ? 'text-red-600' : 'text-titanium-600'
  }`}>
  {metric.trend === 'up' ? <TrendingUp className="w-4 h-4" /> : 
@@ -283,7 +283,7 @@ const PADReportingSystem: React.FC = () => {
  label: 'Limb Salvage Performance', 
  icon: Shield, 
  description: 'Real-time limb preservation outcomes',
- color: 'text-green-600'
+ color: 'text-[#2C4A60]'
  },
  { 
  type: 'wound-care', 
@@ -297,7 +297,7 @@ const PADReportingSystem: React.FC = () => {
  label: 'CLI Monitoring', 
  icon: Zap, 
  description: 'Critical limb ischemia detection and response',
- color: 'text-amber-600'
+ color: 'text-[#6B7280]'
  },
  { 
  type: 'access-site', 
@@ -341,8 +341,8 @@ const PADReportingSystem: React.FC = () => {
  <div key={schedule.id} className="flex items-center justify-between p-3 bg-titanium-50 rounded-lg">
  <div className="flex items-center gap-3">
  <div className={`w-3 h-3 rounded-full ${
- schedule.status === 'active' ? 'bg-green-500' : 
- schedule.status === 'paused' ? 'bg-yellow-500' : 'bg-red-500'
+ schedule.status === 'active' ? 'bg-[#C8D4DC]' : 
+ schedule.status === 'paused' ? 'bg-[#F0F5FA]' : 'bg-red-500'
  }`}></div>
  <div>
  <div className="font-medium text-titanium-900">{schedule.name}</div>
@@ -423,8 +423,8 @@ const PADReportingSystem: React.FC = () => {
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-4">
  <div className={`w-3 h-3 rounded-full ${
- schedule.status === 'active' ? 'bg-green-500' : 
- schedule.status === 'paused' ? 'bg-yellow-500' : 'bg-red-500'
+ schedule.status === 'active' ? 'bg-[#C8D4DC]' : 
+ schedule.status === 'paused' ? 'bg-[#F0F5FA]' : 'bg-red-500'
  }`}></div>
  <div>
  <div className="font-semibold text-titanium-900">{schedule.name}</div>
@@ -445,8 +445,8 @@ const PADReportingSystem: React.FC = () => {
  onClick={() => toggleScheduleStatus(schedule.id)}
  className={`p-2 rounded-lg transition-colors ${
  schedule.status === 'active' 
- ? 'text-green-600 hover:bg-green-50' 
- : 'text-yellow-600 hover:bg-yellow-50'
+ ? 'text-[#2C4A60] hover:bg-[#C8D4DC]' 
+ : 'text-[#6B7280] hover:bg-[#F0F5FA]'
  }`}
  >
  {schedule.status === 'active' ? <CheckCircle className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}

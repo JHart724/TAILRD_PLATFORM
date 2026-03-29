@@ -502,7 +502,7 @@ const EPDevicePathwayFunnel: React.FC = () => {
  <div className="grid grid-cols-4 gap-3 text-center">
  <button
  onClick={() => handleMetricClick(stage.stage, 'eligible')}
- className="p-2 bg-white rounded-lg hover:bg-green-50 hover:shadow-md transition-all cursor-pointer group"
+ className="p-2 bg-white rounded-lg hover:bg-[#C8D4DC] hover:shadow-md transition-all cursor-pointer group"
  >
  <div className="text-lg font-bold text-medical-green-600 group-hover:text-medical-green-700">
  {stage.eligible}
@@ -522,7 +522,7 @@ const EPDevicePathwayFunnel: React.FC = () => {
  </button>
  <button
  onClick={() => handleMetricClick(stage.stage, 'pending')}
- className="p-2 bg-white rounded-lg hover:bg-amber-50 hover:shadow-md transition-all cursor-pointer group"
+ className="p-2 bg-white rounded-lg hover:bg-[#F0F5FA] hover:shadow-md transition-all cursor-pointer group"
  >
  <div className="text-lg font-bold text-medical-amber-600 group-hover:text-medical-amber-700">
  {stage.pending}
@@ -651,8 +651,8 @@ const EPDevicePathwayFunnel: React.FC = () => {
  </div>
  </div>
  <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl">
- <div className="text-sm text-green-700 font-medium">Avg EF</div>
- <div className="text-2xl font-bold text-green-800">
+ <div className="text-sm text-[#2C4A60] font-medium">Avg EF</div>
+ <div className="text-2xl font-bold text-[#2C4A60]">
  {getFilteredPatients().length ? 
  Math.round(getFilteredPatients().reduce((sum, p) => sum + p.ejectionFraction, 0) / getFilteredPatients().length) : 0
  }%
@@ -672,9 +672,9 @@ const EPDevicePathwayFunnel: React.FC = () => {
  <div className="flex items-start justify-between mb-3">
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm ${
- patient.status === 'implanted' ? 'bg-green-500' :
+ patient.status === 'implanted' ? 'bg-[#C8D4DC]' :
  patient.status === 'eligible' ? 'bg-chrome-500' :
- patient.status === 'pending' ? 'bg-amber-500' : 'bg-red-500'
+ patient.status === 'pending' ? 'bg-[#F0F5FA]' : 'bg-red-500'
  }`}>
  {patient.name.split(' ').map(n => n[0]).join('')}
  </div>
@@ -686,9 +686,9 @@ const EPDevicePathwayFunnel: React.FC = () => {
  </div>
  </div>
  <div className={`px-2 py-1 rounded-full text-xs font-medium ${
- patient.status === 'implanted' ? 'bg-green-100 text-green-700' :
+ patient.status === 'implanted' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
  patient.status === 'eligible' ? 'bg-chrome-100 text-chrome-700' :
- patient.status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
+ patient.status === 'pending' ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-red-100 text-red-700'
  }`}>
  {patient.status.toUpperCase()}
  </div>
@@ -717,12 +717,12 @@ const EPDevicePathwayFunnel: React.FC = () => {
  {patient.barriers && patient.barriers.length > 0 && (
  <div className="mb-4">
  <div className="text-sm font-medium text-titanium-700 mb-2 flex items-center gap-1">
- <AlertTriangle className="w-3 h-3 text-amber-600" />
+ <AlertTriangle className="w-3 h-3 text-[#6B7280]" />
  Current Barriers
  </div>
  <div className="flex flex-wrap gap-2">
  {patient.barriers.map((barrier, idx) => (
- <span key={barrier} className="px-2 py-1 bg-amber-100 text-amber-700 text-xs rounded-full">
+ <span key={barrier} className="px-2 py-1 bg-[#F0F5FA] text-[#6B7280] text-xs rounded-full">
  {barrier}
  </span>
  ))}

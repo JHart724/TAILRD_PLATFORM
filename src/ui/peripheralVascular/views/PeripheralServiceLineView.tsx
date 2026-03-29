@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Activity, Target, Grid3X3, Users, Calculator, MapPin, BarChart3, Heart, Shield, Network, Award, FileText, Search } from 'lucide-react';
 import ExportButton from '../../../components/shared/ExportButton';
 
@@ -22,22 +22,22 @@ const PeripheralVascularAnalytics: React.FC = () => (
       <div className="metal-card p-6">
         <h4 className="text-sm font-medium text-titanium-600 mb-2">PAD Interventions</h4>
         <div className="text-2xl font-bold text-titanium-900">1,456</div>
-        <div className="text-sm text-green-600">+11.2% vs last quarter</div>
+        <div className="text-sm text-[#2C4A60]">+11.2% vs last quarter</div>
       </div>
       <div className="metal-card p-6">
         <h4 className="text-sm font-medium text-titanium-600 mb-2">Limb Salvage Cases</h4>
         <div className="text-2xl font-bold text-titanium-900">287</div>
-        <div className="text-sm text-green-600">+18.4% vs last quarter</div>
+        <div className="text-sm text-[#2C4A60]">+18.4% vs last quarter</div>
       </div>
       <div className="metal-card p-6">
         <h4 className="text-sm font-medium text-titanium-600 mb-2">CLI Revascularizations</h4>
         <div className="text-2xl font-bold text-titanium-900">392</div>
-        <div className="text-sm text-green-600">+15.7% vs last quarter</div>
+        <div className="text-sm text-[#2C4A60]">+15.7% vs last quarter</div>
       </div>
       <div className="metal-card p-6">
         <h4 className="text-sm font-medium text-titanium-600 mb-2">Wound Healing Rate</h4>
         <div className="text-2xl font-bold text-titanium-900">78.3%</div>
-        <div className="text-sm text-green-600">+4.1% vs last quarter</div>
+        <div className="text-sm text-[#2C4A60]">+4.1% vs last quarter</div>
       </div>
     </div>
     <div className="metal-card p-8">
@@ -232,13 +232,12 @@ interface TabGroup {
 }
 
 const PeripheralServiceLineView: React.FC = () => {
-  const [activeTab, _setActiveTab] = useState<PeripheralServiceLineTab>('analytics');
-  const contentRef = useRef<HTMLDivElement>(null);
-  const setActiveTab = (tab: PeripheralServiceLineTab) => {
-    _setActiveTab(tab);
-    setTimeout(() => {
-      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
+  const [activeTab, setActiveTab] = useState<PeripheralServiceLineTab>('analytics');
+
+  const handleTabChange = (tab: PeripheralServiceLineTab) => {
+    setActiveTab(tab);
+    const container = document.getElementById('main-scroll-container');
+    if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
 
   const tabGroups: TabGroup[] = [
@@ -338,7 +337,7 @@ const PeripheralServiceLineView: React.FC = () => {
                   return (
                     <button
                       key={tab.id}
-                      onClick={() => setActiveTab(tab.id as PeripheralServiceLineTab)}
+                      onClick={() => handleTabChange(tab.id as PeripheralServiceLineTab)}
                       className={`group relative p-4 rounded-xl border transition-all duration-300 ${
                         isActive
                           ? 'bg-medical-arterial-50 border-medical-arterial-200 text-medical-arterial-600 shadow-lg scale-105'
@@ -363,7 +362,7 @@ const PeripheralServiceLineView: React.FC = () => {
         </div>
 
         {/* Tab Content */}
-        <div ref={contentRef} className="space-y-6">
+        <div className="space-y-6">
           {renderTabContent()}
         </div>
       </div>

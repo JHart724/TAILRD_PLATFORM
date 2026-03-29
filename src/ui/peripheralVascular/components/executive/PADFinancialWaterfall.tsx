@@ -137,7 +137,7 @@ const PADFinancialWaterfall: React.FC = () => {
  <div className="text-xs text-titanium-600 mb-1">
  Avg per Patient
  </div>
- <div className="text-lg font-bold text-medical-green-600">
+ <div className="text-lg font-bold text-[#2C4A60]">
  {formatCurrency(item.avgPerPatient)}
  </div>
  </div>
@@ -156,17 +156,17 @@ const PADFinancialWaterfall: React.FC = () => {
 
  {/* Summary Cards */}
  <div className="grid grid-cols-3 gap-4 pt-6 border-t border-titanium-200">
- <div className="p-4 rounded-lg bg-medical-green-50">
+ <div className="p-4 rounded-lg bg-[#F0F5FA]">
  <div className="flex items-center gap-2 mb-2">
- <TrendingUp className="w-4 h-4 text-medical-green-600" />
- <div className="text-xs font-semibold text-medical-green-700 uppercase">
+ <TrendingUp className="w-4 h-4 text-[#2C4A60]" />
+ <div className="text-xs font-semibold text-[#2C4A60] uppercase">
  High Priority
  </div>
  </div>
- <div className="text-2xl font-bold text-medical-green-900">
+ <div className="text-2xl font-bold text-[#2C4A60]">
  {formatCurrency(waterfallData[4].value)}
  </div>
- <div className="text-xs text-medical-green-700 mt-1">
+ <div className="text-xs text-[#2C4A60] mt-1">
  Critical Limb Ischemia
  </div>
  </div>
@@ -184,17 +184,17 @@ const PADFinancialWaterfall: React.FC = () => {
  <div className="text-xs text-porsche-700 mt-1">Endovascular</div>
  </div>
 
- <div className="p-4 rounded-lg bg-medical-amber-50">
+ <div className="p-4 rounded-lg bg-[#F0F5FA]">
  <div className="flex items-center gap-2 mb-2">
- <AlertCircle className="w-4 h-4 text-medical-amber-600" />
- <div className="text-xs font-semibold text-medical-amber-700 uppercase">
+ <AlertCircle className="w-4 h-4 text-[#6B7280]" />
+ <div className="text-xs font-semibold text-[#6B7280] uppercase">
  Avg ROI
  </div>
  </div>
- <div className="text-2xl font-bold text-medical-amber-900">
+ <div className="text-2xl font-bold text-[#6B7280]">
  {formatCurrency(totalOpportunity / totalPatients)}
  </div>
- <div className="text-xs text-medical-amber-700 mt-1">Per Patient</div>
+ <div className="text-xs text-[#6B7280] mt-1">Per Patient</div>
  </div>
  </div>
  </div>

@@ -896,11 +896,11 @@ export function trajectoryDisplay(direction: TrajectoryResult['direction']): {
     case 'worsening_rapid':
       return { arrow: '\u2193', label: 'Worsening rapidly', colorClass: 'text-red-600' };
     case 'worsening_slow':
-      return { arrow: '\u2198', label: 'Worsening slowly', colorClass: 'text-amber-600' };
+      return { arrow: '\u2198', label: 'Worsening slowly', colorClass: 'text-[#6B7280]' };
     case 'stable':
       return { arrow: '\u2192', label: 'Stable', colorClass: 'text-gray-500' };
     case 'improving':
-      return { arrow: '\u2197', label: 'Improving', colorClass: 'text-green-600' };
+      return { arrow: '\u2197', label: 'Improving', colorClass: 'text-[#2C4A60]' };
   }
 }
 
@@ -917,10 +917,10 @@ export function timeHorizonDisplay(horizon: TimeHorizonResult['horizon']): {
     case 'immediate':
       return { icon: '\uD83D\uDD34', label: 'Immediate', bgClass: 'bg-red-100', textClass: 'text-red-700' };
     case 'near_term':
-      return { icon: '\uD83D\uDFE0', label: 'Near-term', bgClass: 'bg-orange-100', textClass: 'text-orange-700' };
+      return { icon: '\uD83D\uDFE0', label: 'Near-term', bgClass: 'bg-[#FDF2F3]', textClass: 'text-[#7A1A2E]' };
     case 'emerging':
-      return { icon: '\uD83D\uDFE1', label: 'Emerging', bgClass: 'bg-yellow-100', textClass: 'text-yellow-700' };
+      return { icon: '\uD83D\uDFE1', label: 'Emerging', bgClass: 'bg-[#F0F5FA]', textClass: 'text-[#6B7280]' };
     case 'watch':
-      return { icon: '\uD83D\uDFE2', label: 'Watch', bgClass: 'bg-green-100', textClass: 'text-green-700' };
+      return { icon: '\uD83D\uDFE2', label: 'Watch', bgClass: 'bg-[#C8D4DC]', textClass: 'text-[#2C4A60]' };
   }
 }

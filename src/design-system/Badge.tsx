@@ -10,16 +10,16 @@ interface BadgeProps {
 const Badge: React.FC<BadgeProps> = ({ variant, label, className = '' }) => {
   const config = {
     estimate: {
-      bg: 'rgba(245, 158, 11, 0.08)',
-      text: '#92400e',
-      border: 'rgba(245, 158, 11, 0.15)',
+      bg: '#e8eef3',
+      text: '#2C4A60',
+      border: '#C8D4DC',
       icon: BarChart3,
       defaultLabel: 'CMS Estimate',
     },
     verified: {
-      bg: 'rgba(34, 197, 94, 0.08)',
-      text: '#15803d',
-      border: 'rgba(34, 197, 94, 0.15)',
+      bg: 'rgba(44, 74, 96, 0.08)',
+      text: '#2C4A60',
+      border: 'rgba(44, 74, 96, 0.15)',
       icon: Check,
       defaultLabel: 'Verified',
     },

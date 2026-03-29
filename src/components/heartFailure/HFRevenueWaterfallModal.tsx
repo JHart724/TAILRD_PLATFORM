@@ -44,8 +44,8 @@ const getSubcategoryData = (category: string): SubcategoryData[] => {
  { name: 'Hypertrophic CM', revenue: 300000, patientCount: 10, color: '#1E40AF' }
  ],
  '340B': [
- { name: 'ARNI 340B Savings', revenue: 500000, patientCount: 280, color: '#10B981' },
- { name: 'SGLT2i 340B Savings', revenue: 300000, patientCount: 180, color: '#059669' }
+ { name: 'ARNI 340B Savings', revenue: 500000, patientCount: 280, color: '#4A6880' },
+ { name: 'SGLT2i 340B Savings', revenue: 300000, patientCount: 180, color: '#2C4A60' }
  ]
   };
   return data[category] || [];
@@ -114,7 +114,7 @@ export const HFRevenueWaterfallModal: React.FC<HFRevenueWaterfallModalProps> = (
  <p className="text-gray-600 mt-1">{getCategoryDescription(category)}</p>
  <div className="flex items-center gap-6 mt-3">
  <div className="flex items-center">
- <DollarSign className="w-5 h-5 text-emerald-600 mr-1" />
+ <DollarSign className="w-5 h-5 text-[#2C4A60] mr-1" />
  <span className="text-lg font-semibold text-gray-900">
  {formatMoney(totalRevenue)}
  </span>
@@ -144,14 +144,14 @@ export const HFRevenueWaterfallModal: React.FC<HFRevenueWaterfallModalProps> = (
  <div className="p-6">
  {/* Summary Metrics */}
  <div className="grid grid-cols-3 gap-6 mb-8">
- <div className="bg-emerald-50 rounded-lg p-6 text-center">
+ <div className="bg-[#F0F5FA] rounded-lg p-6 text-center">
  <div className="flex items-center justify-center mb-3">
- <DollarSign className="w-8 h-8 text-emerald-600" />
+ <DollarSign className="w-8 h-8 text-[#2C4A60]" />
  </div>
- <div className="text-2xl font-bold text-emerald-900 mb-1">
+ <div className="text-2xl font-bold text-[#2C4A60] mb-1">
  {formatMoney(displayTotal)}
  </div>
- <div className="text-sm text-emerald-700">Total Revenue Opportunity</div>
+ <div className="text-sm text-[#2C4A60]">Total Revenue Opportunity</div>
  </div>
  <div className="bg-chrome-50 rounded-lg p-6 text-center">
  <div className="flex items-center justify-center mb-3">

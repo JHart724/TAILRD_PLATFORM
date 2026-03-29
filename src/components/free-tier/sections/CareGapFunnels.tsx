@@ -124,7 +124,7 @@ const CareGapFunnels: React.FC<CareGapFunnelsProps> = ({
                           </div>
                           <div>
                             <span className="font-semibold text-titanium-700">Dollar impact: </span>
-                            <span className="text-emerald-600 font-data font-semibold">{FUNNEL_VALUES[funnelIndex]}</span>
+                            <span className="text-[#2C4A60] font-data font-semibold">{FUNNEL_VALUES[funnelIndex]}</span>
                           </div>
                           <div className="flex items-center gap-1 text-titanium-400">
                             <Lock className="w-3 h-3" />
@@ -145,9 +145,9 @@ const CareGapFunnels: React.FC<CareGapFunnelsProps> = ({
               )}
 
               {/* Dollar opportunity */}
-              <div className="mt-2 bg-emerald-50 border border-emerald-100 rounded-lg px-2 py-1.5 text-center">
-                <div className="text-[10px] text-emerald-600 font-body">Closing gap =</div>
-                <div className="text-xs font-data font-bold text-emerald-700">{FUNNEL_VALUES[funnelIndex]}</div>
+              <div className="mt-2 bg-[#F0F5FA] border border-[#C8D4DC] rounded-lg px-2 py-1.5 text-center">
+                <div className="text-[10px] text-[#2C4A60] font-body">Closing gap =</div>
+                <div className="text-xs font-data font-bold text-[#2C4A60]">{FUNNEL_VALUES[funnelIndex]}</div>
               </div>
             </div>
           );

@@ -273,7 +273,7 @@ const PlatformConfiguration: React.FC = () => {
                           ? 'bg-[#7A1A2E]/10 text-[#7A1A2E]'
                           : b.tier === 'Standard'
                           ? 'bg-blue-100 text-blue-800'
-                          : 'bg-amber-100 text-amber-800'
+                          : 'bg-[#F0F5FA] text-[#6B7280]'
                       }`}
                     >
                       {b.tier}

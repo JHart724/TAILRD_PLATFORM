@@ -161,9 +161,9 @@ const LimbSalvageScreening: React.FC = () => {
 
   const getRiskColor = (risk: string) => {
  switch (risk) {
- case 'Low': return 'bg-emerald-100 text-emerald-800 border-emerald-300';
- case 'Moderate': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
- case 'High': return 'bg-amber-100 text-amber-800 border-amber-300';
+ case 'Low': return 'bg-[#F0F5FA] text-[#2C4A60] border-[#C8D4DC]';
+ case 'Moderate': return 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]';
+ case 'High': return 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]';
  case 'Critical': return 'bg-red-100 text-red-800 border-red-300';
  default: return 'bg-titanium-100 text-titanium-800 border-titanium-300';
  }
@@ -172,8 +172,8 @@ const LimbSalvageScreening: React.FC = () => {
   const getRuralityColor = (rurality: string) => {
  switch (rurality) {
  case 'Rural': return 'bg-red-100 text-red-700';
- case 'Suburban': return 'bg-yellow-100 text-yellow-700';
- case 'Urban': return 'bg-emerald-100 text-emerald-700';
+ case 'Suburban': return 'bg-[#F0F5FA] text-[#6B7280]';
+ case 'Urban': return 'bg-[#F0F5FA] text-[#2C4A60]';
  default: return 'bg-titanium-100 text-titanium-700';
  }
   };
@@ -242,15 +242,15 @@ const LimbSalvageScreening: React.FC = () => {
  <div className="text-sm text-red-700">Critical Risk</div>
  <div className="text-xs text-red-600 mt-1">Immediate intervention needed</div>
  </div>
- <div className="p-4 rounded-lg bg-amber-50 border border-amber-200">
- <div className="text-2xl font-bold text-amber-600">67</div>
- <div className="text-sm text-amber-700">High Risk</div>
- <div className="text-xs text-amber-600 mt-1">Urgent evaluation required</div>
+ <div className="p-4 rounded-lg bg-[#F0F5FA] border border-[#C8D4DC]">
+ <div className="text-2xl font-bold text-[#6B7280]">67</div>
+ <div className="text-sm text-[#6B7280]">High Risk</div>
+ <div className="text-xs text-[#6B7280] mt-1">Urgent evaluation required</div>
  </div>
- <div className="p-4 rounded-lg bg-yellow-50 border border-yellow-200">
- <div className="text-2xl font-bold text-yellow-600">91</div>
- <div className="text-sm text-yellow-700">Moderate Risk</div>
- <div className="text-xs text-yellow-600 mt-1">Enhanced monitoring</div>
+ <div className="p-4 rounded-lg bg-[#F0F5FA] border border-[#C8D4DC]">
+ <div className="text-2xl font-bold text-[#6B7280]">91</div>
+ <div className="text-sm text-[#6B7280]">Moderate Risk</div>
+ <div className="text-xs text-[#6B7280] mt-1">Enhanced monitoring</div>
  </div>
  <div className="p-4 rounded-lg bg-medical-teal-50 border border-medical-teal-200">
  <div className="text-2xl font-bold text-medical-teal-600">89</div>
@@ -291,7 +291,7 @@ const LimbSalvageScreening: React.FC = () => {
  <div className="space-y-1">
  {patient.disparityFlags.map((flag) => (
  <div key={flag} className="flex items-center gap-2">
- <AlertTriangle className="w-3 h-3 text-amber-500" />
+ <AlertTriangle className="w-3 h-3 text-[#6B7280]" />
  <span className="text-xs text-titanium-600">{flag}</span>
  </div>
  ))}
@@ -377,7 +377,7 @@ const LimbSalvageScreening: React.FC = () => {
  <span className="font-semibold text-titanium-900">{count}</span>
  <div className="w-16 bg-titanium-200 rounded-full h-2">
  <div 
- className="h-2 bg-amber-500 rounded-full"
+ className="h-2 bg-[#F0F5FA] rounded-full"
  style={{ width: `${(count / Math.max(...Object.values(disparityMetrics.byRurality))) * 100}%` }}
  />
  </div>
@@ -395,12 +395,12 @@ const LimbSalvageScreening: React.FC = () => {
  <div key={group} className="flex items-center justify-between">
  <span className="text-sm text-titanium-700">{group}</span>
  <div className="flex items-center gap-2">
- <span className={`font-semibold ${rate > 8 ? 'text-red-600' : rate > 6 ? 'text-amber-600' : 'text-emerald-600'}`}>
+ <span className={`font-semibold ${rate > 8 ? 'text-red-600' : rate > 6 ? 'text-[#6B7280]' : 'text-[#2C4A60]'}`}>
  {rate}%
  </span>
  <div className="w-16 bg-titanium-200 rounded-full h-2">
  <div 
- className={`h-2 rounded-full ${rate > 8 ? 'bg-red-500' : rate > 6 ? 'bg-amber-500' : 'bg-emerald-500'}`}
+ className={`h-2 rounded-full ${rate > 8 ? 'bg-red-500' : rate > 6 ? 'bg-[#F0F5FA]' : 'bg-[#F0F5FA]'}`}
  style={{ width: `${(rate / 15) * 100}%` }}
  />
  </div>
@@ -413,10 +413,10 @@ const LimbSalvageScreening: React.FC = () => {
 
  {/* Key Metrics */}
  <div className="grid grid-cols-3 gap-6 mt-8">
- <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
- <div className="text-2xl font-bold text-amber-600">{disparityMetrics.averageTimeToDiagnosis}</div>
- <div className="text-sm text-amber-700">Average Days to Diagnosis</div>
- <div className="text-xs text-amber-600 mt-1">Higher in rural/minority populations</div>
+ <div className="p-4 bg-[#F0F5FA] border border-[#C8D4DC] rounded-lg">
+ <div className="text-2xl font-bold text-[#6B7280]">{disparityMetrics.averageTimeToDiagnosis}</div>
+ <div className="text-sm text-[#6B7280]">Average Days to Diagnosis</div>
+ <div className="text-xs text-[#6B7280] mt-1">Higher in rural/minority populations</div>
  </div>
  <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
  <div className="text-2xl font-bold text-red-600">{disparityMetrics.careGaps}</div>
@@ -454,10 +454,10 @@ const LimbSalvageScreening: React.FC = () => {
  Generate Contact List
  </button>
  </div>
- <div className="p-4 border-l-4 border-amber-500 bg-amber-50">
- <div className="font-medium text-amber-800">Overdue ABI Screening (67)</div>
- <div className="text-sm text-amber-700 mt-1">High-risk patients without recent screening</div>
- <button className="mt-2 px-3 py-1 bg-amber-600 text-white rounded text-xs hover:bg-amber-700">
+ <div className="p-4 border-l-4 border-[#C8D4DC] bg-[#F0F5FA]">
+ <div className="font-medium text-[#6B7280]">Overdue ABI Screening (67)</div>
+ <div className="text-sm text-[#6B7280] mt-1">High-risk patients without recent screening</div>
+ <button className="mt-2 px-3 py-1 bg-[#F0F5FA] text-white rounded text-xs hover:bg-[#F0F5FA]">
  Schedule Screening
  </button>
  </div>
@@ -478,37 +478,37 @@ const LimbSalvageScreening: React.FC = () => {
  <div className="p-4 bg-white border border-titanium-200 rounded-lg">
  <div className="font-medium text-titanium-900">Diabetes Education Program</div>
  <div className="text-sm text-titanium-600 mt-1">Target: Hispanic/Latino community centers</div>
- <div className="text-xs text-emerald-600 mt-2">Expected impact: 30% reduction in late-stage PAD</div>
+ <div className="text-xs text-[#2C4A60] mt-2">Expected impact: 30% reduction in late-stage PAD</div>
  </div>
  <div className="p-4 bg-white border border-titanium-200 rounded-lg">
  <div className="font-medium text-titanium-900">ABI Screening Events</div>
  <div className="text-sm text-titanium-600 mt-1">Community health fairs in high-risk zip codes</div>
- <div className="text-xs text-emerald-600 mt-2">Scheduled: 3 events next quarter</div>
+ <div className="text-xs text-[#2C4A60] mt-2">Scheduled: 3 events next quarter</div>
  </div>
  <div className="p-4 bg-white border border-titanium-200 rounded-lg">
  <div className="font-medium text-titanium-900">Cultural Competency Training</div>
  <div className="text-sm text-titanium-600 mt-1">Provider education on disparity-aware care</div>
- <div className="text-xs text-emerald-600 mt-2">Goal: Reduce time to diagnosis by 40%</div>
+ <div className="text-xs text-[#2C4A60] mt-2">Goal: Reduce time to diagnosis by 40%</div>
  </div>
  </div>
  </div>
  </div>
 
  {/* Outcome Projections */}
- <div className="mt-8 p-6 bg-emerald-50 border border-emerald-200 rounded-xl">
- <h4 className="font-semibold text-emerald-800 mb-4">Projected Impact of Interventions</h4>
+ <div className="mt-8 p-6 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl">
+ <h4 className="font-semibold text-[#2C4A60] mb-4">Projected Impact of Interventions</h4>
  <div className="grid grid-cols-3 gap-6">
  <div className="text-center">
- <div className="text-2xl font-bold text-emerald-600">35%</div>
- <div className="text-sm text-emerald-700">Reduction in Late-Stage PAD</div>
+ <div className="text-2xl font-bold text-[#2C4A60]">35%</div>
+ <div className="text-sm text-[#2C4A60]">Reduction in Late-Stage PAD</div>
  </div>
  <div className="text-center">
- <div className="text-2xl font-bold text-emerald-600">28%</div>
- <div className="text-sm text-emerald-700">Decrease in Amputation Rate</div>
+ <div className="text-2xl font-bold text-[#2C4A60]">28%</div>
+ <div className="text-sm text-[#2C4A60]">Decrease in Amputation Rate</div>
  </div>
  <div className="text-center">
- <div className="text-2xl font-bold text-emerald-600">$2.8M</div>
- <div className="text-sm text-emerald-700">Annual Cost Savings</div>
+ <div className="text-2xl font-bold text-[#2C4A60]">$2.8M</div>
+ <div className="text-sm text-[#2C4A60]">Annual Cost Savings</div>
  </div>
  </div>
  </div>

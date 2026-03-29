@@ -266,9 +266,9 @@ const AblationPlanningChecklist: React.FC = () => {
   const getStatusIcon = (status: PreAblationAssessment['status']) => {
  switch (status) {
  case 'complete':
- return <Check className="w-5 h-5 text-emerald-600" />;
+ return <Check className="w-5 h-5 text-[#2C4A60]" />;
  case 'pending':
- return <Clock className="w-5 h-5 text-amber-600" />;
+ return <Clock className="w-5 h-5 text-[#6B7280]" />;
  case 'missing':
  return <AlertTriangle className="w-5 h-5 text-red-600" />;
  }
@@ -277,9 +277,9 @@ const AblationPlanningChecklist: React.FC = () => {
   const getStatusColor = (status: PreAblationAssessment['status']) => {
  switch (status) {
  case 'complete':
- return 'bg-emerald-50 border-emerald-200';
+ return 'bg-[#F0F5FA] border-[#C8D4DC]';
  case 'pending':
- return 'bg-amber-50 border-amber-200';
+ return 'bg-[#F0F5FA] border-[#C8D4DC]';
  case 'missing':
  return 'bg-red-50 border-red-200';
  }
@@ -288,11 +288,11 @@ const AblationPlanningChecklist: React.FC = () => {
   const getEfficacyColor = (efficacy: Antiarrhythmic['efficacy']) => {
  switch (efficacy) {
  case 'Effective':
- return 'bg-emerald-100 text-emerald-800';
+ return 'bg-[#F0F5FA] text-[#2C4A60]';
  case 'Ineffective':
  return 'bg-red-100 text-red-800';
  case 'Intolerable':
- return 'bg-amber-100 text-amber-800';
+ return 'bg-[#F0F5FA] text-[#6B7280]';
  }
   };
 
@@ -383,13 +383,13 @@ const AblationPlanningChecklist: React.FC = () => {
  {/* Expected Success Rate */}
  <div className="bg-white rounded-2xl p-6 shadow-chrome-card border border-titanium-200">
  <h3 className="text-lg font-semibold text-titanium-800 mb-4 flex items-center gap-2">
- <Target className="w-5 h-5 text-emerald-500" />
+ <Target className="w-5 h-5 text-[#2C4A60]" />
  Expected Success Rate
  </h3>
  <div className="text-center">
  <div className={`text-4xl font-bold mb-2 ${
- calculateSuccessRate >= 80 ? 'text-emerald-600' :
- calculateSuccessRate >= 60 ? 'text-amber-600' : 'text-red-600'
+ calculateSuccessRate >= 80 ? 'text-[#2C4A60]' :
+ calculateSuccessRate >= 60 ? 'text-[#6B7280]' : 'text-red-600'
  }`}>
  {calculateSuccessRate}%
  </div>
@@ -465,8 +465,8 @@ const AblationPlanningChecklist: React.FC = () => {
  onClick={() => updateAssessmentStatus(assessment.id, 'complete')}
  className={`px-3 py-1 text-xs rounded transition-colors ${
  assessment.status === 'complete'
- ? 'bg-emerald-600 text-white'
- : 'bg-emerald-100 text-emerald-600 hover:bg-emerald-200'
+ ? 'bg-[#F0F5FA] text-white'
+ : 'bg-[#F0F5FA] text-[#2C4A60] hover:bg-[#F0F5FA]'
  }`}
  >
  Complete
@@ -475,8 +475,8 @@ const AblationPlanningChecklist: React.FC = () => {
  onClick={() => updateAssessmentStatus(assessment.id, 'pending')}
  className={`px-3 py-1 text-xs rounded transition-colors ${
  assessment.status === 'pending'
- ? 'bg-amber-600 text-white'
- : 'bg-amber-100 text-amber-600 hover:bg-amber-200'
+ ? 'bg-[#F0F5FA] text-white'
+ : 'bg-[#F0F5FA] text-[#6B7280] hover:bg-[#F0F5FA]'
  }`}
  >
  Pending
@@ -502,7 +502,7 @@ const AblationPlanningChecklist: React.FC = () => {
  <div className="bg-white rounded-2xl p-6 shadow-chrome-card border border-titanium-200">
  <div className="flex items-center justify-between mb-4">
  <h3 className="text-lg font-semibold text-titanium-800 flex items-center gap-2">
- <Activity className="w-5 h-5 text-green-500" />
+ <Activity className="w-5 h-5 text-[#2C4A60]" />
  Prior Antiarrhythmic Medications
  </h3>
  <button
@@ -595,7 +595,7 @@ const AblationPlanningChecklist: React.FC = () => {
  <div className="flex gap-3">
  <button
  onClick={addAntiarrhythmic}
- className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
+ className="px-4 py-2 bg-[#C8D4DC] text-white rounded-lg hover:bg-[#C8D4DC] transition-colors text-sm"
  >
  Add Medication
  </button>

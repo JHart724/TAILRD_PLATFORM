@@ -96,7 +96,7 @@ export default function CareGapOrchestrationCard({ orchestration, defaultExpande
     : o.severity === 'critical'
     ? 'border-l-arterial-600'
     : o.severity === 'high'
-    ? 'border-l-amber-600'
+    ? 'border-l-[#6B7280]'
     : 'border-l-chrome-500';
 
   return (
@@ -123,10 +123,10 @@ export default function CareGapOrchestrationCard({ orchestration, defaultExpande
               <span
                 className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-body font-medium ${
                   isResolved
-                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                    ? 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]'
                     : o.severity === 'critical'
                     ? 'bg-arterial-50 text-arterial-700 border border-arterial-200'
-                    : 'bg-amber-50 text-amber-700 border border-amber-200'
+                    : 'bg-[#F0F5FA] text-[#6B7280] border border-[#C8D4DC]'
                 }`}
               >
                 {o.condition}
@@ -140,7 +140,7 @@ export default function CareGapOrchestrationCard({ orchestration, defaultExpande
           <span
             className={`hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-xs font-body font-medium ${
               isResolved
-                ? 'bg-emerald-100 text-emerald-700'
+                ? 'bg-[#F0F5FA] text-[#2C4A60]'
                 : hasActiveStage
                 ? 'bg-arterial-50 text-arterial-700'
                 : 'bg-chrome-100 text-chrome-700'
@@ -330,7 +330,7 @@ export default function CareGapOrchestrationCard({ orchestration, defaultExpande
                       <div
                         className={`mt-3 flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-body font-medium ${
                           actionTaken === 'confirmed'
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            ? 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]'
                             : 'bg-titanium-100 text-titanium-600 border border-titanium-200'
                         }`}
                       >

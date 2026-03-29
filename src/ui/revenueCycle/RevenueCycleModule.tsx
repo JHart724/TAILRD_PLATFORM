@@ -121,7 +121,7 @@ const RevenueCycleModule: React.FC = () => {
  </p>
  <div className="mt-2 flex items-center gap-4 text-xs text-titanium-500">
  <span className="bg-chrome-50 px-2 py-1 rounded-full border border-chrome-200">DRG • ICD-10 • CPT Analytics</span>
- <span className="bg-emerald-50 px-2 py-1 rounded-full border border-emerald-200">Claims • CDI • Denial Management</span>
+ <span className="bg-[#F0F5FA] px-2 py-1 rounded-full border border-[#C8D4DC]">Claims • CDI • Denial Management</span>
  </div>
  </div>
  </div>

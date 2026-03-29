@@ -134,7 +134,7 @@ const KPIStrip: React.FC<KPIStripProps> = ({ hasUploadedFiles, kpis }) => {
           kpi.unit
         );
         const positive = isTrendPositive(kpi.trend.direction, kpi.label);
-        const trendColor = positive ? 'text-emerald-600' : 'text-arterial-600';
+        const trendColor = positive ? 'text-[#2C4A60]' : 'text-arterial-600';
         const TrendIcon =
           kpi.trend.direction === 'up' ? TrendingUp : TrendingDown;
         const isExpanded = expandedKPI === kpi.label;

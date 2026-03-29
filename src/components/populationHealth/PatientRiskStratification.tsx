@@ -330,9 +330,9 @@ const PatientRiskStratification: React.FC<PatientRiskStratificationProps> = ({ c
  key={`cell-${index}`} 
  fill={
  entry.riskRange === '81-100' ? '#ef4444' :
- entry.riskRange === '61-80' ? '#f59e0b' :
+ entry.riskRange === '61-80' ? '#6B7280' :
  entry.riskRange === '41-60' ? '#3b82f6' :
- '#10b981'
+ '#2C4A60'
  }
  />
  ))}

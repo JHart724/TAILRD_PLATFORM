@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { DEMO_PATIENT_CONTEXT, DEMO_PATIENT_ROSTER } from '../../../types/shared';
 import { Users, Calendar, AlertTriangle, Clock, Heart, Shield, Activity, FileText, Download, UserCheck, Stethoscope } from 'lucide-react';
 
@@ -89,13 +89,12 @@ const ClinicalToolsPanel: React.FC<{ activeToolTab?: string; onToolTabChange?: (
 type TabId = 'dashboard' | 'patients' | 'workflow' | 'safety' | 'hospital-alerts' | 'team' | 'documentation' | 'clinicaltools' | 'clinical-gaps';
 
 const CareTeamView: React.FC = () => {
-  const [activeTab, _setActiveTab] = useState<TabId>('dashboard');
-  const contentRef = useRef<HTMLDivElement>(null);
-  const setActiveTab = (tab: TabId) => {
-    _setActiveTab(tab);
-    setTimeout(() => {
-      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
+  const [activeTab, setActiveTab] = useState<TabId>('dashboard');
+
+  const handleTabChange = (tab: TabId) => {
+    setActiveTab(tab);
+    const container = document.getElementById('main-scroll-container');
+    if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
   const [activeToolTab, setActiveToolTab] = useState<string>('phenotype');
   const [docTemplateFeedback, setDocTemplateFeedback] = useState<string | null>(null);
@@ -151,7 +150,7 @@ const CareTeamView: React.FC = () => {
  ].map((item, index) => (
  <div key={item.pillar} className={`p-3 rounded-lg border ${
  item.status === 'red' ? 'bg-red-50 border-red-200' :
- item.status === 'amber' ? 'bg-amber-50 border-amber-200' : 'bg-green-50 border-green-200'
+ item.status === 'amber' ? 'bg-[#F0F5FA] border-[#C8D4DC]' : 'bg-[#C8D4DC] border-[#2C4A60]'
  }`}>
  <div className="flex justify-between items-center">
  <span className="font-medium text-titanium-900">{item.pillar}</span>
@@ -167,17 +166,17 @@ const CareTeamView: React.FC = () => {
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">Workflow Actions</h4>
  <div className="space-y-2">
- <button onClick={() => { setActiveTab('clinicaltools'); setActiveToolTab('contraindication'); }} className="w-full text-left p-3 rounded-lg bg-chrome-50 border border-chrome-200 hover:bg-chrome-100 transition-colors">
+ <button onClick={() => { handleTabChange('clinicaltools'); setActiveToolTab('contraindication'); }} className="w-full text-left p-3 rounded-lg bg-chrome-50 border border-chrome-200 hover:bg-chrome-100 transition-colors">
  <div className="font-medium text-chrome-900">Review MRA Eligibility</div>
  <div className="text-sm text-chrome-600">23 patients pending review</div>
  </button>
- <button onClick={() => { setActiveTab('clinicaltools'); setActiveToolTab('contraindication'); }} className="w-full text-left p-3 rounded-lg bg-arterial-50 border border-arterial-200 hover:bg-arterial-100 transition-colors">
+ <button onClick={() => { handleTabChange('clinicaltools'); setActiveToolTab('contraindication'); }} className="w-full text-left p-3 rounded-lg bg-arterial-50 border border-arterial-200 hover:bg-arterial-100 transition-colors">
  <div className="font-medium text-arterial-900">SGLT2i Assessment</div>
  <div className="text-sm text-arterial-600">31 patients for evaluation</div>
  </button>
- <button onClick={() => { setActiveTab('clinicaltools'); setActiveToolTab('contraindication'); }} className="w-full text-left p-3 rounded-lg bg-green-50 border border-green-200 hover:bg-green-100 transition-colors">
- <div className="font-medium text-green-900">Dose Optimization</div>
- <div className="text-sm text-green-600">18 patients ready for titration</div>
+ <button onClick={() => { handleTabChange('clinicaltools'); setActiveToolTab('contraindication'); }} className="w-full text-left p-3 rounded-lg bg-[#C8D4DC] border border-[#2C4A60] hover:bg-[#C8D4DC] transition-colors">
+ <div className="font-medium text-[#2C4A60]">Dose Optimization</div>
+ <div className="text-sm text-[#2C4A60]">18 patients ready for titration</div>
  </button>
  </div>
  </div>
@@ -206,12 +205,12 @@ const CareTeamView: React.FC = () => {
  <div
  onClick={() => setExpandedSafetyCard(expandedSafetyCard === item.id ? null : item.id)}
  className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 hover:shadow-md ${
- item.color === 'red' ? 'bg-red-50 border-red-200 hover:bg-red-100' : 'bg-amber-50 border-amber-200 hover:bg-amber-100'
+ item.color === 'red' ? 'bg-red-50 border-red-200 hover:bg-red-100' : 'bg-[#F0F5FA] border-[#C8D4DC] hover:bg-[#F0F5FA]'
  } ${expandedSafetyCard === item.id ? 'ring-2 ring-offset-1 ' + (item.color === 'red' ? 'ring-red-400' : 'ring-amber-400') : ''}`}
  >
  <div className="text-center">
  <div className={`text-2xl font-bold ${
- item.color === 'red' ? 'text-red-600' : 'text-amber-600'
+ item.color === 'red' ? 'text-red-600' : 'text-[#6B7280]'
  }`}>{item.count}</div>
  <div className="text-sm font-medium text-titanium-700">{item.alert}</div>
  <div className="text-xs text-titanium-500 mt-1">{expandedSafetyCard === item.id ? 'Click to collapse' : 'Click to view patients'}</div>
@@ -219,7 +218,7 @@ const CareTeamView: React.FC = () => {
  </div>
  {expandedSafetyCard === item.id && (
  <div className={`mt-2 p-3 rounded-lg border text-sm ${
- item.color === 'red' ? 'bg-red-50 border-red-100' : 'bg-amber-50 border-amber-100'
+ item.color === 'red' ? 'bg-red-50 border-red-100' : 'bg-[#F0F5FA] border-[#C8D4DC]'
  }`}>
  <div className="font-medium text-titanium-800 mb-2">Affected Patients (showing 3 of {item.count}):</div>
  {item.patients.map((patient, pIdx) => (
@@ -275,9 +274,9 @@ const CareTeamView: React.FC = () => {
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">Documentation Tools</h4>
  <div className="space-y-2">
- <button onClick={() => { setDocTemplateFeedback('gdmt'); setTimeout(() => setDocTemplateFeedback(null), 2000); }} className="w-full text-left p-3 rounded-lg bg-green-50 border border-green-200 hover:bg-green-100 transition-colors">
- <div className="font-medium text-green-900">{docTemplateFeedback === 'gdmt' ? '✓ Template Loaded' : 'GDMT Template'}</div>
- <div className="text-sm text-green-600">Standardized assessment form</div>
+ <button onClick={() => { setDocTemplateFeedback('gdmt'); setTimeout(() => setDocTemplateFeedback(null), 2000); }} className="w-full text-left p-3 rounded-lg bg-[#C8D4DC] border border-[#2C4A60] hover:bg-[#C8D4DC] transition-colors">
+ <div className="font-medium text-[#2C4A60]">{docTemplateFeedback === 'gdmt' ? '✓ Template Loaded' : 'GDMT Template'}</div>
+ <div className="text-sm text-[#2C4A60]">Standardized assessment form</div>
  </button>
  <button onClick={() => { setDocTemplateFeedback('discharge'); setTimeout(() => setDocTemplateFeedback(null), 2000); }} className="w-full text-left p-3 rounded-lg bg-chrome-50 border border-chrome-200 hover:bg-chrome-100 transition-colors">
  <div className="font-medium text-chrome-900">{docTemplateFeedback === 'discharge' ? '✓ Template Loaded' : 'Discharge Planning'}</div>
@@ -324,7 +323,7 @@ const CareTeamView: React.FC = () => {
  return (
  <button
  key={tab.id}
- onClick={() => setActiveTab(tab.id as TabId)}
+ onClick={() => handleTabChange(tab.id as TabId)}
  className={`group relative p-4 rounded-xl border transition-all duration-300 ${
  isActive
  ? 'bg-porsche-50 border-porsche-200 text-porsche-600 shadow-lg scale-105'
@@ -347,7 +346,7 @@ const CareTeamView: React.FC = () => {
  </div>
 
  {/* Tab Content */}
- <div ref={contentRef} className="space-y-6">
+ <div className="space-y-6">
  {renderTabContent()}
  </div>
  </div>

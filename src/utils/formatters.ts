@@ -121,8 +121,8 @@ export const getSeverityLevel = (
 /** Returns Tailwind color classes for a severity level */
 export const severityColors: Record<SeverityLevel, { text: string; bg: string; border: string; icon: string }> = {
   critical: { text: 'text-crimson-600', bg: 'bg-crimson-50', border: 'border-crimson-200', icon: 'text-crimson-500' },
-  warning: { text: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200', icon: 'text-amber-500' },
-  'on-track': { text: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200', icon: 'text-green-500' },
+  warning: { text: 'text-[#6B7280]', bg: 'bg-[#F0F5FA]', border: 'border-[#C8D4DC]', icon: 'text-[#6B7280]' },
+  'on-track': { text: 'text-[#2C4A60]', bg: 'bg-[#C8D4DC]', border: 'border-[#2C4A60]', icon: 'text-[#2C4A60]' },
 };
 
 // ── Trend Direction Logic ─────────────────────────────────────────────

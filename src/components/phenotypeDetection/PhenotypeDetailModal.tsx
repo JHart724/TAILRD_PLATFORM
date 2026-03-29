@@ -292,7 +292,7 @@ const PhenotypeDetailModal: React.FC<PhenotypeDetailModalProps> = ({
  <div className="flex items-start gap-3 flex-1">
  <div className="mt-1">
  {criterion.present === true && (
- <CheckCircle className="w-4 h-4 text-green-600" />
+ <CheckCircle className="w-4 h-4 text-[#2C4A60]" />
  )}
  {criterion.present === false && (
  <X className="w-4 h-4 text-red-600" />
@@ -313,7 +313,7 @@ const PhenotypeDetailModal: React.FC<PhenotypeDetailModalProps> = ({
  </div>
  <div className={`px-2 py-1 rounded text-xs font-medium ${
  criterion.weight === 'major' ? 'bg-red-100 text-red-700' :
- criterion.weight === 'minor' ? 'bg-amber-100 text-amber-700' :
+ criterion.weight === 'minor' ? 'bg-[#F0F5FA] text-[#6B7280]' :
  'bg-chrome-100 text-chrome-700'
  }`}>
  {criterion.weight}
@@ -344,8 +344,8 @@ const PhenotypeDetailModal: React.FC<PhenotypeDetailModalProps> = ({
  <div className="flex items-center gap-2 mb-1">
  <span className="font-medium text-titanium-900">{evidence.category}</span>
  <span className={`px-2 py-0.5 rounded text-xs font-medium ${
- evidence.strength === 'strong' ? 'bg-green-100 text-green-700' :
- evidence.strength === 'moderate' ? 'bg-amber-100 text-amber-700' :
+ evidence.strength === 'strong' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ evidence.strength === 'moderate' ? 'bg-[#F0F5FA] text-[#6B7280]' :
  'bg-titanium-100 text-titanium-700'
  }`}>
  {evidence.strength}

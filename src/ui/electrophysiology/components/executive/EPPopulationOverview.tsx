@@ -155,7 +155,7 @@ const EPPopulationOverview: React.FC = () => {
  {isHighGap ? (
  <AlertCircle className="w-5 h-5 text-red-700" />
  ) : (
- <CheckCircle className="w-5 h-5 text-teal-700" />
+ <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
  )}
  </div>
 
@@ -166,7 +166,7 @@ const EPPopulationOverview: React.FC = () => {
  </div>
  <div>
  <div className="text-xs text-titanium-600">Rate</div>
- <div className={`text-lg font-bold ${isHighGap ? 'text-red-800' : 'text-teal-700'}`}>
+ <div className={`text-lg font-bold ${isHighGap ? 'text-red-800' : 'text-[#2C4A60]'}`}>
  {population.detectionRate}%
  </div>
  </div>
@@ -179,7 +179,7 @@ const EPPopulationOverview: React.FC = () => {
  <div className="relative w-full h-3 bg-titanium-200 rounded-full overflow-hidden mb-2">
  <div 
  className={`absolute left-0 top-0 h-full transition-all ${
- isHighGap ? 'bg-red-700' : 'bg-teal-600'
+ isHighGap ? 'bg-red-700' : 'bg-[#C8D4DC]'
  }`}
  style={{ width: `${population.detectionRate}%` }}
  />
@@ -205,7 +205,7 @@ const EPPopulationOverview: React.FC = () => {
  <span className="text-titanium-700">High detection gap (&lt;70%)</span>
  </div>
  <div className="flex items-center gap-2">
- <CheckCircle className="w-4 h-4 text-teal-700" />
+ <CheckCircle className="w-4 h-4 text-[#2C4A60]" />
  <span className="text-titanium-700">Acceptable detection (≥70%)</span>
  </div>
  </div>

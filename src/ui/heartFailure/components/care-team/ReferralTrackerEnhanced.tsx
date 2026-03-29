@@ -839,9 +839,9 @@ const ReferralTrackerEnhanced: React.FC = () => {
  </div>
 
  {/* Laboratory Results */}
- <div className="bg-green-50 rounded-lg p-4">
+ <div className="bg-[#C8D4DC] rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <Droplets className="w-5 h-5 text-green-600" />
+ <Droplets className="w-5 h-5 text-[#2C4A60]" />
  Laboratory Results
  </h3>
  <div className="grid grid-cols-3 gap-4">
@@ -921,15 +921,15 @@ const ReferralTrackerEnhanced: React.FC = () => {
  </div>
 
  {/* Clinical Notes */}
- <div className="bg-yellow-50 rounded-lg p-4">
+ <div className="bg-[#F0F5FA] rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <FileText className="w-5 h-5 text-yellow-600" />
+ <FileText className="w-5 h-5 text-[#6B7280]" />
  Recent Clinical Notes
  </h3>
  <div className="space-y-2">
  {selectedPatient.fullChart.notes.map((note, idx) => (
  <div key={`note-${idx}`} className="flex items-start gap-2">
- <Activity className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+ <Activity className="w-4 h-4 text-[#6B7280] mt-0.5 flex-shrink-0" />
  <span className="text-sm text-gray-700">{note}</span>
  </div>
  ))}

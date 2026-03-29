@@ -58,8 +58,8 @@ const ACTIVE_SESSIONS: ActiveSession[] = [
 ];
 
 const MFA_DATA = [
-  { name: 'MFA Enabled', value: 7, color: '#059669' },
-  { name: 'MFA Disabled', value: 5, color: '#D97706' },
+  { name: 'MFA Enabled', value: 7, color: '#2C4A60' },
+  { name: 'MFA Disabled', value: 5, color: '#6B7280' },
 ];
 
 const IP_ALLOWLIST = [
@@ -102,8 +102,8 @@ const AuditSecurity: React.FC = () => {
         </div>
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
-              <AlertTriangle className="w-5 h-5 text-amber-600" />
+            <div className="w-10 h-10 rounded-lg bg-[#F0F5FA] flex items-center justify-center">
+              <AlertTriangle className="w-5 h-5 text-[#6B7280]" />
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">{SECURITY_SUMMARY.suspiciousIPs}</div>
@@ -113,8 +113,8 @@ const AuditSecurity: React.FC = () => {
         </div>
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-              <ShieldCheck className="w-5 h-5 text-green-600" />
+            <div className="w-10 h-10 rounded-lg bg-[#C8D4DC] flex items-center justify-center">
+              <ShieldCheck className="w-5 h-5 text-[#2C4A60]" />
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">{SECURITY_SUMMARY.phiRejections}</div>

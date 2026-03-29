@@ -52,21 +52,21 @@ const HFWorkflow: React.FC = () => (
  ].map((item, index) => (
  <div key={item.pillar} className={`p-3 rounded-lg border ${
  item.status === 'red' ? 'bg-red-50 border-red-200' :
- item.status === 'amber' ? 'bg-amber-50 border-amber-200' :
- 'bg-green-50 border-green-200'
+ item.status === 'amber' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
+ 'bg-[#C8D4DC] border-[#2C4A60]'
  }`}>
  <div className="flex justify-between items-center">
  <div className={`font-medium ${
  item.status === 'red' ? 'text-red-900' :
- item.status === 'amber' ? 'text-amber-900' :
- 'text-green-900'
+ item.status === 'amber' ? 'text-[#6B7280]' :
+ 'text-[#2C4A60]'
  }`}>
  {item.pillar}
  </div>
  <div className={`text-sm ${
  item.status === 'red' ? 'text-red-700' :
- item.status === 'amber' ? 'text-amber-700' :
- 'text-green-700'
+ item.status === 'amber' ? 'text-[#6B7280]' :
+ 'text-[#2C4A60]'
  }`}>
  {item.current} (Target: {item.target})
  </div>
@@ -107,7 +107,7 @@ const HFWorkflow: React.FC = () => (
  <div className="text-xs text-chrome-600">Step-wise medication optimization</div>
  </button>
  <button 
- className="w-full p-3 text-left bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
+ className="w-full p-3 text-left bg-[#C8D4DC] hover:bg-[#C8D4DC] rounded-lg transition-colors"
  onClick={async () => {
  // Action handler - implementation pending
  try {
@@ -137,8 +137,8 @@ const HFWorkflow: React.FC = () => (
  }
  }}
  >
- <div className="font-medium text-green-900">Device Therapy Evaluation</div>
- <div className="text-xs text-green-600">CRT/ICD candidacy assessment</div>
+ <div className="font-medium text-[#2C4A60]">Device Therapy Evaluation</div>
+ <div className="text-xs text-[#2C4A60]">CRT/ICD candidacy assessment</div>
  </button>
  <button 
  className="w-full p-3 text-left bg-arterial-50 hover:bg-arterial-100 rounded-lg transition-colors"
@@ -201,9 +201,9 @@ const HFSafety: React.FC = () => (
  { metric: 'Length of Stay', value: '4.2 days', target: '<5 days', status: 'green' },
  { metric: 'Patient Satisfaction', value: '92%', target: '>90%', status: 'green' }
  ].map((item, index) => (
- <div key={item.metric} className="flex justify-between items-center p-3 bg-green-50 rounded-lg border border-green-200">
- <div className="font-medium text-green-900">{item.metric}</div>
- <div className="text-sm text-green-700">{item.value}</div>
+ <div key={item.metric} className="flex justify-between items-center p-3 bg-[#C8D4DC] rounded-lg border border-[#2C4A60]">
+ <div className="font-medium text-[#2C4A60]">{item.metric}</div>
+ <div className="text-sm text-[#2C4A60]">{item.value}</div>
  </div>
  ))}
  </div>
@@ -219,15 +219,15 @@ const HFSafety: React.FC = () => (
  ].map((item, index) => (
  <div key={item.alert} className={`p-3 rounded-lg border ${
  item.severity === 'red' ? 'bg-red-50 border-red-200' :
- 'bg-amber-50 border-amber-200'
+ 'bg-[#F0F5FA] border-[#C8D4DC]'
  }`}>
  <div className={`font-medium ${
- item.severity === 'red' ? 'text-red-900' : 'text-amber-900'
+ item.severity === 'red' ? 'text-red-900' : 'text-[#6B7280]'
  }`}>
  {item.alert}
  </div>
  <div className={`text-sm ${
- item.severity === 'red' ? 'text-red-700' : 'text-amber-700'
+ item.severity === 'red' ? 'text-red-700' : 'text-[#6B7280]'
  }`}>
  {item.count} patients require attention
  </div>
@@ -312,14 +312,14 @@ const HFClinicalCollaboration: React.FC = () => (
  ].map((pathway, index) => (
  <div key={pathway.pathway} className={`flex items-center justify-between p-4 rounded-lg border ${
  pathway.indication === 'Heart Failure with Reduced EF' ? 'bg-chrome-50 border-chrome-200' :
- pathway.indication === 'CRT/ICD Candidacy' ? 'bg-green-50 border-green-200' :
+ pathway.indication === 'CRT/ICD Candidacy' ? 'bg-[#C8D4DC] border-[#2C4A60]' :
  pathway.indication === 'Stage D Heart Failure' ? 'bg-red-50 border-red-200' :
  'bg-arterial-50 border-arterial-200'
  }`}>
  <div>
  <div className={`font-medium ${
  pathway.indication === 'Heart Failure with Reduced EF' ? 'text-chrome-900' :
- pathway.indication === 'CRT/ICD Candidacy' ? 'text-green-900' :
+ pathway.indication === 'CRT/ICD Candidacy' ? 'text-[#2C4A60]' :
  pathway.indication === 'Stage D Heart Failure' ? 'text-red-900' :
  'text-arterial-900'
  }`}>
@@ -331,7 +331,7 @@ const HFClinicalCollaboration: React.FC = () => (
  </div>
  <div className={`text-xs px-2 py-1 rounded-full ${
  pathway.indication === 'Heart Failure with Reduced EF' ? 'bg-chrome-100 text-chrome-700' :
- pathway.indication === 'CRT/ICD Candidacy' ? 'bg-green-100 text-green-700' :
+ pathway.indication === 'CRT/ICD Candidacy' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
  pathway.indication === 'Stage D Heart Failure' ? 'bg-red-100 text-red-700' :
  'bg-arterial-100 text-arterial-700'
  }`}>
@@ -352,17 +352,17 @@ const HFClinicalCollaboration: React.FC = () => (
  <div className="text-2xl font-bold text-chrome-600">87%</div>
  <div className="text-xs text-chrome-700">GDMT Target Achievement</div>
  </div>
- <div className="text-center p-4 bg-green-50 rounded-lg">
- <div className="text-2xl font-bold text-green-600">23%</div>
- <div className="text-xs text-green-700">Readmission Reduction</div>
+ <div className="text-center p-4 bg-[#C8D4DC] rounded-lg">
+ <div className="text-2xl font-bold text-[#2C4A60]">23%</div>
+ <div className="text-xs text-[#2C4A60]">Readmission Reduction</div>
  </div>
  <div className="text-center p-4 bg-arterial-50 rounded-lg">
  <div className="text-2xl font-bold text-arterial-600">94%</div>
  <div className="text-xs text-arterial-700">Clinical Consensus Rate</div>
  </div>
- <div className="text-center p-4 bg-emerald-50 rounded-lg">
- <div className="text-2xl font-bold text-emerald-600">96%</div>
- <div className="text-xs text-emerald-700">Guideline Adherence</div>
+ <div className="text-center p-4 bg-[#F0F5FA] rounded-lg">
+ <div className="text-2xl font-bold text-[#2C4A60]">96%</div>
+ <div className="text-xs text-[#2C4A60]">Guideline Adherence</div>
  </div>
  </div>
  </div>
@@ -379,12 +379,12 @@ const HFClinicalCollaboration: React.FC = () => (
  ].map((consult, index) => (
  <div key={consult.consultation} className={`p-3 rounded-lg border ${
  consult.urgency === 'urgent' ? 'bg-red-50 border-red-200' :
- consult.urgency === 'priority' ? 'bg-amber-50 border-amber-200' :
+ consult.urgency === 'priority' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
  'bg-chrome-50 border-chrome-200'
  }`}>
  <div className={`font-medium ${
  consult.urgency === 'urgent' ? 'text-red-900' :
- consult.urgency === 'priority' ? 'text-amber-900' :
+ consult.urgency === 'priority' ? 'text-[#6B7280]' :
  'text-chrome-900'
  }`}>
  {consult.consultation}
@@ -433,7 +433,7 @@ const HFClinicalCollaboration: React.FC = () => (
  <div className="text-xs text-chrome-600">Guideline-directed medical therapy</div>
  </button>
  <button 
- className="w-full p-3 text-left bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
+ className="w-full p-3 text-left bg-[#C8D4DC] hover:bg-[#C8D4DC] rounded-lg transition-colors"
  onClick={async () => {
  // Action handler - implementation pending
  try {
@@ -463,8 +463,8 @@ const HFClinicalCollaboration: React.FC = () => (
  }
  }}
  >
- <div className="font-medium text-green-900">Device Candidacy Tool</div>
- <div className="text-xs text-green-600">CRT/ICD selection criteria</div>
+ <div className="font-medium text-[#2C4A60]">Device Candidacy Tool</div>
+ <div className="text-xs text-[#2C4A60]">CRT/ICD selection criteria</div>
  </button>
  <button 
  className="w-full p-3 text-left bg-arterial-50 hover:bg-arterial-100 rounded-lg transition-colors"
@@ -478,15 +478,15 @@ const HFClinicalCollaboration: React.FC = () => (
  <div className="text-xs text-arterial-600">Evidence-based recommendations</div>
  </button>
  <button 
- className="w-full p-3 text-left bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors"
+ className="w-full p-3 text-left bg-[#F0F5FA] hover:bg-[#F0F5FA] rounded-lg transition-colors"
  onClick={() => {
  // Action handler - implementation pending
  // TODO: Implement Multidisciplinary Consultation platform
  {};
  }}
  >
- <div className="font-medium text-amber-900">Multidisciplinary Consultation</div>
- <div className="text-xs text-amber-600">Team collaboration platform</div>
+ <div className="font-medium text-[#6B7280]">Multidisciplinary Consultation</div>
+ <div className="text-xs text-[#6B7280]">Team collaboration platform</div>
  </button>
  </div>
  </div>
@@ -538,19 +538,19 @@ const HFDocumentation: React.FC = () => (
  ].map((item, index) => (
  <div key={`${item.alert}-${item.patient}`} className={`p-3 rounded-lg border ${
  item.urgency === 'high' ? 'bg-red-50 border-red-200' :
- item.urgency === 'medium' ? 'bg-amber-50 border-amber-200' :
+ item.urgency === 'medium' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
  'bg-chrome-50 border-chrome-200'
  }`}>
  <div className={`font-medium ${
  item.urgency === 'high' ? 'text-red-900' :
- item.urgency === 'medium' ? 'text-amber-900' :
+ item.urgency === 'medium' ? 'text-[#6B7280]' :
  'text-chrome-900'
  }`}>
  {item.alert}
  </div>
  <div className={`text-sm ${
  item.urgency === 'high' ? 'text-red-700' :
- item.urgency === 'medium' ? 'text-amber-700' :
+ item.urgency === 'medium' ? 'text-[#6B7280]' :
  'text-chrome-700'
  }`}>
  {item.patient} • Due in {item.dueIn}
@@ -574,15 +574,15 @@ const HFDocumentation: React.FC = () => (
  <div className="text-xs text-chrome-600">Comprehensive heart failure evaluation</div>
  </button>
  <button 
- className="w-full p-3 text-left bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
+ className="w-full p-3 text-left bg-[#C8D4DC] hover:bg-[#C8D4DC] rounded-lg transition-colors"
  onClick={() => {
  // Action handler - implementation pending
  // TODO: Implement GDMT Documentation template
  {};
  }}
  >
- <div className="font-medium text-green-900">GDMT Documentation</div>
- <div className="text-xs text-green-600">Guideline-directed therapy notes</div>
+ <div className="font-medium text-[#2C4A60]">GDMT Documentation</div>
+ <div className="text-xs text-[#2C4A60]">Guideline-directed therapy notes</div>
  </button>
  <button 
  className="w-full p-3 text-left bg-arterial-50 hover:bg-arterial-100 rounded-lg transition-colors"
@@ -596,15 +596,15 @@ const HFDocumentation: React.FC = () => (
  <div className="text-xs text-arterial-600">CRT/ICD assessment documentation</div>
  </button>
  <button 
- className="w-full p-3 text-left bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors"
+ className="w-full p-3 text-left bg-[#F0F5FA] hover:bg-[#F0F5FA] rounded-lg transition-colors"
  onClick={() => {
  // Action handler - implementation pending
  // TODO: Implement Discharge Planning template
  {};
  }}
  >
- <div className="font-medium text-amber-900">Discharge Planning</div>
- <div className="text-xs text-amber-600">Transition of care documentation</div>
+ <div className="font-medium text-[#6B7280]">Discharge Planning</div>
+ <div className="text-xs text-[#6B7280]">Transition of care documentation</div>
  </button>
  </div>
  
@@ -613,7 +613,7 @@ const HFDocumentation: React.FC = () => (
  <div className="space-y-2">
  <div className="flex justify-between items-center p-2 bg-titanium-50 rounded">
  <span className="text-sm text-titanium-700">Completion Rate</span>
- <span className="text-sm font-medium text-green-600">97%</span>
+ <span className="text-sm font-medium text-[#2C4A60]">97%</span>
  </div>
  <div className="flex justify-between items-center p-2 bg-titanium-50 rounded">
  <span className="text-sm text-titanium-700">Avg Time to Complete</span>

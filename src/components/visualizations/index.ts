@@ -14,17 +14,17 @@ export type { ChartDataPoint as ChartData } from './BaseChart';
 
 // Common chart configurations
 export const CHART_COLORS = {
-  primary: '#3B82F6',
-  secondary: '#10B981', 
-  warning: '#F59E0B',
+  primary: '#2C4A60',
+  secondary: '#4A6880',
+  warning: '#6B7280',
   danger: '#EF4444',
   carmona: '#9B2438',
-  cyan: '#06B6D4',
+  cyan: '#C8D4DC',
   medical: {
- blue: '#2563EB',
- green: '#059669',
+ blue: '#2C4A60',
+ green: '#4A6880',
  red: '#DC2626',
- amber: '#D97706',
+ amber: '#6B7280',
  carmona: '#7A1A2E',
  indigo: '#4A6880'
   }

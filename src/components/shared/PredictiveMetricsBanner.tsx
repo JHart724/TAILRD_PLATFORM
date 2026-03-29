@@ -44,22 +44,22 @@ const PredictiveMetricsBanner: React.FC<PredictiveMetricsBannerProps> = ({ data 
             <div className="text-xs text-red-500 mt-0.5">patients projected to reach clinical threshold</div>
           </div>
 
-          <div className="bg-emerald-50/70 border border-emerald-100 rounded-xl p-4">
+          <div className="bg-[#F0F5FA]/70 border border-[#C8D4DC] rounded-xl p-4">
             <div className="flex items-center gap-1.5 mb-1">
-              <DollarSign className="w-3.5 h-3.5 text-emerald-500" />
-              <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wide">This Quarter</span>
+              <DollarSign className="w-3.5 h-3.5 text-[#2C4A60]" />
+              <span className="text-xs font-semibold text-[#2C4A60] uppercase tracking-wide">This Quarter</span>
             </div>
-            <div className="text-2xl font-bold text-emerald-700">${(data.quarterlyActionableRevenue / 1_000_000).toFixed(1)}M</div>
-            <div className="text-xs text-emerald-500 mt-0.5">actionable revenue (of ${(data.totalIdentifiedRevenue / 1_000_000).toFixed(1)}M total)</div>
+            <div className="text-2xl font-bold text-[#2C4A60]">${(data.quarterlyActionableRevenue / 1_000_000).toFixed(1)}M</div>
+            <div className="text-xs text-[#2C4A60] mt-0.5">actionable revenue (of ${(data.totalIdentifiedRevenue / 1_000_000).toFixed(1)}M total)</div>
           </div>
 
-          <div className="bg-amber-50/70 border border-amber-100 rounded-xl p-4">
+          <div className="bg-[#F0F5FA]/70 border border-[#C8D4DC] rounded-xl p-4">
             <div className="flex items-center gap-1.5 mb-1">
-              <TrendingUp className="w-3.5 h-3.5 text-amber-500" />
-              <span className="text-xs font-semibold text-amber-600 uppercase tracking-wide">Rapid Deterioration</span>
+              <TrendingUp className="w-3.5 h-3.5 text-[#6B7280]" />
+              <span className="text-xs font-semibold text-[#6B7280] uppercase tracking-wide">Rapid Deterioration</span>
             </div>
-            <div className="text-2xl font-bold text-amber-700">{data.rapidDeteriorationCount}</div>
-            <div className="text-xs text-amber-500 mt-0.5">patients — immediate action indicated</div>
+            <div className="text-2xl font-bold text-[#6B7280]">{data.rapidDeteriorationCount}</div>
+            <div className="text-xs text-[#6B7280] mt-0.5">patients — immediate action indicated</div>
           </div>
 
           <div className="bg-slate-50/70 border border-slate-100 rounded-xl p-4">
@@ -82,13 +82,13 @@ const PredictiveMetricsBanner: React.FC<PredictiveMetricsBannerProps> = ({ data 
             <div className="text-xs text-titanium-500">projected 12-month revenue at current closure rate</div>
           </div>
 
-          <div className="bg-emerald-50/70 border border-emerald-100 rounded-xl p-4">
+          <div className="bg-[#F0F5FA]/70 border border-[#C8D4DC] rounded-xl p-4">
             <div className="flex items-center gap-1.5 mb-1">
-              <Zap className="w-3.5 h-3.5 text-emerald-500" />
-              <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wide">Systematic Closure</span>
+              <Zap className="w-3.5 h-3.5 text-[#2C4A60]" />
+              <span className="text-xs font-semibold text-[#2C4A60] uppercase tracking-wide">Systematic Closure</span>
             </div>
-            <div className="text-xl font-bold text-emerald-700">${(data.projectedRevenueSystematic / 1_000_000).toFixed(1)}M</div>
-            <div className="text-xs text-emerald-500">projected with TAILRD systematic gap closure</div>
+            <div className="text-xl font-bold text-[#2C4A60]">${(data.projectedRevenueSystematic / 1_000_000).toFixed(1)}M</div>
+            <div className="text-xs text-[#2C4A60]">projected with TAILRD systematic gap closure</div>
           </div>
 
           <div className="bg-blue-50/70 border border-blue-100 rounded-xl p-4">

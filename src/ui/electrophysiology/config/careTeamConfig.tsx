@@ -27,7 +27,7 @@ const EPDashboard: React.FC = () => (
  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <div className="flex items-center gap-3">
- <Zap className="w-8 h-8 text-medical-green-600" />
+ <Zap className="w-8 h-8 text-[#2C4A60]" />
  <div>
  <div className="text-2xl font-bold text-titanium-900">142</div>
  <div className="text-sm text-titanium-600">EP Procedures MTD</div>
@@ -36,7 +36,7 @@ const EPDashboard: React.FC = () => (
  </div>
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <div className="flex items-center gap-3">
- <Heart className="w-8 h-8 text-green-600" />
+ <Heart className="w-8 h-8 text-[#2C4A60]" />
  <div>
  <div className="text-2xl font-bold text-titanium-900">89</div>
  <div className="text-sm text-titanium-600">LAAC Procedures</div>
@@ -84,12 +84,12 @@ const EPPatients: React.FC = () => (
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <div className="flex items-center justify-between mb-6">
  <h3 className="text-lg font-semibold text-titanium-900 flex items-center gap-2">
- <Users className="w-5 h-5 text-medical-green-600" />
+ <Users className="w-5 h-5 text-[#2C4A60]" />
  Electrophysiology Patient Registry
  </h3>
  <div className="flex items-center gap-3">
  <button 
- className="px-4 py-2 bg-medical-green-100 text-medical-green-700 rounded-lg hover:bg-medical-green-200 transition-colors text-sm"
+ className="px-4 py-2 bg-medical-green-100 text-[#2C4A60] rounded-lg hover:bg-medical-green-200 transition-colors text-sm"
  onClick={() => {
  // Action handler - implementation pending
  // TODO: Implement EP registry export functionality with secure data handling
@@ -129,7 +129,7 @@ const EPPatients: React.FC = () => (
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.rhythm === 'AFib' ? 'bg-red-100 text-red-700' :
- patient.rhythm === 'VTach' ? 'bg-amber-100 text-amber-700' :
+ patient.rhythm === 'VTach' ? 'bg-[#F0F5FA] text-[#6B7280]' :
  'bg-chrome-100 text-chrome-700'
  }`}>
  {patient.rhythm}
@@ -139,8 +139,8 @@ const EPPatients: React.FC = () => (
  <td className="py-3 px-4 font-mono text-center">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  parseInt(patient.chads) >= 4 ? 'bg-red-100 text-red-700' :
- parseInt(patient.chads) >= 2 ? 'bg-amber-100 text-amber-700' :
- 'bg-green-100 text-green-700'
+ parseInt(patient.chads) >= 2 ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ 'bg-[#C8D4DC] text-[#2C4A60]'
  }`}>
  {patient.chads}
  </span>
@@ -148,10 +148,10 @@ const EPPatients: React.FC = () => (
  <td className="py-3 px-4 text-titanium-700">{patient.anticoag}</td>
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
- patient.status === 'Complete' ? 'bg-green-100 text-green-700' :
+ patient.status === 'Complete' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
  patient.status === 'Scheduled' ? 'bg-chrome-100 text-chrome-700' :
  patient.status === 'Planning' ? 'bg-arterial-100 text-arterial-700' :
- patient.status === 'Recovery' ? 'bg-amber-100 text-amber-700' :
+ patient.status === 'Recovery' ? 'bg-[#F0F5FA] text-[#6B7280]' :
  'bg-gray-100 text-gray-700'
  }`}>
  {patient.status}
@@ -224,7 +224,7 @@ const EPClinicalCollaboration: React.FC = () => (
  {/* Clinical Collaboration & Consultation */}
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Users className="w-5 h-5 text-medical-green-600" />
+ <Users className="w-5 h-5 text-[#2C4A60]" />
  Clinical Collaboration & Multidisciplinary Consultation
  </h3>
  
@@ -250,7 +250,7 @@ const EPClinicalCollaboration: React.FC = () => (
  </div>
  <div className="text-sm text-titanium-700">{member.role}</div>
  <div className="text-xs text-titanium-600">{member.specialty}</div>
- <div className="text-xs text-green-600 mt-1 font-medium">{member.expertise}</div>
+ <div className="text-xs text-[#2C4A60] mt-1 font-medium">{member.expertise}</div>
  <div className="mt-2">
  <span className="text-xs text-titanium-500">{member.consultations} clinical consultations YTD</span>
  </div>
@@ -262,7 +262,7 @@ const EPClinicalCollaboration: React.FC = () => (
  {/* Clinical Decision Support Pathways */}
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Zap className="w-5 h-5 text-green-600" />
+ <Zap className="w-5 h-5 text-[#2C4A60]" />
  Evidence-Based Clinical Pathways
  </h4>
  <div className="space-y-3">
@@ -274,14 +274,14 @@ const EPClinicalCollaboration: React.FC = () => (
  ].map((pathway, index) => (
  <div key={pathway.pathway} className={`flex items-center justify-between p-4 rounded-lg border ${
  pathway.indication === 'Atrial Fibrillation' ? 'bg-red-50 border-red-200' :
- pathway.indication === 'Anticoagulation Contraindication' ? 'bg-amber-50 border-amber-200' :
+ pathway.indication === 'Anticoagulation Contraindication' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
  pathway.indication === 'Ventricular Tachycardia' ? 'bg-arterial-50 border-arterial-200' :
  'bg-chrome-50 border-chrome-200'
  }`}>
  <div>
  <div className={`font-medium ${
  pathway.indication === 'Atrial Fibrillation' ? 'text-red-900' :
- pathway.indication === 'Anticoagulation Contraindication' ? 'text-amber-900' :
+ pathway.indication === 'Anticoagulation Contraindication' ? 'text-[#6B7280]' :
  pathway.indication === 'Ventricular Tachycardia' ? 'text-arterial-900' :
  'text-chrome-900'
  }`}>
@@ -293,7 +293,7 @@ const EPClinicalCollaboration: React.FC = () => (
  </div>
  <div className={`text-xs px-2 py-1 rounded-full ${
  pathway.indication === 'Atrial Fibrillation' ? 'bg-red-100 text-red-700' :
- pathway.indication === 'Anticoagulation Contraindication' ? 'bg-amber-100 text-amber-700' :
+ pathway.indication === 'Anticoagulation Contraindication' ? 'bg-[#F0F5FA] text-[#6B7280]' :
  pathway.indication === 'Ventricular Tachycardia' ? 'bg-arterial-100 text-arterial-700' :
  'bg-chrome-100 text-chrome-700'
  }`}>
@@ -310,9 +310,9 @@ const EPClinicalCollaboration: React.FC = () => (
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">Clinical Quality Outcomes</h4>
  <div className="space-y-4">
- <div className="text-center p-4 bg-green-50 rounded-lg">
- <div className="text-2xl font-bold text-green-600">96.4%</div>
- <div className="text-xs text-green-700">Clinical Success Rate</div>
+ <div className="text-center p-4 bg-[#C8D4DC] rounded-lg">
+ <div className="text-2xl font-bold text-[#2C4A60]">96.4%</div>
+ <div className="text-xs text-[#2C4A60]">Clinical Success Rate</div>
  </div>
  <div className="text-center p-4 bg-chrome-50 rounded-lg">
  <div className="text-2xl font-bold text-chrome-600">94%</div>
@@ -322,9 +322,9 @@ const EPClinicalCollaboration: React.FC = () => (
  <div className="text-2xl font-bold text-arterial-600">92.8%</div>
  <div className="text-xs text-arterial-700">Stroke Prevention Rate</div>
  </div>
- <div className="text-center p-4 bg-emerald-50 rounded-lg">
- <div className="text-2xl font-bold text-emerald-600">98%</div>
- <div className="text-xs text-emerald-700">Multidisciplinary Consensus</div>
+ <div className="text-center p-4 bg-[#F0F5FA] rounded-lg">
+ <div className="text-2xl font-bold text-[#2C4A60]">98%</div>
+ <div className="text-xs text-[#2C4A60]">Multidisciplinary Consensus</div>
  </div>
  </div>
  </div>
@@ -341,12 +341,12 @@ const EPClinicalCollaboration: React.FC = () => (
  ].map((consult, index) => (
  <div key={consult.consultation} className={`p-3 rounded-lg border ${
  consult.urgency === 'urgent' ? 'bg-red-50 border-red-200' :
- consult.urgency === 'priority' ? 'bg-amber-50 border-amber-200' :
+ consult.urgency === 'priority' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
  'bg-chrome-50 border-chrome-200'
  }`}>
  <div className={`font-medium ${
  consult.urgency === 'urgent' ? 'text-red-900' :
- consult.urgency === 'priority' ? 'text-amber-900' :
+ consult.urgency === 'priority' ? 'text-[#6B7280]' :
  'text-chrome-900'
  }`}>
  {consult.consultation}
@@ -400,7 +400,7 @@ const EPClinicalCollaboration: React.FC = () => (
  <div className="text-xs text-chrome-600">Bleeding risk evaluation</div>
  </button>
  <button 
- className="w-full p-3 text-left bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
+ className="w-full p-3 text-left bg-[#C8D4DC] hover:bg-[#C8D4DC] rounded-lg transition-colors"
  onClick={async () => {
  // Action handler - implementation pending
  try {
@@ -437,8 +437,8 @@ const EPClinicalCollaboration: React.FC = () => (
  }
  }}
  >
- <div className="font-medium text-green-900">Clinical Guidelines</div>
- <div className="text-xs text-green-600">Evidence-based recommendations</div>
+ <div className="font-medium text-[#2C4A60]">Clinical Guidelines</div>
+ <div className="text-xs text-[#2C4A60]">Evidence-based recommendations</div>
  </button>
  <button 
  className="w-full p-3 text-left bg-arterial-50 hover:bg-arterial-100 rounded-lg transition-colors"
@@ -505,44 +505,44 @@ const EPDocumentation: React.FC = () => (
  {/* EP Documentation & Registry */}
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <FileText className="w-5 h-5 text-medical-green-600" />
+ <FileText className="w-5 h-5 text-[#2C4A60]" />
  EP Documentation & Quality Registry
  </h3>
  
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* Documentation Alerts */}
  <div className="space-y-4">
- <div className="bg-gradient-to-r from-amber-50 to-amber-50 p-6 rounded-xl border border-amber-100">
- <h4 className="font-semibold text-amber-900 mb-4 flex items-center gap-2">
- <AlertTriangle className="w-5 h-5 text-amber-600" />
+ <div className="bg-gradient-to-r from-amber-50 to-amber-50 p-6 rounded-xl border border-[#C8D4DC]">
+ <h4 className="font-semibold text-[#6B7280] mb-4 flex items-center gap-2">
+ <AlertTriangle className="w-5 h-5 text-[#6B7280]" />
  Documentation Alerts & Registry
  </h4>
  <div className="space-y-3">
- <div className="bg-white p-4 rounded-lg border border-amber-200">
+ <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-2">
- <span className="font-medium text-amber-900">LAAC Registry Due</span>
- <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full">DUE TODAY</span>
+ <span className="font-medium text-[#6B7280]">LAAC Registry Due</span>
+ <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded-full">DUE TODAY</span>
  </div>
- <div className="text-sm text-amber-700">2 LAAC procedures require registry data entry</div>
- <div className="text-xs text-amber-600 mt-1">Required within 24h of procedure</div>
+ <div className="text-sm text-[#6B7280]">2 LAAC procedures require registry data entry</div>
+ <div className="text-xs text-[#6B7280] mt-1">Required within 24h of procedure</div>
  </div>
  
- <div className="bg-white p-4 rounded-lg border border-amber-200">
+ <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-2">
- <span className="font-medium text-amber-900">Ablation Reports Pending</span>
- <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full">PENDING</span>
+ <span className="font-medium text-[#6B7280]">Ablation Reports Pending</span>
+ <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded-full">PENDING</span>
  </div>
- <div className="text-sm text-amber-700">3 ablation procedures missing operative notes</div>
- <div className="text-xs text-amber-600 mt-1">Complete within 48h</div>
+ <div className="text-sm text-[#6B7280]">3 ablation procedures missing operative notes</div>
+ <div className="text-xs text-[#6B7280] mt-1">Complete within 48h</div>
  </div>
  
- <div className="bg-white p-4 rounded-lg border border-green-200">
+ <div className="bg-white p-4 rounded-lg border border-[#2C4A60]">
  <div className="flex items-center justify-between mb-2">
- <span className="font-medium text-green-900">Device Follow-up Notes</span>
- <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">COMPLETE</span>
+ <span className="font-medium text-[#2C4A60]">Device Follow-up Notes</span>
+ <span className="text-xs bg-[#C8D4DC] text-[#2C4A60] px-2 py-1 rounded-full">COMPLETE</span>
  </div>
- <div className="text-sm text-green-700">All device clinic notes up to date</div>
- <div className="text-xs text-green-600 mt-1">Next batch due tomorrow</div>
+ <div className="text-sm text-[#2C4A60]">All device clinic notes up to date</div>
+ <div className="text-xs text-[#2C4A60] mt-1">Next batch due tomorrow</div>
  </div>
  </div>
  </div>
@@ -551,12 +551,12 @@ const EPDocumentation: React.FC = () => (
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">Documentation Compliance</h4>
  <div className="space-y-4">
- <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+ <div className="flex items-center justify-between p-4 bg-[#C8D4DC] rounded-lg">
  <div>
- <div className="font-medium text-green-900">EP Registry Completeness</div>
- <div className="text-sm text-green-700">LAAC, Ablation data quality</div>
+ <div className="font-medium text-[#2C4A60]">EP Registry Completeness</div>
+ <div className="text-sm text-[#2C4A60]">LAAC, Ablation data quality</div>
  </div>
- <div className="text-2xl font-bold text-green-600">94.6%</div>
+ <div className="text-2xl font-bold text-[#2C4A60]">94.6%</div>
  </div>
  
  <div className="flex items-center justify-between p-4 bg-chrome-50 rounded-lg">
@@ -657,9 +657,9 @@ const EPDocumentation: React.FC = () => (
  <div className="text-right">
  <div className="text-xs text-titanium-500">{activity.time}</div>
  <div className={`text-xs px-2 py-1 rounded-full ${
- activity.status === 'Complete' ? 'bg-green-100 text-green-700' :
+ activity.status === 'Complete' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
  activity.status === 'In Progress' ? 'bg-chrome-100 text-chrome-700' :
- 'bg-amber-100 text-amber-700'
+ 'bg-[#F0F5FA] text-[#6B7280]'
  }`}>
  {activity.status}
  </div>
@@ -674,14 +674,14 @@ const EPDocumentation: React.FC = () => (
  <h4 className="font-semibold text-titanium-900 mb-4">Registry & Quality Actions</h4>
  <div className="space-y-2">
  <button 
- className="w-full p-3 text-left bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
+ className="w-full p-3 text-left bg-[#C8D4DC] hover:bg-[#C8D4DC] rounded-lg transition-colors"
  onClick={() => {
  // Action handler - implementation pending
  // TODO: Implement LAAC registry data entry system with automated field population and validation
  }}
  >
- <div className="font-medium text-green-900">Complete LAAC Registry</div>
- <div className="text-xs text-green-600">2 cases due today</div>
+ <div className="font-medium text-[#2C4A60]">Complete LAAC Registry</div>
+ <div className="text-xs text-[#2C4A60]">2 cases due today</div>
  </button>
  <button 
  className="w-full p-3 text-left bg-chrome-50 hover:bg-chrome-100 rounded-lg transition-colors"
@@ -704,14 +704,14 @@ const EPDocumentation: React.FC = () => (
  <div className="text-xs text-arterial-600">Success rate trending</div>
  </button>
  <button 
- className="w-full p-3 text-left bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors"
+ className="w-full p-3 text-left bg-[#F0F5FA] hover:bg-[#F0F5FA] rounded-lg transition-colors"
  onClick={() => {
  // Action handler - implementation pending
  // TODO: Implement template management system with version control and clinical decision support integration
  }}
  >
- <div className="font-medium text-emerald-900">Update Templates</div>
- <div className="text-xs text-emerald-600">Review documentation forms</div>
+ <div className="font-medium text-[#2C4A60]">Update Templates</div>
+ <div className="text-xs text-[#2C4A60]">Review documentation forms</div>
  </button>
  </div>
  </div>

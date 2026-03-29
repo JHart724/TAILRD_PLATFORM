@@ -45,7 +45,7 @@ const SHProcedureFunnel: React.FC<SHProcedureFunnelProps> = ({ data }) => {
  <span className="font-bold text-titanium-900">{procedure.referred} ({toFixed(referralRate, 0)}%)</span>
  </div>
  <div className="w-full bg-titanium-100 rounded-full h-2">
- <div className="bg-amber-500 h-full rounded-full" style={{ width: `${referralRate}%` }} />
+ <div className="bg-[#F0F5FA] h-full rounded-full" style={{ width: `${referralRate}%` }} />
  </div>
  </div>
 
@@ -55,7 +55,7 @@ const SHProcedureFunnel: React.FC<SHProcedureFunnelProps> = ({ data }) => {
  <span className="font-bold text-titanium-900">{procedure.completed} ({toFixed(completionRate, 0)}%)</span>
  </div>
  <div className="w-full bg-titanium-100 rounded-full h-2">
- <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${completionRate}%` }} />
+ <div className="bg-[#F0F5FA] h-full rounded-full" style={{ width: `${completionRate}%` }} />
  </div>
  </div>
  </div>

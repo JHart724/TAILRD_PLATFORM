@@ -76,7 +76,7 @@ const StatRow: React.FC<{
         <div
           className={`flex items-center gap-1 ${
             stat.trend.direction === 'up'
-              ? 'text-emerald-600'
+              ? 'text-[#2C4A60]'
               : 'text-arterial-600'
           }`}
         >

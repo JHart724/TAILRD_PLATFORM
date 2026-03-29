@@ -271,8 +271,8 @@ const ZipHeatMap: React.FC<ZipHeatMapProps> = ({
 
   const getRiskColor = (riskLevel: string): string => {
  switch (riskLevel) {
- case 'Low': return '#10B981';
- case 'Medium': return '#F59E0B';
+ case 'Low': return '#2C4A60';
+ case 'Medium': return '#6B7280';
  case 'High': return '#EF4444';
  default: return '#9CA3AF';
  }
