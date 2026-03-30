@@ -393,9 +393,16 @@ const ModuleTile: React.FC<ModuleTileProps> = ({ module, onClick }) => {
  <div className="absolute inset-0 bg-gradient-to-br from-white via-transparent to-white rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
  
  <div className="relative space-y-4">
- {/* Icon container - no blue background on hover */}
+ {/* Icon container */}
  <div className="w-fit">
- <div className="p-4 rounded-xl bg-white border border-titanium-200 transition-all duration-500 group-hover:bg-white group-hover:border-titanium-200 group-hover:shadow-lg">
+ <div
+   className="p-4 rounded-xl transition-all duration-500 group-hover:shadow-lg"
+   style={{
+     background: 'rgba(44,74,96,0.08)',
+     border: '1px solid rgba(44,74,96,0.15)',
+     color: '#2C4A60',
+   }}
+ >
  <Icon />
  </div>
  </div>

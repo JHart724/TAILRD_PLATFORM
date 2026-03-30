@@ -34,8 +34,8 @@ const moduleNavItems: NavItem[] = [
   { label: 'Heart Failure',        icon: Heart,        path: '/hf',         glowColor: '#C8D4DC', accentBg: 'rgba(200, 212, 220, 0.15)' },
   { label: 'Electrophysiology',    icon: Zap,          path: '/ep',         glowColor: '#8FA8BC', accentBg: 'rgba(143, 168, 188, 0.15)' },
   { label: 'Structural Heart',     icon: Stethoscope,  path: '/structural', glowColor: '#D4707F', accentBg: 'rgba(155, 36, 56, 0.15)' },
-  { label: 'Coronary',             icon: GitBranch,     path: '/coronary',   glowColor: '#5CAA72', accentBg: 'rgba(26, 74, 46, 0.15)' },
-  { label: 'Valvular',             icon: CircuitBoard,  path: '/valvular',   glowColor: '#D4B85C', accentBg: 'rgba(139, 105, 20, 0.15)' },
+  { label: 'Coronary',             icon: GitBranch,     path: '/coronary',   glowColor: '#8FA8BC', accentBg: 'rgba(44, 74, 96, 0.15)' },
+  { label: 'Valvular',             icon: CircuitBoard,  path: '/valvular',   glowColor: '#C8D4DC', accentBg: 'rgba(44, 74, 96, 0.15)' },
   { label: 'Peripheral Vascular',  icon: Activity,      path: '/peripheral', glowColor: '#7B8698', accentBg: 'rgba(46, 52, 64, 0.15)' },
   { label: 'Clinical Research',    icon: FlaskConical,  path: '/research',   glowColor: '#7B8698', accentBg: 'rgba(46, 52, 64, 0.15)' },
 ];

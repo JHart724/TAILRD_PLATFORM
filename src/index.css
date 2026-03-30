@@ -221,9 +221,6 @@
   /* ─── Section 3: Sidebar Styles ─────────────────────────── */
   .sidebar-container {
     background: linear-gradient(175deg, #0E1825 0%, #162436 35%, #1C3048 65%, #162030 100%);
-    position: sticky;
-    top: 0;
-    align-self: flex-start;
   }
 
   .sidebar-container::before {
@@ -233,10 +230,10 @@
     pointer-events: none;
     z-index: 0;
     background-image:
-      repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(200,220,240,0.022) 3px, rgba(200,220,240,0.022) 4px),
-      repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(200,220,240,0.014) 3px, rgba(200,220,240,0.014) 4px),
-      repeating-linear-gradient(135deg, transparent, transparent 6px, rgba(200,220,240,0.008) 6px, rgba(200,220,240,0.008) 7px),
-      repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(200,220,240,0.008) 6px, rgba(200,220,240,0.008) 7px);
+      repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(200,220,240,0.055) 3px, rgba(200,220,240,0.055) 4px),
+      repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(200,220,240,0.035) 3px, rgba(200,220,240,0.035) 4px),
+      repeating-linear-gradient(135deg, transparent, transparent 6px, rgba(200,220,240,0.022) 6px, rgba(200,220,240,0.022) 7px),
+      repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(200,220,240,0.022) 6px, rgba(200,220,240,0.022) 7px);
   }
 
   .sidebar-container::after {

@@ -43,7 +43,7 @@ export default function AppShell({ children }: AppShellProps) {
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-screen app-surface">
+    <div className="flex h-screen overflow-hidden app-surface">
       <a href="#main-content" className="skip-nav">Skip to main content</a>
       <Sidebar />
       <div ref={scrollRef} id="main-scroll-container" className="flex flex-col flex-1 min-w-0 overflow-y-auto h-screen">
