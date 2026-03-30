@@ -1,246 +1,305 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  BarChart3, 
-  Users, 
-  Building2, 
-  Activity, 
-  CheckCircle, 
+import {
+  BarChart3,
+  Users,
+  Building2,
+  Activity,
   TrendingUp,
   Wifi,
   WifiOff,
-  AlertTriangle
+  AlertTriangle,
+  RefreshCw,
+  ServerOff,
 } from 'lucide-react';
 import TailrdLogo from '../../components/TailrdLogo';
 import { toFixed } from '../../utils/formatters';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+
+interface PlatformAnalytics {
+  totalHospitals: number;
+  activeUsers: number;
+  monthlyGrowth: number;
+  platformRevenue: number;
+  systemHealth: number;
+  criticalAlerts: number;
+  apiResponseMs?: number;
+}
+
 const SuperAdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [backendConnected, setBackendConnected] = useState(false);
-  const [analytics, setAnalytics] = useState<any>(null);
+  const [analytics, setAnalytics] = useState<PlatformAnalytics | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [lastChecked, setLastChecked] = useState<Date | null>(null);
 
-  useEffect(() => {
- checkBackendConnection();
- fetchAnalytics();
- 
- // Refresh analytics every 30 seconds
- const interval = setInterval(() => {
- checkBackendConnection();
- fetchAnalytics();
- }, 30000);
- 
- return () => clearInterval(interval);
+  const checkBackendConnection = useCallback(async (): Promise<boolean> => {
+    try {
+      const res = await fetch(`${API_URL}/health`, { signal: AbortSignal.timeout(4000) });
+      const connected = res.ok;
+      setBackendConnected(connected);
+      return connected;
+    } catch {
+      setBackendConnected(false);
+      return false;
+    }
   }, []);
 
-  const checkBackendConnection = async () => {
- try {
- const response = await fetch('http://localhost:3001/health');
- setBackendConnected(response.ok);
- } catch {
- setBackendConnected(false);
- }
-  };
+  const fetchAnalytics = useCallback(async () => {
+    setLoading(true);
+    const connected = await checkBackendConnection();
 
-  const fetchAnalytics = async () => {
- try {
- if (backendConnected) {
- const response = await fetch('http://localhost:3001/api/admin/analytics');
- if (response.ok) {
- const data = await response.json();
- setAnalytics(data);
- return;
- }
- }
- } catch (error) {
- // Backend unavailable, using fallback data
- }
- 
- // Fallback data when backend is unavailable
- const fallbackData = {
- totalHospitals: 247,
- activeUsers: 15420,
- monthlyGrowth: 12.3,
- platformRevenue: 2850000,
- systemHealth: 99.7,
- criticalAlerts: 3
- };
- setAnalytics(fallbackData);
-  };
+    if (!connected) {
+      setAnalytics(null);
+      setLoading(false);
+      setLastChecked(new Date());
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_URL}/api/admin/analytics`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('tailrd-session-token') ?? ''}`,
+        },
+        signal: AbortSignal.timeout(8000),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data: PlatformAnalytics = await res.json();
+      setAnalytics(data);
+    } catch {
+      setAnalytics(null);
+    } finally {
+      setLoading(false);
+      setLastChecked(new Date());
+    }
+  }, [checkBackendConnection]);
+
+  useEffect(() => {
+    fetchAnalytics();
+    const interval = setInterval(fetchAnalytics, 30000);
+    return () => clearInterval(interval);
+  }, [fetchAnalytics]);
 
   return (
- <div className="min-h-screen bg-gray-50">
- {/* Header */}
- <header className="bg-white shadow-sm border-b border-gray-200">
- <div className="px-6 py-4">
- <div className="flex items-center justify-between">
- <div className="flex items-center gap-4">
- <button onClick={() => navigate('/dashboard')} className="hover:opacity-75 transition-opacity">
- <TailrdLogo />
- </button>
- <div>
- <h1 className="text-2xl font-bold text-titanium-900">TAILRD Super Admin</h1>
- <p className="text-sm text-titanium-600">Production Healthcare Platform Management</p>
- </div>
- </div>
- <div className="flex items-center gap-2 text-sm">
- {backendConnected ? (
- <>
- <Wifi className="w-4 h-4 text-[#2C4A60]" />
- <span className="text-[#2C4A60]">EMR Integration Active</span>
- </>
- ) : (
- <>
- <WifiOff className="w-4 h-4 text-[#6B7280]" />
- <span className="text-[#6B7280]">Demo Mode - Mock Data</span>
- </>
- )}
- </div>
- </div>
- </div>
- </header>
+    <div className="min-h-screen bg-[#F0F5FA]">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b border-[#C8D4DC]">
+        <div className="px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <button onClick={() => navigate('/dashboard')} className="hover:opacity-75 transition-opacity">
+                <TailrdLogo />
+              </button>
+              <div>
+                <h1 className="text-2xl font-bold text-[#1A2F4A]">TAILRD Super Admin</h1>
+                <p className="text-sm text-[#4A6880]">Platform Management Console</p>
+              </div>
+            </div>
 
- {/* Main Content */}
- <main className="p-8">
- <div className="mb-8">
- <h2 className="text-3xl font-bold text-titanium-900 mb-2">Platform Analytics</h2>
- <p className="text-titanium-600">Real-time insights into your healthcare platform</p>
- </div>
+            <div className="flex items-center gap-4">
+              {/* Last checked timestamp */}
+              {lastChecked && (
+                <span className="text-xs text-[#6B7280]">
+                  Updated {lastChecked.toLocaleTimeString()}
+                </span>
+              )}
 
- {/* Analytics Cards */}
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
- <div className="bg-white rounded-lg shadow p-6 border-l-4 border-porsche-500">
- <div className="flex items-center justify-between">
- <div>
- <p className="text-sm font-medium text-titanium-600">Connected Hospitals</p>
- <p className="text-3xl font-bold text-titanium-900">{analytics?.totalHospitals || 0}</p>
- <p className="text-sm text-[#2C4A60] mt-1">↗ All systems operational</p>
- </div>
- <Building2 className="w-12 h-12 text-porsche-500" />
- </div>
- </div>
+              {/* Manual refresh */}
+              <button
+                onClick={fetchAnalytics}
+                disabled={loading}
+                className="flex items-center gap-1.5 text-sm text-[#4A6880] hover:text-[#2C4A60] transition-colors disabled:opacity-50"
+              >
+                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                Refresh
+              </button>
 
- <div className="bg-white rounded-lg shadow p-6 border-l-4 border-[#2C4A60]">
- <div className="flex items-center justify-between">
- <div>
- <p className="text-sm font-medium text-titanium-600">Active Users</p>
- <p className="text-3xl font-bold text-titanium-900">{analytics?.activeUsers?.toLocaleString() || 0}</p>
- <p className="text-sm text-[#2C4A60] mt-1">↗ +{analytics?.monthlyGrowth || 0}% this month</p>
- </div>
- <Users className="w-12 h-12 text-[#2C4A60]" />
- </div>
- </div>
+              {/* Connection status */}
+              <div className="flex items-center gap-2 text-sm">
+                {backendConnected ? (
+                  <>
+                    <Wifi className="w-4 h-4 text-[#2C4A60]" />
+                    <span className="text-[#2C4A60] font-medium">Backend Connected</span>
+                  </>
+                ) : (
+                  <>
+                    <WifiOff className="w-4 h-4 text-[#7A1A2E]" />
+                    <span className="text-[#7A1A2E] font-medium">Backend Offline</span>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
 
- <div className="bg-white rounded-lg shadow p-6 border-l-4 border-arterial-500">
- <div className="flex items-center justify-between">
- <div>
- <p className="text-sm font-medium text-titanium-600">Platform Revenue</p>
- <p className="text-3xl font-bold text-titanium-900">
- ${toFixed(analytics?.platformRevenue / 1000000, 1)}M
- </p>
- <p className="text-sm text-[#2C4A60] mt-1">↗ Growing monthly</p>
- </div>
- <TrendingUp className="w-12 h-12 text-arterial-500" />
- </div>
- </div>
+      {/* Main Content */}
+      <main className="p-8">
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-[#1A2F4A] mb-2">Platform Analytics</h2>
+          <p className="text-[#4A6880]">Live data from the connected backend</p>
+        </div>
 
- <div className="bg-white rounded-lg shadow p-6 border-l-4 border-[#2C4A60]">
- <div className="flex items-center justify-between">
- <div>
- <p className="text-sm font-medium text-titanium-600">System Health</p>
- <p className="text-3xl font-bold text-[#2C4A60]">{analytics?.systemHealth || 0}%</p>
- <p className="text-sm text-[#2C4A60] mt-1">All systems operational</p>
- </div>
- <CheckCircle className="w-12 h-12 text-[#2C4A60]" />
- </div>
- </div>
+        {/* Offline Banner */}
+        {!backendConnected && !loading && (
+          <div className="mb-8 rounded-xl border border-[#9B2438] bg-[rgba(122,26,46,0.05)] p-5 flex items-start gap-4">
+            <ServerOff className="w-6 h-6 text-[#7A1A2E] shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold text-[#7A1A2E] text-base">Backend Unavailable</p>
+              <p className="text-sm text-[#5C1022] mt-1">
+                Could not reach <code className="px-1 py-0.5 bg-[rgba(122,26,46,0.08)] rounded text-xs font-mono">{API_URL}/health</code>.
+                Platform analytics require an active backend connection.
+              </p>
+              <p className="text-sm text-[#4A6880] mt-2">
+                All clinical modules and demo content remain fully functional. Only live platform metrics are unavailable.
+              </p>
+              <button
+                onClick={fetchAnalytics}
+                className="mt-3 text-sm font-medium text-[#7A1A2E] underline underline-offset-2 hover:text-[#5C1022] transition-colors"
+              >
+                Retry connection
+              </button>
+            </div>
+          </div>
+        )}
 
- <div className="bg-white rounded-lg shadow p-6 border-l-4 border-[#C8D4DC]">
- <div className="flex items-center justify-between">
- <div>
- <p className="text-sm font-medium text-titanium-600">Critical Alerts</p>
- <p className="text-3xl font-bold text-[#6B7280]">{analytics?.criticalAlerts || 0}</p>
- <p className="text-sm text-titanium-600 mt-1">Active monitoring</p>
- </div>
- <AlertTriangle className="w-12 h-12 text-[#6B7280]" />
- </div>
- </div>
+        {/* Loading skeleton */}
+        {loading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="bg-white rounded-xl shadow-sm p-6 border border-[#C8D4DC] animate-pulse">
+                <div className="h-4 bg-[#C8D4DC] rounded w-1/2 mb-3" />
+                <div className="h-8 bg-[#E8EEF2] rounded w-1/3 mb-2" />
+                <div className="h-3 bg-[#E8EEF2] rounded w-2/3" />
+              </div>
+            ))}
+          </div>
+        )}
 
- <div className="bg-white rounded-lg shadow p-6 border-l-4 border-chrome-500">
- <div className="flex items-center justify-between">
- <div>
- <p className="text-sm font-medium text-titanium-600">API Performance</p>
- <p className="text-3xl font-bold text-chrome-600">145ms</p>
- <p className="text-sm text-[#2C4A60] mt-1">Excellent response time</p>
- </div>
- <Activity className="w-12 h-12 text-chrome-500" />
- </div>
- </div>
- </div>
+        {/* Analytics Cards — only rendered when real data exists */}
+        {!loading && analytics && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <MetricCard
+              label="Connected Hospitals"
+              value={analytics.totalHospitals.toLocaleString()}
+              sub="All systems operational"
+              icon={<Building2 className="w-10 h-10 text-[#4A6880]" />}
+              accent="#2C4A60"
+            />
+            <MetricCard
+              label="Active Users"
+              value={analytics.activeUsers.toLocaleString()}
+              sub={`+${analytics.monthlyGrowth}% this month`}
+              icon={<Users className="w-10 h-10 text-[#4A6880]" />}
+              accent="#2C4A60"
+            />
+            <MetricCard
+              label="Platform Revenue"
+              value={`$${toFixed(analytics.platformRevenue / 1000000, 1)}M`}
+              sub="Cumulative ARR"
+              icon={<TrendingUp className="w-10 h-10 text-[#4A6880]" />}
+              accent="#2C4A60"
+            />
+            <MetricCard
+              label="System Health"
+              value={`${analytics.systemHealth}%`}
+              sub="Uptime — rolling 30 days"
+              icon={<Activity className="w-10 h-10 text-[#2C4A60]" />}
+              accent="#2C4A60"
+            />
+            <MetricCard
+              label="Critical Alerts"
+              value={String(analytics.criticalAlerts)}
+              sub={analytics.criticalAlerts === 0 ? 'No active alerts' : 'Requires attention'}
+              icon={
+                <AlertTriangle
+                  className={`w-10 h-10 ${analytics.criticalAlerts > 0 ? 'text-[#7A1A2E]' : 'text-[#4A6880]'}`}
+                />
+              }
+              accent={analytics.criticalAlerts > 0 ? '#7A1A2E' : '#2C4A60'}
+            />
+            {analytics.apiResponseMs !== undefined && (
+              <MetricCard
+                label="API Response"
+                value={`${analytics.apiResponseMs}ms`}
+                sub={analytics.apiResponseMs < 200 ? 'Excellent' : analytics.apiResponseMs < 500 ? 'Good' : 'Degraded'}
+                icon={<Activity className="w-10 h-10 text-[#4A6880]" />}
+                accent="#2C4A60"
+              />
+            )}
+          </div>
+        )}
 
- {/* Production Status */}
- <div className="bg-gradient-to-r from-porsche-50 to-green-50 rounded-lg p-6 border border-porsche-200">
- <h2 className="text-xl font-bold text-titanium-900 mb-4">🚀 Production Status</h2>
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
- <div className="flex items-center gap-3">
- <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
- <span className="text-sm font-medium text-titanium-700">Backend API Ready</span>
- </div>
- <div className="flex items-center gap-3">
- <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
- <span className="text-sm font-medium text-titanium-700">EMR Integration Ready</span>
- </div>
- <div className="flex items-center gap-3">
- <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
- <span className="text-sm font-medium text-titanium-700">HIPAA Compliant</span>
- </div>
- <div className="flex items-center gap-3">
- <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
- <span className="text-sm font-medium text-titanium-700">Revenue Ready</span>
- </div>
- </div>
- <div className="mt-4 p-4 bg-white rounded border border-[#2C4A60]">
- <p className="text-sm text-titanium-700">
- <strong>Status:</strong> Your TAILRD platform is production-ready! 
- Backend running at <code className="px-1 py-0.5 bg-gray-100 rounded text-xs">localhost:3001</code>
- </p>
- <p className="text-sm text-[#2C4A60] mt-2">
- ✅ Ready for hospital onboarding and revenue generation
- </p>
- </div>
- </div>
-
- {/* Quick Actions */}
- <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
- <button 
- onClick={() => navigate('/hf')}
- className="p-6 bg-white rounded-lg shadow hover:shadow-md transition-shadow border border-gray-200"
- >
- <BarChart3 className="w-8 h-8 text-porsche-500 mb-3" />
- <h3 className="text-lg font-semibold text-titanium-900 mb-2">Heart Failure Module</h3>
- <p className="text-sm text-titanium-600">Access GDMT analytics and care team dashboards</p>
- </button>
-
- <button 
- onClick={() => navigate('/ep')}
- className="p-6 bg-white rounded-lg shadow hover:shadow-md transition-shadow border border-gray-200"
- >
- <Activity className="w-8 h-8 text-arterial-500 mb-3" />
- <h3 className="text-lg font-semibold text-titanium-900 mb-2">Electrophysiology</h3>
- <p className="text-sm text-titanium-600">EP device monitoring and clinical support</p>
- </button>
-
- <button 
- onClick={() => navigate('/coronary')}
- className="p-6 bg-white rounded-lg shadow hover:shadow-md transition-shadow border border-gray-200"
- >
- <TrendingUp className="w-8 h-8 text-[#2C4A60] mb-3" />
- <h3 className="text-lg font-semibold text-titanium-900 mb-2">PCI & Coronary</h3>
- <p className="text-sm text-titanium-600">Coronary intervention analytics and networks</p>
- </button>
- </div>
- </main>
- </div>
+        {/* Quick Navigation */}
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold text-[#1A2F4A] mb-4">Quick Navigation</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <NavCard
+              onClick={() => navigate('/hf')}
+              icon={<BarChart3 className="w-7 h-7 text-[#4A6880]" />}
+              title="Heart Failure"
+              description="GDMT analytics and care team dashboards"
+            />
+            <NavCard
+              onClick={() => navigate('/ep')}
+              icon={<Activity className="w-7 h-7 text-[#4A6880]" />}
+              title="Electrophysiology"
+              description="EP device monitoring and clinical support"
+            />
+            <NavCard
+              onClick={() => navigate('/coronary')}
+              icon={<TrendingUp className="w-7 h-7 text-[#4A6880]" />}
+              title="PCI & Coronary"
+              description="Coronary intervention analytics"
+            />
+          </div>
+        </div>
+      </main>
+    </div>
   );
 };
+
+// ── Sub-components ───────────────────────────────────────────────────────────
+
+interface MetricCardProps {
+  label: string;
+  value: string;
+  sub: string;
+  icon: React.ReactNode;
+  accent: string;
+}
+
+const MetricCard: React.FC<MetricCardProps> = ({ label, value, sub, icon, accent }) => (
+  <div
+    className="bg-white rounded-xl shadow-sm p-6 border-l-4 flex items-center justify-between"
+    style={{ borderLeftColor: accent }}
+  >
+    <div>
+      <p className="text-sm font-medium text-[#4A6880]">{label}</p>
+      <p className="text-3xl font-bold text-[#1A2F4A] mt-1">{value}</p>
+      <p className="text-sm text-[#6B7280] mt-1">{sub}</p>
+    </div>
+    {icon}
+  </div>
+);
+
+interface NavCardProps {
+  onClick: () => void;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
+const NavCard: React.FC<NavCardProps> = ({ onClick, icon, title, description }) => (
+  <button
+    onClick={onClick}
+    className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-[#C8D4DC] text-left w-full"
+  >
+    <div className="mb-3">{icon}</div>
+    <h3 className="text-base font-semibold text-[#1A2F4A] mb-1">{title}</h3>
+    <p className="text-sm text-[#4A6880]">{description}</p>
+  </button>
+);
 
 export default SuperAdminDashboard;
