@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { demoAction } from '../../../utils/demoActions';
 import { Calculator, Heart, AlertTriangle, CheckCircle, Info, Zap, Shield } from 'lucide-react';
 
 interface CHA2DS2VAScInputs {
@@ -332,7 +333,7 @@ const EPRiskStratification: React.FC = () => {
  {(selectedScore === 'both' || selectedScore === 'cha2ds2vasc') && (
  <div 
  className={`p-4 rounded-xl border-2 cursor-pointer hover:shadow-lg transition-all ${getRiskColor(cha2ds2vasc.riskCategory, 'stroke')}`}
- onClick={() => console.log('CHA2DS2-VASc drill-down:', cha2ds2vasc)}
+ onClick={demoAction()}
  >
  <div className="flex items-center gap-2 mb-2">
  <Zap className="w-5 h-5" />
@@ -348,7 +349,7 @@ const EPRiskStratification: React.FC = () => {
  {(selectedScore === 'both' || selectedScore === 'hasbled') && (
  <div 
  className={`p-4 rounded-xl border-2 cursor-pointer hover:shadow-lg transition-all ${getRiskColor(hasbled.riskCategory, 'bleeding')}`}
- onClick={() => console.log('HAS-BLED drill-down:', hasbled)}
+ onClick={demoAction()}
  >
  <div className="flex items-center gap-2 mb-2">
  <Shield className="w-5 h-5" />

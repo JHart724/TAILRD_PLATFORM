@@ -318,7 +318,7 @@ const EPEquityAnalysis: React.FC = () => {
   const handleGroupClick = (group: EquityGroup) => {
  setSelectedGroup(group.group);
  setShowPatientDetail(true);
- console.log('Opening equity drill-down for:', selectedSegmentData.label, '-', group.group);
+    toast.info('Equity Analysis Detail', 'Full EHR integration required for this action.');
  {};
   };
 
@@ -511,7 +511,7 @@ const EPEquityAnalysis: React.FC = () => {
  </div>
  <button
  onClick={() => {
- console.log('Opening targeted intervention plan for:', group.group);
+    toast.info('Targeted Intervention Plan', 'Full EHR integration required for this action.');
  {};
  }}
  className="text-sm bg-porsche-500 text-white px-3 py-1 rounded hover:bg-porsche-600 transition-colors"
@@ -651,7 +651,7 @@ const EPEquityAnalysis: React.FC = () => {
  <button 
  className="flex items-center gap-2 px-4 py-2 bg-white border border-titanium-300 text-titanium-700 rounded-lg hover:bg-titanium-50 transition-colors"
  onClick={() => {
- console.log('Opening patient cohort list');
+    toast.info('Patient Cohort List', 'Full EHR integration required for this action.');
  {};
  }}
  >

@@ -943,7 +943,7 @@ const EPPatientWorklistEnhanced: React.FC = () => {
  <button 
  onClick={(e) => {
  e.stopPropagation();
- console.log('Opening chart for patient:', patient.name, patient.mrn, 'Priority:', patient.priority);
+    toast.info('Open Patient Chart', 'Full EHR integration required for this action.');
  setChartFeedback(patient.name);
  setTimeout(() => setChartFeedback(null), 2000);
  }}

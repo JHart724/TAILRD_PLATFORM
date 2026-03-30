@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { demoAction } from '../../../utils/demoActions';
 import { TrendingUp, TrendingDown, Activity, Heart, Zap, BarChart3, Shield } from 'lucide-react';
 import { toFixed } from '../../../../utils/formatters';
 
@@ -105,7 +106,7 @@ const EPOutcomesTrends: React.FC = () => {
  setTimeRange(e.target.value as '6m' | '12m' | 'ytd');
  console.log('Time range changed:', e.target.value);
  }}
- onClick={() => console.log('Time range selector clicked')}
+ onClick={demoAction()}
  className="px-3 py-1 text-sm border border-titanium-300 rounded-lg focus:ring-2 focus:ring-chrome-500"
  >
  <option value="6m">Last 6 Months</option>
@@ -121,7 +122,7 @@ const EPOutcomesTrends: React.FC = () => {
  <div 
  key={trend.metric}
  className="p-3 bg-titanium-50 rounded-lg border border-titanium-200 cursor-pointer hover:bg-titanium-100 transition-colors"
- onClick={() => console.log('KPI drill-down:', trend.metric, trend)}
+ onClick={demoAction()}
  >
  <div className="flex items-center justify-between mb-1">
  <div className="text-xs text-titanium-600 font-medium">{trend.metric}</div>
@@ -177,7 +178,7 @@ const EPOutcomesTrends: React.FC = () => {
  <div 
  key={data.month} 
  className="flex items-center gap-3 cursor-pointer hover:bg-titanium-50 rounded-lg p-2 -m-2 transition-colors"
- onClick={() => console.log('Month drill-down:', data.month, selectedMetric, data.value)}
+ onClick={demoAction()}
  >
  <div className="w-12 text-xs font-medium text-titanium-700">{data.month}</div>
  

@@ -757,7 +757,7 @@ const EPAutomatedClinicalSupport: React.FC = () => {
  <button 
  className="flex-1 px-3 py-2 bg-gradient-to-r from-[#2C4A60] to-[#2C4A60] text-white text-xs rounded-lg hover:from-[#2C4A60] hover:to-[#2C4A60] transition-all duration-300 flex items-center justify-center gap-1"
  onClick={() => {
- console.log(`EP: Viewing detailed assessment for patient ${assessment.name} (${assessment.mrn})`);
+    toast.info('View Detailed Assessment', 'Full EHR integration required for this action.');
  {}
  // TODO: Implement detailed patient assessment view with comprehensive clinical data and decision support tools
  }}
@@ -768,7 +768,7 @@ const EPAutomatedClinicalSupport: React.FC = () => {
  <button 
  className="flex-1 px-3 py-2 bg-gradient-to-r from-titanium-100 to-titanium-200 text-titanium-800 text-xs rounded-lg hover:from-titanium-200 hover:to-titanium-300 transition-all duration-300 flex items-center justify-center gap-1"
  onClick={() => {
- console.log(`EP: Scheduling consultation for patient ${assessment.name} based on automated assessment`);
+    toast.info('Schedule Consultation', 'Full EHR integration required for this action.');
  {}
  // TODO: Implement automated scheduling system with priority-based appointment allocation and clinical workflow integration
  }}

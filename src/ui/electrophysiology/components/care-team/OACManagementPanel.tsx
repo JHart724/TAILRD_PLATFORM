@@ -268,7 +268,7 @@ const OACManagementPanel: React.FC = () => {
  timestamp: new Date().toISOString()
  };
 
- console.log('Generated bridging plan:', planData);
+    toast.info('Generate Bridging Plan', 'Full EHR integration required for this action.');
  {}
   };
 

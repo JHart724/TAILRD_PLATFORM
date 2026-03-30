@@ -1,4 +1,5 @@
 import React from 'react';
+import { demoAction } from '../../../utils/demoActions';
 import { AlertCircle, CheckCircle } from 'lucide-react';
 import { toFixed } from '../../../../utils/formatters';
 
@@ -143,7 +144,7 @@ const EPPopulationOverview: React.FC = () => {
  ? 'border-red-300 bg-red-50 hover:border-red-400' 
  : 'border-titanium-300 bg-titanium-50 hover:border-chrome-400'
  }`}
- onClick={() => console.log('Population drill-down:', population.name)}
+ onClick={demoAction()}
  >
  <div className="flex items-start justify-between mb-3">
  <div>

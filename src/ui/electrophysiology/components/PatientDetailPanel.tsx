@@ -740,7 +740,7 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  <button 
  className="flex-1 px-4 py-3 bg-[#2C4A60] text-white rounded-lg font-medium hover:bg-[#2C4A60] transition-colors"
  onClick={() => {
- console.log(`EP: Beginning care plan for patient ${patient.name} (${patient.mrn})`);
+    toast.info('Begin Care Plan', 'Full EHR integration required for this action.');
  {};
  // TODO: Implement comprehensive EP care plan workflow with clinical decision support and automated scheduling
  }}
@@ -752,7 +752,7 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  <button 
  className="px-4 py-3 bg-arterial-600 text-white rounded-lg font-medium hover:bg-arterial-700 transition-colors"
  onClick={() => {
- console.log(`EP: Opening device actions for patient ${patient.name} with ${patient.deviceMonitoring?.deviceType}`);
+    toast.info('Device Actions', 'Full EHR integration required for this action.');
  {};
  // TODO: Implement comprehensive device management system with remote interrogation and parameter adjustment
  }}
@@ -765,7 +765,7 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  <button 
  className="px-4 py-3 bg-porsche-600 text-white rounded-lg font-medium hover:bg-porsche-700 transition-colors"
  onClick={() => {
- console.log(`EP: Opening LAAC workflow for patient ${patient.name} with status ${patient.laacStatus}`);
+    toast.info('LAAC Workflow', 'Full EHR integration required for this action.');
  {};
  // TODO: Implement comprehensive LAAC workflow with automated checklists, scheduling, and registry integration
  }}

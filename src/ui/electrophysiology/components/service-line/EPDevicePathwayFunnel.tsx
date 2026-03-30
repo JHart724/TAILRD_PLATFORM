@@ -758,7 +758,7 @@ const EPDevicePathwayFunnel: React.FC = () => {
  <div className="flex gap-3 mt-6 pt-6 border-t border-titanium-200">
  <button 
  onClick={() => {
- console.log('Generating EP device report:', selectedDevice, selectedMetric);
+    toast.info('Generate Device Report', 'Full EHR integration required for this action.');
  {}
  }}
  className="flex-1 bg-porsche-500 text-white py-3 px-4 rounded-lg hover:bg-porsche-600 transition-colors font-medium"
@@ -767,7 +767,7 @@ const EPDevicePathwayFunnel: React.FC = () => {
  </button>
  <button 
  onClick={() => {
- console.log('Scheduling EP device reviews:', selectedDevice, getFilteredPatients().length);
+    toast.info('Schedule Device Reviews', 'Full EHR integration required for this action.');
  {}
  }}
  className="flex-1 bg-white border border-titanium-300 text-titanium-700 py-3 px-4 rounded-lg hover:bg-titanium-50 transition-colors font-medium"

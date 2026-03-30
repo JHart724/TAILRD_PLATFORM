@@ -386,7 +386,7 @@ const EPAdvancedDeviceTracker: React.FC = () => {
  <button 
  className="flex-1 px-3 py-2 bg-porsche-500 text-white text-sm font-semibold rounded-lg hover:bg-porsche-600 transition-colors"
  onClick={() => {
- console.log('Opening patient screening for device candidacy');
+    toast.info('Patient Screening', 'Full EHR integration required for this action.');
  setActionFeedback('screening');
  setTimeout(() => setActionFeedback(null), 2000);
  }}
@@ -396,7 +396,7 @@ const EPAdvancedDeviceTracker: React.FC = () => {
  <button 
  className="px-3 py-2 border border-titanium-300 text-titanium-700 text-sm font-semibold rounded-lg hover:bg-titanium-50 transition-colors"
  onClick={() => {
- console.log('Opening device therapy guidelines');
+    toast.info('Device Therapy Guidelines', 'Full EHR integration required for this action.');
  setActionFeedback('guidelines');
  setTimeout(() => setActionFeedback(null), 2000);
  }}

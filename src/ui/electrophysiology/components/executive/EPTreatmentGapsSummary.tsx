@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { demoAction } from '../../../utils/demoActions';
 import { AlertTriangle, Target, TrendingUp, Clock, CheckCircle, Users, Calendar, ArrowRight, ExternalLink, X, Heart, Activity, Zap, Shield, Pill, FileText, Thermometer, Droplets } from 'lucide-react';
 import { toFixed } from '../../../../utils/formatters';
 
@@ -333,21 +334,21 @@ const EPTreatmentGapsSummary: React.FC = () => {
  <div className="grid grid-cols-5 gap-4 mb-6">
  <div 
  className="p-4 text-center bg-titanium-50 rounded-lg border border-titanium-200 cursor-pointer hover:bg-titanium-100 transition-colors"
- onClick={() => console.log('Total gaps drill-down')}
+ onClick={demoAction()}
  >
  <div className="text-3xl font-bold text-titanium-900 mb-1">{summary.totalGaps}</div>
  <div className="text-sm text-titanium-600">Total Gaps</div>
  </div>
  <div 
  className="p-4 text-center bg-red-50 rounded-lg border border-red-200 cursor-pointer hover:bg-red-100 transition-colors"
- onClick={() => console.log('High impact gaps drill-down')}
+ onClick={demoAction()}
  >
  <div className="text-3xl font-bold text-red-600 mb-1">{summary.highImpact}</div>
  <div className="text-sm text-titanium-600">High Impact</div>
  </div>
  <div 
  className="p-4 text-center bg-[#F0F5FA] rounded-lg border border-[#C8D4DC] cursor-pointer hover:bg-[#F0F5FA] transition-colors"
- onClick={() => console.log('Urgent gaps drill-down')}
+ onClick={demoAction()}
  >
  <div className="text-3xl font-bold text-[#6B7280] mb-1">{summary.urgent}</div>
  <div className="text-sm text-titanium-600">Urgent</div>

@@ -746,7 +746,7 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  <div className="flex gap-3 pt-4 border-t border-gray-200">
  <button 
  onClick={() => {
- console.log('Beginning care plan for patient:', patient.name, patient.mrn, 'GDMT gaps:', patient.gdmtGaps);
+    toast.info('Begin Care Plan', 'Full EHR integration required for this action.');
  setCarePlanFeedback(true);
  setTimeout(() => setCarePlanFeedback(false), 2500);
  }}

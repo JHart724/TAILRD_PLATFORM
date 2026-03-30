@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { demoAction } from '../../../utils/demoActions';
 import { Target, TrendingUp, Award, AlertTriangle, Users, Calendar, ChevronDown, ChevronRight, Eye, FileText, Activity, Clock, Zap, Heart, Shield } from 'lucide-react';
 import { toFixed } from '../../../../utils/formatters';
 
@@ -287,7 +288,7 @@ const EPQualityMetrics: React.FC = () => {
  <div className="text-sm text-titanium-600 mb-1">Overall Performance</div>
  <div 
  className="text-3xl font-bold text-titanium-900 cursor-pointer hover:text-chrome-600 transition-colors"
- onClick={() => console.log('Overall performance drill-down:', filteredMetrics)}
+ onClick={demoAction()}
  >
  {toFixed(filteredMetrics.reduce((sum, m) => sum + ((m.currentValue / m.targetValue) * 100), 0) / filteredMetrics.length, 0)}%
  </div>
@@ -582,7 +583,7 @@ const EPQualityMetrics: React.FC = () => {
  <div
  key={opportunity.description}
  className="p-3 bg-white rounded-lg border border-titanium-200 cursor-pointer hover:bg-titanium-50 transition-colors"
- onClick={() => console.log('Opportunity selected:', opportunity.description, 'Impact:', opportunity.impact)}
+ onClick={demoAction()}
  >
  <div className="flex items-center justify-between mb-2">
  <span className={`px-2 py-1 text-xs rounded-full ${

@@ -1136,7 +1136,7 @@ const CareGapAnalyzer: React.FC = () => {
  <div className="mt-6 flex space-x-3">
  <button 
  onClick={() => {
- console.log('Creating care plan for patient:', selectedPatient?.name, selectedPatient?.mrn);
+    toast.info('Create Care Plan', 'Full EHR integration required for this action.');
  setCareActionFeedback('care-plan');
  setTimeout(() => setCareActionFeedback(null), 2500);
  }}
@@ -1147,7 +1147,7 @@ const CareGapAnalyzer: React.FC = () => {
  </button>
  <button 
  onClick={() => {
- console.log('Addressing care gaps for patient:', selectedPatient?.name, selectedPatient?.fullChart?.careGaps);
+    toast.info('Address Care Gaps', 'Full EHR integration required for this action.');
  setCareActionFeedback('care-gaps');
  setTimeout(() => setCareActionFeedback(null), 2500);
  }}
@@ -1158,7 +1158,7 @@ const CareGapAnalyzer: React.FC = () => {
  </button>
  <button 
  onClick={() => {
- console.log('Opening full chart for patient:', selectedPatient?.name, selectedPatient?.mrn);
+    toast.info('Open Full Chart', 'Full EHR integration required for this action.');
  setCareActionFeedback('full-chart');
  setTimeout(() => setCareActionFeedback(null), 2500);
  }}
