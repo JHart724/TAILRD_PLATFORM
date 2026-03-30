@@ -1,8 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bell } from 'lucide-react';
 import { NotificationPanel } from '../components/notifications';
 import UserMenu from '../components/UserMenu';
 import { useAuth } from '../auth/AuthContext';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+const isDemoMode = process.env.REACT_APP_DEMO_MODE === 'true';
+
+type ApiStatus = 'demo' | 'online' | 'offline' | 'checking';
+
+function useApiHealth(): ApiStatus {
+  const [status, setStatus] = useState<ApiStatus>(isDemoMode ? 'demo' : 'checking');
+
+  useEffect(() => {
+    if (isDemoMode) return; // no health check needed in demo mode
+
+    const check = async () => {
+      try {
+        const res = await fetch(`${API_URL}/health`, {
+          signal: AbortSignal.timeout(3000),
+        });
+        setStatus(res.ok ? 'online' : 'offline');
+      } catch {
+        setStatus('offline');
+      }
+    };
+
+    check();
+    const id = setInterval(check, 30000);
+    return () => clearInterval(id);
+  }, []);
+
+  return status;
+}
 
 interface TopBarProps {
   moduleName?: string;
@@ -12,6 +42,7 @@ interface TopBarProps {
 export default function TopBar({ moduleName, viewName }: TopBarProps) {
   const [notifOpen, setNotifOpen] = useState(false);
   const { state } = useAuth();
+  const apiStatus = useApiHealth();
   const user = state.user;
   const segments: { label: string; isLast: boolean }[] = [];
 
@@ -62,8 +93,43 @@ export default function TopBar({ moduleName, viewName }: TopBarProps) {
           />
         </div>
 
-        {/* Right: Notifications + User */}
+        {/* Right: API status + Notifications + User */}
         <div className="flex items-center gap-4">
+          {/* API / Demo status pill */}
+          <span
+            className="hidden sm:flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-medium select-none"
+            style={{
+              background:
+                apiStatus === 'online'  ? 'rgba(44,74,96,0.10)'  :
+                apiStatus === 'offline' ? 'rgba(122,26,46,0.10)' :
+                'rgba(200,212,220,0.30)',
+              color:
+                apiStatus === 'online'  ? '#2C4A60'  :
+                apiStatus === 'offline' ? '#7A1A2E'  :
+                '#4A6880',
+            }}
+            title={
+              apiStatus === 'online'   ? 'Backend API connected' :
+              apiStatus === 'offline'  ? 'Backend offline — demo data active' :
+              apiStatus === 'checking' ? 'Checking API connection...' :
+              'Demo mode — synthetic patient data'
+            }
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{
+                background:
+                  apiStatus === 'online'  ? '#2C4A60'  :
+                  apiStatus === 'offline' ? '#7A1A2E'  :
+                  '#4A6880',
+                animation: apiStatus === 'offline' ? 'pulse 2s cubic-bezier(0.4,0,0.6,1) infinite' : 'none',
+              }}
+            />
+            {apiStatus === 'online'   ? 'Live'    :
+             apiStatus === 'offline'  ? 'Offline' :
+             apiStatus === 'checking' ? '…'       :
+             'Demo'}
+          </span>
           <button
             onClick={() => setNotifOpen(true)}
             className="relative transition-colors topbar-icon-btn p-1.5"
