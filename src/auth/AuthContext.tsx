@@ -34,6 +34,7 @@ export interface UserPermissions {
     coronaryIntervention: boolean;
     peripheralVascular: boolean;
     valvularDisease: boolean;
+    research: boolean;
   };
   views: {
     executive: boolean;
@@ -77,6 +78,7 @@ export interface AuthState {
   sessionExpiry: Date | null;
   loginAttempts: number;
   isLocked: boolean;
+  lockoutUntil: number | null; // Unix ms timestamp — null means not locked
 }
 
 type AuthAction =
@@ -100,6 +102,7 @@ const FULL_ACCESS_PERMISSIONS: UserPermissions = {
     coronaryIntervention: true,
     peripheralVascular: true,
     valvularDisease: true,
+    research: true,
   },
   views: { executive: true, serviceLines: true, careTeam: true },
   actions: {
@@ -151,6 +154,86 @@ const initialState: AuthState = {
   sessionExpiry: null,
   loginAttempts: 0,
   isLocked: false,
+  lockoutUntil: null,
+};
+
+// Session duration: 4 hours in demo, 8 hours in dev (production should set REACT_APP_SESSION_TIMEOUT_MS)
+const SESSION_DURATION_MS = process.env.REACT_APP_SESSION_TIMEOUT_MS
+  ? parseInt(process.env.REACT_APP_SESSION_TIMEOUT_MS, 10)
+  : isDemoMode
+  ? 4 * 60 * 60 * 1000   // 4 hours for demo
+  : 8 * 60 * 60 * 1000;  // 8 hours for dev (production .env should set 30 min)
+
+// Cryptographically secure token generator
+function generateSecureToken(byteLength = 32): string {
+  const buf = new Uint8Array(byteLength);
+  crypto.getRandomValues(buf);
+  return Array.from(buf).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Demo-mode credential allow-list — maps email → role profile
+interface DemoUserProfile {
+  role: UserRole;
+  firstName: string;
+  lastName: string;
+  title: string;
+  department: string;
+  backendPermissions: UserPermissions;
+}
+
+const DEMO_USERS: Record<string, DemoUserProfile> = {
+  'exec@demo.com': {
+    role: 'hospital-admin',
+    firstName: 'Sarah',
+    lastName: 'Chen',
+    title: 'Chief Medical Officer',
+    department: 'Executive',
+    backendPermissions: FULL_ACCESS_PERMISSIONS,
+  },
+  'physician@demo.com': {
+    role: 'physician',
+    firstName: 'James',
+    lastName: 'Okonkwo',
+    title: 'Interventional Cardiologist',
+    department: 'Cardiovascular Services',
+    backendPermissions: {
+      modules: { heartFailure: true, electrophysiology: true, structuralHeart: true, coronaryIntervention: true, peripheralVascular: true, valvularDisease: true, research: true },
+      views: { executive: false, serviceLines: true, careTeam: true },
+      actions: { viewReports: true, exportData: false, manageUsers: false, configureAlerts: false, accessPHI: true },
+    },
+  },
+  'analyst@demo.com': {
+    role: 'analyst',
+    firstName: 'Maria',
+    lastName: 'Lopez',
+    title: 'Quality Analyst',
+    department: 'Clinical Quality',
+    backendPermissions: {
+      modules: { heartFailure: true, electrophysiology: true, structuralHeart: true, coronaryIntervention: true, peripheralVascular: true, valvularDisease: true, research: false },
+      views: { executive: true, serviceLines: true, careTeam: false },
+      actions: { viewReports: true, exportData: true, manageUsers: false, configureAlerts: false, accessPHI: false },
+    },
+  },
+  'nurse@demo.com': {
+    role: 'nurse-manager',
+    firstName: 'Patricia',
+    lastName: 'Williams',
+    title: 'Nurse Manager',
+    department: 'Cardiac Care Unit',
+    backendPermissions: {
+      modules: { heartFailure: true, electrophysiology: true, structuralHeart: false, coronaryIntervention: false, peripheralVascular: false, valvularDisease: false, research: false },
+      views: { executive: false, serviceLines: false, careTeam: true },
+      actions: { viewReports: true, exportData: false, manageUsers: false, configureAlerts: true, accessPHI: true },
+    },
+  },
+  'admin@demo.com': {
+    role: 'super-admin',
+    firstName: 'Demo',
+    lastName: 'Admin',
+    title: 'Platform Administrator',
+    department: 'IT',
+    backendPermissions: FULL_ACCESS_PERMISSIONS,
+  },
 };
 
 function authReducer(state: AuthState, action: AuthAction): AuthState {
@@ -159,8 +242,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
       return { ...state, isLoading: true };
 
     case 'LOGIN_SUCCESS': {
-      const sessionExpiry = new Date();
-      sessionExpiry.setHours(sessionExpiry.getHours() + 8);
+      const sessionExpiry = new Date(Date.now() + SESSION_DURATION_MS);
       return {
         ...state,
         user: action.payload.user,
@@ -171,6 +253,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
         sessionExpiry,
         loginAttempts: 0,
         isLocked: false,
+        lockoutUntil: null,
       };
     }
 
@@ -186,8 +269,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
       return { ...initialState };
 
     case 'REFRESH_TOKEN_SUCCESS': {
-      const newExpiry = new Date();
-      newExpiry.setHours(newExpiry.getHours() + 8);
+      const newExpiry = new Date(Date.now() + SESSION_DURATION_MS);
       return {
         ...state,
         sessionToken: action.payload.sessionToken,
@@ -205,10 +287,10 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
       };
 
     case 'LOCK_ACCOUNT':
-      return { ...state, isLocked: true };
+      return { ...state, isLocked: true, lockoutUntil: Date.now() + 30 * 60 * 1000 };
 
     case 'RESET_LOGIN_ATTEMPTS':
-      return { ...state, loginAttempts: 0, isLocked: false };
+      return { ...state, loginAttempts: 0, isLocked: false, lockoutUntil: null };
 
     default:
       return state;
@@ -316,9 +398,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // ── Login ──
   const login = useCallback(async (email: string, password: string, _mfaCode?: string): Promise<boolean> => {
+    // Check lockout with auto-expiry
     if (state.isLocked) {
-      errorHandler.handlePermissionError('Account locked due to multiple failed login attempts');
-      return false;
+      if (state.lockoutUntil && Date.now() < state.lockoutUntil) {
+        const minsLeft = Math.ceil((state.lockoutUntil - Date.now()) / 60000);
+        errorHandler.handlePermissionError(`Account locked. Try again in ${minsLeft} minute${minsLeft !== 1 ? 's' : ''}.`);
+        return false;
+      }
+      // Lockout period expired — auto-unlock
+      dispatch({ type: 'RESET_LOGIN_ATTEMPTS' });
     }
 
     dispatch({ type: 'LOGIN_START' });
@@ -353,28 +441,36 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     }
 
-    // Universal access: any non-empty email + any non-empty password succeeds
+    // ── Demo mode: allow-list only ──
+    // Simulate network latency for realism
     await new Promise((resolve) => setTimeout(resolve, 600));
 
+    const demoProfile = DEMO_USERS[email.toLowerCase().trim()];
+    if (!demoProfile) {
+      dispatch({ type: 'LOGIN_FAILURE', payload: { error: 'Demo account not recognised. Contact your TAILRD presenter for credentials.' } });
+      return false;
+    }
+
     const user: User = {
-      id: 'user-001',
-      email,
-      firstName: email.split('@')[0] || 'User',
-      lastName: '',
-      role: 'super-admin',
-      department: 'Cardiovascular Services',
-      permissions: ROLE_PERMISSIONS['super-admin'],
-      backendPermissions: FULL_ACCESS_PERMISSIONS,
-      sessionExpiry: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(),
+      id: `demo-${demoProfile.role}`,
+      email: email.toLowerCase().trim(),
+      firstName: demoProfile.firstName,
+      lastName: demoProfile.lastName,
+      title: demoProfile.title,
+      role: demoProfile.role,
+      department: demoProfile.department,
+      permissions: ROLE_PERMISSIONS[demoProfile.role] || [],
+      backendPermissions: demoProfile.backendPermissions,
+      sessionExpiry: new Date(Date.now() + SESSION_DURATION_MS).toISOString(),
       mfaEnabled: false,
     };
 
-    const sessionToken = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const refreshToken = `refresh_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const sessionToken = generateSecureToken();
+    const refreshToken = generateSecureToken();
 
     dispatch({ type: 'LOGIN_SUCCESS', payload: { user, sessionToken, refreshToken } });
     return true;
-  }, [state.isLocked]);
+  }, [state.isLocked, state.lockoutUntil]);
 
   // ── Logout ──
   const logout = useCallback(async (): Promise<void> => {
@@ -406,7 +502,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     try {
       if (isDemoMode) {
-        const newToken = `demo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        const newToken = generateSecureToken();
         dispatch({ type: 'REFRESH_TOKEN_SUCCESS', payload: { sessionToken: newToken } });
         localStorage.setItem('tailrd-session-token', newToken);
         return true;
@@ -468,15 +564,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         'pv': 'peripheralVascular',
         'peripheral': 'peripheralVascular',
         'peripheralVascular': 'peripheralVascular',
-        'research': 'heartFailure', // No dedicated research perm — fallback
+        'research': 'research',
       };
       const permKey = modulePermMap[moduleKey];
       if (permKey && state.user.backendPermissions.modules[permKey] !== undefined) {
         return state.user.backendPermissions.modules[permKey] === true;
       }
     }
-    // Demo mode fallback — grant all access when no backend permissions exist
-    return true;
+    // Fail closed in production; fail open only in demo mode
+    return isDemoMode;
   }, [state.user, state.isAuthenticated]);
 
   const hasViewAccess = useCallback((viewKey: string): boolean => {
@@ -496,7 +592,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return state.user.backendPermissions.views[permKey] === true;
       }
     }
-    return true; // Demo fallback
+    // Fail closed in production; fail open only in demo mode
+    return isDemoMode;
   }, [state.user, state.isAuthenticated]);
 
   const isSessionValid = useCallback((): boolean => {
