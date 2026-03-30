@@ -171,70 +171,40 @@ function generateSecureToken(byteLength = 32): string {
   return Array.from(buf).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// Demo-mode credential allow-list — maps email → role profile
-interface DemoUserProfile {
-  role: UserRole;
-  firstName: string;
-  lastName: string;
-  title: string;
-  department: string;
-  backendPermissions: UserPermissions;
-}
+// The one account that gets super-admin + backend access
+const SUPER_ADMIN_EMAIL = 'jhart@tailrd-heart.com';
 
-const DEMO_USERS: Record<string, DemoUserProfile> = {
-  'exec@demo.com': {
-    role: 'hospital-admin',
-    firstName: 'Sarah',
-    lastName: 'Chen',
-    title: 'Chief Medical Officer',
-    department: 'Executive',
-    backendPermissions: FULL_ACCESS_PERMISSIONS,
+// Full demo permissions — all modules and views, no admin console
+const DEMO_ACCESS_PERMISSIONS: UserPermissions = {
+  modules: {
+    heartFailure: true,
+    electrophysiology: true,
+    structuralHeart: true,
+    coronaryIntervention: true,
+    peripheralVascular: true,
+    valvularDisease: true,
+    research: true,
   },
-  'physician@demo.com': {
-    role: 'physician',
-    firstName: 'James',
-    lastName: 'Okonkwo',
-    title: 'Interventional Cardiologist',
-    department: 'Cardiovascular Services',
-    backendPermissions: {
-      modules: { heartFailure: true, electrophysiology: true, structuralHeart: true, coronaryIntervention: true, peripheralVascular: true, valvularDisease: true, research: true },
-      views: { executive: false, serviceLines: true, careTeam: true },
-      actions: { viewReports: true, exportData: false, manageUsers: false, configureAlerts: false, accessPHI: true },
-    },
-  },
-  'analyst@demo.com': {
-    role: 'analyst',
-    firstName: 'Maria',
-    lastName: 'Lopez',
-    title: 'Quality Analyst',
-    department: 'Clinical Quality',
-    backendPermissions: {
-      modules: { heartFailure: true, electrophysiology: true, structuralHeart: true, coronaryIntervention: true, peripheralVascular: true, valvularDisease: true, research: false },
-      views: { executive: true, serviceLines: true, careTeam: false },
-      actions: { viewReports: true, exportData: true, manageUsers: false, configureAlerts: false, accessPHI: false },
-    },
-  },
-  'nurse@demo.com': {
-    role: 'nurse-manager',
-    firstName: 'Patricia',
-    lastName: 'Williams',
-    title: 'Nurse Manager',
-    department: 'Cardiac Care Unit',
-    backendPermissions: {
-      modules: { heartFailure: true, electrophysiology: true, structuralHeart: false, coronaryIntervention: false, peripheralVascular: false, valvularDisease: false, research: false },
-      views: { executive: false, serviceLines: false, careTeam: true },
-      actions: { viewReports: true, exportData: false, manageUsers: false, configureAlerts: true, accessPHI: true },
-    },
-  },
-  'admin@demo.com': {
-    role: 'super-admin',
-    firstName: 'Demo',
-    lastName: 'Admin',
-    title: 'Platform Administrator',
-    department: 'IT',
-    backendPermissions: FULL_ACCESS_PERMISSIONS,
+  views: { executive: true, serviceLines: true, careTeam: true },
+  actions: {
+    viewReports: true,
+    exportData: true,
+    manageUsers: false,
+    configureAlerts: false,
+    accessPHI: false,
   },
 };
+
+/** Derive a display name from an email address (e.g. "john.hart@x.com" → "John Hart") */
+function nameFromEmail(email: string): { firstName: string; lastName: string } {
+  const local = email.split('@')[0] || 'User';
+  const parts = local.replace(/[._-]+/g, ' ').split(' ').filter(Boolean);
+  const capitalise = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+  return {
+    firstName: capitalise(parts[0] || 'Demo'),
+    lastName: parts.length > 1 ? capitalise(parts[parts.length - 1]) : 'User',
+  };
+}
 
 function authReducer(state: AuthState, action: AuthAction): AuthState {
   switch (action.type) {
@@ -441,26 +411,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     }
 
-    // ── Demo mode: allow-list only ──
+    // ── Demo mode ──
     // Simulate network latency for realism
     await new Promise((resolve) => setTimeout(resolve, 600));
 
-    const demoProfile = DEMO_USERS[email.toLowerCase().trim()];
-    if (!demoProfile) {
-      dispatch({ type: 'LOGIN_FAILURE', payload: { error: 'Demo account not recognised. Contact your TAILRD presenter for credentials.' } });
-      return false;
-    }
+    const normalizedEmail = email.toLowerCase().trim();
+    const isSuperAdmin = normalizedEmail === SUPER_ADMIN_EMAIL;
+    const { firstName, lastName } = isSuperAdmin
+      ? { firstName: 'Jeff', lastName: 'Hart' }
+      : nameFromEmail(normalizedEmail);
+
+    const role: UserRole = isSuperAdmin ? 'super-admin' : 'hospital-admin';
 
     const user: User = {
-      id: `demo-${demoProfile.role}`,
-      email: email.toLowerCase().trim(),
-      firstName: demoProfile.firstName,
-      lastName: demoProfile.lastName,
-      title: demoProfile.title,
-      role: demoProfile.role,
-      department: demoProfile.department,
-      permissions: ROLE_PERMISSIONS[demoProfile.role] || [],
-      backendPermissions: demoProfile.backendPermissions,
+      id: isSuperAdmin ? 'jhart-superadmin' : `demo-${normalizedEmail}`,
+      email: normalizedEmail,
+      firstName,
+      lastName,
+      title: isSuperAdmin ? 'Platform Administrator' : 'Demo User',
+      role,
+      department: isSuperAdmin ? 'TAILRD Administration' : 'Cardiovascular Services',
+      permissions: ROLE_PERMISSIONS[role] || [],
+      backendPermissions: isSuperAdmin ? FULL_ACCESS_PERMISSIONS : DEMO_ACCESS_PERMISSIONS,
       sessionExpiry: new Date(Date.now() + SESSION_DURATION_MS).toISOString(),
       mfaEnabled: false,
     };
