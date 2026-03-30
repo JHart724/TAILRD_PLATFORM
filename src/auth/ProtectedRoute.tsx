@@ -79,21 +79,18 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  // ── Role-based access control ──
-  // Demo mode: bypass all role/module/view checks
-  if (!isDemoMode) {
-    // Module-level access check
-    if (requiredModule && !hasModuleAccess(requiredModule)) {
-      return renderAccessDenied('module', requiredModule);
-    }
-
-    // View-level access check
-    if (requiredView && !hasViewAccess(requiredView)) {
-      return renderAccessDenied('view', requiredView);
-    }
+  // ── Role-based access control — enforced in all modes ──
+  // Module-level access check
+  if (requiredModule && !hasModuleAccess(requiredModule)) {
+    return renderAccessDenied('module', requiredModule);
   }
 
-  // Permission-based access control (works in both modes, but demo always returns true)
+  // View-level access check
+  if (requiredView && !hasViewAccess(requiredView)) {
+    return renderAccessDenied('view', requiredView);
+  }
+
+  // Permission-based access control
   if (requiredPermissions.length > 0) {
     const hasAllPermissions = requiredPermissions.every((permission) =>
       hasPermission(permission.module, permission.action, permission.resource)

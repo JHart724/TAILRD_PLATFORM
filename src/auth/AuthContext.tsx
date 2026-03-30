@@ -117,7 +117,10 @@ const FULL_ACCESS_PERMISSIONS: UserPermissions = {
 /** Legacy role-based permissions (backward compat for hasPermission) */
 const ROLE_PERMISSIONS: Record<string, Permission[]> = {
   'super-admin': [{ module: '*', action: 'admin' }],
-  'hospital-admin': [{ module: '*', action: 'admin' }],
+  'hospital-admin': [
+    { module: '*', action: 'read' },
+    { module: '*', action: 'write' },
+  ],
   physician: [
     { module: '*', action: 'read' },
     { module: 'patients', action: 'write', resource: 'assigned' },
@@ -503,8 +506,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // ── Permission helpers ──
 
   const hasPermission = useCallback((module: string, action: string, resource?: string): boolean => {
-    if (isDemoMode) return true;
     if (!state.user) return false;
+    // Always check actual role permissions — demo mode does not bypass this
     return state.user.permissions.some((p) => {
       const moduleMatch = p.module === '*' || p.module === module;
       const actionMatch = p.action === 'admin' || p.action === action;
