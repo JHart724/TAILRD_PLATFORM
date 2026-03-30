@@ -272,7 +272,7 @@ const ValveSpecialtyPhenotypesDashboard: React.FC = () => {
 	<ul className="space-y-1">
 	{phenotype.interventions.map((intervention: string) => (
 	<li key={intervention} className="text-sm text-titanium-700 flex items-start gap-2">
-	<span className="w-1.5 h-1.5 rounded-full bg-medical-green-400 mt-1.5 flex-shrink-0" />
+	<span className="w-1.5 h-1.5 rounded-full bg-[#4A6880] mt-1.5 flex-shrink-0" />
 	{intervention}
 	</li>
 	))}
@@ -328,9 +328,9 @@ const ValveSpecialtyPhenotypesDashboard: React.FC = () => {
 	<div className="metal-card p-6">
 	<h3 className="text-xl font-bold text-titanium-900 mb-4">Quick Actions</h3>
 	{quickActionFeedback && (
-	<div className="mb-4 p-3 bg-medical-green-50 border border-medical-green-200 rounded-lg flex items-center gap-2">
-	<CheckCircle className="w-5 h-5 text-medical-green-600" />
-	<span className="text-sm font-medium text-medical-green-800">
+	<div className="mb-4 p-3 bg-[#f0f5fa] border border-[#C8D4DC] rounded-lg flex items-center gap-2">
+	<CheckCircle className="w-5 h-5 text-[#2C4A60]" />
+	<span className="text-sm font-medium text-[#2C4A60]">
 	{quickActionFeedback === 'alerts' && 'Loading high-risk patient alerts...'}
 	{quickActionFeedback === 'screening' && 'Population screening analysis initiated...'}
 	{quickActionFeedback === 'revenue' && 'Revenue opportunity report generating...'}

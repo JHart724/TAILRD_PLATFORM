@@ -116,7 +116,7 @@ const BaseExecutiveView: React.FC<BaseExecutiveViewProps> = ({ config }) => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               {drgPerformanceCards.map((card) => {
                 const varianceColor = card.isPositive
-                  ? 'text-sm text-medical-green-600'
+                  ? 'text-sm text-[#2C4A60]'
                   : 'text-sm text-medical-red-600';
                 return (
                   <div
@@ -124,13 +124,13 @@ const BaseExecutiveView: React.FC<BaseExecutiveViewProps> = ({ config }) => {
                     className="bg-white/80 rounded-xl p-4 border border-titanium-200 shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     <div className="flex items-center gap-3 mb-3">
-                      <DollarSign className="w-8 h-8 text-medical-green-600" />
+                      <DollarSign className="w-8 h-8 text-[#2C4A60]" />
                       <div>
-                        <div className="font-semibold text-medical-green-900">{card.title}</div>
-                        <div className="text-2xl font-bold text-medical-green-800">{card.value}</div>
+                        <div className="font-semibold text-[#2C4A60]">{card.title}</div>
+                        <div className="text-2xl font-bold text-[#2C4A60]">{card.value}</div>
                       </div>
                     </div>
-                    <div className="text-sm text-medical-green-700 mb-2">{card.caseCount}</div>
+                    <div className="text-sm text-[#2C4A60] mb-2">{card.caseCount}</div>
                     <div className={varianceColor}>{card.variance}</div>
                   </div>
                 );
@@ -144,22 +144,22 @@ const BaseExecutiveView: React.FC<BaseExecutiveViewProps> = ({ config }) => {
                 <div className="text-center">
                   <div className="text-2xl font-bold text-titanium-900">{drgMetrics.currentCMI}</div>
                   <div className="text-sm text-titanium-600">Current CMI</div>
-                  <div className="text-xs text-medical-green-600">+0.28 vs target</div>
+                  <div className="text-xs text-[#2C4A60]">+0.28 vs target</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-medical-green-700">{drgMetrics.monthlyOpportunity}</div>
+                  <div className="text-2xl font-bold text-[#2C4A60]">{drgMetrics.monthlyOpportunity}</div>
                   <div className="text-sm text-titanium-600">Monthly Opportunity</div>
                   <div className="text-xs text-titanium-500">From DRG optimization</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-medical-amber-700">{drgMetrics.documentationRate}</div>
+                  <div className="text-2xl font-bold text-crimson-700">{drgMetrics.documentationRate}</div>
                   <div className="text-sm text-titanium-600">Documentation Rate</div>
                   <div className="text-xs text-titanium-500">CC/MCC capture</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-titanium-900">{drgMetrics.avgLOS}</div>
                   <div className="text-sm text-titanium-600">Avg LOS</div>
-                  <div className="text-xs text-medical-green-600">{drgMetrics.losBenchmark}</div>
+                  <div className="text-xs text-[#2C4A60]">{drgMetrics.losBenchmark}</div>
                 </div>
               </div>
             </div>
@@ -171,7 +171,7 @@ const BaseExecutiveView: React.FC<BaseExecutiveViewProps> = ({ config }) => {
           <div className="metal-card relative z-10">
             <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
               <h3 className="text-lg font-semibold text-titanium-900 mb-1 flex items-center gap-2">
-                <Activity className="w-5 h-5 text-medical-green-600" />
+                <Activity className="w-5 h-5 text-[#2C4A60]" />
                 {proSummary.title}
               </h3>
               <p className="text-sm text-titanium-600">
@@ -184,7 +184,7 @@ const BaseExecutiveView: React.FC<BaseExecutiveViewProps> = ({ config }) => {
                   const valueColor =
                     metric.isPositive === false
                       ? 'text-xl font-bold mb-1 text-medical-red-700'
-                      : 'text-xl font-bold mb-1 text-medical-green-700';
+                      : 'text-xl font-bold mb-1 text-[#2C4A60]';
                   return (
                     <div
                       key={metric.label}

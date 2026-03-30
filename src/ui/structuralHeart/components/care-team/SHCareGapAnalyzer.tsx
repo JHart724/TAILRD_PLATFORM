@@ -586,8 +586,8 @@ const SHCareGapAnalyzer: React.FC = () => {
   const getImpactColor = (impact: string) => {
  const colors = {
  high: 'text-medical-red-600 bg-medical-red-100',
- medium: 'text-medical-amber-600 bg-medical-amber-100',
- low: 'text-medical-green-600 bg-medical-green-100',
+ medium: 'text-crimson-600 bg-crimson-100',
+ low: 'text-[#2C4A60] bg-[#e0eaf3]',
  };
  return colors[impact as keyof typeof colors];
   };
@@ -595,8 +595,8 @@ const SHCareGapAnalyzer: React.FC = () => {
   const getUrgencyColor = (urgency: string) => {
  const colors = {
  urgent: 'border-l-medical-red-400 bg-medical-red-50/30',
- soon: 'border-l-medical-amber-400 bg-medical-amber-50',
- routine: 'border-l-medical-green-400 bg-medical-green-50',
+ soon: 'border-l-crimson-400 bg-crimson-50',
+ routine: 'border-l-[#4A6880] bg-[#f0f5fa]',
  };
  return colors[urgency as keyof typeof colors];
   };
@@ -604,11 +604,11 @@ const SHCareGapAnalyzer: React.FC = () => {
   const getCategoryIcon = (category: string) => {
  const icons = {
  'Valve Therapy': <Target className="w-5 h-5 text-porsche-600" />,
- Procedure: <TrendingUp className="w-5 h-5 text-medical-green-600" />,
- Screening: <AlertTriangle className="w-5 h-5 text-medical-amber-600" />,
+ Procedure: <TrendingUp className="w-5 h-5 text-[#2C4A60]" />,
+ Screening: <AlertTriangle className="w-5 h-5 text-crimson-600" />,
  'Follow-up': <Clock className="w-5 h-5 text-medical-red-600" />,
  Lab: <CheckCircle className="w-5 h-5 text-titanium-600" />,
- Lifestyle: <Users className="w-5 h-5 text-medical-green-600" />,
+ Lifestyle: <Users className="w-5 h-5 text-[#2C4A60]" />,
  };
  return icons[category as keyof typeof icons];
   };
@@ -627,7 +627,7 @@ const SHCareGapAnalyzer: React.FC = () => {
  </div>
  <div className="text-right">
  <div className="text-sm text-titanium-600 mb-1">Total Potential Savings</div>
- <div className="text-3xl font-bold text-medical-green-600 font-sf">
+ <div className="text-3xl font-bold text-[#2C4A60] font-sf">
  ${toFixed(summary.totalPotentialSavings / 1000000, 1)}M
  </div>
  <div className="text-sm text-titanium-600">Annual opportunity</div>
@@ -645,7 +645,7 @@ const SHCareGapAnalyzer: React.FC = () => {
  <div className="text-sm text-titanium-600">High Impact</div>
  </div>
  <div className="metal-card p-4 text-center">
- <div className="text-3xl font-bold text-medical-amber-600 mb-1 font-sf">{summary.urgent}</div>
+ <div className="text-3xl font-bold text-crimson-600 mb-1 font-sf">{summary.urgent}</div>
  <div className="text-sm text-titanium-600">Urgent</div>
  </div>
  <div className="metal-card p-4 text-center">
@@ -653,7 +653,7 @@ const SHCareGapAnalyzer: React.FC = () => {
  <div className="text-sm text-titanium-600">Avg Weeks</div>
  </div>
  <div className="metal-card p-4 text-center">
- <div className="text-3xl font-bold text-medical-green-600 mb-1 font-sf">{summary.complianceRate}%</div>
+ <div className="text-3xl font-bold text-[#2C4A60] mb-1 font-sf">{summary.complianceRate}%</div>
  <div className="text-sm text-titanium-600">Compliance</div>
  </div>
  </div>
@@ -738,7 +738,7 @@ const SHCareGapAnalyzer: React.FC = () => {
  {getPatientsForGap(gap.title).length} <ExternalLink className="w-5 h-5" />
  </div>
  {gap.costSavings && (
- <div className="text-sm text-medical-green-600 font-semibold">
+ <div className="text-sm text-[#2C4A60] font-semibold">
  ${toFixed(gap.costSavings / 1000000, 1)}M savings
  </div>
  )}
@@ -793,7 +793,7 @@ const SHCareGapAnalyzer: React.FC = () => {
  <div className="space-y-2">
  {gap.barriers.map((barrier, index) => (
  <div key={barrier} className="flex items-center gap-2 text-sm">
- <AlertTriangle className="w-4 h-4 text-medical-amber-600" />
+ <AlertTriangle className="w-4 h-4 text-crimson-600" />
  <span className="text-titanium-800">{barrier}</span>
  </div>
  ))}
@@ -829,7 +829,7 @@ const SHCareGapAnalyzer: React.FC = () => {
  <button className="px-4 py-2 bg-porsche-600 text-white text-sm rounded-lg hover:bg-porsche-700 transition-colors">
  Start Action Plan
  </button>
- <button className="px-4 py-2 bg-medical-green-100 text-medical-green-800 text-sm rounded-lg hover:bg-medical-green-200 transition-colors border border-medical-green-300">
+ <button className="px-4 py-2 bg-[#e0eaf3] text-[#2C4A60] text-sm rounded-lg hover:bg-[#C8D4DC] transition-colors border border-[#C8D4DC]">
  Assign to Team
  </button>
  </div>

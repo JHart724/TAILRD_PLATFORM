@@ -360,8 +360,8 @@ const EPOutcomesByCohort: React.FC = () => {
  }
  
  switch (performance) {
- case 'excellent': return 'text-medical-green-700 bg-medical-green-50 border-medical-green-200';
- case 'good': return 'text-medical-amber-700 bg-medical-amber-50 border-medical-amber-200';
+ case 'excellent': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'good': return 'text-crimson-700 bg-crimson-50 border-crimson-200';
  default: return 'text-medical-red-700 bg-medical-red-50 border-medical-red-200';
  }
   };
@@ -369,7 +369,7 @@ const EPOutcomesByCohort: React.FC = () => {
   const getTrendIcon = (trend: 'improving' | 'declining' | 'stable') => {
  switch (trend) {
  case 'improving':
- return <TrendingUp className="w-4 h-4 text-medical-green-600" />;
+ return <TrendingUp className="w-4 h-4 text-[#2C4A60]" />;
  case 'declining':
  return <TrendingDown className="w-4 h-4 text-medical-red-600" />;
  default:
@@ -382,7 +382,7 @@ const EPOutcomesByCohort: React.FC = () => {
  case 'significant':
  return 'bg-porsche-100 text-porsche-800 border-porsche-200';
  case 'trending':
- return 'bg-medical-amber-100 text-medical-amber-800 border-medical-amber-200';
+ return 'bg-crimson-100 text-crimson-700 border-crimson-200';
  default:
  return 'bg-titanium-100 text-titanium-600 border-titanium-200';
  }
@@ -399,7 +399,7 @@ const EPOutcomesByCohort: React.FC = () => {
  switch (significance) {
  case 'primary': return 'medical-red';
  case 'secondary': return 'porsche';  
- case 'safety': return 'medical-amber';
+ case 'safety': return 'crimson';
  default: return 'titanium';
  }
   };
@@ -477,7 +477,7 @@ const EPOutcomesByCohort: React.FC = () => {
  <p className="text-sm text-titanium-600">{selectedOutcomeData.description}</p>
  <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold border mt-2 ${
  selectedOutcomeData.clinicalSignificance === 'primary' ? 'bg-medical-red-100 text-medical-red-800 border-medical-red-200' :
- selectedOutcomeData.clinicalSignificance === 'safety' ? 'bg-medical-amber-100 text-medical-amber-800 border-medical-amber-200' :
+ selectedOutcomeData.clinicalSignificance === 'safety' ? 'bg-crimson-100 text-crimson-700 border-crimson-200' :
  'bg-porsche-100 text-porsche-800 border-porsche-200'
  }`}>
  {selectedOutcomeData.clinicalSignificance.toUpperCase()} ENDPOINT
@@ -519,7 +519,7 @@ const EPOutcomesByCohort: React.FC = () => {
  <div className="flex items-center gap-2 ml-4">
  {getTrendIcon(cohort.trend)}
  <span className={`text-sm font-semibold ${
- cohort.trend === 'improving' ? 'text-medical-green-600' :
+ cohort.trend === 'improving' ? 'text-[#2C4A60]' :
  cohort.trend === 'declining' ? 'text-medical-red-600' : 'text-titanium-600'
  }`}>
  {cohort.trend !== 'stable' && (cohort.trendValue > 0 ? '+' : '')}{toFixed(cohort.trendValue, 1)}
@@ -558,7 +558,7 @@ const EPOutcomesByCohort: React.FC = () => {
  <div
  className={`h-2 rounded-full transition-all duration-700 ${
  (isLowerBetter ? cohort.currentValue <= cohort.targetValue : cohort.currentValue >= cohort.targetValue) 
- ? 'bg-medical-green-500' 
+ ? 'bg-[#2C4A60]' 
  : 'bg-medical-red-500'
  }`}
  style={{
@@ -607,7 +607,7 @@ const EPOutcomesByCohort: React.FC = () => {
  <div className="grid grid-cols-4 gap-4 pt-6 border-t border-titanium-200 mb-6">
  <div>
  <div className="text-sm text-titanium-600 mb-1">Best Performing Cohort</div>
- <div className="text-lg font-bold text-medical-green-600">
+ <div className="text-lg font-bold text-[#2C4A60]">
  {filteredCohorts.reduce((best, current) => 
  (isLowerBetter ? current.currentValue < best.currentValue : current.currentValue > best.currentValue) 
  ? current : best
@@ -645,7 +645,7 @@ const EPOutcomesByCohort: React.FC = () => {
 
  <div>
  <div className="text-sm text-titanium-600 mb-1">Improving Trends</div>
- <div className="text-lg font-bold text-medical-green-600">
+ <div className="text-lg font-bold text-[#2C4A60]">
  {filteredCohorts.filter(c => c.trend === 'improving').length}
  </div>
  <div className="text-sm text-titanium-600">
@@ -728,7 +728,7 @@ const EPOutcomesByCohort: React.FC = () => {
  Compare Cohorts
  </button>
  <button 
- className="flex items-center gap-2 px-4 py-2 bg-medical-green-600 text-white rounded-lg hover:bg-medical-green-700 transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-[#2C4A60] text-white rounded-lg hover:bg-[#2C4A60] transition-colors"
  onClick={() => {
  console.log('Opening quality improvement planning tool');
  {};

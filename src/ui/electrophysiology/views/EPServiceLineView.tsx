@@ -54,15 +54,15 @@ const ElectrophysiologyAnalytics: React.FC = () => (
  </h3>
  <p className="text-titanium-600 mb-6">Comprehensive electrophysiology analytics including AFib ablations, LAAC procedures, device implantations, arrhythmia management, and anticoagulation optimization.</p>
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
- <div className="bg-gradient-to-br from-medical-green-50 to-medical-green-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">AFib Excellence</h4>
  <p className="text-sm text-titanium-600">Advanced atrial fibrillation management with optimal ablation outcomes and stroke prevention</p>
  </div>
- <div className="bg-gradient-to-br from-medical-green-50 to-medical-green-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Device Innovation</h4>
  <p className="text-sm text-titanium-600">Comprehensive device management including implants, extractions, and remote monitoring</p>
  </div>
- <div className="bg-gradient-to-br from-medical-green-50 to-medical-green-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">LAAC Program</h4>
  <p className="text-sm text-titanium-600">Left atrial appendage closure program with comprehensive stroke prevention analytics</p>
  </div>
@@ -81,11 +81,11 @@ const EPProcedureAnalytics: React.FC = () => (
  </h3>
  <p className="text-titanium-600 mb-6">Comprehensive electrophysiology procedure performance analytics.</p>
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- <div className="bg-gradient-to-br from-medical-green-50 to-medical-green-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Ablation Procedures</h4>
  <p className="text-sm text-titanium-600">AFib, AFL, VT, and SVT ablation success rates, recurrence tracking, and complications</p>
  </div>
- <div className="bg-gradient-to-br from-medical-green-50 to-medical-green-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Device Procedures</h4>
  <p className="text-sm text-titanium-600">Pacemaker, ICD, CRT implants, upgrades, and lead extraction analytics</p>
  </div>
@@ -104,11 +104,11 @@ const EPProviderPerformance: React.FC = () => (
  </h3>
  <p className="text-titanium-600 mb-6">Individual electrophysiologist performance metrics and outcomes tracking.</p>
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- <div className="bg-gradient-to-br from-medical-green-50 to-medical-green-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Ablation Specialists</h4>
  <p className="text-sm text-titanium-600">AFib ablation success rates, procedure times, and complication tracking</p>
  </div>
- <div className="bg-gradient-to-br from-medical-green-50 to-medical-green-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Device Specialists</h4>
  <p className="text-sm text-titanium-600">Device implant success, extraction outcomes, and programming optimization</p>
  </div>
@@ -127,11 +127,11 @@ const ArrhythmiaManagement: React.FC = () => (
  </h3>
  <p className="text-titanium-600 mb-6">Comprehensive arrhythmia management and treatment optimization analytics.</p>
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- <div className="bg-gradient-to-br from-medical-green-50 to-medical-green-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">AFib Management</h4>
  <p className="text-sm text-titanium-600">Rate vs rhythm control strategies, anticoagulation management, and outcomes</p>
  </div>
- <div className="bg-gradient-to-br from-medical-green-50 to-medical-green-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">VT/VF Management</h4>
  <p className="text-sm text-titanium-600">Ventricular arrhythmia management, ICD therapy optimization, and ablation outcomes</p>
  </div>
@@ -150,15 +150,15 @@ const EPQualityMetrics: React.FC = () => (
  </h3>
  <p className="text-titanium-600 mb-6">Comprehensive quality indicators for electrophysiology programs.</p>
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
- <div className="bg-gradient-to-br from-medical-green-50 to-medical-green-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Ablation Quality</h4>
  <p className="text-sm text-titanium-600">Success rates, freedom from arrhythmia, and procedural complications</p>
  </div>
- <div className="bg-gradient-to-br from-medical-green-50 to-medical-green-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Device Quality</h4>
  <p className="text-sm text-titanium-600">Implant success rates, lead performance, and device longevity metrics</p>
  </div>
- <div className="bg-gradient-to-br from-medical-green-50 to-medical-green-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Stroke Prevention</h4>
  <p className="text-sm text-titanium-600">Anticoagulation adherence, LAAC outcomes, and stroke risk reduction</p>
  </div>
@@ -311,7 +311,7 @@ const EPServiceLineView: React.FC = () => {
  onClick={() => handleTabChange(tab.id as EPServiceLineTab)}
  className={`group relative p-4 rounded-xl border transition-all duration-300 ${
  isActive
- ? 'bg-[#F0F5FA] border-medical-green-200 text-[#2C4A60] shadow-lg scale-105'
+ ? 'bg-[#F0F5FA] border-[#C8D4DC] text-[#2C4A60] shadow-lg scale-105'
  : 'bg-white border-titanium-200 text-titanium-600 hover:bg-white hover:scale-105 hover:shadow-lg'
  }`}
  >
@@ -322,7 +322,7 @@ const EPServiceLineView: React.FC = () => {
  </span>
  </div>
  {isActive && (
- <div className="absolute inset-0 bg-gradient-to-r from-medical-green-400/20 to-medical-green-500/20 rounded-xl opacity-50" />
+ <div className="absolute inset-0 bg-gradient-to-r from-[#4A6880]/20 to-[#2C4A60]/20 rounded-xl opacity-50" />
  )}
  </button>
  );

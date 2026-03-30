@@ -298,7 +298,7 @@ const WoundCareIntegration: React.FC = () => {
  <div className="flex items-center justify-between">
  <div>
  <h2 className="text-2xl font-bold text-titanium-800 mb-2 flex items-center gap-3">
- <Bandage className="w-8 h-8 text-medical-green-600" />
+ <Bandage className="w-8 h-8 text-[#2C4A60]" />
  Wound Care Integration
  </h2>
  <p className="text-titanium-600">
@@ -307,7 +307,7 @@ const WoundCareIntegration: React.FC = () => {
  </div>
  <button
  onClick={updateWoundStatus}
- className="flex items-center gap-2 px-6 py-3 bg-medical-green-600 text-white rounded-lg hover:bg-medical-green-700 transition-colors"
+ className="flex items-center gap-2 px-6 py-3 bg-[#2C4A60] text-white rounded-lg hover:bg-[#2C4A60] transition-colors"
  >
  <Activity className="w-4 h-4" />
  Update Wound Status
@@ -329,7 +329,7 @@ const WoundCareIntegration: React.FC = () => {
  type="text"
  value={patient.wound.location}
  onChange={(e) => updateWound('location', e.target.value)}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-green-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60]"
  />
  </div>
 
@@ -339,7 +339,7 @@ const WoundCareIntegration: React.FC = () => {
  type="number"
  value={patient.wound.size}
  onChange={(e) => updateWound('size', parseFloat(e.target.value) || 0)}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-green-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60]"
  step="0.1"
  min="0"
  />
@@ -369,7 +369,7 @@ const WoundCareIntegration: React.FC = () => {
  <select
  value={patient.wound.tissueType}
  onChange={(e) => updateWound('tissueType', e.target.value)}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-green-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60]"
  >
  <option value="Granulation">Granulation</option>
  <option value="Slough">Slough</option>
@@ -384,7 +384,7 @@ const WoundCareIntegration: React.FC = () => {
  <select
  value={patient.wound.drainage}
  onChange={(e) => updateWound('drainage', e.target.value)}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-green-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60]"
  >
  <option value="None">None</option>
  <option value="Minimal">Minimal</option>
@@ -465,7 +465,7 @@ const WoundCareIntegration: React.FC = () => {
  type="text"
  value={patient.infection.culture}
  onChange={(e) => updateInfection('culture', e.target.value)}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-green-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60]"
  placeholder="e.g., MRSA positive"
  />
  </div>
@@ -476,7 +476,7 @@ const WoundCareIntegration: React.FC = () => {
  type="text"
  value={patient.infection.antibiotics}
  onChange={(e) => updateInfection('antibiotics', e.target.value)}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-green-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60]"
  placeholder="e.g., Vancomycin"
  />
  </div>
@@ -498,7 +498,7 @@ const WoundCareIntegration: React.FC = () => {
  ...prev,
  offloading: { ...prev.offloading, method: e.target.value as any }
  }))}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-green-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60]"
  >
  <option value="None">None</option>
  <option value="Boot">Offloading boot</option>
@@ -540,7 +540,7 @@ const WoundCareIntegration: React.FC = () => {
  ...prev,
  offloading: { ...prev.offloading, notes: e.target.value }
  }))}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-green-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60]"
  rows={3}
  />
  </div>
@@ -581,7 +581,7 @@ const WoundCareIntegration: React.FC = () => {
  type="number"
  value={patient.vascular.abi}
  onChange={(e) => updateVascular('abi', parseFloat(e.target.value) || 0)}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-green-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60]"
  step="0.01"
  min="0"
  max="2"
@@ -599,7 +599,7 @@ const WoundCareIntegration: React.FC = () => {
  type="number"
  value={patient.vascular.tcpo2}
  onChange={(e) => updateVascular('tcpo2', parseInt(e.target.value) || 0)}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-green-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60]"
  min="0"
  max="100"
  />
@@ -615,7 +615,7 @@ const WoundCareIntegration: React.FC = () => {
  type="date"
  value={patient.vascular.nextSurveillance}
  onChange={(e) => updateVascular('nextSurveillance', e.target.value)}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-green-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60]"
  />
  </div>
  </div>
@@ -685,7 +685,7 @@ const WoundCareIntegration: React.FC = () => {
  <select
  value={selectedTeamFilter}
  onChange={(e) => setSelectedTeamFilter(e.target.value)}
- className="px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-green-500"
+ className="px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60]"
  >
  <option value="all">All Team Members</option>
  <option value="Vascular">Vascular</option>
@@ -750,7 +750,7 @@ const WoundCareIntegration: React.FC = () => {
  ...prev,
  debridementSchedule: { ...prev.debridementSchedule, frequency: e.target.value as any }
  }))}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-green-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60]"
  >
  <option value="Daily">Daily</option>
  <option value="Weekly">Weekly</option>
@@ -768,7 +768,7 @@ const WoundCareIntegration: React.FC = () => {
  ...prev,
  debridementSchedule: { ...prev.debridementSchedule, nextDate: e.target.value }
  }))}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-green-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60]"
  />
  </div>
 
@@ -781,7 +781,7 @@ const WoundCareIntegration: React.FC = () => {
  ...prev,
  debridementSchedule: { ...prev.debridementSchedule, provider: e.target.value }
  }))}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-green-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60]"
  />
  </div>
  </div>

@@ -100,7 +100,7 @@ const GRACEScoreCalculator: React.FC = () => {
  if (score <= 108) {
  riskCategory = 'Low';
  mortalityRisk = '< 1%';
- color = 'medical-green';
+ color = 'chrome-blue';
  interpretation = 'Low risk of in-hospital mortality. Conservative management appropriate.';
  recommendations = [
  'Conservative medical management',
@@ -111,7 +111,7 @@ const GRACEScoreCalculator: React.FC = () => {
  } else if (score <= 140) {
  riskCategory = 'Intermediate';
  mortalityRisk = '1-3%';
- color = 'medical-amber';
+ color = 'crimson';
  interpretation = 'Intermediate risk of in-hospital mortality. Consider early invasive strategy.';
  recommendations = [
  'Early invasive strategy within 24-72 hours',

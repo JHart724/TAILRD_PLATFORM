@@ -285,9 +285,9 @@ const AnticoagulationSafetyChecker: React.FC = () => {
   const getStatusColor = (status: AnticoagulationResult['status']) => {
  switch (status) {
  case 'contraindicated': return 'text-red-800 bg-red-100 border-red-300';
- case 'caution': return 'text-medical-amber-800 bg-medical-amber-100 border-medical-amber-300';
- case 'monitor': return 'text-medical-green-800 bg-medical-green-100 border-medical-green-300';
- case 'safe': return 'text-medical-green-800 bg-medical-green-100 border-medical-green-300';
+ case 'caution': return 'text-crimson-700 bg-crimson-100 border-crimson-200';
+ case 'monitor': return 'text-[#2C4A60] bg-[#e0eaf3] border-[#C8D4DC]';
+ case 'safe': return 'text-[#2C4A60] bg-[#e0eaf3] border-[#C8D4DC]';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };
@@ -418,8 +418,8 @@ const AnticoagulationSafetyChecker: React.FC = () => {
  </div>
  </div>
 
- <div className="p-4 bg-medical-amber-50 border border-medical-amber-200 rounded-lg">
- <h3 className="font-semibold text-medical-amber-800 mb-3">Clinical Conditions</h3>
+ <div className="p-4 bg-crimson-50 border border-crimson-200 rounded-lg">
+ <h3 className="font-semibold text-crimson-700 mb-3">Clinical Conditions</h3>
  <div className="space-y-3">
  {[
  { key: 'isPregnant', label: 'Pregnant' },
@@ -435,7 +435,7 @@ const AnticoagulationSafetyChecker: React.FC = () => {
  type="checkbox"
  checked={patientData[condition.key as keyof PatientData] as boolean}
  onChange={(e) => updatePatientData(condition.key as keyof PatientData, e.target.checked)}
- className="rounded text-medical-amber-600"
+ className="rounded text-crimson-600"
  />
  <span className="text-sm font-medium text-titanium-700">{condition.label}</span>
  </label>
@@ -521,7 +521,7 @@ const AnticoagulationSafetyChecker: React.FC = () => {
  </div>
  <div className="space-y-3">
  <div className="font-semibold text-titanium-900 flex items-center gap-2">
- <Droplets className="w-5 h-5 text-medical-amber-500" />
+ <Droplets className="w-5 h-5 text-crimson-500" />
  Bleeding Risk
  </div>
  <div className="text-sm text-titanium-700">
@@ -536,21 +536,21 @@ const AnticoagulationSafetyChecker: React.FC = () => {
  </div>
 
  {/* Clinical Recommendation */}
- <div className="p-6 bg-medical-green-50 border border-medical-green-200 rounded-xl">
- <h3 className="text-lg font-semibold text-medical-green-800 mb-4">Clinical Recommendation</h3>
- <div className="text-sm text-medical-green-700">
+ <div className="p-6 bg-[#f0f5fa] border border-[#C8D4DC] rounded-xl">
+ <h3 className="text-lg font-semibold text-[#2C4A60] mb-4">Clinical Recommendation</h3>
+ <div className="text-sm text-[#2C4A60]">
  {patientData.chaidsVascScore >= 2 && !patientData.hasActiveBleeding && (
- <div className="font-semibold text-medical-green-800">
+ <div className="font-semibold text-[#2C4A60]">
  Anticoagulation RECOMMENDED - Stroke risk outweighs bleeding risk
  </div>
  )}
  {patientData.chaidsVascScore === 1 && (
- <div className="font-semibold text-medical-amber-800">
+ <div className="font-semibold text-crimson-700">
  Consider anticoagulation - Shared decision making recommended
  </div>
  )}
  {patientData.chaidsVascScore === 0 && (
- <div className="font-semibold text-medical-green-800">
+ <div className="font-semibold text-[#2C4A60]">
  Anticoagulation NOT recommended - Very low stroke risk
  </div>
  )}

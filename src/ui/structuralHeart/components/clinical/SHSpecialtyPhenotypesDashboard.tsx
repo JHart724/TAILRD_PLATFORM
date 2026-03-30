@@ -352,16 +352,16 @@ const SHSpecialtyPhenotypesDashboard: React.FC = () => {
  </div>
 
  {/* Revenue Impact */}
- <div className="flex items-center justify-between p-3 bg-medical-green-50 border border-medical-green-200 rounded-lg">
+ <div className="flex items-center justify-between p-3 bg-[#f0f5fa] border border-[#C8D4DC] rounded-lg">
  <div>
- <div className="text-sm font-semibold text-medical-green-800">Revenue Opportunity</div>
- <div className="text-xs text-medical-green-600">{phenotype.revenue}</div>
+ <div className="text-sm font-semibold text-[#2C4A60]">Revenue Opportunity</div>
+ <div className="text-xs text-[#2C4A60]">{phenotype.revenue}</div>
  </div>
  <div className="text-right">
- <div className="text-lg font-bold text-medical-green-700">
+ <div className="text-lg font-bold text-[#2C4A60]">
  ${toFixed(phenotype.revenueGap / 1000, 0)}K
  </div>
- <div className="text-xs text-medical-green-600">Gap</div>
+ <div className="text-xs text-[#2C4A60]">Gap</div>
  </div>
  </div>
 
@@ -400,7 +400,7 @@ const SHSpecialtyPhenotypesDashboard: React.FC = () => {
  <ul className="space-y-1">
  {phenotype.interventions.map((intervention: string) => (
  <li key={intervention} className="text-sm text-titanium-700 flex items-start gap-2">
- <span className="w-1.5 h-1.5 rounded-full bg-medical-green-400 mt-1.5 flex-shrink-0" />
+ <span className="w-1.5 h-1.5 rounded-full bg-[#4A6880] mt-1.5 flex-shrink-0" />
  {intervention}
  </li>
  ))}
@@ -457,9 +457,9 @@ const SHSpecialtyPhenotypesDashboard: React.FC = () => {
  <div className="metal-card p-6">
  <h3 className="text-xl font-bold text-titanium-900 mb-4">Quick Actions</h3>
  {quickActionFeedback && (
- <div className="mb-4 p-3 bg-medical-green-50 border border-medical-green-200 rounded-lg flex items-center gap-2">
- <CheckCircle className="w-5 h-5 text-medical-green-600" />
- <span className="text-sm font-medium text-medical-green-800">
+ <div className="mb-4 p-3 bg-[#f0f5fa] border border-[#C8D4DC] rounded-lg flex items-center gap-2">
+ <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
+ <span className="text-sm font-medium text-[#2C4A60]">
  {quickActionFeedback === 'alerts' && 'Loading high-risk patient alerts...'}
  {quickActionFeedback === 'screening' && 'Population screening analysis initiated...'}
  {quickActionFeedback === 'revenue' && 'Revenue opportunity report generating...'}
@@ -485,12 +485,12 @@ const SHSpecialtyPhenotypesDashboard: React.FC = () => {
  <div className="text-xs text-porsche-600">Run bulk phenotype analysis</div>
  </button>
  <button 
- className="p-4 border-2 border-medical-green-200 rounded-lg hover:bg-medical-green-50 transition-colors"
+ className="p-4 border-2 border-[#C8D4DC] rounded-lg hover:bg-[#f0f5fa] transition-colors"
  onClick={() => { setQuickActionFeedback('revenue'); setTimeout(() => setQuickActionFeedback(null), 3000); }}
  >
- <DollarSign className="w-6 h-6 text-medical-green-600 mx-auto mb-2" />
- <div className="text-sm font-semibold text-medical-green-800">Revenue Report</div>
- <div className="text-xs text-medical-green-600">Generate opportunity analysis</div>
+ <DollarSign className="w-6 h-6 text-[#2C4A60] mx-auto mb-2" />
+ <div className="text-sm font-semibold text-[#2C4A60]">Revenue Report</div>
+ <div className="text-xs text-[#2C4A60]">Generate opportunity analysis</div>
  </button>
  <button 
  className="p-4 border-2 border-deep-amber-200 rounded-lg hover:bg-deep-amber-50 transition-colors"

@@ -378,7 +378,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
  onClick={() => setActiveTab(tab.id as any)}
  className={`px-6 py-3 border-b-2 transition-all duration-200 flex items-center gap-2 ${
  activeTab === tab.id
- ? 'border-medical-green-500 text-medical-green-600 bg-medical-green-50'
+ ? 'border-[#2C4A60] text-[#2C4A60] bg-[#f0f5fa]'
  : 'border-transparent text-titanium-600 hover:text-titanium-800 hover:bg-titanium-50'
  }`}
  >
@@ -421,10 +421,10 @@ const EPClinicalDecisionSupport: React.FC = () => {
  ))}
  </div>
 
- <div className="p-4 bg-medical-green-50 rounded-xl border border-medical-green-200">
+ <div className="p-4 bg-[#f0f5fa] rounded-xl border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-2">
  <span className="font-semibold text-titanium-900">CHA₂DS₂-VASc Score</span>
- <span className="text-2xl font-bold text-medical-green-600">{cha2ds2vasc.score}</span>
+ <span className="text-2xl font-bold text-[#2C4A60]">{cha2ds2vasc.score}</span>
  </div>
  <div className="text-sm text-titanium-600 mb-1">Stroke Risk: {cha2ds2vasc.risk}</div>
  <div className="text-sm text-titanium-600">Annual Risk: {cha2ds2vasc.yearlyStrokeRisk}%</div>
@@ -433,7 +433,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
 
  <div className="metal-card p-6">
  <h3 className="text-xl font-bold text-titanium-900 mb-4 font-sf flex items-center gap-2">
- <AlertTriangle className="w-6 h-6 text-medical-amber-500" />
+ <AlertTriangle className="w-6 h-6 text-crimson-500" />
  HAS-BLED Calculator
  </h3>
  
@@ -462,10 +462,10 @@ const EPClinicalDecisionSupport: React.FC = () => {
  ))}
  </div>
 
- <div className="p-4 bg-medical-amber-50 rounded-xl border border-medical-amber-200">
+ <div className="p-4 bg-crimson-50 rounded-xl border border-crimson-200">
  <div className="flex items-center justify-between mb-2">
  <span className="font-semibold text-titanium-900">HAS-BLED Score</span>
- <span className="text-2xl font-bold text-medical-amber-600">{hasbled.score}</span>
+ <span className="text-2xl font-bold text-crimson-600">{hasbled.score}</span>
  </div>
  <div className="text-sm text-titanium-600 mb-1">Bleeding Risk: {hasbled.risk}</div>
  <div className="text-sm text-titanium-600">Annual Risk: {hasbled.yearlyBleedRisk}%</div>
@@ -478,20 +478,20 @@ const EPClinicalDecisionSupport: React.FC = () => {
  {activeTab === 'watchman' && (
  <div className="metal-card p-8">
  <h2 className="text-2xl font-bold text-titanium-900 mb-6 font-sf flex items-center gap-2">
- <Shield className="w-8 h-8 text-medical-green-500" />
+ <Shield className="w-8 h-8 text-[#2C4A60]" />
  WATCHMAN/LAAC Eligibility Assessment
  </h2>
 
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
  <div className={`p-6 rounded-xl border-2 ${
- watchmanRec.eligibility === 'Eligible' ? 'border-medical-green-400 bg-medical-green-50' :
- watchmanRec.eligibility === 'Consider' ? 'border-medical-amber-400 bg-medical-amber-50' :
+ watchmanRec.eligibility === 'Eligible' ? 'border-[#4A6880] bg-[#f0f5fa]' :
+ watchmanRec.eligibility === 'Consider' ? 'border-crimson-400 bg-crimson-50' :
  'border-medical-red-400 bg-medical-red-50'
  }`}>
  <div className="flex items-center gap-3 mb-3">
  <CheckCircle className={`w-8 h-8 ${
- watchmanRec.eligibility === 'Eligible' ? 'text-medical-green-600' :
- watchmanRec.eligibility === 'Consider' ? 'text-medical-amber-600' :
+ watchmanRec.eligibility === 'Eligible' ? 'text-[#2C4A60]' :
+ watchmanRec.eligibility === 'Consider' ? 'text-crimson-600' :
  'text-medical-red-600'
  }`} />
  <div>
@@ -501,12 +501,12 @@ const EPClinicalDecisionSupport: React.FC = () => {
  </div>
  </div>
 
- <div className="p-6 bg-medical-green-50 rounded-xl border border-medical-green-200">
+ <div className="p-6 bg-[#f0f5fa] rounded-xl border border-[#C8D4DC]">
  <h4 className="font-semibold text-titanium-900 mb-3">Rationale</h4>
  <ul className="text-sm text-titanium-700 space-y-1">
  {watchmanRec.rationale.map((item, index) => (
  <li key={item} className="flex items-start gap-2">
- <CheckCircle className="w-4 h-4 text-medical-green-500 mt-0.5 flex-shrink-0" />
+ <CheckCircle className="w-4 h-4 text-[#2C4A60] mt-0.5 flex-shrink-0" />
  {item}
  </li>
  ))}
@@ -518,7 +518,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
  <ul className="text-sm text-titanium-700 space-y-1">
  {watchmanRec.nextSteps.map((step, index) => (
  <li key={step} className="flex items-start gap-2">
- <div className="w-4 h-4 bg-medical-green-500 rounded-full text-white text-xs flex items-center justify-center mt-0.5 flex-shrink-0">
+ <div className="w-4 h-4 bg-[#2C4A60] rounded-full text-white text-xs flex items-center justify-center mt-0.5 flex-shrink-0">
  {index + 1}
  </div>
  {step}
@@ -552,20 +552,20 @@ const EPClinicalDecisionSupport: React.FC = () => {
  {activeTab === 'ablation' && (
  <div className="metal-card p-8">
  <h2 className="text-2xl font-bold text-titanium-900 mb-6 font-sf flex items-center gap-2">
- <Zap className="w-8 h-8 text-medical-green-500" />
+ <Zap className="w-8 h-8 text-[#2C4A60]" />
  AF Ablation Eligibility Assessment
  </h2>
 
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
  <div className={`p-6 rounded-xl border-2 ${
- ablationRec.eligibility === 'Eligible' ? 'border-medical-green-400 bg-medical-green-50' :
- ablationRec.eligibility === 'Consider' ? 'border-medical-amber-400 bg-medical-amber-50' :
+ ablationRec.eligibility === 'Eligible' ? 'border-[#4A6880] bg-[#f0f5fa]' :
+ ablationRec.eligibility === 'Consider' ? 'border-crimson-400 bg-crimson-50' :
  'border-medical-red-400 bg-medical-red-50'
  }`}>
  <div className="flex items-center gap-3 mb-3">
  <Zap className={`w-8 h-8 ${
- ablationRec.eligibility === 'Eligible' ? 'text-medical-green-600' :
- ablationRec.eligibility === 'Consider' ? 'text-medical-amber-600' :
+ ablationRec.eligibility === 'Eligible' ? 'text-[#2C4A60]' :
+ ablationRec.eligibility === 'Consider' ? 'text-crimson-600' :
  'text-medical-red-600'
  }`} />
  <div>
@@ -575,12 +575,12 @@ const EPClinicalDecisionSupport: React.FC = () => {
  </div>
  </div>
 
- <div className="p-6 bg-medical-green-50 rounded-xl border border-medical-green-200">
+ <div className="p-6 bg-[#f0f5fa] rounded-xl border border-[#C8D4DC]">
  <h4 className="font-semibold text-titanium-900 mb-3">Supporting Factors</h4>
  <ul className="text-sm text-titanium-700 space-y-1">
  {ablationRec.rationale.map((item, index) => (
  <li key={item} className="flex items-start gap-2">
- <CheckCircle className="w-4 h-4 text-medical-green-500 mt-0.5 flex-shrink-0" />
+ <CheckCircle className="w-4 h-4 text-[#2C4A60] mt-0.5 flex-shrink-0" />
  {item}
  </li>
  ))}
@@ -592,7 +592,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
  <ul className="text-sm text-titanium-700 space-y-1">
  {ablationRec.nextSteps.map((step, index) => (
  <li key={step} className="flex items-start gap-2">
- <div className="w-4 h-4 bg-medical-green-500 rounded-full text-white text-xs flex items-center justify-center mt-0.5 flex-shrink-0">
+ <div className="w-4 h-4 bg-[#2C4A60] rounded-full text-white text-xs flex items-center justify-center mt-0.5 flex-shrink-0">
  {index + 1}
  </div>
  {step}
@@ -609,7 +609,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
  <div className="space-y-6">
  <div className="metal-card p-8">
  <h2 className="text-2xl font-bold text-titanium-900 mb-6 font-sf flex items-center gap-2">
- <Brain className="w-8 h-8 text-medical-green-500" />
+ <Brain className="w-8 h-8 text-[#2C4A60]" />
  TAILRD Clinical Algorithms
  </h2>
  <p className="text-titanium-600 mb-6">
@@ -620,7 +620,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
  {getTAILRDAlgorithms().map((algorithm, index) => (
  <div key={algorithm.name || `algorithm-${index}`} className="p-6 bg-white rounded-xl border border-titanium-200 hover:shadow-chrome-card-hover transition-all duration-300">
  <div className="flex items-center gap-3 mb-4">
- <Award className="w-6 h-6 text-medical-green-500" />
+ <Award className="w-6 h-6 text-[#2C4A60]" />
  <h3 className="font-bold text-titanium-900">{algorithm.name}</h3>
  </div>
  
@@ -629,11 +629,11 @@ const EPClinicalDecisionSupport: React.FC = () => {
  <div className="mb-4">
  <div className="flex items-center justify-between mb-2">
  <span className="text-sm font-semibold text-titanium-700">Algorithm Score</span>
- <span className="text-lg font-bold text-medical-green-600">{algorithm.score}%</span>
+ <span className="text-lg font-bold text-[#2C4A60]">{algorithm.score}%</span>
  </div>
  <div className="w-full bg-titanium-200 rounded-full h-2">
  <div 
- className="h-2 bg-medical-green-500 rounded-full transition-all duration-300"
+ className="h-2 bg-[#2C4A60] rounded-full transition-all duration-300"
  style={{ width: `${algorithm.score}%` }}
  ></div>
  </div>
@@ -644,7 +644,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
  <ul className="text-xs text-titanium-600 space-y-1">
  {algorithm.factors.map((factor, factorIndex) => (
  <li key={factorIndex} className="flex items-start gap-1">
- <CheckCircle className="w-3 h-3 text-medical-green-500 mt-0.5 flex-shrink-0" />
+ <CheckCircle className="w-3 h-3 text-[#2C4A60] mt-0.5 flex-shrink-0" />
  {factor}
  </li>
  ))}
@@ -652,8 +652,8 @@ const EPClinicalDecisionSupport: React.FC = () => {
  </div>
 
  <div className={`p-3 rounded-lg text-sm font-semibold ${
- algorithm.score >= 80 ? 'bg-medical-green-100 text-medical-green-800' :
- algorithm.score >= 60 ? 'bg-medical-amber-100 text-medical-amber-800' :
+ algorithm.score >= 80 ? 'bg-[#e0eaf3] text-[#2C4A60]' :
+ algorithm.score >= 60 ? 'bg-crimson-100 text-crimson-700' :
  'bg-medical-red-100 text-medical-red-800'
  }`}>
  {algorithm.recommendation}

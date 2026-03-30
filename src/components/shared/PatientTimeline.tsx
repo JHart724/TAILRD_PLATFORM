@@ -194,9 +194,9 @@ const eventTypeConfig = {
   },
   lab: {
  icon: TestTube,
- color: 'bg-medical-green-500',
- bgColor: 'bg-medical-green-50',
- textColor: 'text-medical-green-700'
+ color: 'bg-[#2C4A60]',
+ bgColor: 'bg-[#f0f5fa]',
+ textColor: 'text-[#2C4A60]'
   },
   procedure: {
  icon: Activity,
@@ -206,15 +206,15 @@ const eventTypeConfig = {
   },
   imaging: {
  icon: Image,
- color: 'bg-medical-amber-500',
- bgColor: 'bg-medical-amber-50',
- textColor: 'text-medical-amber-700'
+ color: 'bg-crimson-500',
+ bgColor: 'bg-crimson-50',
+ textColor: 'text-crimson-700'
   },
   visit: {
  icon: User,
- color: 'bg-medical-teal-500',
- bgColor: 'bg-medical-teal-50',
- textColor: 'text-medical-teal-700'
+ color: 'bg-[#2C4A60]',
+ bgColor: 'bg-[#f0f5fa]',
+ textColor: 'text-[#2C4A60]'
   },
   admission: {
  icon: MapPin,
@@ -233,9 +233,9 @@ const eventTypeConfig = {
 const moduleColors = {
   heartFailure: 'border-l-porsche-400',
   structural: 'border-l-medical-arterial-400',
-  ep: 'border-l-medical-teal-400',
-  vascular: 'border-l-medical-green-400',
-  valvular: 'border-l-medical-amber-400',
+  ep: 'border-l-[#4A6880]',
+  vascular: 'border-l-[#4A6880]',
+  valvular: 'border-l-crimson-400',
   coronary: 'border-l-medical-red-400'
 };
 
@@ -302,7 +302,7 @@ const PatientTimeline: React.FC<PatientTimelineProps> = ({ patientId, className 
  case 'high': return 'text-medical-red-600';
  case 'low': return 'text-porsche-600';
  case 'critical': return 'text-medical-red-700 font-bold';
- default: return 'text-medical-green-600';
+ default: return 'text-[#2C4A60]';
  }
   };
 
@@ -521,7 +521,7 @@ const PatientTimeline: React.FC<PatientTimelineProps> = ({ patientId, className 
  <div className="flex justify-between">
  <span className="text-titanium-600">Status:</span>
  <span className={`font-medium ${
- event.status === 'active' ? 'text-medical-red-600' : 'text-medical-green-600'
+ event.status === 'active' ? 'text-medical-red-600' : 'text-[#2C4A60]'
  }`}>{event.status}</span>
  </div>
  </div>
@@ -619,7 +619,7 @@ const PatientTimeline: React.FC<PatientTimelineProps> = ({ patientId, className 
  <ul className="space-y-1">
  {event.details.plan.map((item: string, i: number) => (
  <li key={item} className="text-sm text-titanium-700 flex items-start gap-2">
- <div className="w-1.5 h-1.5 bg-medical-green-400 rounded-full mt-2 flex-shrink-0" />
+ <div className="w-1.5 h-1.5 bg-[#4A6880] rounded-full mt-2 flex-shrink-0" />
  {item}
  </li>
  ))}

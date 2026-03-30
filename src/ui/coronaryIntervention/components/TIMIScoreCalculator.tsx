@@ -128,8 +128,8 @@ const TIMIScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ patie
 
   const getRiskColor = (category: string) => {
  switch (category) {
- case 'Low': return 'text-medical-green-600 bg-medical-green-50 border-medical-green-200';
- case 'Intermediate': return 'text-medical-amber-600 bg-medical-amber-50 border-medical-amber-200';
+ case 'Low': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'Intermediate': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
  case 'High': return 'text-medical-red-600 bg-medical-red-50 border-medical-red-200';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
@@ -138,7 +138,7 @@ const TIMIScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ patie
   return (
  <div className="metal-card p-8">
  <div className="flex items-center gap-3 mb-6">
- <Calculator className="w-8 h-8 text-medical-amber-500" />
+ <Calculator className="w-8 h-8 text-crimson-500" />
  <div>
  <h2 className="text-2xl font-bold text-titanium-900 font-sf">TIMI Risk Score</h2>
  <p className="text-titanium-600">For UA/NSTEMI Risk Assessment</p>
@@ -155,7 +155,7 @@ const TIMIScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ patie
  type="number"
  value={inputs.age}
  onChange={(e) => updateInput('age', parseInt(e.target.value) || 0)}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-medical-amber-500 focus:border-medical-amber-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-crimson-500 focus:border-crimson-500"
  min="18"
  max="120"
  />
@@ -167,7 +167,7 @@ const TIMIScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ patie
  <select
  value={inputs.riskFactors}
  onChange={(e) => updateInput('riskFactors', parseInt(e.target.value))}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-medical-amber-500 focus:border-medical-amber-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-crimson-500 focus:border-crimson-500"
  >
  <option value={0}>0 risk factors</option>
  <option value={1}>1 risk factor</option>
@@ -186,7 +186,7 @@ const TIMIScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ patie
  type="checkbox"
  checked={inputs.knownCAD}
  onChange={(e) => updateInput('knownCAD', e.target.checked)}
- className="rounded text-medical-amber-600"
+ className="rounded text-crimson-600"
  />
  <span className="text-sm font-medium text-titanium-700">Known CAD (stenosis ≥50%)</span>
  </label>
@@ -196,7 +196,7 @@ const TIMIScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ patie
  type="checkbox"
  checked={inputs.aspirinUse}
  onChange={(e) => updateInput('aspirinUse', e.target.checked)}
- className="rounded text-medical-amber-600"
+ className="rounded text-crimson-600"
  />
  <span className="text-sm font-medium text-titanium-700">Aspirin use in prior 7 days</span>
  </label>
@@ -206,7 +206,7 @@ const TIMIScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ patie
  type="checkbox"
  checked={inputs.severeAngina}
  onChange={(e) => updateInput('severeAngina', e.target.checked)}
- className="rounded text-medical-amber-600"
+ className="rounded text-crimson-600"
  />
  <span className="text-sm font-medium text-titanium-700">Severe angina (≥2 episodes in 24h)</span>
  </label>
@@ -262,20 +262,20 @@ const TIMIScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ patie
  </div>
  </div>
 
- <div className="p-4 bg-medical-green-50 border border-medical-green-200 rounded-lg">
+ <div className="p-4 bg-[#f0f5fa] border border-[#C8D4DC] rounded-lg">
  <div className="flex items-start gap-2">
- <CheckCircle className="w-5 h-5 text-medical-green-600 mt-0.5 flex-shrink-0" />
- <div className="text-sm text-medical-green-800">
+ <CheckCircle className="w-5 h-5 text-[#2C4A60] mt-0.5 flex-shrink-0" />
+ <div className="text-sm text-[#2C4A60]">
  <div className="font-semibold mb-1">Antiplatelet Therapy</div>
  <p>{result.antiplateletTherapy}</p>
  </div>
  </div>
  </div>
 
- <div className="p-4 bg-medical-amber-50 border border-medical-amber-200 rounded-lg">
+ <div className="p-4 bg-crimson-50 border border-crimson-200 rounded-lg">
  <div className="flex items-start gap-2">
- <Timer className="w-5 h-5 text-medical-amber-600 mt-0.5 flex-shrink-0" />
- <div className="text-sm text-medical-amber-800">
+ <Timer className="w-5 h-5 text-crimson-600 mt-0.5 flex-shrink-0" />
+ <div className="text-sm text-crimson-700">
  <div className="font-semibold mb-1">Invasive Strategy</div>
  <p>{result.invasiveStrategy}</p>
  </div>

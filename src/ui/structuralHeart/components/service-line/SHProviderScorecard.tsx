@@ -150,27 +150,27 @@ const SHProviderScorecard: React.FC = () => {
 
   const getPerformanceColor = (value: number, type: 'rate' | 'readmission' | 'quality') => {
  if (type === 'readmission') {
- if (value <= 8) return 'text-medical-green-600 bg-medical-green-50';
- if (value <= 12) return 'text-medical-amber-600 bg-medical-amber-50';
+ if (value <= 8) return 'text-[#2C4A60] bg-[#f0f5fa]';
+ if (value <= 12) return 'text-crimson-600 bg-crimson-50';
  return 'text-medical-red-600 bg-medical-red-50';
  }
  
  if (type === 'quality') {
- if (value >= 90) return 'text-medical-green-600 bg-medical-green-50';
- if (value >= 80) return 'text-medical-amber-600 bg-medical-amber-50';
+ if (value >= 90) return 'text-[#2C4A60] bg-[#f0f5fa]';
+ if (value >= 80) return 'text-crimson-600 bg-crimson-50';
  return 'text-medical-red-600 bg-medical-red-50';
  }
  
  // Default for rates
- if (value >= 70) return 'text-medical-green-600 bg-medical-green-50';
- if (value >= 60) return 'text-medical-amber-600 bg-medical-amber-50';
+ if (value >= 70) return 'text-[#2C4A60] bg-[#f0f5fa]';
+ if (value >= 60) return 'text-crimson-600 bg-crimson-50';
  return 'text-medical-red-600 bg-medical-red-50';
   };
 
   const getTrendIcon = (trend: 'up' | 'down' | 'stable') => {
  switch (trend) {
  case 'up':
- return <TrendingUp className="w-4 h-4 text-medical-green-600" />;
+ return <TrendingUp className="w-4 h-4 text-[#2C4A60]" />;
  case 'down':
  return <TrendingDown className="w-4 h-4 text-medical-red-600" />;
  default:
@@ -245,7 +245,7 @@ const SHProviderScorecard: React.FC = () => {
  <div className="flex items-center gap-2">
  {getTrendIcon(provider.trend)}
  <span className={`text-sm font-semibold ${
- provider.trend === 'up' ? 'text-medical-green-600' :
+ provider.trend === 'up' ? 'text-[#2C4A60]' :
  provider.trend === 'down' ? 'text-medical-red-600' : 'text-titanium-600'
  }`}>
  {provider.trend !== 'stable' && (provider.trendValue > 0 ? '+' : '')}{provider.trendValue}%
@@ -342,7 +342,7 @@ const SHProviderScorecard: React.FC = () => {
 
  <div className="p-4 bg-white rounded-lg">
  <div className="text-sm text-titanium-600 mb-1">Disease Stage Improvement</div>
- <div className="text-3xl font-bold text-medical-green-600">
+ <div className="text-3xl font-bold text-[#2C4A60]">
  +{toFixed(selectedProviderData.diseaseStageImprovement, 1)}%
  </div>
  <div className="text-sm text-titanium-600 mt-1">
@@ -354,8 +354,8 @@ const SHProviderScorecard: React.FC = () => {
  <div className="text-sm text-titanium-600 mb-1">Case Complexity</div>
  <div className={`text-2xl font-bold ${
  selectedProviderData.caseComplexity === 'high' ? 'text-medical-red-600' :
- selectedProviderData.caseComplexity === 'medium' ? 'text-medical-amber-600' :
- 'text-medical-green-600'
+ selectedProviderData.caseComplexity === 'medium' ? 'text-crimson-600' :
+ 'text-[#2C4A60]'
  }`}>
  {selectedProviderData.caseComplexity.toUpperCase()}
  </div>
@@ -371,7 +371,7 @@ const SHProviderScorecard: React.FC = () => {
  <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-titanium-200">
  <div>
  <div className="text-sm text-titanium-600 mb-1">Top Performer</div>
- <div className="text-lg font-bold text-medical-green-600">
+ <div className="text-lg font-bold text-[#2C4A60]">
  {sortedProviders[0].name}
  </div>
  <div className="text-sm text-titanium-600">

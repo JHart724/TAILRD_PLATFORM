@@ -89,7 +89,7 @@ const EPPatients: React.FC = () => (
  </h3>
  <div className="flex items-center gap-3">
  <button 
- className="px-4 py-2 bg-medical-green-100 text-[#2C4A60] rounded-lg hover:bg-medical-green-200 transition-colors text-sm"
+ className="px-4 py-2 bg-[#e0eaf3] text-[#2C4A60] rounded-lg hover:bg-[#C8D4DC] transition-colors text-sm"
  onClick={() => {
  // Action handler - implementation pending
  // TODO: Implement EP registry export functionality with secure data handling
@@ -777,7 +777,7 @@ export const electrophysiologyCareTeamConfig: CareTeamViewConfig = {
   moduleName: 'Electrophysiology',
   moduleDescription: 'Advanced electrophysiology care coordination, LAAC optimization, and arrhythmia management',
   moduleIcon: Zap,
-  primaryColor: 'medical-green',
+  primaryColor: 'chrome-blue',
   tabs: electrophysiologyTabs,
   tabContent: {
  dashboard: EPDashboard,

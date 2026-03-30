@@ -194,7 +194,7 @@ const LimbSalvageScreening: React.FC = () => {
  onClick={() => setActiveTab(tab.id as any)}
  className={`px-6 py-3 border-b-2 transition-all duration-200 flex items-center gap-2 ${
  activeTab === tab.id
- ? 'border-medical-teal-500 text-medical-teal-600 bg-medical-teal-50'
+ ? 'border-[#2C4A60] text-[#2C4A60] bg-[#f0f5fa]'
  : 'border-transparent text-titanium-600 hover:text-titanium-800 hover:bg-titanium-50'
  }`}
  >
@@ -211,7 +211,7 @@ const LimbSalvageScreening: React.FC = () => {
  <div className="metal-card p-6">
  <div className="flex items-center justify-between mb-6">
  <h3 className="text-xl font-bold text-titanium-900 flex items-center gap-2">
- <AlertTriangle className="w-6 h-6 text-medical-teal-600" />
+ <AlertTriangle className="w-6 h-6 text-[#2C4A60]" />
  High-Risk Patient Identification
  </h3>
  <div className="flex items-center gap-4">
@@ -229,7 +229,7 @@ const LimbSalvageScreening: React.FC = () => {
  <option value="low">Low</option>
  </select>
  </div>
- <button className="px-4 py-2 bg-medical-teal-500 text-white rounded-lg hover:bg-medical-teal-600 transition-colors">
+ <button className="px-4 py-2 bg-[#2C4A60] text-white rounded-lg hover:bg-[#2C4A60] transition-colors">
  Export List
  </button>
  </div>
@@ -252,10 +252,10 @@ const LimbSalvageScreening: React.FC = () => {
  <div className="text-sm text-[#6B7280]">Moderate Risk</div>
  <div className="text-xs text-[#6B7280] mt-1">Enhanced monitoring</div>
  </div>
- <div className="p-4 rounded-lg bg-medical-teal-50 border border-medical-teal-200">
- <div className="text-2xl font-bold text-medical-teal-600">89</div>
- <div className="text-sm text-medical-teal-700">Care Gaps</div>
- <div className="text-xs text-medical-teal-600 mt-1">Overdue for screening</div>
+ <div className="p-4 rounded-lg bg-[#f0f5fa] border border-[#C8D4DC]">
+ <div className="text-2xl font-bold text-[#2C4A60]">89</div>
+ <div className="text-sm text-[#2C4A60]">Care Gaps</div>
+ <div className="text-xs text-[#2C4A60] mt-1">Overdue for screening</div>
  </div>
  </div>
 
@@ -319,11 +319,11 @@ const LimbSalvageScreening: React.FC = () => {
  {/* Next Actions */}
  <div>
  <h5 className="text-sm font-semibold text-titanium-700 mb-2">Recommended Action</h5>
- <div className="p-3 bg-medical-teal-50 border border-medical-teal-200 rounded-lg">
- <div className="text-sm font-medium text-medical-teal-800">{patient.nextAction}</div>
- <div className="text-xs text-medical-teal-600 mt-1">Last visit: {patient.lastVisit}</div>
+ <div className="p-3 bg-[#f0f5fa] border border-[#C8D4DC] rounded-lg">
+ <div className="text-sm font-medium text-[#2C4A60]">{patient.nextAction}</div>
+ <div className="text-xs text-[#2C4A60] mt-1">Last visit: {patient.lastVisit}</div>
  </div>
- <button className="w-full mt-3 px-4 py-2 bg-medical-teal-500 text-white rounded-lg hover:bg-medical-teal-600 transition-colors text-sm">
+ <button className="w-full mt-3 px-4 py-2 bg-[#2C4A60] text-white rounded-lg hover:bg-[#2C4A60] transition-colors text-sm">
  Schedule Intervention
  </button>
  </div>
@@ -340,7 +340,7 @@ const LimbSalvageScreening: React.FC = () => {
  <div className="space-y-6">
  <div className="metal-card p-6">
  <h3 className="text-xl font-bold text-titanium-900 mb-6 flex items-center gap-2">
- <Users className="w-6 h-6 text-medical-teal-600" />
+ <Users className="w-6 h-6 text-[#2C4A60]" />
  Health Disparity Analytics
  </h3>
 
@@ -356,7 +356,7 @@ const LimbSalvageScreening: React.FC = () => {
  <span className="font-semibold text-titanium-900">{count}</span>
  <div className="w-16 bg-titanium-200 rounded-full h-2">
  <div 
- className="h-2 bg-medical-teal-500 rounded-full"
+ className="h-2 bg-[#2C4A60] rounded-full"
  style={{ width: `${(count / Math.max(...Object.values(disparityMetrics.byRace))) * 100}%` }}
  />
  </div>
@@ -423,10 +423,10 @@ const LimbSalvageScreening: React.FC = () => {
  <div className="text-sm text-red-700">Patients with Care Gaps</div>
  <div className="text-xs text-red-600 mt-1">Overdue for recommended screening</div>
  </div>
- <div className="p-4 bg-medical-teal-50 border border-medical-teal-200 rounded-lg">
- <div className="text-2xl font-bold text-medical-teal-600">2.8x</div>
- <div className="text-sm text-medical-teal-700">Higher Risk in Minorities</div>
- <div className="text-xs text-medical-teal-600 mt-1">Compared to overall population</div>
+ <div className="p-4 bg-[#f0f5fa] border border-[#C8D4DC] rounded-lg">
+ <div className="text-2xl font-bold text-[#2C4A60]">2.8x</div>
+ <div className="text-sm text-[#2C4A60]">Higher Risk in Minorities</div>
+ <div className="text-xs text-[#2C4A60] mt-1">Compared to overall population</div>
  </div>
  </div>
  </div>
@@ -438,7 +438,7 @@ const LimbSalvageScreening: React.FC = () => {
  <div className="space-y-6">
  <div className="metal-card p-6">
  <h3 className="text-xl font-bold text-titanium-900 mb-6 flex items-center gap-2">
- <Target className="w-6 h-6 text-medical-teal-600" />
+ <Target className="w-6 h-6 text-[#2C4A60]" />
  Proactive Outreach Recommendations
  </h3>
 
@@ -461,10 +461,10 @@ const LimbSalvageScreening: React.FC = () => {
  Schedule Screening
  </button>
  </div>
- <div className="p-4 border-l-4 border-medical-teal-500 bg-medical-teal-50">
- <div className="font-medium text-medical-teal-800">Rural Access Initiative (124)</div>
- <div className="text-sm text-medical-teal-700 mt-1">Mobile screening unit deployment recommended</div>
- <button className="mt-2 px-3 py-1 bg-medical-teal-600 text-white rounded text-xs hover:bg-medical-teal-700">
+ <div className="p-4 border-l-4 border-[#2C4A60] bg-[#f0f5fa]">
+ <div className="font-medium text-[#2C4A60]">Rural Access Initiative (124)</div>
+ <div className="text-sm text-[#2C4A60] mt-1">Mobile screening unit deployment recommended</div>
+ <button className="mt-2 px-3 py-1 bg-[#2C4A60] text-white rounded text-xs hover:bg-[#2C4A60]">
  Plan Mobile Unit
  </button>
  </div>

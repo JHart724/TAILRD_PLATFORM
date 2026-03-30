@@ -105,7 +105,7 @@ const AmyloidosisScreener: React.FC = () => {
 
  if (totalScore <= 2) {
  riskLevel = 'Low';
- color = 'medical-green';
+ color = 'chrome-blue';
  recommendation = 'Low risk for cardiac amyloidosis. Routine follow-up appropriate.';
  nextSteps = [
  'Continue standard HF management',
@@ -114,7 +114,7 @@ const AmyloidosisScreener: React.FC = () => {
  ];
  } else if (totalScore <= 5) {
  riskLevel = 'Intermediate';
- color = 'medical-amber';
+ color = 'crimson';
  recommendation = 'Intermediate risk for cardiac amyloidosis. Consider additional evaluation.';
  nextSteps = [
  'Consider strain echocardiography',

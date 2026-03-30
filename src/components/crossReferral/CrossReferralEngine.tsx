@@ -235,8 +235,8 @@ const CrossReferralEngine: React.FC = () => {
  };
  case 'urgent':
  return {
- color: 'bg-medical-amber-100 text-medical-amber-700 border-medical-amber-200',
- icon: 'bg-medical-amber-600',
+ color: 'bg-crimson-100 text-crimson-700 border-crimson-200',
+ icon: 'bg-crimson-600',
  priority: 'MED'
  };
  case 'routine':
@@ -261,7 +261,7 @@ const CrossReferralEngine: React.FC = () => {
  case 'reviewed':
  return 'bg-porsche-100 text-porsche-700 border-porsche-200';
  case 'accepted':
- return 'bg-medical-green-100 text-medical-green-700 border-medical-green-200';
+ return 'bg-[#e0eaf3] text-[#2C4A60] border-[#C8D4DC]';
  case 'scheduled':
  return 'bg-arterial-100 text-arterial-700 border-arterial-200';
  case 'completed':
@@ -598,7 +598,7 @@ const CrossReferralEngine: React.FC = () => {
  <div className="flex justify-end">
  <button
  onClick={exportToCSV}
- className="flex items-center gap-2 px-4 py-2 bg-medical-green-600 text-white rounded-lg hover:bg-medical-green-700 transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-[#2C4A60] text-white rounded-lg hover:bg-[#2C4A60] transition-colors"
  >
  <Download className="w-4 h-4" />
  Export CSV
@@ -626,7 +626,7 @@ const CrossReferralEngine: React.FC = () => {
  <span>Emergent: {mockReferrals.filter(r => r.urgency === 'emergent').length}</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-2 h-2 bg-medical-amber-500 rounded-full"></div>
+ <div className="w-2 h-2 bg-crimson-500 rounded-full"></div>
  <span>Urgent: {mockReferrals.filter(r => r.urgency === 'urgent').length}</span>
  </div>
  <div className="flex items-center gap-2">

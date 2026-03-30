@@ -353,16 +353,16 @@ const EPPatientPanelTable: React.FC = () => {
  const colors = {
  critical: 'bg-medical-red-100 text-medical-red-800 border-medical-red-300',
  high: 'bg-medical-orange-100 text-medical-orange-800 border-medical-orange-300',
- medium: 'bg-medical-amber-100 text-medical-amber-800 border-medical-amber-300',
- low: 'bg-medical-green-100 text-medical-green-800 border-medical-green-300'
+ medium: 'bg-crimson-100 text-crimson-700 border-crimson-200',
+ low: 'bg-[#e0eaf3] text-[#2C4A60] border-[#C8D4DC]'
  };
  return colors[priority as keyof typeof colors] || colors.low;
   };
 
   const getStrokeRiskColor = (risk: number) => {
  if (risk >= 6) return 'text-medical-red-700 bg-medical-red-100';
- if (risk >= 3) return 'text-medical-amber-700 bg-medical-amber-100';
- return 'text-medical-green-700 bg-medical-green-100';
+ if (risk >= 3) return 'text-crimson-700 bg-crimson-100';
+ return 'text-[#2C4A60] bg-[#e0eaf3]';
   };
 
   const getArrhythmiaIcon = (arrhythmia: string) => {
@@ -374,7 +374,7 @@ const EPPatientPanelTable: React.FC = () => {
  case 'VF':
  return <Zap className="w-4 h-4 text-medical-red-600" />;
  case 'Bradycardia':
- return <Activity className="w-4 h-4 text-medical-amber-600" />;
+ return <Activity className="w-4 h-4 text-crimson-600" />;
  default:
  return <Heart className="w-4 h-4 text-titanium-600" />;
  }
@@ -764,7 +764,7 @@ const EPPatientPanelTable: React.FC = () => {
  <div className="text-sm text-titanium-600">High Priority</div>
  </div>
  <div className="text-center">
- <div className="text-2xl font-bold text-medical-amber-600">
+ <div className="text-2xl font-bold text-crimson-600">
  {sortedPatients.filter(p => p.treatmentGaps.length > 0).length}
  </div>
  <div className="text-sm text-titanium-600">Treatment Gaps</div>
@@ -776,7 +776,7 @@ const EPPatientPanelTable: React.FC = () => {
  <div className="text-sm text-titanium-600">Device Eligible</div>
  </div>
  <div className="text-center">
- <div className="text-2xl font-bold text-medical-green-600">
+ <div className="text-2xl font-bold text-[#2C4A60]">
  {sortedPatients.filter(p => p.ablationCandidate).length}
  </div>
  <div className="text-sm text-titanium-600">Ablation Candidates</div>

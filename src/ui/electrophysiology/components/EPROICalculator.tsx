@@ -421,7 +421,7 @@ const EPROICalculator: React.FC = () => {
  
  <button
  onClick={exportEPROIReport}
- className="px-4 py-2 bg-medical-green-500 text-white rounded-lg hover:bg-medical-green-600 transition-colors flex items-center gap-2"
+ className="px-4 py-2 bg-[#2C4A60] text-white rounded-lg hover:bg-[#2C4A60] transition-colors flex items-center gap-2"
  >
  <Download className="w-4 h-4" />
  Export EP Report
@@ -737,7 +737,7 @@ const EPROICalculator: React.FC = () => {
  </div>
  
  <div className="text-center">
- <div className="text-lg font-bold text-medical-green-600">
+ <div className="text-lg font-bold text-[#2C4A60]">
  {metric.improved}{metric.unit === '%' ? '%' : ''}
  </div>
  <div className="text-xs text-titanium-500">Target</div>

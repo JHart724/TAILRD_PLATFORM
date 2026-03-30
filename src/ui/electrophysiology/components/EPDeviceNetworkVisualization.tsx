@@ -721,7 +721,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  
  <button
  onClick={exportNetworkData}
- className="p-2 rounded-lg bg-medical-green-100 text-medical-green-700 hover:bg-medical-green-200 transition-colors"
+ className="p-2 rounded-lg bg-[#e0eaf3] text-[#2C4A60] hover:bg-[#C8D4DC] transition-colors"
  >
  <Download className="w-4 h-4" />
  </button>
@@ -732,7 +732,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Zap className={`w-6 h-6 ${metrics.devicePerformanceScore >= 0.9 ? 'text-medical-green-600' : 'text-red-600'}`} />
+ <Zap className={`w-6 h-6 ${metrics.devicePerformanceScore >= 0.9 ? 'text-[#2C4A60]' : 'text-red-600'}`} />
  <div>
  <div className="text-lg font-bold text-titanium-900">{toFixed(metrics.devicePerformanceScore * 100, 0)}%</div>
  <div className="text-xs text-titanium-600">Device Performance</div>
@@ -782,7 +782,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Users className="w-6 h-6 text-medical-green-600" />
+ <Users className="w-6 h-6 text-[#2C4A60]" />
  <div>
  <div className="text-lg font-bold text-titanium-900">{metrics.totalDevicePatients.toLocaleString()}</div>
  <div className="text-xs text-titanium-600">Device Patients</div>
@@ -828,7 +828,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  x={(fromNode.x + toNode.x) / 2}
  y={(fromNode.y + toNode.y) / 2 - 8}
  textAnchor="middle"
- className="text-xs fill-medical-green-700 font-bold"
+ className="text-xs fill-[#2C4A60] font-bold"
  style={{ fontSize: '10px' }}
  >
  {connection.avgResponseTime < 24 ? `${toFixed(connection.avgResponseTime, 1)}h` : `${toFixed(connection.avgResponseTime / 24, 1)}d`}
@@ -922,7 +922,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
  <div className="space-y-2">
  <div className="flex items-center gap-2">
- <div className="w-4 h-1 bg-medical-green-600"></div>
+ <div className="w-4 h-1 bg-[#2C4A60]"></div>
  <span>Device Flow (High Priority)</span>
  </div>
  <div className="flex items-center gap-2">
@@ -958,7 +958,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  {/* Node Details Panel */}
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Zap className="w-5 h-5 text-medical-green-600" />
+ <Zap className="w-5 h-5 text-[#2C4A60]" />
  Device Network Details
  </h4>
  
@@ -1093,7 +1093,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Zap className="w-5 h-5 text-medical-green-600" />
+ <Zap className="w-5 h-5 text-[#2C4A60]" />
  Device Performance
  </h4>
  <div className="space-y-3">

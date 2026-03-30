@@ -78,9 +78,9 @@ const ReferralPathwayCard: React.FC<ReferralPathwayCardProps> = ({
  };
  case 'urgent':
  return {
- color: 'bg-medical-amber-100 text-medical-amber-700 border-medical-amber-300',
- bgColor: 'bg-medical-amber-50',
- accentColor: 'border-l-medical-amber-500',
+ color: 'bg-crimson-100 text-crimson-700 border-crimson-200',
+ bgColor: 'bg-crimson-50',
+ accentColor: 'border-l-crimson-500',
  icon: Clock,
  priority: 'URGENT'
  };
@@ -146,13 +146,13 @@ const ReferralPathwayCard: React.FC<ReferralPathwayCardProps> = ({
  const modalConfig = {
  accept: {
  title: 'Accept Referral',
- color: 'medical-green',
+ color: 'chrome-blue',
  actionText: 'Accept Referral',
  placeholder: 'Optional: Add notes for the accepting provider...'
  },
  defer: {
  title: 'Defer Referral',
- color: 'medical-amber',
+ color: 'crimson',
  actionText: 'Defer Referral',
  placeholder: 'Reason for deferring this referral...'
  },
@@ -278,7 +278,7 @@ const ReferralPathwayCard: React.FC<ReferralPathwayCardProps> = ({
 
  {/* Revenue Estimate */}
  {estimatedRevenue && (
- <div className="mt-2 text-xs text-medical-green-600 font-medium">
+ <div className="mt-2 text-xs text-[#2C4A60] font-medium">
  Estimated Revenue Impact: ${estimatedRevenue.toLocaleString()}
  </div>
  )}
@@ -338,7 +338,7 @@ const ReferralPathwayCard: React.FC<ReferralPathwayCardProps> = ({
  {clinicalContext.currentMedications && clinicalContext.currentMedications.length > 0 && (
  <div>
  <h4 className="font-medium text-titanium-800 text-sm mb-2 flex items-center gap-2">
- <Pill className="w-4 h-4 text-medical-green-500" />
+ <Pill className="w-4 h-4 text-[#2C4A60]" />
  Current Medications
  </h4>
  <div className="space-y-1">
@@ -372,7 +372,7 @@ const ReferralPathwayCard: React.FC<ReferralPathwayCardProps> = ({
  {clinicalContext.vitals && clinicalContext.vitals.length > 0 && (
  <div>
  <h4 className="font-medium text-titanium-800 text-sm mb-2 flex items-center gap-2">
- <Activity className="w-4 h-4 text-medical-amber-500" />
+ <Activity className="w-4 h-4 text-crimson-500" />
  Recent Vitals
  </h4>
  <div className="grid grid-cols-3 gap-2">
@@ -396,7 +396,7 @@ const ReferralPathwayCard: React.FC<ReferralPathwayCardProps> = ({
  <div className="flex gap-2">
  <button
  onClick={() => setShowActionModal('accept')}
- className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-medical-green-600 hover:bg-medical-green-700 text-white rounded-lg font-medium transition-colors"
+ className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#2C4A60] hover:bg-[#2C4A60] text-white rounded-lg font-medium transition-colors"
  >
  <CheckCircle className="w-4 h-4" />
  Accept
@@ -404,7 +404,7 @@ const ReferralPathwayCard: React.FC<ReferralPathwayCardProps> = ({
  
  <button
  onClick={() => setShowActionModal('defer')}
- className="flex items-center justify-center gap-2 px-4 py-2 bg-medical-amber-600 hover:bg-medical-amber-700 text-white rounded-lg font-medium transition-colors"
+ className="flex items-center justify-center gap-2 px-4 py-2 bg-crimson-600 hover:bg-crimson-700 text-white rounded-lg font-medium transition-colors"
  >
  <Pause className="w-4 h-4" />
  Defer

@@ -456,9 +456,9 @@ const EPReferralTrackerEnhanced: React.FC = () => {
 
   const getStatusIcon = (status: string) => {
  const icons = {
- pending: <Clock className="w-5 h-5 text-medical-amber-600" />,
+ pending: <Clock className="w-5 h-5 text-crimson-600" />,
  scheduled: <Calendar className="w-5 h-5 text-porsche-600" />,
- completed: <CheckCircle className="w-5 h-5 text-medical-green-600" />,
+ completed: <CheckCircle className="w-5 h-5 text-[#2C4A60]" />,
  cancelled: <XCircle className="w-5 h-5 text-titanium-500" />,
  overdue: <AlertTriangle className="w-5 h-5 text-medical-red-600" />
  };
@@ -467,9 +467,9 @@ const EPReferralTrackerEnhanced: React.FC = () => {
 
   const getStatusColor = (status: string) => {
  const colors = {
- pending: 'bg-medical-amber-50 text-medical-amber-800 border-medical-amber-200',
+ pending: 'bg-crimson-50 text-crimson-700 border-crimson-200',
  scheduled: 'bg-porsche-50 text-porsche-800 border-porsche-200',
- completed: 'bg-medical-green-50 text-medical-green-800 border-medical-green-200',
+ completed: 'bg-[#f0f5fa] text-[#2C4A60] border-[#C8D4DC]',
  cancelled: 'bg-titanium-100 text-titanium-700 border-titanium-300',
  overdue: 'bg-medical-red-50 text-medical-red-800 border-medical-red-200'
  };
@@ -478,8 +478,8 @@ const EPReferralTrackerEnhanced: React.FC = () => {
 
   const getInsuranceColor = (status: string) => {
  const colors = {
- approved: 'text-medical-green-600 bg-medical-green-100',
- pending: 'text-medical-amber-600 bg-medical-amber-100',
+ approved: 'text-[#2C4A60] bg-[#e0eaf3]',
+ pending: 'text-crimson-600 bg-crimson-100',
  denied: 'text-medical-red-600 bg-medical-red-100',
  not_required: 'text-titanium-600 bg-titanium-100',
  };
@@ -522,10 +522,10 @@ const EPReferralTrackerEnhanced: React.FC = () => {
  <div className="grid grid-cols-5 gap-4 mb-6">
  {[
  { key: 'all', label: 'Total', count: statusCounts.all, color: 'titanium' },
- { key: 'pending', label: 'Pending', count: statusCounts.pending, color: 'medical-amber' },
+ { key: 'pending', label: 'Pending', count: statusCounts.pending, color: 'crimson' },
  { key: 'scheduled', label: 'Scheduled', count: statusCounts.scheduled, color: 'porsche' },
  { key: 'overdue', label: 'Overdue', count: statusCounts.overdue, color: 'medical-red' },
- { key: 'completed', label: 'Completed', count: statusCounts.completed, color: 'medical-green' }
+ { key: 'completed', label: 'Completed', count: statusCounts.completed, color: 'chrome-blue' }
  ].map(({ key, label, count, color }) => (
  <button
  key={key}
@@ -577,7 +577,7 @@ const EPReferralTrackerEnhanced: React.FC = () => {
  key={referral.id}
  className={`metal-card border-l-4 transition-all duration-300 hover:shadow-chrome-elevated cursor-pointer ${
  referral.status === 'overdue' ? 'border-l-medical-red-400' :
- referral.priority === 'urgent' ? 'border-l-medical-amber-400' :
+ referral.priority === 'urgent' ? 'border-l-crimson-400' :
  'border-l-porsche-400'
  }`}
  onClick={() => setSelectedReferral(selectedReferral?.id === referral.id ? null : referral)}
@@ -675,7 +675,7 @@ const EPReferralTrackerEnhanced: React.FC = () => {
  {referral.completedDate && (
  <div className="text-center p-3 bg-white rounded-lg border border-titanium-200">
  <div className="text-sm text-titanium-600 mb-1">Completed</div>
- <div className="font-medium text-medical-green-700">
+ <div className="font-medium text-[#2C4A60]">
  {new Date(referral.completedDate).toLocaleDateString()}
  </div>
  </div>
@@ -733,13 +733,13 @@ const EPReferralTrackerEnhanced: React.FC = () => {
  <h4 className="font-semibold text-titanium-900 mb-3">Next Steps</h4>
  <div className="space-y-2">
  <div className="flex items-center gap-2">
- <CheckCircle className="w-4 h-4 text-medical-green-600" />
+ <CheckCircle className="w-4 h-4 text-[#2C4A60]" />
  <span className="text-sm text-titanium-800">Follow-up required: {referral.followUpRequired ? 'Yes' : 'No'}</span>
  </div>
  {referral.notes && (
  <div className="mt-3">
  <div className="text-sm text-titanium-600 mb-1">Notes:</div>
- <div className="text-sm text-titanium-800 bg-medical-amber-50 p-3 rounded border border-medical-amber-200">
+ <div className="text-sm text-titanium-800 bg-crimson-50 p-3 rounded border border-crimson-200">
  {referral.notes}
  </div>
  </div>
@@ -758,12 +758,12 @@ const EPReferralTrackerEnhanced: React.FC = () => {
  Follow Up
  </button>
  {referral.status === 'pending' && (
- <button className="px-4 py-2 bg-medical-green-100 text-medical-green-800 text-sm rounded-lg hover:bg-medical-green-200 transition-colors border border-medical-green-300">
+ <button className="px-4 py-2 bg-[#e0eaf3] text-[#2C4A60] text-sm rounded-lg hover:bg-[#C8D4DC] transition-colors border border-[#C8D4DC]">
  Mark Scheduled
  </button>
  )}
  {referral.status === 'scheduled' && (
- <button className="px-4 py-2 bg-medical-amber-100 text-medical-amber-800 text-sm rounded-lg hover:bg-medical-amber-200 transition-colors border border-medical-amber-300">
+ <button className="px-4 py-2 bg-crimson-100 text-crimson-700 text-sm rounded-lg hover:bg-crimson-100 transition-colors border border-crimson-200">
  Send Reminder
  </button>
  )}
@@ -771,7 +771,7 @@ const EPReferralTrackerEnhanced: React.FC = () => {
  <div className="text-sm text-titanium-600">
  {referral.followUpRequired && (
  <span className="flex items-center gap-1">
- <AlertTriangle className="w-4 h-4 text-medical-amber-600" />
+ <AlertTriangle className="w-4 h-4 text-crimson-600" />
  Follow-up required
  </span>
  )}

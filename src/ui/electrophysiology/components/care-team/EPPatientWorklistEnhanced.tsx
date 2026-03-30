@@ -552,23 +552,23 @@ const EPPatientWorklistEnhanced: React.FC = () => {
   const getPriorityColor = (priority: string) => {
  const colors = {
  high: 'border-l-medical-red-400 bg-medical-red-50/50',
- medium: 'border-l-medical-amber-400 bg-medical-amber-50',
- low: 'border-l-medical-green-400 bg-medical-green-50',
+ medium: 'border-l-crimson-400 bg-crimson-50',
+ low: 'border-l-[#4A6880] bg-[#f0f5fa]',
  };
  return colors[priority as keyof typeof colors];
   };
 
   const getRiskColor = (riskScore: number) => {
  if (riskScore >= 8) return 'text-medical-red-600 bg-medical-red-100';
- if (riskScore >= 6) return 'text-medical-amber-600 bg-medical-amber-100';
- return 'text-medical-green-600 bg-medical-green-100';
+ if (riskScore >= 6) return 'text-crimson-600 bg-crimson-100';
+ return 'text-[#2C4A60] bg-[#e0eaf3]';
   };
 
   const getCHA2DS2VAScColor = (riskCategory: string) => {
  const colors = {
- 'I': 'text-medical-green-600 bg-medical-green-100',
+ 'I': 'text-[#2C4A60] bg-[#e0eaf3]',
  'II': 'text-porsche-600 bg-porsche-100',
- 'III': 'text-medical-amber-600 bg-medical-amber-100',
+ 'III': 'text-crimson-600 bg-crimson-100',
  'IV': 'text-medical-red-600 bg-medical-red-100',
  };
  return colors[riskCategory as keyof typeof colors];
@@ -707,8 +707,8 @@ const EPPatientWorklistEnhanced: React.FC = () => {
  <div className="text-sm text-titanium-600 mb-1">Priority</div>
  <div className={`inline-block px-3 py-1 rounded-lg font-semibold text-sm ${
  patient.priority === 'high' ? 'bg-medical-red-100 text-medical-red-700' :
- patient.priority === 'medium' ? 'bg-medical-amber-100 text-medical-amber-700' :
- 'bg-medical-green-100 text-medical-green-700'
+ patient.priority === 'medium' ? 'bg-crimson-100 text-crimson-700' :
+ 'bg-[#e0eaf3] text-[#2C4A60]'
  }`}>
  {patient.priority.toUpperCase()}
  </div>
@@ -798,8 +798,8 @@ const EPPatientWorklistEnhanced: React.FC = () => {
  </h4>
  </div>
  <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
- data.status === 'optimal' ? 'bg-medical-green-100 text-medical-green-700' :
- data.status === 'suboptimal' ? 'bg-medical-amber-100 text-medical-amber-700' :
+ data.status === 'optimal' ? 'bg-[#e0eaf3] text-[#2C4A60]' :
+ data.status === 'suboptimal' ? 'bg-crimson-100 text-crimson-700' :
  data.status === 'not_started' ? 'bg-medical-red-100 text-medical-red-700' :
  'bg-titanium-100 text-titanium-600'
  }`}>
@@ -832,7 +832,7 @@ const EPPatientWorklistEnhanced: React.FC = () => {
  {data.nextAction && (
  <div className="md:col-span-2">
  <span className="text-titanium-600">Next Action:</span>
- <div className="font-semibold text-medical-green-900">{data.nextAction}</div>
+ <div className="font-semibold text-[#2C4A60]">{data.nextAction}</div>
  </div>
  )}
  </div>
@@ -856,8 +856,8 @@ const EPPatientWorklistEnhanced: React.FC = () => {
  <div className="ml-4 text-right">
  <div className={`px-2 py-1 rounded text-xs font-semibold ${
  opportunity.priority === 'high' ? 'bg-medical-red-100 text-medical-red-700' :
- opportunity.priority === 'medium' ? 'bg-medical-amber-100 text-medical-amber-700' :
- 'bg-medical-green-100 text-medical-green-700'
+ opportunity.priority === 'medium' ? 'bg-crimson-100 text-crimson-700' :
+ 'bg-[#e0eaf3] text-[#2C4A60]'
  }`}>
  {opportunity.priority.toUpperCase()}
  </div>
@@ -882,7 +882,7 @@ const EPPatientWorklistEnhanced: React.FC = () => {
  {patient.treatmentGaps.map((gap, index) => (
  <span
  key={gap}
- className="px-3 py-1 bg-medical-amber-50 text-medical-amber-800 text-sm rounded-lg border border-medical-amber-200"
+ className="px-3 py-1 bg-crimson-50 text-crimson-700 text-sm rounded-lg border border-crimson-200"
  >
  {gap}
  </span>

@@ -50,7 +50,7 @@ const mockModuleData = {
  name: 'Electrophysiology',
  displayName: 'Electrophysiology',
  icon: Zap,
- color: 'medical-teal',
+ color: 'chrome-blue',
  activeAlerts: 18,
  openGaps: 89,
  pendingReferrals: 6,
@@ -63,7 +63,7 @@ const mockModuleData = {
  name: 'Vascular',
  displayName: 'Vascular',
  icon: Route,
- color: 'medical-green',
+ color: 'chrome-blue',
  activeAlerts: 7,
  openGaps: 34,
  pendingReferrals: 4,
@@ -76,7 +76,7 @@ const mockModuleData = {
  name: 'Valvular',
  displayName: 'Valvular',
  icon: Activity,
- color: 'medical-amber',
+ color: 'crimson',
  activeAlerts: 9,
  openGaps: 45,
  pendingReferrals: 3,
@@ -136,23 +136,17 @@ const ModuleNavigator: React.FC<ModuleNavigatorProps> = ({
  border: 'border-medical-arterial-200',
  badge: 'bg-medical-arterial-500 text-white'
  },
- 'medical-teal': {
- bg: isActive ? 'bg-medical-teal-500' : 'bg-medical-teal-50 hover:bg-medical-teal-100',
- text: isActive ? 'text-white' : 'text-medical-teal-700',
- border: 'border-medical-teal-200',
- badge: 'bg-medical-teal-500 text-white'
+ 'chrome-blue': {
+ bg: isActive ? 'bg-[#2C4A60]' : 'bg-[#f0f5fa] hover:bg-[#e0eaf3]',
+ text: isActive ? 'text-white' : 'text-[#2C4A60]',
+ border: 'border-[#C8D4DC]',
+ badge: 'bg-[#2C4A60] text-white'
  },
- 'medical-green': {
- bg: isActive ? 'bg-medical-green-500' : 'bg-medical-green-50 hover:bg-medical-green-100',
- text: isActive ? 'text-white' : 'text-medical-green-700',
- border: 'border-medical-green-200',
- badge: 'bg-medical-green-500 text-white'
- },
- 'medical-amber': {
- bg: isActive ? 'bg-medical-amber-500' : 'bg-medical-amber-50 hover:bg-medical-amber-100',
- text: isActive ? 'text-white' : 'text-medical-amber-700',
- border: 'border-medical-amber-200',
- badge: 'bg-medical-amber-500 text-white'
+ 'crimson': {
+ bg: isActive ? 'bg-crimson-500' : 'bg-crimson-50 hover:bg-crimson-100',
+ text: isActive ? 'text-white' : 'text-crimson-700',
+ border: 'border-crimson-200',
+ badge: 'bg-crimson-500 text-white'
  },
  'medical-red': {
  bg: isActive ? 'bg-medical-red-500' : 'bg-medical-red-50 hover:bg-medical-red-100',
@@ -203,7 +197,7 @@ const ModuleNavigator: React.FC<ModuleNavigatorProps> = ({
  {layout === 'sidebar' && (
  <>
  {module.openGaps > 0 && (
- <span className="px-1.5 py-0.5 bg-medical-amber-500 text-white rounded text-xs font-bold">
+ <span className="px-1.5 py-0.5 bg-crimson-500 text-white rounded text-xs font-bold">
  {module.openGaps}
  </span>
  )}
@@ -257,7 +251,7 @@ const ModuleNavigator: React.FC<ModuleNavigatorProps> = ({
  <span>{module.activeAlerts} alerts</span>
  </div>
  <div className="flex items-center gap-2">
- <Target className="w-3 h-3 text-medical-amber-500" />
+ <Target className="w-3 h-3 text-crimson-500" />
  <span>{module.openGaps} gaps</span>
  </div>
  <div className="flex items-center gap-2">
@@ -384,7 +378,7 @@ const ModuleNavigator: React.FC<ModuleNavigatorProps> = ({
  <div className="w-px h-4 bg-white" />
  
  <div className="flex items-center gap-1">
- <TrendingUp className="w-4 h-4 text-medical-green-500" />
+ <TrendingUp className="w-4 h-4 text-[#2C4A60]" />
  <span className="font-medium text-titanium-900">
  {mockModuleData[currentModule as keyof typeof mockModuleData].qualityScore}%
  </span>
@@ -394,7 +388,7 @@ const ModuleNavigator: React.FC<ModuleNavigatorProps> = ({
  <div className="w-px h-4 bg-white" />
  
  <div className="flex items-center gap-1">
- <DollarSign className="w-4 h-4 text-medical-green-500" />
+ <DollarSign className="w-4 h-4 text-[#2C4A60]" />
  <span className="font-medium text-titanium-900">
  ${toFixed(mockModuleData[currentModule as keyof typeof mockModuleData].revenueOpportunity / 1000000, 1)}M
  </span>

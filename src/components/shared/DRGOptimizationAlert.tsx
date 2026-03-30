@@ -35,14 +35,14 @@ const DRGOptimizationAlert: React.FC<DRGOptimizationAlertProps> = ({
   const getPriorityColor = (priority: 'high' | 'medium' | 'low') => {
  switch (priority) {
  case 'high': return 'border-medical-red-300 bg-medical-red-50';
- case 'medium': return 'border-medical-amber-300 bg-medical-amber-50';
+ case 'medium': return 'border-crimson-200 bg-crimson-50';
  case 'low': return 'border-porsche-300 bg-porsche-50';
  }
   };
 
   const getConfidenceColor = (confidence: number) => {
- if (confidence >= 90) return 'bg-medical-green-100 text-medical-green-800';
- if (confidence >= 75) return 'bg-medical-amber-100 text-medical-amber-800';
+ if (confidence >= 90) return 'bg-[#e0eaf3] text-[#2C4A60]';
+ if (confidence >= 75) return 'bg-crimson-100 text-crimson-700';
  return 'bg-medical-red-100 text-medical-red-800';
   };
 
@@ -50,17 +50,17 @@ const DRGOptimizationAlert: React.FC<DRGOptimizationAlertProps> = ({
 
   return (
  <div className="metal-card">
- <div className="px-6 py-4 border-b border-titanium-200 bg-gradient-to-r from-titanium-50 to-medical-green-50/40">
+ <div className="px-6 py-4 border-b border-titanium-200 bg-gradient-to-r from-titanium-50 to-[#f0f5fa]/40">
  <div className="flex items-center justify-between">
  <div>
  <h3 className="text-lg font-semibold text-titanium-900 mb-2 flex items-center gap-2">
- <TrendingUp className="w-5 h-5 text-medical-green-600" />
+ <TrendingUp className="w-5 h-5 text-[#2C4A60]" />
  {title}
  </h3>
  <p className="text-sm text-titanium-600">Real-time identification of coding improvements</p>
  </div>
  <div className="text-right">
- <div className="text-2xl font-bold text-medical-green-700">
+ <div className="text-2xl font-bold text-[#2C4A60]">
  +${totalPotentialRevenue.toLocaleString()}
  </div>
  <div className="text-xs text-titanium-500">Total Opportunity</div>
@@ -85,7 +85,7 @@ const DRGOptimizationAlert: React.FC<DRGOptimizationAlertProps> = ({
  </div>
  )}
  <div className="flex items-center gap-2 mb-2">
- <span className="text-sm font-semibold text-medical-green-800">
+ <span className="text-sm font-semibold text-[#2C4A60]">
  DRG {opportunity.currentDRG} → {opportunity.potentialDRG}
  </span>
  <span className={`text-xs px-2 py-1 rounded-full font-medium ${getConfidenceColor(opportunity.confidence)}`}>
@@ -93,7 +93,7 @@ const DRGOptimizationAlert: React.FC<DRGOptimizationAlertProps> = ({
  </span>
  <span className={`text-xs px-2 py-1 rounded-full font-medium ${
  opportunity.priority === 'high' ? 'bg-medical-red-100 text-medical-red-800' :
- opportunity.priority === 'medium' ? 'bg-medical-amber-100 text-medical-amber-800' :
+ opportunity.priority === 'medium' ? 'bg-crimson-100 text-crimson-700' :
  'bg-porsche-100 text-porsche-800'
  }`}>
  {opportunity.priority.toUpperCase()} PRIORITY
@@ -101,7 +101,7 @@ const DRGOptimizationAlert: React.FC<DRGOptimizationAlertProps> = ({
  </div>
  <div className="text-xs text-titanium-700 mb-2">
  <div className="font-medium">Current: {opportunity.currentDRGDescription}</div>
- <div className="font-medium text-medical-green-800">Potential: {opportunity.potentialDRGDescription}</div>
+ <div className="font-medium text-[#2C4A60]">Potential: {opportunity.potentialDRGDescription}</div>
  </div>
  <div className="text-xs text-titanium-600 mb-2">
  <strong>Documentation needed:</strong> {opportunity.documentationNeeded.join(', ')}
@@ -120,7 +120,7 @@ const DRGOptimizationAlert: React.FC<DRGOptimizationAlertProps> = ({
  </div>
  </div>
  <div className="text-right ml-4">
- <div className="text-lg font-bold text-medical-green-700 flex items-center gap-1">
+ <div className="text-lg font-bold text-[#2C4A60] flex items-center gap-1">
  <DollarSign className="w-4 h-4" />
  +{opportunity.revenueImpact.toLocaleString()}
  </div>

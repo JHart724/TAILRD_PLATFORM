@@ -141,19 +141,19 @@ const GDMTOptimizationTracker: React.FC = () => {
  switch (status) {
  case 'optimal':
  return {
- color: 'text-medical-green-600',
- bgColor: 'bg-medical-green-100',
- borderColor: 'border-medical-green-300',
+ color: 'text-[#2C4A60]',
+ bgColor: 'bg-[#e0eaf3]',
+ borderColor: 'border-[#C8D4DC]',
  icon: CheckCircle,
- light: 'bg-medical-green-500'
+ light: 'bg-[#2C4A60]'
  };
  case 'suboptimal':
  return {
- color: 'text-medical-amber-600',
- bgColor: 'bg-medical-amber-100',
- borderColor: 'border-medical-amber-300',
+ color: 'text-crimson-600',
+ bgColor: 'bg-crimson-100',
+ borderColor: 'border-crimson-200',
  icon: AlertTriangle,
- light: 'bg-medical-amber-500'
+ light: 'bg-crimson-500'
  };
  case 'contraindicated':
  return {
@@ -183,8 +183,8 @@ const GDMTOptimizationTracker: React.FC = () => {
   };
 
   const getOverallGDMTColor = (score: number) => {
- if (score >= 85) return 'text-medical-green-600';
- if (score >= 65) return 'text-medical-amber-600';
+ if (score >= 85) return 'text-[#2C4A60]';
+ if (score >= 65) return 'text-crimson-600';
  return 'text-medical-red-600';
   };
 
@@ -226,8 +226,8 @@ const GDMTOptimizationTracker: React.FC = () => {
  <div className="w-full bg-titanium-200 rounded-full h-3 mb-2">
  <div
  className={`h-3 rounded-full transition-all duration-500 ${
- currentPatient.overallGDMTScore >= 85 ? 'bg-medical-green-500' :
- currentPatient.overallGDMTScore >= 65 ? 'bg-medical-amber-500' :
+ currentPatient.overallGDMTScore >= 85 ? 'bg-[#2C4A60]' :
+ currentPatient.overallGDMTScore >= 65 ? 'bg-crimson-500' :
  'bg-medical-red-500'
  }`}
  style={{ width: `${currentPatient.overallGDMTScore}%` }}
@@ -401,14 +401,14 @@ const GDMTOptimizationTracker: React.FC = () => {
  
  <div className="flex justify-between items-center text-sm">
  <span className="text-titanium-600">At target dose:</span>
- <span className="font-medium text-medical-green-600">
+ <span className="font-medium text-[#2C4A60]">
  {mockPopulationMetrics.onACEi.atTarget.toLocaleString()} ({Math.round(mockPopulationMetrics.onACEi.atTarget / mockPopulationMetrics.onACEi.count * 100)}%)
  </span>
  </div>
 
  <div className="w-full bg-titanium-200 rounded-full h-2">
  <div
- className="h-2 bg-medical-green-500 rounded-full transition-all duration-500"
+ className="h-2 bg-[#2C4A60] rounded-full transition-all duration-500"
  style={{ width: `${mockPopulationMetrics.onACEi.atTarget / mockPopulationMetrics.onACEi.count * 100}%` }}
  />
  </div>
@@ -447,14 +447,14 @@ const GDMTOptimizationTracker: React.FC = () => {
  
  <div className="flex justify-between items-center text-sm">
  <span className="text-titanium-600">At target dose:</span>
- <span className="font-medium text-medical-green-600">
+ <span className="font-medium text-[#2C4A60]">
  {mockPopulationMetrics.onBetaBlocker.atTarget.toLocaleString()} ({Math.round(mockPopulationMetrics.onBetaBlocker.atTarget / mockPopulationMetrics.onBetaBlocker.count * 100)}%)
  </span>
  </div>
 
  <div className="w-full bg-titanium-200 rounded-full h-2">
  <div
- className="h-2 bg-medical-green-500 rounded-full transition-all duration-500"
+ className="h-2 bg-[#2C4A60] rounded-full transition-all duration-500"
  style={{ width: `${mockPopulationMetrics.onBetaBlocker.atTarget / mockPopulationMetrics.onBetaBlocker.count * 100}%` }}
  />
  </div>
@@ -463,12 +463,12 @@ const GDMTOptimizationTracker: React.FC = () => {
  </div>
 
  {/* MRA */}
- <div className="retina-card border-l-4 border-l-medical-green-500">
+ <div className="retina-card border-l-4 border-l-[#2C4A60]">
  <div className="p-4">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center gap-2">
- <div className="p-2 bg-medical-green-100 rounded-lg">
- <Activity className="w-5 h-5 text-medical-green-600" />
+ <div className="p-2 bg-[#e0eaf3] rounded-lg">
+ <Activity className="w-5 h-5 text-[#2C4A60]" />
  </div>
  <div>
  <h3 className="font-semibold text-titanium-800">MRA</h3>
@@ -476,7 +476,7 @@ const GDMTOptimizationTracker: React.FC = () => {
  </div>
  </div>
  <div className="text-right">
- <div className="text-xl font-bold text-medical-green-600">
+ <div className="text-xl font-bold text-[#2C4A60]">
  {mockPopulationMetrics.onMRA.percentage}%
  </div>
  <div className="text-xs text-titanium-600">On therapy</div>
@@ -493,14 +493,14 @@ const GDMTOptimizationTracker: React.FC = () => {
  
  <div className="flex justify-between items-center text-sm">
  <span className="text-titanium-600">At target dose:</span>
- <span className="font-medium text-medical-green-600">
+ <span className="font-medium text-[#2C4A60]">
  {mockPopulationMetrics.onMRA.atTarget.toLocaleString()} ({Math.round(mockPopulationMetrics.onMRA.atTarget / mockPopulationMetrics.onMRA.count * 100)}%)
  </span>
  </div>
 
  <div className="w-full bg-titanium-200 rounded-full h-2">
  <div
- className="h-2 bg-medical-green-500 rounded-full transition-all duration-500"
+ className="h-2 bg-[#2C4A60] rounded-full transition-all duration-500"
  style={{ width: `${mockPopulationMetrics.onMRA.atTarget / mockPopulationMetrics.onMRA.count * 100}%` }}
  />
  </div>
@@ -509,12 +509,12 @@ const GDMTOptimizationTracker: React.FC = () => {
  </div>
 
  {/* SGLT2i */}
- <div className="retina-card border-l-4 border-l-medical-amber-500">
+ <div className="retina-card border-l-4 border-l-crimson-500">
  <div className="p-4">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center gap-2">
- <div className="p-2 bg-medical-amber-100 rounded-lg">
- <Target className="w-5 h-5 text-medical-amber-600" />
+ <div className="p-2 bg-crimson-100 rounded-lg">
+ <Target className="w-5 h-5 text-crimson-600" />
  </div>
  <div>
  <h3 className="font-semibold text-titanium-800">SGLT2i</h3>
@@ -522,7 +522,7 @@ const GDMTOptimizationTracker: React.FC = () => {
  </div>
  </div>
  <div className="text-right">
- <div className="text-xl font-bold text-medical-amber-600">
+ <div className="text-xl font-bold text-crimson-600">
  {mockPopulationMetrics.onSGLT2i.percentage}%
  </div>
  <div className="text-xs text-titanium-600">On therapy</div>
@@ -539,19 +539,19 @@ const GDMTOptimizationTracker: React.FC = () => {
  
  <div className="flex justify-between items-center text-sm">
  <span className="text-titanium-600">At target dose:</span>
- <span className="font-medium text-medical-green-600">
+ <span className="font-medium text-[#2C4A60]">
  {mockPopulationMetrics.onSGLT2i.atTarget.toLocaleString()} ({Math.round(mockPopulationMetrics.onSGLT2i.atTarget / mockPopulationMetrics.onSGLT2i.count * 100)}%)
  </span>
  </div>
 
  <div className="w-full bg-titanium-200 rounded-full h-2">
  <div
- className="h-2 bg-medical-green-500 rounded-full transition-all duration-500"
+ className="h-2 bg-[#2C4A60] rounded-full transition-all duration-500"
  style={{ width: `${mockPopulationMetrics.onSGLT2i.atTarget / mockPopulationMetrics.onSGLT2i.count * 100}%` }}
  />
  </div>
  
- <div className="text-xs text-medical-amber-600 bg-medical-amber-50 p-2 rounded border border-medical-amber-200">
+ <div className="text-xs text-crimson-600 bg-crimson-50 p-2 rounded border border-crimson-200">
  <Info className="w-3 h-3 inline mr-1" />
  Opportunity for improvement: 55% of eligible patients not on therapy
  </div>

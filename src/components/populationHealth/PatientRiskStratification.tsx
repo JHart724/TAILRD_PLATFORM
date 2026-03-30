@@ -199,16 +199,16 @@ const PatientRiskStratification: React.FC<PatientRiskStratificationProps> = ({ c
 
   const getRiskColor = (score: number) => {
  if (score >= 80) return 'text-medical-red-600 bg-medical-red-50 border-medical-red-200';
- if (score >= 60) return 'text-medical-amber-600 bg-medical-amber-50 border-medical-amber-200';
+ if (score >= 60) return 'text-crimson-600 bg-crimson-50 border-crimson-200';
  if (score >= 40) return 'text-porsche-600 bg-porsche-50 border-porsche-200';
- return 'text-medical-green-600 bg-medical-green-50 border-medical-green-200';
+ return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
   };
 
   const getRiskBadgeColor = (score: number) => {
  if (score >= 80) return 'bg-medical-red-500';
- if (score >= 60) return 'bg-medical-amber-500';
+ if (score >= 60) return 'bg-crimson-500';
  if (score >= 40) return 'bg-porsche-500';
- return 'bg-medical-green-500';
+ return 'bg-[#2C4A60]';
   };
 
   const getRiskLabel = (score: number) => {
@@ -356,7 +356,7 @@ const PatientRiskStratification: React.FC<PatientRiskStratificationProps> = ({ c
  <div className="retina-card p-6 bg-white border border-titanium-200">
  <div className="flex items-center justify-between mb-4">
  <h2 className="text-xl font-semibold text-titanium-900">Risk Factor Impact</h2>
- <Target className="w-5 h-5 text-medical-amber-500" />
+ <Target className="w-5 h-5 text-crimson-500" />
  </div>
  
  <ResponsiveContainer width="100%" height={300}>
@@ -479,7 +479,7 @@ const PatientRiskStratification: React.FC<PatientRiskStratificationProps> = ({ c
  </div>
  <div className="flex justify-between text-sm">
  <span className="text-titanium-600">Comorbidity Burden</span>
- <span className="font-medium text-medical-amber-600">Moderate</span>
+ <span className="font-medium text-crimson-600">Moderate</span>
  </div>
  <div className="flex justify-between text-sm">
  <span className="text-titanium-600">Prior Admissions</span>
@@ -500,7 +500,7 @@ const PatientRiskStratification: React.FC<PatientRiskStratificationProps> = ({ c
  <span className="text-titanium-700">Review medication adherence</span>
  </div>
  <div className="flex items-center gap-2 text-sm">
- <Calendar className="w-3 h-3 text-medical-green-500" />
+ <Calendar className="w-3 h-3 text-[#2C4A60]" />
  <span className="text-titanium-700">Enroll in remote monitoring</span>
  </div>
  </div>
@@ -526,9 +526,9 @@ const PatientRiskStratification: React.FC<PatientRiskStratificationProps> = ({ c
  <div className="flex items-start justify-between mb-3">
  <div className="flex items-center gap-3">
  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${
- index === 0 ? 'bg-medical-green-500' :
+ index === 0 ? 'bg-[#2C4A60]' :
  index === 1 ? 'bg-porsche-500' :
- index === 2 ? 'bg-medical-amber-500' :
+ index === 2 ? 'bg-crimson-500' :
  'bg-medical-arterial-500'
  }`}>
  {index + 1}
@@ -542,7 +542,7 @@ const PatientRiskStratification: React.FC<PatientRiskStratificationProps> = ({ c
  
  <div className="grid grid-cols-2 gap-4 mb-3">
  <div className="text-center p-2 bg-white rounded-lg">
- <div className="text-lg font-bold text-medical-green-600">{intervention.impact}%</div>
+ <div className="text-lg font-bold text-[#2C4A60]">{intervention.impact}%</div>
  <div className="text-xs text-titanium-600">Impact Score</div>
  </div>
  <div className="text-center p-2 bg-white rounded-lg">

@@ -57,7 +57,7 @@ export const MODULE_CONFIGS: Record<string, ModuleConfig> = {
  description: '• GDMT Optimization • HFrEF/HFpEF Analytics',
  drgRanges: ['291-293'],
  primaryColor: 'porsche',
- secondaryColor: 'medical-green'
+ secondaryColor: 'chrome-blue'
   },
   electrophysiology: {
  name: 'electrophysiology',

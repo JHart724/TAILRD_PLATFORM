@@ -57,14 +57,14 @@ const EPDRGDetailModal: React.FC<EPDRGDetailModalProps> = ({
   };
 
   const getMarginColor = (marginPercent: number): string => {
- if (marginPercent >= 20) return 'text-medical-green-600';
- if (marginPercent >= 10) return 'text-medical-amber-600';
+ if (marginPercent >= 20) return 'text-[#2C4A60]';
+ if (marginPercent >= 10) return 'text-crimson-600';
  return 'text-medical-red-600';
   };
 
   const getMarginBgColor = (marginPercent: number): string => {
- if (marginPercent >= 20) return 'bg-medical-green-50';
- if (marginPercent >= 10) return 'bg-medical-amber-50';
+ if (marginPercent >= 20) return 'bg-[#f0f5fa]';
+ if (marginPercent >= 10) return 'bg-crimson-50';
  return 'bg-medical-red-50';
   };
 
@@ -161,19 +161,19 @@ const EPDRGDetailModal: React.FC<EPDRGDetailModalProps> = ({
  <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
  
  {/* Total Revenue */}
- <div className="bg-medical-green-50 rounded-xl p-6 border border-medical-green-200">
+ <div className="bg-[#f0f5fa] rounded-xl p-6 border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center">
- <DollarSign className="w-8 h-8 text-medical-green-600 mr-3" />
+ <DollarSign className="w-8 h-8 text-[#2C4A60] mr-3" />
  <div>
- <div className="text-lg font-bold text-medical-green-900">Total Revenue</div>
+ <div className="text-lg font-bold text-[#2C4A60]">Total Revenue</div>
  </div>
  </div>
  </div>
- <div className="text-3xl font-bold text-medical-green-900">
+ <div className="text-3xl font-bold text-[#2C4A60]">
  {formatMoney(totalRevenue)}
  </div>
- <div className="text-sm text-medical-green-700 mt-1">
+ <div className="text-sm text-[#2C4A60] mt-1">
  Avg: {formatMoney(avgReimbursement)}
  </div>
  </div>
@@ -191,7 +191,7 @@ const EPDRGDetailModal: React.FC<EPDRGDetailModalProps> = ({
  <div className="text-3xl font-bold text-porsche-900">
  {avgLos} days
  </div>
- <div className={`text-sm mt-1 ${avgLos <= targetLos ? 'text-medical-green-700' : 'text-medical-red-700'}`}>
+ <div className={`text-sm mt-1 ${avgLos <= targetLos ? 'text-[#2C4A60]' : 'text-medical-red-700'}`}>
  Target: {targetLos} days
  </div>
  </div>
@@ -285,7 +285,7 @@ const EPDRGDetailModal: React.FC<EPDRGDetailModalProps> = ({
  <div className="flex justify-between items-center">
  <span className="text-titanium-700">Cases Above Target Margin (≥20%)</span>
  <div className="text-right">
- <div className="text-xl font-bold text-medical-green-600">
+ <div className="text-xl font-bold text-[#2C4A60]">
  {cases.filter(c => c.marginPercent >= 20).length}
  </div>
  <div className="text-sm text-titanium-500">

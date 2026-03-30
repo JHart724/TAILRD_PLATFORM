@@ -297,9 +297,9 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  case 'ICD':
  return 'text-medical-red-600 bg-medical-red-100';
  case 'WATCHMAN':
- return 'text-medical-green-600 bg-medical-green-100';
+ return 'text-[#2C4A60] bg-[#e0eaf3]';
  case 'CardioMEMS':
- return 'text-medical-amber-600 bg-medical-amber-100';
+ return 'text-crimson-600 bg-crimson-100';
  case 'TAVR':
  return 'text-arterial-600 bg-arterial-100';
  case 'MitraClip':
@@ -314,9 +314,9 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  case 'high':
  return 'text-medical-red-600 bg-medical-red-100 border-medical-red-200';
  case 'medium':
- return 'text-medical-amber-600 bg-medical-amber-100 border-medical-amber-200';
+ return 'text-crimson-600 bg-crimson-100 border-crimson-200';
  case 'low':
- return 'text-medical-green-600 bg-medical-green-100 border-medical-green-200';
+ return 'text-[#2C4A60] bg-[#e0eaf3] border-[#C8D4DC]';
  default:
  return 'text-titanium-600 bg-titanium-100 border-titanium-200';
  }
@@ -327,9 +327,9 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  case 'eligible':
  return 'text-porsche-600 bg-porsche-100 border-porsche-200';
  case 'pending-approval':
- return 'text-medical-amber-600 bg-medical-amber-100 border-medical-amber-200';
+ return 'text-crimson-600 bg-crimson-100 border-crimson-200';
  case 'scheduled':
- return 'text-medical-green-600 bg-medical-green-100 border-medical-green-200';
+ return 'text-[#2C4A60] bg-[#e0eaf3] border-[#C8D4DC]';
  case 'declined':
  return 'text-medical-red-600 bg-medical-red-100 border-medical-red-200';
  case 'contraindicated':
@@ -385,7 +385,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  
  <button
  onClick={exportToCSV}
- className="flex items-center gap-2 px-4 py-2 bg-medical-green-600 text-white rounded-lg hover:bg-medical-green-700 transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-[#2C4A60] text-white rounded-lg hover:bg-[#2C4A60] transition-colors"
  >
  <Download className="w-4 h-4" />
  Export CSV
@@ -427,7 +427,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  <div className="retina-card p-4 border-l-4 border-l-porsche-500">
  <div className="flex items-center justify-between mb-2">
  <Users className="w-5 h-5 text-porsche-500" />
- <TrendingUp className="w-4 h-4 text-medical-green-500" />
+ <TrendingUp className="w-4 h-4 text-[#2C4A60]" />
  </div>
  <div className="text-2xl font-bold text-titanium-800 mb-1">
  {filteredPatients.length}
@@ -435,9 +435,9 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  <div className="text-sm text-titanium-600">Eligible Patients</div>
  </div>
 
- <div className="retina-card p-4 border-l-4 border-l-medical-green-500">
+ <div className="retina-card p-4 border-l-4 border-l-[#2C4A60]">
  <div className="flex items-center justify-between mb-2">
- <DollarSign className="w-5 h-5 text-medical-green-500" />
+ <DollarSign className="w-5 h-5 text-[#2C4A60]" />
  <span className="text-xs text-titanium-500">Avg ${Math.round(totalRevenue / filteredPatients.length / 1000)}K</span>
  </div>
  <div className="text-2xl font-bold text-titanium-800 mb-1">
@@ -446,9 +446,9 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  <div className="text-sm text-titanium-600">Total Revenue Potential</div>
  </div>
 
- <div className="retina-card p-4 border-l-4 border-l-medical-amber-500">
+ <div className="retina-card p-4 border-l-4 border-l-crimson-500">
  <div className="flex items-center justify-between mb-2">
- <Clock className="w-5 h-5 text-medical-amber-500" />
+ <Clock className="w-5 h-5 text-crimson-500" />
  <span className="text-xs text-titanium-500">Range: {Math.min(...filteredPatients.map(p => p.daysSinceEligible))}-{Math.max(...filteredPatients.map(p => p.daysSinceEligible))}d</span>
  </div>
  <div className="text-2xl font-bold text-titanium-800 mb-1">
@@ -518,8 +518,8 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  <div className="flex items-center gap-2">
  <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
  patient.eligibilityCriteriaMet === patient.totalCriteria 
- ? 'bg-medical-green-500' 
- : 'bg-medical-amber-500'
+ ? 'bg-[#2C4A60]' 
+ : 'bg-crimson-500'
  }`}>
  {patient.eligibilityCriteriaMet === patient.totalCriteria ? (
  <CheckCircle className="w-3 h-3 text-white" />
@@ -542,7 +542,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  )}
  </div>
  ) : (
- <span className="text-sm text-medical-green-600">None identified</span>
+ <span className="text-sm text-[#2C4A60]">None identified</span>
  )}
  </div>
  </td>
@@ -550,7 +550,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  <div className="text-sm">
  <div className={`font-medium ${
  patient.daysSinceEligible > 90 ? 'text-medical-red-600' :
- patient.daysSinceEligible > 30 ? 'text-medical-amber-600' :
+ patient.daysSinceEligible > 30 ? 'text-crimson-600' :
  'text-titanium-800'
  }`}>
  {patient.daysSinceEligible} days
@@ -558,7 +558,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  </div>
  </td>
  <td className="p-3">
- <div className="font-medium text-medical-green-600">
+ <div className="font-medium text-[#2C4A60]">
  ${patient.estimatedDRGRevenue.toLocaleString()}
  </div>
  </td>
@@ -589,13 +589,13 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  {/* Eligibility Criteria */}
  <div>
  <h4 className="font-semibold text-titanium-800 mb-3 flex items-center gap-2">
- <CheckCircle className="w-4 h-4 text-medical-green-500" />
+ <CheckCircle className="w-4 h-4 text-[#2C4A60]" />
  Eligibility Criteria
  </h4>
  <div className="space-y-2">
  {patient.eligibilityCriteria.map((criteria, idx) => (
  <div key={criteria} className="flex items-center gap-2 text-sm">
- <CheckCircle className="w-3 h-3 text-medical-green-500 flex-shrink-0" />
+ <CheckCircle className="w-3 h-3 text-[#2C4A60] flex-shrink-0" />
  <span className="text-titanium-700">{criteria}</span>
  </div>
  ))}

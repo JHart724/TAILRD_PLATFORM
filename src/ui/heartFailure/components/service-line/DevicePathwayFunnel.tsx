@@ -192,7 +192,7 @@ const DevicePathwayFunnel: React.FC = () => {
  {
  type: 'CardioMEMS',
  icon: Activity,
- color: 'medical-green',
+ color: 'chrome-blue',
  stages: [
  {
  stage: 'screening',
@@ -308,9 +308,9 @@ const DevicePathwayFunnel: React.FC = () => {
   const getStageColor = (stage: string) => {
  const colors = {
  screening: 'porsche',
- guidelines: 'medical-amber',
+ guidelines: 'crimson',
  evaluation: 'titanium',
- decision: 'medical-green',
+ decision: 'chrome-blue',
  implant: 'medical-red',
  };
  return colors[stage as keyof typeof colors] || 'titanium';
@@ -405,8 +405,8 @@ const DevicePathwayFunnel: React.FC = () => {
  <div className="text-right">
  {index > 0 && (
  <div className={`text-sm font-bold ${
- conversionRate >= 80 ? 'text-medical-green-600' :
- conversionRate >= 60 ? 'text-medical-amber-600' : 'text-medical-red-600'
+ conversionRate >= 80 ? 'text-[#2C4A60]' :
+ conversionRate >= 60 ? 'text-crimson-600' : 'text-medical-red-600'
  }`}>
  {formatPercentage(conversionRate)} conversion
  </div>
@@ -431,11 +431,11 @@ const DevicePathwayFunnel: React.FC = () => {
  onClick={() => handleMetricClick(stage.stage, 'eligible')}
  className="p-2 bg-white rounded-lg hover:bg-[#C8D4DC] hover:shadow-md transition-all cursor-pointer group"
  >
- <div className="text-lg font-bold text-medical-green-600 group-hover:text-medical-green-700">
+ <div className="text-lg font-bold text-[#2C4A60] group-hover:text-[#2C4A60]">
  {stage.eligible}
  </div>
  <div className="text-xs text-titanium-600 group-hover:text-titanium-700">Eligible</div>
- <ChevronRight className="w-3 h-3 mx-auto mt-1 opacity-0 group-hover:opacity-100 transition-opacity text-medical-green-600" />
+ <ChevronRight className="w-3 h-3 mx-auto mt-1 opacity-0 group-hover:opacity-100 transition-opacity text-[#2C4A60]" />
  </button>
  <button
  onClick={() => handleMetricClick(stage.stage, 'implanted')}
@@ -451,11 +451,11 @@ const DevicePathwayFunnel: React.FC = () => {
  onClick={() => handleMetricClick(stage.stage, 'pending')}
  className="p-2 bg-white rounded-lg hover:bg-[#F0F5FA] hover:shadow-md transition-all cursor-pointer group"
  >
- <div className="text-lg font-bold text-medical-amber-600 group-hover:text-medical-amber-700">
+ <div className="text-lg font-bold text-crimson-600 group-hover:text-crimson-700">
  {stage.pending}
  </div>
  <div className="text-xs text-titanium-600 group-hover:text-titanium-700">Pending</div>
- <ChevronRight className="w-3 h-3 mx-auto mt-1 opacity-0 group-hover:opacity-100 transition-opacity text-medical-amber-600" />
+ <ChevronRight className="w-3 h-3 mx-auto mt-1 opacity-0 group-hover:opacity-100 transition-opacity text-crimson-600" />
  </button>
  <button
  onClick={() => handleMetricClick(stage.stage, 'contraindicated')}
@@ -474,14 +474,14 @@ const DevicePathwayFunnel: React.FC = () => {
  {isSelected && selectedStageData && (
  <div className="mt-3 p-4 bg-white rounded-xl border border-titanium-200">
  <div className="flex items-center gap-2 mb-3">
- <AlertTriangle className="w-5 h-5 text-medical-amber-600" />
+ <AlertTriangle className="w-5 h-5 text-crimson-600" />
  <h4 className="font-semibold text-titanium-900">Common Barriers</h4>
  </div>
  <div className="grid grid-cols-3 gap-2">
  {selectedStageData.commonBarriers.map((barrier, idx) => (
  <div
  key={barrier}
- className="p-2 bg-medical-amber-50 rounded-lg text-sm text-titanium-800"
+ className="p-2 bg-crimson-50 rounded-lg text-sm text-titanium-800"
  >
  {barrier}
  </div>
@@ -489,9 +489,9 @@ const DevicePathwayFunnel: React.FC = () => {
  </div>
  {selectedStageData.successRate > 0 && (
  <div className="mt-3 flex items-center gap-2">
- <CheckCircle className="w-5 h-5 text-medical-green-600" />
+ <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
  <span className="text-sm text-titanium-700">
- Success Rate: <span className="font-bold text-medical-green-600">
+ Success Rate: <span className="font-bold text-[#2C4A60]">
  {formatPercentage(selectedStageData.successRate)}
  </span>
  </span>
@@ -528,7 +528,7 @@ const DevicePathwayFunnel: React.FC = () => {
 
  <div>
  <div className="text-sm text-titanium-600 mb-1">Success Rate</div>
- <div className="text-lg font-bold text-medical-green-600">
+ <div className="text-lg font-bold text-[#2C4A60]">
  {formatPercentage(selectedDeviceData.stages[4].successRate)}
  </div>
  <div className="text-sm text-titanium-600">

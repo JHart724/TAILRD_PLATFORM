@@ -116,9 +116,9 @@ const PopulationOverviewDashboard: React.FC<PopulationOverviewDashboardProps> = 
 
   const getStatusColor = (status: string) => {
  switch (status) {
- case 'exceeding': return 'text-medical-green-600';
+ case 'exceeding': return 'text-[#2C4A60]';
  case 'meeting': return 'text-porsche-600';
- case 'below': return 'text-medical-amber-600';
+ case 'below': return 'text-crimson-600';
  case 'critical': return 'text-medical-red-600';
  default: return 'text-titanium-600';
  }
@@ -184,7 +184,7 @@ const PopulationOverviewDashboard: React.FC<PopulationOverviewDashboardProps> = 
  <div className="flex items-center justify-between mb-2">
  <Users className="w-5 h-5 text-porsche-600" />
  <span className={`text-sm font-semibold flex items-center gap-1 ${
- patientGrowth >= 0 ? 'text-medical-green-600' : 'text-medical-red-600'
+ patientGrowth >= 0 ? 'text-[#2C4A60]' : 'text-medical-red-600'
  }`}>
  {patientGrowth >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
  {toFixed(Math.abs(patientGrowth), 1)}%
@@ -196,8 +196,8 @@ const PopulationOverviewDashboard: React.FC<PopulationOverviewDashboardProps> = 
 
  <div className="p-4 bg-white rounded-xl border border-titanium-200">
  <div className="flex items-center justify-between mb-2">
- <DollarSign className="w-5 h-5 text-medical-green-600" />
- <span className="text-sm font-semibold text-medical-green-600 flex items-center gap-1">
+ <DollarSign className="w-5 h-5 text-[#2C4A60]" />
+ <span className="text-sm font-semibold text-[#2C4A60] flex items-center gap-1">
  <TrendingUp className="w-3 h-3" />
  8.2%
  </span>
@@ -208,8 +208,8 @@ const PopulationOverviewDashboard: React.FC<PopulationOverviewDashboardProps> = 
 
  <div className="p-4 bg-white rounded-xl border border-titanium-200">
  <div className="flex items-center justify-between mb-2">
- <Award className="w-5 h-5 text-medical-amber-600" />
- <span className="text-sm font-semibold text-medical-green-600">85.2%</span>
+ <Award className="w-5 h-5 text-crimson-600" />
+ <span className="text-sm font-semibold text-[#2C4A60]">85.2%</span>
  </div>
  <div className="text-2xl font-bold text-titanium-900">4/5</div>
  <div className="text-sm text-titanium-600">Quality Measures</div>
@@ -274,7 +274,7 @@ const PopulationOverviewDashboard: React.FC<PopulationOverviewDashboardProps> = 
  <div className="retina-card p-6 bg-white border border-titanium-200">
  <div className="flex items-center justify-between mb-4">
  <h2 className="text-xl font-semibold text-titanium-900">Quality Measure Performance</h2>
- <Activity className="w-5 h-5 text-medical-green-500" />
+ <Activity className="w-5 h-5 text-[#2C4A60]" />
  </div>
  
  <div className="grid grid-cols-2 gap-4">
@@ -293,9 +293,9 @@ const PopulationOverviewDashboard: React.FC<PopulationOverviewDashboardProps> = 
  <div className="w-full bg-titanium-200 rounded-full h-2 mb-1">
  <div 
  className={`h-2 rounded-full transition-all duration-500 ${
- status === 'exceeding' ? 'bg-medical-green-500' :
+ status === 'exceeding' ? 'bg-[#2C4A60]' :
  status === 'meeting' ? 'bg-porsche-500' :
- status === 'below' ? 'bg-medical-amber-500' :
+ status === 'below' ? 'bg-crimson-500' :
  'bg-medical-red-500'
  }`}
  style={{ width: `${Math.min(measure.current, 100)}%` }}
@@ -358,7 +358,7 @@ const PopulationOverviewDashboard: React.FC<PopulationOverviewDashboardProps> = 
  <div className="retina-card p-6 bg-white border border-titanium-200">
  <div className="flex items-center justify-between mb-4">
  <h2 className="text-xl font-semibold text-titanium-900">Revenue Opportunities</h2>
- <DollarSign className="w-5 h-5 text-medical-green-500" />
+ <DollarSign className="w-5 h-5 text-[#2C4A60]" />
  </div>
  
  <div className="space-y-4">
@@ -366,7 +366,7 @@ const PopulationOverviewDashboard: React.FC<PopulationOverviewDashboardProps> = 
  <div key={item.category} className="p-4 bg-white rounded-lg border border-titanium-200">
  <div className="flex items-center justify-between mb-2">
  <div className="font-medium text-titanium-900">{item.category}</div>
- <div className="text-lg font-bold text-medical-green-600">
+ <div className="text-lg font-bold text-[#2C4A60]">
  ${toFixed(item.amount / 1000000, 1)}M
  </div>
  </div>
@@ -376,7 +376,7 @@ const PopulationOverviewDashboard: React.FC<PopulationOverviewDashboardProps> = 
  </div>
  <div className="w-full bg-titanium-200 rounded-full h-2 mt-2">
  <div 
- className="bg-medical-green-500 h-2 rounded-full transition-all duration-500"
+ className="bg-[#2C4A60] h-2 rounded-full transition-all duration-500"
  style={{ width: `${(item.amount / Math.max(...mockRevenueData.map(r => r.amount))) * 100}%` }}
  />
  </div>
@@ -389,7 +389,7 @@ const PopulationOverviewDashboard: React.FC<PopulationOverviewDashboardProps> = 
  <div className="retina-card p-6 bg-white border border-titanium-200">
  <div className="flex items-center justify-between mb-4">
  <h2 className="text-xl font-semibold text-titanium-900">Provider Performance</h2>
- <Award className="w-5 h-5 text-medical-amber-500" />
+ <Award className="w-5 h-5 text-crimson-500" />
  </div>
  
  <div className="space-y-3">
@@ -411,7 +411,7 @@ const PopulationOverviewDashboard: React.FC<PopulationOverviewDashboardProps> = 
  </div>
  </div>
  <div className="text-right">
- <div className="text-lg font-bold text-medical-green-600">
+ <div className="text-lg font-bold text-[#2C4A60]">
  ${toFixed(provider.revenue / 1000, 0)}K
  </div>
  </div>

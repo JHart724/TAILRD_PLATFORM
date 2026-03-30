@@ -700,9 +700,9 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  )}
 
  {/* Action Items */}
- <div className="bg-medical-green-50 rounded-lg p-4">
+ <div className="bg-[#f0f5fa] rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <Activity className="w-5 h-5 text-medical-green-600" />
+ <Activity className="w-5 h-5 text-[#2C4A60]" />
  Action Items & Care Plan
  </h3>
  <div className="space-y-3">
@@ -738,7 +738,7 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  {/* Action Buttons */}
  <div className="flex gap-3 pt-4 border-t border-gray-200">
  <button 
- className="flex-1 px-4 py-3 bg-medical-green-600 text-white rounded-lg font-medium hover:bg-medical-green-700 transition-colors"
+ className="flex-1 px-4 py-3 bg-[#2C4A60] text-white rounded-lg font-medium hover:bg-[#2C4A60] transition-colors"
  onClick={() => {
  console.log(`EP: Beginning care plan for patient ${patient.name} (${patient.mrn})`);
  {};

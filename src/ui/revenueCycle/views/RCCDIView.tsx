@@ -29,7 +29,7 @@ const RCCDIView: React.FC = () => {
  </div>
  </div>
 
- <div className="metal-card p-6 border-l-4 border-l-medical-green-400 bg-medical-green-50">
+ <div className="metal-card p-6 border-l-4 border-l-[#4A6880] bg-[#f0f5fa]">
  <div className="flex items-start justify-between mb-3">
  <div className="flex-1">
  <div className="text-sm font-semibold text-titanium-600 uppercase tracking-wider mb-2">
@@ -40,18 +40,18 @@ const RCCDIView: React.FC = () => {
  </div>
  <div className="text-sm text-titanium-600">Monthly Potential</div>
  </div>
- <div className="ml-4 p-3 rounded-xl bg-gradient-to-br from-white via-medical-green-50/60 to-white border border-titanium-200 shadow-lg">
- <DollarSign className="w-6 h-6 text-medical-green-600 drop-shadow-sm" />
+ <div className="ml-4 p-3 rounded-xl bg-gradient-to-br from-white via-[#f0f5fa]/60 to-white border border-titanium-200 shadow-lg">
+ <DollarSign className="w-6 h-6 text-[#2C4A60] drop-shadow-sm" />
  </div>
  </div>
- <div className="flex items-center gap-2 text-sm font-semibold text-medical-green-600">
+ <div className="flex items-center gap-2 text-sm font-semibold text-[#2C4A60]">
  <TrendingUp className="w-4 h-4" />
  <span>+23%</span>
  <span className="text-titanium-500 font-normal ml-1">vs last month</span>
  </div>
  </div>
 
- <div className="metal-card p-6 border-l-4 border-l-medical-amber-400 bg-medical-amber-50">
+ <div className="metal-card p-6 border-l-4 border-l-crimson-400 bg-crimson-50">
  <div className="flex items-start justify-between mb-3">
  <div className="flex-1">
  <div className="text-sm font-semibold text-titanium-600 uppercase tracking-wider mb-2">
@@ -62,11 +62,11 @@ const RCCDIView: React.FC = () => {
  </div>
  <div className="text-sm text-titanium-600">Within 48 Hours</div>
  </div>
- <div className="ml-4 p-3 rounded-xl bg-gradient-to-br from-white via-medical-amber-50/60 to-white border border-titanium-200 shadow-lg">
- <Clock className="w-6 h-6 text-medical-amber-600 drop-shadow-sm" />
+ <div className="ml-4 p-3 rounded-xl bg-gradient-to-br from-white via-crimson-50/60 to-white border border-titanium-200 shadow-lg">
+ <Clock className="w-6 h-6 text-crimson-600 drop-shadow-sm" />
  </div>
  </div>
- <div className="flex items-center gap-2 text-sm font-semibold text-medical-green-600">
+ <div className="flex items-center gap-2 text-sm font-semibold text-[#2C4A60]">
  <TrendingUp className="w-4 h-4" />
  <span>+12%</span>
  <span className="text-titanium-500 font-normal ml-1">improvement</span>
@@ -119,7 +119,7 @@ const RCCDIView: React.FC = () => {
  alert.priority === 'high' 
  ? 'bg-medical-red-100 text-medical-red-600'
  : alert.priority === 'medium'
- ? 'bg-medical-amber-100 text-medical-amber-600'
+ ? 'bg-crimson-100 text-crimson-600'
  : 'bg-porsche-100 text-porsche-600'
  }`}>
  <User className="w-5 h-5" />
@@ -135,7 +135,7 @@ const RCCDIView: React.FC = () => {
  alert.priority === 'high'
  ? 'bg-medical-red-100 text-medical-red-800'
  : alert.priority === 'medium'
- ? 'bg-medical-amber-100 text-medical-amber-800'
+ ? 'bg-crimson-100 text-crimson-700'
  : 'bg-porsche-100 text-porsche-800'
  }`}>
  {alert.priority.toUpperCase()} PRIORITY
@@ -143,7 +143,7 @@ const RCCDIView: React.FC = () => {
  </div>
  </div>
  <div className="text-right">
- <div className="text-xl font-bold text-medical-green-700">
+ <div className="text-xl font-bold text-[#2C4A60]">
  +${alert.impactAnalysis.reimbursementImpact.toLocaleString()}
  </div>
  <div className="text-sm text-titanium-500">Revenue Impact</div>
@@ -169,7 +169,7 @@ const RCCDIView: React.FC = () => {
  <div className="text-sm font-semibold text-titanium-700 mb-2">Suggested Additions</div>
  <div className="space-y-1">
  {alert.suggestedAdditions.map((suggestion, suggIndex) => (
- <div key={suggIndex} className="text-sm text-medical-green-700 bg-medical-green-100 px-3 py-1 rounded border border-medical-green-200">
+ <div key={suggIndex} className="text-sm text-[#2C4A60] bg-[#e0eaf3] px-3 py-1 rounded border border-[#C8D4DC]">
  {suggestion}
  </div>
  ))}
@@ -194,7 +194,7 @@ const RCCDIView: React.FC = () => {
  </div>
  <div>
  <div className="text-titanium-600">Reimbursement</div>
- <div className="font-semibold text-medical-green-700">
+ <div className="font-semibold text-[#2C4A60]">
  +${alert.impactAnalysis.reimbursementImpact.toLocaleString()}
  </div>
  </div>
@@ -208,7 +208,7 @@ const RCCDIView: React.FC = () => {
  </div>
 
  <div className="flex gap-3 mt-4">
- <button className="px-4 py-2 bg-medical-green-600 text-white text-sm rounded-lg hover:bg-medical-green-700 transition-colors font-medium">
+ <button className="px-4 py-2 bg-[#2C4A60] text-white text-sm rounded-lg hover:bg-[#2C4A60] transition-colors font-medium">
  Accept Suggestions
  </button>
  <button className="px-4 py-2 bg-titanium-100 text-titanium-700 text-sm rounded-lg hover:bg-titanium-200 transition-colors font-medium">
@@ -243,14 +243,14 @@ const RCCDIView: React.FC = () => {
  </div>
  </div>
 
- <div className="flex items-center justify-between p-4 bg-gradient-to-r from-medical-amber-50 to-medical-amber-100 rounded-lg border border-medical-amber-200">
+ <div className="flex items-center justify-between p-4 bg-gradient-to-r from-crimson-50 to-crimson-100 rounded-lg border border-crimson-200">
  <div>
- <div className="font-semibold text-medical-amber-900">Respiratory</div>
- <div className="text-sm text-medical-amber-700">18 opportunities • $42K potential</div>
+ <div className="font-semibold text-crimson-700">Respiratory</div>
+ <div className="text-sm text-crimson-700">18 opportunities • $42K potential</div>
  </div>
  <div className="text-right">
- <div className="text-2xl font-bold text-medical-amber-800">27%</div>
- <div className="text-xs text-medical-amber-600">of total opportunities</div>
+ <div className="text-2xl font-bold text-crimson-700">27%</div>
+ <div className="text-xs text-crimson-600">of total opportunities</div>
  </div>
  </div>
 
@@ -279,20 +279,20 @@ const RCCDIView: React.FC = () => {
  </div>
 
  <div className="metal-card">
- <div className="px-6 py-4 border-b border-titanium-200 bg-gradient-to-r from-titanium-50 to-medical-green-50/40">
+ <div className="px-6 py-4 border-b border-titanium-200 bg-gradient-to-r from-titanium-50 to-[#f0f5fa]/40">
  <h3 className="text-lg font-semibold text-titanium-900 mb-2">Monthly CDI Impact</h3>
  <p className="text-sm text-titanium-600">Revenue recovery and quality improvements</p>
  </div>
  
  <div className="p-6">
  <div className="space-y-6">
- <div className="bg-gradient-to-r from-medical-green-50 to-medical-green-100 rounded-lg p-4 border border-medical-green-200">
+ <div className="bg-gradient-to-r from-[#f0f5fa] to-[#e0eaf3] rounded-lg p-4 border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-3">
- <div className="font-semibold text-medical-green-900">Revenue Recovery</div>
- <CheckCircle className="w-5 h-5 text-medical-green-600" />
+ <div className="font-semibold text-[#2C4A60]">Revenue Recovery</div>
+ <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
  </div>
- <div className="text-2xl font-bold text-medical-green-800 mb-2">$89,450</div>
- <div className="text-sm text-medical-green-700">
+ <div className="text-2xl font-bold text-[#2C4A60] mb-2">$89,450</div>
+ <div className="text-sm text-[#2C4A60]">
  From 34 resolved alerts this month
  </div>
  </div>

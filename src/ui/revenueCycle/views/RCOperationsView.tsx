@@ -22,14 +22,14 @@ const RCOperationsView: React.FC = () => {
  <FileX className="w-6 h-6 text-porsche-600 drop-shadow-sm" />
  </div>
  </div>
- <div className="flex items-center gap-2 text-sm font-semibold text-medical-green-600">
+ <div className="flex items-center gap-2 text-sm font-semibold text-[#2C4A60]">
  <TrendingUp className="w-4 h-4 transform rotate-180" />
  <span>-8.2%</span>
  <span className="text-titanium-500 font-normal ml-1">vs last month</span>
  </div>
  </div>
 
- <div className="metal-card p-6 border-l-4 border-l-medical-amber-400 bg-medical-amber-50">
+ <div className="metal-card p-6 border-l-4 border-l-crimson-400 bg-crimson-50">
  <div className="flex items-start justify-between mb-3">
  <div className="flex-1">
  <div className="text-sm font-semibold text-titanium-600 uppercase tracking-wider mb-2">
@@ -40,18 +40,18 @@ const RCOperationsView: React.FC = () => {
  </div>
  <div className="text-sm text-titanium-600">Days</div>
  </div>
- <div className="ml-4 p-3 rounded-xl bg-gradient-to-br from-white via-medical-amber-50/60 to-white border border-titanium-200 shadow-lg">
- <Clock className="w-6 h-6 text-medical-amber-600 drop-shadow-sm" />
+ <div className="ml-4 p-3 rounded-xl bg-gradient-to-br from-white via-crimson-50/60 to-white border border-titanium-200 shadow-lg">
+ <Clock className="w-6 h-6 text-crimson-600 drop-shadow-sm" />
  </div>
  </div>
- <div className="flex items-center gap-2 text-sm font-semibold text-medical-green-600">
+ <div className="flex items-center gap-2 text-sm font-semibold text-[#2C4A60]">
  <TrendingUp className="w-4 h-4 transform rotate-180" />
  <span>-0.8</span>
  <span className="text-titanium-500 font-normal ml-1">days improved</span>
  </div>
  </div>
 
- <div className="metal-card p-6 border-l-4 border-l-medical-green-400 bg-medical-green-50">
+ <div className="metal-card p-6 border-l-4 border-l-[#4A6880] bg-[#f0f5fa]">
  <div className="flex items-start justify-between mb-3">
  <div className="flex-1">
  <div className="text-sm font-semibold text-titanium-600 uppercase tracking-wider mb-2">
@@ -62,11 +62,11 @@ const RCOperationsView: React.FC = () => {
  </div>
  <div className="text-sm text-titanium-600">First Pass</div>
  </div>
- <div className="ml-4 p-3 rounded-xl bg-gradient-to-br from-white via-medical-green-50/60 to-white border border-titanium-200 shadow-lg">
- <CheckCircle className="w-6 h-6 text-medical-green-600 drop-shadow-sm" />
+ <div className="ml-4 p-3 rounded-xl bg-gradient-to-br from-white via-[#f0f5fa]/60 to-white border border-titanium-200 shadow-lg">
+ <CheckCircle className="w-6 h-6 text-[#2C4A60] drop-shadow-sm" />
  </div>
  </div>
- <div className="flex items-center gap-2 text-sm font-semibold text-medical-green-600">
+ <div className="flex items-center gap-2 text-sm font-semibold text-[#2C4A60]">
  <TrendingUp className="w-4 h-4" />
  <span>+2.1%</span>
  <span className="text-titanium-500 font-normal ml-1">improvement</span>
@@ -88,7 +88,7 @@ const RCOperationsView: React.FC = () => {
  <AlertTriangle className="w-6 h-6 text-medical-red-600 drop-shadow-sm" />
  </div>
  </div>
- <div className="flex items-center gap-2 text-sm font-semibold text-medical-green-600">
+ <div className="flex items-center gap-2 text-sm font-semibold text-[#2C4A60]">
  <TrendingUp className="w-4 h-4 transform rotate-180" />
  <span>-12</span>
  <span className="text-titanium-500 font-normal ml-1">denials resolved</span>
@@ -142,8 +142,8 @@ const RCOperationsView: React.FC = () => {
  ].map((denial, index) => (
  <div key={denial.claimId} className={`rounded-lg p-4 border ${
  denial.priority === 'high' 
- ? 'bg-gradient-to-r from-medical-red-50 to-medical-amber-50 border-medical-red-200' 
- : 'bg-gradient-to-r from-medical-amber-50 to-porsche-50 border-medical-amber-200'
+ ? 'bg-gradient-to-r from-medical-red-50 to-crimson-50 border-medical-red-200' 
+ : 'bg-gradient-to-r from-crimson-50 to-porsche-50 border-crimson-200'
  }`}>
  <div className="flex items-start justify-between mb-3">
  <div className="flex-1">
@@ -152,7 +152,7 @@ const RCOperationsView: React.FC = () => {
  <span className={`text-xs px-2 py-1 rounded-full font-medium ${
  denial.priority === 'high' 
  ? 'bg-medical-red-100 text-medical-red-800' 
- : 'bg-medical-amber-100 text-medical-amber-800'
+ : 'bg-crimson-100 text-crimson-700'
  }`}>
  {denial.priority.toUpperCase()} PRIORITY
  </span>
@@ -196,7 +196,7 @@ const RCOperationsView: React.FC = () => {
 
  {/* Claims Processing Workflow */}
  <div className="metal-card">
- <div className="px-6 py-4 border-b border-titanium-200 bg-gradient-to-r from-titanium-50 to-medical-green-50/40">
+ <div className="px-6 py-4 border-b border-titanium-200 bg-gradient-to-r from-titanium-50 to-[#f0f5fa]/40">
  <h3 className="text-lg font-semibold text-titanium-900 mb-2">Claims Processing Pipeline</h3>
  <p className="text-sm text-titanium-600">Real-time workflow status and bottlenecks</p>
  </div>
@@ -243,8 +243,8 @@ const RCOperationsView: React.FC = () => {
  <div className="flex items-center justify-between mb-3">
  <div className="font-semibold text-titanium-900">{stage.stage}</div>
  <div className={`text-sm px-2 py-1 rounded-full font-medium ${
- stage.status === 'good' ? 'bg-medical-green-100 text-medical-green-800' :
- stage.status === 'warning' ? 'bg-medical-amber-100 text-medical-amber-800' :
+ stage.status === 'good' ? 'bg-[#e0eaf3] text-[#2C4A60]' :
+ stage.status === 'warning' ? 'bg-crimson-100 text-crimson-700' :
  'bg-titanium-100 text-titanium-700'
  }`}>
  {stage.count} claims
@@ -266,8 +266,8 @@ const RCOperationsView: React.FC = () => {
  <div className="w-full bg-titanium-200 rounded-full h-3">
  <div 
  className={`h-3 rounded-full transition-all duration-300 ${
- stage.status === 'good' ? 'bg-gradient-to-r from-medical-green-400 to-medical-green-600' :
- stage.status === 'warning' ? 'bg-gradient-to-r from-medical-amber-400 to-medical-amber-600' :
+ stage.status === 'good' ? 'bg-gradient-to-r from-[#4A6880] to-[#2C4A60]' :
+ stage.status === 'warning' ? 'bg-gradient-to-r from-crimson-400 to-crimson-600' :
  'bg-gradient-to-r from-titanium-400 to-titanium-600'
  }`}
  style={{ 
@@ -291,15 +291,15 @@ const RCOperationsView: React.FC = () => {
  
  <div className="p-6">
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
- <div className="bg-gradient-to-r from-medical-green-50 to-medical-green-100 rounded-lg p-4 border border-medical-green-200">
+ <div className="bg-gradient-to-r from-[#f0f5fa] to-[#e0eaf3] rounded-lg p-4 border border-[#C8D4DC]">
  <div className="flex items-center gap-3 mb-3">
- <Users className="w-8 h-8 text-medical-green-600" />
+ <Users className="w-8 h-8 text-[#2C4A60]" />
  <div>
- <div className="font-semibold text-medical-green-900">Active Staff</div>
- <div className="text-2xl font-bold text-medical-green-800">24</div>
+ <div className="font-semibold text-[#2C4A60]">Active Staff</div>
+ <div className="text-2xl font-bold text-[#2C4A60]">24</div>
  </div>
  </div>
- <div className="text-sm text-medical-green-700">
+ <div className="text-sm text-[#2C4A60]">
  3 FTEs above target staffing
  </div>
  </div>
@@ -317,15 +317,15 @@ const RCOperationsView: React.FC = () => {
  </div>
  </div>
 
- <div className="bg-gradient-to-r from-medical-amber-50 to-medical-amber-100 rounded-lg p-4 border border-medical-amber-200">
+ <div className="bg-gradient-to-r from-crimson-50 to-crimson-100 rounded-lg p-4 border border-crimson-200">
  <div className="flex items-center gap-3 mb-3">
- <DollarSign className="w-8 h-8 text-medical-amber-600" />
+ <DollarSign className="w-8 h-8 text-crimson-600" />
  <div>
- <div className="font-semibold text-medical-amber-900">Revenue per FTE</div>
- <div className="text-2xl font-bold text-medical-amber-800">$2.4M</div>
+ <div className="font-semibold text-crimson-700">Revenue per FTE</div>
+ <div className="text-2xl font-bold text-crimson-700">$2.4M</div>
  </div>
  </div>
- <div className="text-sm text-medical-amber-700">
+ <div className="text-sm text-crimson-700">
  Annual productivity per employee
  </div>
  </div>
@@ -366,7 +366,7 @@ const RCOperationsView: React.FC = () => {
  <div className="font-medium text-titanium-900">{performer.name}</div>
  <div className="text-sm text-titanium-600">{performer.role} • {performer.specialization}</div>
  </div>
- <div className="text-lg font-bold text-medical-green-700">
+ <div className="text-lg font-bold text-[#2C4A60]">
  {performer.accuracy}% accuracy
  </div>
  </div>
@@ -382,7 +382,7 @@ const RCOperationsView: React.FC = () => {
  </div>
  <div>
  <div className="text-titanium-600">Efficiency</div>
- <div className="font-semibold text-medical-green-700">+12% above target</div>
+ <div className="font-semibold text-[#2C4A60]">+12% above target</div>
  </div>
  </div>
  </div>

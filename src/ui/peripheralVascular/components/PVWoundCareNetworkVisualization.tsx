@@ -759,7 +759,7 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  
  <button
  onClick={exportNetworkData}
- className="p-2 rounded-lg bg-medical-teal-100 text-medical-teal-700 hover:bg-medical-teal-200 transition-colors"
+ className="p-2 rounded-lg bg-[#e0eaf3] text-[#2C4A60] hover:bg-[#C8D4DC] transition-colors"
  >
  <Download className="w-4 h-4" />
  </button>
@@ -1016,7 +1016,7 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  {/* Node Details Panel */}
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Footprints className="w-5 h-5 text-medical-teal-600" />
+ <Footprints className="w-5 h-5 text-[#2C4A60]" />
  Wound Care Details
  </h4>
  

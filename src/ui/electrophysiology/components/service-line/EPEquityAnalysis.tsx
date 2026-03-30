@@ -305,12 +305,12 @@ const EPEquityAnalysis: React.FC = () => {
   const getBarColor = (delta: number, isInverted: boolean = false) => {
  const threshold = isInverted ? 0 : 0; // For metrics where lower is better (stroke, bleeding, time)
  if (isInverted) {
- if (delta <= -2) return 'bg-medical-green-500';
- if (delta <= 0) return 'bg-medical-amber-500';
+ if (delta <= -2) return 'bg-[#2C4A60]';
+ if (delta <= 0) return 'bg-crimson-500';
  return 'bg-medical-red-500';
  } else {
- if (delta >= 2) return 'bg-medical-green-500';
- if (delta >= 0) return 'bg-medical-amber-500';
+ if (delta >= 2) return 'bg-[#2C4A60]';
+ if (delta >= 0) return 'bg-crimson-500';
  return 'bg-medical-red-500';
  }
   };
@@ -410,7 +410,7 @@ const EPEquityAnalysis: React.FC = () => {
  </div>
  <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${
  (isInvertedMetric ? group.delta <= 0 : group.delta >= 0) 
- ? 'text-medical-green-700 bg-medical-green-100' 
+ ? 'text-[#2C4A60] bg-[#e0eaf3]' 
  : 'text-medical-red-700 bg-medical-red-100'
  }`}>
  {(isInvertedMetric ? group.delta <= 0 : group.delta >= 0) ? (
@@ -480,7 +480,7 @@ const EPEquityAnalysis: React.FC = () => {
 
  <div>
  <div className="text-sm text-titanium-600 mb-1">Performance Leader</div>
- <div className="text-lg font-bold text-medical-green-600">
+ <div className="text-lg font-bold text-[#2C4A60]">
  {selectedSegmentData.groups.reduce((prev, curr) => 
  (isInvertedMetric ? prev.value < curr.value : prev.value > curr.value) ? prev : curr
  ).group}
@@ -528,11 +528,11 @@ const EPEquityAnalysis: React.FC = () => {
  <h4 className="font-semibold text-titanium-900 mb-3">Performance Legend</h4>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  <div className="flex items-center gap-2">
- <div className="w-4 h-4 bg-medical-green-500 rounded"></div>
+ <div className="w-4 h-4 bg-[#2C4A60] rounded"></div>
  <span className="text-sm text-titanium-700">Above Average Performance</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-4 bg-medical-amber-500 rounded"></div>
+ <div className="w-4 h-4 bg-crimson-500 rounded"></div>
  <span className="text-sm text-titanium-700">Near Average Performance</span>
  </div>
  <div className="flex items-center gap-2">

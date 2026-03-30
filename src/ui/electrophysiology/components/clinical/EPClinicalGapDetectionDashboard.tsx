@@ -4426,7 +4426,7 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
       {/* Header summary */}
       <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
         <h3 className="text-lg font-semibold text-titanium-900 mb-1 flex items-center gap-2">
-          <Zap className="w-5 h-5 text-medical-green-600" />
+          <Zap className="w-5 h-5 text-[#2C4A60]" />
           Clinical Gap Detection — Electrophysiology Module
         </h3>
         <p className="text-sm text-titanium-600 mb-4">
@@ -4584,9 +4584,9 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <Activity className="w-4 h-4 text-medical-green-600" />
-                    <span className="font-semibold text-medical-green-700">Recommended Action:</span>
-                    <span className="text-sm font-medium bg-medical-green-50 border border-medical-green-200 px-3 py-1 rounded-lg text-medical-green-800">
+                    <Activity className="w-4 h-4 text-[#2C4A60]" />
+                    <span className="font-semibold text-[#2C4A60]">Recommended Action:</span>
+                    <span className="text-sm font-medium bg-[#f0f5fa] border border-[#C8D4DC] px-3 py-1 rounded-lg text-[#2C4A60]">
                       {gap.cta}
                     </span>
                   </div>

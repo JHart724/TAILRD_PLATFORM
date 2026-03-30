@@ -80,7 +80,7 @@ interface PeripheralCareTeamViewConfig {
   moduleName: string;
   moduleDescription: string;
   moduleIcon: React.ElementType;
-  primaryColor: 'porsche' | 'medical-green' | 'medical-red' | 'medical-amber' | 'medical-arterial';
+  primaryColor: 'porsche' | 'chrome-blue' | 'medical-red' | 'crimson' | 'medical-arterial';
   tabs: Array<{
  id: string;
  label: string;
@@ -188,12 +188,12 @@ const PeripheralCareTeamView: React.FC = () => {
  border: 'border-porsche-200',
  accent: 'porsche'
  };
- case 'medical-green':
+ case 'chrome-blue':
  return {
- text: 'text-medical-green-600',
- bg: 'bg-medical-green-50',
- border: 'border-medical-green-200',
- accent: 'medical-green'
+ text: 'text-[#2C4A60]',
+ bg: 'bg-[#f0f5fa]',
+ border: 'border-[#C8D4DC]',
+ accent: 'chrome-blue'
  };
  case 'medical-red':
  return {
@@ -202,12 +202,12 @@ const PeripheralCareTeamView: React.FC = () => {
  border: 'border-medical-red-200',
  accent: 'medical-red'
  };
- case 'medical-amber':
+ case 'crimson':
  return {
- text: 'text-medical-amber-600',
- bg: 'bg-medical-amber-50',
- border: 'border-medical-amber-200',
- accent: 'medical-amber'
+ text: 'text-crimson-600',
+ bg: 'bg-crimson-50',
+ border: 'border-crimson-200',
+ accent: 'crimson'
  };
  case 'medical-arterial':
  return {

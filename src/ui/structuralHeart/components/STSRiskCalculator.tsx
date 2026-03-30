@@ -232,8 +232,8 @@ const STSRiskCalculator: React.FC<{ patientData?: PatientContext }> = ({ patient
 
   const getRiskColor = (category: string) => {
  switch (category) {
- case 'Low': return 'text-medical-green-600 bg-medical-green-50 border-medical-green-200';
- case 'Intermediate': return 'text-medical-amber-600 bg-medical-amber-50 border-medical-amber-200';
+ case 'Low': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'Intermediate': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
  case 'High': return 'text-medical-red-600 bg-medical-red-50 border-medical-red-200';
  case 'Very High': return 'text-red-800 bg-red-100 border-red-300';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';

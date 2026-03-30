@@ -206,13 +206,13 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  
  if (metric === 'stroke_events' || metric === 'bleeding_events') {
  // For event counts, lower is better
- if (value <= range.good) return 'bg-medical-green-500 text-white';
- if (value <= range.warning) return 'bg-medical-amber-500 text-white';
+ if (value <= range.good) return 'bg-[#2C4A60] text-white';
+ if (value <= range.warning) return 'bg-crimson-500 text-white';
  return 'bg-medical-red-500 text-white';
  } else {
  // For rates and percentages, higher is better
- if (value >= range.good) return 'bg-medical-green-500 text-white';
- if (value >= range.warning) return 'bg-medical-amber-500 text-white';
+ if (value >= range.good) return 'bg-[#2C4A60] text-white';
+ if (value >= range.warning) return 'bg-crimson-500 text-white';
  return 'bg-medical-red-500 text-white';
  }
   };
@@ -246,7 +246,7 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
   const getTrendIcon = (trend: 'up' | 'down' | 'stable') => {
  switch (trend) {
  case 'up':
- return <TrendingUp className="w-4 h-4 text-medical-green-600" />;
+ return <TrendingUp className="w-4 h-4 text-[#2C4A60]" />;
  case 'down':
  return <TrendingDown className="w-4 h-4 text-medical-red-600" />;
  default:
@@ -342,7 +342,7 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  <div className="flex items-center gap-1 ml-auto">
  {getTrendIcon(physician.trend)}
  <span className={`text-xs font-semibold ${
- physician.trend === 'up' ? 'text-medical-green-600' :
+ physician.trend === 'up' ? 'text-[#2C4A60]' :
  physician.trend === 'down' ? 'text-medical-red-600' : 'text-titanium-600'
  }`}>
  {physician.trend !== 'stable' && (physician.trendValue > 0 ? '+' : '')}{physician.trendValue}%
@@ -374,11 +374,11 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  <h4 className="font-semibold text-titanium-900 mb-3">Performance Legend</h4>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  <div className="flex items-center gap-2">
- <div className="w-4 h-4 bg-medical-green-500 rounded"></div>
+ <div className="w-4 h-4 bg-[#2C4A60] rounded"></div>
  <span className="text-sm text-titanium-700">Excellent Performance</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-4 bg-medical-amber-500 rounded"></div>
+ <div className="w-4 h-4 bg-crimson-500 rounded"></div>
  <span className="text-sm text-titanium-700">Needs Improvement</span>
  </div>
  <div className="flex items-center gap-2">
@@ -397,7 +397,7 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-titanium-200">
  <div>
  <div className="text-sm text-titanium-600 mb-1">Top OAC Performer</div>
- <div className="text-lg font-bold text-medical-green-600">
+ <div className="text-lg font-bold text-[#2C4A60]">
  {sortedPhysicians.sort((a, b) => b.oacs_rx_rate - a.oacs_rx_rate)[0]?.name}
  </div>
  <div className="text-sm text-titanium-600">

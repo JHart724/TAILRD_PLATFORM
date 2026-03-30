@@ -270,8 +270,8 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
 
   const getRiskColor = (category: string) => {
  switch (category) {
- case 'Low': return 'text-medical-green-600 bg-medical-green-50 border-medical-green-200';
- case 'Intermediate': return 'text-medical-amber-600 bg-medical-amber-50 border-medical-amber-200';
+ case 'Low': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'Intermediate': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
  case 'High': return 'text-medical-red-600 bg-medical-red-50 border-medical-red-200';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
@@ -279,8 +279,8 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
 
   const getRecommendationColor = (rec: string) => {
  switch (rec) {
- case 'Preferred': return 'text-medical-green-600 bg-medical-green-50 border-medical-green-200';
- case 'Reasonable': return 'text-medical-amber-600 bg-medical-amber-50 border-medical-amber-200';
+ case 'Preferred': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'Reasonable': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
  case 'Not Recommended': return 'text-medical-red-600 bg-medical-red-50 border-medical-red-200';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
@@ -288,9 +288,9 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
 
   const getStrategyColor = (strategy: 'PCI' | 'CABG' | 'Either') => {
  switch (strategy) {
- case 'PCI': return 'text-medical-green-700 bg-medical-green-50 border-medical-green-300';
+ case 'PCI': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
  case 'CABG': return 'text-porsche-700 bg-porsche-50 border-porsche-300';
- case 'Either': return 'text-medical-amber-700 bg-medical-amber-50 border-medical-amber-300';
+ case 'Either': return 'text-crimson-700 bg-crimson-50 border-crimson-200';
  }
   };
 
@@ -398,8 +398,8 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  </div>
  </div>
 
- <div className="p-4 bg-medical-amber-50 border border-medical-amber-200 rounded-lg">
- <h3 className="font-semibold text-medical-amber-800 mb-3">Side Branch Stenosis (%)</h3>
+ <div className="p-4 bg-crimson-50 border border-crimson-200 rounded-lg">
+ <h3 className="font-semibold text-crimson-700 mb-3">Side Branch Stenosis (%)</h3>
  <div className="grid grid-cols-3 gap-4">
  <div>
  <label className="block text-sm font-medium text-titanium-700 mb-1">D1</label>
@@ -407,7 +407,7 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  type="number"
  value={inputs.d1Stenosis}
  onChange={(e) => updateInput('d1Stenosis', parseInt(e.target.value) || 0)}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-medical-amber-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-crimson-500"
  min="0"
  max="100"
  />
@@ -418,7 +418,7 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  type="number"
  value={inputs.om1Stenosis}
  onChange={(e) => updateInput('om1Stenosis', parseInt(e.target.value) || 0)}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-medical-amber-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-crimson-500"
  min="0"
  max="100"
  />
@@ -429,7 +429,7 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  type="number"
  value={inputs.rcaPdaStenosis}
  onChange={(e) => updateInput('rcaPdaStenosis', parseInt(e.target.value) || 0)}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-medical-amber-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-crimson-500"
  min="0"
  max="100"
  />
@@ -672,12 +672,12 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  </div>
  </div>
 
- <div className="p-4 bg-medical-green-50 border border-medical-green-200 rounded-lg">
- <div className="font-semibold text-medical-green-800 mb-2">Management Recommendations</div>
- <ul className="space-y-1 text-sm text-medical-green-700">
+ <div className="p-4 bg-[#f0f5fa] border border-[#C8D4DC] rounded-lg">
+ <div className="font-semibold text-[#2C4A60] mb-2">Management Recommendations</div>
+ <ul className="space-y-1 text-sm text-[#2C4A60]">
  {result.recommendations.map((rec) => (
  <li key={rec} className="flex items-start gap-1">
- <div className="w-1 h-1 bg-medical-green-600 rounded-full mt-2 flex-shrink-0"></div>
+ <div className="w-1 h-1 bg-[#2C4A60] rounded-full mt-2 flex-shrink-0"></div>
  {rec}
  </li>
  ))}

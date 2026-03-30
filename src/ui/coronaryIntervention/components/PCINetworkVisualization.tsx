@@ -488,7 +488,7 @@ const PCINetworkVisualization: React.FC = () => {
  
  <button
  onClick={exportNetworkData}
- className="p-2 rounded-lg bg-medical-amber-100 text-medical-amber-700 hover:bg-medical-amber-200 transition-colors"
+ className="p-2 rounded-lg bg-crimson-100 text-crimson-700 hover:bg-crimson-100 transition-colors"
  >
  <Download className="w-4 h-4" />
  </button>
@@ -714,7 +714,7 @@ const PCINetworkVisualization: React.FC = () => {
  {/* Node Details Panel */}
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Heart className="w-5 h-5 text-medical-amber-600" />
+ <Heart className="w-5 h-5 text-crimson-600" />
  PCI Network Details
  </h4>
  

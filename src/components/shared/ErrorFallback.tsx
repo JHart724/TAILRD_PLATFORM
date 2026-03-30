@@ -198,7 +198,7 @@ export class ErrorBoundary extends Component<Props, State> {
  
  <button
  onClick={this.handleGoHome}
- className="flex items-center justify-center gap-2 px-4 py-3 bg-medical-green-600 text-white rounded-xl hover:bg-medical-green-700 transition-colors"
+ className="flex items-center justify-center gap-2 px-4 py-3 bg-[#2C4A60] text-white rounded-xl hover:bg-[#2C4A60] transition-colors"
  >
  <Home className="w-4 h-4" />
  Go to Dashboard
@@ -206,7 +206,7 @@ export class ErrorBoundary extends Component<Props, State> {
  
  <button
  onClick={this.handleReportBug}
- className="flex items-center justify-center gap-2 px-4 py-3 bg-medical-amber-600 text-white rounded-xl hover:bg-medical-amber-700 transition-colors"
+ className="flex items-center justify-center gap-2 px-4 py-3 bg-crimson-600 text-white rounded-xl hover:bg-crimson-700 transition-colors"
  >
  <Bug className="w-4 h-4" />
  Report Issue

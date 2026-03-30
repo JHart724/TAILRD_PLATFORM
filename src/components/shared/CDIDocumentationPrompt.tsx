@@ -39,7 +39,7 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
   const getPriorityColor = (priority: 'high' | 'medium' | 'low') => {
  switch (priority) {
  case 'high': return 'border-l-medical-red-400 bg-medical-red-50/50';
- case 'medium': return 'border-l-medical-amber-400 bg-medical-amber-50';
+ case 'medium': return 'border-l-crimson-400 bg-crimson-50';
  case 'low': return 'border-l-porsche-400 bg-porsche-50/50';
  }
   };
@@ -47,7 +47,7 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
   const getPriorityIcon = (priority: 'high' | 'medium' | 'low') => {
  switch (priority) {
  case 'high': return <AlertCircle className="w-4 h-4 text-medical-red-600" />;
- case 'medium': return <Clock className="w-4 h-4 text-medical-amber-600" />;
+ case 'medium': return <Clock className="w-4 h-4 text-crimson-600" />;
  case 'low': return <FileText className="w-4 h-4 text-porsche-600" />;
  }
   };
@@ -65,17 +65,17 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
 
   return (
  <div className="metal-card">
- <div className="px-6 py-4 border-b border-titanium-200 bg-gradient-to-r from-titanium-50 to-medical-amber-50/40">
+ <div className="px-6 py-4 border-b border-titanium-200 bg-gradient-to-r from-titanium-50 to-crimson-50/40">
  <div className="flex items-center justify-between">
  <div>
  <h3 className="text-lg font-semibold text-titanium-900 mb-2 flex items-center gap-2">
- <FileText className="w-5 h-5 text-medical-amber-600" />
+ <FileText className="w-5 h-5 text-crimson-600" />
  {title}
  </h3>
  <p className="text-sm text-titanium-600">Clinical documentation improvement cdiAlerts</p>
  </div>
  <div className="text-right">
- <div className="text-2xl font-bold text-medical-green-700">
+ <div className="text-2xl font-bold text-[#2C4A60]">
  +${totalRevenueImpact.toLocaleString()}
  </div>
  <div className="text-xs text-titanium-500">Potential Revenue Impact</div>
@@ -107,7 +107,7 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
  )}
  <span className={`text-xs px-2 py-1 rounded-full font-medium ${
  cdiAlert.priority === 'high' ? 'bg-medical-red-100 text-medical-red-800' :
- cdiAlert.priority === 'medium' ? 'bg-medical-amber-100 text-medical-amber-800' :
+ cdiAlert.priority === 'medium' ? 'bg-crimson-100 text-crimson-700' :
  'bg-porsche-100 text-porsche-800'
  }`}>
  {cdiAlert.priority.toUpperCase()}
@@ -126,14 +126,14 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
  </div>
  
  <div className="text-sm text-titanium-700 mb-3">
- <div className="font-medium text-medical-green-800">Suggested Documentation:</div>
+ <div className="font-medium text-[#2C4A60]">Suggested Documentation:</div>
  <div className="text-titanium-600">{cdiAlert.suggestedAdditions.join(', ')}</div>
  </div>
  
  <div className="flex items-center gap-4 text-xs">
  <div className={`flex items-center gap-1 ${
  isOverdue ? 'text-medical-red-600' : 
- isUrgent ? 'text-medical-amber-600' : 
+ isUrgent ? 'text-crimson-600' : 
  'text-titanium-500'
  }`}>
  <Clock className="w-3 h-3" />
@@ -148,7 +148,7 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
  </div>
  
  <div className="text-right ml-4">
- <div className="text-lg font-bold text-medical-green-700 flex items-center gap-1">
+ <div className="text-lg font-bold text-[#2C4A60] flex items-center gap-1">
  <DollarSign className="w-4 h-4" />
  +{cdiAlert.impactAnalysis.reimbursementImpact.toLocaleString()}
  </div>
@@ -167,7 +167,7 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
  Send Query
  </button>
  <button 
- className="text-xs bg-medical-green-100 text-medical-green-800 px-2 py-1 rounded hover:bg-medical-green-200 transition-colors block"
+ className="text-xs bg-[#e0eaf3] text-[#2C4A60] px-2 py-1 rounded hover:bg-[#C8D4DC] transition-colors block"
  onClick={() => {
  console.log('Marking CDI cdiAlert complete for patient:', cdiAlert.patientName);
  // TODO: Implement CDI completion workflow
@@ -185,7 +185,7 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
  <div className="grid grid-cols-3 gap-3 mt-3 pt-3 border-t border-titanium-200">
  <div className="text-center">
  <div className="text-sm font-medium text-titanium-800">Severity</div>
- <div className={`text-sm ${cdiAlert.impactAnalysis.severityChange > 0 ? 'text-medical-amber-600' : 'text-titanium-600'}`}>
+ <div className={`text-sm ${cdiAlert.impactAnalysis.severityChange > 0 ? 'text-crimson-600' : 'text-titanium-600'}`}>
  {cdiAlert.impactAnalysis.severityChange > 0 ? '+' : ''}{cdiAlert.impactAnalysis.severityChange}
  </div>
  </div>
@@ -197,7 +197,7 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
  </div>
  <div className="text-center">
  <div className="text-sm font-medium text-titanium-800">CMI</div>
- <div className="text-sm text-medical-green-600">
+ <div className="text-sm text-[#2C4A60]">
  +{toFixed(cdiAlert.impactAnalysis.cmiImpact, 2)}
  </div>
  </div>
@@ -214,21 +214,21 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
  
  {/* Action Summary */}
  {showActions && (
- <div className="bg-medical-green-50 rounded-lg p-4 border border-medical-green-200">
+ <div className="bg-[#f0f5fa] rounded-lg p-4 border border-[#C8D4DC]">
  <div className="flex items-center justify-between">
  <div>
- <div className="font-semibold text-medical-green-900 flex items-center gap-2">
+ <div className="font-semibold text-[#2C4A60] flex items-center gap-2">
  <CheckCircle className="w-4 h-4" />
  CDI Team Actions
  </div>
- <div className="text-sm text-medical-green-700 mt-1">
+ <div className="text-sm text-[#2C4A60] mt-1">
  • Schedule physician queries for high-priority cases
  • Review documentation templates with care teams
  • Coordinate with coding staff for clarification
  </div>
  </div>
  <div className="text-right">
- <div className="text-lg font-bold text-medical-green-800">
+ <div className="text-lg font-bold text-[#2C4A60]">
  {cdiAlerts.length} Active
  </div>
  <div className="text-xs text-titanium-600">Total Alerts</div>

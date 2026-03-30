@@ -69,8 +69,8 @@ const PhenotypeDetailModal: React.FC<PhenotypeDetailModalProps> = ({
   const getStatusColor = (status: PhenotypeDetail['status']) => {
  switch (status) {
  case 'detected': return 'medical-red';
- case 'suspected': return 'medical-amber';
- case 'ruled-out': return 'medical-green';
+ case 'suspected': return 'crimson';
+ case 'ruled-out': return 'chrome-blue';
  case 'not-screened': return 'titanium';
  default: return 'titanium';
  }
@@ -91,14 +91,14 @@ const PhenotypeDetailModal: React.FC<PhenotypeDetailModalProps> = ({
   };
 
   const getEvidenceColor = (type: Evidence['type']) => {
- return type === 'for' ? 'medical-green' : 'medical-red';
+ return type === 'for' ? 'chrome-blue' : 'medical-red';
   };
 
   const getPriorityColor = (priority: NextStep['priority']) => {
  switch (priority) {
  case 'urgent': return 'medical-red';
  case 'routine': return 'porsche';
- case 'follow-up': return 'medical-green';
+ case 'follow-up': return 'chrome-blue';
  default: return 'titanium';
  }
   };

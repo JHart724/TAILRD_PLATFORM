@@ -54,7 +54,7 @@ const WellsPECalculator: React.FC = () => {
  if (score <= 4) {
  probability = 'Low';
  peRisk = '~12% PE prevalence';
- color = 'medical-green';
+ color = 'chrome-blue';
  interpretation = 'Low probability of pulmonary embolism. Consider D-dimer testing.';
  recommendations = [
  'Order D-dimer',
@@ -66,7 +66,7 @@ const WellsPECalculator: React.FC = () => {
  } else if (score <= 6) {
  probability = 'Moderate';
  peRisk = '~30% PE prevalence';
- color = 'medical-amber';
+ color = 'crimson';
  interpretation = 'Moderate probability of pulmonary embolism. Imaging typically required.';
  recommendations = [
  'Consider CTPA or V/Q scan',
@@ -156,8 +156,8 @@ const WellsPECalculator: React.FC = () => {
  <div className="retina-card p-6">
  <div className="flex items-center justify-between mb-6">
  <div className="flex items-center gap-3">
- <div className="w-12 h-12 bg-medical-amber-100 rounded-xl flex items-center justify-center">
- <Zap className="w-6 h-6 text-medical-amber-600" />
+ <div className="w-12 h-12 bg-crimson-100 rounded-xl flex items-center justify-center">
+ <Zap className="w-6 h-6 text-crimson-600" />
  </div>
  <div>
  <h3 className="text-xl font-bold text-titanium-900 font-sf">Wells PE Score</h3>

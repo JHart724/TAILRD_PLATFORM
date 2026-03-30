@@ -62,7 +62,7 @@ const PeripheralDashboard: React.FC = () => (
  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <div className="flex items-center gap-3">
- <Activity className="w-8 h-8 text-medical-amber-600" />
+ <Activity className="w-8 h-8 text-crimson-600" />
  <div>
  <div className="text-2xl font-bold text-titanium-900">247</div>
  <div className="text-sm text-titanium-600">Active PAD Patients</div>
@@ -104,7 +104,7 @@ const PeripheralDashboard: React.FC = () => (
  {/* WIfI Classification Dashboard */}
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Target className="w-5 h-5 text-medical-amber-600" />
+ <Target className="w-5 h-5 text-crimson-600" />
  WIfI Classification & Risk Assessment
  </h3>
  <WIfIClassification />
@@ -113,7 +113,7 @@ const PeripheralDashboard: React.FC = () => (
  {/* Network Visualization */}
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <MapPin className="w-5 h-5 text-medical-amber-600" />
+ <MapPin className="w-5 h-5 text-crimson-600" />
  Wound Care Network
  </h3>
  <PVWoundCareNetworkVisualization />
@@ -127,7 +127,7 @@ const PeripheralPatients: React.FC = () => (
  {/* Patient Census */}
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Users className="w-5 h-5 text-medical-amber-600" />
+ <Users className="w-5 h-5 text-crimson-600" />
  PAD Patient Registry
  </h3>
  
@@ -157,8 +157,8 @@ const PeripheralPatients: React.FC = () => (
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.riskLevel === 'High' ? 'bg-medical-red-100 text-medical-red-700' :
- patient.riskLevel === 'Moderate' ? 'bg-medical-amber-100 text-medical-amber-700' :
- 'bg-medical-green-100 text-[#2C4A60]'
+ patient.riskLevel === 'Moderate' ? 'bg-crimson-100 text-crimson-700' :
+ 'bg-[#e0eaf3] text-[#2C4A60]'
  }`}>
  {patient.riskLevel}
  </span>
@@ -167,7 +167,7 @@ const PeripheralPatients: React.FC = () => (
  <td className="py-3 px-4 text-titanium-700">{patient.woundStage}</td>
  <td className="py-3 px-4 text-titanium-700">{patient.nextAppt}</td>
  <td className="py-3 px-4">
- <span className="px-2 py-1 bg-medical-green-100 text-[#2C4A60] rounded-full text-xs font-medium">
+ <span className="px-2 py-1 bg-[#e0eaf3] text-[#2C4A60] rounded-full text-xs font-medium">
  {patient.status}
  </span>
  </td>
@@ -186,7 +186,7 @@ const PeripheralWorkflow: React.FC = () => (
  {/* PAD Reporting System */}
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Target className="w-5 h-5 text-medical-amber-600" />
+ <Target className="w-5 h-5 text-crimson-600" />
  PAD Optimization & Reporting
  </h3>
  <PADReportingSystem />
@@ -200,7 +200,7 @@ const PeripheralSafety: React.FC = () => (
  {/* Limb Salvage Screening */}
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Shield className="w-5 h-5 text-medical-amber-600" />
+ <Shield className="w-5 h-5 text-crimson-600" />
  Limb Salvage Screening & Protocols
  </h3>
  <LimbSalvageScreening />
@@ -220,7 +220,7 @@ const PeripheralClinicalCollaboration: React.FC = () => (
  {/* Clinical Collaboration Dashboard */}
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Users className="w-5 h-5 text-medical-amber-600" />
+ <Users className="w-5 h-5 text-crimson-600" />
  Peripheral Vascular Clinical Collaboration & Consultation
  </h3>
  
@@ -414,7 +414,7 @@ const PeripheralDocumentation: React.FC = () => (
  {/* Documentation Alerts & Templates */}
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <FileText className="w-5 h-5 text-medical-amber-600" />
+ <FileText className="w-5 h-5 text-crimson-600" />
  PAD Documentation Support
  </h3>
  
@@ -431,12 +431,12 @@ const PeripheralDocumentation: React.FC = () => (
  <p className="text-sm text-medical-red-600 mt-1">Patient Johnson, R. - ABI results not documented</p>
  </div>
  
- <div className="bg-medical-amber-50 border border-medical-amber-200 rounded-lg p-3">
+ <div className="bg-crimson-50 border border-crimson-200 rounded-lg p-3">
  <div className="flex items-center gap-2">
- <AlertTriangle className="w-4 h-4 text-medical-amber-600" />
- <span className="font-medium text-medical-amber-700">Wound Assessment Due</span>
+ <AlertTriangle className="w-4 h-4 text-crimson-600" />
+ <span className="font-medium text-crimson-700">Wound Assessment Due</span>
  </div>
- <p className="text-sm text-medical-amber-600 mt-1">Patient Chen, D. - Weekly wound assessment required</p>
+ <p className="text-sm text-crimson-600 mt-1">Patient Chen, D. - Weekly wound assessment required</p>
  </div>
 
  <div className="bg-porsche-50 border border-porsche-200 rounded-lg p-3">
@@ -535,7 +535,7 @@ export const peripheralCareTeamConfig: CareTeamViewConfig = {
   moduleName: 'Peripheral Vascular',
   moduleDescription: 'Comprehensive peripheral vascular care, PAD optimization, and critical limb ischemia management',
   moduleIcon: Target,
-  primaryColor: 'medical-amber',
+  primaryColor: 'crimson',
   tabs: peripheralTabs,
   tabContent: {
  dashboard: PeripheralDashboard,

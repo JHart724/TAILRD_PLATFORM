@@ -75,7 +75,7 @@ const FRAMINGHAMHFCalculator: React.FC = () => {
 
  if (fourYearRisk < 5) {
  riskCategory = 'Low';
- color = 'medical-green';
+ color = 'chrome-blue';
  interpretation = 'Low risk of developing heart failure. Focus on primary prevention.';
  recommendations = [
  'Continue healthy lifestyle modifications',
@@ -86,7 +86,7 @@ const FRAMINGHAMHFCalculator: React.FC = () => {
  ];
  } else if (fourYearRisk < 15) {
  riskCategory = 'Intermediate';
- color = 'medical-amber';
+ color = 'crimson';
  interpretation = 'Moderate risk of developing heart failure. Enhanced prevention strategies recommended.';
  recommendations = [
  'Aggressive BP control (target <130/80)',

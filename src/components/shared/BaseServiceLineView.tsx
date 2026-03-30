@@ -7,7 +7,7 @@ export interface ServiceLineViewConfig {
   moduleName: string;
   moduleDescription: string;
   moduleIcon: React.ElementType;
-  primaryColor: 'porsche' | 'medical-green' | 'medical-red' | 'medical-amber' | 'medical-arterial' | 'medical-teal';
+  primaryColor: 'porsche' | 'chrome-blue' | 'medical-red' | 'crimson' | 'medical-arterial';
   tabs: ServiceLineTabConfig[];
   tabContent: Record<string, React.ComponentType<any>>;
   exportData?: Record<string, ExportData>;
@@ -39,31 +39,26 @@ const BaseServiceLineView: React.FC<BaseServiceLineViewProps> = ({ config }) => 
  bg: 'bg-porsche-50',
  text: 'text-porsche-600'
  },
- 'medical-green': {
- border: 'border-medical-green-500',
- bg: 'bg-medical-green-50', 
- text: 'text-medical-green-600'
+ 'chrome-blue': {
+ border: 'border-[#2C4A60]',
+ bg: 'bg-[#f0f5fa]', 
+ text: 'text-[#2C4A60]'
  },
  'medical-red': {
  border: 'border-medical-red-500',
  bg: 'bg-medical-red-50',
  text: 'text-medical-red-600'
  },
- 'medical-amber': {
- border: 'border-medical-amber-500',
- bg: 'bg-medical-amber-50',
- text: 'text-medical-amber-600'
+ 'crimson': {
+ border: 'border-crimson-500',
+ bg: 'bg-crimson-50',
+ text: 'text-crimson-600'
  },
  'medical-arterial': {
  border: 'border-medical-arterial-500',
  bg: 'bg-medical-arterial-50',
  text: 'text-medical-arterial-600'
  },
- 'medical-teal': {
- border: 'border-medical-teal-500',
- bg: 'bg-medical-teal-50',
- text: 'text-medical-teal-600'
- }
  };
  
  return colorMap[primaryColor][type];

@@ -142,7 +142,7 @@ const RCExecutiveView: React.FC = () => {
 
  {/* Revenue Cycle DRG Financial Performance Analytics */}
  <div className="metal-card">
- <div className="px-6 py-4 border-b border-titanium-200 bg-gradient-to-r from-titanium-50 to-medical-green-50/40">
+ <div className="px-6 py-4 border-b border-titanium-200 bg-gradient-to-r from-titanium-50 to-[#f0f5fa]/40">
  <h3 className="text-lg font-semibold text-titanium-900 mb-2">Revenue Cycle DRG Financial Performance</h3>
  <p className="text-sm text-titanium-600">Top DRG revenue analysis and case mix optimization</p>
  </div>
@@ -150,35 +150,35 @@ const RCExecutiveView: React.FC = () => {
  <div className="p-6">
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
  {/* High-Impact DRGs Performance */}
- <div className="bg-gradient-to-r from-medical-green-50 to-medical-green-100 rounded-lg p-4 border border-medical-green-200">
+ <div className="bg-gradient-to-r from-[#f0f5fa] to-[#e0eaf3] rounded-lg p-4 border border-[#C8D4DC]">
  <div className="flex items-center gap-3 mb-3">
- <DollarSign className="w-8 h-8 text-medical-green-600" />
+ <DollarSign className="w-8 h-8 text-[#2C4A60]" />
  <div>
- <div className="font-semibold text-medical-green-900">High-Impact DRGs</div>
- <div className="text-2xl font-bold text-medical-green-800">$68,420</div>
+ <div className="font-semibold text-[#2C4A60]">High-Impact DRGs</div>
+ <div className="text-2xl font-bold text-[#2C4A60]">$68,420</div>
  </div>
  </div>
- <div className="text-sm text-medical-green-700 mb-2">
+ <div className="text-sm text-[#2C4A60] mb-2">
  Average reimbursement • 2,834 cases YTD
  </div>
- <div className="text-sm text-medical-green-600">
+ <div className="text-sm text-[#2C4A60]">
  +$14.2K above national average
  </div>
  </div>
 
  {/* Medium-Impact DRGs Performance */}
- <div className="bg-gradient-to-r from-medical-amber-50 to-medical-amber-100 rounded-lg p-4 border border-medical-amber-200">
+ <div className="bg-gradient-to-r from-crimson-50 to-crimson-100 rounded-lg p-4 border border-crimson-200">
  <div className="flex items-center gap-3 mb-3">
- <DollarSign className="w-8 h-8 text-medical-amber-600" />
+ <DollarSign className="w-8 h-8 text-crimson-600" />
  <div>
- <div className="font-semibold text-medical-amber-900">Medium-Impact DRGs</div>
- <div className="text-2xl font-bold text-medical-amber-800">$38,190</div>
+ <div className="font-semibold text-crimson-700">Medium-Impact DRGs</div>
+ <div className="text-2xl font-bold text-crimson-700">$38,190</div>
  </div>
  </div>
- <div className="text-sm text-medical-amber-700 mb-2">
+ <div className="text-sm text-crimson-700 mb-2">
  Average reimbursement • 4,567 cases YTD
  </div>
- <div className="text-sm text-medical-amber-600">
+ <div className="text-sm text-crimson-600">
  +$6.8K above national average
  </div>
  </div>
@@ -208,22 +208,22 @@ const RCExecutiveView: React.FC = () => {
  <div className="text-center">
  <div className="text-2xl font-bold text-titanium-900">1.89</div>
  <div className="text-sm text-titanium-600">Current CMI</div>
- <div className="text-xs text-medical-green-600">+0.15 vs target</div>
+ <div className="text-xs text-[#2C4A60]">+0.15 vs target</div>
  </div>
  <div className="text-center">
- <div className="text-2xl font-bold text-medical-green-700">+$654K</div>
+ <div className="text-2xl font-bold text-[#2C4A60]">+$654K</div>
  <div className="text-sm text-titanium-600">Monthly Opportunity</div>
  <div className="text-xs text-titanium-500">From DRG optimization</div>
  </div>
  <div className="text-center">
- <div className="text-2xl font-bold text-medical-amber-700">89.7%</div>
+ <div className="text-2xl font-bold text-crimson-700">89.7%</div>
  <div className="text-sm text-titanium-600">Documentation Rate</div>
  <div className="text-xs text-titanium-500">CC/MCC capture</div>
  </div>
  <div className="text-center">
  <div className="text-2xl font-bold text-titanium-900">4.6 days</div>
  <div className="text-sm text-titanium-600">Avg LOS</div>
- <div className="text-xs text-medical-green-600">-0.4 days vs benchmark</div>
+ <div className="text-xs text-[#2C4A60]">-0.4 days vs benchmark</div>
  </div>
  </div>
  </div>

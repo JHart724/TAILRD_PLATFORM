@@ -300,11 +300,11 @@ const ClinicalContextPanel: React.FC<ClinicalContextPanelProps> = ({
   const getSeverityColor = (severity: string) => {
  switch (severity) {
  case 'high': return 'text-medical-red-600 bg-medical-red-50';
- case 'medium': return 'text-medical-amber-600 bg-medical-amber-50';
+ case 'medium': return 'text-crimson-600 bg-crimson-50';
  case 'low': return 'text-porsche-600 bg-porsche-50';
  case 'severe': return 'text-medical-red-700 bg-medical-red-100';
- case 'moderate': return 'text-medical-amber-700 bg-medical-amber-100';
- case 'mild': return 'text-medical-green-700 bg-medical-green-100';
+ case 'moderate': return 'text-crimson-700 bg-crimson-100';
+ case 'mild': return 'text-[#2C4A60] bg-[#e0eaf3]';
  default: return 'text-titanium-600 bg-titanium-50';
  }
   };
@@ -312,7 +312,7 @@ const ClinicalContextPanel: React.FC<ClinicalContextPanelProps> = ({
   const getStatusColor = (status: string) => {
  switch (status) {
  case 'high': return 'text-medical-red-600';
- case 'normal': return 'text-medical-green-600';
+ case 'normal': return 'text-[#2C4A60]';
  case 'low': return 'text-porsche-600';
  case 'critical': return 'text-medical-red-700';
  default: return 'text-titanium-600';
@@ -322,15 +322,15 @@ const ClinicalContextPanel: React.FC<ClinicalContextPanelProps> = ({
   const getTrendIcon = (trend: string) => {
  switch (trend) {
  case 'up': return <TrendingUp className="w-3 h-3 text-medical-red-500" />;
- case 'down': return <TrendingDown className="w-3 h-3 text-medical-green-500" />;
+ case 'down': return <TrendingDown className="w-3 h-3 text-[#2C4A60]" />;
  case 'stable': return <Minus className="w-3 h-3 text-titanium-400" />;
  default: return null;
  }
   };
 
   const getAdherenceColor = (adherence: number) => {
- if (adherence >= 90) return 'text-medical-green-600';
- if (adherence >= 80) return 'text-medical-amber-600';
+ if (adherence >= 90) return 'text-[#2C4A60]';
+ if (adherence >= 80) return 'text-crimson-600';
  return 'text-medical-red-600';
   };
 
@@ -553,7 +553,7 @@ const ClinicalContextPanel: React.FC<ClinicalContextPanelProps> = ({
  <div className="flex items-center gap-2 mb-1">
  <AlertTriangle className={`w-3 h-3 ${
  alert.severity === 'high' ? 'text-medical-red-500' :
- alert.severity === 'medium' ? 'text-medical-amber-500' :
+ alert.severity === 'medium' ? 'text-crimson-500' :
  'text-porsche-500'
  }`} />
  <span className="text-sm font-medium text-titanium-900">{alert.title}</span>
@@ -596,8 +596,8 @@ const ClinicalContextPanel: React.FC<ClinicalContextPanelProps> = ({
  <div className="flex items-center justify-between mb-1">
  <div className="text-sm font-medium text-titanium-900">{phenotype.name}</div>
  <div className={`px-2 py-1 rounded text-xs font-medium ${
- phenotype.status === 'confirmed' ? 'text-medical-green-700 bg-medical-green-100' :
- phenotype.status === 'pending' ? 'text-medical-amber-700 bg-medical-amber-100' :
+ phenotype.status === 'confirmed' ? 'text-[#2C4A60] bg-[#e0eaf3]' :
+ phenotype.status === 'pending' ? 'text-crimson-700 bg-crimson-100' :
  'text-titanium-600 bg-titanium-100'
  }`}>
  {phenotype.status}
@@ -634,8 +634,8 @@ const ClinicalContextPanel: React.FC<ClinicalContextPanelProps> = ({
  <div className="flex items-center justify-between mb-1">
  <div className="text-sm font-medium text-titanium-900">{referral.specialty}</div>
  <div className={`px-2 py-1 rounded text-xs font-medium ${
- referral.status === 'scheduled' ? 'text-medical-green-700 bg-medical-green-100' :
- referral.status === 'pending' ? 'text-medical-amber-700 bg-medical-amber-100' :
+ referral.status === 'scheduled' ? 'text-[#2C4A60] bg-[#e0eaf3]' :
+ referral.status === 'pending' ? 'text-crimson-700 bg-crimson-100' :
  'text-titanium-600 bg-titanium-100'
  }`}>
  {referral.status}

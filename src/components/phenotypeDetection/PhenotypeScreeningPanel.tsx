@@ -189,8 +189,8 @@ const PhenotypeScreeningPanel: React.FC<PhenotypeScreeningPanelProps> = ({
   const getStatusColor = (status: PhenotypeStatus['status']) => {
  switch (status) {
  case 'detected': return 'medical-red';
- case 'suspected': return 'medical-amber';
- case 'ruled-out': return 'medical-green';
+ case 'suspected': return 'crimson';
+ case 'ruled-out': return 'chrome-blue';
  case 'not-screened': return 'titanium';
  default: return 'titanium';
  }

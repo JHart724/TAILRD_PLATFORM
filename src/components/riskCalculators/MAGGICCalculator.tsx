@@ -148,7 +148,7 @@ const MAGGICCalculator: React.FC = () => {
 
  if (score <= 15) {
  riskCategory = 'Low';
- color = 'medical-green';
+ color = 'chrome-blue';
  interpretation = 'Low risk of mortality. Standard heart failure management with regular monitoring.';
  recommendations = [
  'Continue current GDMT (ACE/ARB + Beta-blocker)',
@@ -159,7 +159,7 @@ const MAGGICCalculator: React.FC = () => {
  ];
  } else if (score <= 25) {
  riskCategory = 'Medium';
- color = 'medical-amber';
+ color = 'crimson';
  interpretation = 'Moderate risk of mortality. Optimize therapy and consider advanced interventions.';
  recommendations = [
  'Maximize GDMT dosing',

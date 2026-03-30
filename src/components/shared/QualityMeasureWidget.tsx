@@ -61,11 +61,11 @@ const QualityMeasureWidget: React.FC<QualityMeasureWidgetProps> = ({
  switch (actualStatus) {
  case 'exceeding':
  return {
- color: 'text-medical-green-600',
- bgColor: 'bg-medical-green-50',
- borderColor: 'border-medical-green-200',
- gaugeColor: 'stroke-medical-green-500',
- textColor: 'text-medical-green-700'
+ color: 'text-[#2C4A60]',
+ bgColor: 'bg-[#f0f5fa]',
+ borderColor: 'border-[#C8D4DC]',
+ gaugeColor: 'stroke-[#2C4A60]',
+ textColor: 'text-[#2C4A60]'
  };
  case 'meeting':
  return {
@@ -77,11 +77,11 @@ const QualityMeasureWidget: React.FC<QualityMeasureWidgetProps> = ({
  };
  case 'below':
  return {
- color: 'text-medical-amber-600',
- bgColor: 'bg-medical-amber-50',
- borderColor: 'border-medical-amber-200',
- gaugeColor: 'stroke-medical-amber-500',
- textColor: 'text-medical-amber-700'
+ color: 'text-crimson-600',
+ bgColor: 'bg-crimson-50',
+ borderColor: 'border-crimson-200',
+ gaugeColor: 'stroke-crimson-500',
+ textColor: 'text-crimson-700'
  };
  case 'critical':
  return {
@@ -267,7 +267,7 @@ const QualityMeasureWidget: React.FC<QualityMeasureWidgetProps> = ({
  {trend && (
  <div className="flex items-center gap-1 text-xs">
  {trend.direction === 'up' && (
- <TrendingUp className="w-3 h-3 text-medical-green-600" />
+ <TrendingUp className="w-3 h-3 text-[#2C4A60]" />
  )}
  {trend.direction === 'down' && (
  <TrendingDown className="w-3 h-3 text-medical-red-600" />
@@ -276,7 +276,7 @@ const QualityMeasureWidget: React.FC<QualityMeasureWidgetProps> = ({
  <Minus className="w-3 h-3 text-titanium-500" />
  )}
  <span className={`font-medium ${
- trend.direction === 'up' ? 'text-medical-green-600' :
+ trend.direction === 'up' ? 'text-[#2C4A60]' :
  trend.direction === 'down' ? 'text-medical-red-600' :
  'text-titanium-500'
  }`}>

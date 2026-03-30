@@ -369,13 +369,13 @@ const AdvancedDeviceTracker: React.FC = () => {
  </div>
 
  {/* Revenue Impact */}
- <div className="flex items-center justify-between p-3 bg-medical-green-50 border border-medical-green-200 rounded-lg mb-4">
+ <div className="flex items-center justify-between p-3 bg-[#f0f5fa] border border-[#C8D4DC] rounded-lg mb-4">
  <div>
- <div className="text-sm font-semibold text-medical-green-800">Revenue Gap</div>
- <div className="text-xs text-medical-green-600">{device.citation}</div>
+ <div className="text-sm font-semibold text-[#2C4A60]">Revenue Gap</div>
+ <div className="text-xs text-[#2C4A60]">{device.citation}</div>
  </div>
  <div className="text-right">
- <div className="text-lg font-bold text-medical-green-700">
+ <div className="text-lg font-bold text-[#2C4A60]">
  ${device.revenueGap >= 1000000 ? `${toFixed(device.revenueGap / 1000000, 1)}M` : `${toFixed(device.revenueGap / 1000, 0)}K`}
  </div>
  </div>
@@ -424,11 +424,11 @@ const AdvancedDeviceTracker: React.FC = () => {
  <div className="text-lg font-bold text-deep-red-600">ICD Implants</div>
  <div className="text-xs text-deep-red-600">313 patients underutilized</div>
  </div>
- <div className="p-4 border-2 border-medical-green-200 rounded-lg">
- <DollarSign className="w-6 h-6 text-medical-green-600 mb-2" />
- <div className="text-sm font-semibold text-medical-green-800">Revenue Leader</div>
- <div className="text-lg font-bold text-medical-green-600">$10.4M</div>
- <div className="text-xs text-medical-green-600">ICD program expansion</div>
+ <div className="p-4 border-2 border-[#C8D4DC] rounded-lg">
+ <DollarSign className="w-6 h-6 text-[#2C4A60] mb-2" />
+ <div className="text-sm font-semibold text-[#2C4A60]">Revenue Leader</div>
+ <div className="text-lg font-bold text-[#2C4A60]">$10.4M</div>
+ <div className="text-xs text-[#2C4A60]">ICD program expansion</div>
  </div>
  <div className="p-4 border-2 border-deep-blue-200 rounded-lg">
  <TrendingUp className="w-6 h-6 text-deep-blue-600 mb-2" />

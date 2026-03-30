@@ -221,7 +221,7 @@ const EPReferralTracker: React.FC = () => {
  Follow Up
  </button>
  {referral.status === 'pending' && (
- <button className="px-4 py-2 bg-gradient-to-r from-medical-green-100/80 to-medical-green-200/80 text-medical-green-800 text-sm rounded-lg hover:from-medical-green-200/90 hover:to-medical-green-300/90 transition-all duration-300 transform hover:scale-105 hover:shadow-md font-medium border border-medical-green-300/40">
+ <button className="px-4 py-2 bg-gradient-to-r from-[#e0eaf3]/80 to-[#C8D4DC]/80 text-[#2C4A60] text-sm rounded-lg hover:from-[#C8D4DC]/90 hover:to-[#C8D4DC]/90 transition-all duration-300 transform hover:scale-105 hover:shadow-md font-medium border border-[#C8D4DC]/40">
  Mark Scheduled
  </button>
  )}

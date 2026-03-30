@@ -191,21 +191,21 @@ const EPRevenueOpportunityModal: React.FC<EPRevenueOpportunityModalProps> = ({
  <div className="bg-[#F0F5FA] p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center">
- <Clock className="w-8 h-8 text-medical-amber-600 mr-3" />
+ <Clock className="w-8 h-8 text-crimson-600 mr-3" />
  <div>
- <div className="text-lg font-bold text-medical-amber-900">Medium Priority</div>
- <div className="text-sm text-medical-amber-700">Planned review</div>
+ <div className="text-lg font-bold text-crimson-700">Medium Priority</div>
+ <div className="text-sm text-crimson-700">Planned review</div>
  </div>
  </div>
  </div>
  <div className="space-y-2">
  <div className="flex justify-between items-center">
- <span className="text-medical-amber-700">Count:</span>
- <span className="text-2xl font-bold text-medical-amber-900">{mediumPriorityOpps.length}</span>
+ <span className="text-crimson-700">Count:</span>
+ <span className="text-2xl font-bold text-crimson-700">{mediumPriorityOpps.length}</span>
  </div>
  <div className="flex justify-between items-center">
- <span className="text-medical-amber-700">Revenue:</span>
- <span className="text-xl font-bold text-medical-amber-900">{formatMoney(mediumPriorityRevenue)}</span>
+ <span className="text-crimson-700">Revenue:</span>
+ <span className="text-xl font-bold text-crimson-700">{formatMoney(mediumPriorityRevenue)}</span>
  </div>
  </div>
  </div>
@@ -214,21 +214,21 @@ const EPRevenueOpportunityModal: React.FC<EPRevenueOpportunityModalProps> = ({
  <div className="bg-[#C8D4DC] p-4 rounded-lg border border-[#2C4A60]">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center">
- <DollarSign className="w-8 h-8 text-medical-green-600 mr-3" />
+ <DollarSign className="w-8 h-8 text-[#2C4A60] mr-3" />
  <div>
- <div className="text-lg font-bold text-medical-green-900">Total Potential</div>
- <div className="text-sm text-medical-green-700">Combined opportunity</div>
+ <div className="text-lg font-bold text-[#2C4A60]">Total Potential</div>
+ <div className="text-sm text-[#2C4A60]">Combined opportunity</div>
  </div>
  </div>
  </div>
  <div className="space-y-2">
  <div className="flex justify-between items-center">
- <span className="text-medical-green-700">Count:</span>
- <span className="text-2xl font-bold text-medical-green-900">{opportunities.length}</span>
+ <span className="text-[#2C4A60]">Count:</span>
+ <span className="text-2xl font-bold text-[#2C4A60]">{opportunities.length}</span>
  </div>
  <div className="flex justify-between items-center">
- <span className="text-medical-green-700">Revenue:</span>
- <span className="text-xl font-bold text-medical-green-900">{formatMoney(totalRevenue)}</span>
+ <span className="text-[#2C4A60]">Revenue:</span>
+ <span className="text-xl font-bold text-[#2C4A60]">{formatMoney(totalRevenue)}</span>
  </div>
  </div>
  </div>
@@ -325,7 +325,7 @@ const EPRevenueOpportunityModal: React.FC<EPRevenueOpportunityModalProps> = ({
  </div>
  <div className="flex items-center gap-3 flex-shrink-0 text-right">
  <span className="font-medium text-gray-900 whitespace-nowrap">{item.count} cases</span>
- <span className="font-semibold text-medical-green-600 whitespace-nowrap">${toFixed(item.revenue / 1000, 0)}K</span>
+ <span className="font-semibold text-[#2C4A60] whitespace-nowrap">${toFixed(item.revenue / 1000, 0)}K</span>
  </div>
  </div>
  ))}

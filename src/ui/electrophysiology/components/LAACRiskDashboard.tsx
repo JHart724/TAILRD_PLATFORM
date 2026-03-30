@@ -389,28 +389,28 @@ const LAACRiskDashboard: React.FC = () => {
   const getRiskColor = (score: number, type: 'stroke' | 'bleeding') => {
  if (type === 'stroke') {
  if (score >= 6) return 'text-medical-red-600 bg-medical-red-100';
- if (score >= 3) return 'text-medical-amber-600 bg-medical-amber-100';
- return 'text-medical-green-600 bg-medical-green-100';
+ if (score >= 3) return 'text-crimson-600 bg-crimson-100';
+ return 'text-[#2C4A60] bg-[#e0eaf3]';
  } else {
  if (score >= 3) return 'text-medical-red-600 bg-medical-red-100';
- if (score >= 2) return 'text-medical-amber-600 bg-medical-amber-100';
- return 'text-medical-green-600 bg-medical-green-100';
+ if (score >= 2) return 'text-crimson-600 bg-crimson-100';
+ return 'text-[#2C4A60] bg-[#e0eaf3]';
  }
   };
 
   const getPriorityColor = (priority: string) => {
  switch (priority) {
  case 'urgent': return 'bg-medical-red-100 text-medical-red-800 border-medical-red-200';
- case 'high': return 'bg-medical-amber-100 text-medical-amber-800 border-medical-amber-200';
- case 'medium': return 'bg-medical-green-100 text-medical-green-800 border-medical-green-200';
+ case 'high': return 'bg-crimson-100 text-crimson-700 border-crimson-200';
+ case 'medium': return 'bg-[#e0eaf3] text-[#2C4A60] border-[#C8D4DC]';
  default: return 'bg-titanium-100 text-titanium-600 border-titanium-200';
  }
   };
 
   const getReimbursementColor = (likelihood: string) => {
  switch (likelihood) {
- case 'high': return 'text-medical-green-600';
- case 'medium': return 'text-medical-amber-600';
+ case 'high': return 'text-[#2C4A60]';
+ case 'medium': return 'text-crimson-600';
  default: return 'text-medical-red-600';
  }
   };
@@ -421,14 +421,14 @@ const LAACRiskDashboard: React.FC = () => {
  <div className="metal-card p-6">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center gap-3">
- <Calculator className="w-6 h-6 text-medical-green-600" />
+ <Calculator className="w-6 h-6 text-[#2C4A60]" />
  <h2 className="text-2xl font-bold text-titanium-900">WATCHMAN LAAC Risk Assessment Dashboard</h2>
  </div>
  <div className="flex items-center gap-4">
  <select
  value={sortBy}
  onChange={(e) => setSortBy(e.target.value as any)}
- className="px-3 py-2 border border-titanium-300 rounded-lg focus:ring-medical-green-500 focus:border-medical-green-500"
+ className="px-3 py-2 border border-titanium-300 rounded-lg focus:ring-[#2C4A60] focus:border-[#2C4A60]"
  >
  <option value="priority">Sort by Priority</option>
  <option value="strokeRisk">Sort by Stroke Risk</option>
@@ -439,14 +439,14 @@ const LAACRiskDashboard: React.FC = () => {
 
  {/* Summary Statistics */}
  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
- <div className="p-4 bg-medical-green-50 rounded-lg border border-medical-green-200">
- <div className="text-2xl font-bold text-medical-green-600">
+ <div className="p-4 bg-[#f0f5fa] rounded-lg border border-[#C8D4DC]">
+ <div className="text-2xl font-bold text-[#2C4A60]">
  {assessedPatients.filter(p => p.assessment.watchmanEligible).length}
  </div>
  <div className="text-sm text-titanium-600">WATCHMAN Eligible</div>
  </div>
- <div className="p-4 bg-medical-green-50 rounded-lg border border-medical-green-200">
- <div className="text-2xl font-bold text-medical-green-600">
+ <div className="p-4 bg-[#f0f5fa] rounded-lg border border-[#C8D4DC]">
+ <div className="text-2xl font-bold text-[#2C4A60]">
  {assessedPatients.filter(p => p.assessment.reimbursementLikelihood === 'high').length}
  </div>
  <div className="text-sm text-titanium-600">High Reimbursement</div>
@@ -457,8 +457,8 @@ const LAACRiskDashboard: React.FC = () => {
  </div>
  <div className="text-sm text-titanium-600">High Priority</div>
  </div>
- <div className="p-4 bg-medical-amber-50 rounded-lg border border-medical-amber-200">
- <div className="text-2xl font-bold text-medical-amber-600">
+ <div className="p-4 bg-crimson-50 rounded-lg border border-crimson-200">
+ <div className="text-2xl font-bold text-crimson-600">
  ${assessedPatients.filter(p => p.assessment.watchmanEligible).reduce((sum, p) => sum + p.assessment.estimatedCost, 0).toLocaleString()}
  </div>
  <div className="text-sm text-titanium-600">Total Revenue Potential</div>
@@ -487,7 +487,7 @@ const LAACRiskDashboard: React.FC = () => {
  </div>
  <button
  onClick={() => setExpandedPatient(expandedPatient === patient.patientId ? null : patient.patientId)}
- className="flex items-center gap-2 px-4 py-2 bg-medical-green-100 text-medical-green-700 rounded-lg hover:bg-medical-green-200 transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-[#e0eaf3] text-[#2C4A60] rounded-lg hover:bg-[#C8D4DC] transition-colors"
  >
  <Eye className="w-4 h-4" />
  {expandedPatient === patient.patientId ? 'Hide Details' : 'View Details'}
@@ -516,7 +516,7 @@ const LAACRiskDashboard: React.FC = () => {
  <div className="text-sm text-titanium-600">LAAC Appropriate</div>
  <div className="flex justify-center">
  {patient.assessment.laacAppropriate ? (
- <CheckCircle className="w-6 h-6 text-medical-green-500" />
+ <CheckCircle className="w-6 h-6 text-[#2C4A60]" />
  ) : (
  <XCircle className="w-6 h-6 text-medical-red-500" />
  )}
@@ -526,7 +526,7 @@ const LAACRiskDashboard: React.FC = () => {
  <div className="text-sm text-titanium-600">WATCHMAN Eligible</div>
  <div className="flex justify-center">
  {patient.assessment.watchmanEligible ? (
- <Shield className="w-6 h-6 text-medical-green-500" />
+ <Shield className="w-6 h-6 text-[#2C4A60]" />
  ) : (
  <XCircle className="w-6 h-6 text-medical-red-500" />
  )}
@@ -546,9 +546,9 @@ const LAACRiskDashboard: React.FC = () => {
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* Clinical Recommendation */}
  <div className="space-y-4">
- <div className="p-4 bg-medical-green-50 rounded-lg border border-medical-green-200">
+ <div className="p-4 bg-[#f0f5fa] rounded-lg border border-[#C8D4DC]">
  <div className="flex items-start gap-3">
- <AlertTriangle className="w-5 h-5 text-medical-green-500 mt-0.5" />
+ <AlertTriangle className="w-5 h-5 text-[#2C4A60] mt-0.5" />
  <div>
  <div className="text-sm font-medium text-titanium-900 mb-1">Clinical Recommendation</div>
  <div className="text-sm text-titanium-700">{patient.assessment.clinicalRecommendation}</div>
@@ -591,11 +591,11 @@ const LAACRiskDashboard: React.FC = () => {
  <div className="space-y-4">
  {/* Coverage Criteria */}
  {patient.assessment.coverageCriteria.length > 0 && (
- <div className="p-4 bg-medical-green-50 rounded-lg border border-medical-green-200">
+ <div className="p-4 bg-[#f0f5fa] rounded-lg border border-[#C8D4DC]">
  <div className="text-sm font-medium text-titanium-900 mb-2">Coverage Criteria Met</div>
  <div className="space-y-1">
  {patient.assessment.coverageCriteria.slice(0, 3).map((criteria, index) => (
- <div key={criteria} className="flex items-center gap-2 text-sm text-medical-green-700">
+ <div key={criteria} className="flex items-center gap-2 text-sm text-[#2C4A60]">
  <CheckCircle className="w-4 h-4" />
  {criteria}
  </div>
@@ -615,7 +615,7 @@ const LAACRiskDashboard: React.FC = () => {
  {patient.labValues.inr && (
  <div>INR: <span className="font-medium">{patient.labValues.inr}</span></div>
  )}
- <div>Revenue: <span className="font-medium text-medical-green-600">${patient.assessment.estimatedCost.toLocaleString()}</span></div>
+ <div>Revenue: <span className="font-medium text-[#2C4A60]">${patient.assessment.estimatedCost.toLocaleString()}</span></div>
  </div>
  </div>
 

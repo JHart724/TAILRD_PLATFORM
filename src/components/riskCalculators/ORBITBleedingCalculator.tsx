@@ -62,7 +62,7 @@ const ORBITBleedingCalculator: React.FC = () => {
  if (score <= 2) {
  bleedingRisk = 'Low';
  annualBleedingRate = '2.4% per year';
- color = 'medical-green';
+ color = 'chrome-blue';
  interpretation = 'Low risk of major bleeding with anticoagulation. Benefits likely outweigh risks.';
  recommendations = [
  'Anticoagulation recommended if CHA2DS2-VASc ≥2',
@@ -74,7 +74,7 @@ const ORBITBleedingCalculator: React.FC = () => {
  } else if (score <= 4) {
  bleedingRisk = 'Medium';
  annualBleedingRate = '4.7% per year';
- color = 'medical-amber';
+ color = 'crimson';
  interpretation = 'Moderate bleeding risk. Careful risk-benefit assessment required.';
  recommendations = [
  'Consider bleeding vs. stroke risk ratio',

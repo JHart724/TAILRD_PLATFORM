@@ -153,9 +153,9 @@ const QualityReportGenerator: React.FC<QualityReportGeneratorProps> = ({ classNa
 
   const getStatusColor = (status: string) => {
  switch (status) {
- case 'exceeding': return 'text-medical-green-600 bg-medical-green-50';
+ case 'exceeding': return 'text-[#2C4A60] bg-[#f0f5fa]';
  case 'meeting': return 'text-porsche-600 bg-porsche-50';
- case 'approaching': return 'text-medical-amber-600 bg-medical-amber-50';
+ case 'approaching': return 'text-crimson-600 bg-crimson-50';
  case 'below': return 'text-medical-red-600 bg-medical-red-50';
  default: return 'text-titanium-600 bg-titanium-50';
  }
@@ -328,7 +328,7 @@ const QualityReportGenerator: React.FC<QualityReportGeneratorProps> = ({ classNa
  <div className="retina-card p-6 bg-white border border-titanium-200">
  <div className="flex items-center justify-between mb-6">
  <div className="flex items-center gap-4">
- <div className="p-3 bg-gradient-to-br from-medical-green-500 to-medical-green-600 rounded-2xl shadow-lg">
+ <div className="p-3 bg-gradient-to-br from-[#2C4A60] to-[#2C4A60] rounded-2xl shadow-lg">
  <FileDown className="w-8 h-8 text-white" />
  </div>
  <div>
@@ -350,7 +350,7 @@ const QualityReportGenerator: React.FC<QualityReportGeneratorProps> = ({ classNa
  <button
  onClick={downloadReport}
  disabled={isGenerating}
- className="px-4 py-2 bg-medical-green-500 text-white rounded-lg hover:bg-medical-green-600 transition-colors duration-200 flex items-center gap-2 disabled:opacity-50"
+ className="px-4 py-2 bg-[#2C4A60] text-white rounded-lg hover:bg-[#2C4A60] transition-colors duration-200 flex items-center gap-2 disabled:opacity-50"
  >
  <Download className="w-4 h-4" />
  Download PDF
@@ -409,7 +409,7 @@ const QualityReportGenerator: React.FC<QualityReportGeneratorProps> = ({ classNa
  <label className="block text-sm font-medium text-titanium-700 mb-2">Actions</label>
  <button
  onClick={exportTableData}
- className="w-full px-3 py-2 bg-medical-amber-500 text-white rounded-lg hover:bg-medical-amber-600 transition-colors duration-200 flex items-center justify-center gap-2 text-sm"
+ className="w-full px-3 py-2 bg-crimson-500 text-white rounded-lg hover:bg-crimson-600 transition-colors duration-200 flex items-center justify-center gap-2 text-sm"
  >
  <Database className="w-4 h-4" />
  Export CSV
@@ -451,7 +451,7 @@ const QualityReportGenerator: React.FC<QualityReportGeneratorProps> = ({ classNa
  <div className="retina-card p-6 bg-white border border-titanium-200">
  <div className="flex items-center justify-between mb-4">
  <h2 className="text-xl font-semibold text-titanium-900">Performance Summary</h2>
- <Award className="w-5 h-5 text-medical-amber-500" />
+ <Award className="w-5 h-5 text-crimson-500" />
  </div>
  
  <div className="space-y-4">
@@ -473,7 +473,7 @@ const QualityReportGenerator: React.FC<QualityReportGeneratorProps> = ({ classNa
  {toFixed(measure.current.rate, 1)}%
  </div>
  <div className={`flex items-center gap-1 text-sm ${
- trend >= 0 ? 'text-medical-green-600' : 'text-medical-red-600'
+ trend >= 0 ? 'text-[#2C4A60]' : 'text-medical-red-600'
  }`}>
  {trend >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
  {toFixed(Math.abs(trend), 1)}%
@@ -491,9 +491,9 @@ const QualityReportGenerator: React.FC<QualityReportGeneratorProps> = ({ classNa
  <div className="w-full bg-titanium-200 rounded-full h-2">
  <div 
  className={`h-2 rounded-full transition-all duration-500 ${
- status === 'exceeding' ? 'bg-medical-green-500' :
+ status === 'exceeding' ? 'bg-[#2C4A60]' :
  status === 'meeting' ? 'bg-porsche-500' :
- status === 'approaching' ? 'bg-medical-amber-500' :
+ status === 'approaching' ? 'bg-crimson-500' :
  'bg-medical-red-500'
  }`}
  style={{ width: `${Math.min(measure.current.rate, 100)}%` }}
@@ -558,7 +558,7 @@ const QualityReportGenerator: React.FC<QualityReportGeneratorProps> = ({ classNa
  </td>
  <td className="py-4 px-4">
  <div className={`flex items-center gap-1 ${
- trend >= 0 ? 'text-medical-green-600' : 'text-medical-red-600'
+ trend >= 0 ? 'text-[#2C4A60]' : 'text-medical-red-600'
  }`}>
  {trend >= 0 ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
  {trend >= 0 ? '+' : ''}{toFixed(trend, 1)}%

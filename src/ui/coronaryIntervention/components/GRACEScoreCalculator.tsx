@@ -151,8 +151,8 @@ const GRACEScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pati
 
   const getRiskColor = (category: string) => {
  switch (category) {
- case 'Low': return 'text-medical-green-600 bg-medical-green-50 border-medical-green-200';
- case 'Intermediate': return 'text-medical-amber-600 bg-medical-amber-50 border-medical-amber-200';
+ case 'Low': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'Intermediate': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
  case 'High': return 'text-medical-red-600 bg-medical-red-50 border-medical-red-200';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
@@ -303,15 +303,15 @@ const GRACEScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pati
  </div>
  </div>
 
- <div className="p-4 bg-medical-amber-50 border border-medical-amber-200 rounded-lg">
+ <div className="p-4 bg-crimson-50 border border-crimson-200 rounded-lg">
  <div className="flex items-start gap-2">
- <TrendingUp className="w-5 h-5 text-medical-amber-600 mt-0.5 flex-shrink-0" />
- <div className="text-sm text-medical-amber-800">
+ <TrendingUp className="w-5 h-5 text-crimson-600 mt-0.5 flex-shrink-0" />
+ <div className="text-sm text-crimson-700">
  <div className="font-semibold mb-2">Recommendations</div>
  <ul className="space-y-1">
  {result.recommendations.map((rec) => (
  <li key={rec} className="flex items-start gap-1">
- <div className="w-1 h-1 bg-medical-amber-600 rounded-full mt-2 flex-shrink-0"></div>
+ <div className="w-1 h-1 bg-crimson-600 rounded-full mt-2 flex-shrink-0"></div>
  {rec}
  </li>
  ))}

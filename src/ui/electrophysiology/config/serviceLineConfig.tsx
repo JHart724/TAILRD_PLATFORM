@@ -761,7 +761,7 @@ export const electrophysiologyServiceLineConfig: ServiceLineViewConfig = {
   moduleName: 'Electrophysiology',
   moduleDescription: 'Advanced EP analytics for procedures, devices, and clinical outcomes',
   moduleIcon: Zap,
-  primaryColor: 'medical-green',
+  primaryColor: 'chrome-blue',
   tabs: electrophysiologyTabs,
   tabContent: {
  'analytics': ElectrophysiologyAnalytics,

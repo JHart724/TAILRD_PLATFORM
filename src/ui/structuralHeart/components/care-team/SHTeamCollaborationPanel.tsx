@@ -532,8 +532,8 @@ const SHTeamCollaborationPanel: React.FC = () => {
 
   const getStatusColor = (status: string) => {
  const colors = {
- online: 'bg-medical-green-500',
- away: 'bg-medical-amber-500',
+ online: 'bg-[#2C4A60]',
+ away: 'bg-crimson-500',
  offline: 'bg-titanium-400',
  };
  return colors[status as keyof typeof colors];
@@ -554,7 +554,7 @@ const SHTeamCollaborationPanel: React.FC = () => {
  text: 'text-titanium-600',
  consultation: 'text-porsche-600',
  alert: 'text-medical-red-600',
- handoff: 'text-medical-green-600',
+ handoff: 'text-[#2C4A60]',
  };
  return colors[type as keyof typeof colors];
   };
@@ -585,7 +585,7 @@ const SHTeamCollaborationPanel: React.FC = () => {
  </div>
  <div className="text-right">
  <div className="text-sm text-titanium-600 mb-1">Team Online</div>
- <div className="text-2xl font-bold text-medical-green-600 font-sf">
+ <div className="text-2xl font-bold text-[#2C4A60] font-sf">
  {onlineCount}
  </div>
  </div>
@@ -774,7 +774,7 @@ const SHTeamCollaborationPanel: React.FC = () => {
  </div>
  </div>
  <div className="flex gap-2">
- <button className="p-2 bg-medical-green-100 text-medical-green-600 rounded-lg hover:bg-medical-green-200 transition-colors">
+ <button className="p-2 bg-[#e0eaf3] text-[#2C4A60] rounded-lg hover:bg-[#C8D4DC] transition-colors">
  <Phone className="w-4 h-4" />
  </button>
  <button className="p-2 bg-porsche-100 text-porsche-600 rounded-lg hover:bg-porsche-200 transition-colors">
@@ -846,7 +846,7 @@ const SHTeamCollaborationPanel: React.FC = () => {
  <div className="text-titanium-800 mb-3">{alert.message}</div>
  
  {!alert.acknowledged && (
- <button className="px-4 py-2 bg-medical-green-600 text-white text-sm rounded-lg hover:bg-medical-green-700 transition-colors">
+ <button className="px-4 py-2 bg-[#2C4A60] text-white text-sm rounded-lg hover:bg-[#2C4A60] transition-colors">
  Acknowledge
  </button>
  )}

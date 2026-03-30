@@ -179,8 +179,8 @@ const CoronarySafetyScreening: React.FC = () => {
  {/* Header */}
  <div className="bg-white rounded-xl border border-titanium-200 p-6 shadow-chrome-card-hover">
  <div className="flex items-center gap-3 mb-4">
- <div className="p-3 rounded-xl bg-medical-amber-100">
- <Shield className="w-6 h-6 text-medical-amber-600" />
+ <div className="p-3 rounded-xl bg-crimson-100">
+ <Shield className="w-6 h-6 text-crimson-600" />
  </div>
  <div>
  <h2 className="text-2xl font-bold text-titanium-900 font-sf">Coronary Safety Screening</h2>
@@ -214,7 +214,7 @@ const CoronarySafetyScreening: React.FC = () => {
  type="number"
  value={patientData.age}
  onChange={(e) => setPatientData({...patientData, age: Number(e.target.value)})}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-medical-amber-500 focus:border-medical-amber-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-crimson-500 focus:border-crimson-500"
  />
  </div>
  <div>
@@ -223,7 +223,7 @@ const CoronarySafetyScreening: React.FC = () => {
  type="number"
  value={patientData.weight}
  onChange={(e) => setPatientData({...patientData, weight: Number(e.target.value)})}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-medical-amber-500 focus:border-medical-amber-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-crimson-500 focus:border-crimson-500"
  />
  </div>
  </div>
@@ -236,7 +236,7 @@ const CoronarySafetyScreening: React.FC = () => {
  step="0.1"
  value={patientData.creatinine}
  onChange={(e) => setPatientData({...patientData, creatinine: Number(e.target.value)})}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-medical-amber-500 focus:border-medical-amber-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-crimson-500 focus:border-crimson-500"
  />
  </div>
  <div>
@@ -245,7 +245,7 @@ const CoronarySafetyScreening: React.FC = () => {
  type="number"
  value={patientData.egfr}
  onChange={(e) => setPatientData({...patientData, egfr: Number(e.target.value)})}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-medical-amber-500 focus:border-medical-amber-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-crimson-500 focus:border-crimson-500"
  />
  </div>
  </div>
@@ -256,7 +256,7 @@ const CoronarySafetyScreening: React.FC = () => {
  type="number"
  value={patientData.plateletCount}
  onChange={(e) => setPatientData({...patientData, plateletCount: Number(e.target.value)})}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-medical-amber-500 focus:border-medical-amber-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-crimson-500 focus:border-crimson-500"
  />
  </div>
 
@@ -285,7 +285,7 @@ const CoronarySafetyScreening: React.FC = () => {
  ...patientData,
  [item.key]: e.target.checked
  })}
- className="mr-2 text-medical-amber-600 focus:ring-medical-amber-500"
+ className="mr-2 text-crimson-600 focus:ring-crimson-500"
  />
  {item.label}
  </label>
@@ -299,7 +299,7 @@ const CoronarySafetyScreening: React.FC = () => {
  <select
  value={patientData.priorContrastReaction}
  onChange={(e) => setPatientData({...patientData, priorContrastReaction: e.target.value})}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-medical-amber-500 focus:border-medical-amber-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-crimson-500 focus:border-crimson-500"
  >
  <option value="none">None/Unknown</option>
  <option value="mild">Mild (rash, nausea)</option>
@@ -339,7 +339,7 @@ const CoronarySafetyScreening: React.FC = () => {
  <ul className="space-y-1">
  {daptAssessment.monitoring.map((item) => (
  <li key={item} className="text-sm text-titanium-700 flex items-center gap-2">
- <div className="w-1.5 h-1.5 bg-medical-amber-500 rounded-full"></div>
+ <div className="w-1.5 h-1.5 bg-crimson-500 rounded-full"></div>
  {item}
  </li>
  ))}
@@ -389,7 +389,7 @@ const CoronarySafetyScreening: React.FC = () => {
  <ul className="space-y-1">
  {contrastAssessment.monitoring.map((item) => (
  <li key={item} className="text-sm text-titanium-700 flex items-center gap-2">
- <div className="w-1.5 h-1.5 bg-medical-amber-500 rounded-full"></div>
+ <div className="w-1.5 h-1.5 bg-crimson-500 rounded-full"></div>
  {item}
  </li>
  ))}

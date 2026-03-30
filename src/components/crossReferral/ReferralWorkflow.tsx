@@ -58,10 +58,10 @@ const ReferralWorkflow: React.FC<ReferralWorkflowProps> = ({
  };
  case 'urgent':
  return {
- color: 'text-medical-amber-600',
- bgColor: 'bg-medical-amber-50',
- borderColor: 'border-medical-amber-200',
- accentColor: 'bg-medical-amber-500'
+ color: 'text-crimson-600',
+ bgColor: 'bg-crimson-50',
+ borderColor: 'border-crimson-200',
+ accentColor: 'bg-crimson-500'
  };
  case 'routine':
  return {
@@ -83,7 +83,7 @@ const ReferralWorkflow: React.FC<ReferralWorkflowProps> = ({
   const getStepIcon = (step: WorkflowStep, index: number) => {
  switch (step.status) {
  case 'completed':
- return <CheckCircle className="w-5 h-5 text-medical-green-500 fill-current" />;
+ return <CheckCircle className="w-5 h-5 text-[#2C4A60] fill-current" />;
  case 'current':
  return <PlayCircle className="w-5 h-5 text-porsche-500 fill-current animate-pulse" />;
  case 'pending':
@@ -99,8 +99,8 @@ const ReferralWorkflow: React.FC<ReferralWorkflowProps> = ({
  switch (step.status) {
  case 'completed':
  return {
- bgColor: 'bg-medical-green-50',
- borderColor: 'border-medical-green-200',
+ bgColor: 'bg-[#f0f5fa]',
+ borderColor: 'border-[#C8D4DC]',
  textColor: 'text-titanium-700',
  titleColor: 'text-titanium-800'
  };
@@ -301,7 +301,7 @@ const ReferralWorkflow: React.FC<ReferralWorkflowProps> = ({
  {/* Step Status Badge */}
  <div className="flex-shrink-0 ml-4">
  {step.status === 'completed' && (
- <div className="flex items-center gap-1 px-2 py-1 bg-medical-green-100 text-medical-green-700 text-xs rounded-full border border-medical-green-200">
+ <div className="flex items-center gap-1 px-2 py-1 bg-[#e0eaf3] text-[#2C4A60] text-xs rounded-full border border-[#C8D4DC]">
  <CheckCircle className="w-3 h-3" />
  Complete
  </div>
@@ -361,7 +361,7 @@ const ReferralWorkflow: React.FC<ReferralWorkflowProps> = ({
  {/* Completed Workflow */}
  {currentStep >= steps.length && (
  <div className="mt-6 pt-4 border-t border-titanium-200">
- <div className="flex items-center justify-center gap-2 text-medical-green-600">
+ <div className="flex items-center justify-center gap-2 text-[#2C4A60]">
  <CheckCircle className="w-5 h-5" />
  <span className="font-medium">Workflow Complete</span>
  </div>

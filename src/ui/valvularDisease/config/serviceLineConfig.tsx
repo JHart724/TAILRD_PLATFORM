@@ -102,20 +102,20 @@ const ValvularDiseaseAnalytics: React.FC = () => (
  </div>
  <div className="metal-card p-8">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Target className="w-5 h-5 text-medical-amber-600" />
+ <Target className="w-5 h-5 text-crimson-600" />
  Procedure Analytics
  </h3>
  <p className="text-titanium-600 mb-6">Comprehensive analytics for aortic, mitral, tricuspid, and pulmonary valve interventions including TAVR, MitraClip, surgical valve replacement, and valve-in-valve procedures.</p>
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Aortic Valve Excellence</h4>
  <p className="text-sm text-titanium-600">TAVR program optimization with risk-stratified patient selection and outcomes tracking</p>
  </div>
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Mitral Valve Innovation</h4>
  <p className="text-sm text-titanium-600">MitraClip, surgical repair, and TMVR program analytics with functional assessment</p>
  </div>
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Heart Team Coordination</h4>
  <p className="text-sm text-titanium-600">Multidisciplinary heart team workflows and surgical vs transcatheter decision support</p>
  </div>
@@ -129,16 +129,16 @@ const ValvularProviderScorecard: React.FC = () => (
   <div className="space-y-6">
  <div className="metal-card p-8">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Stethoscope className="w-5 h-5 text-medical-amber-600" />
+ <Stethoscope className="w-5 h-5 text-crimson-600" />
  Valvular Disease Provider Performance
  </h3>
  <p className="text-titanium-600 mb-6">Individual surgeon and interventionalist performance metrics for valve procedures.</p>
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">TAVR Operators</h4>
  <p className="text-sm text-titanium-600">Case volumes, success rates, and complication tracking for transcatheter aortic valve replacement</p>
  </div>
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Cardiac Surgeons</h4>
  <p className="text-sm text-titanium-600">Surgical valve replacement outcomes, repair rates, and operative mortality metrics</p>
  </div>
@@ -152,16 +152,16 @@ const ValveDecisionSupport: React.FC = () => (
   <div className="space-y-6">
  <div className="metal-card p-8">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Activity className="w-5 h-5 text-medical-amber-600" />
+ <Activity className="w-5 h-5 text-crimson-600" />
  Valve Intervention Decision Support
  </h3>
  <p className="text-titanium-600 mb-6">Clinical decision support tools for optimal valve intervention selection.</p>
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">TAVR vs SAVR Selection</h4>
  <p className="text-sm text-titanium-600">Risk calculator integration and heart team decision pathways for aortic valve interventions</p>
  </div>
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Mitral Intervention Pathways</h4>
  <p className="text-sm text-titanium-600">MitraClip eligibility, surgical repair feasibility, and TMVR candidate assessment</p>
  </div>
@@ -175,20 +175,20 @@ const ValvularRiskCalculators: React.FC = () => (
   <div className="space-y-6">
  <div className="metal-card p-8">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Calculator className="w-5 h-5 text-medical-amber-600" />
+ <Calculator className="w-5 h-5 text-crimson-600" />
  Valvular Disease Risk Calculators
  </h3>
  <p className="text-titanium-600 mb-6">Integrated risk assessment tools for valve intervention planning.</p>
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">STS Risk Calculator</h4>
  <p className="text-sm text-titanium-600">Society of Thoracic Surgeons operative risk assessment for valve surgery</p>
  </div>
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">EuroSCORE II</h4>
  <p className="text-sm text-titanium-600">European cardiac surgery risk evaluation system for valve procedures</p>
  </div>
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">TAVR Risk Models</h4>
  <p className="text-sm text-titanium-600">Specialized risk assessment for transcatheter aortic valve replacement candidates</p>
  </div>
@@ -202,16 +202,16 @@ const ValvularProcedureAnalytics: React.FC = () => (
   <div className="space-y-6">
  <div className="metal-card p-8">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <BarChart3 className="w-5 h-5 text-medical-amber-600" />
+ <BarChart3 className="w-5 h-5 text-crimson-600" />
  Valvular Procedure Analytics
  </h3>
  <p className="text-titanium-600 mb-6">Detailed analytics for all valve intervention procedures.</p>
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Transcatheter Procedures</h4>
  <p className="text-sm text-titanium-600">TAVR, MitraClip, TMVR, and tricuspid intervention analytics</p>
  </div>
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Surgical Procedures</h4>
  <p className="text-sm text-titanium-600">Valve replacement, repair, and complex multi-valve surgery analytics</p>
  </div>
@@ -225,16 +225,16 @@ const ValvularSafetyScreening: React.FC = () => (
   <div className="space-y-6">
  <div className="metal-card p-8">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Shield className="w-5 h-5 text-medical-amber-600" />
+ <Shield className="w-5 h-5 text-crimson-600" />
  Valvular Intervention Safety Screening
  </h3>
  <p className="text-titanium-600 mb-6">Comprehensive safety assessments and contraindication screening for valve interventions.</p>
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">TAVR Safety Protocols</h4>
  <p className="text-sm text-titanium-600">Pre-procedural screening, sizing protocols, and complication prevention</p>
  </div>
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Surgical Risk Assessment</h4>
  <p className="text-sm text-titanium-600">Operative risk evaluation and perioperative safety optimization</p>
  </div>
@@ -248,20 +248,20 @@ const ValvularQualityMetrics: React.FC = () => (
   <div className="space-y-6">
  <div className="metal-card p-8">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Award className="w-5 h-5 text-medical-amber-600" />
+ <Award className="w-5 h-5 text-crimson-600" />
  Valvular Disease Quality Metrics
  </h3>
  <p className="text-titanium-600 mb-6">Comprehensive quality indicators for valve intervention programs.</p>
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">TAVR Quality Measures</h4>
  <p className="text-sm text-titanium-600">30-day mortality, stroke rates, and functional outcomes for TAVR procedures</p>
  </div>
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Surgical Quality Indicators</h4>
  <p className="text-sm text-titanium-600">Operative mortality, reoperation rates, and long-term durability metrics</p>
  </div>
- <div className="bg-gradient-to-br from-medical-amber-50 to-medical-amber-100 p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-crimson-50 to-crimson-100 p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Registry Compliance</h4>
  <p className="text-sm text-titanium-600">STS, TVT Registry, and institutional quality database participation</p>
  </div>
@@ -417,7 +417,7 @@ export const valvularDiseaseServiceLineConfig: ServiceLineViewConfig = {
   moduleName: 'Valvular Disease',
   moduleDescription: 'Comprehensive valve intervention analytics for TAVR, MitraClip, and surgical procedures',
   moduleIcon: Heart,
-  primaryColor: 'medical-amber',
+  primaryColor: 'crimson',
   tabs: valvularDiseaseTabs,
   tabContent: {
  'analytics': ValvularDiseaseAnalytics,

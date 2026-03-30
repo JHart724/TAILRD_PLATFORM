@@ -98,7 +98,7 @@ const INTERMACSCalculator: React.FC = () => {
  description: "Stable on mild-moderate inotropic support but attempts to wean result in symptomatic hypotension",
  survival: "70-80% at 1 year",
  urgency: 'Urgent',
- color: 'medical-amber',
+ color: 'crimson',
  recommendations: [
  'LVAD evaluation within 2-4 weeks',
  'Optimize GDMT if tolerated',
@@ -112,7 +112,7 @@ const INTERMACSCalculator: React.FC = () => {
  description: "Possible weaning from inotropes but experiencing daily symptoms of congestion at rest or during ADLs",
  survival: "80-85% at 1 year",
  urgency: 'Urgent',
- color: 'medical-amber',
+ color: 'crimson',
  recommendations: [
  'LVAD evaluation within 1-2 months',
  'Maximum GDMT optimization',
@@ -126,7 +126,7 @@ const INTERMACSCalculator: React.FC = () => {
  description: "Comfortable at rest, exertion intolerant, unable to carry out any strenuous activity",
  survival: "85-90% at 1 year",
  urgency: 'Elective',
- color: 'medical-amber',
+ color: 'crimson',
  recommendations: [
  'LVAD evaluation within 3-6 months',
  'Cardiac rehabilitation',
@@ -140,7 +140,7 @@ const INTERMACSCalculator: React.FC = () => {
  description: "Minor limitation with exertion, comfortable at rest and with ADLs",
  survival: ">90% at 1 year",
  urgency: 'Elective',
- color: 'medical-green',
+ color: 'chrome-blue',
  recommendations: [
  'Continue medical optimization',
  'Monitor for progression',
@@ -154,7 +154,7 @@ const INTERMACSCalculator: React.FC = () => {
  description: "Clinically stable with reasonable level of comfortable activity",
  survival: ">95% at 1 year",
  urgency: 'Elective',
- color: 'medical-green',
+ color: 'chrome-blue',
  recommendations: [
  'Continue GDMT',
  'Regular monitoring',
@@ -216,7 +216,7 @@ const INTERMACSCalculator: React.FC = () => {
 
  if (riskScore <= 5) {
  riskCategory = 'Low';
- color = 'medical-green';
+ color = 'chrome-blue';
  survivelEstimate = '>85% 2-year survival';
  recommendations = [
  'Excellent LVAD candidate',
@@ -226,7 +226,7 @@ const INTERMACSCalculator: React.FC = () => {
  ];
  } else if (riskScore <= 10) {
  riskCategory = 'Intermediate';
- color = 'medical-amber';
+ color = 'crimson';
  survivelEstimate = '70-85% 2-year survival';
  recommendations = [
  'Good LVAD candidate with optimization',
@@ -279,8 +279,8 @@ const INTERMACSCalculator: React.FC = () => {
  {/* Header */}
  <div className="flex items-center justify-between mb-6">
  <div className="flex items-center gap-3">
- <div className="w-12 h-12 bg-medical-amber-100 rounded-xl flex items-center justify-center">
- <Zap className="w-6 h-6 text-medical-amber-600" />
+ <div className="w-12 h-12 bg-crimson-100 rounded-xl flex items-center justify-center">
+ <Zap className="w-6 h-6 text-crimson-600" />
  </div>
  <div>
  <h3 className="text-xl font-bold text-titanium-900 font-sf">INTERMACS Calculator</h3>
