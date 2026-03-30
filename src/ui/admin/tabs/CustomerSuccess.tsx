@@ -57,7 +57,7 @@ const HOSPITAL_METRICS: HospitalMetrics[] = [
   },
   {
     id: 'hs-003',
-    name: 'Memorial Hermann',
+    name: 'Mercy Health System',
     abbr: 'MH',
     gapClosureRate: 18,
     gapClosureTrend: [5, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18],

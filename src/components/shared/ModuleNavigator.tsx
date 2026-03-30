@@ -37,7 +37,7 @@ const mockModuleData = {
  name: 'Structural',
  displayName: 'Structural Heart',
  icon: Settings,
- color: 'medical-arterial',
+ color: 'arterial',
  activeAlerts: 12,
  openGaps: 67,
  pendingReferrals: 15,
@@ -130,11 +130,11 @@ const ModuleNavigator: React.FC<ModuleNavigatorProps> = ({
  border: 'border-porsche-200',
  badge: 'bg-porsche-500 text-white'
  },
- 'medical-arterial': {
- bg: isActive ? 'bg-medical-arterial-500' : 'bg-medical-arterial-50 hover:bg-medical-arterial-100',
- text: isActive ? 'text-white' : 'text-medical-arterial-700',
- border: 'border-medical-arterial-200',
- badge: 'bg-medical-arterial-500 text-white'
+ 'arterial': {
+ bg: isActive ? 'bg-arterial-500' : 'bg-arterial-50 hover:bg-arterial-100',
+ text: isActive ? 'text-white' : 'text-arterial-700',
+ border: 'border-arterial-200',
+ badge: 'bg-arterial-500 text-white'
  },
  'chrome-blue': {
  bg: isActive ? 'bg-[#2C4A60]' : 'bg-[#f0f5fa] hover:bg-[#e0eaf3]',

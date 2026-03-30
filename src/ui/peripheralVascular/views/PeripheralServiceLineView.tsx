@@ -42,20 +42,20 @@ const PeripheralVascularAnalytics: React.FC = () => (
     </div>
     <div className="metal-card p-8">
       <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
-        <Target className="w-5 h-5 text-medical-arterial-600" />
+        <Target className="w-5 h-5 text-arterial-600" />
         Analytics Overview
       </h3>
       <p className="text-titanium-600 mb-6">Comprehensive peripheral arterial disease (PAD) analytics including endovascular interventions, surgical bypass, wound care coordination, and limb salvage outcomes.</p>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">PAD Excellence</h4>
           <p className="text-sm text-titanium-600">Advanced endovascular interventions with optimal patency rates and limb preservation</p>
         </div>
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">Limb Salvage Program</h4>
           <p className="text-sm text-titanium-600">Comprehensive critical limb ischemia management with multidisciplinary care coordination</p>
         </div>
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">Wound Care Network</h4>
           <p className="text-sm text-titanium-600">Integrated wound care specialists, podiatrists, and vascular surgeons collaboration</p>
         </div>
@@ -69,16 +69,16 @@ const PeripheralVascularProviderScorecard: React.FC = () => (
   <div className="space-y-6">
     <div className="metal-card p-8">
       <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
-        <Users className="w-5 h-5 text-medical-arterial-600" />
+        <Users className="w-5 h-5 text-arterial-600" />
         Peripheral Vascular Provider Performance
       </h3>
       <p className="text-titanium-600 mb-6">Individual vascular surgeon and interventionalist performance metrics for PAD procedures.</p>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">Vascular Surgeons</h4>
           <p className="text-sm text-titanium-600">Bypass patency rates, surgical outcomes, and limb salvage success metrics</p>
         </div>
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">Interventionalists</h4>
           <p className="text-sm text-titanium-600">Endovascular success rates, vessel patency, and technical success tracking</p>
         </div>
@@ -92,20 +92,20 @@ const PADRiskCalculators: React.FC = () => (
   <div className="space-y-6">
     <div className="metal-card p-8">
       <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
-        <Calculator className="w-5 h-5 text-medical-arterial-600" />
+        <Calculator className="w-5 h-5 text-arterial-600" />
         PAD Risk Assessment Tools
       </h3>
       <p className="text-titanium-600 mb-6">Integrated risk calculators for peripheral arterial disease intervention planning.</p>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">WIfI Classification</h4>
           <p className="text-sm text-titanium-600">Wound, Ischemia, and foot Infection classification system for limb threat assessment</p>
         </div>
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">ABI Calculator</h4>
           <p className="text-sm text-titanium-600">Ankle-brachial index assessment and interpretation for PAD diagnosis</p>
         </div>
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">GLASS Classification</h4>
           <p className="text-sm text-titanium-600">Global Limb Anatomic Staging System for comprehensive lesion assessment</p>
         </div>
@@ -119,16 +119,16 @@ const PADInterventionAnalytics: React.FC = () => (
   <div className="space-y-6">
     <div className="metal-card p-8">
       <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
-        <BarChart3 className="w-5 h-5 text-medical-arterial-600" />
+        <BarChart3 className="w-5 h-5 text-arterial-600" />
         PAD Intervention Analytics
       </h3>
       <p className="text-titanium-600 mb-6">Detailed analytics for peripheral arterial disease interventions and procedures.</p>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">Endovascular Procedures</h4>
           <p className="text-sm text-titanium-600">Balloon angioplasty, stenting, atherectomy, and drug-coated device utilization</p>
         </div>
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">Surgical Procedures</h4>
           <p className="text-sm text-titanium-600">Bypass grafting, endarterectomy, and hybrid procedure analytics</p>
         </div>
@@ -142,16 +142,16 @@ const CLIManagement: React.FC = () => (
   <div className="space-y-6">
     <div className="metal-card p-8">
       <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
-        <Heart className="w-5 h-5 text-medical-arterial-600" />
+        <Heart className="w-5 h-5 text-arterial-600" />
         Critical Limb Ischemia Management
       </h3>
       <p className="text-titanium-600 mb-6">Comprehensive CLI patient management and limb salvage program analytics.</p>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">Limb Salvage Outcomes</h4>
           <p className="text-sm text-titanium-600">Amputation-free survival, wound healing rates, and functional outcomes</p>
         </div>
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">Revascularization Success</h4>
           <p className="text-sm text-titanium-600">Technical success, patency rates, and clinical improvement metrics</p>
         </div>
@@ -165,16 +165,16 @@ const PADSafetyScreening: React.FC = () => (
   <div className="space-y-6">
     <div className="metal-card p-8">
       <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
-        <Shield className="w-5 h-5 text-medical-arterial-600" />
+        <Shield className="w-5 h-5 text-arterial-600" />
         PAD Intervention Safety Screening
       </h3>
       <p className="text-titanium-600 mb-6">Comprehensive safety assessments and contraindication screening for PAD interventions.</p>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">Pre-procedural Assessment</h4>
           <p className="text-sm text-titanium-600">Renal function, contrast allergy screening, and bleeding risk evaluation</p>
         </div>
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">Complication Prevention</h4>
           <p className="text-sm text-titanium-600">Access site management, embolic protection, and post-procedure monitoring</p>
         </div>
@@ -188,20 +188,20 @@ const PADQualityMetrics: React.FC = () => (
   <div className="space-y-6">
     <div className="metal-card p-8">
       <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
-        <Award className="w-5 h-5 text-medical-arterial-600" />
+        <Award className="w-5 h-5 text-arterial-600" />
         PAD Quality Metrics
       </h3>
       <p className="text-titanium-600 mb-6">Comprehensive quality indicators for peripheral vascular intervention programs.</p>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">Intervention Quality</h4>
           <p className="text-sm text-titanium-600">Technical success rates, patency outcomes, and appropriate use metrics</p>
         </div>
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">Limb Salvage Metrics</h4>
           <p className="text-sm text-titanium-600">Amputation rates, wound healing success, and functional preservation</p>
         </div>
-        <div className="bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-lg">
+        <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-lg">
           <h4 className="font-semibold text-titanium-900 mb-2">Registry Compliance</h4>
           <p className="text-sm text-titanium-600">VQI Registry, national database participation, and quality reporting</p>
         </div>
@@ -340,18 +340,18 @@ const PeripheralServiceLineView: React.FC = () => {
                       onClick={() => handleTabChange(tab.id as PeripheralServiceLineTab)}
                       className={`group relative p-4 rounded-xl border transition-all duration-300 ${
                         isActive
-                          ? 'bg-medical-arterial-50 border-medical-arterial-200 text-medical-arterial-600 shadow-lg scale-105'
+                          ? 'bg-arterial-50 border-arterial-200 text-arterial-600 shadow-lg scale-105'
                           : 'bg-white border-titanium-200 text-titanium-600 hover:bg-white hover:scale-105 hover:shadow-lg'
                       }`}
                     >
                       <div className="flex flex-col items-center gap-2">
-                        <Icon className={`w-6 h-6 ${isActive ? 'text-medical-arterial-600' : 'text-titanium-600 group-hover:text-titanium-800'}`} />
-                        <span className={`text-xs font-semibold text-center leading-tight ${isActive ? 'text-medical-arterial-600' : 'text-titanium-600 group-hover:text-titanium-800'}`}>
+                        <Icon className={`w-6 h-6 ${isActive ? 'text-arterial-600' : 'text-titanium-600 group-hover:text-titanium-800'}`} />
+                        <span className={`text-xs font-semibold text-center leading-tight ${isActive ? 'text-arterial-600' : 'text-titanium-600 group-hover:text-titanium-800'}`}>
                           {tab.label}
                         </span>
                       </div>
                       {isActive && (
-                        <div className="absolute inset-0 bg-gradient-to-r from-medical-arterial-400/20 to-medical-arterial-500/20 rounded-xl opacity-50" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-arterial-400/20 to-arterial-500/20 rounded-xl opacity-50" />
                       )}
                     </button>
                   );

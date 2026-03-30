@@ -44,7 +44,7 @@ interface HospitalRateLimit {
 const HOSPITALS = [
   { id: 'hs-001', name: 'Baylor Scott & White' },
   { id: 'hs-002', name: 'Regional Medical' },
-  { id: 'hs-003', name: 'Memorial Hermann' },
+  { id: 'hs-003', name: 'Mercy Health System' },
 ];
 
 const DEFAULT_MODULES: ModuleToggle[] = [
@@ -77,13 +77,13 @@ const FEATURE_FLAGS: FeatureFlag[] = [
 const BILLING_DATA: HospitalBilling[] = [
   { id: 'hs-001', name: 'Baylor Scott & White', tier: 'Enterprise', contractStart: '2025-06-01', contractEnd: '2026-05-31', mrr: 42000 },
   { id: 'hs-002', name: 'Regional Medical', tier: 'Standard', contractStart: '2025-09-15', contractEnd: '2026-09-14', mrr: 28000 },
-  { id: 'hs-003', name: 'Memorial Hermann', tier: 'Trial', contractStart: '2026-03-08', contractEnd: '2026-04-07', mrr: 0 },
+  { id: 'hs-003', name: 'Mercy Health System', tier: 'Trial', contractStart: '2026-03-08', contractEnd: '2026-04-07', mrr: 0 },
 ];
 
 const RATE_LIMITS: HospitalRateLimit[] = [
   { id: 'hs-001', name: 'Baylor Scott & White', requestsPerMinute: 120, uploadsPerDay: 10 },
   { id: 'hs-002', name: 'Regional Medical', requestsPerMinute: 100, uploadsPerDay: 8 },
-  { id: 'hs-003', name: 'Memorial Hermann', requestsPerMinute: 60, uploadsPerDay: 3 },
+  { id: 'hs-003', name: 'Mercy Health System', requestsPerMinute: 60, uploadsPerDay: 3 },
 ];
 
 // ─── Toggle Component ────────────────────────────────────────────────────────

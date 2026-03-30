@@ -465,7 +465,7 @@ const ProtectedPCIChecklist: React.FC = () => {
  {/* Hemodynamic Goals */}
  <div className="bg-white rounded-2xl p-6 shadow-chrome-card border border-titanium-200">
  <div className="flex items-center gap-3 mb-4">
- <Activity className="w-5 h-5 text-medical-arterial-600" />
+ <Activity className="w-5 h-5 text-arterial-600" />
  <h3 className="text-lg font-semibold text-titanium-800">Hemodynamic Goals</h3>
  </div>
  

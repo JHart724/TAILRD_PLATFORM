@@ -228,17 +228,17 @@ const SHAdvancedProcedureTracker: React.FC = () => {
  switch (category) {
  case 'procedure': return 'text-deep-blue-600 bg-deep-blue-50 border-deep-blue-200';
  case 'intervention': return 'text-deep-red-600 bg-deep-red-50 border-deep-red-200';
- case 'diagnostic': return 'text-deep-green-600 bg-deep-green-50 border-deep-green-200';
- case 'therapy': return 'text-deep-amber-600 bg-deep-amber-50 border-deep-amber-200';
+ case 'diagnostic': return 'text-deep-green-600 bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'therapy': return 'text-deep-amber-600 bg-crimson-50 border-crimson-200';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };
 
   const getUtilizationColor = (utilization: number) => {
  if (utilization < 10) return 'text-deep-red-600 bg-deep-red-50';
- if (utilization < 30) return 'text-deep-amber-600 bg-deep-amber-50';
+ if (utilization < 30) return 'text-deep-amber-600 bg-crimson-50';
  if (utilization < 50) return 'text-deep-blue-600 bg-deep-blue-50';
- return 'text-deep-green-600 bg-deep-green-50';
+ return 'text-deep-green-600 bg-[#f0f5fa]';
   };
 
   return (
@@ -259,11 +259,11 @@ const SHAdvancedProcedureTracker: React.FC = () => {
  <div className="text-2xl font-bold text-porsche-600 font-sf">{totalEligible}</div>
  <div className="text-sm text-porsche-700">Total Eligible Patients</div>
  </div>
- <div className="p-4 bg-deep-green-50 border border-deep-green-200 rounded-lg">
+ <div className="p-4 bg-[#f0f5fa] border border-[#C8D4DC] rounded-lg">
  <div className="text-2xl font-bold text-deep-green-600 font-sf">{totalUtilized}</div>
  <div className="text-sm text-deep-green-700">Currently Receiving</div>
  </div>
- <div className="p-4 bg-deep-amber-50 border border-deep-amber-200 rounded-lg">
+ <div className="p-4 bg-crimson-50 border border-crimson-200 rounded-lg">
  <div className="text-2xl font-bold text-deep-amber-600 font-sf">{Math.round((totalUtilized/totalEligible)*100)}%</div>
  <div className="text-sm text-deep-amber-700">Overall Utilization</div>
  </div>
@@ -342,7 +342,7 @@ const SHAdvancedProcedureTracker: React.FC = () => {
  <div className="font-bold text-titanium-900">{procedure.eligiblePatients}</div>
  <div className="text-xs text-titanium-600">Eligible</div>
  </div>
- <div className="text-center p-2 bg-deep-green-50 rounded">
+ <div className="text-center p-2 bg-[#f0f5fa] rounded">
  <div className="font-bold text-deep-green-600">{procedure.utilizedPatients}</div>
  <div className="text-xs text-deep-green-700">Current</div>
  </div>
@@ -436,9 +436,9 @@ const SHAdvancedProcedureTracker: React.FC = () => {
  <div className="text-lg font-bold text-deep-blue-600">Valve Therapy</div>
  <div className="text-xs text-deep-blue-600">Low complexity, high volume</div>
  </div>
- <div className="p-4 border-2 border-deep-amber-200 rounded-lg">
+ <div className="p-4 border-2 border-crimson-200 rounded-lg">
  <Users className="w-6 h-6 text-deep-amber-600 mb-2" />
- <div className="text-sm font-semibold text-deep-amber-800">Population Impact</div>
+ <div className="text-sm font-semibold text-crimson-700">Population Impact</div>
  <div className="text-lg font-bold text-deep-amber-600">2,191</div>
  <div className="text-xs text-deep-amber-600">Total underutilized patients</div>
  </div>

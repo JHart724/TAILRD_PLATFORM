@@ -244,7 +244,7 @@ const CoronaryServiceLineView: React.FC = () => {
  return (
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-8">
  <h3 className="text-2xl font-bold text-titanium-900 mb-6 flex items-center gap-3">
- <Target className="w-8 h-8 text-medical-arterial-600" />
+ <Target className="w-8 h-8 text-arterial-600" />
  Multi-Arterial Graft Strategy
  </h3>
  <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">

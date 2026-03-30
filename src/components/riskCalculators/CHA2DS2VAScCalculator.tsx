@@ -76,8 +76,8 @@ const CHA2DS2VAScCalculator: React.FC = () => {
   return (
  <div className="retina-card bg-white border border-titanium-200 rounded-2xl p-8 shadow-2xl">
  <h3 className="text-2xl font-bold text-titanium-900 mb-6 flex items-center gap-3">
- <div className="p-3 rounded-xl bg-medical-arterial-50 border border-medical-arterial-200">
- <svg className="w-6 h-6 text-medical-arterial-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+ <div className="p-3 rounded-xl bg-arterial-50 border border-arterial-200">
+ <svg className="w-6 h-6 text-arterial-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
  </svg>
  </div>
@@ -96,7 +96,7 @@ const CHA2DS2VAScCalculator: React.FC = () => {
  type="number"
  value={age}
  onChange={(e) => setAge(parseInt(e.target.value) || 0)}
- className="w-full px-4 py-3 border border-titanium-300 rounded-xl focus:ring-2 focus:ring-medical-arterial-500 focus:border-medical-arterial-500"
+ className="w-full px-4 py-3 border border-titanium-300 rounded-xl focus:ring-2 focus:ring-arterial-500 focus:border-arterial-500"
  min="0"
  max="120"
  />
@@ -110,7 +110,7 @@ const CHA2DS2VAScCalculator: React.FC = () => {
  onClick={() => setSex('male')}
  className={`p-3 rounded-xl border font-medium transition-all ${
  sex === 'male' 
- ? 'bg-medical-arterial-50 border-medical-arterial-200 text-medical-arterial-700' 
+ ? 'bg-arterial-50 border-arterial-200 text-arterial-700' 
  : 'bg-white border-titanium-300 text-titanium-600 hover:bg-titanium-50'
  }`}
  >
@@ -120,7 +120,7 @@ const CHA2DS2VAScCalculator: React.FC = () => {
  onClick={() => setSex('female')}
  className={`p-3 rounded-xl border font-medium transition-all ${
  sex === 'female' 
- ? 'bg-medical-arterial-50 border-medical-arterial-200 text-medical-arterial-700' 
+ ? 'bg-arterial-50 border-arterial-200 text-arterial-700' 
  : 'bg-white border-titanium-300 text-titanium-600 hover:bg-titanium-50'
  }`}
  >
@@ -145,7 +145,7 @@ const CHA2DS2VAScCalculator: React.FC = () => {
  type="checkbox"
  checked={factor.value}
  onChange={(e) => factor.setter(e.target.checked)}
- className="w-5 h-5 text-medical-arterial-600 border-titanium-300 rounded focus:ring-medical-arterial-500"
+ className="w-5 h-5 text-arterial-600 border-titanium-300 rounded focus:ring-arterial-500"
  />
  <span className="text-sm text-titanium-700">{factor.label}</span>
  </label>
@@ -159,11 +159,11 @@ const CHA2DS2VAScCalculator: React.FC = () => {
  <h4 className="text-lg font-semibold text-titanium-900 mb-4">Risk Assessment</h4>
  
  <div className="grid grid-cols-2 gap-4">
- <div className="text-center bg-gradient-to-br from-medical-arterial-50 to-medical-arterial-100 p-6 rounded-xl border border-medical-arterial-200">
- <div className="text-4xl font-bold text-medical-arterial-700 mb-2">
+ <div className="text-center bg-gradient-to-br from-arterial-50 to-arterial-100 p-6 rounded-xl border border-arterial-200">
+ <div className="text-4xl font-bold text-arterial-700 mb-2">
  {score}
  </div>
- <div className="text-sm font-medium text-medical-arterial-600">CHA₂DS₂-VASc Score</div>
+ <div className="text-sm font-medium text-arterial-600">CHA₂DS₂-VASc Score</div>
  </div>
  
  <div className="text-center bg-gradient-to-br from-chrome-50 to-chrome-100 p-6 rounded-xl border border-chrome-200">

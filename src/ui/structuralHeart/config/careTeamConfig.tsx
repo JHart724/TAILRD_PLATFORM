@@ -921,7 +921,7 @@ export const structuralCareTeamConfig: CareTeamViewConfig = {
   moduleName: 'Structural Heart',
   moduleDescription: 'Advanced structural heart interventions, TAVR/SAVR coordination, and valve optimization',
   moduleIcon: Heart,
-  primaryColor: 'medical-arterial',
+  primaryColor: 'arterial',
   tabs: structuralTabs,
   tabContent: {
  dashboard: StructuralDashboard,

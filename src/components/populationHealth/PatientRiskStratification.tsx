@@ -529,7 +529,7 @@ const PatientRiskStratification: React.FC<PatientRiskStratificationProps> = ({ c
  index === 0 ? 'bg-[#2C4A60]' :
  index === 1 ? 'bg-porsche-500' :
  index === 2 ? 'bg-crimson-500' :
- 'bg-medical-arterial-500'
+ 'bg-arterial-500'
  }`}>
  {index + 1}
  </div>

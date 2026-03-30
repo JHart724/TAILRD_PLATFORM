@@ -437,8 +437,8 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  </div>
  </div>
 
- <div className="p-4 bg-medical-arterial-50 border border-medical-arterial-200 rounded-lg">
- <h3 className="font-semibold text-medical-arterial-800 mb-3">Lesion Characteristics</h3>
+ <div className="p-4 bg-arterial-50 border border-arterial-200 rounded-lg">
+ <h3 className="font-semibold text-arterial-800 mb-3">Lesion Characteristics</h3>
  <div className="space-y-3">
  <div>
  <label className="block text-sm font-medium text-titanium-700 mb-2">Total Occlusions</label>
@@ -446,7 +446,7 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  type="number"
  value={inputs.numTotalOcclusions}
  onChange={(e) => updateInput('numTotalOcclusions', parseInt(e.target.value) || 0)}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-medical-arterial-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-arterial-500"
  min="0"
  max="10"
  />
@@ -458,7 +458,7 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  type="checkbox"
  checked={inputs.trifurcation}
  onChange={(e) => updateInput('trifurcation', e.target.checked)}
- className="rounded text-medical-arterial-600"
+ className="rounded text-arterial-600"
  />
  <span className="text-sm font-medium text-titanium-700">Trifurcation</span>
  </label>
@@ -468,7 +468,7 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  type="checkbox"
  checked={inputs.aortaOstial}
  onChange={(e) => updateInput('aortaOstial', e.target.checked)}
- className="rounded text-medical-arterial-600"
+ className="rounded text-arterial-600"
  />
  <span className="text-sm font-medium text-titanium-700">Aorto-ostial</span>
  </label>
@@ -478,7 +478,7 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  type="checkbox"
  checked={inputs.severeTortuosity}
  onChange={(e) => updateInput('severeTortuosity', e.target.checked)}
- className="rounded text-medical-arterial-600"
+ className="rounded text-arterial-600"
  />
  <span className="text-sm font-medium text-titanium-700">Severe tortuosity</span>
  </label>
@@ -488,7 +488,7 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  type="checkbox"
  checked={inputs.lengthOver20mm}
  onChange={(e) => updateInput('lengthOver20mm', e.target.checked)}
- className="rounded text-medical-arterial-600"
+ className="rounded text-arterial-600"
  />
  <span className="text-sm font-medium text-titanium-700">Length {'>'}20mm</span>
  </label>
@@ -498,7 +498,7 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  type="checkbox"
  checked={inputs.heavyCalcification}
  onChange={(e) => updateInput('heavyCalcification', e.target.checked)}
- className="rounded text-medical-arterial-600"
+ className="rounded text-arterial-600"
  />
  <span className="text-sm font-medium text-titanium-700">Heavy calcification</span>
  </label>
@@ -508,7 +508,7 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  type="checkbox"
  checked={inputs.thrombus}
  onChange={(e) => updateInput('thrombus', e.target.checked)}
- className="rounded text-medical-arterial-600"
+ className="rounded text-arterial-600"
  />
  <span className="text-sm font-medium text-titanium-700">Thrombus</span>
  </label>

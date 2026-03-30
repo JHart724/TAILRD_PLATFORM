@@ -73,7 +73,7 @@ const RCCDIView: React.FC = () => {
  </div>
  </div>
 
- <div className="metal-card p-6 border-l-4 border-l-medical-arterial-400 bg-medical-arterial-50/50">
+ <div className="metal-card p-6 border-l-4 border-l-arterial-400 bg-arterial-50/50">
  <div className="flex items-start justify-between mb-3">
  <div className="flex-1">
  <div className="text-sm font-semibold text-titanium-600 uppercase tracking-wider mb-2">
@@ -84,11 +84,11 @@ const RCCDIView: React.FC = () => {
  </div>
  <div className="text-sm text-titanium-600">Potential Increase</div>
  </div>
- <div className="ml-4 p-3 rounded-xl bg-gradient-to-br from-white via-medical-arterial-50/60 to-white border border-titanium-200 shadow-lg">
- <Target className="w-6 h-6 text-medical-arterial-600 drop-shadow-sm" />
+ <div className="ml-4 p-3 rounded-xl bg-gradient-to-br from-white via-arterial-50/60 to-white border border-titanium-200 shadow-lg">
+ <Target className="w-6 h-6 text-arterial-600 drop-shadow-sm" />
  </div>
  </div>
- <div className="flex items-center gap-2 text-sm font-semibold text-medical-arterial-600">
+ <div className="flex items-center gap-2 text-sm font-semibold text-arterial-600">
  <TrendingUp className="w-4 h-4" />
  <span>0.52</span>
  <span className="text-titanium-500 font-normal ml-1">total opportunity</span>
@@ -308,13 +308,13 @@ const RCCDIView: React.FC = () => {
  </div>
  </div>
 
- <div className="bg-gradient-to-r from-medical-arterial-50 to-medical-arterial-100 rounded-lg p-4 border border-medical-arterial-200">
+ <div className="bg-gradient-to-r from-arterial-50 to-arterial-100 rounded-lg p-4 border border-arterial-200">
  <div className="flex items-center justify-between mb-3">
- <div className="font-semibold text-medical-arterial-900">Quality Impact</div>
- <Target className="w-5 h-5 text-medical-arterial-600" />
+ <div className="font-semibold text-arterial-900">Quality Impact</div>
+ <Target className="w-5 h-5 text-arterial-600" />
  </div>
- <div className="text-2xl font-bold text-medical-arterial-800 mb-2">94.2%</div>
- <div className="text-sm text-medical-arterial-700">
+ <div className="text-2xl font-bold text-arterial-800 mb-2">94.2%</div>
+ <div className="text-sm text-arterial-700">
  Risk-adjusted quality score improvement
  </div>
  </div>

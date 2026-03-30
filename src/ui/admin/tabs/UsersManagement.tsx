@@ -52,10 +52,10 @@ const USERS: AdminUser[] = [
   { id: 'u-007', email: 'lisa.park@regionalmed.org', firstName: 'Lisa', lastName: 'Park', role: 'Nurse Manager', hospital: 'Regional Medical', hospitalId: 'hs-002', status: 'Active', lastLogin: '2026-03-22 07:55', mfaEnabled: false },
   { id: 'u-008', email: 'emily.foster@regionalmed.org', firstName: 'Emily', lastName: 'Foster', role: 'Physician', hospital: 'Regional Medical', hospitalId: 'hs-002', status: 'Active', lastLogin: '2026-03-21 17:30', mfaEnabled: true },
   { id: 'u-009', email: 'mark.davis@regionalmed.org', firstName: 'Mark', lastName: 'Davis', role: 'Analyst', hospital: 'Regional Medical', hospitalId: 'hs-002', status: 'Active', lastLogin: '2026-03-21 15:10', mfaEnabled: false },
-  // Memorial Hermann (3 users)
-  { id: 'u-010', email: 'john.martinez@memhermann.org', firstName: 'John', lastName: 'Martinez', role: 'Hospital Admin', hospital: 'Memorial Hermann', hospitalId: 'hs-003', status: 'Active', lastLogin: '2026-03-22 08:30', mfaEnabled: true },
-  { id: 'u-011', email: 'maria.rodriguez@memhermann.org', firstName: 'Maria', lastName: 'Rodriguez', role: 'Service Line Director', hospital: 'Memorial Hermann', hospitalId: 'hs-003', status: 'Active', lastLogin: '2026-03-22 06:20', mfaEnabled: false },
-  { id: 'u-012', email: 'robert.kim@memhermann.org', firstName: 'Robert', lastName: 'Kim', role: 'Care Team Lead', hospital: 'Memorial Hermann', hospitalId: 'hs-003', status: 'Pending', lastLogin: 'Never', mfaEnabled: false },
+  // Mercy Health System (3 users)
+  { id: 'u-010', email: 'john.martinez@mercyhealth.org', firstName: 'John', lastName: 'Martinez', role: 'Hospital Admin', hospital: 'Mercy Health System', hospitalId: 'hs-003', status: 'Active', lastLogin: '2026-03-22 08:30', mfaEnabled: true },
+  { id: 'u-011', email: 'maria.rodriguez@mercyhealth.org', firstName: 'Maria', lastName: 'Rodriguez', role: 'Service Line Director', hospital: 'Mercy Health System', hospitalId: 'hs-003', status: 'Active', lastLogin: '2026-03-22 06:20', mfaEnabled: false },
+  { id: 'u-012', email: 'robert.kim@mercyhealth.org', firstName: 'Robert', lastName: 'Kim', role: 'Care Team Lead', hospital: 'Mercy Health System', hospitalId: 'hs-003', status: 'Pending', lastLogin: 'Never', mfaEnabled: false },
 ];
 
 const MOCK_LOGINS: LoginEntry[] = [

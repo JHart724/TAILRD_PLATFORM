@@ -302,10 +302,10 @@ const HFPhenotypeClassification: React.FC<{ patientData?: PatientContext }> = ({
  </div>
  </div>
 
- <div className="p-4 bg-medical-arterial-50 border border-medical-arterial-200 rounded-lg">
+ <div className="p-4 bg-arterial-50 border border-arterial-200 rounded-lg">
  <div className="flex items-center gap-2 mb-3">
- <Moon className="w-5 h-5 text-medical-arterial-600" />
- <h3 className="font-semibold text-medical-arterial-800">Sleep Assessment</h3>
+ <Moon className="w-5 h-5 text-arterial-600" />
+ <h3 className="font-semibold text-arterial-800">Sleep Assessment</h3>
  </div>
  <div className="space-y-4">
  <div className="grid grid-cols-2 gap-4">
@@ -315,7 +315,7 @@ const HFPhenotypeClassification: React.FC<{ patientData?: PatientContext }> = ({
  type="number"
  value={inputs.obesityBMI}
  onChange={(e) => updateInput('obesityBMI', parseFloat(e.target.value) || 0)}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-medical-arterial-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-arterial-500"
  step="0.1"
  min="15"
  max="50"
@@ -327,7 +327,7 @@ const HFPhenotypeClassification: React.FC<{ patientData?: PatientContext }> = ({
  type="number"
  value={inputs.ahiScore}
  onChange={(e) => updateInput('ahiScore', parseInt(e.target.value) || 0)}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-medical-arterial-500"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-arterial-500"
  min="0"
  max="100"
  disabled={!inputs.sleepStudyDone}
@@ -340,7 +340,7 @@ const HFPhenotypeClassification: React.FC<{ patientData?: PatientContext }> = ({
  type="checkbox"
  checked={inputs.sleepStudyDone}
  onChange={(e) => updateInput('sleepStudyDone', e.target.checked)}
- className="rounded text-medical-arterial-600"
+ className="rounded text-arterial-600"
  />
  <span className="text-sm font-medium text-titanium-700">Sleep study completed</span>
  </label>
@@ -350,7 +350,7 @@ const HFPhenotypeClassification: React.FC<{ patientData?: PatientContext }> = ({
  type="checkbox"
  checked={inputs.snoring}
  onChange={(e) => updateInput('snoring', e.target.checked)}
- className="rounded text-medical-arterial-600"
+ className="rounded text-arterial-600"
  />
  <span className="text-sm font-medium text-titanium-700">Loud snoring</span>
  </label>
@@ -360,7 +360,7 @@ const HFPhenotypeClassification: React.FC<{ patientData?: PatientContext }> = ({
  type="checkbox"
  checked={inputs.nocturnalDyspnea}
  onChange={(e) => updateInput('nocturnalDyspnea', e.target.checked)}
- className="rounded text-medical-arterial-600"
+ className="rounded text-arterial-600"
  />
  <span className="text-sm font-medium text-titanium-700">Nocturnal dyspnea</span>
  </label>
@@ -370,7 +370,7 @@ const HFPhenotypeClassification: React.FC<{ patientData?: PatientContext }> = ({
  type="checkbox"
  checked={inputs.morningHeadaches}
  onChange={(e) => updateInput('morningHeadaches', e.target.checked)}
- className="rounded text-medical-arterial-600"
+ className="rounded text-arterial-600"
  />
  <span className="text-sm font-medium text-titanium-700">Morning headaches</span>
  </label>
@@ -447,12 +447,12 @@ const HFPhenotypeClassification: React.FC<{ patientData?: PatientContext }> = ({
  </ul>
  </div>
 
- <div className="p-4 bg-medical-arterial-50 border border-medical-arterial-200 rounded-lg">
- <div className="font-semibold text-medical-arterial-800 mb-2">Sleep Apnea Management</div>
- <ul className="space-y-1 text-sm text-medical-arterial-700">
+ <div className="p-4 bg-arterial-50 border border-arterial-200 rounded-lg">
+ <div className="font-semibold text-arterial-800 mb-2">Sleep Apnea Management</div>
+ <ul className="space-y-1 text-sm text-arterial-700">
  {result.sleepApnea.recommendations.map((rec, index) => (
  <li key={rec} className="flex items-start gap-1">
- <div className="w-1 h-1 bg-medical-arterial-600 rounded-full mt-2 flex-shrink-0"></div>
+ <div className="w-1 h-1 bg-arterial-600 rounded-full mt-2 flex-shrink-0"></div>
  {rec}
  </li>
  ))}

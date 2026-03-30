@@ -217,7 +217,7 @@ const PopulationOverviewDashboard: React.FC<PopulationOverviewDashboardProps> = 
 
  <div className="p-4 bg-white rounded-xl border border-titanium-200">
  <div className="flex items-center justify-between mb-2">
- <Zap className="w-5 h-5 text-medical-arterial-600" />
+ <Zap className="w-5 h-5 text-arterial-600" />
  <span className="text-sm font-semibold text-medical-red-600 flex items-center gap-1">
  <TrendingDown className="w-3 h-3" />
  2.1%
@@ -438,7 +438,7 @@ const PopulationOverviewDashboard: React.FC<PopulationOverviewDashboardProps> = 
  </div>
  <div className="w-full bg-titanium-200 rounded-full h-1.5">
  <div 
- className="bg-medical-arterial-500 h-1.5 rounded-full transition-all duration-500"
+ className="bg-arterial-500 h-1.5 rounded-full transition-all duration-500"
  style={{ width: `${provider.deviceUtilization}%` }}
  />
  </div>

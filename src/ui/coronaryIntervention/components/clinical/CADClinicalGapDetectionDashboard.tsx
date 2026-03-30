@@ -7122,7 +7122,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
                   </div>
                   {gap.category === 'Discovery' && (
                     <div className="text-xs font-semibold text-slate-700 mt-1 flex items-center gap-1">
-                      <span className="text-indigo-500">&#x2B21;</span> Discovery — Net new patients
+                      <span className="text-[#2C4A60]">&#x2B21;</span> Discovery — Net new patients
                     </div>
                   )}
                   <div className="font-semibold text-titanium-900 text-base">{gap.name}</div>

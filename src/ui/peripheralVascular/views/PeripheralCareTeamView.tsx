@@ -80,7 +80,7 @@ interface PeripheralCareTeamViewConfig {
   moduleName: string;
   moduleDescription: string;
   moduleIcon: React.ElementType;
-  primaryColor: 'porsche' | 'chrome-blue' | 'medical-red' | 'crimson' | 'medical-arterial';
+  primaryColor: 'porsche' | 'chrome-blue' | 'medical-red' | 'crimson' | 'arterial';
   tabs: Array<{
  id: string;
  label: string;
@@ -209,12 +209,12 @@ const PeripheralCareTeamView: React.FC = () => {
  border: 'border-crimson-200',
  accent: 'crimson'
  };
- case 'medical-arterial':
+ case 'arterial':
  return {
- text: 'text-medical-arterial-600',
- bg: 'bg-medical-arterial-50',
- border: 'border-medical-arterial-200',
- accent: 'medical-arterial'
+ text: 'text-arterial-600',
+ bg: 'bg-arterial-50',
+ border: 'border-arterial-200',
+ accent: 'arterial'
  };
  default:
  return {

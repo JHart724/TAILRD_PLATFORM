@@ -25,9 +25,9 @@ const EPExecutiveKPICard: React.FC<EPExecutiveKPICardProps> = ({
   const getStatusClasses = () => {
  switch (status) {
  case 'optimal':
- return 'border-l-deep-green-600 bg-white';
+ return 'border-l-[#2C4A60] bg-white';
  case 'warning':
- return 'border-l-deep-amber-600 bg-white';
+ return 'border-l-crimson-600 bg-white';
  case 'critical':
  return 'border-l-deep-red-600 bg-white';
  default:

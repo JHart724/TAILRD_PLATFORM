@@ -7,7 +7,7 @@ export interface ServiceLineViewConfig {
   moduleName: string;
   moduleDescription: string;
   moduleIcon: React.ElementType;
-  primaryColor: 'porsche' | 'chrome-blue' | 'medical-red' | 'crimson' | 'medical-arterial';
+  primaryColor: 'porsche' | 'chrome-blue' | 'medical-red' | 'crimson' | 'arterial';
   tabs: ServiceLineTabConfig[];
   tabContent: Record<string, React.ComponentType<any>>;
   exportData?: Record<string, ExportData>;
@@ -54,10 +54,10 @@ const BaseServiceLineView: React.FC<BaseServiceLineViewProps> = ({ config }) => 
  bg: 'bg-crimson-50',
  text: 'text-crimson-600'
  },
- 'medical-arterial': {
- border: 'border-medical-arterial-500',
- bg: 'bg-medical-arterial-50',
- text: 'text-medical-arterial-600'
+ 'arterial': {
+ border: 'border-arterial-500',
+ bg: 'bg-arterial-50',
+ text: 'text-arterial-600'
  },
  };
  

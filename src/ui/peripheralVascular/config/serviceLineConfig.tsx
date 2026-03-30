@@ -44,7 +44,7 @@ const PeripheralVascularAnalytics: React.FC = () => (
  </div>
  <div className="metal-card p-8">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Target className="w-5 h-5 text-medical-arterial-600" />
+ <Target className="w-5 h-5 text-arterial-600" />
  Procedure Analytics
  </h3>
  <p className="text-titanium-600 mb-6">Comprehensive peripheral arterial disease (PAD) analytics including endovascular interventions, surgical bypass, wound care coordination, and limb salvage outcomes.</p>
@@ -64,7 +64,7 @@ const PeripheralVascularAnalytics: React.FC = () => (
  <div className="bg-white border border-titanium-200 rounded-lg p-5">
    <h4 className="font-bold text-titanium-900 mb-4">Limb Salvage Program</h4>
    <div className="space-y-0 divide-y divide-titanium-100">
-     <div className="flex items-center justify-between py-2"><span className="text-sm text-titanium-600">Limb Salvage Rate</span><span className="text-sm font-semibold text-medical-arterial-700">85%</span></div>
+     <div className="flex items-center justify-between py-2"><span className="text-sm text-titanium-600">Limb Salvage Rate</span><span className="text-sm font-semibold text-arterial-700">85%</span></div>
      <div className="flex items-center justify-between py-2"><span className="text-sm text-titanium-600">CLI Referral-to-Revasc</span><span className="text-sm font-semibold text-titanium-900">12.4d</span></div>
      <div className="flex items-center justify-between py-2"><span className="text-sm text-titanium-600">Major Amputation Rate</span><span className="text-sm font-semibold text-titanium-900">3.2%</span></div>
      <div className="flex items-center justify-between py-2"><span className="text-sm text-titanium-600">Wound Healing Rate</span><span className="text-sm font-semibold text-titanium-900">78.3%</span></div>
@@ -79,7 +79,7 @@ const PeripheralVascularAnalytics: React.FC = () => (
      <div className="flex items-center justify-between py-2"><span className="text-sm text-titanium-600">Avg Healing Time</span><span className="text-sm font-semibold text-titanium-900">42d</span></div>
      <div className="flex items-center justify-between py-2"><span className="text-sm text-titanium-600">Multidisciplinary Reviews MTD</span><span className="text-sm font-semibold text-titanium-900">34</span></div>
      <div className="flex items-center justify-between py-2"><span className="text-sm text-titanium-600">Podiatry Referral Rate</span><span className="text-sm font-semibold text-titanium-900">94.2%</span></div>
-     <div className="flex items-center justify-between py-2"><span className="text-sm text-titanium-600">WIfI Stage 4 Cases</span><span className="text-sm font-semibold text-medical-arterial-700">12</span></div>
+     <div className="flex items-center justify-between py-2"><span className="text-sm text-titanium-600">WIfI Stage 4 Cases</span><span className="text-sm font-semibold text-arterial-700">12</span></div>
    </div>
  </div>
  </div>
@@ -99,13 +99,13 @@ const PeripheralVascularProviderScorecard: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="metal-card p-5 border-l-4 border-l-medical-arterial-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total Providers</p><p className="text-3xl font-bold text-titanium-900">5</p><p className="text-xs text-titanium-500 mt-1">Vascular surgeons &amp; interventionalists</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-arterial-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total Providers</p><p className="text-3xl font-bold text-titanium-900">5</p><p className="text-xs text-titanium-500 mt-1">Vascular surgeons &amp; interventionalists</p></div>
         <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Avg Limb Salvage Rate</p><p className="text-3xl font-bold text-[#2C4A60]">88.6%</p><p className="text-xs text-titanium-500 mt-1">CLI patients at 12 months</p></div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total Procedures</p><p className="text-3xl font-bold text-blue-700">990</p><p className="text-xs text-titanium-500 mt-1">Endovascular + surgical this quarter</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-titanium-100 flex items-center gap-2">
-          <Users className="w-5 h-5 text-medical-arterial-600" />
+          <Users className="w-5 h-5 text-arterial-600" />
           <h3 className="text-base font-semibold text-titanium-900">PV Provider Performance Scorecard</h3>
         </div>
         <div className="overflow-x-auto">
@@ -120,7 +120,7 @@ const PeripheralVascularProviderScorecard: React.FC = () => {
                   <td className="px-4 py-3 text-center font-mono">{p.surgVol > 0 ? p.surgVol : '—'}</td>
                   <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.limbSalvage}</span></td>
                   <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">{p.patency1yr}</span></td>
-                  <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="flex-1 bg-titanium-100 rounded-full h-2"><div className="bg-medical-arterial-500 h-2 rounded-full" style={{ width: `${p.quality}%` }} /></div><span className="text-xs font-semibold text-titanium-700">{p.quality}</span></div></td>
+                  <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="flex-1 bg-titanium-100 rounded-full h-2"><div className="bg-arterial-500 h-2 rounded-full" style={{ width: `${p.quality}%` }} /></div><span className="text-xs font-semibold text-titanium-700">{p.quality}</span></div></td>
                 </tr>
               ))}
             </tbody>
@@ -153,14 +153,14 @@ const PADInterventionAnalytics: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="metal-card p-5 border-l-4 border-l-medical-arterial-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total Interventions</p><p className="text-3xl font-bold text-titanium-900">1,456</p><p className="text-xs text-[#2C4A60] mt-1">+11.2% vs last quarter</p></div>
+        <div className="metal-card p-5 border-l-4 border-l-arterial-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Total Interventions</p><p className="text-3xl font-bold text-titanium-900">1,456</p><p className="text-xs text-[#2C4A60] mt-1">+11.2% vs last quarter</p></div>
         <div className="metal-card p-5 border-l-4 border-l-[#2C4A60]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">Technical Success</p><p className="text-3xl font-bold text-[#2C4A60]">96.8%</p><p className="text-xs text-titanium-500 mt-1">Across all interventions</p></div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">DCB Use (Fem-Pop)</p><p className="text-3xl font-bold text-blue-700">78.4%</p><p className="text-xs text-[#2C4A60] mt-1">+9.3% vs last quarter</p></div>
         <div className="metal-card p-5 border-l-4 border-l-[#6B7280]"><p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide mb-1">CLI Limb Salvage</p><p className="text-3xl font-bold text-[#6B7280]">86.4%</p><p className="text-xs text-[#2C4A60] mt-1">+2.1% vs last quarter</p></div>
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-titanium-100 flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 text-medical-arterial-600" />
+          <BarChart3 className="w-5 h-5 text-arterial-600" />
           <h3 className="text-base font-semibold text-titanium-900">PAD Intervention Analytics by Procedure Type</h3>
         </div>
         <div className="overflow-x-auto">
@@ -203,7 +203,7 @@ const CLIManagement: React.FC = () => {
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-titanium-100 flex items-center gap-2">
-          <Activity className="w-5 h-5 text-medical-arterial-600" />
+          <Activity className="w-5 h-5 text-arterial-600" />
           <h3 className="text-base font-semibold text-titanium-900">CLI Patient Pipeline by Stage</h3>
         </div>
         <table className="w-full text-sm">
@@ -244,7 +244,7 @@ const PADSafetyScreening: React.FC = () => {
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-titanium-100 flex items-center gap-2">
-          <Shield className="w-5 h-5 text-medical-arterial-600" />
+          <Shield className="w-5 h-5 text-arterial-600" />
           <h3 className="text-base font-semibold text-titanium-900">Active Safety Alerts — PV Procedures</h3>
         </div>
         <table className="w-full text-sm">
@@ -286,7 +286,7 @@ const PADQualityMetrics: React.FC = () => {
       </div>
       <div className="metal-card bg-white rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-titanium-100 flex items-center gap-2">
-          <Award className="w-5 h-5 text-medical-arterial-600" />
+          <Award className="w-5 h-5 text-arterial-600" />
           <h3 className="text-base font-semibold text-titanium-900">PV Quality Measures — Current Performance</h3>
         </div>
         <div className="overflow-x-auto">
@@ -401,7 +401,7 @@ const PVVascularPipeline: React.FC = () => {
             <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-medium">{patientCount} patients</span>
           </div>
           {gap && <p className="text-xs text-titanium-600 mt-1">{gap.evidence}</p>}
-          {gap && <p className="text-xs font-semibold text-medical-arterial-700 mt-2">Action: {gap.cta}</p>}
+          {gap && <p className="text-xs font-semibold text-arterial-700 mt-2">Action: {gap.cta}</p>}
         </div>
       </div>
       {gap?.subcategories && (
@@ -487,9 +487,9 @@ const PVVascularPipeline: React.FC = () => {
       </div>
 
       {/* Automation callout */}
-      <div className="metal-card bg-gradient-to-r from-medical-arterial-50 to-blue-50 border border-medical-arterial-200 rounded-2xl p-5">
+      <div className="metal-card bg-gradient-to-r from-arterial-50 to-blue-50 border border-arterial-200 rounded-2xl p-5">
         <div className="flex items-start gap-3">
-          <Zap className="w-5 h-5 text-medical-arterial-600 mt-0.5 flex-shrink-0" />
+          <Zap className="w-5 h-5 text-arterial-600 mt-0.5 flex-shrink-0" />
           <div>
             <h4 className="text-sm font-bold text-titanium-900">Automated Vascular Pipeline Detection</h4>
             <p className="text-xs text-titanium-600 mt-1">&#9889; Patients automatically identified from EHR integration</p>
@@ -752,7 +752,7 @@ export const peripheralVascularServiceLineConfig: ServiceLineViewConfig = {
   moduleName: 'Peripheral Vascular',
   moduleDescription: 'Advanced PAD analytics for interventions, wound care coordination, and limb salvage',
   moduleIcon: Activity,
-  primaryColor: 'medical-arterial',
+  primaryColor: 'arterial',
   tabs: peripheralVascularTabs,
   tabContent: {
  'analytics': PeripheralVascularAnalytics,

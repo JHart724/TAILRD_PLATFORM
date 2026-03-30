@@ -4486,7 +4486,7 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
                   </div>
                   {gap.category === 'Discovery' && (
                     <div className="flex items-center gap-1.5 mt-1">
-                      <span className="text-xs font-semibold text-indigo-600">{'\u2B21'} Discovery — Net new patients · Never previously identified</span>
+                      <span className="text-xs font-semibold text-[#2C4A60]">{'\u2B21'} Discovery — Net new patients · Never previously identified</span>
                     </div>
                   )}
                   <div className="font-semibold text-titanium-900 text-base">{gap.name}</div>
@@ -4509,7 +4509,7 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
                   )}
                   {gap.whyMissed && (
                     <div className="mt-2 text-xs text-titanium-500 italic flex items-start gap-1.5">
-                      <Search className="w-3 h-3 text-indigo-400 flex-shrink-0 mt-0.5" />
+                      <Search className="w-3 h-3 text-[#4A6880] flex-shrink-0 mt-0.5" />
                       <span>Why standard systems miss this: {gap.whyMissed}</span>
                     </div>
                   )}
@@ -4628,7 +4628,7 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
                                   </span>
                                 )}
                                 {gap.category === 'Discovery' && (
-                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-indigo-100 text-slate-700 px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow. TAILRD identified this patient by assembling disconnected signals across care settings.">
+                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-[#e0eaf3] text-slate-700 px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow. TAILRD identified this patient by assembling disconnected signals across care settings.">
                                     <Radio className="w-3 h-3" />
                                     First identified by TAILRD
                                   </span>
@@ -4673,7 +4673,7 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
                                 {gap.whyTailrd && (
                                   <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 mt-2">
                                     <p className="text-xs font-semibold text-slate-700 mb-1">Why TAILRD identified this patient:</p>
-                                    <p className="text-sm text-indigo-600">{gap.whyTailrd}</p>
+                                    <p className="text-sm text-[#2C4A60]">{gap.whyTailrd}</p>
                                   </div>
                                 )}
                               </div>

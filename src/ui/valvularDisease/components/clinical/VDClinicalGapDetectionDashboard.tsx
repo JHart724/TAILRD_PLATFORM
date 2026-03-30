@@ -3227,12 +3227,12 @@ const renderVDPredictiveDetail = (gap: VDClinicalGap, pt: VDGapPatient) => {
     if (!isNaN(currentVmax)) {
       const prog = projectASProgression({ currentVmax, priorVmax, monthsBetween: priorVmax != null ? 6 : undefined });
       elements.push(
-        <div key="as-prog" className="mt-3 bg-indigo-50 border border-indigo-200 rounded-xl p-3 space-y-1">
-          <div className="flex items-center gap-2 text-sm font-bold text-indigo-800">
-            <TrendingUp className="w-4 h-4 text-indigo-600 flex-shrink-0" />
+        <div key="as-prog" className="mt-3 bg-[#f0f4f8] border border-[#C8D4DC] rounded-xl p-3 space-y-1">
+          <div className="flex items-center gap-2 text-sm font-bold text-[#1A2F4A]">
+            <TrendingUp className="w-4 h-4 text-[#2C4A60] flex-shrink-0" />
             Predictive Intelligence — AS Progression to Severe
           </div>
-          <div className="text-sm text-indigo-700">
+          <div className="text-sm text-[#2C4A60]">
             Current Vmax: {currentVmax.toFixed(1)} m/s
             {priorVmax != null && <> · Previous: {priorVmax.toFixed(1)} m/s (6 months ago)</>}
             {' '}· Rate: {prog.annualizedRate.toFixed(2)} m/s/year ({prog.progressionCategory})
@@ -3241,7 +3241,7 @@ const renderVDPredictiveDetail = (gap: VDClinicalGap, pt: VDGapPatient) => {
             )}
             {prog.monthsToSevere === 0 && <> · Already at severe threshold</>}
           </div>
-          <div className="text-xs text-indigo-600 italic">Confidence: {prog.confidence} — {prog.basisNote}</div>
+          <div className="text-xs text-[#2C4A60] italic">Confidence: {prog.confidence} — {prog.basisNote}</div>
           <div className="flex items-center gap-1.5 text-xs text-blue-600 mt-1">
             <Zap className="w-3 h-3 flex-shrink-0" />
             Trajectory-aware · Forward-looking · Auto-computed from serial echocardiography
@@ -3371,7 +3371,7 @@ const VDClinicalGapDetectionDashboard: React.FC = () => {
 
   const categoryColor = (c: string) =>
     c === 'Discovery'
-      ? 'bg-indigo-100 text-indigo-800'
+      ? 'bg-[#e0eaf3] text-[#1A2F4A]'
       : c === 'Gap'
       ? 'bg-red-100 text-red-800'
       : c === 'Safety'
@@ -3466,13 +3466,13 @@ const VDClinicalGapDetectionDashboard: React.FC = () => {
                   </div>
                   {gap.category === 'Discovery' && (
                     <div className="flex items-center gap-1.5 mt-1">
-                      <span className="text-xs font-semibold text-indigo-600">{'\u2B21'} Discovery — Net new patients · Never previously identified</span>
+                      <span className="text-xs font-semibold text-[#2C4A60]">{'\u2B21'} Discovery — Net new patients · Never previously identified</span>
                     </div>
                   )}
                   <div className="font-semibold text-titanium-900 text-base">{gap.name}</div>
                   {gap.whyMissed && (
                     <div className="mt-2 text-xs text-titanium-500 italic flex items-start gap-1.5">
-                      <Search className="w-3 h-3 text-indigo-400 flex-shrink-0 mt-0.5" />
+                      <Search className="w-3 h-3 text-[#4A6880] flex-shrink-0 mt-0.5" />
                       <span>Why standard systems miss this: {gap.whyMissed}</span>
                     </div>
                   )}
@@ -3598,7 +3598,7 @@ const VDClinicalGapDetectionDashboard: React.FC = () => {
                                   </span>
                                 )}
                                 {gap.category === 'Discovery' && (
-                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow. TAILRD identified this patient by assembling disconnected signals across care settings.">
+                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-[#e0eaf3] text-[#2C4A60] px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow. TAILRD identified this patient by assembling disconnected signals across care settings.">
                                     <Radio className="w-3 h-3" />
                                     First identified by TAILRD
                                   </span>
@@ -3645,9 +3645,9 @@ const VDClinicalGapDetectionDashboard: React.FC = () => {
                             )}
                             {ptOpen && gap.whyTailrd && (
                               <div className="px-4">
-                                <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-3 mt-2">
-                                  <p className="text-xs font-semibold text-indigo-700 mb-1">Why TAILRD identified this patient:</p>
-                                  <p className="text-sm text-indigo-600">{gap.whyTailrd}</p>
+                                <div className="bg-[#f0f4f8] border border-[#C8D4DC] rounded-xl p-3 mt-2">
+                                  <p className="text-xs font-semibold text-[#2C4A60] mb-1">Why TAILRD identified this patient:</p>
+                                  <p className="text-sm text-[#2C4A60]">{gap.whyTailrd}</p>
                                 </div>
                               </div>
                             )}

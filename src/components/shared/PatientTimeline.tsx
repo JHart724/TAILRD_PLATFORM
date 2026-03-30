@@ -200,9 +200,9 @@ const eventTypeConfig = {
   },
   procedure: {
  icon: Activity,
- color: 'bg-medical-arterial-500',
- bgColor: 'bg-medical-arterial-50',
- textColor: 'text-medical-arterial-700'
+ color: 'bg-arterial-500',
+ bgColor: 'bg-arterial-50',
+ textColor: 'text-arterial-700'
   },
   imaging: {
  icon: Image,
@@ -232,7 +232,7 @@ const eventTypeConfig = {
 
 const moduleColors = {
   heartFailure: 'border-l-porsche-400',
-  structural: 'border-l-medical-arterial-400',
+  structural: 'border-l-arterial-400',
   ep: 'border-l-[#4A6880]',
   vascular: 'border-l-[#4A6880]',
   valvular: 'border-l-crimson-400',

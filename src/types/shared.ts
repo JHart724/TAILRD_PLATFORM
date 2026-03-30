@@ -64,7 +64,7 @@ export const MODULE_CONFIGS: Record<string, ModuleConfig> = {
  displayName: 'Electrophysiology',
  description: '• Device Management • LAA Closure Analytics',
  drgRanges: ['241-244'],
- primaryColor: 'medical-arterial',
+ primaryColor: 'arterial',
  secondaryColor: 'porsche'
   },
   // Add other modules...
