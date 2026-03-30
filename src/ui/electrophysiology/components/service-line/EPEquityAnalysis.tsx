@@ -1,3 +1,4 @@
+import { toast } from '../../../../components/shared/Toast';
 import React, { useState } from 'react';
 import { BarChart, Users, AlertTriangle, TrendingUp, TrendingDown, Filter, Target, Eye, ChevronRight, Activity } from 'lucide-react';
 import { toFixed } from '../../../../utils/formatters';

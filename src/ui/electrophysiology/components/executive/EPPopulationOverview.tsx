@@ -1,5 +1,5 @@
 import React from 'react';
-import { demoAction } from '../../../utils/demoActions';
+import { demoAction } from '../../../../utils/demoActions';
 import { AlertCircle, CheckCircle } from 'lucide-react';
 import { toFixed } from '../../../../utils/formatters';
 

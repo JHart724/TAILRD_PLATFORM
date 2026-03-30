@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { demoAction } from '../../../utils/demoActions';
+import { demoAction } from '../../../../utils/demoActions';
 import { TrendingUp, TrendingDown, Activity, Heart, Zap, BarChart3, Shield } from 'lucide-react';
 import { toFixed } from '../../../../utils/formatters';
 

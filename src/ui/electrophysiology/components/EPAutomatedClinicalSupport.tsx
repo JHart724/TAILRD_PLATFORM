@@ -1,3 +1,4 @@
+import { toast } from '../../../components/shared/Toast';
 import React, { useState, useMemo } from 'react';
 import { Brain, Heart, Shield, Zap, AlertTriangle, CheckCircle, TrendingUp, Users, Target, Calendar, ChevronRight, Eye, Stethoscope, Clock, Plus, ChevronUp, Info } from 'lucide-react';
 

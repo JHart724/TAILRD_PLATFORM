@@ -1,3 +1,4 @@
+import { toast } from '../../../../components/shared/Toast';
 import React, { useState, useEffect, useRef } from 'react';
 import { TrendingUp, AlertCircle, Calendar, ExternalLink, Filter, User, Heart, Clock, Target, CheckCircle, XCircle, AlertTriangle, ChevronUp, ChevronRight, Pill, Activity, Search } from 'lucide-react';
 import PatientDetailPanel from './EPPatientDetailPanel';

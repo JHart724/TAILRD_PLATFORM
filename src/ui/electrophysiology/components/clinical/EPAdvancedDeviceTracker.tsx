@@ -1,3 +1,4 @@
+import { toast } from '../../../../components/shared/Toast';
 import React, { useState } from 'react';
 import { Activity, Heart, Zap, Monitor, TrendingUp, AlertTriangle, DollarSign, Users , CheckCircle } from 'lucide-react';
 import { toFixed } from '../../../../utils/formatters';

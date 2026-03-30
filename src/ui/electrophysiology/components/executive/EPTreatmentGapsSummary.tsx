@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { demoAction } from '../../../utils/demoActions';
+import { demoAction } from '../../../../utils/demoActions';
 import { AlertTriangle, Target, TrendingUp, Clock, CheckCircle, Users, Calendar, ArrowRight, ExternalLink, X, Heart, Activity, Zap, Shield, Pill, FileText, Thermometer, Droplets } from 'lucide-react';
 import { toFixed } from '../../../../utils/formatters';
 

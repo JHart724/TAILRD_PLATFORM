@@ -1,3 +1,4 @@
+import { toast } from '../../../components/shared/Toast';
 import React from 'react';
 import { X, Heart, Thermometer, Droplets, Users, FileText, Shield, Pill, Calendar, Activity, AlertTriangle, TrendingUp, ChevronRight, Zap, Target, CheckCircle, XCircle, Clock, Battery, Waves, DollarSign } from 'lucide-react';
 

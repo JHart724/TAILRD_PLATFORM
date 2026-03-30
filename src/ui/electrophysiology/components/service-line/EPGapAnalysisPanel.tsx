@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { demoAction } from '../../../utils/demoActions';
+import { demoAction } from '../../../../utils/demoActions';
 import { AlertTriangle, Target, TrendingUp, Clock, CheckCircle, Users, Calendar, ArrowRight, ExternalLink, X, Heart, Zap, Shield, Pill, FileText, Activity, ChevronRight } from 'lucide-react';
 
 interface EPTreatmentGap {

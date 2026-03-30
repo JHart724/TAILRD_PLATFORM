@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { demoAction } from '../../../utils/demoActions';
+import { demoAction } from '../../../../utils/demoActions';
 import { Calculator, Heart, AlertTriangle, CheckCircle, Info, Zap, Shield } from 'lucide-react';
 
 interface CHA2DS2VAScInputs {
