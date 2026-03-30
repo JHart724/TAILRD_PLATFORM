@@ -675,10 +675,35 @@ function MainDashboard(): JSX.Element {
   );
 }
 
+const isDemoMode = process.env.REACT_APP_DEMO_MODE === 'true';
+
+function resetDemoState(): void {
+  ['tailrd-session-token', 'tailrd-refresh-token', 'tailrd-user', 'tailrd-user-id'].forEach(
+    (key) => localStorage.removeItem(key)
+  );
+  sessionStorage.clear();
+  window.location.href = '/';
+}
+
 export default function App(): JSX.Element {
   // Initialize theme system
   useEffect(() => {
  initializeTheme();
+  }, []);
+
+  // Demo presenter shortcut: Ctrl+Shift+R resets all demo state
+  useEffect(() => {
+    if (!isDemoMode) return;
+    const handleKeyCombo = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'R') {
+        e.preventDefault();
+        if (window.confirm('Reset all demo state? This will return to the login screen.')) {
+          resetDemoState();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyCombo);
+    return () => window.removeEventListener('keydown', handleKeyCombo);
   }, []);
 
   return (
