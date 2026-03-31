@@ -89,7 +89,7 @@ const kpiData: KPIData[] = [
  subtext: '27% of opportunity',
  trend: 12,
  icon: TrendingUp,
- color: 'green',
+ color: 'copper',
  trendData: [
  { month: 'Jun', value: 0.8 },
  { month: 'Jul', value: 0.95 },
@@ -123,12 +123,19 @@ export const HFExecutiveSummary: React.FC = () => {
 
   const getColorClasses = (color: string) => {
  const colors: any = {
- blue: { bg: 'bg-chrome-50', border: 'border-chrome-300', text: 'text-chrome-700', icon: 'text-chrome-600', stroke: '#2C4A60' },
- green: { bg: 'bg-[#F0F5FA]', border: 'border-[#C8D4DC]', text: 'text-[#2C4A60]', icon: 'text-[#2C4A60]', stroke: '#2C4A60' },
- carmona: { bg: 'bg-arterial-50', border: 'border-arterial-300', text: 'text-arterial-700', icon: 'text-arterial-600', stroke: '#9B2438' },
- red: { bg: 'bg-red-50', border: 'border-red-300', text: 'text-red-700', icon: 'text-red-600', stroke: '#9B2438' },
- orange: { bg: 'bg-[#F0F5FA]', border: 'border-[#C8D4DC]', text: 'text-[#6B7280]', icon: 'text-[#6B7280]', stroke: '#6B7280' },
- teal: { bg: 'bg-[#C8D4DC]', border: 'border-[#2C4A60]', text: 'text-[#2C4A60]', icon: 'text-[#2C4A60]', stroke: '#4A6880' }
+ // Chrome Blue — patient volume / clinical data
+ blue:   { bg: 'bg-[#EFF4F8]', border: 'border-[#B8C9D9]', text: 'text-[#2C4A60]', icon: 'text-[#2C4A60]', stroke: '#2C4A60' },
+ // Metallic Gold — revenue / financial opportunity
+ green:  { bg: 'bg-[#FAF6E8]', border: 'border-[#E0CC80]', text: 'text-[#7A5810]', icon: 'text-[#8B6914]', stroke: '#C4982A' },
+ // Carmona Red — risk / critical
+ carmona:{ bg: 'bg-arterial-50', border: 'border-arterial-300', text: 'text-arterial-700', icon: 'text-arterial-600', stroke: '#9B2438' },
+ red:    { bg: 'bg-[#FDF2F3]', border: 'border-[#F5C0C8]', text: 'text-[#7A1A2E]', icon: 'text-[#9B2438]', stroke: '#9B2438' },
+ // Steel Teal — device / procedure metrics
+ orange: { bg: 'bg-[#EEF8FA]', border: 'border-[#A8D8E4]', text: 'text-[#1A6878]', icon: 'text-[#1A6878]', stroke: '#1A6878' },
+ // Racing Green — clinical quality / GDMT
+ teal:   { bg: 'bg-[#EEF6F2]', border: 'border-[#A8D0BC]', text: 'text-[#2D6147]', icon: 'text-[#2D6147]', stroke: '#2D6147' },
+ // Copper Bronze — captured / realized value
+ copper: { bg: 'bg-[#FAF3EC]', border: 'border-[#DDBA98]', text: 'text-[#7A4A1E]', icon: 'text-[#8B5A2B]', stroke: '#8B5A2B' },
  };
  return colors[color] || colors.blue;
   };
@@ -162,8 +169,8 @@ export const HFExecutiveSummary: React.FC = () => {
  {Math.abs(kpi.trend)}%
  </div>
  </div>
- <div className="text-3xl font-bold mb-1">{kpi.value}</div>
- <div className="text-sm font-semibold text-gray-700 mb-1">{kpi.label}</div>
+ <div className="text-3xl font-bold mb-1" style={{ color: colors.stroke }}>{kpi.value}</div>
+ <div className="text-sm font-semibold mb-1" style={{ color: colors.stroke }}>{kpi.label}</div>
  <div className="text-xs text-gray-500">{kpi.subtext}</div>
  </button>
  );
