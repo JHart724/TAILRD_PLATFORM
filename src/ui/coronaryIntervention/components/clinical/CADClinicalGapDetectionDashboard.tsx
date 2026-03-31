@@ -6990,6 +6990,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
   const [expandedPatient, setExpandedPatient] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'priority' | 'patients' | 'opportunity'>('priority');
   const [showMethodology, setShowMethodology] = useState<string | null>(null);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
   const totalPatients = CAD_CLINICAL_GAPS.reduce((sum, g) => sum + g.patientCount, 0);
   const totalOpportunity = CAD_CLINICAL_GAPS.reduce((sum, g) => sum + g.dollarOpportunity, 0);
@@ -7007,6 +7008,35 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
       }
     }
   });
+
+  const filterConfig: Record<string, string[]> = {
+    'Post-ACS & Secondary Prevention': ['Post-ACS', 'Post-MI', 'ACS', 'PCSK9', 'Colchicine', 'ACE-I', 'ARB', 'Statin', 'High-Intensity', 'Medication Reconciliation', 'PREVENT 2024', 'Blood Pressure', 'Diabetes', 'Smoking Cessation', 'Cardiac Rehab', 'SGLT2i'],
+    'Antiplatelet & Anticoagulation': ['DAPT', 'P2Y12', 'Aspirin', 'Anticoagulation', 'Cangrelor', 'Bridging', 'OAC', 'Reversal', 'DOAC', 'HIT', 'Antithrombotic'],
+    'PCI Quality': ['PCI', 'IVUS', 'OCT', 'FFR', 'iFR', 'Physiologic', 'Atherectomy', 'IVL', 'Drug-Coated Balloon', 'Radial Access', 'Protected PCI', 'CTO', 'Complete Revascularization', 'Non-Culprit', 'CCTA', 'Chest Pain', 'In-Stent Restenosis', 'Cardiogenic Shock', 'SCAI', 'Hemodynamic'],
+    'CABG & Surgical': ['CABG', 'Bypass', 'Graft', 'Arterial', 'IMA', 'Endoscopic', 'Hybrid', 'Off-Pump', 'MIDCAB', 'Radial Artery', 'Blood Conservation', 'Intra-Operative', 'Delirium', 'Post-Operative', 'Sternotomy'],
+    'Lipid Management': ['LDL', 'Lp(a)', 'Inclisiran', 'Bempedoic', 'Icosapent', 'Triglycerides', 'Statin Intolerance', 'Lipid', 'Cholesterol'],
+    'Peri-Procedural Safety': ['Door-to-Balloon', 'AKI', 'Contrast', 'POAF', 'Pre-Operative', 'Non-Cardiac Surgery', 'Delirium', 'Blood Conservation', 'Anticoagulation Reversal', 'Emergency Surgery'],
+  };
+
+  const chipCounts = Object.fromEntries(
+    Object.entries(filterConfig).map(([label, keywords]) => [
+      label,
+      sortedGaps.filter(gap =>
+        keywords.some(kw => (gap.name || '').toLowerCase().includes(kw.toLowerCase()))
+      ).length
+    ])
+  );
+
+  const filteredGaps = activeFilters.length === 0 ? sortedGaps : sortedGaps.filter(gap => {
+    const gapName = (gap.name || '').toLowerCase();
+    return activeFilters.some(label =>
+      filterConfig[label].some(kw => gapName.includes(kw.toLowerCase()))
+    );
+  });
+
+  const filteredPatientCount = filteredGaps.reduce((sum, g) => sum + (g.patientCount || 0), 0);
+  const totalPatientCountForChips = sortedGaps.reduce((sum, g) => sum + (g.patientCount || 0), 0);
+  const totalOpportunityForChips = sortedGaps.reduce((sum, g) => sum + (g.dollarOpportunity || 0), 0);
 
   const priorityColor = (p: string) => {
     if (p === 'high') return 'bg-red-50 border-red-300 text-red-700';
@@ -7096,9 +7126,63 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
         </select>
       </div>
 
+      {/* Filter Chips */}
+      <div className="mb-4">
+        <div className="flex items-start justify-between mb-2">
+          <div className="flex flex-wrap gap-2">
+            {Object.entries(filterConfig).map(([label]) => {
+              const isActive = activeFilters.includes(label);
+              const count = chipCounts[label];
+              return (
+                <button
+                  key={label}
+                  onClick={() => setActiveFilters(prev =>
+                    prev.includes(label) ? prev.filter(f => f !== label) : [...prev, label]
+                  )}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'text-white border border-transparent'
+                      : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50'
+                  }`}
+                  style={isActive ? { backgroundColor: '#2C4A60' } : {}}
+                >
+                  {label}
+                  <span className={`text-xs rounded-full px-1.5 py-0.5 font-semibold ${
+                    isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          {activeFilters.length > 0 && (
+            <button
+              onClick={() => setActiveFilters([])}
+              className="text-sm text-slate-500 hover:text-slate-700 whitespace-nowrap ml-4 mt-1"
+            >
+              Clear all filters
+            </button>
+          )}
+        </div>
+        <div className="text-sm text-slate-500">
+          {activeFilters.length > 0 ? (
+            <span>
+              Showing <strong>{filteredPatientCount.toLocaleString()}</strong> patients across{' '}
+              <strong>{filteredGaps.length}</strong> gaps · Filtered by: {activeFilters.join(', ')}
+            </span>
+          ) : (
+            <span>
+              Patients identified: <strong>{totalPatientCountForChips.toLocaleString()}</strong> ·{' '}
+              Opportunity: <strong>${(totalOpportunityForChips / 1_000_000).toFixed(1)}M</strong>
+            </span>
+          )}
+        </div>
+      </div>
+
       {/* Gap list */}
       <div className="space-y-4">
-        {sortedGaps.map((gap) => {
+        {filteredGaps.map((gap) => {
           const isOpen = expandedGap === gap.id;
           return (
             <div key={gap.id} className="metal-card bg-white border border-titanium-200 rounded-2xl overflow-hidden">

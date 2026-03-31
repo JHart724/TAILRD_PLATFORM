@@ -4375,6 +4375,7 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
   const [expandedPatient, setExpandedPatient] = useState<string | null>(null);
   const [patientSortOrder, setPatientSortOrder] = useState<'urgency' | 'dollar' | 'score'>('urgency');
   const [showMethodology, setShowMethodology] = useState<string | null>(null);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
   const sortPatients = (patients: EPGapPatient[], _gap: EPClinicalGap) => {
     return [...patients].sort((a, b) => {
@@ -4400,7 +4401,40 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
   const totalOpportunity = EP_CLINICAL_GAPS.reduce((sum, g) => sum + g.dollarOpportunity, 0);
 
   const categorySortOrder: Record<string, number> = { Safety: 0, Discovery: 1, Gap: 2, Therapy: 2, Growth: 3, Quality: 4, Deprescribing: 5 };
-  const sortedGaps = [...EP_CLINICAL_GAPS].sort((a, b) => (categorySortOrder[a.category] ?? 99) - (categorySortOrder[b.category] ?? 99));
+  const sortedGaps = [...EP_CLINICAL_GAPS].sort((a, b) => {
+    const diff = (categorySortOrder[a.category] ?? 99) - (categorySortOrder[b.category] ?? 99);
+    if (diff !== 0) return diff;
+    return (b.patientCount || 0) - (a.patientCount || 0);
+  });
+
+  const filterConfig: Record<string, string[]> = {
+    'AF Management': ['AF', 'Atrial Fibrillation', 'Rhythm Control', 'Rate Control', 'EAST-AFNET', 'Persistent AF', 'Cardioversion', 'Flutter'],
+    'Anticoagulation': ['OAC', 'Anticoagulation', 'CHA', 'Subclinical AF', 'Undertreatment', 'TEE', 'Aspirin + OAC'],
+    'Ablation Candidates': ['Ablation', 'PFA', 'SVT', 'AVNRT', 'AVRT', 'VT', 'Epicardial', 'CSP', 'Zero-Fluoroscopy', 'CASTLE-AF', 'VANISH', 'PARTITA'],
+    'Device Therapy': ['ICD', 'LAAC', 'Watchman', 'Leadless', 'Subcutaneous ICD', 'CRT', 'Battery', 'ERI', 'EOL', 'Lead Recall', 'Device Infection', 'Remote Monitoring', 'Cardiac Arrest'],
+    'Drug Safety': ['Amiodarone', 'Dofetilide', 'Dronedarone', 'QTc', 'LQTS', 'Torsades', 'AAD', 'REMS'],
+    'Diagnostics & Syncope': ['Syncope', 'ILR', 'Loop Recorder', 'PVC', 'WPW', 'Fontan', 'Congenital', 'Adult Congenital', 'Carotid', 'Cryptogenic', 'Inappropriate Sinus'],
+  };
+
+  const chipCounts = Object.fromEntries(
+    Object.entries(filterConfig).map(([label, keywords]) => [
+      label,
+      sortedGaps.filter(gap =>
+        keywords.some(kw => (gap.name || '').toLowerCase().includes(kw.toLowerCase()))
+      ).length
+    ])
+  );
+
+  const filteredGaps = activeFilters.length === 0 ? sortedGaps : sortedGaps.filter(gap => {
+    const gapName = (gap.name || '').toLowerCase();
+    return activeFilters.some(label =>
+      filterConfig[label].some(kw => gapName.includes(kw.toLowerCase()))
+    );
+  });
+
+  const filteredPatientCount = filteredGaps.reduce((sum, g) => sum + (g.patientCount || 0), 0);
+  const totalPatientCountForChips = sortedGaps.reduce((sum, g) => sum + (g.patientCount || 0), 0);
+  const totalOpportunityForChips = sortedGaps.reduce((sum, g) => sum + (g.dollarOpportunity || 0), 0);
 
   const priorityColor = (p: string) => {
     if (p === 'high') return 'bg-red-50 border-red-300 text-red-700';
@@ -4460,9 +4494,63 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
         </div>
       </div>
 
+      {/* Filter Chips */}
+      <div className="mb-4">
+        <div className="flex items-start justify-between mb-2">
+          <div className="flex flex-wrap gap-2">
+            {Object.entries(filterConfig).map(([label]) => {
+              const isActive = activeFilters.includes(label);
+              const count = chipCounts[label];
+              return (
+                <button
+                  key={label}
+                  onClick={() => setActiveFilters(prev =>
+                    prev.includes(label) ? prev.filter(f => f !== label) : [...prev, label]
+                  )}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'text-white border border-transparent'
+                      : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50'
+                  }`}
+                  style={isActive ? { backgroundColor: '#2C4A60' } : {}}
+                >
+                  {label}
+                  <span className={`text-xs rounded-full px-1.5 py-0.5 font-semibold ${
+                    isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          {activeFilters.length > 0 && (
+            <button
+              onClick={() => setActiveFilters([])}
+              className="text-sm text-slate-500 hover:text-slate-700 whitespace-nowrap ml-4 mt-1"
+            >
+              Clear all filters
+            </button>
+          )}
+        </div>
+        <div className="text-sm text-slate-500">
+          {activeFilters.length > 0 ? (
+            <span>
+              Showing <strong>{filteredPatientCount.toLocaleString()}</strong> patients across{' '}
+              <strong>{filteredGaps.length}</strong> gaps · Filtered by: {activeFilters.join(', ')}
+            </span>
+          ) : (
+            <span>
+              Patients identified: <strong>{totalPatientCountForChips.toLocaleString()}</strong> ·{' '}
+              Opportunity: <strong>${(totalOpportunityForChips / 1_000_000).toFixed(1)}M</strong>
+            </span>
+          )}
+        </div>
+      </div>
+
       {/* Gap list */}
       <div className="space-y-4">
-        {sortedGaps.map((gap) => {
+        {filteredGaps.map((gap) => {
           const isOpen = expandedGap === gap.id;
           return (
             <div key={gap.id} className="metal-card bg-white border border-titanium-200 rounded-2xl overflow-hidden">
