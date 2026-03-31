@@ -156,11 +156,12 @@ const PeripheralExecutiveView: React.FC = () => {
 	},
   });
 
+  // Colors: Chrome Blue (patients), Metallic Gold (revenue), Racing Green (quality), Copper Bronze (avg revenue)
   const kpiCards = [
-	{ label: 'Total Patients', value: config.kpiData.totalPatients, sub: config.kpiData.totalPatientsSub, icon: <VascularIcon />, color: 'text-[#2C4A60]' },
-	{ label: 'Revenue Opportunity', value: config.kpiData.totalOpportunity, sub: config.kpiData.totalOpportunitySub, icon: <DollarIcon />, color: 'text-porsche-600' },
-	{ label: 'Optimal PAD Therapy', value: config.kpiData.gdmtOptimization, sub: config.kpiData.gdmtOptimizationSub, icon: <ChartIcon />, color: 'text-[#4A6880]' },
-	{ label: 'Avg Revenue / Patient', value: config.kpiData.avgRoi, sub: config.kpiData.avgRoiSub, icon: <TrendUpIcon />, color: 'text-[#2C4A60]' },
+	{ label: 'Total Patients', value: config.kpiData.totalPatients, sub: config.kpiData.totalPatientsSub, icon: <VascularIcon />, valueColor: '#2C4A60', bg: '#EFF4F8', border: '#B8C9D9' },
+	{ label: 'Revenue Opportunity', value: config.kpiData.totalOpportunity, sub: config.kpiData.totalOpportunitySub, icon: <DollarIcon />, valueColor: '#8B6914', bg: '#FAF6E8', border: '#D4B85C' },
+	{ label: 'Optimal PAD Therapy', value: config.kpiData.gdmtOptimization, sub: config.kpiData.gdmtOptimizationSub, icon: <ChartIcon />, valueColor: '#2D6147', bg: '#EEF6F2', border: '#A8D0BC' },
+	{ label: 'Avg Revenue / Patient', value: config.kpiData.avgRoi, sub: config.kpiData.avgRoiSub, icon: <TrendUpIcon />, valueColor: '#8B5A2B', bg: '#FAF3EC', border: '#DDBA98' },
   ];
 
   return (
@@ -239,13 +240,13 @@ const PeripheralExecutiveView: React.FC = () => {
 
 	{/* ── KPI Summary Cards ─────────────────────────────────── */}
 	<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-	{kpiCards.map((kpi, i) => (
-	<div key={kpi.label} className="metal-card p-5 group hover:shadow-metal-3 transition-all duration-300">
+	{kpiCards.map((kpi) => (
+	<div key={kpi.label} className="metal-card p-5 group hover:shadow-metal-3 transition-all duration-300" style={{ background: kpi.bg, borderColor: kpi.border }}>
 	<div className="flex items-center justify-between mb-3">
 	<span className="text-titanium-500 text-sm font-medium">{kpi.label}</span>
-	<span className={`${kpi.color} opacity-60 group-hover:opacity-100 transition-opacity`}>{kpi.icon}</span>
+	<span className="opacity-60 group-hover:opacity-100 transition-opacity" style={{ color: kpi.valueColor }}>{kpi.icon}</span>
 	</div>
-	<div className="text-3xl font-bold text-titanium-900 mb-1">{kpi.value}</div>
+	<div className="text-3xl font-bold mb-1" style={{ color: kpi.valueColor }}>{kpi.value}</div>
 	<div className="text-xs text-titanium-400">{kpi.sub}</div>
 	</div>
 	))}
@@ -293,39 +294,53 @@ const PeripheralExecutiveView: React.FC = () => {
 	<p className="text-sm text-titanium-500 mb-6">{config.drgDescription}</p>
 
 	<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-	{config.drgPerformanceCards.map((drg, i) => (
+	{config.drgPerformanceCards.map((drg, i) => {
+	// Index 0 (MCC, highest) → Metallic Gold; Index 1 (CC, mid) → Chrome Blue mid; Index 2 (lowest) → Carmona Red
+	const drgColors = [
+	{ value: '#C4982A', bg: '#FAF6E8', border: '#D4B85C' },
+	{ value: '#4A6880', bg: '#F0F5FA', border: '#C8D4DC' },
+	{ value: '#9B2438', bg: '#FDF2F3', border: '#F5C0C8' },
+	];
+	const dc = drgColors[i] || drgColors[0];
+	return (
 	<button
 	key={drg.title}
 	onClick={() => setActiveModal(`drg-${drg.title}`)}
-	className="text-left p-4 rounded-xl border border-titanium-200 bg-white hover:bg-[#f0f4f8] hover:border-[#C8D4DC] transition-all duration-200 group"
+	className="text-left p-4 rounded-xl border transition-all duration-200 group"
+	style={{ background: dc.bg, borderColor: dc.border }}
 	>
 	<div className="text-sm text-titanium-500 mb-1">{drg.title}</div>
-	<div className="text-2xl font-bold text-titanium-900 mb-2">{drg.value}</div>
+	<div className="text-2xl font-bold mb-2" style={{ color: dc.value }}>{drg.value}</div>
 	<div className="text-xs text-titanium-400 mb-1">{drg.caseCount}</div>
-	<div className={`text-xs font-medium ${drg.isPositive ? 'text-[#2C4A60]' : 'text-crimson-600'}`}>
+	<div className="text-xs font-medium" style={{ color: drg.isPositive ? '#2C4A60' : '#9B2438' }}>
 	{drg.variance}
 	</div>
 	</button>
-	))}
+	);
+	})}
 	</div>
 
 	{/* DRG Summary Metrics */}
 	<div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-titanium-200">
 	<div>
 	<div className="text-xs text-titanium-400 mb-1">Current CMI</div>
-	<div className="text-lg font-bold text-titanium-900">{config.drgMetrics.currentCMI}</div>
+	{/* Chrome Blue */}
+	<div className="text-lg font-bold" style={{ color: '#2C4A60' }}>{config.drgMetrics.currentCMI}</div>
 	</div>
 	<div>
 	<div className="text-xs text-titanium-400 mb-1">Monthly Opportunity</div>
-	<div className="text-lg font-bold text-porsche-600">{config.drgMetrics.monthlyOpportunity}</div>
+	{/* Metallic Gold */}
+	<div className="text-lg font-bold" style={{ color: '#8B6914' }}>{config.drgMetrics.monthlyOpportunity}</div>
 	</div>
 	<div>
 	<div className="text-xs text-titanium-400 mb-1">Documentation Rate</div>
-	<div className="text-lg font-bold text-titanium-900">{config.drgMetrics.documentationRate}</div>
+	{/* Racing Green */}
+	<div className="text-lg font-bold" style={{ color: '#2D6147' }}>{config.drgMetrics.documentationRate}</div>
 	</div>
 	<div>
 	<div className="text-xs text-titanium-400 mb-1">Avg LOS</div>
-	<div className="text-lg font-bold text-titanium-900">{config.drgMetrics.avgLOS}</div>
+	{/* Steel Teal */}
+	<div className="text-lg font-bold" style={{ color: '#1A6878' }}>{config.drgMetrics.avgLOS}</div>
 	</div>
 	</div>
 	</div>

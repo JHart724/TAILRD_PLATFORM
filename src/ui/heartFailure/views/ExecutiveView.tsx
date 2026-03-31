@@ -653,19 +653,19 @@ const ExecutiveView: React.FC = () => {
  <div className="text-gray-600 text-lg mb-4">23 high-priority documentation opportunities identified</div>
  
  <div className="grid grid-cols-3 gap-4 mt-4">
- <div className="bg-white rounded-lg p-3 border border-red-200">
+ <div className="rounded-lg p-3 border" style={{ background: '#FDF2F3', borderColor: '#F5C0C8' }}>
  <div className="text-sm text-gray-600">High Priority</div>
- <div className="text-2xl font-bold text-red-600">8</div>
- <div className="text-sm text-gray-500">$68,600</div>
+ <div className="text-2xl font-bold" style={{ color: '#9B2438' }}>8</div>
+ <div className="text-sm" style={{ color: '#8B6914' }}>$68,600</div>
  </div>
- <div className="bg-white rounded-lg p-3 border border-[#f5c6cf]">
+ <div className="rounded-lg p-3 border" style={{ background: '#FAF6E8', borderColor: '#D4B85C' }}>
  <div className="text-sm text-gray-600">Medium Priority</div>
- <div className="text-2xl font-bold text-[#7A1A2E]">12</div>
- <div className="text-sm text-gray-500">$50,240</div>
+ <div className="text-2xl font-bold" style={{ color: '#8B6914' }}>12</div>
+ <div className="text-sm" style={{ color: '#8B6914' }}>$50,240</div>
  </div>
- <div className="bg-white rounded-lg p-3 border border-gray-200">
+ <div className="rounded-lg p-3 border" style={{ background: '#F0F5FA', borderColor: '#C8D4DC' }}>
  <div className="text-sm text-gray-600">Due This Week</div>
- <div className="text-2xl font-bold text-gray-700">8</div>
+ <div className="text-2xl font-bold" style={{ color: '#4A6880' }}>8</div>
  <div className="text-sm text-gray-500">Urgent action</div>
  </div>
  </div>
@@ -692,20 +692,28 @@ const ExecutiveView: React.FC = () => {
  {heartFailureConfig.drgPerformanceCards.map((card, index) => {
  const drgCodes = ['DRG 291', 'DRG 292', 'DRG 293'];
  const drgCode = drgCodes[index];
+ // DRG 291 (MCC, highest) → Metallic Gold; DRG 292 (CC, mid) → Chrome Blue mid; DRG 293 (lowest) → Carmona Red
+ const drgColors = [
+ { value: '#C4982A', bg: '#FAF6E8', border: '#D4B85C' },
+ { value: '#4A6880', bg: '#F0F5FA', border: '#C8D4DC' },
+ { value: '#9B2438', bg: '#FDF2F3', border: '#F5C0C8' },
+ ];
+ const dc = drgColors[index] || drgColors[0];
  return (
- <div 
- key={card.title} 
+ <div
+ key={card.title}
  onClick={() => {
  const drgData = getDRGData(drgCode);
  if (drgData) setSelectedDRG(drgData);
  }}
- className="bg-gradient-to-r from-white to-[#f0f4f8] rounded-xl p-4 border border-titanium-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+ className="rounded-xl p-4 border shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+ style={{ background: `linear-gradient(to right, white, ${dc.bg})`, borderColor: dc.border }}
  >
  <div className="flex items-center gap-3 mb-3">
- <DollarSign className="w-8 h-8 text-[#2C4A60]" />
+ <DollarSign className="w-8 h-8" style={{ color: dc.value }} />
  <div>
  <div className="font-semibold text-[#1e293b]">{card.title}</div>
- <div className="text-2xl font-bold text-[#2C4A60]">{card.value}</div>
+ <div className="text-2xl font-bold" style={{ color: dc.value }}>{card.value}</div>
  </div>
  </div>
  <div className="text-sm text-[#4A6880] mb-2">
@@ -724,22 +732,26 @@ const ExecutiveView: React.FC = () => {
  <h4 className="font-semibold text-titanium-900 mb-4">{heartFailureConfig.moduleName} Case Mix Index (CMI) Analysis</h4>
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
  <div className="text-center">
- <div className="text-2xl font-bold text-titanium-900">{heartFailureConfig.drgMetrics.currentCMI}</div>
+ {/* Current CMI → Chrome Blue */}
+ <div className="text-2xl font-bold" style={{ color: '#2C4A60' }}>{heartFailureConfig.drgMetrics.currentCMI}</div>
  <div className="text-sm text-titanium-600">Current CMI</div>
  <div className="text-xs text-[#2C4A60]">+0.28 vs target</div>
  </div>
  <div className="text-center">
- <div className="text-2xl font-bold text-[#2C4A60]">{heartFailureConfig.drgMetrics.monthlyOpportunity}</div>
+ {/* Monthly Opportunity → Metallic Gold */}
+ <div className="text-2xl font-bold" style={{ color: '#8B6914' }}>{heartFailureConfig.drgMetrics.monthlyOpportunity}</div>
  <div className="text-sm text-titanium-600">Monthly Opportunity</div>
  <div className="text-xs text-titanium-500">From DRG optimization</div>
  </div>
  <div className="text-center">
- <div className="text-2xl font-bold text-[#7A1A2E]">{heartFailureConfig.drgMetrics.documentationRate}</div>
+ {/* Documentation Rate → Racing Green */}
+ <div className="text-2xl font-bold" style={{ color: '#2D6147' }}>{heartFailureConfig.drgMetrics.documentationRate}</div>
  <div className="text-sm text-titanium-600">Documentation Rate</div>
  <div className="text-xs text-titanium-500">CC/MCC capture</div>
  </div>
  <div className="text-center">
- <div className="text-2xl font-bold text-titanium-900">{heartFailureConfig.drgMetrics.avgLOS}</div>
+ {/* Avg LOS → Steel Teal (efficiency metric) */}
+ <div className="text-2xl font-bold" style={{ color: '#1A6878' }}>{heartFailureConfig.drgMetrics.avgLOS}</div>
  <div className="text-sm text-titanium-600">Avg LOS</div>
  <div className="text-xs text-[#2C4A60]">{heartFailureConfig.drgMetrics.losBenchmark}</div>
  </div>

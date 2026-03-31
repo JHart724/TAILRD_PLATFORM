@@ -357,7 +357,7 @@ interface RoleToggleProps { value: Role; onChange: (role: Role) => void; }
 const RoleToggle: React.FC<RoleToggleProps> = ({ value, onChange }) => {
   const roles: Array<{ id: Role; label: string; desc: string; color: string; }> = [
  { id: "Executive", label: "Executive", desc: "Financial & ROI", color: "text-chrome-700 bg-chrome-50 border-chrome-200" },
- { id: "Service Line", label: "Service Line", desc: "Operations", color: "text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]" },
+ { id: "Service Line", label: "Service Line", desc: "Operations", color: "text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]" },
  { id: "Care Team", label: "Care Team", desc: "Patient Care", color: "text-[#2C4A60] bg-[#F0F5FA] border-[#C8D4DC]" },
   ];
 
@@ -628,7 +628,7 @@ function MainDashboard(): JSX.Element {
  <FlaskConical className="w-5 h-5 text-titanium-600" />
  </div>
  <div className="text-left">
- <div className="text-2xl font-medium font-display flex items-center gap-3">Clinical Research Assist <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#C8D4DC] text-[#2C4A60]">Beta</span></div>
+ <div className="text-2xl font-medium font-display flex items-center gap-3">Clinical Research Assist <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#F0F7F4] text-[#2D6147]">Beta</span></div>
  <div className="text-sm opacity-80 font-light">Registry pre-population � Trial eligibility screening � Research workflow automation</div>
  </div>
  <Icons.ArrowRight />
@@ -723,7 +723,7 @@ export default function App(): JSX.Element {
  <div className="min-h-screen bg-chrome-50 relative overflow-hidden">
  {/* Background pattern */}
  <div className="absolute inset-0 opacity-[0.04]" style={{
- backgroundImage: `radial-gradient(circle at 30% 20%, #1e40af 2px, transparent 2px), radial-gradient(circle at 70% 80%, #0ea5e9 1px, transparent 1px)`,
+ backgroundImage: `radial-gradient(circle at 30% 20%, #1E3347 2px, transparent 2px), radial-gradient(circle at 70% 80%, #6B8EA8 1px, transparent 1px)`,
  backgroundSize: '60px 60px'
  }}></div>
  

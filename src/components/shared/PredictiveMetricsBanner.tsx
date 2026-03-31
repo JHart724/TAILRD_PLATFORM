@@ -62,42 +62,46 @@ const PredictiveMetricsBanner: React.FC<PredictiveMetricsBannerProps> = ({ data 
             <div className="text-xs text-[#9B2438] mt-0.5">patients — immediate action indicated</div>
           </div>
 
-          <div className="bg-slate-50/70 border border-slate-100 rounded-xl p-4">
+          {/* Avg Time to Event → Steel Teal (efficiency/LOS-style metric) */}
+          <div className="border rounded-xl p-4" style={{ background: '#EEF8FA', borderColor: '#A8D8E4' }}>
             <div className="flex items-center gap-1.5 mb-1">
-              <Clock className="w-3.5 h-3.5 text-slate-500" />
-              <span className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Avg Time to Event</span>
+              <Clock className="w-3.5 h-3.5" style={{ color: '#1A6878' }} />
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1A6878' }}>Avg Time to Event</span>
             </div>
-            <div className="text-2xl font-bold text-slate-700">{data.avgTimeToEvent} mo</div>
-            <div className="text-xs text-slate-500 mt-0.5">if current gaps remain unaddressed</div>
+            <div className="text-2xl font-bold" style={{ color: '#1A6878' }}>{data.avgTimeToEvent} mo</div>
+            <div className="text-xs mt-0.5" style={{ color: '#1A6878' }}>if current gaps remain unaddressed</div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="bg-titanium-50/70 border border-titanium-100 rounded-xl p-4">
+          {/* Current Rate Projection → Chrome Blue mid */}
+          <div className="border rounded-xl p-4" style={{ background: '#F0F5FA', borderColor: '#C8D4DC' }}>
             <div className="flex items-center gap-1.5 mb-1">
-              <Target className="w-3.5 h-3.5 text-titanium-500" />
-              <span className="text-xs font-semibold text-titanium-600 uppercase tracking-wide">Current Rate Projection</span>
+              <Target className="w-3.5 h-3.5" style={{ color: '#4A6880' }} />
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#4A6880' }}>Current Rate Projection</span>
             </div>
-            <div className="text-xl font-bold text-titanium-700">${(data.projectedRevenueCurrentRate / 1_000_000).toFixed(1)}M</div>
-            <div className="text-xs text-titanium-500">projected 12-month revenue at current closure rate</div>
+            <div className="text-xl font-bold" style={{ color: '#4A6880' }}>${(data.projectedRevenueCurrentRate / 1_000_000).toFixed(1)}M</div>
+            <div className="text-xs" style={{ color: '#4A6880' }}>projected 12-month revenue at current closure rate</div>
           </div>
 
-          <div className="bg-[#F0F5FA]/70 border border-[#C8D4DC] rounded-xl p-4">
+          {/* Systematic Closure → Chrome Blue (revenue opportunity) */}
+          <div className="border rounded-xl p-4" style={{ background: '#EFF4F8', borderColor: '#B8C9D9' }}>
             <div className="flex items-center gap-1.5 mb-1">
-              <Zap className="w-3.5 h-3.5 text-[#2C4A60]" />
-              <span className="text-xs font-semibold text-[#2C4A60] uppercase tracking-wide">Systematic Closure</span>
+              <Zap className="w-3.5 h-3.5" style={{ color: '#2C4A60' }} />
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#2C4A60' }}>Systematic Closure</span>
             </div>
-            <div className="text-xl font-bold text-[#2C4A60]">${(data.projectedRevenueSystematic / 1_000_000).toFixed(1)}M</div>
-            <div className="text-xs text-[#2C4A60]">projected with TAILRD systematic gap closure</div>
+            <div className="text-xl font-bold" style={{ color: '#2C4A60' }}>${(data.projectedRevenueSystematic / 1_000_000).toFixed(1)}M</div>
+            <div className="text-xs" style={{ color: '#2C4A60' }}>projected with TAILRD systematic gap closure</div>
           </div>
 
-          <div className="bg-blue-50/70 border border-blue-100 rounded-xl p-4">
+          {/* Acceleration Potential → Metallic Gold (revenue opportunity / financial target) */}
+          <div className="border rounded-xl p-4" style={{ background: '#FAF6E8', borderColor: '#D4B85C' }}>
             <div className="flex items-center gap-1.5 mb-1">
-              <TrendingUp className="w-3.5 h-3.5 text-blue-500" />
-              <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">Acceleration Potential</span>
+              <TrendingUp className="w-3.5 h-3.5" style={{ color: '#8B6914' }} />
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#8B6914' }}>Acceleration Potential</span>
             </div>
-            <div className="text-xl font-bold text-blue-700">${(accelerationPotential / 1_000_000).toFixed(1)}M</div>
-            <div className="text-xs text-blue-500">additional revenue with systematic closure</div>
+            <div className="text-xl font-bold" style={{ color: '#8B6914' }}>${(accelerationPotential / 1_000_000).toFixed(1)}M</div>
+            <div className="text-xs" style={{ color: '#8B6914' }}>additional revenue with systematic closure</div>
           </div>
         </div>
       </div>
