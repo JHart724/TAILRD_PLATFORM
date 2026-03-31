@@ -40,22 +40,22 @@ const SharedProjectedVsRealized: React.FC<SharedProjectedVsRealizedProps> = ({
  </div>
  <div className="text-right">
  <div className="text-sm text-titanium-500">Realization Rate</div>
- <div className="text-2xl font-bold text-porsche-600">{realizationRate}%</div>
+ <div className="text-2xl font-bold" style={{ color: '#2D6147' }}>{realizationRate}%</div>
  </div>
  </div>
 
  <div className="grid grid-cols-3 gap-4 mb-6">
- <div className="p-4 bg-porsche-50 rounded-lg border border-porsche-200">
- <div className="text-xs text-porsche-700 font-medium mb-1">Total Projected</div>
- <div className="text-xl font-bold text-porsche-900">{formatMoney(totalProjected)}</div>
+ <div className="p-4 rounded-lg" style={{ background: '#FAF6E8', border: '1px solid #E0CC80' }}>
+ <div className="text-xs font-medium mb-1" style={{ color: '#8B6914' }}>Total Projected</div>
+ <div className="text-xl font-bold" style={{ color: '#8B6914' }}>{formatMoney(totalProjected)}</div>
  </div>
- <div className="p-4 bg-[#C8D4DC] rounded-lg border border-[#2C4A60]">
- <div className="text-xs text-[#2C4A60] font-medium mb-1">Total Realized</div>
- <div className="text-xl font-bold text-[#2C4A60]">{formatMoney(totalRealized)}</div>
+ <div className="p-4 rounded-lg" style={{ background: '#EEF6F2', border: '1px solid #A8D0BC' }}>
+ <div className="text-xs font-medium mb-1" style={{ color: '#2D6147' }}>Total Realized</div>
+ <div className="text-xl font-bold" style={{ color: '#2D6147' }}>{formatMoney(totalRealized)}</div>
  </div>
- <div className="p-4 bg-[#F0F5FA] rounded-lg border border-[#C8D4DC]">
- <div className="text-xs text-[#6B7280] font-medium mb-1">Gap</div>
- <div className="text-xl font-bold text-[#6B7280]">{formatMoney(gap)}</div>
+ <div className="p-4 rounded-lg" style={{ background: '#FDF2F3', border: '1px solid #F5C0C8' }}>
+ <div className="text-xs font-medium mb-1" style={{ color: '#9B2438' }}>Gap</div>
+ <div className="text-xl font-bold" style={{ color: '#9B2438' }}>{formatMoney(gap)}</div>
  </div>
  </div>
 
@@ -70,16 +70,16 @@ const SharedProjectedVsRealized: React.FC<SharedProjectedVsRealizedProps> = ({
  >
  <div className="w-12 text-xs font-medium text-titanium-700">{data.month}</div>
  <div className="flex-1 relative">
- <div className="h-8 bg-titanium-100 rounded-lg overflow-hidden">
- <div className="h-full bg-porsche-200 rounded-lg transition-all" style={{ width: `${projectedWidth}%` }} />
+ <div className="h-8 rounded-lg overflow-hidden" style={{ background: '#FAF6E8' }}>
+ <div className="h-full rounded-lg transition-all" style={{ width: `${projectedWidth}%`, backgroundColor: '#E8D48A' }} />
  </div>
  <div className="absolute inset-0 h-8 overflow-hidden">
- <div className="h-full bg-porsche-500 rounded-lg transition-all" style={{ width: `${realizedWidth}%` }} />
+ <div className="h-full rounded-lg transition-all" style={{ width: `${realizedWidth}%`, backgroundColor: '#2D6147' }} />
  </div>
  </div>
  <div className="w-32 text-right">
- <div className="text-xs font-medium text-titanium-800">{formatMoney(data.realized)}</div>
- <div className="text-xs text-titanium-500">/ {formatMoney(data.projected)}</div>
+ <div className="text-xs font-medium" style={{ color: '#2D6147' }}>{formatMoney(data.realized)}</div>
+ <div className="text-xs" style={{ color: '#8B6914' }}>/ {formatMoney(data.projected)}</div>
  </div>
  </div>
  );
@@ -88,11 +88,11 @@ const SharedProjectedVsRealized: React.FC<SharedProjectedVsRealizedProps> = ({
 
  <div className="flex items-center gap-6 mt-6 pt-4 border-t border-titanium-200">
  <div className="flex items-center gap-2">
- <div className="w-4 h-4 bg-porsche-200 rounded" />
+ <div className="w-4 h-4 rounded" style={{ background: '#E8D48A' }} />
  <span className="text-sm text-titanium-700">Projected Opportunity</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-4 bg-porsche-500 rounded" />
+ <div className="w-4 h-4 rounded" style={{ background: '#2D6147' }} />
  <span className="text-sm text-titanium-700">Realized Revenue</span>
  </div>
  </div>
