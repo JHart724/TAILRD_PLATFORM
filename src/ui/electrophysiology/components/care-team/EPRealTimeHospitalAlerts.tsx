@@ -343,7 +343,7 @@ const EPRealTimeHospitalAlerts: React.FC = () => {
  case 'ED': return 'bg-red-100 text-red-700 border-red-200';
  case 'ICU': return 'bg-arterial-100 text-arterial-700 border-arterial-200';
  case 'Floor': return 'bg-chrome-100 text-chrome-700 border-chrome-200';
- case 'Tele': return 'bg-[#C8D4DC] text-[#2C4A60] border-[#2C4A60]';
+ case 'Tele': return 'bg-[#F0F7F4] text-[#2D6147] border-[#2C4A60]';
  default: return 'bg-gray-100 text-gray-700 border-gray-200';
  }
   };

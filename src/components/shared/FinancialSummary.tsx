@@ -57,8 +57,8 @@ const FinancialSummary: React.FC<FinancialSummaryProps> = ({
   };
 
   const getROIColor = (roi: number): string => {
- if (roi >= 20) return 'text-[#2C4A60] bg-[#C8D4DC]';
- if (roi >= 10) return 'text-[#6B7280] bg-[#F0F5FA]';
+ if (roi >= 20) return 'text-[#2D6147] bg-[#F0F7F4]';
+ if (roi >= 10) return 'text-[#8B6914] bg-[#FAF6E8]';
  return 'text-red-600 bg-red-50';
   };
 

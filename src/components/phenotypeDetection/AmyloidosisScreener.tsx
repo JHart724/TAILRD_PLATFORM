@@ -196,7 +196,7 @@ const AmyloidosisScreener: React.FC = () => {
  onClick={() => updateCriterion(criterionIndex, true)}
  className={`flex-1 py-2 px-3 text-sm rounded-lg border-2 transition-all ${
  criterion.present === true
- ? 'border-[#2C4A60] bg-[#C8D4DC] text-[#2C4A60]'
+ ? 'border-[#2C4A60] bg-[#F0F7F4] text-[#2D6147]'
  : 'border-titanium-200 hover:border-[#2C4A60] text-titanium-600'
  }`}
  >
@@ -218,7 +218,7 @@ const AmyloidosisScreener: React.FC = () => {
  onClick={() => updateCriterion(criterionIndex, null)}
  className={`flex-1 py-2 px-3 text-sm rounded-lg border-2 transition-all ${
  criterion.present === null
- ? 'border-[#C8D4DC] bg-[#F0F5FA] text-[#6B7280]'
+ ? 'border-[#C8D4DC] bg-[#FAF6E8] text-[#8B6914]'
  : 'border-titanium-200 hover:border-[#C8D4DC] text-titanium-600'
  }`}
  >

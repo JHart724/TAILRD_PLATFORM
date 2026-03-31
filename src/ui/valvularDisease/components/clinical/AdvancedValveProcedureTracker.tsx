@@ -106,16 +106,16 @@ const AdvancedValveProcedureTracker: React.FC = () => {
   const getCategoryColor = (category: string) => {
  switch (category) {
  case 'procedure': return 'text-porsche-600 bg-porsche-50 border-porsche-200';
- case 'emerging': return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
+ case 'emerging': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };
 
   const getUtilizationColor = (utilization: number) => {
  if (utilization < 10) return 'text-crimson-600 bg-crimson-50';
- if (utilization < 30) return 'text-[#6B7280] bg-[#F0F5FA]';
+ if (utilization < 30) return 'text-[#8B6914] bg-[#FAF6E8]';
  if (utilization < 50) return 'text-porsche-600 bg-porsche-50';
- return 'text-[#2C4A60] bg-[#C8D4DC]';
+ return 'text-[#2D6147] bg-[#F0F7F4]';
   };
 
   return (
@@ -134,7 +134,7 @@ const AdvancedValveProcedureTracker: React.FC = () => {
  <div className="text-2xl font-bold text-porsche-600 font-sf">{totalEligible}</div>
  <div className="text-sm text-porsche-700">Total Eligible Patients</div>
  </div>
- <div className="p-4 bg-[#C8D4DC] border border-[#2C4A60] rounded-lg">
+ <div className="p-4 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg">
  <div className="text-2xl font-bold text-[#2C4A60] font-sf">{totalUtilized}</div>
  <div className="text-sm text-[#2C4A60]">Currently Receiving</div>
  </div>
@@ -224,7 +224,7 @@ const AdvancedValveProcedureTracker: React.FC = () => {
  </div>
  </div>
 
- <div className="flex items-center justify-between p-3 bg-[#C8D4DC] border border-[#2C4A60] rounded-lg mb-4">
+ <div className="flex items-center justify-between p-3 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg mb-4">
  <div>
  <div className="text-sm font-semibold text-[#2C4A60]">Revenue Gap</div>
  </div>
@@ -252,7 +252,7 @@ const AdvancedValveProcedureTracker: React.FC = () => {
  </button>
  </div>
  {actionFeedback && (
- <div className="mt-2 p-2 bg-[#C8D4DC] border border-[#2C4A60] rounded-lg text-[#2C4A60] text-sm flex items-center gap-2">
+ <div className="mt-2 p-2 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg text-[#2C4A60] text-sm flex items-center gap-2">
  <CheckCircle className="w-4 h-4" />
  {actionFeedback === 'screening' ? 'Patient screening tool loading...' : 'Opening clinical guidelines...'}
  </div>

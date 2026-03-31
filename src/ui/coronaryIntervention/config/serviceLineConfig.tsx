@@ -121,8 +121,8 @@ const CoronaryProviderScorecard: React.FC = () => {
                   <td className="px-4 py-3 text-titanium-600">{p.specialty}</td>
                   <td className="px-4 py-3 text-center font-mono">{p.pci > 0 ? p.pci : '—'}</td>
                   <td className="px-4 py-3 text-center font-mono">{p.cabg > 0 ? p.cabg : '—'}</td>
-                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.successRate}</span></td>
-                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{p.complications}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F7F4] text-[#2D6147]">{p.successRate}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#FAF6E8] text-[#8B6914]">{p.complications}</span></td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div className="flex-1 bg-titanium-100 rounded-full h-2"><div className="bg-porsche-500 h-2 rounded-full" style={{ width: `${p.quality}%` }} /></div>
@@ -179,8 +179,8 @@ const PCIProcedureAnalytics: React.FC = () => {
                 <tr key={i} className="hover:bg-titanium-50">
                   <td className="px-4 py-3 font-medium text-titanium-900">{p.type}</td>
                   <td className="px-4 py-3 font-mono font-semibold text-titanium-800">{p.volume.toLocaleString()}</td>
-                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.success}</span></td>
-                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{p.complications}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F7F4] text-[#2D6147]">{p.success}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#FAF6E8] text-[#8B6914]">{p.complications}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{p.avgLos}</td>
                   <td className="px-4 py-3 font-mono text-titanium-700">{p.cost}</td>
                 </tr>
@@ -223,7 +223,7 @@ const CABGAnalytics: React.FC = () => {
                   <td className="px-4 py-3 font-medium text-titanium-900">{d.type}</td>
                   <td className="px-4 py-3 font-mono font-semibold">{d.volume}</td>
                   <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{d.mortality}</span></td>
-                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{d.stroke}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#FAF6E8] text-[#8B6914]">{d.stroke}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{d.reop}</td>
                   <td className="px-4 py-3 font-mono">{d.grafts}</td>
                   <td className="px-4 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">{d.arterial}</span></td>
@@ -266,7 +266,7 @@ const STEMIPathways: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {metrics.map((m, i) => (
-            <div key={i} className="rounded-xl border bg-[#C8D4DC] border-[#2C4A60] px-4 py-3 flex items-start justify-between">
+            <div key={i} className="rounded-xl border bg-[#F0F7F4] border-[#D8EDE6] px-4 py-3 flex items-start justify-between">
               <div>
                 <p className="text-xs font-semibold text-titanium-600 uppercase tracking-wide">{m.label}</p>
                 <p className="text-xl font-bold text-titanium-900 mt-0.5">{m.value}</p>
@@ -282,7 +282,7 @@ const STEMIPathways: React.FC = () => {
         <table className="w-full text-sm">
           <thead className="bg-titanium-50"><tr>{['Site', 'STEMI Volume', 'Median D2B', 'D2B ≤90 Rate'].map(h => <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-titanium-600 uppercase tracking-wide">{h}</th>)}</tr></thead>
           <tbody className="divide-y divide-titanium-100">
-            {sites.map((s, i) => <tr key={i} className="hover:bg-titanium-50"><td className="px-4 py-3 font-medium text-titanium-900">{s.name}</td><td className="px-4 py-3 font-mono font-semibold">{s.vol}</td><td className="px-4 py-3">{s.d2b}</td><td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{s.rate}</span></td></tr>)}
+            {sites.map((s, i) => <tr key={i} className="hover:bg-titanium-50"><td className="px-4 py-3 font-medium text-titanium-900">{s.name}</td><td className="px-4 py-3 font-mono font-semibold">{s.vol}</td><td className="px-4 py-3">{s.d2b}</td><td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F7F4] text-[#2D6147]">{s.rate}</span></td></tr>)}
           </tbody>
         </table>
       </div>
@@ -325,7 +325,7 @@ const CoronaryQualityMetrics: React.FC = () => {
                   <td className="px-4 py-3 font-medium text-titanium-900">{m.measure}</td>
                   <td className="px-4 py-3 font-mono font-semibold text-titanium-800">{m.rate}</td>
                   <td className="px-4 py-3 text-titanium-500">{m.benchmark}</td>
-                  <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${m.above ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-red-100 text-red-800'}`}>{m.above ? 'Above Benchmark' : 'Below / Gap'}</span></td>
+                  <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${m.above ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-red-100 text-red-800'}`}>{m.above ? 'Above Benchmark' : 'Below / Gap'}</span></td>
                   <td className="px-4 py-3 text-titanium-500 text-xs">{m.registry}</td>
                 </tr>
               ))}
@@ -568,7 +568,7 @@ const CADInterventionPipeline: React.FC = () => {
         <Activity className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />,
         'Gap 47',
         'HIGH PRIORITY',
-        'bg-[#F0F5FA] text-[#6B7280]',
+        'bg-[#FAF6E8] text-[#8B6914]',
         'border-[#C8D4DC]',
         'bg-[#F0F5FA]',
         'border-[#C8D4DC]',

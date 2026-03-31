@@ -195,8 +195,8 @@ const CoronarySpecialtyPhenotypesDashboard: React.FC = () => {
   const getRiskColor = (risk: string) => {
  switch (risk) {
  case 'high': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
- case 'moderate': return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
- case 'low': return 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]';
+ case 'moderate': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
+ case 'low': return 'text-[#2D6147] bg-[#F0F7F4] border-[#2C4A60]';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };
@@ -219,7 +219,7 @@ const CoronarySpecialtyPhenotypesDashboard: React.FC = () => {
  <div className="text-2xl font-bold text-porsche-600 font-sf">{totalEligible}</div>
  <div className="text-sm text-porsche-700">Total Eligible Patients</div>
  </div>
- <div className="p-4 bg-[#C8D4DC] border border-[#2C4A60] rounded-lg">
+ <div className="p-4 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg">
  <div className="text-2xl font-bold text-[#2C4A60] font-sf">{totalIdentified}</div>
  <div className="text-sm text-[#2C4A60]">Currently Identified</div>
  </div>
@@ -325,7 +325,7 @@ const CoronarySpecialtyPhenotypesDashboard: React.FC = () => {
  <div className="text-sm font-semibold text-titanium-700 mb-1">Interventions</div>
  <div className="flex flex-wrap gap-1">
  {phenotype.interventions.slice(0, 2).map((intervention) => (
- <span key={intervention} className="px-2 py-1 bg-[#C8D4DC] text-[#2C4A60] text-xs rounded">
+ <span key={intervention} className="px-2 py-1 bg-[#F0F7F4] text-[#2D6147] text-xs rounded">
  {intervention}
  </span>
  ))}
@@ -339,7 +339,7 @@ const CoronarySpecialtyPhenotypesDashboard: React.FC = () => {
  </div>
 
  {/* Revenue Impact */}
- <div className="flex items-center justify-between p-3 bg-[#C8D4DC] border border-[#2C4A60] rounded-lg">
+ <div className="flex items-center justify-between p-3 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg">
  <div>
  <div className="text-sm font-semibold text-[#2C4A60]">Revenue Opportunity</div>
  <div className="text-xs text-[#2C4A60]">{phenotype.revenue}</div>
@@ -426,7 +426,7 @@ const CoronarySpecialtyPhenotypesDashboard: React.FC = () => {
  </div>
  </div>
  <div className="flex items-center gap-3">
- <span className={`text-xs px-2 py-0.5 rounded-full ${pt.risk === 'High' ? 'bg-crimson-100 text-crimson-700' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>
+ <span className={`text-xs px-2 py-0.5 rounded-full ${pt.risk === 'High' ? 'bg-crimson-100 text-crimson-700' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>
  {pt.risk}
  </span>
  <span className="text-xs text-titanium-500">{pt.status}</span>

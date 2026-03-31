@@ -503,8 +503,8 @@ const ExecutiveView: React.FC = () => {
  <GapIntelligenceCard data={{
    totalGaps: 23,
    categories: [
-     { name: 'Therapy', patients: 1200, color: '#3b82f6' },
-     { name: 'Safety', patients: 180, color: '#ef4444' },
+     { name: 'Therapy', patients: 1200, color: '#2C4A60' },
+     { name: 'Safety', patients: 180, color: '#9B2438' },
      { name: 'Growth', patients: 420, color: '#4A6880' },
      { name: 'Quality', patients: 850, color: '#C8D4DC' },
    ],

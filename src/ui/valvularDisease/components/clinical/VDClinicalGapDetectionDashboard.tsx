@@ -3202,8 +3202,8 @@ const getVDTrajectoryBadges = (gap: VDClinicalGap, pt: VDGapPatient) => {
     <>
       <span className={`ml-2 text-xs px-2 py-0.5 rounded-full font-medium ${
         trajectory.direction === 'worsening_rapid' ? 'bg-red-100 text-red-700' :
-        trajectory.direction === 'worsening_slow' ? 'bg-[#F0F5FA] text-[#6B7280]' :
-        trajectory.direction === 'improving' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+        trajectory.direction === 'worsening_slow' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+        trajectory.direction === 'improving' ? 'bg-[#F0F7F4] text-[#2D6147]' :
         'bg-gray-100 text-gray-600'
       }`}>
         {traj.arrow} {traj.label}
@@ -3366,18 +3366,18 @@ const VDClinicalGapDetectionDashboard: React.FC = () => {
   const priorityColor = (p: string) => {
     if (p === 'high') return 'bg-red-50 border-red-300 text-red-700';
     if (p === 'medium') return 'bg-[#F0F5FA] border-[#C8D4DC] text-[#6B7280]';
-    return 'bg-[#C8D4DC] border-[#2C4A60] text-[#2C4A60]';
+    return 'bg-[#F0F7F4] border-[#D8EDE6] text-[#2C4A60]';
   };
 
   const categoryColor = (c: string) =>
     c === 'Discovery'
-      ? 'bg-[#e0eaf3] text-[#1A2F4A]'
+      ? 'bg-[#F0F5FA] text-[#1A2F4A]'
       : c === 'Gap'
       ? 'bg-red-100 text-red-800'
       : c === 'Safety'
       ? 'bg-rose-200 text-rose-900'
       : c === 'Quality'
-      ? 'bg-[#F0F5FA] text-[#6B7280]'
+      ? 'bg-[#FAF6E8] text-[#8B6914]'
       : 'bg-blue-100 text-blue-800';
 
   return (
@@ -3400,7 +3400,7 @@ const VDClinicalGapDetectionDashboard: React.FC = () => {
             </div>
             <div className="text-2xl font-bold text-red-800">{totalPatients.toLocaleString()}</div>
           </div>
-          <div className="bg-[#C8D4DC] border border-[#2C4A60] rounded-xl p-4">
+          <div className="bg-[#F0F7F4] border border-[#D8EDE6] rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
               <DollarSign className="w-4 h-4 text-[#2C4A60]" />
               <span className="text-xs font-semibold text-[#2C4A60] uppercase tracking-wide">Total Opportunity</span>
@@ -3593,12 +3593,12 @@ const VDClinicalGapDetectionDashboard: React.FC = () => {
                                   </span>
                                 )}
                                 {gap.ctaMap && pt.subflag && gap.ctaMap[pt.subflag] && (
-                                  <span className="ml-2 text-xs bg-[#C8D4DC] text-[#2C4A60] px-2 py-0.5 rounded-full">
+                                  <span className="ml-2 text-xs bg-[#F0F7F4] text-[#2D6147] px-2 py-0.5 rounded-full">
                                     {gap.ctaMap[pt.subflag]}
                                   </span>
                                 )}
                                 {gap.category === 'Discovery' && (
-                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-[#e0eaf3] text-[#2C4A60] px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow. TAILRD identified this patient by assembling disconnected signals across care settings.">
+                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-[#F0F7F4] text-[#2D6147] px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow. TAILRD identified this patient by assembling disconnected signals across care settings.">
                                     <Radio className="w-3 h-3" />
                                     First identified by TAILRD
                                   </span>

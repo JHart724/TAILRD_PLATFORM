@@ -149,7 +149,7 @@ const ResearchExecutiveView: React.FC = () => {
                         ? 'bg-[#F0F5FA] text-[#2C4A60]'
                         : inTarget
                         ? 'bg-blue-100 text-blue-700'
-                        : 'bg-[#F0F5FA] text-[#6B7280]'
+                        : 'bg-[#FAF6E8] text-[#8B6914]'
                     }`}
                   >
                     {aboveTarget ? 'Above Target' : inTarget ? 'On Target' : 'Below Target'}
@@ -266,7 +266,7 @@ const ResearchExecutiveView: React.FC = () => {
                         <span
                           className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
                             trial.type === 'Industry'
-                              ? 'bg-[#F0F5FA] text-[#6B7280]'
+                              ? 'bg-[#FAF6E8] text-[#8B6914]'
                               : 'bg-slate-100 text-slate-600'
                           }`}
                         >

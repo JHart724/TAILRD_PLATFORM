@@ -390,11 +390,11 @@ const LAACRiskDashboard: React.FC = () => {
  if (type === 'stroke') {
  if (score >= 6) return 'text-medical-red-600 bg-medical-red-100';
  if (score >= 3) return 'text-crimson-600 bg-crimson-100';
- return 'text-[#2C4A60] bg-[#e0eaf3]';
+ return 'text-[#2D6147] bg-[#F0F7F4]';
  } else {
  if (score >= 3) return 'text-medical-red-600 bg-medical-red-100';
  if (score >= 2) return 'text-crimson-600 bg-crimson-100';
- return 'text-[#2C4A60] bg-[#e0eaf3]';
+ return 'text-[#2D6147] bg-[#F0F7F4]';
  }
   };
 
@@ -402,7 +402,7 @@ const LAACRiskDashboard: React.FC = () => {
  switch (priority) {
  case 'urgent': return 'bg-medical-red-100 text-medical-red-800 border-medical-red-200';
  case 'high': return 'bg-crimson-100 text-crimson-700 border-crimson-200';
- case 'medium': return 'bg-[#e0eaf3] text-[#2C4A60] border-[#C8D4DC]';
+ case 'medium': return 'bg-[#F0F7F4] text-[#2D6147] border-[#D8EDE6]';
  default: return 'bg-titanium-100 text-titanium-600 border-titanium-200';
  }
   };
@@ -487,7 +487,7 @@ const LAACRiskDashboard: React.FC = () => {
  </div>
  <button
  onClick={() => setExpandedPatient(expandedPatient === patient.patientId ? null : patient.patientId)}
- className="flex items-center gap-2 px-4 py-2 bg-[#e0eaf3] text-[#2C4A60] rounded-lg hover:bg-[#C8D4DC] transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-[#F0F7F4] text-[#2D6147] rounded-lg hover:bg-[#C8D4DC] transition-colors"
  >
  <Eye className="w-4 h-4" />
  {expandedPatient === patient.patientId ? 'Hide Details' : 'View Details'}

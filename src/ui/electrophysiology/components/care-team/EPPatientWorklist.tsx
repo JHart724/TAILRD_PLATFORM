@@ -110,7 +110,7 @@ const EPPatientWorklist: React.FC = () => {
   const getPriorityBadge = (priority: string) => {
  const colors = {
  high: 'bg-red-100 text-red-900 border-red-400',
- medium: 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]',
+ medium: 'bg-[#FAF6E8] text-[#8B6914] border-[#C8D4DC]',
  low: 'bg-titanium-100 text-titanium-700 border-titanium-400'
  };
  return colors[priority as keyof typeof colors];

@@ -167,7 +167,7 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
  Send Query
  </button>
  <button 
- className="text-xs bg-[#e0eaf3] text-[#2C4A60] px-2 py-1 rounded hover:bg-[#C8D4DC] transition-colors block"
+ className="text-xs bg-[#F0F7F4] text-[#2D6147] px-2 py-1 rounded hover:bg-[#C8D4DC] transition-colors block"
  onClick={() => {
  console.log('Marking CDI cdiAlert complete for patient:', cdiAlert.patientName);
  // TODO: Implement CDI completion workflow

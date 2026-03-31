@@ -146,8 +146,8 @@ const EPPatientWorklistEnhanced: React.FC = () => {
 
   const getAnticoagulationStatusColor = (status: string) => {
  switch(status) {
- case 'optimal': return 'text-[#2C4A60]';
- case 'suboptimal': return 'text-[#6B7280]';
+ case 'optimal': return 'text-[#2D6147]';
+ case 'suboptimal': return 'text-[#8B6914]';
  case 'contraindicated': return 'text-red-600';
  case 'not_started': return 'text-gray-600';
  default: return 'text-gray-600';
@@ -155,8 +155,8 @@ const EPPatientWorklistEnhanced: React.FC = () => {
   };
 
   const getAnticoagulationScoreColor = (score: number) => {
- if (score >= 80) return 'text-[#2C4A60] bg-[#C8D4DC]';
- if (score >= 60) return 'text-[#6B7280] bg-[#F0F5FA]';
+ if (score >= 80) return 'bg-[#F0F7F4] text-[#2D6147]';
+ if (score >= 60) return 'bg-[#FAF6E8] text-[#8B6914]';
  return 'text-red-600 bg-red-100';
   };
 
@@ -562,12 +562,12 @@ const EPPatientWorklistEnhanced: React.FC = () => {
   const getRiskColor = (riskScore: number) => {
  if (riskScore >= 8) return 'text-medical-red-600 bg-medical-red-100';
  if (riskScore >= 6) return 'text-crimson-600 bg-crimson-100';
- return 'text-[#2C4A60] bg-[#e0eaf3]';
+ return 'bg-[#F0F7F4] text-[#2D6147]';
   };
 
   const getCHA2DS2VAScColor = (riskCategory: string) => {
  const colors = {
- 'I': 'text-[#2C4A60] bg-[#e0eaf3]',
+ 'I': 'bg-[#F0F7F4] text-[#2D6147]',
  'II': 'text-porsche-600 bg-porsche-100',
  'III': 'text-crimson-600 bg-crimson-100',
  'IV': 'text-medical-red-600 bg-medical-red-100',
@@ -709,7 +709,7 @@ const EPPatientWorklistEnhanced: React.FC = () => {
  <div className={`inline-block px-3 py-1 rounded-lg font-semibold text-sm ${
  patient.priority === 'high' ? 'bg-medical-red-100 text-medical-red-700' :
  patient.priority === 'medium' ? 'bg-crimson-100 text-crimson-700' :
- 'bg-[#e0eaf3] text-[#2C4A60]'
+ 'bg-[#F0F7F4] text-[#2D6147]'
  }`}>
  {patient.priority.toUpperCase()}
  </div>
@@ -799,8 +799,8 @@ const EPPatientWorklistEnhanced: React.FC = () => {
  </h4>
  </div>
  <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
- data.status === 'optimal' ? 'bg-[#e0eaf3] text-[#2C4A60]' :
- data.status === 'suboptimal' ? 'bg-crimson-100 text-crimson-700' :
+ data.status === 'optimal' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ data.status === 'suboptimal' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  data.status === 'not_started' ? 'bg-medical-red-100 text-medical-red-700' :
  'bg-titanium-100 text-titanium-600'
  }`}>
@@ -858,7 +858,7 @@ const EPPatientWorklistEnhanced: React.FC = () => {
  <div className={`px-2 py-1 rounded text-xs font-semibold ${
  opportunity.priority === 'high' ? 'bg-medical-red-100 text-medical-red-700' :
  opportunity.priority === 'medium' ? 'bg-crimson-100 text-crimson-700' :
- 'bg-[#e0eaf3] text-[#2C4A60]'
+ 'bg-[#F0F7F4] text-[#2D6147]'
  }`}>
  {opportunity.priority.toUpperCase()}
  </div>

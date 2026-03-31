@@ -127,9 +127,9 @@ const EPProcedureAnalytics: React.FC = () => {
                 <tr key={i} className="hover:bg-titanium-50">
                   <td className="px-4 py-3 font-medium text-titanium-900">{p.type}</td>
                   <td className="px-4 py-3 font-mono font-semibold">{p.volume}</td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.success}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F7F4] text-[#2D6147]">{p.success}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{p.free1yr}</td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{p.complications}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#FAF6E8] text-[#8B6914]">{p.complications}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{p.avgTime}</td>
                 </tr>
               ))}
@@ -173,8 +173,8 @@ const EPProviderPerformance: React.FC = () => {
                   <td className="px-4 py-3 text-titanium-600">{p.specialty}</td>
                   <td className="px-4 py-3 text-center font-mono">{p.ablations}</td>
                   <td className="px-4 py-3 text-center font-mono">{p.devices}</td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.successRate}</span></td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{p.complications}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F7F4] text-[#2D6147]">{p.successRate}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#FAF6E8] text-[#8B6914]">{p.complications}</span></td>
                   <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="flex-1 bg-titanium-100 rounded-full h-2"><div className="bg-[#F0F5FA] h-2 rounded-full" style={{ width: `${p.quality}%` }} /></div><span className="text-xs font-semibold text-titanium-700">{p.quality}</span></div></td>
                 </tr>
               ))}
@@ -219,7 +219,7 @@ const ArrhythmiaManagement: React.FC = () => {
                   <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">{d.rhythm}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{d.rate}</td>
                   <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">{d.ablation}</span></td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{d.oac}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F7F4] text-[#2D6147]">{d.oac}</span></td>
                 </tr>
               ))}
             </tbody>
@@ -264,7 +264,7 @@ const EPQualityMetrics: React.FC = () => {
                   <td className="px-4 py-3 font-medium text-titanium-900">{m.measure}</td>
                   <td className="px-4 py-3 font-mono font-semibold text-titanium-800">{m.rate}</td>
                   <td className="px-4 py-3 text-titanium-500">{m.benchmark}</td>
-                  <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${m.above ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-red-100 text-red-800'}`}>{m.above ? 'Above' : 'Below / Gap'}</span></td>
+                  <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${m.above ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-red-100 text-red-800'}`}>{m.above ? 'Above' : 'Below / Gap'}</span></td>
                   <td className="px-4 py-3 text-titanium-500 text-xs">{m.source}</td>
                 </tr>
               ))}
@@ -491,7 +491,7 @@ const EPDeviceAblationPipeline: React.FC = () => {
         pfaGap,
         'Gap 11: PFA Re-ablation — AF Recurrence Post-Ablation',
         'GROWTH',
-        'bg-[#C8D4DC] text-[#2C4A60]',
+        'bg-[#F0F7F4] text-[#2D6147]',
         'border-[#2C4A60]',
         'bg-[#C8D4DC]',
         <Zap className="w-5 h-5 text-[#2C4A60] mt-0.5 flex-shrink-0" />
@@ -502,7 +502,7 @@ const EPDeviceAblationPipeline: React.FC = () => {
         ilrGap,
         'Gap 65: Cryptogenic Stroke — Implantable Loop Recorder Not Ordered',
         'HIGH PRIORITY',
-        'bg-[#F0F5FA] text-[#6B7280]',
+        'bg-[#FAF6E8] text-[#8B6914]',
         'border-[#C8D4DC]',
         'bg-[#F0F5FA]',
         <AlertTriangle className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />

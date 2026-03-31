@@ -164,8 +164,8 @@ const StatusBadge: React.FC<{ status: HealthSystem['status']; trialDays?: number
   trialDays,
 }) => {
   const styles: Record<string, string> = {
-    Active: 'bg-[#C8D4DC] text-[#2C4A60]',
-    Trial: 'bg-[#F0F5FA] text-[#6B7280]',
+    Active: 'bg-[#F0F7F4] text-[#2D6147]',
+    Trial: 'bg-[#FAF6E8] text-[#8B6914]',
     Inactive: 'bg-red-100 text-red-800',
   };
 

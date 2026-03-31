@@ -30,7 +30,7 @@ interface SHBenchmarkDetailModalProps {
 const getPercentileColor = (percentile: number): string => {
   if (percentile >= 90) return 'bg-[#F0F5FA] text-[#2C4A60] border-[#C8D4DC]';
   if (percentile >= 75) return 'bg-chrome-100 text-chrome-800 border-chrome-300';
-  if (percentile >= 50) return 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]';
+  if (percentile >= 50) return 'bg-[#FAF6E8] text-[#8B6914] border-[#C8D4DC]';
   return 'bg-red-100 text-red-800 border-red-300';
 };
 
@@ -61,7 +61,7 @@ const SHBenchmarkDetailModal: React.FC<SHBenchmarkDetailModalProps> = ({
  { category: 'Top 25%', value: comparisonData.top25, color: '#9CA3AF' },
  { category: 'Top 50%', value: comparisonData.top50, color: '#6B7280' },
  { category: 'National Avg', value: comparisonData.national, color: '#4B5563' },
- { category: 'Our Performance', value: ourValue, color: '#14B8A6' }
+ { category: 'Our Performance', value: ourValue, color: '#4A6880' }
   ];
 
   const renderTrendTooltip = (props: any) => {
@@ -169,10 +169,10 @@ const SHBenchmarkDetailModal: React.FC<SHBenchmarkDetailModalProps> = ({
  <Line
  type="monotone"
  dataKey="value"
- stroke="#14B8A6"
+ stroke="#4A6880"
  strokeWidth={3}
- dot={{ r: 6, fill: "#14B8A6" }}
- activeDot={{ r: 8, fill: "#0D9488" }}
+ dot={{ r: 6, fill: "#4A6880" }}
+ activeDot={{ r: 8, fill: "#3E6275" }}
  />
  </LineChart>
  </ResponsiveContainer>

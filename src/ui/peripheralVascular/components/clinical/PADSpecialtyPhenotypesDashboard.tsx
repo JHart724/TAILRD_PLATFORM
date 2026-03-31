@@ -20,7 +20,7 @@ const PADSpecialtyPhenotypesDashboard: React.FC = () => {
   const totalGap = PAD_PHENOTYPES.reduce((s, p) => s + p.patientGap, 0);
   const avgDetection = Math.round(PAD_PHENOTYPES.reduce((s, p) => s + p.detectionRate, 0) / PAD_PHENOTYPES.length);
   const BULLET = '\u2022';
-  const getPriorityColor = (p: string) => p === 'Critical' ? 'text-crimson-600 bg-crimson-50 border-crimson-200' : p === 'High' ? 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]' : p === 'Moderate' ? 'text-porsche-600 bg-porsche-50 border-porsche-200' : 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]';
+  const getPriorityColor = (p: string) => p === 'Critical' ? 'text-crimson-600 bg-crimson-50 border-crimson-200' : p === 'High' ? 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]' : p === 'Moderate' ? 'text-porsche-600 bg-porsche-50 border-porsche-200' : 'text-[#2D6147] bg-[#F0F7F4] border-[#2C4A60]';
   const getCategoryIcon = (c: string) => { switch(c) { case 'ischemic': return <Flame className="w-4 h-4" />; case 'inflammatory': return <Zap className="w-4 h-4" />; case 'structural': return <Shield className="w-4 h-4" />; case 'metabolic': return <Activity className="w-4 h-4" />; default: return <Heart className="w-4 h-4" />; } };
   const getDetectionColor = (d: number) => d < 30 ? 'bg-crimson-500' : d < 50 ? 'bg-[#F0F5FA]' : d < 70 ? 'bg-porsche-500' : 'bg-[#C8D4DC]';
   return (

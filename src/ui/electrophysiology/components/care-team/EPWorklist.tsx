@@ -341,8 +341,8 @@ const EPWorklist: React.FC = () => {
   const getPriorityColor = (priority: string) => {
  switch (priority) {
  case 'Emergent': return 'bg-red-100 text-red-700 border-red-200';
- case 'Urgent': return 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]';
- default: return 'bg-[#C8D4DC] text-[#2C4A60] border-[#2C4A60]';
+ case 'Urgent': return 'bg-[#FAF6E8] text-[#8B6914] border-[#C8D4DC]';
+ default: return 'bg-[#F0F7F4] text-[#2D6147] border-[#2C4A60]';
  }
   };
 
@@ -350,7 +350,7 @@ const EPWorklist: React.FC = () => {
  switch (status) {
  case 'Completed': return 'bg-[#F0F5FA] text-[#2C4A60]';
  case 'In Progress': return 'bg-chrome-100 text-chrome-700';
- case 'Pre-procedure': return 'bg-[#F0F5FA] text-[#6B7280]';
+ case 'Pre-procedure': return 'bg-[#FAF6E8] text-[#8B6914]';
  case 'Scheduled': return 'bg-titanium-100 text-titanium-700';
  default: return 'bg-red-100 text-red-700';
  }
@@ -358,10 +358,10 @@ const EPWorklist: React.FC = () => {
 
   const getRhythmColor = (rhythm: string) => {
  switch (rhythm) {
- case 'SR': return 'bg-[#C8D4DC] text-[#2C4A60]';
+ case 'SR': return 'bg-[#F0F7F4] text-[#2D6147]';
  case 'AF': case 'AFL': return 'bg-red-100 text-red-700';
  case 'VT': case 'VF': return 'bg-red-100 text-red-700';
- case 'Brady': return 'bg-[#F0F5FA] text-[#6B7280]';
+ case 'Brady': return 'bg-[#FAF6E8] text-[#8B6914]';
  case 'SVT': return 'bg-chrome-100 text-chrome-700';
  default: return 'bg-titanium-100 text-titanium-700';
  }
@@ -532,8 +532,8 @@ const EPWorklist: React.FC = () => {
  </div>
  </div>
  <span className={`text-xs px-2 py-1 rounded font-medium ${
- ablation.outcome === 'Success' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
- ablation.outcome === 'Partial' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ ablation.outcome === 'Success' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ ablation.outcome === 'Partial' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-red-100 text-red-700'
  }`}>
  {ablation.outcome}

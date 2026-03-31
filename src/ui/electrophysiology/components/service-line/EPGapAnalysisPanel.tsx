@@ -264,8 +264,8 @@ const EPGapAnalysisPanel: React.FC = () => {
   const getImpactColor = (impact: string) => {
  const colors = {
  critical: 'text-red-600 bg-red-100 border-red-300',
- high: 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]',
- moderate: 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]',
+ high: 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]',
+ moderate: 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]',
  };
  return colors[impact as keyof typeof colors];
   };
@@ -542,7 +542,7 @@ const EPGapAnalysisPanel: React.FC = () => {
  e.stopPropagation();
  console.log('Assign to team:', gap.title);
  }}
- className="px-4 py-2 bg-[#C8D4DC] text-[#2C4A60] text-sm rounded-lg hover:bg-[#C8D4DC] transition-colors border border-[#2C4A60]"
+ className="px-4 py-2 bg-[#F0F7F4] text-[#2D6147] text-sm rounded-lg hover:bg-[#C8D4DC] transition-colors border border-[#2C4A60]"
  >
  Assign to Team
  </button>

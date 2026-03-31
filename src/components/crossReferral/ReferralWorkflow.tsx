@@ -301,7 +301,7 @@ const ReferralWorkflow: React.FC<ReferralWorkflowProps> = ({
  {/* Step Status Badge */}
  <div className="flex-shrink-0 ml-4">
  {step.status === 'completed' && (
- <div className="flex items-center gap-1 px-2 py-1 bg-[#e0eaf3] text-[#2C4A60] text-xs rounded-full border border-[#C8D4DC]">
+ <div className="flex items-center gap-1 px-2 py-1 bg-[#F0F7F4] text-[#2D6147] text-xs rounded-full border border-[#D8EDE6]">
  <CheckCircle className="w-3 h-3" />
  Complete
  </div>

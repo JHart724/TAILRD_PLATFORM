@@ -150,13 +150,13 @@ const SHMonthDetailModal: React.FC<SHMonthDetailModalProps> = ({
  <Tooltip content={renderCustomTooltip} />
  <Legend 
  formatter={(value) => (
- <span style={{ color: value === 'projected' ? '#3B82F6' : '#14B8A6' }}>
+ <span style={{ color: value === 'projected' ? '#2C4A60' : '#4A6880' }}>
  {value === 'projected' ? 'Projected' : 'Realized'}
  </span>
  )}
  />
- <Bar dataKey="projected" fill="#3B82F6" name="projected" radius={[2, 2, 0, 0]} />
- <Bar dataKey="realized" fill="#14B8A6" name="realized" radius={[2, 2, 0, 0]} />
+ <Bar dataKey="projected" fill="#2C4A60" name="projected" radius={[2, 2, 0, 0]} />
+ <Bar dataKey="realized" fill="#4A6880" name="realized" radius={[2, 2, 0, 0]} />
  </BarChart>
  </ResponsiveContainer>
  </div>

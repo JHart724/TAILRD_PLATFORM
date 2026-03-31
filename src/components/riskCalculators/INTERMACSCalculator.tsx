@@ -327,8 +327,8 @@ const INTERMACSCalculator: React.FC = () => {
  </div>
  <div className={`px-2 py-1 rounded text-xs font-medium ${
  profile.urgency === 'Critical' ? 'bg-red-100 text-red-700' :
- profile.urgency === 'Urgent' ? 'bg-[#F0F5FA] text-[#6B7280]' :
- 'bg-[#C8D4DC] text-[#2C4A60]'
+ profile.urgency === 'Urgent' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ 'bg-[#F0F7F4] text-[#2D6147]'
  }`}>
  {profile.urgency}
  </div>
@@ -530,13 +530,13 @@ const INTERMACSCalculator: React.FC = () => {
  {/* Urgency */}
  <div className={`p-4 rounded-xl border ${
  result.profile.urgency === 'Critical' ? 'border-red-200 bg-red-50' :
- result.profile.urgency === 'Urgent' ? 'border-[#C8D4DC] bg-[#F0F5FA]' :
- 'border-[#2C4A60] bg-[#C8D4DC]'
+ result.profile.urgency === 'Urgent' ? 'border-[#F4ECC0] bg-[#FAF6E8]' :
+ 'border-[#D8EDE6] bg-[#F0F7F4]'
  }`}>
  <div className="flex items-center gap-2 mb-2">
  <Activity className={`w-4 h-4 ${
  result.profile.urgency === 'Critical' ? 'text-red-600' :
- result.profile.urgency === 'Urgent' ? 'text-[#6B7280]' :
+ result.profile.urgency === 'Urgent' ? 'text-[#8B6914]' :
  'text-[#2C4A60]'
  }`} />
  <span className="font-semibold text-titanium-900">

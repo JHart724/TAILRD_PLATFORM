@@ -282,8 +282,8 @@ const EPTreatmentGapsSummary: React.FC = () => {
   const getImpactColor = (impact: string) => {
  const colors = {
  high: 'text-red-600 bg-red-100',
- medium: 'text-[#6B7280] bg-[#F0F5FA]',
- low: 'text-[#2C4A60] bg-[#C8D4DC]',
+ medium: 'text-[#8B6914] bg-[#FAF6E8]',
+ low: 'text-[#2D6147] bg-[#F0F7F4]',
  };
  return colors[impact as keyof typeof colors];
   };
@@ -544,7 +544,7 @@ const EPTreatmentGapsSummary: React.FC = () => {
  e.stopPropagation();
  console.log('Assign to team:', gap.title);
  }}
- className="px-4 py-2 bg-[#C8D4DC] text-[#2C4A60] text-sm rounded-lg hover:bg-[#C8D4DC] transition-colors border border-[#2C4A60]"
+ className="px-4 py-2 bg-[#F0F7F4] text-[#2D6147] text-sm rounded-lg hover:bg-[#C8D4DC] transition-colors border border-[#2C4A60]"
  >
  Assign to Team
  </button>

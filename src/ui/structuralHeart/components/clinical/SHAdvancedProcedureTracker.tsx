@@ -405,7 +405,7 @@ const SHAdvancedProcedureTracker: React.FC = () => {
  </button>
  </div>
  {actionFeedback && (
- <div className="mt-2 p-2 bg-[#C8D4DC] border border-[#2C4A60] rounded-lg text-[#2C4A60] text-sm flex items-center gap-2">
+ <div className="mt-2 p-2 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg text-[#2C4A60] text-sm flex items-center gap-2">
  <CheckCircle className="w-4 h-4" />
  {actionFeedback === 'screening' ? 'Patient screening tool loading...' : 'Opening clinical guidelines...'}
  </div>

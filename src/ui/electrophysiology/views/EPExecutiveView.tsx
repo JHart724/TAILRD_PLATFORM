@@ -491,8 +491,8 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 	<GapIntelligenceCard data={{
 	  totalGaps: 20,
 	  categories: [
-	    { name: 'Therapy', patients: 680, color: '#3b82f6' },
-	    { name: 'Safety', patients: 290, color: '#ef4444' },
+	    { name: 'Therapy', patients: 680, color: '#2C4A60' },
+	    { name: 'Safety', patients: 290, color: '#9B2438' },
 	    { name: 'Growth', patients: 350, color: '#4A6880' },
 	    { name: 'Quality', patients: 410, color: '#C8D4DC' },
 	  ],

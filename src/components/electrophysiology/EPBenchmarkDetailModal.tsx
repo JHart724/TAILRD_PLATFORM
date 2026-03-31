@@ -100,10 +100,10 @@ const EPBenchmarkDetailModal: React.FC<EPBenchmarkDetailModalProps> = ({
  <Line
  type="monotone"
  dataKey="value"
- stroke="#3B82F6"
+ stroke="#2C4A60"
  strokeWidth={3}
- dot={{ r: 6, fill: '#3B82F6' }}
- activeDot={{ r: 8, fill: '#1D4ED8' }}
+ dot={{ r: 6, fill: '#2C4A60' }}
+ activeDot={{ r: 8, fill: '#1E3347' }}
  />
  </LineChart>
  </ResponsiveContainer>

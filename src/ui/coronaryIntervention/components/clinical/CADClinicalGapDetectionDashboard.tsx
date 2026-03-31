@@ -6528,7 +6528,7 @@ function daptUrgencyLabel(kv: Record<string, string | number>): { label: string;
   if (riskWindow.includes('CRITICAL') || riskWindow.includes('<3')) {
     return { label: 'CRITICAL — DES <90 days', color: 'text-red-800 bg-red-200' };
   }
-  return { label: 'HIGH — DES 90-365 days', color: 'text-[#6B7280] bg-[#F0F5FA]' };
+  return { label: 'HIGH — DES 90-365 days', color: 'text-[#8B6914] bg-[#FAF6E8]' };
 }
 
 /** Render DAPT safety alert (Gap 50) */
@@ -6888,7 +6888,7 @@ function renderCADPredictiveBadges(gap: CADClinicalGap, pt: CADGapPatient): Reac
 
   return (
     <>
-      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${display.colorClass === 'text-red-600' ? 'bg-red-100 text-red-700' : display.colorClass === 'text-[#6B7280]' ? 'bg-[#F0F5FA] text-[#6B7280]' : display.colorClass === 'text-[#2C4A60]' ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-gray-100 text-gray-500'}`}>
+      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${display.colorClass === 'text-red-600' ? 'bg-red-100 text-red-700' : display.colorClass === 'text-[#6B7280]' ? 'bg-[#FAF6E8] text-[#8B6914]' : display.colorClass === 'text-[#2C4A60]' ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-gray-100 text-gray-500'}`}>
         {display.arrow} {display.label}
       </span>
       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${horizonDisplay.bgClass} ${horizonDisplay.textClass}`}>
@@ -7011,7 +7011,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
   const priorityColor = (p: string) => {
     if (p === 'high') return 'bg-red-50 border-red-300 text-red-700';
     if (p === 'medium') return 'bg-[#F0F5FA] border-[#C8D4DC] text-[#6B7280]';
-    return 'bg-[#C8D4DC] border-[#2C4A60] text-[#2C4A60]';
+    return 'bg-[#F0F7F4] border-[#D8EDE6] text-[#2C4A60]';
   };
 
   const categoryColor = (c: string) =>
@@ -7020,9 +7020,9 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
       : c === 'Safety'
       ? 'bg-rose-200 text-rose-900'
       : c === 'Quality'
-      ? 'bg-[#F0F5FA] text-[#6B7280]'
+      ? 'bg-[#FAF6E8] text-[#8B6914]'
       : c === 'Deprescribing'
-      ? 'bg-[#F0F5FA] text-[#6B7280]'
+      ? 'bg-[#FAF6E8] text-[#8B6914]'
       : c === 'Discovery'
       ? 'bg-slate-100 text-slate-800'
       : 'bg-blue-100 text-blue-800';
@@ -7030,7 +7030,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
   const tierColor = (tier?: string) => {
     if (!tier) return '';
     if (tier.includes('A')) return 'bg-red-100 text-red-700';
-    if (tier.includes('B')) return 'bg-[#F0F5FA] text-[#6B7280]';
+    if (tier.includes('B')) return 'bg-[#FAF6E8] text-[#8B6914]';
     if (tier.includes('C')) return 'bg-blue-100 text-blue-700';
     return 'bg-titanium-100 text-titanium-700';
   };
@@ -7063,7 +7063,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
             </div>
             <div className="text-2xl font-bold text-red-800">{totalPatients.toLocaleString()}</div>
           </div>
-          <div className="bg-[#C8D4DC] border border-[#2C4A60] rounded-xl p-4">
+          <div className="bg-[#F0F7F4] border border-[#D8EDE6] rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
               <DollarSign className="w-4 h-4 text-[#2C4A60]" />
               <span className="text-xs font-semibold text-[#2C4A60] uppercase tracking-wide">Total Opportunity</span>
@@ -7257,7 +7257,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
                                   </span>
                                 )}
                                 {cta && (
-                                  <span className="ml-2 text-xs bg-[#C8D4DC] text-[#2C4A60] px-2 py-0.5 rounded-full">
+                                  <span className="ml-2 text-xs bg-[#F0F7F4] text-[#2D6147] px-2 py-0.5 rounded-full">
                                     {cta}
                                   </span>
                                 )}

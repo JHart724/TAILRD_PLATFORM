@@ -200,8 +200,8 @@ const ValvularCareTeamView: React.FC = () => {
  <td className="p-3">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.severity.includes('Severe') ? 'bg-red-100 text-red-700' :
- patient.severity.includes('Moderate') ? 'bg-[#F0F5FA] text-[#6B7280]' :
- 'bg-[#C8D4DC] text-[#2C4A60]'
+ patient.severity.includes('Moderate') ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ 'bg-[#F0F7F4] text-[#2D6147]'
  }`}>
  {patient.severity}
  </span>
@@ -302,7 +302,7 @@ const ValvularCareTeamView: React.FC = () => {
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  <div className="p-4 bg-red-50 border border-red-200 rounded-xl"><div className="text-2xl font-bold text-red-700">3</div><div className="text-sm text-red-600">Active Safety Alerts</div></div>
  <div className="p-4 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl"><div className="text-2xl font-bold text-[#6B7280]">7</div><div className="text-sm text-[#6B7280]">Overdue Surveillance</div></div>
- <div className="p-4 bg-[#C8D4DC] border border-[#2C4A60] rounded-xl"><div className="text-2xl font-bold text-[#2C4A60]">94%</div><div className="text-sm text-[#2C4A60]">Prophylaxis Documented</div></div>
+ <div className="p-4 bg-[#F0F7F4] border border-[#D8EDE6] rounded-xl"><div className="text-2xl font-bold text-[#2C4A60]">94%</div><div className="text-sm text-[#2C4A60]">Prophylaxis Documented</div></div>
  </div>
  </div>
  </div>
@@ -314,7 +314,7 @@ const ValvularCareTeamView: React.FC = () => {
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2"><Users className="w-5 h-5 text-porsche-600" /> Valve Care Team</h3>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  {[{name:'Dr. Sarah Mitchell',role:'Cardiac Surgeon',status:'Available'},{name:'Dr. James Park',role:'Interventional Cardiologist',status:'In Procedure'},{name:'Lisa Thompson, NP',role:'Valve Coordinator',status:'Available'}].map((m,i) => (
- <div key={i} className="p-4 border border-titanium-200 rounded-xl"><div className="font-semibold text-titanium-800">{m.name}</div><div className="text-sm text-titanium-600">{m.role}</div><span className={`mt-2 inline-block px-2 py-0.5 rounded-full text-xs ${m.status === 'Available' ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>{m.status}</span></div>
+ <div key={i} className="p-4 border border-titanium-200 rounded-xl"><div className="font-semibold text-titanium-800">{m.name}</div><div className="text-sm text-titanium-600">{m.role}</div><span className={`mt-2 inline-block px-2 py-0.5 rounded-full text-xs ${m.status === 'Available' ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>{m.status}</span></div>
  ))}
  </div>
  </div>
@@ -327,7 +327,7 @@ const ValvularCareTeamView: React.FC = () => {
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2"><FileText className="w-5 h-5 text-porsche-600" /> Clinical Documentation</h3>
  <div className="space-y-3">
  {[{title:'Pre-Operative Valve Assessment',type:'Template',status:'Active'},{title:'Post-TAVR Discharge Protocol',type:'Protocol',status:'Active'},{title:'Endocarditis Prophylaxis Guidelines',type:'Guideline',status:'Active'},{title:'Anticoagulation Bridge Protocol',type:'Protocol',status:'Under Review'}].map((d,i) => (
- <div key={i} className="flex items-center justify-between p-4 border border-titanium-200 rounded-xl hover:bg-titanium-50"><div className="flex items-center gap-3"><FileText className="w-5 h-5 text-titanium-400" /><div><div className="font-medium text-titanium-800">{d.title}</div><div className="text-xs text-titanium-500">{d.type}</div></div></div><span className={`px-2 py-0.5 rounded-full text-xs ${d.status === 'Active' ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>{d.status}</span></div>
+ <div key={i} className="flex items-center justify-between p-4 border border-titanium-200 rounded-xl hover:bg-titanium-50"><div className="flex items-center gap-3"><FileText className="w-5 h-5 text-titanium-400" /><div><div className="font-medium text-titanium-800">{d.title}</div><div className="text-xs text-titanium-500">{d.type}</div></div></div><span className={`px-2 py-0.5 rounded-full text-xs ${d.status === 'Active' ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>{d.status}</span></div>
  ))}
  </div>
  </div>

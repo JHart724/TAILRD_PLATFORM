@@ -157,8 +157,8 @@ const CoronarySafetyScreening: React.FC = () => {
   const getRiskColor = (risk: string) => {
  switch (risk) {
  case 'low': return 'text-[#2C4A60] bg-[#F0F5FA] border-[#C8D4DC]';
- case 'moderate': return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
- case 'high': return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
+ case 'moderate': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
+ case 'high': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
  case 'contraindicated': return 'text-red-600 bg-red-50 border-red-200';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }

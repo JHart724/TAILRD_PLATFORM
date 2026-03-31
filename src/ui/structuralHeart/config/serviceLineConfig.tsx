@@ -242,7 +242,7 @@ const TAVRCandidatePipeline: React.FC = () => {
                 <h3 className="text-base font-semibold text-titanium-900">
                   Gap 79: Moderate AS — Echo Surveillance Overdue
                 </h3>
-                <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-0.5 rounded-full font-medium">SURVEILLANCE</span>
+                <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-0.5 rounded-full font-medium">SURVEILLANCE</span>
                 <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-medium">{totalModerateAS} patients</span>
               </div>
               <p className="text-xs text-titanium-600 mt-1">{moderateASGap.evidence}</p>
@@ -283,7 +283,7 @@ const TAVRCandidatePipeline: React.FC = () => {
                 <h3 className="text-base font-semibold text-titanium-900">
                   Gap 80: Post-TAVR Baseline Echo Missing
                 </h3>
-                <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-0.5 rounded-full font-medium">QUALITY GAP</span>
+                <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-0.5 rounded-full font-medium">QUALITY GAP</span>
                 <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-medium">{totalPostTavr} patients</span>
               </div>
               <p className="text-xs text-titanium-600 mt-1">{postTavrGap.evidence}</p>
@@ -414,9 +414,9 @@ const StructuralProcedureAnalytics: React.FC = () => {
                 <tr key={i} className="hover:bg-titanium-50">
                   <td className="px-4 py-3 font-medium text-titanium-900">{p.type}</td>
                   <td className="px-4 py-3 font-mono font-semibold">{p.volume}</td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.technical}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F7F4] text-[#2D6147]">{p.technical}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{p.pvl}</td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{p.stroke}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#FAF6E8] text-[#8B6914]">{p.stroke}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{p.los}</td>
                   <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{p.mortality}</span></td>
                 </tr>
@@ -459,7 +459,7 @@ const StructuralOutcomesAnalytics: React.FC = () => {
                   <td className="px-4 py-3 font-medium text-titanium-900">{t.risk}</td>
                   <td className="px-4 py-3 font-mono font-semibold">{t.n}</td>
                   <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{t.mortality}</span></td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{t.stroke}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#FAF6E8] text-[#8B6914]">{t.stroke}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{t.pvl}</td>
                   <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">O/E: {t.oe}</span></td>
                 </tr>
@@ -539,8 +539,8 @@ const StructuralProviderScorecard: React.FC = () => {
                   <td className="px-4 py-3 text-titanium-600">{p.specialty}</td>
                   <td className="px-4 py-3 text-center font-mono">{p.tavrVol}</td>
                   <td className="px-4 py-3 text-center font-mono">{p.mitraclipVol}</td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.successRate}</span></td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{p.complications}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F7F4] text-[#2D6147]">{p.successRate}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#FAF6E8] text-[#8B6914]">{p.complications}</span></td>
                   <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="flex-1 bg-titanium-100 rounded-full h-2"><div className="bg-medical-red-500 h-2 rounded-full" style={{ width: `${p.quality}%` }} /></div><span className="text-xs font-semibold text-titanium-700">{p.quality}</span></div></td>
                 </tr>
               ))}
@@ -583,7 +583,7 @@ const StructuralSafetyScreening: React.FC = () => {
                 <td className="px-4 py-3 font-medium text-titanium-900">{a.category}</td>
                 <td className="px-4 py-3 font-mono font-semibold">{a.count}</td>
                 <td className="px-4 py-3 text-titanium-600 text-xs">{a.action}</td>
-                <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${a.severity === 'red' ? 'bg-red-100 text-red-800' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>{a.severity === 'red' ? 'High' : 'Moderate'}</span></td>
+                <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${a.severity === 'red' ? 'bg-red-100 text-red-800' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>{a.severity === 'red' ? 'High' : 'Moderate'}</span></td>
               </tr>
             ))}
           </tbody>

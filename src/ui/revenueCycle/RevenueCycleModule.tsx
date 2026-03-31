@@ -103,7 +103,7 @@ const RevenueCycleModule: React.FC = () => {
  <div className="flex items-center gap-4">
  <button
  onClick={() => navigate('/dashboard')}
- className="p-3 rounded-xl bg-[#e0eaf3] hover:bg-[#C8D4DC] transition-colors cursor-pointer"
+ className="p-3 rounded-xl bg-[#F0F5FA] hover:bg-[#C8D4DC] transition-colors cursor-pointer"
  title="Return to Dashboard"
  >
  <DollarSign className="w-8 h-8 text-[#2C4A60]" />
@@ -162,7 +162,7 @@ const RevenueCycleModule: React.FC = () => {
  }}>
  <div className="flex items-center gap-3">
  <div className={`p-2 rounded-lg transition-colors ${
- isActive ? 'bg-[#e0eaf3]' : 'bg-white'
+ isActive ? 'bg-[#F0F5FA]' : 'bg-white'
  }`}>
  <IconComponent className={`w-5 h-5 transition-colors ${
  isActive ? 'text-[#2C4A60]' : 'text-titanium-600'

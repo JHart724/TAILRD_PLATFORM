@@ -115,7 +115,7 @@ const zipData: ZIPData[] = [
 ];
 
 const getRiskColor = (riskScore: number) => {
-  if (riskScore >= 8.5) return '#dc2626'; // red-600
+  if (riskScore >= 8.5) return '#7A1A2E'; // red-600
   if (riskScore >= 7.0) return '#7A1A2E'; // orange-600
   if (riskScore >= 6.0) return '#6B7280'; // amber-600
   if (riskScore >= 5.0) return '#65a30d'; // lime-600
@@ -153,8 +153,8 @@ export const HFGeographicHeatMapSimple: React.FC = () => {
  {/* Metro Area Outline */}
  <path
  d="M 150 50 L 180 45 L 220 40 L 280 35 L 320 40 L 380 45 L 420 55 L 450 70 L 460 100 L 465 150 L 470 200 L 465 250 L 460 300 L 450 340 L 430 370 L 400 385 L 360 390 L 320 385 L 280 380 L 240 375 L 200 370 L 170 360 L 150 340 L 140 300 L 135 250 L 140 200 L 145 150 L 150 100 L 150 50 Z"
- fill="#e0f2fe"
- stroke="#0284c7"
+ fill="#E8EEF2"
+ stroke="#4A6880"
  strokeWidth="2"
  opacity="0.3"
  />

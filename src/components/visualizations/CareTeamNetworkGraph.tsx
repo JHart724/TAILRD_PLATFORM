@@ -31,21 +31,21 @@ const CareTeamNetworkGraph: React.FC = () => {
   // Generate network data
   const nodes: NetworkNode[] = [
  // Providers
- { id: 'sw', name: 'Dr. Sarah Williams', type: 'provider', specialty: 'Cardiology', patientCount: 89, connectionStrength: 0.95, x: 200, y: 150, color: '#ef4444' },
- { id: 'mc', name: 'Dr. Michael Chen', type: 'provider', specialty: 'Cardiology', patientCount: 127, connectionStrength: 0.88, x: 350, y: 100, color: '#3b82f6' },
+ { id: 'sw', name: 'Dr. Sarah Williams', type: 'provider', specialty: 'Cardiology', patientCount: 89, connectionStrength: 0.95, x: 200, y: 150, color: '#9B2438' },
+ { id: 'mc', name: 'Dr. Michael Chen', type: 'provider', specialty: 'Cardiology', patientCount: 127, connectionStrength: 0.88, x: 350, y: 100, color: '#2C4A60' },
  { id: 'jm', name: 'Dr. Jennifer Martinez', type: 'provider', specialty: 'Internal Medicine', patientCount: 203, connectionStrength: 0.67, x: 150, y: 300, color: '#2C4A60' },
  { id: 'rt', name: 'Dr. Robert Thompson', type: 'provider', specialty: 'Cardiology', patientCount: 156, connectionStrength: 0.85, x: 400, y: 250, color: '#9B2438' },
  { id: 'lp', name: 'Dr. Lisa Park', type: 'provider', specialty: 'Internal Medicine', patientCount: 178, connectionStrength: 0.71, x: 300, y: 350, color: '#C8D4DC' },
  
  // Departments
- { id: 'cardio', name: 'Cardiology', type: 'department', patientCount: 372, connectionStrength: 0.92, x: 500, y: 150, color: '#dc2626' },
+ { id: 'cardio', name: 'Cardiology', type: 'department', patientCount: 372, connectionStrength: 0.92, x: 500, y: 150, color: '#7A1A2E' },
  { id: 'internal', name: 'Internal Medicine', type: 'department', patientCount: 381, connectionStrength: 0.69, x: 100, y: 200, color: '#2C4A60' },
  { id: 'pharmacy', name: 'Pharmacy', type: 'service', patientCount: 753, connectionStrength: 0.78, x: 250, y: 50, color: '#7A1A2E' },
  { id: 'lab', name: 'Laboratory', type: 'service', patientCount: 650, connectionStrength: 0.82, x: 450, y: 350, color: '#7A1A2E' },
  
  // Patient Groups
- { id: 'hfref', name: 'HFrEF Patients', type: 'patient-group', patientCount: 847, connectionStrength: 0.73, x: 550, y: 200, color: '#be123c' },
- { id: 'hfpef', name: 'HFpEF Patients', type: 'patient-group', patientCount: 298, connectionStrength: 0.65, x: 350, y: 400, color: '#1d4ed8' },
+ { id: 'hfref', name: 'HFrEF Patients', type: 'patient-group', patientCount: 847, connectionStrength: 0.73, x: 550, y: 200, color: '#7A1A2E' },
+ { id: 'hfpef', name: 'HFpEF Patients', type: 'patient-group', patientCount: 298, connectionStrength: 0.65, x: 350, y: 400, color: '#1E3347' },
  { id: 'hfmref', name: 'HFmrEF Patients', type: 'patient-group', patientCount: 102, connectionStrength: 0.58, x: 150, y: 100, color: '#7c2d12' }
   ];
 
@@ -182,7 +182,7 @@ const CareTeamNetworkGraph: React.FC = () => {
  y1={fromNode.y}
  x2={toNode.x}
  y2={toNode.y}
- stroke={connection.type === 'referral' ? '#2C4A60' : connection.type === 'collaboration' ? '#3b82f6' : '#C8D4DC'}
+ stroke={connection.type === 'referral' ? '#2C4A60' : connection.type === 'collaboration' ? '#2C4A60' : '#C8D4DC'}
  strokeWidth={isHighlighted ? getConnectionWidth(connection) * 2 : getConnectionWidth(connection)}
  opacity={isHighlighted ? 1 : getConnectionOpacity(connection)}
  strokeDasharray={connection.type === 'consultation' ? '5,5' : 'none'}

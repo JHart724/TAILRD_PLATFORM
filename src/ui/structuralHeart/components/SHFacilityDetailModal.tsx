@@ -37,9 +37,9 @@ const formatMoney = (amount: number): string => {
 
 const getCategoryColor = (category: string): string => {
   const colors: Record<string, string> = {
- 'Valve Therapy': '#14B8A6',
+ 'Valve Therapy': '#4A6880',
  'Procedures': '#9B2438', 
- 'Phenotypes': '#3B82F6',
+ 'Phenotypes': '#2C4A60',
  '340B': '#4A6880'
   };
   return colors[category] || '#6B7280';

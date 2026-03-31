@@ -182,8 +182,8 @@ const STSRiskCalculator: React.FC<STSRiskCalculatorProps> = ({
 
   const getRiskColor = (category: string): string => {
  switch (category) {
- case 'Low': return 'text-[#2C4A60]';
- case 'Intermediate': return 'text-[#6B7280]';
+ case 'Low': return 'text-[#2D6147]';
+ case 'Intermediate': return 'text-[#8B6914]';
  case 'High': return 'text-red-600';
  default: return 'text-gray-600';
  }

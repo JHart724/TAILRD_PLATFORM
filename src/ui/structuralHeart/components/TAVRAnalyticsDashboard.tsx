@@ -304,7 +304,7 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  <button
  onClick={() => setIsLiveMode(!isLiveMode)}
  className={`p-2 rounded-lg transition-colors ${
- isLiveMode ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-gray-100 text-gray-700'
+ isLiveMode ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-gray-100 text-gray-700'
  }`}
  >
  <RefreshCw className={`w-4 h-4 ${isLiveMode ? 'animate-spin' : ''}`} />
@@ -661,9 +661,9 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  <div className="text-sm font-medium text-titanium-700">{metric.measure}</div>
  <div className={`px-2 py-1 rounded text-xs font-medium ${
  metric.category === 'Mortality' ? 'bg-red-100 text-red-700' :
- metric.category === 'Morbidity' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ metric.category === 'Morbidity' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  metric.category === 'Efficiency' ? 'bg-chrome-100 text-chrome-700' :
- 'bg-[#C8D4DC] text-[#2C4A60]'
+ 'bg-[#F0F7F4] text-[#2D6147]'
  }`}>
  {metric.category}
  </div>

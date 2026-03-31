@@ -112,7 +112,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.92, 
  x: 300, 
  y: 120, 
- color: '#0d9488',
+ color: '#3E6275',
  status: 'busy'
  },
  { 
@@ -125,7 +125,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.85, 
  x: 500, 
  y: 180, 
- color: '#0f766e',
+ color: '#2C4A60',
  status: 'active'
  },
  { 
@@ -137,7 +137,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.88, 
  x: 150, 
  y: 320, 
- color: '#dc2626',
+ color: '#7A1A2E',
  status: 'critical'
  },
  
@@ -179,7 +179,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.91, 
  x: 250, 
  y: 220, 
- color: '#166534',
+ color: '#2D6147',
  status: 'available'
  },
  { 
@@ -192,7 +192,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.73, 
  x: 400, 
  y: 280, 
- color: '#14532d',
+ color: '#1E3D2E',
  status: 'active'
  },
  
@@ -243,7 +243,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.86, 
  x: 550, 
  y: 120, 
- color: '#166534'
+ color: '#2D6147'
  },
  { 
  id: 'laac-devices', 
@@ -254,7 +254,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.91, 
  x: 450, 
  y: 40, 
- color: '#14532d'
+ color: '#1E3D2E'
  },
  
  // Monitoring Systems
@@ -307,7 +307,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.92, 
  x: 50, 
  y: 80, 
- color: '#dc2626',
+ color: '#7A1A2E',
  isHighRisk: true
  },
  { 
@@ -340,7 +340,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  connectionStrength: 0.89, 
  x: 150, 
  y: 380, 
- color: '#dc2626',
+ color: '#7A1A2E',
  isHighRisk: true
  },
  
@@ -611,10 +611,10 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  switch (connection.type) {
  case 'device-flow': return '#2C4A60';
  case 'monitoring-pathway': return '#4A6880';
- case 'alert-response': return '#dc2626';
- case 'emergency-pathway': return '#b91c1c';
+ case 'alert-response': return '#7A1A2E';
+ case 'emergency-pathway': return '#7A1A2E';
  case 'anticoag-referral': return '#7A1A2E';
- case 'coordination': return '#0d9488';
+ case 'coordination': return '#3E6275';
  case 'follow-up': return '#2C4A60';
  default: return '#6b7280';
  }
@@ -662,7 +662,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  active: '#4A6880',
  busy: '#C8D4DC',
  available: '#6b7280',
- critical: '#dc2626'
+ critical: '#7A1A2E'
  };
  return colors[node.status];
   };
@@ -671,7 +671,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  switch (status) {
  case 'good': return '#4A6880';
  case 'warning': return '#C8D4DC';
- case 'critical': return '#dc2626';
+ case 'critical': return '#7A1A2E';
  default: return null;
  }
   };
@@ -721,7 +721,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  
  <button
  onClick={exportNetworkData}
- className="p-2 rounded-lg bg-[#e0eaf3] text-[#2C4A60] hover:bg-[#C8D4DC] transition-colors"
+ className="p-2 rounded-lg bg-[#F0F7F4] text-[#2D6147] hover:bg-[#C8D4DC] transition-colors"
  >
  <Download className="w-4 h-4" />
  </button>
@@ -865,7 +865,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  cx={node.x + nodeSize - 3}
  cy={node.y - nodeSize + 3}
  r="4"
- fill="#dc2626"
+ fill="#7A1A2E"
  className="animate-pulse"
  />
  )}
@@ -972,8 +972,8 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  )}
  {selectedNode.status && (
  <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${
- selectedNode.status === 'active' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
- selectedNode.status === 'busy' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ selectedNode.status === 'active' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ selectedNode.status === 'busy' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  selectedNode.status === 'critical' ? 'bg-red-100 text-red-700' :
  'bg-gray-100 text-gray-700'
  }`}>
@@ -982,8 +982,8 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  )}
  {selectedNode.batteryStatus && (
  <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ml-2 ${
- selectedNode.batteryStatus === 'good' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
- selectedNode.batteryStatus === 'warning' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ selectedNode.batteryStatus === 'good' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ selectedNode.batteryStatus === 'warning' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-red-100 text-red-700'
  }`}>
  {selectedNode.batteryStatus.toUpperCase()} BATTERY
@@ -1049,7 +1049,7 @@ const EPDeviceNetworkVisualization: React.FC = () => {
  <div className="flex items-center gap-2">
  <span className="text-titanium-500">{conn.patientFlow} pts</span>
  {conn.avgResponseTime && (
- <span className={`text-xs px-1 rounded ${conn.avgResponseTime <= 24 ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>
+ <span className={`text-xs px-1 rounded ${conn.avgResponseTime <= 24 ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>
  {conn.avgResponseTime < 24 ? `${toFixed(conn.avgResponseTime, 1)}h` : `${toFixed(conn.avgResponseTime / 24, 1)}d`}
  </span>
  )}

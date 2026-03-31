@@ -100,7 +100,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  connectionStrength: 0.82, 
  x: 80, 
  y: 180, 
- color: '#dc2626',
+ color: '#7A1A2E',
  status: 'active'
  },
  
@@ -116,7 +116,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  connectionStrength: 0.89, 
  x: 220, 
  y: 120, 
- color: '#dc2626',
+ color: '#7A1A2E',
  status: 'busy'
  },
  { 
@@ -130,7 +130,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  connectionStrength: 0.93, 
  x: 360, 
  y: 80, 
- color: '#b91c1c',
+ color: '#7A1A2E',
  status: 'active'
  },
  
@@ -164,7 +164,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  connectionStrength: 0.94, 
  x: 380, 
  y: 220, 
- color: '#991b1b',
+ color: '#5C1022',
  status: 'available'
  },
  
@@ -194,7 +194,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  connectionStrength: 0.95, 
  x: 320, 
  y: 350, 
- color: '#b91c1c',
+ color: '#7A1A2E',
  status: 'active'
  },
  
@@ -210,7 +210,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  connectionStrength: 0.91, 
  x: 480, 
  y: 320, 
- color: '#dc2626',
+ color: '#7A1A2E',
  status: 'available'
  },
  
@@ -240,7 +240,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  connectionStrength: 0.85, 
  x: 120, 
  y: 60, 
- color: '#be123c'
+ color: '#7A1A2E'
  },
  { 
  id: 'mitral-regurg', 
@@ -251,7 +251,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  connectionStrength: 0.78, 
  x: 450, 
  y: 60, 
- color: '#1d4ed8'
+ color: '#1E3347'
  },
  { 
  id: 'tricuspid-disease', 
@@ -285,7 +285,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  connectionStrength: 0.91, 
  x: 420, 
  y: 380, 
- color: '#166534'
+ color: '#2D6147'
  }
   ];
 
@@ -550,13 +550,13 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
 
   const getConnectionColor = (connection: StructuralNetworkConnection) => {
  switch (connection.type) {
- case 'referral': return '#dc2626';
+ case 'referral': return '#7A1A2E';
  case 'evaluation': return '#7A1A2E';
- case 'procedure': return '#b91c1c';
- case 'heart-team': return '#991b1b';
+ case 'procedure': return '#7A1A2E';
+ case 'heart-team': return '#5C1022';
  case 'collaboration': return '#7c2d12';
  case 'surveillance': return '#2C4A60';
- case 'follow-up': return '#0891b2';
+ case 'follow-up': return '#4A6880';
  default: return '#6b7280';
  }
   };
@@ -795,7 +795,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  cx={node.x + nodeSize - 3}
  cy={node.y - nodeSize + 3}
  r="4"
- fill="#dc2626"
+ fill="#7A1A2E"
  className="animate-pulse"
  />
  )}
@@ -892,8 +892,8 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  )}
  {selectedNode.status && (
  <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${
- selectedNode.status === 'active' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
- selectedNode.status === 'busy' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ selectedNode.status === 'active' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ selectedNode.status === 'busy' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-gray-100 text-gray-700'
  }`}>
  {selectedNode.status.toUpperCase()}
@@ -953,7 +953,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  <div className="flex items-center gap-2">
  <span className="text-titanium-500">{conn.patientFlow} pts</span>
  {conn.avgTimeToNext && (
- <span className={`text-xs px-1 rounded ${conn.avgTimeToNext <= 7 ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>
+ <span className={`text-xs px-1 rounded ${conn.avgTimeToNext <= 7 ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>
  {conn.avgTimeToNext}d
  </span>
  )}

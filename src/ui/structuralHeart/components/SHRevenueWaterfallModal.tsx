@@ -28,10 +28,10 @@ const formatMoney = (amount: number): string => {
 const getSubcategoryData = (category: string): SubcategoryData[] => {
   const data: Record<string, SubcategoryData[]> = {
  'Valve Therapy': [
- { name: 'TAVR Procedures', revenue: 12000000, patientCount: 247, color: '#14B8A6' },
- { name: 'MitraClip Interventions', revenue: 8500000, patientCount: 156, color: '#0D9488' },
- { name: 'TMVR Procedures', revenue: 6200000, patientCount: 89, color: '#0F766E' },
- { name: 'Tricuspid Interventions', revenue: 3100000, patientCount: 67, color: '#0E7490' }
+ { name: 'TAVR Procedures', revenue: 12000000, patientCount: 247, color: '#2C4A60' },
+ { name: 'MitraClip Interventions', revenue: 8500000, patientCount: 156, color: '#8B6914' },
+ { name: 'TMVR Procedures', revenue: 6200000, patientCount: 89, color: '#2D6147' },
+ { name: 'Tricuspid Interventions', revenue: 3100000, patientCount: 67, color: '#4A6880' }
  ],
  Procedures: [
  { name: 'Transcatheter Valve Devices', revenue: 15000000, patientCount: 320, color: '#9B2438' },
@@ -39,13 +39,13 @@ const getSubcategoryData = (category: string): SubcategoryData[] => {
  { name: 'Closure Devices', revenue: 1800000, patientCount: 95, color: '#5C1022' }
  ],
  Phenotypes: [
- { name: 'High-Risk Aortic Stenosis', revenue: 8200000, patientCount: 180, color: '#3B82F6' },
- { name: 'Mitral Regurgitation', revenue: 6100000, patientCount: 140, color: '#2563EB' },
- { name: 'Complex Valve Disease', revenue: 4300000, patientCount: 75, color: '#1E40AF' }
+ { name: 'High-Risk Aortic Stenosis', revenue: 8200000, patientCount: 180, color: '#2C4A60' },
+ { name: 'Mitral Regurgitation', revenue: 6100000, patientCount: 140, color: '#8B6914' },
+ { name: 'Complex Valve Disease', revenue: 4300000, patientCount: 75, color: '#2D6147' }
  ],
  '340B': [
  { name: 'Antithrombotic Therapy', revenue: 850000, patientCount: 380, color: '#4A6880' },
- { name: 'Anticoagulation Management', revenue: 620000, patientCount: 280, color: '#2C4A60' }
+ { name: 'Anticoagulation Management', revenue: 620000, patientCount: 280, color: '#2D6147' }
  ]
   };
   return data[category] || [];

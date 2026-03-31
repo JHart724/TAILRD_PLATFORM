@@ -150,7 +150,7 @@ const RCExecutiveView: React.FC = () => {
  <div className="p-6">
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
  {/* High-Impact DRGs Performance */}
- <div className="bg-gradient-to-r from-[#f0f5fa] to-[#e0eaf3] rounded-lg p-4 border border-[#C8D4DC]">
+ <div className="bg-gradient-to-r from-[#f0f5fa] to-[#F0F5FA] rounded-lg p-4 border border-[#C8D4DC]">
  <div className="flex items-center gap-3 mb-3">
  <DollarSign className="w-8 h-8 text-[#2C4A60]" />
  <div>

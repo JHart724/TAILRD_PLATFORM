@@ -286,8 +286,8 @@ const AnticoagulationSafetyChecker: React.FC = () => {
  switch (status) {
  case 'contraindicated': return 'text-red-800 bg-red-100 border-red-300';
  case 'caution': return 'text-crimson-700 bg-crimson-100 border-crimson-200';
- case 'monitor': return 'text-[#2C4A60] bg-[#e0eaf3] border-[#C8D4DC]';
- case 'safe': return 'text-[#2C4A60] bg-[#e0eaf3] border-[#C8D4DC]';
+ case 'monitor': return 'text-[#2D6147] bg-[#F0F7F4] border-[#D8EDE6]';
+ case 'safe': return 'text-[#2D6147] bg-[#F0F7F4] border-[#D8EDE6]';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };

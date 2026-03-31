@@ -304,8 +304,8 @@ const PeripheralWorklist: React.FC = () => {
 
   const getSeverityColor = (severity: string) => {
  switch (severity) {
- case 'Claudication': return 'bg-[#C8D4DC] text-[#2C4A60]';
- case 'CLI': return 'bg-[#F0F5FA] text-[#6B7280]';
+ case 'Claudication': return 'bg-[#F0F7F4] text-[#2D6147]';
+ case 'CLI': return 'bg-[#FAF6E8] text-[#8B6914]';
  case 'CLTI': return 'bg-red-100 text-red-700';
  default: return 'bg-titanium-100 text-titanium-700';
  }
@@ -315,10 +315,10 @@ const PeripheralWorklist: React.FC = () => {
  switch (status) {
  case 'Screening': return 'bg-chrome-100 text-chrome-700';
  case 'Scheduled': return 'bg-arterial-100 text-arterial-700';
- case 'Pre-procedure': return 'bg-[#F0F5FA] text-[#6B7280]';
+ case 'Pre-procedure': return 'bg-[#FAF6E8] text-[#8B6914]';
  case 'In Progress': return 'bg-chrome-100 text-chrome-700';
- case 'Post-op': return 'bg-[#F0F5FA] text-[#2C4A60]';
- case 'Follow-up': return 'bg-[#C8D4DC] text-[#2C4A60]';
+ case 'Post-op': return 'bg-[#F0F7F4] text-[#2D6147]';
+ case 'Follow-up': return 'bg-[#F0F7F4] text-[#2D6147]';
  case 'Wound Care': return 'bg-red-100 text-red-700';
  default: return 'bg-titanium-100 text-titanium-700';
  }
@@ -326,14 +326,14 @@ const PeripheralWorklist: React.FC = () => {
 
   const getABIColor = (abi: number) => {
  if (abi < 0.4) return 'text-red-600';
- if (abi < 0.7) return 'text-[#6B7280]';
- if (abi < 0.9) return 'text-[#2C4A60]';
+ if (abi < 0.7) return 'text-[#8B6914]';
+ if (abi < 0.9) return 'text-[#8B6914]';
  return 'text-chrome-600';
   };
 
   const getWoundStatusColor = (status?: string) => {
  switch (status) {
- case 'Healing': return 'text-[#2C4A60] bg-[#C8D4DC]';
+ case 'Healing': return 'bg-[#F0F7F4] text-[#2D6147]';
  case 'Infected': return 'text-red-600 bg-red-100';
  case 'Non-healing': return 'text-red-800 bg-red-200';
  case 'None': return 'text-titanium-600 bg-titanium-100';
@@ -370,8 +370,8 @@ const PeripheralWorklist: React.FC = () => {
  <div className="p-2 bg-white rounded border border-titanium-200">
  <div className="text-xs text-titanium-600">WIfI Stage</div>
  <div className={`font-bold ${
- patient.wifiStage <= 2 ? 'text-[#2C4A60]' :
- patient.wifiStage === 3 ? 'text-[#6B7280]' : 'text-red-600'
+ patient.wifiStage <= 2 ? 'text-[#2D6147]' :
+ patient.wifiStage === 3 ? 'text-[#8B6914]' : 'text-red-600'
  }`}>
  Stage {patient.wifiStage}
  </div>
@@ -382,8 +382,8 @@ const PeripheralWorklist: React.FC = () => {
  <div className="p-2 bg-white rounded border border-titanium-200">
  <div className="text-xs text-titanium-600">TASC Grade</div>
  <div className={`font-bold ${
- patient.tascGrade === 'A' ? 'text-[#2C4A60]' :
- patient.tascGrade === 'B' ? 'text-[#6B7280]' :
+ patient.tascGrade === 'A' ? 'text-[#2D6147]' :
+ patient.tascGrade === 'B' ? 'text-[#8B6914]' :
  patient.tascGrade === 'C' ? 'text-red-600' : 'text-red-800'
  }`}>
  Grade {patient.tascGrade}
@@ -396,7 +396,7 @@ const PeripheralWorklist: React.FC = () => {
  {/* Risk Factors */}
  <div>
  <h4 className="font-semibold text-titanium-800 mb-3 flex items-center gap-2">
- <AlertTriangle className="w-4 h-4 text-[#6B7280]" />
+ <AlertTriangle className="w-4 h-4 text-[#8B6914]" />
  Risk Factors
  </h4>
  <div className="space-y-2">
@@ -406,7 +406,7 @@ const PeripheralWorklist: React.FC = () => {
  <span className="text-titanium-600">Smoking:</span>
  <span className={`ml-2 font-medium ${
  patient.smokingStatus === 'Current' ? 'text-red-600' :
- patient.smokingStatus === 'Former' ? 'text-[#6B7280]' : 'text-[#2C4A60]'
+ patient.smokingStatus === 'Former' ? 'text-[#8B6914]' : 'text-[#2D6147]'
  }`}>
  {patient.smokingStatus}
  </span>
@@ -418,8 +418,8 @@ const PeripheralWorklist: React.FC = () => {
  <div className="text-sm">
  <span className="text-titanium-600">Diabetes:</span>
  <span className={`ml-2 font-medium ${
- patient.diabetesControl === 'Good' ? 'text-[#2C4A60]' :
- patient.diabetesControl === 'Fair' ? 'text-[#6B7280]' :
+ patient.diabetesControl === 'Good' ? 'text-[#2D6147]' :
+ patient.diabetesControl === 'Fair' ? 'text-[#8B6914]' :
  patient.diabetesControl === 'Poor' ? 'text-red-600' : 'text-titanium-600'
  }`}>
  {patient.diabetesControl}
@@ -462,8 +462,8 @@ const PeripheralWorklist: React.FC = () => {
  <div className="text-xs text-titanium-600">Urgency</div>
  <span className={`text-xs px-2 py-1 rounded font-medium ${
  patient.procedurePlan.urgency === 'Emergent' ? 'bg-red-100 text-red-700' :
- patient.procedurePlan.urgency === 'Urgent' ? 'bg-[#F0F5FA] text-[#6B7280]' :
- 'bg-[#C8D4DC] text-[#2C4A60]'
+ patient.procedurePlan.urgency === 'Urgent' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ 'bg-[#F0F7F4] text-[#2D6147]'
  }`}>
  {patient.procedurePlan.urgency}
  </span>

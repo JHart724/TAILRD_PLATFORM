@@ -92,9 +92,9 @@ const HFRevenueOpportunityModal: React.FC<HFRevenueOpportunityModalProps> = ({
   });
 
   // Colors for charts
-  const drgColors = ['#0EA5E9', '#9B2438', '#4A6880', '#6B7280', '#EF4444'];
+  const drgColors = ['#6B8EA8', '#9B2438', '#4A6880', '#6B7280', '#9B2438'];
   const timelineColors = {
- 'Due Today': '#EF4444',
+ 'Due Today': '#9B2438',
  'Due This Week': '#6B7280', 
  'Due This Month': '#4A6880',
  'Due Later': '#6B7280'

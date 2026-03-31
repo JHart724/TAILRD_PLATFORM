@@ -465,7 +465,7 @@ const SHValvePhenotypeClassification: React.FC<{ patientData?: PatientContext }>
  <span className={`ml-auto text-xs font-bold px-2 py-0.5 rounded ${
  results.interventionTiming.class === 'Class I' ? 'bg-red-500 text-red-400' :
  results.interventionTiming.class === 'Class IIa' ? 'bg-[#F0F5FA]/20 text-[#6B7280]' :
- results.interventionTiming.class === 'Class IIb' ? 'bg-bg-[#F0F5FA] text-[#6B7280]' :
+ results.interventionTiming.class === 'Class IIb' ? 'bg-bg-[#FAF6E8] text-[#8B6914]' :
  'bg-white text-titanium-400'
  }`}>{results.interventionTiming.class}</span>
  </h4>

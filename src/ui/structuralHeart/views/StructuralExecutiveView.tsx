@@ -491,8 +491,8 @@ const StructuralExecutiveView: React.FC = () => {
 	<GapIntelligenceCard data={{
 	  totalGaps: 8,
 	  categories: [
-	    { name: 'Therapy', patients: 180, color: '#3b82f6' },
-	    { name: 'Safety', patients: 90, color: '#ef4444' },
+	    { name: 'Therapy', patients: 180, color: '#2C4A60' },
+	    { name: 'Safety', patients: 90, color: '#9B2438' },
 	    { name: 'Growth', patients: 220, color: '#4A6880' },
 	    { name: 'Quality', patients: 340, color: '#C8D4DC' },
 	  ],

@@ -279,8 +279,8 @@ const EPPhenotypeClassification: React.FC<{ patientData?: PatientContext }> = ({
  switch (severity) {
  case 'Critical': return 'text-red-700 bg-red-50 border-red-300';
  case 'High': return 'text-red-600 bg-red-50 border-red-200';
- case 'Moderate': return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
- case 'Low': return 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]';
+ case 'Moderate': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
+ case 'Low': return 'text-[#2D6147] bg-[#F0F7F4] border-[#2C4A60]';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };

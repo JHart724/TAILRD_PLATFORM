@@ -206,9 +206,9 @@ export const EPExecutiveSummary: React.FC = () => {
  <Line 
  type="monotone" 
  dataKey="value" 
- stroke={selectedKPI.color === 'blue' ? '#3b82f6' : selectedKPI.color === 'green' ? '#2C4A60' : selectedKPI.color === 'carmona' ? '#9B2438' : '#ef4444'}
+ stroke={selectedKPI.color === 'blue' ? '#2C4A60' : selectedKPI.color === 'green' ? '#2C4A60' : selectedKPI.color === 'carmona' ? '#9B2438' : '#9B2438'}
  strokeWidth={3}
- dot={{ fill: selectedKPI.color === 'blue' ? '#3b82f6' : selectedKPI.color === 'green' ? '#2C4A60' : selectedKPI.color === 'carmona' ? '#9B2438' : '#ef4444', strokeWidth: 2, r: 5 }}
+ dot={{ fill: selectedKPI.color === 'blue' ? '#2C4A60' : selectedKPI.color === 'green' ? '#2C4A60' : selectedKPI.color === 'carmona' ? '#9B2438' : '#9B2438', strokeWidth: 2, r: 5 }}
  activeDot={{ r: 7 }}
  />
  </LineChart>

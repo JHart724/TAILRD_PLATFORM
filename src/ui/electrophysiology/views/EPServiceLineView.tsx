@@ -54,15 +54,15 @@ const ElectrophysiologyAnalytics: React.FC = () => (
  </h3>
  <p className="text-titanium-600 mb-6">Comprehensive electrophysiology analytics including AFib ablations, LAAC procedures, device implantations, arrhythmia management, and anticoagulation optimization.</p>
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
- <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#F0F5FA] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">AFib Excellence</h4>
  <p className="text-sm text-titanium-600">Advanced atrial fibrillation management with optimal ablation outcomes and stroke prevention</p>
  </div>
- <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#F0F5FA] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Device Innovation</h4>
  <p className="text-sm text-titanium-600">Comprehensive device management including implants, extractions, and remote monitoring</p>
  </div>
- <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#F0F5FA] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">LAAC Program</h4>
  <p className="text-sm text-titanium-600">Left atrial appendage closure program with comprehensive stroke prevention analytics</p>
  </div>
@@ -81,11 +81,11 @@ const EPProcedureAnalytics: React.FC = () => (
  </h3>
  <p className="text-titanium-600 mb-6">Comprehensive electrophysiology procedure performance analytics.</p>
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#F0F5FA] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Ablation Procedures</h4>
  <p className="text-sm text-titanium-600">AFib, AFL, VT, and SVT ablation success rates, recurrence tracking, and complications</p>
  </div>
- <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#F0F5FA] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Device Procedures</h4>
  <p className="text-sm text-titanium-600">Pacemaker, ICD, CRT implants, upgrades, and lead extraction analytics</p>
  </div>
@@ -104,11 +104,11 @@ const EPProviderPerformance: React.FC = () => (
  </h3>
  <p className="text-titanium-600 mb-6">Individual electrophysiologist performance metrics and outcomes tracking.</p>
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#F0F5FA] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Ablation Specialists</h4>
  <p className="text-sm text-titanium-600">AFib ablation success rates, procedure times, and complication tracking</p>
  </div>
- <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#F0F5FA] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Device Specialists</h4>
  <p className="text-sm text-titanium-600">Device implant success, extraction outcomes, and programming optimization</p>
  </div>
@@ -127,11 +127,11 @@ const ArrhythmiaManagement: React.FC = () => (
  </h3>
  <p className="text-titanium-600 mb-6">Comprehensive arrhythmia management and treatment optimization analytics.</p>
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#F0F5FA] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">AFib Management</h4>
  <p className="text-sm text-titanium-600">Rate vs rhythm control strategies, anticoagulation management, and outcomes</p>
  </div>
- <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#F0F5FA] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">VT/VF Management</h4>
  <p className="text-sm text-titanium-600">Ventricular arrhythmia management, ICD therapy optimization, and ablation outcomes</p>
  </div>
@@ -150,15 +150,15 @@ const EPQualityMetrics: React.FC = () => (
  </h3>
  <p className="text-titanium-600 mb-6">Comprehensive quality indicators for electrophysiology programs.</p>
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
- <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#F0F5FA] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Ablation Quality</h4>
  <p className="text-sm text-titanium-600">Success rates, freedom from arrhythmia, and procedural complications</p>
  </div>
- <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#F0F5FA] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Device Quality</h4>
  <p className="text-sm text-titanium-600">Implant success rates, lead performance, and device longevity metrics</p>
  </div>
- <div className="bg-gradient-to-br from-[#f0f5fa] to-[#e0eaf3] p-6 rounded-lg">
+ <div className="bg-gradient-to-br from-[#f0f5fa] to-[#F0F5FA] p-6 rounded-lg">
  <h4 className="font-semibold text-titanium-900 mb-2">Stroke Prevention</h4>
  <p className="text-sm text-titanium-600">Anticoagulation adherence, LAAC outcomes, and stroke risk reduction</p>
  </div>
@@ -190,6 +190,8 @@ type EPServiceLineTab =
 
 interface TabGroup {
   label: string;
+  color: string;
+  colorBg: string;
   tabs: Array<{ id: string; label: string; icon: React.ElementType; description: string }>;
 }
 
@@ -205,6 +207,8 @@ const EPServiceLineView: React.FC = () => {
   const tabGroups: TabGroup[] = [
  {
  label: 'Clinical Analytics',
+ color: '#2C4A60',
+ colorBg: 'rgba(44, 74, 96, 0.08)',
  tabs: [
  { id: 'analytics', label: 'EP Analytics', icon: Target, description: 'Comprehensive electrophysiology analytics dashboard' },
  { id: 'heatmap', label: 'Patient Risk Heatmap', icon: Grid3X3, description: 'EP patient risk visualization matrix' },
@@ -215,6 +219,8 @@ const EPServiceLineView: React.FC = () => {
  },
  {
  label: 'Gap & Opportunity',
+ color: '#C4982A',
+ colorBg: 'rgba(196, 152, 42, 0.10)',
  tabs: [
  { id: 'gap-detection', label: 'Gap Detection (38-Gap)', icon: Search, description: 'AI-driven EP clinical gap detection' },
  { id: 'outcomes-trends', label: 'Outcomes Trends', icon: TrendingUp, description: 'EP outcomes trends and longitudinal analysis' },
@@ -224,6 +230,8 @@ const EPServiceLineView: React.FC = () => {
  },
  {
  label: 'Clinical Tools',
+ color: '#1A6878',
+ colorBg: 'rgba(26, 104, 120, 0.08)',
  tabs: [
  { id: 'arrhythmia', label: 'Arrhythmia Management', icon: Activity, description: 'Comprehensive arrhythmia treatment optimization' },
  { id: 'laac-risk', label: 'LAAC Risk Dashboard', icon: Heart, description: 'Left atrial appendage closure risk assessment' },
@@ -233,6 +241,8 @@ const EPServiceLineView: React.FC = () => {
  },
  {
  label: 'Care Coordination',
+ color: '#9B2438',
+ colorBg: 'rgba(155, 36, 56, 0.08)',
  tabs: [
  { id: 'device-network', label: 'Device Network', icon: Network, description: 'EP device utilization and network analysis' },
  { id: 'network', label: 'Care Team Network', icon: Network, description: 'EP care team collaboration and referral patterns' },
@@ -240,6 +250,8 @@ const EPServiceLineView: React.FC = () => {
  },
  {
  label: 'Outcomes & Reporting',
+ color: '#2D6147',
+ colorBg: 'rgba(45, 97, 71, 0.10)',
  tabs: [
  { id: 'quality', label: 'Quality Metrics', icon: Award, description: 'EP quality indicators and outcome measures' },
  { id: 'equity-analysis', label: 'Equity Analysis', icon: PieChart, description: 'Health equity analysis across patient demographics' },
@@ -299,7 +311,7 @@ const EPServiceLineView: React.FC = () => {
  <div key={group.label}>
  {groupIdx > 0 && <div className="border-t border-titanium-100 my-4" />}
  <div className="mb-3">
- <span className="text-xs font-semibold uppercase tracking-wider text-titanium-400">{group.label}</span>
+ <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: group.color }}>{group.label}</span>
  </div>
  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6 gap-3 mb-2">
  {group.tabs.map((tab) => {
@@ -311,18 +323,32 @@ const EPServiceLineView: React.FC = () => {
  onClick={() => handleTabChange(tab.id as EPServiceLineTab)}
  className={`group relative p-4 rounded-xl border transition-all duration-300 ${
  isActive
- ? 'bg-[#F0F5FA] border-[#C8D4DC] text-[#2C4A60] shadow-lg scale-105'
+ ? 'shadow-lg scale-105'
  : 'bg-white border-titanium-200 text-titanium-600 hover:bg-white hover:scale-105 hover:shadow-lg'
  }`}
+ style={isActive ? {
+ background: group.colorBg,
+ borderColor: group.color,
+ color: group.color,
+ } : {}}
  >
  <div className="flex flex-col items-center gap-2">
- <Icon className={`w-6 h-6 ${isActive ? 'text-[#2C4A60]' : 'text-titanium-600 group-hover:text-titanium-800'}`} />
- <span className={`text-xs font-semibold text-center leading-tight ${isActive ? 'text-[#2C4A60]' : 'text-titanium-600 group-hover:text-titanium-800'}`}>
+ <Icon
+ className="w-6 h-6"
+ style={{ color: isActive ? group.color : undefined }}
+ />
+ <span
+ className={`text-xs font-semibold text-center leading-tight ${!isActive ? 'text-titanium-600 group-hover:text-titanium-800' : ''}`}
+ style={isActive ? { color: group.color } : {}}
+ >
  {tab.label}
  </span>
  </div>
  {isActive && (
- <div className="absolute inset-0 bg-gradient-to-r from-[#4A6880]/20 to-[#2C4A60]/20 rounded-xl opacity-50" />
+ <div
+ className="absolute bottom-0 left-0 right-0 h-0.5 rounded-b-xl"
+ style={{ background: group.color }}
+ />
  )}
  </button>
  );

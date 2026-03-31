@@ -313,7 +313,7 @@ const PhenotypeDetailModal: React.FC<PhenotypeDetailModalProps> = ({
  </div>
  <div className={`px-2 py-1 rounded text-xs font-medium ${
  criterion.weight === 'major' ? 'bg-red-100 text-red-700' :
- criterion.weight === 'minor' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ criterion.weight === 'minor' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-chrome-100 text-chrome-700'
  }`}>
  {criterion.weight}
@@ -344,8 +344,8 @@ const PhenotypeDetailModal: React.FC<PhenotypeDetailModalProps> = ({
  <div className="flex items-center gap-2 mb-1">
  <span className="font-medium text-titanium-900">{evidence.category}</span>
  <span className={`px-2 py-0.5 rounded text-xs font-medium ${
- evidence.strength === 'strong' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
- evidence.strength === 'moderate' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ evidence.strength === 'strong' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ evidence.strength === 'moderate' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-titanium-100 text-titanium-700'
  }`}>
  {evidence.strength}

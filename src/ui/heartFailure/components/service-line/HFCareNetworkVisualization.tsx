@@ -93,7 +93,7 @@ const HFCareNetworkVisualization: React.FC = () => {
  connectionStrength: 0.95, 
  x: 100, 
  y: 150, 
- color: '#1e40af',
+ color: '#1E3347',
  status: 'active'
  },
  { 
@@ -106,7 +106,7 @@ const HFCareNetworkVisualization: React.FC = () => {
  connectionStrength: 0.92, 
  x: 300, 
  y: 120, 
- color: '#1d4ed8',
+ color: '#1E3347',
  status: 'active'
  },
  { 
@@ -119,7 +119,7 @@ const HFCareNetworkVisualization: React.FC = () => {
  connectionStrength: 0.82, 
  x: 500, 
  y: 180, 
- color: '#2563eb',
+ color: '#2C4A60',
  status: 'busy'
  },
  { 
@@ -148,7 +148,7 @@ const HFCareNetworkVisualization: React.FC = () => {
  connectionStrength: 0.96, 
  x: 350, 
  y: 80, 
- color: '#dc2626',
+ color: '#7A1A2E',
  status: 'active'
  },
  { 
@@ -204,7 +204,7 @@ const HFCareNetworkVisualization: React.FC = () => {
  connectionStrength: 0.94, 
  x: 200, 
  y: 50, 
- color: '#dc2626',
+ color: '#7A1A2E',
  isHighRisk: false
  },
  { 
@@ -227,7 +227,7 @@ const HFCareNetworkVisualization: React.FC = () => {
  connectionStrength: 0.79, 
  x: 500, 
  y: 60, 
- color: '#ca8a04'
+ color: '#8B6914'
  },
  { 
  id: 'sglt2i-pathway', 
@@ -252,7 +252,7 @@ const HFCareNetworkVisualization: React.FC = () => {
  connectionStrength: 0.85, 
  x: 50, 
  y: 250, 
- color: '#0891b2',
+ color: '#4A6880',
  status: 'active'
  },
  { 
@@ -289,7 +289,7 @@ const HFCareNetworkVisualization: React.FC = () => {
  connectionStrength: 0.69, 
  x: 50, 
  y: 80, 
- color: '#be123c',
+ color: '#7A1A2E',
  isHighRisk: true
  },
  { 
@@ -301,7 +301,7 @@ const HFCareNetworkVisualization: React.FC = () => {
  connectionStrength: 0.85, 
  x: 450, 
  y: 350, 
- color: '#1d4ed8'
+ color: '#1E3347'
  },
  { 
  id: 'new-diagnosis', 
@@ -325,7 +325,7 @@ const HFCareNetworkVisualization: React.FC = () => {
  connectionStrength: 0.87, 
  x: 300, 
  y: 250, 
- color: '#166534'
+ color: '#2D6147'
  }
   ];
 
@@ -541,10 +541,10 @@ const HFCareNetworkVisualization: React.FC = () => {
 
   const getConnectionColor = (connection: HFNetworkConnection) => {
  switch (connection.type) {
- case 'gdmt-pathway': return '#dc2626';
- case 'readmission-prevention': return '#b91c1c';
- case 'transition': return '#1d4ed8';
- case 'monitoring': return '#0891b2';
+ case 'gdmt-pathway': return '#7A1A2E';
+ case 'readmission-prevention': return '#7A1A2E';
+ case 'transition': return '#1E3347';
+ case 'monitoring': return '#4A6880';
  case 'coordination': return '#2C4A60';
  case 'follow-up': return '#7A1A2E';
  default: return '#6b7280';
@@ -784,7 +784,7 @@ const HFCareNetworkVisualization: React.FC = () => {
  cx={node.x + nodeSize - 3}
  cy={node.y - nodeSize + 3}
  r="4"
- fill="#dc2626"
+ fill="#7A1A2E"
  className="animate-pulse"
  />
  )}
@@ -881,8 +881,8 @@ const HFCareNetworkVisualization: React.FC = () => {
  )}
  {selectedNode.status && (
  <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${
- selectedNode.status === 'active' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
- selectedNode.status === 'busy' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ selectedNode.status === 'active' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ selectedNode.status === 'busy' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-gray-100 text-gray-700'
  }`}>
  {selectedNode.status.toUpperCase()}
@@ -940,7 +940,7 @@ const HFCareNetworkVisualization: React.FC = () => {
  <div className="flex items-center gap-2">
  <span className="text-titanium-500">{conn.patientFlow} pts</span>
  {conn.avgResponseTime && (
- <span className={`text-xs px-1 rounded ${conn.avgResponseTime <= 24 ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>
+ <span className={`text-xs px-1 rounded ${conn.avgResponseTime <= 24 ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>
  {conn.avgResponseTime < 24 ? `${toFixed(conn.avgResponseTime, 1)}h` : `${toFixed(conn.avgResponseTime / 24, 1)}d`}
  </span>
  )}

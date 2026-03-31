@@ -17,13 +17,13 @@ export const CHART_COLORS = {
   primary: '#2C4A60',
   secondary: '#4A6880',
   warning: '#6B7280',
-  danger: '#EF4444',
+  danger: '#9B2438',
   carmona: '#9B2438',
   cyan: '#C8D4DC',
   medical: {
  blue: '#2C4A60',
  green: '#4A6880',
- red: '#DC2626',
+ red: '#7A1A2E',
  amber: '#6B7280',
  carmona: '#7A1A2E',
  indigo: '#4A6880'

@@ -170,8 +170,8 @@ const EPRiskStratification: React.FC = () => {
 
   const getRiskColor = (category: string, scoreType: string) => {
  const baseColors = {
- Low: scoreType === 'stroke' ? 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]' : 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]',
- Moderate: 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]',
+ Low: scoreType === 'stroke' ? 'text-[#2D6147] bg-[#F0F7F4] border-[#2C4A60]' : 'text-[#2D6147] bg-[#F0F7F4] border-[#2C4A60]',
+ Moderate: 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]',
  High: scoreType === 'stroke' ? 'text-red-600 bg-red-50 border-red-200' : 'text-red-600 bg-red-50 border-red-200'
  };
  return baseColors[category as keyof typeof baseColors] || 'text-titanium-600 bg-titanium-50 border-titanium-200';

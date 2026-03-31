@@ -204,9 +204,9 @@ RISK ASSESSMENT:
   const getSyntaxColor = (complexity: string) => {
  switch (complexity) {
  case 'low':
- return 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]';
+ return 'text-[#2D6147] bg-[#F0F7F4] border-[#2C4A60]';
  case 'intermediate':
- return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
+ return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
  case 'high':
  return 'text-red-700 bg-red-50 border-red-200';
  default:
@@ -256,7 +256,7 @@ RISK ASSESSMENT:
  <div>
  <h3 className="text-lg font-semibold text-titanium-800 mb-3">Conduit Selection</h3>
  <div className="space-y-3">
- <div className="bg-[#C8D4DC] border border-[#2C4A60] rounded-lg p-3">
+ <div className="bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg p-3">
  <div className="flex items-center justify-between">
  <div>
  <span className="font-medium text-[#2C4A60]">LIMA to LAD</span>
@@ -488,7 +488,7 @@ RISK ASSESSMENT:
  <div className={`rounded-lg border p-4 ${
  casePlan.complications.riskLevel === 'high' ? 'bg-red-50 border-red-200' :
  casePlan.complications.riskLevel === 'medium' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
- 'bg-[#C8D4DC] border-[#2C4A60]'
+ 'bg-[#F0F7F4] border-[#D8EDE6]'
  }`}>
  <div className="mb-3">
  <label className="block text-sm font-medium mb-2">Risk Level</label>

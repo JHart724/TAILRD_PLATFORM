@@ -189,7 +189,7 @@ const ValvularServiceLineView: React.FC = () => {
                         <span className="font-medium text-titanium-900">{item.factor}</span>
                         <span className={`text-xs px-2 py-1 rounded-full ${
                           item.weight === 'Critical' ? 'bg-red-100 text-red-700' :
-                          item.weight === 'High' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+                          item.weight === 'High' ? 'bg-[#FAF6E8] text-[#8B6914]' :
                           'bg-chrome-100 text-chrome-700'
                         }`}>
                           {item.weight}
@@ -398,7 +398,7 @@ const ValvularServiceLineView: React.FC = () => {
                 { metric: 'Paravalvular Leak', value: '3.1%', benchmark: '<5.0%', met: true },
                 { metric: '30-Day Readmission', value: '7.8%', benchmark: '<10%', met: true }
               ].map((item, index) => (
-                <div key={item.metric} className={`p-6 rounded-xl ${item.met ? 'bg-[#C8D4DC] border-[#2C4A60]' : 'bg-red-50 border-red-200'} border`}>
+                <div key={item.metric} className={`p-6 rounded-xl ${item.met ? 'bg-[#F0F7F4] border-[#D8EDE6]' : 'bg-red-50 border-red-200'} border`}>
                   <div className="text-2xl font-bold text-titanium-900 mb-1">{item.value}</div>
                   <div className="font-medium text-titanium-800 text-sm">{item.metric}</div>
                   <div className={`text-xs mt-2 ${item.met ? 'text-[#2C4A60]' : 'text-red-600'}`}>
@@ -466,7 +466,7 @@ const ValvularServiceLineView: React.FC = () => {
                       <div className="flex items-center gap-3">
                         <span className="font-medium text-titanium-900">{item.value}</span>
                         <span className={`text-xs px-2 py-1 rounded-full ${
-                          item.status === 'Excellent' ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-chrome-100 text-chrome-700'
+                          item.status === 'Excellent' ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-chrome-100 text-chrome-700'
                         }`}>{item.percentile}</span>
                       </div>
                     </div>

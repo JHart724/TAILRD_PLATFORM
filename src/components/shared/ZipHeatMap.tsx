@@ -273,7 +273,7 @@ const ZipHeatMap: React.FC<ZipHeatMapProps> = ({
  switch (riskLevel) {
  case 'Low': return '#2C4A60';
  case 'Medium': return '#6B7280';
- case 'High': return '#EF4444';
+ case 'High': return '#9B2438';
  default: return '#9CA3AF';
  }
   };

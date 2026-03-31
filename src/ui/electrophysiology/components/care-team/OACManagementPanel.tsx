@@ -205,7 +205,7 @@ const OACManagementPanel: React.FC = () => {
 
   const getAdherenceColor = (adherence: string) => {
  switch (adherence) {
- case 'Excellent': return 'text-[#2C4A60] bg-[#C8D4DC]';
+ case 'Excellent': return 'text-[#2D6147] bg-[#F0F7F4]';
  case 'Good': return 'text-chrome-700 bg-chrome-100';
  case 'Poor': return 'text-red-700 bg-red-100';
  default: return 'text-titanium-700 bg-titanium-100';
@@ -215,12 +215,12 @@ const OACManagementPanel: React.FC = () => {
   const getRiskColor = (score: number, isStroke: boolean) => {
  if (isStroke) {
  if (score >= 4) return 'text-red-700 bg-red-100';
- if (score >= 2) return 'text-[#6B7280] bg-[#F0F5FA]';
- return 'text-[#2C4A60] bg-[#C8D4DC]';
+ if (score >= 2) return 'text-[#8B6914] bg-[#FAF6E8]';
+ return 'text-[#2D6147] bg-[#F0F7F4]';
  } else {
  if (score >= 3) return 'text-red-700 bg-red-100';
- if (score >= 2) return 'text-[#6B7280] bg-[#F0F5FA]';
- return 'text-[#2C4A60] bg-[#C8D4DC]';
+ if (score >= 2) return 'text-[#8B6914] bg-[#FAF6E8]';
+ return 'text-[#2D6147] bg-[#F0F7F4]';
  }
   };
 
@@ -228,7 +228,7 @@ const OACManagementPanel: React.FC = () => {
  const [min, max] = target.split('-').map(Number);
  if (inr < min) return { status: 'Low', color: 'text-red-600 bg-red-100' };
  if (inr > max) return { status: 'High', color: 'text-red-600 bg-red-100' };
- return { status: 'In Range', color: 'text-[#2C4A60] bg-[#C8D4DC]' };
+ return { status: 'In Range', color: 'text-[#2D6147] bg-[#F0F7F4]' };
   };
 
   const filteredPatients = useMemo(() => {
@@ -370,7 +370,7 @@ const OACManagementPanel: React.FC = () => {
  </div>
  
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
- <div className="p-4 bg-[#C8D4DC] border border-[#2C4A60] rounded-lg">
+ <div className="p-4 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg">
  <div className="font-medium text-[#2C4A60] mb-2">Low Risk</div>
  <div className="text-sm text-[#2C4A60] mb-2">CHA₂DS₂-VASc ≤2 OR HAS-BLED ≥3</div>
  <div className="text-xs text-[#2C4A60]">

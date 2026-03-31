@@ -53,13 +53,13 @@ const PredictiveMetricsBanner: React.FC<PredictiveMetricsBannerProps> = ({ data 
             <div className="text-xs text-[#2C4A60] mt-0.5">actionable revenue (of ${(data.totalIdentifiedRevenue / 1_000_000).toFixed(1)}M total)</div>
           </div>
 
-          <div className="bg-[#F0F5FA]/70 border border-[#C8D4DC] rounded-xl p-4">
+          <div className="bg-[#FDF2F3]/70 border border-[#F5D0D6] rounded-xl p-4">
             <div className="flex items-center gap-1.5 mb-1">
-              <TrendingUp className="w-3.5 h-3.5 text-[#6B7280]" />
-              <span className="text-xs font-semibold text-[#6B7280] uppercase tracking-wide">Rapid Deterioration</span>
+              <TrendingUp className="w-3.5 h-3.5 text-[#9B2438]" />
+              <span className="text-xs font-semibold text-[#9B2438] uppercase tracking-wide">Rapid Deterioration</span>
             </div>
-            <div className="text-2xl font-bold text-[#6B7280]">{data.rapidDeteriorationCount}</div>
-            <div className="text-xs text-[#6B7280] mt-0.5">patients — immediate action indicated</div>
+            <div className="text-2xl font-bold text-[#9B2438]">{data.rapidDeteriorationCount}</div>
+            <div className="text-xs text-[#9B2438] mt-0.5">patients — immediate action indicated</div>
           </div>
 
           <div className="bg-slate-50/70 border border-slate-100 rounded-xl p-4">

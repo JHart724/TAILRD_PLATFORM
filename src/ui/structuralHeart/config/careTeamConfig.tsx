@@ -122,8 +122,8 @@ const StructuralPatients: React.FC = () => (
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.risk === 'High' ? 'bg-red-100 text-red-700' :
- patient.risk === 'Intermediate' ? 'bg-[#F0F5FA] text-[#6B7280]' :
- 'bg-[#C8D4DC] text-[#2C4A60]'
+ patient.risk === 'Intermediate' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ 'bg-[#F0F7F4] text-[#2D6147]'
  }`}>
  {patient.risk}
  </span>
@@ -132,10 +132,10 @@ const StructuralPatients: React.FC = () => (
  <td className="py-3 px-4 text-titanium-700">{patient.approach}</td>
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
- patient.status === 'Completed' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ patient.status === 'Completed' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  patient.status === 'Scheduled' ? 'bg-chrome-100 text-chrome-700' :
  patient.status === 'Planning' ? 'bg-arterial-100 text-arterial-700' :
- patient.status === 'Pre-op' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ patient.status === 'Pre-op' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-gray-100 text-gray-700'
  }`}>
  {patient.status}
@@ -345,7 +345,7 @@ const StructuralSafety: React.FC = () => (
  <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-2">
  <span className="font-medium text-[#6B7280]">CT Planning Alert</span>
- <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded-full">REVIEW</span>
+ <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">REVIEW</span>
  </div>
  <div className="text-sm text-[#6B7280]">Annular sizing discrepancy detected - dual measurements required</div>
  <div className="text-xs text-[#6B7280] mt-1">CT review pending</div>
@@ -354,7 +354,7 @@ const StructuralSafety: React.FC = () => (
  <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-2">
  <span className="font-medium text-[#6B7280]">Anticoagulation Review</span>
- <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded-full">PENDING</span>
+ <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">PENDING</span>
  </div>
  <div className="text-sm text-[#6B7280]">4 post-TAVR patients due for dual antiplatelet review</div>
  <div className="text-xs text-[#6B7280] mt-1">Next clinic: Thursday 9 AM</div>
@@ -432,7 +432,7 @@ const StructuralSafety: React.FC = () => (
  { item: 'Post-procedure bed reserved', status: 'pending' }
  ].map((check, index) => (
  <div key={check.item} className={`flex items-center gap-3 p-3 rounded-lg ${
- check.status === 'complete' ? 'bg-[#C8D4DC] border border-[#2C4A60]' : 'bg-[#F0F5FA] border border-[#C8D4DC]'
+ check.status === 'complete' ? 'bg-[#F0F7F4] border border-[#D8EDE6]' : 'bg-[#F0F5FA] border border-[#C8D4DC]'
  }`}>
  <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
  check.status === 'complete' ? 'bg-[#C8D4DC]' : 'bg-[#F0F5FA]'
@@ -534,7 +534,7 @@ const StructuralClinicalCollaboration: React.FC = () => (
  <div key={pathway.pathway} className={`flex items-center justify-between p-4 rounded-lg border ${
  pathway.indication === 'Aortic Stenosis' ? 'bg-arterial-50 border-arterial-200' :
  pathway.indication === 'Secondary Mitral Regurgitation' ? 'bg-chrome-50 border-chrome-200' :
- pathway.indication === 'Severe Tricuspid Regurgitation' ? 'bg-[#C8D4DC] border-[#2C4A60]' :
+ pathway.indication === 'Severe Tricuspid Regurgitation' ? 'bg-[#F0F7F4] border-[#D8EDE6]' :
  'bg-[#F0F5FA] border-[#C8D4DC]'
  }`}>
  <div>
@@ -553,8 +553,8 @@ const StructuralClinicalCollaboration: React.FC = () => (
  <div className={`text-xs px-2 py-1 rounded-full ${
  pathway.indication === 'Aortic Stenosis' ? 'bg-arterial-100 text-arterial-700' :
  pathway.indication === 'Secondary Mitral Regurgitation' ? 'bg-chrome-100 text-chrome-700' :
- pathway.indication === 'Severe Tricuspid Regurgitation' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
- 'bg-[#F0F5FA] text-[#6B7280]'
+ pathway.indication === 'Severe Tricuspid Regurgitation' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ 'bg-[#FAF6E8] text-[#8B6914]'
  }`}>
  {pathway.consultation}
  </div>
@@ -724,7 +724,7 @@ const StructuralDocumentation: React.FC = () => (
  <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-2">
  <span className="font-medium text-[#6B7280]">STS/ACC TVT Registry</span>
- <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded-full">DUE TODAY</span>
+ <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">DUE TODAY</span>
  </div>
  <div className="text-sm text-[#6B7280]">3 TAVR cases require 30-day follow-up data entry</div>
  <div className="text-xs text-[#6B7280] mt-1">Registry deadline: End of business today</div>
@@ -742,7 +742,7 @@ const StructuralDocumentation: React.FC = () => (
  <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-2">
  <span className="font-medium text-[#6B7280]">CT Planning Documentation</span>
- <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded-full">PENDING</span>
+ <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">PENDING</span>
  </div>
  <div className="text-sm text-[#6B7280]">5 patients awaiting CT measurement documentation</div>
  <div className="text-xs text-[#6B7280] mt-1">Required before procedure scheduling</div>
@@ -825,9 +825,9 @@ const StructuralDocumentation: React.FC = () => (
  <div className="text-right">
  <div className="text-xs text-titanium-500">{activity.time}</div>
  <div className={`text-xs px-2 py-1 rounded-full ${
- activity.status === 'Complete' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ activity.status === 'Complete' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  activity.status === 'In Progress' ? 'bg-chrome-100 text-chrome-700' :
- 'bg-[#F0F5FA] text-[#6B7280]'
+ 'bg-[#FAF6E8] text-[#8B6914]'
  }`}>
  {activity.status}
  </div>

@@ -50,9 +50,9 @@ const valvularBenchmarks: BenchmarkMetric[] = [
 // ── Revenue Waterfall Categories ───────────────────────────────────
 const valvularWaterfallCategories: WaterfallCategory[] = [
   { label: 'Surgical vs Interventional', value: 18400000, color: '#8B6914' },
-  { label: 'Valve Severity Assessment', value: 12600000, color: '#095bb5' },
-  { label: 'Echo Integration', value: 8200000, color: '#0c6fdb' },
-  { label: 'Guideline Implementation', value: 6800000, color: '#0d9488' },
+  { label: 'Valve Severity Assessment', value: 12600000, color: '#1E3347' },
+  { label: 'Echo Integration', value: 8200000, color: '#2C4A60' },
+  { label: 'Guideline Implementation', value: 6800000, color: '#3E6275' },
   { label: 'Follow-up Protocol', value: 4200000, color: '#4A6880' },
 ];
 
@@ -183,7 +183,7 @@ const ValvularExecutiveView: React.FC = () => {
    totalGaps: 6,
    categories: [
      { name: 'Quality', patients: 313, color: '#C8D4DC' },
-     { name: 'Safety', patients: 59, color: '#ef4444' },
+     { name: 'Safety', patients: 59, color: '#9B2438' },
    ],
    topGaps: [
      { name: 'Moderate AS Surveillance', patients: 134, opportunity: '$1.8M' },

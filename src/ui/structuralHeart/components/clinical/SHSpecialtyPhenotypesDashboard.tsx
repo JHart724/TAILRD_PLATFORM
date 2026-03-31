@@ -439,7 +439,7 @@ const SHSpecialtyPhenotypesDashboard: React.FC = () => {
  </div>
  </div>
  <div className="flex items-center gap-3">
- <span className={`text-xs px-2 py-0.5 rounded-full ${pt.risk === 'High' ? 'bg-crimson-100 text-crimson-700' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>
+ <span className={`text-xs px-2 py-0.5 rounded-full ${pt.risk === 'High' ? 'bg-crimson-100 text-crimson-700' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>
  {pt.risk}
  </span>
  <span className="text-xs text-titanium-500">{pt.status}</span>

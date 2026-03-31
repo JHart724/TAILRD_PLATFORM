@@ -593,7 +593,7 @@ function renderPredictiveBadges(gap: HFClinicalGap, pt: HFGapPatient): React.Rea
 
   return (
     <>
-      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${display.colorClass === 'text-red-600' ? 'bg-red-100 text-red-700' : display.colorClass === 'text-[#6B7280]' ? 'bg-[#F0F5FA] text-[#6B7280]' : display.colorClass === 'text-[#2C4A60]' ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-gray-100 text-gray-500'}`}>
+      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${display.colorClass === 'text-red-600' ? 'bg-red-100 text-red-700' : display.colorClass === 'text-[#6B7280]' ? 'bg-[#FAF6E8] text-[#8B6914]' : display.colorClass === 'text-[#2C4A60]' ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-gray-100 text-gray-500'}`}>
         {display.arrow} {display.label}
       </span>
       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${horizonDisplay.bgClass} ${horizonDisplay.textClass}`}>
@@ -614,7 +614,7 @@ function renderHFPredictedEvent(gapId: string, pt: HFGapPatient): React.ReactNod
       const dirLabel = trajectory.direction === 'improving' ? 'improving' : trajectory.direction === 'stable' ? 'stable' : 'declining';
       const stableBelowThreshold = (trajectory.direction === 'stable' || trajectory.direction === 'worsening_slow') && lvef < 35;
       return (
-        <div className="mt-2 px-3 py-2 bg-[#f0f4f8]/50 border border-[#e0eaf3] rounded-lg">
+        <div className="mt-2 px-3 py-2 bg-[#f0f4f8]/50 border border-[#F0F5FA] rounded-lg">
           <div className="text-xs text-[#1A2F4A]">
             <span className="font-semibold">Predicted event:</span>{' '}
             LVEF trajectory: {lvef}% (was {priorLvef}%) &mdash; {dirLabel}.{' '}
@@ -638,7 +638,7 @@ function renderHFPredictedEvent(gapId: string, pt: HFGapPatient): React.ReactNod
     const hosps = pt.keyValues['HF Hospitalizations'];
     const monthsToDeterioration = kccqRate && kccqRate > 0 ? Math.round(12 / kccqRate) : null;
     return (
-      <div className="mt-2 px-3 py-2 bg-[#f0f4f8]/50 border border-[#e0eaf3] rounded-lg">
+      <div className="mt-2 px-3 py-2 bg-[#f0f4f8]/50 border border-[#F0F5FA] rounded-lg">
         <div className="text-xs text-[#1A2F4A]">
           <span className="font-semibold">Predicted event:</span>{' '}
           LVEF {lvef ?? '?'}%{kccqRate ? ` + KCCQ declining ${kccqRate.toFixed(1)} pts/month` : ''}{hosps ? ` + ${hosps}` : ''} &mdash;{' '}
@@ -677,7 +677,7 @@ function renderHFPredictedEvent(gapId: string, pt: HFGapPatient): React.ReactNod
         const monthsToHighRisk = ratePerMonth > 0 ? Math.round((pt.kccqOverallSummary - 25) / ratePerMonth) : null;
         return (
           <>
-            <div className="mt-2 px-3 py-2 bg-[#f0f4f8]/50 border border-[#e0eaf3] rounded-lg">
+            <div className="mt-2 px-3 py-2 bg-[#f0f4f8]/50 border border-[#F0F5FA] rounded-lg">
               <div className="text-xs text-[#1A2F4A]">
                 <span className="font-semibold">Predicted event:</span>{' '}
                 At current KCCQ decline rate ({ratePerMonth.toFixed(1)} pts/month), hospitalization probability increases 3x
@@ -785,12 +785,12 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
   const priorityColor = (p: string) => {
     if (p === 'high') return 'bg-red-50 border-red-300 text-red-700';
     if (p === 'medium') return 'bg-[#F0F5FA] border-[#C8D4DC] text-[#6B7280]';
-    return 'bg-[#C8D4DC] border-[#2C4A60] text-[#2C4A60]';
+    return 'bg-[#F0F7F4] border-[#D8EDE6] text-[#2C4A60]';
   };
 
   const categoryColor = (c: string) =>
     c === 'Discovery'
-      ? 'bg-[#e0eaf3] text-[#1A2F4A]'
+      ? 'bg-[#F0F5FA] text-[#1A2F4A]'
       : c === 'Gap'
       ? 'bg-red-100 text-red-800'
       : c === 'Safety'
@@ -822,7 +822,7 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
             </div>
             <div className="text-2xl font-bold text-red-800">{totalPatients.toLocaleString()}</div>
           </div>
-          <div className="bg-[#C8D4DC] border border-[#2C4A60] rounded-xl p-4">
+          <div className="bg-[#F0F7F4] border border-[#D8EDE6] rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
               <DollarSign className="w-4 h-4 text-[#2C4A60]" />
               <span className="text-xs font-semibold text-[#2C4A60] uppercase tracking-wide">Total Opportunity</span>
@@ -1022,13 +1022,13 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
                                   {pt.mrn} • Age {pt.age}
                                 </span>
                                 {pt.tier && (
-                                  <span className="ml-2 text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-0.5 rounded-full">
+                                  <span className="ml-2 text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-0.5 rounded-full">
                                     {pt.tier}
                                   </span>
                                 )}
                                 {renderPredictiveBadges(gap, pt)}
                                 {gap.category === 'Discovery' && (
-                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-[#e0eaf3] text-[#2C4A60] px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow, quality program, or EHR alert. TAILRD identified this patient by assembling disconnected signals across care settings.">
+                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-[#F0F7F4] text-[#2D6147] px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow, quality program, or EHR alert. TAILRD identified this patient by assembling disconnected signals across care settings.">
                                     <Radar className="w-3 h-3" />
                                     First identified by TAILRD
                                   </span>

@@ -154,8 +154,8 @@ const CasePlanningWorksheet: React.FC = () => {
 
   const getTASCColor = (grade: string) => {
  switch (grade) {
- case 'A': return 'text-[#2C4A60] bg-[#C8D4DC]';
- case 'B': return 'text-[#6B7280] bg-[#F0F5FA]';
+ case 'A': return 'text-[#2D6147] bg-[#F0F7F4]';
+ case 'B': return 'text-[#8B6914] bg-[#FAF6E8]';
  case 'C': return 'text-red-600 bg-red-100';
  case 'D': return 'text-red-800 bg-red-200';
  default: return 'text-titanium-600 bg-titanium-100';
@@ -164,8 +164,8 @@ const CasePlanningWorksheet: React.FC = () => {
 
   const getCalcificationColor = (level: string) => {
  switch (level) {
- case 'None': return 'text-[#2C4A60] bg-[#C8D4DC]';
- case 'Mild': return 'text-[#6B7280] bg-[#F0F5FA]';
+ case 'None': return 'text-[#2D6147] bg-[#F0F7F4]';
+ case 'Mild': return 'text-[#8B6914] bg-[#FAF6E8]';
  case 'Moderate': return 'text-red-600 bg-red-100';
  case 'Severe': return 'text-red-800 bg-red-200';
  default: return 'text-titanium-600 bg-titanium-100';
@@ -177,7 +177,7 @@ const CasePlanningWorksheet: React.FC = () => {
  case 'Endovascular': return 'text-chrome-600 bg-chrome-100';
  case 'Surgical': return 'text-red-600 bg-red-100';
  case 'Hybrid': return 'text-arterial-600 bg-arterial-100';
- case 'Medical': return 'text-[#2C4A60] bg-[#C8D4DC]';
+ case 'Medical': return 'text-[#2D6147] bg-[#F0F7F4]';
  default: return 'text-titanium-600 bg-titanium-100';
  }
   };

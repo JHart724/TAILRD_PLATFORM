@@ -24,7 +24,7 @@ const AdvancedInterventionTracker: React.FC = () => {
   const BULLET = '\u2022';
   const formatRevenue = (n: number) => n >= 1000000 ? `$${toFixed(n/1000000, 1)}M` : `$${toFixed(n/1000, 0)}K`;
   const getCategoryIcon = (c: string) => { switch(c) { case 'percutaneous': return <Zap className="w-4 h-4" />; case 'surgical': return <Scissors className="w-4 h-4" />; case 'therapeutic': return <Heart className="w-4 h-4" />; case 'pharmacologic': return <Pill className="w-4 h-4" />; case 'diagnostic': return <Monitor className="w-4 h-4" />; default: return <Activity className="w-4 h-4" />; } };
-  const getCategoryColor = (c: string) => { switch(c) { case 'percutaneous': return 'bg-porsche-100 text-porsche-700'; case 'surgical': return 'bg-crimson-100 text-crimson-700'; case 'therapeutic': return 'bg-[#C8D4DC] text-[#2C4A60]'; case 'pharmacologic': return 'bg-[#F0F5FA] text-[#6B7280]'; case 'diagnostic': return 'bg-chrome-100 text-chrome-700'; default: return 'bg-titanium-100 text-titanium-700'; } };
+  const getCategoryColor = (c: string) => { switch(c) { case 'percutaneous': return 'bg-porsche-100 text-porsche-700'; case 'surgical': return 'bg-crimson-100 text-crimson-700'; case 'therapeutic': return 'bg-[#F0F7F4] text-[#2D6147]'; case 'pharmacologic': return 'bg-[#FAF6E8] text-[#8B6914]'; case 'diagnostic': return 'bg-chrome-100 text-chrome-700'; default: return 'bg-titanium-100 text-titanium-700'; } };
   const getUtilizationColor = (u: number) => u < 10 ? 'bg-crimson-500' : u < 20 ? 'bg-[#F0F5FA]' : 'bg-[#C8D4DC]';
   return (
  <div className="space-y-6">

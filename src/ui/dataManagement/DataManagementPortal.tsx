@@ -81,7 +81,7 @@ const DataManagementPortal: React.FC = () => {
     const colors: Record<string, string> = {
       COMPLETE: 'bg-[#F0F5FA] text-[#2C4A60]',
       FAILED: 'bg-red-100 text-red-800',
-      REJECTED_PHI: 'bg-[#F0F5FA] text-[#6B7280]',
+      REJECTED_PHI: 'bg-[#FAF6E8] text-[#8B6914]',
       PENDING: 'bg-slate-100 text-slate-600',
       VALIDATING: 'bg-blue-100 text-blue-700',
       PROCESSING: 'bg-blue-100 text-blue-700',

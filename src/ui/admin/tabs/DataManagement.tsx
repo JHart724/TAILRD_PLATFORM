@@ -111,12 +111,12 @@ const RECOMMENDATIONS: Recommendation[] = [
 function qualityColor(score: number): string {
   if (score >= 80) return '#4A6880';
   if (score >= 60) return '#6B7280';
-  return '#DC2626';
+  return '#7A1A2E';
 }
 
 function qualityBg(score: number): string {
-  if (score >= 80) return 'bg-[#C8D4DC] text-[#2C4A60]';
-  if (score >= 60) return 'bg-[#F0F5FA] text-[#6B7280]';
+  if (score >= 80) return 'bg-[#F0F7F4] text-[#2D6147]';
+  if (score >= 60) return 'bg-[#FAF6E8] text-[#8B6914]';
   return 'bg-red-100 text-red-800';
 }
 
@@ -198,7 +198,7 @@ const DataManagement: React.FC = () => {
             <Tooltip formatter={(value: any) => `${value}%`} />
             <Legend wrapperStyle={{ fontSize: 12 }} />
             <Bar dataKey="BSW" fill="#7A1A2E" barSize={12} radius={[0, 4, 4, 0]} />
-            <Bar dataKey="MSH" fill="#2563EB" barSize={12} radius={[0, 4, 4, 0]} />
+            <Bar dataKey="MSH" fill="#2C4A60" barSize={12} radius={[0, 4, 4, 0]} />
             <Bar dataKey="MH" fill="#4A6880" barSize={12} radius={[0, 4, 4, 0]} />
           </BarChart>
         </ResponsiveContainer>

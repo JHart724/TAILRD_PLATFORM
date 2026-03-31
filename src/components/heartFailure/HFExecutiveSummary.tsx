@@ -123,12 +123,12 @@ export const HFExecutiveSummary: React.FC = () => {
 
   const getColorClasses = (color: string) => {
  const colors: any = {
- blue: { bg: 'bg-chrome-50', border: 'border-chrome-300', text: 'text-chrome-700', icon: 'text-chrome-600', stroke: '#3B82F6' },
+ blue: { bg: 'bg-chrome-50', border: 'border-chrome-300', text: 'text-chrome-700', icon: 'text-chrome-600', stroke: '#2C4A60' },
  green: { bg: 'bg-[#F0F5FA]', border: 'border-[#C8D4DC]', text: 'text-[#2C4A60]', icon: 'text-[#2C4A60]', stroke: '#2C4A60' },
  carmona: { bg: 'bg-arterial-50', border: 'border-arterial-300', text: 'text-arterial-700', icon: 'text-arterial-600', stroke: '#9B2438' },
- red: { bg: 'bg-red-50', border: 'border-red-300', text: 'text-red-700', icon: 'text-red-600', stroke: '#EF4444' },
+ red: { bg: 'bg-red-50', border: 'border-red-300', text: 'text-red-700', icon: 'text-red-600', stroke: '#9B2438' },
  orange: { bg: 'bg-[#F0F5FA]', border: 'border-[#C8D4DC]', text: 'text-[#6B7280]', icon: 'text-[#6B7280]', stroke: '#6B7280' },
- teal: { bg: 'bg-[#C8D4DC]', border: 'border-[#2C4A60]', text: 'text-[#2C4A60]', icon: 'text-[#2C4A60]', stroke: '#14B8A6' }
+ teal: { bg: 'bg-[#C8D4DC]', border: 'border-[#2C4A60]', text: 'text-[#2C4A60]', icon: 'text-[#2C4A60]', stroke: '#4A6880' }
  };
  return colors[color] || colors.blue;
   };

@@ -250,9 +250,9 @@ const AntiplateletContraindicationChecker: React.FC<{ patientData?: PatientConte
   const getStatusColor = (status: ContraindicationResult['status']) => {
  switch (status) {
  case 'contraindicated': return 'text-crimson-800 bg-crimson-100 border-crimson-300';
- case 'caution': return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
+ case 'caution': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
  case 'monitor': return 'text-porsche-800 bg-porsche-100 border-porsche-300';
- case 'safe': return 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]';
+ case 'safe': return 'text-[#2D6147] bg-[#F0F7F4] border-[#2C4A60]';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };

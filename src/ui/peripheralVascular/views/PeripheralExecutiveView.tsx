@@ -49,9 +49,9 @@ const padBenchmarks: BenchmarkMetric[] = [
 
 // ── Revenue Waterfall Categories ───────────────────────────────────
 const padWaterfallCategories: WaterfallCategory[] = [
-  { label: 'Limb Salvage Optimization', value: 12400000, color: '#0d9488' },
-  { label: 'Endovascular Intervention', value: 9200000, color: '#0c6fdb' },
-  { label: 'PAD Screening Program', value: 8600000, color: '#095bb5' },
+  { label: 'Limb Salvage Optimization', value: 12400000, color: '#3E6275' },
+  { label: 'Endovascular Intervention', value: 9200000, color: '#2C4A60' },
+  { label: 'PAD Screening Program', value: 8600000, color: '#1E3347' },
   { label: 'Wound Care Coordination', value: 6800000, color: '#4A6880' },
   { label: 'WIfI Classification', value: 3800000, color: '#7A1A2E' },
 ];
@@ -180,8 +180,8 @@ const PeripheralExecutiveView: React.FC = () => {
 	<GapIntelligenceCard data={{
 	  totalGaps: 12,
 	  categories: [
-	    { name: 'Therapy', patients: 320, color: '#3b82f6' },
-	    { name: 'Safety', patients: 110, color: '#ef4444' },
+	    { name: 'Therapy', patients: 320, color: '#2C4A60' },
+	    { name: 'Safety', patients: 110, color: '#9B2438' },
 	    { name: 'Growth', patients: 180, color: '#4A6880' },
 	    { name: 'Quality', patients: 540, color: '#C8D4DC' },
 	  ],

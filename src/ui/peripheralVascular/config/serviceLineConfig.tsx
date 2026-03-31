@@ -118,7 +118,7 @@ const PeripheralVascularProviderScorecard: React.FC = () => {
                   <td className="px-4 py-3 text-titanium-600">{p.specialty}</td>
                   <td className="px-4 py-3 text-center font-mono">{p.endoVol > 0 ? p.endoVol : '—'}</td>
                   <td className="px-4 py-3 text-center font-mono">{p.surgVol > 0 ? p.surgVol : '—'}</td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.limbSalvage}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F7F4] text-[#2D6147]">{p.limbSalvage}</span></td>
                   <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">{p.patency1yr}</span></td>
                   <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="flex-1 bg-titanium-100 rounded-full h-2"><div className="bg-arterial-500 h-2 rounded-full" style={{ width: `${p.quality}%` }} /></div><span className="text-xs font-semibold text-titanium-700">{p.quality}</span></div></td>
                 </tr>
@@ -171,9 +171,9 @@ const PADInterventionAnalytics: React.FC = () => {
                 <tr key={i} className="hover:bg-titanium-50">
                   <td className="px-4 py-3 font-medium text-titanium-900">{p.type}</td>
                   <td className="px-4 py-3 font-mono font-semibold">{p.volume}</td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#C8D4DC] text-[#2C4A60]">{p.technical}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F7F4] text-[#2D6147]">{p.technical}</span></td>
                   <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">{p.patency1yr}</span></td>
-                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#F0F5FA] text-[#6B7280]">{p.complications}</span></td>
+                  <td className="px-4 py-3"><span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-[#FAF6E8] text-[#8B6914]">{p.complications}</span></td>
                   <td className="px-4 py-3 text-titanium-600">{p.avgLos}</td>
                 </tr>
               ))}
@@ -215,7 +215,7 @@ const CLIManagement: React.FC = () => {
                 <td className="px-4 py-3 font-mono font-semibold">{s.patients}</td>
                 <td className="px-4 py-3 font-mono text-red-700">{s.wifiHigh}</td>
                 <td className="px-4 py-3 text-titanium-600">{s.avgWait}</td>
-                <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${s.urgency === 'red' ? 'bg-red-100 text-red-800' : s.urgency === 'amber' ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-[#C8D4DC] text-[#2C4A60]'}`}>{s.urgency === 'red' ? 'Urgent' : s.urgency === 'amber' ? 'Active' : 'Monitoring'}</span></td>
+                <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${s.urgency === 'red' ? 'bg-red-100 text-red-800' : s.urgency === 'amber' ? 'bg-[#FAF6E8] text-[#8B6914]' : 'bg-[#F0F7F4] text-[#2D6147]'}`}>{s.urgency === 'red' ? 'Urgent' : s.urgency === 'amber' ? 'Active' : 'Monitoring'}</span></td>
               </tr>
             ))}
           </tbody>
@@ -255,7 +255,7 @@ const PADSafetyScreening: React.FC = () => {
                 <td className="px-4 py-3 font-medium text-titanium-900">{a.category}</td>
                 <td className="px-4 py-3 font-mono font-semibold">{a.count}</td>
                 <td className="px-4 py-3 text-titanium-600 text-xs">{a.action}</td>
-                <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${a.severity === 'red' ? 'bg-red-100 text-red-800' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>{a.severity === 'red' ? 'High' : 'Moderate'}</span></td>
+                <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${a.severity === 'red' ? 'bg-red-100 text-red-800' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>{a.severity === 'red' ? 'High' : 'Moderate'}</span></td>
               </tr>
             ))}
           </tbody>
@@ -298,7 +298,7 @@ const PADQualityMetrics: React.FC = () => {
                   <td className="px-4 py-3 font-medium text-titanium-900">{m.measure}</td>
                   <td className="px-4 py-3 font-mono font-semibold text-titanium-800">{m.rate}</td>
                   <td className="px-4 py-3 text-titanium-500">{m.benchmark}</td>
-                  <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${m.above ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-red-100 text-red-800'}`}>{m.above ? 'Above Benchmark' : 'Below Benchmark'}</span></td>
+                  <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${m.above ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-red-100 text-red-800'}`}>{m.above ? 'Above Benchmark' : 'Below Benchmark'}</span></td>
                   <td className="px-4 py-3 text-titanium-500 text-xs">{m.registry}</td>
                 </tr>
               ))}
@@ -506,7 +506,7 @@ const PVVascularPipeline: React.FC = () => {
         'border-[#C8D4DC]',
         'bg-[#F0F5FA]',
         <Activity className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />,
-        'bg-[#F0F5FA] text-[#6B7280]',
+        'bg-[#FAF6E8] text-[#8B6914]',
         'SCREENING GAP'
       )}
 
@@ -519,7 +519,7 @@ const PVVascularPipeline: React.FC = () => {
         'border-[#C8D4DC]',
         'bg-[#F0F5FA]',
         <Activity className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />,
-        'bg-[#F0F5FA] text-[#6B7280]',
+        'bg-[#FAF6E8] text-[#8B6914]',
         'SCREENING GAP'
       )}
 
@@ -532,7 +532,7 @@ const PVVascularPipeline: React.FC = () => {
         'border-[#C8D4DC]',
         'bg-[#F0F5FA]',
         <AlertTriangle className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />,
-        'bg-[#F0F5FA] text-[#6B7280]',
+        'bg-[#FAF6E8] text-[#8B6914]',
         'SURVEILLANCE'
       )}
 
@@ -558,7 +558,7 @@ const PVVascularPipeline: React.FC = () => {
         'border-[#C8D4DC]',
         'bg-[#F0F5FA]',
         <AlertTriangle className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />,
-        'bg-[#F0F5FA] text-[#6B7280]',
+        'bg-[#FAF6E8] text-[#8B6914]',
         'TREATMENT GAP'
       )}
 

@@ -249,11 +249,11 @@ const MFASetup: React.FC<MFASetupProps> = ({ token, onComplete, onCancel }) => {
                   placeholder="000000"
                   className="w-full text-center text-2xl font-mono tracking-[0.5em] py-4 border rounded-lg focus:outline-none focus:ring-2"
                   style={{
-                    borderColor: error ? '#EF4444' : '#E2E8F0',
+                    borderColor: error ? '#9B2438' : '#E2E8F0',
                     color: '#1E293B',
                   }}
                   onFocus={(e) => { e.target.style.borderColor = '#2C4A60'; e.target.style.boxShadow = '0 0 0 2px rgba(44,74,96,0.2)'; }}
-                  onBlur={(e) => { e.target.style.borderColor = error ? '#EF4444' : '#E2E8F0'; e.target.style.boxShadow = 'none'; }}
+                  onBlur={(e) => { e.target.style.borderColor = error ? '#9B2438' : '#E2E8F0'; e.target.style.boxShadow = 'none'; }}
                   onKeyDown={(e) => { if (e.key === 'Enter' && verificationCode.length === 6) verifySetup(); }}
                   autoFocus
                 />
@@ -288,13 +288,13 @@ const MFASetup: React.FC<MFASetupProps> = ({ token, onComplete, onCancel }) => {
           {step === 'backup' && (
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <CheckCircle className="w-5 h-5" style={{ color: '#16A34A' }} />
+                <CheckCircle className="w-5 h-5" style={{ color: '#2D6147' }} />
                 <h2 className="text-lg font-semibold" style={{ color: '#1E293B' }}>
                   MFA Enabled Successfully
                 </h2>
               </div>
 
-              <div className="p-3 rounded-lg mb-4" style={{ backgroundColor: '#FFF7ED', border: '1px solid #FED7AA' }}>
+              <div className="p-3 rounded-lg mb-4" style={{ backgroundColor: '#FAF6E8', border: '1px solid #F0D9A0' }}>
                 <div className="flex items-start gap-2">
                   <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#6B7280' }} />
                   <p className="text-sm" style={{ color: '#92400E' }}>
@@ -317,7 +317,7 @@ const MFASetup: React.FC<MFASetupProps> = ({ token, onComplete, onCancel }) => {
                 <button
                   onClick={copyBackupCodes}
                   className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium border transition-colors"
-                  style={{ borderColor: '#E2E8F0', color: copied ? '#16A34A' : '#475569' }}
+                  style={{ borderColor: '#E2E8F0', color: copied ? '#2D6147' : '#475569' }}
                 >
                   {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   {copied ? 'Copied!' : 'Copy'}
@@ -345,8 +345,8 @@ const MFASetup: React.FC<MFASetupProps> = ({ token, onComplete, onCancel }) => {
           {/* Error Display */}
           {error && (
             <div className="mt-4 p-3 rounded-lg flex items-start gap-2" style={{ backgroundColor: '#FEF2F2', border: '1px solid #FECACA' }}>
-              <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#DC2626' }} />
-              <p className="text-sm" style={{ color: '#991B1B' }}>{error}</p>
+              <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#7A1A2E' }} />
+              <p className="text-sm" style={{ color: '#5C1022' }}>{error}</p>
             </div>
           )}
         </div>

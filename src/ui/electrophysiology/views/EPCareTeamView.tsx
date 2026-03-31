@@ -265,7 +265,7 @@ const EPCareTeamView: React.FC = () => {
  <td className="py-3 text-titanium-600">{p.age}</td>
  <td className="py-3 text-titanium-800">{p.dx}</td>
  <td className="py-3 text-titanium-600">{p.device}</td>
- <td className="py-3"><span className={`text-xs px-2 py-0.5 rounded-full font-medium ${p.risk === 'HIGH' ? 'bg-red-100 text-red-800' : p.risk === 'MODERATE' ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-[#C8D4DC] text-[#2C4A60]'}`}>{p.risk}</span></td>
+ <td className="py-3"><span className={`text-xs px-2 py-0.5 rounded-full font-medium ${p.risk === 'HIGH' ? 'bg-red-100 text-red-800' : p.risk === 'MODERATE' ? 'bg-[#FAF6E8] text-[#8B6914]' : 'bg-[#F0F7F4] text-[#2D6147]'}`}>{p.risk}</span></td>
  <td className="py-3 text-titanium-600">{p.next}</td>
  </tr>
  ))}
@@ -296,7 +296,7 @@ const EPCareTeamView: React.FC = () => {
  <div className="flex-1">
  <div className="flex items-center gap-3 mb-1">
  <span className="font-semibold text-titanium-900 text-sm">{w.patient}</span>
- <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${w.priority === 'HIGH' ? 'bg-red-100 text-red-800' : w.priority === 'MODERATE' ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-[#C8D4DC] text-[#2C4A60]'}`}>{w.priority}</span>
+ <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${w.priority === 'HIGH' ? 'bg-red-100 text-red-800' : w.priority === 'MODERATE' ? 'bg-[#FAF6E8] text-[#8B6914]' : 'bg-[#F0F7F4] text-[#2D6147]'}`}>{w.priority}</span>
  </div>
  <div className="text-sm text-titanium-700">{w.action}</div>
  </div>
@@ -343,7 +343,7 @@ const EPCareTeamView: React.FC = () => {
  <div key={`${a.patient}-${a.alert}`} className={`p-4 rounded-xl border ${a.color === 'red' ? 'bg-red-50 border-red-200' : 'bg-[#F0F5FA] border-[#C8D4DC]'}`}>
  <div className="flex items-center justify-between mb-1">
  <span className="font-semibold text-titanium-900 text-sm">{a.patient}</span>
- <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${a.color === 'red' ? 'bg-red-200 text-red-900' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>{a.severity}</span>
+ <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${a.color === 'red' ? 'bg-red-200 text-red-900' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>{a.severity}</span>
  </div>
  <div className={`text-sm ${a.color === 'red' ? 'text-red-800' : 'text-[#6B7280]'}`}>{a.alert}</div>
  </div>
@@ -376,7 +376,7 @@ const EPCareTeamView: React.FC = () => {
  <div key={m.name} className="p-4 rounded-xl border border-titanium-200 bg-chrome-50">
  <div className="flex items-center justify-between mb-2">
  <span className="font-semibold text-titanium-900 text-sm">{m.name}</span>
- <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${m.sc === 'green' ? 'bg-[#C8D4DC] text-[#2C4A60]' : m.sc === 'amber' ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-blue-100 text-blue-800'}`}>{m.status}</span>
+ <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${m.sc === 'green' ? 'bg-[#F0F7F4] text-[#2D6147]' : m.sc === 'amber' ? 'bg-[#FAF6E8] text-[#8B6914]' : 'bg-blue-100 text-blue-800'}`}>{m.status}</span>
  </div>
  <div className="text-xs text-titanium-500 mb-2">{m.role}</div>
  <div className="text-sm text-titanium-700">Active caseload: <span className="font-semibold">{m.caseload}</span></div>
@@ -454,7 +454,7 @@ const EPCareTeamView: React.FC = () => {
  <h4 className="font-semibold text-titanium-900 mb-4">Documentation Templates</h4>
  <div className="space-y-2">
  {[
- { name: 'AF Ablation Report', desc: 'PVI, linear lesions, mapping data', bg: 'bg-[#C8D4DC] border-[#2C4A60] hover:bg-[#C8D4DC]', text: 'text-[#2C4A60]', sub: 'text-[#2C4A60]' },
+ { name: 'AF Ablation Report', desc: 'PVI, linear lesions, mapping data', bg: 'bg-[#F0F7F4] border-[#D8EDE6] hover:bg-[#C8D4DC]', text: 'text-[#2C4A60]', sub: 'text-[#2C4A60]' },
  { name: 'Device Implant Note', desc: 'ICD/PM/CRT implant procedure note', bg: 'bg-chrome-50 border-chrome-200 hover:bg-chrome-100', text: 'text-chrome-900', sub: 'text-chrome-600' },
  { name: 'EP Study Report', desc: 'Diagnostic EP study with findings', bg: 'bg-chrome-50 border-chrome-200 hover:bg-chrome-100', text: 'text-chrome-900', sub: 'text-chrome-600' },
  { name: 'LAAC Procedure Note', desc: 'Watchman implant documentation', bg: 'bg-[#F0F5FA] border-[#C8D4DC] hover:bg-[#F0F5FA]', text: 'text-[#6B7280]', sub: 'text-[#6B7280]' },

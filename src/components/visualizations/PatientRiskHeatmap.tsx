@@ -55,26 +55,26 @@ const PatientRiskHeatmap: React.FC = () => {
   }, [patientData, sortBy]);
 
   const getRiskColor = (score: number) => {
- if (score >= 80) return 'bg-red-500';
- if (score >= 60) return 'bg-[#F0F5FA]';
- if (score >= 40) return 'bg-[#F0F5FA]';
- if (score >= 20) return 'bg-chrome-500';
- return 'bg-[#C8D4DC]';
+ if (score >= 80) return 'bg-[#7A1A2E]';   // Very High Risk: Carmona deep red
+ if (score >= 60) return 'bg-[#9B2438]';   // High Risk: Carmona mid
+ if (score >= 40) return 'bg-[#C4982A]';   // Moderate Risk: Metallic Gold
+ if (score >= 20) return 'bg-[#3D7A5C]';   // Low-Moderate: Racing Green mid
+ return 'bg-[#2D6147]';                    // Low Risk: Racing Green
   };
 
   const getPillarColor = (pillars: number) => {
- if (pillars === 4) return 'bg-[#F0F5FA]';
- if (pillars === 3) return 'bg-[#C8D4DC]';
- if (pillars === 2) return 'bg-[#F0F5FA]';
- if (pillars === 1) return 'bg-[#F0F5FA]';
- return 'bg-red-500';
+ if (pillars === 4) return 'bg-[#2C4A60]';   // Chrome Blue — full therapy
+ if (pillars === 3) return 'bg-[#3D7A5C]';   // Racing Green mid
+ if (pillars === 2) return 'bg-[#C4982A]';   // Metallic Gold
+ if (pillars === 1) return 'bg-[#9B2438]';   // Carmona Red
+ return 'bg-[#7A1A2E]';                      // Carmona deep — no therapy
   };
 
   const getAgeColor = (age: number) => {
- if (age >= 80) return 'bg-arterial-500';
- if (age >= 70) return 'bg-chrome-500';
- if (age >= 60) return 'bg-[#C8D4DC]';
- return 'bg-[#C8D4DC]';
+ if (age >= 80) return 'bg-[#9B2438]';   // Carmona Red — highest age band
+ if (age >= 70) return 'bg-[#C4982A]';   // Metallic Gold
+ if (age >= 60) return 'bg-[#4A6880]';   // Chrome Blue mid
+ return 'bg-[#3D7A5C]';                  // Racing Green mid — youngest
   };
 
   const getEfColor = (ef: number | undefined) => {
@@ -98,7 +98,7 @@ const PatientRiskHeatmap: React.FC = () => {
  case 'age': return getAgeColor(patient.age);
  case 'provider': 
  const providerIndex = ['Dr. Sarah Williams', 'Dr. Michael Chen', 'Dr. Jennifer Martinez', 'Dr. Robert Thompson', 'Dr. Lisa Park'].indexOf(patient.provider);
- return ['bg-red-400', 'bg-chrome-400', 'bg-[#C8D4DC]', 'bg-arterial-400', 'bg-[#F0F5FA]'][providerIndex] || 'bg-gray-400';
+ return ['bg-[#2C4A60]', 'bg-[#9B2438]', 'bg-[#C4982A]', 'bg-[#2D6147]', 'bg-[#1A6878]'][providerIndex] || 'bg-[#8B5A2B]';
  default: return 'bg-gray-300';
  }
   };
@@ -465,7 +465,7 @@ const PatientRiskHeatmap: React.FC = () => {
  selectedPatient.riskScore >= 80 ? 'bg-red-50 border-red-200' :
  selectedPatient.riskScore >= 60 ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
  selectedPatient.riskScore >= 40 ? 'bg-[#F0F5FA] border-yellow-200' :
- 'bg-[#C8D4DC] border-[#2C4A60]'
+ 'bg-[#F0F7F4] border-[#D8EDE6]'
  }`}>
  <div className="flex items-center gap-3">
  <AlertTriangle className={`w-8 h-8 ${

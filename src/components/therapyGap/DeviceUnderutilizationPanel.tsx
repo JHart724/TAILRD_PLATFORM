@@ -297,7 +297,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  case 'ICD':
  return 'text-medical-red-600 bg-medical-red-100';
  case 'WATCHMAN':
- return 'text-[#2C4A60] bg-[#e0eaf3]';
+ return 'text-[#2C4A60] bg-[#F0F5FA]';
  case 'CardioMEMS':
  return 'text-crimson-600 bg-crimson-100';
  case 'TAVR':
@@ -316,7 +316,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  case 'medium':
  return 'text-crimson-600 bg-crimson-100 border-crimson-200';
  case 'low':
- return 'text-[#2C4A60] bg-[#e0eaf3] border-[#C8D4DC]';
+ return 'text-[#2D6147] bg-[#F0F7F4] border-[#D8EDE6]';
  default:
  return 'text-titanium-600 bg-titanium-100 border-titanium-200';
  }
@@ -329,7 +329,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  case 'pending-approval':
  return 'text-crimson-600 bg-crimson-100 border-crimson-200';
  case 'scheduled':
- return 'text-[#2C4A60] bg-[#e0eaf3] border-[#C8D4DC]';
+ return 'text-[#2D6147] bg-[#F0F7F4] border-[#D8EDE6]';
  case 'declined':
  return 'text-medical-red-600 bg-medical-red-100 border-medical-red-200';
  case 'contraindicated':

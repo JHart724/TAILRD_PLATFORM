@@ -120,9 +120,9 @@ const UserDetailPanel: React.FC<UserDetailPanelProps> = ({ user, onClose }) => {
               <span
                 className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                   user.status === 'Active'
-                    ? 'bg-[#C8D4DC] text-[#2C4A60]'
+                    ? 'bg-[#F0F7F4] text-[#2D6147]'
                     : user.status === 'Pending'
-                    ? 'bg-[#F0F5FA] text-[#6B7280]'
+                    ? 'bg-[#FAF6E8] text-[#8B6914]'
                     : 'bg-red-100 text-red-800'
                 }`}
               >
@@ -299,9 +299,9 @@ const UsersManagement: React.FC = () => {
                   <span
                     className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                       user.status === 'Active'
-                        ? 'bg-[#C8D4DC] text-[#2C4A60]'
+                        ? 'bg-[#F0F7F4] text-[#2D6147]'
                         : user.status === 'Pending'
-                        ? 'bg-[#F0F5FA] text-[#6B7280]'
+                        ? 'bg-[#FAF6E8] text-[#8B6914]'
                         : 'bg-red-100 text-red-800'
                     }`}
                   >

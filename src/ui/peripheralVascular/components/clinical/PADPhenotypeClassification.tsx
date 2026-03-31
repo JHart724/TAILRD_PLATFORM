@@ -137,7 +137,7 @@ const PADPhenotypeClassification: React.FC<{ patientData?: PatientContext }> = (
  };
   };
 
-  const getRiskColor = (risk: string) => risk === 'High' ? 'text-crimson-600 bg-crimson-50 border-crimson-200' : risk === 'Moderate' ? 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]' : 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]';
+  const getRiskColor = (risk: string) => risk === 'High' ? 'text-crimson-600 bg-crimson-50 border-crimson-200' : risk === 'Moderate' ? 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]' : 'text-[#2D6147] bg-[#F0F7F4] border-[#2C4A60]';
   const updateInput = (key: keyof PADPhenotypeInputs, value: any) => setInputs(prev => ({ ...prev, [key]: value }));
 
   return (
@@ -183,7 +183,7 @@ const PADPhenotypeClassification: React.FC<{ patientData?: PatientContext }> = (
  </button>
  {results && (
  <div className="space-y-4">
- <div className={`p-4 rounded-xl border ${results.combinedProfile.includes('Multiple') ? 'bg-crimson-50 border-crimson-200' : results.combinedProfile.includes('Single') ? 'bg-[#F0F5FA] border-[#C8D4DC]' : 'bg-[#C8D4DC] border-[#2C4A60]'}`}>
+ <div className={`p-4 rounded-xl border ${results.combinedProfile.includes('Multiple') ? 'bg-crimson-50 border-crimson-200' : results.combinedProfile.includes('Single') ? 'bg-[#F0F5FA] border-[#C8D4DC]' : 'bg-[#F0F7F4] border-[#D8EDE6]'}`}>
  <p className="font-semibold text-titanium-900">{results.combinedProfile}</p>
  </div>
  {results.phenotypes.map((p) => (

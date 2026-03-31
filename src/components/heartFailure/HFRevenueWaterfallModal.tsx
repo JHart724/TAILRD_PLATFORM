@@ -28,10 +28,10 @@ const formatMoney = (amount: number): string => {
 const getSubcategoryData = (category: string): SubcategoryData[] => {
   const data: Record<string, SubcategoryData[]> = {
  GDMT: [
- { name: 'ARNI Optimization', revenue: 1000000, patientCount: 400, color: '#14B8A6' },
- { name: 'SGLT2i Initiation', revenue: 700000, patientCount: 280, color: '#0D9488' },
- { name: 'Beta Blocker Titration', revenue: 500000, patientCount: 250, color: '#0F766E' },
- { name: 'MRA Optimization', revenue: 200000, patientCount: 120, color: '#0E7490' }
+ { name: 'ARNI Optimization', revenue: 1000000, patientCount: 400, color: '#2C4A60' },
+ { name: 'SGLT2i Initiation', revenue: 700000, patientCount: 280, color: '#8B6914' },
+ { name: 'Beta Blocker Titration', revenue: 500000, patientCount: 250, color: '#2D6147' },
+ { name: 'MRA Optimization', revenue: 200000, patientCount: 120, color: '#4A6880' }
  ],
  Devices: [
  { name: 'CRT-D Implantation', revenue: 1000000, patientCount: 40, color: '#9B2438' },
@@ -39,13 +39,13 @@ const getSubcategoryData = (category: string): SubcategoryData[] => {
  { name: 'CardioMEMS', revenue: 200000, patientCount: 10, color: '#5C1022' }
  ],
  Phenotypes: [
- { name: 'Cardiac Amyloidosis', revenue: 500000, patientCount: 15, color: '#3B82F6' },
- { name: 'Iron Deficiency', revenue: 400000, patientCount: 80, color: '#2563EB' },
- { name: 'Hypertrophic CM', revenue: 300000, patientCount: 10, color: '#1E40AF' }
+ { name: 'Cardiac Amyloidosis', revenue: 500000, patientCount: 15, color: '#2C4A60' },
+ { name: 'Iron Deficiency', revenue: 400000, patientCount: 80, color: '#8B6914' },
+ { name: 'Hypertrophic CM', revenue: 300000, patientCount: 10, color: '#2D6147' }
  ],
  '340B': [
  { name: 'ARNI 340B Savings', revenue: 500000, patientCount: 280, color: '#4A6880' },
- { name: 'SGLT2i 340B Savings', revenue: 300000, patientCount: 180, color: '#2C4A60' }
+ { name: 'SGLT2i 340B Savings', revenue: 300000, patientCount: 180, color: '#2D6147' }
  ]
   };
   return data[category] || [];

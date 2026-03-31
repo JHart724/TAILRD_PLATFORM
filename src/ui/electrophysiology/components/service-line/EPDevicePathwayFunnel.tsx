@@ -479,7 +479,7 @@ const EPDevicePathwayFunnel: React.FC = () => {
  <div className="text-right">
  {index > 0 && (
  <div className={`text-sm font-bold ${
- conversionRate >= 80 ? 'text-[#2C4A60]' :
+ conversionRate >= 80 ? 'text-[#2D6147]' :
  conversionRate >= 60 ? 'text-crimson-600' : 'text-medical-red-600'
  }`}>
  {formatPercentage(conversionRate)} conversion
@@ -687,9 +687,9 @@ const EPDevicePathwayFunnel: React.FC = () => {
  </div>
  </div>
  <div className={`px-2 py-1 rounded-full text-xs font-medium ${
- patient.status === 'implanted' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ patient.status === 'implanted' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  patient.status === 'eligible' ? 'bg-chrome-100 text-chrome-700' :
- patient.status === 'pending' ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-red-100 text-red-700'
+ patient.status === 'pending' ? 'bg-[#FAF6E8] text-[#8B6914]' : 'bg-red-100 text-red-700'
  }`}>
  {patient.status.toUpperCase()}
  </div>
@@ -718,12 +718,12 @@ const EPDevicePathwayFunnel: React.FC = () => {
  {patient.barriers && patient.barriers.length > 0 && (
  <div className="mb-4">
  <div className="text-sm font-medium text-titanium-700 mb-2 flex items-center gap-1">
- <AlertTriangle className="w-3 h-3 text-[#6B7280]" />
+ <AlertTriangle className="w-3 h-3 text-[#8B6914]" />
  Current Barriers
  </div>
  <div className="flex flex-wrap gap-2">
  {patient.barriers.map((barrier, idx) => (
- <span key={barrier} className="px-2 py-1 bg-[#F0F5FA] text-[#6B7280] text-xs rounded-full">
+ <span key={barrier} className="px-2 py-1 bg-[#FAF6E8] text-[#8B6914] text-xs rounded-full">
  {barrier}
  </span>
  ))}

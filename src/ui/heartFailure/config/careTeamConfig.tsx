@@ -53,7 +53,7 @@ const HFWorkflow: React.FC = () => (
  <div key={item.pillar} className={`p-3 rounded-lg border ${
  item.status === 'red' ? 'bg-red-50 border-red-200' :
  item.status === 'amber' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
- 'bg-[#C8D4DC] border-[#2C4A60]'
+ 'bg-[#F0F7F4] border-[#D8EDE6]'
  }`}>
  <div className="flex justify-between items-center">
  <div className={`font-medium ${
@@ -312,7 +312,7 @@ const HFClinicalCollaboration: React.FC = () => (
  ].map((pathway, index) => (
  <div key={pathway.pathway} className={`flex items-center justify-between p-4 rounded-lg border ${
  pathway.indication === 'Heart Failure with Reduced EF' ? 'bg-chrome-50 border-chrome-200' :
- pathway.indication === 'CRT/ICD Candidacy' ? 'bg-[#C8D4DC] border-[#2C4A60]' :
+ pathway.indication === 'CRT/ICD Candidacy' ? 'bg-[#F0F7F4] border-[#D8EDE6]' :
  pathway.indication === 'Stage D Heart Failure' ? 'bg-red-50 border-red-200' :
  'bg-arterial-50 border-arterial-200'
  }`}>
@@ -331,7 +331,7 @@ const HFClinicalCollaboration: React.FC = () => (
  </div>
  <div className={`text-xs px-2 py-1 rounded-full ${
  pathway.indication === 'Heart Failure with Reduced EF' ? 'bg-chrome-100 text-chrome-700' :
- pathway.indication === 'CRT/ICD Candidacy' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ pathway.indication === 'CRT/ICD Candidacy' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  pathway.indication === 'Stage D Heart Failure' ? 'bg-red-100 text-red-700' :
  'bg-arterial-100 text-arterial-700'
  }`}>

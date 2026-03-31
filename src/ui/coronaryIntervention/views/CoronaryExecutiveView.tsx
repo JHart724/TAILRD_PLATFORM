@@ -225,8 +225,8 @@ const CoronaryExecutiveView: React.FC = () => {
  <GapIntelligenceCard data={{
    totalGaps: 26,
    categories: [
-     { name: 'Therapy', patients: 900, color: '#3b82f6' },
-     { name: 'Safety', patients: 340, color: '#ef4444' },
+     { name: 'Therapy', patients: 900, color: '#2C4A60' },
+     { name: 'Safety', patients: 340, color: '#9B2438' },
      { name: 'Growth', patients: 280, color: '#4A6880' },
      { name: 'Quality', patients: 620, color: '#C8D4DC' },
      { name: 'Deprescribing', patients: 190, color: '#64748b' },

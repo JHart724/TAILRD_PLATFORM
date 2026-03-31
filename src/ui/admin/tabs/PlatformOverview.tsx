@@ -30,11 +30,11 @@ import {
 
 const KPI_CARDS = [
   { label: 'Total Health Systems', value: '3', icon: Building2, color: '#7A1A2E' },
-  { label: 'Total Active Users', value: '12', icon: Users, color: '#2563EB' },
+  { label: 'Total Active Users', value: '12', icon: Users, color: '#2C4A60' },
   { label: 'Total Patients', value: '10,660', icon: Heart, color: '#2C4A60' },
-  { label: 'Total Gap Flags', value: '104', icon: AlertTriangle, color: '#6B7280' },
+  { label: 'Total Gap Flags', value: '104', icon: AlertTriangle, color: '#8B6914' },
   { label: 'Data Uploads This Month', value: '7', icon: Upload, color: '#2C4A60' },
-  { label: 'Platform Uptime', value: '99.97%', icon: Server, color: '#0891B2' },
+  { label: 'Platform Uptime', value: '99.97%', icon: Server, color: '#4A6880' },
 ];
 
 // ─── Activity Feed ───────────────────────────────────────────────────────────
@@ -76,12 +76,12 @@ const ACTIVITY_ICON_MAP: Record<ActivityEvent['type'], React.ElementType> = {
 };
 
 const ACTIVITY_COLOR_MAP: Record<ActivityEvent['type'], string> = {
-  login: '#2563EB',
+  login: '#2C4A60',
   upload: '#2C4A60',
   gap_action: '#2C4A60',
-  invite: '#6B7280',
+  invite: '#636D80',
   config: '#7A1A2E',
-  export: '#0891B2',
+  export: '#4A6880',
 };
 
 // ─── Health System Status ────────────────────────────────────────────────────
@@ -154,7 +154,7 @@ const PlatformOverview: React.FC = () => {
               <Tooltip />
               <Legend wrapperStyle={{ fontSize: 12 }} />
               <Line type="monotone" dataKey="BSW" stroke="#7A1A2E" strokeWidth={2} dot={false} />
-              <Line type="monotone" dataKey="MSH" stroke="#2563EB" strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="MSH" stroke="#2C4A60" strokeWidth={2} dot={false} />
               <Line type="monotone" dataKey="MH" stroke="#2C4A60" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
@@ -187,8 +187,8 @@ const PlatformOverview: React.FC = () => {
                 <span
                   className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                     hs.status === 'Active'
-                      ? 'bg-[#C8D4DC] text-[#2C4A60]'
-                      : 'bg-[#F0F5FA] text-[#6B7280]'
+                      ? 'bg-[#F0F7F4] text-[#2D6147]'
+                      : 'bg-[#FAF6E8] text-[#8B6914]'
                   }`}
                 >
                   {hs.status}

@@ -23,6 +23,8 @@ type TabId = 'gdmt' | 'heatmap' | 'providers' | 'devices' | 'phenotype-detection
 
 interface TabGroup {
   label: string;
+  color: string;      // hex color for this category
+  colorBg: string;    // light background hex (rgba ok)
   tabs: Array<{ id: string; label: string; icon: React.ElementType; description: string }>;
 }
 
@@ -38,6 +40,8 @@ const ServiceLineView: React.FC = () => {
   const tabGroups: TabGroup[] = [
  {
  label: 'Clinical Analytics',
+ color: '#2C4A60',
+ colorBg: 'rgba(44, 74, 96, 0.08)',
  tabs: [
  { id: 'gdmt', label: 'GDMT Analytics', icon: Target, description: 'Real-time 4-pillar optimization dashboard' },
  { id: 'heatmap', label: 'Patient Risk Heatmap', icon: Grid3X3, description: 'Interactive risk visualization matrix' },
@@ -48,6 +52,8 @@ const ServiceLineView: React.FC = () => {
  },
  {
  label: 'Gap & Opportunity',
+ color: '#C4982A',
+ colorBg: 'rgba(196, 152, 42, 0.10)',
  tabs: [
  { id: 'gap-detection', label: 'Gap Detection', icon: Search, description: 'AI-driven clinical gap detection' },
  { id: 'therapy-gaps', label: 'Therapy Gap Analysis', icon: Target, description: 'GDMT and device therapy gap identification' },
@@ -57,12 +63,16 @@ const ServiceLineView: React.FC = () => {
  },
  {
  label: 'Device & Advanced Therapy',
+ color: '#2D6147',
+ colorBg: 'rgba(45, 97, 71, 0.10)',
  tabs: [
  { id: 'devices', label: 'Device Analytics', icon: BarChart3, description: 'CRT, ICD, CardioMEMS funnels and advanced device tracking' },
  ],
  },
  {
  label: 'Care Coordination',
+ color: '#9B2438',
+ colorBg: 'rgba(155, 36, 56, 0.08)',
  tabs: [
  { id: 'providers', label: 'Provider Performance', icon: Stethoscope, description: 'Individual physician metrics and rankings' },
  { id: 'network', label: 'Care Network', icon: Network, description: 'Heart failure care pathways and referral patterns' },
@@ -71,6 +81,8 @@ const ServiceLineView: React.FC = () => {
  },
  {
  label: 'Outcomes & Reporting',
+ color: '#1A6878',
+ colorBg: 'rgba(26, 104, 120, 0.08)',
  tabs: [
  { id: 'quality', label: 'Quality Metrics', icon: Shield, description: 'Core and supplemental quality indicators' },
  { id: 'kccq-outcomes', label: 'PRO-Outcomes (KCCQ)', icon: Activity, description: 'Kansas City Cardiomyopathy Questionnaire outcomes tracking' },
@@ -112,7 +124,7 @@ const ServiceLineView: React.FC = () => {
  {/* Section Divider */}
  {groupIdx > 0 && <div className="border-t border-titanium-100 my-4" />}
  <div className="mb-3">
- <span className="text-xs font-semibold uppercase tracking-wider text-titanium-400">{group.label}</span>
+ <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: group.color }}>{group.label}</span>
  </div>
  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6 gap-3 mb-2">
  {group.tabs.map((tab) => {
@@ -124,18 +136,32 @@ const ServiceLineView: React.FC = () => {
  onClick={() => handleTabChange(tab.id as TabId)}
  className={`group relative p-4 rounded-xl border transition-all duration-300 ${
  isActive
- ? 'bg-porsche-50 border-porsche-200 text-porsche-600 shadow-lg scale-105'
+ ? 'shadow-lg scale-105'
  : 'bg-white border-titanium-200 text-titanium-600 hover:bg-white hover:scale-105 hover:shadow-lg'
  }`}
+ style={isActive ? {
+ background: group.colorBg,
+ borderColor: group.color,
+ color: group.color,
+ } : {}}
  >
  <div className="flex flex-col items-center gap-2">
- <Icon className={`w-6 h-6 ${isActive ? 'text-porsche-600' : 'text-titanium-600 group-hover:text-titanium-800'}`} />
- <span className={`text-xs font-semibold text-center leading-tight ${isActive ? 'text-porsche-600' : 'text-titanium-600 group-hover:text-titanium-800'}`}>
+ <Icon
+ className="w-6 h-6"
+ style={{ color: isActive ? group.color : undefined }}
+ />
+ <span
+ className={`text-xs font-semibold text-center leading-tight ${!isActive ? 'text-titanium-600 group-hover:text-titanium-800' : ''}`}
+ style={isActive ? { color: group.color } : {}}
+ >
  {tab.label}
  </span>
  </div>
  {isActive && (
- <div className="absolute inset-0 bg-gradient-to-r from-porsche-400 to-porsche-500 rounded-xl opacity-50" />
+ <div
+ className="absolute bottom-0 left-0 right-0 h-0.5 rounded-b-xl"
+ style={{ background: group.color }}
+ />
  )}
  </button>
  );

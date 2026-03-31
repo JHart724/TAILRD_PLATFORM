@@ -511,7 +511,7 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  </div>
  <div className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.strokeRisk >= 7 ? 'bg-red-100 text-red-700' :
- patient.strokeRisk >= 4 ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-[#C8D4DC] text-[#2C4A60]'
+ patient.strokeRisk >= 4 ? 'bg-[#FAF6E8] text-[#8B6914]' : 'bg-[#F0F7F4] text-[#2D6147]'
  }`}>
  {patient.strokeRisk >= 7 ? 'HIGH RISK' : patient.strokeRisk >= 4 ? 'MODERATE RISK' : 'LOW RISK'}
  </div>
@@ -545,12 +545,12 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  <div className="space-y-1">
  {patient.treatmentGaps.length > 0 ? (
  patient.treatmentGaps.map((gap, idx) => (
- <div key={gap} className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded">
+ <div key={gap} className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded">
  {gap}
  </div>
  ))
  ) : (
- <div className="text-xs bg-[#C8D4DC] text-[#2C4A60] px-2 py-1 rounded">
+ <div className="text-xs bg-[#F0F7F4] text-[#2D6147] px-2 py-1 rounded">
  No gaps identified
  </div>
  )}
