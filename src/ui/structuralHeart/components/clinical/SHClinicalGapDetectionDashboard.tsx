@@ -2454,7 +2454,16 @@ const getSHGapTrajectoryData = (_gapId: string, patientCount: number, category: 
 // ============================================================
 // COMPONENT
 // ============================================================
-const SHClinicalGapDetectionDashboard: React.FC = () => {
+interface SHCategoryFilter {
+  label: string;
+  keywords: string[];
+}
+
+interface SHClinicalGapDetectionDashboardProps {
+  categoryFilter?: SHCategoryFilter;
+}
+
+const SHClinicalGapDetectionDashboard: React.FC<SHClinicalGapDetectionDashboardProps> = ({ categoryFilter }) => {
   const [expandedGap, setExpandedGap] = useState<string | null>(null);
   const [expandedPatient, setExpandedPatient] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'priority' | 'patients' | 'opportunity'>('priority');
@@ -2494,14 +2503,20 @@ const SHClinicalGapDetectionDashboard: React.FC = () => {
     ])
   );
 
-  const filteredGaps = activeFilters.length === 0 ? sortedGaps : sortedGaps.filter(gap => {
-    const gapName = (gap.name || '').toLowerCase();
-    return activeFilters.some(label =>
-      filterConfig[label].some(kw => gapName.includes(kw.toLowerCase()))
-    );
-  });
+  const filteredGaps = categoryFilter
+    ? sortedGaps.filter(gap => {
+        const gapName = (gap.name || '').toLowerCase();
+        return categoryFilter.keywords.some(kw => gapName.includes(kw.toLowerCase()));
+      })
+    : activeFilters.length === 0 ? sortedGaps : sortedGaps.filter(gap => {
+        const gapName = (gap.name || '').toLowerCase();
+        return activeFilters.some(label =>
+          filterConfig[label].some(kw => gapName.includes(kw.toLowerCase()))
+        );
+      });
 
   const filteredPatientCount = filteredGaps.reduce((sum, g) => sum + (g.patientCount || 0), 0);
+  const filteredOpportunity = filteredGaps.reduce((sum, g) => sum + (g.dollarOpportunity || 0), 0);
   const totalPatientCountForChips = sortedGaps.reduce((sum, g) => sum + (g.patientCount || 0), 0);
   const totalOpportunityForChips = sortedGaps.reduce((sum, g) => sum + (g.dollarOpportunity || 0), 0);
 
@@ -2535,19 +2550,23 @@ const SHClinicalGapDetectionDashboard: React.FC = () => {
       <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
         <h3 className="text-lg font-semibold text-titanium-900 mb-1 flex items-center gap-2">
           <Heart className="w-5 h-5 text-medical-red-600" />
-          Clinical Gap Detection — Structural Heart Module
+          {categoryFilter
+            ? `${categoryFilter.label} · ${filteredGaps.length} GAPS · ${filteredPatientCount.toLocaleString()} PATIENTS · $${(filteredOpportunity / 1_000_000).toFixed(1)}M OPPORTUNITY`
+            : 'Clinical Gap Detection — Structural Heart Module'}
         </h3>
-        <p className="text-sm text-titanium-600 mb-4">
-          AI-driven detection of evidence-based structural heart therapy gaps and growth opportunities.
-          Gaps 3, 5, 8 — 15-gap initiative.
-        </p>
+        {!categoryFilter && (
+          <p className="text-sm text-titanium-600 mb-4">
+            AI-driven detection of evidence-based structural heart therapy gaps and growth opportunities.
+            Gaps 3, 5, 8 — 15-gap initiative.
+          </p>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-red-50 border border-red-200 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
               <Users className="w-4 h-4 text-red-600" />
               <span className="text-xs font-semibold text-red-700 uppercase tracking-wide">Affected Patients</span>
             </div>
-            <div className="text-2xl font-bold text-red-800">{totalPatients.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-red-800">{categoryFilter ? filteredPatientCount.toLocaleString() : totalPatients.toLocaleString()}</div>
           </div>
           <div className="bg-[#F0F7F4] border border-[#D8EDE6] rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
@@ -2555,7 +2574,7 @@ const SHClinicalGapDetectionDashboard: React.FC = () => {
               <span className="text-xs font-semibold text-[#2C4A60] uppercase tracking-wide">Total Opportunity</span>
             </div>
             <div className="text-2xl font-bold text-[#2C4A60]">
-              ${(totalOpportunity / 1000000).toFixed(1)}M
+              ${((categoryFilter ? filteredOpportunity : totalOpportunity) / 1000000).toFixed(1)}M
             </div>
           </div>
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
@@ -2563,12 +2582,13 @@ const SHClinicalGapDetectionDashboard: React.FC = () => {
               <TrendingUp className="w-4 h-4 text-blue-600" />
               <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Active Gaps</span>
             </div>
-            <div className="text-2xl font-bold text-blue-800">{SH_CLINICAL_GAPS.length}</div>
+            <div className="text-2xl font-bold text-blue-800">{categoryFilter ? filteredGaps.length : SH_CLINICAL_GAPS.length}</div>
           </div>
         </div>
       </div>
 
-      {/* Sort control */}
+      {/* Sort control — only shown in standalone mode */}
+      {!categoryFilter && (
       <div className="flex items-center gap-3">
         <span className="text-xs font-semibold text-titanium-600 uppercase tracking-wide">Sort by:</span>
         <select
@@ -2581,8 +2601,10 @@ const SHClinicalGapDetectionDashboard: React.FC = () => {
           <option value="opportunity">Dollar Opportunity</option>
         </select>
       </div>
+      )}
 
-      {/* Filter Chips */}
+      {/* Filter Chips — only shown in standalone mode (no categoryFilter) */}
+      {!categoryFilter && (
       <div className="mb-4">
         <div className="flex items-start justify-between mb-2">
           <div className="flex flex-wrap gap-2">
@@ -2635,6 +2657,7 @@ const SHClinicalGapDetectionDashboard: React.FC = () => {
           )}
         </div>
       </div>
+      )}
 
       {/* Gap list */}
       <div className="space-y-4">

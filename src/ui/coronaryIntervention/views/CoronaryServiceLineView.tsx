@@ -14,7 +14,7 @@ import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNet
 import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
 import CrossReferralEngine from '../../../components/crossReferral/CrossReferralEngine';
 
-type TabId = 'cabg-vs-pci' | 'protected-pci' | 'multi-arterial' | 'on-off-pump' | 'grace' | 'timi' | 'syntax' | 'safety' | 'network' | 'analytics' | 'outcomes' | 'reporting' | 'gap-detection' | 'saq-outcomes' | 'risk-heatmap' | 'care-network' | 'cross-referral';
+type TabId = 'analytics' | 'risk-heatmap' | 'grace' | 'timi' | 'syntax' | 'cabg-vs-pci' | 'protected-pci' | 'multi-arterial' | 'on-off-pump' | 'safety' | 'gap-detection' | 'network' | 'care-network' | 'cross-referral' | 'saq-outcomes' | 'outcomes' | 'reporting';
 
 interface TabGroup {
   label: string;
@@ -23,11 +23,25 @@ interface TabGroup {
   tabs: Array<{ id: string; label: string; icon: React.ElementType; description: string }>;
 }
 
+const cadGapSubTabs = [
+  { id: 'all', label: 'All Gaps', keywords: [] as string[] },
+  { id: 'secondary-prev', label: 'Post-ACS & Prevention', keywords: ['post-acs', 'post-mi', 'high-intensity statin', 'colchicine', 'ace-i', 'arb not prescribed', 'medication reconciliation', 'prevent 2024', 'blood pressure not', 'diabetes not', 'smoking cessation', 'cardiac rehab', 'sglt2i'] },
+  { id: 'antiplatelet', label: 'Antiplatelet & Anticoagulation', keywords: ['dapt', 'p2y12', 'aspirin-free', 'aspirin + oac', 'cangrelor', 'bridging', 'doac interruption', 'hit not', 'anticoagulation reversal', 'short dapt'] },
+  { id: 'pci', label: 'PCI Quality', keywords: ['pci', 'ivus', 'ffr', 'ifr', 'physiologic', 'atherectomy', 'ivl', 'drug-coated balloon', 'radial access', 'protected pci', 'cto', 'complete revasc', 'non-culprit', 'ccta', 'in-stent restenosis', 'scai', 'hemodynamic planning'] },
+  { id: 'cabg', label: 'CABG & Surgical', keywords: ['cabg', 'bypass', 'graft', 'bilateral ima', 'endoscopic', 'hybrid revasc', 'off-pump', 'midcab', 'radial artery', 'blood conservation', 'intra-operative tee', 'post-operative af', 'delirium', 'sternotomy'] },
+  { id: 'lipid', label: 'Lipid Management', keywords: ['ldl', 'lp(a)', 'inclisiran', 'bempedoic', 'icosapent', 'triglycerides', 'statin intolerance', 'persistent ldl'] },
+  { id: 'periprocedural', label: 'Peri-Procedural Safety', keywords: ['door-to-balloon', 'aki risk', 'contrast', 'poaf', 'pre-operative cardiac', 'non-cardiac surgery', 'anticoagulation reversal', 'emergency surgery', 'hit not screened'] },
+];
+
 const CoronaryServiceLineView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('gap-detection');
+  const [activeGapSubTab, setActiveGapSubTab] = useState<string>('all');
 
   const handleTabChange = (tab: TabId) => {
     setActiveTab(tab);
+    if (tab !== 'gap-detection') {
+      setActiveGapSubTab('all');
+    }
     const container = document.getElementById('main-scroll-container');
     if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
@@ -41,8 +55,7 @@ const CoronaryServiceLineView: React.FC = () => {
  colorBg: 'rgba(44, 74, 96, 0.08)',
  tabs: [
  { id: 'analytics', label: 'Procedure Analytics', icon: BarChart3, description: 'Advanced coronary analytics' },
- { id: 'risk-heatmap', label: 'Patient Risk Heatmap', icon: Target, description: 'Interactive coronary risk visualization matrix' },
- { id: 'saq-outcomes', label: 'PRO-Outcomes (SAQ)', icon: Activity, description: 'Seattle Angina Questionnaire outcomes tracking' },
+ { id: 'risk-heatmap', label: 'Risk Heatmap', icon: Target, description: 'Interactive coronary risk visualization matrix' },
  ],
  },
  {
@@ -57,6 +70,7 @@ const CoronaryServiceLineView: React.FC = () => {
  { id: 'protected-pci', label: 'Protected PCI', icon: Shield, description: 'Protected PCI planner' },
  { id: 'multi-arterial', label: 'Multi-Arterial', icon: Target, description: 'Multi-arterial graft calculator' },
  { id: 'on-off-pump', label: 'On/Off Pump', icon: Activity, description: 'On-pump vs off-pump decision' },
+ { id: 'safety', label: 'Safety Screening', icon: Shield, description: 'Coronary safety screening' },
  ],
  },
  {
@@ -64,7 +78,7 @@ const CoronaryServiceLineView: React.FC = () => {
  color: '#2D6147',
  colorBg: 'rgba(45, 97, 71, 0.10)',
  tabs: [
- { id: 'gap-detection', label: 'Gap Detection (71-Gap)', icon: Search, description: 'CAD clinical gap detection' },
+ { id: 'gap-detection', label: 'Gap Detection', icon: Search, description: 'CAD clinical gap detection' },
  ],
  },
  {
@@ -82,8 +96,8 @@ const CoronaryServiceLineView: React.FC = () => {
  color: '#9B2438',
  colorBg: 'rgba(155, 36, 56, 0.08)',
  tabs: [
+ { id: 'saq-outcomes', label: 'PRO-Outcomes (SAQ)', icon: Activity, description: 'Seattle Angina Questionnaire outcomes tracking' },
  { id: 'outcomes', label: 'Outcomes', icon: TrendingUp, description: 'Procedural outcomes' },
- { id: 'safety', label: 'Safety Screening', icon: Shield, description: 'Coronary safety screening' },
  { id: 'reporting', label: 'Automated Reports', icon: FileText, description: 'Automated reports' },
  ],
  },
@@ -627,8 +641,6 @@ const CoronaryServiceLineView: React.FC = () => {
  );
  case 'reporting':
  return <AutomatedReportingSystem />;
- case 'gap-detection':
- return <CADClinicalGapDetectionDashboard />;
  case 'saq-outcomes':
  return <SAQOutcomesPanel />;
  case 'risk-heatmap':
@@ -637,6 +649,38 @@ const CoronaryServiceLineView: React.FC = () => {
  return <CareTeamNetworkGraph />;
  case 'cross-referral':
  return <CrossReferralEngine />;
+ case 'gap-detection':
+ return (
+   <div>
+     {/* Gap Sub-Navigation */}
+     <div className="mb-4 bg-white rounded-xl border border-titanium-200 p-4 shadow-sm">
+       <div className="text-xs font-semibold uppercase tracking-wider text-titanium-500 mb-3">Gap Category</div>
+       <div className="flex flex-wrap gap-2">
+         {cadGapSubTabs.map(sub => {
+           const isActive = activeGapSubTab === sub.id;
+           return (
+             <button
+               key={sub.id}
+               onClick={() => setActiveGapSubTab(sub.id)}
+               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                 isActive ? 'text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+               }`}
+               style={isActive ? { backgroundColor: '#2D6147' } : {}}
+             >
+               {sub.label}
+             </button>
+           );
+         })}
+       </div>
+     </div>
+     <CADClinicalGapDetectionDashboard
+       categoryFilter={activeGapSubTab === 'all' ? undefined : {
+         label: cadGapSubTabs.find(s => s.id === activeGapSubTab)?.label || '',
+         keywords: cadGapSubTabs.find(s => s.id === activeGapSubTab)?.keywords || []
+       }}
+     />
+   </div>
+ );
  default:
  return <GRACEScoreCalculator />;
  }

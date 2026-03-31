@@ -13,7 +13,7 @@ import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNet
 import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
 import CrossReferralEngine from '../../../components/crossReferral/CrossReferralEngine';
 
-type TabId = 'tavr' | 'teer-mitral' | 'teer-tricuspid' | 'tmvr' | 'pfo-asd' | 'sts-risk' | 'referrals' | 'analytics' | 'outcomes' | 'quality' | 'reporting' | 'gap-detection' | 'provider-scorecard' | 'phenotype-detection' | 'risk-heatmap' | 'care-network' | 'cross-referral';
+type TabId = 'tavr' | 'teer-mitral' | 'teer-tricuspid' | 'tmvr' | 'pfo-asd' | 'gap-detection' | 'sts-risk' | 'risk-heatmap' | 'quality' | 'outcomes' | 'referrals' | 'provider-scorecard' | 'cross-referral' | 'care-network' | 'phenotype-detection' | 'reporting';
 
 interface TabGroup {
   label: string;
@@ -22,11 +22,25 @@ interface TabGroup {
   tabs: Array<{ id: string; label: string; icon: React.ElementType; description: string }>;
 }
 
+const shGapSubTabs = [
+  { id: 'all', label: 'All Gaps', keywords: [] as string[] },
+  { id: 'tavr', label: 'TAVR Pathway', keywords: ['tavr', 'severe as', 'aortic stenosis', 'low-flow', 'low-gradient', 'dobutamine stress', 'ct sizing', 'cerebral embolic', 'basilica', 'tavr-in-tavr', 'asymptomatic severe'] },
+  { id: 'mitral-tricuspid', label: 'Mitral & Tricuspid', keywords: ['mitral', 'teer', 'functional mr', 'primary mr', 'tr', 'tricuspid', 'coapt', 'mitra-fr', 'bmc', 'commissurotomy'] },
+  { id: 'defect-hcm', label: 'Structural Defect & HCM', keywords: ['pfo', 'asd', 'hcm', 'septal ablation', 'obstructive hcm', 'device closure'] },
+  { id: 'aortopathy', label: 'Aortopathy', keywords: ['bav', 'aortopathy', 'aortic regurgitation', 'lvesd', 'aortic imaging', 'root replacement'] },
+  { id: 'post-proc', label: 'Post-Procedure Quality', keywords: ['post-tavr', 'paravalvular', 'anticoagulation not standardized', 'sizing protocol', 'concomitant pci', 'endocarditis prophylaxis'] },
+  { id: 'surveillance', label: 'Surveillance', keywords: ['surveillance', 'overdue', 'monitoring', 'echo', 'imaging overdue'] },
+];
+
 const StructuralServiceLineView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('gap-detection');
+  const [activeGapSubTab, setActiveGapSubTab] = useState<string>('all');
 
   const handleTabChange = (tab: TabId) => {
     setActiveTab(tab);
+    if (tab !== 'gap-detection') {
+      setActiveGapSubTab('all');
+    }
     const container = document.getElementById('main-scroll-container');
     if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
@@ -35,7 +49,7 @@ const StructuralServiceLineView: React.FC = () => {
 
   const tabGroups: TabGroup[] = [
     {
-      label: 'Procedure Analytics',
+      label: 'Procedure Pathways',
       color: '#9B2438',
       colorBg: 'rgba(155, 36, 56, 0.08)',
       tabs: [
@@ -47,22 +61,23 @@ const StructuralServiceLineView: React.FC = () => {
       ],
     },
     {
-      label: 'Risk & Quality',
+      label: 'Gap & Opportunity',
       color: '#C4982A',
       colorBg: 'rgba(196, 152, 42, 0.10)',
       tabs: [
-        { id: 'sts-risk', label: 'STS Risk', icon: Gauge, description: 'STS risk calculator' },
-        { id: 'analytics', label: 'Procedure Analytics', icon: BarChart3, description: 'Advanced analytics dashboard' },
-        { id: 'quality', label: 'Quality', icon: Target, description: 'Quality metrics and benchmarks' },
-        { id: 'outcomes', label: 'Outcomes', icon: TrendingUp, description: 'Clinical outcomes tracking' },
+        { id: 'gap-detection', label: 'Gap Detection', icon: Search, description: 'AI-driven clinical gap detection across structural heart gaps' },
       ],
     },
     {
-      label: 'Gap & Opportunity',
+      label: 'Risk & Quality',
       color: '#2C4A60',
       colorBg: 'rgba(44, 74, 96, 0.08)',
       tabs: [
-        { id: 'gap-detection', label: 'Gap Detection (20-Gap)', icon: Search, description: 'AI-driven clinical gap detection across 14 structural heart gaps' },
+        { id: 'sts-risk', label: 'STS Risk', icon: Gauge, description: 'STS risk calculator' },
+        { id: 'risk-heatmap', label: 'Risk Heatmap', icon: Target, description: 'Interactive structural heart risk visualization matrix' },
+        { id: 'quality', label: 'Quality', icon: Target, description: 'Quality metrics and benchmarks' },
+        { id: 'outcomes', label: 'Outcomes', icon: TrendingUp, description: 'Clinical outcomes tracking' },
+        { id: 'phenotype-detection', label: 'Phenotyping', icon: Search, description: 'SH phenotype prevalence and detection rates' },
       ],
     },
     {
@@ -73,16 +88,14 @@ const StructuralServiceLineView: React.FC = () => {
         { id: 'referrals', label: 'Referral Network', icon: Users, description: 'Heart team referral patterns' },
         { id: 'provider-scorecard', label: 'Provider Scorecard', icon: Users, description: 'Individual structural heart provider performance analytics' },
         { id: 'cross-referral', label: 'Cross-Referral Engine', icon: Heart, description: 'Cross-specialty referral pathways for structural heart' },
+        { id: 'care-network', label: 'Care Team Network', icon: Users, description: 'Structural heart care team collaboration patterns' },
       ],
     },
     {
-      label: 'Analytics & Reporting',
+      label: 'Reporting',
       color: '#2D6147',
       colorBg: 'rgba(45, 97, 71, 0.10)',
       tabs: [
-        { id: 'risk-heatmap', label: 'Patient Risk Heatmap', icon: Target, description: 'Interactive structural heart risk visualization matrix' },
-        { id: 'care-network', label: 'Care Team Network', icon: Users, description: 'Structural heart care team collaboration patterns' },
-        { id: 'phenotype-detection', label: 'Phenotype Detection', icon: Search, description: 'SH phenotype prevalence and detection rates' },
         { id: 'reporting', label: 'Automated Reports', icon: FileText, description: 'Automated reports and exports' },
       ],
     },
@@ -271,8 +284,6 @@ const StructuralServiceLineView: React.FC = () => {
             </div>
           </div>
         );
-      case 'analytics':
-        return <TAVRAnalyticsDashboard />;
       case 'outcomes':
         return (
           <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-8">
@@ -373,7 +384,37 @@ const StructuralServiceLineView: React.FC = () => {
       case 'care-network':
         return <CareTeamNetworkGraph />;
       case 'gap-detection':
-        return <SHClinicalGapDetectionDashboard />;
+        return (
+          <div>
+            {/* Gap Sub-Navigation */}
+            <div className="mb-4 bg-white rounded-xl border border-titanium-200 p-4 shadow-sm">
+              <div className="text-xs font-semibold uppercase tracking-wider text-titanium-500 mb-3">Gap Category</div>
+              <div className="flex flex-wrap gap-2">
+                {shGapSubTabs.map(sub => {
+                  const isActive = activeGapSubTab === sub.id;
+                  return (
+                    <button
+                      key={sub.id}
+                      onClick={() => setActiveGapSubTab(sub.id)}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                        isActive ? 'text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      }`}
+                      style={isActive ? { backgroundColor: '#C4982A' } : {}}
+                    >
+                      {sub.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <SHClinicalGapDetectionDashboard
+              categoryFilter={activeGapSubTab === 'all' ? undefined : {
+                label: shGapSubTabs.find(s => s.id === activeGapSubTab)?.label || '',
+                keywords: shGapSubTabs.find(s => s.id === activeGapSubTab)?.keywords || []
+              }}
+            />
+          </div>
+        );
       case 'provider-scorecard':
         return <SHProviderScorecard />;
       case 'phenotype-detection':

@@ -231,11 +231,25 @@ interface TabGroup {
   tabs: Array<{ id: string; label: string; icon: React.ElementType; description: string }>;
 }
 
+const pvGapSubTabs = [
+  { id: 'all', label: 'All Gaps', keywords: [] as string[] },
+  { id: 'pad-medical', label: 'PAD Medical Therapy', keywords: ['pad', 'dual pathway', 'cilostazol', 'statin not prescribed', 'antihypertensive not', 'voyager', 'supervised exercise', 'abi screening', 'claudication', 'polyvascular', 'smoking cessation'] },
+  { id: 'revasc', label: 'Revascularization', keywords: ['revascularization', 'clti', 'best-cli', 'drug-coated balloon', 'pedal loop', 'hybrid open', 'limb loss', 'endovascular', 'bypass decision', 'duplex surveillance'] },
+  { id: 'aortic', label: 'Aortic Emergencies', keywords: ['aortic dissection', 'thoracic aortic', 'taa', 'aaa', 'cta aorta', 'surveillance interval exceeded'] },
+  { id: 'venous', label: 'Venous Disease', keywords: ['vte', 'ivc filter', 'may-thurner', 'dvt', 'venous ulcer', 'submassive pe', 'cdt', 'pert', 'extended anticoagulation', 'venous stenting', 'lymphedema'] },
+  { id: 'screening', label: 'Screening & Detection', keywords: ['renal artery', 'cmi', 'mesenteric', 'thoracic outlet', 'popliteal entrapment', 'dialysis access', 'abi screening', 'resistant htn'] },
+  { id: 'peri-proc', label: 'Peri-Procedural', keywords: ['perioperative anticoagulation', 'aki risk not assessed pre-vascular', 'subclavian steal', 'post-revascularization pad', 'anticoagulation not standardized'] },
+];
+
 const PeripheralServiceLineView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<PeripheralServiceLineTab>('analytics');
+  const [activeGapSubTab, setActiveGapSubTab] = useState<string>('all');
 
   const handleTabChange = (tab: PeripheralServiceLineTab) => {
     setActiveTab(tab);
+    if (tab !== 'gap-detection') {
+      setActiveGapSubTab('all');
+    }
     const container = document.getElementById('main-scroll-container');
     if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
@@ -297,7 +311,38 @@ const PeripheralServiceLineView: React.FC = () => {
       case 'wound-care-network': return <PVWoundCareNetworkVisualization />;
       case 'quality': return <PADQualityMetrics />;
       case 'reporting': return <PADReportingSystem />;
-      case 'gap-detection': return <PVClinicalGapDetectionDashboard />;
+      case 'gap-detection':
+        return (
+          <div>
+            {/* Gap Sub-Navigation */}
+            <div className="mb-4 bg-white rounded-xl border border-titanium-200 p-4 shadow-sm">
+              <div className="text-xs font-semibold uppercase tracking-wider text-titanium-500 mb-3">Gap Category</div>
+              <div className="flex flex-wrap gap-2">
+                {pvGapSubTabs.map(sub => {
+                  const isActive = activeGapSubTab === sub.id;
+                  return (
+                    <button
+                      key={sub.id}
+                      onClick={() => setActiveGapSubTab(sub.id)}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                        isActive ? 'text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      }`}
+                      style={isActive ? { backgroundColor: '#2C4A60' } : {}}
+                    >
+                      {sub.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <PVClinicalGapDetectionDashboard
+              categoryFilter={activeGapSubTab === 'all' ? undefined : {
+                label: pvGapSubTabs.find(s => s.id === activeGapSubTab)?.label || '',
+                keywords: pvGapSubTabs.find(s => s.id === activeGapSubTab)?.keywords || [],
+              }}
+            />
+          </div>
+        );
       default: return <PeripheralVascularAnalytics />;
     }
   };

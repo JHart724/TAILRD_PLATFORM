@@ -11,23 +11,39 @@ type TabId = 'bicuspid' | 'ross' | 'repair-vs-replace' | 'echo-surveillance' | '
 
 interface TabGroup {
   label: string;
+  color: string;
+  colorBg: string;
   tabs: Array<{ id: string; label: string; icon: React.ElementType; description: string }>;
 }
 
+const vdGapSubTabs = [
+  { id: 'all', label: 'All Gaps', keywords: [] as string[] },
+  { id: 'as-pathway', label: 'AS & TAVR Pathway', keywords: ['aortic stenosis', 'tavr', 'severe as', 'low-gradient', 'dobutamine', 'ct sizing', 'paravalvular', 'pacemaker after tavr', 'valve-in-valve'] },
+  { id: 'mr-tr', label: 'MR & Tricuspid', keywords: ['mitral regurgitation', 'mr', 'functional mr', 'primary mr', 'teer', 'mitraclip', 'tricuspid', 'tr severity', 'concomitant tv'] },
+  { id: 'surveillance', label: 'Surveillance Gaps', keywords: ['echo surveillance', 'overdue', 'no follow-up echo', 'surveillance not', 'missed echo', 'aortic root', 'bicuspid surveillance'] },
+  { id: 'anticoag', label: 'Anticoagulation & Safety', keywords: ['anticoagulation', 'inr', 'doac after tavr', 'warfarin', 'bridging', 'thrombosis', 'endocarditis prophylaxis', 'dental', 'bleeding'] },
+  { id: 'comorbidity', label: 'Comorbidity & Discovery', keywords: ['heart failure', 'af not', 'coronary', 'sdoh', 'frailty', 'undiagnosed', 'nutrition', 'iron', 'cardiac rehab', 'prehabilitation'] },
+  { id: 'post-proc', label: 'Post-Procedure Quality', keywords: ['discharge', '30-day', 'readmission', 'follow-up', 'palliative', 'advance directive', 'rehab referral', 'quality of life'] },
+];
+
 const ValvularServiceLineView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('clinical-gap-detection');
+  const [activeGapSubTab, setActiveGapSubTab] = useState<string>('all');
 
   const handleTabChange = (tab: TabId) => {
     setActiveTab(tab);
+    if (tab !== 'clinical-gap-detection') {
+      setActiveGapSubTab('all');
+    }
     const container = document.getElementById('main-scroll-container');
     if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
-  const [generatingReport, setGeneratingReport] = useState<string | null>(null);
-  const [exportingFormat, setExportingFormat] = useState<string | null>(null);
 
   const tabGroups: TabGroup[] = [
     {
       label: 'Procedure Pathways',
+      color: '#9B2438',
+      colorBg: 'rgba(155, 36, 56, 0.08)',
       tabs: [
         { id: 'bicuspid', label: 'Bicuspid Repair', icon: Scissors, description: 'Bicuspid aortic valve repair pathway' },
         { id: 'ross', label: 'Ross Procedure', icon: Heart, description: 'Ross procedure tracking and outcomes' },
@@ -36,19 +52,37 @@ const ValvularServiceLineView: React.FC = () => {
       ],
     },
     {
-      label: 'Gap & Quality',
+      label: 'Gap & Opportunity',
+      color: '#C4982A',
+      colorBg: 'rgba(196, 152, 42, 0.10)',
       tabs: [
-        { id: 'clinical-gap-detection', label: 'Gap Detection (28-Gap)', icon: AlertTriangle, description: 'AI-driven clinical gap detection' },
-        { id: 'quality', label: 'Quality', icon: Shield, description: 'Quality metrics and benchmarks' },
+        { id: 'clinical-gap-detection', label: 'Gap Detection', icon: AlertTriangle, description: 'AI-driven clinical gap detection' },
       ],
     },
     {
-      label: 'Analytics & Reporting',
+      label: 'Quality & Analytics',
+      color: '#2C4A60',
+      colorBg: 'rgba(44, 74, 96, 0.08)',
       tabs: [
+        { id: 'quality', label: 'Quality Metrics', icon: Shield, description: 'Quality metrics and benchmarks' },
         { id: 'heatmap', label: 'Patient Risk Heatmap', icon: Target, description: 'Valve patient risk visualization' },
-        { id: 'network', label: 'Referral Network', icon: Users, description: 'Surgical referral patterns' },
         { id: 'analytics', label: 'Analytics', icon: BarChart3, description: 'Advanced valve analytics' },
         { id: 'outcomes', label: 'Outcomes', icon: TrendingUp, description: 'Surgical outcomes tracking' },
+      ],
+    },
+    {
+      label: 'Care Coordination',
+      color: '#1A6878',
+      colorBg: 'rgba(26, 104, 120, 0.08)',
+      tabs: [
+        { id: 'network', label: 'Referral Network', icon: Users, description: 'Surgical referral patterns' },
+      ],
+    },
+    {
+      label: 'Reporting',
+      color: '#2D6147',
+      colorBg: 'rgba(45, 97, 71, 0.10)',
+      tabs: [
         { id: 'reporting', label: 'Automated Reports', icon: FileText, description: 'Automated reports and exports' },
       ],
     },
@@ -500,7 +534,35 @@ const ValvularServiceLineView: React.FC = () => {
         return <AutomatedReportingSystem />;
       case 'clinical-gap-detection':
         return (
-          <VDClinicalGapDetectionDashboard />
+          <div>
+            {/* Gap Sub-Navigation */}
+            <div className="mb-4 bg-white rounded-xl border border-titanium-200 p-4 shadow-sm">
+              <div className="text-xs font-semibold uppercase tracking-wider text-titanium-500 mb-3">Gap Category</div>
+              <div className="flex flex-wrap gap-2">
+                {vdGapSubTabs.map(sub => {
+                  const isActive = activeGapSubTab === sub.id;
+                  return (
+                    <button
+                      key={sub.id}
+                      onClick={() => setActiveGapSubTab(sub.id)}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                        isActive ? 'text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      }`}
+                      style={isActive ? { backgroundColor: '#C4982A' } : {}}
+                    >
+                      {sub.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <VDClinicalGapDetectionDashboard
+              categoryFilter={activeGapSubTab === 'all' ? undefined : {
+                label: vdGapSubTabs.find(s => s.id === activeGapSubTab)?.label || '',
+                keywords: vdGapSubTabs.find(s => s.id === activeGapSubTab)?.keywords || []
+              }}
+            />
+          </div>
         );
       default:
         return <ValvePatientHeatmap />;
@@ -518,7 +580,7 @@ const ValvularServiceLineView: React.FC = () => {
               {/* Section Divider */}
               {groupIdx > 0 && <div className="border-t border-titanium-100 my-4" />}
               <div className="mb-3">
-                <span className="text-xs font-semibold uppercase tracking-wider text-titanium-400">{group.label}</span>
+                <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: group.color }}>{group.label}</span>
               </div>
               <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6 gap-3 mb-2">
                 {group.tabs.map((tab) => {
@@ -530,18 +592,32 @@ const ValvularServiceLineView: React.FC = () => {
                       onClick={() => handleTabChange(tab.id as TabId)}
                       className={`group relative p-4 rounded-xl border transition-all duration-300 ${
                         isActive
-                          ? 'bg-porsche-50 border-porsche-200 text-porsche-600 shadow-lg scale-105'
+                          ? 'shadow-lg scale-105'
                           : 'bg-white border-titanium-200 text-titanium-600 hover:bg-white hover:scale-105 hover:shadow-lg'
                       }`}
+                      style={isActive ? {
+                        background: group.colorBg,
+                        borderColor: group.color,
+                        color: group.color,
+                      } : {}}
                     >
                       <div className="flex flex-col items-center gap-2">
-                        <Icon className={`w-6 h-6 ${isActive ? 'text-porsche-600' : 'text-titanium-600 group-hover:text-titanium-800'}`} />
-                        <span className={`text-xs font-semibold text-center leading-tight ${isActive ? 'text-porsche-600' : 'text-titanium-600 group-hover:text-titanium-800'}`}>
+                        <Icon
+                          className="w-6 h-6"
+                          style={{ color: isActive ? group.color : undefined }}
+                        />
+                        <span
+                          className={`text-xs font-semibold text-center leading-tight ${!isActive ? 'text-titanium-600 group-hover:text-titanium-800' : ''}`}
+                          style={isActive ? { color: group.color } : {}}
+                        >
                           {tab.label}
                         </span>
                       </div>
                       {isActive && (
-                        <div className="absolute inset-0 bg-gradient-to-r from-porsche-400 to-porsche-500 rounded-xl opacity-50" />
+                        <div
+                          className="absolute bottom-0 left-0 right-0 h-0.5 rounded-b-xl"
+                          style={{ background: group.color }}
+                        />
                       )}
                     </button>
                   );
