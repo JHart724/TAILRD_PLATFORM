@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import { PrismaClient, ModuleType, ActivityType } from '@prisma/client';
 import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
@@ -17,7 +17,7 @@ router.get('/dashboard',
     query('hospitalId').optional().isString(),
     query('moduleType').optional().isIn(Object.values(ModuleType))
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { timeRange = '30d', hospitalId, moduleType } = req.query;
       const user = req.user!;
@@ -92,7 +92,7 @@ router.get('/dashboard',
           },
           _sum: {
             usageCount: true,
-            timeSpent: true
+            totalDuration: true
           }
         }),
 
@@ -109,7 +109,7 @@ router.get('/dashboard',
             responseTime: true,
             memoryUsage: true,
             cpuUsage: true,
-            dbQueryTime: true
+            dbQueries: true
           },
           _count: true
         }),
@@ -127,7 +127,7 @@ router.get('/dashboard',
           },
           _sum: {
             usageCount: true,
-            timeSpent: true
+            totalDuration: true
           },
           orderBy: {
             _sum: {
@@ -196,22 +196,22 @@ router.get('/dashboard',
           overview: {
             totalActivities: userActivityCount,
             uniqueUsers: uniqueUsersCount,
-            totalFeatureUsage: featureUsageStats._sum.usageCount || 0,
-            totalTimeSpent: featureUsageStats._sum.timeSpent || 0,
-            averageResponseTime: Math.round(performanceMetrics._avg.responseTime || 0),
+            totalFeatureUsage: featureUsageStats._sum?.usageCount || 0,
+            totalTimeSpent: featureUsageStats._sum?.totalDuration || 0,
+            averageResponseTime: Math.round(performanceMetrics._avg?.responseTime || 0),
             totalApiCalls: performanceMetrics._count
           },
           performance: {
-            averageResponseTime: Math.round(performanceMetrics._avg.responseTime || 0),
-            averageMemoryUsage: Math.round(performanceMetrics._avg.memoryUsage || 0),
-            averageCpuUsage: performanceMetrics._avg.cpuUsage || 0,
-            averageDbQueryTime: Math.round(performanceMetrics._avg.dbQueryTime || 0)
+            averageResponseTime: Math.round(performanceMetrics._avg?.responseTime || 0),
+            averageMemoryUsage: Math.round(performanceMetrics._avg?.memoryUsage || 0),
+            averageCpuUsage: performanceMetrics._avg?.cpuUsage || 0,
+            averageDbQueryTime: Math.round(performanceMetrics._avg?.dbQueries || 0)
           },
           topFeatures: topFeatures.map(f => ({
             featureName: f.featureName,
             moduleType: f.moduleType,
-            usageCount: f._sum.usageCount || 0,
-            timeSpent: f._sum.timeSpent || 0
+            usageCount: f._sum?.usageCount || 0,
+            timeSpent: f._sum?.totalDuration || 0
           })),
           activityByModule: activityByModule.map(a => ({
             moduleType: a.moduleType,
@@ -253,7 +253,7 @@ router.get('/user-activity',
     query('page').optional().isInt({ min: 1 }),
     query('limit').optional().isInt({ min: 1, max: 100 })
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const {
         startDate,
@@ -343,7 +343,7 @@ router.get('/feature-usage',
     query('endDate').optional().isISO8601(),
     query('groupBy').optional().isIn(['day', 'week', 'month', 'feature', 'module', 'user'])
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const {
         moduleType,
@@ -401,10 +401,10 @@ router.get('/feature-usage',
         where: whereClause,
         _sum: {
           usageCount: true,
-          timeSpent: true
+          totalDuration: true
         },
         _avg: {
-          timeSpent: true
+          totalDuration: true
         },
         orderBy,
         take: 100
@@ -418,9 +418,9 @@ router.get('/feature-usage',
           groupBy,
           featureUsage: featureUsage.map(usage => ({
             ...usage,
-            totalUsage: usage._sum.usageCount || 0,
-            totalTimeSpent: usage._sum.timeSpent || 0,
-            averageTimeSpent: usage._avg.timeSpent || 0
+            totalUsage: usage._sum?.usageCount || 0,
+            totalTimeSpent: usage._sum?.totalDuration || 0,
+            averageTimeSpent: usage._avg?.totalDuration || 0
           }))
         },
         message: 'Feature usage analytics retrieved',
@@ -448,7 +448,7 @@ router.get('/performance',
     query('method').optional().isIn(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']),
     query('groupBy').optional().isIn(['hour', 'day', 'endpoint', 'method'])
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const {
         startDate,
@@ -495,10 +495,10 @@ router.get('/performance',
             key = new Date(metric.timestamp).toISOString().substring(0, 10);
             break;
           case 'endpoint':
-            key = metric.endpoint;
+            key = metric.endpoint || 'unknown';
             break;
           case 'method':
-            key = metric.method;
+            key = metric.operation || 'unknown';
             break;
           default:
             key = new Date(metric.timestamp).toISOString().substring(0, 10);
@@ -517,11 +517,11 @@ router.get('/performance',
         }
 
         acc[key].count++;
-        acc[key].totalResponseTime += metric.responseTime;
+        acc[key].totalResponseTime += metric.responseTime || 0;
         acc[key].totalMemoryUsage += metric.memoryUsage || 0;
         acc[key].totalCpuUsage += metric.cpuUsage || 0;
-        acc[key].totalDbQueryTime += metric.dbQueryTime || 0;
-        if (metric.statusCode >= 400) acc[key].errors++;
+        acc[key].totalDbQueryTime += metric.dbQueries || 0;
+        if ((metric.errorRate || 0) > 0) acc[key].errors++;
 
         return acc;
       }, {});
@@ -568,7 +568,7 @@ router.post('/track',
     body('metadata').optional().isObject(),
     body('value').optional().isNumeric()
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -636,7 +636,7 @@ router.post('/gap-actions',
     body('action').isIn(['view', 'ordered', 'referred', 'dismissed']).withMessage('Invalid action'),
     body('reason').optional().isString()
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -696,7 +696,7 @@ router.get('/gap-actions/response-rates',
     query('module').optional().isIn(Object.values(ModuleType)),
     query('timeRange').optional().isIn(['7d', '30d', '90d', '1y'])
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { module, timeRange = '30d' } = req.query;
       const user = req.user!;
@@ -735,11 +735,15 @@ router.get('/gap-actions/response-rates',
         if (!gapMap[row.gapId]) {
           gapMap[row.gapId] = { views: 0, ordered: 0, referred: 0, dismissed: 0 };
         }
-        const key = row.action as keyof typeof gapMap[string];
-        if (key === 'view') {
+        const action = row.action;
+        if (action === 'view') {
           gapMap[row.gapId].views = row._count.id;
-        } else if (key in gapMap[row.gapId]) {
-          gapMap[row.gapId][key] = row._count.id;
+        } else if (action === 'ordered') {
+          gapMap[row.gapId].ordered = row._count.id;
+        } else if (action === 'referred') {
+          gapMap[row.gapId].referred = row._count.id;
+        } else if (action === 'dismissed') {
+          gapMap[row.gapId].dismissed = row._count.id;
         }
       }
 
