@@ -512,7 +512,7 @@ const EPDocumentation: React.FC = () => (
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* Documentation Alerts */}
  <div className="space-y-4">
- <div className="bg-gradient-to-r from-amber-50 to-amber-50 p-6 rounded-xl border border-[#C8D4DC]">
+ <div className="bg-gradient-to-r from-slate-50 to-slate-50 p-6 rounded-xl border border-[#C8D4DC]">
  <h4 className="font-semibold text-[#6B7280] mb-4 flex items-center gap-2">
  <AlertTriangle className="w-5 h-5 text-[#6B7280]" />
  Documentation Alerts & Registry

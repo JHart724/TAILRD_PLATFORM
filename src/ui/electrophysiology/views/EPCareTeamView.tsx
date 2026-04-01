@@ -188,7 +188,7 @@ const EPCareTeamView: React.FC = () => {
  <Calendar className="w-4 h-4" />
  {quickActionFeedback === 'ablation' ? '✓ Scheduling Initiated' : 'Schedule Ablation'}
  </button>
- <button onClick={() => { handleTabChange('clinicaltools'); }} className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-lg hover:from-amber-700 hover:to-amber-800 transition-all duration-300 font-medium">
+ <button onClick={() => { handleTabChange('clinicaltools'); }} className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-[#7A1A2E] to-[#5C1022] text-white rounded-lg hover:from-[#5C1022] hover:to-[#3D0A16] transition-all duration-300 font-medium">
  <Activity className="w-4 h-4" />
  Device Interrogation
  </button>

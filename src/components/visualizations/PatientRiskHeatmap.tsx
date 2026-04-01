@@ -464,7 +464,7 @@ const PatientRiskHeatmap: React.FC = () => {
  <div className={`p-4 rounded-xl border-2 ${
  selectedPatient.riskScore >= 80 ? 'bg-red-50 border-red-200' :
  selectedPatient.riskScore >= 60 ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
- selectedPatient.riskScore >= 40 ? 'bg-[#F0F5FA] border-yellow-200' :
+ selectedPatient.riskScore >= 40 ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
  'bg-[#F0F7F4] border-[#D8EDE6]'
  }`}>
  <div className="flex items-center gap-3">
@@ -488,7 +488,7 @@ const PatientRiskHeatmap: React.FC = () => {
 
  <div className={`p-4 rounded-xl border-2 ${
  selectedPatient.gdmtPillars === 4 ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
- selectedPatient.gdmtPillars >= 2 ? 'bg-[#F0F5FA] border-yellow-200' :
+ selectedPatient.gdmtPillars >= 2 ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
  'bg-red-50 border-red-200'
  }`}>
  <div className="flex items-center gap-3">

@@ -92,7 +92,7 @@ export default function CareGapOrchestrationCard({ orchestration, defaultExpande
 
   // ── Severity border color ──
   const borderColor = isResolved
-    ? 'border-l-emerald-500'
+    ? 'border-l-[#2C4A60]'
     : o.severity === 'critical'
     ? 'border-l-arterial-600'
     : o.severity === 'high'

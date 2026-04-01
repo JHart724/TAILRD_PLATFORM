@@ -360,7 +360,7 @@ const EPRealTimeHospitalAlerts: React.FC = () => {
   return (
  <div className="space-y-6">
  {/* Header with Real-time Status */}
- <div className="bg-gradient-to-r from-red-50 to-amber-50 border border-red-200 rounded-xl p-6">
+ <div className="bg-gradient-to-r from-red-50 to-slate-50 border border-red-200 rounded-xl p-6">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center gap-3">
  <div className="relative">

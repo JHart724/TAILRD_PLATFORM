@@ -142,16 +142,6 @@ const EPQualityMetrics: React.FC = () => (
   </div>
 );
 
-const epGapSubTabs = [
-  { id: 'all', label: 'All Gaps', keywords: [] as string[] },
-  { id: 'af', label: 'AF Management', keywords: ['persistent af', 'rhythm control', 'rate control', 'east-afnet', 'cardioversion', 'early rhythm', 'af recurrence', 'af rate', 'flutter'] },
-  { id: 'anticoag', label: 'Anticoagulation', keywords: ['oac', 'cha', 'anticoagulation not', 'subclinical af', 'undertreatment', 'tee not', 'aspirin + oac'] },
-  { id: 'ablation', label: 'Ablation Candidates', keywords: ['ablation', 'pfa', 'svt', 'avnrt', 'avrt', 'vt ablation', 'epicardial', 'csp', 'zero-fluoroscopy', 'castle-af', 'vanish', 'partita'] },
-  { id: 'device', label: 'Device Therapy', keywords: ['icd', 'laac', 'leadless', 'subcutaneous icd', 'crt', 'battery', 'eri', 'eol', 'lead recall', 'device infection', 'cardiac arrest survivor'] },
-  { id: 'drugsafety', label: 'Drug Safety', keywords: ['amiodarone', 'dofetilide', 'dronedarone', 'qtc', 'lqts', 'torsades', 'aad not discontinued', 'rems'] },
-  { id: 'diagnostics', label: 'Diagnostics & Syncope', keywords: ['syncope', 'loop recorder', 'ilr', 'pvc burden', 'wpw', 'fontan', 'adult congenital', 'carotid', 'cryptogenic', 'inappropriate sinus'] },
-];
-
 type EPServiceLineTab =
   | 'analytics'
   | 'heatmap'
@@ -179,13 +169,9 @@ interface TabGroup {
 
 const EPServiceLineView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<EPServiceLineTab>('gap-detection');
-  const [activeGapSubTab, setActiveGapSubTab] = useState<string>('all');
 
   const handleTabChange = (tab: EPServiceLineTab) => {
     setActiveTab(tab);
-    if (tab !== 'gap-detection') {
-      setActiveGapSubTab('all');
-    }
     const container = document.getElementById('main-scroll-container');
     if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
@@ -261,37 +247,7 @@ const EPServiceLineView: React.FC = () => {
       case 'outcomes-cohort': return <EPOutcomesByCohort />;
       case 'reporting': return <AutomatedReportingSystem />;
       case 'gap-detection':
-        return (
-          <div>
-            {/* Gap Sub-Navigation */}
-            <div className="mb-4 bg-white rounded-xl border border-titanium-200 p-4 shadow-sm">
-              <div className="text-xs font-semibold uppercase tracking-wider text-titanium-500 mb-3">Gap Category</div>
-              <div className="flex flex-wrap gap-2">
-                {epGapSubTabs.map(sub => {
-                  const isActive = activeGapSubTab === sub.id;
-                  return (
-                    <button
-                      key={sub.id}
-                      onClick={() => setActiveGapSubTab(sub.id)}
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                        isActive ? 'text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      }`}
-                      style={isActive ? { backgroundColor: '#2C4A60' } : {}}
-                    >
-                      {sub.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-            <EPClinicalGapDetectionDashboard
-              categoryFilter={activeGapSubTab === 'all' ? undefined : {
-                label: epGapSubTabs.find(s => s.id === activeGapSubTab)?.label || '',
-                keywords: epGapSubTabs.find(s => s.id === activeGapSubTab)?.keywords || []
-              }}
-            />
-          </div>
-        );
+        return <EPClinicalGapDetectionDashboard />;
       default: return <ElectrophysiologyAnalytics />;
     }
   };

@@ -276,7 +276,7 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  
  {/* Key Metrics Row */}
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
- <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-4 rounded-xl border border-[#C8D4DC]">
+ <div className="bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5] p-4 rounded-xl border border-[#C8D4DC]">
  <div className="flex items-center justify-between">
  <div>
  <div className="text-sm text-[#2C4A60] font-medium">4-Pillar Achievement</div>
@@ -311,7 +311,7 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  </div>
  </div>
  
- <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-xl border border-[#C8D4DC]">
+ <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-4 rounded-xl border border-[#C8D4DC]">
  <div className="flex items-center justify-between">
  <div>
  <div className="text-sm text-[#8B6914] font-medium">Optimization Rate</div>
@@ -709,7 +709,7 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  <div className="text-sm text-chrome-700 font-medium">Total Patients</div>
  <div className="text-2xl font-bold text-chrome-800">{patientsByPillar[selectedPillarCount]?.length || 0}</div>
  </div>
- <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-xl">
+ <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-4 rounded-xl">
  <div className="text-sm text-[#636D80] font-medium">Avg Age</div>
  <div className="text-2xl font-bold text-[#8B6914]">
  {patientsByPillar[selectedPillarCount]?.length ? 

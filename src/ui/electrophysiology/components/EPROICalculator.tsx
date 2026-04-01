@@ -432,7 +432,7 @@ const EPROICalculator: React.FC = () => {
 
  {/* Key Results Dashboard */}
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
- <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border border-[#2C4A60]">
+ <div className="bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5] p-6 rounded-xl border border-[#2C4A60]">
  <div className="flex items-center gap-3 mb-2">
  <DollarSign className="w-8 h-8 text-[#2C4A60]" />
  <div>
@@ -443,7 +443,7 @@ const EPROICalculator: React.FC = () => {
  <div className="text-sm text-[#2C4A60]">Over {selectedTimeframe}</div>
  </div>
 
- <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border border-[#2C4A60]">
+ <div className="bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5] p-6 rounded-xl border border-[#2C4A60]">
  <div className="flex items-center gap-3 mb-2">
  <TrendingUp className="w-8 h-8 text-chrome-600" />
  <div>
@@ -465,7 +465,7 @@ const EPROICalculator: React.FC = () => {
  <div className="text-sm text-arterial-600">Time to recover investment</div>
  </div>
 
- <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-6 rounded-xl border border-[#C8D4DC]">
+ <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-6 rounded-xl border border-[#C8D4DC]">
  <div className="flex items-center gap-3 mb-2">
  <Target className="w-8 h-8 text-[#6B7280]" />
  <div>
@@ -501,7 +501,7 @@ const EPROICalculator: React.FC = () => {
  <div className="text-sm text-chrome-600">Annual additional revenue</div>
  </div>
 
- <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-6 rounded-xl border border-[#C8D4DC]">
+ <div className="bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5] p-6 rounded-xl border border-[#C8D4DC]">
  <div className="flex items-center gap-3 mb-2">
  <Heart className="w-6 h-6 text-[#2C4A60]" />
  <div>
@@ -756,7 +756,7 @@ const EPROICalculator: React.FC = () => {
  </div>
 
  {/* EP-Specific Recommendation Summary */}
- <div className="bg-gradient-to-r from-amber-50 to-emerald-50 p-6 rounded-xl border border-[#C8D4DC]">
+ <div className="bg-gradient-to-r from-slate-50 to-[#EFF3F7] p-6 rounded-xl border border-[#C8D4DC]">
  <div className="flex items-center gap-4">
  <div className="p-3 bg-white rounded-full">
  <Zap className="w-8 h-8 text-[#6B7280]" />

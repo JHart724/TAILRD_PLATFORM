@@ -431,7 +431,7 @@ const SHProviderScorecard: React.FC = () => {
  <div className="text-2xl font-bold text-chrome-800">{panelProviderData.patients}</div>
  </div>
  <div className={`p-4 rounded-xl ${
- panelProviderData.valveTherapyRate >= 70 ? 'bg-gradient-to-br from-green-50 to-green-100' : 'bg-gradient-to-br from-amber-50 to-amber-100'
+ panelProviderData.valveTherapyRate >= 70 ? 'bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5]' : 'bg-gradient-to-br from-slate-50 to-slate-100'
  }`}>
  <div className={`text-sm font-medium ${
  panelProviderData.valveTherapyRate >= 70 ? 'text-[#2C4A60]' : 'text-[#6B7280]'
@@ -445,7 +445,7 @@ const SHProviderScorecard: React.FC = () => {
  <div className="text-2xl font-bold text-arterial-800">{toFixed(panelProviderData.qualityScore, 0)}</div>
  </div>
  <div className={`p-4 rounded-xl ${
- panelProviderData.readmissionRate <= 8 ? 'bg-gradient-to-br from-green-50 to-green-100' : 'bg-gradient-to-br from-red-50 to-red-100'
+ panelProviderData.readmissionRate <= 8 ? 'bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5]' : 'bg-gradient-to-br from-red-50 to-red-100'
  }`}>
  <div className={`text-sm font-medium ${
  panelProviderData.readmissionRate <= 8 ? 'text-[#2C4A60]' : 'text-red-700'

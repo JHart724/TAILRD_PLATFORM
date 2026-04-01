@@ -36,25 +36,11 @@ interface TabGroup {
   tabs: Array<{ id: string; label: string; icon: React.ElementType; description: string }>;
 }
 
-const hfGapSubTabs = [
-  { id: 'all', label: 'All Gaps', keywords: [] as string[] },
-  { id: 'gdmt', label: 'GDMT Optimization', keywords: ['arni', 'sglt2i', 'beta-blocker', 'mra', 'finerenone', 'ivabradine', 'vericiguat', 'h-isdn', 'target dose', 'dapa-hf', 'emperor'] },
-  { id: 'device', label: 'Advanced Device', keywords: ['lvad', 'cardiomems', 'icd', 'crt', 'impella', 'ecmo', 'rvad', 'heartmate', 'ramp study', 'bridge-to-transplant', 'remote patient monitoring'] },
-  { id: 'rare-cm', label: 'Rare Cardiomyopathy', keywords: ['amyloid', 'attr', 'sarcoid', 'fabry', 'hcm', 'myosin', 'lvnc', 'non-compaction', 'peripartum', 'myocarditis', 'chemotherapy-induced'] },
-  { id: 'comorbidity', label: 'Comorbidity & Discovery', keywords: ['iron deficiency', 'osa', 'stop-bang', 'hyponatremia', 'glp-1', 'sdoh', 'adherence', 'natriuretic', 'hfpef', 'undiagnosed'] },
-  { id: 'transitions', label: 'Care Transitions', keywords: ['discharge', 'follow-up', 'palliative', 'vaccination', 'cardiac rehab', 'advance directive', 'nt-probnp', '30-day'] },
-  { id: 'cross', label: 'Cross-Module', keywords: ['cross-module', 'coapt', 'teer', 'ablation referral', 'co-detection'] },
-];
-
 const ServiceLineView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('gap-detection');
-  const [activeGapSubTab, setActiveGapSubTab] = useState<string>('all');
 
   const handleTabChange = (tab: TabId) => {
     setActiveTab(tab);
-    if (tab !== 'gap-detection') {
-      setActiveGapSubTab('all');
-    }
     const container = document.getElementById('main-scroll-container');
     if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
@@ -123,37 +109,7 @@ const ServiceLineView: React.FC = () => {
       case 'device-underutil': return <DeviceUnderutilizationPanel />;
       case 'cross-referral': return <CrossReferralEngine />;
       case 'gap-detection':
-        return (
-          <div>
-            {/* Gap Sub-Navigation */}
-            <div className="mb-4 bg-white rounded-xl border border-titanium-200 p-4 shadow-sm">
-              <div className="text-xs font-semibold uppercase tracking-wider text-titanium-500 mb-3">Gap Category</div>
-              <div className="flex flex-wrap gap-2">
-                {hfGapSubTabs.map(sub => {
-                  const isActive = activeGapSubTab === sub.id;
-                  return (
-                    <button
-                      key={sub.id}
-                      onClick={() => setActiveGapSubTab(sub.id)}
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                        isActive ? 'text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      }`}
-                      style={isActive ? { backgroundColor: '#2C4A60' } : {}}
-                    >
-                      {sub.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-            <ClinicalGapDetectionDashboard
-              categoryFilter={activeGapSubTab === 'all' ? undefined : {
-                label: hfGapSubTabs.find(s => s.id === activeGapSubTab)?.label || '',
-                keywords: hfGapSubTabs.find(s => s.id === activeGapSubTab)?.keywords || []
-              }}
-            />
-          </div>
-        );
+        return <ClinicalGapDetectionDashboard />;
       default: return <ClinicalGapDetectionDashboard />;
     }
   };

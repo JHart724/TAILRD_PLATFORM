@@ -23,25 +23,11 @@ interface TabGroup {
   tabs: Array<{ id: string; label: string; icon: React.ElementType; description: string }>;
 }
 
-const cadGapSubTabs = [
-  { id: 'all', label: 'All Gaps', keywords: [] as string[] },
-  { id: 'secondary-prev', label: 'Post-ACS & Prevention', keywords: ['post-acs', 'post-mi', 'high-intensity statin', 'colchicine', 'ace-i', 'arb not prescribed', 'medication reconciliation', 'prevent 2024', 'blood pressure not', 'diabetes not', 'smoking cessation', 'cardiac rehab', 'sglt2i'] },
-  { id: 'antiplatelet', label: 'Antiplatelet & Anticoagulation', keywords: ['dapt', 'p2y12', 'aspirin-free', 'aspirin + oac', 'cangrelor', 'bridging', 'doac interruption', 'hit not', 'anticoagulation reversal', 'short dapt'] },
-  { id: 'pci', label: 'PCI Quality', keywords: ['pci', 'ivus', 'ffr', 'ifr', 'physiologic', 'atherectomy', 'ivl', 'drug-coated balloon', 'radial access', 'protected pci', 'cto', 'complete revasc', 'non-culprit', 'ccta', 'in-stent restenosis', 'scai', 'hemodynamic planning'] },
-  { id: 'cabg', label: 'CABG & Surgical', keywords: ['cabg', 'bypass', 'graft', 'bilateral ima', 'endoscopic', 'hybrid revasc', 'off-pump', 'midcab', 'radial artery', 'blood conservation', 'intra-operative tee', 'post-operative af', 'delirium', 'sternotomy'] },
-  { id: 'lipid', label: 'Lipid Management', keywords: ['ldl', 'lp(a)', 'inclisiran', 'bempedoic', 'icosapent', 'triglycerides', 'statin intolerance', 'persistent ldl'] },
-  { id: 'periprocedural', label: 'Peri-Procedural Safety', keywords: ['door-to-balloon', 'aki risk', 'contrast', 'poaf', 'pre-operative cardiac', 'non-cardiac surgery', 'anticoagulation reversal', 'emergency surgery', 'hit not screened'] },
-];
-
 const CoronaryServiceLineView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('gap-detection');
-  const [activeGapSubTab, setActiveGapSubTab] = useState<string>('all');
 
   const handleTabChange = (tab: TabId) => {
     setActiveTab(tab);
-    if (tab !== 'gap-detection') {
-      setActiveGapSubTab('all');
-    }
     const container = document.getElementById('main-scroll-container');
     if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
@@ -650,37 +636,7 @@ const CoronaryServiceLineView: React.FC = () => {
  case 'cross-referral':
  return <CrossReferralEngine />;
  case 'gap-detection':
- return (
-   <div>
-     {/* Gap Sub-Navigation */}
-     <div className="mb-4 bg-white rounded-xl border border-titanium-200 p-4 shadow-sm">
-       <div className="text-xs font-semibold uppercase tracking-wider text-titanium-500 mb-3">Gap Category</div>
-       <div className="flex flex-wrap gap-2">
-         {cadGapSubTabs.map(sub => {
-           const isActive = activeGapSubTab === sub.id;
-           return (
-             <button
-               key={sub.id}
-               onClick={() => setActiveGapSubTab(sub.id)}
-               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                 isActive ? 'text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-               }`}
-               style={isActive ? { backgroundColor: '#2D6147' } : {}}
-             >
-               {sub.label}
-             </button>
-           );
-         })}
-       </div>
-     </div>
-     <CADClinicalGapDetectionDashboard
-       categoryFilter={activeGapSubTab === 'all' ? undefined : {
-         label: cadGapSubTabs.find(s => s.id === activeGapSubTab)?.label || '',
-         keywords: cadGapSubTabs.find(s => s.id === activeGapSubTab)?.keywords || []
-       }}
-     />
-   </div>
- );
+ return <CADClinicalGapDetectionDashboard />;
  default:
  return <GRACEScoreCalculator />;
  }

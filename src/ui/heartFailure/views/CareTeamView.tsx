@@ -206,7 +206,7 @@ const CareTeamView: React.FC = () => {
  onClick={() => setExpandedSafetyCard(expandedSafetyCard === item.id ? null : item.id)}
  className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 hover:shadow-md ${
  item.color === 'red' ? 'bg-red-50 border-red-200 hover:bg-red-100' : 'bg-[#F0F5FA] border-[#C8D4DC] hover:bg-[#F0F5FA]'
- } ${expandedSafetyCard === item.id ? 'ring-2 ring-offset-1 ' + (item.color === 'red' ? 'ring-red-400' : 'ring-amber-400') : ''}`}
+ } ${expandedSafetyCard === item.id ? 'ring-2 ring-offset-1 ' + (item.color === 'red' ? 'ring-red-400' : 'ring-[#6B7280]') : ''}`}
  >
  <div className="text-center">
  <div className={`text-2xl font-bold ${

@@ -49,7 +49,7 @@ const ClinicalAlertBanner: React.FC<ClinicalAlertBannerProps> = ({
  titleColor: 'text-[#8B6914]',
  messageColor: 'text-[#8B6914]',
  icon: AlertTriangle,
- accentBorder: 'border-l-amber-500'
+ accentBorder: 'border-l-[#7A1A2E]'
  };
  case 'info':
  return {
@@ -67,7 +67,7 @@ const ClinicalAlertBanner: React.FC<ClinicalAlertBannerProps> = ({
  titleColor: 'text-[#2D6147]',
  messageColor: 'text-[#2D6147]',
  icon: CheckCircle,
- accentBorder: 'border-l-green-500'
+ accentBorder: 'border-l-[#2C4A60]'
  };
  }
   };

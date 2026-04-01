@@ -93,8 +93,8 @@ export const premiumColors = {
   },
   glows: {
  porsche:  '0 0 16px rgba(44,74,96,0.20), 0 0 32px rgba(44,74,96,0.10)',
- emerald:  '0 0 16px rgba(22,163,74,0.20), 0 0 32px rgba(22,163,74,0.08)',
- amber: '0 0 16px rgba(217,119,6,0.20), 0 0 32px rgba(217,119,6,0.08)',
+ emerald:  '0 0 16px rgba(44,74,96,0.20), 0 0 32px rgba(44,74,96,0.08)',
+ amber: '0 0 16px rgba(122,26,46,0.20), 0 0 32px rgba(122,26,46,0.08)',
  crimson:  '0 0 16px rgba(122,26,46,0.20), 0 0 32px rgba(122,26,46,0.08)',
  forest: '0 0 16px rgba(26,74,46,0.20), 0 0 32px rgba(26,74,46,0.08)',
  gold: '0 0 16px rgba(139,105,20,0.20), 0 0 32px rgba(139,105,20,0.08)',

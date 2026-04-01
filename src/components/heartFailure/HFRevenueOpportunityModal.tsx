@@ -188,7 +188,7 @@ const HFRevenueOpportunityModal: React.FC<HFRevenueOpportunityModalProps> = ({
  </div>
 
  {/* Medium Priority */}
- <div className="bg-[#F0F5FA] p-4 rounded-lg border border-yellow-200">
+ <div className="bg-[#F0F5FA] p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center">
  <Clock className="w-8 h-8 text-crimson-600 mr-3" />

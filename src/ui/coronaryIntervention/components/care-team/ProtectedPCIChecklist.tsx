@@ -501,7 +501,7 @@ const ProtectedPCIChecklist: React.FC = () => {
  <div
  key={phase.id}
  className={`bg-white rounded-2xl p-4 shadow-chrome-card border border-titanium-200 ${
- phase.status === 'active' ? 'ring-2 ring-emerald-400' : ''
+ phase.status === 'active' ? 'ring-2 ring-[#4A7FA5]' : ''
  }`}
  >
  <div className="flex items-center justify-between mb-3">

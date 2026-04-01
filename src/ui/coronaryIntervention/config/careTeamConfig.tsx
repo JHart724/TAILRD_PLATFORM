@@ -184,7 +184,7 @@ const CoronaryWorkflow: React.FC = () => (
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
  {/* STEMI Pathway */}
  <div className="lg:col-span-2 space-y-4">
- <div className="bg-gradient-to-r from-red-50 to-amber-50 p-6 rounded-xl border border-red-100">
+ <div className="bg-gradient-to-r from-red-50 to-slate-50 p-6 rounded-xl border border-red-100">
  <h4 className="font-semibold text-titanium-900 mb-4">STEMI Primary PCI Pathway</h4>
  
  <div className="space-y-4">
@@ -492,7 +492,7 @@ const CoronaryDocumentation: React.FC = () => (
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* Documentation Alerts */}
  <div className="space-y-4">
- <div className="bg-gradient-to-r from-amber-50 to-amber-50 p-6 rounded-xl border border-[#C8D4DC]">
+ <div className="bg-gradient-to-r from-slate-50 to-slate-50 p-6 rounded-xl border border-[#C8D4DC]">
  <h4 className="font-semibold text-[#6B7280] mb-4 flex items-center gap-2">
  <AlertTriangle className="w-5 h-5 text-[#6B7280]" />
  Documentation Alerts & Registry

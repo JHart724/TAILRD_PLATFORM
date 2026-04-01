@@ -6,7 +6,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 
 const registryKPIs = [
   { label: 'Cases Auto-Populated This Month', value: '159', icon: FileText, color: 'border-l-[#2E3440]' },
-  { label: 'Average Auto-Fill Rate', value: '80%', icon: TrendingUp, color: 'border-l-emerald-500' },
+  { label: 'Average Auto-Fill Rate', value: '80%', icon: TrendingUp, color: 'border-l-[#2C4A60]' },
   { label: 'Abstraction Hours Saved', value: '212', icon: Clock, color: 'border-l-blue-500' },
   { label: 'Submission-Ready Cases', value: '117', icon: CheckCircle, color: 'border-l-[#6B7280]' },
 ];
@@ -63,7 +63,7 @@ const chartData = registries.map((r) => ({
 
 const trialKPIs = [
   { label: 'Patients Screened', value: '284', icon: Users, color: 'border-l-[#2E3440]' },
-  { label: 'Eligible Identified', value: '156', icon: CheckCircle, color: 'border-l-emerald-500' },
+  { label: 'Eligible Identified', value: '156', icon: CheckCircle, color: 'border-l-[#2C4A60]' },
   { label: 'Active Trials', value: '14', icon: FlaskConical, color: 'border-l-blue-500' },
   { label: 'Industry-Sponsored', value: '9', icon: AlertTriangle, color: 'border-l-[#6B7280]' },
 ];

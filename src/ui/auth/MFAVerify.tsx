@@ -216,7 +216,7 @@ const MFAVerify: React.FC<MFAVerifyProps> = ({ token, onVerified, onBack }) => {
                 <div className="p-3 rounded-lg mb-4" style={{ backgroundColor: '#FAF6E8', border: '1px solid #F0D9A0' }}>
                   <div className="flex items-start gap-2">
                     <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#6B7280' }} />
-                    <p className="text-sm" style={{ color: '#92400E' }}>
+                    <p className="text-sm" style={{ color: '#7A1A2E' }}>
                       You have {codesRemaining} backup code{codesRemaining !== 1 ? 's' : ''} remaining. Consider generating new codes in your account settings.
                     </p>
                   </div>

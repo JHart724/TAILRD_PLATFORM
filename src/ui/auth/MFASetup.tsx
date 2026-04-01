@@ -297,7 +297,7 @@ const MFASetup: React.FC<MFASetupProps> = ({ token, onComplete, onCancel }) => {
               <div className="p-3 rounded-lg mb-4" style={{ backgroundColor: '#FAF6E8', border: '1px solid #F0D9A0' }}>
                 <div className="flex items-start gap-2">
                   <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#6B7280' }} />
-                  <p className="text-sm" style={{ color: '#92400E' }}>
+                  <p className="text-sm" style={{ color: '#7A1A2E' }}>
                     Save these backup codes now. They will not be shown again. Each code can be used once if you lose access to your authenticator app.
                   </p>
                 </div>

@@ -890,7 +890,7 @@ const ResearchServiceLineView: React.FC = () => {
                   className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
                     trialFilter === f.id
                       ? f.id === 'industry'
-                        ? 'bg-[#FAF6E8] text-[#8B6914] ring-1 ring-amber-300'
+                        ? 'bg-[#FAF6E8] text-[#8B6914] ring-1 ring-[#6B7280]'
                         : 'bg-[#2E3440] text-white'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}

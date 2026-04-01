@@ -257,7 +257,7 @@ const PhenotypeScreeningPanel: React.FC<PhenotypeScreeningPanelProps> = ({
  <div className="text-sm text-red-600">Require attention</div>
  </div>
 
- <div className="p-4 bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl border border-[#C8D4DC]">
+ <div className="p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border border-[#C8D4DC]">
  <div className="flex items-center gap-2 mb-2">
  <Eye className="w-5 h-5 text-[#6B7280]" />
  <span className="font-semibold text-[#6B7280]">Suspected</span>
