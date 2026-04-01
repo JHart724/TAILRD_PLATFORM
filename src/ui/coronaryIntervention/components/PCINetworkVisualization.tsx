@@ -83,7 +83,7 @@ const PCINetworkVisualization: React.FC = () => {
  connectionStrength: 0.95, 
  x: 200, 
  y: 120, 
- color: '#dc2626',
+ color: '#7A1A2E',
  status: 'active'
  },
  { 
@@ -97,7 +97,7 @@ const PCINetworkVisualization: React.FC = () => {
  connectionStrength: 0.88, 
  x: 450, 
  y: 100, 
- color: '#2563eb',
+ color: '#2C4A60',
  status: 'busy'
  },
  { 
@@ -135,7 +135,7 @@ const PCINetworkVisualization: React.FC = () => {
  connectionStrength: 0.89, 
  x: 150, 
  y: 220, 
- color: '#0891b2',
+ color: '#4A6880',
  status: 'busy'
  },
  
@@ -149,7 +149,7 @@ const PCINetworkVisualization: React.FC = () => {
  connectionStrength: 0.98, 
  x: 100, 
  y: 80, 
- color: '#dc2626',
+ color: '#7A1A2E',
  isEmergency: true
  },
  { 
@@ -173,7 +173,7 @@ const PCINetworkVisualization: React.FC = () => {
  connectionStrength: 0.87, 
  x: 50, 
  y: 150, 
- color: '#b91c1c',
+ color: '#7A1A2E',
  isEmergency: true
  },
  { 
@@ -184,7 +184,7 @@ const PCINetworkVisualization: React.FC = () => {
  connectionStrength: 0.82, 
  x: 50, 
  y: 250, 
- color: '#991b1b',
+ color: '#5C1022',
  isEmergency: true
  },
  
@@ -198,7 +198,7 @@ const PCINetworkVisualization: React.FC = () => {
  connectionStrength: 0.73, 
  x: 300, 
  y: 50, 
- color: '#be123c'
+ color: '#7A1A2E'
  },
  { 
  id: 'nstemi-patients', 
@@ -209,7 +209,7 @@ const PCINetworkVisualization: React.FC = () => {
  connectionStrength: 0.68, 
  x: 450, 
  y: 350, 
- color: '#1d4ed8'
+ color: '#1E3347'
  },
  { 
  id: 'complex-pci', 
@@ -232,7 +232,7 @@ const PCINetworkVisualization: React.FC = () => {
  connectionStrength: 0.85, 
  x: 350, 
  y: 180, 
- color: '#166534'
+ color: '#2D6147'
  }
   ];
 
@@ -402,11 +402,11 @@ const PCINetworkVisualization: React.FC = () => {
 
   const getConnectionColor = (connection: PCINetworkConnection) => {
  switch (connection.type) {
- case 'stemi-pathway': return '#dc2626';
+ case 'stemi-pathway': return '#7A1A2E';
  case 'nstemi-pathway': return '#7A1A2E';
- case 'emergency': return '#b91c1c';
+ case 'emergency': return '#7A1A2E';
  case 'referral': return '#2C4A60';
- case 'collaboration': return '#2563eb';
+ case 'collaboration': return '#2C4A60';
  case 'transfer': return '#7A1A2E';
  default: return '#6b7280';
  }
@@ -631,7 +631,7 @@ const PCINetworkVisualization: React.FC = () => {
  cx={node.x + nodeSize - 3}
  cy={node.y - nodeSize + 3}
  r="4"
- fill="#dc2626"
+ fill="#7A1A2E"
  className="animate-pulse"
  />
  )}
@@ -728,8 +728,8 @@ const PCINetworkVisualization: React.FC = () => {
  )}
  {selectedNode.status && (
  <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${
- selectedNode.status === 'active' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
- selectedNode.status === 'busy' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ selectedNode.status === 'active' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ selectedNode.status === 'busy' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-gray-100 text-gray-700'
  }`}>
  {selectedNode.status.toUpperCase()}
@@ -783,7 +783,7 @@ const PCINetworkVisualization: React.FC = () => {
  <div className="flex items-center gap-2">
  <span className="text-titanium-500">{conn.patientFlow} pts</span>
  {conn.avgDoorToBalloon && (
- <span className={`text-xs px-1 rounded ${conn.avgDoorToBalloon <= 90 ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-red-100 text-red-600'}`}>
+ <span className={`text-xs px-1 rounded ${conn.avgDoorToBalloon <= 90 ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-red-100 text-red-600'}`}>
  {conn.avgDoorToBalloon}m
  </span>
  )}

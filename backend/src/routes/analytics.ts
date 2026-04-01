@@ -1,11 +1,8 @@
-// @ts-nocheck
-// TODO: 35 TS errors — field name mismatches (date→trackedDate, timeSpent→totalDuration,
-// dbQueryTime→dbQueries, missing statusCode/method). Fix in next session.
-import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Router, Response } from 'express';
+import { PrismaClient, ModuleType, ActivityType } from '@prisma/client';
 import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
-import { trackFeature, trackNavigation, trackReportGeneration, ModuleType, ActivityType } from '../middleware/analytics';
+import { trackFeature, trackNavigation, trackReportGeneration } from '../middleware/analytics';
 import { body, query, validationResult } from 'express-validator';
 
 const router = Router();
@@ -20,7 +17,7 @@ router.get('/dashboard',
     query('hospitalId').optional().isString(),
     query('moduleType').optional().isIn(Object.values(ModuleType))
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { timeRange = '30d', hospitalId, moduleType } = req.query;
       const user = req.user!;
@@ -86,7 +83,7 @@ router.get('/dashboard',
         // Feature usage aggregation
         prisma.featureUsage.aggregate({
           where: {
-            date: {
+            periodStart: {
               gte: startDate,
               lte: endDate
             },
@@ -95,7 +92,7 @@ router.get('/dashboard',
           },
           _sum: {
             usageCount: true,
-            timeSpent: true
+            totalDuration: true
           }
         }),
 
@@ -112,7 +109,7 @@ router.get('/dashboard',
             responseTime: true,
             memoryUsage: true,
             cpuUsage: true,
-            dbQueryTime: true
+            dbQueries: true
           },
           _count: true
         }),
@@ -121,7 +118,7 @@ router.get('/dashboard',
         prisma.featureUsage.groupBy({
           by: ['featureName', 'moduleType'],
           where: {
-            date: {
+            periodStart: {
               gte: startDate,
               lte: endDate
             },
@@ -130,7 +127,7 @@ router.get('/dashboard',
           },
           _sum: {
             usageCount: true,
-            timeSpent: true
+            totalDuration: true
           },
           orderBy: {
             _sum: {
@@ -172,14 +169,14 @@ router.get('/dashboard',
         // Business metrics (if available)
         user.role === 'super-admin' ? prisma.businessMetric.findMany({
           where: {
-            date: {
+            periodStart: {
               gte: startDate,
               lte: endDate
             },
             ...(targetHospitalId && { hospitalId: targetHospitalId })
           },
           orderBy: {
-            date: 'desc'
+            periodStart: 'desc'
           },
           take: 30
         }) : []
@@ -199,22 +196,22 @@ router.get('/dashboard',
           overview: {
             totalActivities: userActivityCount,
             uniqueUsers: uniqueUsersCount,
-            totalFeatureUsage: featureUsageStats._sum.usageCount || 0,
-            totalTimeSpent: featureUsageStats._sum.timeSpent || 0,
-            averageResponseTime: Math.round(performanceMetrics._avg.responseTime || 0),
+            totalFeatureUsage: featureUsageStats._sum?.usageCount || 0,
+            totalTimeSpent: featureUsageStats._sum?.totalDuration || 0,
+            averageResponseTime: Math.round(performanceMetrics._avg?.responseTime || 0),
             totalApiCalls: performanceMetrics._count
           },
           performance: {
-            averageResponseTime: Math.round(performanceMetrics._avg.responseTime || 0),
-            averageMemoryUsage: Math.round(performanceMetrics._avg.memoryUsage || 0),
-            averageCpuUsage: performanceMetrics._avg.cpuUsage || 0,
-            averageDbQueryTime: Math.round(performanceMetrics._avg.dbQueryTime || 0)
+            averageResponseTime: Math.round(performanceMetrics._avg?.responseTime || 0),
+            averageMemoryUsage: Math.round(performanceMetrics._avg?.memoryUsage || 0),
+            averageCpuUsage: performanceMetrics._avg?.cpuUsage || 0,
+            averageDbQueryTime: Math.round(performanceMetrics._avg?.dbQueries || 0)
           },
           topFeatures: topFeatures.map(f => ({
             featureName: f.featureName,
             moduleType: f.moduleType,
-            usageCount: f._sum.usageCount || 0,
-            timeSpent: f._sum.timeSpent || 0
+            usageCount: f._sum?.usageCount || 0,
+            timeSpent: f._sum?.totalDuration || 0
           })),
           activityByModule: activityByModule.map(a => ({
             moduleType: a.moduleType,
@@ -256,7 +253,7 @@ router.get('/user-activity',
     query('page').optional().isInt({ min: 1 }),
     query('limit').optional().isInt({ min: 1, max: 100 })
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const {
         startDate,
@@ -346,7 +343,7 @@ router.get('/feature-usage',
     query('endDate').optional().isISO8601(),
     query('groupBy').optional().isIn(['day', 'week', 'month', 'feature', 'module', 'user'])
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const {
         moduleType,
@@ -366,9 +363,9 @@ router.get('/feature-usage',
       }
 
       if (startDate || endDate) {
-        whereClause.date = {};
-        if (startDate) whereClause.date.gte = new Date(startDate as string);
-        if (endDate) whereClause.date.lte = new Date(endDate as string);
+        whereClause.periodStart = {};
+        if (startDate) whereClause.periodStart.gte = new Date(startDate as string);
+        if (endDate) whereClause.periodStart.lte = new Date(endDate as string);
       }
 
       if (moduleType) whereClause.moduleType = moduleType;
@@ -379,8 +376,8 @@ router.get('/feature-usage',
 
       switch (groupBy) {
         case 'day':
-          groupByFields = ['date'];
-          orderBy = { date: 'desc' };
+          groupByFields = ['periodStart'];
+          orderBy = { periodStart: 'desc' };
           break;
         case 'feature':
           groupByFields = ['featureName', 'moduleType'];
@@ -395,8 +392,8 @@ router.get('/feature-usage',
           orderBy = { _sum: { usageCount: 'desc' } };
           break;
         default:
-          groupByFields = ['date'];
-          orderBy = { date: 'desc' };
+          groupByFields = ['periodStart'];
+          orderBy = { periodStart: 'desc' };
       }
 
       const featureUsage = await prisma.featureUsage.groupBy({
@@ -404,10 +401,10 @@ router.get('/feature-usage',
         where: whereClause,
         _sum: {
           usageCount: true,
-          timeSpent: true
+          totalDuration: true
         },
         _avg: {
-          timeSpent: true
+          totalDuration: true
         },
         orderBy,
         take: 100
@@ -421,9 +418,9 @@ router.get('/feature-usage',
           groupBy,
           featureUsage: featureUsage.map(usage => ({
             ...usage,
-            totalUsage: usage._sum.usageCount || 0,
-            totalTimeSpent: usage._sum.timeSpent || 0,
-            averageTimeSpent: usage._avg.timeSpent || 0
+            totalUsage: usage._sum?.usageCount || 0,
+            totalTimeSpent: usage._sum?.totalDuration || 0,
+            averageTimeSpent: usage._avg?.totalDuration || 0
           }))
         },
         message: 'Feature usage analytics retrieved',
@@ -451,7 +448,7 @@ router.get('/performance',
     query('method').optional().isIn(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']),
     query('groupBy').optional().isIn(['hour', 'day', 'endpoint', 'method'])
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const {
         startDate,
@@ -498,10 +495,10 @@ router.get('/performance',
             key = new Date(metric.timestamp).toISOString().substring(0, 10);
             break;
           case 'endpoint':
-            key = metric.endpoint;
+            key = metric.endpoint || 'unknown';
             break;
           case 'method':
-            key = metric.method;
+            key = metric.operation || 'unknown';
             break;
           default:
             key = new Date(metric.timestamp).toISOString().substring(0, 10);
@@ -520,11 +517,11 @@ router.get('/performance',
         }
 
         acc[key].count++;
-        acc[key].totalResponseTime += metric.responseTime;
+        acc[key].totalResponseTime += metric.responseTime || 0;
         acc[key].totalMemoryUsage += metric.memoryUsage || 0;
         acc[key].totalCpuUsage += metric.cpuUsage || 0;
-        acc[key].totalDbQueryTime += metric.dbQueryTime || 0;
-        if (metric.statusCode >= 400) acc[key].errors++;
+        acc[key].totalDbQueryTime += metric.dbQueries || 0;
+        if ((metric.errorRate || 0) > 0) acc[key].errors++;
 
         return acc;
       }, {});
@@ -571,7 +568,7 @@ router.post('/track',
     body('metadata').optional().isObject(),
     body('value').optional().isNumeric()
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -622,6 +619,173 @@ router.post('/track',
       res.status(500).json({
         success: false,
         error: 'Failed to track event',
+        timestamp: new Date().toISOString()
+      } as APIResponse);
+    }
+  }
+);
+
+// ── Gap Action Tracking ─────────────────────────────────────────────
+
+// Record a gap view or action (order, refer, dismiss)
+router.post('/gap-actions',
+  authenticateToken,
+  [
+    body('gapId').isString().isLength({ min: 1 }).withMessage('gapId is required'),
+    body('module').isIn(Object.values(ModuleType)).withMessage('Invalid module'),
+    body('action').isIn(['view', 'ordered', 'referred', 'dismissed']).withMessage('Invalid action'),
+    body('reason').optional().isString()
+  ],
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          error: 'Validation failed',
+          details: errors.array(),
+          timestamp: new Date().toISOString()
+        } as APIResponse);
+      }
+
+      const { gapId, module, action, reason } = req.body;
+      const user = req.user!;
+
+      // Require reason for dismissals
+      if (action === 'dismissed' && (!reason || !reason.trim())) {
+        return res.status(400).json({
+          success: false,
+          error: 'Reason is required when dismissing a gap',
+          timestamp: new Date().toISOString()
+        } as APIResponse);
+      }
+
+      const gapAction = await prisma.gapAction.create({
+        data: {
+          gapId,
+          module: module as ModuleType,
+          action,
+          reason: action === 'dismissed' ? reason?.trim() : null,
+          userId: user.userId || null,
+          hospitalId: user.hospitalId,
+        }
+      });
+
+      res.status(201).json({
+        success: true,
+        data: { id: gapAction.id, tracked: true },
+        message: `Gap ${action} recorded`,
+        timestamp: new Date().toISOString()
+      } as APIResponse);
+
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: 'Failed to record gap action',
+        timestamp: new Date().toISOString()
+      } as APIResponse);
+    }
+  }
+);
+
+// Get gap response rates for executive dashboard
+router.get('/gap-actions/response-rates',
+  authenticateToken,
+  authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'analyst']),
+  [
+    query('module').optional().isIn(Object.values(ModuleType)),
+    query('timeRange').optional().isIn(['7d', '30d', '90d', '1y'])
+  ],
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { module, timeRange = '30d' } = req.query;
+      const user = req.user!;
+
+      // Calculate date range
+      const endDate = new Date();
+      const startDate = new Date();
+      switch (timeRange) {
+        case '7d': startDate.setDate(endDate.getDate() - 7); break;
+        case '30d': startDate.setDate(endDate.getDate() - 30); break;
+        case '90d': startDate.setDate(endDate.getDate() - 90); break;
+        case '1y': startDate.setFullYear(endDate.getFullYear() - 1); break;
+      }
+
+      // Hospital access control
+      const targetHospitalId = user.role === 'super-admin'
+        ? null
+        : user.hospitalId;
+
+      const whereClause: any = {
+        createdAt: { gte: startDate, lte: endDate },
+      };
+      if (targetHospitalId) whereClause.hospitalId = targetHospitalId;
+      if (module) whereClause.module = module;
+
+      // Get all gap actions grouped by gapId and action type
+      const actions = await prisma.gapAction.groupBy({
+        by: ['gapId', 'action'],
+        where: whereClause,
+        _count: { id: true },
+      });
+
+      // Build per-gap response rates
+      const gapMap: Record<string, { views: number; ordered: number; referred: number; dismissed: number }> = {};
+      for (const row of actions) {
+        if (!gapMap[row.gapId]) {
+          gapMap[row.gapId] = { views: 0, ordered: 0, referred: 0, dismissed: 0 };
+        }
+        const action = row.action;
+        if (action === 'view') {
+          gapMap[row.gapId].views = row._count.id;
+        } else if (action === 'ordered') {
+          gapMap[row.gapId].ordered = row._count.id;
+        } else if (action === 'referred') {
+          gapMap[row.gapId].referred = row._count.id;
+        } else if (action === 'dismissed') {
+          gapMap[row.gapId].dismissed = row._count.id;
+        }
+      }
+
+      // Compute overall response rate
+      let totalViewed = 0;
+      let totalActioned = 0;
+      const rates = Object.entries(gapMap).map(([gapId, counts]) => {
+        const actioned = counts.ordered + counts.referred + counts.dismissed;
+        totalViewed += counts.views;
+        totalActioned += actioned;
+        return {
+          gapId,
+          views: counts.views,
+          actioned,
+          responseRate: counts.views > 0 ? Math.round((actioned / counts.views) * 100) : 0,
+          breakdown: {
+            ordered: counts.ordered,
+            referred: counts.referred,
+            dismissed: counts.dismissed,
+          },
+        };
+      });
+
+      const overallRate = totalViewed > 0 ? Math.round((totalActioned / totalViewed) * 100) : 0;
+
+      res.json({
+        success: true,
+        data: {
+          rates: rates.sort((a, b) => b.views - a.views),
+          overallRate,
+          totalViewed,
+          totalActioned,
+          timeRange,
+        },
+        message: 'Gap response rates retrieved',
+        timestamp: new Date().toISOString()
+      } as APIResponse);
+
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: 'Failed to retrieve gap response rates',
         timestamp: new Date().toISOString()
       } as APIResponse);
     }

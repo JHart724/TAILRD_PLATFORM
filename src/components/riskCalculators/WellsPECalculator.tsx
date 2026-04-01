@@ -266,7 +266,7 @@ const WellsPECalculator: React.FC = () => {
  )}
  {result.probability === 'Moderate' && (
  <div>
- <div className="font-medium text-[#6B7280] mb-1">Moderate Probability (4-6 points)</div>
+ <div className="font-medium text-[#8B6914] mb-1">Moderate Probability (4-6 points)</div>
  <div>CTPA or V/Q scan recommended</div>
  <div>Consider empiric anticoagulation if delay</div>
  </div>
@@ -298,13 +298,13 @@ const WellsPECalculator: React.FC = () => {
  <div>
  <h5 className="font-semibold text-titanium-900 mb-2">Score Interpretation</h5>
  <div className="space-y-2 text-sm">
- <div className="flex justify-between p-2 bg-[#C8D4DC] rounded">
+ <div className="flex justify-between p-2 bg-[#F0F7F4] rounded">
  <span>Low Probability (≤4 points)</span>
  <span className="font-semibold text-[#2C4A60]">~12% PE prevalence</span>
  </div>
  <div className="flex justify-between p-2 bg-[#F0F5FA] rounded">
  <span>Moderate Probability (4-6 points)</span>
- <span className="font-semibold text-[#6B7280]">~30% PE prevalence</span>
+ <span className="font-semibold text-[#8B6914]">~30% PE prevalence</span>
  </div>
  <div className="flex justify-between p-2 bg-red-50 rounded">
  <span>High Probability ({'>'}6 points)</span>
@@ -316,14 +316,14 @@ const WellsPECalculator: React.FC = () => {
  <div>
  <h5 className="font-semibold text-titanium-900 mb-2">Diagnostic Strategy</h5>
  <div className="space-y-3 text-sm">
- <div className="p-3 bg-[#C8D4DC] rounded">
+ <div className="p-3 bg-[#F0F7F4] rounded">
  <div className="font-medium text-[#2C4A60]">Low Probability</div>
  <div>1. D-dimer testing</div>
  <div>2. If negative → PE excluded</div>
  <div>3. If positive → CTPA</div>
  </div>
  <div className="p-3 bg-[#F0F5FA] rounded">
- <div className="font-medium text-[#6B7280]">Moderate Probability</div>
+ <div className="font-medium text-[#8B6914]">Moderate Probability</div>
  <div>1. CTPA or V/Q scan</div>
  <div>2. D-dimer less reliable</div>
  <div>3. Consider age-adjusted D-dimer</div>

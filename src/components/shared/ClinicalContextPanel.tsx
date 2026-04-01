@@ -304,7 +304,7 @@ const ClinicalContextPanel: React.FC<ClinicalContextPanelProps> = ({
  case 'low': return 'text-porsche-600 bg-porsche-50';
  case 'severe': return 'text-medical-red-700 bg-medical-red-100';
  case 'moderate': return 'text-crimson-700 bg-crimson-100';
- case 'mild': return 'text-[#2C4A60] bg-[#e0eaf3]';
+ case 'mild': return 'text-[#2D6147] bg-[#F0F7F4]';
  default: return 'text-titanium-600 bg-titanium-50';
  }
   };
@@ -596,7 +596,7 @@ const ClinicalContextPanel: React.FC<ClinicalContextPanelProps> = ({
  <div className="flex items-center justify-between mb-1">
  <div className="text-sm font-medium text-titanium-900">{phenotype.name}</div>
  <div className={`px-2 py-1 rounded text-xs font-medium ${
- phenotype.status === 'confirmed' ? 'text-[#2C4A60] bg-[#e0eaf3]' :
+ phenotype.status === 'confirmed' ? 'text-[#2D6147] bg-[#F0F7F4]' :
  phenotype.status === 'pending' ? 'text-crimson-700 bg-crimson-100' :
  'text-titanium-600 bg-titanium-100'
  }`}>
@@ -634,7 +634,7 @@ const ClinicalContextPanel: React.FC<ClinicalContextPanelProps> = ({
  <div className="flex items-center justify-between mb-1">
  <div className="text-sm font-medium text-titanium-900">{referral.specialty}</div>
  <div className={`px-2 py-1 rounded text-xs font-medium ${
- referral.status === 'scheduled' ? 'text-[#2C4A60] bg-[#e0eaf3]' :
+ referral.status === 'scheduled' ? 'text-[#2D6147] bg-[#F0F7F4]' :
  referral.status === 'pending' ? 'text-crimson-700 bg-crimson-100' :
  'text-titanium-600 bg-titanium-100'
  }`}>

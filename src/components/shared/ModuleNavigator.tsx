@@ -137,7 +137,7 @@ const ModuleNavigator: React.FC<ModuleNavigatorProps> = ({
  badge: 'bg-arterial-500 text-white'
  },
  'chrome-blue': {
- bg: isActive ? 'bg-[#2C4A60]' : 'bg-[#f0f5fa] hover:bg-[#e0eaf3]',
+ bg: isActive ? 'bg-[#2C4A60]' : 'bg-[#f0f5fa] hover:bg-[#F0F5FA]',
  text: isActive ? 'text-white' : 'text-[#2C4A60]',
  border: 'border-[#C8D4DC]',
  badge: 'bg-[#2C4A60] text-white'

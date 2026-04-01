@@ -281,7 +281,7 @@ const EPAutomatedClinicalSupport: React.FC = () => {
 
   const getEligibilityColor = (eligibility: string) => {
  switch (eligibility) {
- case 'eligible': return 'text-[#2C4A60] bg-[#e0eaf3]';
+ case 'eligible': return 'text-[#2D6147] bg-[#F0F7F4]';
  case 'consider': return 'text-crimson-700 bg-crimson-100';
  case 'not-eligible': return 'text-medical-red-700 bg-medical-red-100';
  default: return 'text-titanium-700 bg-titanium-100';
@@ -298,7 +298,7 @@ const EPAutomatedClinicalSupport: React.FC = () => {
  switch (priority) {
  case 'high': return 'text-medical-red-600 bg-medical-red-100';
  case 'medium': return 'text-crimson-600 bg-crimson-100';
- case 'low': return 'text-[#2C4A60] bg-[#e0eaf3]';
+ case 'low': return 'text-[#2D6147] bg-[#F0F7F4]';
  default: return 'text-titanium-600 bg-titanium-100';
  }
   };
@@ -360,7 +360,7 @@ const EPAutomatedClinicalSupport: React.FC = () => {
 
  {/* Key Metrics Overview */}
  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
- <div className="bg-gradient-to-r from-[#f0f5fa] to-[#e0eaf3] rounded-xl p-4 border border-[#C8D4DC]">
+ <div className="bg-gradient-to-r from-[#f0f5fa] to-[#F0F5FA] rounded-xl p-4 border border-[#C8D4DC]">
  <div className="text-sm font-semibold text-titanium-600 uppercase tracking-wider mb-1">
  Patients Scanned
  </div>

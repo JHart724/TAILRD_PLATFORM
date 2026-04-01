@@ -34,3 +34,4 @@ clean_gaps.js
 dedup_gaps.js
 fix_gaps.js
 recalibrate.js
+.gstack/

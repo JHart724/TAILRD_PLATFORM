@@ -292,7 +292,7 @@ const AblationPlanningChecklist: React.FC = () => {
  case 'Ineffective':
  return 'bg-red-100 text-red-800';
  case 'Intolerable':
- return 'bg-[#F0F5FA] text-[#6B7280]';
+ return 'bg-[#FAF6E8] text-[#8B6914]';
  }
   };
 
@@ -476,7 +476,7 @@ const AblationPlanningChecklist: React.FC = () => {
  className={`px-3 py-1 text-xs rounded transition-colors ${
  assessment.status === 'pending'
  ? 'bg-[#F0F5FA] text-white'
- : 'bg-[#F0F5FA] text-[#6B7280] hover:bg-[#F0F5FA]'
+ : 'bg-[#FAF6E8] text-[#8B6914] hover:bg-[#F0F5FA]'
  }`}
  >
  Pending

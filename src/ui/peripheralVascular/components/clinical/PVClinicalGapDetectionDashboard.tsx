@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { AlertTriangle, CheckCircle, DollarSign, Users, ChevronDown, ChevronUp, Target, Activity, Pill, Stethoscope, TrendingUp, Zap, Info, Search, Radio, FileText } from 'lucide-react';
 import { computeHERDOO2 } from '../../../../utils/clinicalCalculators';
 import { computeTrajectory, computeTimeHorizon, trajectoryDisplay, timeHorizonDisplay, formatDollar, type TrajectoryResult, type TrajectoryDistribution } from '../../../../utils/predictiveCalculators';
+import GapActionButtons from '../../../../components/shared/GapActionButtons';
+import { useGapActions } from '../../../../hooks/useGapActions';
 
 // ============================================================
 // CLINICAL GAP DETECTION — PERIPHERAL VASCULAR MODULE
@@ -3049,8 +3051,8 @@ const getPVTrajectoryBadges = (gap: PVClinicalGap, pt: PVGapPatient) => {
     <>
       <span className={`ml-2 text-xs px-2 py-0.5 rounded-full font-medium ${
         trajectory.direction === 'worsening_rapid' ? 'bg-red-100 text-red-700' :
-        trajectory.direction === 'worsening_slow' ? 'bg-[#F0F5FA] text-[#6B7280]' :
-        trajectory.direction === 'improving' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+        trajectory.direction === 'worsening_slow' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+        trajectory.direction === 'improving' ? 'bg-[#F0F7F4] text-[#2D6147]' :
         'bg-gray-100 text-gray-600'
       }`}>
         {traj.arrow} {traj.label}
@@ -3160,11 +3162,22 @@ const getPVGapTrajectoryData = (_gapId: string, patientCount: number, category: 
 // ============================================================
 // COMPONENT
 // ============================================================
-const PVClinicalGapDetectionDashboard: React.FC = () => {
+interface PVCategoryFilter {
+  label: string;
+  keywords: string[];
+}
+
+interface PVClinicalGapDetectionDashboardProps {
+  categoryFilter?: PVCategoryFilter;
+}
+
+const PVClinicalGapDetectionDashboard: React.FC<PVClinicalGapDetectionDashboardProps> = ({ categoryFilter }) => {
   const [expandedGap, setExpandedGap] = useState<string | null>(null);
+  const { trackGapView, gapActions } = useGapActions('PERIPHERAL_VASCULAR');
   const [expandedPatient, setExpandedPatient] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'priority' | 'patients' | 'opportunity'>('priority');
   const [showMethodology, setShowMethodology] = useState<string | null>(null);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
   const totalPatients = PV_CLINICAL_GAPS.reduce((sum, g) => sum + g.patientCount, 0);
   const totalOpportunity = PV_CLINICAL_GAPS.reduce((sum, g) => sum + g.dollarOpportunity, 0);
@@ -3181,15 +3194,50 @@ const PVClinicalGapDetectionDashboard: React.FC = () => {
     }
   });
 
+  const filterConfig: Record<string, string[]> = {
+    'PAD Medical Therapy': ['PAD', 'Dual Pathway', 'Cilostazol', 'Statin', 'Antihypertensive', 'VOYAGER', 'Supervised Exercise', 'ABI', 'Claudication', 'Polyvascular', 'Smoking Cessation'],
+    'Revascularization': ['Revascularization', 'CLTI', 'BEST-CLI', 'Drug-Coated Balloon', 'Pedal Loop', 'Hybrid', 'Limb Loss', 'Limb Salvage', 'Endovascular', 'Bypass', 'Duplex'],
+    'Aortic Emergencies': ['Aortic Dissection', 'Thoracic Aortic', 'TAA', 'AAA', 'Aorta Protocol', 'CTA Aorta'],
+    'Venous Disease': ['VTE', 'IVC Filter', 'May-Thurner', 'DVT', 'Venous Ulcer', 'PE', 'CDT', 'PERT', 'Anticoagulation Not Evaluated', 'Venous Stenting', 'Lymphedema'],
+    'Screening & Detection': ['Renal Artery', 'CMI', 'Mesenteric', 'Thoracic Outlet', 'Popliteal Entrapment', 'Dialysis Access', 'Screening', 'AAA'],
+    'Peri-Procedural': ['Perioperative', 'AKI', 'Pre-Vascular', 'Subclavian Steal', 'Post-Operative', 'Anticoagulation Protocol', 'LIMA-CABG'],
+  };
+
+  const chipCounts = Object.fromEntries(
+    Object.entries(filterConfig).map(([label, keywords]) => [
+      label,
+      sortedGaps.filter(gap =>
+        keywords.some(kw => (gap.name || '').toLowerCase().includes(kw.toLowerCase()))
+      ).length
+    ])
+  );
+
+  const filteredGaps = categoryFilter
+    ? sortedGaps.filter(gap => {
+        const gapName = (gap.name || '').toLowerCase();
+        return categoryFilter.keywords.some(kw => gapName.includes(kw.toLowerCase()));
+      })
+    : activeFilters.length === 0 ? sortedGaps : sortedGaps.filter(gap => {
+        const gapName = (gap.name || '').toLowerCase();
+        return activeFilters.some(label =>
+          filterConfig[label].some(kw => gapName.includes(kw.toLowerCase()))
+        );
+      });
+
+  const filteredPatientCount = filteredGaps.reduce((sum, g) => sum + (g.patientCount || 0), 0);
+  const filteredOpportunity = filteredGaps.reduce((sum, g) => sum + (g.dollarOpportunity || 0), 0);
+  const totalPatientCountForChips = sortedGaps.reduce((sum, g) => sum + (g.patientCount || 0), 0);
+  const totalOpportunityForChips = sortedGaps.reduce((sum, g) => sum + (g.dollarOpportunity || 0), 0);
+
   const priorityColor = (p: string) => {
     if (p === 'high') return 'bg-red-50 border-red-300 text-red-700';
     if (p === 'medium') return 'bg-[#F0F5FA] border-[#C8D4DC] text-[#6B7280]';
-    return 'bg-[#C8D4DC] border-[#2C4A60] text-[#2C4A60]';
+    return 'bg-[#F0F7F4] border-[#D8EDE6] text-[#2C4A60]';
   };
 
   const categoryColor = (c: string) =>
     c === 'Discovery'
-      ? 'bg-[#e0eaf3] text-[#1A2F4A]'
+      ? 'bg-[#F0F5FA] text-[#1A2F4A]'
       : c === 'Gap'
       ? 'bg-red-100 text-red-800'
       : c === 'Safety'
@@ -3202,27 +3250,30 @@ const PVClinicalGapDetectionDashboard: React.FC = () => {
       <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
         <h3 className="text-lg font-semibold text-titanium-900 mb-1 flex items-center gap-2">
           <Activity className="w-5 h-5 text-arterial-600" />
-          Clinical Gap Detection — Peripheral Vascular Module
+          {categoryFilter
+            ? `${categoryFilter.label} · ${filteredGaps.length} GAPS · ${filteredPatientCount.toLocaleString()} PATIENTS · $${(filteredOpportunity / 1_000_000).toFixed(1)}M OPPORTUNITY`
+            : 'Clinical Gap Detection \u2014 Peripheral Vascular Module'}
         </h3>
-        <p className="text-sm text-titanium-600 mb-4">
-          AI-driven detection of evidence-based PV therapy gaps — polyvascular cross-module opportunities.
-          Gaps 14, 24, 25, 28, 34, 35, 36, 43 — 45-gap initiative.
-        </p>
+        {!categoryFilter && (
+          <p className="text-sm text-titanium-600 mb-4">
+            AI-driven detection of evidence-based PV therapy gaps and polyvascular cross-module opportunities.
+          </p>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-red-50 border border-red-200 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
               <Users className="w-4 h-4 text-red-600" />
               <span className="text-xs font-semibold text-red-700 uppercase tracking-wide">Affected Patients</span>
             </div>
-            <div className="text-2xl font-bold text-red-800">{totalPatients.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-red-800">{categoryFilter ? filteredPatientCount.toLocaleString() : totalPatients.toLocaleString()}</div>
           </div>
-          <div className="bg-[#C8D4DC] border border-[#2C4A60] rounded-xl p-4">
+          <div className="bg-[#F0F7F4] border border-[#D8EDE6] rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
               <DollarSign className="w-4 h-4 text-[#2C4A60]" />
               <span className="text-xs font-semibold text-[#2C4A60] uppercase tracking-wide">Total Opportunity</span>
             </div>
             <div className="text-2xl font-bold text-[#2C4A60]">
-              ${(totalOpportunity / 1000000).toFixed(1)}M
+              ${((categoryFilter ? filteredOpportunity : totalOpportunity) / 1000000).toFixed(1)}M
             </div>
           </div>
           <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
@@ -3230,9 +3281,10 @@ const PVClinicalGapDetectionDashboard: React.FC = () => {
               <TrendingUp className="w-4 h-4 text-slate-600" />
               <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Cross-Module Gaps</span>
             </div>
-            <div className="text-2xl font-bold text-slate-800">{PV_CLINICAL_GAPS.length}</div>
+            <div className="text-2xl font-bold text-slate-800">{categoryFilter ? filteredGaps.length : PV_CLINICAL_GAPS.length}</div>
           </div>
         </div>
+        {!categoryFilter && (
         <div className="mt-4 p-3 bg-slate-50 border border-slate-200 rounded-xl">
           <p className="text-xs text-slate-700">
             <strong>Cross-Module Note:</strong> Gap 14 (COMPASS Dual Pathway) patients with both CAD and PAD
@@ -3241,9 +3293,11 @@ const PVClinicalGapDetectionDashboard: React.FC = () => {
             cardiologist or the vascular surgeon depending on the patient's primary care team.
           </p>
         </div>
+        )}
       </div>
 
-      {/* Sort control */}
+      {/* Sort control — only shown in standalone mode */}
+      {!categoryFilter && (
       <div className="flex items-center gap-3">
         <span className="text-xs font-semibold text-titanium-600 uppercase tracking-wide">Sort by:</span>
         <select
@@ -3256,16 +3310,77 @@ const PVClinicalGapDetectionDashboard: React.FC = () => {
           <option value="opportunity">Dollar Opportunity</option>
         </select>
       </div>
+      )}
+
+      {/* Filter Chips — only shown in standalone mode (no categoryFilter) */}
+      {!categoryFilter && (
+      <div className="mb-4">
+        <div className="flex items-start justify-between mb-2">
+          <div className="flex flex-wrap gap-2">
+            {Object.entries(filterConfig).map(([label]) => {
+              const isActive = activeFilters.includes(label);
+              const count = chipCounts[label];
+              return (
+                <button
+                  key={label}
+                  onClick={() => setActiveFilters(prev =>
+                    prev.includes(label) ? prev.filter(f => f !== label) : [...prev, label]
+                  )}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'text-white border border-transparent'
+                      : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50'
+                  }`}
+                  style={isActive ? { backgroundColor: '#2C4A60' } : {}}
+                >
+                  {label}
+                  <span className={`text-xs rounded-full px-1.5 py-0.5 font-semibold ${
+                    isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          {activeFilters.length > 0 && (
+            <button
+              onClick={() => setActiveFilters([])}
+              className="text-sm text-slate-500 hover:text-slate-700 whitespace-nowrap ml-4 mt-1"
+            >
+              Clear all filters
+            </button>
+          )}
+        </div>
+        <div className="text-sm text-slate-500">
+          {activeFilters.length > 0 ? (
+            <span>
+              Showing <strong>{filteredPatientCount.toLocaleString()}</strong> patients across{' '}
+              <strong>{filteredGaps.length}</strong> gaps · Filtered by: {activeFilters.join(', ')}
+            </span>
+          ) : (
+            <span>
+              Patients identified: <strong>{totalPatientCountForChips.toLocaleString()}</strong> ·{' '}
+              Opportunity: <strong>${(totalOpportunityForChips / 1_000_000).toFixed(1)}M</strong>
+            </span>
+          )}
+        </div>
+      </div>
+      )}
 
       {/* Gap list */}
       <div className="space-y-4">
-        {sortedGaps.map((gap) => {
+        {filteredGaps.map((gap) => {
           const isOpen = expandedGap === gap.id;
           return (
             <div key={gap.id} className="metal-card bg-white border border-titanium-200 rounded-2xl overflow-hidden">
               <button
                 className="w-full text-left p-5 flex items-start justify-between hover:bg-titanium-50 transition-colors"
-                onClick={() => setExpandedGap(isOpen ? null : gap.id)}
+                onClick={() => {
+                  const nextId = isOpen ? null : gap.id;
+                  setExpandedGap(nextId);
+                  if (nextId) trackGapView(gap.id);
+                }}
               >
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2 mb-1">
@@ -3379,6 +3494,15 @@ const PVClinicalGapDetectionDashboard: React.FC = () => {
                     </span>
                   </div>
 
+                  {/* Gap Action Buttons — care team response tracking */}
+                  <GapActionButtons
+                    gapId={gap.id}
+                    gapName={gap.name}
+                    ctaText={gap.cta}
+                    moduleType="PERIPHERAL_VASCULAR"
+                    existingAction={gapActions[gap.id] || null}
+                  />
+
                   <div>
                     <h4 className="font-semibold text-titanium-800 mb-2 flex items-center gap-2">
                       <Users className="w-4 h-4 text-titanium-600" />
@@ -3399,12 +3523,12 @@ const PVClinicalGapDetectionDashboard: React.FC = () => {
                                   {pt.mrn} • Age {pt.age}
                                 </span>
                                 {pt.tier && (
-                                  <span className="ml-2 text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-0.5 rounded-full">
+                                  <span className="ml-2 text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-0.5 rounded-full">
                                     {pt.tier}
                                   </span>
                                 )}
                                 {gap.category === 'Discovery' && (
-                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-[#e0eaf3] text-[#2C4A60] px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow. TAILRD identified this patient by assembling disconnected signals across care settings.">
+                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-[#F0F7F4] text-[#2D6147] px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow. TAILRD identified this patient by assembling disconnected signals across care settings.">
                                     <Radio className="w-3 h-3" />
                                     First identified by TAILRD
                                   </span>

@@ -1,37 +1,11 @@
-// checks until analytics data layer is properly aligned with Prisma schema.
 import { Request, Response, NextFunction } from 'express';
-import { PrismaClient, ModuleType as PrismaModuleType } from '@prisma/client';
+import { PrismaClient, ActivityType, ModuleType } from '@prisma/client';
 import { AuthenticatedRequest } from './auth';
 
+// Re-export Prisma enums as the single source of truth
+export { ActivityType, ModuleType };
+
 const prisma = new PrismaClient();
-
-// Activity type definitions
-export enum ActivityType {
-  LOGIN = 'LOGIN',
-  LOGOUT = 'LOGOUT',
-  NAVIGATION = 'NAVIGATION',
-  API_CALL = 'API_CALL',
-  FEATURE_USE = 'FEATURE_USE',
-  REPORT_GENERATION = 'REPORT_GENERATION',
-  DATA_EXPORT = 'DATA_EXPORT',
-  USER_MANAGEMENT = 'USER_MANAGEMENT',
-  CONFIGURATION = 'CONFIGURATION',
-  SEARCH = 'SEARCH',
-  FILTER = 'FILTER',
-  ALERT_INTERACTION = 'ALERT_INTERACTION',
-  ERROR = 'ERROR'
-}
-
-export enum ModuleType {
-  HEART_FAILURE = 'HEART_FAILURE',
-  ELECTROPHYSIOLOGY = 'ELECTROPHYSIOLOGY',
-  STRUCTURAL_HEART = 'STRUCTURAL_HEART',
-  CORONARY_INTERVENTION = 'CORONARY_INTERVENTION',
-  PERIPHERAL_VASCULAR = 'PERIPHERAL_VASCULAR',
-  VALVULAR_DISEASE = 'VALVULAR_DISEASE',
-  ADMIN = 'ADMIN',
-  ANALYTICS = 'ANALYTICS'
-}
 
 interface AnalyticsMetadata {
   userAgent?: string;
@@ -95,9 +69,11 @@ class AnalyticsTracker {
       resourceId: data.resourceId,
       moduleType: data.moduleType,
       duration: data.duration,
-      ipAddress: data.metadata?.ipAddress,
+      ipAddress: data.metadata?.ipAddress || 'unknown',
       userAgent: data.metadata?.userAgent,
-      sessionId: data.metadata?.sessionId,
+      sessionId: data.metadata?.sessionId || 'no-session',
+      path: data.metadata?.pageUrl || '/',
+      method: 'TRACK',
       metadata: data.metadata ? JSON.stringify(data.metadata) : undefined,
       timestamp: new Date()
     };
@@ -164,7 +140,7 @@ class AnalyticsTracker {
       userId: data.userId,
       hospitalId: data.hospitalId,
       featureName: data.featureName,
-      moduleType: data.moduleType as unknown as PrismaModuleType,
+      moduleType: data.moduleType as ModuleType,
       category: 'DASHBOARD' as const,
       usageCount: data.usageCount || 1,
       totalDuration: data.timeSpent || 0,
@@ -469,7 +445,7 @@ export const trackReportGeneration = async (
         hospitalId: req.user.hospitalId || 'platform',
         reportType,
         reportName: `${reportType} report`,
-        moduleType: moduleType as unknown as PrismaModuleType,
+        moduleType: moduleType as ModuleType,
         exportFormat: format,
         parameters: parameters ? JSON.stringify(parameters) as any : undefined,
         generationTime: 0,

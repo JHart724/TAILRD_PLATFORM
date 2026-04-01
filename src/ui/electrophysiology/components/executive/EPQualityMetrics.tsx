@@ -230,8 +230,8 @@ const EPQualityMetrics: React.FC = () => {
  performance = (current / target) * 100;
  }
 
- if (performance >= 90) return 'text-[#2C4A60] bg-[#C8D4DC]';
- if (performance >= 75) return 'text-[#6B7280] bg-[#F0F5FA]';
+ if (performance >= 90) return 'text-[#2D6147] bg-[#F0F7F4]';
+ if (performance >= 75) return 'text-[#8B6914] bg-[#FAF6E8]';
  return 'text-red-600 bg-red-50';
   };
 
@@ -485,7 +485,7 @@ const EPQualityMetrics: React.FC = () => {
  {formatValue(trend.value, metric.unit)}
  </span>
  <span className={`text-xs px-2 py-1 rounded-full ${
- trend.change > 0 ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ trend.change > 0 ? 'bg-[#F0F7F4] text-[#2D6147]' :
  trend.change < 0 ? 'bg-red-100 text-red-700' :
  'bg-titanium-100 text-titanium-600'
  }`}>
@@ -587,8 +587,8 @@ const EPQualityMetrics: React.FC = () => {
  >
  <div className="flex items-center justify-between mb-2">
  <span className={`px-2 py-1 text-xs rounded-full ${
- opportunity.difficulty === 'Low' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
- opportunity.difficulty === 'Medium' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ opportunity.difficulty === 'Low' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ opportunity.difficulty === 'Medium' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-red-100 text-red-700'
  }`}>
  {opportunity.difficulty}

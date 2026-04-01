@@ -25,13 +25,13 @@ export const premiumColors = {
   },
   green: {
  950: '#052e16', 900: '#0a3d1f', 800: '#116932', 700: '#2C4A60',
- 600: '#4A6880', 500: '#4A6880', 400: '#4ade80', 300: '#86efac',
- 200: '#bbf7d0', 100: '#dcfce7', 50: '#f0fdf4',
+ 600: '#4A6880', 500: '#4A6880', 400: '#4A8A6E', 300: '#A8C8B8',
+ 200: '#D0E8DC', 100: '#E0EEE8', 50: '#f0fdf4',
   },
   amber: {
- 950: '#451a03', 900: '#78350f', 800: '#92400e', 700: '#b45309',
- 600: '#6B7280', 500: '#C8D4DC', 400: '#C8D4DC', 300: '#fcd34d',
- 200: '#fde68a', 100: '#F0F5FA', 50: '#fffbeb',
+ 950: '#451a03', 900: '#78350f', 800: '#92400e', 700: '#8B6914',
+ 600: '#6B7280', 500: '#C8D4DC', 400: '#C8D4DC', 300: '#D4AA3C',
+ 200: '#EAD68A', 100: '#F0F5FA', 50: '#FAF6E8',
   },
   crimson: {
  950: '#100306', 900: '#20050C', 800: '#3E0A17', 700: '#5C1022',
@@ -39,9 +39,9 @@ export const premiumColors = {
  200: '#E8A1AD', 100: '#F5D0D6', 50: '#FDF2F3',
   },
   forest: {
- 950: '#0E2A1A', 900: '#0f3d24', 800: '#14532d', 700: '#2C4A60',
- 600: '#1A4A2E', 500: '#2D7A4A', 400: '#5CAA72', 300: '#86efac',
- 200: '#bbf7d0', 100: '#dcfce7', 50: '#f0fdf4',
+ 950: '#0E2A1A', 900: '#0f3d24', 800: '#1E3D2E', 700: '#2C4A60',
+ 600: '#1A4A2E', 500: '#2D7A4A', 400: '#5CAA72', 300: '#A8C8B8',
+ 200: '#D0E8DC', 100: '#E0EEE8', 50: '#f0fdf4',
   },
   gold: {
  950: '#3A2C08', 900: '#5C4610', 800: '#6B4A1A', 700: '#8B6914',
@@ -54,9 +54,19 @@ export const premiumColors = {
  200: '#BCC2CE', 100: '#DEE0E6', 50: '#F0F1F4',
   },
   teal: {
- 950: '#042f2e', 900: '#134e4a', 800: '#115e59', 700: '#0f766e',
- 600: '#0d9488', 500: '#14b8a6', 400: '#2dd4bf', 300: '#5eead4',
- 200: '#99f6e4', 100: '#ccfbf1', 50: '#f0fdfa',
+ 950: '#042f2e', 900: '#134e4a', 800: '#115e59', 700: '#2C4A60',
+ 600: '#3E6275', 500: '#4A6880', 400: '#2dd4bf', 300: '#5eead4',
+ 200: '#C8D4DC', 100: '#E8EEF2', 50: '#f0fdfa',
+  },
+  steelTeal: {
+    950: '#061820', 900: '#0D3040', 800: '#0F4A5C', 700: '#1A6878',
+    600: '#2A8A9E', 500: '#4AAEC0', 400: '#72C4D4', 300: '#A0D8E4',
+    200: '#C4EAF0', 100: '#DFF4F8', 50: '#F0FAFB',
+  },
+  copperBronze: {
+    950: '#2A1A08', 900: '#4A2E10', 800: '#6B401A', 700: '#8B5A2B',
+    600: '#B8763E', 500: '#D4975A', 400: '#E0B07A', 300: '#ECC89E',
+    200: '#F4DEC4', 100: '#F9EEE0', 50: '#FDF7F0',
   },
   neutral: {
  50: '#fafafa', 100: '#f5f5f5', 200: '#e5e5e5', 300: '#d4d4d4',
@@ -73,7 +83,9 @@ export const premiumColors = {
  forest: 'linear-gradient(135deg, #0E2A1A 0%, #1A4A2E 50%, #5CAA72 100%)',
  gold: 'linear-gradient(135deg, #3A2C08 0%, #8B6914 50%, #D4B85C 100%)',
  gunmetal: 'linear-gradient(135deg, #1D2128 0%, #2E3440 50%, #7B8698 100%)',
- teal: 'linear-gradient(135deg, #042f2e 0%, #0d9488 50%, #2dd4bf 100%)',
+ teal: 'linear-gradient(135deg, #042f2e 0%, #3E6275 50%, #2dd4bf 100%)',
+ steelTeal: 'linear-gradient(135deg, #061820 0%, #1A6878 50%, #4AAEC0 100%)',
+ copperBronze: 'linear-gradient(135deg, #2A1A08 0%, #8B5A2B 50%, #D4975A 100%)',
  titanium: 'linear-gradient(135deg, #111827 0%, #636D80 50%, #B8C0CE 100%)',
  metalSurface:  'linear-gradient(145deg, #F0F5FA 0%, rgba(216,221,230,0.4) 50%, rgba(238,241,245,0.8) 100%)',
  darkMetal: 'linear-gradient(145deg, #111827 0%, #1F2937 50%, #374151 100%)',
@@ -81,13 +93,15 @@ export const premiumColors = {
   },
   glows: {
  porsche:  '0 0 16px rgba(44,74,96,0.20), 0 0 32px rgba(44,74,96,0.10)',
- emerald:  '0 0 16px rgba(22,163,74,0.20), 0 0 32px rgba(22,163,74,0.08)',
- amber: '0 0 16px rgba(217,119,6,0.20), 0 0 32px rgba(217,119,6,0.08)',
+ emerald:  '0 0 16px rgba(44,74,96,0.20), 0 0 32px rgba(44,74,96,0.08)',
+ amber: '0 0 16px rgba(122,26,46,0.20), 0 0 32px rgba(122,26,46,0.08)',
  crimson:  '0 0 16px rgba(122,26,46,0.20), 0 0 32px rgba(122,26,46,0.08)',
  forest: '0 0 16px rgba(26,74,46,0.20), 0 0 32px rgba(26,74,46,0.08)',
  gold: '0 0 16px rgba(139,105,20,0.20), 0 0 32px rgba(139,105,20,0.08)',
  gunmetal: '0 0 16px rgba(46,52,64,0.20), 0 0 32px rgba(46,52,64,0.08)',
  teal: '0 0 16px rgba(13,148,136,0.20), 0 0 32px rgba(13,148,136,0.08)',
+ steelTeal: '0 0 16px rgba(26,104,120,0.20), 0 0 32px rgba(26,104,120,0.08)',
+ copperBronze: '0 0 16px rgba(139,90,43,0.20), 0 0 32px rgba(139,90,43,0.08)',
  titanium: '0 0 16px rgba(99,109,128,0.15), 0 0 32px rgba(99,109,128,0.06)',
   },
 };
@@ -102,10 +116,18 @@ export const clinicalColors = {
 } as const;
 
 export const chartColors = [
-  '#2C4A60', '#7A1A2E', '#4A6880',
-  '#6B7280', '#C8D4DC', '#2E3440',
-  premiumColors.titanium[500], porsche[300], porsche[400],
-  porsche[600],
+  '#2C4A60',  // Chrome Blue dark
+  '#9B2438',  // Carmona Red
+  '#C4982A',  // Metallic Gold
+  '#2D6147',  // Racing Green
+  '#1A6878',  // Steel Teal
+  '#8B5A2B',  // Copper Bronze
+  '#4A6880',  // Chrome Blue mid
+  '#7A1A2E',  // Carmona deep
+  '#8B6914',  // Gold deep
+  '#3D7A5C',  // Racing Green mid
+  '#2A8A9E',  // Steel Teal mid
+  '#B8763E',  // Copper Bronze mid
 ] as const;
 
 export const moduleThemes = {

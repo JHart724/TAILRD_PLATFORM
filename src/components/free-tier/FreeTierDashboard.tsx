@@ -55,10 +55,16 @@ const FreeTierDashboard: React.FC<FreeTierDashboardProps> = ({ backToMain }) => 
         <Header hasUploadedFiles={false} onBackToMain={backToMain} />
 
         {/* Clinical Gap Intelligence Summary */}
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div
+          className="rounded-xl border border-slate-200 p-6 shadow-sm"
+          style={{
+            background: 'linear-gradient(to right, #ffffff, #f8fafc)',
+            borderLeft: '3px solid #2C4A60',
+          }}
+        >
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Clinical Gap Intelligence</p>
+              <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#2C4A60', letterSpacing: '0.08em' }}>Clinical Gap Intelligence</p>
               <div className="flex items-baseline gap-3 flex-wrap">
                 <span className="text-3xl font-bold" style={{ color: '#2C4A60' }}>
                   {PLATFORM_TOTALS.totalPatients.toLocaleString()}
@@ -74,15 +80,22 @@ const FreeTierDashboard: React.FC<FreeTierDashboardProps> = ({ backToMain }) => 
               </p>
             </div>
             <div className="flex items-center gap-6 text-sm text-slate-500">
-              {Object.entries(PLATFORM_TOTALS.modules).map(([key, mod]) => (
-                <div key={key} className="text-center">
-                  <div className="font-semibold text-slate-700">{mod.patients.toLocaleString()}</div>
-                  <div className="text-xs uppercase">{key}</div>
-                </div>
-              ))}
+              {Object.entries(PLATFORM_TOTALS.modules).map(([key, mod]) => {
+                const moduleHex: Record<string, string> = {
+                  hf: '#B91C1C', ep: '#6D28D9', cad: '#C2410C',
+                  sh: '#0E7490', vd: '#1D4ED8', pv: '#065F46',
+                };
+                const color = moduleHex[key] || '#2C4A60';
+                return (
+                  <div key={key} className="text-center">
+                    <div className="font-bold" style={{ color }}>{mod.patients.toLocaleString()}</div>
+                    <div className="text-xs uppercase text-slate-400">{key}</div>
+                  </div>
+                );
+              })}
               <div className="text-center border-l border-slate-200 pl-6">
-                <div className="font-bold text-slate-800">{PLATFORM_TOTALS.totalPatients.toLocaleString()}</div>
-                <div className="text-xs uppercase">Total</div>
+                <div className="font-bold" style={{ color: '#2C4A60' }}>{PLATFORM_TOTALS.totalPatients.toLocaleString()}</div>
+                <div className="text-xs uppercase text-slate-400">Total</div>
               </div>
             </div>
           </div>

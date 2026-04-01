@@ -324,15 +324,15 @@ const PatientRiskStratification: React.FC<PatientRiskStratificationProps> = ({ c
  'Count'
  ]}
  />
- <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]}>
+ <Bar dataKey="count" fill="#2C4A60" radius={[4, 4, 0, 0]}>
  {mockRiskDistribution.map((entry, index) => (
  <Cell 
  key={`cell-${index}`} 
  fill={
- entry.riskRange === '81-100' ? '#ef4444' :
- entry.riskRange === '61-80' ? '#6B7280' :
- entry.riskRange === '41-60' ? '#3b82f6' :
- '#2C4A60'
+ entry.riskRange === '81-100' ? '#9B2438' :
+ entry.riskRange === '61-80' ? '#8B6914' :
+ entry.riskRange === '41-60' ? '#4A6880' :
+ '#2D6147'
  }
  />
  ))}
@@ -374,8 +374,8 @@ const PatientRiskStratification: React.FC<PatientRiskStratificationProps> = ({ c
  <Radar
  name="Impact Score"
  dataKey="impact"
- stroke="#3b82f6"
- fill="#3b82f6"
+ stroke="#2C4A60"
+ fill="#2C4A60"
  fillOpacity={0.3}
  strokeWidth={2}
  />

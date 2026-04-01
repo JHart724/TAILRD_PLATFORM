@@ -391,13 +391,13 @@ const ORBITBleedingCalculator: React.FC = () => {
  <div>
  <h5 className="font-semibold text-titanium-900 mb-2">Risk Stratification</h5>
  <div className="space-y-2 text-sm">
- <div className="flex justify-between p-2 bg-[#C8D4DC] rounded">
+ <div className="flex justify-between p-2 bg-[#F0F7F4] rounded">
  <span>Low Risk (0-2 points)</span>
  <span className="font-semibold text-[#2C4A60]">2.4%/year bleeding</span>
  </div>
  <div className="flex justify-between p-2 bg-[#F0F5FA] rounded">
  <span>Medium Risk (3-4 points)</span>
- <span className="font-semibold text-[#6B7280]">4.7%/year bleeding</span>
+ <span className="font-semibold text-[#8B6914]">4.7%/year bleeding</span>
  </div>
  <div className="flex justify-between p-2 bg-red-50 rounded">
  <span>High Risk (5-7 points)</span>

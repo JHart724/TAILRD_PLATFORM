@@ -162,8 +162,8 @@ const LimbSalvageScreening: React.FC = () => {
   const getRiskColor = (risk: string) => {
  switch (risk) {
  case 'Low': return 'bg-[#F0F5FA] text-[#2C4A60] border-[#C8D4DC]';
- case 'Moderate': return 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]';
- case 'High': return 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]';
+ case 'Moderate': return 'bg-[#FAF6E8] text-[#8B6914] border-[#C8D4DC]';
+ case 'High': return 'bg-[#FAF6E8] text-[#8B6914] border-[#C8D4DC]';
  case 'Critical': return 'bg-red-100 text-red-800 border-red-300';
  default: return 'bg-titanium-100 text-titanium-800 border-titanium-300';
  }
@@ -172,7 +172,7 @@ const LimbSalvageScreening: React.FC = () => {
   const getRuralityColor = (rurality: string) => {
  switch (rurality) {
  case 'Rural': return 'bg-red-100 text-red-700';
- case 'Suburban': return 'bg-[#F0F5FA] text-[#6B7280]';
+ case 'Suburban': return 'bg-[#FAF6E8] text-[#8B6914]';
  case 'Urban': return 'bg-[#F0F5FA] text-[#2C4A60]';
  default: return 'bg-titanium-100 text-titanium-700';
  }

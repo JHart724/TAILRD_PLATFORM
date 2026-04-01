@@ -243,7 +243,7 @@ const RCOperationsView: React.FC = () => {
  <div className="flex items-center justify-between mb-3">
  <div className="font-semibold text-titanium-900">{stage.stage}</div>
  <div className={`text-sm px-2 py-1 rounded-full font-medium ${
- stage.status === 'good' ? 'bg-[#e0eaf3] text-[#2C4A60]' :
+ stage.status === 'good' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  stage.status === 'warning' ? 'bg-crimson-100 text-crimson-700' :
  'bg-titanium-100 text-titanium-700'
  }`}>
@@ -291,7 +291,7 @@ const RCOperationsView: React.FC = () => {
  
  <div className="p-6">
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
- <div className="bg-gradient-to-r from-[#f0f5fa] to-[#e0eaf3] rounded-lg p-4 border border-[#C8D4DC]">
+ <div className="bg-gradient-to-r from-[#f0f5fa] to-[#F0F5FA] rounded-lg p-4 border border-[#C8D4DC]">
  <div className="flex items-center gap-3 mb-3">
  <Users className="w-8 h-8 text-[#2C4A60]" />
  <div>

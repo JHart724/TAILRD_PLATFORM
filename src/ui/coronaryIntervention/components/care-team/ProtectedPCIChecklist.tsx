@@ -388,7 +388,7 @@ const ProtectedPCIChecklist: React.FC = () => {
  <div className={`px-4 py-2 rounded-lg font-medium ${
  pciState.status === 'preparation' ? 'bg-chrome-100 text-chrome-700' :
  pciState.status === 'active' ? 'bg-[#F0F5FA] text-[#2C4A60]' :
- pciState.status === 'paused' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ pciState.status === 'paused' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-titanium-100 text-titanium-700'
  }`}>
  {pciState.status.toUpperCase()}
@@ -501,7 +501,7 @@ const ProtectedPCIChecklist: React.FC = () => {
  <div
  key={phase.id}
  className={`bg-white rounded-2xl p-4 shadow-chrome-card border border-titanium-200 ${
- phase.status === 'active' ? 'ring-2 ring-emerald-400' : ''
+ phase.status === 'active' ? 'ring-2 ring-[#4A7FA5]' : ''
  }`}
  >
  <div className="flex items-center justify-between mb-3">

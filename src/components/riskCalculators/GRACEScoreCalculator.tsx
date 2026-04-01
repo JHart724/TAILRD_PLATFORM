@@ -368,13 +368,13 @@ const GRACEScoreCalculator: React.FC = () => {
  <div>
  <h5 className="font-semibold text-titanium-900 mb-2">Risk Stratification</h5>
  <div className="space-y-2 text-sm">
- <div className="flex justify-between p-2 bg-[#C8D4DC] rounded">
+ <div className="flex justify-between p-2 bg-[#F0F7F4] rounded">
  <span>Low Risk (≤108)</span>
- <span className="font-semibold text-[#2C4A60]">&lt;1% mortality</span>
+ <span className="font-semibold text-[#2D6147]">&lt;1% mortality</span>
  </div>
  <div className="flex justify-between p-2 bg-[#F0F5FA] rounded">
  <span>Intermediate Risk (109-140)</span>
- <span className="font-semibold text-[#6B7280]">1-3% mortality</span>
+ <span className="font-semibold text-[#8B6914]">1-3% mortality</span>
  </div>
  <div className="flex justify-between p-2 bg-red-50 rounded">
  <span>High Risk (&gt;140)</span>

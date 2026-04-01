@@ -386,7 +386,7 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  connectionStrength: 0.91, 
  x: 300, 
  y: 280, 
- color: '#166534'
+ color: '#2D6147'
  }
   ];
 
@@ -759,7 +759,7 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  
  <button
  onClick={exportNetworkData}
- className="p-2 rounded-lg bg-[#e0eaf3] text-[#2C4A60] hover:bg-[#C8D4DC] transition-colors"
+ className="p-2 rounded-lg bg-[#F0F7F4] text-[#2D6147] hover:bg-[#C8D4DC] transition-colors"
  >
  <Download className="w-4 h-4" />
  </button>
@@ -1030,15 +1030,15 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  )}
  {selectedNode.woundStage && (
  <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${
- selectedNode.woundStage <= 2 ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-red-100 text-red-700'
+ selectedNode.woundStage <= 2 ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-red-100 text-red-700'
  }`}>
  STAGE {selectedNode.woundStage}
  </div>
  )}
  {selectedNode.status && (
  <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${
- selectedNode.status === 'active' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
- selectedNode.status === 'busy' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ selectedNode.status === 'active' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ selectedNode.status === 'busy' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-gray-100 text-gray-700'
  }`}>
  {selectedNode.status.toUpperCase()}
@@ -1096,7 +1096,7 @@ const PVWoundCareNetworkVisualization: React.FC = () => {
  <div className="flex items-center gap-2">
  <span className="text-titanium-500">{conn.patientFlow} pts</span>
  {conn.avgResponseTime && (
- <span className={`text-xs px-1 rounded ${conn.avgResponseTime <= 24 ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>
+ <span className={`text-xs px-1 rounded ${conn.avgResponseTime <= 24 ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>
  {conn.avgResponseTime < 24 ? `${toFixed(conn.avgResponseTime, 1)}h` : `${toFixed(conn.avgResponseTime / 24, 1)}d`}
  </span>
  )}

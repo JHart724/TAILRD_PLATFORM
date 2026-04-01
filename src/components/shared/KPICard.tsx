@@ -12,6 +12,9 @@ interface KPICardProps {
   };
   status?: 'optimal' | 'warning' | 'critical';
   icon?: React.ElementType;
+  accentColor?: string;  // hex color override for accent bar, icon, value text
+  accentBg?: string;     // hex background for the card
+  accentBorder?: string; // hex border for the card
 }
 
 const KPICard: React.FC<KPICardProps> = ({
@@ -21,6 +24,9 @@ const KPICard: React.FC<KPICardProps> = ({
   trend,
   status = 'optimal',
   icon: Icon,
+  accentColor,
+  accentBg,
+  accentBorder,
 }) => {
   const getAccentBarStyle = (): React.CSSProperties => {
  const colorMap: Record<string, string> = {
@@ -28,7 +34,7 @@ const KPICard: React.FC<KPICardProps> = ({
    warning: '#8B6914',
    critical: '#7A1A2E',
  };
- const c = colorMap[status] || '#2C4A60';
+ const c = accentColor || colorMap[status] || '#2C4A60';
  return {
    position: 'absolute' as const,
    top: 0,
@@ -46,7 +52,15 @@ const KPICard: React.FC<KPICardProps> = ({
    warning: '139,105,20',
    critical: '122,26,46',
  };
- const rgb = colorMap[status] || '44,74,96';
+ // Convert hex accentColor to rgb if provided
+ let rgb = colorMap[status] || '44,74,96';
+ if (accentColor) {
+   const hex = accentColor.replace('#', '');
+   const r = parseInt(hex.substring(0, 2), 16);
+   const g = parseInt(hex.substring(2, 4), 16);
+   const b = parseInt(hex.substring(4, 6), 16);
+   rgb = `${r},${g},${b}`;
+ }
  return {
    position: 'absolute' as const,
    top: 0,
@@ -65,7 +79,7 @@ const KPICard: React.FC<KPICardProps> = ({
    warning: '#8B6914',
    critical: '#7A1A2E',
  };
- const c = colorMap[status] || '#2C4A60';
+ const c = accentColor || colorMap[status] || '#2C4A60';
  return {
    width: '20px',
    height: '1.5px',
@@ -99,9 +113,14 @@ const KPICard: React.FC<KPICardProps> = ({
  return `Trend ${direction} by ${trend.value} ${trend.label}`;
   };
 
+  const cardStyle: React.CSSProperties = {};
+  if (accentBg) cardStyle.background = accentBg;
+  if (accentBorder) cardStyle.borderColor = accentBorder;
+
   return (
  <div
  className="group relative glass-panel hover:-translate-y-px transition-all duration-300 ease-chrome"
+ style={cardStyle}
  role="article"
  aria-labelledby={`kpi-label-${label.replace(/\s+/g, '-').toLowerCase()}`}
  aria-describedby={`kpi-desc-${label.replace(/\s+/g, '-').toLowerCase()}`}
@@ -124,6 +143,7 @@ const KPICard: React.FC<KPICardProps> = ({
  <div
  className="kpi-value"
  aria-label={`${label} value: ${value}`}
+ style={accentColor ? { color: accentColor } : undefined}
  >
  {value}
  </div>
@@ -134,13 +154,16 @@ const KPICard: React.FC<KPICardProps> = ({
  {Icon && (
  <div
  className="ml-4 p-3 rounded-xl transition-colors duration-300"
- style={{
+ style={accentColor ? {
+   background: accentBg || 'rgba(143,168,188,0.08)',
+   border: `1px solid ${accentBorder || 'rgba(175,205,225,0.18)'}`,
+ } : {
    background: 'rgba(143,168,188,0.08)',
    border: '1px solid rgba(175,205,225,0.18)',
  }}
  aria-hidden="true"
  >
- <Icon className="w-6 h-6" style={{ color: '#4A6880' }} />
+ <Icon className="w-6 h-6" style={{ color: accentColor || '#4A6880' }} />
  </div>
  )}
  </div>

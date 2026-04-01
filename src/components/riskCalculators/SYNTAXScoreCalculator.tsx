@@ -123,9 +123,9 @@ const SYNTAXScoreCalculator: React.FC<SYNTAXScoreProps> = ({
   const getTertileColor = (tertile: string): string => {
  switch (tertile) {
  case 'Low':
- return 'text-[#2C4A60]';
+ return 'text-[#2D6147]';
  case 'Intermediate':
- return 'text-[#6B7280]';
+ return 'text-[#8B6914]';
  case 'High':
  return 'text-red-600';
  default:

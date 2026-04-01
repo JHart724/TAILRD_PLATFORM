@@ -89,7 +89,7 @@ const EPPatients: React.FC = () => (
  </h3>
  <div className="flex items-center gap-3">
  <button 
- className="px-4 py-2 bg-[#e0eaf3] text-[#2C4A60] rounded-lg hover:bg-[#C8D4DC] transition-colors text-sm"
+ className="px-4 py-2 bg-[#F0F7F4] text-[#2D6147] rounded-lg hover:bg-[#C8D4DC] transition-colors text-sm"
  onClick={() => {
  // Action handler - implementation pending
  // TODO: Implement EP registry export functionality with secure data handling
@@ -129,7 +129,7 @@ const EPPatients: React.FC = () => (
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.rhythm === 'AFib' ? 'bg-red-100 text-red-700' :
- patient.rhythm === 'VTach' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ patient.rhythm === 'VTach' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-chrome-100 text-chrome-700'
  }`}>
  {patient.rhythm}
@@ -139,8 +139,8 @@ const EPPatients: React.FC = () => (
  <td className="py-3 px-4 font-mono text-center">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  parseInt(patient.chads) >= 4 ? 'bg-red-100 text-red-700' :
- parseInt(patient.chads) >= 2 ? 'bg-[#F0F5FA] text-[#6B7280]' :
- 'bg-[#C8D4DC] text-[#2C4A60]'
+ parseInt(patient.chads) >= 2 ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ 'bg-[#F0F7F4] text-[#2D6147]'
  }`}>
  {patient.chads}
  </span>
@@ -148,10 +148,10 @@ const EPPatients: React.FC = () => (
  <td className="py-3 px-4 text-titanium-700">{patient.anticoag}</td>
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
- patient.status === 'Complete' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ patient.status === 'Complete' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  patient.status === 'Scheduled' ? 'bg-chrome-100 text-chrome-700' :
  patient.status === 'Planning' ? 'bg-arterial-100 text-arterial-700' :
- patient.status === 'Recovery' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ patient.status === 'Recovery' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-gray-100 text-gray-700'
  }`}>
  {patient.status}
@@ -293,7 +293,7 @@ const EPClinicalCollaboration: React.FC = () => (
  </div>
  <div className={`text-xs px-2 py-1 rounded-full ${
  pathway.indication === 'Atrial Fibrillation' ? 'bg-red-100 text-red-700' :
- pathway.indication === 'Anticoagulation Contraindication' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ pathway.indication === 'Anticoagulation Contraindication' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  pathway.indication === 'Ventricular Tachycardia' ? 'bg-arterial-100 text-arterial-700' :
  'bg-chrome-100 text-chrome-700'
  }`}>
@@ -512,7 +512,7 @@ const EPDocumentation: React.FC = () => (
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* Documentation Alerts */}
  <div className="space-y-4">
- <div className="bg-gradient-to-r from-amber-50 to-amber-50 p-6 rounded-xl border border-[#C8D4DC]">
+ <div className="bg-gradient-to-r from-slate-50 to-slate-50 p-6 rounded-xl border border-[#C8D4DC]">
  <h4 className="font-semibold text-[#6B7280] mb-4 flex items-center gap-2">
  <AlertTriangle className="w-5 h-5 text-[#6B7280]" />
  Documentation Alerts & Registry
@@ -521,7 +521,7 @@ const EPDocumentation: React.FC = () => (
  <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-2">
  <span className="font-medium text-[#6B7280]">LAAC Registry Due</span>
- <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded-full">DUE TODAY</span>
+ <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">DUE TODAY</span>
  </div>
  <div className="text-sm text-[#6B7280]">2 LAAC procedures require registry data entry</div>
  <div className="text-xs text-[#6B7280] mt-1">Required within 24h of procedure</div>
@@ -530,7 +530,7 @@ const EPDocumentation: React.FC = () => (
  <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-2">
  <span className="font-medium text-[#6B7280]">Ablation Reports Pending</span>
- <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded-full">PENDING</span>
+ <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">PENDING</span>
  </div>
  <div className="text-sm text-[#6B7280]">3 ablation procedures missing operative notes</div>
  <div className="text-xs text-[#6B7280] mt-1">Complete within 48h</div>
@@ -539,7 +539,7 @@ const EPDocumentation: React.FC = () => (
  <div className="bg-white p-4 rounded-lg border border-[#2C4A60]">
  <div className="flex items-center justify-between mb-2">
  <span className="font-medium text-[#2C4A60]">Device Follow-up Notes</span>
- <span className="text-xs bg-[#C8D4DC] text-[#2C4A60] px-2 py-1 rounded-full">COMPLETE</span>
+ <span className="text-xs bg-[#F0F7F4] text-[#2D6147] px-2 py-1 rounded-full">COMPLETE</span>
  </div>
  <div className="text-sm text-[#2C4A60]">All device clinic notes up to date</div>
  <div className="text-xs text-[#2C4A60] mt-1">Next batch due tomorrow</div>
@@ -657,9 +657,9 @@ const EPDocumentation: React.FC = () => (
  <div className="text-right">
  <div className="text-xs text-titanium-500">{activity.time}</div>
  <div className={`text-xs px-2 py-1 rounded-full ${
- activity.status === 'Complete' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ activity.status === 'Complete' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  activity.status === 'In Progress' ? 'bg-chrome-100 text-chrome-700' :
- 'bg-[#F0F5FA] text-[#6B7280]'
+ 'bg-[#FAF6E8] text-[#8B6914]'
  }`}>
  {activity.status}
  </div>

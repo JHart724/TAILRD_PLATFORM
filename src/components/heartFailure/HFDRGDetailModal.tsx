@@ -79,13 +79,13 @@ const HFDRGDetailModal: React.FC<HFDRGDetailModalProps> = ({
  { 
  category: 'Our Average', 
  value: avgLos, 
- color: avgLos <= targetLos ? '#2C4A60' : '#EF4444',
+ color: avgLos <= targetLos ? '#2C4A60' : '#9B2438',
  label: `Our Average: ${avgLos} days`
  },
  { 
  category: 'Hospital Avg', 
  value: hospitalAvgLos, 
- color: '#3B82F6',
+ color: '#2C4A60',
  label: `Hospital Average: ${hospitalAvgLos} days`
  },
  { 

@@ -107,9 +107,9 @@ const CoronaryPatients: React.FC = () => (
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.procedure.includes('Primary') ? 'bg-red-100 text-red-700' :
- patient.procedure.includes('Complex') ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ patient.procedure.includes('Complex') ? 'bg-[#FAF6E8] text-[#8B6914]' :
  patient.procedure.includes('CTO') ? 'bg-arterial-100 text-arterial-700' :
- patient.procedure.includes('NSTEMI') ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ patient.procedure.includes('NSTEMI') ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-chrome-100 text-chrome-700'
  }`}>
  {patient.procedure}
@@ -118,8 +118,8 @@ const CoronaryPatients: React.FC = () => (
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.urgency === 'STAT' ? 'bg-red-100 text-red-700' :
- patient.urgency === 'Urgent' ? 'bg-[#F0F5FA] text-[#6B7280]' :
- 'bg-[#C8D4DC] text-[#2C4A60]'
+ patient.urgency === 'Urgent' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ 'bg-[#F0F7F4] text-[#2D6147]'
  }`}>
  {patient.urgency}
  </span>
@@ -128,10 +128,10 @@ const CoronaryPatients: React.FC = () => (
  <td className="py-3 px-4 font-mono text-titanium-700">{patient.d2b}</td>
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
- patient.status === 'Complete' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ patient.status === 'Complete' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  patient.status === 'In Progress' ? 'bg-chrome-100 text-chrome-700' :
  patient.status === 'Scheduled' ? 'bg-arterial-100 text-arterial-700' :
- patient.status === 'Planning' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ patient.status === 'Planning' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-gray-100 text-gray-700'
  }`}>
  {patient.status}
@@ -184,7 +184,7 @@ const CoronaryWorkflow: React.FC = () => (
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
  {/* STEMI Pathway */}
  <div className="lg:col-span-2 space-y-4">
- <div className="bg-gradient-to-r from-red-50 to-amber-50 p-6 rounded-xl border border-red-100">
+ <div className="bg-gradient-to-r from-red-50 to-slate-50 p-6 rounded-xl border border-red-100">
  <h4 className="font-semibold text-titanium-900 mb-4">STEMI Primary PCI Pathway</h4>
  
  <div className="space-y-4">
@@ -240,18 +240,18 @@ const CoronaryWorkflow: React.FC = () => (
  <div key={decision.criteria} className="grid grid-cols-3 gap-4 p-3 bg-titanium-50 rounded-lg">
  <span className="text-titanium-700 font-medium">{decision.criteria}</span>
  <span className={`text-center px-2 py-1 rounded text-xs font-medium ${
- decision.pci === 'Preferred' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ decision.pci === 'Preferred' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  decision.pci === 'Acceptable' ? 'bg-chrome-100 text-chrome-700' :
- decision.pci === 'Acceptable*' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ decision.pci === 'Acceptable*' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  decision.pci === 'Specialist Required' ? 'bg-arterial-100 text-arterial-700' :
- 'bg-[#F0F5FA] text-[#6B7280]'
+ 'bg-[#FAF6E8] text-[#8B6914]'
  }`}>
  PCI: {decision.pci}
  </span>
  <span className={`text-center px-2 py-1 rounded text-xs font-medium ${
- decision.cabg === 'Preferred' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ decision.cabg === 'Preferred' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  decision.cabg === 'Acceptable' ? 'bg-chrome-100 text-chrome-700' :
- 'bg-[#F0F5FA] text-[#6B7280]'
+ 'bg-[#FAF6E8] text-[#8B6914]'
  }`}>
  CABG: {decision.cabg}
  </span>
@@ -380,7 +380,7 @@ const CoronaryClinicalCollaboration: React.FC = () => (
  </div>
  <div className={`text-xs px-2 py-1 rounded-full ${
  pathway.indication === 'ST-Elevation MI' ? 'bg-red-100 text-red-700' :
- pathway.indication === 'High SYNTAX Score' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ pathway.indication === 'High SYNTAX Score' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  pathway.indication === 'Chronic Total Occlusion' ? 'bg-arterial-100 text-arterial-700' :
  'bg-chrome-100 text-chrome-700'
  }`}>
@@ -492,7 +492,7 @@ const CoronaryDocumentation: React.FC = () => (
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* Documentation Alerts */}
  <div className="space-y-4">
- <div className="bg-gradient-to-r from-amber-50 to-amber-50 p-6 rounded-xl border border-[#C8D4DC]">
+ <div className="bg-gradient-to-r from-slate-50 to-slate-50 p-6 rounded-xl border border-[#C8D4DC]">
  <h4 className="font-semibold text-[#6B7280] mb-4 flex items-center gap-2">
  <AlertTriangle className="w-5 h-5 text-[#6B7280]" />
  Documentation Alerts & Registry
@@ -510,7 +510,7 @@ const CoronaryDocumentation: React.FC = () => (
  <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-2">
  <span className="font-medium text-[#6B7280]">Procedure Notes Due</span>
- <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded-full">DUE TODAY</span>
+ <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">DUE TODAY</span>
  </div>
  <div className="text-sm text-[#6B7280]">3 elective PCI cases require operative reports</div>
  <div className="text-xs text-[#6B7280] mt-1">Due within 24h of procedure completion</div>
@@ -519,7 +519,7 @@ const CoronaryDocumentation: React.FC = () => (
  <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-2">
  <span className="font-medium text-[#6B7280]">Quality Metrics Review</span>
- <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded-full">PENDING</span>
+ <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">PENDING</span>
  </div>
  <div className="text-sm text-[#6B7280]">Door-to-balloon times require monthly review and analysis</div>
  <div className="text-xs text-[#6B7280] mt-1">Quality committee meeting: Friday 2 PM</div>
@@ -578,7 +578,7 @@ const CoronaryDocumentation: React.FC = () => (
  <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">URGENT</span>
  )}
  {template.priority === 'high' && (
- <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded-full">HIGH</span>
+ <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">HIGH</span>
  )}
  </div>
  <div className={`text-xs text-${template.color}-600`}>Estimated completion: {template.time}</div>
@@ -605,9 +605,9 @@ const CoronaryDocumentation: React.FC = () => (
  <div className="text-right">
  <div className="text-xs text-titanium-500">{activity.time}</div>
  <div className={`text-xs px-2 py-1 rounded-full ${
- activity.status === 'Complete' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ activity.status === 'Complete' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  activity.status === 'In Progress' ? 'bg-chrome-100 text-chrome-700' :
- 'bg-[#F0F5FA] text-[#6B7280]'
+ 'bg-[#FAF6E8] text-[#8B6914]'
  }`}>
  {activity.status}
  </div>

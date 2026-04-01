@@ -431,7 +431,7 @@ const SHProviderScorecard: React.FC = () => {
  <div className="text-2xl font-bold text-chrome-800">{panelProviderData.patients}</div>
  </div>
  <div className={`p-4 rounded-xl ${
- panelProviderData.valveTherapyRate >= 70 ? 'bg-gradient-to-br from-green-50 to-green-100' : 'bg-gradient-to-br from-amber-50 to-amber-100'
+ panelProviderData.valveTherapyRate >= 70 ? 'bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5]' : 'bg-gradient-to-br from-slate-50 to-slate-100'
  }`}>
  <div className={`text-sm font-medium ${
  panelProviderData.valveTherapyRate >= 70 ? 'text-[#2C4A60]' : 'text-[#6B7280]'
@@ -445,7 +445,7 @@ const SHProviderScorecard: React.FC = () => {
  <div className="text-2xl font-bold text-arterial-800">{toFixed(panelProviderData.qualityScore, 0)}</div>
  </div>
  <div className={`p-4 rounded-xl ${
- panelProviderData.readmissionRate <= 8 ? 'bg-gradient-to-br from-green-50 to-green-100' : 'bg-gradient-to-br from-red-50 to-red-100'
+ panelProviderData.readmissionRate <= 8 ? 'bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5]' : 'bg-gradient-to-br from-red-50 to-red-100'
  }`}>
  <div className={`text-sm font-medium ${
  panelProviderData.readmissionRate <= 8 ? 'text-[#2C4A60]' : 'text-red-700'
@@ -482,7 +482,7 @@ const SHProviderScorecard: React.FC = () => {
  </div>
  <div className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.riskScore >= 80 ? 'bg-red-100 text-red-700' :
- patient.riskScore >= 60 ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-[#C8D4DC] text-[#2C4A60]'
+ patient.riskScore >= 60 ? 'bg-[#FAF6E8] text-[#8B6914]' : 'bg-[#F0F7F4] text-[#2D6147]'
  }`}>
  {patient.riskScore >= 80 ? 'HIGH RISK' : patient.riskScore >= 60 ? 'MODERATE RISK' : 'LOW RISK'}
  </div>
@@ -495,8 +495,8 @@ const SHProviderScorecard: React.FC = () => {
  Four Pillar Rate Status
  </div>
  <div className={`text-sm px-2 py-1 rounded-full ${
- patient.fourPillarRate === 4 ? 'bg-[#C8D4DC] text-[#2C4A60]' :
- patient.fourPillarRate >= 2 ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-red-100 text-red-700'
+ patient.fourPillarRate === 4 ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ patient.fourPillarRate >= 2 ? 'bg-[#FAF6E8] text-[#8B6914]' : 'bg-red-100 text-red-700'
  }`}>
  {patient.fourPillarRate}/4 pillars active
  </div>

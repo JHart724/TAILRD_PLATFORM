@@ -158,7 +158,7 @@ const PeripheralPatients: React.FC = () => (
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.riskLevel === 'High' ? 'bg-medical-red-100 text-medical-red-700' :
  patient.riskLevel === 'Moderate' ? 'bg-crimson-100 text-crimson-700' :
- 'bg-[#e0eaf3] text-[#2C4A60]'
+ 'bg-[#F0F7F4] text-[#2D6147]'
  }`}>
  {patient.riskLevel}
  </span>
@@ -167,7 +167,7 @@ const PeripheralPatients: React.FC = () => (
  <td className="py-3 px-4 text-titanium-700">{patient.woundStage}</td>
  <td className="py-3 px-4 text-titanium-700">{patient.nextAppt}</td>
  <td className="py-3 px-4">
- <span className="px-2 py-1 bg-[#e0eaf3] text-[#2C4A60] rounded-full text-xs font-medium">
+ <span className="px-2 py-1 bg-[#F0F7F4] text-[#2D6147] rounded-full text-xs font-medium">
  {patient.status}
  </span>
  </td>
@@ -290,7 +290,7 @@ const PeripheralClinicalCollaboration: React.FC = () => (
  <div className={`text-xs px-2 py-1 rounded-full ${
  pathway.indication === 'Peripheral Artery Disease' ? 'bg-chrome-100 text-chrome-700' :
  pathway.indication === 'CLI/CLTI' ? 'bg-red-100 text-red-700' :
- pathway.indication === 'Diabetic Foot Ulcer' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ pathway.indication === 'Diabetic Foot Ulcer' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-arterial-100 text-arterial-700'
  }`}>
  {pathway.consultation}

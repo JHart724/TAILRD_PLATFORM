@@ -14,10 +14,12 @@ import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNet
 import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
 import CrossReferralEngine from '../../../components/crossReferral/CrossReferralEngine';
 
-type TabId = 'cabg-vs-pci' | 'protected-pci' | 'multi-arterial' | 'on-off-pump' | 'grace' | 'timi' | 'syntax' | 'safety' | 'network' | 'analytics' | 'outcomes' | 'reporting' | 'gap-detection' | 'saq-outcomes' | 'risk-heatmap' | 'care-network' | 'cross-referral';
+type TabId = 'analytics' | 'risk-heatmap' | 'grace' | 'timi' | 'syntax' | 'cabg-vs-pci' | 'protected-pci' | 'multi-arterial' | 'on-off-pump' | 'safety' | 'gap-detection' | 'network' | 'care-network' | 'cross-referral' | 'saq-outcomes' | 'outcomes' | 'reporting';
 
 interface TabGroup {
   label: string;
+  color: string;
+  colorBg: string;
   tabs: Array<{ id: string; label: string; icon: React.ElementType; description: string }>;
 }
 
@@ -35,14 +37,17 @@ const CoronaryServiceLineView: React.FC = () => {
   const tabGroups: TabGroup[] = [
  {
  label: 'Clinical Analytics',
+ color: '#2C4A60',
+ colorBg: 'rgba(44, 74, 96, 0.08)',
  tabs: [
  { id: 'analytics', label: 'Procedure Analytics', icon: BarChart3, description: 'Advanced coronary analytics' },
- { id: 'risk-heatmap', label: 'Patient Risk Heatmap', icon: Target, description: 'Interactive coronary risk visualization matrix' },
- { id: 'saq-outcomes', label: 'PRO-Outcomes (SAQ)', icon: Activity, description: 'Seattle Angina Questionnaire outcomes tracking' },
+ { id: 'risk-heatmap', label: 'Risk Heatmap', icon: Target, description: 'Interactive coronary risk visualization matrix' },
  ],
  },
  {
  label: 'Risk Assessment',
+ color: '#C4982A',
+ colorBg: 'rgba(196, 152, 42, 0.10)',
  tabs: [
  { id: 'grace', label: 'GRACE Score', icon: Calculator, description: 'GRACE risk calculator' },
  { id: 'timi', label: 'TIMI Score', icon: Gauge, description: 'TIMI risk calculator' },
@@ -51,16 +56,21 @@ const CoronaryServiceLineView: React.FC = () => {
  { id: 'protected-pci', label: 'Protected PCI', icon: Shield, description: 'Protected PCI planner' },
  { id: 'multi-arterial', label: 'Multi-Arterial', icon: Target, description: 'Multi-arterial graft calculator' },
  { id: 'on-off-pump', label: 'On/Off Pump', icon: Activity, description: 'On-pump vs off-pump decision' },
+ { id: 'safety', label: 'Safety Screening', icon: Shield, description: 'Coronary safety screening' },
  ],
  },
  {
  label: 'Gap & Opportunity',
+ color: '#2D6147',
+ colorBg: 'rgba(45, 97, 71, 0.10)',
  tabs: [
- { id: 'gap-detection', label: 'Gap Detection (71-Gap)', icon: Search, description: 'CAD clinical gap detection' },
+ { id: 'gap-detection', label: 'Gap Detection', icon: Search, description: 'CAD clinical gap detection' },
  ],
  },
  {
  label: 'Care Coordination',
+ color: '#1A6878',
+ colorBg: 'rgba(26, 104, 120, 0.08)',
  tabs: [
  { id: 'network', label: 'Referral Network', icon: Users, description: 'PCI referral network' },
  { id: 'care-network', label: 'Care Team Network', icon: Users, description: 'Coronary care team collaboration and referral patterns' },
@@ -69,9 +79,11 @@ const CoronaryServiceLineView: React.FC = () => {
  },
  {
  label: 'Outcomes & Reporting',
+ color: '#9B2438',
+ colorBg: 'rgba(155, 36, 56, 0.08)',
  tabs: [
+ { id: 'saq-outcomes', label: 'PRO-Outcomes (SAQ)', icon: Activity, description: 'Seattle Angina Questionnaire outcomes tracking' },
  { id: 'outcomes', label: 'Outcomes', icon: TrendingUp, description: 'Procedural outcomes' },
- { id: 'safety', label: 'Safety Screening', icon: Shield, description: 'Coronary safety screening' },
  { id: 'reporting', label: 'Automated Reports', icon: FileText, description: 'Automated reports' },
  ],
  },
@@ -112,7 +124,7 @@ const CoronaryServiceLineView: React.FC = () => {
  <span className="font-medium text-titanium-900">{item.factor}</span>
  <span className={`text-xs px-2 py-1 rounded-full ${
  item.weight === 'Critical' ? 'bg-red-100 text-red-700' :
- item.weight === 'High' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ item.weight === 'High' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-chrome-100 text-chrome-700'
  }`}>
  {item.weight}
@@ -203,7 +215,7 @@ const CoronaryServiceLineView: React.FC = () => {
  { type: 'Impella CP', cases: 23, success: '89.7%' },
  { type: 'ECMO', cases: 8, success: '75.0%' }
  ].map((item, index) => (
- <div key={item.type} className="text-center p-6 rounded-xl bg-[#C8D4DC] border border-[#2C4A60]">
+ <div key={item.type} className="text-center p-6 rounded-xl bg-[#F0F7F4] border border-[#D8EDE6]">
  <div className="text-3xl font-bold text-[#2C4A60] mb-2">{item.cases}</div>
  <div className="font-semibold text-titanium-900">{item.type}</div>
  <div className="text-sm text-[#2C4A60]">{item.success} success</div>
@@ -550,7 +562,7 @@ const CoronaryServiceLineView: React.FC = () => {
  <div className="flex items-center gap-3">
  <span className="font-medium text-titanium-900">{item.value}</span>
  <span className={`text-xs px-2 py-1 rounded-full ${
- item.met ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-red-100 text-red-700'
+ item.met ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-red-100 text-red-700'
  }`}>
  {item.met ? 'Met' : 'Gap'}
  </span>
@@ -575,7 +587,7 @@ const CoronaryServiceLineView: React.FC = () => {
  <div className="flex items-center gap-3">
  <span className="font-medium text-titanium-900">{item.value}</span>
  <span className={`text-xs px-2 py-1 rounded-full ${
- item.met ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-red-100 text-red-700'
+ item.met ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-red-100 text-red-700'
  }`}>
  {item.met ? 'Met' : 'Gap'}
  </span>
@@ -615,8 +627,6 @@ const CoronaryServiceLineView: React.FC = () => {
  );
  case 'reporting':
  return <AutomatedReportingSystem />;
- case 'gap-detection':
- return <CADClinicalGapDetectionDashboard />;
  case 'saq-outcomes':
  return <SAQOutcomesPanel />;
  case 'risk-heatmap':
@@ -625,6 +635,8 @@ const CoronaryServiceLineView: React.FC = () => {
  return <CareTeamNetworkGraph />;
  case 'cross-referral':
  return <CrossReferralEngine />;
+ case 'gap-detection':
+ return <CADClinicalGapDetectionDashboard />;
  default:
  return <GRACEScoreCalculator />;
  }
@@ -640,7 +652,7 @@ const CoronaryServiceLineView: React.FC = () => {
  <div key={group.label}>
  {groupIdx > 0 && <div className="border-t border-titanium-100 my-4" />}
  <div className="mb-3">
- <span className="text-xs font-semibold uppercase tracking-wider text-titanium-400">{group.label}</span>
+ <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: group.color }}>{group.label}</span>
  </div>
  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 gap-3 mb-2">
  {group.tabs.map((tab) => {
@@ -652,18 +664,32 @@ const CoronaryServiceLineView: React.FC = () => {
  onClick={() => handleTabChange(tab.id as TabId)}
  className={`group relative p-4 rounded-xl border transition-all duration-300 ${
  isActive
- ? 'bg-medical-red-50 border-medical-red-200 text-medical-red-600 shadow-lg scale-105'
+ ? 'shadow-lg scale-105'
  : 'bg-white border-titanium-200 text-titanium-600 hover:bg-white hover:scale-105 hover:shadow-lg'
  }`}
+ style={isActive ? {
+ background: group.colorBg,
+ borderColor: group.color,
+ color: group.color,
+ } : {}}
  >
  <div className="flex flex-col items-center gap-2">
- <Icon className={`w-6 h-6 ${isActive ? 'text-medical-red-600' : 'text-titanium-600 group-hover:text-titanium-800'}`} />
- <span className={`text-xs font-semibold text-center leading-tight ${isActive ? 'text-medical-red-600' : 'text-titanium-600 group-hover:text-titanium-800'}`}>
+ <Icon
+ className="w-6 h-6"
+ style={{ color: isActive ? group.color : undefined }}
+ />
+ <span
+ className={`text-xs font-semibold text-center leading-tight ${!isActive ? 'text-titanium-600 group-hover:text-titanium-800' : ''}`}
+ style={isActive ? { color: group.color } : {}}
+ >
  {tab.label}
  </span>
  </div>
  {isActive && (
- <div className="absolute inset-0 bg-gradient-to-r from-medical-red-400/20 to-medical-red-500/20 rounded-xl opacity-50" />
+ <div
+ className="absolute bottom-0 left-0 right-0 h-0.5 rounded-b-xl"
+ style={{ background: group.color }}
+ />
  )}
  </button>
  );

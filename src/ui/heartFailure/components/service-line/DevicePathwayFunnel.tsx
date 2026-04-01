@@ -48,7 +48,7 @@ const DevicePathwayFunnel: React.FC = () => {
  {
  type: 'CRT-D',
  icon: Heart,
- color: 'medical-red',
+ color: '#2C4A60',
  stages: [
  {
  stage: 'screening',
@@ -120,7 +120,7 @@ const DevicePathwayFunnel: React.FC = () => {
  {
  type: 'ICD',
  icon: Zap,
- color: 'porsche',
+ color: '#9B2438',
  stages: [
  {
  stage: 'screening',
@@ -192,7 +192,7 @@ const DevicePathwayFunnel: React.FC = () => {
  {
  type: 'CardioMEMS',
  icon: Activity,
- color: 'chrome-blue',
+ color: '#1A6878',
  stages: [
  {
  stage: 'screening',
@@ -305,15 +305,15 @@ const DevicePathwayFunnel: React.FC = () => {
  setSelectedMetric(null);
   };
 
-  const getStageColor = (stage: string) => {
- const colors = {
- screening: 'porsche',
- guidelines: 'crimson',
- evaluation: 'titanium',
- decision: 'chrome-blue',
- implant: 'medical-red',
+  const getStageColor = (stage: string): string => {
+ const colors: Record<string, string> = {
+ screening: '#4A6880',   // Chrome Blue mid
+ guidelines: '#9B2438',  // Carmona Red
+ evaluation: '#C4982A',  // Metallic Gold
+ decision: '#1A6878',    // Steel Teal
+ implant: '#2D6147',     // Racing Green
  };
- return colors[stage as keyof typeof colors] || 'titanium';
+ return colors[stage] ?? '#636D80';
   };
 
   const formatPercentage = (value: number) => `${toFixed(value, 1)}%`;
@@ -354,11 +354,15 @@ const DevicePathwayFunnel: React.FC = () => {
  }}
  className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all duration-300 ${
  selectedDevice === device.type
- ? `border-${device.color}-400 bg-${device.color}-50 shadow-chrome-elevated`
+ ? 'shadow-chrome-elevated'
  : 'border-titanium-200 hover:border-titanium-300 bg-white'
  }`}
+ style={selectedDevice === device.type ? {
+ borderColor: device.color,
+ background: device.color + '14',
+ } : {}}
  >
- <IconComponent className={`w-5 h-5 text-${device.color}-600`} />
+ <IconComponent className="w-5 h-5" style={{ color: device.color }} />
  <span className="font-semibold text-titanium-900">{device.type}</span>
  <div className="text-sm text-titanium-600">
  {device.stages[0].patients} patients
@@ -383,15 +387,16 @@ const DevicePathwayFunnel: React.FC = () => {
  onClick={() => setSelectedStage(isSelected ? null : stage.stage)}
  className={`w-full p-4 rounded-xl border-2 transition-all duration-300 text-left ${
  isSelected
- ? `border-${stageColor}-400 shadow-chrome-elevated bg-${stageColor}-50`
+ ? 'shadow-chrome-elevated'
  : 'border-titanium-200 hover:border-titanium-300 hover:shadow-chrome-card-hover'
  }`}
+ style={isSelected ? { borderColor: stageColor, background: stageColor + '0D' } : {}}
  >
  {/* Stage Header */}
  <div className="flex items-center justify-between mb-3">
  <div className="flex items-center gap-3">
- <div className={`w-8 h-8 rounded-lg bg-${stageColor}-100 flex items-center justify-center`}>
- <span className={`text-sm font-bold text-${stageColor}-600`}>
+ <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: stageColor + '22', color: stageColor }}>
+ <span className="text-sm font-bold">
  {index + 1}
  </span>
  </div>
@@ -405,7 +410,7 @@ const DevicePathwayFunnel: React.FC = () => {
  <div className="text-right">
  {index > 0 && (
  <div className={`text-sm font-bold ${
- conversionRate >= 80 ? 'text-[#2C4A60]' :
+ conversionRate >= 80 ? 'text-[#2D6147]' :
  conversionRate >= 60 ? 'text-crimson-600' : 'text-medical-red-600'
  }`}>
  {formatPercentage(conversionRate)} conversion
@@ -420,8 +425,8 @@ const DevicePathwayFunnel: React.FC = () => {
  {/* Progress Bar */}
  <div className="w-full bg-titanium-100 rounded-full h-3 mb-2">
  <div
- className={`h-3 rounded-full bg-${stageColor}-500`}
- style={{ width: `${stage.percentage}%` }}
+ className="h-3 rounded-full"
+ style={{ width: `${stage.percentage}%`, background: stageColor }}
  ></div>
  </div>
 
@@ -613,9 +618,9 @@ const DevicePathwayFunnel: React.FC = () => {
  </div>
  </div>
  <div className={`px-2 py-1 rounded-full text-xs font-medium ${
- patient.status === 'implanted' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ patient.status === 'implanted' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  patient.status === 'eligible' ? 'bg-chrome-100 text-chrome-700' :
- patient.status === 'pending' ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-red-100 text-red-700'
+ patient.status === 'pending' ? 'bg-[#FAF6E8] text-[#8B6914]' : 'bg-red-100 text-red-700'
  }`}>
  {patient.status.toUpperCase()}
  </div>
@@ -644,12 +649,12 @@ const DevicePathwayFunnel: React.FC = () => {
  {patient.barriers && patient.barriers.length > 0 && (
  <div className="mb-4">
  <div className="text-sm font-medium text-titanium-700 mb-2 flex items-center gap-1">
- <AlertTriangle className="w-3 h-3 text-[#6B7280]" />
+ <AlertTriangle className="w-3 h-3 text-[#8B6914]" />
  Current Barriers
  </div>
  <div className="flex flex-wrap gap-2">
  {patient.barriers.map((barrier, idx) => (
- <span key={barrier} className="px-2 py-1 bg-[#F0F5FA] text-[#6B7280] text-xs rounded-full">
+ <span key={barrier} className="px-2 py-1 bg-[#FAF6E8] text-[#8B6914] text-xs rounded-full">
  {barrier}
  </span>
  ))}

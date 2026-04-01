@@ -225,8 +225,8 @@ const WoundCareIntegration: React.FC = () => {
 
   const getDepthColor = (depth: string) => {
  switch (depth) {
- case 'Superficial': return 'text-[#2C4A60] bg-[#C8D4DC]';
- case 'Partial thickness': return 'text-[#6B7280] bg-[#F0F5FA]';
+ case 'Superficial': return 'text-[#2D6147] bg-[#F0F7F4]';
+ case 'Partial thickness': return 'text-[#8B6914] bg-[#FAF6E8]';
  case 'Full thickness': return 'text-red-600 bg-red-100';
  case 'Bone/Joint': return 'text-red-800 bg-red-200';
  default: return 'text-titanium-600 bg-titanium-100';
@@ -235,8 +235,8 @@ const WoundCareIntegration: React.FC = () => {
 
   const getInfectionColor = (status: string) => {
  switch (status) {
- case 'None': return 'text-[#2C4A60] bg-[#C8D4DC]';
- case 'Cellulitis': return 'text-[#6B7280] bg-[#F0F5FA]';
+ case 'None': return 'text-[#2D6147] bg-[#F0F7F4]';
+ case 'Cellulitis': return 'text-[#8B6914] bg-[#FAF6E8]';
  case 'Deep tissue': return 'text-red-600 bg-red-100';
  case 'Osteomyelitis': return 'text-red-800 bg-red-200';
  default: return 'text-titanium-600 bg-titanium-100';
@@ -247,7 +247,7 @@ const WoundCareIntegration: React.FC = () => {
  switch (phase) {
  case 'Pre-revasc': return 'text-red-600 bg-red-100';
  case 'Post-revasc': return 'text-chrome-600 bg-chrome-100';
- case 'Surveillance': return 'text-[#2C4A60] bg-[#C8D4DC]';
+ case 'Surveillance': return 'text-[#2D6147] bg-[#F0F7F4]';
  case 'No intervention': return 'text-titanium-600 bg-titanium-100';
  default: return 'text-titanium-600 bg-titanium-100';
  }
@@ -257,9 +257,9 @@ const WoundCareIntegration: React.FC = () => {
  switch (role) {
  case 'Vascular': return 'text-red-600 bg-red-100';
  case 'Podiatry': return 'text-chrome-600 bg-chrome-100';
- case 'Wound care': return 'text-[#2C4A60] bg-[#C8D4DC]';
+ case 'Wound care': return 'text-[#2D6147] bg-[#F0F7F4]';
  case 'Infectious disease': return 'text-arterial-600 bg-arterial-100';
- case 'Endocrine': return 'text-[#6B7280] bg-[#F0F5FA]';
+ case 'Endocrine': return 'text-[#8B6914] bg-[#FAF6E8]';
  case 'Nursing': return 'text-pink-600 bg-pink-100';
  default: return 'text-titanium-600 bg-titanium-100';
  }
@@ -521,8 +521,8 @@ const WoundCareIntegration: React.FC = () => {
  }))}
  className={`p-2 rounded border text-sm font-medium transition-all ${
  patient.offloading.compliance === level
- ? level === 'Excellent' || level === 'Good' ? 'text-[#2C4A60] bg-[#C8D4DC]' :
- level === 'Fair' ? 'text-[#6B7280] bg-[#F0F5FA]' : 'text-red-600 bg-red-100'
+ ? level === 'Excellent' || level === 'Good' ? 'text-[#2D6147] bg-[#F0F7F4]' :
+ level === 'Fair' ? 'text-[#8B6914] bg-[#FAF6E8]' : 'text-red-600 bg-red-100'
  : 'bg-white border-titanium-200 text-titanium-700 hover:bg-titanium-50'
  }`}
  >
@@ -651,7 +651,7 @@ const WoundCareIntegration: React.FC = () => {
  </div>
 
  <div className="space-y-4">
- <div className="p-4 bg-[#C8D4DC] border border-[#2C4A60] rounded-lg text-center">
+ <div className="p-4 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg text-center">
  <div className="text-sm text-[#2C4A60] mb-1">Healing Rate</div>
  <div className="text-2xl font-bold text-[#2C4A60]">
  {toFixed(calculateHealingRate(), 2)} cm²/week

@@ -150,7 +150,7 @@ const CareTeamView: React.FC = () => {
  ].map((item, index) => (
  <div key={item.pillar} className={`p-3 rounded-lg border ${
  item.status === 'red' ? 'bg-red-50 border-red-200' :
- item.status === 'amber' ? 'bg-[#F0F5FA] border-[#C8D4DC]' : 'bg-[#C8D4DC] border-[#2C4A60]'
+ item.status === 'amber' ? 'bg-[#F0F5FA] border-[#C8D4DC]' : 'bg-[#F0F7F4] border-[#D8EDE6]'
  }`}>
  <div className="flex justify-between items-center">
  <span className="font-medium text-titanium-900">{item.pillar}</span>
@@ -174,7 +174,7 @@ const CareTeamView: React.FC = () => {
  <div className="font-medium text-arterial-900">SGLT2i Assessment</div>
  <div className="text-sm text-arterial-600">31 patients for evaluation</div>
  </button>
- <button onClick={() => { handleTabChange('clinicaltools'); setActiveToolTab('contraindication'); }} className="w-full text-left p-3 rounded-lg bg-[#C8D4DC] border border-[#2C4A60] hover:bg-[#C8D4DC] transition-colors">
+ <button onClick={() => { handleTabChange('clinicaltools'); setActiveToolTab('contraindication'); }} className="w-full text-left p-3 rounded-lg bg-[#F0F7F4] border border-[#D8EDE6] hover:bg-[#C8D4DC] transition-colors">
  <div className="font-medium text-[#2C4A60]">Dose Optimization</div>
  <div className="text-sm text-[#2C4A60]">18 patients ready for titration</div>
  </button>
@@ -206,7 +206,7 @@ const CareTeamView: React.FC = () => {
  onClick={() => setExpandedSafetyCard(expandedSafetyCard === item.id ? null : item.id)}
  className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 hover:shadow-md ${
  item.color === 'red' ? 'bg-red-50 border-red-200 hover:bg-red-100' : 'bg-[#F0F5FA] border-[#C8D4DC] hover:bg-[#F0F5FA]'
- } ${expandedSafetyCard === item.id ? 'ring-2 ring-offset-1 ' + (item.color === 'red' ? 'ring-red-400' : 'ring-amber-400') : ''}`}
+ } ${expandedSafetyCard === item.id ? 'ring-2 ring-offset-1 ' + (item.color === 'red' ? 'ring-red-400' : 'ring-[#6B7280]') : ''}`}
  >
  <div className="text-center">
  <div className={`text-2xl font-bold ${
@@ -274,7 +274,7 @@ const CareTeamView: React.FC = () => {
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">Documentation Tools</h4>
  <div className="space-y-2">
- <button onClick={() => { setDocTemplateFeedback('gdmt'); setTimeout(() => setDocTemplateFeedback(null), 2000); }} className="w-full text-left p-3 rounded-lg bg-[#C8D4DC] border border-[#2C4A60] hover:bg-[#C8D4DC] transition-colors">
+ <button onClick={() => { setDocTemplateFeedback('gdmt'); setTimeout(() => setDocTemplateFeedback(null), 2000); }} className="w-full text-left p-3 rounded-lg bg-[#F0F7F4] border border-[#D8EDE6] hover:bg-[#C8D4DC] transition-colors">
  <div className="font-medium text-[#2C4A60]">{docTemplateFeedback === 'gdmt' ? '✓ Template Loaded' : 'GDMT Template'}</div>
  <div className="text-sm text-[#2C4A60]">Standardized assessment form</div>
  </button>

@@ -215,7 +215,7 @@ const SHValveTherapyAnalyticsDashboard: React.FC = () => {
  <button
  onClick={() => setIsLiveMode(!isLiveMode)}
  className={`p-2 rounded-lg transition-colors ${
- isLiveMode ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-gray-100 text-gray-700'
+ isLiveMode ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-gray-100 text-gray-700'
  }`}
  >
  <RefreshCw className={`w-4 h-4 ${isLiveMode ? 'animate-spin' : ''}`} />
@@ -751,7 +751,7 @@ const SHValveTherapyAnalyticsDashboard: React.FC = () => {
  </div>
  <div className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.riskLevel === 'high' ? 'bg-red-100 text-red-700' :
- patient.riskLevel === 'medium' ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-[#C8D4DC] text-[#2C4A60]'
+ patient.riskLevel === 'medium' ? 'bg-[#FAF6E8] text-[#8B6914]' : 'bg-[#F0F7F4] text-[#2D6147]'
  }`}>
  {patient.riskLevel.toUpperCase()} RISK
  </div>
@@ -780,7 +780,7 @@ const SHValveTherapyAnalyticsDashboard: React.FC = () => {
  <div className="text-sm font-medium text-titanium-700 mb-2">Missing Valve Therapy Pillars</div>
  <div className="flex flex-wrap gap-2">
  {patient.missingPillars.map((pillar) => (
- <span key={pillar} className="px-2 py-1 bg-[#F0F5FA] text-[#6B7280] text-xs rounded-full">
+ <span key={pillar} className="px-2 py-1 bg-[#FAF6E8] text-[#8B6914] text-xs rounded-full">
  {pillar}
  </span>
  ))}

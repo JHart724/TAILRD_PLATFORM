@@ -405,7 +405,7 @@ const ValvePatientHeatmap: React.FC = () => {
  </div>
  </div>
 
- <div className="bg-[#C8D4DC] border border-[#2C4A60] p-4 rounded-lg">
+ <div className="bg-[#F0F7F4] border border-[#D8EDE6] p-4 rounded-lg">
  <div className="flex items-center gap-2 text-[#2C4A60]">
  <TrendingUp className="w-5 h-5" />
  <span className="font-semibold">Repair Candidates</span>

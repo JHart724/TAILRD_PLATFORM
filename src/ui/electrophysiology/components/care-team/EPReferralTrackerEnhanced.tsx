@@ -478,7 +478,7 @@ const EPReferralTrackerEnhanced: React.FC = () => {
 
   const getInsuranceColor = (status: string) => {
  const colors = {
- approved: 'text-[#2C4A60] bg-[#e0eaf3]',
+ approved: 'text-[#2D6147] bg-[#F0F7F4]',
  pending: 'text-crimson-600 bg-crimson-100',
  denied: 'text-medical-red-600 bg-medical-red-100',
  not_required: 'text-titanium-600 bg-titanium-100',
@@ -758,7 +758,7 @@ const EPReferralTrackerEnhanced: React.FC = () => {
  Follow Up
  </button>
  {referral.status === 'pending' && (
- <button className="px-4 py-2 bg-[#e0eaf3] text-[#2C4A60] text-sm rounded-lg hover:bg-[#C8D4DC] transition-colors border border-[#C8D4DC]">
+ <button className="px-4 py-2 bg-[#F0F7F4] text-[#2D6147] text-sm rounded-lg hover:bg-[#C8D4DC] transition-colors border border-[#D8EDE6]">
  Mark Scheduled
  </button>
  )}

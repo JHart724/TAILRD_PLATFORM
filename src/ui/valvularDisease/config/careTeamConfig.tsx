@@ -107,7 +107,7 @@ const ValvularPatients: React.FC = () => (
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.valve === 'Aortic' ? 'bg-red-100 text-red-700' :
  patient.valve === 'Mitral' ? 'bg-chrome-100 text-chrome-700' :
- patient.valve === 'Tricuspid' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ patient.valve === 'Tricuspid' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  'bg-gold-100 text-gold-700'
  }`}>
  {patient.valve}
@@ -116,8 +116,8 @@ const ValvularPatients: React.FC = () => (
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.severity === 'Critical' ? 'bg-red-100 text-red-700' :
- patient.severity === 'Severe' ? 'bg-[#F0F5FA] text-[#6B7280]' :
- 'bg-[#F0F5FA] text-[#6B7280]'
+ patient.severity === 'Severe' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ 'bg-[#FAF6E8] text-[#8B6914]'
  }`}>
  {patient.severity}
  </span>
@@ -126,10 +126,10 @@ const ValvularPatients: React.FC = () => (
  <td className="py-3 px-4 text-titanium-700">{patient.surgery}</td>
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
- patient.status === 'Scheduled' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ patient.status === 'Scheduled' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  patient.status === 'Planning' ? 'bg-chrome-100 text-chrome-700' :
  patient.status === 'Heart Team' ? 'bg-gold-100 text-gold-700' :
- patient.status === 'Pre-op' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ patient.status === 'Pre-op' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-gray-100 text-gray-700'
  }`}>
  {patient.status}
@@ -310,7 +310,7 @@ const ValvularSafety: React.FC = () => (
  <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-2">
  <span className="font-medium text-[#6B7280]">Pre-op Clearance Pending</span>
- <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded-full">PENDING</span>
+ <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">PENDING</span>
  </div>
  <div className="text-sm text-[#6B7280]">3 patients awaiting cardiac catheterization clearance</div>
  <div className="text-xs text-[#6B7280] mt-1">Next available slot: Tomorrow 9 AM</div>
@@ -319,7 +319,7 @@ const ValvularSafety: React.FC = () => (
  <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-2">
  <span className="font-medium text-[#6B7280]">Anticoagulation Review</span>
- <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded-full">REVIEW</span>
+ <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">REVIEW</span>
  </div>
  <div className="text-sm text-[#6B7280]">5 post-op patients due for INR monitoring</div>
  <div className="text-xs text-[#6B7280] mt-1">Due within 48 hours</div>
@@ -405,7 +405,7 @@ const ValvularSafety: React.FC = () => (
  { item: 'Anticoagulation plan established', status: 'pending' }
  ].map((check, index) => (
  <div key={check.item} className={`flex items-center gap-3 p-3 rounded-lg ${
- check.status === 'complete' ? 'bg-[#C8D4DC] border border-[#2C4A60]' : 'bg-[#F0F5FA] border border-[#C8D4DC]'
+ check.status === 'complete' ? 'bg-[#F0F7F4] border border-[#D8EDE6]' : 'bg-[#F0F5FA] border border-[#C8D4DC]'
  }`}>
  <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
  check.status === 'complete' ? 'bg-[#C8D4DC]' : 'bg-[#F0F5FA]'
@@ -486,7 +486,7 @@ const ValvularClinicalCollaboration: React.FC = () => (
  <div key={pathway.pathway} className={`flex items-center justify-between p-4 rounded-lg border ${
  pathway.indication === 'Severe Aortic Stenosis' ? 'bg-red-50 border-red-200' :
  pathway.indication === 'Severe Mitral Regurgitation' ? 'bg-chrome-50 border-chrome-200' :
- pathway.indication === 'Severe Tricuspid Regurgitation' ? 'bg-[#C8D4DC] border-[#2C4A60]' :
+ pathway.indication === 'Severe Tricuspid Regurgitation' ? 'bg-[#F0F7F4] border-[#D8EDE6]' :
  'bg-[#F0F5FA] border-[#C8D4DC]'
  }`}>
  <div>
@@ -505,8 +505,8 @@ const ValvularClinicalCollaboration: React.FC = () => (
  <div className={`text-xs px-2 py-1 rounded-full ${
  pathway.indication === 'Severe Aortic Stenosis' ? 'bg-red-100 text-red-700' :
  pathway.indication === 'Severe Mitral Regurgitation' ? 'bg-chrome-100 text-chrome-700' :
- pathway.indication === 'Severe Tricuspid Regurgitation' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
- 'bg-[#F0F5FA] text-[#6B7280]'
+ pathway.indication === 'Severe Tricuspid Regurgitation' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ 'bg-[#FAF6E8] text-[#8B6914]'
  }`}>
  {pathway.consultation}
  </div>
@@ -654,7 +654,7 @@ const ValvularDocumentation: React.FC = () => (
  <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-2">
  <span className="font-medium text-[#6B7280]">Pre-op H&P Due</span>
- <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded-full">DUE TODAY</span>
+ <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">DUE TODAY</span>
  </div>
  <div className="text-sm text-[#6B7280]">5 patients scheduled for surgery this week missing H&P</div>
  <div className="text-xs text-[#6B7280] mt-1">Required within 24h of surgery</div>
@@ -663,7 +663,7 @@ const ValvularDocumentation: React.FC = () => (
  <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-2">
  <span className="font-medium text-[#6B7280]">Post-op Notes Pending</span>
- <span className="text-xs bg-[#F0F5FA] text-[#6B7280] px-2 py-1 rounded-full">OVERDUE</span>
+ <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">OVERDUE</span>
  </div>
  <div className="text-sm text-[#6B7280]">3 surgical cases from yesterday missing operative notes</div>
  <div className="text-xs text-[#6B7280] mt-1">Due within 24h post-procedure</div>
@@ -757,9 +757,9 @@ const ValvularDocumentation: React.FC = () => (
  <div className="text-right">
  <div className="text-xs text-titanium-500">{activity.time}</div>
  <div className={`text-xs px-2 py-1 rounded-full ${
- activity.status === 'Complete' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ activity.status === 'Complete' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  activity.status === 'In Progress' ? 'bg-chrome-100 text-chrome-700' :
- 'bg-[#F0F5FA] text-[#6B7280]'
+ 'bg-[#FAF6E8] text-[#8B6914]'
  }`}>
  {activity.status}
  </div>

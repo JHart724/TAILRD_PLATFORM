@@ -128,8 +128,8 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
   const getPriorityColor = (priority: string) => {
  switch(priority) {
  case 'high': return 'border-red-500 bg-red-50 text-red-700';
- case 'medium': return 'border-[#C8D4DC] bg-[#F0F5FA] text-[#6B7280]';
- case 'low': return 'border-[#2C4A60] bg-[#C8D4DC] text-[#2C4A60]';
+ case 'medium': return 'border-[#C8D4DC] bg-[#FAF6E8] text-[#8B6914]';
+ case 'low': return 'border-[#2C4A60] bg-[#F0F7F4] text-[#2D6147]';
  default: return 'border-gray-300 bg-gray-50 text-gray-700';
  }
   };
@@ -137,29 +137,29 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
   const getRiskColor = (riskLevel: string) => {
  switch(riskLevel) {
  case 'high': return 'text-red-600 bg-red-100';
- case 'medium': return 'text-[#6B7280] bg-[#F0F5FA]';
- case 'low': return 'text-[#2C4A60] bg-[#C8D4DC]';
+ case 'medium': return 'text-[#8B6914] bg-[#FAF6E8]';
+ case 'low': return 'text-[#2D6147] bg-[#F0F7F4]';
  default: return 'text-gray-600 bg-gray-100';
  }
   };
 
   const getAdherenceColor = (adherence?: number) => {
  if (!adherence) return 'text-gray-600 bg-gray-100';
- if (adherence >= 90) return 'text-[#2C4A60] bg-[#C8D4DC]';
- if (adherence >= 75) return 'text-[#6B7280] bg-[#F0F5FA]';
+ if (adherence >= 90) return 'text-[#2D6147] bg-[#F0F7F4]';
+ if (adherence >= 75) return 'text-[#8B6914] bg-[#FAF6E8]';
  return 'text-red-600 bg-red-100';
   };
 
   const getBatteryColor = (level: number) => {
- if (level >= 80) return 'text-[#2C4A60] bg-[#C8D4DC]';
- if (level >= 70) return 'text-[#6B7280] bg-[#F0F5FA]';
+ if (level >= 80) return 'text-[#2D6147] bg-[#F0F7F4]';
+ if (level >= 70) return 'text-[#8B6914] bg-[#FAF6E8]';
  return 'text-red-600 bg-red-100';
   };
 
   const getLeadStatusColor = (status: string) => {
  switch(status) {
- case 'normal': return 'text-[#2C4A60] bg-[#C8D4DC]';
- case 'warning': return 'text-[#6B7280] bg-[#F0F5FA]';
+ case 'normal': return 'text-[#2D6147] bg-[#F0F7F4]';
+ case 'warning': return 'text-[#8B6914] bg-[#FAF6E8]';
  case 'alert': return 'text-red-700 bg-red-100';
  default: return 'text-gray-700 bg-gray-100';
  }
@@ -453,7 +453,7 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  <div>
  <span className="text-sm text-gray-600">LAAC Status:</span>
  <span className={`ml-2 px-2 py-1 rounded text-sm font-medium ${
- patient.laacStatus === 'eligible' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ patient.laacStatus === 'eligible' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  patient.laacStatus === 'scheduled' ? 'bg-chrome-100 text-chrome-700' :
  patient.laacStatus === 'completed' ? 'bg-arterial-100 text-arterial-700' :
  'bg-red-100 text-red-700'

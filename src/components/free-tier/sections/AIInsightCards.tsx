@@ -16,7 +16,7 @@ interface InsightCard {
 const INSIGHTS: InsightCard[] = [
   {
     category: 'Gap',
-    categoryStyle: 'bg-[#F0F5FA] text-[#6B7280]',
+    categoryStyle: 'bg-[#FAF6E8] text-[#8B6914]',
     count: '287 patients',
     title: 'GDMT Intensification Overdue',
     description:
@@ -49,7 +49,7 @@ const INSIGHTS: InsightCard[] = [
   },
   {
     category: 'Gap',
-    categoryStyle: 'bg-[#F0F5FA] text-[#6B7280]',
+    categoryStyle: 'bg-[#FAF6E8] text-[#8B6914]',
     count: '89 patients',
     title: 'ICD/CRT Eligibility Unmet',
     description:

@@ -262,16 +262,16 @@ const DeviceImplantChecklist: React.FC = () => {
   const getRiskColor = (level: string) => {
  switch (level) {
  case 'High': return 'text-red-600 bg-red-100';
- case 'Medium': return 'text-[#6B7280] bg-[#F0F5FA]';
- case 'Low': return 'text-[#2C4A60] bg-[#C8D4DC]';
+ case 'Medium': return 'text-[#8B6914] bg-[#FAF6E8]';
+ case 'Low': return 'text-[#2D6147] bg-[#F0F7F4]';
  default: return 'text-titanium-600 bg-titanium-100';
  }
   };
 
   const getRecommendationColor = (level: string) => {
  switch (level) {
- case 'strong': return 'text-[#2C4A60] bg-[#C8D4DC]';
- case 'moderate': return 'text-[#6B7280] bg-[#F0F5FA]';
+ case 'strong': return 'text-[#2D6147] bg-[#F0F7F4]';
+ case 'moderate': return 'text-[#8B6914] bg-[#FAF6E8]';
  case 'none': return 'text-red-600 bg-red-100';
  default: return 'text-titanium-600 bg-titanium-100';
  }

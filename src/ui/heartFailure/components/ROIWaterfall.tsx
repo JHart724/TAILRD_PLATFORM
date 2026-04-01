@@ -17,10 +17,10 @@ const ROIWaterfall: React.FC<ROIWaterfallProps> = ({ data, onCategoryClick }) =>
   if (!data) return null;
 
   const categories: WaterfallCategory[] = [
- { label: 'GDMT', value: data.gdmt_revenue, color: 'bg-[#C8D4DC]' },
- { label: 'Devices', value: data.devices_revenue, color: 'bg-arterial-500' },
- { label: 'Phenotypes', value: data.phenotypes_revenue, color: 'bg-porsche-500' },
- { label: '340B', value: data._340b_revenue, color: 'bg-[#F0F5FA]' },
+ { label: 'GDMT', value: data.gdmt_revenue, color: '#2C4A60' },
+ { label: 'Devices', value: data.devices_revenue, color: '#1A6878' },
+ { label: 'Phenotypes', value: data.phenotypes_revenue, color: '#4A7FA5' },
+ { label: '340B', value: data._340b_revenue, color: '#8B5A2B' },
   ];
 
   return (

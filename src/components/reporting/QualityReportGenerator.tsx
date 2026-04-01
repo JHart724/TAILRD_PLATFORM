@@ -439,11 +439,11 @@ const QualityReportGenerator: React.FC<QualityReportGeneratorProps> = ({ classNa
  backdropFilter: 'blur(20px)'
  }}
  />
- <Line type="monotone" dataKey="cms144" stroke="#3b82f6" strokeWidth={2} name="CMS144" />
+ <Line type="monotone" dataKey="cms144" stroke="#2C4A60" strokeWidth={2} name="CMS144" />
  <Line type="monotone" dataKey="cms145" stroke="#2C4A60" strokeWidth={2} name="CMS145" />
  <Line type="monotone" dataKey="cms135" stroke="#6B7280" strokeWidth={2} name="CMS135" />
  <Line type="monotone" dataKey="cms347" stroke="#9B2438" strokeWidth={2} name="CMS347" />
- <Line type="monotone" dataKey="cms236" stroke="#ef4444" strokeWidth={2} name="CMS236" />
+ <Line type="monotone" dataKey="cms236" stroke="#9B2438" strokeWidth={2} name="CMS236" />
  </LineChart>
  </ResponsiveContainer>
  </div>

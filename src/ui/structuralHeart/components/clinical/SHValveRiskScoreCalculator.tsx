@@ -315,7 +315,7 @@ const SHValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = (
  <div className="w-full bg-titanium-800 rounded-full h-2">
  <div className="h-2 rounded-full transition-all duration-500"
  style={{ width: `${Math.min(result.stsScore / 20 * 100, 100)}%`,
- background: result.stsScore < 4 ? '#2C4A60' : result.stsScore < 8 ? '#6B7280' : result.stsScore < 15 ? '#7A1A2E' : '#ef4444' }} />
+ background: result.stsScore < 4 ? '#2C4A60' : result.stsScore < 8 ? '#6B7280' : result.stsScore < 15 ? '#7A1A2E' : '#9B2438' }} />
  </div>
  <div className="flex justify-between text-xs text-titanium-500 mt-1">
  <span>Low (&lt;4%)</span><span>Inter (4-8%)</span><span>High (8-15%)</span><span>Prohib (&gt;15%)</span>
@@ -332,7 +332,7 @@ const SHValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = (
  <div className="w-full bg-titanium-800 rounded-full h-2">
  <div className="h-2 rounded-full transition-all duration-500"
  style={{ width: `${Math.min(result.euroScore / 20 * 100, 100)}%`,
- background: result.euroScore < 4 ? '#2C4A60' : result.euroScore < 8 ? '#6B7280' : result.euroScore < 15 ? '#7A1A2E' : '#ef4444' }} />
+ background: result.euroScore < 4 ? '#2C4A60' : result.euroScore < 8 ? '#6B7280' : result.euroScore < 15 ? '#7A1A2E' : '#9B2438' }} />
  </div>
  </div>
 

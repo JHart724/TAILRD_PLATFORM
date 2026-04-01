@@ -142,11 +142,11 @@ const MFAVerify: React.FC<MFAVerifyProps> = ({ token, onVerified, onBack }) => {
                   placeholder="000000"
                   className="w-full text-center text-2xl font-mono tracking-[0.5em] py-4 border rounded-lg focus:outline-none focus:ring-2"
                   style={{
-                    borderColor: error ? '#EF4444' : '#E2E8F0',
+                    borderColor: error ? '#9B2438' : '#E2E8F0',
                     color: '#1E293B',
                   }}
                   onFocus={(e) => { e.target.style.borderColor = '#2C4A60'; e.target.style.boxShadow = '0 0 0 2px rgba(44,74,96,0.2)'; }}
-                  onBlur={(e) => { e.target.style.borderColor = error ? '#EF4444' : '#E2E8F0'; e.target.style.boxShadow = 'none'; }}
+                  onBlur={(e) => { e.target.style.borderColor = error ? '#9B2438' : '#E2E8F0'; e.target.style.boxShadow = 'none'; }}
                   onKeyDown={(e) => { if (e.key === 'Enter' && code.length === 6) verifyTOTP(); }}
                   autoFocus
                 />
@@ -203,20 +203,20 @@ const MFAVerify: React.FC<MFAVerifyProps> = ({ token, onVerified, onBack }) => {
                   maxLength={10}
                   className="w-full text-center text-lg font-mono tracking-widest py-4 border rounded-lg focus:outline-none focus:ring-2"
                   style={{
-                    borderColor: error ? '#EF4444' : '#E2E8F0',
+                    borderColor: error ? '#9B2438' : '#E2E8F0',
                     color: '#1E293B',
                   }}
                   onFocus={(e) => { e.target.style.borderColor = '#2C4A60'; e.target.style.boxShadow = '0 0 0 2px rgba(44,74,96,0.2)'; }}
-                  onBlur={(e) => { e.target.style.borderColor = error ? '#EF4444' : '#E2E8F0'; e.target.style.boxShadow = 'none'; }}
+                  onBlur={(e) => { e.target.style.borderColor = error ? '#9B2438' : '#E2E8F0'; e.target.style.boxShadow = 'none'; }}
                   onKeyDown={(e) => { if (e.key === 'Enter' && backupCode.trim()) verifyBackup(); }}
                 />
               </div>
 
               {codesRemaining !== null && codesRemaining <= 2 && (
-                <div className="p-3 rounded-lg mb-4" style={{ backgroundColor: '#FFF7ED', border: '1px solid #FED7AA' }}>
+                <div className="p-3 rounded-lg mb-4" style={{ backgroundColor: '#FAF6E8', border: '1px solid #F0D9A0' }}>
                   <div className="flex items-start gap-2">
                     <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#6B7280' }} />
-                    <p className="text-sm" style={{ color: '#92400E' }}>
+                    <p className="text-sm" style={{ color: '#7A1A2E' }}>
                       You have {codesRemaining} backup code{codesRemaining !== 1 ? 's' : ''} remaining. Consider generating new codes in your account settings.
                     </p>
                   </div>
@@ -253,8 +253,8 @@ const MFAVerify: React.FC<MFAVerifyProps> = ({ token, onVerified, onBack }) => {
           {/* Error Display */}
           {error && (
             <div className="mt-4 p-3 rounded-lg flex items-start gap-2" style={{ backgroundColor: '#FEF2F2', border: '1px solid #FECACA' }}>
-              <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#DC2626' }} />
-              <p className="text-sm" style={{ color: '#991B1B' }}>{error}</p>
+              <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#7A1A2E' }} />
+              <p className="text-sm" style={{ color: '#5C1022' }}>{error}</p>
             </div>
           )}
         </div>

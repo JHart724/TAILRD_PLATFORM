@@ -208,8 +208,8 @@ const ValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ 
 
   const getRiskColor = (category: string) => {
  switch (category) {
- case 'Low': return 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]';
- case 'Intermediate': return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
+ case 'Low': return 'text-[#2D6147] bg-[#F0F7F4] border-[#2C4A60]';
+ case 'Intermediate': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
  case 'High/Prohibitive': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }

@@ -169,7 +169,7 @@ const RCCDIView: React.FC = () => {
  <div className="text-sm font-semibold text-titanium-700 mb-2">Suggested Additions</div>
  <div className="space-y-1">
  {alert.suggestedAdditions.map((suggestion, suggIndex) => (
- <div key={suggIndex} className="text-sm text-[#2C4A60] bg-[#e0eaf3] px-3 py-1 rounded border border-[#C8D4DC]">
+ <div key={suggIndex} className="text-sm text-[#2D6147] bg-[#F0F7F4] px-3 py-1 rounded border border-[#D8EDE6]">
  {suggestion}
  </div>
  ))}
@@ -286,7 +286,7 @@ const RCCDIView: React.FC = () => {
  
  <div className="p-6">
  <div className="space-y-6">
- <div className="bg-gradient-to-r from-[#f0f5fa] to-[#e0eaf3] rounded-lg p-4 border border-[#C8D4DC]">
+ <div className="bg-gradient-to-r from-[#f0f5fa] to-[#F0F5FA] rounded-lg p-4 border border-[#C8D4DC]">
  <div className="flex items-center justify-between mb-3">
  <div className="font-semibold text-[#2C4A60]">Revenue Recovery</div>
  <CheckCircle className="w-5 h-5 text-[#2C4A60]" />

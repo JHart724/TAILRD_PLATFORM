@@ -652,7 +652,7 @@ const EPClinicalDecisionSupport: React.FC = () => {
  </div>
 
  <div className={`p-3 rounded-lg text-sm font-semibold ${
- algorithm.score >= 80 ? 'bg-[#e0eaf3] text-[#2C4A60]' :
+ algorithm.score >= 80 ? 'bg-[#F0F7F4] text-[#2D6147]' :
  algorithm.score >= 60 ? 'bg-crimson-100 text-crimson-700' :
  'bg-medical-red-100 text-medical-red-800'
  }`}>

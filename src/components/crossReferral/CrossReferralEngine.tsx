@@ -261,7 +261,7 @@ const CrossReferralEngine: React.FC = () => {
  case 'reviewed':
  return 'bg-porsche-100 text-porsche-700 border-porsche-200';
  case 'accepted':
- return 'bg-[#e0eaf3] text-[#2C4A60] border-[#C8D4DC]';
+ return 'bg-[#F0F7F4] text-[#2D6147] border-[#D8EDE6]';
  case 'scheduled':
  return 'bg-arterial-100 text-arterial-700 border-arterial-200';
  case 'completed':

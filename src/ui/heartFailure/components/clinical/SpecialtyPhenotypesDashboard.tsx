@@ -223,8 +223,8 @@ const SpecialtyPhenotypesDashboard: React.FC = () => {
   const getRiskColor = (risk: string) => {
  switch (risk) {
  case 'high': return 'text-deep-red-600 bg-deep-red-50 border-deep-red-200';
- case 'moderate': return 'text-deep-amber-600 bg-crimson-50 border-crimson-200';
- case 'low': return 'text-deep-green-600 bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'moderate': return 'text-[#4A7FA5] bg-crimson-50 border-crimson-200';
+ case 'low': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };
@@ -248,12 +248,12 @@ const SpecialtyPhenotypesDashboard: React.FC = () => {
  <div className="text-sm text-porsche-700">Total Eligible Patients</div>
  </div>
  <div className="p-4 bg-[#f0f5fa] border border-[#C8D4DC] rounded-lg">
- <div className="text-2xl font-bold text-deep-green-600 font-sf">{totalIdentified}</div>
+ <div className="text-2xl font-bold text-[#2C4A60] font-sf">{totalIdentified}</div>
  <div className="text-sm text-deep-green-700">Currently Identified</div>
  </div>
  <div className="p-4 bg-crimson-50 border border-crimson-200 rounded-lg">
- <div className="text-2xl font-bold text-deep-amber-600 font-sf">{totalEligible - totalIdentified}</div>
- <div className="text-sm text-deep-amber-700">Unidentified Patients</div>
+ <div className="text-2xl font-bold text-[#4A7FA5] font-sf">{totalEligible - totalIdentified}</div>
+ <div className="text-sm text-[#4A7FA5]">Unidentified Patients</div>
  </div>
  <div className="p-4 bg-deep-red-50 border border-deep-red-200 rounded-lg">
  <div className="text-2xl font-bold text-deep-red-600 font-sf">${toFixed(totalRevenueGap / 1000000, 1)}M</div>
@@ -315,7 +315,7 @@ const SpecialtyPhenotypesDashboard: React.FC = () => {
  <div className="text-xs text-titanium-600">Eligible</div>
  </div>
  <div className="text-center p-3 bg-[#f0f5fa] rounded-lg">
- <div className="text-lg font-bold text-deep-green-600">{phenotype.identifiedPatients}</div>
+ <div className="text-lg font-bold text-[#2C4A60]">{phenotype.identifiedPatients}</div>
  <div className="text-xs text-deep-green-700">Identified</div>
  </div>
  <div className="text-center p-3 bg-deep-red-50 rounded-lg">
@@ -439,7 +439,7 @@ const SpecialtyPhenotypesDashboard: React.FC = () => {
  </div>
  </div>
  <div className="flex items-center gap-3">
- <span className={`text-xs px-2 py-0.5 rounded-full ${pt.risk === 'High' ? 'bg-crimson-100 text-crimson-700' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>
+ <span className={`text-xs px-2 py-0.5 rounded-full ${pt.risk === 'High' ? 'bg-crimson-100 text-crimson-700' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>
  {pt.risk}
  </span>
  <span className="text-xs text-titanium-500">{pt.status}</span>
@@ -496,9 +496,9 @@ const SpecialtyPhenotypesDashboard: React.FC = () => {
  className="p-4 border-2 border-crimson-200 rounded-lg hover:bg-crimson-50 transition-colors"
  onClick={() => { setQuickActionFeedback('builder'); setTimeout(() => setQuickActionFeedback(null), 3000); }}
  >
- <Activity className="w-6 h-6 text-deep-amber-600 mx-auto mb-2" />
+ <Activity className="w-6 h-6 text-[#4A7FA5] mx-auto mb-2" />
  <div className="text-sm font-semibold text-crimson-700">Protocol Builder</div>
- <div className="text-xs text-deep-amber-600">Create screening workflows</div>
+ <div className="text-xs text-[#4A7FA5]">Create screening workflows</div>
  </button>
  </div>
  </div>

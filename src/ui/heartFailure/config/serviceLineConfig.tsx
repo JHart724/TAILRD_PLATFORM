@@ -243,7 +243,7 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
         'RPM Enrollment',
         'border-[#C8D4DC]',
         'bg-[#F0F5FA]',
-        'bg-[#F0F5FA] text-[#6B7280]',
+        'bg-[#FAF6E8] text-[#8B6914]',
         <Activity className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />,
         'GROWTH'
       )}
@@ -254,7 +254,7 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
         'Diuretic Resistance',
         'border-[#C8D4DC]',
         'bg-[#F0F5FA]',
-        'bg-[#F0F5FA] text-[#6B7280]',
+        'bg-[#FAF6E8] text-[#8B6914]',
         <AlertTriangle className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />,
         'HIGH PRIORITY'
       )}

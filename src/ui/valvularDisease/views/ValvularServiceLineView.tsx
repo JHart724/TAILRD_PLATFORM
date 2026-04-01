@@ -11,6 +11,8 @@ type TabId = 'bicuspid' | 'ross' | 'repair-vs-replace' | 'echo-surveillance' | '
 
 interface TabGroup {
   label: string;
+  color: string;
+  colorBg: string;
   tabs: Array<{ id: string; label: string; icon: React.ElementType; description: string }>;
 }
 
@@ -22,12 +24,12 @@ const ValvularServiceLineView: React.FC = () => {
     const container = document.getElementById('main-scroll-container');
     if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
-  const [generatingReport, setGeneratingReport] = useState<string | null>(null);
-  const [exportingFormat, setExportingFormat] = useState<string | null>(null);
 
   const tabGroups: TabGroup[] = [
     {
       label: 'Procedure Pathways',
+      color: '#9B2438',
+      colorBg: 'rgba(155, 36, 56, 0.08)',
       tabs: [
         { id: 'bicuspid', label: 'Bicuspid Repair', icon: Scissors, description: 'Bicuspid aortic valve repair pathway' },
         { id: 'ross', label: 'Ross Procedure', icon: Heart, description: 'Ross procedure tracking and outcomes' },
@@ -36,19 +38,37 @@ const ValvularServiceLineView: React.FC = () => {
       ],
     },
     {
-      label: 'Gap & Quality',
+      label: 'Gap & Opportunity',
+      color: '#C4982A',
+      colorBg: 'rgba(196, 152, 42, 0.10)',
       tabs: [
-        { id: 'clinical-gap-detection', label: 'Gap Detection (28-Gap)', icon: AlertTriangle, description: 'AI-driven clinical gap detection' },
-        { id: 'quality', label: 'Quality', icon: Shield, description: 'Quality metrics and benchmarks' },
+        { id: 'clinical-gap-detection', label: 'Gap Detection', icon: AlertTriangle, description: 'AI-driven clinical gap detection' },
       ],
     },
     {
-      label: 'Analytics & Reporting',
+      label: 'Quality & Analytics',
+      color: '#2C4A60',
+      colorBg: 'rgba(44, 74, 96, 0.08)',
       tabs: [
+        { id: 'quality', label: 'Quality Metrics', icon: Shield, description: 'Quality metrics and benchmarks' },
         { id: 'heatmap', label: 'Patient Risk Heatmap', icon: Target, description: 'Valve patient risk visualization' },
-        { id: 'network', label: 'Referral Network', icon: Users, description: 'Surgical referral patterns' },
         { id: 'analytics', label: 'Analytics', icon: BarChart3, description: 'Advanced valve analytics' },
         { id: 'outcomes', label: 'Outcomes', icon: TrendingUp, description: 'Surgical outcomes tracking' },
+      ],
+    },
+    {
+      label: 'Care Coordination',
+      color: '#1A6878',
+      colorBg: 'rgba(26, 104, 120, 0.08)',
+      tabs: [
+        { id: 'network', label: 'Referral Network', icon: Users, description: 'Surgical referral patterns' },
+      ],
+    },
+    {
+      label: 'Reporting',
+      color: '#2D6147',
+      colorBg: 'rgba(45, 97, 71, 0.10)',
+      tabs: [
         { id: 'reporting', label: 'Automated Reports', icon: FileText, description: 'Automated reports and exports' },
       ],
     },
@@ -189,7 +209,7 @@ const ValvularServiceLineView: React.FC = () => {
                         <span className="font-medium text-titanium-900">{item.factor}</span>
                         <span className={`text-xs px-2 py-1 rounded-full ${
                           item.weight === 'Critical' ? 'bg-red-100 text-red-700' :
-                          item.weight === 'High' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+                          item.weight === 'High' ? 'bg-[#FAF6E8] text-[#8B6914]' :
                           'bg-chrome-100 text-chrome-700'
                         }`}>
                           {item.weight}
@@ -398,7 +418,7 @@ const ValvularServiceLineView: React.FC = () => {
                 { metric: 'Paravalvular Leak', value: '3.1%', benchmark: '<5.0%', met: true },
                 { metric: '30-Day Readmission', value: '7.8%', benchmark: '<10%', met: true }
               ].map((item, index) => (
-                <div key={item.metric} className={`p-6 rounded-xl ${item.met ? 'bg-[#C8D4DC] border-[#2C4A60]' : 'bg-red-50 border-red-200'} border`}>
+                <div key={item.metric} className={`p-6 rounded-xl ${item.met ? 'bg-[#F0F7F4] border-[#D8EDE6]' : 'bg-red-50 border-red-200'} border`}>
                   <div className="text-2xl font-bold text-titanium-900 mb-1">{item.value}</div>
                   <div className="font-medium text-titanium-800 text-sm">{item.metric}</div>
                   <div className={`text-xs mt-2 ${item.met ? 'text-[#2C4A60]' : 'text-red-600'}`}>
@@ -466,7 +486,7 @@ const ValvularServiceLineView: React.FC = () => {
                       <div className="flex items-center gap-3">
                         <span className="font-medium text-titanium-900">{item.value}</span>
                         <span className={`text-xs px-2 py-1 rounded-full ${
-                          item.status === 'Excellent' ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-chrome-100 text-chrome-700'
+                          item.status === 'Excellent' ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-chrome-100 text-chrome-700'
                         }`}>{item.percentile}</span>
                       </div>
                     </div>
@@ -499,9 +519,7 @@ const ValvularServiceLineView: React.FC = () => {
       case 'reporting':
         return <AutomatedReportingSystem />;
       case 'clinical-gap-detection':
-        return (
-          <VDClinicalGapDetectionDashboard />
-        );
+        return <VDClinicalGapDetectionDashboard />;
       default:
         return <ValvePatientHeatmap />;
     }
@@ -518,7 +536,7 @@ const ValvularServiceLineView: React.FC = () => {
               {/* Section Divider */}
               {groupIdx > 0 && <div className="border-t border-titanium-100 my-4" />}
               <div className="mb-3">
-                <span className="text-xs font-semibold uppercase tracking-wider text-titanium-400">{group.label}</span>
+                <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: group.color }}>{group.label}</span>
               </div>
               <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6 gap-3 mb-2">
                 {group.tabs.map((tab) => {
@@ -530,18 +548,32 @@ const ValvularServiceLineView: React.FC = () => {
                       onClick={() => handleTabChange(tab.id as TabId)}
                       className={`group relative p-4 rounded-xl border transition-all duration-300 ${
                         isActive
-                          ? 'bg-porsche-50 border-porsche-200 text-porsche-600 shadow-lg scale-105'
+                          ? 'shadow-lg scale-105'
                           : 'bg-white border-titanium-200 text-titanium-600 hover:bg-white hover:scale-105 hover:shadow-lg'
                       }`}
+                      style={isActive ? {
+                        background: group.colorBg,
+                        borderColor: group.color,
+                        color: group.color,
+                      } : {}}
                     >
                       <div className="flex flex-col items-center gap-2">
-                        <Icon className={`w-6 h-6 ${isActive ? 'text-porsche-600' : 'text-titanium-600 group-hover:text-titanium-800'}`} />
-                        <span className={`text-xs font-semibold text-center leading-tight ${isActive ? 'text-porsche-600' : 'text-titanium-600 group-hover:text-titanium-800'}`}>
+                        <Icon
+                          className="w-6 h-6"
+                          style={{ color: isActive ? group.color : undefined }}
+                        />
+                        <span
+                          className={`text-xs font-semibold text-center leading-tight ${!isActive ? 'text-titanium-600 group-hover:text-titanium-800' : ''}`}
+                          style={isActive ? { color: group.color } : {}}
+                        >
                           {tab.label}
                         </span>
                       </div>
                       {isActive && (
-                        <div className="absolute inset-0 bg-gradient-to-r from-porsche-400 to-porsche-500 rounded-xl opacity-50" />
+                        <div
+                          className="absolute bottom-0 left-0 right-0 h-0.5 rounded-b-xl"
+                          style={{ background: group.color }}
+                        />
                       )}
                     </button>
                   );

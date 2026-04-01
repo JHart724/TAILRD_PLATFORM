@@ -49,8 +49,8 @@ const EPTreatmentGapQueue: React.FC = () => {
   const getSeverityColor = (severity: string) => {
  switch(severity) {
  case 'high': return 'bg-red-100 text-red-900 border-red-400';
- case 'medium': return 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]';
- case 'low': return 'bg-[#C8D4DC] text-[#2C4A60] border-[#2C4A60]';
+ case 'medium': return 'bg-[#FAF6E8] text-[#8B6914] border-[#C8D4DC]';
+ case 'low': return 'bg-[#F0F7F4] text-[#2D6147] border-[#2C4A60]';
  default: return 'bg-gray-100 text-gray-900 border-gray-400';
  }
   };

@@ -774,7 +774,7 @@ const EPTeamCollaborationPanel: React.FC = () => {
  </div>
  </div>
  <div className="flex gap-2">
- <button className="p-2 bg-[#e0eaf3] text-[#2C4A60] rounded-lg hover:bg-[#C8D4DC] transition-colors">
+ <button className="p-2 bg-[#F0F7F4] text-[#2D6147] rounded-lg hover:bg-[#C8D4DC] transition-colors">
  <Phone className="w-4 h-4" />
  </button>
  <button className="p-2 bg-porsche-100 text-porsche-600 rounded-lg hover:bg-porsche-200 transition-colors">
@@ -870,8 +870,8 @@ const EPTeamCollaborationPanel: React.FC = () => {
  <div className="flex items-center gap-3 mt-2">
  <span className={`px-3 py-1 rounded-lg border-l-4 font-medium text-sm ${
  selectedPatient.priority === 'high' ? 'border-red-500 bg-red-50 text-red-700' :
- selectedPatient.priority === 'medium' ? 'border-[#C8D4DC] bg-[#F0F5FA] text-[#6B7280]' :
- 'border-[#2C4A60] bg-[#C8D4DC] text-[#2C4A60]'
+ selectedPatient.priority === 'medium' ? 'border-[#C8D4DC] bg-[#FAF6E8] text-[#8B6914]' :
+ 'border-[#2C4A60] bg-[#F0F7F4] text-[#2D6147]'
  }`}>
  {selectedPatient.priority.toUpperCase()} Priority
  </span>

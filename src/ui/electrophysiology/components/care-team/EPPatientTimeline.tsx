@@ -118,14 +118,14 @@ const EPPatientTimeline: React.FC<EPPatientTimelineProps> = ({ patientId, patien
 
   const getEventColor = (type: string) => {
  switch(type) {
- case 'EKG': return 'bg-[#C8D4DC] text-[#2C4A60] border-[#2C4A60]';
+ case 'EKG': return 'bg-[#F0F7F4] text-[#2D6147] border-[#2C4A60]';
  case 'Holter': return 'bg-chrome-100 text-chrome-700 border-chrome-300';
  case 'Echo': return 'bg-arterial-100 text-arterial-700 border-arterial-300';
  case 'Anticoag_Lab': return 'bg-red-100 text-red-700 border-red-300';
  case 'EP_Visit': return 'bg-chrome-100 text-chrome-700 border-chrome-300';
- case 'Ablation': return 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]';
+ case 'Ablation': return 'bg-[#FAF6E8] text-[#8B6914] border-[#C8D4DC]';
  case 'Device': return 'bg-gray-100 text-gray-700 border-gray-300';
- case 'Medication': return 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]';
+ case 'Medication': return 'bg-[#FAF6E8] text-[#8B6914] border-[#C8D4DC]';
  default: return 'bg-gray-100 text-gray-700 border-gray-300';
  }
   };
@@ -179,7 +179,7 @@ const EPPatientTimeline: React.FC<EPPatientTimelineProps> = ({ patientId, patien
  key={resultIndex}
  className={`px-2 py-1 text-xs rounded border ${
  result.normal 
- ? 'bg-[#C8D4DC] text-[#2C4A60] border-[#2C4A60]' 
+ ? 'bg-[#F0F7F4] text-[#2D6147] border-[#2C4A60]' 
  : 'bg-red-50 text-red-700 border-red-200'
  }`}
  >
@@ -238,7 +238,7 @@ const EPPatientTimeline: React.FC<EPPatientTimelineProps> = ({ patientId, patien
  key={`${result.key}-${result.value}`}
  className={`p-3 rounded-lg border ${
  result.normal 
- ? 'bg-[#C8D4DC] border-[#2C4A60]' 
+ ? 'bg-[#F0F7F4] border-[#D8EDE6]' 
  : 'bg-red-50 border-red-200'
  }`}
  >

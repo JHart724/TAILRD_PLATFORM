@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { AlertTriangle, CheckCircle, DollarSign, Users, ChevronDown, ChevronUp, Target, Activity, Pill, Stethoscope, TrendingUp, Zap, Info, Search, Radio, FileText } from 'lucide-react';
 import { estimateSYNTAX, computeSAQTrend } from '../../../../utils/clinicalCalculators';
 import { computeTrajectory, computeTimeHorizon, trajectoryDisplay, timeHorizonDisplay, estimateSVGFailureProbability, computeRevenueAtRisk, formatDollar, type TrajectoryResult, type TrajectoryDistribution } from '../../../../utils/predictiveCalculators';
+import GapActionButtons from '../../../../components/shared/GapActionButtons';
+import { useGapActions } from '../../../../hooks/useGapActions';
 
 // ============================================================
 // CLINICAL GAP DETECTION — CAD / CORONARY INTERVENTION MODULE
@@ -6528,7 +6530,7 @@ function daptUrgencyLabel(kv: Record<string, string | number>): { label: string;
   if (riskWindow.includes('CRITICAL') || riskWindow.includes('<3')) {
     return { label: 'CRITICAL — DES <90 days', color: 'text-red-800 bg-red-200' };
   }
-  return { label: 'HIGH — DES 90-365 days', color: 'text-[#6B7280] bg-[#F0F5FA]' };
+  return { label: 'HIGH — DES 90-365 days', color: 'text-[#8B6914] bg-[#FAF6E8]' };
 }
 
 /** Render DAPT safety alert (Gap 50) */
@@ -6888,7 +6890,7 @@ function renderCADPredictiveBadges(gap: CADClinicalGap, pt: CADGapPatient): Reac
 
   return (
     <>
-      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${display.colorClass === 'text-red-600' ? 'bg-red-100 text-red-700' : display.colorClass === 'text-[#6B7280]' ? 'bg-[#F0F5FA] text-[#6B7280]' : display.colorClass === 'text-[#2C4A60]' ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-gray-100 text-gray-500'}`}>
+      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${display.colorClass === 'text-red-600' ? 'bg-red-100 text-red-700' : display.colorClass === 'text-[#6B7280]' ? 'bg-[#FAF6E8] text-[#8B6914]' : display.colorClass === 'text-[#2C4A60]' ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-gray-100 text-gray-500'}`}>
         {display.arrow} {display.label}
       </span>
       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${horizonDisplay.bgClass} ${horizonDisplay.textClass}`}>
@@ -6985,11 +6987,24 @@ function renderCADRevenueTiming(gap: CADClinicalGap, pt: CADGapPatient): React.R
 // ============================================================
 // COMPONENT
 // ============================================================
+const cadGapSubTabs = [
+  { id: 'all', label: 'All Gaps', keywords: [] as string[] },
+  { id: 'secondary-prev', label: 'Post-ACS & Prevention', keywords: ['post-acs', 'post-mi', 'high-intensity statin', 'colchicine', 'ace-i', 'arb not prescribed', 'medication reconciliation', 'prevent 2024', 'blood pressure not', 'diabetes not', 'smoking cessation', 'cardiac rehab', 'sglt2i'] },
+  { id: 'antiplatelet', label: 'Antiplatelet & Anticoagulation', keywords: ['dapt', 'p2y12', 'aspirin-free', 'aspirin + oac', 'cangrelor', 'bridging', 'doac interruption', 'hit not', 'anticoagulation reversal', 'short dapt'] },
+  { id: 'pci', label: 'PCI Quality', keywords: ['pci', 'ivus', 'ffr', 'ifr', 'physiologic', 'atherectomy', 'ivl', 'drug-coated balloon', 'radial access', 'protected pci', 'cto', 'complete revasc', 'non-culprit', 'ccta', 'in-stent restenosis', 'scai', 'hemodynamic planning'] },
+  { id: 'cabg', label: 'CABG & Surgical', keywords: ['cabg', 'bypass', 'graft', 'bilateral ima', 'endoscopic', 'hybrid revasc', 'off-pump', 'midcab', 'radial artery', 'blood conservation', 'intra-operative tee', 'post-operative af', 'delirium', 'sternotomy'] },
+  { id: 'lipid', label: 'Lipid Management', keywords: ['ldl', 'lp(a)', 'inclisiran', 'bempedoic', 'icosapent', 'triglycerides', 'statin intolerance', 'persistent ldl'] },
+  { id: 'periprocedural', label: 'Peri-Procedural Safety', keywords: ['door-to-balloon', 'aki risk', 'contrast', 'poaf', 'pre-operative cardiac', 'non-cardiac surgery', 'anticoagulation reversal', 'emergency surgery', 'hit not screened'] },
+];
+
 const CADClinicalGapDetectionDashboard: React.FC = () => {
   const [expandedGap, setExpandedGap] = useState<string | null>(null);
+  const { trackGapView, gapActions } = useGapActions('CORONARY_INTERVENTION');
+  const [activeGapSubTab, setActiveGapSubTab] = useState<string>('all');
   const [expandedPatient, setExpandedPatient] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'priority' | 'patients' | 'opportunity'>('priority');
   const [showMethodology, setShowMethodology] = useState<string | null>(null);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
   const totalPatients = CAD_CLINICAL_GAPS.reduce((sum, g) => sum + g.patientCount, 0);
   const totalOpportunity = CAD_CLINICAL_GAPS.reduce((sum, g) => sum + g.dollarOpportunity, 0);
@@ -7008,10 +7023,47 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
     }
   });
 
+  const filterConfig: Record<string, string[]> = {
+    'Post-ACS & Secondary Prevention': ['Post-ACS', 'Post-MI', 'ACS', 'PCSK9', 'Colchicine', 'ACE-I', 'ARB', 'Statin', 'High-Intensity', 'Medication Reconciliation', 'PREVENT 2024', 'Blood Pressure', 'Diabetes', 'Smoking Cessation', 'Cardiac Rehab', 'SGLT2i'],
+    'Antiplatelet & Anticoagulation': ['DAPT', 'P2Y12', 'Aspirin', 'Anticoagulation', 'Cangrelor', 'Bridging', 'OAC', 'Reversal', 'DOAC', 'HIT', 'Antithrombotic'],
+    'PCI Quality': ['PCI', 'IVUS', 'OCT', 'FFR', 'iFR', 'Physiologic', 'Atherectomy', 'IVL', 'Drug-Coated Balloon', 'Radial Access', 'Protected PCI', 'CTO', 'Complete Revascularization', 'Non-Culprit', 'CCTA', 'Chest Pain', 'In-Stent Restenosis', 'Cardiogenic Shock', 'SCAI', 'Hemodynamic'],
+    'CABG & Surgical': ['CABG', 'Bypass', 'Graft', 'Arterial', 'IMA', 'Endoscopic', 'Hybrid', 'Off-Pump', 'MIDCAB', 'Radial Artery', 'Blood Conservation', 'Intra-Operative', 'Delirium', 'Post-Operative', 'Sternotomy'],
+    'Lipid Management': ['LDL', 'Lp(a)', 'Inclisiran', 'Bempedoic', 'Icosapent', 'Triglycerides', 'Statin Intolerance', 'Lipid', 'Cholesterol'],
+    'Peri-Procedural Safety': ['Door-to-Balloon', 'AKI', 'Contrast', 'POAF', 'Pre-Operative', 'Non-Cardiac Surgery', 'Delirium', 'Blood Conservation', 'Anticoagulation Reversal', 'Emergency Surgery'],
+  };
+
+  const chipCounts = Object.fromEntries(
+    Object.entries(filterConfig).map(([label, keywords]) => [
+      label,
+      sortedGaps.filter(gap =>
+        keywords.some(kw => (gap.name || '').toLowerCase().includes(kw.toLowerCase()))
+      ).length
+    ])
+  );
+
+  const activeSubTab = cadGapSubTabs.find(s => s.id === activeGapSubTab);
+  const subTabFilteredGaps = !activeSubTab || activeSubTab.id === 'all'
+    ? sortedGaps
+    : sortedGaps.filter(gap =>
+        activeSubTab.keywords.some(kw => (gap.name || '').toLowerCase().includes(kw.toLowerCase()))
+      );
+
+  const filteredGaps = activeFilters.length === 0 ? subTabFilteredGaps : subTabFilteredGaps.filter(gap => {
+    const gapName = (gap.name || '').toLowerCase();
+    return activeFilters.some(label =>
+      filterConfig[label].some(kw => gapName.includes(kw.toLowerCase()))
+    );
+  });
+
+  const filteredPatientCount = filteredGaps.reduce((sum, g) => sum + (g.patientCount || 0), 0);
+  const filteredOpportunity = filteredGaps.reduce((sum, g) => sum + (g.dollarOpportunity || 0), 0);
+  const totalPatientCountForChips = sortedGaps.reduce((sum, g) => sum + (g.patientCount || 0), 0);
+  const totalOpportunityForChips = sortedGaps.reduce((sum, g) => sum + (g.dollarOpportunity || 0), 0);
+
   const priorityColor = (p: string) => {
     if (p === 'high') return 'bg-red-50 border-red-300 text-red-700';
     if (p === 'medium') return 'bg-[#F0F5FA] border-[#C8D4DC] text-[#6B7280]';
-    return 'bg-[#C8D4DC] border-[#2C4A60] text-[#2C4A60]';
+    return 'bg-[#F0F7F4] border-[#D8EDE6] text-[#2C4A60]';
   };
 
   const categoryColor = (c: string) =>
@@ -7020,9 +7072,9 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
       : c === 'Safety'
       ? 'bg-rose-200 text-rose-900'
       : c === 'Quality'
-      ? 'bg-[#F0F5FA] text-[#6B7280]'
+      ? 'bg-[#FAF6E8] text-[#8B6914]'
       : c === 'Deprescribing'
-      ? 'bg-[#F0F5FA] text-[#6B7280]'
+      ? 'bg-[#FAF6E8] text-[#8B6914]'
       : c === 'Discovery'
       ? 'bg-slate-100 text-slate-800'
       : 'bg-blue-100 text-blue-800';
@@ -7030,7 +7082,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
   const tierColor = (tier?: string) => {
     if (!tier) return '';
     if (tier.includes('A')) return 'bg-red-100 text-red-700';
-    if (tier.includes('B')) return 'bg-[#F0F5FA] text-[#6B7280]';
+    if (tier.includes('B')) return 'bg-[#FAF6E8] text-[#8B6914]';
     if (tier.includes('C')) return 'bg-blue-100 text-blue-700';
     return 'bg-titanium-100 text-titanium-700';
   };
@@ -7052,9 +7104,8 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
           Clinical Gap Detection — Coronary Intervention Module
         </h3>
         <p className="text-sm text-titanium-600 mb-4">
-          AI-driven detection of evidence-based CAD therapy gaps and cross-module opportunities.
-          Gaps 9, 14, 15, 20, 23, 32, 37-40, 42, 44, 45 — 45-gap initiative.
-        </p>
+            AI-driven detection of evidence-based CAD therapy gaps and cross-module opportunities.
+          </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-red-50 border border-red-200 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
@@ -7063,7 +7114,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
             </div>
             <div className="text-2xl font-bold text-red-800">{totalPatients.toLocaleString()}</div>
           </div>
-          <div className="bg-[#C8D4DC] border border-[#2C4A60] rounded-xl p-4">
+          <div className="bg-[#F0F7F4] border border-[#D8EDE6] rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
               <DollarSign className="w-4 h-4 text-[#2C4A60]" />
               <span className="text-xs font-semibold text-[#2C4A60] uppercase tracking-wide">Total Opportunity</span>
@@ -7082,7 +7133,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Sort control */}
+      {/* Sort control — only shown in standalone mode */}
       <div className="flex items-center gap-3">
         <span className="text-xs font-semibold text-titanium-600 uppercase tracking-wide">Sort by:</span>
         <select
@@ -7096,15 +7147,75 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
         </select>
       </div>
 
+      {/* Filter Chips */}
+      {(
+      <div className="mb-4">
+        <div className="flex items-start justify-between mb-2">
+          <div className="flex flex-wrap gap-2">
+            {Object.entries(filterConfig).map(([label]) => {
+              const isActive = activeFilters.includes(label);
+              const count = chipCounts[label];
+              return (
+                <button
+                  key={label}
+                  onClick={() => setActiveFilters(prev =>
+                    prev.includes(label) ? prev.filter(f => f !== label) : [...prev, label]
+                  )}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'text-white border border-transparent'
+                      : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50'
+                  }`}
+                  style={isActive ? { backgroundColor: '#2C4A60' } : {}}
+                >
+                  {label}
+                  <span className={`text-xs rounded-full px-1.5 py-0.5 font-semibold ${
+                    isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          {activeFilters.length > 0 && (
+            <button
+              onClick={() => setActiveFilters([])}
+              className="text-sm text-slate-500 hover:text-slate-700 whitespace-nowrap ml-4 mt-1"
+            >
+              Clear all filters
+            </button>
+          )}
+        </div>
+        <div className="text-sm text-slate-500">
+          {activeFilters.length > 0 ? (
+            <span>
+              Showing <strong>{filteredPatientCount.toLocaleString()}</strong> patients across{' '}
+              <strong>{filteredGaps.length}</strong> gaps · Filtered by: {activeFilters.join(', ')}
+            </span>
+          ) : (
+            <span>
+              Patients identified: <strong>{totalPatientCountForChips.toLocaleString()}</strong> ·{' '}
+              Opportunity: <strong>${(totalOpportunityForChips / 1_000_000).toFixed(1)}M</strong>
+            </span>
+          )}
+        </div>
+      </div>
+      )}
+
       {/* Gap list */}
       <div className="space-y-4">
-        {sortedGaps.map((gap) => {
+        {filteredGaps.map((gap) => {
           const isOpen = expandedGap === gap.id;
           return (
             <div key={gap.id} className="metal-card bg-white border border-titanium-200 rounded-2xl overflow-hidden">
               <button
                 className="w-full text-left p-5 flex items-start justify-between hover:bg-titanium-50 transition-colors"
-                onClick={() => setExpandedGap(isOpen ? null : gap.id)}
+                onClick={() => {
+                  const nextId = isOpen ? null : gap.id;
+                  setExpandedGap(nextId);
+                  if (nextId) trackGapView(gap.id);
+                }}
               >
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2 mb-1">
@@ -7231,6 +7342,15 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
                     </span>
                   </div>
 
+                  {/* Gap Action Buttons — care team response tracking */}
+                  <GapActionButtons
+                    gapId={gap.id}
+                    gapName={gap.name}
+                    ctaText={gap.cta}
+                    moduleType="CORONARY_INTERVENTION"
+                    existingAction={gapActions[gap.id] || null}
+                  />
+
                   <div>
                     <h4 className="font-semibold text-titanium-800 mb-2 flex items-center gap-2">
                       <Users className="w-4 h-4 text-titanium-600" />
@@ -7257,7 +7377,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
                                   </span>
                                 )}
                                 {cta && (
-                                  <span className="ml-2 text-xs bg-[#C8D4DC] text-[#2C4A60] px-2 py-0.5 rounded-full">
+                                  <span className="ml-2 text-xs bg-[#F0F7F4] text-[#2D6147] px-2 py-0.5 rounded-full">
                                     {cta}
                                   </span>
                                 )}

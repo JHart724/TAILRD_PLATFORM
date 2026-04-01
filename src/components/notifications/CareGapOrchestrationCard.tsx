@@ -92,7 +92,7 @@ export default function CareGapOrchestrationCard({ orchestration, defaultExpande
 
   // ── Severity border color ──
   const borderColor = isResolved
-    ? 'border-l-emerald-500'
+    ? 'border-l-[#2C4A60]'
     : o.severity === 'critical'
     ? 'border-l-arterial-600'
     : o.severity === 'high'
@@ -126,7 +126,7 @@ export default function CareGapOrchestrationCard({ orchestration, defaultExpande
                     ? 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]'
                     : o.severity === 'critical'
                     ? 'bg-arterial-50 text-arterial-700 border border-arterial-200'
-                    : 'bg-[#F0F5FA] text-[#6B7280] border border-[#C8D4DC]'
+                    : 'bg-[#FAF6E8] text-[#8B6914] border border-[#C8D4DC]'
                 }`}
               >
                 {o.condition}

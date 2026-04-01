@@ -128,7 +128,7 @@ const zipData: ZIPData[] = [
 ];
 
 const getRiskColor = (riskScore: number) => {
-  if (riskScore >= 8.5) return '#dc2626'; // red-600
+  if (riskScore >= 8.5) return '#7A1A2E'; // red-600
   if (riskScore >= 7.0) return '#7A1A2E'; // orange-600
   if (riskScore >= 6.0) return '#6B7280'; // amber-600
   if (riskScore >= 5.0) return '#65a30d'; // lime-600
@@ -153,31 +153,31 @@ export const HFGeographicHeatMap: React.FC = () => {
  <div className="h-96 w-full rounded-lg overflow-hidden border border-gray-300 bg-gradient-to-br from-chrome-50 to-chrome-100">
  <svg width="100%" height="100%" viewBox="0 0 800 600" className="w-full h-full">
  {/* NYC Map Background */}
- <rect width="800" height="600" fill="#f0f9ff" />
+ <rect width="800" height="600" fill="#F0F2F5" />
  
  {/* Simplified NYC Borough Shapes */}
  <g>
  {/* Metro area simplified */}
  <polygon 
  points="300,150 320,150 330,200 340,250 345,300 340,350 330,400 320,450 300,480 280,450 270,400 265,350 270,300 275,250 285,200 295,150"
- fill="#e0f2fe" 
- stroke="#0284c7" 
+ fill="#E8EEF2" 
+ stroke="#4A6880" 
  strokeWidth="1"
  />
  
  {/* Brooklyn simplified */}
  <polygon 
  points="340,350 360,360 400,380 450,400 480,420 470,450 440,470 400,480 360,470 340,450"
- fill="#f0f9ff" 
- stroke="#0284c7" 
+ fill="#F0F2F5" 
+ stroke="#4A6880" 
  strokeWidth="1"
  />
  
  {/* Queens simplified */}
  <polygon 
  points="360,200 400,210 450,230 480,250 500,280 490,320 460,340 420,350 380,340 360,320"
- fill="#f0f9ff" 
- stroke="#0284c7" 
+ fill="#F0F2F5" 
+ stroke="#4A6880" 
  strokeWidth="1"
  />
  </g>
@@ -287,7 +287,7 @@ export const HFGeographicHeatMap: React.FC = () => {
  <span className="text-xs text-gray-600">High (7.0-8.4)</span>
  </div>
  <div className="flex items-center space-x-1">
- <div className="w-4 h-4 rounded" style={{ backgroundColor: '#dc2626' }}></div>
+ <div className="w-4 h-4 rounded" style={{ backgroundColor: '#7A1A2E' }}></div>
  <span className="text-xs text-gray-600">Very High (8.5+)</span>
  </div>
  </div>

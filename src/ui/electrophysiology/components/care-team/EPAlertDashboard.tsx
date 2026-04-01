@@ -247,7 +247,7 @@ const EPAlertDashboard: React.FC = () => {
  <div className="text-xs text-titanium-600 mb-1">Treatment Gaps</div>
  <div className="flex flex-wrap gap-1">
  {alert.treatmentGaps.map((gap, index) => (
- <span key={gap} className="px-2 py-1 bg-[#F0F5FA] text-[#6B7280] text-xs rounded border border-[#C8D4DC]">
+ <span key={gap} className="px-2 py-1 bg-[#FAF6E8] text-[#8B6914] text-xs rounded border border-[#C8D4DC]">
  {gap}
  </span>
  ))}

@@ -128,9 +128,9 @@ const KCCQOutcomesPanel: React.FC = () => {
               />
               <ReferenceLine
                 y={60}
-                stroke="#3b82f6"
+                stroke="#2C4A60"
                 strokeDasharray="6 3"
-                label={{ value: 'Intervention Threshold', position: 'right', fontSize: 10, fill: '#3b82f6' }}
+                label={{ value: 'Intervention Threshold', position: 'right', fontSize: 10, fill: '#2C4A60' }}
               />
               <ReferenceLine
                 y={45}
@@ -140,7 +140,7 @@ const KCCQOutcomesPanel: React.FC = () => {
               />
               <Bar
                 dataKey="score"
-                fill="#2563eb"
+                fill="#2C4A60"
                 radius={[4, 4, 0, 0]}
                 maxBarSize={60}
               />

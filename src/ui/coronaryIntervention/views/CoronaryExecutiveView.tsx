@@ -10,6 +10,7 @@ import SharedProjectedVsRealized from '../../../components/shared/SharedProjecte
 import BaseDetailModal from '../../../components/shared/BaseDetailModal';
 import CADFinancialWaterfall from '../components/executive/CADFinancialWaterfall';
 import GapIntelligenceCard from '../../../components/shared/GapIntelligenceCard';
+import GapResponseRateCard from '../../../components/shared/GapResponseRateCard';
 import PredictiveMetricsBanner from '../../../components/shared/PredictiveMetricsBanner';
 import { RevenuePipelineCard, RevenueAtRiskCard, TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
 import type { RevenuePipelineData, RevenueAtRiskData, TrajectoryTrendsData } from '../../../components/shared/ForwardLookingCards';
@@ -202,20 +203,23 @@ const CoronaryExecutiveView: React.FC = () => {
    </div>
    <div className="p-6">
      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-       <div className="bg-white rounded-xl p-4 border border-titanium-200 shadow-sm">
+       {/* Population Mean → Chrome Blue (patient count metric) */}
+       <div className="rounded-xl p-4 border shadow-sm" style={{ background: '#EFF4F8', borderColor: '#B8C9D9' }}>
          <div className="text-sm text-titanium-600 mb-1">Mean SAQ Angina Frequency</div>
-         <div className="text-3xl font-bold text-titanium-900">61.8</div>
+         <div className="text-3xl font-bold" style={{ color: '#2C4A60' }}>61.8</div>
          <div className="text-xs text-titanium-500 mt-1">Population average</div>
        </div>
-       <div className="bg-white rounded-xl p-4 border border-[#C8D4DC] shadow-sm">
+       {/* Mean Improvement → Racing Green (clinical quality) */}
+       <div className="rounded-xl p-4 border shadow-sm" style={{ background: '#EEF6F2', borderColor: '#A8D0BC' }}>
          <div className="text-sm text-titanium-600 mb-1">Mean Improvement (Post-Revasc)</div>
-         <div className="text-3xl font-bold text-[#2C4A60]">+18.4</div>
-         <div className="text-xs text-[#4A6880] mt-1">pts at 90 days post-intervention</div>
+         <div className="text-3xl font-bold" style={{ color: '#2D6147' }}>+18.4</div>
+         <div className="text-xs mt-1" style={{ color: '#2D6147' }}>pts at 90 days post-intervention</div>
        </div>
-       <div className="bg-white rounded-xl p-4 border border-red-200 shadow-sm">
+       {/* Severe Angina Burden → Carmona Red (risk/alert) */}
+       <div className="rounded-xl p-4 border shadow-sm" style={{ background: '#FDF2F3', borderColor: '#F5C0C8' }}>
          <div className="text-sm text-titanium-600 mb-1">Severe Angina Burden (SAQ &lt;50)</div>
-         <div className="text-3xl font-bold text-red-600">234</div>
-         <div className="text-xs text-red-500 mt-1">Intervention evaluation needed</div>
+         <div className="text-3xl font-bold" style={{ color: '#9B2438' }}>234</div>
+         <div className="text-xs mt-1" style={{ color: '#9B2438' }}>Intervention evaluation needed</div>
        </div>
      </div>
    </div>
@@ -225,8 +229,8 @@ const CoronaryExecutiveView: React.FC = () => {
  <GapIntelligenceCard data={{
    totalGaps: 26,
    categories: [
-     { name: 'Therapy', patients: 900, color: '#3b82f6' },
-     { name: 'Safety', patients: 340, color: '#ef4444' },
+     { name: 'Therapy', patients: 900, color: '#2C4A60' },
+     { name: 'Safety', patients: 340, color: '#9B2438' },
      { name: 'Growth', patients: 280, color: '#4A6880' },
      { name: 'Quality', patients: 620, color: '#C8D4DC' },
      { name: 'Deprescribing', patients: 190, color: '#64748b' },
@@ -240,6 +244,13 @@ const CoronaryExecutiveView: React.FC = () => {
    ],
    safetyAlert: 'CRITICAL: 156 patients \u00b7 HIGH: 184 patients',
  }} />
+
+ {/* Gap Response Rate — care team action tracking */}
+ <GapResponseRateCard
+   rates={[]}
+   overallRate={0}
+   timeRange="30d"
+ />
 
  {/* Forward-Looking Executive Cards */}
  <RevenuePipelineCard data={{
@@ -285,36 +296,40 @@ const CoronaryExecutiveView: React.FC = () => {
 
  {/* KPI Summary Cards */}
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
- <div className="metal-card p-6">
+ {/* Patient Population → Chrome Blue */}
+ <div className="metal-card p-6" style={{ background: '#EFF4F8', borderColor: '#B8C9D9' }}>
  <div className="flex items-center gap-3 mb-3">
- <div className="p-2 bg-porsche-50 rounded-lg"><Users className="w-6 h-6 text-porsche-600" /></div>
+ <div className="p-2 rounded-lg" style={{ background: '#B8C9D9' }}><Users className="w-6 h-6" style={{ color: '#2C4A60' }} /></div>
  <span className="text-sm font-medium text-titanium-600">Patient Population</span>
  </div>
- <div className="text-3xl font-bold text-titanium-900">{coronaryInterventionConfig.kpiData.totalPatients}</div>
+ <div className="text-3xl font-bold" style={{ color: '#2C4A60' }}>{coronaryInterventionConfig.kpiData.totalPatients}</div>
  <div className="text-sm text-titanium-500 mt-1">{coronaryInterventionConfig.kpiData.totalPatientsSub}</div>
  </div>
- <div className="metal-card p-6">
+ {/* Revenue Opportunity → Metallic Gold */}
+ <div className="metal-card p-6" style={{ background: '#FAF6E8', borderColor: '#D4B85C' }}>
  <div className="flex items-center gap-3 mb-3">
- <div className="p-2 bg-[#f0f4f8] rounded-lg"><DollarSign className="w-6 h-6 text-[#2C4A60]" /></div>
+ <div className="p-2 rounded-lg" style={{ background: '#D4B85C' }}><DollarSign className="w-6 h-6" style={{ color: '#8B6914' }} /></div>
  <span className="text-sm font-medium text-titanium-600">Revenue Opportunity</span>
  </div>
- <div className="text-3xl font-bold text-titanium-900">{coronaryInterventionConfig.kpiData.totalOpportunity}</div>
+ <div className="text-3xl font-bold" style={{ color: '#8B6914' }}>{coronaryInterventionConfig.kpiData.totalOpportunity}</div>
  <div className="text-sm text-titanium-500 mt-1">{coronaryInterventionConfig.kpiData.totalOpportunitySub}</div>
  </div>
- <div className="metal-card p-6">
+ {/* Procedural Success → Racing Green */}
+ <div className="metal-card p-6" style={{ background: '#EEF6F2', borderColor: '#A8D0BC' }}>
  <div className="flex items-center gap-3 mb-3">
- <div className="p-2 bg-crimson-50 rounded-lg"><Activity className="w-6 h-6 text-crimson-600" /></div>
+ <div className="p-2 rounded-lg" style={{ background: '#A8D0BC' }}><Activity className="w-6 h-6" style={{ color: '#2D6147' }} /></div>
  <span className="text-sm font-medium text-titanium-600">Procedural Success</span>
  </div>
- <div className="text-3xl font-bold text-titanium-900">{coronaryInterventionConfig.kpiData.gdmtOptimization}</div>
+ <div className="text-3xl font-bold" style={{ color: '#2D6147' }}>{coronaryInterventionConfig.kpiData.gdmtOptimization}</div>
  <div className="text-sm text-titanium-500 mt-1">{coronaryInterventionConfig.kpiData.gdmtOptimizationSub}</div>
  </div>
- <div className="metal-card p-6">
+ {/* Avg Revenue / Patient → Copper Bronze */}
+ <div className="metal-card p-6" style={{ background: '#FAF3EC', borderColor: '#DDBA98' }}>
  <div className="flex items-center gap-3 mb-3">
- <div className="p-2 bg-[#fdf0f2] rounded-lg"><TrendingUp className="w-6 h-6 text-[#7A1A2E]" /></div>
+ <div className="p-2 rounded-lg" style={{ background: '#DDBA98' }}><TrendingUp className="w-6 h-6" style={{ color: '#8B5A2B' }} /></div>
  <span className="text-sm font-medium text-titanium-600">Avg Revenue / Patient</span>
  </div>
- <div className="text-3xl font-bold text-titanium-900">{coronaryInterventionConfig.kpiData.avgRoi}</div>
+ <div className="text-3xl font-bold" style={{ color: '#8B5A2B' }}>{coronaryInterventionConfig.kpiData.avgRoi}</div>
  <div className="text-sm text-titanium-500 mt-1">{coronaryInterventionConfig.kpiData.avgRoiSub}</div>
  </div>
  </div>

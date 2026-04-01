@@ -65,8 +65,8 @@ const CHA2DS2VAScCalculator: React.FC = () => {
   const { score, riskPercentage } = calculateScore();
 
   const getRiskLevel = (score: number): { level: string; color: string } => {
- if (score === 0) return { level: 'Very Low', color: 'text-[#2C4A60]' };
- if (score === 1) return { level: 'Low', color: 'text-[#6B7280]' };
+ if (score === 0) return { level: 'Very Low', color: 'text-[#2D6147]' };
+ if (score === 1) return { level: 'Low', color: 'text-[#8B6914]' };
  if (score >= 2) return { level: 'High', color: 'text-red-600' };
  return { level: 'Unknown', color: 'text-gray-600' };
   };
@@ -198,8 +198,8 @@ const CHA2DS2VAScCalculator: React.FC = () => {
  {/* Clinical Recommendations */}
  <div className={`p-4 rounded-xl border ${
  score >= 2 ? 'bg-red-50 border-red-200' : 
- score === 1 ? 'bg-[#F0F5FA] border-[#C8D4DC]' : 
- 'bg-[#C8D4DC] border-[#2C4A60]'
+ score === 1 ? 'bg-[#FAF6E8] border-[#F4ECC0]' : 
+ 'bg-[#F0F7F4] border-[#D8EDE6]'
  }`}>
  <h5 className="font-semibold mb-2 flex items-center gap-2">
  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

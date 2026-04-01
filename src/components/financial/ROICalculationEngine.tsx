@@ -314,7 +314,7 @@ const ROICalculationEngine: React.FC = () => {
  <div className="text-sm text-arterial-600">Time to recover investment</div>
  </div>
 
- <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-6 rounded-xl border border-[#C8D4DC]">
+ <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-6 rounded-xl border border-[#C8D4DC]">
  <div className="flex items-center gap-3 mb-2">
  <Target className="w-8 h-8 text-[#6B7280]" />
  <div>
@@ -481,7 +481,7 @@ const ROICalculationEngine: React.FC = () => {
  </div>
 
  {/* Recommendation Summary */}
- <div className="bg-gradient-to-r from-porsche-50 to-emerald-50 p-6 rounded-xl border border-porsche-200">
+ <div className="bg-gradient-to-r from-porsche-50 to-[#EFF3F7] p-6 rounded-xl border border-porsche-200">
  <div className="flex items-center gap-4">
  <div className="p-3 bg-white rounded-full">
  <Calculator className="w-8 h-8 text-porsche-600" />

@@ -140,41 +140,44 @@ export const RevenueAtRiskCard: React.FC<RevenueAtRiskCardProps> = ({ data }) =>
 
       <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+          {/* This Quarter → Carmona Red (risk/critical) */}
+          <div className="border rounded-xl p-4" style={{ background: '#FDF2F3', borderColor: '#F5C0C8' }}>
             <div className="flex items-center gap-2 mb-2">
-              <Clock className="w-4 h-4 text-red-500" />
-              <span className="text-xs font-semibold text-red-700 uppercase tracking-wide">This Quarter</span>
+              <Clock className="w-4 h-4" style={{ color: '#9B2438' }} />
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#9B2438' }}>This Quarter</span>
             </div>
-            <div className="text-2xl font-bold text-red-800">
+            <div className="text-2xl font-bold" style={{ color: '#9B2438' }}>
               ${(data.immediateRevenue / 1_000_000).toFixed(1)}M
             </div>
-            <div className="text-xs text-red-600 mt-1">
+            <div className="text-xs mt-1" style={{ color: '#9B2438' }}>
               {data.immediatePatients} patients in immediate time horizon
             </div>
           </div>
 
-          <div className="bg-[#fdf0f2] border border-[#f5c6cf] rounded-xl p-4">
+          {/* If Deferred → Metallic Gold (revenue at risk = opportunity cost) */}
+          <div className="border rounded-xl p-4" style={{ background: '#FAF6E8', borderColor: '#D4B85C' }}>
             <div className="flex items-center gap-2 mb-2">
-              <TrendingDown className="w-4 h-4 text-[#7A1A2E]" />
-              <span className="text-xs font-semibold text-[#7A1A2E] uppercase tracking-wide">If Deferred Past Q2</span>
+              <TrendingDown className="w-4 h-4" style={{ color: '#8B6914' }} />
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#8B6914' }}>If Deferred Past Q2</span>
             </div>
-            <div className="text-2xl font-bold text-[#5C1022]">
+            <div className="text-2xl font-bold" style={{ color: '#8B6914' }}>
               +${(data.deferralRevenue / 1_000_000).toFixed(1)}M
             </div>
-            <div className="text-xs text-[#7A1A2E] mt-1">
+            <div className="text-xs mt-1" style={{ color: '#8B6914' }}>
               additional moves to at-risk category
             </div>
           </div>
 
-          <div className="bg-titanium-50 border border-titanium-200 rounded-xl p-4">
+          {/* 12-Month Cumulative → Chrome Blue mid (efficiency / total) */}
+          <div className="border rounded-xl p-4" style={{ background: '#F0F5FA', borderColor: '#C8D4DC' }}>
             <div className="flex items-center gap-2 mb-2">
-              <DollarSign className="w-4 h-4 text-titanium-500" />
-              <span className="text-xs font-semibold text-titanium-700 uppercase tracking-wide">12-Month Cumulative</span>
+              <DollarSign className="w-4 h-4" style={{ color: '#4A6880' }} />
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#4A6880' }}>12-Month Cumulative</span>
             </div>
-            <div className="text-2xl font-bold text-titanium-800">
+            <div className="text-2xl font-bold" style={{ color: '#4A6880' }}>
               ${(data.cumulativeRisk12Month / 1_000_000).toFixed(1)}M
             </div>
-            <div className="text-xs text-titanium-500 mt-1">
+            <div className="text-xs mt-1" style={{ color: '#4A6880' }}>
               at-risk if gaps remain unaddressed
             </div>
           </div>
@@ -227,21 +230,24 @@ export const TrajectoryTrendsCard: React.FC<TrajectoryTrendsCardProps> = ({ data
 
       <div className="p-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-red-50/70 border border-red-100 rounded-xl p-4">
-            <div className="text-3xl font-bold text-red-700">{data.worseningRapidPct}%</div>
-            <div className="text-xs text-red-600 mt-1">
+          {/* Worsening rapidly → Carmona Red (risk/alert) */}
+          <div className="border rounded-xl p-4" style={{ background: '#FDF2F3', borderColor: '#F5C0C8' }}>
+            <div className="text-3xl font-bold" style={{ color: '#9B2438' }}>{data.worseningRapidPct}%</div>
+            <div className="text-xs mt-1" style={{ color: '#9B2438' }}>
               of flagged patients worsening rapidly ({data.worseningRapidCount} patients)
             </div>
           </div>
-          <div className="bg-[#fdf0f2] border border-[#f5c6cf] rounded-xl p-4">
-            <div className="text-lg font-bold text-[#7A1A2E]">{data.meanDeclineRate}</div>
-            <div className="text-xs text-[#7A1A2E] mt-1">
+          {/* Mean decline rate → Steel Teal (efficiency/LOS-type metric) */}
+          <div className="border rounded-xl p-4" style={{ background: '#EEF8FA', borderColor: '#A8D8E4' }}>
+            <div className="text-lg font-bold" style={{ color: '#1A6878' }}>{data.meanDeclineRate}</div>
+            <div className="text-xs mt-1" style={{ color: '#1A6878' }}>
               mean decline across {data.declineMetric} gap population
             </div>
           </div>
-          <div className="bg-slate-50/70 border border-slate-100 rounded-xl p-4">
-            <div className="text-3xl font-bold text-slate-700">{data.thresholdIn30Days}</div>
-            <div className="text-xs text-slate-600 mt-1">
+          {/* Threshold in 30 days → Chrome Blue mid (count) */}
+          <div className="border rounded-xl p-4" style={{ background: '#F0F5FA', borderColor: '#C8D4DC' }}>
+            <div className="text-3xl font-bold" style={{ color: '#4A6880' }}>{data.thresholdIn30Days}</div>
+            <div className="text-xs mt-1" style={{ color: '#4A6880' }}>
               patients projected to reach clinical threshold in next 30 days
             </div>
           </div>

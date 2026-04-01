@@ -88,14 +88,23 @@ const kpiData: KPIData[] = [
 export const EPExecutiveSummary: React.FC = () => {
   const [selectedKPI, setSelectedKPI] = useState<KPIData | null>(null);
 
+  const getColorMap = (color: string) => {
+ const colors: Record<string, { bg: string; border: string; text: string; icon: string; stroke: string }> = {
+ // Chrome Blue — patient volume / counts
+ blue:    { bg: 'bg-[#EFF4F8]', border: 'border-[#B8C9D9]', text: 'text-[#2C4A60]', icon: 'text-[#2C4A60]', stroke: '#2C4A60' },
+ // Metallic Gold — revenue / financial opportunity
+ green:   { bg: 'bg-[#FAF6E8]', border: 'border-[#D4B85C]', text: 'text-[#8B6914]', icon: 'text-[#8B6914]', stroke: '#8B6914' },
+ // Racing Green — clinical quality / ablation success
+ carmona: { bg: 'bg-[#EEF6F2]', border: 'border-[#A8D0BC]', text: 'text-[#2D6147]', icon: 'text-[#2D6147]', stroke: '#2D6147' },
+ // Carmona Red — risk / device infection alerts
+ red:     { bg: 'bg-[#FDF2F3]', border: 'border-[#F5C0C8]', text: 'text-[#9B2438]', icon: 'text-[#9B2438]', stroke: '#9B2438' },
+ };
+ return colors[color] || colors.blue;
+  };
+
   const getColorClasses = (color: string) => {
- switch (color) {
- case 'blue': return 'bg-chrome-500 text-white border-chrome-200';
- case 'green': return 'bg-[#F0F5FA] text-white border-[#C8D4DC]';
- case 'carmona': return 'bg-arterial-500 text-white border-arterial-200';
- case 'red': return 'bg-red-500 text-white border-red-200';
- default: return 'bg-gray-500 text-white border-gray-200';
- }
+ const c = getColorMap(color);
+ return `${c.bg} ${c.text} ${c.border}`;
   };
 
   const getTrendColorClasses = (trend: number) => {
@@ -132,13 +141,13 @@ export const EPExecutiveSummary: React.FC = () => {
  <h4 className="text-sm font-semibold text-titanium-600 uppercase tracking-wider mb-2">
  {kpi.label}
  </h4>
- <div className="text-3xl font-bold text-titanium-900 mb-1 font-sf">
+ <div className="text-3xl font-bold mb-1 font-sf" style={{ color: getColorMap(kpi.color).stroke }}>
  {kpi.value}
  </div>
  <div className="text-sm text-titanium-600">{kpi.subtext}</div>
  </div>
- <div className={`ml-4 p-3 rounded-xl ${getColorClasses(kpi.color)} shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300`}>
- <Icon className="w-5 h-5" />
+ <div className={`ml-4 p-3 rounded-xl border ${getColorMap(kpi.color).bg} ${getColorMap(kpi.color).border} shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300`}>
+ <Icon className="w-5 h-5" style={{ color: getColorMap(kpi.color).stroke }} />
  </div>
  </div>
  <div className={`flex items-center gap-2 text-sm font-semibold ${getTrendColorClasses(kpi.trend)}`}>
@@ -176,9 +185,9 @@ export const EPExecutiveSummary: React.FC = () => {
  </div>
 
  <div className="mb-6">
- <div className={`inline-flex items-center gap-3 px-4 py-2 rounded-xl ${getColorClasses(selectedKPI.color)} mb-4`}>
- <selectedKPI.icon className="w-5 h-5" />
- <span className="font-semibold">Current Value: {selectedKPI.value}</span>
+ <div className={`inline-flex items-center gap-3 px-4 py-2 rounded-xl border ${getColorMap(selectedKPI.color).bg} ${getColorMap(selectedKPI.color).border} mb-4`}>
+ <selectedKPI.icon className="w-5 h-5" style={{ color: getColorMap(selectedKPI.color).stroke }} />
+ <span className="font-semibold" style={{ color: getColorMap(selectedKPI.color).stroke }}>Current Value: {selectedKPI.value}</span>
  </div>
  
  <div className="text-sm text-titanium-600 mb-4">
@@ -206,9 +215,9 @@ export const EPExecutiveSummary: React.FC = () => {
  <Line 
  type="monotone" 
  dataKey="value" 
- stroke={selectedKPI.color === 'blue' ? '#3b82f6' : selectedKPI.color === 'green' ? '#2C4A60' : selectedKPI.color === 'carmona' ? '#9B2438' : '#ef4444'}
+ stroke={selectedKPI.color === 'blue' ? '#2C4A60' : selectedKPI.color === 'green' ? '#2C4A60' : selectedKPI.color === 'carmona' ? '#9B2438' : '#9B2438'}
  strokeWidth={3}
- dot={{ fill: selectedKPI.color === 'blue' ? '#3b82f6' : selectedKPI.color === 'green' ? '#2C4A60' : selectedKPI.color === 'carmona' ? '#9B2438' : '#ef4444', strokeWidth: 2, r: 5 }}
+ dot={{ fill: selectedKPI.color === 'blue' ? '#2C4A60' : selectedKPI.color === 'green' ? '#2C4A60' : selectedKPI.color === 'carmona' ? '#9B2438' : '#9B2438', strokeWidth: 2, r: 5 }}
  activeDot={{ r: 7 }}
  />
  </LineChart>

@@ -425,7 +425,7 @@ const SHQualityMetricsDashboard: React.FC = () => {
  {formatValue(trend.value, metric.unit)}
  </span>
  <span className={`text-xs px-2 py-1 rounded-full ${
- trend.change > 0 ? 'bg-[#e0eaf3] text-[#2C4A60]' :
+ trend.change > 0 ? 'bg-[#F0F7F4] text-[#2D6147]' :
  trend.change < 0 ? 'bg-medical-red-100 text-medical-red-700' :
  'bg-titanium-100 text-titanium-600'
  }`}>
@@ -517,7 +517,7 @@ const SHQualityMetricsDashboard: React.FC = () => {
  <div key={opportunity.description} className="p-3 bg-white rounded-lg border border-titanium-200">
  <div className="flex items-center justify-between mb-2">
  <span className={`px-2 py-1 text-xs rounded-full ${
- opportunity.difficulty === 'Low' ? 'bg-[#e0eaf3] text-[#2C4A60]' :
+ opportunity.difficulty === 'Low' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  opportunity.difficulty === 'Medium' ? 'bg-crimson-100 text-crimson-700' :
  'bg-medical-red-100 text-medical-red-700'
  }`}>

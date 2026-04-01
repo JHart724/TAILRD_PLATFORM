@@ -262,7 +262,7 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  connectionStrength: 0.92, 
  x: 440, 
  y: 280, 
- color: '#4338ca',
+ color: '#1E3347',
  status: 'busy'
  },
  
@@ -293,7 +293,7 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  connectionStrength: 0.86, 
  x: 380, 
  y: 420, 
- color: '#1d4ed8',
+ color: '#1E3347',
  status: 'active'
  },
  
@@ -309,7 +309,7 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  connectionStrength: 0.91, 
  x: 540, 
  y: 420, 
- color: '#1e40af',
+ color: '#1E3347',
  status: 'busy'
  },
  
@@ -334,7 +334,7 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  connectionStrength: 0.84, 
  x: 280, 
  y: 40, 
- color: '#c2410c'
+ color: '#8B6914'
  },
  { 
  id: 'complex-valve', 
@@ -345,7 +345,7 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  connectionStrength: 0.78, 
  x: 480, 
  y: 60, 
- color: '#dc2626'
+ color: '#7A1A2E'
  },
  
  // Outcomes Registry
@@ -678,8 +678,8 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  case 'savr-pathway': return '#2E3440';
  case 'risk-assessment': return '#1A3A40';
  case 'multidisciplinary': return '#4A6880';
- case 'surveillance': return '#1d4ed8';
- case 'anticoag-management': return '#1e40af';
+ case 'surveillance': return '#1E3347';
+ case 'anticoag-management': return '#1E3347';
  case 'follow-up': return '#1e3a8a';
  default: return '#6b7280';
  }
@@ -974,7 +974,7 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  <span>Echo Evaluation (Urgent)</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-1 bg-chrome-600" style={{ background: 'repeating-linear-gradient(90deg, #4f46e5, #4f46e5 4px, transparent 4px, transparent 8px)' }}></div>
+ <div className="w-4 h-1 bg-chrome-600" style={{ background: 'repeating-linear-gradient(90deg, #2C4A60, #2C4A60 4px, transparent 4px, transparent 8px)' }}></div>
  <span>Heart Team Decision (Standard)</span>
  </div>
  <div className="flex items-center gap-2">
@@ -1020,8 +1020,8 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  )}
  {selectedNode.status && (
  <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${
- selectedNode.status === 'active' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
- selectedNode.status === 'busy' ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ selectedNode.status === 'active' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ selectedNode.status === 'busy' ? 'bg-[#FAF6E8] text-[#8B6914]' :
  selectedNode.status === 'scheduled' ? 'bg-gold-100 text-gold-700' :
  'bg-gray-100 text-gray-700'
  }`}>
@@ -1100,7 +1100,7 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  <div className="flex items-center gap-2">
  <span className="text-titanium-500">{conn.patientFlow} pts</span>
  {conn.avgTimeToNext && (
- <span className={`text-xs px-1 rounded ${conn.avgTimeToNext <= 7 ? 'bg-[#C8D4DC] text-[#2C4A60]' : 'bg-[#F0F5FA] text-[#6B7280]'}`}>
+ <span className={`text-xs px-1 rounded ${conn.avgTimeToNext <= 7 ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>
  {conn.avgTimeToNext}d
  </span>
  )}

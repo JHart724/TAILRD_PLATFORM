@@ -41,7 +41,7 @@ const DRGOptimizationAlert: React.FC<DRGOptimizationAlertProps> = ({
   };
 
   const getConfidenceColor = (confidence: number) => {
- if (confidence >= 90) return 'bg-[#e0eaf3] text-[#2C4A60]';
+ if (confidence >= 90) return 'bg-[#F0F7F4] text-[#2D6147]';
  if (confidence >= 75) return 'bg-crimson-100 text-crimson-700';
  return 'bg-medical-red-100 text-medical-red-800';
   };

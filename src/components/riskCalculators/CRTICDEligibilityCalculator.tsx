@@ -168,7 +168,7 @@ const CRTICDEligibilityCalculator: React.FC<CRTICDEligibilityProps> = ({
   const getClassColor = (classRec: string): string => {
  if (classRec === 'Class I') return 'text-[#2C4A60]';
  if (classRec === 'Class IIa') return 'text-chrome-600';
- if (classRec === 'Class IIb') return 'text-[#6B7280]';
+ if (classRec === 'Class IIb') return 'text-[#8B6914]';
  return 'text-gray-600';
   };
 

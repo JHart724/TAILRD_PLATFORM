@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Heart, Zap, Box, Target, Repeat2, GitBranch, ChevronDown, ChevronUp } from 'lucide-react';
 import SectionCard from '../../../design-system/SectionCard';
 import ModuleDetailPanel from './ModuleDetailPanel';
@@ -13,6 +13,16 @@ const iconMap: Record<string, React.ElementType> = {
   Target,
   Repeat: Repeat2,
   GitBranch,
+};
+
+/** Distinct identity color per module */
+const MODULE_COLORS: Record<string, string> = {
+  hf:      '#B91C1C', // Heart Failure — deep red
+  ep:      '#6D28D9', // Electrophysiology — deep purple
+  sh:      '#0E7490', // Structural Heart — deep teal
+  coronary:'#C2410C', // Coronary — deep orange
+  valvular:'#1D4ED8', // Valvular — deep blue
+  pv:      '#065F46', // Peripheral Vascular — deep forest green
 };
 
 interface CommandGridProps {
@@ -30,37 +40,53 @@ const QualityDot: React.FC<{ score: number }> = ({ score }) => {
 };
 
 const CommandGrid: React.FC<CommandGridProps> = ({ modules, expandedModule, onModuleClick }) => {
+  const [hoveredModule, setHoveredModule] = useState<string | null>(null);
+
   return (
-    <SectionCard title="Service Line Command Center" subtitle="6 Cardiovascular Modules">
+    <SectionCard title="Service Line Command Center" subtitle="6 Cardiovascular Modules" sectionLabel="Service Line">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {modules.map((module) => {
           const IconComponent = iconMap[module.icon];
+          const moduleColor = MODULE_COLORS[module.id] || '#2C4A60';
+          const isExpanded = expandedModule === module.id;
+          const isHovered = hoveredModule === module.id;
+          const isActive = isExpanded || isHovered;
 
           return (
             <div
               key={module.id}
               onClick={() => onModuleClick(module.id)}
-              className={`bg-white rounded-xl border shadow-chrome-card p-4 cursor-pointer hover:border-chrome-400 hover:shadow-lg transition-all duration-200 relative ${
-                expandedModule === module.id
-                  ? 'border-chrome-500 ring-2 ring-chrome-200 shadow-lg'
-                  : 'border-chrome-200'
-              }`}
+              onMouseEnter={() => setHoveredModule(module.id)}
+              onMouseLeave={() => setHoveredModule(null)}
+              className="bg-white rounded-xl p-4 cursor-pointer transition-all duration-200 relative"
+              style={{
+                borderTop: `4px solid ${moduleColor}`,
+                borderRight: `1px solid ${isActive ? moduleColor : '#e2e8f0'}`,
+                borderBottom: `1px solid ${isActive ? moduleColor : '#e2e8f0'}`,
+                borderLeft: `1px solid ${isActive ? moduleColor : '#e2e8f0'}`,
+                boxShadow: isActive
+                  ? `0 4px 16px ${moduleColor}28, 0 1px 3px rgba(0,0,0,0.08)`
+                  : '0 1px 3px rgba(0,0,0,0.06)',
+              }}
             >
               {/* Expand indicator */}
               <div className="absolute top-2 right-2">
-                {expandedModule === module.id ? (
-                  <ChevronUp className="w-3.5 h-3.5 text-chrome-400" />
+                {isExpanded ? (
+                  <ChevronUp className="w-3.5 h-3.5" style={{ color: moduleColor }} />
                 ) : (
                   <ChevronDown className="w-3.5 h-3.5 text-chrome-300" />
                 )}
               </div>
 
               {/* Icon */}
-              <div className="w-10 h-10 rounded-xl bg-chrome-50 flex items-center justify-center">
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{ backgroundColor: `${moduleColor}1A` }}
+              >
                 {IconComponent ? (
-                  <IconComponent className="w-5 h-5 text-chrome-600" />
+                  <IconComponent className="w-5 h-5" color={moduleColor} />
                 ) : (
-                  <Box className="w-5 h-5 text-chrome-600" />
+                  <Box className="w-5 h-5" color={moduleColor} />
                 )}
               </div>
 

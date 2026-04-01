@@ -57,14 +57,14 @@ type TrialFilter = 'All' | 'New' | 'Industry Sponsored' | 'Referred' | 'Enrolled
 
 function completenessColor(pct: number): string {
   if (pct >= 85) return 'text-[#2C4A60] bg-[#F0F5FA]';
-  if (pct >= 60) return 'text-[#6B7280] bg-[#F0F5FA]';
+  if (pct >= 60) return 'text-[#8B6914] bg-[#FAF6E8]';
   return 'text-red-600 bg-red-50';
 }
 
 function registryStatusChip(status: string) {
   const map: Record<string, string> = {
     'Needs Review': 'bg-red-50 text-red-700 border border-red-200',
-    'In Review': 'bg-[#F0F5FA] text-[#6B7280] border border-[#C8D4DC]',
+    'In Review': 'bg-[#FAF6E8] text-[#8B6914] border border-[#C8D4DC]',
     'Ready': 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]',
     'Approved': 'bg-blue-50 text-blue-700 border border-blue-200',
     'Submitted': 'bg-titanium-100 text-titanium-600 border border-titanium-200',
@@ -75,7 +75,7 @@ function registryStatusChip(status: string) {
 function trialStatusChip(status: TrialStatus): string {
   const map: Record<TrialStatus, string> = {
     'New': 'bg-blue-50 text-blue-700 border border-blue-200',
-    'In Review': 'bg-[#F0F5FA] text-[#6B7280] border border-[#C8D4DC]',
+    'In Review': 'bg-[#FAF6E8] text-[#8B6914] border border-[#C8D4DC]',
     'Referred': 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]',
     'Enrolled': 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]',
     'Screen Failed': 'bg-red-50 text-red-700 border border-red-200',
@@ -86,7 +86,7 @@ function trialStatusChip(status: TrialStatus): string {
 function confidenceBadge(level: 'High' | 'Moderate' | 'Review'): string {
   const map = {
     High: 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]',
-    Moderate: 'bg-[#F0F5FA] text-[#6B7280] border border-[#C8D4DC]',
+    Moderate: 'bg-[#FAF6E8] text-[#8B6914] border border-[#C8D4DC]',
     Review: 'bg-red-50 text-red-700 border border-red-200',
   };
   return map[level];
@@ -282,7 +282,7 @@ const ResearchCareTeamView: React.FC = () => {
                   <td className="px-4 py-3 text-titanium-800 font-medium">{row.trial}</td>
                   <td className="px-4 py-3 text-center">
                     {row.sponsorType === 'industry' ? (
-                      <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide bg-[#F0F5FA] text-[#6B7280] border border-[#C8D4DC]">
+                      <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide bg-[#FAF6E8] text-[#8B6914] border border-[#C8D4DC]">
                         Industry
                       </span>
                     ) : row.sponsorType === 'nih' ? (

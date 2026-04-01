@@ -25,8 +25,8 @@ export interface SharedBenchmarksPanelProps {
 const SharedBenchmarksPanel: React.FC<SharedBenchmarksPanelProps> = ({
   title = 'National Benchmarks', subtitle, benchmarks, dataSource, lastUpdated, onBenchmarkClick, className = '',
 }) => {
-  const getTrendIcon = (trend: string) => {
- if (trend === 'up') return <TrendingUp className="w-4 h-4 text-[#2C4A60]" />;
+  const getTrendIcon = (trend: string, positive: boolean) => {
+ if (trend === 'up') return <TrendingUp className="w-4 h-4" style={{ color: positive ? '#2D6147' : '#9B2438' }} />;
  if (trend === 'down') return <TrendingDown className="w-4 h-4 text-crimson-600" />;
  return <Minus className="w-4 h-4 text-titanium-500" />;
   };
@@ -52,27 +52,28 @@ const SharedBenchmarksPanel: React.FC<SharedBenchmarksPanelProps> = ({
  const positive = isPositiveTrend(bm);
  return (
  <div key={bm.metric}
- className={`p-4 border border-titanium-200 rounded-lg bg-titanium-50 transition-colors ${onBenchmarkClick ? 'cursor-pointer hover:border-porsche-300 hover:shadow-md' : ''}`}
+ className={`p-4 rounded-lg transition-colors ${onBenchmarkClick ? 'cursor-pointer hover:shadow-md' : ''}`}
+ style={positive ? { background: '#F0F7F4', border: '1px solid #A8D0BC' } : { background: '#FDF2F3', border: '1px solid #F5C0C8' }}
  onClick={() => onBenchmarkClick?.(bm.metric)}
  >
  <div className="flex items-start justify-between mb-3">
  <div className="flex-1">
  <div className="text-sm font-medium text-titanium-800 mb-1">{bm.metric}</div>
  <div className="flex items-baseline gap-2">
- <span className="text-2xl font-bold text-titanium-900">{bm.ourValue}{bm.unit}</span>
+ <span className="text-2xl font-bold" style={{ color: positive ? '#2D6147' : '#9B2438' }}>{bm.ourValue}{bm.unit}</span>
  <span className="text-sm text-titanium-500">vs {bm.benchmark}{bm.unit}</span>
  </div>
  </div>
- {getTrendIcon(bm.trend)}
+ {getTrendIcon(bm.trend, positive)}
  </div>
  <div className="flex items-center justify-between text-sm">
- <span className={`font-medium ${positive ? 'text-[#2C4A60]' : 'text-crimson-600'}`}>
+ <span className="font-medium" style={{ color: positive ? '#2D6147' : '#9B2438' }}>
  {formatDeltaValue(delta, bm.unit)} vs benchmark
  </span>
- <span className="text-titanium-700 font-medium">{formatPercentile(bm.percentile)}</span>
+ <span className="font-medium" style={{ color: bm.percentile >= 75 ? '#2D6147' : bm.percentile >= 50 ? '#2C4A60' : '#9B2438' }}>{formatPercentile(bm.percentile)}</span>
  </div>
  <div className="mt-3 w-full bg-titanium-200 rounded-full h-2 overflow-hidden">
- <div className={`h-full rounded-full transition-all ${positive ? 'bg-[#C8D4DC]' : 'bg-[#F0F5FA]'}`} style={{ width: `${bm.percentile}%` }} />
+ <div className="h-full rounded-full transition-all" style={{ width: `${bm.percentile}%`, backgroundColor: bm.percentile >= 75 ? '#2D6147' : bm.percentile >= 50 ? '#2C4A60' : '#9B2438' }} />
  </div>
  </div>
  );

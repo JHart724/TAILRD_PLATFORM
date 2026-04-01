@@ -686,9 +686,9 @@ const StructuralInterventionPathwayFunnel: React.FC = () => {
  </div>
  </div>
  <div className={`px-2 py-1 rounded-full text-xs font-medium ${
- patient.status === 'treated' ? 'bg-[#C8D4DC] text-[#2C4A60]' :
+ patient.status === 'treated' ? 'bg-[#F0F7F4] text-[#2D6147]' :
  patient.status === 'eligible' ? 'bg-chrome-100 text-chrome-700' :
- patient.status === 'pending' ? 'bg-[#F0F5FA] text-[#6B7280]' : 'bg-red-100 text-red-700'
+ patient.status === 'pending' ? 'bg-[#FAF6E8] text-[#8B6914]' : 'bg-red-100 text-red-700'
  }`}>
  {patient.status.toUpperCase()}
  </div>
@@ -722,7 +722,7 @@ const StructuralInterventionPathwayFunnel: React.FC = () => {
  </div>
  <div className="flex flex-wrap gap-2">
  {patient.barriers.map((barrier) => (
- <span key={barrier} className="px-2 py-1 bg-[#F0F5FA] text-[#6B7280] text-xs rounded-full">
+ <span key={barrier} className="px-2 py-1 bg-[#FAF6E8] text-[#8B6914] text-xs rounded-full">
  {barrier}
  </span>
  ))}

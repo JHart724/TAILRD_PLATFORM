@@ -121,29 +121,29 @@ const SHPatientDetailPanel: React.FC<SHPatientDetailPanelProps> = ({ patient, on
   const getPriorityColor = (priority: string) => {
  switch(priority) {
  case 'high': return 'border-red-500 bg-red-50 text-red-700';
- case 'medium': return 'border-[#C8D4DC] bg-[#F0F5FA] text-[#6B7280]';
- case 'low': return 'border-[#2C4A60] bg-[#C8D4DC] text-[#2C4A60]';
+ case 'medium': return 'border-[#C8D4DC] bg-[#FAF6E8] text-[#8B6914]';
+ case 'low': return 'border-[#2C4A60] bg-[#F0F7F4] text-[#2D6147]';
  default: return 'border-gray-300 bg-gray-50 text-gray-700';
  }
   };
 
   const getRiskColor = (riskScore: number) => {
  if (riskScore >= 8) return 'text-red-600 bg-red-100';
- if (riskScore >= 6) return 'text-[#6B7280] bg-[#F0F5FA]';
- return 'text-[#2C4A60] bg-[#C8D4DC]';
+ if (riskScore >= 6) return 'text-[#8B6914] bg-[#FAF6E8]';
+ return 'text-[#2D6147] bg-[#F0F7F4]';
   };
 
   const getAdherenceColor = (adherence?: number) => {
  if (!adherence) return 'text-gray-600 bg-gray-100';
- if (adherence >= 90) return 'text-[#2C4A60] bg-[#C8D4DC]';
- if (adherence >= 75) return 'text-[#6B7280] bg-[#F0F5FA]';
+ if (adherence >= 90) return 'text-[#2D6147] bg-[#F0F7F4]';
+ if (adherence >= 75) return 'text-[#8B6914] bg-[#FAF6E8]';
  return 'text-red-600 bg-red-100';
   };
 
   const getValveTherapyStatusColor = (status: string) => {
  switch(status) {
- case 'optimal': return 'text-[#2C4A60] bg-[#C8D4DC] border-[#2C4A60]';
- case 'suboptimal': return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
+ case 'optimal': return 'text-[#2D6147] bg-[#F0F7F4] border-[#2C4A60]';
+ case 'suboptimal': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
  case 'contraindicated': return 'text-red-700 bg-red-100 border-red-300';
  case 'not_started': return 'text-gray-700 bg-gray-100 border-gray-300';
  default: return 'text-gray-700 bg-gray-100 border-gray-300';
@@ -161,8 +161,8 @@ const SHPatientDetailPanel: React.FC<SHPatientDetailPanelProps> = ({ patient, on
   };
 
   const getValveTherapyScoreColor = (score: number) => {
- if (score >= 80) return 'text-[#2C4A60] bg-[#C8D4DC]';
- if (score >= 60) return 'text-[#6B7280] bg-[#F0F5FA]';
+ if (score >= 80) return 'text-[#2D6147] bg-[#F0F7F4]';
+ if (score >= 60) return 'text-[#8B6914] bg-[#FAF6E8]';
  return 'text-red-700 bg-red-100';
   };
 
@@ -285,8 +285,8 @@ const SHPatientDetailPanel: React.FC<SHPatientDetailPanelProps> = ({ patient, on
   const getAlertColor = (level: 'contraindication' | 'caution' | 'warning') => {
  switch(level) {
  case 'contraindication': return 'text-red-800 bg-red-100 border-red-300';
- case 'caution': return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
- case 'warning': return 'text-[#6B7280] bg-[#F0F5FA] border-[#C8D4DC]';
+ case 'caution': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
+ case 'warning': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
  default: return 'text-gray-800 bg-gray-100 border-gray-300';
  }
   };
@@ -603,14 +603,14 @@ const SHPatientDetailPanel: React.FC<SHPatientDetailPanelProps> = ({ patient, on
  <div key={`${opp.pillar}-${opp.action}`} className={`p-2 rounded border-l-4 text-sm ${
  opp.priority === 'high' ? 'bg-red-50 border-red-400' :
  opp.priority === 'medium' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
- 'bg-[#C8D4DC] border-[#2C4A60]'
+ 'bg-[#F0F7F4] border-[#D8EDE6]'
  }`}>
  <div className="flex items-center justify-between mb-1">
  <span className="font-medium">{opp.pillar}</span>
  <span className={`px-2 py-1 rounded text-xs font-medium ${
  opp.priority === 'high' ? 'bg-red-100 text-red-700' :
- opp.priority === 'medium' ? 'bg-[#F0F5FA] text-[#6B7280]' :
- 'bg-[#C8D4DC] text-[#2C4A60]'
+ opp.priority === 'medium' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ 'bg-[#F0F7F4] text-[#2D6147]'
  }`}>
  {opp.priority} priority
  </span>
@@ -756,7 +756,7 @@ const SHPatientDetailPanel: React.FC<SHPatientDetailPanelProps> = ({ patient, on
  Begin Care Plan
  </button>
  {carePlanFeedback && (
- <div className="mt-2 p-2 bg-[#C8D4DC] border border-[#2C4A60] rounded-lg text-[#2C4A60] text-sm flex items-center gap-2">
+ <div className="mt-2 p-2 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg text-[#2C4A60] text-sm flex items-center gap-2">
  <CheckCircle className="w-4 h-4" />
  ✓ Care plan initiated — loading optimization roadmap...
  </div>

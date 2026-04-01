@@ -278,7 +278,7 @@ const MAGGICScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  <span className="text-sm font-medium text-titanium-700">Current Smoker</span>
  </label>
 
- <label className="flex items-center space-x-3 p-3 bg-[#f0f5fa] rounded-lg cursor-pointer hover:bg-[#e0eaf3]">
+ <label className="flex items-center space-x-3 p-3 bg-[#f0f5fa] rounded-lg cursor-pointer hover:bg-[#F0F5FA]">
  <input
  type="checkbox"
  checked={inputs.aceiOrArb}
@@ -288,7 +288,7 @@ const MAGGICScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  <span className="text-sm font-medium text-titanium-700">ACE-I/ARB/ARNi</span>
  </label>
 
- <label className="flex items-center space-x-3 p-3 bg-[#f0f5fa] rounded-lg cursor-pointer hover:bg-[#e0eaf3]">
+ <label className="flex items-center space-x-3 p-3 bg-[#f0f5fa] rounded-lg cursor-pointer hover:bg-[#F0F5FA]">
  <input
  type="checkbox"
  checked={inputs.betaBlocker}

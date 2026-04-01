@@ -297,9 +297,9 @@ const EPEquityAnalysis: React.FC = () => {
  case 'significant':
  return 'bg-red-100 text-red-800 border-red-200';
  case 'trending':
- return 'bg-[#F0F5FA] text-[#6B7280] border-[#C8D4DC]';
+ return 'bg-[#FAF6E8] text-[#8B6914] border-[#C8D4DC]';
  default:
- return 'bg-[#C8D4DC] text-[#2C4A60] border-[#2C4A60]';
+ return 'bg-[#F0F7F4] text-[#2D6147] border-[#2C4A60]';
  }
   };
 
@@ -411,7 +411,7 @@ const EPEquityAnalysis: React.FC = () => {
  </div>
  <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${
  (isInvertedMetric ? group.delta <= 0 : group.delta >= 0) 
- ? 'text-[#2C4A60] bg-[#e0eaf3]' 
+ ? 'text-[#2D6147] bg-[#F0F7F4]' 
  : 'text-medical-red-700 bg-medical-red-100'
  }`}>
  {(isInvertedMetric ? group.delta <= 0 : group.delta >= 0) ? (

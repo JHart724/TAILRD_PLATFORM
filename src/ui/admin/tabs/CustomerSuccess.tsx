@@ -147,7 +147,7 @@ const CustomerSuccess: React.FC = () => {
             <Tooltip formatter={(value: any) => `${value}%`} />
             <Legend wrapperStyle={{ fontSize: 12 }} />
             <Line type="monotone" dataKey="BSW" stroke="#7A1A2E" strokeWidth={2} dot={{ r: 3 }} />
-            <Line type="monotone" dataKey="MSH" stroke="#2563EB" strokeWidth={2} dot={{ r: 3 }} />
+            <Line type="monotone" dataKey="MSH" stroke="#2C4A60" strokeWidth={2} dot={{ r: 3 }} />
             <Line type="monotone" dataKey="MH" stroke="#2C4A60" strokeWidth={2} dot={{ r: 3 }} />
           </LineChart>
         </ResponsiveContainer>

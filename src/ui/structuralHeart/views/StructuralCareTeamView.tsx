@@ -173,8 +173,8 @@ const StructuralCareTeamView: React.FC = () => {
  <td className="p-3 text-titanium-700">{patient.procedure}</td>
  <td className="p-3">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
- patient.risk.includes('Low') ? 'bg-[#C8D4DC] text-[#2C4A60]' :
- patient.risk.includes('Moderate') ? 'bg-[#F0F5FA] text-[#6B7280]' :
+ patient.risk.includes('Low') ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ patient.risk.includes('Moderate') ? 'bg-[#FAF6E8] text-[#8B6914]' :
  'bg-red-100 text-red-700'
  }`}>
  {patient.risk}
@@ -222,7 +222,7 @@ const StructuralCareTeamView: React.FC = () => {
  <div key={item.patient} className={`p-3 rounded-lg border ${
  item.urgency === 'High' ? 'bg-red-50 border-red-200' :
  item.urgency === 'Medium' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
- 'bg-[#C8D4DC] border-[#2C4A60]'
+ 'bg-[#F0F7F4] border-[#D8EDE6]'
  }`}>
  <div className="font-medium text-titanium-900">{item.patient}</div>
  <div className="text-sm text-titanium-600">{item.procedure}</div>
@@ -268,7 +268,7 @@ const StructuralCareTeamView: React.FC = () => {
  <div key={item.patient} className={`p-3 rounded-lg border ${
  item.status === 'Overdue' ? 'bg-red-50 border-red-200' :
  item.status === 'Due' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
- 'bg-[#C8D4DC] border-[#2C4A60]'
+ 'bg-[#F0F7F4] border-[#D8EDE6]'
  }`}>
  <div className="font-medium text-titanium-900">{item.patient}</div>
  <div className="text-sm text-titanium-600">{item.days}</div>
@@ -365,7 +365,7 @@ const StructuralCareTeamView: React.FC = () => {
  <div className="font-medium text-chrome-900">Heart Team Note</div>
  <div className="text-sm text-chrome-600">Multidisciplinary decision template</div>
  </button>
- <button className="w-full text-left p-3 rounded-lg bg-[#C8D4DC] border border-[#2C4A60] hover:bg-[#C8D4DC] transition-colors">
+ <button className="w-full text-left p-3 rounded-lg bg-[#F0F7F4] border border-[#D8EDE6] hover:bg-[#C8D4DC] transition-colors">
  <div className="font-medium text-[#2C4A60]">Procedure Note</div>
  <div className="text-sm text-[#2C4A60]">Standardized operative note</div>
  </button>

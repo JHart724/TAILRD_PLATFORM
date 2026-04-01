@@ -1011,7 +1011,7 @@
   .status-warning {
     @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium;
     background: rgba(245, 158, 11, 0.08);
-    color: #92400e;
+    color: #7A1A2E;
     border: 1px solid rgba(245, 158, 11, 0.15);
   }
 

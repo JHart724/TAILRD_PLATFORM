@@ -263,7 +263,7 @@ const PeripheralServiceLineView: React.FC = () => {
     {
       label: 'Gap & Opportunity',
       tabs: [
-        { id: 'gap-detection', label: 'Gap Detection (27-Gap)', icon: Search, description: 'PV clinical gap detection' },
+        { id: 'gap-detection', label: 'Gap Detection', icon: Search, description: 'AI-driven PV clinical gap detection' },
       ],
     },
     {
@@ -297,7 +297,8 @@ const PeripheralServiceLineView: React.FC = () => {
       case 'wound-care-network': return <PVWoundCareNetworkVisualization />;
       case 'quality': return <PADQualityMetrics />;
       case 'reporting': return <PADReportingSystem />;
-      case 'gap-detection': return <PVClinicalGapDetectionDashboard />;
+      case 'gap-detection':
+        return <PVClinicalGapDetectionDashboard />;
       default: return <PeripheralVascularAnalytics />;
     }
   };

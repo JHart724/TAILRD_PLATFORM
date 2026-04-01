@@ -141,11 +141,11 @@ const GDMTOptimizationTracker: React.FC = () => {
  switch (status) {
  case 'optimal':
  return {
- color: 'text-[#2C4A60]',
- bgColor: 'bg-[#e0eaf3]',
- borderColor: 'border-[#C8D4DC]',
+ color: 'text-[#2D6147]',
+ bgColor: 'bg-[#F0F7F4]',
+ borderColor: 'border-[#D8EDE6]',
  icon: CheckCircle,
- light: 'bg-[#2C4A60]'
+ light: 'bg-[#2D6147]'
  };
  case 'suboptimal':
  return {
@@ -467,8 +467,8 @@ const GDMTOptimizationTracker: React.FC = () => {
  <div className="p-4">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center gap-2">
- <div className="p-2 bg-[#e0eaf3] rounded-lg">
- <Activity className="w-5 h-5 text-[#2C4A60]" />
+ <div className="p-2 bg-[#F0F7F4] rounded-lg">
+ <Activity className="w-5 h-5 text-[#2D6147]" />
  </div>
  <div>
  <h3 className="font-semibold text-titanium-800">MRA</h3>
