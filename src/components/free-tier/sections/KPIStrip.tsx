@@ -134,7 +134,7 @@ const KPIStrip: React.FC<KPIStripProps> = ({ hasUploadedFiles, kpis }) => {
           kpi.unit
         );
         const positive = isTrendPositive(kpi.trend.direction, kpi.label);
-        const trendColor = positive ? 'text-[#2C4A60]' : 'text-arterial-600';
+        const trendHex = positive ? '#2D6147' : '#7A1A2E';
         const TrendIcon =
           kpi.trend.direction === 'up' ? TrendingUp : TrendingDown;
         const isExpanded = expandedKPI === kpi.label;
@@ -143,7 +143,11 @@ const KPIStrip: React.FC<KPIStripProps> = ({ hasUploadedFiles, kpis }) => {
         return (
           <div
             key={kpi.label}
-            className="bg-white rounded-xl border border-chrome-200 shadow-chrome-card p-4 hover:shadow-chrome-card-hover transition-shadow duration-200 cursor-pointer"
+            className="bg-white rounded-xl border border-chrome-200 p-4 hover:shadow-md transition-shadow duration-200 cursor-pointer"
+            style={{
+              borderLeft: '3px solid #2C4A60',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+            }}
             onClick={() => setExpandedKPI(prev => prev === kpi.label ? null : kpi.label)}
           >
             {/* Top row: icon + badge */}
@@ -174,8 +178,8 @@ const KPIStrip: React.FC<KPIStripProps> = ({ hasUploadedFiles, kpis }) => {
 
             {/* Trend row */}
             <div className="mt-2 flex items-center gap-1">
-              <TrendIcon className={`w-3.5 h-3.5 ${trendColor}`} />
-              <span className={`text-xs font-body font-medium ${trendColor}`}>
+              <TrendIcon className="w-3.5 h-3.5" style={{ color: trendHex }} />
+              <span className="text-xs font-body font-medium" style={{ color: trendHex }}>
                 {kpi.trend.value}
               </span>
             </div>
