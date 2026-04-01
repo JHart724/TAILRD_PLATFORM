@@ -2557,7 +2557,6 @@ const SHClinicalGapDetectionDashboard: React.FC<SHClinicalGapDetectionDashboardP
         {!categoryFilter && (
           <p className="text-sm text-titanium-600 mb-4">
             AI-driven detection of evidence-based structural heart therapy gaps and growth opportunities.
-            Gaps 3, 5, 8 — 15-gap initiative.
           </p>
         )}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

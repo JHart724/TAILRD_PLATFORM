@@ -6985,17 +6985,19 @@ function renderCADRevenueTiming(gap: CADClinicalGap, pt: CADGapPatient): React.R
 // ============================================================
 // COMPONENT
 // ============================================================
-interface CADCategoryFilter {
-  label: string;
-  keywords: string[];
-}
+const cadGapSubTabs = [
+  { id: 'all', label: 'All Gaps', keywords: [] as string[] },
+  { id: 'secondary-prev', label: 'Post-ACS & Prevention', keywords: ['post-acs', 'post-mi', 'high-intensity statin', 'colchicine', 'ace-i', 'arb not prescribed', 'medication reconciliation', 'prevent 2024', 'blood pressure not', 'diabetes not', 'smoking cessation', 'cardiac rehab', 'sglt2i'] },
+  { id: 'antiplatelet', label: 'Antiplatelet & Anticoagulation', keywords: ['dapt', 'p2y12', 'aspirin-free', 'aspirin + oac', 'cangrelor', 'bridging', 'doac interruption', 'hit not', 'anticoagulation reversal', 'short dapt'] },
+  { id: 'pci', label: 'PCI Quality', keywords: ['pci', 'ivus', 'ffr', 'ifr', 'physiologic', 'atherectomy', 'ivl', 'drug-coated balloon', 'radial access', 'protected pci', 'cto', 'complete revasc', 'non-culprit', 'ccta', 'in-stent restenosis', 'scai', 'hemodynamic planning'] },
+  { id: 'cabg', label: 'CABG & Surgical', keywords: ['cabg', 'bypass', 'graft', 'bilateral ima', 'endoscopic', 'hybrid revasc', 'off-pump', 'midcab', 'radial artery', 'blood conservation', 'intra-operative tee', 'post-operative af', 'delirium', 'sternotomy'] },
+  { id: 'lipid', label: 'Lipid Management', keywords: ['ldl', 'lp(a)', 'inclisiran', 'bempedoic', 'icosapent', 'triglycerides', 'statin intolerance', 'persistent ldl'] },
+  { id: 'periprocedural', label: 'Peri-Procedural Safety', keywords: ['door-to-balloon', 'aki risk', 'contrast', 'poaf', 'pre-operative cardiac', 'non-cardiac surgery', 'anticoagulation reversal', 'emergency surgery', 'hit not screened'] },
+];
 
-interface CADClinicalGapDetectionDashboardProps {
-  categoryFilter?: CADCategoryFilter;
-}
-
-const CADClinicalGapDetectionDashboard: React.FC<CADClinicalGapDetectionDashboardProps> = ({ categoryFilter }) => {
+const CADClinicalGapDetectionDashboard: React.FC = () => {
   const [expandedGap, setExpandedGap] = useState<string | null>(null);
+  const [activeGapSubTab, setActiveGapSubTab] = useState<string>('all');
   const [expandedPatient, setExpandedPatient] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'priority' | 'patients' | 'opportunity'>('priority');
   const [showMethodology, setShowMethodology] = useState<string | null>(null);
@@ -7036,17 +7038,19 @@ const CADClinicalGapDetectionDashboard: React.FC<CADClinicalGapDetectionDashboar
     ])
   );
 
-  const filteredGaps = categoryFilter
-    ? sortedGaps.filter(gap => {
-        const gapName = (gap.name || '').toLowerCase();
-        return categoryFilter.keywords.some(kw => gapName.includes(kw.toLowerCase()));
-      })
-    : activeFilters.length === 0 ? sortedGaps : sortedGaps.filter(gap => {
-        const gapName = (gap.name || '').toLowerCase();
-        return activeFilters.some(label =>
-          filterConfig[label].some(kw => gapName.includes(kw.toLowerCase()))
-        );
-      });
+  const activeSubTab = cadGapSubTabs.find(s => s.id === activeGapSubTab);
+  const subTabFilteredGaps = !activeSubTab || activeSubTab.id === 'all'
+    ? sortedGaps
+    : sortedGaps.filter(gap =>
+        activeSubTab.keywords.some(kw => (gap.name || '').toLowerCase().includes(kw.toLowerCase()))
+      );
+
+  const filteredGaps = activeFilters.length === 0 ? subTabFilteredGaps : subTabFilteredGaps.filter(gap => {
+    const gapName = (gap.name || '').toLowerCase();
+    return activeFilters.some(label =>
+      filterConfig[label].some(kw => gapName.includes(kw.toLowerCase()))
+    );
+  });
 
   const filteredPatientCount = filteredGaps.reduce((sum, g) => sum + (g.patientCount || 0), 0);
   const filteredOpportunity = filteredGaps.reduce((sum, g) => sum + (g.dollarOpportunity || 0), 0);
@@ -7094,23 +7098,18 @@ const CADClinicalGapDetectionDashboard: React.FC<CADClinicalGapDetectionDashboar
       <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
         <h3 className="text-lg font-semibold text-titanium-900 mb-1 flex items-center gap-2">
           <Target className="w-5 h-5 text-porsche-600" />
-          {categoryFilter
-            ? `${categoryFilter.label} · ${filteredGaps.length} GAPS · ${filteredPatientCount.toLocaleString()} PATIENTS · $${(filteredOpportunity / 1_000_000).toFixed(1)}M OPPORTUNITY`
-            : 'Clinical Gap Detection — Coronary Intervention Module'}
+          Clinical Gap Detection — Coronary Intervention Module
         </h3>
-        {!categoryFilter && (
-          <p className="text-sm text-titanium-600 mb-4">
+        <p className="text-sm text-titanium-600 mb-4">
             AI-driven detection of evidence-based CAD therapy gaps and cross-module opportunities.
-            Gaps 9, 14, 15, 20, 23, 32, 37-40, 42, 44, 45 — 45-gap initiative.
           </p>
-        )}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-red-50 border border-red-200 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
               <Users className="w-4 h-4 text-red-600" />
               <span className="text-xs font-semibold text-red-700 uppercase tracking-wide">Affected Patients</span>
             </div>
-            <div className="text-2xl font-bold text-red-800">{categoryFilter ? filteredPatientCount.toLocaleString() : totalPatients.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-red-800">{totalPatients.toLocaleString()}</div>
           </div>
           <div className="bg-[#F0F7F4] border border-[#D8EDE6] rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
@@ -7118,7 +7117,7 @@ const CADClinicalGapDetectionDashboard: React.FC<CADClinicalGapDetectionDashboar
               <span className="text-xs font-semibold text-[#2C4A60] uppercase tracking-wide">Total Opportunity</span>
             </div>
             <div className="text-2xl font-bold text-[#2C4A60]">
-              ${((categoryFilter ? filteredOpportunity : totalOpportunity) / 1000000).toFixed(1)}M
+              ${(totalOpportunity / 1000000).toFixed(1)}M
             </div>
           </div>
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
@@ -7126,13 +7125,12 @@ const CADClinicalGapDetectionDashboard: React.FC<CADClinicalGapDetectionDashboar
               <TrendingUp className="w-4 h-4 text-blue-600" />
               <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Active Gaps</span>
             </div>
-            <div className="text-2xl font-bold text-blue-800">{categoryFilter ? filteredGaps.length : CAD_CLINICAL_GAPS.length}</div>
+            <div className="text-2xl font-bold text-blue-800">{CAD_CLINICAL_GAPS.length}</div>
           </div>
         </div>
       </div>
 
       {/* Sort control — only shown in standalone mode */}
-      {!categoryFilter && (
       <div className="flex items-center gap-3">
         <span className="text-xs font-semibold text-titanium-600 uppercase tracking-wide">Sort by:</span>
         <select
@@ -7145,10 +7143,9 @@ const CADClinicalGapDetectionDashboard: React.FC<CADClinicalGapDetectionDashboar
           <option value="opportunity">Dollar Opportunity</option>
         </select>
       </div>
-      )}
 
-      {/* Filter Chips — only shown in standalone mode (no categoryFilter) */}
-      {!categoryFilter && (
+      {/* Filter Chips */}
+      {(
       <div className="mb-4">
         <div className="flex items-start justify-between mb-2">
           <div className="flex flex-wrap gap-2">

@@ -22,30 +22,14 @@ interface TabGroup {
   tabs: Array<{ id: string; label: string; icon: React.ElementType; description: string }>;
 }
 
-const shGapSubTabs = [
-  { id: 'all', label: 'All Gaps', keywords: [] as string[] },
-  { id: 'tavr', label: 'TAVR Pathway', keywords: ['tavr', 'severe as', 'aortic stenosis', 'low-flow', 'low-gradient', 'dobutamine stress', 'ct sizing', 'cerebral embolic', 'basilica', 'tavr-in-tavr', 'asymptomatic severe'] },
-  { id: 'mitral-tricuspid', label: 'Mitral & Tricuspid', keywords: ['mitral', 'teer', 'functional mr', 'primary mr', 'tr', 'tricuspid', 'coapt', 'mitra-fr', 'bmc', 'commissurotomy'] },
-  { id: 'defect-hcm', label: 'Structural Defect & HCM', keywords: ['pfo', 'asd', 'hcm', 'septal ablation', 'obstructive hcm', 'device closure'] },
-  { id: 'aortopathy', label: 'Aortopathy', keywords: ['bav', 'aortopathy', 'aortic regurgitation', 'lvesd', 'aortic imaging', 'root replacement'] },
-  { id: 'post-proc', label: 'Post-Procedure Quality', keywords: ['post-tavr', 'paravalvular', 'anticoagulation not standardized', 'sizing protocol', 'concomitant pci', 'endocarditis prophylaxis'] },
-  { id: 'surveillance', label: 'Surveillance', keywords: ['surveillance', 'overdue', 'monitoring', 'echo', 'imaging overdue'] },
-];
-
 const StructuralServiceLineView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('gap-detection');
-  const [activeGapSubTab, setActiveGapSubTab] = useState<string>('all');
 
   const handleTabChange = (tab: TabId) => {
     setActiveTab(tab);
-    if (tab !== 'gap-detection') {
-      setActiveGapSubTab('all');
-    }
     const container = document.getElementById('main-scroll-container');
     if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
-  const [generatingReport, setGeneratingReport] = useState<string | null>(null);
-  const [exportingFormat, setExportingFormat] = useState<string | null>(null);
 
   const tabGroups: TabGroup[] = [
     {
@@ -384,37 +368,7 @@ const StructuralServiceLineView: React.FC = () => {
       case 'care-network':
         return <CareTeamNetworkGraph />;
       case 'gap-detection':
-        return (
-          <div>
-            {/* Gap Sub-Navigation */}
-            <div className="mb-4 bg-white rounded-xl border border-titanium-200 p-4 shadow-sm">
-              <div className="text-xs font-semibold uppercase tracking-wider text-titanium-500 mb-3">Gap Category</div>
-              <div className="flex flex-wrap gap-2">
-                {shGapSubTabs.map(sub => {
-                  const isActive = activeGapSubTab === sub.id;
-                  return (
-                    <button
-                      key={sub.id}
-                      onClick={() => setActiveGapSubTab(sub.id)}
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                        isActive ? 'text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      }`}
-                      style={isActive ? { backgroundColor: '#C4982A' } : {}}
-                    >
-                      {sub.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-            <SHClinicalGapDetectionDashboard
-              categoryFilter={activeGapSubTab === 'all' ? undefined : {
-                label: shGapSubTabs.find(s => s.id === activeGapSubTab)?.label || '',
-                keywords: shGapSubTabs.find(s => s.id === activeGapSubTab)?.keywords || []
-              }}
-            />
-          </div>
-        );
+        return <SHClinicalGapDetectionDashboard />;
       case 'provider-scorecard':
         return <SHProviderScorecard />;
       case 'phenotype-detection':

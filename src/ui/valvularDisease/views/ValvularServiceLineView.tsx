@@ -16,25 +16,11 @@ interface TabGroup {
   tabs: Array<{ id: string; label: string; icon: React.ElementType; description: string }>;
 }
 
-const vdGapSubTabs = [
-  { id: 'all', label: 'All Gaps', keywords: [] as string[] },
-  { id: 'as-pathway', label: 'AS & TAVR Pathway', keywords: ['aortic stenosis', 'tavr', 'severe as', 'low-gradient', 'dobutamine', 'ct sizing', 'paravalvular', 'pacemaker after tavr', 'valve-in-valve'] },
-  { id: 'mr-tr', label: 'MR & Tricuspid', keywords: ['mitral regurgitation', 'mr', 'functional mr', 'primary mr', 'teer', 'mitraclip', 'tricuspid', 'tr severity', 'concomitant tv'] },
-  { id: 'surveillance', label: 'Surveillance Gaps', keywords: ['echo surveillance', 'overdue', 'no follow-up echo', 'surveillance not', 'missed echo', 'aortic root', 'bicuspid surveillance'] },
-  { id: 'anticoag', label: 'Anticoagulation & Safety', keywords: ['anticoagulation', 'inr', 'doac after tavr', 'warfarin', 'bridging', 'thrombosis', 'endocarditis prophylaxis', 'dental', 'bleeding'] },
-  { id: 'comorbidity', label: 'Comorbidity & Discovery', keywords: ['heart failure', 'af not', 'coronary', 'sdoh', 'frailty', 'undiagnosed', 'nutrition', 'iron', 'cardiac rehab', 'prehabilitation'] },
-  { id: 'post-proc', label: 'Post-Procedure Quality', keywords: ['discharge', '30-day', 'readmission', 'follow-up', 'palliative', 'advance directive', 'rehab referral', 'quality of life'] },
-];
-
 const ValvularServiceLineView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('clinical-gap-detection');
-  const [activeGapSubTab, setActiveGapSubTab] = useState<string>('all');
 
   const handleTabChange = (tab: TabId) => {
     setActiveTab(tab);
-    if (tab !== 'clinical-gap-detection') {
-      setActiveGapSubTab('all');
-    }
     const container = document.getElementById('main-scroll-container');
     if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
@@ -533,37 +519,7 @@ const ValvularServiceLineView: React.FC = () => {
       case 'reporting':
         return <AutomatedReportingSystem />;
       case 'clinical-gap-detection':
-        return (
-          <div>
-            {/* Gap Sub-Navigation */}
-            <div className="mb-4 bg-white rounded-xl border border-titanium-200 p-4 shadow-sm">
-              <div className="text-xs font-semibold uppercase tracking-wider text-titanium-500 mb-3">Gap Category</div>
-              <div className="flex flex-wrap gap-2">
-                {vdGapSubTabs.map(sub => {
-                  const isActive = activeGapSubTab === sub.id;
-                  return (
-                    <button
-                      key={sub.id}
-                      onClick={() => setActiveGapSubTab(sub.id)}
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                        isActive ? 'text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      }`}
-                      style={isActive ? { backgroundColor: '#C4982A' } : {}}
-                    >
-                      {sub.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-            <VDClinicalGapDetectionDashboard
-              categoryFilter={activeGapSubTab === 'all' ? undefined : {
-                label: vdGapSubTabs.find(s => s.id === activeGapSubTab)?.label || '',
-                keywords: vdGapSubTabs.find(s => s.id === activeGapSubTab)?.keywords || []
-              }}
-            />
-          </div>
-        );
+        return <VDClinicalGapDetectionDashboard />;
       default:
         return <ValvePatientHeatmap />;
     }

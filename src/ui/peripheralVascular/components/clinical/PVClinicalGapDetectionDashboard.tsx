@@ -3253,8 +3253,7 @@ const PVClinicalGapDetectionDashboard: React.FC<PVClinicalGapDetectionDashboardP
         </h3>
         {!categoryFilter && (
           <p className="text-sm text-titanium-600 mb-4">
-            AI-driven detection of evidence-based PV therapy gaps \u2014 polyvascular cross-module opportunities.
-            Gaps 14, 24, 25, 28, 34, 35, 36, 43 \u2014 45-gap initiative.
+            AI-driven detection of evidence-based PV therapy gaps and polyvascular cross-module opportunities.
           </p>
         )}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
