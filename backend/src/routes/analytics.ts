@@ -83,7 +83,7 @@ router.get('/dashboard',
         // Feature usage aggregation
         prisma.featureUsage.aggregate({
           where: {
-            date: {
+            periodStart: {
               gte: startDate,
               lte: endDate
             },
@@ -118,7 +118,7 @@ router.get('/dashboard',
         prisma.featureUsage.groupBy({
           by: ['featureName', 'moduleType'],
           where: {
-            date: {
+            periodStart: {
               gte: startDate,
               lte: endDate
             },
@@ -169,14 +169,14 @@ router.get('/dashboard',
         // Business metrics (if available)
         user.role === 'super-admin' ? prisma.businessMetric.findMany({
           where: {
-            date: {
+            periodStart: {
               gte: startDate,
               lte: endDate
             },
             ...(targetHospitalId && { hospitalId: targetHospitalId })
           },
           orderBy: {
-            date: 'desc'
+            periodStart: 'desc'
           },
           take: 30
         }) : []
@@ -363,9 +363,9 @@ router.get('/feature-usage',
       }
 
       if (startDate || endDate) {
-        whereClause.date = {};
-        if (startDate) whereClause.date.gte = new Date(startDate as string);
-        if (endDate) whereClause.date.lte = new Date(endDate as string);
+        whereClause.periodStart = {};
+        if (startDate) whereClause.periodStart.gte = new Date(startDate as string);
+        if (endDate) whereClause.periodStart.lte = new Date(endDate as string);
       }
 
       if (moduleType) whereClause.moduleType = moduleType;
@@ -376,8 +376,8 @@ router.get('/feature-usage',
 
       switch (groupBy) {
         case 'day':
-          groupByFields = ['date'];
-          orderBy = { date: 'desc' };
+          groupByFields = ['periodStart'];
+          orderBy = { periodStart: 'desc' };
           break;
         case 'feature':
           groupByFields = ['featureName', 'moduleType'];
@@ -392,8 +392,8 @@ router.get('/feature-usage',
           orderBy = { _sum: { usageCount: 'desc' } };
           break;
         default:
-          groupByFields = ['date'];
-          orderBy = { date: 'desc' };
+          groupByFields = ['periodStart'];
+          orderBy = { periodStart: 'desc' };
       }
 
       const featureUsage = await prisma.featureUsage.groupBy({
