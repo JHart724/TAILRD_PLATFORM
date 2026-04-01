@@ -86,6 +86,7 @@ model Hospital {
   // Analytics relationships
   userActivities     UserActivity[]
   featureUsages      FeatureUsage[]
+  gapActions         GapAction[]
   performanceMetrics PerformanceMetric[]
   businessMetrics    BusinessMetric[]
   reportGenerations  ReportGeneration[]
@@ -152,6 +153,7 @@ model User {
   // Analytics relationships
   userActivities    UserActivity[]
   featureUsages     FeatureUsage[]
+  gapActions        GapAction[]
   reportGenerations ReportGeneration[]
   errorLogs         ErrorLog[]
 
@@ -670,6 +672,8 @@ enum ModuleType {
   CORONARY_INTERVENTION
   PERIPHERAL_VASCULAR
   VALVULAR_DISEASE
+  ADMIN
+  ANALYTICS
 }
 
 enum WebhookStatus {
@@ -950,24 +954,60 @@ model ErrorLog {
   @@map("error_logs")
 }
 
+// Gap Action Tracking — records care team responses to clinical gaps
+model GapAction {
+  id         String     @id @default(cuid())
+  gapId      String
+  module     ModuleType
+  action     String     // 'view' | 'ordered' | 'referred' | 'dismissed'
+  reason     String?    // required when action='dismissed'
+  userId     String?
+  user       User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  hospitalId String
+  hospital   Hospital   @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  createdAt  DateTime   @default(now())
+
+  @@index([gapId, module])
+  @@index([hospitalId, module, createdAt])
+  @@index([action])
+  @@map("gap_actions")
+}
+
 // Note: Analytics relationships are added to existing Hospital and User models
 // These relationships will be added to the existing model definitions above
 
 // Analytics Enums
 enum ActivityType {
+  // Auth
   LOGIN
   LOGOUT
+  // Navigation & API
   PAGE_VIEW
+  NAVIGATION
   API_REQUEST
+  API_CALL
+  // Data operations
   SEARCH
   FILTER
   EXPORT
+  DATA_EXPORT
   CREATE
   UPDATE
   DELETE
   DOWNLOAD
   PRINT
   SHARE
+  // Feature usage
+  FEATURE_USE
+  REPORT_GENERATION
+  USER_MANAGEMENT
+  CONFIGURATION
+  ALERT_INTERACTION
+  // Gap tracking
+  GAP_VIEW
+  GAP_ACTION
+  // Errors
+  ERROR
 }
 
 enum FeatureCategory {

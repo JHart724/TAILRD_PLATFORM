@@ -19,6 +19,7 @@ import { modulesClinicalData } from '../../../config/allModulesClinicalData';
 import { getOrdinalSuffix, formatMillions, toFixed, roundTo } from '../../../utils/formatters';
 import BaseDetailModal from '../../../components/shared/BaseDetailModal';
 import GapIntelligenceCard from '../../../components/shared/GapIntelligenceCard';
+import GapResponseRateCard from '../../../components/shared/GapResponseRateCard';
 import PredictiveMetricsBanner from '../../../components/shared/PredictiveMetricsBanner';
 import { RevenuePipelineCard, RevenueAtRiskCard, TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
 import type { RevenuePipelineData, RevenueAtRiskData, TrajectoryTrendsData } from '../../../components/shared/ForwardLookingCards';
@@ -505,6 +506,13 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 	  ],
 	  safetyAlert: 'CRITICAL: 134 patients \u00b7 HIGH: 156 patients',
 	}} />
+
+	{/* Gap Response Rate — care team action tracking */}
+	<GapResponseRateCard
+	  rates={[]}
+	  overallRate={0}
+	  timeRange="30d"
+	/>
 
 	{/* Forward-Looking Executive Cards */}
 	<RevenuePipelineCard data={{

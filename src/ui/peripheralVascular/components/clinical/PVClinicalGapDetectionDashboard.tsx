@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { AlertTriangle, CheckCircle, DollarSign, Users, ChevronDown, ChevronUp, Target, Activity, Pill, Stethoscope, TrendingUp, Zap, Info, Search, Radio, FileText } from 'lucide-react';
 import { computeHERDOO2 } from '../../../../utils/clinicalCalculators';
 import { computeTrajectory, computeTimeHorizon, trajectoryDisplay, timeHorizonDisplay, formatDollar, type TrajectoryResult, type TrajectoryDistribution } from '../../../../utils/predictiveCalculators';
+import GapActionButtons from '../../../../components/shared/GapActionButtons';
+import { useGapActions } from '../../../../hooks/useGapActions';
 
 // ============================================================
 // CLINICAL GAP DETECTION — PERIPHERAL VASCULAR MODULE
@@ -3171,6 +3173,7 @@ interface PVClinicalGapDetectionDashboardProps {
 
 const PVClinicalGapDetectionDashboard: React.FC<PVClinicalGapDetectionDashboardProps> = ({ categoryFilter }) => {
   const [expandedGap, setExpandedGap] = useState<string | null>(null);
+  const { trackGapView, gapActions } = useGapActions('PERIPHERAL_VASCULAR');
   const [expandedPatient, setExpandedPatient] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'priority' | 'patients' | 'opportunity'>('priority');
   const [showMethodology, setShowMethodology] = useState<string | null>(null);
@@ -3373,7 +3376,11 @@ const PVClinicalGapDetectionDashboard: React.FC<PVClinicalGapDetectionDashboardP
             <div key={gap.id} className="metal-card bg-white border border-titanium-200 rounded-2xl overflow-hidden">
               <button
                 className="w-full text-left p-5 flex items-start justify-between hover:bg-titanium-50 transition-colors"
-                onClick={() => setExpandedGap(isOpen ? null : gap.id)}
+                onClick={() => {
+                  const nextId = isOpen ? null : gap.id;
+                  setExpandedGap(nextId);
+                  if (nextId) trackGapView(gap.id);
+                }}
               >
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2 mb-1">
@@ -3486,6 +3493,15 @@ const PVClinicalGapDetectionDashboard: React.FC<PVClinicalGapDetectionDashboardP
                       {gap.cta}
                     </span>
                   </div>
+
+                  {/* Gap Action Buttons — care team response tracking */}
+                  <GapActionButtons
+                    gapId={gap.id}
+                    gapName={gap.name}
+                    ctaText={gap.cta}
+                    moduleType="PERIPHERAL_VASCULAR"
+                    existingAction={gapActions[gap.id] || null}
+                  />
 
                   <div>
                     <h4 className="font-semibold text-titanium-800 mb-2 flex items-center gap-2">

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { AlertTriangle, CheckCircle, DollarSign, Users, ChevronDown, ChevronUp, Target, Heart, Activity, Pill, Stethoscope, TrendingUp, Zap, Info, Search, Radar, FileText } from 'lucide-react';
+import GapActionButtons from '../../../../components/shared/GapActionButtons';
+import { useGapActions } from '../../../../hooks/useGapActions';
 import { computeDANISHTier, classifyLVOT, computeSTOPBANG, computeKCCQTrend } from '../../../../utils/clinicalCalculators';
 import { computeTrajectory, computeTimeHorizon, predictThresholdDate, trajectoryDisplay, timeHorizonDisplay, computeRevenueAtRisk, formatDollar, projectBAVProgression, computeKCCQHospitalizationRisk, type TrajectoryResult, type TrajectoryDistribution } from '../../../../utils/predictiveCalculators';
 import { HF_CLINICAL_GAPS, type HFClinicalGap, type HFGapPatient } from './hfGapData';
@@ -752,17 +754,20 @@ const getHFGapTrajectoryData = (_gapId: string, patientCount: number, category: 
 // ============================================================
 // COMPONENT
 // ============================================================
-interface CategoryFilter {
-  label: string;
-  keywords: string[];
-}
+const hfGapSubTabs = [
+  { id: 'all', label: 'All Gaps', keywords: [] as string[] },
+  { id: 'gdmt', label: 'GDMT Optimization', keywords: ['arni', 'sglt2i', 'beta-blocker', 'mra', 'finerenone', 'ivabradine', 'vericiguat', 'h-isdn', 'target dose', 'dapa-hf', 'emperor'] },
+  { id: 'device', label: 'Advanced Device', keywords: ['lvad', 'cardiomems', 'icd', 'crt', 'impella', 'ecmo', 'rvad', 'heartmate', 'ramp study', 'bridge-to-transplant', 'remote patient monitoring'] },
+  { id: 'rare-cm', label: 'Rare Cardiomyopathy', keywords: ['amyloid', 'attr', 'sarcoid', 'fabry', 'hcm', 'myosin', 'lvnc', 'non-compaction', 'peripartum', 'myocarditis', 'chemotherapy-induced'] },
+  { id: 'comorbidity', label: 'Comorbidity & Discovery', keywords: ['iron deficiency', 'osa', 'stop-bang', 'hyponatremia', 'glp-1', 'sdoh', 'adherence', 'natriuretic', 'hfpef', 'undiagnosed'] },
+  { id: 'transitions', label: 'Care Transitions', keywords: ['discharge', 'follow-up', 'palliative', 'vaccination', 'cardiac rehab', 'advance directive', 'nt-probnp', '30-day'] },
+  { id: 'cross', label: 'Cross-Module', keywords: ['cross-module', 'coapt', 'teer', 'ablation referral', 'co-detection'] },
+];
 
-interface ClinicalGapDetectionDashboardProps {
-  categoryFilter?: CategoryFilter;
-}
-
-const ClinicalGapDetectionDashboard: React.FC<ClinicalGapDetectionDashboardProps> = ({ categoryFilter }) => {
+const ClinicalGapDetectionDashboard: React.FC = () => {
   const [expandedGap, setExpandedGap] = useState<string | null>(null);
+  const { trackGapView, gapActions } = useGapActions('HEART_FAILURE');
+  const [activeGapSubTab, setActiveGapSubTab] = useState<string>('all');
   const [expandedPatient, setExpandedPatient] = useState<string | null>(null);
   const [patientSortOrder, setPatientSortOrder] = useState<'urgency' | 'dollar' | 'score'>('urgency');
   const [showMethodology, setShowMethodology] = useState<string | null>(null);
@@ -832,17 +837,19 @@ const ClinicalGapDetectionDashboard: React.FC<ClinicalGapDetectionDashboardProps
     ])
   );
 
-  const filteredGaps = categoryFilter
-    ? sortedGaps.filter(gap => {
-        const gapName = (gap.name || '').toLowerCase();
-        return categoryFilter.keywords.some(kw => gapName.includes(kw.toLowerCase()));
-      })
-    : activeFilters.length === 0 ? sortedGaps : sortedGaps.filter(gap => {
-        const gapName = (gap.name || '').toLowerCase();
-        return activeFilters.some(label =>
-          filterConfig[label].some(kw => gapName.includes(kw.toLowerCase()))
-        );
-      });
+  const activeSubTab = hfGapSubTabs.find(s => s.id === activeGapSubTab);
+  const subTabFilteredGaps = !activeSubTab || activeSubTab.id === 'all'
+    ? sortedGaps
+    : sortedGaps.filter(gap =>
+        activeSubTab.keywords.some(kw => (gap.name || '').toLowerCase().includes(kw.toLowerCase()))
+      );
+
+  const filteredGaps = activeFilters.length === 0 ? subTabFilteredGaps : subTabFilteredGaps.filter(gap => {
+    const gapName = (gap.name || '').toLowerCase();
+    return activeFilters.some(label =>
+      filterConfig[label].some(kw => gapName.includes(kw.toLowerCase()))
+    );
+  });
 
   const filteredPatientCount = filteredGaps.reduce((sum, g) => sum + (g.patientCount || 0), 0);
   const filteredOpportunity = filteredGaps.reduce((sum, g) => sum + (g.dollarOpportunity || 0), 0);
@@ -851,19 +858,44 @@ const ClinicalGapDetectionDashboard: React.FC<ClinicalGapDetectionDashboardProps
 
   return (
     <div className="space-y-6">
+      {/* Gap Category Sub-tabs */}
+      <div className="mb-4 bg-white rounded-xl border border-titanium-200 p-4 shadow-sm overflow-x-auto">
+        <div className="flex gap-2 min-w-max">
+          {hfGapSubTabs.map(sub => {
+            const count = sub.id === 'all'
+              ? sortedGaps.length
+              : sortedGaps.filter(g => sub.keywords.some(kw => (g.name || '').toLowerCase().includes(kw.toLowerCase()))).length;
+            const isActive = activeGapSubTab === sub.id;
+            return (
+              <button
+                key={sub.id}
+                onClick={() => setActiveGapSubTab(sub.id)}
+                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
+                  isActive ? 'text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+                style={isActive ? { backgroundColor: '#2C4A60' } : {}}
+              >
+                {sub.label} ({count})
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Header summary */}
       <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
         <h3 className="text-lg font-semibold text-titanium-900 mb-1 flex items-center gap-2">
           <Target className="w-5 h-5 text-porsche-600" />
-          {categoryFilter
-            ? `${categoryFilter.label} · ${filteredGaps.length} GAPS · ${filteredPatientCount.toLocaleString()} PATIENTS · $${(filteredOpportunity / 1_000_000).toFixed(1)}M OPPORTUNITY`
-            : 'Clinical Gap Detection — Heart Failure Module'}
+          Clinical Gap Detection — Heart Failure Module
         </h3>
-        {!categoryFilter && (
-          <p className="text-sm text-titanium-600 mb-4">
-            AI-driven detection of evidence-based therapy gaps and growth opportunities.
-            Gaps 1, 2, 6, 7, 12, 13, 16-22, 26, 29-31 — 45-gap initiative.
-          </p>
+        {activeSubTab && activeSubTab.id !== 'all' ? (
+          <div className="text-sm text-slate-500 mb-4">
+            <strong>{activeSubTab.label}</strong> · {filteredPatientCount.toLocaleString()} patients · ${(filteredOpportunity / 1_000_000).toFixed(1)}M
+          </div>
+        ) : (
+          <div className="text-sm text-slate-500 mb-4">
+            Patients identified: <strong>{totalPatients.toLocaleString()}</strong> · Opportunity: <strong>${(totalOpportunity / 1_000_000).toFixed(1)}M</strong>
+          </div>
         )}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-red-50 border border-red-200 rounded-xl p-4">
@@ -871,7 +903,7 @@ const ClinicalGapDetectionDashboard: React.FC<ClinicalGapDetectionDashboardProps
               <Users className="w-4 h-4 text-red-600" />
               <span className="text-xs font-semibold text-red-700 uppercase tracking-wide">Affected Patients</span>
             </div>
-            <div className="text-2xl font-bold text-red-800">{categoryFilter ? filteredPatientCount.toLocaleString() : totalPatients.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-red-800">{filteredPatientCount.toLocaleString()}</div>
           </div>
           <div className="bg-[#F0F7F4] border border-[#D8EDE6] rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
@@ -879,7 +911,7 @@ const ClinicalGapDetectionDashboard: React.FC<ClinicalGapDetectionDashboardProps
               <span className="text-xs font-semibold text-[#2C4A60] uppercase tracking-wide">Total Opportunity</span>
             </div>
             <div className="text-2xl font-bold text-[#2C4A60]">
-              ${((categoryFilter ? filteredOpportunity : totalOpportunity) / 1000000).toFixed(1)}M
+              ${(filteredOpportunity / 1000000).toFixed(1)}M
             </div>
           </div>
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
@@ -887,13 +919,12 @@ const ClinicalGapDetectionDashboard: React.FC<ClinicalGapDetectionDashboardProps
               <TrendingUp className="w-4 h-4 text-blue-600" />
               <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Active Gaps</span>
             </div>
-            <div className="text-2xl font-bold text-blue-800">{categoryFilter ? filteredGaps.length : HF_CLINICAL_GAPS.length}</div>
+            <div className="text-2xl font-bold text-blue-800">{filteredGaps.length}</div>
           </div>
         </div>
       </div>
 
-      {/* Filter Chips — only shown in standalone mode (no categoryFilter) */}
-      {!categoryFilter && (
+      {/* Filter Chips */}
       <div className="mb-4">
         <div className="flex items-start justify-between mb-2">
           <div className="flex flex-wrap gap-2">
@@ -946,7 +977,6 @@ const ClinicalGapDetectionDashboard: React.FC<ClinicalGapDetectionDashboardProps
           )}
         </div>
       </div>
-      )}
 
       {/* Gap list */}
       <div className="space-y-4">
@@ -957,7 +987,11 @@ const ClinicalGapDetectionDashboard: React.FC<ClinicalGapDetectionDashboardProps
               {/* Gap header — clickable */}
               <button
                 className="w-full text-left p-5 flex items-start justify-between hover:bg-titanium-50 transition-colors"
-                onClick={() => setExpandedGap(isOpen ? null : gap.id)}
+                onClick={() => {
+                  const nextId = isOpen ? null : gap.id;
+                  setExpandedGap(nextId);
+                  if (nextId) trackGapView(gap.id);
+                }}
               >
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2 mb-1">
@@ -1095,6 +1129,15 @@ const ClinicalGapDetectionDashboard: React.FC<ClinicalGapDetectionDashboardProps
                       {gap.cta}
                     </span>
                   </div>
+
+                  {/* Gap Action Buttons — care team response tracking */}
+                  <GapActionButtons
+                    gapId={gap.id}
+                    gapName={gap.name}
+                    ctaText={gap.cta}
+                    moduleType="HEART_FAILURE"
+                    existingAction={gapActions[gap.id] || null}
+                  />
 
                   {/* Sample patients */}
                   <div>

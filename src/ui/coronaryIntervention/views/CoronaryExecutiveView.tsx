@@ -10,6 +10,7 @@ import SharedProjectedVsRealized from '../../../components/shared/SharedProjecte
 import BaseDetailModal from '../../../components/shared/BaseDetailModal';
 import CADFinancialWaterfall from '../components/executive/CADFinancialWaterfall';
 import GapIntelligenceCard from '../../../components/shared/GapIntelligenceCard';
+import GapResponseRateCard from '../../../components/shared/GapResponseRateCard';
 import PredictiveMetricsBanner from '../../../components/shared/PredictiveMetricsBanner';
 import { RevenuePipelineCard, RevenueAtRiskCard, TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
 import type { RevenuePipelineData, RevenueAtRiskData, TrajectoryTrendsData } from '../../../components/shared/ForwardLookingCards';
@@ -243,6 +244,13 @@ const CoronaryExecutiveView: React.FC = () => {
    ],
    safetyAlert: 'CRITICAL: 156 patients \u00b7 HIGH: 184 patients',
  }} />
+
+ {/* Gap Response Rate — care team action tracking */}
+ <GapResponseRateCard
+   rates={[]}
+   overallRate={0}
+   timeRange="30d"
+ />
 
  {/* Forward-Looking Executive Cards */}
  <RevenuePipelineCard data={{

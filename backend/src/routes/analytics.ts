@@ -1,11 +1,8 @@
-// @ts-nocheck
-// TODO: 35 TS errors — field name mismatches (date→trackedDate, timeSpent→totalDuration,
-// dbQueryTime→dbQueries, missing statusCode/method). Fix in next session.
 import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, ModuleType, ActivityType } from '@prisma/client';
 import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
-import { trackFeature, trackNavigation, trackReportGeneration, ModuleType, ActivityType } from '../middleware/analytics';
+import { trackFeature, trackNavigation, trackReportGeneration } from '../middleware/analytics';
 import { body, query, validationResult } from 'express-validator';
 
 const router = Router();
@@ -622,6 +619,169 @@ router.post('/track',
       res.status(500).json({
         success: false,
         error: 'Failed to track event',
+        timestamp: new Date().toISOString()
+      } as APIResponse);
+    }
+  }
+);
+
+// ── Gap Action Tracking ─────────────────────────────────────────────
+
+// Record a gap view or action (order, refer, dismiss)
+router.post('/gap-actions',
+  authenticateToken,
+  [
+    body('gapId').isString().isLength({ min: 1 }).withMessage('gapId is required'),
+    body('module').isIn(Object.values(ModuleType)).withMessage('Invalid module'),
+    body('action').isIn(['view', 'ordered', 'referred', 'dismissed']).withMessage('Invalid action'),
+    body('reason').optional().isString()
+  ],
+  async (req: AuthenticatedRequest, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          error: 'Validation failed',
+          details: errors.array(),
+          timestamp: new Date().toISOString()
+        } as APIResponse);
+      }
+
+      const { gapId, module, action, reason } = req.body;
+      const user = req.user!;
+
+      // Require reason for dismissals
+      if (action === 'dismissed' && (!reason || !reason.trim())) {
+        return res.status(400).json({
+          success: false,
+          error: 'Reason is required when dismissing a gap',
+          timestamp: new Date().toISOString()
+        } as APIResponse);
+      }
+
+      const gapAction = await prisma.gapAction.create({
+        data: {
+          gapId,
+          module: module as ModuleType,
+          action,
+          reason: action === 'dismissed' ? reason?.trim() : null,
+          userId: user.userId || null,
+          hospitalId: user.hospitalId,
+        }
+      });
+
+      res.status(201).json({
+        success: true,
+        data: { id: gapAction.id, tracked: true },
+        message: `Gap ${action} recorded`,
+        timestamp: new Date().toISOString()
+      } as APIResponse);
+
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: 'Failed to record gap action',
+        timestamp: new Date().toISOString()
+      } as APIResponse);
+    }
+  }
+);
+
+// Get gap response rates for executive dashboard
+router.get('/gap-actions/response-rates',
+  authenticateToken,
+  authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'analyst']),
+  [
+    query('module').optional().isIn(Object.values(ModuleType)),
+    query('timeRange').optional().isIn(['7d', '30d', '90d', '1y'])
+  ],
+  async (req: AuthenticatedRequest, res) => {
+    try {
+      const { module, timeRange = '30d' } = req.query;
+      const user = req.user!;
+
+      // Calculate date range
+      const endDate = new Date();
+      const startDate = new Date();
+      switch (timeRange) {
+        case '7d': startDate.setDate(endDate.getDate() - 7); break;
+        case '30d': startDate.setDate(endDate.getDate() - 30); break;
+        case '90d': startDate.setDate(endDate.getDate() - 90); break;
+        case '1y': startDate.setFullYear(endDate.getFullYear() - 1); break;
+      }
+
+      // Hospital access control
+      const targetHospitalId = user.role === 'super-admin'
+        ? null
+        : user.hospitalId;
+
+      const whereClause: any = {
+        createdAt: { gte: startDate, lte: endDate },
+      };
+      if (targetHospitalId) whereClause.hospitalId = targetHospitalId;
+      if (module) whereClause.module = module;
+
+      // Get all gap actions grouped by gapId and action type
+      const actions = await prisma.gapAction.groupBy({
+        by: ['gapId', 'action'],
+        where: whereClause,
+        _count: { id: true },
+      });
+
+      // Build per-gap response rates
+      const gapMap: Record<string, { views: number; ordered: number; referred: number; dismissed: number }> = {};
+      for (const row of actions) {
+        if (!gapMap[row.gapId]) {
+          gapMap[row.gapId] = { views: 0, ordered: 0, referred: 0, dismissed: 0 };
+        }
+        const key = row.action as keyof typeof gapMap[string];
+        if (key === 'view') {
+          gapMap[row.gapId].views = row._count.id;
+        } else if (key in gapMap[row.gapId]) {
+          gapMap[row.gapId][key] = row._count.id;
+        }
+      }
+
+      // Compute overall response rate
+      let totalViewed = 0;
+      let totalActioned = 0;
+      const rates = Object.entries(gapMap).map(([gapId, counts]) => {
+        const actioned = counts.ordered + counts.referred + counts.dismissed;
+        totalViewed += counts.views;
+        totalActioned += actioned;
+        return {
+          gapId,
+          views: counts.views,
+          actioned,
+          responseRate: counts.views > 0 ? Math.round((actioned / counts.views) * 100) : 0,
+          breakdown: {
+            ordered: counts.ordered,
+            referred: counts.referred,
+            dismissed: counts.dismissed,
+          },
+        };
+      });
+
+      const overallRate = totalViewed > 0 ? Math.round((totalActioned / totalViewed) * 100) : 0;
+
+      res.json({
+        success: true,
+        data: {
+          rates: rates.sort((a, b) => b.views - a.views),
+          overallRate,
+          totalViewed,
+          totalActioned,
+          timeRange,
+        },
+        message: 'Gap response rates retrieved',
+        timestamp: new Date().toISOString()
+      } as APIResponse);
+
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: 'Failed to retrieve gap response rates',
         timestamp: new Date().toISOString()
       } as APIResponse);
     }
