@@ -37,14 +37,14 @@ const OpportunityHeatmap: React.FC<OpportunityHeatmapProps> = ({ data, onFacilit
  <div className="space-y-4">
  {data.map((site) => {
  const percentage = (site.opp_revenue / maxRevenue) * 100;
- const rankColor = site.rank === 1 ? '#C4982A' : site.rank === 2 ? '#2C4A60' : site.rank === 3 ? '#1A6878' : '#8B5A2B';
+ const rankColor = site.rank === 1 ? '#2C4A60' : site.rank === 2 ? '#1A6878' : site.rank === 3 ? '#8B5A2B' : '#4A7FA5';
  const rankGradient = site.rank === 1
- ? 'linear-gradient(to right, #E8D48A, #C4982A)'
+ ? 'linear-gradient(to right, #4A7FA5, #2C4A60)'
  : site.rank === 2
- ? 'linear-gradient(to right, #8FA8BC, #2C4A60)'
+ ? 'linear-gradient(to right, #6DB5A0, #1A6878)'
  : site.rank === 3
- ? 'linear-gradient(to right, #A0D8E4, #1A6878)'
- : 'linear-gradient(to right, #ECC89E, #8B5A2B)';
+ ? 'linear-gradient(to right, #ECC89E, #8B5A2B)'
+ : 'linear-gradient(to right, #8FA8BC, #4A7FA5)';
 
  return (
  <div
@@ -83,7 +83,7 @@ const OpportunityHeatmap: React.FC<OpportunityHeatmapProps> = ({ data, onFacilit
 
  <div className="mt-6 pt-6 border-t border-titanium-200">
  <div className="text-center">
- <div className="text-lg font-bold" style={{ color: '#C4982A' }}>
+ <div className="text-lg font-bold" style={{ color: '#2C4A60' }}>
  Total System Opportunity: {formatMoney(data.reduce((sum, s) => sum + s.opp_revenue, 0))}
  </div>
  <div className="text-sm text-titanium-600 mt-1">

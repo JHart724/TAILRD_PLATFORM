@@ -70,10 +70,10 @@ const SharedBenchmarksPanel: React.FC<SharedBenchmarksPanelProps> = ({
  <span className="font-medium" style={{ color: positive ? '#2D6147' : '#9B2438' }}>
  {formatDeltaValue(delta, bm.unit)} vs benchmark
  </span>
- <span className="font-medium" style={{ color: bm.percentile >= 75 ? '#2D6147' : bm.percentile >= 50 ? '#C4982A' : '#9B2438' }}>{formatPercentile(bm.percentile)}</span>
+ <span className="font-medium" style={{ color: bm.percentile >= 75 ? '#2D6147' : bm.percentile >= 50 ? '#2C4A60' : '#9B2438' }}>{formatPercentile(bm.percentile)}</span>
  </div>
  <div className="mt-3 w-full bg-titanium-200 rounded-full h-2 overflow-hidden">
- <div className="h-full rounded-full transition-all" style={{ width: `${bm.percentile}%`, backgroundColor: bm.percentile >= 75 ? '#2D6147' : bm.percentile >= 50 ? '#C4982A' : '#9B2438' }} />
+ <div className="h-full rounded-full transition-all" style={{ width: `${bm.percentile}%`, backgroundColor: bm.percentile >= 75 ? '#2D6147' : bm.percentile >= 50 ? '#2C4A60' : '#9B2438' }} />
  </div>
  </div>
  );

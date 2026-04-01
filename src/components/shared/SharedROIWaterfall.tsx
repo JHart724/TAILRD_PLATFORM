@@ -41,8 +41,8 @@ const SharedROIWaterfall: React.FC<SharedROIWaterfallProps> = ({
  </div>
  <div className="text-right">
  <div className="text-sm text-titanium-500 mb-1">Realized Revenue</div>
- <div className="text-3xl font-bold" style={{ color: '#2D6147' }}>{formatMoney(realizedRevenue)}</div>
- <div className="text-xs text-titanium-400 mt-1" style={{ color: '#2D6147' }}>{realizationRate}% capture rate</div>
+ <div className="text-3xl font-bold" style={{ color: '#2C4A60' }}>{formatMoney(realizedRevenue)}</div>
+ <div className="text-xs text-titanium-400 mt-1" style={{ color: '#2C4A60' }}>{realizationRate}% capture rate</div>
  </div>
  </div>
  <div className="space-y-4">
