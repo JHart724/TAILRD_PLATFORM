@@ -38,8 +38,8 @@ export default function GapActionButtons({
   // After action: show confirmation badge
   if (actionTaken) {
     const badges: Record<GapActionType, { label: string; color: string; icon: React.ElementType }> = {
-      ordered: { label: 'Order Initiated', color: 'bg-green-50 text-green-700 border-green-200', icon: CheckCircle },
-      referred: { label: 'Referral Sent', color: 'bg-blue-50 text-blue-700 border-blue-200', icon: Send },
+      ordered: { label: 'Order Initiated', color: 'bg-forest-50 text-forest-700 border-forest-200', icon: CheckCircle },
+      referred: { label: 'Referral Sent', color: 'bg-porsche-50 text-porsche-700 border-porsche-200', icon: Send },
       dismissed: { label: 'Dismissed', color: 'bg-titanium-100 text-titanium-600 border-titanium-200', icon: XCircle },
     };
     const badge = badges[actionTaken];
@@ -61,7 +61,7 @@ export default function GapActionButtons({
         <button
           onClick={() => handleAction('ordered')}
           disabled={isSubmitting}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors disabled:opacity-50"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-forest-600 text-white text-sm font-medium hover:bg-forest-700 transition-colors disabled:opacity-50"
         >
           <CheckCircle className="w-4 h-4" />
           {ctaText || 'Order'}
@@ -69,7 +69,7 @@ export default function GapActionButtons({
         <button
           onClick={() => handleAction('referred')}
           disabled={isSubmitting}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#3D6F94] text-white text-sm font-medium hover:bg-[#2A5578] transition-colors disabled:opacity-50"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-porsche-600 text-white text-sm font-medium hover:bg-porsche-700 transition-colors disabled:opacity-50"
         >
           <Send className="w-4 h-4" />
           Refer
@@ -94,7 +94,7 @@ export default function GapActionButtons({
             value={dismissReason}
             onChange={(e) => setDismissReason(e.target.value)}
             placeholder="e.g., Already addressed in prior visit, Contraindicated for this population, Coding artifact..."
-            className="w-full px-3 py-2 text-sm border border-titanium-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#3D6F94] focus:border-transparent"
+            className="w-full px-3 py-2 text-sm border border-titanium-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-porsche-600 focus:border-transparent"
             rows={3}
           />
           <div className="flex gap-2">

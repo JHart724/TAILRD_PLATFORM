@@ -15,14 +15,14 @@ const iconMap: Record<string, React.ElementType> = {
   GitBranch,
 };
 
-/** Distinct identity color per module */
+/** Distinct identity color per module — from approved Porsche Chrome palette */
 const MODULE_COLORS: Record<string, string> = {
-  hf:      '#B91C1C', // Heart Failure — deep red
-  ep:      '#6D28D9', // Electrophysiology — deep purple
-  sh:      '#0E7490', // Structural Heart — deep teal
-  coronary:'#C2410C', // Coronary — deep orange
-  valvular:'#1D4ED8', // Valvular — deep blue
-  pv:      '#065F46', // Peripheral Vascular — deep forest green
+  hf:      '#7A1A2E', // Heart Failure — crimson-600
+  ep:      '#3D6F94', // Electrophysiology — porsche-600 (chrome blue)
+  sh:      '#1A6878', // Structural Heart — steelTeal-700
+  coronary:'#8B6914', // Coronary — gold-700
+  valvular:'#2A5578', // Valvular — porsche-700
+  pv:      '#1A4A2E', // Peripheral Vascular — forest-600
 };
 
 interface CommandGridProps {
