@@ -105,9 +105,9 @@ const InterventionContraindicationChecker: React.FC<{ patientData?: PatientConte
   const getStatusColor = (status: ContraindicationResult['status']) => {
  switch (status) {
  case 'contraindicated': return 'text-red-800 bg-red-100 border-red-300';
- case 'caution': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
+ case 'caution': return 'text-amber-600 bg-amber-50 border-titanium-300';
  case 'monitor': return 'text-porsche-800 bg-porsche-100 border-porsche-300';
- case 'safe': return 'text-[#2D6147] bg-[#F0F7F4] border-[#2C4A60]';
+ case 'safe': return 'text-green-600 bg-green-50 border-teal-700';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };
@@ -156,12 +156,12 @@ const InterventionContraindicationChecker: React.FC<{ patientData?: PatientConte
  </div>
  </div>
  </div>
- <div className="p-4 bg-[#F0F5FA] border border-[#C8D4DC] rounded-lg">
- <h3 className="font-semibold text-[#6B7280] mb-3">Clinical Conditions</h3>
+ <div className="p-4 bg-chrome-50 border border-titanium-300 rounded-lg">
+ <h3 className="font-semibold text-gray-500 mb-3">Clinical Conditions</h3>
  <div className="space-y-2">
  {[{k:'hasContrastAllergy',l:'Contrast allergy'},{k:'hasCKDStage4Plus',l:'CKD Stage 4+'},{k:'hasActiveInfection',l:'Active infection'},{k:'hasNonHealingWound',l:'Non-healing wound'},{k:'hasSepsis',l:'Sepsis'},{k:'lifeExpectancyLessThan2Years',l:'Life expectancy <2 years'},{k:'hasAdequateRunoff',l:'Adequate runoff'},{k:'hasPriorBypass',l:'Prior bypass'},{k:'hasSaphenousVein',l:'Saphenous vein available'},{k:'hasCAD',l:'Coronary artery disease'},{k:'ambulatory',l:'Ambulatory'}].map(c => (
  <label key={c.k} className="flex items-center space-x-3 p-2 bg-white rounded-lg cursor-pointer">
- <input type="checkbox" checked={patientData[c.k as keyof PatientData] as boolean} onChange={e => updatePatientData(c.k as keyof PatientData, e.target.checked)} className="rounded text-[#6B7280]" />
+ <input type="checkbox" checked={patientData[c.k as keyof PatientData] as boolean} onChange={e => updatePatientData(c.k as keyof PatientData, e.target.checked)} className="rounded text-gray-500" />
  <span className="text-sm font-medium text-titanium-700">{c.l}</span>
  </label>
  ))}
@@ -208,13 +208,13 @@ const InterventionContraindicationChecker: React.FC<{ patientData?: PatientConte
  ))}
  </div>
  {results.some(r => r.alternatives.length > 0) && (
- <div className="p-6 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl">
- <h3 className="text-lg font-semibold text-[#6B7280] mb-4">Alternative Approaches</h3>
+ <div className="p-6 bg-chrome-50 border border-titanium-300 rounded-xl">
+ <h3 className="text-lg font-semibold text-gray-500 mb-4">Alternative Approaches</h3>
  <div className="space-y-4">
  {results.filter(r => r.alternatives.length > 0).map((result) => (
  <div key={result.therapy}>
- <div className="font-semibold text-[#6B7280] mb-2">{result.therapy}:</div>
- <ul className="text-sm text-[#6B7280] space-y-1">{result.alternatives.map((alt) => (<li key={alt} className="flex items-start gap-1"><div className="w-1 h-1 bg-[#F0F5FA] rounded-full mt-2 flex-shrink-0" />{alt}</li>))}</ul>
+ <div className="font-semibold text-gray-500 mb-2">{result.therapy}:</div>
+ <ul className="text-sm text-gray-500 space-y-1">{result.alternatives.map((alt) => (<li key={alt} className="flex items-start gap-1"><div className="w-1 h-1 bg-chrome-50 rounded-full mt-2 flex-shrink-0" />{alt}</li>))}</ul>
  </div>
  ))}
  </div>
@@ -222,8 +222,8 @@ const InterventionContraindicationChecker: React.FC<{ patientData?: PatientConte
  )}
  </div>
  </div>
- <div className="mt-6 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
- <p className="text-sm text-[#6B7280]">
+ <div className="mt-6 bg-chrome-50 border border-titanium-300 rounded-xl p-4">
+ <p className="text-sm text-gray-500">
  <strong>Guidelines:</strong> 2024 ACC/AHA PAD Guideline; 2017 ESC PAD Guideline; TASC II Inter-Society Consensus; Global Vascular Guidelines (GVG) on CLTI.
  </p>
  </div>

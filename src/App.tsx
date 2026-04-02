@@ -129,7 +129,7 @@ const Icons = {
  </svg>
   ),
   Zap: () => (
- <svg className="h-8 w-8 text-[#2C4A60]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+ <svg className="h-8 w-8 text-teal-700" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
  <path strokeLinecap="round" strokeLinejoin="round" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
  </svg>
   ),
@@ -184,7 +184,7 @@ const Icons = {
  </svg>
   ),
   Chart: () => (
- <svg className="h-6 w-6 text-[#2C4A60]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+ <svg className="h-6 w-6 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
  </svg>
   ),
@@ -327,8 +327,8 @@ const KpiCard: React.FC<KpiCardProps> = ({ label, value, icon: Icon, variant = "
   const getVariantColors = (variant: KpiVariant): string => {
  const variants: Record<KpiVariant, string> = {
  default: "bg-white border-titanium-200",
- success: "bg-[#F0F5FA] border-[#C8D4DC] text-[#1E2D3D]",
- warning: "bg-[#F0F5FA] border-[#C8D4DC] text-[#374151]",
+ success: "bg-chrome-50 border-titanium-300 text-chrome-900",
+ warning: "bg-chrome-50 border-titanium-300 text-[#374151]",
  danger: "bg-arterial-50 border-arterial-200 text-arterial-900",
  info: "bg-chrome-50 border-chrome-200 text-chrome-900",
  };
@@ -345,7 +345,7 @@ const KpiCard: React.FC<KpiCardProps> = ({ label, value, icon: Icon, variant = "
  {Icon && (<div className="p-2 rounded-lg bg-chrome-600 shadow-chrome-card"><Icon /></div>)}
  <span className="text-sm font-semibold text-titanium-500">{label}</span>
  </div>
- {trend !== undefined && (<div className={`text-xs font-semibold ${trend > 0 ? "text-[#2C4A60]" : "text-medical-red-600"}`}>{trend > 0 ? "?" : "?"} {Math.abs(trend)}%</div>)}
+ {trend !== undefined && (<div className={`text-xs font-semibold ${trend > 0 ? "text-teal-700" : "text-medical-red-600"}`}>{trend > 0 ? "?" : "?"} {Math.abs(trend)}%</div>)}
  </div>
  <div className="text-3xl font-bold font-data text-titanium-900 mb-1">{value}</div>
  </div>
@@ -357,8 +357,8 @@ interface RoleToggleProps { value: Role; onChange: (role: Role) => void; }
 const RoleToggle: React.FC<RoleToggleProps> = ({ value, onChange }) => {
   const roles: Array<{ id: Role; label: string; desc: string; color: string; }> = [
  { id: "Executive", label: "Executive", desc: "Financial & ROI", color: "text-chrome-700 bg-chrome-50 border-chrome-200" },
- { id: "Service Line", label: "Service Line", desc: "Operations", color: "text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]" },
- { id: "Care Team", label: "Care Team", desc: "Patient Care", color: "text-[#2C4A60] bg-[#F0F5FA] border-[#C8D4DC]" },
+ { id: "Service Line", label: "Service Line", desc: "Operations", color: "text-amber-600 bg-amber-50 border-titanium-300" },
+ { id: "Care Team", label: "Care Team", desc: "Patient Care", color: "text-teal-700 bg-chrome-50 border-titanium-300" },
   ];
 
   return (
@@ -429,9 +429,9 @@ interface PatientQueueProps { title: string; patients: Patient[]; variant?: Pati
 const PatientQueue: React.FC<PatientQueueProps> = ({ title, patients, variant = "default", maxItems = 6 }) => {
   const getVariantStyle = (variant: PatientQueueVariant): string => {
  switch (variant) {
- case "warning": return "bg-[#F0F5FA] border-[#C8D4DC]";
+ case "warning": return "bg-chrome-50 border-titanium-300";
  case "danger": return "bg-red-50 border-red-200";
- case "success": return "bg-[#F0F5FA] border-[#C8D4DC]";
+ case "success": return "bg-chrome-50 border-titanium-300";
  default: return "bg-chrome-50 border-chrome-200";
  }
   };
@@ -595,7 +595,7 @@ function MainDashboard(): JSX.Element {
  {/* Subtle shine */}
  <div className="absolute inset-0 bg-gradient-to-br from-white via-transparent to-white rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
  <div className="relative flex items-center gap-4">
- <div className="p-3 rounded-xl bg-[#C8D4DC] border border-[#C8D4DC]">
+ <div className="p-3 rounded-xl bg-titanium-300 border border-titanium-300">
  <Icons.Chart />
  </div>
  <div className="text-left">
@@ -628,7 +628,7 @@ function MainDashboard(): JSX.Element {
  <FlaskConical className="w-5 h-5 text-titanium-600" />
  </div>
  <div className="text-left">
- <div className="text-2xl font-medium font-display flex items-center gap-3">Clinical Research Assist <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#F0F7F4] text-[#2D6147]">Beta</span></div>
+ <div className="text-2xl font-medium font-display flex items-center gap-3">Clinical Research Assist <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-green-50 text-green-600">Beta</span></div>
  <div className="text-sm opacity-80 font-light">Registry pre-population � Trial eligibility screening � Research workflow automation</div>
  </div>
  <Icons.ArrowRight />

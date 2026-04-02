@@ -138,8 +138,8 @@ const ValvePhenotypeClassification: React.FC<{ patientData?: PatientContext }> =
 
   const getRiskColor = (risk: string) =>
  risk === 'High' ? 'text-crimson-600 bg-crimson-50 border-crimson-200'
- : risk === 'Moderate' ? 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]'
- : 'text-[#2D6147] bg-[#F0F7F4] border-[#2C4A60]';
+ : risk === 'Moderate' ? 'text-amber-600 bg-amber-50 border-titanium-300'
+ : 'text-green-600 bg-green-50 border-teal-700';
 
   const updateInput = (key: keyof ValvePhenotypeInputs, value: any) =>
  setInputs(prev => ({ ...prev, [key]: value }));
@@ -200,7 +200,7 @@ const ValvePhenotypeClassification: React.FC<{ patientData?: PatientContext }> =
  </button>
  {results && (
  <div className="space-y-4">
- <div className={`p-4 rounded-xl border ${results.combinedRiskProfile.includes('Multiple') ? 'bg-crimson-50 border-crimson-200' : results.combinedRiskProfile.includes('Single') ? 'bg-[#F0F5FA] border-[#C8D4DC]' : 'bg-[#F0F7F4] border-[#D8EDE6]'}`}>
+ <div className={`p-4 rounded-xl border ${results.combinedRiskProfile.includes('Multiple') ? 'bg-crimson-50 border-crimson-200' : results.combinedRiskProfile.includes('Single') ? 'bg-chrome-50 border-titanium-300' : 'bg-green-50 border-green-100'}`}>
  <p className="font-semibold text-titanium-900">{results.combinedRiskProfile}</p>
  </div>
  {[
@@ -215,7 +215,7 @@ const ValvePhenotypeClassification: React.FC<{ patientData?: PatientContext }> =
  <span className={`px-3 py-1 rounded-full text-xs font-bold ${getRiskColor(d.risk)}`}>{d.risk} Risk ({d.probability}%)</span>
  </div>
  <div className="w-full bg-titanium-100 rounded-full h-2 mb-3">
- <div className={`h-full rounded-full ${d.risk==='High'?'bg-crimson-500':d.risk==='Moderate'?'bg-[#F0F5FA]':'bg-[#C8D4DC]'}`} style={{width:`${d.probability}%`}}/>
+ <div className={`h-full rounded-full ${d.risk==='High'?'bg-crimson-500':d.risk==='Moderate'?'bg-chrome-50':'bg-titanium-300'}`} style={{width:`${d.probability}%`}}/>
  </div>
  <ul className="space-y-1">{d.recommendations.map((r)=>(<li key={r} className="text-sm text-titanium-700 flex items-start gap-2"><span className="text-porsche-500 mt-1">{'\u2022'}</span>{r}</li>))}</ul>
  </div>))}

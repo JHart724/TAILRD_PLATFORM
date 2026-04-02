@@ -50,7 +50,7 @@ const DeviceFunnel: React.FC<DeviceFunnelProps> = ({ data }) => {
  <span className="font-bold text-titanium-900">{device.referred} ({toFixed(referralRate, 0)}%)</span>
  </div>
  <div className="w-full bg-titanium-100 rounded-full h-2">
- <div className="bg-[#F0F5FA] h-full rounded-full" style={{ width: `${referralRate}%` }} />
+ <div className="bg-chrome-50 h-full rounded-full" style={{ width: `${referralRate}%` }} />
  </div>
  </div>
 
@@ -60,7 +60,7 @@ const DeviceFunnel: React.FC<DeviceFunnelProps> = ({ data }) => {
  <span className="font-bold text-titanium-900">{device.completed} ({toFixed(completionRate, 0)}%)</span>
  </div>
  <div className="w-full bg-titanium-100 rounded-full h-2">
- <div className="bg-[#F0F5FA] h-full rounded-full" style={{ width: `${completionRate}%` }} />
+ <div className="bg-chrome-50 h-full rounded-full" style={{ width: `${completionRate}%` }} />
  </div>
  </div>
  </div>

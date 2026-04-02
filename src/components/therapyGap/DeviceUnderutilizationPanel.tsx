@@ -297,7 +297,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  case 'ICD':
  return 'text-medical-red-600 bg-medical-red-100';
  case 'WATCHMAN':
- return 'text-[#2C4A60] bg-[#F0F5FA]';
+ return 'text-teal-700 bg-chrome-50';
  case 'CardioMEMS':
  return 'text-crimson-600 bg-crimson-100';
  case 'TAVR':
@@ -316,7 +316,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  case 'medium':
  return 'text-crimson-600 bg-crimson-100 border-crimson-200';
  case 'low':
- return 'text-[#2D6147] bg-[#F0F7F4] border-[#D8EDE6]';
+ return 'text-green-600 bg-green-50 border-green-100';
  default:
  return 'text-titanium-600 bg-titanium-100 border-titanium-200';
  }
@@ -329,7 +329,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  case 'pending-approval':
  return 'text-crimson-600 bg-crimson-100 border-crimson-200';
  case 'scheduled':
- return 'text-[#2D6147] bg-[#F0F7F4] border-[#D8EDE6]';
+ return 'text-green-600 bg-green-50 border-green-100';
  case 'declined':
  return 'text-medical-red-600 bg-medical-red-100 border-medical-red-200';
  case 'contraindicated':
@@ -385,7 +385,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  
  <button
  onClick={exportToCSV}
- className="flex items-center gap-2 px-4 py-2 bg-[#2C4A60] text-white rounded-lg hover:bg-[#2C4A60] transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-teal-700 text-white rounded-lg hover:bg-teal-700 transition-colors"
  >
  <Download className="w-4 h-4" />
  Export CSV
@@ -427,7 +427,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  <div className="retina-card p-4 border-l-4 border-l-porsche-500">
  <div className="flex items-center justify-between mb-2">
  <Users className="w-5 h-5 text-porsche-500" />
- <TrendingUp className="w-4 h-4 text-[#2C4A60]" />
+ <TrendingUp className="w-4 h-4 text-teal-700" />
  </div>
  <div className="text-2xl font-bold text-titanium-800 mb-1">
  {filteredPatients.length}
@@ -437,7 +437,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
 
  <div className="retina-card p-4 border-l-4 border-l-[#2C4A60]">
  <div className="flex items-center justify-between mb-2">
- <DollarSign className="w-5 h-5 text-[#2C4A60]" />
+ <DollarSign className="w-5 h-5 text-teal-700" />
  <span className="text-xs text-titanium-500">Avg ${Math.round(totalRevenue / filteredPatients.length / 1000)}K</span>
  </div>
  <div className="text-2xl font-bold text-titanium-800 mb-1">
@@ -518,7 +518,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  <div className="flex items-center gap-2">
  <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
  patient.eligibilityCriteriaMet === patient.totalCriteria 
- ? 'bg-[#2C4A60]' 
+ ? 'bg-teal-700' 
  : 'bg-crimson-500'
  }`}>
  {patient.eligibilityCriteriaMet === patient.totalCriteria ? (
@@ -542,7 +542,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  )}
  </div>
  ) : (
- <span className="text-sm text-[#2C4A60]">None identified</span>
+ <span className="text-sm text-teal-700">None identified</span>
  )}
  </div>
  </td>
@@ -558,7 +558,7 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  </div>
  </td>
  <td className="p-3">
- <div className="font-medium text-[#2C4A60]">
+ <div className="font-medium text-teal-700">
  ${patient.estimatedDRGRevenue.toLocaleString()}
  </div>
  </td>
@@ -589,13 +589,13 @@ const DeviceUnderutilizationPanel: React.FC = () => {
  {/* Eligibility Criteria */}
  <div>
  <h4 className="font-semibold text-titanium-800 mb-3 flex items-center gap-2">
- <CheckCircle className="w-4 h-4 text-[#2C4A60]" />
+ <CheckCircle className="w-4 h-4 text-teal-700" />
  Eligibility Criteria
  </h4>
  <div className="space-y-2">
  {patient.eligibilityCriteria.map((criteria, idx) => (
  <div key={criteria} className="flex items-center gap-2 text-sm">
- <CheckCircle className="w-3 h-3 text-[#2C4A60] flex-shrink-0" />
+ <CheckCircle className="w-3 h-3 text-teal-700 flex-shrink-0" />
  <span className="text-titanium-700">{criteria}</span>
  </div>
  ))}

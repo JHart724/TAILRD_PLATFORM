@@ -188,7 +188,7 @@ const HFRevenueOpportunityModal: React.FC<HFRevenueOpportunityModalProps> = ({
  </div>
 
  {/* Medium Priority */}
- <div className="bg-[#F0F5FA] p-4 rounded-lg border border-[#C8D4DC]">
+ <div className="bg-chrome-50 p-4 rounded-lg border border-titanium-300">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center">
  <Clock className="w-8 h-8 text-crimson-600 mr-3" />
@@ -211,24 +211,24 @@ const HFRevenueOpportunityModal: React.FC<HFRevenueOpportunityModalProps> = ({
  </div>
 
  {/* Total Potential */}
- <div className="bg-[#C8D4DC] p-4 rounded-lg border border-[#2C4A60]">
+ <div className="bg-titanium-300 p-4 rounded-lg border border-teal-700">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center">
- <DollarSign className="w-8 h-8 text-[#2C4A60] mr-3" />
+ <DollarSign className="w-8 h-8 text-teal-700 mr-3" />
  <div>
- <div className="text-lg font-bold text-[#2C4A60]">Total Potential</div>
- <div className="text-sm text-[#2C4A60]">Combined opportunity</div>
+ <div className="text-lg font-bold text-teal-700">Total Potential</div>
+ <div className="text-sm text-teal-700">Combined opportunity</div>
  </div>
  </div>
  </div>
  <div className="space-y-2">
  <div className="flex justify-between items-center">
- <span className="text-[#2C4A60]">Count:</span>
- <span className="text-2xl font-bold text-[#2C4A60]">{opportunities.length}</span>
+ <span className="text-teal-700">Count:</span>
+ <span className="text-2xl font-bold text-teal-700">{opportunities.length}</span>
  </div>
  <div className="flex justify-between items-center">
- <span className="text-[#2C4A60]">Revenue:</span>
- <span className="text-xl font-bold text-[#2C4A60]">{formatMoney(totalRevenue)}</span>
+ <span className="text-teal-700">Revenue:</span>
+ <span className="text-xl font-bold text-teal-700">{formatMoney(totalRevenue)}</span>
  </div>
  </div>
  </div>
@@ -325,7 +325,7 @@ const HFRevenueOpportunityModal: React.FC<HFRevenueOpportunityModalProps> = ({
  </div>
  <div className="flex items-center gap-3 flex-shrink-0 text-right">
  <span className="font-medium text-gray-900 whitespace-nowrap">{item.count} cases</span>
- <span className="font-semibold text-[#2C4A60] whitespace-nowrap">${toFixed(item.revenue / 1000, 0)}K</span>
+ <span className="font-semibold text-teal-700 whitespace-nowrap">${toFixed(item.revenue / 1000, 0)}K</span>
  </div>
  </div>
  ))}

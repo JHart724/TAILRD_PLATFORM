@@ -33,8 +33,8 @@ interface CommandGridProps {
 
 const QualityDot: React.FC<{ score: number }> = ({ score }) => {
   let colorClass = 'bg-arterial-500';
-  if (score >= 92) colorClass = 'bg-[#F0F5FA]';
-  else if (score >= 88) colorClass = 'bg-[#F0F5FA]';
+  if (score >= 92) colorClass = 'bg-chrome-50';
+  else if (score >= 88) colorClass = 'bg-chrome-50';
 
   return <span className={`inline-block w-1.5 h-1.5 rounded-full ${colorClass} mr-1`} />;
 };

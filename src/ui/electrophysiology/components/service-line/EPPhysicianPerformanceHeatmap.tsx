@@ -206,12 +206,12 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  
  if (metric === 'stroke_events' || metric === 'bleeding_events') {
  // For event counts, lower is better
- if (value <= range.good) return 'bg-[#2C4A60] text-white';
+ if (value <= range.good) return 'bg-teal-700 text-white';
  if (value <= range.warning) return 'bg-crimson-500 text-white';
  return 'bg-medical-red-500 text-white';
  } else {
  // For rates and percentages, higher is better
- if (value >= range.good) return 'bg-[#2C4A60] text-white';
+ if (value >= range.good) return 'bg-teal-700 text-white';
  if (value >= range.warning) return 'bg-crimson-500 text-white';
  return 'bg-medical-red-500 text-white';
  }
@@ -246,7 +246,7 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
   const getTrendIcon = (trend: 'up' | 'down' | 'stable') => {
  switch (trend) {
  case 'up':
- return <TrendingUp className="w-4 h-4 text-[#2C4A60]" />;
+ return <TrendingUp className="w-4 h-4 text-teal-700" />;
  case 'down':
  return <TrendingDown className="w-4 h-4 text-medical-red-600" />;
  default:
@@ -342,7 +342,7 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  <div className="flex items-center gap-1 ml-auto">
  {getTrendIcon(physician.trend)}
  <span className={`text-xs font-semibold ${
- physician.trend === 'up' ? 'text-[#2C4A60]' :
+ physician.trend === 'up' ? 'text-teal-700' :
  physician.trend === 'down' ? 'text-medical-red-600' : 'text-titanium-600'
  }`}>
  {physician.trend !== 'stable' && (physician.trendValue > 0 ? '+' : '')}{physician.trendValue}%
@@ -374,7 +374,7 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  <h4 className="font-semibold text-titanium-900 mb-3">Performance Legend</h4>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  <div className="flex items-center gap-2">
- <div className="w-4 h-4 bg-[#2C4A60] rounded"></div>
+ <div className="w-4 h-4 bg-teal-700 rounded"></div>
  <span className="text-sm text-titanium-700">Excellent Performance</span>
  </div>
  <div className="flex items-center gap-2">
@@ -397,7 +397,7 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-titanium-200">
  <div>
  <div className="text-sm text-titanium-600 mb-1">Top OAC Performer</div>
- <div className="text-lg font-bold text-[#2C4A60]">
+ <div className="text-lg font-bold text-teal-700">
  {sortedPhysicians.sort((a, b) => b.oacs_rx_rate - a.oacs_rx_rate)[0]?.name}
  </div>
  <div className="text-sm text-titanium-600">
@@ -464,13 +464,13 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  selectedPhysicianData.inr_control_pct >= 80 ? 'bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5]' : 'bg-gradient-to-br from-slate-50 to-slate-100'
  }`}>
  <div className={`text-sm font-medium flex items-center gap-1 ${
- selectedPhysicianData.inr_control_pct >= 80 ? 'text-[#2C4A60]' : 'text-[#6B7280]'
+ selectedPhysicianData.inr_control_pct >= 80 ? 'text-teal-700' : 'text-gray-500'
  }`}>
  <Target className="w-4 h-4" />
  INR Control
  </div>
  <div className={`text-2xl font-bold ${
- selectedPhysicianData.inr_control_pct >= 80 ? 'text-[#2C4A60]' : 'text-[#6B7280]'
+ selectedPhysicianData.inr_control_pct >= 80 ? 'text-teal-700' : 'text-gray-500'
  }`}>{toFixed(selectedPhysicianData.inr_control_pct, 1)}%</div>
  </div>
  <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-4 rounded-xl">
@@ -495,7 +495,7 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm ${
  patient.strokeRisk >= 7 ? 'bg-red-500' :
- patient.strokeRisk >= 4 ? 'bg-[#F0F5FA]' : 'bg-[#C8D4DC]'
+ patient.strokeRisk >= 4 ? 'bg-chrome-50' : 'bg-titanium-300'
  }`}>
  {patient.name.split(' ').map(n => n[0]).join('')}
  </div>
@@ -511,7 +511,7 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  </div>
  <div className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.strokeRisk >= 7 ? 'bg-red-100 text-red-700' :
- patient.strokeRisk >= 4 ? 'bg-[#FAF6E8] text-[#8B6914]' : 'bg-[#F0F7F4] text-[#2D6147]'
+ patient.strokeRisk >= 4 ? 'bg-amber-50 text-amber-600' : 'bg-green-50 text-green-600'
  }`}>
  {patient.strokeRisk >= 7 ? 'HIGH RISK' : patient.strokeRisk >= 4 ? 'MODERATE RISK' : 'LOW RISK'}
  </div>
@@ -545,12 +545,12 @@ const EPPhysicianPerformanceHeatmap: React.FC = () => {
  <div className="space-y-1">
  {patient.treatmentGaps.length > 0 ? (
  patient.treatmentGaps.map((gap, idx) => (
- <div key={gap} className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded">
+ <div key={gap} className="text-xs bg-amber-50 text-amber-600 px-2 py-1 rounded">
  {gap}
  </div>
  ))
  ) : (
- <div className="text-xs bg-[#F0F7F4] text-[#2D6147] px-2 py-1 rounded">
+ <div className="text-xs bg-green-50 text-green-600 px-2 py-1 rounded">
  No gaps identified
  </div>
  )}

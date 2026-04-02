@@ -29,7 +29,7 @@ const CoronaryDashboard: React.FC = () => (
  </div>
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <div className="flex items-center gap-3">
- <Timer className="w-8 h-8 text-[#2C4A60]" />
+ <Timer className="w-8 h-8 text-teal-700" />
  <div>
  <div className="text-2xl font-bold text-titanium-900">78min</div>
  <div className="text-sm text-titanium-600">Door-to-Balloon Time</div>
@@ -107,9 +107,9 @@ const CoronaryPatients: React.FC = () => (
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.procedure.includes('Primary') ? 'bg-red-100 text-red-700' :
- patient.procedure.includes('Complex') ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ patient.procedure.includes('Complex') ? 'bg-amber-50 text-amber-600' :
  patient.procedure.includes('CTO') ? 'bg-arterial-100 text-arterial-700' :
- patient.procedure.includes('NSTEMI') ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ patient.procedure.includes('NSTEMI') ? 'bg-amber-50 text-amber-600' :
  'bg-chrome-100 text-chrome-700'
  }`}>
  {patient.procedure}
@@ -118,8 +118,8 @@ const CoronaryPatients: React.FC = () => (
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.urgency === 'STAT' ? 'bg-red-100 text-red-700' :
- patient.urgency === 'Urgent' ? 'bg-[#FAF6E8] text-[#8B6914]' :
- 'bg-[#F0F7F4] text-[#2D6147]'
+ patient.urgency === 'Urgent' ? 'bg-amber-50 text-amber-600' :
+ 'bg-green-50 text-green-600'
  }`}>
  {patient.urgency}
  </span>
@@ -128,10 +128,10 @@ const CoronaryPatients: React.FC = () => (
  <td className="py-3 px-4 font-mono text-titanium-700">{patient.d2b}</td>
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
- patient.status === 'Complete' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ patient.status === 'Complete' ? 'bg-green-50 text-green-600' :
  patient.status === 'In Progress' ? 'bg-chrome-100 text-chrome-700' :
  patient.status === 'Scheduled' ? 'bg-arterial-100 text-arterial-700' :
- patient.status === 'Planning' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ patient.status === 'Planning' ? 'bg-amber-50 text-amber-600' :
  'bg-gray-100 text-gray-700'
  }`}>
  {patient.status}
@@ -197,13 +197,13 @@ const CoronaryWorkflow: React.FC = () => (
  <div className="ml-auto text-sm text-red-600 font-medium">&lt;10 min</div>
  </div>
  
- <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-[#C8D4DC]">
- <div className="w-8 h-8 bg-[#F0F5FA] rounded-full flex items-center justify-center text-white font-bold text-sm">2</div>
+ <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-titanium-300">
+ <div className="w-8 h-8 bg-chrome-50 rounded-full flex items-center justify-center text-white font-bold text-sm">2</div>
  <div>
  <div className="font-medium text-titanium-900">Patient Preparation</div>
  <div className="text-sm text-titanium-600">IV access, antiplatelet loading, transfer to cath lab</div>
  </div>
- <div className="ml-auto text-sm text-[#6B7280] font-medium">&lt;20 min</div>
+ <div className="ml-auto text-sm text-gray-500 font-medium">&lt;20 min</div>
  </div>
  
  <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-red-200">
@@ -215,13 +215,13 @@ const CoronaryWorkflow: React.FC = () => (
  <div className="ml-auto text-sm text-red-600 font-medium">&lt;90 min</div>
  </div>
  
- <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-[#2C4A60]">
- <div className="w-8 h-8 bg-[#C8D4DC] rounded-full flex items-center justify-center text-white font-bold text-sm">4</div>
+ <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-teal-700">
+ <div className="w-8 h-8 bg-titanium-300 rounded-full flex items-center justify-center text-white font-bold text-sm">4</div>
  <div>
  <div className="font-medium text-titanium-900">Post-PCI Care</div>
  <div className="text-sm text-titanium-600">ICU monitoring, DAPT, cardiac rehabilitation</div>
  </div>
- <div className="ml-auto text-sm text-[#2C4A60] font-medium">24-48h</div>
+ <div className="ml-auto text-sm text-teal-700 font-medium">24-48h</div>
  </div>
  </div>
  </div>
@@ -240,18 +240,18 @@ const CoronaryWorkflow: React.FC = () => (
  <div key={decision.criteria} className="grid grid-cols-3 gap-4 p-3 bg-titanium-50 rounded-lg">
  <span className="text-titanium-700 font-medium">{decision.criteria}</span>
  <span className={`text-center px-2 py-1 rounded text-xs font-medium ${
- decision.pci === 'Preferred' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ decision.pci === 'Preferred' ? 'bg-green-50 text-green-600' :
  decision.pci === 'Acceptable' ? 'bg-chrome-100 text-chrome-700' :
- decision.pci === 'Acceptable*' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ decision.pci === 'Acceptable*' ? 'bg-amber-50 text-amber-600' :
  decision.pci === 'Specialist Required' ? 'bg-arterial-100 text-arterial-700' :
- 'bg-[#FAF6E8] text-[#8B6914]'
+ 'bg-amber-50 text-amber-600'
  }`}>
  PCI: {decision.pci}
  </span>
  <span className={`text-center px-2 py-1 rounded text-xs font-medium ${
- decision.cabg === 'Preferred' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ decision.cabg === 'Preferred' ? 'bg-green-50 text-green-600' :
  decision.cabg === 'Acceptable' ? 'bg-chrome-100 text-chrome-700' :
- 'bg-[#FAF6E8] text-[#8B6914]'
+ 'bg-amber-50 text-amber-600'
  }`}>
  CABG: {decision.cabg}
  </span>
@@ -273,9 +273,9 @@ const CoronaryWorkflow: React.FC = () => (
  <div className="text-2xl font-bold text-red-600">78min</div>
  <div className="text-xs text-red-700">Door-to-Balloon</div>
  </div>
- <div className="text-center p-4 bg-[#C8D4DC] rounded-lg">
- <div className="text-2xl font-bold text-[#2C4A60]">94.2%</div>
- <div className="text-xs text-[#2C4A60]">PCI Success Rate</div>
+ <div className="text-center p-4 bg-titanium-300 rounded-lg">
+ <div className="text-2xl font-bold text-teal-700">94.2%</div>
+ <div className="text-xs text-teal-700">PCI Success Rate</div>
  </div>
  <div className="text-center p-4 bg-chrome-50 rounded-lg">
  <div className="text-2xl font-bold text-chrome-600">87%</div>
@@ -361,14 +361,14 @@ const CoronaryClinicalCollaboration: React.FC = () => (
  ].map((pathway, index) => (
  <div key={pathway.pathway} className={`flex items-center justify-between p-4 rounded-lg border ${
  pathway.indication === 'ST-Elevation MI' ? 'bg-red-50 border-red-200' :
- pathway.indication === 'High SYNTAX Score' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
+ pathway.indication === 'High SYNTAX Score' ? 'bg-chrome-50 border-titanium-300' :
  pathway.indication === 'Chronic Total Occlusion' ? 'bg-arterial-50 border-arterial-200' :
  'bg-chrome-50 border-chrome-200'
  }`}>
  <div>
  <div className={`font-medium ${
  pathway.indication === 'ST-Elevation MI' ? 'text-red-900' :
- pathway.indication === 'High SYNTAX Score' ? 'text-[#6B7280]' :
+ pathway.indication === 'High SYNTAX Score' ? 'text-gray-500' :
  pathway.indication === 'Chronic Total Occlusion' ? 'text-arterial-900' :
  'text-chrome-900'
  }`}>
@@ -380,7 +380,7 @@ const CoronaryClinicalCollaboration: React.FC = () => (
  </div>
  <div className={`text-xs px-2 py-1 rounded-full ${
  pathway.indication === 'ST-Elevation MI' ? 'bg-red-100 text-red-700' :
- pathway.indication === 'High SYNTAX Score' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ pathway.indication === 'High SYNTAX Score' ? 'bg-amber-50 text-amber-600' :
  pathway.indication === 'Chronic Total Occlusion' ? 'bg-arterial-100 text-arterial-700' :
  'bg-chrome-100 text-chrome-700'
  }`}>
@@ -397,9 +397,9 @@ const CoronaryClinicalCollaboration: React.FC = () => (
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">Clinical Quality Outcomes</h4>
  <div className="space-y-4">
- <div className="text-center p-4 bg-[#C8D4DC] rounded-lg">
- <div className="text-2xl font-bold text-[#2C4A60]">94.2%</div>
- <div className="text-xs text-[#2C4A60]">Clinical Success Rate</div>
+ <div className="text-center p-4 bg-titanium-300 rounded-lg">
+ <div className="text-2xl font-bold text-teal-700">94.2%</div>
+ <div className="text-xs text-teal-700">Clinical Success Rate</div>
  </div>
  <div className="text-center p-4 bg-chrome-50 rounded-lg">
  <div className="text-2xl font-bold text-chrome-600">98%</div>
@@ -409,9 +409,9 @@ const CoronaryClinicalCollaboration: React.FC = () => (
  <div className="text-2xl font-bold text-arterial-600">96%</div>
  <div className="text-xs text-arterial-700">Heart Team Consensus</div>
  </div>
- <div className="text-center p-4 bg-[#F0F5FA] rounded-lg">
- <div className="text-2xl font-bold text-[#6B7280]">2.1%</div>
- <div className="text-xs text-[#6B7280]">Clinical Complications</div>
+ <div className="text-center p-4 bg-chrome-50 rounded-lg">
+ <div className="text-2xl font-bold text-gray-500">2.1%</div>
+ <div className="text-xs text-gray-500">Clinical Complications</div>
  </div>
  </div>
  </div>
@@ -419,7 +419,7 @@ const CoronaryClinicalCollaboration: React.FC = () => (
  {/* Active Clinical Consultations */}
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <AlertTriangle className="w-5 h-5 text-[#6B7280]" />
+ <AlertTriangle className="w-5 h-5 text-gray-500" />
  Active Clinical Consultations
  </h4>
  <div className="space-y-3">
@@ -428,10 +428,10 @@ const CoronaryClinicalCollaboration: React.FC = () => (
  <div className="text-sm text-red-700">Complex case requiring heart team input</div>
  <div className="text-xs text-red-600">Multidisciplinary review scheduled</div>
  </div>
- <div className="p-3 bg-[#F0F5FA] rounded-lg border border-[#C8D4DC]">
- <div className="font-medium text-[#6B7280]">CTO Assessment</div>
- <div className="text-sm text-[#6B7280]">Patient evaluation for chronic total occlusion</div>
- <div className="text-xs text-[#6B7280]">Specialist consultation pending</div>
+ <div className="p-3 bg-chrome-50 rounded-lg border border-titanium-300">
+ <div className="font-medium text-gray-500">CTO Assessment</div>
+ <div className="text-sm text-gray-500">Patient evaluation for chronic total occlusion</div>
+ <div className="text-xs text-gray-500">Specialist consultation pending</div>
  </div>
  <div className="p-3 bg-chrome-50 rounded-lg border border-chrome-200">
  <div className="font-medium text-chrome-900">Treatment Planning</div>
@@ -455,13 +455,13 @@ const CoronaryClinicalCollaboration: React.FC = () => (
  <div className="text-xs text-red-600">Evidence-based treatment pathway</div>
  </button>
  <button 
- className="w-full p-3 text-left bg-[#F0F5FA] hover:bg-[#F0F5FA] rounded-lg transition-colors"
+ className="w-full p-3 text-left bg-chrome-50 hover:bg-chrome-50 rounded-lg transition-colors"
  onClick={() => {
  // TODO: Open Risk Assessment Tools
  }}
  >
- <div className="font-medium text-[#6B7280]">Risk Assessment Tools</div>
- <div className="text-xs text-[#6B7280]">Clinical risk stratification</div>
+ <div className="font-medium text-gray-500">Risk Assessment Tools</div>
+ <div className="text-xs text-gray-500">Clinical risk stratification</div>
  </button>
  <button className="w-full p-3 text-left bg-chrome-50 hover:bg-chrome-100 rounded-lg transition-colors">
  <div className="font-medium text-chrome-900">Guideline Recommendations</div>
@@ -492,9 +492,9 @@ const CoronaryDocumentation: React.FC = () => (
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* Documentation Alerts */}
  <div className="space-y-4">
- <div className="bg-gradient-to-r from-slate-50 to-slate-50 p-6 rounded-xl border border-[#C8D4DC]">
- <h4 className="font-semibold text-[#6B7280] mb-4 flex items-center gap-2">
- <AlertTriangle className="w-5 h-5 text-[#6B7280]" />
+ <div className="bg-gradient-to-r from-slate-50 to-slate-50 p-6 rounded-xl border border-titanium-300">
+ <h4 className="font-semibold text-gray-500 mb-4 flex items-center gap-2">
+ <AlertTriangle className="w-5 h-5 text-gray-500" />
  Documentation Alerts & Registry
  </h4>
  <div className="space-y-3">
@@ -507,22 +507,22 @@ const CoronaryDocumentation: React.FC = () => (
  <div className="text-xs text-red-600 mt-1">Door-to-balloon time and complications missing</div>
  </div>
  
- <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
+ <div className="bg-white p-4 rounded-lg border border-titanium-300">
  <div className="flex items-center justify-between mb-2">
- <span className="font-medium text-[#6B7280]">Procedure Notes Due</span>
- <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">DUE TODAY</span>
+ <span className="font-medium text-gray-500">Procedure Notes Due</span>
+ <span className="text-xs bg-amber-50 text-amber-600 px-2 py-1 rounded-full">DUE TODAY</span>
  </div>
- <div className="text-sm text-[#6B7280]">3 elective PCI cases require operative reports</div>
- <div className="text-xs text-[#6B7280] mt-1">Due within 24h of procedure completion</div>
+ <div className="text-sm text-gray-500">3 elective PCI cases require operative reports</div>
+ <div className="text-xs text-gray-500 mt-1">Due within 24h of procedure completion</div>
  </div>
  
- <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
+ <div className="bg-white p-4 rounded-lg border border-titanium-300">
  <div className="flex items-center justify-between mb-2">
- <span className="font-medium text-[#6B7280]">Quality Metrics Review</span>
- <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">PENDING</span>
+ <span className="font-medium text-gray-500">Quality Metrics Review</span>
+ <span className="text-xs bg-amber-50 text-amber-600 px-2 py-1 rounded-full">PENDING</span>
  </div>
- <div className="text-sm text-[#6B7280]">Door-to-balloon times require monthly review and analysis</div>
- <div className="text-xs text-[#6B7280] mt-1">Quality committee meeting: Friday 2 PM</div>
+ <div className="text-sm text-gray-500">Door-to-balloon times require monthly review and analysis</div>
+ <div className="text-xs text-gray-500 mt-1">Quality committee meeting: Friday 2 PM</div>
  </div>
  </div>
  </div>
@@ -531,12 +531,12 @@ const CoronaryDocumentation: React.FC = () => (
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">Documentation Compliance</h4>
  <div className="space-y-4">
- <div className="flex items-center justify-between p-4 bg-[#C8D4DC] rounded-lg">
+ <div className="flex items-center justify-between p-4 bg-titanium-300 rounded-lg">
  <div>
- <div className="font-medium text-[#2C4A60]">NCDR Registry Completeness</div>
- <div className="text-sm text-[#2C4A60]">Data quality score</div>
+ <div className="font-medium text-teal-700">NCDR Registry Completeness</div>
+ <div className="text-sm text-teal-700">Data quality score</div>
  </div>
- <div className="text-2xl font-bold text-[#2C4A60]">92.8%</div>
+ <div className="text-2xl font-bold text-teal-700">92.8%</div>
  </div>
  
  <div className="flex items-center justify-between p-4 bg-chrome-50 rounded-lg">
@@ -578,7 +578,7 @@ const CoronaryDocumentation: React.FC = () => (
  <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">URGENT</span>
  )}
  {template.priority === 'high' && (
- <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">HIGH</span>
+ <span className="text-xs bg-amber-50 text-amber-600 px-2 py-1 rounded-full">HIGH</span>
  )}
  </div>
  <div className={`text-xs text-${template.color}-600`}>Estimated completion: {template.time}</div>
@@ -605,9 +605,9 @@ const CoronaryDocumentation: React.FC = () => (
  <div className="text-right">
  <div className="text-xs text-titanium-500">{activity.time}</div>
  <div className={`text-xs px-2 py-1 rounded-full ${
- activity.status === 'Complete' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ activity.status === 'Complete' ? 'bg-green-50 text-green-600' :
  activity.status === 'In Progress' ? 'bg-chrome-100 text-chrome-700' :
- 'bg-[#FAF6E8] text-[#8B6914]'
+ 'bg-amber-50 text-amber-600'
  }`}>
  {activity.status}
  </div>
@@ -643,9 +643,9 @@ const CoronaryDocumentation: React.FC = () => (
  <div className="font-medium text-arterial-900">Door-to-Balloon Analysis</div>
  <div className="text-xs text-arterial-600">STEMI performance review</div>
  </button>
- <button className="w-full p-3 text-left bg-[#F0F5FA] hover:bg-[#F0F5FA] rounded-lg transition-colors">
- <div className="font-medium text-[#2C4A60]">Update Templates</div>
- <div className="text-xs text-[#2C4A60]">Review documentation forms</div>
+ <button className="w-full p-3 text-left bg-chrome-50 hover:bg-chrome-50 rounded-lg transition-colors">
+ <div className="font-medium text-teal-700">Update Templates</div>
+ <div className="text-xs text-teal-700">Review documentation forms</div>
  </button>
  </div>
  </div>

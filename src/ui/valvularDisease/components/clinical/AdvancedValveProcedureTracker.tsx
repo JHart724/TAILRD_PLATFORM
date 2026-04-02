@@ -106,16 +106,16 @@ const AdvancedValveProcedureTracker: React.FC = () => {
   const getCategoryColor = (category: string) => {
  switch (category) {
  case 'procedure': return 'text-porsche-600 bg-porsche-50 border-porsche-200';
- case 'emerging': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
+ case 'emerging': return 'text-amber-600 bg-amber-50 border-titanium-300';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };
 
   const getUtilizationColor = (utilization: number) => {
  if (utilization < 10) return 'text-crimson-600 bg-crimson-50';
- if (utilization < 30) return 'text-[#8B6914] bg-[#FAF6E8]';
+ if (utilization < 30) return 'text-amber-600 bg-amber-50';
  if (utilization < 50) return 'text-porsche-600 bg-porsche-50';
- return 'text-[#2D6147] bg-[#F0F7F4]';
+ return 'text-green-600 bg-green-50';
   };
 
   return (
@@ -134,13 +134,13 @@ const AdvancedValveProcedureTracker: React.FC = () => {
  <div className="text-2xl font-bold text-porsche-600 font-sf">{totalEligible}</div>
  <div className="text-sm text-porsche-700">Total Eligible Patients</div>
  </div>
- <div className="p-4 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg">
- <div className="text-2xl font-bold text-[#2C4A60] font-sf">{totalUtilized}</div>
- <div className="text-sm text-[#2C4A60]">Currently Receiving</div>
+ <div className="p-4 bg-green-50 border border-green-100 rounded-lg">
+ <div className="text-2xl font-bold text-teal-700 font-sf">{totalUtilized}</div>
+ <div className="text-sm text-teal-700">Currently Receiving</div>
  </div>
- <div className="p-4 bg-[#F0F5FA] border border-[#C8D4DC] rounded-lg">
- <div className="text-2xl font-bold text-[#6B7280] font-sf">{Math.round((totalUtilized/totalEligible)*100)}%</div>
- <div className="text-sm text-[#6B7280]">Overall Utilization</div>
+ <div className="p-4 bg-chrome-50 border border-titanium-300 rounded-lg">
+ <div className="text-2xl font-bold text-gray-500 font-sf">{Math.round((totalUtilized/totalEligible)*100)}%</div>
+ <div className="text-sm text-gray-500">Overall Utilization</div>
  </div>
  <div className="p-4 bg-crimson-50 border border-crimson-200 rounded-lg">
  <div className="text-2xl font-bold text-crimson-600 font-sf">${toFixed(totalRevenueGap / 1000000, 1)}M</div>
@@ -189,8 +189,8 @@ const AdvancedValveProcedureTracker: React.FC = () => {
  <div
  className={`h-2 rounded-full transition-all duration-500 ${
  proc.currentUtilization < 10 ? 'bg-crimson-500' :
- proc.currentUtilization < 30 ? 'bg-[#F0F5FA]' :
- proc.currentUtilization < 50 ? 'bg-porsche-500' : 'bg-[#C8D4DC]'
+ proc.currentUtilization < 30 ? 'bg-chrome-50' :
+ proc.currentUtilization < 50 ? 'bg-porsche-500' : 'bg-titanium-300'
  }`}
  style={{ width: `${Math.min(proc.currentUtilization, 100)}%` }}
  ></div>
@@ -203,9 +203,9 @@ const AdvancedValveProcedureTracker: React.FC = () => {
  <div className="font-bold text-titanium-900">{proc.eligiblePatients}</div>
  <div className="text-xs text-titanium-600">Eligible</div>
  </div>
- <div className="text-center p-2 bg-[#C8D4DC] rounded">
- <div className="font-bold text-[#2C4A60]">{proc.utilizedPatients}</div>
- <div className="text-xs text-[#2C4A60]">Current</div>
+ <div className="text-center p-2 bg-titanium-300 rounded">
+ <div className="font-bold text-teal-700">{proc.utilizedPatients}</div>
+ <div className="text-xs text-teal-700">Current</div>
  </div>
  <div className="text-center p-2 bg-crimson-50 rounded">
  <div className="font-bold text-crimson-600">{proc.eligiblePatients - proc.utilizedPatients}</div>
@@ -224,12 +224,12 @@ const AdvancedValveProcedureTracker: React.FC = () => {
  </div>
  </div>
 
- <div className="flex items-center justify-between p-3 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg mb-4">
+ <div className="flex items-center justify-between p-3 bg-green-50 border border-green-100 rounded-lg mb-4">
  <div>
- <div className="text-sm font-semibold text-[#2C4A60]">Revenue Gap</div>
+ <div className="text-sm font-semibold text-teal-700">Revenue Gap</div>
  </div>
  <div className="text-right">
- <div className="text-lg font-bold text-[#2C4A60]">
+ <div className="text-lg font-bold text-teal-700">
  ${proc.revenueGap >= 1000000 ? `${toFixed(proc.revenueGap / 1000000, 1)}M` : `${toFixed(proc.revenueGap / 1000, 0)}K`}
  </div>
  </div>
@@ -252,7 +252,7 @@ const AdvancedValveProcedureTracker: React.FC = () => {
  </button>
  </div>
  {actionFeedback && (
- <div className="mt-2 p-2 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg text-[#2C4A60] text-sm flex items-center gap-2">
+ <div className="mt-2 p-2 bg-green-50 border border-green-100 rounded-lg text-teal-700 text-sm flex items-center gap-2">
  <CheckCircle className="w-4 h-4" />
  {actionFeedback === 'screening' ? 'Patient screening tool loading...' : 'Opening clinical guidelines...'}
  </div>
@@ -270,11 +270,11 @@ const AdvancedValveProcedureTracker: React.FC = () => {
  <div className="text-lg font-bold text-crimson-600">MitraClip/TEER</div>
  <div className="text-xs text-crimson-600">87 patients underutilized</div>
  </div>
- <div className="p-4 border-2 border-[#2C4A60] rounded-lg">
- <DollarSign className="w-6 h-6 text-[#2C4A60] mb-2" />
- <div className="text-sm font-semibold text-[#2C4A60]">Revenue Leader</div>
- <div className="text-lg font-bold text-[#2C4A60]">$3.26M</div>
- <div className="text-xs text-[#2C4A60]">MitraClip/TEER program expansion</div>
+ <div className="p-4 border-2 border-teal-700 rounded-lg">
+ <DollarSign className="w-6 h-6 text-teal-700 mb-2" />
+ <div className="text-sm font-semibold text-teal-700">Revenue Leader</div>
+ <div className="text-lg font-bold text-teal-700">$3.26M</div>
+ <div className="text-xs text-teal-700">MitraClip/TEER program expansion</div>
  </div>
  <div className="p-4 border-2 border-porsche-200 rounded-lg">
  <TrendingUp className="w-6 h-6 text-porsche-600 mb-2" />
@@ -282,11 +282,11 @@ const AdvancedValveProcedureTracker: React.FC = () => {
  <div className="text-lg font-bold text-porsche-600">Tricuspid</div>
  <div className="text-xs text-porsche-600">Rapidly expanding indication</div>
  </div>
- <div className="p-4 border-2 border-[#C8D4DC] rounded-lg">
- <Users className="w-6 h-6 text-[#6B7280] mb-2" />
- <div className="text-sm font-semibold text-[#6B7280]">Population Impact</div>
- <div className="text-lg font-bold text-[#6B7280]">{totalEligible - totalUtilized}</div>
- <div className="text-xs text-[#6B7280]">Total underutilized patients</div>
+ <div className="p-4 border-2 border-titanium-300 rounded-lg">
+ <Users className="w-6 h-6 text-gray-500 mb-2" />
+ <div className="text-sm font-semibold text-gray-500">Population Impact</div>
+ <div className="text-lg font-bold text-gray-500">{totalEligible - totalUtilized}</div>
+ <div className="text-xs text-gray-500">Total underutilized patients</div>
  </div>
  </div>
  </div>

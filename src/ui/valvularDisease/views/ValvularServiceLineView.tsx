@@ -90,8 +90,8 @@ const ValvularServiceLineView: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
               {[
                 { stage: 'Assessment', patients: 156, rate: '100%', bgColor: 'bg-chrome-50', borderColor: 'border-chrome-200', textColor: 'text-chrome-600' },
-                { stage: 'Suitable', patients: 98, rate: '62.8%', bgColor: 'bg-[#C8D4DC]', borderColor: 'border-[#2C4A60]', textColor: 'text-[#2C4A60]' },
-                { stage: 'Repair Planned', patients: 82, rate: '83.7%', bgColor: 'bg-[#F0F5FA]', borderColor: 'border-[#C8D4DC]', textColor: 'text-[#6B7280]' },
+                { stage: 'Suitable', patients: 98, rate: '62.8%', bgColor: 'bg-titanium-300', borderColor: 'border-teal-700', textColor: 'text-teal-700' },
+                { stage: 'Repair Planned', patients: 82, rate: '83.7%', bgColor: 'bg-chrome-50', borderColor: 'border-titanium-300', textColor: 'text-gray-500' },
                 { stage: 'Completed', patients: 76, rate: '92.7%', bgColor: 'bg-gold-50', borderColor: 'border-gold-200', textColor: 'text-gold-600' }
               ].map((item, index) => (
                 <div key={item.stage} className={`text-center p-6 rounded-xl ${item.bgColor} border ${item.borderColor}`}>
@@ -124,9 +124,9 @@ const ValvularServiceLineView: React.FC = () => {
               <div className="bg-white p-6 rounded-xl border border-titanium-200">
                 <h4 className="font-semibold text-titanium-900 mb-4">Repair Outcomes</h4>
                 <div className="space-y-3">
-                  <div className="flex justify-between p-3 bg-[#C8D4DC] rounded-lg">
+                  <div className="flex justify-between p-3 bg-titanium-300 rounded-lg">
                     <span className="text-titanium-900">Freedom from reoperation</span>
-                    <span className="font-bold text-[#2C4A60]">94.2% @ 5 yrs</span>
+                    <span className="font-bold text-teal-700">94.2% @ 5 yrs</span>
                   </div>
                   <div className="flex justify-between p-3 bg-chrome-50 rounded-lg">
                     <span className="text-titanium-900">Post-op AI grade \u2264 mild</span>
@@ -136,9 +136,9 @@ const ValvularServiceLineView: React.FC = () => {
                     <span className="text-titanium-900">Operative mortality</span>
                     <span className="font-bold text-gold-600">0.8%</span>
                   </div>
-                  <div className="flex justify-between p-3 bg-[#F0F5FA] rounded-lg">
+                  <div className="flex justify-between p-3 bg-chrome-50 rounded-lg">
                     <span className="text-titanium-900">Mean gradient</span>
-                    <span className="font-bold text-[#6B7280]">8.2 mmHg</span>
+                    <span className="font-bold text-gray-500">8.2 mmHg</span>
                   </div>
                 </div>
               </div>
@@ -169,10 +169,10 @@ const ValvularServiceLineView: React.FC = () => {
               <div className="bg-white p-6 rounded-xl border border-titanium-200">
                 <h4 className="font-semibold text-titanium-900 mb-4">Selection Criteria</h4>
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between"><span>Age &lt;50 years</span><span className="text-[#2C4A60]">{'\u2713'} Required</span></div>
-                  <div className="flex justify-between"><span>Active lifestyle</span><span className="text-[#2C4A60]">{'\u2713'} Required</span></div>
-                  <div className="flex justify-between"><span>Normal PV anatomy</span><span className="text-[#2C4A60]">{'\u2713'} Required</span></div>
-                  <div className="flex justify-between"><span>No contraindications</span><span className="text-[#2C4A60]">{'\u2713'} Required</span></div>
+                  <div className="flex justify-between"><span>Age &lt;50 years</span><span className="text-teal-700">{'\u2713'} Required</span></div>
+                  <div className="flex justify-between"><span>Active lifestyle</span><span className="text-teal-700">{'\u2713'} Required</span></div>
+                  <div className="flex justify-between"><span>Normal PV anatomy</span><span className="text-teal-700">{'\u2713'} Required</span></div>
+                  <div className="flex justify-between"><span>No contraindications</span><span className="text-teal-700">{'\u2713'} Required</span></div>
                 </div>
               </div>
               <div className="bg-white p-6 rounded-xl border border-titanium-200">
@@ -191,7 +191,7 @@ const ValvularServiceLineView: React.FC = () => {
         return (
           <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-8">
             <h3 className="text-2xl font-bold text-titanium-900 mb-6 flex items-center gap-3">
-              <Workflow className="w-8 h-8 text-[#2C4A60]" />
+              <Workflow className="w-8 h-8 text-teal-700" />
               Valve Repair vs Replacement Decision Tool
             </h3>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -209,16 +209,16 @@ const ValvularServiceLineView: React.FC = () => {
                         <span className="font-medium text-titanium-900">{item.factor}</span>
                         <span className={`text-xs px-2 py-1 rounded-full ${
                           item.weight === 'Critical' ? 'bg-red-100 text-red-700' :
-                          item.weight === 'High' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+                          item.weight === 'High' ? 'bg-amber-50 text-amber-600' :
                           'bg-chrome-100 text-chrome-700'
                         }`}>
                           {item.weight}
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-3 text-sm">
-                        <div className="p-2 bg-[#C8D4DC] rounded-lg">
-                          <div className="text-[#2C4A60] font-medium">Repair</div>
-                          <div className="text-[#2C4A60]">{item.repair}</div>
+                        <div className="p-2 bg-titanium-300 rounded-lg">
+                          <div className="text-teal-700 font-medium">Repair</div>
+                          <div className="text-teal-700">{item.repair}</div>
                         </div>
                         <div className="p-2 bg-chrome-50 rounded-lg">
                           <div className="text-chrome-700 font-medium">Replace</div>
@@ -234,7 +234,7 @@ const ValvularServiceLineView: React.FC = () => {
                 <div className="bg-white p-6 rounded-xl border border-titanium-200">
                   <div className="grid grid-cols-2 gap-6">
                     <div className="text-center">
-                      <div className="text-[#2C4A60] font-semibold mb-3">Repair</div>
+                      <div className="text-teal-700 font-semibold mb-3">Repair</div>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
                           <span>Operative mortality</span>
@@ -285,15 +285,15 @@ const ValvularServiceLineView: React.FC = () => {
         return (
           <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-8">
             <h3 className="text-2xl font-bold text-titanium-900 mb-6 flex items-center gap-3">
-              <Calendar className="w-8 h-8 text-[#6B7280]" />
+              <Calendar className="w-8 h-8 text-gray-500" />
               Echo Surveillance Scheduler
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
               {[
                 { interval: 'Overdue', count: 23, bgColor: 'bg-red-50', borderColor: 'border-red-200', textColor: 'text-red-600' },
-                { interval: 'Due This Month', count: 67, bgColor: 'bg-[#F0F5FA]', borderColor: 'border-[#C8D4DC]', textColor: 'text-[#6B7280]' },
+                { interval: 'Due This Month', count: 67, bgColor: 'bg-chrome-50', borderColor: 'border-titanium-300', textColor: 'text-gray-500' },
                 { interval: 'Due Next Month', count: 89, bgColor: 'bg-chrome-50', borderColor: 'border-chrome-200', textColor: 'text-chrome-600' },
-                { interval: 'Future', count: 245, bgColor: 'bg-[#C8D4DC]', borderColor: 'border-[#2C4A60]', textColor: 'text-[#2C4A60]' }
+                { interval: 'Future', count: 245, bgColor: 'bg-titanium-300', borderColor: 'border-teal-700', textColor: 'text-teal-700' }
               ].map((item, index) => (
                 <div key={item.interval} className={`text-center p-6 rounded-xl ${item.bgColor} border ${item.borderColor}`}>
                   <div className={`text-3xl font-bold ${item.textColor} mb-2`}>{item.count}</div>
@@ -311,9 +311,9 @@ const ValvularServiceLineView: React.FC = () => {
                     { severity: 'Severe AS/AI', interval: 'Every 6 months' },
                     { severity: 'Post-repair', interval: 'Every 6-12 months' }
                   ].map((item, index) => (
-                    <div key={item.severity} className="flex justify-between p-3 bg-[#F0F5FA] rounded-lg">
+                    <div key={item.severity} className="flex justify-between p-3 bg-chrome-50 rounded-lg">
                       <span className="text-titanium-900">{item.severity}</span>
-                      <span className="font-medium text-[#6B7280]">{item.interval}</span>
+                      <span className="font-medium text-gray-500">{item.interval}</span>
                     </div>
                   ))}
                 </div>
@@ -323,11 +323,11 @@ const ValvularServiceLineView: React.FC = () => {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-titanium-600">Overall compliance rate</span>
-                    <span className="font-bold text-[#2C4A60]">87.3%</span>
+                    <span className="font-bold text-teal-700">87.3%</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-titanium-600">Avg delay (overdue cases)</span>
-                    <span className="font-bold text-[#6B7280]">4.2 months</span>
+                    <span className="font-bold text-gray-500">4.2 months</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-titanium-600">No-show rate</span>
@@ -353,14 +353,14 @@ const ValvularServiceLineView: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 {[
                   { label: 'Total Surgical Volume', value: '423', change: '+6.2%', bgColor: 'bg-chrome-50', borderColor: 'border-chrome-200', textColor: 'text-chrome-600' },
-                  { label: 'Repair Rate', value: '62%', change: '+8.1%', bgColor: 'bg-[#C8D4DC]', borderColor: 'border-[#2C4A60]', textColor: 'text-[#2C4A60]' },
+                  { label: 'Repair Rate', value: '62%', change: '+8.1%', bgColor: 'bg-titanium-300', borderColor: 'border-teal-700', textColor: 'text-teal-700' },
                   { label: 'Ross Procedures', value: '23', change: '+4.5%', bgColor: 'bg-red-50', borderColor: 'border-red-200', textColor: 'text-red-600' },
-                  { label: 'Echo Surveillance', value: '424', change: '+12.3%', bgColor: 'bg-[#F0F5FA]', borderColor: 'border-[#C8D4DC]', textColor: 'text-[#6B7280]' }
+                  { label: 'Echo Surveillance', value: '424', change: '+12.3%', bgColor: 'bg-chrome-50', borderColor: 'border-titanium-300', textColor: 'text-gray-500' }
                 ].map((item, index) => (
                   <div key={item.label} className={`p-6 rounded-xl ${item.bgColor} border ${item.borderColor}`}>
                     <div className={`text-3xl font-bold ${item.textColor} mb-1`}>{item.value}</div>
                     <div className="font-medium text-titanium-900">{item.label}</div>
-                    <div className="text-sm text-[#2C4A60] mt-1">{item.change} vs prior year</div>
+                    <div className="text-sm text-teal-700 mt-1">{item.change} vs prior year</div>
                   </div>
                 ))}
               </div>
@@ -394,7 +394,7 @@ const ValvularServiceLineView: React.FC = () => {
                     ].map((q, index) => (
                       <div key={q.quarter} className="bg-porsche-50 p-4 rounded-xl text-center">
                         <div className="font-medium text-titanium-900 mb-2">{q.quarter}</div>
-                        <div className="text-sm"><span className="text-[#2C4A60]">Repair: {q.repairs}</span></div>
+                        <div className="text-sm"><span className="text-teal-700">Repair: {q.repairs}</span></div>
                         <div className="text-sm"><span className="text-chrome-600">Replace: {q.replacements}</span></div>
                       </div>
                     ))}
@@ -408,7 +408,7 @@ const ValvularServiceLineView: React.FC = () => {
         return (
           <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-8">
             <h3 className="text-2xl font-bold text-titanium-900 mb-6 flex items-center gap-3">
-              <TrendingUp className="w-8 h-8 text-[#2C4A60]" />
+              <TrendingUp className="w-8 h-8 text-teal-700" />
               Surgical Outcomes Tracking
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -418,10 +418,10 @@ const ValvularServiceLineView: React.FC = () => {
                 { metric: 'Paravalvular Leak', value: '3.1%', benchmark: '<5.0%', met: true },
                 { metric: '30-Day Readmission', value: '7.8%', benchmark: '<10%', met: true }
               ].map((item, index) => (
-                <div key={item.metric} className={`p-6 rounded-xl ${item.met ? 'bg-[#F0F7F4] border-[#D8EDE6]' : 'bg-red-50 border-red-200'} border`}>
+                <div key={item.metric} className={`p-6 rounded-xl ${item.met ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-200'} border`}>
                   <div className="text-2xl font-bold text-titanium-900 mb-1">{item.value}</div>
                   <div className="font-medium text-titanium-800 text-sm">{item.metric}</div>
-                  <div className={`text-xs mt-2 ${item.met ? 'text-[#2C4A60]' : 'text-red-600'}`}>
+                  <div className={`text-xs mt-2 ${item.met ? 'text-teal-700' : 'text-red-600'}`}>
                     Benchmark: {item.benchmark} {item.met ? '\u2713' : '\u2717'}
                   </div>
                 </div>
@@ -437,9 +437,9 @@ const ValvularServiceLineView: React.FC = () => {
                     { metric: 'Post-op AI grade \u2264 mild', value: '91.8%' },
                     { metric: 'Mean gradient post-op', value: '8.2 mmHg' }
                   ].map((item, index) => (
-                    <div key={item.metric} className="flex justify-between p-3 bg-[#C8D4DC] rounded-lg">
+                    <div key={item.metric} className="flex justify-between p-3 bg-titanium-300 rounded-lg">
                       <span className="text-titanium-900">{item.metric}</span>
-                      <span className="font-bold text-[#2C4A60]">{item.value}</span>
+                      <span className="font-bold text-teal-700">{item.value}</span>
                     </div>
                   ))}
                 </div>
@@ -486,7 +486,7 @@ const ValvularServiceLineView: React.FC = () => {
                       <div className="flex items-center gap-3">
                         <span className="font-medium text-titanium-900">{item.value}</span>
                         <span className={`text-xs px-2 py-1 rounded-full ${
-                          item.status === 'Excellent' ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-chrome-100 text-chrome-700'
+                          item.status === 'Excellent' ? 'bg-green-50 text-green-600' : 'bg-chrome-100 text-chrome-700'
                         }`}>{item.percentile}</span>
                       </div>
                     </div>

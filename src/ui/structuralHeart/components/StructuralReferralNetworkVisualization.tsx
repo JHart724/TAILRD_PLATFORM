@@ -663,7 +663,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <UserPlus className={`w-6 h-6 ${metrics.referralConversionRate >= 0.75 ? 'text-[#2C4A60]' : 'text-red-600'}`} />
+ <UserPlus className={`w-6 h-6 ${metrics.referralConversionRate >= 0.75 ? 'text-teal-700' : 'text-red-600'}`} />
  <div>
  <div className="text-lg font-bold text-titanium-900">{toFixed(metrics.referralConversionRate * 100, 0)}%</div>
  <div className="text-xs text-titanium-600">Referral Conversion</div>
@@ -693,7 +693,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Users className="w-6 h-6 text-[#6B7280]" />
+ <Users className="w-6 h-6 text-gray-500" />
  <div>
  <div className="text-lg font-bold text-titanium-900">{toFixed(metrics.heartTeamUtilization * 100, 0)}%</div>
  <div className="text-xs text-titanium-600">Heart Team Util</div>
@@ -703,7 +703,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Target className="w-6 h-6 text-[#2C4A60]" />
+ <Target className="w-6 h-6 text-teal-700" />
  <div>
  <div className="text-lg font-bold text-titanium-900">{toFixed(metrics.overallSuccessRate * 100, 0)}%</div>
  <div className="text-xs text-titanium-600">Success Rate</div>
@@ -846,17 +846,17 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  <span>Primary Referrals (Urgent)</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-1 bg-[#6B7280]" style={{ background: 'repeating-linear-gradient(90deg, #7A1A2E, #7A1A2E 4px, transparent 4px, transparent 8px)' }}></div>
+ <div className="w-4 h-1 bg-gray-500" style={{ background: 'repeating-linear-gradient(90deg, #7A1A2E, #7A1A2E 4px, transparent 4px, transparent 8px)' }}></div>
  <span>Evaluations (Standard)</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-1 bg-[#C8D4DC]"></div>
+ <div className="w-4 h-1 bg-titanium-300"></div>
  <span>Follow-up & Surveillance</span>
  </div>
  </div>
  <div className="space-y-2">
  <div className="flex items-center gap-2">
- <div className="w-4 h-1 bg-[#F0F5FA]"></div>
+ <div className="w-4 h-1 bg-chrome-50"></div>
  <span>Heart Team Decisions</span>
  </div>
  <div className="flex items-center gap-2">
@@ -864,9 +864,9 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  <span>High Volume Centers</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-2 h-2 bg-[#C8D4DC] rounded-full"></div>
+ <div className="w-2 h-2 bg-titanium-300 rounded-full"></div>
  <span>Available</span>
- <div className="w-2 h-2 bg-[#F0F5FA] rounded-full"></div>
+ <div className="w-2 h-2 bg-chrome-50 rounded-full"></div>
  <span>Busy</span>
  <div className="w-2 h-2 bg-red-500 rounded-full"></div>
  <span>Active</span>
@@ -892,8 +892,8 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  )}
  {selectedNode.status && (
  <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${
- selectedNode.status === 'active' ? 'bg-[#F0F7F4] text-[#2D6147]' :
- selectedNode.status === 'busy' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ selectedNode.status === 'active' ? 'bg-green-50 text-green-600' :
+ selectedNode.status === 'busy' ? 'bg-amber-50 text-amber-600' :
  'bg-gray-100 text-gray-700'
  }`}>
  {selectedNode.status.toUpperCase()}
@@ -909,11 +909,11 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  </div>
  )}
  {selectedNode.referralConversionRate && (
- <div className={`p-3 rounded-lg ${selectedNode.referralConversionRate >= 0.8 ? 'bg-[#C8D4DC]' : 'bg-[#F0F5FA]'}`}>
- <div className={`text-lg font-bold ${selectedNode.referralConversionRate >= 0.8 ? 'text-[#2C4A60]' : 'text-[#6B7280]'}`}>
+ <div className={`p-3 rounded-lg ${selectedNode.referralConversionRate >= 0.8 ? 'bg-titanium-300' : 'bg-chrome-50'}`}>
+ <div className={`text-lg font-bold ${selectedNode.referralConversionRate >= 0.8 ? 'text-teal-700' : 'text-gray-500'}`}>
  {toFixed(selectedNode.referralConversionRate * 100, 0)}%
  </div>
- <div className={`text-xs ${selectedNode.referralConversionRate >= 0.8 ? 'text-[#2C4A60]' : 'text-[#6B7280]'}`}>
+ <div className={`text-xs ${selectedNode.referralConversionRate >= 0.8 ? 'text-teal-700' : 'text-gray-500'}`}>
  Conversion Rate
  </div>
  </div>
@@ -931,9 +931,9 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  </div>
  )}
  {selectedNode.successRate && (
- <div className="bg-[#F0F5FA] p-3 rounded-lg">
- <div className="text-lg font-bold text-[#2C4A60]">{toFixed(selectedNode.successRate * 100, 1)}%</div>
- <div className="text-xs text-[#2C4A60]">Success Rate</div>
+ <div className="bg-chrome-50 p-3 rounded-lg">
+ <div className="text-lg font-bold text-teal-700">{toFixed(selectedNode.successRate * 100, 1)}%</div>
+ <div className="text-xs text-teal-700">Success Rate</div>
  </div>
  )}
  </div>
@@ -953,7 +953,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  <div className="flex items-center gap-2">
  <span className="text-titanium-500">{conn.patientFlow} pts</span>
  {conn.avgTimeToNext && (
- <span className={`text-xs px-1 rounded ${conn.avgTimeToNext <= 7 ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>
+ <span className={`text-xs px-1 rounded ${conn.avgTimeToNext <= 7 ? 'bg-green-50 text-green-600' : 'bg-amber-50 text-amber-600'}`}>
  {conn.avgTimeToNext}d
  </span>
  )}
@@ -998,7 +998,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  <div className="space-y-3">
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Overall Conversion</span>
- <span className={`font-bold ${metrics.referralConversionRate >= 0.75 ? 'text-[#2C4A60]' : 'text-red-600'}`}>
+ <span className={`font-bold ${metrics.referralConversionRate >= 0.75 ? 'text-teal-700' : 'text-red-600'}`}>
  {toFixed(metrics.referralConversionRate * 100, 1)}%
  </span>
  </div>
@@ -1015,13 +1015,13 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <HeartHandshake className="w-5 h-5 text-[#6B7280]" />
+ <HeartHandshake className="w-5 h-5 text-gray-500" />
  Heart Team Coordination
  </h4>
  <div className="space-y-3">
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Team Utilization</span>
- <span className="font-bold text-[#6B7280]">{toFixed(metrics.heartTeamUtilization * 100, 1)}%</span>
+ <span className="font-bold text-gray-500">{toFixed(metrics.heartTeamUtilization * 100, 1)}%</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Weekly Conferences</span>
@@ -1029,14 +1029,14 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Cases Reviewed</span>
- <span className="font-bold text-[#2C4A60]">{nodes.find(n => n.id === 'heart-team')?.patientVolume}</span>
+ <span className="font-bold text-teal-700">{nodes.find(n => n.id === 'heart-team')?.patientVolume}</span>
  </div>
  </div>
  </div>
  
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Activity className="w-5 h-5 text-[#2C4A60]" />
+ <Activity className="w-5 h-5 text-teal-700" />
  Procedure Volumes
  </h4>
  <div className="space-y-3">
@@ -1050,7 +1050,7 @@ const StructuralReferralNetworkVisualization: React.FC = () => {
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Overall Success Rate</span>
- <span className="font-bold text-[#2C4A60]">{toFixed(metrics.overallSuccessRate * 100, 1)}%</span>
+ <span className="font-bold text-teal-700">{toFixed(metrics.overallSuccessRate * 100, 1)}%</span>
  </div>
  </div>
  </div>

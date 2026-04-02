@@ -257,22 +257,22 @@ const PhenotypeScreeningPanel: React.FC<PhenotypeScreeningPanelProps> = ({
  <div className="text-sm text-red-600">Require attention</div>
  </div>
 
- <div className="p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border border-[#C8D4DC]">
+ <div className="p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border border-titanium-300">
  <div className="flex items-center gap-2 mb-2">
- <Eye className="w-5 h-5 text-[#6B7280]" />
- <span className="font-semibold text-[#6B7280]">Suspected</span>
+ <Eye className="w-5 h-5 text-gray-500" />
+ <span className="font-semibold text-gray-500">Suspected</span>
  </div>
- <div className="text-2xl font-bold text-[#6B7280]">{statusCounts.suspected}</div>
- <div className="text-sm text-[#6B7280]">Need workup</div>
+ <div className="text-2xl font-bold text-gray-500">{statusCounts.suspected}</div>
+ <div className="text-sm text-gray-500">Need workup</div>
  </div>
 
- <div className="p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-xl border border-[#2C4A60]">
+ <div className="p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-xl border border-teal-700">
  <div className="flex items-center gap-2 mb-2">
- <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
- <span className="font-semibold text-[#2C4A60]">Ruled Out</span>
+ <CheckCircle className="w-5 h-5 text-teal-700" />
+ <span className="font-semibold text-teal-700">Ruled Out</span>
  </div>
- <div className="text-2xl font-bold text-[#2C4A60]">{statusCounts['ruled-out']}</div>
- <div className="text-sm text-[#2C4A60]">Excluded</div>
+ <div className="text-2xl font-bold text-teal-700">{statusCounts['ruled-out']}</div>
+ <div className="text-sm text-teal-700">Excluded</div>
  </div>
 
  <div className="p-4 bg-gradient-to-br from-titanium-50 to-titanium-100 rounded-xl border border-titanium-200">
@@ -387,8 +387,8 @@ const PhenotypeScreeningPanel: React.FC<PhenotypeScreeningPanelProps> = ({
  </div>
  <div className={`w-3 h-3 rounded-full ${
  phenotype.clinicalImpact === 'High' ? 'bg-red-500' :
- phenotype.clinicalImpact === 'Medium' ? 'bg-[#F0F5FA]' :
- 'bg-[#C8D4DC]'
+ phenotype.clinicalImpact === 'Medium' ? 'bg-chrome-50' :
+ 'bg-titanium-300'
  }`} title={`${phenotype.clinicalImpact} clinical impact`}></div>
  </div>
  </button>

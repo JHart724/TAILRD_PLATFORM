@@ -354,7 +354,7 @@ const EPPatientPanelTable: React.FC = () => {
  critical: 'bg-medical-red-100 text-medical-red-800 border-medical-red-300',
  high: 'bg-medical-orange-100 text-medical-orange-800 border-medical-orange-300',
  medium: 'bg-crimson-100 text-crimson-700 border-crimson-200',
- low: 'bg-[#F0F7F4] text-[#2D6147] border-[#D8EDE6]'
+ low: 'bg-green-50 text-green-600 border-green-100'
  };
  return colors[priority as keyof typeof colors] || colors.low;
   };
@@ -362,7 +362,7 @@ const EPPatientPanelTable: React.FC = () => {
   const getStrokeRiskColor = (risk: number) => {
  if (risk >= 6) return 'text-medical-red-700 bg-medical-red-100';
  if (risk >= 3) return 'text-crimson-700 bg-crimson-100';
- return 'text-[#2D6147] bg-[#F0F7F4]';
+ return 'text-green-600 bg-green-50';
   };
 
   const getArrhythmiaIcon = (arrhythmia: string) => {
@@ -628,22 +628,22 @@ const EPPatientPanelTable: React.FC = () => {
  <td className="px-4 py-3">
  <div className="grid grid-cols-2 gap-1 text-xs">
  <div className={`px-1 py-0.5 rounded text-center ${
- patient.currentTreatment.anticoagulation ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-red-100 text-red-700'
+ patient.currentTreatment.anticoagulation ? 'bg-green-50 text-green-600' : 'bg-red-100 text-red-700'
  }`}>
  OAC
  </div>
  <div className={`px-1 py-0.5 rounded text-center ${
- patient.currentTreatment.rateControl ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-red-100 text-red-700'
+ patient.currentTreatment.rateControl ? 'bg-green-50 text-green-600' : 'bg-red-100 text-red-700'
  }`}>
  Rate
  </div>
  <div className={`px-1 py-0.5 rounded text-center ${
- patient.currentTreatment.rhythmControl ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-red-100 text-red-700'
+ patient.currentTreatment.rhythmControl ? 'bg-green-50 text-green-600' : 'bg-red-100 text-red-700'
  }`}>
  Rhythm
  </div>
  <div className={`px-1 py-0.5 rounded text-center ${
- patient.currentTreatment.deviceTherapy ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-gray-100 text-gray-700'
+ patient.currentTreatment.deviceTherapy ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-700'
  }`}>
  Device
  </div>
@@ -653,7 +653,7 @@ const EPPatientPanelTable: React.FC = () => {
  {patient.treatmentGaps.length > 0 ? (
  <div className="space-y-1">
  {patient.treatmentGaps.slice(0, 2).map((gap, idx) => (
- <div key={gap} className="px-2 py-1 bg-[#FAF6E8] text-[#8B6914] text-xs rounded">
+ <div key={gap} className="px-2 py-1 bg-amber-50 text-amber-600 text-xs rounded">
  {gap}
  </div>
  ))}
@@ -662,7 +662,7 @@ const EPPatientPanelTable: React.FC = () => {
  )}
  </div>
  ) : (
- <span className="px-2 py-1 bg-[#F0F7F4] text-[#2D6147] text-xs rounded">
+ <span className="px-2 py-1 bg-green-50 text-green-600 text-xs rounded">
  No gaps identified
  </span>
  )}
@@ -776,7 +776,7 @@ const EPPatientPanelTable: React.FC = () => {
  <div className="text-sm text-titanium-600">Device Eligible</div>
  </div>
  <div className="text-center">
- <div className="text-2xl font-bold text-[#2C4A60]">
+ <div className="text-2xl font-bold text-teal-700">
  {sortedPatients.filter(p => p.ablationCandidate).length}
  </div>
  <div className="text-sm text-titanium-600">Ablation Candidates</div>

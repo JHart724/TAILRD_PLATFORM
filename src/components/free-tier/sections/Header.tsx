@@ -20,7 +20,7 @@ const Header: React.FC<HeaderProps> = ({ hasUploadedFiles }) => {
           AHA 2024
         </span>
         {hasUploadedFiles && (
-          <span className="inline-flex items-center gap-1.5 bg-[#F0F5FA] text-[#2C4A60] text-xs font-body font-medium px-2.5 py-1 rounded-full">
+          <span className="inline-flex items-center gap-1.5 bg-chrome-50 text-teal-700 text-xs font-body font-medium px-2.5 py-1 rounded-full">
             <Upload className="w-3 h-3" />
             Uploaded Data
           </span>

@@ -251,8 +251,8 @@ const CoronaryRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = 
 
   const getRiskColor = (category: string) => {
  switch (category) {
- case 'Low': return 'text-[#2D6147] bg-[#F0F7F4] border-[#2C4A60]';
- case 'Intermediate': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
+ case 'Low': return 'text-green-600 bg-green-50 border-teal-700';
+ case 'Intermediate': return 'text-amber-600 bg-amber-50 border-titanium-300';
  case 'High': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
@@ -340,8 +340,8 @@ const CoronaryRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = 
  </div>
 
  {/* Presentation */}
- <div className="p-4 bg-[#F0F5FA] border border-[#C8D4DC] rounded-lg">
- <h3 className="font-semibold text-[#6B7280] mb-3">Presentation (GRACE + TIMI)</h3>
+ <div className="p-4 bg-chrome-50 border border-titanium-300 rounded-lg">
+ <h3 className="font-semibold text-gray-500 mb-3">Presentation (GRACE + TIMI)</h3>
  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
  {[
  { key: 'stElevation', label: 'ST Elevation/Depression' },
@@ -354,7 +354,7 @@ const CoronaryRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = 
  type="checkbox"
  checked={inputs[item.key as keyof CoronaryRiskInputs] as boolean}
  onChange={(e) => updateInput(item.key as keyof CoronaryRiskInputs, e.target.checked)}
- className="rounded text-[#6B7280]"
+ className="rounded text-gray-500"
  />
  <span className="text-sm font-medium text-titanium-700">{item.label}</span>
  </label>
@@ -411,8 +411,8 @@ const CoronaryRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = 
  </div>
 
  {/* Risk Factors - TIMI */}
- <div className="p-4 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg">
- <h3 className="font-semibold text-[#2C4A60] mb-3">Risk Factors (TIMI)</h3>
+ <div className="p-4 bg-green-50 border border-green-100 rounded-lg">
+ <h3 className="font-semibold text-teal-700 mb-3">Risk Factors (TIMI)</h3>
  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
  {[
  { key: 'diabetes', label: 'Diabetes Mellitus' },
@@ -425,7 +425,7 @@ const CoronaryRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = 
  type="checkbox"
  checked={inputs[item.key as keyof CoronaryRiskInputs] as boolean}
  onChange={(e) => updateInput(item.key as keyof CoronaryRiskInputs, e.target.checked)}
- className="rounded text-[#2C4A60]"
+ className="rounded text-teal-700"
  />
  <span className="text-sm font-medium text-titanium-700">{item.label}</span>
  </label>

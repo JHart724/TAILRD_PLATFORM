@@ -279,8 +279,8 @@ const EPPhenotypeClassification: React.FC<{ patientData?: PatientContext }> = ({
  switch (severity) {
  case 'Critical': return 'text-red-700 bg-red-50 border-red-300';
  case 'High': return 'text-red-600 bg-red-50 border-red-200';
- case 'Moderate': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
- case 'Low': return 'text-[#2D6147] bg-[#F0F7F4] border-[#2C4A60]';
+ case 'Moderate': return 'text-amber-600 bg-amber-50 border-titanium-300';
+ case 'Low': return 'text-green-600 bg-green-50 border-teal-700';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };
@@ -449,7 +449,7 @@ const EPPhenotypeClassification: React.FC<{ patientData?: PatientContext }> = ({
 
  {/* Stroke Risk */}
  {(inputs.primaryRhythm.startsWith('afib') || inputs.primaryRhythm === 'aflutter') && (
- <div className={`p-6 rounded-xl border-2 ${result.strokeRisk.anticoagulationIndicated ? 'border-red-200 bg-red-50' : 'border-[#2C4A60] bg-[#C8D4DC]'}`}>
+ <div className={`p-6 rounded-xl border-2 ${result.strokeRisk.anticoagulationIndicated ? 'border-red-200 bg-red-50' : 'border-teal-700 bg-titanium-300'}`}>
  <div className="flex items-center gap-3 mb-3">
  <AlertTriangle className="w-6 h-6" />
  <div className="font-bold text-lg">Stroke Risk: CHA₂DS₂-VASc = {result.strokeRisk.cha2ds2vasc}</div>
@@ -476,7 +476,7 @@ const EPPhenotypeClassification: React.FC<{ patientData?: PatientContext }> = ({
 
  {/* Device Assessment */}
  <div className={`p-6 rounded-xl border-2 ${
- result.deviceAssessment.upgradeNeeded ? 'border-[#C8D4DC] bg-[#F0F5FA]' : 'border-titanium-200 bg-titanium-50'
+ result.deviceAssessment.upgradeNeeded ? 'border-titanium-300 bg-chrome-50' : 'border-titanium-200 bg-titanium-50'
  }`}>
  <div className="flex items-center gap-3 mb-3">
  <Heart className="w-6 h-6" />

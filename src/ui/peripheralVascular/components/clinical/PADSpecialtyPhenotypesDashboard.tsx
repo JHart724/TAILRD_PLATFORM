@@ -20,9 +20,9 @@ const PADSpecialtyPhenotypesDashboard: React.FC = () => {
   const totalGap = PAD_PHENOTYPES.reduce((s, p) => s + p.patientGap, 0);
   const avgDetection = Math.round(PAD_PHENOTYPES.reduce((s, p) => s + p.detectionRate, 0) / PAD_PHENOTYPES.length);
   const BULLET = '\u2022';
-  const getPriorityColor = (p: string) => p === 'Critical' ? 'text-crimson-600 bg-crimson-50 border-crimson-200' : p === 'High' ? 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]' : p === 'Moderate' ? 'text-porsche-600 bg-porsche-50 border-porsche-200' : 'text-[#2D6147] bg-[#F0F7F4] border-[#2C4A60]';
+  const getPriorityColor = (p: string) => p === 'Critical' ? 'text-crimson-600 bg-crimson-50 border-crimson-200' : p === 'High' ? 'text-amber-600 bg-amber-50 border-titanium-300' : p === 'Moderate' ? 'text-porsche-600 bg-porsche-50 border-porsche-200' : 'text-green-600 bg-green-50 border-teal-700';
   const getCategoryIcon = (c: string) => { switch(c) { case 'ischemic': return <Flame className="w-4 h-4" />; case 'inflammatory': return <Zap className="w-4 h-4" />; case 'structural': return <Shield className="w-4 h-4" />; case 'metabolic': return <Activity className="w-4 h-4" />; default: return <Heart className="w-4 h-4" />; } };
-  const getDetectionColor = (d: number) => d < 30 ? 'bg-crimson-500' : d < 50 ? 'bg-[#F0F5FA]' : d < 70 ? 'bg-porsche-500' : 'bg-[#C8D4DC]';
+  const getDetectionColor = (d: number) => d < 30 ? 'bg-crimson-500' : d < 50 ? 'bg-chrome-50' : d < 70 ? 'bg-porsche-500' : 'bg-titanium-300';
   return (
  <div className="space-y-6">
  <div className="flex items-center gap-3 mb-2">
@@ -32,7 +32,7 @@ const PADSpecialtyPhenotypesDashboard: React.FC = () => {
  </div>
  <div className="grid grid-cols-3 gap-4">
  <div className="metal-card p-4 text-center"><div className="text-xs text-titanium-500 mb-1">Phenotypes Tracked</div><div className="text-2xl font-bold text-titanium-900">{PAD_PHENOTYPES.length}</div><div className="text-xs text-titanium-500">specialty classifications</div></div>
- <div className="metal-card p-4 text-center"><div className="text-xs text-titanium-500 mb-1">Avg Detection Rate</div><div className="text-2xl font-bold text-[#6B7280]">{avgDetection}%</div><div className="text-xs text-titanium-500">across all phenotypes</div></div>
+ <div className="metal-card p-4 text-center"><div className="text-xs text-titanium-500 mb-1">Avg Detection Rate</div><div className="text-2xl font-bold text-gray-500">{avgDetection}%</div><div className="text-xs text-titanium-500">across all phenotypes</div></div>
  <div className="metal-card p-4 text-center"><div className="text-xs text-titanium-500 mb-1">Total Patient Gap</div><div className="text-2xl font-bold text-crimson-600"><Users className="w-5 h-5 inline mr-1" />{totalGap}</div><div className="text-xs text-titanium-500">underdetected patients</div></div>
  </div>
  <div className="flex gap-3 flex-wrap">
@@ -77,8 +77,8 @@ const PADSpecialtyPhenotypesDashboard: React.FC = () => {
  <li className="flex items-start gap-2"><span className="text-porsche-500 mt-0.5">{BULLET}</span>Buerger disease requires absolute smoking cessation as cornerstone of management</li>
  </ul>
  </div>
- <div className="mt-6 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
- <p className="text-sm text-[#6B7280]">
+ <div className="mt-6 bg-chrome-50 border border-titanium-300 rounded-xl p-4">
+ <p className="text-sm text-gray-500">
  <strong>Guidelines:</strong> 2024 ACC/AHA PAD Guideline; Global Vascular Guidelines on CLTI; TASC II Inter-Society Consensus on PAD.
  </p>
  </div>

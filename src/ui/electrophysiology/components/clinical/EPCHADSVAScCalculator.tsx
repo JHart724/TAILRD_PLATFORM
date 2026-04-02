@@ -78,9 +78,9 @@ const EPCHADSVAScCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
 
   const getRiskColor = (category: string) => {
  switch (category) {
- case 'Low': return 'text-[#2D6147]';
- case 'Low-Moderate': return 'text-[#8B6914]';
- case 'Moderate': return 'text-[#8B6914]';
+ case 'Low': return 'text-green-600';
+ case 'Low-Moderate': return 'text-amber-600';
+ case 'Moderate': return 'text-amber-600';
  case 'High': return 'text-red-400';
  default: return 'text-titanium-400';
  }
@@ -88,9 +88,9 @@ const EPCHADSVAScCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
 
   const getRiskBg = (category: string) => {
  switch (category) {
- case 'Low': return 'bg-[#F0F7F4] border-[#D8EDE6]';
- case 'Low-Moderate': return 'bg-[#F0F5FA]/10 border-[#C8D4DC]/30';
- case 'Moderate': return 'bg-bg-[#F0F5FA] border-[#C8D4DC]/30';
+ case 'Low': return 'bg-green-50 border-green-100';
+ case 'Low-Moderate': return 'bg-chrome-50/10 border-titanium-300/30';
+ case 'Moderate': return 'bg-bg-chrome-50 border-titanium-300/30';
  case 'High': return 'bg-red-500 border-red-500';
  default: return 'bg-titanium-500 border-titanium-500';
  }
@@ -203,16 +203,16 @@ const EPCHADSVAScCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  </div>
 
  <div className="grid grid-cols-4 gap-1 text-center text-xs">
- <div className="text-[#2C4A60]">Low (0)</div>
- <div className="text-[#8B6914]">Low-Mod (1)</div>
- <div className="text-[#8B6914]">Mod (2-4)</div>
+ <div className="text-teal-700">Low (0)</div>
+ <div className="text-amber-600">Low-Mod (1)</div>
+ <div className="text-amber-600">Mod (2-4)</div>
  <div className="text-red-400">High (5-9)</div>
  </div>
  </div>
 
  <div className="metal-card rounded-2xl p-4 border border-titanium-200">
  <h4 className="text-sm font-semibold text-white font-sf mb-3 flex items-center gap-2">
- <AlertTriangle className="w-4 h-4 text-[#8B6914]" />
+ <AlertTriangle className="w-4 h-4 text-amber-600" />
  Annual Stroke Risk
  </h4>
  <div className="text-2xl font-bold text-white font-sf">
@@ -227,7 +227,7 @@ const EPCHADSVAScCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  </h4>
  <div className="flex items-start gap-2">
  {result.riskCategory === 'Low' ? (
- <CheckCircle className="w-5 h-5 text-[#2C4A60] mt-0.5 flex-shrink-0" />
+ <CheckCircle className="w-5 h-5 text-teal-700 mt-0.5 flex-shrink-0" />
  ) : (
  <Info className="w-5 h-5 text-porsche-400 mt-0.5 flex-shrink-0" />
  )}

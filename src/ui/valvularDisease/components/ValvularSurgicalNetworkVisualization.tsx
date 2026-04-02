@@ -791,7 +791,7 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Users className={`w-6 h-6 ${metrics.heartTeamUtilization >= 0.85 ? 'text-[#2C4A60]' : 'text-[#6B7280]'}`} />
+ <Users className={`w-6 h-6 ${metrics.heartTeamUtilization >= 0.85 ? 'text-teal-700' : 'text-gray-500'}`} />
  <div>
  <div className="text-lg font-bold text-titanium-900">{toFixed(metrics.heartTeamUtilization * 100, 0)}%</div>
  <div className="text-xs text-titanium-600">Heart Team Util</div>
@@ -821,7 +821,7 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Shield className="w-6 h-6 text-[#2C4A60]" />
+ <Shield className="w-6 h-6 text-teal-700" />
  <div>
  <div className="text-lg font-bold text-titanium-900">{toFixed(metrics.postOpSurveillanceCompliance * 100, 0)}%</div>
  <div className="text-xs text-titanium-600">Surveillance</div>
@@ -992,9 +992,9 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  <span>High Volume Programs</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-2 h-2 bg-[#C8D4DC] rounded-full"></div>
+ <div className="w-2 h-2 bg-titanium-300 rounded-full"></div>
  <span>Active</span>
- <div className="w-2 h-2 bg-[#F0F5FA] rounded-full"></div>
+ <div className="w-2 h-2 bg-chrome-50 rounded-full"></div>
  <span>Busy</span>
  <div className="w-2 h-2 bg-gold-500 rounded-full"></div>
  <span>Scheduled</span>
@@ -1020,8 +1020,8 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  )}
  {selectedNode.status && (
  <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${
- selectedNode.status === 'active' ? 'bg-[#F0F7F4] text-[#2D6147]' :
- selectedNode.status === 'busy' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ selectedNode.status === 'active' ? 'bg-green-50 text-green-600' :
+ selectedNode.status === 'busy' ? 'bg-amber-50 text-amber-600' :
  selectedNode.status === 'scheduled' ? 'bg-gold-100 text-gold-700' :
  'bg-gray-100 text-gray-700'
  }`}>
@@ -1038,11 +1038,11 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  </div>
  )}
  {selectedNode.conversionRate && (
- <div className={`p-3 rounded-lg ${selectedNode.conversionRate >= 0.8 ? 'bg-[#C8D4DC]' : 'bg-[#F0F5FA]'}`}>
- <div className={`text-lg font-bold ${selectedNode.conversionRate >= 0.8 ? 'text-[#2C4A60]' : 'text-[#6B7280]'}`}>
+ <div className={`p-3 rounded-lg ${selectedNode.conversionRate >= 0.8 ? 'bg-titanium-300' : 'bg-chrome-50'}`}>
+ <div className={`text-lg font-bold ${selectedNode.conversionRate >= 0.8 ? 'text-teal-700' : 'text-gray-500'}`}>
  {toFixed(selectedNode.conversionRate * 100, 0)}%
  </div>
- <div className={`text-xs ${selectedNode.conversionRate >= 0.8 ? 'text-[#2C4A60]' : 'text-[#6B7280]'}`}>
+ <div className={`text-xs ${selectedNode.conversionRate >= 0.8 ? 'text-teal-700' : 'text-gray-500'}`}>
  Conversion Rate
  </div>
  </div>
@@ -1060,9 +1060,9 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  </div>
  )}
  {selectedNode.successRate && (
- <div className="bg-[#F0F5FA] p-3 rounded-lg">
- <div className="text-lg font-bold text-[#2C4A60]">{toFixed(selectedNode.successRate * 100, 1)}%</div>
- <div className="text-xs text-[#2C4A60]">Success Rate</div>
+ <div className="bg-chrome-50 p-3 rounded-lg">
+ <div className="text-lg font-bold text-teal-700">{toFixed(selectedNode.successRate * 100, 1)}%</div>
+ <div className="text-xs text-teal-700">Success Rate</div>
  </div>
  )}
  {selectedNode.avgStsScore && (
@@ -1072,15 +1072,15 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  </div>
  )}
  {selectedNode.complianceRate && (
- <div className="bg-[#C8D4DC] p-3 rounded-lg">
- <div className="text-lg font-bold text-[#2C4A60]">{toFixed(selectedNode.complianceRate * 100, 0)}%</div>
- <div className="text-xs text-[#2C4A60]">Compliance</div>
+ <div className="bg-titanium-300 p-3 rounded-lg">
+ <div className="text-lg font-bold text-teal-700">{toFixed(selectedNode.complianceRate * 100, 0)}%</div>
+ <div className="text-xs text-teal-700">Compliance</div>
  </div>
  )}
  {selectedNode.complicationRate && (
- <div className="bg-[#F0F5FA] p-3 rounded-lg">
- <div className="text-lg font-bold text-[#6B7280]">{toFixed(selectedNode.complicationRate * 100, 1)}%</div>
- <div className="text-xs text-[#6B7280]">Complications</div>
+ <div className="bg-chrome-50 p-3 rounded-lg">
+ <div className="text-lg font-bold text-gray-500">{toFixed(selectedNode.complicationRate * 100, 1)}%</div>
+ <div className="text-xs text-gray-500">Complications</div>
  </div>
  )}
  </div>
@@ -1100,7 +1100,7 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  <div className="flex items-center gap-2">
  <span className="text-titanium-500">{conn.patientFlow} pts</span>
  {conn.avgTimeToNext && (
- <span className={`text-xs px-1 rounded ${conn.avgTimeToNext <= 7 ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>
+ <span className={`text-xs px-1 rounded ${conn.avgTimeToNext <= 7 ? 'bg-green-50 text-green-600' : 'bg-amber-50 text-amber-600'}`}>
  {conn.avgTimeToNext}d
  </span>
  )}
@@ -1145,7 +1145,7 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  <div className="space-y-3">
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Heart Team Utilization</span>
- <span className={`font-bold ${metrics.heartTeamUtilization >= 0.85 ? 'text-[#2C4A60]' : 'text-[#6B7280]'}`}>
+ <span className={`font-bold ${metrics.heartTeamUtilization >= 0.85 ? 'text-teal-700' : 'text-gray-500'}`}>
  {toFixed(metrics.heartTeamUtilization * 100, 1)}%
  </span>
  </div>
@@ -1176,20 +1176,20 @@ const ValvularSurgicalNetworkVisualization: React.FC = () => {
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Overall Success Rate</span>
- <span className="font-bold text-[#2C4A60]">{toFixed(metrics.overallSurgicalSuccessRate * 100, 1)}%</span>
+ <span className="font-bold text-teal-700">{toFixed(metrics.overallSurgicalSuccessRate * 100, 1)}%</span>
  </div>
  </div>
  </div>
  
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Shield className="w-5 h-5 text-[#2C4A60]" />
+ <Shield className="w-5 h-5 text-teal-700" />
  Long-term Management
  </h4>
  <div className="space-y-3">
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Surveillance Compliance</span>
- <span className="font-bold text-[#2C4A60]">{toFixed(metrics.postOpSurveillanceCompliance * 100, 1)}%</span>
+ <span className="font-bold text-teal-700">{toFixed(metrics.postOpSurveillanceCompliance * 100, 1)}%</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Long-term Patients</span>

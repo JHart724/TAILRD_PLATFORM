@@ -150,7 +150,7 @@ const CareTeamView: React.FC = () => {
  ].map((item, index) => (
  <div key={item.pillar} className={`p-3 rounded-lg border ${
  item.status === 'red' ? 'bg-red-50 border-red-200' :
- item.status === 'amber' ? 'bg-[#F0F5FA] border-[#C8D4DC]' : 'bg-[#F0F7F4] border-[#D8EDE6]'
+ item.status === 'amber' ? 'bg-chrome-50 border-titanium-300' : 'bg-green-50 border-green-100'
  }`}>
  <div className="flex justify-between items-center">
  <span className="font-medium text-titanium-900">{item.pillar}</span>
@@ -174,9 +174,9 @@ const CareTeamView: React.FC = () => {
  <div className="font-medium text-arterial-900">SGLT2i Assessment</div>
  <div className="text-sm text-arterial-600">31 patients for evaluation</div>
  </button>
- <button onClick={() => { handleTabChange('clinicaltools'); setActiveToolTab('contraindication'); }} className="w-full text-left p-3 rounded-lg bg-[#F0F7F4] border border-[#D8EDE6] hover:bg-[#C8D4DC] transition-colors">
- <div className="font-medium text-[#2C4A60]">Dose Optimization</div>
- <div className="text-sm text-[#2C4A60]">18 patients ready for titration</div>
+ <button onClick={() => { handleTabChange('clinicaltools'); setActiveToolTab('contraindication'); }} className="w-full text-left p-3 rounded-lg bg-green-50 border border-green-100 hover:bg-titanium-300 transition-colors">
+ <div className="font-medium text-teal-700">Dose Optimization</div>
+ <div className="text-sm text-teal-700">18 patients ready for titration</div>
  </button>
  </div>
  </div>
@@ -205,12 +205,12 @@ const CareTeamView: React.FC = () => {
  <div
  onClick={() => setExpandedSafetyCard(expandedSafetyCard === item.id ? null : item.id)}
  className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 hover:shadow-md ${
- item.color === 'red' ? 'bg-red-50 border-red-200 hover:bg-red-100' : 'bg-[#F0F5FA] border-[#C8D4DC] hover:bg-[#F0F5FA]'
+ item.color === 'red' ? 'bg-red-50 border-red-200 hover:bg-red-100' : 'bg-chrome-50 border-titanium-300 hover:bg-chrome-50'
  } ${expandedSafetyCard === item.id ? 'ring-2 ring-offset-1 ' + (item.color === 'red' ? 'ring-red-400' : 'ring-[#6B7280]') : ''}`}
  >
  <div className="text-center">
  <div className={`text-2xl font-bold ${
- item.color === 'red' ? 'text-red-600' : 'text-[#6B7280]'
+ item.color === 'red' ? 'text-red-600' : 'text-gray-500'
  }`}>{item.count}</div>
  <div className="text-sm font-medium text-titanium-700">{item.alert}</div>
  <div className="text-xs text-titanium-500 mt-1">{expandedSafetyCard === item.id ? 'Click to collapse' : 'Click to view patients'}</div>
@@ -218,7 +218,7 @@ const CareTeamView: React.FC = () => {
  </div>
  {expandedSafetyCard === item.id && (
  <div className={`mt-2 p-3 rounded-lg border text-sm ${
- item.color === 'red' ? 'bg-red-50 border-red-100' : 'bg-[#F0F5FA] border-[#C8D4DC]'
+ item.color === 'red' ? 'bg-red-50 border-red-100' : 'bg-chrome-50 border-titanium-300'
  }`}>
  <div className="font-medium text-titanium-800 mb-2">Affected Patients (showing 3 of {item.count}):</div>
  {item.patients.map((patient, pIdx) => (
@@ -274,9 +274,9 @@ const CareTeamView: React.FC = () => {
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">Documentation Tools</h4>
  <div className="space-y-2">
- <button onClick={() => { setDocTemplateFeedback('gdmt'); setTimeout(() => setDocTemplateFeedback(null), 2000); }} className="w-full text-left p-3 rounded-lg bg-[#F0F7F4] border border-[#D8EDE6] hover:bg-[#C8D4DC] transition-colors">
- <div className="font-medium text-[#2C4A60]">{docTemplateFeedback === 'gdmt' ? '✓ Template Loaded' : 'GDMT Template'}</div>
- <div className="text-sm text-[#2C4A60]">Standardized assessment form</div>
+ <button onClick={() => { setDocTemplateFeedback('gdmt'); setTimeout(() => setDocTemplateFeedback(null), 2000); }} className="w-full text-left p-3 rounded-lg bg-green-50 border border-green-100 hover:bg-titanium-300 transition-colors">
+ <div className="font-medium text-teal-700">{docTemplateFeedback === 'gdmt' ? '✓ Template Loaded' : 'GDMT Template'}</div>
+ <div className="text-sm text-teal-700">Standardized assessment form</div>
  </button>
  <button onClick={() => { setDocTemplateFeedback('discharge'); setTimeout(() => setDocTemplateFeedback(null), 2000); }} className="w-full text-left p-3 rounded-lg bg-chrome-50 border border-chrome-200 hover:bg-chrome-100 transition-colors">
  <div className="font-medium text-chrome-900">{docTemplateFeedback === 'discharge' ? '✓ Template Loaded' : 'Discharge Planning'}</div>

@@ -147,11 +147,11 @@ const BaseExecutiveView: React.FC<BaseExecutiveViewProps> = ({ config }) => {
                     <div className="flex items-center gap-3 mb-3">
                       <DollarSign className="w-8 h-8" style={{ color: dc.value }} />
                       <div>
-                        <div className="font-semibold text-[#1e293b]">{card.title}</div>
+                        <div className="font-semibold text-neutral-800">{card.title}</div>
                         <div className="text-2xl font-bold" style={{ color: dc.value }}>{card.value}</div>
                       </div>
                     </div>
-                    <div className="text-sm text-[#4A6880] mb-2">{card.caseCount}</div>
+                    <div className="text-sm text-teal-500 mb-2">{card.caseCount}</div>
                     <div className="text-sm" style={{ color: card.isPositive ? '#2C4A60' : '#9B2438' }}>{card.variance}</div>
                   </div>
                 );
@@ -166,7 +166,7 @@ const BaseExecutiveView: React.FC<BaseExecutiveViewProps> = ({ config }) => {
                   {/* Current CMI → Chrome Blue */}
                   <div className="text-2xl font-bold" style={{ color: '#2C4A60' }}>{drgMetrics.currentCMI}</div>
                   <div className="text-sm text-titanium-600">Current CMI</div>
-                  <div className="text-xs text-[#2C4A60]">+0.28 vs target</div>
+                  <div className="text-xs text-teal-700">+0.28 vs target</div>
                 </div>
                 <div className="text-center">
                   {/* Monthly Opportunity → Metallic Gold */}
@@ -184,7 +184,7 @@ const BaseExecutiveView: React.FC<BaseExecutiveViewProps> = ({ config }) => {
                   {/* Avg LOS → Steel Teal */}
                   <div className="text-2xl font-bold" style={{ color: '#1A6878' }}>{drgMetrics.avgLOS}</div>
                   <div className="text-sm text-titanium-600">Avg LOS</div>
-                  <div className="text-xs text-[#2C4A60]">{drgMetrics.losBenchmark}</div>
+                  <div className="text-xs text-teal-700">{drgMetrics.losBenchmark}</div>
                 </div>
               </div>
             </div>
@@ -196,7 +196,7 @@ const BaseExecutiveView: React.FC<BaseExecutiveViewProps> = ({ config }) => {
           <div className="metal-card relative z-10">
             <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
               <h3 className="text-lg font-semibold text-titanium-900 mb-1 flex items-center gap-2">
-                <Activity className="w-5 h-5 text-[#2C4A60]" />
+                <Activity className="w-5 h-5 text-teal-700" />
                 {proSummary.title}
               </h3>
               <p className="text-sm text-titanium-600">
@@ -209,7 +209,7 @@ const BaseExecutiveView: React.FC<BaseExecutiveViewProps> = ({ config }) => {
                   const valueColor =
                     metric.isPositive === false
                       ? 'text-xl font-bold mb-1 text-medical-red-700'
-                      : 'text-xl font-bold mb-1 text-[#2C4A60]';
+                      : 'text-xl font-bold mb-1 text-teal-700';
                   return (
                     <div
                       key={metric.label}

@@ -278,7 +278,7 @@ const ReferralPathwayCard: React.FC<ReferralPathwayCardProps> = ({
 
  {/* Revenue Estimate */}
  {estimatedRevenue && (
- <div className="mt-2 text-xs text-[#2C4A60] font-medium">
+ <div className="mt-2 text-xs text-teal-700 font-medium">
  Estimated Revenue Impact: ${estimatedRevenue.toLocaleString()}
  </div>
  )}
@@ -338,7 +338,7 @@ const ReferralPathwayCard: React.FC<ReferralPathwayCardProps> = ({
  {clinicalContext.currentMedications && clinicalContext.currentMedications.length > 0 && (
  <div>
  <h4 className="font-medium text-titanium-800 text-sm mb-2 flex items-center gap-2">
- <Pill className="w-4 h-4 text-[#2C4A60]" />
+ <Pill className="w-4 h-4 text-teal-700" />
  Current Medications
  </h4>
  <div className="space-y-1">
@@ -396,7 +396,7 @@ const ReferralPathwayCard: React.FC<ReferralPathwayCardProps> = ({
  <div className="flex gap-2">
  <button
  onClick={() => setShowActionModal('accept')}
- className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#2C4A60] hover:bg-[#2C4A60] text-white rounded-lg font-medium transition-colors"
+ className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-teal-700 hover:bg-teal-700 text-white rounded-lg font-medium transition-colors"
  >
  <CheckCircle className="w-4 h-4" />
  Accept

@@ -317,7 +317,7 @@ const GDMTContraindicationChecker: React.FC<{ patientData?: PatientContext }> = 
  case 'contraindicated': return 'text-red-800 bg-red-100 border-red-300';
  case 'caution': return 'text-crimson-700 bg-crimson-100 border-crimson-200';
  case 'monitor': return 'text-porsche-800 bg-porsche-100 border-porsche-300';
- case 'safe': return 'text-[#2D6147] bg-[#F0F7F4] border-[#D8EDE6]';
+ case 'safe': return 'text-green-600 bg-green-50 border-green-100';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };
@@ -553,8 +553,8 @@ const GDMTContraindicationChecker: React.FC<{ patientData?: PatientContext }> = 
  )}
  </div>
  </div>
- <div className="mt-6 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
- <p className="text-sm text-[#6B7280]">
+ <div className="mt-6 bg-chrome-50 border border-titanium-300 rounded-xl p-4">
+ <p className="text-sm text-gray-500">
  <strong>Guidelines:</strong> 2022 AHA/ACC/HFSA Heart Failure Guideline; 2021 ESC Heart Failure Guideline; 2023 ACC Expert Consensus on GDMT Optimization.
  </p>
  </div>

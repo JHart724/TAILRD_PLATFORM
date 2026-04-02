@@ -333,7 +333,7 @@ const ProtectedPCIChecklist: React.FC = () => {
  <h3 className="text-lg font-semibold text-titanium-800">{title}</h3>
  </div>
  <div className="flex items-center gap-2">
- <div className={`w-3 h-3 rounded-full ${getCompletionPercentage(items) === 100 ? 'bg-[#F0F5FA]' : 'bg-[#F0F5FA]'}`} />
+ <div className={`w-3 h-3 rounded-full ${getCompletionPercentage(items) === 100 ? 'bg-chrome-50' : 'bg-chrome-50'}`} />
  <span className="text-sm text-titanium-600">{getCompletionPercentage(items)}% Complete</span>
  </div>
  </div>
@@ -345,8 +345,8 @@ const ProtectedPCIChecklist: React.FC = () => {
  onClick={() => toggleChecklistItem(section, item.id)}
  className={`w-5 h-5 rounded border-2 flex items-center justify-center mt-0.5 transition-colors ${
  item.completed
- ? 'bg-[#F0F5FA] border-[#C8D4DC] text-white'
- : 'border-titanium-300 hover:border-[#C8D4DC]'
+ ? 'bg-chrome-50 border-titanium-300 text-white'
+ : 'border-titanium-300 hover:border-titanium-300'
  }`}
  >
  {item.completed && <Check className="w-3 h-3" />}
@@ -387,8 +387,8 @@ const ProtectedPCIChecklist: React.FC = () => {
  <div className="flex items-center gap-3">
  <div className={`px-4 py-2 rounded-lg font-medium ${
  pciState.status === 'preparation' ? 'bg-chrome-100 text-chrome-700' :
- pciState.status === 'active' ? 'bg-[#F0F5FA] text-[#2C4A60]' :
- pciState.status === 'paused' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ pciState.status === 'active' ? 'bg-chrome-50 text-teal-700' :
+ pciState.status === 'paused' ? 'bg-amber-50 text-amber-600' :
  'bg-titanium-100 text-titanium-700'
  }`}>
  {pciState.status.toUpperCase()}
@@ -407,7 +407,7 @@ const ProtectedPCIChecklist: React.FC = () => {
  {pciState.status === 'preparation' && (
  <button
  onClick={startProcedure}
- className="flex items-center gap-2 px-6 py-3 bg-[#F0F5FA] text-white rounded-lg hover:bg-[#F0F5FA] transition-colors font-medium"
+ className="flex items-center gap-2 px-6 py-3 bg-chrome-50 text-white rounded-lg hover:bg-chrome-50 transition-colors font-medium"
  >
  <Play className="w-4 h-4" />
  Start Procedure
@@ -418,7 +418,7 @@ const ProtectedPCIChecklist: React.FC = () => {
  <>
  <button
  onClick={pauseProcedure}
- className="flex items-center gap-2 px-4 py-2 bg-[#F0F5FA] text-white rounded-lg hover:bg-[#F0F5FA] transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-chrome-50 text-white rounded-lg hover:bg-chrome-50 transition-colors"
  >
  <Pause className="w-4 h-4" />
  Pause
@@ -436,7 +436,7 @@ const ProtectedPCIChecklist: React.FC = () => {
  {pciState.status === 'paused' && (
  <button
  onClick={resumeProcedure}
- className="flex items-center gap-2 px-4 py-2 bg-[#F0F5FA] text-white rounded-lg hover:bg-[#F0F5FA] transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-chrome-50 text-white rounded-lg hover:bg-chrome-50 transition-colors"
  >
  <Play className="w-4 h-4" />
  Resume
@@ -482,7 +482,7 @@ const ProtectedPCIChecklist: React.FC = () => {
  onChange={(e) => updateHemodynamicGoal(goal.parameter, e.target.value)}
  className="flex-1 px-2 py-1 text-sm border border-titanium-300 rounded focus:outline-none focus:ring-1 focus:ring-porsche-500"
  />
- <div className={`w-3 h-3 rounded-full ${goal.achieved ? 'bg-[#F0F5FA]' : 'bg-titanium-300'}`} />
+ <div className={`w-3 h-3 rounded-full ${goal.achieved ? 'bg-chrome-50' : 'bg-titanium-300'}`} />
  </div>
  </div>
  ))}
@@ -507,7 +507,7 @@ const ProtectedPCIChecklist: React.FC = () => {
  <div className="flex items-center justify-between mb-3">
  <div className="flex items-center gap-3">
  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
- phase.status === 'completed' ? 'bg-[#F0F5FA] text-white' :
+ phase.status === 'completed' ? 'bg-chrome-50 text-white' :
  phase.status === 'active' ? 'bg-porsche-500 text-white' :
  'bg-titanium-300 text-titanium-600'
  }`}>
@@ -529,9 +529,9 @@ const ProtectedPCIChecklist: React.FC = () => {
  disabled={phase.status !== 'active'}
  className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
  item.completed
- ? 'bg-[#F0F5FA] border-[#C8D4DC] text-white'
+ ? 'bg-chrome-50 border-titanium-300 text-white'
  : phase.status === 'active'
- ? 'border-titanium-300 hover:border-[#C8D4DC]'
+ ? 'border-titanium-300 hover:border-titanium-300'
  : 'border-titanium-200 bg-titanium-100'
  }`}
  >

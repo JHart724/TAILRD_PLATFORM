@@ -181,7 +181,7 @@ const SliderRow: React.FC<{
         </p>
         <p
           className={`text-sm font-bold ${
-            isPositive ? 'text-[#2C4A60]' : 'text-arterial-600'
+            isPositive ? 'text-teal-700' : 'text-arterial-600'
           }`}
         >
           {isPositive ? '+' : ''}
@@ -243,9 +243,9 @@ const RevenueRecoveryCalculator: React.FC = () => {
       subtitle="Adjust targets to see your estimated upside"
     >
       {/* Amber banner */}
-      <div className="mb-5 flex items-start gap-2 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl px-4 py-3">
-        <span className="text-[#6B7280] text-base mt-0.5">⚠</span>
-        <p className="text-xs text-[#6B7280] leading-snug">
+      <div className="mb-5 flex items-start gap-2 bg-chrome-50 border border-titanium-300 rounded-xl px-4 py-3">
+        <span className="text-gray-500 text-base mt-0.5">⚠</span>
+        <p className="text-xs text-gray-500 leading-snug">
           Based on CMS national benchmarks for facilities your size —{' '}
           <span className="font-semibold">connect your EHR to verify</span> these estimates with
           your actual data.
@@ -274,7 +274,7 @@ const RevenueRecoveryCalculator: React.FC = () => {
           </p>
           <p
             className={`text-3xl font-bold font-data mt-1 ${
-              totalOpportunity > 0 ? 'text-[#2C4A60]' : 'text-titanium-800'
+              totalOpportunity > 0 ? 'text-teal-700' : 'text-titanium-800'
             }`}
           >
             {totalOpportunity > 0 ? '+' : ''}

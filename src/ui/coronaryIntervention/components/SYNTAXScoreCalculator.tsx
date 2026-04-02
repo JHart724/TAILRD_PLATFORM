@@ -270,7 +270,7 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
 
   const getRiskColor = (category: string) => {
  switch (category) {
- case 'Low': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'Low': return 'text-teal-700 bg-chrome-50 border-titanium-300';
  case 'Intermediate': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
  case 'High': return 'text-medical-red-600 bg-medical-red-50 border-medical-red-200';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
@@ -279,7 +279,7 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
 
   const getRecommendationColor = (rec: string) => {
  switch (rec) {
- case 'Preferred': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'Preferred': return 'text-teal-700 bg-chrome-50 border-titanium-300';
  case 'Reasonable': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
  case 'Not Recommended': return 'text-medical-red-600 bg-medical-red-50 border-medical-red-200';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
@@ -288,7 +288,7 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
 
   const getStrategyColor = (strategy: 'PCI' | 'CABG' | 'Either') => {
  switch (strategy) {
- case 'PCI': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'PCI': return 'text-teal-700 bg-chrome-50 border-titanium-300';
  case 'CABG': return 'text-porsche-700 bg-porsche-50 border-porsche-300';
  case 'Either': return 'text-crimson-700 bg-crimson-50 border-crimson-200';
  }
@@ -672,12 +672,12 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  </div>
  </div>
 
- <div className="p-4 bg-[#f0f5fa] border border-[#C8D4DC] rounded-lg">
- <div className="font-semibold text-[#2C4A60] mb-2">Management Recommendations</div>
- <ul className="space-y-1 text-sm text-[#2C4A60]">
+ <div className="p-4 bg-chrome-50 border border-titanium-300 rounded-lg">
+ <div className="font-semibold text-teal-700 mb-2">Management Recommendations</div>
+ <ul className="space-y-1 text-sm text-teal-700">
  {result.recommendations.map((rec) => (
  <li key={rec} className="flex items-start gap-1">
- <div className="w-1 h-1 bg-[#2C4A60] rounded-full mt-2 flex-shrink-0"></div>
+ <div className="w-1 h-1 bg-teal-700 rounded-full mt-2 flex-shrink-0"></div>
  {rec}
  </li>
  ))}
@@ -773,8 +773,8 @@ const SYNTAXScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  )}
 
  {/* References */}
- <div className="mt-6 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
- <p className="text-sm text-[#6B7280]">
+ <div className="mt-6 bg-chrome-50 border border-titanium-300 rounded-xl p-4">
+ <p className="text-sm text-gray-500">
  <strong>References:</strong> SYNTAX Trial (5-year), SYNTAX II Trial, 2021 ACC/AHA Coronary Revascularization Guideline. SYNTAX II incorporates both anatomical complexity and clinical variables for individualized treatment recommendations.
  </p>
  </div>

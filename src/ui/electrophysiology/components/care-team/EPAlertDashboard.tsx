@@ -163,8 +163,8 @@ const EPAlertDashboard: React.FC = () => {
   const getAlertColor = (level: string) => {
  switch(level) {
  case 'critical': return 'border-red-500 bg-red-50';
- case 'high': return 'border-[#C8D4DC] bg-[#F0F5FA]';
- case 'medium': return 'border-[#C8D4DC] bg-[#F0F5FA]';
+ case 'high': return 'border-titanium-300 bg-chrome-50';
+ case 'medium': return 'border-titanium-300 bg-chrome-50';
  default: return 'border-gray-300 bg-gray-50';
  }
   };
@@ -172,8 +172,8 @@ const EPAlertDashboard: React.FC = () => {
   const getAlertIcon = (level: string) => {
  switch(level) {
  case 'critical': return <AlertTriangle className="w-5 h-5 text-red-600" />;
- case 'high': return <AlertCircle className="w-5 h-5 text-[#6B7280]" />;
- case 'medium': return <Bell className="w-5 h-5 text-[#6B7280]" />;
+ case 'high': return <AlertCircle className="w-5 h-5 text-gray-500" />;
+ case 'medium': return <Bell className="w-5 h-5 text-gray-500" />;
  default: return <Bell className="w-5 h-5 text-gray-600" />;
  }
   };
@@ -247,7 +247,7 @@ const EPAlertDashboard: React.FC = () => {
  <div className="text-xs text-titanium-600 mb-1">Treatment Gaps</div>
  <div className="flex flex-wrap gap-1">
  {alert.treatmentGaps.map((gap, index) => (
- <span key={gap} className="px-2 py-1 bg-[#FAF6E8] text-[#8B6914] text-xs rounded border border-[#C8D4DC]">
+ <span key={gap} className="px-2 py-1 bg-amber-50 text-amber-600 text-xs rounded border border-titanium-300">
  {gap}
  </span>
  ))}
@@ -299,7 +299,7 @@ const EPAlertDashboard: React.FC = () => {
  <ul className="space-y-2">
  {selectedAlert.recommendations.map((rec, index) => (
  <li key={rec} className="flex items-start gap-2">
- <CheckCircle className="w-4 h-4 text-[#2C4A60] mt-0.5" />
+ <CheckCircle className="w-4 h-4 text-teal-700 mt-0.5" />
  <span className="text-sm text-gray-700">{rec}</span>
  </li>
  ))}

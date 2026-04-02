@@ -171,9 +171,9 @@ const SHValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = (
 
   const getCategoryColor = (category: string) => {
  switch (category) {
- case 'Low': return 'text-[#2C4A60]';
- case 'Intermediate': return 'text-[#6B7280]';
- case 'High': return 'text-[#6B7280]';
+ case 'Low': return 'text-teal-700';
+ case 'Intermediate': return 'text-gray-500';
+ case 'High': return 'text-gray-500';
  case 'Prohibitive': return 'text-red-400';
  default: return 'text-titanium-400';
  }
@@ -181,9 +181,9 @@ const SHValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = (
 
   const getCategoryBg = (category: string) => {
  switch (category) {
- case 'Low': return 'bg-[#F0F5FA] border-[#C8D4DC]';
- case 'Intermediate': return 'bg-[#F0F5FA]/10 border-[#C8D4DC]/30';
- case 'High': return 'bg-bg-[#F0F5FA] border-[#C8D4DC]/30';
+ case 'Low': return 'bg-chrome-50 border-titanium-300';
+ case 'Intermediate': return 'bg-chrome-50/10 border-titanium-300/30';
+ case 'High': return 'bg-bg-chrome-50 border-titanium-300/30';
  case 'Prohibitive': return 'bg-red-500 border-red-500';
  default: return 'bg-white border-titanium-200';
  }
@@ -294,7 +294,7 @@ const SHValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = (
  { key: 'immunocompromised' as const, label: 'Immunocompromised' },
  ].map(({ key, label }) => (
  <label key={key} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border cursor-pointer transition-all ${
- inputs[key] ? 'bg-bg-[#F0F5FA] border-[#C8D4DC]/30' : 'bg-white border-titanium-200 hover:border-titanium-200'
+ inputs[key] ? 'bg-bg-chrome-50 border-titanium-300/30' : 'bg-white border-titanium-200 hover:border-titanium-200'
  }`}>
  <input type="checkbox" checked={inputs[key] as boolean} onChange={(e) => updateInput(key, e.target.checked)} className="w-3.5 h-3.5 accent-orange-500" />
  <span className="text-xs text-titanium-300 font-sf">{label}</span>
@@ -352,9 +352,9 @@ const SHValveRiskScoreCalculator: React.FC<{ patientData?: PatientContext }> = (
  <h4 className="text-xs font-semibold text-titanium-400 mb-3 uppercase tracking-wider">2020 ACC/AHA VHD Guideline Thresholds</h4>
  <div className="space-y-2 text-xs">
  {[
- { range: 'STS < 4%', rec: 'Low risk: SAVR or TAVR', color: 'text-[#2C4A60]' },
- { range: 'STS 4-8%', rec: 'Intermediate: Heart Team shared decision', color: 'text-[#6B7280]' },
- { range: 'STS > 8%', rec: 'High risk: TAVR preferred', color: 'text-[#6B7280]' },
+ { range: 'STS < 4%', rec: 'Low risk: SAVR or TAVR', color: 'text-teal-700' },
+ { range: 'STS 4-8%', rec: 'Intermediate: Heart Team shared decision', color: 'text-gray-500' },
+ { range: 'STS > 8%', rec: 'High risk: TAVR preferred', color: 'text-gray-500' },
  { range: 'STS > 15% or prohibitive', rec: 'TAVR if feasible, or medical/palliative', color: 'text-red-400' },
  ].map(({ range, rec, color }) => (
  <div key={range} className="flex items-start gap-2">

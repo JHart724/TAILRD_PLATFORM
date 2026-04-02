@@ -24,16 +24,16 @@ const PremiumColorTest: React.FC = () => {
  <div className="mb-8">
  <h3 className="text-lg font-medium text-neutral-300 mb-4">Green Scale</h3>
  <div className="grid grid-cols-4 gap-4">
- <div className="bg-[#C8D4DC] h-24 rounded-lg flex items-end justify-center pb-3">
+ <div className="bg-titanium-300 h-24 rounded-lg flex items-end justify-center pb-3">
  <span className="text-white font-medium text-sm">green-400</span>
  </div>
- <div className="bg-[#C8D4DC] h-24 rounded-lg flex items-end justify-center pb-3">
+ <div className="bg-titanium-300 h-24 rounded-lg flex items-end justify-center pb-3">
  <span className="text-white font-medium text-sm">green-600</span>
  </div>
- <div className="bg-[#C8D4DC] h-24 rounded-lg flex items-end justify-center pb-3">
+ <div className="bg-titanium-300 h-24 rounded-lg flex items-end justify-center pb-3">
  <span className="text-white font-medium text-sm">green-800</span>
  </div>
- <div className="bg-[#C8D4DC] h-24 rounded-lg flex items-end justify-center pb-3">
+ <div className="bg-titanium-300 h-24 rounded-lg flex items-end justify-center pb-3">
  <span className="text-white font-medium text-sm">green-900</span>
  </div>
  </div>
@@ -43,16 +43,16 @@ const PremiumColorTest: React.FC = () => {
  <div className="mb-8">
  <h3 className="text-lg font-medium text-neutral-300 mb-4">Amber Scale</h3>
  <div className="grid grid-cols-4 gap-4">
- <div className="bg-[#F0F5FA] h-24 rounded-lg flex items-end justify-center pb-3">
+ <div className="bg-chrome-50 h-24 rounded-lg flex items-end justify-center pb-3">
  <span className="text-black font-medium text-sm">amber-400</span>
  </div>
- <div className="bg-[#F0F5FA] h-24 rounded-lg flex items-end justify-center pb-3">
+ <div className="bg-chrome-50 h-24 rounded-lg flex items-end justify-center pb-3">
  <span className="text-white font-medium text-sm">amber-600</span>
  </div>
- <div className="bg-[#F0F5FA] h-24 rounded-lg flex items-end justify-center pb-3">
+ <div className="bg-chrome-50 h-24 rounded-lg flex items-end justify-center pb-3">
  <span className="text-white font-medium text-sm">amber-800</span>
  </div>
- <div className="bg-[#F0F5FA] h-24 rounded-lg flex items-end justify-center pb-3">
+ <div className="bg-chrome-50 h-24 rounded-lg flex items-end justify-center pb-3">
  <span className="text-white font-medium text-sm">amber-900</span>
  </div>
  </div>
@@ -81,16 +81,16 @@ const PremiumColorTest: React.FC = () => {
  <div className="mb-8">
  <h3 className="text-lg font-medium text-neutral-300 mb-4">Teal Scale</h3>
  <div className="grid grid-cols-4 gap-4">
- <div className="bg-[#C8D4DC] h-24 rounded-lg flex items-end justify-center pb-3">
+ <div className="bg-titanium-300 h-24 rounded-lg flex items-end justify-center pb-3">
  <span className="text-black font-medium text-sm">teal-400</span>
  </div>
- <div className="bg-[#C8D4DC] h-24 rounded-lg flex items-end justify-center pb-3">
+ <div className="bg-titanium-300 h-24 rounded-lg flex items-end justify-center pb-3">
  <span className="text-white font-medium text-sm">teal-600</span>
  </div>
- <div className="bg-[#C8D4DC] h-24 rounded-lg flex items-end justify-center pb-3">
+ <div className="bg-titanium-300 h-24 rounded-lg flex items-end justify-center pb-3">
  <span className="text-white font-medium text-sm">teal-800</span>
  </div>
- <div className="bg-[#C8D4DC] h-24 rounded-lg flex items-end justify-center pb-3">
+ <div className="bg-titanium-300 h-24 rounded-lg flex items-end justify-center pb-3">
  <span className="text-white font-medium text-sm">teal-900</span>
  </div>
  </div>
