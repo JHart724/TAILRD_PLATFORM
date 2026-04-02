@@ -28,6 +28,18 @@ const initializeReferralService = async () => {
 router.get('/:hospitalId',
   authenticateToken,
   authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager', 'quality-director', 'analyst']),
+  // Multi-tenant isolation: verify user can access requested hospital
+  (req: AuthenticatedRequest, res: Response, next: any) => {
+    const requestedHospital = req.params.hospitalId;
+    if (req.user?.role !== 'super-admin' && req.user?.hospitalId !== requestedHospital) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied: Cannot access other hospital data',
+        timestamp: new Date().toISOString(),
+      } as APIResponse);
+    }
+    next();
+  },
   [
     param('hospitalId').isString().notEmpty().withMessage('Hospital ID is required'),
     query('status').optional().isIn(Object.values(ReferralStatus)),
