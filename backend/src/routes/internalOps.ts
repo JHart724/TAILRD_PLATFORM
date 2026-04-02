@@ -351,25 +351,36 @@ router.get('/dashboard', async (req: AuthenticatedRequest, res) => {
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function generateSecurePassword(): string {
+  const crypto = require('crypto');
   const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
   const lower = 'abcdefghjkmnpqrstuvwxyz';
   const digits = '23456789';
   const special = '!@#$%&*';
   const all = upper + lower + digits + special;
 
+  const randomIndex = (len: number): number => {
+    const bytes = crypto.randomBytes(4);
+    return bytes.readUInt32BE(0) % len;
+  };
+
   let password = '';
   // Guarantee one of each category
-  password += upper[Math.floor(Math.random() * upper.length)];
-  password += lower[Math.floor(Math.random() * lower.length)];
-  password += digits[Math.floor(Math.random() * digits.length)];
-  password += special[Math.floor(Math.random() * special.length)];
+  password += upper[randomIndex(upper.length)];
+  password += lower[randomIndex(lower.length)];
+  password += digits[randomIndex(digits.length)];
+  password += special[randomIndex(special.length)];
 
   for (let i = 4; i < 16; i++) {
-    password += all[Math.floor(Math.random() * all.length)];
+    password += all[randomIndex(all.length)];
   }
 
-  // Shuffle
-  return password.split('').sort(() => Math.random() - 0.5).join('');
+  // Fisher-Yates shuffle with crypto randomness
+  const chars = password.split('');
+  for (let i = chars.length - 1; i > 0; i--) {
+    const j = randomIndex(i + 1);
+    [chars[i], chars[j]] = [chars[j], chars[i]];
+  }
+  return chars.join('');
 }
 
 export = router;
