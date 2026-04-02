@@ -42,12 +42,12 @@ const SAQOutcomesPanel: React.FC = () => {
 
         <div className="metal-card p-5">
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="w-4 h-4 text-[#2C4A60]" />
+            <TrendingUp className="w-4 h-4 text-teal-700" />
             <span className="text-xs font-semibold text-titanium-600 uppercase tracking-wide">
               Mean Change — Post-Revascularization
             </span>
           </div>
-          <div className="text-3xl font-bold text-[#2C4A60]">+28.4 pts</div>
+          <div className="text-3xl font-bold text-teal-700">+28.4 pts</div>
           <div className="text-xs text-titanium-500 mt-1">at 6 months post-procedure</div>
         </div>
 

@@ -93,7 +93,7 @@ const CustomerSuccess: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <div className="flex items-center gap-2 mb-2">
-            <Target className="w-5 h-5 text-[#7A1A2E]" />
+            <Target className="w-5 h-5 text-red-600" />
             <span className="text-xs text-gray-500 uppercase font-semibold">Gaps Identified</span>
           </div>
           <div className="text-2xl font-bold text-gray-900">
@@ -102,7 +102,7 @@ const CustomerSuccess: React.FC = () => {
         </div>
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <div className="flex items-center gap-2 mb-2">
-            <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
+            <CheckCircle className="w-5 h-5 text-teal-700" />
             <span className="text-xs text-gray-500 uppercase font-semibold">Gaps Actioned</span>
           </div>
           <div className="text-2xl font-bold text-gray-900">
@@ -114,7 +114,7 @@ const CustomerSuccess: React.FC = () => {
         </div>
         <div className="bg-white rounded-lg border border-gray-200 p-5">
           <div className="flex items-center gap-2 mb-2">
-            <DollarSign className="w-5 h-5 text-[#2C4A60]" />
+            <DollarSign className="w-5 h-5 text-teal-700" />
             <span className="text-xs text-gray-500 uppercase font-semibold">Revenue Recovered</span>
           </div>
           <div className="text-2xl font-bold text-gray-900">$47.2M</div>
@@ -136,7 +136,7 @@ const CustomerSuccess: React.FC = () => {
       {/* Gap Closure Trend Chart */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
         <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-1.5">
-          <TrendingUp className="w-4 h-4 text-[#7A1A2E]" />
+          <TrendingUp className="w-4 h-4 text-red-600" />
           Gap Closure Rate Trend (12 Months)
         </h3>
         <ResponsiveContainer width="100%" height={280}>

@@ -56,16 +56,16 @@ type TrialFilter = 'All' | 'New' | 'Industry Sponsored' | 'Referred' | 'Enrolled
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
 function completenessColor(pct: number): string {
-  if (pct >= 85) return 'text-[#2C4A60] bg-[#F0F5FA]';
-  if (pct >= 60) return 'text-[#8B6914] bg-[#FAF6E8]';
+  if (pct >= 85) return 'text-teal-700 bg-chrome-50';
+  if (pct >= 60) return 'text-amber-600 bg-amber-50';
   return 'text-red-600 bg-red-50';
 }
 
 function registryStatusChip(status: string) {
   const map: Record<string, string> = {
     'Needs Review': 'bg-red-50 text-red-700 border border-red-200',
-    'In Review': 'bg-[#FAF6E8] text-[#8B6914] border border-[#C8D4DC]',
-    'Ready': 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]',
+    'In Review': 'bg-amber-50 text-amber-600 border border-titanium-300',
+    'Ready': 'bg-chrome-50 text-teal-700 border border-titanium-300',
     'Approved': 'bg-blue-50 text-blue-700 border border-blue-200',
     'Submitted': 'bg-titanium-100 text-titanium-600 border border-titanium-200',
   };
@@ -75,9 +75,9 @@ function registryStatusChip(status: string) {
 function trialStatusChip(status: TrialStatus): string {
   const map: Record<TrialStatus, string> = {
     'New': 'bg-blue-50 text-blue-700 border border-blue-200',
-    'In Review': 'bg-[#FAF6E8] text-[#8B6914] border border-[#C8D4DC]',
-    'Referred': 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]',
-    'Enrolled': 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]',
+    'In Review': 'bg-amber-50 text-amber-600 border border-titanium-300',
+    'Referred': 'bg-chrome-50 text-teal-700 border border-titanium-300',
+    'Enrolled': 'bg-chrome-50 text-teal-700 border border-titanium-300',
     'Screen Failed': 'bg-red-50 text-red-700 border border-red-200',
   };
   return map[status];
@@ -85,8 +85,8 @@ function trialStatusChip(status: TrialStatus): string {
 
 function confidenceBadge(level: 'High' | 'Moderate' | 'Review'): string {
   const map = {
-    High: 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]',
-    Moderate: 'bg-[#FAF6E8] text-[#8B6914] border border-[#C8D4DC]',
+    High: 'bg-chrome-50 text-teal-700 border border-titanium-300',
+    Moderate: 'bg-amber-50 text-amber-600 border border-titanium-300',
     Review: 'bg-red-50 text-red-700 border border-red-200',
   };
   return map[level];
@@ -202,7 +202,7 @@ const ResearchCareTeamView: React.FC = () => {
                   </td>
                   <td className="px-4 py-3 text-center">
                     <span className={`inline-flex items-center gap-1 text-xs font-semibold ${
-                      row.deadline <= 2 ? 'text-red-600' : row.deadline <= 5 ? 'text-[#6B7280]' : 'text-titanium-600'
+                      row.deadline <= 2 ? 'text-red-600' : row.deadline <= 5 ? 'text-gray-500' : 'text-titanium-600'
                     }`}>
                       <Clock className="w-3.5 h-3.5" />
                       {row.deadline}d
@@ -282,7 +282,7 @@ const ResearchCareTeamView: React.FC = () => {
                   <td className="px-4 py-3 text-titanium-800 font-medium">{row.trial}</td>
                   <td className="px-4 py-3 text-center">
                     {row.sponsorType === 'industry' ? (
-                      <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide bg-[#FAF6E8] text-[#8B6914] border border-[#C8D4DC]">
+                      <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide bg-amber-50 text-amber-600 border border-titanium-300">
                         Industry
                       </span>
                     ) : row.sponsorType === 'nih' ? (

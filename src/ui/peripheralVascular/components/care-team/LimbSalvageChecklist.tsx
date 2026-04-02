@@ -260,8 +260,8 @@ const LimbSalvageChecklist: React.FC = () => {
 
   const getWiFIColor = (stage: number) => {
  switch (stage) {
- case 1: return 'text-[#2D6147] bg-[#F0F7F4]';
- case 2: return 'text-[#8B6914] bg-[#FAF6E8]';
+ case 1: return 'text-green-600 bg-green-50';
+ case 2: return 'text-amber-600 bg-amber-50';
  case 3: return 'text-red-600 bg-red-100';
  case 4: return 'text-red-800 bg-red-200';
  default: return 'text-titanium-600 bg-titanium-100';
@@ -270,8 +270,8 @@ const LimbSalvageChecklist: React.FC = () => {
 
   const getTASCColor = (grade: string) => {
  switch (grade) {
- case 'A': return 'text-[#2D6147] bg-[#F0F7F4]';
- case 'B': return 'text-[#8B6914] bg-[#FAF6E8]';
+ case 'A': return 'text-green-600 bg-green-50';
+ case 'B': return 'text-amber-600 bg-amber-50';
  case 'C': return 'text-red-600 bg-red-100';
  case 'D': return 'text-red-800 bg-red-200';
  default: return 'text-titanium-600 bg-titanium-100';
@@ -279,8 +279,8 @@ const LimbSalvageChecklist: React.FC = () => {
   };
 
   const getAmputationRiskColor = (risk: number) => {
- if (risk <= 20) return 'text-[#2D6147] bg-[#F0F7F4]';
- if (risk <= 40) return 'text-[#8B6914] bg-[#FAF6E8]';
+ if (risk <= 20) return 'text-green-600 bg-green-50';
+ if (risk <= 40) return 'text-amber-600 bg-amber-50';
  if (risk <= 60) return 'text-red-600 bg-red-100';
  return 'text-red-800 bg-red-200';
   };
@@ -288,8 +288,8 @@ const LimbSalvageChecklist: React.FC = () => {
   const getUrgencyColor = (urgency: string) => {
  switch (urgency) {
  case 'Emergent': return 'text-red-600 bg-red-100';
- case 'Urgent': return 'text-[#8B6914] bg-[#FAF6E8]';
- case 'Elective': return 'text-[#2D6147] bg-[#F0F7F4]';
+ case 'Urgent': return 'text-amber-600 bg-amber-50';
+ case 'Elective': return 'text-green-600 bg-green-50';
  default: return 'text-titanium-600 bg-titanium-100';
  }
   };
@@ -470,7 +470,7 @@ const LimbSalvageChecklist: React.FC = () => {
 
  <div className="bg-white rounded-2xl p-6 shadow-chrome-card border border-titanium-200">
  <h3 className="text-lg font-semibold text-titanium-800 mb-4 flex items-center gap-2">
- <Activity className="w-5 h-5 text-[#2C4A60]" />
+ <Activity className="w-5 h-5 text-teal-700" />
  Run-off Assessment
  </h3>
  
@@ -487,7 +487,7 @@ const LimbSalvageChecklist: React.FC = () => {
  }))}
  className={`p-2 rounded-lg border text-sm font-medium transition-all ${
  salvagePlan.runoff.vessels === vessels
- ? 'bg-[#F0F7F4] border-[#D8EDE6] text-[#2C4A60]'
+ ? 'bg-green-50 border-green-100 text-teal-700'
  : 'bg-white border-titanium-200 text-titanium-700 hover:bg-titanium-50'
  }`}
  >
@@ -556,7 +556,7 @@ const LimbSalvageChecklist: React.FC = () => {
  }))}
  className={`w-full p-2 rounded border text-sm text-left transition-all ${
  salvagePlan.conduit.gsv === status
- ? 'bg-[#F0F7F4] border-[#D8EDE6] text-[#2C4A60]'
+ ? 'bg-green-50 border-green-100 text-teal-700'
  : 'bg-white border-titanium-200 text-titanium-700 hover:bg-titanium-50'
  }`}
  >
@@ -611,7 +611,7 @@ const LimbSalvageChecklist: React.FC = () => {
  {/* Comorbidities and Risk Factors */}
  <div className="bg-white rounded-2xl p-6 shadow-chrome-card border border-titanium-200">
  <h3 className="text-lg font-semibold text-titanium-800 mb-4 flex items-center gap-2">
- <AlertTriangle className="w-5 h-5 text-[#6B7280]" />
+ <AlertTriangle className="w-5 h-5 text-gray-500" />
  Comorbidities & Risk Factors
  </h3>
  
@@ -640,8 +640,8 @@ const LimbSalvageChecklist: React.FC = () => {
  onClick={() => setSalvagePlan(prev => ({ ...prev, infectionControl: status }))}
  className={`p-3 rounded-lg border text-sm font-medium transition-all ${
  salvagePlan.infectionControl === status
- ? status === 'Adequate' ? 'bg-[#F0F7F4] border-[#D8EDE6] text-[#2C4A60]' :
- status === 'Pending' ? 'bg-[#F0F5FA] border-[#C8D4DC] text-[#6B7280]' :
+ ? status === 'Adequate' ? 'bg-green-50 border-green-100 text-teal-700' :
+ status === 'Pending' ? 'bg-chrome-50 border-titanium-300 text-gray-500' :
  'bg-red-50 border-red-300 text-red-800'
  : 'bg-white border-titanium-200 text-titanium-700 hover:bg-titanium-50'
  }`}
@@ -667,17 +667,17 @@ const LimbSalvageChecklist: React.FC = () => {
 
  <div className="bg-white rounded-2xl p-6 shadow-chrome-card border border-titanium-200 text-center">
  <div className="mb-2">
- <Shield className="w-8 h-8 text-[#2C4A60] mx-auto mb-2" />
+ <Shield className="w-8 h-8 text-teal-700 mx-auto mb-2" />
  <div className="text-sm text-titanium-600">Limb Salvage Rate</div>
  </div>
- <div className="text-3xl font-bold text-[#2C4A60]">
+ <div className="text-3xl font-bold text-teal-700">
  {calculateLimbSalvageRate}%
  </div>
  </div>
 
  <div className="bg-white rounded-2xl p-6 shadow-chrome-card border border-titanium-200 text-center">
  <div className="mb-2">
- <Clock className="w-8 h-8 text-[#6B7280] mx-auto mb-2" />
+ <Clock className="w-8 h-8 text-gray-500 mx-auto mb-2" />
  <div className="text-sm text-titanium-600">Urgency</div>
  </div>
  <div className={`text-lg font-bold px-3 py-1 rounded-lg ${getUrgencyColor(salvagePlan.urgency)}`}>
@@ -725,13 +725,13 @@ const LimbSalvageChecklist: React.FC = () => {
  <div className="flex gap-3">
  <button
  onClick={() => setSalvagePlan(prev => ({ ...prev, status: 'Planning' }))}
- className="px-4 py-2 bg-[#F0F5FA] text-white rounded-lg hover:bg-[#F0F5FA] transition-colors text-sm"
+ className="px-4 py-2 bg-chrome-50 text-white rounded-lg hover:bg-chrome-50 transition-colors text-sm"
  >
  Advance to Planning
  </button>
  <button
  onClick={() => setSalvagePlan(prev => ({ ...prev, status: 'Approved' }))}
- className="px-4 py-2 bg-[#C8D4DC] text-white rounded-lg hover:bg-[#C8D4DC] transition-colors text-sm"
+ className="px-4 py-2 bg-titanium-300 text-white rounded-lg hover:bg-titanium-300 transition-colors text-sm"
  >
  Approve Plan
  </button>

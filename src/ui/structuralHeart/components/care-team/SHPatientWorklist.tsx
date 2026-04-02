@@ -110,7 +110,7 @@ const SHPatientWorklist: React.FC = () => {
   const getPriorityBadge = (priority: string) => {
  const colors = {
  high: 'bg-red-100 text-red-900 border-red-400',
- medium: 'bg-[#FAF6E8] text-[#8B6914] border-[#C8D4DC]',
+ medium: 'bg-amber-50 text-amber-600 border-titanium-300',
  low: 'bg-titanium-100 text-titanium-700 border-titanium-400'
  };
  return colors[priority as keyof typeof colors];
@@ -188,7 +188,7 @@ const SHPatientWorklist: React.FC = () => {
  </div>
  <div>
  <div className="text-xs text-titanium-600 mb-1">Valve Therapy Gaps</div>
- <div className="font-medium text-[#6B7280]">{patient.therapyGaps.length} medications</div>
+ <div className="font-medium text-gray-500">{patient.therapyGaps.length} medications</div>
  </div>
  <div>
  <div className="text-xs text-titanium-600 mb-1">Next Appointment</div>

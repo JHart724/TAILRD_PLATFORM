@@ -189,9 +189,9 @@ const CoronaryCareTeamView: React.FC = () => {
  };
  case 'chrome-blue':
  return {
- text: 'text-[#2C4A60]',
- bg: 'bg-[#f0f5fa]',
- border: 'border-[#C8D4DC]',
+ text: 'text-teal-700',
+ bg: 'bg-chrome-50',
+ border: 'border-titanium-300',
  accent: 'chrome-blue'
  };
  case 'medical-red':

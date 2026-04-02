@@ -115,8 +115,8 @@ function qualityColor(score: number): string {
 }
 
 function qualityBg(score: number): string {
-  if (score >= 80) return 'bg-[#F0F7F4] text-[#2D6147]';
-  if (score >= 60) return 'bg-[#FAF6E8] text-[#8B6914]';
+  if (score >= 80) return 'bg-green-50 text-green-600';
+  if (score >= 60) return 'bg-amber-50 text-amber-600';
   return 'bg-red-100 text-red-800';
 }
 
@@ -187,7 +187,7 @@ const DataManagement: React.FC = () => {
       {/* Field Completeness Chart */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
         <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-1.5">
-          <TrendingUp className="w-4 h-4 text-[#7A1A2E]" />
+          <TrendingUp className="w-4 h-4 text-red-600" />
           Data Field Completeness by Hospital
         </h3>
         <ResponsiveContainer width="100%" height={300}>
@@ -225,7 +225,7 @@ const DataManagement: React.FC = () => {
                     <td key={i} className="py-3 text-center">
                       <span
                         className={`inline-flex items-center gap-1 text-sm font-medium ${
-                          val >= 80 ? 'text-[#2C4A60]' : val >= 60 ? 'text-[#6B7280]' : 'text-red-600'
+                          val >= 80 ? 'text-teal-700' : val >= 60 ? 'text-gray-500' : 'text-red-600'
                         }`}
                       >
                         {val >= 80 ? (
@@ -247,7 +247,7 @@ const DataManagement: React.FC = () => {
       {/* Recommendations */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
         <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-1.5">
-          <AlertCircle className="w-4 h-4 text-[#6B7280]" />
+          <AlertCircle className="w-4 h-4 text-gray-500" />
           Improvement Recommendations
         </h3>
         <div className="space-y-3">

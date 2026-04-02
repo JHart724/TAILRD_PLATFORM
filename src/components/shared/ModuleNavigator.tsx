@@ -137,10 +137,10 @@ const ModuleNavigator: React.FC<ModuleNavigatorProps> = ({
  badge: 'bg-arterial-500 text-white'
  },
  'chrome-blue': {
- bg: isActive ? 'bg-[#2C4A60]' : 'bg-[#f0f5fa] hover:bg-[#F0F5FA]',
- text: isActive ? 'text-white' : 'text-[#2C4A60]',
- border: 'border-[#C8D4DC]',
- badge: 'bg-[#2C4A60] text-white'
+ bg: isActive ? 'bg-teal-700' : 'bg-chrome-50 hover:bg-chrome-50',
+ text: isActive ? 'text-white' : 'text-teal-700',
+ border: 'border-titanium-300',
+ badge: 'bg-teal-700 text-white'
  },
  'crimson': {
  bg: isActive ? 'bg-crimson-500' : 'bg-crimson-50 hover:bg-crimson-100',
@@ -378,7 +378,7 @@ const ModuleNavigator: React.FC<ModuleNavigatorProps> = ({
  <div className="w-px h-4 bg-white" />
  
  <div className="flex items-center gap-1">
- <TrendingUp className="w-4 h-4 text-[#2C4A60]" />
+ <TrendingUp className="w-4 h-4 text-teal-700" />
  <span className="font-medium text-titanium-900">
  {mockModuleData[currentModule as keyof typeof mockModuleData].qualityScore}%
  </span>
@@ -388,7 +388,7 @@ const ModuleNavigator: React.FC<ModuleNavigatorProps> = ({
  <div className="w-px h-4 bg-white" />
  
  <div className="flex items-center gap-1">
- <DollarSign className="w-4 h-4 text-[#2C4A60]" />
+ <DollarSign className="w-4 h-4 text-teal-700" />
  <span className="font-medium text-titanium-900">
  ${toFixed(mockModuleData[currentModule as keyof typeof mockModuleData].revenueOpportunity / 1000000, 1)}M
  </span>

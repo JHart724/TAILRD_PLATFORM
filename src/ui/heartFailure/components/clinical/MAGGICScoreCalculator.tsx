@@ -124,7 +124,7 @@ const MAGGICScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
 
   const getRiskColor = (category: string) => {
  switch (category) {
- case 'Low': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'Low': return 'text-teal-700 bg-chrome-50 border-titanium-300';
  case 'Intermediate': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
  case 'High': return 'text-medical-red-600 bg-medical-red-50 border-medical-red-200';
  case 'Very High': return 'text-red-800 bg-red-100 border-red-300';
@@ -278,22 +278,22 @@ const MAGGICScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pat
  <span className="text-sm font-medium text-titanium-700">Current Smoker</span>
  </label>
 
- <label className="flex items-center space-x-3 p-3 bg-[#f0f5fa] rounded-lg cursor-pointer hover:bg-[#F0F5FA]">
+ <label className="flex items-center space-x-3 p-3 bg-chrome-50 rounded-lg cursor-pointer hover:bg-chrome-50">
  <input
  type="checkbox"
  checked={inputs.aceiOrArb}
  onChange={(e) => updateInput('aceiOrArb', e.target.checked)}
- className="rounded text-[#2C4A60]"
+ className="rounded text-teal-700"
  />
  <span className="text-sm font-medium text-titanium-700">ACE-I/ARB/ARNi</span>
  </label>
 
- <label className="flex items-center space-x-3 p-3 bg-[#f0f5fa] rounded-lg cursor-pointer hover:bg-[#F0F5FA]">
+ <label className="flex items-center space-x-3 p-3 bg-chrome-50 rounded-lg cursor-pointer hover:bg-chrome-50">
  <input
  type="checkbox"
  checked={inputs.betaBlocker}
  onChange={(e) => updateInput('betaBlocker', e.target.checked)}
- className="rounded text-[#2C4A60]"
+ className="rounded text-teal-700"
  />
  <span className="text-sm font-medium text-titanium-700">Beta-Blocker</span>
  </label>

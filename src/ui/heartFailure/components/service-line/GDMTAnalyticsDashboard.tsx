@@ -208,14 +208,14 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  
  <div className="flex items-center gap-4">
  <div className="flex items-center gap-2 text-sm text-titanium-600">
- <div className={`w-2 h-2 rounded-full ${isLiveMode ? 'bg-[#2C4A60] animate-pulse' : 'bg-gray-400'}`}></div>
+ <div className={`w-2 h-2 rounded-full ${isLiveMode ? 'bg-teal-700 animate-pulse' : 'bg-gray-400'}`}></div>
  {isLiveMode ? 'Live' : 'Paused'}
  </div>
  
  <button
  onClick={() => setIsLiveMode(!isLiveMode)}
  className={`p-2 rounded-lg transition-colors ${
- isLiveMode ? 'bg-[#F0F5FA] text-[#2C4A60]' : 'bg-gray-100 text-gray-700'
+ isLiveMode ? 'bg-chrome-50 text-teal-700' : 'bg-gray-100 text-gray-700'
  }`}
  >
  <RefreshCw className={`w-4 h-4 ${isLiveMode ? 'animate-spin' : ''}`} />
@@ -276,13 +276,13 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  
  {/* Key Metrics Row */}
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
- <div className="bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5] p-4 rounded-xl border border-[#C8D4DC]">
+ <div className="bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5] p-4 rounded-xl border border-titanium-300">
  <div className="flex items-center justify-between">
  <div>
- <div className="text-sm text-[#2C4A60] font-medium">4-Pillar Achievement</div>
- <div className="text-2xl font-bold text-[#2C4A60]">{toFixed(gdmtMetrics[0]?.value ?? 0, 1)}%</div>
+ <div className="text-sm text-teal-700 font-medium">4-Pillar Achievement</div>
+ <div className="text-2xl font-bold text-teal-700">{toFixed(gdmtMetrics[0]?.value ?? 0, 1)}%</div>
  </div>
- <div className={`flex items-center text-sm ${gdmtMetrics[0]?.trend > 0 ? 'text-[#2C4A60]' : 'text-red-600'}`}>
+ <div className={`flex items-center text-sm ${gdmtMetrics[0]?.trend > 0 ? 'text-teal-700' : 'text-red-600'}`}>
  {gdmtMetrics[0]?.trend > 0 ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
  {toFixed(Math.abs(gdmtMetrics[0]?.trend || 0), 1)}%
  </div>
@@ -311,15 +311,15 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  </div>
  </div>
  
- <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-4 rounded-xl border border-[#C8D4DC]">
+ <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-4 rounded-xl border border-titanium-300">
  <div className="flex items-center justify-between">
  <div>
- <div className="text-sm text-[#8B6914] font-medium">Optimization Rate</div>
- <div className="text-2xl font-bold text-[#8B6914]">
+ <div className="text-sm text-amber-600 font-medium">Optimization Rate</div>
+ <div className="text-2xl font-bold text-amber-600">
  {toFixed(providers.reduce((sum, p) => sum + p.rate, 0) / providers.length, 1)}%
  </div>
  </div>
- <Target className="w-6 h-6 text-[#8B6914]" />
+ <Target className="w-6 h-6 text-amber-600" />
  </div>
  </div>
  </div>
@@ -328,7 +328,7 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  <div>
  <h4 className="text-lg font-semibold mb-4 flex items-center gap-2">
  Provider Performance (Live Updates)
- {isLiveMode && <div className="w-2 h-2 bg-[#2C4A60] rounded-full animate-pulse"></div>}
+ {isLiveMode && <div className="w-2 h-2 bg-teal-700 rounded-full animate-pulse"></div>}
  </h4>
  
  <div className="space-y-3">
@@ -337,9 +337,9 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm ${
- provider.score >= 90 ? 'bg-[#2D6147]' : 
+ provider.score >= 90 ? 'bg-green-600' : 
  provider.score >= 80 ? 'bg-chrome-500' : 
- provider.score >= 70 ? 'bg-[#F0F5FA]' : 'bg-red-500'
+ provider.score >= 70 ? 'bg-chrome-50' : 'bg-red-500'
  }`}>
  {provider.name.split(' ').map(n => n[0]).join('')}
  </div>
@@ -355,7 +355,7 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  <div className="text-xs text-titanium-600">GDMT Score</div>
  </div>
  <div className="text-center">
- <div className="text-lg font-bold text-[#2C4A60]">{toFixed(provider.rate, 1)}%</div>
+ <div className="text-lg font-bold text-teal-700">{toFixed(provider.rate, 1)}%</div>
  <div className="text-xs text-titanium-600">4-Pillar Rate</div>
  </div>
  <div className="text-center">
@@ -364,7 +364,7 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  </div>
  <div className="text-center">
  <div className={`text-lg font-bold flex items-center gap-1 ${
- provider.trend > 0 ? 'text-[#2C4A60]' : 'text-red-600'
+ provider.trend > 0 ? 'text-teal-700' : 'text-red-600'
  }`}>
  {provider.trend > 0 ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
  {provider.trend > 0 ? '+' : ''}{toFixed(provider.trend, 1)}%
@@ -379,15 +379,15 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  </div>
  
  {/* Alert System */}
- <div className="bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
+ <div className="bg-chrome-50 border border-titanium-300 rounded-xl p-4">
  <div className="flex items-center gap-2 mb-2">
- <AlertTriangle className="w-5 h-5 text-[#8B6914]" />
- <h4 className="font-semibold text-[#8B6914]">Performance Alerts</h4>
+ <AlertTriangle className="w-5 h-5 text-amber-600" />
+ <h4 className="font-semibold text-amber-600">Performance Alerts</h4>
  </div>
  <div className="space-y-2 text-sm">
- <div className="text-[#8B6914]">• Dr. Robert Thompson showing -2.3% trend over 30 days</div>
- <div className="text-[#8B6914]">• Overall 4-pillar rate below target (13.8% vs 15.0% target)</div>
- <div className="text-[#2C4A60]">• Dr. Jennifer Martinez improved 12.1% this month</div>
+ <div className="text-amber-600">• Dr. Robert Thompson showing -2.3% trend over 30 days</div>
+ <div className="text-amber-600">• Overall 4-pillar rate below target (13.8% vs 15.0% target)</div>
+ <div className="text-teal-700">• Dr. Jennifer Martinez improved 12.1% this month</div>
  </div>
  </div>
  </div>
@@ -416,7 +416,7 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  pillars === 1 ? 'text-[#C4982A]' :
  pillars === 2 ? 'text-[#B8763E]' :
  pillars === 3 ? 'text-[#3D7A5C]' :
- 'text-[#2C4A60]'
+ 'text-teal-700'
  }`}
  >
  {pillars}
@@ -435,7 +435,7 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  </div>
  
  <div className={`flex items-center justify-center gap-1 text-xs ${
- gdmtMetrics[index]?.trend > 0 ? 'text-[#2C4A60]' : 'text-red-600'
+ gdmtMetrics[index]?.trend > 0 ? 'text-teal-700' : 'text-red-600'
  }`}>
  {gdmtMetrics[index]?.trend > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
  <span>{gdmtMetrics[index]?.trend > 0 ? '+' : ''}{toFixed(gdmtMetrics[index]?.trend ?? 0, 1)}%</span>
@@ -457,17 +457,17 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  Key Insights
  </h4>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
- <div className="text-center p-4 bg-[#F0F5FA] rounded-lg">
- <div className="text-2xl font-bold text-[#2C4A60] mb-1">
+ <div className="text-center p-4 bg-chrome-50 rounded-lg">
+ <div className="text-2xl font-bold text-teal-700 mb-1">
  {toFixed(gdmtMetrics[4]?.value ?? 0, 1)}%
  </div>
- <div className="text-sm text-[#2C4A60]">Optimal Therapy Rate</div>
+ <div className="text-sm text-teal-700">Optimal Therapy Rate</div>
  </div>
- <div className="text-center p-4 bg-[#F0F5FA] rounded-lg">
- <div className="text-2xl font-bold text-[#8B6914] mb-1">
+ <div className="text-center p-4 bg-chrome-50 rounded-lg">
+ <div className="text-2xl font-bold text-amber-600 mb-1">
  {toFixed((gdmtMetrics[0]?.value || 0) + (gdmtMetrics[1]?.value || 0), 1)}%
  </div>
- <div className="text-sm text-[#8B6914]">High Opportunity (0-1 pillars)</div>
+ <div className="text-sm text-amber-600">High Opportunity (0-1 pillars)</div>
  </div>
  <div className="text-center p-4 bg-chrome-50 rounded-lg">
  <div className="text-2xl font-bold text-chrome-600 mb-1">
@@ -533,7 +533,7 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  <div className="text-sm text-titanium-600">Patients</div>
  </div>
  <div>
- <div className="text-xl font-bold text-[#2C4A60]">{hfType.fourPillarRate}%</div>
+ <div className="text-xl font-bold text-teal-700">{hfType.fourPillarRate}%</div>
  <div className="text-sm text-titanium-600">4-Pillar Rate</div>
  </div>
  </div>
@@ -550,9 +550,9 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  <div 
  key={nyha}
  className={`h-2 rounded-sm flex-1 ${
- nyha === 'I' ? 'bg-[#2D6147]' :
- nyha === 'II' ? 'bg-[#C4982A]' :
- nyha === 'III' ? 'bg-[#9B2438]' : 'bg-[#7A1A2E]'
+ nyha === 'I' ? 'bg-green-600' :
+ nyha === 'II' ? 'bg-amber-500' :
+ nyha === 'III' ? 'bg-red-500' : 'bg-red-600'
  }`}
  title={`NYHA ${nyha}: ${data.count} patients`}
  />
@@ -584,9 +584,9 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  className="p-4 rounded-lg bg-gray-50 text-center"
  >
  <div className={`text-lg font-bold mb-2 ${
- nyhaClass === 'I' ? 'text-[#2D6147]' :
- nyhaClass === 'II' ? 'text-[#8B6914]' :
- nyhaClass === 'III' ? 'text-[#8B6914]' : 'text-red-600'
+ nyhaClass === 'I' ? 'text-green-600' :
+ nyhaClass === 'II' ? 'text-amber-600' :
+ nyhaClass === 'III' ? 'text-amber-600' : 'text-red-600'
  }`}>
  NYHA {nyhaClass}
  </div>
@@ -596,7 +596,7 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  <div className="text-titanium-600">patients</div>
  </div>
  <div>
- <div className="font-semibold text-[#2C4A60]">{data.fourPillarRate}%</div>
+ <div className="font-semibold text-teal-700">{data.fourPillarRate}%</div>
  <div className="text-titanium-600">4-pillar rate</div>
  </div>
  <div>
@@ -639,9 +639,9 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  <div key={provider.name} className="p-4 border rounded-lg flex justify-between items-center bg-white shadow-sm hover:shadow-md transition-shadow">
  <div className="flex items-center gap-3">
  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold ${
- provider.score >= 90 ? 'bg-[#2D6147]' : 
+ provider.score >= 90 ? 'bg-green-600' : 
  provider.score >= 80 ? 'bg-chrome-500' : 
- provider.score >= 70 ? 'bg-[#F0F5FA]' : 'bg-red-500'
+ provider.score >= 70 ? 'bg-chrome-50' : 'bg-red-500'
  }`}>
  {provider.name.split(' ').map(n => n[0]).join('')}
  </div>
@@ -656,7 +656,7 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  <div className="text-xs text-titanium-600">GDMT Score</div>
  </div>
  <div className="text-center">
- <div className="text-lg font-bold text-[#2C4A60]">{toFixed(provider.rate, 1)}%</div>
+ <div className="text-lg font-bold text-teal-700">{toFixed(provider.rate, 1)}%</div>
  <div className="text-xs text-titanium-600">4-Pillar Rate</div>
  </div>
  <div className="text-center">
@@ -664,7 +664,7 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  <div className="text-xs text-titanium-600">Risk-Adjusted</div>
  </div>
  <div className="text-center">
- <div className={`text-lg font-bold ${provider.trend > 0 ? 'text-[#2C4A60]' : 'text-red-600'}`}>
+ <div className={`text-lg font-bold ${provider.trend > 0 ? 'text-teal-700' : 'text-red-600'}`}>
  {provider.trend > 0 ? '+' : ''}{toFixed(provider.trend, 1)}%
  </div>
  <div className="text-xs text-titanium-600">30d Trend</div>
@@ -710,8 +710,8 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  <div className="text-2xl font-bold text-chrome-800">{patientsByPillar[selectedPillarCount]?.length || 0}</div>
  </div>
  <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-4 rounded-xl">
- <div className="text-sm text-[#636D80] font-medium">Avg Age</div>
- <div className="text-2xl font-bold text-[#8B6914]">
+ <div className="text-sm text-gray-600 font-medium">Avg Age</div>
+ <div className="text-2xl font-bold text-amber-600">
  {patientsByPillar[selectedPillarCount]?.length ? 
  Math.round(patientsByPillar[selectedPillarCount].reduce((sum, p) => sum + p.age, 0) / patientsByPillar[selectedPillarCount].length) : 0
  }
@@ -738,7 +738,7 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm ${
  patient.riskLevel === 'high' ? 'bg-red-500' :
- patient.riskLevel === 'medium' ? 'bg-[#8B6914]' : 'bg-[#2D6147]'
+ patient.riskLevel === 'medium' ? 'bg-amber-600' : 'bg-green-600'
  }`}>
  {patient.name.split(' ').map(n => n[0]).join('')}
  </div>
@@ -751,7 +751,7 @@ const GDMTAnalyticsDashboard: React.FC = () => {
  </div>
  <div className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.riskLevel === 'high' ? 'bg-red-100 text-red-700' :
- patient.riskLevel === 'medium' ? 'bg-[#FAF6E8] text-[#8B6914]' : 'bg-[#F0F7F4] text-[#2D6147]'
+ patient.riskLevel === 'medium' ? 'bg-amber-50 text-amber-600' : 'bg-green-50 text-green-600'
  }`}>
  {patient.riskLevel.toUpperCase()} RISK
  </div>

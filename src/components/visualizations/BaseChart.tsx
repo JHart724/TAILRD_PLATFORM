@@ -285,7 +285,7 @@ const BaseChart: React.FC<BaseChartProps> = ({
  <div className="flex items-center gap-3">
  {trend && (
  <div className={`flex items-center gap-1 text-sm font-medium ${
- trend.direction === 'up' ? 'text-[#2C4A60]' : 'text-arterial-600'
+ trend.direction === 'up' ? 'text-teal-700' : 'text-arterial-600'
  }`}>
  {trend.direction === 'up' ?
  <TrendingUp className="w-4 h-4" /> :

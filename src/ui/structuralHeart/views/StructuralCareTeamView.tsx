@@ -113,7 +113,7 @@ const StructuralCareTeamView: React.FC = () => {
  </div>
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <div className="flex items-center gap-3">
- <Activity className="w-8 h-8 text-[#2C4A60]" />
+ <Activity className="w-8 h-8 text-teal-700" />
  <div>
  <div className="text-2xl font-bold text-titanium-900">98.2%</div>
  <div className="text-sm text-titanium-600">Success Rate</div>
@@ -122,7 +122,7 @@ const StructuralCareTeamView: React.FC = () => {
  </div>
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <div className="flex items-center gap-3">
- <Clock className="w-8 h-8 text-[#6B7280]" />
+ <Clock className="w-8 h-8 text-gray-500" />
  <div>
  <div className="text-2xl font-bold text-titanium-900">2.1</div>
  <div className="text-sm text-titanium-600">Avg LOS (days)</div>
@@ -173,8 +173,8 @@ const StructuralCareTeamView: React.FC = () => {
  <td className="p-3 text-titanium-700">{patient.procedure}</td>
  <td className="p-3">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
- patient.risk.includes('Low') ? 'bg-[#F0F7F4] text-[#2D6147]' :
- patient.risk.includes('Moderate') ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ patient.risk.includes('Low') ? 'bg-green-50 text-green-600' :
+ patient.risk.includes('Moderate') ? 'bg-amber-50 text-amber-600' :
  'bg-red-100 text-red-700'
  }`}>
  {patient.risk}
@@ -221,15 +221,15 @@ const StructuralCareTeamView: React.FC = () => {
  ].map((item) => (
  <div key={item.patient} className={`p-3 rounded-lg border ${
  item.urgency === 'High' ? 'bg-red-50 border-red-200' :
- item.urgency === 'Medium' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
- 'bg-[#F0F7F4] border-[#D8EDE6]'
+ item.urgency === 'Medium' ? 'bg-chrome-50 border-titanium-300' :
+ 'bg-green-50 border-green-100'
  }`}>
  <div className="font-medium text-titanium-900">{item.patient}</div>
  <div className="text-sm text-titanium-600">{item.procedure}</div>
  <div className={`text-xs font-medium ${
  item.urgency === 'High' ? 'text-red-600' :
- item.urgency === 'Medium' ? 'text-[#6B7280]' :
- 'text-[#2C4A60]'
+ item.urgency === 'Medium' ? 'text-gray-500' :
+ 'text-teal-700'
  }`}>
  {item.urgency} Priority
  </div>
@@ -267,15 +267,15 @@ const StructuralCareTeamView: React.FC = () => {
  ].map((item) => (
  <div key={item.patient} className={`p-3 rounded-lg border ${
  item.status === 'Overdue' ? 'bg-red-50 border-red-200' :
- item.status === 'Due' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
- 'bg-[#F0F7F4] border-[#D8EDE6]'
+ item.status === 'Due' ? 'bg-chrome-50 border-titanium-300' :
+ 'bg-green-50 border-green-100'
  }`}>
  <div className="font-medium text-titanium-900">{item.patient}</div>
  <div className="text-sm text-titanium-600">{item.days}</div>
  <div className={`text-xs font-medium ${
  item.status === 'Overdue' ? 'text-red-600' :
- item.status === 'Due' ? 'text-[#6B7280]' :
- 'text-[#2C4A60]'
+ item.status === 'Due' ? 'text-gray-500' :
+ 'text-teal-700'
  }`}>
  {item.status}
  </div>
@@ -303,11 +303,11 @@ const StructuralCareTeamView: React.FC = () => {
  { alert: 'Contraindications', count: 1, color: 'amber' }
  ].map((item) => (
  <div key={item.alert} className={`p-4 rounded-xl border ${
- item.color === 'red' ? 'bg-red-50 border-red-200' : 'bg-[#F0F5FA] border-[#C8D4DC]'
+ item.color === 'red' ? 'bg-red-50 border-red-200' : 'bg-chrome-50 border-titanium-300'
  }`}>
  <div className="text-center">
  <div className={`text-2xl font-bold ${
- item.color === 'red' ? 'text-red-600' : 'text-[#6B7280]'
+ item.color === 'red' ? 'text-red-600' : 'text-gray-500'
  }`}>{item.count}</div>
  <div className="text-sm font-medium text-titanium-700">{item.alert}</div>
  </div>
@@ -365,9 +365,9 @@ const StructuralCareTeamView: React.FC = () => {
  <div className="font-medium text-chrome-900">Heart Team Note</div>
  <div className="text-sm text-chrome-600">Multidisciplinary decision template</div>
  </button>
- <button className="w-full text-left p-3 rounded-lg bg-[#F0F7F4] border border-[#D8EDE6] hover:bg-[#C8D4DC] transition-colors">
- <div className="font-medium text-[#2C4A60]">Procedure Note</div>
- <div className="text-sm text-[#2C4A60]">Standardized operative note</div>
+ <button className="w-full text-left p-3 rounded-lg bg-green-50 border border-green-100 hover:bg-titanium-300 transition-colors">
+ <div className="font-medium text-teal-700">Procedure Note</div>
+ <div className="text-sm text-teal-700">Standardized operative note</div>
  </button>
  </div>
  </div>

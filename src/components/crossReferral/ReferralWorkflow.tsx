@@ -83,7 +83,7 @@ const ReferralWorkflow: React.FC<ReferralWorkflowProps> = ({
   const getStepIcon = (step: WorkflowStep, index: number) => {
  switch (step.status) {
  case 'completed':
- return <CheckCircle className="w-5 h-5 text-[#2C4A60] fill-current" />;
+ return <CheckCircle className="w-5 h-5 text-teal-700 fill-current" />;
  case 'current':
  return <PlayCircle className="w-5 h-5 text-porsche-500 fill-current animate-pulse" />;
  case 'pending':
@@ -99,8 +99,8 @@ const ReferralWorkflow: React.FC<ReferralWorkflowProps> = ({
  switch (step.status) {
  case 'completed':
  return {
- bgColor: 'bg-[#f0f5fa]',
- borderColor: 'border-[#C8D4DC]',
+ bgColor: 'bg-chrome-50',
+ borderColor: 'border-titanium-300',
  textColor: 'text-titanium-700',
  titleColor: 'text-titanium-800'
  };
@@ -301,7 +301,7 @@ const ReferralWorkflow: React.FC<ReferralWorkflowProps> = ({
  {/* Step Status Badge */}
  <div className="flex-shrink-0 ml-4">
  {step.status === 'completed' && (
- <div className="flex items-center gap-1 px-2 py-1 bg-[#F0F7F4] text-[#2D6147] text-xs rounded-full border border-[#D8EDE6]">
+ <div className="flex items-center gap-1 px-2 py-1 bg-green-50 text-green-600 text-xs rounded-full border border-green-100">
  <CheckCircle className="w-3 h-3" />
  Complete
  </div>
@@ -361,7 +361,7 @@ const ReferralWorkflow: React.FC<ReferralWorkflowProps> = ({
  {/* Completed Workflow */}
  {currentStep >= steps.length && (
  <div className="mt-6 pt-4 border-t border-titanium-200">
- <div className="flex items-center justify-center gap-2 text-[#2C4A60]">
+ <div className="flex items-center justify-center gap-2 text-teal-700">
  <CheckCircle className="w-5 h-5" />
  <span className="font-medium">Workflow Complete</span>
  </div>

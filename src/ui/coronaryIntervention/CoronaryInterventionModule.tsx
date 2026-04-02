@@ -10,7 +10,7 @@ const CoronaryInterventionModule: React.FC = () => {
  name: 'Coronary Intervention',
  description: 'Population CAD screening to complex revascularization across PCP-Cardiology-Surgery',
  icon: Activity,
- color: 'text-[#6B7280]',
+ color: 'text-gray-500',
  patientCount: '3,046',
  views: [
  {

@@ -36,7 +36,7 @@ const ExecutiveKPICard: React.FC<ExecutiveKPICardProps> = ({
   };
 
   const getTrendColor = () => {
- if (trend?.direction === 'up') return 'text-[#2C4A60]';
+ if (trend?.direction === 'up') return 'text-teal-700';
  return 'text-arterial-600';
   };
 

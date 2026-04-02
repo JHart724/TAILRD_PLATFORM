@@ -441,20 +441,20 @@ const caseFlags: Record<string, Array<{ field: string; issue: string; recommenda
 // ── Helpers ──────────────────────────────────────────────────
 
 function completenessColor(pct: number): string {
-  if (pct >= 85) return 'bg-[#C8D4DC]';
-  if (pct >= 60) return 'bg-[#F0F5FA]';
+  if (pct >= 85) return 'bg-titanium-300';
+  if (pct >= 60) return 'bg-chrome-50';
   return 'bg-red-500';
 }
 
 function completenessTextColor(pct: number): string {
-  if (pct >= 85) return 'text-[#2C4A60]';
-  if (pct >= 60) return 'text-[#6B7280]';
+  if (pct >= 85) return 'text-teal-700';
+  if (pct >= 60) return 'text-gray-500';
   return 'text-red-700';
 }
 
 function confidenceDot(pct: number): string {
-  if (pct >= 85) return 'bg-[#C8D4DC]';
-  if (pct >= 60) return 'bg-[#F0F5FA]';
+  if (pct >= 85) return 'bg-titanium-300';
+  if (pct >= 60) return 'bg-chrome-50';
   return 'bg-red-500';
 }
 
@@ -462,7 +462,7 @@ function sourceChip(src: string): string {
   switch (src) {
     case 'Structured': return 'bg-slate-100 text-slate-700';
     case 'Calculated': return 'bg-blue-100 text-blue-700';
-    case 'Inferred': return 'bg-[#FAF6E8] text-[#8B6914]';
+    case 'Inferred': return 'bg-amber-50 text-amber-600';
     case 'Manual': return 'bg-slate-100 text-slate-700';
     default: return 'bg-gray-100 text-gray-600';
   }
@@ -470,9 +470,9 @@ function sourceChip(src: string): string {
 
 function statusChip(status: string): string {
   switch (status) {
-    case 'Approved': return 'bg-[#F0F7F4] text-[#2D6147]';
+    case 'Approved': return 'bg-green-50 text-green-600';
     case 'Submitted': return 'bg-blue-100 text-blue-800';
-    case 'In Review': return 'bg-[#FAF6E8] text-[#8B6914]';
+    case 'In Review': return 'bg-amber-50 text-amber-600';
     case 'Auto-populated': return 'bg-slate-100 text-slate-600';
     default: return 'bg-gray-100 text-gray-600';
   }
@@ -480,10 +480,10 @@ function statusChip(status: string): string {
 
 function sponsorBadge(type: string): string {
   switch (type) {
-    case 'industry': return 'bg-[#FAF6E8] text-[#8B6914]';
+    case 'industry': return 'bg-amber-50 text-amber-600';
     case 'investigator': return 'bg-slate-100 text-slate-700';
-    case 'nih': return 'bg-[#F0F7F4] text-[#2D6147]';
-    case 'api': return 'bg-[#F0F7F4] text-[#2D6147]';
+    case 'nih': return 'bg-green-50 text-green-600';
+    case 'api': return 'bg-green-50 text-green-600';
     default: return 'bg-gray-100 text-gray-600';
   }
 }
@@ -615,7 +615,7 @@ const ResearchServiceLineView: React.FC = () => {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
               activeTab === tab.id
-                ? 'bg-[#2E3440] text-white shadow-sm'
+                ? 'bg-neutral-700 text-white shadow-sm'
                 : 'text-slate-600 hover:text-slate-800 hover:bg-slate-200'
             }`}
           >
@@ -641,7 +641,7 @@ const ResearchServiceLineView: React.FC = () => {
                 }}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
                   activeRegistry === rt.id
-                    ? 'bg-[#2E3440] text-white'
+                    ? 'bg-neutral-700 text-white'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
@@ -722,8 +722,8 @@ const ResearchServiceLineView: React.FC = () => {
               <div className="max-h-[580px] overflow-y-auto px-4 py-3 space-y-4">
                 {sections.map((sec) => (
                   <div key={sec.title}>
-                    <h4 className="text-xs font-bold text-[#2E3440] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                      <div className="w-1 h-3.5 bg-[#2E3440] rounded-full" />
+                    <h4 className="text-xs font-bold text-neutral-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                      <div className="w-1 h-3.5 bg-neutral-700 rounded-full" />
                       {sec.title}
                     </h4>
                     <div className="space-y-1.5">
@@ -731,7 +731,7 @@ const ResearchServiceLineView: React.FC = () => {
                         <div
                           key={f.label}
                           className={`flex items-center justify-between py-1.5 px-2 rounded-md ${
-                            f.confidence < 70 ? 'bg-[#F0F5FA] border border-[#C8D4DC]' : 'hover:bg-slate-50'
+                            f.confidence < 70 ? 'bg-chrome-50 border border-titanium-300' : 'hover:bg-slate-50'
                           }`}
                         >
                           <div className="flex-1 min-w-0">
@@ -772,13 +772,13 @@ const ResearchServiceLineView: React.FC = () => {
                       />
                     </div>
                     <div className="grid grid-cols-3 gap-2 text-center">
-                      <div className="bg-[#C8D4DC] rounded-lg p-2">
-                        <div className="text-lg font-bold text-[#2C4A60]">{highConf}</div>
-                        <div className="text-[10px] text-[#2C4A60]">High conf.</div>
+                      <div className="bg-titanium-300 rounded-lg p-2">
+                        <div className="text-lg font-bold text-teal-700">{highConf}</div>
+                        <div className="text-[10px] text-teal-700">High conf.</div>
                       </div>
-                      <div className="bg-[#F0F5FA] rounded-lg p-2">
-                        <div className="text-lg font-bold text-[#6B7280]">{needsReview}</div>
-                        <div className="text-[10px] text-[#6B7280]">Needs review</div>
+                      <div className="bg-chrome-50 rounded-lg p-2">
+                        <div className="text-lg font-bold text-gray-500">{needsReview}</div>
+                        <div className="text-[10px] text-gray-500">Needs review</div>
                       </div>
                       <div className="bg-red-50 rounded-lg p-2">
                         <div className="text-lg font-bold text-red-700">{missing}</div>
@@ -796,7 +796,7 @@ const ResearchServiceLineView: React.FC = () => {
                   Flags ({flags.length})
                 </h3>
                 {flags.length === 0 ? (
-                  <div className="flex items-center gap-2 text-xs text-[#2C4A60] py-2">
+                  <div className="flex items-center gap-2 text-xs text-teal-700 py-2">
                     <CheckCircle className="w-4 h-4" />
                     No flags for this case
                   </div>
@@ -822,7 +822,7 @@ const ResearchServiceLineView: React.FC = () => {
                   {[
                     { label: 'Structured', count: structured, color: 'bg-slate-500', bgColor: 'bg-slate-100' },
                     { label: 'Calculated', count: calculated, color: 'bg-blue-500', bgColor: 'bg-blue-100' },
-                    { label: 'Inferred', count: inferred, color: 'bg-[#F0F5FA]', bgColor: 'bg-[#F0F5FA]' },
+                    { label: 'Inferred', count: inferred, color: 'bg-chrome-50', bgColor: 'bg-chrome-50' },
                     { label: 'Manual', count: manual, color: 'bg-slate-500', bgColor: 'bg-slate-100' },
                   ].map((s) => (
                     <div key={s.label} className="flex items-center gap-2">
@@ -842,7 +842,7 @@ const ResearchServiceLineView: React.FC = () => {
 
               {/* Action Buttons */}
               <div className="flex flex-col gap-2">
-                <button className="w-full py-2 bg-[#2E3440] text-white text-sm font-semibold rounded-lg hover:bg-[#3B4252] transition-colors flex items-center justify-center gap-2">
+                <button className="w-full py-2 bg-neutral-700 text-white text-sm font-semibold rounded-lg hover:bg-[#3B4252] transition-colors flex items-center justify-center gap-2">
                   <CheckCircle className="w-4 h-4" />
                   Approve & Submit
                 </button>
@@ -876,9 +876,9 @@ const ResearchServiceLineView: React.FC = () => {
                   className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2E3440]/20 focus:border-[#2E3440]"
                 />
               </div>
-              <div className="flex items-center gap-1.5 bg-[#F0F7F4] border border-[#D8EDE6] rounded-full px-3 py-1.5">
-                <div className="w-2 h-2 rounded-full bg-[#C8D4DC] animate-pulse" />
-                <span className="text-xs font-medium text-[#2C4A60]">Live: ClinicalTrials.gov</span>
+              <div className="flex items-center gap-1.5 bg-green-50 border border-green-100 rounded-full px-3 py-1.5">
+                <div className="w-2 h-2 rounded-full bg-titanium-300 animate-pulse" />
+                <span className="text-xs font-medium text-teal-700">Live: ClinicalTrials.gov</span>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -890,8 +890,8 @@ const ResearchServiceLineView: React.FC = () => {
                   className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
                     trialFilter === f.id
                       ? f.id === 'industry'
-                        ? 'bg-[#FAF6E8] text-[#8B6914] ring-1 ring-[#6B7280]'
-                        : 'bg-[#2E3440] text-white'
+                        ? 'bg-amber-50 text-amber-600 ring-1 ring-[#6B7280]'
+                        : 'bg-neutral-700 text-white'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
                 >
@@ -905,7 +905,7 @@ const ResearchServiceLineView: React.FC = () => {
                 </span>
               )}
               {apiError && (
-                <span className="ml-auto text-xs text-[#6B7280]">
+                <span className="ml-auto text-xs text-gray-500">
                   Live search temporarily unavailable -- showing curated trials
                 </span>
               )}
@@ -941,7 +941,7 @@ const ResearchServiceLineView: React.FC = () => {
                         {t.phase === 'Registry' ? 'Registry' : `Phase ${t.phase}`}
                       </span>
                       <span className={`px-1.5 py-0.5 rounded font-medium ${
-                        t.status === 'Enrolling' ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-[#FAF6E8] text-[#8B6914]'
+                        t.status === 'Enrolling' ? 'bg-green-50 text-green-600' : 'bg-amber-50 text-amber-600'
                       }`}>
                         {t.status}
                       </span>
@@ -958,13 +958,13 @@ const ResearchServiceLineView: React.FC = () => {
                 {/* API Trials */}
                 {apiTrials.length > 0 && (
                   <>
-                    <div className="px-4 py-2 bg-[#f0f4f8] border-y border-[#F0F5FA]">
-                      <span className="text-[10px] font-semibold text-[#2C4A60] uppercase tracking-wider">
+                    <div className="px-4 py-2 bg-chrome-50 border-y border-chrome-50">
+                      <span className="text-[10px] font-semibold text-teal-700 uppercase tracking-wider">
                         Live from ClinicalTrials.gov
                       </span>
                     </div>
                     {apiTrials.map((t) => (
-                      <div key={t.id} className="w-full text-left px-4 py-3 border-l-4 border-l-transparent hover:bg-[#f0f4f8]/30">
+                      <div key={t.id} className="w-full text-left px-4 py-3 border-l-4 border-l-transparent hover:bg-chrome-50/30">
                         <div className="flex items-start justify-between gap-2 mb-1">
                           <span className="text-sm font-medium text-slate-800 leading-tight">{t.name}</span>
                           <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full whitespace-nowrap ${sponsorBadge(t.sponsorType)}`}>
@@ -972,8 +972,8 @@ const ResearchServiceLineView: React.FC = () => {
                           </span>
                         </div>
                         <div className="flex items-center gap-2 text-xs mt-1">
-                          <span className="bg-[#F0F7F4] text-[#2D6147] px-1.5 py-0.5 rounded font-medium">{t.phase}</span>
-                          <span className="bg-[#F0F7F4] text-[#2D6147] px-1.5 py-0.5 rounded font-medium">{t.status}</span>
+                          <span className="bg-green-50 text-green-600 px-1.5 py-0.5 rounded font-medium">{t.phase}</span>
+                          <span className="bg-green-50 text-green-600 px-1.5 py-0.5 rounded font-medium">{t.status}</span>
                           <span className="text-slate-400">{t.nct}</span>
                         </div>
                         <div className="mt-1 text-[10px] text-slate-500 truncate">
@@ -997,9 +997,9 @@ const ResearchServiceLineView: React.FC = () => {
                 <div className="overflow-y-auto max-h-[600px]">
                   {/* Industry warning banner */}
                   {selectedTrialData.sponsorType === 'industry' && (
-                    <div className="bg-[#F0F5FA] border-b border-[#C8D4DC] px-4 py-2.5 flex items-start gap-2">
-                      <AlertTriangle className="w-4 h-4 text-[#6B7280] flex-shrink-0 mt-0.5" />
-                      <p className="text-xs text-[#6B7280]">
+                    <div className="bg-chrome-50 border-b border-titanium-300 px-4 py-2.5 flex items-start gap-2">
+                      <AlertTriangle className="w-4 h-4 text-gray-500 flex-shrink-0 mt-0.5" />
+                      <p className="text-xs text-gray-500">
                         <span className="font-semibold">Industry-Sponsored Trial</span> -- Enrollment discussions require PI approval before patient contact. Research compliance office notification required.
                       </p>
                     </div>
@@ -1028,7 +1028,7 @@ const ResearchServiceLineView: React.FC = () => {
                         {selectedTrialData.phase === 'Registry' ? 'Registry' : `Phase ${selectedTrialData.phase}`}
                       </span>
                       <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                        selectedTrialData.status === 'Enrolling' ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-[#FAF6E8] text-[#8B6914]'
+                        selectedTrialData.status === 'Enrolling' ? 'bg-green-50 text-green-600' : 'bg-amber-50 text-amber-600'
                       }`}>
                         {selectedTrialData.status}
                       </span>
@@ -1039,14 +1039,14 @@ const ResearchServiceLineView: React.FC = () => {
 
                     {/* Inclusion criteria */}
                     <div>
-                      <h4 className="text-xs font-bold text-[#2C4A60] uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                      <h4 className="text-xs font-bold text-teal-700 uppercase tracking-wider mb-1.5 flex items-center gap-1">
                         <CheckCircle className="w-3.5 h-3.5" />
                         Inclusion Criteria
                       </h4>
                       <ul className="space-y-1">
                         {selectedTrialData.inclusion.map((c, i) => (
                           <li key={i} className="flex items-start gap-1.5 text-xs text-slate-700">
-                            <ChevronRight className="w-3 h-3 text-[#2C4A60] flex-shrink-0 mt-0.5" />
+                            <ChevronRight className="w-3 h-3 text-teal-700 flex-shrink-0 mt-0.5" />
                             {c}
                           </li>
                         ))}
@@ -1070,13 +1070,13 @@ const ResearchServiceLineView: React.FC = () => {
                     </div>
 
                     {/* Eligible patients box */}
-                    <div className="bg-[#2E3440]/5 border border-[#2E3440]/10 rounded-lg p-3">
+                    <div className="bg-neutral-700/5 border border-[#2E3440]/10 rounded-lg p-3">
                       <div className="flex items-center justify-between">
                         <div>
                           <span className="text-xs text-slate-500">Eligible patients in your population</span>
-                          <div className="text-2xl font-bold text-[#2E3440]">{selectedTrialData.eligiblePatients}</div>
+                          <div className="text-2xl font-bold text-neutral-700">{selectedTrialData.eligiblePatients}</div>
                         </div>
-                        <Users className="w-8 h-8 text-[#2E3440]/30" />
+                        <Users className="w-8 h-8 text-neutral-700/30" />
                       </div>
                       <p className="text-[10px] text-slate-500 mt-1">
                         Based on EHR-matched inclusion/exclusion criteria across active patient panel

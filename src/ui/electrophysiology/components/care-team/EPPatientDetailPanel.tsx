@@ -122,29 +122,29 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
   const getPriorityColor = (priority: string) => {
  switch(priority) {
  case 'high': return 'border-red-500 bg-red-50 text-red-700';
- case 'medium': return 'border-[#C8D4DC] bg-[#FAF6E8] text-[#8B6914]';
- case 'low': return 'border-[#2C4A60] bg-[#F0F7F4] text-[#2D6147]';
+ case 'medium': return 'border-titanium-300 bg-amber-50 text-amber-600';
+ case 'low': return 'border-teal-700 bg-green-50 text-green-600';
  default: return 'border-gray-300 bg-gray-50 text-gray-700';
  }
   };
 
   const getRiskColor = (riskScore: number) => {
  if (riskScore >= 8) return 'text-red-600 bg-red-100';
- if (riskScore >= 6) return 'text-[#8B6914] bg-[#FAF6E8]';
- return 'text-[#2D6147] bg-[#F0F7F4]';
+ if (riskScore >= 6) return 'text-amber-600 bg-amber-50';
+ return 'text-green-600 bg-green-50';
   };
 
   const getAdherenceColor = (adherence?: number) => {
  if (!adherence) return 'text-gray-600 bg-gray-100';
- if (adherence >= 90) return 'text-[#2D6147] bg-[#F0F7F4]';
- if (adherence >= 75) return 'text-[#8B6914] bg-[#FAF6E8]';
+ if (adherence >= 90) return 'text-green-600 bg-green-50';
+ if (adherence >= 75) return 'text-amber-600 bg-amber-50';
  return 'text-red-600 bg-red-100';
   };
 
   const getAnticoagulationStatusColor = (status: string) => {
  switch(status) {
- case 'optimal': return 'text-[#2D6147] bg-[#F0F7F4] border-[#2C4A60]';
- case 'suboptimal': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
+ case 'optimal': return 'text-green-600 bg-green-50 border-teal-700';
+ case 'suboptimal': return 'text-amber-600 bg-amber-50 border-titanium-300';
  case 'contraindicated': return 'text-red-700 bg-red-100 border-red-300';
  case 'not_started': return 'text-gray-700 bg-gray-100 border-gray-300';
  default: return 'text-gray-700 bg-gray-100 border-gray-300';
@@ -162,8 +162,8 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
   };
 
   const getAnticoagulationScoreColor = (score: number) => {
- if (score >= 80) return 'text-[#2D6147] bg-[#F0F7F4]';
- if (score >= 60) return 'text-[#8B6914] bg-[#FAF6E8]';
+ if (score >= 80) return 'text-green-600 bg-green-50';
+ if (score >= 60) return 'text-amber-600 bg-amber-50';
  return 'text-red-700 bg-red-100';
   };
 
@@ -286,8 +286,8 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
   const getAlertColor = (level: 'contraindication' | 'caution' | 'warning') => {
  switch(level) {
  case 'contraindication': return 'text-red-800 bg-red-100 border-red-300';
- case 'caution': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
- case 'warning': return 'text-[#8B6914] bg-[#FAF6E8] border-[#C8D4DC]';
+ case 'caution': return 'text-amber-600 bg-amber-50 border-titanium-300';
+ case 'warning': return 'text-amber-600 bg-amber-50 border-titanium-300';
  default: return 'text-gray-800 bg-gray-100 border-gray-300';
  }
   };
@@ -349,8 +349,8 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
  <div className="text-xl font-bold text-arterial-600 mb-2">Risk Category {patient.riskCategory}</div>
  <p className="text-sm text-gray-600">Functional Class</p>
  </div>
- <div className="bg-[#F0F5FA] rounded-lg p-4 text-center">
- <div className="text-2xl font-bold text-[#6B7280] mb-2">{patient.treatmentGaps.length}</div>
+ <div className="bg-chrome-50 rounded-lg p-4 text-center">
+ <div className="text-2xl font-bold text-gray-500 mb-2">{patient.treatmentGaps.length}</div>
  <p className="text-sm text-gray-600">Anticoagulation Gaps</p>
  </div>
  </div>
@@ -388,9 +388,9 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
  </div>
 
  {/* Laboratory Results */}
- <div className="bg-[#C8D4DC] rounded-lg p-4">
+ <div className="bg-titanium-300 rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <Droplets className="w-5 h-5 text-[#2C4A60]" />
+ <Droplets className="w-5 h-5 text-teal-700" />
  Laboratory Results
  </h3>
  <div className="grid grid-cols-3 gap-4">
@@ -483,15 +483,15 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
  </div>
 
  {/* Recent Clinical Notes */}
- <div className="bg-[#F0F5FA] rounded-lg p-4">
+ <div className="bg-chrome-50 rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <FileText className="w-5 h-5 text-[#6B7280]" />
+ <FileText className="w-5 h-5 text-gray-500" />
  Recent Clinical Notes
  </h3>
  <div className="space-y-2">
  {patient.fullChart.notes.map((note, idx) => (
  <div key={`note-${idx}`} className="flex items-start gap-2">
- <ChevronRight className="w-4 h-4 text-[#6B7280] mt-0.5 flex-shrink-0" />
+ <ChevronRight className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
  <span className="text-sm text-gray-700">{note}</span>
  </div>
  ))}
@@ -532,8 +532,8 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
  <div className="w-full bg-gray-200 rounded-full h-2">
  <div 
  className={`h-2 rounded-full transition-all duration-500 ${
- patient.fullChart.anticoagulation.overallScore >= 80 ? 'bg-[#C8D4DC]' :
- patient.fullChart.anticoagulation.overallScore >= 60 ? 'bg-[#F0F5FA]' : 'bg-red-500'
+ patient.fullChart.anticoagulation.overallScore >= 80 ? 'bg-titanium-300' :
+ patient.fullChart.anticoagulation.overallScore >= 60 ? 'bg-chrome-50' : 'bg-red-500'
  }`}
  style={{ width: `${patient.fullChart.anticoagulation.overallScore}%` }}
  ></div>
@@ -603,15 +603,15 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
  {patient.fullChart.anticoagulation.opportunities.map((opp, idx) => (
  <div key={`${opp.pillar}-${opp.action}`} className={`p-2 rounded border-l-4 text-sm ${
  opp.priority === 'high' ? 'bg-red-50 border-red-400' :
- opp.priority === 'medium' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
- 'bg-[#F0F7F4] border-[#D8EDE6]'
+ opp.priority === 'medium' ? 'bg-chrome-50 border-titanium-300' :
+ 'bg-green-50 border-green-100'
  }`}>
  <div className="flex items-center justify-between mb-1">
  <span className="font-medium">{opp.pillar}</span>
  <span className={`px-2 py-1 rounded text-xs font-medium ${
  opp.priority === 'high' ? 'bg-red-100 text-red-700' :
- opp.priority === 'medium' ? 'bg-[#FAF6E8] text-[#8B6914]' :
- 'bg-[#F0F7F4] text-[#2D6147]'
+ opp.priority === 'medium' ? 'bg-amber-50 text-amber-600' :
+ 'bg-green-50 text-green-600'
  }`}>
  {opp.priority} priority
  </span>
@@ -648,9 +648,9 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
 
  {/* Recent Hospitalizations */}
  {patient.fullChart.recentHospitalizations.length > 0 && (
- <div className="bg-[#F0F5FA] rounded-lg p-4">
+ <div className="bg-chrome-50 rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <Calendar className="w-5 h-5 text-[#6B7280]" />
+ <Calendar className="w-5 h-5 text-gray-500" />
  Recent Hospitalizations
  </h3>
  <div className="space-y-2">
@@ -671,15 +671,15 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
 
  {/* Anticoagulation Gaps */}
  {patient.treatmentGaps.length > 0 && (
- <div className="bg-[#F0F5FA] rounded-lg p-4">
+ <div className="bg-chrome-50 rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <AlertTriangle className="w-5 h-5 text-[#6B7280]" />
+ <AlertTriangle className="w-5 h-5 text-gray-500" />
  Anticoagulation Optimization Gaps
  </h3>
  <div className="grid gap-2">
  {patient.treatmentGaps.map((gap, idx) => (
  <div key={gap} className="flex items-center gap-2 bg-white p-2 rounded">
- <AlertTriangle className="w-4 h-4 text-[#6B7280]" />
+ <AlertTriangle className="w-4 h-4 text-gray-500" />
  <span className="text-sm text-gray-700">{gap}</span>
  </div>
  ))}
@@ -757,7 +757,7 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
  Begin Care Plan
  </button>
  {carePlanFeedback && (
- <div className="mt-2 p-2 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg text-[#2C4A60] text-sm flex items-center gap-2">
+ <div className="mt-2 p-2 bg-green-50 border border-green-100 rounded-lg text-teal-700 text-sm flex items-center gap-2">
  <CheckCircle className="w-4 h-4" />
  ✓ Care plan initiated — loading optimization roadmap...
  </div>

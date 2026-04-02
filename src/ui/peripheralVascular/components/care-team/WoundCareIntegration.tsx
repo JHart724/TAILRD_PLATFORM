@@ -225,8 +225,8 @@ const WoundCareIntegration: React.FC = () => {
 
   const getDepthColor = (depth: string) => {
  switch (depth) {
- case 'Superficial': return 'text-[#2D6147] bg-[#F0F7F4]';
- case 'Partial thickness': return 'text-[#8B6914] bg-[#FAF6E8]';
+ case 'Superficial': return 'text-green-600 bg-green-50';
+ case 'Partial thickness': return 'text-amber-600 bg-amber-50';
  case 'Full thickness': return 'text-red-600 bg-red-100';
  case 'Bone/Joint': return 'text-red-800 bg-red-200';
  default: return 'text-titanium-600 bg-titanium-100';
@@ -235,8 +235,8 @@ const WoundCareIntegration: React.FC = () => {
 
   const getInfectionColor = (status: string) => {
  switch (status) {
- case 'None': return 'text-[#2D6147] bg-[#F0F7F4]';
- case 'Cellulitis': return 'text-[#8B6914] bg-[#FAF6E8]';
+ case 'None': return 'text-green-600 bg-green-50';
+ case 'Cellulitis': return 'text-amber-600 bg-amber-50';
  case 'Deep tissue': return 'text-red-600 bg-red-100';
  case 'Osteomyelitis': return 'text-red-800 bg-red-200';
  default: return 'text-titanium-600 bg-titanium-100';
@@ -247,7 +247,7 @@ const WoundCareIntegration: React.FC = () => {
  switch (phase) {
  case 'Pre-revasc': return 'text-red-600 bg-red-100';
  case 'Post-revasc': return 'text-chrome-600 bg-chrome-100';
- case 'Surveillance': return 'text-[#2D6147] bg-[#F0F7F4]';
+ case 'Surveillance': return 'text-green-600 bg-green-50';
  case 'No intervention': return 'text-titanium-600 bg-titanium-100';
  default: return 'text-titanium-600 bg-titanium-100';
  }
@@ -257,9 +257,9 @@ const WoundCareIntegration: React.FC = () => {
  switch (role) {
  case 'Vascular': return 'text-red-600 bg-red-100';
  case 'Podiatry': return 'text-chrome-600 bg-chrome-100';
- case 'Wound care': return 'text-[#2D6147] bg-[#F0F7F4]';
+ case 'Wound care': return 'text-green-600 bg-green-50';
  case 'Infectious disease': return 'text-arterial-600 bg-arterial-100';
- case 'Endocrine': return 'text-[#8B6914] bg-[#FAF6E8]';
+ case 'Endocrine': return 'text-amber-600 bg-amber-50';
  case 'Nursing': return 'text-pink-600 bg-pink-100';
  default: return 'text-titanium-600 bg-titanium-100';
  }
@@ -298,7 +298,7 @@ const WoundCareIntegration: React.FC = () => {
  <div className="flex items-center justify-between">
  <div>
  <h2 className="text-2xl font-bold text-titanium-800 mb-2 flex items-center gap-3">
- <Bandage className="w-8 h-8 text-[#2C4A60]" />
+ <Bandage className="w-8 h-8 text-teal-700" />
  Wound Care Integration
  </h2>
  <p className="text-titanium-600">
@@ -307,7 +307,7 @@ const WoundCareIntegration: React.FC = () => {
  </div>
  <button
  onClick={updateWoundStatus}
- className="flex items-center gap-2 px-6 py-3 bg-[#2C4A60] text-white rounded-lg hover:bg-[#2C4A60] transition-colors"
+ className="flex items-center gap-2 px-6 py-3 bg-teal-700 text-white rounded-lg hover:bg-teal-700 transition-colors"
  >
  <Activity className="w-4 h-4" />
  Update Wound Status
@@ -435,7 +435,7 @@ const WoundCareIntegration: React.FC = () => {
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
  <div className="bg-white rounded-2xl p-6 shadow-chrome-card border border-titanium-200">
  <h3 className="text-lg font-semibold text-titanium-800 mb-4 flex items-center gap-2">
- <Shield className="w-5 h-5 text-[#6B7280]" />
+ <Shield className="w-5 h-5 text-gray-500" />
  Infection Status
  </h3>
  
@@ -521,8 +521,8 @@ const WoundCareIntegration: React.FC = () => {
  }))}
  className={`p-2 rounded border text-sm font-medium transition-all ${
  patient.offloading.compliance === level
- ? level === 'Excellent' || level === 'Good' ? 'text-[#2D6147] bg-[#F0F7F4]' :
- level === 'Fair' ? 'text-[#8B6914] bg-[#FAF6E8]' : 'text-red-600 bg-red-100'
+ ? level === 'Excellent' || level === 'Good' ? 'text-green-600 bg-green-50' :
+ level === 'Fair' ? 'text-amber-600 bg-amber-50' : 'text-red-600 bg-red-100'
  : 'bg-white border-titanium-200 text-titanium-700 hover:bg-titanium-50'
  }`}
  >
@@ -624,7 +624,7 @@ const WoundCareIntegration: React.FC = () => {
  {/* Healing Timeline Tracker */}
  <div className="bg-white rounded-2xl p-6 shadow-chrome-card border border-titanium-200">
  <h3 className="text-lg font-semibold text-titanium-800 mb-4 flex items-center gap-2">
- <TrendingUp className="w-5 h-5 text-[#2C4A60]" />
+ <TrendingUp className="w-5 h-5 text-teal-700" />
  Healing Timeline Tracker
  </h3>
  
@@ -651,9 +651,9 @@ const WoundCareIntegration: React.FC = () => {
  </div>
 
  <div className="space-y-4">
- <div className="p-4 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg text-center">
- <div className="text-sm text-[#2C4A60] mb-1">Healing Rate</div>
- <div className="text-2xl font-bold text-[#2C4A60]">
+ <div className="p-4 bg-green-50 border border-green-100 rounded-lg text-center">
+ <div className="text-sm text-teal-700 mb-1">Healing Rate</div>
+ <div className="text-2xl font-bold text-teal-700">
  {toFixed(calculateHealingRate(), 2)} cm²/week
  </div>
  </div>
@@ -665,9 +665,9 @@ const WoundCareIntegration: React.FC = () => {
  </div>
  </div>
 
- <div className="p-4 bg-[#F0F5FA] border border-[#C8D4DC] rounded-lg text-center">
- <div className="text-sm text-[#6B7280] mb-1">Goal Timeline</div>
- <div className="text-lg font-bold text-[#6B7280]">
+ <div className="p-4 bg-chrome-50 border border-titanium-300 rounded-lg text-center">
+ <div className="text-sm text-gray-500 mb-1">Goal Timeline</div>
+ <div className="text-lg font-bold text-gray-500">
  {patient.goalHealingTime}
  </div>
  </div>

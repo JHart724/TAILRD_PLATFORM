@@ -57,13 +57,13 @@ const HFDRGDetailModal: React.FC<HFDRGDetailModalProps> = ({
   };
 
   const getMarginColor = (marginPercent: number): string => {
- if (marginPercent >= 20) return 'text-[#2C4A60]';
+ if (marginPercent >= 20) return 'text-teal-700';
  if (marginPercent >= 10) return 'text-crimson-600';
  return 'text-medical-red-600';
   };
 
   const getMarginBgColor = (marginPercent: number): string => {
- if (marginPercent >= 20) return 'bg-[#f0f5fa]';
+ if (marginPercent >= 20) return 'bg-chrome-50';
  if (marginPercent >= 10) return 'bg-crimson-50';
  return 'bg-medical-red-50';
   };
@@ -161,19 +161,19 @@ const HFDRGDetailModal: React.FC<HFDRGDetailModalProps> = ({
  <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
  
  {/* Total Revenue */}
- <div className="bg-[#f0f5fa] rounded-xl p-6 border border-[#C8D4DC]">
+ <div className="bg-chrome-50 rounded-xl p-6 border border-titanium-300">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center">
- <DollarSign className="w-8 h-8 text-[#2C4A60] mr-3" />
+ <DollarSign className="w-8 h-8 text-teal-700 mr-3" />
  <div>
- <div className="text-lg font-bold text-[#2C4A60]">Total Revenue</div>
+ <div className="text-lg font-bold text-teal-700">Total Revenue</div>
  </div>
  </div>
  </div>
- <div className="text-3xl font-bold text-[#2C4A60]">
+ <div className="text-3xl font-bold text-teal-700">
  {formatMoney(totalRevenue)}
  </div>
- <div className="text-sm text-[#2C4A60] mt-1">
+ <div className="text-sm text-teal-700 mt-1">
  Avg: {formatMoney(avgReimbursement)}
  </div>
  </div>
@@ -191,7 +191,7 @@ const HFDRGDetailModal: React.FC<HFDRGDetailModalProps> = ({
  <div className="text-3xl font-bold text-porsche-900">
  {avgLos} days
  </div>
- <div className={`text-sm mt-1 ${avgLos <= targetLos ? 'text-[#2C4A60]' : 'text-medical-red-700'}`}>
+ <div className={`text-sm mt-1 ${avgLos <= targetLos ? 'text-teal-700' : 'text-medical-red-700'}`}>
  Target: {targetLos} days
  </div>
  </div>
@@ -215,19 +215,19 @@ const HFDRGDetailModal: React.FC<HFDRGDetailModalProps> = ({
  </div>
 
  {/* Margin */}
- <div className="bg-[#F0F5FA] rounded-xl p-6 border border-[#C8D4DC]">
+ <div className="bg-chrome-50 rounded-xl p-6 border border-titanium-300">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center">
- <TrendingUp className="w-8 h-8 text-[#2C4A60] mr-3" />
+ <TrendingUp className="w-8 h-8 text-teal-700 mr-3" />
  <div>
- <div className="text-lg font-bold text-[#2C4A60]">Margin</div>
+ <div className="text-lg font-bold text-teal-700">Margin</div>
  </div>
  </div>
  </div>
- <div className="text-3xl font-bold text-[#2C4A60]">
+ <div className="text-3xl font-bold text-teal-700">
  {toFixed(margin, 1)}%
  </div>
- <div className="text-sm text-[#2C4A60] mt-1">
+ <div className="text-sm text-teal-700 mt-1">
  Above target
  </div>
  </div>
@@ -285,7 +285,7 @@ const HFDRGDetailModal: React.FC<HFDRGDetailModalProps> = ({
  <div className="flex justify-between items-center">
  <span className="text-titanium-700">Cases Above Target Margin (≥20%)</span>
  <div className="text-right">
- <div className="text-xl font-bold text-[#2C4A60]">
+ <div className="text-xl font-bold text-teal-700">
  {cases.filter(c => c.marginPercent >= 20).length}
  </div>
  <div className="text-sm text-titanium-500">

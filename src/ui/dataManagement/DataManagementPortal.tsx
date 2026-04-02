@@ -79,9 +79,9 @@ const DataManagementPortal: React.FC = () => {
 
   const statusBadge = (status: string) => {
     const colors: Record<string, string> = {
-      COMPLETE: 'bg-[#F0F5FA] text-[#2C4A60]',
+      COMPLETE: 'bg-chrome-50 text-teal-700',
       FAILED: 'bg-red-100 text-red-800',
-      REJECTED_PHI: 'bg-[#FAF6E8] text-[#8B6914]',
+      REJECTED_PHI: 'bg-amber-50 text-amber-600',
       PENDING: 'bg-slate-100 text-slate-600',
       VALIDATING: 'bg-blue-100 text-blue-700',
       PROCESSING: 'bg-blue-100 text-blue-700',
@@ -99,9 +99,9 @@ const DataManagementPortal: React.FC = () => {
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center gap-3">
-          <Upload className="w-7 h-7 text-[#2C4A60]" />
+          <Upload className="w-7 h-7 text-teal-700" />
           <div>
-            <h1 className="text-2xl font-bold text-[#2C4A60]">Data Management</h1>
+            <h1 className="text-2xl font-bold text-teal-700">Data Management</h1>
             <p className="text-sm text-slate-500">Upload de-identified clinical data for gap detection analysis</p>
           </div>
         </div>
@@ -112,7 +112,7 @@ const DataManagementPortal: React.FC = () => {
 
           <div
             className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-              dragOver ? 'border-[#2C4A60] bg-slate-50' : 'border-slate-300 hover:border-slate-400'
+              dragOver ? 'border-teal-700 bg-slate-50' : 'border-slate-300 hover:border-slate-400'
             }`}
             onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
@@ -153,7 +153,7 @@ const DataManagementPortal: React.FC = () => {
             <button
               onClick={handleUpload}
               disabled={!selectedFile || !moduleId || uploading}
-              className="px-5 py-2 bg-[#2C4A60] text-white rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#3a5d77] transition-colors"
+              className="px-5 py-2 bg-teal-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#3a5d77] transition-colors"
             >
               {uploading ? 'Uploading...' : 'Upload & Process'}
             </button>
@@ -166,12 +166,12 @@ const DataManagementPortal: React.FC = () => {
             <h2 className="text-lg font-semibold text-slate-800 mb-4">Processing Status</h2>
 
             {currentJob.status === 'REJECTED_PHI' ? (
-              <div className="bg-[#F0F5FA] border border-[#C8D4DC] rounded-lg p-4">
+              <div className="bg-chrome-50 border border-titanium-300 rounded-lg p-4">
                 <div className="flex items-start gap-3">
-                  <AlertTriangle className="w-5 h-5 text-[#6B7280] mt-0.5" />
+                  <AlertTriangle className="w-5 h-5 text-gray-500 mt-0.5" />
                   <div>
-                    <p className="font-medium text-[#6B7280]">File Rejected -- Potential PHI Detected</p>
-                    <p className="text-sm text-[#6B7280] mt-1">Please verify the file is fully de-identified and re-upload.</p>
+                    <p className="font-medium text-gray-500">File Rejected -- Potential PHI Detected</p>
+                    <p className="text-sm text-gray-500 mt-1">Please verify the file is fully de-identified and re-upload.</p>
                   </div>
                 </div>
               </div>
@@ -187,17 +187,17 @@ const DataManagementPortal: React.FC = () => {
               </div>
             ) : currentJob.status === 'COMPLETE' ? (
               <div className="space-y-3">
-                <div className="flex items-center gap-2 text-[#2C4A60]">
+                <div className="flex items-center gap-2 text-teal-700">
                   <CheckCircle className="w-5 h-5" />
                   <span className="font-medium">Processing Complete</span>
                 </div>
                 <div className="grid grid-cols-4 gap-4">
                   <div className="bg-slate-50 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-bold text-[#2C4A60]">{currentJob.processedRows || 0}</p>
+                    <p className="text-2xl font-bold text-teal-700">{currentJob.processedRows || 0}</p>
                     <p className="text-xs text-slate-500">Rows Processed</p>
                   </div>
                   <div className="bg-slate-50 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-bold text-[#2C4A60]">{currentJob.patientsCreated || 0}</p>
+                    <p className="text-2xl font-bold text-teal-700">{currentJob.patientsCreated || 0}</p>
                     <p className="text-xs text-slate-500">New Patients</p>
                   </div>
                   <div className="bg-slate-50 rounded-lg p-3 text-center">
@@ -205,12 +205,12 @@ const DataManagementPortal: React.FC = () => {
                     <p className="text-xs text-slate-500">Updated</p>
                   </div>
                   <div className="bg-slate-50 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-bold text-[#2C4A60]">{currentJob.gapFlagsCreated || 0}</p>
+                    <p className="text-2xl font-bold text-teal-700">{currentJob.gapFlagsCreated || 0}</p>
                     <p className="text-xs text-slate-500">Gaps Identified</p>
                   </div>
                 </div>
                 {(currentJob.errorRows || 0) > 0 && (
-                  <p className="text-xs text-[#6B7280]">{currentJob.errorRows} rows had validation errors</p>
+                  <p className="text-xs text-gray-500">{currentJob.errorRows} rows had validation errors</p>
                 )}
               </div>
             ) : (
@@ -222,10 +222,10 @@ const DataManagementPortal: React.FC = () => {
                   const active = i === currentIdx;
                   return (
                     <div key={step} className="flex items-center gap-3">
-                      {done ? <CheckCircle className="w-4 h-4 text-[#2C4A60]" /> :
+                      {done ? <CheckCircle className="w-4 h-4 text-teal-700" /> :
                        active ? <RefreshCw className="w-4 h-4 text-blue-600 animate-spin" /> :
                        <div className="w-4 h-4 rounded-full border-2 border-slate-300" />}
-                      <span className={`text-sm ${active ? 'text-blue-700 font-medium' : done ? 'text-[#2C4A60]' : 'text-slate-400'}`}>
+                      <span className={`text-sm ${active ? 'text-blue-700 font-medium' : done ? 'text-teal-700' : 'text-slate-400'}`}>
                         {step.replace(/_/g, ' ')}
                       </span>
                     </div>

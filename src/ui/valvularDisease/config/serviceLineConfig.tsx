@@ -36,7 +36,7 @@ const VDGapDetectionWithForecast: React.FC = () => (
         ].map((q, i) => (
           <div key={i} className="px-4 py-3 text-center">
             <div className="text-xs font-semibold text-titanium-500 uppercase">{q.label}</div>
-            <div className="text-lg font-bold text-[#2C4A60] mt-1">{formatDollar(q.revenue)}</div>
+            <div className="text-lg font-bold text-teal-700 mt-1">{formatDollar(q.revenue)}</div>
             <div className="text-xs text-titanium-500">{q.procedures} procedures</div>
           </div>
         ))}
@@ -57,9 +57,9 @@ const VDGapDetectionWithForecast: React.FC = () => (
             <div className="text-lg font-bold text-red-600">22 months</div>
             <div className="text-xs text-titanium-400">to clear pipeline</div>
           </div>
-          <div className="bg-[#F0F5FA]/70 rounded-lg p-3">
+          <div className="bg-chrome-50/70 rounded-lg p-3">
             <div className="text-xs text-titanium-500 mb-1">Systematic Closure</div>
-            <div className="text-lg font-bold text-[#2C4A60]">8 months</div>
+            <div className="text-lg font-bold text-teal-700">8 months</div>
             <div className="text-xs text-titanium-400">with TAILRD protocol</div>
           </div>
           <div className="bg-blue-50/70 rounded-lg p-3">
@@ -82,22 +82,22 @@ const ValvularDiseaseAnalytics: React.FC = () => (
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">Aortic Valve Interventions</h4>
  <div className="text-2xl font-bold text-titanium-900">1,247</div>
- <div className="text-sm text-[#2C4A60]">+12.3% vs last quarter</div>
+ <div className="text-sm text-teal-700">+12.3% vs last quarter</div>
  </div>
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">Mitral Valve Procedures</h4>
  <div className="text-2xl font-bold text-titanium-900">892</div>
- <div className="text-sm text-[#2C4A60]">+8.7% vs last quarter</div>
+ <div className="text-sm text-teal-700">+8.7% vs last quarter</div>
  </div>
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">Tricuspid Interventions</h4>
  <div className="text-2xl font-bold text-titanium-900">234</div>
- <div className="text-sm text-[#2C4A60]">+23.1% vs last quarter</div>
+ <div className="text-sm text-teal-700">+23.1% vs last quarter</div>
  </div>
  <div className="metal-card p-6">
  <h4 className="text-sm font-medium text-titanium-600 mb-2">Valve-in-Valve Procedures</h4>
  <div className="text-2xl font-bold text-titanium-900">156</div>
- <div className="text-sm text-[#2C4A60]">+18.4% vs last quarter</div>
+ <div className="text-sm text-teal-700">+18.4% vs last quarter</div>
  </div>
  </div>
  <div className="metal-card p-8">

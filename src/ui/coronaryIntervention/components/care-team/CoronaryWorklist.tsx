@@ -313,16 +313,16 @@ const CoronaryWorklist: React.FC = () => {
   const getPriorityColor = (priority: string) => {
  switch (priority) {
  case 'Emergent': return 'bg-red-100 text-red-700 border-red-200';
- case 'Urgent': return 'bg-[#FAF6E8] text-[#8B6914] border-[#F4ECC0]';
- default: return 'bg-[#F0F7F4] text-[#2D6147] border-[#D8EDE6]';
+ case 'Urgent': return 'bg-amber-50 text-amber-600 border-amber-100';
+ default: return 'bg-green-50 text-green-600 border-green-100';
  }
   };
 
   const getStatusColor = (status: string) => {
  switch (status) {
- case 'Completed': return 'bg-[#F0F7F4] text-[#2D6147]';
+ case 'Completed': return 'bg-green-50 text-green-600';
  case 'In Progress': return 'bg-chrome-100 text-chrome-700';
- case 'Pre-procedure': return 'bg-[#FAF6E8] text-[#8B6914]';
+ case 'Pre-procedure': return 'bg-amber-50 text-amber-600';
  case 'Scheduled': return 'bg-titanium-100 text-titanium-700';
  default: return 'bg-red-100 text-red-700';
  }
@@ -339,16 +339,16 @@ const CoronaryWorklist: React.FC = () => {
  </h4>
  <div className="space-y-2">
  <div className="grid grid-cols-2 gap-2 text-sm">
- <div className={`p-2 rounded ${patient.angiogramSummary.lm ? 'bg-red-100 text-red-700' : 'bg-[#F0F7F4] text-[#2D6147]'}`}>
+ <div className={`p-2 rounded ${patient.angiogramSummary.lm ? 'bg-red-100 text-red-700' : 'bg-green-50 text-green-600'}`}>
  LM: {patient.angiogramSummary.lm ? 'Disease' : 'Normal'}
  </div>
- <div className={`p-2 rounded ${patient.angiogramSummary.lad ? 'bg-red-100 text-red-700' : 'bg-[#F0F7F4] text-[#2D6147]'}`}>
+ <div className={`p-2 rounded ${patient.angiogramSummary.lad ? 'bg-red-100 text-red-700' : 'bg-green-50 text-green-600'}`}>
  LAD: {patient.angiogramSummary.lad ? 'Disease' : 'Normal'}
  </div>
- <div className={`p-2 rounded ${patient.angiogramSummary.lcx ? 'bg-red-100 text-red-700' : 'bg-[#F0F7F4] text-[#2D6147]'}`}>
+ <div className={`p-2 rounded ${patient.angiogramSummary.lcx ? 'bg-red-100 text-red-700' : 'bg-green-50 text-green-600'}`}>
  LCX: {patient.angiogramSummary.lcx ? 'Disease' : 'Normal'}
  </div>
- <div className={`p-2 rounded ${patient.angiogramSummary.rca ? 'bg-red-100 text-red-700' : 'bg-[#F0F7F4] text-[#2D6147]'}`}>
+ <div className={`p-2 rounded ${patient.angiogramSummary.rca ? 'bg-red-100 text-red-700' : 'bg-green-50 text-green-600'}`}>
  RCA: {patient.angiogramSummary.rca ? 'Disease' : 'Normal'}
  </div>
  </div>
@@ -359,15 +359,15 @@ const CoronaryWorklist: React.FC = () => {
  {/* SYNTAX Score & Recommendation */}
  <div>
  <h4 className="font-semibold text-titanium-800 mb-3 flex items-center gap-2">
- <Star className="w-4 h-4 text-[#8B6914]" />
+ <Star className="w-4 h-4 text-amber-600" />
  Assessment
  </h4>
  <div className="space-y-3">
  <div className="p-3 bg-white rounded-lg border border-titanium-200">
  <div className="text-sm text-titanium-600">SYNTAX Score</div>
  <div className={`text-xl font-bold ${
- patient.syntaxScore < 22 ? 'text-[#2D6147]' :
- patient.syntaxScore < 33 ? 'text-[#8B6914]' :
+ patient.syntaxScore < 22 ? 'text-green-600' :
+ patient.syntaxScore < 33 ? 'text-amber-600' :
  'text-red-600'
  }`}>
  {patient.syntaxScore}
@@ -387,7 +387,7 @@ const CoronaryWorklist: React.FC = () => {
  {/* Risk Assessment */}
  <div>
  <h4 className="font-semibold text-titanium-800 mb-3 flex items-center gap-2">
- <AlertTriangle className="w-4 h-4 text-[#8B6914]" />
+ <AlertTriangle className="w-4 h-4 text-amber-600" />
  Risk Assessment
  </h4>
  <div className="space-y-2">
@@ -395,8 +395,8 @@ const CoronaryWorklist: React.FC = () => {
  <div key={key} className="flex justify-between items-center p-2 bg-white rounded border border-titanium-200">
  <span className="text-sm text-titanium-600 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
  <span className={`text-xs px-2 py-1 rounded font-medium ${
- value === 'Low' ? 'bg-[#F0F7F4] text-[#2D6147]' :
- value === 'Intermediate' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ value === 'Low' ? 'bg-green-50 text-green-600' :
+ value === 'Intermediate' ? 'bg-amber-50 text-amber-600' :
  'bg-red-100 text-red-700'
  }`}>
  {value}
@@ -429,8 +429,8 @@ const CoronaryWorklist: React.FC = () => {
  <div className="p-3 bg-white rounded-lg border border-titanium-200">
  <div className="text-sm text-titanium-600">Adherence</div>
  <div className={`text-sm font-medium ${
- patient.daptPlan.adherence === 'Good' ? 'text-[#2D6147]' :
- patient.daptPlan.adherence === 'Poor' ? 'text-red-600' : 'text-[#8B6914]'
+ patient.daptPlan.adherence === 'Good' ? 'text-green-600' :
+ patient.daptPlan.adherence === 'Poor' ? 'text-red-600' : 'text-amber-600'
  }`}>
  {patient.daptPlan.adherence}
  </div>
@@ -443,7 +443,7 @@ const CoronaryWorklist: React.FC = () => {
  {patient.cardiacRehab && (
  <div className="lg:col-span-3">
  <h4 className="font-semibold text-titanium-800 mb-3 flex items-center gap-2">
- <UserCheck className="w-4 h-4 text-[#2C4A60]" />
+ <UserCheck className="w-4 h-4 text-teal-700" />
  Cardiac Rehabilitation
  </h4>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -558,7 +558,7 @@ const CoronaryWorklist: React.FC = () => {
  </button>
  <button
  onClick={bulkOrderCardiacRehab}
- className="px-3 py-1 bg-[#C8D4DC] text-white rounded text-sm hover:bg-[#C8D4DC] transition-colors"
+ className="px-3 py-1 bg-titanium-300 text-white rounded text-sm hover:bg-titanium-300 transition-colors"
  >
  Order Cardiac Rehab
  </button>
@@ -635,8 +635,8 @@ const CoronaryWorklist: React.FC = () => {
  <td className="p-3">
  <span className={`px-2 py-1 text-xs font-medium rounded-full ${
  patient.lesionComplexity === 'High' ? 'bg-red-100 text-red-700' :
- patient.lesionComplexity === 'Intermediate' ? 'bg-[#FAF6E8] text-[#8B6914]' :
- 'bg-[#F0F7F4] text-[#2D6147]'
+ patient.lesionComplexity === 'Intermediate' ? 'bg-amber-50 text-amber-600' :
+ 'bg-green-50 text-green-600'
  }`}>
  {patient.lesionComplexity}
  </span>

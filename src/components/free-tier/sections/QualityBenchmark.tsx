@@ -55,7 +55,7 @@ const MiniBarComparison: React.FC<{
   const bars = [
     { label: 'You', value: yourValue, color: 'bg-chrome-600' },
     { label: 'Nat. Avg', value: nationalAvg, color: 'bg-titanium-300' },
-    { label: 'Top 10%', value: topDecile, color: 'bg-[#F0F5FA]' },
+    { label: 'Top 10%', value: topDecile, color: 'bg-chrome-50' },
   ];
 
   return (

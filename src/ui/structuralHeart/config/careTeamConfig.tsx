@@ -31,7 +31,7 @@ const StructuralDashboard: React.FC = () => (
  </div>
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <div className="flex items-center gap-3">
- <Activity className="w-8 h-8 text-[#2C4A60]" />
+ <Activity className="w-8 h-8 text-teal-700" />
  <div>
  <div className="text-2xl font-bold text-titanium-900">96.8%</div>
  <div className="text-sm text-titanium-600">TAVR Success Rate</div>
@@ -114,7 +114,7 @@ const StructuralPatients: React.FC = () => (
  patient.procedure === 'TAVR' ? 'bg-arterial-100 text-arterial-700' :
  patient.procedure === 'TEER' ? 'bg-chrome-100 text-chrome-700' :
  patient.procedure === 'TMVR' ? 'bg-chrome-100 text-chrome-700' :
- 'bg-[#F0F5FA] text-[#2C4A60]'
+ 'bg-chrome-50 text-teal-700'
  }`}>
  {patient.procedure}
  </span>
@@ -122,8 +122,8 @@ const StructuralPatients: React.FC = () => (
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.risk === 'High' ? 'bg-red-100 text-red-700' :
- patient.risk === 'Intermediate' ? 'bg-[#FAF6E8] text-[#8B6914]' :
- 'bg-[#F0F7F4] text-[#2D6147]'
+ patient.risk === 'Intermediate' ? 'bg-amber-50 text-amber-600' :
+ 'bg-green-50 text-green-600'
  }`}>
  {patient.risk}
  </span>
@@ -132,10 +132,10 @@ const StructuralPatients: React.FC = () => (
  <td className="py-3 px-4 text-titanium-700">{patient.approach}</td>
  <td className="py-3 px-4">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
- patient.status === 'Completed' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ patient.status === 'Completed' ? 'bg-green-50 text-green-600' :
  patient.status === 'Scheduled' ? 'bg-chrome-100 text-chrome-700' :
  patient.status === 'Planning' ? 'bg-arterial-100 text-arterial-700' :
- patient.status === 'Pre-op' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ patient.status === 'Pre-op' ? 'bg-amber-50 text-amber-600' :
  'bg-gray-100 text-gray-700'
  }`}>
  {patient.status}
@@ -207,13 +207,13 @@ const StructuralWorkflow: React.FC = () => (
  <div className="ml-auto text-sm text-arterial-600 font-medium">5-7 days</div>
  </div>
  
- <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-[#C8D4DC]">
- <div className="w-8 h-8 bg-[#F0F5FA] rounded-full flex items-center justify-center text-white font-bold text-sm">5</div>
+ <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-titanium-300">
+ <div className="w-8 h-8 bg-chrome-50 rounded-full flex items-center justify-center text-white font-bold text-sm">5</div>
  <div>
  <div className="font-medium text-titanium-900">Procedure & Recovery</div>
  <div className="text-sm text-titanium-600">TAVR implantation and post-procedure monitoring</div>
  </div>
- <div className="ml-auto text-sm text-[#2C4A60] font-medium">1-3 days</div>
+ <div className="ml-auto text-sm text-teal-700 font-medium">1-3 days</div>
  </div>
  </div>
  </div>
@@ -253,17 +253,17 @@ const StructuralWorkflow: React.FC = () => (
  <div className="text-2xl font-bold text-arterial-600">16.8d</div>
  <div className="text-xs text-arterial-700">Avg Time to TAVR</div>
  </div>
- <div className="text-center p-4 bg-[#C8D4DC] rounded-lg">
- <div className="text-2xl font-bold text-[#2C4A60]">96.8%</div>
- <div className="text-xs text-[#2C4A60]">Success Rate</div>
+ <div className="text-center p-4 bg-titanium-300 rounded-lg">
+ <div className="text-2xl font-bold text-teal-700">96.8%</div>
+ <div className="text-xs text-teal-700">Success Rate</div>
  </div>
  <div className="text-center p-4 bg-chrome-50 rounded-lg">
  <div className="text-2xl font-bold text-chrome-600">4.2d</div>
  <div className="text-xs text-chrome-700">Avg Length of Stay</div>
  </div>
- <div className="text-center p-4 bg-[#F0F5FA] rounded-lg">
- <div className="text-2xl font-bold text-[#6B7280]">89%</div>
- <div className="text-xs text-[#6B7280]">Heart Team Utilization</div>
+ <div className="text-center p-4 bg-chrome-50 rounded-lg">
+ <div className="text-2xl font-bold text-gray-500">89%</div>
+ <div className="text-xs text-gray-500">Heart Team Utilization</div>
  </div>
  </div>
  </div>
@@ -302,9 +302,9 @@ const StructuralWorkflow: React.FC = () => (
  <div className="font-medium text-chrome-900">CT Planning Queue</div>
  <div className="text-xs text-chrome-600">8 studies pending</div>
  </button>
- <button className="w-full p-3 text-left bg-[#F0F5FA] hover:bg-[#F0F5FA] rounded-lg transition-colors">
- <div className="font-medium text-[#2C4A60]">OR Schedule</div>
- <div className="text-xs text-[#2C4A60]">15 procedures scheduled</div>
+ <button className="w-full p-3 text-left bg-chrome-50 hover:bg-chrome-50 rounded-lg transition-colors">
+ <div className="font-medium text-teal-700">OR Schedule</div>
+ <div className="text-xs text-teal-700">15 procedures scheduled</div>
  </button>
  </div>
  </div>
@@ -342,22 +342,22 @@ const StructuralSafety: React.FC = () => (
  <div className="text-xs text-red-600 mt-1">Heart team evaluation required</div>
  </div>
  
- <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
+ <div className="bg-white p-4 rounded-lg border border-titanium-300">
  <div className="flex items-center justify-between mb-2">
- <span className="font-medium text-[#6B7280]">CT Planning Alert</span>
- <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">REVIEW</span>
+ <span className="font-medium text-gray-500">CT Planning Alert</span>
+ <span className="text-xs bg-amber-50 text-amber-600 px-2 py-1 rounded-full">REVIEW</span>
  </div>
- <div className="text-sm text-[#6B7280]">Annular sizing discrepancy detected - dual measurements required</div>
- <div className="text-xs text-[#6B7280] mt-1">CT review pending</div>
+ <div className="text-sm text-gray-500">Annular sizing discrepancy detected - dual measurements required</div>
+ <div className="text-xs text-gray-500 mt-1">CT review pending</div>
  </div>
  
- <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
+ <div className="bg-white p-4 rounded-lg border border-titanium-300">
  <div className="flex items-center justify-between mb-2">
- <span className="font-medium text-[#6B7280]">Anticoagulation Review</span>
- <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">PENDING</span>
+ <span className="font-medium text-gray-500">Anticoagulation Review</span>
+ <span className="text-xs bg-amber-50 text-amber-600 px-2 py-1 rounded-full">PENDING</span>
  </div>
- <div className="text-sm text-[#6B7280]">4 post-TAVR patients due for dual antiplatelet review</div>
- <div className="text-xs text-[#6B7280] mt-1">Next clinic: Thursday 9 AM</div>
+ <div className="text-sm text-gray-500">4 post-TAVR patients due for dual antiplatelet review</div>
+ <div className="text-xs text-gray-500 mt-1">Next clinic: Thursday 9 AM</div>
  </div>
  </div>
  </div>
@@ -366,9 +366,9 @@ const StructuralSafety: React.FC = () => (
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">Safety & Quality Metrics</h4>
  <div className="grid grid-cols-2 gap-4">
- <div className="text-center p-4 bg-[#C8D4DC] rounded-lg">
- <div className="text-2xl font-bold text-[#2C4A60]">96.8%</div>
- <div className="text-xs text-[#2C4A60]">Procedural Success</div>
+ <div className="text-center p-4 bg-titanium-300 rounded-lg">
+ <div className="text-2xl font-bold text-teal-700">96.8%</div>
+ <div className="text-xs text-teal-700">Procedural Success</div>
  </div>
  <div className="text-center p-4 bg-chrome-50 rounded-lg">
  <div className="text-2xl font-bold text-chrome-600">2.1%</div>
@@ -378,9 +378,9 @@ const StructuralSafety: React.FC = () => (
  <div className="text-2xl font-bold text-arterial-600">1.8%</div>
  <div className="text-xs text-arterial-700">Major Complications</div>
  </div>
- <div className="text-center p-4 bg-[#F0F5FA] rounded-lg">
- <div className="text-2xl font-bold text-[#2C4A60]">97.4%</div>
- <div className="text-xs text-[#2C4A60]">Safety Compliance</div>
+ <div className="text-center p-4 bg-chrome-50 rounded-lg">
+ <div className="text-2xl font-bold text-teal-700">97.4%</div>
+ <div className="text-xs text-teal-700">Safety Compliance</div>
  </div>
  </div>
  </div>
@@ -391,20 +391,20 @@ const StructuralSafety: React.FC = () => (
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">TAVR Safety Protocol</h4>
  <div className="space-y-3">
- <div className="p-4 bg-[#C8D4DC] rounded-lg border border-[#2C4A60]">
+ <div className="p-4 bg-titanium-300 rounded-lg border border-teal-700">
  <div className="flex items-center justify-between mb-2">
- <span className="font-medium text-[#2C4A60]">Low-Intermediate Risk</span>
- <span className="text-sm font-bold text-[#2C4A60]">STS &lt;8%</span>
+ <span className="font-medium text-teal-700">Low-Intermediate Risk</span>
+ <span className="text-sm font-bold text-teal-700">STS &lt;8%</span>
  </div>
- <div className="text-sm text-[#2C4A60]">Standard TAVR protocol • Femoral approach preferred • Conscious sedation</div>
+ <div className="text-sm text-teal-700">Standard TAVR protocol • Femoral approach preferred • Conscious sedation</div>
  </div>
  
- <div className="p-4 bg-[#F0F5FA] rounded-lg border border-[#C8D4DC]">
+ <div className="p-4 bg-chrome-50 rounded-lg border border-titanium-300">
  <div className="flex items-center justify-between mb-2">
- <span className="font-medium text-[#6B7280]">High Risk</span>
- <span className="text-sm font-bold text-[#6B7280]">STS 8-15%</span>
+ <span className="font-medium text-gray-500">High Risk</span>
+ <span className="text-sm font-bold text-gray-500">STS 8-15%</span>
  </div>
- <div className="text-sm text-[#6B7280]">Enhanced monitoring • General anesthesia • ICU recovery • Extended observation</div>
+ <div className="text-sm text-gray-500">Enhanced monitoring • General anesthesia • ICU recovery • Extended observation</div>
  </div>
  
  <div className="p-4 bg-red-50 rounded-lg border border-red-200">
@@ -432,10 +432,10 @@ const StructuralSafety: React.FC = () => (
  { item: 'Post-procedure bed reserved', status: 'pending' }
  ].map((check, index) => (
  <div key={check.item} className={`flex items-center gap-3 p-3 rounded-lg ${
- check.status === 'complete' ? 'bg-[#F0F7F4] border border-[#D8EDE6]' : 'bg-[#F0F5FA] border border-[#C8D4DC]'
+ check.status === 'complete' ? 'bg-green-50 border border-green-100' : 'bg-chrome-50 border border-titanium-300'
  }`}>
  <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
- check.status === 'complete' ? 'bg-[#C8D4DC]' : 'bg-[#F0F5FA]'
+ check.status === 'complete' ? 'bg-titanium-300' : 'bg-chrome-50'
  }`}>
  {check.status === 'complete' ? (
  <UserCheck className="w-3 h-3 text-white" />
@@ -444,7 +444,7 @@ const StructuralSafety: React.FC = () => (
  )}
  </div>
  <span className={`text-sm ${
- check.status === 'complete' ? 'text-[#2C4A60]' : 'text-[#6B7280]'
+ check.status === 'complete' ? 'text-teal-700' : 'text-gray-500'
  }`}>
  {check.item}
  </span>
@@ -461,9 +461,9 @@ const StructuralSafety: React.FC = () => (
  <div className="font-medium text-red-900">Activate TAVR Emergency Team</div>
  <div className="text-xs text-red-600">Immediate surgical backup</div>
  </button>
- <button className="w-full p-3 text-left bg-[#F0F5FA] hover:bg-[#F0F5FA] rounded-lg transition-colors">
- <div className="font-medium text-[#6B7280]">Vascular Complication Protocol</div>
- <div className="text-xs text-[#6B7280]">Access site management</div>
+ <button className="w-full p-3 text-left bg-chrome-50 hover:bg-chrome-50 rounded-lg transition-colors">
+ <div className="font-medium text-gray-500">Vascular Complication Protocol</div>
+ <div className="text-xs text-gray-500">Access site management</div>
  </button>
  <button className="w-full p-3 text-left bg-arterial-50 hover:bg-arterial-100 rounded-lg transition-colors">
  <div className="font-medium text-arterial-900">Valve Malposition Protocol</div>
@@ -534,15 +534,15 @@ const StructuralClinicalCollaboration: React.FC = () => (
  <div key={pathway.pathway} className={`flex items-center justify-between p-4 rounded-lg border ${
  pathway.indication === 'Aortic Stenosis' ? 'bg-arterial-50 border-arterial-200' :
  pathway.indication === 'Secondary Mitral Regurgitation' ? 'bg-chrome-50 border-chrome-200' :
- pathway.indication === 'Severe Tricuspid Regurgitation' ? 'bg-[#F0F7F4] border-[#D8EDE6]' :
- 'bg-[#F0F5FA] border-[#C8D4DC]'
+ pathway.indication === 'Severe Tricuspid Regurgitation' ? 'bg-green-50 border-green-100' :
+ 'bg-chrome-50 border-titanium-300'
  }`}>
  <div>
  <div className={`font-medium ${
  pathway.indication === 'Aortic Stenosis' ? 'text-arterial-900' :
  pathway.indication === 'Secondary Mitral Regurgitation' ? 'text-chrome-900' :
- pathway.indication === 'Severe Tricuspid Regurgitation' ? 'text-[#2C4A60]' :
- 'text-[#6B7280]'
+ pathway.indication === 'Severe Tricuspid Regurgitation' ? 'text-teal-700' :
+ 'text-gray-500'
  }`}>
  {pathway.pathway}
  </div>
@@ -553,8 +553,8 @@ const StructuralClinicalCollaboration: React.FC = () => (
  <div className={`text-xs px-2 py-1 rounded-full ${
  pathway.indication === 'Aortic Stenosis' ? 'bg-arterial-100 text-arterial-700' :
  pathway.indication === 'Secondary Mitral Regurgitation' ? 'bg-chrome-100 text-chrome-700' :
- pathway.indication === 'Severe Tricuspid Regurgitation' ? 'bg-[#F0F7F4] text-[#2D6147]' :
- 'bg-[#FAF6E8] text-[#8B6914]'
+ pathway.indication === 'Severe Tricuspid Regurgitation' ? 'bg-green-50 text-green-600' :
+ 'bg-amber-50 text-amber-600'
  }`}>
  {pathway.consultation}
  </div>
@@ -569,9 +569,9 @@ const StructuralClinicalCollaboration: React.FC = () => (
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">Clinical Quality Outcomes</h4>
  <div className="space-y-4">
- <div className="text-center p-4 bg-[#C8D4DC] rounded-lg">
- <div className="text-2xl font-bold text-[#2C4A60]">96.8%</div>
- <div className="text-xs text-[#2C4A60]">Clinical Success Rate</div>
+ <div className="text-center p-4 bg-titanium-300 rounded-lg">
+ <div className="text-2xl font-bold text-teal-700">96.8%</div>
+ <div className="text-xs text-teal-700">Clinical Success Rate</div>
  </div>
  <div className="text-center p-4 bg-chrome-50 rounded-lg">
  <div className="text-2xl font-bold text-chrome-600">2.1%</div>
@@ -581,9 +581,9 @@ const StructuralClinicalCollaboration: React.FC = () => (
  <div className="text-2xl font-bold text-arterial-600">94%</div>
  <div className="text-xs text-arterial-700">Heart Team Consensus</div>
  </div>
- <div className="text-center p-4 bg-[#F0F5FA] rounded-lg">
- <div className="text-2xl font-bold text-[#2C4A60]">97%</div>
- <div className="text-xs text-[#2C4A60]">Guideline Adherence</div>
+ <div className="text-center p-4 bg-chrome-50 rounded-lg">
+ <div className="text-2xl font-bold text-teal-700">97%</div>
+ <div className="text-xs text-teal-700">Guideline Adherence</div>
  </div>
  </div>
  </div>
@@ -600,12 +600,12 @@ const StructuralClinicalCollaboration: React.FC = () => (
  ].map((consult, index) => (
  <div key={consult.consultation} className={`p-3 rounded-lg border ${
  consult.urgency === 'urgent' ? 'bg-red-50 border-red-200' :
- consult.urgency === 'priority' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
+ consult.urgency === 'priority' ? 'bg-chrome-50 border-titanium-300' :
  'bg-chrome-50 border-chrome-200'
  }`}>
  <div className={`font-medium ${
  consult.urgency === 'urgent' ? 'text-red-900' :
- consult.urgency === 'priority' ? 'text-[#6B7280]' :
+ consult.urgency === 'priority' ? 'text-gray-500' :
  'text-chrome-900'
  }`}>
  {consult.consultation}
@@ -646,13 +646,13 @@ const StructuralClinicalCollaboration: React.FC = () => (
  <div className="font-medium text-chrome-900">TAVR Decision Framework</div>
  <div className="text-xs text-chrome-600">Evidence-based selection criteria</div>
  </button>
- <button className="w-full p-3 text-left bg-[#F0F5FA] hover:bg-[#F0F5FA] rounded-lg transition-colors">
- <div className="font-medium text-[#2C4A60]">Clinical Guidelines</div>
- <div className="text-xs text-[#2C4A60]">AHA/ACC/EACTS recommendations</div>
+ <button className="w-full p-3 text-left bg-chrome-50 hover:bg-chrome-50 rounded-lg transition-colors">
+ <div className="font-medium text-teal-700">Clinical Guidelines</div>
+ <div className="text-xs text-teal-700">AHA/ACC/EACTS recommendations</div>
  </button>
- <button className="w-full p-3 text-left bg-[#F0F5FA] hover:bg-[#F0F5FA] rounded-lg transition-colors">
- <div className="font-medium text-[#6B7280]">Heart Team Consultation</div>
- <div className="text-xs text-[#6B7280]">Multidisciplinary case review</div>
+ <button className="w-full p-3 text-left bg-chrome-50 hover:bg-chrome-50 rounded-lg transition-colors">
+ <div className="font-medium text-gray-500">Heart Team Consultation</div>
+ <div className="text-xs text-gray-500">Multidisciplinary case review</div>
  </button>
  </div>
  </div>
@@ -715,19 +715,19 @@ const StructuralDocumentation: React.FC = () => (
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* Documentation Alerts */}
  <div className="space-y-4">
- <div className="bg-gradient-to-r from-amber-50 to-amber-50 p-6 rounded-xl border border-[#C8D4DC]">
- <h4 className="font-semibold text-[#6B7280] mb-4 flex items-center gap-2">
- <AlertTriangle className="w-5 h-5 text-[#6B7280]" />
+ <div className="bg-gradient-to-r from-amber-50 to-amber-50 p-6 rounded-xl border border-titanium-300">
+ <h4 className="font-semibold text-gray-500 mb-4 flex items-center gap-2">
+ <AlertTriangle className="w-5 h-5 text-gray-500" />
  Documentation Alerts & Registry
  </h4>
  <div className="space-y-3">
- <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
+ <div className="bg-white p-4 rounded-lg border border-titanium-300">
  <div className="flex items-center justify-between mb-2">
- <span className="font-medium text-[#6B7280]">STS/ACC TVT Registry</span>
- <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">DUE TODAY</span>
+ <span className="font-medium text-gray-500">STS/ACC TVT Registry</span>
+ <span className="text-xs bg-amber-50 text-amber-600 px-2 py-1 rounded-full">DUE TODAY</span>
  </div>
- <div className="text-sm text-[#6B7280]">3 TAVR cases require 30-day follow-up data entry</div>
- <div className="text-xs text-[#6B7280] mt-1">Registry deadline: End of business today</div>
+ <div className="text-sm text-gray-500">3 TAVR cases require 30-day follow-up data entry</div>
+ <div className="text-xs text-gray-500 mt-1">Registry deadline: End of business today</div>
  </div>
  
  <div className="bg-white p-4 rounded-lg border border-red-200">
@@ -739,13 +739,13 @@ const StructuralDocumentation: React.FC = () => (
  <div className="text-xs text-red-600 mt-1">Requires immediate completion</div>
  </div>
  
- <div className="bg-white p-4 rounded-lg border border-[#C8D4DC]">
+ <div className="bg-white p-4 rounded-lg border border-titanium-300">
  <div className="flex items-center justify-between mb-2">
- <span className="font-medium text-[#6B7280]">CT Planning Documentation</span>
- <span className="text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-1 rounded-full">PENDING</span>
+ <span className="font-medium text-gray-500">CT Planning Documentation</span>
+ <span className="text-xs bg-amber-50 text-amber-600 px-2 py-1 rounded-full">PENDING</span>
  </div>
- <div className="text-sm text-[#6B7280]">5 patients awaiting CT measurement documentation</div>
- <div className="text-xs text-[#6B7280] mt-1">Required before procedure scheduling</div>
+ <div className="text-sm text-gray-500">5 patients awaiting CT measurement documentation</div>
+ <div className="text-xs text-gray-500 mt-1">Required before procedure scheduling</div>
  </div>
  </div>
  </div>
@@ -754,12 +754,12 @@ const StructuralDocumentation: React.FC = () => (
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">Registry Compliance</h4>
  <div className="space-y-4">
- <div className="flex items-center justify-between p-4 bg-[#C8D4DC] rounded-lg">
+ <div className="flex items-center justify-between p-4 bg-titanium-300 rounded-lg">
  <div>
- <div className="font-medium text-[#2C4A60]">STS/ACC TVT Registry</div>
- <div className="text-sm text-[#2C4A60]">Data completeness</div>
+ <div className="font-medium text-teal-700">STS/ACC TVT Registry</div>
+ <div className="text-sm text-teal-700">Data completeness</div>
  </div>
- <div className="text-2xl font-bold text-[#2C4A60]">96.2%</div>
+ <div className="text-2xl font-bold text-teal-700">96.2%</div>
  </div>
  
  <div className="flex items-center justify-between p-4 bg-chrome-50 rounded-lg">
@@ -825,9 +825,9 @@ const StructuralDocumentation: React.FC = () => (
  <div className="text-right">
  <div className="text-xs text-titanium-500">{activity.time}</div>
  <div className={`text-xs px-2 py-1 rounded-full ${
- activity.status === 'Complete' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ activity.status === 'Complete' ? 'bg-green-50 text-green-600' :
  activity.status === 'In Progress' ? 'bg-chrome-100 text-chrome-700' :
- 'bg-[#FAF6E8] text-[#8B6914]'
+ 'bg-amber-50 text-amber-600'
  }`}>
  {activity.status}
  </div>
@@ -849,13 +849,13 @@ const StructuralDocumentation: React.FC = () => (
  <div className="font-medium text-chrome-900">Generate Quality Report</div>
  <div className="text-xs text-chrome-600">Monthly TAVR outcomes summary</div>
  </button>
- <button className="w-full p-3 text-left bg-[#F0F5FA] hover:bg-[#F0F5FA] rounded-lg transition-colors">
- <div className="font-medium text-[#2C4A60]">Update Templates</div>
- <div className="text-xs text-[#2C4A60]">Review documentation forms</div>
+ <button className="w-full p-3 text-left bg-chrome-50 hover:bg-chrome-50 rounded-lg transition-colors">
+ <div className="font-medium text-teal-700">Update Templates</div>
+ <div className="text-xs text-teal-700">Review documentation forms</div>
  </button>
- <button className="w-full p-3 text-left bg-[#F0F5FA] hover:bg-[#F0F5FA] rounded-lg transition-colors">
- <div className="font-medium text-[#6B7280]">Follow-up Reminders</div>
- <div className="text-xs text-[#6B7280]">Schedule 30-day contacts</div>
+ <button className="w-full p-3 text-left bg-chrome-50 hover:bg-chrome-50 rounded-lg transition-colors">
+ <div className="font-medium text-gray-500">Follow-up Reminders</div>
+ <div className="text-xs text-gray-500">Schedule 30-day contacts</div>
  </button>
  </div>
  </div>

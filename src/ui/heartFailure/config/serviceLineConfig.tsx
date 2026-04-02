@@ -73,7 +73,7 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
             <ul className="space-y-1 mb-3">
               {p.signals.map((s, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-titanium-700">
-                  <AlertTriangle className="w-3.5 h-3.5 text-[#6B7280] mt-0.5 flex-shrink-0" />
+                  <AlertTriangle className="w-3.5 h-3.5 text-gray-500 mt-0.5 flex-shrink-0" />
                   {s}
                 </li>
               ))}
@@ -93,7 +93,7 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
                   <span className="text-xs text-blue-800 font-medium">
                     KCCQ-OS: {kccqCurrent}
                     {kccqTrend != null && (
-                      <span className={kccqTrend >= 0 ? 'text-[#2C4A60] ml-1' : 'text-red-700 ml-1'}>
+                      <span className={kccqTrend >= 0 ? 'text-teal-700 ml-1' : 'text-red-700 ml-1'}>
                         ({kccqTrend >= 0 ? '+' : ''}{kccqTrend} from prior)
                       </span>
                     )}
@@ -155,7 +155,7 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
               <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-medium">{gap.patientCount} patients</span>
             </div>
             <p className="text-xs text-titanium-600 mt-1">{gap.evidence}</p>
-            <p className={`text-xs font-semibold mt-2 ${borderColor.includes('red') ? 'text-red-700' : borderColor.includes('amber') ? 'text-[#6B7280]' : 'text-blue-700'}`}>Action: {gap.cta}</p>
+            <p className={`text-xs font-semibold mt-2 ${borderColor.includes('red') ? 'text-red-700' : borderColor.includes('amber') ? 'text-gray-500' : 'text-blue-700'}`}>Action: {gap.cta}</p>
           </div>
         </div>
         <div className="space-y-2">
@@ -180,8 +180,8 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
           <p className="text-xs text-titanium-500 mt-1">NYHA III + HF hospitalization in 12 mo</p>
         </div>
         <div className="metal-card p-5 border-l-4 border-l-[#6B7280]">
-          <p className="text-xs font-semibold text-[#6B7280] uppercase tracking-wide mb-1">RPM Enrollment Pending</p>
-          <p className="text-3xl font-bold text-[#6B7280]">{rpmCount}</p>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">RPM Enrollment Pending</p>
+          <p className="text-3xl font-bold text-gray-500">{rpmCount}</p>
           <p className="text-xs text-titanium-500 mt-1">HF eligible, not enrolled in RPM</p>
         </div>
         <div className="metal-card p-5 border-l-4 border-l-blue-500">
@@ -219,7 +219,7 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
           ].map((q, i) => (
             <div key={i} className="px-4 py-3 text-center">
               <div className="text-xs font-semibold text-titanium-500 uppercase">{q.label}</div>
-              <div className="text-lg font-bold text-[#2C4A60] mt-1">{formatDollar(q.revenue)}</div>
+              <div className="text-lg font-bold text-teal-700 mt-1">{formatDollar(q.revenue)}</div>
               <div className="text-xs text-titanium-500">{q.procedures} procedures</div>
             </div>
           ))}
@@ -241,10 +241,10 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
       {renderGapSection(
         rpmGap,
         'RPM Enrollment',
-        'border-[#C8D4DC]',
-        'bg-[#F0F5FA]',
-        'bg-[#FAF6E8] text-[#8B6914]',
-        <Activity className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />,
+        'border-titanium-300',
+        'bg-chrome-50',
+        'bg-amber-50 text-amber-600',
+        <Activity className="w-5 h-5 text-gray-500 mt-0.5 flex-shrink-0" />,
         'GROWTH'
       )}
 
@@ -252,10 +252,10 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
       {renderGapSection(
         diureticResistGap,
         'Diuretic Resistance',
-        'border-[#C8D4DC]',
-        'bg-[#F0F5FA]',
-        'bg-[#FAF6E8] text-[#8B6914]',
-        <AlertTriangle className="w-5 h-5 text-[#6B7280] mt-0.5 flex-shrink-0" />,
+        'border-titanium-300',
+        'bg-chrome-50',
+        'bg-amber-50 text-amber-600',
+        <AlertTriangle className="w-5 h-5 text-gray-500 mt-0.5 flex-shrink-0" />,
         'HIGH PRIORITY'
       )}
 
@@ -293,9 +293,9 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
               <div className="text-lg font-bold text-red-600">16 months</div>
               <div className="text-xs text-titanium-400">to clear pipeline</div>
             </div>
-            <div className="bg-[#F0F5FA]/70 rounded-lg p-3">
+            <div className="bg-chrome-50/70 rounded-lg p-3">
               <div className="text-xs text-titanium-500 mb-1">Systematic Closure</div>
-              <div className="text-lg font-bold text-[#2C4A60]">5 months</div>
+              <div className="text-lg font-bold text-teal-700">5 months</div>
               <div className="text-xs text-titanium-400">with TAILRD protocol</div>
             </div>
             <div className="bg-blue-50/70 rounded-lg p-3">

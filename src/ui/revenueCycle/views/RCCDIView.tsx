@@ -29,7 +29,7 @@ const RCCDIView: React.FC = () => {
  </div>
  </div>
 
- <div className="metal-card p-6 border-l-4 border-l-[#4A6880] bg-[#f0f5fa]">
+ <div className="metal-card p-6 border-l-4 border-l-[#4A6880] bg-chrome-50">
  <div className="flex items-start justify-between mb-3">
  <div className="flex-1">
  <div className="text-sm font-semibold text-titanium-600 uppercase tracking-wider mb-2">
@@ -41,10 +41,10 @@ const RCCDIView: React.FC = () => {
  <div className="text-sm text-titanium-600">Monthly Potential</div>
  </div>
  <div className="ml-4 p-3 rounded-xl bg-gradient-to-br from-white via-[#f0f5fa]/60 to-white border border-titanium-200 shadow-lg">
- <DollarSign className="w-6 h-6 text-[#2C4A60] drop-shadow-sm" />
+ <DollarSign className="w-6 h-6 text-teal-700 drop-shadow-sm" />
  </div>
  </div>
- <div className="flex items-center gap-2 text-sm font-semibold text-[#2C4A60]">
+ <div className="flex items-center gap-2 text-sm font-semibold text-teal-700">
  <TrendingUp className="w-4 h-4" />
  <span>+23%</span>
  <span className="text-titanium-500 font-normal ml-1">vs last month</span>
@@ -66,7 +66,7 @@ const RCCDIView: React.FC = () => {
  <Clock className="w-6 h-6 text-crimson-600 drop-shadow-sm" />
  </div>
  </div>
- <div className="flex items-center gap-2 text-sm font-semibold text-[#2C4A60]">
+ <div className="flex items-center gap-2 text-sm font-semibold text-teal-700">
  <TrendingUp className="w-4 h-4" />
  <span>+12%</span>
  <span className="text-titanium-500 font-normal ml-1">improvement</span>
@@ -143,7 +143,7 @@ const RCCDIView: React.FC = () => {
  </div>
  </div>
  <div className="text-right">
- <div className="text-xl font-bold text-[#2C4A60]">
+ <div className="text-xl font-bold text-teal-700">
  +${alert.impactAnalysis.reimbursementImpact.toLocaleString()}
  </div>
  <div className="text-sm text-titanium-500">Revenue Impact</div>
@@ -169,7 +169,7 @@ const RCCDIView: React.FC = () => {
  <div className="text-sm font-semibold text-titanium-700 mb-2">Suggested Additions</div>
  <div className="space-y-1">
  {alert.suggestedAdditions.map((suggestion, suggIndex) => (
- <div key={suggIndex} className="text-sm text-[#2D6147] bg-[#F0F7F4] px-3 py-1 rounded border border-[#D8EDE6]">
+ <div key={suggIndex} className="text-sm text-green-600 bg-green-50 px-3 py-1 rounded border border-green-100">
  {suggestion}
  </div>
  ))}
@@ -194,7 +194,7 @@ const RCCDIView: React.FC = () => {
  </div>
  <div>
  <div className="text-titanium-600">Reimbursement</div>
- <div className="font-semibold text-[#2C4A60]">
+ <div className="font-semibold text-teal-700">
  +${alert.impactAnalysis.reimbursementImpact.toLocaleString()}
  </div>
  </div>
@@ -208,7 +208,7 @@ const RCCDIView: React.FC = () => {
  </div>
 
  <div className="flex gap-3 mt-4">
- <button className="px-4 py-2 bg-[#2C4A60] text-white text-sm rounded-lg hover:bg-[#2C4A60] transition-colors font-medium">
+ <button className="px-4 py-2 bg-teal-700 text-white text-sm rounded-lg hover:bg-teal-700 transition-colors font-medium">
  Accept Suggestions
  </button>
  <button className="px-4 py-2 bg-titanium-100 text-titanium-700 text-sm rounded-lg hover:bg-titanium-200 transition-colors font-medium">
@@ -286,13 +286,13 @@ const RCCDIView: React.FC = () => {
  
  <div className="p-6">
  <div className="space-y-6">
- <div className="bg-gradient-to-r from-[#f0f5fa] to-[#F0F5FA] rounded-lg p-4 border border-[#C8D4DC]">
+ <div className="bg-gradient-to-r from-[#f0f5fa] to-[#F0F5FA] rounded-lg p-4 border border-titanium-300">
  <div className="flex items-center justify-between mb-3">
- <div className="font-semibold text-[#2C4A60]">Revenue Recovery</div>
- <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
+ <div className="font-semibold text-teal-700">Revenue Recovery</div>
+ <CheckCircle className="w-5 h-5 text-teal-700" />
  </div>
- <div className="text-2xl font-bold text-[#2C4A60] mb-2">$89,450</div>
- <div className="text-sm text-[#2C4A60]">
+ <div className="text-2xl font-bold text-teal-700 mb-2">$89,450</div>
+ <div className="text-sm text-teal-700">
  From 34 resolved alerts this month
  </div>
  </div>

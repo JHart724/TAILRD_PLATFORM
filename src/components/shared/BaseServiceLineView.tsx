@@ -40,9 +40,9 @@ const BaseServiceLineView: React.FC<BaseServiceLineViewProps> = ({ config }) => 
  text: 'text-porsche-600'
  },
  'chrome-blue': {
- border: 'border-[#2C4A60]',
- bg: 'bg-[#f0f5fa]', 
- text: 'text-[#2C4A60]'
+ border: 'border-teal-700',
+ bg: 'bg-chrome-50', 
+ text: 'text-teal-700'
  },
  'medical-red': {
  border: 'border-medical-red-500',

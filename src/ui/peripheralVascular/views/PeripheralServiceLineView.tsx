@@ -22,22 +22,22 @@ const PeripheralVascularAnalytics: React.FC = () => (
       <div className="metal-card p-6">
         <h4 className="text-sm font-medium text-titanium-600 mb-2">PAD Interventions</h4>
         <div className="text-2xl font-bold text-titanium-900">1,456</div>
-        <div className="text-sm text-[#2C4A60]">+11.2% vs last quarter</div>
+        <div className="text-sm text-teal-700">+11.2% vs last quarter</div>
       </div>
       <div className="metal-card p-6">
         <h4 className="text-sm font-medium text-titanium-600 mb-2">Limb Salvage Cases</h4>
         <div className="text-2xl font-bold text-titanium-900">287</div>
-        <div className="text-sm text-[#2C4A60]">+18.4% vs last quarter</div>
+        <div className="text-sm text-teal-700">+18.4% vs last quarter</div>
       </div>
       <div className="metal-card p-6">
         <h4 className="text-sm font-medium text-titanium-600 mb-2">CLI Revascularizations</h4>
         <div className="text-2xl font-bold text-titanium-900">392</div>
-        <div className="text-sm text-[#2C4A60]">+15.7% vs last quarter</div>
+        <div className="text-sm text-teal-700">+15.7% vs last quarter</div>
       </div>
       <div className="metal-card p-6">
         <h4 className="text-sm font-medium text-titanium-600 mb-2">Wound Healing Rate</h4>
         <div className="text-2xl font-bold text-titanium-900">78.3%</div>
-        <div className="text-sm text-[#2C4A60]">+4.1% vs last quarter</div>
+        <div className="text-sm text-teal-700">+4.1% vs last quarter</div>
       </div>
     </div>
     <div className="metal-card p-8">

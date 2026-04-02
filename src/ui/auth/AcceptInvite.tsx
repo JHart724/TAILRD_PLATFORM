@@ -124,7 +124,7 @@ const AcceptInvite: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 text-[#2C4A60] animate-spin mx-auto mb-4" />
+          <Loader2 className="w-8 h-8 text-teal-700 animate-spin mx-auto mb-4" />
           <p className="text-sm text-titanium-500 font-body">Validating invitation...</p>
         </div>
       </div>
@@ -172,7 +172,7 @@ const AcceptInvite: React.FC = () => {
               </p>
               <Link
                 to="/login"
-                className="inline-flex items-center text-sm font-semibold text-[#2C4A60] hover:text-[#1d3344] transition-colors font-body"
+                className="inline-flex items-center text-sm font-semibold text-teal-700 hover:text-[#1d3344] transition-colors font-body"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Login
@@ -189,15 +189,15 @@ const AcceptInvite: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="bg-white rounded-xl shadow-chrome-card border border-titanium-200 p-8 text-center max-w-md w-full mx-4">
-          <div className="w-16 h-16 bg-[#F0F5FA] rounded-full flex items-center justify-center mx-auto mb-6">
-            <Check className="w-8 h-8 text-[#2C4A60]" />
+          <div className="w-16 h-16 bg-chrome-50 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Check className="w-8 h-8 text-teal-700" />
           </div>
           <h2 className="font-display text-2xl font-bold text-titanium-900 mb-3">Account Activated</h2>
           <p className="font-body text-sm text-titanium-500">
             Your account has been created. Redirecting to the dashboard...
           </p>
           <div className="mt-6">
-            <Loader2 className="w-5 h-5 text-[#2C4A60] animate-spin mx-auto" />
+            <Loader2 className="w-5 h-5 text-teal-700 animate-spin mx-auto" />
           </div>
         </div>
       </div>
@@ -272,7 +272,7 @@ const AcceptInvite: React.FC = () => {
                       setPassword(e.target.value);
                       if (pageState === 'error') setPageState('valid');
                     }}
-                    className="w-full px-4 py-3 pr-12 border border-titanium-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60] focus:border-[#2C4A60] bg-white text-titanium-900 placeholder-titanium-400 transition-colors font-body"
+                    className="w-full px-4 py-3 pr-12 border border-titanium-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60] focus:border-teal-700 bg-white text-titanium-900 placeholder-titanium-400 transition-colors font-body"
                     disabled={pageState === 'submitting'}
                     autoComplete="new-password"
                   />
@@ -302,7 +302,7 @@ const AcceptInvite: React.FC = () => {
                       setConfirmPassword(e.target.value);
                       if (pageState === 'error') setPageState('valid');
                     }}
-                    className="w-full px-4 py-3 pr-12 border border-titanium-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60] focus:border-[#2C4A60] bg-white text-titanium-900 placeholder-titanium-400 transition-colors font-body"
+                    className="w-full px-4 py-3 pr-12 border border-titanium-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C4A60] focus:border-teal-700 bg-white text-titanium-900 placeholder-titanium-400 transition-colors font-body"
                     disabled={pageState === 'submitting'}
                     autoComplete="new-password"
                   />
@@ -317,7 +317,7 @@ const AcceptInvite: React.FC = () => {
                 </div>
                 {/* Passwords match indicator */}
                 {confirmPassword.length > 0 && (
-                  <div className={`flex items-center mt-2 text-xs font-body ${passwordsMatch ? 'text-[#2C4A60]' : 'text-red-500'}`}>
+                  <div className={`flex items-center mt-2 text-xs font-body ${passwordsMatch ? 'text-teal-700' : 'text-red-500'}`}>
                     {passwordsMatch ? <Check className="w-3.5 h-3.5 mr-1" /> : <X className="w-3.5 h-3.5 mr-1" />}
                     {passwordsMatch ? 'Passwords match' : 'Passwords do not match'}
                   </div>
@@ -327,7 +327,7 @@ const AcceptInvite: React.FC = () => {
               {/* Password requirements */}
               <div className="bg-slate-50 rounded-lg p-4 border border-titanium-100">
                 <div className="flex items-center mb-3">
-                  <Shield className="w-4 h-4 text-[#2C4A60] mr-2" />
+                  <Shield className="w-4 h-4 text-teal-700 mr-2" />
                   <span className="text-xs font-semibold text-titanium-700 font-body uppercase tracking-wide">
                     Password Requirements
                   </span>
@@ -338,11 +338,11 @@ const AcceptInvite: React.FC = () => {
                       {password.length === 0 ? (
                         <div className="w-4 h-4 rounded-full border-2 border-titanium-300 mr-2.5 flex-shrink-0" />
                       ) : check.passed ? (
-                        <Check className="w-4 h-4 text-[#2C4A60] mr-2.5 flex-shrink-0" />
+                        <Check className="w-4 h-4 text-teal-700 mr-2.5 flex-shrink-0" />
                       ) : (
                         <X className="w-4 h-4 text-red-400 mr-2.5 flex-shrink-0" />
                       )}
-                      <span className={password.length === 0 ? 'text-titanium-500' : check.passed ? 'text-[#2C4A60]' : 'text-red-600'}>
+                      <span className={password.length === 0 ? 'text-titanium-500' : check.passed ? 'text-teal-700' : 'text-red-600'}>
                         {check.label}
                       </span>
                     </li>
@@ -354,7 +354,7 @@ const AcceptInvite: React.FC = () => {
               <button
                 type="submit"
                 disabled={!canSubmit || pageState === 'submitting'}
-                className="w-full py-3 px-4 bg-[#2C4A60] hover:bg-[#1d3344] disabled:bg-titanium-400 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors duration-200 shadow-chrome-card flex items-center justify-center font-body"
+                className="w-full py-3 px-4 bg-teal-700 hover:bg-[#1d3344] disabled:bg-titanium-400 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors duration-200 shadow-chrome-card flex items-center justify-center font-body"
               >
                 {pageState === 'submitting' ? (
                   <>
@@ -371,7 +371,7 @@ const AcceptInvite: React.FC = () => {
             <div className="mt-6 text-center">
               <Link
                 to="/login"
-                className="inline-flex items-center text-sm text-[#2C4A60] hover:text-[#1d3344] font-semibold transition-colors font-body"
+                className="inline-flex items-center text-sm text-teal-700 hover:text-[#1d3344] font-semibold transition-colors font-body"
               >
                 <ArrowLeft className="w-4 h-4 mr-1" />
                 Back to Login

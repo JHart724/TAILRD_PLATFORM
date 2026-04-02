@@ -194,9 +194,9 @@ const eventTypeConfig = {
   },
   lab: {
  icon: TestTube,
- color: 'bg-[#2C4A60]',
- bgColor: 'bg-[#f0f5fa]',
- textColor: 'text-[#2C4A60]'
+ color: 'bg-teal-700',
+ bgColor: 'bg-chrome-50',
+ textColor: 'text-teal-700'
   },
   procedure: {
  icon: Activity,
@@ -212,9 +212,9 @@ const eventTypeConfig = {
   },
   visit: {
  icon: User,
- color: 'bg-[#2C4A60]',
- bgColor: 'bg-[#f0f5fa]',
- textColor: 'text-[#2C4A60]'
+ color: 'bg-teal-700',
+ bgColor: 'bg-chrome-50',
+ textColor: 'text-teal-700'
   },
   admission: {
  icon: MapPin,
@@ -302,7 +302,7 @@ const PatientTimeline: React.FC<PatientTimelineProps> = ({ patientId, className 
  case 'high': return 'text-medical-red-600';
  case 'low': return 'text-porsche-600';
  case 'critical': return 'text-medical-red-700 font-bold';
- default: return 'text-[#2C4A60]';
+ default: return 'text-teal-700';
  }
   };
 
@@ -521,7 +521,7 @@ const PatientTimeline: React.FC<PatientTimelineProps> = ({ patientId, className 
  <div className="flex justify-between">
  <span className="text-titanium-600">Status:</span>
  <span className={`font-medium ${
- event.status === 'active' ? 'text-medical-red-600' : 'text-[#2C4A60]'
+ event.status === 'active' ? 'text-medical-red-600' : 'text-teal-700'
  }`}>{event.status}</span>
  </div>
  </div>
@@ -619,7 +619,7 @@ const PatientTimeline: React.FC<PatientTimelineProps> = ({ patientId, className 
  <ul className="space-y-1">
  {event.details.plan.map((item: string, i: number) => (
  <li key={item} className="text-sm text-titanium-700 flex items-start gap-2">
- <div className="w-1.5 h-1.5 bg-[#4A6880] rounded-full mt-2 flex-shrink-0" />
+ <div className="w-1.5 h-1.5 bg-teal-500 rounded-full mt-2 flex-shrink-0" />
  {item}
  </li>
  ))}

@@ -499,7 +499,7 @@ const PCINetworkVisualization: React.FC = () => {
  <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Timer className={`w-6 h-6 ${metrics.doorToBalloonCompliance >= 0.85 ? 'text-[#2C4A60]' : 'text-red-600'}`} />
+ <Timer className={`w-6 h-6 ${metrics.doorToBalloonCompliance >= 0.85 ? 'text-teal-700' : 'text-red-600'}`} />
  <div>
  <div className="text-lg font-bold text-titanium-900">{toFixed(metrics.doorToBalloonCompliance * 100, 0)}%</div>
  <div className="text-xs text-titanium-600">D2B &lt;90min</div>
@@ -539,7 +539,7 @@ const PCINetworkVisualization: React.FC = () => {
  
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Heart className="w-6 h-6 text-[#6B7280]" />
+ <Heart className="w-6 h-6 text-gray-500" />
  <div>
  <div className="text-lg font-bold text-titanium-900">{toFixed(metrics.averageSyntaxScore, 1)}</div>
  <div className="text-xs text-titanium-600">Avg SYNTAX</div>
@@ -549,7 +549,7 @@ const PCINetworkVisualization: React.FC = () => {
  
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <TrendingUp className="w-6 h-6 text-[#2C4A60]" />
+ <TrendingUp className="w-6 h-6 text-teal-700" />
  <div>
  <div className="text-lg font-bold text-titanium-900">{metrics.totalPciVolume}</div>
  <div className="text-xs text-titanium-600">Total Volume</div>
@@ -682,11 +682,11 @@ const PCINetworkVisualization: React.FC = () => {
  <span>STEMI Pathway (STAT)</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-1 bg-[#6B7280]" style={{ background: 'repeating-linear-gradient(90deg, #7A1A2E, #7A1A2E 4px, transparent 4px, transparent 8px)' }}></div>
+ <div className="w-4 h-1 bg-gray-500" style={{ background: 'repeating-linear-gradient(90deg, #7A1A2E, #7A1A2E 4px, transparent 4px, transparent 8px)' }}></div>
  <span>NSTEMI Pathway (Urgent)</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-4 h-1 bg-[#C8D4DC]"></div>
+ <div className="w-4 h-1 bg-titanium-300"></div>
  <span>Referrals</span>
  </div>
  </div>
@@ -700,9 +700,9 @@ const PCINetworkVisualization: React.FC = () => {
  <span>Emergency Services</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-2 h-2 bg-[#C8D4DC] rounded-full"></div>
+ <div className="w-2 h-2 bg-titanium-300 rounded-full"></div>
  <span>Available</span>
- <div className="w-2 h-2 bg-[#F0F5FA] rounded-full"></div>
+ <div className="w-2 h-2 bg-chrome-50 rounded-full"></div>
  <span>Busy</span>
  <div className="w-2 h-2 bg-red-500 rounded-full"></div>
  <span>Active</span>
@@ -728,8 +728,8 @@ const PCINetworkVisualization: React.FC = () => {
  )}
  {selectedNode.status && (
  <div className={`text-xs px-2 py-1 rounded-full inline-block mt-1 ${
- selectedNode.status === 'active' ? 'bg-[#F0F7F4] text-[#2D6147]' :
- selectedNode.status === 'busy' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ selectedNode.status === 'active' ? 'bg-green-50 text-green-600' :
+ selectedNode.status === 'busy' ? 'bg-amber-50 text-amber-600' :
  'bg-gray-100 text-gray-700'
  }`}>
  {selectedNode.status.toUpperCase()}
@@ -745,25 +745,25 @@ const PCINetworkVisualization: React.FC = () => {
  </div>
  )}
  {selectedNode.doorToBalloonTime && (
- <div className={`p-3 rounded-lg ${selectedNode.doorToBalloonTime <= 90 ? 'bg-[#C8D4DC]' : 'bg-red-50'}`}>
- <div className={`text-lg font-bold ${selectedNode.doorToBalloonTime <= 90 ? 'text-[#2C4A60]' : 'text-red-600'}`}>
+ <div className={`p-3 rounded-lg ${selectedNode.doorToBalloonTime <= 90 ? 'bg-titanium-300' : 'bg-red-50'}`}>
+ <div className={`text-lg font-bold ${selectedNode.doorToBalloonTime <= 90 ? 'text-teal-700' : 'text-red-600'}`}>
  {selectedNode.doorToBalloonTime}min
  </div>
- <div className={`text-xs ${selectedNode.doorToBalloonTime <= 90 ? 'text-[#2C4A60]' : 'text-red-700'}`}>
+ <div className={`text-xs ${selectedNode.doorToBalloonTime <= 90 ? 'text-teal-700' : 'text-red-700'}`}>
  Door-to-Balloon
  </div>
  </div>
  )}
  {selectedNode.successRate && (
- <div className="bg-[#F0F5FA] p-3 rounded-lg">
- <div className="text-lg font-bold text-[#2C4A60]">{toFixed(selectedNode.successRate * 100, 0)}%</div>
- <div className="text-xs text-[#2C4A60]">Success Rate</div>
+ <div className="bg-chrome-50 p-3 rounded-lg">
+ <div className="text-lg font-bold text-teal-700">{toFixed(selectedNode.successRate * 100, 0)}%</div>
+ <div className="text-xs text-teal-700">Success Rate</div>
  </div>
  )}
  {selectedNode.syntaxScore && (
- <div className="bg-[#F0F5FA] p-3 rounded-lg">
- <div className="text-lg font-bold text-[#6B7280]">{selectedNode.syntaxScore}</div>
- <div className="text-xs text-[#6B7280]">SYNTAX Score</div>
+ <div className="bg-chrome-50 p-3 rounded-lg">
+ <div className="text-lg font-bold text-gray-500">{selectedNode.syntaxScore}</div>
+ <div className="text-xs text-gray-500">SYNTAX Score</div>
  </div>
  )}
  </div>
@@ -783,7 +783,7 @@ const PCINetworkVisualization: React.FC = () => {
  <div className="flex items-center gap-2">
  <span className="text-titanium-500">{conn.patientFlow} pts</span>
  {conn.avgDoorToBalloon && (
- <span className={`text-xs px-1 rounded ${conn.avgDoorToBalloon <= 90 ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-red-100 text-red-600'}`}>
+ <span className={`text-xs px-1 rounded ${conn.avgDoorToBalloon <= 90 ? 'bg-green-50 text-green-600' : 'bg-red-100 text-red-600'}`}>
  {conn.avgDoorToBalloon}m
  </span>
  )}
@@ -822,13 +822,13 @@ const PCINetworkVisualization: React.FC = () => {
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Shield className="w-5 h-5 text-[#2C4A60]" />
+ <Shield className="w-5 h-5 text-teal-700" />
  Quality Metrics
  </h4>
  <div className="space-y-3">
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Door-to-Balloon &lt;90min</span>
- <span className={`font-bold ${metrics.doorToBalloonCompliance >= 0.85 ? 'text-[#2C4A60]' : 'text-red-600'}`}>
+ <span className={`font-bold ${metrics.doorToBalloonCompliance >= 0.85 ? 'text-teal-700' : 'text-red-600'}`}>
  {toFixed(metrics.doorToBalloonCompliance * 100, 1)}%
  </span>
  </div>
@@ -838,7 +838,7 @@ const PCINetworkVisualization: React.FC = () => {
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Average SYNTAX Score</span>
- <span className="font-bold text-[#6B7280]">{toFixed(metrics.averageSyntaxScore, 1)}</span>
+ <span className="font-bold text-gray-500">{toFixed(metrics.averageSyntaxScore, 1)}</span>
  </div>
  </div>
  </div>
@@ -876,7 +876,7 @@ const PCINetworkVisualization: React.FC = () => {
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Available Cath Labs</span>
- <span className="font-bold text-[#2C4A60]">{nodes.filter(n => n.type === 'cath-lab').length}</span>
+ <span className="font-bold text-teal-700">{nodes.filter(n => n.type === 'cath-lab').length}</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-titanium-600">Emergency Pathways</span>
