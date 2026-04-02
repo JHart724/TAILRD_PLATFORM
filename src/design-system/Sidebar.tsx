@@ -53,6 +53,7 @@ function getInitialExpanded(): boolean {
 export default function Sidebar() {
   const [expanded, setExpanded] = useState<boolean>(getInitialExpanded);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -64,16 +65,43 @@ export default function Sidebar() {
     }
   }, [expanded]);
 
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
   const isActive = (path: string): boolean => location.pathname.startsWith(path);
 
   return (
-    <aside
-      className={`
-        sidebar-dark sidebar-container flex flex-col h-screen shrink-0
-        transition-[width] duration-200 ease-in-out
-        ${expanded ? 'w-60' : 'w-16'}
-      `}
-    >
+    <>
+      {/* Mobile hamburger — visible only below md breakpoint */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="fixed top-3 left-3 z-50 p-2 rounded-lg bg-neutral-800 text-white md:hidden"
+        aria-label="Open navigation"
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M3 5h14M3 10h14M3 15h14" />
+        </svg>
+      </button>
+
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      <aside
+        className={`
+          sidebar-dark sidebar-container flex flex-col h-screen shrink-0
+          transition-all duration-200 ease-in-out
+          ${expanded ? 'w-60' : 'w-16'}
+          fixed md:relative z-40
+          ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        `}
+      >
       {/* Logo + Toggle */}
       <div className="flex items-center justify-between h-14 px-3 border-b border-white/[0.08] relative z-[1]">
         {expanded && (
@@ -231,5 +259,6 @@ export default function Sidebar() {
         </div>
       </div>
     </aside>
+    </>
   );
 }
