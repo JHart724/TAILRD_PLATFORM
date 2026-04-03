@@ -1,3 +1,6 @@
+import * as dotenv from "dotenv";
+dotenv.config();
+
 /**
  * FHIR Bundle Ingest Pipeline — S3 → Prisma
  *
