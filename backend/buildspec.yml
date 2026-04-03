@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to ECR...
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 863518424332.dkr.ecr.us-east-1.amazonaws.com
+      - IMAGE_URI=863518424332.dkr.ecr.us-east-1.amazonaws.com/tailrd/ingest
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)
+  build:
+    commands:
+      - echo Building ingest image...
+      - docker build -f Dockerfile.ingest -t $IMAGE_URI:$IMAGE_TAG -t $IMAGE_URI:latest .
+  post_build:
+    commands:
+      - echo Pushing to ECR...
+      - docker push $IMAGE_URI:$IMAGE_TAG
+      - docker push $IMAGE_URI:latest
+      - echo "Image pushed: $IMAGE_URI:$IMAGE_TAG"
