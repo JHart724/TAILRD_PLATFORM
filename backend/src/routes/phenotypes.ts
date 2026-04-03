@@ -59,6 +59,22 @@ router.get('/:patientId',
         offset = 0
       } = req.query;
 
+      // Multi-tenant isolation: verify patient belongs to user's hospital
+      const userHospitalId = req.user?.hospitalId;
+      if (userHospitalId && req.user?.role !== 'super-admin') {
+        const patient = await prisma.patient.findFirst({
+          where: { id: patientId, hospitalId: userHospitalId },
+          select: { id: true },
+        });
+        if (!patient) {
+          return res.status(404).json({
+            success: false,
+            error: 'Patient not found',
+            timestamp: new Date().toISOString(),
+          } as APIResponse);
+        }
+      }
+
       const service = initializePhenotypeService();
 
       // Get phenotype history for patient
