@@ -484,6 +484,9 @@ export interface JWTPayload {
   hospitalName: string;
   permissions: UserPermissions;
   demoMode?: boolean;
+  mfaRequired?: boolean;
+  mfaVerified?: boolean;
+  sessionId?: string;
   iat: number;
   exp: number;
 }
