@@ -81,7 +81,7 @@ router.post('/password-reset/request', async (req: AuthenticatedRequest, res: Re
         data: {
           resetToken: hashedToken,
           resetTokenExpiry,
-        } as any, // TODO: Remove `as any` once resetToken/resetTokenExpiry fields are added to Prisma schema
+        },
       });
 
       // TODO: Send email with resetToken (unhashed) via transactional email service.

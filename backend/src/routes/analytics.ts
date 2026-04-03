@@ -88,7 +88,7 @@ router.get('/dashboard',
               lte: endDate
             },
             ...(targetHospitalId && { hospitalId: targetHospitalId }),
-            ...(moduleType && { moduleType })
+            ...(moduleType && { moduleType: moduleType as ModuleType })
           },
           _sum: {
             usageCount: true,
@@ -123,7 +123,7 @@ router.get('/dashboard',
               lte: endDate
             },
             ...(targetHospitalId && { hospitalId: targetHospitalId }),
-            ...(moduleType && { moduleType })
+            ...(moduleType && { moduleType: moduleType as ModuleType })
           },
           _sum: {
             usageCount: true,
