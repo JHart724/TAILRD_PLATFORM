@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import prisma from '../lib/prisma';
 import { logger } from '../utils/logger';
 import { AlertService } from './alertService';
 import { CQLEngine } from '../cql/cqlEngine';
@@ -156,7 +157,7 @@ export class ECGAIService {
   private isInitialized = false;
 
   constructor() {
-    this.prisma = new PrismaClient();
+    this.prisma = prisma;
     this.alertService = new AlertService();
     this.cqlEngine = new CQLEngine();
     this.modelEndpoints = new Map();

@@ -22,12 +22,13 @@ router.use(authenticateToken);
 // ============================================
 
 // Get risk score assessments for a patient
-router.get('/risk-scores/:patientId', async (req: Request, res: Response) => {
+router.get('/risk-scores/:patientId', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { patientId } = req.params;
     const { module, scoreType } = req.query;
+    const hospitalId = req.user!.hospitalId;
 
-    const where: any = { patientId };
+    const where: any = { patientId, hospitalId };
     if (module) where.module = module;
     if (scoreType) where.scoreType = scoreType;
 
@@ -52,14 +53,14 @@ router.get('/risk-scores/:patientId', async (req: Request, res: Response) => {
 });
 
 // Create a risk score assessment
-router.post('/risk-scores', async (req: Request, res: Response) => {
+router.post('/risk-scores', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const validation = validateBody(createRiskScoreSchema, req.body);
     if (!validation.success) {
       return res.status(400).json({ success: false, error: 'Validation failed', details: validation.errors, timestamp: new Date().toISOString() });
     }
     const assessment = await prisma.riskScoreAssessment.create({
-      data: validation.data as any,
+      data: { ...(validation.data as any), hospitalId: req.user!.hospitalId },
     });
 
     res.status(201).json({
@@ -129,12 +130,13 @@ router.get('/risk-scores/summary/:hospitalId', authorizeHospital, async (req: Re
 // ============================================
 
 // Get interventions for a patient
-router.get('/interventions/:patientId', async (req: Request, res: Response) => {
+router.get('/interventions/:patientId', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { patientId } = req.params;
     const { module, status, category } = req.query;
+    const hospitalId = req.user!.hospitalId;
 
-    const where: any = { patientId };
+    const where: any = { patientId, hospitalId };
     if (module) where.module = module;
     if (status) where.status = status;
     if (category) where.category = category;
@@ -160,14 +162,14 @@ router.get('/interventions/:patientId', async (req: Request, res: Response) => {
 });
 
 // Create an intervention record
-router.post('/interventions', async (req: Request, res: Response) => {
+router.post('/interventions', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const validation = validateBody(createInterventionSchema, req.body);
     if (!validation.success) {
       return res.status(400).json({ success: false, error: 'Validation failed', details: validation.errors, timestamp: new Date().toISOString() });
     }
     const intervention = await prisma.interventionTracking.create({
-      data: validation.data as any,
+      data: { ...(validation.data as any), hospitalId: req.user!.hospitalId },
     });
 
     res.status(201).json({
@@ -186,7 +188,7 @@ router.post('/interventions', async (req: Request, res: Response) => {
 });
 
 // Update intervention status
-router.patch('/interventions/:id/status', async (req: Request, res: Response) => {
+router.patch('/interventions/:id/status', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
     const parsed = updateInterventionStatusSchema.safeParse(req.body);
@@ -277,12 +279,13 @@ router.get('/interventions/summary/:hospitalId', authorizeHospital, async (req: 
 // ============================================
 
 // Get contraindication assessments for a patient
-router.get('/contraindications/:patientId', async (req: Request, res: Response) => {
+router.get('/contraindications/:patientId', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { patientId } = req.params;
     const { module, level } = req.query;
+    const hospitalId = req.user!.hospitalId;
 
-    const where: any = { patientId };
+    const where: any = { patientId, hospitalId };
     if (module) where.module = module;
     if (level) where.level = level;
 
@@ -307,14 +310,14 @@ router.get('/contraindications/:patientId', async (req: Request, res: Response) 
 });
 
 // Create a contraindication assessment
-router.post('/contraindications', async (req: Request, res: Response) => {
+router.post('/contraindications', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const validation = validateBody(createContraindicationSchema, req.body);
     if (!validation.success) {
       return res.status(400).json({ success: false, error: 'Validation failed', details: validation.errors, timestamp: new Date().toISOString() });
     }
     const assessment = await prisma.contraindicationAssessment.create({
-      data: validation.data as any,
+      data: { ...(validation.data as any), hospitalId: req.user!.hospitalId },
     });
 
     res.status(201).json({
@@ -333,7 +336,7 @@ router.post('/contraindications', async (req: Request, res: Response) => {
 });
 
 // Override a contraindication
-router.patch('/contraindications/:id/override', async (req: Request, res: Response) => {
+router.patch('/contraindications/:id/override', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
     const validation = validateBody(overrideContraindicationSchema, req.body);
@@ -409,7 +412,7 @@ router.get('/contraindications/summary/:hospitalId', authorizeHospital, async (r
 // ============================================
 
 // Run GDMT assessment for a patient
-router.post('/gdmt/assess', async (req: Request, res: Response) => {
+router.post('/gdmt/assess', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const validation = createGDMTAssessmentSchema.safeParse(req.body);
     if (!validation.success) {
@@ -439,12 +442,13 @@ router.post('/gdmt/assess', async (req: Request, res: Response) => {
 });
 
 // Get GDMT history for a patient
-router.get('/gdmt/history/:patientId', async (req: Request, res: Response) => {
+router.get('/gdmt/history/:patientId', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { patientId } = req.params;
+    const hospitalId = req.user!.hospitalId;
 
     const assessments = await prisma.riskScoreAssessment.findMany({
-      where: { patientId, scoreType: 'GDMT_OPTIMIZATION' },
+      where: { patientId, hospitalId, scoreType: 'GDMT_OPTIMIZATION' },
       orderBy: { createdAt: 'desc' },
       take: 20,
     });
@@ -469,12 +473,13 @@ router.get('/gdmt/history/:patientId', async (req: Request, res: Response) => {
 // ============================================
 
 // Get drug titrations by module (supports generalDrugClass)
-router.get('/drug-titrations/:patientId', async (req: Request, res: Response) => {
+router.get('/drug-titrations/:patientId', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { patientId } = req.params;
     const { module } = req.query;
+    const hospitalId = req.user!.hospitalId;
 
-    const where: any = { patientId };
+    const where: any = { patientId, hospitalId };
     if (module) where.module = module;
 
     const titrations = await prisma.drugTitration.findMany({

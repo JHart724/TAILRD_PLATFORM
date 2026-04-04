@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../lib/prisma';
 import { logger } from '../utils/logger';
 import { RedoxWebhookPayload } from './webhookHandler';
 import { PatientService } from '../services/patientService';
@@ -22,8 +22,6 @@ export interface ProcessingResult {
   alertsTriggered?: number;
   dataProcessed?: any;
 }
-
-const prisma = new PrismaClient();
 
 export class RedoxEventProcessor {
   private patientService: PatientService;

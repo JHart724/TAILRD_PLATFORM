@@ -1,12 +1,11 @@
 import { Router, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../lib/prisma';
 import { APIResponse, JWTPayload, UserPermissions } from '../types';
 import { buildUserPermissions, FULL_ACCESS_PERMISSIONS } from '../config/rolePermissions';
 
 const router = Router();
-const prisma = new PrismaClient();
 const isDemoMode = process.env.DEMO_MODE === 'true';
 
 // ─── Demo users (only used when DEMO_MODE=true) ───────────────────────────────

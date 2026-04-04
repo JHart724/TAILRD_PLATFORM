@@ -7,6 +7,7 @@
 | Date | Files Changed | Items Completed | New Issues |
 |------|--------------|-----------------|------------|
 | 2026-04-04 | Initial audit | 0 | 87 action items identified |
+| 2026-04-04 | server.ts, auth.ts, admin.ts, analytics.ts, referrals.ts, phenotypes.ts, onboarding.ts, middleware/analytics.ts, eventProcessor.ts, ecgAIService.ts, contentIntelligenceService.ts | P0-SEC-2 | 0 |
 
 ---
 
@@ -44,8 +45,8 @@ The platform needs approximately **200 engineering hours** to reach a state wher
 ### P0 Findings
 
 - [ ] **P0-SEC-1: AWS credentials, JWT secret, PHI encryption key committed to git** | `backend/.env:11-17` | Risk: Full AWS account compromise, JWT forgery, PHI decryption | Est: 4h
-- [ ] **P0-SEC-2: 13 files create own PrismaClient, bypassing PHI encryption** | `server.ts:11`, `auth.ts:9`, `admin.ts:10`, `analytics.ts:12`, `referrals.ts:10`, `phenotypes.ts:10`, `onboarding.ts:9`, `middleware/analytics.ts:6`, `eventProcessor.ts:26`, `ecgAIService.ts:159`, `contentIntelligenceService.ts:211`, `seed.ts:4`, `seedBSW.ts:4` | Risk: PHI stored/read in plaintext | Est: 3h
-- [ ] **P0-SEC-3: Cross-tenant IDOR on all clinicalIntelligence endpoints** | `clinicalIntelligence.ts:25,132,280,442,472` -- queries by patientId without hospitalId | Risk: Hospital A reads Hospital B patient data | Est: 4h
+- [x] **P0-SEC-2: 13 files create own PrismaClient, bypassing PHI encryption** | `server.ts:11`, `auth.ts:9`, `admin.ts:10`, `analytics.ts:12`, `referrals.ts:10`, `phenotypes.ts:10`, `onboarding.ts:9`, `middleware/analytics.ts:6`, `eventProcessor.ts:26`, `ecgAIService.ts:159`, `contentIntelligenceService.ts:211`, `seed.ts:4`, `seedBSW.ts:4` | Risk: PHI stored/read in plaintext | Est: 3h
+- [x] **P0-SEC-3: Cross-tenant IDOR on all clinicalIntelligence endpoints** | `clinicalIntelligence.ts:25,132,280,442,472` -- queries by patientId without hospitalId | Risk: Hospital A reads Hospital B patient data | Est: 4h
 - [ ] **P0-SEC-4: Unauthenticated webhook test endpoint reflects body** | `webhooks.ts:232-240` | Risk: Information disclosure, SSRF probe | Est: 1h
 - [ ] **P0-SEC-5: Mass assignment on hospital update** | `admin.ts:392-401` -- raw req.body to prisma.update | Risk: Attacker sets redoxWebhookUrl to their server | Est: 1h
 
@@ -420,8 +421,8 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 ## P0 -- Fix Before Any Deployment (13 items, ~57h)
 
 - [ ] P0-SEC-1: Rotate ALL secrets (AWS keys, JWT, PHI key). Add .env to .gitignore. Scrub git history. | 4h
-- [ ] P0-SEC-2: Replace 13 rogue PrismaClient instances with shared singleton | 3h
-- [ ] P0-SEC-3: Add hospitalId to all clinicalIntelligence WHERE clauses | 4h
+- [x] P0-SEC-2: Replace 13 rogue PrismaClient instances with shared singleton | 3h
+- [x] P0-SEC-3: Add hospitalId to all clinicalIntelligence WHERE clauses | 4h
 - [ ] P0-SEC-4: Remove/gate unauthenticated webhook test endpoint | 1h
 - [ ] P0-SEC-5: Whitelist fields on admin hospital update | 1h
 - [ ] P0-HIPAA-1: Extend PHI encryption to Encounter, Observation, Order, Medication, Condition, WebhookEvent | 8h
@@ -431,7 +432,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [ ] P0-PIPE-1: Wire processSynthea.ts to persistence services | 12h
 - [ ] P0-BACK-1: Remove @ts-nocheck from analytics.ts | 3h
 - [ ] P0-UX-1: Add ARIA attributes, focus traps, keyboard nav | 8h
-- [ ] P0-SCALE-1: (covered by P0-SEC-2) | 0h
+- [x] P0-SCALE-1: (covered by P0-SEC-2) | 0h
 
 ## P1 -- Fix Before Health System Goes Live (34 items, ~158h)
 

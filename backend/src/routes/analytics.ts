@@ -2,14 +2,13 @@
 // TODO: 35 TS errors — field name mismatches (date→trackedDate, timeSpent→totalDuration,
 // dbQueryTime→dbQueries, missing statusCode/method). Fix in next session.
 import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../lib/prisma';
 import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
 import { trackFeature, trackNavigation, trackReportGeneration, ModuleType, ActivityType } from '../middleware/analytics';
 import { body, query, validationResult } from 'express-validator';
 
 const router = Router();
-const prisma = new PrismaClient();
 
 // Analytics Dashboard - Main Platform Metrics
 router.get('/dashboard',

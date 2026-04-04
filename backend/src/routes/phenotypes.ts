@@ -1,5 +1,5 @@
 import { Router, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../lib/prisma';
 import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
 import { logger } from '../utils/logger';
@@ -7,7 +7,6 @@ import { PhenotypeService, PhenotypeDetectionResult, PhenotypeType, PhenotypeSta
 import { body, param, query, validationResult } from 'express-validator';
 
 const router = Router();
-const prisma = new PrismaClient();
 
 // Initialize phenotype service (singleton pattern)
 let phenotypeService: PhenotypeService;

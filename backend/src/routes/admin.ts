@@ -1,13 +1,12 @@
 import { Router, Response } from 'express';
 import bcrypt from 'bcryptjs';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../lib/prisma';
 import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
 import { body, validationResult } from 'express-validator';
 const godViewRouter = require('./godView');
 
 const router = Router();
-const prisma = new PrismaClient();
 
 // Mount GOD view routes
 router.use('/god', godViewRouter);

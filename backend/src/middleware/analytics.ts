@@ -1,9 +1,8 @@
 // checks until analytics data layer is properly aligned with Prisma schema.
 import { Request, Response, NextFunction } from 'express';
-import { PrismaClient, ModuleType as PrismaModuleType } from '@prisma/client';
+import { ModuleType as PrismaModuleType } from '@prisma/client';
+import prisma from '../lib/prisma';
 import { AuthenticatedRequest } from './auth';
-
-const prisma = new PrismaClient();
 
 // Activity type definitions
 export enum ActivityType {

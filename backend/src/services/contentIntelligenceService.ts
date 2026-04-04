@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import prisma from '../lib/prisma';
 import { logger } from '../utils/logger';
 import axios from 'axios';
 import fs from 'fs-extra';
@@ -208,7 +209,7 @@ export class ContentIntelligenceService {
   private isInitialized = false;
 
   constructor() {
-    this.prisma = new PrismaClient();
+    this.prisma = prisma;
     this.contentSources = new Map();
     this.nlpEndpoint = process.env.NLP_ENDPOINT || 'http://localhost:8081/nlp';
     this.contentEngineUrl = process.env.CV_CONTENT_ENGINE_URL || 'http://localhost:8082';

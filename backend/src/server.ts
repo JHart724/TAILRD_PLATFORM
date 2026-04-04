@@ -5,10 +5,8 @@ import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import { config } from 'dotenv';
 import { createLogger, format, transports } from 'winston';
-import { PrismaClient } from '@prisma/client';
+import prisma from './lib/prisma';
 import { APIResponse } from './types';
-
-const prisma = new PrismaClient();
 import { analyticsMiddleware } from './middleware/analytics';
 import { csrfCookieSetter, csrfProtection, csrfTokenEndpoint } from './middleware/csrfProtection';
 import { loginRateLimit } from './middleware/authRateLimit';
