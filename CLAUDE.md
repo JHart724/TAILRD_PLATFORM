@@ -239,8 +239,19 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 - Every gap rule MUST be grounded in current ACC/AHA/ESC guidelines (2022-2024)
 - Every gap rule MUST cite its guideline source inline in the code comments (e.g., "2022 AHA/ACC/HFSA HF Guideline, Class 2a, LOE B-R")
 - Every gap rule MUST specify the LOINC, ICD-10, RxNorm, or CPT codes it evaluates
+- Every gap rule MUST include an `evidence` object with triggerCriteria (what patient data triggered it), guidelineSource, classOfRecommendation, levelOfEvidence, and exclusions
 - Gap rules must handle contraindications, intolerances, and clinical trial enrollment as exclusion criteria
+- Gap rules must check `hasContraindication()` against relevant exclusion code sets before firing
 - Clinical accuracy is non-negotiable. This platform will be used by cardiologists and health system CMOs.
+
+**FDA CDS Exemption Compliance (21st Century Cures Act):**
+- The platform provides clinical decision SUPPORT, not clinical decisions
+- Every gap must be transparent: the clinician sees the patient data, the guideline, and the logic
+- Use language like "recommended for review", "consider", "guideline suggests" -- NOT "order", "prescribe", "must"
+- Never auto-order or auto-prescribe based on gap detection
+- The clinician always makes the final decision and can dismiss any gap with a documented reason
+- Do NOT use ML/AI for gap detection -- use deterministic, rule-based logic only
+- The ECG AI pipeline (backend/src/ai/) is NOT covered by the CDS exemption and should not be activated without FDA clearance
 
 **Current gap rule status (as of April 2026):**
 - Heart Failure: 8 rules (ACEi/ARB/ARNi, SGLT2i, Beta-Blocker, MRA, ATTR-CM, Iron Deficiency, Finerenone/CKD+T2DM, Digoxin Toxicity)
@@ -286,3 +297,6 @@ These rules are non-negotiable. Violating any of them creates clinical, security
 - **Never leave PHI (patient names, MRN, DOB, addresses) in logs, error messages, or console output.** Log patient IDs (internal UUIDs) only, never identifiers.
 - **Never query patient data without `hospitalId` in the WHERE clause.** Every patient-scoped query must enforce tenant isolation.
 - **Never accept `hospitalId` from request body for authorization decisions.** Always use `req.user.hospitalId` from the verified JWT.
+- **Never use directive language in gap recommendations.** Say "consider" or "recommended for review", not "order" or "prescribe". Directive language may trigger FDA SaMD classification.
+- **Never use ML/AI for gap detection.** All gap rules must be deterministic, rule-based, and transparent. The clinician must be able to trace exactly why a gap fired.
+- **Never create a gap rule without an `evidence` object.** Every gap must carry its trigger criteria, guideline source, class, and level of evidence for FDA CDS exemption compliance.

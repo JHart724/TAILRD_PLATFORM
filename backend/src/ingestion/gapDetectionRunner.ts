@@ -100,6 +100,18 @@ export async function runGapDetection(
   return result;
 }
 
+/**
+ * DetectedGap -- the output of a gap rule evaluation.
+ *
+ * FDA CDS EXEMPTION COMPLIANCE (21st Century Cures Act):
+ * Every gap MUST include `evidence` and `guideline` fields so that
+ * the clinician can independently review the basis for the recommendation.
+ * Without transparency, the software may be classified as a medical device
+ * requiring FDA 510(k) clearance.
+ *
+ * The platform RECOMMENDS review, it does NOT direct treatment.
+ * The clinician always makes the final decision.
+ */
 interface DetectedGap {
   type: TherapyGapType;
   module: ModuleType;
@@ -107,7 +119,31 @@ interface DetectedGap {
   target: string;
   medication?: string;
   recommendations?: Record<string, unknown>;
+  // FDA CDS transparency fields
+  evidence?: {
+    triggerCriteria: string[];    // What patient data triggered this gap (human-readable)
+    guidelineSource: string;      // e.g., "2022 AHA/ACC/HFSA HF Guideline"
+    classOfRecommendation: string; // e.g., "Class 1"
+    levelOfEvidence: string;      // e.g., "LOE A"
+    exclusions?: string[];        // Conditions that would make this gap inapplicable
+  };
 }
+
+/**
+ * Contraindication/exclusion check helper.
+ * If the patient has a documented reason NOT to receive a therapy,
+ * the gap should not fire. This prevents false positives and respects
+ * clinical judgment already documented in the EHR.
+ */
+function hasContraindication(dxCodes: string[], exclusionCodes: string[]): boolean {
+  return dxCodes.some(dx => exclusionCodes.some(ex => dx.startsWith(ex)));
+}
+
+// Common exclusion code sets
+const EXCLUSION_RENAL_SEVERE = ['N18.5', 'N18.6', 'N19'];  // ESRD, stage 5 CKD
+const EXCLUSION_PREGNANCY = ['O00', 'O09', 'Z33'];          // Pregnancy
+const EXCLUSION_HOSPICE = ['Z51.5'];                         // Palliative/hospice
+const EXCLUSION_ALLERGY_DOCUMENTED = ['Z88'];                // Drug allergy status
 
 /**
  * Runtime Gap Rule Registry -- guideline provenance for every detection rule.
@@ -383,9 +419,22 @@ function evaluateGapRules(
       gaps.push({
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.HEART_FAILURE,
-        status: 'ATTR-CM screening needed',
-        target: 'Tc-99m PYP ordered',
-        recommendations: { action: 'Order Tc-99m PYP Scan' },
+        status: 'ATTR-CM screening recommended for review',
+        target: 'Tc-99m PYP scan considered',
+        recommendations: { action: 'Consider Tc-99m PYP Scan based on clinical assessment' },
+        evidence: {
+          triggerCriteria: [
+            `NT-proBNP: ${labValues['nt_probnp'] ?? 'N/A'}`,
+            `LVEF: ${labValues['lvef'] ?? 'N/A'}%`,
+            `hs-TnT: ${labValues['hs_tnt'] ?? 'N/A'}`,
+            `Age: ${age}`,
+            `Signals met: ${signals}/3 required`,
+          ],
+          guidelineSource: '2023 ACC Expert Consensus on ATTR-CM',
+          classOfRecommendation: 'Expert Consensus',
+          levelOfEvidence: 'B-NR',
+          exclusions: ['Known ATTR-CM diagnosis', 'Active oncology treatment'],
+        },
       });
     }
   }
