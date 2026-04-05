@@ -235,7 +235,7 @@ Covered in Section 7 above. Additional:
 
 ### Synthea Pipeline
 
-- [ ] **P0-PIPE-1: processSynthea.ts discards all parsed data** | `processSynthea.ts:59-69` -- JSON.parse output never passed to any service | Est: 12h
+- [x] **P0-PIPE-1: processSynthea.ts discards all parsed data** | `processSynthea.ts:59-69` -- JSON.parse output never passed to any service | Est: 12h
 - [ ] **P0-PIPE-2: seedFromSynthea.ts is a stub** | `seedFromSynthea.ts:54-76` -- only console.log statements | Est: 8h
 - [ ] **P1-PIPE-1: No concurrency, batching, or resumability** | Sequential for-of loop, no checkpoint | Est: 8h
 - [ ] **P1-PIPE-2: FHIR resource handlers disconnected from persistence** | `fhirResourceHandlers.ts` -- map Condition, Medication, Procedure but no write functions exist | Est: 6h
@@ -429,7 +429,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [x] P0-HIPAA-2: Remove PHI from audit log metadata | 3h
 - [x] P0-CLIN-2: Fix ferritin/troponin substitution in ATTR-CM | 2h
 - [x] P0-CLIN-3: Fix finerenone indication (add diabetes check or remove) | 2h
-- [ ] P0-PIPE-1: Wire processSynthea.ts to persistence services | 12h
+- [x] P0-PIPE-1: Wire processSynthea.ts to persistence services | 12h
 - [x] P0-BACK-1: Remove @ts-nocheck from analytics.ts | 3h
 - [ ] P0-UX-1: Add ARIA attributes, focus traps, keyboard nav | 8h
 - [x] P0-SCALE-1: (covered by P0-SEC-2) | 0h
