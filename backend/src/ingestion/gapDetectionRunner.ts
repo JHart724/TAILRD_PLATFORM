@@ -187,6 +187,66 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'A',
   },
   {
+    id: 'gap-hf-34-sglt2i',
+    name: 'SGLT2i in HFrEF',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2022 AHA/ACC/HFSA HF Guideline; DAPA-HF, EMPEROR-Reduced',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC/HFSA',
+    lastReviewDate: '2026-04-05',
+    nextReviewDue: '2026-10-05',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-hf-35-beta-blocker',
+    name: 'Beta-Blocker in HFrEF',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2022 AHA/ACC/HFSA HF Guideline',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC/HFSA',
+    lastReviewDate: '2026-04-05',
+    nextReviewDue: '2026-10-05',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-hf-36-mra',
+    name: 'MRA in HFrEF',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2022 AHA/ACC/HFSA HF Guideline; RALES, EMPHASIS-HF',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC/HFSA',
+    lastReviewDate: '2026-04-05',
+    nextReviewDue: '2026-10-05',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-ep-oac-afib',
+    name: 'Oral Anticoagulation in AFib',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-04-05',
+    nextReviewDue: '2026-10-05',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-cad-statin',
+    name: 'High-Intensity Statin in CAD',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2018 ACC/AHA Guideline on Management of Blood Cholesterol',
+    guidelineVersion: '2018',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-05',
+    nextReviewDue: '2026-10-05',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
     id: 'gap-sh-1-as-surveillance',
     name: 'Aortic Stenosis Echo Surveillance',
     module: 'STRUCTURAL_HEART',
@@ -248,9 +308,7 @@ function evaluateGapRules(
   const hasAF = dxCodes.some(c => c.startsWith('I48'));
   const hasCAD = dxCodes.some(c => c.startsWith('I25'));
 
-  // Suppress unused variable warnings for AF and CAD — reserved for future rules
-  void hasAF;
-  void hasCAD;
+  // All condition flags are now used by gap rules below
 
   // Gap 1: ATTR-CM Detection (HF)
   // Guideline: 2023 ACC Expert Consensus on ATTR-CM Diagnosis and Management
@@ -314,6 +372,73 @@ function evaluateGapRules(
     }
   }
 
+  // Gap HF-34: SGLT2i Missing in HFrEF
+  // Guideline: 2022 AHA/ACC/HFSA HF Guideline, Class 1, LOE A (DAPA-HF, EMPEROR-Reduced)
+  // All HFrEF (LVEF <=40%) patients should be on SGLT2i regardless of diabetes status
+  // RxNorm: dapagliflozin (1488564), empagliflozin (1545653), sotagliflozin (2627044)
+  if (hasHF && labValues['lvef'] !== undefined && labValues['lvef'] <= 40) {
+    const SGLT2I_CODES = ['1488564', '1545653', '2627044'];
+    const onSGLT2i = medCodes.some(c => SGLT2I_CODES.includes(c));
+    if (!onSGLT2i) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.HEART_FAILURE,
+        status: 'SGLT2i not prescribed in HFrEF',
+        target: 'SGLT2i initiated',
+        medication: 'Dapagliflozin or Empagliflozin',
+        recommendations: {
+          action: 'Prescribe SGLT2i per 2022 AHA/ACC/HFSA, Class 1, LOE A',
+          guideline: 'DAPA-HF / EMPEROR-Reduced trials',
+        },
+      });
+    }
+  }
+
+  // Gap HF-35: Beta-Blocker Missing in HFrEF
+  // Guideline: 2022 AHA/ACC/HFSA HF Guideline, Class 1, LOE A
+  // Evidence-based BB: carvedilol (20352), metoprolol succinate (6918), bisoprolol (19484)
+  if (hasHF && labValues['lvef'] !== undefined && labValues['lvef'] <= 40) {
+    const BB_CODES = ['20352', '6918', '19484'];
+    const onBB = medCodes.some(c => BB_CODES.includes(c));
+    if (!onBB) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.HEART_FAILURE,
+        status: 'Evidence-based beta-blocker not prescribed in HFrEF',
+        target: 'Beta-blocker initiated',
+        medication: 'Carvedilol, Metoprolol Succinate, or Bisoprolol',
+        recommendations: {
+          action: 'Prescribe evidence-based BB per 2022 AHA/ACC/HFSA, Class 1, LOE A',
+        },
+      });
+    }
+  }
+
+  // Gap HF-36: MRA Missing in HFrEF
+  // Guideline: 2022 AHA/ACC/HFSA HF Guideline, Class 1, LOE A (RALES, EMPHASIS-HF)
+  // Spironolactone (9997) or Eplerenone (298869) when LVEF <=35%, K<5.0, eGFR>30
+  if (
+    hasHF &&
+    labValues['lvef'] !== undefined && labValues['lvef'] <= 35 &&
+    labValues['potassium'] !== undefined && labValues['potassium'] < 5.0 &&
+    labValues['egfr'] !== undefined && labValues['egfr'] > 30
+  ) {
+    const MRA_CODES = ['9997', '298869'];
+    const onMRA = medCodes.some(c => MRA_CODES.includes(c));
+    if (!onMRA) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.HEART_FAILURE,
+        status: 'MRA not prescribed in HFrEF with LVEF<=35%',
+        target: 'Spironolactone or Eplerenone initiated',
+        medication: 'Spironolactone or Eplerenone',
+        recommendations: {
+          action: 'Prescribe MRA per 2022 AHA/ACC/HFSA, Class 1, LOE A (RALES/EMPHASIS-HF)',
+        },
+      });
+    }
+  }
+
   // Gap 39: QTc Safety Alert (EP)
   // Guideline: ACC/AHA/HRS EP Guidelines. QTc prolongation thresholds are sex-specific:
   // Male: >450ms prolonged, >500ms critical
@@ -328,6 +453,29 @@ function evaluateGapRules(
         status: `QTc ${severity}: ${labValues['qtc_interval']}ms (threshold ${qtcThreshold}ms)`,
         target: 'QT drug review completed',
         recommendations: { action: 'Order ECG + Electrolytes + Medication Review' },
+      });
+    }
+  }
+
+  // Gap EP-OAC: Oral Anticoagulation Missing in AFib
+  // Guideline: 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE A
+  // AFib patients with CHA2DS2-VASc >=2 (male) or >=3 (female) should be on OAC
+  // Simplified: AFib + age>=65 as proxy for elevated CHA2DS2-VASc
+  // DOACs: apixaban (1364430), rivaroxaban (1114195), edoxaban (1599538), dabigatran (1037045)
+  if (hasAF && age >= 65) {
+    const OAC_CODES = ['1364430', '1114195', '1599538', '1037045', '11289']; // DOACs + warfarin
+    const onOAC = medCodes.some(c => OAC_CODES.includes(c));
+    if (!onOAC) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.ELECTROPHYSIOLOGY,
+        status: 'Oral anticoagulant not prescribed in AFib',
+        target: 'OAC therapy initiated',
+        medication: 'Apixaban, Rivaroxaban, or Edoxaban',
+        recommendations: {
+          action: 'Prescribe DOAC per 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE A',
+          guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation',
+        },
       });
     }
   }
@@ -366,6 +514,27 @@ function evaluateGapRules(
       medication: 'P2Y12 Inhibitor',
       recommendations: { action: 'Verify DAPT status with interventional cardiologist per ACC/AHA 2021' },
     });
+  }
+
+  // Gap CAD-STATIN: High-Intensity Statin in CAD
+  // Guideline: 2018 ACC/AHA Cholesterol Guideline, Class 1, LOE A
+  // All ASCVD patients should be on high-intensity statin
+  if (hasCAD) {
+    const STATIN_CODES = ['36567', '301542', '83367', '42463'];
+    const onStatin = medCodes.some(c => STATIN_CODES.includes(c));
+    if (!onStatin) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'High-intensity statin not prescribed in CAD',
+        target: 'Statin therapy initiated',
+        medication: 'Atorvastatin 40-80mg or Rosuvastatin 20-40mg',
+        recommendations: {
+          action: 'Prescribe high-intensity statin per 2018 ACC/AHA Cholesterol, Class 1, LOE A',
+          guideline: '2018 ACC/AHA Cholesterol Management',
+        },
+      });
+    }
   }
 
   // ============================================================

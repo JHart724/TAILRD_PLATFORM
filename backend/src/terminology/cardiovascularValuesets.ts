@@ -220,6 +220,14 @@ export const RXNORM_ASPIRIN = {
   ASPIRIN_325MG: '198467',
 } as const;
 
+/** DOACs -- used by AFib anticoagulation gap rule */
+export const RXNORM_DOACS = {
+  APIXABAN: '1364430',
+  RIVAROXABAN: '1114195',
+  EDOXABAN: '1599538',
+  DABIGATRAN: '1037045',
+} as const;
+
 /** Warfarin -- used by mechanical valve anticoagulation gap rule */
 export const RXNORM_WARFARIN = {
   WARFARIN: '11289',
