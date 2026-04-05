@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { TrendingUp, TrendingDown, Info, Download } from 'lucide-react';
 import { toFixed } from '../../utils/formatters';
+import ChartEmptyState from '../shared/ChartEmptyState';
 
 export interface ChartDataPoint {
   label: string;
@@ -55,6 +56,23 @@ const BaseChart: React.FC<BaseChartProps> = ({
   trend,
   exportable = false
 }) => {
+
+  // Empty state: render fallback when no data is provided
+  if (!data || data.length === 0) {
+    return (
+      <div className={`glass-panel overflow-hidden ${className}`}>
+        {(title || subtitle) && (
+          <div className="p-6 border-b border-titanium-200">
+            <div>
+              {title && <h3 className="text-lg font-semibold text-titanium-900 font-body">{title}</h3>}
+              {subtitle && <p className="text-sm text-titanium-500 mt-1 font-body">{subtitle}</p>}
+            </div>
+          </div>
+        )}
+        <ChartEmptyState message="No data available for this time period" />
+      </div>
+    );
+  }
 
   const maxValue = useMemo(() => {
  const dataMax = Math.max(...data.map(d => Math.max(d.value, d.target || 0)));
@@ -272,7 +290,7 @@ const BaseChart: React.FC<BaseChartProps> = ({
   };
 
   return (
- <div className={`bg-white rounded-xl shadow-chrome-card border border-titanium-200 overflow-hidden ${className}`}>
+ <div className={`glass-panel overflow-hidden ${className}`}>
  {/* Header */}
  {(title || subtitle || trend || exportable) && (
  <div className="p-6 border-b border-titanium-200">

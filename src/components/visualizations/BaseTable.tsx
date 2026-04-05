@@ -120,7 +120,7 @@ const BaseTable: React.FC<BaseTableProps> = ({
 
   if (loading) {
  return (
- <div className={`bg-white rounded-xl shadow-chrome-card border border-titanium-200 p-8 ${className}`}>
+ <div className={`glass-panel p-8 ${className}`}>
  <div className="animate-pulse space-y-4">
  <div className="h-4 bg-titanium-200 rounded w-1/4"></div>
  <div className="space-y-2">
@@ -134,7 +134,7 @@ const BaseTable: React.FC<BaseTableProps> = ({
   }
 
   return (
- <div className={`bg-white rounded-xl shadow-chrome-card border border-titanium-200 overflow-hidden ${className}`}>
+ <div className={`glass-panel overflow-hidden ${className}`}>
  {/* Header */}
  {(title || searchable || filterable || exportable) && (
  <div className="p-6 border-b border-titanium-200">
@@ -208,7 +208,7 @@ const BaseTable: React.FC<BaseTableProps> = ({
  <tbody className="divide-y divide-titanium-100">
  {paginatedData.length === 0 ? (
  <tr>
- <td colSpan={columns.length} className="px-6 py-8 text-center text-titanium-500 font-body">
+ <td colSpan={columns.length} className="py-12 text-center text-titanium-400 text-sm font-body">
  {emptyMessage}
  </td>
  </tr>

@@ -338,8 +338,8 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 - [x] **P1-UX-2: Non-functional TopBar search** | TopBar.tsx:84-93 -- no onChange, no state, decorative only | Est: 4h
 - [x] **P2-UX-1: Permanent notification badge** | TopBar.tsx:141-147 -- always shows red dot | Est: 1h
 - [x] **P2-UX-2: Artificial 300ms loading delay** | ModuleLayout.tsx:44 -- setTimeout for animation | Est: 0.5h
-- [ ] **P2-UX-3: Glass panel system inconsistently adopted** | Some views use glass-panel, others raw bg-white | Est: 3h
-- [ ] **P2-UX-4: Empty state handling sparse** | ChartEmptyState exists but rarely used | Est: 4h
+- [x] **P2-UX-3: Glass panel system inconsistently adopted** | Some views use glass-panel, others raw bg-white | Est: 3h
+- [x] **P2-UX-4: Empty state handling sparse** | ChartEmptyState exists but rarely used | Est: 4h
 
 **Strengths:** Frosted glass design system is premium. Clinical severity hierarchy (optimal/warning/critical) is well-executed. Carmona Red glow indicators. Module color theming. 3-click navigation rule met.
 
