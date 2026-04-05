@@ -264,6 +264,15 @@ router.get('/metadata',
         });
       }
 
+      // Verify the file key belongs to the user's hospital
+      const hospitalId = req.user?.hospitalId;
+      if (hospitalId && !key.includes(hospitalId) && req.user?.role !== 'super-admin') {
+        return res.status(403).json({
+          success: false,
+          error: 'Access denied: file does not belong to your hospital',
+        });
+      }
+
       const metadata = await s3Service.getFileMetadata(key, bucket);
 
       return res.json({

@@ -54,7 +54,7 @@ export async function runGapDetection(
     );
 
     // Run gap detection rules
-    const detectedGaps = evaluateGapRules(dxCodes, labValues, medCodes, age);
+    const detectedGaps = evaluateGapRules(dxCodes, labValues, medCodes, age, patient.gender);
 
     for (const gap of detectedGaps) {
       const existing = await prisma.therapyGap.findFirst({
@@ -107,6 +107,7 @@ function evaluateGapRules(
   labValues: Record<string, number>,
   medCodes: string[],
   age: number,
+  gender?: string,
 ): DetectedGap[] {
   const gaps: DetectedGap[] = [];
   const hasHF = dxCodes.some(c => c.startsWith('I50'));
@@ -180,15 +181,21 @@ function evaluateGapRules(
   }
 
   // Gap 39: QTc Safety Alert (EP)
-  if (labValues['qtc_interval'] !== undefined && labValues['qtc_interval'] > 470) {
-    const severity = labValues['qtc_interval'] > 500 ? 'CRITICAL' : 'HIGH';
-    gaps.push({
-      type: TherapyGapType.MEDICATION_CONTRAINDICATED,
-      module: ModuleType.ELECTROPHYSIOLOGY,
-      status: `QTc ${severity}: ${labValues['qtc_interval']}ms`,
-      target: 'QT drug review completed',
-      recommendations: { action: 'Order ECG + Electrolytes + Medication Review' },
-    });
+  // Guideline: ACC/AHA/HRS EP Guidelines. QTc prolongation thresholds are sex-specific:
+  // Male: >450ms prolonged, >500ms critical
+  // Female: >470ms prolonged, >500ms critical
+  if (labValues['qtc_interval'] !== undefined) {
+    const qtcThreshold = gender === 'FEMALE' ? 470 : 450;
+    if (labValues['qtc_interval'] > qtcThreshold) {
+      const severity = labValues['qtc_interval'] > 500 ? 'CRITICAL' : 'HIGH';
+      gaps.push({
+        type: TherapyGapType.MEDICATION_CONTRAINDICATED,
+        module: ModuleType.ELECTROPHYSIOLOGY,
+        status: `QTc ${severity}: ${labValues['qtc_interval']}ms (threshold ${qtcThreshold}ms)`,
+        target: 'QT drug review completed',
+        recommendations: { action: 'Order ECG + Electrolytes + Medication Review' },
+      });
+    }
   }
 
   // Gap 44: Digoxin Toxicity (HF)

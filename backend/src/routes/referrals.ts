@@ -193,7 +193,7 @@ router.get('/patient/:patientId',
         hospitalId: req.user?.hospitalId // Ensure user can only see referrals from their hospital
       };
 
-      const referrals = await service.getPatientReferrals(patientId);
+      const referrals = await service.getPatientReferrals(patientId, filters.hospitalId);
 
       logger.info('Patient referrals retrieved', {
         patientId,

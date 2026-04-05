@@ -13,20 +13,12 @@ const router = Router();
 // All GOD view endpoints require authentication and super admin role
 router.use(authenticateToken);
 router.use((req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-  // Check for SUPER_ADMIN role
-  if (req.user?.role !== 'SUPER_ADMIN') {
+  // Check for super-admin role (kebab-case, matching JWT payload)
+  if (req.user?.role !== 'super-admin') {
     return res.status(403).json({
-      error: 'Forbidden: SUPER_ADMIN role required for GOD view access'
+      error: 'Forbidden: super-admin role required for GOD view access'
     });
   }
-
-  // Log all GOD view access for audit
-  console.log(`GOD View Access: ${req.user.email} - ${req.method} ${req.path}`, {
-    userId: req.user.userId,
-    timestamp: new Date().toISOString(),
-    ip: req.ip,
-    userAgent: req.get('User-Agent')
-  });
 
   next();
 });

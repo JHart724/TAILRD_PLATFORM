@@ -415,11 +415,12 @@ export class CrossReferralService {
   /**
    * Get active referrals for a patient
    */
-  async getPatientReferrals(patientId: string): Promise<any[]> {
+  async getPatientReferrals(patientId: string, hospitalId?: string): Promise<any[]> {
     try {
       return await this.prisma.crossReferral.findMany({
         where: {
           patientId,
+          ...(hospitalId && { hospitalId }),
           status: {
             in: [ReferralStatus.TRIGGERED, ReferralStatus.REVIEWED, ReferralStatus.ACCEPTED]
           }
