@@ -87,7 +87,7 @@ The platform needs approximately **200 engineering hours** to reach a state wher
 - No prototype pollution patterns detected.
 
 Only finding:
-- [ ] **P2-INJ-1: Webhook HMAC computed on re-serialized body** | `webhooks.ts:83` -- should use raw body | Est: 1h
+- [x] **P2-INJ-1: Webhook HMAC computed on re-serialized body** | `webhooks.ts:83` -- should use raw body | Est: 1h
 
 ---
 
@@ -106,7 +106,7 @@ Covered in Sections 1 and 3. Additional:
 
 - [x] **P1-AUTH-1: CORS allows undefined origin** | `server.ts:94-98` -- standard API behavior, not a vulnerability | Est: 0h (informational)
 - [x] **P2-AUTH-1: Bcrypt cost inconsistency** | cost 10 in `auth.ts:19`, cost 12 in `invite.ts:103`, `admin.ts:719` | Est: 0.5h
-- [ ] **P2-AUTH-2: Hardcoded seed passwords** | `seedBSW.ts:39` ('Bsw2026!Tailrd'), `createSuperAdmin.ts:26` ('demo123!') | Est: 0.5h
+- [x] **P2-AUTH-2: Hardcoded seed passwords** | `seedBSW.ts:39` ('Bsw2026!Tailrd'), `createSuperAdmin.ts:26` ('demo123!') | Est: 0.5h
 
 ---
 
@@ -308,12 +308,12 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 - [x] **P1-BACK-5: 46 `as any` casts in backend** | Multiple files, concentrated in mfa.ts (8), accountSecurity.ts (3) | Est: 3h
 - [x] **P2-BACK-1: analyticsController.ts is dead code** | Never mounted in server.ts | Est: 0.5h
 - [x] **P2-BACK-2: healthCheck.ts middleware (430 lines) is orphaned** | Never imported | Est: 0.5h
-- [ ] **P2-BACK-3: Dual Redox pipelines** | webhooks.ts (mounted) vs eventProcessor.ts+webhookHandler.ts (dead) | Est: 1h
+- [x] **P2-BACK-3: Dual Redox pipelines** | webhooks.ts (mounted) vs eventProcessor.ts+webhookHandler.ts (dead) | Est: 1h
 - [x] **P2-BACK-4: Redis declared but never used** | In package.json, never instantiated | Est: 0.5h
 - [x] **P2-BACK-5: Rate limiter runs after CSRF/body parsing** | server.ts middleware order | Est: 0.5h
 - [x] **P2-BACK-6: Dual logger instances** | server.ts:52 vs utils/logger.ts | Est: 1h
-- [ ] **P2-BACK-7: winston-cloudwatch not in package.json** | logger.ts:113 -- will crash in production | Est: 0.5h
-- [ ] **P2-BACK-8: Port mismatch** | .env sets 4000, Docker expects 3001, frontend defaults to 3001 | Est: 1h
+- [x] **P2-BACK-7: winston-cloudwatch not in package.json** | logger.ts:113 -- will crash in production | Est: 0.5h
+- [x] **P2-BACK-8: Port mismatch** | .env sets 4000, Docker expects 3001, frontend defaults to 3001 | Est: 1h
 
 ---
 
@@ -324,7 +324,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 - [x] **P1-FE-3: API_URL defined independently in 7 files** | 2 have inconsistent /api suffix (TopBar.tsx, SuperAdminDashboard.tsx) | Est: 2h
 - [x] **P1-FE-4: Hardcoded mock data in production components** | App.tsx:216-308, notificationMockData.ts, UsersManagement.tsx | Est: 3h
 - [x] **P1-FE-5: Duplicate ErrorBoundary** | ErrorFallback.tsx (used) vs ErrorBoundary.tsx (orphaned) | Est: 1h
-- [ ] **P2-FE-1: App.tsx has ~350 lines of dead code** | Lines 96-682 -- inline SVG icons, duplicate KpiCard, unreachable MainDashboard | Est: 2h
+- [x] **P2-FE-1: App.tsx has ~350 lines of dead code** | Lines 96-682 -- inline SVG icons, duplicate KpiCard, unreachable MainDashboard | Est: 2h
 - [ ] **P2-FE-2: 34 TODO stubs in care team configs** | Unimplemented button handlers across 13 files | Est: 4h
 - [x] **P2-FE-3: rememberMe checkbox is cosmetic** | Login.tsx:15-16 -- never consumed | Est: 0.5h
 - [ ] **P2-FE-4: Legacy porsche-*/crimson-* Tailwind classes** | May not resolve in current config -- invisible styling failures | Est: 2h
@@ -336,7 +336,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 - [ ] **P0-UX-1: WCAG 2.1 AA non-compliant** | Only 46 aria-* attributes across 13/415 files. No tablist roles, no focus traps, no aria-expanded on accordions. | Est: 8h
 - [x] **P1-UX-1: Hardcoded "Live . Updated 2m ago"** | Sidebar.tsx:105 -- never updates, erodes clinical trust | Est: 0.5h
 - [x] **P1-UX-2: Non-functional TopBar search** | TopBar.tsx:84-93 -- no onChange, no state, decorative only | Est: 4h
-- [ ] **P2-UX-1: Permanent notification badge** | TopBar.tsx:141-147 -- always shows red dot | Est: 1h
+- [x] **P2-UX-1: Permanent notification badge** | TopBar.tsx:141-147 -- always shows red dot | Est: 1h
 - [x] **P2-UX-2: Artificial 300ms loading delay** | ModuleLayout.tsx:44 -- setTimeout for animation | Est: 0.5h
 - [ ] **P2-UX-3: Glass panel system inconsistently adopted** | Some views use glass-panel, others raw bg-white | Est: 3h
 - [ ] **P2-UX-4: Empty state handling sparse** | ChartEmptyState exists but rarely used | Est: 4h

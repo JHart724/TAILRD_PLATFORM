@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback, lazy, Suspense, useEffect } from
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import CountUp from 'react-countup';
 import TailrdLogo from './components/TailrdLogo';
-import { Heart, Activity, Zap, Stethoscope, GitBranch, CircuitBoard, FlaskConical } from 'lucide-react';
+import { Heart, Activity, Zap, Stethoscope, GitBranch, CircuitBoard, FlaskConical, DollarSign, Target, Users, AlertTriangle, Brain, BarChart3, ArrowRight, ArrowLeft, TrendingUp } from 'lucide-react';
 import { ErrorBoundary } from './components/shared/ErrorFallback';
 import { ToastContainer } from './components/shared/Toast';
 import { errorHandler } from './utils/ErrorHandler';
@@ -92,119 +92,18 @@ interface Patient {
 type ModuleKpiMap = Record<ModuleId, Record<Role, ModuleKpi[]>>;
 type ModulePatients = Record<ModuleId, Patient[]>;
 
-// Icons
+// Icons -- using lucide-react instead of inline SVGs
 const Icons = {
-  Users: () => (
- <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m3 5.197V9a3 3 0 00-6 0v12.01" />
- </svg>
-  ),
-  Dollar: () => (
- <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
- </svg>
-  ),
-  Target: () => (
- <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
- </svg>
-  ),
-  Activity: () => (
- <svg className="h-8 w-8 text-porsche-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M22 12h-4l-3 9L9 3l-3 9H2" />
- </svg>
-  ),
-  Monitor: () => (
- <svg className="h-8 w-8 text-porsche-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <g strokeWidth={2}>
- <rect x="3" y="4" width="18" height="12" rx="2" />
- <path d="M8 21h8M12 16v5" />
- <path strokeLinecap="round" d="M7 10h10M7 12h8" />
- </g>
- </svg>
-  ),
-  Heart: () => (
- <svg className="h-8 w-8 text-porsche-800" fill="currentColor" viewBox="0 0 24 24">
- <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
- </svg>
-  ),
-  Zap: () => (
- <svg className="h-8 w-8 text-[#2C4A60]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
- </svg>
-  ),
-  Valve: () => (
- <svg className="h-8 w-8 text-porsche-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <circle cx="12" cy="12" r="9" strokeWidth={2} />
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 7v10M7 12h10" />
- <circle cx="12" cy="12" r="3" strokeWidth={2} fill="currentColor" fillOpacity="0.3" />
- </svg>
-  ),
-  Coronary: () => (
- <svg className="h-8 w-8 text-porsche-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <g strokeWidth={2}>
- <path d="M12 3v9M8 8l4 4 4-4" />
- <circle cx="8" cy="16" r="3" />
- <circle cx="16" cy="16" r="3" />
- <path d="M12 12v1c0 2-2 3-4 3M12 12v1c0 2 2 3 4 3" />
- </g>
- </svg>
-  ),
-  Peripheral: () => (
- <svg className="h-8 w-8 text-porsche-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <g strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
- <path d="M12 2v20M12 2c0 0-4 2-4 6s4 6 4 6M12 2c0 0 4 2 4 6s-4 6-4 6M12 14c0 0-3 2-3 5s3 3 3 3M12 14c0 0 3 2 3 5s-3 3-3 3" />
- </g>
- </svg>
-  ),
-  ArrowRight: () => (
- <svg className="h-4 w-4 text-chrome-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
- </svg>
-  ),
-  ArrowLeft: () => (
- <svg className="h-5 w-5 text-chrome-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
- </svg>
-  ),
-  Settings: () => (
- <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
- </svg>
-  ),
-  Alert: () => (
- <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z" />
- </svg>
-  ),
-  Brain: () => (
- <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
- </svg>
-  ),
-  Chart: () => (
- <svg className="h-6 w-6 text-[#2C4A60]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
- </svg>
-  ),
-  Database: () => (
- <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
- </svg>
-  ),
-  DollarChart: () => (
- <svg className="h-8 w-8 text-chrome-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3v18h18" />
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l3-3 3 3 5-5" />
- </svg>
-  ),
-  TrendingUp: () => (
- <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
- <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l3-3 3 3 5-5M21 12h-4M17 8l4 4-4 4" />
- </svg>
-  ),
+  Users: () => <Users className="h-5 w-5" />,
+  Dollar: () => <DollarSign className="h-5 w-5" />,
+  Target: () => <Target className="h-5 w-5" />,
+  Alert: () => <AlertTriangle className="h-5 w-5" />,
+  Activity: () => <Activity className="h-5 w-5" />,
+  Brain: () => <Brain className="h-5 w-5" />,
+  Chart: () => <BarChart3 className="h-5 w-5" />,
+  ArrowRight: () => <ArrowRight className="h-4 w-4" />,
+  ArrowLeft: () => <ArrowLeft className="h-4 w-4" />,
+  Trending: () => <TrendingUp className="h-5 w-5" />,
 };
 
 const formatMoney = (amount: number): string => {

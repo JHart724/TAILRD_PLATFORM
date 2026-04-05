@@ -105,7 +105,15 @@ app.use(cookieParser());
 // Rate limiter BEFORE body parsing to reject abusive traffic without parsing 1MB payloads
 app.use('/api/', limiter);
 
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({
+  limit: '1mb',
+  verify: (req: any, _res, buf) => {
+    // Capture raw body for webhook HMAC verification
+    if (req.url?.startsWith('/api/webhooks')) {
+      req.rawBody = buf.toString('utf8');
+    }
+  },
+}));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 // CSRF protection — sets token cookie on all responses, validates on mutations

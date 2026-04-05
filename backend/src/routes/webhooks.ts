@@ -80,7 +80,8 @@ const verifyRedoxSignature = (req: any, res: any, next: any) => {
     } as APIResponse);
   }
 
-  const rawBody = JSON.stringify(req.body);
+  // Use raw body captured by express.json verify callback for accurate HMAC
+  const rawBody = (req as any).rawBody || JSON.stringify(req.body);
   const expectedSignature = crypto
     .createHmac('sha256', webhookSecret)
     .update(rawBody, 'utf8')
