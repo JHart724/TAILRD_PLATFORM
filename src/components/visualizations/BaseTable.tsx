@@ -1,26 +1,26 @@
 import React, { useState, useMemo } from 'react';
 import { ChevronUp, ChevronDown, Search, Filter, Download } from 'lucide-react';
 
-export interface BaseTableColumn {
+export interface BaseTableColumn<T = Record<string, unknown>> {
   key: string;
   label: string;
   sortable?: boolean;
   searchable?: boolean;
-  render?: (value: any, row: any) => React.ReactNode;
+  render?: (value: unknown, row: T) => React.ReactNode;
   className?: string;
   width?: string;
 }
 
-export interface BaseTableProps {
-  columns: BaseTableColumn[];
-  data: any[];
+export interface BaseTableProps<T = Record<string, unknown>> {
+  columns: BaseTableColumn<T>[];
+  data: T[];
   title?: string;
   subtitle?: string;
   searchable?: boolean;
   filterable?: boolean;
   exportable?: boolean;
   className?: string;
-  onRowClick?: (row: any) => void;
+  onRowClick?: (row: T) => void;
   loading?: boolean;
   emptyMessage?: string;
   pagination?: {

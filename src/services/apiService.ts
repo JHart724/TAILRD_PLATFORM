@@ -5,7 +5,7 @@
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
-export interface APIResponse<T = any> {
+export interface APIResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
@@ -159,7 +159,7 @@ class APIService {
  return this.request<PatientData[]>('/modules/heart-failure/patients');
   }
 
-  async calculateGDMT(patientData: any): Promise<APIResponse<GDMTRecommendations>> {
+  async calculateGDMT(patientData: Record<string, unknown>): Promise<APIResponse<GDMTRecommendations>> {
  return this.request<GDMTRecommendations>('/modules/heart-failure/gdmt-calculator', {
  method: 'POST',
  body: JSON.stringify({ patientData }),
@@ -167,21 +167,21 @@ class APIService {
   }
 
   // Advanced Heart Failure APIs
-  async getGDMTGapAnalysis(populationFilters?: any) {
+  async getGDMTGapAnalysis(populationFilters?: Record<string, unknown>) {
  return this.request('/modules/heart-failure/gdmt-gaps', {
  method: 'POST',
  body: JSON.stringify({ populationFilters: populationFilters || {} }),
  });
   }
 
-  async analyzePhenotype(patientData: any) {
+  async analyzePhenotype(patientData: Record<string, unknown>) {
  return this.request('/modules/heart-failure/phenotype-analysis', {
  method: 'POST',
  body: JSON.stringify({ patientData }),
  });
   }
 
-  async assessDeviceEligibility(patientData: any) {
+  async assessDeviceEligibility(patientData: Record<string, unknown>) {
  return this.request('/modules/heart-failure/device-eligibility', {
  method: 'POST',
  body: JSON.stringify({ patientData }),
@@ -202,14 +202,14 @@ class APIService {
   }
 
   // Clinical workflows
-  async initiateCareWorkflow(workflowType: string, patientId: string, config?: any) {
+  async initiateCareWorkflow(workflowType: string, patientId: string, config?: Record<string, unknown>) {
  return this.request('/workflows/initiate', {
  method: 'POST',
  body: JSON.stringify({ workflowType, patientId, config }),
  });
   }
 
-  async generateClinicalReport(reportType: string, parameters?: any) {
+  async generateClinicalReport(reportType: string, parameters?: Record<string, unknown>) {
  return this.request('/reports/generate', {
  method: 'POST',
  body: JSON.stringify({ reportType, parameters }),
@@ -217,7 +217,7 @@ class APIService {
   }
 
   // Export functionality
-  async exportData(dataType: string, format: 'csv' | 'excel' | 'pdf', filters?: any) {
+  async exportData(dataType: string, format: 'csv' | 'excel' | 'pdf', filters?: Record<string, unknown>) {
  return this.request('/export', {
  method: 'POST',
  body: JSON.stringify({ dataType, format, filters }),
@@ -225,21 +225,21 @@ class APIService {
   }
 
   // Advanced Electrophysiology APIs
-  async predictAblationSuccess(patientData: any) {
+  async predictAblationSuccess(patientData: Record<string, unknown>) {
  return this.request('/modules/electrophysiology/ablation-predictor', {
  method: 'POST',
  body: JSON.stringify({ patientData }),
  });
   }
 
-  async recommendLAACDevice(patientData: any) {
+  async recommendLAACDevice(patientData: Record<string, unknown>) {
  return this.request('/modules/electrophysiology/laac-device-selection', {
  method: 'POST',
  body: JSON.stringify({ patientData }),
  });
   }
 
-  async getAnticoagulationDecision(patientData: any) {
+  async getAnticoagulationDecision(patientData: Record<string, unknown>) {
  return this.request('/modules/electrophysiology/anticoagulation-decision', {
  method: 'POST',
  body: JSON.stringify({ patientData }),
@@ -259,7 +259,7 @@ class APIService {
  return this.request(`/clinical/risk-scores/${patientId}${qs}`);
   }
 
-  async createRiskScore(data: any) {
+  async createRiskScore(data: Record<string, unknown>) {
  return this.request('/clinical/risk-scores', {
  method: 'POST',
  body: JSON.stringify(data),
@@ -280,7 +280,7 @@ class APIService {
  return this.request(`/clinical/interventions/${patientId}${qs}`);
   }
 
-  async createIntervention(data: any) {
+  async createIntervention(data: Record<string, unknown>) {
  return this.request('/clinical/interventions', {
  method: 'POST',
  body: JSON.stringify(data),
@@ -308,7 +308,7 @@ class APIService {
  return this.request(`/clinical/contraindications/${patientId}${qs}`);
   }
 
-  async createContraindication(data: any) {
+  async createContraindication(data: Record<string, unknown>) {
  return this.request('/clinical/contraindications', {
  method: 'POST',
  body: JSON.stringify(data),

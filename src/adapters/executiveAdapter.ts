@@ -21,8 +21,8 @@ export interface FrontendExecutiveMetric {
 
 export interface FrontendExecutiveDashboard {
   metrics: FrontendExecutiveMetric[];
-  charts: any[];
-  kpis: any;
+  charts: Array<Record<string, unknown>>;
+  kpis: Record<string, unknown>;
 }
 
 // ─── Mapping helpers ────────────────────────────────────────────────────────

@@ -21,11 +21,11 @@ export interface AuthResponse {
       department?: string;
       hospitalId?: string;
       hospitalName?: string;
-      permissions?: any;
+      permissions?: Record<string, boolean>;
     };
     token: string;
     refreshToken: string;
-    permissions?: any;
+    permissions?: Record<string, boolean>;
   };
 }
 
@@ -110,8 +110,8 @@ export interface ExecutiveData {
     trend?: { direction: 'up' | 'down'; value: string; label: string };
     status?: 'optimal' | 'warning' | 'critical';
   }>;
-  charts: any[];
-  kpis: any;
+  charts: Array<Record<string, unknown>>;
+  kpis: Record<string, unknown>;
 }
 
 export interface PatientFilters {

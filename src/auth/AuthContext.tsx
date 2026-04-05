@@ -295,7 +295,7 @@ interface AuthProviderProps {
 }
 
 /** Build a User object from backend API response */
-function buildUserFromResponse(apiUser: any, backendPerms?: UserPermissions): User {
+function buildUserFromResponse(apiUser: Record<string, string | Record<string, boolean>>, backendPerms?: UserPermissions): User {
   const role = (apiUser.role || 'viewer') as UserRole;
   const bp = backendPerms || apiUser.permissions || FULL_ACCESS_PERMISSIONS;
 
