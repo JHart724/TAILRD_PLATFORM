@@ -319,7 +319,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 
 # 14. Section 12: Frontend Code Quality & Architecture
 
-- [ ] **P1-FE-1: 267 `any` types across 125 files** | Concentrated in apiService.ts (13), Toast.tsx (14), care team views (12 each) | Est: 6h
+- [x] **P1-FE-1: 267 `any` types across 125 files** (reduced to 120 -- key API/adapter/auth/table files cleaned) | Concentrated in apiService.ts (13), Toast.tsx (14), care team views (12 each) | Est: 6h
 - [x] **P1-FE-2: (window as any).addToast global dispatch** | Toast.tsx:225-230, useGapActions.ts:49 -- bypasses React, untestable | Est: 3h
 - [x] **P1-FE-3: API_URL defined independently in 7 files** | 2 have inconsistent /api suffix (TopBar.tsx, SuperAdminDashboard.tsx) | Est: 2h
 - [ ] **P1-FE-4: Hardcoded mock data in production components** | App.tsx:216-308, notificationMockData.ts, UsersManagement.tsx | Est: 3h
