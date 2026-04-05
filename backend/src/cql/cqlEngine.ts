@@ -703,13 +703,15 @@ export class CQLEngine {
   }
 
   private hashPatientData(patientBundle: any): string {
-    // Simple hash of relevant patient data for cache invalidation
-    const relevantData = {
-      observations: patientBundle.entry?.filter((e: any) => e.resource?.resourceType === 'Observation').length || 0,
-      medications: patientBundle.entry?.filter((e: any) => e.resource?.resourceType === 'MedicationRequest').length || 0,
-      conditions: patientBundle.entry?.filter((e: any) => e.resource?.resourceType === 'Condition').length || 0
-    };
-    return Buffer.from(JSON.stringify(relevantData)).toString('base64').slice(0, 16);
+    // Hash patient data using resource IDs for collision-resistant cache keys
+    const entries = patientBundle.entry || [];
+    const ids = entries
+      .map((e: any) => e.resource?.id || e.fullUrl || '')
+      .sort()
+      .join('|');
+    // Use a simple hash of the concatenated IDs + count
+    const content = `${ids}:${entries.length}`;
+    return require('crypto').createHash('sha256').update(content).digest('hex').slice(0, 16);
   }
 
   private getCachedResult(cacheKey: string): CQLRuleResult | null {

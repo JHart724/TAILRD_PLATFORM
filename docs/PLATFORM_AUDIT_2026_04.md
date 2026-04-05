@@ -67,12 +67,12 @@ The platform needs approximately **200 engineering hours** to reach a state wher
 
 ### P2 Findings
 
-- [ ] **P2-SEC-1: Math.random() for API key generation** | `onboarding.ts:491-498` | Est: 0.5h
+- [x] **P2-SEC-1: Math.random() for API key generation** | `onboarding.ts:491-498` | Est: 0.5h
 - [ ] **P2-SEC-2: 10MB JSON body limit** | `server.ts:124` | Est: 0.5h
-- [ ] **P2-SEC-3: PHI encryption passthrough in non-production** | `phiEncryption.ts:27-29` | Est: 0.5h
+- [x] **P2-SEC-3: PHI encryption passthrough in non-production** | `phiEncryption.ts:27-29` | Est: 0.5h
 - [ ] **P2-SEC-4: JWT stored in plaintext in loginSession** | `auth.ts:203-211` | Est: 2h
-- [ ] **P2-SEC-5: Webhook status leaks config unauthenticated** | `webhooks.ts:268-282` | Est: 0.25h
-- [ ] **P2-SEC-6: Admin analytics returns fake data on DB failure** | `admin.ts:49-58` | Est: 0.25h
+- [x] **P2-SEC-5: Webhook status leaks config unauthenticated** | `webhooks.ts:268-282` | Est: 0.25h
+- [x] **P2-SEC-6: Admin analytics returns fake data on DB failure** | `admin.ts:49-58` | Est: 0.25h
 
 ---
 
@@ -104,7 +104,7 @@ Only finding:
 Covered in Sections 1 and 3. Additional:
 
 - [x] **P1-AUTH-1: CORS allows undefined origin** | `server.ts:94-98` -- standard API behavior, not a vulnerability | Est: 0h (informational)
-- [ ] **P2-AUTH-1: Bcrypt cost inconsistency** | cost 10 in `auth.ts:19`, cost 12 in `invite.ts:103`, `admin.ts:719` | Est: 0.5h
+- [x] **P2-AUTH-1: Bcrypt cost inconsistency** | cost 10 in `auth.ts:19`, cost 12 in `invite.ts:103`, `admin.ts:719` | Est: 0.5h
 - [ ] **P2-AUTH-2: Hardcoded seed passwords** | `seedBSW.ts:39` ('Bsw2026!Tailrd'), `createSuperAdmin.ts:26` ('demo123!') | Est: 0.5h
 
 ---
@@ -216,7 +216,7 @@ Covered in Section 7 above. Additional:
 - [x] **P1-CLIN-4: Valueset resolver is entirely mock data** | `valuesetResolver.ts:441-541` -- 3-4 codes per terminology | Est: 8h
 - [x] **P1-CLIN-5: No guideline versioning mechanism** | No guidelineVersion, lastReviewDate, or expirationDate on rules | Est: 4h
 - [x] **P1-CLIN-6: TherapyGapType enum too narrow** | `schema.prisma:1308-1316` -- only 7 types, cannot represent procedure/screening/referral gaps | Est: 2h
-- [ ] **P2-CLIN-1: Cache key collision in CQL engine** | `cqlEngine.ts:704-713` -- hash uses resource counts only | Est: 1h
+- [x] **P2-CLIN-1: Cache key collision in CQL engine** | `cqlEngine.ts:704-713` -- hash uses resource counts only | Est: 1h
 
 ---
 
@@ -305,11 +305,11 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 - [x] **P1-BACK-3: N+1 in observationService alert creation** | `observationService.ts:320-333` | Est: 0.5h
 - [x] **P1-BACK-4: createSuperAdmin.ts never writes to DB** | `createSuperAdmin.ts:12-45` -- creates in-memory object only | Est: 1h
 - [x] **P1-BACK-5: 46 `as any` casts in backend** | Multiple files, concentrated in mfa.ts (8), accountSecurity.ts (3) | Est: 3h
-- [ ] **P2-BACK-1: analyticsController.ts is dead code** | Never mounted in server.ts | Est: 0.5h
+- [x] **P2-BACK-1: analyticsController.ts is dead code** | Never mounted in server.ts | Est: 0.5h
 - [ ] **P2-BACK-2: healthCheck.ts middleware (430 lines) is orphaned** | Never imported | Est: 0.5h
 - [ ] **P2-BACK-3: Dual Redox pipelines** | webhooks.ts (mounted) vs eventProcessor.ts+webhookHandler.ts (dead) | Est: 1h
-- [ ] **P2-BACK-4: Redis declared but never used** | In package.json, never instantiated | Est: 0.5h
-- [ ] **P2-BACK-5: Rate limiter runs after CSRF/body parsing** | server.ts middleware order | Est: 0.5h
+- [x] **P2-BACK-4: Redis declared but never used** | In package.json, never instantiated | Est: 0.5h
+- [x] **P2-BACK-5: Rate limiter runs after CSRF/body parsing** | server.ts middleware order | Est: 0.5h
 - [ ] **P2-BACK-6: Dual logger instances** | server.ts:52 vs utils/logger.ts | Est: 1h
 - [ ] **P2-BACK-7: winston-cloudwatch not in package.json** | logger.ts:113 -- will crash in production | Est: 0.5h
 - [ ] **P2-BACK-8: Port mismatch** | .env sets 4000, Docker expects 3001, frontend defaults to 3001 | Est: 1h

@@ -90,7 +90,7 @@ export class MFAService {
     for (let i = 0; i < 8; i++) {
       const code = crypto.randomBytes(5).toString('hex').toUpperCase(); // 10-char alphanumeric
       backupCodes.push(code);
-      hashedCodes.push(await bcrypt.hash(code, 10));
+      hashedCodes.push(await bcrypt.hash(code, 12));
     }
 
     await prisma.userMFA.update({

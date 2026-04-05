@@ -45,10 +45,10 @@ const PHI_FIELD_MAP: Record<string, string[]> = {
 
 function encrypt(text: string): string {
   if (!ENCRYPTION_KEY) {
-    if (isProduction) {
-      throw new Error('FATAL: PHI_ENCRYPTION_KEY is required in production. Cannot store PHI unencrypted.');
+    if (!isDemoMode) {
+      throw new Error('FATAL: PHI_ENCRYPTION_KEY is required outside demo mode. Cannot store PHI unencrypted.');
     }
-    return text; // Passthrough only in dev/demo mode
+    return text; // Passthrough only in explicit demo mode
   }
   const iv = crypto.randomBytes(16);
   const key = Buffer.from(ENCRYPTION_KEY, 'hex');
@@ -61,8 +61,8 @@ function encrypt(text: string): string {
 
 function decrypt(encryptedText: string): string {
   if (!ENCRYPTION_KEY) {
-    if (isProduction) {
-      throw new Error('FATAL: PHI_ENCRYPTION_KEY is required in production. Cannot read PHI without key.');
+    if (!isDemoMode) {
+      throw new Error('FATAL: PHI_ENCRYPTION_KEY is required outside demo mode. Cannot read PHI without key.');
     }
     return encryptedText;
   }

@@ -15,7 +15,7 @@ const demoUsers = [
   {
     id: 'user-000',
     email: 'superadmin@tailrd.com',
-    passwordHash: bcrypt.hashSync('admin123', 10),
+    passwordHash: bcrypt.hashSync('admin123', 12),
     firstName: 'Platform',
     lastName: 'Administrator',
     title: 'Super Administrator',
@@ -27,7 +27,7 @@ const demoUsers = [
   {
     id: 'user-001',
     email: 'admin@stmarys.org',
-    passwordHash: bcrypt.hashSync('demo123', 10),
+    passwordHash: bcrypt.hashSync('demo123', 12),
     firstName: 'Sarah',
     lastName: 'Johnson',
     title: 'Chief Medical Officer',
@@ -39,7 +39,7 @@ const demoUsers = [
   {
     id: 'user-002',
     email: 'cardio@stmarys.org',
-    passwordHash: bcrypt.hashSync('demo123', 10),
+    passwordHash: bcrypt.hashSync('demo123', 12),
     firstName: 'Dr. Michael',
     lastName: 'Chen',
     title: 'Interventional Cardiologist',
@@ -68,7 +68,7 @@ const demoUsers = [
   {
     id: 'user-003',
     email: 'admin@community.org',
-    passwordHash: bcrypt.hashSync('demo123', 10),
+    passwordHash: bcrypt.hashSync('demo123', 12),
     firstName: 'Lisa',
     lastName: 'Rodriguez',
     title: 'Quality Director',
