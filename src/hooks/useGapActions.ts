@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { DATA_SOURCE } from '../config/dataSource';
+import { toast } from '../components/shared/Toast';
 
 export type GapActionType = 'ordered' | 'referred' | 'dismissed';
 
@@ -46,33 +47,21 @@ export function useGapActions(moduleType: string): UseGapActionsReturn {
     try {
       await postGapAction({ gapId, module: moduleType, action, reason });
     } catch {
-      if (typeof window !== 'undefined' && (window as any).addToast) {
-        (window as any).addToast({
-          type: 'error',
-          title: 'Tracking Failed',
-          message: 'Could not record gap action. Your action was still noted locally.',
-          duration: 4000,
-        });
-      }
+      toast.error('Tracking Failed', 'Could not record gap action. Your action was still noted locally.');
     }
 
     // Always update local state, even if API fails
     setGapActions(prev => ({ ...prev, [gapId]: action }));
 
-    if (typeof window !== 'undefined' && (window as any).addToast) {
-      const labels: Record<GapActionType, string> = {
-        ordered: 'Order Initiated',
-        referred: 'Referral Sent',
-        dismissed: 'Gap Dismissed',
-      };
-      (window as any).addToast({
-        type: action === 'dismissed' ? 'info' : 'success',
-        title: labels[action],
-        message: action === 'dismissed'
-          ? `Gap dismissed. Reason: ${reason}`
-          : `Action recorded for this care gap.`,
-        duration: 4000,
-      });
+    const labels: Record<GapActionType, string> = {
+      ordered: 'Order Initiated',
+      referred: 'Referral Sent',
+      dismissed: 'Gap Dismissed',
+    };
+    if (action === 'dismissed') {
+      toast.info(labels[action], `Gap dismissed. Reason: ${reason}`);
+    } else {
+      toast.success(labels[action], 'Action recorded for this care gap.');
     }
   }, [moduleType, postGapAction]);
 

@@ -1,6 +1,6 @@
-import { Router, Request, Response } from 'express';
+import { Router, Response } from 'express';
 import { mfaService } from '../services/mfaService';
-import { authenticateToken } from '../middleware/auth';
+import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
 import { writeAuditLog } from '../middleware/auditLogger';
 import prisma from '../lib/prisma';
 
@@ -10,9 +10,9 @@ const router = Router();
 router.use(authenticateToken);
 
 // POST /api/mfa/setup -- Generate TOTP secret and QR code
-router.post('/setup', async (req: Request, res: Response) => {
+router.post('/setup', async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const userId = (req as any).user?.userId;
+    const userId = req.user?.userId;
     if (!userId) return res.status(401).json({ error: 'Unauthorized' });
 
     const user = await prisma.user.findUnique({
@@ -37,9 +37,9 @@ router.post('/setup', async (req: Request, res: Response) => {
 });
 
 // POST /api/mfa/verify-setup -- Verify TOTP and enable MFA
-router.post('/verify-setup', async (req: Request, res: Response) => {
+router.post('/verify-setup', async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const userId = (req as any).user?.userId;
+    const userId = req.user?.userId;
     const { token } = req.body;
 
     if (!userId || !token) return res.status(400).json({ error: 'Token required' });
@@ -71,9 +71,9 @@ router.post('/verify-setup', async (req: Request, res: Response) => {
 });
 
 // POST /api/mfa/verify -- Verify TOTP during login
-router.post('/verify', async (req: Request, res: Response) => {
+router.post('/verify', async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const userId = (req as any).user?.userId;
+    const userId = req.user?.userId;
     const { token } = req.body;
 
     if (!userId || !token) return res.status(400).json({ error: 'Token required' });
@@ -97,7 +97,7 @@ router.post('/verify', async (req: Request, res: Response) => {
         hospitalId: user.hospitalId,
         role: user.role,
         mfaVerified: true,
-        sessionId: (req as any).user?.sessionId,
+        sessionId: req.user?.sessionId,
       },
       process.env.JWT_SECRET!,
       { expiresIn: '8h' }
@@ -110,9 +110,9 @@ router.post('/verify', async (req: Request, res: Response) => {
 });
 
 // POST /api/mfa/verify-backup -- Verify backup code
-router.post('/verify-backup', async (req: Request, res: Response) => {
+router.post('/verify-backup', async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const userId = (req as any).user?.userId;
+    const userId = req.user?.userId;
     const { code } = req.body;
 
     if (!userId || !code) return res.status(400).json({ error: 'Backup code required' });
@@ -150,9 +150,9 @@ router.post('/verify-backup', async (req: Request, res: Response) => {
 });
 
 // GET /api/mfa/status -- Get MFA status for current user
-router.get('/status', async (req: Request, res: Response) => {
+router.get('/status', async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const userId = (req as any).user?.userId;
+    const userId = req.user?.userId;
     if (!userId) return res.status(401).json({ error: 'Unauthorized' });
 
     const status = await mfaService.getMFAStatus(userId);
@@ -163,10 +163,10 @@ router.get('/status', async (req: Request, res: Response) => {
 });
 
 // DELETE /api/mfa/disable -- Disable MFA (requires TOTP verification)
-router.delete('/disable', async (req: Request, res: Response) => {
+router.delete('/disable', async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const userId = (req as any).user?.userId;
-    const userRole = (req as any).user?.role;
+    const userId = req.user?.userId;
+    const userRole = req.user?.role;
     const { token } = req.body;
 
     if (!userId) return res.status(401).json({ error: 'Unauthorized' });

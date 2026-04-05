@@ -220,15 +220,14 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
  };
   }, [addToast]);
 
-  // Expose toast functions globally
+  // Register with the event-based toast system
   useEffect(() => {
- (window as any).addToast = addToast;
- (window as any).clearToasts = clearAllToasts;
-
- return () => {
- delete (window as any).addToast;
- delete (window as any).clearToasts;
- };
+    toastEmitter._addToast = addToast;
+    toastEmitter._clearToasts = clearAllToasts;
+    return () => {
+      toastEmitter._addToast = null;
+      toastEmitter._clearToasts = null;
+    };
   }, [addToast, clearAllToasts]);
 
   const getPositionClasses = () => {
@@ -265,32 +264,30 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
   );
 };
 
-// Toast utility functions for easy use
+// Internal emitter -- avoids window globals while allowing non-React callers
+const toastEmitter: {
+  _addToast: ((toast: Omit<ToastData, 'id'>) => void) | null;
+  _clearToasts: (() => void) | null;
+} = { _addToast: null, _clearToasts: null };
+
+// Toast utility functions for easy use (import { toast } from './Toast')
+type ToastOptions = Partial<Pick<ToastData, 'duration' | 'dismissible'>>;
+
 export const toast = {
-  success: (title: string, message: string, options?: Partial<ToastData>) => {
- if ((window as any).addToast) {
- (window as any).addToast({ type: 'success', title, message, ...options });
- }
+  success: (title: string, message: string, options?: ToastOptions) => {
+    toastEmitter._addToast?.({ type: 'success', title, message, ...options });
   },
-  error: (title: string, message: string, options?: Partial<ToastData>) => {
- if ((window as any).addToast) {
- (window as any).addToast({ type: 'error', title, message, duration: 8000, ...options });
- }
+  error: (title: string, message: string, options?: ToastOptions) => {
+    toastEmitter._addToast?.({ type: 'error', title, message, duration: 8000, ...options });
   },
-  warning: (title: string, message: string, options?: Partial<ToastData>) => {
- if ((window as any).addToast) {
- (window as any).addToast({ type: 'warning', title, message, duration: 6000, ...options });
- }
+  warning: (title: string, message: string, options?: ToastOptions) => {
+    toastEmitter._addToast?.({ type: 'warning', title, message, duration: 6000, ...options });
   },
-  info: (title: string, message: string, options?: Partial<ToastData>) => {
- if ((window as any).addToast) {
- (window as any).addToast({ type: 'info', title, message, ...options });
- }
+  info: (title: string, message: string, options?: ToastOptions) => {
+    toastEmitter._addToast?.({ type: 'info', title, message, ...options });
   },
   clear: () => {
- if ((window as any).clearToasts) {
- (window as any).clearToasts();
- }
+    toastEmitter._clearToasts?.();
   }
 };
 

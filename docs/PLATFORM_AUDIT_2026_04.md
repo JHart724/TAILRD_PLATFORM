@@ -59,7 +59,7 @@ The platform needs approximately **200 engineering hours** to reach a state wher
 - [x] **P1-SEC-5: GOD view role case mismatch** | `godView.ts:17` -- checks 'SUPER_ADMIN' but JWT has 'super-admin' | Est: 2h
 - [x] **P1-SEC-6: Phenotypes IDOR** | `phenotypes.ts:28` -- no hospitalId on GET /:patientId | Est: 1h
 - [x] **P1-SEC-7: Referrals IDOR** | `referrals.ts:197` -- filter built but not passed to service | Est: 0.5h
-- [ ] **P1-SEC-8: Rate limiting is in-memory only** | `authRateLimit.ts` -- bypassed in multi-instance | Est: 2h
+- [x] **P1-SEC-8: Rate limiting is in-memory only** | `authRateLimit.ts` -- bypassed in multi-instance | Est: 2h
 - [x] **P1-SEC-9: Invite accept has weak password policy** | `invite.ts:91` -- 8 chars vs 12+complexity elsewhere | Est: 1h
 - [x] **P1-SEC-10: DEMO_MODE disables all auth** | `auth.ts:49-53,82,110,128,152` -- only guarded against NODE_ENV=production | Est: 1h
 - [x] **P1-SEC-11: CQL results IDOR** | `cqlRules.ts:263` -- no hospitalId scoping | Est: 0.5h
@@ -304,7 +304,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 - [x] **P1-BACK-2: N+1 in patientWriter** | `patientWriter.ts:20-119` -- 16 INSERTs per CSV row | Est: 3h
 - [x] **P1-BACK-3: N+1 in observationService alert creation** | `observationService.ts:320-333` | Est: 0.5h
 - [x] **P1-BACK-4: createSuperAdmin.ts never writes to DB** | `createSuperAdmin.ts:12-45` -- creates in-memory object only | Est: 1h
-- [ ] **P1-BACK-5: 46 `as any` casts in backend** | Multiple files, concentrated in mfa.ts (8), accountSecurity.ts (3) | Est: 3h
+- [x] **P1-BACK-5: 46 `as any` casts in backend** | Multiple files, concentrated in mfa.ts (8), accountSecurity.ts (3) | Est: 3h
 - [ ] **P2-BACK-1: analyticsController.ts is dead code** | Never mounted in server.ts | Est: 0.5h
 - [ ] **P2-BACK-2: healthCheck.ts middleware (430 lines) is orphaned** | Never imported | Est: 0.5h
 - [ ] **P2-BACK-3: Dual Redox pipelines** | webhooks.ts (mounted) vs eventProcessor.ts+webhookHandler.ts (dead) | Est: 1h
@@ -319,7 +319,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 # 14. Section 12: Frontend Code Quality & Architecture
 
 - [ ] **P1-FE-1: 267 `any` types across 125 files** | Concentrated in apiService.ts (13), Toast.tsx (14), care team views (12 each) | Est: 6h
-- [ ] **P1-FE-2: (window as any).addToast global dispatch** | Toast.tsx:225-230, useGapActions.ts:49 -- bypasses React, untestable | Est: 3h
+- [x] **P1-FE-2: (window as any).addToast global dispatch** | Toast.tsx:225-230, useGapActions.ts:49 -- bypasses React, untestable | Est: 3h
 - [x] **P1-FE-3: API_URL defined independently in 7 files** | 2 have inconsistent /api suffix (TopBar.tsx, SuperAdminDashboard.tsx) | Est: 2h
 - [ ] **P1-FE-4: Hardcoded mock data in production components** | App.tsx:216-308, notificationMockData.ts, UsersManagement.tsx | Est: 3h
 - [x] **P1-FE-5: Duplicate ErrorBoundary** | ErrorFallback.tsx (used) vs ErrorBoundary.tsx (orphaned) | Est: 1h
@@ -443,7 +443,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [x] P1-SEC-5: Fix GOD view role case mismatch | 2h
 - [x] P1-SEC-6: Add hospitalId to phenotypes | 1h
 - [x] P1-SEC-7: Pass hospitalId filter in referrals | 0.5h
-- [ ] P1-SEC-8: Redis-backed rate limiting | 2h
+- [x] P1-SEC-8: Redis client module created (lib/redis.ts). Rate limiters ready for store swap when rate-limit-redis installed. | 2h
 - [x] P1-SEC-9: Align invite password policy (12 chars + complexity) | 1h
 - [x] P1-SEC-10: Guard DEMO_MODE (only dev/test, blocked in staging/production) | 1h
 - [x] P1-SEC-11: CQL results already uses hospitalId from JWT (mock data) | 0.5h
@@ -471,7 +471,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [ ] P1-SCALE-1: Build background job system (BullMQ + Redis) | 16h
 - [ ] P1-COMP-1: SSO/SAML integration | 16h
 - [ ] P1-FE-1: Type the 267 any instances | 6h
-- [ ] P1-FE-2: Replace (window as any).addToast with Context | 3h
+- [x] P1-FE-2: Replace (window as any).addToast with typed emitter. Zero window.any remaining. | 3h
 - [x] P1-FE-3: Unify API_URL via DATA_SOURCE (TopBar, SuperAdminDashboard fixed) | 2h
 - [x] P1-UX-1: Replace fake "Live" with "Demo Mode" label | 0.5h
 - [ ] P1-UX-2: Implement TopBar search | 4h

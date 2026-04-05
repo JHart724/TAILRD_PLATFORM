@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from '../shared/Toast';
 import {
   CheckCircle,
   Circle,
@@ -65,29 +66,14 @@ export default function CareGapOrchestrationCard({ orchestration, defaultExpande
 
   const handleConfirmReferral = () => {
     setActionTaken('confirmed');
-    // Use global toast if available
-    if (typeof window !== 'undefined' && (window as any).addToast) {
-      (window as any).addToast({
-        type: 'success',
-        title: 'Referral Confirmed',
-        message: `Referral to ${o.moduleLabel} initiated for ${o.patientName}. Coordinator will be assigned.`,
-        duration: 5000,
-      });
-    }
+    toast.success('Referral Confirmed', `Referral to ${o.moduleLabel} initiated for ${o.patientName}. Coordinator will be assigned.`);
   };
 
   const handleOptOut = () => {
     if (!optOutReason.trim()) return;
     setActionTaken('opted_out');
     setShowOptOut(false);
-    if (typeof window !== 'undefined' && (window as any).addToast) {
-      (window as any).addToast({
-        type: 'info',
-        title: 'Opt-Out Recorded',
-        message: `Opt-out logged for ${o.patientName}. Reason documented in audit trail.`,
-        duration: 5000,
-      });
-    }
+    toast.info('Opt-Out Recorded', `Opt-out logged for ${o.patientName}. Reason documented in audit trail.`);
   };
 
   // ── Severity border color ──

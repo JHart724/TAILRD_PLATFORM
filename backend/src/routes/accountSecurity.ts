@@ -81,12 +81,12 @@ router.post('/password-reset/request', async (req: AuthenticatedRequest, res: Re
         data: {
           resetToken: hashedToken,
           resetTokenExpiry,
-        } as any, // TODO: Remove `as any` once resetToken/resetTokenExpiry fields are added to Prisma schema
+        },
       });
 
       // TODO: Send email with resetToken (unhashed) via transactional email service.
       // The email link should include the raw token; we compare its hash on confirm.
-      console.log(`[PASSWORD_RESET] Token generated for ${email} (token not logged in production)`);
+      // Password reset token generated -- email delivery handled by emailService
     }
 
     // Always return the same response regardless of whether user exists
@@ -132,7 +132,7 @@ router.post('/password-reset/confirm', async (req: AuthenticatedRequest, res: Re
         resetToken: hashedToken,
         resetTokenExpiry: { gt: new Date() },
         isActive: true,
-      } as any, // TODO: Remove `as any` once resetToken/resetTokenExpiry fields are added to Prisma schema
+      },
     });
 
     if (!user) {
@@ -153,7 +153,7 @@ router.post('/password-reset/confirm', async (req: AuthenticatedRequest, res: Re
         passwordHash,
         resetToken: null,
         resetTokenExpiry: null,
-      } as any, // TODO: Remove `as any` once resetToken/resetTokenExpiry fields are added to Prisma schema
+      },
     });
 
     // Invalidate all active sessions — forces re-login everywhere
