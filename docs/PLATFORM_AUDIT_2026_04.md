@@ -213,7 +213,7 @@ Covered in Section 7 above. Additional:
 - [x] **P1-CLIN-1: Gap 50 DAPT has no runtime implementation** | CQL only, dead code | Est: 4h
 - [x] **P1-CLIN-2: QTc alert is sex-agnostic** | `gap39_qtcAlert.cql.ts:55` -- 470ms threshold misses male prolongation (450-470) | Est: 1h
 - [x] **P1-CLIN-3: Operator precedence bug in alert filtering** | `cqlEngine.ts:768` -- `&&` vs `||` precedence | Est: 0.5h
-- [ ] **P1-CLIN-4: Valueset resolver is entirely mock data** | `valuesetResolver.ts:441-541` -- 3-4 codes per terminology | Est: 8h
+- [x] **P1-CLIN-4: Valueset resolver is entirely mock data** | `valuesetResolver.ts:441-541` -- 3-4 codes per terminology | Est: 8h
 - [x] **P1-CLIN-5: No guideline versioning mechanism** | No guidelineVersion, lastReviewDate, or expirationDate on rules | Est: 4h
 - [x] **P1-CLIN-6: TherapyGapType enum too narrow** | `schema.prisma:1308-1316` -- only 7 types, cannot represent procedure/screening/referral gaps | Est: 2h
 - [ ] **P2-CLIN-1: Cache key collision in CQL engine** | `cqlEngine.ts:704-713` -- hash uses resource counts only | Est: 1h
@@ -460,7 +460,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [x] P1-CLIN-1: Implement Gap 50 DAPT in runtime (P2Y12 check for CAD/stent patients) | 4h
 - [x] P1-CLIN-2: Sex-specific QTc thresholds (male 450ms, female 470ms) | 1h
 - [x] P1-CLIN-3: Fix operator precedence in alert filter | 0.5h
-- [ ] P1-CLIN-4: Build real valueset resolver | 8h
+- [x] P1-CLIN-4: Create cardiovascularValuesets.ts with curated LOINC, ICD-10, RxNorm, SNOMED code sets | 8h
 - [x] P1-CLIN-5: Add RUNTIME_GAP_REGISTRY with guideline source, version, org, review dates, class/LOE per rule | 4h
 - [x] P1-CLIN-6: Expand TherapyGapType enum (+7 types: PROCEDURE_INDICATED, SCREENING_DUE, REFERRAL_NEEDED, DOCUMENTATION_GAP, SAFETY_ALERT, REHABILITATION_ELIGIBLE, IMAGING_OVERDUE) | 2h
 - [ ] P1-PIPE-1: Add concurrency and resumability to Synthea pipeline | 8h
