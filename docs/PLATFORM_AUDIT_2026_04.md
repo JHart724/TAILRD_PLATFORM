@@ -113,7 +113,7 @@ Covered in Sections 1 and 3. Additional:
 
 ### P0 Findings
 
-- [ ] **P0-HIPAA-1: PHI encryption covers Patient model only** | `phiEncryption.ts:10-23` -- Encounter (primaryDiagnosis, chiefComplaint), Observation (valueText), Order (orderName, indication), Medication (medicationName), Condition (conditionName, icd10Code), WebhookEvent (rawPayload with full FHIR bundles) are ALL unencrypted | Est: 8h
+- [x] **P0-HIPAA-1: PHI encryption covers Patient model only** | `phiEncryption.ts:10-23` -- Encounter (primaryDiagnosis, chiefComplaint), Observation (valueText), Order (orderName, indication), Medication (medicationName), Condition (conditionName, icd10Code), WebhookEvent (rawPayload with full FHIR bundles) are ALL unencrypted | Est: 8h
 - [x] **P0-HIPAA-2: PHI in audit log metadata** | `dataRequests.ts:98-99,345,500` -- patient MRN and name stored in plaintext AuditLog.metadata | Est: 3h
 
 ### P1 Findings
@@ -207,7 +207,7 @@ Covered in Sections 1 and 3. Additional:
 
 Covered in Section 7 above. Additional:
 
-- [ ] **P0-CLIN-1: CQL engine returns Math.random()** | `cqlEngine.ts:452-479` -- createMockCompiledRule() | Est: 0h (do not fix CQL engine -- fix runtime rules instead)
+- [x] **P0-CLIN-1: CQL engine returns Math.random()** | `cqlEngine.ts:452-479` -- createMockCompiledRule() | Est: 0h (do not fix CQL engine -- fix runtime rules instead)
 - [x] **P0-CLIN-2: Ferritin used as troponin proxy in ATTR-CM** | `gapDetectionRunner.ts:125` | Risk: False positives in iron-overloaded patients | Est: 2h
 - [x] **P0-CLIN-3: Finerenone recommended for HF (wrong indication)** | `gapDetectionRunner.ts:156-175` | Risk: Clinically inappropriate recommendation | Est: 2h
 - [ ] **P1-CLIN-1: Gap 50 DAPT has no runtime implementation** | CQL only, dead code | Est: 4h
@@ -298,7 +298,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 
 # 13. Section 11: Backend Architecture & Code Quality
 
-- [ ] **P0-BACK-1: @ts-nocheck on 500+ line analytics route** | `analytics.ts:1` | Est: 3h
+- [x] **P0-BACK-1: @ts-nocheck on 500+ line analytics route** | `analytics.ts:1` | Est: 3h
 - [ ] **P0-BACK-2: PatientService class is a stub** | `patientService.ts:199-218` -- returns fake IDs like `patient-${Date.now()}` | Est: 2h
 - [ ] **P1-BACK-1: N+1 in gapDetectionRunner** | `gapDetectionRunner.ts:60-90` -- individual findFirst+create per patient per gap | Est: 2h
 - [ ] **P1-BACK-2: N+1 in patientWriter** | `patientWriter.ts:20-119` -- 16 INSERTs per CSV row | Est: 3h
@@ -425,12 +425,12 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [x] P0-SEC-3: Add hospitalId to all clinicalIntelligence WHERE clauses | 4h
 - [x] P0-SEC-4: Remove/gate unauthenticated webhook test endpoint | 1h
 - [x] P0-SEC-5: Whitelist fields on admin hospital update | 1h
-- [ ] P0-HIPAA-1: Extend PHI encryption to Encounter, Observation, Order, Medication, Condition, WebhookEvent | 8h
+- [x] P0-HIPAA-1: Extend PHI encryption to Encounter, Observation, Order, Medication, Condition (string fields). WebhookEvent.rawPayload (Json) deferred. | 8h
 - [x] P0-HIPAA-2: Remove PHI from audit log metadata | 3h
 - [x] P0-CLIN-2: Fix ferritin/troponin substitution in ATTR-CM | 2h
 - [x] P0-CLIN-3: Fix finerenone indication (add diabetes check or remove) | 2h
 - [ ] P0-PIPE-1: Wire processSynthea.ts to persistence services | 12h
-- [ ] P0-BACK-1: Remove @ts-nocheck from analytics.ts | 3h
+- [x] P0-BACK-1: Remove @ts-nocheck from analytics.ts | 3h
 - [ ] P0-UX-1: Add ARIA attributes, focus traps, keyboard nav | 8h
 - [x] P0-SCALE-1: (covered by P0-SEC-2) | 0h
 

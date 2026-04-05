@@ -20,6 +20,27 @@ const PHI_FIELD_MAP: Record<string, string[]> = {
     'state',
     'zipCode',
   ],
+  Encounter: [
+    'chiefComplaint',
+    'primaryDiagnosis',
+    'attendingProvider',
+  ],
+  Observation: [
+    'valueText',
+    'observationName',
+  ],
+  Order: [
+    'orderName',
+    'indication',
+    'instructions',
+  ],
+  Medication: [
+    'medicationName',
+    'genericName',
+  ],
+  Condition: [
+    'conditionName',
+  ],
 };
 
 function encrypt(text: string): string {

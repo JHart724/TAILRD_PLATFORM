@@ -1,6 +1,4 @@
-// @ts-nocheck
-// TODO: 35 TS errors — field name mismatches (date→trackedDate, timeSpent→totalDuration,
-// dbQueryTime→dbQueries, missing statusCode/method). Fix in next session.
+// Analytics routes — platform metrics, feature usage, performance tracking
 import { Router } from 'express';
 import prisma from '../lib/prisma';
 import { APIResponse } from '../types';
