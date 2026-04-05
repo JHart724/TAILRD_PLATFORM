@@ -38,7 +38,7 @@ interface ActionEntry {
   detail: string;
 }
 
-// ─── Mock Data ───────────────────────────────────────────────────────────────
+// ─── DEMO DATA — Replace with GET /api/admin/users when backend is deployed ──
 
 const USERS: AdminUser[] = [
   // BSW (4 users)

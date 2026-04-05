@@ -213,6 +213,9 @@ const formatMoney = (amount: number): string => {
   return `$${amount.toLocaleString()}`;
 };
 
+// DEMO DATA: These values are displayed on the main dashboard in demo mode.
+// When backend is deployed, replace with API call to /api/modules/summary.
+// Patient counts and revenue are illustrative, not derived from real data.
 const MODULES: Module[] = [
   {
  id: "hf",

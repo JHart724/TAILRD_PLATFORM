@@ -81,7 +81,9 @@ function daysAgo(days: number, hoursOffset = 0): string {
 }
 
 
-// ── Notifications ──────────────────────────────────────────
+// ── Demo Notifications ────────────────────────────────────
+// DEMO DATA: Replace with real-time notifications from backend
+// when P1-NOTIF-1 (clinical alert delivery) is implemented.
 
 export const MOCK_NOTIFICATIONS: CareGapNotification[] = [
   {
