@@ -3546,6 +3546,466 @@ export const RUNTIME_GAP_REGISTRY = [
     classOfRecommendation: '2a',
     levelOfEvidence: 'B-R',
   },
+  // --- Final Batch: 26 Coronary Rules (CAD-ASPIRIN-PRIMARY through CAD-SLEEP-APNEA-CAD) ---
+  {
+    id: 'gap-cad-aspirin-primary',
+    name: 'Aspirin Assessment in CAD',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
+    guidelineVersion: '2021',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-cad-beta-blocker',
+    name: 'Beta-Blocker in Stable CAD',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2012 ACCF/AHA/ACP/AATS/PCNA/SCAI/STS Guideline for Stable Ischemic Heart Disease',
+    guidelineVersion: '2012',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-cad-ace-stable',
+    name: 'ACEi in Stable CAD with HTN',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2017 ACC/AHA High Blood Pressure Guideline + 2012 Stable IHD Guideline',
+    guidelineVersion: '2017',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-cad-nicorandil',
+    name: 'Nicorandil for Refractory Angina',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2019 ESC Guideline for Chronic Coronary Syndromes',
+    guidelineVersion: '2019',
+    guidelineOrg: 'ESC',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-cad-trimetazidine',
+    name: 'Trimetazidine Consideration in CAD',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2019 ESC Guideline for Chronic Coronary Syndromes',
+    guidelineVersion: '2019',
+    guidelineOrg: 'ESC',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '2b',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-cad-coronary-cta-fu',
+    name: 'Coronary CTA Follow-Up',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+    guidelineVersion: '2022',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-cad-nuclear-stress',
+    name: 'Nuclear Stress Test Consideration',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+    guidelineVersion: '2022',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-cad-catheterization',
+    name: 'Catheterization Review',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
+    guidelineVersion: '2021',
+    guidelineOrg: 'ACC/AHA/SCAI',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-cad-complete-revasc',
+    name: 'Complete Revascularization Assessment',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (COMPLETE Trial)',
+    guidelineVersion: '2021',
+    guidelineOrg: 'ACC/AHA/SCAI',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-cad-ischemia-guided',
+    name: 'Ischemia-Guided Therapy Review',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (ISCHEMIA Trial)',
+    guidelineVersion: '2021',
+    guidelineOrg: 'ACC/AHA/SCAI',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-cad-minoca',
+    name: 'MINOCA Workup',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2022 ACC/AHA Guideline for Evaluation and Diagnosis of Chest Pain; AHA MINOCA Scientific Statement',
+    guidelineVersion: '2022',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-cad-scad',
+    name: 'SCAD Evaluation',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2018 AHA Scientific Statement on SCAD',
+    guidelineVersion: '2018',
+    guidelineOrg: 'AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-cad-takotsubo',
+    name: 'Takotsubo Follow-Up',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2018 ESC Position Statement on Takotsubo Syndrome',
+    guidelineVersion: '2018',
+    guidelineOrg: 'ESC',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: 'Expert Consensus',
+    levelOfEvidence: 'C',
+  },
+  {
+    id: 'gap-cad-vasospastic',
+    name: 'Vasospastic Angina Evaluation',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2019 ESC Guideline for Chronic Coronary Syndromes; JCS 2013 Vasospastic Angina Guideline',
+    guidelineVersion: '2019',
+    guidelineOrg: 'ESC/JCS',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-cad-microvascular',
+    name: 'Microvascular Disease Assessment',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2019 ESC Guideline for Chronic Coronary Syndromes; COVADIS Criteria',
+    guidelineVersion: '2019',
+    guidelineOrg: 'ESC',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-cad-cardiac-transplant-cad',
+    name: 'Cardiac Allograft Vasculopathy',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: 'ISHLT 2010 Guideline on Cardiac Allograft Vasculopathy',
+    guidelineVersion: '2010',
+    guidelineOrg: 'ISHLT',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C',
+  },
+  {
+    id: 'gap-cad-lipid-panel-fu',
+    name: 'Lipid Panel Follow-Up in CAD',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2018 ACC/AHA Guideline on the Management of Blood Cholesterol',
+    guidelineVersion: '2018',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-cad-glucose-screen',
+    name: 'Glucose Screening in CAD',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2019 ACC/AHA Guideline on Primary Prevention of Cardiovascular Disease',
+    guidelineVersion: '2019',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-cad-hemoglobin-a1c-target',
+    name: 'A1c Target Review in CAD+DM',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2019 ACC/AHA Guideline on Primary Prevention; ADA Standards of Care 2024',
+    guidelineVersion: '2024',
+    guidelineOrg: 'ACC/AHA/ADA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-cad-antiplatelet-review',
+    name: 'Antiplatelet Review Post-Event',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2016 ACC/AHA Guideline Focused Update on Duration of DAPT',
+    guidelineVersion: '2016',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-cad-chest-pain-protocol',
+    name: 'Chest Pain Protocol Adherence',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+    guidelineVersion: '2022',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-cad-secondary-prevention',
+    name: 'Secondary Prevention Bundle Review',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2019 ACC/AHA Guideline on Primary Prevention; AHA/ACC Secondary Prevention Recommendations',
+    guidelineVersion: '2019',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-cad-women-specific',
+    name: 'Women-Specific CAD Screening',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2019 ACC/AHA Guideline on Primary Prevention; AHA Cardiovascular Disease in Women Scientific Statement',
+    guidelineVersion: '2019',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-cad-young-mi',
+    name: 'Young MI Workup',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+    guidelineVersion: '2022',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-cad-exercise-prescription',
+    name: 'Exercise Prescription in CAD',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
+    guidelineVersion: '2021',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-cad-sleep-apnea-cad',
+    name: 'Sleep Apnea Screening in CAD',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2019 ACC/AHA Guideline on Primary Prevention; AHA Sleep Apnea and CVD Scientific Statement',
+    guidelineVersion: '2019',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-NR',
+  },
+  // --- Final Batch: 3 EP Rules (EP-PILL-IN-POCKET through EP-ANTICOAG-SCORE-REASSESS) ---
+  {
+    id: 'gap-ep-pill-in-pocket',
+    name: 'Pill-in-Pocket Strategy for Paroxysmal AF',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-ep-left-atrial-size',
+    name: 'Left Atrial Size Documentation',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-ep-anticoag-score-reassess',
+    name: 'Annual CHA2DS2-VASc Reassessment',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  // --- Final Batch: 6 Valvular Rules (VD-ECHO-INTERVAL through VD-ANTIPLATELET-BIOPROSTHETIC) ---
+  {
+    id: 'gap-vd-echo-interval',
+    name: 'Echo Surveillance Interval Adherence',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-vd-functional-status',
+    name: 'Functional Status Assessment in Valve Disease',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C',
+  },
+  {
+    id: 'gap-vd-preop-assessment',
+    name: 'Preoperative Assessment for Valve Surgery',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-vd-pulmonary-htn',
+    name: 'Pulmonary Hypertension Screen in Valve Disease',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2022 ESC/ERS Guidelines for Diagnosis and Treatment of Pulmonary Hypertension',
+    guidelineVersion: '2022',
+    guidelineOrg: 'ESC/ERS',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-vd-tricuspid-secondary',
+    name: 'Secondary Tricuspid Regurgitation',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vd-antiplatelet-bioprosthetic',
+    name: 'Antiplatelet After Bioprosthetic Valve',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
+  },
+  // --- Final Batch: 3 PV Rules (PV-CRITICAL-LIMB through PV-ANTICOAG-VTE) ---
+  {
+    id: 'gap-pv-critical-limb',
+    name: 'Critical Limb Ischemia Urgent Evaluation',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+    guidelineVersion: '2024',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-pv-graft-surveillance',
+    name: 'Bypass Graft Surveillance',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease; SVS Practice Guidelines',
+    guidelineVersion: '2024',
+    guidelineOrg: 'ACC/AHA/SVS',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-pv-anticoag-vte',
+    name: 'VTE Anticoagulation Duration Review',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2021 ASH Guidelines on VTE Management; 2020 CHEST Guideline on Antithrombotic Therapy for VTE',
+    guidelineVersion: '2021',
+    guidelineOrg: 'ASH/CHEST',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
 ] as const;
 
 function evaluateGapRules(
@@ -8467,6 +8927,815 @@ function evaluateGapRules(
     }
   }
   // ============================================================
+  // FINAL BATCH: 26 CORONARY RULES (CAD-ASPIRIN-PRIMARY through CAD-SLEEP-APNEA-CAD)
+  // ============================================================
+
+  // CAD-ASPIRIN-PRIMARY: Aspirin Assessment in CAD
+  // Guideline: 2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization, Class 1, LOE A
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const ASPIRIN_CODES_CAP = ['1191', '198464'];
+    const onAspirinCAP = medCodes.some(c => ASPIRIN_CODES_CAP.includes(c));
+    if (!onAspirinCAP) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider aspirin therapy assessment for established CAD',
+        target: 'Aspirin initiated or contraindication documented',
+        medication: 'Aspirin 81mg',
+        recommendations: {
+          action: 'Consider low-dose aspirin 81mg daily for secondary prevention in CAD per 2021 ACC/AHA/SCAI Guideline',
+          guideline: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
+          note: 'Recommended for review: aspirin reduces major adverse cardiovascular events in established CAD',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Coronary artery disease (I25.*)',
+            'No aspirin (RxNorm 1191/198464) in active medications',
+          ],
+          guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE A',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Active bleeding', 'Aspirin allergy (Z88.6)', 'Concurrent OAC therapy'],
+        },
+      });
+    }
+  }
+
+  // CAD-BETA-BLOCKER: Beta-Blocker in Stable CAD
+  // Guideline: 2012 ACCF/AHA Stable IHD Guideline, Class 2a, LOE B
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const BB_CODES_SCAD = ['20352', '6918', '19484', '7512']; // carvedilol, metoprolol, bisoprolol, nadolol
+    const onBBscad = medCodes.some(c => BB_CODES_SCAD.includes(c));
+    if (!onBBscad) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider beta-blocker assessment for stable CAD',
+        target: 'Beta-blocker initiated or rationale for deferral documented',
+        medication: 'Metoprolol Succinate or Bisoprolol',
+        recommendations: {
+          action: 'Consider beta-blocker for stable ischemic heart disease per 2012 ACCF/AHA Guideline',
+          guideline: '2012 ACCF/AHA/ACP/AATS/PCNA/SCAI/STS Guideline for Stable Ischemic Heart Disease',
+          note: 'Recommended for review: beta-blockers improve outcomes in stable CAD particularly post-MI',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Coronary artery disease (I25.*)',
+            'No beta-blocker in active medications',
+          ],
+          guidelineSource: '2012 ACCF/AHA/ACP/AATS/PCNA/SCAI/STS Guideline for Stable Ischemic Heart Disease',
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Severe bradycardia', 'Decompensated HF', 'Severe reactive airway disease'],
+        },
+      });
+    }
+  }
+
+  // CAD-ACE-STABLE: ACEi in Stable CAD with Hypertension
+  // Guideline: 2017 ACC/AHA High BP Guideline + 2012 Stable IHD Guideline, Class 1, LOE A
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasHTN = dxCodes.some(c => c.startsWith('I10'));
+    const RAAS_CODES_SCAD = ['29046', '3827', '35296', '52175', '69749', '1656339', '83818', '83515'];
+    const onRAASscad = medCodes.some(c => RAAS_CODES_SCAD.includes(c));
+    if (hasHTN && !onRAASscad) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider ACEi/ARB for stable CAD with hypertension',
+        target: 'RAAS inhibitor initiated or contraindication documented',
+        medication: 'ACEi or ARB',
+        recommendations: {
+          action: 'Consider ACEi or ARB for blood pressure management in stable CAD with HTN per ACC/AHA Guidelines',
+          guideline: '2017 ACC/AHA High Blood Pressure Guideline + 2012 Stable IHD Guideline',
+          note: 'Recommended for review: RAAS inhibition reduces cardiovascular events in CAD with hypertension',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Coronary artery disease (I25.*)',
+            'Hypertension (I10)',
+            'No ACEi/ARB/ARNi in active medications',
+          ],
+          guidelineSource: '2017 ACC/AHA High Blood Pressure Guideline + 2012 Stable IHD Guideline',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE A',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Angioedema history', 'Pregnancy (O00-O09)', 'Hyperkalemia (K>5.5)'],
+        },
+      });
+    }
+  }
+
+  // CAD-NICORANDIL: Nicorandil for Refractory Angina
+  // Guideline: 2019 ESC Chronic Coronary Syndromes Guideline, Class 2a, LOE B
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasAngina = dxCodes.some(c => c.startsWith('I20'));
+    const onMaxAntianginal = medCodes.some(c => ['6918', '17767', '7417'].includes(c)); // BB + CCB
+    const onNicorandil = medCodes.includes('29987');
+    if (hasAngina && onMaxAntianginal && !onNicorandil) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider nicorandil for refractory angina on maximal antianginal therapy',
+        target: 'Nicorandil reviewed for refractory angina management',
+        medication: 'Nicorandil',
+        recommendations: {
+          action: 'Consider nicorandil as add-on antianginal therapy per 2019 ESC CCS Guideline',
+          guideline: '2019 ESC Guideline for Chronic Coronary Syndromes',
+          note: 'Recommended for review: nicorandil reduces angina frequency via potassium channel opening and nitrate-like effects',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Coronary artery disease (I25.*) with angina (I20.*)',
+            'On maximal first-line antianginal therapy (BB + CCB)',
+            'No nicorandil in active medications',
+          ],
+          guidelineSource: '2019 ESC Guideline for Chronic Coronary Syndromes',
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Concurrent PDE5 inhibitor', 'GI ulceration', 'Hypotension'],
+        },
+      });
+    }
+  }
+
+  // CAD-TRIMETAZIDINE: Trimetazidine Consideration
+  // Guideline: 2019 ESC CCS Guideline, Class 2b, LOE B
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasAnginaTMZ = dxCodes.some(c => c.startsWith('I20'));
+    const hasMetabolicTMZ = dxCodes.some(c => c.startsWith('E11') || c.startsWith('E78'));
+    const onTrimetazidine = medCodes.includes('47832');
+    if (hasAnginaTMZ && hasMetabolicTMZ && !onTrimetazidine) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider trimetazidine for angina with metabolic comorbidities',
+        target: 'Trimetazidine reviewed for metabolic modulation in CAD',
+        medication: 'Trimetazidine',
+        recommendations: {
+          action: 'Consider trimetazidine as metabolic antianginal agent per 2019 ESC CCS Guideline',
+          guideline: '2019 ESC Guideline for Chronic Coronary Syndromes',
+          note: 'Recommended for review: trimetazidine shifts myocardial metabolism from fatty acid to glucose oxidation, reducing ischemia',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Coronary artery disease (I25.*) with angina (I20.*)',
+            'Metabolic comorbidity (diabetes E11 or dyslipidemia E78)',
+            'No trimetazidine in active medications',
+          ],
+          guidelineSource: '2019 ESC Guideline for Chronic Coronary Syndromes',
+          classOfRecommendation: 'Class 2b',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Parkinson disease', 'Severe renal impairment (eGFR<30)', 'Movement disorders'],
+        },
+      });
+    }
+  }
+
+  // CAD-CORONARY-CTA-FU: Coronary CTA Follow-Up
+  // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 2a, LOE B-NR
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasPriorCTA = dxCodes.some(c => c.startsWith('Z87.39')); // personal history of cardiac procedure proxy
+    if (hasPriorCTA && labValues['coronary_cta_months'] === undefined) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider coronary CTA follow-up imaging interval review',
+        target: 'Follow-up coronary CTA or alternative imaging scheduled',
+        recommendations: {
+          action: 'Consider interval coronary CTA follow-up per 2022 ACC/AHA Chest Pain Guideline',
+          guideline: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          note: 'Recommended for review: periodic noninvasive imaging reassessment may guide management adjustments in CAD',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Coronary artery disease (I25.*)',
+            'Prior cardiac imaging history (Z87.39)',
+            'No recent coronary CTA documented in observations',
+          ],
+          guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE B-NR',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Contrast allergy', 'Severe renal disease (eGFR<30)', 'Recent catheterization'],
+        },
+      });
+    }
+  }
+
+  // CAD-NUCLEAR-STRESS: Nuclear Stress Test Consideration
+  // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 1, LOE B
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasIntermediateRisk = labValues['ascvd_risk'] !== undefined && labValues['ascvd_risk'] >= 7.5 && labValues['ascvd_risk'] < 20;
+    const noRecentStress = labValues['stress_test_months'] === undefined;
+    if (hasIntermediateRisk && noRecentStress) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider nuclear stress test for intermediate-risk CAD patient',
+        target: 'Stress imaging study ordered or alternative assessment documented',
+        recommendations: {
+          action: 'Consider nuclear stress testing for functional ischemia assessment per 2022 ACC/AHA Chest Pain Guideline',
+          guideline: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          note: 'Recommended for review: functional ischemia testing guides revascularization decisions in intermediate-risk patients',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Coronary artery disease (I25.*)',
+            `ASCVD risk: ${labValues['ascvd_risk'] ?? 'N/A'}% (intermediate 7.5-20%)`,
+            'No recent stress test documented',
+          ],
+          guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Unable to exercise with no pharmacologic alternative', 'Recent revascularization <90 days'],
+        },
+      });
+    }
+  }
+
+  // CAD-CATHETERIZATION: Catheterization Review for High Risk Features
+  // Guideline: 2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization, Class 1, LOE A
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasHighRiskCAD = labValues['lvef'] !== undefined && labValues['lvef'] < 35;
+    const hasAnginaCath = dxCodes.some(c => c.startsWith('I20'));
+    if (hasHighRiskCAD && hasAnginaCath) {
+      gaps.push({
+        type: TherapyGapType.REFERRAL_NEEDED,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider cardiac catheterization review for high-risk CAD features',
+        target: 'Coronary angiography or interventional evaluation reviewed',
+        recommendations: {
+          action: 'Consider coronary angiography for CAD with high-risk features (LVEF <35% + angina) per 2021 ACC/AHA/SCAI Guideline',
+          guideline: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
+          note: 'Recommended for review: invasive evaluation may identify revascularization targets in high-risk patients',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Coronary artery disease (I25.*)',
+            `LVEF: ${labValues['lvef'] ?? 'N/A'}% (<35%)`,
+            'Angina symptoms (I20.*)',
+          ],
+          guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE A',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Recent catheterization <6 months', 'Severe comorbidities precluding intervention'],
+        },
+      });
+    }
+  }
+
+  // CAD-COMPLETE-REVASC: Complete Revascularization Assessment
+  // Guideline: 2021 ACC/AHA/SCAI (COMPLETE Trial), Class 2a, LOE B-R
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasMultivessel = dxCodes.some(c => c.startsWith('I25.1')); // multivessel CAD proxy
+    const hasPriorPCI = dxCodes.some(c => c.startsWith('Z95.5')); // presence of coronary stent
+    if (hasMultivessel && hasPriorPCI) {
+      gaps.push({
+        type: TherapyGapType.REFERRAL_NEEDED,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider complete revascularization assessment for multivessel CAD',
+        target: 'Multivessel CAD revascularization strategy reviewed by heart team',
+        recommendations: {
+          action: 'Consider complete revascularization strategy per COMPLETE trial and 2021 ACC/AHA/SCAI Guideline',
+          guideline: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (COMPLETE Trial)',
+          note: 'Recommended for review: complete revascularization reduced CV death and MI vs culprit-only PCI in STEMI with multivessel CAD',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Coronary artery disease with multivessel involvement (I25.1*)',
+            'Prior coronary stent (Z95.5)',
+          ],
+          guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (COMPLETE Trial)',
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE B-R',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive surgical risk', 'Complete revascularization already achieved'],
+        },
+      });
+    }
+  }
+
+  // CAD-ISCHEMIA-GUIDED: Ischemia-Guided Therapy Review
+  // Guideline: 2021 ACC/AHA/SCAI (ISCHEMIA Trial), Class 2a, LOE B-R
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasStableAnginaISC = dxCodes.some(c => c.startsWith('I25.11') || c.startsWith('I20.8'));
+    const hasModerateIschemia = labValues['stress_test_months'] !== undefined; // proxy for stress test done
+    if (hasStableAnginaISC && hasModerateIschemia) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider ischemia-guided therapy review per ISCHEMIA trial evidence',
+        target: 'Optimal medical therapy vs revascularization strategy reviewed',
+        recommendations: {
+          action: 'Consider ischemia-guided management approach per ISCHEMIA trial and 2021 ACC/AHA/SCAI Guideline',
+          guideline: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (ISCHEMIA Trial)',
+          note: 'Recommended for review: ISCHEMIA trial showed initial conservative strategy was non-inferior to routine invasive strategy for stable CAD',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Stable coronary artery disease (I25.11/I20.8)',
+            'Prior stress test documented',
+          ],
+          guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (ISCHEMIA Trial)',
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE B-R',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Left main disease', 'LVEF <35%', 'Unacceptable angina on OMT'],
+        },
+      });
+    }
+  }
+
+  // CAD-MINOCA: MINOCA Workup
+  // Guideline: 2022 ACC/AHA Chest Pain Guideline + AHA MINOCA Scientific Statement, Class 1, LOE B-NR
+  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasMI = dxCodes.some(c => c.startsWith('I21'));
+    const hasMINOCA = dxCodes.some(c => c.startsWith('I24'));
+    if (hasMI && hasMINOCA) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider MINOCA comprehensive workup for MI with non-obstructive coronaries',
+        target: 'MINOCA diagnostic evaluation (CMR, provocation testing) reviewed',
+        recommendations: {
+          action: 'Consider cardiac MRI and vasospasm provocation testing per AHA MINOCA Scientific Statement',
+          guideline: '2022 ACC/AHA Chest Pain Guideline; AHA MINOCA Scientific Statement',
+          note: 'Recommended for review: MINOCA requires etiologic workup including CMR, vasospasm testing, and thrombophilia screening',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Myocardial infarction (I21.*)',
+            'Non-obstructive coronary disease (I24.*)',
+          ],
+          guidelineSource: '2022 ACC/AHA Guideline for Evaluation and Diagnosis of Chest Pain; AHA MINOCA Scientific Statement',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE B-NR',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'MINOCA workup already completed', 'Obstructive CAD confirmed'],
+        },
+      });
+    }
+  }
+
+  // CAD-SCAD: Spontaneous Coronary Artery Dissection Evaluation
+  // Guideline: 2018 AHA Scientific Statement on SCAD, Class 1, LOE C-LD
+  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasMIscad = dxCodes.some(c => c.startsWith('I21'));
+    const isYoungFemale = gender === 'F' && age < 55;
+    const noAtherosclerosis = !dxCodes.some(c => c.startsWith('I25.1'));
+    if (hasMIscad && isYoungFemale && noAtherosclerosis) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider SCAD evaluation for young female MI without atherosclerotic CAD',
+        target: 'SCAD-specific evaluation and FMD screening reviewed',
+        recommendations: {
+          action: 'Consider SCAD-specific workup including FMD screening per 2018 AHA Scientific Statement on SCAD',
+          guideline: '2018 AHA Scientific Statement on Spontaneous Coronary Artery Dissection',
+          note: 'Recommended for review: SCAD is the leading cause of MI in young women; requires distinct management from atherosclerotic ACS',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Myocardial infarction (I21.*)',
+            `Female patient, age ${age} (<55)`,
+            'No atherosclerotic coronary disease (I25.1)',
+          ],
+          guidelineSource: '2018 AHA Scientific Statement on Spontaneous Coronary Artery Dissection',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE C-LD',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Known atherosclerotic CAD', 'SCAD diagnosis already established'],
+        },
+      });
+    }
+  }
+
+  // CAD-TAKOTSUBO: Takotsubo Follow-Up
+  // Guideline: 2018 ESC Position Statement on Takotsubo, Expert Consensus, LOE C
+  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasTakotsubo = dxCodes.some(c => c.startsWith('I51.81'));
+    if (hasTakotsubo) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider Takotsubo syndrome follow-up and recovery monitoring',
+        target: 'Follow-up echocardiogram and functional assessment scheduled',
+        recommendations: {
+          action: 'Consider serial echocardiography and stress testing follow-up per 2018 ESC Takotsubo Position Statement',
+          guideline: '2018 ESC Position Statement on Takotsubo Syndrome',
+          note: 'Recommended for review: Takotsubo carries ~5% annual recurrence rate; LV function recovery monitoring is essential',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Takotsubo syndrome (I51.81)',
+          ],
+          guidelineSource: '2018 ESC Position Statement on Takotsubo Syndrome',
+          classOfRecommendation: 'Expert Consensus',
+          levelOfEvidence: 'LOE C',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Full LV recovery confirmed on recent echo', 'Alternative diagnosis established'],
+        },
+      });
+    }
+  }
+
+  // CAD-VASOSPASTIC: Vasospastic Angina Evaluation
+  // Guideline: 2019 ESC CCS Guideline + JCS Vasospastic Angina Guideline, Class 1, LOE B
+  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasVasospasm = dxCodes.some(c => c.startsWith('I20.1'));
+    const CCB_CODES_VASOSP = ['17767', '7417', '33910']; // nifedipine, amlodipine, diltiazem
+    const onCCBvasosp = medCodes.some(c => CCB_CODES_VASOSP.includes(c));
+    if (hasVasospasm && !onCCBvasosp) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider calcium channel blocker for vasospastic angina',
+        target: 'CCB initiated or alternative vasodilator reviewed',
+        medication: 'Diltiazem or Nifedipine',
+        recommendations: {
+          action: 'Consider CCB (diltiazem or nifedipine) for vasospastic angina per 2019 ESC CCS Guideline',
+          guideline: '2019 ESC Guideline for Chronic Coronary Syndromes; JCS 2013 Vasospastic Angina Guideline',
+          note: 'Recommended for review: CCBs are first-line therapy for coronary vasospasm; beta-blockers may worsen vasospasm',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Vasospastic angina (I20.1)',
+            'No calcium channel blocker in active medications',
+          ],
+          guidelineSource: '2019 ESC Guideline for Chronic Coronary Syndromes; JCS 2013 Vasospastic Angina Guideline',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Severe hypotension', 'CCB allergy', 'Severe LV dysfunction with hemodynamic compromise'],
+        },
+      });
+    }
+  }
+
+  // CAD-MICROVASCULAR: Microvascular Disease Assessment
+  // Guideline: 2019 ESC CCS Guideline, COVADIS Criteria, Class 2a, LOE B-NR
+  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasAnginaMVD = dxCodes.some(c => c.startsWith('I20'));
+    const hasNormalCoronaries = dxCodes.some(c => c.startsWith('I25.5')); // ischemic CM proxy
+    const noObstructiveCAD = !dxCodes.some(c => c.startsWith('I25.1'));
+    if (hasAnginaMVD && (hasNormalCoronaries || noObstructiveCAD) && age > 40) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider microvascular disease assessment for angina with non-obstructive coronaries',
+        target: 'Coronary microvascular function testing reviewed',
+        recommendations: {
+          action: 'Consider coronary microvascular function assessment (CFR/IMR testing) per 2019 ESC CCS Guideline and COVADIS criteria',
+          guideline: '2019 ESC Guideline for Chronic Coronary Syndromes; COVADIS Criteria',
+          note: 'Recommended for review: up to 50% of angina patients have non-obstructive CAD; microvascular dysfunction is a treatable cause',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Angina symptoms (I20.*)',
+            'No obstructive coronary disease (I25.1)',
+            `Age: ${age} (>40)`,
+          ],
+          guidelineSource: '2019 ESC Guideline for Chronic Coronary Syndromes; COVADIS Criteria',
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE B-NR',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Known obstructive CAD', 'Non-cardiac chest pain confirmed'],
+        },
+      });
+    }
+  }
+
+  // CAD-CARDIAC-TRANSPLANT-CAD: Cardiac Allograft Vasculopathy
+  // Guideline: ISHLT 2010 Guideline on Cardiac Allograft Vasculopathy, Class 1, LOE C
+  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasTransplant = dxCodes.some(c => c.startsWith('Z94.1')); // heart transplant status
+    if (hasTransplant && hasCAD) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider cardiac allograft vasculopathy (CAV) surveillance in heart transplant recipient',
+        target: 'Annual coronary angiography or dobutamine stress echo reviewed',
+        recommendations: {
+          action: 'Consider annual CAV surveillance per ISHLT Guidelines for heart transplant recipients with CAD',
+          guideline: 'ISHLT 2010 Guideline on Cardiac Allograft Vasculopathy',
+          note: 'Recommended for review: CAV is the leading cause of late graft failure; annual surveillance improves outcomes',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Heart transplant recipient (Z94.1)',
+            'Coronary artery disease (I25.*)',
+          ],
+          guidelineSource: 'ISHLT 2010 Guideline on Cardiac Allograft Vasculopathy',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE C',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Graft failure with planned retransplant', 'Recent angiography <6 months'],
+        },
+      });
+    }
+  }
+
+  // CAD-LIPID-PANEL-FU: Lipid Panel Follow-Up
+  // Guideline: 2018 ACC/AHA Cholesterol Guideline, Class 1, LOE A
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const STATIN_CODES_LPF = ['36567', '301542', '83367', '42463', '861634'];
+    const onStatinLPF = medCodes.some(c => STATIN_CODES_LPF.includes(c));
+    if (onStatinLPF && labValues['ldl'] === undefined && labValues['total_cholesterol'] === undefined) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider lipid panel follow-up for CAD patient on statin therapy',
+        target: 'Fasting lipid panel obtained and LDL-C response assessed',
+        recommendations: {
+          action: 'Consider fasting lipid panel to assess LDL-C response to statin per 2018 ACC/AHA Cholesterol Guideline',
+          guideline: '2018 ACC/AHA Guideline on the Management of Blood Cholesterol',
+          note: 'Recommended for review: repeat lipid panel 4-12 weeks after statin initiation, then periodically to confirm LDL-C <70 mg/dL',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Coronary artery disease (I25.*)',
+            'On statin therapy',
+            'No recent LDL or total cholesterol in observations',
+          ],
+          guidelineSource: '2018 ACC/AHA Guideline on the Management of Blood Cholesterol',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE A',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Recent lipid panel <4 weeks', 'Statin intolerance documented'],
+        },
+      });
+    }
+  }
+
+  // CAD-GLUCOSE-SCREEN: Glucose Screening in CAD
+  // Guideline: 2019 ACC/AHA Primary Prevention Guideline, Class 1, LOE B
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const noDiabetesGS = !dxCodes.some(c => c.startsWith('E11') || c.startsWith('E10'));
+    if (noDiabetesGS && labValues['hba1c'] === undefined && labValues['fasting_glucose'] === undefined) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider glucose screening for CAD patient without known diabetes',
+        target: 'HbA1c or fasting glucose obtained',
+        recommendations: {
+          action: 'Consider HbA1c or fasting glucose screening per 2019 ACC/AHA Primary Prevention Guideline',
+          guideline: '2019 ACC/AHA Guideline on Primary Prevention of Cardiovascular Disease',
+          note: 'Recommended for review: undiagnosed diabetes or prediabetes is common in CAD and affects management',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Coronary artery disease (I25.*)',
+            'No diabetes diagnosis (E10/E11)',
+            'No HbA1c or fasting glucose in observations',
+          ],
+          guidelineSource: '2019 ACC/AHA Guideline on Primary Prevention of Cardiovascular Disease',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Known diabetes on treatment', 'Recent glucose screening <3 months'],
+        },
+      });
+    }
+  }
+
+  // CAD-HEMOGLOBIN-A1C-TARGET: A1c Target Review
+  // Guideline: ADA Standards of Care 2024 + 2019 ACC/AHA, Class 1, LOE A
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasDM_A1c = dxCodes.some(c => c.startsWith('E11'));
+    if (hasDM_A1c && labValues['hba1c'] !== undefined && labValues['hba1c'] > 7.0) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider A1c target review for CAD patient with diabetes and elevated A1c',
+        target: 'A1c management plan with cardiovascular-benefit agents reviewed',
+        recommendations: {
+          action: 'Consider intensifying glucose management with CV-benefit agents (SGLT2i/GLP-1 RA) per ADA 2024 Standards of Care',
+          guideline: 'ADA Standards of Care 2024; 2019 ACC/AHA Primary Prevention Guideline',
+          note: 'Recommended for review: A1c >7% in CAD+DM warrants review of glycemic agents with proven cardiovascular benefit',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Coronary artery disease (I25.*)',
+            'Type 2 diabetes (E11.*)',
+            `HbA1c: ${labValues['hba1c'] ?? 'N/A'}% (>7.0%)`,
+          ],
+          guidelineSource: 'ADA Standards of Care 2024; 2019 ACC/AHA Guideline on Primary Prevention',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE A',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Age >80 with frailty (relaxed A1c target)', 'Hypoglycemia unawareness'],
+        },
+      });
+    }
+  }
+
+  // CAD-ANTIPLATELET-REVIEW: Antiplatelet Review >1yr Post Event
+  // Guideline: 2016 ACC/AHA DAPT Focused Update, Class 2a, LOE B-R
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const onDualAntiplatelet = medCodes.includes('1191') && medCodes.some(c => ['32968', '1116632'].includes(c)); // aspirin + clopidogrel/ticagrelor
+    const hasPriorMI = dxCodes.some(c => c.startsWith('I25.2')); // old MI
+    if (onDualAntiplatelet && hasPriorMI) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider antiplatelet duration review for long-term DAPT post MI',
+        target: 'DAPT continuation vs de-escalation assessed per bleeding/ischemic risk',
+        recommendations: {
+          action: 'Consider DAPT duration review using DAPT score or PRECISE-DAPT per 2016 ACC/AHA Focused Update',
+          guideline: '2016 ACC/AHA Guideline Focused Update on Duration of DAPT',
+          note: 'Recommended for review: prolonged DAPT >12 months reduces ischemic events but increases bleeding; individualize duration',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Coronary artery disease (I25.*)',
+            'Old myocardial infarction (I25.2)',
+            'On dual antiplatelet therapy (aspirin + P2Y12 inhibitor)',
+          ],
+          guidelineSource: '2016 ACC/AHA Guideline Focused Update on Duration of DAPT',
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE B-R',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Active bleeding', 'Recent stent <12 months'],
+        },
+      });
+    }
+  }
+
+  // CAD-CHEST-PAIN-PROTOCOL: Chest Pain Protocol Adherence
+  // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 1, LOE B
+  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasChestPain = dxCodes.some(c => c.startsWith('I20'));
+    const hasEDvisit = dxCodes.some(c => c.startsWith('Z76.89') || c.startsWith('R07')); // ED presentation proxy
+    if (hasChestPain && hasEDvisit && labValues['troponin'] === undefined) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider chest pain protocol adherence review with troponin assessment',
+        target: 'Serial troponin and risk stratification completed per protocol',
+        recommendations: {
+          action: 'Consider high-sensitivity troponin protocol for chest pain evaluation per 2022 ACC/AHA Chest Pain Guideline',
+          guideline: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          note: 'Recommended for review: 0/1-hour or 0/3-hour hs-troponin protocol enables rapid and safe triage of chest pain',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Angina/chest pain (I20.*/R07.*)',
+            'ED presentation proxy (Z76.89/R07)',
+            'No troponin documented in observations',
+          ],
+          guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Non-cardiac chest pain established', 'Troponin already resulted'],
+        },
+      });
+    }
+  }
+
+  // CAD-SECONDARY-PREVENTION: Secondary Prevention Bundle Review
+  // Guideline: 2019 ACC/AHA Primary Prevention + AHA/ACC Secondary Prevention, Class 1, LOE A
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const STATIN_CODES_SP = ['36567', '301542', '83367', '42463'];
+    const onStatinSP = medCodes.some(c => STATIN_CODES_SP.includes(c));
+    const onAspirinSP = medCodes.includes('1191');
+    const onBBsp = medCodes.some(c => ['20352', '6918', '19484'].includes(c));
+    const bundleDeficit = (!onStatinSP ? 1 : 0) + (!onAspirinSP ? 1 : 0) + (!onBBsp ? 1 : 0);
+    if (bundleDeficit >= 2) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider comprehensive secondary prevention bundle review for CAD',
+        target: 'Statin + antiplatelet + beta-blocker bundle assessed',
+        recommendations: {
+          action: 'Consider secondary prevention medication bundle optimization per AHA/ACC guidelines',
+          guideline: '2019 ACC/AHA Primary Prevention Guideline; AHA/ACC Secondary Prevention Recommendations',
+          note: 'Recommended for review: secondary prevention bundle (statin + antiplatelet + BB) reduces recurrent events by >50%',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Coronary artery disease (I25.*)',
+            `Secondary prevention deficits: ${bundleDeficit} of 3 core medications missing`,
+          ],
+          guidelineSource: '2019 ACC/AHA Primary Prevention Guideline; AHA/ACC Secondary Prevention Recommendations',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE A',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Documented contraindications to missing agents', 'Active bleeding'],
+        },
+      });
+    }
+  }
+
+  // CAD-WOMEN-SPECIFIC: Women-Specific CAD Screening
+  // Guideline: 2019 ACC/AHA Primary Prevention + AHA CVD in Women Statement, Class 1, LOE B
+  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const isFemaleOver50 = gender === 'F' && age > 50;
+    const hasRiskFactors = dxCodes.some(c =>
+      c.startsWith('I10') || c.startsWith('E78') || c.startsWith('E11') || c.startsWith('F17')
+    );
+    if (isFemaleOver50 && hasRiskFactors && !hasCAD) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider women-specific CAD risk assessment for female patient with cardiovascular risk factors',
+        target: 'Sex-specific CVD risk assessment and screening reviewed',
+        recommendations: {
+          action: 'Consider women-specific CAD risk assessment including coronary artery calcium scoring per AHA CVD in Women Statement',
+          guideline: '2019 ACC/AHA Primary Prevention Guideline; AHA Cardiovascular Disease in Women Scientific Statement',
+          note: 'Recommended for review: women have unique CAD presentations and risk factors including preeclampsia history and autoimmune conditions',
+        },
+        evidence: {
+          triggerCriteria: [
+            `Female patient, age ${age} (>50)`,
+            'Cardiovascular risk factors (HTN, dyslipidemia, DM, or smoking)',
+            'No established CAD diagnosis',
+          ],
+          guidelineSource: '2019 ACC/AHA Primary Prevention Guideline; AHA Cardiovascular Disease in Women Scientific Statement',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Known CAD on treatment', 'Recent comprehensive CVD screening'],
+        },
+      });
+    }
+  }
+
+  // CAD-YOUNG-MI: Young MI Workup
+  // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 1, LOE C-LD
+  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasAcuteMI = dxCodes.some(c => c.startsWith('I21'));
+    if (hasAcuteMI && age < 45) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider extended workup for young MI (age <45) including thrombophilia and substance screening',
+        target: 'Young MI workup including hypercoagulability, toxicology, and familial screening reviewed',
+        recommendations: {
+          action: 'Consider thrombophilia screening, urine toxicology, and familial hypercholesterolemia assessment per ACC/AHA Guideline',
+          guideline: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          note: 'Recommended for review: MI in patients <45 warrants evaluation for non-atherosclerotic etiologies',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Acute myocardial infarction (I21.*)',
+            `Age: ${age} (<45)`,
+          ],
+          guidelineSource: '2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE C-LD',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Known atherosclerotic CAD', 'Workup already completed'],
+        },
+      });
+    }
+  }
+
+  // CAD-EXERCISE-PRESCRIPTION: Exercise Prescription Post-Rehab
+  // Guideline: 2021 ACC/AHA/SCAI Guideline, Class 1, LOE A
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasCompletedRehab = dxCodes.some(c => c.startsWith('Z50.0')); // rehab status
+    if (hasCompletedRehab && labValues['exercise_prescription'] === undefined) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider maintenance exercise prescription for CAD patient post cardiac rehabilitation',
+        target: 'Structured exercise maintenance plan documented',
+        recommendations: {
+          action: 'Consider structured exercise prescription (150 min/wk moderate or 75 min/wk vigorous) per 2021 ACC/AHA Guideline',
+          guideline: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
+          note: 'Recommended for review: sustained exercise reduces mortality 20-30% in CAD patients post-rehabilitation',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Coronary artery disease (I25.*)',
+            'Cardiac rehab completed (Z50.0)',
+            'No exercise prescription documented',
+          ],
+          guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE A',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Unstable angina', 'Decompensated HF', 'Severe musculoskeletal limitation'],
+        },
+      });
+    }
+  }
+
+  // CAD-SLEEP-APNEA-CAD: Sleep Apnea Screening in CAD
+  // Guideline: 2019 ACC/AHA Primary Prevention + AHA Sleep Apnea Statement, Class 2a, LOE B-NR
+  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasObesity = dxCodes.some(c => c.startsWith('E66'));
+    const noSleepApnea = !dxCodes.some(c => c.startsWith('G47.3'));
+    if (hasObesity && noSleepApnea) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Consider sleep apnea screening for CAD patient with obesity',
+        target: 'Sleep study or screening questionnaire (STOP-BANG) completed',
+        recommendations: {
+          action: 'Consider polysomnography or home sleep testing for obese CAD patient per AHA Sleep Apnea and CVD Statement',
+          guideline: '2019 ACC/AHA Primary Prevention Guideline; AHA Sleep Apnea and CVD Scientific Statement',
+          note: 'Recommended for review: OSA prevalence exceeds 60% in CAD patients with obesity; treatment may improve cardiovascular outcomes',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Coronary artery disease (I25.*)',
+            'Obesity (E66.*)',
+            'No sleep apnea diagnosis (G47.3)',
+          ],
+          guidelineSource: '2019 ACC/AHA Primary Prevention Guideline; AHA Sleep Apnea and CVD Scientific Statement',
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE B-NR',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Known sleep apnea on CPAP', 'Recent sleep study <12 months'],
+        },
+      });
+    }
+  }
+
+  // ============================================================
   // NEW EP RULES (EP-EARLY-RHYTHM through EP-AF-CATHETER-TIMING)
   // ============================================================
 
@@ -8959,6 +10228,103 @@ function evaluateGapRules(
         exclusions: ['Hospice/palliative care (Z51.5)', 'Recent ablation within 12 months', 'Long-standing persistent AF >3 years'],
       },
     });
+  }
+
+  // ============================================================
+  // FINAL BATCH: 3 EP RULES (EP-PILL-IN-POCKET through EP-ANTICOAG-SCORE-REASSESS)
+  // ============================================================
+
+  // EP-PILL-IN-POCKET: Pill-in-Pocket Strategy for Paroxysmal AF
+  // Guideline: 2023 ACC/AHA/ACCP/HRS AF Guideline, Class 2a, LOE B
+  if (hasAF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasParoxysmalAF = dxCodes.some(c => c.startsWith('I48.0'));
+    const noStructuralHD = !dxCodes.some(c => c.startsWith('I42') || c.startsWith('I50'));
+    const AAD_CODES_PIP = ['4603', '8754']; // flecainide, propafenone
+    const onAADpip = medCodes.some(c => AAD_CODES_PIP.includes(c));
+    if (hasParoxysmalAF && noStructuralHD && !onAADpip) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.ELECTROPHYSIOLOGY,
+        status: 'Consider pill-in-pocket strategy for paroxysmal AF without structural heart disease',
+        target: 'Pill-in-pocket flecainide or propafenone reviewed with EP',
+        medication: 'Flecainide or Propafenone (PRN)',
+        recommendations: {
+          action: 'Consider pill-in-pocket flecainide/propafenone for infrequent paroxysmal AF per 2023 ACC/AHA/ACCP/HRS Guideline',
+          guideline: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+          note: 'Recommended for review: pill-in-pocket approach suitable for hemodynamically stable patients with infrequent, symptomatic episodes',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Paroxysmal atrial fibrillation (I48.0)',
+            'No structural heart disease (I42/I50)',
+            'No standing antiarrhythmic drug therapy',
+          ],
+          guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Structural heart disease', 'Bundle branch block', 'Known coronary artery disease'],
+        },
+      });
+    }
+  }
+
+  // EP-LEFT-ATRIAL-SIZE: Left Atrial Size Documentation
+  // Guideline: 2023 ACC/AHA/ACCP/HRS AF Guideline, Class 1, LOE B
+  if (hasAF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    if (labValues['la_diameter'] === undefined && labValues['la_volume_index'] === undefined) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.ELECTROPHYSIOLOGY,
+        status: 'Consider left atrial size documentation for AF management planning',
+        target: 'LA volume index or LA diameter documented via echocardiography',
+        recommendations: {
+          action: 'Consider echocardiographic LA size assessment for AF rhythm strategy planning per 2023 ACC/AHA/ACCP/HRS Guideline',
+          guideline: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+          note: 'Recommended for review: LA size impacts ablation candidacy, success rates, and rhythm vs rate control decision',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Atrial fibrillation (I48.*)',
+            'No LA diameter or LA volume index in observations',
+          ],
+          guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Recent echocardiogram <6 months', 'Rate-controlled permanent AF'],
+        },
+      });
+    }
+  }
+
+  // EP-ANTICOAG-SCORE-REASSESS: Annual CHA2DS2-VASc Reassessment
+  // Guideline: 2023 ACC/AHA/ACCP/HRS AF Guideline, Class 1, LOE B
+  if (hasAF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const OAC_CODES_REASSESS = ['11289', '1364430', '1114195', '1037045', '1599538'];
+    const onOACreassess = medCodes.some(c => OAC_CODES_REASSESS.includes(c));
+    if (onOACreassess && labValues['cha2ds2_vasc_date'] === undefined) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.ELECTROPHYSIOLOGY,
+        status: 'Consider annual CHA2DS2-VASc score reassessment for AF patient on anticoagulation',
+        target: 'CHA2DS2-VASc score recalculated and anticoagulation appropriateness reviewed',
+        recommendations: {
+          action: 'Consider annual reassessment of CHA2DS2-VASc and HAS-BLED scores per 2023 ACC/AHA/ACCP/HRS Guideline',
+          guideline: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+          note: 'Recommended for review: stroke and bleeding risk evolve over time; annual reassessment ensures ongoing OAC appropriateness',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Atrial fibrillation (I48.*)',
+            'On oral anticoagulation therapy',
+            'No recent CHA2DS2-VASc reassessment documented',
+          ],
+          guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Mechanical valve (separate indication)', 'Recent score calculation <6 months'],
+        },
+      });
+    }
   }
 
   // ============================================================
@@ -9802,6 +11168,200 @@ function evaluateGapRules(
 
 
   // ============================================================
+  // FINAL BATCH: 6 VALVULAR RULES (VD-ECHO-INTERVAL through VD-ANTIPLATELET-BIOPROSTHETIC)
+  // ============================================================
+
+  // VD-ECHO-INTERVAL: Echo Surveillance Interval Adherence
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
+  const hasAnyValveDxFB = dxCodes.some(c =>
+    c.startsWith('I34') || c.startsWith('I35') || c.startsWith('I36') || c.startsWith('I37') || c.startsWith('I05') || c.startsWith('I06') || c.startsWith('I07') || c.startsWith('I08')
+  );
+  if (hasAnyValveDxFB && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    if (labValues['echo_months'] === undefined) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.VALVULAR_DISEASE,
+        status: 'Consider echocardiographic surveillance interval review for valve disease',
+        target: 'Echo surveillance completed per guideline-recommended intervals',
+        recommendations: {
+          action: 'Consider echocardiogram per surveillance intervals in 2020 ACC/AHA VHD Guideline (annual for severe, 1-2yr for moderate)',
+          guideline: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+          note: 'Recommended for review: regular echo surveillance detects disease progression and optimizes intervention timing',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Valvular heart disease (I34-I37, I05-I08)',
+            'No recent echocardiogram documented in observations',
+          ],
+          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Trace/trivial regurgitation only', 'Recent echo <3 months'],
+        },
+      });
+    }
+  }
+
+  // VD-FUNCTIONAL-STATUS: Functional Status Assessment in Valve Disease
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE C
+  if (hasAnyValveDxFB && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasValveSxFS = dxCodes.some(c =>
+      c.startsWith('R06') || c.startsWith('R53') || c.startsWith('R55') || c.startsWith('R00')
+    );
+    if (hasValveSxFS && labValues['nyha_class'] === undefined) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.VALVULAR_DISEASE,
+        status: 'Consider functional status assessment (NYHA class) for symptomatic valve disease',
+        target: 'NYHA functional class and exercise capacity documented',
+        recommendations: {
+          action: 'Consider formal NYHA classification and 6-minute walk test per 2020 ACC/AHA VHD Guideline',
+          guideline: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+          note: 'Recommended for review: symptom onset is a key trigger for valve intervention; formal assessment prevents missed indications',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Valvular heart disease (I34-I37, I05-I08)',
+            'Symptoms present (dyspnea R06, fatigue R53, syncope R55, palpitations R00)',
+            'No NYHA class documented in observations',
+          ],
+          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE C',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'NYHA recently documented', 'Mild valve disease only'],
+        },
+      });
+    }
+  }
+
+  // VD-PREOP-ASSESSMENT: Preoperative Assessment for Valve Surgery
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
+  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasSevereValve = dxCodes.some(c => c.startsWith('I35.0') || c.startsWith('I34.0') || c.startsWith('I35.2'));
+    if (hasSevereValve && labValues['sts_score'] === undefined) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.VALVULAR_DISEASE,
+        status: 'Consider preoperative risk assessment for potential valve intervention',
+        target: 'STS risk score and heart team evaluation documented',
+        recommendations: {
+          action: 'Consider STS risk score calculation and multidisciplinary heart team review per 2020 ACC/AHA VHD Guideline',
+          guideline: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+          note: 'Recommended for review: STS score and heart team assessment guide surgical vs transcatheter approach selection',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Severe valvular disease (I35.0 AS, I34.0 MR, I35.2 AR)',
+            'No STS risk score documented',
+          ],
+          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'STS score recently calculated', 'Patient declines intervention'],
+        },
+      });
+    }
+  }
+
+  // VD-PULMONARY-HTN: Pulmonary Hypertension Screen in Valve Disease
+  // Guideline: 2022 ESC/ERS PH Guidelines + 2020 ACC/AHA VHD Guideline, Class 1, LOE B
+  if (hasAnyValveDxFB && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasDyspneaVD = dxCodes.some(c => c.startsWith('R06'));
+    const noPH = !dxCodes.some(c => c.startsWith('I27'));
+    if (hasDyspneaVD && noPH && labValues['pasp'] === undefined) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.VALVULAR_DISEASE,
+        status: 'Consider pulmonary hypertension screening in valve disease patient with dyspnea',
+        target: 'PASP estimated via echocardiography or right heart catheterization reviewed',
+        recommendations: {
+          action: 'Consider echo-estimated PASP and RV function assessment per 2022 ESC/ERS PH + 2020 ACC/AHA VHD Guidelines',
+          guideline: '2022 ESC/ERS Guidelines for Diagnosis and Treatment of Pulmonary Hypertension',
+          note: 'Recommended for review: secondary PH in valve disease affects surgical timing and post-operative outcomes',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Valvular heart disease (I34-I37, I05-I08)',
+            'Dyspnea (R06.*)',
+            'No pulmonary hypertension diagnosis (I27)',
+            'No PASP documented in observations',
+          ],
+          guidelineSource: '2022 ESC/ERS Guidelines for Diagnosis and Treatment of Pulmonary Hypertension',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Known PH on treatment', 'Recent RHC <6 months'],
+        },
+      });
+    }
+  }
+
+  // VD-TRICUSPID-SECONDARY: Secondary Tricuspid Regurgitation
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 2a, LOE B-NR
+  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasTR = dxCodes.some(c => c.startsWith('I36'));
+    const hasLeftHeartDx = dxCodes.some(c =>
+      c.startsWith('I50') || c.startsWith('I34') || c.startsWith('I35') || c.startsWith('I05') || c.startsWith('I06')
+    );
+    if (hasTR && hasLeftHeartDx) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.VALVULAR_DISEASE,
+        status: 'Consider secondary tricuspid regurgitation assessment in left heart disease',
+        target: 'TR severity grading and intervention candidacy reviewed',
+        recommendations: {
+          action: 'Consider comprehensive TR evaluation including RV function and annular dilation per 2020 ACC/AHA VHD Guideline',
+          guideline: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+          note: 'Recommended for review: significant secondary TR may warrant concurrent intervention during left-sided valve surgery',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Tricuspid regurgitation (I36.*)',
+            'Left heart disease (I50, I34, I35, I05, I06)',
+          ],
+          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE B-NR',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Trivial TR only', 'Recent TR assessment <3 months'],
+        },
+      });
+    }
+  }
+
+  // VD-ANTIPLATELET-BIOPROSTHETIC: Antiplatelet After Bioprosthetic Valve >3 Months
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 2a, LOE B
+  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasBioprosthetic = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.4')); // bioprosthetic valve proxy
+    const noMechanicalValveBio = !dxCodes.some(c => c.startsWith('Z95.3')); // not mechanical
+    const ASPIRIN_CODE_BIO = '1191';
+    const onAspirinBio = medCodes.includes(ASPIRIN_CODE_BIO);
+    if (hasBioprosthetic && noMechanicalValveBio && !onAspirinBio) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.VALVULAR_DISEASE,
+        status: 'Consider low-dose aspirin for bioprosthetic valve >3 months post-implant',
+        target: 'Aspirin 81mg initiated or anticoagulation rationale documented',
+        medication: 'Aspirin 81mg',
+        recommendations: {
+          action: 'Consider low-dose aspirin for long-term antithrombotic therapy after bioprosthetic valve per 2020 ACC/AHA VHD Guideline',
+          guideline: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+          note: 'Recommended for review: low-dose aspirin is reasonable after initial 3-6 month anticoagulation period post bioprosthetic valve',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Bioprosthetic valve (Z95.2/Z95.4)',
+            'Not a mechanical valve (Z95.3)',
+            'No aspirin in active medications',
+          ],
+          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Active bleeding', 'On therapeutic anticoagulation for other indication', 'Aspirin allergy'],
+        },
+      });
+    }
+  }
+
+  // ============================================================
   // NEW PERIPHERAL VASCULAR RULES (PV-RIVAROXABAN through PV-NAFTIDROFURYL)
   // ============================================================
 
@@ -10246,5 +11806,100 @@ function evaluateGapRules(
       });
     }
   }
+
+  // ============================================================
+  // FINAL BATCH: 3 PV RULES (PV-CRITICAL-LIMB through PV-ANTICOAG-VTE)
+  // ============================================================
+
+  // PV-CRITICAL-LIMB: Critical Limb Ischemia Urgent Evaluation
+  // Guideline: 2024 ACC/AHA PAD Guideline, Class 1, LOE A
+  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasCLI = dxCodes.some(c => c.startsWith('I70.24') || c.startsWith('I70.25'));
+    const hasTissueLoss = dxCodes.some(c => c.startsWith('L97') || c.startsWith('L98.4'));
+    if (hasCLI || (hasPAD && hasTissueLoss)) {
+      gaps.push({
+        type: TherapyGapType.REFERRAL_NEEDED,
+        module: ModuleType.PERIPHERAL_VASCULAR,
+        status: 'Consider urgent vascular evaluation for critical limb ischemia with tissue loss',
+        target: 'Urgent vascular surgery or interventional consultation obtained',
+        recommendations: {
+          action: 'Consider urgent vascular specialist referral for CLI assessment and revascularization planning per 2024 ACC/AHA PAD Guideline',
+          guideline: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+          note: 'Recommended for review: CLI with tissue loss requires urgent revascularization evaluation to prevent limb loss',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Critical limb ischemia (I70.24/I70.25) or PAD with tissue loss (L97/L98.4)',
+          ],
+          guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE A',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Vascular surgery already consulted', 'Non-ischemic wound etiology confirmed'],
+        },
+      });
+    }
+  }
+
+  // PV-GRAFT-SURVEILLANCE: Bypass Graft Surveillance
+  // Guideline: 2024 ACC/AHA PAD Guideline + SVS Practice Guidelines, Class 1, LOE B
+  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasVascularGraft = dxCodes.some(c => c.startsWith('Z95.8'));
+    if (hasVascularGraft && hasPAD && labValues['graft_duplex_months'] === undefined) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.PERIPHERAL_VASCULAR,
+        status: 'Consider interval duplex surveillance for peripheral bypass graft',
+        target: 'Graft duplex ultrasound surveillance completed per guideline intervals',
+        recommendations: {
+          action: 'Consider duplex ultrasound graft surveillance at 1, 3, 6, 12 months then annually per SVS/ACC/AHA Guidelines',
+          guideline: '2024 ACC/AHA Guideline on Peripheral Artery Disease; SVS Practice Guidelines',
+          note: 'Recommended for review: duplex surveillance detects graft stenosis before occlusion; assisted primary patency exceeds primary patency',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Vascular graft (Z95.8)',
+            'Peripheral artery disease (I73.9/I70.2*)',
+            'No recent graft duplex documented in observations',
+          ],
+          guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease; SVS Practice Guidelines',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Recent duplex <3 months', 'Graft known to be occluded'],
+        },
+      });
+    }
+  }
+
+  // PV-ANTICOAG-VTE: VTE Anticoagulation Duration Review
+  // Guideline: 2021 ASH VTE Guidelines + 2020 CHEST Antithrombotic Guideline, Class 1, LOE B
+  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasVTE = dxCodes.some(c => c.startsWith('I82'));
+    const OAC_CODES_VTE = ['11289', '1364430', '1114195', '1037045', '1599538'];
+    const onOACvte = medCodes.some(c => OAC_CODES_VTE.includes(c));
+    if (hasVTE && onOACvte) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.PERIPHERAL_VASCULAR,
+        status: 'Consider VTE anticoagulation duration review and continued need assessment',
+        target: 'OAC duration assessed with bleeding risk re-evaluation',
+        recommendations: {
+          action: 'Consider reassessing anticoagulation duration and bleeding risk at 3-6 month intervals per ASH/CHEST VTE Guidelines',
+          guideline: '2021 ASH Guidelines on VTE Management; 2020 CHEST Guideline on Antithrombotic Therapy for VTE',
+          note: 'Recommended for review: unprovoked VTE may warrant extended anticoagulation; provoked VTE typically 3-6 months',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Venous thromboembolism (I82.*)',
+            'On oral anticoagulation therapy',
+          ],
+          guidelineSource: '2021 ASH Guidelines on VTE Management; 2020 CHEST Guideline on Antithrombotic Therapy for VTE',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Active cancer-associated VTE (separate protocol)', 'Recent duration review <3 months'],
+        },
+      });
+    }
+  }
+
   return gaps;
 }
