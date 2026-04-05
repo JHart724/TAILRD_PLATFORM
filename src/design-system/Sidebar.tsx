@@ -102,7 +102,7 @@ export default function Sidebar() {
         <div className="px-3 relative z-[1]">
           <div className="sb-live">
             <div className="sb-live-dot"></div>
-            <span>Live · Updated 2m ago</span>
+            <span>Demo Mode</span>
           </div>
         </div>
       )}

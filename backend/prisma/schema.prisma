@@ -332,7 +332,7 @@ model Observation {
   performingLab    String?
 
   // EHR Integration
-  fhirObservationId String?
+  fhirObservationId String? @unique
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -340,7 +340,6 @@ model Observation {
 
   @@index([hospitalId, observedDateTime])
   @@index([patientId, observationType])
-  @@index([fhirObservationId])
   @@index([observationType, observedDateTime])
   @@map("observations")
 }

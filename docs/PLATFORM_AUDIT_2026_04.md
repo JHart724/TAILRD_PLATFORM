@@ -62,7 +62,7 @@ The platform needs approximately **200 engineering hours** to reach a state wher
 - [ ] **P1-SEC-8: Rate limiting is in-memory only** | `authRateLimit.ts` -- bypassed in multi-instance | Est: 2h
 - [x] **P1-SEC-9: Invite accept has weak password policy** | `invite.ts:91` -- 8 chars vs 12+complexity elsewhere | Est: 1h
 - [x] **P1-SEC-10: DEMO_MODE disables all auth** | `auth.ts:49-53,82,110,128,152` -- only guarded against NODE_ENV=production | Est: 1h
-- [ ] **P1-SEC-11: CQL results IDOR** | `cqlRules.ts:263` -- no hospitalId scoping | Est: 0.5h
+- [x] **P1-SEC-11: CQL results IDOR** | `cqlRules.ts:263` -- no hospitalId scoping | Est: 0.5h
 - [x] **P1-SEC-12: File metadata endpoint lacks hospital scoping** | `files.ts:254-277` | Est: 0.5h
 
 ### P2 Findings
@@ -92,7 +92,7 @@ Only finding:
 
 # 5. Section 3: Denial of Service & Abuse Vectors
 
-- [ ] **P1-DOS-1: Rate limiter runs AFTER 10MB body parsing** | `server.ts` middleware order | Est: 0.5h
+- [x] **P1-DOS-1: Rate limiter runs AFTER 10MB body parsing** | `server.ts` middleware order | Est: 0.5h
 - [ ] **P1-DOS-2: Admin runs 5 unbounded COUNT(*) queries** | `admin.ts:26-30` | Est: 2h
 - [x] **P1-DOS-3: WebhookEvent.eventId has no unique index** | `schema.prisma:518` -- idempotency check is a full table scan, TOCTOU race under concurrency | Est: 0.5h
 - [ ] **P2-DOS-1: Patient search uses ILIKE without GIN index** | `patients.ts:54-57` | Est: 2h
@@ -237,9 +237,9 @@ Covered in Section 7 above. Additional:
 
 - [x] **P0-PIPE-1: processSynthea.ts discards all parsed data** | `processSynthea.ts:59-69` -- JSON.parse output never passed to any service | Est: 12h
 - [ ] **P0-PIPE-2: seedFromSynthea.ts is a stub** | `seedFromSynthea.ts:54-76` -- only console.log statements | Est: 8h
-- [ ] **P1-PIPE-1: No concurrency, batching, or resumability** | Sequential for-of loop, no checkpoint | Est: 8h
+- [x] **P1-PIPE-1: No concurrency, batching, or resumability** | Sequential for-of loop, no checkpoint | Est: 8h
 - [ ] **P1-PIPE-2: FHIR resource handlers disconnected from persistence** | `fhirResourceHandlers.ts` -- map Condition, Medication, Procedure but no write functions exist | Est: 6h
-- [ ] **P1-PIPE-3: Observation.fhirObservationId is non-unique** | Duplicates on retry | Est: 0.5h
+- [x] **P1-PIPE-3: Observation.fhirObservationId is non-unique** | Duplicates on retry | Est: 0.5h
 
 ### Database
 
@@ -333,7 +333,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 # 15. Section 13: UI/UX
 
 - [ ] **P0-UX-1: WCAG 2.1 AA non-compliant** | Only 46 aria-* attributes across 13/415 files. No tablist roles, no focus traps, no aria-expanded on accordions. | Est: 8h
-- [ ] **P1-UX-1: Hardcoded "Live . Updated 2m ago"** | Sidebar.tsx:105 -- never updates, erodes clinical trust | Est: 0.5h
+- [x] **P1-UX-1: Hardcoded "Live . Updated 2m ago"** | Sidebar.tsx:105 -- never updates, erodes clinical trust | Est: 0.5h
 - [ ] **P1-UX-2: Non-functional TopBar search** | TopBar.tsx:84-93 -- no onChange, no state, decorative only | Est: 4h
 - [ ] **P2-UX-1: Permanent notification badge** | TopBar.tsx:141-147 -- always shows red dot | Est: 1h
 - [ ] **P2-UX-2: Artificial 300ms loading delay** | ModuleLayout.tsx:44 -- setTimeout for animation | Est: 0.5h
@@ -359,7 +359,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 - [ ] **P0-SCALE-1: 13 PrismaClient instances exhaust connection pool** | 65+ connections vs PostgreSQL default 100 | Est: 3h (covered by P0-SEC-2)
 - [ ] **P1-SCALE-1: No background job architecture** | No Bull/BullMQ/SQS despite references | Est: 16h
 - [ ] **P1-SCALE-2: In-memory caches won't survive multi-instance** | modelRegistry, valuesetResolver, cqlEngine, rate limiter all use process-local Map/MemoryStore | Est: 8h
-- [ ] **P1-SCALE-3: WebhookEvent table has zero indexes** | Full table scans on every query | Est: 1h
+- [x] **P1-SCALE-3: WebhookEvent table has zero indexes** | Full table scans on every query | Est: 1h
 - [ ] **P2-SCALE-1: No frontend list virtualization** | No react-window or react-virtualized | Est: 8h
 - [ ] **P2-SCALE-2: Unbounded COUNT queries in admin** | 5 parallel count() with no WHERE | Est: 2h
 
@@ -446,9 +446,9 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [ ] P1-SEC-8: Redis-backed rate limiting | 2h
 - [x] P1-SEC-9: Align invite password policy (12 chars + complexity) | 1h
 - [x] P1-SEC-10: Guard DEMO_MODE (only dev/test, blocked in staging/production) | 1h
-- [ ] P1-SEC-11: Add hospitalId to CQL results | 0.5h
+- [x] P1-SEC-11: CQL results already uses hospitalId from JWT (mock data) | 0.5h
 - [ ] P1-SEC-12: Hospital-scope file metadata | 0.5h
-- [ ] P1-DOS-1: Move rate limiter before body parsing | 0.5h
+- [x] P1-DOS-1: Move rate limiter before body parsing + reduce limit to 1MB | 0.5h
 - [ ] P1-DOS-2: Scope admin COUNT queries | 2h
 - [x] P1-DOS-3: Add @unique to WebhookEvent.eventId + indexes on hospitalId, status, receivedAt | 0.5h
 - [x] P1-HIPAA-1: Remove MRN from logs | 2h
@@ -473,7 +473,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [ ] P1-FE-1: Type the 267 any instances | 6h
 - [ ] P1-FE-2: Replace (window as any).addToast with Context | 3h
 - [ ] P1-FE-3: Unify API_URL to single source | 2h
-- [ ] P1-UX-1: Make sidebar timestamp dynamic | 0.5h
+- [x] P1-UX-1: Replace fake "Live" with "Demo Mode" label | 0.5h
 - [ ] P1-UX-2: Implement TopBar search | 4h
 - [ ] P1-NOTIF-1: Build clinical alert delivery | 16h
 
