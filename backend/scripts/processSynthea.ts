@@ -109,6 +109,8 @@ interface ProcessingStats {
   patients: number;
   encounters: number;
   observations: number;
+  conditions: number;
+  medications: number;
   errors: number;
 }
 
@@ -123,6 +125,8 @@ async function processFHIRBundle(
   const patients: FHIRPatient[] = [];
   const encounters: FHIREncounter[] = [];
   const observations: FHIRObservation[] = [];
+  const conditions: any[] = [];
+  const medicationRequests: any[] = [];
 
   for (const entry of bundle.entry) {
     const r = entry.resource;
@@ -136,8 +140,12 @@ async function processFHIRBundle(
       case "Observation":
         observations.push(r as FHIRObservation);
         break;
-      // Condition, MedicationRequest, Procedure, etc. can be added later
-      // as persistence functions are built for those resource types
+      case "Condition":
+        conditions.push(r);
+        break;
+      case "MedicationRequest":
+        medicationRequests.push(r);
+        break;
     }
   }
 
@@ -185,6 +193,62 @@ async function processFHIRBundle(
       stats.observations++;
     } catch (err: any) {
       stats.errors++;
+    }
+  }
+
+  // 4. Persist conditions (ICD-10 codes critical for gap detection)
+  if (conditions.length > 0) {
+    const conditionData = conditions
+      .filter(c => c.code?.coding?.[0])
+      .map(c => {
+        const coding = c.code.coding[0];
+        return {
+          patientId: patientId!,
+          hospitalId,
+          conditionName: coding.display || coding.code || 'Unknown',
+          icd10Code: coding.code || null,
+          snomedCode: coding.system?.includes('snomed') ? coding.code : null,
+          category: 'PROBLEM_LIST' as const,
+          clinicalStatus: (c.clinicalStatus?.coding?.[0]?.code === 'active' ? 'ACTIVE' : 'RESOLVED') as any,
+          verificationStatus: 'CONFIRMED' as any,
+          onsetDate: c.onsetDateTime ? new Date(c.onsetDateTime) : null,
+          abatementDate: c.abatementDateTime ? new Date(c.abatementDateTime) : null,
+          fhirConditionId: c.id || null,
+        };
+      });
+    if (conditionData.length > 0) {
+      try {
+        await prisma.condition.createMany({ data: conditionData, skipDuplicates: true });
+        stats.conditions += conditionData.length;
+      } catch (err: any) {
+        stats.errors++;
+      }
+    }
+  }
+
+  // 5. Persist medications (RxNorm codes critical for gap detection)
+  if (medicationRequests.length > 0) {
+    const medData = medicationRequests
+      .filter(m => m.medicationCodeableConcept?.coding?.[0])
+      .map(m => {
+        const coding = m.medicationCodeableConcept.coding[0];
+        return {
+          patientId: patientId!,
+          hospitalId,
+          medicationName: coding.display || coding.code || 'Unknown',
+          rxNormCode: coding.system?.includes('rxnorm') ? coding.code : null,
+          status: (m.status === 'active' ? 'ACTIVE' : m.status === 'stopped' ? 'STOPPED' : 'COMPLETED') as any,
+          startDate: m.authoredOn ? new Date(m.authoredOn) : null,
+          fhirMedicationRequestId: m.id || null,
+        };
+      });
+    if (medData.length > 0) {
+      try {
+        await prisma.medication.createMany({ data: medData, skipDuplicates: true });
+        stats.medications += medData.length;
+      } catch (err: any) {
+        stats.errors++;
+      }
     }
   }
 }
@@ -236,7 +300,7 @@ async function main() {
   console.log("TAILRD Synthea Processor");
   console.log("========================");
 
-  const stats: ProcessingStats = { patients: 0, encounters: 0, observations: 0, errors: 0 };
+  const stats: ProcessingStats = { patients: 0, encounters: 0, observations: 0, conditions: 0, medications: 0, errors: 0 };
   const startTime = Date.now();
 
   if (useS3) {
@@ -339,6 +403,8 @@ async function main() {
   console.log(`  Patients:     ${stats.patients}`);
   console.log(`  Encounters:   ${stats.encounters}`);
   console.log(`  Observations: ${stats.observations}`);
+  console.log(`  Conditions:   ${stats.conditions}`);
+  console.log(`  Medications:  ${stats.medications}`);
   console.log(`  Errors:       ${stats.errors}`);
   console.log(`  Time:         ${elapsed}s`);
 

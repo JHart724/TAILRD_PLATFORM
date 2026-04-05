@@ -79,7 +79,9 @@ router.get('/dashboard',
             } 
           } 
         }),
-        prisma.webhookEvent.count(),
+        prisma.webhookEvent.count({
+          where: { receivedAt: { gte: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000) } } // Last 90 days (bounded)
+        }),
         prisma.webhookEvent.count({
           where: {
             receivedAt: {
@@ -87,7 +89,7 @@ router.get('/dashboard',
             }
           }
         }),
-        prisma.alert.count(),
+        prisma.alert.count({ where: { isAcknowledged: false } }),
         prisma.alert.count({ where: { isAcknowledged: false } })
       ]);
 
