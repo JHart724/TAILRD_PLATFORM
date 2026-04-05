@@ -37,7 +37,7 @@ Each module has 3 view tiers: Executive (CMO/VP level), Service Line (director l
 
 **Database:**
 - PostgreSQL 15 (via Prisma migrations)
-- Redis 7 (declared, not yet wired into application code)
+- Redis 7 (client module at lib/redis.ts, connects when REDIS_URL set)
 
 **Infrastructure:**
 - Docker (multi-stage build) + docker-compose (postgres, redis, nginx)
@@ -97,7 +97,7 @@ TAILRD_PLATFORM-main/
 │   │   ├── middleware/               # auth, audit, rate-limit, PHI encryption, CSRF
 │   │   ├── cql/                      # Clinical Quality Language engine + gap rules
 │   │   │   └── gapRules/             # Individual gap rule definitions
-│   │   ├── redox/                    # EHR integration (event processor, FHIR handlers)
+│   │   ├── redox/                    # EHR integration (FHIR handlers, batch gap detection)
 │   │   ├── ingestion/                # CSV parser, patient writer, gap detection runner
 │   │   ├── ai/                       # ECG inference pipeline
 │   │   ├── config/                   # Role permissions
@@ -243,14 +243,18 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 - Clinical accuracy is non-negotiable. This platform will be used by cardiologists and health system CMOs.
 
 **Current gap rule status (as of April 2026):**
-- Heart Failure: 4 rules implemented (ATTR-CM, Iron Deficiency, Finerenone, Digoxin Toxicity)
-- Electrophysiology: 1 rule (QTc Safety)
-- Coronary: 1 rule (DAPT, CQL only -- not wired to runtime)
-- Structural Heart: 0 rules
-- Valvular: 0 rules
-- Peripheral Vascular: 0 rules
+- Heart Failure: 4 rules (ATTR-CM, Iron Deficiency, Finerenone for CKD+T2DM, Digoxin Toxicity)
+- Electrophysiology: 1 rule (QTc Safety, sex-specific thresholds)
+- Coronary: 1 rule (DAPT/P2Y12 discontinuation)
+- Structural Heart: 1 rule (Aortic Stenosis echo surveillance)
+- Valvular: 1 rule (Mechanical valve anticoagulation)
+- Peripheral Vascular: 2 rules (PAD statin therapy, ABI screening)
 
-The CQL engine (`cqlEngine.ts`) is currently scaffolding. The actual runtime gap detection runs through `ingestion/gapDetectionRunner.ts`.
+10 rules execute in the runtime (`ingestion/gapDetectionRunner.ts`). Each rule has guideline provenance in `RUNTIME_GAP_REGISTRY`. The CQL engine (`cqlEngine.ts`) is scaffolding -- gap rules run directly via TypeScript, not CQL. 256 gaps are defined in the frontend UI across all 6 modules.
+
+**Cardiovascular terminology:** `backend/src/terminology/cardiovascularValuesets.ts` contains curated LOINC, ICD-10, RxNorm, and SNOMED code sets for gap detection. When adding new gap rules, add required codes there.
+
+**Redis:** `backend/src/lib/redis.ts` provides a shared client singleton. Connects when `REDIS_URL` is set, falls back gracefully. Used for future rate limiter store, caching, and session management.
 
 ## 9. Key Contacts & Business Context
 

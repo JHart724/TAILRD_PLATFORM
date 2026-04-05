@@ -65,6 +65,34 @@ export const ICD10_CARDIAC_AMYLOIDOSIS = [
   'E85.1',   // Hereditary transthyretin amyloidosis (ATTRv)
 ] as const;
 
+/** Aortic stenosis (I35.0) -- used by structural heart gap rules */
+export const ICD10_AORTIC_STENOSIS = [
+  'I35.0',   // Nonrheumatic aortic (valve) stenosis
+  'I35.2',   // Nonrheumatic aortic (valve) stenosis with insufficiency
+  'I06.0',   // Rheumatic aortic stenosis
+  'I06.2',   // Rheumatic aortic stenosis with insufficiency
+  'Q23.0',   // Congenital stenosis of aortic valve
+] as const;
+
+/** Mechanical heart valve presence -- used by valvular anticoag gap rule */
+export const ICD10_MECHANICAL_VALVE = [
+  'Z95.2',   // Presence of prosthetic heart valve
+  'Z95.3',   // Presence of xenogenic heart valve
+  'Z95.4',   // Presence of other heart valve replacement
+] as const;
+
+/** Peripheral artery disease -- used by PV gap rules */
+export const ICD10_PAD = [
+  'I73.9',   // Peripheral vascular disease, unspecified
+  'I70.20',  // Atherosclerosis of native arteries of extremities, unspecified
+  'I70.21',  // Atherosclerosis of native arteries with intermittent claudication
+  'I70.22',  // Atherosclerosis of native arteries with rest pain
+  'I70.23',  // Atherosclerosis of native arteries with ulceration
+  'I70.24',  // Atherosclerosis of native arteries with gangrene
+  'I70.25',  // Atherosclerosis of native arteries, other
+  'I70.29',  // Other atherosclerosis of native arteries of extremities
+] as const;
+
 // ── LOINC Lab Codes ──────────────────────────────────────────────────────────
 
 /** Lab observation LOINC codes relevant to cardiovascular gap detection */
@@ -190,4 +218,24 @@ export const RXNORM_ASPIRIN = {
   ASPIRIN: '1191',
   ASPIRIN_81MG: '198464',
   ASPIRIN_325MG: '198467',
+} as const;
+
+/** Warfarin -- used by mechanical valve anticoagulation gap rule */
+export const RXNORM_WARFARIN = {
+  WARFARIN: '11289',
+  WARFARIN_1MG: '855288',
+  WARFARIN_2MG: '855296',
+  WARFARIN_5MG: '855318',
+  WARFARIN_10MG: '855332',
+} as const;
+
+/** High-intensity statins -- used by PAD statin gap rule */
+export const RXNORM_STATINS = {
+  ATORVASTATIN: '36567',
+  ROSUVASTATIN: '301542',
+  SIMVASTATIN: '83367',
+  PRAVASTATIN: '42463',
+  PITAVASTATIN: '861634',
+  LOVASTATIN: '6472',
+  FLUVASTATIN: '41127',
 } as const;

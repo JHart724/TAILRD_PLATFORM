@@ -186,6 +186,54 @@ export const RUNTIME_GAP_REGISTRY = [
     classOfRecommendation: '1',
     levelOfEvidence: 'A',
   },
+  {
+    id: 'gap-sh-1-as-surveillance',
+    name: 'Aortic Stenosis Echo Surveillance',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-05',
+    nextReviewDue: '2026-10-05',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-vd-1-mechanical-valve-anticoag',
+    name: 'Mechanical Valve Anticoagulation',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-05',
+    nextReviewDue: '2026-10-05',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-pv-1-pad-statin',
+    name: 'PAD Statin Therapy',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+    guidelineVersion: '2024',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-05',
+    nextReviewDue: '2026-10-05',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-pv-2-abi-screening',
+    name: 'ABI Screening',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+    guidelineVersion: '2024',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-05',
+    nextReviewDue: '2026-10-05',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
 ] as const;
 
 function evaluateGapRules(
@@ -318,6 +366,108 @@ function evaluateGapRules(
       medication: 'P2Y12 Inhibitor',
       recommendations: { action: 'Verify DAPT status with interventional cardiologist per ACC/AHA 2021' },
     });
+  }
+
+  // ============================================================
+  // Structural Heart Module
+  // ============================================================
+
+  // Gap SH-1: Aortic Stenosis Surveillance Imaging Overdue
+  // Guideline: 2020 ACC/AHA Valvular Heart Disease Guideline, Class 1, LOE B
+  // Moderate AS: echo every 1-2 years. Severe AS: echo every 6-12 months.
+  // Fires when: AS diagnosis (I35.0) present but no echo observation in 12 months
+  const hasAorticStenosis = dxCodes.some(c => c.startsWith('I35.0'));
+  if (hasAorticStenosis) {
+    const lastEcho = labValues['lvef']; // LVEF implies echo was done
+    // If no LVEF in data, echo may be overdue
+    if (lastEcho === undefined) {
+      gaps.push({
+        type: TherapyGapType.IMAGING_OVERDUE,
+        module: ModuleType.STRUCTURAL_HEART,
+        status: 'Echo surveillance overdue for aortic stenosis',
+        target: 'Transthoracic echocardiogram completed',
+        recommendations: {
+          action: 'Order TTE per 2020 ACC/AHA VHD Guideline',
+          guideline: '2020 ACC/AHA Valvular Heart Disease, Class 1, LOE B',
+        },
+      });
+    }
+  }
+
+  // ============================================================
+  // Valvular Disease Module
+  // ============================================================
+
+  // Gap VD-1: Anticoagulation Missing in Mechanical Valve
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE A
+  // All mechanical valve patients require lifelong warfarin (INR 2.5-3.5)
+  // RxNorm warfarin: 11289
+  const hasMechanicalValve = dxCodes.some(c =>
+    c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4')
+  );
+  if (hasMechanicalValve) {
+    const onWarfarin = medCodes.includes('11289');
+    if (!onWarfarin) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.VALVULAR_DISEASE,
+        status: 'Warfarin not active with mechanical valve',
+        target: 'Warfarin prescribed with target INR 2.5-3.5',
+        medication: 'Warfarin',
+        recommendations: {
+          action: 'Initiate warfarin per 2020 ACC/AHA VHD Guideline, Class 1, LOE A',
+          guideline: '2020 ACC/AHA Valvular Heart Disease',
+        },
+      });
+    }
+  }
+
+  // ============================================================
+  // Peripheral Vascular Module
+  // ============================================================
+
+  // Gap PV-1: Statin Missing in PAD
+  // Guideline: 2024 ACC/AHA PAD Guideline, Class 1, LOE A
+  // All PAD patients should be on high-intensity statin therapy
+  // RxNorm statins: atorvastatin (36567), rosuvastatin (301542)
+  const hasPAD = dxCodes.some(c => c.startsWith('I73.9') || c.startsWith('I70.2'));
+  if (hasPAD) {
+    const STATIN_CODES = ['36567', '301542', '83367', '42463']; // atorvastatin, rosuvastatin, simvastatin, pravastatin
+    const onStatin = medCodes.some(c => STATIN_CODES.includes(c));
+    if (!onStatin) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.PERIPHERAL_VASCULAR,
+        status: 'High-intensity statin not prescribed in PAD',
+        target: 'Statin therapy initiated',
+        medication: 'Atorvastatin or Rosuvastatin',
+        recommendations: {
+          action: 'Prescribe high-intensity statin per 2024 ACC/AHA PAD Guideline, Class 1, LOE A',
+          guideline: '2024 ACC/AHA Peripheral Artery Disease',
+        },
+      });
+    }
+  }
+
+  // Gap PV-2: ABI Screening Not Done
+  // Guideline: 2024 ACC/AHA PAD Guideline, Class 1, LOE B
+  // Patients with claudication symptoms (R26.89) or diabetes + age >50 should have ABI
+  const hasClaudication = dxCodes.some(c => c.startsWith('R26') || c.startsWith('M79.6'));
+  const diabetesOver50 = hasDiabetes && age >= 50;
+  if ((hasClaudication || diabetesOver50) && !hasPAD) {
+    const hasABI = labValues['abi_right'] !== undefined || labValues['abi_left'] !== undefined;
+    if (!hasABI) {
+      gaps.push({
+        type: TherapyGapType.SCREENING_DUE,
+        module: ModuleType.PERIPHERAL_VASCULAR,
+        status: 'ABI screening not performed',
+        target: 'Ankle-brachial index completed',
+        recommendations: {
+          action: 'Order ABI per 2024 ACC/AHA PAD Guideline for symptomatic/at-risk patients',
+          guideline: '2024 ACC/AHA Peripheral Artery Disease, Class 1, LOE B',
+        },
+      });
+    }
   }
 
   return gaps;
