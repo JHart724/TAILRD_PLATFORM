@@ -46,6 +46,8 @@ export default function GapCard({
       <button
         className="w-full text-left p-5 flex items-start justify-between hover:bg-titanium-50 transition-colors"
         onClick={handleToggle}
+        aria-expanded={isExpanded}
+        aria-controls={`gap-detail-${gap.id}`}
       >
         <div className="flex-1">
           <div className="flex flex-wrap items-center gap-2 mb-1">
@@ -112,7 +114,7 @@ export default function GapCard({
 
       {/* Expanded content */}
       {isExpanded && (
-        <div className="border-t border-titanium-200 p-5 space-y-5">
+        <div id={`gap-detail-${gap.id}`} className="border-t border-titanium-200 p-5 space-y-5">
           {children}
         </div>
       )}

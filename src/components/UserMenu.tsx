@@ -97,6 +97,9 @@ const UserMenu: React.FC<UserMenuProps> = ({
  <button
  onClick={() => setIsOpen(!isOpen)}
  className="flex items-center gap-3 px-3 py-2 rounded-lg border border-titanium-200 bg-white hover:bg-titanium-50 transition-all duration-200 hover:shadow-md"
+ aria-label="User menu"
+ aria-haspopup="true"
+ aria-expanded={isOpen}
  >
  {/* Avatar */}
  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-porsche-500 to-porsche-600 flex items-center justify-center text-white font-semibold text-sm">
@@ -121,7 +124,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
 
  {/* Dropdown Menu */}
  {isOpen && (
- <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-titanium-200 z-50 overflow-hidden">
+ <div role="menu" className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-titanium-200 z-50 overflow-hidden">
  {/* User Header */}
  <div className="p-4 bg-gradient-to-r from-porsche-50 to-porsche-100 border-b border-titanium-200">
  <div className="flex items-center gap-3">
@@ -157,6 +160,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
  return (
  <button
  key={item.label}
+ role="menuitem"
  onClick={() => {
  item.action();
  setIsOpen(false);
@@ -185,6 +189,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
  {/* Sign Out */}
  <div className="border-t border-titanium-200 p-2">
  <button
+ role="menuitem"
  onClick={async () => {
  setIsOpen(false);
  await logout();

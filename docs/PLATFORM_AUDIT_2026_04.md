@@ -129,8 +129,8 @@ Covered in Sections 1 and 3. Additional:
 ### P2 Findings
 
 - [x] **P2-HIPAA-1: No field-level response scoping by role** | `patients.ts:62-89` -- analyst sees same PHI as physician | Est: 6h
-- [ ] **P2-HIPAA-2: No automated breach notification delivery** | `breachNotification.ts` -- tracking only | Est: 4h
-- [ ] **P2-HIPAA-3: No automated hard-delete after retention period** | Architecture gap | Est: 4h
+- [x] **P2-HIPAA-2: No automated breach notification delivery** | Added /overdue-check endpoint + checkBreachDeadlines() | Est: 4h
+- [x] **P2-HIPAA-3: No automated hard-delete after retention period** | Created retentionPurge.ts script | Est: 4h
 - [x] **P2-HIPAA-4: BAAs needed for: PostgreSQL host, Redox, AWS S3, AWS SES, log aggregation** | Documentation gap | Est: 2h
 
 ---
@@ -333,7 +333,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 
 # 15. Section 13: UI/UX
 
-- [ ] **P0-UX-1: WCAG 2.1 AA non-compliant** | Only 46 aria-* attributes across 13/415 files. No tablist roles, no focus traps, no aria-expanded on accordions. | Est: 8h
+- [x] **P0-UX-1: WCAG 2.1 AA non-compliant** | Added ARIA to GapCard (expanded/controls), UserMenu (haspopup/menu/menuitem), Sidebar (navigation/aria-current), ModuleLayout (tablist/tab/selected). Focus traps on modals still TODO. | Est: 8h
 - [x] **P1-UX-1: Hardcoded "Live . Updated 2m ago"** | Sidebar.tsx:105 -- never updates, erodes clinical trust | Est: 0.5h
 - [x] **P1-UX-2: Non-functional TopBar search** | TopBar.tsx:84-93 -- no onChange, no state, decorative only | Est: 4h
 - [x] **P2-UX-1: Permanent notification badge** | TopBar.tsx:141-147 -- always shows red dot | Est: 1h
@@ -490,8 +490,8 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [x] P2-DOS-1: Add GIN index for patient search | 2h
 - [x] P2-AUTH-1: Standardize bcrypt cost to 12 | 0.5h
 - [x] P2-HIPAA-1: Role-based field scoping | 6h
-- [ ] P2-HIPAA-2: Automated breach notification | 4h
-- [ ] P2-HIPAA-3: Automated retention purge | 4h
+- [x] P2-HIPAA-2: Breach deadline check endpoint + checkBreachDeadlines() helper | 4h
+- [x] P2-HIPAA-3: retentionPurge.ts script for 6-year hard-delete | 4h
 - [x] P2-HIPAA-4: Document BAA requirements | 2h
 - [x] P2-CLIN-1: Fix CQL cache key collision | 1h
 - [x] P2-BACK-1: Remove dead analyticsController.ts | 0.5h

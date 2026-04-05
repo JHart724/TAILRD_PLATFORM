@@ -108,11 +108,12 @@ export default function Sidebar() {
       )}
 
       {/* Module Navigation */}
-      <nav className="flex-1 py-3 px-2 space-y-1 overflow-y-auto relative z-[1]">
+      <nav role="navigation" aria-label="Module navigation" className="flex-1 py-3 px-2 space-y-1 overflow-y-auto relative z-[1]">
         {/* Service Line */}
         <button
           onClick={() => navigate('/service-line')}
           title={!expanded ? 'Service Line' : undefined}
+          aria-current={isActive('/service-line') ? 'page' : undefined}
           className={`
             flex items-center w-full rounded-lg transition-all duration-200 mb-2
             ${expanded ? 'px-3 py-2.5 gap-3' : 'justify-center px-0 py-2.5'}
@@ -156,6 +157,7 @@ export default function Sidebar() {
               <button
                 onClick={() => navigate(item.path)}
                 title={!expanded ? item.label : undefined}
+                aria-current={active ? 'page' : undefined}
                 className={`
                   flex items-center w-full rounded-lg transition-all duration-200
                   ${expanded ? 'px-3 py-2.5 gap-3' : 'justify-center px-0 py-2.5'}

@@ -148,6 +148,75 @@ router.get('/', async (req: AuthenticatedRequest, res: Response) => {
   }
 });
 
+// GET /overdue — Get all incidents past HIPAA 60-day deadline without HHS notification
+router.get('/compliance/overdue', async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const sixtyDaysAgo = new Date();
+    sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+
+    const overdue = await prisma.breachIncident.findMany({
+      where: {
+        discoveredAt: { lte: sixtyDaysAgo },
+        hhsNotifiedAt: null,
+        status: { notIn: ['CLOSED', 'REMEDIATED'] },
+      },
+      orderBy: { discoveredAt: 'asc' },
+    });
+
+    return res.json({
+      success: true,
+      data: overdue,
+      meta: { overdueCount: overdue.length },
+    });
+  } catch (err: any) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// GET /overdue-check — Automated breach deadline warning for cron/dashboard
+router.get('/overdue-check', async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const result = await checkBreachDeadlines();
+
+    // Also return the detailed list for dashboard display
+    const now = new Date();
+    const openBreaches = await prisma.breachIncident.findMany({
+      where: {
+        status: { not: 'CLOSED' },
+        hhsNotifiedAt: null,
+      },
+      orderBy: { discoveredAt: 'asc' },
+    });
+
+    const breaches = openBreaches.map((inc) => {
+      const deadline = new Date(inc.discoveredAt);
+      deadline.setDate(deadline.getDate() + 60);
+      const daysRemaining = Math.ceil((deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      return {
+        id: inc.id,
+        discoveredAt: inc.discoveredAt.toISOString(),
+        incidentType: inc.incidentType,
+        severity: inc.severity,
+        status: inc.status,
+        hhsDeadline: deadline.toISOString(),
+        daysRemaining,
+        overdue: daysRemaining < 0,
+        approaching: daysRemaining >= 0 && daysRemaining <= 14,
+      };
+    });
+
+    return res.json({
+      success: true,
+      data: {
+        summary: result,
+        breaches,
+      },
+    });
+  } catch (err: any) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // GET /:id — Get breach incident detail
 router.get('/:id', async (req: AuthenticatedRequest, res: Response) => {
   try {
@@ -238,30 +307,38 @@ router.patch('/:id', async (req: AuthenticatedRequest, res: Response) => {
   }
 });
 
-// GET /overdue — Get all incidents past HIPAA 60-day deadline without HHS notification
-router.get('/compliance/overdue', async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const sixtyDaysAgo = new Date();
-    sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+/**
+ * Check all open breach incidents against the HIPAA 60-day notification deadline.
+ * Returns counts of overdue and approaching (within 14 days) breaches.
+ * Designed to be called from a cron schedule.
+ */
+export async function checkBreachDeadlines(): Promise<{ overdue: number; approaching: number }> {
+  const now = new Date();
+  const sixtyDaysAgo = new Date(now);
+  sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+  const fortysixDaysAgo = new Date(now);
+  fortysixDaysAgo.setDate(fortysixDaysAgo.getDate() - 46); // 60 - 14 = 46 days ago means 14 days remaining
 
-    const overdue = await prisma.breachIncident.findMany({
-      where: {
-        discoveredAt: { lte: sixtyDaysAgo },
-        hhsNotifiedAt: null,
-        status: { notIn: ['CLOSED', 'REMEDIATED'] },
-      },
-      orderBy: { discoveredAt: 'asc' },
-    });
+  // Overdue: discovered more than 60 days ago, not notified, not closed
+  const overdue = await prisma.breachIncident.count({
+    where: {
+      discoveredAt: { lt: sixtyDaysAgo },
+      hhsNotifiedAt: null,
+      status: { not: 'CLOSED' },
+    },
+  });
 
-    return res.json({
-      success: true,
-      data: overdue,
-      meta: { overdueCount: overdue.length },
-    });
-  } catch (err: any) {
-    return res.status(500).json({ success: false, error: err.message });
-  }
-});
+  // Approaching: discovered 46-60 days ago (14 days or fewer remaining), not notified, not closed
+  const approaching = await prisma.breachIncident.count({
+    where: {
+      discoveredAt: { gte: sixtyDaysAgo, lte: fortysixDaysAgo },
+      hhsNotifiedAt: null,
+      status: { not: 'CLOSED' },
+    },
+  });
+
+  return { overdue, approaching };
+}
 
 module.exports = router;
 export default router;
