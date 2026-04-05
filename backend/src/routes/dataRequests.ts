@@ -95,8 +95,6 @@ router.post('/access-request', async (req: AuthenticatedRequest, res: Response) 
           requestorRelation,
           notes: notes || null,
           status: 'PENDING',
-          patientMRN: patient.mrn,
-          patientName: `${patient.firstName} ${patient.lastName}`,
         },
       },
     });
@@ -342,7 +340,7 @@ router.post('/export/:patientId', async (req: AuthenticatedRequest, res: Respons
         resourceType: 'Patient',
         resourceId: patientId,
         patientId,
-        description: `Complete patient data export (DSAR) for patient ${patient.firstName} ${patient.lastName} (MRN: ${patient.mrn})`,
+        description: `Complete patient data export (DSAR) for patient ${patientId}`,
         metadata: {
           exportedRecordCounts: {
             encounters: patient.encounters.length,
@@ -497,15 +495,13 @@ router.post('/deletion/:patientId', async (req: AuthenticatedRequest, res: Respo
         resourceType: 'Patient',
         resourceId: patientId,
         patientId,
-        description: `Patient data deletion (DSAR) executed for ${patient.firstName} ${patient.lastName} (MRN: ${patient.mrn})`,
+        description: `Patient data deletion (DSAR) executed for patient ${patientId}`,
         metadata: {
           reason,
           legalBasis,
           deletionType: 'soft-delete',
           deletedAt: now.toISOString(),
           deletedRecordCounts: result,
-          patientMRN: patient.mrn,
-          patientName: `${patient.firstName} ${patient.lastName}`,
           note: 'Records soft-deleted for HIPAA 6-year retention compliance. Hard deletion available after retention period.',
         },
       },

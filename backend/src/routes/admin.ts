@@ -388,12 +388,19 @@ router.put('/hospitals/:hospitalId',
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { hospitalId } = req.params;
-      const updateData = req.body;
 
-      // Remove fields that shouldn't be updated directly
-      delete updateData.id;
-      delete updateData.createdAt;
-      delete updateData.updatedAt;
+      // Whitelist allowed update fields to prevent mass assignment
+      const { name, displayName, address, city, state, zipCode, phone, website,
+              logoUrl, primaryColor, secondaryColor, timezone, ehrSystem,
+              subscriptionTier, subscriptionActive, maxUsers, enabledModules,
+              contactName, contactEmail, contactPhone } = req.body;
+      const updateData = Object.fromEntries(
+        Object.entries({ name, displayName, address, city, state, zipCode, phone, website,
+          logoUrl, primaryColor, secondaryColor, timezone, ehrSystem,
+          subscriptionTier, subscriptionActive, maxUsers, enabledModules,
+          contactName, contactEmail, contactPhone })
+          .filter(([_, v]) => v !== undefined)
+      );
 
       const hospital = await prisma.hospital.update({
         where: { id: hospitalId },

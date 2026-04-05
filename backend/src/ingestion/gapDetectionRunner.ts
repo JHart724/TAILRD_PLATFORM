@@ -118,11 +118,13 @@ function evaluateGapRules(
   void hasCAD;
 
   // Gap 1: ATTR-CM Detection (HF)
+  // Guideline: 2023 ACC Expert Consensus on ATTR-CM Diagnosis and Management
+  // Signals: elevated NT-proBNP, preserved LVEF (>=50%), elevated hs-TnT, age>=65
   if (hasHF) {
     let signals = 0;
     if (labValues['nt_probnp'] && labValues['nt_probnp'] > 900) signals++;
     if (labValues['lvef'] && labValues['lvef'] >= 50) signals++;
-    if (labValues['ferritin'] && labValues['ferritin'] > 14) signals++; // hs-TnT proxy
+    if (labValues['hs_tnt'] && labValues['hs_tnt'] > 14) signals++; // hs-TnT (LOINC 67151-1), NOT ferritin
     if (age >= 65) signals++;
     if (signals >= 3) {
       gaps.push({
@@ -152,13 +154,16 @@ function evaluateGapRules(
     }
   }
 
-  // Gap 6: Finerenone (HF)
+  // Gap 6: Finerenone for CKD with Type 2 Diabetes (HF comorbidity)
+  // Guideline: FIDELIO-DKD / FIGARO-DKD trials; FDA-approved for CKD + T2DM
+  // Requires: T2DM diagnosis + eGFR 25-60 + K<5.0 + not already on finerenone
+  // Note: This is NOT a general HF MRA -- finerenone is specifically for diabetic kidney disease
+  const hasDiabetes = dxCodes.some(c => c.startsWith('E11')); // Type 2 diabetes mellitus
   if (
-    hasHF &&
-    labValues['lvef'] !== undefined &&
-    labValues['lvef'] >= 40 &&
+    hasDiabetes &&
     labValues['egfr'] !== undefined &&
     labValues['egfr'] >= 25 &&
+    labValues['egfr'] <= 60 &&
     labValues['potassium'] !== undefined &&
     labValues['potassium'] < 5.0
   ) {
@@ -166,10 +171,10 @@ function evaluateGapRules(
       gaps.push({
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.HEART_FAILURE,
-        status: 'Finerenone not prescribed',
+        status: 'Finerenone not prescribed (CKD + T2DM)',
         target: 'Finerenone initiated',
         medication: 'Finerenone',
-        recommendations: { action: 'Prescribe Finerenone' },
+        recommendations: { action: 'Prescribe Finerenone for CKD with T2DM per FIDELIO-DKD/FIGARO-DKD' },
       });
     }
   }

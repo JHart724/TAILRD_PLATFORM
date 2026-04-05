@@ -47,8 +47,8 @@ The platform needs approximately **200 engineering hours** to reach a state wher
 - [ ] **P0-SEC-1: AWS credentials, JWT secret, PHI encryption key committed to git** | `backend/.env:11-17` | Risk: Full AWS account compromise, JWT forgery, PHI decryption | Est: 4h
 - [x] **P0-SEC-2: 13 files create own PrismaClient, bypassing PHI encryption** | `server.ts:11`, `auth.ts:9`, `admin.ts:10`, `analytics.ts:12`, `referrals.ts:10`, `phenotypes.ts:10`, `onboarding.ts:9`, `middleware/analytics.ts:6`, `eventProcessor.ts:26`, `ecgAIService.ts:159`, `contentIntelligenceService.ts:211`, `seed.ts:4`, `seedBSW.ts:4` | Risk: PHI stored/read in plaintext | Est: 3h
 - [x] **P0-SEC-3: Cross-tenant IDOR on all clinicalIntelligence endpoints** | `clinicalIntelligence.ts:25,132,280,442,472` -- queries by patientId without hospitalId | Risk: Hospital A reads Hospital B patient data | Est: 4h
-- [ ] **P0-SEC-4: Unauthenticated webhook test endpoint reflects body** | `webhooks.ts:232-240` | Risk: Information disclosure, SSRF probe | Est: 1h
-- [ ] **P0-SEC-5: Mass assignment on hospital update** | `admin.ts:392-401` -- raw req.body to prisma.update | Risk: Attacker sets redoxWebhookUrl to their server | Est: 1h
+- [x] **P0-SEC-4: Unauthenticated webhook test endpoint reflects body** | `webhooks.ts:232-240` | Risk: Information disclosure, SSRF probe | Est: 1h
+- [x] **P0-SEC-5: Mass assignment on hospital update** | `admin.ts:392-401` -- raw req.body to prisma.update | Risk: Attacker sets redoxWebhookUrl to their server | Est: 1h
 
 ### P1 Findings
 
@@ -114,7 +114,7 @@ Covered in Sections 1 and 3. Additional:
 ### P0 Findings
 
 - [ ] **P0-HIPAA-1: PHI encryption covers Patient model only** | `phiEncryption.ts:10-23` -- Encounter (primaryDiagnosis, chiefComplaint), Observation (valueText), Order (orderName, indication), Medication (medicationName), Condition (conditionName, icd10Code), WebhookEvent (rawPayload with full FHIR bundles) are ALL unencrypted | Est: 8h
-- [ ] **P0-HIPAA-2: PHI in audit log metadata** | `dataRequests.ts:98-99,345,500` -- patient MRN and name stored in plaintext AuditLog.metadata | Est: 3h
+- [x] **P0-HIPAA-2: PHI in audit log metadata** | `dataRequests.ts:98-99,345,500` -- patient MRN and name stored in plaintext AuditLog.metadata | Est: 3h
 
 ### P1 Findings
 
@@ -208,8 +208,8 @@ Covered in Sections 1 and 3. Additional:
 Covered in Section 7 above. Additional:
 
 - [ ] **P0-CLIN-1: CQL engine returns Math.random()** | `cqlEngine.ts:452-479` -- createMockCompiledRule() | Est: 0h (do not fix CQL engine -- fix runtime rules instead)
-- [ ] **P0-CLIN-2: Ferritin used as troponin proxy in ATTR-CM** | `gapDetectionRunner.ts:125` | Risk: False positives in iron-overloaded patients | Est: 2h
-- [ ] **P0-CLIN-3: Finerenone recommended for HF (wrong indication)** | `gapDetectionRunner.ts:156-175` | Risk: Clinically inappropriate recommendation | Est: 2h
+- [x] **P0-CLIN-2: Ferritin used as troponin proxy in ATTR-CM** | `gapDetectionRunner.ts:125` | Risk: False positives in iron-overloaded patients | Est: 2h
+- [x] **P0-CLIN-3: Finerenone recommended for HF (wrong indication)** | `gapDetectionRunner.ts:156-175` | Risk: Clinically inappropriate recommendation | Est: 2h
 - [ ] **P1-CLIN-1: Gap 50 DAPT has no runtime implementation** | CQL only, dead code | Est: 4h
 - [ ] **P1-CLIN-2: QTc alert is sex-agnostic** | `gap39_qtcAlert.cql.ts:55` -- 470ms threshold misses male prolongation (450-470) | Est: 1h
 - [ ] **P1-CLIN-3: Operator precedence bug in alert filtering** | `cqlEngine.ts:768` -- `&&` vs `||` precedence | Est: 0.5h
@@ -423,12 +423,12 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [ ] P0-SEC-1: Rotate ALL secrets (AWS keys, JWT, PHI key). Add .env to .gitignore. Scrub git history. | 4h
 - [x] P0-SEC-2: Replace 13 rogue PrismaClient instances with shared singleton | 3h
 - [x] P0-SEC-3: Add hospitalId to all clinicalIntelligence WHERE clauses | 4h
-- [ ] P0-SEC-4: Remove/gate unauthenticated webhook test endpoint | 1h
-- [ ] P0-SEC-5: Whitelist fields on admin hospital update | 1h
+- [x] P0-SEC-4: Remove/gate unauthenticated webhook test endpoint | 1h
+- [x] P0-SEC-5: Whitelist fields on admin hospital update | 1h
 - [ ] P0-HIPAA-1: Extend PHI encryption to Encounter, Observation, Order, Medication, Condition, WebhookEvent | 8h
-- [ ] P0-HIPAA-2: Remove PHI from audit log metadata | 3h
-- [ ] P0-CLIN-2: Fix ferritin/troponin substitution in ATTR-CM | 2h
-- [ ] P0-CLIN-3: Fix finerenone indication (add diabetes check or remove) | 2h
+- [x] P0-HIPAA-2: Remove PHI from audit log metadata | 3h
+- [x] P0-CLIN-2: Fix ferritin/troponin substitution in ATTR-CM | 2h
+- [x] P0-CLIN-3: Fix finerenone indication (add diabetes check or remove) | 2h
 - [ ] P0-PIPE-1: Wire processSynthea.ts to persistence services | 12h
 - [ ] P0-BACK-1: Remove @ts-nocheck from analytics.ts | 3h
 - [ ] P0-UX-1: Add ARIA attributes, focus traps, keyboard nav | 8h

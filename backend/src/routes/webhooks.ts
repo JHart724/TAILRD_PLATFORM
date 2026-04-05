@@ -227,17 +227,20 @@ router.post('/redox', verifyRedoxSignature, async (req, res) => {
   }
 });
 
-// ── Test endpoint (no signature verification) ───────────────────────────────
+// ── Test endpoint (super-admin only, no signature verification) ──────────────
 
-router.post('/redox/test', (req, res) => {
-  logger.info('Test webhook endpoint called');
-  res.status(200).json({
-    success: true,
-    message: 'Test webhook endpoint is working',
-    timestamp: new Date().toISOString(),
-    receivedData: req.body
-  } as APIResponse);
-});
+router.post('/redox/test',
+  authenticateToken,
+  authorizeRole(['super-admin']),
+  (req, res) => {
+    logger.info('Test webhook endpoint called');
+    res.status(200).json({
+      success: true,
+      message: 'Test webhook endpoint is working',
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+);
 
 // ── Dead-letter queue (admin only) ──────────────────────────────────────────
 
@@ -264,21 +267,23 @@ router.get('/dead-letter',
   }
 );
 
-// ── Status endpoint ─────────────────────────────────────────────────────────
+// ── Status endpoint (super-admin only) ───────────────────────────────────────
 
-router.get('/redox/status', (req, res) => {
-  res.status(200).json({
-    success: true,
-    data: {
-      status: 'active',
-      webhookUrl: `${process.env.API_BASE_URL}/webhooks/redox`,
-      testUrl: `${process.env.API_BASE_URL}/webhooks/redox/test`,
-      signatureVerification: !!process.env.REDOX_WEBHOOK_SECRET,
-      lastUpdated: new Date().toISOString()
-    },
-    message: 'Redox webhook endpoints are configured and ready',
-    timestamp: new Date().toISOString()
-  } as APIResponse);
-});
+router.get('/redox/status',
+  authenticateToken,
+  authorizeRole(['super-admin']),
+  (req, res) => {
+    res.status(200).json({
+      success: true,
+      data: {
+        status: 'active',
+        signatureVerification: !!process.env.REDOX_WEBHOOK_SECRET,
+        lastUpdated: new Date().toISOString()
+      },
+      message: 'Redox webhook status',
+      timestamp: new Date().toISOString()
+    } as APIResponse);
+  }
+);
 
 export = router;
