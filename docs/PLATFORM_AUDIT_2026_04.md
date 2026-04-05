@@ -215,7 +215,7 @@ Covered in Section 7 above. Additional:
 - [x] **P1-CLIN-3: Operator precedence bug in alert filtering** | `cqlEngine.ts:768` -- `&&` vs `||` precedence | Est: 0.5h
 - [ ] **P1-CLIN-4: Valueset resolver is entirely mock data** | `valuesetResolver.ts:441-541` -- 3-4 codes per terminology | Est: 8h
 - [ ] **P1-CLIN-5: No guideline versioning mechanism** | No guidelineVersion, lastReviewDate, or expirationDate on rules | Est: 4h
-- [ ] **P1-CLIN-6: TherapyGapType enum too narrow** | `schema.prisma:1308-1316` -- only 7 types, cannot represent procedure/screening/referral gaps | Est: 2h
+- [x] **P1-CLIN-6: TherapyGapType enum too narrow** | `schema.prisma:1308-1316` -- only 7 types, cannot represent procedure/screening/referral gaps | Est: 2h
 - [ ] **P2-CLIN-1: Cache key collision in CQL engine** | `cqlEngine.ts:704-713` -- hash uses resource counts only | Est: 1h
 
 ---
@@ -300,7 +300,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 
 - [x] **P0-BACK-1: @ts-nocheck on 500+ line analytics route** | `analytics.ts:1` | Est: 3h
 - [ ] **P0-BACK-2: PatientService class is a stub** | `patientService.ts:199-218` -- returns fake IDs like `patient-${Date.now()}` | Est: 2h
-- [ ] **P1-BACK-1: N+1 in gapDetectionRunner** | `gapDetectionRunner.ts:60-90` -- individual findFirst+create per patient per gap | Est: 2h
+- [x] **P1-BACK-1: N+1 in gapDetectionRunner** | `gapDetectionRunner.ts:60-90` -- individual findFirst+create per patient per gap | Est: 2h
 - [ ] **P1-BACK-2: N+1 in patientWriter** | `patientWriter.ts:20-119` -- 16 INSERTs per CSV row | Est: 3h
 - [x] **P1-BACK-3: N+1 in observationService alert creation** | `observationService.ts:320-333` | Est: 0.5h
 - [ ] **P1-BACK-4: createSuperAdmin.ts never writes to DB** | `createSuperAdmin.ts:12-45` -- creates in-memory object only | Est: 1h
@@ -462,10 +462,10 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [x] P1-CLIN-3: Fix operator precedence in alert filter | 0.5h
 - [ ] P1-CLIN-4: Build real valueset resolver | 8h
 - [ ] P1-CLIN-5: Add guideline versioning to rules | 4h
-- [ ] P1-CLIN-6: Expand TherapyGapType enum | 2h
+- [x] P1-CLIN-6: Expand TherapyGapType enum (+7 types: PROCEDURE_INDICATED, SCREENING_DUE, REFERRAL_NEEDED, DOCUMENTATION_GAP, SAFETY_ALERT, REHABILITATION_ELIGIBLE, IMAGING_OVERDUE) | 2h
 - [ ] P1-PIPE-1: Add concurrency and resumability to Synthea pipeline | 8h
 - [ ] P1-PIPE-2: Build persistence for FHIR Condition, Medication, Procedure | 6h
-- [ ] P1-BACK-1: Batch gapDetectionRunner writes | 2h
+- [x] P1-BACK-1: Pre-load existing gaps + batch createMany in gapDetectionRunner | 2h
 - [ ] P1-BACK-2: Batch patientWriter writes | 3h
 - [ ] P1-BACK-4: Make createSuperAdmin actually write to DB | 1h
 - [ ] P1-SCALE-1: Build background job system (BullMQ + Redis) | 16h

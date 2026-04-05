@@ -56,37 +56,44 @@ export async function runGapDetection(
     // Run gap detection rules
     const detectedGaps = evaluateGapRules(dxCodes, labValues, medCodes, age, patient.gender);
 
-    for (const gap of detectedGaps) {
-      const existing = await prisma.therapyGap.findFirst({
-        where: {
-          patientId: patient.id,
-          hospitalId,
-          gapType: gap.type,
-          module: gap.module,
-        },
-      });
+    if (detectedGaps.length === 0) continue;
 
-      if (existing) {
+    // Pre-load existing gaps for this patient in one query (avoids N+1)
+    const existingGaps = await prisma.therapyGap.findMany({
+      where: { patientId: patient.id, hospitalId },
+      select: { id: true, gapType: true, module: true },
+    });
+    const existingKey = (g: { gapType: string; module: string }) => `${g.gapType}::${g.module}`;
+    const existingMap = new Map(existingGaps.map(g => [existingKey(g), g.id]));
+
+    const toCreate: any[] = [];
+    for (const gap of detectedGaps) {
+      const key = existingKey({ gapType: gap.type, module: gap.module });
+      const existingId = existingMap.get(key);
+
+      if (existingId) {
         await prisma.therapyGap.update({
-          where: { id: existing.id },
+          where: { id: existingId },
           data: { currentStatus: gap.status },
         });
         result.gapFlagsUpdated++;
       } else {
-        await prisma.therapyGap.create({
-          data: {
-            patientId: patient.id,
-            hospitalId,
-            gapType: gap.type,
-            module: gap.module,
-            medication: gap.medication || null,
-            currentStatus: gap.status,
-            targetStatus: gap.target,
-            recommendations: gap.recommendations as Prisma.InputJsonValue ?? Prisma.JsonNull,
-          },
+        toCreate.push({
+          patientId: patient.id,
+          hospitalId,
+          gapType: gap.type,
+          module: gap.module,
+          medication: gap.medication || null,
+          currentStatus: gap.status,
+          targetStatus: gap.target,
+          recommendations: gap.recommendations as Prisma.InputJsonValue ?? Prisma.JsonNull,
         });
-        result.gapFlagsCreated++;
       }
+    }
+
+    if (toCreate.length > 0) {
+      await prisma.therapyGap.createMany({ data: toCreate });
+      result.gapFlagsCreated += toCreate.length;
     }
   }
 
