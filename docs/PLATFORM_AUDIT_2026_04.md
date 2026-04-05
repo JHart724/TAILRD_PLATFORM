@@ -71,7 +71,7 @@ The platform needs approximately **200 engineering hours** to reach a state wher
 - [x] **P2-SEC-1: Math.random() for API key generation** | `onboarding.ts:491-498` | Est: 0.5h
 - [x] **P2-SEC-2: 10MB JSON body limit** | `server.ts:124` | Est: 0.5h
 - [x] **P2-SEC-3: PHI encryption passthrough in non-production** | `phiEncryption.ts:27-29` | Est: 0.5h
-- [ ] **P2-SEC-4: JWT stored in plaintext in loginSession** | `auth.ts:203-211` | Est: 2h
+- [x] **P2-SEC-4: JWT stored in plaintext in loginSession** | `auth.ts:203-211` | Est: 2h
 - [x] **P2-SEC-5: Webhook status leaks config unauthenticated** | `webhooks.ts:268-282` | Est: 0.25h
 - [x] **P2-SEC-6: Admin analytics returns fake data on DB failure** | `admin.ts:49-58` | Est: 0.25h
 
@@ -96,7 +96,7 @@ Only finding:
 - [x] **P1-DOS-1: Rate limiter runs AFTER 10MB body parsing** | `server.ts` middleware order | Est: 0.5h
 - [x] **P1-DOS-2: Admin runs 5 unbounded COUNT(*) queries** | `admin.ts:26-30` | Est: 2h
 - [x] **P1-DOS-3: WebhookEvent.eventId has no unique index** | `schema.prisma:518` -- idempotency check is a full table scan, TOCTOU race under concurrency | Est: 0.5h
-- [ ] **P2-DOS-1: Patient search uses ILIKE without GIN index** | `patients.ts:54-57` | Est: 2h
+- [x] **P2-DOS-1: Patient search uses ILIKE without GIN index** | `patients.ts:54-57` | Est: 2h
 
 ---
 
@@ -131,7 +131,7 @@ Covered in Sections 1 and 3. Additional:
 - [ ] **P2-HIPAA-1: No field-level response scoping by role** | `patients.ts:62-89` -- analyst sees same PHI as physician | Est: 6h
 - [ ] **P2-HIPAA-2: No automated breach notification delivery** | `breachNotification.ts` -- tracking only | Est: 4h
 - [ ] **P2-HIPAA-3: No automated hard-delete after retention period** | Architecture gap | Est: 4h
-- [ ] **P2-HIPAA-4: BAAs needed for: PostgreSQL host, Redox, AWS S3, AWS SES, log aggregation** | Documentation gap | Est: 2h
+- [x] **P2-HIPAA-4: BAAs needed for: PostgreSQL host, Redox, AWS S3, AWS SES, log aggregation** | Documentation gap | Est: 2h
 
 ---
 

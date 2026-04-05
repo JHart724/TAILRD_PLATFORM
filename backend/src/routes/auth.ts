@@ -198,12 +198,14 @@ router.post('/login', async (req: Request, res: Response) => {
       permissions,
     });
 
-    // Create login session
+    // Create login session (store hashed token, not plaintext)
+    const crypto = require('crypto');
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
     await prisma.loginSession.create({
       data: {
         userId: user.id,
         hospitalId: user.hospitalId,
-        sessionToken: token,
+        sessionToken: tokenHash,
         ipAddress: req.ip || 'unknown',
         userAgent: req.get('User-Agent') || 'unknown',
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
@@ -253,8 +255,10 @@ router.post('/logout', async (req: Request, res: Response) => {
 
   if (!isDemoMode && token) {
     try {
+      const crypto = require('crypto');
+      const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
       await prisma.loginSession.updateMany({
-        where: { sessionToken: token, isActive: true },
+        where: { sessionToken: tokenHash, isActive: true },
         data: { isActive: false },
       });
     } catch (error) {
@@ -301,11 +305,14 @@ router.post('/refresh', async (req: Request, res: Response) => {
       demoMode: decoded.demoMode,
     });
 
-    // Update session in DB (production only)
+    // Update session in DB (production only) -- store hashed tokens
     if (!isDemoMode) {
+      const crypto = require('crypto');
+      const oldHash = crypto.createHash('sha256').update(token).digest('hex');
+      const newHash = crypto.createHash('sha256').update(newToken).digest('hex');
       await prisma.loginSession.updateMany({
-        where: { sessionToken: token, isActive: true },
-        data: { sessionToken: newToken, lastActivity: new Date() },
+        where: { sessionToken: oldHash, isActive: true },
+        data: { sessionToken: newHash, lastActivity: new Date() },
       });
     }
 

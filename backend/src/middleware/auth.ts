@@ -32,8 +32,10 @@ const authenticateToken = async (req: AuthenticatedRequest, res: Response, next:
 
       // Validate session is still active (logout invalidates sessions)
       if (!isDemoMode) {
+        const crypto = require('crypto');
+        const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
         const session = await prisma.loginSession.findUnique({
-          where: { sessionToken: token },
+          where: { sessionToken: tokenHash },
           select: { isActive: true },
         });
         if (!session || !session.isActive) {
