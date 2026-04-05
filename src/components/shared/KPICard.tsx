@@ -3,7 +3,7 @@ import { TrendingUp, TrendingDown } from 'lucide-react';
 
 interface KPICardProps {
   label: string;
-  value: string;
+  value: string | null | undefined;
   subvalue?: string;
   trend?: {
  direction: 'up' | 'down';
@@ -142,10 +142,10 @@ const KPICard: React.FC<KPICardProps> = ({
  <div style={getMicroRuleStyle()} />
  <div
  className="kpi-value"
- aria-label={`${label} value: ${value}`}
+ aria-label={`${label} value: ${value ?? 'No data'}`}
  style={accentColor ? { color: accentColor } : undefined}
  >
- {value}
+ {value ?? <span className="text-titanium-400 text-lg">--</span>}
  </div>
  {subvalue && (
  <div className="text-sm font-body mt-1" style={{ color: '#3A5268' }}>{subvalue}</div>
