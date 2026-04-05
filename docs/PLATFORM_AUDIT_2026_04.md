@@ -237,7 +237,7 @@ Covered in Section 7 above. Additional:
 ### Synthea Pipeline
 
 - [x] **P0-PIPE-1: processSynthea.ts discards all parsed data** | `processSynthea.ts:59-69` -- JSON.parse output never passed to any service | Est: 12h
-- [ ] **P0-PIPE-2: seedFromSynthea.ts is a stub** | `seedFromSynthea.ts:54-76` -- only console.log statements | Est: 8h
+- [x] **P0-PIPE-2: seedFromSynthea.ts is a stub** | `seedFromSynthea.ts:54-76` -- only console.log statements | Est: 8h
 - [x] **P1-PIPE-1: No concurrency, batching, or resumability** | Sequential for-of loop, no checkpoint | Est: 8h
 - [x] **P1-PIPE-2: FHIR resource handlers disconnected from persistence** | `fhirResourceHandlers.ts` -- map Condition, Medication, Procedure but no write functions exist | Est: 6h
 - [x] **P1-PIPE-3: Observation.fhirObservationId is non-unique** | Duplicates on retry | Est: 0.5h
