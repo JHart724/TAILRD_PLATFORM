@@ -128,7 +128,7 @@ Covered in Sections 1 and 3. Additional:
 
 ### P2 Findings
 
-- [ ] **P2-HIPAA-1: No field-level response scoping by role** | `patients.ts:62-89` -- analyst sees same PHI as physician | Est: 6h
+- [x] **P2-HIPAA-1: No field-level response scoping by role** | `patients.ts:62-89` -- analyst sees same PHI as physician | Est: 6h
 - [ ] **P2-HIPAA-2: No automated breach notification delivery** | `breachNotification.ts` -- tracking only | Est: 4h
 - [ ] **P2-HIPAA-3: No automated hard-delete after retention period** | Architecture gap | Est: 4h
 - [x] **P2-HIPAA-4: BAAs needed for: PostgreSQL host, Redox, AWS S3, AWS SES, log aggregation** | Documentation gap | Est: 2h
@@ -327,7 +327,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 - [x] **P2-FE-1: App.tsx has ~350 lines of dead code** | Lines 96-682 -- inline SVG icons, duplicate KpiCard, unreachable MainDashboard | Est: 2h
 - [ ] **P2-FE-2: 34 TODO stubs in care team configs** | Unimplemented button handlers across 13 files | Est: 4h
 - [x] **P2-FE-3: rememberMe checkbox is cosmetic** | Login.tsx:15-16 -- never consumed | Est: 0.5h
-- [ ] **P2-FE-4: Legacy porsche-*/crimson-* Tailwind classes** | May not resolve in current config -- invisible styling failures | Est: 2h
+- [x] **P2-FE-4: Legacy porsche-*/crimson-* Tailwind classes** (verified: defined in tailwind.config.js, not legacy -- active design system) | May not resolve in current config -- invisible styling failures | Est: 2h
 
 ---
 

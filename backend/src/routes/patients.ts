@@ -6,6 +6,25 @@ import { writeAuditLog } from '../middleware/auditLogger';
 import { validateBody, createPatientSchema, updatePatientSchema } from '../validation/clinicalSchemas';
 import prisma from '../lib/prisma';
 
+// HIPAA minimum necessary: redact direct identifiers for non-clinical roles
+const PHI_REDACTED_ROLES = ['analyst', 'quality-director'];
+function redactPHI(patient: Record<string, unknown>, role: string): Record<string, unknown> {
+  if (!PHI_REDACTED_ROLES.includes(role)) return patient;
+  return {
+    ...patient,
+    firstName: '***',
+    lastName: '***',
+    mrn: '***',
+    dateOfBirth: null,
+    phone: null,
+    email: null,
+    street: null,
+    city: null,
+    state: null,
+    zipCode: null,
+  };
+}
+
 const router = Router();
 
 // All patient routes require authentication + PHI access tier
@@ -91,9 +110,12 @@ router.get('/',
         prisma.patient.count({ where }),
       ]);
 
+      const role = req.user!.role;
+      const scoped = patients.map(p => redactPHI(p as Record<string, unknown>, role));
+
       const response: PaginatedResponse = {
         success: true,
-        data: patients,
+        data: scoped,
         pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
         message: `${patients.length} patients`,
         timestamp: new Date().toISOString(),
@@ -162,9 +184,10 @@ router.get('/:patientId',
         } as APIResponse);
       }
 
+      const scopedPatient = redactPHI(patient as Record<string, unknown>, req.user!.role);
       res.json({
         success: true,
-        data: patient,
+        data: scopedPatient,
         message: 'Patient retrieved',
         timestamp: new Date().toISOString(),
       } as APIResponse);
