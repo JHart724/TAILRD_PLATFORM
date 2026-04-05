@@ -109,18 +109,21 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
-// Add CloudWatch transport for production (if configured)
+// Add CloudWatch transport for production (if configured and installed)
 if (process.env.NODE_ENV === 'production' && process.env.AWS_CLOUDWATCH_GROUP) {
-  const CloudWatchTransport = require('winston-cloudwatch');
-  
-  logger.add(new CloudWatchTransport({
-    logGroupName: process.env.AWS_CLOUDWATCH_GROUP,
-    logStreamName: `tailrd-backend-${new Date().toISOString().split('T')[0]}`,
-    awsRegion: process.env.AWS_REGION || 'us-east-1',
-    messageFormatter: (item: any) => {
-      return `${item.timestamp} [${item.level}] ${item.message} ${JSON.stringify(item.meta)}`;
-    }
-  }));
+  try {
+    const CloudWatchTransport = require('winston-cloudwatch');
+    logger.add(new CloudWatchTransport({
+      logGroupName: process.env.AWS_CLOUDWATCH_GROUP,
+      logStreamName: `tailrd-backend-${new Date().toISOString().split('T')[0]}`,
+      awsRegion: process.env.AWS_REGION || 'us-east-1',
+      messageFormatter: (item: any) => {
+        return `${item.timestamp} [${item.level}] ${item.message} ${JSON.stringify(item.meta)}`;
+      }
+    }));
+  } catch {
+    console.warn('winston-cloudwatch not installed. Install with: npm install winston-cloudwatch');
+  }
 }
 
 // Helper functions for structured logging

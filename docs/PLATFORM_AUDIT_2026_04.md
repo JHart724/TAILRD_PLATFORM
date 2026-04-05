@@ -479,7 +479,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 
 ## P2 -- Fix Before Scale (27 items, ~95h)
 
-- [ ] P2-SEC-1: Crypto.randomBytes for API keys | 0.5h
+- [x] P2-SEC-1: Crypto.randomBytes for API keys | 0.5h
 - [x] P2-SEC-2: Reduce body limit to 1MB (done with P1-DOS-1) | 0.5h
 - [ ] P2-SEC-3: Require PHI key in non-demo environments | 0.5h
 - [ ] P2-SEC-4: Hash session tokens in DB | 2h
@@ -487,7 +487,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [ ] P2-SEC-6: Remove mock fallback on DB failure | 0.25h
 - [ ] P2-INJ-1: HMAC on raw body | 1h
 - [ ] P2-DOS-1: Add GIN index for patient search | 2h
-- [ ] P2-AUTH-1: Standardize bcrypt cost to 12 | 0.5h
+- [x] P2-AUTH-1: Standardize bcrypt cost to 12 | 0.5h
 - [ ] P2-HIPAA-1: Role-based field scoping | 6h
 - [ ] P2-HIPAA-2: Automated breach notification | 4h
 - [ ] P2-HIPAA-3: Automated retention purge | 4h

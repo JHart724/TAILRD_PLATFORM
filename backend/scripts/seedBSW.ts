@@ -36,7 +36,8 @@ async function seedBSW() {
   console.log('✅ Hospital created:', hospital.name);
 
   const salt = await bcrypt.genSalt(12);
-  const hash = await bcrypt.hash('Bsw2026!Tailrd', salt);
+  const demoPassword = process.env.DEMO_PASSWORD || 'Bsw2026!Tailrd';
+  const hash = await bcrypt.hash(demoPassword, salt);
 
   const users = [
     { email: 'bsw-executive@tailrd.demo', firstName: 'BSW', lastName: 'Executive', role: 'QUALITY_DIRECTOR' as const, permExec: true, permSL: false, permCT: false, permManage: false, permExport: false },

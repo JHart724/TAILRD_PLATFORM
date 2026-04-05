@@ -156,14 +156,16 @@ export default function TopBar({ moduleName, viewName }: TopBarProps) {
             aria-label="Notifications"
           >
             <Bell size={18} />
-            <span
-              className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full"
-              style={{
-                background: '#7A1A2E',
-                border: '1.5px solid rgba(253,254,255,0.9)',
-                boxShadow: '0 0 4px rgba(122,26,46,0.6)',
-              }}
-            />
+            {isDemoMode && (
+              <span
+                className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full"
+                style={{
+                  background: '#7A1A2E',
+                  border: '1.5px solid rgba(253,254,255,0.9)',
+                  boxShadow: '0 0 4px rgba(122,26,46,0.6)',
+                }}
+              />
+            )}
           </button>
           <UserMenu
             userName={user ? `${user.firstName}${user.lastName ? ' ' + user.lastName : ''}` : 'Superuser'}
