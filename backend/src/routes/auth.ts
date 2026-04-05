@@ -286,7 +286,8 @@ router.post('/refresh', async (req: Request, res: Response) => {
   try {
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET!
+      process.env.JWT_SECRET!,
+      { algorithms: ['HS256'] }
     ) as JWTPayload;
 
     // Issue a fresh token with same payload
@@ -337,7 +338,7 @@ router.post('/verify', (req: Request, res: Response) => {
     } as APIResponse);
   }
 
-  jwt.verify(token, process.env.JWT_SECRET!, (err: any, decoded: any) => {
+  jwt.verify(token, process.env.JWT_SECRET!, { algorithms: ['HS256'] }, (err: any, decoded: any) => {
     if (err) {
       return res.status(403).json({
         success: false,

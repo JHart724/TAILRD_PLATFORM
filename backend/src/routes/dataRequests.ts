@@ -450,21 +450,38 @@ router.post('/deletion/:patientId', async (req: AuthenticatedRequest, res: Respo
 
     const now = new Date();
 
-    // Execute cascade soft-delete in a transaction
+    // Execute cascade deletion in a transaction
+    // Clinical records are hard-deleted; patient shell is soft-deleted for 6-year retention
     const result = await prisma.$transaction(async (tx) => {
-      // Soft-delete encounters
+      // Hard-delete clinical records (no retention requirement for derived data)
+      const [medications, conditions, carePlans, cqlResults, therapyGaps,
+             phenotypes, referrals, titrations, devices, riskScores,
+             interventions, contraindications] = await Promise.all([
+        tx.medication.deleteMany({ where: { patientId, hospitalId } }),
+        tx.condition.deleteMany({ where: { patientId, hospitalId } }),
+        tx.carePlan.deleteMany({ where: { patientId, hospitalId } }),
+        tx.cQLResult.deleteMany({ where: { patientId, hospitalId } }),
+        tx.therapyGap.deleteMany({ where: { patientId, hospitalId } }),
+        tx.phenotype.deleteMany({ where: { patientId, hospitalId } }),
+        tx.crossReferral.deleteMany({ where: { patientId, hospitalId } }),
+        tx.drugTitration.deleteMany({ where: { patientId, hospitalId } }),
+        tx.deviceEligibility.deleteMany({ where: { patientId, hospitalId } }),
+        tx.riskScoreAssessment.deleteMany({ where: { patientId, hospitalId } }),
+        tx.interventionTracking.deleteMany({ where: { patientId, hospitalId } }),
+        tx.contraindicationAssessment.deleteMany({ where: { patientId, hospitalId } }),
+      ]);
+
+      // Soft-delete encounters and observations (have deletedAt field)
       const encounters = await tx.encounter.updateMany({
         where: { patientId, hospitalId, deletedAt: null },
         data: { deletedAt: now },
       });
-
-      // Soft-delete observations
       const observations = await tx.observation.updateMany({
         where: { patientId, hospitalId, deletedAt: null },
         data: { deletedAt: now },
       });
 
-      // Soft-delete alerts (alerts may not have deletedAt — mark as resolved instead)
+      // Resolve alerts
       const alerts = await tx.alert.updateMany({
         where: { patientId, hospitalId, resolvedAt: null },
         data: { resolvedAt: now },
@@ -480,6 +497,16 @@ router.post('/deletion/:patientId', async (req: AuthenticatedRequest, res: Respo
         encounters: encounters.count,
         observations: observations.count,
         alerts: alerts.count,
+        medications: medications.count,
+        conditions: conditions.count,
+        carePlans: carePlans.count,
+        therapyGaps: therapyGaps.count,
+        phenotypes: phenotypes.count,
+        referrals: referrals.count,
+        titrations: titrations.count,
+        riskScores: riskScores.count,
+        interventions: interventions.count,
+        contraindications: contraindications.count,
       };
     });
 

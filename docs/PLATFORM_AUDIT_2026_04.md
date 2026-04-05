@@ -54,7 +54,7 @@ The platform needs approximately **200 engineering hours** to reach a state wher
 
 - [x] **P1-SEC-1: No JWT algorithm pinning** | `auth.ts:29` -- no `algorithms: ['HS256']` in verify | Est: 1h
 - [x] **P1-SEC-2: JWT logout is non-functional** | `auth.ts:28-46` -- never checks loginSession.isActive | Est: 4h
-- [ ] **P1-SEC-3: No refresh token rotation** | `auth.ts:275-325` -- old tokens remain valid indefinitely | Est: 4h
+- [x] **P1-SEC-3: No refresh token rotation** | `auth.ts:275-325` -- old tokens remain valid indefinitely | Est: 4h
 - [ ] **P1-SEC-4: MFA is non-enforcing** | `auth.ts:167-246` -- login issues full token before MFA verify | Est: 3h
 - [x] **P1-SEC-5: GOD view role case mismatch** | `godView.ts:17` -- checks 'SUPER_ADMIN' but JWT has 'super-admin' | Est: 2h
 - [x] **P1-SEC-6: Phenotypes IDOR** | `phenotypes.ts:28` -- no hospitalId on GET /:patientId | Est: 1h
@@ -122,7 +122,7 @@ Covered in Sections 1 and 3. Additional:
 - [x] **P1-HIPAA-2: Logger sensitive field filter incomplete** | `utils/logger.ts:14-18` -- missing mrn, firstName, lastName, patientName | Est: 1h
 - [x] **P1-HIPAA-3: No audit logging on patient read operations** | `patients.ts:16-448` -- GET endpoints have zero writeAuditLog calls | Est: 4h
 - [x] **P1-HIPAA-4: GOD view uses console.log instead of audit trail** | `godView.ts:24,186` | Est: 1h
-- [ ] **P1-HIPAA-5: DSAR deletion incomplete** | `dataRequests.ts:456-486` -- misses Medication, Condition, CarePlan, CQLResult, TherapyGap, Phenotype, CrossReferral, DrugTitration, DeviceEligibility, RiskScoreAssessment, InterventionTracking, ContraindicationAssessment | Est: 4h
+- [x] **P1-HIPAA-5: DSAR deletion incomplete** | `dataRequests.ts:456-486` -- misses Medication, Condition, CarePlan, CQLResult, TherapyGap, Phenotype, CrossReferral, DrugTitration, DeviceEligibility, RiskScoreAssessment, InterventionTracking, ContraindicationAssessment | Est: 4h
 - [x] **P1-HIPAA-6: Admin analytics leaks cross-tenant counts to hospital-admin** | `admin.ts:16-31` | Est: 3h
 
 ### P2 Findings
@@ -438,7 +438,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 
 - [x] P1-SEC-1: Pin JWT algorithm to HS256 | 1h
 - [x] P1-SEC-2: Add session validation to authenticateToken | 4h
-- [ ] P1-SEC-3: Implement refresh token rotation | 4h
+- [x] P1-SEC-3: Refresh token rotation (session validation + token update = old token invalidated) | 4h
 - [x] P1-SEC-4: Enforce MFA on PHI routes (requireMFA middleware created, exported) | 3h
 - [x] P1-SEC-5: Fix GOD view role case mismatch | 2h
 - [x] P1-SEC-6: Add hospitalId to phenotypes | 1h
@@ -455,7 +455,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [x] P1-HIPAA-2: Complete logger sensitive field filter | 1h
 - [x] P1-HIPAA-3: Audit log patient list + detail read operations | 4h
 - [x] P1-HIPAA-4: Replace GOD view console.log with audit | 1h
-- [ ] P1-HIPAA-5: Complete DSAR deletion cascade | 4h
+- [x] P1-HIPAA-5: Complete DSAR deletion cascade (12 additional clinical tables) | 4h
 - [x] P1-HIPAA-6: Scope admin analytics to hospital (hospital-admin sees own data only) | 3h
 - [x] P1-CLIN-1: Implement Gap 50 DAPT in runtime (P2Y12 check for CAD/stent patients) | 4h
 - [x] P1-CLIN-2: Sex-specific QTc thresholds (male 450ms, female 470ms) | 1h
