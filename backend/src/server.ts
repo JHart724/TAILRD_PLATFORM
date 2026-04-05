@@ -4,8 +4,8 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import { config } from 'dotenv';
-import { createLogger, format, transports } from 'winston';
 import prisma from './lib/prisma';
+import { logger } from './utils/logger';
 import { APIResponse } from './types';
 import { analyticsMiddleware } from './middleware/analytics';
 import { csrfCookieSetter, csrfProtection, csrfTokenEndpoint } from './middleware/csrfProtection';
@@ -50,28 +50,7 @@ if (!isDemoMode && !process.env.JWT_SECRET) {
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-const logger = createLogger({
-  level: process.env.LOG_LEVEL || 'info',
-  format: format.combine(
-    format.timestamp(),
-    format.errors({ stack: true }),
-    format.json()
-  ),
-  defaultMeta: { service: 'tailrd-backend' },
-  transports: [
-    new transports.File({ filename: 'logs/error.log', level: 'error' }),
-    new transports.File({ filename: 'logs/combined.log' }),
-  ],
-});
-
-if (NODE_ENV !== 'production') {
-  logger.add(new transports.Console({
-    format: format.combine(
-      format.colorize(),
-      format.simple()
-    )
-  }));
-}
+// Logger imported from utils/logger.ts (shared singleton with PHI redaction)
 
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'),

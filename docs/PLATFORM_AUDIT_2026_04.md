@@ -68,7 +68,7 @@ The platform needs approximately **200 engineering hours** to reach a state wher
 ### P2 Findings
 
 - [x] **P2-SEC-1: Math.random() for API key generation** | `onboarding.ts:491-498` | Est: 0.5h
-- [ ] **P2-SEC-2: 10MB JSON body limit** | `server.ts:124` | Est: 0.5h
+- [x] **P2-SEC-2: 10MB JSON body limit** | `server.ts:124` | Est: 0.5h
 - [x] **P2-SEC-3: PHI encryption passthrough in non-production** | `phiEncryption.ts:27-29` | Est: 0.5h
 - [ ] **P2-SEC-4: JWT stored in plaintext in loginSession** | `auth.ts:203-211` | Est: 2h
 - [x] **P2-SEC-5: Webhook status leaks config unauthenticated** | `webhooks.ts:268-282` | Est: 0.25h
@@ -306,11 +306,11 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 - [x] **P1-BACK-4: createSuperAdmin.ts never writes to DB** | `createSuperAdmin.ts:12-45` -- creates in-memory object only | Est: 1h
 - [x] **P1-BACK-5: 46 `as any` casts in backend** | Multiple files, concentrated in mfa.ts (8), accountSecurity.ts (3) | Est: 3h
 - [x] **P2-BACK-1: analyticsController.ts is dead code** | Never mounted in server.ts | Est: 0.5h
-- [ ] **P2-BACK-2: healthCheck.ts middleware (430 lines) is orphaned** | Never imported | Est: 0.5h
+- [x] **P2-BACK-2: healthCheck.ts middleware (430 lines) is orphaned** | Never imported | Est: 0.5h
 - [ ] **P2-BACK-3: Dual Redox pipelines** | webhooks.ts (mounted) vs eventProcessor.ts+webhookHandler.ts (dead) | Est: 1h
 - [x] **P2-BACK-4: Redis declared but never used** | In package.json, never instantiated | Est: 0.5h
 - [x] **P2-BACK-5: Rate limiter runs after CSRF/body parsing** | server.ts middleware order | Est: 0.5h
-- [ ] **P2-BACK-6: Dual logger instances** | server.ts:52 vs utils/logger.ts | Est: 1h
+- [x] **P2-BACK-6: Dual logger instances** | server.ts:52 vs utils/logger.ts | Est: 1h
 - [ ] **P2-BACK-7: winston-cloudwatch not in package.json** | logger.ts:113 -- will crash in production | Est: 0.5h
 - [ ] **P2-BACK-8: Port mismatch** | .env sets 4000, Docker expects 3001, frontend defaults to 3001 | Est: 1h
 
@@ -325,7 +325,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 - [x] **P1-FE-5: Duplicate ErrorBoundary** | ErrorFallback.tsx (used) vs ErrorBoundary.tsx (orphaned) | Est: 1h
 - [ ] **P2-FE-1: App.tsx has ~350 lines of dead code** | Lines 96-682 -- inline SVG icons, duplicate KpiCard, unreachable MainDashboard | Est: 2h
 - [ ] **P2-FE-2: 34 TODO stubs in care team configs** | Unimplemented button handlers across 13 files | Est: 4h
-- [ ] **P2-FE-3: rememberMe checkbox is cosmetic** | Login.tsx:15-16 -- never consumed | Est: 0.5h
+- [x] **P2-FE-3: rememberMe checkbox is cosmetic** | Login.tsx:15-16 -- never consumed | Est: 0.5h
 - [ ] **P2-FE-4: Legacy porsche-*/crimson-* Tailwind classes** | May not resolve in current config -- invisible styling failures | Est: 2h
 
 ---
@@ -361,7 +361,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 - [ ] **P1-SCALE-2: In-memory caches won't survive multi-instance** | modelRegistry, valuesetResolver, cqlEngine, rate limiter all use process-local Map/MemoryStore | Est: 8h
 - [x] **P1-SCALE-3: WebhookEvent table has zero indexes** | Full table scans on every query | Est: 1h
 - [ ] **P2-SCALE-1: No frontend list virtualization** | No react-window or react-virtualized | Est: 8h
-- [ ] **P2-SCALE-2: Unbounded COUNT queries in admin** | 5 parallel count() with no WHERE | Est: 2h
+- [x] **P2-SCALE-2: Unbounded COUNT queries in admin** | 5 parallel count() with no WHERE | Est: 2h
 
 ---
 
