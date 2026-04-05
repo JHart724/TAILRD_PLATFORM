@@ -209,5 +209,23 @@ function evaluateGapRules(
     }
   }
 
+  // Gap 50: Premature DAPT Discontinuation (Coronary)
+  // Guideline: ACC/AHA 2016 DAPT Guidelines, updated by 2021 ACC/AHA/SCAI Coronary Revascularization
+  // Fires when: CAD/stent patient (I25.* or Z95.5) is missing P2Y12 inhibitor
+  // P2Y12 RxNorm codes: clopidogrel (32968), prasugrel (613391), ticagrelor (1116632)
+  const hasStentOrCAD = hasCAD || dxCodes.some(c => c.startsWith('Z95.5'));
+  const P2Y12_CODES = ['32968', '613391', '1116632'];
+  const onP2Y12 = medCodes.some(c => P2Y12_CODES.includes(c));
+  if (hasStentOrCAD && !onP2Y12) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.CORONARY_INTERVENTION,
+      status: 'P2Y12 inhibitor not active post-stent/CAD',
+      target: 'DAPT resumed or documented discontinuation rationale',
+      medication: 'P2Y12 Inhibitor',
+      recommendations: { action: 'Verify DAPT status with interventional cardiologist per ACC/AHA 2021' },
+    });
+  }
+
   return gaps;
 }

@@ -78,7 +78,6 @@ export const transformFHIRPatient = (fhirPatient: FHIRPatient): TransformedPatie
 
     logger.info('Transformed FHIR patient', {
       patientId: transformed.id,
-      mrn: transformed.mrn,
     });
 
     return transformed;
@@ -290,7 +289,6 @@ export const processPatientData = async (
 
     logger.info('Patient persisted', {
       internalId: patient.id,
-      mrn: patient.mrn,
       hospitalId,
       modules: assignedModules,
       eventType,

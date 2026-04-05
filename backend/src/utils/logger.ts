@@ -14,7 +14,9 @@ const excludeSensitiveData = winston.format((info) => {
   const sensitiveFields = [
     'ssn', 'socialSecurityNumber', 'password', 'token', 'apiKey',
     'dob', 'dateOfBirth', 'phone', 'phoneNumber', 'email',
-    'address', 'zipCode', 'postalCode', 'creditCard', 'bankAccount'
+    'address', 'zipCode', 'postalCode', 'creditCard', 'bankAccount',
+    'mrn', 'medicalRecordNumber', 'firstName', 'lastName', 'name',
+    'patientName', 'patientMRN', 'street', 'city', 'state',
   ];
 
   const cleanObject = (obj: any): any => {

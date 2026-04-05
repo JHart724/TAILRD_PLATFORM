@@ -118,8 +118,8 @@ Covered in Sections 1 and 3. Additional:
 
 ### P1 Findings
 
-- [ ] **P1-HIPAA-1: MRN logged in plaintext** | `patientService.ts:80-82,291-296` -- logger.info includes mrn field | Est: 2h
-- [ ] **P1-HIPAA-2: Logger sensitive field filter incomplete** | `utils/logger.ts:14-18` -- missing mrn, firstName, lastName, patientName | Est: 1h
+- [x] **P1-HIPAA-1: MRN logged in plaintext** | `patientService.ts:80-82,291-296` -- logger.info includes mrn field | Est: 2h
+- [x] **P1-HIPAA-2: Logger sensitive field filter incomplete** | `utils/logger.ts:14-18` -- missing mrn, firstName, lastName, patientName | Est: 1h
 - [ ] **P1-HIPAA-3: No audit logging on patient read operations** | `patients.ts:16-448` -- GET endpoints have zero writeAuditLog calls | Est: 4h
 - [ ] **P1-HIPAA-4: GOD view uses console.log instead of audit trail** | `godView.ts:24,186` | Est: 1h
 - [ ] **P1-HIPAA-5: DSAR deletion incomplete** | `dataRequests.ts:456-486` -- misses Medication, Condition, CarePlan, CQLResult, TherapyGap, Phenotype, CrossReferral, DrugTitration, DeviceEligibility, RiskScoreAssessment, InterventionTracking, ContraindicationAssessment | Est: 4h
@@ -210,7 +210,7 @@ Covered in Section 7 above. Additional:
 - [x] **P0-CLIN-1: CQL engine returns Math.random()** | `cqlEngine.ts:452-479` -- createMockCompiledRule() | Est: 0h (do not fix CQL engine -- fix runtime rules instead)
 - [x] **P0-CLIN-2: Ferritin used as troponin proxy in ATTR-CM** | `gapDetectionRunner.ts:125` | Risk: False positives in iron-overloaded patients | Est: 2h
 - [x] **P0-CLIN-3: Finerenone recommended for HF (wrong indication)** | `gapDetectionRunner.ts:156-175` | Risk: Clinically inappropriate recommendation | Est: 2h
-- [ ] **P1-CLIN-1: Gap 50 DAPT has no runtime implementation** | CQL only, dead code | Est: 4h
+- [x] **P1-CLIN-1: Gap 50 DAPT has no runtime implementation** | CQL only, dead code | Est: 4h
 - [ ] **P1-CLIN-2: QTc alert is sex-agnostic** | `gap39_qtcAlert.cql.ts:55` -- 470ms threshold misses male prolongation (450-470) | Est: 1h
 - [ ] **P1-CLIN-3: Operator precedence bug in alert filtering** | `cqlEngine.ts:768` -- `&&` vs `||` precedence | Est: 0.5h
 - [ ] **P1-CLIN-4: Valueset resolver is entirely mock data** | `valuesetResolver.ts:441-541` -- 3-4 codes per terminology | Est: 8h
@@ -451,13 +451,13 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [ ] P1-DOS-1: Move rate limiter before body parsing | 0.5h
 - [ ] P1-DOS-2: Scope admin COUNT queries | 2h
 - [x] P1-DOS-3: Add @unique to WebhookEvent.eventId + indexes on hospitalId, status, receivedAt | 0.5h
-- [ ] P1-HIPAA-1: Remove MRN from logs | 2h
-- [ ] P1-HIPAA-2: Complete logger sensitive field filter | 1h
+- [x] P1-HIPAA-1: Remove MRN from logs | 2h
+- [x] P1-HIPAA-2: Complete logger sensitive field filter | 1h
 - [ ] P1-HIPAA-3: Audit log patient read operations | 4h
 - [ ] P1-HIPAA-4: Replace GOD view console.log with audit | 1h
 - [ ] P1-HIPAA-5: Complete DSAR deletion cascade | 4h
 - [ ] P1-HIPAA-6: Scope admin analytics to hospital | 3h
-- [ ] P1-CLIN-1: Implement Gap 50 DAPT in runtime | 4h
+- [x] P1-CLIN-1: Implement Gap 50 DAPT in runtime (P2Y12 check for CAD/stent patients) | 4h
 - [ ] P1-CLIN-2: Sex-specific QTc thresholds | 1h
 - [ ] P1-CLIN-3: Fix operator precedence in alert filter | 0.5h
 - [ ] P1-CLIN-4: Build real valueset resolver | 8h
