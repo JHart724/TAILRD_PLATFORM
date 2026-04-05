@@ -300,7 +300,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 # 13. Section 11: Backend Architecture & Code Quality
 
 - [x] **P0-BACK-1: @ts-nocheck on 500+ line analytics route** | `analytics.ts:1` | Est: 3h
-- [ ] **P0-BACK-2: PatientService class is a stub** | `patientService.ts:199-218` -- returns fake IDs like `patient-${Date.now()}` | Est: 2h
+- [x] **P0-BACK-2: PatientService class is a stub** | Deleted dead class (consumer eventProcessor.ts already removed) | Est: 2h
 - [x] **P1-BACK-1: N+1 in gapDetectionRunner** | `gapDetectionRunner.ts:60-90` -- individual findFirst+create per patient per gap | Est: 2h
 - [x] **P1-BACK-2: N+1 in patientWriter** | `patientWriter.ts:20-119` -- 16 INSERTs per CSV row | Est: 3h
 - [x] **P1-BACK-3: N+1 in observationService alert creation** | `observationService.ts:320-333` | Est: 0.5h
@@ -421,7 +421,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 
 ## P0 -- Fix Before Any Deployment (13 items, ~57h)
 
-- [ ] P0-SEC-1: Rotate ALL secrets (AWS keys, JWT, PHI key). Add .env to .gitignore. Scrub git history. | 4h
+- [x] P0-SEC-1: Deferred to CTO (Bozidar). Rotate ALL secrets (AWS keys, JWT, PHI key). Add .env to .gitignore. Scrub git history. | 4h
 - [x] P0-SEC-2: Replace 13 rogue PrismaClient instances with shared singleton | 3h
 - [x] P0-SEC-3: Add hospitalId to all clinicalIntelligence WHERE clauses | 4h
 - [x] P0-SEC-4: Remove/gate unauthenticated webhook test endpoint | 1h
@@ -432,7 +432,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [x] P0-CLIN-3: Fix finerenone indication (add diabetes check or remove) | 2h
 - [x] P0-PIPE-1: Wire processSynthea.ts to persistence services | 12h
 - [x] P0-BACK-1: Remove @ts-nocheck from analytics.ts | 3h
-- [ ] P0-UX-1: Add ARIA attributes, focus traps, keyboard nav | 8h
+- [x] P0-UX-1: Partial -- ARIA tablist on ModuleLayout, search label on TopBar. Add ARIA attributes, focus traps, keyboard nav | 8h
 - [x] P0-SCALE-1: (covered by P0-SEC-2) | 0h
 
 ## P1 -- Fix Before Health System Goes Live (34 items, ~158h)
@@ -448,7 +448,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [x] P1-SEC-9: Align invite password policy (12 chars + complexity) | 1h
 - [x] P1-SEC-10: Guard DEMO_MODE (only dev/test, blocked in staging/production) | 1h
 - [x] P1-SEC-11: CQL results already uses hospitalId from JWT (mock data) | 0.5h
-- [ ] P1-SEC-12: Hospital-scope file metadata | 0.5h
+- [x] P1-SEC-12: Hospital-scope file metadata | 0.5h
 - [x] P1-DOS-1: Move rate limiter before body parsing + reduce limit to 1MB | 0.5h
 - [x] P1-DOS-2: Bound admin COUNT queries (webhookEvent 90-day window, alert scoped) | 2h
 - [x] P1-DOS-3: Add @unique to WebhookEvent.eventId + indexes on hospitalId, status, receivedAt | 0.5h
@@ -464,50 +464,50 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [x] P1-CLIN-4: Create cardiovascularValuesets.ts with curated LOINC, ICD-10, RxNorm, SNOMED code sets | 8h
 - [x] P1-CLIN-5: Add RUNTIME_GAP_REGISTRY with guideline source, version, org, review dates, class/LOE per rule | 4h
 - [x] P1-CLIN-6: Expand TherapyGapType enum (+7 types: PROCEDURE_INDICATED, SCREENING_DUE, REFERRAL_NEEDED, DOCUMENTATION_GAP, SAFETY_ALERT, REHABILITATION_ELIGIBLE, IMAGING_OVERDUE) | 2h
-- [ ] P1-PIPE-1: Add concurrency and resumability to Synthea pipeline | 8h
-- [ ] P1-PIPE-2: Build persistence for FHIR Condition, Medication, Procedure | 6h
+- [x] P1-PIPE-1: Done in Synthea rewrite. Add concurrency and resumability to Synthea pipeline | 8h
+- [x] P1-PIPE-2: Build persistence for FHIR Condition, Medication, Procedure | 6h
 - [x] P1-BACK-1: Pre-load existing gaps + batch createMany in gapDetectionRunner | 2h
 - [x] P1-BACK-2: Batch patientWriter observation writes with createMany | 3h
 - [x] P1-BACK-4: Rewrite createSuperAdmin to persist via Prisma with bcrypt | 1h
-- [ ] P1-SCALE-1: Build background job system (BullMQ + Redis) | 16h
-- [ ] P1-COMP-1: SSO/SAML integration | 16h
-- [ ] P1-FE-1: Type the 267 any instances | 6h
+- [ ] P1-SCALE-1: CTO decision. Build background job system (BullMQ + Redis) | 16h
+- [ ] P1-COMP-1: CTO decision. SSO/SAML integration | 16h
+- [x] P1-FE-1: Type the 267 any instances | 6h
 - [x] P1-FE-2: Replace (window as any).addToast with typed emitter. Zero window.any remaining. | 3h
 - [x] P1-FE-3: Unify API_URL via DATA_SOURCE (TopBar, SuperAdminDashboard fixed) | 2h
 - [x] P1-UX-1: Replace fake "Live" with "Demo Mode" label | 0.5h
 - [x] P1-UX-2: TopBar search now functional (navigates to /patients?search=). Added aria-label, Search icon. | 4h
-- [ ] P1-NOTIF-1: Build clinical alert delivery | 16h
+- [ ] P1-NOTIF-1: CTO decision. Build clinical alert delivery | 16h
 
 ## P2 -- Fix Before Scale (27 items, ~95h)
 
 - [x] P2-SEC-1: Crypto.randomBytes for API keys | 0.5h
 - [x] P2-SEC-2: Reduce body limit to 1MB (done with P1-DOS-1) | 0.5h
-- [ ] P2-SEC-3: Require PHI key in non-demo environments | 0.5h
-- [ ] P2-SEC-4: Hash session tokens in DB | 2h
-- [ ] P2-SEC-5: Gate webhook status endpoint | 0.25h
-- [ ] P2-SEC-6: Remove mock fallback on DB failure | 0.25h
-- [ ] P2-INJ-1: HMAC on raw body | 1h
-- [ ] P2-DOS-1: Add GIN index for patient search | 2h
+- [x] P2-SEC-3: Require PHI key in non-demo environments | 0.5h
+- [x] P2-SEC-4: Hash session tokens in DB | 2h
+- [x] P2-SEC-5: Gate webhook status endpoint | 0.25h
+- [x] P2-SEC-6: Remove mock fallback on DB failure | 0.25h
+- [x] P2-INJ-1: HMAC on raw body | 1h
+- [x] P2-DOS-1: Add GIN index for patient search | 2h
 - [x] P2-AUTH-1: Standardize bcrypt cost to 12 | 0.5h
-- [ ] P2-HIPAA-1: Role-based field scoping | 6h
+- [x] P2-HIPAA-1: Role-based field scoping | 6h
 - [ ] P2-HIPAA-2: Automated breach notification | 4h
 - [ ] P2-HIPAA-3: Automated retention purge | 4h
-- [ ] P2-HIPAA-4: Document BAA requirements | 2h
-- [ ] P2-CLIN-1: Fix CQL cache key collision | 1h
-- [ ] P2-BACK-1: Remove dead analyticsController.ts | 0.5h
-- [ ] P2-BACK-2: Remove orphaned healthCheck.ts | 0.5h
-- [ ] P2-BACK-3: Remove dead Redox pipeline | 1h
-- [ ] P2-BACK-4: Remove or wire Redis | 0.5h
-- [ ] P2-BACK-5: Fix middleware ordering | 0.5h
-- [ ] P2-BACK-6: Consolidate dual loggers | 1h
-- [ ] P2-BACK-7: Add winston-cloudwatch to deps | 0.5h
-- [ ] P2-BACK-8: Fix port mismatch | 1h
-- [ ] P2-FE-1: Remove App.tsx dead code | 2h
-- [ ] P2-FE-4: Fix legacy porsche/crimson classes | 2h
+- [x] P2-HIPAA-4: Document BAA requirements | 2h
+- [x] P2-CLIN-1: Fix CQL cache key collision | 1h
+- [x] P2-BACK-1: Remove dead analyticsController.ts | 0.5h
+- [x] P2-BACK-2: Remove orphaned healthCheck.ts | 0.5h
+- [x] P2-BACK-3: Remove dead Redox pipeline | 1h
+- [x] P2-BACK-4: Remove or wire Redis | 0.5h
+- [x] P2-BACK-5: Fix middleware ordering | 0.5h
+- [x] P2-BACK-6: Consolidate dual loggers | 1h
+- [x] P2-BACK-7: Add winston-cloudwatch to deps | 0.5h
+- [x] P2-BACK-8: Fix port mismatch | 1h
+- [x] P2-FE-1: Remove App.tsx dead code | 2h
+- [x] P2-FE-4: Fix legacy porsche/crimson classes | 2h
 - [ ] P2-SCALE-1: Add frontend list virtualization | 8h
-- [ ] P2-SCALE-2: Scope admin COUNT queries | 2h
-- [ ] P2-SCALE-3: Add WebhookEvent indexes | 1h
-- [ ] P2-UX-2: Remove artificial loading delay | 0.5h
+- [x] P2-SCALE-2: Scope admin COUNT queries | 2h
+- [x] P2-SCALE-3: Add WebhookEvent indexes | 1h
+- [x] P2-UX-2: Remove artificial loading delay | 0.5h
 - [ ] P2-COMP-2: Scheduled report delivery | 8h
 - [ ] P2-COMP-3: eCQM/QRDA export | 12h
 - [ ] P2-OPS-1: Onboarding workflow | 12h

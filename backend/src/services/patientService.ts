@@ -194,28 +194,6 @@ function moduleFlags(modules: CardiovascularModule['type'][]) {
  * PatientService class wrapper for use by RedoxEventProcessor and other services
  * that need an instantiable service pattern.
  */
-export class PatientService {
-  async upsertPatient(data: {
-    identifiers: any;
-    demographics: any;
-    facilityCode: string;
-    lastUpdated: string;
-  }): Promise<{ patientId: string }> {
-    // Delegate to processPatientData or handle directly
-    logger.info('PatientService.upsertPatient called', { facilityCode: data.facilityCode });
-    return { patientId: `patient-${Date.now()}` };
-  }
-
-  async getOrCreatePatient(data: {
-    identifiers: any;
-    demographics: any;
-    facilityCode: string;
-  }): Promise<{ patientId: string }> {
-    logger.info('PatientService.getOrCreatePatient called', { facilityCode: data.facilityCode });
-    return { patientId: `patient-${Date.now()}` };
-  }
-}
-
 export const processPatientData = async (
   fhirPatient: FHIRPatient,
   eventType: string,
