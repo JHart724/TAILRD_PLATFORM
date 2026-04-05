@@ -813,6 +813,297 @@ export const RUNTIME_GAP_REGISTRY = [
     classOfRecommendation: '2a',
     levelOfEvidence: 'C',
   },
+  // --- New Structural Heart Rules (SH-3 through SH-9) ---
+  {
+    id: 'gap-sh-3-mitral-intervention',
+    name: 'Mitral Valve Intervention Evaluation',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-4-tricuspid-assessment',
+    name: 'Tricuspid Valve Assessment',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'C',
+  },
+  {
+    id: 'gap-sh-5-structural-imaging',
+    name: 'Structural Heart Imaging Follow-up',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-6-post-tavr-followup',
+    name: 'Post-TAVR Follow-up',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-7-endocarditis-prophylaxis',
+    name: 'Endocarditis Prophylaxis Review',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2021 AHA Scientific Statement on Prevention of Infective Endocarditis',
+    guidelineVersion: '2021',
+    guidelineOrg: 'AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-8-laa-assessment',
+    name: 'Left Atrial Appendage Assessment',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-9-pfo-closure',
+    name: 'PFO Closure Evaluation',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 AHA/ASA Guideline for Prevention of Stroke in Patients with Stroke and TIA',
+    guidelineVersion: '2020',
+    guidelineOrg: 'AHA/ASA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
+  },
+  // --- New Valvular Disease Rules (VD-3 through VD-12) ---
+  {
+    id: 'gap-vd-3-inr-monitoring',
+    name: 'INR Monitoring for Mechanical Valve',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-vd-4-mitral-stenosis',
+    name: 'Mitral Stenosis Surveillance',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-vd-5-aortic-regurgitation',
+    name: 'Aortic Regurgitation Monitoring',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-vd-6-doac-mechanical-valve',
+    name: 'DOAC Contraindicated in Mechanical Valve',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease (RE-ALIGN Trial)',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '3 (Harm)',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-vd-7-exercise-restriction-as',
+    name: 'Exercise Restriction in Severe AS',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C',
+  },
+  {
+    id: 'gap-vd-8-rheumatic-screen',
+    name: 'Rheumatic Heart Disease Screen',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 AHA Scientific Statement on Rheumatic Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-vd-9-endocarditis-education',
+    name: 'Endocarditis Education',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2021 AHA Scientific Statement on Prevention of Infective Endocarditis',
+    guidelineVersion: '2021',
+    guidelineOrg: 'AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C',
+  },
+  {
+    id: 'gap-vd-10-pregnancy-risk',
+    name: 'Pregnancy Risk in Valve Disease',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C',
+  },
+  {
+    id: 'gap-vd-11-bioprosthetic-degeneration',
+    name: 'Bioprosthetic Valve Degeneration Watch',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-vd-12-af-valve-anticoag',
+    name: 'Anticoagulation in AF + Valve Disease',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  // --- New Peripheral Vascular Rules (PV-3 through PV-9) ---
+  {
+    id: 'gap-pv-3-antiplatelet',
+    name: 'Antiplatelet in PAD',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+    guidelineVersion: '2024',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-pv-4-smoking-cessation',
+    name: 'Smoking Cessation in PAD',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+    guidelineVersion: '2024',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-pv-5-exercise-therapy',
+    name: 'Exercise Therapy for Claudication',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+    guidelineVersion: '2024',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-pv-6-diabetes-control',
+    name: 'Diabetes Control in PAD',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+    guidelineVersion: '2024',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-pv-7-wound-care',
+    name: 'Wound Care Assessment',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+    guidelineVersion: '2024',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-pv-8-duplex-followup',
+    name: 'Duplex Ultrasound Follow-up',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+    guidelineVersion: '2024',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-pv-9-aaa-screening',
+    name: 'AAA Screening',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease',
+    guidelineVersion: '2022',
+    guidelineOrg: 'ACC/AHA/AATS/STS',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
 ] as const;
 
 function evaluateGapRules(
@@ -2277,6 +2568,772 @@ function evaluateGapRules(
         action: 'Order TTE for bioprosthetic valve surveillance per 2020 ACC/AHA VHD, Class 1, LOE C',
         guideline: '2020 ACC/AHA Valvular Heart Disease',
         note: 'Annual echo monitors for structural valve deterioration (SVD) in bioprosthetic valves',
+      },
+    });
+  }
+
+  // ============================================================
+  // NEW Structural Heart Rules (SH-3 through SH-9)
+  // ============================================================
+
+  // Gap SH-3: Mitral Valve Intervention Evaluation
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
+  // Mitral regurgitation (I34.0) with LVEF < 60 or symptomatic warrants intervention evaluation
+  const hasMitralRegurg = dxCodes.some(c => c.startsWith('I34.0'));
+  if (
+    hasMitralRegurg &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    const lvefBelow60 = labValues['lvef'] !== undefined && labValues['lvef'] < 60;
+    const symptomatic = dxCodes.some(c => c.startsWith('R06') || c.startsWith('R00')); // Dyspnea, palpitations
+    if (lvefBelow60 || symptomatic) {
+      gaps.push({
+        type: TherapyGapType.PROCEDURE_INDICATED,
+        module: ModuleType.STRUCTURAL_HEART,
+        status: 'Mitral valve intervention evaluation recommended for review',
+        target: 'Mitral valve intervention assessment completed',
+        recommendations: {
+          action: 'Consider referral to heart valve team for mitral valve intervention evaluation per 2020 ACC/AHA VHD',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Mitral regurgitation (I34.0)',
+            `LVEF: ${labValues['lvef'] ?? 'N/A'}% (threshold < 60%)`,
+            `Symptomatic: ${symptomatic ? 'Yes' : 'No'}`,
+          ],
+          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Life expectancy < 1 year'],
+        },
+      });
+    }
+  }
+
+  // Gap SH-4: Tricuspid Valve Assessment
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 2a, LOE C
+  // Tricuspid regurgitation (I36.1) with right heart symptoms warrants assessment
+  const hasTricuspidRegurg = dxCodes.some(c => c.startsWith('I36.1'));
+  if (
+    hasTricuspidRegurg &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    // Right heart symptom proxies: peripheral edema (R60), hepatomegaly (R16), ascites (R18)
+    const hasRightHeartSymptoms = dxCodes.some(c =>
+      c.startsWith('R60') || c.startsWith('R16') || c.startsWith('R18')
+    );
+    if (hasRightHeartSymptoms) {
+      gaps.push({
+        type: TherapyGapType.SCREENING_DUE,
+        module: ModuleType.STRUCTURAL_HEART,
+        status: 'Tricuspid valve assessment recommended for review',
+        target: 'Tricuspid valve evaluation completed',
+        recommendations: {
+          action: 'Consider tricuspid valve assessment for symptomatic tricuspid regurgitation per 2020 ACC/AHA VHD',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Tricuspid regurgitation (I36.1)',
+            'Right heart symptoms present (edema, hepatomegaly, or ascites)',
+          ],
+          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+          classOfRecommendation: '2a',
+          levelOfEvidence: 'C',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Severe pulmonary hypertension as primary cause'],
+        },
+      });
+    }
+  }
+
+  // Gap SH-5: Structural Heart Imaging Follow-up
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
+  // Any valve disease diagnosis (I34-I37) without recent echo needs follow-up imaging
+  const hasAnyValveDx = dxCodes.some(c =>
+    c.startsWith('I34') || c.startsWith('I35') || c.startsWith('I36') || c.startsWith('I37')
+  );
+  if (
+    hasAnyValveDx &&
+    labValues['lvef'] === undefined &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Structural heart imaging follow-up recommended for review',
+      target: 'Echocardiogram completed for valve disease surveillance',
+      recommendations: {
+        action: 'Consider echocardiographic follow-up for valve disease per 2020 ACC/AHA VHD',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Valve disease diagnosis present (I34-I37 range)',
+          'No recent echocardiogram data available (LVEF not on file)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent echo within guideline interval'],
+      },
+    });
+  }
+
+  // Gap SH-6: Post-TAVR Follow-up
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
+  // Patients with prosthetic aortic valve (Z95.2) AND aortic stenosis history need follow-up
+  const hasProstheticAorticValve = dxCodes.some(c => c.startsWith('Z95.2'));
+  if (
+    hasProstheticAorticValve &&
+    hasAorticStenosis &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.FOLLOWUP_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Post-TAVR follow-up recommended for review',
+      target: 'Post-TAVR surveillance evaluation completed',
+      recommendations: {
+        action: 'Consider post-TAVR follow-up evaluation with echocardiography per 2020 ACC/AHA VHD',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Prosthetic aortic valve (Z95.2)',
+          'History of aortic stenosis (I35.0)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent post-TAVR evaluation on file'],
+      },
+    });
+  }
+
+  // Gap SH-7: Endocarditis Prophylaxis Review
+  // Guideline: 2021 AHA Endocarditis Prevention, Class 2a, LOE B
+  // Prosthetic valve patients (Z95.2-Z95.4) with high-risk procedure codes
+  const hasProstheticValve = dxCodes.some(c =>
+    c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4')
+  );
+  // High-risk procedure proxy: dental procedure codes (Z01.2) or documented procedures
+  const hasHighRiskProcedure = dxCodes.some(c => c.startsWith('Z01.2') || c.startsWith('Z96'));
+  if (
+    hasProstheticValve &&
+    hasHighRiskProcedure &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MONITORING_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Endocarditis prophylaxis review recommended',
+      target: 'Endocarditis prophylaxis assessment documented',
+      recommendations: {
+        action: 'Consider reviewing endocarditis prophylaxis needs for prosthetic valve patient per 2021 AHA guideline',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Prosthetic valve (Z95.2, Z95.3, or Z95.4)',
+          'High-risk procedure encounter documented',
+        ],
+        guidelineSource: '2021 AHA Scientific Statement on Prevention of Infective Endocarditis',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Documented allergy to prophylactic antibiotics (Z88)'],
+      },
+    });
+  }
+
+  // Gap SH-8: Left Atrial Appendage Assessment
+  // Guideline: 2023 ACC/AHA AFib Guideline, Class 2a, LOE B
+  // AF + structural heart disease (I34-I37) should consider LAA assessment
+  if (
+    hasAF &&
+    hasAnyValveDx &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.SCREENING_DUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Left atrial appendage assessment recommended for review',
+      target: 'LAA assessment completed',
+      recommendations: {
+        action: 'Consider left atrial appendage evaluation in AF with structural heart disease per 2023 ACC/AHA AFib',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Atrial fibrillation (I48.*)',
+          'Structural heart / valve disease (I34-I37 range)',
+        ],
+        guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prior LAA occlusion device'],
+      },
+    });
+  }
+
+  // Gap SH-9: PFO Closure Evaluation
+  // Guideline: 2020 AHA/ASA Stroke Prevention, Class 2a, LOE B
+  // Cryptogenic stroke (I63.9) + age < 60 + PFO (Q21.1)
+  const hasCryptogenicStroke = dxCodes.some(c => c.startsWith('I63.9'));
+  const hasPFO = dxCodes.some(c => c.startsWith('Q21.1'));
+  if (
+    hasCryptogenicStroke &&
+    age < 60 &&
+    hasPFO &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'PFO closure evaluation recommended for review',
+      target: 'PFO closure candidacy assessment completed',
+      recommendations: {
+        action: 'Consider PFO closure evaluation for cryptogenic stroke prevention per 2020 AHA/ASA guideline',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Cryptogenic stroke (I63.9)',
+          `Age: ${age} (< 60 threshold)`,
+          'Patent foramen ovale (Q21.1)',
+        ],
+        guidelineSource: '2020 AHA/ASA Guideline for Prevention of Stroke in Patients with Stroke and TIA',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Known alternative stroke etiology', 'Active endocarditis'],
+      },
+    });
+  }
+
+  // ============================================================
+  // NEW Valvular Disease Rules (VD-3 through VD-12)
+  // ============================================================
+
+  // Gap VD-3: INR Monitoring for Mechanical Valve
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE A
+  // Mechanical valve on warfarin needs regular INR monitoring
+  if (
+    hasMechanicalValve &&
+    medCodes.includes('11289') && // on warfarin
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    const hasRecentINR = labValues['inr'] !== undefined;
+    if (!hasRecentINR) {
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.VALVULAR_DISEASE,
+        status: 'INR monitoring overdue for mechanical valve on warfarin',
+        target: 'INR checked and within therapeutic range',
+        recommendations: {
+          action: 'Recommended for review: INR monitoring for mechanical valve anticoagulation per 2020 ACC/AHA VHD',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Mechanical valve (Z95.2, Z95.3, or Z95.4)',
+            'Active warfarin therapy',
+            'No recent INR value on file',
+          ],
+          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'A',
+          exclusions: ['Hospice/palliative care (Z51.5)'],
+        },
+      });
+    }
+  }
+
+  // Gap VD-4: Mitral Stenosis Surveillance
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
+  // Mitral stenosis (I05.0 or I34.2) requires periodic echo surveillance
+  const hasMitralStenosis = dxCodes.some(c => c.startsWith('I05.0') || c.startsWith('I34.2'));
+  if (
+    hasMitralStenosis &&
+    labValues['lvef'] === undefined &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Echo surveillance overdue for mitral stenosis',
+      target: 'Transthoracic echocardiogram completed',
+      recommendations: {
+        action: 'Consider echocardiographic surveillance for mitral stenosis per 2020 ACC/AHA VHD',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mitral stenosis (I05.0 or I34.2)',
+          'No recent echocardiogram data available',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent echo within guideline interval'],
+      },
+    });
+  }
+
+  // Gap VD-5: Aortic Regurgitation Monitoring
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
+  // Aortic regurgitation (I35.1) requires periodic echo surveillance
+  const hasAorticRegurg = dxCodes.some(c => c.startsWith('I35.1'));
+  if (
+    hasAorticRegurg &&
+    labValues['lvef'] === undefined &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Echo surveillance overdue for aortic regurgitation',
+      target: 'Transthoracic echocardiogram completed',
+      recommendations: {
+        action: 'Consider echocardiographic surveillance for aortic regurgitation per 2020 ACC/AHA VHD',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Aortic regurgitation (I35.1)',
+          'No recent echocardiogram data available',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent echo within guideline interval'],
+      },
+    });
+  }
+
+  // Gap VD-6: DOAC Contraindicated in Mechanical Valve
+  // Guideline: 2020 ACC/AHA VHD (RE-ALIGN Trial), Class 3 (Harm), LOE B
+  // DOACs are contraindicated in mechanical valve patients -- warfarin is required
+  // DOAC RxNorm: apixaban (1364430), rivaroxaban (1114195), dabigatran (1037045), edoxaban (1599538)
+  if (hasMechanicalValve && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const DOAC_CODES = ['1364430', '1114195', '1037045', '1599538'];
+    const onDOAC = medCodes.some(c => DOAC_CODES.includes(c));
+    if (onDOAC) {
+      gaps.push({
+        type: TherapyGapType.SAFETY_ALERT,
+        module: ModuleType.VALVULAR_DISEASE,
+        status: 'DOAC detected in mechanical valve patient -- contraindicated',
+        target: 'DOAC discontinued and warfarin initiated',
+        recommendations: {
+          action: 'SAFETY ALERT: Consider urgent review -- DOAC is contraindicated with mechanical valve per RE-ALIGN trial. Warfarin is the only approved anticoagulant.',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Mechanical valve (Z95.2, Z95.3, or Z95.4)',
+            'Active DOAC therapy detected (apixaban, rivaroxaban, dabigatran, or edoxaban)',
+          ],
+          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease (RE-ALIGN Trial)',
+          classOfRecommendation: '3 (Harm)',
+          levelOfEvidence: 'B',
+          exclusions: ['Hospice/palliative care (Z51.5)'],
+        },
+      });
+    }
+  }
+
+  // Gap VD-7: Exercise Restriction in Severe AS
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE C
+  // Severe AS (I35.0) + age > 65 should have exercise restriction documentation
+  if (
+    hasAorticStenosis &&
+    age > 65 &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.DOCUMENTATION_GAP,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Exercise restriction documentation recommended for review in severe AS',
+      target: 'Exercise restriction counseling documented',
+      recommendations: {
+        action: 'Consider documenting exercise restriction counseling for severe aortic stenosis per 2020 ACC/AHA VHD',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Severe aortic stenosis (I35.0)',
+          `Age: ${age} (> 65 threshold)`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Already documented exercise restriction'],
+      },
+    });
+  }
+
+  // Gap VD-8: Rheumatic Heart Disease Screen
+  // Guideline: 2020 AHA RHD Scientific Statement, Class 1, LOE B
+  // Rheumatic fever history (I01/I02) + age < 40 warrants screening
+  const hasRheumaticFever = dxCodes.some(c => c.startsWith('I01') || c.startsWith('I02'));
+  if (
+    hasRheumaticFever &&
+    age < 40 &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.SCREENING_DUE,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Rheumatic heart disease screening recommended for review',
+      target: 'Echocardiographic screening for RHD completed',
+      recommendations: {
+        action: 'Consider rheumatic heart disease screening with echocardiography per 2020 AHA RHD Statement',
+      },
+      evidence: {
+        triggerCriteria: [
+          'History of rheumatic fever (I01 or I02)',
+          `Age: ${age} (< 40 threshold)`,
+        ],
+        guidelineSource: '2020 AHA Scientific Statement on Rheumatic Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Established RHD already under management'],
+      },
+    });
+  }
+
+  // Gap VD-9: Endocarditis Education
+  // Guideline: 2021 AHA Endocarditis Prevention, Class 1, LOE C
+  // Any prosthetic valve patient should have endocarditis education documented
+  if (
+    hasProstheticValve &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.DOCUMENTATION_GAP,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Endocarditis education documentation recommended for review',
+      target: 'Patient education on endocarditis prevention documented',
+      recommendations: {
+        action: 'Consider documenting endocarditis prevention education for prosthetic valve patient per 2021 AHA guideline',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Prosthetic valve (Z95.2, Z95.3, or Z95.4)',
+        ],
+        guidelineSource: '2021 AHA Scientific Statement on Prevention of Infective Endocarditis',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Education already documented this cycle'],
+      },
+    });
+  }
+
+  // Gap VD-10: Pregnancy Risk in Valve Disease
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE C
+  // Valve disease + female + age 18-45 needs pregnancy risk counseling
+  if (
+    hasAnyValveDx &&
+    gender === 'FEMALE' &&
+    age >= 18 && age <= 45 &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE) &&
+    !hasContraindication(dxCodes, EXCLUSION_PREGNANCY)
+  ) {
+    gaps.push({
+      type: TherapyGapType.SCREENING_DUE,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Pregnancy risk assessment recommended for review in valve disease',
+      target: 'Pregnancy risk counseling and pre-conception evaluation completed',
+      recommendations: {
+        action: 'Consider pre-conception cardiovascular risk assessment for valve disease per 2020 ACC/AHA VHD',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Valve disease diagnosis present (I34-I37 range)',
+          `Gender: Female`,
+          `Age: ${age} (18-45 reproductive age range)`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Current pregnancy (managed separately)', 'Post-menopausal'],
+      },
+    });
+  }
+
+  // Gap VD-11: Bioprosthetic Valve Degeneration Watch
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
+  // Bioprosthetic valve (Z95.2/Z95.4) + age > 65 (proxy for >10yr post-implant risk)
+  if (
+    hasBioprostheticValve &&
+    age > 65 &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MONITORING_OVERDUE,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Bioprosthetic valve degeneration monitoring recommended for review',
+      target: 'Structural valve deterioration assessment completed',
+      recommendations: {
+        action: 'Consider enhanced surveillance for bioprosthetic valve degeneration per 2020 ACC/AHA VHD',
+        note: 'Bioprosthetic valves have increased degeneration risk after 10 years, especially in older patients',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Bioprosthetic valve (Z95.2 or Z95.4)',
+          `Age: ${age} (> 65, increased degeneration risk proxy)`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent valve assessment on file'],
+      },
+    });
+  }
+
+  // Gap VD-12: Anticoagulation in AF + Valve Disease
+  // Guideline: 2023 ACC/AHA AFib Guideline, Class 1, LOE A
+  // AF + any valve dx + no oral anticoagulant
+  // OAC RxNorm: warfarin (11289), apixaban (1364430), rivaroxaban (1114195), dabigatran (1037045), edoxaban (1599538)
+  if (
+    hasAF &&
+    hasAnyValveDx &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    const OAC_CODES = ['11289', '1364430', '1114195', '1037045', '1599538'];
+    const onOAC = medCodes.some(c => OAC_CODES.includes(c));
+    if (!onOAC) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.VALVULAR_DISEASE,
+        status: 'Oral anticoagulation missing in AF with valve disease',
+        target: 'Oral anticoagulant initiated',
+        medication: 'Warfarin or DOAC (based on valve type)',
+        recommendations: {
+          action: 'Consider oral anticoagulation for AF with concomitant valve disease per 2023 ACC/AHA AFib Guideline',
+          note: 'Mechanical valves require warfarin; bioprosthetic or native valve disease may use DOAC',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Atrial fibrillation (I48.*)',
+            'Valve disease diagnosis present (I34-I37 range)',
+            'No oral anticoagulant on active medication list',
+          ],
+          guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'A',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Active bleeding', 'Documented contraindication to anticoagulation'],
+        },
+      });
+    }
+  }
+
+  // ============================================================
+  // NEW Peripheral Vascular Rules (PV-3 through PV-9)
+  // ============================================================
+
+  // Gap PV-3: Antiplatelet in PAD
+  // Guideline: 2024 ACC/AHA PAD Guideline, Class 1, LOE A
+  // PAD patients should be on aspirin or clopidogrel
+  // RxNorm: aspirin (1191), clopidogrel (32968)
+  if (
+    hasPAD &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    const ANTIPLATELET_CODES = ['1191', '32968'];
+    const onAntiplatelet = medCodes.some(c => ANTIPLATELET_CODES.includes(c));
+    if (!onAntiplatelet) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.PERIPHERAL_VASCULAR,
+        status: 'Antiplatelet therapy missing in PAD',
+        target: 'Antiplatelet therapy initiated',
+        medication: 'Aspirin or Clopidogrel',
+        recommendations: {
+          action: 'Consider antiplatelet therapy for peripheral artery disease per 2024 ACC/AHA PAD Guideline',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Peripheral artery disease (I73.9 or I70.2*)',
+            'No aspirin or clopidogrel on active medication list',
+          ],
+          guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'A',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Active bleeding', 'Documented antiplatelet allergy (Z88)'],
+        },
+      });
+    }
+  }
+
+  // Gap PV-4: Smoking Cessation in PAD
+  // Guideline: 2024 ACC/AHA PAD Guideline, Class 1, LOE A
+  // PAD + active smoking (F17 tobacco use or Z72.0 tobacco use)
+  const hasSmoking = dxCodes.some(c => c.startsWith('F17') || c.startsWith('Z72.0'));
+  if (
+    hasPAD &&
+    hasSmoking &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.REFERRAL_NEEDED,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'Smoking cessation referral recommended for review in PAD',
+      target: 'Smoking cessation program referral placed',
+      recommendations: {
+        action: 'Consider referral to smoking cessation program for PAD patient per 2024 ACC/AHA PAD Guideline',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Peripheral artery disease (I73.9 or I70.2*)',
+          'Active tobacco use (F17 or Z72.0)',
+        ],
+        guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // Gap PV-5: Exercise Therapy for Claudication
+  // Guideline: 2024 ACC/AHA PAD Guideline, Class 1, LOE A
+  // PAD + claudication (I73.9) warrants supervised exercise therapy
+  const hasClaudicationPAD = dxCodes.some(c => c.startsWith('I73.9'));
+  if (
+    hasPAD &&
+    hasClaudicationPAD &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.REHABILITATION_ELIGIBLE,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'Supervised exercise therapy recommended for review in PAD with claudication',
+      target: 'Supervised exercise therapy program initiated',
+      recommendations: {
+        action: 'Consider supervised exercise therapy for claudication per 2024 ACC/AHA PAD Guideline',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Peripheral artery disease (I73.9 or I70.2*)',
+          'Claudication symptoms (I73.9)',
+        ],
+        guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Critical limb ischemia', 'Unable to exercise due to comorbidity'],
+      },
+    });
+  }
+
+  // Gap PV-6: Diabetes Control in PAD
+  // Guideline: 2024 ACC/AHA PAD Guideline, Class 1, LOE B
+  // PAD + diabetes + no HbA1c on file
+  if (
+    hasPAD &&
+    hasDiabetes &&
+    labValues['hba1c'] === undefined &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MONITORING_OVERDUE,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'HbA1c monitoring overdue in PAD with diabetes',
+      target: 'HbA1c checked and glycemic control assessed',
+      recommendations: {
+        action: 'Consider HbA1c monitoring for diabetes management in PAD per 2024 ACC/AHA PAD Guideline',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Peripheral artery disease (I73.9 or I70.2*)',
+          'Diabetes mellitus (E11.*)',
+          'No HbA1c value on file',
+        ],
+        guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent HbA1c within guideline interval'],
+      },
+    });
+  }
+
+  // Gap PV-7: Wound Care Assessment
+  // Guideline: 2024 ACC/AHA PAD Guideline, Class 1, LOE B
+  // PAD + ulcer/gangrene (I70.23, I70.24, L97)
+  const hasWoundOrGangrene = dxCodes.some(c =>
+    c.startsWith('I70.23') || c.startsWith('I70.24') || c.startsWith('L97')
+  );
+  if (
+    hasPAD &&
+    hasWoundOrGangrene &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.REFERRAL_NEEDED,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'Wound care assessment referral recommended for review in PAD',
+      target: 'Wound care specialist referral placed',
+      recommendations: {
+        action: 'Consider wound care specialist referral for PAD with ulcer/gangrene per 2024 ACC/AHA PAD Guideline',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Peripheral artery disease (I73.9 or I70.2*)',
+          'Ulcer or gangrene (I70.23, I70.24, or L97)',
+        ],
+        guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // Gap PV-8: Duplex Ultrasound Follow-up
+  // Guideline: 2024 ACC/AHA PAD Guideline, Class 1, LOE B
+  // PAD + prior vascular intervention (Z95.8) needs imaging follow-up
+  const hasPriorVascularIntervention = dxCodes.some(c => c.startsWith('Z95.8'));
+  if (
+    hasPAD &&
+    hasPriorVascularIntervention &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'Duplex ultrasound follow-up recommended for review post-intervention',
+      target: 'Duplex ultrasound surveillance completed',
+      recommendations: {
+        action: 'Consider duplex ultrasound follow-up for post-intervention PAD surveillance per 2024 ACC/AHA PAD Guideline',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Peripheral artery disease (I73.9 or I70.2*)',
+          'Prior vascular intervention (Z95.8)',
+        ],
+        guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent duplex ultrasound on file'],
+      },
+    });
+  }
+
+  // Gap PV-9: AAA Screening
+  // Guideline: 2022 ACC/AHA/AATS/STS Aortic Disease Guideline, Class 1, LOE B
+  // Male + age >= 65 + ever smoked (F17 tobacco use or Z87.891 history of tobacco use)
+  const hasEverSmoked = dxCodes.some(c => c.startsWith('F17') || c.startsWith('Z87.891'));
+  if (
+    gender === 'MALE' &&
+    age >= 65 &&
+    hasEverSmoked &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.SCREENING_DUE,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'Abdominal aortic aneurysm screening recommended for review',
+      target: 'AAA ultrasound screening completed',
+      recommendations: {
+        action: 'Consider one-time AAA ultrasound screening for male ever-smoker age >= 65 per 2022 ACC/AHA/AATS/STS Aortic Disease Guideline',
+      },
+      evidence: {
+        triggerCriteria: [
+          `Gender: Male`,
+          `Age: ${age} (>= 65 threshold)`,
+          'History of tobacco use (F17 or Z87.891)',
+        ],
+        guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Known AAA already under surveillance', 'Prior AAA repair'],
       },
     });
   }

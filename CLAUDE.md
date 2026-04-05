@@ -254,14 +254,14 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 - The ECG AI pipeline (backend/src/ai/) is NOT covered by the CDS exemption and should not be activated without FDA clearance
 
 **Current gap rule status (as of April 2026):**
-- Heart Failure: 8 rules (ACEi/ARB/ARNi, SGLT2i, Beta-Blocker, MRA, ATTR-CM, Iron Deficiency, Finerenone/CKD+T2DM, Digoxin Toxicity)
-- Electrophysiology: 3 rules (QTc Safety, AFib OAC, AFib Rate Control)
-- Coronary: 3 rules (DAPT/P2Y12, High-Intensity Statin, Cardiac Rehab Referral)
-- Structural Heart: 2 rules (AS Echo Surveillance, TAVR Evaluation)
-- Valvular: 2 rules (Mechanical Valve Anticoag, Bioprosthetic Echo Surveillance)
-- Peripheral Vascular: 2 rules (PAD Statin, ABI Screening)
+- Heart Failure: 28 rules (GDMT 4-pillar, ATTR-CM, iron, GLP-1, ivabradine, vericiguat, H-ISDN, rehab, RPM, BNP monitoring, palliative, and more)
+- Electrophysiology: 11 rules (QTc, AFib OAC, rate control, LAAC, ablation, ICD, CRT, amiodarone/dofetilide monitoring, syncope, remote monitoring)
+- Coronary: 10 rules (DAPT, statin, ACEi post-MI, BB post-MI, smoking, Lp(a), ezetimibe, A1c, BP, cardiac rehab)
+- Structural Heart: 9 rules (AS echo, TAVR, mitral/tricuspid, post-TAVR f/u, endocarditis, LAA, PFO, imaging)
+- Valvular: 12 rules (mechanical anticoag, INR monitoring, DOAC safety alert, MS/AR/bioprosthetic surveillance, RHD, pregnancy risk, AF+valve, endocarditis education)
+- Peripheral Vascular: 9 rules (statin, ABI, antiplatelet, smoking, exercise, diabetes, wound care, duplex f/u, AAA screening)
 
-20 rules execute in the runtime (`ingestion/gapDetectionRunner.ts`). Each rule has guideline provenance in `RUNTIME_GAP_REGISTRY`. The CQL engine (`cqlEngine.ts`) is scaffolding -- gap rules run directly via TypeScript, not CQL. 256 gaps are defined in the frontend UI across all 6 modules.
+79 rules execute in the runtime (`ingestion/gapDetectionRunner.ts`). Each rule has guideline provenance in `RUNTIME_GAP_REGISTRY`. The CQL engine (`cqlEngine.ts`) is scaffolding -- gap rules run directly via TypeScript, not CQL. 256 gaps are defined in the frontend UI across all 6 modules.
 
 **Cardiovascular terminology:** `backend/src/terminology/cardiovascularValuesets.ts` contains curated LOINC, ICD-10, RxNorm, and SNOMED code sets for gap detection. When adding new gap rules, add required codes there.
 
