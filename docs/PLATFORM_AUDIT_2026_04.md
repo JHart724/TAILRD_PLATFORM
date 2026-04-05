@@ -60,8 +60,8 @@ The platform needs approximately **200 engineering hours** to reach a state wher
 - [x] **P1-SEC-6: Phenotypes IDOR** | `phenotypes.ts:28` -- no hospitalId on GET /:patientId | Est: 1h
 - [x] **P1-SEC-7: Referrals IDOR** | `referrals.ts:197` -- filter built but not passed to service | Est: 0.5h
 - [ ] **P1-SEC-8: Rate limiting is in-memory only** | `authRateLimit.ts` -- bypassed in multi-instance | Est: 2h
-- [ ] **P1-SEC-9: Invite accept has weak password policy** | `invite.ts:91` -- 8 chars vs 12+complexity elsewhere | Est: 1h
-- [ ] **P1-SEC-10: DEMO_MODE disables all auth** | `auth.ts:49-53,82,110,128,152` -- only guarded against NODE_ENV=production | Est: 1h
+- [x] **P1-SEC-9: Invite accept has weak password policy** | `invite.ts:91` -- 8 chars vs 12+complexity elsewhere | Est: 1h
+- [x] **P1-SEC-10: DEMO_MODE disables all auth** | `auth.ts:49-53,82,110,128,152` -- only guarded against NODE_ENV=production | Est: 1h
 - [ ] **P1-SEC-11: CQL results IDOR** | `cqlRules.ts:263` -- no hospitalId scoping | Est: 0.5h
 - [x] **P1-SEC-12: File metadata endpoint lacks hospital scoping** | `files.ts:254-277` | Est: 0.5h
 
@@ -212,7 +212,7 @@ Covered in Section 7 above. Additional:
 - [x] **P0-CLIN-3: Finerenone recommended for HF (wrong indication)** | `gapDetectionRunner.ts:156-175` | Risk: Clinically inappropriate recommendation | Est: 2h
 - [x] **P1-CLIN-1: Gap 50 DAPT has no runtime implementation** | CQL only, dead code | Est: 4h
 - [x] **P1-CLIN-2: QTc alert is sex-agnostic** | `gap39_qtcAlert.cql.ts:55` -- 470ms threshold misses male prolongation (450-470) | Est: 1h
-- [ ] **P1-CLIN-3: Operator precedence bug in alert filtering** | `cqlEngine.ts:768` -- `&&` vs `||` precedence | Est: 0.5h
+- [x] **P1-CLIN-3: Operator precedence bug in alert filtering** | `cqlEngine.ts:768` -- `&&` vs `||` precedence | Est: 0.5h
 - [ ] **P1-CLIN-4: Valueset resolver is entirely mock data** | `valuesetResolver.ts:441-541` -- 3-4 codes per terminology | Est: 8h
 - [ ] **P1-CLIN-5: No guideline versioning mechanism** | No guidelineVersion, lastReviewDate, or expirationDate on rules | Est: 4h
 - [ ] **P1-CLIN-6: TherapyGapType enum too narrow** | `schema.prisma:1308-1316` -- only 7 types, cannot represent procedure/screening/referral gaps | Est: 2h
@@ -444,8 +444,8 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [x] P1-SEC-6: Add hospitalId to phenotypes | 1h
 - [x] P1-SEC-7: Pass hospitalId filter in referrals | 0.5h
 - [ ] P1-SEC-8: Redis-backed rate limiting | 2h
-- [ ] P1-SEC-9: Align invite password policy | 1h
-- [ ] P1-SEC-10: Guard DEMO_MODE in all environments | 1h
+- [x] P1-SEC-9: Align invite password policy (12 chars + complexity) | 1h
+- [x] P1-SEC-10: Guard DEMO_MODE (only dev/test, blocked in staging/production) | 1h
 - [ ] P1-SEC-11: Add hospitalId to CQL results | 0.5h
 - [ ] P1-SEC-12: Hospital-scope file metadata | 0.5h
 - [ ] P1-DOS-1: Move rate limiter before body parsing | 0.5h
@@ -459,7 +459,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [ ] P1-HIPAA-6: Scope admin analytics to hospital | 3h
 - [x] P1-CLIN-1: Implement Gap 50 DAPT in runtime (P2Y12 check for CAD/stent patients) | 4h
 - [x] P1-CLIN-2: Sex-specific QTc thresholds (male 450ms, female 470ms) | 1h
-- [ ] P1-CLIN-3: Fix operator precedence in alert filter | 0.5h
+- [x] P1-CLIN-3: Fix operator precedence in alert filter | 0.5h
 - [ ] P1-CLIN-4: Build real valueset resolver | 8h
 - [ ] P1-CLIN-5: Add guideline versioning to rules | 4h
 - [ ] P1-CLIN-6: Expand TherapyGapType enum | 2h

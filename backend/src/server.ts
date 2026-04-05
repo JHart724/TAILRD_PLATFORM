@@ -16,13 +16,16 @@ config();
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const isDemoMode = process.env.DEMO_MODE === 'true';
 
-// ── CRITICAL: Prevent DEMO_MODE from reaching production ──────────────────────
-if (isDemoMode && NODE_ENV === 'production') {
+// ── CRITICAL: Prevent DEMO_MODE from reaching any deployed environment ────────
+if (isDemoMode && NODE_ENV !== 'development' && NODE_ENV !== 'test') {
   console.error('\n╔══════════════════════════════════════════════════════════════╗');
-  console.error('║  FATAL: DEMO_MODE=true is not allowed in production.       ║');
+  console.error('║  FATAL: DEMO_MODE=true is only allowed in development/test ║');
   console.error('║  Set DEMO_MODE=false or remove it from environment.        ║');
   console.error('╚══════════════════════════════════════════════════════════════╝\n');
   process.exit(1);
+}
+if (isDemoMode) {
+  console.warn('⚠️  DEMO_MODE is active. All auth, RBAC, and tenant isolation are disabled.');
 }
 
 // ── CRITICAL: PHI_ENCRYPTION_KEY required outside demo mode ──────────────────

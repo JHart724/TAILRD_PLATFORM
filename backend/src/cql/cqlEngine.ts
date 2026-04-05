@@ -765,7 +765,7 @@ export class CQLEngine {
     patientId: string, 
     context?: any
   ): Promise<void> {
-    const alerts = results.filter(r => r.type === 'Alert' && r.priority === 'critical' || r.priority === 'high');
+    const alerts = results.filter(r => r.type === 'Alert' && (r.priority === 'critical' || r.priority === 'high'));
     
     if (alerts.length === 0) return;
 

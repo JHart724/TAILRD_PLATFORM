@@ -91,8 +91,11 @@ router.get('/invite/validate/:token', async (req, res) => {
 router.post('/invite/accept/:token', async (req, res) => {
   try {
     const { password, firstName, lastName } = req.body;
-    if (!password || password.length < 8) {
-      return res.status(400).json({ error: 'Password must be at least 8 characters' });
+    if (!password || password.length < 12) {
+      return res.status(400).json({ error: 'Password must be at least 12 characters' });
+    }
+    if (!/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      return res.status(400).json({ error: 'Password must contain uppercase, lowercase, number, and special character' });
     }
 
     const invite = await prisma.inviteToken.findUnique({ where: { token: req.params.token } });
