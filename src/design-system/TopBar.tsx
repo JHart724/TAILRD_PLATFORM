@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Bell } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Bell, Search } from 'lucide-react';
 import { NotificationPanel } from '../components/notifications';
 import UserMenu from '../components/UserMenu';
 import { useAuth } from '../auth/AuthContext';
@@ -43,9 +44,19 @@ interface TopBarProps {
 
 export default function TopBar({ moduleName, viewName }: TopBarProps) {
   const [notifOpen, setNotifOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { state } = useAuth();
   const apiStatus = useApiHealth();
+  const navigate = useNavigate();
   const user = state.user;
+
+  const handleSearch = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/patients?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery('');
+    }
+  }, [searchQuery, navigate]);
   const segments: { label: string; isLast: boolean }[] = [];
 
   if (!moduleName) {
@@ -82,18 +93,24 @@ export default function TopBar({ moduleName, viewName }: TopBarProps) {
         </div>
 
         {/* Center: Search */}
-        <div className="hidden md:block">
-          <input
-            type="text"
-            placeholder="Search patients, protocols..."
-            className="w-80 px-4 py-1.5 text-sm rounded-lg transition-colors"
-            style={{
-              background: 'rgba(244, 246, 248, 0.80)',
-              border: '1px solid rgba(200, 212, 220, 0.40)',
-              color: '#374151',
-            }}
-          />
-        </div>
+        <form onSubmit={handleSearch} className="hidden md:block" role="search">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search patients by name or MRN..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Search patients"
+              className="w-80 pl-9 pr-4 py-1.5 text-sm rounded-lg transition-colors"
+              style={{
+                background: 'rgba(244, 246, 248, 0.80)',
+                border: '1px solid rgba(200, 212, 220, 0.40)',
+                color: '#374151',
+              }}
+            />
+          </div>
+        </form>
 
         {/* Right: API status + Notifications + User */}
         <div className="flex items-center gap-4">

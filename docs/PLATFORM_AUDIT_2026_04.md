@@ -334,9 +334,9 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 
 - [ ] **P0-UX-1: WCAG 2.1 AA non-compliant** | Only 46 aria-* attributes across 13/415 files. No tablist roles, no focus traps, no aria-expanded on accordions. | Est: 8h
 - [x] **P1-UX-1: Hardcoded "Live . Updated 2m ago"** | Sidebar.tsx:105 -- never updates, erodes clinical trust | Est: 0.5h
-- [ ] **P1-UX-2: Non-functional TopBar search** | TopBar.tsx:84-93 -- no onChange, no state, decorative only | Est: 4h
+- [x] **P1-UX-2: Non-functional TopBar search** | TopBar.tsx:84-93 -- no onChange, no state, decorative only | Est: 4h
 - [ ] **P2-UX-1: Permanent notification badge** | TopBar.tsx:141-147 -- always shows red dot | Est: 1h
-- [ ] **P2-UX-2: Artificial 300ms loading delay** | ModuleLayout.tsx:44 -- setTimeout for animation | Est: 0.5h
+- [x] **P2-UX-2: Artificial 300ms loading delay** | ModuleLayout.tsx:44 -- setTimeout for animation | Est: 0.5h
 - [ ] **P2-UX-3: Glass panel system inconsistently adopted** | Some views use glass-panel, others raw bg-white | Est: 3h
 - [ ] **P2-UX-4: Empty state handling sparse** | ChartEmptyState exists but rarely used | Est: 4h
 
@@ -474,13 +474,13 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [x] P1-FE-2: Replace (window as any).addToast with typed emitter. Zero window.any remaining. | 3h
 - [x] P1-FE-3: Unify API_URL via DATA_SOURCE (TopBar, SuperAdminDashboard fixed) | 2h
 - [x] P1-UX-1: Replace fake "Live" with "Demo Mode" label | 0.5h
-- [ ] P1-UX-2: Implement TopBar search | 4h
+- [x] P1-UX-2: TopBar search now functional (navigates to /patients?search=). Added aria-label, Search icon. | 4h
 - [ ] P1-NOTIF-1: Build clinical alert delivery | 16h
 
 ## P2 -- Fix Before Scale (27 items, ~95h)
 
 - [ ] P2-SEC-1: Crypto.randomBytes for API keys | 0.5h
-- [ ] P2-SEC-2: Reduce body limit to 1MB | 0.5h
+- [x] P2-SEC-2: Reduce body limit to 1MB (done with P1-DOS-1) | 0.5h
 - [ ] P2-SEC-3: Require PHI key in non-demo environments | 0.5h
 - [ ] P2-SEC-4: Hash session tokens in DB | 2h
 - [ ] P2-SEC-5: Gate webhook status endpoint | 0.25h

@@ -271,7 +271,7 @@ const toastEmitter: {
 } = { _addToast: null, _clearToasts: null };
 
 // Toast utility functions for easy use (import { toast } from './Toast')
-type ToastOptions = Partial<Pick<ToastData, 'duration' | 'dismissible'>>;
+type ToastOptions = Partial<Pick<ToastData, 'duration' | 'actions' | 'isRecoverable' | 'errorId'>>;
 
 export const toast = {
   success: (title: string, message: string, options?: ToastOptions) => {

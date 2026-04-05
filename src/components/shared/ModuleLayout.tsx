@@ -37,13 +37,10 @@ const ModuleLayout: React.FC<ModuleLayoutProps> = ({
     if (container) container.scrollTo({ top: 0, behavior: 'auto' });
   };
 
-  const handleViewChange = async (viewId: string) => {
+  const handleViewChange = (viewId: string) => {
  if (viewId === activeView) return;
- setIsLoading(true);
  scrollToTop();
- await new Promise(resolve => setTimeout(resolve, 300));
  setActiveView(viewId);
- setIsLoading(false);
   };
 
   const { hasViewAccess, isDemoMode } = useAuth();
@@ -119,12 +116,15 @@ const ModuleLayout: React.FC<ModuleLayoutProps> = ({
  {/* Chrome-styled view tabs — sticky, flush against TopBar */}
  <nav className="px-6 py-2 sticky z-20" style={{ top: '3.5rem', background: 'linear-gradient(180deg, rgba(249,251,254,0.95) 0%, rgba(245,247,249,0.92) 100%)', borderBottom: '1px solid rgba(180,200,215,0.20)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}>
  <div className="max-w-[1800px] mx-auto">
- <div className="tab-switcher flex gap-1">
+ <div className="tab-switcher flex gap-1" role="tablist" aria-label="Module views">
  {filteredViews.map((view) => (
  <button
  type="button"
+ role="tab"
  key={view.id}
  onClick={() => handleViewChange(view.id)}
+ aria-selected={activeView === view.id}
+ aria-controls={`panel-${view.id}`}
  className={`flex items-center gap-2 py-2.5 px-5 text-sm transition-all duration-200 rounded-md ${
  activeView === view.id
  ? 'tab-item-active'
