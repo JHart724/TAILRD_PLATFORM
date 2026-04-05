@@ -261,7 +261,7 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 - Valvular: 12 rules (mechanical anticoag, INR monitoring, DOAC safety alert, MS/AR/bioprosthetic surveillance, RHD, pregnancy risk, AF+valve, endocarditis education)
 - Peripheral Vascular: 9 rules (statin, ABI, antiplatelet, smoking, exercise, diabetes, wound care, duplex f/u, AAA screening)
 
-79 rules execute in the runtime (`ingestion/gapDetectionRunner.ts`). Each rule has guideline provenance in `RUNTIME_GAP_REGISTRY`. The CQL engine (`cqlEngine.ts`) is scaffolding -- gap rules run directly via TypeScript, not CQL. 256 gaps are defined in the frontend UI across all 6 modules.
+139 rules execute in the runtime (`ingestion/gapDetectionRunner.ts`). Each rule has guideline provenance in `RUNTIME_GAP_REGISTRY`. The CQL engine (`cqlEngine.ts`) is scaffolding -- gap rules run directly via TypeScript, not CQL. 256 gaps are defined in the frontend UI across all 6 modules.
 
 **Cardiovascular terminology:** `backend/src/terminology/cardiovascularValuesets.ts` contains curated LOINC, ICD-10, RxNorm, and SNOMED code sets for gap detection. When adding new gap rules, add required codes there.
 
