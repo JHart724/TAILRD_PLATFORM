@@ -121,9 +121,9 @@ Covered in Sections 1 and 3. Additional:
 - [x] **P1-HIPAA-1: MRN logged in plaintext** | `patientService.ts:80-82,291-296` -- logger.info includes mrn field | Est: 2h
 - [x] **P1-HIPAA-2: Logger sensitive field filter incomplete** | `utils/logger.ts:14-18` -- missing mrn, firstName, lastName, patientName | Est: 1h
 - [ ] **P1-HIPAA-3: No audit logging on patient read operations** | `patients.ts:16-448` -- GET endpoints have zero writeAuditLog calls | Est: 4h
-- [ ] **P1-HIPAA-4: GOD view uses console.log instead of audit trail** | `godView.ts:24,186` | Est: 1h
+- [x] **P1-HIPAA-4: GOD view uses console.log instead of audit trail** | `godView.ts:24,186` | Est: 1h
 - [ ] **P1-HIPAA-5: DSAR deletion incomplete** | `dataRequests.ts:456-486` -- misses Medication, Condition, CarePlan, CQLResult, TherapyGap, Phenotype, CrossReferral, DrugTitration, DeviceEligibility, RiskScoreAssessment, InterventionTracking, ContraindicationAssessment | Est: 4h
-- [ ] **P1-HIPAA-6: Admin analytics leaks cross-tenant counts to hospital-admin** | `admin.ts:16-31` | Est: 3h
+- [x] **P1-HIPAA-6: Admin analytics leaks cross-tenant counts to hospital-admin** | `admin.ts:16-31` | Est: 3h
 
 ### P2 Findings
 
@@ -302,7 +302,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 - [ ] **P0-BACK-2: PatientService class is a stub** | `patientService.ts:199-218` -- returns fake IDs like `patient-${Date.now()}` | Est: 2h
 - [ ] **P1-BACK-1: N+1 in gapDetectionRunner** | `gapDetectionRunner.ts:60-90` -- individual findFirst+create per patient per gap | Est: 2h
 - [ ] **P1-BACK-2: N+1 in patientWriter** | `patientWriter.ts:20-119` -- 16 INSERTs per CSV row | Est: 3h
-- [ ] **P1-BACK-3: N+1 in observationService alert creation** | `observationService.ts:320-333` | Est: 0.5h
+- [x] **P1-BACK-3: N+1 in observationService alert creation** | `observationService.ts:320-333` | Est: 0.5h
 - [ ] **P1-BACK-4: createSuperAdmin.ts never writes to DB** | `createSuperAdmin.ts:12-45` -- creates in-memory object only | Est: 1h
 - [ ] **P1-BACK-5: 46 `as any` casts in backend** | Multiple files, concentrated in mfa.ts (8), accountSecurity.ts (3) | Est: 3h
 - [ ] **P2-BACK-1: analyticsController.ts is dead code** | Never mounted in server.ts | Est: 0.5h
@@ -320,9 +320,9 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 
 - [ ] **P1-FE-1: 267 `any` types across 125 files** | Concentrated in apiService.ts (13), Toast.tsx (14), care team views (12 each) | Est: 6h
 - [ ] **P1-FE-2: (window as any).addToast global dispatch** | Toast.tsx:225-230, useGapActions.ts:49 -- bypasses React, untestable | Est: 3h
-- [ ] **P1-FE-3: API_URL defined independently in 7 files** | 2 have inconsistent /api suffix (TopBar.tsx, SuperAdminDashboard.tsx) | Est: 2h
+- [x] **P1-FE-3: API_URL defined independently in 7 files** | 2 have inconsistent /api suffix (TopBar.tsx, SuperAdminDashboard.tsx) | Est: 2h
 - [ ] **P1-FE-4: Hardcoded mock data in production components** | App.tsx:216-308, notificationMockData.ts, UsersManagement.tsx | Est: 3h
-- [ ] **P1-FE-5: Duplicate ErrorBoundary** | ErrorFallback.tsx (used) vs ErrorBoundary.tsx (orphaned) | Est: 1h
+- [x] **P1-FE-5: Duplicate ErrorBoundary** | ErrorFallback.tsx (used) vs ErrorBoundary.tsx (orphaned) | Est: 1h
 - [ ] **P2-FE-1: App.tsx has ~350 lines of dead code** | Lines 96-682 -- inline SVG icons, duplicate KpiCard, unreachable MainDashboard | Est: 2h
 - [ ] **P2-FE-2: 34 TODO stubs in care team configs** | Unimplemented button handlers across 13 files | Est: 4h
 - [ ] **P2-FE-3: rememberMe checkbox is cosmetic** | Login.tsx:15-16 -- never consumed | Est: 0.5h
@@ -454,9 +454,9 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [x] P1-HIPAA-1: Remove MRN from logs | 2h
 - [x] P1-HIPAA-2: Complete logger sensitive field filter | 1h
 - [ ] P1-HIPAA-3: Audit log patient read operations | 4h
-- [ ] P1-HIPAA-4: Replace GOD view console.log with audit | 1h
+- [x] P1-HIPAA-4: Replace GOD view console.log with audit | 1h
 - [ ] P1-HIPAA-5: Complete DSAR deletion cascade | 4h
-- [ ] P1-HIPAA-6: Scope admin analytics to hospital | 3h
+- [x] P1-HIPAA-6: Scope admin analytics to hospital (hospital-admin sees own data only) | 3h
 - [x] P1-CLIN-1: Implement Gap 50 DAPT in runtime (P2Y12 check for CAD/stent patients) | 4h
 - [x] P1-CLIN-2: Sex-specific QTc thresholds (male 450ms, female 470ms) | 1h
 - [x] P1-CLIN-3: Fix operator precedence in alert filter | 0.5h
@@ -472,7 +472,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [ ] P1-COMP-1: SSO/SAML integration | 16h
 - [ ] P1-FE-1: Type the 267 any instances | 6h
 - [ ] P1-FE-2: Replace (window as any).addToast with Context | 3h
-- [ ] P1-FE-3: Unify API_URL to single source | 2h
+- [x] P1-FE-3: Unify API_URL via DATA_SOURCE (TopBar, SuperAdminDashboard fixed) | 2h
 - [x] P1-UX-1: Replace fake "Live" with "Demo Mode" label | 0.5h
 - [ ] P1-UX-2: Implement TopBar search | 4h
 - [ ] P1-NOTIF-1: Build clinical alert delivery | 16h

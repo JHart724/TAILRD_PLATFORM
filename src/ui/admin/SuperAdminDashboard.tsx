@@ -15,7 +15,8 @@ import {
 import TailrdLogo from '../../components/TailrdLogo';
 import { toFixed } from '../../utils/formatters';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+import { DATA_SOURCE } from '../../config/dataSource';
+const API_URL = DATA_SOURCE.apiUrl;
 
 interface PlatformAnalytics {
   totalHospitals: number;
@@ -36,7 +37,8 @@ const SuperAdminDashboard: React.FC = () => {
 
   const checkBackendConnection = useCallback(async (): Promise<boolean> => {
     try {
-      const res = await fetch(`${API_URL}/health`, { signal: AbortSignal.timeout(4000) });
+      const baseUrl = API_URL.replace(/\/api$/, '');
+      const res = await fetch(`${baseUrl}/health`, { signal: AbortSignal.timeout(4000) });
       const connected = res.ok;
       setBackendConnected(connected);
       return connected;
@@ -58,7 +60,7 @@ const SuperAdminDashboard: React.FC = () => {
     }
 
     try {
-      const res = await fetch(`${API_URL}/api/admin/analytics`, {
+      const res = await fetch(`${API_URL}/admin/analytics`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('tailrd-session-token') ?? ''}`,
         },

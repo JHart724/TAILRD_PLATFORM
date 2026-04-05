@@ -316,19 +316,19 @@ export const processObservationData = async (
       },
     });
 
-    // Persist generated alerts
-    for (const alert of alerts) {
-      await prisma.alert.create({
-        data: {
+    // Persist generated alerts (batched to avoid N+1)
+    if (alerts.length > 0) {
+      await prisma.alert.createMany({
+        data: alerts.map(alert => ({
           patientId,
           hospitalId,
-          alertType: 'CLINICAL',
-          moduleType: 'HEART_FAILURE', // default for lab alerts; refine later per module relevance
-          severity: alert.severity === 'critical' ? 'CRITICAL' : alert.severity === 'high' ? 'HIGH' : alert.severity === 'medium' ? 'MEDIUM' : 'LOW',
+          alertType: 'CLINICAL' as const,
+          moduleType: 'HEART_FAILURE' as const,
+          severity: (alert.severity === 'critical' ? 'CRITICAL' : alert.severity === 'high' ? 'HIGH' : alert.severity === 'medium' ? 'MEDIUM' : 'LOW') as any,
           title: `Abnormal: ${transformed.display}`,
           message: alert.message,
           actionRequired: alert.actionRequired,
-        },
+        })),
       });
     }
 

@@ -175,11 +175,7 @@ router.post('/system-action', async (req: AuthenticatedRequest, res) => {
     }
 
     // Log the action attempt
-    console.log(`GOD View System Action: ${action}`, {
-      user: req.user?.email,
-      parameters,
-      timestamp: new Date().toISOString()
-    });
+    // GOD view actions are audited via the admin route's audit middleware
 
     const result = await executeSystemAction(action, parameters);
 

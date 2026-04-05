@@ -11,49 +11,39 @@ const router = Router();
 // Mount GOD view routes
 router.use('/god', godViewRouter);
 
-// Quick Analytics for Super Admin Dashboard
+// Quick Analytics for Admin Dashboard
+// Hospital-admin sees only their hospital; super-admin sees platform-wide
 router.get('/analytics', authenticateToken, authorizeRole(['super-admin', 'hospital-admin']), async (req: AuthenticatedRequest, res: Response) => {
   try {
-    // Platform statistics
+    const isSuperAdmin = req.user!.role === 'super-admin';
+    const hospitalFilter = isSuperAdmin ? {} : { hospitalId: req.user!.hospitalId };
+
     const [
       totalHospitals,
       activeUsers,
       totalPatients,
-      totalWebhookEvents,
       totalAlerts
     ] = await Promise.all([
-      prisma.hospital.count().catch(() => 247), // Fallback if no database
-      prisma.user.count({ where: { isActive: true } }).catch(() => 15420),
-      prisma.patient.count().catch(() => 125000),
-      prisma.webhookEvent.count().catch(() => 89234),
-      prisma.alert.count({ where: { isAcknowledged: false } }).catch(() => 3)
+      isSuperAdmin ? prisma.hospital.count() : Promise.resolve(1),
+      prisma.user.count({ where: { isActive: true, ...hospitalFilter } }),
+      prisma.patient.count({ where: hospitalFilter }),
+      prisma.alert.count({ where: { isAcknowledged: false, ...hospitalFilter } }),
     ]);
-
-    // Calculate metrics
-    const monthlyGrowth = 12.3;
-    const platformRevenue = totalHospitals * 11500; // Average $11.5k per hospital
-    const systemHealth = 99.7;
 
     const analytics = {
       totalHospitals,
       activeUsers,
-      monthlyGrowth,
-      platformRevenue,
-      systemHealth,
-      criticalAlerts: totalAlerts
+      totalPatients,
+      criticalAlerts: totalAlerts,
     };
 
-    res.json(analytics);
+    res.json({ success: true, data: analytics, timestamp: new Date().toISOString() });
 
   } catch (error: any) {
-    // Return fallback data if database is unavailable
-    res.json({
-      totalHospitals: 247,
-      activeUsers: 15420,
-      monthlyGrowth: 12.3,
-      platformRevenue: 2850000,
-      systemHealth: 99.7,
-      criticalAlerts: 3
+    res.status(500).json({
+      success: false,
+      error: 'Failed to load analytics',
+      timestamp: new Date().toISOString(),
     });
   }
 });

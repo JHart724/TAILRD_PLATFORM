@@ -4,8 +4,10 @@ import { NotificationPanel } from '../components/notifications';
 import UserMenu from '../components/UserMenu';
 import { useAuth } from '../auth/AuthContext';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
-const isDemoMode = process.env.REACT_APP_DEMO_MODE === 'true';
+import { DATA_SOURCE } from '../config/dataSource';
+
+const API_URL = DATA_SOURCE.apiUrl.replace(/\/api$/, ''); // Health endpoint is at root, not /api
+const isDemoMode = DATA_SOURCE.demoMode;
 
 type ApiStatus = 'demo' | 'online' | 'offline' | 'checking';
 
