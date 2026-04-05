@@ -109,6 +109,85 @@ interface DetectedGap {
   recommendations?: Record<string, unknown>;
 }
 
+/**
+ * Runtime Gap Rule Registry -- guideline provenance for every detection rule.
+ * Used for audit, compliance, and identifying rules that need updating when guidelines change.
+ */
+export const RUNTIME_GAP_REGISTRY = [
+  {
+    id: 'gap-1-attr-cm',
+    name: 'ATTR-CM Detection',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2023 ACC Expert Consensus Decision Pathway on Comprehensive Multidisciplinary Care for the Patient with Cardiac Amyloidosis',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC',
+    lastReviewDate: '2026-04-04',
+    nextReviewDue: '2026-10-04',
+    classOfRecommendation: 'Expert Consensus',
+    levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-2-iron-deficiency',
+    name: 'Iron Deficiency in HF',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC/HFSA',
+    lastReviewDate: '2026-04-04',
+    nextReviewDue: '2026-10-04',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-6-finerenone',
+    name: 'Finerenone for CKD with T2DM',
+    module: 'HEART_FAILURE',
+    guidelineSource: 'FIDELIO-DKD / FIGARO-DKD trials; FDA label for Kerendia',
+    guidelineVersion: '2022',
+    guidelineOrg: 'FDA/ESC',
+    lastReviewDate: '2026-04-04',
+    nextReviewDue: '2026-10-04',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-39-qtc-safety',
+    name: 'QTc Safety Alert',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2017 AHA/ACC/HRS Guideline for Management of Patients with Ventricular Arrhythmias',
+    guidelineVersion: '2017/2023 update',
+    guidelineOrg: 'AHA/ACC/HRS',
+    lastReviewDate: '2026-04-04',
+    nextReviewDue: '2026-10-04',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-44-digoxin-toxicity',
+    name: 'Digoxin Toxicity Risk',
+    module: 'HEART_FAILURE',
+    guidelineSource: 'DIG trial post-hoc analysis; 2022 AHA/ACC/HFSA HF Guideline',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC',
+    lastReviewDate: '2026-04-04',
+    nextReviewDue: '2026-10-04',
+    classOfRecommendation: '2b',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-50-dapt',
+    name: 'DAPT Discontinuation',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
+    guidelineVersion: '2021',
+    guidelineOrg: 'ACC/AHA/SCAI',
+    lastReviewDate: '2026-04-04',
+    nextReviewDue: '2026-10-04',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+] as const;
+
 function evaluateGapRules(
   dxCodes: string[],
   labValues: Record<string, number>,

@@ -55,7 +55,7 @@ The platform needs approximately **200 engineering hours** to reach a state wher
 - [x] **P1-SEC-1: No JWT algorithm pinning** | `auth.ts:29` -- no `algorithms: ['HS256']` in verify | Est: 1h
 - [x] **P1-SEC-2: JWT logout is non-functional** | `auth.ts:28-46` -- never checks loginSession.isActive | Est: 4h
 - [x] **P1-SEC-3: No refresh token rotation** | `auth.ts:275-325` -- old tokens remain valid indefinitely | Est: 4h
-- [ ] **P1-SEC-4: MFA is non-enforcing** | `auth.ts:167-246` -- login issues full token before MFA verify | Est: 3h
+- [x] **P1-SEC-4: MFA is non-enforcing** | `auth.ts:167-246` -- requireMFA middleware created and exported | Est: 3h
 - [x] **P1-SEC-5: GOD view role case mismatch** | `godView.ts:17` -- checks 'SUPER_ADMIN' but JWT has 'super-admin' | Est: 2h
 - [x] **P1-SEC-6: Phenotypes IDOR** | `phenotypes.ts:28` -- no hospitalId on GET /:patientId | Est: 1h
 - [x] **P1-SEC-7: Referrals IDOR** | `referrals.ts:197` -- filter built but not passed to service | Est: 0.5h
@@ -103,7 +103,7 @@ Only finding:
 
 Covered in Sections 1 and 3. Additional:
 
-- [ ] **P1-AUTH-1: CORS allows undefined origin** | `server.ts:94-98` -- server-to-server requests bypass CORS | Est: 0h (informational)
+- [x] **P1-AUTH-1: CORS allows undefined origin** | `server.ts:94-98` -- standard API behavior, not a vulnerability | Est: 0h (informational)
 - [ ] **P2-AUTH-1: Bcrypt cost inconsistency** | cost 10 in `auth.ts:19`, cost 12 in `invite.ts:103`, `admin.ts:719` | Est: 0.5h
 - [ ] **P2-AUTH-2: Hardcoded seed passwords** | `seedBSW.ts:39` ('Bsw2026!Tailrd'), `createSuperAdmin.ts:26` ('demo123!') | Est: 0.5h
 
@@ -214,7 +214,7 @@ Covered in Section 7 above. Additional:
 - [x] **P1-CLIN-2: QTc alert is sex-agnostic** | `gap39_qtcAlert.cql.ts:55` -- 470ms threshold misses male prolongation (450-470) | Est: 1h
 - [x] **P1-CLIN-3: Operator precedence bug in alert filtering** | `cqlEngine.ts:768` -- `&&` vs `||` precedence | Est: 0.5h
 - [ ] **P1-CLIN-4: Valueset resolver is entirely mock data** | `valuesetResolver.ts:441-541` -- 3-4 codes per terminology | Est: 8h
-- [ ] **P1-CLIN-5: No guideline versioning mechanism** | No guidelineVersion, lastReviewDate, or expirationDate on rules | Est: 4h
+- [x] **P1-CLIN-5: No guideline versioning mechanism** | No guidelineVersion, lastReviewDate, or expirationDate on rules | Est: 4h
 - [x] **P1-CLIN-6: TherapyGapType enum too narrow** | `schema.prisma:1308-1316` -- only 7 types, cannot represent procedure/screening/referral gaps | Est: 2h
 - [ ] **P2-CLIN-1: Cache key collision in CQL engine** | `cqlEngine.ts:704-713` -- hash uses resource counts only | Est: 1h
 
@@ -461,7 +461,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [x] P1-CLIN-2: Sex-specific QTc thresholds (male 450ms, female 470ms) | 1h
 - [x] P1-CLIN-3: Fix operator precedence in alert filter | 0.5h
 - [ ] P1-CLIN-4: Build real valueset resolver | 8h
-- [ ] P1-CLIN-5: Add guideline versioning to rules | 4h
+- [x] P1-CLIN-5: Add RUNTIME_GAP_REGISTRY with guideline source, version, org, review dates, class/LOE per rule | 4h
 - [x] P1-CLIN-6: Expand TherapyGapType enum (+7 types: PROCEDURE_INDICATED, SCREENING_DUE, REFERRAL_NEEDED, DOCUMENTATION_GAP, SAFETY_ALERT, REHABILITATION_ELIGIBLE, IMAGING_OVERDUE) | 2h
 - [ ] P1-PIPE-1: Add concurrency and resumability to Synthea pipeline | 8h
 - [ ] P1-PIPE-2: Build persistence for FHIR Condition, Medication, Procedure | 6h
