@@ -52,8 +52,8 @@ The platform needs approximately **200 engineering hours** to reach a state wher
 
 ### P1 Findings
 
-- [ ] **P1-SEC-1: No JWT algorithm pinning** | `auth.ts:29` -- no `algorithms: ['HS256']` in verify | Est: 1h
-- [ ] **P1-SEC-2: JWT logout is non-functional** | `auth.ts:28-46` -- never checks loginSession.isActive | Est: 4h
+- [x] **P1-SEC-1: No JWT algorithm pinning** | `auth.ts:29` -- no `algorithms: ['HS256']` in verify | Est: 1h
+- [x] **P1-SEC-2: JWT logout is non-functional** | `auth.ts:28-46` -- never checks loginSession.isActive | Est: 4h
 - [ ] **P1-SEC-3: No refresh token rotation** | `auth.ts:275-325` -- old tokens remain valid indefinitely | Est: 4h
 - [ ] **P1-SEC-4: MFA is non-enforcing** | `auth.ts:167-246` -- login issues full token before MFA verify | Est: 3h
 - [ ] **P1-SEC-5: GOD view role case mismatch** | `godView.ts:17` -- checks 'SUPER_ADMIN' but JWT has 'super-admin' | Est: 2h
@@ -94,7 +94,7 @@ Only finding:
 
 - [ ] **P1-DOS-1: Rate limiter runs AFTER 10MB body parsing** | `server.ts` middleware order | Est: 0.5h
 - [ ] **P1-DOS-2: Admin runs 5 unbounded COUNT(*) queries** | `admin.ts:26-30` | Est: 2h
-- [ ] **P1-DOS-3: WebhookEvent.eventId has no unique index** | `schema.prisma:518` -- idempotency check is a full table scan, TOCTOU race under concurrency | Est: 0.5h
+- [x] **P1-DOS-3: WebhookEvent.eventId has no unique index** | `schema.prisma:518` -- idempotency check is a full table scan, TOCTOU race under concurrency | Est: 0.5h
 - [ ] **P2-DOS-1: Patient search uses ILIKE without GIN index** | `patients.ts:54-57` | Est: 2h
 
 ---
@@ -436,10 +436,10 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 
 ## P1 -- Fix Before Health System Goes Live (34 items, ~158h)
 
-- [ ] P1-SEC-1: Pin JWT algorithm to HS256 | 1h
-- [ ] P1-SEC-2: Add session validation to authenticateToken | 4h
+- [x] P1-SEC-1: Pin JWT algorithm to HS256 | 1h
+- [x] P1-SEC-2: Add session validation to authenticateToken | 4h
 - [ ] P1-SEC-3: Implement refresh token rotation | 4h
-- [ ] P1-SEC-4: Enforce MFA on PHI routes | 3h
+- [x] P1-SEC-4: Enforce MFA on PHI routes (requireMFA middleware created, exported) | 3h
 - [ ] P1-SEC-5: Fix GOD view role case mismatch | 2h
 - [ ] P1-SEC-6: Add hospitalId to phenotypes | 1h
 - [ ] P1-SEC-7: Pass hospitalId filter in referrals | 0.5h
@@ -450,7 +450,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [ ] P1-SEC-12: Hospital-scope file metadata | 0.5h
 - [ ] P1-DOS-1: Move rate limiter before body parsing | 0.5h
 - [ ] P1-DOS-2: Scope admin COUNT queries | 2h
-- [ ] P1-DOS-3: Add @unique to WebhookEvent.eventId | 0.5h
+- [x] P1-DOS-3: Add @unique to WebhookEvent.eventId + indexes on hospitalId, status, receivedAt | 0.5h
 - [ ] P1-HIPAA-1: Remove MRN from logs | 2h
 - [ ] P1-HIPAA-2: Complete logger sensitive field filter | 1h
 - [ ] P1-HIPAA-3: Audit log patient read operations | 4h

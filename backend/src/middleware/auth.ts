@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import prisma from '../lib/prisma';
 import { JWTPayload, APIResponse } from '../types';
 import { FULL_ACCESS_PERMISSIONS, MODULE_KEY_MAP } from '../config/rolePermissions';
 
@@ -20,34 +21,48 @@ interface AuthenticatedRequest extends Request {
 // Verifies JWT. In demo mode, allows unauthenticated requests with a synthetic
 // super-admin payload so the frontend works without login.
 
-const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+const authenticateToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
   // If a token is provided, always try to verify it (works in both modes)
   if (token) {
-    jwt.verify(token, JWT_SECRET, (err: any, user: any) => {
-      if (err) {
-        // In demo mode, fall through to synthetic user instead of 403
-        if (isDemoMode) {
-          req.user = createDemoPayload();
-          return next();
+    try {
+      const user = jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] }) as JWTPayload;
+
+      // Validate session is still active (logout invalidates sessions)
+      if (!isDemoMode) {
+        const session = await prisma.loginSession.findUnique({
+          where: { sessionToken: token },
+          select: { isActive: true },
+        });
+        if (!session || !session.isActive) {
+          return res.status(401).json({
+            success: false,
+            error: 'Session has been revoked',
+            timestamp: new Date().toISOString(),
+          } as APIResponse);
         }
-        return res.status(403).json({
-          success: false,
-          error: 'Invalid or expired token',
-          timestamp: new Date().toISOString(),
-        } as APIResponse);
       }
-      req.user = user as JWTPayload;
-      next();
-    });
-    return;
+
+      req.user = user;
+      return next();
+    } catch (err: any) {
+      // In demo mode, fall through to synthetic user instead of 403
+      if (isDemoMode) {
+        req.user = createDemoPayload();
+        return next();
+      }
+      return res.status(403).json({
+        success: false,
+        error: 'Invalid or expired token',
+        timestamp: new Date().toISOString(),
+      } as APIResponse);
+    }
   }
 
   // No token provided
   if (isDemoMode) {
-    // Auto-generate super-admin payload for demo mode
     req.user = createDemoPayload();
     return next();
   }
@@ -178,11 +193,46 @@ const authorizeView = (req: AuthenticatedRequest, res: Response, next: NextFunct
   next();
 };
 
+// ─── requireMFA ──────────────────────────────────────────────────────────────
+// Enforces MFA verification on PHI-access routes. Users with MFA enabled must
+// have completed MFA verification (mfaVerified: true in JWT) to access patient data.
+
+const requireMFA = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  if (isDemoMode) return next();
+
+  const user = req.user;
+  if (!user) {
+    return res.status(401).json({
+      success: false,
+      error: 'Authentication required',
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+
+  // Check if user has MFA enabled via UserMFA relation
+  const mfaRecord = await prisma.userMFA.findUnique({
+    where: { userId: user.userId },
+    select: { enabled: true },
+  });
+
+  // If MFA is enabled but token lacks mfaVerified, block access
+  if (mfaRecord?.enabled && !user.mfaVerified) {
+    return res.status(403).json({
+      success: false,
+      error: 'MFA verification required to access patient data',
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  }
+
+  next();
+};
+
 export {
   authenticateToken,
   authorizeHospital,
   authorizeRole,
   authorizeModule,
   authorizeView,
+  requireMFA,
   AuthenticatedRequest,
 };

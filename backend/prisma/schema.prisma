@@ -515,7 +515,7 @@ model WebhookEvent {
 
   // Event Details
   eventType    String // NewPatient, Results, Visits, Orders
-  eventId      String // Unique event ID from Redox
+  eventId      String @unique // Unique event ID from Redox — idempotency key
   sourceSystem String // Source EHR system
 
   // Processing Status
@@ -535,6 +535,9 @@ model WebhookEvent {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([hospitalId])
+  @@index([status])
+  @@index([receivedAt])
   @@map("webhook_events")
 }
 
