@@ -357,7 +357,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 
 # 17. Section 15: Scalability & Performance
 
-- [ ] **P0-SCALE-1: 13 PrismaClient instances exhaust connection pool** | 65+ connections vs PostgreSQL default 100 | Est: 3h (covered by P0-SEC-2)
+- [x] **P0-SCALE-1: 13 PrismaClient instances exhaust connection pool** | Fixed in P0-SEC-2 (all use shared singleton) | Est: 3h
 - [ ] **P1-SCALE-1: No background job architecture** | No Bull/BullMQ/SQS despite references | Est: 16h
 - [ ] **P1-SCALE-2: In-memory caches won't survive multi-instance** | modelRegistry, valuesetResolver, cqlEngine, rate limiter all use process-local Map/MemoryStore | Est: 8h
 - [x] **P1-SCALE-3: WebhookEvent table has zero indexes** | Full table scans on every query | Est: 1h
