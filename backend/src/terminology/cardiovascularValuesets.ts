@@ -237,6 +237,20 @@ export const RXNORM_WARFARIN = {
   WARFARIN_10MG: '855332',
 } as const;
 
+/** Rate control agents (BB + CCB) -- used by AFib rate control gap rule */
+export const RXNORM_RATE_CONTROL = {
+  METOPROLOL: '6918',
+  CARVEDILOL: '20352',
+  DILTIAZEM: '3443',
+  VERAPAMIL: '11170',
+} as const;
+
+/** Bioprosthetic valve presence -- used by echo surveillance gap rule */
+export const ICD10_BIOPROSTHETIC_VALVE = [
+  'Z95.2',   // Presence of prosthetic heart valve
+  'Z95.4',   // Presence of other heart valve replacement
+] as const;
+
 /** High-intensity statins -- used by PAD statin gap rule */
 export const RXNORM_STATINS = {
   ATORVASTATIN: '36567',

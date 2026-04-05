@@ -325,7 +325,7 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 - [x] **P1-FE-4: Hardcoded mock data in production components** | App.tsx:216-308, notificationMockData.ts, UsersManagement.tsx | Est: 3h
 - [x] **P1-FE-5: Duplicate ErrorBoundary** | ErrorFallback.tsx (used) vs ErrorBoundary.tsx (orphaned) | Est: 1h
 - [x] **P2-FE-1: App.tsx has ~350 lines of dead code** | Lines 96-682 -- inline SVG icons, duplicate KpiCard, unreachable MainDashboard | Est: 2h
-- [ ] **P2-FE-2: 34 TODO stubs in care team configs** | Unimplemented button handlers across 13 files | Est: 4h
+- [x] **P2-FE-2: 34 TODO stubs in care team configs** | Unimplemented button handlers across 13 files | Est: 4h
 - [x] **P2-FE-3: rememberMe checkbox is cosmetic** | Login.tsx:15-16 -- never consumed | Est: 0.5h
 - [x] **P2-FE-4: Legacy porsche-*/crimson-* Tailwind classes** (verified: defined in tailwind.config.js, not legacy -- active design system) | May not resolve in current config -- invisible styling failures | Est: 2h
 

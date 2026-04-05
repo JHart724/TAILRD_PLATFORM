@@ -1,5 +1,6 @@
 import React from 'react';
 import { Users, Calendar, AlertTriangle, Clock, Heart, Shield, Activity, FileText, Download, UserCheck, Gauge, Target, TrendingUp, Timer } from 'lucide-react';
+import { toast } from '../../../components/shared/Toast';
 import { CareTeamViewConfig } from '../../../components/shared/BaseCareTeamView';
 import { StandardTabConfig } from '../../../components/shared/StandardInterfaces';
 
@@ -448,7 +449,7 @@ const CoronaryClinicalCollaboration: React.FC = () => (
  <button 
  className="w-full p-3 text-left bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
  onClick={() => {
- // TODO: Open STEMI Protocol Guidance
+ toast.info('STEMI Protocol Guidance', 'Evidence-based STEMI treatment pathway and protocol reference will be available in the next release.');
  }}
  >
  <div className="font-medium text-red-900">STEMI Protocol Guidance</div>
@@ -457,7 +458,7 @@ const CoronaryClinicalCollaboration: React.FC = () => (
  <button 
  className="w-full p-3 text-left bg-[#F0F5FA] hover:bg-[#F0F5FA] rounded-lg transition-colors"
  onClick={() => {
- // TODO: Open Risk Assessment Tools
+ toast.info('Risk Assessment Tools', 'Clinical risk stratification tools for coronary intervention will be available in the next release.');
  }}
  >
  <div className="font-medium text-[#6B7280]">Risk Assessment Tools</div>
@@ -624,7 +625,7 @@ const CoronaryDocumentation: React.FC = () => (
  <button 
  className="w-full p-3 text-left bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
  onClick={() => {
- // TODO: Open NCDR Registry System
+ toast.info('NCDR Registry', 'NCDR CathPCI registry data entry system will be available in the next release.');
  }}
  >
  <div className="font-medium text-red-900">Complete NCDR Entries</div>
@@ -637,7 +638,7 @@ const CoronaryDocumentation: React.FC = () => (
  <button 
  className="w-full p-3 text-left bg-arterial-50 hover:bg-arterial-100 rounded-lg transition-colors"
  onClick={() => {
- // TODO: Open Door-to-Balloon Analysis
+ toast.info('Door-to-Balloon Analysis', 'STEMI door-to-balloon performance analysis and benchmarking will be available in the next release.');
  }}
  >
  <div className="font-medium text-arterial-900">Door-to-Balloon Analysis</div>

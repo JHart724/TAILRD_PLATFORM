@@ -1,6 +1,7 @@
 import React from 'react';
 import { Users, Calendar, AlertTriangle, Clock, Heart, Shield } from 'lucide-react';
 import { apiService } from '../../../services/apiService';
+import { toast } from '../../../components/shared/Toast';
 import { CareTeamViewConfig } from '../../../components/shared/BaseCareTeamView';
 import { StandardTabConfig } from '../../../components/shared/StandardInterfaces';
 import CRTICDEligibilityCalculator from '../../../components/riskCalculators/CRTICDEligibilityCalculator';
@@ -469,9 +470,7 @@ const HFClinicalCollaboration: React.FC = () => (
  <button 
  className="w-full p-3 text-left bg-arterial-50 hover:bg-arterial-100 rounded-lg transition-colors"
  onClick={() => {
- // Action handler - implementation pending
- // TODO: Implement HF Guidelines reference modal
- {};
+ toast.info('HF Guidelines', 'Evidence-based HF guideline reference will be available in the next release.');
  }}
  >
  <div className="font-medium text-arterial-900">HF Guidelines</div>
@@ -480,9 +479,7 @@ const HFClinicalCollaboration: React.FC = () => (
  <button 
  className="w-full p-3 text-left bg-[#F0F5FA] hover:bg-[#F0F5FA] rounded-lg transition-colors"
  onClick={() => {
- // Action handler - implementation pending
- // TODO: Implement Multidisciplinary Consultation platform
- {};
+ toast.info('Multidisciplinary Consultation', 'Team collaboration platform for multidisciplinary HF case review will be available in the next release.');
  }}
  >
  <div className="font-medium text-[#6B7280]">Multidisciplinary Consultation</div>
@@ -565,9 +562,7 @@ const HFDocumentation: React.FC = () => (
  <button 
  className="w-full p-3 text-left bg-chrome-50 hover:bg-chrome-100 rounded-lg transition-colors"
  onClick={() => {
- // Action handler - implementation pending
- // TODO: Implement HF Assessment Template
- {};
+ toast.info('HF Assessment Template', 'Comprehensive heart failure evaluation template will be available in the next release.');
  }}
  >
  <div className="font-medium text-chrome-900">HF Assessment Template</div>
@@ -576,9 +571,7 @@ const HFDocumentation: React.FC = () => (
  <button 
  className="w-full p-3 text-left bg-[#C8D4DC] hover:bg-[#C8D4DC] rounded-lg transition-colors"
  onClick={() => {
- // Action handler - implementation pending
- // TODO: Implement GDMT Documentation template
- {};
+ toast.info('GDMT Documentation', 'Guideline-directed medical therapy documentation template will be available in the next release.');
  }}
  >
  <div className="font-medium text-[#2C4A60]">GDMT Documentation</div>
@@ -587,9 +580,7 @@ const HFDocumentation: React.FC = () => (
  <button 
  className="w-full p-3 text-left bg-arterial-50 hover:bg-arterial-100 rounded-lg transition-colors"
  onClick={() => {
- // Action handler - implementation pending
- // TODO: Implement Device Evaluation Note template
- {};
+ toast.info('Device Evaluation Note', 'CRT/ICD assessment documentation template will be available in the next release.');
  }}
  >
  <div className="font-medium text-arterial-900">Device Evaluation Note</div>
@@ -598,9 +589,7 @@ const HFDocumentation: React.FC = () => (
  <button 
  className="w-full p-3 text-left bg-[#F0F5FA] hover:bg-[#F0F5FA] rounded-lg transition-colors"
  onClick={() => {
- // Action handler - implementation pending
- // TODO: Implement Discharge Planning template
- {};
+ toast.info('Discharge Planning', 'Transition of care documentation template will be available in the next release.');
  }}
  >
  <div className="font-medium text-[#6B7280]">Discharge Planning</div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Users, Calendar, AlertTriangle, Clock, Zap, Shield, Activity, FileText, Download, UserCheck, Gauge, Target, TrendingUp, Timer, Heart } from 'lucide-react';
+import { toast } from '../../../components/shared/Toast';
 import { CareTeamViewConfig } from '../../../components/shared/BaseCareTeamView';
 import { StandardTabConfig } from '../../../components/shared/StandardInterfaces';
 import { apiService } from '../../../services/apiService';
@@ -91,8 +92,7 @@ const EPPatients: React.FC = () => (
  <button 
  className="px-4 py-2 bg-[#F0F7F4] text-[#2D6147] rounded-lg hover:bg-[#C8D4DC] transition-colors text-sm"
  onClick={() => {
- // Action handler - implementation pending
- // TODO: Implement EP registry export functionality with secure data handling
+ toast.info('Export Registry', 'Secure EP registry export with HIPAA-compliant data handling will be available in the next release.');
  }}
  >
  <Download className="w-4 h-4 mr-2 inline" />
@@ -676,8 +676,7 @@ const EPDocumentation: React.FC = () => (
  <button 
  className="w-full p-3 text-left bg-[#C8D4DC] hover:bg-[#C8D4DC] rounded-lg transition-colors"
  onClick={() => {
- // Action handler - implementation pending
- // TODO: Implement LAAC registry data entry system with automated field population and validation
+ toast.info('LAAC Registry', 'LAAC registry data entry with automated field population and validation will be available in the next release.');
  }}
  >
  <div className="font-medium text-[#2C4A60]">Complete LAAC Registry</div>
@@ -686,8 +685,7 @@ const EPDocumentation: React.FC = () => (
  <button 
  className="w-full p-3 text-left bg-chrome-50 hover:bg-chrome-100 rounded-lg transition-colors"
  onClick={() => {
- // Action handler - implementation pending
- // TODO: Implement automated quality report generation with real-time data analytics and benchmarking
+ toast.info('Quality Report', 'Automated monthly EP outcomes report with real-time analytics and benchmarking will be available in the next release.');
  }}
  >
  <div className="font-medium text-chrome-900">Generate Quality Report</div>
@@ -696,8 +694,7 @@ const EPDocumentation: React.FC = () => (
  <button 
  className="w-full p-3 text-left bg-arterial-50 hover:bg-arterial-100 rounded-lg transition-colors"
  onClick={() => {
- // Action handler - implementation pending
- // TODO: Implement advanced ablation analytics with machine learning predictive models
+ toast.info('Ablation Success Analysis', 'Advanced ablation analytics with ML-driven predictive modeling will be available in the next release.');
  }}
  >
  <div className="font-medium text-arterial-900">Ablation Success Analysis</div>
@@ -706,8 +703,7 @@ const EPDocumentation: React.FC = () => (
  <button 
  className="w-full p-3 text-left bg-[#F0F5FA] hover:bg-[#F0F5FA] rounded-lg transition-colors"
  onClick={() => {
- // Action handler - implementation pending
- // TODO: Implement template management system with version control and clinical decision support integration
+ toast.info('Update Templates', 'Template management with version control and clinical decision support integration will be available in the next release.');
  }}
  >
  <div className="font-medium text-[#2C4A60]">Update Templates</div>

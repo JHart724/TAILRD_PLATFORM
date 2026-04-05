@@ -294,6 +294,66 @@ export const RUNTIME_GAP_REGISTRY = [
     classOfRecommendation: '1',
     levelOfEvidence: 'B',
   },
+  {
+    id: 'gap-hf-37-raas',
+    name: 'ACEi/ARB/ARNi in HFrEF',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC/HFSA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-ep-rate-control-afib',
+    name: 'Rate Control in AFib',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-cad-cardiac-rehab',
+    name: 'Cardiac Rehab Referral in CAD',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
+    guidelineVersion: '2021',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-sh-2-tavr-eval',
+    name: 'TAVR Evaluation for Severe AS',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-vd-2-bioprosthetic-echo',
+    name: 'Echo Surveillance for Bioprosthetic Valve',
+    module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-04-03',
+    nextReviewDue: '2026-10-03',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C',
+  },
 ] as const;
 
 function evaluateGapRules(
@@ -637,6 +697,122 @@ function evaluateGapRules(
         },
       });
     }
+  }
+
+  // ============================================================
+  // Gap HF-37: ACEi/ARB/ARNi Missing in HFrEF (First pillar of GDMT)
+  // ============================================================
+  // Guideline: 2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure, Class 1, LOE A
+  // All HFrEF (LVEF <=40%) patients should be on a RAAS inhibitor unless contraindicated
+  // Preferred: sacubitril/valsartan (ARNI); alternatives: ACEi or ARB
+  // RxNorm: lisinopril (29046), enalapril (3827), ramipril (35296),
+  //         losartan (52175), valsartan (69749), sacubitril/valsartan (1656339)
+  if (hasHF && labValues['lvef'] !== undefined && labValues['lvef'] <= 40) {
+    const RAAS_CODES = ['29046', '3827', '35296', '52175', '69749', '1656339'];
+    const onRAAS = medCodes.some(c => RAAS_CODES.includes(c));
+    if (!onRAAS) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.HEART_FAILURE,
+        status: 'ACEi/ARB/ARNi not prescribed in HFrEF',
+        target: 'RAAS inhibitor initiated (preferably sacubitril/valsartan)',
+        medication: 'Sacubitril/Valsartan (preferred), Lisinopril, Enalapril, Ramipril, Losartan, or Valsartan',
+        recommendations: {
+          action: 'Prescribe RAAS inhibitor per 2022 AHA/ACC/HFSA, Class 1, LOE A',
+          guideline: '2022 AHA/ACC/HFSA Heart Failure Guideline',
+          preferred: 'Sacubitril/Valsartan (ARNI) per PARADIGM-HF',
+        },
+      });
+    }
+  }
+
+  // ============================================================
+  // Gap EP-RC: Rate Control Missing in AFib
+  // ============================================================
+  // Guideline: 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE B
+  // AFib patients should be on a rate control agent (beta-blocker or non-dihydropyridine CCB)
+  // RxNorm: metoprolol (6918), carvedilol (20352), diltiazem (3443), verapamil (11170)
+  if (hasAF) {
+    const RATE_CONTROL_CODES = ['6918', '20352', '3443', '11170'];
+    const onRateControl = medCodes.some(c => RATE_CONTROL_CODES.includes(c));
+    if (!onRateControl) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.ELECTROPHYSIOLOGY,
+        status: 'Rate control agent not prescribed in AFib',
+        target: 'Beta-blocker or non-dihydropyridine CCB initiated',
+        medication: 'Metoprolol, Carvedilol, Diltiazem, or Verapamil',
+        recommendations: {
+          action: 'Prescribe rate control agent per 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE B',
+          guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation',
+          note: 'Avoid non-DHP CCB (diltiazem/verapamil) in patients with HFrEF',
+        },
+      });
+    }
+  }
+
+  // ============================================================
+  // Gap CAD-REHAB: Cardiac Rehab Referral in CAD
+  // ============================================================
+  // Guideline: 2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization, Class 1, LOE A
+  // All CAD patients (I25.*) should be referred to cardiac rehabilitation
+  // This is a referral gap, not a medication gap
+  if (hasCAD) {
+    gaps.push({
+      type: TherapyGapType.REFERRAL_NEEDED,
+      module: ModuleType.CORONARY_INTERVENTION,
+      status: 'Cardiac rehabilitation referral not documented',
+      target: 'Cardiac rehab referral placed',
+      recommendations: {
+        action: 'Refer to cardiac rehabilitation per 2021 ACC/AHA Coronary Revascularization, Class 1, LOE A',
+        guideline: '2021 ACC/AHA/SCAI Coronary Artery Revascularization',
+        note: 'Cardiac rehab improves outcomes in all CAD patients, especially post-ACS and post-revascularization',
+      },
+    });
+  }
+
+  // ============================================================
+  // Gap SH-2: TAVR Evaluation for Severe Aortic Stenosis
+  // ============================================================
+  // Guideline: 2020 ACC/AHA Valvular Heart Disease Guideline, Class 1, LOE A
+  // Patients with severe AS (I35.0), age >= 65, and LVEF available (suggests symptomatic/evaluated)
+  // should be evaluated for TAVR by a heart valve team
+  if (hasAorticStenosis && age >= 65 && labValues['lvef'] !== undefined) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'TAVR evaluation not documented for severe aortic stenosis',
+      target: 'Heart valve team evaluation for TAVR completed',
+      recommendations: {
+        action: 'Refer to heart valve team for TAVR evaluation per 2020 ACC/AHA VHD, Class 1, LOE A',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'All patients >= 65 with severe AS should be evaluated by a multidisciplinary heart valve team',
+      },
+    });
+  }
+
+  // ============================================================
+  // Gap VD-2: Echo Surveillance for Bioprosthetic Valve
+  // ============================================================
+  // Guideline: 2020 ACC/AHA Valvular Heart Disease Guideline, Class 1, LOE C
+  // Bioprosthetic valve patients (Z95.2, Z95.4) require annual echo surveillance
+  // to monitor for structural valve deterioration (SVD)
+  // Fires when: bioprosthetic valve present AND no recent echo (LVEF not available as proxy)
+  const hasBioprostheticValve = dxCodes.some(c =>
+    c.startsWith('Z95.2') || c.startsWith('Z95.4')
+  );
+  if (hasBioprostheticValve && labValues['lvef'] === undefined) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Echo surveillance overdue for bioprosthetic valve',
+      target: 'Annual transthoracic echocardiogram completed',
+      recommendations: {
+        action: 'Order TTE for bioprosthetic valve surveillance per 2020 ACC/AHA VHD, Class 1, LOE C',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Annual echo monitors for structural valve deterioration (SVD) in bioprosthetic valves',
+      },
+    });
   }
 
   return gaps;
