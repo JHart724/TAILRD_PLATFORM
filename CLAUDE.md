@@ -254,28 +254,102 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 - The ECG AI pipeline (backend/src/ai/) is NOT covered by the CDS exemption and should not be activated without FDA clearance
 
 **Current gap rule status (as of April 2026):**
-- Heart Failure: 28 rules (GDMT 4-pillar, ATTR-CM, iron, GLP-1, ivabradine, vericiguat, H-ISDN, rehab, RPM, BNP monitoring, palliative, and more)
-- Electrophysiology: 11 rules (QTc, AFib OAC, rate control, LAAC, ablation, ICD, CRT, amiodarone/dofetilide monitoring, syncope, remote monitoring)
-- Coronary: 10 rules (DAPT, statin, ACEi post-MI, BB post-MI, smoking, Lp(a), ezetimibe, A1c, BP, cardiac rehab)
-- Structural Heart: 9 rules (AS echo, TAVR, mitral/tricuspid, post-TAVR f/u, endocarditis, LAA, PFO, imaging)
-- Valvular: 12 rules (mechanical anticoag, INR monitoring, DOAC safety alert, MS/AR/bioprosthetic surveillance, RHD, pregnancy risk, AF+valve, endocarditis education)
-- Peripheral Vascular: 9 rules (statin, ABI, antiplatelet, smoking, exercise, diabetes, wound care, duplex f/u, AAA screening)
+- Heart Failure: 47 rules (100% coverage)
+- Electrophysiology: 44 rules (100% coverage)
+- Coronary Intervention: 76 rules (100% coverage)
+- Structural Heart: 25 rules (100% coverage)
+- Valvular Disease: 32 rules (100% coverage)
+- Peripheral Vascular: 33 rules (100% coverage)
 
-257 rules execute in the runtime (exceeds 256 frontend gap definitions -- full coverage) (`ingestion/gapDetectionRunner.ts`). Each rule has guideline provenance in `RUNTIME_GAP_REGISTRY`. The CQL engine (`cqlEngine.ts`) is scaffolding -- gap rules run directly via TypeScript, not CQL. 256 gaps are defined in the frontend UI across all 6 modules.
+257 rules execute in the runtime (full coverage of all 256 frontend gap definitions) via `ingestion/gapDetectionRunner.ts`. Each rule has guideline provenance in `RUNTIME_GAP_REGISTRY` with class of recommendation and level of evidence. The CQL engine (`cqlEngine.ts`) is scaffolding -- gap rules run directly via deterministic TypeScript, not CQL.
 
 **Cardiovascular terminology:** `backend/src/terminology/cardiovascularValuesets.ts` contains curated LOINC, ICD-10, RxNorm, and SNOMED code sets for gap detection. When adding new gap rules, add required codes there.
 
 **Redis:** `backend/src/lib/redis.ts` provides a shared client singleton. Connects when `REDIS_URL` is set, falls back gracefully. Used for future rate limiter store, caching, and session management.
 
-## 9. Key Contacts & Business Context
+## 9. Deployment & Production Readiness
+
+**Current state:** The platform runs locally only. There is no production deployment.
+
+**What exists:**
+- Dockerfile (multi-stage build, needs `npm ci` fix for devDeps in build stage)
+- docker-compose.yml (postgres, redis, nginx)
+- CloudFormation templates for VPC, S3/KMS, WAF/CloudTrail
+- GitHub Actions CI (lint, typecheck, test, security scan -- deploy step is a no-op)
+- Synthea pipeline reads from S3 and persists to database
+- seedFromSynthea.ts creates 3 demo health system tenants
+
+**What's missing for production:**
+- [ ] Compute hosting (ECS Fargate, Railway, Render, or Fly.io)
+- [ ] Managed PostgreSQL (RDS or provider-managed)
+- [ ] DNS + SSL for app.tailrd-heart.com and api.tailrd-heart.com
+- [ ] CI/CD deploy step (push to ECR, update ECS service)
+- [ ] Secrets Manager integration (replace .env with SSM/Secrets Manager)
+- [ ] Frontend deployment (Netlify/Vercel with REACT_APP_USE_REAL_API=true)
+
+**Fastest path to production (~20h):**
+1. Fix Dockerfile (change `npm ci --only=production` to `npm ci` in build stage)
+2. Deploy backend to Railway/Render with managed PostgreSQL
+3. Deploy frontend to Netlify/Vercel
+4. Configure DNS, SSL, CORS
+5. Run `prisma migrate deploy` + `seedFromSynthea.ts --s3 --limit 500`
+6. Smoke test all 6 modules
+
+## 10. Frontend-Backend Wiring Status
+
+**The clinical UI currently runs on hardcoded mock data in demo mode.** When `REACT_APP_USE_REAL_API=true`, the frontend calls the real backend. But most module dashboards have inline mock data that renders regardless of the API flag.
+
+**Wired to real backend:**
+- Login/logout/refresh (AuthContext.tsx)
+- Health check (TopBar.tsx)
+- Platform totals (platformTotals.ts)
+- Gap actions (useGapActions.ts)
+- File upload (DataManagementPortal.tsx)
+- MFA setup/verify
+- Invite accept
+- Admin analytics
+- GodView
+
+**NOT wired (hardcoded mock data):**
+- All 6 module executive/service-line/care-team views
+- Notification panel
+- All admin tabs (users, audit, config, data, health systems, customer success)
+- Patient worklists
+- Gap detection dashboards (show frontend gap data, not TherapyGap table)
+- Phenotype screening panel
+- Risk calculators
+
+**To wire a module to real data:**
+1. Replace the hardcoded gap data array with an API call to `GET /api/gaps?hospitalId=X&module=Y`
+2. Replace the hardcoded patient list with `GET /api/patients?hospitalId=X`
+3. Replace KPI calculations with `GET /api/analytics/dashboard?module=Y`
+
+## 11. Testing
+
+**Current state:** Near-zero test coverage.
+
+- Backend: 1 Jest config file, no test files running
+- Frontend: 1 test file (useGapActions.test.ts)
+- No integration tests
+- No E2E tests
+
+**What's needed:**
+- [ ] Backend unit tests for gap detection rules (verify each rule fires correctly)
+- [ ] Backend integration tests for webhook pipeline (FHIR → DB)
+- [ ] Backend integration tests for auth flow (login, logout, refresh, MFA)
+- [ ] Frontend component tests for shared components (KPICard, GapCard, ModuleLayout)
+- [ ] E2E tests for critical paths (login → module → gap detail)
+
+## 12. Key Contacts & Business Context
 
 - **CMO:** Dr. Tony Das (Baylor Scott & White)
 - **CTO:** Bozidar Benko
 - **Mount Sinai:** Co-development partner, subawardee on ARPA-H grant
 - **Key prospects:** HCA (Medical City Dallas), CommonSpirit, CRF
-- Demo capability is critical. Hospital executives need to log in from tailrd-heart.com and see realistic mock data for their health system.
+- Production deployment is the priority. Hospital executives need to log in from tailrd-heart.com and see real gap analytics from their patient population.
+- Demo capability with Synthea data serves initial pilots until Redox EHR integration is live.
 
-## 10. Demo Accounts
+## 13. Demo Accounts
 
 When provisioning demo accounts or seeding demo data, create health-system-specific tenants for at minimum:
 - **Medical City Dallas** (HCA) -- large community hospital, high PCI volume
@@ -284,7 +358,7 @@ When provisioning demo accounts or seeding demo data, create health-system-speci
 
 Each tenant should have realistic cardiovascular patient population data and gap distribution for their geography and size. Demo data should feel real enough that a CMO looking at it believes it represents their institution.
 
-## 11. NEVER DO
+## 14. NEVER DO
 
 These rules are non-negotiable. Violating any of them creates clinical, security, or compliance risk:
 
