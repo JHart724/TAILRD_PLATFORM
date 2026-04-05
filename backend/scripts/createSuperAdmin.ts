@@ -1,60 +1,74 @@
 /**
- * Create SUPER_ADMIN User Script
- * 
- * Creates a super admin user for GOD view access.
- * Run with: npm run seed:super-admin
+ * Create Super Admin User
+ *
+ * Creates or updates a super-admin user for GOD view access.
+ * Run with: npx tsx backend/scripts/createSuperAdmin.ts
+ *
+ * Environment: reads EMAIL and PASSWORD from args or uses defaults.
+ *   npx tsx backend/scripts/createSuperAdmin.ts --email admin@tailrd.com --password SecurePass123!
  */
 
 import bcrypt from 'bcryptjs';
+import prisma from '../src/lib/prisma';
+import { FULL_ACCESS_PERMISSIONS } from '../src/config/rolePermissions';
+import * as dotenv from 'dotenv';
 
-console.log('Creating SUPER_ADMIN user...');
+dotenv.config();
 
-const createSuperAdmin = async () => {
-  try {
-    // Mock super admin creation for demo
-    const superAdmin = {
-      id: 'super-admin-001',
-      email: 'admin@tailrd.com',
+async function main() {
+  const emailIdx = process.argv.indexOf('--email');
+  const passIdx = process.argv.indexOf('--password');
+  const email = emailIdx !== -1 ? process.argv[emailIdx + 1] : 'admin@tailrd.com';
+  const password = passIdx !== -1 ? process.argv[passIdx + 1] : 'TailrdAdmin2026!';
+
+  console.log('Creating super-admin user...');
+
+  // Ensure a default hospital exists for the super-admin
+  const hospital = await prisma.hospital.upsert({
+    where: { id: 'tailrd-platform' },
+    create: {
+      id: 'tailrd-platform',
+      name: 'TAILRD Platform',
+      displayName: 'TAILRD',
+      ehrSystem: 'Internal',
+      subscriptionTier: 'ENTERPRISE',
+      subscriptionActive: true,
+      enabledModules: ['HEART_FAILURE', 'ELECTROPHYSIOLOGY', 'CORONARY_INTERVENTION', 'STRUCTURAL_HEART', 'VALVULAR_DISEASE', 'PERIPHERAL_VASCULAR'],
+    },
+    update: {},
+  });
+
+  const passwordHash = await bcrypt.hash(password, 12);
+
+  const user = await prisma.user.upsert({
+    where: { email },
+    create: {
+      email,
+      passwordHash,
       firstName: 'System',
       lastName: 'Administrator',
-      role: 'SUPER_ADMIN',
+      role: 'super-admin',
       isActive: true,
-      createdAt: new Date()
-    };
+      hospitalId: hospital.id,
+      ...FULL_ACCESS_PERMISSIONS,
+    },
+    update: {
+      passwordHash,
+      isActive: true,
+      role: 'super-admin',
+    },
+  });
 
-    console.log('✅ SUPER_ADMIN user created successfully:');
-    console.log(`   Email: ${superAdmin.email}`);
-    console.log(`   Password: demo123!`);
-    console.log(`   Role: ${superAdmin.role}`);
-    console.log('');
-    console.log('🔐 Use these credentials to access the GOD view:');
-    console.log('   URL: /admin/god');
-    console.log('   Login with the above credentials');
-    
-    // In a real implementation, you would:
-    // 1. Hash the password with bcrypt
-    // 2. Save to database with Prisma
-    // 3. Set appropriate permissions
-    
-    return superAdmin;
+  console.log(`Super-admin created:`);
+  console.log(`  ID:    ${user.id}`);
+  console.log(`  Email: ${email}`);
+  console.log(`  Role:  super-admin`);
+  console.log(`  Login at /admin/god`);
 
-  } catch (error) {
-    console.error('❌ Failed to create SUPER_ADMIN user:', error);
-    throw error;
-  }
-};
-
-// Execute if run directly
-if (require.main === module) {
-  createSuperAdmin()
-    .then(() => {
-      console.log('✅ Super admin setup complete!');
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error('❌ Super admin setup failed:', error);
-      process.exit(1);
-    });
+  await prisma.$disconnect();
 }
 
-export default createSuperAdmin;
+main().catch((err) => {
+  console.error('Failed:', err.message);
+  process.exit(1);
+});

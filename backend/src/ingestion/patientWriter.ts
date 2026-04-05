@@ -84,35 +84,36 @@ export async function writePatients(
         result.observationsWritten++;
       }
 
-      // Write lab observations
+      // Write lab observations (batched to avoid N+1)
       const labFields = [
         'lvef', 'bnp', 'nt_probnp', 'ferritin', 'tsat', 'sodium', 'potassium', 'egfr',
         'ldl', 'lpa', 'triglycerides', 'qtc_interval', 'qrs_duration', 'kccq_score',
         'abi_right', 'abi_left',
       ];
+      const observationBatch: any[] = [];
       for (const field of labFields) {
         const value = row.data[field];
         if (value !== null && value !== undefined) {
           const dateFieldKey = `${field}_date`;
           const effectiveDateStr = row.data[dateFieldKey] as string | null;
           const effectiveDate = effectiveDateStr ? new Date(effectiveDateStr) : new Date();
-
           const category: ObservationCategory = field === 'kccq_score' ? 'SURVEY' : 'LABORATORY';
 
-          await prisma.observation.create({
-            data: {
-              patientId: dbPatient.id,
-              hospitalId,
-              observationType: field,
-              observationName: getObservationName(field),
-              category,
-              valueNumeric: value as number,
-              unit: getUnit(field),
-              observedDateTime: effectiveDate,
-            },
+          observationBatch.push({
+            patientId: dbPatient.id,
+            hospitalId,
+            observationType: field,
+            observationName: getObservationName(field),
+            category,
+            valueNumeric: value as number,
+            unit: getUnit(field),
+            observedDateTime: effectiveDate,
           });
-          result.observationsWritten++;
         }
+      }
+      if (observationBatch.length > 0) {
+        await prisma.observation.createMany({ data: observationBatch });
+        result.observationsWritten += observationBatch.length;
       }
     } catch (err) {
       result.errors.push({ patientId, error: (err as Error).message });

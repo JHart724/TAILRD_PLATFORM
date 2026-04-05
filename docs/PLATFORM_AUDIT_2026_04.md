@@ -120,7 +120,7 @@ Covered in Sections 1 and 3. Additional:
 
 - [x] **P1-HIPAA-1: MRN logged in plaintext** | `patientService.ts:80-82,291-296` -- logger.info includes mrn field | Est: 2h
 - [x] **P1-HIPAA-2: Logger sensitive field filter incomplete** | `utils/logger.ts:14-18` -- missing mrn, firstName, lastName, patientName | Est: 1h
-- [ ] **P1-HIPAA-3: No audit logging on patient read operations** | `patients.ts:16-448` -- GET endpoints have zero writeAuditLog calls | Est: 4h
+- [x] **P1-HIPAA-3: No audit logging on patient read operations** | `patients.ts:16-448` -- GET endpoints have zero writeAuditLog calls | Est: 4h
 - [x] **P1-HIPAA-4: GOD view uses console.log instead of audit trail** | `godView.ts:24,186` | Est: 1h
 - [ ] **P1-HIPAA-5: DSAR deletion incomplete** | `dataRequests.ts:456-486` -- misses Medication, Condition, CarePlan, CQLResult, TherapyGap, Phenotype, CrossReferral, DrugTitration, DeviceEligibility, RiskScoreAssessment, InterventionTracking, ContraindicationAssessment | Est: 4h
 - [x] **P1-HIPAA-6: Admin analytics leaks cross-tenant counts to hospital-admin** | `admin.ts:16-31` | Est: 3h
@@ -301,9 +301,9 @@ BSW-specific seed in `scripts/seedBSW.ts`:
 - [x] **P0-BACK-1: @ts-nocheck on 500+ line analytics route** | `analytics.ts:1` | Est: 3h
 - [ ] **P0-BACK-2: PatientService class is a stub** | `patientService.ts:199-218` -- returns fake IDs like `patient-${Date.now()}` | Est: 2h
 - [x] **P1-BACK-1: N+1 in gapDetectionRunner** | `gapDetectionRunner.ts:60-90` -- individual findFirst+create per patient per gap | Est: 2h
-- [ ] **P1-BACK-2: N+1 in patientWriter** | `patientWriter.ts:20-119` -- 16 INSERTs per CSV row | Est: 3h
+- [x] **P1-BACK-2: N+1 in patientWriter** | `patientWriter.ts:20-119` -- 16 INSERTs per CSV row | Est: 3h
 - [x] **P1-BACK-3: N+1 in observationService alert creation** | `observationService.ts:320-333` | Est: 0.5h
-- [ ] **P1-BACK-4: createSuperAdmin.ts never writes to DB** | `createSuperAdmin.ts:12-45` -- creates in-memory object only | Est: 1h
+- [x] **P1-BACK-4: createSuperAdmin.ts never writes to DB** | `createSuperAdmin.ts:12-45` -- creates in-memory object only | Est: 1h
 - [ ] **P1-BACK-5: 46 `as any` casts in backend** | Multiple files, concentrated in mfa.ts (8), accountSecurity.ts (3) | Est: 3h
 - [ ] **P2-BACK-1: analyticsController.ts is dead code** | Never mounted in server.ts | Est: 0.5h
 - [ ] **P2-BACK-2: healthCheck.ts middleware (430 lines) is orphaned** | Never imported | Est: 0.5h
@@ -453,7 +453,7 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [x] P1-DOS-3: Add @unique to WebhookEvent.eventId + indexes on hospitalId, status, receivedAt | 0.5h
 - [x] P1-HIPAA-1: Remove MRN from logs | 2h
 - [x] P1-HIPAA-2: Complete logger sensitive field filter | 1h
-- [ ] P1-HIPAA-3: Audit log patient read operations | 4h
+- [x] P1-HIPAA-3: Audit log patient list + detail read operations | 4h
 - [x] P1-HIPAA-4: Replace GOD view console.log with audit | 1h
 - [ ] P1-HIPAA-5: Complete DSAR deletion cascade | 4h
 - [x] P1-HIPAA-6: Scope admin analytics to hospital (hospital-admin sees own data only) | 3h
@@ -466,8 +466,8 @@ If the ECG AI pipeline or CQL gap rules influence treatment decisions, TAILRD ma
 - [ ] P1-PIPE-1: Add concurrency and resumability to Synthea pipeline | 8h
 - [ ] P1-PIPE-2: Build persistence for FHIR Condition, Medication, Procedure | 6h
 - [x] P1-BACK-1: Pre-load existing gaps + batch createMany in gapDetectionRunner | 2h
-- [ ] P1-BACK-2: Batch patientWriter writes | 3h
-- [ ] P1-BACK-4: Make createSuperAdmin actually write to DB | 1h
+- [x] P1-BACK-2: Batch patientWriter observation writes with createMany | 3h
+- [x] P1-BACK-4: Rewrite createSuperAdmin to persist via Prisma with bcrypt | 1h
 - [ ] P1-SCALE-1: Build background job system (BullMQ + Redis) | 16h
 - [ ] P1-COMP-1: SSO/SAML integration | 16h
 - [ ] P1-FE-1: Type the 267 any instances | 6h

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { APIResponse, PaginatedResponse } from '../types';
 import { authenticateToken, authorizeRole, authorizeHospital, AuthenticatedRequest } from '../middleware/auth';
 import { requirePHIAccess } from '../middleware/tierEnforcement';
+import { writeAuditLog } from '../middleware/auditLogger';
 import { validateBody, createPatientSchema, updatePatientSchema } from '../validation/clinicalSchemas';
 import prisma from '../lib/prisma';
 
@@ -98,6 +99,7 @@ router.get('/',
         timestamp: new Date().toISOString(),
       };
       res.json(response);
+      writeAuditLog(req, 'PATIENT_LIST_VIEWED', 'Patient', null, `Viewed ${patients.length} patients`).catch(() => {});
     } catch (error: any) {
       res.status(500).json({
         success: false,
@@ -166,6 +168,7 @@ router.get('/:patientId',
         message: 'Patient retrieved',
         timestamp: new Date().toISOString(),
       } as APIResponse);
+      writeAuditLog(req, 'PATIENT_DETAIL_VIEWED', 'Patient', patientId, 'Patient record accessed').catch(() => {});
     } catch (error: any) {
       res.status(500).json({
         success: false,
