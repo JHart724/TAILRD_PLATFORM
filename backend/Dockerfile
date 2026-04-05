@@ -11,8 +11,8 @@ WORKDIR /app
 COPY package*.json ./
 COPY tsconfig.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+# Install ALL dependencies (devDeps needed for TypeScript compilation)
+RUN npm ci
 
 # Copy source code
 COPY src/ ./src/
@@ -24,8 +24,8 @@ RUN npm run build
 # Production stage
 FROM node:18-alpine AS production
 
-# Install security updates
-RUN apk update && apk upgrade
+# Install security updates + curl for healthcheck
+RUN apk update && apk upgrade && apk add --no-cache curl
 
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs

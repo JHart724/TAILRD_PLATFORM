@@ -122,4 +122,160 @@ router.post('/:moduleId/:gapId/action', authenticateToken, async (req: Authentic
   }
 });
 
+// GET /api/gaps/:moduleId/detailed
+// Returns gap data in the shape the frontend gap dashboards need:
+// grouped by gapType, with patient list per gap, severity, and evidence
+router.get('/:moduleId/detailed', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = req.user?.hospitalId;
+  const moduleId = req.params.moduleId;
+
+  if (!hospitalId) {
+    return res.status(400).json({ error: 'Hospital context required' });
+  }
+
+  const moduleEnum = moduleMap[moduleId];
+  if (!moduleEnum) {
+    return res.status(400).json({ error: 'Invalid module' });
+  }
+
+  try {
+    // Get all open gaps for this module with patient details
+    const gaps = await prisma.therapyGap.findMany({
+      where: { hospitalId, module: moduleEnum, resolvedAt: null },
+      include: {
+        patient: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            mrn: true,
+            dateOfBirth: true,
+            gender: true,
+            riskScore: true,
+            riskCategory: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    // Group by gapType for the dashboard view
+    const grouped: Record<string, {
+      gapType: string;
+      status: string;
+      target: string;
+      medication: string | null;
+      recommendations: any;
+      patients: any[];
+      count: number;
+    }> = {};
+
+    for (const gap of gaps) {
+      const key = gap.gapType;
+      if (!grouped[key]) {
+        grouped[key] = {
+          gapType: gap.gapType,
+          status: gap.currentStatus,
+          target: gap.targetStatus,
+          medication: gap.medication,
+          recommendations: gap.recommendations,
+          patients: [],
+          count: 0,
+        };
+      }
+      grouped[key].patients.push({
+        id: gap.patient.id,
+        firstName: gap.patient.firstName,
+        lastName: gap.patient.lastName,
+        mrn: gap.patient.mrn,
+        age: gap.patient.dateOfBirth
+          ? Math.floor((Date.now() - new Date(gap.patient.dateOfBirth).getTime()) / (365.25 * 24 * 60 * 60 * 1000))
+          : null,
+        gender: gap.patient.gender,
+        riskCategory: gap.patient.riskCategory,
+        gapId: gap.id,
+        createdAt: gap.createdAt,
+      });
+      grouped[key].count++;
+    }
+
+    const gapList = Object.values(grouped).sort((a, b) => b.count - a.count);
+
+    res.json({
+      success: true,
+      data: {
+        module: moduleId,
+        source: 'database',
+        totalGapTypes: gapList.length,
+        totalPatientGaps: gaps.length,
+        gaps: gapList,
+      },
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: 'Failed to fetch detailed gaps' });
+  }
+});
+
+// GET /api/gaps/summary/all
+// Returns gap counts per module for the platform dashboard / module navigator
+router.get('/summary/all', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = req.user?.hospitalId;
+
+  if (!hospitalId) {
+    return res.status(400).json({ error: 'Hospital context required' });
+  }
+
+  try {
+    const summary = await prisma.therapyGap.groupBy({
+      by: ['module'],
+      where: { hospitalId, resolvedAt: null },
+      _count: { id: true },
+    });
+
+    const patientCounts = await prisma.patient.groupBy({
+      by: [],
+      where: { hospitalId, isActive: true },
+      _count: { id: true },
+    });
+
+    const modulePatientCounts = await Promise.all(
+      Object.values(moduleMap).filter((v, i, arr) => arr.indexOf(v) === i).map(async (mod) => {
+        const fieldMap: Record<string, string> = {
+          HEART_FAILURE: 'heartFailurePatient',
+          ELECTROPHYSIOLOGY: 'electrophysiologyPatient',
+          CORONARY_INTERVENTION: 'coronaryPatient',
+          STRUCTURAL_HEART: 'structuralHeartPatient',
+          VALVULAR_DISEASE: 'valvularDiseasePatient',
+          PERIPHERAL_VASCULAR: 'peripheralVascularPatient',
+        };
+        const field = fieldMap[mod];
+        if (!field) return { module: mod, patients: 0 };
+        const count = await prisma.patient.count({
+          where: { hospitalId, isActive: true, [field]: true },
+        });
+        return { module: mod, patients: count };
+      })
+    );
+
+    res.json({
+      success: true,
+      data: {
+        totalPatients: patientCounts._count?.id || 0,
+        modules: summary.map(s => {
+          const modPatients = modulePatientCounts.find(m => m.module === s.module);
+          return {
+            module: s.module,
+            openGaps: s._count.id,
+            patients: modPatients?.patients || 0,
+          };
+        }),
+      },
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: 'Failed to fetch gap summary' });
+  }
+});
+
 export default router;
