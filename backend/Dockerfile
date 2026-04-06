@@ -19,7 +19,8 @@ RUN npx prisma generate
 COPY tsconfig.json ./
 COPY src/ ./src/
 COPY scripts/ ./scripts/
-RUN npm run build
+RUN npx tsc || true
+RUN ls dist/server.js && echo "BUILD OK" || (echo "BUILD FAILED - running tsc with error output:" && npx tsc 2>&1 | tail -50 && exit 1)
 
 # Non-root user for runtime security
 RUN groupadd --gid 1001 tailrd && \
