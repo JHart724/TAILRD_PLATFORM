@@ -104,7 +104,7 @@ function signToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
     iat: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + 1 * 60 * 60, // 1 hour (HIPAA: short-lived tokens)
   };
-  return jwt.sign(fullPayload, process.env.JWT_SECRET!);
+  return jwt.sign(fullPayload, process.env.JWT_SECRET!, { algorithm: 'HS256' });
 }
 
 // ─── POST /api/auth/login ──────────────────────────────────────────────────────

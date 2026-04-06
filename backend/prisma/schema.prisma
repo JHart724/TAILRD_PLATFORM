@@ -185,6 +185,8 @@ model Patient {
   lastName    String
   dateOfBirth DateTime
   gender      Gender
+  race        String?   // FHIR US Core Race Extension (OMB categories: white, black, asian, aian, nhpi, other, unknown)
+  ethnicity   String?   // FHIR US Core Ethnicity Extension (hispanic, non-hispanic, unknown)
   phone       String?
   email       String?
 

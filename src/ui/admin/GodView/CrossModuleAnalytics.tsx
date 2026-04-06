@@ -62,11 +62,12 @@ export const CrossModuleAnalytics: React.FC<CrossModuleAnalyticsProps> = ({ data
   const [selectedView, setSelectedView] = useState<'revenue' | 'gaps' | 'coverage' | 'quality'>('revenue');
 
   // Transform data for charts
+  // Revenue estimate based on patient count (deterministic, no Math.random)
+  const REVENUE_PER_PATIENT_ESTIMATE = 2500;
   const moduleRevenueData = Object.entries(data.patientCoverage.byModule).map(([module, patients], index) => ({
  module: module.replace(/([A-Z])/g, ' $1').trim(),
  patients,
- // Mock revenue data - in real implementation, this would come from the API
- revenue: Math.floor(Math.random() * 8000000) + 1000000,
+ revenue: patients * REVENUE_PER_PATIENT_ESTIMATE,
  color: getChartColor(index)
   }));
 

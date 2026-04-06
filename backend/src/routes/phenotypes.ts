@@ -1,7 +1,7 @@
 import { Router, Response } from 'express';
 import prisma from '../lib/prisma';
 import { APIResponse } from '../types';
-import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
+import { authenticateToken, authorizeRole, requireMFA, AuthenticatedRequest } from '../middleware/auth';
 import { logger } from '../utils/logger';
 import { PhenotypeService, PhenotypeDetectionResult, PhenotypeType, PhenotypeStatus } from '../services/phenotypeService';
 import { body, param, query, validationResult } from 'express-validator';
@@ -26,6 +26,7 @@ const initializePhenotypeService = () => {
  */
 router.get('/:patientId',
   authenticateToken,
+  requireMFA,
   authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager']),
   [
     param('patientId').isString().notEmpty().withMessage('Patient ID is required'),

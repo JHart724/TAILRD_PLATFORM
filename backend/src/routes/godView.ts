@@ -227,9 +227,12 @@ async function getModuleMetrics(moduleName: string) {
 }
 
 async function getModuleAlerts(moduleName: string) {
-  // Mock alerts - replace with actual alert service
-  const alertCounts = Math.floor(Math.random() * 5);
-  return alertCounts;
+  // Mock alerts - deterministic placeholder until alert service is wired
+  const alertMap: Record<string, number> = {
+    heartFailure: 3, electrophysiology: 2, structuralHeart: 1,
+    coronaryIntervention: 2, valvularDisease: 1, peripheralVascular: 1,
+  };
+  return alertMap[moduleName] ?? 0;
 }
 
 async function calculateTotalRevenue() {

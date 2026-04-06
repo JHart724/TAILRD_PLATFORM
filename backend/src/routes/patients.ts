@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { APIResponse, PaginatedResponse } from '../types';
-import { authenticateToken, authorizeRole, authorizeHospital, AuthenticatedRequest } from '../middleware/auth';
+import { authenticateToken, authorizeRole, authorizeHospital, requireMFA, AuthenticatedRequest } from '../middleware/auth';
 import { requirePHIAccess } from '../middleware/tierEnforcement';
 import { writeAuditLog } from '../middleware/auditLogger';
 import { validateBody, createPatientSchema, updatePatientSchema } from '../validation/clinicalSchemas';
@@ -27,8 +27,9 @@ function redactPHI(patient: Record<string, unknown>, role: string): Record<strin
 
 const router = Router();
 
-// All patient routes require authentication + PHI access tier
+// All patient routes require authentication + MFA + PHI access tier
 router.use(authenticateToken);
+router.use(requireMFA);
 router.use(requirePHIAccess());
 
 // ── LIST patients (paginated, scoped to user's hospital) ────────────────────

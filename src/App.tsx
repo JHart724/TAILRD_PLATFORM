@@ -32,6 +32,8 @@ const NotFoundPage = lazy(() => import("./ui/NotFoundPage"));
 const AcceptInvite = lazy(() => import("./ui/auth/AcceptInvite"));
 const SuperAdminLogin = lazy(() => import("./ui/auth/SuperAdminLogin"));
 const SuperAdminConsole = lazy(() => import("./ui/admin/SuperAdminConsole"));
+const SuperAdminDashboard = lazy(() => import("./ui/admin/SuperAdminDashboard"));
+const GodView = lazy(() => import("./ui/admin/GodView/GodView"));
 const FreeTierDashboard = lazy(() => import("./components/free-tier/FreeTierDashboard"));
 
 // Scroll to top on route change
@@ -672,6 +674,16 @@ export default function App(): JSX.Element {
  <Route path="/admin" element={
    <ProtectedRoute requiredPermissions={[{ module: '*', action: 'admin' }]}>
      <SuperAdminConsole />
+   </ProtectedRoute>
+ } />
+ <Route path="/admin/god" element={
+   <ProtectedRoute requiredPermissions={[{ module: '*', action: 'admin' }]}>
+     <AppShell><GodView /></AppShell>
+   </ProtectedRoute>
+ } />
+ <Route path="/admin/dashboard" element={
+   <ProtectedRoute requiredPermissions={[{ module: '*', action: 'admin' }]}>
+     <AppShell><SuperAdminDashboard /></AppShell>
    </ProtectedRoute>
  } />
 

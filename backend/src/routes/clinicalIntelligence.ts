@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import prisma from '../lib/prisma';
-import { authenticateToken, authorizeHospital, AuthenticatedRequest } from '../middleware/auth';
+import { authenticateToken, authorizeHospital, requireMFA, AuthenticatedRequest } from '../middleware/auth';
 import {
   validateBody,
   createRiskScoreSchema,
@@ -16,6 +16,7 @@ const router = Router();
 
 // All clinical intelligence routes require authentication
 router.use(authenticateToken);
+router.use(requireMFA);
 
 // ============================================
 // Risk Score Assessments
@@ -196,6 +197,15 @@ router.patch('/interventions/:id/status', async (req: AuthenticatedRequest, res:
       return res.status(400).json({ success: false, error: 'Validation failed', details: parsed.error.errors.map(e => `${e.path.join('.')}: ${e.message}`), timestamp: new Date().toISOString() });
     }
     const { status, outcome, completedAt, complications } = parsed.data;
+    const hospitalId = req.user!.hospitalId;
+
+    // Verify intervention belongs to this hospital before updating
+    const existing = await prisma.interventionTracking.findFirst({
+      where: { id, hospitalId },
+    });
+    if (!existing) {
+      return res.status(404).json({ success: false, error: 'Intervention not found', timestamp: new Date().toISOString() });
+    }
 
     const updated = await prisma.interventionTracking.update({
       where: { id },
@@ -344,6 +354,15 @@ router.patch('/contraindications/:id/override', async (req: AuthenticatedRequest
       return res.status(400).json({ success: false, error: 'Validation failed', details: validation.errors, timestamp: new Date().toISOString() });
     }
     const { overriddenBy, overrideReason } = validation.data;
+    const hospitalId = req.user!.hospitalId;
+
+    // Verify contraindication belongs to this hospital before updating
+    const existing = await prisma.contraindicationAssessment.findFirst({
+      where: { id, hospitalId },
+    });
+    if (!existing) {
+      return res.status(404).json({ success: false, error: 'Contraindication not found', timestamp: new Date().toISOString() });
+    }
 
     const updated = await prisma.contraindicationAssessment.update({
       where: { id },

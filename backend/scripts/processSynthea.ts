@@ -239,7 +239,7 @@ async function processFHIRBundle(
           rxNormCode: coding.system?.includes('rxnorm') ? coding.code : null,
           status: (m.status === 'active' ? 'ACTIVE' : m.status === 'stopped' ? 'STOPPED' : 'COMPLETED') as any,
           startDate: m.authoredOn ? new Date(m.authoredOn) : null,
-          fhirMedicationRequestId: m.id || null,
+          fhirMedicationId: m.id || null,
         };
       });
     if (medData.length > 0) {
