@@ -23,9 +23,6 @@ RUN npm run build
 # Remove devDependencies after build
 RUN npm prune --production
 
-# Copy config
-COPY .env.example .env.example
-
 # Create directories
 RUN mkdir -p logs backups uploads
 
