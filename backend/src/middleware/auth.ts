@@ -136,7 +136,9 @@ const authorizeRole = (allowedRoles: string[]) => {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     if (isDemoMode) return next();
 
-    if (!req.user?.role || !allowedRoles.includes(req.user.role)) {
+    // Normalize role: Prisma enum HOSPITAL_ADMIN → kebab-case hospital-admin
+    const userRole = req.user?.role?.toLowerCase().replace(/_/g, '-') || '';
+    if (!userRole || !allowedRoles.includes(userRole)) {
       return res.status(403).json({
         success: false,
         error: `Access denied: Requires one of roles: ${allowedRoles.join(', ')}`,
