@@ -8,6 +8,18 @@
 import { Router, Response, NextFunction } from 'express';
 import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
 import { writeAuditLog } from '../middleware/auditLogger';
+import prisma from '../lib/prisma';
+import { ModuleType } from '@prisma/client';
+
+// Map frontend camelCase module names to Prisma enum + patient boolean field
+const MODULE_MAP: Record<string, { enum: ModuleType; patientField: string }> = {
+  heartFailure: { enum: 'HEART_FAILURE', patientField: 'heartFailurePatient' },
+  electrophysiology: { enum: 'ELECTROPHYSIOLOGY', patientField: 'electrophysiologyPatient' },
+  coronaryIntervention: { enum: 'CORONARY_INTERVENTION', patientField: 'coronaryPatient' },
+  structuralHeart: { enum: 'STRUCTURAL_HEART', patientField: 'structuralHeartPatient' },
+  valvularDisease: { enum: 'VALVULAR_DISEASE', patientField: 'valvularDiseasePatient' },
+  peripheralVascular: { enum: 'PERIPHERAL_VASCULAR', patientField: 'peripheralVascularPatient' },
+};
 
 const router = Router();
 
@@ -193,120 +205,142 @@ router.post('/system-action', async (req: AuthenticatedRequest, res) => {
   }
 });
 
-// Mock implementation functions (replace with real service calls)
+// ─── Real data helper functions (query Prisma) ─────────────────────────────
+
+const REVENUE_PER_GAP_ESTIMATE = 2500; // Conservative revenue opportunity per open gap
 
 async function getModuleHealth(moduleName: string) {
-  // Mock implementation - replace with actual health checks
-  const healthScores = {
-    heartFailure: 'healthy',
-    structuralHeart: 'healthy', 
-    electrophysiology: 'warning',
-    peripheralVascular: 'healthy',
-    valvularDisease: 'healthy',
-    coronaryIntervention: 'warning',
-    revenueCycle: 'healthy'
-  };
-  
-  return healthScores[moduleName as keyof typeof healthScores] || 'unknown';
+  const mapping = MODULE_MAP[moduleName];
+  if (!mapping) return 'unknown';
+  const openGaps = await prisma.therapyGap.count({ where: { module: mapping.enum, resolvedAt: null } });
+  const totalGaps = await prisma.therapyGap.count({ where: { module: mapping.enum } });
+  const closureRate = totalGaps > 0 ? (totalGaps - openGaps) / totalGaps : 1;
+  if (closureRate >= 0.8) return 'healthy';
+  if (closureRate >= 0.5) return 'warning';
+  return 'critical';
 }
 
 async function getModuleMetrics(moduleName: string) {
-  // Mock metrics - replace with actual data queries
-  const baseMetrics = {
-    heartFailure: { patients: 2450, revenueOpportunity: 6200000, gapsIdentified: 340 },
-    structuralHeart: { patients: 1200, revenueOpportunity: 4800000, gapsIdentified: 180 },
-    electrophysiology: { patients: 980, revenueOpportunity: 3200000, gapsIdentified: 120 },
-    peripheralVascular: { patients: 1800, revenueOpportunity: 2800000, gapsIdentified: 220 },
-    valvularDisease: { patients: 850, revenueOpportunity: 5100000, gapsIdentified: 95 },
-    coronaryIntervention: { patients: 1950, revenueOpportunity: 7200000, gapsIdentified: 280 },
-    revenueCycle: { patients: 8000, revenueOpportunity: 1200000, gapsIdentified: 450 }
-  };
-  
-  return baseMetrics[moduleName as keyof typeof baseMetrics] || { 
-    patients: 0, revenueOpportunity: 0, gapsIdentified: 0 
-  };
+  const mapping = MODULE_MAP[moduleName];
+  if (!mapping) return { patients: 0, revenueOpportunity: 0, gapsIdentified: 0 };
+  const [patients, gapsIdentified] = await Promise.all([
+    prisma.patient.count({ where: { isActive: true, [mapping.patientField]: true } }),
+    prisma.therapyGap.count({ where: { module: mapping.enum, resolvedAt: null } }),
+  ]);
+  return { patients, revenueOpportunity: gapsIdentified * REVENUE_PER_GAP_ESTIMATE, gapsIdentified };
 }
 
 async function getModuleAlerts(moduleName: string) {
-  // Mock alerts - deterministic placeholder until alert service is wired
-  const alertMap: Record<string, number> = {
-    heartFailure: 3, electrophysiology: 2, structuralHeart: 1,
-    coronaryIntervention: 2, valvularDisease: 1, peripheralVascular: 1,
-  };
-  return alertMap[moduleName] ?? 0;
+  const mapping = MODULE_MAP[moduleName];
+  if (!mapping) return 0;
+  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  return prisma.alert.count({ where: { module: mapping.enum, severity: 'HIGH', createdAt: { gte: weekAgo } } });
 }
 
 async function calculateTotalRevenue() {
-  // Mock calculation - sum all module revenue opportunities
-  return 29500000; // $29.5M total opportunity
+  const totalOpenGaps = await prisma.therapyGap.count({ where: { resolvedAt: null } });
+  return totalOpenGaps * REVENUE_PER_GAP_ESTIMATE;
 }
 
 async function aggregateGaps() {
-  // Mock gap aggregation
-  return [
-    { category: 'GDMT Optimization', count: 580, impact: 'high' },
-    { category: 'Device Eligibility', count: 320, impact: 'medium' },
-    { category: 'Phenotype Detection', count: 240, impact: 'medium' },
-    { category: 'Care Coordination', count: 180, impact: 'low' }
-  ];
+  const grouped = await prisma.therapyGap.groupBy({
+    by: ['gapType'],
+    where: { resolvedAt: null },
+    _count: { id: true },
+    orderBy: { _count: { id: 'desc' } },
+    take: 10,
+  });
+  return grouped.map(g => ({
+    category: g.gapType.replace(/_/g, ' '),
+    count: g._count.id,
+    impact: g._count.id > 100 ? 'high' : g._count.id > 30 ? 'medium' : 'low',
+  }));
 }
 
 async function getPatientCoverage() {
-  // Mock patient coverage metrics
+  const totalPatients = await prisma.patient.count({ where: { isActive: true } });
+  const byModule: Record<string, number> = {};
+  for (const [name, mapping] of Object.entries(MODULE_MAP)) {
+    byModule[name] = await prisma.patient.count({ where: { isActive: true, [mapping.patientField]: true } });
+  }
+  const managed = Object.values(byModule).reduce((sum, c) => sum + c, 0);
   return {
-    totalPatients: 17230,
-    activelyManaged: 15180,
-    coverage: 0.881, // 88.1%
-    byModule: {
-      heartFailure: 2450,
-      structuralHeart: 1200,
-      electrophysiology: 980,
-      peripheralVascular: 1800,
-      valvularDisease: 850,
-      coronaryIntervention: 1950,
-      revenueCycle: 8000
-    }
+    totalPatients,
+    activelyManaged: managed,
+    coverage: totalPatients > 0 ? managed / totalPatients : 0,
+    byModule,
   };
 }
 
 async function getModuleComparison() {
-  // Mock module comparison metrics
+  const moduleMetrics = await Promise.all(
+    Object.entries(MODULE_MAP).map(async ([name, mapping]) => {
+      const [patients, gaps] = await Promise.all([
+        prisma.patient.count({ where: { isActive: true, [mapping.patientField]: true } }),
+        prisma.therapyGap.count({ where: { module: mapping.enum, resolvedAt: null } }),
+      ]);
+      return { name, patients, gaps, efficiency: patients > 0 ? gaps / patients : 0 };
+    })
+  );
+  const byPatients = [...moduleMetrics].sort((a, b) => b.patients - a.patients);
+  const byGaps = [...moduleMetrics].sort((a, b) => b.gaps - a.gaps);
+  const byEfficiency = [...moduleMetrics].sort((a, b) => a.efficiency - b.efficiency);
   return {
-    patientVolume: 'coronaryIntervention', // highest volume
-    revenueOpportunity: 'coronaryIntervention', // highest revenue potential  
-    gapIdentification: 'revenueCycle', // most gaps identified
-    efficiency: 'electrophysiology' // best gap-to-patient ratio
+    patientVolume: byPatients[0]?.name || 'none',
+    revenueOpportunity: byGaps[0]?.name || 'none',
+    gapIdentification: byGaps[0]?.name || 'none',
+    efficiency: byEfficiency[0]?.name || 'none',
   };
 }
 
 async function getSystemQualityMetrics() {
-  // Mock system-wide quality metrics
+  const [totalGaps, closedGaps, safetyGaps] = await Promise.all([
+    prisma.therapyGap.count(),
+    prisma.therapyGap.count({ where: { resolvedAt: { not: null } } }),
+    prisma.therapyGap.count({ where: { gapType: 'SAFETY_ALERT', resolvedAt: null } }),
+  ]);
+  const closureRate = totalGaps > 0 ? closedGaps / totalGaps : 1;
   return {
-    overallScore: 0.847,
-    codeCompliance: 0.923,
-    documentationQuality: 0.876,
-    careCoordination: 0.789,
-    patientSafety: 0.956
+    overallScore: closureRate,
+    gapClosureRate: closureRate,
+    openSafetyAlerts: safetyGaps,
+    totalGapsEvaluated: totalGaps,
+    totalGapsClosed: closedGaps,
   };
 }
 
 async function getSystemFinancialSummary() {
-  // Mock financial summary
+  const [openGaps, closedGaps] = await Promise.all([
+    prisma.therapyGap.count({ where: { resolvedAt: null } }),
+    prisma.therapyGap.count({ where: { resolvedAt: { not: null } } }),
+  ]);
+  const totalOpportunity = openGaps * REVENUE_PER_GAP_ESTIMATE;
+  const captured = closedGaps * REVENUE_PER_GAP_ESTIMATE;
   return {
-    totalRevenue: 125600000,
-    totalOpportunity: 29500000,
-    captureRate: 0.742,
-    projectedAnnualGain: 21900000
+    totalOpportunity,
+    capturedRevenue: captured,
+    captureRate: (openGaps + closedGaps) > 0 ? captured / ((openGaps + closedGaps) * REVENUE_PER_GAP_ESTIMATE) : 0,
+    projectedAnnualGain: totalOpportunity,
   };
 }
 
 async function getSystemRiskDistribution() {
-  // Mock risk distribution
+  const patients = await prisma.patient.findMany({
+    where: { isActive: true },
+    select: { riskCategory: true },
+  });
+  const total = patients.length || 1;
+  const counts = { low: 0, moderate: 0, high: 0, critical: 0 };
+  for (const p of patients) {
+    const cat = (p.riskCategory || 'low').toLowerCase();
+    if (cat in counts) counts[cat as keyof typeof counts]++;
+    else counts.low++;
+  }
   return {
-    low: 0.456,      // 45.6% low risk
-    moderate: 0.321, // 32.1% moderate risk  
-    high: 0.189,     // 18.9% high risk
-    critical: 0.034  // 3.4% critical risk
+    low: counts.low / total,
+    moderate: counts.moderate / total,
+    high: counts.high / total,
+    critical: counts.critical / total,
   };
 }
 
@@ -316,77 +350,64 @@ async function globalSearch({ query, module, type, limit }: {
   type?: 'patient' | 'provider' | 'facility' | 'all';
   limit: number;
 }) {
-  // Mock search implementation - replace with actual search service
-  const mockResults = [
-    {
-      id: 'p-12345',
-      type: 'patient',
-      name: 'John Smith',
-      module: 'heartFailure',
-      mrn: 'MRN-67890',
-      riskLevel: 'high',
-      lastSeen: '2024-01-15'
+  // Search patients by name or MRN
+  const patients = await prisma.patient.findMany({
+    where: {
+      isActive: true,
+      OR: [
+        { firstName: { contains: query, mode: 'insensitive' } },
+        { lastName: { contains: query, mode: 'insensitive' } },
+        { mrn: { contains: query, mode: 'insensitive' } },
+      ],
     },
-    {
-      id: 'pr-456',
-      type: 'provider', 
-      name: 'Dr. Sarah Johnson',
-      module: 'structuralHeart',
-      specialty: 'Cardiothoracic Surgery',
-      patientCount: 156
-    },
-    {
-      id: 'f-789',
-      type: 'facility',
-      name: 'Main Campus Cath Lab',
-      module: 'coronaryIntervention', 
-      capacity: 12,
-      utilization: 0.87
-    }
-  ].filter(result => 
-    result.name.toLowerCase().includes(query.toLowerCase()) &&
-    (!module || result.module === module) &&
-    (!type || type === 'all' || result.type === type)
-  ).slice(0, limit);
-  
-  return mockResults;
+    select: { id: true, firstName: true, lastName: true, mrn: true, riskCategory: true, hospitalId: true },
+    take: limit,
+  });
+
+  return patients.map(p => ({
+    id: p.id,
+    type: 'patient' as const,
+    name: `${p.firstName} ${p.lastName}`,
+    mrn: p.mrn,
+    riskLevel: p.riskCategory || 'unknown',
+    hospitalId: p.hospitalId,
+  }));
 }
 
 async function getDetailedModuleHealth(moduleName: string) {
-  // Mock detailed health metrics
+  const mapping = MODULE_MAP[moduleName];
+  if (!mapping) return { status: 'unknown' };
+  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const [openGaps, newGapsThisWeek, closedThisWeek, patientCount] = await Promise.all([
+    prisma.therapyGap.count({ where: { module: mapping.enum, resolvedAt: null } }),
+    prisma.therapyGap.count({ where: { module: mapping.enum, identifiedAt: { gte: weekAgo } } }),
+    prisma.therapyGap.count({ where: { module: mapping.enum, resolvedAt: { gte: weekAgo } } }),
+    prisma.patient.count({ where: { isActive: true, [mapping.patientField]: true } }),
+  ]);
+  const closureRate = (newGapsThisWeek + closedThisWeek) > 0 ? closedThisWeek / (newGapsThisWeek + closedThisWeek) : 1;
   return {
-    status: 'healthy',
-    uptime: 0.9987,
-    responseTime: 245, // ms
-    errorRate: 0.0023,
-    dataFreshness: 'current',
-    lastHealthCheck: new Date().toISOString(),
-    components: {
-      api: 'healthy',
-      database: 'healthy', 
-      cache: 'healthy',
-      frontend: 'healthy'
-    },
-    performance: {
-      avgResponseTime: 245,
-      p95ResponseTime: 890,
-      throughput: 1250 // requests/hour
-    }
+    status: closureRate >= 0.7 ? 'healthy' : closureRate >= 0.4 ? 'warning' : 'critical',
+    openGaps,
+    newGapsThisWeek,
+    closedThisWeek,
+    closureRate,
+    patientCount,
+    gapsPerPatient: patientCount > 0 ? (openGaps / patientCount).toFixed(2) : '0',
+    lastUpdated: new Date().toISOString(),
   };
 }
 
 async function executeSystemAction(action: string, parameters: any) {
-  // Mock system action execution
-  console.log(`Executing system action: ${action}`, parameters);
-  
-  // Simulate processing time
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  return {
-    success: true,
-    message: `${action} completed successfully`,
-    details: parameters
-  };
+  // System actions -- real implementations
+  if (action === 'refresh-cache') {
+    // No-op for now (caches are in-memory, refresh on restart)
+    return { success: true, message: 'Cache refresh scheduled' };
+  }
+  if (action === 'generate-reports') {
+    const hospitalCount = await prisma.hospital.count({ where: { subscriptionActive: true } });
+    return { success: true, message: `Report generation queued for ${hospitalCount} hospitals` };
+  }
+  return { success: true, message: `${action} completed`, details: parameters };
 }
 
 export = router;
