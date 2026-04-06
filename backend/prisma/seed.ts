@@ -255,11 +255,12 @@ async function main() {
       await prisma.encounter.create({
         data: {
           patient: { connect: { id: patient.id } },
+          hospital: { connect: { id: patient.hospitalId } },
           encounterNumber: `ENC${Date.now()}${i}`,
           encounterType: Math.random() > 0.5 ? 'OUTPATIENT' : 'INPATIENT',
           status: 'FINISHED',
           startDateTime: startDate,
-          endDateTime: new Date(startDate.getTime() + (Math.random() * 4 * 60 * 60 * 1000)), // 0-4 hours later
+          endDateTime: new Date(startDate.getTime() + (Math.random() * 4 * 60 * 60 * 1000)),
           department: 'Cardiology',
           location: patient.hospitalId === 'hosp-001' ? 'St. Mary\'s' : 'Community General',
           attendingProvider: patient.hospitalId === 'hosp-001' ? 'Dr. Michael Chen' : 'Dr. Sarah Martinez',
@@ -276,6 +277,7 @@ async function main() {
     await prisma.observation.create({
       data: {
         patient: { connect: { id: patient.id } },
+        hospital: { connect: { id: patient.hospitalId } },
         observationType: 'LOINC:33747-0',
         observationName: 'NT-proBNP',
         category: 'LABORATORY',
@@ -294,6 +296,7 @@ async function main() {
     await prisma.observation.create({
       data: {
         patient: { connect: { id: patient.id } },
+        hospital: { connect: { id: patient.hospitalId } },
         observationType: 'LOINC:8480-6',
         observationName: 'Systolic Blood Pressure',
         category: 'VITAL_SIGNS',
@@ -314,6 +317,7 @@ async function main() {
     await prisma.alert.create({
       data: {
         patientId: randomPatient.id,
+        hospitalId: randomPatient.hospitalId,
         alertType: 'CLINICAL',
         severity: ['LOW', 'MEDIUM', 'HIGH'][Math.floor(Math.random() * 3)] as any,
         title: 'Abnormal Lab Value',
@@ -333,10 +337,11 @@ async function main() {
   // Create sample recommendations
   for (let i = 0; i < 5; i++) {
     const randomPatient = [...stMarysPatients, ...communityPatients][Math.floor(Math.random() * 15)];
-    
+
     await prisma.recommendation.create({
       data: {
         patientId: randomPatient.id,
+        hospitalId: randomPatient.hospitalId,
         recommendationType: 'MEDICATION',
         priority: ['LOW', 'MEDIUM', 'HIGH'][Math.floor(Math.random() * 3)] as any,
         title: 'ACE Inhibitor Optimization',
@@ -545,7 +550,7 @@ async function main() {
   for (const a of groupBAlerts) {
     if (a.pts.length > 0) {
       await prisma.alert.create({
-        data: { patientId: a.pts[0].id, alertType: 'CLINICAL', severity: 'HIGH', title: a.title, message: a.message, moduleType: a.module, actionRequired: true, triggeredAt: new Date() },
+        data: { patientId: a.pts[0].id, hospitalId: a.pts[0].hospitalId, alertType: 'CLINICAL', severity: 'HIGH', title: a.title, message: a.message, moduleType: a.module, actionRequired: true, triggeredAt: new Date() },
       });
     }
   }
@@ -559,7 +564,7 @@ async function main() {
   for (const r of groupBRecs) {
     if (r.pts.length > 0) {
       await prisma.recommendation.create({
-        data: { patientId: r.pts[0].id, recommendationType: r.type, priority: 'HIGH', title: r.title, description: r.desc, evidence: r.ev, moduleType: r.module, evidenceLevel: 'A', guidelineSource: r.src },
+        data: { patientId: r.pts[0].id, hospitalId: r.pts[0].hospitalId, recommendationType: r.type, priority: 'HIGH', title: r.title, description: r.desc, evidence: r.ev, moduleType: r.module, evidenceLevel: 'A', guidelineSource: r.src },
       });
     }
   }
