@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import prisma from '../lib/prisma';
 import { APIResponse, JWTPayload, UserPermissions } from '../types';
 import { buildUserPermissions, FULL_ACCESS_PERMISSIONS } from '../config/rolePermissions';
+import { writeAuditLog } from '../middleware/auditLogger';
 
 const router = Router();
 const isDemoMode = process.env.DEMO_MODE === 'true';
@@ -104,7 +105,7 @@ function signToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
     iat: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // 24 hours
   };
-  return jwt.sign(fullPayload, process.env.JWT_SECRET!);
+  return jwt.sign(fullPayload, process.env.JWT_SECRET!, { algorithm: 'HS256' });
 }
 
 // ─── POST /api/auth/login ──────────────────────────────────────────────────────
@@ -170,6 +171,7 @@ router.post('/login', async (req: Request, res: Response) => {
     });
 
     if (!user || !user.isActive) {
+      await writeAuditLog(req, 'LOGIN_FAILED', 'User', null, `Failed login attempt for email: ${email} (user not found or inactive)`);
       return res.status(401).json({
         success: false,
         error: 'Invalid credentials',
@@ -179,6 +181,7 @@ router.post('/login', async (req: Request, res: Response) => {
 
     const passwordValid = await bcrypt.compare(password, user.passwordHash);
     if (!passwordValid) {
+      await writeAuditLog(req, 'LOGIN_FAILED', 'User', user.id, `Failed login: invalid password for ${user.role} at ${user.hospitalId}`);
       return res.status(401).json({
         success: false,
         error: 'Invalid credentials',
@@ -217,6 +220,8 @@ router.post('/login', async (req: Request, res: Response) => {
       where: { id: user.id },
       data: { lastLogin: new Date() },
     });
+
+    await writeAuditLog(req, 'LOGIN_SUCCESS', 'User', user.id, `Successful login: ${user.role} at ${user.hospitalId}`);
 
     return res.json({
       success: true,
@@ -265,6 +270,8 @@ router.post('/logout', async (req: Request, res: Response) => {
       console.error('Logout session cleanup error:', error);
     }
   }
+
+  await writeAuditLog(req, 'LOGOUT', 'User', null, 'User logged out');
 
   return res.json({
     success: true,
