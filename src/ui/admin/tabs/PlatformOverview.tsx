@@ -25,10 +25,11 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts';
+import { useAdminDashboard } from '../../../hooks/useAdminData';
 
-// ─── KPI Data ────────────────────────────────────────────────────────────────
+// ─── KPI Data (defaults -- overridden by real API data when available) ──────
 
-const KPI_CARDS = [
+const DEFAULT_KPI_CARDS = [
   { label: 'Total Health Systems', value: '3', icon: Building2, color: '#7A1A2E' },
   { label: 'Total Active Users', value: '12', icon: Users, color: '#2C4A60' },
   { label: 'Total Patients', value: '10,660', icon: Heart, color: '#2C4A60' },
@@ -115,8 +116,22 @@ const UPLOAD_DATA = Array.from({ length: 12 }, (_, i) => {
 // ─── Component ───────────────────────────────────────────────────────────────
 
 const PlatformOverview: React.FC = () => {
+  const { data: dashboard, loading } = useAdminDashboard();
+
+  // Use real data from API when available, fall back to defaults
+  const KPI_CARDS = dashboard ? [
+    { label: 'Total Health Systems', value: String(dashboard.totalHospitals), icon: Building2, color: '#7A1A2E' },
+    { label: 'Total Active Users', value: String(dashboard.activeUsers), icon: Users, color: '#2C4A60' },
+    { label: 'Total Patients', value: dashboard.totalPatients.toLocaleString(), icon: Heart, color: '#2C4A60' },
+    { label: 'Unacknowledged Alerts', value: String(dashboard.unacknowledgedAlerts), icon: AlertTriangle, color: '#8B6914' },
+    { label: 'Webhook Events (24h)', value: String(dashboard.recentWebhookEvents), icon: Upload, color: '#2C4A60' },
+    { label: 'Platform Status', value: 'Online', icon: Server, color: '#059669' },
+  ] : DEFAULT_KPI_CARDS;
+
   return (
     <div className="space-y-6">
+      {loading && <div className="text-sm text-gray-500 animate-pulse">Loading live data...</div>}
+      {dashboard && <div className="text-xs text-emerald-600 font-medium">Live data from backend API</div>}
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {KPI_CARDS.map((kpi) => {
