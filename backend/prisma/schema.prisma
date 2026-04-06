@@ -72,6 +72,7 @@ model Hospital {
   riskScoreAssessments        RiskScoreAssessment[]
   interventionTracking        InterventionTracking[]
   contraindicationAssessments ContraindicationAssessment[]
+  recommendations             Recommendation[]
 
   // New clinical models
   medications Medication[]
@@ -245,6 +246,7 @@ model Patient {
   @@index([fhirPatientId])
   @@index([email])
   @@index([lastName, firstName])
+  @@index([hospitalId, isActive])
   @@map("patients")
 }
 
@@ -476,6 +478,8 @@ model Recommendation {
   evidenceLevel   String? // A, B, C, etc.
   guidelineSource String? // ACC/AHA, ESC, etc.
 
+  @@index([hospitalId, patientId])
+  @@index([hospitalId, moduleType])
   @@map("recommendations")
 }
 
@@ -1118,6 +1122,8 @@ model TherapyGap {
 
   @@index([patientId, identifiedAt])
   @@index([module, gapType])
+  @@index([hospitalId, module, resolvedAt])
+  @@index([hospitalId, patientId])
   @@map("therapy_gaps")
 }
 
