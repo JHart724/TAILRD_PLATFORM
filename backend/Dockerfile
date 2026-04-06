@@ -23,11 +23,18 @@ COPY scripts/ ./scripts/
 
 RUN npm run build
 
-# Remove devDependencies after build
-RUN npm prune --production
+# Keep all deps -- npm prune removes .prisma/client which is needed at runtime
+# Image size is larger but Prisma works correctly
 
-# Create directories
-RUN mkdir -p logs backups uploads
+# Create non-root user for runtime security
+RUN groupadd --gid 1001 tailrd && \
+    useradd --uid 1001 --gid tailrd --shell /bin/false --create-home tailrd
+
+# Create directories owned by tailrd
+RUN mkdir -p logs backups uploads && chown -R tailrd:tailrd /app
+
+# Switch to non-root user
+USER tailrd
 
 # Expose port
 EXPOSE 3001
