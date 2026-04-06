@@ -43,7 +43,7 @@ export const RevenuePipelineCard: React.FC<RevenuePipelineCardProps> = ({ data }
           <div>
             <h3 className="text-lg font-semibold text-titanium-900">Revenue Pipeline — Forward Projection</h3>
             <p className="text-sm text-titanium-600">
-              12-month projected: <span className="font-bold text-[#2C4A60]">${(data.totalProjected12Month / 1_000_000).toFixed(1)}M</span> based on patient trajectory
+              12-month projected: <span className="font-bold text-teal-700">${(data.totalProjected12Month / 1_000_000).toFixed(1)}M</span> based on patient trajectory
             </p>
           </div>
           <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-lg px-3 py-1.5">
@@ -88,11 +88,11 @@ export const RevenuePipelineCard: React.FC<RevenuePipelineCardProps> = ({ data }
                   <div className="text-xs text-titanium-500">{q.procedures} projected procedures</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-bold text-[#2C4A60]">
+                  <div className="text-sm font-bold text-teal-700">
                     ${q.revenue >= 1_000_000 ? `${(q.revenue / 1_000_000).toFixed(1)}M` : `${(q.revenue / 1_000).toFixed(0)}K`}
                   </div>
                   <div className={`text-xs font-medium ${
-                    q.confidence === 'high' ? 'text-[#2C4A60]' : q.confidence === 'moderate' ? 'text-[#4A6880]' : 'text-[#64748b]'
+                    q.confidence === 'high' ? 'text-teal-700' : q.confidence === 'moderate' ? 'text-teal-500' : 'text-[#64748b]'
                   }`}>
                     {q.confidence === 'high' ? 'High' : q.confidence === 'moderate' ? 'Moderate' : 'Low'} confidence
                   </div>

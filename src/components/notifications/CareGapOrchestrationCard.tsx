@@ -109,10 +109,10 @@ export default function CareGapOrchestrationCard({ orchestration, defaultExpande
               <span
                 className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-body font-medium ${
                   isResolved
-                    ? 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]'
+                    ? 'bg-chrome-50 text-teal-700 border border-titanium-300'
                     : o.severity === 'critical'
                     ? 'bg-arterial-50 text-arterial-700 border border-arterial-200'
-                    : 'bg-[#FAF6E8] text-[#8B6914] border border-[#C8D4DC]'
+                    : 'bg-amber-50 text-amber-600 border border-titanium-300'
                 }`}
               >
                 {o.condition}
@@ -126,7 +126,7 @@ export default function CareGapOrchestrationCard({ orchestration, defaultExpande
           <span
             className={`hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-xs font-body font-medium ${
               isResolved
-                ? 'bg-[#F0F5FA] text-[#2C4A60]'
+                ? 'bg-chrome-50 text-teal-700'
                 : hasActiveStage
                 ? 'bg-arterial-50 text-arterial-700'
                 : 'bg-chrome-100 text-chrome-700'
@@ -316,7 +316,7 @@ export default function CareGapOrchestrationCard({ orchestration, defaultExpande
                       <div
                         className={`mt-3 flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-body font-medium ${
                           actionTaken === 'confirmed'
-                            ? 'bg-[#F0F5FA] text-[#2C4A60] border border-[#C8D4DC]'
+                            ? 'bg-chrome-50 text-teal-700 border border-titanium-300'
                             : 'bg-titanium-100 text-titanium-600 border border-titanium-200'
                         }`}
                       >

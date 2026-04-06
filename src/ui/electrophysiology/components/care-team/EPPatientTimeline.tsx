@@ -118,14 +118,14 @@ const EPPatientTimeline: React.FC<EPPatientTimelineProps> = ({ patientId, patien
 
   const getEventColor = (type: string) => {
  switch(type) {
- case 'EKG': return 'bg-[#F0F7F4] text-[#2D6147] border-[#2C4A60]';
+ case 'EKG': return 'bg-green-50 text-green-600 border-teal-700';
  case 'Holter': return 'bg-chrome-100 text-chrome-700 border-chrome-300';
  case 'Echo': return 'bg-arterial-100 text-arterial-700 border-arterial-300';
  case 'Anticoag_Lab': return 'bg-red-100 text-red-700 border-red-300';
  case 'EP_Visit': return 'bg-chrome-100 text-chrome-700 border-chrome-300';
- case 'Ablation': return 'bg-[#FAF6E8] text-[#8B6914] border-[#C8D4DC]';
+ case 'Ablation': return 'bg-amber-50 text-amber-600 border-titanium-300';
  case 'Device': return 'bg-gray-100 text-gray-700 border-gray-300';
- case 'Medication': return 'bg-[#FAF6E8] text-[#8B6914] border-[#C8D4DC]';
+ case 'Medication': return 'bg-amber-50 text-amber-600 border-titanium-300';
  default: return 'bg-gray-100 text-gray-700 border-gray-300';
  }
   };
@@ -162,7 +162,7 @@ const EPPatientTimeline: React.FC<EPPatientTimelineProps> = ({ patientId, patien
  <div>
  <div className="flex items-center gap-2">
  <h4 className="text-sm font-semibold text-titanium-900">{event.title}</h4>
- {event.important && <AlertCircle className="w-3 h-3 text-[#6B7280]" />}
+ {event.important && <AlertCircle className="w-3 h-3 text-gray-500" />}
  </div>
  <p className="text-sm text-titanium-600">{event.description}</p>
  </div>
@@ -179,7 +179,7 @@ const EPPatientTimeline: React.FC<EPPatientTimelineProps> = ({ patientId, patien
  key={resultIndex}
  className={`px-2 py-1 text-xs rounded border ${
  result.normal 
- ? 'bg-[#F0F7F4] text-[#2D6147] border-[#2C4A60]' 
+ ? 'bg-green-50 text-green-600 border-teal-700' 
  : 'bg-red-50 text-red-700 border-red-200'
  }`}
  >
@@ -238,18 +238,18 @@ const EPPatientTimeline: React.FC<EPPatientTimelineProps> = ({ patientId, patien
  key={`${result.key}-${result.value}`}
  className={`p-3 rounded-lg border ${
  result.normal 
- ? 'bg-[#F0F7F4] border-[#D8EDE6]' 
+ ? 'bg-green-50 border-green-100' 
  : 'bg-red-50 border-red-200'
  }`}
  >
  <div className="text-sm font-medium text-gray-900">{result.key}</div>
  <div className={`text-lg font-bold ${
- result.normal ? 'text-[#2C4A60]' : 'text-red-700'
+ result.normal ? 'text-teal-700' : 'text-red-700'
  }`}>
  {result.value}
  </div>
  <div className={`text-xs ${
- result.normal ? 'text-[#2C4A60]' : 'text-red-600'
+ result.normal ? 'text-teal-700' : 'text-red-600'
  }`}>
  {result.normal ? 'Normal' : 'Abnormal'}
  </div>

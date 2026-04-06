@@ -75,7 +75,7 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
  <p className="text-sm text-titanium-600">Clinical documentation improvement cdiAlerts</p>
  </div>
  <div className="text-right">
- <div className="text-2xl font-bold text-[#2C4A60]">
+ <div className="text-2xl font-bold text-teal-700">
  +${totalRevenueImpact.toLocaleString()}
  </div>
  <div className="text-xs text-titanium-500">Potential Revenue Impact</div>
@@ -126,7 +126,7 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
  </div>
  
  <div className="text-sm text-titanium-700 mb-3">
- <div className="font-medium text-[#2C4A60]">Suggested Documentation:</div>
+ <div className="font-medium text-teal-700">Suggested Documentation:</div>
  <div className="text-titanium-600">{cdiAlert.suggestedAdditions.join(', ')}</div>
  </div>
  
@@ -148,7 +148,7 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
  </div>
  
  <div className="text-right ml-4">
- <div className="text-lg font-bold text-[#2C4A60] flex items-center gap-1">
+ <div className="text-lg font-bold text-teal-700 flex items-center gap-1">
  <DollarSign className="w-4 h-4" />
  +{cdiAlert.impactAnalysis.reimbursementImpact.toLocaleString()}
  </div>
@@ -167,7 +167,7 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
  Send Query
  </button>
  <button 
- className="text-xs bg-[#F0F7F4] text-[#2D6147] px-2 py-1 rounded hover:bg-[#C8D4DC] transition-colors block"
+ className="text-xs bg-green-50 text-green-600 px-2 py-1 rounded hover:bg-titanium-300 transition-colors block"
  onClick={() => {
  console.log('Marking CDI cdiAlert complete for patient:', cdiAlert.patientName);
  // TODO: Implement CDI completion workflow
@@ -197,7 +197,7 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
  </div>
  <div className="text-center">
  <div className="text-sm font-medium text-titanium-800">CMI</div>
- <div className="text-sm text-[#2C4A60]">
+ <div className="text-sm text-teal-700">
  +{toFixed(cdiAlert.impactAnalysis.cmiImpact, 2)}
  </div>
  </div>
@@ -214,21 +214,21 @@ const CDIDocumentationPrompt: React.FC<CDIDocumentationPromptProps> = ({
  
  {/* Action Summary */}
  {showActions && (
- <div className="bg-[#f0f5fa] rounded-lg p-4 border border-[#C8D4DC]">
+ <div className="bg-chrome-50 rounded-lg p-4 border border-titanium-300">
  <div className="flex items-center justify-between">
  <div>
- <div className="font-semibold text-[#2C4A60] flex items-center gap-2">
+ <div className="font-semibold text-teal-700 flex items-center gap-2">
  <CheckCircle className="w-4 h-4" />
  CDI Team Actions
  </div>
- <div className="text-sm text-[#2C4A60] mt-1">
+ <div className="text-sm text-teal-700 mt-1">
  • Schedule physician queries for high-priority cases
  • Review documentation templates with care teams
  • Coordinate with coding staff for clarification
  </div>
  </div>
  <div className="text-right">
- <div className="text-lg font-bold text-[#2C4A60]">
+ <div className="text-lg font-bold text-teal-700">
  {cdiAlerts.length} Active
  </div>
  <div className="text-xs text-titanium-600">Total Alerts</div>

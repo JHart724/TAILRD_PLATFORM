@@ -126,7 +126,7 @@ const ValvularCareTeamView: React.FC = () => {
  </div>
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <div className="flex items-center gap-3">
- <Scissors className="w-8 h-8 text-[#2C4A60]" />
+ <Scissors className="w-8 h-8 text-teal-700" />
  <div>
  <div className="text-2xl font-bold text-titanium-900">23</div>
  <div className="text-sm text-titanium-600">Surgeries This Month</div>
@@ -135,7 +135,7 @@ const ValvularCareTeamView: React.FC = () => {
  </div>
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <div className="flex items-center gap-3">
- <Eye className="w-8 h-8 text-[#6B7280]" />
+ <Eye className="w-8 h-8 text-gray-500" />
  <div>
  <div className="text-2xl font-bold text-titanium-900">89</div>
  <div className="text-sm text-titanium-600">Due for Echo</div>
@@ -200,8 +200,8 @@ const ValvularCareTeamView: React.FC = () => {
  <td className="p-3">
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.severity.includes('Severe') ? 'bg-red-100 text-red-700' :
- patient.severity.includes('Moderate') ? 'bg-[#FAF6E8] text-[#8B6914]' :
- 'bg-[#F0F7F4] text-[#2D6147]'
+ patient.severity.includes('Moderate') ? 'bg-amber-50 text-amber-600' :
+ 'bg-green-50 text-green-600'
  }`}>
  {patient.severity}
  </span>
@@ -253,15 +253,15 @@ const ValvularCareTeamView: React.FC = () => {
  <div className="space-y-3">
  <div className="flex justify-between">
  <span className="text-titanium-600">STS Score</span>
- <span className="font-bold text-[#6B7280]">4.2%</span>
+ <span className="font-bold text-gray-500">4.2%</span>
  </div>
  <div className="flex justify-between">
  <span className="text-titanium-600">EuroSCORE II</span>
- <span className="font-bold text-[#6B7280]">3.8%</span>
+ <span className="font-bold text-gray-500">3.8%</span>
  </div>
  <div className="flex justify-between">
  <span className="text-titanium-600">Frailty Assessment</span>
- <span className="font-bold text-[#2C4A60]">Not frail</span>
+ <span className="font-bold text-teal-700">Not frail</span>
  </div>
  <div className="flex justify-between">
  <span className="text-titanium-600">Recommendation</span>
@@ -278,8 +278,8 @@ const ValvularCareTeamView: React.FC = () => {
  <h3 className="text-2xl font-bold text-titanium-900 mb-6">Repaired Valve Surveillance</h3>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
  {[
- { status: 'Excellent Function', count: 45, bgColor: 'bg-[#C8D4DC]', borderColor: 'border-[#2C4A60]', textColor: 'text-[#2C4A60]' },
- { status: 'Mild Dysfunction', count: 12, bgColor: 'bg-[#F0F5FA]', borderColor: 'border-[#C8D4DC]', textColor: 'text-[#6B7280]' },
+ { status: 'Excellent Function', count: 45, bgColor: 'bg-titanium-300', borderColor: 'border-teal-700', textColor: 'text-teal-700' },
+ { status: 'Mild Dysfunction', count: 12, bgColor: 'bg-chrome-50', borderColor: 'border-titanium-300', textColor: 'text-gray-500' },
  { status: 'Needs Follow-up', count: 8, bgColor: 'bg-red-50', borderColor: 'border-red-200', textColor: 'text-red-600' }
  ].map((item, index) => (
  <div key={item.status} className={`text-center p-6 rounded-xl ${item.bgColor} border ${item.borderColor}`}>
@@ -301,8 +301,8 @@ const ValvularCareTeamView: React.FC = () => {
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2"><Shield className="w-5 h-5 text-red-600" /> Safety Monitoring</h3>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  <div className="p-4 bg-red-50 border border-red-200 rounded-xl"><div className="text-2xl font-bold text-red-700">3</div><div className="text-sm text-red-600">Active Safety Alerts</div></div>
- <div className="p-4 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl"><div className="text-2xl font-bold text-[#6B7280]">7</div><div className="text-sm text-[#6B7280]">Overdue Surveillance</div></div>
- <div className="p-4 bg-[#F0F7F4] border border-[#D8EDE6] rounded-xl"><div className="text-2xl font-bold text-[#2C4A60]">94%</div><div className="text-sm text-[#2C4A60]">Prophylaxis Documented</div></div>
+ <div className="p-4 bg-chrome-50 border border-titanium-300 rounded-xl"><div className="text-2xl font-bold text-gray-500">7</div><div className="text-sm text-gray-500">Overdue Surveillance</div></div>
+ <div className="p-4 bg-green-50 border border-green-100 rounded-xl"><div className="text-2xl font-bold text-teal-700">94%</div><div className="text-sm text-teal-700">Prophylaxis Documented</div></div>
  </div>
  </div>
  </div>
@@ -314,7 +314,7 @@ const ValvularCareTeamView: React.FC = () => {
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2"><Users className="w-5 h-5 text-porsche-600" /> Valve Care Team</h3>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  {[{name:'Dr. Sarah Mitchell',role:'Cardiac Surgeon',status:'Available'},{name:'Dr. James Park',role:'Interventional Cardiologist',status:'In Procedure'},{name:'Lisa Thompson, NP',role:'Valve Coordinator',status:'Available'}].map((m,i) => (
- <div key={i} className="p-4 border border-titanium-200 rounded-xl"><div className="font-semibold text-titanium-800">{m.name}</div><div className="text-sm text-titanium-600">{m.role}</div><span className={`mt-2 inline-block px-2 py-0.5 rounded-full text-xs ${m.status === 'Available' ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>{m.status}</span></div>
+ <div key={i} className="p-4 border border-titanium-200 rounded-xl"><div className="font-semibold text-titanium-800">{m.name}</div><div className="text-sm text-titanium-600">{m.role}</div><span className={`mt-2 inline-block px-2 py-0.5 rounded-full text-xs ${m.status === 'Available' ? 'bg-green-50 text-green-600' : 'bg-amber-50 text-amber-600'}`}>{m.status}</span></div>
  ))}
  </div>
  </div>
@@ -327,7 +327,7 @@ const ValvularCareTeamView: React.FC = () => {
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2"><FileText className="w-5 h-5 text-porsche-600" /> Clinical Documentation</h3>
  <div className="space-y-3">
  {[{title:'Pre-Operative Valve Assessment',type:'Template',status:'Active'},{title:'Post-TAVR Discharge Protocol',type:'Protocol',status:'Active'},{title:'Endocarditis Prophylaxis Guidelines',type:'Guideline',status:'Active'},{title:'Anticoagulation Bridge Protocol',type:'Protocol',status:'Under Review'}].map((d,i) => (
- <div key={i} className="flex items-center justify-between p-4 border border-titanium-200 rounded-xl hover:bg-titanium-50"><div className="flex items-center gap-3"><FileText className="w-5 h-5 text-titanium-400" /><div><div className="font-medium text-titanium-800">{d.title}</div><div className="text-xs text-titanium-500">{d.type}</div></div></div><span className={`px-2 py-0.5 rounded-full text-xs ${d.status === 'Active' ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>{d.status}</span></div>
+ <div key={i} className="flex items-center justify-between p-4 border border-titanium-200 rounded-xl hover:bg-titanium-50"><div className="flex items-center gap-3"><FileText className="w-5 h-5 text-titanium-400" /><div><div className="font-medium text-titanium-800">{d.title}</div><div className="text-xs text-titanium-500">{d.type}</div></div></div><span className={`px-2 py-0.5 rounded-full text-xs ${d.status === 'Active' ? 'bg-green-50 text-green-600' : 'bg-amber-50 text-amber-600'}`}>{d.status}</span></div>
  ))}
  </div>
  </div>

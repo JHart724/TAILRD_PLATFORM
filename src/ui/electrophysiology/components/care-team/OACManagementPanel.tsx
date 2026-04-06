@@ -205,7 +205,7 @@ const OACManagementPanel: React.FC = () => {
 
   const getAdherenceColor = (adherence: string) => {
  switch (adherence) {
- case 'Excellent': return 'text-[#2D6147] bg-[#F0F7F4]';
+ case 'Excellent': return 'text-green-600 bg-green-50';
  case 'Good': return 'text-chrome-700 bg-chrome-100';
  case 'Poor': return 'text-red-700 bg-red-100';
  default: return 'text-titanium-700 bg-titanium-100';
@@ -215,12 +215,12 @@ const OACManagementPanel: React.FC = () => {
   const getRiskColor = (score: number, isStroke: boolean) => {
  if (isStroke) {
  if (score >= 4) return 'text-red-700 bg-red-100';
- if (score >= 2) return 'text-[#8B6914] bg-[#FAF6E8]';
- return 'text-[#2D6147] bg-[#F0F7F4]';
+ if (score >= 2) return 'text-amber-600 bg-amber-50';
+ return 'text-green-600 bg-green-50';
  } else {
  if (score >= 3) return 'text-red-700 bg-red-100';
- if (score >= 2) return 'text-[#8B6914] bg-[#FAF6E8]';
- return 'text-[#2D6147] bg-[#F0F7F4]';
+ if (score >= 2) return 'text-amber-600 bg-amber-50';
+ return 'text-green-600 bg-green-50';
  }
   };
 
@@ -228,7 +228,7 @@ const OACManagementPanel: React.FC = () => {
  const [min, max] = target.split('-').map(Number);
  if (inr < min) return { status: 'Low', color: 'text-red-600 bg-red-100' };
  if (inr > max) return { status: 'High', color: 'text-red-600 bg-red-100' };
- return { status: 'In Range', color: 'text-[#2D6147] bg-[#F0F7F4]' };
+ return { status: 'In Range', color: 'text-green-600 bg-green-50' };
   };
 
   const filteredPatients = useMemo(() => {
@@ -284,37 +284,37 @@ const OACManagementPanel: React.FC = () => {
  const bridging = getBridgingRecommendation(patient.cha2ds2vasc, patient.hasbled, 'Moderate');
 
  return (
- <div className="mt-4 p-4 bg-[#F0F5FA] border border-[#C8D4DC] rounded-lg">
+ <div className="mt-4 p-4 bg-chrome-50 border border-titanium-300 rounded-lg">
  <div className="flex items-center justify-between mb-3">
  <div className="flex items-center gap-2">
- <Calendar className="w-4 h-4 text-[#6B7280]" />
- <span className="font-medium text-[#6B7280]">Upcoming Procedure</span>
+ <Calendar className="w-4 h-4 text-gray-500" />
+ <span className="font-medium text-gray-500">Upcoming Procedure</span>
  </div>
- <div className="text-sm text-[#6B7280]">{daysUntil} days</div>
+ <div className="text-sm text-gray-500">{daysUntil} days</div>
  </div>
  
  <div className="grid grid-cols-2 gap-4 mb-3">
  <div>
- <div className="text-xs text-[#6B7280]">Procedure</div>
- <div className="text-sm font-medium text-[#6B7280]">{procedure.procedureType}</div>
+ <div className="text-xs text-gray-500">Procedure</div>
+ <div className="text-sm font-medium text-gray-500">{procedure.procedureType}</div>
  </div>
  <div>
- <div className="text-xs text-[#6B7280]">Date</div>
- <div className="text-sm font-medium text-[#6B7280]">
+ <div className="text-xs text-gray-500">Date</div>
+ <div className="text-sm font-medium text-gray-500">
  {new Date(procedure.date).toLocaleDateString()}
  </div>
  </div>
  </div>
 
- <div className="p-3 bg-white rounded-lg border border-[#C8D4DC] mb-3">
- <div className="text-xs text-[#6B7280] mb-1">Bridging Protocol</div>
- <div className="text-sm text-[#6B7280]">{bridging.protocol}</div>
- <div className="text-xs text-[#6B7280] mt-1">{bridging.reasoning}</div>
+ <div className="p-3 bg-white rounded-lg border border-titanium-300 mb-3">
+ <div className="text-xs text-gray-500 mb-1">Bridging Protocol</div>
+ <div className="text-sm text-gray-500">{bridging.protocol}</div>
+ <div className="text-xs text-gray-500 mt-1">{bridging.reasoning}</div>
  </div>
 
  <button
  onClick={() => generateBridgingPlan(patient)}
- className="w-full px-3 py-2 bg-[#F0F5FA] text-white rounded text-sm hover:bg-[#F0F5FA] transition-colors"
+ className="w-full px-3 py-2 bg-chrome-50 text-white rounded text-sm hover:bg-chrome-50 transition-colors"
  >
  Generate Bridging Plan
  </button>
@@ -370,18 +370,18 @@ const OACManagementPanel: React.FC = () => {
  </div>
  
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
- <div className="p-4 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg">
- <div className="font-medium text-[#2C4A60] mb-2">Low Risk</div>
- <div className="text-sm text-[#2C4A60] mb-2">CHA₂DS₂-VASc ≤2 OR HAS-BLED ≥3</div>
- <div className="text-xs text-[#2C4A60]">
+ <div className="p-4 bg-green-50 border border-green-100 rounded-lg">
+ <div className="font-medium text-teal-700 mb-2">Low Risk</div>
+ <div className="text-sm text-teal-700 mb-2">CHA₂DS₂-VASc ≤2 OR HAS-BLED ≥3</div>
+ <div className="text-xs text-teal-700">
  Stop OAC 2-5 days before procedure. Resume 12-24h post-procedure without bridging.
  </div>
  </div>
  
- <div className="p-4 bg-[#F0F5FA] border border-[#C8D4DC] rounded-lg">
- <div className="font-medium text-[#6B7280] mb-2">Moderate Risk</div>
- <div className="text-sm text-[#6B7280] mb-2">CHA₂DS₂-VASc 3 AND HAS-BLED &lt;3</div>
- <div className="text-xs text-[#6B7280]">
+ <div className="p-4 bg-chrome-50 border border-titanium-300 rounded-lg">
+ <div className="font-medium text-gray-500 mb-2">Moderate Risk</div>
+ <div className="text-sm text-gray-500 mb-2">CHA₂DS₂-VASc 3 AND HAS-BLED &lt;3</div>
+ <div className="text-xs text-gray-500">
  Consider bridging based on individual patient factors and procedure risk.
  </div>
  </div>
@@ -465,7 +465,7 @@ const OACManagementPanel: React.FC = () => {
  </div>
  <div className="p-2 bg-titanium-50 rounded">
  <div className="text-xs text-titanium-600">Time in Range</div>
- <div className={`font-medium ${patient.inr.timeInRange >= 70 ? 'text-[#2C4A60]' : 'text-red-600'}`}>
+ <div className={`font-medium ${patient.inr.timeInRange >= 70 ? 'text-teal-700' : 'text-red-600'}`}>
  {patient.inr.timeInRange}%
  </div>
  </div>
@@ -505,7 +505,7 @@ const OACManagementPanel: React.FC = () => {
  {/* Follow-up */}
  <div className="mb-4">
  <div className="flex items-center gap-2 mb-2">
- <Calendar className="w-4 h-4 text-[#2C4A60]" />
+ <Calendar className="w-4 h-4 text-teal-700" />
  <span className="font-medium text-titanium-800">Follow-up</span>
  </div>
  
@@ -541,7 +541,7 @@ const OACManagementPanel: React.FC = () => {
  {patient.inr.readings.slice(0, 4).map((reading, index) => (
  <div key={reading.date} className="flex justify-between items-center text-sm">
  <span className="text-titanium-600">{new Date(reading.date).toLocaleDateString()}</span>
- <span className={`font-medium ${reading.inRange ? 'text-[#2C4A60]' : 'text-red-600'}`}>
+ <span className={`font-medium ${reading.inRange ? 'text-teal-700' : 'text-red-600'}`}>
  {reading.value}
  </span>
  </div>
@@ -577,7 +577,7 @@ const OACManagementPanel: React.FC = () => {
  </div>
  
  <div className="text-center">
- <div className="text-2xl font-bold text-[#6B7280] mb-1">
+ <div className="text-2xl font-bold text-gray-500 mb-1">
  {patients.filter(p => p.hasbled >= 3).length}
  </div>
  <div className="text-sm text-titanium-600">High Bleeding Risk</div>

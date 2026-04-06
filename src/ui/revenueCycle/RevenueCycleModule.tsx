@@ -66,15 +66,15 @@ const RevenueCycleModule: React.FC = () => {
  {/* Loading animation */}
  <div className="mb-8">
  <div className="relative w-16 h-16 mx-auto">
- <div className="absolute inset-0 border-4 border-[#C8D4DC] rounded-full"></div>
- <div className="absolute inset-0 border-4 border-[#2C4A60] rounded-full border-t-transparent animate-spin"></div>
+ <div className="absolute inset-0 border-4 border-titanium-300 rounded-full"></div>
+ <div className="absolute inset-0 border-4 border-teal-700 rounded-full border-t-transparent animate-spin"></div>
  </div>
  </div>
  
  {/* Brand */}
  <h1 className="text-3xl font-light mb-2">
  <span className="text-titanium-700 font-extralight tracking-wide">TAILRD</span>
- <span className="text-[#4A6880] mx-2 font-thin">•</span>
+ <span className="text-teal-500 mx-2 font-thin">•</span>
  <span className="bg-gradient-to-r from-[#2C4A60] to-[#2C4A60] bg-clip-text text-transparent font-medium">Heart</span>
  </h1>
  
@@ -83,9 +83,9 @@ const RevenueCycleModule: React.FC = () => {
  
  {/* Animated dots */}
  <div className="flex justify-center space-x-1">
- <div className="w-2 h-2 bg-[#4A6880] rounded-full animate-pulse" style={{animationDelay: '0ms'}}></div>
- <div className="w-2 h-2 bg-[#2C4A60] rounded-full animate-pulse" style={{animationDelay: '150ms'}}></div>
- <div className="w-2 h-2 bg-[#2C4A60] rounded-full animate-pulse" style={{animationDelay: '300ms'}}></div>
+ <div className="w-2 h-2 bg-teal-500 rounded-full animate-pulse" style={{animationDelay: '0ms'}}></div>
+ <div className="w-2 h-2 bg-teal-700 rounded-full animate-pulse" style={{animationDelay: '150ms'}}></div>
+ <div className="w-2 h-2 bg-teal-700 rounded-full animate-pulse" style={{animationDelay: '300ms'}}></div>
  </div>
  
  {/* Subtitle */}
@@ -103,10 +103,10 @@ const RevenueCycleModule: React.FC = () => {
  <div className="flex items-center gap-4">
  <button
  onClick={() => navigate('/dashboard')}
- className="p-3 rounded-xl bg-[#F0F5FA] hover:bg-[#C8D4DC] transition-colors cursor-pointer"
+ className="p-3 rounded-xl bg-chrome-50 hover:bg-titanium-300 transition-colors cursor-pointer"
  title="Return to Dashboard"
  >
- <DollarSign className="w-8 h-8 text-[#2C4A60]" />
+ <DollarSign className="w-8 h-8 text-teal-700" />
  </button>
  <div className="text-xs text-titanium-500 mt-1 text-center">← Dashboard</div>
  <div>
@@ -121,13 +121,13 @@ const RevenueCycleModule: React.FC = () => {
  </p>
  <div className="mt-2 flex items-center gap-4 text-xs text-titanium-500">
  <span className="bg-chrome-50 px-2 py-1 rounded-full border border-chrome-200">DRG • ICD-10 • CPT Analytics</span>
- <span className="bg-[#F0F5FA] px-2 py-1 rounded-full border border-[#C8D4DC]">Claims • CDI • Denial Management</span>
+ <span className="bg-chrome-50 px-2 py-1 rounded-full border border-titanium-300">Claims • CDI • Denial Management</span>
  </div>
  </div>
  </div>
  <div className="text-right">
  <div className="text-sm text-titanium-600">Total Claims Value</div>
- <div className="text-2xl font-bold text-[#2C4A60] font-sf">$24.8M</div>
+ <div className="text-2xl font-bold text-teal-700 font-sf">$24.8M</div>
  </div>
  </div>
  </div>
@@ -151,7 +151,7 @@ const RevenueCycleModule: React.FC = () => {
  {/* Folder Tab Shape */}
  <div className={`relative px-6 py-4 transition-all duration-300 ${
  isActive 
- ? 'bg-white border-2 border-[#4A6880] border-b-white shadow-lg' 
+ ? 'bg-white border-2 border-teal-500 border-b-white shadow-lg' 
  : 'bg-titanium-100 border-2 border-titanium-200 hover:bg-titanium-50 hover:border-titanium-300'
  }`}
  style={{
@@ -162,20 +162,20 @@ const RevenueCycleModule: React.FC = () => {
  }}>
  <div className="flex items-center gap-3">
  <div className={`p-2 rounded-lg transition-colors ${
- isActive ? 'bg-[#F0F5FA]' : 'bg-white'
+ isActive ? 'bg-chrome-50' : 'bg-white'
  }`}>
  <IconComponent className={`w-5 h-5 transition-colors ${
- isActive ? 'text-[#2C4A60]' : 'text-titanium-600'
+ isActive ? 'text-teal-700' : 'text-titanium-600'
  }`} />
  </div>
  <div className="text-left">
  <div className={`font-bold text-base transition-colors ${
- isActive ? 'text-[#2C4A60]' : 'text-chrome-950'
+ isActive ? 'text-teal-700' : 'text-chrome-950'
  }`}>
  {view.label}
  </div>
  <div className={`text-xs mt-1 transition-colors ${
- isActive ? 'text-[#2C4A60]' : 'text-titanium-600'
+ isActive ? 'text-teal-700' : 'text-titanium-600'
  }`}>
  {view.description}
  </div>
@@ -185,7 +185,7 @@ const RevenueCycleModule: React.FC = () => {
  
  {/* Active tab highlight bar */}
  {isActive && (
- <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#2C4A60] rounded-t-full"></div>
+ <div className="absolute bottom-0 left-0 right-0 h-1 bg-teal-700 rounded-t-full"></div>
  )}
  </button>
  );

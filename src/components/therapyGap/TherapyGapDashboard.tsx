@@ -166,7 +166,7 @@ const TherapyGapDashboard: React.FC = () => {
  case 'Device':
  return 'bg-medical-red-500';
  case 'Rehab':
- return 'bg-[#2C4A60]';
+ return 'bg-teal-700';
  case 'Screening':
  return 'bg-crimson-500';
  default:
@@ -321,7 +321,7 @@ const TherapyGapDashboard: React.FC = () => {
  
  <button
  onClick={exportData}
- className="flex items-center gap-2 px-4 py-2 bg-[#2C4A60] text-white rounded-lg hover:bg-[#2C4A60] transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-teal-700 text-white rounded-lg hover:bg-teal-700 transition-colors"
  >
  <Download className="w-4 h-4" />
  Export
@@ -370,7 +370,7 @@ const TherapyGapDashboard: React.FC = () => {
  <div className="retina-card p-6 border-l-4 border-l-porsche-500">
  <div className="flex items-center justify-between mb-2">
  <Users className="w-6 h-6 text-porsche-500" />
- <TrendingUp className="w-4 h-4 text-[#2C4A60]" />
+ <TrendingUp className="w-4 h-4 text-teal-700" />
  </div>
  <div className="text-2xl font-bold text-titanium-800 mb-1">
  {totalMetrics.gaps.toLocaleString()}
@@ -380,8 +380,8 @@ const TherapyGapDashboard: React.FC = () => {
 
  <div className="retina-card p-6 border-l-4 border-l-[#2C4A60]">
  <div className="flex items-center justify-between mb-2">
- <Target className="w-6 h-6 text-[#2C4A60]" />
- <TrendingUp className="w-4 h-4 text-[#2C4A60]" />
+ <Target className="w-6 h-6 text-teal-700" />
+ <TrendingUp className="w-4 h-4 text-teal-700" />
  </div>
  <div className="text-2xl font-bold text-titanium-800 mb-1">
  {totalMetrics.closed.toLocaleString()}
@@ -403,7 +403,7 @@ const TherapyGapDashboard: React.FC = () => {
  <div className="retina-card p-6 border-l-4 border-l-medical-red-500">
  <div className="flex items-center justify-between mb-2">
  <DollarSign className="w-6 h-6 text-medical-red-500" />
- <TrendingUp className="w-4 h-4 text-[#2C4A60]" />
+ <TrendingUp className="w-4 h-4 text-teal-700" />
  </div>
  <div className="text-2xl font-bold text-titanium-800 mb-1">
  ${toFixed(totalMetrics.revenue / 1000, 0)}K
@@ -473,7 +473,7 @@ const TherapyGapDashboard: React.FC = () => {
  <div className="flex items-center gap-2">
  <div className="w-16 bg-titanium-200 rounded-full h-2">
  <div
- className="h-2 bg-[#2C4A60] rounded-full transition-all duration-500"
+ className="h-2 bg-teal-700 rounded-full transition-all duration-500"
  style={{ width: `${(item.closed / item.gaps) * 100}%` }}
  />
  </div>

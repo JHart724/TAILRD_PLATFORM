@@ -47,7 +47,7 @@ const EPBenchmarkDetailModal: React.FC<EPBenchmarkDetailModalProps> = ({
  {ourValue}{unit}
  </div>
  <div className={`flex items-center text-lg font-semibold ${
- isPositiveTrend ? 'text-[#2C4A60]' : 'text-red-600'
+ isPositiveTrend ? 'text-teal-700' : 'text-red-600'
  }`}>
  {isPositiveTrend ? <TrendingUp className="w-5 h-5 mr-1" /> : <TrendingDown className="w-5 h-5 mr-1" />}
  {formatDelta(delta, unit)} vs national ({toFixed(trendPercentage, 1)}%)
@@ -73,9 +73,9 @@ const EPBenchmarkDetailModal: React.FC<EPBenchmarkDetailModalProps> = ({
  <div className="text-2xl font-bold text-gray-900">{nationalValue}{unit}</div>
  <div className="text-sm text-gray-700">National Average</div>
  </div>
- <div className="bg-[#C8D4DC] rounded-lg p-4 text-center">
- <div className="text-2xl font-bold text-[#2C4A60]">{percentile}{getOrdinalSuffix(percentile)}</div>
- <div className="text-sm text-[#2C4A60]">Percentile</div>
+ <div className="bg-titanium-300 rounded-lg p-4 text-center">
+ <div className="text-2xl font-bold text-teal-700">{percentile}{getOrdinalSuffix(percentile)}</div>
+ <div className="text-sm text-teal-700">Percentile</div>
  </div>
  <div className="bg-arterial-50 rounded-lg p-4 text-center">
  <div className="text-2xl font-bold text-arterial-900">{comparisonData.top10}{unit}</div>

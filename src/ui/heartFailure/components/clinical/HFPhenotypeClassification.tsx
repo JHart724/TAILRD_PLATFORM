@@ -232,7 +232,7 @@ const HFPhenotypeClassification: React.FC<{ patientData?: PatientContext }> = ({
  switch (severity) {
  case 'Absolute': return 'text-medical-red-600 bg-medical-red-50 border-medical-red-200';
  case 'Functional': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
- case 'None': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'None': return 'text-teal-700 bg-chrome-50 border-titanium-300';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };
@@ -241,7 +241,7 @@ const HFPhenotypeClassification: React.FC<{ patientData?: PatientContext }> = ({
  switch (risk) {
  case 'High': return 'text-medical-red-600 bg-medical-red-50 border-medical-red-200';
  case 'Moderate': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
- case 'Low': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'Low': return 'text-teal-700 bg-chrome-50 border-titanium-300';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };

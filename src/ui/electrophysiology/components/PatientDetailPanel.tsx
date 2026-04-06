@@ -128,8 +128,8 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
   const getPriorityColor = (priority: string) => {
  switch(priority) {
  case 'high': return 'border-red-500 bg-red-50 text-red-700';
- case 'medium': return 'border-[#C8D4DC] bg-[#FAF6E8] text-[#8B6914]';
- case 'low': return 'border-[#2C4A60] bg-[#F0F7F4] text-[#2D6147]';
+ case 'medium': return 'border-titanium-300 bg-amber-50 text-amber-600';
+ case 'low': return 'border-teal-700 bg-green-50 text-green-600';
  default: return 'border-gray-300 bg-gray-50 text-gray-700';
  }
   };
@@ -137,29 +137,29 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
   const getRiskColor = (riskLevel: string) => {
  switch(riskLevel) {
  case 'high': return 'text-red-600 bg-red-100';
- case 'medium': return 'text-[#8B6914] bg-[#FAF6E8]';
- case 'low': return 'text-[#2D6147] bg-[#F0F7F4]';
+ case 'medium': return 'text-amber-600 bg-amber-50';
+ case 'low': return 'text-green-600 bg-green-50';
  default: return 'text-gray-600 bg-gray-100';
  }
   };
 
   const getAdherenceColor = (adherence?: number) => {
  if (!adherence) return 'text-gray-600 bg-gray-100';
- if (adherence >= 90) return 'text-[#2D6147] bg-[#F0F7F4]';
- if (adherence >= 75) return 'text-[#8B6914] bg-[#FAF6E8]';
+ if (adherence >= 90) return 'text-green-600 bg-green-50';
+ if (adherence >= 75) return 'text-amber-600 bg-amber-50';
  return 'text-red-600 bg-red-100';
   };
 
   const getBatteryColor = (level: number) => {
- if (level >= 80) return 'text-[#2D6147] bg-[#F0F7F4]';
- if (level >= 70) return 'text-[#8B6914] bg-[#FAF6E8]';
+ if (level >= 80) return 'text-green-600 bg-green-50';
+ if (level >= 70) return 'text-amber-600 bg-amber-50';
  return 'text-red-600 bg-red-100';
   };
 
   const getLeadStatusColor = (status: string) => {
  switch(status) {
- case 'normal': return 'text-[#2D6147] bg-[#F0F7F4]';
- case 'warning': return 'text-[#8B6914] bg-[#FAF6E8]';
+ case 'normal': return 'text-green-600 bg-green-50';
+ case 'warning': return 'text-amber-600 bg-amber-50';
  case 'alert': return 'text-red-700 bg-red-100';
  default: return 'text-gray-700 bg-gray-100';
  }
@@ -168,15 +168,15 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
   const getCHADSColor = (score?: number) => {
  if (!score) return 'text-gray-600';
  if (score >= 3) return 'text-red-600';
- if (score >= 2) return 'text-[#6B7280]';
- return 'text-[#2C4A60]';
+ if (score >= 2) return 'text-gray-500';
+ return 'text-teal-700';
   };
 
   const getHASBLEDColor = (score?: number) => {
  if (!score) return 'text-gray-600';
  if (score >= 3) return 'text-red-600';
- if (score >= 2) return 'text-[#6B7280]';
- return 'text-[#2C4A60]';
+ if (score >= 2) return 'text-gray-500';
+ return 'text-teal-700';
   };
 
   return (
@@ -239,8 +239,8 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  </div>
  )}
  {patient.hasbleedScore && (
- <div className="bg-[#F0F5FA] rounded-lg p-4 text-center">
- <div className="text-xl font-bold text-[#6B7280] mb-2">HAS-BLED: {patient.hasbleedScore}</div>
+ <div className="bg-chrome-50 rounded-lg p-4 text-center">
+ <div className="text-xl font-bold text-gray-500 mb-2">HAS-BLED: {patient.hasbleedScore}</div>
  <p className="text-sm text-gray-600">Bleeding Risk</p>
  </div>
  )}
@@ -289,7 +289,7 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  <div className="grid grid-cols-2 gap-4">
  <div>
  <span className="text-sm text-gray-600">Currently Anticoagulated:</span>
- <p className={`font-medium ${patient.afibDetails.anticoagulation.current ? 'text-[#2C4A60]' : 'text-red-600'}`}>
+ <p className={`font-medium ${patient.afibDetails.anticoagulation.current ? 'text-teal-700' : 'text-red-600'}`}>
  {patient.afibDetails.anticoagulation.current ? 'Yes' : 'No'}
  </p>
  </div>
@@ -349,7 +349,7 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  </div>
  <div className="flex justify-between">
  <span className="text-gray-600">Remote Monitoring:</span>
- <span className={`font-medium ${patient.deviceMonitoring.remoteMonitoring ? 'text-[#2C4A60]' : 'text-red-600'}`}>
+ <span className={`font-medium ${patient.deviceMonitoring.remoteMonitoring ? 'text-teal-700' : 'text-red-600'}`}>
  {patient.deviceMonitoring.remoteMonitoring ? 'Active' : 'Inactive'}
  </span>
  </div>
@@ -367,7 +367,7 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  <div className="bg-white rounded p-3 border">
  <div className="grid grid-cols-3 gap-3 text-center">
  <div>
- <div className="text-lg font-bold text-[#2C4A60]">{patient.deviceMonitoring.therapyDelivery.appropriateShocks}</div>
+ <div className="text-lg font-bold text-teal-700">{patient.deviceMonitoring.therapyDelivery.appropriateShocks}</div>
  <div className="text-xs text-gray-600">Appropriate</div>
  </div>
  <div>
@@ -426,8 +426,8 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  {patient.deviceMonitoring.alerts.map((alert, idx) => (
  <div key={`${alert.type}-${alert.date}`} className={`p-3 rounded border-l-4 ${
  alert.severity === 'critical' ? 'border-red-500 bg-red-50' :
- alert.severity === 'high' ? 'border-[#C8D4DC] bg-[#F0F5FA]' :
- 'border-[#C8D4DC] bg-[#F0F5FA]'
+ alert.severity === 'high' ? 'border-titanium-300 bg-chrome-50' :
+ 'border-titanium-300 bg-chrome-50'
  }`}>
  <div className="flex items-center justify-between mb-1">
  <span className="font-medium text-sm">{alert.type.toUpperCase()} Alert</span>
@@ -453,7 +453,7 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  <div>
  <span className="text-sm text-gray-600">LAAC Status:</span>
  <span className={`ml-2 px-2 py-1 rounded text-sm font-medium ${
- patient.laacStatus === 'eligible' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ patient.laacStatus === 'eligible' ? 'bg-green-50 text-green-600' :
  patient.laacStatus === 'scheduled' ? 'bg-chrome-100 text-chrome-700' :
  patient.laacStatus === 'completed' ? 'bg-arterial-100 text-arterial-700' :
  'bg-red-100 text-red-700'
@@ -481,15 +481,15 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  <h4 className="font-medium text-gray-900 mb-2">LAAC Indication:</h4>
  <div className="text-sm text-gray-700">
  {patient.chaScore && patient.chaScore >= 3 && patient.hasbleedScore && patient.hasbleedScore >= 3 ? (
- <div className="text-[#2C4A60]">
+ <div className="text-teal-700">
  ✓ Strong indication for LAAC: High stroke risk (CHA₂DS₂-VASc ≥3) with high bleeding risk (HAS-BLED ≥3)
  </div>
  ) : patient.afibDetails?.anticoagulation.current === false ? (
- <div className="text-[#2C4A60]">
+ <div className="text-teal-700">
  ✓ LAAC candidate: Contraindication to anticoagulation
  </div>
  ) : (
- <div className="text-[#6B7280]">
+ <div className="text-gray-500">
  ⚠ Consider LAAC: Patient meets some criteria but requires individualized assessment
  </div>
  )}
@@ -535,9 +535,9 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  </div>
 
  {/* Laboratory Results */}
- <div className="bg-[#C8D4DC] rounded-lg p-4">
+ <div className="bg-titanium-300 rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <Droplets className="w-5 h-5 text-[#2C4A60]" />
+ <Droplets className="w-5 h-5 text-teal-700" />
  Laboratory Results
  </h3>
  <div className="grid grid-cols-3 gap-4">
@@ -637,15 +637,15 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  </div>
 
  {/* Recent Clinical Notes */}
- <div className="bg-[#F0F5FA] rounded-lg p-4">
+ <div className="bg-chrome-50 rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <FileText className="w-5 h-5 text-[#6B7280]" />
+ <FileText className="w-5 h-5 text-gray-500" />
  Recent Clinical Notes
  </h3>
  <div className="space-y-2">
  {patient.fullChart.notes.map((note, idx) => (
  <div key={`note-${idx}`} className="flex items-start gap-2">
- <ChevronRight className="w-4 h-4 text-[#6B7280] mt-0.5 flex-shrink-0" />
+ <ChevronRight className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
  <span className="text-sm text-gray-700">{note}</span>
  </div>
  ))}
@@ -701,9 +701,9 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  )}
 
  {/* Action Items */}
- <div className="bg-[#f0f5fa] rounded-lg p-4">
+ <div className="bg-chrome-50 rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <Activity className="w-5 h-5 text-[#2C4A60]" />
+ <Activity className="w-5 h-5 text-teal-700" />
  Action Items & Care Plan
  </h3>
  <div className="space-y-3">
@@ -739,7 +739,7 @@ const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({ patient, onClos
  {/* Action Buttons */}
  <div className="flex gap-3 pt-4 border-t border-gray-200">
  <button 
- className="flex-1 px-4 py-3 bg-[#2C4A60] text-white rounded-lg font-medium hover:bg-[#2C4A60] transition-colors"
+ className="flex-1 px-4 py-3 bg-teal-700 text-white rounded-lg font-medium hover:bg-teal-700 transition-colors"
  onClick={() => {
     toast.info('Begin Care Plan', 'Full EHR integration required for this action.');
  {};

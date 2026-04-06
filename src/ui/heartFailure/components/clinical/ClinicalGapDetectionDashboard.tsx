@@ -117,26 +117,26 @@ function renderSignalDetection(gapId: string, patient: HFGapPatient): React.Reac
             Cross-module dual detection -- unique to TAILRD
           </div>
         </div>
-        <div className="bg-[#f0f4f8] border border-[#C8D4DC] rounded-xl p-4 space-y-2 mt-2">
-          <h5 className="text-sm font-semibold text-[#1A2F4A]">
+        <div className="bg-chrome-50 border border-titanium-300 rounded-xl p-4 space-y-2 mt-2">
+          <h5 className="text-sm font-semibold text-chrome-800">
             ATTR-CM Signal Detection ({metCount}/7 signals detected)
           </h5>
           <ul className="space-y-1">
             {rows.map((r) => (
-              <li key={r.key} className={`text-sm flex gap-2 ${r.met ? 'text-[#2C4A60]' : 'text-red-500'}`}>
+              <li key={r.key} className={`text-sm flex gap-2 ${r.met ? 'text-teal-700' : 'text-red-500'}`}>
                 <span className="font-bold flex-shrink-0">{r.met ? '\u2713' : '\u2717'}</span>
                 <span>
                   {r.label}
                   {r.met
-                    ? <span className="text-[#2C4A60] ml-1">-- {r.matchText}</span>
+                    ? <span className="text-teal-700 ml-1">-- {r.matchText}</span>
                     : <span className="text-red-400 ml-1">-- {r.notMetReason}</span>
                   }
                 </span>
               </li>
             ))}
           </ul>
-          <p className="text-xs text-[#2C4A60] flex items-center gap-1 mt-2">
-            <Zap className="w-3 h-3 text-[#4A6880] flex-shrink-0" />
+          <p className="text-xs text-teal-700 flex items-center gap-1 mt-2">
+            <Zap className="w-3 h-3 text-teal-500 flex-shrink-0" />
             All signals auto-detected from EHR structured fields
           </p>
         </div>
@@ -153,26 +153,26 @@ function renderSignalDetection(gapId: string, patient: HFGapPatient): React.Reac
       return { ...s, met: !!match, matchText: match };
     });
     return (
-      <div className="bg-[#f0f4f8] border border-[#C8D4DC] rounded-xl p-4 space-y-2">
-        <h5 className="text-sm font-semibold text-[#1A2F4A]">
+      <div className="bg-chrome-50 border border-titanium-300 rounded-xl p-4 space-y-2">
+        <h5 className="text-sm font-semibold text-chrome-800">
           ATTR-CM Signal Detection ({metCount}/7 signals detected)
         </h5>
         <ul className="space-y-1">
           {rows.map((r) => (
-            <li key={r.key} className={`text-sm flex gap-2 ${r.met ? 'text-[#2C4A60]' : 'text-red-500'}`}>
+            <li key={r.key} className={`text-sm flex gap-2 ${r.met ? 'text-teal-700' : 'text-red-500'}`}>
               <span className="font-bold flex-shrink-0">{r.met ? '\u2713' : '\u2717'}</span>
               <span>
                 {r.label}
                 {r.met
-                  ? <span className="text-[#2C4A60] ml-1">-- {r.matchText}</span>
+                  ? <span className="text-teal-700 ml-1">-- {r.matchText}</span>
                   : <span className="text-red-400 ml-1">-- {r.notMetReason}</span>
                 }
               </span>
             </li>
           ))}
         </ul>
-        <p className="text-xs text-[#2C4A60] flex items-center gap-1 mt-2">
-          <Zap className="w-3 h-3 text-[#4A6880] flex-shrink-0" />
+        <p className="text-xs text-teal-700 flex items-center gap-1 mt-2">
+          <Zap className="w-3 h-3 text-teal-500 flex-shrink-0" />
           All signals auto-detected from EHR structured fields
         </p>
       </div>
@@ -189,29 +189,29 @@ function renderSignalDetection(gapId: string, patient: HFGapPatient): React.Reac
     });
     const h2fpef = computeH2FPEF(metCount);
     return (
-      <div className="bg-[#f0f4f8] border border-[#C8D4DC] rounded-xl p-4 space-y-2">
-        <h5 className="text-sm font-semibold text-[#1A2F4A]">
+      <div className="bg-chrome-50 border border-titanium-300 rounded-xl p-4 space-y-2">
+        <h5 className="text-sm font-semibold text-chrome-800">
           HFpEF Signal Detection ({metCount}/6 signals)
         </h5>
         <ul className="space-y-1">
           {rows.map((r) => (
-            <li key={r.key} className={`text-sm flex gap-2 ${r.met ? 'text-[#2C4A60]' : 'text-red-500'}`}>
+            <li key={r.key} className={`text-sm flex gap-2 ${r.met ? 'text-teal-700' : 'text-red-500'}`}>
               <span className="font-bold flex-shrink-0">{r.met ? '\u2713' : '\u2717'}</span>
               <span>
                 {r.label}
                 {r.met
-                  ? <span className="text-[#2C4A60] ml-1">-- {r.matchText}</span>
+                  ? <span className="text-teal-700 ml-1">-- {r.matchText}</span>
                   : <span className="text-red-400 ml-1">-- {r.notMetReason}</span>
                 }
               </span>
             </li>
           ))}
         </ul>
-        <div className="mt-2 text-sm font-medium text-[#1A2F4A]">
+        <div className="mt-2 text-sm font-medium text-chrome-800">
           H2FPEF Score: {h2fpef.score} -- {h2fpef.probability}
         </div>
-        <p className="text-xs text-[#2C4A60] flex items-center gap-1 mt-1">
-          <Zap className="w-3 h-3 text-[#4A6880] flex-shrink-0" />
+        <p className="text-xs text-teal-700 flex items-center gap-1 mt-1">
+          <Zap className="w-3 h-3 text-teal-500 flex-shrink-0" />
           All signals auto-detected
         </p>
       </div>
@@ -237,28 +237,28 @@ function renderEligibilityChecker(gapId: string, patient: HFGapPatient): React.R
     ];
     const metCount = criteria.filter((c) => c.met).length;
     return (
-      <div className="bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4 space-y-2">
-        <h5 className="text-sm font-semibold text-[#2C4A60]">
+      <div className="bg-chrome-50 border border-titanium-300 rounded-xl p-4 space-y-2">
+        <h5 className="text-sm font-semibold text-teal-700">
           CHAMPION Criteria ({metCount}/4 met)
         </h5>
         <ul className="space-y-1">
           {criteria.map((c) => (
-            <li key={c.label} className={`text-sm flex gap-2 ${c.met ? 'text-[#2C4A60]' : 'text-red-500'}`}>
+            <li key={c.label} className={`text-sm flex gap-2 ${c.met ? 'text-teal-700' : 'text-red-500'}`}>
               <span className="font-bold flex-shrink-0">{c.met ? '\u2713' : '\u2717'}</span>
               <span>{c.label}{c.detail ? <span className="ml-1">-- {c.detail}</span> : null}</span>
             </li>
           ))}
         </ul>
         {patient.kccqOverallSummary !== undefined && (
-          <div className="text-sm text-[#2C4A60] mt-1">
+          <div className="text-sm text-teal-700 mt-1">
             KCCQ Overall: {patient.kccqOverallSummary}
             {patient.kccqPriorOverallSummary !== undefined && (
               <span> {'\u2193'} from {patient.kccqPriorOverallSummary}</span>
             )}
           </div>
         )}
-        <p className="text-xs text-[#2C4A60] flex items-center gap-1 mt-1">
-          <Zap className="w-3 h-3 text-[#2C4A60] flex-shrink-0" />
+        <p className="text-xs text-teal-700 flex items-center gap-1 mt-1">
+          <Zap className="w-3 h-3 text-teal-700 flex-shrink-0" />
           Eligibility auto-confirmed from clinical data
         </p>
       </div>
@@ -285,20 +285,20 @@ function renderEligibilityChecker(gapId: string, patient: HFGapPatient): React.R
     ];
     const metCount = criteria.filter((c) => c.met).length;
     return (
-      <div className="bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4 space-y-2">
-        <h5 className="text-sm font-semibold text-[#2C4A60]">
+      <div className="bg-chrome-50 border border-titanium-300 rounded-xl p-4 space-y-2">
+        <h5 className="text-sm font-semibold text-teal-700">
           COAPT Eligibility ({metCount}/4 criteria met)
         </h5>
         <ul className="space-y-1">
           {criteria.map((c) => (
-            <li key={c.label} className={`text-sm flex gap-2 ${c.met ? 'text-[#2C4A60]' : 'text-red-500'}`}>
+            <li key={c.label} className={`text-sm flex gap-2 ${c.met ? 'text-teal-700' : 'text-red-500'}`}>
               <span className="font-bold flex-shrink-0">{c.met ? '\u2713' : '\u2717'}</span>
               <span>{c.label} -- {c.detail}</span>
             </li>
           ))}
         </ul>
-        <p className="text-xs text-[#2C4A60] flex items-center gap-1 mt-1">
-          <Zap className="w-3 h-3 text-[#2C4A60] flex-shrink-0" />
+        <p className="text-xs text-teal-700 flex items-center gap-1 mt-1">
+          <Zap className="w-3 h-3 text-teal-700 flex-shrink-0" />
           All criteria auto-checked
         </p>
       </div>
@@ -323,27 +323,27 @@ function renderEligibilityChecker(gapId: string, patient: HFGapPatient): React.R
       { label: 'On GDMT >=3 months', met: gdmtMet },
     ];
     return (
-      <div className="bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4 space-y-2">
-        <h5 className="text-sm font-semibold text-[#2C4A60]">
+      <div className="bg-chrome-50 border border-titanium-300 rounded-xl p-4 space-y-2">
+        <h5 className="text-sm font-semibold text-teal-700">
           ICD Eligibility + DANISH
         </h5>
         <ul className="space-y-1">
           {criteria.map((c) => (
-            <li key={c.label} className={`text-sm flex gap-2 ${c.met ? 'text-[#2C4A60]' : 'text-red-500'}`}>
+            <li key={c.label} className={`text-sm flex gap-2 ${c.met ? 'text-teal-700' : 'text-red-500'}`}>
               <span className="font-bold flex-shrink-0">{c.met ? '\u2713' : '\u2717'}</span>
               <span>{c.label}</span>
             </li>
           ))}
         </ul>
-        <div className="text-sm font-medium text-[#2C4A60] mt-1">
+        <div className="text-sm font-medium text-teal-700 mt-1">
           DANISH Tier: Age {age} &mdash; {danishResult.tier} ({danishResult.hrBenefit})
           <span className="ml-1 inline-flex items-center gap-1 text-xs text-blue-600">
             <Zap className="w-3 h-3 flex-shrink-0" /> Auto-stratified
           </span>
         </div>
-        <p className="text-xs text-[#2C4A60] mt-1">{danishResult.recommendation}</p>
-        <p className="text-xs text-[#2C4A60] flex items-center gap-1 mt-1">
-          <Zap className="w-3 h-3 text-[#2C4A60] flex-shrink-0" />
+        <p className="text-xs text-teal-700 mt-1">{danishResult.recommendation}</p>
+        <p className="text-xs text-teal-700 flex items-center gap-1 mt-1">
+          <Zap className="w-3 h-3 text-teal-700 flex-shrink-0" />
           All criteria auto-computed
         </p>
       </div>
@@ -364,21 +364,21 @@ function renderEligibilityChecker(gapId: string, patient: HFGapPatient): React.R
       diagnosisHTN: hasHTN,
     });
     return (
-      <div className="bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4 space-y-2">
-        <h5 className="text-sm font-semibold text-[#2C4A60]">
+      <div className="bg-chrome-50 border border-titanium-300 rounded-xl p-4 space-y-2">
+        <h5 className="text-sm font-semibold text-teal-700">
           STOP-BANG Risk Assessment
         </h5>
-        <div className="text-sm font-medium text-[#2C4A60]">
+        <div className="text-sm font-medium text-teal-700">
           STOP-BANG: {stopBangResult.score}/8 ({stopBangResult.components.length > 0 ? stopBangResult.components.join(', ') : 'No EHR-derivable components met'}) &mdash; {stopBangResult.risk} risk
           <span className="ml-1 inline-flex items-center gap-1 text-xs text-blue-600">
             <Zap className="w-3 h-3 flex-shrink-0" /> Auto-calculated
           </span>
         </div>
-        <p className="text-xs text-[#2C4A60]">
+        <p className="text-xs text-teal-700">
           S (snoring), T (tiredness), O (observed apnea) require patient-reported data and are not scored from structured EHR fields. Score reflects P, B, A, N, G components only.
         </p>
-        <p className="text-xs text-[#2C4A60] flex items-center gap-1 mt-1">
-          <Zap className="w-3 h-3 text-[#2C4A60] flex-shrink-0" />
+        <p className="text-xs text-teal-700 flex items-center gap-1 mt-1">
+          <Zap className="w-3 h-3 text-teal-700 flex-shrink-0" />
           Auto-calculated from structured EHR data
         </p>
       </div>
@@ -396,19 +396,19 @@ function renderEligibilityChecker(gapId: string, patient: HFGapPatient): React.R
       lvotGradientProvoked: isNaN(provokedVal as number) ? undefined : provokedVal,
     });
     return (
-      <div className="bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4 space-y-2">
-        <h5 className="text-sm font-semibold text-[#2C4A60]">
+      <div className="bg-chrome-50 border border-titanium-300 rounded-xl p-4 space-y-2">
+        <h5 className="text-sm font-semibold text-teal-700">
           LVOT Classification
         </h5>
-        <div className="text-sm font-medium text-[#2C4A60]">
+        <div className="text-sm font-medium text-teal-700">
           LVOT: {restVal != null && !isNaN(restVal) ? `${restVal} mmHg rest` : 'N/A rest'} &middot; {provokedVal != null && !isNaN(provokedVal) ? `${provokedVal} mmHg provoked` : 'N/A provoked'} &mdash; {lvotResult.severity}
           <span className="ml-1 inline-flex items-center gap-1 text-xs text-blue-600">
             <Zap className="w-3 h-3 flex-shrink-0" /> Auto-classified
           </span>
         </div>
-        <p className="text-xs text-[#2C4A60]">{lvotResult.details}</p>
-        <p className="text-xs text-[#2C4A60] flex items-center gap-1 mt-1">
-          <Zap className="w-3 h-3 text-[#2C4A60] flex-shrink-0" />
+        <p className="text-xs text-teal-700">{lvotResult.details}</p>
+        <p className="text-xs text-teal-700 flex items-center gap-1 mt-1">
+          <Zap className="w-3 h-3 text-teal-700 flex-shrink-0" />
           LVOT gradient auto-classified from echocardiographic data
         </p>
       </div>
@@ -482,9 +482,9 @@ function renderGDMTStatus(gapId: string, patient: HFGapPatient): React.ReactNode
       </h5>
       <ul className="space-y-1">
         {pillars.map((p) => (
-          <li key={p.label} className={`text-sm flex gap-2 ${p.met ? 'text-[#2C4A60]' : 'text-red-500'}`}>
+          <li key={p.label} className={`text-sm flex gap-2 ${p.met ? 'text-teal-700' : 'text-red-500'}`}>
             <span className="font-bold flex-shrink-0">{p.met ? '\u2713' : '\u2717'}</span>
-            <span>{p.label}: <span className={p.met ? 'text-[#2C4A60]' : 'text-red-400'}>{p.detail}</span></span>
+            <span>{p.label}: <span className={p.met ? 'text-teal-700' : 'text-red-400'}>{p.detail}</span></span>
           </li>
         ))}
       </ul>
@@ -514,15 +514,15 @@ function renderKCCQTrend(patient: HFGapPatient): React.ReactNode {
   });
 
   return (
-    <div className="bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-3 space-y-1">
-      <div className="text-sm font-medium text-[#6B7280]">
+    <div className="bg-chrome-50 border border-titanium-300 rounded-xl p-3 space-y-1">
+      <div className="text-sm font-medium text-gray-500">
         KCCQ Overall: {overall}
         {physical !== undefined && <span> {'\u00B7'} Physical: {physical}</span>}
         {qol !== undefined && <span> {'\u00B7'} QoL: {qol}</span>}
       </div>
-      <div className="text-sm text-[#6B7280]">{kccqTrendResult.display}</div>
-      <p className="text-xs text-[#6B7280] flex items-center gap-1">
-        <Zap className="w-3 h-3 text-[#6B7280] flex-shrink-0" />
+      <div className="text-sm text-gray-500">{kccqTrendResult.display}</div>
+      <p className="text-xs text-gray-500 flex items-center gap-1">
+        <Zap className="w-3 h-3 text-gray-500 flex-shrink-0" />
         Auto-calculated from EHR flowsheet data
       </p>
     </div>
@@ -596,7 +596,7 @@ function renderPredictiveBadges(gap: HFClinicalGap, pt: HFGapPatient): React.Rea
 
   return (
     <>
-      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${display.colorClass === 'text-red-600' ? 'bg-red-100 text-red-700' : display.colorClass === 'text-[#6B7280]' ? 'bg-[#FAF6E8] text-[#8B6914]' : display.colorClass === 'text-[#2C4A60]' ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-gray-100 text-gray-500'}`}>
+      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${display.colorClass === 'text-red-600' ? 'bg-red-100 text-red-700' : display.colorClass === 'text-gray-500' ? 'bg-amber-50 text-amber-600' : display.colorClass === 'text-teal-700' ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-500'}`}>
         {display.arrow} {display.label}
       </span>
       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${horizonDisplay.bgClass} ${horizonDisplay.textClass}`}>
@@ -617,8 +617,8 @@ function renderHFPredictedEvent(gapId: string, pt: HFGapPatient): React.ReactNod
       const dirLabel = trajectory.direction === 'improving' ? 'improving' : trajectory.direction === 'stable' ? 'stable' : 'declining';
       const stableBelowThreshold = (trajectory.direction === 'stable' || trajectory.direction === 'worsening_slow') && lvef < 35;
       return (
-        <div className="mt-2 px-3 py-2 bg-[#f0f4f8]/50 border border-[#F0F5FA] rounded-lg">
-          <div className="text-xs text-[#1A2F4A]">
+        <div className="mt-2 px-3 py-2 bg-chrome-50/50 border border-chrome-50 rounded-lg">
+          <div className="text-xs text-chrome-800">
             <span className="font-semibold">Predicted event:</span>{' '}
             LVEF trajectory: {lvef}% (was {priorLvef}%) &mdash; {dirLabel}.{' '}
             {stableBelowThreshold
@@ -641,8 +641,8 @@ function renderHFPredictedEvent(gapId: string, pt: HFGapPatient): React.ReactNod
     const hosps = pt.keyValues['HF Hospitalizations'];
     const monthsToDeterioration = kccqRate && kccqRate > 0 ? Math.round(12 / kccqRate) : null;
     return (
-      <div className="mt-2 px-3 py-2 bg-[#f0f4f8]/50 border border-[#F0F5FA] rounded-lg">
-        <div className="text-xs text-[#1A2F4A]">
+      <div className="mt-2 px-3 py-2 bg-chrome-50/50 border border-chrome-50 rounded-lg">
+        <div className="text-xs text-chrome-800">
           <span className="font-semibold">Predicted event:</span>{' '}
           LVEF {lvef ?? '?'}%{kccqRate ? ` + KCCQ declining ${kccqRate.toFixed(1)} pts/month` : ''}{hosps ? ` + ${hosps}` : ''} &mdash;{' '}
           {monthsToDeterioration
@@ -680,8 +680,8 @@ function renderHFPredictedEvent(gapId: string, pt: HFGapPatient): React.ReactNod
         const monthsToHighRisk = ratePerMonth > 0 ? Math.round((pt.kccqOverallSummary - 25) / ratePerMonth) : null;
         return (
           <>
-            <div className="mt-2 px-3 py-2 bg-[#f0f4f8]/50 border border-[#F0F5FA] rounded-lg">
-              <div className="text-xs text-[#1A2F4A]">
+            <div className="mt-2 px-3 py-2 bg-chrome-50/50 border border-chrome-50 rounded-lg">
+              <div className="text-xs text-chrome-800">
                 <span className="font-semibold">Predicted event:</span>{' '}
                 At current KCCQ decline rate ({ratePerMonth.toFixed(1)} pts/month), hospitalization probability increases 3x
                 {monthsToHighRisk && monthsToHighRisk > 0 ? ` within ${monthsToHighRisk} months` : ' imminently'}.
@@ -726,8 +726,8 @@ function renderHFRevenueTiming(gap: HFClinicalGap, pt: HFGapPatient): React.Reac
   });
 
   return (
-    <div className="mt-2 px-3 py-2 bg-[#F0F5FA]/50 border border-[#C8D4DC] rounded-lg">
-      <div className="text-xs text-[#2C4A60]">
+    <div className="mt-2 px-3 py-2 bg-chrome-50/50 border border-titanium-300 rounded-lg">
+      <div className="text-xs text-teal-700">
         <span className="font-semibold">Revenue timing:</span>{' '}
         {formatDollar(revenue.revenueThisQuarter)} actionable this quarter &middot;{' '}
         {formatDollar(revenue.revenueAtRiskIfDeferred)} at risk if deferred &middot;{' '}
@@ -830,13 +830,13 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
 
   const priorityColor = (p: string) => {
     if (p === 'high') return 'bg-red-50 border-red-300 text-red-700';
-    if (p === 'medium') return 'bg-[#F0F5FA] border-[#C8D4DC] text-[#6B7280]';
-    return 'bg-[#F0F7F4] border-[#D8EDE6] text-[#2C4A60]';
+    if (p === 'medium') return 'bg-chrome-50 border-titanium-300 text-gray-500';
+    return 'bg-green-50 border-green-100 text-teal-700';
   };
 
   const categoryColor = (c: string) =>
     c === 'Discovery'
-      ? 'bg-[#F0F5FA] text-[#1A2F4A]'
+      ? 'bg-chrome-50 text-chrome-800'
       : c === 'Gap'
       ? 'bg-red-100 text-red-800'
       : c === 'Safety'
@@ -939,12 +939,12 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
             </div>
             <div className="text-2xl font-bold text-red-800">{filteredPatientCount.toLocaleString()}</div>
           </div>
-          <div className="bg-[#F0F7F4] border border-[#D8EDE6] rounded-xl p-4">
+          <div className="bg-green-50 border border-green-100 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
-              <DollarSign className="w-4 h-4 text-[#2C4A60]" />
-              <span className="text-xs font-semibold text-[#2C4A60] uppercase tracking-wide">Total Opportunity</span>
+              <DollarSign className="w-4 h-4 text-teal-700" />
+              <span className="text-xs font-semibold text-teal-700 uppercase tracking-wide">Total Opportunity</span>
             </div>
-            <div className="text-2xl font-bold text-[#2C4A60]">
+            <div className="text-2xl font-bold text-teal-700">
               ${(filteredOpportunity / 1000000).toFixed(1)}M
             </div>
           </div>
@@ -1047,7 +1047,7 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
                       <span className="font-semibold text-titanium-900">{gap.patientCount}</span> patients
                     </span>
                     <span className="text-sm text-titanium-600">
-                      <span className="font-semibold text-[#2C4A60]">${(gap.dollarOpportunity / 1000000).toFixed(1)}M</span> opportunity
+                      <span className="font-semibold text-teal-700">${(gap.dollarOpportunity / 1000000).toFixed(1)}M</span> opportunity
                     </span>
                   </div>
                   {/* Two-stream value display for ATTR-CM */}
@@ -1067,13 +1067,13 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
                   )}
                   {gap.whyMissed && (
                     <div className="mt-2 text-xs text-titanium-500 italic flex items-start gap-1.5">
-                      <Search className="w-3 h-3 text-[#4A6880] flex-shrink-0 mt-0.5" />
+                      <Search className="w-3 h-3 text-teal-500 flex-shrink-0 mt-0.5" />
                       <span>Why standard systems miss this: {gap.whyMissed}</span>
                     </div>
                   )}
                   {gap.category === 'Discovery' && (
                     <div className="flex items-center gap-1.5 mt-1">
-                      <span className="text-xs font-semibold text-[#2C4A60]">{'\u2B21'} Discovery — Net new patients {'\u00B7'} Never previously identified</span>
+                      <span className="text-xs font-semibold text-teal-700">{'\u2B21'} Discovery — Net new patients {'\u00B7'} Never previously identified</span>
                     </div>
                   )}
                 </div>
@@ -1101,19 +1101,19 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
                         </div>
                         <div className="flex items-center gap-4 text-xs">
                           <span className="text-red-600 font-medium">{'\u2193'} {dist.worseningRapid} worsening rapidly</span>
-                          <span className="text-[#6B7280] font-medium">{'\u2198'} {dist.worseningSlow} worsening slowly</span>
+                          <span className="text-gray-500 font-medium">{'\u2198'} {dist.worseningSlow} worsening slowly</span>
                           <span className="text-gray-500 font-medium">{'\u2192'} {dist.stable} stable</span>
-                          <span className="text-[#2C4A60] font-medium">{'\u2197'} {dist.improving} improving</span>
+                          <span className="text-teal-700 font-medium">{'\u2197'} {dist.improving} improving</span>
                         </div>
                         <div className="flex h-2 rounded-full overflow-hidden mt-2">
                           <div className="bg-red-400" style={{ width: `${(dist.worseningRapid / dist.total) * 100}%` }} />
-                          <div className="bg-[#F0F5FA]" style={{ width: `${(dist.worseningSlow / dist.total) * 100}%` }} />
+                          <div className="bg-chrome-50" style={{ width: `${(dist.worseningSlow / dist.total) * 100}%` }} />
                           <div className="bg-gray-300" style={{ width: `${(dist.stable / dist.total) * 100}%` }} />
-                          <div className="bg-[#C8D4DC]" style={{ width: `${(dist.improving / dist.total) * 100}%` }} />
+                          <div className="bg-titanium-300" style={{ width: `${(dist.improving / dist.total) * 100}%` }} />
                         </div>
                         <div className="flex items-center gap-4 mt-2 text-xs text-titanium-600">
-                          <span>Q1 opportunity: <span className="font-bold text-[#2C4A60]">{formatDollar(q1Rev)}</span> ({dist.worseningRapid} patients -- highest urgency)</span>
-                          <span>Full population: <span className="font-bold text-[#2C4A60]">{formatDollar(gap.dollarOpportunity)}</span></span>
+                          <span>Q1 opportunity: <span className="font-bold text-teal-700">{formatDollar(q1Rev)}</span> ({dist.worseningRapid} patients -- highest urgency)</span>
+                          <span>Full population: <span className="font-bold text-teal-700">{formatDollar(gap.dollarOpportunity)}</span></span>
                         </div>
                       </div>
                     );
@@ -1122,13 +1122,13 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
                   {/* Detection criteria */}
                   <div>
                     <h4 className="font-semibold text-titanium-800 mb-2 flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-[#6B7280]" />
+                      <AlertTriangle className="w-4 h-4 text-gray-500" />
                       Detection Criteria
                     </h4>
                     <ul className="space-y-1">
                       {gap.detectionCriteria.map((c) => (
                         <li key={c} className="text-sm text-titanium-700 flex gap-2">
-                          <CheckCircle className="w-3.5 h-3.5 text-[#2C4A60] flex-shrink-0 mt-0.5" />
+                          <CheckCircle className="w-3.5 h-3.5 text-teal-700 flex-shrink-0 mt-0.5" />
                           {c}
                         </li>
                       ))}
@@ -1206,13 +1206,13 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
                                   {pt.mrn} • Age {pt.age}
                                 </span>
                                 {pt.tier && (
-                                  <span className="ml-2 text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-0.5 rounded-full">
+                                  <span className="ml-2 text-xs bg-amber-50 text-amber-600 px-2 py-0.5 rounded-full">
                                     {pt.tier}
                                   </span>
                                 )}
                                 {renderPredictiveBadges(gap, pt)}
                                 {gap.category === 'Discovery' && (
-                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-[#F0F7F4] text-[#2D6147] px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow, quality program, or EHR alert. TAILRD identified this patient by assembling disconnected signals across care settings.">
+                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow, quality program, or EHR alert. TAILRD identified this patient by assembling disconnected signals across care settings.">
                                     <Radar className="w-3 h-3" />
                                     First identified by TAILRD
                                   </span>
@@ -1228,7 +1228,7 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
                                   const improved = delta >= 5;
                                   const declined = delta <= -5;
                                   const arrow = improved ? '\u2191' : declined ? '\u2193' : '\u2192';
-                                  const colorClass = improved ? 'text-[#2C4A60]' : declined ? 'text-red-700' : 'text-titanium-500';
+                                  const colorClass = improved ? 'text-teal-700' : declined ? 'text-red-700' : 'text-titanium-500';
                                   return (
                                     <div className={`text-xs font-medium ${colorClass} bg-titanium-50 border border-titanium-200 rounded-lg px-3 py-1.5 inline-flex items-center gap-1`}>
                                       <TrendingUp className="w-3 h-3 flex-shrink-0" />
@@ -1272,9 +1272,9 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
                                 {renderHFPredictedEvent(gap.id, pt)}
                                 {renderHFRevenueTiming(gap, pt)}
                                 {gap.whyTailrd && (
-                                  <div className="bg-[#f0f4f8] border border-[#C8D4DC] rounded-xl p-3 mt-2">
-                                    <p className="text-xs font-semibold text-[#2C4A60] mb-1">Why TAILRD identified this patient:</p>
-                                    <p className="text-sm text-[#2C4A60]">{gap.whyTailrd}</p>
+                                  <div className="bg-chrome-50 border border-titanium-300 rounded-xl p-3 mt-2">
+                                    <p className="text-xs font-semibold text-teal-700 mb-1">Why TAILRD identified this patient:</p>
+                                    <p className="text-sm text-teal-700">{gap.whyTailrd}</p>
                                   </div>
                                 )}
                               </div>

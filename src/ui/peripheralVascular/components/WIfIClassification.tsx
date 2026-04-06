@@ -118,8 +118,8 @@ const WIfIClassification: React.FC = () => {
 
   const getRiskColor = (risk: string) => {
  switch (risk) {
- case 'Very Low': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
- case 'Low': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'Very Low': return 'text-teal-700 bg-chrome-50 border-titanium-300';
+ case 'Low': return 'text-teal-700 bg-chrome-50 border-titanium-300';
  case 'Moderate': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
  case 'High': return 'text-medical-red-600 bg-medical-red-50 border-medical-red-200';
  case 'Very High': return 'text-red-800 bg-red-100 border-red-300';
@@ -132,7 +132,7 @@ const WIfIClassification: React.FC = () => {
  case 'Immediate': return 'text-red-800 bg-red-100 border-red-300';
  case 'Urgent': return 'text-medical-red-600 bg-medical-red-50 border-medical-red-200';
  case 'Timely': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
- case 'Routine': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'Routine': return 'text-teal-700 bg-chrome-50 border-titanium-300';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };
@@ -161,7 +161,7 @@ const WIfIClassification: React.FC = () => {
   return (
  <div className="metal-card p-8">
  <div className="flex items-center gap-3 mb-6">
- <Calculator className="w-8 h-8 text-[#2C4A60]" />
+ <Calculator className="w-8 h-8 text-teal-700" />
  <div>
  <h2 className="text-2xl font-bold text-titanium-900 font-sf">WIfI Classification</h2>
  <p className="text-titanium-600">Wound, Ischemia, and foot Infection Assessment</p>
@@ -179,7 +179,7 @@ const WIfIClassification: React.FC = () => {
  <select
  value={inputs.woundGrade}
  onChange={(e) => updateInput('woundGrade', parseInt(e.target.value))}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-[#2C4A60] focus:border-[#2C4A60]"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-[#2C4A60] focus:border-teal-700"
  >
  {woundOptions.map(option => (
  <option key={option.value} value={option.value}>
@@ -196,7 +196,7 @@ const WIfIClassification: React.FC = () => {
  <select
  value={inputs.ischemiaGrade}
  onChange={(e) => updateInput('ischemiaGrade', parseInt(e.target.value))}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-[#2C4A60] focus:border-[#2C4A60]"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-[#2C4A60] focus:border-teal-700"
  >
  {ischemiaOptions.map(option => (
  <option key={option.value} value={option.value}>
@@ -213,7 +213,7 @@ const WIfIClassification: React.FC = () => {
  <select
  value={inputs.footInfectionGrade}
  onChange={(e) => updateInput('footInfectionGrade', parseInt(e.target.value))}
- className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-[#2C4A60] focus:border-[#2C4A60]"
+ className="w-full px-3 py-2 border border-titanium-300 rounded-lg focus:ring-2 focus:ring-[#2C4A60] focus:border-teal-700"
  >
  {infectionOptions.map(option => (
  <option key={option.value} value={option.value}>

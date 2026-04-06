@@ -112,9 +112,9 @@ const BaseTable: React.FC<BaseTableProps> = ({
   };
 
   const getScoreColor = (value: number, thresholds = [80, 70, 60]): string => {
- if (value >= thresholds[0]) return "text-[#2C4A60] bg-[#F0F5FA]";
+ if (value >= thresholds[0]) return "text-teal-700 bg-chrome-50";
  if (value >= thresholds[1]) return "text-chrome-600 bg-chrome-50";
- if (value >= thresholds[2]) return "text-[#8B6914] bg-[#FAF6E8]";
+ if (value >= thresholds[2]) return "text-amber-600 bg-amber-50";
  return "text-arterial-600 bg-arterial-50";
   };
 
@@ -274,9 +274,9 @@ const BaseTable: React.FC<BaseTableProps> = ({
 
 // Utility function for score coloring - exported for reuse
 export const getScoreColor = (value: number, thresholds = [80, 70, 60]): string => {
-  if (value >= thresholds[0]) return "text-[#2C4A60] bg-[#F0F5FA]";
+  if (value >= thresholds[0]) return "text-teal-700 bg-chrome-50";
   if (value >= thresholds[1]) return "text-chrome-600 bg-chrome-50";
-  if (value >= thresholds[2]) return "text-[#8B6914] bg-[#FAF6E8]";
+  if (value >= thresholds[2]) return "text-amber-600 bg-amber-50";
   return "text-arterial-600 bg-arterial-50";
 };
 

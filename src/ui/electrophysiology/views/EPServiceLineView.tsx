@@ -27,27 +27,27 @@ const ElectrophysiologyAnalytics: React.FC = () => (
       <div className="metal-card p-6">
         <h4 className="text-sm font-medium text-titanium-600 mb-2">AFib Ablations</h4>
         <div className="text-2xl font-bold text-titanium-900">1,234</div>
-        <div className="text-sm text-[#2C4A60]">+14.7% vs last quarter</div>
+        <div className="text-sm text-teal-700">+14.7% vs last quarter</div>
       </div>
       <div className="metal-card p-6">
         <h4 className="text-sm font-medium text-titanium-600 mb-2">LAAC Procedures</h4>
         <div className="text-2xl font-bold text-titanium-900">456</div>
-        <div className="text-sm text-[#2C4A60]">+28.3% vs last quarter</div>
+        <div className="text-sm text-teal-700">+28.3% vs last quarter</div>
       </div>
       <div className="metal-card p-6">
         <h4 className="text-sm font-medium text-titanium-600 mb-2">Device Implants</h4>
         <div className="text-2xl font-bold text-titanium-900">789</div>
-        <div className="text-sm text-[#2C4A60]">+9.2% vs last quarter</div>
+        <div className="text-sm text-teal-700">+9.2% vs last quarter</div>
       </div>
       <div className="metal-card p-6">
         <h4 className="text-sm font-medium text-titanium-600 mb-2">Lead Extractions</h4>
         <div className="text-2xl font-bold text-titanium-900">123</div>
-        <div className="text-sm text-[#2C4A60]">+6.5% vs last quarter</div>
+        <div className="text-sm text-teal-700">+6.5% vs last quarter</div>
       </div>
     </div>
     <div className="metal-card p-8">
       <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
-        <Target className="w-5 h-5 text-[#2C4A60]" />
+        <Target className="w-5 h-5 text-teal-700" />
         Analytics Overview
       </h3>
       <p className="text-titanium-600 mb-6">Comprehensive electrophysiology analytics including AFib ablations, LAAC procedures, device implantations, arrhythmia management, and anticoagulation optimization.</p>
@@ -74,7 +74,7 @@ const ArrhythmiaManagement: React.FC = () => (
   <div className="space-y-6">
     <div className="metal-card p-8">
       <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
-        <Activity className="w-5 h-5 text-[#2C4A60]" />
+        <Activity className="w-5 h-5 text-teal-700" />
         Arrhythmia Management Analytics
       </h3>
       <p className="text-titanium-600 mb-6">Comprehensive arrhythmia management and treatment optimization analytics.</p>
@@ -97,7 +97,7 @@ const EPProviderPerformance: React.FC = () => (
   <div className="space-y-6">
     <div className="metal-card p-8">
       <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
-        <Users className="w-5 h-5 text-[#2C4A60]" />
+        <Users className="w-5 h-5 text-teal-700" />
         EP Provider Performance
       </h3>
       <p className="text-titanium-600 mb-6">Individual electrophysiologist performance metrics and outcomes tracking.</p>
@@ -120,7 +120,7 @@ const EPQualityMetrics: React.FC = () => (
   <div className="space-y-6">
     <div className="metal-card p-8">
       <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
-        <Award className="w-5 h-5 text-[#2C4A60]" />
+        <Award className="w-5 h-5 text-teal-700" />
         EP Quality Metrics
       </h3>
       <p className="text-titanium-600 mb-6">Comprehensive quality indicators for electrophysiology programs.</p>

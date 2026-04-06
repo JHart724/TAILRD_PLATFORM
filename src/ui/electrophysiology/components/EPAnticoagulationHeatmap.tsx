@@ -25,10 +25,10 @@ const EPAnticoagulationHeatmap: React.FC<EPAnticoagulationHeatmapProps> = ({ dat
   );
 
   const getHeatColor = (score: number): string => {
- if (score >= 80) return "bg-[#F0F5FA]";
- if (score >= 75) return "bg-[#C8D4DC]";
- if (score >= 70) return "bg-[#F0F5FA]";
- if (score >= 65) return "bg-[#F0F5FA]";
+ if (score >= 80) return "bg-chrome-50";
+ if (score >= 75) return "bg-titanium-300";
+ if (score >= 70) return "bg-chrome-50";
+ if (score >= 65) return "bg-chrome-50";
  return "bg-red-500";
   };
 
@@ -67,11 +67,11 @@ const EPAnticoagulationHeatmap: React.FC<EPAnticoagulationHeatmapProps> = ({ dat
  <span>Performance Key:</span>
  <div className="flex gap-2">
  <div className="flex items-center gap-1">
- <div className="w-3 h-3 rounded bg-[#F0F5FA]"></div>
+ <div className="w-3 h-3 rounded bg-chrome-50"></div>
  <span>≥80%</span>
  </div>
  <div className="flex items-center gap-1">
- <div className="w-3 h-3 rounded bg-[#F0F5FA]"></div>
+ <div className="w-3 h-3 rounded bg-chrome-50"></div>
  <span>70-79%</span>
  </div>
  <div className="flex items-center gap-1">

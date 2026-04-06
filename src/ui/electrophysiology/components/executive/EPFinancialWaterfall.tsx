@@ -137,7 +137,7 @@ const EPFinancialWaterfall: React.FC = () => {
  <div className="text-xs text-titanium-600 mb-1">
  Avg per Patient
  </div>
- <div className="text-lg font-bold text-[#2C4A60]">
+ <div className="text-lg font-bold text-teal-700">
  {formatCurrency(item.avgPerPatient)}
  </div>
  </div>
@@ -156,17 +156,17 @@ const EPFinancialWaterfall: React.FC = () => {
 
  {/* Summary Cards */}
  <div className="grid grid-cols-3 gap-4 pt-6 border-t border-titanium-200">
- <div className="p-4 rounded-lg bg-[#F0F5FA]">
+ <div className="p-4 rounded-lg bg-chrome-50">
  <div className="flex items-center gap-2 mb-2">
- <TrendingUp className="w-4 h-4 text-[#2C4A60]" />
- <div className="text-xs font-semibold text-[#2C4A60] uppercase">
+ <TrendingUp className="w-4 h-4 text-teal-700" />
+ <div className="text-xs font-semibold text-teal-700 uppercase">
  High Priority
  </div>
  </div>
- <div className="text-2xl font-bold text-[#2C4A60]">
+ <div className="text-2xl font-bold text-teal-700">
  {formatCurrency(waterfallData[2].value)}
  </div>
- <div className="text-xs text-[#2C4A60] mt-1">
+ <div className="text-xs text-teal-700 mt-1">
  Device Therapy
  </div>
  </div>
@@ -184,17 +184,17 @@ const EPFinancialWaterfall: React.FC = () => {
  <div className="text-xs text-porsche-700 mt-1">Anticoagulation</div>
  </div>
 
- <div className="p-4 rounded-lg bg-[#F0F5FA]">
+ <div className="p-4 rounded-lg bg-chrome-50">
  <div className="flex items-center gap-2 mb-2">
- <AlertCircle className="w-4 h-4 text-[#6B7280]" />
- <div className="text-xs font-semibold text-[#6B7280] uppercase">
+ <AlertCircle className="w-4 h-4 text-gray-500" />
+ <div className="text-xs font-semibold text-gray-500 uppercase">
  Avg ROI
  </div>
  </div>
- <div className="text-2xl font-bold text-[#6B7280]">
+ <div className="text-2xl font-bold text-gray-500">
  {formatCurrency(totalOpportunity / totalPatients)}
  </div>
- <div className="text-xs text-[#6B7280] mt-1">Per Patient</div>
+ <div className="text-xs text-gray-500 mt-1">Per Patient</div>
  </div>
  </div>
  </div>

@@ -81,9 +81,9 @@ const ReferralTracker: React.FC = () => {
 
   const getStatusIcon = (status: string) => {
  const icons = {
- pending: <Clock className="w-4 h-4 text-[#6B7280]" />,
+ pending: <Clock className="w-4 h-4 text-gray-500" />,
  scheduled: <CheckCircle className="w-4 h-4 text-chrome-700" />,
- completed: <CheckCircle className="w-4 h-4 text-[#2C4A60]" />,
+ completed: <CheckCircle className="w-4 h-4 text-teal-700" />,
  cancelled: <XCircle className="w-4 h-4 text-titanium-500" />,
  overdue: <AlertTriangle className="w-4 h-4 text-red-700" />
  };
@@ -92,9 +92,9 @@ const ReferralTracker: React.FC = () => {
 
   const getStatusBadge = (status: string) => {
  const colors = {
- pending: 'bg-[#FAF6E8] text-[#8B6914] border-[#C8D4DC]',
+ pending: 'bg-amber-50 text-amber-600 border-titanium-300',
  scheduled: 'bg-chrome-100 text-chrome-900 border-chrome-400',
- completed: 'bg-[#F0F7F4] text-[#2D6147] border-[#2C4A60]',
+ completed: 'bg-green-50 text-green-600 border-teal-700',
  cancelled: 'bg-titanium-100 text-titanium-700 border-titanium-400',
  overdue: 'bg-red-100 text-red-900 border-red-400'
  };
@@ -199,7 +199,7 @@ const ReferralTracker: React.FC = () => {
  {referral.completedDate && (
  <div>
  <span className="text-titanium-600">Completed:</span>{' '}
- <span className="font-medium text-[#2C4A60]">
+ <span className="font-medium text-teal-700">
  {new Date(referral.completedDate).toLocaleDateString()}
  </span>
  </div>
@@ -209,7 +209,7 @@ const ReferralTracker: React.FC = () => {
  {referral.notes && (
  <div className="mb-3">
  <div className="text-xs text-titanium-600 mb-1">Notes</div>
- <div className="text-sm text-[#8B6914] bg-[#FAF6E8] p-3 rounded-lg border border-[#C8D4DC]">
+ <div className="text-sm text-amber-600 bg-amber-50 p-3 rounded-lg border border-titanium-300">
  {referral.notes}
  </div>
  </div>
@@ -221,7 +221,7 @@ const ReferralTracker: React.FC = () => {
  Follow Up
  </button>
  {referral.status === 'pending' && (
- <button className="px-4 py-2 bg-gradient-to-r from-[#F0F5FA]/80 to-[#C8D4DC]/80 text-[#2C4A60] text-sm rounded-lg hover:from-[#C8D4DC]/90 hover:to-[#C8D4DC]/90 transition-all duration-300 transform hover:scale-105 hover:shadow-md font-medium border border-[#C8D4DC]/40">
+ <button className="px-4 py-2 bg-gradient-to-r from-[#F0F5FA]/80 to-[#C8D4DC]/80 text-teal-700 text-sm rounded-lg hover:from-[#C8D4DC]/90 hover:to-[#C8D4DC]/90 transition-all duration-300 transform hover:scale-105 hover:shadow-md font-medium border border-titanium-300/40">
  Mark Scheduled
  </button>
  )}

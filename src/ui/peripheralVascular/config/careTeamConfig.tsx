@@ -82,7 +82,7 @@ const PeripheralDashboard: React.FC = () => (
  
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
  <div className="flex items-center gap-3">
- <TrendingUp className="w-8 h-8 text-[#2C4A60]" />
+ <TrendingUp className="w-8 h-8 text-teal-700" />
  <div>
  <div className="text-2xl font-bold text-titanium-900">85%</div>
  <div className="text-sm text-titanium-600">Limb Salvage Rate</div>
@@ -158,7 +158,7 @@ const PeripheralPatients: React.FC = () => (
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.riskLevel === 'High' ? 'bg-medical-red-100 text-medical-red-700' :
  patient.riskLevel === 'Moderate' ? 'bg-crimson-100 text-crimson-700' :
- 'bg-[#F0F7F4] text-[#2D6147]'
+ 'bg-green-50 text-green-600'
  }`}>
  {patient.riskLevel}
  </span>
@@ -167,7 +167,7 @@ const PeripheralPatients: React.FC = () => (
  <td className="py-3 px-4 text-titanium-700">{patient.woundStage}</td>
  <td className="py-3 px-4 text-titanium-700">{patient.nextAppt}</td>
  <td className="py-3 px-4">
- <span className="px-2 py-1 bg-[#F0F7F4] text-[#2D6147] rounded-full text-xs font-medium">
+ <span className="px-2 py-1 bg-green-50 text-green-600 rounded-full text-xs font-medium">
  {patient.status}
  </span>
  </td>
@@ -246,7 +246,7 @@ const PeripheralClinicalCollaboration: React.FC = () => (
  </div>
  <div className="text-sm text-titanium-700">{member.role}</div>
  <div className="text-xs text-titanium-600">{member.specialty}</div>
- <div className="text-xs text-[#6B7280] mt-1 font-medium">{member.expertise}</div>
+ <div className="text-xs text-gray-500 mt-1 font-medium">{member.expertise}</div>
  <div className="mt-2">
  <span className="text-xs text-titanium-500">{member.consultations} clinical consultations YTD</span>
  </div>
@@ -258,7 +258,7 @@ const PeripheralClinicalCollaboration: React.FC = () => (
  {/* Clinical Decision Pathways */}
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Target className="w-5 h-5 text-[#6B7280]" />
+ <Target className="w-5 h-5 text-gray-500" />
  Evidence-Based Clinical Pathways
  </h4>
  <div className="space-y-3">
@@ -271,14 +271,14 @@ const PeripheralClinicalCollaboration: React.FC = () => (
  <div key={pathway.pathway} className={`flex items-center justify-between p-4 rounded-lg border ${
  pathway.indication === 'Peripheral Artery Disease' ? 'bg-chrome-50 border-chrome-200' :
  pathway.indication === 'CLI/CLTI' ? 'bg-red-50 border-red-200' :
- pathway.indication === 'Diabetic Foot Ulcer' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
+ pathway.indication === 'Diabetic Foot Ulcer' ? 'bg-chrome-50 border-titanium-300' :
  'bg-arterial-50 border-arterial-200'
  }`}>
  <div>
  <div className={`font-medium ${
  pathway.indication === 'Peripheral Artery Disease' ? 'text-chrome-900' :
  pathway.indication === 'CLI/CLTI' ? 'text-red-900' :
- pathway.indication === 'Diabetic Foot Ulcer' ? 'text-[#6B7280]' :
+ pathway.indication === 'Diabetic Foot Ulcer' ? 'text-gray-500' :
  'text-arterial-900'
  }`}>
  {pathway.pathway}
@@ -290,7 +290,7 @@ const PeripheralClinicalCollaboration: React.FC = () => (
  <div className={`text-xs px-2 py-1 rounded-full ${
  pathway.indication === 'Peripheral Artery Disease' ? 'bg-chrome-100 text-chrome-700' :
  pathway.indication === 'CLI/CLTI' ? 'bg-red-100 text-red-700' :
- pathway.indication === 'Diabetic Foot Ulcer' ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ pathway.indication === 'Diabetic Foot Ulcer' ? 'bg-amber-50 text-amber-600' :
  'bg-arterial-100 text-arterial-700'
  }`}>
  {pathway.consultation}
@@ -306,9 +306,9 @@ const PeripheralClinicalCollaboration: React.FC = () => (
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">Clinical Quality Outcomes</h4>
  <div className="space-y-4">
- <div className="text-center p-4 bg-[#C8D4DC] rounded-lg">
- <div className="text-2xl font-bold text-[#2C4A60]">85%</div>
- <div className="text-xs text-[#2C4A60]">Limb Salvage Rate</div>
+ <div className="text-center p-4 bg-titanium-300 rounded-lg">
+ <div className="text-2xl font-bold text-teal-700">85%</div>
+ <div className="text-xs text-teal-700">Limb Salvage Rate</div>
  </div>
  <div className="text-center p-4 bg-chrome-50 rounded-lg">
  <div className="text-2xl font-bold text-chrome-600">92%</div>
@@ -318,9 +318,9 @@ const PeripheralClinicalCollaboration: React.FC = () => (
  <div className="text-2xl font-bold text-arterial-600">94%</div>
  <div className="text-xs text-arterial-700">Clinical Consensus Rate</div>
  </div>
- <div className="text-center p-4 bg-[#F0F5FA] rounded-lg">
- <div className="text-2xl font-bold text-[#6B7280]">96%</div>
- <div className="text-xs text-[#6B7280]">Guideline Adherence</div>
+ <div className="text-center p-4 bg-chrome-50 rounded-lg">
+ <div className="text-2xl font-bold text-gray-500">96%</div>
+ <div className="text-xs text-gray-500">Guideline Adherence</div>
  </div>
  </div>
  </div>
@@ -337,12 +337,12 @@ const PeripheralClinicalCollaboration: React.FC = () => (
  ].map((consult, index) => (
  <div key={consult.consultation} className={`p-3 rounded-lg border ${
  consult.urgency === 'urgent' ? 'bg-red-50 border-red-200' :
- consult.urgency === 'priority' ? 'bg-[#F0F5FA] border-[#C8D4DC]' :
+ consult.urgency === 'priority' ? 'bg-chrome-50 border-titanium-300' :
  'bg-chrome-50 border-chrome-200'
  }`}>
  <div className={`font-medium ${
  consult.urgency === 'urgent' ? 'text-red-900' :
- consult.urgency === 'priority' ? 'text-[#6B7280]' :
+ consult.urgency === 'priority' ? 'text-gray-500' :
  'text-chrome-900'
  }`}>
  {consult.consultation}
@@ -378,14 +378,14 @@ const PeripheralClinicalCollaboration: React.FC = () => (
  <div className="text-xs text-red-600">Critical limb ischemia evaluation</div>
  </button>
  <button 
- className="w-full p-3 text-left bg-[#F0F5FA] hover:bg-[#F0F5FA] rounded-lg transition-colors"
+ className="w-full p-3 text-left bg-chrome-50 hover:bg-chrome-50 rounded-lg transition-colors"
  onClick={() => {
  // Action handler - implementation pending
  {};
  }}
  >
- <div className="font-medium text-[#6B7280]">PAD Guidelines</div>
- <div className="text-xs text-[#6B7280]">Evidence-based recommendations</div>
+ <div className="font-medium text-gray-500">PAD Guidelines</div>
+ <div className="text-xs text-gray-500">Evidence-based recommendations</div>
  </button>
  <button className="w-full p-3 text-left bg-arterial-50 hover:bg-arterial-100 rounded-lg transition-colors">
  <div className="font-medium text-arterial-900">Multidisciplinary Consultation</div>

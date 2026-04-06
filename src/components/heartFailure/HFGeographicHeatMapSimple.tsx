@@ -320,13 +320,13 @@ export const HFGeographicHeatMapSimple: React.FC = () => {
  </div>
  </div>
 
- <div className="bg-[#C8D4DC] rounded-lg p-4 border border-[#2C4A60]">
+ <div className="bg-titanium-300 rounded-lg p-4 border border-teal-700">
  <div className="flex items-center mb-2">
- <Heart className="w-5 h-5 text-[#2C4A60] mr-2" />
- <span className="text-sm font-medium text-[#2C4A60]">GDMT Optimized</span>
+ <Heart className="w-5 h-5 text-teal-700 mr-2" />
+ <span className="text-sm font-medium text-teal-700">GDMT Optimized</span>
  </div>
- <div className="text-2xl font-bold text-[#2C4A60]">{selectedZIP.gdmtRate}%</div>
- <div className="text-xs text-[#2C4A60] mt-1">
+ <div className="text-2xl font-bold text-teal-700">{selectedZIP.gdmtRate}%</div>
+ <div className="text-xs text-teal-700 mt-1">
  {Math.round((selectedZIP.gdmtRate / 100) * selectedZIP.patients)} patients
  </div>
  </div>
@@ -373,7 +373,7 @@ export const HFGeographicHeatMapSimple: React.FC = () => {
 
  <div className="bg-white border border-gray-200 rounded-lg p-3">
  <div className="text-sm text-gray-600">Medication Gaps</div>
- <div className="text-xl font-bold text-[#6B7280]">
+ <div className="text-xl font-bold text-gray-500">
  {Math.round(selectedZIP.patients * ((100 - selectedZIP.gdmtRate) / 100))}
  </div>
  <div className="text-xs text-gray-500">Sub-optimal GDMT</div>
@@ -381,7 +381,7 @@ export const HFGeographicHeatMapSimple: React.FC = () => {
 
  <div className="bg-white border border-gray-200 rounded-lg p-3">
  <div className="text-sm text-gray-600">Revenue Opportunity</div>
- <div className="text-xl font-bold text-[#2C4A60]">
+ <div className="text-xl font-bold text-teal-700">
  ${(selectedZIP.patients * 2.8).toLocaleString()}K
  </div>
  <div className="text-xs text-gray-500">Annual potential</div>

@@ -41,7 +41,7 @@ const DRGOptimizationAlert: React.FC<DRGOptimizationAlertProps> = ({
   };
 
   const getConfidenceColor = (confidence: number) => {
- if (confidence >= 90) return 'bg-[#F0F7F4] text-[#2D6147]';
+ if (confidence >= 90) return 'bg-green-50 text-green-600';
  if (confidence >= 75) return 'bg-crimson-100 text-crimson-700';
  return 'bg-medical-red-100 text-medical-red-800';
   };
@@ -54,13 +54,13 @@ const DRGOptimizationAlert: React.FC<DRGOptimizationAlertProps> = ({
  <div className="flex items-center justify-between">
  <div>
  <h3 className="text-lg font-semibold text-titanium-900 mb-2 flex items-center gap-2">
- <TrendingUp className="w-5 h-5 text-[#2C4A60]" />
+ <TrendingUp className="w-5 h-5 text-teal-700" />
  {title}
  </h3>
  <p className="text-sm text-titanium-600">Real-time identification of coding improvements</p>
  </div>
  <div className="text-right">
- <div className="text-2xl font-bold text-[#2C4A60]">
+ <div className="text-2xl font-bold text-teal-700">
  +${totalPotentialRevenue.toLocaleString()}
  </div>
  <div className="text-xs text-titanium-500">Total Opportunity</div>
@@ -85,7 +85,7 @@ const DRGOptimizationAlert: React.FC<DRGOptimizationAlertProps> = ({
  </div>
  )}
  <div className="flex items-center gap-2 mb-2">
- <span className="text-sm font-semibold text-[#2C4A60]">
+ <span className="text-sm font-semibold text-teal-700">
  DRG {opportunity.currentDRG} → {opportunity.potentialDRG}
  </span>
  <span className={`text-xs px-2 py-1 rounded-full font-medium ${getConfidenceColor(opportunity.confidence)}`}>
@@ -101,7 +101,7 @@ const DRGOptimizationAlert: React.FC<DRGOptimizationAlertProps> = ({
  </div>
  <div className="text-xs text-titanium-700 mb-2">
  <div className="font-medium">Current: {opportunity.currentDRGDescription}</div>
- <div className="font-medium text-[#2C4A60]">Potential: {opportunity.potentialDRGDescription}</div>
+ <div className="font-medium text-teal-700">Potential: {opportunity.potentialDRGDescription}</div>
  </div>
  <div className="text-xs text-titanium-600 mb-2">
  <strong>Documentation needed:</strong> {opportunity.documentationNeeded.join(', ')}
@@ -120,7 +120,7 @@ const DRGOptimizationAlert: React.FC<DRGOptimizationAlertProps> = ({
  </div>
  </div>
  <div className="text-right ml-4">
- <div className="text-lg font-bold text-[#2C4A60] flex items-center gap-1">
+ <div className="text-lg font-bold text-teal-700 flex items-center gap-1">
  <DollarSign className="w-4 h-4" />
  +{opportunity.revenueImpact.toLocaleString()}
  </div>

@@ -390,11 +390,11 @@ const LAACRiskDashboard: React.FC = () => {
  if (type === 'stroke') {
  if (score >= 6) return 'text-medical-red-600 bg-medical-red-100';
  if (score >= 3) return 'text-crimson-600 bg-crimson-100';
- return 'text-[#2D6147] bg-[#F0F7F4]';
+ return 'text-green-600 bg-green-50';
  } else {
  if (score >= 3) return 'text-medical-red-600 bg-medical-red-100';
  if (score >= 2) return 'text-crimson-600 bg-crimson-100';
- return 'text-[#2D6147] bg-[#F0F7F4]';
+ return 'text-green-600 bg-green-50';
  }
   };
 
@@ -402,14 +402,14 @@ const LAACRiskDashboard: React.FC = () => {
  switch (priority) {
  case 'urgent': return 'bg-medical-red-100 text-medical-red-800 border-medical-red-200';
  case 'high': return 'bg-crimson-100 text-crimson-700 border-crimson-200';
- case 'medium': return 'bg-[#F0F7F4] text-[#2D6147] border-[#D8EDE6]';
+ case 'medium': return 'bg-green-50 text-green-600 border-green-100';
  default: return 'bg-titanium-100 text-titanium-600 border-titanium-200';
  }
   };
 
   const getReimbursementColor = (likelihood: string) => {
  switch (likelihood) {
- case 'high': return 'text-[#2C4A60]';
+ case 'high': return 'text-teal-700';
  case 'medium': return 'text-crimson-600';
  default: return 'text-medical-red-600';
  }
@@ -421,14 +421,14 @@ const LAACRiskDashboard: React.FC = () => {
  <div className="metal-card p-6">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center gap-3">
- <Calculator className="w-6 h-6 text-[#2C4A60]" />
+ <Calculator className="w-6 h-6 text-teal-700" />
  <h2 className="text-2xl font-bold text-titanium-900">WATCHMAN LAAC Risk Assessment Dashboard</h2>
  </div>
  <div className="flex items-center gap-4">
  <select
  value={sortBy}
  onChange={(e) => setSortBy(e.target.value as any)}
- className="px-3 py-2 border border-titanium-300 rounded-lg focus:ring-[#2C4A60] focus:border-[#2C4A60]"
+ className="px-3 py-2 border border-titanium-300 rounded-lg focus:ring-[#2C4A60] focus:border-teal-700"
  >
  <option value="priority">Sort by Priority</option>
  <option value="strokeRisk">Sort by Stroke Risk</option>
@@ -439,14 +439,14 @@ const LAACRiskDashboard: React.FC = () => {
 
  {/* Summary Statistics */}
  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
- <div className="p-4 bg-[#f0f5fa] rounded-lg border border-[#C8D4DC]">
- <div className="text-2xl font-bold text-[#2C4A60]">
+ <div className="p-4 bg-chrome-50 rounded-lg border border-titanium-300">
+ <div className="text-2xl font-bold text-teal-700">
  {assessedPatients.filter(p => p.assessment.watchmanEligible).length}
  </div>
  <div className="text-sm text-titanium-600">WATCHMAN Eligible</div>
  </div>
- <div className="p-4 bg-[#f0f5fa] rounded-lg border border-[#C8D4DC]">
- <div className="text-2xl font-bold text-[#2C4A60]">
+ <div className="p-4 bg-chrome-50 rounded-lg border border-titanium-300">
+ <div className="text-2xl font-bold text-teal-700">
  {assessedPatients.filter(p => p.assessment.reimbursementLikelihood === 'high').length}
  </div>
  <div className="text-sm text-titanium-600">High Reimbursement</div>
@@ -487,7 +487,7 @@ const LAACRiskDashboard: React.FC = () => {
  </div>
  <button
  onClick={() => setExpandedPatient(expandedPatient === patient.patientId ? null : patient.patientId)}
- className="flex items-center gap-2 px-4 py-2 bg-[#F0F7F4] text-[#2D6147] rounded-lg hover:bg-[#C8D4DC] transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-600 rounded-lg hover:bg-titanium-300 transition-colors"
  >
  <Eye className="w-4 h-4" />
  {expandedPatient === patient.patientId ? 'Hide Details' : 'View Details'}
@@ -516,7 +516,7 @@ const LAACRiskDashboard: React.FC = () => {
  <div className="text-sm text-titanium-600">LAAC Appropriate</div>
  <div className="flex justify-center">
  {patient.assessment.laacAppropriate ? (
- <CheckCircle className="w-6 h-6 text-[#2C4A60]" />
+ <CheckCircle className="w-6 h-6 text-teal-700" />
  ) : (
  <XCircle className="w-6 h-6 text-medical-red-500" />
  )}
@@ -526,7 +526,7 @@ const LAACRiskDashboard: React.FC = () => {
  <div className="text-sm text-titanium-600">WATCHMAN Eligible</div>
  <div className="flex justify-center">
  {patient.assessment.watchmanEligible ? (
- <Shield className="w-6 h-6 text-[#2C4A60]" />
+ <Shield className="w-6 h-6 text-teal-700" />
  ) : (
  <XCircle className="w-6 h-6 text-medical-red-500" />
  )}
@@ -546,9 +546,9 @@ const LAACRiskDashboard: React.FC = () => {
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* Clinical Recommendation */}
  <div className="space-y-4">
- <div className="p-4 bg-[#f0f5fa] rounded-lg border border-[#C8D4DC]">
+ <div className="p-4 bg-chrome-50 rounded-lg border border-titanium-300">
  <div className="flex items-start gap-3">
- <AlertTriangle className="w-5 h-5 text-[#2C4A60] mt-0.5" />
+ <AlertTriangle className="w-5 h-5 text-teal-700 mt-0.5" />
  <div>
  <div className="text-sm font-medium text-titanium-900 mb-1">Clinical Recommendation</div>
  <div className="text-sm text-titanium-700">{patient.assessment.clinicalRecommendation}</div>
@@ -591,11 +591,11 @@ const LAACRiskDashboard: React.FC = () => {
  <div className="space-y-4">
  {/* Coverage Criteria */}
  {patient.assessment.coverageCriteria.length > 0 && (
- <div className="p-4 bg-[#f0f5fa] rounded-lg border border-[#C8D4DC]">
+ <div className="p-4 bg-chrome-50 rounded-lg border border-titanium-300">
  <div className="text-sm font-medium text-titanium-900 mb-2">Coverage Criteria Met</div>
  <div className="space-y-1">
  {patient.assessment.coverageCriteria.slice(0, 3).map((criteria, index) => (
- <div key={criteria} className="flex items-center gap-2 text-sm text-[#2C4A60]">
+ <div key={criteria} className="flex items-center gap-2 text-sm text-teal-700">
  <CheckCircle className="w-4 h-4" />
  {criteria}
  </div>
@@ -615,7 +615,7 @@ const LAACRiskDashboard: React.FC = () => {
  {patient.labValues.inr && (
  <div>INR: <span className="font-medium">{patient.labValues.inr}</span></div>
  )}
- <div>Revenue: <span className="font-medium text-[#2C4A60]">${patient.assessment.estimatedCost.toLocaleString()}</span></div>
+ <div>Revenue: <span className="font-medium text-teal-700">${patient.assessment.estimatedCost.toLocaleString()}</span></div>
  </div>
  </div>
 

@@ -240,7 +240,7 @@ const CareTeamNetworkGraph: React.FC = () => {
  {/* Legend */}
  <div className="mt-4 flex items-center gap-6 text-sm">
  <div className="flex items-center gap-2">
- <div className="w-3 h-0.5 bg-[#C8D4DC]"></div>
+ <div className="w-3 h-0.5 bg-titanium-300"></div>
  <span>Referrals</span>
  </div>
  <div className="flex items-center gap-2">
@@ -248,7 +248,7 @@ const CareTeamNetworkGraph: React.FC = () => {
  <span>Collaborations</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-3 h-0.5 bg-[#6B7280]" style={{ background: 'repeating-linear-gradient(90deg, #6B7280, #6B7280 3px, transparent 3px, transparent 6px)' }}></div>
+ <div className="w-3 h-0.5 bg-gray-500" style={{ background: 'repeating-linear-gradient(90deg, #6B7280, #6B7280 3px, transparent 3px, transparent 6px)' }}></div>
  <span>Consultations</span>
  </div>
  </div>
@@ -276,9 +276,9 @@ const CareTeamNetworkGraph: React.FC = () => {
  <div className="text-lg font-bold text-chrome-600">{selectedNode.patientCount || 0}</div>
  <div className="text-xs text-chrome-700">Patients</div>
  </div>
- <div className="bg-[#F0F5FA] p-3 rounded-lg">
- <div className="text-lg font-bold text-[#2C4A60]">{toFixed(selectedNode.connectionStrength * 100, 0)}%</div>
- <div className="text-xs text-[#2C4A60]">Connection</div>
+ <div className="bg-chrome-50 p-3 rounded-lg">
+ <div className="text-lg font-bold text-teal-700">{toFixed(selectedNode.connectionStrength * 100, 0)}%</div>
+ <div className="text-xs text-teal-700">Connection</div>
  </div>
  </div>
  
@@ -334,7 +334,7 @@ const CareTeamNetworkGraph: React.FC = () => {
  
  <div className="bg-white p-4 rounded-xl border border-titanium-200">
  <div className="flex items-center gap-3">
- <Building className="w-8 h-8 text-[#2C4A60]" />
+ <Building className="w-8 h-8 text-teal-700" />
  <div>
  <div className="text-2xl font-bold text-titanium-900">{nodes.filter(n => n.type === 'department').length + nodes.filter(n => n.type === 'service').length}</div>
  <div className="text-sm text-titanium-600">Departments & Services</div>

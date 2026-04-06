@@ -486,15 +486,15 @@ const ExecutiveView: React.FC = () => {
          <div className="text-3xl font-bold text-red-600">487</div>
          <div className="text-xs text-red-500 mt-1">Intervention recommended</div>
        </div>
-       <div className="bg-white rounded-xl p-4 border border-[#C8D4DC] shadow-sm">
+       <div className="bg-white rounded-xl p-4 border border-titanium-300 shadow-sm">
          <div className="text-sm text-titanium-600 mb-1">Mean Improvement (Actioned)</div>
-         <div className="text-3xl font-bold text-[#2C4A60]">+14.2</div>
-         <div className="text-xs text-[#4A6880] mt-1">pts at 90 days</div>
+         <div className="text-3xl font-bold text-teal-700">+14.2</div>
+         <div className="text-xs text-teal-500 mt-1">pts at 90 days</div>
        </div>
        <div className="bg-white rounded-xl p-4 border border-[#f5c6cf] shadow-sm">
          <div className="text-sm text-titanium-600 mb-1">Showing Decline</div>
-         <div className="text-3xl font-bold text-[#7A1A2E]">134</div>
-         <div className="text-xs text-[#7A1A2E] mt-1">&gt;5 pt drop from prior</div>
+         <div className="text-3xl font-bold text-red-600">134</div>
+         <div className="text-xs text-red-600 mt-1">&gt;5 pt drop from prior</div>
        </div>
      </div>
    </div>
@@ -649,15 +649,15 @@ const ExecutiveView: React.FC = () => {
  <div className="mb-6">
  <div 
  onClick={() => setShowOpportunityModal(true)}
- className="bg-gradient-to-br from-[#f0f4f8] to-[#e8eef3] rounded-lg border-2 border-[#C8D4DC] p-8 cursor-pointer hover:shadow-lg transition-shadow"
+ className="bg-gradient-to-br from-[#f0f4f8] to-[#e8eef3] rounded-lg border-2 border-titanium-300 p-8 cursor-pointer hover:shadow-lg transition-shadow"
  >
  <div className="flex items-start justify-between">
  <div className="flex-1">
  <div className="flex items-center mb-3">
- <TrendingUp className="w-6 h-6 text-[#2C4A60] mr-2" />
+ <TrendingUp className="w-6 h-6 text-teal-700 mr-2" />
  <h3 className="text-xl font-bold">Revenue Opportunities Pipeline</h3>
  </div>
- <div className="text-5xl font-bold text-[#2C4A60] mb-2">$127,240</div>
+ <div className="text-5xl font-bold text-teal-700 mb-2">$127,240</div>
  <div className="text-gray-600 text-lg mb-4">23 high-priority documentation opportunities identified</div>
  
  <div className="grid grid-cols-3 gap-4 mt-4">
@@ -720,14 +720,14 @@ const ExecutiveView: React.FC = () => {
  <div className="flex items-center gap-3 mb-3">
  <DollarSign className="w-8 h-8" style={{ color: dc.value }} />
  <div>
- <div className="font-semibold text-[#1e293b]">{card.title}</div>
+ <div className="font-semibold text-neutral-800">{card.title}</div>
  <div className="text-2xl font-bold" style={{ color: dc.value }}>{card.value}</div>
  </div>
  </div>
- <div className="text-sm text-[#4A6880] mb-2">
+ <div className="text-sm text-teal-500 mb-2">
  {card.caseCount}
  </div>
- <div className={`text-sm ${card.isPositive ? 'text-[#2C4A60]' : 'text-medical-red-600'}`}>
+ <div className={`text-sm ${card.isPositive ? 'text-teal-700' : 'text-medical-red-600'}`}>
  {card.variance}
  </div>
  </div>
@@ -743,7 +743,7 @@ const ExecutiveView: React.FC = () => {
  {/* Current CMI → Chrome Blue */}
  <div className="text-2xl font-bold" style={{ color: '#2C4A60' }}>{heartFailureConfig.drgMetrics.currentCMI}</div>
  <div className="text-sm text-titanium-600">Current CMI</div>
- <div className="text-xs text-[#2C4A60]">+0.28 vs target</div>
+ <div className="text-xs text-teal-700">+0.28 vs target</div>
  </div>
  <div className="text-center">
  {/* Monthly Opportunity → Metallic Gold */}
@@ -761,7 +761,7 @@ const ExecutiveView: React.FC = () => {
  {/* Avg LOS → Steel Teal (efficiency metric) */}
  <div className="text-2xl font-bold" style={{ color: '#1A6878' }}>{heartFailureConfig.drgMetrics.avgLOS}</div>
  <div className="text-sm text-titanium-600">Avg LOS</div>
- <div className="text-xs text-[#2C4A60]">{heartFailureConfig.drgMetrics.losBenchmark}</div>
+ <div className="text-xs text-teal-700">{heartFailureConfig.drgMetrics.losBenchmark}</div>
  </div>
  </div>
  </div>

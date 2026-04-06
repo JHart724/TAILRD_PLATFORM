@@ -69,7 +69,7 @@ export default function GapCard({
               <span className="font-semibold text-titanium-900">{gap.patientCount}</span> patients
             </span>
             <span className="text-sm text-titanium-600">
-              <span className="font-semibold text-[#2C4A60]">${(gap.dollarOpportunity / 1000000).toFixed(1)}M</span> opportunity
+              <span className="font-semibold text-teal-700">${(gap.dollarOpportunity / 1000000).toFixed(1)}M</span> opportunity
             </span>
           </div>
           {gap.pharmaceuticalOpportunity && gap.pharmaceuticalOpportunity > 0 && (
@@ -91,13 +91,13 @@ export default function GapCard({
           )}
           {gap.whyMissed && (
             <div className="mt-2 text-xs text-titanium-500 italic flex items-start gap-1.5">
-              <Search className="w-3 h-3 text-[#4A6880] flex-shrink-0 mt-0.5" />
+              <Search className="w-3 h-3 text-teal-500 flex-shrink-0 mt-0.5" />
               <span>Why standard systems miss this: {gap.whyMissed}</span>
             </div>
           )}
           {gap.category === 'Discovery' && (
             <div className="flex items-center gap-1.5 mt-1">
-              <span className="text-xs font-semibold text-[#2C4A60]">
+              <span className="text-xs font-semibold text-teal-700">
                 {'\u2B21'} Discovery — Net new patients {'\u00B7'} Never previously identified
               </span>
             </div>

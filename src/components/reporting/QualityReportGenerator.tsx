@@ -153,7 +153,7 @@ const QualityReportGenerator: React.FC<QualityReportGeneratorProps> = ({ classNa
 
   const getStatusColor = (status: string) => {
  switch (status) {
- case 'exceeding': return 'text-[#2C4A60] bg-[#f0f5fa]';
+ case 'exceeding': return 'text-teal-700 bg-chrome-50';
  case 'meeting': return 'text-porsche-600 bg-porsche-50';
  case 'approaching': return 'text-crimson-600 bg-crimson-50';
  case 'below': return 'text-medical-red-600 bg-medical-red-50';
@@ -350,7 +350,7 @@ const QualityReportGenerator: React.FC<QualityReportGeneratorProps> = ({ classNa
  <button
  onClick={downloadReport}
  disabled={isGenerating}
- className="px-4 py-2 bg-[#2C4A60] text-white rounded-lg hover:bg-[#2C4A60] transition-colors duration-200 flex items-center gap-2 disabled:opacity-50"
+ className="px-4 py-2 bg-teal-700 text-white rounded-lg hover:bg-teal-700 transition-colors duration-200 flex items-center gap-2 disabled:opacity-50"
  >
  <Download className="w-4 h-4" />
  Download PDF
@@ -473,7 +473,7 @@ const QualityReportGenerator: React.FC<QualityReportGeneratorProps> = ({ classNa
  {toFixed(measure.current.rate, 1)}%
  </div>
  <div className={`flex items-center gap-1 text-sm ${
- trend >= 0 ? 'text-[#2C4A60]' : 'text-medical-red-600'
+ trend >= 0 ? 'text-teal-700' : 'text-medical-red-600'
  }`}>
  {trend >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
  {toFixed(Math.abs(trend), 1)}%
@@ -491,7 +491,7 @@ const QualityReportGenerator: React.FC<QualityReportGeneratorProps> = ({ classNa
  <div className="w-full bg-titanium-200 rounded-full h-2">
  <div 
  className={`h-2 rounded-full transition-all duration-500 ${
- status === 'exceeding' ? 'bg-[#2C4A60]' :
+ status === 'exceeding' ? 'bg-teal-700' :
  status === 'meeting' ? 'bg-porsche-500' :
  status === 'approaching' ? 'bg-crimson-500' :
  'bg-medical-red-500'
@@ -558,7 +558,7 @@ const QualityReportGenerator: React.FC<QualityReportGeneratorProps> = ({ classNa
  </td>
  <td className="py-4 px-4">
  <div className={`flex items-center gap-1 ${
- trend >= 0 ? 'text-[#2C4A60]' : 'text-medical-red-600'
+ trend >= 0 ? 'text-teal-700' : 'text-medical-red-600'
  }`}>
  {trend >= 0 ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
  {trend >= 0 ? '+' : ''}{toFixed(trend, 1)}%

@@ -261,11 +261,11 @@ const CrossReferralEngine: React.FC = () => {
  case 'reviewed':
  return 'bg-porsche-100 text-porsche-700 border-porsche-200';
  case 'accepted':
- return 'bg-[#F0F7F4] text-[#2D6147] border-[#D8EDE6]';
+ return 'bg-green-50 text-green-600 border-green-100';
  case 'scheduled':
  return 'bg-arterial-100 text-arterial-700 border-arterial-200';
  case 'completed':
- return 'bg-[#F0F5FA] text-[#2C4A60] border-[#C8D4DC]';
+ return 'bg-chrome-50 text-teal-700 border-titanium-300';
  case 'rejected':
  return 'bg-medical-red-100 text-medical-red-700 border-medical-red-200';
  default:
@@ -598,7 +598,7 @@ const CrossReferralEngine: React.FC = () => {
  <div className="flex justify-end">
  <button
  onClick={exportToCSV}
- className="flex items-center gap-2 px-4 py-2 bg-[#2C4A60] text-white rounded-lg hover:bg-[#2C4A60] transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-teal-700 text-white rounded-lg hover:bg-teal-700 transition-colors"
  >
  <Download className="w-4 h-4" />
  Export CSV

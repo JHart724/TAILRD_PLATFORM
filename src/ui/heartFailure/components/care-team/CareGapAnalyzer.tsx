@@ -588,7 +588,7 @@ const CareGapAnalyzer: React.FC = () => {
  const colors = {
  high: 'text-medical-red-600 bg-medical-red-100',
  medium: 'text-crimson-600 bg-crimson-100',
- low: 'text-[#2D6147] bg-[#F0F7F4]',
+ low: 'text-green-600 bg-green-50',
  };
  return colors[impact as keyof typeof colors];
   };
@@ -597,7 +597,7 @@ const CareGapAnalyzer: React.FC = () => {
  const colors = {
  urgent: 'border-l-medical-red-400 bg-medical-red-50/30',
  soon: 'border-l-crimson-400 bg-crimson-50',
- routine: 'border-l-[#4A6880] bg-[#f0f5fa]',
+ routine: 'border-l-[#4A6880] bg-chrome-50',
  };
  return colors[urgency as keyof typeof colors];
   };
@@ -605,11 +605,11 @@ const CareGapAnalyzer: React.FC = () => {
   const getCategoryIcon = (category: string) => {
  const icons = {
  GDMT: <Target className="w-5 h-5 text-porsche-600" />,
- Device: <TrendingUp className="w-5 h-5 text-[#2C4A60]" />,
+ Device: <TrendingUp className="w-5 h-5 text-teal-700" />,
  Screening: <AlertTriangle className="w-5 h-5 text-crimson-600" />,
  'Follow-up': <Clock className="w-5 h-5 text-medical-red-600" />,
  Lab: <CheckCircle className="w-5 h-5 text-titanium-600" />,
- Lifestyle: <Users className="w-5 h-5 text-[#2C4A60]" />,
+ Lifestyle: <Users className="w-5 h-5 text-teal-700" />,
  };
  return icons[category as keyof typeof icons];
   };
@@ -628,7 +628,7 @@ const CareGapAnalyzer: React.FC = () => {
  </div>
  <div className="text-right">
  <div className="text-sm text-titanium-600 mb-1">Total Potential Savings</div>
- <div className="text-3xl font-bold text-[#2C4A60] font-sf">
+ <div className="text-3xl font-bold text-teal-700 font-sf">
  ${toFixed(summary.totalPotentialSavings / 1000000, 1)}M
  </div>
  <div className="text-sm text-titanium-600">Annual opportunity</div>
@@ -654,7 +654,7 @@ const CareGapAnalyzer: React.FC = () => {
  <div className="text-sm text-titanium-600">Avg Weeks</div>
  </div>
  <div className="metal-card p-4 text-center">
- <div className="text-3xl font-bold text-[#2C4A60] mb-1 font-sf">{summary.complianceRate}%</div>
+ <div className="text-3xl font-bold text-teal-700 mb-1 font-sf">{summary.complianceRate}%</div>
  <div className="text-sm text-titanium-600">Compliance</div>
  </div>
  </div>
@@ -739,7 +739,7 @@ const CareGapAnalyzer: React.FC = () => {
  {getPatientsForGap(gap.title).length} <ExternalLink className="w-5 h-5" />
  </div>
  {gap.costSavings && (
- <div className="text-sm text-[#2C4A60] font-semibold">
+ <div className="text-sm text-teal-700 font-semibold">
  ${toFixed(gap.costSavings / 1000000, 1)}M savings
  </div>
  )}
@@ -830,7 +830,7 @@ const CareGapAnalyzer: React.FC = () => {
  <button className="px-4 py-2 bg-porsche-600 text-white text-sm rounded-lg hover:bg-porsche-700 transition-colors">
  Start Action Plan
  </button>
- <button className="px-4 py-2 bg-[#F0F5FA] text-[#2C4A60] text-sm rounded-lg hover:bg-[#D4E4F0] transition-colors border border-[#D4E4F0]">
+ <button className="px-4 py-2 bg-chrome-50 text-teal-700 text-sm rounded-lg hover:bg-chrome-100 transition-colors border border-chrome-100">
  Assign to Team
  </button>
  </div>
@@ -960,9 +960,9 @@ const CareGapAnalyzer: React.FC = () => {
  </div>
 
  {/* Labs */}
- <div className="bg-[#C8D4DC] rounded-lg p-4">
+ <div className="bg-titanium-300 rounded-lg p-4">
  <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <Droplets className="w-5 h-5 text-[#2C4A60]" />
+ <Droplets className="w-5 h-5 text-teal-700" />
  Laboratory Results
  </h3>
  <div className="grid grid-cols-2 gap-3 text-sm">
@@ -999,8 +999,8 @@ const CareGapAnalyzer: React.FC = () => {
  <span className="text-gray-600 ml-2">{med.dose} {med.frequency}</span>
  </div>
  <div className={`px-2 py-1 rounded text-xs font-medium ${
- med.adherence >= 90 ? 'bg-[#F0F7F4] text-[#2D6147]' :
- med.adherence >= 80 ? 'bg-[#FAF6E8] text-[#8B6914]' :
+ med.adherence >= 90 ? 'bg-green-50 text-green-600' :
+ med.adherence >= 80 ? 'bg-amber-50 text-amber-600' :
  'bg-red-100 text-red-800'
  }`}>
  {med.adherence}% adherence
@@ -1031,7 +1031,7 @@ const CareGapAnalyzer: React.FC = () => {
  <div className="flex items-center gap-2 mb-2">
  <Pill className="w-4 h-4 text-chrome-600" />
  <span className="font-semibold text-chrome-800">GDMT Recommendation</span>
- <span className="px-2 py-1 bg-[#F0F5FA] text-[#2C4A60] text-xs rounded-full">
+ <span className="px-2 py-1 bg-chrome-50 text-teal-700 text-xs rounded-full">
  {gdmtRec.evidenceLevel}
  </span>
  </div>
@@ -1048,11 +1048,11 @@ const CareGapAnalyzer: React.FC = () => {
  </div>
  
  <div>
- <div className="font-medium text-[#636D80] mb-1">Monitoring:</div>
- <ul className="text-[#636D80] space-y-1">
+ <div className="font-medium text-gray-600 mb-1">Monitoring:</div>
+ <ul className="text-gray-600 space-y-1">
  {gdmtRec.monitoring.map((item, idx) => (
  <li key={item} className="flex items-start gap-1">
- <div className="w-1 h-1 bg-[#F0F5FA] rounded-full mt-2 flex-shrink-0"></div>
+ <div className="w-1 h-1 bg-chrome-50 rounded-full mt-2 flex-shrink-0"></div>
  {item}
  </li>
  ))}
@@ -1060,8 +1060,8 @@ const CareGapAnalyzer: React.FC = () => {
  </div>
  
  <div>
- <div className="font-medium text-[#2C4A60] mb-1">Economic Impact:</div>
- <div className="text-[#2C4A60] font-semibold">{gdmtRec.costSavings}</div>
+ <div className="font-medium text-teal-700 mb-1">Economic Impact:</div>
+ <div className="text-teal-700 font-semibold">{gdmtRec.costSavings}</div>
  </div>
  </div>
  
@@ -1091,9 +1091,9 @@ const CareGapAnalyzer: React.FC = () => {
  </div>
 
  {/* Care Team */}
- <div className="bg-[#F0F5FA] rounded-lg p-4">
+ <div className="bg-chrome-50 rounded-lg p-4">
  <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <Users className="w-5 h-5 text-[#636D80]" />
+ <Users className="w-5 h-5 text-gray-600" />
  Care Team
  </h3>
  <div className="space-y-2 text-sm">
@@ -1152,7 +1152,7 @@ const CareGapAnalyzer: React.FC = () => {
  setCareActionFeedback('care-gaps');
  setTimeout(() => setCareActionFeedback(null), 2500);
  }}
- className="bg-[#C8D4DC] text-white px-4 py-2 rounded-lg hover:bg-[#C8D4DC] transition-colors flex items-center gap-2"
+ className="bg-titanium-300 text-white px-4 py-2 rounded-lg hover:bg-titanium-300 transition-colors flex items-center gap-2"
  >
  <CheckCircle className="w-4 h-4" />
  Address Gap
@@ -1169,7 +1169,7 @@ const CareGapAnalyzer: React.FC = () => {
  </button>
  </div>
  {careActionFeedback && (
- <div className="mt-3 p-3 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg text-[#2D6147] text-sm flex items-center gap-2">
+ <div className="mt-3 p-3 bg-green-50 border border-green-100 rounded-lg text-green-600 text-sm flex items-center gap-2">
  <CheckCircle className="w-4 h-4" />
  {careActionFeedback === 'care-plan' ? '\u2713 Care plan initialized \u2014 loading template...' :
  careActionFeedback === 'care-gaps' ? '\u2713 Gap closure workflow initiated...' :

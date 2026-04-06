@@ -628,7 +628,7 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 	<div className="text-sm text-titanium-600">{item.devices} devices annually</div>
 	</div>
 	<div className="text-right">
-	<div className="font-bold text-[#2C4A60]">{item.opportunity}</div>
+	<div className="font-bold text-teal-700">{item.opportunity}</div>
 	<div className="text-xs text-titanium-500">{item.current} → {item.potential}</div>
 	</div>
 	</div>
@@ -654,15 +654,15 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 	<div className="mb-6">
 	<div
 	onClick={() => setShowOpportunityModal(true)}
-	className="bg-gradient-to-br from-[#f0f4f8] to-[#e8eef3] rounded-lg border-2 border-[#C8D4DC] p-8 cursor-pointer hover:shadow-lg transition-shadow"
+	className="bg-gradient-to-br from-[#f0f4f8] to-[#e8eef3] rounded-lg border-2 border-titanium-300 p-8 cursor-pointer hover:shadow-lg transition-shadow"
 	>
 	<div className="flex items-start justify-between">
 	<div className="flex-1">
 	<div className="flex items-center mb-3">
-	<TrendingUp className="w-6 h-6 text-[#2C4A60] mr-2" />
+	<TrendingUp className="w-6 h-6 text-teal-700 mr-2" />
 	<h3 className="text-xl font-bold">Revenue Opportunities Pipeline</h3>
 	</div>
-	<div className="text-5xl font-bold text-[#2C4A60] mb-2">$127,240</div>
+	<div className="text-5xl font-bold text-teal-700 mb-2">$127,240</div>
 	<div className="text-gray-600 text-lg mb-4">23 high-priority documentation opportunities identified</div>
 
 	<div className="grid grid-cols-3 gap-4 mt-4">
@@ -724,11 +724,11 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 	<div className="flex items-center gap-3 mb-3">
 	<DollarSign className="w-8 h-8" style={{ color: dc.value }} />
 	<div>
-	<div className="font-semibold text-[#1e293b]">{drg.name}</div>
+	<div className="font-semibold text-neutral-800">{drg.name}</div>
 	<div className="text-2xl font-bold" style={{ color: dc.value }}>${toFixed(drg.reimbursement / 1000, 0)}K</div>
 	</div>
 	</div>
-	<div className="text-sm text-[#4A6880] mb-2">
+	<div className="text-sm text-teal-500 mb-2">
 	{drg.cases} cases
 	</div>
 	<div className="text-sm" style={{ color: drg.margin > 30 ? '#2C4A60' : '#9B2438' }}>
@@ -747,7 +747,7 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 	{/* Current CMI → Chrome Blue */}
 	<div className="text-2xl font-bold" style={{ color: '#2C4A60' }}>3.78</div>
 	<div className="text-sm text-titanium-600">Current CMI</div>
-	<div className="text-xs text-[#2C4A60]">+0.28 vs target</div>
+	<div className="text-xs text-teal-700">+0.28 vs target</div>
 	</div>
 	<div className="text-center">
 	{/* Monthly Opportunity → Metallic Gold */}
@@ -765,7 +765,7 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 	{/* Avg LOS → Steel Teal */}
 	<div className="text-2xl font-bold" style={{ color: '#1A6878' }}>2.8</div>
 	<div className="text-sm text-titanium-600">Avg LOS</div>
-	<div className="text-xs text-[#2C4A60]">vs 3.2 benchmark</div>
+	<div className="text-xs text-teal-700">vs 3.2 benchmark</div>
 	</div>
 	</div>
 	</div>

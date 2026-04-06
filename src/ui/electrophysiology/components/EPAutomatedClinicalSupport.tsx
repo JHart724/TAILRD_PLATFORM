@@ -281,7 +281,7 @@ const EPAutomatedClinicalSupport: React.FC = () => {
 
   const getEligibilityColor = (eligibility: string) => {
  switch (eligibility) {
- case 'eligible': return 'text-[#2D6147] bg-[#F0F7F4]';
+ case 'eligible': return 'text-green-600 bg-green-50';
  case 'consider': return 'text-crimson-700 bg-crimson-100';
  case 'not-eligible': return 'text-medical-red-700 bg-medical-red-100';
  default: return 'text-titanium-700 bg-titanium-100';
@@ -289,7 +289,7 @@ const EPAutomatedClinicalSupport: React.FC = () => {
   };
 
   const getConfidenceColor = (confidence: number) => {
- if (confidence >= 80) return 'text-[#2C4A60]';
+ if (confidence >= 80) return 'text-teal-700';
  if (confidence >= 60) return 'text-crimson-600';
  return 'text-medical-red-600';
   };
@@ -298,7 +298,7 @@ const EPAutomatedClinicalSupport: React.FC = () => {
  switch (priority) {
  case 'high': return 'text-medical-red-600 bg-medical-red-100';
  case 'medium': return 'text-crimson-600 bg-crimson-100';
- case 'low': return 'text-[#2D6147] bg-[#F0F7F4]';
+ case 'low': return 'text-green-600 bg-green-50';
  default: return 'text-titanium-600 bg-titanium-100';
  }
   };
@@ -347,7 +347,7 @@ const EPAutomatedClinicalSupport: React.FC = () => {
  {/* Header */}
  <div className="metal-card p-6">
  <div className="flex items-center gap-3 mb-4">
- <Brain className="w-8 h-8 text-[#2C4A60]" />
+ <Brain className="w-8 h-8 text-teal-700" />
  <div>
  <h2 className="text-2xl font-bold text-titanium-900 font-sf">
  Automated Clinical Decision Support
@@ -360,12 +360,12 @@ const EPAutomatedClinicalSupport: React.FC = () => {
 
  {/* Key Metrics Overview */}
  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
- <div className="bg-gradient-to-r from-[#f0f5fa] to-[#F0F5FA] rounded-xl p-4 border border-[#C8D4DC]">
+ <div className="bg-gradient-to-r from-[#f0f5fa] to-[#F0F5FA] rounded-xl p-4 border border-titanium-300">
  <div className="text-sm font-semibold text-titanium-600 uppercase tracking-wider mb-1">
  Patients Scanned
  </div>
  <div className="text-2xl font-bold text-titanium-900 font-sf">{stats.total}</div>
- <div className="text-xs text-[#2C4A60]">Auto-analyzed from EHR</div>
+ <div className="text-xs text-teal-700">Auto-analyzed from EHR</div>
  </div>
 
  <div className="bg-gradient-to-r from-porsche-50 to-porsche-100 rounded-xl p-4 border border-porsche-200">
@@ -408,7 +408,7 @@ const EPAutomatedClinicalSupport: React.FC = () => {
  onClick={() => setActiveTab(tab.id as any)}
  className={`px-4 py-3 border-b-2 transition-all duration-200 flex items-center gap-2 ${
  activeTab === tab.id
- ? 'border-[#2C4A60] text-[#2C4A60] bg-[#f0f5fa]'
+ ? 'border-teal-700 text-teal-700 bg-chrome-50'
  : 'border-transparent text-titanium-600 hover:text-titanium-800 hover:bg-titanium-50'
  }`}
  >
@@ -426,7 +426,7 @@ const EPAutomatedClinicalSupport: React.FC = () => {
  {/* Risk Distribution */}
  <div className="metal-card p-6">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <Target className="w-5 h-5 text-[#2C4A60]" />
+ <Target className="w-5 h-5 text-teal-700" />
  Automated Risk Stratification Overview
  </h3>
  
@@ -434,12 +434,12 @@ const EPAutomatedClinicalSupport: React.FC = () => {
  <div className="space-y-4">
  <h4 className="font-semibold text-titanium-900">LAAC Eligibility Distribution</h4>
  <div className="space-y-3">
- <div className="flex items-center justify-between p-3 bg-[#f0f5fa] rounded-lg border border-[#C8D4DC]">
+ <div className="flex items-center justify-between p-3 bg-chrome-50 rounded-lg border border-titanium-300">
  <div className="flex items-center gap-3">
- <div className="w-3 h-3 bg-[#2C4A60] rounded-full"></div>
+ <div className="w-3 h-3 bg-teal-700 rounded-full"></div>
  <span className="font-medium">Eligible for LAAC</span>
  </div>
- <span className="font-bold text-[#2C4A60]">{stats.laacEligible} patients</span>
+ <span className="font-bold text-teal-700">{stats.laacEligible} patients</span>
  </div>
  <div className="flex items-center justify-between p-3 bg-crimson-50 rounded-lg border border-crimson-200">
  <div className="flex items-center gap-3">
@@ -461,12 +461,12 @@ const EPAutomatedClinicalSupport: React.FC = () => {
  <div className="space-y-4">
  <h4 className="font-semibold text-titanium-900">Ablation Eligibility Distribution</h4>
  <div className="space-y-3">
- <div className="flex items-center justify-between p-3 bg-[#f0f5fa] rounded-lg border border-[#C8D4DC]">
+ <div className="flex items-center justify-between p-3 bg-chrome-50 rounded-lg border border-titanium-300">
  <div className="flex items-center gap-3">
- <div className="w-3 h-3 bg-[#2C4A60] rounded-full"></div>
+ <div className="w-3 h-3 bg-teal-700 rounded-full"></div>
  <span className="font-medium">Eligible for Ablation</span>
  </div>
- <span className="font-bold text-[#2C4A60]">{stats.ablationEligible} patients</span>
+ <span className="font-bold text-teal-700">{stats.ablationEligible} patients</span>
  </div>
  <div className="flex items-center justify-between p-3 bg-crimson-50 rounded-lg border border-crimson-200">
  <div className="flex items-center gap-3">
@@ -491,7 +491,7 @@ const EPAutomatedClinicalSupport: React.FC = () => {
  <div className="metal-card p-6">
  <div className="flex items-center justify-between mb-4">
  <h3 className="text-lg font-semibold text-titanium-900 flex items-center gap-2">
- <Clock className="w-5 h-5 text-[#2C4A60]" />
+ <Clock className="w-5 h-5 text-teal-700" />
  Recent Automated Assessments
  </h3>
  <div className="text-sm text-titanium-600">Last scan: {new Date().toLocaleDateString()}</div>
@@ -548,7 +548,7 @@ const EPAutomatedClinicalSupport: React.FC = () => {
  onClick={() => setFilterEligibility(filter.id as any)}
  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${
  filterEligibility === filter.id
- ? 'bg-[#2C4A60] text-white shadow-md'
+ ? 'bg-teal-700 text-white shadow-md'
  : 'bg-titanium-100 text-titanium-700 hover:bg-titanium-200'
  }`}
  >
@@ -653,7 +653,7 @@ const EPAutomatedClinicalSupport: React.FC = () => {
  {expandedPatients[assessment.id] && (
  <div className="mt-6 pt-6 border-t border-titanium-200 space-y-4">
  {/* Risk Factors */}
- <div className="bg-[#f0f5fa] rounded-lg p-4">
+ <div className="bg-chrome-50 rounded-lg p-4">
  <h4 className="font-semibold text-titanium-900 mb-3 flex items-center gap-2">
  <Heart className="w-4 h-4 text-medical-red-600" />
  CHA₂DS₂-VASc Risk Factors
@@ -789,7 +789,7 @@ const EPAutomatedClinicalSupport: React.FC = () => {
  <div className="space-y-6">
  <div className="metal-card p-6">
  <h3 className="text-lg font-semibold text-titanium-900 mb-4 flex items-center gap-2">
- <TrendingUp className="w-5 h-5 text-[#2C4A60]" />
+ <TrendingUp className="w-5 h-5 text-teal-700" />
  Population Risk Analytics
  </h3>
  

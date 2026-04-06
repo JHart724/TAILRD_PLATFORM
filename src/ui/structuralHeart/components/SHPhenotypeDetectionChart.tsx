@@ -154,7 +154,7 @@ const SHPhenotypeDetection: React.FC = () => {
  {isHighGap ? (
  <AlertCircle className="w-5 h-5 text-red-700" />
  ) : (
- <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
+ <CheckCircle className="w-5 h-5 text-teal-700" />
  )}
  </div>
 
@@ -165,7 +165,7 @@ const SHPhenotypeDetection: React.FC = () => {
  </div>
  <div>
  <div className="text-xs text-titanium-600">Rate</div>
- <div className={`text-lg font-bold ${isHighGap ? 'text-red-800' : 'text-[#2C4A60]'}`}>
+ <div className={`text-lg font-bold ${isHighGap ? 'text-red-800' : 'text-teal-700'}`}>
  {phenotype.detectionRate}%
  </div>
  </div>
@@ -178,7 +178,7 @@ const SHPhenotypeDetection: React.FC = () => {
  <div className="relative w-full h-3 bg-titanium-200 rounded-full overflow-hidden mb-2">
  <div 
  className={`absolute left-0 top-0 h-full transition-all ${
- isHighGap ? 'bg-red-700' : 'bg-[#C8D4DC]'
+ isHighGap ? 'bg-red-700' : 'bg-titanium-300'
  }`}
  style={{ width: `${phenotype.detectionRate}%` }}
  />
@@ -204,7 +204,7 @@ const SHPhenotypeDetection: React.FC = () => {
  <span className="text-titanium-700">High detection gap (&lt;30%)</span>
  </div>
  <div className="flex items-center gap-2">
- <CheckCircle className="w-4 h-4 text-[#2C4A60]" />
+ <CheckCircle className="w-4 h-4 text-teal-700" />
  <span className="text-titanium-700">Acceptable detection (≥30%)</span>
  </div>
  </div>

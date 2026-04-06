@@ -2917,11 +2917,11 @@ const renderVTEHerdoo2Display = (pt: PVGapPatient) => {
 
   if (isMale) {
     return (
-      <div className="mt-3 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-3 space-y-2">
-        <div className="text-sm font-semibold text-[#6B7280]">
+      <div className="mt-3 bg-chrome-50 border border-titanium-300 rounded-xl p-3 space-y-2">
+        <div className="text-sm font-semibold text-gray-500">
           High-risk (male) — extended anticoagulation recommended
         </div>
-        <div className="text-xs text-[#6B7280]">
+        <div className="text-xs text-gray-500">
           Men with unprovoked VTE have high recurrence risk (10-15%/yr). Extended DOAC at reduced dose (apixaban 2.5mg BID or rivaroxaban 10mg) recommended.
         </div>
         <div className="flex items-center gap-1.5 text-xs text-blue-600 mt-1">
@@ -2946,17 +2946,17 @@ const renderVTEHerdoo2Display = (pt: PVGapPatient) => {
     });
 
     return (
-      <div className="mt-3 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-3 space-y-2">
-        <div className="text-sm font-semibold text-[#6B7280]">
+      <div className="mt-3 bg-chrome-50 border border-titanium-300 rounded-xl p-3 space-y-2">
+        <div className="text-sm font-semibold text-gray-500">
           HERDOO2: {herdooResult.score}/4 &mdash; {herdooResult.risk}
         </div>
-        <div className="text-xs text-[#6B7280] space-y-0.5">
+        <div className="text-xs text-gray-500 space-y-0.5">
           {herdooResult.components.length > 0 && (
             <div>Components: {herdooResult.components.join(', ')}</div>
           )}
           <div>Hyperpigmentation/edema/redness in either leg (1pt), Obesity BMI &ge;30 (1pt), Older age &ge;65 (1pt), &ge;2 prior VTE (1pt)</div>
           {herdooResult.score <= 1 && (
-            <div className="font-medium text-[#2C4A60]">Score 0-1: Low recurrence risk &mdash; may safely stop anticoagulation at 3 months</div>
+            <div className="font-medium text-teal-700">Score 0-1: Low recurrence risk &mdash; may safely stop anticoagulation at 3 months</div>
           )}
           {herdooResult.score >= 2 && (
             <div className="font-medium text-red-700">Score &ge;2: High recurrence risk &mdash; extended anticoagulation recommended</div>
@@ -3004,8 +3004,8 @@ const renderABIDisplay = (pt: PVGapPatient) => {
 
   // No ABI value available — show screening needed
   return (
-    <div className="mt-3 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-3 space-y-1">
-      <div className="text-sm font-semibold text-[#6B7280]">
+    <div className="mt-3 bg-chrome-50 border border-titanium-300 rounded-xl p-3 space-y-1">
+      <div className="text-sm font-semibold text-gray-500">
         ABI: Not yet performed — screening indicated
       </div>
       <div className="flex items-center gap-1.5 text-xs text-blue-600">
@@ -3052,8 +3052,8 @@ const getPVTrajectoryBadges = (gap: PVClinicalGap, pt: PVGapPatient) => {
     <>
       <span className={`ml-2 text-xs px-2 py-0.5 rounded-full font-medium ${
         trajectory.direction === 'worsening_rapid' ? 'bg-red-100 text-red-700' :
-        trajectory.direction === 'worsening_slow' ? 'bg-[#FAF6E8] text-[#8B6914]' :
-        trajectory.direction === 'improving' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+        trajectory.direction === 'worsening_slow' ? 'bg-amber-50 text-amber-600' :
+        trajectory.direction === 'improving' ? 'bg-green-50 text-green-600' :
         'bg-gray-100 text-gray-600'
       }`}>
         {traj.arrow} {traj.label}
@@ -3078,12 +3078,12 @@ const renderPVPredictiveDetail = (gap: PVClinicalGap, pt: PVGapPatient) => {
     const trajectory = computeTrajectory({ currentValue: currentABI, priorValue: priorABI, daysBetween: 180 });
     const traj = trajectoryDisplay(trajectory.direction);
     elements.push(
-      <div key="abi-traj" className="mt-3 bg-[#f0f4f8] border border-[#C8D4DC] rounded-xl p-3 space-y-1">
-        <div className="flex items-center gap-2 text-sm font-bold text-[#1A2F4A]">
-          <TrendingUp className="w-4 h-4 text-[#2C4A60] flex-shrink-0" />
+      <div key="abi-traj" className="mt-3 bg-chrome-50 border border-titanium-300 rounded-xl p-3 space-y-1">
+        <div className="flex items-center gap-2 text-sm font-bold text-chrome-800">
+          <TrendingUp className="w-4 h-4 text-teal-700 flex-shrink-0" />
           Predictive Intelligence — ABI Trajectory
         </div>
-        <div className="text-sm text-[#2C4A60]">
+        <div className="text-sm text-teal-700">
           Current ABI: {currentABI.toFixed(2)} · Prior ABI: {priorABI.toFixed(2)} (6 months ago) · {traj.arrow} {traj.label} · Rate: {Math.abs(trajectory.ratePerYear).toFixed(3)}/year
           {currentABI < 0.5 && <> · Critical limb ischemia threshold approaching</>}
         </div>
@@ -3103,12 +3103,12 @@ const renderPVPredictiveDetail = (gap: PVClinicalGap, pt: PVGapPatient) => {
     const eGFRTrajectory = computeTrajectory({ currentValue: currentEGFR, priorValue: priorEGFR, daysBetween: 180 });
     const eTraj = trajectoryDisplay(eGFRTrajectory.direction);
     elements.push(
-      <div key="egfr-traj" className="mt-3 bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-3 space-y-1">
-        <div className="flex items-center gap-2 text-sm font-bold text-[#6B7280]">
-          <Activity className="w-4 h-4 text-[#6B7280] flex-shrink-0" />
+      <div key="egfr-traj" className="mt-3 bg-chrome-50 border border-titanium-300 rounded-xl p-3 space-y-1">
+        <div className="flex items-center gap-2 text-sm font-bold text-gray-500">
+          <Activity className="w-4 h-4 text-gray-500 flex-shrink-0" />
           Renal Function Trajectory
         </div>
-        <div className="text-sm text-[#6B7280]">
+        <div className="text-sm text-gray-500">
           eGFR: {currentEGFR} · Prior: {priorEGFR} (6 months ago) · {eTraj.arrow} {eTraj.label} · Rate: {Math.abs(eGFRTrajectory.ratePerYear).toFixed(1)} mL/min/year
           {currentEGFR < 30 && <> · CKD Stage 4+ — contrast and medication dosing implications</>}
         </div>
@@ -3262,13 +3262,13 @@ const PVClinicalGapDetectionDashboard: React.FC<PVClinicalGapDetectionDashboardP
 
   const priorityColor = (p: string) => {
     if (p === 'high') return 'bg-red-50 border-red-300 text-red-700';
-    if (p === 'medium') return 'bg-[#F0F5FA] border-[#C8D4DC] text-[#6B7280]';
-    return 'bg-[#F0F7F4] border-[#D8EDE6] text-[#2C4A60]';
+    if (p === 'medium') return 'bg-chrome-50 border-titanium-300 text-gray-500';
+    return 'bg-green-50 border-green-100 text-teal-700';
   };
 
   const categoryColor = (c: string) =>
     c === 'Discovery'
-      ? 'bg-[#F0F5FA] text-[#1A2F4A]'
+      ? 'bg-chrome-50 text-chrome-800'
       : c === 'Gap'
       ? 'bg-red-100 text-red-800'
       : c === 'Safety'
@@ -3305,12 +3305,12 @@ const PVClinicalGapDetectionDashboard: React.FC<PVClinicalGapDetectionDashboardP
             </div>
             <div className="text-2xl font-bold text-red-800">{categoryFilter ? filteredPatientCount.toLocaleString() : totalPatients.toLocaleString()}</div>
           </div>
-          <div className="bg-[#F0F7F4] border border-[#D8EDE6] rounded-xl p-4">
+          <div className="bg-green-50 border border-green-100 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
-              <DollarSign className="w-4 h-4 text-[#2C4A60]" />
-              <span className="text-xs font-semibold text-[#2C4A60] uppercase tracking-wide">Total Opportunity</span>
+              <DollarSign className="w-4 h-4 text-teal-700" />
+              <span className="text-xs font-semibold text-teal-700 uppercase tracking-wide">Total Opportunity</span>
             </div>
-            <div className="text-2xl font-bold text-[#2C4A60]">
+            <div className="text-2xl font-bold text-teal-700">
               ${((categoryFilter ? filteredOpportunity : totalOpportunity) / 1000000).toFixed(1)}M
             </div>
           </div>
@@ -3436,13 +3436,13 @@ const PVClinicalGapDetectionDashboard: React.FC<PVClinicalGapDetectionDashboardP
                   </div>
                   {gap.category === 'Discovery' && (
                     <div className="flex items-center gap-1.5 mt-1">
-                      <span className="text-xs font-semibold text-[#2C4A60]">{'\u2B21'} Discovery — Net new patients · Never previously identified</span>
+                      <span className="text-xs font-semibold text-teal-700">{'\u2B21'} Discovery — Net new patients · Never previously identified</span>
                     </div>
                   )}
                   <div className="font-semibold text-titanium-900 text-base">{gap.name}</div>
                   {gap.whyMissed && (
                     <div className="mt-2 text-xs text-titanium-500 italic flex items-start gap-1.5">
-                      <Search className="w-3 h-3 text-[#4A6880] flex-shrink-0 mt-0.5" />
+                      <Search className="w-3 h-3 text-teal-500 flex-shrink-0 mt-0.5" />
                       <span>Why standard systems miss this: {gap.whyMissed}</span>
                     </div>
                   )}
@@ -3451,7 +3451,7 @@ const PVClinicalGapDetectionDashboard: React.FC<PVClinicalGapDetectionDashboardP
                       <span className="font-semibold text-titanium-900">{gap.patientCount}</span> patients
                     </span>
                     <span className="text-sm text-titanium-600">
-                      <span className="font-semibold text-[#2C4A60]">${(gap.dollarOpportunity / 1000000).toFixed(1)}M</span> opportunity
+                      <span className="font-semibold text-teal-700">${(gap.dollarOpportunity / 1000000).toFixed(1)}M</span> opportunity
                     </span>
                   </div>
                 </div>
@@ -3474,19 +3474,19 @@ const PVClinicalGapDetectionDashboard: React.FC<PVClinicalGapDetectionDashboardP
                         </div>
                         <div className="flex items-center gap-4 text-xs">
                           <span className="text-red-600 font-medium">{'\u2193'} {dist.worseningRapid} worsening rapidly</span>
-                          <span className="text-[#6B7280] font-medium">{'\u2198'} {dist.worseningSlow} worsening slowly</span>
+                          <span className="text-gray-500 font-medium">{'\u2198'} {dist.worseningSlow} worsening slowly</span>
                           <span className="text-gray-500 font-medium">{'\u2192'} {dist.stable} stable</span>
-                          <span className="text-[#2C4A60] font-medium">{'\u2197'} {dist.improving} improving</span>
+                          <span className="text-teal-700 font-medium">{'\u2197'} {dist.improving} improving</span>
                         </div>
                         <div className="flex h-2 rounded-full overflow-hidden mt-2">
                           <div className="bg-red-400" style={{ width: `${(dist.worseningRapid / dist.total) * 100}%` }} />
-                          <div className="bg-[#F0F5FA]" style={{ width: `${(dist.worseningSlow / dist.total) * 100}%` }} />
+                          <div className="bg-chrome-50" style={{ width: `${(dist.worseningSlow / dist.total) * 100}%` }} />
                           <div className="bg-gray-300" style={{ width: `${(dist.stable / dist.total) * 100}%` }} />
-                          <div className="bg-[#C8D4DC]" style={{ width: `${(dist.improving / dist.total) * 100}%` }} />
+                          <div className="bg-titanium-300" style={{ width: `${(dist.improving / dist.total) * 100}%` }} />
                         </div>
                         <div className="flex items-center gap-4 mt-2 text-xs text-titanium-600">
-                          <span>Q1 opportunity: <span className="font-bold text-[#2C4A60]">{formatDollar(q1Rev)}</span> ({dist.worseningRapid} patients -- highest urgency)</span>
-                          <span>Full population: <span className="font-bold text-[#2C4A60]">{formatDollar(gap.dollarOpportunity)}</span></span>
+                          <span>Q1 opportunity: <span className="font-bold text-teal-700">{formatDollar(q1Rev)}</span> ({dist.worseningRapid} patients -- highest urgency)</span>
+                          <span>Full population: <span className="font-bold text-teal-700">{formatDollar(gap.dollarOpportunity)}</span></span>
                         </div>
                       </div>
                     );
@@ -3503,13 +3503,13 @@ const PVClinicalGapDetectionDashboard: React.FC<PVClinicalGapDetectionDashboardP
                   )}
                   <div>
                     <h4 className="font-semibold text-titanium-800 mb-2 flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-[#6B7280]" />
+                      <AlertTriangle className="w-4 h-4 text-gray-500" />
                       Detection Criteria
                     </h4>
                     <ul className="space-y-1">
                       {gap.detectionCriteria.map((c) => (
                         <li key={c} className="text-sm text-titanium-700 flex gap-2">
-                          <CheckCircle className="w-3.5 h-3.5 text-[#2C4A60] flex-shrink-0 mt-0.5" />
+                          <CheckCircle className="w-3.5 h-3.5 text-teal-700 flex-shrink-0 mt-0.5" />
                           {c}
                         </li>
                       ))}
@@ -3561,12 +3561,12 @@ const PVClinicalGapDetectionDashboard: React.FC<PVClinicalGapDetectionDashboardP
                                   {pt.mrn} • Age {pt.age}
                                 </span>
                                 {pt.tier && (
-                                  <span className="ml-2 text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-0.5 rounded-full">
+                                  <span className="ml-2 text-xs bg-amber-50 text-amber-600 px-2 py-0.5 rounded-full">
                                     {pt.tier}
                                   </span>
                                 )}
                                 {gap.category === 'Discovery' && (
-                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-[#F0F7F4] text-[#2D6147] px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow. TAILRD identified this patient by assembling disconnected signals across care settings.">
+                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow. TAILRD identified this patient by assembling disconnected signals across care settings.">
                                     <Radio className="w-3 h-3" />
                                     First identified by TAILRD
                                   </span>
@@ -3613,9 +3613,9 @@ const PVClinicalGapDetectionDashboard: React.FC<PVClinicalGapDetectionDashboardP
                             )}
                             {ptOpen && gap.whyTailrd && (
                               <div className="px-4">
-                                <div className="bg-[#f0f4f8] border border-[#C8D4DC] rounded-xl p-3 mt-2">
-                                  <p className="text-xs font-semibold text-[#2C4A60] mb-1">Why TAILRD identified this patient:</p>
-                                  <p className="text-sm text-[#2C4A60]">{gap.whyTailrd}</p>
+                                <div className="bg-chrome-50 border border-titanium-300 rounded-xl p-3 mt-2">
+                                  <p className="text-xs font-semibold text-teal-700 mb-1">Why TAILRD identified this patient:</p>
+                                  <p className="text-sm text-teal-700">{gap.whyTailrd}</p>
                                 </div>
                               </div>
                             )}

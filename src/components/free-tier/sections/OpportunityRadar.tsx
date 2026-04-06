@@ -13,7 +13,7 @@ interface OpportunityRadarProps {
 function getCategoryStyles(category: string): { bg: string; text: string } {
   switch (category.toLowerCase()) {
     case 'quality':
-      return { bg: 'bg-[#F0F5FA]', text: 'text-[#2C4A60]' };
+      return { bg: 'bg-chrome-50', text: 'text-teal-700' };
     case 'growth':
       return { bg: 'bg-chrome-100', text: 'text-chrome-700' };
     default:
@@ -26,7 +26,7 @@ function getPriorityLabelColor(priority: 'high' | 'medium' | 'low'): string {
     case 'high':
       return 'text-arterial-600';
     case 'medium':
-      return 'text-[#6B7280]';
+      return 'text-gray-500';
     case 'low':
       return 'text-titanium-500';
   }

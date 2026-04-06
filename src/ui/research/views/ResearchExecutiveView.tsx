@@ -98,7 +98,7 @@ const ResearchExecutiveView: React.FC = () => {
       {/* ── Page Heading ─────────────────────────────────────── */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-titanium-900 flex items-center gap-2">
-          <FlaskConical className="w-7 h-7 text-[#2E3440]" />
+          <FlaskConical className="w-7 h-7 text-neutral-700" />
           Research Performance Dashboard
         </h1>
         <p className="text-titanium-500 mt-1">Registry automation and trial eligibility at a glance</p>
@@ -109,7 +109,7 @@ const ResearchExecutiveView: React.FC = () => {
          ══════════════════════════════════════════════════════════ */}
       <section className="mb-10">
         <h2 className="text-lg font-semibold text-titanium-800 mb-4 flex items-center gap-2">
-          <FileText className="w-5 h-5 text-[#2E3440]" />
+          <FileText className="w-5 h-5 text-neutral-700" />
           Registry Automation
         </h2>
 
@@ -146,10 +146,10 @@ const ResearchExecutiveView: React.FC = () => {
                   <span
                     className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
                       aboveTarget
-                        ? 'bg-[#F0F5FA] text-[#2C4A60]'
+                        ? 'bg-chrome-50 text-teal-700'
                         : inTarget
                         ? 'bg-blue-100 text-blue-700'
-                        : 'bg-[#FAF6E8] text-[#8B6914]'
+                        : 'bg-amber-50 text-amber-600'
                     }`}
                   >
                     {aboveTarget ? 'Above Target' : inTarget ? 'On Target' : 'Below Target'}
@@ -222,7 +222,7 @@ const ResearchExecutiveView: React.FC = () => {
          ══════════════════════════════════════════════════════════ */}
       <section>
         <h2 className="text-lg font-semibold text-titanium-800 mb-4 flex items-center gap-2">
-          <Beaker className="w-5 h-5 text-[#2E3440]" />
+          <Beaker className="w-5 h-5 text-neutral-700" />
           Trial Eligibility Screening
         </h2>
 
@@ -266,7 +266,7 @@ const ResearchExecutiveView: React.FC = () => {
                         <span
                           className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
                             trial.type === 'Industry'
-                              ? 'bg-[#FAF6E8] text-[#8B6914]'
+                              ? 'bg-amber-50 text-amber-600'
                               : 'bg-slate-100 text-slate-600'
                           }`}
                         >
@@ -277,8 +277,8 @@ const ResearchExecutiveView: React.FC = () => {
                     <td className="py-3 px-4 text-right font-medium text-titanium-800">{trial.eligible.toLocaleString()}</td>
                     <td className="py-3 px-4 text-titanium-600">{trial.phase}</td>
                     <td className="py-3 px-4">
-                      <span className="inline-flex items-center gap-1 text-[#2C4A60] font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#F0F5FA]" />
+                      <span className="inline-flex items-center gap-1 text-teal-700 font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-chrome-50" />
                         {trial.status}
                       </span>
                     </td>
@@ -291,7 +291,7 @@ const ResearchExecutiveView: React.FC = () => {
 
         {/* Disclosure Note */}
         <div className="flex items-start gap-2 text-xs text-titanium-500 bg-titanium-50 border border-titanium-200 rounded-xl p-3">
-          <AlertTriangle className="w-4 h-4 text-[#6B7280] mt-0.5 shrink-0" />
+          <AlertTriangle className="w-4 h-4 text-gray-500 mt-0.5 shrink-0" />
           <span>
             Industry-sponsored trials flagged. Eligibility screening is automated — enrollment decisions require PI review.
           </span>

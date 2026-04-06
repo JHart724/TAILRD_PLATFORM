@@ -102,7 +102,7 @@ function signToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
   const fullPayload: JWTPayload = {
     ...payload,
     iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // 24 hours
+    exp: Math.floor(Date.now() / 1000) + 1 * 60 * 60, // 1 hour (HIPAA: short-lived tokens)
   };
   return jwt.sign(fullPayload, process.env.JWT_SECRET!);
 }
@@ -208,7 +208,7 @@ router.post('/login', async (req: Request, res: Response) => {
         sessionToken: tokenHash,
         ipAddress: req.ip || 'unknown',
         userAgent: req.get('User-Agent') || 'unknown',
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        expiresAt: new Date(Date.now() + 1 * 60 * 60 * 1000),
       },
     });
 

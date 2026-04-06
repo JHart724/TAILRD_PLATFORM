@@ -150,18 +150,18 @@ const RCExecutiveView: React.FC = () => {
  <div className="p-6">
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
  {/* High-Impact DRGs Performance */}
- <div className="bg-gradient-to-r from-[#f0f5fa] to-[#F0F5FA] rounded-lg p-4 border border-[#C8D4DC]">
+ <div className="bg-gradient-to-r from-[#f0f5fa] to-[#F0F5FA] rounded-lg p-4 border border-titanium-300">
  <div className="flex items-center gap-3 mb-3">
- <DollarSign className="w-8 h-8 text-[#2C4A60]" />
+ <DollarSign className="w-8 h-8 text-teal-700" />
  <div>
- <div className="font-semibold text-[#2C4A60]">High-Impact DRGs</div>
- <div className="text-2xl font-bold text-[#2C4A60]">$68,420</div>
+ <div className="font-semibold text-teal-700">High-Impact DRGs</div>
+ <div className="text-2xl font-bold text-teal-700">$68,420</div>
  </div>
  </div>
- <div className="text-sm text-[#2C4A60] mb-2">
+ <div className="text-sm text-teal-700 mb-2">
  Average reimbursement • 2,834 cases YTD
  </div>
- <div className="text-sm text-[#2C4A60]">
+ <div className="text-sm text-teal-700">
  +$14.2K above national average
  </div>
  </div>
@@ -208,10 +208,10 @@ const RCExecutiveView: React.FC = () => {
  <div className="text-center">
  <div className="text-2xl font-bold text-titanium-900">1.89</div>
  <div className="text-sm text-titanium-600">Current CMI</div>
- <div className="text-xs text-[#2C4A60]">+0.15 vs target</div>
+ <div className="text-xs text-teal-700">+0.15 vs target</div>
  </div>
  <div className="text-center">
- <div className="text-2xl font-bold text-[#2C4A60]">+$654K</div>
+ <div className="text-2xl font-bold text-teal-700">+$654K</div>
  <div className="text-sm text-titanium-600">Monthly Opportunity</div>
  <div className="text-xs text-titanium-500">From DRG optimization</div>
  </div>
@@ -223,7 +223,7 @@ const RCExecutiveView: React.FC = () => {
  <div className="text-center">
  <div className="text-2xl font-bold text-titanium-900">4.6 days</div>
  <div className="text-sm text-titanium-600">Avg LOS</div>
- <div className="text-xs text-[#2C4A60]">-0.4 days vs benchmark</div>
+ <div className="text-xs text-teal-700">-0.4 days vs benchmark</div>
  </div>
  </div>
  </div>
