@@ -566,7 +566,120 @@ Top 5 failure reasons:
 
 ---
 
-*End of original audit (2026-04-04). Delta audit follows.*
+*End of original audit (2026-04-04). Session work log follows.*
+
+---
+
+# SESSION WORK LOG -- 2026-04-05/06
+
+## Completed Items (all committed to git)
+
+### P0 -- Clinical Accuracy (all resolved)
+- [x] P0-CLIN-4: Fixed RxNorm 4603→4441 (furosemide→flecainide) in 4 AAD arrays
+- [x] P0-CLIN-5: Fixed RxNorm 9947→9997 (sotalol→spironolactone) in MRA_CODES_K
+- [x] P0-CLIN-6: Removed atorvastatin from PPI codes, added esomeprazole
+- [x] P0-CLIN-7: Fixed diltiazem RxNorm 2991→3443 in SVT rate control
+- [x] P0-CLIN-8: Added race/ethnicity to Patient schema, HF-19 now uses race field
+- [x] P0-CLIN-9: Normalized all gender comparisons to MALE/FEMALE Prisma enum
+- [x] P0-CLIN-10: All 257 rules now use "Consider" language (zero "Prescribe"/"Order")
+
+### P0 -- Security (all resolved)
+- [x] P0-SEC-8: requireMFA applied to patients, gaps/detailed, clinicalIntelligence, phenotypes
+- [x] P0-SEC-9: jwt.sign() HS256 algorithm pinned on all 4 sign calls
+- [x] P0-SEC-10: MFA JWT includes email, permissions claims; aligned to 1h expiry
+- [x] P0-SEC-11: Cross-tenant PATCH fix on clinicalIntelligence (hospitalId findFirst before update)
+
+### P0 -- Infrastructure (all resolved)
+- [x] P0-INFRA-1: .terraform/ added to .gitignore
+- [x] P0-INFRA-2: terraform.tfvars in .gitignore + terraform.tfvars.example created
+- [x] P0-INFRA-3/4: Verified no merge conflicts exist (false positive)
+
+### P0 -- Pipeline (all resolved)
+- [x] P0-PIPE-3: seedFromSynthea.ts fixed to use correct Hospital schema fields
+- [x] P0-PIPE-4: processSynthea.ts fhirMedicationRequestId→fhirMedicationId
+- [x] P0-PIPE-5: Recommendation model now has hospitalId FK with indexes
+
+### P0 -- God View (4 of 6 resolved)
+- [x] P0-GOD-1: GodView route added at /admin/god in App.tsx
+- [x] P0-GOD-2: SuperAdminDashboard route added at /admin/dashboard
+- [x] P0-GOD-3: God View backend wired to real Prisma data (zero mock functions remaining)
+- [x] P0-GOD-5: Math.random() replaced with deterministic values
+- [x] P0-GOD-6: Audit logging on all GOD view access (middleware-level)
+- [ ] P0-GOD-4: SuperAdminConsole tabs wired to API (PlatformOverview done, 6 remaining)
+
+### P1 -- Clinical (all resolved)
+- [x] P1-CLIN-7: All 257 rules have evidence objects (guidelineSource, class, LOE, triggerCriteria)
+- [x] P1-CLIN-8: All 257 rules call hasContraindication before firing
+- [x] P1-CLIN-9: ARNI RxNorm 1656328→1656339
+- [x] P1-CLIN-10: cardiovascularValuesets.ts imported, canonical code arrays created
+- [x] P1-CLIN-11: Removed 1,448 duplicate registry lines
+- [x] P1-CLIN-12: EXCLUSION_PREGNANCY expanded to full O-chapter + Z33/Z34
+- [x] P1-CLIN-13: Added N18.4 (CKD stage 4) to renal exclusion
+
+### P1 -- Security (all resolved)
+- [x] P1-SEC-14: PHI redaction on /gaps/:moduleId/detailed for analyst/quality-director roles
+- [x] P1-SEC-15: Login/logout audit logging (LOGIN_SUCCESS, LOGIN_FAILED, LOGOUT)
+- [x] P1-SEC-16: Admin audit logging (HOSPITAL_CREATED/UPDATED, USER_CREATED/UPDATED)
+- [x] P1-SEC-17: Token refresh re-validates user isActive status
+- [x] P1-SEC-18: File metadata tenant isolation uses startsWith prefix (not substring)
+
+### P1 -- Infrastructure (all resolved)
+- [x] P1-INFRA-1: KMS already enabled on CloudWatch logs
+- [x] P1-INFRA-2: ALB access logging already enabled
+- [x] P1-INFRA-3: CloudFront logging already enabled
+- [x] P1-INFRA-4: Remote Terraform backend (S3+DynamoDB) + bootstrap script
+- [x] P1-INFRA-5: ElastiCache already fully defined in IaC
+- [x] P1-INFRA-6: CloudFront WAFv2 -- rate limiting + AWS managed rules
+- [x] P1-INFRA-7: ECS auto-scaling -- CPU 70% / memory 80%, 2-10 tasks
+- [x] P1-INFRA-8: Route53 DNS records for api. and app. domains
+- [x] P1-INFRA-9: Dockerfile non-root user (tailrd uid 1001)
+- [x] P1-INFRA-10: ECS healthcheck Node-based (no curl dependency)
+- [x] P1-INFRA-11: deploy-frontend.sh path fixed (root, not /frontend/)
+- [x] P1-INFRA-12: ALB logs S3 bucket encryption changed to AES256 (SSE-S3)
+
+### P1 -- Pipeline (all resolved)
+- [x] P1-PIPE-5: seed.ts and seedBSW.ts use shared PrismaClient from lib/prisma
+- [x] P1-PIPE-6: Gap detection batch processing (100 patients at a time, cursor pagination)
+- [x] P1-PIPE-7: Missing indexes added (TherapyGap, Patient, Recommendation)
+
+### P1 -- Enterprise Features (all resolved)
+- [x] P1-COMP-1: AWS Cognito SSO/SAML integration (Terraform + backend middleware)
+- [x] P1-NOTIF-1: Clinical alert delivery (immediate + daily digest + weekly summary via SES)
+
+### P2 -- Clinical (resolved)
+- [x] P2-CLIN-2: MRA threshold LVEF <=35%→<=40% per 2022 AHA/ACC/HFSA
+- [x] P2-CLIN-3: HFpEF SGLT2i expanded to LVEF >40% (includes HFmrEF per DELIVER)
+
+## Remaining Items
+
+### P1 (3 items, ~32h)
+- [ ] P1-SCALE-1: Background job system (BullMQ + Redis) -- 16h
+- [ ] P1-SCALE-2: In-memory caches multi-instance -- 8h
+- [ ] P1-PIPE-4: Procedure/Device/AllergyIntolerance ingestion -- 8h
+
+### P2 (5 items, ~48h)
+- [ ] P2-SCALE-1: Frontend list virtualization -- 8h
+- [ ] P2-COMP-1: Real-time notifications (WebSocket/SSE) -- 8h
+- [ ] P2-COMP-2: Scheduled report delivery -- 8h (partially done via clinical alerts cron)
+- [ ] P2-COMP-3: eCQM/QRDA export -- 12h
+- [ ] P2-OPS-1: Onboarding workflow -- 12h
+
+### God View (1 remaining)
+- [ ] P0-GOD-4: Wire remaining 6 SuperAdminConsole tabs to API -- 8h
+
+## Updated Readiness Scorecard
+
+| Dimension | Score | Prior |
+|-----------|-------|-------|
+| Security | 8/10 | 5 |
+| Clinical Accuracy | 9/10 | 6 |
+| Gap Coverage | 8/10 | 8 |
+| Infrastructure | 9/10 | 6 |
+| Regulatory Readiness | 8/10 | 5 |
+| God View | 6/10 | 3 |
+| Enterprise Features | 7/10 | 4 |
+| Exec Demo Readiness | 5/10 | 3 |
+| Overall | 7/10 | 4.5 |
 
 ---
 ---
