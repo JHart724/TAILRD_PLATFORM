@@ -205,6 +205,7 @@ app.use('/api/platform', require('./routes/platform').default);
 app.use('/api/gaps', require('./routes/gaps').default);
 app.use('/api/users', require('./routes/invite').default);
 app.use('/api/mfa', require('./routes/mfa').default);
+app.use('/api/notifications', require('./routes/notifications').default);
 
 app.use('*', (req, res) => {
   res.status(404).json({
@@ -252,11 +253,33 @@ process.on('uncaughtException', (error) => {
 
 if (require.main === module) {
   app.listen(PORT, () => {
-    logger.info(`🚀 TAILRD Platform Backend server running on port ${PORT}`, {
+    logger.info(`TAILRD Platform Backend running on port ${PORT}`, {
       environment: NODE_ENV,
       port: PORT,
       timestamp: new Date().toISOString()
     });
+
+    // Clinical alert cron jobs (production only)
+    if (NODE_ENV === 'production') {
+      const cron = require('node-cron');
+      const { runDailyDigestForAllHospitals, runWeeklySummaryForAllHospitals } = require('./services/clinicalAlertService');
+
+      // Daily digest at 7:00 AM EST every day
+      cron.schedule('0 12 * * *', async () => { // 12:00 UTC = 7:00 AM EST
+        logger.info('Running daily gap digest for all hospitals');
+        const result = await runDailyDigestForAllHospitals();
+        logger.info(`Daily digest complete: ${result.emails} emails to ${result.hospitals} hospitals`);
+      });
+
+      // Weekly summary every Monday at 8:00 AM EST
+      cron.schedule('0 13 * * 1', async () => { // 13:00 UTC Monday = 8:00 AM EST Monday
+        logger.info('Running weekly gap summary for all hospitals');
+        const result = await runWeeklySummaryForAllHospitals();
+        logger.info(`Weekly summary complete: ${result.emails} emails to ${result.hospitals} hospitals`);
+      });
+
+      logger.info('Clinical alert cron jobs scheduled (daily digest 7am EST, weekly summary Mon 8am EST)');
+    }
   });
 }
 

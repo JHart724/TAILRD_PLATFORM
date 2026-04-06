@@ -141,6 +141,9 @@ model User {
   isActive  Boolean   @default(true)
   lastLogin DateTime?
 
+  // Notification preferences (JSON: immediateAlerts, dailyDigest, weeklySummary, moduleFilter)
+  notificationPreferences Json?
+
   // Password reset
   resetToken       String?   @unique
   resetTokenExpiry DateTime?
