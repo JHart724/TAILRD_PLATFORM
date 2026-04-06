@@ -25,11 +25,8 @@ COPY scripts/ ./scripts/
 # Build the application
 RUN npm run build
 
-# Production stage (slim instead of alpine for cross-platform buildx compatibility)
+# Production stage
 FROM node:18-slim AS production
-
-# Install curl for healthcheck
-RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user for security
 RUN groupadd -g 1001 nodejs && useradd -u 1001 -g nodejs -m tailrd
@@ -68,7 +65,7 @@ EXPOSE 3001
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:3001/api/health || exit 1
+  CMD node -e "require('http').get('http://localhost:3001/api/health',(r)=>{process.exit(r.statusCode===200?0:1)}).on('error',()=>process.exit(1))"
 
 # Start the application
 CMD ["npm", "start"]
