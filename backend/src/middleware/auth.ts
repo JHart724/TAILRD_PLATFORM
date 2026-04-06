@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import prisma from '../lib/prisma';
 import { JWTPayload, APIResponse } from '../types';
 import { FULL_ACCESS_PERMISSIONS, MODULE_KEY_MAP } from '../config/rolePermissions';
+import { verifyCognitoToken, isCognitoEnabled } from './cognitoAuth';
 
 const isDemoMode = process.env.DEMO_MODE === 'true';
 // Startup validation in server.ts ensures JWT_SECRET is set when not in demo mode.
@@ -50,6 +51,15 @@ const authenticateToken = async (req: AuthenticatedRequest, res: Response, next:
       req.user = user;
       return next();
     } catch (err: any) {
+      // Local JWT failed -- try Cognito if configured (SSO/SAML tokens use RS256)
+      if (isCognitoEnabled()) {
+        const cognitoUser = await verifyCognitoToken(token);
+        if (cognitoUser) {
+          req.user = cognitoUser;
+          return next();
+        }
+      }
+
       // In demo mode, fall through to synthetic user instead of 403
       if (isDemoMode) {
         req.user = createDemoPayload();

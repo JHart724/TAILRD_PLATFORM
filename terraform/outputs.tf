@@ -63,3 +63,30 @@ output "frontend_bucket_arn" {
   description = "S3 bucket ARN for frontend static files"
   value       = aws_s3_bucket.frontend.arn
 }
+
+# ─── Cognito ───────────────────────────────────────────────────────────────
+
+output "cognito_user_pool_id" {
+  description = "Cognito User Pool ID"
+  value       = aws_cognito_user_pool.main.id
+}
+
+output "cognito_user_pool_arn" {
+  description = "Cognito User Pool ARN"
+  value       = aws_cognito_user_pool.main.arn
+}
+
+output "cognito_app_client_id" {
+  description = "Cognito App Client ID (for frontend SDK)"
+  value       = aws_cognito_user_pool_client.api.id
+}
+
+output "cognito_domain" {
+  description = "Cognito hosted UI domain"
+  value       = "https://${aws_cognito_user_pool_domain.main.domain}.auth.${var.aws_region}.amazoncognito.com"
+}
+
+output "cognito_issuer" {
+  description = "Cognito token issuer URL (for JWT validation)"
+  value       = "https://cognito-idp.${var.aws_region}.amazonaws.com/${aws_cognito_user_pool.main.id}"
+}
