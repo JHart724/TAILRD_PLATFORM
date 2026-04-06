@@ -97,7 +97,7 @@ router.post('/verify', async (req: AuthenticatedRequest, res: Response) => {
         hospitalId: user.hospitalId,
         role: user.role,
         mfaVerified: true,
-        sessionId: req.user?.sessionId,
+        // sessionId not in JWT payload -- MFA verified token inherits session
       },
       process.env.JWT_SECRET!,
       { expiresIn: '8h' }

@@ -14,6 +14,10 @@ COPY tsconfig.json ./
 # Install ALL dependencies (devDeps needed for TypeScript compilation)
 RUN npm ci
 
+# Copy Prisma schema and generate client
+COPY prisma/ ./prisma/
+RUN npx prisma generate
+
 # Copy source code
 COPY src/ ./src/
 COPY scripts/ ./scripts/
@@ -43,10 +47,12 @@ RUN npm ci --only=production && npm cache clean --force
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/scripts ./scripts
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
 # Copy environment and configuration files
 COPY .env.example .env.example
-COPY scripts/setup-database-schema.sql ./scripts/
+# COPY scripts/setup-database-schema.sql ./scripts/  # Prisma manages schema
 
 # Create necessary directories
 RUN mkdir -p logs backups uploads

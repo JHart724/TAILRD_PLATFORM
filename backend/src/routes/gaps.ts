@@ -156,7 +156,7 @@ router.get('/:moduleId/detailed', authenticateToken, async (req: AuthenticatedRe
           },
         },
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { identifiedAt: 'desc' },
     });
 
     // Group by gapType for the dashboard view
@@ -194,7 +194,6 @@ router.get('/:moduleId/detailed', authenticateToken, async (req: AuthenticatedRe
         gender: gap.patient.gender,
         riskCategory: gap.patient.riskCategory,
         gapId: gap.id,
-        createdAt: gap.createdAt,
       });
       grouped[key].count++;
     }
@@ -233,10 +232,8 @@ router.get('/summary/all', authenticateToken, async (req: AuthenticatedRequest, 
       _count: { id: true },
     });
 
-    const patientCounts = await prisma.patient.groupBy({
-      by: [],
+    const totalPatientCount = await prisma.patient.count({
       where: { hospitalId, isActive: true },
-      _count: { id: true },
     });
 
     const modulePatientCounts = await Promise.all(
@@ -261,7 +258,7 @@ router.get('/summary/all', authenticateToken, async (req: AuthenticatedRequest, 
     res.json({
       success: true,
       data: {
-        totalPatients: patientCounts._count?.id || 0,
+        totalPatients: totalPatientCount,
         modules: summary.map(s => {
           const modPatients = modulePatientCounts.find(m => m.module === s.module);
           return {
