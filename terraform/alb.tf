@@ -2,12 +2,19 @@
 # TAILRD Heart -- Application Load Balancer (HIPAA-compliant)
 # ──────────────────────────────────────────────────────────────────────────────
 
-# ─── ACM Certificate (lookup) ───────────────────────────────────────────────
+# ─── ACM Certificate (request new) ─────────────────────────────────────────
 
-data "aws_acm_certificate" "api" {
-  domain      = "api.${var.domain_name}"
-  statuses    = ["ISSUED"]
-  most_recent = true
+resource "aws_acm_certificate" "api" {
+  domain_name       = "api.${var.domain_name}"
+  validation_method = "DNS"
+
+  tags = {
+    Name = "${local.name_prefix}-api-cert"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # ─── S3 Bucket for ALB Access Logs ─────────────────────────────────────────
@@ -57,6 +64,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "alb_logs" {
   rule {
     id     = "expire-old-logs"
     status = "Enabled"
+    filter {}
 
     expiration {
       days = 365
@@ -172,7 +180,7 @@ resource "aws_lb_listener" "https" {
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
-  certificate_arn   = data.aws_acm_certificate.api.arn
+  certificate_arn   = aws_acm_certificate.api.arn
 
   default_action {
     type             = "forward"

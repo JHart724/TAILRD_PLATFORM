@@ -4,19 +4,22 @@
 
 # ─── ACM Certificate for CloudFront (must be us-east-1) ─────────────────────
 
-data "aws_acm_certificate" "frontend" {
-  provider    = aws
-  domain      = "app.${var.domain_name}"
-  statuses    = ["ISSUED"]
-  most_recent = true
+resource "aws_acm_certificate" "frontend" {
+  domain_name       = "app.${var.domain_name}"
+  validation_method = "DNS"
+
+  tags = {
+    Name = "${local.name_prefix}-frontend-cert"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # ─── WAF Web ACL (lookup existing from CloudFormation) ──────────────────────
-
-data "aws_wafv2_web_acl" "main" {
-  name  = "${var.project_name}-waf-acl"
-  scope = "CLOUDFRONT"
-}
+# The existing WAF is REGIONAL scope (for ALB). CloudFront needs CLOUDFRONT scope.
+# For now, skip WAF on CloudFront. The ALB WAF protects the API.
 
 # ─── S3 Bucket for Frontend Static Files ───────────────────────────────────
 
@@ -93,7 +96,8 @@ resource "aws_cloudfront_distribution" "frontend" {
   comment             = "${local.name_prefix} frontend distribution"
   default_root_object = "index.html"
   price_class         = "PriceClass_100"
-  web_acl_id          = data.aws_wafv2_web_acl.main.arn
+  # WAF is REGIONAL scope (for ALB). CloudFront WAF would need a separate CLOUDFRONT-scope ACL.
+  # web_acl_id = "" # Add CLOUDFRONT-scope WAF later if needed
 
   aliases = ["app.${var.domain_name}"]
 
@@ -149,7 +153,7 @@ resource "aws_cloudfront_distribution" "frontend" {
   # ── TLS Configuration ────────────────────────────────────────────────────
 
   viewer_certificate {
-    acm_certificate_arn      = data.aws_acm_certificate.frontend.arn
+    acm_certificate_arn      = aws_acm_certificate.frontend.arn
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
