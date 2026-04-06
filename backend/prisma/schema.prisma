@@ -442,6 +442,10 @@ model Alert {
 model Recommendation {
   id String @id @default(cuid())
 
+  // Tenant isolation (required for multi-tenancy)
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id])
+
   // Patient association
   patientId String
   patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)

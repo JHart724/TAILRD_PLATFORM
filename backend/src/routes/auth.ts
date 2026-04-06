@@ -301,7 +301,21 @@ router.post('/refresh', async (req: Request, res: Response) => {
       { algorithms: ['HS256'] }
     ) as JWTPayload;
 
-    // Issue a fresh token with same payload
+    // Re-validate user is still active before issuing new token
+    if (!isDemoMode) {
+      const user = await prisma.user.findUnique({
+        where: { id: decoded.userId },
+        select: { isActive: true, role: true },
+      });
+      if (!user || !user.isActive) {
+        return res.status(401).json({
+          success: false,
+          error: 'Account deactivated',
+          timestamp: new Date().toISOString(),
+        } as APIResponse);
+      }
+    }
+
     const newToken = signToken({
       userId: decoded.userId,
       email: decoded.email,

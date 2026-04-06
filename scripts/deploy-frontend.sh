@@ -14,7 +14,7 @@ PROJECT_NAME="${PROJECT_NAME:-tailrd}"
 BUCKET_NAME="${PROJECT_NAME}-${ENVIRONMENT}-frontend"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-FRONTEND_DIR="${PROJECT_ROOT}/frontend"
+FRONTEND_DIR="${PROJECT_ROOT}"
 
 # ─── Colors ─────────────────────────────────────────────────────────────────
 

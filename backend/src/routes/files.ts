@@ -264,9 +264,9 @@ router.get('/metadata',
         });
       }
 
-      // Verify the file key belongs to the user's hospital
+      // Verify the file key belongs to the user's hospital (prefix match, not substring)
       const hospitalId = req.user?.hospitalId;
-      if (hospitalId && !key.includes(hospitalId) && req.user?.role !== 'super-admin') {
+      if (hospitalId && !key.startsWith(`uploads/${hospitalId}/`) && !key.startsWith(`${hospitalId}/`) && req.user?.role !== 'super-admin') {
         return res.status(403).json({
           success: false,
           error: 'Access denied: file does not belong to your hospital',

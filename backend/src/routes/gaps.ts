@@ -241,11 +241,14 @@ router.get('/:moduleId/detailed', authenticateToken, requireMFA, async (req: Aut
           count: 0,
         };
       }
+      // HIPAA minimum necessary: redact PHI for non-clinical roles
+      const role = req.user?.role || '';
+      const isRedacted = ['analyst', 'quality-director'].includes(role);
       grouped[key].patients.push({
         id: gap.patient.id,
-        firstName: gap.patient.firstName,
-        lastName: gap.patient.lastName,
-        mrn: gap.patient.mrn,
+        firstName: isRedacted ? '***' : gap.patient.firstName,
+        lastName: isRedacted ? '***' : gap.patient.lastName,
+        mrn: isRedacted ? '***' : gap.patient.mrn,
         age: gap.patient.dateOfBirth
           ? Math.floor((Date.now() - new Date(gap.patient.dateOfBirth).getTime()) / (365.25 * 24 * 60 * 60 * 1000))
           : null,
