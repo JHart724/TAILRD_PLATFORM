@@ -43,6 +43,7 @@ export async function runGapDetection(
   hospitalId: string,
   _uploadJobId: string,
 ): Promise<GapDetectionResult> {
+  const BATCH_SIZE = 100; // Process patients in batches to avoid OOM
   const result: GapDetectionResult = {
     patientsEvaluated: 0,
     gapFlagsCreated: 0,
@@ -50,82 +51,111 @@ export async function runGapDetection(
     gapFlagsResolved: 0,
   };
 
-  // Get all patients for this hospital with clinical data
-  const patients = await prisma.patient.findMany({
+  // Pre-load ALL existing gaps for this hospital in one query (avoids N+1 per patient)
+  const allExistingGaps = await prisma.therapyGap.findMany({
     where: { hospitalId },
-    include: {
-      conditions: true,
-      observations: { orderBy: { observedDateTime: 'desc' } },
-      medications: true,
-    },
+    select: { id: true, patientId: true, gapType: true, module: true },
   });
+  const existingKey = (patientId: string, gapType: string, module: string) =>
+    `${patientId}::${gapType}::${module}`;
+  const existingMap = new Map(
+    allExistingGaps.map(g => [existingKey(g.patientId, g.gapType, g.module), g.id])
+  );
 
-  for (const patient of patients) {
-    result.patientsEvaluated++;
+  // Count total patients for progress tracking
+  const totalPatients = await prisma.patient.count({ where: { hospitalId } });
+  let cursor: string | undefined;
 
-    // Collect diagnosis codes
-    const dxCodes = patient.conditions.map(c => c.icd10Code).filter(Boolean) as string[];
-
-    // Build lab value map (most recent value per observation type)
-    const labValues: Record<string, number> = {};
-    for (const obs of patient.observations) {
-      if (obs.valueNumeric !== null && !labValues[obs.observationType]) {
-        labValues[obs.observationType] = obs.valueNumeric;
-      }
-    }
-
-    // Collect medication RxNorm codes
-    const medCodes = patient.medications
-      .map(m => m.rxNormCode)
-      .filter(Boolean) as string[];
-
-    // Estimate patient age from dateOfBirth
-    const age = Math.floor(
-      (Date.now() - patient.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000),
-    );
-
-    // Run gap detection rules
-    const detectedGaps = evaluateGapRules(dxCodes, labValues, medCodes, age, patient.gender);
-
-    if (detectedGaps.length === 0) continue;
-
-    // Pre-load existing gaps for this patient in one query (avoids N+1)
-    const existingGaps = await prisma.therapyGap.findMany({
-      where: { patientId: patient.id, hospitalId },
-      select: { id: true, gapType: true, module: true },
+  // Process patients in batches using cursor-based pagination
+  while (true) {
+    const patients = await prisma.patient.findMany({
+      where: { hospitalId },
+      include: {
+        conditions: true,
+        observations: { orderBy: { observedDateTime: 'desc' } },
+        medications: true,
+      },
+      take: BATCH_SIZE,
+      ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
+      orderBy: { id: 'asc' },
     });
-    const existingKey = (g: { gapType: string; module: string }) => `${g.gapType}::${g.module}`;
-    const existingMap = new Map(existingGaps.map(g => [existingKey(g), g.id]));
 
-    const toCreate: any[] = [];
-    for (const gap of detectedGaps) {
-      const key = existingKey({ gapType: gap.type, module: gap.module });
-      const existingId = existingMap.get(key);
+    if (patients.length === 0) break;
+    cursor = patients[patients.length - 1].id;
 
-      if (existingId) {
-        await prisma.therapyGap.update({
-          where: { id: existingId },
-          data: { currentStatus: gap.status },
-        });
-        result.gapFlagsUpdated++;
-      } else {
-        toCreate.push({
-          patientId: patient.id,
-          hospitalId,
-          gapType: gap.type,
-          module: gap.module,
-          medication: gap.medication || null,
-          currentStatus: gap.status,
-          targetStatus: gap.target,
-          recommendations: gap.recommendations as Prisma.InputJsonValue ?? Prisma.JsonNull,
-        });
+    const allToCreate: any[] = [];
+    const allToUpdate: { id: string; status: string }[] = [];
+
+    for (const patient of patients) {
+      result.patientsEvaluated++;
+
+      const dxCodes = patient.conditions.map(c => c.icd10Code).filter(Boolean) as string[];
+
+      // Build lab value map (most recent value per observation type)
+      const labValues: Record<string, number> = {};
+      for (const obs of patient.observations) {
+        if (obs.valueNumeric !== null && !labValues[obs.observationType]) {
+          labValues[obs.observationType] = obs.valueNumeric;
+        }
+      }
+
+      const medCodes = patient.medications
+        .map(m => m.rxNormCode)
+        .filter(Boolean) as string[];
+
+      const age = Math.floor(
+        (Date.now() - patient.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000),
+      );
+
+      try {
+        const detectedGaps = evaluateGapRules(dxCodes, labValues, medCodes, age, patient.gender, patient.race ?? undefined);
+
+        if (detectedGaps.length === 0) continue;
+
+        for (const gap of detectedGaps) {
+          const key = existingKey(patient.id, gap.type, gap.module);
+          const existId = existingMap.get(key);
+
+          if (existId) {
+            allToUpdate.push({ id: existId, status: gap.status });
+          } else {
+            allToCreate.push({
+              patientId: patient.id,
+              hospitalId,
+              gapType: gap.type,
+              module: gap.module,
+              medication: gap.medication || null,
+              currentStatus: gap.status,
+              targetStatus: gap.target,
+              recommendations: gap.recommendations as Prisma.InputJsonValue ?? Prisma.JsonNull,
+            });
+          }
+        }
+      } catch (err) {
+        // Log but don't fail the entire run for one bad patient
+        console.error(`Gap detection failed for patient ${patient.id}:`, err instanceof Error ? err.message : err);
       }
     }
 
-    if (toCreate.length > 0) {
-      await prisma.therapyGap.createMany({ data: toCreate });
-      result.gapFlagsCreated += toCreate.length;
+    // Batch create new gaps
+    if (allToCreate.length > 0) {
+      await prisma.therapyGap.createMany({ data: allToCreate });
+      result.gapFlagsCreated += allToCreate.length;
     }
+
+    // Batch update existing gaps
+    if (allToUpdate.length > 0) {
+      await prisma.$transaction(
+        allToUpdate.map(u => prisma.therapyGap.update({
+          where: { id: u.id },
+          data: { currentStatus: u.status },
+        }))
+      );
+      result.gapFlagsUpdated += allToUpdate.length;
+    }
+
+    // If we got fewer than BATCH_SIZE, we're done
+    if (patients.length < BATCH_SIZE) break;
   }
 
   return result;
