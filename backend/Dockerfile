@@ -25,15 +25,14 @@ COPY scripts/ ./scripts/
 # Build the application
 RUN npm run build
 
-# Production stage
-FROM node:18-alpine AS production
+# Production stage (slim instead of alpine for cross-platform buildx compatibility)
+FROM node:18-slim AS production
 
-# Install security updates + curl for healthcheck
-RUN apk update && apk upgrade && apk add --no-cache curl
+# Install curl for healthcheck
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user for security
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S tailrd -u 1001
+RUN groupadd -g 1001 nodejs && useradd -u 1001 -g nodejs -m tailrd
 
 # Set working directory
 WORKDIR /app
@@ -59,7 +58,7 @@ RUN mkdir -p logs backups uploads
 
 # Set correct permissions
 RUN chown -R tailrd:nodejs /app
-RUN chmod +x scripts/*.sh
+RUN chmod +x scripts/*.sh 2>/dev/null || true
 
 # Switch to non-root user
 USER tailrd
