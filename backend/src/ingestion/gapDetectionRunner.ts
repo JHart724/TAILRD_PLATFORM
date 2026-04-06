@@ -3380,7 +3380,7 @@ function evaluateGapRules(
         status: 'Iron deficiency untreated',
         target: 'IV iron prescribed',
         medication: 'IV Iron',
-        recommendations: { action: 'Order IV Ferric Carboxymaltose' },
+        recommendations: { action: 'Consider IV Ferric Carboxymaltose' },
       });
     }
   }
@@ -3405,7 +3405,7 @@ function evaluateGapRules(
         status: 'Finerenone not prescribed (CKD + T2DM)',
         target: 'Finerenone initiated',
         medication: 'Finerenone',
-        recommendations: { action: 'Prescribe Finerenone for CKD with T2DM per FIDELIO-DKD/FIGARO-DKD' },
+        recommendations: { action: 'Consider Finerenone for CKD with T2DM per FIDELIO-DKD/FIGARO-DKD' },
       });
     }
   }
@@ -3425,7 +3425,7 @@ function evaluateGapRules(
         target: 'SGLT2i initiated',
         medication: 'Dapagliflozin or Empagliflozin',
         recommendations: {
-          action: 'Prescribe SGLT2i per 2022 AHA/ACC/HFSA, Class 1, LOE A',
+          action: 'Consider SGLT2i per 2022 AHA/ACC/HFSA, Class 1, LOE A',
           guideline: 'DAPA-HF / EMPEROR-Reduced trials',
         },
       });
@@ -3446,7 +3446,7 @@ function evaluateGapRules(
         target: 'Beta-blocker initiated',
         medication: 'Carvedilol, Metoprolol Succinate, or Bisoprolol',
         recommendations: {
-          action: 'Prescribe evidence-based BB per 2022 AHA/ACC/HFSA, Class 1, LOE A',
+          action: 'Consider evidence-based BB per 2022 AHA/ACC/HFSA, Class 1, LOE A',
         },
       });
     }
@@ -3454,10 +3454,10 @@ function evaluateGapRules(
 
   // Gap HF-36: MRA Missing in HFrEF
   // Guideline: 2022 AHA/ACC/HFSA HF Guideline, Class 1, LOE A (RALES, EMPHASIS-HF)
-  // Spironolactone (9997) or Eplerenone (298869) when LVEF <=35%, K<5.0, eGFR>30
+  // Spironolactone (9997) or Eplerenone (298869) when LVEF <=40%, K<5.0, eGFR>30
   if (
     hasHF &&
-    labValues['lvef'] !== undefined && labValues['lvef'] <= 35 &&
+    labValues['lvef'] !== undefined && labValues['lvef'] <= 40 &&
     labValues['potassium'] !== undefined && labValues['potassium'] < 5.0 &&
     labValues['egfr'] !== undefined && labValues['egfr'] > 30
   ) {
@@ -3467,12 +3467,10 @@ function evaluateGapRules(
       gaps.push({
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.HEART_FAILURE,
-        status: 'MRA not prescribed in HFrEF with LVEF<=35%',
+        status: 'MRA not prescribed in HFrEF with LVEF<=40%',
         target: 'Spironolactone or Eplerenone initiated',
         medication: 'Spironolactone or Eplerenone',
-        recommendations: {
-          action: 'Prescribe MRA per 2022 AHA/ACC/HFSA, Class 1, LOE A (RALES/EMPHASIS-HF)',
-        },
+        recommendations: { action: 'Consider MRA per 2022 AHA/ACC/HFSA, Class 1, LOE A (RALES/EMPHASIS-HF)' },
       });
     }
   }
@@ -3890,11 +3888,12 @@ function evaluateGapRules(
     });
   }
 
-  // Gap HF-79: SGLT2i for HFpEF
+  // Gap HF-79: SGLT2i for HFpEF/HFmrEF
   // Guideline: 2023 ACC Expert Consensus on HFpEF (EMPEROR-Preserved, DELIVER Trials)
+  // DELIVER included LVEF > 40%, so this covers both HFmrEF (41-49%) and HFpEF (>=50%)
   if (
     hasHF &&
-    labValues['lvef'] !== undefined && labValues['lvef'] >= 50 &&
+    labValues['lvef'] !== undefined && labValues['lvef'] > 40 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     const SGLT2I_CODES_HFPEF = ['1488564', '1545653', '2627044'];
@@ -3903,12 +3902,12 @@ function evaluateGapRules(
       gaps.push({
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.HEART_FAILURE,
-        status: 'SGLT2i not prescribed in HFpEF',
-        target: 'SGLT2i therapy considered for HFpEF',
+        status: 'SGLT2i not prescribed in HFmrEF/HFpEF',
+        target: 'SGLT2i therapy considered',
         medication: 'Dapagliflozin or Empagliflozin',
-        recommendations: { action: 'Consider SGLT2i for HFpEF per 2023 ACC Expert Consensus (EMPEROR-Preserved, DELIVER)' },
+        recommendations: { action: 'Consider SGLT2i for HFmrEF/HFpEF per 2023 ACC Expert Consensus (EMPEROR-Preserved, DELIVER)' },
         evidence: {
-          triggerCriteria: ['HFpEF (LVEF >= 50%)', 'No current SGLT2i'],
+          triggerCriteria: [`HFmrEF/HFpEF (LVEF > 40%): ${labValues['lvef']}%`, 'No current SGLT2i'],
           guidelineSource: '2023 ACC Expert Consensus Decision Pathway on HFpEF (EMPEROR-Preserved, DELIVER Trials)',
           classOfRecommendation: '1',
           levelOfEvidence: 'A',
@@ -3981,7 +3980,7 @@ function evaluateGapRules(
         module: ModuleType.ELECTROPHYSIOLOGY,
         status: `QTc ${severity}: ${labValues['qtc_interval']}ms (threshold ${qtcThreshold}ms)`,
         target: 'QT drug review completed',
-        recommendations: { action: 'Order ECG + Electrolytes + Medication Review' },
+        recommendations: { action: 'Consider ECG + Electrolytes + Medication Review' },
       });
     }
   }
@@ -4002,7 +4001,7 @@ function evaluateGapRules(
         target: 'OAC therapy initiated',
         medication: 'Apixaban, Rivaroxaban, or Edoxaban',
         recommendations: {
-          action: 'Prescribe DOAC per 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE A',
+          action: 'Consider DOAC per 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE A',
           guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation',
         },
       });
@@ -4322,7 +4321,7 @@ function evaluateGapRules(
         target: 'Statin therapy initiated',
         medication: 'Atorvastatin 40-80mg or Rosuvastatin 20-40mg',
         recommendations: {
-          action: 'Prescribe high-intensity statin per 2018 ACC/AHA Cholesterol, Class 1, LOE A',
+          action: 'Consider high-intensity statin per 2018 ACC/AHA Cholesterol, Class 1, LOE A',
           guideline: '2018 ACC/AHA Cholesterol Management',
         },
       });
@@ -4588,7 +4587,7 @@ function evaluateGapRules(
         status: 'Echo surveillance overdue for aortic stenosis',
         target: 'Transthoracic echocardiogram completed',
         recommendations: {
-          action: 'Order TTE per 2020 ACC/AHA VHD Guideline',
+          action: 'Consider TTE per 2020 ACC/AHA VHD Guideline',
           guideline: '2020 ACC/AHA Valvular Heart Disease, Class 1, LOE B',
         },
       });
@@ -4643,7 +4642,7 @@ function evaluateGapRules(
         target: 'Statin therapy initiated',
         medication: 'Atorvastatin or Rosuvastatin',
         recommendations: {
-          action: 'Prescribe high-intensity statin per 2024 ACC/AHA PAD Guideline, Class 1, LOE A',
+          action: 'Consider high-intensity statin per 2024 ACC/AHA PAD Guideline, Class 1, LOE A',
           guideline: '2024 ACC/AHA Peripheral Artery Disease',
         },
       });
@@ -4664,7 +4663,7 @@ function evaluateGapRules(
         status: 'ABI screening not performed',
         target: 'Ankle-brachial index completed',
         recommendations: {
-          action: 'Order ABI per 2024 ACC/AHA PAD Guideline for symptomatic/at-risk patients',
+          action: 'Consider ABI per 2024 ACC/AHA PAD Guideline for symptomatic/at-risk patients',
           guideline: '2024 ACC/AHA Peripheral Artery Disease, Class 1, LOE B',
         },
       });
@@ -4690,7 +4689,7 @@ function evaluateGapRules(
         target: 'RAAS inhibitor initiated (preferably sacubitril/valsartan)',
         medication: 'Sacubitril/Valsartan (preferred), Lisinopril, Enalapril, Ramipril, Losartan, or Valsartan',
         recommendations: {
-          action: 'Prescribe RAAS inhibitor per 2022 AHA/ACC/HFSA, Class 1, LOE A',
+          action: 'Consider RAAS inhibitor per 2022 AHA/ACC/HFSA, Class 1, LOE A',
           guideline: '2022 AHA/ACC/HFSA Heart Failure Guideline',
           preferred: 'Sacubitril/Valsartan (ARNI) per PARADIGM-HF',
         },
@@ -4715,7 +4714,7 @@ function evaluateGapRules(
         target: 'Beta-blocker or non-dihydropyridine CCB initiated',
         medication: 'Metoprolol, Carvedilol, Diltiazem, or Verapamil',
         recommendations: {
-          action: 'Prescribe rate control agent per 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE B',
+          action: 'Consider rate control agent per 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE B',
           guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation',
           note: 'Avoid non-DHP CCB (diltiazem/verapamil) in patients with HFrEF',
         },
@@ -4780,7 +4779,7 @@ function evaluateGapRules(
       status: 'Echo surveillance overdue for bioprosthetic valve',
       target: 'Annual transthoracic echocardiogram completed',
       recommendations: {
-        action: 'Order TTE for bioprosthetic valve surveillance per 2020 ACC/AHA VHD, Class 1, LOE C',
+        action: 'Consider TTE for bioprosthetic valve surveillance per 2020 ACC/AHA VHD, Class 1, LOE C',
         guideline: '2020 ACC/AHA Valvular Heart Disease',
         note: 'Annual echo monitors for structural valve deterioration (SVD) in bioprosthetic valves',
       },
