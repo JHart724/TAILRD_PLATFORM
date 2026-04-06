@@ -3,6 +3,9 @@
 
 FROM node:18-slim
 
+# Prisma requires OpenSSL
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # Copy package files and install ALL deps (need devDeps for Prisma generate + tsc)
