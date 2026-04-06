@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AlertTriangle, CheckCircle, DollarSign, Users, ChevronDown, ChevronUp, Target, Activity, Pill, Stethoscope, TrendingUp, Zap, Info, Search, Radio, FileText } from 'lucide-react';
 import { computeQTcRisk, computeCHA2DS2VASc, estimatePVCBurden } from '../../../../utils/clinicalCalculators';
 import { computeTrajectory, computeTimeHorizon, trajectoryDisplay, timeHorizonDisplay, computeRevenueAtRisk, formatDollar, type TrajectoryResult, type TrajectoryDistribution } from '../../../../utils/predictiveCalculators';
 import GapActionButtons from '../../../../components/shared/GapActionButtons';
 import { useGapActions } from '../../../../hooks/useGapActions';
+import { fetchModuleGapsFromApi, type FrontendClinicalGap } from '../../../../adapters/gapAdapter';
 
 // ============================================================
 // CLINICAL GAP DETECTION — ELECTROPHYSIOLOGY MODULE
@@ -4390,6 +4391,20 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
   const [patientSortOrder, setPatientSortOrder] = useState<'urgency' | 'dollar' | 'score'>('urgency');
   const [showMethodology, setShowMethodology] = useState<string | null>(null);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [dataSource, setDataSource] = useState<'mock' | 'api'>('mock');
+  const [apiGaps, setApiGaps] = useState<FrontendClinicalGap[] | null>(null);
+
+  // Try to fetch real gap data from backend; fall back to mock data
+  useEffect(() => {
+    let cancelled = false;
+    fetchModuleGapsFromApi('electrophysiology').then(gaps => {
+      if (!cancelled && gaps && gaps.length > 0) {
+        setApiGaps(gaps);
+        setDataSource('api');
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
 
   const sortPatients = (patients: EPGapPatient[], _gap: EPClinicalGap) => {
     return [...patients].sort((a, b) => {
@@ -4411,11 +4426,27 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
     });
   };
 
-  const totalPatients = EP_CLINICAL_GAPS.reduce((sum, g) => sum + g.patientCount, 0);
-  const totalOpportunity = EP_CLINICAL_GAPS.reduce((sum, g) => sum + g.dollarOpportunity, 0);
+  // Use real API data when available, fall back to mock data
+  const activeGaps: EPClinicalGap[] = dataSource === 'api' && apiGaps
+    ? apiGaps.map(g => ({
+        ...g,
+        dollarOpportunity: g.dollarOpportunity || 0,
+        evidence: g.evidence || '',
+        cta: g.cta || '',
+        detectionCriteria: g.detectionCriteria || [],
+        patients: g.patients?.map(p => ({
+          ...p,
+          signals: p.signals || [],
+          keyValues: p.keyValues || {},
+        })) || [],
+      })) as unknown as EPClinicalGap[]
+    : EP_CLINICAL_GAPS;
+
+  const totalPatients = activeGaps.reduce((sum, g) => sum + g.patientCount, 0);
+  const totalOpportunity = activeGaps.reduce((sum, g) => sum + g.dollarOpportunity, 0);
 
   const categorySortOrder: Record<string, number> = { Safety: 0, Discovery: 1, Gap: 2, Therapy: 2, Growth: 3, Quality: 4, Deprescribing: 5 };
-  const sortedGaps = [...EP_CLINICAL_GAPS].sort((a, b) => {
+  const sortedGaps = [...activeGaps].sort((a, b) => {
     const diff = (categorySortOrder[a.category] ?? 99) - (categorySortOrder[b.category] ?? 99);
     if (diff !== 0) return diff;
     return (b.patientCount || 0) - (a.patientCount || 0);
@@ -4514,8 +4545,11 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
             <strong>{activeSubTab.label}</strong> · {filteredPatientCount.toLocaleString()} patients · ${(filteredOpportunity / 1_000_000).toFixed(1)}M
           </div>
         ) : (
-          <div className="text-sm text-slate-500 mb-4">
-            Patients identified: <strong>{totalPatients.toLocaleString()}</strong> · Opportunity: <strong>${(totalOpportunity / 1_000_000).toFixed(1)}M</strong>
+          <div className="text-sm text-slate-500 mb-4 flex items-center gap-3">
+            <span>Patients identified: <strong>{totalPatients.toLocaleString()}</strong> · Opportunity: <strong>${(totalOpportunity / 1_000_000).toFixed(1)}M</strong></span>
+            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${dataSource === 'api' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+              {dataSource === 'api' ? 'Live Data' : 'Demo Data'}
+            </span>
           </div>
         )}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

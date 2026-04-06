@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AlertTriangle, CheckCircle, DollarSign, Users, ChevronDown, ChevronUp, Target, Heart, Stethoscope, TrendingUp, Zap, Info, Search, Radio, FileText } from 'lucide-react';
 import { computeTrajectory, computeTimeHorizon, projectASProgression, projectBAVProgression, trajectoryDisplay, timeHorizonDisplay, formatDollar, type TrajectoryResult, type TrajectoryDistribution } from '../../../../utils/predictiveCalculators';
 import GapActionButtons from '../../../../components/shared/GapActionButtons';
 import { useGapActions } from '../../../../hooks/useGapActions';
+import { fetchModuleGapsFromApi, type FrontendClinicalGap } from '../../../../adapters/gapAdapter';
 
 // ============================================================
 // CLINICAL GAP DETECTION &mdash; VALVULAR DISEASE MODULE
@@ -3358,15 +3359,45 @@ const VDClinicalGapDetectionDashboard: React.FC<VDClinicalGapDetectionDashboardP
   const [sortBy, setSortBy] = useState<'priority' | 'patients' | 'opportunity'>('priority');
   const [showMethodology, setShowMethodology] = useState<string | null>(null);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [dataSource, setDataSource] = useState<'mock' | 'api'>('mock');
+  const [apiGaps, setApiGaps] = useState<FrontendClinicalGap[] | null>(null);
 
-  const totalPatients = VD_CLINICAL_GAPS.reduce((sum, g) => sum + g.patientCount, 0);
-  const totalOpportunity = VD_CLINICAL_GAPS.reduce((sum, g) => sum + g.dollarOpportunity, 0);
-  const safetyGaps = VD_CLINICAL_GAPS.filter(g => g.category === 'Safety');
+  // Try to fetch real gap data from backend; fall back to mock data
+  useEffect(() => {
+    let cancelled = false;
+    fetchModuleGapsFromApi('valvular-disease').then(gaps => {
+      if (!cancelled && gaps && gaps.length > 0) {
+        setApiGaps(gaps);
+        setDataSource('api');
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  // Use real API data when available, fall back to mock data
+  const activeGaps: VDClinicalGap[] = dataSource === 'api' && apiGaps
+    ? apiGaps.map(g => ({
+        ...g,
+        dollarOpportunity: g.dollarOpportunity || 0,
+        evidence: g.evidence || '',
+        cta: g.cta || '',
+        detectionCriteria: g.detectionCriteria || [],
+        patients: g.patients?.map(p => ({
+          ...p,
+          signals: p.signals || [],
+          keyValues: p.keyValues || {},
+        })) || [],
+      })) as unknown as VDClinicalGap[]
+    : VD_CLINICAL_GAPS;
+
+  const totalPatients = activeGaps.reduce((sum, g) => sum + g.patientCount, 0);
+  const totalOpportunity = activeGaps.reduce((sum, g) => sum + g.dollarOpportunity, 0);
+  const safetyGaps = activeGaps.filter(g => g.category === 'Safety');
   const safetyPatients = safetyGaps.reduce((sum, g) => sum + g.patientCount, 0);
 
   const priorityOrder: Record<string, number> = { high: 0, medium: 1, low: 2 };
   const categoryOrder: Record<string, number> = { Safety: 0, Discovery: 1, Gap: 2, Growth: 3, Quality: 2 };
-  const sortedGaps = [...VD_CLINICAL_GAPS].sort((a, b) => {
+  const sortedGaps = [...activeGaps].sort((a, b) => {
     const catDiff = (categoryOrder[a.category] ?? 3) - (categoryOrder[b.category] ?? 3);
     if (catDiff !== 0) return catDiff;
     switch (sortBy) {
@@ -3439,6 +3470,13 @@ const VDClinicalGapDetectionDashboard: React.FC<VDClinicalGapDetectionDashboardP
             : 'Clinical Gap Detection \u2014 Valvular Disease Module'}
         </h3>
         {!categoryFilter && (
+          <div className="text-sm text-titanium-600 mb-4 flex items-center gap-3">
+            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${dataSource === 'api' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+              {dataSource === 'api' ? 'Live Data' : 'Demo Data'}
+            </span>
+          </div>
+        )}
+        {!categoryFilter && (
           <p className="text-sm text-titanium-600 mb-4">
             AI-driven detection of evidence-based valvular disease therapy gaps, surveillance deficiencies, and safety opportunities.
             21 active gap rules covering AS surveillance, post-TAVR quality, anticoagulation safety, BAV aortopathy, endocarditis prophylaxis, HALT screening, intervention referral, mitral repair quality, tricuspid intervention, valve-in-valve TAVR, concomitant AF, heart team documentation, prosthesis mismatch, aortic root, INR monitoring, TEER eligibility, PVE safety, pacemaker risk, bioprosthetic surveillance, TMVR candidacy, and AS+CAD strategy.
@@ -3466,7 +3504,7 @@ const VDClinicalGapDetectionDashboard: React.FC<VDClinicalGapDetectionDashboardP
               <TrendingUp className="w-4 h-4 text-blue-600" />
               <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Active Gaps</span>
             </div>
-            <div className="text-2xl font-bold text-blue-800">{categoryFilter ? filteredGaps.length : VD_CLINICAL_GAPS.length}</div>
+            <div className="text-2xl font-bold text-blue-800">{categoryFilter ? filteredGaps.length : activeGaps.length}</div>
           </div>
           <div className="bg-rose-50 border border-rose-200 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
