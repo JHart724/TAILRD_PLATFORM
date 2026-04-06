@@ -7,19 +7,20 @@
 
 import { Router, Response, NextFunction } from 'express';
 import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
+import { writeAuditLog } from '../middleware/auditLogger';
 
 const router = Router();
 
 // All GOD view endpoints require authentication and super admin role
 router.use(authenticateToken);
 router.use((req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-  // Check for super-admin role (kebab-case, matching JWT payload)
   if (req.user?.role !== 'super-admin') {
     return res.status(403).json({
       error: 'Forbidden: super-admin role required for GOD view access'
     });
   }
-
+  // Audit every GOD view access (HIPAA: highest-privilege access must be logged)
+  writeAuditLog(req, 'GOD_VIEW_ACCESS', 'GodView', null, `GOD view: ${req.method} ${req.originalUrl}`);
   next();
 });
 

@@ -4,6 +4,7 @@ import prisma from '../lib/prisma';
 import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
 import { body, validationResult } from 'express-validator';
+import { writeAuditLog } from '../middleware/auditLogger';
 const godViewRouter = require('./godView');
 
 const router = Router();
@@ -348,6 +349,7 @@ router.post('/hospitals',
         }
       });
 
+      await writeAuditLog(req, 'HOSPITAL_CREATED', 'Hospital', hospital.id, `Created hospital: ${hospital.name}`);
       res.status(201).json({
         success: true,
         data: hospital,
@@ -407,6 +409,7 @@ router.put('/hospitals/:hospitalId',
         }
       });
 
+      await writeAuditLog(req, 'HOSPITAL_UPDATED', 'Hospital', req.params.hospitalId, 'Updated hospital configuration');
       res.json({
         success: true,
         data: hospital,
@@ -751,6 +754,7 @@ router.post('/hospitals/:hospitalId/users',
         message: 'User created successfully',
         timestamp: new Date().toISOString()
       } as APIResponse);
+      await writeAuditLog(req, 'USER_CREATED', 'User', user.id, `Created user: ${user.role} at hospital ${req.params.hospitalId}`);
 
     } catch (error: any) {
       if (error.code === 'P2002') {
@@ -806,6 +810,7 @@ router.put('/users/:userId',
         }
       });
 
+      await writeAuditLog(req, 'USER_UPDATED', 'User', req.params.userId, 'Updated user profile/role');
       res.json({
         success: true,
         data: user,
