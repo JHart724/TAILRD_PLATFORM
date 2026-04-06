@@ -10,6 +10,7 @@ import {
   Users,
   Calendar,
 } from 'lucide-react';
+import { useAdminHospitals } from '../../../hooks/useAdminData';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -181,8 +182,35 @@ const StatusBadge: React.FC<{ status: HealthSystem['status']; trialDays?: number
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
+// Transform API hospital data to the HealthSystem display format
+function mapApiHospital(h: any): HealthSystem {
+  const modules: string[] = [];
+  if (h.moduleHeartFailure) modules.push('HF');
+  if (h.moduleElectrophysiology) modules.push('EP');
+  if (h.moduleStructuralHeart) modules.push('SH');
+  if (h.moduleCoronaryIntervention) modules.push('CAD');
+  if (h.modulePeripheralVascular) modules.push('PV');
+  if (h.moduleValvularDisease) modules.push('VD');
+  return {
+    id: h.id,
+    name: h.name,
+    status: h.subscriptionActive ? 'Active' : 'Inactive',
+    tier: (h.subscriptionTier || 'Standard') as any,
+    modules,
+    users: h._count?.users ?? h.users?.length ?? 0,
+    location: `${h.city || ''}, ${h.state || ''}`.replace(/^, |, $/g, '') || 'N/A',
+    contactEmail: h.users?.[0]?.email || 'N/A',
+    contractStart: h.subscriptionStart ? new Date(h.subscriptionStart).toLocaleDateString() : 'N/A',
+    mrr: 'N/A',
+  };
+}
+
 const HealthSystems: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false);
+  const { data: apiHospitals, loading: apiLoading } = useAdminHospitals();
+
+  // Use API data when available, fall back to mock
+  const displaySystems = apiHospitals ? apiHospitals.map(mapApiHospital) : HEALTH_SYSTEMS;
 
   return (
     <div className="space-y-6">
@@ -234,7 +262,7 @@ const HealthSystems: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {HEALTH_SYSTEMS.map((hs, idx) => (
+            {displaySystems.map((hs, idx) => (
               <tr
                 key={hs.id}
                 className={`border-b border-gray-100 hover:bg-gray-50 transition-colors ${

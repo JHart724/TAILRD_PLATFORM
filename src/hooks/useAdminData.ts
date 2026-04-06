@@ -70,27 +70,63 @@ export function useAdminAnalytics() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!DATA_SOURCE.useRealApi) {
-      setLoading(false);
-      return;
-    }
-
-    const token = localStorage.getItem('tailrd-session-token');
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-
-    fetch(`${DATA_SOURCE.apiUrl}/admin/analytics`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(r => r.ok ? r.json() : null)
-      .then(json => {
-        if (json?.data) setData(json.data);
-      })
-      .catch(() => {})
+    adminFetch('/admin/analytics')
+      .then(d => setData(d))
       .finally(() => setLoading(false));
   }, []);
 
   return { data, loading };
+}
+
+/** Fetch hospitals list from admin API */
+export function useAdminHospitals() {
+  const [data, setData] = useState<any[] | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    adminFetch('/admin/hospitals')
+      .then(d => setData(Array.isArray(d) ? d : d?.hospitals || null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  return { data, loading, refetch: () => {
+    setLoading(true);
+    adminFetch('/admin/hospitals').then(d => setData(Array.isArray(d) ? d : d?.hospitals || null)).finally(() => setLoading(false));
+  }};
+}
+
+/** Fetch users list from admin API */
+export function useAdminUsers() {
+  const [data, setData] = useState<any[] | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    adminFetch('/admin/users')
+      .then(d => setData(Array.isArray(d) ? d : d?.users || null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  return { data, loading, refetch: () => {
+    setLoading(true);
+    adminFetch('/admin/users').then(d => setData(Array.isArray(d) ? d : d?.users || null)).finally(() => setLoading(false));
+  }};
+}
+
+/** Shared admin API fetch with auth */
+async function adminFetch(path: string): Promise<any> {
+  if (!DATA_SOURCE.useRealApi) return null;
+
+  const token = localStorage.getItem('tailrd-session-token');
+  if (!token) return null;
+
+  try {
+    const r = await fetch(`${DATA_SOURCE.apiUrl}${path}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!r.ok) return null;
+    const json = await r.json();
+    return json.data || json;
+  } catch {
+    return null;
+  }
 }

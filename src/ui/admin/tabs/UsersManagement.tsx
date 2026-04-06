@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAdminUsers } from '../../../hooks/useAdminData';
 import {
   Search,
   Filter,
@@ -190,13 +191,33 @@ const UserDetailPanel: React.FC<UserDetailPanelProps> = ({ user, onClose }) => {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
+// Map API user to display format
+function mapApiUser(u: any): AdminUser {
+  return {
+    id: u.id,
+    email: u.email,
+    firstName: u.firstName || '',
+    lastName: u.lastName || '',
+    role: u.role || 'viewer',
+    hospital: u.hospital?.name || u.hospitalName || 'Unknown',
+    hospitalId: u.hospitalId || '',
+    status: u.isActive ? 'Active' : 'Inactive',
+    lastLogin: u.lastLogin ? new Date(u.lastLogin).toLocaleString() : 'Never',
+    mfaEnabled: !!u.mfaEnabled,
+  };
+}
+
 const UsersManagement: React.FC = () => {
   const [search, setSearch] = useState('');
   const [hospitalFilter, setHospitalFilter] = useState('all');
   const [roleFilter, setRoleFilter] = useState('all');
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
+  const { data: apiUsers } = useAdminUsers();
 
-  const filtered = USERS.filter((u) => {
+  // Use API data when available, fall back to mock
+  const allUsers = apiUsers ? apiUsers.map(mapApiUser) : USERS;
+
+  const filtered = allUsers.filter((u) => {
     if (hospitalFilter !== 'all' && u.hospital !== hospitalFilter) return false;
     if (roleFilter !== 'all' && u.role !== roleFilter) return false;
     if (search) {
@@ -210,8 +231,8 @@ const UsersManagement: React.FC = () => {
     return true;
   });
 
-  const hospitals = Array.from(new Set(USERS.map((u) => u.hospital)));
-  const roles = Array.from(new Set(USERS.map((u) => u.role)));
+  const hospitals = Array.from(new Set(allUsers.map((u) => u.hospital)));
+  const roles = Array.from(new Set(allUsers.map((u) => u.role)));
 
   return (
     <div className="space-y-6">

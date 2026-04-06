@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAdminDashboard } from '../../../hooks/useAdminData';
 import {
   ShieldAlert,
   ShieldCheck,
@@ -71,8 +72,14 @@ const IP_ALLOWLIST = [
 // ─── Component ───────────────────────────────────────────────────────────────
 
 const AuditSecurity: React.FC = () => {
+  const { data: dashboard } = useAdminDashboard();
   const [allowlist, setAllowlist] = useState(IP_ALLOWLIST);
   const [newIp, setNewIp] = useState('');
+
+  // Override mock security summary with real alert count when available
+  if (dashboard) {
+    SECURITY_SUMMARY.openAlerts = dashboard.unacknowledgedAlerts;
+  }
 
   const addIp = () => {
     if (newIp && !allowlist.includes(newIp)) {

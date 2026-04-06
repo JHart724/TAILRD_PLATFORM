@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAdminHospitals } from '../../../hooks/useAdminData';
 import {
   TrendingUp,
   Clock,
@@ -87,8 +88,12 @@ const PLATFORM_SUMMARY = {
 // ─── Component ───────────────────────────────────────────────────────────────
 
 const CustomerSuccess: React.FC = () => {
+  const { data: hospitals } = useAdminHospitals();
+  const liveCount = hospitals ? hospitals.length : null;
+
   return (
     <div className="space-y-6">
+      {liveCount !== null && <div className="text-xs text-emerald-600 font-medium">Live data: {liveCount} health systems from backend API</div>}
       {/* Platform-Wide Summary */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-lg border border-gray-200 p-5">

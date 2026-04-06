@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAdminDashboard } from '../../../hooks/useAdminData';
 import {
   Database,
   HardDrive,
@@ -123,8 +124,20 @@ function qualityBg(score: number): string {
 // ─── Component ───────────────────────────────────────────────────────────────
 
 const DataManagement: React.FC = () => {
+  const { data: dashboard } = useAdminDashboard();
+
   return (
     <div className="space-y-6">
+      {dashboard && (
+        <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-sm">
+          <span className="font-medium text-emerald-800">Live Platform Stats:</span>{' '}
+          <span className="text-emerald-700">
+            {dashboard.totalPatients.toLocaleString()} patients across {dashboard.totalHospitals} health systems |{' '}
+            {dashboard.totalWebhookEvents} webhook events (90d) |{' '}
+            {dashboard.recentPatients} new patients (30d)
+          </span>
+        </div>
+      )}
       {/* Per-Hospital Data Stats */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {HOSPITAL_DATA.map((h) => (
