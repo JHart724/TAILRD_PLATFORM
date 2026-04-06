@@ -17,14 +17,15 @@ terraform {
     }
   }
 
-  # Uncomment and configure for remote state:
-  # backend "s3" {
-  #   bucket         = "tailrd-terraform-state"
-  #   key            = "infrastructure/terraform.tfstate"
-  #   region         = "us-east-1"
-  #   dynamodb_table = "tailrd-terraform-locks"
-  #   encrypt        = true
-  # }
+  # Remote state backend (S3 + DynamoDB locking)
+  # Prerequisites: run scripts/bootstrap-terraform.sh first to create the bucket + table
+  backend "s3" {
+    bucket         = "tailrd-terraform-state-863518424332"
+    key            = "infrastructure/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "tailrd-terraform-locks"
+    encrypt        = true
+  }
 }
 
 # ─── AWS Provider ────────────────────────────────────────────────────────────

@@ -17,9 +17,98 @@ resource "aws_acm_certificate" "frontend" {
   }
 }
 
-# ─── WAF Web ACL (lookup existing from CloudFormation) ──────────────────────
-# The existing WAF is REGIONAL scope (for ALB). CloudFront needs CLOUDFRONT scope.
-# For now, skip WAF on CloudFront. The ALB WAF protects the API.
+# ─── WAF Web ACL (CLOUDFRONT scope) ────────────────────────────────────────
+# Rate limiting + AWS managed rule sets for L7 protection on the CDN
+
+resource "aws_wafv2_web_acl" "cloudfront" {
+  name        = "${local.name_prefix}-cloudfront-waf"
+  description = "WAF for CloudFront frontend distribution"
+  scope       = "CLOUDFRONT" # Must be CLOUDFRONT scope, deployed in us-east-1
+
+  default_action {
+    allow {}
+  }
+
+  # Rate limiting: 2000 requests per 5 min per IP
+  rule {
+    name     = "rate-limit"
+    priority = 1
+
+    action {
+      block {}
+    }
+
+    statement {
+      rate_based_statement {
+        limit              = 2000
+        aggregate_key_type = "IP"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "${local.name_prefix}-cf-rate-limit"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  # AWS Managed Rules: Common Rule Set (XSS, SQLi, etc.)
+  rule {
+    name     = "aws-managed-common"
+    priority = 2
+
+    override_action {
+      none {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesCommonRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "${local.name_prefix}-cf-common-rules"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  # AWS Managed Rules: Known Bad Inputs
+  rule {
+    name     = "aws-managed-bad-inputs"
+    priority = 3
+
+    override_action {
+      none {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesKnownBadInputsRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "${local.name_prefix}-cf-bad-inputs"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  visibility_config {
+    cloudwatch_metrics_enabled = true
+    metric_name                = "${local.name_prefix}-cloudfront-waf"
+    sampled_requests_enabled   = true
+  }
+
+  tags = merge(local.common_tags, {
+    Name      = "${local.name_prefix}-cloudfront-waf"
+    Component = "Security"
+  })
+}
 
 # ─── S3 Bucket for Frontend Static Files ───────────────────────────────────
 
@@ -96,8 +185,7 @@ resource "aws_cloudfront_distribution" "frontend" {
   comment             = "${local.name_prefix} frontend distribution"
   default_root_object = "index.html"
   price_class         = "PriceClass_100"
-  # WAF is REGIONAL scope (for ALB). CloudFront WAF would need a separate CLOUDFRONT-scope ACL.
-  # web_acl_id = "" # Add CLOUDFRONT-scope WAF later if needed
+  web_acl_id = aws_wafv2_web_acl.cloudfront.arn
 
   aliases = ["app.${var.domain_name}"]
 
