@@ -21,8 +21,14 @@ COPY src/ ./src/
 COPY scripts/ ./scripts/
 RUN npm run build
 
-# Create directories
-RUN mkdir -p logs backups uploads
+# Non-root user for runtime security
+RUN groupadd --gid 1001 tailrd && \
+    useradd --uid 1001 --gid tailrd --shell /bin/false --create-home tailrd
+
+# Create directories owned by tailrd
+RUN mkdir -p logs backups uploads && chown -R tailrd:tailrd /app
+
+USER tailrd
 
 EXPOSE 3001
 
