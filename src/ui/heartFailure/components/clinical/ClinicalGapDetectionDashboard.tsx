@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AlertTriangle, CheckCircle, DollarSign, Users, ChevronDown, ChevronUp, Target, Heart, Activity, Pill, Stethoscope, TrendingUp, Zap, Info, Search, Radar, FileText } from 'lucide-react';
 import GapActionButtons from '../../../../components/shared/GapActionButtons';
 import { useGapActions } from '../../../../hooks/useGapActions';
 import { computeDANISHTier, classifyLVOT, computeSTOPBANG, computeKCCQTrend } from '../../../../utils/clinicalCalculators';
 import { computeTrajectory, computeTimeHorizon, predictThresholdDate, trajectoryDisplay, timeHorizonDisplay, computeRevenueAtRisk, formatDollar, projectBAVProgression, computeKCCQHospitalizationRisk, type TrajectoryResult, type TrajectoryDistribution } from '../../../../utils/predictiveCalculators';
 import { HF_CLINICAL_GAPS, type HFClinicalGap, type HFGapPatient } from './hfGapData';
+import { fetchModuleGapsFromApi, type FrontendClinicalGap } from '../../../../adapters/gapAdapter';
 
 // Re-export for any consumers that still import from this file
 export type { HFClinicalGap, HFGapPatient };
@@ -772,6 +773,20 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
   const [patientSortOrder, setPatientSortOrder] = useState<'urgency' | 'dollar' | 'score'>('urgency');
   const [showMethodology, setShowMethodology] = useState<string | null>(null);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [dataSource, setDataSource] = useState<'mock' | 'api'>('mock');
+  const [apiGaps, setApiGaps] = useState<FrontendClinicalGap[] | null>(null);
+
+  // Try to fetch real gap data from backend; fall back to mock data
+  useEffect(() => {
+    let cancelled = false;
+    fetchModuleGapsFromApi('heart-failure').then(gaps => {
+      if (!cancelled && gaps && gaps.length > 0) {
+        setApiGaps(gaps);
+        setDataSource('api');
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
 
   const sortPatients = (patients: HFGapPatient[], _gap: HFClinicalGap) => {
     return [...patients].sort((a, b) => {
@@ -794,8 +809,24 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
     });
   };
 
-  const totalPatients = HF_CLINICAL_GAPS.reduce((sum, g) => sum + g.patientCount, 0);
-  const totalOpportunity = HF_CLINICAL_GAPS.reduce((sum, g) => sum + g.dollarOpportunity, 0);
+  // Use real API data when available, fall back to mock data
+  const activeGaps: HFClinicalGap[] = dataSource === 'api' && apiGaps
+    ? apiGaps.map(g => ({
+        ...g,
+        dollarOpportunity: g.dollarOpportunity || 0,
+        evidence: g.evidence || '',
+        cta: g.cta || '',
+        detectionCriteria: g.detectionCriteria || [],
+        patients: g.patients?.map(p => ({
+          ...p,
+          signals: p.signals || [],
+          keyValues: p.keyValues || {},
+        })) || [],
+      })) as unknown as HFClinicalGap[]
+    : HF_CLINICAL_GAPS;
+
+  const totalPatients = activeGaps.reduce((sum, g) => sum + g.patientCount, 0);
+  const totalOpportunity = activeGaps.reduce((sum, g) => sum + (g.dollarOpportunity || 0), 0);
 
   const priorityColor = (p: string) => {
     if (p === 'high') return 'bg-red-50 border-red-300 text-red-700';
@@ -812,7 +843,7 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
       ? 'bg-rose-200 text-rose-900'
       : 'bg-blue-100 text-blue-800';
 
-  const sortedGaps = [...HF_CLINICAL_GAPS].sort((a, b) => {
+  const sortedGaps = [...activeGaps].sort((a, b) => {
     const order: Record<string, number> = { Safety: 0, Discovery: 1, Gap: 2, Growth: 3 };
     const diff = (order[a.category] ?? 4) - (order[b.category] ?? 4);
     if (diff !== 0) return diff;
@@ -893,8 +924,11 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
             <strong>{activeSubTab.label}</strong> · {filteredPatientCount.toLocaleString()} patients · ${(filteredOpportunity / 1_000_000).toFixed(1)}M
           </div>
         ) : (
-          <div className="text-sm text-slate-500 mb-4">
-            Patients identified: <strong>{totalPatients.toLocaleString()}</strong> · Opportunity: <strong>${(totalOpportunity / 1_000_000).toFixed(1)}M</strong>
+          <div className="text-sm text-slate-500 mb-4 flex items-center gap-3">
+            <span>Patients identified: <strong>{totalPatients.toLocaleString()}</strong> · Opportunity: <strong>${(totalOpportunity / 1_000_000).toFixed(1)}M</strong></span>
+            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${dataSource === 'api' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+              {dataSource === 'api' ? 'Live Data' : 'Demo Data'}
+            </span>
           </div>
         )}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
