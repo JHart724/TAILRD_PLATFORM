@@ -22,7 +22,7 @@ const RCOperationsView: React.FC = () => {
  <FileX className="w-6 h-6 text-porsche-600 drop-shadow-sm" />
  </div>
  </div>
- <div className="flex items-center gap-2 text-sm font-semibold text-[#2C4A60]">
+ <div className="flex items-center gap-2 text-sm font-semibold text-teal-700">
  <TrendingUp className="w-4 h-4 transform rotate-180" />
  <span>-8.2%</span>
  <span className="text-titanium-500 font-normal ml-1">vs last month</span>
@@ -44,14 +44,14 @@ const RCOperationsView: React.FC = () => {
  <Clock className="w-6 h-6 text-crimson-600 drop-shadow-sm" />
  </div>
  </div>
- <div className="flex items-center gap-2 text-sm font-semibold text-[#2C4A60]">
+ <div className="flex items-center gap-2 text-sm font-semibold text-teal-700">
  <TrendingUp className="w-4 h-4 transform rotate-180" />
  <span>-0.8</span>
  <span className="text-titanium-500 font-normal ml-1">days improved</span>
  </div>
  </div>
 
- <div className="metal-card p-6 border-l-4 border-l-[#4A6880] bg-[#f0f5fa]">
+ <div className="metal-card p-6 border-l-4 border-l-[#4A6880] bg-chrome-50">
  <div className="flex items-start justify-between mb-3">
  <div className="flex-1">
  <div className="text-sm font-semibold text-titanium-600 uppercase tracking-wider mb-2">
@@ -63,10 +63,10 @@ const RCOperationsView: React.FC = () => {
  <div className="text-sm text-titanium-600">First Pass</div>
  </div>
  <div className="ml-4 p-3 rounded-xl bg-gradient-to-br from-white via-[#f0f5fa]/60 to-white border border-titanium-200 shadow-lg">
- <CheckCircle className="w-6 h-6 text-[#2C4A60] drop-shadow-sm" />
+ <CheckCircle className="w-6 h-6 text-teal-700 drop-shadow-sm" />
  </div>
  </div>
- <div className="flex items-center gap-2 text-sm font-semibold text-[#2C4A60]">
+ <div className="flex items-center gap-2 text-sm font-semibold text-teal-700">
  <TrendingUp className="w-4 h-4" />
  <span>+2.1%</span>
  <span className="text-titanium-500 font-normal ml-1">improvement</span>
@@ -88,7 +88,7 @@ const RCOperationsView: React.FC = () => {
  <AlertTriangle className="w-6 h-6 text-medical-red-600 drop-shadow-sm" />
  </div>
  </div>
- <div className="flex items-center gap-2 text-sm font-semibold text-[#2C4A60]">
+ <div className="flex items-center gap-2 text-sm font-semibold text-teal-700">
  <TrendingUp className="w-4 h-4 transform rotate-180" />
  <span>-12</span>
  <span className="text-titanium-500 font-normal ml-1">denials resolved</span>
@@ -243,7 +243,7 @@ const RCOperationsView: React.FC = () => {
  <div className="flex items-center justify-between mb-3">
  <div className="font-semibold text-titanium-900">{stage.stage}</div>
  <div className={`text-sm px-2 py-1 rounded-full font-medium ${
- stage.status === 'good' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ stage.status === 'good' ? 'bg-green-50 text-green-600' :
  stage.status === 'warning' ? 'bg-crimson-100 text-crimson-700' :
  'bg-titanium-100 text-titanium-700'
  }`}>
@@ -291,15 +291,15 @@ const RCOperationsView: React.FC = () => {
  
  <div className="p-6">
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
- <div className="bg-gradient-to-r from-[#f0f5fa] to-[#F0F5FA] rounded-lg p-4 border border-[#C8D4DC]">
+ <div className="bg-gradient-to-r from-[#f0f5fa] to-[#F0F5FA] rounded-lg p-4 border border-titanium-300">
  <div className="flex items-center gap-3 mb-3">
- <Users className="w-8 h-8 text-[#2C4A60]" />
+ <Users className="w-8 h-8 text-teal-700" />
  <div>
- <div className="font-semibold text-[#2C4A60]">Active Staff</div>
- <div className="text-2xl font-bold text-[#2C4A60]">24</div>
+ <div className="font-semibold text-teal-700">Active Staff</div>
+ <div className="text-2xl font-bold text-teal-700">24</div>
  </div>
  </div>
- <div className="text-sm text-[#2C4A60]">
+ <div className="text-sm text-teal-700">
  3 FTEs above target staffing
  </div>
  </div>
@@ -366,7 +366,7 @@ const RCOperationsView: React.FC = () => {
  <div className="font-medium text-titanium-900">{performer.name}</div>
  <div className="text-sm text-titanium-600">{performer.role} • {performer.specialization}</div>
  </div>
- <div className="text-lg font-bold text-[#2C4A60]">
+ <div className="text-lg font-bold text-teal-700">
  {performer.accuracy}% accuracy
  </div>
  </div>
@@ -382,7 +382,7 @@ const RCOperationsView: React.FC = () => {
  </div>
  <div>
  <div className="text-titanium-600">Efficiency</div>
- <div className="font-semibold text-[#2C4A60]">+12% above target</div>
+ <div className="font-semibold text-teal-700">+12% above target</div>
  </div>
  </div>
  </div>

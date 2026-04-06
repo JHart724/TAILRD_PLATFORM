@@ -3145,22 +3145,22 @@ const renderHALTAlert = (pt: VDGapPatient) => {
   const neuroEvent = String(pt.keyValues['Neurologic Event'] || pt.keyValues['Neurologic Complaints'] || '');
   const gradientChange = String(pt.keyValues['Mean Gradient Change'] || pt.keyValues['Gradient Change'] || '');
   return (
-    <div className="mt-3 bg-[#F0F5FA] border-2 border-[#C8D4DC] rounded-xl p-3 space-y-2">
-      <div className="flex items-center gap-2 text-sm font-bold text-[#6B7280]">
-        <AlertTriangle className="w-4 h-4 text-[#6B7280] flex-shrink-0" />
+    <div className="mt-3 bg-chrome-50 border-2 border-titanium-300 rounded-xl p-3 space-y-2">
+      <div className="flex items-center gap-2 text-sm font-bold text-gray-500">
+        <AlertTriangle className="w-4 h-4 text-gray-500 flex-shrink-0" />
         HALT Screening Required &mdash; Post-TAVR Neurologic Symptoms
       </div>
       {neuroEvent && (
-        <div className="text-sm text-[#6B7280]">
+        <div className="text-sm text-gray-500">
           Neurologic event: <span className="font-semibold">{neuroEvent}</span>
         </div>
       )}
       {gradientChange && (
-        <div className="text-sm text-[#6B7280]">
+        <div className="text-sm text-gray-500">
           Gradient trend: <span className="font-semibold">{gradientChange}</span>
         </div>
       )}
-      <div className="text-sm font-semibold text-[#6B7280]">
+      <div className="text-sm font-semibold text-gray-500">
         Order CT of TAVR valve to assess for hypoattenuated leaflet thickening
       </div>
       <div className="flex items-center gap-1.5 text-xs text-blue-600 mt-1">
@@ -3205,8 +3205,8 @@ const getVDTrajectoryBadges = (gap: VDClinicalGap, pt: VDGapPatient) => {
     <>
       <span className={`ml-2 text-xs px-2 py-0.5 rounded-full font-medium ${
         trajectory.direction === 'worsening_rapid' ? 'bg-red-100 text-red-700' :
-        trajectory.direction === 'worsening_slow' ? 'bg-[#FAF6E8] text-[#8B6914]' :
-        trajectory.direction === 'improving' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+        trajectory.direction === 'worsening_slow' ? 'bg-amber-50 text-amber-600' :
+        trajectory.direction === 'improving' ? 'bg-green-50 text-green-600' :
         'bg-gray-100 text-gray-600'
       }`}>
         {traj.arrow} {traj.label}
@@ -3230,12 +3230,12 @@ const renderVDPredictiveDetail = (gap: VDClinicalGap, pt: VDGapPatient) => {
     if (!isNaN(currentVmax)) {
       const prog = projectASProgression({ currentVmax, priorVmax, monthsBetween: priorVmax != null ? 6 : undefined });
       elements.push(
-        <div key="as-prog" className="mt-3 bg-[#f0f4f8] border border-[#C8D4DC] rounded-xl p-3 space-y-1">
-          <div className="flex items-center gap-2 text-sm font-bold text-[#1A2F4A]">
-            <TrendingUp className="w-4 h-4 text-[#2C4A60] flex-shrink-0" />
+        <div key="as-prog" className="mt-3 bg-chrome-50 border border-titanium-300 rounded-xl p-3 space-y-1">
+          <div className="flex items-center gap-2 text-sm font-bold text-chrome-800">
+            <TrendingUp className="w-4 h-4 text-teal-700 flex-shrink-0" />
             Predictive Intelligence — AS Progression to Severe
           </div>
-          <div className="text-sm text-[#2C4A60]">
+          <div className="text-sm text-teal-700">
             Current Vmax: {currentVmax.toFixed(1)} m/s
             {priorVmax != null && <> · Previous: {priorVmax.toFixed(1)} m/s (6 months ago)</>}
             {' '}· Rate: {prog.annualizedRate.toFixed(2)} m/s/year ({prog.progressionCategory})
@@ -3244,7 +3244,7 @@ const renderVDPredictiveDetail = (gap: VDClinicalGap, pt: VDGapPatient) => {
             )}
             {prog.monthsToSevere === 0 && <> · Already at severe threshold</>}
           </div>
-          <div className="text-xs text-[#2C4A60] italic">Confidence: {prog.confidence} — {prog.basisNote}</div>
+          <div className="text-xs text-teal-700 italic">Confidence: {prog.confidence} — {prog.basisNote}</div>
           <div className="flex items-center gap-1.5 text-xs text-blue-600 mt-1">
             <Zap className="w-3 h-3 flex-shrink-0" />
             Trajectory-aware · Forward-looking · Auto-computed from serial echocardiography
@@ -3444,19 +3444,19 @@ const VDClinicalGapDetectionDashboard: React.FC<VDClinicalGapDetectionDashboardP
 
   const priorityColor = (p: string) => {
     if (p === 'high') return 'bg-red-50 border-red-300 text-red-700';
-    if (p === 'medium') return 'bg-[#F0F5FA] border-[#C8D4DC] text-[#6B7280]';
-    return 'bg-[#F0F7F4] border-[#D8EDE6] text-[#2C4A60]';
+    if (p === 'medium') return 'bg-chrome-50 border-titanium-300 text-gray-500';
+    return 'bg-green-50 border-green-100 text-teal-700';
   };
 
   const categoryColor = (c: string) =>
     c === 'Discovery'
-      ? 'bg-[#F0F5FA] text-[#1A2F4A]'
+      ? 'bg-chrome-50 text-chrome-800'
       : c === 'Gap'
       ? 'bg-red-100 text-red-800'
       : c === 'Safety'
       ? 'bg-rose-200 text-rose-900'
       : c === 'Quality'
-      ? 'bg-[#FAF6E8] text-[#8B6914]'
+      ? 'bg-amber-50 text-amber-600'
       : 'bg-blue-100 text-blue-800';
 
   return (
@@ -3490,12 +3490,12 @@ const VDClinicalGapDetectionDashboard: React.FC<VDClinicalGapDetectionDashboardP
             </div>
             <div className="text-2xl font-bold text-red-800">{categoryFilter ? filteredPatientCount.toLocaleString() : totalPatients.toLocaleString()}</div>
           </div>
-          <div className="bg-[#F0F7F4] border border-[#D8EDE6] rounded-xl p-4">
+          <div className="bg-green-50 border border-green-100 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
-              <DollarSign className="w-4 h-4 text-[#2C4A60]" />
-              <span className="text-xs font-semibold text-[#2C4A60] uppercase tracking-wide">Total Opportunity</span>
+              <DollarSign className="w-4 h-4 text-teal-700" />
+              <span className="text-xs font-semibold text-teal-700 uppercase tracking-wide">Total Opportunity</span>
             </div>
-            <div className="text-2xl font-bold text-[#2C4A60]">
+            <div className="text-2xl font-bold text-teal-700">
               ${((categoryFilter ? filteredOpportunity : totalOpportunity) / 1000000).toFixed(1)}M
             </div>
           </div>
@@ -3618,13 +3618,13 @@ const VDClinicalGapDetectionDashboard: React.FC<VDClinicalGapDetectionDashboardP
                   </div>
                   {gap.category === 'Discovery' && (
                     <div className="flex items-center gap-1.5 mt-1">
-                      <span className="text-xs font-semibold text-[#2C4A60]">{'\u2B21'} Discovery — Net new patients · Never previously identified</span>
+                      <span className="text-xs font-semibold text-teal-700">{'\u2B21'} Discovery — Net new patients · Never previously identified</span>
                     </div>
                   )}
                   <div className="font-semibold text-titanium-900 text-base">{gap.name}</div>
                   {gap.whyMissed && (
                     <div className="mt-2 text-xs text-titanium-500 italic flex items-start gap-1.5">
-                      <Search className="w-3 h-3 text-[#4A6880] flex-shrink-0 mt-0.5" />
+                      <Search className="w-3 h-3 text-teal-500 flex-shrink-0 mt-0.5" />
                       <span>Why standard systems miss this: {gap.whyMissed}</span>
                     </div>
                   )}
@@ -3639,7 +3639,7 @@ const VDClinicalGapDetectionDashboard: React.FC<VDClinicalGapDetectionDashboardP
                       <span className="font-semibold text-titanium-900">{gap.patientCount}</span> patients
                     </span>
                     <span className="text-sm text-titanium-600">
-                      <span className="font-semibold text-[#2C4A60]">${(gap.dollarOpportunity / 1000000).toFixed(1)}M</span> opportunity
+                      <span className="font-semibold text-teal-700">${(gap.dollarOpportunity / 1000000).toFixed(1)}M</span> opportunity
                     </span>
                   </div>
                   {gap.subcategories && (
@@ -3671,19 +3671,19 @@ const VDClinicalGapDetectionDashboard: React.FC<VDClinicalGapDetectionDashboardP
                         </div>
                         <div className="flex items-center gap-4 text-xs">
                           <span className="text-red-600 font-medium">{'\u2193'} {dist.worseningRapid} worsening rapidly</span>
-                          <span className="text-[#6B7280] font-medium">{'\u2198'} {dist.worseningSlow} worsening slowly</span>
+                          <span className="text-gray-500 font-medium">{'\u2198'} {dist.worseningSlow} worsening slowly</span>
                           <span className="text-gray-500 font-medium">{'\u2192'} {dist.stable} stable</span>
-                          <span className="text-[#2C4A60] font-medium">{'\u2197'} {dist.improving} improving</span>
+                          <span className="text-teal-700 font-medium">{'\u2197'} {dist.improving} improving</span>
                         </div>
                         <div className="flex h-2 rounded-full overflow-hidden mt-2">
                           <div className="bg-red-400" style={{ width: `${(dist.worseningRapid / dist.total) * 100}%` }} />
-                          <div className="bg-[#F0F5FA]" style={{ width: `${(dist.worseningSlow / dist.total) * 100}%` }} />
+                          <div className="bg-chrome-50" style={{ width: `${(dist.worseningSlow / dist.total) * 100}%` }} />
                           <div className="bg-gray-300" style={{ width: `${(dist.stable / dist.total) * 100}%` }} />
-                          <div className="bg-[#C8D4DC]" style={{ width: `${(dist.improving / dist.total) * 100}%` }} />
+                          <div className="bg-titanium-300" style={{ width: `${(dist.improving / dist.total) * 100}%` }} />
                         </div>
                         <div className="flex items-center gap-4 mt-2 text-xs text-titanium-600">
-                          <span>Q1 opportunity: <span className="font-bold text-[#2C4A60]">{formatDollar(q1Rev)}</span> ({dist.worseningRapid} patients -- highest urgency)</span>
-                          <span>Full population: <span className="font-bold text-[#2C4A60]">{formatDollar(gap.dollarOpportunity)}</span></span>
+                          <span>Q1 opportunity: <span className="font-bold text-teal-700">{formatDollar(q1Rev)}</span> ({dist.worseningRapid} patients -- highest urgency)</span>
+                          <span>Full population: <span className="font-bold text-teal-700">{formatDollar(gap.dollarOpportunity)}</span></span>
                         </div>
                       </div>
                     );
@@ -3691,13 +3691,13 @@ const VDClinicalGapDetectionDashboard: React.FC<VDClinicalGapDetectionDashboardP
 
                   <div>
                     <h4 className="font-semibold text-titanium-800 mb-2 flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-[#6B7280]" />
+                      <AlertTriangle className="w-4 h-4 text-gray-500" />
                       Detection Criteria
                     </h4>
                     <ul className="space-y-1">
                       {gap.detectionCriteria.map((c) => (
                         <li key={c} className="text-sm text-titanium-700 flex gap-2">
-                          <CheckCircle className="w-3.5 h-3.5 text-[#2C4A60] flex-shrink-0 mt-0.5" />
+                          <CheckCircle className="w-3.5 h-3.5 text-teal-700 flex-shrink-0 mt-0.5" />
                           {c}
                         </li>
                       ))}
@@ -3754,12 +3754,12 @@ const VDClinicalGapDetectionDashboard: React.FC<VDClinicalGapDetectionDashboardP
                                   </span>
                                 )}
                                 {gap.ctaMap && pt.subflag && gap.ctaMap[pt.subflag] && (
-                                  <span className="ml-2 text-xs bg-[#F0F7F4] text-[#2D6147] px-2 py-0.5 rounded-full">
+                                  <span className="ml-2 text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded-full">
                                     {gap.ctaMap[pt.subflag]}
                                   </span>
                                 )}
                                 {gap.category === 'Discovery' && (
-                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-[#F0F7F4] text-[#2D6147] px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow. TAILRD identified this patient by assembling disconnected signals across care settings.">
+                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow. TAILRD identified this patient by assembling disconnected signals across care settings.">
                                     <Radio className="w-3 h-3" />
                                     First identified by TAILRD
                                   </span>
@@ -3806,9 +3806,9 @@ const VDClinicalGapDetectionDashboard: React.FC<VDClinicalGapDetectionDashboardP
                             )}
                             {ptOpen && gap.whyTailrd && (
                               <div className="px-4">
-                                <div className="bg-[#f0f4f8] border border-[#C8D4DC] rounded-xl p-3 mt-2">
-                                  <p className="text-xs font-semibold text-[#2C4A60] mb-1">Why TAILRD identified this patient:</p>
-                                  <p className="text-sm text-[#2C4A60]">{gap.whyTailrd}</p>
+                                <div className="bg-chrome-50 border border-titanium-300 rounded-xl p-3 mt-2">
+                                  <p className="text-xs font-semibold text-teal-700 mb-1">Why TAILRD identified this patient:</p>
+                                  <p className="text-sm text-teal-700">{gap.whyTailrd}</p>
                                 </div>
                               </div>
                             )}

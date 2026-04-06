@@ -1,5 +1,5 @@
 import { Router, Response } from 'express';
-import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
+import { authenticateToken, requireMFA, AuthenticatedRequest } from '../middleware/auth';
 import prisma from '../lib/prisma';
 import { writeAuditLog } from '../middleware/auditLogger';
 import { ModuleType } from '@prisma/client';
@@ -21,6 +21,64 @@ const moduleMap: Record<string, ModuleType> = {
   'pv': 'PERIPHERAL_VASCULAR',
   'vd': 'VALVULAR_DISEASE',
 };
+
+// GET /api/gaps/summary/all -- MUST be before /:moduleId to avoid Express matching 'summary' as a moduleId
+router.get('/summary/all', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = req.user?.hospitalId;
+
+  if (!hospitalId) {
+    return res.status(400).json({ error: 'Hospital context required' });
+  }
+
+  try {
+    const summary = await prisma.therapyGap.groupBy({
+      by: ['module'],
+      where: { hospitalId, resolvedAt: null },
+      _count: { id: true },
+    });
+
+    const totalPatientCount = await prisma.patient.count({
+      where: { hospitalId, isActive: true },
+    });
+
+    const modulePatientCounts = await Promise.all(
+      Object.values(moduleMap).filter((v, i, arr) => arr.indexOf(v) === i).map(async (mod) => {
+        const fieldMap: Record<string, string> = {
+          HEART_FAILURE: 'heartFailurePatient',
+          ELECTROPHYSIOLOGY: 'electrophysiologyPatient',
+          CORONARY_INTERVENTION: 'coronaryPatient',
+          STRUCTURAL_HEART: 'structuralHeartPatient',
+          VALVULAR_DISEASE: 'valvularDiseasePatient',
+          PERIPHERAL_VASCULAR: 'peripheralVascularPatient',
+        };
+        const field = fieldMap[mod];
+        if (!field) return { module: mod, patients: 0 };
+        const count = await prisma.patient.count({
+          where: { hospitalId, isActive: true, [field]: true },
+        });
+        return { module: mod, patients: count };
+      })
+    );
+
+    res.json({
+      success: true,
+      data: {
+        totalPatients: totalPatientCount,
+        modules: summary.map(s => {
+          const modPatients = modulePatientCounts.find(m => m.module === s.module);
+          return {
+            module: s.module,
+            openGaps: s._count.id,
+            patients: modPatients?.patients || 0,
+          };
+        }),
+      },
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: 'Failed to fetch gap summary' });
+  }
+});
 
 // GET /api/gaps/:moduleId
 router.get('/:moduleId', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
@@ -125,7 +183,7 @@ router.post('/:moduleId/:gapId/action', authenticateToken, async (req: Authentic
 // GET /api/gaps/:moduleId/detailed
 // Returns gap data in the shape the frontend gap dashboards need:
 // grouped by gapType, with patient list per gap, severity, and evidence
-router.get('/:moduleId/detailed', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+router.get('/:moduleId/detailed', authenticateToken, requireMFA, async (req: AuthenticatedRequest, res: Response) => {
   const hospitalId = req.user?.hospitalId;
   const moduleId = req.params.moduleId;
 
@@ -218,61 +276,4 @@ router.get('/:moduleId/detailed', authenticateToken, async (req: AuthenticatedRe
 
 // GET /api/gaps/summary/all
 // Returns gap counts per module for the platform dashboard / module navigator
-router.get('/summary/all', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
-  const hospitalId = req.user?.hospitalId;
-
-  if (!hospitalId) {
-    return res.status(400).json({ error: 'Hospital context required' });
-  }
-
-  try {
-    const summary = await prisma.therapyGap.groupBy({
-      by: ['module'],
-      where: { hospitalId, resolvedAt: null },
-      _count: { id: true },
-    });
-
-    const totalPatientCount = await prisma.patient.count({
-      where: { hospitalId, isActive: true },
-    });
-
-    const modulePatientCounts = await Promise.all(
-      Object.values(moduleMap).filter((v, i, arr) => arr.indexOf(v) === i).map(async (mod) => {
-        const fieldMap: Record<string, string> = {
-          HEART_FAILURE: 'heartFailurePatient',
-          ELECTROPHYSIOLOGY: 'electrophysiologyPatient',
-          CORONARY_INTERVENTION: 'coronaryPatient',
-          STRUCTURAL_HEART: 'structuralHeartPatient',
-          VALVULAR_DISEASE: 'valvularDiseasePatient',
-          PERIPHERAL_VASCULAR: 'peripheralVascularPatient',
-        };
-        const field = fieldMap[mod];
-        if (!field) return { module: mod, patients: 0 };
-        const count = await prisma.patient.count({
-          where: { hospitalId, isActive: true, [field]: true },
-        });
-        return { module: mod, patients: count };
-      })
-    );
-
-    res.json({
-      success: true,
-      data: {
-        totalPatients: totalPatientCount,
-        modules: summary.map(s => {
-          const modPatients = modulePatientCounts.find(m => m.module === s.module);
-          return {
-            module: s.module,
-            openGaps: s._count.id,
-            patients: modPatients?.patients || 0,
-          };
-        }),
-      },
-      timestamp: new Date().toISOString(),
-    });
-  } catch (error: any) {
-    res.status(500).json({ success: false, error: 'Failed to fetch gap summary' });
-  }
-});
-
 export default router;

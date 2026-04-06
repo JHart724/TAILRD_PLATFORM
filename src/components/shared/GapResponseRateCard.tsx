@@ -57,9 +57,9 @@ const GapResponseRateCard: React.FC<GapResponseRateCardProps> = ({
               Care team actions on detected gaps ({timeRange})
             </p>
           </div>
-          <div className="flex items-center gap-1.5 bg-[#F0F5FA] border border-[#D4E4F0] rounded-lg px-3 py-1.5">
-            <Activity className="w-3.5 h-3.5 text-[#3D6F94] flex-shrink-0" />
-            <span className="text-xs text-[#2A5578] font-medium">Live tracking</span>
+          <div className="flex items-center gap-1.5 bg-chrome-50 border border-chrome-100 rounded-lg px-3 py-1.5">
+            <Activity className="w-3.5 h-3.5 text-chrome-600 flex-shrink-0" />
+            <span className="text-xs text-chrome-700 font-medium">Live tracking</span>
           </div>
         </div>
       </div>
@@ -102,7 +102,7 @@ const GapResponseRateCard: React.FC<GapResponseRateCardProps> = ({
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-titanium-500">Referred</span>
-                  <span className="font-semibold text-[#3D6F94]">
+                  <span className="font-semibold text-chrome-600">
                     {rates.reduce((s, r) => s + r.breakdown.referred, 0)}
                   </span>
                 </div>

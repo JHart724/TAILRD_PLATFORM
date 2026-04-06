@@ -360,7 +360,7 @@ const EPOutcomesByCohort: React.FC = () => {
  }
  
  switch (performance) {
- case 'excellent': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'excellent': return 'text-teal-700 bg-chrome-50 border-titanium-300';
  case 'good': return 'text-crimson-700 bg-crimson-50 border-crimson-200';
  default: return 'text-medical-red-700 bg-medical-red-50 border-medical-red-200';
  }
@@ -369,7 +369,7 @@ const EPOutcomesByCohort: React.FC = () => {
   const getTrendIcon = (trend: 'improving' | 'declining' | 'stable') => {
  switch (trend) {
  case 'improving':
- return <TrendingUp className="w-4 h-4 text-[#2C4A60]" />;
+ return <TrendingUp className="w-4 h-4 text-teal-700" />;
  case 'declining':
  return <TrendingDown className="w-4 h-4 text-medical-red-600" />;
  default:
@@ -519,7 +519,7 @@ const EPOutcomesByCohort: React.FC = () => {
  <div className="flex items-center gap-2 ml-4">
  {getTrendIcon(cohort.trend)}
  <span className={`text-sm font-semibold ${
- cohort.trend === 'improving' ? 'text-[#2C4A60]' :
+ cohort.trend === 'improving' ? 'text-teal-700' :
  cohort.trend === 'declining' ? 'text-medical-red-600' : 'text-titanium-600'
  }`}>
  {cohort.trend !== 'stable' && (cohort.trendValue > 0 ? '+' : '')}{toFixed(cohort.trendValue, 1)}
@@ -558,7 +558,7 @@ const EPOutcomesByCohort: React.FC = () => {
  <div
  className={`h-2 rounded-full transition-all duration-700 ${
  (isLowerBetter ? cohort.currentValue <= cohort.targetValue : cohort.currentValue >= cohort.targetValue) 
- ? 'bg-[#2C4A60]' 
+ ? 'bg-teal-700' 
  : 'bg-medical-red-500'
  }`}
  style={{
@@ -607,7 +607,7 @@ const EPOutcomesByCohort: React.FC = () => {
  <div className="grid grid-cols-4 gap-4 pt-6 border-t border-titanium-200 mb-6">
  <div>
  <div className="text-sm text-titanium-600 mb-1">Best Performing Cohort</div>
- <div className="text-lg font-bold text-[#2C4A60]">
+ <div className="text-lg font-bold text-teal-700">
  {filteredCohorts.reduce((best, current) => 
  (isLowerBetter ? current.currentValue < best.currentValue : current.currentValue > best.currentValue) 
  ? current : best
@@ -645,7 +645,7 @@ const EPOutcomesByCohort: React.FC = () => {
 
  <div>
  <div className="text-sm text-titanium-600 mb-1">Improving Trends</div>
- <div className="text-lg font-bold text-[#2C4A60]">
+ <div className="text-lg font-bold text-teal-700">
  {filteredCohorts.filter(c => c.trend === 'improving').length}
  </div>
  <div className="text-sm text-titanium-600">
@@ -728,7 +728,7 @@ const EPOutcomesByCohort: React.FC = () => {
  Compare Cohorts
  </button>
  <button 
- className="flex items-center gap-2 px-4 py-2 bg-[#2C4A60] text-white rounded-lg hover:bg-[#2C4A60] transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-teal-700 text-white rounded-lg hover:bg-teal-700 transition-colors"
  onClick={() => {
  console.log('Opening quality improvement planning tool');
  {};

@@ -187,8 +187,8 @@ const PlatformOverview: React.FC = () => {
                 <span
                   className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                     hs.status === 'Active'
-                      ? 'bg-[#F0F7F4] text-[#2D6147]'
-                      : 'bg-[#FAF6E8] text-[#8B6914]'
+                      ? 'bg-green-50 text-green-600'
+                      : 'bg-amber-50 text-amber-600'
                   }`}
                 >
                   {hs.status}

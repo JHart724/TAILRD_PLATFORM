@@ -210,7 +210,7 @@ const SHQualityMetricsDashboard: React.FC = () => {
  performance = (current / target) * 100;
  }
 
- if (performance >= 90) return 'text-[#2C4A60] bg-[#f0f5fa]';
+ if (performance >= 90) return 'text-teal-700 bg-chrome-50';
  if (performance >= 75) return 'text-crimson-600 bg-crimson-50';
  return 'text-medical-red-600 bg-medical-red-50';
   };
@@ -218,7 +218,7 @@ const SHQualityMetricsDashboard: React.FC = () => {
   const getTrendIcon = (trend: 'up' | 'down' | 'stable') => {
  switch (trend) {
  case 'up':
- return <TrendingUp className="w-4 h-4 text-[#2C4A60]" />;
+ return <TrendingUp className="w-4 h-4 text-teal-700" />;
  case 'down':
  return <TrendingUp className="w-4 h-4 text-medical-red-600 transform rotate-180" />;
  default:
@@ -321,7 +321,7 @@ const SHQualityMetricsDashboard: React.FC = () => {
  <div className="flex items-center gap-2 ml-4">
  {getTrendIcon(metric.trend)}
  <span className={`text-sm font-semibold ${
- metric.trend === 'up' ? 'text-[#2C4A60]' :
+ metric.trend === 'up' ? 'text-teal-700' :
  metric.trend === 'down' ? 'text-medical-red-600' : 'text-titanium-600'
  }`}>
  {metric.trend !== 'stable' && (metric.trendValue > 0 ? '+' : '')}{metric.trendValue}%
@@ -369,7 +369,7 @@ const SHQualityMetricsDashboard: React.FC = () => {
  <div className="w-full bg-titanium-100 rounded-full h-2 mb-2">
  <div
  className={`h-2 rounded-full ${
- (metric.currentValue / metric.targetValue) >= 0.9 ? 'bg-[#2C4A60]' :
+ (metric.currentValue / metric.targetValue) >= 0.9 ? 'bg-teal-700' :
  (metric.currentValue / metric.targetValue) >= 0.75 ? 'bg-crimson-500' :
  'bg-medical-red-500'
  }`}
@@ -396,7 +396,7 @@ const SHQualityMetricsDashboard: React.FC = () => {
  <div className={`w-3 h-3 rounded-full ${
  cohort.riskLevel === 'high' ? 'bg-medical-red-500' :
  cohort.riskLevel === 'medium' ? 'bg-crimson-500' :
- 'bg-[#2C4A60]'
+ 'bg-teal-700'
  }`}></div>
  <span className="text-sm text-titanium-800">{cohort.name}</span>
  </div>
@@ -413,7 +413,7 @@ const SHQualityMetricsDashboard: React.FC = () => {
  {metric.trendData && (
  <div>
  <div className="flex items-center gap-2 mb-3">
- <Activity className="w-4 h-4 text-[#2C4A60]" />
+ <Activity className="w-4 h-4 text-teal-700" />
  <h4 className="font-semibold text-titanium-900">Quarterly Trends</h4>
  </div>
  <div className="space-y-2">
@@ -425,7 +425,7 @@ const SHQualityMetricsDashboard: React.FC = () => {
  {formatValue(trend.value, metric.unit)}
  </span>
  <span className={`text-xs px-2 py-1 rounded-full ${
- trend.change > 0 ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ trend.change > 0 ? 'bg-green-50 text-green-600' :
  trend.change < 0 ? 'bg-medical-red-100 text-medical-red-700' :
  'bg-titanium-100 text-titanium-600'
  }`}>
@@ -466,7 +466,7 @@ const SHQualityMetricsDashboard: React.FC = () => {
  // Configuring quality alert
  {}
  }}
- className="flex items-center gap-2 px-3 py-2 bg-[#2C4A60] text-white text-xs rounded-lg hover:bg-[#2C4A60] transition-colors"
+ className="flex items-center gap-2 px-3 py-2 bg-teal-700 text-white text-xs rounded-lg hover:bg-teal-700 transition-colors"
  >
  <Clock className="w-3 h-3" />
  Set Alert
@@ -517,7 +517,7 @@ const SHQualityMetricsDashboard: React.FC = () => {
  <div key={opportunity.description} className="p-3 bg-white rounded-lg border border-titanium-200">
  <div className="flex items-center justify-between mb-2">
  <span className={`px-2 py-1 text-xs rounded-full ${
- opportunity.difficulty === 'Low' ? 'bg-[#F0F7F4] text-[#2D6147]' :
+ opportunity.difficulty === 'Low' ? 'bg-green-50 text-green-600' :
  opportunity.difficulty === 'Medium' ? 'bg-crimson-100 text-crimson-700' :
  'bg-medical-red-100 text-medical-red-700'
  }`}>
@@ -539,7 +539,7 @@ const SHQualityMetricsDashboard: React.FC = () => {
  <div className="grid grid-cols-4 gap-4 mt-6 pt-6 border-t border-titanium-200">
  <div>
  <div className="text-sm text-titanium-600 mb-1">Top Performer</div>
- <div className="text-lg font-bold text-[#2C4A60]">
+ <div className="text-lg font-bold text-teal-700">
  {filteredMetrics.sort((a, b) => (b.currentValue / b.targetValue) - (a.currentValue / a.targetValue))[0]?.name.split(' ')[0]}
  </div>
  <div className="text-sm text-titanium-600">
@@ -564,7 +564,7 @@ const SHQualityMetricsDashboard: React.FC = () => {
 
  <div>
  <div className="text-sm text-titanium-600 mb-1">Trending Up</div>
- <div className="text-lg font-bold text-[#2C4A60]">
+ <div className="text-lg font-bold text-teal-700">
  {filteredMetrics.filter(m => m.trend === 'up').length}
  </div>
  <div className="text-sm text-titanium-600">

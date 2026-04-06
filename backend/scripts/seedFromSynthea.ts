@@ -24,26 +24,47 @@ const DEMO_HOSPITALS = [
   {
     id: "demo-medical-city-dallas",
     name: "Medical City Dallas",
-    displayName: "Medical City Dallas (HCA)",
-    ehrSystem: "Epic",
+    system: "HCA Healthcare",
     subscriptionTier: "ENTERPRISE" as const,
     patientLimit: 200,
+    patientCount: 25000,
+    bedCount: 875,
+    hospitalType: "COMMUNITY" as const,
+    street: "7777 Forest Lane",
+    city: "Dallas",
+    state: "TX",
+    zipCode: "75230",
+    maxUsers: 50,
   },
   {
     id: "demo-commonspirit",
     name: "CommonSpirit Health",
-    displayName: "CommonSpirit Health",
-    ehrSystem: "Cerner",
+    system: "CommonSpirit Health",
     subscriptionTier: "ENTERPRISE" as const,
     patientLimit: 150,
+    patientCount: 150000,
+    bedCount: 2200,
+    hospitalType: "ACADEMIC" as const,
+    street: "444 W Lake Street",
+    city: "Chicago",
+    state: "IL",
+    zipCode: "60606",
+    maxUsers: 100,
   },
   {
     id: "demo-mount-sinai",
     name: "Mount Sinai Health System",
-    displayName: "Mount Sinai",
-    ehrSystem: "Epic",
+    system: "Mount Sinai",
     subscriptionTier: "ENTERPRISE" as const,
     patientLimit: 150,
+    patientCount: 35000,
+    bedCount: 1139,
+    hospitalType: "ACADEMIC" as const,
+    street: "1 Gustave L. Levy Place",
+    city: "New York",
+    state: "NY",
+    zipCode: "10029",
+    maxUsers: 75,
   },
 ];
 
@@ -54,18 +75,24 @@ async function ensureHospitals(): Promise<void> {
       create: {
         id: h.id,
         name: h.name,
-        displayName: h.displayName,
-        ehrSystem: h.ehrSystem,
+        system: h.system,
+        patientCount: h.patientCount,
+        bedCount: h.bedCount,
+        hospitalType: h.hospitalType,
+        street: h.street,
+        city: h.city,
+        state: h.state,
+        zipCode: h.zipCode,
         subscriptionTier: h.subscriptionTier,
+        subscriptionStart: new Date(),
         subscriptionActive: true,
-        enabledModules: [
-          "HEART_FAILURE",
-          "ELECTROPHYSIOLOGY",
-          "CORONARY_INTERVENTION",
-          "STRUCTURAL_HEART",
-          "VALVULAR_DISEASE",
-          "PERIPHERAL_VASCULAR",
-        ],
+        maxUsers: h.maxUsers,
+        moduleHeartFailure: true,
+        moduleElectrophysiology: true,
+        moduleCoronaryIntervention: true,
+        moduleStructuralHeart: true,
+        moduleValvularDisease: true,
+        modulePeripheralVascular: true,
       },
       update: { subscriptionActive: true },
     });
@@ -167,7 +194,7 @@ async function main() {
   console.log(`  Gaps:      ${gapCount}`);
   console.log("\nDemo accounts:");
   for (const h of DEMO_HOSPITALS) {
-    console.log(`  ${h.displayName}: hospital ID = ${h.id}`);
+    console.log(`  ${h.name}: hospital ID = ${h.id}`);
   }
 
   await prisma.$disconnect();

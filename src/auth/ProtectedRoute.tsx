@@ -163,7 +163,7 @@ function renderPermissionDenied(
             className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-6"
             style={{ background: 'rgba(245, 158, 11, 0.12)', border: '1px solid rgba(245, 158, 11, 0.2)' }}
           >
-            <AlertTriangle className="w-8 h-8 text-[#6B7280]" />
+            <AlertTriangle className="w-8 h-8 text-gray-500" />
           </div>
           <h1 className="text-2xl font-bold text-chrome-100 mb-4">Permission Denied</h1>
           <p className="text-chrome-400 mb-4">

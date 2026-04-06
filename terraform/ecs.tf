@@ -250,7 +250,7 @@ resource "aws_ecs_task_definition" "backend" {
       ]
 
       healthCheck = {
-        command     = ["CMD", "curl", "-f", "http://localhost:${var.container_port}/api/health"]
+        command     = ["CMD-SHELL", "node -e \"require('http').get('http://localhost:${var.container_port}/api/health',(r)=>{process.exit(r.statusCode===200?0:1)}).on('error',()=>process.exit(1))\""]
         interval    = 30
         timeout     = 5
         retries     = 3

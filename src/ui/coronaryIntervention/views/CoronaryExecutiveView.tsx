@@ -29,7 +29,7 @@ const CoronaryExecutiveView: React.FC = () => {
  { label: 'Complex PCI', value: 24800000, color: 'bg-porsche-500' },
  { label: 'STEMI Protocol', value: 18600000, color: 'bg-crimson-500' },
  { label: 'FFR/iFR Guidance', value: 12400000, color: 'bg-arterial-500' },
- { label: 'Cath Lab Efficiency', value: 8900000, color: 'bg-[#4A6880]' },
+ { label: 'Cath Lab Efficiency', value: 8900000, color: 'bg-teal-500' },
  { label: 'Stent Optimization', value: 6200000, color: 'bg-[#64748b]' },
   ];
 
@@ -473,7 +473,7 @@ const CoronaryExecutiveView: React.FC = () => {
  key: 'marginPercent', label: 'Margin %', align: 'right',
  render: (val: any) => (
  <span className={`px-2 py-1 rounded text-sm font-medium ${
- val >= 20 ? 'bg-[#f0f4f8] text-[#2C4A60]' : val >= 10 ? 'bg-[#fdf0f2] text-[#7A1A2E]' : 'bg-crimson-50 text-crimson-700'
+ val >= 20 ? 'bg-chrome-50 text-teal-700' : val >= 10 ? 'bg-[#fdf0f2] text-red-600' : 'bg-crimson-50 text-crimson-700'
  }`}>
  {toFixed(val as number, 1)}%
  </span>

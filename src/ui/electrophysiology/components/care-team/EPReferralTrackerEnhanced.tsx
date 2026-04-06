@@ -458,7 +458,7 @@ const EPReferralTrackerEnhanced: React.FC = () => {
  const icons = {
  pending: <Clock className="w-5 h-5 text-crimson-600" />,
  scheduled: <Calendar className="w-5 h-5 text-porsche-600" />,
- completed: <CheckCircle className="w-5 h-5 text-[#2C4A60]" />,
+ completed: <CheckCircle className="w-5 h-5 text-teal-700" />,
  cancelled: <XCircle className="w-5 h-5 text-titanium-500" />,
  overdue: <AlertTriangle className="w-5 h-5 text-medical-red-600" />
  };
@@ -469,7 +469,7 @@ const EPReferralTrackerEnhanced: React.FC = () => {
  const colors = {
  pending: 'bg-crimson-50 text-crimson-700 border-crimson-200',
  scheduled: 'bg-porsche-50 text-porsche-800 border-porsche-200',
- completed: 'bg-[#f0f5fa] text-[#2C4A60] border-[#C8D4DC]',
+ completed: 'bg-chrome-50 text-teal-700 border-titanium-300',
  cancelled: 'bg-titanium-100 text-titanium-700 border-titanium-300',
  overdue: 'bg-medical-red-50 text-medical-red-800 border-medical-red-200'
  };
@@ -478,7 +478,7 @@ const EPReferralTrackerEnhanced: React.FC = () => {
 
   const getInsuranceColor = (status: string) => {
  const colors = {
- approved: 'text-[#2D6147] bg-[#F0F7F4]',
+ approved: 'text-green-600 bg-green-50',
  pending: 'text-crimson-600 bg-crimson-100',
  denied: 'text-medical-red-600 bg-medical-red-100',
  not_required: 'text-titanium-600 bg-titanium-100',
@@ -675,7 +675,7 @@ const EPReferralTrackerEnhanced: React.FC = () => {
  {referral.completedDate && (
  <div className="text-center p-3 bg-white rounded-lg border border-titanium-200">
  <div className="text-sm text-titanium-600 mb-1">Completed</div>
- <div className="font-medium text-[#2C4A60]">
+ <div className="font-medium text-teal-700">
  {new Date(referral.completedDate).toLocaleDateString()}
  </div>
  </div>
@@ -733,7 +733,7 @@ const EPReferralTrackerEnhanced: React.FC = () => {
  <h4 className="font-semibold text-titanium-900 mb-3">Next Steps</h4>
  <div className="space-y-2">
  <div className="flex items-center gap-2">
- <CheckCircle className="w-4 h-4 text-[#2C4A60]" />
+ <CheckCircle className="w-4 h-4 text-teal-700" />
  <span className="text-sm text-titanium-800">Follow-up required: {referral.followUpRequired ? 'Yes' : 'No'}</span>
  </div>
  {referral.notes && (
@@ -758,7 +758,7 @@ const EPReferralTrackerEnhanced: React.FC = () => {
  Follow Up
  </button>
  {referral.status === 'pending' && (
- <button className="px-4 py-2 bg-[#F0F7F4] text-[#2D6147] text-sm rounded-lg hover:bg-[#C8D4DC] transition-colors border border-[#D8EDE6]">
+ <button className="px-4 py-2 bg-green-50 text-green-600 text-sm rounded-lg hover:bg-titanium-300 transition-colors border border-green-100">
  Mark Scheduled
  </button>
  )}
@@ -839,9 +839,9 @@ const EPReferralTrackerEnhanced: React.FC = () => {
  </div>
 
  {/* Laboratory Results */}
- <div className="bg-[#C8D4DC] rounded-lg p-4">
+ <div className="bg-titanium-300 rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <Droplets className="w-5 h-5 text-[#2C4A60]" />
+ <Droplets className="w-5 h-5 text-teal-700" />
  Laboratory Results
  </h3>
  <div className="grid grid-cols-3 gap-4">
@@ -921,15 +921,15 @@ const EPReferralTrackerEnhanced: React.FC = () => {
  </div>
 
  {/* Clinical Notes */}
- <div className="bg-[#F0F5FA] rounded-lg p-4">
+ <div className="bg-chrome-50 rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <FileText className="w-5 h-5 text-[#6B7280]" />
+ <FileText className="w-5 h-5 text-gray-500" />
  Recent Clinical Notes
  </h3>
  <div className="space-y-2">
  {selectedPatient.fullChart.notes.map((note, idx) => (
  <div key={`note-${idx}`} className="flex items-start gap-2">
- <Activity className="w-4 h-4 text-[#6B7280] mt-0.5 flex-shrink-0" />
+ <Activity className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
  <span className="text-sm text-gray-700">{note}</span>
  </div>
  ))}

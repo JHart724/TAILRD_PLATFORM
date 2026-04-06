@@ -99,7 +99,7 @@ const Toggle: React.FC<{ enabled: boolean; onChange: () => void; label: string }
     aria-label={`Toggle ${label}`}
   >
     {enabled ? (
-      <ToggleRight className="w-8 h-5 text-[#7A1A2E]" />
+      <ToggleRight className="w-8 h-5 text-red-600" />
     ) : (
       <ToggleLeft className="w-8 h-5 text-gray-300 group-hover:text-gray-400" />
     )}
@@ -270,10 +270,10 @@ const PlatformConfiguration: React.FC = () => {
                     <span
                       className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                         b.tier === 'Enterprise'
-                          ? 'bg-[#7A1A2E]/10 text-[#7A1A2E]'
+                          ? 'bg-red-600/10 text-red-600'
                           : b.tier === 'Standard'
                           ? 'bg-blue-100 text-blue-800'
-                          : 'bg-[#FAF6E8] text-[#8B6914]'
+                          : 'bg-amber-50 text-amber-600'
                       }`}
                     >
                       {b.tier}

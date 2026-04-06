@@ -124,16 +124,16 @@ export const HFExecutiveSummary: React.FC = () => {
   const getColorClasses = (color: string) => {
  const colors: any = {
  // Chrome Blue — patient volume / clinical data
- blue:   { bg: 'bg-[#EFF4F8]', border: 'border-[#B8C9D9]', text: 'text-[#2C4A60]', icon: 'text-[#2C4A60]', stroke: '#2C4A60' },
+ blue:   { bg: 'bg-[#EFF4F8]', border: 'border-[#B8C9D9]', text: 'text-teal-700', icon: 'text-teal-700', stroke: '#2C4A60' },
  // Metallic Gold — revenue / financial opportunity
- green:  { bg: 'bg-[#FAF6E8]', border: 'border-[#E0CC80]', text: 'text-[#7A5810]', icon: 'text-[#8B6914]', stroke: '#C4982A' },
+ green:  { bg: 'bg-amber-50', border: 'border-[#E0CC80]', text: 'text-[#7A5810]', icon: 'text-amber-600', stroke: '#C4982A' },
  // Carmona Red — risk / critical
  carmona:{ bg: 'bg-arterial-50', border: 'border-arterial-300', text: 'text-arterial-700', icon: 'text-arterial-600', stroke: '#9B2438' },
- red:    { bg: 'bg-[#FDF2F3]', border: 'border-[#F5C0C8]', text: 'text-[#7A1A2E]', icon: 'text-[#9B2438]', stroke: '#9B2438' },
+ red:    { bg: 'bg-red-50', border: 'border-[#F5C0C8]', text: 'text-red-600', icon: 'text-red-500', stroke: '#9B2438' },
  // Steel Teal — device / procedure metrics
  orange: { bg: 'bg-[#EEF8FA]', border: 'border-[#A8D8E4]', text: 'text-[#1A6878]', icon: 'text-[#1A6878]', stroke: '#1A6878' },
  // Racing Green — clinical quality / GDMT
- teal:   { bg: 'bg-[#EEF6F2]', border: 'border-[#A8D0BC]', text: 'text-[#2D6147]', icon: 'text-[#2D6147]', stroke: '#2D6147' },
+ teal:   { bg: 'bg-[#EEF6F2]', border: 'border-[#A8D0BC]', text: 'text-green-600', icon: 'text-green-600', stroke: '#2D6147' },
  // Copper Bronze — captured / realized value
  copper: { bg: 'bg-[#FAF3EC]', border: 'border-[#DDBA98]', text: 'text-[#7A4A1E]', icon: 'text-[#8B5A2B]', stroke: '#8B5A2B' },
  };
@@ -163,7 +163,7 @@ export const HFExecutiveSummary: React.FC = () => {
  <div className="flex items-start justify-between mb-3">
  <Icon className={`${colors.icon} w-8 h-8`} />
  <div className={`flex items-center text-sm font-semibold ${
- kpi.trend >= 0 ? 'text-[#2C4A60]' : 'text-red-600'
+ kpi.trend >= 0 ? 'text-teal-700' : 'text-red-600'
  }`}>
  <TrendIcon className="w-4 h-4 mr-1" />
  {Math.abs(kpi.trend)}%
@@ -198,7 +198,7 @@ export const HFExecutiveSummary: React.FC = () => {
  <div className="mb-4">
  <div className="text-4xl font-bold mb-2">{selectedKPI.value}</div>
  <div className={`flex items-center text-lg font-semibold ${
- selectedKPI.trend >= 0 ? 'text-[#2C4A60]' : 'text-red-600'
+ selectedKPI.trend >= 0 ? 'text-teal-700' : 'text-red-600'
  }`}>
  {selectedKPI.trend >= 0 ? <TrendingUp className="w-5 h-5 mr-1" /> : <TrendingDown className="w-5 h-5 mr-1" />}
  {Math.abs(selectedKPI.trend)}% vs last quarter

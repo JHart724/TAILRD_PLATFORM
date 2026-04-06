@@ -150,19 +150,19 @@ const ProviderScorecard: React.FC = () => {
 
   const getPerformanceColor = (value: number, type: 'rate' | 'readmission' | 'quality') => {
  if (type === 'readmission') {
- if (value <= 8) return 'text-[#2C4A60] bg-[#f0f5fa]';
+ if (value <= 8) return 'text-teal-700 bg-chrome-50';
  if (value <= 12) return 'text-crimson-600 bg-crimson-50';
  return 'text-medical-red-600 bg-medical-red-50';
  }
  
  if (type === 'quality') {
- if (value >= 90) return 'text-[#2C4A60] bg-[#f0f5fa]';
+ if (value >= 90) return 'text-teal-700 bg-chrome-50';
  if (value >= 80) return 'text-crimson-600 bg-crimson-50';
  return 'text-medical-red-600 bg-medical-red-50';
  }
  
  // Default for rates
- if (value >= 70) return 'text-[#2C4A60] bg-[#f0f5fa]';
+ if (value >= 70) return 'text-teal-700 bg-chrome-50';
  if (value >= 60) return 'text-crimson-600 bg-crimson-50';
  return 'text-medical-red-600 bg-medical-red-50';
   };
@@ -170,7 +170,7 @@ const ProviderScorecard: React.FC = () => {
   const getTrendIcon = (trend: 'up' | 'down' | 'stable') => {
  switch (trend) {
  case 'up':
- return <TrendingUp className="w-4 h-4 text-[#2C4A60]" />;
+ return <TrendingUp className="w-4 h-4 text-teal-700" />;
  case 'down':
  return <TrendingDown className="w-4 h-4 text-medical-red-600" />;
  default:
@@ -248,7 +248,7 @@ const ProviderScorecard: React.FC = () => {
  <div className="flex items-center gap-2">
  {getTrendIcon(provider.trend)}
  <span className={`text-sm font-semibold ${
- provider.trend === 'up' ? 'text-[#2C4A60]' :
+ provider.trend === 'up' ? 'text-teal-700' :
  provider.trend === 'down' ? 'text-medical-red-600' : 'text-titanium-600'
  }`}>
  {provider.trend !== 'stable' && (provider.trendValue > 0 ? '+' : '')}{provider.trendValue}%
@@ -345,7 +345,7 @@ const ProviderScorecard: React.FC = () => {
 
  <div className="p-4 bg-white rounded-lg">
  <div className="text-sm text-titanium-600 mb-1">LVEF Improvement</div>
- <div className="text-3xl font-bold text-[#2C4A60]">
+ <div className="text-3xl font-bold text-teal-700">
  +{toFixed(displayProviderData.lvefImprovement, 1)}%
  </div>
  <div className="text-sm text-titanium-600 mt-1">
@@ -358,7 +358,7 @@ const ProviderScorecard: React.FC = () => {
  <div className={`text-2xl font-bold ${
  displayProviderData.caseComplexity === 'high' ? 'text-medical-red-600' :
  displayProviderData.caseComplexity === 'medium' ? 'text-crimson-600' :
- 'text-[#2C4A60]'
+ 'text-teal-700'
  }`}>
  {displayProviderData.caseComplexity.toUpperCase()}
  </div>
@@ -374,7 +374,7 @@ const ProviderScorecard: React.FC = () => {
  <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-titanium-200">
  <div>
  <div className="text-sm text-titanium-600 mb-1">Top Performer</div>
- <div className="text-lg font-bold text-[#2C4A60]">
+ <div className="text-lg font-bold text-teal-700">
  {sortedProviders[0].name}
  </div>
  <div className="text-sm text-titanium-600">
@@ -437,10 +437,10 @@ const ProviderScorecard: React.FC = () => {
  panelProviderData.gdmtRate >= 70 ? 'bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5]' : 'bg-gradient-to-br from-slate-50 to-slate-100'
  }`}>
  <div className={`text-sm font-medium ${
- panelProviderData.gdmtRate >= 70 ? 'text-[#2C4A60]' : 'text-[#6B7280]'
+ panelProviderData.gdmtRate >= 70 ? 'text-teal-700' : 'text-gray-500'
  }`}>GDMT Rate</div>
  <div className={`text-2xl font-bold ${
- panelProviderData.gdmtRate >= 70 ? 'text-[#2C4A60]' : 'text-[#6B7280]'
+ panelProviderData.gdmtRate >= 70 ? 'text-teal-700' : 'text-gray-500'
  }`}>{toFixed(panelProviderData.gdmtRate, 1)}%</div>
  </div>
  <div className="bg-gradient-to-br from-arterial-50 to-arterial-100 p-4 rounded-xl">
@@ -451,10 +451,10 @@ const ProviderScorecard: React.FC = () => {
  panelProviderData.readmissionRate <= 8 ? 'bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5]' : 'bg-gradient-to-br from-red-50 to-red-100'
  }`}>
  <div className={`text-sm font-medium ${
- panelProviderData.readmissionRate <= 8 ? 'text-[#2C4A60]' : 'text-red-700'
+ panelProviderData.readmissionRate <= 8 ? 'text-teal-700' : 'text-red-700'
  }`}>Readmission Rate</div>
  <div className={`text-2xl font-bold ${
- panelProviderData.readmissionRate <= 8 ? 'text-[#2C4A60]' : 'text-red-800'
+ panelProviderData.readmissionRate <= 8 ? 'text-teal-700' : 'text-red-800'
  }`}>{toFixed(panelProviderData.readmissionRate, 1)}%</div>
  </div>
  </div>
@@ -472,7 +472,7 @@ const ProviderScorecard: React.FC = () => {
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm ${
  patient.riskScore >= 80 ? 'bg-red-500' :
- patient.riskScore >= 60 ? 'bg-[#F0F5FA]' : 'bg-[#C8D4DC]'
+ patient.riskScore >= 60 ? 'bg-chrome-50' : 'bg-titanium-300'
  }`}>
  {patient.name.split(' ').map(n => n[0]).join('')}
  </div>
@@ -485,7 +485,7 @@ const ProviderScorecard: React.FC = () => {
  </div>
  <div className={`px-2 py-1 rounded-full text-xs font-medium ${
  patient.riskScore >= 80 ? 'bg-red-100 text-red-700' :
- patient.riskScore >= 60 ? 'bg-[#FAF6E8] text-[#8B6914]' : 'bg-[#F0F7F4] text-[#2D6147]'
+ patient.riskScore >= 60 ? 'bg-amber-50 text-amber-600' : 'bg-green-50 text-green-600'
  }`}>
  {patient.riskScore >= 80 ? 'HIGH RISK' : patient.riskScore >= 60 ? 'MODERATE RISK' : 'LOW RISK'}
  </div>
@@ -498,8 +498,8 @@ const ProviderScorecard: React.FC = () => {
  GDMT Status
  </div>
  <div className={`text-sm px-2 py-1 rounded-full ${
- patient.gdmtPillars === 4 ? 'bg-[#F0F7F4] text-[#2D6147]' :
- patient.gdmtPillars >= 2 ? 'bg-[#FAF6E8] text-[#8B6914]' : 'bg-red-100 text-red-700'
+ patient.gdmtPillars === 4 ? 'bg-green-50 text-green-600' :
+ patient.gdmtPillars >= 2 ? 'bg-amber-50 text-amber-600' : 'bg-red-100 text-red-700'
  }`}>
  {patient.gdmtPillars}/4 pillars active
  </div>

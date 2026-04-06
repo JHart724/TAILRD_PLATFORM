@@ -282,8 +282,8 @@ const EPTreatmentGapsSummary: React.FC = () => {
   const getImpactColor = (impact: string) => {
  const colors = {
  high: 'text-red-600 bg-red-100',
- medium: 'text-[#8B6914] bg-[#FAF6E8]',
- low: 'text-[#2D6147] bg-[#F0F7F4]',
+ medium: 'text-amber-600 bg-amber-50',
+ low: 'text-green-600 bg-green-50',
  };
  return colors[impact as keyof typeof colors];
   };
@@ -291,8 +291,8 @@ const EPTreatmentGapsSummary: React.FC = () => {
   const getUrgencyColor = (urgency: string) => {
  const colors = {
  urgent: 'border-l-red-400 bg-red-50',
- soon: 'border-l-[#6B7280] bg-[#F0F5FA]',
- routine: 'border-l-[#2C4A60] bg-[#C8D4DC]',
+ soon: 'border-l-[#6B7280] bg-chrome-50',
+ routine: 'border-l-[#2C4A60] bg-titanium-300',
  };
  return colors[urgency as keyof typeof colors];
   };
@@ -300,10 +300,10 @@ const EPTreatmentGapsSummary: React.FC = () => {
   const getCategoryIcon = (category: string) => {
  const icons = {
  Anticoagulation: <Shield className="w-5 h-5 text-chrome-600" />,
- Rate_Control: <Heart className="w-5 h-5 text-[#2C4A60]" />,
+ Rate_Control: <Heart className="w-5 h-5 text-teal-700" />,
  Rhythm_Control: <Zap className="w-5 h-5 text-arterial-600" />,
  Device: <Activity className="w-5 h-5 text-chrome-600" />,
- Screening: <AlertTriangle className="w-5 h-5 text-[#6B7280]" />,
+ Screening: <AlertTriangle className="w-5 h-5 text-gray-500" />,
  'Follow-up': <Clock className="w-5 h-5 text-red-600" />,
  };
  return icons[category as keyof typeof icons];
@@ -323,7 +323,7 @@ const EPTreatmentGapsSummary: React.FC = () => {
  </div>
  <div className="text-right">
  <div className="text-sm text-titanium-600 mb-1">Total Potential Savings</div>
- <div className="text-3xl font-bold text-[#2C4A60]">
+ <div className="text-3xl font-bold text-teal-700">
  ${toFixed(summary.totalPotentialSavings / 1000000, 1)}M
  </div>
  <div className="text-sm text-titanium-600">Annual opportunity</div>
@@ -347,18 +347,18 @@ const EPTreatmentGapsSummary: React.FC = () => {
  <div className="text-sm text-titanium-600">High Impact</div>
  </div>
  <div 
- className="p-4 text-center bg-[#F0F5FA] rounded-lg border border-[#C8D4DC] cursor-pointer hover:bg-[#F0F5FA] transition-colors"
+ className="p-4 text-center bg-chrome-50 rounded-lg border border-titanium-300 cursor-pointer hover:bg-chrome-50 transition-colors"
  onClick={demoAction()}
  >
- <div className="text-3xl font-bold text-[#6B7280] mb-1">{summary.urgent}</div>
+ <div className="text-3xl font-bold text-gray-500 mb-1">{summary.urgent}</div>
  <div className="text-sm text-titanium-600">Urgent</div>
  </div>
  <div className="p-4 text-center bg-titanium-50 rounded-lg border border-titanium-200">
  <div className="text-3xl font-bold text-titanium-900 mb-1">{summary.avgClosureTime}</div>
  <div className="text-sm text-titanium-600">Avg Weeks</div>
  </div>
- <div className="p-4 text-center bg-[#C8D4DC] rounded-lg border border-[#2C4A60]">
- <div className="text-3xl font-bold text-[#2C4A60] mb-1">{summary.complianceRate}%</div>
+ <div className="p-4 text-center bg-titanium-300 rounded-lg border border-teal-700">
+ <div className="text-3xl font-bold text-teal-700 mb-1">{summary.complianceRate}%</div>
  <div className="text-sm text-titanium-600">Compliance</div>
  </div>
  </div>
@@ -442,7 +442,7 @@ const EPTreatmentGapsSummary: React.FC = () => {
  {gap.affectedPatients} <ExternalLink className="w-5 h-5" />
  </div>
  {gap.costSavings && (
- <div className="text-sm text-[#2C4A60] font-semibold">
+ <div className="text-sm text-teal-700 font-semibold">
  ${toFixed(gap.costSavings / 1000000, 1)}M savings
  </div>
  )}
@@ -497,7 +497,7 @@ const EPTreatmentGapsSummary: React.FC = () => {
  <div className="space-y-2">
  {gap.barriers.map((barrier, index) => (
  <div key={barrier} className="flex items-center gap-2 text-sm">
- <AlertTriangle className="w-4 h-4 text-[#6B7280]" />
+ <AlertTriangle className="w-4 h-4 text-gray-500" />
  <span className="text-titanium-800">{barrier}</span>
  </div>
  ))}
@@ -544,7 +544,7 @@ const EPTreatmentGapsSummary: React.FC = () => {
  e.stopPropagation();
  console.log('Assign to team:', gap.title);
  }}
- className="px-4 py-2 bg-[#F0F7F4] text-[#2D6147] text-sm rounded-lg hover:bg-[#C8D4DC] transition-colors border border-[#2C4A60]"
+ className="px-4 py-2 bg-green-50 text-green-600 text-sm rounded-lg hover:bg-titanium-300 transition-colors border border-teal-700"
  >
  Assign to Team
  </button>

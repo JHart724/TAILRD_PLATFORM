@@ -151,7 +151,7 @@ const GRACEScoreCalculator: React.FC<{ patientData?: PatientContext }> = ({ pati
 
   const getRiskColor = (category: string) => {
  switch (category) {
- case 'Low': return 'text-[#2D6147] bg-[#F0F7F4] border-[#D8EDE6]';
+ case 'Low': return 'text-green-600 bg-green-50 border-green-100';
  case 'Intermediate': return 'text-crimson-600 bg-crimson-50 border-crimson-200';
  case 'High': return 'text-medical-red-600 bg-medical-red-50 border-medical-red-200';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';

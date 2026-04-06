@@ -201,14 +201,14 @@ const PatientRiskStratification: React.FC<PatientRiskStratificationProps> = ({ c
  if (score >= 80) return 'text-medical-red-600 bg-medical-red-50 border-medical-red-200';
  if (score >= 60) return 'text-crimson-600 bg-crimson-50 border-crimson-200';
  if (score >= 40) return 'text-porsche-600 bg-porsche-50 border-porsche-200';
- return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ return 'text-teal-700 bg-chrome-50 border-titanium-300';
   };
 
   const getRiskBadgeColor = (score: number) => {
  if (score >= 80) return 'bg-medical-red-500';
  if (score >= 60) return 'bg-crimson-500';
  if (score >= 40) return 'bg-porsche-500';
- return 'bg-[#2C4A60]';
+ return 'bg-teal-700';
   };
 
   const getRiskLabel = (score: number) => {
@@ -500,7 +500,7 @@ const PatientRiskStratification: React.FC<PatientRiskStratificationProps> = ({ c
  <span className="text-titanium-700">Review medication adherence</span>
  </div>
  <div className="flex items-center gap-2 text-sm">
- <Calendar className="w-3 h-3 text-[#2C4A60]" />
+ <Calendar className="w-3 h-3 text-teal-700" />
  <span className="text-titanium-700">Enroll in remote monitoring</span>
  </div>
  </div>
@@ -526,7 +526,7 @@ const PatientRiskStratification: React.FC<PatientRiskStratificationProps> = ({ c
  <div className="flex items-start justify-between mb-3">
  <div className="flex items-center gap-3">
  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${
- index === 0 ? 'bg-[#2C4A60]' :
+ index === 0 ? 'bg-teal-700' :
  index === 1 ? 'bg-porsche-500' :
  index === 2 ? 'bg-crimson-500' :
  'bg-arterial-500'
@@ -542,7 +542,7 @@ const PatientRiskStratification: React.FC<PatientRiskStratificationProps> = ({ c
  
  <div className="grid grid-cols-2 gap-4 mb-3">
  <div className="text-center p-2 bg-white rounded-lg">
- <div className="text-lg font-bold text-[#2C4A60]">{intervention.impact}%</div>
+ <div className="text-lg font-bold text-teal-700">{intervention.impact}%</div>
  <div className="text-xs text-titanium-600">Impact Score</div>
  </div>
  <div className="text-center p-2 bg-white rounded-lg">

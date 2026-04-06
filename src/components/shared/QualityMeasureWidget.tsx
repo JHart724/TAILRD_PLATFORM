@@ -61,11 +61,11 @@ const QualityMeasureWidget: React.FC<QualityMeasureWidgetProps> = ({
  switch (actualStatus) {
  case 'exceeding':
  return {
- color: 'text-[#2C4A60]',
- bgColor: 'bg-[#f0f5fa]',
- borderColor: 'border-[#C8D4DC]',
+ color: 'text-teal-700',
+ bgColor: 'bg-chrome-50',
+ borderColor: 'border-titanium-300',
  gaugeColor: 'stroke-[#2C4A60]',
- textColor: 'text-[#2C4A60]'
+ textColor: 'text-teal-700'
  };
  case 'meeting':
  return {
@@ -267,7 +267,7 @@ const QualityMeasureWidget: React.FC<QualityMeasureWidgetProps> = ({
  {trend && (
  <div className="flex items-center gap-1 text-xs">
  {trend.direction === 'up' && (
- <TrendingUp className="w-3 h-3 text-[#2C4A60]" />
+ <TrendingUp className="w-3 h-3 text-teal-700" />
  )}
  {trend.direction === 'down' && (
  <TrendingDown className="w-3 h-3 text-medical-red-600" />
@@ -276,7 +276,7 @@ const QualityMeasureWidget: React.FC<QualityMeasureWidgetProps> = ({
  <Minus className="w-3 h-3 text-titanium-500" />
  )}
  <span className={`font-medium ${
- trend.direction === 'up' ? 'text-[#2C4A60]' :
+ trend.direction === 'up' ? 'text-teal-700' :
  trend.direction === 'down' ? 'text-medical-red-600' :
  'text-titanium-500'
  }`}>

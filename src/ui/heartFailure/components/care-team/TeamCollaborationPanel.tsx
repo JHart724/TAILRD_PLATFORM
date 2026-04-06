@@ -532,7 +532,7 @@ const TeamCollaborationPanel: React.FC = () => {
 
   const getStatusColor = (status: string) => {
  const colors = {
- online: 'bg-[#2C4A60]',
+ online: 'bg-teal-700',
  away: 'bg-crimson-500',
  offline: 'bg-titanium-400',
  };
@@ -554,7 +554,7 @@ const TeamCollaborationPanel: React.FC = () => {
  text: 'text-titanium-600',
  consultation: 'text-porsche-600',
  alert: 'text-medical-red-600',
- handoff: 'text-[#2C4A60]',
+ handoff: 'text-teal-700',
  };
  return colors[type as keyof typeof colors];
   };
@@ -585,7 +585,7 @@ const TeamCollaborationPanel: React.FC = () => {
  </div>
  <div className="text-right">
  <div className="text-sm text-titanium-600 mb-1">Team Online</div>
- <div className="text-2xl font-bold text-[#2C4A60] font-sf">
+ <div className="text-2xl font-bold text-teal-700 font-sf">
  {onlineCount}
  </div>
  </div>
@@ -774,7 +774,7 @@ const TeamCollaborationPanel: React.FC = () => {
  </div>
  </div>
  <div className="flex gap-2">
- <button className="p-2 bg-[#F0F7F4] text-[#2D6147] rounded-lg hover:bg-[#C8D4DC] transition-colors">
+ <button className="p-2 bg-green-50 text-green-600 rounded-lg hover:bg-titanium-300 transition-colors">
  <Phone className="w-4 h-4" />
  </button>
  <button className="p-2 bg-porsche-100 text-porsche-600 rounded-lg hover:bg-porsche-200 transition-colors">
@@ -846,7 +846,7 @@ const TeamCollaborationPanel: React.FC = () => {
  <div className="text-titanium-800 mb-3">{alert.message}</div>
  
  {!alert.acknowledged && (
- <button className="px-4 py-2 bg-[#2C4A60] text-white text-sm rounded-lg hover:bg-[#2C4A60] transition-colors">
+ <button className="px-4 py-2 bg-teal-700 text-white text-sm rounded-lg hover:bg-teal-700 transition-colors">
  Acknowledge
  </button>
  )}
@@ -870,8 +870,8 @@ const TeamCollaborationPanel: React.FC = () => {
  <div className="flex items-center gap-3 mt-2">
  <span className={`px-3 py-1 rounded-lg border-l-4 font-medium text-sm ${
  selectedPatient.priority === 'high' ? 'border-red-500 bg-red-50 text-red-700' :
- selectedPatient.priority === 'medium' ? 'border-[#C8D4DC] bg-[#FAF6E8] text-[#8B6914]' :
- 'border-[#2C4A60] bg-[#F0F7F4] text-[#2D6147]'
+ selectedPatient.priority === 'medium' ? 'border-titanium-300 bg-amber-50 text-amber-600' :
+ 'border-teal-700 bg-green-50 text-green-600'
  }`}>
  {selectedPatient.priority.toUpperCase()} Priority
  </span>
@@ -908,8 +908,8 @@ const TeamCollaborationPanel: React.FC = () => {
  <div className="text-xl font-bold text-arterial-600 mb-2">NYHA {selectedPatient.nyhaClass}</div>
  <p className="text-sm text-gray-600">Functional Class</p>
  </div>
- <div className="bg-[#F0F5FA] rounded-lg p-4 text-center">
- <div className="text-2xl font-bold text-[#6B7280] mb-2">
+ <div className="bg-chrome-50 rounded-lg p-4 text-center">
+ <div className="text-2xl font-bold text-gray-500 mb-2">
  {Object.values(selectedPatient.fullChart.gdmtStatus).filter(status => !status).length}
  </div>
  <p className="text-sm text-gray-600">GDMT Gaps</p>
@@ -947,9 +947,9 @@ const TeamCollaborationPanel: React.FC = () => {
  </div>
 
  {/* Laboratory Results */}
- <div className="bg-[#C8D4DC] rounded-lg p-4">
+ <div className="bg-titanium-300 rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <Droplets className="w-5 h-5 text-[#2C4A60]" />
+ <Droplets className="w-5 h-5 text-teal-700" />
  Laboratory Results
  </h3>
  <div className="grid grid-cols-3 gap-4">
@@ -1018,25 +1018,25 @@ const TeamCollaborationPanel: React.FC = () => {
  <div className="grid grid-cols-2 gap-3">
  <div className="flex items-center gap-2">
  <div className={`w-3 h-3 rounded-full ${
- selectedPatient.fullChart.gdmtStatus.betaBlocker ? 'bg-[#C8D4DC]' : 'bg-red-500'
+ selectedPatient.fullChart.gdmtStatus.betaBlocker ? 'bg-titanium-300' : 'bg-red-500'
  }`}></div>
  <span className="text-sm">Beta Blocker</span>
  </div>
  <div className="flex items-center gap-2">
  <div className={`w-3 h-3 rounded-full ${
- selectedPatient.fullChart.gdmtStatus.aceArb ? 'bg-[#C8D4DC]' : 'bg-red-500'
+ selectedPatient.fullChart.gdmtStatus.aceArb ? 'bg-titanium-300' : 'bg-red-500'
  }`}></div>
  <span className="text-sm">ACE/ARB/ARNi</span>
  </div>
  <div className="flex items-center gap-2">
  <div className={`w-3 h-3 rounded-full ${
- selectedPatient.fullChart.gdmtStatus.mra ? 'bg-[#C8D4DC]' : 'bg-red-500'
+ selectedPatient.fullChart.gdmtStatus.mra ? 'bg-titanium-300' : 'bg-red-500'
  }`}></div>
  <span className="text-sm">MRA</span>
  </div>
  <div className="flex items-center gap-2">
  <div className={`w-3 h-3 rounded-full ${
- selectedPatient.fullChart.gdmtStatus.sglt2 ? 'bg-[#C8D4DC]' : 'bg-red-500'
+ selectedPatient.fullChart.gdmtStatus.sglt2 ? 'bg-titanium-300' : 'bg-red-500'
  }`}></div>
  <span className="text-sm">SGLT2i</span>
  </div>
@@ -1068,15 +1068,15 @@ const TeamCollaborationPanel: React.FC = () => {
  </div>
 
  {/* Clinical Notes */}
- <div className="bg-[#F0F5FA] rounded-lg p-4">
+ <div className="bg-chrome-50 rounded-lg p-4">
  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
- <FileText className="w-5 h-5 text-[#6B7280]" />
+ <FileText className="w-5 h-5 text-gray-500" />
  Recent Clinical Notes
  </h3>
  <div className="space-y-2">
  {selectedPatient.fullChart.notes.map((note, idx) => (
  <div key={note} className="flex items-start gap-2">
- <Activity className="w-4 h-4 text-[#6B7280] mt-0.5 flex-shrink-0" />
+ <Activity className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
  <span className="text-sm text-gray-700">{note}</span>
  </div>
  ))}

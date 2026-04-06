@@ -58,8 +58,8 @@ const HFRiskAlerts: React.FC = () => {
   const getAlertColor = (type: string) => {
  switch (type) {
  case 'critical': return 'border-red-500 bg-red-50 text-red-700';
- case 'warning': return 'border-[#C8D4DC] bg-[#FAF6E8] text-[#8B6914]';
- case 'opportunity': return 'border-[#2C4A60] bg-[#F0F7F4] text-[#2D6147]';
+ case 'warning': return 'border-titanium-300 bg-amber-50 text-amber-600';
+ case 'opportunity': return 'border-teal-700 bg-green-50 text-green-600';
  default: return 'border-gray-500 bg-gray-50 text-gray-700';
  }
   };

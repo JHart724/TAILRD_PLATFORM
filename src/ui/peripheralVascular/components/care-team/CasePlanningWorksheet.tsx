@@ -154,8 +154,8 @@ const CasePlanningWorksheet: React.FC = () => {
 
   const getTASCColor = (grade: string) => {
  switch (grade) {
- case 'A': return 'text-[#2D6147] bg-[#F0F7F4]';
- case 'B': return 'text-[#8B6914] bg-[#FAF6E8]';
+ case 'A': return 'text-green-600 bg-green-50';
+ case 'B': return 'text-amber-600 bg-amber-50';
  case 'C': return 'text-red-600 bg-red-100';
  case 'D': return 'text-red-800 bg-red-200';
  default: return 'text-titanium-600 bg-titanium-100';
@@ -164,8 +164,8 @@ const CasePlanningWorksheet: React.FC = () => {
 
   const getCalcificationColor = (level: string) => {
  switch (level) {
- case 'None': return 'text-[#2D6147] bg-[#F0F7F4]';
- case 'Mild': return 'text-[#8B6914] bg-[#FAF6E8]';
+ case 'None': return 'text-green-600 bg-green-50';
+ case 'Mild': return 'text-amber-600 bg-amber-50';
  case 'Moderate': return 'text-red-600 bg-red-100';
  case 'Severe': return 'text-red-800 bg-red-200';
  default: return 'text-titanium-600 bg-titanium-100';
@@ -177,7 +177,7 @@ const CasePlanningWorksheet: React.FC = () => {
  case 'Endovascular': return 'text-chrome-600 bg-chrome-100';
  case 'Surgical': return 'text-red-600 bg-red-100';
  case 'Hybrid': return 'text-arterial-600 bg-arterial-100';
- case 'Medical': return 'text-[#2D6147] bg-[#F0F7F4]';
+ case 'Medical': return 'text-green-600 bg-green-50';
  default: return 'text-titanium-600 bg-titanium-100';
  }
   };
@@ -648,7 +648,7 @@ const CasePlanningWorksheet: React.FC = () => {
 
  <div className="bg-white rounded-2xl p-6 shadow-chrome-card border border-titanium-200">
  <h3 className="text-lg font-semibold text-titanium-800 mb-4 flex items-center gap-2">
- <AlertTriangle className="w-5 h-5 text-[#6B7280]" />
+ <AlertTriangle className="w-5 h-5 text-gray-500" />
  Risk Assessment
  </h3>
  
@@ -726,13 +726,13 @@ const CasePlanningWorksheet: React.FC = () => {
  <div className="flex gap-3">
  <button
  onClick={() => setCasePlan(prev => ({ ...prev, status: 'Reviewed' }))}
- className="px-4 py-2 bg-[#F0F5FA] text-white rounded-lg hover:bg-[#F0F5FA] transition-colors text-sm"
+ className="px-4 py-2 bg-chrome-50 text-white rounded-lg hover:bg-chrome-50 transition-colors text-sm"
  >
  Mark Reviewed
  </button>
  <button
  onClick={() => setCasePlan(prev => ({ ...prev, status: 'Approved' }))}
- className="px-4 py-2 bg-[#C8D4DC] text-white rounded-lg hover:bg-[#C8D4DC] transition-colors text-sm"
+ className="px-4 py-2 bg-titanium-300 text-white rounded-lg hover:bg-titanium-300 transition-colors text-sm"
  >
  Approve Plan
  </button>

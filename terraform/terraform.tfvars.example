@@ -1,0 +1,45 @@
+environment    = "production"
+aws_region     = "us-east-1"
+aws_account_id = "REPLACE_WITH_AWS_ACCOUNT_ID"
+project_name   = "tailrd"
+domain_name    = "tailrd-heart.com"
+
+# Existing CloudFormation VPC resources
+vpc_id = "vpc-REPLACE"
+
+public_subnet_ids = [
+  "subnet-REPLACE_PUBLIC_1A",
+  "subnet-REPLACE_PUBLIC_1B",
+]
+
+private_subnet_ids = [
+  "subnet-REPLACE_PRIVATE_1A",
+  "subnet-REPLACE_PRIVATE_1B",
+]
+
+database_subnet_ids = [
+  "subnet-REPLACE_DATABASE_1A",
+  "subnet-REPLACE_DATABASE_1B",
+]
+
+# Existing CloudFormation security groups
+alb_security_group_id = "sg-REPLACE_ALB"
+app_security_group_id = "sg-REPLACE_APP"
+db_security_group_id  = "sg-REPLACE_DB"
+
+# Existing CloudFormation KMS keys
+phi_kms_key_arn = "arn:aws:kms:us-east-1:ACCOUNT_ID:key/REPLACE_PHI_KEY"
+s3_kms_key_arn  = "arn:aws:kms:us-east-1:ACCOUNT_ID:key/REPLACE_S3_KEY"
+
+# Synthea data bucket
+synthea_bucket = "tailrd-cardiovascular-datasets-ACCOUNT_ID"
+
+# RDS sizing
+db_instance_class   = "db.t3.medium"
+db_allocated_storage = 100
+
+# ECS sizing
+ecs_cpu           = 1024  # 1 vCPU
+ecs_memory        = 2048  # 2 GB
+ecs_desired_count = 2     # 2 tasks for HA
+container_port    = 3001

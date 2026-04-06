@@ -91,13 +91,13 @@ export const EPExecutiveSummary: React.FC = () => {
   const getColorMap = (color: string) => {
  const colors: Record<string, { bg: string; border: string; text: string; icon: string; stroke: string }> = {
  // Chrome Blue — patient volume / counts
- blue:    { bg: 'bg-[#EFF4F8]', border: 'border-[#B8C9D9]', text: 'text-[#2C4A60]', icon: 'text-[#2C4A60]', stroke: '#2C4A60' },
+ blue:    { bg: 'bg-[#EFF4F8]', border: 'border-[#B8C9D9]', text: 'text-teal-700', icon: 'text-teal-700', stroke: '#2C4A60' },
  // Metallic Gold — revenue / financial opportunity
- green:   { bg: 'bg-[#FAF6E8]', border: 'border-[#D4B85C]', text: 'text-[#8B6914]', icon: 'text-[#8B6914]', stroke: '#8B6914' },
+ green:   { bg: 'bg-amber-50', border: 'border-[#D4B85C]', text: 'text-amber-600', icon: 'text-amber-600', stroke: '#8B6914' },
  // Racing Green — clinical quality / ablation success
- carmona: { bg: 'bg-[#EEF6F2]', border: 'border-[#A8D0BC]', text: 'text-[#2D6147]', icon: 'text-[#2D6147]', stroke: '#2D6147' },
+ carmona: { bg: 'bg-[#EEF6F2]', border: 'border-[#A8D0BC]', text: 'text-green-600', icon: 'text-green-600', stroke: '#2D6147' },
  // Carmona Red — risk / device infection alerts
- red:     { bg: 'bg-[#FDF2F3]', border: 'border-[#F5C0C8]', text: 'text-[#9B2438]', icon: 'text-[#9B2438]', stroke: '#9B2438' },
+ red:     { bg: 'bg-red-50', border: 'border-[#F5C0C8]', text: 'text-red-500', icon: 'text-red-500', stroke: '#9B2438' },
  };
  return colors[color] || colors.blue;
   };
@@ -108,7 +108,7 @@ export const EPExecutiveSummary: React.FC = () => {
   };
 
   const getTrendColorClasses = (trend: number) => {
- return trend >= 0 ? 'text-[#2C4A60]' : 'text-red-600';
+ return trend >= 0 ? 'text-teal-700' : 'text-red-600';
   };
 
   const formatValue = (value: number, id: string) => {

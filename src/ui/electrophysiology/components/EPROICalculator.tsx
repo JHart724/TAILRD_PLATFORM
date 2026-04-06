@@ -399,7 +399,7 @@ const EPROICalculator: React.FC = () => {
  <div className="flex items-center justify-between">
  <div>
  <div className="flex items-center gap-3 mb-2">
- <Zap className="w-8 h-8 text-[#6B7280]" />
+ <Zap className="w-8 h-8 text-gray-500" />
  <h2 className="text-3xl font-bold text-titanium-900">EP ROI Calculation Engine</h2>
  </div>
  <p className="text-titanium-600">Comprehensive financial impact modeling for Electrophysiology procedures and programs</p>
@@ -412,7 +412,7 @@ const EPROICalculator: React.FC = () => {
  className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
  isCalculating 
  ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
- : 'bg-[#F0F5FA] text-white hover:bg-[#F0F5FA]'
+ : 'bg-chrome-50 text-white hover:bg-chrome-50'
  } transition-colors`}
  >
  <Calculator className="w-4 h-4" />
@@ -421,7 +421,7 @@ const EPROICalculator: React.FC = () => {
  
  <button
  onClick={exportEPROIReport}
- className="px-4 py-2 bg-[#2C4A60] text-white rounded-lg hover:bg-[#2C4A60] transition-colors flex items-center gap-2"
+ className="px-4 py-2 bg-teal-700 text-white rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2"
  >
  <Download className="w-4 h-4" />
  Export EP Report
@@ -432,18 +432,18 @@ const EPROICalculator: React.FC = () => {
 
  {/* Key Results Dashboard */}
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
- <div className="bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5] p-6 rounded-xl border border-[#2C4A60]">
+ <div className="bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5] p-6 rounded-xl border border-teal-700">
  <div className="flex items-center gap-3 mb-2">
- <DollarSign className="w-8 h-8 text-[#2C4A60]" />
+ <DollarSign className="w-8 h-8 text-teal-700" />
  <div>
- <div className="text-sm text-[#2C4A60] font-medium">EP ROI</div>
- <div className="text-3xl font-bold text-[#2C4A60]">{toFixed(calculateEPROI.roiPercentage, 0)}%</div>
+ <div className="text-sm text-teal-700 font-medium">EP ROI</div>
+ <div className="text-3xl font-bold text-teal-700">{toFixed(calculateEPROI.roiPercentage, 0)}%</div>
  </div>
  </div>
- <div className="text-sm text-[#2C4A60]">Over {selectedTimeframe}</div>
+ <div className="text-sm text-teal-700">Over {selectedTimeframe}</div>
  </div>
 
- <div className="bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5] p-6 rounded-xl border border-[#2C4A60]">
+ <div className="bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5] p-6 rounded-xl border border-teal-700">
  <div className="flex items-center gap-3 mb-2">
  <TrendingUp className="w-8 h-8 text-chrome-600" />
  <div>
@@ -465,15 +465,15 @@ const EPROICalculator: React.FC = () => {
  <div className="text-sm text-arterial-600">Time to recover investment</div>
  </div>
 
- <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-6 rounded-xl border border-[#C8D4DC]">
+ <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-6 rounded-xl border border-titanium-300">
  <div className="flex items-center gap-3 mb-2">
- <Target className="w-8 h-8 text-[#6B7280]" />
+ <Target className="w-8 h-8 text-gray-500" />
  <div>
- <div className="text-sm text-[#6B7280] font-medium">Annual Savings</div>
- <div className="text-3xl font-bold text-[#6B7280]">${toFixed(calculateEPROI.annualSavings / 1000000, 1)}M</div>
+ <div className="text-sm text-gray-500 font-medium">Annual Savings</div>
+ <div className="text-3xl font-bold text-gray-500">${toFixed(calculateEPROI.annualSavings / 1000000, 1)}M</div>
  </div>
  </div>
- <div className="text-sm text-[#6B7280]">Per year potential</div>
+ <div className="text-sm text-gray-500">Per year potential</div>
  </div>
  </div>
 
@@ -501,15 +501,15 @@ const EPROICalculator: React.FC = () => {
  <div className="text-sm text-chrome-600">Annual additional revenue</div>
  </div>
 
- <div className="bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5] p-6 rounded-xl border border-[#C8D4DC]">
+ <div className="bg-gradient-to-br from-[#EFF3F7] to-[#E4EDF5] p-6 rounded-xl border border-titanium-300">
  <div className="flex items-center gap-3 mb-2">
- <Heart className="w-6 h-6 text-[#2C4A60]" />
+ <Heart className="w-6 h-6 text-teal-700" />
  <div>
- <div className="text-sm text-[#2C4A60] font-medium">Device Revenue Impact</div>
- <div className="text-2xl font-bold text-[#2C4A60]">${toFixed(calculateEPROI.deviceImpact / 1000, 0)}K</div>
+ <div className="text-sm text-teal-700 font-medium">Device Revenue Impact</div>
+ <div className="text-2xl font-bold text-teal-700">${toFixed(calculateEPROI.deviceImpact / 1000, 0)}K</div>
  </div>
  </div>
- <div className="text-sm text-[#2C4A60]">Annual additional revenue</div>
+ <div className="text-sm text-teal-700">Annual additional revenue</div>
  </div>
  </div>
 
@@ -610,7 +610,7 @@ const EPROICalculator: React.FC = () => {
  </div>
  </div>
  <div className="text-right">
- <div className="font-bold text-[#2C4A60]">
+ <div className="font-bold text-teal-700">
  ${toFixed(saving.annualSaving * saving.probability / 1000, 0)}K
  </div>
  <div className="text-xs text-titanium-500">
@@ -666,9 +666,9 @@ const EPROICalculator: React.FC = () => {
  <div key={proc.type} className="p-4 border border-titanium-200 rounded-lg">
  <div className="flex items-center gap-2 mb-3">
  {proc.type === 'ablation' && <Zap className="w-5 h-5 text-red-500" />}
- {proc.type === 'device-implant' && <Heart className="w-5 h-5 text-[#2C4A60]" />}
+ {proc.type === 'device-implant' && <Heart className="w-5 h-5 text-teal-700" />}
  {proc.type === 'laac' && <Shield className="w-5 h-5 text-chrome-500" />}
- {proc.type === 'afib-screening' && <Activity className="w-5 h-5 text-[#6B7280]" />}
+ {proc.type === 'afib-screening' && <Activity className="w-5 h-5 text-gray-500" />}
  <span className="font-medium text-titanium-900 text-sm capitalize">
  {proc.type.replace('-', ' ')}
  </span>
@@ -689,14 +689,14 @@ const EPROICalculator: React.FC = () => {
  </div>
  <div className="flex justify-between text-sm">
  <span className="text-titanium-600">Net Revenue:</span>
- <span className="font-medium text-[#2C4A60]">
+ <span className="font-medium text-teal-700">
  ${toFixed((proc.averageReimbursement - proc.averageCost) / 1000, 0)}K
  </span>
  </div>
  <div className="pt-2 border-t border-titanium-200">
  <div className="flex justify-between text-sm">
  <span className="text-titanium-600">Annual Impact:</span>
- <span className="font-bold text-[#2C4A60]">
+ <span className="font-bold text-teal-700">
  ${toFixed(((proc.projectedVolume - proc.currentVolume) *
  (proc.averageReimbursement - proc.averageCost) *
  (proc.successRate / 100)) / 1000, 0)}K
@@ -731,13 +731,13 @@ const EPROICalculator: React.FC = () => {
  
  <div className="flex items-center">
  {metric.impact > 0 ? 
- <TrendingUp className="w-4 h-4 text-[#2C4A60]" /> : 
+ <TrendingUp className="w-4 h-4 text-teal-700" /> : 
  <TrendingDown className="w-4 h-4 text-red-500" />
  }
  </div>
  
  <div className="text-center">
- <div className="text-lg font-bold text-[#2C4A60]">
+ <div className="text-lg font-bold text-teal-700">
  {metric.improved}{metric.unit === '%' ? '%' : ''}
  </div>
  <div className="text-xs text-titanium-500">Target</div>
@@ -745,7 +745,7 @@ const EPROICalculator: React.FC = () => {
  </div>
  
  <div className="mt-2 flex items-center justify-between">
- <span className={`text-sm font-medium ${metric.impact > 0 ? 'text-[#2C4A60]' : 'text-red-600'}`}>
+ <span className={`text-sm font-medium ${metric.impact > 0 ? 'text-teal-700' : 'text-red-600'}`}>
  {metric.impact > 0 ? '+' : ''}{toFixed(metric.impact, 1)}%
  </span>
  <span className="text-xs text-titanium-500">{metric.confidence}% confidence</span>
@@ -756,10 +756,10 @@ const EPROICalculator: React.FC = () => {
  </div>
 
  {/* EP-Specific Recommendation Summary */}
- <div className="bg-gradient-to-r from-slate-50 to-[#EFF3F7] p-6 rounded-xl border border-[#C8D4DC]">
+ <div className="bg-gradient-to-r from-slate-50 to-[#EFF3F7] p-6 rounded-xl border border-titanium-300">
  <div className="flex items-center gap-4">
  <div className="p-3 bg-white rounded-full">
- <Zap className="w-8 h-8 text-[#6B7280]" />
+ <Zap className="w-8 h-8 text-gray-500" />
  </div>
  
  <div className="flex-1">
@@ -767,7 +767,7 @@ const EPROICalculator: React.FC = () => {
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
  <div>
  <div className="text-sm text-titanium-600">Recommendation</div>
- <div className="text-lg font-bold text-[#2C4A60]">
+ <div className="text-lg font-bold text-teal-700">
  {calculateEPROI.roiPercentage > 200 ? 'Strongly Recommended' : 
  calculateEPROI.roiPercentage > 100 ? 'Recommended' : 
  calculateEPROI.roiPercentage > 0 ? 'Consider' : 'Reconsider'}
@@ -783,7 +783,7 @@ const EPROICalculator: React.FC = () => {
  </div>
  <div>
  <div className="text-sm text-titanium-600">Implementation Focus</div>
- <div className="text-lg font-bold text-[#6B7280]">AFib & LAAC</div>
+ <div className="text-lg font-bold text-gray-500">AFib & LAAC</div>
  </div>
  </div>
  
@@ -791,7 +791,7 @@ const EPROICalculator: React.FC = () => {
  <div className="text-sm text-titanium-600 mb-2">Key Strategic Priorities:</div>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
  <div className="flex items-center gap-2">
- <div className="w-2 h-2 bg-[#F0F5FA] rounded-full"></div>
+ <div className="w-2 h-2 bg-chrome-50 rounded-full"></div>
  <span className="text-sm">Expand AFib screening program</span>
  </div>
  <div className="flex items-center gap-2">
@@ -803,7 +803,7 @@ const EPROICalculator: React.FC = () => {
  <span className="text-sm">Grow LAAC procedure volume</span>
  </div>
  <div className="flex items-center gap-2">
- <div className="w-2 h-2 bg-[#F0F5FA] rounded-full"></div>
+ <div className="w-2 h-2 bg-chrome-50 rounded-full"></div>
  <span className="text-sm">Reduce device complications</span>
  </div>
  </div>

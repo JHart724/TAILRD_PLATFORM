@@ -151,9 +151,9 @@ router.post('/invite/accept/:token', async (req, res) => {
     }
 
     const authToken = jwt.sign(
-      { userId: user.id, email: user.email, role: user.role, hospitalId: user.hospitalId },
+      { userId: user.id, email: user.email, role: user.role, hospitalId: user.hospitalId, permissions: user.permissions || {} },
       jwtSecret,
-      { expiresIn: '24h' }
+      { algorithm: 'HS256', expiresIn: '1h' }
     );
 
     res.json({ token: authToken, user: { id: user.id, email: user.email, role: user.role } });

@@ -6531,7 +6531,7 @@ function daptUrgencyLabel(kv: Record<string, string | number>): { label: string;
   if (riskWindow.includes('CRITICAL') || riskWindow.includes('<3')) {
     return { label: 'CRITICAL — DES <90 days', color: 'text-red-800 bg-red-200' };
   }
-  return { label: 'HIGH — DES 90-365 days', color: 'text-[#8B6914] bg-[#FAF6E8]' };
+  return { label: 'HIGH — DES 90-365 days', color: 'text-amber-600 bg-amber-50' };
 }
 
 /** Render DAPT safety alert (Gap 50) */
@@ -6601,9 +6601,9 @@ function renderDigoxinAlert(pt: CADGapPatient): React.ReactNode {
   const beersFlag = age >= 75 && dose > 0.125 && egfr < 50;
 
   return (
-    <div className={`${beersFlag ? 'bg-red-50 border-red-200' : 'bg-[#F0F5FA] border-[#C8D4DC]'} border-2 rounded-xl p-4 space-y-2`}>
-      <h5 className={`font-bold flex items-center gap-2 text-sm ${beersFlag ? 'text-red-800' : 'text-[#6B7280]'}`}>
-        <AlertTriangle className={`w-4 h-4 ${beersFlag ? 'text-red-600' : 'text-[#6B7280]'}`} />
+    <div className={`${beersFlag ? 'bg-red-50 border-red-200' : 'bg-chrome-50 border-titanium-300'} border-2 rounded-xl p-4 space-y-2`}>
+      <h5 className={`font-bold flex items-center gap-2 text-sm ${beersFlag ? 'text-red-800' : 'text-gray-500'}`}>
+        <AlertTriangle className={`w-4 h-4 ${beersFlag ? 'text-red-600' : 'text-gray-500'}`} />
         {beersFlag ? 'BEERS CRITERIA — HIGH-RISK DIGOXIN' : 'DIGOXIN TOXICITY RISK'}
       </h5>
       <div className="grid grid-cols-3 gap-2 text-sm">
@@ -6616,8 +6616,8 @@ function renderDigoxinAlert(pt: CADGapPatient): React.ReactNode {
           Beers Criteria: age {'>'}=75 + dose {'>'}0.125mg + eGFR {'<'}50 — avoid or reduce dose
         </p>
       )}
-      <p className={`text-xs flex items-center gap-1 ${beersFlag ? 'text-red-500' : 'text-[#6B7280]'}`}>
-        <Zap className={`w-3 h-3 flex-shrink-0 ${beersFlag ? 'text-red-400' : 'text-[#6B7280]'}`} />
+      <p className={`text-xs flex items-center gap-1 ${beersFlag ? 'text-red-500' : 'text-gray-500'}`}>
+        <Zap className={`w-3 h-3 flex-shrink-0 ${beersFlag ? 'text-red-400' : 'text-gray-500'}`} />
         Risk auto-calculated
       </p>
     </div>
@@ -6627,25 +6627,25 @@ function renderDigoxinAlert(pt: CADGapPatient): React.ReactNode {
 /** Render BB deprescribing opportunity (Gap 56) */
 function renderBBDeprescribing(pt: CADGapPatient): React.ReactNode {
   return (
-    <div className="bg-[#F0F5FA] border-2 border-[#C8D4DC] rounded-xl p-4 space-y-2">
-      <h5 className="font-bold text-[#6B7280] flex items-center gap-2 text-sm">
-        <Activity className="w-4 h-4 text-[#6B7280]" />
+    <div className="bg-chrome-50 border-2 border-titanium-300 rounded-xl p-4 space-y-2">
+      <h5 className="font-bold text-gray-500 flex items-center gap-2 text-sm">
+        <Activity className="w-4 h-4 text-gray-500" />
         DEPRESCRIBING OPPORTUNITY — REDUCE-AMI 2024
       </h5>
-      <div className="grid grid-cols-2 gap-2 text-sm text-[#6B7280]">
+      <div className="grid grid-cols-2 gap-2 text-sm text-gray-500">
         <div><span className="font-medium">MI Date:</span> {pt.keyValues['Prior MI'] ?? 'N/A'}</div>
         <div><span className="font-medium">LVEF:</span> {pt.keyValues['LVEF'] ?? 'N/A'}</div>
         <div><span className="font-medium">Beta-Blocker:</span> {pt.keyValues['Beta-Blocker'] ?? 'N/A'}</div>
         <div><span className="font-medium">HF/Angina/Arrhythmia:</span> {pt.keyValues['HF'] === 'No' && pt.keyValues['Angina'] === 'No' ? 'None' : 'Present'}</div>
       </div>
-      <p className="text-sm text-[#6B7280] italic">
+      <p className="text-sm text-gray-500 italic">
         No mortality benefit in post-MI LVEF {'>'}=50% without HF, angina, or arrhythmia (Yndigegn, NEJM 2024)
       </p>
-      <p className="text-sm text-[#6B7280] font-semibold">
+      <p className="text-sm text-gray-500 font-semibold">
         Discuss BB continuation vs deprescribing — shared decision recommended
       </p>
-      <p className="text-xs text-[#6B7280] flex items-center gap-1">
-        <Zap className="w-3 h-3 text-[#6B7280] flex-shrink-0" />
+      <p className="text-xs text-gray-500 flex items-center gap-1">
+        <Zap className="w-3 h-3 text-gray-500 flex-shrink-0" />
         All deprescribing criteria auto-confirmed
       </p>
     </div>
@@ -6655,22 +6655,22 @@ function renderBBDeprescribing(pt: CADGapPatient): React.ReactNode {
 /** Render OAC + Aspirin deprescribing opportunity (Gap 53) */
 function renderOACDeprescribing(pt: CADGapPatient): React.ReactNode {
   return (
-    <div className="bg-[#F0F5FA] border-2 border-[#C8D4DC] rounded-xl p-4 space-y-2">
-      <h5 className="font-bold text-[#6B7280] flex items-center gap-2 text-sm">
-        <Activity className="w-4 h-4 text-[#6B7280]" />
+    <div className="bg-chrome-50 border-2 border-titanium-300 rounded-xl p-4 space-y-2">
+      <h5 className="font-bold text-gray-500 flex items-center gap-2 text-sm">
+        <Activity className="w-4 h-4 text-gray-500" />
         DEPRESCRIBING OPPORTUNITY — Excess bleeding risk
       </h5>
-      <div className="grid grid-cols-2 gap-2 text-sm text-[#6B7280]">
+      <div className="grid grid-cols-2 gap-2 text-sm text-gray-500">
         <div><span className="font-medium">AF Diagnosis:</span> {pt.keyValues['AF Type'] ?? 'N/A'}</div>
         <div><span className="font-medium">Last ACS/PCI:</span> {pt.keyValues['Last PCI'] ?? 'N/A'}</div>
         <div><span className="font-medium">Current Regimen:</span> {pt.keyValues['OAC'] ?? 'N/A'} + {pt.keyValues['Aspirin'] ?? 'N/A'}</div>
         <div><span className="font-medium">Stent in last 12 mo:</span> {pt.keyValues['Stent (last 12 mo)'] ?? 'No'}</div>
       </div>
-      <p className="text-sm text-[#6B7280] font-semibold">
+      <p className="text-sm text-gray-500 font-semibold">
         Discontinue aspirin — OAC monotherapy appropriate for stable CAD {'>'}12 months post-stent
       </p>
-      <p className="text-xs text-[#6B7280] flex items-center gap-1">
-        <Zap className="w-3 h-3 text-[#6B7280] flex-shrink-0" />
+      <p className="text-xs text-gray-500 flex items-center gap-1">
+        <Zap className="w-3 h-3 text-gray-500 flex-shrink-0" />
         Regimen and timing auto-detected
       </p>
     </div>
@@ -6687,9 +6687,9 @@ function renderSAQTrend(pt: CADGapPatient): React.ReactNode {
     score >= 25 ? 'Moderate Limitation' :
     'Severe Limitation';
   const severityColor =
-    score >= 75 ? 'text-[#2C4A60]' :
-    score >= 50 ? 'text-[#6B7280]' :
-    score >= 25 ? 'text-[#7A1A2E]' :
+    score >= 75 ? 'text-teal-700' :
+    score >= 50 ? 'text-gray-500' :
+    score >= 25 ? 'text-red-600' :
     'text-red-700';
 
   const saqTrendResult = computeSAQTrend({
@@ -6699,7 +6699,7 @@ function renderSAQTrend(pt: CADGapPatient): React.ReactNode {
 
   const prior = pt.saqPriorAnginaFrequency;
   const arrow = prior != null ? (score > prior ? '\u2191' : score < prior ? '\u2193' : '\u2192') : null;
-  const arrowColor = prior != null ? (score > prior ? 'text-[#2C4A60]' : score < prior ? 'text-red-600' : 'text-titanium-500') : '';
+  const arrowColor = prior != null ? (score > prior ? 'text-teal-700' : score < prior ? 'text-red-600' : 'text-titanium-500') : '';
 
   return (
     <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-1">
@@ -6742,8 +6742,8 @@ function renderSYNTAXDisplay(pt: CADGapPatient): React.ReactNode {
 
   const tierColor =
     syntaxResult.tier === 'High' ? 'text-red-700' :
-    syntaxResult.tier === 'Intermediate' ? 'text-[#6B7280]' :
-    'text-[#2C4A60]';
+    syntaxResult.tier === 'Intermediate' ? 'text-gray-500' :
+    'text-teal-700';
 
   return (
     <div className="bg-blue-50 border border-blue-200 rounded-xl p-3">
@@ -6891,7 +6891,7 @@ function renderCADPredictiveBadges(gap: CADClinicalGap, pt: CADGapPatient): Reac
 
   return (
     <>
-      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${display.colorClass === 'text-red-600' ? 'bg-red-100 text-red-700' : display.colorClass === 'text-[#6B7280]' ? 'bg-[#FAF6E8] text-[#8B6914]' : display.colorClass === 'text-[#2C4A60]' ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-gray-100 text-gray-500'}`}>
+      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${display.colorClass === 'text-red-600' ? 'bg-red-100 text-red-700' : display.colorClass === 'text-gray-500' ? 'bg-amber-50 text-amber-600' : display.colorClass === 'text-teal-700' ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-500'}`}>
         {display.arrow} {display.label}
       </span>
       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${horizonDisplay.bgClass} ${horizonDisplay.textClass}`}>
@@ -6906,15 +6906,15 @@ function renderCADPredictedEvent(gapId: string, pt: CADGapPatient): React.ReactN
   // Gap 52 — Post-ACS PCSK9i Treatment Window Countdown
   if ((gapId.includes('52') || gapId.includes('pcsk9') || gapId.includes('post-acs')) && pt.keyValues['ACS Date'] && pt.keyValues['PCSK9i Window Remaining']) {
     return (
-      <div className="mt-2 px-3 py-2 bg-[#F0F5FA] border border-[#C8D4DC] rounded-lg">
-        <div className="text-xs font-semibold text-[#6B7280] mb-1">Treatment Window Countdown</div>
-        <div className="text-xs text-[#6B7280]">
+      <div className="mt-2 px-3 py-2 bg-chrome-50 border border-titanium-300 rounded-lg">
+        <div className="text-xs font-semibold text-gray-500 mb-1">Treatment Window Countdown</div>
+        <div className="text-xs text-gray-500">
           ACS event: {pt.keyValues['ACS Date']} · Days elapsed: {pt.keyValues['Days Since ACS']}
         </div>
-        <div className="text-xs text-[#6B7280] font-bold">
+        <div className="text-xs text-gray-500 font-bold">
           Days remaining in highest-benefit window: {pt.keyValues['PCSK9i Window Remaining']}
         </div>
-        <div className="text-xs text-[#6B7280] mt-0.5">ODYSSEY OUTCOMES: Greatest absolute benefit in first 90 days post-ACS</div>
+        <div className="text-xs text-gray-500 mt-0.5">ODYSSEY OUTCOMES: Greatest absolute benefit in first 90 days post-ACS</div>
       </div>
     );
   }
@@ -6937,7 +6937,7 @@ function renderCADPredictedEvent(gapId: string, pt: CADGapPatient): React.ReactN
     const cabgDate = pt.keyValues['CABG Date'];
     if (typeof cabgDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(cabgDate)) {
       const svg = estimateSVGFailureProbability({ cabgDate });
-      const riskColor = svg.riskCategory === 'very_high' ? 'text-red-700' : svg.riskCategory === 'high' ? 'text-red-600' : svg.riskCategory === 'moderate' ? 'text-[#6B7280]' : 'text-[#2C4A60]';
+      const riskColor = svg.riskCategory === 'very_high' ? 'text-red-700' : svg.riskCategory === 'high' ? 'text-red-600' : svg.riskCategory === 'moderate' ? 'text-gray-500' : 'text-teal-700';
       const surveillanceNote = svg.probability >= 0.30 ? 'overdue' : svg.probability >= 0.15 ? 'recommended' : 'per guidelines';
       return (
         <div className="mt-2 px-3 py-2 bg-slate-50/50 border border-slate-200 rounded-lg">
@@ -6974,8 +6974,8 @@ function renderCADRevenueTiming(gap: CADClinicalGap, pt: CADGapPatient): React.R
   });
 
   return (
-    <div className="mt-2 px-3 py-2 bg-[#F0F5FA]/50 border border-[#C8D4DC] rounded-lg">
-      <div className="text-xs text-[#2C4A60]">
+    <div className="mt-2 px-3 py-2 bg-chrome-50/50 border border-titanium-300 rounded-lg">
+      <div className="text-xs text-teal-700">
         <span className="font-semibold">Revenue timing:</span>{' '}
         {formatDollar(revenue.revenueThisQuarter)} actionable this quarter &middot;{' '}
         {formatDollar(revenue.revenueAtRiskIfDeferred)} at risk if deferred &middot;{' '}
@@ -7093,8 +7093,8 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
 
   const priorityColor = (p: string) => {
     if (p === 'high') return 'bg-red-50 border-red-300 text-red-700';
-    if (p === 'medium') return 'bg-[#F0F5FA] border-[#C8D4DC] text-[#6B7280]';
-    return 'bg-[#F0F7F4] border-[#D8EDE6] text-[#2C4A60]';
+    if (p === 'medium') return 'bg-chrome-50 border-titanium-300 text-gray-500';
+    return 'bg-green-50 border-green-100 text-teal-700';
   };
 
   const categoryColor = (c: string) =>
@@ -7103,9 +7103,9 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
       : c === 'Safety'
       ? 'bg-rose-200 text-rose-900'
       : c === 'Quality'
-      ? 'bg-[#FAF6E8] text-[#8B6914]'
+      ? 'bg-amber-50 text-amber-600'
       : c === 'Deprescribing'
-      ? 'bg-[#FAF6E8] text-[#8B6914]'
+      ? 'bg-amber-50 text-amber-600'
       : c === 'Discovery'
       ? 'bg-slate-100 text-slate-800'
       : 'bg-blue-100 text-blue-800';
@@ -7113,7 +7113,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
   const tierColor = (tier?: string) => {
     if (!tier) return '';
     if (tier.includes('A')) return 'bg-red-100 text-red-700';
-    if (tier.includes('B')) return 'bg-[#FAF6E8] text-[#8B6914]';
+    if (tier.includes('B')) return 'bg-amber-50 text-amber-600';
     if (tier.includes('C')) return 'bg-blue-100 text-blue-700';
     return 'bg-titanium-100 text-titanium-700';
   };
@@ -7148,12 +7148,12 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
             </div>
             <div className="text-2xl font-bold text-red-800">{totalPatients.toLocaleString()}</div>
           </div>
-          <div className="bg-[#F0F7F4] border border-[#D8EDE6] rounded-xl p-4">
+          <div className="bg-green-50 border border-green-100 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
-              <DollarSign className="w-4 h-4 text-[#2C4A60]" />
-              <span className="text-xs font-semibold text-[#2C4A60] uppercase tracking-wide">Total Opportunity</span>
+              <DollarSign className="w-4 h-4 text-teal-700" />
+              <span className="text-xs font-semibold text-teal-700 uppercase tracking-wide">Total Opportunity</span>
             </div>
-            <div className="text-2xl font-bold text-[#2C4A60]">
+            <div className="text-2xl font-bold text-teal-700">
               ${(totalOpportunity / 1000000).toFixed(1)}M
             </div>
           </div>
@@ -7267,7 +7267,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
                   </div>
                   {gap.category === 'Discovery' && (
                     <div className="text-xs font-semibold text-slate-700 mt-1 flex items-center gap-1">
-                      <span className="text-[#2C4A60]">&#x2B21;</span> Discovery — Net new patients
+                      <span className="text-teal-700">&#x2B21;</span> Discovery — Net new patients
                     </div>
                   )}
                   <div className="font-semibold text-titanium-900 text-base">{gap.name}</div>
@@ -7276,7 +7276,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
                       <span className="font-semibold text-titanium-900">{gap.patientCount}</span> patients
                     </span>
                     <span className="text-sm text-titanium-600">
-                      <span className="font-semibold text-[#2C4A60]">${(gap.dollarOpportunity / 1000000).toFixed(1)}M</span> opportunity
+                      <span className="font-semibold text-teal-700">${(gap.dollarOpportunity / 1000000).toFixed(1)}M</span> opportunity
                     </span>
                   </div>
                   {gap.subcategories && (
@@ -7308,19 +7308,19 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
                         </div>
                         <div className="flex items-center gap-4 text-xs">
                           <span className="text-red-600 font-medium">{'\u2193'} {dist.worseningRapid} worsening rapidly</span>
-                          <span className="text-[#6B7280] font-medium">{'\u2198'} {dist.worseningSlow} worsening slowly</span>
+                          <span className="text-gray-500 font-medium">{'\u2198'} {dist.worseningSlow} worsening slowly</span>
                           <span className="text-gray-500 font-medium">{'\u2192'} {dist.stable} stable</span>
-                          <span className="text-[#2C4A60] font-medium">{'\u2197'} {dist.improving} improving</span>
+                          <span className="text-teal-700 font-medium">{'\u2197'} {dist.improving} improving</span>
                         </div>
                         <div className="flex h-2 rounded-full overflow-hidden mt-2">
                           <div className="bg-red-400" style={{ width: `${(dist.worseningRapid / dist.total) * 100}%` }} />
-                          <div className="bg-[#F0F5FA]" style={{ width: `${(dist.worseningSlow / dist.total) * 100}%` }} />
+                          <div className="bg-chrome-50" style={{ width: `${(dist.worseningSlow / dist.total) * 100}%` }} />
                           <div className="bg-gray-300" style={{ width: `${(dist.stable / dist.total) * 100}%` }} />
-                          <div className="bg-[#C8D4DC]" style={{ width: `${(dist.improving / dist.total) * 100}%` }} />
+                          <div className="bg-titanium-300" style={{ width: `${(dist.improving / dist.total) * 100}%` }} />
                         </div>
                         <div className="flex items-center gap-4 mt-2 text-xs text-titanium-600">
-                          <span>Q1 opportunity: <span className="font-bold text-[#2C4A60]">{formatDollar(q1Rev)}</span> ({dist.worseningRapid} patients -- highest urgency)</span>
-                          <span>Full population: <span className="font-bold text-[#2C4A60]">{formatDollar(gap.dollarOpportunity)}</span></span>
+                          <span>Q1 opportunity: <span className="font-bold text-teal-700">{formatDollar(q1Rev)}</span> ({dist.worseningRapid} patients -- highest urgency)</span>
+                          <span>Full population: <span className="font-bold text-teal-700">{formatDollar(gap.dollarOpportunity)}</span></span>
                         </div>
                       </div>
                     );
@@ -7337,13 +7337,13 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
                   )}
                   <div>
                     <h4 className="font-semibold text-titanium-800 mb-2 flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-[#6B7280]" />
+                      <AlertTriangle className="w-4 h-4 text-gray-500" />
                       Detection Criteria
                     </h4>
                     <ul className="space-y-1">
                       {gap.detectionCriteria.map((c) => (
                         <li key={c} className="text-sm text-titanium-700 flex gap-2">
-                          <CheckCircle className="w-3.5 h-3.5 text-[#2C4A60] flex-shrink-0 mt-0.5" />
+                          <CheckCircle className="w-3.5 h-3.5 text-teal-700 flex-shrink-0 mt-0.5" />
                           {c}
                         </li>
                       ))}
@@ -7351,12 +7351,12 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
                   </div>
 
                   {gap.whyMissed && (
-                    <div className="bg-[#F0F5FA] border border-[#C8D4DC] rounded-xl p-4">
-                      <h4 className="font-semibold text-[#6B7280] mb-1 flex items-center gap-2">
-                        <Search className="w-4 h-4 text-[#6B7280]" />
+                    <div className="bg-chrome-50 border border-titanium-300 rounded-xl p-4">
+                      <h4 className="font-semibold text-gray-500 mb-1 flex items-center gap-2">
+                        <Search className="w-4 h-4 text-gray-500" />
                         Why standard systems miss this
                       </h4>
-                      <p className="text-sm text-[#6B7280]">{gap.whyMissed}</p>
+                      <p className="text-sm text-gray-500">{gap.whyMissed}</p>
                     </div>
                   )}
 
@@ -7411,7 +7411,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
                                   </span>
                                 )}
                                 {cta && (
-                                  <span className="ml-2 text-xs bg-[#F0F7F4] text-[#2D6147] px-2 py-0.5 rounded-full">
+                                  <span className="ml-2 text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded-full">
                                     {cta}
                                   </span>
                                 )}

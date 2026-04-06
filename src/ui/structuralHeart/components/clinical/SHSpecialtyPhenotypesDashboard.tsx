@@ -223,8 +223,8 @@ const SHSpecialtyPhenotypesDashboard: React.FC = () => {
   const getRiskColor = (risk: string) => {
  switch (risk) {
  case 'high': return 'text-deep-red-600 bg-deep-red-50 border-deep-red-200';
- case 'moderate': return 'text-[#4A7FA5] bg-crimson-50 border-crimson-200';
- case 'low': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
+ case 'moderate': return 'text-chrome-500 bg-crimson-50 border-crimson-200';
+ case 'low': return 'text-teal-700 bg-chrome-50 border-titanium-300';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };
@@ -247,13 +247,13 @@ const SHSpecialtyPhenotypesDashboard: React.FC = () => {
  <div className="text-2xl font-bold text-porsche-600 font-sf">{totalEligible}</div>
  <div className="text-sm text-porsche-700">Total Eligible Patients</div>
  </div>
- <div className="p-4 bg-[#f0f5fa] border border-[#C8D4DC] rounded-lg">
- <div className="text-2xl font-bold text-[#2C4A60] font-sf">{totalIdentified}</div>
+ <div className="p-4 bg-chrome-50 border border-titanium-300 rounded-lg">
+ <div className="text-2xl font-bold text-teal-700 font-sf">{totalIdentified}</div>
  <div className="text-sm text-deep-green-700">Currently Identified</div>
  </div>
  <div className="p-4 bg-crimson-50 border border-crimson-200 rounded-lg">
- <div className="text-2xl font-bold text-[#4A7FA5] font-sf">{totalEligible - totalIdentified}</div>
- <div className="text-sm text-[#4A7FA5]">Unidentified Patients</div>
+ <div className="text-2xl font-bold text-chrome-500 font-sf">{totalEligible - totalIdentified}</div>
+ <div className="text-sm text-chrome-500">Unidentified Patients</div>
  </div>
  <div className="p-4 bg-deep-red-50 border border-deep-red-200 rounded-lg">
  <div className="text-2xl font-bold text-deep-red-600 font-sf">${toFixed(totalRevenueGap / 1000000, 1)}M</div>
@@ -314,8 +314,8 @@ const SHSpecialtyPhenotypesDashboard: React.FC = () => {
  <div className="text-lg font-bold text-titanium-900">{phenotype.eligiblePatients}</div>
  <div className="text-xs text-titanium-600">Eligible</div>
  </div>
- <div className="text-center p-3 bg-[#f0f5fa] rounded-lg">
- <div className="text-lg font-bold text-[#2C4A60]">{phenotype.identifiedPatients}</div>
+ <div className="text-center p-3 bg-chrome-50 rounded-lg">
+ <div className="text-lg font-bold text-teal-700">{phenotype.identifiedPatients}</div>
  <div className="text-xs text-deep-green-700">Identified</div>
  </div>
  <div className="text-center p-3 bg-deep-red-50 rounded-lg">
@@ -352,16 +352,16 @@ const SHSpecialtyPhenotypesDashboard: React.FC = () => {
  </div>
 
  {/* Revenue Impact */}
- <div className="flex items-center justify-between p-3 bg-[#f0f5fa] border border-[#C8D4DC] rounded-lg">
+ <div className="flex items-center justify-between p-3 bg-chrome-50 border border-titanium-300 rounded-lg">
  <div>
- <div className="text-sm font-semibold text-[#2C4A60]">Revenue Opportunity</div>
- <div className="text-xs text-[#2C4A60]">{phenotype.revenue}</div>
+ <div className="text-sm font-semibold text-teal-700">Revenue Opportunity</div>
+ <div className="text-xs text-teal-700">{phenotype.revenue}</div>
  </div>
  <div className="text-right">
- <div className="text-lg font-bold text-[#2C4A60]">
+ <div className="text-lg font-bold text-teal-700">
  ${toFixed(phenotype.revenueGap / 1000, 0)}K
  </div>
- <div className="text-xs text-[#2C4A60]">Gap</div>
+ <div className="text-xs text-teal-700">Gap</div>
  </div>
  </div>
 
@@ -400,7 +400,7 @@ const SHSpecialtyPhenotypesDashboard: React.FC = () => {
  <ul className="space-y-1">
  {phenotype.interventions.map((intervention: string) => (
  <li key={intervention} className="text-sm text-titanium-700 flex items-start gap-2">
- <span className="w-1.5 h-1.5 rounded-full bg-[#4A6880] mt-1.5 flex-shrink-0" />
+ <span className="w-1.5 h-1.5 rounded-full bg-teal-500 mt-1.5 flex-shrink-0" />
  {intervention}
  </li>
  ))}
@@ -439,7 +439,7 @@ const SHSpecialtyPhenotypesDashboard: React.FC = () => {
  </div>
  </div>
  <div className="flex items-center gap-3">
- <span className={`text-xs px-2 py-0.5 rounded-full ${pt.risk === 'High' ? 'bg-crimson-100 text-crimson-700' : 'bg-[#FAF6E8] text-[#8B6914]'}`}>
+ <span className={`text-xs px-2 py-0.5 rounded-full ${pt.risk === 'High' ? 'bg-crimson-100 text-crimson-700' : 'bg-amber-50 text-amber-600'}`}>
  {pt.risk}
  </span>
  <span className="text-xs text-titanium-500">{pt.status}</span>
@@ -457,9 +457,9 @@ const SHSpecialtyPhenotypesDashboard: React.FC = () => {
  <div className="metal-card p-6">
  <h3 className="text-xl font-bold text-titanium-900 mb-4">Quick Actions</h3>
  {quickActionFeedback && (
- <div className="mb-4 p-3 bg-[#f0f5fa] border border-[#C8D4DC] rounded-lg flex items-center gap-2">
- <CheckCircle className="w-5 h-5 text-[#2C4A60]" />
- <span className="text-sm font-medium text-[#2C4A60]">
+ <div className="mb-4 p-3 bg-chrome-50 border border-titanium-300 rounded-lg flex items-center gap-2">
+ <CheckCircle className="w-5 h-5 text-teal-700" />
+ <span className="text-sm font-medium text-teal-700">
  {quickActionFeedback === 'alerts' && 'Loading high-risk patient alerts...'}
  {quickActionFeedback === 'screening' && 'Population screening analysis initiated...'}
  {quickActionFeedback === 'revenue' && 'Revenue opportunity report generating...'}
@@ -485,20 +485,20 @@ const SHSpecialtyPhenotypesDashboard: React.FC = () => {
  <div className="text-xs text-porsche-600">Run bulk phenotype analysis</div>
  </button>
  <button 
- className="p-4 border-2 border-[#C8D4DC] rounded-lg hover:bg-[#f0f5fa] transition-colors"
+ className="p-4 border-2 border-titanium-300 rounded-lg hover:bg-chrome-50 transition-colors"
  onClick={() => { setQuickActionFeedback('revenue'); setTimeout(() => setQuickActionFeedback(null), 3000); }}
  >
- <DollarSign className="w-6 h-6 text-[#2C4A60] mx-auto mb-2" />
- <div className="text-sm font-semibold text-[#2C4A60]">Revenue Report</div>
- <div className="text-xs text-[#2C4A60]">Generate opportunity analysis</div>
+ <DollarSign className="w-6 h-6 text-teal-700 mx-auto mb-2" />
+ <div className="text-sm font-semibold text-teal-700">Revenue Report</div>
+ <div className="text-xs text-teal-700">Generate opportunity analysis</div>
  </button>
  <button 
  className="p-4 border-2 border-crimson-200 rounded-lg hover:bg-crimson-50 transition-colors"
  onClick={() => { setQuickActionFeedback('builder'); setTimeout(() => setQuickActionFeedback(null), 3000); }}
  >
- <Activity className="w-6 h-6 text-[#4A7FA5] mx-auto mb-2" />
+ <Activity className="w-6 h-6 text-chrome-500 mx-auto mb-2" />
  <div className="text-sm font-semibold text-crimson-700">Protocol Builder</div>
- <div className="text-xs text-[#4A7FA5]">Create screening workflows</div>
+ <div className="text-xs text-chrome-500">Create screening workflows</div>
  </button>
  </div>
  </div>

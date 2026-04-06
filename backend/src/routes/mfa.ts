@@ -94,13 +94,14 @@ router.post('/verify', async (req: AuthenticatedRequest, res: Response) => {
     const fullToken = jwt.sign(
       {
         userId: user.id,
+        email: user.email,
         hospitalId: user.hospitalId,
         role: user.role,
+        permissions: user.permissions || {},
         mfaVerified: true,
-        // sessionId not in JWT payload -- MFA verified token inherits session
       },
       process.env.JWT_SECRET!,
-      { expiresIn: '8h' }
+      { algorithm: 'HS256', expiresIn: '1h' }
     );
 
     res.json({ token: fullToken, mfaVerified: true });
@@ -133,9 +134,9 @@ router.post('/verify-backup', async (req: AuthenticatedRequest, res: Response) =
 
     const jwt = require('jsonwebtoken');
     const fullToken = jwt.sign(
-      { userId: user.id, hospitalId: user.hospitalId, role: user.role, mfaVerified: true },
+      { userId: user.id, email: user.email, hospitalId: user.hospitalId, role: user.role, permissions: user.permissions || {}, mfaVerified: true },
       process.env.JWT_SECRET!,
-      { expiresIn: '8h' }
+      { algorithm: 'HS256', expiresIn: '1h' }
     );
 
     res.json({

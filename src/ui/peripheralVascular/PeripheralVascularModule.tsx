@@ -10,7 +10,7 @@ const PeripheralVascularModule: React.FC = () => {
  name: 'Peripheral Vascular',
  description: 'Comprehensive PAD and limb salvage programs',
  icon: Navigation,
- color: 'text-[#2C4A60]',
+ color: 'text-teal-700',
  patientCount: '2,494',
  views: [
  {

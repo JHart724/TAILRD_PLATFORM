@@ -164,8 +164,8 @@ const StatusBadge: React.FC<{ status: HealthSystem['status']; trialDays?: number
   trialDays,
 }) => {
   const styles: Record<string, string> = {
-    Active: 'bg-[#F0F7F4] text-[#2D6147]',
-    Trial: 'bg-[#FAF6E8] text-[#8B6914]',
+    Active: 'bg-green-50 text-green-600',
+    Trial: 'bg-amber-50 text-amber-600',
     Inactive: 'bg-red-100 text-red-800',
   };
 
@@ -173,7 +173,7 @@ const StatusBadge: React.FC<{ status: HealthSystem['status']; trialDays?: number
     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status]}`}>
       {status}
       {status === 'Trial' && trialDays !== undefined && (
-        <span className="ml-1 text-[#6B7280]">({trialDays}d left)</span>
+        <span className="ml-1 text-gray-500">({trialDays}d left)</span>
       )}
     </span>
   );
@@ -243,8 +243,8 @@ const HealthSystems: React.FC = () => {
               >
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-[#7A1A2E]/10 flex items-center justify-center">
-                      <Building2 className="w-4 h-4 text-[#7A1A2E]" />
+                    <div className="w-9 h-9 rounded-lg bg-red-600/10 flex items-center justify-center">
+                      <Building2 className="w-4 h-4 text-red-600" />
                     </div>
                     <div>
                       <div className="text-sm font-medium text-gray-900">{hs.name}</div>
@@ -283,7 +283,7 @@ const HealthSystems: React.FC = () => {
                 <td className="px-4 py-4 text-sm font-medium text-gray-900">{hs.mrr}</td>
                 <td className="px-6 py-4">
                   <div className="flex items-center justify-end gap-2">
-                    <button className="p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-[#7A1A2E] transition-colors" title="View">
+                    <button className="p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-red-600 transition-colors" title="View">
                       <Eye className="w-4 h-4" />
                     </button>
                     <button className="p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-blue-600 transition-colors" title="Edit">

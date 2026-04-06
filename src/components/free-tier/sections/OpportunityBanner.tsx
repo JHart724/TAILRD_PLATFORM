@@ -8,7 +8,7 @@ const OpportunityBanner: React.FC = () => {
         Identified Opportunities
       </p>
       <p className="text-4xl font-bold font-data text-titanium-800 mt-1">
-        {formatDollars(PLATFORM_TOTALS.totalOpportunity)} identified · <span className="text-[#2C4A60]">{formatDollars(PLATFORM_TOTALS.quarterlyActionable)} actionable this quarter</span>
+        {formatDollars(PLATFORM_TOTALS.totalOpportunity)} identified · <span className="text-teal-700">{formatDollars(PLATFORM_TOTALS.quarterlyActionable)} actionable this quarter</span>
       </p>
     </div>
   );

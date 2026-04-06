@@ -143,7 +143,7 @@ const FreeTierDashboard: React.FC<FreeTierDashboardProps> = ({ backToMain }) => 
           </div>
           <p className="text-xs text-titanium-600">
             At current referral rates, estimated time to close identified gaps: <span className="font-bold text-red-600">18 months</span>.
-            With systematic TAILRD gap closure protocol: <span className="font-bold text-[#2C4A60]">6 months</span>.
+            With systematic TAILRD gap closure protocol: <span className="font-bold text-teal-700">6 months</span>.
           </p>
         </div>
 

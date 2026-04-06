@@ -3892,7 +3892,7 @@ const renderDofetilideAlert = (patient: EPGapPatient): React.ReactNode => {
       <div className="flex items-center gap-2">
         <span className="text-xs font-medium text-red-600">REMS Status:</span>
         {isCompliant ? (
-          <span className="bg-[#C8D4DC] text-white px-2 py-0.5 rounded text-xs font-bold">COMPLIANT</span>
+          <span className="bg-titanium-300 text-white px-2 py-0.5 rounded text-xs font-bold">COMPLIANT</span>
         ) : (
           <span className="bg-red-600 text-white px-2 py-0.5 rounded text-xs font-bold">NON-COMPLIANT</span>
         )}
@@ -3980,9 +3980,9 @@ const renderDeviceBatteryAlert = (patient: EPGapPatient): React.ReactNode => {
   const isEOL = batteryStatus.includes('eol');
   const isERI = batteryStatus.includes('eri');
   const severity = isEOL ? 'CRITICAL' : isERI ? 'HIGH' : 'UNKNOWN';
-  const bgColor = isEOL ? 'bg-red-50 border-red-200' : 'bg-[#F0F5FA] border-[#C8D4DC]';
-  const headerColor = isEOL ? 'text-red-700' : 'text-[#6B7280]';
-  const iconColor = isEOL ? 'text-red-600' : 'text-[#6B7280]';
+  const bgColor = isEOL ? 'bg-red-50 border-red-200' : 'bg-chrome-50 border-titanium-300';
+  const headerColor = isEOL ? 'text-red-700' : 'text-gray-500';
+  const iconColor = isEOL ? 'text-red-600' : 'text-gray-500';
 
   const deviceType = patient.keyValues['Device'] as string | undefined ?? 'Unknown';
   const pmDependent = patient.keyValues['PM-Dependent'] as string | undefined;
@@ -4004,7 +4004,7 @@ const renderDeviceBatteryAlert = (patient: EPGapPatient): React.ReactNode => {
         {isEOL ? (
           <span className="bg-red-600 text-white px-2 py-0.5 rounded text-xs font-bold">CRITICAL</span>
         ) : isERI ? (
-          <span className="bg-[#F0F5FA] text-white px-2 py-0.5 rounded text-xs font-bold">HIGH</span>
+          <span className="bg-chrome-50 text-white px-2 py-0.5 rounded text-xs font-bold">HIGH</span>
         ) : (
           <span className="bg-gray-500 text-white px-2 py-0.5 rounded text-xs font-bold">UNKNOWN</span>
         )}
@@ -4043,10 +4043,10 @@ const renderQTcRiskAlert = (patient: EPGapPatient): React.ReactNode => {
   const badgeClass = severity === 'CRITICAL'
     ? 'bg-red-600 text-white'
     : severity === 'HIGH'
-    ? 'bg-[#F0F5FA] text-white'
+    ? 'bg-chrome-50 text-white'
     : severity === 'MODERATE'
-    ? 'bg-[#FAF6E8] text-[#8B6914]'
-    : 'bg-[#F0F7F4] text-[#2D6147]';
+    ? 'bg-amber-50 text-amber-600'
+    : 'bg-green-50 text-green-600';
 
   return (
     <div className="bg-red-50 border border-red-200 rounded-lg p-3 mt-3">
@@ -4168,12 +4168,12 @@ const renderPVCBurdenDisplay = (patient: EPGapPatient): React.ReactNode => {
     holterPVCPercent: holterPct != null && !isNaN(holterPct) ? holterPct : undefined,
   });
   return (
-    <div className="bg-[#F0F5FA] border border-[#C8D4DC] rounded-lg p-3 mt-3">
-      <h5 className="text-sm font-bold text-[#6B7280] flex items-center gap-1.5 mb-1">
-        <Activity className="w-4 h-4 text-[#6B7280]" />
+    <div className="bg-chrome-50 border border-titanium-300 rounded-lg p-3 mt-3">
+      <h5 className="text-sm font-bold text-gray-500 flex items-center gap-1.5 mb-1">
+        <Activity className="w-4 h-4 text-gray-500" />
         PVC Burden Estimate
       </h5>
-      <div className="text-sm text-[#6B7280]">
+      <div className="text-sm text-gray-500">
         PVC burden: {pvcResult.burden} ({pvcResult.source}) &mdash; {pvcResult.ablationThreshold ? 'above' : 'below'} ablation threshold
         <span className="ml-1 inline-flex items-center gap-1 text-xs text-blue-600">
           <Zap className="w-3 h-3 flex-shrink-0" /> Auto-estimated
@@ -4283,7 +4283,7 @@ function renderEPPredictiveBadges(gap: EPClinicalGap, pt: EPGapPatient): React.R
 
   return (
     <>
-      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${display.colorClass === 'text-red-600' ? 'bg-red-100 text-red-700' : display.colorClass === 'text-[#6B7280]' ? 'bg-[#FAF6E8] text-[#8B6914]' : display.colorClass === 'text-[#2C4A60]' ? 'bg-[#F0F7F4] text-[#2D6147]' : 'bg-gray-100 text-gray-500'}`}>
+      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${display.colorClass === 'text-red-600' ? 'bg-red-100 text-red-700' : display.colorClass === 'text-gray-500' ? 'bg-amber-50 text-amber-600' : display.colorClass === 'text-teal-700' ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-500'}`}>
         {display.arrow} {display.label}
       </span>
       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${horizonDisplay.bgClass} ${horizonDisplay.textClass}`}>
@@ -4359,8 +4359,8 @@ function renderEPRevenueTiming(gap: EPClinicalGap, pt: EPGapPatient): React.Reac
   });
 
   return (
-    <div className="mt-2 px-3 py-2 bg-[#F0F5FA]/50 border border-[#C8D4DC] rounded-lg">
-      <div className="text-xs text-[#2C4A60]">
+    <div className="mt-2 px-3 py-2 bg-chrome-50/50 border border-titanium-300 rounded-lg">
+      <div className="text-xs text-teal-700">
         <span className="font-semibold">Revenue timing:</span>{' '}
         {formatDollar(revenue.revenueThisQuarter)} actionable this quarter &middot;{' '}
         {formatDollar(revenue.revenueAtRiskIfDeferred)} at risk if deferred &middot;{' '}
@@ -4491,8 +4491,8 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
 
   const priorityColor = (p: string) => {
     if (p === 'high') return 'bg-red-50 border-red-300 text-red-700';
-    if (p === 'medium') return 'bg-[#F0F5FA] border-[#C8D4DC] text-[#6B7280]';
-    return 'bg-[#F0F7F4] border-[#D8EDE6] text-[#2C4A60]';
+    if (p === 'medium') return 'bg-chrome-50 border-titanium-300 text-gray-500';
+    return 'bg-green-50 border-green-100 text-teal-700';
   };
 
   const categoryColor = (c: string) =>
@@ -4503,9 +4503,9 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
       : c === 'Safety'
       ? 'bg-rose-200 text-rose-900'
       : c === 'Quality'
-      ? 'bg-[#FAF6E8] text-[#8B6914]'
+      ? 'bg-amber-50 text-amber-600'
       : c === 'Deprescribing'
-      ? 'bg-[#FAF6E8] text-[#8B6914]'
+      ? 'bg-amber-50 text-amber-600'
       : 'bg-blue-100 text-blue-800';
 
   return (
@@ -4537,7 +4537,7 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
       {/* Header summary */}
       <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6">
         <h3 className="text-lg font-semibold text-titanium-900 mb-1 flex items-center gap-2">
-          <Zap className="w-5 h-5 text-[#2C4A60]" />
+          <Zap className="w-5 h-5 text-teal-700" />
           Clinical Gap Detection — Electrophysiology Module
         </h3>
         {activeSubTab && activeSubTab.id !== 'all' ? (
@@ -4560,12 +4560,12 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
             </div>
             <div className="text-2xl font-bold text-red-800">{filteredPatientCount.toLocaleString()}</div>
           </div>
-          <div className="bg-[#F0F7F4] border border-[#D8EDE6] rounded-xl p-4">
+          <div className="bg-green-50 border border-green-100 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
-              <DollarSign className="w-4 h-4 text-[#2C4A60]" />
-              <span className="text-xs font-semibold text-[#2C4A60] uppercase tracking-wide">Total Opportunity</span>
+              <DollarSign className="w-4 h-4 text-teal-700" />
+              <span className="text-xs font-semibold text-teal-700 uppercase tracking-wide">Total Opportunity</span>
             </div>
-            <div className="text-2xl font-bold text-[#2C4A60]">
+            <div className="text-2xl font-bold text-teal-700">
               ${(filteredOpportunity / 1000000).toFixed(1)}M
             </div>
           </div>
@@ -4663,7 +4663,7 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
                   </div>
                   {gap.category === 'Discovery' && (
                     <div className="flex items-center gap-1.5 mt-1">
-                      <span className="text-xs font-semibold text-[#2C4A60]">{'\u2B21'} Discovery — Net new patients · Never previously identified</span>
+                      <span className="text-xs font-semibold text-teal-700">{'\u2B21'} Discovery — Net new patients · Never previously identified</span>
                     </div>
                   )}
                   <div className="font-semibold text-titanium-900 text-base">{gap.name}</div>
@@ -4672,7 +4672,7 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
                       <span className="font-semibold text-titanium-900">{gap.patientCount}</span> patients
                     </span>
                     <span className="text-sm text-titanium-600">
-                      <span className="font-semibold text-[#2C4A60]">${(gap.dollarOpportunity / 1000000).toFixed(1)}M</span> opportunity
+                      <span className="font-semibold text-teal-700">${(gap.dollarOpportunity / 1000000).toFixed(1)}M</span> opportunity
                     </span>
                   </div>
                   {gap.subcategories && (
@@ -4686,7 +4686,7 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
                   )}
                   {gap.whyMissed && (
                     <div className="mt-2 text-xs text-titanium-500 italic flex items-start gap-1.5">
-                      <Search className="w-3 h-3 text-[#4A6880] flex-shrink-0 mt-0.5" />
+                      <Search className="w-3 h-3 text-teal-500 flex-shrink-0 mt-0.5" />
                       <span>Why standard systems miss this: {gap.whyMissed}</span>
                     </div>
                   )}
@@ -4710,19 +4710,19 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
                         </div>
                         <div className="flex items-center gap-4 text-xs">
                           <span className="text-red-600 font-medium">{'\u2193'} {dist.worseningRapid} worsening rapidly</span>
-                          <span className="text-[#6B7280] font-medium">{'\u2198'} {dist.worseningSlow} worsening slowly</span>
+                          <span className="text-gray-500 font-medium">{'\u2198'} {dist.worseningSlow} worsening slowly</span>
                           <span className="text-gray-500 font-medium">{'\u2192'} {dist.stable} stable</span>
-                          <span className="text-[#2C4A60] font-medium">{'\u2197'} {dist.improving} improving</span>
+                          <span className="text-teal-700 font-medium">{'\u2197'} {dist.improving} improving</span>
                         </div>
                         <div className="flex h-2 rounded-full overflow-hidden mt-2">
                           <div className="bg-red-400" style={{ width: `${(dist.worseningRapid / dist.total) * 100}%` }} />
-                          <div className="bg-[#F0F5FA]" style={{ width: `${(dist.worseningSlow / dist.total) * 100}%` }} />
+                          <div className="bg-chrome-50" style={{ width: `${(dist.worseningSlow / dist.total) * 100}%` }} />
                           <div className="bg-gray-300" style={{ width: `${(dist.stable / dist.total) * 100}%` }} />
-                          <div className="bg-[#C8D4DC]" style={{ width: `${(dist.improving / dist.total) * 100}%` }} />
+                          <div className="bg-titanium-300" style={{ width: `${(dist.improving / dist.total) * 100}%` }} />
                         </div>
                         <div className="flex items-center gap-4 mt-2 text-xs text-titanium-600">
-                          <span>Q1 opportunity: <span className="font-bold text-[#2C4A60]">{formatDollar(q1Rev)}</span> ({dist.worseningRapid} patients -- highest urgency)</span>
-                          <span>Full population: <span className="font-bold text-[#2C4A60]">{formatDollar(gap.dollarOpportunity)}</span></span>
+                          <span>Q1 opportunity: <span className="font-bold text-teal-700">{formatDollar(q1Rev)}</span> ({dist.worseningRapid} patients -- highest urgency)</span>
+                          <span>Full population: <span className="font-bold text-teal-700">{formatDollar(gap.dollarOpportunity)}</span></span>
                         </div>
                       </div>
                     );
@@ -4739,13 +4739,13 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
                   )}
                   <div>
                     <h4 className="font-semibold text-titanium-800 mb-2 flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-[#6B7280]" />
+                      <AlertTriangle className="w-4 h-4 text-gray-500" />
                       Detection Criteria
                     </h4>
                     <ul className="space-y-1">
                       {gap.detectionCriteria.map((c) => (
                         <li key={c} className="text-sm text-titanium-700 flex gap-2">
-                          <CheckCircle className="w-3.5 h-3.5 text-[#2C4A60] flex-shrink-0 mt-0.5" />
+                          <CheckCircle className="w-3.5 h-3.5 text-teal-700 flex-shrink-0 mt-0.5" />
                           {c}
                         </li>
                       ))}
@@ -4761,9 +4761,9 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <Activity className="w-4 h-4 text-[#2C4A60]" />
-                    <span className="font-semibold text-[#2C4A60]">Recommended Action:</span>
-                    <span className="text-sm font-medium bg-[#f0f5fa] border border-[#C8D4DC] px-3 py-1 rounded-lg text-[#2C4A60]">
+                    <Activity className="w-4 h-4 text-teal-700" />
+                    <span className="font-semibold text-teal-700">Recommended Action:</span>
+                    <span className="text-sm font-medium bg-chrome-50 border border-titanium-300 px-3 py-1 rounded-lg text-teal-700">
                       {gap.cta}
                     </span>
                   </div>
@@ -4809,12 +4809,12 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
                                   {pt.mrn} • Age {pt.age}
                                 </span>
                                 {pt.scenario && (
-                                  <span className="ml-2 text-xs bg-[#FAF6E8] text-[#8B6914] px-2 py-0.5 rounded-full">
+                                  <span className="ml-2 text-xs bg-amber-50 text-amber-600 px-2 py-0.5 rounded-full">
                                     {pt.scenario}
                                   </span>
                                 )}
                                 {gap.category === 'Discovery' && (
-                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-[#F0F5FA] text-slate-700 px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow. TAILRD identified this patient by assembling disconnected signals across care settings.">
+                                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-chrome-50 text-slate-700 px-2 py-0.5 rounded-full" title="This patient was not previously flagged in any clinical workflow. TAILRD identified this patient by assembling disconnected signals across care settings.">
                                     <Radio className="w-3 h-3" />
                                     First identified by TAILRD
                                   </span>
@@ -4859,7 +4859,7 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
                                 {gap.whyTailrd && (
                                   <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 mt-2">
                                     <p className="text-xs font-semibold text-slate-700 mb-1">Why TAILRD identified this patient:</p>
-                                    <p className="text-sm text-[#2C4A60]">{gap.whyTailrd}</p>
+                                    <p className="text-sm text-teal-700">{gap.whyTailrd}</p>
                                   </div>
                                 )}
                               </div>

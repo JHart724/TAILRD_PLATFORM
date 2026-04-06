@@ -229,17 +229,17 @@ const AdvancedDeviceTracker: React.FC = () => {
  switch (category) {
  case 'device': return 'text-deep-blue-600 bg-deep-blue-50 border-deep-blue-200';
  case 'procedure': return 'text-deep-red-600 bg-deep-red-50 border-deep-red-200';
- case 'diagnostic': return 'text-[#2C4A60] bg-[#f0f5fa] border-[#C8D4DC]';
- case 'therapy': return 'text-[#4A7FA5] bg-crimson-50 border-crimson-200';
+ case 'diagnostic': return 'text-teal-700 bg-chrome-50 border-titanium-300';
+ case 'therapy': return 'text-chrome-500 bg-crimson-50 border-crimson-200';
  default: return 'text-titanium-600 bg-titanium-50 border-titanium-200';
  }
   };
 
   const getUtilizationColor = (utilization: number) => {
  if (utilization < 10) return 'text-deep-red-600 bg-deep-red-50';
- if (utilization < 30) return 'text-[#4A7FA5] bg-crimson-50';
+ if (utilization < 30) return 'text-chrome-500 bg-crimson-50';
  if (utilization < 50) return 'text-deep-blue-600 bg-deep-blue-50';
- return 'text-[#2C4A60] bg-[#f0f5fa]';
+ return 'text-teal-700 bg-chrome-50';
   };
 
   return (
@@ -260,13 +260,13 @@ const AdvancedDeviceTracker: React.FC = () => {
  <div className="text-2xl font-bold text-porsche-600 font-sf">{totalEligible}</div>
  <div className="text-sm text-porsche-700">Total Eligible Patients</div>
  </div>
- <div className="p-4 bg-[#f0f5fa] border border-[#C8D4DC] rounded-lg">
- <div className="text-2xl font-bold text-[#2C4A60] font-sf">{totalUtilized}</div>
+ <div className="p-4 bg-chrome-50 border border-titanium-300 rounded-lg">
+ <div className="text-2xl font-bold text-teal-700 font-sf">{totalUtilized}</div>
  <div className="text-sm text-deep-green-700">Currently Receiving</div>
  </div>
  <div className="p-4 bg-crimson-50 border border-crimson-200 rounded-lg">
- <div className="text-2xl font-bold text-[#4A7FA5] font-sf">{Math.round((totalUtilized/totalEligible)*100)}%</div>
- <div className="text-sm text-[#4A7FA5]">Overall Utilization</div>
+ <div className="text-2xl font-bold text-chrome-500 font-sf">{Math.round((totalUtilized/totalEligible)*100)}%</div>
+ <div className="text-sm text-chrome-500">Overall Utilization</div>
  </div>
  <div className="p-4 bg-deep-red-50 border border-deep-red-200 rounded-lg">
  <div className="text-2xl font-bold text-deep-red-600 font-sf">${toFixed(totalRevenueGap / 1000000, 1)}M</div>
@@ -326,8 +326,8 @@ const AdvancedDeviceTracker: React.FC = () => {
  <div 
  className={`h-2 rounded-full transition-all duration-500 ${
  device.currentUtilization < 10 ? 'bg-deep-red-500' :
- device.currentUtilization < 30 ? 'bg-[#4A7FA5]' :
- device.currentUtilization < 50 ? 'bg-deep-blue-500' : 'bg-[#2C4A60]'
+ device.currentUtilization < 30 ? 'bg-chrome-500' :
+ device.currentUtilization < 50 ? 'bg-deep-blue-500' : 'bg-teal-700'
  }`}
  style={{ width: `${Math.min(device.currentUtilization, 100)}%` }}
  ></div>
@@ -343,8 +343,8 @@ const AdvancedDeviceTracker: React.FC = () => {
  <div className="font-bold text-titanium-900">{device.eligiblePatients}</div>
  <div className="text-xs text-titanium-600">Eligible</div>
  </div>
- <div className="text-center p-2 bg-[#f0f5fa] rounded">
- <div className="font-bold text-[#2C4A60]">{device.utilizedPatients}</div>
+ <div className="text-center p-2 bg-chrome-50 rounded">
+ <div className="font-bold text-teal-700">{device.utilizedPatients}</div>
  <div className="text-xs text-deep-green-700">Current</div>
  </div>
  <div className="text-center p-2 bg-deep-red-50 rounded">
@@ -370,13 +370,13 @@ const AdvancedDeviceTracker: React.FC = () => {
  </div>
 
  {/* Revenue Impact */}
- <div className="flex items-center justify-between p-3 bg-[#f0f5fa] border border-[#C8D4DC] rounded-lg mb-4">
+ <div className="flex items-center justify-between p-3 bg-chrome-50 border border-titanium-300 rounded-lg mb-4">
  <div>
- <div className="text-sm font-semibold text-[#2C4A60]">Revenue Gap</div>
- <div className="text-xs text-[#2C4A60]">{device.citation}</div>
+ <div className="text-sm font-semibold text-teal-700">Revenue Gap</div>
+ <div className="text-xs text-teal-700">{device.citation}</div>
  </div>
  <div className="text-right">
- <div className="text-lg font-bold text-[#2C4A60]">
+ <div className="text-lg font-bold text-teal-700">
  ${device.revenueGap >= 1000000 ? `${toFixed(device.revenueGap / 1000000, 1)}M` : `${toFixed(device.revenueGap / 1000, 0)}K`}
  </div>
  </div>
@@ -406,7 +406,7 @@ const AdvancedDeviceTracker: React.FC = () => {
  </button>
  </div>
  {actionFeedback && (
- <div className="mt-2 p-2 bg-[#F0F7F4] border border-[#D8EDE6] rounded-lg text-[#2C4A60] text-sm flex items-center gap-2">
+ <div className="mt-2 p-2 bg-green-50 border border-green-100 rounded-lg text-teal-700 text-sm flex items-center gap-2">
  <CheckCircle className="w-4 h-4" />
  {actionFeedback === 'screening' ? 'Patient screening tool loading...' : 'Opening clinical guidelines...'}
  </div>
@@ -425,11 +425,11 @@ const AdvancedDeviceTracker: React.FC = () => {
  <div className="text-lg font-bold text-deep-red-600">ICD Implants</div>
  <div className="text-xs text-deep-red-600">313 patients underutilized</div>
  </div>
- <div className="p-4 border-2 border-[#C8D4DC] rounded-lg">
- <DollarSign className="w-6 h-6 text-[#2C4A60] mb-2" />
- <div className="text-sm font-semibold text-[#2C4A60]">Revenue Leader</div>
- <div className="text-lg font-bold text-[#2C4A60]">$10.4M</div>
- <div className="text-xs text-[#2C4A60]">ICD program expansion</div>
+ <div className="p-4 border-2 border-titanium-300 rounded-lg">
+ <DollarSign className="w-6 h-6 text-teal-700 mb-2" />
+ <div className="text-sm font-semibold text-teal-700">Revenue Leader</div>
+ <div className="text-lg font-bold text-teal-700">$10.4M</div>
+ <div className="text-xs text-teal-700">ICD program expansion</div>
  </div>
  <div className="p-4 border-2 border-deep-blue-200 rounded-lg">
  <TrendingUp className="w-6 h-6 text-deep-blue-600 mb-2" />
@@ -438,10 +438,10 @@ const AdvancedDeviceTracker: React.FC = () => {
  <div className="text-xs text-deep-blue-600">Low complexity, high volume</div>
  </div>
  <div className="p-4 border-2 border-crimson-200 rounded-lg">
- <Users className="w-6 h-6 text-[#4A7FA5] mb-2" />
+ <Users className="w-6 h-6 text-chrome-500 mb-2" />
  <div className="text-sm font-semibold text-crimson-700">Population Impact</div>
- <div className="text-lg font-bold text-[#4A7FA5]">2,191</div>
- <div className="text-xs text-[#4A7FA5]">Total underutilized patients</div>
+ <div className="text-lg font-bold text-chrome-500">2,191</div>
+ <div className="text-xs text-chrome-500">Total underutilized patients</div>
  </div>
  </div>
  </div>

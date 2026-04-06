@@ -28,9 +28,9 @@ const ValvularGeographicHeatMap: React.FC = () => {
 
   const getHeatColor = (severityScore: number) => {
  if (severityScore >= 8.0) return 'bg-medical-red-400';
- if (severityScore >= 6.5) return 'bg-[#F0F5FA]';
+ if (severityScore >= 6.5) return 'bg-chrome-50';
  if (severityScore >= 5.0) return 'bg-titanium-400';
- return 'bg-[#F0F5FA]';
+ return 'bg-chrome-50';
   };
 
   const getHeatIntensity = (severityScore: number) => {
@@ -64,11 +64,11 @@ const ValvularGeographicHeatMap: React.FC = () => {
  </div>
  <div className="flex items-center gap-2 text-sm">
  <div className="flex items-center gap-1">
- <div className="w-3 h-3 rounded-full bg-[#F0F5FA]"></div>
+ <div className="w-3 h-3 rounded-full bg-chrome-50"></div>
  <span className="text-titanium-600">Mild</span>
  </div>
  <div className="flex items-center gap-1">
- <div className="w-3 h-3 rounded-full bg-[#F0F5FA]"></div>
+ <div className="w-3 h-3 rounded-full bg-chrome-50"></div>
  <span className="text-titanium-600">Moderate</span>
  </div>
  <div className="flex items-center gap-1">
@@ -136,14 +136,14 @@ const ValvularGeographicHeatMap: React.FC = () => {
 
  <div className="p-3 bg-white rounded-lg">
  <div className="text-xs text-titanium-600 mb-1">Intervention Rate</div>
- <div className="text-2xl font-bold text-[#6B7280]">
+ <div className="text-2xl font-bold text-gray-500">
  {selectedData.interventionRate}%
  </div>
  </div>
 
  <div className="p-3 bg-white rounded-lg">
  <div className="text-xs text-titanium-600 mb-1">Opportunity</div>
- <div className="text-2xl font-bold text-[#2C4A60]">
+ <div className="text-2xl font-bold text-teal-700">
  {formatCurrency(selectedData.opportunityRevenue)}
  </div>
  </div>

@@ -50,13 +50,13 @@ const EPEquityGapDashboard: React.FC<EPEquityGapDashboardProps> = ({ data, segme
  </div>
  <div className="flex items-center gap-2">
  <span className="text-sm font-bold text-titanium-900">{toFixed(group.value, 1)}%</span>
- <span className={`text-xs font-bold ${isAboveAvg ? "text-[#2C4A60]" : "text-arterial-600"}`}>
+ <span className={`text-xs font-bold ${isAboveAvg ? "text-teal-700" : "text-arterial-600"}`}>
  {isAboveAvg ? "+" : ""}{toFixed(deltaFromAvg, 1)}
  </span>
  </div>
  </div>
  <div className="w-full bg-titanium-100 rounded-full h-3 overflow-hidden">
- <div className={`h-full rounded-full transition-all duration-500 ${isAboveAvg ? "bg-[#F0F5FA]" : "bg-[#F0F5FA]"}`} style={{ width: `${percentage}%` }} />
+ <div className={`h-full rounded-full transition-all duration-500 ${isAboveAvg ? "bg-chrome-50" : "bg-chrome-50"}`} style={{ width: `${percentage}%` }} />
  </div>
  </div>
  );

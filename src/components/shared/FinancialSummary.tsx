@@ -57,13 +57,13 @@ const FinancialSummary: React.FC<FinancialSummaryProps> = ({
   };
 
   const getROIColor = (roi: number): string => {
- if (roi >= 20) return 'text-[#2D6147] bg-[#F0F7F4]';
- if (roi >= 10) return 'text-[#8B6914] bg-[#FAF6E8]';
+ if (roi >= 20) return 'text-green-600 bg-green-50';
+ if (roi >= 10) return 'text-amber-600 bg-amber-50';
  return 'text-red-600 bg-red-50';
   };
 
   const getMarginColor = (margin: number): string => {
- if (margin >= 0) return 'text-[#2C4A60]';
+ if (margin >= 0) return 'text-teal-700';
  return 'text-red-600';
   };
 
@@ -95,7 +95,7 @@ const FinancialSummary: React.FC<FinancialSummaryProps> = ({
  <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
  <div className="text-center">
  <div className="flex items-center justify-center mb-2">
- <DollarSign className="w-6 h-6 text-[#2C4A60]" />
+ <DollarSign className="w-6 h-6 text-teal-700" />
  </div>
  <div className="text-2xl font-bold text-gray-900">
  {formatCurrency(data.totalValidatedBenefits)}

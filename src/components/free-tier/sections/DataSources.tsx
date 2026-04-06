@@ -9,8 +9,8 @@ interface DataSourcesProps {
 
 const colorMap: Record<string, { bg: string; text: string }> = {
   'chrome-600': { bg: 'bg-chrome-100', text: 'text-chrome-600' },
-  'emerald-600': { bg: 'bg-[#F0F5FA]', text: 'text-[#2C4A60]' },
-  'amber-600': { bg: 'bg-[#F0F5FA]', text: 'text-[#6B7280]' },
+  'emerald-600': { bg: 'bg-chrome-50', text: 'text-teal-700' },
+  'amber-600': { bg: 'bg-chrome-50', text: 'text-gray-500' },
   'arterial-600': { bg: 'bg-arterial-100', text: 'text-arterial-600' },
 };
 

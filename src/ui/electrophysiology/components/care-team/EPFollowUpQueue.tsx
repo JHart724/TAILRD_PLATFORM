@@ -71,8 +71,8 @@ const EPFollowUpQueue: React.FC = () => {
   const getPriorityColor = (priority: string) => {
  switch(priority) {
  case 'overdue': return 'bg-red-100 text-red-900 border-red-400';
- case 'due_soon': return 'bg-[#FAF6E8] text-[#8B6914] border-[#C8D4DC]';
- case 'scheduled': return 'bg-[#F0F7F4] text-[#2D6147] border-[#2C4A60]';
+ case 'due_soon': return 'bg-amber-50 text-amber-600 border-titanium-300';
+ case 'scheduled': return 'bg-green-50 text-green-600 border-teal-700';
  default: return 'bg-gray-100 text-gray-900 border-gray-400';
  }
   };
@@ -80,8 +80,8 @@ const EPFollowUpQueue: React.FC = () => {
   const getPriorityIcon = (priority: string) => {
  switch(priority) {
  case 'overdue': return <AlertCircle className="w-4 h-4 text-red-600" />;
- case 'due_soon': return <Clock className="w-4 h-4 text-[#6B7280]" />;
- case 'scheduled': return <Calendar className="w-4 h-4 text-[#2C4A60]" />;
+ case 'due_soon': return <Clock className="w-4 h-4 text-gray-500" />;
+ case 'scheduled': return <Calendar className="w-4 h-4 text-teal-700" />;
  default: return <Calendar className="w-4 h-4 text-gray-600" />;
  }
   };

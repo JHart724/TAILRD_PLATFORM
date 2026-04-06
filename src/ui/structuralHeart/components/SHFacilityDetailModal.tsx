@@ -103,14 +103,14 @@ const SHFacilityDetailModal: React.FC<SHFacilityDetailModalProps> = ({
  <div className="p-6">
  {/* Summary Metrics */}
  <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
- <div className="bg-[#F0F5FA] rounded-lg p-6 text-center">
+ <div className="bg-chrome-50 rounded-lg p-6 text-center">
  <div className="flex items-center justify-center mb-3">
- <DollarSign className="w-8 h-8 text-[#2C4A60]" />
+ <DollarSign className="w-8 h-8 text-teal-700" />
  </div>
- <div className="text-2xl font-bold text-[#2C4A60] mb-1">
+ <div className="text-2xl font-bold text-teal-700 mb-1">
  {formatMoney(totalRevenue)}
  </div>
- <div className="text-sm text-[#2C4A60]">Total Revenue Opportunity</div>
+ <div className="text-sm text-teal-700">Total Revenue Opportunity</div>
  </div>
  
  <div className="bg-chrome-50 rounded-lg p-6 text-center">
@@ -123,14 +123,14 @@ const SHFacilityDetailModal: React.FC<SHFacilityDetailModalProps> = ({
  <div className="text-sm text-chrome-700">SH Patient Population</div>
  </div>
  
- <div className="bg-[#C8D4DC] rounded-lg p-6 text-center">
+ <div className="bg-titanium-300 rounded-lg p-6 text-center">
  <div className="flex items-center justify-center mb-3">
- <Target className="w-8 h-8 text-[#2C4A60]" />
+ <Target className="w-8 h-8 text-teal-700" />
  </div>
- <div className="text-2xl font-bold text-[#2C4A60] mb-1">
+ <div className="text-2xl font-bold text-teal-700 mb-1">
  {valveTherapyRate}%
  </div>
- <div className="text-sm text-[#2C4A60]">Valve Therapy Optimization Rate</div>
+ <div className="text-sm text-teal-700">Valve Therapy Optimization Rate</div>
  </div>
  
  <div className="bg-arterial-50 rounded-lg p-6 text-center">
@@ -216,7 +216,7 @@ const SHFacilityDetailModal: React.FC<SHFacilityDetailModalProps> = ({
  <td className="py-3">
  <div className="flex items-center">
  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white mr-3 ${
- index === 0 ? 'bg-[#F0F5FA]' : 
+ index === 0 ? 'bg-chrome-50' : 
  index === 1 ? 'bg-chrome-500' : 
  index === 2 ? 'bg-arterial-500' : 'bg-gray-400'
  }`}>
@@ -230,9 +230,9 @@ const SHFacilityDetailModal: React.FC<SHFacilityDetailModalProps> = ({
  </td>
  <td className="py-3 text-right">
  <span className={`font-medium ${
- provider.valveTherapyRate >= 80 ? 'text-[#2C4A60]' : 
+ provider.valveTherapyRate >= 80 ? 'text-teal-700' : 
  provider.valveTherapyRate >= 70 ? 'text-chrome-600' : 
- provider.valveTherapyRate >= 60 ? 'text-[#6B7280]' : 'text-red-600'
+ provider.valveTherapyRate >= 60 ? 'text-gray-500' : 'text-red-600'
  }`}>
  {provider.valveTherapyRate}%
  </span>
