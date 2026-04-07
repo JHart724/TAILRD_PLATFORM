@@ -19,7 +19,7 @@
  *     --attribute-mapping '{"email":"email","custom:hospitalId":"hospitalId","custom:role":"role"}'
  */
 
-import jwt, { JwtHeader, SigningKeyCallback } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import https from 'https';
 import { JWTPayload } from '../types';
 import { buildUserPermissions } from '../config/rolePermissions';

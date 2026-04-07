@@ -3,7 +3,16 @@ import jwt from 'jsonwebtoken';
 import prisma from '../lib/prisma';
 import { JWTPayload, APIResponse } from '../types';
 import { FULL_ACCESS_PERMISSIONS, MODULE_KEY_MAP } from '../config/rolePermissions';
-import { verifyCognitoToken, isCognitoEnabled } from './cognitoAuth';
+// Cognito auth is optional -- only loaded when COGNITO_USER_POOL_ID is set
+let verifyCognitoToken: ((token: string) => Promise<any>) | null = null;
+let isCognitoEnabled: (() => boolean) = () => false;
+try {
+  const cognito = require('./cognitoAuth');
+  verifyCognitoToken = cognito.verifyCognitoToken;
+  isCognitoEnabled = cognito.isCognitoEnabled;
+} catch {
+  // cognitoAuth not available -- SSO disabled, local auth only
+}
 
 const isDemoMode = process.env.DEMO_MODE === 'true';
 // Startup validation in server.ts ensures JWT_SECRET is set when not in demo mode.
