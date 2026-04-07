@@ -301,11 +301,11 @@ router.post('/refresh', async (req: Request, res: Response) => {
       { algorithms: ['HS256'] }
     ) as JWTPayload;
 
-    // Re-validate user is still active before issuing new token
+    // Re-validate user is still active and rebuild permissions from DB
     if (!isDemoMode) {
       const user = await prisma.user.findUnique({
         where: { id: decoded.userId },
-        select: { isActive: true, role: true },
+        include: { hospital: true },
       });
       if (!user || !user.isActive) {
         return res.status(401).json({
@@ -314,17 +314,28 @@ router.post('/refresh', async (req: Request, res: Response) => {
           timestamp: new Date().toISOString(),
         } as APIResponse);
       }
+      // Rebuild permissions from current DB state (not stale JWT claims)
+      const freshPermissions = buildUserPermissions(user, user.hospital);
+      var newToken = signToken({
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+        hospitalId: user.hospitalId,
+        hospitalName: user.hospital.name,
+        permissions: freshPermissions,
+        demoMode: decoded.demoMode,
+      });
+    } else {
+      var newToken = signToken({
+        userId: decoded.userId,
+        email: decoded.email,
+        role: decoded.role,
+        hospitalId: decoded.hospitalId,
+        hospitalName: decoded.hospitalName,
+        permissions: decoded.permissions,
+        demoMode: decoded.demoMode,
+      });
     }
-
-    const newToken = signToken({
-      userId: decoded.userId,
-      email: decoded.email,
-      role: decoded.role,
-      hospitalId: decoded.hospitalId,
-      hospitalName: decoded.hospitalName,
-      permissions: decoded.permissions,
-      demoMode: decoded.demoMode,
-    });
 
     // Update session in DB (production only) -- store hashed tokens
     if (!isDemoMode) {

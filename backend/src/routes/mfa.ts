@@ -91,6 +91,7 @@ router.post('/verify', async (req: AuthenticatedRequest, res: Response) => {
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     const jwt = require('jsonwebtoken');
+    const crypto = require('crypto');
     const fullToken = jwt.sign(
       {
         userId: user.id,
@@ -103,6 +104,23 @@ router.post('/verify', async (req: AuthenticatedRequest, res: Response) => {
       process.env.JWT_SECRET!,
       { algorithm: 'HS256', expiresIn: '1h' }
     );
+
+    // Invalidate pre-MFA session and create post-MFA session
+    await prisma.loginSession.updateMany({
+      where: { userId: user.id, isActive: true },
+      data: { isActive: false },
+    });
+    const tokenHash = crypto.createHash('sha256').update(fullToken).digest('hex');
+    await prisma.loginSession.create({
+      data: {
+        userId: user.id,
+        hospitalId: user.hospitalId,
+        sessionToken: tokenHash,
+        ipAddress: req.ip || 'unknown',
+        userAgent: req.get('User-Agent') || 'unknown',
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+      },
+    });
 
     res.json({ token: fullToken, mfaVerified: true });
   } catch (err: any) {
@@ -133,11 +151,29 @@ router.post('/verify-backup', async (req: AuthenticatedRequest, res: Response) =
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     const jwt = require('jsonwebtoken');
+    const crypto = require('crypto');
     const fullToken = jwt.sign(
       { userId: user.id, email: user.email, hospitalId: user.hospitalId, role: user.role, permissions: user.permissions || {}, mfaVerified: true },
       process.env.JWT_SECRET!,
       { algorithm: 'HS256', expiresIn: '1h' }
     );
+
+    // Invalidate pre-MFA session and create post-MFA session
+    await prisma.loginSession.updateMany({
+      where: { userId: user.id, isActive: true },
+      data: { isActive: false },
+    });
+    const tokenHash = crypto.createHash('sha256').update(fullToken).digest('hex');
+    await prisma.loginSession.create({
+      data: {
+        userId: user.id,
+        hospitalId: user.hospitalId,
+        sessionToken: tokenHash,
+        ipAddress: req.ip || 'unknown',
+        userAgent: req.get('User-Agent') || 'unknown',
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+      },
+    });
 
     res.json({
       token: fullToken,

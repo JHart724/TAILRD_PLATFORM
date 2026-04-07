@@ -239,14 +239,17 @@ router.post('/change-password', authenticateToken, async (req: AuthenticatedRequ
     // Get current session token from auth header to preserve it
     const authHeader = req.headers['authorization'];
     const currentToken = authHeader && authHeader.split(' ')[1];
+    const currentTokenHash = currentToken
+      ? crypto.createHash('sha256').update(currentToken).digest('hex')
+      : '';
 
     // Invalidate all OTHER active sessions (keep current one alive)
-    if (currentToken) {
+    if (currentTokenHash) {
       await prisma.loginSession.updateMany({
         where: {
           userId,
           isActive: true,
-          sessionToken: { not: currentToken },
+          sessionToken: { not: currentTokenHash },
         },
         data: { isActive: false },
       });
@@ -292,11 +295,14 @@ router.get('/sessions', authenticateToken, async (req: AuthenticatedRequest, res
     // Mark the current session so the frontend can highlight it
     const authHeader = req.headers['authorization'];
     const currentToken = authHeader && authHeader.split(' ')[1];
+    const currentTokenHash = currentToken
+      ? crypto.createHash('sha256').update(currentToken).digest('hex')
+      : '';
 
     let currentSessionId: string | null = null;
-    if (currentToken) {
+    if (currentTokenHash) {
       const currentSession = await prisma.loginSession.findUnique({
-        where: { sessionToken: currentToken },
+        where: { sessionToken: currentTokenHash },
         select: { id: true },
       });
       currentSessionId = currentSession?.id || null;
@@ -347,7 +353,10 @@ router.delete('/sessions/:sessionId', authenticateToken, async (req: Authenticat
     // Don't allow revoking the current session via this endpoint
     const authHeader = req.headers['authorization'];
     const currentToken = authHeader && authHeader.split(' ')[1];
-    if (session.sessionToken === currentToken) {
+    const currentTokenHash = currentToken
+      ? crypto.createHash('sha256').update(currentToken).digest('hex')
+      : '';
+    if (session.sessionToken === currentTokenHash) {
       return res.status(400).json({
         success: false,
         error: 'Cannot revoke your current session. Use /api/auth/logout instead.',
@@ -383,12 +392,15 @@ router.delete('/sessions', authenticateToken, async (req: AuthenticatedRequest, 
     const userId = req.user!.userId;
     const authHeader = req.headers['authorization'];
     const currentToken = authHeader && authHeader.split(' ')[1];
+    const currentTokenHash = currentToken
+      ? crypto.createHash('sha256').update(currentToken).digest('hex')
+      : '';
 
     const result = await prisma.loginSession.updateMany({
       where: {
         userId,
         isActive: true,
-        ...(currentToken ? { sessionToken: { not: currentToken } } : {}),
+        ...(currentTokenHash ? { sessionToken: { not: currentTokenHash } } : {}),
       },
       data: { isActive: false },
     });
