@@ -1,5 +1,5 @@
 import { Router, Response } from 'express';
-import { authenticateToken, requireMFA, AuthenticatedRequest } from '../middleware/auth';
+import { authenticateToken, requireMFA, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
 import prisma from '../lib/prisma';
 import { writeAuditLog } from '../middleware/auditLogger';
 import { ModuleType } from '@prisma/client';
@@ -23,7 +23,7 @@ const moduleMap: Record<string, ModuleType> = {
 };
 
 // GET /api/gaps/summary/all -- MUST be before /:moduleId to avoid Express matching 'summary' as a moduleId
-router.get('/summary/all', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+router.get('/summary/all', authenticateToken, authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager', 'quality-director', 'analyst']), async (req: AuthenticatedRequest, res: Response) => {
   const hospitalId = req.user?.hospitalId;
 
   if (!hospitalId) {
@@ -81,7 +81,7 @@ router.get('/summary/all', authenticateToken, async (req: AuthenticatedRequest, 
 });
 
 // GET /api/gaps/:moduleId
-router.get('/:moduleId', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+router.get('/:moduleId', authenticateToken, authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager', 'quality-director', 'analyst']), async (req: AuthenticatedRequest, res: Response) => {
   const hospitalId = req.user?.hospitalId;
   const moduleId = req.params.moduleId;
 
@@ -127,7 +127,7 @@ router.get('/:moduleId', authenticateToken, async (req: AuthenticatedRequest, re
 });
 
 // POST /api/gaps/:moduleId/:gapId/action
-router.post('/:moduleId/:gapId/action', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+router.post('/:moduleId/:gapId/action', authenticateToken, authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager']), async (req: AuthenticatedRequest, res: Response) => {
   const { patientId, action, notes } = req.body;
   const hospitalId = req.user?.hospitalId;
 

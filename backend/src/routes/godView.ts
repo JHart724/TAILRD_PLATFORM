@@ -113,21 +113,32 @@ router.get('/cross-module-analytics', async (req, res) => {
  * GET /api/admin/god/global-search
  * Searches across all modules for patients, providers, or concepts
  */
-router.get('/global-search', async (req, res) => {
+router.get('/global-search', async (req: AuthenticatedRequest, res) => {
   try {
-    const { q, module, type, limit = 50 } = req.query;
-    
+    const { q, module, type, limit = 50, hospitalId } = req.query;
+
     if (!q || typeof q !== 'string' || q.length < 2) {
-      return res.status(400).json({ 
-        error: 'Query parameter "q" must be at least 2 characters' 
+      return res.status(400).json({
+        error: 'Query parameter "q" must be at least 2 characters'
       });
     }
-    
+
+    // Require explicit hospital selection for PHI searches — no cross-tenant by default
+    if (!hospitalId || typeof hospitalId !== 'string') {
+      return res.status(400).json({
+        error: 'hospitalId required for patient search. GOD view searches are scoped per health system.',
+      });
+    }
+
+    // Audit every GOD view PHI search
+    await writeAuditLog(req, 'GOD_VIEW_PATIENT_SEARCH', 'Patient', null, `GOD view search in hospital ${hospitalId}`);
+
     const searchResults = await globalSearch({
       query: q,
+      hospitalId: hospitalId as string,
       module: module as string,
       type: type as 'patient' | 'provider' | 'facility' | 'all',
-      limit: Math.min(Number(limit), 100) // Max 100 results
+      limit: Math.min(Number(limit), 100)
     });
     
     res.json({
@@ -344,16 +355,18 @@ async function getSystemRiskDistribution() {
   };
 }
 
-async function globalSearch({ query, module, type, limit }: {
+async function globalSearch({ query, hospitalId, module, type, limit }: {
   query: string;
+  hospitalId: string;
   module?: string;
   type?: 'patient' | 'provider' | 'facility' | 'all';
   limit: number;
 }) {
-  // Search patients by name or MRN
+  // Search patients scoped to selected hospital — no cross-tenant PHI exposure
   const patients = await prisma.patient.findMany({
     where: {
       isActive: true,
+      hospitalId, // TENANT-SCOPED — required
       OR: [
         { firstName: { contains: query, mode: 'insensitive' } },
         { lastName: { contains: query, mode: 'insensitive' } },
