@@ -3346,26 +3346,28 @@ function evaluateGapRules(
     if (labValues['hs_tnt'] && labValues['hs_tnt'] > 14) signals++; // hs-TnT (LOINC 67151-1), NOT ferritin
     if (age >= 65) signals++;
     if (signals >= 3) {
-      gaps.push({
-        type: TherapyGapType.MONITORING_OVERDUE,
-        module: ModuleType.HEART_FAILURE,
-        status: 'ATTR-CM screening recommended for review',
-        target: 'Tc-99m PYP scan considered',
-        recommendations: { action: 'Consider Tc-99m PYP Scan based on clinical assessment' },
-        evidence: {
-          triggerCriteria: [
-            `NT-proBNP: ${labValues['nt_probnp'] ?? 'N/A'}`,
-            `LVEF: ${labValues['lvef'] ?? 'N/A'}%`,
-            `hs-TnT: ${labValues['hs_tnt'] ?? 'N/A'}`,
-            `Age: ${age}`,
-            `Signals met: ${signals}/3 required`,
-          ],
-          guidelineSource: '2023 ACC Expert Consensus on ATTR-CM',
-          classOfRecommendation: 'Expert Consensus',
-          levelOfEvidence: 'B-NR',
-          exclusions: ['Known ATTR-CM diagnosis', 'Active oncology treatment'],
-        },
-      });
+            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+          type: TherapyGapType.MONITORING_OVERDUE,
+          module: ModuleType.HEART_FAILURE,
+          status: 'ATTR-CM screening recommended for review',
+          target: 'Tc-99m PYP scan considered',
+          recommendations: { action: 'Consider Tc-99m PYP Scan based on clinical assessment' },
+          evidence: {
+            triggerCriteria: [
+              `NT-proBNP: ${labValues['nt_probnp'] ?? 'N/A'}`,
+              `LVEF: ${labValues['lvef'] ?? 'N/A'}%`,
+              `hs-TnT: ${labValues['hs_tnt'] ?? 'N/A'}`,
+              `Age: ${age}`,
+              `Signals met: ${signals}/3 required`,
+            ],
+            guidelineSource: '2023 ACC Expert Consensus on ATTR-CM',
+            classOfRecommendation: 'Expert Consensus',
+            levelOfEvidence: 'B-NR',
+            exclusions: ['Known ATTR-CM diagnosis', 'Active oncology treatment'],
+          },
+        });
+      }
     }
   }
 
@@ -3375,14 +3377,23 @@ function evaluateGapRules(
     const tsatLow = labValues['tsat'] !== undefined && labValues['tsat'] < 20;
     const functionalID = labValues['ferritin'] >= 100 && labValues['ferritin'] < 300 && tsatLow;
     if (ferritinLow || functionalID) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_MISSING,
-        module: ModuleType.HEART_FAILURE,
-        status: 'Iron deficiency untreated',
-        target: 'IV iron prescribed',
-        medication: 'IV Iron',
-        recommendations: { action: 'Consider IV Ferric Carboxymaltose' },
-      });
+            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+          type: TherapyGapType.MEDICATION_MISSING,
+          module: ModuleType.HEART_FAILURE,
+          status: 'Iron deficiency untreated',
+          target: 'IV iron prescribed',
+          medication: 'IV Iron',
+          recommendations: { action: 'Consider IV Ferric Carboxymaltose' },
+              evidence: {
+          triggerCriteria: ['Iron deficiency untreated'],
+          guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
+          classOfRecommendation: '2a',
+          levelOfEvidence: 'B-R',
+          exclusions: ['Active infection', 'Iron overload', 'Hospice/palliative care'],
+        },
+  });
+      }
     }
   }
 
@@ -3400,14 +3411,23 @@ function evaluateGapRules(
     labValues['potassium'] < 5.0
   ) {
     if (!medCodes.some(c => c === '2481926')) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_MISSING,
-        module: ModuleType.HEART_FAILURE,
-        status: 'Finerenone not prescribed (CKD + T2DM)',
-        target: 'Finerenone initiated',
-        medication: 'Finerenone',
-        recommendations: { action: 'Consider Finerenone for CKD with T2DM per FIDELIO-DKD/FIGARO-DKD' },
-      });
+            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+          type: TherapyGapType.MEDICATION_MISSING,
+          module: ModuleType.HEART_FAILURE,
+          status: 'Finerenone not prescribed (CKD + T2DM)',
+          target: 'Finerenone initiated',
+          medication: 'Finerenone',
+          recommendations: { action: 'Consider Finerenone for CKD with T2DM per FIDELIO-DKD/FIGARO-DKD' },
+              evidence: {
+          triggerCriteria: ['Finerenone not prescribed (CKD + T2DM)'],
+          guidelineSource: 'FIDELIO-DKD / FIGARO-DKD Trials; FDA-approved for CKD + T2DM',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'A',
+          exclusions: ['Hyperkalemia (K+ >= 5.0)', 'Severe hepatic impairment', 'Hospice/palliative care'],
+        },
+  });
+      }
     }
   }
 
@@ -3419,17 +3439,26 @@ function evaluateGapRules(
     const SGLT2I_CODES = ['1488564', '1545653', '2627044'];
     const onSGLT2i = medCodes.some(c => SGLT2I_CODES.includes(c));
     if (!onSGLT2i) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_MISSING,
-        module: ModuleType.HEART_FAILURE,
-        status: 'SGLT2i not prescribed in HFrEF',
-        target: 'SGLT2i initiated',
-        medication: 'Dapagliflozin or Empagliflozin',
-        recommendations: {
-          action: 'Consider SGLT2i per 2022 AHA/ACC/HFSA, Class 1, LOE A',
-          guideline: 'DAPA-HF / EMPEROR-Reduced trials',
+            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+          type: TherapyGapType.MEDICATION_MISSING,
+          module: ModuleType.HEART_FAILURE,
+          status: 'SGLT2i not prescribed in HFrEF',
+          target: 'SGLT2i initiated',
+          medication: 'Dapagliflozin or Empagliflozin',
+          recommendations: {
+            action: 'Consider SGLT2i per 2022 AHA/ACC/HFSA, Class 1, LOE A',
+            guideline: 'DAPA-HF / EMPEROR-Reduced trials',
+          },
+              evidence: {
+          triggerCriteria: ['SGLT2i not prescribed in HFrEF'],
+          guidelineSource: '2022 AHA/ACC/HFSA Guideline (DAPA-HF, EMPEROR-Reduced)',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'A',
+          exclusions: ['Type 1 diabetes with DKA', 'eGFR < 20', 'Hospice/palliative care'],
         },
-      });
+  });
+      }
     }
   }
 
@@ -3440,16 +3469,25 @@ function evaluateGapRules(
     const BB_CODES = ['20352', '6918', '19484'];
     const onBB = medCodes.some(c => BB_CODES.includes(c));
     if (!onBB) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_MISSING,
-        module: ModuleType.HEART_FAILURE,
-        status: 'Evidence-based beta-blocker not prescribed in HFrEF',
-        target: 'Beta-blocker initiated',
-        medication: 'Carvedilol, Metoprolol Succinate, or Bisoprolol',
-        recommendations: {
-          action: 'Consider evidence-based BB per 2022 AHA/ACC/HFSA, Class 1, LOE A',
-        },
-      });
+            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+          type: TherapyGapType.MEDICATION_MISSING,
+          module: ModuleType.HEART_FAILURE,
+          status: 'Evidence-based beta-blocker not prescribed in HFrEF',
+          target: 'Beta-blocker initiated',
+          medication: 'Carvedilol, Metoprolol Succinate, or Bisoprolol',
+          recommendations: {
+            action: 'Consider evidence-based BB per 2022 AHA/ACC/HFSA, Class 1, LOE A',
+          },
+          evidence: {
+            triggerCriteria: ['HFrEF without evidence-based beta-blocker'],
+            guidelineSource: '2022 AHA/ACC/HFSA Guideline for Heart Failure',
+            classOfRecommendation: '1',
+            levelOfEvidence: 'A',
+            exclusions: ['Severe bradycardia', 'Cardiogenic shock', 'Hospice/palliative care'],
+          },
+        });
+      }
     }
   }
 
@@ -3465,14 +3503,23 @@ function evaluateGapRules(
     const MRA_CODES = ['9997', '298869'];
     const onMRA = medCodes.some(c => MRA_CODES.includes(c));
     if (!onMRA) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_MISSING,
-        module: ModuleType.HEART_FAILURE,
-        status: 'MRA not prescribed in HFrEF with LVEF<=40%',
-        target: 'Spironolactone or Eplerenone initiated',
-        medication: 'Spironolactone or Eplerenone',
-        recommendations: { action: 'Consider MRA per 2022 AHA/ACC/HFSA, Class 1, LOE A (RALES/EMPHASIS-HF)' },
-      });
+            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+          type: TherapyGapType.MEDICATION_MISSING,
+          module: ModuleType.HEART_FAILURE,
+          status: 'MRA not prescribed in HFrEF with LVEF<=40%',
+          target: 'Spironolactone or Eplerenone initiated',
+          medication: 'Spironolactone or Eplerenone',
+          recommendations: { action: 'Consider MRA per 2022 AHA/ACC/HFSA, Class 1, LOE A (RALES/EMPHASIS-HF)' },
+              evidence: {
+          triggerCriteria: ['Evidence-based beta-blocker not prescribed in HFrEF'],
+          guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'A',
+          exclusions: ['Severe bradycardia (HR < 50)', 'Cardiogenic shock', 'Hospice/palliative care'],
+        },
+  });
+      }
     }
   }
 
@@ -3976,13 +4023,22 @@ function evaluateGapRules(
     const qtcThreshold = gender === 'FEMALE' ? 470 : 450;
     if (labValues['qtc_interval'] > qtcThreshold) {
       const severity = labValues['qtc_interval'] > 500 ? 'CRITICAL' : 'HIGH';
-      gaps.push({
-        type: TherapyGapType.MEDICATION_CONTRAINDICATED,
-        module: ModuleType.ELECTROPHYSIOLOGY,
-        status: `QTc ${severity}: ${labValues['qtc_interval']}ms (threshold ${qtcThreshold}ms)`,
-        target: 'QT drug review completed',
-        recommendations: { action: 'Consider ECG + Electrolytes + Medication Review' },
-      });
+            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+          type: TherapyGapType.MEDICATION_CONTRAINDICATED,
+          module: ModuleType.ELECTROPHYSIOLOGY,
+          status: `QTc ${severity}: ${labValues['qtc_interval']}ms (threshold ${qtcThreshold}ms)`,
+          target: 'QT drug review completed',
+          recommendations: { action: 'Consider ECG + Electrolytes + Medication Review' },
+          evidence: {
+            triggerCriteria: ['QTc prolongation above sex-specific threshold'],
+            guidelineSource: '2017 AHA/ACC/HRS Guideline for Ventricular Arrhythmias',
+            classOfRecommendation: '1',
+            levelOfEvidence: 'B',
+            exclusions: ['Known congenital LQTS on treatment', 'Hospice/palliative care'],
+          },
+        });
+      }
     }
   }
 
@@ -3995,17 +4051,26 @@ function evaluateGapRules(
     const OAC_CODES = ['1364430', '1114195', '1599538', '1037045', '11289']; // DOACs + warfarin
     const onOAC = medCodes.some(c => OAC_CODES.includes(c));
     if (!onOAC) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_MISSING,
-        module: ModuleType.ELECTROPHYSIOLOGY,
-        status: 'Oral anticoagulant not prescribed in AFib',
-        target: 'OAC therapy initiated',
-        medication: 'Apixaban, Rivaroxaban, or Edoxaban',
-        recommendations: {
-          action: 'Consider DOAC per 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE A',
-          guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation',
+            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+          type: TherapyGapType.MEDICATION_MISSING,
+          module: ModuleType.ELECTROPHYSIOLOGY,
+          status: 'Oral anticoagulant not prescribed in AFib',
+          target: 'OAC therapy initiated',
+          medication: 'Apixaban, Rivaroxaban, or Edoxaban',
+          recommendations: {
+            action: 'Consider DOAC per 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE A',
+            guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation',
+          },
+              evidence: {
+          triggerCriteria: ['Oral anticoagulant not prescribed in AFib'],
+          guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for AF Management',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'A',
+          exclusions: ['Active major bleeding', 'Mechanical heart valve', 'Hospice/palliative care'],
         },
-      });
+  });
+      }
     }
   }
 
@@ -4279,14 +4344,23 @@ function evaluateGapRules(
     labValues['egfr'] < 50
   ) {
     if (medCodes.some(c => ['197604', '197605', '197606'].includes(c))) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_CONTRAINDICATED,
-        module: ModuleType.HEART_FAILURE,
-        status: 'Digoxin toxicity risk',
-        target: 'Digoxin dose reviewed',
-        medication: 'Digoxin',
-        recommendations: { action: 'Review Digoxin Dose' },
-      });
+            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+          type: TherapyGapType.MEDICATION_CONTRAINDICATED,
+          module: ModuleType.HEART_FAILURE,
+          status: 'Digoxin toxicity risk',
+          target: 'Digoxin dose reviewed',
+          medication: 'Digoxin',
+          recommendations: { action: 'Review Digoxin Dose' },
+          evidence: {
+            triggerCriteria: ['Age >= 75, eGFR < 50, on digoxin'],
+            guidelineSource: 'DIG Trial Post-Hoc; 2022 AHA/ACC/HFSA Guideline',
+            classOfRecommendation: '1',
+            levelOfEvidence: 'B',
+            exclusions: ['Hospice/palliative care'],
+          },
+        });
+      }
     }
   }
 
@@ -4298,14 +4372,23 @@ function evaluateGapRules(
   const P2Y12_CODES = ['32968', '613391', '1116632'];
   const onP2Y12 = medCodes.some(c => P2Y12_CODES.includes(c));
   if (hasStentOrCAD && !onP2Y12) {
-    gaps.push({
-      type: TherapyGapType.MEDICATION_MISSING,
-      module: ModuleType.CORONARY_INTERVENTION,
-      status: 'P2Y12 inhibitor not active post-stent/CAD',
-      target: 'DAPT resumed or documented discontinuation rationale',
-      medication: 'P2Y12 Inhibitor',
-      recommendations: { action: 'Verify DAPT status with interventional cardiologist per ACC/AHA 2021' },
-    });
+        if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'P2Y12 inhibitor not active post-stent/CAD',
+        target: 'DAPT resumed or documented discontinuation rationale',
+        medication: 'P2Y12 Inhibitor',
+        recommendations: { action: 'Verify DAPT status with interventional cardiologist per ACC/AHA 2021' },
+          evidence: {
+            triggerCriteria: ['CAD/stent without P2Y12 inhibitor'],
+            guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Revascularization',
+            classOfRecommendation: '1',
+            levelOfEvidence: 'A',
+            exclusions: ['Active bleeding', 'High bleeding risk', 'Hospice/palliative care'],
+          },
+      });
+    }
   }
 
   // Gap CAD-STATIN: High-Intensity Statin in CAD
@@ -4315,17 +4398,26 @@ function evaluateGapRules(
     const STATIN_CODES = ['36567', '301542', '83367', '42463'];
     const onStatin = medCodes.some(c => STATIN_CODES.includes(c));
     if (!onStatin) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_MISSING,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'High-intensity statin not prescribed in CAD',
-        target: 'Statin therapy initiated',
-        medication: 'Atorvastatin 40-80mg or Rosuvastatin 20-40mg',
-        recommendations: {
-          action: 'Consider high-intensity statin per 2018 ACC/AHA Cholesterol, Class 1, LOE A',
-          guideline: '2018 ACC/AHA Cholesterol Management',
+            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+          type: TherapyGapType.MEDICATION_MISSING,
+          module: ModuleType.CORONARY_INTERVENTION,
+          status: 'High-intensity statin not prescribed in CAD',
+          target: 'Statin therapy initiated',
+          medication: 'Atorvastatin 40-80mg or Rosuvastatin 20-40mg',
+          recommendations: {
+            action: 'Consider high-intensity statin per 2018 ACC/AHA Cholesterol, Class 1, LOE A',
+            guideline: '2018 ACC/AHA Cholesterol Management',
+          },
+              evidence: {
+          triggerCriteria: ['Digoxin toxicity risk'],
+          guidelineSource: 'DIG Trial Post-Hoc Analysis; 2022 AHA/ACC/HFSA Guideline',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'B',
+          exclusions: ['Hospice/palliative care'],
         },
-      });
+  });
+      }
     }
   }
 
@@ -4582,16 +4674,25 @@ function evaluateGapRules(
     const lastEcho = labValues['lvef']; // LVEF implies echo was done
     // If no LVEF in data, echo may be overdue
     if (lastEcho === undefined) {
-      gaps.push({
-        type: TherapyGapType.IMAGING_OVERDUE,
-        module: ModuleType.STRUCTURAL_HEART,
-        status: 'Echo surveillance overdue for aortic stenosis',
-        target: 'Transthoracic echocardiogram completed',
-        recommendations: {
-          action: 'Consider TTE per 2020 ACC/AHA VHD Guideline',
-          guideline: '2020 ACC/AHA Valvular Heart Disease, Class 1, LOE B',
-        },
-      });
+            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+          type: TherapyGapType.IMAGING_OVERDUE,
+          module: ModuleType.STRUCTURAL_HEART,
+          status: 'Echo surveillance overdue for aortic stenosis',
+          target: 'Transthoracic echocardiogram completed',
+          recommendations: {
+            action: 'Consider TTE per 2020 ACC/AHA VHD Guideline',
+            guideline: '2020 ACC/AHA Valvular Heart Disease, Class 1, LOE B',
+          },
+          evidence: {
+            triggerCriteria: ['Aortic stenosis without recent echo'],
+            guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
+            classOfRecommendation: '1',
+            levelOfEvidence: 'B',
+            exclusions: ['Hospice/palliative care'],
+          },
+        });
+      }
     }
   }
 
@@ -4609,17 +4710,26 @@ function evaluateGapRules(
   if (hasMechanicalValve) {
     const onWarfarin = medCodes.includes('11289');
     if (!onWarfarin) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_MISSING,
-        module: ModuleType.VALVULAR_DISEASE,
-        status: 'Warfarin not active with mechanical valve',
-        target: 'Warfarin prescribed with target INR 2.5-3.5',
-        medication: 'Warfarin',
-        recommendations: {
-          action: 'Consider warfarin per 2020 ACC/AHA VHD Guideline, Class 1, LOE A',
-          guideline: '2020 ACC/AHA Valvular Heart Disease',
+            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+          type: TherapyGapType.MEDICATION_MISSING,
+          module: ModuleType.VALVULAR_DISEASE,
+          status: 'Warfarin not active with mechanical valve',
+          target: 'Warfarin prescribed with target INR 2.5-3.5',
+          medication: 'Warfarin',
+          recommendations: {
+            action: 'Consider warfarin per 2020 ACC/AHA VHD Guideline, Class 1, LOE A',
+            guideline: '2020 ACC/AHA Valvular Heart Disease',
+          },
+              evidence: {
+          triggerCriteria: ['Echo surveillance overdue for aortic stenosis'],
+          guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'B',
+          exclusions: ['Hospice/palliative care'],
         },
-      });
+  });
+      }
     }
   }
 
@@ -4636,17 +4746,26 @@ function evaluateGapRules(
     const STATIN_CODES = ['36567', '301542', '83367', '42463']; // atorvastatin, rosuvastatin, simvastatin, pravastatin
     const onStatin = medCodes.some(c => STATIN_CODES.includes(c));
     if (!onStatin) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_MISSING,
-        module: ModuleType.PERIPHERAL_VASCULAR,
-        status: 'High-intensity statin not prescribed in PAD',
-        target: 'Statin therapy initiated',
-        medication: 'Atorvastatin or Rosuvastatin',
-        recommendations: {
-          action: 'Consider high-intensity statin per 2024 ACC/AHA PAD Guideline, Class 1, LOE A',
-          guideline: '2024 ACC/AHA Peripheral Artery Disease',
-        },
-      });
+            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+          type: TherapyGapType.MEDICATION_MISSING,
+          module: ModuleType.PERIPHERAL_VASCULAR,
+          status: 'High-intensity statin not prescribed in PAD',
+          target: 'Statin therapy initiated',
+          medication: 'Atorvastatin or Rosuvastatin',
+          recommendations: {
+            action: 'Consider high-intensity statin per 2024 ACC/AHA PAD Guideline, Class 1, LOE A',
+            guideline: '2024 ACC/AHA Peripheral Artery Disease',
+          },
+          evidence: {
+            triggerCriteria: ['PAD without high-intensity statin'],
+            guidelineSource: '2024 ACC/AHA Guideline for Peripheral Artery Disease',
+            classOfRecommendation: '1',
+            levelOfEvidence: 'A',
+            exclusions: ['Statin intolerance', 'Active liver disease', 'Hospice/palliative care'],
+          },
+        });
+      }
     }
   }
 
@@ -4658,16 +4777,25 @@ function evaluateGapRules(
   if ((hasClaudication || diabetesOver50) && !hasPAD) {
     const hasABI = labValues['abi_right'] !== undefined || labValues['abi_left'] !== undefined;
     if (!hasABI) {
-      gaps.push({
-        type: TherapyGapType.SCREENING_DUE,
-        module: ModuleType.PERIPHERAL_VASCULAR,
-        status: 'ABI screening not performed',
-        target: 'Ankle-brachial index completed',
-        recommendations: {
-          action: 'Consider ABI per 2024 ACC/AHA PAD Guideline for symptomatic/at-risk patients',
-          guideline: '2024 ACC/AHA Peripheral Artery Disease, Class 1, LOE B',
-        },
-      });
+            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+          type: TherapyGapType.SCREENING_DUE,
+          module: ModuleType.PERIPHERAL_VASCULAR,
+          status: 'ABI screening not performed',
+          target: 'Ankle-brachial index completed',
+          recommendations: {
+            action: 'Consider ABI per 2024 ACC/AHA PAD Guideline for symptomatic/at-risk patients',
+            guideline: '2024 ACC/AHA Peripheral Artery Disease, Class 1, LOE B',
+          },
+          evidence: {
+            triggerCriteria: ['Claudication or diabetes+age>=50 without ABI'],
+            guidelineSource: '2024 ACC/AHA Guideline for Peripheral Artery Disease',
+            classOfRecommendation: '1',
+            levelOfEvidence: 'B',
+            exclusions: ['Known PAD', 'Prior ABI', 'Hospice/palliative care'],
+          },
+        });
+      }
     }
   }
 
@@ -4683,18 +4811,27 @@ function evaluateGapRules(
     const RAAS_CODES = ['29046', '3827', '35296', '52175', '69749', '1656339'];
     const onRAAS = medCodes.some(c => RAAS_CODES.includes(c));
     if (!onRAAS) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_MISSING,
-        module: ModuleType.HEART_FAILURE,
-        status: 'ACEi/ARB/ARNi not prescribed in HFrEF',
-        target: 'RAAS inhibitor initiated (preferably sacubitril/valsartan)',
-        medication: 'Sacubitril/Valsartan (preferred), Lisinopril, Enalapril, Ramipril, Losartan, or Valsartan',
-        recommendations: {
-          action: 'Consider RAAS inhibitor per 2022 AHA/ACC/HFSA, Class 1, LOE A',
-          guideline: '2022 AHA/ACC/HFSA Heart Failure Guideline',
-          preferred: 'Sacubitril/Valsartan (ARNI) per PARADIGM-HF',
+            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+          type: TherapyGapType.MEDICATION_MISSING,
+          module: ModuleType.HEART_FAILURE,
+          status: 'ACEi/ARB/ARNi not prescribed in HFrEF',
+          target: 'RAAS inhibitor initiated (preferably sacubitril/valsartan)',
+          medication: 'Sacubitril/Valsartan (preferred), Lisinopril, Enalapril, Ramipril, Losartan, or Valsartan',
+          recommendations: {
+            action: 'Consider RAAS inhibitor per 2022 AHA/ACC/HFSA, Class 1, LOE A',
+            guideline: '2022 AHA/ACC/HFSA Heart Failure Guideline',
+            preferred: 'Sacubitril/Valsartan (ARNI) per PARADIGM-HF',
+          },
+              evidence: {
+          triggerCriteria: ['High-intensity statin not prescribed in PAD'],
+          guidelineSource: '2024 ACC/AHA Guideline for Peripheral Artery Disease',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'A',
+          exclusions: ['Documented statin intolerance', 'Active liver disease', 'Hospice/palliative care'],
         },
-      });
+  });
+      }
     }
   }
 
@@ -4708,18 +4845,27 @@ function evaluateGapRules(
     const RATE_CONTROL_CODES = ['6918', '20352', '3443', '11170'];
     const onRateControl = medCodes.some(c => RATE_CONTROL_CODES.includes(c));
     if (!onRateControl) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_MISSING,
-        module: ModuleType.ELECTROPHYSIOLOGY,
-        status: 'Rate control agent not prescribed in AFib',
-        target: 'Beta-blocker or non-dihydropyridine CCB initiated',
-        medication: 'Metoprolol, Carvedilol, Diltiazem, or Verapamil',
-        recommendations: {
-          action: 'Consider rate control agent per 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE B',
-          guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation',
-          note: 'Avoid non-DHP CCB (diltiazem/verapamil) in patients with HFrEF',
-        },
-      });
+            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+          type: TherapyGapType.MEDICATION_MISSING,
+          module: ModuleType.ELECTROPHYSIOLOGY,
+          status: 'Rate control agent not prescribed in AFib',
+          target: 'Beta-blocker or non-dihydropyridine CCB initiated',
+          medication: 'Metoprolol, Carvedilol, Diltiazem, or Verapamil',
+          recommendations: {
+            action: 'Consider rate control agent per 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE B',
+            guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation',
+            note: 'Avoid non-DHP CCB (diltiazem/verapamil) in patients with HFrEF',
+          },
+          evidence: {
+            triggerCriteria: ['AFib without rate control agent'],
+            guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for AF Management',
+            classOfRecommendation: '1',
+            levelOfEvidence: 'B',
+            exclusions: ['Severe bradycardia', 'Sick sinus without pacemaker', 'Hospice/palliative care'],
+          },
+        });
+      }
     }
   }
 
@@ -4730,17 +4876,26 @@ function evaluateGapRules(
   // All CAD patients (I25.*) should be referred to cardiac rehabilitation
   // This is a referral gap, not a medication gap
   if (hasCAD) {
-    gaps.push({
-      type: TherapyGapType.REFERRAL_NEEDED,
-      module: ModuleType.CORONARY_INTERVENTION,
-      status: 'Cardiac rehabilitation referral not documented',
-      target: 'Cardiac rehab referral placed',
-      recommendations: {
-        action: 'Refer to cardiac rehabilitation per 2021 ACC/AHA Coronary Revascularization, Class 1, LOE A',
-        guideline: '2021 ACC/AHA/SCAI Coronary Artery Revascularization',
-        note: 'Cardiac rehab improves outcomes in all CAD patients, especially post-ACS and post-revascularization',
-      },
-    });
+        if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+        type: TherapyGapType.REFERRAL_NEEDED,
+        module: ModuleType.CORONARY_INTERVENTION,
+        status: 'Cardiac rehabilitation referral not documented',
+        target: 'Cardiac rehab referral placed',
+        recommendations: {
+          action: 'Refer to cardiac rehabilitation per 2021 ACC/AHA Coronary Revascularization, Class 1, LOE A',
+          guideline: '2021 ACC/AHA/SCAI Coronary Artery Revascularization',
+          note: 'Cardiac rehab improves outcomes in all CAD patients, especially post-ACS and post-revascularization',
+        },
+          evidence: {
+            triggerCriteria: ['CAD without cardiac rehabilitation referral'],
+            guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Revascularization',
+            classOfRecommendation: '1',
+            levelOfEvidence: 'A',
+            exclusions: ['Unstable angina', 'Severe functional limitation', 'Hospice/palliative care'],
+          },
+      });
+    }
   }
 
   // ============================================================
@@ -4750,17 +4905,26 @@ function evaluateGapRules(
   // Patients with severe AS (I35.0), age >= 65, and LVEF available (suggests symptomatic/evaluated)
   // should be evaluated for TAVR by a heart valve team
   if (hasAorticStenosis && age >= 65 && labValues['lvef'] !== undefined) {
-    gaps.push({
-      type: TherapyGapType.PROCEDURE_INDICATED,
-      module: ModuleType.STRUCTURAL_HEART,
-      status: 'TAVR evaluation not documented for severe aortic stenosis',
-      target: 'Heart valve team evaluation for TAVR completed',
-      recommendations: {
-        action: 'Refer to heart valve team for TAVR evaluation per 2020 ACC/AHA VHD, Class 1, LOE A',
-        guideline: '2020 ACC/AHA Valvular Heart Disease',
-        note: 'All patients >= 65 with severe AS should be evaluated by a multidisciplinary heart valve team',
-      },
-    });
+        if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+        type: TherapyGapType.PROCEDURE_INDICATED,
+        module: ModuleType.STRUCTURAL_HEART,
+        status: 'TAVR evaluation not documented for severe aortic stenosis',
+        target: 'Heart valve team evaluation for TAVR completed',
+        recommendations: {
+          action: 'Refer to heart valve team for TAVR evaluation per 2020 ACC/AHA VHD, Class 1, LOE A',
+          guideline: '2020 ACC/AHA Valvular Heart Disease',
+          note: 'All patients >= 65 with severe AS should be evaluated by a multidisciplinary heart valve team',
+        },
+            evidence: {
+          triggerCriteria: ['Rate control agent not prescribed in AFib'],
+          guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for AF Management',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'B',
+          exclusions: ['Severe bradycardia', 'Sick sinus syndrome without pacemaker', 'Hospice/palliative care'],
+        },
+  });
+    }
   }
 
   // ============================================================
@@ -4774,17 +4938,26 @@ function evaluateGapRules(
     c.startsWith('Z95.2') || c.startsWith('Z95.4')
   );
   if (hasBioprostheticValve && labValues['lvef'] === undefined) {
-    gaps.push({
-      type: TherapyGapType.IMAGING_OVERDUE,
-      module: ModuleType.VALVULAR_DISEASE,
-      status: 'Echo surveillance overdue for bioprosthetic valve',
-      target: 'Annual transthoracic echocardiogram completed',
-      recommendations: {
-        action: 'Consider TTE for bioprosthetic valve surveillance per 2020 ACC/AHA VHD, Class 1, LOE C',
-        guideline: '2020 ACC/AHA Valvular Heart Disease',
-        note: 'Annual echo monitors for structural valve deterioration (SVD) in bioprosthetic valves',
-      },
-    });
+        if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  gaps.push({
+        type: TherapyGapType.IMAGING_OVERDUE,
+        module: ModuleType.VALVULAR_DISEASE,
+        status: 'Echo surveillance overdue for bioprosthetic valve',
+        target: 'Annual transthoracic echocardiogram completed',
+        recommendations: {
+          action: 'Consider TTE for bioprosthetic valve surveillance per 2020 ACC/AHA VHD, Class 1, LOE C',
+          guideline: '2020 ACC/AHA Valvular Heart Disease',
+          note: 'Annual echo monitors for structural valve deterioration (SVD) in bioprosthetic valves',
+        },
+          evidence: {
+            triggerCriteria: ['Bioprosthetic valve without recent echo'],
+            guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
+            classOfRecommendation: '1',
+            levelOfEvidence: 'C',
+            exclusions: ['Hospice/palliative care'],
+          },
+      });
+    }
   }
 
   // ============================================================
