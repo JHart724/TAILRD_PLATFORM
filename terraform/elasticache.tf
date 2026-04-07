@@ -2,6 +2,26 @@
 # TAILRD Heart -- ElastiCache Redis (HIPAA-compliant)
 # ──────────────────────────────────────────────────────────────────────────────
 
+# ─── Redis Auth Token ────────────────────────────────────────────────────────
+
+resource "random_password" "redis_auth" {
+  length  = 64
+  special = false # ElastiCache auth tokens don't support all special chars
+}
+
+# Store in Secrets Manager for ECS task injection
+resource "aws_secretsmanager_secret" "redis_auth" {
+  name        = "${local.name_prefix}/app/redis-auth-token"
+  description = "Redis AUTH token for ${local.name_prefix}"
+  kms_key_id  = var.phi_kms_key_arn
+  tags        = merge(local.common_tags, { DataClass = "Secret" })
+}
+
+resource "aws_secretsmanager_secret_version" "redis_auth" {
+  secret_id     = aws_secretsmanager_secret.redis_auth.id
+  secret_string = random_password.redis_auth.result
+}
+
 # ─── Redis Subnet Group ──────────────────────────────────────────────────────
 
 resource "aws_elasticache_subnet_group" "main" {
@@ -78,8 +98,10 @@ resource "aws_elasticache_replication_group" "main" {
   node_type            = "cache.t3.medium"
   parameter_group_name = aws_elasticache_parameter_group.redis7.name
 
-  # Topology -- single node; set num_cache_clusters > 1 to scale
-  num_cache_clusters = 1
+  # Topology -- HA with automatic failover
+  num_cache_clusters         = local.is_production ? 2 : 1
+  automatic_failover_enabled = local.is_production
+  multi_az_enabled           = local.is_production
   port               = 6379
 
   # Networking -- private only
@@ -90,7 +112,7 @@ resource "aws_elasticache_replication_group" "main" {
   at_rest_encryption_enabled = true
   kms_key_id                 = var.phi_kms_key_arn
   transit_encryption_enabled = true
-  # auth_token can be added for password authentication if needed
+  auth_token                 = random_password.redis_auth.result
 
   # Maintenance
   maintenance_window       = "sun:05:00-sun:06:00"

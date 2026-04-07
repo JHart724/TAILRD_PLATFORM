@@ -22,7 +22,7 @@ resource "aws_cognito_user_pool" "main" {
   }
 
   # MFA configuration
-  mfa_configuration = "OPTIONAL"  # Required for HIPAA -- users can enable TOTP
+  mfa_configuration = "ON"  # HIPAA requires MFA for all users accessing PHI
   software_token_mfa_configuration {
     enabled = true
   }
