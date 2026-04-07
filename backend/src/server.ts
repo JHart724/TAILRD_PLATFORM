@@ -14,10 +14,12 @@ import { loginRateLimit } from './middleware/authRateLimit';
 config();
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
-const isDemoMode = process.env.DEMO_MODE === 'true';
+// DEMO_MODE only allowed when NODE_ENV is EXPLICITLY set to development or test
+const isExplicitDevOrTest = ['development', 'test'].includes(process.env.NODE_ENV ?? '');
+const isDemoMode = process.env.DEMO_MODE === 'true' && isExplicitDevOrTest;
 
 // ── CRITICAL: Prevent DEMO_MODE from reaching any deployed environment ────────
-if (isDemoMode && NODE_ENV !== 'development' && NODE_ENV !== 'test') {
+if (process.env.DEMO_MODE === 'true' && !isExplicitDevOrTest) {
   console.error('\n╔══════════════════════════════════════════════════════════════╗');
   console.error('║  FATAL: DEMO_MODE=true is only allowed in development/test ║');
   console.error('║  Set DEMO_MODE=false or remove it from environment.        ║');
@@ -72,7 +74,10 @@ const allowedOrigins = process.env.CORS_ORIGINS
 
 const corsOptions = {
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (origin && allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else if (!origin && NODE_ENV !== 'production') {
+      // Allow no-origin requests in development only (curl, Postman, server-to-server)
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

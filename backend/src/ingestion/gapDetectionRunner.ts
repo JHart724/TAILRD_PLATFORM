@@ -4616,7 +4616,7 @@ function evaluateGapRules(
         target: 'Warfarin prescribed with target INR 2.5-3.5',
         medication: 'Warfarin',
         recommendations: {
-          action: 'Initiate warfarin per 2020 ACC/AHA VHD Guideline, Class 1, LOE A',
+          action: 'Consider warfarin per 2020 ACC/AHA VHD Guideline, Class 1, LOE A',
           guideline: '2020 ACC/AHA Valvular Heart Disease',
         },
       });
@@ -7900,7 +7900,7 @@ function evaluateGapRules(
   // CAD-FAMILY-SCREEN: Premature CAD Family Screening
   // Guideline: 2018 ACC/AHA Cholesterol Guideline, Class 2a, LOE B
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const prematureCADfam = (gender === 'male' && age < 55) || (gender === 'female' && age < 65);
+    const prematureCADfam = (gender === 'MALE' && age < 55) || (gender === 'FEMALE' && age < 65);
     if (prematureCADfam) {
       const hasFamilyScreenFam = dxCodes.some(c => c.startsWith('Z82.4') || c.startsWith('Z80.0'));
       if (!hasFamilyScreenFam) {
@@ -8590,7 +8590,7 @@ function evaluateGapRules(
   // Guideline: 2018 AHA Scientific Statement on SCAD, Class 1, LOE C-LD
   if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasMIscad = dxCodes.some(c => c.startsWith('I21'));
-    const isYoungFemale = gender === 'F' && age < 55;
+    const isYoungFemale = gender === 'FEMALE' && age < 55;
     const noAtherosclerosis = !dxCodes.some(c => c.startsWith('I25.1'));
     if (hasMIscad && isYoungFemale && noAtherosclerosis) {
       gaps.push({
@@ -8928,7 +8928,7 @@ function evaluateGapRules(
   // CAD-WOMEN-SPECIFIC: Women-Specific CAD Screening
   // Guideline: 2019 ACC/AHA Primary Prevention + AHA CVD in Women Statement, Class 1, LOE B
   if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const isFemaleOver50 = gender === 'F' && age > 50;
+    const isFemaleOver50 = gender === 'FEMALE' && age > 50;
     const hasRiskFactors = dxCodes.some(c =>
       c.startsWith('I10') || c.startsWith('E78') || c.startsWith('E11') || c.startsWith('F17')
     );
@@ -9157,7 +9157,7 @@ function evaluateGapRules(
   // Syncope (R55) + male + age <45
   if (
     dxCodes.some(c => c.startsWith('R55')) &&
-    gender === 'male' &&
+    gender === 'MALE' &&
     age < 45 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {

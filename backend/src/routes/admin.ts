@@ -672,7 +672,7 @@ router.post('/hospitals/:hospitalId/users',
     body('firstName').isLength({ min: 1 }).withMessage('First name is required'),
     body('lastName').isLength({ min: 1 }).withMessage('Last name is required'),
     body('role').isIn(['HOSPITAL_ADMIN', 'PHYSICIAN', 'NURSE_MANAGER', 'QUALITY_DIRECTOR', 'ANALYST', 'VIEWER']),
-    body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
+    body('password').isLength({ min: 12 }).matches(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])/).withMessage('Password must be 12+ characters with uppercase, number, and special character')
   ],
   async (req: AuthenticatedRequest, res: Response) => {
     try {

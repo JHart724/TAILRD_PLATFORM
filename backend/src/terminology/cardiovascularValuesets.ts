@@ -129,8 +129,8 @@ export const LOINC_CARDIOVASCULAR_LABS = {
   LPA: '10835-7',               // Lipoprotein(a)
 
   // Cardiac function
-  LVEF: '10230-1',              // Left ventricular ejection fraction
-  QTC_INTERVAL: '8636-3',       // QTc interval
+  LVEF: '18010-0',              // Left ventricular ejection fraction by echocardiography (was 10230-1 = QRS duration — WRONG)
+  QTC_INTERVAL: '8867-4',       // QTc interval Fridericia (preferred for antiarrhythmic monitoring)
   QRS_DURATION: '8632-2',       // QRS duration
 
   // Other

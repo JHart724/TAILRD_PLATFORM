@@ -19,7 +19,7 @@ router.post('/hospitals',
     body('adminUser.firstName').isLength({ min: 1 }).withMessage('Admin first name is required'),
     body('adminUser.lastName').isLength({ min: 1 }).withMessage('Admin last name is required'),
     body('adminUser.email').isEmail().withMessage('Valid admin email is required'),
-    body('adminUser.password').isLength({ min: 8 }).withMessage('Admin password must be at least 8 characters'),
+    body('adminUser.password').isLength({ min: 12 }).matches(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])/).withMessage('Password must be 12+ characters with uppercase, number, and special character'),
     body('subscription.tier').isIn(['BASIC', 'PROFESSIONAL', 'ENTERPRISE']),
     body('subscription.maxUsers').isInt({ min: 1 }).withMessage('Max users must be positive')
   ],

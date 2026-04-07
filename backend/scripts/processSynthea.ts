@@ -237,7 +237,7 @@ async function processFHIRBundle(
           hospitalId,
           medicationName: coding.display || coding.code || 'Unknown',
           rxNormCode: coding.system?.includes('rxnorm') ? coding.code : null,
-          status: (m.status === 'active' ? 'ACTIVE' : m.status === 'stopped' ? 'STOPPED' : 'COMPLETED') as any,
+          status: (m.status === 'active' ? 'ACTIVE' : m.status === 'stopped' ? 'DISCONTINUED' : m.status === 'on-hold' ? 'ON_HOLD' : 'COMPLETED') as any,
           startDate: m.authoredOn ? new Date(m.authoredOn) : null,
           fhirMedicationId: m.id || null,
         };

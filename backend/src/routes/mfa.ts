@@ -171,7 +171,8 @@ router.delete('/disable', async (req: AuthenticatedRequest, res: Response) => {
     const { token } = req.body;
 
     if (!userId) return res.status(401).json({ error: 'Unauthorized' });
-    if (userRole === 'SUPER_ADMIN') {
+    const normalizedRole = userRole?.toLowerCase().replace(/_/g, '-') || '';
+    if (normalizedRole === 'super-admin') {
       return res.status(403).json({ error: 'Super Admin cannot disable their own MFA' });
     }
 

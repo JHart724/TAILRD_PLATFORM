@@ -7,7 +7,7 @@ import { validateBody, createPatientSchema, updatePatientSchema } from '../valid
 import prisma from '../lib/prisma';
 
 // HIPAA minimum necessary: redact direct identifiers for non-clinical roles
-const PHI_REDACTED_ROLES = ['analyst', 'quality-director'];
+const PHI_REDACTED_ROLES = ['analyst', 'quality-director', 'viewer'];
 function redactPHI(patient: Record<string, unknown>, role: string): Record<string, unknown> {
   if (!PHI_REDACTED_ROLES.includes(role)) return patient;
   return {
