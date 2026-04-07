@@ -18,13 +18,14 @@ dotenv.config();
  *   npx ts-node src/scripts/ingestSynthea.ts [--concurrency 10] [--limit 100] [--resume]
  */
 
-import { PrismaClient, Gender, EncounterType, EncounterStatus, ObservationCategory, MedicationStatus, ConditionCategory, ConditionClinicalStatus, ConditionVerificationStatus } from '@prisma/client';
+import { Gender, EncounterType, EncounterStatus, ObservationCategory, MedicationStatus, ConditionCategory, ConditionClinicalStatus, ConditionVerificationStatus } from '@prisma/client';
+import prisma from '../lib/prisma';
 import { S3Client, ListObjectsV2Command, GetObjectCommand } from '@aws-sdk/client-s3';
 import { Readable } from 'stream';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const prisma = new PrismaClient();
+// PrismaClient singleton imported from lib/prisma (includes PHI encryption middleware)
 
 const s3 = new S3Client({ region: process.env.AWS_REGION || 'us-east-1' });
 const BUCKET = process.env.S3_BUCKET_UPLOADS || 'tailrd-cardiovascular-datasets-863518424332';

@@ -456,7 +456,7 @@ router.post('/deletion/:patientId', async (req: AuthenticatedRequest, res: Respo
       // Hard-delete clinical records (no retention requirement for derived data)
       const [medications, conditions, carePlans, cqlResults, therapyGaps,
              phenotypes, referrals, titrations, devices, riskScores,
-             interventions, contraindications] = await Promise.all([
+             interventions, contraindications, orders, recommendations, alerts] = await Promise.all([
         tx.medication.deleteMany({ where: { patientId, hospitalId } }),
         tx.condition.deleteMany({ where: { patientId, hospitalId } }),
         tx.carePlan.deleteMany({ where: { patientId, hospitalId } }),
@@ -469,6 +469,9 @@ router.post('/deletion/:patientId', async (req: AuthenticatedRequest, res: Respo
         tx.riskScoreAssessment.deleteMany({ where: { patientId, hospitalId } }),
         tx.interventionTracking.deleteMany({ where: { patientId, hospitalId } }),
         tx.contraindicationAssessment.deleteMany({ where: { patientId, hospitalId } }),
+        tx.order.deleteMany({ where: { patientId, hospitalId } }),
+        tx.recommendation.deleteMany({ where: { patientId, hospitalId } }),
+        tx.alert.deleteMany({ where: { patientId, hospitalId } }),
       ]);
 
       // Soft-delete encounters and observations (have deletedAt field)

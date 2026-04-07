@@ -171,7 +171,7 @@ router.post('/login', async (req: Request, res: Response) => {
     });
 
     if (!user || !user.isActive) {
-      await writeAuditLog(req, 'LOGIN_FAILED', 'User', null, `Failed login attempt for email: ${email} (user not found or inactive)`);
+      await writeAuditLog(req, 'LOGIN_FAILED', 'User', null, 'Authentication failed');
       return res.status(401).json({
         success: false,
         error: 'Invalid credentials',
@@ -181,7 +181,7 @@ router.post('/login', async (req: Request, res: Response) => {
 
     const passwordValid = await bcrypt.compare(password, user.passwordHash);
     if (!passwordValid) {
-      await writeAuditLog(req, 'LOGIN_FAILED', 'User', user.id, `Failed login: invalid password for ${user.role} at ${user.hospitalId}`);
+      await writeAuditLog(req, 'LOGIN_FAILED', 'User', user.id, 'Authentication failed');
       return res.status(401).json({
         success: false,
         error: 'Invalid credentials',
