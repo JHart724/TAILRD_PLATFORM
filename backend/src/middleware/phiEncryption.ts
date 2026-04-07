@@ -7,40 +7,41 @@ const isDemoMode = process.env.DEMO_MODE === 'true';
 const isProduction = process.env.NODE_ENV === 'production';
 
 // PHI fields that must be encrypted at rest per HIPAA 164.312(a)(2)(iv)
+// PHI string fields encrypted via middleware (HIPAA 164.312(a)(2)(iv))
 const PHI_FIELD_MAP: Record<string, string[]> = {
+  // Core patient data
   Patient: [
-    'firstName',
-    'lastName',
-    'dateOfBirth',
-    'phone',
-    'email',
-    'mrn',
-    'street',
-    'city',
-    'state',
-    'zipCode',
+    'firstName', 'lastName', 'dateOfBirth', 'phone', 'email',
+    'mrn', 'street', 'city', 'state', 'zipCode',
   ],
-  Encounter: [
-    'chiefComplaint',
-    'primaryDiagnosis',
-    'attendingProvider',
-  ],
-  Observation: [
-    'valueText',
-    'observationName',
-  ],
-  Order: [
-    'orderName',
-    'indication',
-    'instructions',
-  ],
-  Medication: [
-    'medicationName',
-    'genericName',
-  ],
-  Condition: [
-    'conditionName',
-  ],
+  // Clinical encounter data
+  Encounter: ['chiefComplaint', 'primaryDiagnosis', 'attendingProvider'],
+  Observation: ['valueText', 'observationName', 'orderingProvider'],
+  Order: ['orderName', 'indication', 'instructions', 'orderingProvider'],
+  Medication: ['medicationName', 'genericName', 'prescribedBy'],
+  Condition: ['conditionName', 'recordedBy'],
+  // Clinical decision support
+  Alert: ['message'],
+  DrugTitration: ['drugName'],
+  CrossReferral: ['reason', 'notes'],
+  CarePlan: ['title'],
+  // Intervention tracking
+  InterventionTracking: ['interventionName', 'indication', 'performingProvider', 'outcome'],
+  // Breach and data requests
+  BreachIncident: ['description'],
+  PatientDataRequest: ['requestedBy', 'requestorEmail'],
+  // MFA secrets (not PHI but equally sensitive — DB compromise must not expose TOTP)
+  UserMFA: ['secret'],
+};
+
+// JSON fields requiring serialize-then-encrypt (standard field encryption doesn't work on Json type)
+const PHI_JSON_FIELDS: Record<string, string[]> = {
+  WebhookEvent: ['rawPayload'],
+  RiskScoreAssessment: ['inputData'],
+  InterventionTracking: ['findings'],
+  Alert: ['triggerData'],
+  Phenotype: ['evidence'],
+  ContraindicationAssessment: ['reasons'],
 };
 
 function encrypt(text: string): string {
@@ -100,25 +101,53 @@ function decryptRecord(record: Record<string, any>, fields: string[]): Record<st
   return record;
 }
 
+function encryptJsonField(data: Record<string, any>, field: string): void {
+  if (data[field] != null) {
+    const serialized = typeof data[field] === 'string' ? data[field] : JSON.stringify(data[field]);
+    data[field] = encrypt(serialized);
+  }
+}
+
+function decryptJsonField(record: Record<string, any>, field: string): void {
+  if (record[field] && typeof record[field] === 'string' && record[field].startsWith('enc:')) {
+    try {
+      const decrypted = decrypt(record[field]);
+      record[field] = JSON.parse(decrypted);
+    } catch {
+      // If JSON parse fails, return as decrypted string
+      record[field] = decrypt(record[field]);
+    }
+  }
+}
+
 export function applyPHIEncryption(prisma: PrismaClient): void {
   prisma.$use(async (params: Prisma.MiddlewareParams, next: (params: Prisma.MiddlewareParams) => Promise<any>) => {
     const model = params.model as string | undefined;
-    if (!model || !PHI_FIELD_MAP[model]) {
+    const stringFields = model ? PHI_FIELD_MAP[model] : undefined;
+    const jsonFields = model ? PHI_JSON_FIELDS[model] : undefined;
+
+    if (!model || (!stringFields && !jsonFields)) {
       return next(params);
     }
 
-    const fields = PHI_FIELD_MAP[model];
+    const fields = stringFields || [];
 
-    // Encrypt on write
+    // Encrypt on write (string fields + JSON fields)
     if (['create', 'update', 'upsert'].includes(params.action)) {
       const data = params.args?.data;
       if (data) {
         encryptFields(data, fields);
+        if (jsonFields) jsonFields.forEach(jf => encryptJsonField(data, jf));
       }
-      // Handle upsert's create/update separately
       if (params.action === 'upsert') {
-        if (params.args?.create) encryptFields(params.args.create, fields);
-        if (params.args?.update) encryptFields(params.args.update, fields);
+        if (params.args?.create) {
+          encryptFields(params.args.create, fields);
+          if (jsonFields) jsonFields.forEach(jf => encryptJsonField(params.args.create, jf));
+        }
+        if (params.args?.update) {
+          encryptFields(params.args.update, fields);
+          if (jsonFields) jsonFields.forEach(jf => encryptJsonField(params.args.update, jf));
+        }
       }
     }
 
@@ -126,18 +155,24 @@ export function applyPHIEncryption(prisma: PrismaClient): void {
       const rows = Array.isArray(params.args.data) ? params.args.data : [params.args.data];
       for (const row of rows) {
         encryptFields(row, fields);
+        if (jsonFields) jsonFields.forEach(jf => encryptJsonField(row, jf));
       }
     }
 
     const result = await next(params);
 
-    // Decrypt on read
+    // Decrypt on read (string fields + JSON fields)
     if (result) {
+      const decryptOne = (r: Record<string, any>) => {
+        decryptRecord(r, fields);
+        if (jsonFields) jsonFields.forEach(jf => decryptJsonField(r, jf));
+        return r;
+      };
       if (Array.isArray(result)) {
-        return result.map((r) => (typeof r === 'object' && r !== null ? decryptRecord(r, fields) : r));
+        return result.map((r) => (typeof r === 'object' && r !== null ? decryptOne(r) : r));
       }
       if (typeof result === 'object' && result !== null) {
-        return decryptRecord(result, fields);
+        return decryptOne(result);
       }
     }
 
