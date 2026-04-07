@@ -374,3 +374,43 @@ These rules are non-negotiable. Violating any of them creates clinical, security
 - **Never use directive language in gap recommendations.** Say "consider" or "recommended for review", not "order" or "prescribe". Directive language may trigger FDA SaMD classification.
 - **Never use ML/AI for gap detection.** All gap rules must be deterministic, rule-based, and transparent. The clinician must be able to trace exactly why a gap fired.
 - **Never create a gap rule without an `evidence` object.** Every gap must carry its trigger criteria, guideline source, class, and level of evidence for FDA CDS exemption compliance.
+
+## 15. Deployment Rules (Learned from April 7, 2026 Production Incident)
+
+### RULE 1: NEVER use `tsc || true` in the Dockerfile
+If TypeScript fails, the build fails. If the build fails, the image is not pushed. Nothing breaks.
+
+### RULE 2: Schema changes and code changes deploy together via Dockerfile CMD
+The CMD runs `npx prisma migrate deploy` before `node dist/server.js`. Never manually run migrations separately.
+
+### RULE 3: Test the container locally before every push that touches server startup
+If you change server.ts, auth.ts, middleware/auth.ts, or phiEncryption.ts — build and run the container locally first. If exit code 1 locally, do not push.
+
+### RULE 4: NEVER use `var` in TypeScript files
+Always use `const` or `let`. `var` in if/else branches causes runtime crashes in strict mode compiled TypeScript.
+
+### RULE 5: The deploy workflow must register a new task definition with the commit SHA
+`--force-new-deployment` without a task def update just restarts with the old image. Register a new task def per commit.
+
+### RULE 6: WSL cannot run `prisma generate` locally against Windows filesystem
+Local `tsc` will show errors for new schema fields. These resolve in Docker build. Check if the field exists in schema.prisma — if yes, stale-client error. Do not add `as any` casts.
+
+### RULE 7: Branch protection is enforced — always use a PR
+Direct pushes to `main` are blocked. Use feature branches and `gh pr create`.
+
+### RULE 8: Pre-push verification sequence
+Zero TypeScript errors (excluding stale Prisma types), zero rogue PrismaClient, zero var declarations, zero @ts-nocheck.
+
+### RULE 9: Never commit .claude/settings.local.json
+This file stores Claude Code session context and can contain tokens that trigger GitHub secret scanning push protection, blocking ALL pushes. Add to .gitignore. Never include real or realistic-looking secret strings in docs — use `<placeholder-name>` format.
+
+## 16. Production Incident History
+
+### April 7, 2026 — ~4 hour outage during Phase 1 remediation sprint
+**Root causes:** `var newToken` in auth.ts, schema migration before matching image, `tsc || true` suppressing 28 errors, CI using force-new-deployment without new task def.
+**Resolution:** Fixed var to let, removed tsc||true, added prisma migrate to CMD, updated CI, fixed all TS errors.
+**Prevention:** Local container test before every push.
+
+## 17. ECS Deployment Runbook
+- **Container won't start, no logs:** Module import error or Prisma mismatch. Pull and run locally.
+- **Roll back first:** `aws ecs update-service --task-definition tailrd-backend:LAST_WORKING --force-new-deployment`. Never leave production down while debugging.

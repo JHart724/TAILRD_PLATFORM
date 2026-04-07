@@ -61,7 +61,7 @@ const authenticateToken = async (req: AuthenticatedRequest, res: Response, next:
       return next();
     } catch (err: any) {
       // Local JWT failed -- try Cognito if configured (SSO/SAML tokens use RS256)
-      if (isCognitoEnabled()) {
+      if (isCognitoEnabled() && verifyCognitoToken) {
         const cognitoUser = await verifyCognitoToken(token);
         if (cognitoUser) {
           req.user = cognitoUser;

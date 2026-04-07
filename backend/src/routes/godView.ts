@@ -245,7 +245,7 @@ async function getModuleAlerts(moduleName: string) {
   const mapping = MODULE_MAP[moduleName];
   if (!mapping) return 0;
   const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  return prisma.alert.count({ where: { module: mapping.enum, severity: 'HIGH', createdAt: { gte: weekAgo } } });
+  return prisma.alert.count({ where: { moduleType: mapping.enum, severity: 'HIGH', createdAt: { gte: weekAgo } } });
 }
 
 async function calculateTotalRevenue() {

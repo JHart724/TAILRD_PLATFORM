@@ -13,6 +13,7 @@
 
 import prisma from '../lib/prisma';
 import { sendEmail } from './emailService';
+import { TherapyGapType, UserRole } from '@prisma/client';
 import { writeAuditLog } from '../middleware/auditLogger';
 import { ModuleType } from '@prisma/client';
 import { Request } from 'express';
@@ -64,7 +65,7 @@ export async function sendImmediateAlerts(
     where: {
       id: { in: newGapIds },
       hospitalId,
-      gapType: { in: IMMEDIATE_ALERT_GAP_TYPES },
+      gapType: { in: IMMEDIATE_ALERT_GAP_TYPES as TherapyGapType[] },
     },
     include: {
       patient: { select: { id: true, firstName: true, lastName: true, mrn: true } },
@@ -78,9 +79,9 @@ export async function sendImmediateAlerts(
     where: {
       hospitalId,
       isActive: true,
-      role: { in: ['physician', 'nurse-manager', 'hospital-admin'] },
+      role: { in: [UserRole.PHYSICIAN, UserRole.NURSE_MANAGER, UserRole.HOSPITAL_ADMIN] },
     },
-    select: { id: true, email: true, firstName: true, role: true, notificationPreferences: true },
+    select: { id: true, email: true, firstName: true, role: true, notificationPreferences: true } as Record<string, boolean>,
   });
 
   let sent = 0;
@@ -140,7 +141,7 @@ export async function sendDailyDigest(hospitalId: string): Promise<number> {
     where: {
       hospitalId,
       isActive: true,
-      role: { in: ['physician', 'nurse-manager', 'hospital-admin', 'quality-director'] },
+      role: { in: [UserRole.PHYSICIAN, UserRole.NURSE_MANAGER, UserRole.HOSPITAL_ADMIN, UserRole.QUALITY_DIRECTOR] },
     },
     select: { id: true, email: true, firstName: true, notificationPreferences: true },
   });
@@ -209,7 +210,7 @@ export async function sendWeeklySummary(hospitalId: string): Promise<number> {
     where: {
       hospitalId,
       isActive: true,
-      role: { in: ['hospital-admin', 'quality-director'] },
+      role: { in: [UserRole.HOSPITAL_ADMIN, UserRole.QUALITY_DIRECTOR] },
     },
     select: { id: true, email: true, firstName: true, notificationPreferences: true },
   });
