@@ -295,7 +295,7 @@ interface AuthProviderProps {
 }
 
 /** Build a User object from backend API response */
-function buildUserFromResponse(apiUser: Record<string, string | Record<string, boolean>>, backendPerms?: UserPermissions): User {
+function buildUserFromResponse(apiUser: Record<string, any>, backendPerms?: UserPermissions): User {
   const role = (apiUser.role || 'viewer') as UserRole;
   const bp = backendPerms || apiUser.permissions || FULL_ACCESS_PERMISSIONS;
 
@@ -394,7 +394,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         const response = await loginApi(email, password);
         if (response.success) {
-          const user = buildUserFromResponse(response.data.user, response.data.permissions);
+          const user = buildUserFromResponse(response.data.user, response.data.permissions as any);
           const sessionToken = response.data.token;
           const refreshToken = response.data.refreshToken;
 

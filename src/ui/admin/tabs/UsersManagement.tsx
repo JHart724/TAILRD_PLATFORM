@@ -192,16 +192,16 @@ const UserDetailPanel: React.FC<UserDetailPanelProps> = ({ user, onClose }) => {
 // ─── Component ───────────────────────────────────────────────────────────────
 
 // Map API user to display format
-function mapApiUser(u: any): AdminUser {
+function mapApiUser(u: Record<string, any>): AdminUser {
   return {
-    id: u.id,
-    email: u.email,
-    firstName: u.firstName || '',
-    lastName: u.lastName || '',
-    role: u.role || 'viewer',
-    hospital: u.hospital?.name || u.hospitalName || 'Unknown',
-    hospitalId: u.hospitalId || '',
-    status: u.isActive ? 'Active' : 'Inactive',
+    id: String(u.id || ''),
+    email: String(u.email || ''),
+    firstName: String(u.firstName || ''),
+    lastName: String(u.lastName || ''),
+    role: String(u.role || 'viewer'),
+    hospital: String(u.hospital?.name || u.hospitalName || 'Unknown'),
+    hospitalId: String(u.hospitalId || ''),
+    status: u.isActive ? 'Active' as const : 'Inactive' as const,
     lastLogin: u.lastLogin ? new Date(u.lastLogin).toLocaleString() : 'Never',
     mfaEnabled: !!u.mfaEnabled,
   };
