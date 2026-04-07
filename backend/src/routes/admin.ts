@@ -781,13 +781,17 @@ router.put('/users/:userId',
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { userId } = req.params;
-      const updateData = req.body;
-
-      // Remove fields that shouldn't be updated directly
-      delete updateData.id;
-      delete updateData.passwordHash;
-      delete updateData.createdAt;
-      delete updateData.updatedAt;
+      // Whitelist allowed fields -- prevent mass assignment privilege escalation
+      const { firstName, lastName, title, department, npi, isActive } = req.body;
+      const updateData: Record<string, any> = {};
+      if (firstName !== undefined) updateData.firstName = firstName;
+      if (lastName !== undefined) updateData.lastName = lastName;
+      if (title !== undefined) updateData.title = title;
+      if (department !== undefined) updateData.department = department;
+      if (npi !== undefined) updateData.npi = npi;
+      if (isActive !== undefined) updateData.isActive = isActive;
+      // role changes require explicit separate endpoint for audit trail
+      // hospitalId, email, passwordHash, permissions are NEVER mass-assignable
 
       const user = await prisma.user.update({
         where: { id: userId },

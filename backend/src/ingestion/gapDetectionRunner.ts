@@ -3327,6 +3327,7 @@ function evaluateGapRules(
   medCodes: string[],
   age: number,
   gender?: string,
+  race?: string,
 ): DetectedGap[] {
   const gaps: DetectedGap[] = [];
   const hasHF = dxCodes.some(c => c.startsWith('I50'));
@@ -3591,7 +3592,7 @@ function evaluateGapRules(
   if (
     hasHF &&
     labValues['lvef'] !== undefined && labValues['lvef'] <= 40 &&
-    gender === 'BLACK' &&
+    race?.toUpperCase() === 'BLACK' &&
     !medCodes.some(c => ['5470', '6058'].includes(c)) &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {

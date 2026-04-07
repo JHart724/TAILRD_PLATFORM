@@ -43,8 +43,15 @@ provider "aws" {
 # ─── Locals ──────────────────────────────────────────────────────────────────
 
 locals {
-  name_prefix = "${var.project_name}-${var.environment}"
+  name_prefix   = "${var.project_name}-${var.environment}"
   is_production = var.environment == "production"
+
+  common_tags = {
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "terraform"
+    HIPAA       = "true"
+  }
 }
 
 # ─── Data Sources: Existing CloudFormation Resources ─────────────────────────
