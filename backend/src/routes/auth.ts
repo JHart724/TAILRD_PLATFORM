@@ -302,6 +302,7 @@ router.post('/refresh', async (req: Request, res: Response) => {
     ) as JWTPayload;
 
     // Re-validate user is still active and rebuild permissions from DB
+    let newToken: string;
     if (!isDemoMode) {
       const user = await prisma.user.findUnique({
         where: { id: decoded.userId },
@@ -316,7 +317,7 @@ router.post('/refresh', async (req: Request, res: Response) => {
       }
       // Rebuild permissions from current DB state (not stale JWT claims)
       const freshPermissions = buildUserPermissions(user, user.hospital);
-      var newToken = signToken({
+      newToken = signToken({
         userId: user.id,
         email: user.email,
         role: user.role,
@@ -326,7 +327,7 @@ router.post('/refresh', async (req: Request, res: Response) => {
         demoMode: decoded.demoMode,
       });
     } else {
-      var newToken = signToken({
+      newToken = signToken({
         userId: decoded.userId,
         email: decoded.email,
         role: decoded.role,
