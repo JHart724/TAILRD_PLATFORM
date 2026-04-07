@@ -484,8 +484,8 @@ router.post('/deletion/:patientId', async (req: AuthenticatedRequest, res: Respo
         data: { deletedAt: now },
       });
 
-      // Resolve alerts
-      const alerts = await tx.alert.updateMany({
+      // Resolve remaining alerts (already hard-deleted above, this handles any with resolvedAt tracking)
+      const resolvedAlerts = await tx.alert.updateMany({
         where: { patientId, hospitalId, resolvedAt: null },
         data: { resolvedAt: now },
       });

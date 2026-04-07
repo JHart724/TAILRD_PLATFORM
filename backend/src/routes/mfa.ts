@@ -87,18 +87,23 @@ router.post('/verify', async (req: AuthenticatedRequest, res: Response) => {
     await writeAuditLog(req, 'MFA_VERIFIED', 'user', userId, 'MFA verification successful');
 
     // Issue full JWT with mfaVerified: true
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { hospital: true },
+    });
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     const jwt = require('jsonwebtoken');
     const crypto = require('crypto');
+    const { buildUserPermissions } = require('../config/rolePermissions');
+    const permissions = buildUserPermissions(user, user.hospital);
     const fullToken = jwt.sign(
       {
         userId: user.id,
         email: user.email,
         hospitalId: user.hospitalId,
         role: user.role,
-        permissions: user.permissions || {},
+        permissions,
         mfaVerified: true,
       },
       process.env.JWT_SECRET!,
@@ -147,13 +152,18 @@ router.post('/verify-backup', async (req: AuthenticatedRequest, res: Response) =
       `Backup code used. ${result.codesRemaining} remaining`);
 
     // Issue full JWT
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { hospital: true },
+    });
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     const jwt = require('jsonwebtoken');
     const crypto = require('crypto');
+    const { buildUserPermissions: buildPerms } = require('../config/rolePermissions');
+    const backupPermissions = buildPerms(user, user.hospital);
     const fullToken = jwt.sign(
-      { userId: user.id, email: user.email, hospitalId: user.hospitalId, role: user.role, permissions: user.permissions || {}, mfaVerified: true },
+      { userId: user.id, email: user.email, hospitalId: user.hospitalId, role: user.role, permissions: backupPermissions, mfaVerified: true },
       process.env.JWT_SECRET!,
       { algorithm: 'HS256', expiresIn: '1h' }
     );

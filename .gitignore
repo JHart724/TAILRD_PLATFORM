@@ -35,6 +35,7 @@ dedup_gaps.js
 fix_gaps.js
 recalibrate.js
 .claude/settings.local.json
+.claude/*.local.json
 
 # Terraform
 **/.terraform/
@@ -42,4 +43,3 @@ terraform.tfvars
 *.tfstate
 *.tfstate.backup
 .terraform.lock.hcl
-.claude/settings.local.json

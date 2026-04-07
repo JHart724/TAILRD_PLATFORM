@@ -150,8 +150,12 @@ router.post('/invite/accept/:token', async (req, res) => {
       return res.status(500).json({ error: 'Server configuration error' });
     }
 
+    // Build permissions from role (user.permissions doesn't exist on Prisma type)
+    const { buildUserPermissions } = require('../config/rolePermissions');
+    const hospital = await prisma.hospital.findUnique({ where: { id: user.hospitalId } });
+    const invitePermissions = buildUserPermissions(user, hospital);
     const authToken = jwt.sign(
-      { userId: user.id, email: user.email, role: user.role, hospitalId: user.hospitalId, permissions: user.permissions || {} },
+      { userId: user.id, email: user.email, role: user.role, hospitalId: user.hospitalId, permissions: invitePermissions },
       jwtSecret,
       { algorithm: 'HS256', expiresIn: '1h' }
     );
