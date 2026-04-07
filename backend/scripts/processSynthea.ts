@@ -127,6 +127,9 @@ async function processFHIRBundle(
   const observations: FHIRObservation[] = [];
   const conditions: any[] = [];
   const medicationRequests: any[] = [];
+  const procedures: any[] = [];
+  const devices: any[] = [];
+  const allergies: any[] = [];
 
   for (const entry of bundle.entry) {
     const r = entry.resource;
@@ -145,6 +148,15 @@ async function processFHIRBundle(
         break;
       case "MedicationRequest":
         medicationRequests.push(r);
+        break;
+      case "Procedure":
+        procedures.push(r);
+        break;
+      case "Device":
+        devices.push(r);
+        break;
+      case "AllergyIntolerance":
+        allergies.push(r);
         break;
     }
   }
@@ -246,6 +258,72 @@ async function processFHIRBundle(
       try {
         await prisma.medication.createMany({ data: medData, skipDuplicates: true });
         stats.medications += medData.length;
+      } catch (err: any) {
+        stats.errors++;
+      }
+    }
+
+    // 6. Persist procedures
+    const procData = procedures
+      .filter((p: any) => p.code?.coding?.[0])
+      .map((p: any) => {
+        const coding = p.code.coding[0];
+        return {
+          patientId: patientId!,
+          hospitalId,
+          fhirProcedureId: p.id || null,
+          cptCode: coding.system?.includes('cpt') ? coding.code : null,
+          snomedCode: coding.system?.includes('snomed') ? coding.code : null,
+          procedureName: coding.display || coding.code || 'Unknown',
+          status: p.status || 'completed',
+          procedureDate: p.performedDateTime ? new Date(p.performedDateTime) : null,
+          performedBy: p.performer?.[0]?.actor?.display || null,
+        };
+      });
+    if (procData.length > 0) {
+      try {
+        await prisma.procedure.createMany({ data: procData, skipDuplicates: true });
+      } catch (err: any) {
+        stats.errors++;
+      }
+    }
+
+    // 7. Persist devices
+    const devData = devices
+      .filter((d: any) => d.type?.coding?.[0] || d.deviceName?.[0])
+      .map((d: any) => ({
+        patientId: patientId!,
+        hospitalId,
+        fhirDeviceId: d.id || null,
+        deviceType: d.type?.coding?.[0]?.display || d.deviceName?.[0]?.name || 'Unknown',
+        deviceStatus: d.status || 'active',
+        implantDate: d.manufactureDate ? new Date(d.manufactureDate) : null,
+        manufacturer: d.manufacturer || null,
+        modelNumber: d.modelNumber || null,
+      }));
+    if (devData.length > 0) {
+      try {
+        await prisma.deviceImplant.createMany({ data: devData, skipDuplicates: true });
+      } catch (err: any) {
+        stats.errors++;
+      }
+    }
+
+    // 8. Persist allergies
+    const allergyData = allergies
+      .map((a: any) => ({
+        patientId: patientId!,
+        hospitalId,
+        fhirAllergyId: a.id || null,
+        substanceCode: a.code?.coding?.[0]?.code || null,
+        substanceName: a.code?.text || a.code?.coding?.[0]?.display || null,
+        allergyType: a.type || 'allergy',
+        severity: a.reaction?.[0]?.severity || null,
+        clinicalStatus: a.clinicalStatus?.coding?.[0]?.code || 'active',
+      }));
+    if (allergyData.length > 0) {
+      try {
+        await prisma.allergyIntolerance.createMany({ data: allergyData, skipDuplicates: true });
       } catch (err: any) {
         stats.errors++;
       }

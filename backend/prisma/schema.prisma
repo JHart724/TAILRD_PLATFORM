@@ -75,10 +75,13 @@ model Hospital {
   recommendations             Recommendation[]
 
   // New clinical models
-  medications Medication[]
-  conditions  Condition[]
-  carePlans   CarePlan[]
-  auditLogs   AuditLog[]
+  medications          Medication[]
+  conditions           Condition[]
+  carePlans            CarePlan[]
+  auditLogs            AuditLog[]
+  procedures           Procedure[]
+  deviceImplants       DeviceImplant[]
+  allergyIntolerances  AllergyIntolerance[]
 
   // Operations relationships
   onboardingSteps Onboarding[]
@@ -241,9 +244,12 @@ model Patient {
   deletedAt DateTime?
 
   // New clinical model relationships
-  medications Medication[]
-  conditions  Condition[]
-  carePlans   CarePlan[]
+  medications          Medication[]
+  conditions           Condition[]
+  carePlans            CarePlan[]
+  procedures           Procedure[]
+  deviceImplants       DeviceImplant[]
+  allergyIntolerances  AllergyIntolerance[]
 
   @@unique([hospitalId, mrn]) // MRN is unique within each hospital
   @@index([fhirPatientId])
@@ -2269,3 +2275,84 @@ model IPAllowlist {
 }
 
 
+
+// ─── FHIR Clinical Resources (Phase 1 Audit FIX-8.1) ─────────────────────
+
+model Procedure {
+  id              String   @id @default(cuid())
+  patientId       String
+  patient         Patient  @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  hospitalId      String
+  hospital        Hospital @relation(fields: [hospitalId], references: [id])
+  fhirProcedureId String?  @unique
+  cptCode         String?
+  snomedCode      String?
+  procedureName   String?
+  status          String   @default("completed")
+  procedureDate   DateTime?
+  performedBy     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([patientId])
+  @@index([hospitalId])
+  @@index([cptCode])
+  @@map("procedures")
+}
+
+model DeviceImplant {
+  id            String    @id @default(cuid())
+  patientId     String
+  patient       Patient   @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  hospitalId    String
+  hospital      Hospital  @relation(fields: [hospitalId], references: [id])
+  fhirDeviceId  String?   @unique
+  deviceType    String    // ICD, CRT-D, CRT-P, Pacemaker, Watchman, LVAD
+  deviceStatus  String    @default("active")
+  implantDate   DateTime?
+  manufacturer  String?
+  modelNumber   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([patientId])
+  @@index([hospitalId])
+  @@index([deviceType])
+  @@map("device_implants")
+}
+
+model AllergyIntolerance {
+  id              String   @id @default(cuid())
+  patientId       String
+  patient         Patient  @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  hospitalId      String
+  hospital        Hospital @relation(fields: [hospitalId], references: [id])
+  fhirAllergyId   String?  @unique
+  substanceCode   String?  // RxNorm or SNOMED code
+  substanceName   String?
+  allergyType     String   @default("allergy") // allergy | intolerance
+  severity        String?  // mild | moderate | severe
+  clinicalStatus  String   @default("active")  // active | inactive | resolved
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([patientId])
+  @@index([hospitalId])
+  @@index([substanceCode])
+  @@map("allergy_intolerances")
+}
+
+model FailedFhirBundle {
+  id            String    @id @default(cuid())
+  originalPath  String
+  patientFhirId String?
+  hospitalId    String?
+  errorMessage  String
+  retryCount    Int       @default(0)
+  failedAt      DateTime  @default(now())
+  resolvedAt    DateTime?
+
+  @@index([failedAt])
+  @@index([resolvedAt])
+  @@map("failed_fhir_bundles")
+}
