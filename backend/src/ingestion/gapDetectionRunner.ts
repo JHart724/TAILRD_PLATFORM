@@ -51,16 +51,10 @@ export async function runGapDetection(
     gapFlagsResolved: 0,
   };
 
-  // Pre-load ALL existing gaps for this hospital in one query (avoids N+1 per patient)
-  const allExistingGaps = await prisma.therapyGap.findMany({
-    where: { hospitalId },
-    select: { id: true, patientId: true, gapType: true, module: true },
-  });
+  // Existing gap lookup — loaded per batch to avoid OOM at 100K+ patients
   const existingKey = (patientId: string, gapType: string, module: string) =>
     `${patientId}::${gapType}::${module}`;
-  const existingMap = new Map(
-    allExistingGaps.map(g => [existingKey(g.patientId, g.gapType, g.module), g.id])
-  );
+  let existingMap = new Map<string, string>();
 
   // Count total patients for progress tracking
   const totalPatients = await prisma.patient.count({ where: { hospitalId } });
@@ -82,6 +76,16 @@ export async function runGapDetection(
 
     if (patients.length === 0) break;
     cursor = patients[patients.length - 1].id;
+
+    // Load existing gaps for THIS BATCH only (prevents OOM at scale)
+    const batchPatientIds = patients.map(p => p.id);
+    const batchExistingGaps = await prisma.therapyGap.findMany({
+      where: { hospitalId, patientId: { in: batchPatientIds } },
+      select: { id: true, patientId: true, gapType: true, module: true },
+    });
+    existingMap = new Map(
+      batchExistingGaps.map(g => [existingKey(g.patientId, g.gapType, g.module), g.id])
+    );
 
     const allToCreate: any[] = [];
     const allToUpdate: { id: string; status: string }[] = [];
