@@ -1,4 +1,5 @@
 import { Router, Response } from 'express';
+import { logger } from '../utils/logger';
 import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
 import prisma from '../lib/prisma';
 import bcrypt from 'bcryptjs';
@@ -54,16 +55,16 @@ router.post('/invite', authenticateToken, async (req: AuthenticatedRequest, res:
 
     const inviteUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/invite/${invite.token}`;
 
-    // In dev: log URL. In production: send via SES
-    if (process.env.NODE_ENV !== 'production' || process.env.LOG_INVITE_URL === 'true') {
-      console.log(`\nINVITE URL for ${email}:\n${inviteUrl}\n`);
+    // In dev only: log invite URL (never log email/URL in production)
+    if (process.env.NODE_ENV === 'development') {
+      logger.debug('Invite created', { inviteId: invite.id });
     }
 
     await writeAuditLog(req, 'INVITE_SENT', 'InviteToken', invite.id, `Invite sent to ${email} as ${role}`);
 
     res.json({ inviteId: invite.id, expiresAt: invite.expiresAt, email });
   } catch (error) {
-    console.error('Invite creation error:', error);
+    logger.error('Invite creation error:', { error: error instanceof Error ? error.message : String(error) });
     res.status(500).json({ error: 'Failed to create invite' });
   }
 });
@@ -82,7 +83,7 @@ router.get('/invite/validate/:token', async (req, res) => {
 
     res.json({ email: invite.email, role: invite.role, hospitalName: invite.hospital.name });
   } catch (error) {
-    console.error('Invite validation error:', error);
+    logger.error('Invite validation error:', { error: error instanceof Error ? error.message : String(error) });
     res.status(500).json({ error: 'Failed to validate invite' });
   }
 });
@@ -162,7 +163,7 @@ router.post('/invite/accept/:token', async (req, res) => {
 
     res.json({ token: authToken, user: { id: user.id, email: user.email, role: user.role } });
   } catch (error) {
-    console.error('Invite accept error:', error);
+    logger.error('Invite accept error:', { error: error instanceof Error ? error.message : String(error) });
     res.status(500).json({ error: 'Failed to accept invite' });
   }
 });
@@ -191,7 +192,7 @@ router.get('/', authenticateToken, async (req: AuthenticatedRequest, res: Respon
     });
     res.json(users);
   } catch (error) {
-    console.error('User list error:', error);
+    logger.error('User list error:', { error: error instanceof Error ? error.message : String(error) });
     res.status(500).json({ error: 'Failed to fetch users' });
   }
 });

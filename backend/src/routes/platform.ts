@@ -1,4 +1,5 @@
 import { Router, Response } from 'express';
+import { logger } from '../utils/logger';
 import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
 import prisma from '../lib/prisma';
 import { ModuleType } from '@prisma/client';
@@ -61,7 +62,7 @@ router.get('/totals', authenticateToken, async (req: AuthenticatedRequest, res: 
       computedAt: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('Platform totals error:', error);
+    logger.error('Platform totals error:', { error: error instanceof Error ? error.message : String(error) });
     res.status(500).json({ error: 'Failed to compute platform totals' });
   }
 });

@@ -6,6 +6,7 @@
  */
 
 import { Router, Response, NextFunction } from 'express';
+import { logger } from '../utils/logger';
 import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
 import { writeAuditLog } from '../middleware/auditLogger';
 import prisma from '../lib/prisma';
@@ -76,7 +77,7 @@ router.get('/overview', async (req: AuthenticatedRequest, res) => {
     });
     
   } catch (error) {
-    console.error('GOD View overview error:', error);
+    logger.error('GOD View overview error:', { error: error instanceof Error ? error.message : String(error) });
     res.status(500).json({ error: 'Failed to fetch module overview' });
   }
 });
@@ -104,7 +105,7 @@ router.get('/cross-module-analytics', async (req, res) => {
     });
     
   } catch (error) {
-    console.error('GOD View analytics error:', error);
+    logger.error('GOD View analytics error:', { error: error instanceof Error ? error.message : String(error) });
     res.status(500).json({ error: 'Failed to generate cross-module analytics' });
   }
 });
@@ -149,7 +150,7 @@ router.get('/global-search', async (req: AuthenticatedRequest, res) => {
     });
     
   } catch (error) {
-    console.error('GOD View search error:', error);
+    logger.error('GOD View search error:', { error: error instanceof Error ? error.message : String(error) });
     res.status(500).json({ error: 'Search failed' });
   }
 });
@@ -179,7 +180,7 @@ router.get('/module-health/:moduleName', async (req, res) => {
     });
     
   } catch (error) {
-    console.error(`GOD View module health error for ${req.params.moduleName}:`, error);
+    logger.error('GOD View module health error', { moduleName: req.params.moduleName, error: error instanceof Error ? error.message : String(error) });
     res.status(500).json({ error: 'Failed to fetch module health details' });
   }
 });
@@ -211,7 +212,7 @@ router.post('/system-action', async (req: AuthenticatedRequest, res) => {
     });
     
   } catch (error) {
-    console.error('GOD View system action error:', error);
+    logger.error('GOD View system action error:', { error: error instanceof Error ? error.message : String(error) });
     res.status(500).json({ error: 'System action failed' });
   }
 });
