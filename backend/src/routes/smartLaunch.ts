@@ -77,7 +77,7 @@ router.get('/callback', async (req: Request, res: Response) => {
       return res.redirect(`${FRONTEND_URL}/login?error=smart_token_failed`);
     }
 
-    const tokenData = await tokenResponse.json();
+    const tokenData = await tokenResponse.json() as { access_token: string; patient?: string; id_token?: string };
     const { access_token, patient } = tokenData;
 
     const smartContext = Buffer.from(JSON.stringify({

@@ -80,7 +80,7 @@ export interface DDIWarning {
 
 export function checkDDI(
   proposedRxNorm: string,
-  currentMedications: Array<{ rxnormCode: string | null; medicationName?: string | null; status: string }>
+  currentMedications: Array<{ rxNormCode: string | null; medicationName?: string | null; status: string }>
 ): DDIWarning[] {
   const warnings: DDIWarning[] = [];
 
@@ -89,7 +89,7 @@ export function checkDDI(
 
     for (const interaction of rule.interactsWith) {
       const matchingMed = currentMedications.find(med =>
-        med.rxnormCode && interaction.codes.includes(med.rxnormCode) && med.status === 'ACTIVE'
+        med.rxNormCode && interaction.codes.includes(med.rxNormCode) && med.status === 'ACTIVE'
       );
 
       if (matchingMed) {
@@ -101,7 +101,7 @@ export function checkDDI(
           recommendation: rule.recommendation,
           guidelineSource: rule.guidelineSource,
           drug1RxNorm: proposedRxNorm,
-          drug2RxNorm: matchingMed.rxnormCode!,
+          drug2RxNorm: matchingMed.rxNormCode!,
           drug2Name: matchingMed.medicationName || 'Unknown',
         });
       }
@@ -124,9 +124,9 @@ export async function runPatientDDICheck(patientId: string, hospitalId: string):
     let alertCount = 0;
 
     for (const med of patient.medications) {
-      if (!med.rxnormCode) continue;
+      if (!med.rxNormCode) continue;
       const otherMeds = patient.medications.filter(m => m.id !== med.id);
-      const warnings = checkDDI(med.rxnormCode, otherMeds);
+      const warnings = checkDDI(med.rxNormCode, otherMeds);
 
       for (const w of warnings) {
         const key = [w.drug1RxNorm, w.drug2RxNorm, w.riskType].sort().join('-');

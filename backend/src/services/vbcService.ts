@@ -65,12 +65,13 @@ export async function calculateQualityMeasures(hospitalId: string): Promise<void
       const compliant = Math.max(0, totalEligible - nonCompliant);
       const rate = totalEligible > 0 ? compliant / totalEligible : 0;
 
+      const reportingPeriod = `${periodStart.getFullYear()}-YTD`;
       await prisma.qualityMeasure.upsert({
         where: {
-          hospitalId_measureCode_periodStart: {
+          hospitalId_measureCode_reportingPeriod: {
             hospitalId,
             measureCode: measure.measureId,
-            periodStart,
+            reportingPeriod,
           },
         },
         create: {
@@ -81,7 +82,7 @@ export async function calculateQualityMeasures(hospitalId: string): Promise<void
           numerator: compliant,
           denominator: totalEligible,
           rate,
-          reportingPeriod: `${periodStart.getFullYear()}-YTD`,
+          reportingPeriod,
           periodStart,
           periodEnd,
         },
