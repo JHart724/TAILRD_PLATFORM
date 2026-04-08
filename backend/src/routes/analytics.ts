@@ -1,8 +1,4 @@
-// @ts-nocheck
-// Analytics routes — field name mismatches between code and Prisma schema.
-// date→trackedDate, timeSpent→totalDuration, dbQueryTime→dbQueries.
-// Fix in dedicated session. Build must pass for deployment.
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import prisma from '../lib/prisma';
 import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
@@ -20,7 +16,7 @@ router.get('/dashboard',
     query('hospitalId').optional().isString(),
     query('moduleType').optional().isIn(Object.values(ModuleType))
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { timeRange = '30d', hospitalId, moduleType } = req.query;
       const user = req.user!;
@@ -86,16 +82,16 @@ router.get('/dashboard',
         // Feature usage aggregation
         prisma.featureUsage.aggregate({
           where: {
-            date: {
+            periodStart: {
               gte: startDate,
               lte: endDate
             },
             ...(targetHospitalId && { hospitalId: targetHospitalId }),
-            ...(moduleType && { moduleType })
+            ...(moduleType && { moduleType: moduleType as any })
           },
           _sum: {
             usageCount: true,
-            timeSpent: true
+            totalDuration: true
           }
         }),
 
@@ -112,7 +108,7 @@ router.get('/dashboard',
             responseTime: true,
             memoryUsage: true,
             cpuUsage: true,
-            dbQueryTime: true
+            dbQueries: true
           },
           _count: true
         }),
@@ -121,16 +117,16 @@ router.get('/dashboard',
         prisma.featureUsage.groupBy({
           by: ['featureName', 'moduleType'],
           where: {
-            date: {
+            periodStart: {
               gte: startDate,
               lte: endDate
             },
             ...(targetHospitalId && { hospitalId: targetHospitalId }),
-            ...(moduleType && { moduleType })
+            ...(moduleType && { moduleType: moduleType as any })
           },
           _sum: {
             usageCount: true,
-            timeSpent: true
+            totalDuration: true
           },
           orderBy: {
             _sum: {
@@ -172,14 +168,14 @@ router.get('/dashboard',
         // Business metrics (if available)
         user.role === 'super-admin' ? prisma.businessMetric.findMany({
           where: {
-            date: {
+            periodStart: {
               gte: startDate,
               lte: endDate
             },
             ...(targetHospitalId && { hospitalId: targetHospitalId })
           },
           orderBy: {
-            date: 'desc'
+            periodStart: 'desc'
           },
           take: 30
         }) : []
@@ -199,22 +195,22 @@ router.get('/dashboard',
           overview: {
             totalActivities: userActivityCount,
             uniqueUsers: uniqueUsersCount,
-            totalFeatureUsage: featureUsageStats._sum.usageCount || 0,
-            totalTimeSpent: featureUsageStats._sum.timeSpent || 0,
-            averageResponseTime: Math.round(performanceMetrics._avg.responseTime || 0),
+            totalFeatureUsage: featureUsageStats._sum?.usageCount || 0,
+            totalTimeSpent: featureUsageStats._sum?.totalDuration || 0,
+            averageResponseTime: Math.round(performanceMetrics._avg?.responseTime || 0),
             totalApiCalls: performanceMetrics._count
           },
           performance: {
-            averageResponseTime: Math.round(performanceMetrics._avg.responseTime || 0),
-            averageMemoryUsage: Math.round(performanceMetrics._avg.memoryUsage || 0),
-            averageCpuUsage: performanceMetrics._avg.cpuUsage || 0,
-            averageDbQueryTime: Math.round(performanceMetrics._avg.dbQueryTime || 0)
+            averageResponseTime: Math.round(performanceMetrics._avg?.responseTime || 0),
+            averageMemoryUsage: Math.round(performanceMetrics._avg?.memoryUsage || 0),
+            averageCpuUsage: performanceMetrics._avg?.cpuUsage || 0,
+            averageDbQueryTime: Math.round(performanceMetrics._avg?.dbQueries || 0)
           },
           topFeatures: topFeatures.map(f => ({
             featureName: f.featureName,
             moduleType: f.moduleType,
-            usageCount: f._sum.usageCount || 0,
-            timeSpent: f._sum.timeSpent || 0
+            usageCount: f._sum?.usageCount || 0,
+            timeSpent: f._sum?.totalDuration || 0
           })),
           activityByModule: activityByModule.map(a => ({
             moduleType: a.moduleType,
@@ -256,7 +252,7 @@ router.get('/user-activity',
     query('page').optional().isInt({ min: 1 }),
     query('limit').optional().isInt({ min: 1, max: 100 })
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const {
         startDate,
@@ -346,7 +342,7 @@ router.get('/feature-usage',
     query('endDate').optional().isISO8601(),
     query('groupBy').optional().isIn(['day', 'week', 'month', 'feature', 'module', 'user'])
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const {
         moduleType,
@@ -366,9 +362,9 @@ router.get('/feature-usage',
       }
 
       if (startDate || endDate) {
-        whereClause.date = {};
-        if (startDate) whereClause.date.gte = new Date(startDate as string);
-        if (endDate) whereClause.date.lte = new Date(endDate as string);
+        whereClause.periodStart = {};
+        if (startDate) whereClause.periodStart.gte = new Date(startDate as string);
+        if (endDate) whereClause.periodStart.lte = new Date(endDate as string);
       }
 
       if (moduleType) whereClause.moduleType = moduleType;
@@ -379,8 +375,8 @@ router.get('/feature-usage',
 
       switch (groupBy) {
         case 'day':
-          groupByFields = ['date'];
-          orderBy = { date: 'desc' };
+          groupByFields = ['periodStart'];
+          orderBy = { periodStart: 'desc' };
           break;
         case 'feature':
           groupByFields = ['featureName', 'moduleType'];
@@ -395,8 +391,8 @@ router.get('/feature-usage',
           orderBy = { _sum: { usageCount: 'desc' } };
           break;
         default:
-          groupByFields = ['date'];
-          orderBy = { date: 'desc' };
+          groupByFields = ['periodStart'];
+          orderBy = { periodStart: 'desc' };
       }
 
       const featureUsage = await prisma.featureUsage.groupBy({
@@ -404,10 +400,10 @@ router.get('/feature-usage',
         where: whereClause,
         _sum: {
           usageCount: true,
-          timeSpent: true
+          totalDuration: true
         },
         _avg: {
-          timeSpent: true
+          totalDuration: true
         },
         orderBy,
         take: 100
@@ -421,9 +417,9 @@ router.get('/feature-usage',
           groupBy,
           featureUsage: featureUsage.map(usage => ({
             ...usage,
-            totalUsage: usage._sum.usageCount || 0,
-            totalTimeSpent: usage._sum.timeSpent || 0,
-            averageTimeSpent: usage._avg.timeSpent || 0
+            totalUsage: usage._sum?.usageCount || 0,
+            totalTimeSpent: usage._sum?.totalDuration || 0,
+            averageTimeSpent: usage._avg?.totalDuration || 0
           }))
         },
         message: 'Feature usage analytics retrieved',
@@ -451,7 +447,7 @@ router.get('/performance',
     query('method').optional().isIn(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']),
     query('groupBy').optional().isIn(['hour', 'day', 'endpoint', 'method'])
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const {
         startDate,
@@ -477,7 +473,7 @@ router.get('/performance',
       }
 
       if (endpoint) whereClause.endpoint = { contains: endpoint };
-      if (method) whereClause.method = method;
+      if (method) whereClause.operation = { contains: method as string };
 
       // Get performance metrics with aggregation
       const performanceData = await prisma.performanceMetric.findMany({
@@ -498,10 +494,10 @@ router.get('/performance',
             key = new Date(metric.timestamp).toISOString().substring(0, 10);
             break;
           case 'endpoint':
-            key = metric.endpoint;
+            key = metric.endpoint ?? 'unknown';
             break;
           case 'method':
-            key = metric.method;
+            key = metric.operation;
             break;
           default:
             key = new Date(metric.timestamp).toISOString().substring(0, 10);
@@ -523,8 +519,8 @@ router.get('/performance',
         acc[key].totalResponseTime += metric.responseTime;
         acc[key].totalMemoryUsage += metric.memoryUsage || 0;
         acc[key].totalCpuUsage += metric.cpuUsage || 0;
-        acc[key].totalDbQueryTime += metric.dbQueryTime || 0;
-        if (metric.statusCode >= 400) acc[key].errors++;
+        acc[key].totalDbQueryTime += metric.dbQueries || 0;
+        if ((metric.errorRate ?? 0) > 0) acc[key].errors++;
 
         return acc;
       }, {});
@@ -571,7 +567,7 @@ router.post('/track',
     body('metadata').optional().isObject(),
     body('value').optional().isNumeric()
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
