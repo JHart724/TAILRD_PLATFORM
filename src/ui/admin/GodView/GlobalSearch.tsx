@@ -25,8 +25,23 @@ export const GlobalSearch: React.FC = () => {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [hospitals, setHospitals] = useState<Array<{ id: string; name: string }>>([]);
+  const [selectedHospitalId, setSelectedHospitalId] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Fetch hospitals for the selector
+  useEffect(() => {
+    const token = localStorage.getItem('tailrd-session-token');
+    fetch('/api/admin/hospitals', { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(d => {
+        const list = d.data || d || [];
+        setHospitals(list.map((h: any) => ({ id: h.id, name: h.name })));
+        if (list.length === 1) setSelectedHospitalId(list[0].id);
+      })
+      .catch(() => {});
+  }, []);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -52,7 +67,7 @@ export const GlobalSearch: React.FC = () => {
 
   // Handle search input
   useEffect(() => {
- if (!query.trim()) {
+ if (!query.trim() || !selectedHospitalId) {
  setResults([]);
  setIsSearching(false);
  return;
@@ -61,7 +76,7 @@ export const GlobalSearch: React.FC = () => {
  const searchTimer = setTimeout(async () => {
  setIsSearching(true);
  try {
- const response = await fetch(`/api/admin/god/global-search?q=${encodeURIComponent(query)}&limit=10`, {
+ const response = await fetch(`/api/admin/god/global-search?q=${encodeURIComponent(query)}&hospitalId=${encodeURIComponent(selectedHospitalId)}&limit=10`, {
  headers: { 'Authorization': `Bearer ${localStorage.getItem('tailrd-session-token')}` }
  });
  
@@ -79,7 +94,7 @@ export const GlobalSearch: React.FC = () => {
  }, 300);
 
  return () => clearTimeout(searchTimer);
-  }, [query]);
+  }, [query, selectedHospitalId]);
 
   // Handle navigation keys
   useEffect(() => {
@@ -203,6 +218,19 @@ export const GlobalSearch: React.FC = () => {
  borderColor: semantic['border.default']
  }}
  >
+ {/* Hospital Selector */}
+ <div className="flex items-center gap-3 px-4 py-2 border-b" style={{ borderColor: semantic['border.muted'] }}>
+ <Building className="w-4 h-4" style={{ color: semantic['text.muted'] }} />
+ <select
+ value={selectedHospitalId}
+ onChange={(e) => setSelectedHospitalId(e.target.value)}
+ className="flex-1 bg-transparent outline-none text-sm"
+ style={{ color: semantic['text.primary'] }}
+ >
+ <option value="">Select a health system first</option>
+ {hospitals.map(h => <option key={h.id} value={h.id}>{h.name}</option>)}
+ </select>
+ </div>
  {/* Search Input */}
  <div className="flex items-center gap-3 p-4 border-b" style={{ borderColor: semantic['border.muted'] }}>
  <Search className="w-5 h-5" style={{ color: semantic['text.muted'] }} />
@@ -211,10 +239,11 @@ export const GlobalSearch: React.FC = () => {
  type="text"
  value={query}
  onChange={(e) => setQuery(e.target.value)}
- placeholder="Search across all modules..."
+ placeholder={selectedHospitalId ? "Search patients by name or MRN..." : "Select a health system above first"}
  className="flex-1 text-lg bg-transparent outline-none"
  style={{ color: semantic['text.primary'] }}
  autoFocus
+ disabled={!selectedHospitalId}
  />
  {isSearching && (
  <Loader2 className="w-5 h-5 animate-spin" style={{ color: semantic['text.muted'] }} />
