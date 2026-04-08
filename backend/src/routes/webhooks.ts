@@ -190,15 +190,18 @@ router.post('/redox', verifyRedoxSignature, async (req, res) => {
             const { OrdersService } = require('../services/ordersService');
             const ordersService = new OrdersService();
             for (const order of payload.Orders) {
+              const orderCode = order.code?.coding?.[0]?.code || order.id || 'UNKNOWN';
+              const orderName = order.code?.text || order.code?.coding?.[0]?.display;
+              const categoryCode = order.category?.[0]?.coding?.[0]?.code || 'procedure';
               await ordersService.processOrder({
                 patientId,
                 hospitalId,
-                orderType: (order.Type || 'procedure').toLowerCase(),
-                orderCode: order.Code || order.ID || 'UNKNOWN',
-                orderName: order.Name || order.Description,
-                status: order.Status,
-                orderedDateTime: order.DateTime ? new Date(order.DateTime) : undefined,
-                orderingProvider: order.Provider?.FirstName ? `${order.Provider.FirstName} ${order.Provider.LastName}` : undefined,
+                orderType: categoryCode.toLowerCase() as any,
+                orderCode,
+                orderName,
+                status: order.status,
+                orderedDateTime: order.authoredOn ? new Date(order.authoredOn) : undefined,
+                orderingProvider: order.requester?.display,
                 rawPayload: order,
               });
             }
