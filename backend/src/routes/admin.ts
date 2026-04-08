@@ -1072,34 +1072,53 @@ router.get('/users/:id/activity',
   }
 );
 
-// GET /api/admin/config — platform configuration (mock)
+// GET /api/admin/config — platform configuration (real data)
 router.get('/config',
   authenticateToken,
   authorizeRole(['super-admin']),
   async (_req: AuthenticatedRequest, res: Response) => {
-    res.json({
-      success: true,
-      data: {
-        moduleConfig: {
-          'hs-001': { hf: true, ep: true, sh: true, cad: true, pv: true, vd: true },
-          'hs-002': { hf: true, ep: true, sh: true, cad: true, pv: true, vd: true },
-          'hs-003': { hf: true, ep: false, sh: true, cad: true, pv: false, vd: false },
+    try {
+      const [hospitals, totalUsers, totalPatients, totalGaps] = await Promise.all([
+        prisma.hospital.findMany({
+          select: {
+            id: true, name: true, subscriptionTier: true, subscriptionActive: true, maxUsers: true,
+            moduleHeartFailure: true, moduleElectrophysiology: true, moduleStructuralHeart: true,
+            moduleCoronaryIntervention: true, modulePeripheralVascular: true, moduleValvularDisease: true,
+            _count: { select: { users: true, patients: true } },
+          },
+          orderBy: { name: 'asc' },
+        }),
+        prisma.user.count({ where: { isActive: true } }),
+        prisma.patient.count({ where: { isActive: true } }),
+        prisma.therapyGap.count({ where: { resolvedAt: null } }),
+      ]);
+
+      const moduleConfig: Record<string, Record<string, boolean>> = {};
+      for (const h of hospitals) {
+        moduleConfig[h.id] = {
+          hf: h.moduleHeartFailure, ep: h.moduleElectrophysiology, sh: h.moduleStructuralHeart,
+          cad: h.moduleCoronaryIntervention, pv: h.modulePeripheralVascular, vd: h.moduleValvularDisease,
+        };
+      }
+
+      res.json({
+        success: true,
+        data: {
+          platformStats: { totalHospitals: hospitals.length, totalUsers, totalPatients, totalOpenGaps: totalGaps },
+          moduleConfig,
+          hospitals: hospitals.map(h => ({
+            id: h.id, name: h.name, tier: h.subscriptionTier, active: h.subscriptionActive,
+            users: h._count.users, patients: h._count.patients, maxUsers: h.maxUsers,
+          })),
+          featureFlags: { demoMode: false, clinicalTrials: true, registryAssist: true, predictiveLayer: false, mfaEnforcement: true },
+          maintenanceMode: false,
         },
-        featureFlags: { demoMode: false, clinicalTrials: true, registryAssist: true, predictiveLayer: false, mfaEnforcement: true },
-        maintenanceMode: false,
-        rateLimits: {
-          'hs-001': { requestsPerMinute: 120, uploadsPerDay: 10 },
-          'hs-002': { requestsPerMinute: 100, uploadsPerDay: 8 },
-          'hs-003': { requestsPerMinute: 60, uploadsPerDay: 3 },
-        },
-        billing: [
-          { hospitalId: 'hs-001', tier: 'Enterprise', contractStart: '2025-06-01', contractEnd: '2026-05-31', mrr: 42000 },
-          { hospitalId: 'hs-002', tier: 'Standard', contractStart: '2025-09-15', contractEnd: '2026-09-14', mrr: 28000 },
-          { hospitalId: 'hs-003', tier: 'Trial', contractStart: '2026-03-08', contractEnd: '2026-04-07', mrr: 0 },
-        ],
-      },
-      timestamp: new Date().toISOString(),
-    } as APIResponse);
+        timestamp: new Date().toISOString(),
+      } as APIResponse);
+    } catch (error) {
+      logger.error('Failed to fetch platform config', { error: error instanceof Error ? error.message : String(error) });
+      res.status(500).json({ success: false, error: 'Failed to fetch platform configuration' });
+    }
   }
 );
 
