@@ -27,6 +27,7 @@ const PeripheralVascularModule = lazy(() => import("./ui/peripheralVascular/Peri
 const ResearchModule = lazy(() => import("./ui/research/ResearchModule"));
 const DataManagementPortal = lazy(() => import("./ui/dataManagement/DataManagementPortal"));
 const PatientListView = lazy(() => import("./components/PatientListView").then(m => ({ default: m.PatientListView })));
+const AuthCallback = lazy(() => import("./pages/AuthCallback").then(m => ({ default: m.AuthCallback })));
 const SettingsPage = lazy(() => import("./ui/SettingsPage"));
 const ProfilePage = lazy(() => import("./ui/ProfilePage"));
 const NotFoundPage = lazy(() => import("./ui/NotFoundPage"));
@@ -668,6 +669,7 @@ export default function App(): JSX.Element {
  <Routes>
  {/* Public routes */}
  <Route path="/" element={<Login />} />
+ <Route path="/auth/callback" element={<AuthCallback />} />
  <Route path="/login" element={<Login />} />
  <Route path="/logout" element={<Logout />} />
  <Route path="/invite/:token" element={<AcceptInvite />} />

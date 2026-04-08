@@ -220,6 +220,17 @@ const Login: React.FC = () => {
               )}
             </button>
           </form>
+
+          {/* SSO Login */}
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <button
+              onClick={() => { window.location.href = '/api/sso/login'; }}
+              type="button"
+              className="w-full py-2.5 px-4 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+            >
+              Sign in with your health system SSO
+            </button>
+          </div>
         </div>
 
         {/* Footer text */}
