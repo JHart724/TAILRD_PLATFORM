@@ -99,6 +99,11 @@ model Hospital {
   uploadJobs   UploadJob[]
   inviteTokens InviteToken[]
 
+  // Phase 3 relationships
+  cdsHooksSessions     CdsHooksSession[]
+  bpciEpisodes         BpciEpisode[]
+  drugInteractionAlerts DrugInteractionAlert[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -146,6 +151,13 @@ model User {
 
   // Notification preferences (JSON: immediateAlerts, dailyDigest, weeklySummary, moduleFilter)
   notificationPreferences Json?
+
+  // SSO / SAML fields
+  samlNameId       String?   // SAML NameID from IdP
+  samlSessionIndex String?   // SAML session for SLO
+  ssoProvider      String?   // 'okta', 'azure', 'google', etc.
+  lastSsoLogin     DateTime?
+  isVerified       Boolean   @default(false)
 
   // Password reset
   resetToken       String?   @unique
@@ -217,6 +229,13 @@ model Patient {
   peripheralVascularPatient Boolean @default(false)
   valvularDiseasePatient    Boolean @default(false)
 
+  // Patient Merge tracking
+  mergedIntoId String?    // ID of surviving patient when this record was merged
+  mergedAt     DateTime?  // When the merge occurred
+  isMerged     Boolean    @default(false)
+  mergedInto   Patient?   @relation("PatientMerge", fields: [mergedIntoId], references: [id])
+  mergedPatients Patient[] @relation("PatientMerge")
+
   // EHR Integration
   fhirPatientId String? // FHIR Patient resource ID
   lastEHRSync   DateTime?
@@ -250,6 +269,10 @@ model Patient {
   procedures           Procedure[]
   deviceImplants       DeviceImplant[]
   allergyIntolerances  AllergyIntolerance[]
+
+  // Phase 3 relationships
+  bpciEpisodes          BpciEpisode[]
+  drugInteractionAlerts DrugInteractionAlert[]
 
   @@unique([hospitalId, mrn]) // MRN is unique within each hospital
   @@index([fhirPatientId])
@@ -445,6 +468,8 @@ model Alert {
   deletedAt DateTime?
 
   @@index([hospitalId, severity])
+  @@index([hospitalId, moduleType])
+  @@index([hospitalId, severity, createdAt])
   @@index([patientId, moduleType])
   @@map("alerts")
 }
@@ -2355,4 +2380,69 @@ model FailedFhirBundle {
   @@index([failedAt])
   @@index([resolvedAt])
   @@map("failed_fhir_bundles")
+}
+
+// CDS Hooks session tracking
+model CdsHooksSession {
+  id          String   @id @default(cuid())
+  hookId      String   // patient-view, order-select, etc.
+  fhirContext Json     // FHIR context from EHR
+  patientId   String?
+  hospitalId  String
+  cards       Json?    // returned cards
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+
+  hospital    Hospital @relation(fields: [hospitalId], references: [id])
+
+  @@index([hospitalId])
+  @@index([patientId])
+  @@index([createdAt])
+  @@map("cds_hooks_sessions")
+}
+
+// BPCI-A Episode tracking for value-based care
+model BpciEpisode {
+  id              String    @id @default(cuid())
+  hospitalId      String
+  patientId       String
+  episodeType     String    // 'HF', 'AMI', 'CABG', 'HipKnee'
+  anchorAdmission DateTime
+  episodeEnd      DateTime?
+  targetPrice     Float?
+  actualSpend     Float?
+  status          String    @default("ACTIVE")
+  createdAt       DateTime  @default(now())
+
+  hospital        Hospital  @relation(fields: [hospitalId], references: [id])
+  patient         Patient   @relation(fields: [patientId], references: [id])
+
+  @@index([hospitalId, status])
+  @@index([patientId])
+  @@map("bpci_episodes")
+}
+
+// Drug-Drug Interaction alerts
+model DrugInteractionAlert {
+  id              String    @id @default(cuid())
+  patientId       String
+  hospitalId      String
+  drug1RxNorm     String
+  drug1Name       String
+  drug2RxNorm     String
+  drug2Name       String
+  interactionType String    // 'HYPERKALEMIA', 'QTC_PROLONGATION', 'BLEEDING', 'ARNI_WASHOUT'
+  severity        String    // 'CRITICAL', 'HIGH', 'MEDIUM'
+  recommendation  String
+  status          String    @default("ACTIVE")
+  acknowledgedBy  String?
+  acknowledgedAt  DateTime?
+  createdAt       DateTime  @default(now())
+
+  patient         Patient   @relation(fields: [patientId], references: [id])
+  hospital        Hospital  @relation(fields: [hospitalId], references: [id])
+
+  @@index([patientId, status])
+  @@index([hospitalId, severity])
+  @@map("drug_interaction_alerts")
 }
