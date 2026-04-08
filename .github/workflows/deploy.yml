@@ -11,6 +11,7 @@ env:
   ECR_REPOSITORY: tailrd-backend
   ECS_CLUSTER: tailrd-production-cluster
   ECS_SERVICE: tailrd-production-backend
+  ECS_TASK_FAMILY: tailrd-backend
 
 jobs:
   deploy:
@@ -50,7 +51,7 @@ jobs:
         run: |
           # Register new task definition with this commit's image
           aws ecs describe-task-definition \
-            --task-definition $ECS_SERVICE \
+            --task-definition $ECS_TASK_FAMILY \
             --query 'taskDefinition' \
             --output json > /tmp/taskdef.json
 
