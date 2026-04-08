@@ -147,12 +147,15 @@ router.post('/redox', verifyRedoxSignature, async (req, res) => {
       idempotencyKey, hospitalId, payload, existingId,
     );
 
+    let processedPatientId: string | undefined;
+
     try {
       switch (payload.EventType) {
         case 'NewPatient':
         case 'PatientUpdate': {
           if (payload.Patient) {
             const { patientId } = await processPatientData(payload.Patient, payload.EventType, hospitalId);
+            processedPatientId = patientId;
             logger.info(`Processed ${payload.EventType}`, { patientId, hospitalId });
           }
           break;
@@ -162,6 +165,7 @@ router.post('/redox', verifyRedoxSignature, async (req, res) => {
         case 'NewResults': {
           if (payload.Results && payload.Results.length > 0) {
             const patientId = await ensurePatientId(payload, hospitalId);
+            processedPatientId = patientId;
             for (const result of payload.Results) {
               await processObservationData(result, payload.Patient, hospitalId, patientId);
             }
@@ -224,6 +228,22 @@ router.post('/redox', verifyRedoxSignature, async (req, res) => {
 
       // Mark webhook as completed
       await markCompleted(webhookEventId);
+
+      // Trigger gap detection for affected patient (non-blocking)
+      if (processedPatientId && hospitalId) {
+        const { runGapDetectionForPatient } = require('../ingestion/runGapDetectionForPatient');
+        setImmediate(async () => {
+          try {
+            await runGapDetectionForPatient(processedPatientId, hospitalId);
+          } catch (gapError) {
+            logger.error('Post-webhook gap detection failed', {
+              patientId: processedPatientId,
+              hospitalId,
+              error: gapError instanceof Error ? gapError.message : String(gapError),
+            });
+          }
+        });
+      }
     } catch (processingError: any) {
       // Mark failed with retry logic (exponential backoff, dead-letter after 5 attempts)
       const { shouldRetry } = await markFailed(webhookEventId, processingError);
