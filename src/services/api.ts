@@ -181,6 +181,13 @@ export class ApiError extends Error {
   }
 }
 
+// ─── CSRF Token Helper ─────────────────────────────────────────────────────
+
+function getCsrfToken(): string | null {
+  const match = document.cookie.match(/__tailrd_csrf=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
 // ─── Base Fetch Helper ──────────────────────────────────────────────────────
 
 async function apiFetch<T>(
@@ -196,6 +203,15 @@ async function apiFetch<T>(
 
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  // Attach CSRF token for mutating requests
+  const method = (options.method || 'GET').toUpperCase();
+  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+    const csrfToken = getCsrfToken();
+    if (csrfToken) {
+      headers['x-csrf-token'] = csrfToken;
+    }
   }
 
   let response: Response;
