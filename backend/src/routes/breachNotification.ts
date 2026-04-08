@@ -12,6 +12,7 @@ import { Router, Request, Response } from 'express';
 import { z } from 'zod';
 import prisma from '../lib/prisma';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
+import { writeAuditLog } from '../middleware/auditLogger';
 
 const router = Router();
 
@@ -116,6 +117,7 @@ router.post('/', async (req: AuthenticatedRequest, res: Response) => {
 // GET / — List all breach incidents
 router.get('/', async (req: AuthenticatedRequest, res: Response) => {
   try {
+    await writeAuditLog(req, 'BREACH_DATA_ACCESSED', 'BreachIncident', 'all', 'Super-admin listed breach incidents');
     const { status, severity } = req.query;
     const where: any = {};
     if (status) where.status = status;
@@ -220,6 +222,7 @@ router.get('/overdue-check', async (req: AuthenticatedRequest, res: Response) =>
 // GET /:id — Get breach incident detail
 router.get('/:id', async (req: AuthenticatedRequest, res: Response) => {
   try {
+    await writeAuditLog(req, 'BREACH_DATA_ACCESSED', 'BreachIncident', req.params.id, 'Super-admin viewed breach incident detail');
     const incident = await prisma.breachIncident.findUnique({
       where: { id: req.params.id },
     });
@@ -255,6 +258,7 @@ router.get('/:id', async (req: AuthenticatedRequest, res: Response) => {
 // PATCH /:id — Update breach incident (status transitions, investigation data)
 router.patch('/:id', async (req: AuthenticatedRequest, res: Response) => {
   try {
+    await writeAuditLog(req, 'BREACH_DATA_MODIFIED', 'BreachIncident', req.params.id, 'Super-admin updated breach incident');
     const parsed = updateBreachSchema.safeParse(req.body);
     if (!parsed.success) {
       return res.status(400).json({

@@ -6,6 +6,7 @@ import { ValuesetResolver } from '../cql/valuesetResolver';
 import { ClinicalDecisionProcessor } from '../cql/clinicalDecisionProcessor';
 import { TherapyGapService } from '../services/therapyGapService';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
+import prisma from '../lib/prisma';
 
 /**
  * CQL Rules API Routes
@@ -264,7 +265,18 @@ router.get('/results/:patientId', authenticateToken, authorizeRole(['super-admin
   try {
     const patientId = req.params.patientId;
     const hospitalId = req.user?.hospitalId;
-    
+
+    // Verify patient belongs to requesting user's hospital
+    if (hospitalId && req.user?.role?.toLowerCase().replace(/_/g, '-') !== 'super-admin') {
+      const patient = await prisma.patient.findFirst({
+        where: { id: patientId, hospitalId },
+        select: { id: true },
+      });
+      if (!patient) {
+        return res.status(404).json({ success: false, error: 'Patient not found', timestamp: new Date().toISOString() });
+      }
+    }
+
     // Date range filtering
     const startDate = req.query.startDate ? new Date(req.query.startDate as string) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // Default: last 30 days
     const endDate = req.query.endDate ? new Date(req.query.endDate as string) : new Date();
@@ -610,6 +622,18 @@ router.get('/rules/:id/recommendations', authenticateToken, authorizeRole(['supe
         error: 'Patient ID is required',
         timestamp: new Date().toISOString()
       });
+    }
+
+    // Verify patient belongs to requesting user's hospital
+    const hospitalId = req.user?.hospitalId;
+    if (hospitalId && req.user?.role?.toLowerCase().replace(/_/g, '-') !== 'super-admin') {
+      const patient = await prisma.patient.findFirst({
+        where: { id: patientId, hospitalId },
+        select: { id: true },
+      });
+      if (!patient) {
+        return res.status(404).json({ success: false, error: 'Patient not found', timestamp: new Date().toISOString() });
+      }
     }
 
     // In production, this would:
