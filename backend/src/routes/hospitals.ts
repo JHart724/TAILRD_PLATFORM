@@ -1,11 +1,13 @@
-import { Router } from 'express';
-import { APIResponse, Hospital } from '../types';
+import { Router, Response } from 'express';
+import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, authorizeHospital, AuthenticatedRequest } from '../middleware/auth';
+import prisma from '../lib/prisma';
+import { logger } from '../utils/logger';
 
 const router = Router();
 
-// Mock hospital data for demonstration
-const mockHospitals: Hospital[] = [
+// Removed: mock hospital data. All endpoints now query Prisma.
+const _MOCK_REMOVED = [
   {
     id: 'hosp-001',
     name: 'St. Mary\'s Regional Medical Center',
@@ -84,130 +86,128 @@ const mockHospitals: Hospital[] = [
 ];
 
 // GET /api/hospitals - Super admin only (can see all hospitals)
-router.get('/', 
-  authenticateToken, 
-  authorizeRole(['super-admin']), 
-  (req: AuthenticatedRequest, res) => {
-    res.json({
-      success: true,
-      data: mockHospitals,
-      message: 'All hospitals retrieved',
-      timestamp: new Date().toISOString()
-    } as APIResponse);
+router.get('/',
+  authenticateToken,
+  authorizeRole(['super-admin']),
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const hospitals = await prisma.hospital.findMany({
+        orderBy: { name: 'asc' },
+        select: {
+          id: true, name: true, system: true, npi: true, patientCount: true, bedCount: true,
+          hospitalType: true, street: true, city: true, state: true, zipCode: true,
+          subscriptionTier: true, subscriptionActive: true, maxUsers: true,
+          moduleHeartFailure: true, moduleElectrophysiology: true, moduleStructuralHeart: true,
+          moduleCoronaryIntervention: true, modulePeripheralVascular: true, moduleValvularDisease: true,
+        },
+      });
+      res.json({ success: true, data: hospitals, message: 'All hospitals retrieved', timestamp: new Date().toISOString() });
+    } catch (error) {
+      logger.error('Failed to fetch hospitals', { error: error instanceof Error ? error.message : String(error) });
+      res.status(500).json({ success: false, error: 'Failed to fetch hospitals' });
+    }
   }
 );
 
 // GET /api/hospitals/:hospitalId - Get specific hospital (users can only see their own)
-router.get('/:hospitalId', 
-  authenticateToken, 
+router.get('/:hospitalId',
+  authenticateToken,
   authorizeHospital,
-  (req: AuthenticatedRequest, res) => {
-    const hospital = mockHospitals.find(h => h.id === req.params.hospitalId);
-    
-    if (!hospital) {
-      return res.status(404).json({
-        success: false,
-        error: 'Hospital not found',
-        timestamp: new Date().toISOString()
-      } as APIResponse);
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const hospital = await prisma.hospital.findUnique({ where: { id: req.params.hospitalId } });
+      if (!hospital) {
+        return res.status(404).json({ success: false, error: 'Hospital not found', timestamp: new Date().toISOString() });
+      }
+      res.json({ success: true, data: hospital, message: 'Hospital retrieved successfully', timestamp: new Date().toISOString() });
+    } catch (error) {
+      logger.error('Failed to fetch hospital', { error: error instanceof Error ? error.message : String(error) });
+      res.status(500).json({ success: false, error: 'Failed to fetch hospital' });
     }
-
-    res.json({
-      success: true,
-      data: hospital,
-      message: 'Hospital retrieved successfully',
-      timestamp: new Date().toISOString()
-    } as APIResponse);
   }
 );
 
 // GET /api/hospitals/:hospitalId/modules - Get enabled modules for hospital
-router.get('/:hospitalId/modules', 
-  authenticateToken, 
+router.get('/:hospitalId/modules',
+  authenticateToken,
   authorizeHospital,
-  (req: AuthenticatedRequest, res) => {
-    const hospital = mockHospitals.find(h => h.id === req.params.hospitalId);
-    
-    if (!hospital) {
-      return res.status(404).json({
-        success: false,
-        error: 'Hospital not found',
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const hospital = await prisma.hospital.findUnique({
+        where: { id: req.params.hospitalId },
+        select: {
+          id: true, name: true,
+          moduleHeartFailure: true, moduleElectrophysiology: true, moduleStructuralHeart: true,
+          moduleCoronaryIntervention: true, modulePeripheralVascular: true, moduleValvularDisease: true,
+        },
+      });
+      if (!hospital) {
+        return res.status(404).json({ success: false, error: 'Hospital not found', timestamp: new Date().toISOString() });
+      }
+
+      const enabledModules: Record<string, boolean> = {
+        heartFailure: hospital.moduleHeartFailure,
+        electrophysiology: hospital.moduleElectrophysiology,
+        structuralHeart: hospital.moduleStructuralHeart,
+        coronaryIntervention: hospital.moduleCoronaryIntervention,
+        peripheralVascular: hospital.modulePeripheralVascular,
+        valvularDisease: hospital.moduleValvularDisease,
+      };
+
+      res.json({
+        success: true,
+        data: { hospitalId: hospital.id, hospitalName: hospital.name, enabledModules, userPermissions: req.user?.permissions?.modules },
+        message: 'Hospital modules retrieved',
         timestamp: new Date().toISOString()
-      } as APIResponse);
+      });
+    } catch (error) {
+      logger.error('Failed to fetch hospital modules', { error: error instanceof Error ? error.message : String(error) });
+      res.status(500).json({ success: false, error: 'Failed to fetch hospital modules' });
     }
-
-    // Filter modules based on user permissions
-    const userPermissions = req.user?.permissions;
-    const enabledModules = Object.entries(hospital.modules)
-      .filter(([module, enabled]) => {
-        if (!enabled) return false;
-        if (!userPermissions?.modules) return false;
-        return userPermissions.modules[module as keyof typeof userPermissions.modules];
-      })
-      .reduce((acc, [module, enabled]) => {
-        acc[module] = enabled;
-        return acc;
-      }, {} as any);
-
-    res.json({
-      success: true,
-      data: {
-        hospitalId: hospital.id,
-        hospitalName: hospital.name,
-        enabledModules,
-        userPermissions: userPermissions?.modules
-      },
-      message: 'Hospital modules retrieved',
-      timestamp: new Date().toISOString()
-    } as APIResponse);
   }
 );
 
 // GET /api/hospitals/:hospitalId/analytics - Get hospital analytics summary
-router.get('/:hospitalId/analytics', 
-  authenticateToken, 
+router.get('/:hospitalId/analytics',
+  authenticateToken,
   authorizeHospital,
-  (req: AuthenticatedRequest, res) => {
-    const hospital = mockHospitals.find(h => h.id === req.params.hospitalId);
-    
-    if (!hospital) {
-      return res.status(404).json({
-        success: false,
-        error: 'Hospital not found',
-        timestamp: new Date().toISOString()
-      } as APIResponse);
-    }
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const hospitalId = req.params.hospitalId;
+      const [totalPatients, activePatients, openGaps, riskCounts] = await Promise.all([
+        prisma.patient.count({ where: { hospitalId } }),
+        prisma.patient.count({ where: { hospitalId, isActive: true } }),
+        prisma.therapyGap.count({ where: { hospitalId, resolvedAt: null } }),
+        prisma.patient.groupBy({
+          by: ['riskCategory'],
+          where: { hospitalId, isActive: true },
+          _count: { id: true },
+        }),
+      ]);
 
-    // Generate analytics based on hospital size
-    const analytics = {
-      totalPatients: hospital.patientCount,
-      activePatients: Math.floor(hospital.patientCount * 0.15), // 15% active
-      riskDistribution: {
-        high: Math.floor(hospital.patientCount * 0.08),
-        medium: Math.floor(hospital.patientCount * 0.17),
-        low: Math.floor(hospital.patientCount * 0.75)
-      },
-      moduleBreakdown: {
-        heartFailure: hospital.modules.heartFailure ? Math.floor(hospital.patientCount * 0.08) : 0,
-        coronaryIntervention: hospital.modules.coronaryIntervention ? Math.floor(hospital.patientCount * 0.12) : 0,
-        electrophysiology: hospital.modules.electrophysiology ? Math.floor(hospital.patientCount * 0.04) : 0,
-        structuralHeart: hospital.modules.structuralHeart ? Math.floor(hospital.patientCount * 0.02) : 0,
-        peripheralVascular: hospital.modules.peripheralVascular ? Math.floor(hospital.patientCount * 0.06) : 0,
-        valvularDisease: hospital.modules.valvularDisease ? Math.floor(hospital.patientCount * 0.03) : 0
-      },
-      dailyVolume: {
-        admissions: Math.floor(hospital.patientCount * 0.001), // 0.1% daily admission rate
-        procedures: Math.floor(hospital.patientCount * 0.0008),
-        labResults: Math.floor(hospital.patientCount * 0.05)
+      const riskDist: Record<string, number> = { high: 0, moderate: 0, low: 0 };
+      for (const rc of riskCounts) {
+        const cat = (rc.riskCategory || 'low').toLowerCase();
+        if (cat in riskDist) riskDist[cat] = rc._count.id;
       }
-    };
 
-    res.json({
-      success: true,
-      data: analytics,
-      message: 'Hospital analytics retrieved',
-      timestamp: new Date().toISOString()
-    } as APIResponse);
+      const analytics = {
+        totalPatients,
+        activePatients,
+        openGaps,
+        riskDistribution: riskDist,
+      };
+
+      res.json({
+        success: true,
+        data: analytics,
+        message: 'Hospital analytics retrieved',
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      logger.error('Failed to fetch hospital analytics', { error: error instanceof Error ? error.message : String(error) });
+      res.status(500).json({ success: false, error: 'Failed to fetch hospital analytics' });
+    }
   }
 );
 

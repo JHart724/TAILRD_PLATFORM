@@ -1,4 +1,5 @@
 import { Router, Response } from 'express';
+import { logger } from '../utils/logger';
 import { authenticateToken, requireMFA, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
 import prisma from '../lib/prisma';
 import { writeAuditLog } from '../middleware/auditLogger';
@@ -121,7 +122,7 @@ router.get('/:moduleId', authenticateToken, authorizeRole(['super-admin', 'hospi
       totalPatients: gapSummary.reduce((sum, g) => sum + g._count.id, 0),
     });
   } catch (error) {
-    console.error('Gaps fetch error:', error);
+    logger.error('Gaps fetch error:', { error: error instanceof Error ? error.message : String(error) });
     res.status(500).json({ error: 'Failed to fetch gaps' });
   }
 });
@@ -175,7 +176,7 @@ router.post('/:moduleId/:gapId/action', authenticateToken, authorizeRole(['super
 
     res.json(updated);
   } catch (error) {
-    console.error('Gap action error:', error);
+    logger.error('Gap action error:', { error: error instanceof Error ? error.message : String(error) });
     res.status(500).json({ error: 'Failed to action gap' });
   }
 });

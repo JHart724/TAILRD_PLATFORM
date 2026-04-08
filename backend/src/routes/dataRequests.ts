@@ -1,4 +1,5 @@
 import { Router, Response } from 'express';
+import { logger } from '../utils/logger';
 import { z } from 'zod';
 import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
@@ -114,7 +115,7 @@ router.post('/access-request', async (req: AuthenticatedRequest, res: Response) 
       timestamp: new Date().toISOString(),
     } as APIResponse);
   } catch (error: any) {
-    console.error('Create data request error:', error);
+    logger.error('Create data request error:', { error: error instanceof Error ? error.message : String(error) });
     return res.status(500).json({
       success: false,
       error: 'Failed to create data request',
@@ -192,7 +193,7 @@ router.get('/access-request', async (req: AuthenticatedRequest, res: Response) =
       timestamp: new Date().toISOString(),
     } as APIResponse);
   } catch (error: any) {
-    console.error('List data requests error:', error);
+    logger.error('List data requests error:', { error: error instanceof Error ? error.message : String(error) });
     return res.status(500).json({
       success: false,
       error: 'Failed to retrieve data requests',
@@ -278,7 +279,7 @@ router.patch('/access-request/:requestId', async (req: AuthenticatedRequest, res
       timestamp: new Date().toISOString(),
     } as APIResponse);
   } catch (error: any) {
-    console.error('Update data request error:', error);
+    logger.error('Update data request error:', { error: error instanceof Error ? error.message : String(error) });
     return res.status(500).json({
       success: false,
       error: 'Failed to update data request',
@@ -396,7 +397,7 @@ router.post('/export/:patientId', async (req: AuthenticatedRequest, res: Respons
       timestamp: new Date().toISOString(),
     } as APIResponse);
   } catch (error: any) {
-    console.error('Patient data export error:', error);
+    logger.error('Patient data export error:', { error: error instanceof Error ? error.message : String(error) });
     return res.status(500).json({
       success: false,
       error: 'Failed to generate patient data export',
@@ -548,7 +549,7 @@ router.post('/deletion/:patientId', async (req: AuthenticatedRequest, res: Respo
       timestamp: new Date().toISOString(),
     } as APIResponse);
   } catch (error: any) {
-    console.error('Patient data deletion error:', error);
+    logger.error('Patient data deletion error:', { error: error instanceof Error ? error.message : String(error) });
     return res.status(500).json({
       success: false,
       error: 'Failed to execute patient data deletion',

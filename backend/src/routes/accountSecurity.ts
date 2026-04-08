@@ -1,4 +1,5 @@
 import { Router, Response } from 'express';
+import { logger } from '../utils/logger';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
@@ -96,7 +97,7 @@ router.post('/password-reset/request', async (req: AuthenticatedRequest, res: Re
       timestamp: new Date().toISOString(),
     } as APIResponse);
   } catch (error: any) {
-    console.error('Password reset request error:', error);
+    logger.error('Password reset request error:', { error: error instanceof Error ? error.message : String(error) });
     return res.status(500).json({
       success: false,
       error: 'Internal server error',
@@ -168,7 +169,7 @@ router.post('/password-reset/confirm', async (req: AuthenticatedRequest, res: Re
       timestamp: new Date().toISOString(),
     } as APIResponse);
   } catch (error: any) {
-    console.error('Password reset confirm error:', error);
+    logger.error('Password reset confirm error:', { error: error instanceof Error ? error.message : String(error) });
     return res.status(500).json({
       success: false,
       error: 'Internal server error',
@@ -261,7 +262,7 @@ router.post('/change-password', authenticateToken, async (req: AuthenticatedRequ
       timestamp: new Date().toISOString(),
     } as APIResponse);
   } catch (error: any) {
-    console.error('Change password error:', error);
+    logger.error('Change password error:', { error: error instanceof Error ? error.message : String(error) });
     return res.status(500).json({
       success: false,
       error: 'Internal server error',
@@ -320,7 +321,7 @@ router.get('/sessions', authenticateToken, async (req: AuthenticatedRequest, res
       timestamp: new Date().toISOString(),
     } as APIResponse);
   } catch (error: any) {
-    console.error('List sessions error:', error);
+    logger.error('List sessions error:', { error: error instanceof Error ? error.message : String(error) });
     return res.status(500).json({
       success: false,
       error: 'Failed to retrieve sessions',
@@ -375,7 +376,7 @@ router.delete('/sessions/:sessionId', authenticateToken, async (req: Authenticat
       timestamp: new Date().toISOString(),
     } as APIResponse);
   } catch (error: any) {
-    console.error('Revoke session error:', error);
+    logger.error('Revoke session error:', { error: error instanceof Error ? error.message : String(error) });
     return res.status(500).json({
       success: false,
       error: 'Failed to revoke session',
@@ -412,7 +413,7 @@ router.delete('/sessions', authenticateToken, async (req: AuthenticatedRequest, 
       timestamp: new Date().toISOString(),
     } as APIResponse);
   } catch (error: any) {
-    console.error('Revoke all sessions error:', error);
+    logger.error('Revoke all sessions error:', { error: error instanceof Error ? error.message : String(error) });
     return res.status(500).json({
       success: false,
       error: 'Failed to revoke sessions',
@@ -461,9 +462,11 @@ router.post(
         data: { isActive: false },
       });
 
-      console.log(
-        `[SESSION_REVOKE] Super-admin ${req.user!.email} revoked ${result.count} session(s) for user ${targetUser.email}. Reason: ${validation.data.reason || 'none provided'}`
-      );
+      logger.info('Session revoke by super-admin', {
+        adminUserId: req.user!.userId,
+        targetUserId: userId,
+        sessionsRevoked: result.count,
+      });
 
       return res.json({
         success: true,
@@ -472,7 +475,7 @@ router.post(
         timestamp: new Date().toISOString(),
       } as APIResponse);
     } catch (error: any) {
-      console.error('Force revoke user sessions error:', error);
+      logger.error('Force revoke user sessions error:', { error: error instanceof Error ? error.message : String(error) });
       return res.status(500).json({
         success: false,
         error: 'Failed to revoke user sessions',

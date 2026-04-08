@@ -1,4 +1,5 @@
 import { Router, Response } from 'express';
+import { logger } from '../utils/logger';
 import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
 import { parseCSV } from '../ingestion/csvParser';
 import { writePatients } from '../ingestion/patientWriter';
@@ -127,7 +128,7 @@ router.post('/upload', authenticateToken, async (req: AuthenticatedRequest, res:
       },
     });
   } catch (error) {
-    console.error('Upload processing failed:', error);
+    logger.error('Upload processing failed:', { error: error instanceof Error ? error.message : String(error) });
     res.status(500).json({ error: 'Upload processing failed' });
   }
 });

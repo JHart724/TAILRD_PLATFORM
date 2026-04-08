@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express';
+import { logger } from '../utils/logger';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import prisma from '../lib/prisma';
@@ -243,7 +244,7 @@ router.post('/login', async (req: Request, res: Response) => {
       timestamp: new Date().toISOString(),
     } as APIResponse);
   } catch (error) {
-    console.error('Login error:', error);
+    logger.error('Login error:', { error: error instanceof Error ? error.message : String(error) });
     return res.status(500).json({
       success: false,
       error: 'Internal server error',
@@ -267,7 +268,7 @@ router.post('/logout', async (req: Request, res: Response) => {
         data: { isActive: false },
       });
     } catch (error) {
-      console.error('Logout session cleanup error:', error);
+      logger.error('Logout session cleanup error:', { error: error instanceof Error ? error.message : String(error) });
     }
   }
 
