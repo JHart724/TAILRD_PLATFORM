@@ -219,11 +219,11 @@ const generateSamplePatients = (moduleId: ModuleId, count = 20): Patient[] => {
 
   return Array.from({ length: count }, (_, i) => ({
  id: `${moduleId.toUpperCase()}${(i + 1).toString().padStart(4, "0")}`,
- name: names[Math.floor(Math.random() * names.length)],
- age: 50 + Math.floor(Math.random() * 40),
- physician: physicians[Math.floor(Math.random() * physicians.length)],
- priority: priorities[Math.floor(Math.random() * priorities.length)],
- status: statuses[Math.floor(Math.random() * statuses.length)],
+ name: names[i % names.length],
+ age: 50 + ((i * 7 + 3) % 40),
+ physician: physicians[i % physicians.length],
+ priority: priorities[i % priorities.length],
+ status: statuses[i % statuses.length],
   }));
 };
 

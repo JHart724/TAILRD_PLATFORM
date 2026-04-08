@@ -618,8 +618,10 @@ export class PhenotypeService {
 
   // Helper methods
   private checkClinicalCriterion(patientData: any, criterion: string): boolean {
-    // Mock implementation - in reality would check diagnosis codes, clinical notes, etc.
-    return Math.random() > 0.7; // Mock positive rate
+    // Check if the criterion exists in patient's diagnosis or condition data
+    if (!patientData || !criterion) return false;
+    const conditions: string[] = patientData?.conditions || patientData?.diagnoses || [];
+    return conditions.some((c: string) => c.toLowerCase().includes(criterion.toLowerCase()));
   }
 
   private getImagingFindings(patientData: any, modality: string): ImagingEvidence[] {

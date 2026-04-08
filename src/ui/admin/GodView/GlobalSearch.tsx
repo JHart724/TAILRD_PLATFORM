@@ -62,7 +62,7 @@ export const GlobalSearch: React.FC = () => {
  setIsSearching(true);
  try {
  const response = await fetch(`/api/admin/god/global-search?q=${encodeURIComponent(query)}&limit=10`, {
- headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+ headers: { 'Authorization': `Bearer ${localStorage.getItem('tailrd-session-token')}` }
  });
  
  if (response.ok) {

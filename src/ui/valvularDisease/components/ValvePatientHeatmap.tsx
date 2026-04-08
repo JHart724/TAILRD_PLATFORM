@@ -40,34 +40,38 @@ const ValvePatientHeatmap: React.FC = () => {
  const repairOptions: Array<'Repair' | 'Replacement' | 'Undetermined'> = ['Repair', 'Replacement', 'Undetermined'];
  const regurgitationGrades: Array<'None' | 'Trace' | 'Mild' | 'Moderate' | 'Severe'> = ['None', 'Trace', 'Mild', 'Moderate', 'Severe'];
  
+ // Seeded deterministic pseudo-random for stable demo data
+ const seed = (n: number) => {
+ const x = Math.sin(n * 9301 + 49297) * 49297;
+ return x - Math.floor(x);
+ };
+
  return Array.from({ length: 120 }, (_, i) => {
- const valveType = valveTypes[Math.floor(Math.random() * valveTypes.length)];
- const severity = severities[Math.floor(Math.random() * severities.length)];
- const isBicuspid = valveType === 'Aortic' && Math.random() > 0.8;
- const age = Math.floor(Math.random() * 40) + 45; // 45-85 years
- 
- // STS Score correlates with age and severity
- let stsScore = Math.random() * 20;
+ const valveType = valveTypes[Math.floor(seed(i) * valveTypes.length)];
+ const severity = severities[Math.floor(seed(i + 100) * severities.length)];
+ const isBicuspid = valveType === 'Aortic' && seed(i + 200) > 0.8;
+ const age = Math.floor(seed(i + 300) * 40) + 45;
+
+ let stsScore = seed(i + 400) * 20;
  if (severity === 'Severe' || severity === 'Critical') stsScore += 15;
  if (age > 75) stsScore += 10;
  stsScore = Math.min(Math.floor(stsScore), 100);
- 
+
  const surgicalRisk = stsScore < 4 ? 'Low' : stsScore < 8 ? 'Intermediate' : stsScore < 15 ? 'High' : 'Prohibitive';
- 
- // Gradient varies by valve type and severity
+
  let gradientPeak = 20;
  if (valveType === 'Aortic') {
- gradientPeak = severity === 'Mild' ? Math.random() * 20 + 10 :
- severity === 'Moderate' ? Math.random() * 20 + 40 :
- severity === 'Severe' ? Math.random() * 30 + 60 :
- Math.random() * 40 + 80;
+ gradientPeak = severity === 'Mild' ? seed(i + 500) * 20 + 10 :
+ severity === 'Moderate' ? seed(i + 500) * 20 + 40 :
+ severity === 'Severe' ? seed(i + 500) * 30 + 60 :
+ seed(i + 500) * 40 + 80;
  } else if (valveType === 'Mitral') {
- gradientPeak = severity === 'Mild' ? Math.random() * 5 + 5 :
- severity === 'Moderate' ? Math.random() * 5 + 10 :
- severity === 'Severe' ? Math.random() * 10 + 15 :
- Math.random() * 15 + 20;
+ gradientPeak = severity === 'Mild' ? seed(i + 600) * 5 + 5 :
+ severity === 'Moderate' ? seed(i + 600) * 5 + 10 :
+ severity === 'Severe' ? seed(i + 600) * 10 + 15 :
+ seed(i + 600) * 15 + 20;
  }
- 
+
  return {
  id: `VD${String(i + 1).padStart(3, '0')}`,
  name: `Patient ${i + 1}`,
@@ -76,18 +80,18 @@ const ValvePatientHeatmap: React.FC = () => {
  severity,
  stsScore,
  surgicalRisk,
- treatment: treatments[Math.floor(Math.random() * treatments.length)],
- provider: providers[Math.floor(Math.random() * providers.length)],
- lastVisit: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000),
- comorbidities: comorbidityOptions.slice(0, Math.floor(Math.random() * 3) + 1),
- ejectionFraction: Math.floor(Math.random() * 40) + 35, // 35-75%
+ treatment: treatments[Math.floor(seed(i + 700) * treatments.length)],
+ provider: providers[Math.floor(seed(i + 800) * providers.length)],
+ lastVisit: new Date(Date.now() - seed(i + 900) * 90 * 24 * 60 * 60 * 1000),
+ comorbidities: comorbidityOptions.slice(0, Math.floor(seed(i + 1000) * 3) + 1),
+ ejectionFraction: Math.floor(seed(i + 1100) * 40) + 35,
  isBicuspid,
- rossProcedureCandidate: valveType === 'Aortic' && age < 60 && Math.random() > 0.7,
- repairVsReplacement: repairOptions[Math.floor(Math.random() * repairOptions.length)],
- postOpOutcome: Math.random() > 0.3 ? ['Excellent', 'Good', 'Fair', 'Poor'][Math.floor(Math.random() * 4)] as any : undefined,
+ rossProcedureCandidate: valveType === 'Aortic' && age < 60 && seed(i + 1200) > 0.7,
+ repairVsReplacement: repairOptions[Math.floor(seed(i + 1300) * repairOptions.length)],
+ postOpOutcome: seed(i + 1400) > 0.3 ? (['Excellent', 'Good', 'Fair', 'Poor'][Math.floor(seed(i + 1500) * 4)] as any) : undefined,
  gradientPeak,
- effectiveOrificeArea: Math.random() * 2 + 0.5, // 0.5-2.5 cm²
- regurgitationGrade: regurgitationGrades[Math.floor(Math.random() * regurgitationGrades.length)]
+ effectiveOrificeArea: seed(i + 1600) * 2 + 0.5,
+ regurgitationGrade: regurgitationGrades[Math.floor(seed(i + 1700) * regurgitationGrades.length)]
  };
  });
   }, []);

@@ -92,10 +92,10 @@ export const GodView: React.FC = () => {
  try {
  const [overviewRes, analyticsRes] = await Promise.all([
  fetch('/api/admin/god/overview', {
- headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+ headers: { 'Authorization': `Bearer ${localStorage.getItem('tailrd-session-token')}` }
  }),
  fetch('/api/admin/god/cross-module-analytics', {
- headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+ headers: { 'Authorization': `Bearer ${localStorage.getItem('tailrd-session-token')}` }
  })
  ]);
 
