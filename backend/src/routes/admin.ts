@@ -554,6 +554,9 @@ router.patch('/hospitals/:hospitalId/status',
         }
       });
 
+      await writeAuditLog(req, 'HOSPITAL_STATUS_CHANGED', 'Hospital', hospitalId,
+        JSON.stringify({ newStatus: active, changedBy: req.user?.userId }));
+
       res.json({
         success: true,
         data: hospital,
