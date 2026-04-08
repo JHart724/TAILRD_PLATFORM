@@ -207,10 +207,22 @@ function mapApiHospital(h: any): HealthSystem {
 
 const HealthSystems: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false);
-  const { data: apiHospitals, loading: apiLoading } = useAdminHospitals();
+  const { data: apiHospitals, loading: apiLoading, refetch } = useAdminHospitals();
 
   // Use API data when available, fall back to mock
   const displaySystems = apiHospitals ? apiHospitals.map(mapApiHospital) : HEALTH_SYSTEMS;
+
+  const handleDeactivate = async (id: string) => {
+    const token = localStorage.getItem('tailrd-session-token');
+    try {
+      await fetch(`/api/admin/hospitals/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ active: false }),
+      });
+      refetch();
+    } catch { /* handled by refetch showing updated state */ }
+  };
 
   return (
     <div className="space-y-6">
@@ -317,7 +329,7 @@ const HealthSystems: React.FC = () => {
                     <button className="p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-blue-600 transition-colors" title="Edit">
                       <Pencil className="w-4 h-4" />
                     </button>
-                    <button className="p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-red-600 transition-colors" title="Deactivate">
+                    <button onClick={() => handleDeactivate(hs.id)} className="p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-red-600 transition-colors" title="Deactivate">
                       <Ban className="w-4 h-4" />
                     </button>
                   </div>
