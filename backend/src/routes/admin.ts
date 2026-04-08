@@ -5,6 +5,7 @@ import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
 import { body, validationResult } from 'express-validator';
 import { writeAuditLog } from '../middleware/auditLogger';
+import { logger } from '../utils/logger';
 const godViewRouter = require('./godView');
 
 const router = Router();
