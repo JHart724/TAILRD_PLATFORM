@@ -747,8 +747,10 @@ export class CrossReferralService {
   }
 
   private checkConditionInResult(resultData: any, condition: string): boolean {
-    // Mock implementation - would check CQL result for specific conditions
-    return Math.random() > 0.8; // Mock positive rate
+    // Check if the condition code exists in the result data's diagnosis/condition list
+    if (!resultData || !condition) return false;
+    const conditions: string[] = resultData?.conditions || resultData?.diagnoses || [];
+    return conditions.some((c: string) => c.toLowerCase().includes(condition.toLowerCase()));
   }
 
   private getReadableReason(condition: string): string {

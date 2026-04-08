@@ -124,23 +124,37 @@ export interface STSRiskResult {
 class APIService {
   private async request<T>(endpoint: string, options?: RequestInit): Promise<APIResponse<T>> {
  try {
- const response = await fetch(`${API_BASE_URL}${endpoint}`, {
- headers: {
+ const token = localStorage.getItem('tailrd-session-token');
+ const headers: Record<string, string> = {
  'Content-Type': 'application/json',
- ...options?.headers,
- },
+ ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+ ...(options?.headers as Record<string, string> || {}),
+ };
+
+ const response = await fetch(`${API_BASE_URL}${endpoint}`, {
  ...options,
+ headers,
  });
 
+ if (response.status === 401) {
+ localStorage.removeItem('tailrd-session-token');
+ localStorage.removeItem('tailrd-refresh-token');
+ localStorage.removeItem('tailrd-user');
+ window.location.href = '/login';
+ throw new Error('Session expired');
+ }
+
  const data: APIResponse<T> = await response.json();
- 
+
  if (!response.ok) {
  throw new Error(data.error || `HTTP error! status: ${response.status}`);
  }
 
  return data;
  } catch (error) {
+ if ((error as Error).message !== 'Session expired') {
  console.error(`API request failed for ${endpoint}:`, error);
+ }
  throw error;
  }
   }

@@ -27,18 +27,24 @@ const PatientRiskHeatmap: React.FC = () => {
  const providers = ['Dr. Sarah Williams', 'Dr. Michael Chen', 'Dr. Jennifer Martinez', 'Dr. Robert Thompson', 'Dr. Lisa Park'];
  const comorbidityOptions = ['Diabetes', 'CKD', 'COPD', 'AFib', 'CAD', 'HTN', 'Obesity'];
  
+ // Seeded deterministic pseudo-random for stable demo data
+ const seed = (n: number) => {
+ const x = Math.sin(n * 9301 + 49297) * 49297;
+ return x - Math.floor(x);
+ };
+
  return Array.from({ length: 50 }, (_, i) => ({
  id: `P${String(i + 1).padStart(3, '0')}`,
  name: `Patient ${i + 1}`,
- age: Math.floor(Math.random() * 40) + 45, // 45-85 years
- riskScore: Math.floor(Math.random() * 100),
- gdmtPillars: Math.floor(Math.random() * 5),
- provider: providers[Math.floor(Math.random() * providers.length)],
- lastVisit: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000), // Last 90 days
- comorbidities: comorbidityOptions.slice(0, Math.floor(Math.random() * 4) + 1),
- ejectionFraction: Math.random() > 0.3 ? Math.floor(Math.random() * 40) + 15 : undefined, // 15-55%
- creatinine: Math.random() * 2 + 0.8, // 0.8-2.8
- potassium: Math.random() * 2 + 3.5 // 3.5-5.5
+ age: Math.floor(seed(i) * 40) + 45,
+ riskScore: Math.floor(seed(i + 100) * 100),
+ gdmtPillars: Math.floor(seed(i + 200) * 5),
+ provider: providers[Math.floor(seed(i + 300) * providers.length)],
+ lastVisit: new Date(Date.now() - seed(i + 400) * 90 * 24 * 60 * 60 * 1000),
+ comorbidities: comorbidityOptions.slice(0, Math.floor(seed(i + 500) * 4) + 1),
+ ejectionFraction: seed(i + 600) > 0.3 ? Math.floor(seed(i + 700) * 40) + 15 : undefined,
+ creatinine: seed(i + 800) * 2 + 0.8,
+ potassium: seed(i + 900) * 2 + 3.5
  }));
   }, []);
 

@@ -5,8 +5,11 @@ const Logout: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
- localStorage.removeItem('authToken');
- localStorage.removeItem('userData');
+ localStorage.removeItem('tailrd-session-token');
+ localStorage.removeItem('tailrd-refresh-token');
+ localStorage.removeItem('tailrd-user');
+ localStorage.removeItem('tailrd-user-id');
+ sessionStorage.clear();
  navigate('/', { replace: true });
   }, [navigate]);
 
