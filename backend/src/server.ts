@@ -146,6 +146,9 @@ if (!isDemoMode) {
   }));
 }
 
+// CDS Hooks — mounted before auth middleware (CDS uses its own JWT)
+app.use('/cds-services', require('./routes/cdsHooks').default);
+
 app.get('/health', (req, res) => {
   res.status(200).json({
     success: true,
