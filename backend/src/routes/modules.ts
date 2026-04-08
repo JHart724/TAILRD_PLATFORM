@@ -1,14 +1,16 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import { APIResponse } from '../types';
-import { authenticateToken, authorizeHospital, authorizeModule, authorizeView } from '../middleware/auth';
+import { authenticateToken, authorizeHospital, authorizeModule, authorizeView, AuthenticatedRequest } from '../middleware/auth';
+import prisma from '../lib/prisma';
+import { logger } from '../utils/logger';
 
 const router = Router();
 
 // All module routes require authentication
 router.use(authenticateToken);
 
-// Get all available modules
-router.get('/', (req, res) => {
+// Get all available modules with real patient counts per hospital
+router.get('/', async (req: AuthenticatedRequest, res: Response) => {
   const modules = [
     {
       id: 'heart-failure',
@@ -66,12 +68,40 @@ router.get('/', (req, res) => {
     }
   ];
 
-  res.json({
-    success: true,
-    data: modules,
-    message: 'Available cardiovascular modules',
-    timestamp: new Date().toISOString()
-  } as APIResponse);
+  try {
+    const hospitalId = req.user?.hospitalId;
+    if (hospitalId) {
+      // Enrich with real patient counts from the database
+      const MODULE_FIELDS: Record<string, string> = {
+        'heart-failure': 'heartFailurePatient',
+        'electrophysiology': 'electrophysiologyPatient',
+        'coronary-intervention': 'coronaryPatient',
+        'structural-heart': 'structuralHeartPatient',
+        'peripheral-vascular': 'peripheralVascularPatient',
+        'valvular-disease': 'valvularDiseasePatient',
+      };
+
+      for (const mod of modules) {
+        const field = MODULE_FIELDS[mod.id];
+        if (field) {
+          const count = await prisma.patient.count({
+            where: { hospitalId, isActive: true, [field]: true },
+          });
+          (mod as any).patientCount = count;
+        }
+      }
+    }
+
+    res.json({
+      success: true,
+      data: modules,
+      message: 'Available cardiovascular modules',
+      timestamp: new Date().toISOString()
+    } as APIResponse);
+  } catch (error) {
+    logger.error('Failed to fetch modules', { error: error instanceof Error ? error.message : String(error) });
+    res.status(500).json({ success: false, error: 'Failed to fetch modules' });
+  }
 });
 
 // Heart Failure module endpoints

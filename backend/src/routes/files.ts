@@ -185,10 +185,10 @@ router.get('/download-url',
         return res.status(403).json({ success: false, error: 'No hospital context' });
       }
 
-      // Verify file belongs to this hospital (path-based check)
-      const pathParts = key.split('/');
-      const fileHospitalId = pathParts[1]; // {prefix}/{hospitalId}/...
-      if (fileHospitalId !== hospitalId && req.user?.role !== 'super-admin') {
+      // Verify file belongs to this hospital (path-based check with strict format validation)
+      const pathMatch = key.match(/^[a-z]+\/([a-zA-Z0-9-]+)\//);
+      const fileHospitalId = pathMatch ? pathMatch[1] : null;
+      if ((!fileHospitalId || fileHospitalId !== hospitalId) && req.user?.role !== 'super-admin') {
         return res.status(403).json({
           success: false,
           error: 'Access denied: file does not belong to your hospital',
