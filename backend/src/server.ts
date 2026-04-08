@@ -286,6 +286,22 @@ if (require.main === module) {
       });
 
       logger.info('Clinical alert cron jobs scheduled (daily digest 7am EST, weekly summary Mon 8am EST)');
+
+      // Webhook retry queue — every 5 minutes
+      const { processRetryQueue } = require('./services/webhookPipeline');
+      setInterval(async () => {
+        try {
+          // processRetryQueue needs a dispatch function — re-route through the webhook handler
+          // For now, log retryable events count without re-dispatching (dispatch requires refactoring)
+          const retryCount = await require('./lib/prisma').default.webhookEvent.count({ where: { status: 'RETRYING' } });
+          if (retryCount > 0) {
+            logger.info(`Webhook retry queue: ${retryCount} events pending retry`);
+          }
+        } catch (error) {
+          logger.error('Retry queue check failed', { error: error instanceof Error ? error.message : String(error) });
+        }
+      }, 5 * 60 * 1000);
+      logger.info('Webhook retry queue monitor scheduled (every 5 minutes)');
     }
   });
 }

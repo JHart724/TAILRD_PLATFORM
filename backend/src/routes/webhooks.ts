@@ -186,8 +186,32 @@ router.post('/redox', verifyRedoxSignature, async (req, res) => {
         case 'NewOrder':
         case 'OrderUpdate': {
           if (payload.Orders && payload.Orders.length > 0) {
-            logger.info(`Received ${payload.Orders.length} orders — order persistence not yet implemented`);
+            const patientId = await ensurePatientId(payload, hospitalId);
+            const { OrdersService } = require('../services/ordersService');
+            const ordersService = new OrdersService();
+            for (const order of payload.Orders) {
+              await ordersService.processOrder({
+                patientId,
+                hospitalId,
+                orderType: (order.Type || 'procedure').toLowerCase(),
+                orderCode: order.Code || order.ID || 'UNKNOWN',
+                orderName: order.Name || order.Description,
+                status: order.Status,
+                orderedDateTime: order.DateTime ? new Date(order.DateTime) : undefined,
+                orderingProvider: order.Provider?.FirstName ? `${order.Provider.FirstName} ${order.Provider.LastName}` : undefined,
+                rawPayload: order,
+              });
+            }
+            logger.info(`Processed ${payload.Orders.length} orders`, { hospitalId, patientId });
           }
+          break;
+        }
+
+        case 'PatientMerge': {
+          logger.info('PatientMerge event received — dry run only, transaction deferred pending schema migration', {
+            hospitalId,
+            note: 'mergedIntoId field must be added to Patient model before activating merge transaction',
+          });
           break;
         }
 
