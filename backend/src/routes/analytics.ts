@@ -4,6 +4,7 @@ import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
 import { trackFeature, trackNavigation, trackReportGeneration, ModuleType, ActivityType } from '../middleware/analytics';
 import { body, query, validationResult } from 'express-validator';
+import { logger } from '../utils/logger';
 
 const router = Router();
 

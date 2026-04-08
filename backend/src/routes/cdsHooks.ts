@@ -80,17 +80,17 @@ router.post('/tailrd-cardiovascular-gaps', async (req: Request, res: Response) =
       where: {
         patientId: patient.id,
         resolvedAt: null,
-        severity: { in: ['CRITICAL', 'HIGH'] },
+        currentStatus: { in: ['CRITICAL', 'HIGH', 'ACTIVE'] },
       },
-      orderBy: [{ severity: 'asc' }, { createdAt: 'desc' }],
+      orderBy: [{ identifiedAt: 'desc' }],
       take: 5,
     });
 
     const cards = therapyGaps.map(gap => ({
       uuid: gap.id,
-      summary: gap.title,
-      detail: gap.description,
-      indicator: gap.severity === 'CRITICAL' ? 'critical' : 'warning',
+      summary: `${gap.gapType.replace(/_/g, ' ')}: ${gap.medication || gap.device || gap.targetStatus}`,
+      detail: `Current: ${gap.currentStatus}. Target: ${gap.targetStatus}. Module: ${gap.module}.`,
+      indicator: gap.currentStatus === 'CRITICAL' ? 'critical' : 'warning',
       source: {
         label: 'TAILRD Heart',
         url: `https://app.tailrd-heart.com/patients/${patient.id}/gaps`,
@@ -220,7 +220,7 @@ router.post('/tailrd-discharge-gaps', async (req: Request, res: Response) => {
 
     const gaps = await prisma.therapyGap.findMany({
       where: { patientId: patient.id, resolvedAt: null },
-      orderBy: { severity: 'asc' },
+      orderBy: { identifiedAt: 'desc' },
       take: 10,
     });
 
@@ -230,8 +230,8 @@ router.post('/tailrd-discharge-gaps', async (req: Request, res: Response) => {
       cards: [{
         uuid: crypto.randomUUID(),
         summary: `${gaps.length} cardiovascular therapy gap${gaps.length > 1 ? 's' : ''} identified at discharge`,
-        detail: `Review ${gaps.length} open therapy gaps before discharge: ${gaps.map(g => g.title).join(', ')}`,
-        indicator: gaps.some(g => g.severity === 'CRITICAL') ? 'critical' : 'warning',
+        detail: `Review ${gaps.length} open therapy gaps before discharge: ${gaps.map(g => g.gapType.replace(/_/g, ' ')).join(', ')}`,
+        indicator: gaps.some(g => g.currentStatus === 'CRITICAL') ? 'critical' : 'warning',
         source: { label: 'TAILRD Heart' },
         links: [{
           label: 'Review all gaps in TAILRD',
