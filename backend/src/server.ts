@@ -76,10 +76,12 @@ const corsOptions = {
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     if (origin && allowedOrigins.includes(origin)) {
       callback(null, true);
-    } else if (!origin && NODE_ENV !== 'production') {
-      // Allow no-origin requests in development only (curl, Postman, server-to-server)
+    } else if (!origin) {
+      // No Origin header = not a browser request (curl, ALB health checks, server-to-server)
+      // CORS is a browser security mechanism — non-browser requests are always allowed
       callback(null, true);
     } else {
+      // Browser request from an origin not in allowedOrigins — block it
       callback(new Error('Not allowed by CORS'));
     }
   },
