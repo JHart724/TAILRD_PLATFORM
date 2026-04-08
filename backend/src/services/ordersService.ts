@@ -5,15 +5,11 @@
  * cardiovascular-specific order monitoring.
  */
 
-import { PrismaClient } from '@prisma/client';
+import prisma from '../lib/prisma';
 import { logger } from '../utils/logger';
 
 export class OrdersService {
-  private prisma: PrismaClient;
-
-  constructor(prisma: PrismaClient) {
-    this.prisma = prisma;
-  }
+  private prisma = prisma;
 
   private mapOrderType(type: string): any {
     const map: Record<string, string> = {
