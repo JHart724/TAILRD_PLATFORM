@@ -81,8 +81,8 @@ export async function sendImmediateAlerts(
       isActive: true,
       role: { in: [UserRole.PHYSICIAN, UserRole.NURSE_MANAGER, UserRole.HOSPITAL_ADMIN] },
     },
-    select: { id: true, email: true, firstName: true, role: true, notificationPreferences: true } as Record<string, boolean>,
-  });
+    select: { id: true, email: true, firstName: true, role: true, notificationPreferences: true },
+  }) as Array<{ id: string; email: string; firstName: string; role: string; notificationPreferences: unknown }>;
 
   let sent = 0;
   for (const clinician of clinicians) {
@@ -144,7 +144,7 @@ export async function sendDailyDigest(hospitalId: string): Promise<number> {
       role: { in: [UserRole.PHYSICIAN, UserRole.NURSE_MANAGER, UserRole.HOSPITAL_ADMIN, UserRole.QUALITY_DIRECTOR] },
     },
     select: { id: true, email: true, firstName: true, notificationPreferences: true },
-  });
+  }) as Array<{ id: string; email: string; firstName: string; notificationPreferences: unknown }>;
 
   const moduleGroups: Record<string, { count: number; types: string[] }> = {};
   for (const g of newGaps) {
@@ -213,7 +213,7 @@ export async function sendWeeklySummary(hospitalId: string): Promise<number> {
       role: { in: [UserRole.HOSPITAL_ADMIN, UserRole.QUALITY_DIRECTOR] },
     },
     select: { id: true, email: true, firstName: true, notificationPreferences: true },
-  });
+  }) as Array<{ id: string; email: string; firstName: string; notificationPreferences: unknown }>;
 
   let sent = 0;
   for (const leader of leaders) {
