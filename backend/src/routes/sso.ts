@@ -70,7 +70,7 @@ router.get('/callback', async (req: Request, res: Response) => {
       return res.redirect(`${FRONTEND_URL}/login?error=token_exchange_failed`);
     }
 
-    const tokens = await tokenResponse.json();
+    const tokens = await tokenResponse.json() as { id_token: string; access_token: string };
 
     // Decode ID token for user attributes
     const idTokenPayload = JSON.parse(
@@ -147,9 +147,10 @@ router.get('/callback', async (req: Request, res: Response) => {
     await prisma.loginSession.create({
       data: {
         userId: user.id,
+        hospitalId: user.hospitalId,
         sessionToken: tokenHash,
         isActive: true,
-        deviceInfo: req.headers['user-agent'] ?? 'SSO',
+        userAgent: req.headers['user-agent'] ?? 'SSO',
         ipAddress: req.ip ?? 'unknown',
         expiresAt: new Date(Date.now() + 8 * 60 * 60 * 1000),
       },
