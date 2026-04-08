@@ -195,6 +195,9 @@ app.use('/api/auth', loginRateLimit, require('./routes/auth'));
 // SSO/SAML routes (Cognito hosted UI integration)
 app.use('/api/sso', require('./routes/sso').default);
 
+// SMART on FHIR launch (EHR launch with PKCE)
+app.use('/api/smart', require('./routes/smartLaunch').default);
+
 app.use('/api/webhooks', require('./routes/webhooks'));
 app.use('/api/patients', require('./routes/patients'));
 app.use('/api/modules', require('./routes/modules'));
