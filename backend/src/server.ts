@@ -189,6 +189,9 @@ app.get('/api/auth/csrf-token', csrfTokenEndpoint);
 // Auth routes with aggressive rate limiting
 app.use('/api/auth', loginRateLimit, require('./routes/auth'));
 
+// SSO/SAML routes (Cognito hosted UI integration)
+app.use('/api/sso', require('./routes/sso').default);
+
 app.use('/api/webhooks', require('./routes/webhooks'));
 app.use('/api/patients', require('./routes/patients'));
 app.use('/api/modules', require('./routes/modules'));
