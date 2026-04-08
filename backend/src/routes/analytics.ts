@@ -624,4 +624,47 @@ router.post('/track',
   }
 );
 
+// VBC Quality Measures
+router.get('/vbc/quality-measures',
+  authenticateToken,
+  authorizeRole(['super-admin', 'hospital-admin', 'quality-director']),
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const hospitalId = req.user?.hospitalId;
+      if (!hospitalId && req.user?.role !== 'super-admin') {
+        return res.status(400).json({ success: false, error: 'Hospital context required' });
+      }
+      const where: any = {};
+      if (hospitalId) where.hospitalId = hospitalId;
+      where.periodStart = { gte: new Date(new Date().getFullYear(), 0, 1) };
+
+      const measures = await prisma.qualityMeasure.findMany({
+        where,
+        orderBy: [{ measureCode: 'asc' }],
+      });
+      return res.json({ success: true, data: { measures } });
+    } catch (error) {
+      return res.status(500).json({ success: false, error: 'Failed to fetch quality measures' });
+    }
+  }
+);
+
+router.post('/vbc/recalculate',
+  authenticateToken,
+  authorizeRole(['super-admin', 'hospital-admin']),
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const hospitalId = req.user?.hospitalId;
+      if (!hospitalId) {
+        return res.status(400).json({ success: false, error: 'Hospital context required' });
+      }
+      const { calculateQualityMeasures } = require('../services/vbcService');
+      setImmediate(() => calculateQualityMeasures(hospitalId).catch((e: Error) => logger.error('VBC recalc failed', { error: e.message })));
+      return res.json({ success: true, message: 'Quality measure recalculation started' });
+    } catch (error) {
+      return res.status(500).json({ success: false, error: 'Failed to start recalculation' });
+    }
+  }
+);
+
 export = router;
