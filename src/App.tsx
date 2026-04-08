@@ -26,6 +26,7 @@ const ValvularDiseaseModule = lazy(() => import("./ui/valvularDisease/ValvularDi
 const PeripheralVascularModule = lazy(() => import("./ui/peripheralVascular/PeripheralVascularModule"));
 const ResearchModule = lazy(() => import("./ui/research/ResearchModule"));
 const DataManagementPortal = lazy(() => import("./ui/dataManagement/DataManagementPortal"));
+const PatientListView = lazy(() => import("./components/PatientListView").then(m => ({ default: m.PatientListView })));
 const SettingsPage = lazy(() => import("./ui/SettingsPage"));
 const ProfilePage = lazy(() => import("./ui/ProfilePage"));
 const NotFoundPage = lazy(() => import("./ui/NotFoundPage"));
@@ -745,6 +746,11 @@ export default function App(): JSX.Element {
  <Route path="/service-line" element={
  <ProtectedRoute>
  <AppShell><FreeTierDashboard /></AppShell>
+ </ProtectedRoute>
+ } />
+ <Route path="/patients" element={
+ <ProtectedRoute>
+ <AppShell><PatientListView /></AppShell>
  </ProtectedRoute>
  } />
  <Route path="/data" element={
