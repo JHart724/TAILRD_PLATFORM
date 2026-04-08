@@ -936,3 +936,453 @@ Redis singleton exists at `lib/redis.ts`. Correctly initializes on REDIS_URL. **
 ---
 
 *End of Phase 1 Master Audit. 121 findings. 14 CRITICAL (4 fixed). 52 HIGH. 41 MEDIUM. 14 LOW.*
+
+---
+---
+
+# PHASE 2 AUDIT — April 8, 2026
+## 8 Specialist Agents | Sections 5, 5B, 7, 8, 10, 11, 12-14, 15-31
+## 125 Findings: 9 CRITICAL | 23 HIGH | 52 MEDIUM | 18 LOW | 23 INFO/P2-P3
+
+---
+
+## Phase 2 Severity Distribution
+
+| Domain | CRITICAL | HIGH | MEDIUM | LOW | Total |
+|--------|----------|------|--------|-----|-------|
+| Multi-Tenancy (§5) | 2 | 3 | 3 | 3 | 11 |
+| EHR/FHIR/CDS (§5B) | 0 | 8 | 5 | 2 | 15 |
+| Backend Architecture (§7) | 2 | 3 | 8 | 3 | 16 |
+| Frontend Architecture (§8) | 3 | 3 | 7 | 3 | 16 |
+| God View & Admin (§10) | 0 | 3 | 5 | 4 | 12 |
+| Demo Readiness (§11) | 0 | 0 | 2 | 1 | 3 |
+| Code Quality & Scale (§12-14) | 0 | 1 | 8 | 1 | 10 |
+| Extended Sections (§15-31) | 0 | 0 | 10 | 4 | 14 |
+| **TOTAL** | **7** | **21** | **48** | **21** | **97** |
+
+---
+
+## Readiness Scorecard (40 Dimensions)
+
+| # | Dimension | Score | Notes |
+|---|-----------|-------|-------|
+| 1 | Authentication | 7/10 | JWT + MFA working; Cognito scaffolded; wrong localStorage keys in 3 components |
+| 2 | Authorization (RBAC) | 8/10 | 7 roles, per-module/view permissions, authorizeRole middleware |
+| 3 | Tenant Isolation | 6/10 | Core PHI routes isolated; admin/onboarding/cqlRules have gaps |
+| 4 | PHI Encryption | 9/10 | AES-256-GCM via Prisma middleware; 19+ models covered |
+| 5 | Audit Logging | 7/10 | File + DB logging, HIPAA retention; hospital status toggle not logged |
+| 6 | CSRF Protection | 3/10 | Backend middleware exists; frontend sends no CSRF tokens |
+| 7 | Session Management | 6/10 | LoginSession model, hashed tokens; cross-tab sync missing |
+| 8 | Gap Detection Accuracy | 8/10 | 257 rules, all with evidence objects and contraindication checks |
+| 9 | Gap Detection Performance | 5/10 | O(P*257) sequential; OOM risk at 100K patients |
+| 10 | FHIR R4 Compliance | 4/10 | Ingests 3/18 US Core profiles; 6 handlers built but unwired |
+| 11 | Redox Integration | 5/10 | Webhook pipeline solid; orders not persisted; retry never activated |
+| 12 | CDS Hooks | 0/10 | Not implemented |
+| 13 | SMART on FHIR | 0/10 | Not implemented |
+| 14 | EHR Write-Back | 0/10 | Not implemented |
+| 15 | Patient Identity/MPI | 3/10 | MRN matching only; no merge, no cross-facility |
+| 16 | Database Schema | 8/10 | 40+ models, 74 indexes, hospitalId on all PHI models |
+| 17 | API Design | 5/10 | Inconsistent envelopes, no versioning, OpenAPI not mounted |
+| 18 | TypeScript Safety | 4/10 | strict:true but 2 @ts-nocheck, 378 any, tsc||true in Dockerfile |
+| 19 | Error Handling | 5/10 | Global handler exists; no Prisma error translation |
+| 20 | Logging | 5/10 | Winston with PHI redaction; 29 console.log bypass it |
+| 21 | Frontend API Layer | 3/10 | 3 competing clients; apiService missing auth; no CSRF |
+| 22 | Frontend Mock Data | 2/10 | 95% of views hardcoded regardless of API flag |
+| 23 | Component Architecture | 3/10 | 7 files >1000 lines; massive duplication across modules |
+| 24 | Test Coverage | 1/10 | 5/257 gap rules tested; 0 route tests; 1 frontend test |
+| 25 | God View Backend | 8/10 | Real Prisma queries; no Math.random; proper audit logging |
+| 26 | Admin Console | 3/10 | 4/7 tabs hardcoded mock; write operations are noops |
+| 27 | Demo Readiness | 6/10 | CONDITIONAL GO; 2 mandatory fixes; UI is polished |
+| 28 | Risk Calculators | 6/10 | 12 validated calculators; none auto-populate from DB |
+| 29 | Clinical Workflow | 5/10 | Cross-referral service exists but uses Math.random(); HF-only discharge rules |
+| 30 | Value-Based Care | 4/10 | 5 CMS eCQMs; no MSSP/BPCI-A/Stars/HEDIS |
+| 31 | DDI Checking | 2/10 | QTc cascade only; no DDI database |
+| 32 | Documentation | 4/10 | DR plan, BAA register, audit docs; no SOC2/pen test/PIA |
+| 33 | SSO/SCIM | 1/10 | Cognito scaffolded; no SAML/OIDC/SCIM |
+| 34 | Infrastructure | 7/10 | ECS, RDS Multi-AZ, CloudFront, WAF, Secrets Manager deployed |
+| 35 | CI/CD | 7/10 | GitHub Actions with new task def per deploy (just fixed) |
+| 36 | Disaster Recovery | 3/10 | Plan documented; no cross-region; no tested runbook |
+| 37 | Scalability | 4/10 | N+1 queries in 3 routes; in-memory rate limiting; no caching |
+| 38 | Enterprise Features | 4/10 | 5/21 complete; SSO, HITRUST, SLA blocking deals |
+| 39 | Internationalization | 0/10 | US-only; no i18n framework |
+| 40 | Accessibility/Dark Mode | 0/10 | No dark mode; no WCAG audit |
+| | **OVERALL** | **4.1/10** | |
+
+---
+
+# SECTION 5 — MULTI-TENANCY & DATA ISOLATION
+
+## Route-by-Route Isolation Table
+
+| Route File | Auth? | hospitalId WHERE? | Write Tenant-Verified? | Audit? | Status |
+|------------|-------|-------------------|------------------------|--------|--------|
+| auth.ts | Public | N/A | N/A | Yes | OK |
+| patients.ts | Yes+MFA | Yes | Yes | Yes | PASS |
+| gaps.ts | Yes | Yes | Yes | Yes | PASS |
+| admin.ts | Yes | Partial | Super-admin only | Partial | ISSUES |
+| godView.ts | Yes+SA | global-search only | N/A | Yes | ISSUES |
+| analytics.ts | Yes | Conditional | N/A | No | PARTIAL |
+| webhooks.ts | HMAC | Yes | N/A | Yes | PASS |
+| upload.ts | Yes | Yes | N/A | Yes | PASS |
+| files.ts | Yes | Path-based | Path-based | No | PARTIAL |
+| notifications.ts | Yes | User-scoped | JWT | Yes | PASS |
+| referrals.ts | Yes | Yes | Yes | Yes | PASS |
+| phenotypes.ts | Yes+MFA | Yes | Yes | Yes | PASS |
+| modules.ts | Yes | NO (100% mock) | N/A | No | FAIL |
+| hospitals.ts | Yes | Mock data | N/A | No | PARTIAL |
+| mfa.ts | Yes | User-scoped | N/A | Yes | PASS |
+| invite.ts | Partial | Yes | N/A | Yes | PASS |
+| platform.ts | Yes | Yes | N/A | No | PASS |
+| onboarding.ts | Yes | No tenant check on PATCH | No | No | ISSUE |
+| clinicalIntelligence.ts | Yes+MFA | Yes | Yes | No | PASS |
+| content.ts | Yes | No PHI | N/A | No | OK |
+| cqlRules.ts | Yes | Partial | N/A | No | PARTIAL |
+| accountSecurity.ts | Partial | User-scoped | Yes | No | PASS |
+| dataRequests.ts | Yes+Admin | Yes | Yes | Yes | PASS |
+| auditExport.ts | Yes+Admin | Yes | N/A | Yes | PASS |
+| breachNotification.ts | Yes+SA | No | No | No | ISSUE |
+| internalOps.ts | Yes+SA | N/A | N/A | No | OK |
+
+**Verdict: Multi-tenancy NOT safe for two real health systems simultaneously.** Core PHI routes are properly isolated. Must fix: onboarding PATCH tenant check, modules.ts mock data, cqlRules.ts patient ownership.
+
+## FINDING-P2-1: GOD View Queries Aggregate Across All Tenants
+Severity: HIGH | File: backend/src/routes/godView.ts | Lines 222-356
+All helper functions query without hospitalId filter. getSystemRiskDistribution() returns combined patient population data across all health systems.
+Fix: Add optional hospitalId parameter to all helper functions.
+
+## FINDING-P2-2: modules.ts Returns Hardcoded Mock Data — Zero Tenant Isolation
+Severity: CRITICAL | File: backend/src/routes/modules.ts | All endpoints
+Every endpoint returns hardcoded fake patient names, MRNs, and clinical data. No Prisma queries. All tenants see identical fabricated data.
+Fix: Replace with real Prisma queries scoped by req.user.hospitalId.
+
+## FINDING-P2-3: admin.ts PUT /users/:userId Has No Tenant Ownership Check
+Severity: CRITICAL | File: backend/src/routes/admin.ts | Lines 778-840
+Updates any user by ID without verifying hospitalId ownership. Currently mitigated by super-admin restriction but dangerous if role check relaxed.
+Fix: Add hospitalId verification for non-super-admin callers.
+
+## FINDING-P2-4: onboarding.ts PATCH Has No Tenant Check
+Severity: HIGH | File: backend/src/routes/onboarding.ts | Lines 248-310
+hospital-admin can update onboarding steps (including Redox activation) for any hospital by changing the URL parameter.
+Fix: Verify req.user.hospitalId === req.params.hospitalId for non-super-admin.
+
+## FINDING-P2-6: cqlRules.ts Patient Endpoints Lack Hospital Ownership Verification
+Severity: HIGH | File: backend/src/routes/cqlRules.ts | Lines 198-327, 601-653
+/results/:patientId, /evaluate, /recommendations accept any patientId without verifying hospital ownership. Currently returns mock data but dangerous when wired to real data.
+Fix: Verify patient.hospitalId === req.user.hospitalId before any query.
+
+## FINDING-P2-7: files.ts Download Tenant Check Uses Fragile Path Parsing
+Severity: MEDIUM | File: backend/src/routes/files.ts | Line 189
+Extracts hospitalId from S3 key by splitting on "/". Crafted key could bypass check.
+Fix: Store file metadata with hospitalId in DB and look up ownership there.
+
+---
+
+# SECTION 5B — EHR INTEGRATION, REDOX, FHIR, CDS HOOKS
+
+## Subsection Readiness Scores
+| Subsection | Score |
+|------------|-------|
+| Redox Integration | 5/10 |
+| FHIR R4 Compliance | 4/10 |
+| CDS Hooks | 0/10 |
+| SMART on FHIR | 0/10 |
+| EHR Write-Back | 0/10 |
+| Patient Identity | 3/10 |
+| Batch Gap Detection | 2/10 |
+| Data Ingestion Quality | 6/10 |
+| Integration Monitoring | 3/10 |
+| Data Completeness | 5/10 |
+
+**Overall EHR Integration Readiness: 3/10**
+
+## FINDING-P2-50: Order Processing Not Implemented
+Severity: HIGH | File: backend/src/services/webhookPipeline.ts
+NewOrder/OrderUpdate events received but not persisted. OrdersService exists but never called from webhook handler. Medication orders from EHR are lost.
+Fix: Wire OrdersService.processOrder() into webhook dispatch. Effort: 4-6 hours.
+
+## FINDING-P2-51: Retry Queue Never Activated
+Severity: HIGH | File: backend/src/services/webhookPipeline.ts
+processRetryQueue() defined but never called from server.ts or any cron. Failed webhooks permanently lost.
+Fix: Add cron job in server.ts. Effort: 1-2 hours.
+
+## FINDING-P2-54: Six FHIR Resource Handlers Built But Not Wired
+Severity: HIGH | File: backend/src/redox/fhirResourceHandlers.ts
+MedicationRequest, Procedure, AllergyIntolerance, CarePlan, Device, Condition handlers exist but are not called from webhook dispatch.
+Fix: Wire into webhook event type dispatch. Effort: 2-3 days.
+
+## FINDING-P2-57: CDS Hooks Not Implemented
+Severity: HIGH | Category: EHR Integration
+Zero infrastructure. No discovery endpoint, no hook handlers, no card formatting, no JWT auth.
+Fix: Implement CDS Hooks 2.0 (patient-view, order-select, encounter-discharge). Effort: 2-3 weeks.
+
+## FINDING-P2-60: No Patient Merge Handling
+Severity: HIGH | Category: Patient Identity
+No Redox PatientMerge event handling. Duplicate patients accumulate, gap counts inflate.
+Fix: Handle merge event, reassign clinical data, mark source inactive. Effort: 1-2 days.
+
+## FINDING-P2-62: Batch Gap Detection is Scaffolding Only
+Severity: HIGH | File: backend/src/redox/batchGapDetection.ts
+Entirely placeholder. Real gap runner only executes after CSV upload, not on EHR data.
+Fix: Wire gapDetectionRunner to run after webhook events and nightly batch. Effort: 1-2 days.
+
+## FINDING-P2-63: No Real-Time Gap Detection After Webhook Events
+Severity: HIGH | Category: EHR Integration
+New EHR data (labs, encounters, meds) does not trigger gap re-evaluation for the patient.
+Fix: Call runGapDetectionForPatient() after each webhook event. Effort: 1-2 days.
+
+## FINDING-P2-68: OrdersService Uses Non-Singleton PrismaClient
+Severity: MEDIUM | File: backend/src/services/ordersService.ts
+Accepts PrismaClient via constructor instead of importing singleton. Bypasses PHI encryption.
+Fix: Import from lib/prisma.ts. Effort: 30 minutes.
+
+---
+
+# SECTION 7 — BACKEND ARCHITECTURE
+
+Health Score: 5.6/10
+
+## FINDING-P2-100: @ts-nocheck in Two Production Files
+Severity: CRITICAL | Files: analytics.ts (line 1), gapDetectionRunner.ts (line 1)
+Violates CLAUDE.md Section 14 NEVER DO rule.
+Fix: Fix underlying type errors and remove directive. Effort: 2-4 hours.
+
+## FINDING-P2-101: Dockerfile Still Uses tsc || true
+Severity: CRITICAL | File: backend/Dockerfile (line 22)
+Root cause of April 7 outage. Still present despite deployment Rule 1.
+Fix: Change to `RUN npx tsc` (remove || true). Effort: 1 hour after TS fixes.
+
+## FINDING-P2-102: Dockerfile HEALTHCHECK Hits Wrong Endpoint
+Severity: HIGH | File: backend/Dockerfile (line 37)
+Checks /api/health but server mounts at /health. Container will be marked unhealthy.
+Fix: Change URL to http://localhost:3001/health. Effort: 5 minutes.
+
+## FINDING-P2-103: hospitals.ts Returns Hardcoded Mock Data
+Severity: HIGH | File: backend/src/routes/hospitals.ts
+Entire file is mock data. Does not import Prisma. admin.ts has real hospital CRUD.
+Fix: Wire to Prisma queries following admin.ts pattern. Effort: 2-3 hours.
+
+## FINDING-P2-107: 5 Orphaned Service Files
+Severity: MEDIUM | Files: qualityMeasureService, resultsService, visitService, drugTitrationService, ordersService
+Never imported by any route or other service. Dead code.
+Fix: Archive or wire to routes. Effort: 30 min to archive.
+
+## FINDING-P2-110: 29 console.log/error Calls Bypass Winston PHI Redaction
+Severity: MEDIUM | Files: 8 route files
+console.error in auth.ts can dump full error objects with PHI to stdout.
+Fix: Replace with logger.info/error. Effort: 1-2 hours.
+
+## FINDING-P2-111: Invite URL Logged to Console with Email and Token
+Severity: HIGH | File: backend/src/routes/invite.ts (line 59)
+Logs email + invite token to stdout in production.
+Fix: Guard with env check or remove. Effort: 10 minutes.
+
+## FINDING-P2-112: Three Competing Frontend API Clients
+Severity: MEDIUM | Files: api.ts, apiService.ts, hfClient.ts
+Different auth handling, error handling, base URLs across all three.
+Fix: Consolidate to api.ts. Effort: 2-3 hours.
+
+---
+
+# SECTION 8 — FRONTEND ARCHITECTURE
+
+Health Score: 3.5/10
+
+## FINDING-P2-150: Three Competing API Client Implementations
+Severity: HIGH | Files: api.ts, apiService.ts, hfClient.ts
+apiService.ts sends no auth token. hfClient.ts is dead code. Components use raw fetch() directly.
+Fix: Consolidate to api.ts as single client. Effort: 4-6 hours.
+
+## FINDING-P2-151: GodView and GlobalSearch Use Wrong Token Key
+Severity: CRITICAL | Files: GodView.tsx (lines 95,98), GlobalSearch.tsx (line 65)
+Uses localStorage.getItem('authToken') but auth system stores under 'tailrd-session-token'. GodView always fails.
+Fix: Change to 'tailrd-session-token'. Effort: 15 minutes.
+
+## FINDING-P2-152: Logout Component Clears Wrong Token Keys
+Severity: CRITICAL | File: src/components/Logout.tsx (line 8)
+Removes 'authToken' and 'userData' instead of 'tailrd-session-token', 'tailrd-refresh-token', 'tailrd-user'. Session persists after "logout".
+Fix: Use AuthContext.logout(). Effort: 10 minutes.
+
+## FINDING-P2-154: apiService.ts Missing Auth Token on All Requests
+Severity: CRITICAL | File: src/services/apiService.ts (lines 125-146)
+Never attaches Authorization header. All clinical calculator API calls will 401 in production.
+Fix: Add token from localStorage. Effort: 20 minutes.
+
+## FINDING-P2-155: No CSRF Token Handling in Frontend
+Severity: HIGH | All frontend API client files
+Backend has CSRF middleware. Frontend sends zero CSRF tokens. All POST/PATCH/DELETE will fail.
+Fix: Read CSRF cookie and attach X-CSRF-Token header. Effort: 2-3 hours.
+
+## FINDING-P2-156: 7 Frontend Files Over 1,000 Lines (CAD Dashboard: 7,504)
+Severity: MEDIUM | Largest: CADClinicalGapDetectionDashboard.tsx (7,504 lines)
+Inline gap data arrays, component logic, rendering all in one file.
+Fix: Extract gap data into separate files, split sub-components. Effort: 8-12 hours.
+
+## FINDING-P2-159: Math.random() in Patient Data Generation
+Severity: HIGH | Files: App.tsx (lines 222-226), PatientRiskHeatmap.tsx, ValvePatientHeatmap.tsx
+Patient names, ages, clinical values change on every render. Violates CLAUDE.md rule.
+Fix: Replace with seeded deterministic data. Effort: 2-3 hours.
+
+## FINDING-P2-160: 68+ Files With Hardcoded Mock Data
+Severity: HIGH | 95% of UI renders hardcoded data regardless of API flag
+Executive views, service line views, admin tabs, worklists — all inline constants.
+Fix: Module-by-module API wiring. Effort: 20-30 hours total.
+
+---
+
+# SECTION 10 — GOD VIEW & ADMIN CONSOLE
+
+Readiness: 3.5/10 (God View backend: 7/10; Admin Console: 2/10)
+
+## FINDING-P2-200: GlobalSearch Missing Required hospitalId Parameter
+Severity: HIGH | File: src/ui/admin/GodView/GlobalSearch.tsx (line 64)
+Backend returns 400 without hospitalId. Frontend never sends it. Search is 100% broken.
+Fix: Add hospital selector to GlobalSearch component. Effort: 1-2 hours.
+
+## FINDING-P2-202: Hospital Status Toggle Not Audit Logged
+Severity: HIGH | File: backend/src/routes/admin.ts (lines 533-572)
+Deactivating a hospital is not audit logged. HIPAA gap.
+Fix: Add writeAuditLog call. Effort: 15 minutes.
+
+## FINDING-P2-203: 12 Mock Backend Endpoints in Admin Console
+Severity: MEDIUM | File: backend/src/routes/admin.ts (lines 930-1245)
+Duplicate mock endpoints that shadow real Prisma CRUD endpoints elsewhere in the file.
+Fix: Wire console tabs to existing real endpoints. Effort: 8-12 hours.
+
+## FINDING-P2-204: Admin Console Write Operations Are Noops
+Severity: MEDIUM | Files: HealthSystems.tsx, UsersManagement.tsx, PlatformConfiguration.tsx
+Add/Edit/Delete buttons have no onClick handlers or make no API calls.
+Fix: Wire submit handlers to real backend CRUD. Effort: 6-8 hours.
+
+## FINDING-P2-209: Audit & Security Tab Shows Only Hardcoded Data
+Severity: HIGH | File: src/ui/admin/tabs/AuditSecurity.tsx
+Primary security monitoring tool shows fabricated data. Real AuditLog table exists but has no UI.
+Fix: Wire to real audit log query endpoint. Effort: 4-6 hours.
+
+---
+
+# SECTION 11 — DEMO READINESS
+
+## Verdict: CONDITIONAL GO for Medical City Dallas Demo
+
+**2 Mandatory Pre-Demo Fixes:**
+| Fix | Time | Impact |
+|-----|------|--------|
+| P2-151: GodView localStorage key | 15 min | Admin panel shows error state |
+| P2-152: Logout clears wrong keys | 10 min | Session persists after logout |
+
+**Demo Path:** Login → Dashboard → Module tile → Executive (KPIs/charts) → Service Line (gap detection) → Care Team (patient worklist, clinical tools)
+
+All 6 modules + Research are navigable with 3 view tiers. UI is polished. Hardcoded data is clinically plausible. Gap Detection tabs attempt real API with mock fallback. KPIs show realistic numbers. Charts render correctly.
+
+**Showstoppers if not fixed:** GodView broken (P2-151), logout doesn't work (P2-152).
+
+---
+
+# SECTIONS 12-14 — CODE QUALITY, SCALABILITY, COMPETITIVE POSITIONING
+
+## FINDING-P2-300: gapDetectionRunner.ts is 11,391 Lines
+Severity: MEDIUM | File: backend/src/ingestion/gapDetectionRunner.ts
+Largest non-generated file by 3x. Contains all 257 gap rules in one function.
+Fix: Split into 6 module-specific files. Effort: 8-12 hours.
+
+## FINDING-P2-302: Test Coverage at 1.9% for Gap Rules
+Severity: MEDIUM | 5 of 257 gap rules have tests. 0 of 26 route files have test files.
+Jest infrastructure is ready but tests simply haven't been written.
+Fix: Prioritize gap rule tests (clinical accuracy) and auth route tests (security). Effort: 20-30 hours.
+
+## FINDING-P2-307: Gap Detection O(P*257) with OOM Risk at 100K Patients
+Severity: MEDIUM | File: gapDetectionRunner.ts
+Pre-loads all existing gaps into memory. At 100K patients × 15 gaps = 1.5M records (~300MB).
+Fix: Stream existing gaps instead of pre-loading. Add memory-bounded batching. Effort: 4-8 hours.
+
+## FINDING-P2-311: 5 Enterprise Features Blocking Health System Deals
+Severity: HIGH | Category: Enterprise Readiness
+Blockers: (1) SSO/SAML, (2) HITRUST readiness, (3) BAA execution, (4) Uptime SLA, (5) CDS Hooks/SMART on FHIR.
+Enterprise readiness: 5/21 Complete, 8/21 Partial, 8/21 Not Started.
+
+---
+
+# SECTIONS 15-31 — EXTENDED COVERAGE
+
+## Summary Table
+| Section | Topic | Score (0-3) | Priority |
+|---------|-------|-------------|----------|
+| 15 | Clinical Workflow | 2 | P1 |
+| 16 | RPM & Connected Devices | 1 | P2 |
+| 17 | SDOH | 1 | P2 |
+| 18 | Risk Score Calculators | 2 | P2 |
+| 19 | HCC Coding | 1 | P2 |
+| 20 | Session & UX | 1 | P3 |
+| 21 | Incident Response & BC | 2 | P1 |
+| 22 | Documentation | 2 | P1 |
+| 23 | Drug-Drug Interaction | 1 | P1 |
+| 24 | FHIR Version Compat | 1 | P3 |
+| 25 | Cardio-Oncology | 0 | P3 |
+| 26 | Inherited Cardiac | 2 | P2 |
+| 27 | Value-Based Care | 2 | P1 |
+| 28 | Outbound Webhooks | 0 | P2 |
+| 29 | White-Labeling | 0 | P3 |
+| 30 | i18n & GDPR | 0 | P3 |
+| 31 | Dark Mode | 0 | P3 |
+
+## FINDING-P2-351: crossReferralService.ts Uses Math.random() for Clinical Decisions
+Severity: MEDIUM | File: backend/src/services/crossReferralService.ts (line 752)
+checkConditionInResult() uses Math.random() > 0.8 to trigger referrals. Clinical safety issue.
+Fix: Replace with deterministic condition checking. Effort: 2-4 hours.
+
+## FINDING-P2-362: No SOC 2, Pen Test, or Privacy Impact Assessment
+Severity: MEDIUM | Category: Documentation
+Table-stakes for health system procurement. None exist.
+Fix: Engage audit firm for SOC 2; schedule pen test; draft PIA. Effort: 6-12 months (SOC 2).
+
+## FINDING-P2-369: Only 5 CMS eCQMs Implemented
+Severity: MEDIUM | Category: Value-Based Care
+Enterprise health systems in value-based contracts need MSSP, BPCI-A, Stars, HEDIS alignment.
+Fix: Map gap rules to CMS quality measure denominators/numerators. Effort: 2-3 weeks.
+
+---
+
+# DELIVERABLE: SERIES A DUE DILIGENCE PARAGRAPH
+
+TAILRD Heart has built a clinically deep cardiovascular gap detection engine with 257 deterministic rules grounded in ACC/AHA/ESC guidelines, proper FDA CDS exemption compliance, HIPAA-grade PHI encryption, and a 7-role RBAC system with MFA. The platform is deployed on AWS with ECS Fargate, RDS Multi-AZ, CloudFront, and a functioning CI/CD pipeline. However, the platform is pre-revenue with near-zero test coverage (1.9% for gap rules), no executed BAAs, no SOC 2 or HITRUST certification, and 95% of the frontend renders hardcoded demo data. EHR integration is inbound-only with no CDS Hooks, SMART on FHIR, or write-back capability. Enterprise deal blockers include SSO, uptime SLA, and compliance certifications. The clinical IP (gap rules, evidence objects, guideline provenance) is the core asset. The engineering work to reach production-grade is estimated at 8-12 weeks for a 2-person team, with compliance certifications requiring 6-12 additional months. Risk: single-developer bus factor on the backend, and the 11,391-line gap detection monolith is a maintenance liability.
+
+# DELIVERABLE: CARDIOLOGIST CMO REACTION PARAGRAPH
+
+A cardiologist CMO viewing the platform would be impressed by the clinical depth: 257 gap rules across 6 cardiovascular subspecialties, each citing specific ACC/AHA/ESC guideline class and level of evidence. The GDMT optimization for HF, QTc safety monitoring for EP, and DAPT duration tracking for PCI are clinically sound and reflect current practice guidelines. The 12 validated risk calculators (MAGGIC, CHA2DS2-VASc, STS Risk, GRACE, etc.) add genuine clinical utility. However, the CMO would quickly notice that the data is synthetic, that "real-time" labels appear on static data, and that clinical actions (gap dismissal, referral creation) do not persist. The phenotype detection and cross-module referral capabilities would generate excitement, but the lack of EHR integration (no CDS Hooks in Epic, no order write-back) would raise questions about clinical workflow adoption. The CMO's verdict: "Impressive clinical intelligence engine, but it needs to live inside our EHR workflow, not as a separate portal."
+
+# DELIVERABLE: FASTEST PATH TO MEDICAL CITY DALLAS DEMO
+
+| Step | Task | Est. Time | Owner |
+|------|------|-----------|-------|
+| 1 | Fix GodView localStorage key (P2-151) | 15 min | [J] |
+| 2 | Fix Logout component (P2-152) | 10 min | [J] |
+| 3 | Fix apiService.ts auth token (P2-154) | 20 min | [J] |
+| 4 | Fix Dockerfile: remove tsc||true, fix healthcheck (P2-101, P2-102) | 30 min | [J] |
+| 5 | Replace Math.random() in App.tsx and crossReferralService (P2-159, P2-351) | 1 hour | [J] |
+| 6 | Seed Medical City Dallas tenant with Synthea data | 2 hours | [J] |
+| 7 | Deploy updated image | 30 min | [J] |
+| 8 | Rehearse demo path across all 6 modules | 1 hour | [J] |
+| **Total** | | **~5.5 hours** | |
+
+Demo can be ready in a single work session. The hardcoded clinical data is plausible enough for an initial CMO walkthrough. Wire real data module-by-module after initial demo feedback.
+
+---
+
+# COMBINED PHASE 1 + PHASE 2 STATUS
+
+| Metric | Phase 1 | Phase 2 | Total |
+|--------|---------|---------|-------|
+| Findings | 121 | 97 | 218 |
+| CRITICAL | 14 (4 fixed) | 7 | 21 (4 fixed) |
+| HIGH | 52 | 21 | 73 |
+| MEDIUM | 41 | 48 | 89 |
+| LOW | 14 | 21 | 35 |
+| Sections covered | 1,2,3,3B,3C,4,6,9 | 5,5B,7,8,10,11,12-14,15-31 | All 31 |
+
+---
+
+*Phase 2 completed: April 8, 2026*
+*8 specialist agents, 97 findings*
+*Overall platform readiness: 4.1/10*
+*Demo readiness: CONDITIONAL GO (2 mandatory fixes)*
+*Enterprise readiness: 5/21 features complete*
