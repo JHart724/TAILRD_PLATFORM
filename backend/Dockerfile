@@ -19,8 +19,7 @@ RUN npx prisma generate
 COPY tsconfig.json ./
 COPY src/ ./src/
 COPY scripts/ ./scripts/
-RUN npx tsc || true
-RUN ls dist/server.js && echo "BUILD OK" || (echo "BUILD FAILED - running tsc with error output:" && npx tsc 2>&1 | tail -50 && exit 1)
+RUN npx tsc
 
 # Non-root user for runtime security
 RUN groupadd --gid 1001 tailrd && \
@@ -34,6 +33,6 @@ USER tailrd
 EXPOSE 3001
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3001/api/health',(r)=>{process.exit(r.statusCode===200?0:1)}).on('error',()=>process.exit(1))"
+  CMD node -e "require('http').get('http://localhost:3001/health',(r)=>{process.exit(r.statusCode===200?0:1)}).on('error',()=>process.exit(1))"
 
 CMD ["sh", "-c", "npx prisma migrate deploy 2>/dev/null || npx prisma db push --accept-data-loss 2>/dev/null; node dist/server.js"]
