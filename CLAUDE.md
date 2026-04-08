@@ -279,21 +279,17 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 - Synthea pipeline reads from S3 and persists to database
 - seedFromSynthea.ts creates 3 demo health system tenants
 
-**What's missing for production:**
-- [ ] Compute hosting (ECS Fargate, Railway, Render, or Fly.io)
-- [ ] Managed PostgreSQL (RDS or provider-managed)
-- [ ] DNS + SSL for app.tailrd-heart.com and api.tailrd-heart.com
-- [ ] CI/CD deploy step (push to ECR, update ECS service)
-- [ ] Secrets Manager integration (replace .env with SSM/Secrets Manager)
+**Production is live (as of April 7, 2026):**
+- [x] ECS Fargate (backend) -- api.tailrd-heart.com
+- [x] RDS PostgreSQL Multi-AZ
+- [x] CloudFront + ALB
+- [x] ElastiCache Redis
+- [x] Secrets Manager (JWT_SECRET, PHI_ENCRYPTION_KEY, DATABASE_URL)
+- [x] CI/CD: GitHub Actions → ECR → ECS (new task def per commit)
 - [ ] Frontend deployment (Netlify/Vercel with REACT_APP_USE_REAL_API=true)
+- [ ] DNS for app.tailrd-heart.com (frontend)
 
-**Fastest path to production (~20h):**
-1. Fix Dockerfile (change `npm ci --only=production` to `npm ci` in build stage)
-2. Deploy backend to Railway/Render with managed PostgreSQL
-3. Deploy frontend to Netlify/Vercel
-4. Configure DNS, SSL, CORS
-5. Run `prisma migrate deploy` + `seedFromSynthea.ts --s3 --limit 500`
-6. Smoke test all 6 modules
+**Last known working task definition:** `tailrd-backend:10` (image `f1b4f264`, CORS fix)
 
 ## 10. Frontend-Backend Wiring Status
 
@@ -411,6 +407,67 @@ This file stores Claude Code session context and can contain tokens that trigger
 **Resolution:** Fixed var to let, removed tsc||true, added prisma migrate to CMD, updated CI, fixed all TS errors.
 **Prevention:** Local container test before every push.
 
+### April 8, 2026 — All endpoints returning 500 after Phase 1 deploy
+**Root cause:** CORS origin callback in `server.ts:79` blocked requests without an `Origin` header in production (`!origin && NODE_ENV !== 'production'`). Every non-browser request (curl, ALB health checks) hit `new Error('Not allowed by CORS')` → global error handler → 500.
+**Resolution:** PR #59 removed the production-only restriction. CORS is a browser mechanism; requests without Origin headers should always pass.
+**Compounding factor:** Deploy workflow used `force-new-deployment` without registering a new task def, so the fix image wasn't picked up until task def 10 was manually registered.
+**Prevention:** Deploy workflow now registers a new task def per commit (PR #XX).
+
 ## 17. ECS Deployment Runbook
 - **Container won't start, no logs:** Module import error or Prisma mismatch. Pull and run locally.
-- **Roll back first:** `aws ecs update-service --task-definition tailrd-backend:LAST_WORKING --force-new-deployment`. Never leave production down while debugging.
+- **Roll back first:** `aws ecs update-service --cluster tailrd-production-cluster --service tailrd-production-backend --task-definition tailrd-backend:LAST_WORKING`. Never leave production down while debugging.
+- **Last known working task def:** `tailrd-backend:10`
+
+## 18. Phase 2 Operating Rules
+
+### Audit and fix cycle
+1. Run Phase 2 audit agents for pending sections
+2. Append output to `docs/MASTER_AUDIT_2026_04.md` -- never overwrite Phase 1 findings
+3. Update the finding status tracker table (OPEN → IN_PROGRESS → FIXED → VERIFIED)
+4. Fix in groups by section, smallest blast radius first
+5. One branch and PR per fix group
+6. Run 3-check rule before every push
+7. Smoke tests must pass before merge
+8. Health + login check after every deploy
+9. Update "last known working task definition" in this file after every successful deploy
+
+### 3-check pre-push gate
+Before every `git push`, verify:
+1. `grep -r "@ts-nocheck" backend/src/ | grep -v node_modules` → must return nothing
+2. `grep -rn "new PrismaClient" backend/src/ | grep -v lib/prisma.ts | grep -v node_modules` → must return nothing
+3. `grep -rn "\bvar " backend/src/ --include="*.ts" | grep -v node_modules | grep -v "process.env"` → must return nothing
+
+### Stale Prisma type detection
+When `tsc` shows errors for fields that exist in `schema.prisma`, these are stale-client errors from WSL. Do NOT add `as any` casts. Verify the field exists in schema.prisma, note it as a stale-client error, and move on. These resolve in Docker build where `prisma generate` runs correctly.
+
+### Deploy verification (run after every deploy)
+```bash
+curl -s https://api.tailrd-heart.com/health | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+print('Health:', d['data']['status'])
+" && \
+curl -s -X POST https://api.tailrd-heart.com/api/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{\"email\":\"admin@stmarys.org\",\"password\":\"demo123\"}' | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+print('Login:', d.get('success'))
+" && \
+TASK=\$(aws ecs list-tasks --cluster tailrd-production-cluster \
+  --service-name tailrd-production-backend \
+  --query 'taskArns[0]' --output text 2>/dev/null) && \
+aws ecs describe-tasks --cluster tailrd-production-cluster \
+  --tasks "\$TASK" \
+  --query 'tasks[0].containers[0].image' \
+  --output text 2>/dev/null | grep -o '[a-f0-9]\{8\}' | head -1 | \
+  xargs -I{} echo "Running SHA: {}"
+```
+
+All three must pass: Health: healthy, Login: True (or valid error), Running SHA matches pushed commit.
+
+### Rollback protocol
+If deploy verification fails:
+1. Immediately update service to last known working task def
+2. Do NOT debug on production -- pull the image and run locally
+3. Fix, push, and redeploy through normal PR flow

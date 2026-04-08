@@ -43,14 +43,51 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
-      - name: Deploy to ECS
+      - name: Deploy to ECS and verify
+        env:
+          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
+          # Register new task definition with this commit's image
+          aws ecs describe-task-definition \
+            --task-definition $ECS_SERVICE \
+            --query 'taskDefinition' \
+            --output json > /tmp/taskdef.json
+
+          python3 -c "
+          import json, os
+          with open('/tmp/taskdef.json') as f:
+              td = json.load(f)
+          td['containerDefinitions'][0]['image'] = '${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}'
+          for key in ['taskDefinitionArn','revision','status','requiresAttributes',
+                      'compatibilities','registeredAt','registeredBy','deregisteredAt']:
+              td.pop(key, None)
+          with open('/tmp/new-taskdef.json', 'w') as f:
+              json.dump(td, f)
+          print('Task def prepared')
+          "
+
+          NEW_TD=$(aws ecs register-task-definition \
+            --cli-input-json file:///tmp/new-taskdef.json \
+            --query 'taskDefinition.taskDefinitionArn' \
+            --output text)
+          echo "Registered: $NEW_TD"
+
           aws ecs update-service \
             --cluster $ECS_CLUSTER \
             --service $ECS_SERVICE \
-            --force-new-deployment
-          echo "Waiting for service to stabilize..."
-          aws ecs wait services-stable \
-            --cluster $ECS_CLUSTER \
-            --services $ECS_SERVICE
-          echo "Deployment complete!"
+            --task-definition "$NEW_TD"
+
+          echo "Waiting for healthy..."
+          for i in $(seq 1 20); do
+            sleep 15
+            STATUS=$(curl -sf https://api.tailrd-heart.com/health | \
+              python3 -c "import sys,json; print(json.load(sys.stdin)['data']['status'])" 2>/dev/null || echo "unavailable")
+            echo "[$i/20] Health: $STATUS"
+            if [ "$STATUS" = "healthy" ]; then
+              echo "Deploy confirmed healthy on ${IMAGE_TAG}"
+              exit 0
+            fi
+          done
+          echo "ERROR: Deploy did not stabilize in 5 minutes"
+          exit 1
