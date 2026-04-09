@@ -58,6 +58,70 @@ resource "aws_secretsmanager_secret_version" "phi_encryption_key" {
 
 # ─── REDOX Integration Credentials (placeholders) ───────────────────────────
 
+# ─── REDIS_URL ──────────────────────────────────────────────────────────────
+
+resource "aws_secretsmanager_secret" "redis_url" {
+  name        = "${local.name_prefix}/app/redis-url"
+  description = "Redis connection URL for ${local.name_prefix}"
+  kms_key_id  = var.phi_kms_key_arn
+
+  tags = {
+    Name      = "${local.name_prefix}-redis-url"
+    DataClass = "Secret"
+  }
+}
+
+resource "aws_secretsmanager_secret_version" "redis_url" {
+  secret_id     = aws_secretsmanager_secret.redis_url.id
+  secret_string = "rediss://:${random_password.redis_auth.result}@${aws_elasticache_replication_group.main.primary_endpoint_address}:6379"
+}
+
+# ─── REDOX_WEBHOOK_SECRET ───────────────────────────────────────────────────
+
+resource "aws_secretsmanager_secret" "redox_webhook_secret" {
+  name        = "${local.name_prefix}/app/redox-webhook-secret"
+  description = "Redox webhook verification secret for ${local.name_prefix}"
+  kms_key_id  = var.phi_kms_key_arn
+
+  tags = {
+    Name      = "${local.name_prefix}-redox-webhook-secret"
+    DataClass = "Sensitive"
+  }
+}
+
+resource "aws_secretsmanager_secret_version" "redox_webhook_secret" {
+  secret_id     = aws_secretsmanager_secret.redox_webhook_secret.id
+  secret_string = "PLACEHOLDER_REPLACE_ME"
+
+  lifecycle {
+    ignore_changes = [secret_string]
+  }
+}
+
+# ─── SMART_CLIENT_SECRET ────────────────────────────────────────────────────
+
+resource "aws_secretsmanager_secret" "smart_client_secret" {
+  name        = "${local.name_prefix}/app/smart-client-secret"
+  description = "SMART on FHIR client secret for ${local.name_prefix}"
+  kms_key_id  = var.phi_kms_key_arn
+
+  tags = {
+    Name      = "${local.name_prefix}-smart-client-secret"
+    DataClass = "Sensitive"
+  }
+}
+
+resource "aws_secretsmanager_secret_version" "smart_client_secret" {
+  secret_id     = aws_secretsmanager_secret.smart_client_secret.id
+  secret_string = "PLACEHOLDER_REPLACE_ME"
+
+  lifecycle {
+    ignore_changes = [secret_string]
+  }
+}
+
+# ─── REDOX Integration Credentials (placeholders) ───────────────────────────
+
 resource "aws_secretsmanager_secret" "redox_client_id" {
   name        = "${local.name_prefix}/app/redox-client-id"
   description = "Redox EHR integration client ID for ${local.name_prefix}"
@@ -118,6 +182,9 @@ resource "aws_iam_policy" "ecs_secrets_access" {
           aws_secretsmanager_secret.database_url.arn,
           aws_secretsmanager_secret.jwt_secret.arn,
           aws_secretsmanager_secret.phi_encryption_key.arn,
+          aws_secretsmanager_secret.redis_url.arn,
+          aws_secretsmanager_secret.redox_webhook_secret.arn,
+          aws_secretsmanager_secret.smart_client_secret.arn,
           aws_secretsmanager_secret.redox_client_id.arn,
           aws_secretsmanager_secret.redox_client_secret.arn,
           aws_secretsmanager_secret.rds_master_password.arn
@@ -147,11 +214,14 @@ resource "aws_iam_policy" "ecs_secrets_access" {
 output "secrets_arns" {
   description = "Map of secret name to ARN for ECS task definition references"
   value = {
-    database_url       = aws_secretsmanager_secret.database_url.arn
-    jwt_secret         = aws_secretsmanager_secret.jwt_secret.arn
-    phi_encryption_key = aws_secretsmanager_secret.phi_encryption_key.arn
-    redox_client_id    = aws_secretsmanager_secret.redox_client_id.arn
-    redox_client_secret = aws_secretsmanager_secret.redox_client_secret.arn
+    database_url         = aws_secretsmanager_secret.database_url.arn
+    jwt_secret           = aws_secretsmanager_secret.jwt_secret.arn
+    phi_encryption_key   = aws_secretsmanager_secret.phi_encryption_key.arn
+    redis_url            = aws_secretsmanager_secret.redis_url.arn
+    redox_webhook_secret = aws_secretsmanager_secret.redox_webhook_secret.arn
+    smart_client_secret  = aws_secretsmanager_secret.smart_client_secret.arn
+    redox_client_id      = aws_secretsmanager_secret.redox_client_id.arn
+    redox_client_secret  = aws_secretsmanager_secret.redox_client_secret.arn
   }
 }
 
