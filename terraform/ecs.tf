@@ -83,6 +83,9 @@ resource "aws_iam_role_policy" "ecs_task_execution_secrets" {
           aws_secretsmanager_secret.database_url.arn,
           aws_secretsmanager_secret.jwt_secret.arn,
           aws_secretsmanager_secret.phi_encryption_key.arn,
+          aws_secretsmanager_secret.redis_url.arn,
+          aws_secretsmanager_secret.redox_webhook_secret.arn,
+          aws_secretsmanager_secret.smart_client_secret.arn,
           aws_secretsmanager_secret.rds_master_password.arn
         ]
       },
@@ -227,6 +230,18 @@ resource "aws_ecs_task_definition" "backend" {
         {
           name      = "PHI_ENCRYPTION_KEY"
           valueFrom = aws_secretsmanager_secret.phi_encryption_key.arn
+        },
+        {
+          name      = "REDIS_URL"
+          valueFrom = aws_secretsmanager_secret.redis_url.arn
+        },
+        {
+          name      = "REDOX_WEBHOOK_SECRET"
+          valueFrom = aws_secretsmanager_secret.redox_webhook_secret.arn
+        },
+        {
+          name      = "SMART_CLIENT_SECRET"
+          valueFrom = aws_secretsmanager_secret.smart_client_secret.arn
         }
       ]
 
@@ -234,6 +249,10 @@ resource "aws_ecs_task_definition" "backend" {
         {
           name  = "NODE_ENV"
           value = var.environment == "production" ? "production" : "development"
+        },
+        {
+          name  = "PORT"
+          value = tostring(var.container_port)
         },
         {
           name  = "AWS_REGION"
@@ -246,6 +265,46 @@ resource "aws_ecs_task_definition" "backend" {
         {
           name  = "CORS_ORIGINS"
           value = "https://app.${var.domain_name},https://${var.domain_name}"
+        },
+        {
+          name  = "API_URL"
+          value = "https://api.${var.domain_name}"
+        },
+        {
+          name  = "DEMO_MODE"
+          value = "false"
+        },
+        {
+          name  = "LOG_LEVEL"
+          value = "info"
+        },
+        {
+          name  = "COGNITO_USER_POOL_ID"
+          value = aws_cognito_user_pool.main.id
+        },
+        {
+          name  = "COGNITO_CLIENT_ID"
+          value = aws_cognito_user_pool_client.api.id
+        },
+        {
+          name  = "COGNITO_DOMAIN"
+          value = "https://${aws_cognito_user_pool_domain.main.domain}.auth.${var.aws_region}.amazoncognito.com"
+        },
+        {
+          name  = "COGNITO_REGION"
+          value = var.aws_region
+        },
+        {
+          name  = "SES_FROM_ADDRESS"
+          value = "noreply@${var.domain_name}"
+        },
+        {
+          name  = "SMART_CLIENT_ID"
+          value = "PLACEHOLDER_REPLACE_ME"
+        },
+        {
+          name  = "AWS_CLOUDWATCH_GROUP"
+          value = aws_cloudwatch_log_group.ecs.name
         }
       ]
 
