@@ -9,7 +9,8 @@ import { logger } from './utils/logger';
 import { APIResponse } from './types';
 import { analyticsMiddleware } from './middleware/analytics';
 import { csrfCookieSetter, csrfProtection, csrfTokenEndpoint } from './middleware/csrfProtection';
-import { loginRateLimit } from './middleware/authRateLimit';
+import { loginRateLimit, upgradeAuthRateLimitStores } from './middleware/authRateLimit';
+import getRedisClient, { createRedisRateLimitStore } from './lib/redis';
 
 config();
 
@@ -54,7 +55,8 @@ const PORT = process.env.PORT || 3001;
 
 // Logger imported from utils/logger.ts (shared singleton with PHI redaction)
 
-const limiter = rateLimit({
+// Rate limiter — starts with in-memory store, upgrades to Redis after connection
+let activeLimiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'),
   max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
   message: {
@@ -65,6 +67,7 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+const limiter: express.RequestHandler = (req, res, next) => activeLimiter(req, res, next);
 
 const allowedOrigins = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(',').map(o => o.trim())
@@ -268,6 +271,33 @@ process.on('uncaughtException', (error) => {
 });
 
 if (require.main === module) {
+  // Initialize Redis before listening — enables distributed rate limiting across ECS instances
+  getRedisClient().then((redisClient) => {
+    if (redisClient) {
+      const store = createRedisRateLimitStore('global');
+      if (store) {
+        activeLimiter = rateLimit({
+          windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'),
+          max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
+          message: {
+            success: false,
+            error: 'Too many requests from this IP, please try again later.',
+            timestamp: new Date().toISOString()
+          } as APIResponse,
+          standardHeaders: true,
+          legacyHeaders: false,
+          store,
+        });
+        logger.info('Global rate limiting upgraded to Redis store');
+      }
+      if (upgradeAuthRateLimitStores()) {
+        logger.info('Auth rate limiting upgraded to Redis store');
+      }
+    }
+  }).catch((err) => {
+    logger.warn('Redis init failed, rate limiting will use in-memory store', { error: err.message });
+  });
+
   app.listen(PORT, () => {
     logger.info(`TAILRD Platform Backend running on port ${PORT}`, {
       environment: NODE_ENV,
