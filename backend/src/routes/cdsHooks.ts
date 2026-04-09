@@ -11,11 +11,46 @@
  */
 
 import { Router, Request, Response } from 'express';
+import { createRemoteJWKSet, jwtVerify } from 'jose';
 import prisma from '../lib/prisma';
 import { logger } from '../utils/logger';
 import crypto from 'crypto';
 
 const router = Router();
+
+// ─── CDS Hooks JWT Verification (per CDS Hooks 2.0 spec) ─────────────────
+// Required for Epic App Orchard. Verifies JWT from EHR's JWKS endpoint.
+
+const jwksCache = new Map<string, ReturnType<typeof createRemoteJWKSet>>();
+
+async function verifyCDSHooksJWT(
+  authHeader: string | undefined,
+  hookId: string,
+  issuerUrl: string
+): Promise<boolean> {
+  if (process.env.NODE_ENV !== 'production') return true;
+  if (!authHeader?.startsWith('Bearer ')) {
+    logger.warn('CDS Hooks missing JWT', { hookId });
+    return false;
+  }
+  try {
+    const jwksUrl = new URL('/.well-known/jwks.json', issuerUrl);
+    if (!jwksCache.has(issuerUrl)) {
+      jwksCache.set(issuerUrl, createRemoteJWKSet(jwksUrl));
+    }
+    const { payload } = await jwtVerify(authHeader.slice(7), jwksCache.get(issuerUrl)!, {
+      audience: `${process.env.API_URL || 'https://api.tailrd-heart.com'}/cds-services`,
+    });
+    if (!payload.iss || !payload.iat || !payload.exp || !payload.jti) return false;
+    return true;
+  } catch (error) {
+    logger.error('CDS Hooks JWT verification failed', {
+      hookId,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return false;
+  }
+}
 
 // Discovery endpoint — required by CDS Hooks spec
 router.get('/', (_req: Request, res: Response) => {
@@ -59,8 +94,18 @@ router.get('/', (_req: Request, res: Response) => {
 
 // patient-view hook — serve active therapy gaps as CDS cards
 router.post('/tailrd-cardiovascular-gaps', async (req: Request, res: Response) => {
-  const startTime = Date.now();
+  const hookStart = Date.now();
   try {
+    // JWT verification in production
+    if (process.env.NODE_ENV === 'production' && req.body.fhirAuthorization?.subject) {
+      const valid = await verifyCDSHooksJWT(
+        req.headers.authorization as string,
+        'tailrd-cardiovascular-gaps',
+        req.body.fhirAuthorization.subject
+      );
+      if (!valid) return res.json({ cards: [] });
+    }
+
     const { context } = req.body;
     const patientFhirId = context?.patientId;
 
@@ -116,17 +161,20 @@ router.post('/tailrd-cardiovascular-gaps', async (req: Request, res: Response) =
       },
     });
 
+    const duration = Date.now() - hookStart;
+    if (duration > 4000) logger.warn('CDS Hooks near 5s Epic limit', { hookId: 'tailrd-cardiovascular-gaps', durationMs: duration });
+
     logger.info('CDS Hooks patient-view served', {
       patientId: patient.id,
       cardCount: cards.length,
-      durationMs: Date.now() - startTime,
+      durationMs: duration,
     });
 
     return res.json({ cards });
   } catch (error) {
     logger.error('CDS Hooks patient-view error', {
       error: error instanceof Error ? error.message : String(error),
-      durationMs: Date.now() - startTime,
+      durationMs: Date.now() - hookStart,
     });
     return res.json({ cards: [] }); // Always 200 per spec
   }
@@ -134,7 +182,18 @@ router.post('/tailrd-cardiovascular-gaps', async (req: Request, res: Response) =
 
 // order-select hook — drug interaction checking
 router.post('/tailrd-drug-interaction-check', async (req: Request, res: Response) => {
+  const hookStart = Date.now();
   try {
+    // JWT verification in production
+    if (process.env.NODE_ENV === 'production' && req.body.fhirAuthorization?.subject) {
+      const valid = await verifyCDSHooksJWT(
+        req.headers.authorization as string,
+        'tailrd-drug-interaction-check',
+        req.body.fhirAuthorization.subject
+      );
+      if (!valid) return res.json({ cards: [] });
+    }
+
     const { context, prefetch } = req.body;
     const draftOrders = context?.draftOrders?.entry || [];
     const currentMeds = prefetch?.medications?.entry || [];
@@ -197,6 +256,9 @@ router.post('/tailrd-drug-interaction-check', async (req: Request, res: Response
       }
     }
 
+    const duration = Date.now() - hookStart;
+    if (duration > 4000) logger.warn('CDS Hooks near 5s Epic limit', { hookId: 'tailrd-drug-interaction-check', durationMs: duration });
+
     return res.json({ cards });
   } catch (error) {
     logger.error('CDS Hooks order-select error', { error: error instanceof Error ? error.message : String(error) });
@@ -206,7 +268,18 @@ router.post('/tailrd-drug-interaction-check', async (req: Request, res: Response
 
 // encounter-discharge hook — discharge gap check
 router.post('/tailrd-discharge-gaps', async (req: Request, res: Response) => {
+  const hookStart = Date.now();
   try {
+    // JWT verification in production
+    if (process.env.NODE_ENV === 'production' && req.body.fhirAuthorization?.subject) {
+      const valid = await verifyCDSHooksJWT(
+        req.headers.authorization as string,
+        'tailrd-discharge-gaps',
+        req.body.fhirAuthorization.subject
+      );
+      if (!valid) return res.json({ cards: [] });
+    }
+
     const { context } = req.body;
     const patientFhirId = context?.patientId;
 
@@ -225,6 +298,9 @@ router.post('/tailrd-discharge-gaps', async (req: Request, res: Response) => {
     });
 
     if (gaps.length === 0) return res.json({ cards: [] });
+
+    const duration = Date.now() - hookStart;
+    if (duration > 4000) logger.warn('CDS Hooks near 5s Epic limit', { hookId: 'tailrd-discharge-gaps', durationMs: duration });
 
     return res.json({
       cards: [{
