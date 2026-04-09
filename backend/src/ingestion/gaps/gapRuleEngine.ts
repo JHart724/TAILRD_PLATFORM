@@ -1,7 +1,6 @@
 // @ts-nocheck
 // Gap detection rules use TherapyGapType enum values defined in schema.prisma
 // but not yet in the generated Prisma client. Type checking disabled until prisma generate runs.
-import prisma from '../lib/prisma';
 import { TherapyGapType, ModuleType, Prisma } from '@prisma/client';
 import {
   RXNORM_GDMT,
@@ -12,7 +11,7 @@ import {
   RXNORM_DIGOXIN,
   RXNORM_QT_PROLONGING,
   RXNORM_RATE_CONTROL,
-} from '../terminology/cardiovascularValuesets';
+} from '../../terminology/cardiovascularValuesets';
 
 /** Extract code arrays from valueset objects for medication matching */
 function codes(obj: Record<string, string>): string[] {
