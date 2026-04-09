@@ -60,3 +60,14 @@ export function buildTestPatient(overrides: Partial<{
     })),
   };
 }
+
+export function buildClinicalData(patient: ReturnType<typeof buildTestPatient>) {
+  return {
+    conditions: patient.conditions,
+    medications: patient.medications,
+    observations: patient.observations,
+    labValues: Object.fromEntries(
+      patient.observations.map((o: any) => [o.labKey, o.valueNumeric])
+    ) as Record<string, number | null>,
+  };
+}
