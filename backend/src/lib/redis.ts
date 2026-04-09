@@ -6,7 +6,6 @@
  */
 
 import { createClient, RedisClientType } from 'redis';
-import { RedisStore } from 'rate-limit-redis';
 import type { Store } from 'express-rate-limit';
 
 let client: RedisClientType | null = null;
@@ -43,10 +42,17 @@ export async function getRedisClient(): Promise<RedisClientType | null> {
  */
 export function createRedisRateLimitStore(prefix: string): Store | undefined {
   if (!client) return undefined;
-  return new RedisStore({
-    sendCommand: (...args: string[]) => client!.sendCommand(args),
-    prefix: `rl:${prefix}:`,
-  });
+  try {
+    // Dynamic require to avoid crashing at module load if package is missing
+    const { RedisStore } = require('rate-limit-redis');
+    return new RedisStore({
+      sendCommand: (...args: string[]) => client!.sendCommand(args),
+      prefix: `rl:${prefix}:`,
+    });
+  } catch (err: any) {
+    console.warn(`rate-limit-redis not available: ${err.message}. Using in-memory store.`);
+    return undefined;
+  }
 }
 
 export default getRedisClient;
