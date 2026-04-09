@@ -6,6 +6,8 @@
  */
 
 import { createClient, RedisClientType } from 'redis';
+import { RedisStore } from 'rate-limit-redis';
+import type { Store } from 'express-rate-limit';
 
 let client: RedisClientType | null = null;
 let connectionAttempted = false;
@@ -33,6 +35,18 @@ export async function getRedisClient(): Promise<RedisClientType | null> {
     client = null;
     return null;
   }
+}
+
+/**
+ * Creates a RedisStore for express-rate-limit if Redis is connected.
+ * Returns undefined if Redis is unavailable (falls back to in-memory).
+ */
+export function createRedisRateLimitStore(prefix: string): Store | undefined {
+  if (!client) return undefined;
+  return new RedisStore({
+    sendCommand: (...args: string[]) => client!.sendCommand(args),
+    prefix: `rl:${prefix}:`,
+  });
 }
 
 export default getRedisClient;
