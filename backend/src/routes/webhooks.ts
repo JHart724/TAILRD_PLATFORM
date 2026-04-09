@@ -14,6 +14,7 @@ import {
 } from '../services/webhookPipeline';
 import prisma from '../lib/prisma';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
+import { writeAuditLog } from '../middleware/auditLogger';
 import { createLogger } from 'winston';
 
 const router = Router();
@@ -215,10 +216,70 @@ router.post('/redox', verifyRedoxSignature, async (req, res) => {
         }
 
         case 'PatientMerge': {
-          logger.info('PatientMerge event received — dry run only, transaction deferred pending schema migration', {
-            hospitalId,
-            note: 'mergedIntoId field must be added to Patient model before activating merge transaction',
-          });
+          try {
+            const survivingMRN = (payload as any).Patient?.Identifiers?.find((i: any) => i.IDType === 'MRN')?.ID;
+            const retiredMRN = (payload as any).Patient?.PreviousIdentifiers?.find((i: any) => i.IDType === 'MRN')?.ID;
+
+            if (!survivingMRN || !retiredMRN) {
+              logger.warn('PatientMerge event missing MRN identifiers', { hospitalId });
+              break;
+            }
+
+            const [survivingPatient, retiredPatient] = await Promise.all([
+              prisma.patient.findFirst({ where: { mrn: survivingMRN, hospitalId } }),
+              prisma.patient.findFirst({ where: { mrn: retiredMRN, hospitalId } }),
+            ]);
+
+            if (!survivingPatient) {
+              logger.warn('PatientMerge: surviving patient not found', { survivingMRN, hospitalId });
+              break;
+            }
+            if (!retiredPatient) {
+              logger.warn('PatientMerge: retired patient not found', { retiredMRN, hospitalId });
+              break;
+            }
+            if (survivingPatient.id === retiredPatient.id) {
+              logger.warn('PatientMerge: surviving and retired are same patient', { hospitalId });
+              break;
+            }
+
+            await prisma.$transaction([
+              prisma.encounter.updateMany({ where: { patientId: retiredPatient.id }, data: { patientId: survivingPatient.id } }),
+              prisma.observation.updateMany({ where: { patientId: retiredPatient.id }, data: { patientId: survivingPatient.id } }),
+              prisma.medication.updateMany({ where: { patientId: retiredPatient.id }, data: { patientId: survivingPatient.id } }),
+              prisma.condition.updateMany({ where: { patientId: retiredPatient.id }, data: { patientId: survivingPatient.id } }),
+              prisma.therapyGap.updateMany({ where: { patientId: retiredPatient.id }, data: { patientId: survivingPatient.id } }),
+              prisma.alert.updateMany({ where: { patientId: retiredPatient.id }, data: { patientId: survivingPatient.id } }),
+              prisma.patient.update({
+                where: { id: retiredPatient.id },
+                data: { isActive: false, isMerged: true, mergedIntoId: survivingPatient.id, mergedAt: new Date() },
+              }),
+            ]);
+
+            // Re-run gap detection for surviving patient with merged data
+            const { runGapDetectionForPatient: runMergeGapDetection } = require('../ingestion/runGapDetectionForPatient');
+            setImmediate(async () => {
+              try {
+                await runMergeGapDetection(survivingPatient.id, hospitalId);
+              } catch (gapErr: any) {
+                logger.error('Post-merge gap detection failed', { patientId: survivingPatient.id, error: gapErr.message });
+              }
+            });
+
+            await writeAuditLog(
+              { user: { userId: 'system', hospitalId } } as any,
+              'PATIENT_MERGED', 'Patient', retiredPatient.id,
+              JSON.stringify({ survivingPatientId: survivingPatient.id, survivingMRN, retiredMRN })
+            );
+
+            logger.info('PatientMerge completed', {
+              survivingPatientId: survivingPatient.id,
+              retiredPatientId: retiredPatient.id,
+              hospitalId,
+            });
+          } catch (mergeError: any) {
+            logger.error('PatientMerge failed', { hospitalId, error: mergeError.message });
+          }
           break;
         }
 
