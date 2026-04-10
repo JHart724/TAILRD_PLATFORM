@@ -152,7 +152,7 @@ if (!isDemoMode) {
 // CDS Hooks — mounted before auth middleware (CDS uses its own JWT)
 app.use('/cds-services', require('./routes/cdsHooks').default);
 
-app.get('/health', (req, res) => {
+const healthHandler: express.RequestHandler = (_req, res) => {
   res.status(200).json({
     success: true,
     data: {
@@ -164,7 +164,9 @@ app.get('/health', (req, res) => {
     },
     message: 'TAILRD Platform Backend is running'
   } as APIResponse);
-});
+};
+app.get('/health', healthHandler);
+app.get('/api/health', healthHandler);
 
 app.get('/api/status', async (req, res) => {
   const checks: Record<string, string> = {};

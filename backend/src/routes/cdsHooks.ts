@@ -11,7 +11,6 @@
  */
 
 import { Router, Request, Response } from 'express';
-import { createRemoteJWKSet, jwtVerify } from 'jose';
 import prisma from '../lib/prisma';
 import { logger } from '../utils/logger';
 import crypto from 'crypto';
@@ -20,8 +19,9 @@ const router = Router();
 
 // ─── CDS Hooks JWT Verification (per CDS Hooks 2.0 spec) ─────────────────
 // Required for Epic App Orchard. Verifies JWT from EHR's JWKS endpoint.
+// jose is ESM-only — must use dynamic import() to avoid CJS require-time crash.
 
-const jwksCache = new Map<string, ReturnType<typeof createRemoteJWKSet>>();
+const jwksCache = new Map<string, any>();
 
 async function verifyCDSHooksJWT(
   authHeader: string | undefined,
@@ -34,6 +34,7 @@ async function verifyCDSHooksJWT(
     return false;
   }
   try {
+    const { createRemoteJWKSet, jwtVerify } = await import('jose');
     const jwksUrl = new URL('/.well-known/jwks.json', issuerUrl);
     if (!jwksCache.has(issuerUrl)) {
       jwksCache.set(issuerUrl, createRemoteJWKSet(jwksUrl));
@@ -44,10 +45,7 @@ async function verifyCDSHooksJWT(
     if (!payload.iss || !payload.iat || !payload.exp || !payload.jti) return false;
     return true;
   } catch (error) {
-    logger.error('CDS Hooks JWT verification failed', {
-      hookId,
-      error: error instanceof Error ? error.message : String(error),
-    });
+    logger.error('CDS Hooks JWT failed', { hookId, error: error instanceof Error ? error.message : String(error) });
     return false;
   }
 }
