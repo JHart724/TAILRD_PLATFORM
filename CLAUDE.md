@@ -363,7 +363,7 @@ These rules are non-negotiable. Violating any of them creates clinical, security
 - **Never hardcode "Live" or real-time labels on static data.** If data is not actually live-updating, do not label it as such.
 - **Never use `DEMO_MODE=true` in any environment with real patient data.** DEMO_MODE disables all authentication, authorization, tenant isolation, and CSRF protection.
 - **Never create `new PrismaClient()` instances.** Always import the shared singleton from `backend/src/lib/prisma.ts`. The singleton applies PHI encryption middleware. Independent instances bypass encryption.
-- **Never add `@ts-nocheck` to any file.** Fix the type errors instead.
+- **Never add `@ts-nocheck` to any file.** Fix the type errors instead. *Known exceptions (stale Prisma client errors under WSL — see §18): `backend/src/ingestion/gaps/gapRuleEngine.ts`, `backend/src/ingestion/runGapDetectionForPatient.ts`. Do not add any more. Sprint C-9 tracks removal of these two.*
 - **Never leave PHI (patient names, MRN, DOB, addresses) in logs, error messages, or console output.** Log patient IDs (internal UUIDs) only, never identifiers.
 - **Never query patient data without `hospitalId` in the WHERE clause.** Every patient-scoped query must enforce tenant isolation.
 - **Never accept `hospitalId` from request body for authorization decisions.** Always use `req.user.hospitalId` from the verified JWT.

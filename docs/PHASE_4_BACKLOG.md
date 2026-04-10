@@ -337,6 +337,15 @@ Per readiness audit §7. Non-engineering work (Legal, HR, Ops) but engineering o
 
 100 concurrent CDS Hook calls (already scripted for B-3), plus: 50 concurrent logged-in users hitting module dashboards, 1 ECS task killed mid-request (verify no data loss), RDS failover drill. Document outcomes in `docs/LOAD_TEST_2026_Q2.md`.
 
+### C-9 — Remove `@ts-nocheck` from ingestion files
+
+Two pre-existing exceptions currently documented in CLAUDE.md §14:
+
+- `backend/src/ingestion/gaps/gapRuleEngine.ts`
+- `backend/src/ingestion/runGapDetectionForPatient.ts`
+
+Both are stale-Prisma-client errors per CLAUDE.md §18. They resolve when `prisma generate` runs inside a Docker build (Linux FS), not under WSL against the Windows filesystem. **Execution:** run the full build inside Docker, remove the `// @ts-nocheck` line from each file, verify `tsc --noEmit` is clean in-container, ship as one PR. Delete the exception note from CLAUDE.md §14 in the same PR.
+
 ### C-8 — Frontend deploy (app.tailrd-heart.com)
 
 Still on the "not deployed" list in CLAUDE.md §9. Netlify or Vercel, `REACT_APP_USE_REAL_API=true`, DNS cutover. Depends on Sprint B-1 being done so the real-API build doesn't render blank module pages.
