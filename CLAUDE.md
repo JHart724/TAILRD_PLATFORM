@@ -289,7 +289,7 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 - [ ] Frontend deployment (Netlify/Vercel with REACT_APP_USE_REAL_API=true)
 - [ ] DNS for app.tailrd-heart.com (frontend)
 
-**Last known working task definition:** `tailrd-backend:20` (deployed April 8, 2026 -- Phase 3 complete)
+**Last known working task definition:** `tailrd-backend:26 (deployed April 9, 2026 — Sprint A complete)
 
 ## 10. Frontend-Backend Wiring Status
 
@@ -416,7 +416,7 @@ This file stores Claude Code session context and can contain tokens that trigger
 ## 17. ECS Deployment Runbook
 - **Container won't start, no logs:** Module import error or Prisma mismatch. Pull and run locally.
 - **Roll back first:** `aws ecs update-service --cluster tailrd-production-cluster --service tailrd-production-backend --task-definition tailrd-backend:LAST_WORKING`. Never leave production down while debugging.
-- **Last known working task def:** `tailrd-backend:20`
+- **Last known working task def:** `tailrd-backend:26`
 
 ## 18. Phase 2 Operating Rules
 
