@@ -1044,32 +1044,86 @@ router.post('/users/invite',
 // GET /api/admin/users/:id/activity — user activity detail (mock)
 router.get('/users/:id/activity',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['super-admin', 'hospital-admin']),
   async (req: AuthenticatedRequest, res: Response) => {
-    res.json({
-      success: true,
-      data: {
-        userId: req.params.id,
-        loginHistory: [
-          { timestamp: '2026-03-22 08:15:23', ip: '10.0.1.42', success: true },
-          { timestamp: '2026-03-21 17:30:11', ip: '10.0.1.42', success: true },
-          { timestamp: '2026-03-20 09:05:47', ip: '192.168.1.100', success: true },
-          { timestamp: '2026-03-19 08:45:02', ip: '10.0.1.42', success: false },
-          { timestamp: '2026-03-18 14:22:38', ip: '10.0.1.42', success: true },
-        ],
-        recentActions: [
-          { timestamp: '2026-03-22 08:20', action: 'Viewed Dashboard', detail: 'Heart Failure Executive View' },
-          { timestamp: '2026-03-22 08:18', action: 'Exported Report', detail: 'Q1 Gap Analysis PDF' },
-          { timestamp: '2026-03-21 16:45', action: 'Resolved Gap', detail: 'HF-042: LVEF Documentation' },
-          { timestamp: '2026-03-21 15:30', action: 'Viewed Patient', detail: 'Patient ID #4521' },
-          { timestamp: '2026-03-21 14:10', action: 'Updated Alert', detail: 'EP Device Follow-up' },
-          { timestamp: '2026-03-20 11:25', action: 'Viewed Dashboard', detail: 'Structural Heart Service Line' },
-          { timestamp: '2026-03-20 09:15', action: 'Resolved Gap', detail: 'CAD-018: Statin Therapy' },
-          { timestamp: '2026-03-19 16:40', action: 'Exported Report', detail: 'Monthly KPI Summary' },
-        ],
-      },
-      timestamp: new Date().toISOString(),
-    } as APIResponse);
+    try {
+      const targetUserId = req.params.id;
+      const callerRole = (req.user?.role ?? '').toLowerCase().replace(/_/g, '-');
+      const callerHospitalId = req.user?.hospitalId;
+
+      const targetUser = await prisma.user.findUnique({
+        where: { id: targetUserId },
+        select: { id: true, email: true, hospitalId: true, role: true },
+      });
+
+      if (!targetUser) {
+        return res.status(404).json({ success: false, error: 'User not found' } as APIResponse);
+      }
+
+      if (callerRole !== 'super-admin' && targetUser.hospitalId !== callerHospitalId) {
+        return res.status(403).json({ success: false, error: 'Cross-tenant access denied' } as APIResponse);
+      }
+
+      const limitParam = Number.parseInt(String(req.query.limit ?? '50'), 10);
+      const limit = Number.isFinite(limitParam) ? Math.min(Math.max(limitParam, 1), 200) : 50;
+
+      const [loginEvents, actionEvents] = await Promise.all([
+        prisma.auditLog.findMany({
+          where: {
+            userId: targetUserId,
+            action: { in: ['LOGIN_SUCCESS', 'LOGIN_FAILURE', 'LOGOUT', 'MFA_CHALLENGE', 'MFA_SUCCESS', 'MFA_FAILURE'] },
+          },
+          orderBy: { timestamp: 'desc' },
+          take: limit,
+          select: { id: true, action: true, ipAddress: true, timestamp: true, description: true },
+        }),
+        prisma.auditLog.findMany({
+          where: {
+            userId: targetUserId,
+            action: { notIn: ['LOGIN_SUCCESS', 'LOGIN_FAILURE', 'LOGOUT', 'MFA_CHALLENGE', 'MFA_SUCCESS', 'MFA_FAILURE'] },
+          },
+          orderBy: { timestamp: 'desc' },
+          take: limit,
+          select: {
+            id: true,
+            action: true,
+            resourceType: true,
+            resourceId: true,
+            description: true,
+            timestamp: true,
+          },
+        }),
+      ]);
+
+      res.json({
+        success: true,
+        data: {
+          userId: targetUserId,
+          userEmail: targetUser.email,
+          hospitalId: targetUser.hospitalId,
+          loginHistory: loginEvents.map(e => ({
+            id: e.id,
+            timestamp: e.timestamp.toISOString(),
+            ip: e.ipAddress ?? null,
+            success: e.action === 'LOGIN_SUCCESS' || e.action === 'MFA_SUCCESS',
+            action: e.action,
+            description: e.description,
+          })),
+          recentActions: actionEvents.map(e => ({
+            id: e.id,
+            timestamp: e.timestamp.toISOString(),
+            action: e.action,
+            resourceType: e.resourceType,
+            resourceId: e.resourceId,
+            detail: e.description,
+          })),
+        },
+        timestamp: new Date().toISOString(),
+      } as APIResponse);
+    } catch (error) {
+      logger.error('Failed to fetch user activity', { error: error instanceof Error ? error.message : String(error) });
+      res.status(500).json({ success: false, error: 'Failed to fetch user activity' } as APIResponse);
+    }
   }
 );
 

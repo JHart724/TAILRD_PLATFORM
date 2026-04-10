@@ -3,7 +3,7 @@
  */
 
 import { Router, Response } from 'express';
-import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
+import { authenticateToken, requireMFA, AuthenticatedRequest } from '../middleware/auth';
 import prisma from '../lib/prisma';
 import {
   sendDailyDigest,
@@ -15,6 +15,113 @@ import { writeAuditLog } from '../middleware/auditLogger';
 
 const router = Router();
 router.use(authenticateToken);
+
+// ─── GET /api/notifications ─────────────────────────────────────────────────
+// Unified notification feed for the current user's hospital.
+// Aggregates two sources: unresolved TherapyGaps (clinical attention) and
+// recent AuditLog entries for user-visible events (exports, resolutions,
+// patient views). Tenant-scoped by req.user.hospitalId — never from body.
+
+router.get('/', requireMFA, async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = req.user?.hospitalId;
+  if (!hospitalId) {
+    return res.status(401).json({
+      success: false,
+      error: 'Not authenticated',
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  const limitParam = Number.parseInt(String(req.query.limit ?? '25'), 10);
+  const limit = Number.isFinite(limitParam) ? Math.min(Math.max(limitParam, 1), 100) : 25;
+
+  const [gaps, events] = await Promise.all([
+    prisma.therapyGap.findMany({
+      where: { hospitalId, resolvedAt: null },
+      orderBy: { identifiedAt: 'desc' },
+      take: limit,
+      select: {
+        id: true,
+        module: true,
+        gapType: true,
+        medication: true,
+        device: true,
+        currentStatus: true,
+        targetStatus: true,
+        identifiedAt: true,
+        patientId: true,
+      },
+    }),
+    prisma.auditLog.findMany({
+      where: {
+        hospitalId,
+        action: {
+          in: [
+            'GAP_RESOLVED',
+            'GAP_DISMISSED',
+            'PATIENT_VIEWED',
+            'REPORT_EXPORTED',
+            'ALERT_ACKNOWLEDGED',
+            'NOTIFICATION_PREFERENCES_UPDATED',
+          ],
+        },
+      },
+      orderBy: { timestamp: 'desc' },
+      take: limit,
+      select: {
+        id: true,
+        action: true,
+        resourceType: true,
+        resourceId: true,
+        description: true,
+        timestamp: true,
+        userEmail: true,
+      },
+    }),
+  ]);
+
+  const gapNotifications = gaps.map(g => ({
+    id: `gap-${g.id}`,
+    kind: 'gap' as const,
+    severity: 'attention',
+    module: g.module,
+    title: `${g.module} gap recommended for review`,
+    detail: `${g.currentStatus} → ${g.targetStatus}`,
+    medication: g.medication,
+    device: g.device,
+    patientId: g.patientId,
+    timestamp: g.identifiedAt.toISOString(),
+  }));
+
+  const eventNotifications = events.map(e => ({
+    id: `audit-${e.id}`,
+    kind: 'event' as const,
+    severity: 'info',
+    action: e.action,
+    title: e.description ?? e.action,
+    resourceType: e.resourceType,
+    resourceId: e.resourceId,
+    actorEmail: e.userEmail,
+    timestamp: e.timestamp.toISOString(),
+  }));
+
+  const notifications = [...gapNotifications, ...eventNotifications]
+    .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
+    .slice(0, limit);
+
+  res.json({
+    success: true,
+    data: {
+      notifications,
+      counts: {
+        gaps: gapNotifications.length,
+        events: eventNotifications.length,
+        total: notifications.length,
+      },
+    },
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // ─── GET /api/notifications/preferences ─────────────────────────────────────
 // Get current user's notification preferences
