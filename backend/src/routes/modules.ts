@@ -130,7 +130,7 @@ router.get('/heart-failure/dashboard', async (req: AuthenticatedRequest, res: Re
       }),
       prisma.therapyGap.findMany({
         where: { ...openGapWhere, gapType: 'MEDICATION_MISSING' },
-        select: { medication: true },
+        select: { medication: true, patientId: true },
       }),
       prisma.therapyGap.count({
         where: { ...openGapWhere, gapType: 'DEVICE_ELIGIBLE' },
@@ -159,13 +159,29 @@ router.get('/heart-failure/dashboard', async (req: AuthenticatedRequest, res: Re
     }, {});
 
     // GDMT pillar coverage — derived from unresolved MEDICATION_MISSING gaps.
-    // Coverage = 1 - (patients missing this drug class / total HF patients).
-    // Directional metric — use gap engine for authoritative per-patient status.
-    const countMissing = (matcher: RegExp) =>
-      medicationGaps.filter(g => g.medication && matcher.test(g.medication)).length;
+    // Coverage = 1 - (distinct patients missing this drug class / total HF patients).
+    // Dedupe by patientId so one patient with multiple gaps on the same class
+    // counts as one missing patient. Clamp to [0, totalPatients] so a stale
+    // gap row count can never produce negative coverage.
+    const countMissing = (matcher: RegExp) => {
+      const patientIds = new Set<string>();
+      for (const g of medicationGaps) {
+        if (g.medication && matcher.test(g.medication)) {
+          patientIds.add(g.patientId);
+        }
+      }
+      return patientIds.size;
+    };
 
-    const coverageFor = (missing: number) =>
-      totalPatients > 0 ? Math.round((1 - missing / totalPatients) * 1000) / 10 : null;
+    const coverageFor = (missing: number) => {
+      if (totalPatients <= 0) return null;
+      const clamped = Math.min(Math.max(missing, 0), totalPatients);
+      return Math.round((1 - clamped / totalPatients) * 1000) / 10;
+    };
+
+    // Distinct patients with any unresolved medication gap — used for the
+    // "GDMT optimized" summary card (patients with zero medication gaps).
+    const patientsWithMedicationGap = new Set(medicationGaps.map(g => g.patientId)).size;
 
     const statusFor = (coverage: number | null, target: number, amber: number) => {
       if (coverage === null) return 'unknown';
@@ -209,8 +225,8 @@ router.get('/heart-failure/dashboard', async (req: AuthenticatedRequest, res: Re
           totalOpenGaps,
           gapsByType,
           deviceCandidates: deviceGaps,
-          // gdmtOptimized = patients with zero unresolved medication gaps (approximation)
-          gdmtOptimized: Math.max(totalPatients - medicationGaps.length, 0),
+          // gdmtOptimized = patients with zero unresolved medication gaps
+          gdmtOptimized: Math.max(totalPatients - patientsWithMedicationGap, 0),
         },
         gdmtMetrics,
         recentAlerts,
