@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DollarSign, Users, TrendingUp, Target, ChevronRight, Zap, Info, Search } from 'lucide-react';
+import { getHeartFailureDashboard, HFDashboardData } from '../../../services/api';
 import BaseExecutiveView from '../../../components/shared/BaseExecutiveView';
 import KPICard from '../../../components/shared/KPICard';
 import { heartFailureConfig } from '../config/executiveConfig';
@@ -21,9 +22,7 @@ import type { RevenuePipelineData, RevenueAtRiskData, TrajectoryTrendsData } fro
 import { HFRevenueWaterfallModal } from '../../../components/heartFailure/HFRevenueWaterfallModal';
 import HFMonthDetailModal from '../../../components/heartFailure/HFMonthDetailModal';
 import HFBenchmarkDetailModal from '../../../components/heartFailure/HFBenchmarkDetailModal';
-import HFFacilityDetailModal from '../../../components/heartFailure/HFFacilityDetailModal';
 import HFRevenueOpportunityModal from '../../../components/heartFailure/HFRevenueOpportunityModal';
-import HFDRGDetailModal from '../../../components/heartFailure/HFDRGDetailModal';
 import BaseDetailModal from '../../../components/shared/BaseDetailModal';
 import { Heart } from 'lucide-react';
 
@@ -31,10 +30,23 @@ const ExecutiveView: React.FC = () => {
   const [selectedWaterfallCategory, setSelectedWaterfallCategory] = useState<'GDMT' | 'Devices' | 'Phenotypes' | '340B' | null>(null);
   const [selectedMonth, setSelectedMonth] = useState<any>(null);
   const [selectedBenchmark, setSelectedBenchmark] = useState<any>(null);
-  const [selectedFacility, setSelectedFacility] = useState<any>(null);
   const [showOpportunityModal, setShowOpportunityModal] = useState(false);
-  const [selectedDRG, setSelectedDRG] = useState<any>(null);
   const [selectedZip, setSelectedZip] = useState<string | null>(null);
+
+  // Real-data dashboard fetch
+  const [dashboard, setDashboard] = useState<HFDashboardData | null>(null);
+  const [dashboardLoading, setDashboardLoading] = useState(true);
+  const [dashboardError, setDashboardError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setDashboardLoading(true);
+    getHeartFailureDashboard()
+      .then(data => { if (!cancelled) { setDashboard(data); setDashboardError(null); } })
+      .catch(err => { if (!cancelled) setDashboardError(err?.message ?? 'Failed to load dashboard'); })
+      .finally(() => { if (!cancelled) setDashboardLoading(false); });
+    return () => { cancelled = true; };
+  }, []);
 
   // Get category-specific revenue and patient data
   const getCategoryData = (category: string) => {
@@ -205,103 +217,11 @@ const ExecutiveView: React.FC = () => {
  }
   };
 
-  // Generate facility detail data
-  const getFacilityData = (facilityName: string) => {
- const facilities: Record<string, any> = {
- 'Main Campus - HF Clinic': {
- facilityName: 'Main Campus - HF Clinic',
- location: '1000 Medical Center Dr, Suite 100',
- totalRevenue: 2100000, // $2.1M (34%)
- patientCount: 1050,
- gdmtRate: 68,
- captureRate: 35,
- breakdown: [
- { category: 'GDMT', revenue: 850000 },
- { category: 'Devices', revenue: 630000 },
- { category: 'Phenotypes', revenue: 420000 },
- { category: '340B', revenue: 200000 }
- ],
- providers: [
- { name: 'Dr. Sarah Chen', patients: 185, gdmtRate: 78, revenueImpact: 245000 },
- { name: 'Dr. Michael Rodriguez', patients: 162, gdmtRate: 74, revenueImpact: 208000 },
- { name: 'Dr. Jennifer Kim', patients: 148, gdmtRate: 71, revenueImpact: 189000 },
- { name: 'Dr. David Thompson', patients: 134, gdmtRate: 65, revenueImpact: 165000 },
- { name: 'Dr. Lisa Wang', patients: 125, gdmtRate: 62, revenueImpact: 148000 }
- ]
- },
- 'North Campus - HF Clinic': {
- facilityName: 'North Campus - HF Clinic',
- location: '2500 West Medical Blvd, Suite 200',
- totalRevenue: 1600000, // $1.6M (26%)
- patientCount: 820,
- gdmtRate: 72,
- captureRate: 42,
- breakdown: [
- { category: 'GDMT', revenue: 640000 },
- { category: 'Devices', revenue: 480000 },
- { category: 'Phenotypes', revenue: 320000 },
- { category: '340B', revenue: 160000 }
- ],
- providers: [
- { name: 'Dr. James Wilson', patients: 152, gdmtRate: 82, revenueImpact: 198000 },
- { name: 'Dr. Maria Gonzalez', patients: 138, gdmtRate: 79, revenueImpact: 185000 },
- { name: 'Dr. Robert Lee', patients: 126, gdmtRate: 75, revenueImpact: 165000 },
- { name: 'Dr. Amanda Foster', patients: 118, gdmtRate: 68, revenueImpact: 142000 },
- { name: 'Dr. Kevin Park', patients: 105, gdmtRate: 65, revenueImpact: 125000 }
- ]
- },
- 'West Campus - HF Center': {
- facilityName: 'West Campus - HF Center',
- location: '3100 East Campus Way, Suite 150',
- totalRevenue: 1800000, // $1.8M (29%)
- patientCount: 950,
- gdmtRate: 75,
- captureRate: 38,
- breakdown: [
- { category: 'GDMT', revenue: 720000 },
- { category: 'Devices', revenue: 540000 },
- { category: 'Phenotypes', revenue: 360000 },
- { category: '340B', revenue: 180000 }
- ],
- providers: [
- { name: 'Dr. Emily Davis', patients: 175, gdmtRate: 85, revenueImpact: 265000 },
- { name: 'Dr. John Martinez', patients: 158, gdmtRate: 81, revenueImpact: 238000 },
- { name: 'Dr. Susan Taylor', patients: 142, gdmtRate: 77, revenueImpact: 195000 },
- { name: 'Dr. Mark Johnson', patients: 135, gdmtRate: 73, revenueImpact: 178000 },
- { name: 'Dr. Rachel Brown', patients: 128, gdmtRate: 70, revenueImpact: 162000 }
- ]
- },
- 'Community Medical Center - HF Unit': {
- facilityName: 'Community Medical Center - HF Unit',
- location: '3201 Kings Hwy, Brooklyn, NY 11234',
- totalRevenue: 700000, // $0.7M (11%)
- patientCount: 380,
- gdmtRate: 63,
- captureRate: 28,
- breakdown: [
- { category: 'GDMT', revenue: 280000 },
- { category: 'Devices', revenue: 210000 },
- { category: 'Phenotypes', revenue: 140000 },
- { category: '340B', revenue: 70000 }
- ],
- providers: [
- { name: 'Dr. Alex Morgan', patients: 85, gdmtRate: 72, revenueImpact: 95000 },
- { name: 'Dr. Jessica White', patients: 78, gdmtRate: 68, revenueImpact: 82000 },
- { name: 'Dr. Ryan Miller', patients: 72, gdmtRate: 64, revenueImpact: 75000 },
- { name: 'Dr. Nicole Adams', patients: 68, gdmtRate: 60, revenueImpact: 68000 },
- { name: 'Dr. Chris Lewis', patients: 62, gdmtRate: 58, revenueImpact: 60000 }
- ]
- }
- };
- return facilities[facilityName] || null;
-  };
-
-  // Handle facility click
-  const handleFacilityClick = (facilityName: string) => {
- const facilityData = getFacilityData(facilityName);
- if (facilityData) {
- setSelectedFacility(facilityData);
- }
+  // Facility-level drill-down is deferred to Sprint C (wire to real provider
+  // data from backend). Click is a no-op to avoid rendering fake provider
+  // names.
+  const handleFacilityClick = (_facilityName: string) => {
+    // TODO(Sprint-C): fetch /api/modules/heart-failure/facilities and open modal
   };
 
   // Handle revenue opportunity click
@@ -309,87 +229,8 @@ const ExecutiveView: React.FC = () => {
  setShowOpportunityModal(true);
   };
 
-  // Get DRG-specific data
-  const getDRGData = (drgCode: string) => {
- const drgData: Record<string, any> = {
- 'DRG 291': {
- drgCode: 'DRG 291',
- description: 'Heart Failure & Shock w MCC',
- volume: 456,
- avgReimbursement: 78940,
- totalRevenue: 36012640,
- avgLos: 5.2,
- avgCost: 66500,
- margin: 31.6,
- targetLos: 4.8,
- hospitalAvgLos: 5.8,
- nationalBenchmarkLos: 6.1,
- cases: [
- { caseId: 'HF-291-001', ageRange: '75-84', los: 4.2, cost: 58000, revenue: 78940, margin: 20940, marginPercent: 26.5 },
- { caseId: 'HF-291-002', ageRange: '65-74', los: 6.1, cost: 72000, revenue: 78940, margin: 6940, marginPercent: 8.8 },
- { caseId: 'HF-291-003', ageRange: '85+', los: 3.8, cost: 61000, revenue: 78940, margin: 17940, marginPercent: 22.7 },
- { caseId: 'HF-291-004', ageRange: '55-64', los: 7.2, cost: 84000, revenue: 78940, margin: -5060, marginPercent: -6.4 },
- { caseId: 'HF-291-005', ageRange: '75-84', los: 4.9, cost: 59500, revenue: 78940, margin: 19440, marginPercent: 24.6 },
- { caseId: 'HF-291-006', ageRange: '65-74', los: 5.8, cost: 68200, revenue: 78940, margin: 10740, marginPercent: 13.6 },
- { caseId: 'HF-291-007', ageRange: '85+', los: 6.5, cost: 75800, revenue: 78940, margin: 3140, marginPercent: 4.0 },
- { caseId: 'HF-291-008', ageRange: '55-64', los: 3.1, cost: 52000, revenue: 78940, margin: 26940, marginPercent: 34.1 },
- { caseId: 'HF-291-009', ageRange: '75-84', los: 5.4, cost: 63800, revenue: 78940, margin: 15140, marginPercent: 19.2 },
- { caseId: 'HF-291-010', ageRange: '65-74', los: 4.7, cost: 57200, revenue: 78940, margin: 21740, marginPercent: 27.5 }
- ]
- },
- 'DRG 292': {
- drgCode: 'DRG 292',
- description: 'Heart Failure & Shock w CC',
- volume: 823,
- avgReimbursement: 52680,
- totalRevenue: 43355640,
- avgLos: 3.8,
- avgCost: 42200,
- margin: 32.1,
- targetLos: 3.5,
- hospitalAvgLos: 4.2,
- nationalBenchmarkLos: 4.5,
- cases: [
- { caseId: 'HF-292-001', ageRange: '65-74', los: 3.2, cost: 38000, revenue: 52680, margin: 14680, marginPercent: 27.9 },
- { caseId: 'HF-292-002', ageRange: '75-84', los: 4.1, cost: 45200, revenue: 52680, margin: 7480, marginPercent: 14.2 },
- { caseId: 'HF-292-003', ageRange: '55-64', los: 2.8, cost: 35600, revenue: 52680, margin: 17080, marginPercent: 32.4 },
- { caseId: 'HF-292-004', ageRange: '85+', los: 4.9, cost: 48900, revenue: 52680, margin: 3780, marginPercent: 7.2 },
- { caseId: 'HF-292-005', ageRange: '65-74', los: 3.6, cost: 41200, revenue: 52680, margin: 11480, marginPercent: 21.8 },
- { caseId: 'HF-292-006', ageRange: '55-64', los: 3.1, cost: 37800, revenue: 52680, margin: 14880, marginPercent: 28.3 },
- { caseId: 'HF-292-007', ageRange: '75-84', los: 4.4, cost: 46500, revenue: 52680, margin: 6180, marginPercent: 11.7 },
- { caseId: 'HF-292-008', ageRange: '85+', los: 5.2, cost: 51200, revenue: 52680, margin: 1480, marginPercent: 2.8 },
- { caseId: 'HF-292-009', ageRange: '65-74', los: 3.4, cost: 39800, revenue: 52680, margin: 12880, marginPercent: 24.5 },
- { caseId: 'HF-292-010', ageRange: '55-64', los: 2.9, cost: 36400, revenue: 52680, margin: 16280, marginPercent: 30.9 }
- ]
- },
- 'DRG 293': {
- drgCode: 'DRG 293',
- description: 'Heart Failure & Shock w/o CC/MCC',
- volume: 612,
- avgReimbursement: 38420,
- totalRevenue: 23513040,
- avgLos: 2.1,
- avgCost: 31200,
- margin: 35.2,
- targetLos: 2.0,
- hospitalAvgLos: 2.5,
- nationalBenchmarkLos: 2.8,
- cases: [
- { caseId: 'HF-293-001', ageRange: '55-64', los: 1.8, cost: 28000, revenue: 38420, margin: 10420, marginPercent: 27.1 },
- { caseId: 'HF-293-002', ageRange: '65-74', los: 2.3, cost: 32500, revenue: 38420, margin: 5920, marginPercent: 15.4 },
- { caseId: 'HF-293-003', ageRange: '75-84', los: 1.9, cost: 29200, revenue: 38420, margin: 9220, marginPercent: 24.0 },
- { caseId: 'HF-293-004', ageRange: '85+', los: 2.8, cost: 35800, revenue: 38420, margin: 2620, marginPercent: 6.8 },
- { caseId: 'HF-293-005', ageRange: '55-64', los: 1.6, cost: 26800, revenue: 38420, margin: 11620, marginPercent: 30.2 },
- { caseId: 'HF-293-006', ageRange: '65-74', los: 2.1, cost: 30900, revenue: 38420, margin: 7520, marginPercent: 19.6 },
- { caseId: 'HF-293-007', ageRange: '75-84', los: 2.4, cost: 33200, revenue: 38420, margin: 5220, marginPercent: 13.6 },
- { caseId: 'HF-293-008', ageRange: '55-64', los: 1.7, cost: 27600, revenue: 38420, margin: 10820, marginPercent: 28.2 },
- { caseId: 'HF-293-009', ageRange: '85+', los: 2.6, cost: 34500, revenue: 38420, margin: 3920, marginPercent: 10.2 },
- { caseId: 'HF-293-010', ageRange: '65-74', los: 2.0, cost: 30200, revenue: 38420, margin: 8220, marginPercent: 21.4 }
- ]
- }
- };
- return drgData[drgCode];
-  };
+  // DRG case-level drill-down deferred to Sprint C. Case IDs must come from
+  // real DRG billing data — not hardcoded synthetic cases.
 
   // Sample ZIP code data for decompensation risk & readmission hotspots
   const heartFailureZipData = [
@@ -476,48 +317,61 @@ const ExecutiveView: React.FC = () => {
    </div>
    <div className="p-6">
      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-       <div className="bg-white rounded-xl p-4 border border-titanium-200 shadow-sm">
-         <div className="text-sm text-titanium-600 mb-1">Population Mean KCCQ</div>
-         <div className="text-3xl font-bold text-titanium-900">54.2</div>
-         <div className="text-xs text-titanium-500 mt-1">Overall Summary Score</div>
-       </div>
-       <div className="bg-white rounded-xl p-4 border border-red-200 shadow-sm">
-         <div className="text-sm text-titanium-600 mb-1">Below Threshold (&lt;60)</div>
-         <div className="text-3xl font-bold text-red-600">487</div>
-         <div className="text-xs text-red-500 mt-1">Intervention recommended</div>
-       </div>
-       <div className="bg-white rounded-xl p-4 border border-titanium-300 shadow-sm">
-         <div className="text-sm text-titanium-600 mb-1">Mean Improvement (Actioned)</div>
-         <div className="text-3xl font-bold text-teal-700">+14.2</div>
-         <div className="text-xs text-teal-500 mt-1">pts at 90 days</div>
-       </div>
-       <div className="bg-white rounded-xl p-4 border border-[#f5c6cf] shadow-sm">
-         <div className="text-sm text-titanium-600 mb-1">Showing Decline</div>
-         <div className="text-3xl font-bold text-red-600">134</div>
-         <div className="text-xs text-red-600 mt-1">&gt;5 pt drop from prior</div>
-       </div>
+       {dashboardLoading ? (
+         <div className="col-span-4 animate-pulse h-24 bg-titanium-100 rounded-xl" />
+       ) : dashboardError ? (
+         <div className="col-span-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+           Failed to load Heart Failure metrics: {dashboardError}
+         </div>
+       ) : dashboard && dashboard.summary.totalPatients > 0 ? (
+         <>
+           <div className="bg-white rounded-xl p-4 border border-titanium-200 shadow-sm">
+             <div className="text-sm text-titanium-600 mb-1">Total HF Patients</div>
+             <div className="text-3xl font-bold text-titanium-900">{dashboard.summary.totalPatients.toLocaleString()}</div>
+             <div className="text-xs text-titanium-500 mt-1">Active HF panel</div>
+           </div>
+           <div className="bg-white rounded-xl p-4 border border-red-200 shadow-sm">
+             <div className="text-sm text-titanium-600 mb-1">Open Therapy Gaps</div>
+             <div className="text-3xl font-bold text-red-600">{dashboard.summary.totalOpenGaps.toLocaleString()}</div>
+             <div className="text-xs text-red-500 mt-1">Recommended for review</div>
+           </div>
+           <div className="bg-white rounded-xl p-4 border border-titanium-300 shadow-sm">
+             <div className="text-sm text-titanium-600 mb-1">GDMT Optimized</div>
+             <div className="text-3xl font-bold text-teal-700">{dashboard.summary.gdmtOptimized.toLocaleString()}</div>
+             <div className="text-xs text-teal-500 mt-1">No unresolved medication gaps</div>
+           </div>
+           <div className="bg-white rounded-xl p-4 border border-[#f5c6cf] shadow-sm">
+             <div className="text-sm text-titanium-600 mb-1">Device Candidates</div>
+             <div className="text-3xl font-bold text-red-600">{dashboard.summary.deviceCandidates.toLocaleString()}</div>
+             <div className="text-xs text-red-600 mt-1">Eligible, not yet implanted</div>
+           </div>
+         </>
+       ) : (
+         <div className="col-span-4 p-6 text-center text-titanium-500 text-sm">
+           No Heart Failure patients in this hospital yet.
+         </div>
+       )}
      </div>
    </div>
  </div>
 
- {/* Clinical Gap Intelligence */}
- <GapIntelligenceCard data={{
-   totalGaps: 23,
-   categories: [
-     { name: 'Therapy', patients: 1200, color: '#2C4A60' },
-     { name: 'Safety', patients: 180, color: '#9B2438' },
-     { name: 'Growth', patients: 420, color: '#4A6880' },
-     { name: 'Quality', patients: 850, color: '#C8D4DC' },
-   ],
-   topGaps: [
-     { name: 'ATTR-CM Detection', patients: 105, opportunity: '$4.2M' },
-     { name: 'CardioMEMS', patients: 80, opportunity: '$3.8M' },
-     { name: 'Undiagnosed HFpEF', patients: 290, opportunity: '$2.9M' },
-     { name: 'ARNI Underdosing', patients: 340, opportunity: '$2.1M' },
-     { name: 'Cardiac Rehab', patients: 420, opportunity: '$1.8M' },
-   ],
-   safetyAlert: 'CRITICAL: 89 patients \u00b7 HIGH: 91 patients',
- }} />
+ {/* Clinical Gap Intelligence — derived from real gap breakdown */}
+ {dashboard && (
+   <GapIntelligenceCard data={{
+     totalGaps: Object.keys(dashboard.summary.gapsByType).length,
+     categories: [
+       { name: 'Medication', patients: dashboard.summary.gapsByType['MEDICATION_MISSING'] ?? 0, color: '#2C4A60' },
+       { name: 'Safety', patients: dashboard.summary.gapsByType['SAFETY_ALERT'] ?? 0, color: '#9B2438' },
+       { name: 'Monitoring', patients: dashboard.summary.gapsByType['MONITORING_OVERDUE'] ?? 0, color: '#4A6880' },
+       { name: 'Follow-up', patients: dashboard.summary.gapsByType['FOLLOWUP_OVERDUE'] ?? 0, color: '#C8D4DC' },
+     ],
+     topGaps: Object.entries(dashboard.summary.gapsByType)
+       .sort((a, b) => b[1] - a[1])
+       .slice(0, 5)
+       .map(([name, patients]) => ({ name: name.replace(/_/g, ' '), patients, opportunity: '—' })),
+     safetyAlert: `${dashboard.summary.totalOpenGaps} open gaps across ${dashboard.summary.totalPatients} patients`,
+   }} />
+ )}
 
  {/* Gap Response Rate — care team action tracking */}
  <GapResponseRateCard
@@ -698,8 +552,6 @@ const ExecutiveView: React.FC = () => {
  <div className="p-6">
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
  {heartFailureConfig.drgPerformanceCards.map((card, index) => {
- const drgCodes = ['DRG 291', 'DRG 292', 'DRG 293'];
- const drgCode = drgCodes[index];
  // DRG 291 (MCC, highest) → Metallic Gold; DRG 292 (CC, mid) → Chrome Blue mid; DRG 293 (lowest) → Carmona Red
  const drgColors = [
  { value: '#C4982A', bg: '#FAF6E8', border: '#D4B85C' },
@@ -710,11 +562,7 @@ const ExecutiveView: React.FC = () => {
  return (
  <div
  key={card.title}
- onClick={() => {
- const drgData = getDRGData(drgCode);
- if (drgData) setSelectedDRG(drgData);
- }}
- className="rounded-xl p-4 border shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+ className="rounded-xl p-4 border shadow-lg transition-all duration-300"
  style={{ background: `linear-gradient(to right, white, ${dc.bg})`, borderColor: dc.border }}
  >
  <div className="flex items-center gap-3 mb-3">
@@ -800,13 +648,7 @@ const ExecutiveView: React.FC = () => {
  />
  )}
 
- {/* Facility Detail Modal */}
- {selectedFacility && (
- <HFFacilityDetailModal
- {...selectedFacility}
- onClose={() => setSelectedFacility(null)}
- />
- )}
+ {/* Facility Detail Modal deferred to Sprint C — see handleFacilityClick */}
 
  {/* Revenue Opportunity Modal */}
  {showOpportunityModal && (
@@ -864,24 +706,7 @@ const ExecutiveView: React.FC = () => {
  );
  })()}
 
- {/* DRG Detail Modal */}
- {selectedDRG && (
- <HFDRGDetailModal
- drgCode={selectedDRG.drgCode}
- description={selectedDRG.description}
- volume={selectedDRG.volume}
- avgReimbursement={selectedDRG.avgReimbursement}
- totalRevenue={selectedDRG.totalRevenue}
- avgLos={selectedDRG.avgLos}
- avgCost={selectedDRG.avgCost}
- margin={selectedDRG.margin}
- targetLos={selectedDRG.targetLos}
- hospitalAvgLos={selectedDRG.hospitalAvgLos}
- nationalBenchmarkLos={selectedDRG.nationalBenchmarkLos}
- cases={selectedDRG.cases}
- onClose={() => setSelectedDRG(null)}
- />
- )}
+ {/* DRG Detail Modal deferred to Sprint C — cases must come from billing data */}
  </div>
   );
 };
