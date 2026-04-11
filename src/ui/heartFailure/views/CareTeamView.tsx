@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DEMO_PATIENT_CONTEXT, DEMO_PATIENT_ROSTER } from '../../../types/shared';
 import { Users, Calendar, AlertTriangle, Clock, Heart, Shield, Activity, FileText, Download, UserCheck, Stethoscope } from 'lucide-react';
+import { getHeartFailureDashboard, HFDashboardData } from '../../../services/api';
 
 // Import Heart Failure Care Team components
 import PatientWorklistEnhanced from '../components/care-team/PatientWorklistEnhanced';
@@ -100,6 +101,21 @@ const CareTeamView: React.FC = () => {
   const [docTemplateFeedback, setDocTemplateFeedback] = useState<string | null>(null);
   const [expandedSafetyCard, setExpandedSafetyCard] = useState<string | null>(null);
 
+  // Real-data dashboard fetch for GDMT pillars, safety alerts, recent activity
+  const [dashboard, setDashboard] = useState<HFDashboardData | null>(null);
+  const [dashboardLoading, setDashboardLoading] = useState(true);
+  const [dashboardError, setDashboardError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setDashboardLoading(true);
+    getHeartFailureDashboard()
+      .then(data => { if (!cancelled) { setDashboard(data); setDashboardError(null); } })
+      .catch(err => { if (!cancelled) setDashboardError(err?.message ?? 'Failed to load dashboard'); })
+      .finally(() => { if (!cancelled) setDashboardLoading(false); });
+    return () => { cancelled = true; };
+  }, []);
+
   const tabs = [
  { id: 'dashboard', label: 'Dashboard', icon: Activity, description: 'Care team overview & alerts' },
  { id: 'patients', label: 'Patients', icon: Users, description: 'Enhanced patient worklist' },
@@ -141,27 +157,43 @@ const CareTeamView: React.FC = () => {
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">4-Pillar GDMT Optimization</h4>
- <div className="space-y-3">
- {[
- { pillar: 'ACE/ARB/ARNI', current: '89.2%', target: '≥95%', status: 'amber' },
- { pillar: 'Beta Blockers', current: '91.7%', target: '≥95%', status: 'amber' },
- { pillar: 'MRA', current: '76.4%', target: '≥85%', status: 'red' },
- { pillar: 'SGLT2i', current: '62.1%', target: '≥75%', status: 'red' }
- ].map((item, index) => (
- <div key={item.pillar} className={`p-3 rounded-lg border ${
- item.status === 'red' ? 'bg-red-50 border-red-200' :
- item.status === 'amber' ? 'bg-chrome-50 border-titanium-300' : 'bg-green-50 border-green-100'
- }`}>
- <div className="flex justify-between items-center">
- <span className="font-medium text-titanium-900">{item.pillar}</span>
- <div className="text-right">
- <div className="font-semibold text-titanium-900">{item.current}</div>
- <div className="text-xs text-titanium-600">{item.target}</div>
- </div>
- </div>
- </div>
- ))}
- </div>
+ {dashboardLoading ? (
+   <div className="animate-pulse space-y-3">
+     {[0, 1, 2, 3].map(i => <div key={i} className="h-14 bg-titanium-100 rounded-lg" />)}
+   </div>
+ ) : dashboardError ? (
+   <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+     Failed to load GDMT pillars: {dashboardError}
+   </div>
+ ) : dashboard && dashboard.summary.totalPatients > 0 ? (
+   <div className="space-y-3">
+     {[
+       { pillar: 'ACE/ARB/ARNI', metric: dashboard.gdmtMetrics.aceArb },
+       { pillar: 'Beta Blockers', metric: dashboard.gdmtMetrics.betaBlocker },
+       { pillar: 'MRA', metric: dashboard.gdmtMetrics.mra },
+       { pillar: 'SGLT2i', metric: dashboard.gdmtMetrics.sglt2i },
+     ].map(({ pillar, metric }) => (
+       <div key={pillar} className={`p-3 rounded-lg border ${
+         metric.status === 'red' ? 'bg-red-50 border-red-200' :
+         metric.status === 'amber' ? 'bg-chrome-50 border-titanium-300' :
+         metric.status === 'green' ? 'bg-green-50 border-green-100' :
+         'bg-titanium-50 border-titanium-200'
+       }`}>
+         <div className="flex justify-between items-center">
+           <span className="font-medium text-titanium-900">{pillar}</span>
+           <div className="text-right">
+             <div className="font-semibold text-titanium-900">
+               {metric.current !== null ? `${metric.current.toFixed(1)}%` : '—'}
+             </div>
+             <div className="text-xs text-titanium-600">target ≥{metric.target}% · {metric.missingCount} missing</div>
+           </div>
+         </div>
+       </div>
+     ))}
+   </div>
+ ) : (
+   <div className="p-3 text-center text-titanium-500 text-sm">No HF patients in this hospital.</div>
+ )}
  </div>
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">Workflow Actions</h4>
@@ -192,45 +224,53 @@ const CareTeamView: React.FC = () => {
  <Shield className="w-5 h-5 text-red-600" />
  Safety Monitoring
  </h3>
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
- {[
- { alert: 'High K+', count: 7, color: 'red', id: 'high-k', patients: ['Johnson, Mary - K+ 5.8', 'Smith, Robert - K+ 6.1', 'Davis, Carol - K+ 5.6'] },
- { alert: 'Low BP', count: 12, color: 'amber', id: 'low-bp', patients: ['Brown, James - BP 88/52', 'Wilson, Sarah - BP 90/58', 'Taylor, Mark - BP 85/50'] },
- { alert: 'Renal Function', count: 5, color: 'red', id: 'renal', patients: ['Anderson, Lisa - Cr 2.4', 'Thomas, John - Cr 2.1', 'Jackson, Amy - GFR 22'] },
- { alert: 'Drug Interactions', count: 3, color: 'amber', id: 'drug-interactions', patients: ['White, David - NSAID + ACEi', 'Harris, Susan - K-sparing + MRA', 'Martin, Paul - Digoxin + Amiodarone'] },
- { alert: 'Contraindications', count: 8, color: 'red', id: 'contraindications', patients: ['Clark, Nancy - ARNI + ACEi <36hr', 'Lewis, Rick - Bilateral RAS + ACEi', 'Walker, Jane - Angioedema hx + ACEi'] },
- { alert: 'Side Effects', count: 15, color: 'amber', id: 'side-effects', patients: ['Hall, Mike - Cough (ACEi)', 'Allen, Beth - Dizziness (BB)', 'Young, Tom - Gynecomastia (Spironolactone)'] }
- ].map((item, index) => (
- <div key={item.id}>
- <div
- onClick={() => setExpandedSafetyCard(expandedSafetyCard === item.id ? null : item.id)}
- className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 hover:shadow-md ${
- item.color === 'red' ? 'bg-red-50 border-red-200 hover:bg-red-100' : 'bg-chrome-50 border-titanium-300 hover:bg-chrome-50'
- } ${expandedSafetyCard === item.id ? 'ring-2 ring-offset-1 ' + (item.color === 'red' ? 'ring-red-400' : 'ring-[#6B7280]') : ''}`}
- >
- <div className="text-center">
- <div className={`text-2xl font-bold ${
- item.color === 'red' ? 'text-red-600' : 'text-gray-500'
- }`}>{item.count}</div>
- <div className="text-sm font-medium text-titanium-700">{item.alert}</div>
- <div className="text-xs text-titanium-500 mt-1">{expandedSafetyCard === item.id ? 'Click to collapse' : 'Click to view patients'}</div>
- </div>
- </div>
- {expandedSafetyCard === item.id && (
- <div className={`mt-2 p-3 rounded-lg border text-sm ${
- item.color === 'red' ? 'bg-red-50 border-red-100' : 'bg-chrome-50 border-titanium-300'
- }`}>
- <div className="font-medium text-titanium-800 mb-2">Affected Patients (showing 3 of {item.count}):</div>
- {item.patients.map((patient, pIdx) => (
- <div key={patient} className="py-1 px-2 text-titanium-700 border-b border-titanium-100 last:border-b-0">
- {patient}
- </div>
- ))}
- </div>
+ {dashboardLoading ? (
+   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+     {[0, 1, 2, 3, 4, 5].map(i => <div key={i} className="h-28 bg-titanium-100 animate-pulse rounded-xl" />)}
+   </div>
+ ) : dashboardError ? (
+   <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+     Failed to load safety alerts: {dashboardError}
+   </div>
+ ) : dashboard && dashboard.summary.totalOpenGaps > 0 ? (
+   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+     {[
+       { alert: 'Medication Missing', gapType: 'MEDICATION_MISSING', color: 'red' as const },
+       { alert: 'Medication Underdosed', gapType: 'MEDICATION_UNDERDOSED', color: 'amber' as const },
+       { alert: 'Contraindicated', gapType: 'MEDICATION_CONTRAINDICATED', color: 'red' as const },
+       { alert: 'Monitoring Overdue', gapType: 'MONITORING_OVERDUE', color: 'amber' as const },
+       { alert: 'Follow-up Overdue', gapType: 'FOLLOWUP_OVERDUE', color: 'amber' as const },
+       { alert: 'Safety Alert', gapType: 'SAFETY_ALERT', color: 'red' as const },
+     ].map(item => {
+       const count = dashboard.summary.gapsByType[item.gapType] ?? 0;
+       if (count === 0) return null;
+       return (
+         <div key={item.gapType}>
+           <div
+             onClick={() => setExpandedSafetyCard(expandedSafetyCard === item.gapType ? null : item.gapType)}
+             className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 hover:shadow-md ${
+               item.color === 'red' ? 'bg-red-50 border-red-200 hover:bg-red-100' : 'bg-chrome-50 border-titanium-300 hover:bg-chrome-50'
+             } ${expandedSafetyCard === item.gapType ? 'ring-2 ring-offset-1 ' + (item.color === 'red' ? 'ring-red-400' : 'ring-[#6B7280]') : ''}`}
+           >
+             <div className="text-center">
+               <div className={`text-2xl font-bold ${item.color === 'red' ? 'text-red-600' : 'text-gray-500'}`}>{count}</div>
+               <div className="text-sm font-medium text-titanium-700">{item.alert}</div>
+               <div className="text-xs text-titanium-500 mt-1">{expandedSafetyCard === item.gapType ? 'Click to collapse' : 'Click to view'}</div>
+             </div>
+           </div>
+           {expandedSafetyCard === item.gapType && (
+             <div className={`mt-2 p-3 rounded-lg border text-sm ${item.color === 'red' ? 'bg-red-50 border-red-100' : 'bg-chrome-50 border-titanium-300'}`}>
+               <div className="font-medium text-titanium-800 mb-2">Open gaps of this type: {count}</div>
+               <div className="text-titanium-600 text-xs">Use Clinical Gaps tab for patient-level detail.</div>
+             </div>
+           )}
+         </div>
+       );
+     })}
+   </div>
+ ) : (
+   <div className="p-6 text-center text-titanium-500 text-sm">No open safety alerts.</div>
  )}
- </div>
- ))}
- </div>
  </div>
  </div>
  );
@@ -256,20 +296,24 @@ const CareTeamView: React.FC = () => {
  </h3>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
- <h4 className="font-semibold text-titanium-900 mb-4">Recent Notes</h4>
- <div className="space-y-3">
- {[
- { patient: 'Johnson, Mary', type: 'GDMT Review', time: '2 hours ago' },
- { patient: 'Smith, John', type: 'Follow-up', time: '4 hours ago' },
- { patient: 'Davis, Sarah', type: 'Medication Change', time: '6 hours ago' }
- ].map((note, index) => (
- <div key={`${note.patient}-${note.type}`} className="p-3 bg-chrome-50 rounded-lg border border-chrome-200">
- <div className="font-medium text-titanium-900">{note.patient}</div>
- <div className="text-sm text-chrome-600">{note.type}</div>
- <div className="text-xs text-titanium-500">{note.time}</div>
- </div>
- ))}
- </div>
+ <h4 className="font-semibold text-titanium-900 mb-4">Recent Activity</h4>
+ {dashboardLoading ? (
+   <div className="space-y-3">
+     {[0, 1, 2].map(i => <div key={i} className="h-16 bg-titanium-100 animate-pulse rounded-lg" />)}
+   </div>
+ ) : dashboard && dashboard.recentAlerts.length > 0 ? (
+   <div className="space-y-3">
+     {dashboard.recentAlerts.slice(0, 5).map(alert => (
+       <div key={alert.gapId} className="p-3 bg-chrome-50 rounded-lg border border-chrome-200">
+         <div className="font-medium text-titanium-900 text-sm">{alert.message}</div>
+         <div className="text-xs text-chrome-600">{alert.type.replace(/_/g, ' ')}</div>
+         <div className="text-xs text-titanium-500">{new Date(alert.identifiedAt).toLocaleString()}</div>
+       </div>
+     ))}
+   </div>
+ ) : (
+   <div className="p-3 text-center text-titanium-500 text-sm">No recent activity.</div>
+ )}
  </div>
  <div className="bg-white p-6 rounded-xl border border-titanium-200">
  <h4 className="font-semibold text-titanium-900 mb-4">Documentation Tools</h4>

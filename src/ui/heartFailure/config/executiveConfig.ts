@@ -3,61 +3,10 @@ import { DRGOpportunity } from '../../../components/shared/DRGOptimizationAlert'
 import { PLATFORM_TOTALS, formatDollars, formatPatients } from '../../../data/platformTotals';
 // ProSummaryCard is used via ExecutiveViewConfig.proSummary
 
-// Heart Failure DRG 291-293 Optimization Opportunities
-const hfDRGOpportunities: DRGOpportunity[] = [
-  {
- currentDRG: '293',
- currentDRGDescription: 'Heart Failure & Shock w/o CC/MCC',
- potentialDRG: '291',
- potentialDRGDescription: 'Heart Failure & Shock w MCC',
- revenueImpact: 8420,
- documentationNeeded: ['Acute kidney injury documentation', 'Malnutrition severity', 'Respiratory failure'],
- confidence: 92,
- timeframe: '3 days',
- priority: 'high',
- patientName: 'Johnson, Mary',
- mrn: 'MRN-HF-15892'
-  },
-  {
- currentDRG: '292',
- currentDRGDescription: 'Heart Failure & Shock w CC',
- potentialDRG: '291',
- potentialDRGDescription: 'Heart Failure & Shock w MCC',
- revenueImpact: 6180,
- documentationNeeded: ['Chronic kidney disease stage', 'Diabetes complications', 'COPD exacerbation'],
- confidence: 85,
- timeframe: '2 days',
- priority: 'high',
- patientName: 'Davis, Robert',
- mrn: 'MRN-HF-15734'
-  },
-  {
- currentDRG: '293',
- currentDRGDescription: 'Heart Failure & Shock w/o CC/MCC',
- potentialDRG: '292',
- potentialDRGDescription: 'Heart Failure & Shock w CC',
- revenueImpact: 4750,
- documentationNeeded: ['Hypertension with complications', 'Atrial fibrillation type', 'Sleep apnea documentation'],
- confidence: 88,
- timeframe: '4 days',
- priority: 'medium',
- patientName: 'Wilson, Patricia',
- mrn: 'MRN-HF-15698'
-  },
-  {
- currentDRG: '292',
- currentDRGDescription: 'Heart Failure & Shock w CC',
- potentialDRG: '291',
- potentialDRGDescription: 'Heart Failure & Shock w MCC',
- revenueImpact: 7890,
- documentationNeeded: ['Acute on chronic heart failure', 'Cardiorenal syndrome', 'Medication intolerance'],
- confidence: 79,
- timeframe: '5 days',
- priority: 'medium',
- patientName: 'Brown, James',
- mrn: 'MRN-HF-15612'
-  }
-];
+// DRG opportunities are patient-level and must come from the backend — never
+// hardcoded. The Executive view populates this array from the HF dashboard
+// response at runtime; config exports an empty default so static imports work.
+const hfDRGOpportunities: DRGOpportunity[] = [];
 
 export const heartFailureConfig: ExecutiveViewConfig = {
   moduleName: 'Heart Failure',

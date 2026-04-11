@@ -104,34 +104,124 @@ router.get('/', async (req: AuthenticatedRequest, res: Response) => {
   }
 });
 
-// Heart Failure module endpoints
-router.get('/heart-failure/dashboard', (req, res) => {
-  const dashboardData = {
-    summary: {
-      totalPatients: 1247,
-      gdmtOptimized: 1089,
-      careGaps: 158,
-      deviceCandidates: 89
-    },
-    gdmtMetrics: {
-      aceArb: { current: 89.2, target: 95, status: 'amber' },
-      betaBlocker: { current: 91.7, target: 95, status: 'amber' },
-      mra: { current: 76.4, target: 85, status: 'red' },
-      sglt2i: { current: 62.1, target: 75, status: 'red' }
-    },
-    recentAlerts: [
-      { patientId: 'HF001', type: 'GDMT Gap', severity: 'high', message: 'Missing SGLT2i therapy' },
-      { patientId: 'HF003', type: 'Device Candidate', severity: 'medium', message: 'CRT evaluation needed' },
-      { patientId: 'HF005', type: 'Care Transition', severity: 'low', message: 'Follow-up scheduled' }
-    ]
-  };
+// Heart Failure module endpoints — Prisma-backed, tenant-scoped by req.user.hospitalId
+router.get('/heart-failure/dashboard', async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = req.user?.hospitalId;
+  if (!hospitalId) {
+    return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  }
 
-  res.json({
-    success: true,
-    data: dashboardData,
-    message: 'Heart Failure dashboard data',
-    timestamp: new Date().toISOString()
-  } as APIResponse);
+  try {
+    const hfPatientWhere = { hospitalId, isActive: true, heartFailurePatient: true };
+    const openGapWhere = { hospitalId, module: 'HEART_FAILURE' as const, resolvedAt: null };
+
+    const [
+      totalPatients,
+      openGapsByType,
+      medicationGaps,
+      deviceGaps,
+      recentGaps,
+    ] = await Promise.all([
+      prisma.patient.count({ where: hfPatientWhere }),
+      prisma.therapyGap.groupBy({
+        by: ['gapType'],
+        where: openGapWhere,
+        _count: { id: true },
+      }),
+      prisma.therapyGap.findMany({
+        where: { ...openGapWhere, gapType: 'MEDICATION_MISSING' },
+        select: { medication: true },
+      }),
+      prisma.therapyGap.count({
+        where: { ...openGapWhere, gapType: 'DEVICE_ELIGIBLE' },
+      }),
+      prisma.therapyGap.findMany({
+        where: openGapWhere,
+        orderBy: { identifiedAt: 'desc' },
+        take: 10,
+        select: {
+          id: true,
+          gapType: true,
+          medication: true,
+          device: true,
+          currentStatus: true,
+          targetStatus: true,
+          identifiedAt: true,
+          patientId: true,
+        },
+      }),
+    ]);
+
+    const totalOpenGaps = openGapsByType.reduce((sum, g) => sum + g._count.id, 0);
+    const gapsByType = openGapsByType.reduce<Record<string, number>>((acc, g) => {
+      acc[g.gapType] = g._count.id;
+      return acc;
+    }, {});
+
+    // GDMT pillar coverage — derived from unresolved MEDICATION_MISSING gaps.
+    // Coverage = 1 - (patients missing this drug class / total HF patients).
+    // Directional metric — use gap engine for authoritative per-patient status.
+    const countMissing = (matcher: RegExp) =>
+      medicationGaps.filter(g => g.medication && matcher.test(g.medication)).length;
+
+    const coverageFor = (missing: number) =>
+      totalPatients > 0 ? Math.round((1 - missing / totalPatients) * 1000) / 10 : null;
+
+    const statusFor = (coverage: number | null, target: number, amber: number) => {
+      if (coverage === null) return 'unknown';
+      if (coverage >= target) return 'green';
+      if (coverage >= amber) return 'amber';
+      return 'red';
+    };
+
+    const aceArbMissing = countMissing(/(ACEi|ACE inhibitor|ARB|ARNI|sacubitril|valsartan|lisinopril|enalapril|losartan)/i);
+    const betaBlockerMissing = countMissing(/(beta blocker|bisoprolol|carvedilol|metoprolol)/i);
+    const mraMissing = countMissing(/(MRA|spironolactone|eplerenone|mineralocorticoid)/i);
+    const sglt2iMissing = countMissing(/(SGLT2|dapagliflozin|empagliflozin|canagliflozin)/i);
+
+    const gdmtMetrics = {
+      aceArb: { current: coverageFor(aceArbMissing), target: 95, status: statusFor(coverageFor(aceArbMissing), 95, 85), missingCount: aceArbMissing },
+      betaBlocker: { current: coverageFor(betaBlockerMissing), target: 95, status: statusFor(coverageFor(betaBlockerMissing), 95, 85), missingCount: betaBlockerMissing },
+      mra: { current: coverageFor(mraMissing), target: 85, status: statusFor(coverageFor(mraMissing), 85, 70), missingCount: mraMissing },
+      sglt2i: { current: coverageFor(sglt2iMissing), target: 75, status: statusFor(coverageFor(sglt2iMissing), 75, 60), missingCount: sglt2iMissing },
+    };
+
+    const recentAlerts = recentGaps.map(g => ({
+      gapId: g.id,
+      patientId: g.patientId,
+      type: g.gapType,
+      severity: g.gapType === 'MEDICATION_MISSING' || g.gapType === 'DEVICE_ELIGIBLE' ? 'high' : 'medium',
+      message: g.medication
+        ? `Missing ${g.medication}`
+        : g.device
+        ? `${g.device} candidate`
+        : g.targetStatus,
+      currentStatus: g.currentStatus,
+      targetStatus: g.targetStatus,
+      identifiedAt: g.identifiedAt.toISOString(),
+    }));
+
+    res.json({
+      success: true,
+      data: {
+        summary: {
+          totalPatients,
+          totalOpenGaps,
+          gapsByType,
+          deviceCandidates: deviceGaps,
+          // gdmtOptimized = patients with zero unresolved medication gaps (approximation)
+          gdmtOptimized: Math.max(totalPatients - medicationGaps.length, 0),
+        },
+        gdmtMetrics,
+        recentAlerts,
+        source: 'database',
+      },
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  } catch (error) {
+    logger.error('Failed to build HF dashboard', { error: error instanceof Error ? error.message : String(error) });
+    res.status(500).json({ success: false, error: 'Failed to load Heart Failure dashboard' } as APIResponse);
+  }
 });
 
 // GDMT Calculator endpoint
@@ -179,56 +269,75 @@ router.post('/heart-failure/gdmt-calculator', (req, res) => {
   } as APIResponse);
 });
 
-// Patient worklist endpoint
-router.get('/heart-failure/patients', (req, res) => {
-  const patients = [
-    {
-      id: 'HF001',
-      name: 'Sarah Johnson',
-      mrn: '12345678',
-      age: 67,
-      ef: 35,
-      nyhaClass: 'II',
-      gdmtScore: 75,
-      careGaps: ['MRA Missing', 'SGLT2i Titration'],
-      lastVisit: '2024-01-15',
-      nextVisit: '2024-02-15',
-      risk: 'medium'
-    },
-    {
-      id: 'HF002',
-      name: 'Michael Chen',
-      mrn: '23456789',
-      age: 72,
-      ef: 28,
-      nyhaClass: 'III',
-      gdmtScore: 90,
-      careGaps: ['Device Evaluation'],
-      lastVisit: '2024-01-10',
-      nextVisit: '2024-02-10',
-      risk: 'high'
-    },
-    {
-      id: 'HF003',
-      name: 'Jennifer Williams',
-      mrn: '34567890',
-      age: 59,
-      ef: 42,
-      nyhaClass: 'I',
-      gdmtScore: 95,
-      careGaps: [],
-      lastVisit: '2024-01-20',
-      nextVisit: '2024-03-20',
-      risk: 'low'
-    }
-  ];
+// Patient worklist endpoint — Prisma-backed, tenant-scoped by req.user.hospitalId
+router.get('/heart-failure/patients', async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = req.user?.hospitalId;
+  if (!hospitalId) {
+    return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  }
 
-  res.json({
-    success: true,
-    data: patients,
-    message: 'Heart Failure patient worklist',
-    timestamp: new Date().toISOString()
-  } as APIResponse);
+  try {
+    const limitParam = Number.parseInt(String(req.query.limit ?? '100'), 10);
+    const limit = Number.isFinite(limitParam) ? Math.min(Math.max(limitParam, 1), 500) : 100;
+
+    const patients = await prisma.patient.findMany({
+      where: {
+        hospitalId,
+        isActive: true,
+        heartFailurePatient: true,
+      },
+      orderBy: [{ riskCategory: 'desc' }, { lastAssessment: 'desc' }],
+      take: limit,
+      select: {
+        id: true,
+        mrn: true,
+        firstName: true,
+        lastName: true,
+        dateOfBirth: true,
+        gender: true,
+        riskCategory: true,
+        riskScore: true,
+        lastAssessment: true,
+        therapyGaps: {
+          where: { resolvedAt: null, module: 'HEART_FAILURE' },
+          select: { id: true, gapType: true, medication: true, device: true, currentStatus: true },
+        },
+      },
+    });
+
+    const now = Date.now();
+    const worklist = patients.map(p => {
+      const ageMs = now - p.dateOfBirth.getTime();
+      const age = Math.floor(ageMs / (365.25 * 24 * 60 * 60 * 1000));
+      const careGaps = p.therapyGaps.map(g =>
+        g.medication ? `${g.medication} gap` : g.device ? `${g.device} eval` : g.currentStatus,
+      );
+      return {
+        id: p.id,
+        mrn: p.mrn,
+        firstName: p.firstName,
+        lastName: p.lastName,
+        age,
+        gender: p.gender,
+        riskCategory: p.riskCategory,
+        riskScore: p.riskScore,
+        gapCount: p.therapyGaps.length,
+        careGaps,
+        lastAssessment: p.lastAssessment?.toISOString() ?? null,
+      };
+    });
+
+    res.json({
+      success: true,
+      data: worklist,
+      count: worklist.length,
+      source: 'database',
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  } catch (error) {
+    logger.error('Failed to load HF patient worklist', { error: error instanceof Error ? error.message : String(error) });
+    res.status(500).json({ success: false, error: 'Failed to load Heart Failure patient worklist' } as APIResponse);
+  }
 });
 
 // Advanced GDMT Gap Analysis endpoint

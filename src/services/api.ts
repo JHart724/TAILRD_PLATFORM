@@ -328,6 +328,65 @@ export async function getExecutiveDashboard(moduleId: string): Promise<Executive
   return apiFetch<ExecutiveData>(`/modules/${moduleId}/executive`);
 }
 
+// ─── Heart Failure Module ───────────────────────────────────────────────────
+
+export interface HFGDMTPillar {
+  current: number | null;
+  target: number;
+  status: 'green' | 'amber' | 'red' | 'unknown';
+  missingCount: number;
+}
+
+export interface HFDashboardData {
+  summary: {
+    totalPatients: number;
+    totalOpenGaps: number;
+    gapsByType: Record<string, number>;
+    deviceCandidates: number;
+    gdmtOptimized: number;
+  };
+  gdmtMetrics: {
+    aceArb: HFGDMTPillar;
+    betaBlocker: HFGDMTPillar;
+    mra: HFGDMTPillar;
+    sglt2i: HFGDMTPillar;
+  };
+  recentAlerts: Array<{
+    gapId: string;
+    patientId: string;
+    type: string;
+    severity: 'high' | 'medium' | 'low';
+    message: string;
+    currentStatus: string;
+    targetStatus: string;
+    identifiedAt: string;
+  }>;
+  source: string;
+}
+
+export interface HFWorklistPatient {
+  id: string;
+  mrn: string;
+  firstName: string;
+  lastName: string;
+  age: number;
+  gender: string;
+  riskCategory: string | null;
+  riskScore: number | null;
+  gapCount: number;
+  careGaps: string[];
+  lastAssessment: string | null;
+}
+
+export async function getHeartFailureDashboard(): Promise<HFDashboardData> {
+  return apiFetch<HFDashboardData>('/modules/heart-failure/dashboard');
+}
+
+export async function getHeartFailureWorklist(limit?: number): Promise<HFWorklistPatient[]> {
+  const qs = limit ? `?limit=${limit}` : '';
+  return apiFetch<HFWorklistPatient[]>(`/modules/heart-failure/patients${qs}`);
+}
+
 // ─── Patients ───────────────────────────────────────────────────────────────
 
 export async function getPatients(moduleId: string, filters?: PatientFilters): Promise<Patient[]> {
