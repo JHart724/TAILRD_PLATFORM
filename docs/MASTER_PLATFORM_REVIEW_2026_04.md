@@ -938,3 +938,354 @@ The agent produced a complete field-by-field PHI inventory. Of 146 identified PH
 
 **Items 1-8: under 3 hours total. Fix the BAA, fix the drug codes, filter meds. Maximum clinical impact per hour invested.**
 
+---
+
+# PHASES 10-15: REMAINING SECTIONS + ALL DELIVERABLES
+
+---
+
+## §11 Build Blocker — P0
+
+### FINDING-11-001 — P0: Frontend Build Will Fail
+**File:** `src/ui/coronaryIntervention/components/clinical/CADClinicalGapDetectionDashboard.tsx:89-94`
+**Issue:** Orphaned mock data fragment inside the `CADGapPatient` interface definition. TypeScript syntax error (TS1128, TS1109). `npm run build` aborts. Frontend cannot be deployed.
+**Fix:** Move the data fragment to the data section, close the interface properly.
+**Effort:** 15 minutes.
+
+---
+
+## §12 Code Quality
+
+### File Size Emergency List (Top 10)
+
+| File | Lines | Action |
+|------|------:|--------|
+| `gapRuleEngine.ts` | 11,262 | CRITICAL — @ts-nocheck, split to per-module files |
+| `CADClinicalGapDetectionDashboard.tsx` | 6,572 | CRITICAL — has build-blocking syntax error |
+| `EPClinicalGapDetectionDashboard.tsx` | 4,906 | Split |
+| `hfGapData.ts` | 4,209 | Acceptable (data file, not logic) |
+| `VDClinicalGapDetectionDashboard.tsx` | 3,854 | Split |
+| `PVClinicalGapDetectionDashboard.tsx` | 3,661 | Split |
+| `SHClinicalGapDetectionDashboard.tsx` | 2,955 | Split |
+| `modules.ts` (route) | 1,586 | Extract to services |
+| `admin.ts` (route) | 1,323 | Extract to services |
+| `allModulesClinicalData.ts` | 1,243 | Acceptable (data config) |
+
+**17 files over 1,000 lines. 6 over 3,000 lines.** The gap detection dashboards per module are the worst offenders — each is a monolith combining data definitions, business logic, and rendering.
+
+### Test Coverage
+
+| Area | Test Files | Test Count | Coverage |
+|------|:---:|:---:|---|
+| Gap rule detection | 3 | 46 | ~18% of 257 rules |
+| CQL validation | 1 | ~5 | Minimal |
+| Integration (API) | 0 | 0 | None |
+| Frontend components | 1 | ~3 | Near-zero |
+| E2E | 0 | 0 | None |
+| **Total** | **~5** | **~54** | **<5%** |
+
+### Type Safety
+
+| Metric | Backend | Frontend |
+|--------|:---:|:---:|
+| `@ts-nocheck` files | 2 | 0 |
+| `: any` annotations | 395 | ~200 |
+| `as any` casts | 48 | ~30 |
+
+---
+
+## §13 Scalability
+
+- **Gap detection:** Loads patients in batches (per-batch loading implemented in Sprint, OOM fix from Phase 3). O(patients × 257 rules) but batched.
+- **No background job queue:** No BullMQ, SQS, or Redis-backed job system. Gap detection runs synchronously in request handlers or cron. At scale (>10K patients), this will block the event loop.
+- **Database indexes:** 30+ `@@index` declarations in schema.prisma covering the primary query patterns. Foreign keys on TherapyGap, Observation, Encounter all indexed. Adequate for current scale.
+- **N+1 patterns:** Previously fixed in Phase 1-3 audit (gapDetectionRunner, patientWriter, observationService). No new N+1 patterns found.
+- **In-memory caches:** Rate limiter, valueset resolver, CQL engine cache — all in-memory, not Redis-backed. Multi-instance ECS will have per-instance caches (not shared).
+
+---
+
+## §14 Enterprise Feature Matrix
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| SSO/SAML | **Implemented** | Cognito SAML code exists, env vars not configured |
+| Real-time notifications | **Partial** | GET /api/notifications exists (Sprint B-1a) |
+| Email clinical alerts | **Implemented** | SES integration in clinicalAlertService |
+| Scheduled report delivery | **Stub** | Cron framework exists, no report delivery |
+| PDF export | **Implemented** | ExportButton component |
+| Excel export | **Implemented** | CSV/Excel export in dataExport utility |
+| eCQM/QRDA XML export | **Not Implemented** | |
+| CDS Hooks | **Implemented** | 3 hooks, JWT verified, prefetch templates |
+| SMART on FHIR | **Implemented** | EHR launch + PKCE (has CRITICAL verifier leak) |
+| SCIM 2.0 | **Not Implemented** | |
+| Bulk FHIR export | **Not Implemented** | |
+| Care coordination/referrals | **Implemented** | CrossReferralService with full model |
+| Provider scorecards | **Partial** | UI exists, no backend provider aggregation |
+| Risk stratification | **Partial** | Risk calculators exist (MAGGIC, CHA2DS2-VASc) |
+| Custom report builder | **Not Implemented** | |
+| Audit log export | **Implemented** | GET /api/audit/export |
+| Data retention automation | **Implemented** | DSAR deletion + 6yr file retention |
+| Breach notification | **Implemented** | Full model, manual delivery |
+| EHR write-back | **Not Implemented** | Correct per FDA CDS exemption |
+
+**13 of 19 enterprise features implemented or partially implemented (68%).** 6 not implemented — most are P2/P3 priorities.
+
+---
+
+## §15 Clinical Workflows
+
+- **Post-discharge follow-up gaps:** YES — 7-day, 14-day, 30-day follow-up rules present in gapRuleEngine.ts. 30-day readmission flag logic exists.
+- **Cross-referral engine:** YES — `crossReferralService.ts` implements full referral lifecycle with priority, status tracking, and notification generation.
+- **Escalation logic:** NO — no time-based escalation for unaddressed gaps. Gaps remain open indefinitely with no supervisor notification.
+- **HRRP tracking:** PARTIAL — 30-day readmission flag exists but HRRP-specific excess readmission ratio calculation is not implemented.
+
+---
+
+## §3B Service Line View Audit
+
+| Module | Service Line File | Data Source | Sub-components |
+|--------|------------------|-------------|----------------|
+| Heart Failure | `ServiceLineView.tsx` | **API** (Sprint B PR-C) | GDMTAnalyticsDashboard, ProviderScorecard, DevicePathwayFunnel — all API-wired with EHR placeholders |
+| Electrophysiology | `EPServiceLineView.tsx` | **Mock** | 12 tabs, all hardcoded mock data |
+| Coronary | `CoronaryServiceLineView.tsx` | **Mock** | Similar tab structure, all mock |
+| Structural | `StructuralServiceLineView.tsx` | **Mock** | All mock |
+| Valvular | `ValvularServiceLineView.tsx` | **Mock** | All mock |
+| Peripheral | `PeripheralServiceLineView.tsx` | **Mock** | All mock |
+
+---
+
+## §3C Research & Registry
+
+- **Research view:** YES — `src/ui/research/` exists with `ResearchModule.tsx`, `ResearchServiceLineView.tsx` (1,111 lines). Contains clinical trial browser, registry dashboard, de-identified cohort builder.
+- **ClinicalTrials.gov integration:** PARTIAL — UI for trial browsing exists with curated trial data. No live API connection to ClinicalTrials.gov v2.
+- **Registry exports (NCDR, GWTG, STS, VQI):** NOT IMPLEMENTED — no XML/QRDA export capability.
+- **De-identification:** NOT IMPLEMENTED — no Safe Harbor de-identification logic.
+
+---
+
+## §18 Risk Score Calculators
+
+| Calculator | File | Implemented? | Connected to Patient Data? |
+|-----------|------|:---:|:---:|
+| MAGGIC | `MAGGICCalculator.tsx` | YES | Accepts patientData prop |
+| INTERMACS | `INTERMACSCalculator.tsx` | YES | Accepts patientData prop |
+| CHA₂DS₂-VASc | Backend route `/calculators/cha2ds2-vasc/:patientId` | YES | Reads from Prisma |
+| HAS-BLED | Backend route `/calculators/has-bled/:patientId` | YES | Reads from Prisma |
+| STS Risk | Backend route `/calculators/sts-risk/:patientId` | YES | Reads from Prisma |
+| Amyloidosis Screener | `AmyloidosisScreener.tsx` | YES | Accepts patientData prop |
+
+**6 risk calculators implemented.** Missing from the Master Review Prompt list: HEART Score, GRACE 2.0, TIMI, SYNTAX, EuroSCORE II, Killip, Fontaine, Rutherford, ISTH, CRUSADE, HCM Risk-SCD, Seattle HF Model, ASCVD Pooled Cohort.
+
+---
+
+## §23 DDI Checking
+
+`ddiService.ts` exists with 5 drug interaction rules covering QTc cascade, hyperkalemia, and bleeding risk. NOT connected to the gap detection engine — operates as a standalone CDS Hooks service (`tailrd-drug-interaction-check`). The DDI rules are hardcoded in the CDS hook handler, not centralized in the valueset.
+
+---
+
+# DELIVERABLES
+
+---
+
+## Deliverable 1: Severity Distribution Table
+
+| Severity | Count | % |
+|----------|------:|---:|
+| CRITICAL | 24 | 9% |
+| HIGH | 86 | 33% |
+| MEDIUM | 87 | 33% |
+| LOW | 48 | 18% |
+| INFO | 15 | 6% |
+| **TOTAL** | **~260** | 100% |
+
+---
+
+## Deliverable 3: HIPAA Violation Register
+
+| # | Finding | HIPAA Section | Description |
+|---|---------|---------------|-------------|
+| 1 | 2.6-001 | §164.502(e) | No BAA executed for any vendor — unauthorized PHI disclosure |
+| 2 | 2.6-002 | §164.502(e) | Redox BAA not executed before EHR connection |
+| 3 | 2.1-001 | §164.312(a)(2)(iv) | DEMO_MODE silent plaintext — PHI encryption bypassed |
+| 4 | 2.1-002 | §164.312(a)(2)(iv) | DateTime fields bypass encryption (typeof check) |
+| 5 | 2.1-003 | §164.312(a)(2)(iv) | 25+ JSON fields with clinical PHI stored plaintext |
+| 6 | 2.2-001 | §164.312(b) | Audit log records mutable (auditLog.update) |
+| 7 | 2.2-002 | §164.312(b) | Audit logs on ephemeral ECS filesystem |
+| 8 | 2.5-001 | §164.524 | 6 patient-linked models omitted from DSAR deletion |
+| 9 | 2.5-002 | §164.528 | WebhookEvent.rawPayload PHI persists after DSAR |
+| 10 | 2.5-003 | §164.404-408 | Breach 60-day deadline check not automated |
+| 11 | 1.9-* | §164.312(b) | 8 event types not audit logged (password reset, patient modify/delete, gap view, file download) |
+| 12 | 2.2-003 | §164.312(b) | No anomalous access detection |
+
+---
+
+## Deliverable 4: Clinical Safety Register
+
+| # | Finding | Wrong Recommendation | Population Affected | Risk |
+|---|---------|---------------------|---------------------|------|
+| 1 | 3.2-001 | Statin gap inverted (atorvastatin/simvastatin swapped) | All CAD + PAD patients | Under-treatment of statin-eligible, over-treatment of non-eligible |
+| 2 | 3.2-002 | Ivabradine gap fires on all HFrEF regardless of ivabradine use | All ivabradine-treated patients | False positive → alert fatigue |
+| 3 | 3.2-003 | PFA candidacy fires for all furosemide users | Entire HF population on diuretics | Massive false positive → clinical distrust |
+| 4 | 3.7-001 | Discontinued meds suppress valid gaps | ALL medication-based gaps | False negative → missed GDMT optimization |
+| 5 | 3.5-001 | AF anticoagulation uses age-only proxy | All AF patients under 65 with risk factors | Under-detection of high-stroke-risk patients |
+| 6 | 3.3-001 | QTc = heart rate LOINC code | All QTc-monitored patients via FHIR | QTc safety alerts fail entirely |
+| 7 | 3.3-002 | NT-proBNP routing code nonexistent | All HF patients via FHIR | HF biomarker invisible |
+| 8 | 3.5-003 | Anemia threshold 10 g/dL (not sex-specific) | 30-50% of HF patients with Hgb 10-13 | Anemia undetected |
+
+---
+
+## Deliverable 5: Build & Deployment Blocker List
+
+| # | Blocker | Fix |
+|---|---------|-----|
+| 1 | TypeScript syntax error in `CADClinicalGapDetectionDashboard.tsx:89-94` | Move orphaned data, close interface | 
+| 2 | `db push --accept-data-loss` in Dockerfile CMD | Remove fallback |
+| 3 | No AWS BAA executed | Click through AWS Artifact |
+| 4 | Frontend not deployed (no app.tailrd-heart.com) | Netlify/Vercel with REACT_APP_USE_REAL_API=true |
+
+---
+
+## Deliverable 6: Route Security Matrix (Summary)
+
+**120+ routes audited across 29 route files.**
+- **SAFE:** 108 routes (proper hospitalId, auth middleware, tenant verification)
+- **VULNERABLE:** 5 routes (cross-tenant data access — CDS Hooks, CQL batch-evaluate)
+- **PARTIAL:** 7 routes (TOCTOU patterns, missing pre-verification)
+
+Full matrix in Phase 1 Agent 6 output.
+
+---
+
+## Deliverable 8: Drug Code Error Table (Summary)
+
+| Code | Claimed | Actual | Impact |
+|------|---------|--------|--------|
+| `36567` | Atorvastatin | **Simvastatin** | All statin gaps inverted |
+| `83367` | Simvastatin | **Atorvastatin** | Cascades to 3 inline arrays |
+| `1649480` | Ivabradine | **Nonexistent** | Ivabradine patients not recognized |
+| `4603` | Flecainide (in EP-PFA) | **Furosemide** | PFA fires for all diuretic users |
+| `8867-4` | QTc interval | **Heart rate** | QTc safety alerts fail |
+| `33762-9` | NT-proBNP | **Nonexistent** | HF biomarker lost from FHIR |
+| `48641-3` | hs-Troponin I | **Conventional TnI** | hs-TnI unrecognized |
+| `33914-3` | eGFR CKD-EPI | **eGFR MDRD** | Systematic GFR bias |
+
+---
+
+## Deliverable 9: Admin & God View Capability Matrix
+
+| Capability | Backend | Returns Real Data | Frontend | Route | Working E2E |
+|------------|:---:|:---:|:---:|:---:|:---:|
+| Platform health | YES | YES | YES (SuperAdminDashboard) | /admin/dashboard | **YES** |
+| God View overview | YES | YES (Prisma) | YES | /admin/god | **YES** |
+| Cross-module analytics | YES | YES (Prisma) | YES | /admin/god | **YES** |
+| Global patient search | YES | YES (Prisma) | YES | /admin/god | **YES** |
+| Hospital management | YES | YES | YES (HealthSystems tab) | /admin | **PARTIAL** |
+| User management | YES | Mock → Real (PR #96) | Mock UI | /admin | **NO** |
+| Platform overview | YES | Mock | Mock UI | /admin | **NO** |
+| Audit/security | YES | Mock | Mock UI | /admin | **NO** |
+| Configuration | Mock (no-op) | No-op | Mock UI | /admin | **NO** |
+| Data management | Mock | Mock | Mock UI | /admin | **NO** |
+| Customer success | Mock | Mock | Mock UI | /admin | **NO** |
+
+---
+
+## Deliverable 10: Overall Readiness Scorecard
+
+| Dimension | Score | Prior (Phase 3) | Delta | Assessment |
+|-----------|:---:|:---:|:---:|-----------|
+| Security | 6/10 | 8/10 | -2 | More findings surfaced; localStorage JWT, pre-MFA PHI, IDOR in CDS Hooks |
+| HIPAA Compliance | 4/10 | 7/10 | -3 | No BAA executed, PHI encryption gaps, DSAR incomplete |
+| Clinical Accuracy | 5/10 | 9/10 | -4 | Drug code transpositions, discontinued med bug, guideline deviations |
+| Gap Rule Coverage | 8/10 | 8/10 | 0 | 257 rules, all with evidence objects (some incomplete) |
+| UI/UX Quality | 7/10 | — | new | Strong design system foundation, consistency gaps |
+| Accessibility | 3/10 | — | new | No focus traps, color-only severity, missing ARIA |
+| Backend Architecture | 6/10 | 7/10 | -1 | 11K-line @ts-nocheck file, God Object routes |
+| Frontend Architecture | 5/10 | 6/10 | -1 | 17 files >1K lines, 5 modules unwired, build blocker |
+| Data Pipeline | 6/10 | 7/10 | -1 | FHIR handler gaps, LOINC code errors in routing |
+| Multi-Tenancy | 8/10 | 9/10 | -1 | 4 models with weak isolation |
+| Infrastructure | 7/10 | 8/10 | -1 | Single-stage Dockerfile, no container scanning |
+| Test Coverage | 2/10 | 6/10 | -4 | ~54 tests total, <5% coverage |
+| EHR Integration | 5/10 | 7/10 | -2 | PKCE leak, SMART misconfigured, 9 missing FHIR handlers |
+| Demo Readiness | 5/10 | 6/10 | -1 | Build blocker, 5 modules mock, admin mock |
+| Enterprise Features | 7/10 | 7/10 | 0 | 13/19 implemented |
+| **Overall** | **5.5/10** | **7.4/10** | **-1.9** | Adversarial review surfaced depth the prior audit missed |
+
+**Note on score decrease:** The prior audit scored 7.4/10 with a lighter-touch methodology. This adversarial review applied clinical-grade, pentest-grade scrutiny to every file, function, and field. The score decrease reflects deeper discovery, not regression. The platform is objectively better (Sprint A + B shipped real improvements) but the bar was raised significantly.
+
+---
+
+## Deliverable 11: Series A Technical Due Diligence Paragraph
+
+A senior technical DD partner at Oak HC/FT or a16z Bio after a 5-day codebase review would write:
+
+> TAILRD Heart demonstrates genuine clinical domain depth — 257 deterministic gap rules with evidence objects covering six cardiovascular modules is a remarkable engineering achievement for a two-person team. The FHIR R4 pipeline, CDS Hooks implementation, and tenant-isolated Prisma architecture show sophisticated health IT understanding. The Heart Failure module is now wired end-to-end with real Prisma data, proving the pattern works. However, this review identified 24 CRITICAL findings across security (JWT in localStorage, pre-MFA PHI access, cross-tenant IDOR in CDS Hooks), HIPAA compliance (no BAA executed despite 5 days of production PHI processing, 25+ unencrypted JSON fields), and clinical accuracy (atorvastatin/simvastatin RxNorm codes transposed, discontinued medications suppressing gap detection, QTc LOINC code assigned to heart rate). The drug code errors are the most concerning — they affect the correctness of the platform's core clinical value proposition. We would condition funding on: (1) immediate BAA execution (10 minutes), (2) drug code fixes (2 hours), (3) JWT migration to httpOnly cookies (1 week), (4) engagement of a HIPAA compliance firm for formal risk analysis (30 days), and (5) SOC 2 Type I readiness (90 days). The estimated investment to reach deployment readiness for a first health system pilot is $150-200K over 3-4 months. The team's technical capability is strong — they built a clinically sophisticated product — but the security and compliance posture needs rapid maturation before enterprise health system deals can close.
+
+---
+
+## Deliverable 12: Cardiologist CMO First Impression
+
+A cardiologist CMO at Medical City Dallas during a 90-minute demo would:
+
+> First 15 minutes: Impressed by the Liquid Metal design, the 6-module structure, the Heart Failure executive dashboard showing real patient counts and GDMT pillar coverage. "This looks like nothing I've seen from Epic or any of our vendors." Clicks into the gap detection dashboard and sees 257 rules with evidence objects — "You have ACC/AHA 2022 citations on every rule? That's comprehensive."
+>
+> 30-minute mark: Opens the EP module. Asks about CHA₂DS₂-VASc scoring for their AF population. Discovers the anticoagulation gap uses age ≥65 as a proxy instead of calculating the actual score. "So a 55-year-old with three risk factors doesn't flag? That's a problem."
+>
+> 45-minute mark: Clicks into a specific patient on ivabradine. The ivabradine gap still fires. Asks why. "If my patient is on Corlanor and you're still telling me to start ivabradine, I can't trust this system."
+>
+> 60-minute mark: Asks about statin therapy in their CAD population. Notes that patients on atorvastatin are flagged as "no statin prescribed." "Atorvastatin is the most commonly prescribed statin in America. If your system doesn't recognize it, every statin gap in this dashboard is wrong."
+>
+> Verdict: "The vision is exactly right — this is what every CV service line needs. But I'd need the drug codes fixed, the CHA₂DS₂-VASc calculation implemented, and a clinical validation run against 100 of my real patients before I'd bring this to my board. Fix those three things and call me back in 30 days."
+
+---
+
+## Deliverable 13: Fastest Path to Deployable Demo
+
+Hour-by-hour workplan for "CMO at Medical City Dallas logs in and sees real therapy gap data":
+
+| Hour | Who | Task |
+|:---:|-----|------|
+| 0:00 | Jonathan | Execute AWS BAA via AWS Artifact (10 min click) |
+| 0:00 | Jonathan | Email compliance@redoxengine.com for BAA |
+| 0:10 | Engineering | Fix 6 drug/LOINC code errors (items 3-7 from Top 20) — 2h |
+| 0:10 | Engineering | Fix discontinued med filter (item 8) — 30 min |
+| 2:30 | Engineering | Fix CAD build blocker (syntax error) — 15 min |
+| 2:45 | Engineering | Deploy backend (td:31) + verify health/login/dashboard |
+| 3:00 | Engineering | Deploy frontend to app.tailrd-heart.com (Netlify) |
+| 3:30 | Engineering | Create MCD demo tenant + seed with Synthea data |
+| 4:00 | Engineering | Run gap detection on seeded MCD patients |
+| 5:00 | Engineering | Verify: MCD CMO login → HF executive → real KPIs → patient worklist → gap detail with correct evidence |
+| 6:00 | Jonathan | Walk through demo path, screenshot each screen |
+| 7:00 | Jonathan | Send login link to Medical City Dallas contact |
+
+**Total: ~7 hours from start to "CMO can log in."**
+
+---
+
+## Deliverable 14: Quick Wins List (HIGH/CRITICAL, under 1 hour each)
+
+| # | Finding | Effort | Impact |
+|---|---------|:---:|--------|
+| 1 | Execute AWS BAA | 10 min | Closes HIPAA §164.502(e) violation |
+| 2 | Swap atorvastatin/simvastatin codes | 30 min | Fixes all statin gaps |
+| 3 | Fix ivabradine code (1649480→1649380) | 15 min | Fixes ivabradine false positives |
+| 4 | Fix flecainide→furosemide (4603→4441) | 15 min | Fixes PFA gap mass false positive |
+| 5 | Fix QTc LOINC (8867-4→8601-7) | 15 min | Fixes QTc safety from FHIR |
+| 6 | Fix NT-proBNP code (33762-9→33762-6) | 15 min | Fixes HF biomarker from FHIR |
+| 7 | Filter discontinued meds | 30 min | Fixes ALL medication gap false negatives |
+| 8 | Fix CAD build blocker syntax error | 15 min | Unblocks frontend deployment |
+| 9 | Remove demo-mode token catch block | 30 min | Closes tampered token → superadmin |
+| 10 | Correct HFpEF SGLT2i class to 2a | 15 min | Correct evidence shown to clinicians |
+| 11 | Pin mutable action tags in deploy.yml | 30 min | Supply chain protection |
+| 12 | Remove db push --accept-data-loss | 15 min | Prevents production data loss |
+
+**Total: ~4.5 hours for all 12. These alone move the readiness score from 5.5 to ~7.0.**
+
+---
+
+*Master Platform Review completed: April 12, 2026*
+*Production: tailrd-backend:30*
+*Total findings: ~260 across 14 sections*
+*20 agents deployed across 5 batches*
+*Overall readiness: 5.5/10 (adversarial) — improvable to 7.0+ with 12 quick wins*
+
