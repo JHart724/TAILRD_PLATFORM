@@ -112,7 +112,14 @@ router.get('/heart-failure/dashboard', async (req: AuthenticatedRequest, res: Re
   }
 
   try {
-    const hfPatientWhere = { hospitalId, isActive: true, heartFailurePatient: true };
+    const hfPatientWhere = {
+      hospitalId,
+      isActive: true,
+      OR: [
+        { heartFailurePatient: true },
+        { therapyGaps: { some: { module: 'HEART_FAILURE' as const, resolvedAt: null } } },
+      ],
+    };
     const openGapWhere = { hospitalId, module: 'HEART_FAILURE' as const, resolvedAt: null };
 
     const [
@@ -300,7 +307,10 @@ router.get('/heart-failure/patients', async (req: AuthenticatedRequest, res: Res
       where: {
         hospitalId,
         isActive: true,
-        heartFailurePatient: true,
+        OR: [
+          { heartFailurePatient: true },
+          { therapyGaps: { some: { module: 'HEART_FAILURE' as const, resolvedAt: null } } },
+        ],
       },
       orderBy: [{ riskCategory: 'desc' }, { lastAssessment: 'desc' }],
       take: limit,
