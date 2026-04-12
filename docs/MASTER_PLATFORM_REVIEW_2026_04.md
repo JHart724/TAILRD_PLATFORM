@@ -756,5 +756,185 @@ The agent produced a complete field-by-field PHI inventory. Of 146 identified PH
 | LOW | 10 | 6 | 7 | **23** |
 | **Total** | **92** | **54** | **38** | **184** |
 
-**Next phase:** Phase 4 (UI/UX & Design System) + Phase 5 (Multi-Tenancy) + Phase 5B (EHR Integration).
+---
+
+# PHASES 4-9: UI/UX, MULTI-TENANCY, EHR, BACKEND, FRONTEND, INFRASTRUCTURE
+
+**Agents deployed:** 4 parallel (each covering 2-3 sections)
+**Total findings this batch:** ~65
+
+---
+
+## §4 UI/UX & Design System — Summary
+
+*Full findings from Agent 1. Key issues only shown here.*
+
+### Design Token System
+- Tailwind config defines custom palette: `titanium`, `porsche`, `chrome`, `arterial`, `crimson` color families
+- Frosted glass system (`metal-card` class) applied consistently
+- **41 hardcoded hex values found across components** that should use design tokens
+
+### Component Consistency
+- Multiple competing button implementations found
+- Multiple table patterns (no single DataTable component)
+- Toast notification system exists and is centralized
+
+### Accessibility (WCAG 2.1 AA)
+- **No aria-label on icon-only buttons** across most components
+- **Color is the sole indicator of severity** in multiple gap displays (no icon/shape differentiation)
+- **No keyboard trap management** on modal/drawer components
+- **No skip-to-content links**
+
+### Data Freshness
+- Several "Live" and "Real-time" labels found that are static — violates CLAUDE.md §14
+
+---
+
+## §5 Multi-Tenancy — Summary
+
+**16 findings (1 HIGH, 3 MEDIUM, 5 LOW)**
+
+### Model Isolation Matrix
+- **38 of 42 clinical models** have `hospitalId` with FK enforcement — GOOD
+- **4 models have weak isolation:** `PatientDataRequest` (no FK), `FailedFhirBundle` (nullable, no FK), `PerformanceMetric` (nullable), `ErrorLog` (nullable)
+
+### FINDING-5-001 — HIGH: PatientDataRequest Has No FK Constraints
+**File:** `schema.prisma:2048-2100`
+**Issue:** `hospitalId String` and `patientId String` with NO `@relation` — HIPAA right-of-access workflows bypass tenant enforcement at DB layer.
+**Fix:** Add explicit FK relations.
+
+---
+
+## §5B EHR Integration — Summary
+
+**16 findings (1 CRITICAL, 5 HIGH, 5 MEDIUM, 3 LOW, 1 INFO)**
+
+### FINDING-5B-001 — CRITICAL: PKCE Code Verifier Leaked in OAuth State
+**File:** `backend/src/routes/smartLaunch.ts`
+**Issue:** PKCE `codeVerifier` encoded in base64url `state` parameter, round-tripped through EHR auth server. Exposed in redirect URL and EHR logs. Anyone with log access can replay the code exchange.
+**Fix:** Store `{state → codeVerifier}` in Redis with 10-min TTL. Validate at callback.
+**Effort:** 4h
+
+### FINDING-5B-002 — HIGH: SMART Well-Known Config Incorrectly Positions TAILRD as Auth Server
+**Issue:** `authorization_endpoint` and `token_endpoint` point to TAILRD URLs, not EHR URLs. TAILRD is a SMART *client*, not an authorization server. Will fail Epic certification.
+
+### FINDING-5B-003 — HIGH: JWT Issuer from Caller-Controlled Field (SSRF Vector)
+**File:** `cdsHooks.ts`
+**Issue:** `fhirAuthorization.subject` used as JWKS issuer URL — caller controls this field. Attacker can point to malicious JWKS endpoint.
+
+### FHIR Handler Coverage: 9 of 24 US Core profiles handled. Missing: DiagnosticReport, MedicationStatement, Goal, CareTeam, Practitioner, Provenance, etc.
+
+### No EHR write-back exists — correct per FDA CDS exemption posture.
+
+---
+
+## §7 Backend Architecture — Summary
+
+**4 findings (1 CRITICAL, 2 MEDIUM, 1 LOW)**
+
+### FINDING-7-001 — CRITICAL: 11,262-Line gapRuleEngine.ts Has @ts-nocheck
+**Issue:** The entire clinical gap detection engine — 257 rules across 11K lines — has zero TypeScript type checking. Type errors in clinical thresholds, wrong field names, incorrect comparisons all silently pass build.
+
+### Type Safety: 395 `: any` annotations + 46 `as any` casts in production code
+### God Objects: modules.ts (1,586 lines), admin.ts (1,323 lines)
+
+---
+
+## §8 Frontend Architecture + §10 Admin + §11 Demo — Summary
+
+*Full findings from Agent 3. Key items:*
+
+### Module × Tier Data Source Matrix (Deliverable 7)
+
+| Module | Executive | Service Line | Care Team | Gap Dashboard |
+|--------|:---:|:---:|:---:|:---:|
+| **Heart Failure** | **API** | **API** | **API** | **API+Fallback** |
+| Electrophysiology | Mock | Mock | Mock | API+Fallback |
+| Coronary | Mock | Mock | Mock | API+Fallback |
+| Structural Heart | Mock | Mock | Mock | API+Fallback |
+| Valvular Disease | Mock | Mock | Mock | API+Fallback |
+| Peripheral Vascular | Mock | Mock | Mock | API+Fallback |
+
+**Heart Failure is the only module fully wired.** 5 of 6 modules render entirely mock data in executive, service line, and care team views.
+
+### Files Over 1000 Lines (Top 10)
+1. `gapRuleEngine.ts` — 11,262 lines (CRITICAL)
+2. Multiple clinical gap data files — 3,000-7,000 lines each
+3. `admin.ts` route — 1,323 lines
+4. `modules.ts` route — 1,586 lines
+
+### Admin Console: Mostly mock data. GodView uses real Prisma. Most admin tabs return hardcoded responses.
+
+### DEMO_PATIENT_ROSTER still imported in 6 files (5 non-HF modules + shared types)
+
+---
+
+## §9 Infrastructure — Summary
+
+**6 findings (1 HIGH, 2 MEDIUM, 3 LOW)**
+
+### FINDING-9-001 — HIGH: Single-Stage Dockerfile Ships DevDependencies to Production
+**Issue:** `npm ci` installs all deps including TypeScript, Jest, ESLint into production image. ~500MB vs ~150MB.
+**Fix:** Multi-stage build with `--omit=dev` in runner stage.
+
+### FINDING-9-002 — MEDIUM: `db push --accept-data-loss` Fallback in CMD
+**Issue:** If `migrate deploy` fails, container falls through to destructive schema push. Can DROP COLUMNS with PHI.
+**Fix:** Remove fallback. Fail-fast.
+
+### docker-compose.yml missing from project root (referenced in CLAUDE.md).
+
+---
+
+## Phases 4-9 Severity Summary
+
+| Section | CRIT | HIGH | MED | LOW | Total |
+|---------|:---:|:---:|:---:|:---:|:---:|
+| §4 UI/UX | 0 | 3 | 5 | 4 | ~12 |
+| §5 Multi-Tenancy | 0 | 1 | 3 | 5 | ~9 |
+| §5B EHR Integration | 1 | 5 | 5 | 3 | ~16 |
+| §7 Backend Architecture | 1 | 0 | 2 | 1 | ~4 |
+| §8+10+11 Frontend/Admin/Demo | 0 | 3 | 5 | 4 | ~12 |
+| §9 Infrastructure | 0 | 1 | 2 | 3 | ~6 |
+| **Phases 4-9 Total** | **2** | **13** | **22** | **20** | **~59** |
+
+---
+
+## CUMULATIVE TOTALS (All Phases)
+
+| Severity | Phase 1 | Phase 2 | Phase 3 | Phases 4-9 | **GRAND TOTAL** |
+|----------|:---:|:---:|:---:|:---:|:---:|
+| CRITICAL | 10 | 5 | 6 | 2 | **23** |
+| HIGH | 35 | 21 | 14 | 13 | **83** |
+| MEDIUM | 30 | 20 | 11 | 22 | **83** |
+| LOW | 10 | 6 | 7 | 20 | **43** |
+| **Total** | **92** | **54** | **38** | **59** | **~243** |
+
+---
+
+## TOP 20 PRE-DEMO FIX LIST (Deliverable 2)
+
+| # | Finding | Section | Impact | Effort |
+|---|---------|---------|--------|:---:|
+| 1 | Execute AWS BAA via Artifact | §2.6 | Operating without BAA | **10min** |
+| 2 | Email Redox for BAA | §2.6 | EHR without BAA | **1 email** |
+| 3 | Swap atorvastatin/simvastatin codes | §3.2 | All statin gaps inverted | 0.5h |
+| 4 | Fix ivabradine code (1649480→1649380) | §3.2 | All ivabradine patients missed | 0.25h |
+| 5 | Fix flecainide→furosemide (4603→4441) | §3.2 | PFA fires for diuretic users | 0.25h |
+| 6 | Fix QTc LOINC (8867-4→8601-7) | §3.3 | QTc alerts fail from FHIR | 0.25h |
+| 7 | Fix NT-proBNP code (33762-9→33762-6) | §3.3 | HF biomarker lost from FHIR | 0.25h |
+| 8 | Filter discontinued meds in gap runner | §3.7 | ALL med gaps false-negative | 0.5h |
+| 9 | Rotate compromised AWS IAM key | §1.8 | Full AWS account access | 1h |
+| 10 | Pin mutable action tags in deploy.yml | §1.7 | Supply chain attack vector | 0.5h |
+| 11 | Move JWT to httpOnly cookie | §1.4 | XSS → session theft | 8h |
+| 12 | Mount requireMFA globally | §1.1 | Pre-MFA token → PHI | 4h |
+| 13 | Add hospitalId to CDS Hooks lookup | §1.IDOR | Cross-tenant PHI | 2h |
+| 14 | Fix PKCE verifier leak in SMART | §5B | OAuth replay attack | 4h |
+| 15 | Fix SMART well-known config | §5B | Epic certification blocker | 2h |
+| 16 | Remove demo-mode token acceptance | §1.1 | Tampered token → superadmin | 0.5h |
+| 17 | Remove db push --accept-data-loss | §9 | Production data loss | 0.5h |
+| 18 | Fix mass assignment in user creation | §1.2 | Permission escalation | 1h |
+| 19 | Fix DEMO_MODE silent plaintext | §2.1 | PHI stored unencrypted | 4h |
+| 20 | Correct HFpEF SGLT2i class to 2a | §3.5 | Wrong evidence shown to clinicians | 0.25h |
+
+**Items 1-8: under 3 hours total. Fix the BAA, fix the drug codes, filter meds. Maximum clinical impact per hour invested.**
 
