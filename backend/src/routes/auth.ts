@@ -381,17 +381,16 @@ router.post('/verify', (req: Request, res: Response) => {
 
   jwt.verify(token, process.env.JWT_SECRET!, { algorithms: ['HS256'] }, (err: any, decoded: any) => {
     if (err) {
-      return res.status(403).json({
+      return res.json({
         success: false,
-        error: 'Invalid token',
+        data: { valid: false },
         timestamp: new Date().toISOString(),
       } as APIResponse);
     }
 
     return res.json({
       success: true,
-      data: decoded,
-      message: 'Token valid',
+      data: { valid: true, expiresAt: decoded?.exp ? new Date(decoded.exp * 1000).toISOString() : null },
       timestamp: new Date().toISOString(),
     } as APIResponse);
   });

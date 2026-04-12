@@ -20,7 +20,8 @@ const isExplicitDevOrTest = ['development', 'test'].includes(process.env.NODE_EN
 const isDemoMode = process.env.DEMO_MODE === 'true' && isExplicitDevOrTest;
 
 // ── CRITICAL: Prevent DEMO_MODE from reaching any deployed environment ────────
-if (process.env.DEMO_MODE === 'true' && !isExplicitDevOrTest) {
+// FINDING-2.1-001: DEMO_MODE + production = all PHI stored unencrypted
+if (process.env.DEMO_MODE === 'true' && (process.env.NODE_ENV === 'production' || !isExplicitDevOrTest)) {
   console.error('\n╔══════════════════════════════════════════════════════════════╗');
   console.error('║  FATAL: DEMO_MODE=true is only allowed in development/test ║');
   console.error('║  Set DEMO_MODE=false or remove it from environment.        ║');
@@ -149,8 +150,15 @@ if (!isDemoMode) {
   }));
 }
 
-// CDS Hooks — mounted before auth middleware (CDS uses its own JWT)
-app.use('/cds-services', require('./routes/cdsHooks').default);
+// CDS Hooks rate limiter — stricter than general API (60 req/min/IP)
+const cdsLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, error: 'CDS Hooks rate limit exceeded. Try again in 1 minute.' },
+});
+app.use('/cds-services', cdsLimiter, require('./routes/cdsHooks').default);
 
 const healthHandler: express.RequestHandler = (_req, res) => {
   res.status(200).json({
@@ -326,7 +334,24 @@ if (require.main === module) {
         logger.info(`Weekly summary complete: ${result.emails} emails to ${result.hospitals} hospitals`);
       });
 
-      logger.info('Clinical alert cron jobs scheduled (daily digest 7am EST, weekly summary Mon 8am EST)');
+      // Breach deadline check — daily at 9:00 AM UTC (FINDING-2.5-003)
+      const { checkBreachDeadlines } = require('./routes/breachNotification');
+      cron.schedule('0 9 * * *', async () => {
+        try {
+          const result = await checkBreachDeadlines();
+          if (result.overdue > 0) {
+            logger.error(`HIPAA BREACH DEADLINE ALERT: ${result.overdue} breach(es) past 60-day OCR deadline!`, { overdue: result.overdue, approaching: result.approaching });
+          } else if (result.approaching > 0) {
+            logger.warn(`Breach deadline warning: ${result.approaching} breach(es) within 10 days of 60-day OCR deadline`, { approaching: result.approaching });
+          } else {
+            logger.info('Breach deadline check: no overdue or approaching deadlines');
+          }
+        } catch (error) {
+          logger.error('Breach deadline check failed', { error: error instanceof Error ? error.message : String(error) });
+        }
+      });
+
+      logger.info('Clinical alert cron jobs scheduled (daily digest 7am EST, weekly summary Mon 8am EST, breach deadline 9am UTC)');
 
       // Webhook retry queue — every 5 minutes
       const { processRetryQueue } = require('./services/webhookPipeline');

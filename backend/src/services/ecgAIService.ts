@@ -7,6 +7,16 @@ import axios from 'axios';
 import fs from 'fs-extra';
 import path from 'path';
 
+// FINDING-2.7-001: ECG AI pipeline requires FDA 510(k) clearance before clinical use.
+// This flag must remain false until clearance is obtained. CLAUDE.md §8 explicitly prohibits activation.
+const ECG_AI_ENABLED = process.env.ECG_AI_ENABLED === 'true';
+
+function assertEcgAiEnabled(): void {
+  if (!ECG_AI_ENABLED) {
+    throw new Error('ECG_AI_NOT_ENABLED: FDA 510(k) clearance required before clinical use. Set ECG_AI_ENABLED=true only after regulatory approval.');
+  }
+}
+
 export interface ECGAIResult {
   id: string;
   patientId: string;
@@ -165,6 +175,7 @@ export class ECGAIService {
   }
 
   async initialize(): Promise<void> {
+    assertEcgAiEnabled();
     if (this.isInitialized) return;
 
     try {
@@ -507,7 +518,7 @@ export class ECGAIService {
       {
         category: ECGCategory.RHYTHM,
         finding: `${config.name} analysis: Normal rhythm`,
-        probability: 0.87 + Math.random() * 0.1,
+        probability: 0,
         confidence: 0.82 + Math.random() * 0.1,
         clinicalSignificance: 'benign'
       }

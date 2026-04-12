@@ -184,7 +184,7 @@ router.post('/:moduleId/:gapId/action', authenticateToken, authorizeRole(['super
 // GET /api/gaps/:moduleId/detailed
 // Returns gap data in the shape the frontend gap dashboards need:
 // grouped by gapType, with patient list per gap, severity, and evidence
-router.get('/:moduleId/detailed', authenticateToken, requireMFA, async (req: AuthenticatedRequest, res: Response) => {
+router.get('/:moduleId/detailed', authenticateToken, requireMFA, authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager', 'quality-director', 'analyst']), async (req: AuthenticatedRequest, res: Response) => {
   const hospitalId = req.user?.hospitalId;
   const moduleId = req.params.moduleId;
 
