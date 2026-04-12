@@ -775,16 +775,21 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [dataSource, setDataSource] = useState<'mock' | 'api'>('mock');
   const [apiGaps, setApiGaps] = useState<FrontendClinicalGap[] | null>(null);
+  const [gapLoading, setGapLoading] = useState(true);
+  const [gapError, setGapError] = useState<string | null>(null);
 
-  // Try to fetch real gap data from backend; fall back to mock data
   useEffect(() => {
     let cancelled = false;
-    fetchModuleGapsFromApi('heart-failure').then(gaps => {
-      if (!cancelled && gaps && gaps.length > 0) {
-        setApiGaps(gaps);
-        setDataSource('api');
-      }
-    });
+    setGapLoading(true);
+    fetchModuleGapsFromApi('heart-failure')
+      .then(gaps => {
+        if (!cancelled && gaps && gaps.length > 0) {
+          setApiGaps(gaps);
+          setDataSource('api');
+        }
+      })
+      .catch(err => { if (!cancelled) setGapError(err?.message ?? 'Failed to load gaps from API'); })
+      .finally(() => { if (!cancelled) setGapLoading(false); });
     return () => { cancelled = true; };
   }, []);
 
@@ -886,6 +891,22 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
   const filteredOpportunity = filteredGaps.reduce((sum, g) => sum + (g.dollarOpportunity || 0), 0);
   const totalPatientCountForChips = sortedGaps.reduce((sum, g) => sum + (g.patientCount || 0), 0);
   const totalOpportunityForChips = sortedGaps.reduce((sum, g) => sum + (g.dollarOpportunity || 0), 0);
+
+  if (gapLoading) {
+    return (
+      <div className="space-y-4 p-6">
+        {[0, 1, 2, 3].map(i => <div key={i} className="h-28 bg-titanium-100 animate-pulse rounded-xl" />)}
+      </div>
+    );
+  }
+
+  if (gapError && dataSource === 'mock' && activeGaps.length === 0) {
+    return (
+      <div className="p-6 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+        Failed to load gap data: {gapError}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
