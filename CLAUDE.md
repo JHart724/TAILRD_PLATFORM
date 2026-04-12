@@ -305,13 +305,25 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 - Invite accept
 - Admin analytics
 - GodView
+- Notifications (GET /api/notifications — Sprint B-1a, PR #96)
+- Admin user activity (GET /api/admin/users/:id/activity — Sprint B-1a, PR #96)
+- **Heart Failure module (Sprint B-1 PR-A through PR-C, PRs #98-#102):**
+  - Executive View: KPI cards, Gap Intelligence card (dashboard endpoint)
+  - Care Team View: GDMT pillars, safety alerts, recent activity (dashboard endpoint)
+  - Patient Worklist: real patient roster with gap badges (worklist endpoint)
+  - Care Gap Analyzer: gap breakdown with patient drill-down (dashboard + worklist)
+  - Clinical Gap Detection Dashboard: API-first with hfGapData.ts fallback
+  - GDMT Analytics Dashboard: pillar coverage with patient drill-down (dashboard + worklist)
+  - Device Pathway Funnel: device candidate count + patient list (dashboard + worklist)
+  - Real-Time Hospital Alerts: real gap alerts (dashboard), vitals/labs = EHR pending
+  - Team Collaboration Panel: full EHR placeholder (no messaging backend)
+  - Referral Tracker: referral gap count (dashboard), details = EHR pending
+  - Provider Scorecard: full EHR placeholder (no provider aggregation backend)
 
 **NOT wired (hardcoded mock data):**
-- All 6 module executive/service-line/care-team views
-- Notification panel
+- EP, Coronary, Structural, Valvular, Peripheral module views (5 of 6 modules)
+- Notification panel (mock data in sub-components, not wired to GET /api/notifications yet)
 - All admin tabs (users, audit, config, data, health systems, customer success)
-- Patient worklists
-- Gap detection dashboards (show frontend gap data, not TherapyGap table)
 - Phenotype screening panel
 - Risk calculators
 
