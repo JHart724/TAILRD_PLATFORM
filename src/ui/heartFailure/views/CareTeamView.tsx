@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { DEMO_PATIENT_CONTEXT, DEMO_PATIENT_ROSTER } from '../../../types/shared';
+import { DEMO_PATIENT_CONTEXT } from '../../../types/shared';
 import { Users, Calendar, AlertTriangle, Clock, Heart, Shield, Activity, FileText, Download, UserCheck, Stethoscope } from 'lucide-react';
-import { getHeartFailureDashboard, HFDashboardData } from '../../../services/api';
+import { getHeartFailureDashboard, getHeartFailureWorklist, HFDashboardData, HFWorklistPatient } from '../../../services/api';
 
 // Import Heart Failure Care Team components
 import PatientWorklistEnhanced from '../components/care-team/PatientWorklistEnhanced';
@@ -22,14 +22,26 @@ import INTERMACSCalculator from '../../../components/riskCalculators/INTERMACSCa
 import AmyloidosisScreener from '../../../components/phenotypeDetection/AmyloidosisScreener';
 import PhenotypeScreeningPanel from '../../../components/phenotypeDetection/PhenotypeScreeningPanel';
 
-// Clinical Intelligence sub-tab panel
+// Clinical Intelligence sub-tab panel — patient selector backed by API worklist
 const ClinicalToolsPanel: React.FC<{ activeToolTab?: string; onToolTabChange?: (tab: string) => void }> = ({ activeToolTab: externalToolTab, onToolTabChange }) => {
   const [internalToolTab, setInternalToolTab] = useState('phenotype');
+  const [worklist, setWorklist] = useState<HFWorklistPatient[]>([]);
   const [selectedPatientIdx, setSelectedPatientIdx] = useState(0);
   const activeToolTab = externalToolTab || internalToolTab;
   const setActiveToolTab = (tab: string) => { setInternalToolTab(tab); onToolTabChange?.(tab); };
 
-  const selectedPatient = DEMO_PATIENT_ROSTER[selectedPatientIdx]?.context || DEMO_PATIENT_CONTEXT;
+  useEffect(() => {
+    let cancelled = false;
+    getHeartFailureWorklist(20)
+      .then(pts => { if (!cancelled) setWorklist(pts); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+
+  const selectedPt = worklist[selectedPatientIdx];
+  const selectedPatient = selectedPt
+    ? { ...DEMO_PATIENT_CONTEXT, patientId: selectedPt.id, age: selectedPt.age, gender: selectedPt.gender as 'M' | 'F' }
+    : DEMO_PATIENT_CONTEXT;
 
   const tools = [
  { id: 'phenotype', label: 'HF Phenotype Classification', component: HFPhenotypeClassification },
@@ -55,15 +67,19 @@ const ClinicalToolsPanel: React.FC<{ activeToolTab?: string; onToolTabChange?: (
  </h3>
  <div className="flex items-center gap-2">
  <Users className="w-4 h-4 text-titanium-500" />
+ {worklist.length > 0 ? (
  <select
  value={selectedPatientIdx}
  onChange={(e) => setSelectedPatientIdx(Number(e.target.value))}
  className="text-sm border border-titanium-200 rounded-lg px-3 py-1.5 bg-white text-titanium-800 focus:outline-none focus:ring-2 focus:ring-porsche-300"
  >
- {DEMO_PATIENT_ROSTER.map((p, i) => (
- <option key={p.context.patientId} value={i}>{p.label}</option>
+ {worklist.map((p, i) => (
+ <option key={p.id} value={i}>{p.lastName}, {p.firstName} ({p.mrn})</option>
  ))}
  </select>
+ ) : (
+   <span className="text-sm text-titanium-400">Loading patients...</span>
+ )}
  </div>
  </div>
  <div className="flex flex-wrap gap-2">
