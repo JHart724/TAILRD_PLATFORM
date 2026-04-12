@@ -5,6 +5,7 @@ const ENCRYPTION_KEY = process.env.PHI_ENCRYPTION_KEY;
 const ALGORITHM = 'aes-256-gcm';
 const isDemoMode = process.env.DEMO_MODE === 'true';
 const isProduction = process.env.NODE_ENV === 'production';
+let plaintextWarned = false;
 
 // PHI fields that must be encrypted at rest per HIPAA 164.312(a)(2)(iv)
 // PHI string fields encrypted via middleware (HIPAA 164.312(a)(2)(iv))
@@ -49,7 +50,11 @@ function encrypt(text: string): string {
     if (!isDemoMode) {
       throw new Error('FATAL: PHI_ENCRYPTION_KEY is required outside demo mode. Cannot store PHI unencrypted.');
     }
-    return text; // Passthrough only in explicit demo mode
+    if (!plaintextWarned) {
+      plaintextWarned = true;
+      console.error('[PHI-WARN] DEMO_MODE active without PHI_ENCRYPTION_KEY — PHI stored as plaintext');
+    }
+    return text;
   }
   const iv = crypto.randomBytes(16);
   const key = Buffer.from(ENCRYPTION_KEY, 'hex');

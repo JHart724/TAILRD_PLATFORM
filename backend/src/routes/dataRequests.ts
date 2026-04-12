@@ -240,21 +240,12 @@ router.patch('/access-request/:requestId', async (req: AuthenticatedRequest, res
 
     const previousMeta = originalEntry.metadata as any;
 
-    // Update the original entry's metadata with new status
-    await prisma.auditLog.update({
-      where: { id: requestId },
-      data: {
-        metadata: {
-          ...previousMeta,
-          status,
-          reviewedBy: req.user!.email,
-          reviewedAt: new Date().toISOString(),
-          reviewNotes: reviewNotes || null,
-        },
-      },
-    });
+    // HIPAA §164.312(b): audit logs are append-only. Never call auditLog.update().
+    // The original DATA_REQUEST_CREATED entry is immutable. Status changes are
+    // tracked via separate append entries below. Read current status by querying
+    // the latest audit entry for this resource.
 
-    // Create a separate audit trail entry for the status change
+    // Create an append-only audit trail entry for the status change
     await prisma.auditLog.create({
       data: {
         hospitalId,
