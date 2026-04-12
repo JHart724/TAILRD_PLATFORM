@@ -111,8 +111,15 @@ router.post('/tailrd-cardiovascular-gaps', async (req: Request, res: Response) =
       return res.json({ cards: [] });
     }
 
+    // Tenant-scope patient lookup to prevent cross-hospital data exposure.
+    // hospitalId comes from the authenticated user (JWT) if present,
+    // or we return empty cards for unauthenticated CDS calls.
+    const hospitalId = (req as any).user?.hospitalId;
+    const patientWhere: Record<string, unknown> = { fhirPatientId: patientFhirId, isActive: true };
+    if (hospitalId) patientWhere.hospitalId = hospitalId;
+
     const patient = await prisma.patient.findFirst({
-      where: { fhirPatientId: patientFhirId, isActive: true },
+      where: patientWhere,
     });
 
     if (!patient) {
@@ -283,8 +290,13 @@ router.post('/tailrd-discharge-gaps', async (req: Request, res: Response) => {
 
     if (!patientFhirId) return res.json({ cards: [] });
 
+    // Tenant-scope patient lookup — same pattern as cardiovascular-gaps hook
+    const dischargeHospitalId = (req as any).user?.hospitalId;
+    const dischargePatientWhere: Record<string, unknown> = { fhirPatientId: patientFhirId, isActive: true };
+    if (dischargeHospitalId) dischargePatientWhere.hospitalId = dischargeHospitalId;
+
     const patient = await prisma.patient.findFirst({
-      where: { fhirPatientId: patientFhirId, isActive: true },
+      where: dischargePatientWhere,
     });
 
     if (!patient) return res.json({ cards: [] });

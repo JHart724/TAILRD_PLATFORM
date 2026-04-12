@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
 import { logger } from '../utils/logger';
-import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
+import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
 import prisma from '../lib/prisma';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -10,8 +10,8 @@ import { UserRole } from '@prisma/client';
 
 const router = Router();
 
-// POST /api/users/invite
-router.post('/invite', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+// POST /api/users/invite — only admins can invite users
+router.post('/invite', authenticateToken, authorizeRole(['super-admin', 'hospital-admin']), async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { email, role } = req.body;
     const user = req.user;
@@ -31,6 +31,12 @@ router.post('/invite', authenticateToken, async (req: AuthenticatedRequest, res:
     ];
     if (!validRoles.includes(role)) {
       return res.status(400).json({ error: 'Invalid role' });
+    }
+
+    // Only super-admin can assign super-admin role
+    const callerRole = (user.role ?? '').toLowerCase().replace(/_/g, '-');
+    if (role === 'SUPER_ADMIN' && callerRole !== 'super-admin') {
+      return res.status(403).json({ error: 'Only super-admins can invite super-admins' });
     }
 
     // Check if user already exists

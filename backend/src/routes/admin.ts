@@ -726,6 +726,21 @@ router.post('/hospitals/:hospitalId/users',
       // Set default permissions based on role
       const defaultPermissions = getDefaultPermissionsByRole(role, hospital);
 
+      // Explicit allowlist — only these permission keys can be set via API.
+      // Any other key (e.g. role, hospitalId, isActive) is silently dropped.
+      const ALLOWED_PERMISSION_KEYS = [
+        'permHeartFailure', 'permElectrophysiology', 'permStructuralHeart',
+        'permCoronaryIntervention', 'permPeripheralVascular', 'permValvularDisease',
+        'permAccessPHI', 'permManageUsers', 'permExportData',
+        'permViewAnalytics', 'permManageSettings',
+      ] as const;
+      const safePermissions: Record<string, boolean> = {};
+      for (const key of ALLOWED_PERMISSION_KEYS) {
+        if (typeof (permissions as Record<string, unknown>)[key] === 'boolean') {
+          safePermissions[key] = Boolean((permissions as Record<string, unknown>)[key]);
+        }
+      }
+
       const user = await prisma.user.create({
         data: {
           email,
@@ -735,9 +750,8 @@ router.post('/hospitals/:hospitalId/users',
           title,
           role,
           hospitalId,
-          // Merge provided permissions with defaults
           ...defaultPermissions,
-          ...permissions
+          ...safePermissions,
         },
         select: {
           id: true,
