@@ -85,13 +85,9 @@ export interface CADGapPatient {
   tier?: string;
   // Patient-Reported Outcomes — SAQ
   saqAnginaFrequency?: number;        // 0-100
+  saqPriorAnginaFrequency?: number;   // 0-100
   saqPhysicalLimitation?: number;     // 0-100
-      'eGFR': '55 mL/min/1.73m2',
-      'Action': 'Initiate colchicine after clarithromycin course complete',
-    },
-    tier: 'Drug Interaction — defer initiation',
-  },
-];
+}
 
 // ============================================================
 // MASTER GAP DATA

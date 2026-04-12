@@ -39,7 +39,7 @@ export interface TransformedObservation {
 
 const CARDIOVASCULAR_LAB_CODES: Record<string, string[]> = {
   'BNP': ['33747-0', '30934-4'],
-  'NT-proBNP': ['33762-9', '71425-3'],
+  'NT-proBNP': ['33762-6', '71425-3'],
   'Troponin': ['10839-9', '49563-0', '6598-7'],
   'CK-MB': ['13969-1', '32673-6'],
   'Total Cholesterol': ['2093-3'],
@@ -173,7 +173,7 @@ const determineClinicalSignificance = (
   value: number | string | boolean | undefined,
   referenceRange?: TransformedObservation['referenceRange']
 ): 'high' | 'medium' | 'low' => {
-  const criticalLabCodes = ['33747-0', '30934-4', '33762-9', '71425-3', '10839-9', '49563-0'];
+  const criticalLabCodes = ['33747-0', '30934-4', '33762-6', '71425-3', '10839-9', '49563-0'];
   if (criticalLabCodes.includes(code)) return 'high';
   if (typeof value === 'number' && referenceRange) {
     const deviation = calculateDeviation(value, referenceRange);

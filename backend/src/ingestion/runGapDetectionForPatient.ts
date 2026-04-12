@@ -18,7 +18,7 @@ export async function runGapDetectionForPatient(
       where: { id: patientId },
       include: {
         conditions: true,
-        medications: true,
+        medications: { where: { status: 'ACTIVE' } },
         observations: { orderBy: { observedDateTime: 'desc' } },
       },
     });

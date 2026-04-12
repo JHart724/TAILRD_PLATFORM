@@ -95,9 +95,11 @@ router.get('/callback', async (req: Request, res: Response) => {
 
 // SMART Configuration Discovery
 router.get('/.well-known/smart-configuration', (_req: Request, res: Response) => {
+  // TAILRD is a SMART *client*, not an authorization server.
+  // authorization_endpoint and token_endpoint are EHR-specific and resolved
+  // at launch time from the EHR's .well-known/smart-configuration.
+  // This discovery document advertises TAILRD's client capabilities only.
   return res.json({
-    authorization_endpoint: `${API_URL}/api/smart/launch`,
-    token_endpoint: `${API_URL}/api/smart/callback`,
     capabilities: [
       'launch-ehr',
       'client-public',
@@ -109,6 +111,8 @@ router.get('/.well-known/smart-configuration', (_req: Request, res: Response) =>
     scopes_supported: ['openid', 'fhirUser', 'launch', 'patient/*.read', 'user/*.read'],
     response_types_supported: ['code'],
     code_challenge_methods_supported: ['S256'],
+    grant_types_supported: ['authorization_code'],
+    app_launch_url: `${API_URL}/api/smart/launch`,
   });
 });
 

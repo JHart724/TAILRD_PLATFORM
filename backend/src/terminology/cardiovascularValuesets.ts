@@ -130,7 +130,7 @@ export const LOINC_CARDIOVASCULAR_LABS = {
 
   // Cardiac function
   LVEF: '18010-0',              // Left ventricular ejection fraction by echocardiography (was 10230-1 = QRS duration — WRONG)
-  QTC_INTERVAL: '8867-4',       // QTc interval Fridericia (preferred for antiarrhythmic monitoring)
+  QTC_INTERVAL: '8601-7',       // QTc interval (was 8867-4 = heart rate — WRONG; 8601-7 is general QTc per LOINC)
   QRS_DURATION: '8632-2',       // QRS duration
 
   // Other
@@ -191,7 +191,7 @@ export const RXNORM_GDMT = {
   HYDRALAZINE: '5470',
   ISOSORBIDE_DINITRATE: '6058',
   // Ivabradine
-  IVABRADINE: '1649480',
+  IVABRADINE: '1649380',
 } as const;
 
 /** QT-prolonging medications -- used by QTc safety gap rule */
@@ -253,9 +253,9 @@ export const ICD10_BIOPROSTHETIC_VALVE = [
 
 /** High-intensity statins -- used by PAD statin gap rule */
 export const RXNORM_STATINS = {
-  ATORVASTATIN: '36567',
+  ATORVASTATIN: '83367',
   ROSUVASTATIN: '301542',
-  SIMVASTATIN: '83367',
+  SIMVASTATIN: '36567',
   PRAVASTATIN: '42463',
   PITAVASTATIN: '861634',
   LOVASTATIN: '6472',
