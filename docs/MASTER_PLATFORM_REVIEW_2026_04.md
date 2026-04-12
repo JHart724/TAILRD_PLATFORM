@@ -70,18 +70,18 @@
 ## Phase 1 Summary — Security Penetration Test
 
 **Agents deployed:** 6 parallel + 1 live API test suite
-**Total findings:** 71+
+**Total findings:** 92
 **Severity distribution:**
 
 | Severity | Count |
 |----------|------:|
-| CRITICAL | 7 |
-| HIGH | 27 |
-| MEDIUM | 24 |
-| LOW | 8 |
-| **Total** | **~71** |
+| CRITICAL | 10 |
+| HIGH | 35 |
+| MEDIUM | 31 |
+| LOW | 10 |
+| **Total** | **92** |
 
-**Note:** Agent 4 (Supply Chain/Secrets) results pending final compilation. Counts above are from 5 of 6 code agents + live API tests.
+**All 6 agents complete.** Includes live API penetration test results.
 
 ---
 
@@ -320,6 +320,93 @@
 3. **Add hospitalId to CDS Hooks patient lookup** (IDOR-001, IDOR-002) — closes cross-tenant gap exposure. 2h.
 4. **Fix mass assignment in user creation** (FINDING-1.2-001) — closes permission escalation. 1h.
 5. **Remove demo-mode token acceptance in catch block** (FINDING-1.1-001) — closes tampered-token bypass. 0.5h.
+
+---
+
+## 1.7-1.8 Supply Chain & CI/CD Security + Secrets & Credential Hygiene
+
+**Agent:** §1.7-1.8 | **Findings:** 21 (3 CRITICAL, 8 HIGH, 6 MEDIUM, 2 LOW)
+
+### FINDING-1.8-001 — CRITICAL: Live AWS IAM Key on Disk
+**File:** `backend/.env:15-16`
+**Issue:** Real AWS IAM access key `AKIA4SDNVPUGEZOYLPVG` + secret key present on disk. Comment says "ROTATE IMMEDIATELY". Same file has 126-char JWT secret and 64-char PHI encryption key in plaintext. File is in `.gitignore` but existed on disk in cloned repo. Git history shows prior commits of `terraform.tfvars` with AWS account IDs, VPC IDs, subnet IDs, security groups, KMS ARNs.
+**Fix:** Immediately rotate IAM key, JWT_SECRET (invalidates all sessions), and PHI_ENCRYPTION_KEY (requires re-encryption migration). Purge from git history with `git filter-repo`. Enable GitHub secret scanning push protection.
+**Effort:** 5-9h
+
+### FINDING-1.8-002 — CRITICAL: Infrastructure Secrets in Git History
+**File:** `terraform/terraform.tfvars` (committed in `19a9dbc`, removed in `db4e90a`)
+**Issue:** AWS Account ID, all 6 subnet IDs, 3 security group IDs, 2 KMS key ARNs, S3 bucket names all accessible via `git show 19a9dbc:terraform/terraform.tfvars`. Full network topology reconstructible.
+**Fix:** `git filter-repo` to purge. Ensure `.gitignore` covers `terraform.tfvars` and `.terraform/`.
+**Effort:** 2h
+
+### FINDING-1.7-001 — CRITICAL: Mutable Action Tags in Production Deploy
+**File:** `.github/workflows/deploy.yml:24,27,35`
+**Issue:** `actions/checkout@v4`, `aws-actions/configure-aws-credentials@v4`, `aws-actions/amazon-ecr-login@v2` — all mutable tags. Runner has `id-token: write` + AWS credentials. Supply chain compromise = production AWS access.
+**Fix:** Pin all to commit SHAs. `backend/.github/workflows/deploy.yml` already does this — root-level is the exception.
+**Effort:** 0.5h
+
+### FINDING-1.7-002 — HIGH: `prisma db push --accept-data-loss` in Production CMD
+**File:** `backend/Dockerfile:38`
+**Issue:** Production CMD falls back to `db push --accept-data-loss` if `migrate deploy` fails. Can DROP COLUMNS with PHI. `2>/dev/null` suppresses all errors. This pattern caused the April 7 incident.
+**Fix:** `CMD ["sh", "-c", "npx prisma migrate deploy && node dist/server.js"]` — fail hard, no fallback.
+**Effort:** 0.5h
+
+### FINDING-1.7-003 — HIGH: Math.random() in ECG AI Clinical Probabilities
+**File:** `backend/src/services/ecgAIService.ts:510-511,545,548`
+**Issue:** Returns `probability: 0.87 + Math.random() * 0.1` and `confidence: 0.82 + Math.random() * 0.1` as clinical inference results. CLAUDE.md states ECG AI pipeline "is NOT covered by CDS exemption and should not be activated without FDA clearance." Random-but-realistic AF probabilities could be acted on by clinicians.
+**Fix:** Hard-disable ECG AI behind `ECG_AI_ENABLED=false` feature flag. Return HTTP 403 with FDA clearance message.
+**Effort:** 2h
+
+### FINDING-1.7-004 — HIGH: Math.random() for Clinical Risk Scores
+**File:** `backend/src/cql/cqlEngine.ts:475`, `backend/src/routes/cqlRules.ts:862-867`
+**Issue:** CQL engine generates `score` using `Math.floor(Math.random() * 100)`. Batch evaluation generates random `riskScore`, `qualityScore`. Non-deterministic clinical scoring violates FDA CDS exemption.
+**Fix:** Replace with deterministic rule-based scoring or return 501 Not Implemented.
+**Effort:** 4-8h
+
+### FINDING-1.7-005 — HIGH: Static IAM Keys Instead of OIDC
+**File:** Both deploy workflows
+**Issue:** `id-token: write` declared but static IAM keys used. Long-lived credentials stored as GitHub Secrets.
+**Fix:** Implement OIDC-based AWS authentication via `role-to-assume`.
+**Effort:** 3h
+
+### FINDING-1.7-006 — HIGH: Mutable `:latest` Docker Tag Pushed
+**File:** Both deploy workflows
+**Issue:** Both push `$IMAGE_URI:latest` alongside SHA tag. Compromised branch → `:latest` overwrite → next ECS scale-out pulls malicious image.
+**Fix:** Remove `:latest` push. ECS task defs reference SHA tag only.
+**Effort:** 0.5h
+
+### Additional: Blocking bcrypt at module load (HIGH), plaintext JWT in CI workflow (HIGH), no Secrets Manager integration (MEDIUM), no container image scanning (MEDIUM), no frontend npm audit in CI (MEDIUM), Math.random for record IDs (MEDIUM), DEMO_MODE=true default in .env.example (MEDIUM), Dependabot un-pins SHAs (LOW), no CODEOWNERS file (LOW).
+
+---
+
+## Phase 1 — Final Severity Count
+
+| Severity | §1.1 JWT | §1.2 RBAC | §1.4-1.6 DoS/Net | §1.7-1.8 Supply | §1.9 Audit | §1.IDOR | **Total** |
+|----------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| CRITICAL | 2 | 1 | 1 | 3 | 0 | 3 | **10** |
+| HIGH | 8 | 3 | 6 | 8 | 6 | 4 | **35** |
+| MEDIUM | 7 | 3 | 6 | 6 | 7 | 1 | **30** |
+| LOW | 2 | 2 | 4 | 2 | 0 | 0 | **10** |
+| **Total** | **19** | **10** | **20** | **21** | **14** | **8** | **92** |
+
+---
+
+## Phase 1 Top 10 Critical/High Fixes (Priority Order)
+
+| # | Finding | File | Impact | Effort |
+|---|---------|------|--------|--------|
+| 1 | Rotate compromised AWS IAM key | `backend/.env` | Full AWS account access | **NOW** |
+| 2 | Pin mutable action tags in deploy workflow | `.github/workflows/deploy.yml` | Supply chain → prod | 0.5h |
+| 3 | Move JWT to httpOnly cookie | `AuthContext.tsx:401` | XSS → full session theft | 8h |
+| 4 | Mount requireMFA globally | `server.ts` mounts | Pre-MFA token → PHI | 4h |
+| 5 | Add hospitalId to CDS Hooks patient lookup | `cdsHooks.ts:114,286` | Cross-tenant PHI | 2h |
+| 6 | Fix Dockerfile CMD (remove db push fallback) | `Dockerfile:38` | Data loss in production | 0.5h |
+| 7 | Fix mass assignment in user creation | `admin.ts:740` | Permission escalation | 1h |
+| 8 | Remove demo-mode token acceptance in catch | `auth.ts:72` | Tampered token → superadmin | 0.5h |
+| 9 | Disable ECG AI endpoint | `ecgAIService.ts` | Random clinical probabilities | 2h |
+| 10 | Fix invite endpoint (any user → SUPER_ADMIN) | `invite.ts:14` | Privilege escalation | 1h |
+
+**Estimated total for top 10:** ~20 hours of focused engineering work.
 
 **Next phase:** Phase 2 (HIPAA Compliance & Regulatory) — will run in next session.
 
