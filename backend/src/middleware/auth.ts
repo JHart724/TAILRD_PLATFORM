@@ -69,11 +69,8 @@ const authenticateToken = async (req: AuthenticatedRequest, res: Response, next:
         }
       }
 
-      // In demo mode, fall through to synthetic user instead of 403
-      if (isDemoMode) {
-        req.user = createDemoPayload();
-        return next();
-      }
+      // A token was provided but failed verification — always reject.
+      // Demo fallback only applies when NO token is provided (handled above).
       return res.status(403).json({
         success: false,
         error: 'Invalid or expired token',

@@ -715,8 +715,8 @@ export const RUNTIME_GAP_REGISTRY = [
     guidelineOrg: 'ACC',
     lastReviewDate: '2026-04-03',
     nextReviewDue: '2026-10-03',
-    classOfRecommendation: '1',
-    levelOfEvidence: 'A',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-R',
   },
   {
     id: 'gap-hf-80-cardio-oncology',
@@ -3459,7 +3459,7 @@ export function evaluateGapRules(
     labValues['heart_rate'] !== undefined && labValues['heart_rate'] > 70 &&
     onBBforIva &&
     !hasAF &&
-    !medCodes.includes('1649480') &&
+    !medCodes.includes('1649380') &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
@@ -3828,8 +3828,8 @@ export function evaluateGapRules(
         evidence: {
           triggerCriteria: [`HFmrEF/HFpEF (LVEF > 40%): ${labValues['lvef']}%`, 'No current SGLT2i'],
           guidelineSource: '2023 ACC Expert Consensus Decision Pathway on HFpEF (EMPEROR-Preserved, DELIVER Trials)',
-          classOfRecommendation: '1',
-          levelOfEvidence: 'A',
+          classOfRecommendation: '2a',
+          levelOfEvidence: 'B-R',
           exclusions: ['eGFR < 20', 'Type 1 diabetes', 'Recurrent DKA', 'Hospice/palliative care'],
         },
       });
@@ -4266,7 +4266,7 @@ export function evaluateGapRules(
   // Guideline: 2018 ACC/AHA Cholesterol Guideline, Class 1, LOE A
   // All ASCVD patients should be on high-intensity statin
   if (hasCAD) {
-    const STATIN_CODES = ['36567', '301542', '83367', '42463'];
+    const STATIN_CODES = ['83367', '301542', '36567', '42463'];
     const onStatin = medCodes.some(c => STATIN_CODES.includes(c));
     if (!onStatin) {
             if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
@@ -4436,7 +4436,7 @@ export function evaluateGapRules(
   // Guideline: 2018 ACC/AHA Cholesterol Guideline (IMPROVE-IT), Class 1, LOE A
   // CAD + on statin + LDL >70
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const STATIN_CODES_EZE = ['36567', '301542', '83367', '42463'];
+    const STATIN_CODES_EZE = ['83367', '301542', '36567', '42463'];
     const onStatinEze = medCodes.some(c => STATIN_CODES_EZE.includes(c));
     const onEzetimibe = medCodes.includes('341248');
     if (onStatinEze && !onEzetimibe && labValues['ldl'] !== undefined && labValues['ldl'] > 70) {
@@ -4614,7 +4614,7 @@ export function evaluateGapRules(
   // RxNorm statins: atorvastatin (36567), rosuvastatin (301542)
   const hasPAD = dxCodes.some(c => c.startsWith('I73.9') || c.startsWith('I70.2'));
   if (hasPAD) {
-    const STATIN_CODES = ['36567', '301542', '83367', '42463']; // atorvastatin, rosuvastatin, simvastatin, pravastatin
+    const STATIN_CODES = ['83367', '301542', '36567', '42463']; // atorvastatin, rosuvastatin, simvastatin, pravastatin
     const onStatin = medCodes.some(c => STATIN_CODES.includes(c));
     if (!onStatin) {
             if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
@@ -6554,8 +6554,8 @@ export function evaluateGapRules(
   // EP-PFA: Pulsed Field Ablation Candidacy
   // Guideline: 2024 HRS Expert Consensus on PFA, Class 2a, LOE B-NR
   // AF + prior failed ablation proxy (AF + on antiarrhythmic = failed rhythm control proxy)
-  // AAD codes: flecainide (4603), propafenone (8754), sotalol (9947), amiodarone (703), dofetilide (135447)
-  const AAD_CODES = ['4603', '8754', '9947', '703', '135447'];
+  // AAD codes: flecainide (4441), propafenone (8754), sotalol (9947), amiodarone (703), dofetilide (135447)
+  const AAD_CODES = ['4441', '8754', '9947', '703', '135447'];
   const onAAD = medCodes.some(c => AAD_CODES.includes(c));
   if (
     hasAF &&
@@ -6693,7 +6693,7 @@ export function evaluateGapRules(
   if (
     hasIST &&
     labValues['heart_rate'] !== undefined && labValues['heart_rate'] > 100 &&
-    !medCodes.includes('1649480') && // ivabradine
+    !medCodes.includes('1649380') && // ivabradine
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
@@ -7012,7 +7012,7 @@ export function evaluateGapRules(
   // CAD + on max statin + LDL still >70
   // RxNorm: evolocumab (1657974), alirocumab (1659149)
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const STATIN_CODES_PCSK9 = ['36567', '301542', '83367', '42463'];
+    const STATIN_CODES_PCSK9 = ['83367', '301542', '36567', '42463'];
     const onStatinPCSK9 = medCodes.some(c => STATIN_CODES_PCSK9.includes(c));
     const PCSK9_CODES = ['1657974', '1659149'];
     const onPCSK9 = medCodes.some(c => PCSK9_CODES.includes(c));
@@ -7141,7 +7141,7 @@ export function evaluateGapRules(
   // CAD + TG >150 + on statin + no icosapent ethyl
   // RxNorm icosapent ethyl: 1546275
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const STATIN_CODES_O3 = ['36567', '301542', '83367', '42463'];
+    const STATIN_CODES_O3 = ['83367', '301542', '36567', '42463'];
     const onStatinO3 = medCodes.some(c => STATIN_CODES_O3.includes(c));
     if (
       onStatinO3 &&
@@ -8008,7 +8008,7 @@ export function evaluateGapRules(
 
   // CAD-CRP: CRP Monitoring in CAD on Statin
   // Guideline: 2018 ACC/AHA Cholesterol Guideline (CANTOS Trial), Class 2b, LOE B-R
-  const STATIN_CODES_CRP_NEW = ['36567', '301542', '83367', '42463', '861634'];
+  const STATIN_CODES_CRP_NEW = ['83367', '301542', '36567', '42463', '861634'];
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const onStatinCRPnew = medCodes.some(c => STATIN_CODES_CRP_NEW.includes(c));
     if (onStatinCRPnew && labValues['crp'] === undefined && labValues['hs_crp'] === undefined) {
@@ -8786,7 +8786,7 @@ export function evaluateGapRules(
   // CAD-LIPID-PANEL-FU: Lipid Panel Follow-Up
   // Guideline: 2018 ACC/AHA Cholesterol Guideline, Class 1, LOE A
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const STATIN_CODES_LPF = ['36567', '301542', '83367', '42463', '861634'];
+    const STATIN_CODES_LPF = ['83367', '301542', '36567', '42463', '861634'];
     const onStatinLPF = medCodes.some(c => STATIN_CODES_LPF.includes(c));
     if (onStatinLPF && labValues['ldl'] === undefined && labValues['total_cholesterol'] === undefined) {
       gaps.push({
@@ -8939,7 +8939,7 @@ export function evaluateGapRules(
   // CAD-SECONDARY-PREVENTION: Secondary Prevention Bundle Review
   // Guideline: 2019 ACC/AHA Primary Prevention + AHA/ACC Secondary Prevention, Class 1, LOE A
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const STATIN_CODES_SP = ['36567', '301542', '83367', '42463'];
+    const STATIN_CODES_SP = ['83367', '301542', '36567', '42463'];
     const onStatinSP = medCodes.some(c => STATIN_CODES_SP.includes(c));
     const onAspirinSP = medCodes.includes('1191');
     const onBBsp = medCodes.some(c => ['20352', '6918', '19484'].includes(c));
@@ -9099,7 +9099,7 @@ export function evaluateGapRules(
   // EP-EARLY-RHYTHM: Early Rhythm Control in Newly Diagnosed AF
   // Guideline: 2023 ACC/AHA/ACCP/HRS AF Guideline (EAST-AFNET 4), Class 2a, LOE B-R
   // AF diagnosed <1 year + no rhythm control medication
-  const RHYTHM_CONTROL_CODES_ER = ['4603', '8754', '9947', '703', '135447'];
+  const RHYTHM_CONTROL_CODES_ER = ['4441', '8754', '9947', '703', '135447'];
   const onRhythmControlER = medCodes.some(c => RHYTHM_CONTROL_CODES_ER.includes(c));
   if (
     hasAF &&
@@ -9557,7 +9557,7 @@ export function evaluateGapRules(
   // EP-AF-CATHETER-TIMING: AF Ablation Timing Optimization
   // Guideline: 2023 ACC/AHA/ACCP/HRS AF Guideline (EAST-AFNET 4, EARLY-AF), Class 2a, LOE B-R
   // AF + on AAD (proxy for drug-refractory) + no prior ablation
-  const AAD_CODES_TIMING = ['4603', '8754', '9947', '703', '135447'];
+  const AAD_CODES_TIMING = ['4441', '8754', '9947', '703', '135447'];
   const onAADtiming = medCodes.some(c => AAD_CODES_TIMING.includes(c));
   if (
     hasAF &&
@@ -9596,7 +9596,7 @@ export function evaluateGapRules(
   if (hasAF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasParoxysmalAF = dxCodes.some(c => c.startsWith('I48.0'));
     const noStructuralHD = !dxCodes.some(c => c.startsWith('I42') || c.startsWith('I50'));
-    const AAD_CODES_PIP = ['4603', '8754']; // flecainide, propafenone
+    const AAD_CODES_PIP = ['4441', '8754']; // flecainide, propafenone
     const onAADpip = medCodes.some(c => AAD_CODES_PIP.includes(c));
     if (hasParoxysmalAF && noStructuralHD && !onAADpip) {
       gaps.push({

@@ -146,7 +146,7 @@ export const DRUG_CLASSES: Record<string, DrugClassMapping> = {
   'IVABRADINE': {
     className: 'If Channel Inhibitors',
     ingredients: [
-      { rxcui: '1649480', name: 'ivabradine', brands: ['Corlanor'] },
+      { rxcui: '1649380', name: 'ivabradine', brands: ['Corlanor'] },
     ]
   },
   'VERICIGUAT': {

@@ -48,7 +48,7 @@ export async function runGapDetection(
       include: {
         conditions: true,
         observations: { orderBy: { observedDateTime: 'desc' } },
-        medications: true,
+        medications: { where: { status: 'ACTIVE' } },
       },
       take: BATCH_SIZE,
       ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
