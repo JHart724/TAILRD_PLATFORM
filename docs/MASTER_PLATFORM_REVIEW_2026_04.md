@@ -408,5 +408,206 @@
 
 **Estimated total for top 10:** ~20 hours of focused engineering work.
 
-**Next phase:** Phase 2 (HIPAA Compliance & Regulatory) — will run in next session.
+---
+
+# PHASE 2: HIPAA COMPLIANCE & REGULATORY
+
+**Reviewer persona:** HIPAA compliance officer conducting Security Rule risk analysis and Privacy Rule audit.
+**Agents deployed:** 4 parallel
+**Total findings:** ~45+ (pending Agent 4 final count)
+
+---
+
+## 2.1 PHI Encryption at Rest (§164.312(a)(2)(iv))
+
+**Agent:** §2.1 PHI Encryption | **Findings:** 17 (1 CRITICAL, 7 HIGH, 6 MEDIUM, 3 LOW)
+
+### Key Discovery: 146 PHI Fields Inventoried Across 40+ Models
+
+The agent produced a complete field-by-field PHI inventory. Of 146 identified PHI fields:
+- **~35 fields** currently encrypted via `PHI_FIELD_MAP` or `PHI_JSON_FIELDS`
+- **~25 JSON fields** containing clinical data are NOT encrypted (TherapyGap.barriers, Encounter.diagnosisCodes, CdsHooksSession.fhirContext, AuditLog.previousValues/newValues, CarePlan.goals/activities, etc.)
+- **~15 DateTime fields** (dates of service, lab dates, onset dates) silently bypass encryption due to `typeof === 'string'` type check
+
+### FINDING-2.1-001 — CRITICAL: Silent Plaintext in DEMO_MODE
+**File:** `backend/src/middleware/phiEncryption.ts:48-53`
+**Issue:** When `DEMO_MODE=true` AND `PHI_ENCRYPTION_KEY` absent, `encrypt()` returns plaintext unchanged. No guard, no warning. If demo mode reaches production with real data, all PHI stored cleartext.
+**Fix:** Hard-fail if `DEMO_MODE=true` and Patient records exist. Log WARN at startup.
+**Effort:** 4h
+
+### FINDING-2.1-002 — HIGH: DateTime Fields Bypass Encryption
+**File:** `phiEncryption.ts:89`
+**Issue:** `Patient.dateOfBirth` is in PHI_FIELD_MAP but the `typeof data[field] === 'string'` check fails because Prisma sends `Date` objects for DateTime fields. dateOfBirth is silently NOT encrypted despite being in the map.
+**Fix:** Convert Date to ISO string before encrypting. Restore on decrypt.
+**Effort:** 4h
+
+### FINDING-2.1-003 — HIGH: 25+ JSON Fields Not Encrypted
+**Issue:** TherapyGap.barriers/recommendations, Encounter.diagnosisCodes, WebhookEvent.processedData, CdsHooksSession.fhirContext/cards, AuditLog.previousValues/newValues/metadata, CarePlan.goals/activities/careTeam, DrugTitration.barriers/monitoringPlan, DeviceEligibility.criteria/barriers/contraindications, CrossReferral.triggerData, CQLResult.result, RiskScoreAssessment.components, InterventionTracking.complications, ContraindicationAssessment.alternatives/monitoring — all store clinical PHI in JSON, all stored plaintext.
+**Fix:** Add each to `PHI_JSON_FIELDS` in phiEncryption.ts.
+**Effort:** 4h (code) + migration for existing rows
+
+### FINDING-2.1-004 — HIGH: updateMany Not Covered
+**File:** `phiEncryption.ts:136`
+**Issue:** Write-path encrypt handles create/update/upsert/createMany but NOT `updateMany`. Bulk updates to encrypted fields bypass encryption.
+**Fix:** Add `updateMany` to the action list.
+**Effort:** 1h
+
+### FINDING-2.1-005 — HIGH: No Key Rotation Mechanism
+**Issue:** All PHI encrypted under single static key. No versioning, no rotation pathway. Key compromise = all historical PHI exposed.
+**Fix:** Key version prefix scheme + rotation script.
+**Effort:** 16h
+
+### Additional: AuditLog.userEmail plaintext (HIGH), IP addresses plaintext in 5 models (MEDIUM), key length validation missing (MEDIUM), decrypt errors silently swallowed (MEDIUM), BreachIncident.affectedPatientIds array not encrypted (MEDIUM), UserMFA.backupCodes array not encrypted (MEDIUM), Patient.race/ethnicity not encrypted (LOW), DeviceImplant.modelNumber not encrypted (LOW).
+
+---
+
+## 2.2-2.3 Access Controls + Audit Controls
+
+**Agent:** §2.2-2.3 | **Findings:** 12 (1 CRITICAL, 5 HIGH, 5 MEDIUM, 1 LOW)
+
+### FINDING-2.2-001 — CRITICAL: Audit Log Records Mutable
+**File:** `backend/src/routes/dataRequests.ts:244`
+**Rule:** §164.312(b)
+**Issue:** `prisma.auditLog.update()` mutates existing audit records. HIPAA requires tamper-evident, append-only audit logs.
+**Fix:** Remove the update call. Use chain of immutable append entries. Revoke UPDATE on `audit_logs` table from app DB user.
+**Effort:** 4h
+
+### FINDING-2.2-002 — HIGH: Audit Logs on Ephemeral Filesystem
+**File:** `backend/src/middleware/auditLogger.ts:7-8`
+**Issue:** File-based audit logs written to ECS Fargate ephemeral storage. Lost on task replacement.
+**Fix:** Ship to CloudWatch Logs with 6-year retention, or S3 with Object Lock.
+**Effort:** 8h
+
+### FINDING-2.2-003 — HIGH: No Anomalous Access Detection
+**Issue:** Audit log records exist but are never analyzed for bulk PHI harvesting, off-hours access, or cross-patient enumeration.
+**Fix:** Redis-backed counter alerting on >50 unique patients per 5-minute window.
+**Effort:** 1-2 days
+
+### Role-Based Field Scoping Matrix
+
+| Role | /patients list | /patients detail | Sees Name | Sees MRN | Sees DOB | Encounters | Observations |
+|------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| physician | YES | YES | Full | Full | Full | Full | Full |
+| hospital-admin | YES | YES | Full | Full | Full | Full | Full |
+| quality-director | YES | YES | `***` | `***` | null | **FULL (gap!)** | **FULL (gap!)** |
+| analyst | YES | YES | `***` | `***` | null | Not allowed | Not allowed |
+
+**Gap:** quality-director sees full encounter and observation detail (including all clinical data) without redaction. §164.502(b) Minimum Necessary violated.
+
+### Additional: Missing authorizeRole on /gaps/:moduleId/detailed (MEDIUM), riskCategory not redacted for analyst role (MEDIUM), PHI mutations not audited (MEDIUM), patientId not captured in audit DB records (MEDIUM).
+
+---
+
+## 2.4-2.5 Transmission Security + DSAR + Breach
+
+**Agent:** §2.4-2.5 | **Findings:** 10 (0 CRITICAL, 3 HIGH, 5 MEDIUM, 2 LOW)
+
+### DSAR Deletion Cascade — 6 Models Missing
+
+| Model | In DSAR? | Gap |
+|-------|:---:|---|
+| Patient → Encounter → Observation → Medication → Condition → TherapyGap → CQLResult → Phenotype → CrossReferral → DrugTitration → DeviceEligibility → RiskScoreAssessment → InterventionTracking → ContraindicationAssessment → Alert → Recommendation → CarePlan | YES | — |
+| **Order** | **NO** | Prescriptions, lab orders with PHI |
+| **Procedure** | **NO** | CPT codes, performing provider |
+| **DeviceImplant** | **NO** | Device type, implant date |
+| **AllergyIntolerance** | **NO** | Substance, severity |
+| **BpciEpisode** | **NO** | Episode type, financial data |
+| **DrugInteractionAlert** | **NO** | Drug names, interaction details |
+| **WebhookEvent** | **NO** | Raw FHIR payloads with full patient PHI (no patientId FK) |
+
+**FINDING-2.5-001 — HIGH:** 6 patient-linked models omitted from both DSAR deletion AND export. §164.524 (right of access) and erasure rights violated.
+**FINDING-2.5-002 — HIGH:** WebhookEvent.rawPayload contains full patient FHIR bundles but has no patientId FK — cannot be cascade-deleted. PHI persists indefinitely after DSAR.
+**FINDING-2.5-003 — HIGH:** Breach 60-day deadline check (`checkBreachDeadlines()`) exists as HTTP endpoint but is NOT wired to any cron job. Manual polling required.
+
+### Additional: No HTTP→HTTPS redirect at app layer (MEDIUM), DATABASE_URL missing sslmode=require (MEDIUM), Redis TLS not enforced (LOW-MEDIUM), PatientDataRequest model defined but never used (MEDIUM), breach notification delivery fully manual (MEDIUM), no HHS-compliant notification templates (MEDIUM).
+
+---
+
+## 2.6-2.7 BAA + SOC 2 + FDA SaMD + State Privacy
+
+**Agent:** §2.6-2.7 | **Findings:** 15 (3 CRITICAL, 6 HIGH, 4 MEDIUM, 0 LOW)
+
+### FINDING-2.6-001 — CRITICAL: No BAA Executed for ANY Vendor
+**File:** `docs/BAA_REGISTER.md`
+**Issue:** TAILRD went live in production on April 7 receiving, storing, and processing PHI on AWS infrastructure. BAA_REGISTER.md shows ALL vendors as "PENDING." AWS BAA requires a single click in AWS Artifact — it has not been done. Redox BAA requires contacting compliance@redoxengine.com — not initiated. Under 45 CFR §164.502(e), operating without BAAs constitutes unauthorized disclosure of PHI to business associates.
+**Fix:** Execute AWS BAA via AWS Artifact (10 minutes). Email Redox legal immediately.
+**Effort:** 10 minutes (AWS) + 1-3 business days (Redox)
+
+### FINDING-2.6-002 — CRITICAL: Redox BAA Not Initiated Before EHR Connection
+**Issue:** The Redox EHR integration is receiving live FHIR bundles containing full patient demographics, diagnoses, and medications — with no executed BAA.
+
+### FINDING-2.7-001 — CRITICAL: ECG AI Pipeline Requires 510(k) If Activated
+**File:** `backend/src/ai/` (5 files)
+**Issue:** Complete ML inference pipeline for ECG analysis (amyloidosis, HCM, ARVC, AF detection). Currently dormant (no model weights, not routed). But no runtime feature flag prevents accidental activation. CLAUDE.md acknowledges: "NOT covered by CDS exemption — should not be activated without FDA clearance."
+**Fix:** Add `ECG_AI_ENABLED=false` env var gate in pipeline init. Hard-fail if called without gate.
+**Effort:** 2h
+
+### SOC 2 Type II Readiness Scores
+
+| Trust Service Criterion | Score | Key Gap |
+|------------------------|:---:|--------|
+| Security — CC6 (Logical Access) | 5/10 | No access reviews, VIEWER PHI leak, no PAW policy |
+| Security — CC7 (Operations) | 4/10 | No SIEM, no pen test, no change mgmt process |
+| Availability — A1 | 3/10 | No cross-region DR, backup tests unrun, no SLA |
+| Processing Integrity — PI1 | 6/10 | 19 incomplete evidence objects, @ts-nocheck on clinical core |
+| Confidentiality — C1 | 3/10 | 13 PHI models unencrypted, ingest bypasses encryption |
+| Privacy — P1-P8 | 2/10 | No PIA, incomplete DSAR, no minimum necessary enforcement |
+| **Overall** | **3.5/10** | |
+
+### FDA CDS Exemption Assessment
+- **257 gap rules** have `evidence:` key present. **19 rules** have incomplete evidence objects (missing guidelineSource or classOfRecommendation) — violates CDS transparency requirement.
+- **No directive language** found in `action:` fields — all use "Consider" pattern. Compliant.
+- **`target:` fields** use past-tense imperative forms ("Warfarin prescribed", "IV iron prescribed") — not a direct violation but could be misread by FDA reviewer.
+- **ECG AI pipeline** would be Class II SaMD requiring 510(k) if activated. Currently dormant — must remain so.
+
+### State Privacy Law Assessment
+| Law | Status | Key Gap |
+|-----|--------|---------|
+| California CMIA | **NON-COMPLIANT** | No CMIA analysis. CommonSpirit operates in CA. Private right of action. |
+| Washington MHMDA | **NON-COMPLIANT** | No MHMDA posture. CommonSpirit operates in WA. Most aggressive state law. |
+| New York SHIELD | **PARTIAL** | Gaps mirror HIPAA technical safeguard gaps. Mount Sinai = NY. |
+| Illinois BIPA | **UNKNOWN** | ECG waveforms may be biometric identifiers. Requires legal counsel. |
+
+---
+
+## Phase 2 Severity Summary
+
+| Severity | §2.1 PHI | §2.2-2.3 Access | §2.4-2.5 DSAR | §2.6-2.7 Regulatory | **Total** |
+|----------|:---:|:---:|:---:|:---:|:---:|
+| CRITICAL | 1 | 1 | 0 | 3 | **5** |
+| HIGH | 7 | 5 | 3 | 6 | **21** |
+| MEDIUM | 6 | 5 | 5 | 4 | **20** |
+| LOW | 3 | 1 | 2 | 0 | **6** |
+| **Total** | **17** | **12** | **10** | **15** | **54** |
+
+## Phase 2 Top 10 Fixes (Priority Order)
+
+| # | Finding | Impact | Effort |
+|---|---------|--------|--------|
+| 1 | **Execute AWS BAA** (2.6-001) | Operating without BAA = unauthorized PHI disclosure | **10 min** |
+| 2 | **Initiate Redox BAA** (2.6-002) | EHR integration without BAA | **1 email** |
+| 3 | Fix DEMO_MODE silent plaintext (2.1-001) | All PHI unencrypted if demo mode reaches prod | 4h |
+| 4 | Fix DateTime encryption bypass (2.1-002) | Patient.dateOfBirth silently not encrypted | 4h |
+| 5 | Remove auditLog.update() (2.2-001) | Mutable audit trail = compliance failure | 4h |
+| 6 | Add 6 missing models to DSAR cascade (2.5-001) | Incomplete erasure = §164.524 violation | 4h |
+| 7 | Add ECG_AI_ENABLED feature flag (2.7-001) | Prevent accidental FDA SaMD activation | 2h |
+| 8 | Wire breach deadline check to cron (2.5-003) | Silent 60-day OCR deadline miss | 1h |
+| 9 | Ship audit logs to CloudWatch (2.2-002) | Logs lost on ECS task replacement | 8h |
+| 10 | Extend PHI_JSON_FIELDS to 25+ unencrypted fields (2.1-003) | Clinical JSON stored plaintext | 4h |
+
+**Items #1 and #2 are the single highest-priority actions across the entire audit. They require zero code changes and can be completed today.**
+
+---
+
+## Running Totals (Phase 1 + Phase 2)
+
+| Severity | Phase 1 | Phase 2 | **Cumulative** |
+|----------|:---:|:---:|:---:|
+| CRITICAL | 10 | 5 | **15** |
+| HIGH | 35 | 21 | **56** |
+| MEDIUM | 30 | 20 | **50** |
+| LOW | 10 | 6 | **16** |
+| **Total** | **92** | **54** | **146** |
+
+**Next phase:** Phase 3 (Clinical Logic & Accuracy) — RxNorm, LOINC, ICD-10, CPT code audits + guideline version verification + race/gender/equity audit.
 
