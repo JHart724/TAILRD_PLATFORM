@@ -609,5 +609,152 @@ The agent produced a complete field-by-field PHI inventory. Of 146 identified PH
 | LOW | 10 | 6 | **16** |
 | **Total** | **92** | **54** | **146** |
 
-**Next phase:** Phase 3 (Clinical Logic & Accuracy) — RxNorm, LOINC, ICD-10, CPT code audits + guideline version verification + race/gender/equity audit.
+---
+
+# PHASE 3: CLINICAL LOGIC & ACCURACY
+
+**Reviewer persona:** Cardiologist with informatics training. Will not let a single wrong drug code or incorrect threshold pass.
+**Agents deployed:** 4 parallel
+**Total findings:** 38 (6 CRITICAL, 14 HIGH, 11 MEDIUM, 7 LOW)
+
+**This is the most clinically dangerous section of the entire audit.** Six CRITICAL findings directly affect patient safety — wrong drug codes, wrong lab codes, and discontinued medications suppressing valid gap flags.
+
+---
+
+## 3.2 RxNorm Drug Code Audit
+
+**Agent:** §3.2 RxNorm | **Findings:** 9 (3 CRITICAL, 3 HIGH, 2 MEDIUM, 1 LOW)
+**66 drug codes audited across gapRuleEngine.ts and cardiovascularValuesets.ts**
+
+### FINDING-3.2-001 — CRITICAL: Atorvastatin ↔ Simvastatin RxNorm Codes Transposed
+**File:** `cardiovascularValuesets.ts:256-258` + `gapRuleEngine.ts:3269,4439,4617`
+**Issue:** `ATORVASTATIN: '36567'` (should be `83367`) and `SIMVASTATIN: '83367'` (should be `36567`). Fully swapped. Cascades to 3 inline statin arrays. Patients on atorvastatin (most common high-intensity statin) are incorrectly flagged as "no statin." Patients on simvastatin incorrectly suppress the gap.
+**Clinical impact:** Affects every CAD statin gap, PAD statin gap, and ezetimibe add-on gap. Thousands of patients in any health system.
+**Fix:** Swap the two values. 0.5h.
+
+### FINDING-3.2-002 — CRITICAL: Ivabradine Code Off by 1 Digit
+**File:** `cardiovascularValuesets.ts:194` + `gapRuleEngine.ts:3462`
+**Issue:** `IVABRADINE: '1649480'` — correct is `1649380`. Code doesn't exist in any formulary. All HFrEF patients on ivabradine will still have the ivabradine gap fire (false positive). 
+**Fix:** Change to `1649380`. 0.25h.
+
+### FINDING-3.2-003 — CRITICAL: Furosemide Labeled as Flecainide in EP-PFA Rule
+**File:** `gapRuleEngine.ts:6558`
+**Issue:** AAD array `['4603', ...]` — `4603` is furosemide (loop diuretic), not flecainide (`4441`). PFA candidacy gap fires for every diuretic user (nearly the entire HF population) instead of patients on class IC antiarrhythmics.
+**Fix:** Change `4603` to `4441`. 0.25h.
+
+### Additional HIGH findings: Metoprolol ingredient code (`6918`) used where succinate-specific (`866514`) required for HFrEF; GLP-1 RA codes unverified. MEDIUM: 17 inline duplicate code arrays; 3 copy-pasted wrong triggerCriteria. LOW: Finerenone only checks 10mg dose, not 20mg.
+
+---
+
+## 3.3-3.4 LOINC + ICD-10 Code Audit
+
+**Agent:** §3.3-3.4 | **Findings:** 11 (2 CRITICAL, 5 HIGH, 3 MEDIUM, 1 LOW)
+**51 LOINC codes audited + 5 ICD-10 code sets checked for completeness**
+
+### FINDING-3.3-001 — CRITICAL: QTc Interval Assigned Heart Rate LOINC Code
+**File:** `cardiovascularValuesets.ts:133`
+**Issue:** `QTC_INTERVAL: '8867-4'` — this is Heart Rate, not QTc. Correct codes: `8601-7` (general QTc), `8634-0` (Bazett), `8636-5` (Fridericia). FHIR observations for QTc will never match this code — QTc safety alerts will not fire from Redox data. 
+**Fix:** Change to `8601-7`. 0.25h.
+
+### FINDING-3.3-002 — CRITICAL: NT-proBNP Routing Code Doesn't Exist
+**File:** `observationService.ts:42`
+**Issue:** `'33762-9'` — should be `'33762-6'` (check digit transposition). `33762-9` is not a registered LOINC code. All NT-proBNP from FHIR will be unrecognized. NT-proBNP is the primary HF biomarker.
+**Fix:** Change `9` to `6`. 0.25h.
+
+### HIGH findings: hs-Troponin I mapped to conventional code (not `89579-7`); QRS duration mapped to LVEF code `10230-1` in loinc.ts; hs-troponin codes absent from FHIR routing; BNP code `42757-5` nonexistent; eGFR labeled CKD-EPI but code is MDRD (`33914-3` → should be `62238-1`).
+
+### MEDIUM: ICD-10/LOINC valuesets from cardiovascularValuesets.ts NOT IMPORTED by gap engine — centralized codes unused at runtime. Ferritin/creatinine/potassium codes inconsistent across files. @ts-nocheck on gapRuleEngine.ts.
+
+### ICD-10 completeness: HF (COMPLETE), AF (COMPLETE), CAD (COMPLETE), PAD (PARTIALLY COMPLETE — missing laterality sub-codes but `startsWith` matching covers them), AS (COMPLETE).
+
+---
+
+## 3.5-3.6 Race/Gender/Equity + Guideline Accuracy
+
+**Agent:** §3.5-3.6 | **Findings:** 12 (0 CRITICAL, 5 HIGH, 4 MEDIUM, 3 LOW)
+
+### FINDING-3.5-001 — HIGH: CHA₂DS₂-VASc Uses Age-Only Proxy
+**File:** `gapRuleEngine.ts:3916-3946`
+**Issue:** EP-OAC-AFIB rule uses `age >= 65` as proxy for elevated CHA₂DS₂-VASc. Misses high-risk young patients (55yo with HTN+DM+stroke = score 5). No sex-specific thresholds (male ≥2, female ≥3). This is the highest-volume gap in cardiology.
+**Fix:** Implement actual CHA₂DS₂-VASc calculation from available dx codes. 4h.
+
+### FINDING-3.5-002 — HIGH: HFpEF SGLT2i Shows Class 1 LOE A, Should Be Class 2a LOE B-R
+**File:** `gapRuleEngine.ts:3831-3832`
+**Issue:** 2023 ACC focused update assigns SGLT2i for HFpEF/HFmrEF as Class 2a (not 1). Overstating evidence strength to clinicians violates FDA CDS transparency.
+**Fix:** Change class to `'2a'` and LOE to `'B-R'`. 0.25h.
+
+### FINDING-3.5-003 — HIGH: Hemoglobin Anemia Threshold Not Sex-Specific
+**File:** `gapRuleEngine.ts:9941`
+**Issue:** Uses `hemoglobin < 10` for all. WHO criteria: male <13.0, female <12.0. Misses the vast majority of anemic HF patients (Hgb 10-13 range = 30-50% of HF population).
+**Fix:** Sex-specific thresholds. 0.5h.
+
+### FINDING-3.5-004 — HIGH: Iron Deficiency Rule Missing LVEF ≤45% and NYHA II-III Gates
+**File:** `gapRuleEngine.ts:3245-3269`
+**Issue:** Fires for ANY HF patient with low ferritin. Guideline requires LVEF ≤45% AND NYHA II-III.
+**Fix:** Add gates. 1h.
+
+### Race field audit: A-HeFT rule (HF-19) correctly queries `race?.toUpperCase() === 'BLACK'` — field is correct, threshold correct (LVEF ≤40%). Missing RAAS intolerance check context. Race-free eGFR: PASS — engine doesn't calculate eGFR, receives as input.
+
+### 3 copy-pasted evidence objects with wrong trigger text (RAAS rule has PAD statin text, MRA has BB text). SGLT2i HFpEF missing NYHA gate.
+
+---
+
+## 3.7-3.9 Edge Cases + Architecture + DRG
+
+**Agent:** §3.7-3.9 | **Findings:** 6 (1 CRITICAL, 1 HIGH, 2 MEDIUM, 2 LOW)
+
+### FINDING-3.7-001 — CRITICAL: Discontinued Medications Not Filtered
+**File:** `gapDetectionRunner.ts:51` + `runGapDetectionForPatient.ts:21`
+**Issue:** Medication fetch includes ALL statuses (ACTIVE, DISCONTINUED, ON_HOLD, COMPLETED, ENTERED_IN_ERROR). A patient whose metoprolol was discontinued 2 years ago still has the BB RxNorm code in `medCodes`, suppressing the beta-blocker gap. **This produces dangerous false negatives across every medication-based gap rule.**
+**Fix:** Add `.filter(m => m.status === 'ACTIVE')` to medication extraction. 0.5h.
+
+### FINDING-3.7-002 — HIGH: Observation Staleness Not Enforced
+**File:** `gapDetectionRunner.ts:79-82`
+**Issue:** Lab value extraction takes the latest observation regardless of age. A 5-year-old LVEF reading suppresses imaging gaps. No dates passed to `evaluateGapRules()`.
+**Fix:** Add max age cutoffs (12mo for echo, 6mo for labs). Architecture change needed to pass obs dates. 4h.
+
+### Additional: LVEF null handling correct (PASS). Hospice exclusion correct (PASS). Contraindication checks present on all major rules (PASS). No duplicate gap IDs (PASS). guidelineVersion + lastReviewDate present on all registry entries (PASS). DRG codes in schema (PASS) but revenue calculation uses flat $2,500/gap estimate, not actual DRG payments (MEDIUM). No ICD-10→DRG crosswalk (MEDIUM).
+
+---
+
+## Phase 3 Severity Summary
+
+| Severity | §3.2 RxNorm | §3.3-3.4 LOINC/ICD | §3.5-3.6 Equity/Guidelines | §3.7-3.9 Edge Cases | **Total** |
+|----------|:---:|:---:|:---:|:---:|:---:|
+| CRITICAL | 3 | 2 | 0 | 1 | **6** |
+| HIGH | 3 | 5 | 5 | 1 | **14** |
+| MEDIUM | 2 | 3 | 4 | 2 | **11** |
+| LOW | 1 | 1 | 3 | 2 | **7** |
+| **Total** | **9** | **11** | **12** | **6** | **38** |
+
+## Phase 3 Top 10 Fixes — ALL Affect Patient Safety
+
+| # | Finding | Impact | Effort |
+|---|---------|--------|--------|
+| 1 | **Swap atorvastatin/simvastatin codes** (3.2-001) | All statin gaps inverted | 0.5h |
+| 2 | **Fix ivabradine code** (3.2-002) | All ivabradine patients missed | 0.25h |
+| 3 | **Fix flecainide→furosemide** (3.2-003) | PFA fires for all diuretic users | 0.25h |
+| 4 | **Fix QTc LOINC** (3.3-001) | QTc safety alerts fail from FHIR | 0.25h |
+| 5 | **Fix NT-proBNP code** (3.3-002) | HF biomarker lost from FHIR | 0.25h |
+| 6 | **Filter discontinued meds** (3.7-001) | All med gaps produce false negatives | 0.5h |
+| 7 | **Implement CHA₂DS₂-VASc** (3.5-001) | AF anticoagulation — highest volume | 4h |
+| 8 | **Add hs-troponin to FHIR routing** (3.3-005) | ATTR-CM screening from real EHR | 0.5h |
+| 9 | **Sex-specific hemoglobin** (3.5-003) | Anemia missed in 30-50% of HF | 0.5h |
+| 10 | **Fix iron deficiency gates** (3.5-004) | Over-detection in non-indicated patients | 1h |
+
+**Items #1-6 are less than 2 hours total and fix the 6 most dangerous clinical errors in the platform. They should be fixed before any clinical demo.**
+
+---
+
+## Running Totals (Phase 1 + Phase 2 + Phase 3)
+
+| Severity | Phase 1 | Phase 2 | Phase 3 | **Cumulative** |
+|----------|:---:|:---:|:---:|:---:|
+| CRITICAL | 10 | 5 | 6 | **21** |
+| HIGH | 35 | 21 | 14 | **70** |
+| MEDIUM | 30 | 20 | 11 | **61** |
+| LOW | 10 | 6 | 7 | **23** |
+| **Total** | **92** | **54** | **38** | **184** |
+
+**Next phase:** Phase 4 (UI/UX & Design System) + Phase 5 (Multi-Tenancy) + Phase 5B (EHR Integration).
 
