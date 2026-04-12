@@ -11,14 +11,16 @@
 import { Router, Request, Response } from 'express';
 import { logger } from '../utils/logger';
 import crypto from 'crypto';
+import { getRedisClient } from '../lib/redis';
 
 const router = Router();
 const API_URL = process.env.API_URL || 'https://api.tailrd-heart.com';
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://app.tailrd-heart.com';
 const SMART_CLIENT_ID = process.env.SMART_CLIENT_ID || 'tailrd-heart';
+const PKCE_TTL_SECONDS = 600; // 10 minutes
 
 // SMART EHR Launch — Step 1
-router.get('/launch', (req: Request, res: Response) => {
+router.get('/launch', async (req: Request, res: Response) => {
   const { iss, launch } = req.query;
 
   if (!iss || !launch) {
@@ -29,8 +31,16 @@ router.get('/launch', (req: Request, res: Response) => {
   const codeVerifier = crypto.randomBytes(32).toString('base64url');
   const codeChallenge = crypto.createHash('sha256').update(codeVerifier).digest('base64url');
 
-  // Encode state + verifier for callback (production: use Redis/session store)
-  const stateData = Buffer.from(JSON.stringify({ state, codeVerifier, iss })).toString('base64url');
+  // Store PKCE verifier in Redis — never in the state parameter.
+  // The state param is exposed in the redirect URL and EHR server logs.
+  const redis = await getRedisClient();
+  if (redis) {
+    await redis.set(`smart:pkce:${state}`, JSON.stringify({ codeVerifier, iss }), { EX: PKCE_TTL_SECONDS });
+  } else {
+    logger.warn('Redis not available — PKCE verifier stored in memory fallback (single-instance only)');
+    (globalThis as any).__smartPkceStore = (globalThis as any).__smartPkceStore || new Map();
+    (globalThis as any).__smartPkceStore.set(state, { codeVerifier, iss, expires: Date.now() + PKCE_TTL_SECONDS * 1000 });
+  }
 
   const authUrl = new URL(`${iss}/authorize`);
   authUrl.searchParams.set('response_type', 'code');
@@ -38,7 +48,7 @@ router.get('/launch', (req: Request, res: Response) => {
   authUrl.searchParams.set('redirect_uri', `${API_URL}/api/smart/callback`);
   authUrl.searchParams.set('launch', launch as string);
   authUrl.searchParams.set('scope', 'launch openid fhirUser patient/*.read user/*.read');
-  authUrl.searchParams.set('state', stateData);
+  authUrl.searchParams.set('state', state);
   authUrl.searchParams.set('code_challenge', codeChallenge);
   authUrl.searchParams.set('code_challenge_method', 'S256');
   authUrl.searchParams.set('aud', iss as string);
@@ -49,16 +59,40 @@ router.get('/launch', (req: Request, res: Response) => {
 
 // SMART Callback — Step 2: Exchange code for access token
 router.get('/callback', async (req: Request, res: Response) => {
-  const { code, state: stateData } = req.query;
+  const { code, state } = req.query;
 
-  if (!code || !stateData) {
+  if (!code || !state) {
     return res.redirect(`${FRONTEND_URL}/login?error=smart_callback_missing_params`);
   }
 
   try {
-    const { codeVerifier, iss } = JSON.parse(
-      Buffer.from(stateData as string, 'base64url').toString()
-    );
+    // Retrieve PKCE verifier from Redis (or in-memory fallback)
+    let codeVerifier: string | undefined;
+    let iss: string | undefined;
+
+    const redis = await getRedisClient();
+    if (redis) {
+      const stored = await redis.get(`smart:pkce:${state}`);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        codeVerifier = parsed.codeVerifier;
+        iss = parsed.iss;
+        await redis.del(`smart:pkce:${state}`);
+      }
+    } else {
+      const store = (globalThis as any).__smartPkceStore as Map<string, { codeVerifier: string; iss: string; expires: number }> | undefined;
+      const entry = store?.get(state as string);
+      if (entry && entry.expires > Date.now()) {
+        codeVerifier = entry.codeVerifier;
+        iss = entry.iss;
+      }
+      store?.delete(state as string);
+    }
+
+    if (!codeVerifier || !iss) {
+      logger.warn('SMART callback: PKCE state not found or expired', { state });
+      return res.status(400).json({ error: 'Invalid or expired SMART session. Please relaunch from EHR.' });
+    }
 
     const tokenResponse = await fetch(`${iss}/token`, {
       method: 'POST',
