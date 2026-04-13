@@ -732,6 +732,173 @@ router.get('/calculators/sts-risk/:patientId', (req, res) => {
 });
 
 // ==============================================================================
+// ELECTROPHYSIOLOGY MODULE — Prisma-backed, tenant-scoped
+// ==============================================================================
+
+router.get('/electrophysiology/dashboard', async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = req.user?.hospitalId;
+  if (!hospitalId) {
+    return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  }
+
+  try {
+    const epPatientWhere = {
+      hospitalId,
+      isActive: true,
+      OR: [
+        { electrophysiologyPatient: true },
+        { therapyGaps: { some: { module: 'ELECTROPHYSIOLOGY' as const, resolvedAt: null } } },
+      ],
+    };
+    const openGapWhere = { hospitalId, module: 'ELECTROPHYSIOLOGY' as const, resolvedAt: null };
+
+    const [
+      totalPatients,
+      openGapsByType,
+      deviceGaps,
+      recentGaps,
+    ] = await Promise.all([
+      prisma.patient.count({ where: epPatientWhere }),
+      prisma.therapyGap.groupBy({
+        by: ['gapType'],
+        where: openGapWhere,
+        _count: { id: true },
+      }),
+      prisma.therapyGap.count({
+        where: { ...openGapWhere, gapType: 'DEVICE_ELIGIBLE' },
+      }),
+      prisma.therapyGap.findMany({
+        where: openGapWhere,
+        orderBy: { identifiedAt: 'desc' },
+        take: 10,
+        select: {
+          id: true,
+          gapType: true,
+          medication: true,
+          device: true,
+          currentStatus: true,
+          targetStatus: true,
+          identifiedAt: true,
+          patientId: true,
+        },
+      }),
+    ]);
+
+    const totalOpenGaps = openGapsByType.reduce((sum, g) => sum + g._count.id, 0);
+    const gapsByType = openGapsByType.reduce<Record<string, number>>((acc, g) => {
+      acc[g.gapType] = g._count.id;
+      return acc;
+    }, {});
+
+    const recentAlerts = recentGaps.map(g => ({
+      gapId: g.id,
+      patientId: g.patientId,
+      type: g.gapType,
+      severity: g.gapType === 'DEVICE_ELIGIBLE' ? 'high' : 'medium',
+      message: g.medication
+        ? `Missing ${g.medication}`
+        : g.device
+        ? `${g.device} candidate`
+        : g.targetStatus,
+      currentStatus: g.currentStatus,
+      targetStatus: g.targetStatus,
+      identifiedAt: g.identifiedAt.toISOString(),
+    }));
+
+    res.json({
+      success: true,
+      data: {
+        summary: {
+          totalPatients,
+          totalOpenGaps,
+          gapsByType,
+          deviceCandidates: deviceGaps,
+        },
+        recentAlerts,
+        source: 'database',
+      },
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  } catch (error) {
+    logger.error('Failed to build EP dashboard', { error: error instanceof Error ? error.message : String(error) });
+    res.status(500).json({ success: false, error: 'Failed to load Electrophysiology dashboard' } as APIResponse);
+  }
+});
+
+router.get('/electrophysiology/patients', async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = req.user?.hospitalId;
+  if (!hospitalId) {
+    return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  }
+
+  try {
+    const limitParam = Number.parseInt(String(req.query.limit ?? '100'), 10);
+    const limit = Number.isFinite(limitParam) ? Math.min(Math.max(limitParam, 1), 500) : 100;
+
+    const patients = await prisma.patient.findMany({
+      where: {
+        hospitalId,
+        isActive: true,
+        OR: [
+          { electrophysiologyPatient: true },
+          { therapyGaps: { some: { module: 'ELECTROPHYSIOLOGY' as const, resolvedAt: null } } },
+        ],
+      },
+      orderBy: [{ riskCategory: 'desc' }, { lastAssessment: 'desc' }],
+      take: limit,
+      select: {
+        id: true,
+        mrn: true,
+        firstName: true,
+        lastName: true,
+        dateOfBirth: true,
+        gender: true,
+        riskCategory: true,
+        riskScore: true,
+        lastAssessment: true,
+        therapyGaps: {
+          where: { resolvedAt: null, module: 'ELECTROPHYSIOLOGY' },
+          select: { id: true, gapType: true, medication: true, device: true, currentStatus: true },
+        },
+      },
+    });
+
+    const now = Date.now();
+    const worklist = patients.map(p => {
+      const ageMs = now - p.dateOfBirth.getTime();
+      const age = Math.floor(ageMs / (365.25 * 24 * 60 * 60 * 1000));
+      const careGaps = p.therapyGaps.map(g =>
+        g.medication ? `${g.medication} gap` : g.device ? `${g.device} eval` : g.currentStatus,
+      );
+      return {
+        id: p.id,
+        mrn: p.mrn,
+        firstName: p.firstName,
+        lastName: p.lastName,
+        age,
+        gender: p.gender,
+        riskCategory: p.riskCategory,
+        riskScore: p.riskScore,
+        gapCount: p.therapyGaps.length,
+        careGaps,
+        lastAssessment: p.lastAssessment?.toISOString() ?? null,
+      };
+    });
+
+    res.json({
+      success: true,
+      data: worklist,
+      count: worklist.length,
+      source: 'database',
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  } catch (error) {
+    logger.error('Failed to load EP patient worklist', { error: error instanceof Error ? error.message : String(error) });
+    res.status(500).json({ success: false, error: 'Failed to load Electrophysiology patient worklist' } as APIResponse);
+  }
+});
+
+// ==============================================================================
 // ADVANCED ELECTROPHYSIOLOGY CLINICAL DECISION SUPPORT APIS
 // ==============================================================================
 
@@ -1017,6 +1184,173 @@ function calculateHASBLED(patientData: any) {
   if (patientData.takingDrugs || patientData.hasAlcohol) score += 1;
   return score;
 }
+
+// ==============================================================================
+// STRUCTURAL HEART MODULE — Prisma-backed, tenant-scoped
+// ==============================================================================
+
+router.get('/structural-heart/dashboard', async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = req.user?.hospitalId;
+  if (!hospitalId) {
+    return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  }
+
+  try {
+    const shPatientWhere = {
+      hospitalId,
+      isActive: true,
+      OR: [
+        { structuralHeartPatient: true },
+        { therapyGaps: { some: { module: 'STRUCTURAL_HEART' as const, resolvedAt: null } } },
+      ],
+    };
+    const openGapWhere = { hospitalId, module: 'STRUCTURAL_HEART' as const, resolvedAt: null };
+
+    const [
+      totalPatients,
+      openGapsByType,
+      deviceGaps,
+      recentGaps,
+    ] = await Promise.all([
+      prisma.patient.count({ where: shPatientWhere }),
+      prisma.therapyGap.groupBy({
+        by: ['gapType'],
+        where: openGapWhere,
+        _count: { id: true },
+      }),
+      prisma.therapyGap.count({
+        where: { ...openGapWhere, gapType: 'DEVICE_ELIGIBLE' },
+      }),
+      prisma.therapyGap.findMany({
+        where: openGapWhere,
+        orderBy: { identifiedAt: 'desc' },
+        take: 10,
+        select: {
+          id: true,
+          gapType: true,
+          medication: true,
+          device: true,
+          currentStatus: true,
+          targetStatus: true,
+          identifiedAt: true,
+          patientId: true,
+        },
+      }),
+    ]);
+
+    const totalOpenGaps = openGapsByType.reduce((sum, g) => sum + g._count.id, 0);
+    const gapsByType = openGapsByType.reduce<Record<string, number>>((acc, g) => {
+      acc[g.gapType] = g._count.id;
+      return acc;
+    }, {});
+
+    const recentAlerts = recentGaps.map(g => ({
+      gapId: g.id,
+      patientId: g.patientId,
+      type: g.gapType,
+      severity: g.gapType === 'DEVICE_ELIGIBLE' ? 'high' : 'medium',
+      message: g.medication
+        ? `Missing ${g.medication}`
+        : g.device
+        ? `${g.device} candidate`
+        : g.targetStatus,
+      currentStatus: g.currentStatus,
+      targetStatus: g.targetStatus,
+      identifiedAt: g.identifiedAt.toISOString(),
+    }));
+
+    res.json({
+      success: true,
+      data: {
+        summary: {
+          totalPatients,
+          totalOpenGaps,
+          gapsByType,
+          deviceCandidates: deviceGaps,
+        },
+        recentAlerts,
+        source: 'database',
+      },
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  } catch (error) {
+    logger.error('Failed to build Structural Heart dashboard', { error: error instanceof Error ? error.message : String(error) });
+    res.status(500).json({ success: false, error: 'Failed to load Structural Heart dashboard' } as APIResponse);
+  }
+});
+
+router.get('/structural-heart/patients', async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = req.user?.hospitalId;
+  if (!hospitalId) {
+    return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  }
+
+  try {
+    const limitParam = Number.parseInt(String(req.query.limit ?? '100'), 10);
+    const limit = Number.isFinite(limitParam) ? Math.min(Math.max(limitParam, 1), 500) : 100;
+
+    const patients = await prisma.patient.findMany({
+      where: {
+        hospitalId,
+        isActive: true,
+        OR: [
+          { structuralHeartPatient: true },
+          { therapyGaps: { some: { module: 'STRUCTURAL_HEART' as const, resolvedAt: null } } },
+        ],
+      },
+      orderBy: [{ riskCategory: 'desc' }, { lastAssessment: 'desc' }],
+      take: limit,
+      select: {
+        id: true,
+        mrn: true,
+        firstName: true,
+        lastName: true,
+        dateOfBirth: true,
+        gender: true,
+        riskCategory: true,
+        riskScore: true,
+        lastAssessment: true,
+        therapyGaps: {
+          where: { resolvedAt: null, module: 'STRUCTURAL_HEART' },
+          select: { id: true, gapType: true, medication: true, device: true, currentStatus: true },
+        },
+      },
+    });
+
+    const now = Date.now();
+    const worklist = patients.map(p => {
+      const ageMs = now - p.dateOfBirth.getTime();
+      const age = Math.floor(ageMs / (365.25 * 24 * 60 * 60 * 1000));
+      const careGaps = p.therapyGaps.map(g =>
+        g.medication ? `${g.medication} gap` : g.device ? `${g.device} eval` : g.currentStatus,
+      );
+      return {
+        id: p.id,
+        mrn: p.mrn,
+        firstName: p.firstName,
+        lastName: p.lastName,
+        age,
+        gender: p.gender,
+        riskCategory: p.riskCategory,
+        riskScore: p.riskScore,
+        gapCount: p.therapyGaps.length,
+        careGaps,
+        lastAssessment: p.lastAssessment?.toISOString() ?? null,
+      };
+    });
+
+    res.json({
+      success: true,
+      data: worklist,
+      count: worklist.length,
+      source: 'database',
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  } catch (error) {
+    logger.error('Failed to load Structural Heart patient worklist', { error: error instanceof Error ? error.message : String(error) });
+    res.status(500).json({ success: false, error: 'Failed to load Structural Heart patient worklist' } as APIResponse);
+  }
+});
 
 // ==============================================================================
 // ADVANCED STRUCTURAL HEART CLINICAL DECISION SUPPORT APIS
