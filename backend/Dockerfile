@@ -1,32 +1,47 @@
-# TAILRD Platform Backend - Production Docker Image
+# TAILRD Platform Backend — Multi-Stage Production Docker Image
+# FINDING-9-001: Two-stage build excludes devDependencies from runner (~350MB reduction)
 
-FROM node:18-slim
+# ── Stage 1: Builder ────────���─────────────────────────────────────
+FROM node:18-slim AS builder
 
-# Prisma requires OpenSSL at runtime
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Install all dependencies (devDeps needed for prisma generate + tsc)
 COPY package*.json ./
 RUN npm ci
 
-# Generate Prisma client
 COPY prisma/ ./prisma/
 RUN npx prisma generate
 
-# Build TypeScript
 COPY tsconfig.json ./
 COPY src/ ./src/
 COPY scripts/ ./scripts/
+
 RUN npx tsc
 
-# Non-root user for runtime security
-RUN groupadd --gid 1001 tailrd && \
-    useradd --uid 1001 --gid tailrd --shell /bin/false --create-home tailrd
+# ── Stage 2: Runner ───────���───────────────────────────────────────
+FROM node:18-slim AS runner
 
-# Create directories owned by tailrd
-RUN mkdir -p logs backups uploads && chown -R tailrd:tailrd /app
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Non-root user
+RUN groupadd --gid 1001 tailrd && \
+    useradd --uid 1001 --gid tailrd --shell /bin/bash --create-home tailrd
+
+# Production deps only
+COPY package*.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+
+# Copy compiled output and Prisma client from builder
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY prisma/ ./prisma/
+
+RUN chown -R tailrd:tailrd /app
 
 USER tailrd
 

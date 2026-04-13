@@ -6,6 +6,7 @@ import prisma from '../lib/prisma';
 import { APIResponse, JWTPayload, UserPermissions } from '../types';
 import { buildUserPermissions, FULL_ACCESS_PERMISSIONS } from '../config/rolePermissions';
 import { writeAuditLog } from '../middleware/auditLogger';
+import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
 
 const router = Router();
 const isDemoMode = process.env.DEMO_MODE === 'true';
@@ -256,17 +257,14 @@ router.post('/login', async (req: Request, res: Response) => {
 });
 
 // ─── POST /api/auth/logout ─────────────────────────────────────────────────────
+// FINDING-1.1-006: authenticateToken validates the JWT before invalidating.
+// Invalidates by userId (not token hash) to catch all concurrent sessions.
 
-router.post('/logout', async (req: Request, res: Response) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (!isDemoMode && token) {
+router.post('/logout', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  if (!isDemoMode && req.user?.userId) {
     try {
-      const crypto = require('crypto');
-      const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
       await prisma.loginSession.updateMany({
-        where: { sessionToken: tokenHash, isActive: true },
+        where: { userId: req.user.userId, isActive: true },
         data: { isActive: false },
       });
     } catch (error) {
@@ -274,7 +272,7 @@ router.post('/logout', async (req: Request, res: Response) => {
     }
   }
 
-  await writeAuditLog(req, 'LOGOUT', 'User', null, 'User logged out');
+  await writeAuditLog(req, 'LOGOUT', 'User', req.user?.userId ?? null, 'User logged out');
 
   return res.json({
     success: true,

@@ -806,6 +806,15 @@ router.post('/batch-evaluate', authenticateToken, authorizeRole(['super-admin', 
       });
     }
 
+    // IDOR-003: Verify all patientIds belong to the caller's hospital
+    const hospitalId = req.user!.hospitalId;
+    const validPatients = await prisma.patient.findMany({
+      where: { id: { in: patientIds.slice(0, 50) }, hospitalId },
+      select: { id: true },
+    });
+    const validPatientIds = new Set(validPatients.map((p: { id: string }) => p.id));
+    const safePatientIds = patientIds.filter((id: string) => validPatientIds.has(id));
+
     const { clinicalProcessor } = await initializeCQLComponents();
 
     logger.info('Batch CQL evaluation requested', {
@@ -852,7 +861,7 @@ router.post('/batch-evaluate', authenticateToken, authorizeRole(['super-admin', 
     const results = [];
     const errors = [];
     
-    for (const patientId of patientIds.slice(0, 50)) { // Limit sync processing to 50 patients
+    for (const patientId of safePatientIds.slice(0, 50)) { // Only hospital-owned patients
       try {
         // In production, this would fetch actual patient data and evaluate
         const mockResult = {
