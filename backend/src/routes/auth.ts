@@ -145,6 +145,14 @@ router.post('/login', async (req: Request, res: Response) => {
       demoMode: true,
     });
 
+    res.cookie('tailrd-auth', token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 1000,
+      path: '/',
+    });
+
     return res.json({
       success: true,
       data: {
@@ -227,6 +235,16 @@ router.post('/login', async (req: Request, res: Response) => {
 
     await writeAuditLog(req, 'LOGIN_SUCCESS', 'User', user.id, `Successful login: ${user.role} at ${user.hospitalId}`);
 
+    // Cookie set for browser clients. Token kept in body for backward compat —
+    // API clients, mobile, CDS Hooks use Bearer header.
+    res.cookie('tailrd-auth', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 1000,
+      path: '/',
+    });
+
     return res.json({
       success: true,
       data: {
@@ -271,6 +289,13 @@ router.post('/logout', authenticateToken, async (req: AuthenticatedRequest, res:
       logger.error('Logout session cleanup error:', { error: error instanceof Error ? error.message : String(error) });
     }
   }
+
+  res.clearCookie('tailrd-auth', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    path: '/',
+  });
 
   await writeAuditLog(req, 'LOGOUT', 'User', req.user?.userId ?? null, 'User logged out');
 
@@ -349,6 +374,14 @@ router.post('/refresh', async (req: Request, res: Response) => {
         data: { sessionToken: newHash, lastActivity: new Date() },
       });
     }
+
+    res.cookie('tailrd-auth', newToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 1000,
+      path: '/',
+    });
 
     return res.json({
       success: true,
