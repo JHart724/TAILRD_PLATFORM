@@ -461,7 +461,7 @@ print('Health:', d['data']['status'])
 " && \
 curl -s -X POST https://api.tailrd-heart.com/api/auth/login \
   -H 'Content-Type: application/json' \
-  -d '{\"email\":\"admin@stmarys.org\",\"password\":\"demo123\"}' | python3 -c "
+  -d '{\"email\":\"JHart@tailrd-heart.com\",\"password\":\"Demo2026!\"}' | python3 -c "
 import sys,json
 d=json.load(sys.stdin)
 print('Login:', d.get('success'))
