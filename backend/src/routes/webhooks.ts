@@ -287,6 +287,16 @@ router.post('/redox', verifyRedoxSignature, async (req, res) => {
           logger.warn(`Unhandled event type: ${payload.EventType}`);
       }
 
+      // Write resolved patientId to WebhookEvent for DSAR cascade (FINDING-2.5-002)
+      if (processedPatientId && webhookEventId) {
+        await prisma.webhookEvent.update({
+          where: { id: webhookEventId },
+          data: { patientId: processedPatientId },
+        }).catch((err: Error) => {
+          logger.warn('Failed to set patientId on WebhookEvent', { webhookEventId, error: err.message });
+        });
+      }
+
       // Mark webhook as completed
       await markCompleted(webhookEventId);
 

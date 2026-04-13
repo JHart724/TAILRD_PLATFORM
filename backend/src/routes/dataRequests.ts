@@ -474,6 +474,8 @@ router.post('/deletion/:patientId', async (req: AuthenticatedRequest, res: Respo
         tx.allergyIntolerance.deleteMany({ where: { patientId, hospitalId } }),
         tx.bpciEpisode.deleteMany({ where: { patientId, hospitalId } }),
         tx.drugInteractionAlert.deleteMany({ where: { patientId, hospitalId } }),
+        // FINDING-2.5-002: Delete WebhookEvent raw FHIR payloads for this patient
+        tx.webhookEvent.updateMany({ where: { patientId }, data: { rawPayload: {}, processedData: {} } }),
       ]);
 
       // Soft-delete encounters and observations (have deletedAt field)
