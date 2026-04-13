@@ -1643,24 +1643,41 @@ router.post('/structural-heart/mitraclip-eligibility', (req, res) => {
 // CORONARY INTERVENTION CLINICAL DECISION SUPPORT APIS
 // ==============================================================================
 
-router.get('/coronary-intervention/dashboard', (req, res) => {
-  const dashboardData = {
-    summary: { totalPatients: 1456, pciVolume: 892, stemiActivations: 156, cathLabUtilization: 78.4 },
-    performanceMetrics: {
-      doorToBalloon: { current: 58, target: 60, status: 'green', unit: 'min' },
-      pciSuccessRate: { current: 96.2, target: 95, status: 'green', unit: '%' },
-      stemiActivation: { current: 91.8, target: 95, status: 'amber', unit: '%' },
-      ffrUtilization: { current: 68.4, target: 75, status: 'amber', unit: '%' },
-      radialAccessRate: { current: 82.1, target: 85, status: 'amber', unit: '%' },
-      inHospitalMortality: { current: 1.8, target: 2.0, status: 'green', unit: '%' }
-    },
-    recentAlerts: [
-      { patientId: 'CAD001', type: 'STEMI Protocol', severity: 'high', message: 'Door-to-balloon >90 min' },
-      { patientId: 'CAD003', type: 'FFR Opportunity', severity: 'medium', message: 'Intermediate stenosis - FFR recommended' },
-      { patientId: 'CAD005', type: 'Dual Antiplatelet', severity: 'low', message: 'DAPT duration review needed' }
-    ]
-  };
-  res.json({ success: true, data: dashboardData, message: 'Coronary Intervention dashboard data', timestamp: new Date().toISOString() } as APIResponse);
+router.get('/coronary-intervention/dashboard', async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = req.user?.hospitalId;
+  if (!hospitalId) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  try {
+    const patientWhere = {
+      hospitalId, isActive: true,
+      OR: [
+        { coronaryPatient: true },
+        { therapyGaps: { some: { module: 'CORONARY_INTERVENTION' as const, resolvedAt: null } } },
+      ],
+    };
+    const openGapWhere = { hospitalId, module: 'CORONARY_INTERVENTION' as const, resolvedAt: null };
+    const [totalPatients, openGapsByType, deviceGaps, recentGaps] = await Promise.all([
+      prisma.patient.count({ where: patientWhere }),
+      prisma.therapyGap.groupBy({ by: ['gapType'], where: openGapWhere, _count: { id: true } }),
+      prisma.therapyGap.count({ where: { ...openGapWhere, gapType: 'DEVICE_ELIGIBLE' } }),
+      prisma.therapyGap.findMany({
+        where: openGapWhere, orderBy: { identifiedAt: 'desc' }, take: 10,
+        select: { id: true, gapType: true, medication: true, device: true, currentStatus: true, targetStatus: true, identifiedAt: true, patientId: true },
+      }),
+    ]);
+    const totalOpenGaps = openGapsByType.reduce((sum, g) => sum + g._count.id, 0);
+    const gapsByType = openGapsByType.reduce<Record<string, number>>((acc, g) => { acc[g.gapType] = g._count.id; return acc; }, {});
+    const recentAlerts = recentGaps.map(g => ({
+      gapId: g.id, patientId: g.patientId, type: g.gapType,
+      severity: g.gapType === 'DEVICE_ELIGIBLE' ? 'high' : 'medium',
+      message: g.medication ? `Missing ${g.medication}` : g.device ? `${g.device} candidate` : g.targetStatus,
+      currentStatus: g.currentStatus, targetStatus: g.targetStatus,
+      identifiedAt: g.identifiedAt.toISOString(),
+    }));
+    res.json({ success: true, data: { summary: { totalPatients, totalOpenGaps, gapsByType, deviceCandidates: deviceGaps }, recentAlerts, source: 'database' }, timestamp: new Date().toISOString() } as APIResponse);
+  } catch (error) {
+    logger.error('Failed to build Coronary dashboard', { error: error instanceof Error ? error.message : String(error) });
+    res.status(500).json({ success: false, error: 'Failed to load Coronary dashboard' } as APIResponse);
+  }
 });
 
 router.post('/coronary-intervention/pci-risk', (req, res) => {
@@ -1696,13 +1713,32 @@ router.post('/coronary-intervention/pci-risk', (req, res) => {
   } as APIResponse);
 });
 
-router.get('/coronary-intervention/patients', (req, res) => {
-  const patients = [
-    { id: 'CAD001', name: 'James Mitchell', mrn: '45678901', age: 65, diagnosis: 'STEMI - LAD', syntaxScore: 18, ef: 45, risk: 'medium' },
-    { id: 'CAD002', name: 'Patricia Davis', mrn: '56789012', age: 74, diagnosis: '3-Vessel CAD', syntaxScore: 28, ef: 38, risk: 'high' },
-    { id: 'CAD003', name: 'Robert Thompson', mrn: '67890123', age: 58, diagnosis: 'NSTEMI - RCA', syntaxScore: 12, ef: 55, risk: 'low' },
-  ];
-  res.json({ success: true, data: patients, message: 'Coronary Intervention patient worklist', timestamp: new Date().toISOString() } as APIResponse);
+router.get('/coronary-intervention/patients', async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = req.user?.hospitalId;
+  if (!hospitalId) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  try {
+    const limitParam = Number.parseInt(String(req.query.limit ?? '100'), 10);
+    const limit = Number.isFinite(limitParam) ? Math.min(Math.max(limitParam, 1), 500) : 100;
+    const patients = await prisma.patient.findMany({
+      where: { hospitalId, isActive: true, OR: [{ coronaryPatient: true }, { therapyGaps: { some: { module: 'CORONARY_INTERVENTION' as const, resolvedAt: null } } }] },
+      orderBy: [{ riskCategory: 'desc' }, { lastAssessment: 'desc' }],
+      take: limit,
+      select: {
+        id: true, mrn: true, firstName: true, lastName: true, dateOfBirth: true,
+        gender: true, riskCategory: true, riskScore: true, lastAssessment: true,
+        therapyGaps: { where: { resolvedAt: null, module: 'CORONARY_INTERVENTION' }, select: { id: true, gapType: true, medication: true, device: true, currentStatus: true } },
+      },
+    });
+    const now = Date.now();
+    const worklist = patients.map(p => {
+      const age = Math.floor((now - p.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+      return { id: p.id, mrn: p.mrn, firstName: p.firstName, lastName: p.lastName, age, gender: p.gender, riskCategory: p.riskCategory, riskScore: p.riskScore, gapCount: p.therapyGaps.length, careGaps: p.therapyGaps.map(g => g.medication ? `${g.medication} gap` : g.device ? `${g.device} eval` : g.currentStatus), lastAssessment: p.lastAssessment?.toISOString() ?? null };
+    });
+    res.json({ success: true, data: worklist, count: worklist.length, source: 'database', timestamp: new Date().toISOString() } as APIResponse);
+  } catch (error) {
+    logger.error('Failed to load Coronary patients', { error: error instanceof Error ? error.message : String(error) });
+    res.status(500).json({ success: false, error: 'Failed to load Coronary patient worklist' } as APIResponse);
+  }
 });
 
 router.post('/coronary-intervention/ffr-decision', (req, res) => {
@@ -1738,24 +1774,41 @@ router.post('/coronary-intervention/ffr-decision', (req, res) => {
 // VALVULAR DISEASE CLINICAL DECISION SUPPORT APIS
 // ==============================================================================
 
-router.get('/valvular-disease/dashboard', (req, res) => {
-  const dashboardData = {
-    summary: { totalPatients: 1342, severeAS: 169, moderateToSevereMR: 312, scheduledInterventions: 47 },
-    performanceMetrics: {
-      tavrMortality: { current: 2.1, target: 2.5, status: 'green', unit: '%' },
-      valveGradingAccuracy: { current: 91.4, target: 88.0, status: 'green', unit: '%' },
-      echoToIntervention: { current: 14.2, target: 18.0, status: 'green', unit: 'days' },
-      paravalvularLeak: { current: 3.8, target: 5.2, status: 'green', unit: '%' },
-      heartTeamUtilization: { current: 78.6, target: 85.0, status: 'amber', unit: '%' },
-      postOpReadmission: { current: 8.4, target: 9.1, status: 'green', unit: '%' }
-    },
-    recentAlerts: [
-      { patientId: 'VD001', type: 'Severe AS', severity: 'high', message: 'Critical aortic stenosis - TAVR evaluation needed' },
-      { patientId: 'VD003', type: 'Echo Follow-up', severity: 'medium', message: 'Annual surveillance echo overdue' },
-      { patientId: 'VD005', type: 'Heart Team', severity: 'low', message: 'Heart team conference scheduled' }
-    ]
-  };
-  res.json({ success: true, data: dashboardData, message: 'Valvular Disease dashboard data', timestamp: new Date().toISOString() } as APIResponse);
+router.get('/valvular-disease/dashboard', async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = req.user?.hospitalId;
+  if (!hospitalId) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  try {
+    const patientWhere = {
+      hospitalId, isActive: true,
+      OR: [
+        { valvularDiseasePatient: true },
+        { therapyGaps: { some: { module: 'VALVULAR_DISEASE' as const, resolvedAt: null } } },
+      ],
+    };
+    const openGapWhere = { hospitalId, module: 'VALVULAR_DISEASE' as const, resolvedAt: null };
+    const [totalPatients, openGapsByType, deviceGaps, recentGaps] = await Promise.all([
+      prisma.patient.count({ where: patientWhere }),
+      prisma.therapyGap.groupBy({ by: ['gapType'], where: openGapWhere, _count: { id: true } }),
+      prisma.therapyGap.count({ where: { ...openGapWhere, gapType: 'DEVICE_ELIGIBLE' } }),
+      prisma.therapyGap.findMany({
+        where: openGapWhere, orderBy: { identifiedAt: 'desc' }, take: 10,
+        select: { id: true, gapType: true, medication: true, device: true, currentStatus: true, targetStatus: true, identifiedAt: true, patientId: true },
+      }),
+    ]);
+    const totalOpenGaps = openGapsByType.reduce((sum, g) => sum + g._count.id, 0);
+    const gapsByType = openGapsByType.reduce<Record<string, number>>((acc, g) => { acc[g.gapType] = g._count.id; return acc; }, {});
+    const recentAlerts = recentGaps.map(g => ({
+      gapId: g.id, patientId: g.patientId, type: g.gapType,
+      severity: g.gapType === 'DEVICE_ELIGIBLE' ? 'high' : 'medium',
+      message: g.medication ? `Missing ${g.medication}` : g.device ? `${g.device} candidate` : g.targetStatus,
+      currentStatus: g.currentStatus, targetStatus: g.targetStatus,
+      identifiedAt: g.identifiedAt.toISOString(),
+    }));
+    res.json({ success: true, data: { summary: { totalPatients, totalOpenGaps, gapsByType, deviceCandidates: deviceGaps }, recentAlerts, source: 'database' }, timestamp: new Date().toISOString() } as APIResponse);
+  } catch (error) {
+    logger.error('Failed to build Valvular dashboard', { error: error instanceof Error ? error.message : String(error) });
+    res.status(500).json({ success: false, error: 'Failed to load Valvular Disease dashboard' } as APIResponse);
+  }
 });
 
 router.post('/valvular-disease/severity-classification', (req, res) => {
@@ -1804,37 +1857,73 @@ router.post('/valvular-disease/severity-classification', (req, res) => {
   } as APIResponse);
 });
 
-router.get('/valvular-disease/patients', (req, res) => {
-  const patients = [
-    { id: 'VD001', name: 'Eleanor Vasquez', mrn: '78901234', age: 82, diagnosis: 'Severe AS', valveArea: 0.7, ef: 55, risk: 'high' },
-    { id: 'VD002', name: 'Harold Nakamura', mrn: '89012345', age: 71, diagnosis: 'Severe MR (Functional)', eroa: 0.45, ef: 32, risk: 'high' },
-    { id: 'VD003', name: 'Margaret Chen', mrn: '90123456', age: 68, diagnosis: 'Moderate AS', valveArea: 1.2, ef: 60, risk: 'medium' },
-  ];
-  res.json({ success: true, data: patients, message: 'Valvular Disease patient worklist', timestamp: new Date().toISOString() } as APIResponse);
+router.get('/valvular-disease/patients', async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = req.user?.hospitalId;
+  if (!hospitalId) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  try {
+    const limitParam = Number.parseInt(String(req.query.limit ?? '100'), 10);
+    const limit = Number.isFinite(limitParam) ? Math.min(Math.max(limitParam, 1), 500) : 100;
+    const patients = await prisma.patient.findMany({
+      where: { hospitalId, isActive: true, OR: [{ valvularDiseasePatient: true }, { therapyGaps: { some: { module: 'VALVULAR_DISEASE' as const, resolvedAt: null } } }] },
+      orderBy: [{ riskCategory: 'desc' }, { lastAssessment: 'desc' }],
+      take: limit,
+      select: {
+        id: true, mrn: true, firstName: true, lastName: true, dateOfBirth: true,
+        gender: true, riskCategory: true, riskScore: true, lastAssessment: true,
+        therapyGaps: { where: { resolvedAt: null, module: 'VALVULAR_DISEASE' }, select: { id: true, gapType: true, medication: true, device: true, currentStatus: true } },
+      },
+    });
+    const now = Date.now();
+    const worklist = patients.map(p => {
+      const age = Math.floor((now - p.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+      return { id: p.id, mrn: p.mrn, firstName: p.firstName, lastName: p.lastName, age, gender: p.gender, riskCategory: p.riskCategory, riskScore: p.riskScore, gapCount: p.therapyGaps.length, careGaps: p.therapyGaps.map(g => g.medication ? `${g.medication} gap` : g.device ? `${g.device} eval` : g.currentStatus), lastAssessment: p.lastAssessment?.toISOString() ?? null };
+    });
+    res.json({ success: true, data: worklist, count: worklist.length, source: 'database', timestamp: new Date().toISOString() } as APIResponse);
+  } catch (error) {
+    logger.error('Failed to load Valvular patients', { error: error instanceof Error ? error.message : String(error) });
+    res.status(500).json({ success: false, error: 'Failed to load Valvular Disease patient worklist' } as APIResponse);
+  }
 });
 
 // ==============================================================================
 // PERIPHERAL VASCULAR CLINICAL DECISION SUPPORT APIS
 // ==============================================================================
 
-router.get('/peripheral-vascular/dashboard', (req, res) => {
-  const dashboardData = {
-    summary: { totalPatients: 1847, cliPatients: 281, scheduledInterventions: 63, woundCareActive: 142 },
-    performanceMetrics: {
-      abiScreeningRate: { current: 68.4, target: 80.0, status: 'red', unit: '%' },
-      limbSalvageRate: { current: 92.1, target: 90.0, status: 'green', unit: '%' },
-      wifiClassificationUse: { current: 74.2, target: 85.0, status: 'amber', unit: '%' },
-      endovascularSuccess: { current: 94.6, target: 92.0, status: 'green', unit: '%' },
-      amputationRate: { current: 4.2, target: 5.8, status: 'green', unit: '%' },
-      exerciseReferral: { current: 42.8, target: 60.0, status: 'red', unit: '%' }
-    },
-    recentAlerts: [
-      { patientId: 'PV001', type: 'Critical Limb Ischemia', severity: 'high', message: 'WIfI Stage 4 - urgent revascularization' },
-      { patientId: 'PV003', type: 'ABI Screening', severity: 'medium', message: 'Diabetic patient - ABI screening overdue' },
-      { patientId: 'PV005', type: 'Wound Care', severity: 'low', message: 'Wound healing assessment due' }
-    ]
-  };
-  res.json({ success: true, data: dashboardData, message: 'Peripheral Vascular dashboard data', timestamp: new Date().toISOString() } as APIResponse);
+router.get('/peripheral-vascular/dashboard', async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = req.user?.hospitalId;
+  if (!hospitalId) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  try {
+    const patientWhere = {
+      hospitalId, isActive: true,
+      OR: [
+        { peripheralVascularPatient: true },
+        { therapyGaps: { some: { module: 'PERIPHERAL_VASCULAR' as const, resolvedAt: null } } },
+      ],
+    };
+    const openGapWhere = { hospitalId, module: 'PERIPHERAL_VASCULAR' as const, resolvedAt: null };
+    const [totalPatients, openGapsByType, deviceGaps, recentGaps] = await Promise.all([
+      prisma.patient.count({ where: patientWhere }),
+      prisma.therapyGap.groupBy({ by: ['gapType'], where: openGapWhere, _count: { id: true } }),
+      prisma.therapyGap.count({ where: { ...openGapWhere, gapType: 'DEVICE_ELIGIBLE' } }),
+      prisma.therapyGap.findMany({
+        where: openGapWhere, orderBy: { identifiedAt: 'desc' }, take: 10,
+        select: { id: true, gapType: true, medication: true, device: true, currentStatus: true, targetStatus: true, identifiedAt: true, patientId: true },
+      }),
+    ]);
+    const totalOpenGaps = openGapsByType.reduce((sum, g) => sum + g._count.id, 0);
+    const gapsByType = openGapsByType.reduce<Record<string, number>>((acc, g) => { acc[g.gapType] = g._count.id; return acc; }, {});
+    const recentAlerts = recentGaps.map(g => ({
+      gapId: g.id, patientId: g.patientId, type: g.gapType,
+      severity: g.gapType === 'DEVICE_ELIGIBLE' ? 'high' : 'medium',
+      message: g.medication ? `Missing ${g.medication}` : g.device ? `${g.device} candidate` : g.targetStatus,
+      currentStatus: g.currentStatus, targetStatus: g.targetStatus,
+      identifiedAt: g.identifiedAt.toISOString(),
+    }));
+    res.json({ success: true, data: { summary: { totalPatients, totalOpenGaps, gapsByType, deviceCandidates: deviceGaps }, recentAlerts, source: 'database' }, timestamp: new Date().toISOString() } as APIResponse);
+  } catch (error) {
+    logger.error('Failed to build Peripheral Vascular dashboard', { error: error instanceof Error ? error.message : String(error) });
+    res.status(500).json({ success: false, error: 'Failed to load Peripheral Vascular dashboard' } as APIResponse);
+  }
 });
 
 router.post('/peripheral-vascular/wifi-classification', (req, res) => {
@@ -1908,13 +1997,32 @@ router.post('/peripheral-vascular/pad-screening', (req, res) => {
   } as APIResponse);
 });
 
-router.get('/peripheral-vascular/patients', (req, res) => {
-  const patients = [
-    { id: 'PV001', name: 'Thomas Anderson', mrn: '12340001', age: 72, diagnosis: 'CLI - WIfI Stage 4', abi: 0.35, risk: 'high' },
-    { id: 'PV002', name: 'Dorothy Kim', mrn: '12340002', age: 68, diagnosis: 'Moderate PAD', abi: 0.62, risk: 'medium' },
-    { id: 'PV003', name: 'William Garcia', mrn: '12340003', age: 81, diagnosis: 'Severe PAD', abi: 0.48, risk: 'high' },
-  ];
-  res.json({ success: true, data: patients, message: 'Peripheral Vascular patient worklist', timestamp: new Date().toISOString() } as APIResponse);
+router.get('/peripheral-vascular/patients', async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = req.user?.hospitalId;
+  if (!hospitalId) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  try {
+    const limitParam = Number.parseInt(String(req.query.limit ?? '100'), 10);
+    const limit = Number.isFinite(limitParam) ? Math.min(Math.max(limitParam, 1), 500) : 100;
+    const patients = await prisma.patient.findMany({
+      where: { hospitalId, isActive: true, OR: [{ peripheralVascularPatient: true }, { therapyGaps: { some: { module: 'PERIPHERAL_VASCULAR' as const, resolvedAt: null } } }] },
+      orderBy: [{ riskCategory: 'desc' }, { lastAssessment: 'desc' }],
+      take: limit,
+      select: {
+        id: true, mrn: true, firstName: true, lastName: true, dateOfBirth: true,
+        gender: true, riskCategory: true, riskScore: true, lastAssessment: true,
+        therapyGaps: { where: { resolvedAt: null, module: 'PERIPHERAL_VASCULAR' }, select: { id: true, gapType: true, medication: true, device: true, currentStatus: true } },
+      },
+    });
+    const now = Date.now();
+    const worklist = patients.map(p => {
+      const age = Math.floor((now - p.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+      return { id: p.id, mrn: p.mrn, firstName: p.firstName, lastName: p.lastName, age, gender: p.gender, riskCategory: p.riskCategory, riskScore: p.riskScore, gapCount: p.therapyGaps.length, careGaps: p.therapyGaps.map(g => g.medication ? `${g.medication} gap` : g.device ? `${g.device} eval` : g.currentStatus), lastAssessment: p.lastAssessment?.toISOString() ?? null };
+    });
+    res.json({ success: true, data: worklist, count: worklist.length, source: 'database', timestamp: new Date().toISOString() } as APIResponse);
+  } catch (error) {
+    logger.error('Failed to load Peripheral Vascular patients', { error: error instanceof Error ? error.message : String(error) });
+    res.status(500).json({ success: false, error: 'Failed to load Peripheral Vascular patient worklist' } as APIResponse);
+  }
 });
 
 export = router;
