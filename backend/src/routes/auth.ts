@@ -28,6 +28,18 @@ const demoUsers = [
     permissions: FULL_ACCESS_PERMISSIONS,
   },
   {
+    id: 'user-jhart',
+    email: 'JHart@tailrd-heart.com',
+    passwordHash: bcrypt.hashSync('Demo2026!', 12),
+    firstName: 'Jonathan',
+    lastName: 'Hart',
+    title: 'CEO & Founder',
+    role: 'super-admin',
+    hospitalId: 'platform',
+    hospitalName: 'TAILRD Heart',
+    permissions: FULL_ACCESS_PERMISSIONS,
+  },
+  {
     id: 'user-001',
     email: 'admin@stmarys.org',
     passwordHash: bcrypt.hashSync('demo123', 12),
