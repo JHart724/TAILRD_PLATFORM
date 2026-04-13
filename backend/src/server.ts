@@ -10,7 +10,7 @@ import { APIResponse } from './types';
 import { analyticsMiddleware } from './middleware/analytics';
 import { csrfCookieSetter, csrfProtection, csrfTokenEndpoint } from './middleware/csrfProtection';
 import { loginRateLimit, upgradeAuthRateLimitStores } from './middleware/authRateLimit';
-import { requireMFA } from './middleware/auth';
+import { authenticateToken, requireMFA } from './middleware/auth';
 import getRedisClient, { createRedisRateLimitStore } from './lib/redis';
 
 config();
@@ -229,10 +229,12 @@ app.use('/api/smart', require('./routes/smartLaunch').default);
 
 app.use('/api/webhooks', require('./routes/webhooks'));
 
-// FINDING-1.1-002: requireMFA globally on all PHI-accessing /api/* routes.
-// Mounted AFTER auth, sso, smart, webhooks (which have their own auth).
-// MFA check queries UserMFA table — users without MFA enabled pass through.
-app.use('/api', requireMFA);
+// Type-safe global auth + MFA on all PHI-accessing /api/* routes.
+// authenticateToken accepts Request base type (no 'as any' cast needed).
+// Mounted AFTER auth, sso, smart, webhooks (which have their own auth chains).
+// Per-route authenticateToken/requireMFA in individual routers are now redundant
+// but left in place as documentation.
+app.use('/api', authenticateToken, requireMFA);
 
 app.use('/api/patients', require('./routes/patients'));
 app.use('/api/modules', require('./routes/modules'));
