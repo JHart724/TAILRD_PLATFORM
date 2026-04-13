@@ -32,8 +32,11 @@ interface AuthenticatedRequest extends Request {
 // super-admin payload so the frontend works without login.
 
 const authenticateToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  // Cookie-first, Bearer header fallback. Cookie is httpOnly (XSS-safe).
+  // Bearer header preserved for API clients, CDS Hooks, and external integrations.
+  const token = (req as any).cookies?.['tailrd-auth']
+    || req.headers.authorization?.replace('Bearer ', '')?.trim()
+    || null;
 
   // If a token is provided, always try to verify it (works in both modes)
   if (token) {
