@@ -35,10 +35,12 @@ RUN groupadd --gid 1001 tailrd && \
 COPY package*.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 
-# Copy compiled output and Prisma client from builder
+# Copy compiled output, Prisma client + CLI from builder
+# prisma CLI needed for `npx prisma migrate deploy` at startup
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY prisma/ ./prisma/
 
 RUN chown -R tailrd:tailrd /app
