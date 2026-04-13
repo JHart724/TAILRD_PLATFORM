@@ -10,7 +10,7 @@
 
 import bcrypt from 'bcryptjs';
 import prisma from '../src/lib/prisma';
-import { FULL_ACCESS_PERMISSIONS } from '../src/config/rolePermissions';
+// Permission fields set explicitly in upsert — matches seed.ts pattern
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -47,22 +47,35 @@ async function main() {
       passwordHash,
       firstName: 'System',
       lastName: 'Administrator',
-      role: 'super-admin',
+      role: 'SUPER_ADMIN',
       isActive: true,
       hospitalId: hospital.id,
-      ...FULL_ACCESS_PERMISSIONS,
+      permHeartFailure: true,
+      permElectrophysiology: true,
+      permStructuralHeart: true,
+      permCoronaryIntervention: true,
+      permPeripheralVascular: true,
+      permValvularDisease: true,
+      permExecutiveView: true,
+      permServiceLineView: true,
+      permCareTeamView: true,
+      permViewReports: true,
+      permExportData: true,
+      permManageUsers: true,
+      permConfigureAlerts: true,
+      permAccessPHI: true,
     },
     update: {
       passwordHash,
       isActive: true,
-      role: 'super-admin',
+      role: 'SUPER_ADMIN',
     },
   });
 
   console.log(`Super-admin created:`);
   console.log(`  ID:    ${user.id}`);
   console.log(`  Email: ${email}`);
-  console.log(`  Role:  super-admin`);
+  console.log(`  Role:  SUPER_ADMIN`);
   console.log(`  Login at /admin/god`);
 
   await prisma.$disconnect();

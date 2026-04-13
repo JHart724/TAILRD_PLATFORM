@@ -10,6 +10,7 @@ import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
 
 const router = Router();
 const isDemoMode = process.env.DEMO_MODE === 'true';
+const isDemoFallback = process.env.DEMO_FALLBACK_ENABLED === 'true';
 
 // ─── Demo users (only used when DEMO_MODE=true) ───────────────────────────────
 
@@ -122,6 +123,43 @@ function signToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
   return jwt.sign(fullPayload, process.env.JWT_SECRET!, { algorithm: 'HS256' });
 }
 
+// ─── Helper: demo fallback session (prospect demos on Synthea data) ───────────
+// Gated by DEMO_FALLBACK_ENABLED env var. Any email gets HOSPITAL_ADMIN session.
+// MUST be disabled before connecting real patient data.
+
+function buildDemoFallbackResponse(email: string, res: Response) {
+  const demoPayload: Omit<JWTPayload, 'iat' | 'exp'> = {
+    userId: `demo-${Date.now()}`,
+    email,
+    role: 'HOSPITAL_ADMIN',
+    hospitalId: 'hosp-001',
+    hospitalName: 'TAILRD Demo',
+    permissions: FULL_ACCESS_PERMISSIONS,
+    mfaVerified: false,
+    demoMode: true,
+  };
+  const token = signToken(demoPayload);
+  return res.json({
+    success: true,
+    data: {
+      token,
+      user: {
+        id: demoPayload.userId,
+        email,
+        firstName: 'Demo',
+        lastName: 'User',
+        title: 'Demo Account',
+        role: 'HOSPITAL_ADMIN',
+        hospitalId: 'hosp-001',
+        hospitalName: 'TAILRD Demo',
+        permissions: FULL_ACCESS_PERMISSIONS,
+      },
+    },
+    message: 'Demo login successful',
+    timestamp: new Date().toISOString(),
+  } as APIResponse);
+}
+
 // ─── POST /api/auth/login ──────────────────────────────────────────────────────
 
 router.post('/login', async (req: Request, res: Response) => {
@@ -186,6 +224,7 @@ router.post('/login', async (req: Request, res: Response) => {
     });
 
     if (!user || !user.isActive) {
+      if (isDemoFallback) return buildDemoFallbackResponse(email, res);
       await writeAuditLog(req, 'LOGIN_FAILED', 'User', null, 'Authentication failed');
       return res.status(401).json({
         success: false,
@@ -196,6 +235,7 @@ router.post('/login', async (req: Request, res: Response) => {
 
     const passwordValid = await bcrypt.compare(password, user.passwordHash);
     if (!passwordValid) {
+      if (isDemoFallback) return buildDemoFallbackResponse(email, res);
       await writeAuditLog(req, 'LOGIN_FAILED', 'User', user.id, 'Authentication failed');
       return res.status(401).json({
         success: false,
