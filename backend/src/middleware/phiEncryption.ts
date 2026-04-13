@@ -35,14 +35,26 @@ const PHI_FIELD_MAP: Record<string, string[]> = {
   UserMFA: ['secret'],
 };
 
+// DateTime PHI fields that need Date→ISO conversion before encrypt + ISO→Date after decrypt
+const DATETIME_PHI_FIELDS = new Set(['dateOfBirth']);
+
 // JSON fields requiring serialize-then-encrypt (standard field encryption doesn't work on Json type)
 const PHI_JSON_FIELDS: Record<string, string[]> = {
   WebhookEvent: ['rawPayload'],
-  RiskScoreAssessment: ['inputData'],
-  InterventionTracking: ['findings'],
+  RiskScoreAssessment: ['inputData', 'components', 'inputs'],
+  InterventionTracking: ['findings', 'complications', 'outcomes'],
   Alert: ['triggerData'],
   Phenotype: ['evidence'],
-  ContraindicationAssessment: ['reasons'],
+  ContraindicationAssessment: ['reasons', 'alternatives', 'monitoring'],
+  TherapyGap: ['barriers', 'recommendations'],
+  Encounter: ['diagnosisCodes'],
+  CdsHooksSession: ['fhirContext', 'cards'],
+  AuditLog: ['previousValues', 'newValues', 'metadata'],
+  CarePlan: ['goals', 'activities', 'careTeam'],
+  DrugTitration: ['barriers', 'monitoringPlan'],
+  DeviceEligibility: ['criteria', 'barriers', 'contraindications'],
+  CrossReferral: ['triggerData'],
+  CQLResult: ['result'],
 };
 
 function encrypt(text: string): string {
@@ -91,6 +103,9 @@ function decrypt(encryptedText: string): string {
 
 function encryptFields(data: Record<string, any>, fields: string[]): void {
   for (const field of fields) {
+    if (data[field] instanceof Date) {
+      data[field] = (data[field] as Date).toISOString();
+    }
     if (data[field] && typeof data[field] === 'string') {
       data[field] = encrypt(data[field]);
     }
@@ -100,7 +115,13 @@ function encryptFields(data: Record<string, any>, fields: string[]): void {
 function decryptRecord(record: Record<string, any>, fields: string[]): Record<string, any> {
   for (const field of fields) {
     if (record[field] && typeof record[field] === 'string') {
-      record[field] = decrypt(record[field]);
+      const decrypted = decrypt(record[field]);
+      if (DATETIME_PHI_FIELDS.has(field) && typeof decrypted === 'string') {
+        const d = new Date(decrypted);
+        record[field] = !isNaN(d.getTime()) ? d : decrypted;
+      } else {
+        record[field] = decrypted;
+      }
     }
   }
   return record;
@@ -138,7 +159,7 @@ export function applyPHIEncryption(prisma: PrismaClient): void {
     const fields = stringFields || [];
 
     // Encrypt on write (string fields + JSON fields)
-    if (['create', 'update', 'upsert'].includes(params.action)) {
+    if (['create', 'update', 'upsert', 'updateMany'].includes(params.action)) {
       const data = params.args?.data;
       if (data) {
         encryptFields(data, fields);
