@@ -43,13 +43,25 @@ if (!isDemoMode && !process.env.PHI_ENCRYPTION_KEY) {
   process.exit(1);
 }
 
-// ── CRITICAL: JWT_SECRET required when not in demo mode ───────────────────────
-if (!isDemoMode && !process.env.JWT_SECRET) {
-  console.error('\n╔══════════════════════════════════════════════════════════════╗');
-  console.error('║  FATAL: JWT_SECRET must be set when DEMO_MODE is off.      ║');
-  console.error('║  Set JWT_SECRET in your environment variables.             ║');
-  console.error('╚══════════════════════════════════════════════════════════════╝\n');
-  process.exit(1);
+// ── CRITICAL: JWT_SECRET required + entropy validated ─────────────────────────
+if (!isDemoMode) {
+  const jwtSecret = process.env.JWT_SECRET || '';
+  if (!jwtSecret) {
+    console.error('\n╔══════════════════════════════════════════════════════════════╗');
+    console.error('║  FATAL: JWT_SECRET must be set when DEMO_MODE is off.      ║');
+    console.error('║  Set JWT_SECRET in your environment variables.             ║');
+    console.error('╚══════════════════════════════════════════════════════════════╝\n');
+    process.exit(1);
+  }
+  if (jwtSecret.length < 32) {
+    console.error(`FATAL: JWT_SECRET must be at least 32 characters (currently ${jwtSecret.length}). Use: openssl rand -hex 64`);
+    process.exit(1);
+  }
+  const WEAK_SECRETS = ['secret', 'password', 'jwt_secret', 'mysecret', 'changeme', '123456'];
+  if (WEAK_SECRETS.some(w => jwtSecret.toLowerCase().includes(w))) {
+    console.error('FATAL: JWT_SECRET appears to be a weak/default value. Generate with: openssl rand -hex 64');
+    process.exit(1);
+  }
 }
 
 const app = express();

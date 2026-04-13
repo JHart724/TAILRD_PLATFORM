@@ -208,7 +208,7 @@ router.patch('/interventions/:id/status', async (req: AuthenticatedRequest, res:
     }
 
     const updated = await prisma.interventionTracking.update({
-      where: { id },
+      where: { id, hospitalId },
       data: {
         status: status as any,
         ...(outcome && { outcome }),
@@ -365,7 +365,7 @@ router.patch('/contraindications/:id/override', async (req: AuthenticatedRequest
     }
 
     const updated = await prisma.contraindicationAssessment.update({
-      where: { id },
+      where: { id, hospitalId },
       data: { overriddenBy, overrideReason },
     });
 
