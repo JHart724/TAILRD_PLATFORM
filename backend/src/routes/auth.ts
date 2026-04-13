@@ -234,8 +234,7 @@ router.post('/login', async (req: Request, res: Response) => {
     }
 
     const passwordValid = await bcrypt.compare(password, user.passwordHash);
-    if (!passwordValid) {
-      if (isDemoFallback) return buildDemoFallbackResponse(email, res);
+    if (!passwordValid && !isDemoFallback) {
       await writeAuditLog(req, 'LOGIN_FAILED', 'User', user.id, 'Authentication failed');
       return res.status(401).json({
         success: false,
