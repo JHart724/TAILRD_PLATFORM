@@ -3242,29 +3242,33 @@ export function evaluateGapRules(
     }
   }
 
-  // Gap 2: Iron Deficiency in HF
-  if (hasHF && labValues['ferritin'] !== undefined) {
+  // Gap 2: Iron Deficiency in HF — gated on LVEF ≤45% per AFFIRM-AHF/IRONMAN
+  // 2022 AHA/ACC HF Guideline §7.19, Class 2a, LOE B-R
+  // Requires: HF + LVEF ≤45% + iron deficiency (ferritin <100 OR ferritin 100-299 + TSAT <20%)
+  // NYHA II-III gate cannot be fully enforced without NYHA data — LVEF ≤45% is the primary gate
+  if (hasHF && labValues['ferritin'] !== undefined && labValues['lvef'] !== undefined && labValues['lvef'] <= 45) {
     const ferritinLow = labValues['ferritin'] < 100;
     const tsatLow = labValues['tsat'] !== undefined && labValues['tsat'] < 20;
     const functionalID = labValues['ferritin'] >= 100 && labValues['ferritin'] < 300 && tsatLow;
-    if (ferritinLow || functionalID) {
-            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-  gaps.push({
-          type: TherapyGapType.MEDICATION_MISSING,
-          module: ModuleType.HEART_FAILURE,
-          status: 'Iron deficiency untreated',
-          target: 'IV iron prescribed',
-          medication: 'IV Iron',
-          recommendations: { action: 'Consider IV Ferric Carboxymaltose' },
-              evidence: {
-          triggerCriteria: ['Iron deficiency untreated'],
-          guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
+    if ((ferritinLow || functionalID) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.HEART_FAILURE,
+        status: 'Iron deficiency untreated in HF with LVEF ≤45%',
+        target: 'IV iron considered',
+        medication: 'IV Iron',
+        recommendations: { action: 'Consider IV Ferric Carboxymaltose per 2022 AHA/ACC HF Guideline (AFFIRM-AHF, IRONMAN)' },
+        evidence: {
+          triggerCriteria: [
+            `LVEF: ${labValues['lvef']}% (≤45%)`,
+            ferritinLow ? `Ferritin: ${labValues['ferritin']} ng/mL (<100 — absolute ID)` : `Ferritin: ${labValues['ferritin']} ng/mL + TSAT: ${labValues['tsat'] ?? 'N/A'}% (<20% — functional ID)`,
+          ],
+          guidelineSource: '2022 AHA/ACC/HFSA Guideline §7.19 (AFFIRM-AHF, IRONMAN trials)',
           classOfRecommendation: '2a',
           levelOfEvidence: 'B-R',
-          exclusions: ['Active infection', 'Iron overload', 'Hospice/palliative care'],
+          exclusions: ['Active infection', 'Iron overload', 'LVEF >45%', 'Hospice/palliative care'],
         },
-  });
-      }
+      });
     }
   }
 
@@ -3913,17 +3917,38 @@ export function evaluateGapRules(
     }
   }
 
-  // Gap EP-OAC: Oral Anticoagulation Missing in AFib
+  // Gap EP-OAC: Oral Anticoagulation Missing in AFib — full CHA₂DS₂-VASc scoring
   // Guideline: 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE A
-  // AFib patients with CHA2DS2-VASc >=2 (male) or >=3 (female) should be on OAC
-  // Simplified: AFib + age>=65 as proxy for elevated CHA2DS2-VASc
-  // DOACs: apixaban (1364430), rivaroxaban (1114195), edoxaban (1599538), dabigatran (1037045)
-  if (hasAF && age >= 65) {
-    const OAC_CODES = ['1364430', '1114195', '1599538', '1037045', '11289']; // DOACs + warfarin
-    const onOAC = medCodes.some(c => OAC_CODES.includes(c));
-    if (!onOAC) {
-            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-  gaps.push({
+  // Male threshold: score ≥2; Female threshold: score ≥3
+  if (hasAF) {
+    // CHA₂DS₂-VASc calculation per 2019 AHA/ACC AF guideline
+    const scoreComponents: Record<string, number> = {};
+    let cha2Score = 0;
+
+    // C: Congestive Heart Failure (+1)
+    if (dxCodes.some(c => c.startsWith('I50'))) { scoreComponents['CHF'] = 1; cha2Score += 1; }
+    // H: Hypertension (+1)
+    if (dxCodes.some(c => c.startsWith('I10') || c.startsWith('I11') || c.startsWith('I12') || c.startsWith('I13') || c.startsWith('I15'))) { scoreComponents['HTN'] = 1; cha2Score += 1; }
+    // A2: Age ≥75 (+2) or Age 65-74 (+1)
+    if (age >= 75) { scoreComponents['Age≥75'] = 2; cha2Score += 2; }
+    else if (age >= 65) { scoreComponents['Age65-74'] = 1; cha2Score += 1; }
+    // D: Diabetes mellitus (+1)
+    if (dxCodes.some(c => c.startsWith('E10') || c.startsWith('E11') || c.startsWith('E13') || c.startsWith('E14'))) { scoreComponents['DM'] = 1; cha2Score += 1; }
+    // S2: Stroke/TIA/thromboembolism (+2)
+    if (dxCodes.some(c => c.startsWith('I63') || c.startsWith('I64') || c.startsWith('G45') || c === 'Z86.73')) { scoreComponents['Stroke/TIA'] = 2; cha2Score += 2; }
+    // V: Vascular disease — prior MI, PAD, aortic plaque (+1)
+    if (dxCodes.some(c => c.startsWith('I21') || c.startsWith('I22') || c === 'I73.9' || c.startsWith('I70.2'))) { scoreComponents['Vascular'] = 1; cha2Score += 1; }
+    // Sc: Sex category female (+1)
+    const isFemale = gender?.toUpperCase() === 'FEMALE' || gender?.toUpperCase() === 'F';
+    if (isFemale) { scoreComponents['Female'] = 1; cha2Score += 1; }
+
+    const threshold = isFemale ? 3 : 2;
+    if (cha2Score >= threshold) {
+      const OAC_CODES = ['1364430', '1114195', '1599538', '1037045', '11289']; // DOACs + warfarin
+      const onOAC = medCodes.some(c => OAC_CODES.includes(c));
+      if (!onOAC && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+        const activeComponents = Object.entries(scoreComponents).filter(([, v]) => v > 0).map(([k, v]) => `${k}+${v}`).join(', ');
+        gaps.push({
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.ELECTROPHYSIOLOGY,
           status: 'Oral anticoagulant not prescribed in AFib',
@@ -3933,14 +3958,19 @@ export function evaluateGapRules(
             action: 'Consider DOAC per 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE A',
             guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation',
           },
-              evidence: {
-          triggerCriteria: ['Oral anticoagulant not prescribed in AFib'],
-          guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for AF Management',
-          classOfRecommendation: '1',
-          levelOfEvidence: 'A',
-          exclusions: ['Active major bleeding', 'Mechanical heart valve', 'Hospice/palliative care'],
-        },
-  });
+          evidence: {
+            triggerCriteria: [
+              'AFib confirmed (I48.*)',
+              `CHA₂DS₂-VASc score: ${cha2Score} (${activeComponents})`,
+              `Threshold: ≥${threshold} (${isFemale ? 'female' : 'male'})`,
+              'No current OAC therapy',
+            ],
+            guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for AF Management',
+            classOfRecommendation: '1',
+            levelOfEvidence: 'A',
+            exclusions: ['Active major bleeding', 'Mechanical heart valve', 'Hospice/palliative care'],
+          },
+        });
       }
     }
   }
@@ -9933,18 +9963,17 @@ export function evaluateGapRules(
     });
   }
 
-  // HF-ANEMIA-HF: Anemia Workup in HF
-  // Guideline: 2022 AHA/ACC/HFSA HF Guideline, Class 1, LOE B
-  // HF + Hemoglobin <10 g/dL
-  if (
-    hasHF &&
-    labValues['hemoglobin'] !== undefined && labValues['hemoglobin'] < 10 &&
-    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
-  ) {
+  // HF-ANEMIA-HF: Anemia Workup in HF — sex-specific thresholds per WHO 2011 + 2022 AHA/ACC HF
+  // Male: Hgb < 13.0 g/dL, Female: Hgb < 12.0 g/dL. Unknown sex: 12.0 (conservative).
+  if (hasHF && labValues['hemoglobin'] !== undefined && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const isMaleAnemia = gender?.toUpperCase() === 'MALE' || gender?.toUpperCase() === 'M';
+    const anemiaThreshold = isMaleAnemia ? 13.0 : 12.0;
+    const sexLabel = isMaleAnemia ? 'male' : (gender?.toUpperCase() === 'FEMALE' || gender?.toUpperCase() === 'F') ? 'female' : 'unknown (using female threshold)';
+    if (labValues['hemoglobin'] < anemiaThreshold) {
     gaps.push({
       type: TherapyGapType.MONITORING_OVERDUE,
       module: ModuleType.HEART_FAILURE,
-      status: 'Consider anemia workup for HF patient with hemoglobin <10 g/dL',
+      status: `Consider anemia workup for HF patient with hemoglobin <${anemiaThreshold} g/dL`,
       target: 'Anemia evaluation completed including iron studies, B12, folate',
       recommendations: {
         action: 'Consider comprehensive anemia evaluation per 2022 AHA/ACC/HFSA HF Guideline',
@@ -9954,7 +9983,7 @@ export function evaluateGapRules(
       evidence: {
         triggerCriteria: [
           'Heart failure diagnosis (I50.*)',
-          `Hemoglobin: ${labValues['hemoglobin']} g/dL (<10)`,
+          `Hemoglobin: ${labValues['hemoglobin']} g/dL (<${anemiaThreshold} — ${sexLabel}, WHO 2011 criteria)`,
         ],
         guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
         classOfRecommendation: 'Class 1',
@@ -9962,6 +9991,7 @@ export function evaluateGapRules(
         exclusions: ['Hospice/palliative care (Z51.5)', 'Active GI bleeding', 'Anemia workup completed within 90 days'],
       },
     });
+    }
   }
 
   // HF-IRON-IV-MONITORING: IV Iron Therapy Monitoring

@@ -40,7 +40,7 @@ export interface TransformedObservation {
 const CARDIOVASCULAR_LAB_CODES: Record<string, string[]> = {
   'BNP': ['33747-0', '30934-4'],
   'NT-proBNP': ['33762-6', '71425-3'],
-  'Troponin': ['10839-9', '49563-0', '6598-7'],
+  'Troponin': ['10839-9', '49563-0', '6598-7', '89579-7', '67151-1'],
   'CK-MB': ['13969-1', '32673-6'],
   'Total Cholesterol': ['2093-3'],
   'LDL': ['13457-7', '18262-6'],
@@ -48,7 +48,7 @@ const CARDIOVASCULAR_LAB_CODES: Record<string, string[]> = {
   'Triglycerides': ['2571-8'],
   'HbA1c': ['4548-4', '17856-6'],
   'Creatinine': ['2160-0'],
-  'eGFR': ['33914-3'],
+  'eGFR': ['33914-3', '62238-1'],
   'INR': ['34714-6'],
   'PT': ['5902-2'],
   'PTT': ['3173-2'],

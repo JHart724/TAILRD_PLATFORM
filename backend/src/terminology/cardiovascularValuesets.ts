@@ -101,11 +101,11 @@ export const LOINC_CARDIOVASCULAR_LABS = {
   NT_PROBNP: '33762-6',         // Natriuretic peptide.B prohormone N-Terminal
   BNP: '30934-4',               // Natriuretic peptide.B
   HS_TROPONIN_T: '67151-1',     // Troponin T cardiac high sensitivity
-  HS_TROPONIN_I: '48641-3',     // Troponin I cardiac high sensitivity
+  HS_TROPONIN_I: '89579-7',     // Troponin I cardiac high sensitivity (was 48641-3 = conventional TnI)
   DIGOXIN_LEVEL: '10535-3',     // Digoxin
 
   // Renal
-  EGFR: '33914-3',              // eGFR (CKD-EPI)
+  EGFR: '62238-1',              // eGFR CKD-EPI 2021 (was 33914-3 = MDRD). Both accepted in observationService.
   CREATININE: '2160-0',         // Creatinine serum
   BUN: '3094-0',                // Urea nitrogen
 
