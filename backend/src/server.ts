@@ -10,7 +10,7 @@ import { APIResponse } from './types';
 import { analyticsMiddleware } from './middleware/analytics';
 import { csrfCookieSetter, csrfProtection, csrfTokenEndpoint } from './middleware/csrfProtection';
 import { loginRateLimit, upgradeAuthRateLimitStores } from './middleware/authRateLimit';
-import { authenticateToken, requireMFA } from './middleware/auth';
+import { requireMFA } from './middleware/auth';
 import getRedisClient, { createRedisRateLimitStore } from './lib/redis';
 
 config();
@@ -226,10 +226,11 @@ app.use('/api/smart', require('./routes/smartLaunch').default);
 
 app.use('/api/webhooks', require('./routes/webhooks'));
 
-// FINDING-1.1-002: authenticateToken + requireMFA globally on PHI-accessing routes.
-// Mounted AFTER auth, sso, smart, webhooks (which have their own auth chains).
-// authenticateToken sets req.user; requireMFA checks MFA status.
-app.use('/api', authenticateToken as any, requireMFA);
+// FINDING-1.1-002: requireMFA globally on all PHI-accessing /api/* routes.
+// Mounted AFTER auth, sso, smart, webhooks (which have their own auth).
+// Individual route files mount authenticateToken per-route (NOT global — global mount
+// caused container crashes on td:40-41 by running before cookie-parser on some paths).
+app.use('/api', requireMFA);
 
 app.use('/api/patients', require('./routes/patients'));
 app.use('/api/modules', require('./routes/modules'));
