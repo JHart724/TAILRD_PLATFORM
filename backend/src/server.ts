@@ -86,7 +86,10 @@ const limiter: express.RequestHandler = (req, res, next) => activeLimiter(req, r
 const allowedOrigins = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(',').map(o => o.trim())
   : (process.env.NODE_ENV === 'production'
-    ? [process.env.FRONTEND_URL || '']
+    ? [
+        process.env.FRONTEND_URL || 'https://app.tailrd-heart.com',
+        'https://tailrddemo.netlify.app',
+      ].filter(Boolean)
     : ['http://localhost:3000', 'http://localhost:5173']);
 
 const corsOptions = {

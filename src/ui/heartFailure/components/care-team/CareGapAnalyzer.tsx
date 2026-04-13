@@ -37,7 +37,7 @@ const CareGapAnalyzer: React.FC = () => {
           type,
           label: type.replace(/_/g, ' '),
           count,
-          impact: count >= 20 ? 'high' : count >= 10 ? 'medium' : 'low',
+          impact: (count >= 20 ? 'high' : count >= 10 ? 'medium' : 'low') as 'high' | 'medium' | 'low',
         }))
         .sort((a, b) => b.count - a.count)
     : [];

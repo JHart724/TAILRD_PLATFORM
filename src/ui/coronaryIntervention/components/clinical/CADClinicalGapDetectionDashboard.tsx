@@ -87,6 +87,9 @@ export interface CADGapPatient {
   saqAnginaFrequency?: number;        // 0-100
   saqPriorAnginaFrequency?: number;   // 0-100
   saqPhysicalLimitation?: number;     // 0-100
+  saqQualityOfLife?: number;          // 0-100
+  saqAdministeredDate?: string;
+  saqPriorDate?: string;
 }
 
 // ============================================================
