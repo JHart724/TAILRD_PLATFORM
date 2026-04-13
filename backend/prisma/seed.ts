@@ -5,13 +5,13 @@ async function main() {
   console.log('🌱 Starting database seed...');
 
   // Create demo hospitals
-  const stMarysHospital = await prisma.hospital.upsert({
+  const demoHospital1 = await prisma.hospital.upsert({
     where: { id: 'hosp-001' },
     update: {},
     create: {
       id: 'hosp-001',
-      name: "St. Mary's Regional Medical Center",
-      system: 'Catholic Health Network',
+      name: 'TAILRD Demo Hospital',
+      system: 'TAILRD Health Network',
       npi: '1234567890',
       patientCount: 485000,
       bedCount: 650,
@@ -21,7 +21,7 @@ async function main() {
       state: 'IL',
       zipCode: '62701',
       country: 'USA',
-      redoxSourceId: 'stmarys-001',
+      redoxSourceId: 'demo-001',
       redoxDestinationId: 'tailrd-001',
       redoxWebhookUrl: 'https://api.tailrd.com/webhooks/redox/hosp-001',
       redoxIsActive: true,
@@ -38,12 +38,12 @@ async function main() {
     },
   });
 
-  const communityHospital = await prisma.hospital.upsert({
+  const demoHospital2 = await prisma.hospital.upsert({
     where: { id: 'hosp-002' },
     update: {},
     create: {
       id: 'hosp-002',
-      name: 'Community General Hospital',
+      name: 'TAILRD Demo Hospital 2',
       npi: '2345678901',
       patientCount: 180000,
       bedCount: 250,
@@ -70,18 +70,18 @@ async function main() {
     },
   });
 
-  console.log('✅ Created hospitals:', { stMarysHospital: stMarysHospital.id, communityHospital: communityHospital.id });
+  console.log('✅ Created hospitals:', { demoHospital1: demoHospital1.id, demoHospital2: demoHospital2.id });
 
   // Hash password for demo users
   const hashedPassword = await bcrypt.hash('demo123', 12);
 
   // Create demo users
   const sarahJohnson = await prisma.user.upsert({
-    where: { email: 'admin@stmarys.org' },
+    where: { email: 'admin@demo.tailrd-heart.com' },
     update: {},
     create: {
       id: 'user-001',
-      email: 'admin@stmarys.org',
+      email: 'admin@demo.tailrd-heart.com',
       passwordHash: hashedPassword,
       firstName: 'Sarah',
       lastName: 'Johnson',
@@ -109,11 +109,11 @@ async function main() {
   });
 
   const michaelChen = await prisma.user.upsert({
-    where: { email: 'cardio@stmarys.org' },
+    where: { email: 'cardio@demo.tailrd-heart.com' },
     update: {},
     create: {
       id: 'user-002',
-      email: 'cardio@stmarys.org',
+      email: 'cardio@demo.tailrd-heart.com',
       passwordHash: hashedPassword,
       firstName: 'Dr. Michael',
       lastName: 'Chen',
@@ -142,11 +142,11 @@ async function main() {
   });
 
   const lisaRodriguez = await prisma.user.upsert({
-    where: { email: 'admin@community.org' },
+    where: { email: 'quality@demo.tailrd-heart.com' },
     update: {},
     create: {
       id: 'user-003',
-      email: 'admin@community.org',
+      email: 'quality@demo.tailrd-heart.com',
       passwordHash: hashedPassword,
       firstName: 'Lisa',
       lastName: 'Rodriguez',
@@ -179,14 +179,14 @@ async function main() {
     lisaRodriguez: lisaRodriguez.email 
   });
 
-  // Create sample patients for St. Mary's
-  const stMarysPatients = [];
+  // Create sample patients for Demo Hospital 1
+  const demo1Patients = [];
   for (let i = 1; i <= 10; i++) {
     const patient = await prisma.patient.create({
       data: {
         mrn: `SMC${String(i).padStart(6, '0')}`,
         firstName: `Patient${i}`,
-        lastName: `StMarys`,
+        lastName: `Demo`,
         dateOfBirth: new Date(1950 + Math.floor(Math.random() * 50), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1),
         gender: i % 2 === 0 ? 'MALE' : 'FEMALE',
         phone: `555-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}-${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`,
@@ -207,11 +207,11 @@ async function main() {
         valvularDiseasePatient: i <= 3,
       },
     });
-    stMarysPatients.push(patient);
+    demo1Patients.push(patient);
   }
 
-  // Create sample patients for Community General
-  const communityPatients = [];
+  // Create sample patients for Demo Hospital 2
+  const demo2Patients = [];
   for (let i = 1; i <= 5; i++) {
     const patient = await prisma.patient.create({
       data: {
@@ -235,16 +235,16 @@ async function main() {
         peripheralVascularPatient: i <= 2,
       },
     });
-    communityPatients.push(patient);
+    demo2Patients.push(patient);
   }
 
   console.log('✅ Created patients:', { 
-    stMarysCount: stMarysPatients.length, 
-    communityCount: communityPatients.length 
+    demo1Count: demo1Patients.length, 
+    communityCount: demo2Patients.length 
   });
 
   // Create sample encounters for each patient
-  for (const patient of [...stMarysPatients, ...communityPatients]) {
+  for (const patient of [...demo1Patients, ...demo2Patients]) {
     // Create 1-3 encounters per patient
     const encounterCount = Math.floor(Math.random() * 3) + 1;
     
@@ -262,7 +262,7 @@ async function main() {
           startDateTime: startDate,
           endDateTime: new Date(startDate.getTime() + (Math.random() * 4 * 60 * 60 * 1000)),
           department: 'Cardiology',
-          location: patient.hospitalId === 'hosp-001' ? 'St. Mary\'s' : 'Community General',
+          location: patient.hospitalId === 'hosp-001' ? 'Demo Hospital 1' : 'Demo Hospital 2',
           attendingProvider: patient.hospitalId === 'hosp-001' ? 'Dr. Michael Chen' : 'Dr. Sarah Martinez',
           chiefComplaint: 'Chest pain',
           primaryDiagnosis: 'Heart failure',
@@ -272,7 +272,7 @@ async function main() {
   }
 
   // Create sample observations (lab results, vitals)
-  for (const patient of [...stMarysPatients, ...communityPatients]) {
+  for (const patient of [...demo1Patients, ...demo2Patients]) {
     // Create some lab results
     await prisma.observation.create({
       data: {
@@ -312,7 +312,7 @@ async function main() {
 
   // Create sample alerts
   for (let i = 0; i < 5; i++) {
-    const randomPatient = [...stMarysPatients, ...communityPatients][Math.floor(Math.random() * 15)];
+    const randomPatient = [...demo1Patients, ...demo2Patients][Math.floor(Math.random() * 15)];
     
     await prisma.alert.create({
       data: {
@@ -336,7 +336,7 @@ async function main() {
 
   // Create sample recommendations
   for (let i = 0; i < 5; i++) {
-    const randomPatient = [...stMarysPatients, ...communityPatients][Math.floor(Math.random() * 15)];
+    const randomPatient = [...demo1Patients, ...demo2Patients][Math.floor(Math.random() * 15)];
 
     await prisma.recommendation.create({
       data: {
@@ -360,7 +360,7 @@ async function main() {
   // ============================================
 
   // Coronary phenotype detections
-  const coronaryPts = stMarysPatients.filter((p: any) => p.coronaryPatient);
+  const coronaryPts = demo1Patients.filter((p: any) => p.coronaryPatient);
   for (let ci = 0; ci < Math.min(3, coronaryPts.length); ci++) {
     const phenoNames: any[] = ['CMD', 'VASOSPASTIC_ANGINA', 'CALCIFIC_CAD'];
     await prisma.phenotype.create({
@@ -378,7 +378,7 @@ async function main() {
   }
 
   // Valvular phenotype detections
-  const valvularPts = stMarysPatients.filter((p: any) => p.valvularDiseasePatient);
+  const valvularPts = demo1Patients.filter((p: any) => p.valvularDiseasePatient);
   for (let vi = 0; vi < Math.min(2, valvularPts.length); vi++) {
     const valvePhenos: any[] = ['LFLG_AORTIC_STENOSIS', 'BPV_DEGENERATION'];
     await prisma.phenotype.create({
@@ -395,7 +395,7 @@ async function main() {
   }
 
   // Peripheral phenotype detections
-  const padPts = stMarysPatients.filter((p: any) => p.peripheralVascularPatient);
+  const padPts = demo1Patients.filter((p: any) => p.peripheralVascularPatient);
   for (let pi = 0; pi < Math.min(2, padPts.length); pi++) {
     const padPhenos: any[] = ['CLTI', 'DIABETIC_FOOT'];
     await prisma.phenotype.create({
@@ -599,12 +599,12 @@ async function main() {
 
   console.log('Database seeded successfully!');
   console.log('\nDemo Users Created:');
-  console.log('1. admin@stmarys.org (Hospital Admin) - Password: demo123');
-  console.log('2. cardio@stmarys.org (Physician) - Password: demo123');
-  console.log('3. admin@community.org (Quality Director) - Password: demo123');
+  console.log('1. admin@demo.tailrd-heart.com (Hospital Admin) - Password: demo123');
+  console.log('2. cardio@demo.tailrd-heart.com (Physician) - Password: demo123');
+  console.log('3. quality@demo.tailrd-heart.com (Quality Director) - Password: demo123');
   console.log('\nHospitals Created:');
-  console.log('1. St Marys Regional Medical Center (485K patients)');
-  console.log('2. Community General Hospital (180K patients)');
+  console.log('1. TAILRD Demo Hospital (485K patients)');
+  console.log('2. TAILRD Demo Hospital 2 (180K patients)');
   console.log('\nSample Data Created:');
   console.log('- 15 Patients with encounters, observations, alerts, and recommendations');
   console.log('- Group B: Phenotypes, Risk Scores, Interventions, Contraindications, Drug Titrations');
