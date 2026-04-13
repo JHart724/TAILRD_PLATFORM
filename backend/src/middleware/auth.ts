@@ -31,7 +31,8 @@ interface AuthenticatedRequest extends Request {
 // Verifies JWT. In demo mode, allows unauthenticated requests with a synthetic
 // super-admin payload so the frontend works without login.
 
-const authenticateToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+const authenticateToken = async (req: Request, res: Response, next: NextFunction) => {
+  const authReq = req as AuthenticatedRequest;
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -57,14 +58,14 @@ const authenticateToken = async (req: AuthenticatedRequest, res: Response, next:
         }
       }
 
-      req.user = user;
+      authReq.user = user;
       return next();
     } catch (err: any) {
       // Local JWT failed -- try Cognito if configured (SSO/SAML tokens use RS256)
       if (isCognitoEnabled() && verifyCognitoToken) {
         const cognitoUser = await verifyCognitoToken(token);
         if (cognitoUser) {
-          req.user = cognitoUser;
+          authReq.user = cognitoUser;
           return next();
         }
       }
@@ -81,7 +82,7 @@ const authenticateToken = async (req: AuthenticatedRequest, res: Response, next:
 
   // No token provided
   if (isDemoMode) {
-    req.user = createDemoPayload();
+    authReq.user = createDemoPayload();
     return next();
   }
 
@@ -217,10 +218,11 @@ const authorizeView = (req: AuthenticatedRequest, res: Response, next: NextFunct
 // Enforces MFA verification on PHI-access routes. Users with MFA enabled must
 // have completed MFA verification (mfaVerified: true in JWT) to access patient data.
 
-const requireMFA = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+const requireMFA = async (req: Request, res: Response, next: NextFunction) => {
   if (isDemoMode) return next();
 
-  const user = req.user;
+  const authReq = req as AuthenticatedRequest;
+  const user = authReq.user;
   if (!user) {
     return res.status(401).json({
       success: false,
