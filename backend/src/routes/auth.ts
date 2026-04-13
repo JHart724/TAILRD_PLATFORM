@@ -140,6 +140,7 @@ router.post('/login', async (req: Request, res: Response) => {
       hospitalId: user.hospitalId,
       hospitalName: user.hospitalName,
       permissions: user.permissions,
+      mfaVerified: false,
       demoMode: true,
     });
 
@@ -200,6 +201,7 @@ router.post('/login', async (req: Request, res: Response) => {
       hospitalId: user.hospitalId,
       hospitalName: user.hospital.name,
       permissions,
+      mfaVerified: false,
     });
 
     // Create login session (store hashed token, not plaintext)

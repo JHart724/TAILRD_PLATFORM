@@ -309,6 +309,10 @@ router.post('/export/:patientId', async (req: AuthenticatedRequest, res: Respons
         },
         medications: true,
         conditions: true,
+        // TODO(Sprint-C): expand DSAR export to include all patient-linked models
+        // (procedures, deviceImplants, allergyIntolerances, bpciEpisodes, drugInteractionAlerts,
+        //  therapyGaps, phenotypes, crossReferrals, drugTitrations, etc.)
+        // Blocked by stale Prisma client in WSL — include types resolve in Docker build.
       },
     });
 
@@ -464,6 +468,12 @@ router.post('/deletion/:patientId', async (req: AuthenticatedRequest, res: Respo
         tx.order.deleteMany({ where: { patientId, hospitalId } }),
         tx.recommendation.deleteMany({ where: { patientId, hospitalId } }),
         tx.alert.deleteMany({ where: { patientId, hospitalId } }),
+        // FINDING-2.5-001: 5 models previously missing from DSAR cascade
+        tx.procedure.deleteMany({ where: { patientId, hospitalId } }),
+        tx.deviceImplant.deleteMany({ where: { patientId, hospitalId } }),
+        tx.allergyIntolerance.deleteMany({ where: { patientId, hospitalId } }),
+        tx.bpciEpisode.deleteMany({ where: { patientId, hospitalId } }),
+        tx.drugInteractionAlert.deleteMany({ where: { patientId, hospitalId } }),
       ]);
 
       // Soft-delete encounters and observations (have deletedAt field)
