@@ -66,8 +66,8 @@ const BaseTable: React.FC<BaseTableProps> = ({
  // Apply sorting
  if (sortColumn) {
  result.sort((a, b) => {
- const aVal = a[sortColumn];
- const bVal = b[sortColumn];
+ const aVal = a[sortColumn] as string | number;
+ const bVal = b[sortColumn] as string | number;
 
  if (aVal === bVal) return 0;
 
@@ -215,7 +215,7 @@ const BaseTable: React.FC<BaseTableProps> = ({
  ) : (
  paginatedData.map((row, index) => (
  <tr
- key={row.id || `row-${index}`}
+ key={(row as any).id || `row-${index}`}
  className={`${
  index % 2 === 0 ? 'bg-white' : 'bg-chrome-50'
  } hover:bg-chrome-100 transition-colors ${
@@ -227,7 +227,7 @@ const BaseTable: React.FC<BaseTableProps> = ({
  <td key={column.key} className="px-6 py-4 whitespace-nowrap">
  {column.render ?
  column.render(row[column.key], row) :
- <span className="text-titanium-900 font-body">{row[column.key]}</span>
+ <span className="text-titanium-900 font-body">{String(row[column.key] ?? '')}</span>
  }
  </td>
  ))}

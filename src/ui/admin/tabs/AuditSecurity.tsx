@@ -22,7 +22,7 @@ import {
 
 // ─── Mock Data ───────────────────────────────────────────────────────────────
 
-const SECURITY_SUMMARY = {
+const SECURITY_SUMMARY: Record<string, number> = {
   failedLogins: 3,
   suspiciousIPs: 1,
   phiRejections: 0,

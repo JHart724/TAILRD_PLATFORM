@@ -40,7 +40,7 @@ const ClinicalToolsPanel: React.FC<{ activeToolTab?: string; onToolTabChange?: (
 
   const selectedPt = worklist[selectedPatientIdx];
   const selectedPatient = selectedPt
-    ? { ...DEMO_PATIENT_CONTEXT, patientId: selectedPt.id, age: selectedPt.age, gender: selectedPt.gender as 'M' | 'F' }
+    ? { ...DEMO_PATIENT_CONTEXT, patientId: selectedPt.id, age: selectedPt.age, gender: (selectedPt.gender === 'MALE' || selectedPt.gender === 'M' ? 'male' : 'female') as 'male' | 'female' }
     : DEMO_PATIENT_CONTEXT;
 
   const tools = [
