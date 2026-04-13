@@ -228,8 +228,7 @@ app.use('/api/webhooks', require('./routes/webhooks'));
 
 // FINDING-1.1-002: requireMFA globally on all PHI-accessing /api/* routes.
 // Mounted AFTER auth, sso, smart, webhooks (which have their own auth).
-// Individual route files mount authenticateToken per-route (NOT global — global mount
-// caused container crashes on td:40-41 by running before cookie-parser on some paths).
+// MFA check queries UserMFA table — users without MFA enabled pass through.
 app.use('/api', requireMFA);
 
 app.use('/api/patients', require('./routes/patients'));
