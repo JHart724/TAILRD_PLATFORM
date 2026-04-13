@@ -11,6 +11,13 @@ import { logger } from '../utils/logger';
 import { evaluateGapRules } from './gaps/gapRuleEngine';
 import { Prisma } from '@prisma/client';
 
+// FINDING-3.7-002: Observation staleness cutoffs
+// Echo/imaging observations must be within 12 months to suppress gap rules.
+// Lab observations must be within 6 months.
+const ECHO_CUTOFF_MS = 365 * 24 * 60 * 60 * 1000;  // 12 months
+const LAB_CUTOFF_MS = 180 * 24 * 60 * 60 * 1000;    // 6 months
+const IMAGING_TYPES = new Set(['lvef', 'LVEF', 'qrs_duration', 'QRS_DURATION', 'echo_lvef', 'lv_ejection_fraction']);
+
 export { runGapDetectionForPatient } from './runGapDetectionForPatient';
 export { RUNTIME_GAP_REGISTRY } from './gaps/gapRuleEngine';
 
@@ -76,10 +83,17 @@ export async function runGapDetection(
 
       const dxCodes = patient.conditions.map((c: any) => c.icd10Code).filter(Boolean) as string[];
       const labValues: Record<string, number> = {};
+      const now = Date.now();
       for (const obs of patient.observations) {
-        if (obs.valueNumeric !== null && !labValues[obs.observationType]) {
-          labValues[obs.observationType] = obs.valueNumeric;
+        if (obs.valueNumeric === null) continue;
+        if (labValues[obs.observationType] !== undefined) continue;
+        // Enforce staleness cutoffs: imaging 12mo, labs 6mo
+        if (obs.observedDateTime) {
+          const ageMs = now - new Date(obs.observedDateTime).getTime();
+          const cutoff = IMAGING_TYPES.has(obs.observationType) ? ECHO_CUTOFF_MS : LAB_CUTOFF_MS;
+          if (ageMs > cutoff) continue;
         }
+        labValues[obs.observationType] = obs.valueNumeric;
       }
       const medCodes = patient.medications.map((m: any) => m.rxNormCode).filter(Boolean) as string[];
       const age = Math.floor(

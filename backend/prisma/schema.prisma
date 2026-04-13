@@ -273,6 +273,7 @@ model Patient {
   // Phase 3 relationships
   bpciEpisodes          BpciEpisode[]
   drugInteractionAlerts DrugInteractionAlert[]
+  webhookEvents         WebhookEvent[]
 
   @@unique([hospitalId, mrn]) // MRN is unique within each hospital
   @@index([fhirPatientId])
@@ -556,6 +557,11 @@ model WebhookEvent {
   hospitalId String
   hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
 
+  // Patient association (nullable — populated after patient resolution)
+  // FINDING-2.5-002: enables DSAR cascade deletion of raw FHIR payloads
+  patientId  String?
+  patient    Patient?  @relation(fields: [patientId], references: [id])
+
   // Event Details
   eventType    String // NewPatient, Results, Visits, Orders
   eventId      String @unique // Unique event ID from Redox — idempotency key
@@ -579,6 +585,7 @@ model WebhookEvent {
   updatedAt DateTime @updatedAt
 
   @@index([hospitalId])
+  @@index([patientId])
   @@index([status])
   @@index([receivedAt])
   @@map("webhook_events")

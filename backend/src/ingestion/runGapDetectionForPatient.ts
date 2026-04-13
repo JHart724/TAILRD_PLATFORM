@@ -7,6 +7,10 @@ import { logger } from '../utils/logger';
 import { evaluateGapRules } from './gaps/gapRuleEngine';
 import { Prisma } from '@prisma/client';
 
+const ECHO_CUTOFF_MS = 365 * 24 * 60 * 60 * 1000;
+const LAB_CUTOFF_MS = 180 * 24 * 60 * 60 * 1000;
+const IMAGING_TYPES = new Set(['lvef', 'LVEF', 'qrs_duration', 'QRS_DURATION', 'echo_lvef', 'lv_ejection_fraction']);
+
 export async function runGapDetectionForPatient(
   patientId: string,
   hospitalId: string
@@ -29,10 +33,16 @@ export async function runGapDetectionForPatient(
 
     const dxCodes = patient.conditions.map((c: any) => c.icd10Code).filter(Boolean);
     const labValues: Record<string, number> = {};
+    const now = Date.now();
     for (const obs of patient.observations) {
-      if (obs.valueNumeric !== null && !labValues[obs.observationType]) {
-        labValues[obs.observationType] = obs.valueNumeric;
+      if (obs.valueNumeric === null) continue;
+      if (labValues[obs.observationType] !== undefined) continue;
+      if (obs.observedDateTime) {
+        const ageMs = now - new Date(obs.observedDateTime).getTime();
+        const cutoff = IMAGING_TYPES.has(obs.observationType) ? ECHO_CUTOFF_MS : LAB_CUTOFF_MS;
+        if (ageMs > cutoff) continue;
       }
+      labValues[obs.observationType] = obs.valueNumeric;
     }
     const medCodes = patient.medications.map((m: any) => m.rxNormCode).filter(Boolean);
     const age = Math.floor((Date.now() - patient.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
