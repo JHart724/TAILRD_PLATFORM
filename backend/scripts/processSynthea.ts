@@ -35,12 +35,16 @@ const CURSOR_FILE = path.join(__dirname, ".synthea-cursor");
 // Create via seed or manually before running.
 const SYNTHEA_HOSPITAL_ID = process.env.SYNTHEA_HOSPITAL_ID || "synthea-nyc-demo";
 
+// Use default credential chain — env vars locally, task IAM role in ECS Fargate.
+// Explicit credentials would be undefined in Fargate and break the SDK.
 const s3 = new S3Client({
   region: process.env.AWS_REGION || "us-east-1",
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  },
+  ...(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY
+    ? { credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      } }
+    : {}),
 });
 
 // ── S3 Helpers ────────────────────────────────────────────────────────────────
