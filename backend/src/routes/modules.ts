@@ -6,6 +6,9 @@ import { logger } from '../utils/logger';
 
 const router = Router();
 
+// SUPER_ADMIN sees all tenants (GodView). Other roles scoped to their hospital.
+const isSuperAdmin = (req: AuthenticatedRequest) => req.user?.role === 'SUPER_ADMIN';
+
 // All module routes require authentication
 router.use(authenticateToken);
 
@@ -69,8 +72,8 @@ router.get('/', async (req: AuthenticatedRequest, res: Response) => {
   ];
 
   try {
-    const hospitalId = req.user?.hospitalId;
-    if (hospitalId) {
+    const hospitalId = isSuperAdmin(req) ? undefined : req.user?.hospitalId;
+    if (hospitalId || isSuperAdmin(req)) {
       // Enrich with real patient counts from the database
       const MODULE_FIELDS: Record<string, string> = {
         'heart-failure': 'heartFailurePatient',
@@ -85,7 +88,7 @@ router.get('/', async (req: AuthenticatedRequest, res: Response) => {
         const field = MODULE_FIELDS[mod.id];
         if (field) {
           const count = await prisma.patient.count({
-            where: { hospitalId, isActive: true, [field]: true },
+            where: { ...(hospitalId && { hospitalId }), isActive: true, [field]: true },
           });
           (mod as any).patientCount = count;
         }
@@ -106,21 +109,21 @@ router.get('/', async (req: AuthenticatedRequest, res: Response) => {
 
 // Heart Failure module endpoints — Prisma-backed, tenant-scoped by req.user.hospitalId
 router.get('/heart-failure/dashboard', async (req: AuthenticatedRequest, res: Response) => {
-  const hospitalId = req.user?.hospitalId;
-  if (!hospitalId) {
+  const hospitalId = isSuperAdmin(req) ? undefined : req.user?.hospitalId;
+  if (!hospitalId && !isSuperAdmin(req)) {
     return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
   }
 
   try {
     const hfPatientWhere = {
-      hospitalId,
+      ...(hospitalId && { hospitalId }),
       isActive: true,
       OR: [
         { heartFailurePatient: true },
         { therapyGaps: { some: { module: 'HEART_FAILURE' as const, resolvedAt: null } } },
       ],
     };
-    const openGapWhere = { hospitalId, module: 'HEART_FAILURE' as const, resolvedAt: null };
+    const openGapWhere = { ...(hospitalId && { hospitalId }), module: 'HEART_FAILURE' as const, resolvedAt: null };
 
     const [
       totalPatients,
@@ -294,8 +297,8 @@ router.post('/heart-failure/gdmt-calculator', (req, res) => {
 
 // Patient worklist endpoint — Prisma-backed, tenant-scoped by req.user.hospitalId
 router.get('/heart-failure/patients', async (req: AuthenticatedRequest, res: Response) => {
-  const hospitalId = req.user?.hospitalId;
-  if (!hospitalId) {
+  const hospitalId = isSuperAdmin(req) ? undefined : req.user?.hospitalId;
+  if (!hospitalId && !isSuperAdmin(req)) {
     return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
   }
 
@@ -305,7 +308,7 @@ router.get('/heart-failure/patients', async (req: AuthenticatedRequest, res: Res
 
     const patients = await prisma.patient.findMany({
       where: {
-        hospitalId,
+        ...(hospitalId && { hospitalId }),
         isActive: true,
         OR: [
           { heartFailurePatient: true },
@@ -736,21 +739,21 @@ router.get('/calculators/sts-risk/:patientId', (req, res) => {
 // ==============================================================================
 
 router.get('/electrophysiology/dashboard', async (req: AuthenticatedRequest, res: Response) => {
-  const hospitalId = req.user?.hospitalId;
-  if (!hospitalId) {
+  const hospitalId = isSuperAdmin(req) ? undefined : req.user?.hospitalId;
+  if (!hospitalId && !isSuperAdmin(req)) {
     return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
   }
 
   try {
     const epPatientWhere = {
-      hospitalId,
+      ...(hospitalId && { hospitalId }),
       isActive: true,
       OR: [
         { electrophysiologyPatient: true },
         { therapyGaps: { some: { module: 'ELECTROPHYSIOLOGY' as const, resolvedAt: null } } },
       ],
     };
-    const openGapWhere = { hospitalId, module: 'ELECTROPHYSIOLOGY' as const, resolvedAt: null };
+    const openGapWhere = { ...(hospitalId && { hospitalId }), module: 'ELECTROPHYSIOLOGY' as const, resolvedAt: null };
 
     const [
       totalPatients,
@@ -826,8 +829,8 @@ router.get('/electrophysiology/dashboard', async (req: AuthenticatedRequest, res
 });
 
 router.get('/electrophysiology/patients', async (req: AuthenticatedRequest, res: Response) => {
-  const hospitalId = req.user?.hospitalId;
-  if (!hospitalId) {
+  const hospitalId = isSuperAdmin(req) ? undefined : req.user?.hospitalId;
+  if (!hospitalId && !isSuperAdmin(req)) {
     return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
   }
 
@@ -837,7 +840,7 @@ router.get('/electrophysiology/patients', async (req: AuthenticatedRequest, res:
 
     const patients = await prisma.patient.findMany({
       where: {
-        hospitalId,
+        ...(hospitalId && { hospitalId }),
         isActive: true,
         OR: [
           { electrophysiologyPatient: true },
@@ -1190,21 +1193,21 @@ function calculateHASBLED(patientData: any) {
 // ==============================================================================
 
 router.get('/structural-heart/dashboard', async (req: AuthenticatedRequest, res: Response) => {
-  const hospitalId = req.user?.hospitalId;
-  if (!hospitalId) {
+  const hospitalId = isSuperAdmin(req) ? undefined : req.user?.hospitalId;
+  if (!hospitalId && !isSuperAdmin(req)) {
     return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
   }
 
   try {
     const shPatientWhere = {
-      hospitalId,
+      ...(hospitalId && { hospitalId }),
       isActive: true,
       OR: [
         { structuralHeartPatient: true },
         { therapyGaps: { some: { module: 'STRUCTURAL_HEART' as const, resolvedAt: null } } },
       ],
     };
-    const openGapWhere = { hospitalId, module: 'STRUCTURAL_HEART' as const, resolvedAt: null };
+    const openGapWhere = { ...(hospitalId && { hospitalId }), module: 'STRUCTURAL_HEART' as const, resolvedAt: null };
 
     const [
       totalPatients,
@@ -1280,8 +1283,8 @@ router.get('/structural-heart/dashboard', async (req: AuthenticatedRequest, res:
 });
 
 router.get('/structural-heart/patients', async (req: AuthenticatedRequest, res: Response) => {
-  const hospitalId = req.user?.hospitalId;
-  if (!hospitalId) {
+  const hospitalId = isSuperAdmin(req) ? undefined : req.user?.hospitalId;
+  if (!hospitalId && !isSuperAdmin(req)) {
     return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
   }
 
@@ -1291,7 +1294,7 @@ router.get('/structural-heart/patients', async (req: AuthenticatedRequest, res: 
 
     const patients = await prisma.patient.findMany({
       where: {
-        hospitalId,
+        ...(hospitalId && { hospitalId }),
         isActive: true,
         OR: [
           { structuralHeartPatient: true },
@@ -1644,17 +1647,17 @@ router.post('/structural-heart/mitraclip-eligibility', (req, res) => {
 // ==============================================================================
 
 router.get('/coronary-intervention/dashboard', async (req: AuthenticatedRequest, res: Response) => {
-  const hospitalId = req.user?.hospitalId;
-  if (!hospitalId) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  const hospitalId = isSuperAdmin(req) ? undefined : req.user?.hospitalId;
+  if (!hospitalId && !isSuperAdmin(req)) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
   try {
     const patientWhere = {
-      hospitalId, isActive: true,
+      ...(hospitalId && { hospitalId }), isActive: true,
       OR: [
         { coronaryPatient: true },
         { therapyGaps: { some: { module: 'CORONARY_INTERVENTION' as const, resolvedAt: null } } },
       ],
     };
-    const openGapWhere = { hospitalId, module: 'CORONARY_INTERVENTION' as const, resolvedAt: null };
+    const openGapWhere = { ...(hospitalId && { hospitalId }), module: 'CORONARY_INTERVENTION' as const, resolvedAt: null };
     const [totalPatients, openGapsByType, deviceGaps, recentGaps] = await Promise.all([
       prisma.patient.count({ where: patientWhere }),
       prisma.therapyGap.groupBy({ by: ['gapType'], where: openGapWhere, _count: { id: true } }),
@@ -1714,13 +1717,13 @@ router.post('/coronary-intervention/pci-risk', (req, res) => {
 });
 
 router.get('/coronary-intervention/patients', async (req: AuthenticatedRequest, res: Response) => {
-  const hospitalId = req.user?.hospitalId;
-  if (!hospitalId) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  const hospitalId = isSuperAdmin(req) ? undefined : req.user?.hospitalId;
+  if (!hospitalId && !isSuperAdmin(req)) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
   try {
     const limitParam = Number.parseInt(String(req.query.limit ?? '100'), 10);
     const limit = Number.isFinite(limitParam) ? Math.min(Math.max(limitParam, 1), 500) : 100;
     const patients = await prisma.patient.findMany({
-      where: { hospitalId, isActive: true, OR: [{ coronaryPatient: true }, { therapyGaps: { some: { module: 'CORONARY_INTERVENTION' as const, resolvedAt: null } } }] },
+      where: { ...(hospitalId && { hospitalId }), isActive: true, OR: [{ coronaryPatient: true }, { therapyGaps: { some: { module: 'CORONARY_INTERVENTION' as const, resolvedAt: null } } }] },
       orderBy: [{ riskCategory: 'desc' }, { lastAssessment: 'desc' }],
       take: limit,
       select: {
@@ -1775,17 +1778,17 @@ router.post('/coronary-intervention/ffr-decision', (req, res) => {
 // ==============================================================================
 
 router.get('/valvular-disease/dashboard', async (req: AuthenticatedRequest, res: Response) => {
-  const hospitalId = req.user?.hospitalId;
-  if (!hospitalId) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  const hospitalId = isSuperAdmin(req) ? undefined : req.user?.hospitalId;
+  if (!hospitalId && !isSuperAdmin(req)) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
   try {
     const patientWhere = {
-      hospitalId, isActive: true,
+      ...(hospitalId && { hospitalId }), isActive: true,
       OR: [
         { valvularDiseasePatient: true },
         { therapyGaps: { some: { module: 'VALVULAR_DISEASE' as const, resolvedAt: null } } },
       ],
     };
-    const openGapWhere = { hospitalId, module: 'VALVULAR_DISEASE' as const, resolvedAt: null };
+    const openGapWhere = { ...(hospitalId && { hospitalId }), module: 'VALVULAR_DISEASE' as const, resolvedAt: null };
     const [totalPatients, openGapsByType, deviceGaps, recentGaps] = await Promise.all([
       prisma.patient.count({ where: patientWhere }),
       prisma.therapyGap.groupBy({ by: ['gapType'], where: openGapWhere, _count: { id: true } }),
@@ -1858,13 +1861,13 @@ router.post('/valvular-disease/severity-classification', (req, res) => {
 });
 
 router.get('/valvular-disease/patients', async (req: AuthenticatedRequest, res: Response) => {
-  const hospitalId = req.user?.hospitalId;
-  if (!hospitalId) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  const hospitalId = isSuperAdmin(req) ? undefined : req.user?.hospitalId;
+  if (!hospitalId && !isSuperAdmin(req)) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
   try {
     const limitParam = Number.parseInt(String(req.query.limit ?? '100'), 10);
     const limit = Number.isFinite(limitParam) ? Math.min(Math.max(limitParam, 1), 500) : 100;
     const patients = await prisma.patient.findMany({
-      where: { hospitalId, isActive: true, OR: [{ valvularDiseasePatient: true }, { therapyGaps: { some: { module: 'VALVULAR_DISEASE' as const, resolvedAt: null } } }] },
+      where: { ...(hospitalId && { hospitalId }), isActive: true, OR: [{ valvularDiseasePatient: true }, { therapyGaps: { some: { module: 'VALVULAR_DISEASE' as const, resolvedAt: null } } }] },
       orderBy: [{ riskCategory: 'desc' }, { lastAssessment: 'desc' }],
       take: limit,
       select: {
@@ -1890,17 +1893,17 @@ router.get('/valvular-disease/patients', async (req: AuthenticatedRequest, res: 
 // ==============================================================================
 
 router.get('/peripheral-vascular/dashboard', async (req: AuthenticatedRequest, res: Response) => {
-  const hospitalId = req.user?.hospitalId;
-  if (!hospitalId) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  const hospitalId = isSuperAdmin(req) ? undefined : req.user?.hospitalId;
+  if (!hospitalId && !isSuperAdmin(req)) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
   try {
     const patientWhere = {
-      hospitalId, isActive: true,
+      ...(hospitalId && { hospitalId }), isActive: true,
       OR: [
         { peripheralVascularPatient: true },
         { therapyGaps: { some: { module: 'PERIPHERAL_VASCULAR' as const, resolvedAt: null } } },
       ],
     };
-    const openGapWhere = { hospitalId, module: 'PERIPHERAL_VASCULAR' as const, resolvedAt: null };
+    const openGapWhere = { ...(hospitalId && { hospitalId }), module: 'PERIPHERAL_VASCULAR' as const, resolvedAt: null };
     const [totalPatients, openGapsByType, deviceGaps, recentGaps] = await Promise.all([
       prisma.patient.count({ where: patientWhere }),
       prisma.therapyGap.groupBy({ by: ['gapType'], where: openGapWhere, _count: { id: true } }),
@@ -1998,13 +2001,13 @@ router.post('/peripheral-vascular/pad-screening', (req, res) => {
 });
 
 router.get('/peripheral-vascular/patients', async (req: AuthenticatedRequest, res: Response) => {
-  const hospitalId = req.user?.hospitalId;
-  if (!hospitalId) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  const hospitalId = isSuperAdmin(req) ? undefined : req.user?.hospitalId;
+  if (!hospitalId && !isSuperAdmin(req)) return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
   try {
     const limitParam = Number.parseInt(String(req.query.limit ?? '100'), 10);
     const limit = Number.isFinite(limitParam) ? Math.min(Math.max(limitParam, 1), 500) : 100;
     const patients = await prisma.patient.findMany({
-      where: { hospitalId, isActive: true, OR: [{ peripheralVascularPatient: true }, { therapyGaps: { some: { module: 'PERIPHERAL_VASCULAR' as const, resolvedAt: null } } }] },
+      where: { ...(hospitalId && { hospitalId }), isActive: true, OR: [{ peripheralVascularPatient: true }, { therapyGaps: { some: { module: 'PERIPHERAL_VASCULAR' as const, resolvedAt: null } } }] },
       orderBy: [{ riskCategory: 'desc' }, { lastAssessment: 'desc' }],
       take: limit,
       select: {
