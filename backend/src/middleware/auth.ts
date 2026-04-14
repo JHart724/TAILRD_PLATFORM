@@ -42,7 +42,8 @@ const authenticateToken = async (req: Request, res: Response, next: NextFunction
       const user = jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] }) as JWTPayload;
 
       // Validate session is still active (logout invalidates sessions)
-      if (!isDemoMode) {
+      // Skip for demo fallback tokens (no DB session record exists)
+      if (!isDemoMode && !user.demoMode) {
         const crypto = require('crypto');
         const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
         const session = await prisma.loginSession.findUnique({
