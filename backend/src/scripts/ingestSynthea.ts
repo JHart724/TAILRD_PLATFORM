@@ -241,7 +241,7 @@ async function processBundle(key: string): Promise<IngestStats> {
       mrn,
       firstName: name.given?.join(' ') || 'Unknown',
       lastName: name.family || 'Unknown',
-      dateOfBirth: patient.birthDate ? new Date(patient.birthDate) : new Date('1970-01-01'),
+      dateOfBirth: (patient.birthDate ? new Date(patient.birthDate) : new Date('1970-01-01')).toISOString(),
       gender: mapGender(patient.gender),
       phone,
       email,
