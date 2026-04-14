@@ -220,7 +220,7 @@ export const processPatientData = async (
       mrn,
       firstName: transformed.firstName,
       lastName: transformed.lastName,
-      dateOfBirth: transformed.dateOfBirth,
+      dateOfBirth: transformed.dateOfBirth.toISOString(),
       gender: mapGender(transformed.gender),
       phone: transformed.phone || null,
       email: transformed.email || null,

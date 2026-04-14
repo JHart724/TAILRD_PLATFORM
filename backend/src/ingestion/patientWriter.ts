@@ -40,7 +40,7 @@ export async function writePatients(
         hospitalId,
         firstName: 'Patient',
         lastName: patientId,
-        dateOfBirth: estimatedDob,
+        dateOfBirth: estimatedDob.toISOString(),
         gender: mapGender(row.data.sex as string),
         riskCategory: 'MODERATE' as const,
         lastAssessment: encounterDateStr ? new Date(encounterDateStr) : null,

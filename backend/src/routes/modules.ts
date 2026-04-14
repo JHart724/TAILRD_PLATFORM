@@ -336,7 +336,7 @@ router.get('/heart-failure/patients', async (req: AuthenticatedRequest, res: Res
 
     const now = Date.now();
     const worklist = patients.map(p => {
-      const ageMs = now - p.dateOfBirth.getTime();
+      const ageMs = now - new Date(p.dateOfBirth).getTime();
       const age = Math.floor(ageMs / (365.25 * 24 * 60 * 60 * 1000));
       const careGaps = p.therapyGaps.map(g =>
         g.medication ? `${g.medication} gap` : g.device ? `${g.device} eval` : g.currentStatus,
@@ -868,7 +868,7 @@ router.get('/electrophysiology/patients', async (req: AuthenticatedRequest, res:
 
     const now = Date.now();
     const worklist = patients.map(p => {
-      const ageMs = now - p.dateOfBirth.getTime();
+      const ageMs = now - new Date(p.dateOfBirth).getTime();
       const age = Math.floor(ageMs / (365.25 * 24 * 60 * 60 * 1000));
       const careGaps = p.therapyGaps.map(g =>
         g.medication ? `${g.medication} gap` : g.device ? `${g.device} eval` : g.currentStatus,
@@ -1322,7 +1322,7 @@ router.get('/structural-heart/patients', async (req: AuthenticatedRequest, res: 
 
     const now = Date.now();
     const worklist = patients.map(p => {
-      const ageMs = now - p.dateOfBirth.getTime();
+      const ageMs = now - new Date(p.dateOfBirth).getTime();
       const age = Math.floor(ageMs / (365.25 * 24 * 60 * 60 * 1000));
       const careGaps = p.therapyGaps.map(g =>
         g.medication ? `${g.medication} gap` : g.device ? `${g.device} eval` : g.currentStatus,
@@ -1734,7 +1734,7 @@ router.get('/coronary-intervention/patients', async (req: AuthenticatedRequest, 
     });
     const now = Date.now();
     const worklist = patients.map(p => {
-      const age = Math.floor((now - p.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+      const age = Math.floor((now - new Date(p.dateOfBirth).getTime()) / (365.25 * 24 * 60 * 60 * 1000));
       return { id: p.id, mrn: p.mrn, firstName: p.firstName, lastName: p.lastName, age, gender: p.gender, riskCategory: p.riskCategory, riskScore: p.riskScore, gapCount: p.therapyGaps.length, careGaps: p.therapyGaps.map(g => g.medication ? `${g.medication} gap` : g.device ? `${g.device} eval` : g.currentStatus), lastAssessment: p.lastAssessment?.toISOString() ?? null };
     });
     res.json({ success: true, data: worklist, count: worklist.length, source: 'database', timestamp: new Date().toISOString() } as APIResponse);
@@ -1878,7 +1878,7 @@ router.get('/valvular-disease/patients', async (req: AuthenticatedRequest, res: 
     });
     const now = Date.now();
     const worklist = patients.map(p => {
-      const age = Math.floor((now - p.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+      const age = Math.floor((now - new Date(p.dateOfBirth).getTime()) / (365.25 * 24 * 60 * 60 * 1000));
       return { id: p.id, mrn: p.mrn, firstName: p.firstName, lastName: p.lastName, age, gender: p.gender, riskCategory: p.riskCategory, riskScore: p.riskScore, gapCount: p.therapyGaps.length, careGaps: p.therapyGaps.map(g => g.medication ? `${g.medication} gap` : g.device ? `${g.device} eval` : g.currentStatus), lastAssessment: p.lastAssessment?.toISOString() ?? null };
     });
     res.json({ success: true, data: worklist, count: worklist.length, source: 'database', timestamp: new Date().toISOString() } as APIResponse);
@@ -2018,7 +2018,7 @@ router.get('/peripheral-vascular/patients', async (req: AuthenticatedRequest, re
     });
     const now = Date.now();
     const worklist = patients.map(p => {
-      const age = Math.floor((now - p.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+      const age = Math.floor((now - new Date(p.dateOfBirth).getTime()) / (365.25 * 24 * 60 * 60 * 1000));
       return { id: p.id, mrn: p.mrn, firstName: p.firstName, lastName: p.lastName, age, gender: p.gender, riskCategory: p.riskCategory, riskScore: p.riskScore, gapCount: p.therapyGaps.length, careGaps: p.therapyGaps.map(g => g.medication ? `${g.medication} gap` : g.device ? `${g.device} eval` : g.currentStatus), lastAssessment: p.lastAssessment?.toISOString() ?? null };
     });
     res.json({ success: true, data: worklist, count: worklist.length, source: 'database', timestamp: new Date().toISOString() } as APIResponse);

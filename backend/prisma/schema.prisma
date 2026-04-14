@@ -202,7 +202,7 @@ model Patient {
   mrn         String // Medical Record Number from EHR
   firstName   String
   lastName    String
-  dateOfBirth DateTime
+  dateOfBirth String   // PHI-encrypted at rest (HIPAA 164.312(a)(2)(iv)); middleware converts to/from Date on read
   gender      Gender
   race        String?   // FHIR US Core Race Extension (OMB categories: white, black, asian, aian, nhpi, other, unknown)
   ethnicity   String?   // FHIR US Core Ethnicity Extension (hispanic, non-hispanic, unknown)
