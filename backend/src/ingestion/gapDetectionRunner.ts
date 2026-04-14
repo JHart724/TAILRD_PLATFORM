@@ -97,7 +97,7 @@ export async function runGapDetection(
       }
       const medCodes = patient.medications.map((m: any) => m.rxNormCode).filter(Boolean) as string[];
       const age = Math.floor(
-        (Date.now() - patient.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000),
+        (Date.now() - new Date(patient.dateOfBirth).getTime()) / (365.25 * 24 * 60 * 60 * 1000),
       );
 
       try {
