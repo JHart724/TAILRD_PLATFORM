@@ -190,21 +190,47 @@ The platform audit lives at `docs/PLATFORM_AUDIT_2026_04.md`.
 
 ## 7. Gstack Skills
 
+**Browser rule:** Use the `/browse` skill from gstack for ALL web browsing. Never use `mcp__claude-in-chrome__*` tools.
+
 Available skills for specialized workflows:
 
 | Skill | When to use |
 |-------|-------------|
+| `/office-hours` | Product ideas, brainstorming, YC-style forcing questions |
+| `/plan-ceo-review` | Product strategy and scope decisions |
+| `/plan-eng-review` | Before starting any major feature |
+| `/plan-design-review` | Designer's eye plan review |
+| `/plan-devex-review` | Developer experience plan review |
+| `/design-consultation` | Design system, brand, aesthetic direction |
+| `/design-shotgun` | Generate multiple design variants for comparison |
+| `/design-html` | Production-quality HTML/CSS from approved designs |
 | `/review` | After any significant change, before PRs |
 | `/ship` | Deploy, push, create PR |
-| `/plan-eng-review` | Before starting any major feature |
-| `/plan-ceo-review` | Product strategy and scope decisions |
-| `/qa` | Test the site, find bugs |
-| `/investigate` | Debug errors, root cause analysis |
-| `/browse` | Visual QA, site dogfooding |
-| `/retro` | Weekly engineering retrospective |
+| `/land-and-deploy` | Merge PR, wait for CI, verify production |
+| `/canary` | Post-deploy canary monitoring |
+| `/benchmark` | Performance regression detection |
+| `/browse` | Visual QA, site dogfooding, headless browser |
+| `/connect-chrome` | Launch AI-controlled visible Chromium |
+| `/qa` | Test the site, find and fix bugs |
+| `/qa-only` | Report-only QA (no fixes) |
 | `/design-review` | Visual audit, design polish |
-| `/health` | Code quality dashboard |
+| `/setup-browser-cookies` | Import cookies for authenticated testing |
+| `/setup-deploy` | Configure deployment settings |
+| `/retro` | Weekly engineering retrospective |
+| `/investigate` | Debug errors, root cause analysis |
+| `/document-release` | Post-ship documentation update |
+| `/codex` | OpenAI Codex review, challenge, or consult |
+| `/cso` | Security audit (OWASP, STRIDE, secrets, supply chain) |
+| `/autoplan` | Auto-review pipeline (CEO + design + eng + DX) |
+| `/devex-review` | Live developer experience audit |
+| `/careful` | Safety guardrails for destructive commands |
+| `/freeze` | Restrict edits to a specific directory |
+| `/guard` | Full safety mode (careful + freeze) |
+| `/unfreeze` | Clear freeze boundary |
 | `/checkpoint` | Save and resume working state |
+| `/health` | Code quality dashboard |
+| `/learn` | Manage project learnings |
+| `/gstack-upgrade` | Upgrade gstack to latest version |
 
 If gstack skills are not working, run:
 ```bash
@@ -230,6 +256,10 @@ Key routing rules:
 - Architecture review -> invoke plan-eng-review
 - Save progress, checkpoint, resume -> invoke checkpoint
 - Code quality, health check -> invoke health
+- Security audit, secrets, supply chain -> invoke cso
+- Post-deploy monitoring -> invoke canary
+- Performance benchmarks -> invoke benchmark
+- Web browsing (any) -> invoke browse (NEVER mcp__claude-in-chrome__*)
 
 ## 8. Clinical Context
 
