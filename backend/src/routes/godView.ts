@@ -27,9 +27,9 @@ const router = Router();
 // All GOD view endpoints require authentication and super admin role
 router.use(authenticateToken);
 router.use((req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-  if (req.user?.role !== 'super-admin') {
+  if (req.user?.role !== 'SUPER_ADMIN') {
     return res.status(403).json({
-      error: 'Forbidden: super-admin role required for GOD view access'
+      error: 'Forbidden: SUPER_ADMIN role required for GOD view access'
     });
   }
   // Audit every GOD view access (HIPAA: highest-privilege access must be logged)
