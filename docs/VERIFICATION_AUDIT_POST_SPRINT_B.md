@@ -704,7 +704,7 @@ JWT verification code:
 }
 ```
 
-**Result: PASS** �� SMART configuration endpoint returns authorization_endpoint, token_endpoint, PKCE S256 support, and required capabilities.
+**Result: PASS** — SMART configuration endpoint returns authorization_endpoint, token_endpoint, PKCE S256 support, and required capabilities.
 
 ### TEST 5.4: Redis Rate Limiting
 
