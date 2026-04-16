@@ -2,7 +2,6 @@ import request from 'supertest';
 import prisma from '../../src/lib/prisma';
 import app from '../../src/server';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
 
 // ─────────────────────────────────────────────────────────────
 // TEST FIXTURES
@@ -633,7 +632,7 @@ describe('RATE LIMITING REGRESSION', () => {
         .send({ email: 'test@test.com', password: 'wrong' })
     );
     const responses = await Promise.all(requests);
-    const rateLimited = responses.some(r => r.status === 429);
+    const rateLimited = responses.some((r: request.Response) => r.status === 429);
     expect(rateLimited).toBe(true);
   });
 

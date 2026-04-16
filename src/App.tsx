@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, lazy, Suspense, useEffect } from "react";
-import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import CountUp from 'react-countup';
 import TailrdLogo from './components/TailrdLogo';
 import { Heart, Activity, Zap, Stethoscope, GitBranch, CircuitBoard, FlaskConical, DollarSign, Target, Users, AlertTriangle, Brain, BarChart3, ArrowRight, ArrowLeft, TrendingUp } from 'lucide-react';
@@ -12,7 +12,7 @@ import { initializeTheme } from './theme';
 import AppShell from './design-system/AppShell';
 
 
-// Custom animations removed � provided by Tailwind config
+// Custom animations removed · provided by Tailwind config
 
 // Lazy load all modules
 const Login = lazy(() => import("./components/Login"));
@@ -353,7 +353,7 @@ const PatientQueue: React.FC<PatientQueueProps> = ({ title, patients, variant = 
  <div key={patient.id} className={`flex items-center justify-between p-4 ${getVariantStyle(variant)} rounded-xl border transition-all hover:shadow-md`}>
  <div className="flex-1">
  <div className="font-semibold text-titanium-900">{patient.name}</div>
- <div className="text-sm text-titanium-600">{patient.age}y � {patient.id} � {patient.physician}</div>
+ <div className="text-sm text-titanium-600">{patient.age}y · {patient.id} · {patient.physician}</div>
  </div>
  <div className="flex items-center gap-3">
  <div className="text-xs px-3 py-1.5 rounded-full bg-white text-titanium-700 font-medium">{patient.status}</div>
@@ -474,7 +474,7 @@ function MainDashboard(): JSX.Element {
  
  {/* Subtitle */}
  <p className="text-sm text-white mt-6" style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)' }}>
- Population � Panel � Patient Analytics
+ Population · Panel · Patient Analytics
  </p>
  </div>
  </div>
@@ -506,7 +506,7 @@ function MainDashboard(): JSX.Element {
  </div>
  <div className="text-left">
  <div className="text-2xl font-medium font-display">Cardiovascular Service Line</div>
- <div className="text-sm opacity-80 font-light">Population � Panel � Patient - PCP to Specialty Care</div>
+ <div className="text-sm opacity-80 font-light">Population · Panel · Patient - PCP to Specialty Care</div>
  </div>
  <Icons.ArrowRight />
  </div>
@@ -520,7 +520,7 @@ function MainDashboard(): JSX.Element {
  {MODULES.filter(m => m.id !== 'research').map((module) => (<ModuleTile key={module.id} module={module} onClick={() => openModule(module.id)} />))}
  </div>
 
- {/* Clinical Research Assist � separate tile matching Service Line style */}
+ {/* Clinical Research Assist · separate tile matching Service Line style */}
  <div className="flex justify-center mt-8">
  <button
  onClick={() => openModule('research' as ModuleId)}
@@ -535,7 +535,7 @@ function MainDashboard(): JSX.Element {
  </div>
  <div className="text-left">
  <div className="text-2xl font-medium font-display flex items-center gap-3">Clinical Research Assist <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#F0F7F4] text-[#2D6147]">Beta</span></div>
- <div className="text-sm opacity-80 font-light">Registry pre-population � Trial eligibility screening � Research workflow automation</div>
+ <div className="text-sm opacity-80 font-light">Registry pre-population · Trial eligibility screening · Research workflow automation</div>
  </div>
  <Icons.ArrowRight />
  </div>
@@ -660,7 +660,7 @@ export default function App(): JSX.Element {
  
  {/* Subtitle */}
  <p className="text-sm text-titanium-600 mt-6">
- Population � Panel � Patient Analytics
+ Population · Panel · Patient Analytics
  </p>
  </div>
  </div>
@@ -689,6 +689,14 @@ export default function App(): JSX.Element {
      <AppShell><SuperAdminDashboard /></AppShell>
    </ProtectedRoute>
  } />
+
+ {/* Module route aliases — redirect verbose paths to canonical short slugs */}
+ <Route path="/heart-failure/*" element={<Navigate to="/hf" replace />} />
+ <Route path="/electrophysiology/*" element={<Navigate to="/ep" replace />} />
+ <Route path="/structural-heart/*" element={<Navigate to="/structural" replace />} />
+ <Route path="/coronary-intervention/*" element={<Navigate to="/coronary" replace />} />
+ <Route path="/valvular-disease/*" element={<Navigate to="/valvular" replace />} />
+ <Route path="/peripheral-vascular/*" element={<Navigate to="/peripheral" replace />} />
 
  {/* Protected routes */}
  <Route path="/dashboard" element={
