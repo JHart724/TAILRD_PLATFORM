@@ -1,10 +1,9 @@
 name: Build & Deploy to ECS
 
 on:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:
   push:
     branches: [main]
-    paths: ['backend/**']
 
 env:
   AWS_REGION: us-east-1
@@ -92,3 +91,26 @@ jobs:
           done
           echo "ERROR: Deploy did not stabilize in 5 minutes"
           exit 1
+
+  deploy-frontend:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Build frontend
+        run: CI=false npm run build
+        env:
+          REACT_APP_USE_REAL_API: 'true'
+          REACT_APP_API_URL: https://api.tailrd-heart.com/api
+          REACT_APP_DEMO_MODE: 'false'
+
+      - name: Deploy to Netlify
+        run: npx netlify-cli@latest deploy --prod --dir=build --site ${{ secrets.NETLIFY_SITE_ID }} --auth ${{ secrets.NETLIFY_AUTH_TOKEN }}
