@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useModuleDashboard } from '../../../hooks/useModuleDashboard';
 import { DollarSign, Users, TrendingUp, Target, ChevronRight, Zap, Search } from 'lucide-react';
 import BaseExecutiveView from '../../../components/shared/BaseExecutiveView';
 import KPICard from '../../../components/shared/KPICard';
@@ -29,6 +30,7 @@ import { Heart } from 'lucide-react';
 const electrophysiologyData = modulesClinicalData.electrophysiology;
 
 const ElectrophysiologyExecutiveView: React.FC = () => {
+  const { data: dashboard, loading: dashboardLoading, error: dashboardError } = useModuleDashboard('electrophysiology');
   const [selectedWaterfallCategory, setSelectedWaterfallCategory] = useState<'Ablation Therapy' | 'Devices' | 'Phenotypes' | '340B' | null>(null);
   const [selectedMonth, setSelectedMonth] = useState<any>(null);
   const [selectedBenchmark, setSelectedBenchmark] = useState<any>(null);
@@ -478,6 +480,8 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 	<div className="min-h-screen p-6 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #EAEFF4 0%, #F2F5F8 50%, #ECF0F4 100%)' }}>
 
 	<div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
+	{dashboardError && <div className="bg-crimson-50 border border-crimson-200 text-crimson-800 px-4 py-3 rounded-lg">Dashboard: {dashboardError}</div>}
+	{dashboardLoading && <div className="text-titanium-500 text-sm animate-pulse">Loading live data...</div>}
 	{/* Export Button - Clean Integration */}
 	<div className="flex justify-end mb-6">
 	<ExportButton
@@ -490,7 +494,7 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 
 		{/* Clinical Gap Intelligence */}
 	<GapIntelligenceCard data={{
-	  totalGaps: 20,
+	  totalGaps: dashboard?.data?.summary?.totalOpenGaps ?? 20,
 	  categories: [
 	    { name: 'Therapy', patients: 680, color: '#2C4A60' },
 	    { name: 'Safety', patients: 290, color: '#9B2438' },

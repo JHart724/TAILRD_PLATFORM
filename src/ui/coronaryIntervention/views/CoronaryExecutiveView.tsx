@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useModuleDashboard } from '../../../hooks/useModuleDashboard';
 import { DollarSign, Users, TrendingUp, Target, Activity, Heart, Zap, Search } from 'lucide-react';
 import BaseExecutiveView from '../../../components/shared/BaseExecutiveView';
 import { coronaryInterventionConfig } from '../config/executiveConfig';
@@ -18,6 +19,7 @@ import { ExportData } from '../../../utils/dataExport';
 import { getOrdinalSuffix, formatMillions, toFixed, roundTo } from '../../../utils/formatters';
 
 const CoronaryExecutiveView: React.FC = () => {
+  const { data: dashboard, loading: dashboardLoading, error: dashboardError } = useModuleDashboard('coronary-intervention');
   const [selectedMonth, setSelectedMonth] = useState<any>(null);
   const [selectedBenchmark, setSelectedBenchmark] = useState<any>(null);
   const [selectedDRG, setSelectedDRG] = useState<any>(null);
@@ -178,6 +180,8 @@ const CoronaryExecutiveView: React.FC = () => {
  <div className="min-h-screen p-6 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #EAEFF4 0%, #F2F5F8 50%, #ECF0F4 100%)' }}>
 
  <div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
+ {dashboardError && <div className="bg-crimson-50 border border-crimson-200 text-crimson-800 px-4 py-3 rounded-lg">Dashboard: {dashboardError}</div>}
+ {dashboardLoading && <div className="text-titanium-500 text-sm animate-pulse">Loading live data...</div>}
  <div className="flex justify-end mb-6">
  <ExportButton
  data={generateExportData()}
@@ -227,7 +231,7 @@ const CoronaryExecutiveView: React.FC = () => {
 
  {/* Clinical Gap Intelligence */}
  <GapIntelligenceCard data={{
-   totalGaps: 26,
+   totalGaps: dashboard?.data?.summary?.totalOpenGaps ?? 26,
    categories: [
      { name: 'Therapy', patients: 900, color: '#2C4A60' },
      { name: 'Safety', patients: 340, color: '#9B2438' },
@@ -302,7 +306,7 @@ const CoronaryExecutiveView: React.FC = () => {
  <div className="p-2 rounded-lg" style={{ background: '#B8C9D9' }}><Users className="w-6 h-6" style={{ color: '#2C4A60' }} /></div>
  <span className="text-sm font-medium text-titanium-600">Patient Population</span>
  </div>
- <div className="text-3xl font-bold" style={{ color: '#2C4A60' }}>{coronaryInterventionConfig.kpiData.totalPatients}</div>
+ <div className="text-3xl font-bold" style={{ color: '#2C4A60' }}>{dashboard?.data?.summary?.totalPatients?.toLocaleString() ?? coronaryInterventionConfig.kpiData.totalPatients}</div>
  <div className="text-sm text-titanium-500 mt-1">{coronaryInterventionConfig.kpiData.totalPatientsSub}</div>
  </div>
  {/* Revenue Opportunity → Metallic Gold */}
