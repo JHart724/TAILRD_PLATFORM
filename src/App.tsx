@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, lazy, Suspense, useEffect } from "react";
-import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import CountUp from 'react-countup';
 import TailrdLogo from './components/TailrdLogo';
 import { Heart, Activity, Zap, Stethoscope, GitBranch, CircuitBoard, FlaskConical, DollarSign, Target, Users, AlertTriangle, Brain, BarChart3, ArrowRight, ArrowLeft, TrendingUp } from 'lucide-react';
@@ -689,6 +689,14 @@ export default function App(): JSX.Element {
      <AppShell><SuperAdminDashboard /></AppShell>
    </ProtectedRoute>
  } />
+
+ {/* Module route aliases — redirect verbose paths to canonical short slugs */}
+ <Route path="/heart-failure/*" element={<Navigate to="/hf" replace />} />
+ <Route path="/electrophysiology/*" element={<Navigate to="/ep" replace />} />
+ <Route path="/structural-heart/*" element={<Navigate to="/structural" replace />} />
+ <Route path="/coronary-intervention/*" element={<Navigate to="/coronary" replace />} />
+ <Route path="/valvular-disease/*" element={<Navigate to="/valvular" replace />} />
+ <Route path="/peripheral-vascular/*" element={<Navigate to="/peripheral" replace />} />
 
  {/* Protected routes */}
  <Route path="/dashboard" element={
