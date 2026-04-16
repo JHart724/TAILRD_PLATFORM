@@ -49,6 +49,8 @@ export async function runGapDetection(
 
   logger.info('Starting batch gap detection', { hospitalId, totalPatients });
 
+  // Batch cursor-pagination: loop until patients.length === 0 (handled below).
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const patients = await prisma.patient.findMany({
       where: { hospitalId },
