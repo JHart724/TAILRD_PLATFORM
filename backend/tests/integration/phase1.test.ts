@@ -25,7 +25,8 @@ async function apiFetch(
     token?: string;
     headers?: Record<string, string>;
   } = {},
-) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<{ status: number; data: any; ok: boolean }> {
   const { method = 'GET', body, token, headers = {} } = options;
   const reqHeaders: Record<string, string> = {
     'Content-Type': 'application/json',
