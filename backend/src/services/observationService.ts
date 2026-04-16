@@ -295,26 +295,33 @@ export const processObservationData = async (
     const alerts = generateClinicalAlerts([transformed]);
 
     // Persist the observation
-    const observation = await prisma.observation.create({
-      data: {
-        patientId,
-        hospitalId,
-        encounterId: encounterId || null,
-        observationType: transformed.code,
-        observationName: transformed.display,
-        category: mapCategory(transformed.category),
-        valueNumeric: typeof transformed.value === 'number' ? transformed.value : null,
-        valueText: typeof transformed.value === 'string' ? transformed.value : null,
-        valueBoolean: typeof transformed.value === 'boolean' ? transformed.value : null,
-        unit: transformed.unit || null,
-        referenceRangeLow: transformed.referenceRange?.low ?? null,
-        referenceRangeHigh: transformed.referenceRange?.high ?? null,
-        isAbnormal: transformed.isAbnormal,
-        observedDateTime: transformed.effectiveDate,
-        resultDateTime: transformed.issuedDate || null,
-        fhirObservationId: fhirObservation.id || null,
-      },
-    });
+    const fhirId = fhirObservation.id || null;
+    const observationData = {
+      patientId,
+      hospitalId,
+      encounterId: encounterId || null,
+      observationType: transformed.code,
+      observationName: transformed.display,
+      category: mapCategory(transformed.category),
+      valueNumeric: typeof transformed.value === 'number' ? transformed.value : null,
+      valueText: typeof transformed.value === 'string' ? transformed.value : null,
+      valueBoolean: typeof transformed.value === 'boolean' ? transformed.value : null,
+      unit: transformed.unit || null,
+      referenceRangeLow: transformed.referenceRange?.low ?? null,
+      referenceRangeHigh: transformed.referenceRange?.high ?? null,
+      isAbnormal: transformed.isAbnormal,
+      observedDateTime: transformed.effectiveDate,
+      resultDateTime: transformed.issuedDate || null,
+      fhirObservationId: fhirId,
+    };
+
+    const observation = fhirId
+      ? await prisma.observation.upsert({
+          where: { fhirObservationId: fhirId },
+          create: observationData,
+          update: {},
+        })
+      : await prisma.observation.create({ data: observationData });
 
     // Persist generated alerts (batched to avoid N+1)
     if (alerts.length > 0) {
