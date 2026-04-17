@@ -1,5 +1,5 @@
 import { FHIRObservation, FHIRPatient, Alert, Recommendation } from '../types';
-import { ObservationCategory } from '@prisma/client';
+import { ObservationCategory, Prisma } from '@prisma/client';
 import prisma from '../lib/prisma';
 import { createLogger } from 'winston';
 
@@ -359,4 +359,83 @@ export const processObservationData = async (
     });
     throw error;
   }
+};
+
+// ── Batch entry point for bulk ingestion ──────────────────────────────────
+// Transforms and persists a whole patient bundle's observations in one
+// createMany call. Uses skipDuplicates on fhirObservationId so resume
+// / restart is idempotent. Alerts are batched too.
+
+export interface BatchObservationItem {
+  fhirObservation: FHIRObservation;
+  patientId: string;
+  hospitalId: string;
+  encounterId?: string;
+}
+
+export const processObservationsBatch = async (
+  items: BatchObservationItem[],
+  patient: FHIRPatient | undefined,
+): Promise<{ inserted: number; alertsInserted: number; skipped: number }> => {
+  if (items.length === 0) return { inserted: 0, alertsInserted: 0, skipped: 0 };
+
+  const observationData: Prisma.ObservationCreateManyInput[] = [];
+  const alertsToCreate: Prisma.AlertCreateManyInput[] = [];
+  let skipped = 0;
+
+  for (const item of items) {
+    try {
+      const transformed = transformFHIRObservation(item.fhirObservation, patient);
+      observationData.push({
+        patientId: item.patientId,
+        hospitalId: item.hospitalId,
+        encounterId: item.encounterId || null,
+        observationType: transformed.code,
+        observationName: transformed.display,
+        category: mapCategory(transformed.category),
+        valueNumeric: typeof transformed.value === 'number' ? transformed.value : null,
+        valueText: typeof transformed.value === 'string' ? transformed.value : null,
+        valueBoolean: typeof transformed.value === 'boolean' ? transformed.value : null,
+        unit: transformed.unit || null,
+        referenceRangeLow: transformed.referenceRange?.low ?? null,
+        referenceRangeHigh: transformed.referenceRange?.high ?? null,
+        isAbnormal: transformed.isAbnormal,
+        observedDateTime: transformed.effectiveDate,
+        resultDateTime: transformed.issuedDate || null,
+        fhirObservationId: item.fhirObservation.id || null,
+      });
+
+      if (transformed.isAbnormal && transformed.clinicalSignificance === 'high') {
+        alertsToCreate.push({
+          patientId: item.patientId,
+          hospitalId: item.hospitalId,
+          alertType: 'CLINICAL',
+          moduleType: 'HEART_FAILURE',
+          severity: 'HIGH',
+          title: `Abnormal: ${transformed.display}`,
+          message: `Critical abnormal result: ${transformed.display} = ${transformed.value} ${transformed.unit || ''}`,
+          actionRequired: true,
+        });
+      }
+    } catch (err: any) {
+      skipped++;
+    }
+  }
+
+  let inserted = 0;
+  if (observationData.length > 0) {
+    const res = await prisma.observation.createMany({
+      data: observationData,
+      skipDuplicates: true,
+    });
+    inserted = res.count;
+  }
+
+  let alertsInserted = 0;
+  if (alertsToCreate.length > 0) {
+    const res = await prisma.alert.createMany({ data: alertsToCreate });
+    alertsInserted = res.count;
+  }
+
+  return { inserted, alertsInserted, skipped };
 };
