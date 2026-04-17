@@ -15,25 +15,28 @@
  * interrupted runs can resume without reprocessing.
  */
 
-import * as fs from "fs";
 import * as path from "path";
-import { S3Client, ListObjectsV2Command, GetObjectCommand } from "@aws-sdk/client-s3";
+import * as fs from "fs";
+import { S3Client, ListObjectsV2Command, GetObjectCommand, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import * as dotenv from "dotenv";
 import prisma from "../src/lib/prisma";
 import { processPatientData } from "../src/services/patientService";
-import { processObservationData } from "../src/services/observationService";
-import { processEncounterData } from "../src/services/encounterService";
+import { processObservationsBatch, BatchObservationItem } from "../src/services/observationService";
+import { processEncountersBatch } from "../src/services/encounterService";
 import { FHIRPatient, FHIREncounter, FHIRObservation } from "../src/types";
 
 dotenv.config();
 
 const BUCKET = "tailrd-cardiovascular-datasets-863518424332";
 const PREFIX = "synthea/nyc-population-2026/fhir/";
-const CURSOR_FILE = path.join(__dirname, ".synthea-cursor");
 
 // Default hospital for Synthea ingestion. Must exist in DB.
 // Create via seed or manually before running.
 const SYNTHEA_HOSPITAL_ID = process.env.SYNTHEA_HOSPITAL_ID || "synthea-nyc-demo";
+
+// Cursor persisted in S3 so restarts resume from last processed bundle.
+// Ephemeral container disk would lose progress on every Fargate task restart.
+const CURSOR_KEY = `ingest-cursors/${SYNTHEA_HOSPITAL_ID}.txt`;
 
 // Use default credential chain — env vars locally, task IAM role in ECS Fargate.
 // Explicit credentials would be undefined in Fargate and break the SDK.
@@ -77,22 +80,38 @@ async function getS3File(key: string): Promise<string> {
   return Buffer.concat(chunks).toString("utf-8");
 }
 
-// ── Cursor for resumability ───────────────────────────────────────────────────
+// ── Cursor for resumability (S3-backed) ───────────────────────────────────────
+// Key layout: s3://${BUCKET}/ingest-cursors/${SYNTHEA_HOSPITAL_ID}.txt
+// Value: the last processed S3 key (one line of text).
 
-function loadCursor(): string | null {
+async function loadCursor(): Promise<string | null> {
   try {
-    return fs.readFileSync(CURSOR_FILE, "utf-8").trim() || null;
-  } catch {
-    return null;
+    const res = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: CURSOR_KEY }));
+    const chunks: Buffer[] = [];
+    for await (const chunk of res.Body as AsyncIterable<Buffer>) chunks.push(chunk);
+    const value = Buffer.concat(chunks).toString("utf-8").trim();
+    return value || null;
+  } catch (err: any) {
+    if (err?.name === "NoSuchKey" || err?.$metadata?.httpStatusCode === 404) return null;
+    throw err;
   }
 }
 
-function saveCursor(key: string): void {
-  fs.writeFileSync(CURSOR_FILE, key, "utf-8");
+async function saveCursor(key: string): Promise<void> {
+  await s3.send(new PutObjectCommand({
+    Bucket: BUCKET,
+    Key: CURSOR_KEY,
+    Body: key,
+    ContentType: "text/plain",
+  }));
 }
 
-function clearCursor(): void {
-  try { fs.unlinkSync(CURSOR_FILE); } catch { /* no cursor to clear */ }
+async function clearCursor(): Promise<void> {
+  try {
+    await s3.send(new DeleteObjectCommand({ Bucket: BUCKET, Key: CURSOR_KEY }));
+  } catch {
+    /* cursor may not exist — ignore */
+  }
 }
 
 // ── FHIR Bundle Processing ───────────────────────────────────────────────────
@@ -179,37 +198,30 @@ async function processFHIRBundle(
 
   if (!patientId) return; // No patient persisted — skip dependents
 
-  // 2. Persist encounters
-  const encounterIdMap = new Map<string, string>(); // fhirId -> internalId
-  for (const encounter of encounters) {
-    try {
-      const result = await processEncounterData(
-        encounter,
-        patients[0],
-        "SyntheaImport",
-        hospitalId,
-        patientId,
-      );
-      if (encounter.id) encounterIdMap.set(encounter.id, result.encounterId);
-      stats.encounters++;
-    } catch (err: any) {
-      stats.errors++;
-    }
+  // 2. Persist encounters — one createMany per bundle, returns fhirId -> internalId map
+  let encounterIdMap = new Map<string, string>();
+  try {
+    const encResult = await processEncountersBatch(encounters, patients[0], hospitalId, patientId);
+    encounterIdMap = encResult.fhirIdToInternalId;
+    stats.encounters += encResult.inserted;
+    stats.errors += encResult.skipped;
+  } catch (err: any) {
+    stats.errors += encounters.length;
   }
 
-  // 3. Persist observations (link to encounter if possible)
-  for (const obs of observations) {
-    try {
-      // Synthea links observations to encounters via encounter.reference
-      const encounterRef = (obs as any).encounter?.reference;
-      const fhirEncounterId = encounterRef?.replace(/^urn:uuid:/, "")?.replace(/^Encounter\//, "");
-      const encounterId = fhirEncounterId ? encounterIdMap.get(fhirEncounterId) : undefined;
-
-      await processObservationData(obs, patients[0], hospitalId, patientId, encounterId);
-      stats.observations++;
-    } catch (err: any) {
-      stats.errors++;
-    }
+  // 3. Persist observations — one createMany per bundle, linked to encounters via the map
+  const obsItems: BatchObservationItem[] = observations.map((obs) => {
+    const encounterRef = (obs as any).encounter?.reference;
+    const fhirEncounterId = encounterRef?.replace(/^urn:uuid:/, "")?.replace(/^Encounter\//, "");
+    const encounterId = fhirEncounterId ? encounterIdMap.get(fhirEncounterId) : undefined;
+    return { fhirObservation: obs, patientId: patientId!, hospitalId, encounterId };
+  });
+  try {
+    const obsResult = await processObservationsBatch(obsItems, patients[0]);
+    stats.observations += obsResult.inserted;
+    stats.errors += obsResult.skipped;
+  } catch (err: any) {
+    stats.errors += obsItems.length;
   }
 
   // 4. Persist conditions (ICD-10 codes critical for gap detection)
@@ -397,8 +409,8 @@ async function main() {
     const allKeys = await listS3Files();
     console.log(`Found ${allKeys.length} FHIR bundles`);
 
-    // Resume from cursor if available
-    const cursor = loadCursor();
+    // Resume from cursor if available (stored in S3)
+    const cursor = await loadCursor();
     let keys = allKeys;
     if (cursor) {
       const cursorIdx = allKeys.indexOf(cursor);
@@ -425,7 +437,6 @@ async function main() {
           const content = await getS3File(key);
           const bundle: FHIRBundle = JSON.parse(content);
           await processFHIRBundle(bundle, SYNTHEA_HOSPITAL_ID, stats);
-          saveCursor(key);
         } catch (err: any) {
           console.error(`Failed: ${key}`, err.message);
           stats.errors++;
@@ -435,17 +446,24 @@ async function main() {
       await pLimit(tasks, concurrency);
 
       const total = batchStart + batch.length;
-      if (total % 500 === 0 || total === keys.length) {
+      // Persist cursor at the end of each batch rather than per-file so we
+      // don't hammer S3 PutObject. All bundles in the batch are committed to DB
+      // by now (pLimit awaited above), so the last key is safe to record.
+      await saveCursor(batch[batch.length - 1]);
+
+      if (total % 100 === 0 || total === keys.length) {
+        const heapMB = Math.round(process.memoryUsage().heapUsed / 1024 / 1024);
+        const rssMB = Math.round(process.memoryUsage().rss / 1024 / 1024);
         const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
         console.log(
           `Progress: ${total}/${keys.length} bundles | ` +
-          `${stats.patients} patients, ${stats.encounters} encounters, ${stats.observations} observations | ` +
-          `${stats.errors} errors | ${elapsed}s elapsed`
+          `${stats.patients}p ${stats.encounters}e ${stats.observations}o ${stats.errors}err | ` +
+          `heap ${heapMB}MB rss ${rssMB}MB | ${elapsed}s elapsed`
         );
       }
     }
 
-    clearCursor();
+    await clearCursor();
   } else {
     const dir = process.argv[2] || path.join(__dirname, "../../../synthea/output/fhir");
     console.log(`Mode: Local`);

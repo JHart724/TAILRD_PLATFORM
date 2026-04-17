@@ -1,5 +1,5 @@
 import { FHIREncounter, FHIRPatient } from '../types';
-import { EncounterType, EncounterStatus } from '@prisma/client';
+import { EncounterType, EncounterStatus, Prisma } from '@prisma/client';
 import prisma from '../lib/prisma';
 import { createLogger } from 'winston';
 
@@ -384,4 +384,85 @@ export const processEncounterData = async (
     });
     throw error;
   }
+};
+
+// ── Batch entry point for bulk ingestion ──────────────────────────────────
+// Persists a whole patient bundle's encounters in one createMany call.
+// Returns an fhirId -> internalId map so downstream observation batching
+// can link observations to the correct encounter row. skipDuplicates
+// handles the fhirEncounterId unique constraint case on resume.
+
+export interface BatchEncounterResult {
+  fhirIdToInternalId: Map<string, string>;
+  inserted: number;
+  skipped: number;
+}
+
+export const processEncountersBatch = async (
+  encounters: FHIREncounter[],
+  patient: FHIRPatient | undefined,
+  hospitalId: string,
+  patientId: string,
+): Promise<BatchEncounterResult> => {
+  if (encounters.length === 0) {
+    return { fhirIdToInternalId: new Map(), inserted: 0, skipped: 0 };
+  }
+
+  const encounterData: Prisma.EncounterCreateManyInput[] = [];
+  const fhirIds: string[] = [];
+  let skipped = 0;
+
+  for (const enc of encounters) {
+    try {
+      const transformed = transformFHIREncounter(enc, patient);
+      const encounterNumber =
+        enc.identifier?.[0]?.value ||
+        enc.id ||
+        `enc-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+      const diagnosisCodes = [
+        ...(transformed.primaryDiagnosis ? [transformed.primaryDiagnosis] : []),
+        ...transformed.secondaryDiagnoses,
+      ];
+
+      encounterData.push({
+        patientId,
+        hospitalId,
+        encounterNumber,
+        encounterType: mapEncounterType(transformed.class),
+        status: mapEncounterStatus(transformed.status),
+        startDateTime: transformed.startDate,
+        endDateTime: transformed.endDate || null,
+        location: transformed.location || null,
+        primaryDiagnosis: transformed.primaryDiagnosis?.display || null,
+        diagnosisCodes: diagnosisCodes.length > 0 ? (diagnosisCodes as Prisma.InputJsonValue) : Prisma.JsonNull,
+        fhirEncounterId: enc.id || null,
+      });
+      if (enc.id) fhirIds.push(enc.id);
+    } catch (err: any) {
+      skipped++;
+    }
+  }
+
+  let inserted = 0;
+  if (encounterData.length > 0) {
+    const res = await prisma.encounter.createMany({
+      data: encounterData,
+      skipDuplicates: true,
+    });
+    inserted = res.count;
+  }
+
+  const fhirIdToInternalId = new Map<string, string>();
+  if (fhirIds.length > 0) {
+    const rows = await prisma.encounter.findMany({
+      where: { fhirEncounterId: { in: fhirIds }, hospitalId },
+      select: { id: true, fhirEncounterId: true },
+    });
+    for (const r of rows) {
+      if (r.fhirEncounterId) fhirIdToInternalId.set(r.fhirEncounterId, r.id);
+    }
+  }
+
+  return { fhirIdToInternalId, inserted, skipped };
 };
