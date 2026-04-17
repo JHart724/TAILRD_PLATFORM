@@ -94,14 +94,18 @@ const HEALTH_SYSTEMS = [
 ];
 
 // ─── Chart Data ──────────────────────────────────────────────────────────────
+// Placeholder shape until /api/admin/god/dau and /uploads endpoints land.
+// Values are derived deterministically from the index so every page load
+// (and every GodView response) renders the same series — CLAUDE.md §14
+// forbids Math.random in production code.
 
 const DAU_DATA = Array.from({ length: 30 }, (_, i) => {
   const day = i + 1;
   return {
     day: `Mar ${day}`,
-    BSW: Math.floor(2 + Math.random() * 3),
-    MSH: Math.floor(2 + Math.random() * 4),
-    MH: Math.floor(1 + Math.random() * 2),
+    BSW: 2 + (i % 3),
+    MSH: 2 + (i % 4),
+    MH: 1 + (i % 2),
   };
 });
 
@@ -109,7 +113,7 @@ const UPLOAD_DATA = Array.from({ length: 12 }, (_, i) => {
   const weekNum = i + 1;
   return {
     week: `W${weekNum}`,
-    uploads: Math.floor(3 + Math.random() * 8),
+    uploads: 3 + ((i * 3) % 8),
   };
 });
 
