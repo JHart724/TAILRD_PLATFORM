@@ -171,7 +171,6 @@ const PeripheralExecutiveView: React.FC = () => {
 	<div className="min-h-screen p-6 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #EAEFF4 0%, #F2F5F8 50%, #ECF0F4 100%)' }}>
 
 	<div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
-	{dashboardError && <div className="bg-crimson-50 border border-crimson-200 text-crimson-800 px-4 py-3 rounded-lg">Dashboard: {dashboardError}</div>}
 	{dashboardLoading && <div className="text-titanium-500 text-sm animate-pulse">Loading live data...</div>}
 	<div className="flex justify-end mb-6">
 	<ExportButton
