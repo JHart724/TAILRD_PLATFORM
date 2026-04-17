@@ -22,6 +22,20 @@ const MODULE_MAP: Record<string, { enum: ModuleType; patientField: string }> = {
   peripheralVascular: { enum: 'PERIPHERAL_VASCULAR', patientField: 'peripheralVascularPatient' },
 };
 
+// Canonical "patient belongs to this module" predicate. Mirrored in
+// backend/src/routes/modules.ts so GodView counts and per-module dashboard
+// counts agree. A patient is in a module if either the module flag is set
+// OR they have an open therapy gap for that module.
+function buildModulePatientWhere(mapping: { enum: ModuleType; patientField: string }) {
+  return {
+    isActive: true,
+    OR: [
+      { [mapping.patientField]: true },
+      { therapyGaps: { some: { module: mapping.enum, resolvedAt: null } } },
+    ],
+  };
+}
+
 const router = Router();
 
 // All GOD view endpoints require authentication and super admin role
@@ -236,7 +250,7 @@ async function getModuleMetrics(moduleName: string) {
   const mapping = MODULE_MAP[moduleName];
   if (!mapping) return { patients: 0, revenueOpportunity: 0, gapsIdentified: 0 };
   const [patients, gapsIdentified] = await Promise.all([
-    prisma.patient.count({ where: { isActive: true, [mapping.patientField]: true } }),
+    prisma.patient.count({ where: buildModulePatientWhere(mapping) }),
     prisma.therapyGap.count({ where: { module: mapping.enum, resolvedAt: null } }),
   ]);
   return { patients, revenueOpportunity: gapsIdentified * REVENUE_PER_GAP_ESTIMATE, gapsIdentified };
@@ -273,7 +287,7 @@ async function getPatientCoverage() {
   const totalPatients = await prisma.patient.count({ where: { isActive: true } });
   const byModule: Record<string, number> = {};
   for (const [name, mapping] of Object.entries(MODULE_MAP)) {
-    byModule[name] = await prisma.patient.count({ where: { isActive: true, [mapping.patientField]: true } });
+    byModule[name] = await prisma.patient.count({ where: buildModulePatientWhere(mapping) });
   }
   const managed = Object.values(byModule).reduce((sum, c) => sum + c, 0);
   return {
@@ -288,7 +302,7 @@ async function getModuleComparison() {
   const moduleMetrics = await Promise.all(
     Object.entries(MODULE_MAP).map(async ([name, mapping]) => {
       const [patients, gaps] = await Promise.all([
-        prisma.patient.count({ where: { isActive: true, [mapping.patientField]: true } }),
+        prisma.patient.count({ where: buildModulePatientWhere(mapping) }),
         prisma.therapyGap.count({ where: { module: mapping.enum, resolvedAt: null } }),
       ]);
       return { name, patients, gaps, efficiency: patients > 0 ? gaps / patients : 0 };
@@ -396,7 +410,7 @@ async function getDetailedModuleHealth(moduleName: string) {
     prisma.therapyGap.count({ where: { module: mapping.enum, resolvedAt: null } }),
     prisma.therapyGap.count({ where: { module: mapping.enum, identifiedAt: { gte: weekAgo } } }),
     prisma.therapyGap.count({ where: { module: mapping.enum, resolvedAt: { gte: weekAgo } } }),
-    prisma.patient.count({ where: { isActive: true, [mapping.patientField]: true } }),
+    prisma.patient.count({ where: buildModulePatientWhere(mapping) }),
   ]);
   const closureRate = (newGapsThisWeek + closedThisWeek) > 0 ? closedThisWeek / (newGapsThisWeek + closedThisWeek) : 1;
   return {
