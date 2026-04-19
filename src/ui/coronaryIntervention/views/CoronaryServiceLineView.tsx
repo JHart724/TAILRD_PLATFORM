@@ -13,6 +13,7 @@ import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHe
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
 import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
 import CrossReferralEngine from '../../../components/crossReferral/CrossReferralEngine';
+import ServiceLineKPIBanner from '../../../components/shared/ServiceLineKPIBanner';
 
 type TabId = 'analytics' | 'risk-heatmap' | 'grace' | 'timi' | 'syntax' | 'cabg-vs-pci' | 'protected-pci' | 'multi-arterial' | 'on-off-pump' | 'safety' | 'gap-detection' | 'network' | 'care-network' | 'cross-referral' | 'saq-outcomes' | 'outcomes' | 'reporting';
 
@@ -646,6 +647,9 @@ const CoronaryServiceLineView: React.FC = () => {
  <div className="min-h-screen p-6 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #EAEFF4 0%, #F2F5F8 50%, #ECF0F4 100%)' }}>
 
  <div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
+ {/* Real-time KPIs from backend */}
+ <ServiceLineKPIBanner moduleSlug="coronary-intervention" moduleLabel="Coronary Intervention" />
+
  {/* Tab Navigation — Grouped */}
  <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6 shadow-xl">
  {tabGroups.map((group, groupIdx) => (

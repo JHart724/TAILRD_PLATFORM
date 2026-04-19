@@ -18,6 +18,7 @@ import AutomatedReportingSystem from '../../../components/reporting/AutomatedRep
 import EPClinicalGapDetectionDashboard from '../components/clinical/EPClinicalGapDetectionDashboard';
 import EPPhenotypeDetectionChart from '../components/EPPhenotypeDetectionChart';
 import EPOutcomesTrends from '../components/executive/EPOutcomesTrends';
+import ServiceLineKPIBanner from '../../../components/shared/ServiceLineKPIBanner';
 import { electrophysiologyServiceLineConfig } from '../config/serviceLineConfig';
 
 // Electrophysiology Analytics Dashboard
@@ -256,6 +257,9 @@ const EPServiceLineView: React.FC = () => {
     <div className="min-h-screen p-6 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #EAEFF4 0%, #F2F5F8 50%, #ECF0F4 100%)' }}>
 
       <div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
+        {/* Real-time KPIs from backend */}
+        <ServiceLineKPIBanner moduleSlug="electrophysiology" moduleLabel="Electrophysiology" />
+
         {/* Export Action */}
         <div className="flex justify-end">
           <ExportButton
