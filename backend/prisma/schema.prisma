@@ -314,7 +314,7 @@ model Encounter {
   diagnosisCodes   Json? // ICD-10 codes
 
   // EHR Integration
-  fhirEncounterId String? @unique
+  fhirEncounterId String?
 
   // Relationships
   observations Observation[]
@@ -324,6 +324,7 @@ model Encounter {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
+  @@unique([hospitalId, fhirEncounterId]) // Per-tenant FHIR ID uniqueness
   @@index([hospitalId, startDateTime])
   @@index([patientId, startDateTime])
   @@map("encounters")
@@ -369,12 +370,13 @@ model Observation {
   performingLab    String?
 
   // EHR Integration
-  fhirObservationId String? @unique
+  fhirObservationId String?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
+  @@unique([hospitalId, fhirObservationId]) // Per-tenant FHIR ID uniqueness
   @@index([hospitalId, observedDateTime])
   @@index([patientId, observationType])
   @@index([observationType, observedDateTime])
@@ -1764,6 +1766,7 @@ model Medication {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([hospitalId, fhirMedicationId]) // Per-tenant FHIR ID uniqueness
   @@index([patientId, drugClass])
   @@index([hospitalId, status])
   @@index([rxNormCode])
@@ -1812,6 +1815,7 @@ model Condition {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([hospitalId, fhirConditionId]) // Per-tenant FHIR ID uniqueness
   @@index([patientId, clinicalStatus])
   @@index([hospitalId, icd10Code])
   @@index([icd10Code])
@@ -2316,7 +2320,7 @@ model Procedure {
   patient         Patient  @relation(fields: [patientId], references: [id], onDelete: Restrict)
   hospitalId      String
   hospital        Hospital @relation(fields: [hospitalId], references: [id])
-  fhirProcedureId String?  @unique
+  fhirProcedureId String?
   cptCode         String?
   snomedCode      String?
   procedureName   String?
@@ -2326,6 +2330,7 @@ model Procedure {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
+  @@unique([hospitalId, fhirProcedureId]) // Per-tenant FHIR ID uniqueness
   @@index([patientId])
   @@index([hospitalId])
   @@index([cptCode])
@@ -2338,7 +2343,7 @@ model DeviceImplant {
   patient       Patient   @relation(fields: [patientId], references: [id], onDelete: Restrict)
   hospitalId    String
   hospital      Hospital  @relation(fields: [hospitalId], references: [id])
-  fhirDeviceId  String?   @unique
+  fhirDeviceId  String?
   deviceType    String    // ICD, CRT-D, CRT-P, Pacemaker, Watchman, LVAD
   deviceStatus  String    @default("active")
   implantDate   DateTime?
@@ -2347,6 +2352,7 @@ model DeviceImplant {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
+  @@unique([hospitalId, fhirDeviceId]) // Per-tenant FHIR ID uniqueness
   @@index([patientId])
   @@index([hospitalId])
   @@index([deviceType])
@@ -2359,7 +2365,7 @@ model AllergyIntolerance {
   patient         Patient  @relation(fields: [patientId], references: [id], onDelete: Restrict)
   hospitalId      String
   hospital        Hospital @relation(fields: [hospitalId], references: [id])
-  fhirAllergyId   String?  @unique
+  fhirAllergyId   String?
   substanceCode   String?  // RxNorm or SNOMED code
   substanceName   String?
   allergyType     String   @default("allergy") // allergy | intolerance
@@ -2368,6 +2374,7 @@ model AllergyIntolerance {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
+  @@unique([hospitalId, fhirAllergyId]) // Per-tenant FHIR ID uniqueness
   @@index([patientId])
   @@index([hospitalId])
   @@index([substanceCode])
