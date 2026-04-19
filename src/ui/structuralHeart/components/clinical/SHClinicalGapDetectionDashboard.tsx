@@ -5,6 +5,7 @@ import { computeTrajectory, computeTimeHorizon, projectASProgression, projectBAV
 import GapActionButtons from '../../../../components/shared/GapActionButtons';
 import { useGapActions } from '../../../../hooks/useGapActions';
 import { fetchModuleGapsFromApi, type FrontendClinicalGap } from '../../../../adapters/gapAdapter';
+import { useModuleDashboard } from '../../../../hooks/useModuleDashboard';
 
 // ============================================================
 // CLINICAL GAP DETECTION — STRUCTURAL HEART MODULE
@@ -2475,6 +2476,7 @@ const SHClinicalGapDetectionDashboard: React.FC<SHClinicalGapDetectionDashboardP
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [dataSource, setDataSource] = useState<'mock' | 'api'>('mock');
   const [apiGaps, setApiGaps] = useState<FrontendClinicalGap[] | null>(null);
+  const { data: moduleDashboard, loading: dashboardLoading } = useModuleDashboard('structural-heart');
 
   // Try to fetch real gap data from backend; fall back to mock data
   useEffect(() => {
@@ -2506,6 +2508,13 @@ const SHClinicalGapDetectionDashboard: React.FC<SHClinicalGapDetectionDashboardP
 
   const totalPatients = activeGaps.reduce((sum, g) => sum + g.patientCount, 0);
   const totalOpportunity = activeGaps.reduce((sum, g) => sum + g.dollarOpportunity, 0);
+
+  // Real patient total from module dashboard endpoint. When present, overrides
+  // the mock-summed totalPatients for the header display. Opportunity stays
+  // computed from gap data since the dashboard endpoint doesn't expose revenue.
+  const realTotalPatients: number | undefined = moduleDashboard?.data?.summary?.totalPatients;
+  const hasLiveData = dataSource === 'api' || typeof realTotalPatients === 'number';
+  const displayPatients = typeof realTotalPatients === 'number' ? realTotalPatients : totalPatients;
 
   const priorityOrder: Record<string, number> = { high: 0, medium: 1, low: 2 };
   const categoryOrder: Record<string, number> = { Safety: 0, Discovery: 1, Gap: 2, Growth: 3, Quality: 2 };
@@ -2591,8 +2600,8 @@ const SHClinicalGapDetectionDashboard: React.FC<SHClinicalGapDetectionDashboardP
         {!categoryFilter && (
           <div className="text-sm text-titanium-600 mb-4 flex items-center gap-3">
             <span>AI-driven detection of evidence-based structural heart therapy gaps and growth opportunities.</span>
-            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${dataSource === 'api' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
-              {dataSource === 'api' ? 'Live Data' : 'Demo Data'}
+            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${dashboardLoading ? 'bg-slate-100 text-slate-600 animate-pulse' : hasLiveData ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+              {dashboardLoading ? 'Loading...' : hasLiveData ? 'Live Data' : 'Demo Data'}
             </span>
           </div>
         )}
@@ -2602,7 +2611,7 @@ const SHClinicalGapDetectionDashboard: React.FC<SHClinicalGapDetectionDashboardP
               <Users className="w-4 h-4 text-red-600" />
               <span className="text-xs font-semibold text-red-700 uppercase tracking-wide">Affected Patients</span>
             </div>
-            <div className="text-2xl font-bold text-red-800">{categoryFilter ? filteredPatientCount.toLocaleString() : totalPatients.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-red-800">{categoryFilter ? filteredPatientCount.toLocaleString() : displayPatients.toLocaleString()}</div>
           </div>
           <div className="bg-green-50 border border-green-100 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-1">
