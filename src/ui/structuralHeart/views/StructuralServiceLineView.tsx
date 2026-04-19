@@ -12,6 +12,7 @@ import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHe
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
 import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
 import CrossReferralEngine from '../../../components/crossReferral/CrossReferralEngine';
+import ServiceLineKPIBanner from '../../../components/shared/ServiceLineKPIBanner';
 
 type TabId = 'tavr' | 'teer-mitral' | 'teer-tricuspid' | 'tmvr' | 'pfo-asd' | 'gap-detection' | 'sts-risk' | 'risk-heatmap' | 'quality' | 'outcomes' | 'referrals' | 'provider-scorecard' | 'cross-referral' | 'care-network' | 'phenotype-detection' | 'reporting';
 
@@ -384,6 +385,9 @@ const StructuralServiceLineView: React.FC = () => {
     <div className="min-h-screen p-6 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #EAEFF4 0%, #F2F5F8 50%, #ECF0F4 100%)' }}>
 
       <div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
+        {/* Real-time KPIs from backend */}
+        <ServiceLineKPIBanner moduleSlug="structural-heart" moduleLabel="Structural Heart" />
+
         {/* Tab Navigation — Grouped */}
         <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6 shadow-xl">
           {tabGroups.map((group, groupIdx) => (

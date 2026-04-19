@@ -13,6 +13,8 @@ import PVClinicalGapDetectionDashboard from '../components/clinical/PVClinicalGa
 import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHeatmap';
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
 
+import ServiceLineKPIBanner from '../../../components/shared/ServiceLineKPIBanner';
+
 import { peripheralVascularServiceLineConfig } from '../config/serviceLineConfig';
 
 // Peripheral Vascular Analytics Dashboard
@@ -307,6 +309,9 @@ const PeripheralServiceLineView: React.FC = () => {
     <div className="min-h-screen p-6 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #EAEFF4 0%, #F2F5F8 50%, #ECF0F4 100%)' }}>
 
       <div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
+        {/* Real-time KPIs from backend */}
+        <ServiceLineKPIBanner moduleSlug="peripheral-vascular" moduleLabel="Peripheral Vascular" />
+
         {/* Export Action */}
         <div className="flex justify-end">
           <ExportButton

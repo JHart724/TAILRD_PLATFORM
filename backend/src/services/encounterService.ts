@@ -343,11 +343,13 @@ export const processEncounterData = async (
       fhirEncounterId: fhirEncounter.id || null,
     };
 
-    // Upsert by fhirEncounterId when available, otherwise create
+    // Upsert by (hospitalId, fhirEncounterId) composite per migration
+    // 20260419170743_fhir_ids_per_tenant_unique. Old single-field fhirEncounterId
+    // @unique became @@unique([hospitalId, fhirEncounterId]).
     let encounter;
     if (fhirEncounter.id) {
       encounter = await prisma.encounter.upsert({
-        where: { fhirEncounterId: fhirEncounter.id },
+        where: { hospitalId_fhirEncounterId: { hospitalId, fhirEncounterId: fhirEncounter.id } },
         create: encounterData,
         update: {
           status: encounterData.status,

@@ -6,6 +6,7 @@ import ValvePatientHeatmap from '../components/ValvePatientHeatmap';
 import ValvularSurgicalNetworkVisualization from '../components/ValvularSurgicalNetworkVisualization';
 import VDClinicalGapDetectionDashboard from '../components/clinical/VDClinicalGapDetectionDashboard';
 import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
+import ServiceLineKPIBanner from '../../../components/shared/ServiceLineKPIBanner';
 
 type TabId = 'bicuspid' | 'ross' | 'repair-vs-replace' | 'echo-surveillance' | 'clinical-gap-detection' | 'heatmap' | 'network' | 'analytics' | 'outcomes' | 'quality' | 'reporting';
 
@@ -529,6 +530,9 @@ const ValvularServiceLineView: React.FC = () => {
     <div className="min-h-screen p-6 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #EAEFF4 0%, #F2F5F8 50%, #ECF0F4 100%)' }}>
 
       <div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
+        {/* Real-time KPIs from backend */}
+        <ServiceLineKPIBanner moduleSlug="valvular-disease" moduleLabel="Valvular Disease" />
+
         {/* Tab Navigation — Grouped */}
         <div className="metal-card bg-white border border-titanium-200 rounded-2xl p-6 shadow-xl">
           {tabGroups.map((group, groupIdx) => (

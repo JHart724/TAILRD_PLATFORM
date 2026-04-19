@@ -315,9 +315,11 @@ export const processObservationData = async (
       fhirObservationId: fhirId,
     };
 
+    // Composite unique key: (hospitalId, fhirObservationId) per migration
+    // 20260419170743_fhir_ids_per_tenant_unique
     const observation = fhirId
       ? await prisma.observation.upsert({
-          where: { fhirObservationId: fhirId },
+          where: { hospitalId_fhirObservationId: { hospitalId, fhirObservationId: fhirId } },
           create: observationData,
           update: {},
         })
