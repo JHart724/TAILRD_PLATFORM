@@ -1,0 +1,18 @@
+# Workflow changes require review
+/.github/workflows/  @JHart724
+
+# Infrastructure changes
+/terraform/  @JHart724
+
+# Schema changes
+/backend/prisma/schema.prisma  @JHart724
+
+# Security-sensitive files
+/backend/src/middleware/auth.ts  @JHart724
+/backend/src/middleware/phiEncryption.ts  @JHart724
+/backend/src/routes/auth.ts  @JHart724
+/backend/src/routes/godView.ts  @JHart724
+
+# Deployment configs
+/netlify.toml  @JHart724
+/backend/Dockerfile  @JHart724
