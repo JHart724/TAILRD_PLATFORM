@@ -48,3 +48,8 @@ terraform.tfvars
 # Phase 2A temporary artifacts
 .tmp-phase2a/
 .tmp-phase3consolidation/
+
+# Lambda build artifacts
+infrastructure/lambdas/*/node_modules/
+infrastructure/lambdas/*.zip
+.tmp-day4/
