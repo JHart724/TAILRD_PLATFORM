@@ -48,32 +48,38 @@ WHERE id IN (
 );
 
 -- ─── Step 2: drop old global unique indexes ────────────────────────────────────
+-- IF EXISTS: of the 5 indexes this drops, only encounters_fhirEncounterId_key is
+-- actually created by a committed migration in this repo. The other 4 exist on
+-- production RDS due to migration drift (created pre-repo-history or manually).
+-- Fresh databases (Aurora cutover, staging, dev) would fail without IF EXISTS.
+-- This change is backwards-compatible: RDS has already applied this migration,
+-- so IF EXISTS changes nothing for its state. See TECH_DEBT_REGISTER.md.
 
-DROP INDEX "encounters_fhirEncounterId_key";
-DROP INDEX "observations_fhirObservationId_key";
-DROP INDEX "procedures_fhirProcedureId_key";
-DROP INDEX "device_implants_fhirDeviceId_key";
-DROP INDEX "allergy_intolerances_fhirAllergyId_key";
+DROP INDEX IF EXISTS "encounters_fhirEncounterId_key";
+DROP INDEX IF EXISTS "observations_fhirObservationId_key";
+DROP INDEX IF EXISTS "procedures_fhirProcedureId_key";
+DROP INDEX IF EXISTS "device_implants_fhirDeviceId_key";
+DROP INDEX IF EXISTS "allergy_intolerances_fhirAllergyId_key";
 
 -- ─── Step 3: create new per-tenant composite unique indexes ────────────────────
 
-CREATE UNIQUE INDEX "encounters_hospitalId_fhirEncounterId_key"
+CREATE UNIQUE INDEX IF NOT EXISTS "encounters_hospitalId_fhirEncounterId_key"
   ON "encounters"("hospitalId", "fhirEncounterId");
 
-CREATE UNIQUE INDEX "observations_hospitalId_fhirObservationId_key"
+CREATE UNIQUE INDEX IF NOT EXISTS "observations_hospitalId_fhirObservationId_key"
   ON "observations"("hospitalId", "fhirObservationId");
 
-CREATE UNIQUE INDEX "medications_hospitalId_fhirMedicationId_key"
+CREATE UNIQUE INDEX IF NOT EXISTS "medications_hospitalId_fhirMedicationId_key"
   ON "medications"("hospitalId", "fhirMedicationId");
 
-CREATE UNIQUE INDEX "conditions_hospitalId_fhirConditionId_key"
+CREATE UNIQUE INDEX IF NOT EXISTS "conditions_hospitalId_fhirConditionId_key"
   ON "conditions"("hospitalId", "fhirConditionId");
 
-CREATE UNIQUE INDEX "procedures_hospitalId_fhirProcedureId_key"
+CREATE UNIQUE INDEX IF NOT EXISTS "procedures_hospitalId_fhirProcedureId_key"
   ON "procedures"("hospitalId", "fhirProcedureId");
 
-CREATE UNIQUE INDEX "device_implants_hospitalId_fhirDeviceId_key"
+CREATE UNIQUE INDEX IF NOT EXISTS "device_implants_hospitalId_fhirDeviceId_key"
   ON "device_implants"("hospitalId", "fhirDeviceId");
 
-CREATE UNIQUE INDEX "allergy_intolerances_hospitalId_fhirAllergyId_key"
+CREATE UNIQUE INDEX IF NOT EXISTS "allergy_intolerances_hospitalId_fhirAllergyId_key"
   ON "allergy_intolerances"("hospitalId", "fhirAllergyId");
