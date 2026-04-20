@@ -134,6 +134,27 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 - **Planned remediation:** Grep sweep on merge of Sprint B-2. Any remaining instance gets replaced with a deterministic hash or removed.
 - **Target:** 2026-05-15
 
+### 16. Prisma migration history is incomplete
+- **Severity:** HIGH (release / disaster-recovery risk)
+- **Impact:** Production RDS schema cannot be reconstructed from `backend/prisma/migrations/` alone. Six FHIR-backed tables (`procedures`, `observations`, `conditions`, `medications`, `device_implants`, `allergy_intolerances`) exist on RDS but are not created by any committed migration SQL. PR #158's migration further assumed 4 global unique indexes existed that had never been committed. A fresh environment (staging, disaster recovery, Aurora bootstrap) cannot be provisioned by `prisma migrate deploy`. This was discovered in Day 3 Phase 3B when the Aurora schema apply failed on PR #158 at `DROP INDEX observations_fhirObservationId_key`.
+- **Current mitigation:** (a) `20260419170743_fhir_ids_per_tenant_unique/migration.sql` now uses `DROP INDEX IF EXISTS` + `CREATE UNIQUE INDEX IF NOT EXISTS`, making it idempotent. No-op on RDS (already applied), runs clean on fresh DBs. (b) Aurora was bootstrapped via `prisma db push` + copying `_prisma_migrations` rows from RDS. This works for Aurora today but does not fix the underlying history gap.
+- **Planned remediation:** Regenerate a proper baseline. `npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > new-baseline.sql`, create a new migration folder with that SQL, delete the old initial migration, test on a fresh local Postgres, mark both RDS and Aurora as having applied the new baseline via `prisma migrate resolve --applied` (their actual schema already matches).
+- **Target:** 2026-05-01 (before staging environment stands up in Day 9 of Aurora plan, or earlier if any disaster recovery event requires a rebuild)
+
+### 17. RDS Proxy stuck in "internal error" state (AWS-side)
+- **Severity:** MEDIUM (post-cutover pooling only, not migration-critical)
+- **Impact:** `tailrd-aurora-proxy` created on Day 2 never left `UNAVAILABLE / DBProxy Target unavailable due to an internal error`. Delete + recreate on Day 3 reproduced the same failure state within 30 minutes. Credentials are correct (log errors stopped after the secret format fix), IAM role is correct, SG config is correct, Aurora writer is directly reachable from the same SG. AWS internal failure.
+- **Current mitigation:** None at our layer. Day 3 DMS work uses the Aurora writer endpoint directly (not the proxy), so migration is unblocked.
+- **Planned remediation:** (a) Open AWS Support case Severity 3 with reproduction details; (b) if AWS does not resolve before Day 6, cutover points backend DATABASE_URL directly at the Aurora writer endpoint, skipping the proxy. Proxy becomes an optimization we add once AWS resolves.
+- **Target:** Unblock by Day 6 (2026-04-25) or accept direct-connect as permanent
+
+### 18. Audit middleware logs ALB IP instead of real client IP (162k legacy rows)
+- **Severity:** LOW (forensics / compliance)
+- **Impact:** Because Express `trust proxy` was not set until Phase 2A (2026-04-20), every `audit_logs` entry prior to that point recorded the ALB ENI IP (10.0.1.189 range) rather than the real client IP. HIPAA audit trail is technically complete but loses per-user geolocation forensics for the pre-fix period. Approximately 162k rows affected (rough estimate from `SELECT count(*) FROM audit_logs WHERE ipAddress LIKE '10.0.%'`).
+- **Current mitigation:** Phase 2A shipped `app.set('trust proxy', 1)` in `backend/src/server.ts`. All new audit entries capture real client IP. Legacy rows are left as-is.
+- **Planned remediation:** None. Do not retroactively rewrite historical audit records — doing so would itself be a compliance violation (tampering with audit trail). Document and accept.
+- **Target:** N/A (accepted)
+
 ---
 
 ## Summary
@@ -141,9 +162,9 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 | Severity | Count | Target |
 |---|---|---|
 | P0 | 2 | Both complete within 1 week |
-| HIGH | 3 | All within the Aurora migration sprint or the one following |
-| MEDIUM | 5 | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9) |
+| HIGH | 4 | All within the Aurora migration sprint or the one following |
+| MEDIUM | 6 | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9) |
 | P1 | 2 | Dedicated sprints B-2 and B-3 |
-| LOW | 3 | 2026 Q4 or as product maturity dictates |
+| LOW | 4 | 2026 Q4 or as product maturity dictates |
 
 Running this register against the Aurora V2 migration plan shows most MEDIUM items get resolved automatically by the migration. P0 and HIGH items are sequenced explicitly in this doc. New items should be appended here, not inserted mid-list — the numbering is a stable reference.
