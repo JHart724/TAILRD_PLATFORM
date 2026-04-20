@@ -67,6 +67,12 @@ if (!isDemoMode) {
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust the ALB as a single proxy hop so req.ip and express-rate-limit see the
+// real client IP from X-Forwarded-For. Without this, req.ip is the ALB ENI and
+// rate-limit / audit logging cannot distinguish abusive clients. See
+// docs/TECH_DEBT_REGISTER.md item 8.
+app.set('trust proxy', 1);
+
 // Logger imported from utils/logger.ts (shared singleton with PHI redaction)
 
 // Rate limiter — starts with in-memory store, upgrades to Redis after connection

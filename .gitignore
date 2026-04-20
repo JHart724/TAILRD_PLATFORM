@@ -44,3 +44,6 @@ terraform.tfvars
 *.tfstate.backup
 .terraform.lock.hcl
 .gstack/
+
+# Phase 2A temporary artifacts
+.tmp-phase2a/
