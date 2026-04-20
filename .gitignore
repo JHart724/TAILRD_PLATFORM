@@ -47,3 +47,4 @@ terraform.tfvars
 
 # Phase 2A temporary artifacts
 .tmp-phase2a/
+.tmp-phase3consolidation/

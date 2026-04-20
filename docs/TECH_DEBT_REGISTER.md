@@ -134,12 +134,12 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 - **Planned remediation:** Grep sweep on merge of Sprint B-2. Any remaining instance gets replaced with a deterministic hash or removed.
 - **Target:** 2026-05-15
 
-### 16. Prisma migration history is incomplete
+### 16. Prisma migration history is incomplete — **RESOLVED 2026-04-20**
 - **Severity:** HIGH (release / disaster-recovery risk)
 - **Impact:** Production RDS schema cannot be reconstructed from `backend/prisma/migrations/` alone. Six FHIR-backed tables (`procedures`, `observations`, `conditions`, `medications`, `device_implants`, `allergy_intolerances`) exist on RDS but are not created by any committed migration SQL. PR #158's migration further assumed 4 global unique indexes existed that had never been committed. A fresh environment (staging, disaster recovery, Aurora bootstrap) cannot be provisioned by `prisma migrate deploy`. This was discovered in Day 3 Phase 3B when the Aurora schema apply failed on PR #158 at `DROP INDEX observations_fhirObservationId_key`.
-- **Current mitigation:** (a) `20260419170743_fhir_ids_per_tenant_unique/migration.sql` now uses `DROP INDEX IF EXISTS` + `CREATE UNIQUE INDEX IF NOT EXISTS`, making it idempotent. No-op on RDS (already applied), runs clean on fresh DBs. (b) Aurora was bootstrapped via `prisma db push` + copying `_prisma_migrations` rows from RDS. This works for Aurora today but does not fix the underlying history gap.
-- **Planned remediation:** Regenerate a proper baseline. `npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > new-baseline.sql`, create a new migration folder with that SQL, delete the old initial migration, test on a fresh local Postgres, mark both RDS and Aurora as having applied the new baseline via `prisma migrate resolve --applied` (their actual schema already matches).
-- **Target:** 2026-05-01 (before staging environment stands up in Day 9 of Aurora plan, or earlier if any disaster recovery event requires a rebuild)
+- **Resolution (2026-04-20):** Replaced five fragmented migrations with a single consolidated baseline `20260420000000_consolidated_baseline/migration.sql` captured from production RDS via `pg_dump --schema-only --no-owner --no-acl`. Verified on a throwaway test RDS (`tailrd-migration-test`) that `prisma migrate deploy` against this baseline produces a schema matching production byte-for-byte (only diff is pg_dump session nonces). Pre-snapshots of RDS and Aurora taken before applying. `_prisma_migrations` table updated on both databases to reflect the single baseline row. See `docs/MIGRATION_HISTORY_CONSOLIDATION_2026_04_20.md` and `docs/SCHEMA_DIFF_REPORT.md` for the full procedure and verification.
+- **Verification artifacts (retained in S3 for 30 days):** `s3://tailrd-cardiovascular-datasets-863518424332/migration-artifacts/2026-04-20/{rds-schema,aurora-schema,test-rds-schema,consolidated_baseline,rds-prisma-migrations-pre-consolidation,aurora-prisma-migrations-pre-consolidation}.sql`
+- **Snapshots for rollback (retained per AWS default 35 days):** `tailrd-production-postgres-pre-consolidation-2026-04-20` and `tailrd-production-aurora-pre-consolidation-2026-04-20`
 
 ### 17. RDS Proxy stuck in "internal error" state (AWS-side)
 - **Severity:** MEDIUM (post-cutover pooling only, not migration-critical)
