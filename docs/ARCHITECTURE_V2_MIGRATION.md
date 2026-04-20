@@ -370,8 +370,105 @@ Before Day 2:
 
 ---
 
-## 10. Session log
+## 10. Aurora provisioning state (Day 2, 2026-04-20)
+
+### KMS
+
+| Field | Value |
+|---|---|
+| Alias | `alias/tailrd-aurora-production` |
+| Key ID | `ec93e66e-0f65-46bf-b132-11c9b1b7e637` |
+| ARN | `arn:aws:kms:us-east-1:863518424332:key/ec93e66e-0f65-46bf-b132-11c9b1b7e637` |
+| Auto rotation | Enabled (annual) |
+| Multi-region | No |
+
+### Network
+
+| Field | Value |
+|---|---|
+| DB subnet group | `tailrd-aurora-production-subnet-group` (subnets `0168950e9541ff9f6` 1a + `02c70b0a102cf8d3c` 1b) |
+| Aurora SG | `sg-0524ba8efe6058f7b` (`tailrd-aurora-production-sg`) |
+| Aurora SG ingress | `5432/tcp` from backend SG `sg-07cf4b72927f9038f` |
+| Backend SG egress added | `5432/tcp` to Aurora SG (rule `sgr-0d59fcbcea0917bb1`) |
+
+### Aurora cluster
+
+| Field | Value |
+|---|---|
+| Cluster identifier | `tailrd-production-aurora` |
+| Cluster ARN | `arn:aws:rds:us-east-1:863518424332:cluster:tailrd-production-aurora` |
+| Engine | `aurora-postgresql` 15.14 (matches source RDS) |
+| Database name | `tailrd` |
+| Master username | `tailrd_admin` |
+| Master password secret | `arn:aws:secretsmanager:us-east-1:863518424332:secret:tailrd-production/app/aurora-db-password-rAm904` |
+| Writer endpoint | `tailrd-production-aurora.cluster-csp0w6g8u5uq.us-east-1.rds.amazonaws.com:5432` |
+| Reader endpoint | `tailrd-production-aurora.cluster-ro-csp0w6g8u5uq.us-east-1.rds.amazonaws.com:5432` |
+| Storage encryption | Enabled (KMS key above) |
+| Backup retention | 7 days |
+| Backup window | 09:00-10:00 UTC |
+| Maintenance window | Sunday 10:00-11:00 UTC |
+| Deletion protection | Enabled |
+| Performance Insights | Enabled on each instance, 93-day retention |
+| Enhanced monitoring | 15-second granularity, role `rds-monitoring-role` |
+| CloudWatch log exports | `postgresql` |
+| Serverless v2 scaling | Min 0.5 ACU, max 16 ACU |
+
+### Instances
+
+| Identifier | Class | Role | Promotion tier |
+|---|---|---|---|
+| `tailrd-aurora-production-writer` | `db.serverless` | writer | 0 (default) |
+| `tailrd-aurora-production-reader-1` | `db.serverless` | reader | 1 |
+| `tailrd-aurora-production-reader-2` | `db.serverless` | reader | 2 |
+
+All instances: no public access, PI enabled with 93-day retention, enhanced monitoring 15s. Reader serverless scaling inherits cluster config (0.5-16 ACU by default). To constrain reader max to 8 ACU per the plan, add `--serverless-v2-scaling-configuration` at the instance level when Aurora supports it (today it is cluster-scoped, so readers share the cluster's max).
+
+### RDS Proxy
+
+| Field | Value |
+|---|---|
+| Name | `tailrd-aurora-proxy` |
+| ARN | `arn:aws:rds:us-east-1:863518424332:db-proxy:prx-04ea6998eec317f48` |
+| Engine family | POSTGRESQL |
+| Endpoint | `tailrd-aurora-proxy.proxy-csp0w6g8u5uq.us-east-1.rds.amazonaws.com:5432` |
+| Authentication | Secrets Manager only (`IAMAuth: DISABLED`) pointing at the master password secret |
+| IAM role | `arn:aws:iam::863518424332:role/tailrd-aurora-rds-proxy-role` (inline `AuroraSecretsAccess` policy) |
+| Subnets | All 4 private + DB subnets (1a + 1b) |
+| Security group | Aurora SG `sg-0524ba8efe6058f7b` |
+| Require TLS | Yes |
+| Idle client timeout | 1800 s |
+| Connection pool (MaxConnectionsPercent / MaxIdleConnectionsPercent / ConnectionBorrowTimeout) | 100 / 50 / 120 |
+| Target group | `default` (Aurora cluster registered as `TRACKED_CLUSTER`) |
+
+**Pool-max note:** The plan called for "connection pool max 200." RDS Proxy expresses pool size as a *percentage* of the target DB's `max_connections`, not an absolute count. 100% means the proxy can use all of whatever the Aurora cluster's `max_connections` ends up being (varies by current ACU). For Serverless v2, `max_connections` scales from ~400 at 0.5 ACU upward, so 100% is >= 400 concurrent backend connections at idle. Adjust if proxy-capped errors appear post-cutover.
+
+### Endpoint secrets (new, not wired to backend yet)
+
+| Name | ARN |
+|---|---|
+| `tailrd-production/app/aurora-writer-endpoint` | `...aurora-writer-endpoint-gSO4fx` |
+| `tailrd-production/app/aurora-reader-endpoint` | `...aurora-reader-endpoint-s1Vn9f` |
+| `tailrd-production/app/aurora-proxy-endpoint` | `...aurora-proxy-endpoint-c8ASYo` |
+| `tailrd-production/app/aurora-db-password` | `...aurora-db-password-rAm904` |
+
+The existing `tailrd-production/app/database-url` was **NOT modified**. Backend still points at the RDS instance. Secrets Manager swap happens at Day 6 cutover.
+
+### Verified connectivity (ECS run-task, backend SG, via Prisma)
+
+| Endpoint | `SELECT version()` | `pg_is_in_recovery()` | `SELECT 1` |
+|---|---|---|---|
+| Writer | PostgreSQL 15.14 on aarch64-unknown-linux-gnu | `false` | `1` |
+| Reader | PostgreSQL 15.14 on aarch64-unknown-linux-gnu | `true` | `1` |
+| Proxy | *pending target registration (PENDING_PROXY_CAPACITY)* | | |
+
+Writer and reader connectivity verified end-to-end at 2026-04-20T11:51Z. Proxy target registration typically completes within 10-15 min after all cluster instances are available. Re-verify before Day 6 cutover.
+
+---
+
+## 11. Session log
 
 | Date | Changes | Outcome |
 |---|---|---|
-| 2026-04-20 | Created this doc + tech debt register | PR opened and merged — baseline captured |
+| 2026-04-20 | Phase 0: Created this doc + tech debt register | PR #160 merged — baseline captured |
+| 2026-04-20 | Phase 2A: ALB access logs enabled, Express trust proxy set to 1, `docs/RDS_QUERY_ANALYSIS_2026_04_20.md` added. Identified orphaned 17h45m MCD wipe DELETE (PID 19775) as the actual RDS CPU culprit. | PR #161 merged |
+| 2026-04-20 | Phase 2B: Aurora cluster + writer + 2 readers + RDS Proxy + KMS key + SG + secrets provisioned. Writer/reader connectivity verified. Proxy target registration in progress. | Aurora sits empty, awaiting Day 3 DMS |
