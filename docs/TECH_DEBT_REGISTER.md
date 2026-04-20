@@ -155,6 +155,16 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 - **Planned remediation:** None. Do not retroactively rewrite historical audit records — doing so would itself be a compliance violation (tampering with audit trail). Document and accept.
 - **Target:** N/A (accepted)
 
+### 19. CDC deferred on Wave 1 pending production RDS logical replication enablement
+- **Severity:** LOW (intentional deferral, Palantir-grade risk management)
+- **Impact:** Wave 1 on 2026-04-20 ran in `full-load` migration mode rather than `full-load-and-cdc` because `rds.logical_replication` is currently `off` on `tailrd-production-postgres`. Enabling it is a static parameter change requiring an RDS reboot (~30-60s Multi-AZ failover). Without CDC, Aurora's hospitals + users tables will drift from RDS as the app writes new data. Waves 2-4 need CDC to keep the large clinical tables in sync during the 10-day migration window — so CDC must be on before Wave 2.
+- **Decision (2026-04-20, Jonathan):** Defer the reboot because (a) no staging environment exists yet to rehearse the reboot procedure, (b) backend ECS reconnection behavior during RDS failover is unverified, (c) Wave 1 reference tables are near-static so CDC adds little value anyway, (d) rushing a production reboot without rehearsal is anti-Palantir.
+- **Planned remediation:**
+  - **Day 5 (2026-04-21):** Stand up staging RDS instance. Apply the `rds.logical_replication = 1` parameter group change. Reboot. Time the failover. Document backend reconnection behavior. Write `docs/RDS_LOGICAL_REPL_ENABLEMENT_RUNBOOK.md` with precise timings.
+  - **Day 6 (2026-04-22), pre-Wave-2:** Execute the rehearsed runbook against production. Enable `rds.logical_replication = 1`. Reboot. Verify CDC works via a tiny test task.
+  - **Day 6, Wave 2:** Start Wave 2 with full CDC enabled.
+- **Target:** 2026-04-22 (Day 6 before Wave 2 start).
+
 ---
 
 ## Summary
