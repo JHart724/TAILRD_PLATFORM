@@ -64,34 +64,85 @@ async function main() {
     return;
   }
 
-  console.log(`\nDeleting ${totalRows} rows across 11 tables...`);
+  console.log(`\nDeleting ${totalRows} rows across 11 tables (chunked)...`);
 
-  // Order matters: delete children before parents (FK Restrict)
-  // Therapy gaps / alerts / orders reference Patient → delete first
-  // Observation → Encounter (SetNull on delete) but still delete obs first so
-  //   Encounter deletion doesn't need to update obs.encounterId
+  // Chunked delete: original single-deleteMany approach exhausted RDS t3.medium
+  // CPU burst credits mid-run and hung on 353k encounters. Each chunk is a
+  // small transaction; sleep between chunks so baseline CPU doesn't stay at
+  // 100%. See docs/SCALE_REQUIREMENTS.md Phase 2 for the t4g migration plan.
+  const CHUNK_SIZE = 10000;
+  const SLEEP_MS = 1500;
   const results: Record<string, number> = {};
 
-  const stages: Array<[string, () => Promise<{ count: number }>]> = [
-    ["therapyGap", () => prisma.therapyGap.deleteMany({ where })],
-    ["alert", () => prisma.alert.deleteMany({ where })],
-    ["order", () => prisma.order.deleteMany({ where })],
-    ["observation", () => prisma.observation.deleteMany({ where })],
-    ["encounter", () => prisma.encounter.deleteMany({ where })],
-    ["medication", () => prisma.medication.deleteMany({ where })],
-    ["condition", () => prisma.condition.deleteMany({ where })],
-    ["procedure", () => prisma.procedure.deleteMany({ where })],
-    ["deviceImplant", () => prisma.deviceImplant.deleteMany({ where })],
-    ["allergyIntolerance", () => prisma.allergyIntolerance.deleteMany({ where })],
-    ["patient", () => prisma.patient.deleteMany({ where })],
+  async function chunkedDelete(
+    name: string,
+    deleteChunk: (ids: string[]) => Promise<{ count: number }>,
+    findChunk: () => Promise<Array<{ id: string }>>,
+  ): Promise<number> {
+    const start = Date.now();
+    let total = 0;
+    for (;;) {
+      const rows = await findChunk();
+      if (rows.length === 0) break;
+      const res = await deleteChunk(rows.map((r) => r.id));
+      total += res.count;
+      const elapsed = ((Date.now() - start) / 1000).toFixed(1);
+      console.log(`  ${name}: chunk ${res.count} done  total=${total}  ${elapsed}s`);
+      await new Promise((r) => setTimeout(r, SLEEP_MS));
+    }
+    const elapsed = ((Date.now() - start) / 1000).toFixed(1);
+    console.log(`  deleted ${String(total).padStart(8)} ${name}s (${elapsed}s total)`);
+    return total;
+  }
+
+  const stages: Array<[string, () => Promise<number>]> = [
+    ["therapyGap", async () => (await prisma.therapyGap.deleteMany({ where })).count],
+    ["alert", async () => (await prisma.alert.deleteMany({ where })).count],
+    ["order", async () => (await prisma.order.deleteMany({ where })).count],
+    ["observation", () => chunkedDelete(
+      "observation",
+      (ids) => prisma.observation.deleteMany({ where: { id: { in: ids } } }),
+      () => prisma.observation.findMany({ where, select: { id: true }, take: CHUNK_SIZE }),
+    )],
+    ["encounter", () => chunkedDelete(
+      "encounter",
+      (ids) => prisma.encounter.deleteMany({ where: { id: { in: ids } } }),
+      () => prisma.encounter.findMany({ where, select: { id: true }, take: CHUNK_SIZE }),
+    )],
+    ["medication", () => chunkedDelete(
+      "medication",
+      (ids) => prisma.medication.deleteMany({ where: { id: { in: ids } } }),
+      () => prisma.medication.findMany({ where, select: { id: true }, take: CHUNK_SIZE }),
+    )],
+    ["condition", () => chunkedDelete(
+      "condition",
+      (ids) => prisma.condition.deleteMany({ where: { id: { in: ids } } }),
+      () => prisma.condition.findMany({ where, select: { id: true }, take: CHUNK_SIZE }),
+    )],
+    ["procedure", () => chunkedDelete(
+      "procedure",
+      (ids) => prisma.procedure.deleteMany({ where: { id: { in: ids } } }),
+      () => prisma.procedure.findMany({ where, select: { id: true }, take: CHUNK_SIZE }),
+    )],
+    ["deviceImplant", () => chunkedDelete(
+      "deviceImplant",
+      (ids) => prisma.deviceImplant.deleteMany({ where: { id: { in: ids } } }),
+      () => prisma.deviceImplant.findMany({ where, select: { id: true }, take: CHUNK_SIZE }),
+    )],
+    ["allergyIntolerance", () => chunkedDelete(
+      "allergyIntolerance",
+      (ids) => prisma.allergyIntolerance.deleteMany({ where: { id: { in: ids } } }),
+      () => prisma.allergyIntolerance.findMany({ where, select: { id: true }, take: CHUNK_SIZE }),
+    )],
+    ["patient", () => chunkedDelete(
+      "patient",
+      (ids) => prisma.patient.deleteMany({ where: { id: { in: ids } } }),
+      () => prisma.patient.findMany({ where, select: { id: true }, take: CHUNK_SIZE }),
+    )],
   ];
 
   for (const [name, fn] of stages) {
-    const start = Date.now();
-    const res = await fn();
-    results[name] = res.count;
-    const elapsed = ((Date.now() - start) / 1000).toFixed(1);
-    console.log(`  deleted ${String(res.count).padStart(8)} ${name}s (${elapsed}s)`);
+    results[name] = await fn();
   }
 
   console.log("\nCounting rows after wipe...");
