@@ -75,23 +75,55 @@ Rollback leaves us in the pre-Day-6 state: CDC unavailable, Waves 2-4 blocked, a
 
 ## 8. Go/No-Go decision log
 
-_(filled at execution time)_
+Initial run at 2026-04-21T09:44Z found two issues; both remediated and re-run clean at 10:08Z.
 
 | Check | Timestamp (UTC) | Result | Notes |
 |---|---|---|---|
-| 1. No active ECS deployments | | | |
-| 2. No alarms in ALARM | | | |
-| 3. RDS baseline clean | | | |
-| 4. Backend baseline clean | | | |
-| 5. No recent deploys | | | |
+| 1. No active ECS deployments | 10:08:12Z | PASS | 1 PRIMARY deployment, COMPLETED, task def `tailrd-backend:91` |
+| 2. No alarms in ALARM | 10:08:15Z | PASS | Zero alarms in ALARM globally (after alarm config fix below) |
+| 3. RDS baseline clean | 10:08:12Z | PASS | available, Multi-AZ, param-in-sync, no pending mods; CPU 4.2-5.2% across 15 min |
+| 4. Backend baseline clean | 10:08:12Z | PASS | /health 200, status healthy, uptime 2348s |
+| 5. No recent deploys (>30 min) | 10:08:12Z | PASS | Deploy was 40 min prior (09:28:17Z) |
 
-**Decision:** [GO / NO-GO]
-**Decision timestamp:** [UTC]
-**Decided by:** Jonathan Hart
+**Pre-run remediations (for audit trail):**
+- Alarm `TailrdDMS-TASK_FAILED` was in ALARM due to missing-datapoint breach logic between Waves. Changed `TreatMissingData: breaching → notBreaching` at 10:07Z (commit `a0ba016`). Alarm auto-transitioned to OK at 10:08:15Z.
+- Last deploy at 09:28:17Z was only 16 min before the first Go/No-Go check (09:44Z). Waited out the cooldown; at 10:08Z the window was 40 min.
+
+**Decision:** GO
+**Decision timestamp:** 2026-04-21T10:08:15Z
+**Decided by:** Jonathan Hart (authorization received after first Go/No-Go re-run report)
 
 ## 9. Execution log
 
-_(filled at execution time — T0, phase transitions, observed timings, success criteria validation)_
+### Phase 6A — Snapshot + probe launch + 60s baseline (2026-04-21T10:17-13:01Z)
+
+**Snapshot:**
+- ID: `tailrd-production-postgres-pre-logical-repl-2026-04-21`
+- ARN: `arn:aws:rds:us-east-1:863518424332:snapshot:tailrd-production-postgres-pre-logical-repl-2026-04-21`
+- Status: `available` (reached 100% progress before probe launch)
+- Created: 2026-04-21T10:17:16Z
+- Size: 100 GB, encrypted (KMS)
+
+**Probe iterations (runbook gap + image reality surfaced here):**
+- **v1** task `ae59b99...` (10:17:52Z) — FAILED exit 1. `Cannot find module 'pg'` at `/tmp/probe.js`. Runbook referenced `infrastructure/scripts/rdsRebootHealthCheck.js` that was never committed. Wrote probe, uploaded to S3, committed (`3c84bb6`).
+- **v2** task `84dd7344...` (10:26:40Z) — FAILED exit 1. `NODE_PATH=/app/node_modules` didn't help (dash quirk). Commit `ebaa22b`.
+- **v3** task `43bfd723...` (12:53:44Z) — FAILED exit 1. Probe at `/app/probe.js` still couldn't resolve `pg` — confirmed `pg` is not a direct backend dependency (Prisma bundles its own engine).
+- **v4** task `884fb1c6...` (12:59:10Z) — SUCCESS. Rewrote probe to use `@prisma/client` with `$queryRawUnsafe('SELECT 1')`. Commit `dd984a2`. Probe started 12:59:33.856Z.
+
+**60-second pre-reboot baseline (probe v4, window 12:59:33.857Z - 13:00:32.921Z):**
+| Metric | Value |
+|---|---:|
+| Samples | 60 / 60 (100% success) |
+| Fails | 0 |
+| Min latency | 1 ms |
+| p50 latency | 2 ms |
+| p95 latency | 3 ms |
+| p99 latency | 86 ms (*first sample only — Prisma cold-start connect*) |
+| Max latency | 86 ms |
+| Mean latency | 3.17 ms |
+| Window span | 59.064 s |
+
+**Anomalies:** none in-window. The 86 ms p99 is attributable entirely to the first probe call, which includes Prisma's lazy connection establishment. Post-warmup every sample is 1-6 ms. Probe continues running through Phase 6C for reboot window capture.
 
 ## 10. Post-change actions
 
