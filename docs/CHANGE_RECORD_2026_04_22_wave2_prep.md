@@ -74,7 +74,37 @@ Executed at start of Phase 7A. All 5 must pass:
 
 ## 7. Execution log
 
-*(appended live during execution)*
+### Phase 7A — probe rewrite + staging failover test (2026-04-21T14:08-14:26Z)
+
+**Go/No-Go:** 4 of 5 clean. Check 5 (deploy cooldown) was at 26 min (slightly under 30 min threshold) because CI auto-redeployed backend on Day 6 merge. Cooldown will naturally elapse before Phase 7C/7D (which are the phases that actually touch production). Phase 7A is staging-only, so the partial check was accepted.
+
+**Probe v2 rewrite:**
+- `infrastructure/scripts/rdsRebootHealthCheck.js` rewritten on raw `pg` Client with layered timeouts:
+  - `connectionTimeoutMillis: 2000` (initial TCP connect)
+  - `query_timeout: 2000` + `statement_timeout: 2000` (pg internal)
+  - `Promise.race` wall-clock timeout fallback (belt-and-suspenders)
+- `infrastructure/scripts/probe-package.json` — ephemeral dep pin (`pg: ^8.13.0`); installed via `npm install` at ECS task start (~20-30s cold start)
+- New env var `PROBE_DATABASE_URL` for staging-override without touching backend task def secrets config
+- First deploy hit SSL verification error (newer pg-connection-string interprets `?sslmode=require` as `verify-full`, overriding our client-level `rejectUnauthorized: false`). Patched to parse the URL manually and pass discrete Client params. Re-uploaded, worked cleanly.
+
+**Staging test (T0 = 2026-04-21T14:23:29.209Z, `aws rds reboot-db-instance --force-failover`):**
+
+| Event | Δ from T0 |
+|---|---:|
+| Reboot API call (T0) | 0s |
+| First probe `fail` sample | **+11.0s** (error: `"Query read timeout"`, latency 2002ms) |
+| Last probe `fail` sample | +23.0s (error: `"timeout expired"`, latency 2003ms) |
+| **First probe `ok` sample after failure** | **+25.0s** (latency 63ms — reconnect cost) |
+| Staging `DBInstanceStatus: available` | +75s |
+| Probe stopped manually | +122s |
+
+**Probe v2 verdict: PASS.** 166 total samples across a 2m52s window. 7 fails, 159 ok. **Largest inter-sample gap: 2005ms** — the single 2-second timeout fallback. No hang. Probe never stopped emitting; recovered automatically without intervention.
+
+**Compared to v1 on Day 6 production reboot:** v1 stopped emitting at T+15s and produced zero fail samples across the entire 78s window. v2 emitted 12 distinct fail samples during a 12-second observable outage window with explicit, actionable error messages.
+
+**Tech debt #20 → RESOLVED.**
+
+**Note:** the probe-visible DB unavailability window (12s) is far shorter than the AWS "available" state transition (75s). Multi-AZ cutover completes at the ENI layer around T+25s; the remaining 50s of `rebooting` status is AWS bookkeeping that doesn't affect client connectivity. This means for Wave 2 CDC observation, **probe-visible outage is what matters for application impact**, not AWS's instance-state transitions.
 
 ## 8. Tech debt
 

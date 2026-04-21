@@ -1,0 +1,9 @@
+{
+  "name": "tailrd-rds-reboot-probe",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Ephemeral dependency pin for rdsRebootHealthCheck.js v2 (raw pg + timeouts). Fetched by ECS one-shot alongside the probe script; npm install at task start.",
+  "dependencies": {
+    "pg": "^8.13.0"
+  }
+}
