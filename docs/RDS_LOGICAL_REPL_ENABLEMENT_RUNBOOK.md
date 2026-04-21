@@ -159,17 +159,20 @@ From the health-check observer's CloudWatch logs, find the first `ok: true` line
 
 Staging rehearsal ran `tailrd-staging-postgres` (db.t3.medium, Multi-AZ, PG 15.14) through the exact procedure above. Health-check task emitted one `SELECT 1` per second against the staging endpoint throughout.
 
-| Metric | Staging measurement | Production budget |
-|---|---:|---:|
-| T0 (reboot API call) | 09:14:26.116Z | — |
-| Time to AWS "Multi-AZ instance failover started" event | **15.5s** | < 30s |
-| Time to AWS "DB instance restarted" event | **30.8s** | < 60s |
-| Time to AWS "Multi-AZ instance failover completed" event | **50.5s** | < 90s |
-| Time from reboot API call to `available` state | **72.2s** | < 120s |
-| Backend health-check failures during the reboot | **0** (ZERO) | < 10 |
-| Highest single query latency during reboot window | 31ms (normal: 1-2ms) | < 1000ms |
+| Metric | Staging measurement | Production measurement (2026-04-21T13:10:43Z) | Production budget |
+|---|---:|---:|---:|
+| T0 (reboot API call) | 09:14:26.116Z | **13:10:43.532Z** | — |
+| Time to AWS "Multi-AZ instance failover started" event | 15.5s | **17.0s** | < 30s |
+| Time to AWS "DB instance restarted" event | 30.8s | **33.4s** | < 60s |
+| Time to AWS "Multi-AZ instance failover completed" event | 50.5s | **66.8s** | < 90s |
+| Time from reboot API call to `available` state | 72.2s | **~78s** | < 120s |
+| Backend health-check failures during the reboot | 0 | **0** (production traffic via backend's own Prisma pool; the in-VPC probe hung at T+15s due to its own Prisma pool — see tech debt #20) | < 10 |
+| Highest single query latency during reboot window | 31ms | **n/a** (probe hung; backend smoke test endpoints post-reboot all < 350ms) | < 1000ms |
+| `max_wal_senders` enforcement | 10 → 25 (AWS-adjusted) | 10 → 25 (AWS-adjusted) | ≥ 10 |
 
-**Headline finding: Multi-AZ force-failover is effectively invisible to the backend Prisma connection pool.** Every 1-second health-check succeeded throughout the 72-second reboot window. AWS's failover mechanism swaps the ENI backing the DB endpoint transparently; existing TCP connections get a momentary blip (31ms query latency once) but are not severed. This is consistent with AWS documentation but far better than our conservative budget.
+**Headline finding (reconfirmed on production):** Multi-AZ force-failover is effectively invisible to the live backend's Prisma connection pool. Backend `/health` uptime continued monotonically through the entire reboot window (14770s → 15173s in the observation period — no restart). AWS's failover swaps the ENI backing the DB endpoint transparently; existing TCP connections survive.
+
+**Probe caveat on production:** the in-VPC health probe `infrastructure/scripts/rdsRebootHealthCheck.js` (written for Day 6; did not exist during staging rehearsal) stopped emitting at T+15s as Prisma's pool got stuck on the half-open TCP through the ENI swap. The probe task stayed RUNNING, never exited, never produced a `fail` sample. Production backend traffic was unaffected — this is a probe limitation, not a Multi-AZ observation. Tracked as tech debt #20 (`docs/TECH_DEBT_REGISTER.md`); next rehearsal should use a raw `pg` client with aggressive timeouts.
 
 ### Secondary test: SG ingress revoke
 

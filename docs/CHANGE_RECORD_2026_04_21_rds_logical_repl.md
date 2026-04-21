@@ -2,7 +2,7 @@
 
 **Change ID:** CR-2026-04-21-001
 **Owner:** Jonathan Hart
-**Status:** DRAFT (pre-execution)
+**Status:** **COMPLETE** ✅ (2026-04-21T13:44Z)
 **Created:** 2026-04-21
 **Target system:** `tailrd-production-postgres` (db.t3.medium, Multi-AZ, PG 15.14)
 **Change type:** Static parameter change requiring instance reboot with force-failover
@@ -240,6 +240,56 @@ Executed via `infrastructure/scripts/cdcReadinessTest.js` ECS one-shot (task `27
 **Substitution note:** Step 4 in the change record specified `UPDATE modules SET updatedAt = NOW() WHERE name = 'heart_failure'`. The Prisma schema has no `modules` model (the "modules" are frontend views, not database tables — see `backend/prisma/schema.prisma`). Substituted `pg_logical_emit_message`, which produces a WAL record consumable via logical decoding — the exact path DMS will use for CDC. The test remains end-to-end valid (we'd see the same 152-byte advance on a real UPDATE).
 
 **Verdict:** logical replication slot lifecycle proven end-to-end on production. Wave 2 CDC path is unblocked.
+
+### Phase 6-POST — 30-minute observation window (2026-04-21T13:12-13:43Z)
+
+Observation polled every 60s: `/health`, CloudWatch alarms in ALARM state, ECS running count. Eight consecutive poll rounds across T+22 min to T+30 min:
+
+| Time (UTC) | Alarms | ECS running | `/health` | Backend uptime |
+|---|---:|---:|---|---:|
+| 13:35:10Z | 0 | 1 | healthy | 14770s |
+| 13:36:17Z | 0 | 1 | healthy | 14837s |
+| 13:37:24Z | 0 | 1 | healthy | 14904s |
+| 13:38:31Z | 0 | 1 | healthy | 14971s |
+| 13:39:38Z | 0 | 1 | healthy | 15039s |
+| 13:40:46Z | 0 | 1 | healthy | 15106s |
+| 13:41:53Z | 0 | 1 | healthy | 15173s |
+
+**Observation verdict:** CLEAN. Zero alarms. ECS stable at 1/1. Backend uptime monotonically increasing — the backend process never restarted through the reboot. The uptime delta between polls exactly equals the polling interval (~67s), confirming no hidden restart.
+
+Post-reboot baseline `docs/RDS_BASELINE_POST_REBOOT_2026_04_21.md` captured at 13:44:03Z (T+32 min): 30 unique queries tracked, 111 total calls, 4.5ms avg mean, worst 79.6ms (HF dashboard COUNT subquery — expected shape). 0 long-running queries, 0 orphan replication slots, all 4 logical repl settings still in effect.
+
+### Actual vs predicted (summary)
+
+| Metric | Predicted (staging-based) | Actual | Delta |
+|---|---:|---:|---:|
+| Reboot to `available` | ≤ 120s (72s on staging) | ~78s | -6s vs staging |
+| Failover-started event | ≤ 30s from T0 | 17.0s | 13s ahead of budget |
+| Failover-completed event | ≤ 90s from T0 | 66.8s | 23s ahead of budget |
+| Backend `/health` 200 post-reboot | ≤ 2 min | +96s | -24s ahead of budget |
+| Backend process restart count | 0 | 0 | as predicted |
+| CloudWatch alarms fired | 0 | 0 | as predicted |
+| `wal_level` post-reboot | `logical` | `logical` | ✅ |
+| `rds.logical_replication` post-reboot | `on` | `on` | ✅ |
+| `max_replication_slots` post-reboot | `10` | `10` | ✅ |
+| `max_wal_senders` post-reboot | `10` | `25` (AWS-adjusted up) | **+15** (AWS minimum enforcement, non-blocking) |
+
+### Tech debt created
+
+- **#20 — `rdsRebootHealthCheck.js` probe hangs across Multi-AZ failover.** Probe stopped emitting at T+15s (1s before failover start) with task still in RUNNING state. Prisma's query pool blocked on the half-open TCP through ENI swap without timing out. Production traffic unaffected (backend's own Prisma pool survived — smoke test endpoints all 200, uptime continuous). LOW severity, probe-only limitation. Remediation: swap probe to raw `pg` with aggressive timeouts, or wrap Prisma calls in `Promise.race` with AbortSignal.
+
+### Final success criteria — all PASSED ✅
+
+1. `SHOW rds.logical_replication` returns `on` ✅
+2. `SHOW wal_level` returns `logical` ✅
+3. `SHOW max_replication_slots` returns `10` ✅
+4. `SHOW max_wal_senders` returns `≥10` ✅ (25, AWS-adjusted)
+5. Backend `/health` returns 200 within 2 min of `available` ✅ (96s)
+6. Backend login + HF dashboard queries work ✅ (smoke test all 4 endpoints 200)
+7. `AWS/RDS CPUUtilization` returns to baseline (~4-5%) within 5 min ✅ (always stayed 4.2-5.2% through the window; never spiked)
+8. No `TailrdDMS-RDS_CPU_CRITICAL_DURING_MIGRATION` alarms fired ✅
+
+**Change closed 2026-04-21T13:44Z.** No rollback needed. Wave 2 CDC path unblocked.
 
 ## 10. Post-change actions
 
