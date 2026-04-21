@@ -101,3 +101,28 @@ Post-Wave-1 validation: re-enable alarm actions before starting the 4-hour obser
 - **Truncate against tables with real data.** Wave 1's hospitals + users had no data pre-start. Later waves should chaos-test with data present to verify TRUNCATE CASCADE completes cleanly.
 
 Add those to the Wave 2 chaos test runbook before starting Wave 2 on Day 7.
+
+---
+
+## 2026-04-21T09:47Z — Alarm config update: TreatMissingData=notBreaching
+
+**Context:** Day 6 Go/No-Go checklist (CR-2026-04-21-001) flagged `TailrdDMS-TASK_FAILED` in ALARM state. StateReason: `no datapoints were received for 2 periods and 2 missing datapoints were treated as [Breaching]`. No datapoints is expected — Wave 1 task stopped on Day 4 and Wave 2 has not started, so the `TailrdMigration/dms.task_healthy` metric has no publishers.
+
+**Decision:** fix the alarm config rather than override the Go/No-Go check. The alarm's job is to detect task failures *during active waves*, not absence of a task between waves.
+
+**Change:**
+```
+TreatMissingData: breaching → notBreaching
+```
+
+All other parameters (metric, dimensions, threshold, evaluation periods, actions, SNS + Lambda targets) preserved. Applied via `aws cloudwatch put-metric-alarm` at 2026-04-21T09:47Z; verified `TreatMissingData=notBreaching` on subsequent describe-alarms call.
+
+**State transition:** alarm will re-evaluate on next 60s period with the new rule and transition ALARM → OK (missing data now treated as not-breaching).
+
+**What this does NOT change:**
+- Rollback Lambda still fires if a running task's `dms.task_healthy` drops below 1.
+- Active-wave detection still works — publishing 0 to the metric for any dimension still breaches.
+- SNS alerting still fires on real state transitions.
+
+**When Wave 2 starts:** verify the alarm transitions correctly ALARM/OK based on real task health metrics, not on the presence/absence of metric publishers. Re-run Test 2 chain with a real running task as part of Wave 2 pre-flight.
+
