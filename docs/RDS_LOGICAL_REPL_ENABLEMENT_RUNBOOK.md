@@ -69,7 +69,7 @@ aws rds wait db-instance-available --db-instance-identifier tailrd-production-po
 
 The probe source is committed at `infrastructure/scripts/rdsRebootHealthCheck.js`. It connects via `DATABASE_URL`, issues `SELECT 1` once per second, and writes one JSON line per attempt. Connection losses surface as `status: "fail"` samples — the process itself does not exit, so it keeps probing right across the failover window.
 
-Before the reboot, upload the current script to S3 (idempotent) and launch a one-shot ECS task that downloads + runs it inside the VPC:
+Before the reboot, upload the current script to S3 (idempotent), generate a short-lived pre-signed URL, and launch a one-shot ECS task that downloads via `curl` + runs it inside the VPC. Note: the `tailrd-backend` image is `node:18-slim` with `openssl curl` added; it does **not** include the AWS CLI. The probe fetch uses `curl` + pre-signed URL, not `aws s3 cp`.
 
 ```bash
 # 1. Upload (or refresh) the probe in the migration-artifacts prefix
@@ -77,12 +77,17 @@ aws s3 cp infrastructure/scripts/rdsRebootHealthCheck.js \
   s3://tailrd-cardiovascular-datasets-863518424332/migration-artifacts/rdsRebootHealthCheck.js \
   --content-type "application/javascript"
 
-# 2. Launch the one-shot probe task (uses backend task def → inherits DATABASE_URL secret + VPC + IAM)
+# 2. Generate a pre-signed URL (1 hour validity; plenty for a ~45 min reboot window)
+PROBE_URL=$(aws s3 presign \
+  s3://tailrd-cardiovascular-datasets-863518424332/migration-artifacts/rdsRebootHealthCheck.js \
+  --expires-in 3600)
+
+# 3. Launch the one-shot probe task (uses backend task def → inherits DATABASE_URL secret + VPC + IAM)
 aws ecs run-task --cluster tailrd-production-cluster \
   --task-definition tailrd-backend \
   --launch-type FARGATE \
   --network-configuration "awsvpcConfiguration={subnets=[subnet-0e606d5eea0f4c89b,subnet-0071588b7174f200a],securityGroups=[sg-07cf4b72927f9038f],assignPublicIp=DISABLED}" \
-  --overrides '{"containerOverrides":[{"name":"tailrd-backend","command":["sh","-c","aws s3 cp s3://tailrd-cardiovascular-datasets-863518424332/migration-artifacts/rdsRebootHealthCheck.js /tmp/probe.js && node /tmp/probe.js"]}]}' \
+  --overrides "{\"containerOverrides\":[{\"name\":\"tailrd-backend\",\"command\":[\"sh\",\"-c\",\"curl -fsSL '$PROBE_URL' -o /tmp/probe.js && node /tmp/probe.js\"]}]}" \
   --started-by "day-6-production-reboot-healthcheck"
 ```
 
