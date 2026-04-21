@@ -125,6 +125,41 @@ Initial run at 2026-04-21T09:44Z found two issues; both remediated and re-run cl
 
 **Anomalies:** none in-window. The 86 ms p99 is attributable entirely to the first probe call, which includes Prisma's lazy connection establishment. Post-warmup every sample is 1-6 ms. Probe continues running through Phase 6C for reboot window capture.
 
+### Phase 6B — Parameter group staged (2026-04-21T13:03-13:06Z)
+
+**Parameter group:**
+- Name: `tailrd-production-postgres15-logical-repl`
+- ARN: `arn:aws:rds:us-east-1:863518424332:pg:tailrd-production-postgres15-logical-repl`
+- Family: `postgres15`
+
+**Parameters set (all `applyType: static`, `applyMethod: pending-reboot`):**
+
+| Parameter | Value |
+|---|---|
+| `rds.logical_replication` | `1` |
+| `max_replication_slots` | `10` |
+| `max_wal_senders` | `10` |
+
+**Attach to production RDS:**
+- Command: `aws rds modify-db-instance --apply-immediately`
+- Transition: `ParameterApplyStatus: applying` (13:05:04Z) → `pending-reboot` (13:06:05Z)
+- Total `applying` duration: ~61 seconds
+- RDS instance state: `available` throughout (never left)
+
+**Post-attach RDS state (13:06:05Z):**
+- `DBInstanceStatus: available`
+- `DBParameterGroupName: tailrd-production-postgres15-logical-repl`
+- `ParameterApplyStatus: pending-reboot`
+- `PendingModifiedValues: {}` (group association itself is live; only the three static params are queued for reboot)
+
+**Probe during Phase 6B:**
+- 406 total events at 13:06:18Z
+- Last 10 samples all `status: ok`, latency 1-2 ms
+- Zero failures across the entire Phase 6B window
+- Confirms: attaching a new parameter group with `--apply-immediately` is completely transparent to live traffic. The instance never transitioned out of `available`, and the backend's Prisma pool saw no anomalies.
+
+**What is NOT yet in effect:** `wal_level` is still `replica`, `rds.logical_replication` is still `off` at the engine level. These only change on the next RDS reboot (Phase 6C).
+
 ## 10. Post-change actions
 
 - Update `docs/TECH_DEBT_REGISTER.md` item #19 → RESOLVED
