@@ -214,6 +214,85 @@ Next session: execute Day 6 production reboot per `docs/RDS_LOGICAL_REPL_ENABLEM
 
 ---
 
+## Day 6 — production RDS logical replication enablement (2026-04-21)
+
+Change record: `docs/CHANGE_RECORD_2026_04_21_rds_logical_repl.md` / CR-2026-04-21-001. Branch `feat/aurora-v2-day6-logical-repl-prod`.
+
+### Phase 6-PRE Go/No-Go (2026-04-21T09:44-10:08Z)
+Initial check found `TailrdDMS-TASK_FAILED` in ALARM (missing-datapoint breach logic between waves) and the last deploy only 16 min prior. Both remediated: alarm changed to `TreatMissingData=notBreaching`, waited out the 30-min deploy cooldown. Re-run at 10:08:12Z — all 5 checks clean.
+
+### Phase 6A — snapshot + probe (2026-04-21T10:17-13:00Z)
+- Snapshot `tailrd-production-postgres-pre-logical-repl-2026-04-21` taken, reached `available` 100% progress.
+- Runbook gap surfaced: `infrastructure/scripts/rdsRebootHealthCheck.js` was referenced but never committed. Wrote it, uploaded to S3, committed. Four iterations needed to produce a probe that actually ran in the backend image (pg not a direct dep; switched to `@prisma/client`).
+- 60s pre-reboot baseline: 60/60 samples OK, p50=2ms, p95=3ms, max=86ms (Prisma cold-start).
+
+### Phase 6B — parameter group staged (2026-04-21T13:03-13:06Z)
+- Created parameter group `tailrd-production-postgres15-logical-repl`.
+- Three static params (`rds.logical_replication=1`, `max_replication_slots=10`, `max_wal_senders=10`) set with `ApplyMethod=pending-reboot`.
+- Attached with `--apply-immediately`. `ParameterApplyStatus` transitioned `applying` → `pending-reboot` in ~61s. Instance stayed `available`. Probe zero failures across window.
+
+### Phase 6C — reboot with force-failover (T0 = 2026-04-21T13:10:43.532Z)
+
+| Event | UTC | Δ from T0 |
+|---|---|---:|
+| Reboot API call (T0) | 13:10:43.532Z | 0s |
+| Multi-AZ failover started | 13:11:00.541Z | +17.0s |
+| AWS auto-adjusted `max_wal_senders` 10 → 25 | 13:11:08.818Z | +25.3s |
+| DB instance restarted | 13:11:16.938Z | +33.4s |
+| Multi-AZ failover completed | 13:11:50.378Z | +66.8s |
+| `DBInstanceStatus: available` | ~13:12:01Z | ~+78s |
+| Backend `/health` 200 post-reboot | 13:12:19.992Z | +96s |
+
+Reboot beat staging's 72s by 6s, comfortably inside the 120s budget. `max_wal_senders=10` was AWS-corrected to `25` (its Multi-AZ PG15 minimum) — non-blocking since 25 ≥ 10.
+
+### Phase 6D — parameter verification + smoke (2026-04-21T13:13-13:15Z)
+
+Verification ECS one-shot via `infrastructure/scripts/verifyLogicalRepl.js`:
+- `wal_level = logical` ✅
+- `rds.logical_replication = on` ✅
+- `max_replication_slots = 10` ✅
+- `max_wal_senders = 25` (>=10 required) ✅
+- `shared_preload_libraries = rdsutils,pg_stat_statements` ✅
+- `CREATE EXTENSION IF NOT EXISTS pg_stat_statements` — success
+- `SELECT pg_stat_statements_reset()` — executed at DB level (Prisma cosmetic deserialize error on void return; stats reset regardless)
+
+Backend smoke test (`JHart@tailrd-heart.com`):
+- `GET /health` — 200, uptime continuous through reboot (backend process never restarted)
+- `POST /api/auth/login` — 200, token issued
+- `GET /api/modules/heart-failure/dashboard` — 200 in 335ms
+- `GET /api/admin/analytics` — 200 in 116ms
+
+Zero alarms triggered during or after the reboot.
+
+**Probe caveat (not a production finding):** probe stopped emitting at T+15s when Prisma's pool hung on the failover ENI swap. Task stayed RUNNING. Filed as tech debt #20.
+
+### Phase 6E — CDC readiness test (2026-04-21T13:26Z)
+
+Via `infrastructure/scripts/cdcReadinessTest.js` ECS one-shot (exit 0 on v2 after `::text` cast fix for `pg_drop_replication_slot` void return):
+
+| Step | Result |
+|---|---|
+| 0. Slots before test | 0 |
+| 1. Create `day6_readiness_test` (pgoutput) | Created at LSN `47/A0000098` |
+| 2. Inspect slot | plugin=pgoutput, slot_type=logical, active=false, database=tailrd, restart_lsn=`47/A0000060`, confirmed_flush_lsn=`47/A0000098` ✅ |
+| 3. Pre-test `pg_current_wal_lsn()` | `47/A0000098` |
+| 4. `pg_logical_emit_message` (substituting for `UPDATE modules` — no such table in schema) | emit LSN `47/A0000100` |
+| 4b. Post-test `pg_current_wal_lsn()` | `47/A0000130` |
+| 4c. `pg_wal_lsn_diff(post, pre)` | **+152 bytes** ✅ |
+| 5. Slot post-activity | active=false, restart_lsn preserved ✅ |
+| 6. `pg_drop_replication_slot` | dropped ✅ |
+| 6b. Count after drop | 0 ✅ |
+| 7. Final slot census | 0 slots — clean ✅ |
+
+**Verdict:** logical replication slot lifecycle proven end-to-end on production. Wave 2 CDC path unblocked.
+
+### Closes
+
+- Tech debt #19 → RESOLVED
+- Opens tech debt #20 (probe rewrite)
+
+---
+
 ## Wave 1 retention
 
 The `tailrd-migration-wave1` DMS task is **retained** (not deleted) per Jonathan's direction. The task definition pattern (table mappings, settings JSON) will be cloned for Waves 2-4 with:

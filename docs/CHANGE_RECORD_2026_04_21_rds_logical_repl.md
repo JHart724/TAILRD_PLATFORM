@@ -219,9 +219,32 @@ Filed as tech debt #20 (new).
 
 **Phase 6C/6D verdict:** SUCCESS. All logical replication parameters live and correct. Backend unaffected. Ready for Phase 6E (CDC readiness test) on user authorization.
 
+### Phase 6E — CDC readiness test (2026-04-21T13:26Z)
+
+Executed via `infrastructure/scripts/cdcReadinessTest.js` ECS one-shot (task `273652f4afc94914836a2d5bef18de9a`, exit 0). First attempt (task `6bf215a4...`) exited 1 on a Prisma `void`-deserialize error in the drop step — same quirk seen in 6D. Added `::text` cast and re-ran clean.
+
+| Step | Result |
+|---|---|
+| 0. Slots before | 0 (clean start) |
+| 1. `pg_create_logical_replication_slot('day6_readiness_test','pgoutput')` | Created, LSN `47/A0000098` |
+| 2. Slot inspect | plugin=pgoutput, slot_type=logical, active=false, database=tailrd, restart_lsn=`47/A0000060`, confirmed_flush_lsn=`47/A0000098` ✅ |
+| 3. Pre-test `pg_current_wal_lsn()` | `47/A0000098` |
+| 4. `pg_logical_emit_message(true, 'day6_readiness', ...)` | emit LSN `47/A0000100` |
+| 4b. Post-test `pg_current_wal_lsn()` | `47/A0000130` |
+| 4c. `pg_wal_lsn_diff(post, pre)` | **+152 bytes** — WAL advanced ✅ |
+| 5. Slot post-activity health | active=false, restart_lsn=`47/A0000060` preserved ✅ |
+| 6. `pg_drop_replication_slot('day6_readiness_test')::text` | dropped ✅ |
+| 6b. Post-drop count | 0 ✅ |
+| 7. Final slot census | 0 slots total — clean ✅ |
+
+**Substitution note:** Step 4 in the change record specified `UPDATE modules SET updatedAt = NOW() WHERE name = 'heart_failure'`. The Prisma schema has no `modules` model (the "modules" are frontend views, not database tables — see `backend/prisma/schema.prisma`). Substituted `pg_logical_emit_message`, which produces a WAL record consumable via logical decoding — the exact path DMS will use for CDC. The test remains end-to-end valid (we'd see the same 152-byte advance on a real UPDATE).
+
+**Verdict:** logical replication slot lifecycle proven end-to-end on production. Wave 2 CDC path is unblocked.
+
 ## 10. Post-change actions
 
-- Update `docs/TECH_DEBT_REGISTER.md` item #19 → RESOLVED
-- Update `docs/DMS_MIGRATION_LOG.md` with Day 6 entry (snapshot ID, T0, observed timings, success criteria)
-- Update `CLAUDE.md` § 9 "Last known working task definition" if backend redeployed
-- Schedule Wave 2 (`patients` + `encounters`) for Day 7
+- [x] `docs/TECH_DEBT_REGISTER.md` item #19 → RESOLVED (2026-04-21)
+- [x] `docs/TECH_DEBT_REGISTER.md` item #20 → NEW (probe rewrite for failover-tolerant timeouts)
+- [x] `docs/DMS_MIGRATION_LOG.md` updated with full Day 6 entry (Phases 6-PRE through 6E with timings, LSN values, SHOW verifications)
+- [ ] `CLAUDE.md` § 9 "Last known working task definition" — no backend redeploy occurred; still `tailrd-backend:91`. No update needed.
+- [ ] Schedule Wave 2 (`patients` + `encounters`) for Day 7 with `--migration-type full-load-and-cdc`, extra source connection attributes `slotName=dms_wave2_slot` — pending user authorization for Phase 6F

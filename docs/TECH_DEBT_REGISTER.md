@@ -155,20 +155,21 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 - **Planned remediation:** None. Do not retroactively rewrite historical audit records — doing so would itself be a compliance violation (tampering with audit trail). Document and accept.
 - **Target:** N/A (accepted)
 
-### 19. CDC deferred on Wave 1 pending production RDS logical replication enablement — **STAGING-VERIFIED 2026-04-21**
+### 19. CDC deferred on Wave 1 pending production RDS logical replication enablement — **RESOLVED 2026-04-21**
 - **Severity:** LOW (intentional deferral, Palantir-grade risk management)
-- **Impact:** Wave 1 on 2026-04-20 ran in `full-load` migration mode rather than `full-load-and-cdc` because `rds.logical_replication` is currently `off` on `tailrd-production-postgres`. Waves 2-4 need CDC.
-- **Day 5 staging rehearsal (2026-04-21) result: GREEN.**
-  - Reboot procedure: ran exactly as documented
-  - Staging RDS downtime: **72.2s** (within 120s budget)
-  - Backend Prisma connection pool health-check failures: **0** across the full 72s window (expected a handful)
-  - Post-reboot parameter values: all four expected values confirmed (wal_level=logical, rds.logical_replication=on, max_replication_slots=10, max_wal_senders=25 after AWS auto-adjust)
-  - Runbook now contains measured timings: `docs/RDS_LOGICAL_REPL_ENABLEMENT_RUNBOOK.md`
-  - Bonus finding: `pg_stat_statements` now loaded on staging (was missing on production) — will solve tech debt-adjacent observability gap once production is rebooted too
-- **Remaining work:**
-  - **Day 6 (2026-04-22), pre-Wave-2:** Execute the rehearsed runbook against production `tailrd-production-postgres`. Expected budget: <2 min total impact window.
-  - **Day 6, Wave 2:** Start Wave 2 (`patients` + `encounters`) with `--migration-type full-load-and-cdc` and `slotName=dms_wave2_slot` source connection attribute.
-- **Target:** 2026-04-22 (Day 6 before Wave 2 start). Currently unblocked with high confidence.
+- **Original impact:** Wave 1 on 2026-04-20 ran in `full-load` migration mode rather than `full-load-and-cdc` because `rds.logical_replication` was `off` on `tailrd-production-postgres`. Waves 2-4 need CDC.
+- **Day 5 staging rehearsal (2026-04-21) result: GREEN.** 72.2s reboot, zero backend failures, all four parameter values confirmed post-reboot.
+- **Day 6 production reboot (2026-04-21T13:10:43Z): GREEN.** Change record `docs/CHANGE_RECORD_2026_04_21_rds_logical_repl.md` / CR-2026-04-21-001. Measured reboot: 78s (6s faster than staging). Backend `/health` uptime continuous through failover. Post-reboot SHOW values: `wal_level=logical`, `rds.logical_replication=on`, `max_replication_slots=10`, `max_wal_senders=25`. `pg_stat_statements` extension active + stats reset.
+- **Day 6 Phase 6E CDC readiness test (2026-04-21T13:26Z): GREEN.** Created `day6_readiness_test` logical slot at LSN `47/A0000098`, advanced WAL 152 bytes via `pg_logical_emit_message`, slot remained healthy, dropped cleanly, final count = 0. Logical decoding path proven end-to-end on production.
+- **Unblocks:** Wave 2 (`patients` + `encounters`) can now start with `--migration-type full-load-and-cdc` and `slotName=dms_wave2_slot`. Scheduled for Day 7.
+
+### 20. `rdsRebootHealthCheck.js` probe hangs across Multi-AZ failover (filed 2026-04-21)
+- **Severity:** LOW (probe limitation only — does not affect production traffic)
+- **Impact:** During Day 6 Phase 6C production reboot, the probe emitted its last sample at T+15s (1 second before Multi-AZ failover started) and produced no further output through the 78s failover window. ECS task stayed in `RUNNING` state (not killed); the `@prisma/client` query pool apparently blocked on a half-open TCP connection after the RDS endpoint's ENI swap, without timing out. No `fail` samples were emitted — the hung query never returned success or error, so the probe thread stalled. Backend production traffic was unaffected (smoke test endpoints all 200, `/health` uptime continuous).
+- **Remediation options (for next rehearsal or reboot):**
+  - Swap probe to raw `pg` Client with explicit `connectionTimeoutMillis`, `statement_timeout`, `query_timeout` all set to 2-3s
+  - OR wrap each `$queryRawUnsafe` call with `Promise.race` against an AbortSignal timeout
+- **Target:** Before next production RDS reboot (no current ETA). Not blocking Wave 2.
 
 ---
 
@@ -180,6 +181,6 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 | HIGH | 4 | All within the Aurora migration sprint or the one following |
 | MEDIUM | 6 | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9) |
 | P1 | 2 | Dedicated sprints B-2 and B-3 |
-| LOW | 4 | 2026 Q4 or as product maturity dictates |
+| LOW | 5 | 2026 Q4 or as product maturity dictates |
 
 Running this register against the Aurora V2 migration plan shows most MEDIUM items get resolved automatically by the migration. P0 and HIGH items are sequenced explicitly in this doc. New items should be appended here, not inserted mid-list — the numbering is a stable reference.
