@@ -192,6 +192,83 @@ Full test evidence: `docs/DMS_CHAOS_TEST_LOG.md` Test 3 section.
 
 **No production data moved yet.**
 
+### Phase 7D — Rollback Lambda env vars updated for Wave 2 (2026-04-21T15:22Z)
+
+**Env vars diff vs pre-change (Wave 1) snapshot:**
+
+| Variable | Pre-change (Wave 1) | Post-change (Wave 2) | Rationale |
+|---|---|---|---|
+| `DMS_TASK_ARN` | `...:task:IMG4NEHABJCQTHVRK7GNJYTPXI` (Wave 1) | `...:task:X4L644C5LNEN3PPYNNWDDLTB24` (Wave 2) | Point rollback at the new task |
+| `TARGET_TRUNCATE_TABLES` | `hospitals,users` | `patients,encounters` | Wipe Wave 2's targets on rollback |
+| `REPLICATION_SLOT_NAME` | *(absent — Wave 1 was full-load-only)* | `dms_wave2_slot` | CDC slot created by Wave 2 |
+| `SOURCE_HOST` | prod RDS | prod RDS | unchanged ✅ |
+| `AURORA_*` | all prod | all prod | unchanged ✅ |
+| `SOURCE_SECRET_ARN` | prod DB URL secret | prod DB URL secret | unchanged ✅ |
+| `SNS_TOPIC_ARN` | `tailrd-migration-alerts` | same | unchanged ✅ |
+
+**Smoke-test invocation:** manual invoke with test event `{alarmName: "MANUAL_PHASE7D_SMOKE_TEST", reason: "..."}`. For the test only, `TARGET_TRUNCATE_TABLES` was temporarily set to empty string so the Lambda would skip the truncate step (belt-and-suspenders — Aurora patients+encounters are empty, but avoiding any TRUNCATE side-effect was cleaner). Restored to `patients,encounters` after the test.
+
+Lambda response (StatusCode 200, 1062ms execution):
+
+```json
+{
+  "alarm": {"alarmName": "MANUAL_PHASE7D_SMOKE_TEST"},
+  "config": { "dmsTaskArn": "...X4L644C5LNEN3PPYNNWDDLTB24", "slotName": "dms_wave2_slot", "truncateTables": [] },
+  "steps": {
+    "stopTask": { "error": "Replication Task ...X4L644... is currently not running." },
+    "dropSlot": { "error": "slot drop failed: replication slot \"dms_wave2_slot\" does not exist" },
+    "truncate": { "skipped": "no TARGET_TRUNCATE_TABLES configured" },
+    "sns":      { "published": true }
+  }
+}
+```
+
+**What this proves:**
+- ✅ Lambda reaches DMS API with the new Wave 2 ARN (`stopTask` error is "task not running" — the task is in `ready` state, never started). Expected.
+- ✅ **Lambda successfully authenticated against prod RDS and executed SQL.** The `dropSlot` error is "slot does not exist" — the Lambda got past `GetSecretValue` + `kms:Decrypt` + the pg connection + executed `pg_drop_replication_slot` and only then got a "not found" error. **This is end-to-end validation of the Phase 7B.5 IAM + KMS fix in production.**
+- ✅ SNS published successfully.
+- ✅ `truncate` correctly short-circuited when `TARGET_TRUNCATE_TABLES` was empty.
+
+**Final Lambda env verified:** all 9 variables at Wave 2 config post-test. Ready for Wave 2 CDC start.
+
+### Phase 7E — Shadow validator preparation (2026-04-21T15:30Z)
+
+**Part 1: Test run against current state.** Executed `backend/scripts/shadowReadValidation.ts` as ECS one-shot (`eb6cbd52a5334a40bd6fb5a5949a075c`, exit 0) against the live prod RDS + Aurora endpoints.
+
+Result: **6 queries, 6 divergences** — as expected. Key findings:
+
+| Query | RDS rows | Aurora rows | Notes |
+|---|---:|---:|---|
+| `hospitals.all` | 4 | 0 | **Aurora was wiped by Day 4 Test 2's chaos TRUNCATE** (which truncated the very data Wave 1 had just loaded). Means Wave 1's full-load result is currently lost from Aurora. |
+| `hospitals.count` | 1 | 1 | Different hash — Aurora has 0 hospitals but query returns 1 row (the COUNT aggregate row) |
+| `users.by_hospital` | 1 | 0 | Same as hospitals — wiped by Test 2 |
+| `users.role_distribution` | 1 | 0 | Same as hospitals — wiped by Test 2 |
+| `patients.count_per_hospital` | 3 | 0 | Expected — Wave 2 hasn't run |
+| `encounters.by_type` | 4 | 0 | Expected — Wave 2 hasn't run |
+
+**Important Day 8 implication:** Aurora currently has **zero** data in `hospitals` and `users` — Wave 1's full-load was functionally erased by Day 4 chaos Test 2's rollback TRUNCATE. Before Wave 2 starts, either:
+- Re-run Wave 1 full-load to repopulate hospitals + users, OR
+- Accept that Aurora cutover will require backfilling hospitals + users separately, OR
+- Accept that Waves 3-N will themselves truncate/reload their own tables and hospitals + users can wait for a dedicated re-load later
+
+User decision needed at Day 8 start. This is a finding from today, not a drift — but it changes Day 8 planning.
+
+**Part 2: Disabled EventBridge rule created.**
+
+- Rule: `tailrd-shadow-validator-schedule`
+- ARN: `arn:aws:events:us-east-1:863518424332:rule/tailrd-shadow-validator-schedule`
+- Schedule: `rate(5 minutes)`
+- State: **DISABLED** ✅
+- IAM role created: `tailrd-eventbridge-ecs-role` with:
+  - Trust policy: `events.amazonaws.com`
+  - Inline `EventBridgeECSRunTaskPolicy`: `ecs:RunTask` on `tailrd-backend` task-def-family (scoped to `tailrd-production-cluster` via `ArnEquals ecs:cluster` condition) + `iam:PassRole` on the backend task+execution roles (scoped to `ecs-tasks.amazonaws.com`)
+
+**Target NOT YET wired** — deferred to Day 8 Wave 2 start ship. The ECS RunTask target configuration requires inline `SOURCE_DATABASE_URL` + `TARGET_DATABASE_URL` environment overrides. Rather than hardcode production credentials into the EventBridge rule (visible via `describe-rule` + CloudTrail), target wiring happens at cutover against the live task def revision + freshly-fetched Aurora credentials. The rule schedule being present + disabled is the "ready to enable" state the user asked for; enabling + target wiring + initial run are one atomic operation at Day 8 start.
+
+**Known constraint for Day 8 Day-of:**
+- Target needs env: `SOURCE_DATABASE_URL` (from `tailrd-production/app/database-url` secret), `TARGET_DATABASE_URL` (constructed from `tailrd-production/app/aurora-db-password` + Aurora writer endpoint), `SHADOW_SCOPE=all`, `SHADOW_WAVE=2`.
+- Task role `tailrd-production-ecs-task` needs `GetSecretValue` on Aurora secret if we wire via bootstrap-script pattern (not yet granted). Alternative: inline URLs in target — faster but secrets-in-describe-rule concern.
+
 ## 8. Tech debt
 
 - Resolves: **#20** (`rdsRebootHealthCheck.js` probe hangs across Multi-AZ failover)
