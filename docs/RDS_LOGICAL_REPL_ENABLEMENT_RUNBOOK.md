@@ -87,7 +87,7 @@ aws ecs run-task --cluster tailrd-production-cluster \
   --task-definition tailrd-backend \
   --launch-type FARGATE \
   --network-configuration "awsvpcConfiguration={subnets=[subnet-0e606d5eea0f4c89b,subnet-0071588b7174f200a],securityGroups=[sg-07cf4b72927f9038f],assignPublicIp=DISABLED}" \
-  --overrides "{\"containerOverrides\":[{\"name\":\"tailrd-backend\",\"command\":[\"sh\",\"-c\",\"curl -fsSL '$PROBE_URL' -o /tmp/probe.js && NODE_PATH=/app/node_modules node /tmp/probe.js\"]}]}" \
+  --overrides "{\"containerOverrides\":[{\"name\":\"tailrd-backend\",\"command\":[\"sh\",\"-c\",\"cd /app && curl -fsSL '$PROBE_URL' -o probe.js && node probe.js\"]}]}" \
   --started-by "day-6-production-reboot-healthcheck"
 ```
 
