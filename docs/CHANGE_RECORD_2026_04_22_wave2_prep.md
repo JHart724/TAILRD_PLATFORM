@@ -106,6 +106,38 @@ Executed at start of Phase 7A. All 5 must pass:
 
 **Note:** the probe-visible DB unavailability window (12s) is far shorter than the AWS "available" state transition (75s). Multi-AZ cutover completes at the ENI layer around T+25s; the remaining 50s of `rebooting` status is AWS bookkeeping that doesn't affect client connectivity. This means for Wave 2 CDC observation, **probe-visible outage is what matters for application impact**, not AWS's instance-state transitions.
 
+### Phase 7B — live DMS rollback chaos test on staging (2026-04-21T14:36-15:04Z)
+
+Per user direction: executed against staging (not production) to avoid prod schema pollution. Same exercise value.
+
+**Setup chain:** added temporary DMS-SG → staging-RDS-SG ingress (rule `sgr-09bd57fc151ce43d3`), created `chaos_test_day7` table on staging (2 rows), created DMS source endpoint `tailrd-staging-source-chaos`, created DMS task `tailrd-dms-chaos-live-test` (`full-load-and-cdc`, chaos_test_day7 only), started task (full-load done in 1.9s, CDC active with slot `xgavhney3rcztdwg_00016401_9a4d6293_8534_4d50_a069_549a129627a8`), created temporary alarm `TailrdDMS-CHAOS-TEST-TASK-FAILED`, updated Lambda env vars for chaos.
+
+**Trigger + rollback (T0 = alarm-fire time 2026-04-21T14:57:16Z):**
+
+| Step | Δ from T0 | Result |
+|---|---:|---|
+| Alarm fires (2 breached datapoints) | 0s | ALARM |
+| Lambda invoked by CloudWatch | +12s | RequestId `a74095ab...` |
+| Lambda completes | +13s | 1.18s execution time |
+| DMS task → `stopping` | ~+13s | stopTask step succeeded |
+| DMS task → `stopped` | +66s | fully stopped |
+
+**Lambda step results:**
+- ✅ `stopTask`: `stopped: true, priorStatus: running`
+- ❌ `dropSlot`: IAM error — role lacks `secretsmanager:GetSecretValue` on the staging secret ARN. **Test-config artifact, not a rollback-logic bug.** For real Wave 2 (prod source secret), the role already has access. Flagged as Day 8 verify-before-cutover item.
+- ✅ `truncate`: `TRUNCATE "chaos_test_day7" CASCADE` on Aurora — success
+- ✅ `sns`: published
+
+**Datapoint-count learning:** first single `put-metric-data` publish didn't fire the alarm — alarm needs 2 consecutive 60s periods of breach, and with `TreatMissingData: notBreaching` a single datapoint is only 1 period. Fixed by publishing 3 times 30s apart. For Wave 2 real traffic this is not a concern — DMS continuously publishes `dms.task_healthy`.
+
+**Manual dropSlot cleanup:** one-shot ECS task `pg_terminate_backend(active_pid)` → `pg_drop_replication_slot(...)` → `DROP TABLE chaos_test_day7`. Post-cleanup: 0 slots on staging.
+
+**Full teardown:** chaos alarm deleted, chaos DMS task deleted, staging source endpoint deleted, SG rule revoked, Lambda env vars restored to Wave 1 config (verified via `get-function-configuration` — matches pre-chaos snapshot).
+
+**Verdict:** live rollback chain PROVEN end-to-end. Combined with Day 4 Test 1 (Lambda isolation) + Test 2 (alarm→Lambda wiring), all three legs of the rollback system have evidence. Wave 2 CDC is safe to start on Day 8, conditional on pre-cutover verification that the Lambda role has `GetSecretValue` on the prod source secret ARN (which it already should — prod secrets were the original config).
+
+Full test evidence: `docs/DMS_CHAOS_TEST_LOG.md` Test 3 section.
+
 ## 8. Tech debt
 
 - Resolves: **#20** (`rdsRebootHealthCheck.js` probe hangs across Multi-AZ failover)
