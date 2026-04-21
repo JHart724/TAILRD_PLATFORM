@@ -191,3 +191,42 @@ The chaos test's `dropSlot` failure left the slot + dead task's slot position on
 
 Overall: the "live CDC + rollback" chain is proven functional end-to-end. Combined with Test 1 (Lambda isolation) and Test 2 (alarm→Lambda wiring), all three legs of the rollback system have evidence.
 
+---
+
+## 2026-04-21T15:08Z — Phase 7B.5 IAM verification for production `dropSlot` path
+
+**Why this is separate:** Test 3's `dropSlot` failure was an IAM gap on the *staging* secret. The user's instruction was to explicitly verify that the *production* `dropSlot` path will succeed at Wave 2 cutover — the actual production role/secret/KMS combination hasn't been exercised in any prior test.
+
+**Current role policy (before any fix):** `arn:aws:iam::863518424332:role/dms-rollback-role`, inline policy `DMSRollbackPolicy`.
+
+- ✅ `secretsmanager:GetSecretValue` + `DescribeSecret` on both prod secret ARN prefixes:
+  - `.../tailrd-production/app/database-url-*`
+  - `.../tailrd-production/app/aurora-db-password-*`
+- ❌ No `kms:Decrypt` statement in the policy — a gap. The production DATABASE_URL secret is encrypted with customer CMK `arn:aws:kms:us-east-1:863518424332:key/46f6551f-84e6-434f-9316-05055317a1e7`; decrypting it requires `kms:Decrypt` in the caller role's IAM policy (the CMK's key policy has only `RootAccountAccess` + cross-account deny, which delegates to IAM). The Aurora secret uses the AWS-managed `aws/secretsmanager` key (kmsKeyId null), which does not require an explicit role grant.
+
+**Fix applied:** added to `DMSRollbackPolicy`:
+
+```json
+{
+  "Effect": "Allow",
+  "Action": ["kms:Decrypt"],
+  "Resource": ["arn:aws:kms:us-east-1:863518424332:key/46f6551f-84e6-434f-9316-05055317a1e7"],
+  "Condition": {
+    "StringEquals": { "kms:ViaService": "secretsmanager.us-east-1.amazonaws.com" }
+  }
+}
+```
+
+The `kms:ViaService` condition is defense-in-depth — the role can only use the key when the request routes through Secrets Manager, not for arbitrary decrypt operations.
+
+**Verification via `aws iam simulate-principal-policy`:**
+
+| Action | Resource | Result |
+|---|---|---|
+| `secretsmanager:GetSecretValue` | `...tailrd-production/app/database-url-SagEmE` | `allowed` ✅ |
+| `kms:Decrypt` | CMK `46f6551f-...` (with ViaService=secretsmanager) | `allowed` ✅ — matched statement `role_dms-rollback-role_DMSRollbackPolicy` |
+
+**Conclusion:** the Wave 2 `dropSlot` step will succeed in production. The staging failure in Test 3 was entirely a scoped-secret-access issue, not a systemic rollback-logic bug.
+
+**Pre-Wave-2-cutover checklist item (for Day 8):** re-run `aws iam simulate-principal-policy` for both resources immediately before starting the Wave 2 task, to catch any policy drift introduced between now and then.
+

@@ -138,6 +138,60 @@ Per user direction: executed against staging (not production) to avoid prod sche
 
 Full test evidence: `docs/DMS_CHAOS_TEST_LOG.md` Test 3 section.
 
+### Phase 7B.5 — IAM verification for production `dropSlot` (2026-04-21T15:08Z)
+
+**Gap found:** `DMSRollbackPolicy` had `secretsmanager:GetSecretValue` on both prod secret ARN prefixes but NO `kms:Decrypt` statement. The prod DATABASE_URL secret is encrypted with customer CMK `46f6551f-84e6-434f-9316-05055317a1e7`; decrypting it requires explicit `kms:Decrypt` in the caller role's IAM policy (CMK's key policy delegates via `RootAccountAccess`). The Aurora secret uses AWS-default `aws/secretsmanager` key — no grant needed.
+
+**Fix:** added `kms:Decrypt` on the CMK with `kms:ViaService: secretsmanager.us-east-1.amazonaws.com` condition (defense-in-depth — role can only use the key when request routes through Secrets Manager).
+
+**Simulate verification:**
+- `secretsmanager:GetSecretValue` on prod DATABASE_URL secret → `allowed` ✅
+- `kms:Decrypt` on CMK (with ViaService context) → `allowed` ✅ (matched `role_dms-rollback-role_DMSRollbackPolicy`)
+
+**Conclusion:** Wave 2 `dropSlot` will succeed in production. Full details + policy diff in `docs/DMS_CHAOS_TEST_LOG.md` Phase 7B.5 section.
+
+### Phase 7C — Wave 2 DMS task creation (2026-04-21T15:13Z)
+
+**Source endpoint modification:** `tailrd-rds-source` (ARN `XG3PQTZG5BB4RNX3RWT3G3KICQ`) — added `ExtraConnectionAttributes: "slotName=dms_wave2_slot"` (was `null`). This tells DMS to use a specifically-named logical replication slot at Wave 2 start, so the slot name is predictable and referenceable by the rollback Lambda env var (Phase 7D).
+
+**Task created:**
+- **ID:** `tailrd-migration-wave2`
+- **ARN:** `arn:aws:dms:us-east-1:863518424332:task:X4L644C5LNEN3PPYNNWDDLTB24`
+- **Status:** `ready` (DMS terminology for "created, never started" — equivalent to "stopped" in our intent)
+- **Migration type:** `full-load-and-cdc`
+- **Source:** `tailrd-rds-source` (prod RDS)
+- **Target:** `tailrd-aurora-target`
+- **Replication instance:** `tailrd-dms-replication` (t3.medium)
+
+**Table mappings:**
+- `public.patients` (include)
+- `public.encounters` (include)
+
+**Task settings:**
+| Setting | Value | Rationale |
+|---|---|---|
+| `FullLoadSettings.TargetTablePrepMode` | `TRUNCATE_BEFORE_LOAD` | Defensive — wipes Aurora patients+encounters before load. No-op if already empty. Guarantees clean full-load start state. |
+| `FullLoadSettings.CommitRate` | 10000 | Batch commit for throughput |
+| `FullLoadSettings.MaxFullLoadSubTasks` | 8 | Parallel loading (within DMS recommendation bounds for t3.medium) |
+| `ValidationSettings.EnableValidation` | true | Row-level validation enabled during load + CDC |
+| `ValidationSettings.ValidationMode` | ROW_LEVEL | Compares every row between source and target |
+| `ValidationSettings.ThreadCount` | 5 | Parallel validation workers |
+| `ValidationSettings.FailureMaxCount` | 10000 | Permissive — log failures; DMS suspends tables at the threshold |
+| `Logging.EnableLogging` | true | SOURCE_CAPTURE, TARGET_APPLY, SOURCE_UNLOAD, TARGET_LOAD all at DEFAULT severity |
+| `ErrorBehavior.FailOnNoTablesCaptured` | true (default) | Defensive — fail if source produces no tables |
+| `ErrorBehavior.ApplyErrorEscalationPolicy` | LOG_ERROR (default) | Don't fail the task on single-row apply errors; log them |
+
+**What happens when the task is later started (Day 8):**
+1. DMS connects to source using endpoint creds + extra attr `slotName=dms_wave2_slot`
+2. DMS creates logical replication slot `dms_wave2_slot` on production RDS (requires `rds.logical_replication=on`, confirmed)
+3. Full load: DMS truncates Aurora `patients` + `encounters`, then copies rows from RDS (parallel 8 sub-tasks)
+4. CDC: once full load completes, DMS streams WAL changes from the slot continuously
+5. Validation runs continuously at row-level, comparing source and target
+
+**State confirmation:** task in `ready` status. Has never been started. Will remain in this state until Day 8 explicit start. All prior Wave 1 state (stopped task `tailrd-migration-wave1`) still retained.
+
+**No production data moved yet.**
+
 ## 8. Tech debt
 
 - Resolves: **#20** (`rdsRebootHealthCheck.js` probe hangs across Multi-AZ failover)
