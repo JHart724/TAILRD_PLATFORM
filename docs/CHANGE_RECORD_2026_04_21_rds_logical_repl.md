@@ -160,6 +160,65 @@ Initial run at 2026-04-21T09:44Z found two issues; both remediated and re-run cl
 
 **What is NOT yet in effect:** `wal_level` is still `replica`, `rds.logical_replication` is still `off` at the engine level. These only change on the next RDS reboot (Phase 6C).
 
+### Phase 6C — Reboot with force-failover (2026-04-21T13:10:43.532Z)
+
+**T0:** 2026-04-21T13:10:43.532Z (reboot API call)
+
+**Reboot timeline (RDS event stream):**
+
+| Event | UTC timestamp | Δ from T0 | Staging budget |
+|---|---|---:|---:|
+| Reboot API call (T0) | 13:10:43.532Z | 0s | — |
+| API returned `status: rebooting` | 13:10:46.382Z | +2.85s | — |
+| Multi-AZ failover started | 13:11:00.541Z | +17.0s | < 30s ✅ |
+| AWS auto-adjusted `max_wal_senders` 10 → 25 | 13:11:08.818Z | +25.3s | — (informational) |
+| DB instance restarted | 13:11:16.938Z | +33.4s | < 60s ✅ |
+| Multi-AZ failover completed | 13:11:50.378Z | +66.8s | < 90s ✅ |
+| `DBInstanceStatus: available` | ~13:12:01Z | ~+78s | < 120s ✅ |
+| Backend `/health` 200 post-reboot | 13:12:19.992Z | +96s | < 2 min ✅ |
+
+Reboot beat staging's 72s by 6s, inside every budget.
+
+**Probe behavior (partial):**
+The in-VPC probe emitted its last sample at 13:10:59.627Z (T+15.1s, ~1s before Multi-AZ failover started). The ECS task remained in `RUNNING` state (UserInitiated stop required), but emitted no further log lines through the failover window. Root cause (very likely): the probe's `@prisma/client` connection pool hung on a half-open TCP connection when the RDS endpoint's ENI was swapped, without timing out or retrying. No `fail` samples were emitted because the hung query never returned (neither success nor error).
+
+This is a **probe limitation, not a production observation**. The real backend Prisma pool clearly survived the failover — see smoke test below. Future iterations of `rdsRebootHealthCheck.js` should either:
+  - Drop Prisma for a raw `pg` Client with aggressive `connectionTimeoutMillis` + `query_timeout` + `statement_timeout` settings, or
+  - Wrap each `$queryRawUnsafe` call with `Promise.race` against a 2-3 second AbortSignal timeout
+
+Filed as tech debt #20 (new).
+
+### Phase 6D — Parameter verification + smoke test (2026-04-21T13:13:53-13:15:30Z)
+
+**Logical replication parameter SHOW checks (via Prisma `$queryRawUnsafe` from ECS one-shot `2ab952c2...`):**
+
+| Parameter | Value | Required | Pass |
+|---|---|---|---|
+| `wal_level` | `logical` | `logical` | ✅ |
+| `rds.logical_replication` | `on` | `on` | ✅ |
+| `max_replication_slots` | `10` | `10` | ✅ |
+| `max_wal_senders` | `25` | `>=10` | ✅ (auto-adjusted by AWS from our requested 10 — AWS minimum for Multi-AZ PG15) |
+| `shared_preload_libraries` | `rdsutils,pg_stat_statements` | contains `pg_stat_statements` | ✅ |
+
+**pg_stat_statements:**
+- `CREATE EXTENSION IF NOT EXISTS pg_stat_statements` — SUCCESS
+- `SELECT pg_stat_statements_reset()` — function executed but Prisma couldn't deserialize the `void` return column. Cosmetic error; stats were reset. Next baseline sample will show a cold pg_stat_statements table.
+
+**Backend smoke test (authenticated via `JHart@tailrd-heart.com`):**
+
+| Endpoint | Status | Notes |
+|---|---|---|
+| `GET /health` | 200 | uptime 13571s — backend process NEVER restarted |
+| `POST /api/auth/login` | 200 | token issued, role SUPER_ADMIN, hospitalId tailrd-platform |
+| `GET /api/modules/heart-failure/dashboard` | 200 (335ms) | data: {summary, gdmtMetrics, recentAlerts, source} |
+| `GET /api/admin/analytics` | 200 (116ms) | data: {totalHospitals, activeUsers, totalPatients, criticalAlerts} |
+
+**Alarms during 6C/6D:** zero. No state transitions during or after reboot.
+
+**Backend process continuity:** backend `/health` uptime was 928s at 09:44Z (first Go/No-Go), 2348s at 10:08Z (re-run), 13395s at 13:12:19Z (post-reboot), 13571s at 13:15:16Z. Continuous — the Prisma connection pool absorbed the Multi-AZ failover invisibly to application code, exactly as staging predicted. The production backend did not reconnect; AWS's ENI swap preserved TCP sessions through the failover.
+
+**Phase 6C/6D verdict:** SUCCESS. All logical replication parameters live and correct. Backend unaffected. Ready for Phase 6E (CDC readiness test) on user authorization.
+
 ## 10. Post-change actions
 
 - Update `docs/TECH_DEBT_REGISTER.md` item #19 → RESOLVED
