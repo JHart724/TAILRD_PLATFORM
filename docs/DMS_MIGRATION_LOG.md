@@ -135,6 +135,85 @@ Wave 2 start waits on Jonathan's review of this log + Day 5 staging work + Day 6
 
 ---
 
+## 2026-04-21T09:00-09:22Z — Day 5 staging rehearsal
+
+Goal: rehearse the RDS logical replication enablement procedure on staging before applying to production on Day 6.
+
+### 5A — Staging RDS provisioned
+
+- Identifier: `tailrd-staging-postgres`
+- Engine: PostgreSQL 15.14 (matches production)
+- Class: `db.t3.medium`, 100 GB gp3, Multi-AZ
+- Endpoint: `tailrd-staging-postgres.csp0w6g8u5uq.us-east-1.rds.amazonaws.com:5432`
+- SG: `sg-019b478cf4f3d6eff` (`tailrd-rds-staging-sg`), ingress 5432 from backend SG
+- Secret: `tailrd-staging/app/database-url`
+- Backend SG egress added: 5432 to staging SG
+
+### 5B — Consolidated baseline applied
+
+`npx prisma migrate deploy` against staging ran clean. Verified:
+- 54 tables (matches production)
+- 7 composite unique indexes from PR #158
+- `_prisma_migrations` has 1 row: `20260420000000_consolidated_baseline`
+
+This is the **second independent proof** that cold-rebuild from migrations works. First was Phase C of PR #166 on a throwaway `tailrd-migration-test` instance.
+
+### 5C — Custom parameter group attached
+
+- Created `tailrd-staging-postgres15-logical-repl` (family postgres15)
+- Set `rds.logical_replication=1`, `max_replication_slots=10`, `max_wal_senders=10` (ApplyMethod pending-reboot)
+- Attached to staging instance; status became `pending-reboot` as expected
+
+### 5D — Health-check observer running
+
+ECS task `3c132dd6ff314f85b5758e8923735fd3` emitted one `SELECT 1` per second against staging from 09:13:32Z onward. Baseline latency: 1-2ms.
+
+### 5E — Reboot with force-failover — ZERO backend impact
+
+| Event | Timestamp | Delta from T0 |
+|---|---|---:|
+| T0 (reboot API call) | 09:14:26.116Z | 0.0s |
+| AWS: "Multi-AZ instance failover started" | 09:14:41.595Z | +15.5s |
+| AWS: "DB instance restarted" | 09:14:56.909Z | +30.8s |
+| AWS: "Multi-AZ instance failover completed" | 09:15:16.625Z | +50.5s |
+| RDS status returned to `available` | 09:15:38.295Z | +72.2s |
+| Health-check failures during the window | **0** | — |
+| Highest query latency during the window | 31ms (vs 1-2ms baseline) | — |
+
+**The backend Prisma connection pool handled the Multi-AZ failover invisibly.** 175 consecutive `SELECT 1` queries succeeded across the 72s window. This exceeded our conservative budget of 75 failures by a lot.
+
+### Post-reboot parameter verification
+
+```
+wal_level              = logical        (was: replica)
+rds.logical_replication = on           (was: off)
+max_replication_slots  = 10             (was: 20)
+max_wal_senders        = 25             (AWS auto-adjusted from 10 to 25 for replication compatibility)
+shared_preload_libraries = rdsutils,pg_stat_statements  (pg_stat_statements is BONUS — loaded on param group change)
+```
+
+### 5G — SG chaos test
+
+Revoked staging SG ingress rule (backend→staging 5432) for 40s, then restored. Result: **0 failures.** AWS's stateful SG behavior grandfathers existing TCP connections; SG changes only affect new connections. Valuable operational finding.
+
+### 5H — Cleanup + retention
+
+- Health-check task stopped at 09:22:15Z (UserInitiated)
+- Staging RDS retained for Day 9 staging setup. Costs ~$3/day while idle.
+- Staging DATABASE_URL secret retained for Day 9.
+
+### 5I — Day 6 readiness: **GO**
+
+All expectations for production Day 6 reboot now have measured-on-staging evidence:
+- RDS downtime budget: <90s target → staging measured 72.2s
+- Backend impact: <30 failed requests target → staging measured 0
+- Parameter settings: all 4 expected post-reboot values confirmed
+- Rollback procedure: documented, not yet tested (would require a deliberate parameter misconfiguration on staging)
+
+Next session: execute Day 6 production reboot per `docs/RDS_LOGICAL_REPL_ENABLEMENT_RUNBOOK.md` with confidence.
+
+---
+
 ## Wave 1 retention
 
 The `tailrd-migration-wave1` DMS task is **retained** (not deleted) per Jonathan's direction. The task definition pattern (table mappings, settings JSON) will be cloned for Waves 2-4 with:

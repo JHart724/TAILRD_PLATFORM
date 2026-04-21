@@ -53,3 +53,4 @@ terraform.tfvars
 infrastructure/lambdas/*/node_modules/
 infrastructure/lambdas/*.zip
 .tmp-day4/
+.tmp-day5/
