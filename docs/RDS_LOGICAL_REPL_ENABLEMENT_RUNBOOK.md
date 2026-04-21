@@ -67,19 +67,33 @@ aws rds wait db-instance-available --db-instance-identifier tailrd-production-po
 
 ### Step 4 — Start the health-check observer BEFORE reboot
 
-In a separate terminal, run the same health-check pattern we used on staging:
+The probe source is committed at `infrastructure/scripts/rdsRebootHealthCheck.js`. It connects via `DATABASE_URL`, issues `SELECT 1` once per second, and writes one JSON line per attempt. Connection losses surface as `status: "fail"` samples — the process itself does not exit, so it keeps probing right across the failover window.
+
+Before the reboot, upload the current script to S3 (idempotent) and launch a one-shot ECS task that downloads + runs it inside the VPC:
 
 ```bash
-# See also infrastructure/scripts/rdsRebootHealthCheck.js
+# 1. Upload (or refresh) the probe in the migration-artifacts prefix
+aws s3 cp infrastructure/scripts/rdsRebootHealthCheck.js \
+  s3://tailrd-cardiovascular-datasets-863518424332/migration-artifacts/rdsRebootHealthCheck.js \
+  --content-type "application/javascript"
+
+# 2. Launch the one-shot probe task (uses backend task def → inherits DATABASE_URL secret + VPC + IAM)
 aws ecs run-task --cluster tailrd-production-cluster \
   --task-definition tailrd-backend \
   --launch-type FARGATE \
   --network-configuration "awsvpcConfiguration={subnets=[subnet-0e606d5eea0f4c89b,subnet-0071588b7174f200a],securityGroups=[sg-07cf4b72927f9038f],assignPublicIp=DISABLED}" \
-  --overrides '{"containerOverrides":[{"name":"tailrd-backend","command":["sh","-c","cd /app && node /app/scripts/rdsRebootHealthCheck.js"]}]}' \
+  --overrides '{"containerOverrides":[{"name":"tailrd-backend","command":["sh","-c","aws s3 cp s3://tailrd-cardiovascular-datasets-863518424332/migration-artifacts/rdsRebootHealthCheck.js /tmp/probe.js && node /tmp/probe.js"]}]}' \
   --started-by "day-6-production-reboot-healthcheck"
 ```
 
-Watch its output in CloudWatch (`/ecs/tailrd-production-backend`) as JSON lines appear once per second. Each line is `{ts, ok, totalOk, totalFail, ...}`.
+The command output includes the task ARN. Follow its log stream at `/ecs/tailrd-production-backend/ecs/tailrd-backend/<task-id>` in CloudWatch Logs — one JSON line per second with shape:
+
+```json
+{"ts":"2026-04-21T10:15:03.214Z","status":"ok","latency_ms":3,"error":null}
+{"ts":"2026-04-21T10:15:04.215Z","status":"fail","latency_ms":1024,"error":"Connection terminated unexpectedly"}
+```
+
+After Phase 6F, stop the probe task: `aws ecs stop-task --cluster tailrd-production-cluster --task <task-id> --reason "reboot observed"`.
 
 ### Step 5 — Reboot with failover (the actual change)
 
