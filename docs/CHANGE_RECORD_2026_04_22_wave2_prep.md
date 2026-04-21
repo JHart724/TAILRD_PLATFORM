@@ -269,6 +269,36 @@ User decision needed at Day 8 start. This is a finding from today, not a drift �
 - Target needs env: `SOURCE_DATABASE_URL` (from `tailrd-production/app/database-url` secret), `TARGET_DATABASE_URL` (constructed from `tailrd-production/app/aurora-db-password` + Aurora writer endpoint), `SHADOW_SCOPE=all`, `SHADOW_WAVE=2`.
 - Task role `tailrd-production-ecs-task` needs `GetSecretValue` on Aurora secret if we wire via bootstrap-script pattern (not yet granted). Alternative: inline URLs in target — faster but secrets-in-describe-rule concern.
 
+### Phase 7F — Composite-unique duplicate pre-flight (2026-04-21T15:40Z)
+
+**Result: DUPLICATES FOUND. Wave 2 BLOCKED.**
+
+Ran `infrastructure/scripts/wave2DataIntegrityPreflight.js` + follow-up scope query against production RDS.
+
+**Patients (FAIL):**
+- 14,170 total · 14,155 with `fhirPatientId` · 15 without
+- **5,053 distinct `(hospitalId, fhirPatientId)` keys with duplicates**
+- 13,076 rows involved · **8,023 excess rows** to eliminate for uniqueness
+- Dupe-count histogram: 3103 × 2, 950 × 3, 990 × 4, 10 × 6
+- 100% on `demo-medical-city-dallas`; `hosp-001` (10 patients) and `hosp-002` (5 patients) are clean
+- Smoking gun: same `fhirPatientId` across 4 different seed runs (Apr 14, 15, 16, 17), different CUIDs, different `firstName` per row — classic "seedFromSynthea re-run without tenant wipe" pattern. Ties to tech debt #2 (MCD partial wipe state).
+
+**Encounters (PASS):**
+- 353,512 total · 353,479 with `fhirEncounterId` · 33 without
+- **0 duplicates on `(hospitalId, fhirEncounterId)`** ✅
+- Distribution per patient: p50 = 31, p95 = 171, p99 = 576, max = 864 encounters/patient
+- 6,150 patients have at least one encounter
+
+**Dependent-data impact of deleting dupe patients:**
+- **290,064 encounters** reference the duplicate patient CUIDs (82% of all encounters)
+- 0 observations, 0 therapy_gaps (those tables are empty)
+
+**Full analysis + remediation options:** `docs/DATA_DEDUPLICATION_PLAN.md` (written).
+
+**Recommendation (summarized from the plan):** Option A — complete the MCD wipe (closes tech debt #2), re-seed cleanly. Fallback: Option B — in-place dedup with encounter FK reassignment against a throwaway clone first.
+
+**Day 8 start BLOCKED pending remediation decision.**
+
 ## 8. Tech debt
 
 - Resolves: **#20** (`rdsRebootHealthCheck.js` probe hangs across Multi-AZ failover)
