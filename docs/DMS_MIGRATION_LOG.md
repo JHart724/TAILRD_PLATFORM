@@ -293,6 +293,61 @@ Via `infrastructure/scripts/cdcReadinessTest.js` ECS one-shot (exit 0 on v2 afte
 
 ---
 
+## Day 7 — Wave 2 preparation (2026-04-21 to 2026-04-22)
+
+Change record: `docs/CHANGE_RECORD_2026_04_22_wave2_prep.md` / CR-2026-04-22-001. Branch `feat/aurora-v2-day7-wave2-prep`.
+
+### Phase 7A — Probe rewrite (2026-04-21T14:08-14:26Z)
+Probe rewrite on raw `pg` with layered timeouts (2s connect + 2s query + Promise.race wallclock fallback) + manual URL parse to defeat pg-connection-string's SSL-mode `verify-full` override. `probe-package.json` with pg@^8.13 installed at ECS task start. Validated against staging force-failover: 166 samples over 2m52s, 7 explicit timeout fails between T+11s and T+23s, auto-recovery at T+25s. Zero hangs. Tech debt #20 RESOLVED.
+
+### Phase 7B — Live DMS rollback chaos on staging (2026-04-21T14:36-15:04Z)
+Created chaos_test_day7 on staging with 2 rows; created `tailrd-staging-source-chaos` DMS endpoint (with temporary SG ingress rule); ran chaos task through full rollback chain. Alarm→Lambda→task-stop in 66s. dropSlot failed with staging-scoped IAM (by design — Lambda role only has prod secret access). Truncate succeeded on Aurora. All chaos resources torn down.
+
+### Phase 7B.5 — IAM + KMS policy fix (2026-04-21T15:08Z)
+Added `kms:Decrypt` on the prod DB secret's CMK (`46f6551f-...`) to `DMSRollbackPolicy` with `kms:ViaService=secretsmanager.us-east-1.amazonaws.com` condition. Verified via simulate-principal-policy. Validated end-to-end in Phase 7D smoke test.
+
+### Phase 7C — Wave 2 task creation (2026-04-21T15:13Z)
+`tailrd-migration-wave2` task created in `ready` state:
+- ARN: `arn:aws:dms:us-east-1:863518424332:task:X4L644C5LNEN3PPYNNWDDLTB24`
+- full-load-and-cdc against `public.patients` + `public.encounters`
+- TargetTablePrepMode: TRUNCATE_BEFORE_LOAD
+- ValidationSettings: ROW_LEVEL, 5 threads
+- Source endpoint `tailrd-rds-source` modified: ExtraConnectionAttributes `slotName=dms_wave2_slot`
+
+### Phase 7D — Lambda env for Wave 2 (2026-04-21T15:22Z)
+Updated Lambda env: `DMS_TASK_ARN`→Wave 2, `TARGET_TRUNCATE_TABLES`→`patients,encounters`, new `REPLICATION_SLOT_NAME=dms_wave2_slot`. All unchanged vars verified against snapshot. Smoke-test invoke with temp-empty truncate: `stopTask` returned "not running" (expected), `dropSlot` got past KMS+IAM+pg to return "slot does not exist" (proves 7B.5 fix works in prod), `sns` published. Env restored to full Wave 2 config.
+
+### Phase 7E — Shadow validator prep (2026-04-21T15:30Z)
+Ran `backend/scripts/shadowReadValidation.ts` against current state. 6 queries, 6 divergences — 4 expected (Wave 2 tables empty on Aurora), 2 surprising: `hospitals.all` RDS=4 Aurora=0, `users.by_hospital` RDS=1 Aurora=0. Aurora's hospitals + users were wiped by Day 4 chaos Test 2's TRUNCATE. Created EventBridge rule `tailrd-shadow-validator-schedule` (`rate(5 minutes)`, DISABLED) + IAM role `tailrd-eventbridge-ecs-role`. Target wiring deferred to Day 8 cutover.
+
+### Phase 7F — Data integrity pre-flight (2026-04-21T15:40Z)
+`wave2DataIntegrityPreflight.js` found **5,053 distinct `(hospitalId, fhirPatientId)` duplicate keys** on production RDS, all on `demo-medical-city-dallas`. 13,076 total rows in dupe groups, 8,023 excess. Encounters clean (0 dupes on fhirEncounterId). Flagged as Wave 2 blocker pending Option choice.
+
+### Phase 7G-REVISED — In-place dedup (2026-04-22T14:41-16:51Z)
+Constraint audit corrected the Phase 7F verdict — neither RDS nor Aurora has `UNIQUE(hospitalId, fhirPatientId)`, so dupes were NOT a true Wave 2 blocker. Executed in-place dedup (Option B) with staging rehearsal:
+
+- Snapshot `tailrd-production-postgres-pre-mcd-wipe-2026-04-21` taken
+- Rehearsal instance `tailrd-staging-mcd-rehearsal` restored from snapshot
+- `mcdPatientDedup.js` built + dry-run PASS + real run PASS on rehearsal (txn ~70-210s)
+- Production dedup T0 2026-04-22T16:47:33Z, committed 16:48:47Z. Total txn 74s.
+- FK reassignments: encounters 752, procedures 6,375, conditions 186,452, medications 183,271, device_implants 206, allergy_intolerances 15
+- Delete: 8,023 non-survivor patient rows
+- Post-state: 14,170→**6,147 patients**, 5,053→**0 dupe keys**, all FK-dependent table counts unchanged
+- Backend impact: one `/health` timeout + a few 3-9s slow responses during the 74s window; full recovery. Zero alarms fired.
+- Rehearsal instance teardown initiated.
+- Tech debt #2 RESOLVED. Tech debt #20 RESOLVED (in Phase 7A).
+
+### Day 8 entrance criteria (validated as of 2026-04-22T16:51Z)
+- Production RDS `rds.logical_replication=on` (Day 6) ✅
+- Rollback Lambda wired for Wave 2 target + IAM ✅
+- Wave 2 task `tailrd-migration-wave2` in `ready` state ✅
+- Zero dupes on patients + encounters ✅
+- Shadow validator code + EventBridge rule (disabled) ready ✅
+- Source volume for Wave 2: 6,147 patients, 353,512 encounters
+- Aurora hospitals+users must be re-loaded (Wave 1 re-run) before Wave 2 CDC parity works
+
+---
+
 ## Wave 1 retention
 
 The `tailrd-migration-wave1` DMS task is **retained** (not deleted) per Jonathan's direction. The task definition pattern (table mappings, settings JSON) will be cloned for Waves 2-4 with:

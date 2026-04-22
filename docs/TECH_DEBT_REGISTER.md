@@ -20,12 +20,15 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
   - Add git-secrets or trufflehog to CI pre-commit to prevent recurrence
   - Target: **key rotation verified by 2026-04-22**, CI hook by 2026-04-27
 
-### 2. MCD data in partial wipe state
+### 2. MCD data in partial wipe state — **RESOLVED 2026-04-22**
 - **Severity:** P0 (clinical data integrity)
-- **Impact:** The `demo-medical-city-dallas` tenant has 0 Patient rows but non-zero Observation / Encounter / Condition residue. Dashboards for MCD render numbers computed from orphaned rows, which is clinically misleading.
-- **Current mitigation:** MCD is demo-tier, not serving live clinical users. The wipe script (PR #158/#159) completed the Patient delete.
-- **Planned remediation:** Resolved naturally by the Aurora V2 migration — during Day 4 data verification we run a cascade clean on orphaned FHIR rows. If migration slips, run the cascade cleanup script manually against RDS by 2026-04-25.
-- **Target:** 2026-04-25 (Day 6 of Aurora plan) at the latest
+- **Original impact:** Overnight 2026-04-16 Synthea ingestion OOM'd mid-run and left MCD with ~14k patients but half-populated encounters/observations. The fhir*Id unique constraints were ALSO global rather than per-tenant, so re-running ingestion was skipping encounters and observations as "duplicates" when they were intra-tenant first-time inserts. Schema fix shipped in migration 20260419170743 (per-tenant fhir*Id UNIQUE on encounters, observations, etc.). Patient table only got an index (not a UNIQUE) on fhirPatientId, so repeated Synthea seeds over Apr 14-17 accumulated 5,053 distinct `(hospitalId, fhirPatientId)` keys with 2-6 patient rows per key (13,076 rows total, 8,023 excess).
+- **Resolution (Day 7 Phase 7G, 2026-04-22):**
+  - Built `infrastructure/scripts/mcdPatientDedup.js` — transactional, keeps oldest `createdAt` per key, SAVEPOINTs between each UPDATE, invariant-checked before COMMIT.
+  - Rehearsed against `tailrd-staging-mcd-rehearsal` (restored from `tailrd-production-postgres-pre-mcd-wipe-2026-04-21` snapshot). Dry-run + real run both PASSED all invariants. Total txn time 70-210s depending on cache state.
+  - Applied to production 2026-04-22T16:47:33Z. Committed in ~2 min. Post-dedup verification confirmed: 0 dupes, 6,147 patients (was 14,170), 353,512 encounters unchanged. Zero CloudWatch alarms fired during execution.
+  - FK reassignment scope: encounters (752 rows), procedures (6,375), conditions (186,452), medications (183,271), device_implants (206), allergy_intolerances (15). Delete: 8,023 patient rows.
+- **Prevention (followup work, not in this PR):** `backend/src/services/patientService.ts#processPatientData` still upserts on `(hospitalId, mrn)` only. To prevent recurrence of fhirPatientId duplication on future Synthea re-runs, add a pre-check: if `(hospitalId, fhirPatientId)` already exists for a non-null `fhirPatientId`, UPDATE that existing row directly (bypassing the mrn-keyed upsert). Alternative: add `@@unique([hospitalId, fhirPatientId])` to the Prisma schema and generate a migration. Either way, separate ship.
 
 ---
 
@@ -163,13 +166,15 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 - **Day 6 Phase 6E CDC readiness test (2026-04-21T13:26Z): GREEN.** Created `day6_readiness_test` logical slot at LSN `47/A0000098`, advanced WAL 152 bytes via `pg_logical_emit_message`, slot remained healthy, dropped cleanly, final count = 0. Logical decoding path proven end-to-end on production.
 - **Unblocks:** Wave 2 (`patients` + `encounters`) can now start with `--migration-type full-load-and-cdc` and `slotName=dms_wave2_slot`. Scheduled for Day 7.
 
-### 20. `rdsRebootHealthCheck.js` probe hangs across Multi-AZ failover (filed 2026-04-21)
-- **Severity:** LOW (probe limitation only — does not affect production traffic)
-- **Impact:** During Day 6 Phase 6C production reboot, the probe emitted its last sample at T+15s (1 second before Multi-AZ failover started) and produced no further output through the 78s failover window. ECS task stayed in `RUNNING` state (not killed); the `@prisma/client` query pool apparently blocked on a half-open TCP connection after the RDS endpoint's ENI swap, without timing out. No `fail` samples were emitted — the hung query never returned success or error, so the probe thread stalled. Backend production traffic was unaffected (smoke test endpoints all 200, `/health` uptime continuous).
-- **Remediation options (for next rehearsal or reboot):**
-  - Swap probe to raw `pg` Client with explicit `connectionTimeoutMillis`, `statement_timeout`, `query_timeout` all set to 2-3s
-  - OR wrap each `$queryRawUnsafe` call with `Promise.race` against an AbortSignal timeout
-- **Target:** Before next production RDS reboot (no current ETA). Not blocking Wave 2.
+### 20. `rdsRebootHealthCheck.js` probe hangs across Multi-AZ failover — **RESOLVED 2026-04-21**
+- **Severity:** LOW (probe limitation only — did not affect production traffic)
+- **Original impact:** During Day 6 Phase 6C production reboot, the v1 probe (built on `@prisma/client`) stopped emitting at T+15s and produced zero `fail` samples across the entire 78s failover window. The ECS task stayed RUNNING; Prisma's pool blocked on a half-open TCP after the ENI swap without timing out.
+- **Resolution:** Day 7 Phase 7A — probe rewritten on raw `pg` Client with layered timeouts:
+  - `connectionTimeoutMillis: 2000`, `query_timeout: 2000`, `statement_timeout: 2000`
+  - `Promise.race` wall-clock fallback
+  - Manual DATABASE_URL parse to avoid pg-connection-string SSL-mode interpretation overriding client-level `rejectUnauthorized: false`
+  - Ephemeral `probe-package.json` with `pg@^8.13` installed at task start (no backend image rebuild)
+- **Validation:** Day 7 2026-04-21T14:23:29Z staging `--force-failover` reboot. 166 samples emitted across 2m52s, zero hangs, largest inter-sample gap 2005ms. 7 explicit timeout-error fails between T+11s and T+23s; auto-recovery at T+25s. Full evidence in `docs/CHANGE_RECORD_2026_04_22_wave2_prep.md §7`.
 
 ---
 
