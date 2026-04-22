@@ -1,9 +1,32 @@
 # Data Deduplication Plan — `patients` on `(hospitalId, fhirPatientId)`
 
-**Status:** BLOCKING Day 8 Wave 2 until decision made
+**Status:** **RESOLVED 2026-04-22** (Option 2 / in-place dedup executed on production)
 **Discovered:** Day 7 Phase 7F (2026-04-21)
+**Resolved:** Day 7 Phase 7G-REVISED (2026-04-22T16:47Z)
 **Source of truth:** production RDS `tailrd-production-postgres` prod db `tailrd`
-**Change record context:** `docs/CHANGE_RECORD_2026_04_22_wave2_prep.md` Phase 7F
+**Change record context:** `docs/CHANGE_RECORD_2026_04_22_wave2_prep.md` Phase 7G
+
+## 0. Resolution summary (added 2026-04-22)
+
+Re-checked the constraint state on both RDS and Aurora during Phase 7G: **no `UNIQUE(hospitalId, fhirPatientId)`** on either side. Only `@@index([fhirPatientId])` in the Prisma schema. The duplicates were therefore **not actually a Wave 2 blocker** — DMS full-load would have replicated all 14k dirty rows to Aurora without constraint violations.
+
+Corrected assessment: the dupes were a data-quality issue, not a migration blocker. User re-authorized Option 2 (in-place dedup keeping oldest) with staging rehearsal.
+
+**Executed (all invariants PASS):**
+- Snapshot: `tailrd-production-postgres-pre-mcd-wipe-2026-04-21` (available)
+- Rehearsal instance `tailrd-staging-mcd-rehearsal` restored from snapshot, dedup dry-run + real run both clean. Teardown complete.
+- Production dedup 2026-04-22T16:47:33Z, committed ~2 min later. Post-verification: 0 dupes, 6,147 patients (was 14,170), 353,512 encounters unchanged. Zero alarms. Backend probe showed one /health timeout + several 3-9s slow responses during the 2-min txn window, then recovered to ~2-3s — no sustained impact.
+- FK reassignments: encounters 752, procedures 6,375, conditions 186,452, medications 183,271, device_implants 206, allergy_intolerances 15. Delete: 8,023 patients.
+
+Script: `infrastructure/scripts/mcdPatientDedup.js` (transactional, SAVEPOINTed, invariant-checked, DRY_RUN-capable).
+
+Tech debt #2 RESOLVED. Tech debt #20 also RESOLVED earlier in Phase 7A.
+
+Note: the original plan considered "Wave 2 BLOCKED" based on an assumed `UNIQUE(hospitalId, fhirPatientId)` constraint on Aurora. Constraint audit proved no such constraint exists. Plan sections 1-8 below are the historical record at discovery time; the actual remediation was a narrower Option B-variant than originally proposed.
+
+---
+
+### Original discovery (preserved for audit)
 
 ---
 

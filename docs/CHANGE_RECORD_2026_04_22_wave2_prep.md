@@ -297,7 +297,71 @@ Ran `infrastructure/scripts/wave2DataIntegrityPreflight.js` + follow-up scope qu
 
 **Recommendation (summarized from the plan):** Option A — complete the MCD wipe (closes tech debt #2), re-seed cleanly. Fallback: Option B — in-place dedup with encounter FK reassignment against a throwaway clone first.
 
-**Day 8 start BLOCKED pending remediation decision.**
+**Day 8 start BLOCKED pending remediation decision.** ← Updated in Phase 7G-REVISED: proved no UNIQUE constraint on either side, reclassified as data-quality, executed in-place dedup.
+
+### Phase 7G-REVISED — In-place dedup with staging rehearsal (2026-04-22T14:41-16:51Z)
+
+**Scope correction:** constraint audit found neither RDS nor Aurora has `UNIQUE(hospitalId, fhirPatientId)` on `patients` — only `@@index([fhirPatientId])`. Original Phase 7F "Wave 2 BLOCKED" was based on wrong assumption. User re-authorized as Option 2 (in-place dedup).
+
+**Calendar gate:** no demos/events in 6-hour window (Google Calendar confirmed empty).
+
+**Step 1 — Snapshot:** `tailrd-production-postgres-pre-mcd-wipe-2026-04-21` created 2026-04-22T14:44Z, available at 14:46Z. Rollback asset.
+
+**Step 2 — Staging rehearsal restore:** `tailrd-staging-mcd-rehearsal` (db.t3.medium, no Multi-AZ, default.postgres15) restored from snapshot. Available at 16:28Z (~10 min).
+
+**Step 3 — FK discovery:** 24 tables have FKs on `patients.id`. Only 6 have rows referencing MCD dupe patients:
+- `encounters` (delete_rule RESTRICT, 290k rows point at dupe-group patients — only 752 at non-survivors)
+- `procedures` (802k / 6,375 at non-survivors)
+- `conditions` (186k / 186,452)
+- `medications` (183k / 183,271)
+- `device_implants` (30k / 206)
+- `allergy_intolerances` (4k / 15)
+
+**Step 4 — Dedup script** `infrastructure/scripts/mcdPatientDedup.js` built with:
+- Transactional, `SAVEPOINT` between each UPDATE
+- `CREATE TEMP TABLE survivor_map` using `LATERAL` join ordered by `createdAt ASC` per `(hospitalId, fhirPatientId)`
+- 6 UPDATE statements remapping FKs from non-survivor CUIDs to survivor CUIDs
+- DELETE of 8,023 non-survivor patient rows
+- Invariant checks pre-COMMIT: zero dupes + all FK-table counts unchanged + patient count reduced by delete count
+- `DRY_RUN=1` performs all work then ROLLBACK, `DRY_RUN=0` commits
+
+**Step 5 — Rehearsal DRY_RUN (task `6dab6a35...`, exit 0):**
+All invariants PASS. Row count expectations matched exactly (14,155 → 6,132 with-fhir patients, 5,053 dupe keys → 0, all dependent tables unchanged). Total txn time: 210s (cold cache).
+
+**Step 6 — Rehearsal REAL RUN (task `324d07e8...`, exit 0, COMMIT executed):**
+All 8 invariants PASS. Total txn time: 70s (warm cache). Post-commit preflight verify: 0 dupes, 6,147 patients total, 353,512 encounters unchanged.
+
+**Step 7 — PRODUCTION DEDUP (task `c3a64c0e...`, T0 2026-04-22T16:47:33Z, exit 0, COMMIT at 16:48:47Z):**
+
+| Phase | Rows | Duration |
+|---|---:|---:|
+| pre_state | — | 517 ms |
+| create_survivor_map | 8,023 | 167 ms |
+| update_encounters | 752 | 704 ms |
+| update_procedures | 6,375 | 3,141 ms |
+| update_conditions | 186,452 | 15,265 ms |
+| update_medications | 183,271 | 15,588 ms |
+| update_device_implants | 206 | 100 ms |
+| update_allergy_intolerances | 15 | 22 ms |
+| delete_non_survivor_patients | 8,023 | 38,524 ms |
+| post_state_in_txn | — | 534 ms |
+| COMMIT | — | — |
+
+Total txn wall-clock: ~74 seconds. All 8 invariants PASS.
+
+**Post-commit production state:**
+- patients: 14,170 → **6,147** (deleted 8,023)
+- patients with fhir id: 14,155 → 6,132
+- distinct dupe keys: 5,053 → **0**
+- encounters / procedures / conditions / medications / device_implants / allergy_intolerances: all counts unchanged ✅
+
+**Backend impact during the 74-second txn window:** one `/health` timeout at 16:47:02Z (curl exit 000) + several slow responses (3-9 s versus normal ~300 ms). Recovered to ~2-3 s by end of window, then back to normal. No sustained degradation. Zero CloudWatch alarm state transitions during the window (2026-04-22T16:46Z–16:52Z).
+
+**Step 8 — Rehearsal teardown:** `delete-db-instance --skip-final-snapshot` initiated 2026-04-22T16:52Z. Instance status `deleting`.
+
+**Verdict:** MCD patient dedup executed cleanly on production. Tech debt #2 RESOLVED. Data integrity is now sufficient for Day 8 Wave 2 to proceed without the dupe concern. The Aurora full-load will replicate 6,147 patients + 353,512 encounters (reduced source volume reshapes Wave 2 full-load timing downward).
+
+**What this ship does NOT resolve (followup):** the `patientService.ts#processPatientData` upsert still uses `(hospitalId, mrn)` only — future Synthea re-runs without a pre-check on `(hospitalId, fhirPatientId)` could recreate duplicates. Separate PR recommended: add fhirPatientId pre-check in `processPatientData`, optionally add `@@unique([hospitalId, fhirPatientId])` to schema + migration. Documented in tech debt #2's "Prevention" section.
 
 ## 8. Tech debt
 
