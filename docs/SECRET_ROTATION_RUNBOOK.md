@@ -7,6 +7,17 @@ Secrets were committed to git in terraform.tfvars and .env files.
 Git history retains these values permanently even after file deletion.
 Rotation invalidates the exposed values. Run in the order below.
 
+## Rotation history
+
+| Secret | Last rotated | Reason | Evidence |
+|---|---|---|---|
+| `tailrd-cli-access` IAM key (`AKIA****LPVG` → `AKIA****XLDF`) | 2026-04-23 | P0 tech debt #1 — leaked in public git history | See `TECH_DEBT_REGISTER.md` entry #1; new key in Secrets Manager at `tailrd-cli-access/access-key-rotation-2026-04-24`; CI verified via PR #173 deploy run `24842079232`. Reusable auth health-check workflow at `.github/workflows/aws-auth-verify.yml`. |
+| JWT secret | — | — | — |
+| PHI encryption key | — | — | — |
+| Database credentials | — | — | — |
+
+When you rotate a secret, append a row. Keep identifiers redacted (`AKIA****XXXX`) — never include full key IDs or secret values in this file.
+
 ---
 
 ## 1. AWS Credentials (ROTATE FIRST — highest risk)

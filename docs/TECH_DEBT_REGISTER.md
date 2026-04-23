@@ -1,6 +1,6 @@
 # TAILRD Tech Debt Register
 
-**Last updated:** 2026-04-20
+**Last updated:** 2026-04-23
 **Maintained by:** Jonathan Hart
 **Companion doc:** `docs/ARCHITECTURE_V2_MIGRATION.md`
 
@@ -10,15 +10,16 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 
 ## P0 — Block production confidence
 
-### 1. Leaked AWS access key in public git history
+### 1. Leaked AWS access key in public git history — **RESOLVED 2026-04-23**
 - **Severity:** P0
-- **Impact:** An IAM access key (`AKIA****…LPVG`, prefix redacted in this doc to avoid retriggering GitHub secret scanning) was committed to public git history. If the key still has any active permissions, an attacker can impersonate the owning IAM identity. Even if rotated, the historical rewrite would require force-pushing main, which is not acceptable.
-- **Current mitigation:** Jonathan is rotating the key manually out-of-band.
-- **Planned remediation:**
-  - Confirm the old key is deleted via `aws iam list-access-keys --user-name <user>`
-  - Verify no CloudTrail `AccessDenied` spikes on the old key ID
-  - Add git-secrets or trufflehog to CI pre-commit to prevent recurrence
-  - Target: **key rotation verified by 2026-04-22**, CI hook by 2026-04-27
+- **Original impact:** An IAM access key (`AKIA****…LPVG`, prefix redacted in this doc to avoid retriggering GitHub secret scanning) was committed to public git history. If the key still had active permissions, an attacker could impersonate `user/tailrd-cli-access`. Even after rotation, the historical rewrite would require force-pushing main, which is not acceptable — so the only available remediation was key rotation + revocation.
+- **Resolution (2026-04-23):**
+  - **CloudTrail scan** of `AKIA****LPVG` (50 most-recent events via `aws cloudtrail lookup-events`): all legitimate usage by `tailrd-cli-access` — `DescribeTasks` (ECS) and `GetLogEvents` (CloudWatch) from CI and the operator workstation. No unauthorized IPs, no anomalous patterns, no `AccessDenied` spikes. `aws iam get-access-key-last-used` confirmed the key was in active service use up to the moment of rotation — it was *the* working key, not a dormant leftover.
+  - **Phase 1-A prep:** The user had two active IAM keys; AWS limits 2 per user. The dormant key `AKIA****KB5A` (last used 2026-03-17, 37 days idle) was deleted first to free the slot. New key `AKIA****XLDF` was then minted and stashed in AWS Secrets Manager at `tailrd-cli-access/access-key-rotation-2026-04-24` (AWS-managed KMS default key). Secret payload includes `AccessKeyId`, `SecretAccessKey`, `CreatedAt`, and a pointer to the previous key.
+  - **Phase 1-B cutover:** Operator workstation `~/.aws/credentials` rotated to the new key (backup retained at `~/.aws/credentials.bak.2026-04-23`). GitHub Actions secrets `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` updated via stdin-piped `gh secret set` (values never exposed in shell history or environment variables).
+  - **CI verification:** PR [#173](https://github.com/JHart724/TAILRD_PLATFORM/pull/173) merged at `2026-04-23T14:50:23Z`, triggering `deploy.yml` run `24842079232`. The `configure-aws-credentials` → ECR login → docker build+push → `ecs register-task-definition` → `ecs update-service` chain all succeeded end-to-end on the new credentials. Task def `tailrd-backend:93` → `tailrd-backend:94` rolling deploy completed cleanly (`RolloutState: COMPLETED`) with backend `/health` continuously healthy. An auxiliary `aws-auth-verify.yml` workflow (added in the same PR) remains in `.github/workflows/` as a reusable `workflow_dispatch`-triggered health check for any future rotation.
+  - **Revocation:** Leaked key `AKIA****LPVG` deleted via `aws iam delete-access-key` on 2026-04-23 (after CI verification confirmed the new key working end-to-end). `aws iam list-access-keys --user-name tailrd-cli-access` now returns the single new key. Post-deletion smoke tests all green: operator `aws sts get-caller-identity` succeeds, `aws s3 ls s3://tailrd-cardiovascular-datasets-863518424332/` succeeds, `GET https://api.tailrd-heart.com/health` returns `healthy`.
+- **Followup (separate ticket, not in this resolution):** Add `trufflehog` or `git-secrets` to a CI pre-push hook to prevent future leaks from reaching public git history. Target: **2026-04-27**.
 
 ### 2. MCD data in partial wipe state — **RESOLVED 2026-04-22**
 - **Severity:** P0 (clinical data integrity)
