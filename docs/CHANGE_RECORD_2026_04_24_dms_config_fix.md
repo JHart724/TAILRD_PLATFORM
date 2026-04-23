@@ -188,9 +188,95 @@ Created alarm `TailrdCost-MonthlyEstimatedCharges-Over50` (us-east-1, `AWS/Billi
 
 **F4, F5 — tracked, non-blocking. Documented in audit doc.**
 
-### Phase 2-D — staging rehearsal (pending authorization)
+### Phase 2-D — staging rehearsal (executed, teardown complete 2026-04-23)
 
+**Infra provisioned and torn down:**
+- Snapshot `tailrd-production-postgres-day8-rehearsal-3-2026-04-24` (RDS, 100 GiB). **RETAINED** as production Wave 2 rollback asset.
+- Rehearsal RDS `tailrd-staging-wave2-rehearsal-3` restored from snapshot with `tailrd-production-postgres15-logical-repl` parameter group. **DELETED** at teardown.
+- Aurora database `tailrd_rehearsal_3` on `tailrd-production-aurora` cluster via `@prisma/client` + Aurora admin secret. **DROPPED** at teardown.
+- Consolidated baseline schema applied via `npx prisma migrate deploy`. Verified: 54 tables, `_prisma_migrations` baseline row present, 12 FHIR unique indexes, `patients` + `encounters` empty.
+- DMS rehearsal source endpoint `tailrd-rehearsal-source-3` (no `slotName`, matches Phase 2-C fix). **DELETED** at teardown.
+- DMS rehearsal target endpoint `tailrd-rehearsal-target-3` → Aurora `tailrd_rehearsal_3`. **DELETED** at teardown.
+- Both endpoint `test-connection` results: **successful**.
+- DMS task `tailrd-migration-wave2-rehearsal-3` (`F4NFUCRSMZFQXHO4RIIFIMRSP4`) mirroring production Wave 2 settings. **DELETED** at teardown.
 
+**Phase 2-A/2-B/F1 fixes proven working:**
+- DMS task entered `running` state within ~60 s of start.
+- Log stream `dms-task-F4NFUCRSMZFQXHO4RIIFIMRSP4` created in `dms-tasks-tailrd-dms-replication` log group with live event flow — the critical verification that `dms-cloudwatch-logs-role` + pre-created log group + CloudWatch Logs VPC endpoint are all wired correctly. Yesterday's "Stream Component Fatal error with no diagnostic" would no longer occur silently.
+
+**🆕 NEW FINDING — TRUNCATE_BEFORE_LOAD incompatible with target FK graph:**
+
+The rehearsal task's full-load attempt failed with a clean, diagnosable error (thanks to the logging fix):
+```
+[TARGET_LOAD] ERROR: cannot truncate a table referenced in a foreign key constraint.
+DETAIL: Table "observations" references "encounters".
+...
+DETAIL: Table "alerts" references "patients".
+```
+
+Root cause: `FullLoadSettings.TargetTablePrepMode = TRUNCATE_BEFORE_LOAD` issues a PostgreSQL `TRUNCATE` on target tables before loading. PostgreSQL rejects TRUNCATE on tables referenced by other tables' foreign keys unless `CASCADE` (which DMS does not issue). Target schema has:
+- `observations.encounterId` → `encounters(id)`
+- `alerts.patientId` → `patients(id)`
+Plus 6+ other referencing tables per the Prisma schema FK graph.
+
+**This would have hit production Wave 2 identically.** The production Wave 2 task was configured with the same `TRUNCATE_BEFORE_LOAD`.
+
+**Fix applied to production Wave 2 task (`X4L644C5LNEN3PPYNNWDDLTB24`):**
+- `aws dms modify-replication-task` → `FullLoadSettings.TargetTablePrepMode: DO_NOTHING` (was `TRUNCATE_BEFORE_LOAD`).
+- Verified post-modify: task returns to `ready` state, setting confirmed via `describe-replication-tasks`.
+- Rationale: Aurora target tables (`patients`, `encounters`) are already empty (verified below). `DO_NOTHING` lets DMS INSERT directly without attempting TRUNCATE; no FK violation.
+
+**DO_NOTHING prerequisite verified:**
+Aurora production `tailrd` database row counts (2026-04-23):
+- `patients`: 0 ✅
+- `encounters`: 0 ✅
+- `hospitals`: 0 (also empty; unchanged since Day 4 chaos test TRUNCATE)
+- `users`: 0
+
+`DO_NOTHING` will work cleanly on the next production Wave 2 start.
+
+**Note on `reload-target`:** During the rehearsal, after switching to `DO_NOTHING` and restarting with `reload-target`, the TRUNCATE still occurred. `reload-target` truncates the target unconditionally, independent of `TargetTablePrepMode`. Production Wave 2 must use `start-replication` (fresh start), not `reload-target`.
+
+**Prisma-to-Aurora auth diagnostic:**
+- All Prisma auth paths to Aurora verified working: sslmode=require, URL-encoded password, channel_binding=disable, sslmode=prefer/verify-ca variants, and pg direct client baseline.
+- `password_encryption = scram-sha-256`, `ssl_min_protocol_version = TLSv1.2`, `server_version = 15.14`.
+- Earlier ad-hoc auth failures were non-reproducible — most likely caused by an early script version parsing the backend's `DATABASE_URL` env var (which points at RDS, not Aurora) and using RDS's tailrd_admin password to authenticate against Aurora. Production-path scripts now fetch explicitly from the Aurora secret.
+
+### Phase 2-D-TEARDOWN — clean shutdown (2026-04-23)
+
+| Action | Status |
+|---|---|
+| DMS rehearsal task stopped + deleted | ✅ |
+| DMS rehearsal source + target endpoints deleted | ✅ |
+| Aurora `tailrd_rehearsal_3` database dropped | ✅ (verified: 0 matching `pg_database` rows) |
+| Rehearsal RDS `tailrd-staging-wave2-rehearsal-3` deletion | ✅ (RDS returns `DBInstanceNotFound`) |
+| Temporary IAM policy `Phase2D-TempSecretsAccess` on `tailrd-production-ecs-task` | ✅ removed; role is back to original 2 inline policies |
+| S3 scripts at `s3://…/migration-artifacts/phase-2d/` | ✅ all deleted |
+| Snapshot `tailrd-production-postgres-day8-rehearsal-3-2026-04-24` | ✅ **RETAINED** (rollback asset for production Wave 2) |
+| Production Wave 2 task `X4L644C5LNEN3PPYNNWDDLTB24` | ✅ `TargetTablePrepMode: DO_NOTHING`, status `ready` |
+| Phase 2-A log group, Phase 2-B IAM role, Phase 2-C endpoint config, Phase 2-D-PRE-FIX VPC endpoint | ✅ all retained (required for production Wave 2) |
+
+### Production Wave 2 updated runbook (for next session)
+
+1. **Pre-flight verification:**
+   - Aurora production `tailrd`: `patients` + `encounters` still empty (0 rows).
+   - Production RDS `tailrd-production-postgres`: no orphan DMS replication slots.
+   - Production Wave 2 task: `Status: ready`, `TargetTablePrepMode: DO_NOTHING` confirmed via `describe-replication-tasks`.
+   - DMS log group + role + CloudWatch Logs VPC endpoint all present.
+2. **Execution:**
+   - `aws dms start-replication-task --replication-task-arn <X4L…> --start-replication-task-type start-replication`.
+   - **NOT** `reload-target` — that always TRUNCATEs regardless of `TargetTablePrepMode`.
+   - Full-load will INSERT 6,147 patients + 353,512 encounters directly into empty Aurora tables.
+3. **Rollback:**
+   - If task fails pre-CDC: tables remain empty, fix the issue, restart.
+   - If task fails post-full-load: truncate Aurora `patients` + `encounters` via an FK-aware script (drop FK → truncate → re-add FK), then restart.
+   - Snapshot `tailrd-production-postgres-day8-rehearsal-3-2026-04-24` restores production RDS if needed.
+
+### Tech debt / follow-ups (not in this PR)
+
+- **Prisma Query Engine to Aurora auth via `DATABASE_URL`-only path.** Before Aurora cutover (when `DATABASE_URL` will point at Aurora), re-verify `@prisma/client` default-path auth works — not expected to be a blocker since all diagnostic paths passed.
+- **DMS log group retention = 30 days.** Fine for rehearsal/Wave 2. Consider 90 days for long-term DMS observability posture.
+- **Aurora Data API enablement silently failed.** Tracked in §0; investigate post-Wave-2 if Data API becomes desirable for ops tooling.
 
 ## 8. Post-change actions
 
