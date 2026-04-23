@@ -1,0 +1,33 @@
+name: AWS Auth Verify
+
+# Manual trigger only. Exercises configure-aws-credentials + sts get-caller-identity
+# to prove GitHub Actions can read AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY secrets
+# and authenticate to AWS. Used for post-rotation verification without triggering
+# a full deploy. Safe to keep in the repo as an ongoing auth health check.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify AWS credentials
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@ff717079ee2060e4bcee96c4779b553acc87447c # v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: sts get-caller-identity
+        run: |
+          aws sts get-caller-identity --output json | tee /tmp/caller.json
+          USER_ARN=$(python3 -c "import json; print(json.load(open('/tmp/caller.json'))['Arn'])")
+          echo "Authenticated as: $USER_ARN"
+          echo "- Authenticated as: \`$USER_ARN\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Time: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_STEP_SUMMARY
+          [ "$USER_ARN" = "arn:aws:iam::863518424332:user/tailrd-cli-access" ] || exit 1
