@@ -114,3 +114,80 @@ Even a clean Phase 0 audit cannot anticipate every runtime behavior. The rehears
 ## Rule: first failure is an education opportunity, not a disaster
 
 The Day 8 first-attempt failure produced no logs. That was the disaster — the missing observability meant the team spent time debugging without data. The configuration failure itself was recoverable; the lack of diagnostics was not. Prioritize observability prerequisites (Phases 0-A, 0-B, 0-C log/metric paths) over functional prerequisites (Phases 0-D, 0-E data-model fit). The first type, if missing, blinds you. The second type, if missing, fails loudly once observability works.
+
+---
+
+## DMS-specific prerequisites (added 2026-04-24, Day 9 Session 1)
+
+Additions learned from Day 9 Wave 2 production attempts 1 + 2 (both failed). Full post-mortem: `docs/DAY_9_SESSION_1_FAILURE_ANALYSIS.md`.
+
+### 1. Target database DMS control-table pre-check
+
+Before any DMS full-load start, verify the target database has no leftover `awsdms_*` control tables:
+
+```sql
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema='public' AND table_name LIKE 'awsdms_%';
+```
+
+If any are found, they were created by prior DMS tasks (validation subsystem, apply-exceptions tracking, etc.) and will cause a new task's validator init to fail with PostgreSQL `42P07 duplicate_table`. The tables must be dropped before retry:
+
+```sql
+DROP TABLE IF EXISTS public."awsdms_apply_exceptions" CASCADE;
+DROP TABLE IF EXISTS public."awsdms_validation_failures_v2" CASCADE;
+-- Add more if other awsdms_* tables exist
+```
+
+This gap caused Day 9 Attempt 1 to fail at T+22 sec.
+
+### 2. DMS task state-machine awareness
+
+A DMS task cannot be restarted with `start-replication` after any prior start (success or failure) — AWS returns `InvalidParameterCombinationException: Start Type : START_REPLICATION, valid only for tasks running for the first time`.
+
+Available retry start-types and their risks:
+- `resume-processing` — skips full-load and CDC-jumps to the last checkpoint. If full-load failed, this migrates **zero data**.
+- `reload-target` — unconditional TRUNCATE before full-load. **Fails on FK-referenced tables** even when `TargetTablePrepMode: DO_NOTHING` is set in FullLoadSettings.
+- Delete + recreate task — clean slate, new ARN, virgin state. **The only reliable retry path** after a failure.
+
+Before deleting, capture the full task config:
+```bash
+aws dms describe-replication-tasks \
+  --filters Name=replication-task-arn,Values=<ARN> \
+  --output json > task_config.json
+```
+
+Strip `Logging.CloudWatchLogGroup` and `Logging.CloudWatchLogStream` before re-create — DMS rejects these on create (`InvalidParameterValueException: Task Settings CloudWatchLogGroup or CloudWatchLogStream cannot be set on create`). DMS auto-populates them.
+
+After recreation: update any Lambda, ECS task definition, or application env vars that reference the old task ARN.
+
+This scenario was encountered between Day 9 Attempt 1 and Attempt 2.
+
+### 3. PostgreSQL source + SupportLobs interaction
+
+For PostgreSQL sources with **any** TEXT, VARCHAR, JSONB, or similar string-typed columns, `TargetMetadata.SupportLobs` **must be `true`**.
+
+Setting `SupportLobs: false` causes DMS (via `psqlodbcw` driver) to classify every string column as an unsupported LOB and drop them from the CSV during unload. Target-side COPY then receives a CSV with only non-string columns and does a positional INSERT into the target table, which still has all columns present. This produces column misalignment — values land in wrong slots — which surfaces as type errors on the target (e.g., boolean `isActive` values in `Gender` enum slot produces `ERROR: invalid input value for enum "Gender": "true"`).
+
+Correct settings for PostgreSQL with TEXT columns:
+
+```json
+"TargetMetadata": {
+  "SupportLobs": true,
+  "LimitedSizeLobMode": true,
+  "LobMaxSize": 32,
+  "FullLobMode": false
+}
+```
+
+`LimitedSizeLobMode: true` with `LobMaxSize: 32` (KB) handles typical text fields. For fields potentially larger than 32 KB (e.g., full clinical notes, large JSON), switch to `FullLobMode: true` (unlimited streaming, slower).
+
+This silent failure mode caused Day 9 Attempt 2 to fail at T+12 sec. The bug was latent in task config from Day 8 rehearsal, masked by earlier failures.
+
+### 4. Rehearsal-through-completion principle
+
+A staging rehearsal must re-run with each failure fixed until the full pipeline completes cleanly. Stopping a rehearsal after the first failure masks downstream bugs — a rehearsal that completes only 60% of the pipeline has only validated those 60%.
+
+Day 8 Wave 2 rehearsal failed at the `TRUNCATE encounters` step (FK violation from `observations → encounters`). The fix applied (`TargetTablePrepMode: DO_NOTHING`) was valid, but the rehearsal was not re-run to completion. This left `SupportLobs: false` (a separate, downstream bug) undetected. It surfaced on Day 9 Attempt 2 in production instead of in rehearsal staging.
+
+**Rule:** after any rehearsal failure, fix and re-run in the rehearsal environment until the full pipeline — all stages, all data — completes successfully. Only then move to production.
