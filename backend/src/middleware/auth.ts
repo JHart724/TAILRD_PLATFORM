@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import prisma from '../lib/prisma';
-import { JWTPayload, APIResponse } from '../types';
+import { JWTPayload, APIResponse, UserRole } from '../types';
 import { FULL_ACCESS_PERMISSIONS, MODULE_KEY_MAP } from '../config/rolePermissions';
 // Cognito auth is optional -- only loaded when COGNITO_USER_POOL_ID is set
 let verifyCognitoToken: ((token: string) => Promise<any>) | null = null;
@@ -98,7 +98,7 @@ function createDemoPayload(): JWTPayload {
   return {
     userId: 'demo-user',
     email: 'demo@tailrd.com',
-    role: 'super-admin',
+    role: 'SUPER_ADMIN',
     hospitalId: 'demo-hospital',
     hospitalName: 'Demo Hospital',
     permissions: FULL_ACCESS_PERMISSIONS,
@@ -114,7 +114,7 @@ function createDemoPayload(): JWTPayload {
 
 const authorizeHospital = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   // Demo mode and super-admins bypass hospital isolation
-  if (isDemoMode || req.user?.role === 'super-admin') {
+  if (isDemoMode || req.user?.role === 'SUPER_ADMIN') {
     return next();
   }
 
@@ -140,12 +140,11 @@ const authorizeHospital = (req: AuthenticatedRequest, res: Response, next: NextF
 // ─── authorizeRole ─────────────────────────────────────────────────────────────
 // Checks if the user's role is in the allowed list.
 
-const authorizeRole = (allowedRoles: string[]) => {
+const authorizeRole = (allowedRoles: UserRole[]) => {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     if (isDemoMode) return next();
 
-    // Normalize role: Prisma enum HOSPITAL_ADMIN → kebab-case hospital-admin
-    const userRole = req.user?.role?.toLowerCase().replace(/_/g, '-') || '';
+    const userRole = req.user?.role;
     if (!userRole || !allowedRoles.includes(userRole)) {
       return res.status(403).json({
         success: false,

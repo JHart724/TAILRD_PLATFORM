@@ -11,7 +11,7 @@ const router = Router();
 // Analytics Dashboard - Main Platform Metrics
 router.get('/dashboard',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'analyst']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR', 'ANALYST']),
   [
     query('timeRange').optional().isIn(['7d', '30d', '90d', '1y']).withMessage('Invalid time range'),
     query('hospitalId').optional().isString(),
@@ -41,7 +41,7 @@ router.get('/dashboard',
       }
 
       // Hospital access control
-      const targetHospitalId = user.role === 'super-admin' ? 
+      const targetHospitalId = user.role === 'SUPER_ADMIN' ? 
         (hospitalId as string || null) : user.hospitalId;
 
       const whereClause: any = {
@@ -167,7 +167,7 @@ router.get('/dashboard',
         }),
 
         // Business metrics (if available)
-        user.role === 'super-admin' ? prisma.businessMetric.findMany({
+        user.role === 'SUPER_ADMIN' ? prisma.businessMetric.findMany({
           where: {
             periodStart: {
               gte: startDate,
@@ -224,7 +224,7 @@ router.get('/dashboard',
             }, {} as Record<string, number>),
             total: errorStats.reduce((sum, e) => sum + e._count.id, 0)
           },
-          businessMetrics: user.role === 'super-admin' ? businessMetrics : undefined
+          businessMetrics: user.role === 'SUPER_ADMIN' ? businessMetrics : undefined
         },
         message: 'Analytics dashboard data retrieved',
         timestamp: new Date().toISOString()
@@ -243,7 +243,7 @@ router.get('/dashboard',
 // User Activity Analytics
 router.get('/user-activity',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'analyst']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR', 'ANALYST']),
   [
     query('startDate').optional().isISO8601(),
     query('endDate').optional().isISO8601(),
@@ -271,7 +271,7 @@ router.get('/user-activity',
       const whereClause: any = {};
 
       // Hospital access control
-      if (user.role !== 'super-admin') {
+      if (user.role !== 'SUPER_ADMIN') {
         whereClause.hospitalId = user.hospitalId;
       }
 
@@ -335,7 +335,7 @@ router.get('/user-activity',
 // Feature Usage Analytics
 router.get('/feature-usage',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'analyst']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR', 'ANALYST']),
   [
     query('moduleType').optional().isIn(Object.values(ModuleType)),
     query('featureName').optional().isString(),
@@ -358,7 +358,7 @@ router.get('/feature-usage',
       const whereClause: any = {};
 
       // Hospital access control
-      if (user.role !== 'super-admin') {
+      if (user.role !== 'SUPER_ADMIN') {
         whereClause.hospitalId = user.hospitalId;
       }
 
@@ -440,7 +440,7 @@ router.get('/feature-usage',
 // Performance Metrics
 router.get('/performance',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN']),
   [
     query('startDate').optional().isISO8601(),
     query('endDate').optional().isISO8601(),
@@ -463,7 +463,7 @@ router.get('/performance',
       const whereClause: any = {};
 
       // Hospital access control
-      if (user.role !== 'super-admin') {
+      if (user.role !== 'SUPER_ADMIN') {
         whereClause.hospitalId = user.hospitalId;
       }
 
@@ -628,11 +628,11 @@ router.post('/track',
 // VBC Quality Measures
 router.get('/vbc/quality-measures',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin', 'quality-director']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const hospitalId = req.user?.hospitalId;
-      if (!hospitalId && req.user?.role !== 'super-admin') {
+      if (!hospitalId && req.user?.role !== 'SUPER_ADMIN') {
         return res.status(400).json({ success: false, error: 'Hospital context required' });
       }
       const where: any = {};
@@ -652,7 +652,7 @@ router.get('/vbc/quality-measures',
 
 router.post('/vbc/recalculate',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const hospitalId = req.user?.hospitalId;

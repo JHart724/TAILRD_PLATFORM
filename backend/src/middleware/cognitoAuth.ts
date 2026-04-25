@@ -76,7 +76,7 @@ export async function verifyCognitoToken(token: string): Promise<JWTPayload | nu
     // Map Cognito claims to TAILRD JWTPayload
     const email = verified.email || verified['cognito:username'];
     const hospitalId = verified['custom:hospitalId'];
-    const role = verified['custom:role'] || 'viewer';
+    const role = verified['custom:role'] || 'VIEWER';
 
     if (!email) return null;
 

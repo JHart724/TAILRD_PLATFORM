@@ -188,7 +188,7 @@ router.get('/download-url',
       // Verify file belongs to this hospital (path-based check with strict format validation)
       const pathMatch = key.match(/^[a-z]+\/([a-zA-Z0-9-]+)\//);
       const fileHospitalId = pathMatch ? pathMatch[1] : null;
-      if ((!fileHospitalId || fileHospitalId !== hospitalId) && req.user?.role !== 'super-admin') {
+      if ((!fileHospitalId || fileHospitalId !== hospitalId) && req.user?.role !== 'SUPER_ADMIN') {
         return res.status(403).json({
           success: false,
           error: 'Access denied: file does not belong to your hospital',
@@ -266,7 +266,7 @@ router.get('/metadata',
 
       // Verify the file key belongs to the user's hospital (prefix match, not substring)
       const hospitalId = req.user?.hospitalId;
-      if (hospitalId && !key.startsWith(`uploads/${hospitalId}/`) && !key.startsWith(`${hospitalId}/`) && req.user?.role !== 'super-admin') {
+      if (hospitalId && !key.startsWith(`uploads/${hospitalId}/`) && !key.startsWith(`${hospitalId}/`) && req.user?.role !== 'SUPER_ADMIN') {
         return res.status(403).json({
           success: false,
           error: 'Access denied: file does not belong to your hospital',
@@ -290,7 +290,7 @@ router.get('/metadata',
  * Soft-delete a file (S3 versioning preserves it).
  */
 router.delete('/',
-  authorizeRole(['hospital-admin', 'super-admin']),
+  authorizeRole(['HOSPITAL_ADMIN', 'SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const key = req.query.key as string;
@@ -328,7 +328,7 @@ router.delete('/',
  * Super-admin only.
  */
 router.post('/archive',
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { sourceKey, sourceBucket, reason } = req.body;

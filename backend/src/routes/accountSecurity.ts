@@ -428,7 +428,7 @@ router.delete('/sessions', authenticateToken, async (req: AuthenticatedRequest, 
 router.post(
   '/sessions/revoke-user/:userId',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { userId } = req.params;

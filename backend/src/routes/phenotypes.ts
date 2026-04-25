@@ -27,7 +27,7 @@ const initializePhenotypeService = () => {
 router.get('/:patientId',
   authenticateToken,
   requireMFA,
-  authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PHYSICIAN', 'NURSE_MANAGER']),
   [
     param('patientId').isString().notEmpty().withMessage('Patient ID is required'),
     query('status').optional().isIn(['confirmed', 'suspected', 'ruled-out', 'pending']),
@@ -129,7 +129,7 @@ router.get('/:patientId',
  */
 router.post('/screen/:patientId',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PHYSICIAN', 'NURSE_MANAGER']),
   [
     param('patientId').isString().notEmpty().withMessage('Patient ID is required'),
     body('phenotypes').optional().isArray().withMessage('Phenotypes must be an array'),
@@ -213,7 +213,7 @@ router.post('/screen/:patientId',
  */
 router.get('/summary/:hospitalId',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'analyst']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR', 'ANALYST']),
   [
     param('hospitalId').isString().notEmpty().withMessage('Hospital ID is required'),
     query('startDate').optional().isISO8601(),
@@ -237,7 +237,7 @@ router.get('/summary/:hospitalId',
       const hospitalId = req.params.hospitalId;
 
       // Verify user has access to this hospital
-      if (req.user?.hospitalId !== hospitalId && req.user?.role !== 'super-admin') {
+      if (req.user?.hospitalId !== hospitalId && req.user?.role !== 'SUPER_ADMIN') {
         return res.status(403).json({
           success: false,
           error: 'Access denied to hospital data',
@@ -300,7 +300,7 @@ router.get('/summary/:hospitalId',
  */
 router.put('/:id/confirm',
   authenticateToken,
-  authorizeRole(['physician', 'nurse-manager']),
+  authorizeRole(['PHYSICIAN', 'NURSE_MANAGER']),
   [
     param('id').isString().notEmpty().withMessage('Phenotype detection ID is required'),
     body('action').isIn(['confirm', 'reject']).withMessage('Action must be confirm or reject'),
@@ -344,7 +344,7 @@ router.put('/:id/confirm',
       }
 
       // Verify user has access to this patient's hospital
-      if (req.user?.hospitalId !== phenotype.hospitalId && req.user?.role !== 'super-admin') {
+      if (req.user?.hospitalId !== phenotype.hospitalId && req.user?.role !== 'SUPER_ADMIN') {
         return res.status(403).json({
           success: false,
           error: 'Access denied to patient data',

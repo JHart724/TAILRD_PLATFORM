@@ -17,7 +17,7 @@ const SuperAdminLogin: React.FC = () => {
 
   // Redirect if already authenticated as super-admin
   useEffect(() => {
-    if (state.isAuthenticated && state.user?.role === 'super-admin') {
+    if (state.isAuthenticated && state.user?.role === 'SUPER_ADMIN') {
       navigate('/admin', { replace: true });
     }
   }, [state.isAuthenticated, state.user, navigate]);

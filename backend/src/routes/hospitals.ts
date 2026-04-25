@@ -88,7 +88,7 @@ const _MOCK_REMOVED = [
 // GET /api/hospitals - Super admin only (can see all hospitals)
 router.get('/',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const hospitals = await prisma.hospital.findMany({

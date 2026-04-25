@@ -18,7 +18,7 @@ const router = Router();
 
 // All breach routes require super-admin
 router.use(authenticateToken);
-router.use(authorizeRole(['super-admin']));
+router.use(authorizeRole(['SUPER_ADMIN']));
 
 // ── Zod Schemas ─────────────────────────────────────────────────────────────
 

@@ -101,7 +101,7 @@ async function getHospitalTier(hospitalId: string): Promise<string> {
 export function requireFeature(featureName: string) {
   return async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     // Demo mode and super-admins bypass tier checks
-    if (process.env.DEMO_MODE === 'true' || req.user?.role === 'super-admin') {
+    if (process.env.DEMO_MODE === 'true' || req.user?.role === 'SUPER_ADMIN') {
       return next();
     }
 
@@ -134,7 +134,7 @@ export function requireFeature(featureName: string) {
  */
 export function requireExportPermission() {
   return async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    if (process.env.DEMO_MODE === 'true' || req.user?.role === 'super-admin') {
+    if (process.env.DEMO_MODE === 'true' || req.user?.role === 'SUPER_ADMIN') {
       return next();
     }
 
@@ -164,7 +164,7 @@ export function requireExportPermission() {
  */
 export function requirePHIAccess() {
   return async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    if (process.env.DEMO_MODE === 'true' || req.user?.role === 'super-admin') {
+    if (process.env.DEMO_MODE === 'true' || req.user?.role === 'SUPER_ADMIN') {
       return next();
     }
 
@@ -193,7 +193,7 @@ export function requirePHIAccess() {
  */
 export function enforceModuleLimit() {
   return async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    if (process.env.DEMO_MODE === 'true' || req.user?.role === 'super-admin') {
+    if (process.env.DEMO_MODE === 'true' || req.user?.role === 'SUPER_ADMIN') {
       return next();
     }
 
