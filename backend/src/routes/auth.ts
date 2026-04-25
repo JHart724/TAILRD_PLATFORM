@@ -3,44 +3,12 @@ import { logger } from '../utils/logger';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import prisma from '../lib/prisma';
-import { APIResponse, JWTPayload, UserPermissions } from '../types';
-import { buildUserPermissions, FULL_ACCESS_PERMISSIONS } from '../config/rolePermissions';
+import { APIResponse, JWTPayload } from '../types';
+import { buildUserPermissions } from '../config/rolePermissions';
 import { writeAuditLog } from '../middleware/auditLogger';
 import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
 
 const router = Router();
-const isDemoMode = process.env.DEMO_MODE === 'true';
-const isDemoFallback = process.env.DEMO_FALLBACK_ENABLED === 'true';
-
-// ─── Demo users (only used when DEMO_MODE=true) ───────────────────────────────
-
-// Demo passwords hashed at module load — never stored or returned as plaintext
-const demoUsers = [
-  {
-    id: 'user-000',
-    email: 'superadmin@tailrd.com',
-    passwordHash: bcrypt.hashSync('admin123', 12),
-    firstName: 'Platform',
-    lastName: 'Administrator',
-    title: 'Super Administrator',
-    role: 'super-admin',
-    hospitalId: 'platform',
-    hospitalName: 'TAILRD Platform',
-    permissions: FULL_ACCESS_PERMISSIONS,
-  },
-  {
-    id: 'user-jhart',
-    email: 'JHart@tailrd-heart.com',
-    passwordHash: bcrypt.hashSync('Demo2026!', 12),
-    firstName: 'Jonathan',
-    lastName: 'Hart',
-    title: 'CEO & Founder',
-    role: 'super-admin',
-    hospitalId: 'platform',
-    hospitalName: 'TAILRD Heart',
-    permissions: FULL_ACCESS_PERMISSIONS,
-  },
-];
 
 // ─── Helper: sign a JWT token ──────────────────────────────────────────────────
 
@@ -53,49 +21,13 @@ function signToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
   return jwt.sign(fullPayload, process.env.JWT_SECRET!, { algorithm: 'HS256' });
 }
 
-// ─── Helper: demo fallback session (prospect demos on Synthea data) ───────────
-// Gated by DEMO_FALLBACK_ENABLED env var. Any email gets HOSPITAL_ADMIN session.
-// MUST be disabled before connecting real patient data.
-
-function buildDemoFallbackResponse(email: string, res: Response) {
-  const demoPayload: Omit<JWTPayload, 'iat' | 'exp'> = {
-    userId: `demo-${Date.now()}`,
-    email,
-    role: 'HOSPITAL_ADMIN',
-    hospitalId: 'hosp-001',
-    hospitalName: 'TAILRD Demo',
-    permissions: FULL_ACCESS_PERMISSIONS,
-    mfaVerified: false,
-    demoMode: true,
-  };
-  const token = signToken(demoPayload);
-  return res.json({
-    success: true,
-    data: {
-      token,
-      user: {
-        id: demoPayload.userId,
-        email,
-        firstName: 'Demo',
-        lastName: 'User',
-        title: 'Demo Account',
-        role: 'HOSPITAL_ADMIN',
-        hospitalId: 'hosp-001',
-        hospitalName: 'TAILRD Demo',
-        permissions: FULL_ACCESS_PERMISSIONS,
-      },
-    },
-    message: 'Demo login successful',
-    timestamp: new Date().toISOString(),
-  } as APIResponse);
-}
-
 // ─── POST /api/auth/login ──────────────────────────────────────────────────────
 
 router.post('/login', async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const rawEmail = req.body?.email;
+  const password = req.body?.password;
 
-  if (!email || !password) {
+  if (!rawEmail || !password) {
     return res.status(400).json({
       success: false,
       error: 'Email and password required',
@@ -103,50 +35,11 @@ router.post('/login', async (req: Request, res: Response) => {
     } as APIResponse);
   }
 
-  // ── Demo mode: use hardcoded users ──
-  if (isDemoMode) {
-    const user = demoUsers.find((u) => u.email === email && bcrypt.compareSync(password, u.passwordHash));
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        error: 'Invalid credentials',
-        timestamp: new Date().toISOString(),
-      } as APIResponse);
-    }
+  // Normalize email: lowercase + trim. Stored emails were inserted via
+  // createSuperAdmin / invite flows that may have preserved input case;
+  // login lookup must match case-insensitively.
+  const email = String(rawEmail).toLowerCase().trim();
 
-    const token = signToken({
-      userId: user.id,
-      email: user.email,
-      role: user.role,
-      hospitalId: user.hospitalId,
-      hospitalName: user.hospitalName,
-      permissions: user.permissions,
-      mfaVerified: false,
-      demoMode: true,
-    });
-
-    return res.json({
-      success: true,
-      data: {
-        token,
-        user: {
-          id: user.id,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          title: user.title,
-          role: user.role,
-          hospitalId: user.hospitalId,
-          hospitalName: user.hospitalName,
-          permissions: user.permissions,
-        },
-      },
-      message: 'Login successful',
-      timestamp: new Date().toISOString(),
-    } as APIResponse);
-  }
-
-  // ── Production mode: real DB auth ──
   try {
     const user = await prisma.user.findUnique({
       where: { email },
@@ -154,7 +47,6 @@ router.post('/login', async (req: Request, res: Response) => {
     });
 
     if (!user || !user.isActive) {
-      if (isDemoFallback) return buildDemoFallbackResponse(email, res);
       await writeAuditLog(req, 'LOGIN_FAILED', 'User', null, 'Authentication failed');
       return res.status(401).json({
         success: false,
@@ -164,7 +56,7 @@ router.post('/login', async (req: Request, res: Response) => {
     }
 
     const passwordValid = await bcrypt.compare(password, user.passwordHash);
-    if (!passwordValid && !isDemoFallback) {
+    if (!passwordValid) {
       await writeAuditLog(req, 'LOGIN_FAILED', 'User', user.id, 'Authentication failed');
       return res.status(401).json({
         success: false,
@@ -242,7 +134,7 @@ router.post('/login', async (req: Request, res: Response) => {
 // Invalidates by userId (not token hash) to catch all concurrent sessions.
 
 router.post('/logout', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
-  if (!isDemoMode && req.user?.userId) {
+  if (req.user?.userId) {
     try {
       await prisma.loginSession.updateMany({
         where: { userId: req.user.userId, isActive: true },
@@ -284,52 +176,38 @@ router.post('/refresh', async (req: Request, res: Response) => {
     ) as JWTPayload;
 
     // Re-validate user is still active and rebuild permissions from DB
-    let newToken: string;
-    if (!isDemoMode) {
-      const user = await prisma.user.findUnique({
-        where: { id: decoded.userId },
-        include: { hospital: true },
-      });
-      if (!user || !user.isActive) {
-        return res.status(401).json({
-          success: false,
-          error: 'Account deactivated',
-          timestamp: new Date().toISOString(),
-        } as APIResponse);
-      }
-      // Rebuild permissions from current DB state (not stale JWT claims)
-      const freshPermissions = buildUserPermissions(user, user.hospital);
-      newToken = signToken({
-        userId: user.id,
-        email: user.email,
-        role: user.role,
-        hospitalId: user.hospitalId,
-        hospitalName: user.hospital.name,
-        permissions: freshPermissions,
-        demoMode: decoded.demoMode,
-      });
-    } else {
-      newToken = signToken({
-        userId: decoded.userId,
-        email: decoded.email,
-        role: decoded.role,
-        hospitalId: decoded.hospitalId,
-        hospitalName: decoded.hospitalName,
-        permissions: decoded.permissions,
-        demoMode: decoded.demoMode,
-      });
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      include: { hospital: true },
+    });
+    if (!user || !user.isActive) {
+      return res.status(401).json({
+        success: false,
+        error: 'Account deactivated',
+        timestamp: new Date().toISOString(),
+      } as APIResponse);
     }
 
-    // Update session in DB (production only) -- store hashed tokens
-    if (!isDemoMode) {
-      const crypto = require('crypto');
-      const oldHash = crypto.createHash('sha256').update(token).digest('hex');
-      const newHash = crypto.createHash('sha256').update(newToken).digest('hex');
-      await prisma.loginSession.updateMany({
-        where: { sessionToken: oldHash, isActive: true },
-        data: { sessionToken: newHash, lastActivity: new Date() },
-      });
-    }
+    // Rebuild permissions from current DB state (not stale JWT claims)
+    const freshPermissions = buildUserPermissions(user, user.hospital);
+    const newToken = signToken({
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+      hospitalId: user.hospitalId,
+      hospitalName: user.hospital.name,
+      permissions: freshPermissions,
+      mfaVerified: false,
+    });
+
+    // Update session in DB — store hashed tokens
+    const crypto = require('crypto');
+    const oldHash = crypto.createHash('sha256').update(token).digest('hex');
+    const newHash = crypto.createHash('sha256').update(newToken).digest('hex');
+    await prisma.loginSession.updateMany({
+      where: { sessionToken: oldHash, isActive: true },
+      data: { sessionToken: newHash, lastActivity: new Date() },
+    });
 
     return res.json({
       success: true,
@@ -375,34 +253,6 @@ router.post('/verify', (req: Request, res: Response) => {
       timestamp: new Date().toISOString(),
     } as APIResponse);
   });
-});
-
-// ─── GET /api/auth/demo-users (demo mode only) ────────────────────────────────
-
-router.get('/demo-users', (req: Request, res: Response) => {
-  if (!isDemoMode) {
-    return res.status(404).json({
-      success: false,
-      error: 'Not found',
-      timestamp: new Date().toISOString(),
-    } as APIResponse);
-  }
-
-  const publicUsers = demoUsers.map((user) => ({
-    email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    title: user.title,
-    role: user.role,
-    hospitalName: user.hospitalName,
-  }));
-
-  return res.json({
-    success: true,
-    data: publicUsers,
-    message: 'Demo users available for testing',
-    timestamp: new Date().toISOString(),
-  } as APIResponse);
 });
 
 export = router;
