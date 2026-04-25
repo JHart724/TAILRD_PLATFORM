@@ -35,14 +35,22 @@ router.post('/login', async (req: Request, res: Response) => {
     } as APIResponse);
   }
 
-  // Normalize email: lowercase + trim. Stored emails were inserted via
-  // createSuperAdmin / invite flows that may have preserved input case;
-  // login lookup must match case-insensitively.
-  const email = String(rawEmail).toLowerCase().trim();
+  // Case-insensitive email lookup. Stored emails were inserted via
+  // createSuperAdmin / invite flows that may have preserved input case
+  // (e.g., "JHart@tailrd-heart.com" in production). The login lookup must
+  // match regardless of the case the user types.
+  //
+  // We use findFirst + Prisma's `mode: 'insensitive'` rather than
+  // lowercasing the inbound email + findUnique — that breaks for existing
+  // mixed-case stored emails (they don't lowercase on disk, so the
+  // unique-key match misses). `mode: 'insensitive'` generates ILIKE on
+  // PostgreSQL and matches stored data as-is. The DB still enforces
+  // uniqueness on the email column; we just relax the lookup.
+  const email = String(rawEmail).trim();
 
   try {
-    const user = await prisma.user.findUnique({
-      where: { email },
+    const user = await prisma.user.findFirst({
+      where: { email: { equals: email, mode: 'insensitive' } },
       include: { hospital: true },
     });
 
