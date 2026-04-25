@@ -436,6 +436,20 @@ export interface Hospital {
   updatedAt: Date;
 }
 
+/**
+ * Canonical role union, aligned with the Prisma UserRole enum.
+ * Single source of truth — referenced by DatabaseUser, JWTPayload, and
+ * config/rolePermissions.ts BackendRole alias.
+ */
+export type UserRole =
+  | 'SUPER_ADMIN'
+  | 'HOSPITAL_ADMIN'
+  | 'PHYSICIAN'
+  | 'NURSE_MANAGER'
+  | 'QUALITY_DIRECTOR'
+  | 'ANALYST'
+  | 'VIEWER';
+
 export interface DatabaseUser {
   id: string;
   email: string;
@@ -444,7 +458,7 @@ export interface DatabaseUser {
   title?: string;
   department?: string;
   npi?: string; // For physicians
-  role: 'super-admin' | 'hospital-admin' | 'physician' | 'nurse-manager' | 'quality-director' | 'analyst' | 'viewer';
+  role: UserRole;
   hospitalId: string; // Foreign key to Hospital
   permissions: UserPermissions;
   isActive: boolean;
@@ -479,7 +493,7 @@ export interface UserPermissions {
 export interface JWTPayload {
   userId: string;
   email: string;
-  role: string;
+  role: UserRole;
   hospitalId: string;
   hospitalName: string;
   permissions: UserPermissions;

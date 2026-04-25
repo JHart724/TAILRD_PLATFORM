@@ -3,17 +3,12 @@
  * Maps each backend UserRole to its default UserPermissions shape.
  * Individual users can override via their per-field permission booleans in the DB.
  */
-import { UserPermissions } from '../types';
+import { UserRole, UserPermissions } from '../types';
 
-// Matches the Prisma UserRole enum
-export type BackendRole =
-  | 'SUPER_ADMIN'
-  | 'HOSPITAL_ADMIN'
-  | 'PHYSICIAN'
-  | 'NURSE_MANAGER'
-  | 'QUALITY_DIRECTOR'
-  | 'ANALYST'
-  | 'VIEWER';
+// Single source of truth for the role union: imported from types/index.ts
+// which is itself aligned with the Prisma UserRole enum. Local alias kept
+// for readability in DEFAULT_ROLE_PERMISSIONS Record<>.
+type BackendRole = UserRole;
 
 /**
  * Default permission templates per role.
