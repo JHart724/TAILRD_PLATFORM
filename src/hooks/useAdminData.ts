@@ -6,6 +6,18 @@
 import { useState, useEffect } from 'react';
 import { DATA_SOURCE } from '../config/dataSource';
 
+/**
+ * Flat shape consumed by admin dashboard components
+ * (PlatformOverview, DataManagement, AuditSecurity).
+ *
+ * Components access these fields directly (e.g. `dashboard.totalPatients`)
+ * so missing or undefined values cause runtime crashes
+ * (`Cannot read properties of undefined (reading 'toLocaleString')`).
+ *
+ * The adapter `transformDashboard` below maps the backend's nested response
+ * into this flat shape with defensive null-coalescing — every field defaults
+ * to a safe zero/empty value rather than undefined.
+ */
 interface AdminDashboard {
   totalHospitals: number;
   activeHospitals: number;
@@ -17,8 +29,50 @@ interface AdminDashboard {
   recentWebhookEvents: number;
   totalAlerts: number;
   unacknowledgedAlerts: number;
-  subscriptionStats: { subscriptionTier: string; _count: { subscriptionTier: number } }[];
-  moduleStats: { module: string; hospitals: number }[];
+  /** Subscription counts by tier (lowercased keys: enterprise, professional, ...) */
+  subscriptions: Record<string, number>;
+  /** Hospital counts per clinical module */
+  modules: Record<string, number>;
+  recentHospitals: Array<Record<string, unknown>>;
+}
+
+/**
+ * Nested shape that `/api/admin/dashboard` actually returns. Defined here
+ * to keep the adapter visible alongside the consumer type.
+ *
+ * Source: backend/src/routes/admin.ts router.get('/dashboard') response body
+ * (the `dashboardData` const, ~line 138).
+ */
+interface BackendDashboardResponse {
+  overview?: {
+    hospitals?: { total?: number; active?: number; inactive?: number };
+    users?: { total?: number; active?: number; inactive?: number };
+    patients?: { total?: number; recentlyAdded?: number };
+    webhooks?: { total?: number; recent24h?: number };
+    alerts?: { total?: number; unacknowledged?: number };
+  };
+  subscriptions?: Record<string, number>;
+  modules?: Record<string, number>;
+  recentHospitals?: Array<Record<string, unknown>>;
+}
+
+function transformDashboard(raw: BackendDashboardResponse | null | undefined): AdminDashboard {
+  const safe = raw || {};
+  return {
+    totalHospitals: safe.overview?.hospitals?.total ?? 0,
+    activeHospitals: safe.overview?.hospitals?.active ?? 0,
+    totalUsers: safe.overview?.users?.total ?? 0,
+    activeUsers: safe.overview?.users?.active ?? 0,
+    totalPatients: safe.overview?.patients?.total ?? 0,
+    recentPatients: safe.overview?.patients?.recentlyAdded ?? 0,
+    totalWebhookEvents: safe.overview?.webhooks?.total ?? 0,
+    recentWebhookEvents: safe.overview?.webhooks?.recent24h ?? 0,
+    totalAlerts: safe.overview?.alerts?.total ?? 0,
+    unacknowledgedAlerts: safe.overview?.alerts?.unacknowledged ?? 0,
+    subscriptions: safe.subscriptions ?? {},
+    modules: safe.modules ?? {},
+    recentHospitals: safe.recentHospitals ?? [],
+  };
 }
 
 interface AdminAnalytics {
@@ -53,7 +107,11 @@ export function useAdminDashboard() {
         return r.json();
       })
       .then(json => {
-        setData(json.data || json);
+        // Backend returns nested objects (overview.patients.total, etc.) but
+        // dashboard components consume flat fields (totalPatients, etc.).
+        // Adapter maps the nested response into the flat shape with safe
+        // defaults so missing fields render as 0 rather than crash.
+        setData(transformDashboard(json.data || json));
         setError(null);
       })
       .catch(err => {
