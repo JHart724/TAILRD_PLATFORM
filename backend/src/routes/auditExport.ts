@@ -33,7 +33,7 @@ const auditQuerySchema = z.object({
 
 // GET / — Query audit logs (hospital-admin sees own hospital, super-admin sees all)
 router.get('/',
-  authorizeRole(['hospital-admin', 'super-admin']),
+  authorizeRole(['HOSPITAL_ADMIN', 'SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const parsed = auditQuerySchema.safeParse(req.query);
@@ -49,7 +49,7 @@ router.get('/',
       const where: any = {};
 
       // Hospital scoping — hospital-admin can only see their own
-      if (req.user?.role !== 'super-admin') {
+      if (req.user?.role !== 'SUPER_ADMIN') {
         where.hospitalId = req.user?.hospitalId;
       }
 
@@ -91,7 +91,7 @@ router.get('/',
 
 // GET /export — Export audit logs as JSON (with all fields, for compliance)
 router.get('/export',
-  authorizeRole(['hospital-admin', 'super-admin']),
+  authorizeRole(['HOSPITAL_ADMIN', 'SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const parsed = auditQuerySchema.safeParse(req.query);
@@ -106,7 +106,7 @@ router.get('/export',
       const { startDate, endDate, userId, action, resourceType, patientId } = parsed.data;
       const where: any = {};
 
-      if (req.user?.role !== 'super-admin') {
+      if (req.user?.role !== 'SUPER_ADMIN') {
         where.hospitalId = req.user?.hospitalId;
       }
 
@@ -161,11 +161,11 @@ router.get('/export',
 
 // GET /summary — Aggregate audit stats for dashboard
 router.get('/summary',
-  authorizeRole(['hospital-admin', 'super-admin']),
+  authorizeRole(['HOSPITAL_ADMIN', 'SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const where: any = {};
-      if (req.user?.role !== 'super-admin') {
+      if (req.user?.role !== 'SUPER_ADMIN') {
         where.hospitalId = req.user?.hospitalId;
       }
 

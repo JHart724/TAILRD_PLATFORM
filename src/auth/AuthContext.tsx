@@ -8,15 +8,15 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
-/** Backend-aligned role type (7 roles) */
+/** Backend-aligned role type (7 roles, Prisma enum convention) */
 export type UserRole =
-  | 'super-admin'
-  | 'hospital-admin'
-  | 'physician'
-  | 'nurse-manager'
-  | 'quality-director'
-  | 'analyst'
-  | 'viewer';
+  | 'SUPER_ADMIN'
+  | 'HOSPITAL_ADMIN'
+  | 'PHYSICIAN'
+  | 'NURSE_MANAGER'
+  | 'QUALITY_DIRECTOR'
+  | 'ANALYST'
+  | 'VIEWER';
 
 /** Legacy permission shape (kept for backward compat) */
 export interface Permission {
@@ -114,36 +114,31 @@ const FULL_ACCESS_PERMISSIONS: UserPermissions = {
   },
 };
 
-/** Legacy role-based permissions (backward compat for hasPermission) */
-const ROLE_PERMISSIONS: Record<string, Permission[]> = {
-  'super-admin': [{ module: '*', action: 'admin' }],
-  'hospital-admin': [
+/** Default permissions per role — keys aligned with the Prisma UserRole enum. */
+const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
+  SUPER_ADMIN: [{ module: '*', action: 'admin' }],
+  HOSPITAL_ADMIN: [
     { module: '*', action: 'read' },
     { module: '*', action: 'write' },
   ],
-  physician: [
+  PHYSICIAN: [
     { module: '*', action: 'read' },
     { module: 'patients', action: 'write', resource: 'assigned' },
   ],
-  'nurse-manager': [
+  NURSE_MANAGER: [
     { module: 'patients', action: 'read' },
     { module: 'patients', action: 'write', resource: 'assigned' },
   ],
-  'quality-director': [
+  QUALITY_DIRECTOR: [
     { module: '*', action: 'read' },
     { module: 'reports', action: 'write' },
     { module: 'quality', action: 'write' },
   ],
-  analyst: [
+  ANALYST: [
     { module: '*', action: 'read' },
     { module: 'analytics', action: 'read' },
   ],
-  viewer: [{ module: '*', action: 'read' }],
-  // Legacy roles (map to admin for backward compat)
-  admin: [{ module: '*', action: 'admin' }],
-  executive: [{ module: '*', action: 'read' }, { module: 'reports', action: 'write' }],
-  'service-line': [{ module: '*', action: 'read' }, { module: 'patients', action: 'write' }],
-  'care-team': [{ module: 'patients', action: 'read' }, { module: 'patients', action: 'write', resource: 'assigned' }],
+  VIEWER: [{ module: '*', action: 'read' }],
 };
 
 // ─── Reducer ───────────────────────────────────────────────────────────────────
@@ -294,37 +289,12 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-/**
- * Normalize the role string from backend (Prisma SCREAMING_SNAKE_CASE) to the
- * frontend's kebab-case UserRole convention.
- *
- * TECH DEBT — TEMPORARY BRIDGE:
- * The Prisma enum value `SUPER_ADMIN` arrives via JWT/API and the frontend's
- * `UserRole` type expects `'super-admin'`. Without this normalization, every
- * `role === 'super-admin'` comparison and every `ROLE_PERMISSIONS[role]`
- * lookup silently returns false/undefined, which causes the SUPER_ADMIN admin
- * console gate to fail with "Permission Denied" even though the user IS a
- * super-admin in the DB.
- *
- * This helper is the data-ingress translator for now. It will be removed in
- * tech debt #21 (PR 2 of Phase 2-A split — refactor/standardize-role-convention)
- * which standardizes the entire codebase on SCREAMING_SNAKE_CASE.
- *
- * Mirrors the pattern at backend/src/middleware/auth.ts:148 (the existing
- * authorizeRole normalizer that has been doing the same translation
- * server-side for ~150 backend code sites).
- *
- * Defensive: handles null/undefined and already-kebab-case input.
- */
-function normalizeRole(raw: string | null | undefined): UserRole {
-  if (!raw) return 'viewer';
-  const lower = String(raw).toLowerCase().replace(/_/g, '-');
-  return lower as UserRole;
-}
-
 /** Build a User object from backend API response */
 function buildUserFromResponse(apiUser: Record<string, any>, backendPerms?: UserPermissions): User {
-  const role = normalizeRole(apiUser.role);
+  // Frontend UserRole now matches the Prisma enum convention exactly, so the
+  // role string from JWT/API arrives in the right shape and only needs a safe
+  // assertion + fallback for missing/unknown values.
+  const role = (apiUser.role || 'VIEWER') as UserRole;
   const bp = backendPerms || apiUser.permissions || FULL_ACCESS_PERMISSIONS;
 
   return {
@@ -459,7 +429,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       ? { firstName: 'Jeff', lastName: 'Hart' }
       : nameFromEmail(normalizedEmail);
 
-    const role: UserRole = isSuperAdmin ? 'super-admin' : 'hospital-admin';
+    const role: UserRole = isSuperAdmin ? 'SUPER_ADMIN' : 'HOSPITAL_ADMIN';
 
     const user: User = {
       id: isSuperAdmin ? 'jhart-superadmin' : `demo-${normalizedEmail}`,
@@ -554,7 +524,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const hasModuleAccess = useCallback((moduleKey: string): boolean => {
     if (!state.user || !state.isAuthenticated) return false;
     // Super admin and hospital admin have full module access
-    if (state.user.role === 'super-admin' || state.user.role === 'hospital-admin') return true;
+    if (state.user.role === 'SUPER_ADMIN' || state.user.role === 'HOSPITAL_ADMIN') return true;
     // Check user's backend permissions if available
     if (state.user.backendPermissions) {
       const modulePermMap: Record<string, keyof UserPermissions['modules']> = {
@@ -587,7 +557,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const hasViewAccess = useCallback((viewKey: string): boolean => {
     if (!state.user || !state.isAuthenticated) return false;
-    if (state.user.role === 'super-admin' || state.user.role === 'hospital-admin') return true;
+    if (state.user.role === 'SUPER_ADMIN' || state.user.role === 'HOSPITAL_ADMIN') return true;
     if (state.user.backendPermissions) {
       const viewPermMap: Record<string, keyof UserPermissions['views']> = {
         'executive': 'executive',

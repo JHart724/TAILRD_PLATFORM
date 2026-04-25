@@ -73,7 +73,7 @@ const initializeCQLComponents = async () => {
  * GET /api/cql/rules
  * List all loaded CQL rules with metadata
  */
-router.get('/rules', authenticateToken, authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'physician', 'analyst']), async (req: AuthenticatedRequest, res) => {
+router.get('/rules', authenticateToken, authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR', 'PHYSICIAN', 'ANALYST']), async (req: AuthenticatedRequest, res) => {
   try {
     const { ruleLoader } = await initializeCQLComponents();
     
@@ -145,7 +145,7 @@ router.get('/rules', authenticateToken, authorizeRole(['super-admin', 'hospital-
  * GET /api/cql/rules/:id
  * Get specific rule details
  */
-router.get('/rules/:id', authenticateToken, authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'physician', 'analyst']), async (req: AuthenticatedRequest, res) => {
+router.get('/rules/:id', authenticateToken, authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR', 'PHYSICIAN', 'ANALYST']), async (req: AuthenticatedRequest, res) => {
   try {
     const { cqlEngine } = await initializeCQLComponents();
     const ruleId = req.params.id;
@@ -196,7 +196,7 @@ router.get('/rules/:id', authenticateToken, authorizeRole(['super-admin', 'hospi
  * POST /api/cql/evaluate
  * Manually evaluate rules against a patient bundle
  */
-router.post('/evaluate', authenticateToken, authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager']), async (req: AuthenticatedRequest, res) => {
+router.post('/evaluate', authenticateToken, authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PHYSICIAN', 'NURSE_MANAGER']), async (req: AuthenticatedRequest, res) => {
   try {
     const { clinicalProcessor } = await initializeCQLComponents();
     
@@ -261,13 +261,13 @@ router.post('/evaluate', authenticateToken, authorizeRole(['super-admin', 'hospi
  * GET /api/cql/results/:patientId
  * Get CQL evaluation history for a patient
  */
-router.get('/results/:patientId', authenticateToken, authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager']), async (req: AuthenticatedRequest, res) => {
+router.get('/results/:patientId', authenticateToken, authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PHYSICIAN', 'NURSE_MANAGER']), async (req: AuthenticatedRequest, res) => {
   try {
     const patientId = req.params.patientId;
     const hospitalId = req.user?.hospitalId;
 
     // Verify patient belongs to requesting user's hospital
-    if (hospitalId && req.user?.role?.toLowerCase().replace(/_/g, '-') !== 'super-admin') {
+    if (hospitalId && req.user?.role?.toLowerCase().replace(/_/g, '-') !== 'SUPER_ADMIN') {
       const patient = await prisma.patient.findFirst({
         where: { id: patientId, hospitalId },
         select: { id: true },
@@ -343,12 +343,12 @@ router.get('/results/:patientId', authenticateToken, authorizeRole(['super-admin
  * GET /api/cql/gaps/:hospitalId
  * Get therapy gap summary for a hospital
  */
-router.get('/gaps/:hospitalId', authenticateToken, authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'physician', 'analyst']), async (req: AuthenticatedRequest, res) => {
+router.get('/gaps/:hospitalId', authenticateToken, authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR', 'PHYSICIAN', 'ANALYST']), async (req: AuthenticatedRequest, res) => {
   try {
     const hospitalId = req.params.hospitalId;
     
     // Verify user has access to this hospital
-    if (req.user?.hospitalId !== hospitalId && req.user?.role !== 'super-admin') {
+    if (req.user?.hospitalId !== hospitalId && req.user?.role !== 'SUPER_ADMIN') {
       return res.status(403).json({
         success: false,
         error: 'Access denied to hospital data',
@@ -385,7 +385,7 @@ router.get('/gaps/:hospitalId', authenticateToken, authorizeRole(['super-admin',
  * GET /api/cql/stats
  * Get CQL engine statistics
  */
-router.get('/stats', authenticateToken, authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'analyst']), async (req: AuthenticatedRequest, res) => {
+router.get('/stats', authenticateToken, authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR', 'ANALYST']), async (req: AuthenticatedRequest, res) => {
   try {
     const components = await initializeCQLComponents();
     
@@ -433,7 +433,7 @@ router.get('/stats', authenticateToken, authorizeRole(['super-admin', 'hospital-
  * POST /api/cql/reload
  * Reload CQL rules from disk
  */
-router.post('/reload', authenticateToken, authorizeRole(['super-admin', 'hospital-admin']), async (req: AuthenticatedRequest, res) => {
+router.post('/reload', authenticateToken, authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN']), async (req: AuthenticatedRequest, res) => {
   try {
     const { ruleLoader, cqlEngine } = await initializeCQLComponents();
     
@@ -496,7 +496,7 @@ router.post('/reload', authenticateToken, authorizeRole(['super-admin', 'hospita
  * GET /api/cql/valuesets
  * List available valuesets
  */
-router.get('/valuesets', authenticateToken, authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'physician', 'analyst']), async (req: AuthenticatedRequest, res) => {
+router.get('/valuesets', authenticateToken, authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR', 'PHYSICIAN', 'ANALYST']), async (req: AuthenticatedRequest, res) => {
   try {
     const { valuesetResolver } = await initializeCQLComponents();
     
@@ -561,7 +561,7 @@ router.get('/valuesets', authenticateToken, authorizeRole(['super-admin', 'hospi
  * GET /api/cql/valuesets/:id/expand
  * Expand a specific valueset
  */
-router.get('/valuesets/:id/expand', authenticateToken, authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'physician', 'analyst']), async (req: AuthenticatedRequest, res) => {
+router.get('/valuesets/:id/expand', authenticateToken, authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR', 'PHYSICIAN', 'ANALYST']), async (req: AuthenticatedRequest, res) => {
   try {
     const { valuesetResolver } = await initializeCQLComponents();
     const valuesetId = req.params.id;
@@ -610,7 +610,7 @@ router.get('/valuesets/:id/expand', authenticateToken, authorizeRole(['super-adm
  * GET /api/cql/rules/:id/recommendations
  * Get rule-specific recommendations for a patient
  */
-router.get('/rules/:id/recommendations', authenticateToken, authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager']), async (req: AuthenticatedRequest, res) => {
+router.get('/rules/:id/recommendations', authenticateToken, authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PHYSICIAN', 'NURSE_MANAGER']), async (req: AuthenticatedRequest, res) => {
   try {
     const { clinicalProcessor } = await initializeCQLComponents();
     const ruleId = req.params.id;
@@ -626,7 +626,7 @@ router.get('/rules/:id/recommendations', authenticateToken, authorizeRole(['supe
 
     // Verify patient belongs to requesting user's hospital
     const hospitalId = req.user?.hospitalId;
-    if (hospitalId && req.user?.role?.toLowerCase().replace(/_/g, '-') !== 'super-admin') {
+    if (hospitalId && req.user?.role?.toLowerCase().replace(/_/g, '-') !== 'SUPER_ADMIN') {
       const patient = await prisma.patient.findFirst({
         where: { id: patientId, hospitalId },
         select: { id: true },
@@ -680,12 +680,12 @@ router.get('/rules/:id/recommendations', authenticateToken, authorizeRole(['supe
  * GET /api/cql/quality/:hospitalId
  * Get quality measure performance for a hospital
  */
-router.get('/quality/:hospitalId', authenticateToken, authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'analyst']), async (req: AuthenticatedRequest, res) => {
+router.get('/quality/:hospitalId', authenticateToken, authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR', 'ANALYST']), async (req: AuthenticatedRequest, res) => {
   try {
     const hospitalId = req.params.hospitalId;
     
     // Verify user has access to this hospital
-    if (req.user?.hospitalId !== hospitalId && req.user?.role !== 'super-admin') {
+    if (req.user?.hospitalId !== hospitalId && req.user?.role !== 'SUPER_ADMIN') {
       return res.status(403).json({
         success: false,
         error: 'Access denied to hospital data',
@@ -781,7 +781,7 @@ router.get('/quality/:hospitalId', authenticateToken, authorizeRole(['super-admi
  * POST /api/cql/batch-evaluate
  * Run all rules against a patient population
  */
-router.post('/batch-evaluate', authenticateToken, authorizeRole(['super-admin', 'hospital-admin', 'quality-director']), async (req: AuthenticatedRequest, res) => {
+router.post('/batch-evaluate', authenticateToken, authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR']), async (req: AuthenticatedRequest, res) => {
   try {
     const {
       patientIds,

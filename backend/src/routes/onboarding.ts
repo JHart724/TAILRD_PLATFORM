@@ -10,7 +10,7 @@ const router = Router();
 // Hospital Onboarding Workflow
 router.post('/hospitals',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   [
     body('hospitalInfo.name').isLength({ min: 2 }).withMessage('Hospital name is required'),
     body('hospitalInfo.patientCount').isInt({ min: 0 }).withMessage('Patient count must be a positive integer'),
@@ -167,13 +167,13 @@ router.post('/hospitals',
 // Get Onboarding Status
 router.get('/hospitals/:hospitalId/status',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { hospitalId } = req.params;
 
       // Check if user can access this hospital
-      if (req.user?.role !== 'super-admin' && req.user?.hospitalId !== hospitalId) {
+      if (req.user?.role !== 'SUPER_ADMIN' && req.user?.hospitalId !== hospitalId) {
         return res.status(403).json({
           success: false,
           error: 'Access denied',
@@ -247,7 +247,7 @@ router.get('/hospitals/:hospitalId/status',
 // Update Onboarding Step
 router.patch('/hospitals/:hospitalId/onboarding/:step',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN']),
   [
     body('completed').isBoolean().withMessage('Completed status must be boolean'),
     body('notes').optional().isString()
@@ -260,7 +260,7 @@ router.patch('/hospitals/:hospitalId/onboarding/:step',
       // Tenant ownership check: hospital-admin can only modify their own hospital
       const tokenHospitalId = req.user?.hospitalId;
       const role = req.user?.role?.toLowerCase().replace(/_/g, '-');
-      if (role !== 'super-admin' && tokenHospitalId !== hospitalId) {
+      if (role !== 'SUPER_ADMIN' && tokenHospitalId !== hospitalId) {
         return res.status(403).json({
           success: false,
           error: 'Access denied: cannot modify another health system\'s onboarding',
@@ -324,7 +324,7 @@ router.patch('/hospitals/:hospitalId/onboarding/:step',
 // Generate Hospital API Keys for Redox
 router.post('/hospitals/:hospitalId/api-keys',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { hospitalId } = req.params;

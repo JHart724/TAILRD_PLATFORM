@@ -350,7 +350,7 @@ router.post('/redox', verifyRedoxSignature, async (req, res) => {
 
 router.post('/redox/test',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   (req, res) => {
     logger.info('Test webhook endpoint called');
     res.status(200).json({
@@ -365,7 +365,7 @@ router.post('/redox/test',
 
 router.get('/dead-letter',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res) => {
     try {
       const hospitalId = req.query.hospitalId as string | undefined;
@@ -390,7 +390,7 @@ router.get('/dead-letter',
 
 router.get('/redox/status',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   (req, res) => {
     res.status(200).json({
       success: true,

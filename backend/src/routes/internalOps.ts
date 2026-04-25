@@ -21,7 +21,7 @@ const router = Router();
 
 // All internal ops require authentication + super-admin
 router.use(authenticateToken);
-router.use(authorizeRole(['super-admin']));
+router.use(authorizeRole(['SUPER_ADMIN']));
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // BAA (Business Associate Agreement) TRACKING

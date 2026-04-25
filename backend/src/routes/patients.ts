@@ -7,7 +7,7 @@ import { validateBody, createPatientSchema, updatePatientSchema } from '../valid
 import prisma from '../lib/prisma';
 
 // HIPAA minimum necessary: redact direct identifiers for non-clinical roles
-const PHI_REDACTED_ROLES = ['analyst', 'quality-director', 'viewer'];
+const PHI_REDACTED_ROLES = ['ANALYST', 'QUALITY_DIRECTOR', 'VIEWER'];
 function redactPHI(patient: Record<string, unknown>, role: string): Record<string, unknown> {
   if (!PHI_REDACTED_ROLES.includes(role)) return patient;
   return {
@@ -35,7 +35,7 @@ router.use(requirePHIAccess());
 // ── LIST patients (paginated, scoped to user's hospital) ────────────────────
 
 router.get('/',
-  authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager', 'quality-director', 'analyst']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PHYSICIAN', 'NURSE_MANAGER', 'QUALITY_DIRECTOR', 'ANALYST']),
   async (req: AuthenticatedRequest, res) => {
     try {
       const hospitalId = req.user!.hospitalId;
@@ -136,7 +136,7 @@ router.get('/',
 // ── GET single patient with clinical summary ────────────────────────────────
 
 router.get('/:patientId',
-  authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager', 'quality-director', 'analyst']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PHYSICIAN', 'NURSE_MANAGER', 'QUALITY_DIRECTOR', 'ANALYST']),
   async (req: AuthenticatedRequest, res) => {
     try {
       const { patientId } = req.params;
@@ -206,7 +206,7 @@ router.get('/:patientId',
 // ── CREATE patient (manual entry, not via webhook) ──────────────────────────
 
 router.post('/',
-  authorizeRole(['super-admin', 'hospital-admin', 'physician']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PHYSICIAN']),
   async (req: AuthenticatedRequest, res) => {
     try {
       const validation = createPatientSchema.safeParse(req.body);
@@ -268,7 +268,7 @@ router.post('/',
 // ── UPDATE patient ──────────────────────────────────────────────────────────
 
 router.put('/:patientId',
-  authorizeRole(['super-admin', 'hospital-admin', 'physician']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PHYSICIAN']),
   async (req: AuthenticatedRequest, res) => {
     try {
       const validation = updatePatientSchema.safeParse(req.body);
@@ -340,7 +340,7 @@ router.put('/:patientId',
 // ── SOFT DELETE patient (HIPAA 6-year retention) ────────────────────────────
 
 router.delete('/:patientId',
-  authorizeRole(['super-admin', 'hospital-admin']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN']),
   async (req: AuthenticatedRequest, res) => {
     try {
       const { patientId } = req.params;
@@ -380,7 +380,7 @@ router.delete('/:patientId',
 // ── Patient encounter history ───────────────────────────────────────────────
 
 router.get('/:patientId/encounters',
-  authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager', 'quality-director']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PHYSICIAN', 'NURSE_MANAGER', 'QUALITY_DIRECTOR']),
   async (req: AuthenticatedRequest, res) => {
     try {
       const { patientId } = req.params;
@@ -411,7 +411,7 @@ router.get('/:patientId/encounters',
 // ── Patient observation history (labs/vitals) ───────────────────────────────
 
 router.get('/:patientId/observations',
-  authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager', 'quality-director']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PHYSICIAN', 'NURSE_MANAGER', 'QUALITY_DIRECTOR']),
   async (req: AuthenticatedRequest, res) => {
     try {
       const { patientId } = req.params;
@@ -448,7 +448,7 @@ router.get('/:patientId/observations',
 // ── Patient active alerts ───────────────────────────────────────────────────
 
 router.get('/:patientId/alerts',
-  authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager', 'quality-director']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PHYSICIAN', 'NURSE_MANAGER', 'QUALITY_DIRECTOR']),
   async (req: AuthenticatedRequest, res) => {
     try {
       const { patientId } = req.params;

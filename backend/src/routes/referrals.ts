@@ -26,11 +26,11 @@ const initializeReferralService = async () => {
  */
 router.get('/:hospitalId',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager', 'quality-director', 'analyst']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PHYSICIAN', 'NURSE_MANAGER', 'QUALITY_DIRECTOR', 'ANALYST']),
   // Multi-tenant isolation: verify user can access requested hospital
   (req: AuthenticatedRequest, res: Response, next: any) => {
     const requestedHospital = req.params.hospitalId;
-    if (req.user?.role !== 'super-admin' && req.user?.hospitalId !== requestedHospital) {
+    if (req.user?.role !== 'SUPER_ADMIN' && req.user?.hospitalId !== requestedHospital) {
       return res.status(403).json({
         success: false,
         error: 'Access denied: Cannot access other hospital data',
@@ -68,7 +68,7 @@ router.get('/:hospitalId',
       const hospitalId = req.params.hospitalId;
       
       // Verify user has access to this hospital
-      if (req.user?.hospitalId !== hospitalId && req.user?.role !== 'super-admin') {
+      if (req.user?.hospitalId !== hospitalId && req.user?.role !== 'SUPER_ADMIN') {
         return res.status(403).json({
           success: false,
           error: 'Access denied to hospital data',
@@ -167,7 +167,7 @@ router.get('/:hospitalId',
  */
 router.get('/patient/:patientId',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PHYSICIAN', 'NURSE_MANAGER']),
   [
     param('patientId').isString().notEmpty().withMessage('Patient ID is required'),
     query('status').optional().isIn(Object.values(ReferralStatus)),
@@ -245,7 +245,7 @@ router.get('/patient/:patientId',
  */
 router.put('/:id/status',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PHYSICIAN', 'NURSE_MANAGER']),
   [
     param('id').isString().notEmpty().withMessage('Referral ID is required'),
     body('status').isIn(Object.values(ReferralStatus)).withMessage('Valid status is required'),
@@ -293,7 +293,7 @@ router.put('/:id/status',
       }
 
       // Verify user has access to this referral
-      if (req.user?.hospitalId !== referral.hospitalId && req.user?.role !== 'super-admin') {
+      if (req.user?.hospitalId !== referral.hospitalId && req.user?.role !== 'SUPER_ADMIN') {
         return res.status(403).json({
           success: false,
           error: 'Access denied to referral data',
@@ -351,7 +351,7 @@ router.put('/:id/status',
  */
 router.get('/analytics/:hospitalId',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'analyst']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR', 'ANALYST']),
   [
     param('hospitalId').isString().notEmpty().withMessage('Hospital ID is required'),
     query('startDate').optional().isISO8601(),
@@ -374,7 +374,7 @@ router.get('/analytics/:hospitalId',
       const hospitalId = req.params.hospitalId;
       
       // Verify user has access to this hospital
-      if (req.user?.hospitalId !== hospitalId && req.user?.role !== 'super-admin') {
+      if (req.user?.hospitalId !== hospitalId && req.user?.role !== 'SUPER_ADMIN') {
         return res.status(403).json({
           success: false,
           error: 'Access denied to hospital data',
@@ -400,7 +400,7 @@ router.get('/analytics/:hospitalId',
 
       // Get benchmarking data if user is super-admin
       let benchmarks = undefined;
-      if (req.user?.role === 'super-admin') {
+      if (req.user?.role === 'SUPER_ADMIN') {
         benchmarks = await service.getReferralBenchmarks(hospitalId, {
           timeframe: '90d',
           peerGroup: 'similar-size'
@@ -458,7 +458,7 @@ router.get('/analytics/:hospitalId',
  */
 router.post('/',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin', 'physician', 'nurse-manager']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PHYSICIAN', 'NURSE_MANAGER']),
   [
     body('patientId').isString().notEmpty().withMessage('Patient ID is required'),
     body('type').isIn(Object.values(ReferralType)).withMessage('Valid referral type is required'),

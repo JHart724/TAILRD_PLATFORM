@@ -15,9 +15,9 @@ router.use('/god', godViewRouter);
 
 // Quick Analytics for Admin Dashboard
 // Hospital-admin sees only their hospital; super-admin sees platform-wide
-router.get('/analytics', authenticateToken, authorizeRole(['super-admin', 'hospital-admin']), async (req: AuthenticatedRequest, res: Response) => {
+router.get('/analytics', authenticateToken, authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN']), async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const isSuperAdmin = req.user!.role === 'super-admin';
+    const isSuperAdmin = req.user!.role === 'SUPER_ADMIN';
     const hospitalFilter = isSuperAdmin ? {} : { hospitalId: req.user!.hospitalId };
 
     const [
@@ -53,7 +53,7 @@ router.get('/analytics', authenticateToken, authorizeRole(['super-admin', 'hospi
 // Admin Dashboard - Platform Overview
 router.get('/dashboard', 
   authenticateToken, 
-  authorizeRole(['super-admin']), 
+  authorizeRole(['SUPER_ADMIN']), 
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       // Get platform-wide statistics
@@ -195,7 +195,7 @@ router.get('/dashboard',
 // Get All Hospitals (Admin view)
 router.get('/hospitals', 
   authenticateToken, 
-  authorizeRole(['super-admin']), 
+  authorizeRole(['SUPER_ADMIN']), 
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const page = parseInt(req.query.page as string) || 1;
@@ -266,7 +266,7 @@ router.get('/hospitals',
 // Create New Hospital
 router.post('/hospitals',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   [
     body('name').isLength({ min: 2 }).withMessage('Hospital name is required'),
     body('npi').optional().isLength({ min: 10, max: 10 }).withMessage('NPI must be 10 digits'),
@@ -379,7 +379,7 @@ router.post('/hospitals',
 // Update Hospital
 router.put('/hospitals/:hospitalId',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { hospitalId } = req.params;
@@ -439,7 +439,7 @@ router.put('/hospitals/:hospitalId',
 // Get Hospital Details (Admin view with full info)
 router.get('/hospitals/:hospitalId',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { hospitalId } = req.params;
@@ -533,7 +533,7 @@ router.get('/hospitals/:hospitalId',
 // Deactivate/Activate Hospital
 router.patch('/hospitals/:hospitalId/status',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   [
     body('active').isBoolean().withMessage('Active status must be boolean')
   ],
@@ -578,7 +578,7 @@ router.patch('/hospitals/:hospitalId/status',
 // Get All Users (Admin view)
 router.get('/users',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const page = parseInt(req.query.page as string) || 1;
@@ -670,7 +670,7 @@ router.get('/users',
 // Create User for Hospital
 router.post('/hospitals/:hospitalId/users',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   [
     body('email').isEmail().withMessage('Valid email is required'),
     body('firstName').isLength({ min: 1 }).withMessage('First name is required'),
@@ -795,7 +795,7 @@ router.post('/hospitals/:hospitalId/users',
 // Update User
 router.put('/users/:userId',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { userId } = req.params;
@@ -952,7 +952,7 @@ function getDefaultPermissionsByRole(role: string, hospital: any) {
 // GET /api/admin/overview — Platform overview KPIs + activity feed
 router.get('/overview',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (_req: AuthenticatedRequest, res: Response) => {
     res.json({
       success: true,
@@ -986,7 +986,7 @@ router.get('/overview',
 // GET /api/admin/health-systems — list of health systems for console
 router.get('/health-systems',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (_req: AuthenticatedRequest, res: Response) => {
     res.json({
       success: true,
@@ -1003,7 +1003,7 @@ router.get('/health-systems',
 // POST /api/admin/health-systems — add health system (mock)
 router.post('/health-systems',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     res.status(201).json({
       success: true,
@@ -1017,7 +1017,7 @@ router.post('/health-systems',
 // PUT /api/admin/health-systems/:id — update health system (mock)
 router.put('/health-systems/:id',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     res.json({
       success: true,
@@ -1031,7 +1031,7 @@ router.put('/health-systems/:id',
 // GET /api/admin/health-systems/:id/detail — health system detail (mock)
 router.get('/health-systems/:id/detail',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     res.json({
       success: true,
@@ -1044,7 +1044,7 @@ router.get('/health-systems/:id/detail',
 // POST /api/admin/users/invite — invite user (mock)
 router.post('/users/invite',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     res.status(201).json({
       success: true,
@@ -1058,7 +1058,7 @@ router.post('/users/invite',
 // GET /api/admin/users/:id/activity — user activity detail (mock)
 router.get('/users/:id/activity',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const targetUserId = req.params.id;
@@ -1074,7 +1074,7 @@ router.get('/users/:id/activity',
         return res.status(404).json({ success: false, error: 'User not found' } as APIResponse);
       }
 
-      if (callerRole !== 'super-admin' && targetUser.hospitalId !== callerHospitalId) {
+      if (callerRole !== 'SUPER_ADMIN' && targetUser.hospitalId !== callerHospitalId) {
         return res.status(403).json({ success: false, error: 'Cross-tenant access denied' } as APIResponse);
       }
 
@@ -1144,7 +1144,7 @@ router.get('/users/:id/activity',
 // GET /api/admin/config — platform configuration (real data)
 router.get('/config',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (_req: AuthenticatedRequest, res: Response) => {
     try {
       const [hospitals, totalUsers, totalPatients, totalGaps] = await Promise.all([
@@ -1194,7 +1194,7 @@ router.get('/config',
 // PUT /api/admin/config/modules/:hospitalId
 router.put('/config/modules/:hospitalId',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     res.json({ success: true, data: { hospitalId: req.params.hospitalId, modules: req.body }, message: 'Module configuration updated', timestamp: new Date().toISOString() } as APIResponse);
   }
@@ -1203,7 +1203,7 @@ router.put('/config/modules/:hospitalId',
 // PUT /api/admin/config/feature-flags
 router.put('/config/feature-flags',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     res.json({ success: true, data: req.body, message: 'Feature flags updated', timestamp: new Date().toISOString() } as APIResponse);
   }
@@ -1212,7 +1212,7 @@ router.put('/config/feature-flags',
 // PUT /api/admin/config/maintenance
 router.put('/config/maintenance',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (req: AuthenticatedRequest, res: Response) => {
     res.json({ success: true, data: { maintenanceMode: req.body.enabled, scheduledEnd: req.body.scheduledEnd }, message: req.body.enabled ? 'Maintenance mode activated' : 'Maintenance mode deactivated', timestamp: new Date().toISOString() } as APIResponse);
   }
@@ -1221,7 +1221,7 @@ router.put('/config/maintenance',
 // GET /api/admin/audit — audit + security overview (mock)
 router.get('/audit',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (_req: AuthenticatedRequest, res: Response) => {
     res.json({
       success: true,
@@ -1238,7 +1238,7 @@ router.get('/audit',
 // GET /api/admin/security/failed-logins
 router.get('/security/failed-logins',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (_req: AuthenticatedRequest, res: Response) => {
     res.json({
       success: true,
@@ -1255,7 +1255,7 @@ router.get('/security/failed-logins',
 // GET /api/admin/security/active-sessions
 router.get('/security/active-sessions',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (_req: AuthenticatedRequest, res: Response) => {
     res.json({
       success: true,
@@ -1273,7 +1273,7 @@ router.get('/security/active-sessions',
 // GET /api/admin/security/mfa-status
 router.get('/security/mfa-status',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (_req: AuthenticatedRequest, res: Response) => {
     res.json({
       success: true,
@@ -1286,7 +1286,7 @@ router.get('/security/mfa-status',
 // GET /api/admin/customer-success
 router.get('/customer-success',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (_req: AuthenticatedRequest, res: Response) => {
     res.json({
       success: true,
@@ -1306,7 +1306,7 @@ router.get('/customer-success',
 // GET /api/admin/data-quality
 router.get('/data-quality',
   authenticateToken,
-  authorizeRole(['super-admin']),
+  authorizeRole(['SUPER_ADMIN']),
   async (_req: AuthenticatedRequest, res: Response) => {
     res.json({
       success: true,

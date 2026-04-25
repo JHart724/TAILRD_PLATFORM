@@ -26,7 +26,7 @@ const initializeContentService = async () => {
  */
 router.get('/latest',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'physician', 'analyst']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR', 'PHYSICIAN', 'ANALYST']),
   [
     query('limit').optional().isInt({ min: 1, max: 100 }),
     query('since').optional().isISO8601(),
@@ -133,7 +133,7 @@ router.get('/latest',
  */
 router.get('/relevant/:module',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'physician', 'analyst']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR', 'PHYSICIAN', 'ANALYST']),
   [
     query('limit').optional().isInt({ min: 1, max: 50 }),
     query('minRelevanceScore').optional().isFloat({ min: 0, max: 1 }),
@@ -224,7 +224,7 @@ router.get('/relevant/:module',
  */
 router.get('/guidelines/changes',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin', 'quality-director']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR']),
   [
     query('since').optional().isISO8601(),
     query('organizations').optional().isString(), // Comma-separated
@@ -326,7 +326,7 @@ router.get('/guidelines/changes',
  */
 router.get('/stats',
   authenticateToken,
-  authorizeRole(['super-admin', 'hospital-admin', 'quality-director', 'analyst']),
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN', 'QUALITY_DIRECTOR', 'ANALYST']),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const service = await initializeContentService();

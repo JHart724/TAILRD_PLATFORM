@@ -198,7 +198,7 @@ function mapApiUser(u: Record<string, any>): AdminUser {
     email: String(u.email || ''),
     firstName: String(u.firstName || ''),
     lastName: String(u.lastName || ''),
-    role: String(u.role || 'viewer'),
+    role: String(u.role || 'VIEWER'),
     hospital: String(u.hospital?.name || u.hospitalName || 'Unknown'),
     hospitalId: String(u.hospitalId || ''),
     status: u.isActive ? 'Active' as const : 'Inactive' as const,

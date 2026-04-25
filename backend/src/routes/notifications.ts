@@ -185,7 +185,7 @@ router.put('/preferences', async (req: AuthenticatedRequest, res: Response) => {
 
 router.post('/trigger/daily-digest', async (req: AuthenticatedRequest, res: Response) => {
   const normalizedRole = req.user?.role?.toLowerCase().replace(/_/g, '-') || '';
-  if (normalizedRole !== 'super-admin') {
+  if (normalizedRole !== 'SUPER_ADMIN') {
     return res.status(403).json({ error: 'Super-admin only' });
   }
 
@@ -206,7 +206,7 @@ router.post('/trigger/daily-digest', async (req: AuthenticatedRequest, res: Resp
 
 router.post('/trigger/weekly-summary', async (req: AuthenticatedRequest, res: Response) => {
   const normalizedRole = req.user?.role?.toLowerCase().replace(/_/g, '-') || '';
-  if (normalizedRole !== 'super-admin') {
+  if (normalizedRole !== 'SUPER_ADMIN') {
     return res.status(403).json({ error: 'Super-admin only' });
   }
 

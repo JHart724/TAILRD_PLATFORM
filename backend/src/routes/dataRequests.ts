@@ -9,7 +9,7 @@ const router = Router();
 
 // All data-request routes require authentication + admin roles
 router.use(authenticateToken);
-router.use(authorizeRole(['super-admin', 'hospital-admin']));
+router.use(authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN']));
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // ZOD VALIDATION SCHEMAS

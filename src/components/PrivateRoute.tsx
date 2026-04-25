@@ -20,7 +20,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   if (requireSuperAdmin) {
  try {
  const user = JSON.parse(userData);
- if (user.role !== 'super-admin') {
+ if (user.role !== 'SUPER_ADMIN') {
  return <Navigate to="/dashboard" replace />;
  }
  } catch {

@@ -179,9 +179,15 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 
 ---
 
-### 21. Dual role convention (kebab-case vs SCREAMING_SNAKE_CASE)
+### 21. Dual role convention (kebab-case vs SCREAMING_SNAKE_CASE) — **RESOLVED 2026-04-25**
 - **Severity:** MEDIUM
-- **Status:** OPEN (introduced 2026-04-25 by PR 1 of Phase 2-A split)
+- **Status:** RESOLVED — closed by PR 2 of Phase 2-A split (`fix/auth-hardening-and-role-standardization`) on 2026-04-25, same day the bridge was introduced
+- **Resolution:** Standardized the entire codebase on the Prisma SCREAMING_SNAKE_CASE convention. Both `UserRole` type definitions (`backend/src/types/index.ts` canonical export + `src/auth/AuthContext.tsx` mirror) updated. Cascade through ~165 production sites: 88 `authorizeRole([...])` call values, ~40 backend direct `req.user.role === ...` comparisons, ROLE_PERMISSIONS map keys, 5 frontend comparisons, demo-mode role assignments, fallback defaults. The `BackendRole` redundancy in `backend/src/config/rolePermissions.ts` is now a thin alias of `UserRole` from `types/index.ts`. Both normalizers deleted: the backend middleware normalizer at `backend/src/middleware/auth.ts:148` (`.toLowerCase().replace(/_/g, '-')`) and the frontend `normalizeRole` Fix α helper. The 5 silently-buggy backend direct comparisons (`auth.ts:117 authorizeHospital`, `tierEnforcement.ts:104, 137, 167, 196`) that bypassed the middleware normalizer are now correct by construction. 4 dead ROLE_PERMISSIONS keys (`'admin'`, `'executive'`, `'service-line'`, `'care-team'`) removed — they weren't in the active UserRole type and never reachable. View-tier strings (`'service-line'`, `'care-team'`, `'executive'`) preserved as-is across module routing — separate concept from user roles. `crossReferralService.ts` `recipientType` union preserved snake_case — separate concept that happens to share the literal `'physician'`.
+- **Verification:**
+  - Frontend `npx tsc --noEmit`: 0 errors
+  - Backend `npx tsc --noEmit`: 0 role-cascade errors (TS2367 / TS2820); remaining errors are stale-Prisma-client per CLAUDE.md §15 RULE 6 and resolve in Docker build
+  - `git grep -E "'super-admin'|'hospital-admin'|'physician'|'nurse-manager'|'quality-director'|'analyst'|'viewer'"` in `src/` and `backend/src/`: returns ONLY the 2 deliberate skips in `crossReferralService.ts`
+- **Original entry (preserved for audit):**
 - **Target close:** 2026-04-25 (PR 2 of Phase 2-A split — `refactor/standardize-role-convention`)
 - **Impact:** The Prisma enum stores roles as SCREAMING_SNAKE_CASE (`SUPER_ADMIN`, `HOSPITAL_ADMIN`, etc.), and the JWT carries those values verbatim to the client. Backend code (~88 `authorizeRole([...])` call sites + ~40 direct `req.user.role === '...'` comparisons) was written against kebab-case (`super-admin`), and the backend middleware at `backend/src/middleware/auth.ts:148` quietly normalizes Prisma → kebab on every request to bridge the gap. The frontend (~18 sites including `UserRole` type, `ROLE_PERMISSIONS` map keys, role comparisons in `AuthContext.tsx`, `ProtectedRoute.tsx`, `SuperAdminLogin.tsx`, etc.) likewise uses kebab-case but had no normalizer — which silently broke the SUPER_ADMIN admin console gate in production after PR #150 disabled the demo bypass on 2026-04-16.
 - **PR 1 patch (this commit):** A `normalizeRole` helper at `src/auth/AuthContext.tsx` mirrors the backend's middleware-level normalizer at the data-ingress point in `buildUserFromResponse`. This unblocks SUPER_ADMIN access today without touching the 165+ comparison sites.
@@ -198,7 +204,7 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 |---|---|---|
 | P0 | 2 | Both complete within 1 week (RESOLVED) |
 | HIGH | 4 | All within the Aurora migration sprint or the one following |
-| MEDIUM | 7 | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9); #21 closes today via PR 2 of Phase 2-A split |
+| MEDIUM | 7 (1 resolved) | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9); #21 RESOLVED 2026-04-25 via PR 2 of Phase 2-A split |
 | P1 | 2 | Dedicated sprints B-2 and B-3 |
 | LOW | 5 | 2026 Q4 or as product maturity dictates |
 
