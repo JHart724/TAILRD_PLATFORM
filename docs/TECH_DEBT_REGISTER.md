@@ -1,6 +1,6 @@
 # TAILRD Tech Debt Register
 
-**Last updated:** 2026-04-23
+**Last updated:** 2026-04-25
 **Maintained by:** Jonathan Hart
 **Companion doc:** `docs/ARCHITECTURE_V2_MIGRATION.md`
 
@@ -179,13 +179,26 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 
 ---
 
+### 21. Dual role convention (kebab-case vs SCREAMING_SNAKE_CASE)
+- **Severity:** MEDIUM
+- **Status:** OPEN (introduced 2026-04-25 by PR 1 of Phase 2-A split)
+- **Target close:** 2026-04-25 (PR 2 of Phase 2-A split — `refactor/standardize-role-convention`)
+- **Impact:** The Prisma enum stores roles as SCREAMING_SNAKE_CASE (`SUPER_ADMIN`, `HOSPITAL_ADMIN`, etc.), and the JWT carries those values verbatim to the client. Backend code (~88 `authorizeRole([...])` call sites + ~40 direct `req.user.role === '...'` comparisons) was written against kebab-case (`super-admin`), and the backend middleware at `backend/src/middleware/auth.ts:148` quietly normalizes Prisma → kebab on every request to bridge the gap. The frontend (~18 sites including `UserRole` type, `ROLE_PERMISSIONS` map keys, role comparisons in `AuthContext.tsx`, `ProtectedRoute.tsx`, `SuperAdminLogin.tsx`, etc.) likewise uses kebab-case but had no normalizer — which silently broke the SUPER_ADMIN admin console gate in production after PR #150 disabled the demo bypass on 2026-04-16.
+- **PR 1 patch (this commit):** A `normalizeRole` helper at `src/auth/AuthContext.tsx` mirrors the backend's middleware-level normalizer at the data-ingress point in `buildUserFromResponse`. This unblocks SUPER_ADMIN access today without touching the 165+ comparison sites.
+- **PR 2 plan:** Standardize the entire codebase on the backend convention (SCREAMING_SNAKE_CASE — what Prisma already enforces). TypeScript-driven cascade — change the two `UserRole` type definitions (`backend/src/types/index.ts:447` and `src/auth/AuthContext.tsx`) and let the compiler list every literal-mismatch site. Also delete `BackendRole` redundancy in `backend/src/config/rolePermissions.ts` (use `User.role` from `types/index.ts`). Delete both normalizers (frontend `normalizeRole` from this PR, backend `auth.ts:148`). Delete the 4 legacy ROLE_PERMISSIONS keys (`'admin'`, `'executive'`, `'service-line'`, `'care-team'`) that aren't in the active UserRole type.
+- **Also resolves on PR 2 close:** 5 silently-buggy direct comparison sites in backend that bypass the middleware normalizer — `backend/src/middleware/auth.ts:117` (authorizeHospital), `tierEnforcement.ts:104, 137, 167, 196`. These work-by-accident today; standardization makes them correct by construction.
+- **Estimated PR 2 scope:** ~165 production sites + tests, TypeScript-driven, ~6-8 hours of focused work.
+- **Why a temporary bridge instead of going straight to PR 2:** Sinai demo Apr 27. The admin gate was blocking real work today. Two-PR split keeps each diff reviewable and ships unblock + hardening immediately while sequencing the larger refactor properly.
+
+---
+
 ## Summary
 
 | Severity | Count | Target |
 |---|---|---|
-| P0 | 2 | Both complete within 1 week |
+| P0 | 2 | Both complete within 1 week (RESOLVED) |
 | HIGH | 4 | All within the Aurora migration sprint or the one following |
-| MEDIUM | 6 | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9) |
+| MEDIUM | 7 | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9); #21 closes today via PR 2 of Phase 2-A split |
 | P1 | 2 | Dedicated sprints B-2 and B-3 |
 | LOW | 5 | 2026 Q4 or as product maturity dictates |
 

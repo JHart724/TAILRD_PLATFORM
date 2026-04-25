@@ -1900,8 +1900,12 @@ enum CarePlanStatus {
 model AuditLog {
   id String @id @default(cuid())
 
-  hospitalId String
-  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  // Nullable: failed-login events for unknown emails and other anonymous
+  // events have no associated hospital. Pre-2026-04-25 the column was NOT NULL
+  // and writeAuditLog wrote the literal 'unknown' which violated the FK and
+  // silently dropped audit rows. See migration 20260425000000_audit_log_hospital_nullable.
+  hospitalId String?
+  hospital   Hospital? @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
 
   // Who
   userId    String

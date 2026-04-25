@@ -294,9 +294,37 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Normalize the role string from backend (Prisma SCREAMING_SNAKE_CASE) to the
+ * frontend's kebab-case UserRole convention.
+ *
+ * TECH DEBT — TEMPORARY BRIDGE:
+ * The Prisma enum value `SUPER_ADMIN` arrives via JWT/API and the frontend's
+ * `UserRole` type expects `'super-admin'`. Without this normalization, every
+ * `role === 'super-admin'` comparison and every `ROLE_PERMISSIONS[role]`
+ * lookup silently returns false/undefined, which causes the SUPER_ADMIN admin
+ * console gate to fail with "Permission Denied" even though the user IS a
+ * super-admin in the DB.
+ *
+ * This helper is the data-ingress translator for now. It will be removed in
+ * tech debt #21 (PR 2 of Phase 2-A split — refactor/standardize-role-convention)
+ * which standardizes the entire codebase on SCREAMING_SNAKE_CASE.
+ *
+ * Mirrors the pattern at backend/src/middleware/auth.ts:148 (the existing
+ * authorizeRole normalizer that has been doing the same translation
+ * server-side for ~150 backend code sites).
+ *
+ * Defensive: handles null/undefined and already-kebab-case input.
+ */
+function normalizeRole(raw: string | null | undefined): UserRole {
+  if (!raw) return 'viewer';
+  const lower = String(raw).toLowerCase().replace(/_/g, '-');
+  return lower as UserRole;
+}
+
 /** Build a User object from backend API response */
 function buildUserFromResponse(apiUser: Record<string, any>, backendPerms?: UserPermissions): User {
-  const role = (apiUser.role || 'viewer') as UserRole;
+  const role = normalizeRole(apiUser.role);
   const bp = backendPerms || apiUser.permissions || FULL_ACCESS_PERMISSIONS;
 
   return {
@@ -404,13 +432,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
           dispatch({ type: 'LOGIN_SUCCESS', payload: { user, sessionToken, refreshToken } });
           return true;
-        } else {
-          dispatch({ type: 'LOGIN_FAILURE', payload: { error: response.message } });
-          return false;
         }
+        // Backend returned 2xx with success:false — surface the message.
+        throw new Error(response.message || 'Login failed');
       } catch (error) {
-        dispatch({ type: 'LOGIN_FAILURE', payload: { error: 'API connection failed' } });
-        return false;
+        // Re-throw so the caller (Login.tsx handleSubmit) can show a toast.
+        // Previously this catch swallowed errors and returned false, which
+        // produced the "nothing happens on click" UX bug — every login failure
+        // (wrong password, unknown email, network error, CORS rejection)
+        // was invisible to the user.
+        const message = error instanceof Error
+          ? error.message
+          : 'Unable to reach login service';
+        dispatch({ type: 'LOGIN_FAILURE', payload: { error: message } });
+        throw error instanceof Error ? error : new Error(message);
       }
     }
 

@@ -68,7 +68,7 @@ interface AuditEntry {
   userId: string;
   userEmail: string;
   userRole: string;
-  hospitalId: string;
+  hospitalId: string | null;
   action: string;
   resourceType: string;
   resourceId: string | null;
@@ -112,12 +112,16 @@ async function writeAuditLog(
   const authReq = req as AuthenticatedRequest;
   const user = authReq.user;
 
+  // hospitalId is null for unauthenticated events (failed logins on unknown users,
+  // anonymous webhook traffic, etc.). The DB column is nullable to allow this.
+  // Earlier behavior wrote the literal string 'unknown' which violated the
+  // hospitals FK and caused every failed-login audit write to be rejected.
   const entry: AuditEntry = {
     timestamp: new Date().toISOString(),
     userId: user?.userId || 'anonymous',
     userEmail: user?.email || 'unknown',
     userRole: user?.role || 'unknown',
-    hospitalId: user?.hospitalId || 'unknown',
+    hospitalId: user?.hospitalId ?? null,
     action,
     resourceType,
     resourceId,
