@@ -198,14 +198,56 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 
 ---
 
+### 22. Wix DNS authoritative, Route 53 hosted zone is a shadow
+- **Severity:** MEDIUM (blocks SES verification today; ongoing drift risk)
+- **Discovered:** 2026-04-25 during Phase 2-B SES setup
+- **Impact:** The domain `tailrd-heart.com` has its NS delegation pointed at `ns8.wixdns.net` / `ns9.wixdns.net`. The Route 53 hosted zone `Z1021439AHJE52WRSBZ3` (12 records) is a parallel shadow zone — public DNS queries never hit it. Records written to Route 53 (including the SES DKIM CNAMEs / SPF / DMARC published 2026-04-25T00:51Z under change `C07417783M6I2THZ0571C`) are inert until either (a) the same records are added at Wix DNS, or (b) NS delegation moves to Route 53. Confirmed via `Resolve-DnsName`: SES DKIM CNAMEs do NOT resolve publicly; old DMARC `p=none` and original SPF do resolve (from Wix); SendGrid `s1._domainkey` resolves from Wix too. ACM cert validation appears to work — likely because either ACM does internal-to-AWS validation or the validation CNAMEs were also manually mirrored to Wix DNS at some point. Drift risk: any future record added to Route 53 by an engineer assuming it's authoritative will silently fail to take effect.
+- **Current mitigation:** SES verification is manually unblocked by adding the 5 records to Wix DNS via the Wix console (operator action 2026-04-25, see `docs/SES_SETUP_2026_04_25.md` for the records).
+- **Planned remediation:** Two paths possible. (a) **NS migration**: change the registrar to use the four Route 53 nameservers, port any Wix-only records into Route 53 first (most importantly `api.tailrd-heart.com` CNAME → ALB), then update NS at registrar — 24-72h propagation, blackholes `api.` if mishandled. (b) **Stay on Wix authoritative + tear down the Route 53 shadow**: delete the unused Route 53 hosted zone, accept Wix-manual DNS as the operating model. Recommendation will follow a longer audit (likely path A once we have IaC discipline). Either way, documenting the current state explicitly so no future engineer is misled.
+- **Target:** Audit + decision in the post-Sinai cleanup sprint (week of 2026-04-28). Decision deadline before the next pilot onboarding.
+
+### 23. SES infrastructure not in IaC
+- **Severity:** LOW
+- **Discovered:** 2026-04-25 during Phase 2-B SES setup
+- **Impact:** SES domain identity (`tailrd-heart.com`), DKIM signing (RSA 2048), the DKIM/SPF/DMARC DNS records, the sandbox-recipient verification for `jhart@hartconnltd.com`, and the production-access request payload were all created via AWS CLI on 2026-04-25. None of this is in `infrastructure/cloudformation/` or any Terraform module. A fresh AWS environment cannot be reproduced from IaC alone. Same general posture as other manually-created production infra (RDS, ALB, ECS cluster).
+- **Current mitigation:** Setup is fully documented in `docs/SES_SETUP_2026_04_25.md` with all CLI commands run, DKIM tokens, DNS records, and request artifacts. Anyone re-creating from scratch can replay from the runbook.
+- **Planned remediation:** Codify in `infrastructure/terraform/ses.tf` (or CloudFormation equivalent) — domain identity with DKIM signing attributes, SPF / DKIM / DMARC records (once the Wix→Route 53 NS question in #22 is settled), configuration set with bounce/complaint event destinations, sandbox-recipient identities for test addresses.
+- **Target:** Sprint post-Sinai (week of 2026-04-28+)
+
+### 24. Orphaned SendGrid DNS records (account `u50524464`)
+- **Severity:** LOW
+- **Discovered:** 2026-04-25 during Phase 2-B SES setup
+- **Impact:** Three CNAMEs at Wix DNS (and mirrored in Route 53 shadow zone): `s1._domainkey.tailrd-heart.com`, `s2._domainkey.tailrd-heart.com`, `em5637.tailrd-heart.com` — all pointing to `*.u50524464.wl215.sendgrid.net`. SendGrid sender authentication (DKIM + branded link/return-path) is fully published, but no code path uses it: 0 hits in `backend/src/`, frontend `package.json`, Secrets Manager, or SSM Parameter Store. Account ownership is unclear (see #26). Records are inert from a "no email is being sent" standpoint, but anyone who logs into that SendGrid account and sends mail would have a working DKIM-aligned sender that bypasses our intended SES-only governance.
+- **Current mitigation:** None. Records are passive — no risk unless somebody actively misuses the SendGrid account.
+- **Planned remediation:** (a) Determine SendGrid console ownership (#26); (b) decision: reactivate (replace SES with SendGrid as the transactional ESP — unlikely given today's SES setup investment) OR tear down (delete the 3 CNAMEs at both Wix and Route 53; close the SendGrid account). Default plan: tear down.
+- **Target:** Sprint post-Sinai (week of 2026-04-28+)
+
+### 25. Stale Google site-verification + Google SPF reference
+- **Severity:** LOW
+- **Discovered:** 2026-04-25 during Phase 2-B SES setup
+- **Impact:** The root `tailrd-heart.com` TXT record contains two `google-site-verification=...` tokens and an SPF `include:_spf.google.com`. No MX records on the domain → no Google Workspace mailboxes for `tailrd-heart.com` (so `jhart@tailrd-heart.com` does not exist as a real inbox; the working contact is `jhart@hartconnltd.com`). The Google references are leftover from a prior Google Site / Search Console / Workspace verification attempt that was never cleaned up. SPF reference is harmless (just a permitted-sender include for a sender that does not exist), site-verification tokens are inert.
+- **Current mitigation:** The 2026-04-25 SES SPF merge preserved the Google reference rather than dropping it, on the principle of "do one thing per PR." Updated SPF: `v=spf1 include:amazonses.com include:_spf.google.com ~all`.
+- **Planned remediation:** Verify with Jonathan that no active Google service depends on these (e.g., that Google Search Console for tailrd-heart.com is no longer in use), then strip the two `google-site-verification` TXT entries and the `include:_spf.google.com` from the SPF.
+- **Target:** Sprint post-Sinai (week of 2026-04-28+) — combine with #24 cleanup PR.
+
+### 26. SendGrid setup origin investigation
+- **Severity:** LOW (governance / ownership clarity)
+- **Discovered:** 2026-04-25 during Phase 2-B SES setup
+- **Impact:** The SendGrid sender authentication for account `u50524464` was set up at some point in the past but has zero presence in our git history, code, or documentation. Plausible origins: (a) early solo-work attempt by Jonathan that was abandoned, (b) Bozidar (CTO) setup as part of an earlier infra exploration, (c) a previous developer / contractor who had access. Account access for the SendGrid console is unknown — if nobody has the credentials, the account is permanently dormant; if somebody does, we need to know who. Until ownership is established, the orphan cleanup in #24 is blocked on account closure.
+- **Current mitigation:** None. Records are inert at the email-sending layer.
+- **Planned remediation:** (a) Ask Jonathan if he set this up; (b) ask Bozidar if he set this up; (c) if neither, escalate to "SendGrid account abandoned, recover via support or accept as orphan."
+- **Target:** Sprint post-Sinai (week of 2026-04-28+) — must precede #24 cleanup.
+
+---
+
 ## Summary
 
 | Severity | Count | Target |
 |---|---|---|
 | P0 | 2 | Both complete within 1 week (RESOLVED) |
 | HIGH | 4 | All within the Aurora migration sprint or the one following |
-| MEDIUM | 7 (1 resolved) | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9); #21 RESOLVED 2026-04-25 via PR 2 of Phase 2-A split |
+| MEDIUM | 8 (1 resolved) | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9); #21 RESOLVED 2026-04-25 via PR 2 of Phase 2-A split; #22 added 2026-04-25 (Wix DNS shadow zone, post-Sinai) |
 | P1 | 2 | Dedicated sprints B-2 and B-3 |
-| LOW | 5 | 2026 Q4 or as product maturity dictates |
+| LOW | 9 | 2026 Q4 or as product maturity dictates; #23-26 added 2026-04-25 (SES + SendGrid + Google DNS hygiene cluster) |
 
 Running this register against the Aurora V2 migration plan shows most MEDIUM items get resolved automatically by the migration. P0 and HIGH items are sequenced explicitly in this doc. New items should be appended here, not inserted mid-list — the numbering is a stable reference.
