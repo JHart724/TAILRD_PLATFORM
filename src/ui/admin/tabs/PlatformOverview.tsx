@@ -25,18 +25,19 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts';
-import { useAdminDashboard } from '../../../hooks/useAdminData';
+import { useAdminDashboard, useAdminHospitals } from '../../../hooks/useAdminData';
 
-// ─── KPI Data (defaults -- overridden by real API data when available) ──────
+// ─── KPI card layout (labels are constant; values come from /api/admin/dashboard) ──
+// Default values render as "—" when API data is absent so labels never flip mid-load.
 
-const DEFAULT_KPI_CARDS = [
-  { label: 'Total Health Systems', value: '3', icon: Building2, color: '#7A1A2E' },
-  { label: 'Total Active Users', value: '12', icon: Users, color: '#2C4A60' },
-  { label: 'Total Patients', value: '10,660', icon: Heart, color: '#2C4A60' },
-  { label: 'Total Gap Flags', value: '104', icon: AlertTriangle, color: '#8B6914' },
-  { label: 'Data Uploads This Month', value: '7', icon: Upload, color: '#2C4A60' },
-  { label: 'Platform Uptime', value: '99.97%', icon: Server, color: '#4A6880' },
-];
+const KPI_LAYOUT = [
+  { key: 'totalHealthSystems', label: 'Total Health Systems', icon: Building2, color: '#7A1A2E' },
+  { key: 'activeUsers', label: 'Active Users', icon: Users, color: '#2C4A60' },
+  { key: 'totalPatients', label: 'Total Patients', icon: Heart, color: '#2C4A60' },
+  { key: 'unacknowledgedAlerts', label: 'Unacknowledged Alerts', icon: AlertTriangle, color: '#8B6914' },
+  { key: 'webhookEvents24h', label: 'Webhook Events (24h)', icon: Upload, color: '#2C4A60' },
+  { key: 'platformStatus', label: 'Platform Status', icon: Server, color: '#059669' },
+] as const;
 
 // ─── Activity Feed ───────────────────────────────────────────────────────────
 
@@ -86,12 +87,40 @@ const ACTIVITY_COLOR_MAP: Record<ActivityEvent['type'], string> = {
 };
 
 // ─── Health System Status ────────────────────────────────────────────────────
+// Fallback only when /api/admin/hospitals is unreachable.
 
-const HEALTH_SYSTEMS = [
-  { name: 'Baylor Scott & White', abbr: 'BSW', status: 'Active', tier: 'Enterprise', users: 4, patients: 5280, location: 'Temple, TX' },
-  { name: 'Main Campus Health System', abbr: 'MCH', status: 'Active', tier: 'Standard', users: 5, patients: 3540, location: 'Dallas, TX' },
-  { name: 'Mercy Health System', abbr: 'MH', status: 'Trial', tier: 'Trial', users: 3, patients: 1840, location: 'Houston, TX' },
+interface HealthSystemRow {
+  id: string;
+  name: string;
+  status: 'Active' | 'Trial' | 'Inactive';
+  tier: string;
+  users: number;
+  patients: number;
+  location: string;
+}
+
+const FALLBACK_HEALTH_SYSTEMS: HealthSystemRow[] = [
+  { id: 'fallback-bsw', name: 'Baylor Scott & White', status: 'Active', tier: 'Enterprise', users: 4, patients: 5280, location: 'Temple, TX' },
+  { id: 'fallback-mch', name: 'Main Campus Health System', status: 'Active', tier: 'Standard', users: 5, patients: 3540, location: 'Dallas, TX' },
+  { id: 'fallback-mh', name: 'Mercy Health System', status: 'Trial', tier: 'Trial', users: 3, patients: 1840, location: 'Houston, TX' },
 ];
+
+function mapApiHospital(h: Record<string, any>): HealthSystemRow {
+  const tier = String(h.subscriptionTier ?? '').toLowerCase();
+  const tierLabel = tier ? tier.charAt(0).toUpperCase() + tier.slice(1) : 'Standard';
+  const city = h.city ? String(h.city) : '';
+  const state = h.state ? String(h.state) : '';
+  const location = [city, state].filter(Boolean).join(', ') || '—';
+  return {
+    id: String(h.id ?? ''),
+    name: String(h.name ?? 'Unnamed health system'),
+    status: h.subscriptionActive ? (tier === 'trial' ? 'Trial' : 'Active') : 'Inactive',
+    tier: tierLabel,
+    users: Number(h._count?.users ?? 0),
+    patients: Number(h._count?.patients ?? h.patientCount ?? 0),
+    location,
+  };
+}
 
 // ─── Chart Data ──────────────────────────────────────────────────────────────
 // Placeholder shape until /api/admin/god/dau and /uploads endpoints land.
@@ -121,16 +150,30 @@ const UPLOAD_DATA = Array.from({ length: 12 }, (_, i) => {
 
 const PlatformOverview: React.FC = () => {
   const { data: dashboard, loading } = useAdminDashboard();
+  const { data: apiHospitals } = useAdminHospitals();
 
-  // Use real data from API when available, fall back to defaults
-  const KPI_CARDS = dashboard ? [
-    { label: 'Total Health Systems', value: String(dashboard.totalHospitals), icon: Building2, color: '#7A1A2E' },
-    { label: 'Total Active Users', value: String(dashboard.activeUsers), icon: Users, color: '#2C4A60' },
-    { label: 'Total Patients', value: dashboard.totalPatients.toLocaleString(), icon: Heart, color: '#2C4A60' },
-    { label: 'Unacknowledged Alerts', value: String(dashboard.unacknowledgedAlerts), icon: AlertTriangle, color: '#8B6914' },
-    { label: 'Webhook Events (24h)', value: String(dashboard.recentWebhookEvents), icon: Upload, color: '#2C4A60' },
-    { label: 'Platform Status', value: 'Online', icon: Server, color: '#059669' },
-  ] : DEFAULT_KPI_CARDS;
+  // KPI values keyed off the layout above. Missing values render as "—" so the
+  // label set is stable whether the dashboard endpoint has loaded or not.
+  const KPI_VALUES: Record<string, string> = dashboard ? {
+    totalHealthSystems: String(dashboard.totalHospitals),
+    activeUsers: String(dashboard.activeUsers),
+    totalPatients: dashboard.totalPatients.toLocaleString(),
+    unacknowledgedAlerts: String(dashboard.unacknowledgedAlerts),
+    webhookEvents24h: String(dashboard.recentWebhookEvents),
+    platformStatus: 'Online',
+  } : {
+    totalHealthSystems: '—',
+    activeUsers: '—',
+    totalPatients: '—',
+    unacknowledgedAlerts: '—',
+    webhookEvents24h: '—',
+    platformStatus: loading ? 'Checking…' : 'Unknown',
+  };
+
+  // Real hospitals when API data has loaded, deterministic fallback otherwise.
+  const healthSystems: HealthSystemRow[] = apiHospitals && apiHospitals.length > 0
+    ? apiHospitals.map(mapApiHospital)
+    : FALLBACK_HEALTH_SYSTEMS;
 
   return (
     <div className="space-y-6">
@@ -138,11 +181,12 @@ const PlatformOverview: React.FC = () => {
       {dashboard && <div className="text-xs text-emerald-600 font-medium">Live data from backend API</div>}
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {KPI_CARDS.map((kpi) => {
+        {KPI_LAYOUT.map((kpi) => {
           const Icon = kpi.icon;
+          const value = KPI_VALUES[kpi.key] ?? '—';
           return (
             <div
-              key={kpi.label}
+              key={kpi.key}
               className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow"
             >
               <div className="flex items-center gap-2 mb-3">
@@ -153,7 +197,7 @@ const PlatformOverview: React.FC = () => {
                   <Icon className="w-4 h-4" style={{ color: kpi.color }} />
                 </div>
               </div>
-              <div className="text-2xl font-bold text-gray-900">{kpi.value}</div>
+              <div className="text-2xl font-bold text-gray-900">{value}</div>
               <div className="text-xs text-gray-500 mt-1">{kpi.label}</div>
             </div>
           );
@@ -199,8 +243,8 @@ const PlatformOverview: React.FC = () => {
         {/* Health System Cards */}
         <div className="lg:col-span-1 space-y-4">
           <h3 className="text-sm font-semibold text-gray-900">Health System Status</h3>
-          {HEALTH_SYSTEMS.map((hs) => (
-            <div key={hs.abbr} className="bg-white rounded-lg border border-gray-200 p-4">
+          {healthSystems.map((hs) => (
+            <div key={hs.id} className="bg-white rounded-lg border border-gray-200 p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-semibold text-sm text-gray-900">{hs.name}</span>
                 <span
