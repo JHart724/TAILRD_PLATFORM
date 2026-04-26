@@ -1,0 +1,62 @@
+{
+  "Comment": "SES domain identity records for tailrd-heart.com (Phase 2-B 2026-04-25). DKIM CNAMEs + merged SPF + strengthened DMARC.",
+  "Changes": [
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "5jp5g3qg46nnj7zusrdbncn2b5ytfqld._domainkey.tailrd-heart.com.",
+        "Type": "CNAME",
+        "TTL": 1800,
+        "ResourceRecords": [
+          { "Value": "5jp5g3qg46nnj7zusrdbncn2b5ytfqld.dkim.amazonses.com" }
+        ]
+      }
+    },
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "mzqwfep3jhcztnvg6hpt5zjjr42z2ulj._domainkey.tailrd-heart.com.",
+        "Type": "CNAME",
+        "TTL": 1800,
+        "ResourceRecords": [
+          { "Value": "mzqwfep3jhcztnvg6hpt5zjjr42z2ulj.dkim.amazonses.com" }
+        ]
+      }
+    },
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "vgmtxufi36iuhlhlzxocdcnudiintquh._domainkey.tailrd-heart.com.",
+        "Type": "CNAME",
+        "TTL": 1800,
+        "ResourceRecords": [
+          { "Value": "vgmtxufi36iuhlhlzxocdcnudiintquh.dkim.amazonses.com" }
+        ]
+      }
+    },
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "tailrd-heart.com.",
+        "Type": "TXT",
+        "TTL": 3600,
+        "ResourceRecords": [
+          { "Value": "\"v=spf1 include:amazonses.com include:_spf.google.com ~all\"" },
+          { "Value": "\"google-site-verification=LU9Ri5liNwovs98G3Q4raEWg7a2BYeiyR5Jbi56eA4o\"" },
+          { "Value": "\"google-site-verification=_NFklMy1R9qFwcRsr2xv17YMbMsY6yngYT6UdTwTdr4\"" }
+        ]
+      }
+    },
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "_dmarc.tailrd-heart.com.",
+        "Type": "TXT",
+        "TTL": 3600,
+        "ResourceRecords": [
+          { "Value": "\"v=DMARC1; p=quarantine; pct=100; rua=mailto:dmarc-reports@tailrd-heart.com; ruf=mailto:dmarc-reports@tailrd-heart.com; fo=1; aspf=r; adkim=r\"" }
+        ]
+      }
+    }
+  ]
+}
