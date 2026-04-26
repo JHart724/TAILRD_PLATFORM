@@ -153,6 +153,51 @@ export function useAdminHospitals() {
   }};
 }
 
+/** Fetch a single user's login history + recent actions from admin API */
+export interface UserActivityLogin {
+  id: string;
+  timestamp: string;
+  ip: string | null;
+  success: boolean;
+  action: string;
+  description: string | null;
+}
+
+export interface UserActivityAction {
+  id: string;
+  timestamp: string;
+  action: string;
+  resourceType: string | null;
+  resourceId: string | null;
+  detail: string | null;
+}
+
+export interface UserActivity {
+  userId: string;
+  userEmail: string;
+  hospitalId: string;
+  loginHistory: UserActivityLogin[];
+  recentActions: UserActivityAction[];
+}
+
+export function useUserActivity(userId: string | null | undefined) {
+  const [data, setData] = useState<UserActivity | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!userId) {
+      setData(null);
+      return;
+    }
+    setLoading(true);
+    adminFetch(`/admin/users/${encodeURIComponent(userId)}/activity?limit=20`)
+      .then((d) => setData(d))
+      .finally(() => setLoading(false));
+  }, [userId]);
+
+  return { data, loading };
+}
+
 /** Fetch users list from admin API */
 export function useAdminUsers() {
   const [data, setData] = useState<any[] | null>(null);
