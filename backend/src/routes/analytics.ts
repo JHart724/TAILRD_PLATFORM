@@ -96,8 +96,8 @@ router.get('/dashboard',
           }
         }),
 
-        // Performance metrics
-        prisma.performanceMetric.aggregate({
+        // Performance metrics — averaged across per-request samples
+        prisma.performanceRequestLog.aggregate({
           where: {
             timestamp: {
               gte: startDate,
@@ -109,7 +109,7 @@ router.get('/dashboard',
             responseTime: true,
             memoryUsage: true,
             cpuUsage: true,
-            dbQueries: true
+            dbQueryTime: true
           },
           _count: true
         }),
@@ -205,7 +205,7 @@ router.get('/dashboard',
             averageResponseTime: Math.round(performanceMetrics._avg?.responseTime || 0),
             averageMemoryUsage: Math.round(performanceMetrics._avg?.memoryUsage || 0),
             averageCpuUsage: performanceMetrics._avg?.cpuUsage || 0,
-            averageDbQueryTime: Math.round(performanceMetrics._avg?.dbQueries || 0)
+            averageDbQueryTime: Math.round(performanceMetrics._avg?.dbQueryTime || 0)
           },
           topFeatures: topFeatures.map(f => ({
             featureName: f.featureName,
@@ -474,10 +474,10 @@ router.get('/performance',
       }
 
       if (endpoint) whereClause.endpoint = { contains: endpoint };
-      if (method) whereClause.operation = { contains: method as string };
+      if (method) whereClause.method = method as string;
 
-      // Get performance metrics with aggregation
-      const performanceData = await prisma.performanceMetric.findMany({
+      // Get performance request logs (per-request samples)
+      const performanceData = await prisma.performanceRequestLog.findMany({
         where: whereClause,
         orderBy: { timestamp: 'desc' },
         take: 1000
@@ -486,7 +486,7 @@ router.get('/performance',
       // Group and aggregate data based on groupBy parameter
       const groupedData = performanceData.reduce((acc: any, metric) => {
         let key: string;
-        
+
         switch (groupBy) {
           case 'hour':
             key = new Date(metric.timestamp).toISOString().substring(0, 13) + ':00:00.000Z';
@@ -495,10 +495,10 @@ router.get('/performance',
             key = new Date(metric.timestamp).toISOString().substring(0, 10);
             break;
           case 'endpoint':
-            key = metric.endpoint ?? 'unknown';
+            key = metric.endpoint;
             break;
           case 'method':
-            key = metric.operation;
+            key = metric.method;
             break;
           default:
             key = new Date(metric.timestamp).toISOString().substring(0, 10);
@@ -520,8 +520,8 @@ router.get('/performance',
         acc[key].totalResponseTime += metric.responseTime;
         acc[key].totalMemoryUsage += metric.memoryUsage || 0;
         acc[key].totalCpuUsage += metric.cpuUsage || 0;
-        acc[key].totalDbQueryTime += metric.dbQueries || 0;
-        if ((metric.errorRate ?? 0) > 0) acc[key].errors++;
+        acc[key].totalDbQueryTime += metric.dbQueryTime || 0;
+        if (metric.statusCode >= 400) acc[key].errors++;
 
         return acc;
       }, {});

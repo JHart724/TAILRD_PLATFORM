@@ -110,7 +110,8 @@ class AnalyticsTracker {
 
   // Track performance metrics
   public async trackPerformance(data: {
-    hospitalId: string;
+    hospitalId?: string;
+    userId?: string;
     endpoint: string;
     method: string;
     responseTime: number;
@@ -124,21 +125,23 @@ class AnalyticsTracker {
 
     const performance = {
       hospitalId: data.hospitalId,
+      userId: data.userId,
       endpoint: data.endpoint,
       method: data.method,
-      responseTime: data.responseTime,
       statusCode: data.statusCode,
+      responseTime: data.responseTime,
       memoryUsage: data.memoryUsage,
       cpuUsage: data.cpuUsage,
       dbQueryTime: data.dbQueryTime,
-      metadata: data.metadata ? JSON.stringify(data.metadata) : undefined,
+      // Json column accepts a plain object; do NOT JSON.stringify here
+      metadata: data.metadata,
       timestamp: new Date()
     };
 
     this.performanceBuffer.push(performance);
 
     if (this.performanceBuffer.length >= this.batchSize) {
-      await this.flushPerformanceMetrics();
+      await this.flushPerformanceRequestLogs();
     }
   }
 
@@ -228,16 +231,20 @@ class AnalyticsTracker {
     }
   }
 
-  private async flushPerformanceMetrics() {
+  private async flushPerformanceRequestLogs() {
     if (this.performanceBuffer.length === 0) return;
 
+    // try/finally — buffer ALWAYS resets, even on persistent errors. Earlier
+    // implementation only reset on success; a sustained DB error would let
+    // the buffer grow unbounded across every periodic flush. See tech debt #28.
     try {
-      await prisma.performanceMetric.createMany({
+      await prisma.performanceRequestLog.createMany({
         data: this.performanceBuffer
       });
-      this.performanceBuffer = [];
     } catch (error) {
-      console.error('Failed to flush performance metrics:', error);
+      console.error('Failed to flush performance request logs:', error);
+    } finally {
+      this.performanceBuffer = [];
     }
   }
 
@@ -279,7 +286,7 @@ class AnalyticsTracker {
     setInterval(async () => {
       await Promise.all([
         this.flushActivities(),
-        this.flushPerformanceMetrics(),
+        this.flushPerformanceRequestLogs(),
         this.flushFeatureUsage()
       ]);
     }, this.flushInterval);
@@ -288,7 +295,7 @@ class AnalyticsTracker {
   public async flushAll() {
     await Promise.all([
       this.flushActivities(),
-      this.flushPerformanceMetrics(),
+      this.flushPerformanceRequestLogs(),
       this.flushFeatureUsage()
     ]);
   }
@@ -354,7 +361,8 @@ export const analyticsMiddleware = (options: {
       // Track performance metrics
       if (trackPerformance && req.user) {
         tracker.trackPerformance({
-          hospitalId: req.user.hospitalId || 'platform',
+          hospitalId: req.user.hospitalId,
+          userId: req.user.userId,
           endpoint: req.path,
           method: req.method,
           responseTime,
