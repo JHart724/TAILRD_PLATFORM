@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAdminUsers } from '../../../hooks/useAdminData';
+import { useAdminUsers, useUserActivity } from '../../../hooks/useAdminData';
 import {
   Search,
   Filter,
@@ -27,19 +27,7 @@ interface AdminUser {
   mfaEnabled: boolean;
 }
 
-interface LoginEntry {
-  timestamp: string;
-  ip: string;
-  success: boolean;
-}
-
-interface ActionEntry {
-  timestamp: string;
-  action: string;
-  detail: string;
-}
-
-// ─── DEMO DATA — Replace with GET /api/admin/users when backend is deployed ──
+// ─── DEMO DATA — fallback when backend is unreachable ───────────────────────
 
 const USERS: AdminUser[] = [
   // BSW (4 users)
@@ -59,25 +47,6 @@ const USERS: AdminUser[] = [
   { id: 'u-012', email: 'robert.kim@mercyhealth.org', firstName: 'Robert', lastName: 'Kim', role: 'Care Team Lead', hospital: 'Mercy Health System', hospitalId: 'hs-003', status: 'Pending', lastLogin: 'Never', mfaEnabled: false },
 ];
 
-const MOCK_LOGINS: LoginEntry[] = [
-  { timestamp: '2026-03-22 08:15:23', ip: '10.0.1.42', success: true },
-  { timestamp: '2026-03-21 17:30:11', ip: '10.0.1.42', success: true },
-  { timestamp: '2026-03-20 09:05:47', ip: '192.168.1.100', success: true },
-  { timestamp: '2026-03-19 08:45:02', ip: '10.0.1.42', success: false },
-  { timestamp: '2026-03-18 14:22:38', ip: '10.0.1.42', success: true },
-];
-
-const MOCK_ACTIONS: ActionEntry[] = [
-  { timestamp: '2026-03-22 08:20', action: 'Viewed Dashboard', detail: 'Heart Failure Executive View' },
-  { timestamp: '2026-03-22 08:18', action: 'Exported Report', detail: 'Q1 Gap Analysis PDF' },
-  { timestamp: '2026-03-21 16:45', action: 'Resolved Gap', detail: 'HF-042: LVEF Documentation' },
-  { timestamp: '2026-03-21 15:30', action: 'Viewed Patient', detail: 'Patient ID #4521' },
-  { timestamp: '2026-03-21 14:10', action: 'Updated Alert', detail: 'EP Device Follow-up' },
-  { timestamp: '2026-03-20 11:25', action: 'Viewed Dashboard', detail: 'Structural Heart Service Line' },
-  { timestamp: '2026-03-20 09:15', action: 'Resolved Gap', detail: 'CAD-018: Statin Therapy' },
-  { timestamp: '2026-03-19 16:40', action: 'Exported Report', detail: 'Monthly KPI Summary' },
-];
-
 // ─── User Detail Panel ───────────────────────────────────────────────────────
 
 interface UserDetailPanelProps {
@@ -86,7 +55,12 @@ interface UserDetailPanelProps {
 }
 
 const UserDetailPanel: React.FC<UserDetailPanelProps> = ({ user, onClose }) => {
+  const { data: activity, loading: activityLoading } = useUserActivity(user?.id);
+
   if (!user) return null;
+
+  const loginHistory = activity?.loginHistory ?? [];
+  const recentActions = activity?.recentActions ?? [];
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
@@ -148,40 +122,52 @@ const UserDetailPanel: React.FC<UserDetailPanelProps> = ({ user, onClose }) => {
               <Clock className="w-4 h-4 text-gray-400" />
               Login History
             </h4>
-            <div className="space-y-2">
-              {MOCK_LOGINS.map((entry, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between py-2 px-3 rounded-lg bg-gray-50 text-sm"
-                >
-                  <div className="flex items-center gap-2">
-                    {entry.success ? (
-                      <CheckCircle className="w-3.5 h-3.5 text-teal-700" />
-                    ) : (
-                      <XCircle className="w-3.5 h-3.5 text-red-500" />
-                    )}
-                    <span className="text-gray-700">{entry.timestamp}</span>
+            {activityLoading && loginHistory.length === 0 ? (
+              <div className="text-xs text-gray-400 italic py-3">Loading login history...</div>
+            ) : loginHistory.length === 0 ? (
+              <div className="text-xs text-gray-400 italic py-3">No recorded logins.</div>
+            ) : (
+              <div className="space-y-2">
+                {loginHistory.map((entry) => (
+                  <div
+                    key={entry.id}
+                    className="flex items-center justify-between py-2 px-3 rounded-lg bg-gray-50 text-sm"
+                  >
+                    <div className="flex items-center gap-2">
+                      {entry.success ? (
+                        <CheckCircle className="w-3.5 h-3.5 text-teal-700" />
+                      ) : (
+                        <XCircle className="w-3.5 h-3.5 text-red-500" />
+                      )}
+                      <span className="text-gray-700">{new Date(entry.timestamp).toLocaleString()}</span>
+                    </div>
+                    <span className="text-xs text-gray-400 font-mono">{entry.ip ?? '—'}</span>
                   </div>
-                  <span className="text-xs text-gray-400 font-mono">{entry.ip}</span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Recent Actions */}
           <div>
             <h4 className="text-sm font-semibold text-gray-900 mb-3">Recent Actions</h4>
-            <div className="space-y-2">
-              {MOCK_ACTIONS.map((entry, i) => (
-                <div key={i} className="py-2 px-3 rounded-lg bg-gray-50">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-900">{entry.action}</span>
-                    <span className="text-xs text-gray-400">{entry.timestamp}</span>
+            {activityLoading && recentActions.length === 0 ? (
+              <div className="text-xs text-gray-400 italic py-3">Loading recent actions...</div>
+            ) : recentActions.length === 0 ? (
+              <div className="text-xs text-gray-400 italic py-3">No recorded activity.</div>
+            ) : (
+              <div className="space-y-2">
+                {recentActions.map((entry) => (
+                  <div key={entry.id} className="py-2 px-3 rounded-lg bg-gray-50">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-900">{entry.action}</span>
+                      <span className="text-xs text-gray-400">{new Date(entry.timestamp).toLocaleString()}</span>
+                    </div>
+                    {entry.detail && <p className="text-xs text-gray-500 mt-0.5">{entry.detail}</p>}
                   </div>
-                  <p className="text-xs text-gray-500 mt-0.5">{entry.detail}</p>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -240,7 +226,7 @@ const UsersManagement: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-gray-900">Users</h2>
-          <p className="text-sm text-gray-500">{USERS.length} users across {hospitals.length} health systems</p>
+          <p className="text-sm text-gray-500">{allUsers.length} users across {hospitals.length} health systems</p>
         </div>
         <button
           className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg"
