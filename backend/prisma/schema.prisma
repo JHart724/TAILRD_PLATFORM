@@ -88,12 +88,13 @@ model Hospital {
   internalNotes   InternalNote[]
 
   // Analytics relationships
-  userActivities     UserActivity[]
-  featureUsages      FeatureUsage[]
-  performanceMetrics PerformanceMetric[]
-  businessMetrics    BusinessMetric[]
-  reportGenerations  ReportGeneration[]
-  errorLogs          ErrorLog[]
+  userActivities         UserActivity[]
+  featureUsages          FeatureUsage[]
+  performanceMetrics     PerformanceMetric[]
+  performanceRequestLogs PerformanceRequestLog[]
+  businessMetrics        BusinessMetric[]
+  reportGenerations      ReportGeneration[]
+  errorLogs              ErrorLog[]
 
   // Upload & invite relationships
   uploadJobs   UploadJob[]
@@ -169,10 +170,11 @@ model User {
   recommendations Recommendation[]
 
   // Analytics relationships
-  userActivities    UserActivity[]
-  featureUsages     FeatureUsage[]
-  reportGenerations ReportGeneration[]
-  errorLogs         ErrorLog[]
+  userActivities         UserActivity[]
+  featureUsages          FeatureUsage[]
+  performanceRequestLogs PerformanceRequestLog[]
+  reportGenerations      ReportGeneration[]
+  errorLogs              ErrorLog[]
 
   // Upload & invite relationships
   uploadJobs     UploadJob[]
@@ -826,7 +828,51 @@ model FeatureUsage {
   @@map("feature_usage")
 }
 
-// Performance metrics tracking
+/// Per-request performance log for /api endpoints.
+/// Written by middleware/analytics.ts on every authenticated request.
+///
+/// Retention: Currently unbounded. Future scheduled job will aggregate
+/// rows >90 days old into PerformanceMetric (hourly/daily aggregates)
+/// and delete the raw rows. Tracked as tech debt #29 — not blocking.
+///
+/// PII note: metadata may contain ipAddress, userAgent, pageUrl,
+/// queryParams. Treat with same access controls as audit_logs (super-admin
+/// only). Pre-PHI-pilot work to hash/sanitize tracked as tech debt #30.
+model PerformanceRequestLog {
+  id           String   @id @default(cuid())
+
+  // Tenant + actor (both nullable — unauthenticated paths still log)
+  hospitalId   String?
+  hospital     Hospital? @relation(fields: [hospitalId], references: [id], onDelete: SetNull)
+  userId       String?
+  user         User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Request shape
+  endpoint     String
+  method       String   // GET, POST, PUT, DELETE, PATCH
+  statusCode   Int
+
+  // Performance data
+  responseTime Float    // ms
+  memoryUsage  Float?   // bytes (process.memoryUsage().heapUsed)
+  cpuUsage     Float?   // percent (currently unused — kept for future)
+  dbQueryTime  Float?   // ms (currently unused — kept for future)
+
+  // Free-form context (userAgent, ipAddress, pageUrl, queryParams, etc.)
+  metadata     Json?
+
+  timestamp    DateTime @default(now())
+
+  @@index([hospitalId, timestamp])
+  @@index([userId, timestamp])
+  @@index([endpoint, timestamp])
+  @@index([timestamp])
+  @@map("performance_request_logs")
+}
+
+// Performance metrics tracking (aggregate-by-period — currently no writers;
+// reserved for future scheduled job that rolls PerformanceRequestLog rows
+// into hourly/daily/weekly aggregates).
 model PerformanceMetric {
   id String @id @default(cuid())
 
