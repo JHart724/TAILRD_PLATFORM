@@ -238,6 +238,38 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 - **Planned remediation:** (a) Ask Jonathan if he set this up; (b) ask Bozidar if he set this up; (c) if neither, escalate to "SendGrid account abandoned, recover via support or accept as orphan."
 - **Target:** Sprint post-Sinai (week of 2026-04-28+) — must precede #24 cleanup.
 
+### 28. Prisma `performanceMetric.createMany()` failing — never collected analytics — **RESOLVED 2026-04-26**
+- **Severity:** MEDIUM (silent data loss + memory leak; not security-impacting)
+- **Discovered:** 2026-04-26 in production CloudWatch logs, surfaced during Wave 2 Attempt 3 pre-flight Fargate run
+- **Original impact:** The `PerformanceMetric` model was designed for aggregate-by-period metrics (hourly/daily/weekly rollups: `metricType` enum, `operation`, `requestCount`, `period`, `periodStart`, `periodEnd` all required). The `middleware/analytics.ts` writer was producing per-request data (one row per HTTP request) and missing every required aggregate field. `prisma.performanceMetric.createMany()` therefore failed with `Argument 'metricType' is missing` on every flush, silently dropping all per-request performance telemetry to the floor. Schema and writer have never matched — git archaeology shows the bug has existed since `32d4672 Initial commit`. Production has never collected analytics. Compounding bug: the writer's catch block did not reset `performanceBuffer`, so a sustained DB error would leak memory unbounded across every periodic flush.
+- **Resolution (2026-04-26):**
+  - Added new `PerformanceRequestLog` Prisma model dedicated to per-request data (`endpoint`, `method`, `statusCode`, `responseTime`, `memoryUsage`, `cpuUsage`, `dbQueryTime`, `metadata` Json, `timestamp` plus optional FKs to Hospital + User).
+  - Migration `20260427000000_add_performance_request_log` creates `performance_request_logs` table + 4 indexes + 2 FK constraints. Hand-written following the `audit_log_hospital_nullable` convention since Docker daemon was offline locally.
+  - Writer (`middleware/analytics.ts`) switched from `prisma.performanceMetric.createMany` to `prisma.performanceRequestLog.createMany`, with buffer reset moved into a `finally` block to guarantee reset on both success and failure (memory-leak fix). `JSON.stringify(metadata)` removed since Prisma `Json?` columns accept plain JS objects directly. `userId` added to writer signature so per-user drill-down is possible.
+  - Readers in `routes/analytics.ts` switched to query `performanceRequestLog`. The `_avg` semantics still work because each row is one request — sample-by-sample average is meaningful. Field references updated: `dbQueries` → `dbQueryTime`, `operation` → `method`, error inference now uses `statusCode >= 400` (no longer reads non-existent `errorRate`).
+  - `PerformanceMetric` model retained unchanged — reserved for the future scheduled-aggregation job (#29).
+  - `scripts/validateMigration.ts` table list updated; `analytics-guide.md` description clarified.
+- **Verification:** Production deploy applied migration via `prisma migrate deploy` in container CMD. CloudWatch logs show clean `performanceRequestLog.createMany` writes, no more `Argument 'metricType' is missing` errors. `SELECT COUNT(*) FROM performance_request_logs` returns growing count in real time.
+
+### 29. PerformanceRequestLog retention policy not implemented
+- **Severity:** LOW (becomes MEDIUM at ~10M rows or storage-cost concern)
+- **Discovered:** 2026-04-26 during tech debt #28 fix
+- **Impact:** Per-request log table grows unbounded. At expected production scale (5,000-50,000 req/day, 12 months) the table reaches 1.5M-15M rows/year. No business problem until then, but planning ahead avoids a future emergency cleanup.
+- **Current mitigation:** None — table is small today (just deployed).
+- **Planned remediation:** Scheduled job (e.g. nightly cron) aggregates rows >90 days old into `PerformanceMetric` using its existing `period`/`periodStart`/`periodEnd` aggregate schema, then deletes the raw rows. The retained `PerformanceMetric` model is purpose-built for exactly this rollup workflow — so the write side already exists; only the rollup job needs implementation.
+- **Target:** Post-funding (Q3 2026) — earlier if row count exceeds ~1M or storage cost surfaces.
+
+### 30. Metadata field PII review for PerformanceRequestLog
+- **Severity:** LOW (until first PHI-handling pilot)
+- **Discovered:** 2026-04-26 during tech debt #28 fix
+- **Impact:** The `metadata` Json field captures `userAgent`, `ipAddress`, `pageUrl`, `referrer`, `queryParams` from every authenticated request. IP addresses are PII under HIPAA. `pageUrl` may contain patient IDs in path params (e.g. `/api/patients/cmnxlp.../gaps`). `queryParams` may contain search terms. Storing this verbatim is acceptable for an admin-only audit trail in pre-pilot demo state; will require sanitization before the first real-PHI customer.
+- **Current mitigation:** Field treated as audit-grade data. Read access gated to SUPER_ADMIN only in `/api/analytics/*` routes. Schema comment block documents the PII sensitivity inline so future engineers see it. Same access-control posture as `audit_logs`.
+- **Planned remediation:** Pre-PHI-pilot (likely pre-Sinai-production):
+  - Hash IP addresses (e.g. SHA-256 of IP + per-deploy salt) for session continuity without storing raw addresses
+  - Sanitize `pageUrl`: strip query strings, redact path params matching `/cm[a-z0-9]{20,}/` (cuid pattern) → `:id`
+  - Whitelist allowed `metadata` keys; reject anything else at the middleware boundary
+- **Target:** Before first real-PHI customer (likely Sinai production).
+
 ---
 
 ## Summary
@@ -246,8 +278,8 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 |---|---|---|
 | P0 | 2 | Both complete within 1 week (RESOLVED) |
 | HIGH | 4 | All within the Aurora migration sprint or the one following |
-| MEDIUM | 8 (1 resolved) | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9); #21 RESOLVED 2026-04-25 via PR 2 of Phase 2-A split; #22 added 2026-04-25 (Wix DNS shadow zone, post-Sinai) |
+| MEDIUM | 9 (2 resolved) | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9); #21 RESOLVED 2026-04-25 via PR 2 of Phase 2-A split; #22 added 2026-04-25 (Wix DNS shadow zone, post-Sinai); #28 RESOLVED 2026-04-26 (PerformanceRequestLog architecture cleanup) |
 | P1 | 2 | Dedicated sprints B-2 and B-3 |
-| LOW | 9 | 2026 Q4 or as product maturity dictates; #23-26 added 2026-04-25 (SES + SendGrid + Google DNS hygiene cluster) |
+| LOW | 11 | 2026 Q4 or as product maturity dictates; #23-26 added 2026-04-25 (SES + SendGrid + Google DNS hygiene cluster); #29-30 added 2026-04-26 (PerformanceRequestLog retention + PII review, pre-PHI-pilot) |
 
 Running this register against the Aurora V2 migration plan shows most MEDIUM items get resolved automatically by the migration. P0 and HIGH items are sequenced explicitly in this doc. New items should be appended here, not inserted mid-list — the numbering is a stable reference.
