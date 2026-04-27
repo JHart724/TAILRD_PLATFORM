@@ -88,6 +88,7 @@ export const TABLES_TO_COMPARE: readonly string[] = [
   'patient_data_requests',
   'patients',
   'performance_metrics',
+  'performance_request_logs',
   'phenotypes',
   'procedures',
   'quality_measures',

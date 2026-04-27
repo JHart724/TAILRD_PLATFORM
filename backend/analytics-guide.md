@@ -9,7 +9,8 @@ The TAILRD Platform now includes a comprehensive analytics system that tracks us
 ### ✅ 1. Analytics Data Model
 - **UserActivity**: Tracks all user interactions with detailed metadata
 - **FeatureUsage**: Aggregated daily feature usage by hospital/user/module
-- **PerformanceMetric**: API response times, memory usage, and system performance
+- **PerformanceRequestLog**: Per-request performance data (response time, memory, status code) — written by middleware on every API request
+- **PerformanceMetric**: Aggregate-by-period metrics (hourly/daily/weekly rollups) — currently no writers; reserved for future scheduled aggregation job that rolls PerformanceRequestLog rows into period aggregates
 - **BusinessMetric**: Hospital-specific business intelligence data
 - **ReportGeneration**: Track report generation patterns and usage
 - **ErrorLog**: Comprehensive error tracking with severity levels
