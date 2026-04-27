@@ -270,6 +270,14 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
   - Whitelist allowed `metadata` keys; reject anything else at the middleware boundary
 - **Target:** Before first real-PHI customer (likely Sinai production).
 
+### 31. AnalyticsTracker singleton `setInterval` not cleanly disposable
+- **Severity:** LOW
+- **Discovered:** 2026-04-26 during tech debt #28 fix (CI test-leak warning surfaced the issue)
+- **Impact:** `AnalyticsTracker.startPeriodicFlush()` registers a `setInterval` in the constructor that never gets cleared. Test teardown can't stop it; Jest's `--forceExit` is required to terminate the worker process at end of run, which masks any other cleanup issues that might exist. In production this isn't a bug — the process lives forever intentionally — but the test-leak warning ("A worker process has failed to exit gracefully") obscures legitimate teardown failures we'd want to see.
+- **Current mitigation:** `npm test` already passes `--forceExit`. CI continues to function correctly.
+- **Planned remediation:** Add a public `dispose()` method on `AnalyticsTracker` that calls `clearInterval(this.flushTimerId)` and any other cleanup. Wire it into Jest `afterAll()` for test files that import the tracker, and into a future graceful-shutdown handler for the backend process.
+- **Target:** Post-Sinai cleanup sprint, low priority — current `--forceExit` posture is acceptable while we have so few tests; revisit when we expand test coverage and the leak warning starts hiding real issues.
+
 ---
 
 ## Summary
@@ -280,6 +288,6 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 | HIGH | 4 | All within the Aurora migration sprint or the one following |
 | MEDIUM | 9 (2 resolved) | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9); #21 RESOLVED 2026-04-25 via PR 2 of Phase 2-A split; #22 added 2026-04-25 (Wix DNS shadow zone, post-Sinai); #28 RESOLVED 2026-04-26 (PerformanceRequestLog architecture cleanup) |
 | P1 | 2 | Dedicated sprints B-2 and B-3 |
-| LOW | 11 | 2026 Q4 or as product maturity dictates; #23-26 added 2026-04-25 (SES + SendGrid + Google DNS hygiene cluster); #29-30 added 2026-04-26 (PerformanceRequestLog retention + PII review, pre-PHI-pilot) |
+| LOW | 12 | 2026 Q4 or as product maturity dictates; #23-26 added 2026-04-25 (SES + SendGrid + Google DNS hygiene cluster); #29-31 added 2026-04-26 (PerformanceRequestLog retention + PII review + AnalyticsTracker disposal, pre-PHI-pilot or post-Sinai cleanup sprint) |
 
 Running this register against the Aurora V2 migration plan shows most MEDIUM items get resolved automatically by the migration. P0 and HIGH items are sequenced explicitly in this doc. New items should be appended here, not inserted mid-list — the numbering is a stable reference.
