@@ -79,6 +79,20 @@ Parameters:
     Description: |
       Aurora master username. Matches existing production convention.
 
+  PhiEncryptionKeyValue:
+    Type: String
+    NoEcho: true
+    MinLength: 64
+    MaxLength: 64
+    AllowedPattern: '^[a-f0-9]{64}$'
+    Description: |
+      AES-256-GCM PHI encryption key, supplied by the operator as a 64-character
+      lowercase hex string (32 bytes). Generate with: openssl rand -hex 32.
+      An earlier auto-generator (Secrets Manager GenerateSecretString) produced
+      strings with non-hex characters that broke Buffer.from(key, 'hex'), causing
+      the 2026-04-28 staging seed failure. AllowedPattern enforces correctness at
+      stack-create time.
+
 Resources:
 
   # ───────────────────────────────────────────────────────────────────────────
@@ -249,11 +263,10 @@ Resources:
     Properties:
       Name: tailrd-staging-aurora/app/phi-encryption-key
       Description: |
-        AES-256-GCM PHI encryption key for staging - auto-generated 64-hex-char key.
-        Distinct from production key (production key NEVER reused in staging).
-      GenerateSecretString:
-        PasswordLength: 64
-        ExcludeCharacters: 'ghijklmnopqrstuvwxyzGHIJKLMNOPQRSTUVWXYZ!"#$%&()*+,-./:;<=>?@[\]^_`{|}~'
+        AES-256-GCM PHI encryption key for staging. Supplied by the operator
+        via the PhiEncryptionKeyValue stack parameter (64-char hex). Distinct
+        from production key (production key NEVER reused in staging).
+      SecretString: !Ref PhiEncryptionKeyValue
       Tags:
         - Key: Project
           Value: tailrd

@@ -42,6 +42,20 @@ These are the exact values for the `aws cloudformation create-stack` invocation 
 | `CertificateArn` | `arn:aws:acm:us-east-1:863518424332:certificate/a13fe1f5-5999-410d-bc08-92d063579e7a` | ACM cert for `staging-api.tailrd-heart.com`, status `ISSUED` |
 | `AuroraEngineVersion` | `15.14` | `tailrd-production-aurora` exact version (parity) |
 | `DBMasterUsername` | `tailrd_admin` | Production convention |
+| `PhiEncryptionKeyValue` | (operator-supplied 64-char hex) | Generate with `openssl rand -hex 32`. AllowedPattern `^[a-f0-9]{64}$` enforces hex-only at stack-create time. Distinct from production. |
+
+### PhiEncryptionKeyValue note
+
+Earlier versions of this template auto-generated the PHI key via Secrets Manager `GenerateSecretString`. The 2026-04-28 staging seed run revealed that AWS-generated strings included non-hex characters, which broke `Buffer.from(key, 'hex')` in the backend's PHI encryption middleware (AES-256-GCM rejected the under-32-byte key). All 25K Synthea bundles errored.
+
+Fix: the parameter is now operator-supplied. Generate it once before stack create:
+
+```bash
+PHI_KEY=$(openssl rand -hex 32)
+echo "$PHI_KEY" | grep -E '^[a-f0-9]{64}$' && echo "OK ($(echo -n "$PHI_KEY" | wc -c) chars)"
+```
+
+Pass `$PHI_KEY` as the `PhiEncryptionKeyValue` parameter in Task 2.
 
 ### Subnet design note
 
@@ -72,6 +86,10 @@ Expected: Returns `Description`, `Parameters`, `Capabilities` (CAPABILITY_NAMED_
 ## Task 2 - Create staging stack (15–25 min)
 
 ```bash
+# Pre-step: generate the PHI key (do NOT echo to history)
+PHI_KEY=$(openssl rand -hex 32)
+echo "$PHI_KEY" | grep -E '^[a-f0-9]{64}$' >/dev/null || { echo "PHI key invalid"; exit 1; }
+
 aws cloudformation create-stack \
   --stack-name tailrd-staging \
   --template-body file://infrastructure/cloudformation/tailrd-staging.yml \
@@ -84,6 +102,7 @@ aws cloudformation create-stack \
     ParameterKey=CertificateArn,ParameterValue=arn:aws:acm:us-east-1:863518424332:certificate/a13fe1f5-5999-410d-bc08-92d063579e7a \
     ParameterKey=AuroraEngineVersion,ParameterValue=15.14 \
     ParameterKey=DBMasterUsername,ParameterValue=tailrd_admin \
+    ParameterKey=PhiEncryptionKeyValue,ParameterValue="$PHI_KEY" \
   --tags Key=Project,Value=tailrd Key=Environment,Value=staging
 ```
 
