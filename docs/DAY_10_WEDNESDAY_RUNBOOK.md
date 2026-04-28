@@ -429,7 +429,7 @@ aws lambda delete-function --function-name tailrd-production-aurora-rollback
 
 1. **Read-only feature flag - RESOLVED**: a production-grade `READ_ONLY` middleware (`backend/src/middleware/readOnly.ts`) was authored and shipped. When `READ_ONLY=true` is set on the task def, all non-GET requests get a 503 + Retry-After. GET, /api/auth/login, HEAD, and OPTIONS bypass. Path A is now viable: pre-cutover, set `READ_ONLY=true` on the task def via a new revision and force-new-deployment; post-cutover, revert to `READ_ONLY=false` and deploy again.
 
-2. **Aurora password secret name - RESOLVED**: the correct secret is `tailrd-production/app/aurora-db-password` (NOT `tailrd-production/app/aurora-db-password` as the original draft said). Verified via `aws secretsmanager list-secrets`. Endpoints are also pre-stored: `aurora-writer-endpoint`, `aurora-reader-endpoint`, `aurora-proxy-endpoint`.
+2. **Aurora password secret name - RESOLVED**: the correct secret is `tailrd-production/app/aurora-db-password` (NOT `tailrd-production/rds/aurora-password` as the original draft said). Verified via `aws secretsmanager list-secrets`. Endpoints are also pre-stored: `aurora-writer-endpoint`, `aurora-reader-endpoint`, `aurora-proxy-endpoint`.
 
 3. **Production task def MinimumHealthyPercent**: snapshot of task def 106 saved to `/c/Users/JHart/AppData/Local/Temp/tailrd-backend-106-snapshot.json`. Service deployment configuration must be confirmed at cutover time via `aws ecs describe-services`.
 
