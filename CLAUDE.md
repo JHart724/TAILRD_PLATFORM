@@ -319,7 +319,29 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 - [ ] Frontend deployment (Netlify/Vercel with REACT_APP_USE_REAL_API=true)
 - [ ] DNS for app.tailrd-heart.com (frontend)
 
-**Last known working task definition:** `tailrd-backend:28` (deployed April 10, 2026 — Sprint B-1 PR-A: Heart Failure module wired to real Prisma data)
+**Staging is live (as of April 28, 2026):**
+- [x] CloudFormation stack `tailrd-staging` (Aurora Serverless v2 + ECS Fargate + ALB)
+- [x] Aurora endpoint: `tailrd-staging-aurora.cluster-csp0w6g8u5uq.us-east-1.rds.amazonaws.com` (PG 15.14, parity with production)
+- [x] ALB DNS: `tailrd-staging-alb-76101504.us-east-1.elb.amazonaws.com`
+- [x] DNS: `staging-api.tailrd-heart.com` (Wix CNAME → ALB)
+- [x] ACM cert ARN: `arn:aws:acm:us-east-1:863518424332:certificate/a13fe1f5-5999-410d-bc08-92d063579e7a` (ISSUED, expires 2026-11-10)
+- [x] Secrets namespace: `tailrd-staging-aurora/app/{aurora-db-password,database-url,jwt-secret,phi-encryption-key}`
+- [ ] Synthea seed (in progress at session close: 25K patient load running on Fargate task `f1e1fe4e13c742c4a0aeea98926024ca`, post-PHI-key-fix retry)
+- [ ] CI/CD staging deploy job (not yet wired; production deploy on merge-to-main is the only automated pipeline)
+
+**Last known working task definition:** `tailrd-backend:106` (deployed April 28, 2026, SHA `09d84d9` — PR #189 SES email wiring behind `USE_SES_EMAIL` flag). Prior milestone: `:28` from April 10, 2026 (Sprint B-1 PR-A Heart Failure wire-up).
+
+**Production env flags:**
+- `USE_SES_EMAIL` is currently UNSET (defaults to false). SES is plumbed but emails are logged as `EMAIL_DISABLED` events. Flip to `true` after AWS Support approves SES production-access request (case 177716470300327, currently in sandbox).
+- All other production env flags unchanged from prior state.
+
+**Today's main commits (2026-04-28):**
+```
+e67ceb7 Day 9 staging environment (#187)
+3efe423 Wave 2 close-out, 22 tables, 1.82M rows, CDC active (#188)
+2ed470d tech debt #34 — predecessor tailrd-production RDS investigation pending (#186)
+09d84d9 SES email wiring behind USE_SES_EMAIL flag (#189)
+```
 
 ## 10. Frontend-Backend Wiring Status
 
