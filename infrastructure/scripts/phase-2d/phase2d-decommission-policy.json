@@ -1,0 +1,60 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DescribeRdsInstanceAndSnapshots",
+      "Effect": "Allow",
+      "Action": [
+        "rds:DescribeDBInstances",
+        "rds:DescribeDBSnapshots",
+        "rds:DescribeDBClusters"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "DescribeWave2DmsTask",
+      "Effect": "Allow",
+      "Action": [
+        "dms:DescribeReplicationTasks"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "DescribeProductionEcsTaskDef",
+      "Effect": "Allow",
+      "Action": [
+        "ecs:DescribeServices",
+        "ecs:DescribeTaskDefinition"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ReadConnectionAndErrorMetrics",
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:GetMetricStatistics"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "FilterProductionLogsForErrors",
+      "Effect": "Allow",
+      "Action": [
+        "logs:FilterLogEvents"
+      ],
+      "Resource": [
+        "arn:aws:logs:us-east-1:863518424332:log-group:/ecs/tailrd-production-backend:*"
+      ]
+    },
+    {
+      "Sid": "ResolveProductionDatabaseUrlSecret",
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetSecretValue"
+      ],
+      "Resource": [
+        "arn:aws:secretsmanager:us-east-1:863518424332:secret:tailrd-production/app/database-url-*"
+      ]
+    }
+  ]
+}
