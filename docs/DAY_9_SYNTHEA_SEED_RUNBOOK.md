@@ -22,8 +22,17 @@ After Tuesday's staging stack is up (`tailrd-staging` CF stack `CREATE_COMPLETE`
 | **Generation** (already done) | Synthea CLI with `synthea.properties` | Run on ad-hoc EC2 / local; output written to S3 |
 | **Storage** | Per-patient FHIR R4 JSON bundles | `s3://tailrd-cardiovascular-datasets-863518424332/synthea/nyc-population-2026/fhir/` |
 | **Metadata** | Run manifest | `s3://tailrd-cardiovascular-datasets-863518424332/synthea/nyc-population-2026/metadata/` |
-| **Load (this doc)** | `backend/scripts/processSynthea.ts` (with `--s3` flag) | Run via Fargate one-off against staging Aurora |
-| **Cursor** | Resume token for interrupted runs | `s3://...synthea/nyc-population-2026/fhir/ingest-cursors/${SYNTHEA_HOSPITAL_ID}.txt` |
+| **Load (this doc)** | `scripts/processSynthea.ts` (with `--s3` flag) | Run via Fargate one-off against staging Aurora |
+| **Cursor** | Resume token for interrupted runs | `s3://...ingest-cursors/${SYNTHEA_HOSPITAL_ID}.txt` |
+
+**Production image layout (verified 2026-04-28 via Fargate inspection):**
+- `/app/scripts/` — TypeScript source for ad-hoc scripts (processSynthea.ts, seedFromSynthea.ts, etc.)
+- `/app/src/` — TypeScript source for the backend service
+- `/app/dist/` — Compiled JS for `src/` (NOT for `scripts/`)
+- `/app/prisma/` — Prisma schema + migrations
+- **`/app/backend/` does NOT exist.** The repo's `backend/` prefix is stripped during the Docker build's COPY.
+
+This means Fargate one-offs that invoke ad-hoc scripts must use the in-image path `/app/scripts/<file>.ts`, NOT `/app/backend/scripts/<file>.ts`. The script is run via `npx tsx`, which resolves the local repo's relative imports (`../src/services/...`) correctly because `/app/scripts/` and `/app/src/` are siblings.
 
 **Synthea config:** `backend/scripts/synthea/synthea.properties` documents the population shape - NYC demographics, 10K base population, cardiovascular-enriched prevalence (HF 15%, AFib 12%, CAD 18%, AS 4%, etc.).
 
@@ -43,37 +52,31 @@ After Tuesday's staging stack is up (`tailrd-staging` CF stack `CREATE_COMPLETE`
 
 ### Step 1 - Verify (or grant) S3 read permission to staging ECS task role
 
-`tailrd-staging.yml` defines `EcsTaskRole` with policies for Secrets Manager + CloudWatch only. Synthea processor needs to read from `tailrd-cardiovascular-datasets-863518424332/synthea/*`. If not present, attach a temporary policy.
+`tailrd-staging.yml` defines `EcsTaskRole` with policies for Secrets Manager + CloudWatch only. Synthea processor needs to read FHIR bundles from `tailrd-cardiovascular-datasets-863518424332/synthea/*` and write/delete the cursor file at `ingest-cursors/`. Attach a temporary policy.
 
 ```bash
-# Check current task role policies
+# Check current task role policies (initial state should be just StagingTaskPermissions)
 aws iam list-role-policies --role-name tailrd-staging-ecs-task
 
-# If no S3 read policy listed, attach a temporary one:
-cat > /tmp/synthea-s3-read.json <<'EOF'
-{
-  "Version": "2012-10-17",
-  "Statement": [{
-    "Effect": "Allow",
-    "Action": ["s3:GetObject", "s3:ListBucket", "s3:PutObject", "s3:DeleteObject"],
-    "Resource": [
-      "arn:aws:s3:::tailrd-cardiovascular-datasets-863518424332",
-      "arn:aws:s3:::tailrd-cardiovascular-datasets-863518424332/synthea/*",
-      "arn:aws:s3:::tailrd-cardiovascular-datasets-863518424332/synthea/nyc-population-2026/fhir/ingest-cursors/*"
-    ]
-  }]
-}
-EOF
-
+# Attach the temporary policy inline (Windows-safe, no temp file needed):
 aws iam put-role-policy \
   --role-name tailrd-staging-ecs-task \
   --policy-name SyntheaSeedS3Read \
-  --policy-document file:///tmp/synthea-s3-read.json
+  --policy-document '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":["s3:GetObject","s3:ListBucket","s3:PutObject","s3:DeleteObject"],"Resource":["arn:aws:s3:::tailrd-cardiovascular-datasets-863518424332","arn:aws:s3:::tailrd-cardiovascular-datasets-863518424332/synthea/*","arn:aws:s3:::tailrd-cardiovascular-datasets-863518424332/ingest-cursors/*"]}]}'
+
+# Verify both policies present:
+aws iam list-role-policies --role-name tailrd-staging-ecs-task
+# Expected: ["StagingTaskPermissions", "SyntheaSeedS3Read"]
 ```
 
-**Why PutObject + DeleteObject:** the cursor file is written/deleted in S3 to support resume.
+**Resource notes:**
+- The bucket-level ARN allows `s3:ListBucket` (which only checks bucket-level permissions, not per-object).
+- `synthea/*` covers all bundle reads.
+- `ingest-cursors/*` (top-level prefix in the same bucket, NOT under `synthea/`) covers cursor read/write/delete. The `processSynthea.ts` script writes its cursor at `ingest-cursors/${SYNTHEA_HOSPITAL_ID}.txt`.
 
-**Cleanup:** after seed completes successfully (Wednesday), delete this policy:
+**Why PutObject + DeleteObject:** the cursor file is written/deleted in S3 to support resume after interruption.
+
+**Cleanup (Phase 27 acceptance step):** after seed + gap detection complete and verification passes:
 ```bash
 aws iam delete-role-policy --role-name tailrd-staging-ecs-task --policy-name SyntheaSeedS3Read
 ```
@@ -82,22 +85,53 @@ aws iam delete-role-policy --role-name tailrd-staging-ecs-task --policy-name Syn
 
 ## Step 2 - Pre-create the staging hospital tenant
 
-The Synthea processor expects `SYNTHEA_HOSPITAL_ID` to exist in the `Hospital` table. Default value is `synthea-nyc-demo`. We'll use a staging-specific ID to keep tenancy clean.
+The Synthea processor expects `SYNTHEA_HOSPITAL_ID` to exist in the `Hospital` table. Default value is `synthea-nyc-demo`. We use a staging-specific ID `synthea-nyc-staging`.
+
+**Why not psql from local:** Aurora staging is in private subnets with no public ingress. Local psql cannot reach the writer endpoint. Use a Fargate one-off instead, leveraging the same task definition as the running ECS service (it already has DATABASE_URL injected via Secrets Manager).
+
+**Required fields per `prisma/schema.prisma` Hospital model (verified 2026-04-28 via 3 prisma upsert attempts):**
+- `id` (provided), `name`, `patientCount`, `bedCount`, `hospitalType` enum (`ACADEMIC` | `COMMUNITY` | etc.)
+- Address: `street`, `city`, `state`, `zipCode` (country defaults to `USA`)
+- Subscription: `subscriptionTier` enum (`ENTERPRISE` etc.), `subscriptionStart` DateTime (REQUIRED, not auto-default), `maxUsers`
+- **`patientLimit` does NOT exist on the schema**, despite appearing in some legacy seed scripts. Do not include it.
+
+Optional but recommended for gap detection: enable all 6 module booleans so gap rules don't filter out patients.
 
 ```bash
-# From a local shell with DATABASE_URL pointing at staging Aurora:
-export STAGING_DB_URL=$(aws secretsmanager get-secret-value \
-  --secret-id tailrd-staging-aurora/app/database-url \
-  --query 'SecretString' --output text)
-
-DATABASE_URL="$STAGING_DB_URL" psql -c "
-INSERT INTO \"Hospital\" (id, name, system, \"patientCount\", \"bedCount\", \"hospitalType\", street, city, state, \"zipCode\", \"createdAt\", \"updatedAt\")
-VALUES ('synthea-nyc-staging', 'Staging Synthea NYC', 'TAILRD Staging', 25000, 1500, 'ACADEMIC', '0 Staging Way', 'New York', 'NY', '10001', NOW(), NOW())
-ON CONFLICT (id) DO NOTHING;
+# Build the upsert overrides JSON via Python (Windows-safe escaping).
+# Replace path /c/Users/.../seed-overrides.json with your local temp path.
+python -c "
+import json
+node_script = '''const{PrismaClient}=require(\"@prisma/client\");const p=new PrismaClient();(async()=>{const h=await p.hospital.upsert({where:{id:\"synthea-nyc-staging\"},create:{id:\"synthea-nyc-staging\",name:\"Staging Synthea NYC\",system:\"TAILRD Staging\",subscriptionTier:\"ENTERPRISE\",subscriptionStart:new Date(),patientCount:25000,bedCount:1500,hospitalType:\"ACADEMIC\",street:\"0 Staging Way\",city:\"New York\",state:\"NY\",zipCode:\"10001\",maxUsers:10,moduleHeartFailure:true,moduleElectrophysiology:true,moduleStructuralHeart:true,moduleCoronaryIntervention:true,modulePeripheralVascular:true,moduleValvularDisease:true},update:{}});console.log(\"HOSPITAL_READY id=\",h.id);await p.\$disconnect()})().catch(e=>{console.error(\"FAIL\",e.message);process.exit(1)})'''
+cmd = f'cd /app && node -e \\'{node_script}\\' && echo HOSPITAL_DONE'
+overrides = {'containerOverrides':[{'name':'tailrd-backend','environment':[{'name':'SYNTHEA_HOSPITAL_ID','value':'synthea-nyc-staging'}],'command':['sh','-c',cmd]}]}
+with open('C:/Users/JHart/AppData/Local/Temp/seed-overrides.json','w',encoding='utf-8',newline='') as f:
+    json.dump(overrides, f)
 "
+
+# Launch Fargate one-off
+TASK=$(aws ecs run-task \
+  --cluster tailrd-staging-cluster \
+  --task-definition tailrd-staging-backend:1 \
+  --launch-type FARGATE \
+  --network-configuration "awsvpcConfiguration={subnets=[subnet-0071588b7174f200a,subnet-0e606d5eea0f4c89b],securityGroups=[sg-071ad75159eb2ba74],assignPublicIp=DISABLED}" \
+  --overrides "file://C:/Users/JHart/AppData/Local/Temp/seed-overrides.json" \
+  --query 'tasks[0].taskArn' --output text)
+TASK_ID="${TASK##*/}"
+echo "TASK_ID=$TASK_ID"
+
+# Wait for completion
+aws ecs wait tasks-stopped --cluster tailrd-staging-cluster --tasks "$TASK_ID"
+aws ecs describe-tasks --cluster tailrd-staging-cluster --tasks "$TASK_ID" \
+  --query 'tasks[0].{exit:containers[0].exitCode,reason:stoppedReason}' --output json
+# Pull logs
+MSYS_NO_PATHCONV=1 aws logs tail /ecs/tailrd-staging-backend \
+  --log-stream-names "tailrd-backend/tailrd-backend/$TASK_ID" --since 5m | tail -10
 ```
 
-**Pass gate:** `INSERT 0 1` (or `INSERT 0 0` if it already exists from a prior run).
+**Pass gate:** Task exits 0, logs contain `HOSPITAL_READY id= synthea-nyc-staging` followed by `HOSPITAL_DONE`. The upsert is idempotent — re-running is safe and produces the same row.
+
+**Note on staging SG:** `sg-071ad75159eb2ba74` is the staging ECS task SG (CF stack output `EcsTaskSecurityGroup`). Always pull from the live stack output, do not hardcode if the stack is recreated.
 
 ---
 
@@ -112,7 +146,9 @@ TASK_DEF_ARN=$(aws ecs describe-services --cluster "$ECS_CLUSTER" --services "$E
 ECS_SG=$(aws ecs describe-services --cluster "$ECS_CLUSTER" --services "$ECS_SERVICE" \
   --query 'services[0].networkConfiguration.awsvpcConfiguration.securityGroups[0]' --output text)
 
-# Run processSynthea.ts as a one-off
+# Run processSynthea.ts as a one-off.
+# IMPORTANT: path is scripts/processSynthea.ts (NOT backend/scripts/...)
+# The production image strips the backend/ prefix during Docker COPY.
 TASK_ARN=$(aws ecs run-task \
   --cluster "$ECS_CLUSTER" \
   --task-definition "$TASK_DEF_ARN" \
@@ -125,7 +161,7 @@ TASK_ARN=$(aws ecs run-task \
         {"name": "SYNTHEA_HOSPITAL_ID", "value": "synthea-nyc-staging"},
         {"name": "AWS_REGION", "value": "us-east-1"}
       ],
-      "command": ["sh", "-c", "cd /app && npx tsx backend/scripts/processSynthea.ts --s3 --limit 25000 --concurrency 10 2>&1 | tee /tmp/synthea-load.log; echo SYNTHEA_LOAD_DONE"]
+      "command": ["sh", "-c", "cd /app && npx tsx scripts/processSynthea.ts --s3 --limit 25000 --concurrency 10; echo SYNTHEA_LOAD_DONE_EXIT=$?"]
     }]
   }' \
   --query 'tasks[0].taskArn' --output text)
@@ -182,7 +218,7 @@ TASK_ARN=$(aws ecs run-task \
     "containerOverrides": [{
       "name": "tailrd-backend",
       "environment": [{"name": "SYNTHEA_HOSPITAL_ID", "value": "synthea-nyc-staging"}],
-      "command": ["sh", "-c", "cd /app && npx tsx -e \"const{runGapDetection}=require(\\\"./backend/src/ingestion/gapDetectionRunner\\\");(async()=>{const r=await runGapDetection({hospitalId:\\\"synthea-nyc-staging\\\"});console.log(JSON.stringify(r,null,2));console.log(\\\"GAP_DETECTION_DONE\\\")})()\""]
+      "command": ["sh", "-c", "cd /app && npx tsx -e \"const{runGapDetection}=require(\\\"./src/ingestion/gapDetectionRunner\\\");(async()=>{const r=await runGapDetection({hospitalId:\\\"synthea-nyc-staging\\\"});console.log(JSON.stringify(r,null,2));console.log(\\\"GAP_DETECTION_DONE\\\")})()\""]
     }]
   }' \
   --query 'tasks[0].taskArn' --output text)
