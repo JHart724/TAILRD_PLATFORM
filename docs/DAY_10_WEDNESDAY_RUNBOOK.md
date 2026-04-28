@@ -13,6 +13,140 @@
 
 **Total runtime budget:** 2-3 hours active operator time on Day 10 (cutover + 30-min observation). 24-hour soak. ~1 hour on Day 11 for decommission.
 
+## Pre-cutover production baselines (captured 2026-04-28 evening)
+
+These numbers feed `BASELINE_P95_MS` and `BASELINE_ERROR_RATE` env vars on `postCutoverValidation.js`. Wednesday's post-cutover run compares against these.
+
+| Metric | Value | Source |
+|---|---|---|
+| ALB p95 latency (last 30 min, 2026-04-28 21:30 UTC) | **400 ms** (max observed 389 ms, rounded up to 400) | CloudWatch `AWS/ApplicationELB.TargetResponseTime` p95 against `app/tailrd-production-alb/12cc0d46828a90ae` |
+| Production ERROR/5xx count (last 30 min) | **5** (actual measured 0; floor of 5 to allow noise tolerance) | CloudWatch Logs Insights filter against `/ecs/tailrd-production-backend` |
+| Patient count | 6,147 | RDS = Aurora, drift 0 (CDC) |
+| Encounter count | 353,512 | RDS = Aurora, drift 0 |
+| Observation count | 60 | RDS = Aurora, drift 0 |
+| Audit log count | 90 | RDS = Aurora, drift 0 (volatile, ±100 tolerance Wednesday) |
+| Login session count | 102 | RDS = Aurora, drift 0 (volatile, ±100 tolerance Wednesday) |
+
+Pass these into the post-cutover env vars on Wednesday:
+```bash
+export BASELINE_P95_MS=400
+export BASELINE_ERROR_RATE=5
+```
+
+## Post-cutover validation (~5 min)
+
+After Step 4 cutover deploy completes and READ_ONLY is set back to false:
+
+### Pre-step P0: attach Phase2D-PostCutoverValidation IAM policy
+
+```bash
+aws iam put-role-policy \
+  --role-name tailrd-production-ecs-task \
+  --policy-name Phase2D-PostCutoverValidation \
+  --policy-document file://infrastructure/scripts/phase-2d/phase2d-post-cutover-validation-policy.json
+
+aws iam list-role-policies --role-name tailrd-production-ecs-task
+# Expected: Phase2D-PostCutoverValidation appears alongside the baseline policies
+```
+
+### Run the validation Fargate one-off
+
+```bash
+# Build overrides JSON with baselines + smoke creds
+python -c "
+import json, os
+overrides = {
+  'containerOverrides': [{
+    'name': 'tailrd-backend',
+    'environment': [
+      {'name': 'BASELINE_P95_MS', 'value': '400'},
+      {'name': 'BASELINE_ERROR_RATE', 'value': '5'},
+      {'name': 'SMOKE_TEST_EMAIL', 'value': os.environ['SMOKE_TEST_EMAIL']},
+      {'name': 'SMOKE_TEST_PASSWORD', 'value': os.environ['SMOKE_TEST_PASSWORD']},
+    ],
+    'command': ['sh', '-c', 'cd /app && npm install --no-save --silent pg @aws-sdk/client-database-migration-service @aws-sdk/client-rds @aws-sdk/client-ecs @aws-sdk/client-cloudwatch @aws-sdk/client-cloudwatch-logs @aws-sdk/client-secrets-manager >/tmp/npm.log 2>&1 && node -e \\'const{S3Client,GetObjectCommand}=require(\"@aws-sdk/client-s3\");const fs=require(\"fs\");(async()=>{const c=new S3Client({region:\"us-east-1\"});const r=await c.send(new GetObjectCommand({Bucket:\"tailrd-cardiovascular-datasets-863518424332\",Key:\"migration-artifacts/phase-2d/postCutoverValidation.js\"}));fs.writeFileSync(\"/tmp/v.js\",await r.Body.transformToString())})().catch(e=>{console.error(e.message);process.exit(1)})\\' && NODE_PATH=/app/node_modules node /tmp/v.js']
+  }]
+}
+print(json.dumps(overrides))
+" > /tmp/postcut-overrides.json
+
+TASK=$(aws ecs run-task \
+  --cluster tailrd-production-cluster \
+  --task-definition tailrd-backend \
+  --launch-type FARGATE \
+  --network-configuration "awsvpcConfiguration={subnets=[<prod-subnets>],securityGroups=[<prod-sg>],assignPublicIp=DISABLED}" \
+  --overrides file:///tmp/postcut-overrides.json \
+  --query 'tasks[0].taskArn' --output text)
+TASK_ID="${TASK##*/}"
+aws ecs wait tasks-stopped --cluster tailrd-production-cluster --tasks "$TASK_ID"
+
+MSYS_NO_PATHCONV=1 aws logs tail /ecs/tailrd-production-backend \
+  --log-stream-names "tailrd-backend/tailrd-backend/$TASK_ID" --since 10m \
+  | sed -n '/---POST_CUTOVER_VALIDATION---/,/---END---/p'
+```
+
+### Pass condition: `"ready_for_soak": true`
+
+All 7 checks must show `"ok": true` and `"blockers": []`. Warnings are acceptable (review them but don't block).
+
+### If `ready_for_soak: false` (one or more blockers)
+
+Per-check response:
+- `database_url_points_at_aurora` block: cutover Step 4.3 didn't take. Re-flip the secret or rollback.
+- `backend_reading_aurora` block: Aurora unreachable from production VPC. Investigate SG, route, or revert.
+- `modules_respond_healthy` block: backend deploy regression. Check task running SHA matches expected merge.
+- `data_integrity_drift` block: row counts mismatched beyond tolerance. **Hard rollback recommended** (data loss risk).
+- `read_only_off` block: Step 4.6 didn't fire. Re-deploy with READ_ONLY=false.
+- Latency / error blocks: review for transient cutover artifacts; consider rollback if sustained.
+
+If rollback chosen, follow Step 6 of this runbook.
+
+### Pre-step P1: detach Phase2D-PostCutoverValidation IAM policy (MANDATORY)
+
+```bash
+aws iam delete-role-policy \
+  --role-name tailrd-production-ecs-task \
+  --policy-name Phase2D-PostCutoverValidation
+
+aws iam list-role-policies --role-name tailrd-production-ecs-task
+# Phase2D-PostCutoverValidation should NOT appear above
+```
+
+The soak monitor uses your operator CLI credentials, NOT the production task role, so the role does not need lingering permissions.
+
+## 24-hour soak window
+
+Once `ready_for_soak: true`, launch the soak monitor:
+
+```bash
+export BASELINE_P95_MS=400
+export BASELINE_ERROR_RATE=5
+export SMOKE_TEST_EMAIL=<the email>
+export SMOKE_TEST_PASSWORD=<the password>
+export ECS_TASK_DEF=tailrd-backend  # latest revision auto-selected
+export ECS_SUBNETS=subnet-0e606d5eea0f4c89b,subnet-0071588b7174f200a
+export ECS_SG=sg-07cf4b72927f9038f
+
+nohup bash infrastructure/scripts/phase-2d/postCutoverSoakMonitor.sh \
+  > /tmp/soak-monitor-launcher.log 2>&1 &
+```
+
+The monitor runs 76 invocations across 24 hours on a backoff schedule:
+- Hours 0-2: every 5 min (24 invocations) - dense early signal
+- Hours 2-6: every 15 min (16 invocations)
+- Hours 6-24: every 30 min (36 invocations)
+
+Each invocation produces a JSON verdict appended to `/tmp/soak-monitor-{date}.log`. First failure prints to stderr with `ALERT:` prefix; tail the log to monitor.
+
+After 24 hours:
+- 0 failures: declare cutover successful, proceed to Day 11 RDS decommission
+- 1-2 transient failures: investigate, likely acceptable
+- 3+ or sustained failures: rollback to RDS
+
+## Day 11 follow-up: Aurora minor version upgrade
+
+A minor version upgrade (15.14 -> 15.15) is scheduled by AWS for 2026-05-17 10:00 UTC. This will occur 18 days post-cutover during a normal AWS maintenance window. Decision needed: allow it to proceed (default), reschedule, or take it manually post-Sinai. Not blocking Day 10 cutover. Track on the Day 11 punch list.
+
 ## Pre-flight dry run (captured 2026-04-28 evening)
 
 `infrastructure/scripts/phase-2d/preCutoverValidation.js` was executed against pre-cutover production state via Fargate one-off, with the temporary `Phase2D-PreCutoverValidation` IAM policy attached and detached cleanly. Run `ead798c3e02a4cb0a8abf97930fceec0` returned `ready: true` with all 6 checks passing.
