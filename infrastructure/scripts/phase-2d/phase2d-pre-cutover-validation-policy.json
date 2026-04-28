@@ -1,0 +1,62 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DescribeWave2DmsTask",
+      "Effect": "Allow",
+      "Action": [
+        "dms:DescribeReplicationTasks",
+        "dms:DescribeTableStatistics"
+      ],
+      "Resource": [
+        "arn:aws:dms:us-east-1:863518424332:task:YFGGBH5LXRHDBHYD76DVX5MQRA"
+      ]
+    },
+    {
+      "Sid": "DescribeReplicationTasksAccountWide",
+      "Effect": "Allow",
+      "Action": [
+        "dms:DescribeReplicationTasks"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "DescribeAuroraCluster",
+      "Effect": "Allow",
+      "Action": [
+        "rds:DescribeDBClusters"
+      ],
+      "Resource": [
+        "arn:aws:rds:us-east-1:863518424332:cluster:tailrd-production-aurora"
+      ]
+    },
+    {
+      "Sid": "DescribeAuroraPendingMaintenance",
+      "Effect": "Allow",
+      "Action": [
+        "rds:DescribePendingMaintenanceActions"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ReadCdcLagFromCloudWatch",
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:GetMetricStatistics"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ReadProductionDatabaseSecretsForParityCheck",
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetSecretValue"
+      ],
+      "Resource": [
+        "arn:aws:secretsmanager:us-east-1:863518424332:secret:tailrd-production/app/database-url-*",
+        "arn:aws:secretsmanager:us-east-1:863518424332:secret:tailrd-production/app/aurora-db-password-*",
+        "arn:aws:secretsmanager:us-east-1:863518424332:secret:tailrd-production/app/aurora-writer-endpoint-*"
+      ]
+    }
+  ]
+}
