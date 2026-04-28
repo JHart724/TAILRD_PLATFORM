@@ -324,3 +324,54 @@ aws s3 ls s3://tailrd-cardiovascular-datasets-863518424332/ingest-cursors/
 # Note completion in the change record
 echo "Synthea staging seed complete: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> docs/CHANGE_RECORD_2026_04_28_synthea_staging_seed.md
 ```
+
+---
+
+## Final verification (2026-04-28)
+
+### Seed counts (verified via Fargate count query against staging Aurora)
+
+| Table | Count | Per-patient avg |
+|---|---|---|
+| Patient | 25,000 | - |
+| Encounter | 1,432,358 | ~57 |
+| Observation | 12,665,421 | ~506 |
+| Condition | 892,191 | ~36 |
+| Medication | 801,668 | ~32 |
+| Errors | 0 | - |
+| Runtime | 4,992.8s (~83 min) | - |
+
+Counts vastly exceed the conservative ranges in this runbook's Step 6 verification queries because Synthea generates a full patient lifetime of FHIR bundles per person; the original ranges underestimated by 6-10x. The per-patient ratios are clinically realistic for a full-life cardiovascular-enriched cohort.
+
+### Gap detection (verified)
+
+| Metric | Value |
+|---|---|
+| Patients evaluated | 25,000 |
+| Runtime | 631s (~10.5 min) |
+| Gaps created | 0 |
+| Exit code | 0 (success) |
+
+**0 gaps is the correct outcome** given known data-shape mismatches; root cause is documented in `docs/TECH_DEBT_REGISTER.md` entries #36-38:
+
+- **#36** Synthea defaults to SNOMED CT codes for conditions; gap rules query ICD-10
+- **#37** `gapDetectionRunner.ts` filters labs > 6 months old; Synthea NYC dataset most recent is 2023-06-01 (34+ months stale)
+- **#38** Synthea medications mostly `status='COMPLETED'`; gap rules require `status='ACTIVE'`
+
+Real gap data will come from the production Redox EHR feed, which delivers ICD-10 + active medications + recent observations natively. The staging environment validates infrastructure (CF stack, Aurora, ECS, deploy pipeline), not gap detection clinical workflow.
+
+### Operational corrections discovered during execution
+
+These are corrections to the v1 of this runbook, recorded so future operators don't repeat the same diagnosis:
+
+1. **`runGapDetection` signature**: takes `hospitalId: string` as a positional argument, not an options object. The original Step 5 in this runbook showed `runGapDetection({ hospitalId: ... })` which produces a Prisma `Unknown argument hospitalId` error because the object lands as the WHERE filter literal. Use `runGapDetection('synthea-nyc-staging')`.
+2. **Production image path**: `/app/scripts/processSynthea.ts`, NOT `/app/backend/scripts/processSynthea.ts`. The Docker build strips the `backend/` prefix during COPY. Image layout has `/app/scripts/`, `/app/src/`, `/app/dist/` as siblings; `/app/backend/` does not exist. (Already corrected in PR #187 follow-up.)
+3. **IAM scope for staging-only Phase2D scripts**: the `SyntheaSeedS3Read` policy attached to `tailrd-staging-ecs-task` allows `synthea/*` and `ingest-cursors/*` prefixes only. Scripts pulled from S3 by Fargate one-offs must live under `s3://...synthea/scripts/` (or another allowed prefix), NOT `s3://...migration-artifacts/` (the production-side prefix).
+4. **`Hospital` Prisma model required fields**: `id`, `name`, `patientCount`, `bedCount`, `hospitalType`, `street`, `city`, `state`, `zipCode`, `subscriptionTier`, `subscriptionStart` (DateTime, no default), `maxUsers`. `patientLimit` is NOT a field. (Already corrected in PR #187 runbook update.)
+5. **Module booleans**: enable `moduleHeartFailure`, `moduleElectrophysiology`, `moduleStructuralHeart`, `moduleCoronaryIntervention`, `modulePeripheralVascular`, `moduleValvularDisease` on the staging hospital row so module-scoped queries don't filter out patients on the demo tenant.
+
+### Post-acceptance cleanup status (2026-04-28)
+- [x] `SyntheaSeedS3Read` IAM policy detached
+- [x] Tech debt entries #36-38 logged
+- [x] This runbook updated with verified counts + corrections
+- [x] Cursor file present at `s3://...synthea/nyc-population-2026/fhir/ingest-cursors/synthea-nyc-staging.txt` (resume point preserved for any future incremental load)
