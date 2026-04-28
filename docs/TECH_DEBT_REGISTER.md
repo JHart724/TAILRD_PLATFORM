@@ -278,6 +278,37 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 - **Planned remediation:** Add a public `dispose()` method on `AnalyticsTracker` that calls `clearInterval(this.flushTimerId)` and any other cleanup. Wire it into Jest `afterAll()` for test files that import the tracker, and into a future graceful-shutdown handler for the backend process.
 - **Target:** Post-Sinai cleanup sprint, low priority — current `--forceExit` posture is acceptable while we have so few tests; revisit when we expand test coverage and the leak warning starts hiding real issues.
 
+### 34. Investigate and decommission predecessor RDS instance `tailrd-production` (t4g)
+- **Severity:** MEDIUM (HIPAA-tagged, deletion-protected, contents unknown - until investigated, cannot determine disposition)
+- **Discovered:** 2026-04-27 during Day 9 pre-flight investigation
+- **Impact:** A predecessor production RDS instance named exactly `tailrd-production` (db.t4g.medium, PG 15.10, 50 GB) exists in the production VPC `vpc-0fc14ae0c2511b94d`, created **2026-04-03** - 17 days before the migration sprint started, 24 days before today. State observed:
+  - DeletionProtection: **TRUE**
+  - Tags: `Project=tailrd`, `Environment=production`, **`HIPAA=true`**
+  - 14-day backup retention (production-grade)
+  - Daily automated snapshots since 2026-04-13
+  - 0 active connections in the last hour (currently dormant)
+  - Database name: `tailrd_platform` (different from current production DB `tailrd` on `tailrd-production-postgres`)
+  - Engine 15.10 (older than current prod's 15.14)
+  - Subnet group `tailrd-production-db` (different from current prod's `tailrd-production-db-subnet-group`)
+  - Shares security group `sg-09e3b87c3cbc42925` with the active `tailrd-production-postgres` (same VPC database SG)
+  - Empty ECS cluster `tailrd-production` (also predecessor, 0 services, 0 tasks) likely paired with this instance
+
+  Either contains genuine production data from a previous architecture iteration that needs proper retirement, or is leftover that was never decommissioned. The HIPAA tag + deletion protection + production-grade backup retention signal someone valued this instance enough to safeguard it. Cannot be safely retired without investigation.
+
+- **Investigation steps required (week of 2026-04-28+):**
+  1. Read-only Fargate query against `tailrd-production` to enumerate `tailrd_platform` schema, table list, row counts. Identify whether contents are real PHI, stale demo data, or empty.
+  2. Search CloudTrail for connection patterns: which IAM principals or service roles ever connected? When was the last successful connection? Last `RDS-DataAPI` or `secretsmanager:GetSecretValue` for any related secret?
+  3. Search git history + Secrets Manager for any reference to `tailrd-production.csp0w6g8u5uq.us-east-1.rds.amazonaws.com` (the predecessor's endpoint) - identify any code paths still pointing at it.
+  4. Inspect any old ECS task definitions in the empty `tailrd-production` ECS cluster (revisions retain even after service delete). Look for `DATABASE_URL` env vars or secrets that referenced this instance.
+  5. Check related CloudFormation/IaC history (the 3 March-12 stacks own only foundation networking, not this instance - confirms it was created out-of-band).
+  6. Document findings; decide: retire (after data extraction if needed) vs preserve (if business reason surfaces).
+
+- **Planned remediation:** Investigation in week of 2026-04-28+ after Sinai meetings. If contents are real production data, extract relevant data and archive the final snapshot for HIPAA records. If leftover, remove deletion protection (`aws rds modify-db-instance --no-deletion-protection`), delete instance, delete the empty `tailrd-production` ECS cluster, retire any orphaned IAM roles. If genuinely active in some pipeline I haven't identified, do NOT delete and update this entry with the new context.
+
+- **Severity rationale:** MEDIUM not LOW because the HIPAA tag implies the instance may have held PHI at some point. Even if currently empty, retirement requires proper HIPAA decommissioning (snapshot retention, audit log capture, BAA-aware data destruction). Treat with caution. The instance's deletion protection is the safety rail that prevents accidental destruction during this investigation window.
+
+- **Target:** Post-Sinai (week of 2026-05-04). Not blocking Day 9 staging environment work - staging uses `tailrd-staging-aurora` (Aurora Serverless v2) at a completely different name + class + VPC SG; no collision with this predecessor instance.
+
 ---
 
 ## Summary
@@ -286,7 +317,7 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 |---|---|---|
 | P0 | 2 | Both complete within 1 week (RESOLVED) |
 | HIGH | 4 | All within the Aurora migration sprint or the one following |
-| MEDIUM | 9 (2 resolved) | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9); #21 RESOLVED 2026-04-25 via PR 2 of Phase 2-A split; #22 added 2026-04-25 (Wix DNS shadow zone, post-Sinai); #28 RESOLVED 2026-04-26 (PerformanceRequestLog architecture cleanup) |
+| MEDIUM | 10 (2 resolved) | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9); #21 RESOLVED 2026-04-25 via PR 2 of Phase 2-A split; #22 added 2026-04-25 (Wix DNS shadow zone, post-Sinai); #28 RESOLVED 2026-04-26 (PerformanceRequestLog architecture cleanup); #34 added 2026-04-27 (predecessor `tailrd-production` t4g RDS investigation, post-Sinai) |
 | P1 | 2 | Dedicated sprints B-2 and B-3 |
 | LOW | 12 | 2026 Q4 or as product maturity dictates; #23-26 added 2026-04-25 (SES + SendGrid + Google DNS hygiene cluster); #29-31 added 2026-04-26 (PerformanceRequestLog retention + PII review + AnalyticsTracker disposal, pre-PHI-pilot or post-Sinai cleanup sprint) |
 
