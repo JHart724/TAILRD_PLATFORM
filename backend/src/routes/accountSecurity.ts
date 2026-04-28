@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
+import { sendEmail, buildPasswordResetEmail } from '../services/emailService';
 import prisma from '../lib/prisma';
 
 const router = Router();
@@ -85,9 +86,16 @@ router.post('/password-reset/request', async (req: AuthenticatedRequest, res: Re
         },
       });
 
-      // TODO: Send email with resetToken (unhashed) via transactional email service.
-      // The email link should include the raw token; we compare its hash on confirm.
-      // Password reset token generated -- email delivery handled by emailService
+      // Send the reset email with the raw token; we compare its hash on confirm.
+      // Best-effort: failures are logged in emailService but don't change the
+      // public response (we still return the same generic message regardless).
+      const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password/${resetToken}`;
+      const resetEmail = buildPasswordResetEmail({
+        resetUrl,
+        expiresIn: '1 hour',
+      });
+      resetEmail.to = user.email;
+      await sendEmail(resetEmail);
     }
 
     // Always return the same response regardless of whether user exists
