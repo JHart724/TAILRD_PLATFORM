@@ -1,0 +1,105 @@
+name: Build & Deploy to Staging
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: tailrd-backend
+  ECS_CLUSTER: tailrd-staging-cluster
+  ECS_SERVICE: tailrd-staging-backend
+  ECS_TASK_FAMILY: tailrd-staging-backend
+  HEALTH_URL: https://staging-api.tailrd-heart.com/health
+
+# Runs in parallel with the production deploy.yml workflow. Both consume the
+# same backend Docker build but tag and push independently so neither blocks
+# the other if one fails. ECR is idempotent on identical SHA tags.
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@ff717079ee2060e4bcee96c4779b553acc87447c # v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@f2e9fc6c2b355c1890b65e6f6f0e2ac3e6e22f78 # v2
+
+      - name: Build, tag, and push image (staging tag)
+        env:
+          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Same image as production, just tagged "staging-latest" in addition
+          # to the SHA. Production deploy.yml runs in parallel and pushes the
+          # SHA tag too; ECR de-dupes on content hash so the parallel build
+          # is wasted CPU but not wasted storage.
+          cd backend
+          docker build \
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:staging-latest \
+            .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:staging-latest
+
+      - name: Deploy to staging ECS and verify
+        env:
+          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Pull current staging task def, swap image, register new revision
+          aws ecs describe-task-definition \
+            --task-definition $ECS_TASK_FAMILY \
+            --query 'taskDefinition' \
+            --output json > /tmp/taskdef.json
+
+          python3 -c "
+          import json, os
+          with open('/tmp/taskdef.json') as f:
+              td = json.load(f)
+          td['containerDefinitions'][0]['image'] = '${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}'
+          for key in ['taskDefinitionArn','revision','status','requiresAttributes',
+                      'compatibilities','registeredAt','registeredBy','deregisteredAt']:
+              td.pop(key, None)
+          with open('/tmp/new-taskdef.json', 'w') as f:
+              json.dump(td, f)
+          print('Staging task def prepared')
+          "
+
+          NEW_TD=$(aws ecs register-task-definition \
+            --cli-input-json file:///tmp/new-taskdef.json \
+            --query 'taskDefinition.taskDefinitionArn' \
+            --output text)
+          echo "Registered: $NEW_TD"
+
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service $ECS_SERVICE \
+            --task-definition "$NEW_TD"
+
+          echo "Waiting for staging healthy..."
+          for i in $(seq 1 20); do
+            sleep 15
+            STATUS=$(curl -sf "$HEALTH_URL" | \
+              python3 -c "import sys,json; print(json.load(sys.stdin)['data']['status'])" 2>/dev/null || echo "unavailable")
+            echo "[$i/20] Staging health: $STATUS"
+            if [ "$STATUS" = "healthy" ]; then
+              echo "Staging deploy confirmed healthy on ${IMAGE_TAG}"
+              exit 0
+            fi
+          done
+          echo "ERROR: Staging deploy did not stabilize in 5 minutes"
+          exit 1
