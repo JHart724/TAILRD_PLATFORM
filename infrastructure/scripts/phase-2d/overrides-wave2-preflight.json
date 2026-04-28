@@ -1,0 +1,12 @@
+{
+  "containerOverrides": [
+    {
+      "name": "tailrd-backend",
+      "command": [
+        "sh",
+        "-c",
+        "set -eu; cd /app; echo 'npm install pg + @aws-sdk/client-secrets-manager...'; npm install --no-save --silent pg@8.13.1 @aws-sdk/client-secrets-manager@3.1032.0 >/tmp/npm.log 2>&1 || (cat /tmp/npm.log; exit 1); echo 'downloading wave2 attempt 3 pre-flight script from S3...'; node -e \"const{S3Client,GetObjectCommand}=require('@aws-sdk/client-s3');const fs=require('fs');(async()=>{const c=new S3Client({region:'us-east-1'});const r=await c.send(new GetObjectCommand({Bucket:'tailrd-cardiovascular-datasets-863518424332',Key:'migration-artifacts/phase-2d/wave2Attempt3PreFlight.js'}));fs.writeFileSync('/tmp/preflight.js',await r.Body.transformToString())})().catch(e=>{console.error(e.message);process.exit(1)})\"; echo 'running pre-flight...'; NODE_PATH=/app/node_modules node /tmp/preflight.js"
+      ]
+    }
+  ]
+}

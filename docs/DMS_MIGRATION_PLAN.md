@@ -1,4 +1,4 @@
-# DMS Migration Plan — RDS to Aurora
+# DMS Migration Plan - RDS to Aurora
 
 **Status:** Day 3 (2026-04-20), Phase 3A. Design phase. No DMS resources created yet.
 **Owner:** Jonathan Hart
@@ -31,25 +31,25 @@
 
 Wave design driven by two constraints: (a) topological order of foreign-key dependencies so referenced rows land first, (b) row-count-based risk tiering so we validate small before large.
 
-Row counts below are from the 2026-04-20 `pg_stat_user_tables` probe (captured in `docs/RDS_QUERY_ANALYSIS_2026_04_20.md`) and will be re-measured via `SELECT COUNT(*)` immediately before each wave starts — a pg_stat count can lag reality.
+Row counts below are from the 2026-04-20 `pg_stat_user_tables` probe (captured in `docs/RDS_QUERY_ANALYSIS_2026_04_20.md`) and will be re-measured via `SELECT COUNT(*)` immediately before each wave starts - a pg_stat count can lag reality.
 
-### Wave 1 — Reference data (<100k rows each, ~30 min full load)
+### Wave 1 - Reference data (<100k rows each, ~30 min full load)
 
 | Prisma model | Physical table | ~Row count (2026-04-20) | FK anchors |
 |---|---|---:|---|
-| `Hospital` | `hospitals` | 4 | — (root) |
+| `Hospital` | `hospitals` | 4 | - (root) |
 | `User` | `users` | small | `hospitalId` → `hospitals.id` |
 | `InviteToken` | `invite_tokens` | small | `hospitalId` → `hospitals.id` |
 | `UserMFA` | `user_mfa` | small | `userId` → `users.id` |
 | `UserSession` | `user_sessions` | small | `userId` → `users.id` |
 | `IPAllowlist` | `ip_allowlists` | small | `hospitalId` → `hospitals.id` |
 | `LoginSession` | `login_sessions` | 62 | `userId` → `users.id` |
-| `TermICD10` | `term_icd10s` | ~70k (static reference) | — |
-| `TermRxNorm` | `term_rx_norms` | ~50k (static reference) | — |
-| `TermLOINC` | `term_loincs` | ~10k (static reference) | — |
-| `TermCPT` | `term_cp_ts` | ~20k (static reference) | — |
-| `TermMSDRG` | `term_msdr_gs` | small | — |
-| `TermGapValueSet` | `term_gap_value_sets` | small | — |
+| `TermICD10` | `term_icd10s` | ~70k (static reference) | - |
+| `TermRxNorm` | `term_rx_norms` | ~50k (static reference) | - |
+| `TermLOINC` | `term_loincs` | ~10k (static reference) | - |
+| `TermCPT` | `term_cp_ts` | ~20k (static reference) | - |
+| `TermMSDRG` | `term_msdr_gs` | small | - |
+| `TermGapValueSet` | `term_gap_value_sets` | small | - |
 
 **Goal of Wave 1:** prove the DMS → Aurora pipeline end-to-end on low-risk data. No clinical PHI, no high-volume tables. The authentication spine (`hospitals` + `users`) is the gate for every other table.
 
@@ -64,7 +64,7 @@ Row counts below are from the 2026-04-20 `pg_stat_user_tables` probe (captured i
 
 **Estimated full-load duration:** 10-30 min (dominated by the static terminology tables; dozens of MB total).
 
-### Wave 2 — Core clinical (≤1M rows each, ~2 hr full load)
+### Wave 2 - Core clinical (≤1M rows each, ~2 hr full load)
 
 | Prisma model | Physical table | ~Row count | FK anchors |
 |---|---|---:|---|
@@ -81,7 +81,7 @@ Row counts below are from the 2026-04-20 `pg_stat_user_tables` probe (captured i
 
 **Estimated full-load duration:** 1-2 hr.
 
-### Wave 3 — High volume clinical (1M+ rows, ~6-8 hr full load)
+### Wave 3 - High volume clinical (1M+ rows, ~6-8 hr full load)
 
 | Prisma model | Physical table | ~Row count | FK anchors |
 |---|---|---:|---|
@@ -103,42 +103,42 @@ Row counts below are from the 2026-04-20 `pg_stat_user_tables` probe (captured i
 
 **Estimated full-load duration:** 6-8 hr depending on Aurora ACU scaling.
 
-### Wave 4 — Audit, operational, ancillary (~1 hr full load)
+### Wave 4 - Audit, operational, ancillary (~1 hr full load)
 
 | Prisma model | Physical table | ~Row count |
 |---|---|---:|
 | `AuditLog` | `audit_logs` | 30 (low currently, grows over time) |
-| `UserActivity` | `user_activities` | — |
-| `FeatureUsage` | `feature_usages` | — |
-| `PerformanceMetric` | `performance_metrics` | — |
-| `BusinessMetric` | `business_metrics` | — |
-| `WebhookEvent` | `webhook_events` | — |
-| `FailedFhirBundle` | `failed_fhir_bundles` | — |
+| `UserActivity` | `user_activities` | - |
+| `FeatureUsage` | `feature_usages` | - |
+| `PerformanceMetric` | `performance_metrics` | - |
+| `BusinessMetric` | `business_metrics` | - |
+| `WebhookEvent` | `webhook_events` | - |
+| `FailedFhirBundle` | `failed_fhir_bundles` | - |
 | `ErrorLog` | `error_logs` | 57 |
 | `Alert` | `alerts` | 8 |
 | `TherapyGap` | `therapy_gaps` | 211 |
 | `Recommendation` | `recommendations` | 8 |
-| `Order` | `orders` | — |
-| `UploadJob` | `upload_jobs` | — |
-| `Onboarding` | `onboardings` | — |
-| `CarePlan` | `care_plans` | — |
-| `CQLRule` | `cql_rules` | — |
-| `CQLResult` | `cql_results` | — |
+| `Order` | `orders` | - |
+| `UploadJob` | `upload_jobs` | - |
+| `Onboarding` | `onboardings` | - |
+| `CarePlan` | `care_plans` | - |
+| `CQLRule` | `cql_rules` | - |
+| `CQLResult` | `cql_results` | - |
 | `Phenotype` | `phenotypes` | 7 |
-| `CrossReferral` | `cross_referrals` | — |
+| `CrossReferral` | `cross_referrals` | - |
 | `DrugTitration` | `drug_titrations` | 2 |
-| `QualityMeasure` | `quality_measures` | — |
-| `DeviceEligibility` | `device_eligibilities` | — |
+| `QualityMeasure` | `quality_measures` | - |
+| `DeviceEligibility` | `device_eligibilities` | - |
 | `RiskScoreAssessment` | `risk_score_assessments` | 4 |
 | `InterventionTracking` | `intervention_trackings` | 3 |
 | `ContraindicationAssessment` | `contraindication_assessments` | 2 |
-| `InternalNote` | `internal_notes` | — |
-| `BreachIncident` | `breach_incidents` | — |
-| `PatientDataRequest` | `patient_data_requests` | — |
-| `CdsHooksSession` | `cds_hooks_sessions` | — |
-| `BpciEpisode` | `bpci_episodes` | — |
-| `DrugInteractionAlert` | `drug_interaction_alerts` | — |
-| `ReportGeneration` | `report_generations` | — |
+| `InternalNote` | `internal_notes` | - |
+| `BreachIncident` | `breach_incidents` | - |
+| `PatientDataRequest` | `patient_data_requests` | - |
+| `CdsHooksSession` | `cds_hooks_sessions` | - |
+| `BpciEpisode` | `bpci_episodes` | - |
+| `DrugInteractionAlert` | `drug_interaction_alerts` | - |
+| `ReportGeneration` | `report_generations` | - |
 
 **Validation criteria (Wave 4 gate):** same four checks. `audit_logs` gets special attention because tech debt item in `TECH_DEBT_REGISTER.md` notes 162k legacy entries contain the ALB ENI IP rather than the real client IP (pre-Phase-2A fix). Migrate as-is; do not rewrite historical audit data.
 
@@ -160,7 +160,7 @@ This is the state we hold until Day 6 cutover. Target steady-state lag: <10 seco
 
 1. **Before any DMS work**, `npx prisma migrate deploy` runs against an empty Aurora writer endpoint. This creates every table, every index, every foreign key, every composite unique. Schema on Aurora is **identical** to what CI would produce on a fresh RDS.
 2. DMS replication tasks are configured with `TargetMetadata.TargetTablePrepMode = "DO_NOTHING"`. DMS finds the tables already there, skips creation, and streams rows into them.
-3. DMS is also configured with `FullLoadSettings.CreatePkAfterFullLoad = false` — we already have PKs from Prisma, DMS must not try to add them.
+3. DMS is also configured with `FullLoadSettings.CreatePkAfterFullLoad = false` - we already have PKs from Prisma, DMS must not try to add them.
 4. Indexes are pre-existing. DMS loads into indexed tables. Slower than loading then indexing, but safer: the wave-gate validation can run concurrently and catch constraint violations immediately.
 
 ### PR #158 composite uniques
@@ -179,7 +179,7 @@ Prisma uses `@default(cuid())` or `@default(uuid())` for most tables, so no sequ
 
 Every wave must pass all four gates before Jonathan approves the next. Gates are enforced by `backend/scripts/validateMigration.ts` (Phase 3C), not by trusting DMS's own "task succeeded" signal. DMS can silently skip rows on constraint violation; only client-side validation catches that.
 
-### Gate A — Row-count parity
+### Gate A - Row-count parity
 
 For every table in the wave:
 - `rds_count = SELECT COUNT(*) FROM public.<table>` (source)
@@ -187,10 +187,10 @@ For every table in the wave:
 - `diff = rds_count - aurora_count`
 
 **Pass:** `diff == 0` for every table.
-**Warn:** `diff <= 10` — investigate but not necessarily block (possible CDC in-flight rows).
+**Warn:** `diff <= 10` - investigate but not necessarily block (possible CDC in-flight rows).
 **Fail:** `diff > 10` on any table. Pause wave.
 
-### Gate B — Checksum parity
+### Gate B - Checksum parity
 
 For the wave's sample tables (every table in Waves 1-2; 10k-row samples per table in Waves 3-4):
 - `rds_hash = md5(string_agg(id, ',' ORDER BY id))` (source)
@@ -201,7 +201,7 @@ For the wave's sample tables (every table in Waves 1-2; 10k-row samples per tabl
 
 Rationale: row-count parity is necessary but not sufficient. Checksum proves the **same IDs** landed on both sides, not just the same count.
 
-### Gate C — Foreign-key integrity
+### Gate C - Foreign-key integrity
 
 Wave-specific FK sweep queries, run against Aurora only:
 - Wave 1: `SELECT COUNT(*) FROM users WHERE hospitalId NOT IN (SELECT id FROM hospitals)` → must be 0
@@ -212,7 +212,7 @@ Wave-specific FK sweep queries, run against Aurora only:
 **Pass:** all FK sweeps return 0.
 **Fail:** non-zero. Pause wave. Cause is usually "DMS applied child before parent finished." Solution is to rerun the wave.
 
-### Gate D — DMS task health
+### Gate D - DMS task health
 
 - `aws dms describe-replication-tasks` returns Status `running`
 - `aws dms describe-table-statistics` shows all tables in wave at `FullLoadEndTime` (full load complete)
@@ -235,14 +235,14 @@ No other approver. No silent proceed.
 
 ## 5. Abort conditions
 
-Abort conditions pause the migration. They do **not** trigger automatic rollback — we pause, diagnose, then decide.
+Abort conditions pause the migration. They do **not** trigger automatic rollback - we pause, diagnose, then decide.
 
 | Condition | Threshold | Action |
 |---|---|---|
 | Replication lag | > 60 seconds for > 5 min | Pause CDC, investigate source write rate vs Aurora apply rate |
 | DMS error count | > 100 errors in the task log over any 10-min window | Pause task, read error log, decide if transient or structural |
 | Row-count divergence | > 0.1% on any table (or > 10 rows on tables with < 10k rows) | Pause wave, run FK + checksum gates to locate the gap |
-| Aurora CPU | > 80% sustained for 5 min | Investigate — usually means ACU too low or a long query; scale up ACU or kill the runaway |
+| Aurora CPU | > 80% sustained for 5 min | Investigate - usually means ACU too low or a long query; scale up ACU or kill the runaway |
 | DMS instance memory | > 85% | Scale up the DMS replication instance class |
 | Unexpected schema mismatch | Any DDL drift between RDS and Aurora detected by validateMigration.ts | Halt immediately, this should be impossible given Prisma ownership |
 | Prisma migrations drift | `schema.prisma` on main ≠ schema applied to Aurora at Phase 3B | Halt. Re-run `prisma migrate deploy` against Aurora before resuming |
@@ -309,10 +309,10 @@ Migration is **complete** and Day 6 cutover is **approved** only when all of the
 4. **0 errors** in DMS task log for the last 60 minutes of CDC
 5. **Replication lag < 10 seconds sustained for 24 hours**
 6. **All CloudWatch alarms in OK state** for the last 24 hours (`ROW_DIFF_CRITICAL`, `HASH_MISMATCH_CRITICAL`, `LAG_WARNING`, `LAG_CRITICAL`)
-7. **Aurora p99 query latency ≤ RDS p99 latency + 10%** — verified by running the gap-detection engine against both databases with the same tenant and comparing timings over a 1-hour window
-8. **All composite unique constraints enforced on Aurora** — `SELECT conname FROM pg_constraint WHERE conname LIKE '%fhir%'` on Aurora returns the same set as RDS
-9. **All foreign keys valid on Aurora** — the FK sweep queries from Gate C return 0 for every FK
-10. **Prisma migration state consistent** — `_prisma_migrations` table on Aurora has the same rows as RDS
+7. **Aurora p99 query latency ≤ RDS p99 latency + 10%** - verified by running the gap-detection engine against both databases with the same tenant and comparing timings over a 1-hour window
+8. **All composite unique constraints enforced on Aurora** - `SELECT conname FROM pg_constraint WHERE conname LIKE '%fhir%'` on Aurora returns the same set as RDS
+9. **All foreign keys valid on Aurora** - the FK sweep queries from Gate C return 0 for every FK
+10. **Prisma migration state consistent** - `_prisma_migrations` table on Aurora has the same rows as RDS
 
 Any one of these failing means no cutover. Period.
 
@@ -327,22 +327,22 @@ No live customer-facing clients exist today. No customer comms needed.
 Every wave start, validation pass, gate approval, abort condition, and rollback goes in `docs/DMS_MIGRATION_LOG.md` as an append-only log with ISO 8601 timestamps. Format:
 
 ```markdown
-## 2026-04-20T18:00:00Z — Wave 1 started
+## 2026-04-20T18:00:00Z - Wave 1 started
 Task: tailrd-migration-wave1
 Tables: hospitals, users, ...
 Start row counts: hospitals=4, users=...
 Expected duration: 10-30 min
 
-## 2026-04-20T18:12:00Z — Wave 1 full load complete
+## 2026-04-20T18:12:00Z - Wave 1 full load complete
 ...
 
-## 2026-04-20T18:15:00Z — Wave 1 validation
+## 2026-04-20T18:15:00Z - Wave 1 validation
 Gate A (row count): PASS
 Gate B (checksum): PASS
 Gate C (FK integrity): PASS
 Gate D (DMS health): PASS
 
-## 2026-04-20T18:20:00Z — Wave 1 approved by Jonathan Hart
+## 2026-04-20T18:20:00Z - Wave 1 approved by Jonathan Hart
 Proceeding to Wave 2.
 ```
 
@@ -427,15 +427,45 @@ Nothing skips forward. 3G cannot run until 3F created the task. 3H cannot start 
 Before Phase 3B starts, confirm:
 
 - [ ] Wave membership matches actual Prisma models (no drift from `backend/prisma/schema.prisma`)
-- [ ] Row-count estimates are within 2× of reality — rerun `validateMigration.ts --report-only` to refresh
+- [ ] Row-count estimates are within 2× of reality - rerun `validateMigration.ts --report-only` to refresh
 - [ ] Composite unique constraint list matches PR #158 exactly
 - [ ] `docs/DMS_MIGRATION_LOG.md` exists and has the Wave 1 pre-start template
 - [ ] Jonathan has read the abort conditions in §5 and acknowledges the escalation path
 
 ---
 
-## 13. Revision history
+## 13. Schema parity during the migration window
+
+**Discovered 2026-04-27 during Wave 2 Attempt 3 inventory.** During the migration window (RDS active source, Aurora replication target), all schema migrations must be applied to BOTH databases. The April 20 consolidated baseline gave both databases identical structure, but subsequent migrations applied only to RDS via the deploy workflow's `prisma migrate deploy` step (which uses the backend's `DATABASE_URL` → RDS):
+
+- `20260425000000_audit_log_hospital_nullable` (April 25, RDS only until 2026-04-27T18:07Z)
+- `20260427000000_add_performance_request_log` (April 27 = today's PR #184, RDS only until 2026-04-27T18:07Z)
+
+This created schema drift discovered when Wave 2 Attempt 3 inventory found `performance_request_logs` table on RDS but absent from Aurora. Drift was resolved by running `prisma migrate deploy` against the Aurora endpoint via Fargate one-off (`infrastructure/scripts/phase-2d/applyAuroraSchemaParity.js`) on 2026-04-27T18:07Z.
+
+### Required during the migration window
+
+1. **Every Prisma migration applied to RDS must also apply to Aurora before any Wave migration runs.** DMS does not migrate schema; row replication into a missing table fails immediately with `relation does not exist`, and FK violations against missing parent tables fail with `violates foreign key constraint`.
+2. **New tables created on RDS must exist on Aurora** before that table is included in a DMS wave mapping.
+3. **Schema parity must be verified before each migration wave** - not just target table emptiness. Pre-flight verification expanded to include parity check.
+4. **Load-order attributes on selection rules for FK-rich schemas.** Discovered 2026-04-27 during Wave 2 Attempt 4 (tech debt #33): without explicit `load-order` on each selection rule, DMS full-load runs tables in parallel and child tables can attempt INSERT before parent tables commit, causing FK violations. Cure for next time: assign higher `load-order` to parent tables (hospitals, users), lower to children. Recovery without this attribute is `aws dms reload-tables` after the parent rows have committed, but the cleaner path is to set `load-order` upfront.
+5. **Future iteration:** consider extending the CI/CD deploy workflow to apply migrations to BOTH endpoints (RDS via the standard backend container CMD; Aurora via a parallel `prisma migrate deploy` step pointed at the Aurora secret) for the duration of the migration window. This avoids manual one-shot remediation. **Not in scope for the April 27 Wave 2; tracked as follow-up.**
+
+### Tooling
+
+`infrastructure/scripts/phase-2d/applyAuroraSchemaParity.js` (created 2026-04-27) provides one-shot parity check + remediation. It:
+
+- Reads Aurora's `_prisma_migrations` table (state BEFORE)
+- Runs `npx prisma migrate deploy` with `DATABASE_URL` pointed at the Aurora writer (using credentials from `tailrd-production/app/aurora-db-password` secret)
+- Drops stale test artifacts (e.g., `chaos_test_day7` from the Day 7 chaos test on 2026-04-21)
+- Runs `information_schema.columns` diff across NEEDS_MIGRATION tables on both databases
+- Outputs structured JSON with a `CLEAN` / `NEEDS_REVIEW` verdict
+
+Run via the existing Phase2D Fargate pattern (attach `Phase2D-TempSecretsAccess` inline policy → Fargate one-off → detach). Use before each migration wave during the migration window. After Aurora cutover (Day 6 in this plan, deferred per current schedule), this tool is no longer needed because Aurora becomes the only DB and migrations apply via the standard deploy workflow.
+
+## 14. Revision history
 
 | Date | Change | PR |
 |---|---|---|
 | 2026-04-20 | Initial design doc | (this PR) |
+| 2026-04-27 | Add §13 Schema parity during migration window - drift discovery + tooling + future-iteration note | (Wave 2 combined PR) |
