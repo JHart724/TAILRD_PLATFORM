@@ -1,8 +1,17 @@
 /**
  * Email Service for TAILRD Heart Platform
- * Dev mode: logs email content to console
- * Production: sends via AWS SES
+ *
+ * Behavior is gated by USE_SES_EMAIL:
+ *   - "true"  -> send via AWS SES (region from AWS_REGION, source from SES_FROM_ADDRESS)
+ *   - else    -> log a structured EMAIL_DISABLED event and return successfully
+ *
+ * sendEmail never throws on transport failure; failures are logged so callers
+ * (invite, password reset, MFA, alerts) treat email as best-effort. The DB row
+ * (invite, reset token, etc.) is the source of truth, not the delivery.
  */
+
+import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+import { logger } from '../utils/logger';
 
 interface EmailOptions {
   to: string;
@@ -11,41 +20,48 @@ interface EmailOptions {
   text: string;
 }
 
-const isDev = process.env.NODE_ENV !== 'production';
+const useSes = process.env.USE_SES_EMAIL === 'true';
 const fromAddress = process.env.SES_FROM_ADDRESS || 'noreply@tailrd-heart.com';
 
+let sesClient: SESClient | null = null;
+function getSesClient(): SESClient {
+  if (!sesClient) {
+    sesClient = new SESClient({ region: process.env.AWS_REGION || 'us-east-1' });
+  }
+  return sesClient;
+}
+
 export async function sendEmail(options: EmailOptions): Promise<void> {
-  if (isDev || process.env.LOG_INVITE_URL_TO_CONSOLE === 'true') {
-    console.log('═══════════════════════════════════════');
-    console.log('EMAIL (dev mode - not sent)');
-    console.log(`To: ${options.to}`);
-    console.log(`Subject: ${options.subject}`);
-    console.log(`Body:\n${options.text}`);
-    console.log('═══════════════════════════════════════');
+  if (!useSes) {
+    logger.info('EMAIL_DISABLED', {
+      to: options.to,
+      subject: options.subject,
+      reason: 'USE_SES_EMAIL not set to "true"',
+    });
     return;
   }
 
-  // Production: AWS SES
-  // Note: Requires @aws-sdk/client-ses
-  // If not available, fall back to console logging with warning
   try {
-    const sesModule = await import('@aws-sdk/client-ses' as string);
-    const { SESClient, SendEmailCommand } = sesModule;
-    const ses = new SESClient({ region: process.env.AWS_REGION || 'us-east-1' });
-    await ses.send(new SendEmailCommand({
-      Source: fromAddress,
-      Destination: { ToAddresses: [options.to] },
-      Message: {
-        Subject: { Data: options.subject },
-        Body: {
-          Html: { Data: options.html },
-          Text: { Data: options.text },
+    await getSesClient().send(
+      new SendEmailCommand({
+        Source: fromAddress,
+        Destination: { ToAddresses: [options.to] },
+        Message: {
+          Subject: { Data: options.subject },
+          Body: {
+            Html: { Data: options.html },
+            Text: { Data: options.text },
+          },
         },
-      },
-    }));
+      })
+    );
+    logger.info('EMAIL_SENT', { to: options.to, subject: options.subject });
   } catch (err) {
-    console.warn('SES send failed, logging email instead:', err);
-    console.log(`Would send to ${options.to}: ${options.subject}`);
+    logger.error('EMAIL_SEND_FAILED', {
+      to: options.to,
+      subject: options.subject,
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
 }
 
@@ -58,7 +74,7 @@ export function buildInviteEmail(params: {
 }): EmailOptions {
   const { hospitalName, role, inviteUrl, expiresIn } = params;
   return {
-    to: '', // caller sets this
+    to: '',
     subject: "You've been invited to TAILRD Heart",
     html: `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 20px;">
@@ -89,14 +105,14 @@ export function buildInviteEmail(params: {
   };
 }
 
-// Template 2: Password Reset (template only, no endpoint yet)
+// Template 2: Password Reset
 export function buildPasswordResetEmail(params: {
   resetUrl: string;
   expiresIn: string;
 }): EmailOptions {
   return {
     to: '',
-    subject: 'TAILRD Heart -- Password Reset Request',
+    subject: 'TAILRD Heart - Password Reset Request',
     html: `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 20px;">
         <div style="text-align: center; margin-bottom: 32px;">
@@ -126,13 +142,16 @@ export function buildMFABackupCodesEmail(params: {
   userName: string;
 }): EmailOptions {
   const codeList = params.backupCodes.map((c, i) => `  ${i + 1}. ${c}`).join('\n');
-  const codeListHtml = params.backupCodes.map((c, i) =>
-    `<div style="font-family: monospace; font-size: 16px; padding: 4px 0; color: #1E293B;">${i + 1}. <strong>${c}</strong></div>`
-  ).join('');
+  const codeListHtml = params.backupCodes
+    .map(
+      (c, i) =>
+        `<div style="font-family: monospace; font-size: 16px; padding: 4px 0; color: #1E293B;">${i + 1}. <strong>${c}</strong></div>`
+    )
+    .join('');
 
   return {
     to: '',
-    subject: 'TAILRD Heart -- Your MFA Backup Codes',
+    subject: 'TAILRD Heart - Your MFA Backup Codes',
     html: `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 20px;">
         <div style="text-align: center; margin-bottom: 32px;">
@@ -141,7 +160,7 @@ export function buildMFABackupCodesEmail(params: {
         <div style="background: #FFF7ED; border: 1px solid #FED7AA; border-radius: 8px; padding: 32px;">
           <h2 style="color: #1E293B; font-size: 20px; margin: 0 0 8px;">Your Backup Codes</h2>
           <p style="color: #475569; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">
-            ${params.userName}, you've enabled two-factor authentication. Save these backup codes securely -- each can be used once if you lose access to your authenticator app.
+            ${params.userName}, you've enabled two-factor authentication. Save these backup codes securely. Each can be used once if you lose access to your authenticator app.
           </p>
           <div style="background: white; border: 1px solid #E2E8F0; border-radius: 6px; padding: 16px; margin: 16px 0;">
             ${codeListHtml}
@@ -152,7 +171,7 @@ export function buildMFABackupCodesEmail(params: {
         </div>
       </div>
     `,
-    text: `TAILRD Heart -- MFA Backup Codes\n\n${params.userName}, save these backup codes:\n\n${codeList}\n\nEach code can be used once. Store securely.`,
+    text: `TAILRD Heart - MFA Backup Codes\n\n${params.userName}, save these backup codes:\n\n${codeList}\n\nEach code can be used once. Store securely.`,
   };
 }
 
@@ -171,7 +190,7 @@ export function buildSecurityAlertEmail(params: {
 
   return {
     to: '',
-    subject: `TAILRD Heart -- Security Alert: ${alertLabels[params.alertType]}`,
+    subject: `TAILRD Heart - Security Alert: ${alertLabels[params.alertType]}`,
     html: `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 20px;">
         <div style="text-align: center; margin-bottom: 32px;">

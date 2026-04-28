@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { writeAuditLog } from '../middleware/auditLogger';
+import { sendEmail, buildInviteEmail } from '../services/emailService';
 import { UserRole } from '@prisma/client';
 
 const router = Router();
@@ -67,6 +68,22 @@ router.post('/invite', authenticateToken, authorizeRole(['SUPER_ADMIN', 'HOSPITA
     }
 
     await writeAuditLog(req, 'INVITE_SENT', 'InviteToken', invite.id, `Invite sent to ${email} as ${role}`);
+
+    // Send the invite email. Best-effort: failures are logged in emailService but
+    // don't fail the request, since the InviteToken DB row is the source of truth
+    // and the recipient can be re-notified out-of-band.
+    const hospital = await prisma.hospital.findUnique({
+      where: { id: user.hospitalId },
+      select: { name: true },
+    });
+    const inviteEmail = buildInviteEmail({
+      hospitalName: hospital?.name || 'TAILRD Heart',
+      role,
+      inviteUrl,
+      expiresIn: '48 hours',
+    });
+    inviteEmail.to = email;
+    await sendEmail(inviteEmail);
 
     res.json({ inviteId: invite.id, expiresAt: invite.expiresAt, email });
   } catch (error) {
