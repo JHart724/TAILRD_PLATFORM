@@ -1,0 +1,647 @@
+# TAILRD Heart staging environment per docs/DAY_9_PLAN.md (2026-04-27).
+# Per docs/ARCHITECTURE_V2_MIGRATION.md Day 9 spec.
+#
+# Stack creates 16 resources: Aurora Serverless v2 cluster (writer + 1 reader,
+# 0.5-4 ACU on PG 15.14), DB cluster parameter group (rds.logical_replication=1),
+# DB subnet group, Aurora SG, master password secret + DATABASE_URL + JWT_SECRET
+# + PHI_ENCRYPTION_KEY secrets, ECS cluster + task def (1024/2048) + service,
+# ECS task SG, execution + task IAM roles, ALB + target group + HTTPS/HTTP-redirect
+# listeners + ALB SG, CloudWatch log group.
+#
+# All resources tagged Project=tailrd, Environment=staging.
+# VPC defaults to production (vpc-0fc14ae0c2511b94d) per Day 9 shared-VPC decision.
+# Secrets namespace: tailrd-staging-aurora/* (NOT tailrd-staging/* - that namespace
+# is already in use by the dormant tailrd-staging-postgres rehearsal Postgres).
+
+AWSTemplateFormatVersion: "2010-09-09"
+Description: TAILRD Heart staging environment (Aurora Serverless v2, ECS Fargate, ALB) per docs/DAY_9_PLAN.md
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "Networking"
+        Parameters:
+          - VpcId
+          - PrivateSubnetIds
+          - PublicSubnetIds
+      - Label:
+          default: "Aurora staging"
+        Parameters:
+          - AuroraEngineVersion
+          - DBMasterUsername
+      - Label:
+          default: "Backend"
+        Parameters:
+          - ECRImageUri
+          - CertificateArn
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-0fc14ae0c2511b94d
+    Description: Production VPC (shared per Day 9 decision)
+
+  PrivateSubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: |
+      Two production private subnets (db tier) for Aurora + ECS tasks. Default
+      values match the existing tailrd-production-postgres / Aurora subnet group.
+
+  PublicSubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: |
+      Two production public subnets for the staging ALB.
+
+  ECRImageUri:
+    Type: String
+    Default: 863518424332.dkr.ecr.us-east-1.amazonaws.com/tailrd-backend:2f7768fe570627875e9d7f7a7ba6ffb9a549c4e3
+    Description: |
+      Initial ECS service image. Defaults to the current production image SHA
+      (PR #184 deploy). CI/CD pipeline replaces this per merge to main.
+
+  CertificateArn:
+    Type: String
+    Description: |
+      ACM certificate ARN for staging-api.tailrd-heart.com. Issued via DNS-validation
+      against Wix DNS (Wix is authoritative for tailrd-heart.com per tech debt #22).
+      Created via Task 3 of Day 9 plan; passed in at stack create.
+
+  AuroraEngineVersion:
+    Type: String
+    Default: "15.14"
+    Description: |
+      Aurora PostgreSQL engine version. 15.14 matches current production.
+
+  DBMasterUsername:
+    Type: String
+    Default: tailrd_admin
+    Description: |
+      Aurora master username. Matches existing production convention.
+
+  PhiEncryptionKeyValue:
+    Type: String
+    NoEcho: true
+    MinLength: 64
+    MaxLength: 64
+    AllowedPattern: '^[a-f0-9]{64}$'
+    Description: |
+      AES-256-GCM PHI encryption key, supplied by the operator as a 64-character
+      lowercase hex string (32 bytes). Generate with: openssl rand -hex 32.
+      An earlier auto-generator (Secrets Manager GenerateSecretString) produced
+      strings with non-hex characters that broke Buffer.from(key, 'hex'), causing
+      the 2026-04-28 staging seed failure. AllowedPattern enforces correctness at
+      stack-create time.
+
+Resources:
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # Aurora cluster + instances + parameter group + subnet group + SG
+  # ───────────────────────────────────────────────────────────────────────────
+
+  AuroraSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupName: tailrd-staging-aurora-subnet-group
+      DBSubnetGroupDescription: Aurora staging subnet group (private subnets)
+      SubnetIds: !Ref PrivateSubnetIds
+      Tags:
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  AuroraClusterParams:
+    Type: AWS::RDS::DBClusterParameterGroup
+    Properties:
+      DBClusterParameterGroupName: tailrd-staging-aurora-cluster-params
+      Description: Aurora staging cluster parameters (logical replication enabled for parity with production)
+      Family: aurora-postgresql15
+      Parameters:
+        rds.logical_replication: "1"
+      Tags:
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  AuroraSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: tailrd-staging-aurora-sg
+      GroupDescription: Aurora staging - ingress 5432 from ECS task SG only
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          CidrIp: 0.0.0.0/0
+          Description: Default egress (overridden in production hardening if needed)
+      Tags:
+        - Key: Name
+          Value: tailrd-staging-aurora-sg
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  AuroraIngressFromEcs:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref AuroraSecurityGroup
+      IpProtocol: tcp
+      FromPort: 5432
+      ToPort: 5432
+      SourceSecurityGroupId: !Ref EcsTaskSecurityGroup
+      Description: Ingress 5432 from staging ECS task SG
+
+  AuroraMasterPassword:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: tailrd-staging-aurora/app/aurora-db-password
+      Description: Aurora staging master password (auto-generated by CF)
+      GenerateSecretString:
+        SecretStringTemplate: !Sub '{"username":"${DBMasterUsername}"}'
+        GenerateStringKey: password
+        PasswordLength: 32
+        ExcludeCharacters: '"@/\'
+      Tags:
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  AuroraCluster:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      DBClusterIdentifier: tailrd-staging-aurora
+      Engine: aurora-postgresql
+      EngineVersion: !Ref AuroraEngineVersion
+      DatabaseName: tailrd
+      MasterUsername: !Ref DBMasterUsername
+      MasterUserPassword: !Sub "{{resolve:secretsmanager:${AuroraMasterPassword}::password}}"
+      VpcSecurityGroupIds:
+        - !Ref AuroraSecurityGroup
+      DBSubnetGroupName: !Ref AuroraSubnetGroup
+      DBClusterParameterGroupName: !Ref AuroraClusterParams
+      ServerlessV2ScalingConfiguration:
+        MinCapacity: 0.5
+        MaxCapacity: 4.0
+      StorageEncrypted: true
+      DeletionProtection: false
+      BackupRetentionPeriod: 1
+      EnableCloudwatchLogsExports:
+        - postgresql
+      Tags:
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  AuroraWriter:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: tailrd-staging-aurora-writer
+      DBClusterIdentifier: !Ref AuroraCluster
+      Engine: aurora-postgresql
+      DBInstanceClass: db.serverless
+      PubliclyAccessible: false
+      Tags:
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  AuroraReader:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: tailrd-staging-aurora-reader-1
+      DBClusterIdentifier: !Ref AuroraCluster
+      Engine: aurora-postgresql
+      DBInstanceClass: db.serverless
+      PubliclyAccessible: false
+      Tags:
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # Application secrets - DATABASE_URL, JWT_SECRET, PHI_ENCRYPTION_KEY
+  # ───────────────────────────────────────────────────────────────────────────
+
+  DatabaseUrlSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: tailrd-staging-aurora/app/database-url
+      Description: |
+        Backend DATABASE_URL for staging Aurora. Populated post-deploy with the
+        Aurora writer endpoint + master credentials. Day 9 plan Task 4 finalizes.
+      SecretString: !Sub "postgresql://${DBMasterUsername}:placeholder@placeholder:5432/tailrd?sslmode=require"
+      Tags:
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  JwtSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: tailrd-staging-aurora/app/jwt-secret
+      Description: JWT signing secret for staging - auto-generated, distinct from production
+      GenerateSecretString:
+        PasswordLength: 64
+        ExcludePunctuation: true
+      Tags:
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  PhiEncryptionKey:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: tailrd-staging-aurora/app/phi-encryption-key
+      Description: |
+        AES-256-GCM PHI encryption key for staging. Supplied by the operator
+        via the PhiEncryptionKeyValue stack parameter (64-char hex). Distinct
+        from production key (production key NEVER reused in staging).
+      SecretString: !Ref PhiEncryptionKeyValue
+      Tags:
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # ECS cluster + service + task definition + SG + IAM roles + log group
+  # ───────────────────────────────────────────────────────────────────────────
+
+  EcsCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: tailrd-staging-cluster
+      CapacityProviders:
+        - FARGATE
+        - FARGATE_SPOT
+      DefaultCapacityProviderStrategy:
+        - CapacityProvider: FARGATE
+          Weight: 1
+      ClusterSettings:
+        - Name: containerInsights
+          Value: enabled
+      Tags:
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  EcsLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /ecs/tailrd-staging-backend
+      RetentionInDays: 7
+      Tags:
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  EcsTaskSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: tailrd-staging-ecs-sg
+      GroupDescription: ECS tasks - ingress 3001 from ALB SG only; egress to AWS APIs + Aurora
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          CidrIp: 0.0.0.0/0
+          Description: Default egress (Secrets Manager, ECR, CloudWatch, Aurora)
+      Tags:
+        - Key: Name
+          Value: tailrd-staging-ecs-sg
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  EcsTaskIngressFromAlb:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref EcsTaskSecurityGroup
+      IpProtocol: tcp
+      FromPort: 3001
+      ToPort: 3001
+      SourceSecurityGroupId: !Ref AlbSecurityGroup
+      Description: Ingress 3001 from staging ALB SG (backend container port)
+
+  EcsExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: tailrd-staging-ecs-execution-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      Policies:
+        - PolicyName: SecretsManagerStagingRead
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                  - secretsmanager:DescribeSecret
+                Resource:
+                  - !Ref AuroraMasterPassword
+                  - !Ref DatabaseUrlSecret
+                  - !Ref JwtSecret
+                  - !Ref PhiEncryptionKey
+      Tags:
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  EcsTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: tailrd-staging-ecs-task
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: StagingTaskPermissions
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                  - secretsmanager:DescribeSecret
+                Resource:
+                  - !Sub arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:tailrd-staging-aurora/*
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !GetAtt EcsLogGroup.Arn
+              - Effect: Allow
+                Action:
+                  - cloudwatch:PutMetricData
+                Resource: "*"
+                Condition:
+                  StringEquals:
+                    cloudwatch:namespace: TailrdStaging
+      Tags:
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  EcsTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: tailrd-staging-backend
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "1024"
+      Memory: "2048"
+      ExecutionRoleArn: !GetAtt EcsExecutionRole.Arn
+      TaskRoleArn: !GetAtt EcsTaskRole.Arn
+      ContainerDefinitions:
+        - Name: tailrd-backend
+          Image: !Ref ECRImageUri
+          Essential: true
+          PortMappings:
+            - ContainerPort: 3001
+              Protocol: tcp
+          Environment:
+            - Name: NODE_ENV
+              Value: staging
+            - Name: AWS_REGION
+              Value: !Ref AWS::Region
+            - Name: PORT
+              Value: "3001"
+            - Name: FRONTEND_URL
+              Value: https://staging-api.tailrd-heart.com
+            - Name: CORS_ORIGINS
+              Value: https://staging-api.tailrd-heart.com,https://tailrddemo.netlify.app
+            - Name: DEMO_MODE
+              Value: "false"
+            - Name: DEMO_FALLBACK_ENABLED
+              Value: "false"
+            - Name: LOG_LEVEL
+              Value: info
+            - Name: API_URL
+              Value: https://staging-api.tailrd-heart.com
+            - Name: AWS_CLOUDWATCH_GROUP
+              Value: /ecs/tailrd-staging-backend
+          Secrets:
+            - Name: DATABASE_URL
+              ValueFrom: !Ref DatabaseUrlSecret
+            - Name: JWT_SECRET
+              ValueFrom: !Ref JwtSecret
+            - Name: PHI_ENCRYPTION_KEY
+              ValueFrom: !Ref PhiEncryptionKey
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref EcsLogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: tailrd-backend
+
+  EcsService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - HttpsListener
+    Properties:
+      ServiceName: tailrd-staging-backend
+      Cluster: !Ref EcsCluster
+      TaskDefinition: !Ref EcsTaskDefinition
+      DesiredCount: 1
+      LaunchType: FARGATE
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          Subnets: !Ref PrivateSubnetIds
+          SecurityGroups:
+            - !Ref EcsTaskSecurityGroup
+          AssignPublicIp: DISABLED
+      LoadBalancers:
+        - ContainerName: tailrd-backend
+          ContainerPort: 3001
+          TargetGroupArn: !Ref AlbTargetGroup
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 100
+      Tags:
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # ALB + target group + HTTPS listener + HTTP→HTTPS redirect + ALB SG
+  # ───────────────────────────────────────────────────────────────────────────
+
+  AlbSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: tailrd-staging-alb-sg
+      GroupDescription: Staging ALB - ingress 80/443 from world; egress 3001 to ECS task SG
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+          Description: HTTPS from world
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+          Description: HTTP from world (redirected to 443)
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 3001
+          ToPort: 3001
+          DestinationSecurityGroupId: !Ref EcsTaskSecurityGroup
+          Description: Forward to staging ECS tasks
+      Tags:
+        - Key: Name
+          Value: tailrd-staging-alb-sg
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  Alb:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: tailrd-staging-alb
+      Type: application
+      Scheme: internet-facing
+      Subnets: !Ref PublicSubnetIds
+      SecurityGroups:
+        - !Ref AlbSecurityGroup
+      LoadBalancerAttributes:
+        - Key: idle_timeout.timeout_seconds
+          Value: "60"
+      Tags:
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  AlbTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: tailrd-staging-tg
+      Protocol: HTTP
+      Port: 3001
+      VpcId: !Ref VpcId
+      TargetType: ip
+      HealthCheckEnabled: true
+      HealthCheckProtocol: HTTP
+      HealthCheckPath: /health
+      HealthCheckIntervalSeconds: 30
+      HealthCheckTimeoutSeconds: 10
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 3
+      Matcher:
+        HttpCode: "200"
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: "30"
+      Tags:
+        - Key: Project
+          Value: tailrd
+        - Key: Environment
+          Value: staging
+
+  HttpsListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref Alb
+      Protocol: HTTPS
+      Port: 443
+      SslPolicy: ELBSecurityPolicy-TLS13-1-2-2021-06
+      Certificates:
+        - CertificateArn: !Ref CertificateArn
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref AlbTargetGroup
+
+  HttpRedirectListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref Alb
+      Protocol: HTTP
+      Port: 80
+      DefaultActions:
+        - Type: redirect
+          RedirectConfig:
+            Protocol: HTTPS
+            Port: "443"
+            StatusCode: HTTP_301
+
+# ───────────────────────────────────────────────────────────────────────────
+# Outputs
+# ───────────────────────────────────────────────────────────────────────────
+
+Outputs:
+  AuroraWriterEndpoint:
+    Description: Aurora staging writer endpoint (use in DATABASE_URL post-deploy)
+    Value: !GetAtt AuroraCluster.Endpoint.Address
+    Export:
+      Name: !Sub "${AWS::StackName}-aurora-writer-endpoint"
+
+  AuroraReaderEndpoint:
+    Description: Aurora staging reader endpoint
+    Value: !GetAtt AuroraCluster.ReadEndpoint.Address
+    Export:
+      Name: !Sub "${AWS::StackName}-aurora-reader-endpoint"
+
+  AuroraSecretArn:
+    Description: ARN of the auto-generated Aurora master password secret
+    Value: !Ref AuroraMasterPassword
+
+  DatabaseUrlSecretArn:
+    Description: ARN of the DATABASE_URL secret (placeholder until Task 4 finalizes)
+    Value: !Ref DatabaseUrlSecret
+
+  AlbDnsName:
+    Description: ALB DNS name (CNAME target for staging-api.tailrd-heart.com)
+    Value: !GetAtt Alb.DNSName
+    Export:
+      Name: !Sub "${AWS::StackName}-alb-dns"
+
+  EcsClusterName:
+    Description: ECS cluster name
+    Value: !Ref EcsCluster
+
+  EcsServiceName:
+    Description: ECS service name (for CI/CD update-service calls)
+    Value: !GetAtt EcsService.Name
+
+  EcsTaskDefinitionArn:
+    Description: Initial task definition ARN (CI/CD registers new revisions on top)
+    Value: !Ref EcsTaskDefinition
+
+  EcsTaskRoleArn:
+    Description: ECS task role ARN
+    Value: !GetAtt EcsTaskRole.Arn
+
+  LogGroupName:
+    Description: CloudWatch log group for staging backend
+    Value: !Ref EcsLogGroup
