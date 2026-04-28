@@ -335,36 +335,13 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 
 - **Target:** Post-Sinai (week of 2026-05-04). Not blocking Day 9 staging environment work - staging uses `tailrd-staging-aurora` (Aurora Serverless v2) at a completely different name + class + VPC SG; no collision with this predecessor instance.
 
-### 34. Investigate and decommission predecessor RDS instance `tailrd-production` (t4g)
-- **Severity:** MEDIUM (HIPAA-tagged, deletion-protected, contents unknown - until investigated, cannot determine disposition)
-- **Discovered:** 2026-04-27 during Day 9 pre-flight investigation
-- **Impact:** A predecessor production RDS instance named exactly `tailrd-production` (db.t4g.medium, PG 15.10, 50 GB) exists in the production VPC `vpc-0fc14ae0c2511b94d`, created **2026-04-03** - 17 days before the migration sprint started, 24 days before today. State observed:
-  - DeletionProtection: **TRUE**
-  - Tags: `Project=tailrd`, `Environment=production`, **`HIPAA=true`**
-  - 14-day backup retention (production-grade)
-  - Daily automated snapshots since 2026-04-13
-  - 0 active connections in the last hour (currently dormant)
-  - Database name: `tailrd_platform` (different from current production DB `tailrd` on `tailrd-production-postgres`)
-  - Engine 15.10 (older than current prod's 15.14)
-  - Subnet group `tailrd-production-db` (different from current prod's `tailrd-production-db-subnet-group`)
-  - Shares security group `sg-09e3b87c3cbc42925` with the active `tailrd-production-postgres` (same VPC database SG)
-  - Empty ECS cluster `tailrd-production` (also predecessor, 0 services, 0 tasks) likely paired with this instance
-
-  Either contains genuine production data from a previous architecture iteration that needs proper retirement, or is leftover that was never decommissioned. The HIPAA tag + deletion protection + production-grade backup retention signal someone valued this instance enough to safeguard it. Cannot be safely retired without investigation.
-
-- **Investigation steps required (week of 2026-04-28+):**
-  1. Read-only Fargate query against `tailrd-production` to enumerate `tailrd_platform` schema, table list, row counts. Identify whether contents are real PHI, stale demo data, or empty.
-  2. Search CloudTrail for connection patterns: which IAM principals or service roles ever connected? When was the last successful connection? Last `RDS-DataAPI` or `secretsmanager:GetSecretValue` for any related secret?
-  3. Search git history + Secrets Manager for any reference to `tailrd-production.csp0w6g8u5uq.us-east-1.rds.amazonaws.com` (the predecessor's endpoint) - identify any code paths still pointing at it.
-  4. Inspect any old ECS task definitions in the empty `tailrd-production` ECS cluster (revisions retain even after service delete). Look for `DATABASE_URL` env vars or secrets that referenced this instance.
-  5. Check related CloudFormation/IaC history (the 3 March-12 stacks own only foundation networking, not this instance - confirms it was created out-of-band).
-  6. Document findings; decide: retire (after data extraction if needed) vs preserve (if business reason surfaces).
-
-- **Planned remediation:** Investigation in week of 2026-04-28+ after Sinai meetings. If contents are real production data, extract relevant data and archive the final snapshot for HIPAA records. If leftover, remove deletion protection (`aws rds modify-db-instance --no-deletion-protection`), delete instance, delete the empty `tailrd-production` ECS cluster, retire any orphaned IAM roles. If genuinely active in some pipeline I haven't identified, do NOT delete and update this entry with the new context.
-
-- **Severity rationale:** MEDIUM not LOW because the HIPAA tag implies the instance may have held PHI at some point. Even if currently empty, retirement requires proper HIPAA decommissioning (snapshot retention, audit log capture, BAA-aware data destruction). Treat with caution. The instance's deletion protection is the safety rail that prevents accidental destruction during this investigation window.
-
-- **Target:** Post-Sinai (week of 2026-05-04). Not blocking Day 9 staging environment work - staging uses `tailrd-staging-aurora` (Aurora Serverless v2) at a completely different name + class + VPC SG; no collision with this predecessor instance.
+### 35. Post-Deploy Smoke Test workflow login step failing
+- **Severity:** LOW (does not block deploys; `/health` check passes; only the authenticated login step fails)
+- **Discovered:** 2026-04-28 during Day 9 PR merges
+- **Impact:** The GitHub Actions `Post-Deploy Smoke Test` workflow (`.github/workflows/smoke-test.yml`) fires after every successful `Build & Deploy to ECS` run and immediately fails. The `/health` step passes (`Health: healthy`), but the next step authenticates with `LOGIN_EMAIL`/`LOGIN_PASSWORD` GitHub repo secrets and `curl` exits with code 22 (HTTP 4xx). Failed through PRs #192, #193, #194, #195, #196 today. Cause: the `LOGIN_PASSWORD` GitHub secret does not match the production password for the test account referenced by `LOGIN_EMAIL`. Deploys themselves continue to succeed; only the post-deploy authenticated probe fails. Silent test failure masks any real authentication regression that lands during a deploy.
+- **Remediation:** Either (a) rotate the production test account's password to match the `LOGIN_PASSWORD` GitHub secret, or (b) update the GitHub secret to match the current production password. After rotation, verify by re-running the workflow on the next merge; the login step should pass and the workflow should turn green.
+- **Severity rationale:** LOW because deploys succeed and `/health` verification passes; the workflow being persistently red is a noise-vs-signal issue rather than a production risk. But the silent failure means any real auth regression during a deploy goes undetected by this workflow until production users hit it. Tightening the loop is a small win.
+- **Target:** Pre-Day-10 cutover (Wednesday morning) so the smoke test catches authentication regressions during the cutover deploy. Not blocking but a nice safety net.
 
 ### 36. Synthea SNOMED CT codes do not match TAILRD ICD-10 gap rule queries
 - **Severity:** LOW (synthetic-data-only impact)
@@ -409,7 +386,7 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 | HIGH | 4 | All within the Aurora migration sprint or the one following |
 | MEDIUM | 10 (2 resolved) | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9); #21 RESOLVED 2026-04-25 via PR 2 of Phase 2-A split; #22 added 2026-04-25 (Wix DNS shadow zone, post-Sinai); #28 RESOLVED 2026-04-26 (PerformanceRequestLog architecture cleanup); #34 added 2026-04-27 (predecessor `tailrd-production` t4g RDS investigation, post-Sinai) |
 | P1 | 2 | Dedicated sprints B-2 and B-3 |
-| LOW | 15 | 2026 Q4 or as product maturity dictates; #23-26 added 2026-04-25 (SES + SendGrid + Google DNS hygiene cluster); #29-31 added 2026-04-26 (PerformanceRequestLog retention + PII review + AnalyticsTracker disposal, pre-PHI-pilot or post-Sinai cleanup sprint); #36-38 added 2026-04-28 (Synthea staging gap detection data limitations: SNOMED vs ICD-10, staleness cutoffs, COMPLETED vs ACTIVE meds) |
+| LOW | 16 | 2026 Q4 or as product maturity dictates; #23-26 added 2026-04-25 (SES + SendGrid + Google DNS hygiene cluster); #29-31 added 2026-04-26 (PerformanceRequestLog retention + PII review + AnalyticsTracker disposal, pre-PHI-pilot or post-Sinai cleanup sprint); #35-38 added 2026-04-28 (Post-Deploy smoke test login secret mismatch; Synthea staging gap detection data limitations: SNOMED vs ICD-10, staleness cutoffs, COMPLETED vs ACTIVE meds) |
 | Learning entry | 2 | #32 + #33 added + RESOLVED 2026-04-27 (Aurora schema drift / Wave 2 Attempt 3 lessons; DMS parallel-load FK race / Wave 2 Attempt 4 lessons) - recorded as institutional memory, not debt to track |
 
 Running this register against the Aurora V2 migration plan shows most MEDIUM items get resolved automatically by the migration. P0 and HIGH items are sequenced explicitly in this doc. New items should be appended here, not inserted mid-list - the numbering is a stable reference.
