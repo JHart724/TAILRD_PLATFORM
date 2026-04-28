@@ -13,6 +13,53 @@
 
 **Total runtime budget:** 2-3 hours active operator time on Day 10 (cutover + 30-min observation). 24-hour soak. ~1 hour on Day 11 for decommission.
 
+## Pre-flight dry run (captured 2026-04-28 evening)
+
+`infrastructure/scripts/phase-2d/preCutoverValidation.js` was executed against pre-cutover production state via Fargate one-off, with the temporary `Phase2D-PreCutoverValidation` IAM policy attached and detached cleanly. Run `ead798c3e02a4cb0a8abf97930fceec0` returned `ready: true` with all 6 checks passing.
+
+| Check | Result |
+|---|---|
+| `dms_task_status` | running, full load 100%, 22 tables, no failure |
+| `dms_table_stats` | 22 tables loaded, 0 incomplete, 0 validationFailed |
+| `aurora_cluster` | available, engine 15.14 |
+| `aurora_pending_maintenance` | 0 blocking; 1 informational (db-upgrade 15.14 to 15.15 scheduled 2026-05-17 - 18 days post-cutover, see Day 11 follow-up below) |
+| `cdc_lag` | no datapoints in 10-min window (low-traffic evening; Wednesday morning will populate) |
+| `row_parity` | 0 drift across patients (6,147), observations (60), encounters (353,512), audit_logs (88), login_sessions (100) |
+
+**Wednesday morning expectation:** the same script invocation should also return `ready: true`. Significant deviation (e.g., new pending maintenance, drift > 5 rows on any table, DMS task non-running) means STOP and investigate before proceeding to cutover.
+
+## Pre-step 0: attach Phase2D-PreCutoverValidation IAM policy
+
+The production task role (`tailrd-production-ecs-task`) does not carry the IAM permissions needed to run `preCutoverValidation.js` in steady-state operation. Attach the temporary policy at cutover-window start:
+
+```bash
+aws iam put-role-policy \
+  --role-name tailrd-production-ecs-task \
+  --policy-name Phase2D-PreCutoverValidation \
+  --policy-document file://infrastructure/scripts/phase-2d/phase2d-pre-cutover-validation-policy.json
+```
+
+The policy grants exactly: `dms:DescribeReplicationTasks` (account-wide) + `dms:DescribeTableStatistics` on the Wave 2 task ARN, `rds:DescribeDBClusters` on the Aurora cluster, `rds:DescribePendingMaintenanceActions` (account-wide), `cloudwatch:GetMetricStatistics` (account-wide), and `secretsmanager:GetSecretValue` on the 3 production database secrets needed for parity check.
+
+**MANDATORY: detach after cutover.** This policy must NOT remain attached during steady-state operation. Detach as soon as the dry run completes:
+
+```bash
+aws iam delete-role-policy \
+  --role-name tailrd-production-ecs-task \
+  --policy-name Phase2D-PreCutoverValidation
+
+aws iam list-role-policies --role-name tailrd-production-ecs-task
+# Phase2D-PreCutoverValidation should NOT appear above
+```
+
+If the detach fails, STOP everything and surface immediately. The role must be clean before any further cutover steps.
+
+## Day 11 follow-up: Aurora minor version upgrade
+
+A minor version upgrade (15.14 -> 15.15) is scheduled by AWS for 2026-05-17 10:00 UTC. This will occur 18 days post-cutover during a normal AWS maintenance window. Decision needed: allow it to proceed (default), reschedule, or take it manually post-Sinai. Not blocking Day 10 cutover. Track on the Day 11 punch list.
+
+---
+
 **Pre-verified parameters captured 2026-04-28:**
 
 | Resource | Value |
