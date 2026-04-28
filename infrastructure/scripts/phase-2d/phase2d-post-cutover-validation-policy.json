@@ -1,0 +1,56 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DescribeWave2DmsTask",
+      "Effect": "Allow",
+      "Action": ["dms:DescribeReplicationTasks"],
+      "Resource": "*"
+    },
+    {
+      "Sid": "DescribeAuroraCluster",
+      "Effect": "Allow",
+      "Action": ["rds:DescribeDBClusters"],
+      "Resource": ["arn:aws:rds:us-east-1:863518424332:cluster:tailrd-production-aurora"]
+    },
+    {
+      "Sid": "DescribeProductionEcsTaskDef",
+      "Effect": "Allow",
+      "Action": [
+        "ecs:DescribeServices",
+        "ecs:DescribeTaskDefinition"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ReadAlbAndErrorMetrics",
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:GetMetricStatistics"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "FilterProductionLogsForErrors",
+      "Effect": "Allow",
+      "Action": [
+        "logs:FilterLogEvents"
+      ],
+      "Resource": [
+        "arn:aws:logs:us-east-1:863518424332:log-group:/ecs/tailrd-production-backend:*"
+      ]
+    },
+    {
+      "Sid": "ReadProductionDatabaseSecretsForParityCheck",
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetSecretValue"
+      ],
+      "Resource": [
+        "arn:aws:secretsmanager:us-east-1:863518424332:secret:tailrd-production/app/database-url-*",
+        "arn:aws:secretsmanager:us-east-1:863518424332:secret:tailrd-production/app/database-url-rds-rollback-*",
+        "arn:aws:secretsmanager:us-east-1:863518424332:secret:tailrd-production/rds/master-password-*"
+      ]
+    }
+  ]
+}
