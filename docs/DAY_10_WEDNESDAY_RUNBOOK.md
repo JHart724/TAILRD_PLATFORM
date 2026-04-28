@@ -59,7 +59,7 @@ Use the same Fargate one-off pattern that `applyAuroraSchemaParity.js` uses. Qui
 ```bash
 # Pull DATABASE_URL for current production (RDS) and Aurora separately
 RDS_URL=$(aws secretsmanager get-secret-value --secret-id tailrd-production/app/database-url --query SecretString --output text)
-AURORA_PW=$(aws secretsmanager get-secret-value --secret-id tailrd-production/rds/aurora-password --query SecretString --output text | python -c "import sys,json; print(json.load(sys.stdin)['password'])" 2>/dev/null || aws secretsmanager get-secret-value --secret-id tailrd-production/app/aurora-url --query SecretString --output text | sed -E 's|.*//[^:]+:([^@]+)@.*|\1|')
+AURORA_PW=$(aws secretsmanager get-secret-value --secret-id tailrd-production/app/aurora-db-password --query SecretString --output text | python -c "import sys,json; print(json.load(sys.stdin)['password'])" 2>/dev/null || aws secretsmanager get-secret-value --secret-id tailrd-production/app/aurora-url --query SecretString --output text | sed -E 's|.*//[^:]+:([^@]+)@.*|\1|')
 AURORA_URL="postgresql://tailrd_admin:${AURORA_PW}@tailrd-production-aurora.cluster-csp0w6g8u5uq.us-east-1.rds.amazonaws.com:5432/tailrd?sslmode=require"
 
 # Launch parity check Fargate task (re-uses production task def, overrides command)
@@ -179,21 +179,46 @@ Watch ACU climb in CloudWatch console for `tailrd-production-aurora` cluster. Pr
 
 Path A (maintenance window, recommended).
 
-### 4.1 Flip read-only flag
+### 4.1 Flip read-only flag (env var on task def)
+
+The `READ_ONLY` env var is wired through `backend/src/middleware/readOnly.ts`. To flip it on:
 
 ```bash
-# This depends on the actual feature-flag mechanism. If it's an env var on the
-# task def, it requires a deploy. If it's a Secrets Manager value or runtime
-# flag, it's a hot flip. Confirm the mechanism BEFORE Day 10 and update this
-# step.
-#
-# Current best-known: there is no read-only flag wired. Path A may need to be
-# replaced with Path B (zero-downtime) or a new feature flag landed before
-# Day 10 cutover.
-echo "TODO confirm read-only flag mechanism before Day 10"
+# Pull the current task def
+aws ecs describe-task-definition \
+  --task-definition tailrd-production-backend \
+  --query 'taskDefinition' --output json > /tmp/td-current.json
+
+# Build a new revision with READ_ONLY=true added to environment, stripping
+# task def metadata that register-task-definition doesn't accept
+python -c "
+import json
+with open('/tmp/td-current.json') as f: td = json.load(f)
+for k in ['taskDefinitionArn','revision','status','requiresAttributes','compatibilities','registeredAt','registeredBy']:
+    td.pop(k, None)
+env = td['containerDefinitions'][0].get('environment') or []
+env = [e for e in env if e['name'] != 'READ_ONLY']
+env.append({'name':'READ_ONLY','value':'true'})
+td['containerDefinitions'][0]['environment'] = env
+with open('/tmp/td-readonly.json','w') as f: json.dump(td, f)
+"
+
+NEW_REV=$(aws ecs register-task-definition --cli-input-json file:///tmp/td-readonly.json \
+  --query 'taskDefinition.taskDefinitionArn' --output text)
+echo "Read-only task def: $NEW_REV"
+
+# Update service to the read-only revision
+aws ecs update-service \
+  --cluster tailrd-production-cluster \
+  --service tailrd-production-backend \
+  --task-definition "$NEW_REV"
+
+aws ecs wait services-stable \
+  --cluster tailrd-production-cluster \
+  --services tailrd-production-backend
 ```
 
-**If no read-only flag exists:** drop to Path B. Document the decision before proceeding.
+After tasks stabilize, all non-GET requests except `/api/auth/login` return 503 + `Retry-After: 60`.
 
 ### 4.2 Stop DMS replication task
 
@@ -400,9 +425,65 @@ aws lambda delete-function --function-name tailrd-production-aurora-rollback
 
 ---
 
-## Open questions before Day 10
+## Open questions resolved (2026-04-28)
 
-1. **Read-only feature flag**: does production have one wired? If not, Path A unusable. Investigate today, not Wednesday.
-2. **Aurora password secret name**: confirmed by Day 5 work as `tailrd-production/rds/aurora-password` or similar - verify path in 1.2 above before Wednesday.
-3. **Production task def cap**: ECS may need `desiredCount=2` momentarily during cutover for rolling. Confirm `MinimumHealthyPercent=100` is honored in production service.
-4. **PHI key compatibility**: Aurora data was migrated by DMS (which moved encrypted PHI bytes as-is). New ECS tasks must use the SAME `PHI_ENCRYPTION_KEY` to decrypt those rows. Confirm production secret unchanged through cutover.
+1. **Read-only feature flag - RESOLVED**: a production-grade `READ_ONLY` middleware (`backend/src/middleware/readOnly.ts`) was authored and shipped. When `READ_ONLY=true` is set on the task def, all non-GET requests get a 503 + Retry-After. GET, /api/auth/login, HEAD, and OPTIONS bypass. Path A is now viable: pre-cutover, set `READ_ONLY=true` on the task def via a new revision and force-new-deployment; post-cutover, revert to `READ_ONLY=false` and deploy again.
+
+2. **Aurora password secret name - RESOLVED**: the correct secret is `tailrd-production/app/aurora-db-password` (NOT `tailrd-production/app/aurora-db-password` as the original draft said). Verified via `aws secretsmanager list-secrets`. Endpoints are also pre-stored: `aurora-writer-endpoint`, `aurora-reader-endpoint`, `aurora-proxy-endpoint`.
+
+3. **Production task def MinimumHealthyPercent**: snapshot of task def 106 saved to `/c/Users/JHart/AppData/Local/Temp/tailrd-backend-106-snapshot.json`. Service deployment configuration must be confirmed at cutover time via `aws ecs describe-services`.
+
+4. **PHI key continuity - CONFIRMED**: production task def 106 references `arn:aws:secretsmanager:us-east-1:863518424332:secret:tailrd-production/app/phi-encryption-key-ktvX7y`. The post-cutover task def MUST keep this same secret ARN. Aurora rows migrated by DMS contain bytes encrypted with this exact key; rotating the key during cutover would render every PHI field undecryptable. Pre-cutover safety check (Step 1.6 below) verifies the new task def references the same ARN.
+
+## Step 1.6 - PHI key continuity safety check (NEW, run before Step 4 cutover)
+
+```bash
+# Pull current production task def's PHI key ARN
+CURRENT_PHI=$(aws ecs describe-task-definition \
+  --task-definition tailrd-production-backend \
+  --query 'taskDefinition.containerDefinitions[0].secrets[?name==`PHI_ENCRYPTION_KEY`].valueFrom' \
+  --output text)
+echo "Current PHI key ARN: $CURRENT_PHI"
+
+# When registering the new task def for cutover, the JSON for this entry MUST be identical:
+#   { "name": "PHI_ENCRYPTION_KEY", "valueFrom": "$CURRENT_PHI" }
+# Save this for the cutover task def diff:
+echo "$CURRENT_PHI" > ~/tailrd-phi-key-arn.txt
+```
+
+**STOP if** the cutover task def references a different `PHI_ENCRYPTION_KEY` ARN. The DATABASE_URL change is the only secret reference allowed to change.
+
+## Pre-cutover automated validation
+
+Before Step 4 cutover, run the automated validation script:
+
+```bash
+# Upload the script to S3 (one-time, or after any update)
+aws s3 cp infrastructure/scripts/phase-2d/preCutoverValidation.js \
+  s3://tailrd-cardiovascular-datasets-863518424332/migration-artifacts/phase-2d/preCutoverValidation.js
+
+# Run via Fargate one-off using production task definition (already has DMS, RDS, SM, CW perms)
+TASK_ARN=$(aws ecs run-task \
+  --cluster tailrd-production-cluster \
+  --task-definition tailrd-production-backend \
+  --launch-type FARGATE \
+  --network-configuration "awsvpcConfiguration={subnets=[<prod-subnets>],securityGroups=[<prod-sg>],assignPublicIp=DISABLED}" \
+  --overrides '{
+    "containerOverrides": [{
+      "name": "tailrd-backend",
+      "command": ["sh", "-c", "cd /app && npm install --no-save --silent pg @aws-sdk/client-database-migration-service @aws-sdk/client-rds @aws-sdk/client-secrets-manager @aws-sdk/client-cloudwatch >/dev/null && node -e \"const{S3Client,GetObjectCommand}=require('"'"'@aws-sdk/client-s3'"'"');const fs=require('"'"'fs'"'"');(async()=>{const c=new S3Client({region:'"'"'us-east-1'"'"'});const r=await c.send(new GetObjectCommand({Bucket:'"'"'tailrd-cardiovascular-datasets-863518424332'"'"',Key:'"'"'migration-artifacts/phase-2d/preCutoverValidation.js'"'"'}));fs.writeFileSync('"'"'/tmp/v.js'"'"',await r.Body.transformToString())})()\" && NODE_PATH=/app/node_modules node /tmp/v.js"]
+    }]
+  }' \
+  --query 'tasks[0].taskArn' --output text)
+
+# Wait + pull verdict
+aws ecs wait tasks-stopped --cluster tailrd-production-cluster --tasks "$TASK_ARN"
+TASK_ID="${TASK_ARN##*/}"
+MSYS_NO_PATHCONV=1 aws logs tail /ecs/tailrd-production-backend \
+  --log-stream-names "tailrd-backend/tailrd-backend/$TASK_ID" \
+  --since 10m | sed -n '/---PRE_CUTOVER_VALIDATION---/,/---END---/p'
+```
+
+**Pass condition:** Output JSON has `"ready": true` and `"blockers": []`. Anything else: STOP.
+
+The script automates checks documented as 1.1-1.3 above. Step 1.4 (production health) and 1.5 (operator readiness) remain manual.

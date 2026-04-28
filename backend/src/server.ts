@@ -11,6 +11,7 @@ import { analyticsMiddleware } from './middleware/analytics';
 import { csrfCookieSetter, csrfProtection, csrfTokenEndpoint } from './middleware/csrfProtection';
 import { loginRateLimit, upgradeAuthRateLimitStores } from './middleware/authRateLimit';
 import { authenticateToken, requireMFA } from './middleware/auth';
+import { readOnlyGuard } from './middleware/readOnly';
 import getRedisClient, { createRedisRateLimitStore } from './lib/redis';
 
 config();
@@ -161,6 +162,11 @@ app.use((req, res, next) => {
   });
   next();
 });
+
+// READ_ONLY guard. When READ_ONLY=true is set on the task def, non-GET requests
+// (except /api/auth/login) get a 503 + Retry-After. Used for maintenance
+// windows (e.g., Day 10 cutover). See backend/src/middleware/readOnly.ts.
+app.use(readOnlyGuard);
 
 // Analytics middleware for tracking user activities and performance
 // Disabled in demo mode — Prisma engine isn't available without a real DB
