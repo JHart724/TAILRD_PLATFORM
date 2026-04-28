@@ -335,13 +335,16 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 
 - **Target:** Post-Sinai (week of 2026-05-04). Not blocking Day 9 staging environment work - staging uses `tailrd-staging-aurora` (Aurora Serverless v2) at a completely different name + class + VPC SG; no collision with this predecessor instance.
 
-### 35. Post-Deploy Smoke Test workflow login step failing
-- **Severity:** LOW (does not block deploys; `/health` check passes; only the authenticated login step fails)
+### 35. Post-Deploy Smoke Test workflow login step failing - **RESOLVED 2026-04-28**
+- **Severity:** LOW (did not block deploys; `/health` check passed; only the authenticated login step failed)
 - **Discovered:** 2026-04-28 during Day 9 PR merges
-- **Impact:** The GitHub Actions `Post-Deploy Smoke Test` workflow (`.github/workflows/smoke-test.yml`) fires after every successful `Build & Deploy to ECS` run and immediately fails. The `/health` step passes (`Health: healthy`), but the next step authenticates with `LOGIN_EMAIL`/`LOGIN_PASSWORD` GitHub repo secrets and `curl` exits with code 22 (HTTP 4xx). Failed through PRs #192, #193, #194, #195, #196 today. Cause: the `LOGIN_PASSWORD` GitHub secret does not match the production password for the test account referenced by `LOGIN_EMAIL`. Deploys themselves continue to succeed; only the post-deploy authenticated probe fails. Silent test failure masks any real authentication regression that lands during a deploy.
-- **Remediation:** Either (a) rotate the production test account's password to match the `LOGIN_PASSWORD` GitHub secret, or (b) update the GitHub secret to match the current production password. After rotation, verify by re-running the workflow on the next merge; the login step should pass and the workflow should turn green.
-- **Severity rationale:** LOW because deploys succeed and `/health` verification passes; the workflow being persistently red is a noise-vs-signal issue rather than a production risk. But the silent failure means any real auth regression during a deploy goes undetected by this workflow until production users hit it. Tightening the loop is a small win.
-- **Target:** Pre-Day-10 cutover (Wednesday morning) so the smoke test catches authentication regressions during the cutover deploy. Not blocking but a nice safety net.
+- **Original impact:** The GitHub Actions `Post-Deploy Smoke Test` workflow (`.github/workflows/smoke-test.yml`) fired after every successful `Build & Deploy to ECS` run and immediately failed. The `/health` step passed (`Health: healthy`), but the next step authenticated with `SMOKE_TEST_EMAIL`/`SMOKE_TEST_PASSWORD` GitHub repo secrets and `curl` exited with code 22 (HTTP 4xx). Failed across PRs #192, #193, #194, #195, #196, #197 over the course of the day. Cause: the `SMOKE_TEST_PASSWORD` GitHub secret did not match the production password for the test account referenced by `SMOKE_TEST_EMAIL`. Deploys themselves continued to succeed; only the post-deploy authenticated probe failed. Silent test failure masked any real authentication regression that landed during a deploy.
+- **Resolution (2026-04-28):**
+  - Verified `JHart@tailrd-heart.com` / `Demo2026!` (the operator's SUPER_ADMIN account documented in `CLAUDE.md` section 18) authenticates cleanly against production `/api/auth/login`.
+  - Rotated both `SMOKE_TEST_EMAIL` and `SMOKE_TEST_PASSWORD` GitHub repo secrets to match this known-working credential pair via `gh secret set` over stdin (no shell history exposure).
+  - Triggered manual `workflow_dispatch` of `smoke-test.yml`. Run `25078155872` completed `success`.
+  - All steps passed: health check, login, all 6 module dashboards (`PASS source=database` for HF, EP, Coronary, Structural, Valvular, Peripheral), all 6 module patient endpoints (`PASS count=2-3 source=database`).
+- **Followup (no action needed):** every future merge to main will fire the smoke test against the same credentials. Day 10 cutover deploys will now produce real signal, not silent red.
 
 ### 36. Synthea SNOMED CT codes do not match TAILRD ICD-10 gap rule queries
 - **Severity:** LOW (synthetic-data-only impact)
@@ -386,7 +389,7 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 | HIGH | 4 | All within the Aurora migration sprint or the one following |
 | MEDIUM | 10 (2 resolved) | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9); #21 RESOLVED 2026-04-25 via PR 2 of Phase 2-A split; #22 added 2026-04-25 (Wix DNS shadow zone, post-Sinai); #28 RESOLVED 2026-04-26 (PerformanceRequestLog architecture cleanup); #34 added 2026-04-27 (predecessor `tailrd-production` t4g RDS investigation, post-Sinai) |
 | P1 | 2 | Dedicated sprints B-2 and B-3 |
-| LOW | 16 | 2026 Q4 or as product maturity dictates; #23-26 added 2026-04-25 (SES + SendGrid + Google DNS hygiene cluster); #29-31 added 2026-04-26 (PerformanceRequestLog retention + PII review + AnalyticsTracker disposal, pre-PHI-pilot or post-Sinai cleanup sprint); #35-38 added 2026-04-28 (Post-Deploy smoke test login secret mismatch; Synthea staging gap detection data limitations: SNOMED vs ICD-10, staleness cutoffs, COMPLETED vs ACTIVE meds) |
+| LOW | 16 (1 resolved) | 2026 Q4 or as product maturity dictates; #23-26 added 2026-04-25 (SES + SendGrid + Google DNS hygiene cluster); #29-31 added 2026-04-26 (PerformanceRequestLog retention + PII review + AnalyticsTracker disposal, pre-PHI-pilot or post-Sinai cleanup sprint); #35 RESOLVED 2026-04-28 (Post-Deploy smoke test login secret rotated to known-working credentials, run 25078155872 success); #36-38 added 2026-04-28 (Synthea staging gap detection data limitations: SNOMED vs ICD-10, staleness cutoffs, COMPLETED vs ACTIVE meds) |
 | Learning entry | 2 | #32 + #33 added + RESOLVED 2026-04-27 (Aurora schema drift / Wave 2 Attempt 3 lessons; DMS parallel-load FK race / Wave 2 Attempt 4 lessons) - recorded as institutional memory, not debt to track |
 
 Running this register against the Aurora V2 migration plan shows most MEDIUM items get resolved automatically by the migration. P0 and HIGH items are sequenced explicitly in this doc. New items should be appended here, not inserted mid-list - the numbering is a stable reference.
