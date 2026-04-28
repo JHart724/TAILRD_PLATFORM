@@ -366,6 +366,39 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 
 - **Target:** Post-Sinai (week of 2026-05-04). Not blocking Day 9 staging environment work - staging uses `tailrd-staging-aurora` (Aurora Serverless v2) at a completely different name + class + VPC SG; no collision with this predecessor instance.
 
+### 36. Synthea SNOMED CT codes do not match TAILRD ICD-10 gap rule queries
+- **Severity:** LOW (synthetic-data-only impact)
+- **Discovered:** 2026-04-28 during Day 9 staging gap detection verification
+- **Impact:** Synthea defaults to SNOMED CT codes for conditions (sample staging values: `105531004`, `224299000`, `446654005`). TAILRD gap rules query ICD-10 codes (`I50.x` for HF, `I25.x` for CAD, etc.) via `Condition.icd10Code`. SNOMED values land in the `icd10Code` column unchanged, so no rule fires. Verified empirically: 25,000 staging patients evaluated by `runGapDetection`, 0 gaps created across all 6 modules.
+- **Remediation options:**
+  1. Configure Synthea to emit ICD-10 via the US Core profile (likely `exporter.fhir.use_us_core_ig = true` already set; profile may also need `generate.terminology_service_url` or an offline ICD-10 mapping).
+  2. Add a SNOMED -> ICD-10 translation step in `backend/scripts/processSynthea.ts` (custom mapping table for the cardiovascular code set TAILRD cares about).
+  3. Use Redox sandbox synthetic data, which delivers ICD-10 natively.
+- **Severity rationale:** LOW because this affects only the Synthea-seeded staging environment used for infrastructure validation. Production Redox feed delivers ICD-10 natively, so the bug is invisible in production.
+- **Target:** Pre-sales-demo sprint, when staging gap demos become customer-facing. Not blocking Day 10 cutover or any production work.
+
+### 37. Gap detection staleness cutoffs filter out historical Synthea labs and observations
+- **Severity:** LOW (synthetic-data-only impact)
+- **Discovered:** 2026-04-28 same context as #36
+- **Impact:** `gapDetectionRunner.ts:94-97` filters labs > 6 months old and imaging > 12 months old (`LAB_CUTOFF_MS`, `ECHO_CUTOFF_MS`). The Synthea NYC dataset's most recent observation is dated `2023-06-01`. Today is 2026-04-28, so every Synthea observation is 34+ months stale and gets filtered out. The `labValues` map ends up empty for every patient, so lab-driven rules cannot fire even with a hypothetical SNOMED -> ICD-10 fix.
+- **Remediation options:**
+  1. Fast-forward observation timestamps during Synthea ingestion: shift `observedDateTime` by `(today - synthea_max_date)` so the most recent labs land within the cutoff window. Documents data semantics as "as if observed today".
+  2. Generate a fresh Synthea snapshot with `generate.start_date` close to today, re-upload to S3, re-seed staging.
+  3. Add `DISABLE_STALENESS_FILTER=true` env var for non-production environments. Backend reads at runtime, skips the cutoff check when set.
+- **Severity rationale:** LOW (synthetic data only).
+- **Target:** Same as #36.
+
+### 38. Synthea medications mostly COMPLETED; gap rules require ACTIVE
+- **Severity:** LOW (synthetic-data-only impact)
+- **Discovered:** 2026-04-28 same context as #36
+- **Impact:** `gapDetectionRunner.ts:60` filters `medications: { where: { status: 'ACTIVE' } }`. Synthea-generated medications mostly carry `status: 'COMPLETED'` (the default for historical prescriptions). Few or no `ACTIVE` rows make it into the patient's medication context, so medication-driven rules (e.g., GDMT optimization, DAPT duration, statin presence checks) cannot fire.
+- **Remediation options:**
+  1. Configure Synthea to emit `ACTIVE` for ongoing therapies (`generate.medications.always_active=true` or similar).
+  2. Translate `COMPLETED` -> `ACTIVE` for the most recent prescription per `rxNormCode` per patient during ingestion.
+  3. Generate a fresh Synthea snapshot capturing in-flight prescriptions at the snapshot date.
+- **Severity rationale:** LOW (synthetic data only).
+- **Target:** Same as #36.
+
 ---
 
 ## Summary
@@ -376,7 +409,7 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 | HIGH | 4 | All within the Aurora migration sprint or the one following |
 | MEDIUM | 10 (2 resolved) | Mostly resolved by the Aurora V2 migration itself (Days 2, 6, 8, 9); #21 RESOLVED 2026-04-25 via PR 2 of Phase 2-A split; #22 added 2026-04-25 (Wix DNS shadow zone, post-Sinai); #28 RESOLVED 2026-04-26 (PerformanceRequestLog architecture cleanup); #34 added 2026-04-27 (predecessor `tailrd-production` t4g RDS investigation, post-Sinai) |
 | P1 | 2 | Dedicated sprints B-2 and B-3 |
-| LOW | 12 | 2026 Q4 or as product maturity dictates; #23-26 added 2026-04-25 (SES + SendGrid + Google DNS hygiene cluster); #29-31 added 2026-04-26 (PerformanceRequestLog retention + PII review + AnalyticsTracker disposal, pre-PHI-pilot or post-Sinai cleanup sprint) |
+| LOW | 15 | 2026 Q4 or as product maturity dictates; #23-26 added 2026-04-25 (SES + SendGrid + Google DNS hygiene cluster); #29-31 added 2026-04-26 (PerformanceRequestLog retention + PII review + AnalyticsTracker disposal, pre-PHI-pilot or post-Sinai cleanup sprint); #36-38 added 2026-04-28 (Synthea staging gap detection data limitations: SNOMED vs ICD-10, staleness cutoffs, COMPLETED vs ACTIVE meds) |
 | Learning entry | 2 | #32 + #33 added + RESOLVED 2026-04-27 (Aurora schema drift / Wave 2 Attempt 3 lessons; DMS parallel-load FK race / Wave 2 Attempt 4 lessons) - recorded as institutional memory, not debt to track |
 
 Running this register against the Aurora V2 migration plan shows most MEDIUM items get resolved automatically by the migration. P0 and HIGH items are sequenced explicitly in this doc. New items should be appended here, not inserted mid-list - the numbering is a stable reference.
