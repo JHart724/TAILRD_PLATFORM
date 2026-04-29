@@ -2,7 +2,8 @@
 
 **Author:** Jonathan Hart
 **Created:** 2026-04-29 (post Day 10 Aurora cutover, post Phase 1 backend audit, post BSW scoping document review)
-**Status:** v1.1 — ACTIVE
+**Status:** v1.2 — ACTIVE
+**Revised:** 2026-04-29 (v1.2 corrects HF-first bias in v1.1; all 7 modules advance in parallel through tiers)
 **Companions:** docs/audit/AUDIT_FRAMEWORK.md, docs/TECH_DEBT_REGISTER.md, TAILRD-BSW-Scoping-Document-v7_1.docx (clinical knowledge base v4.0)
 
 ## 1. Mission
@@ -42,6 +43,8 @@ The BSW scoping document is itself a strategic asset — a publishable, defensib
 **Path A (tier-based UI polish) layers on top.** Tier 1 (107) bespoke UI surfaces, full polish. Tier 2 (462) strong templated UI patterns. Tier 3 (139) catalog-tier surfaces.
 
 **Combined: every gap is enterprise-grade in detection logic and clinical content. UI polish is proportional to user-facing value.** This is how Stripe / Palantir / Epic actually build — bulletproof core engine, tiered UI investment.
+
+**Critical sequencing principle: parallel module advancement, not serial.** v1.1 implicitly sequenced Heart Failure first as "lighthouse." This pattern — HF gets the polish, other modules lag — is a known historical issue in this codebase and the plan explicitly rejects it. All 7 modules advance through each tier together. Tier 1 work spans HF + EP + SH + CAD + VHD + PV + CX in parallel. Tier 2 work spans all 7 in parallel. Tier 3 work spans all 7 in parallel. No module is the "first" module. No module gets ahead. Equal depth at equal time.
 
 ## 5. The Plan: Three Phases
 
@@ -92,22 +95,43 @@ Per-module, ~7-10h each across HF, EP, SH, CAD, VHD, PV, CX:
 - AUDIT-002 type safety + AUDIT-003 console.* cleanup — 35-58h
 - Phase 2-5 audit findings remediation — depends on findings
 
-**Tier 1 clinical content (107 gaps, ~250-350h):**
-- Module-by-module, starting with Heart Failure (lighthouse module, broadest reach)
-- Sequence: HF (29 T1) → SH (13 T1) → CAD (18 T1) → EP (15 T1) → CX (17 T1) → VHD (8 T1) → PV (7 T1)
-- Per gap: verify detection logic, validate clinical content against guidelines + trial citations from BSW doc, implement/polish calculator, build bespoke UI surface, write tests
-- ~3-5h per Tier 1 gap on average
+**Tier 1 clinical content (107 gaps across all 7 modules in parallel, ~250-350h):**
+
+Distribution across modules:
+- HF: 29 Tier 1 gaps
+- CAD: 18 Tier 1 gaps
+- CX: 17 Tier 1 gaps
+- EP: 15 Tier 1 gaps
+- SH: 13 Tier 1 gaps
+- VHD: 8 Tier 1 gaps
+- PV: 7 Tier 1 gaps
+
+Sequencing principle: parallel advancement, not module-by-module serialization. Working approach is gap-type batching across modules — implement all GDMT-pillar-style gaps across HF + EP + CAD together, all device-DRG gaps across HF + EP + SH together, all specialty-pharmacy gaps across HF + CAD + PV + CX together. This pattern produces shared UI components and shared test harnesses, reduces cognitive switching cost, and ensures all 7 modules cross the Tier 1 finish line simultaneously.
+
+Per gap: verify detection logic, validate clinical content against guidelines + trial citations from BSW doc, implement/polish calculator, build bespoke UI surface, write tests. ~3-5h per Tier 1 gap on average.
+
+Phase 1 closing condition: all 107 Tier 1 gaps across all 7 modules complete. No module finishes first. No module finishes last.
 
 **Phase 1 checkpoint (end of Week 9):** All Tier 1 gaps production-grade. Backend bulletproof. Mid-timeline reassessment of Tier 2/3 sequencing within Phase 2/3 budget.
 
 ### Phase 2 — Tier 2 Clinical + UI/UX Polish (Weeks 10-15, ~600-900h)
 
-**Tier 2 clinical content (462 gaps, ~600-900h):**
-- Templated UI pattern per gap-type (alert / recommendation / educational / safety)
-- Detection logic verified
-- Citations validated
-- Sample tests per pattern
-- ~1.5-2.5h per Tier 2 gap
+**Tier 2 clinical content (462 gaps across all 7 modules in parallel, ~600-900h):**
+
+Distribution across modules:
+- PV: 82 Tier 2 gaps
+- VHD: 72 Tier 2 gaps
+- CX: 71 Tier 2 gaps
+- HF: 62 Tier 2 gaps
+- EP: 62 Tier 2 gaps
+- SH: 58 Tier 2 gaps
+- CAD: 55 Tier 2 gaps
+
+Same parallel-advancement principle as Phase 1. Templated UI pattern per gap-type (alert / recommendation / educational / safety) means Tier 2 work batches across modules by UI pattern. Implementing the "alert" pattern once and applying it across all 7 modules is more efficient than building 7 module-specific alert patterns. The pattern library accumulates across the phase.
+
+Per gap: detection logic verified, citations validated, templated UI applied, sample tests per pattern. ~1.5-2.5h per Tier 2 gap.
+
+Phase 2 closing condition: all 462 Tier 2 gaps across all 7 modules complete. No module ahead. No module behind.
 
 **UI/UX polish:**
 - Design system applied consistently across all surfaces
@@ -118,9 +142,20 @@ Per-module, ~7-10h each across HF, EP, SH, CAD, VHD, PV, CX:
 
 ### Phase 3 — Tier 3 + Integration + Launch Readiness (Weeks 16-17, ~150-300h)
 
-**Tier 3 clinical content (139 gaps, ~105-175h):**
-- Detection logic + citations + catalog surface
-- Lighter UI investment (catalog tier, not bespoke)
+**Tier 3 clinical content (139 gaps across all 7 modules in parallel, ~105-175h):**
+
+Distribution across modules:
+- HF: 35 Tier 3 gaps
+- VHD: 25 Tier 3 gaps
+- SH: 17 Tier 3 gaps
+- CAD: 17 Tier 3 gaps
+- CX: 17 Tier 3 gaps
+- PV: 16 Tier 3 gaps
+- EP: 12 Tier 3 gaps
+
+Same parallel principle. Detection logic + citations + catalog surface across all modules. Lighter UI investment (catalog tier, not bespoke). Catalog surface is module-agnostic by design — one catalog UI pattern across all 7 modules.
+
+Phase 3 closing condition: all 139 Tier 3 gaps complete across all 7 modules.
 
 **Integration + polish:**
 - End-to-end integration testing
@@ -147,6 +182,8 @@ If 2+ flags fire: 3-day reset. Plan absorbs this.
 If 3+ flags fire: 1-week reset + sequence review.
 
 **Spinal surgery contingency:** plan absorbs 2-3 week recovery window. Pre-surgery: lock in surgery-week and recovery-week scope so resumption is mechanical. During recovery: documentation + planning work only.
+
+**Module parity discipline:** at each 2-week burnout-watch checkpoint, also verify module parity. If any module is more than ~2 days ahead or behind on tier completion, rebalance. The flag is not "HF is ahead because it's better-built" — that pattern is exactly what v1.2 corrects. The flag is "module parity drift" and the response is rebalancing the next cycle's work toward the lagging modules.
 
 ## 7. Cash Strategy
 
@@ -178,9 +215,10 @@ End of 3-4 month execution, platform is robust if:
 - [ ] AUDIT-002 reduced to < 50 ESLint warnings
 - [ ] AUDIT-003 reduced to 0 in production code paths (scripts excepted)
 - [ ] All 708 gaps with documented audit verdict per gap (spec ↔ code ↔ UI alignment)
-- [ ] All Tier 1 gaps (107) production-grade with bespoke UI + validated calculators
-- [ ] All Tier 2 gaps (462) functional with templated UI + citations
-- [ ] All Tier 3 gaps (139) detection-coded + catalog-surfaced + cited
+- [ ] All Tier 1 gaps (107) production-grade with bespoke UI + validated calculators, distributed across all 7 modules
+- [ ] All Tier 2 gaps (462) functional with templated UI + citations, distributed across all 7 modules
+- [ ] All Tier 3 gaps (139) detection-coded + catalog-surfaced + cited, distributed across all 7 modules
+- [ ] No single module is materially more polished than any other (module parity verified at audit)
 - [ ] All 7 modules with documented UI/UX audit verdict of PASS
 - [ ] Service line + research views: documented user workflows verified, polished
 - [ ] Operational maturity: APM live, runbook coverage 100%, alerting tested
@@ -193,14 +231,28 @@ If 80%+ of these check, robust achieved. If not, plan failed and that's informat
 
 ## 10. Document Discipline
 
-This is v1.1. Revisions:
+This is v1.2 (revised from v1.1 to correct HF-first bias). Revisions:
 - **v2.0** at end of Week 3 (Phase 0 checkpoint) — based on audit findings, sequencing locked
 - **v3.0** at end of Week 9 (Phase 1 checkpoint) — Tier 2 sequencing confirmed
 - **v4.0** at end of Week 15 (Phase 2 checkpoint) — final stretch plan
 
 Every revision: separate PR. Document is the source of truth.
 
-## 11. Cross-References
+## 11. Module Parity Principle
+
+The TAILRD platform's clinical credibility depends on uniform depth across all 7 modules. A platform that demos exceptionally well in Heart Failure and falls flat in Peripheral Vascular signals "team has expertise in HF, not PV." A platform that demos uniformly across all 7 signals "team has built a true cardiovascular intelligence platform." The latter is the v1.0 target.
+
+Operational rules during execution:
+
+1. No phase is complete until all 7 modules are at parity for that phase's tier.
+2. When work is queued, gap-type batching across modules is preferred over module-by-module serialization.
+3. Shared UI patterns and shared test harnesses are first-class deliverables — they enforce parity by construction.
+4. At every checkpoint, audit module parity explicitly. Any drift > 2 days triggers rebalancing in the next cycle.
+5. The instinct to "polish HF more" or "wait, PV doesn't need that" is a known anti-pattern. The plan explicitly rejects both.
+
+Cross-module / Disparities / Safety (CX) is treated as a real module under this principle, not a residual category. Its 105 gaps advance in parallel with the other 6.
+
+## 12. Cross-References
 
 - Backend audit framework: docs/audit/AUDIT_FRAMEWORK.md
 - Phase 1 backend audit report: docs/audit/PHASE_1_REPORT.md
