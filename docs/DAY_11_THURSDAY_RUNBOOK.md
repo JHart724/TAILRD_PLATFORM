@@ -24,9 +24,14 @@
 | DMS source endpoint | `arn:aws:dms:us-east-1:863518424332:endpoint:XG3PQTZG5BB4RNX3RWT3G3KICQ` (`tailrd-rds-source`) |
 | DMS target endpoint | `arn:aws:dms:us-east-1:863518424332:endpoint:CLT4CXLHTJFM3B5IEVDWYKNUFQ` (`tailrd-aurora-target`) |
 | Migration IAM roles | `dms-cloudwatch-logs-role`, `dms-rollback-role`, `dms-vpc-role` |
-| Final snapshot id (target) | `tailrd-production-postgres-final-pre-decom-2026-04-30` |
+| Final snapshot id (PRE-STAGED 2026-04-29) | `tailrd-production-postgres-final-pre-decom-20260429` (status: available, encrypted, tagged HIPAA + RetainUntil=2032-04-30) |
+| Production task definition (post-cutover) | `tailrd-backend:123` (Aurora-served, READ_ONLY=false) |
 
-The replication slot name on RDS is captured at runtime (Step 4.3) since it's slot-config-derived; not stored in CloudFormation.
+The replication slot name on RDS is captured at runtime (Step 3.1) since it's slot-config-derived; not stored in CloudFormation.
+
+**Day 10 → Day 11 carryover:**
+- The final HIPAA snapshot was created during Day 10 close-out (Phase 81). Step 2 below is now a verify-only step.
+- Phase 80 already exercised `decommissionValidation.js` with the Phase2D-Decommission IAM policy attached + detached. Step 1 below is the second run, expected to clear the two pending blockers (`rds_no_recent_traffic` clears at T+24h soak, `final_snapshot_exists` already satisfied).
 
 ---
 
@@ -71,12 +76,13 @@ overrides = {
 print(json.dumps(overrides))
 " > /tmp/decom-overrides.json
 
-TASK=$(aws ecs run-task \
+# IMPORTANT: pin to the post-cutover task def revision that's known-good
+TASK=$(MSYS_NO_PATHCONV=1 aws ecs run-task \
   --cluster tailrd-production-cluster \
-  --task-definition tailrd-backend \
+  --task-definition tailrd-backend:123 \
   --launch-type FARGATE \
   --network-configuration "awsvpcConfiguration={subnets=[subnet-0e606d5eea0f4c89b,subnet-0071588b7174f200a],securityGroups=[sg-07cf4b72927f9038f],assignPublicIp=DISABLED}" \
-  --overrides file:///tmp/decom-overrides.json \
+  --overrides "file://C:/Users/JHart/AppData/Local/Temp/decom-overrides.json" \
   --query 'tasks[0].taskArn' --output text)
 TASK_ID="${TASK##*/}"
 aws ecs wait tasks-stopped --cluster tailrd-production-cluster --tasks "$TASK_ID"
@@ -86,44 +92,40 @@ MSYS_NO_PATHCONV=1 aws logs tail /ecs/tailrd-production-backend \
   | sed -n '/---DECOMMISSION_VALIDATION---/,/---END---/p'
 ```
 
-**Pass condition:** `"ready_for_decommission": true`. All 7 checks ok:true (well, except `final_snapshot_exists` which will fail until Step 2 below; that's the only acceptable pre-snapshot blocker).
+**Path note:** under git-bash on Windows, `file:///tmp/...` does not resolve through to AWS CLI. Use the full Windows path with `MSYS_NO_PATHCONV=1` as shown. (This was the Phase 80 dry-run lesson.)
 
-If checks 1-4, 6, 7 fail: STOP and investigate. Production may not actually be on Aurora, or RDS may still be receiving traffic. Do NOT proceed to deletion.
+**Pass condition:** `"ready_for_decommission": true`. All 7 checks ok:true.
 
-If only check 5 (`final_snapshot_exists`) fails: that's expected pre-snapshot. Proceed to Step 2.
+By the time this runs on Day 11 morning:
+- `rds_no_recent_traffic` should now PASS (24h soak window has elapsed since cutover at 2026-04-29T00:51:55Z, so the 24h CloudWatch window should be clean).
+- `final_snapshot_exists` should already PASS (snapshot pre-staged 2026-04-29).
+
+If `rds_no_recent_traffic` still fails: STOP — something is still hitting RDS. Investigate (check ECS task connections, smoke test pods, leftover DMS tasks).
+If checks 1, 3, 4, 6, 7 fail: STOP and investigate. Production may not actually be on Aurora, or operational drift since Day 10.
 
 ---
 
-## Step 2 - Final RDS snapshot for HIPAA audit (10-15 min)
+## Step 2 - Final RDS snapshot for HIPAA audit (verify only)
+
+The final snapshot was **pre-staged during Day 10 close-out (Phase 81)**:
+- ID: `tailrd-production-postgres-final-pre-decom-20260429`
+- Tags: HIPAA=true, RetainUntil=2032-04-30 (6-year HIPAA minimum per 45 CFR 164.530(j)(2)), CreatedBy=jhart, CutoverDate=2026-04-29
+- Captures the final state of RDS at the moment writes ceased (2026-04-29T00:51:55Z)
+
+Verify it is still available before proceeding:
 
 ```bash
-SNAPSHOT_ID="tailrd-production-postgres-final-pre-decom-$(date -u +%Y-%m-%d)"
-
-aws rds create-db-snapshot \
-  --db-instance-identifier tailrd-production-postgres \
-  --db-snapshot-identifier "$SNAPSHOT_ID" \
-  --tags \
-    Key=Project,Value=tailrd \
-    Key=Environment,Value=production \
-    Key=HIPAA,Value=true \
-    Key=Purpose,Value=pre-decom-final \
-    Key=RetainUntil,Value=2027-04-30
-
-aws rds wait db-snapshot-available --db-snapshot-identifier "$SNAPSHOT_ID"
-
-# Verify accessible
-aws rds describe-db-snapshots --db-snapshot-identifier "$SNAPSHOT_ID" \
-  --query 'DBSnapshots[0].{Status:Status,Created:SnapshotCreateTime,Size:AllocatedStorage,Tags:TagList}' \
+aws rds describe-db-snapshots \
+  --db-snapshot-identifier tailrd-production-postgres-final-pre-decom-20260429 \
+  --query 'DBSnapshots[0].{Status:Status,Created:SnapshotCreateTime,Size:AllocatedStorage,Encrypted:Encrypted,KmsKeyId:KmsKeyId,Tags:TagList}' \
   --output json
 
-# Save ARN to local audit file
-SNAPSHOT_ARN=$(aws rds describe-db-snapshots --db-snapshot-identifier "$SNAPSHOT_ID" \
-  --query 'DBSnapshots[0].DBSnapshotArn' --output text)
-echo "$SNAPSHOT_ARN" >> ~/tailrd-hipaa-snapshot-arns.txt
-echo "Final snapshot ARN: $SNAPSHOT_ARN"
+# Expected: Status=available, Encrypted=true, KmsKeyId=<production KMS>, Tags include HIPAA=true and RetainUntil=2032-04-30
 ```
 
-Re-run validation script to confirm `final_snapshot_exists: true`.
+If snapshot is missing or in `failed` status, STOP. Take a fresh snapshot using the Phase 81 procedure before proceeding to Step 4 (RDS deletion).
+
+Re-run validation script (Step 1) to confirm `final_snapshot_exists: true`. If it was already true on the first run, skip the re-run.
 
 ---
 
@@ -144,11 +146,11 @@ o = {'containerOverrides':[{'name':'tailrd-backend','environment':[{'name':'RDS_
 print(json.dumps(o))
 " > /tmp/slot-query-overrides.json
 
-# Launch + wait
-TASK=$(aws ecs run-task --cluster tailrd-production-cluster --task-definition tailrd-backend \
+# Launch + wait (use full Windows path for git-bash AWS CLI)
+TASK=$(MSYS_NO_PATHCONV=1 aws ecs run-task --cluster tailrd-production-cluster --task-definition tailrd-backend:123 \
   --launch-type FARGATE \
-  --network-configuration "awsvpcConfiguration={subnets=[<prod-subnets>],securityGroups=[<prod-sg>],assignPublicIp=DISABLED}" \
-  --overrides file:///tmp/slot-query-overrides.json \
+  --network-configuration "awsvpcConfiguration={subnets=[subnet-0e606d5eea0f4c89b,subnet-0071588b7174f200a],securityGroups=[sg-07cf4b72927f9038f],assignPublicIp=DISABLED}" \
+  --overrides "file://C:/Users/JHart/AppData/Local/Temp/slot-query-overrides.json" \
   --query 'tasks[0].taskArn' --output text)
 TASK_ID="${TASK##*/}"
 aws ecs wait tasks-stopped --cluster tailrd-production-cluster --tasks "$TASK_ID"
@@ -259,11 +261,12 @@ aws lambda delete-function --function-name tailrd-production-aurora-rollback 2>&
 
 ## Step 6 - CLAUDE.md update + commit
 
-Update the production state section:
-- Mark Aurora Serverless v2 as the production database
-- Document the final RDS snapshot ARN + 1-year retention policy
-- Update `Last known working task definition` to the post-cutover revision
-- Note the migration completed 2026-04-30
+Note: CLAUDE.md was already updated to cutover-complete state during Day 10 Phase 78 (PR #202). Day 11 update should be a smaller delta:
+- Replace `DECOMMISSION_PENDING` with `DECOMMISSIONED 2026-04-30`
+- Document the final RDS snapshot ARN + 6-year retention (RetainUntil=2032-04-30)
+- Note Day 11 decommission completed cleanly (no rollback)
+- DMS infrastructure: REMOVED (replication instance, endpoints, IAM roles)
+- Migration project: COMPLETE
 
 Open a small docs PR via the same-session pattern. CI should pass instantly (docs only).
 
@@ -296,8 +299,8 @@ If detach fails, STOP. The role must be clean before any further session work.
 ## Acceptance checklist
 
 - [ ] Pre-step P0: Phase2D-Decommission IAM attached
-- [ ] Step 1: validation script returns ready_for_decommission: true (after Step 2 snapshot)
-- [ ] Step 2: final RDS snapshot exists, available, tagged HIPAA + RetainUntil
+- [ ] Step 1: validation script returns ready_for_decommission: true (no blockers; final snapshot already exists from Phase 81)
+- [ ] Step 2: pre-staged 2026-04-29 snapshot still available, tags intact (HIPAA=true, RetainUntil=2032-04-30)
 - [ ] Step 3.1: replication slot name captured
 - [ ] Step 3.2: DMS task deleted (DBInstanceNotFound or empty list)
 - [ ] Step 3.3: replication slot dropped on RDS
