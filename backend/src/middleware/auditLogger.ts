@@ -37,6 +37,13 @@ try {
   });
 }
 
+// AUDIT-013 remediation: dual-transport for durability.
+// - File transport (existing) preserves dev ergonomics and gives the operator
+//   a local audit-log artifact for offline review.
+// - Console JSON transport (new) writes to ECS task stdout, captured by the
+//   awslogs driver into CloudWatch Logs. CloudWatch is durable, queryable,
+//   and HIPAA-eligible — addresses §164.312(b) audit control retention even
+//   when the ECS task filesystem is recycled.
 const auditLogger = winston.createLogger({
   level: 'info',
   format: winston.format.combine(
@@ -44,22 +51,36 @@ const auditLogger = winston.createLogger({
     winston.format.json(),
   ),
   defaultMeta: { service: 'tailrd-audit' },
-  transports: [auditTransport],
+  transports: [
+    auditTransport,
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.timestamp({ format: 'YYYY-MM-DDTHH:mm:ss.SSSZ' }),
+        winston.format.json(),
+      ),
+      level: 'info',
+    }),
+  ],
   // Never exit on uncaught — audit logs must persist
   exitOnError: false,
 });
 
-// In development, also log audit events to the console for visibility
-if (process.env.NODE_ENV === 'development') {
-  auditLogger.add(
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple(),
-      ),
-    }),
-  );
-}
+// AUDIT-013 remediation: HIPAA-grade actions throw on DB write failure
+// (rather than silently best-effort) so callers can degrade safely instead
+// of pretending the audit succeeded. File + Console transports still capture
+// the event regardless; the throw signals "primary durable record failed."
+const HIPAA_GRADE_ACTIONS = new Set<string>([
+  'LOGIN_SUCCESS',
+  'LOGIN_FAILED',
+  'LOGOUT',
+  'PHI_VIEW',
+  'PHI_EXPORT',
+  'PATIENT_CREATED',
+  'PATIENT_UPDATED',
+  'PATIENT_DELETED',
+  'BREACH_DATA_ACCESSED',
+  'BREACH_DATA_MODIFIED',
+]);
 
 // ─── Types ──────────────────────────────────────────────────────────────────────
 
@@ -134,7 +155,10 @@ async function writeAuditLog(
   // 1. Write to file-based audit log (synchronous from Winston's perspective)
   auditLogger.info('audit_event', entry);
 
-  // 2. Write to database AuditLog table (best-effort, non-blocking)
+  // 2. Write to database AuditLog table.
+  // AUDIT-013 remediation: HIPAA-grade events throw on DB failure so the
+  // calling route can return 500 ("audit unavailable") rather than pretend
+  // the action succeeded silently. Non-HIPAA events remain best-effort.
   try {
     await prisma.auditLog.create({
       data: {
@@ -152,12 +176,16 @@ async function writeAuditLog(
       },
     });
   } catch (dbError) {
-    // Log the database write failure but do NOT throw.
-    // The file-based log is the authoritative HIPAA audit trail.
     auditLogger.error('audit_db_write_failed', {
       error: dbError instanceof Error ? dbError.message : String(dbError),
+      hipaaGrade: HIPAA_GRADE_ACTIONS.has(action),
       originalEntry: entry,
     });
+    if (HIPAA_GRADE_ACTIONS.has(action)) {
+      throw new Error(
+        `Audit DB write failed for HIPAA-grade event: ${action}. File and Console transports still captured the event but the durable DB record failed.`,
+      );
+    }
   }
 }
 

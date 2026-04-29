@@ -18,6 +18,19 @@ const isDemoMode = process.env.DEMO_MODE === 'true';
 // Startup validation in server.ts ensures JWT_SECRET is set when not in demo mode.
 const JWT_SECRET = process.env.JWT_SECRET!;
 
+// AUDIT-009 remediation: when MFA_ENFORCED=true, requireMFA middleware will
+// force MFA enrollment for HIPAA-relevant roles (per HIPAA §164.312(d)
+// person-or-entity authentication). Default false in production to allow
+// controlled rollout. Set true in staging to exercise the enforcement path.
+// Read at call-time (not import-time) so deployment env flips take effect
+// on the next request without requiring a process restart.
+const isMfaEnforced = (): boolean => process.env.MFA_ENFORCED === 'true';
+// Roles that must have MFA enrolled when MFA_ENFORCED is on. Phase 1
+// rollout covers SUPER_ADMIN + HOSPITAL_ADMIN (highest-privilege roles
+// with cross-hospital or hospital-wide PHI access). Lower roles
+// (PHYSICIAN, NURSE_MANAGER, etc.) get added in a follow-up rollout.
+const MFA_ENFORCED_ROLES = new Set<UserRole>(['SUPER_ADMIN', 'HOSPITAL_ADMIN']);
+
 interface AuthenticatedRequest extends Request {
   user?: JWTPayload;
   hospital?: {
@@ -237,13 +250,26 @@ const requireMFA = async (req: Request, res: Response, next: NextFunction) => {
     select: { enabled: true },
   });
 
+  // AUDIT-009 remediation: when MFA_ENFORCED=true, force MFA enrollment for
+  // privileged roles (SUPER_ADMIN, HOSPITAL_ADMIN). Returns 403 with a
+  // discoverable hint flag the frontend can use to redirect to /mfa/setup.
+  if (isMfaEnforced() && MFA_ENFORCED_ROLES.has(user.role) && !mfaRecord?.enabled) {
+    return res.status(403).json({
+      success: false,
+      error: 'MFA enrollment required for your role. Complete setup at /api/mfa/setup before accessing protected routes.',
+      requiresMfaEnrollment: true,
+      timestamp: new Date().toISOString(),
+    } as APIResponse & { requiresMfaEnrollment: boolean });
+  }
+
   // If MFA is enabled but token lacks mfaVerified, block access
   if (mfaRecord?.enabled && !user.mfaVerified) {
     return res.status(403).json({
       success: false,
       error: 'MFA verification required to access patient data',
+      requiresMfaVerification: true,
       timestamp: new Date().toISOString(),
-    } as APIResponse);
+    } as APIResponse & { requiresMfaVerification: boolean });
   }
 
   next();
