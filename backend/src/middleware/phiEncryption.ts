@@ -5,6 +5,10 @@ const ENCRYPTION_KEY = process.env.PHI_ENCRYPTION_KEY;
 const ALGORITHM = 'aes-256-gcm';
 const isDemoMode = process.env.DEMO_MODE === 'true';
 const isProduction = process.env.NODE_ENV === 'production';
+// AUDIT-015 remediation: when true, allow reading legacy plaintext rows from
+// PHI-encrypted columns (pre-encryption-rollout data). Default false in
+// production. Set explicitly during a one-off backfill window.
+const ALLOW_LEGACY_PLAINTEXT = process.env.PHI_LEGACY_PLAINTEXT_OK === 'true' || isDemoMode;
 let plaintextWarned = false;
 
 // PHI fields that must be encrypted at rest per HIPAA 164.312(a)(2)(iv)
@@ -84,20 +88,39 @@ function decrypt(encryptedText: string): string {
     }
     return encryptedText;
   }
-  if (!encryptedText.startsWith('enc:')) return encryptedText; // Not encrypted
+
+  // AUDIT-015 remediation: legacy plaintext (no enc: prefix). Throw unless
+  // ALLOW_LEGACY_PLAINTEXT is set (migration window only).
+  if (!encryptedText.startsWith('enc:')) {
+    if (ALLOW_LEGACY_PLAINTEXT) return encryptedText;
+    throw new Error('PHI decryption: unencrypted value found in encrypted-field column (set PHI_LEGACY_PLAINTEXT_OK=true if running a migration; otherwise this indicates corrupted data)');
+  }
+
+  // AUDIT-015 remediation: malformed format. Throw rather than silently
+  // returning ciphertext.
+  const [, ivHex, authTagHex, encrypted] = encryptedText.split(':');
+  if (!ivHex || !authTagHex || !encrypted) {
+    throw new Error('PHI decryption: malformed ciphertext format (expected enc:iv:authTag:ciphertext)');
+  }
+
+  // AUDIT-015 remediation: AES-GCM auth-tag failure now propagates instead
+  // of being swallowed by catch-and-return-ciphertext. crypto.decipher.final()
+  // throws on auth-tag mismatch; let that throw bubble up.
+  const key = Buffer.from(ENCRYPTION_KEY, 'hex');
+  const iv = Buffer.from(ivHex, 'hex');
+  const authTag = Buffer.from(authTagHex, 'hex');
+  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+  decipher.setAuthTag(authTag);
   try {
-    const [, ivHex, authTagHex, encrypted] = encryptedText.split(':');
-    if (!ivHex || !authTagHex || !encrypted) return encryptedText;
-    const key = Buffer.from(ENCRYPTION_KEY, 'hex');
-    const iv = Buffer.from(ivHex, 'hex');
-    const authTag = Buffer.from(authTagHex, 'hex');
-    const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
-    decipher.setAuthTag(authTag);
     let decrypted = decipher.update(encrypted, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
     return decrypted;
-  } catch {
-    return encryptedText; // Return as-is if decryption fails (might be plaintext)
+  } catch (err: any) {
+    // Wrap with context so operators can distinguish integrity failure from
+    // other crypto errors. Preserve original error for observability.
+    const wrapped: any = new Error(`PHI decryption: integrity check failed (${err?.message || 'auth tag mismatch'})`);
+    wrapped.cause = err;
+    throw wrapped;
   }
 }
 
