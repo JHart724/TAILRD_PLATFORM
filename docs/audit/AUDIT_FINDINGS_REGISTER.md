@@ -44,20 +44,33 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 
 - **AUDIT-002** — 406 `: any` usages, 779 ESLint warnings concentrated in PHI code (Phase 1, OPEN)
 - **AUDIT-003** — 69 `console.*` in production code; 16 in `server.ts` (Phase 1, OPEN)
+- **AUDIT-009** — `requireMFA` is opt-in per user (Phase 2A, OPEN; reproduces tech debt #3)
+- **AUDIT-010** — Refresh token = JWT itself (Phase 2A, OPEN; reproduces tech debt #4)
+- **AUDIT-011** — `authorizeHospital` silent no-op AND not applied to patient routes (Phase 2A, OPEN; reproduces tech debt #5)
+- **AUDIT-013** — Audit log written to ephemeral ECS local storage (Phase 2A, OPEN)
+- **AUDIT-014** — Patient search silently broken on encrypted PHI fields (Phase 2B, OPEN)
+- **AUDIT-015** — `decrypt()` returns ciphertext on integrity failure (Phase 2B, OPEN)
+- **AUDIT-016** — No PHI key rotation pattern (Phase 2B, OPEN)
 
 ### MEDIUM (P2)
 
 - **AUDIT-004** — `@ts-nocheck` on `gapRuleEngine.ts` (11,292 LOC, 22% of source) (Phase 1, OPEN)
 - **AUDIT-005** — God-files: `routes/modules.ts` (2,031 LOC) and `routes/admin.ts` (1,337 LOC) (Phase 1, OPEN)
 - **AUDIT-006** — 27 outdated dependencies, 9 major-version-behind (Phase 1, OPEN)
+- **AUDIT-012** — `/api/auth/verify` returns `valid: true` for revoked sessions (Phase 2A, OPEN)
+- **AUDIT-018** — `AuditLog.description` accepts arbitrary input, not encrypted (Phase 2B, OPEN)
+- **AUDIT-019** — `FailedFhirBundle` plaintext PHI fragments (Phase 2B, OPEN)
+- **AUDIT-020** — External FHIR identifiers (`fhir*Id`) plaintext (Phase 2B, OPEN)
 
 ### LOW (P3)
 
 - **AUDIT-007** — 2 moderate npm vulnerabilities (`uuid` chain, `node-cron`) (Phase 1, OPEN)
+- **AUDIT-017** — `PHI_ENCRYPTION_KEY` length not validated at startup (Phase 2B, OPEN)
 
 ### INFO
 
 - **AUDIT-008** — Tech debt register has #27 gap (Phase 1, OPEN)
+- **AUDIT-021** — `UserSession` model is dead code (Phase 2B, OPEN)
 
 ---
 
@@ -207,12 +220,164 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 
 ---
 
+### AUDIT-009 — `requireMFA` is opt-in per user
+
+- **Phase:** 2A
+- **Severity:** HIGH (P1)
+- **Status:** OPEN
+- **Discovered:** 2026-04-29
+- **Location:** `backend/src/middleware/auth.ts:221-250`
+- **Evidence:** Lines 234-247 query `userMFA.enabled`. If `!mfaRecord?.enabled`, middleware passes regardless of `mfaVerified`. Wired globally at `server.ts:249` for `/api/*`.
+- **Severity rationale:** HIPAA §164.312(d) (person-or-entity authentication) expects MFA for any account with PHI access. A user with only password auth can access PHI routes today.
+- **Remediation:** `mfaEnforced` gate requiring `user.mfaVerified` for any route tagged `phi: true` when `user.role !== 'DEMO'`. Force-enroll SUPER_ADMIN and HOSPITAL_ADMIN users.
+- **Effort estimate:** M (8-16h)
+- **Dependencies:** None
+- **Cross-references:** Tech debt #3, AUDIT-001
+
+### AUDIT-010 — Refresh token equals JWT itself
+
+- **Phase:** 2A
+- **Severity:** HIGH (P1)
+- **Status:** OPEN
+- **Location:** `backend/src/routes/auth.ts:167-233`
+- **Evidence:** `/api/auth/refresh` accepts the same JWT used for auth, verifies it, issues new JWT. No separate refresh credential.
+- **Severity rationale:** Leaked JWT remains a refresh credential until logout. No upper-bound expiry. No rotation cadence.
+- **Remediation:** Separate refresh token (HTTP-only cookie, 30-day expiry); rotate on every refresh; revoke on password change.
+- **Effort estimate:** M (12-20h)
+- **Cross-references:** Tech debt #4
+
+### AUDIT-011 — `authorizeHospital` silent no-op AND not applied to patient routes
+
+- **Phase:** 2A
+- **Severity:** HIGH (P1)
+- **Status:** OPEN
+- **Location:** `backend/src/middleware/auth.ts:121-126`; missing-from `backend/src/routes/patients.ts`
+- **Evidence:** Middleware silently `next()`s when no `:hospitalId` URL param. Patient routes don't apply the middleware at all. Tenant isolation depends entirely on per-handler `where: { hospitalId: req.user.hospitalId }` discipline.
+- **Severity rationale:** Two failure modes; with AUDIT-001 0% coverage no detection layer; future route forgetting the filter would silently leak cross-tenant data.
+- **Remediation:** Replace silent no-op with fail-loud; apply explicit guard on PHI routes; integration test for cross-tenant access attempts (must 403).
+- **Effort estimate:** L (16-24h)
+- **Cross-references:** Tech debt #5, AUDIT-001
+
+### AUDIT-012 — `/api/auth/verify` returns `valid: true` for revoked sessions
+
+- **Phase:** 2A
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Location:** `backend/src/routes/auth.ts:237-264`
+- **Evidence:** `/verify` runs `jwt.verify` only — no `loginSession.isActive` lookup. Token whose session was revoked still returns `valid: true` until JWT expiry.
+- **Severity rationale:** UX-only; not an authorization bypass. UI may surface stale "valid" state for logged-out sessions.
+- **Remediation:** Add `loginSession.findUnique({sessionToken: hash})` lookup matching `authenticateToken`.
+- **Effort estimate:** S (2h)
+
+### AUDIT-013 — Audit log written to ephemeral ECS local storage
+
+- **Phase:** 2A
+- **Severity:** HIGH (P1)
+- **Status:** OPEN
+- **Location:** `backend/src/middleware/auditLogger.ts:8, 24-38`
+- **Evidence:** Audit logs written to `path.resolve(__dirname, '../../logs')` via Winston. ECS Fargate task storage is ephemeral. DB write at line 138-153 is best-effort and does not throw on failure.
+- **Severity rationale:** HIPAA §164.312(b) requires audit controls. Ephemeral storage means records can disappear with task recycling.
+- **Remediation:** Stream Winston output to CloudWatch Logs + S3 archive cron; make DB write throw on HIPAA-grade events.
+- **Effort estimate:** M (8-16h)
+
+### AUDIT-014 — Patient search silently broken on encrypted PHI fields
+
+- **Phase:** 2B
+- **Severity:** HIGH (P1)
+- **Status:** OPEN
+- **Location:** `backend/src/routes/patients.ts:81-86`
+- **Evidence:** GET `/api/patients` builds `where.OR` with `contains` on encrypted `firstName`/`lastName`/`mrn`/`email`. AES-GCM is non-deterministic; SQL ILIKE on ciphertext can't match plaintext.
+- **Severity rationale:** Production search returns 0 results, silently. AUDIT-001 0% coverage means no detection.
+- **Remediation:** Design choice — deterministic search-key column via HMAC, OR application-side filter, OR feature scope reduction.
+- **Effort estimate:** L (16-30h)
+- **Cross-references:** AUDIT-001, AUDIT-020
+
+### AUDIT-015 — `decrypt()` returns ciphertext on integrity failure
+
+- **Phase:** 2B
+- **Severity:** HIGH (P1)
+- **Status:** OPEN
+- **Location:** `backend/src/middleware/phiEncryption.ts:88-101`
+- **Evidence:** Catch block returns `encryptedText` as-is on AES-GCM auth-tag mismatch.
+- **Severity rationale:** HIPAA §164.312(c)(1) (integrity) expects detection of unauthorized alteration. Fail-silent masks tampering and leaks ciphertext upstream.
+- **Remediation:** Throw on decrypt failure. Single legacy-data flag for documented migration.
+- **Effort estimate:** S (2-4h)
+
+### AUDIT-016 — No PHI key rotation pattern
+
+- **Phase:** 2B
+- **Severity:** HIGH (P1)
+- **Status:** OPEN
+- **Location:** `backend/src/middleware/phiEncryption.ts:4`
+- **Evidence:** Key loaded once at module init. No version tag in `enc:` format. No multi-key fallback. `kmsService.ts` scaffolded but unwired.
+- **Severity rationale:** HIPAA §164.312(a)(2)(iv) implementation specification expects periodic key rotation. Rotating today would make all existing ciphertext unreadable.
+- **Remediation:** Key-version tag in ciphertext; multi-key map; re-encrypt-on-rotation background job; optionally wire `kmsService.ts` for envelope encryption.
+- **Effort estimate:** L (24-40h)
+
+### AUDIT-017 — `PHI_ENCRYPTION_KEY` length not validated at startup
+
+- **Phase:** 2B
+- **Severity:** LOW (P3)
+- **Status:** OPEN
+- **Location:** `backend/src/server.ts:38-45`
+- **Evidence:** Existence check only. AES-256 requires 32 bytes (64 hex chars). Malformed key throws on first encryption, not at startup.
+- **Severity rationale:** Operational, not security.
+- **Remediation:** Add `Buffer.from(...).length === 32` check to startup validation.
+- **Effort estimate:** XS (15 min)
+
+### AUDIT-018 — `AuditLog.description` accepts arbitrary input, not encrypted
+
+- **Phase:** 2B
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Location:** `backend/prisma/schema.prisma` (AuditLog model)
+- **Evidence:** All current `writeAuditLog` callers (16 sites) pass non-PHI templated strings. Field accepts arbitrary input.
+- **Severity rationale:** Latent risk; no active leak today.
+- **Remediation:** Add `description` to `PHI_FIELD_MAP.AuditLog` OR ESLint rule on free-form interpolation in `writeAuditLog` calls.
+- **Effort estimate:** S (1h)
+
+### AUDIT-019 — `FailedFhirBundle` plaintext PHI fragments
+
+- **Phase:** 2B
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Location:** `backend/prisma/schema.prisma` (FailedFhirBundle model)
+- **Evidence:** `errorMessage` and `originalPath` plaintext. FHIR ingest failures typically include partial bundle JSON; S3 paths sometimes carry patient identifiers.
+- **Severity rationale:** Failed-bundle table accumulates raw FHIR fragments with potential PHI in clear text.
+- **Remediation:** Sanitize at write OR add fields to `PHI_FIELD_MAP.FailedFhirBundle`. Add 30-day retention prune.
+- **Effort estimate:** S-M (4-8h)
+
+### AUDIT-020 — External FHIR identifiers (`fhir*Id`) plaintext
+
+- **Phase:** 2B
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Location:** ~8 fields across schema (Patient, Encounter, Observation, Order, Medication, Condition, AllergyIntolerance, Procedure, DeviceImplant)
+- **Evidence:** Each `String?` indexed for FHIR sync lookup. Per HIPAA §164.514(b)(2)(i)(R) externally-assigned unique identifiers are PHI.
+- **Severity rationale:** DB compromise leaks external EHR identifier; mitigated by tenant isolation. Operational tradeoff: encrypting breaks lookup.
+- **Remediation:** Decision matches AUDIT-014 search-key design.
+- **Effort estimate:** Bundled with AUDIT-014
+- **Cross-references:** AUDIT-014
+
+### AUDIT-021 — `UserSession` model is dead code
+
+- **Phase:** 2B
+- **Severity:** INFO
+- **Status:** OPEN
+- **Location:** `backend/prisma/schema.prisma` (UserSession model)
+- **Evidence:** Schema-defined; only reference outside schema is `mfaService.ts:27` comment. Active session management uses `LoginSession`.
+- **Severity rationale:** Code hygiene. Increases auth surface area in schema reading.
+- **Remediation:** Drop the model + migration to remove the table.
+- **Effort estimate:** S (2-4h)
+
+---
+
 ## Phase status
 
 | Phase | Dimension | Findings count | Status |
 |-------|-----------|---------------:|--------|
 | 1 | Code quality + tech debt reconciliation | 8 (1 P0, 2 P1, 4 P2, 1 P3, 1 INFO) | COMPLETE 2026-04-29 |
-| 2 | Security posture | 0 | DEFERRED |
+| 2 | Security posture | 13 (0 P0, 7 P1, 4 P2, 1 P3, 1 INFO) | COMPLETE 2026-04-29 (2A + 2B; 2C/2D deferred to Phase 2.5) |
 | 3 | Data layer | 0 | DEFERRED |
 | 4 | Operational maturity | 0 | DEFERRED |
 | 5 | HIPAA + compliance | 0 | DEFERRED (depends on Phase 1 Tier A + Phase 2) |
