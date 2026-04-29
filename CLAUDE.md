@@ -311,13 +311,29 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 
 **Production is live (as of April 7, 2026):**
 - [x] ECS Fargate (backend) -- api.tailrd-heart.com
-- [x] RDS PostgreSQL Multi-AZ
+- [x] **Aurora Serverless v2 PostgreSQL** (cutover from RDS 2026-04-29T00:51:55Z)
 - [x] CloudFront + ALB
 - [x] ElastiCache Redis
 - [x] Secrets Manager (JWT_SECRET, PHI_ENCRYPTION_KEY, DATABASE_URL)
 - [x] CI/CD: GitHub Actions → ECR → ECS (new task def per commit)
 - [ ] Frontend deployment (Netlify/Vercel with REACT_APP_USE_REAL_API=true)
 - [ ] DNS for app.tailrd-heart.com (frontend)
+
+**Production database (post Day 10 cutover, 2026-04-29):**
+- [x] Aurora endpoint (writer): `tailrd-production-aurora.cluster-csp0w6g8u5uq.us-east-1.rds.amazonaws.com:5432`
+- [x] Aurora endpoint (reader): `tailrd-production-aurora.cluster-ro-csp0w6g8u5uq.us-east-1.rds.amazonaws.com:5432`
+- [x] PG 15.14, ServerlessV2 0.5-4 ACU, encrypted with production KMS
+- [x] DATABASE_URL secret (`tailrd-production/app/database-url`) flipped 2026-04-29T00:51:55Z, VersionId `3c0074fb-ac80-4b01-9402-4e6e47de7351`
+- [ ] **DECOMMISSION_PENDING:** RDS instance `tailrd-production-postgres` (db.t3.medium, PG 15.10) still exists with deletion-protection ON. 0 connections since cutover. Final HIPAA-tagged snapshot taken 2026-04-29 evening (`tailrd-production-postgres-final-pre-decom-*`, 6yr retention). Deletion scheduled Day 11 (Thursday 2026-04-30) per `docs/DAY_11_PLAN.md`.
+
+**Day 10 cutover summary (2026-04-28 to 2026-04-29):**
+- Total READ_ONLY blast window: **26 min 15 sec** (00:36:30Z → 01:02:45Z)
+- Total cutover wall clock (READ_ONLY=true → soak launched): **~38 min**
+- Pre-cutover snapshots: `tailrd-production-postgres-pre-cutover-20260428-231342` + `tailrd-production-aurora-pre-cutover-20260428-231342`
+- Cutover task def progression: `tailrd-backend:121` → `:122` (READ_ONLY=true) → `:123` (READ_ONLY=false post-cutover)
+- Post-cutover validation: `ready_for_soak: true`, all 7 checks (1 latency warning, expected during ACU ramp)
+- 24-hour soak monitor running; `postCutoverSoakMonitor.sh` with trap-detach IAM safety
+- Cutover record: `docs/CHANGE_RECORD_2026_04_29_day10_aurora_cutover.md`
 
 **Staging is live (as of April 28, 2026):**
 - [x] CloudFormation stack `tailrd-staging` (Aurora Serverless v2 + ECS Fargate + ALB)
@@ -329,7 +345,7 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 - [ ] Synthea seed (in progress at session close: 25K patient load running on Fargate task `f1e1fe4e13c742c4a0aeea98926024ca`, post-PHI-key-fix retry)
 - [ ] CI/CD staging deploy job (not yet wired; production deploy on merge-to-main is the only automated pipeline)
 
-**Last known working task definition:** `tailrd-backend:106` (deployed April 28, 2026, SHA `09d84d9` — PR #189 SES email wiring behind `USE_SES_EMAIL` flag). Prior milestone: `:28` from April 10, 2026 (Sprint B-1 PR-A Heart Failure wire-up).
+**Last known working task definition:** `tailrd-backend:123` (deployed 2026-04-29T01:02:45Z — Day 10 cutover, `READ_ONLY=false`, on Aurora). Prior milestones: `:122` (READ_ONLY=true, cutover transient), `:106` (April 28 SES email wiring, PR #189), `:28` (April 10 Sprint B-1 PR-A Heart Failure wire-up).
 
 **Production env flags:**
 - `USE_SES_EMAIL` is currently UNSET (defaults to false). SES is plumbed but emails are logged as `EMAIL_DISABLED` events. Flip to `true` after AWS Support approves SES production-access request (case 177716470300327, currently in sandbox).
