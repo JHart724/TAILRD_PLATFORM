@@ -32,6 +32,7 @@ The replication slot name on RDS is captured at runtime (Step 3.1) since it's sl
 **Day 10 → Day 11 carryover:**
 - The final HIPAA snapshot was created during Day 10 close-out (Phase 81). Step 2 below is now a verify-only step.
 - Phase 80 already exercised `decommissionValidation.js` with the Phase2D-Decommission IAM policy attached + detached. Step 1 below is the second run, expected to clear the two pending blockers (`rds_no_recent_traffic` clears at T+24h soak, `final_snapshot_exists` already satisfied).
+- Soak monitor diagnostic at `docs/audit/SOAK_MONITOR_DIAGNOSTIC_2026_04_29.md` documents 3 ALERT entries as workstation-environmental (not production-relevant). The monitor's natural-end exit code may show `SOAK_DEGRADED` or `SOAK_FAILED` based on the FAILURES counter; operator-override is justified per the diagnostic. Decommission decision rests on independent evidence (Aurora steady connections, RDS sustained-zero connections, /health continuous, decommissionValidation.js verdict).
 
 ---
 
