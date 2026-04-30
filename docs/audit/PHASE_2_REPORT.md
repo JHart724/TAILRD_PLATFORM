@@ -331,4 +331,31 @@ None currently apply.
 
 ---
 
-*Authored 2026-04-29 in branch `docs/audit-phase-2-security`. Verdict calibrated to Phase 1: CONDITIONAL PASS reflects production safety + defensibility roadmap, not absence of findings.*
+## 7.1 Tier S Status Update — 2026-04-30
+
+Tier S findings resolved or deployed:
+
+- **AUDIT-009** — DEPLOYED (code shipped via PR #214; `MFA_ENFORCED=false` in production; controlled rollout pending separate runbook with user notification + admin enrollment)
+- **AUDIT-013** — **RESOLVED** (audit log durability via stdout-JSON Winston transport → ECS log driver → CloudWatch Logs; HIPAA-grade actions throw on DB write failure; verified active on `:138`)
+- **AUDIT-015** — **RESOLVED** (decrypt strict mode active in production task def `:138` since 2026-04-30T18:31:00Z with `PHI_LEGACY_PLAINTEXT_OK=false`; 51 legacy plaintext rows backfilled via Prisma middleware path; verified clean by independent re-run; production stable 79+ minutes post-flip with zero PHI decryption errors)
+- **AUDIT-011** — pending (batch 2 — tenant isolation, highest blast radius, deferred until Day 11 RDS decommission complete)
+
+**New finding added 2026-04-30:**
+
+- **AUDIT-022** — Legacy JSON PHI not encrypted at rest (243 row-instances across 11 columns / 6 models). MEDIUM (P2). Surfaced during AUDIT-015 diagnostic. Becomes Tier B (defensibility hardening). Cannot cause runtime errors under any flag state due to `decryptJsonField` typeof gating, but violates HIPAA §164.312(a)(2)(iv) at-rest expectation.
+
+**Phase 2 verdict eligibility for upgrade to PASS:**
+
+- ✓ Tier S security-critical: AUDIT-009 (deployed), AUDIT-013 (resolved), AUDIT-015 (resolved); AUDIT-011 still pending
+- AUDIT-009 controlled rollout to flag-on (separate runbook + user notification)
+- Phase 1 AUDIT-001 Tier A complete (auth middleware coverage to 80%+)
+- Tier A: AUDIT-014 (search-key design), AUDIT-016 (PHI key rotation)
+- Tier B: AUDIT-022 (newly added; JSON PHI at-rest encryption)
+- Phase 2C (secret lifecycle) and 2D (threat modeling) executed and clean
+- Integration tests for tenant isolation passing (validates AUDIT-011 fix)
+
+**Current state: 3 of 4 Tier S RESOLVED, 1 deployed flag-off. Next gate: Day 11 RDS decommission + AUDIT-011 batch 2.**
+
+---
+
+*Authored 2026-04-29 in branch `docs/audit-phase-2-security`. Verdict calibrated to Phase 1: CONDITIONAL PASS reflects production safety + defensibility roadmap, not absence of findings. Tier S Status Update appended 2026-04-30 in branch `docs/audit-015-closeout`.*

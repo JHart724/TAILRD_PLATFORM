@@ -44,12 +44,12 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 
 - **AUDIT-002** — 406 `: any` usages, 779 ESLint warnings concentrated in PHI code (Phase 1, OPEN)
 - **AUDIT-003** — 69 `console.*` in production code; 16 in `server.ts` (Phase 1, OPEN)
-- **AUDIT-009** — `requireMFA` is opt-in per user (Phase 2A, OPEN; reproduces tech debt #3)
+- **AUDIT-009** — `requireMFA` is opt-in per user (Phase 2A, **DEPLOYED 2026-04-30**; flag-off pending controlled rollout; reproduces tech debt #3)
 - **AUDIT-010** — Refresh token = JWT itself (Phase 2A, OPEN; reproduces tech debt #4)
 - **AUDIT-011** — `authorizeHospital` silent no-op AND not applied to patient routes (Phase 2A, OPEN; reproduces tech debt #5)
-- **AUDIT-013** — Audit log written to ephemeral ECS local storage (Phase 2A, OPEN)
+- **AUDIT-013** — Audit log written to ephemeral ECS local storage (Phase 2A, **RESOLVED 2026-04-30**)
 - **AUDIT-014** — Patient search silently broken on encrypted PHI fields (Phase 2B, OPEN)
-- **AUDIT-015** — `decrypt()` returns ciphertext on integrity failure (Phase 2B, OPEN)
+- **AUDIT-015** — `decrypt()` returns ciphertext on integrity failure (Phase 2B, **RESOLVED 2026-04-30**)
 - **AUDIT-016** — No PHI key rotation pattern (Phase 2B, OPEN)
 
 ### MEDIUM (P2)
@@ -61,6 +61,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-018** — `AuditLog.description` accepts arbitrary input, not encrypted (Phase 2B, OPEN)
 - **AUDIT-019** — `FailedFhirBundle` plaintext PHI fragments (Phase 2B, OPEN)
 - **AUDIT-020** — External FHIR identifiers (`fhir*Id`) plaintext (Phase 2B, OPEN)
+- **AUDIT-022** — Legacy JSON PHI not encrypted at rest (243 row-instances across 11 columns, 6 models) (Phase 2B-extended, OPEN)
 
 ### LOW (P3)
 
@@ -224,7 +225,8 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 
 - **Phase:** 2A
 - **Severity:** HIGH (P1)
-- **Status:** OPEN
+- **Status:** **DEPLOYED 2026-04-30** (code shipped via PR #214; `MFA_ENFORCED=false` in production pending controlled rollout — user notification + admin enrollment required first)
+- **Resolution note:** Code path active on production task def `:138`. Enforcement gate dormant via env flag. Tracked as open follow-up: MFA_ENFORCED rollout planning runbook.
 - **Discovered:** 2026-04-29
 - **Location:** `backend/src/middleware/auth.ts:221-250`
 - **Evidence:** Lines 234-247 query `userMFA.enabled`. If `!mfaRecord?.enabled`, middleware passes regardless of `mfaVerified`. Wired globally at `server.ts:249` for `/api/*`.
@@ -273,7 +275,8 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 
 - **Phase:** 2A
 - **Severity:** HIGH (P1)
-- **Status:** OPEN
+- **Status:** **RESOLVED 2026-04-30** (PR #214)
+- **Resolution note:** Dual-transport audit logging shipped: file (dev convenience) + stdout-JSON Winston transport captured by ECS awslogs driver to CloudWatch Logs. HIPAA-grade actions (LOGIN_*, LOGOUT, PHI_*, PATIENT_*, BREACH_*) throw on DB write failure instead of silently degrading. Verified active on `:138` via CloudWatch `service:tailrd-audit` JSON output stream.
 - **Location:** `backend/src/middleware/auditLogger.ts:8, 24-38`
 - **Evidence:** Audit logs written to `path.resolve(__dirname, '../../logs')` via Winston. ECS Fargate task storage is ephemeral. DB write at line 138-153 is best-effort and does not throw on failure.
 - **Severity rationale:** HIPAA §164.312(b) requires audit controls. Ephemeral storage means records can disappear with task recycling.
@@ -296,7 +299,8 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 
 - **Phase:** 2B
 - **Severity:** HIGH (P1)
-- **Status:** OPEN
+- **Status:** **RESOLVED 2026-04-30** (PR #214 + commit `3ee03cf` backfill)
+- **Resolution note:** Three throw paths active in production task def `:138` since 2026-04-30T18:31:00Z: (a) AES-GCM auth-tag mismatch throws "integrity check failed"; (b) malformed `enc:` format throws; (c) legacy plaintext throws unless `PHI_LEGACY_PLAINTEXT_OK=true`. Pre-deploy verify-phi-legacy.js found 51 legacy plaintext rows across 8 string columns. Backfill (commit `3ee03cf`, Fargate run `9a3ff7860e40406ea05507769a7fdd00`) re-encrypted all 51 via Prisma `update()` middleware path: 51/51 succeeded, 0 failures. Independent re-verification (`3904f48bdca8474bb7d71b079ac88cf5`) confirmed `cleanForDeploy: true` (0 legacy rows, 36 columns scanned). Production stable on `:138` for 79+ minutes with `PHI_LEGACY_PLAINTEXT_OK=false` and zero PHI decryption errors in CloudWatch. HIPAA §164.312(c)(1) integrity expectation met.
 - **Location:** `backend/src/middleware/phiEncryption.ts:88-101`
 - **Evidence:** Catch block returns `encryptedText` as-is on AES-GCM auth-tag mismatch.
 - **Severity rationale:** HIPAA §164.312(c)(1) (integrity) expects detection of unauthorized alteration. Fail-silent masks tampering and leaks ciphertext upstream.
@@ -372,12 +376,40 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 
 ---
 
+### AUDIT-022 — Legacy JSON PHI not encrypted at rest
+
+- **Phase:** 2B-extended (surfaced 2026-04-30 during AUDIT-015 diagnostic)
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Discovered:** 2026-04-30
+- **Location:** 11 JSON columns across 6 models, 243 legacy row-instances:
+  - `risk_score_assessments.inputData` (4)
+  - `risk_score_assessments.components` (4)
+  - `intervention_tracking.findings` (2)
+  - `alerts.triggerData` (5)
+  - `phenotypes.evidence` (7)
+  - `contraindication_assessments.reasons` (2)
+  - `contraindication_assessments.alternatives` (2)
+  - `contraindication_assessments.monitoring` (2)
+  - `therapy_gaps.recommendations` (211)
+  - `drug_titrations.barriers` (2)
+  - `drug_titrations.monitoringPlan` (2)
+- **Evidence:** `verify-phi-legacy-json.js` Fargate task run 2026-04-30 (`2e8c333d8bb745ab891a8f13d9061e7e`), `cleanForFlagFlip: false`, 243 total legacy JSON-field row-instances. Detail per-column counts available at `infrastructure/scripts/phase-2d/verify-phi-legacy-json.js` for replay.
+- **Runtime safety analysis:** `decryptJsonField` (`phiEncryption.ts:160-170`) gates the `decrypt()` call on `typeof === 'string' && startsWith('enc:')`. Legacy JSON values are `typeof === 'object'` (Prisma returns parsed JSON), so they skip the decrypt path entirely and are returned as-is. **Cannot cause runtime errors under any flag state.**
+- **Severity rationale:** HIPAA §164.312(a)(2)(iv) encryption-at-rest is an addressable implementation specification. PHI stored in plaintext in JSON columns violates the principle even though no runtime exposure exists today (cipher tag wouldn't catch tampering on these specific rows; if anyone DUMPS the database via DBA path, these rows leak). Cannot fail formal HIPAA audit on this finding alone but contributes to the at-rest encryption gap surface.
+- **Remediation:** Separate JSON-aware backfill script mirroring `backfillPHIEncryption.js` pattern. Read each JSON value via Prisma `findUnique`, write back via `prisma.<model>.update()` to trigger `encryptJsonField` middleware. Per-row try/catch + post-verify discipline. Bulk concern: `therapy_gaps.recommendations` has 211 rows — same approach, just larger batch.
+- **Effort estimate:** M (4-8h, larger row count + JSON serialization edge cases)
+- **Dependencies:** Independent of AUDIT-015 closeout. Should be addressed before Phase 2 verdict upgrade to PASS. Becomes Tier B (defensibility hardening) per `PHASE_2_REPORT.md` §6.
+- **Cross-references:** AUDIT-015 (parallel finding for string columns; same remediation pattern with file-name parallel)
+
+---
+
 ## Phase status
 
 | Phase | Dimension | Findings count | Status |
 |-------|-----------|---------------:|--------|
 | 1 | Code quality + tech debt reconciliation | 8 (1 P0, 2 P1, 4 P2, 1 P3, 1 INFO) | COMPLETE 2026-04-29 |
-| 2 | Security posture | 13 (0 P0, 7 P1, 4 P2, 1 P3, 1 INFO) | COMPLETE 2026-04-29 (2A + 2B; 2C/2D deferred to Phase 2.5) |
+| 2 | Security posture | 14 (0 P0, 7 P1, 5 P2, 1 P3, 1 INFO) | COMPLETE 2026-04-29; Tier S findings RESOLVED 2026-04-30 (AUDIT-009 deployed flag-off, AUDIT-013 + AUDIT-015 RESOLVED); AUDIT-011 pending; AUDIT-022 added 2026-04-30 |
 | 3 | Data layer | 0 | DEFERRED |
 | 4 | Operational maturity | 0 | DEFERRED |
 | 5 | HIPAA + compliance | 0 | DEFERRED (depends on Phase 1 Tier A + Phase 2) |
