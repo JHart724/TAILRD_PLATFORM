@@ -130,15 +130,71 @@ Re-run validation script (Step 1) to confirm `final_snapshot_exists: true`. If i
 
 ---
 
+## Step 2.5 - DMS task enumeration (BEFORE deletion)
+
+Before starting Step 3, enumerate ALL DMS replication tasks pointing at the source RDS instance — not just the named Wave 2 task in this runbook. The May 2 (Day 11) execution discovered an undocumented Wave 1 full-load task (`tailrd-migration-wave1`, `task:IMG4NEHABJCQTHVRK7GNJYTPXI`) that had run on April 20, completed normally, and sat dormant for 12 days. It still held references to the source/target endpoints and blocked endpoint deletion via `InvalidResourceStateFault` until it was identified and deleted.
+
+```bash
+echo "=== All DMS tasks in account (look for any pointing at our endpoints/instance) ==="
+aws dms describe-replication-tasks \
+  --query 'ReplicationTasks[].{taskId:ReplicationTaskIdentifier,arn:ReplicationTaskArn,status:Status,sourceEndpoint:SourceEndpointArn,targetEndpoint:TargetEndpointArn}' \
+  --output json
+```
+
+Expected output (post-Day 11 baseline going forward): empty or only the named Wave 2 task. If ANY task references the source endpoint (`endpoint:XG3PQTZG5BB4RNX3RWT3G3KICQ`), target endpoint (`endpoint:CLT4CXLHTJFM3B5IEVDWYKNUFQ`), or replication instance (`rep:JGQBSRDUTNH3HO6PKL3BEESYS4`), it must be deleted in Step 3 before the endpoints/instance can be deleted.
+
+For each unexpected task: investigate before deleting. Check:
+- `MigrationType` (full-load is dormant bootstrap; cdc / full-load-and-cdc are ongoing replication)
+- `Status` (must be stopped or failed; never delete a running task)
+- `ReplicationTaskCreationDate` + `StopDate` (recency)
+- `TableMappings` (which tables it copied)
+- `LastFailureMessage` (clean stop expected)
+
+Apply the same Wave 2 deletion pattern (delete-replication-task + wait replication-task-deleted) to each.
+
+---
+
 ## Step 3 - DMS task + replication slot cleanup (5 min)
 
 ### 3.1 Capture replication slot name from RDS
 
 ```bash
 # Run a Fargate one-off to query pg_replication_slots on RDS.
-# Use the rollback URL secret if it was captured during cutover; else fetch via master password.
+# Use the rollback URL secret if it was captured during cutover; else build from master password.
+#
+# Note: tailrd-production/rds/master-password is stored as a JSON object
+# with keys {dbname, host, password, port, username, engine}, NOT as a
+# plain-string password. The earlier (May 2 Day 11) attempt assumed plain string
+# and failed with "password authentication failed" until JSON parsing was added.
+# Both formats are now handled below: JSON.password if parseable, else raw string.
 RDS_URL=$(aws secretsmanager get-secret-value --secret-id tailrd-production/app/database-url-rds-rollback --query SecretString --output text 2>/dev/null \
-  || (PW=$(aws secretsmanager get-secret-value --secret-id tailrd-production/rds/master-password --query SecretString --output text); echo "postgresql://tailrd_admin:$(python -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1], safe=''))" "$PW")@tailrd-production-postgres.csp0w6g8u5uq.us-east-1.rds.amazonaws.com:5432/tailrd?sslmode=require"))
+  || (
+    SECRET_JSON=$(aws secretsmanager get-secret-value --secret-id tailrd-production/rds/master-password --query SecretString --output text)
+    # Try JSON-shaped secret first (current production format)
+    PW=$(echo "$SECRET_JSON" | python -c "import sys,json
+try:
+  print(json.load(sys.stdin)['password'])
+except Exception:
+  print(sys.stdin.read().strip(), file=sys.stderr); sys.exit(1)" 2>/dev/null)
+    if [ -z "$PW" ]; then
+      # Fallback: plain-string format
+      PW="$SECRET_JSON"
+    fi
+    USER_RDS=$(echo "$SECRET_JSON" | python -c "import sys,json
+try: print(json.load(sys.stdin)['username'])
+except Exception: print('tailrd_admin')")
+    HOST_RDS=$(echo "$SECRET_JSON" | python -c "import sys,json
+try: print(json.load(sys.stdin)['host'])
+except Exception: print('tailrd-production-postgres.csp0w6g8u5uq.us-east-1.rds.amazonaws.com')")
+    DB_RDS=$(echo "$SECRET_JSON" | python -c "import sys,json
+try: print(json.load(sys.stdin)['dbname'])
+except Exception: print('tailrd')")
+    PORT_RDS=$(echo "$SECRET_JSON" | python -c "import sys,json
+try: print(json.load(sys.stdin)['port'])
+except Exception: print('5432')")
+    ENC_PW=$(python -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1], safe=''))" "$PW")
+    echo "postgresql://${USER_RDS}:${ENC_PW}@${HOST_RDS}:${PORT_RDS}/${DB_RDS}?sslmode=require"
+  ))
 
 # Build slot-query overrides
 python -c "
@@ -235,16 +291,48 @@ done
 
 ---
 
-## Step 5 - DMS infrastructure cleanup (5-10 min)
+## Step 5 - DMS infrastructure cleanup (8-15 min)
+
+DMS deletion timing observed during May 2 execution:
+
+| Resource | Initiate → Absent (observed) | Poll budget |
+|---|---|---|
+| DMS replication task | ~30-60s | `aws dms wait replication-task-deleted` (built-in) |
+| DMS endpoint | 60-150s (one observed at 134s, another at ~10min after eventual consistency caught up) | Poll loop: 12 probes × 10s = 2 min budget; extend to 15+ probes if needed |
+| DMS replication instance | 5-10 min (one observed at 6 min 51s) | `aws dms wait replication-instance-deleted` (built-in) |
+
+ORDER MATTERS: task → endpoints → instance. AWS rejects endpoint deletion while any task references the endpoint (`InvalidResourceStateFault`), and rejects instance deletion while any endpoint exists.
 
 ```bash
-# Delete DMS replication instance
-aws dms delete-replication-instance \
-  --replication-instance-arn arn:aws:dms:us-east-1:863518424332:rep:JGQBSRDUTNH3HO6PKL3BEESYS4
-
-# Delete DMS endpoints
+# 5.1 Delete DMS endpoints (60-150s typical; eventual-consistency means describe-endpoints
+# may return 'deleting' for a while after delete-endpoint accepts the request)
+echo "DELETING DMS endpoints at $(date -u +%H:%M:%SZ)"
 aws dms delete-endpoint --endpoint-arn arn:aws:dms:us-east-1:863518424332:endpoint:XG3PQTZG5BB4RNX3RWT3G3KICQ
 aws dms delete-endpoint --endpoint-arn arn:aws:dms:us-east-1:863518424332:endpoint:CLT4CXLHTJFM3B5IEVDWYKNUFQ
+
+# Poll-verify each (DMS doesn't have aws dms wait endpoint-deleted)
+for arn in \
+  arn:aws:dms:us-east-1:863518424332:endpoint:XG3PQTZG5BB4RNX3RWT3G3KICQ \
+  arn:aws:dms:us-east-1:863518424332:endpoint:CLT4CXLHTJFM3B5IEVDWYKNUFQ; do
+  echo "--- Polling $arn ---"
+  for i in $(seq 1 15); do
+    RESULT=$(aws dms describe-endpoints --filters "Name=endpoint-arn,Values=$arn" --query 'length(Endpoints)' --output text 2>/dev/null || echo "0")
+    if [ "$RESULT" = "0" ] || [ -z "$RESULT" ]; then
+      echo "Endpoint deleted at $(date -u +%H:%M:%SZ) (probe $i)"
+      break
+    fi
+    echo "Probe $i: still present, sleep 10..."
+    sleep 10
+  done
+done
+
+# 5.2 Delete DMS replication instance (5-10 min wait)
+echo "DELETING DMS replication instance at $(date -u +%H:%M:%SZ)"
+aws dms delete-replication-instance \
+  --replication-instance-arn arn:aws:dms:us-east-1:863518424332:rep:JGQBSRDUTNH3HO6PKL3BEESYS4
+aws dms wait replication-instance-deleted \
+  --filters "Name=replication-instance-arn,Values=arn:aws:dms:us-east-1:863518424332:rep:JGQBSRDUTNH3HO6PKL3BEESYS4"
+echo "Replication instance deleted at $(date -u +%H:%M:%SZ)"
 
 # Delete DMS-specific IAM roles (none of which are referenced post-decommission)
 for role in dms-cloudwatch-logs-role dms-rollback-role dms-vpc-role; do
