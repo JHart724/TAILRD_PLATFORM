@@ -8,7 +8,7 @@
  * 7 checks:
  *   1. production_task_def_uses_aurora      - DATABASE_URL env var resolves to Aurora hostname
  *   2. rds_no_recent_traffic                - DatabaseConnections == 0 last 24h on RDS
- *   3. aurora_active_traffic                - DatabaseConnections > 0 last 24h on Aurora
+ *   3. aurora_active_traffic                - TWO-PART direct evidence (point-in-time pg_stat_activity AND 24h max DatabaseConnections >= 1)
  *   4. error_rate_within_baseline           - 24h error count vs operator-supplied baseline
  *   5. final_snapshot_exists                - tailrd-production-postgres-final-pre-decom-* available
  *   6. rds_still_present                    - RDS instance currently exists (sanity check; deletion target valid)
@@ -54,6 +54,7 @@ const {
   SecretsManagerClient,
   GetSecretValueCommand,
 } = require('@aws-sdk/client-secrets-manager');
+const { Client: PgClient } = require('pg');
 
 const REGION = process.env.AWS_REGION || 'us-east-1';
 const RDS_INSTANCE_ID = 'tailrd-production-postgres';
@@ -157,8 +158,54 @@ async function checkRdsNoRecentTraffic() {
   }
 }
 
-// Check 3: Aurora DatabaseConnections > 0 over last 24h (production traffic confirmed).
+// Check 3: Aurora is actively serving production - TWO-PART direct evidence.
+//   Part 1: Point-in-time pg_stat_activity shows >= 1 production client backend right now
+//   Part 2: CloudWatch DatabaseConnections Maximum >= 1 across the last 24h
+// Both must pass. Average over 24h is too noisy for low-traffic pilot environments
+// where idle pool members can dip the average below 1; Maximum captures presence even
+// during ACU scale-down windows.
 async function checkAuroraActiveTraffic() {
+  let pgPart = { ok: false, detail: 'not_run' };
+  let cwPart = { ok: false, detail: 'not_run' };
+
+  // Part 1: pg_stat_activity (point-in-time direct query)
+  let pg;
+  try {
+    const url = await getSecret('tailrd-production/app/database-url');
+    const u = new URL(url);
+    pg = new PgClient({
+      host: u.hostname,
+      port: Number(u.port || 5432),
+      user: decodeURIComponent(u.username),
+      password: decodeURIComponent(u.password),
+      database: u.pathname.replace(/^\//, '').split('?')[0] || 'tailrd',
+      ssl: { rejectUnauthorized: false },
+    });
+    await pg.connect();
+    const q = await pg.query(`
+      SELECT COUNT(*)::int AS c
+      FROM pg_stat_activity
+      WHERE datname = current_database()
+        AND pid != pg_backend_pid()
+        AND state IS NOT NULL
+        AND backend_type = 'client backend'
+    `);
+    const productionConnections = q.rows[0].c;
+    pgPart = {
+      ok: productionConnections >= 1,
+      productionConnections,
+      threshold: 1,
+      source: 'pg_stat_activity (point-in-time)',
+    };
+  } catch (err) {
+    pgPart = { ok: false, error: String(err.message || err), source: 'pg_stat_activity' };
+  } finally {
+    if (pg) {
+      try { await pg.end(); } catch (_) { /* swallow */ }
+    }
+  }
+
+  // Part 2: CloudWatch Maximum over 24h
   try {
     const r = await cw.send(
       new GetMetricStatisticsCommand({
@@ -168,23 +215,34 @@ async function checkAuroraActiveTraffic() {
         StartTime: new Date(Date.now() - 24 * 60 * 60 * 1000),
         EndTime: new Date(),
         Period: 3600,
-        Statistics: ['Average'],
+        Statistics: ['Maximum'],
       })
     );
     const points = r.Datapoints || [];
-    const avgConnections = points.length > 0
-      ? points.reduce((a, p) => a + (p.Average || 0), 0) / points.length
+    const maxConnections24h = points.length > 0
+      ? Math.max(...points.map((p) => p.Maximum || 0))
       : 0;
-    const ok = avgConnections >= 1;
-    record('aurora_active_traffic', ok, {
-      avgConnectionsLast24h: Number(avgConnections.toFixed(2)),
+    cwPart = {
+      ok: maxConnections24h >= 1,
+      maxConnections24h,
       datapointCount: points.length,
       threshold: 1,
-      note: avgConnections >= 1 ? 'production traffic on Aurora confirmed' : 'no Aurora traffic - cutover may not be complete',
-    });
+      source: 'CloudWatch DatabaseConnections Maximum (24h)',
+    };
   } catch (err) {
-    record('aurora_active_traffic', false, String(err.message || err));
+    cwPart = { ok: false, error: String(err.message || err), source: 'CloudWatch' };
   }
+
+  const ok = pgPart.ok && cwPart.ok;
+  record('aurora_active_traffic', ok, {
+    pointInTime: pgPart,
+    soakWindow: cwPart,
+    note: ok
+      ? 'production traffic on Aurora confirmed (both point-in-time and 24h soak)'
+      : !pgPart.ok && !cwPart.ok ? 'no Aurora traffic detected - cutover may not be complete'
+      : !pgPart.ok ? 'no live production connections right now - production may be down'
+      : 'no traffic in 24h soak window - cutover may have just happened or environment is idle',
+  });
 }
 
 // Check 4: 24-hour error rate within tolerance.
