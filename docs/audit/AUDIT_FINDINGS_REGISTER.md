@@ -252,13 +252,22 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 
 - **Phase:** 2A
 - **Severity:** HIGH (P1)
-- **Status:** OPEN
-- **Location:** `backend/src/middleware/auth.ts:121-126`; missing-from `backend/src/routes/patients.ts`
+- **Status:** OPEN (design complete 2026-05-02 — see `docs/audit/AUDIT_011_DESIGN.md`; implementation pending)
+- **Location:** `backend/src/middleware/auth.ts:128-151`; missing-from `backend/src/routes/patients.ts`
 - **Evidence:** Middleware silently `next()`s when no `:hospitalId` URL param. Patient routes don't apply the middleware at all. Tenant isolation depends entirely on per-handler `where: { hospitalId: req.user.hospitalId }` discipline.
 - **Severity rationale:** Two failure modes; with AUDIT-001 0% coverage no detection layer; future route forgetting the filter would silently leak cross-tenant data.
-- **Remediation:** Replace silent no-op with fail-loud; apply explicit guard on PHI routes; integration test for cross-tenant access attempts (must 403).
-- **Effort estimate:** L (16-24h)
-- **Cross-references:** Tech debt #5, AUDIT-001
+
+**Pre-fix subfindings (surfaced 2026-05-02 during AUDIT-011 design):**
+
+- **GAP-1**: `backend/src/ingestion/runGapDetectionForPatient.ts:21` — `prisma.patient.findUnique({ where: { id: patientId } })` ignores the `hospitalId` parameter in scope (line 16). Webhook caller path can load cross-tenant patient PHI + medications + observations into memory. Fix: `findFirst({ where: { id: patientId, hospitalId } })` (Phase a-pre).
+
+- **GAP-2**: `backend/src/services/crossReferralService.ts:811` — `getReferralById(referralId)` lacks `hospitalId` parameter; `findUnique({ where: { id: referralId } })` loads cross-tenant referral PHI before route handler's post-fetch validation runs. Fix: add `hospitalId` parameter, scope query (Phase a-pre).
+
+Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see `docs/audit/AUDIT_011_DESIGN.md` §11). Bundled into AUDIT-011 remediation Phase a-pre.
+
+- **Remediation:** Defense-in-depth across 3 layers (see `docs/audit/AUDIT_011_DESIGN.md`): Layer 1 fail-loud `authorizeHospital`; Layer 2 new `enforceHospitalScope` middleware; Layer 3 Prisma client extension `TENANT_GUARD_STRICT` (env-flag rollout). Plus: 12 REFACTOR sites (where: { id } → where: { id, hospitalId }), 9 LEGITIMATE_BYPASS markers (webhook + audit logging), GAP-1 + GAP-2 fixes, 60-80 cross-tenant integration tests.
+- **Effort estimate:** Revised to M (11.5-15.5h) — original L (16-24h) lowered after §2 audit found 0 RED routes; raised again by §11 callsite audit (+3-4h pre-flag-flip work).
+- **Cross-references:** Tech debt #5, AUDIT-001, `docs/audit/AUDIT_011_DESIGN.md`
 
 ### AUDIT-012 — `/api/auth/verify` returns `valid: true` for revoked sessions
 
