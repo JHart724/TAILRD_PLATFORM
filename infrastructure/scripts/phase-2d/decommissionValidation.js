@@ -246,6 +246,19 @@ async function checkAuroraActiveTraffic() {
 }
 
 // Check 4: 24-hour error rate within tolerance.
+//
+// Filter pattern uses CloudWatch Logs JSON syntax to match only structured
+// events with level="error". The previous OR-of-tokens pattern
+// (?ERROR ?5xx ?500 ?502 ?503 ?504) had a false-positive: ISO timestamps
+// with millisecond fragments .500/.502/.503/.504 (e.g. "2026-05-02T02:23:27.503Z")
+// matched as 5xx error tokens because CloudWatch tokenizes on non-alphanumerics
+// and treats numeric substrings as standalone tokens. The Day 11 (2026-05-02)
+// decom validator returned errorCount24h=1 from a clean LOGIN_SUCCESS audit
+// event whose timestamp ended in .503ms.
+//
+// Production logs are structured JSON (Winston Console transport captured by
+// ECS awslogs driver, AUDIT-013 dual-transport pattern); { $.level = "error" }
+// matches only true error events with no substring bleed.
 async function checkErrorRateBaseline() {
   try {
     const r = await cwl.send(
@@ -253,7 +266,7 @@ async function checkErrorRateBaseline() {
         logGroupName: LOG_GROUP,
         startTime: Date.now() - 24 * 60 * 60 * 1000,
         endTime: Date.now(),
-        filterPattern: '?ERROR ?5xx ?500 ?502 ?503 ?504',
+        filterPattern: '{ $.level = "error" }',
       })
     );
     const errorCount24h = (r.events || []).length;
