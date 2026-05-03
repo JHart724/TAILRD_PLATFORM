@@ -8,13 +8,13 @@
 
 | Field | Value |
 |---|---|
-| Last updated | 2026-05-03 (Day 5 of Phase 0) |
+| Last updated | 2026-05-03 (Day 5 of Phase 0) — HF audit ship |
 | Last update by | jhart |
-| Last update commit SHA | `3f4ef57` (PR #223 — AUDIT-025 Phase a Migration Validation gate) |
+| Last update commit SHA | `a5cb10c` (PR #224 — BUILD_STATE.md Tier 1 ledger) |
 | Plan reference | `docs/PATH_TO_ROBUST.md` v1.2 (active 2026-04-28) |
-| Plan target | Platform v1.0 by 2026-07-29 to 2026-08-29 (3-4 months) |
+| Plan target | **Under revision per v2.0**; current v1.2 timeline (3-4 months) preliminary revised to **7-9 months** per HF audit §6.3; v2.0 PATH_TO_ROBUST due ~2026-05-19 will codify final timeline |
 | Phase 0 day | **5 of 21** (16 days remaining in Phase 0 window) |
-| Phase 0 hours budget | **~30-50h consumed of 120-150h** (~80-100h remaining) |
+| Phase 0 hours budget | **~40-60h consumed of 120-150h** (~60-90h remaining; HF audit ~7-10h logged) |
 | v2.0 PATH_TO_ROBUST due | end of Week 3 (~2026-05-19) |
 
 ---
@@ -35,7 +35,7 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 ### Phase 0B — Per-module clinical audits (~50-70h)
 
 - [/] PV — codebase inventory + spec↔code addendum complete (26.7% coverage)
-- [ ] HF (~7-10h, largest spec at 126 gaps, BSW pilot's most-developed module)
+- [/] HF — spec↔code addendum complete (46% any / 21.4% DET_OK; 11 T1 SPEC_ONLY)
 - [ ] CAD (~6-8h, highest rule density at 76 rules)
 - [ ] EP (~6-8h)
 - [ ] SH (~6-8h)
@@ -78,9 +78,9 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 
 | # | Surface | Module | View | Audit state |
 |---|---|---|---|---|
-| 1 | HF — care team | HF | care team | NOT STARTED |
-| 2 | HF — service line | HF | service line | NOT STARTED |
-| 3 | HF — executive | HF | executive | NOT STARTED |
+| 1 | HF — care team | HF | care team | **PARTIAL** (Phase 0B addendum, spec↔code mapping) |
+| 2 | HF — service line | HF | service line | file-count inventory only |
+| 3 | HF — executive | HF | executive | file-count inventory only |
 | 4 | EP — care team | EP | care team | NOT STARTED |
 | 5 | EP — service line | EP | service line | NOT STARTED |
 | 6 | EP — executive | EP | executive | NOT STARTED |
@@ -99,7 +99,7 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 | 19 | Research/registry/trial | cross-cutting | all 3 views | NOT STARTED — 3 frontend files exist, 0 backend routes / 0 Prisma models |
 | 20 | Backend superuser | cross-cutting | admin | **PARTIAL** via AUDIT-011 Phase a-pre |
 
-**Audit coverage:** 1 of 20 surfaces with substantive audit work (PV care team via Phase 0B addendum, spec↔code mapping). Additional partial coverage: 2 PV surfaces inventoried at file-count level only (service line, executive); 1 cross-cutting (Backend superuser) partially audited via AUDIT-011 Phase a-pre tenant isolation work. Source: `docs/audit/PHASE_0B_PV_AUDIT_REPORT*.md`, `docs/audit/AUDIT_011_DESIGN.md`.
+**Audit coverage:** 2 of 20 surfaces with substantive audit work (HF care team via Phase 0B addendum 2026-05-03; PV care team via Phase 0B addendum 2026-04-29 — both spec↔code mapping). Additional partial coverage: 4 surfaces inventoried at file-count level only (HF service line + executive, PV service line + executive); 1 cross-cutting (Backend superuser) partially audited via AUDIT-011 Phase a-pre tenant isolation work. Source: `docs/audit/PHASE_0B_HF_AUDIT_ADDENDUM.md`, `docs/audit/PHASE_0B_PV_AUDIT_REPORT*.md`, `docs/audit/AUDIT_011_DESIGN.md`.
 
 ---
 
@@ -113,15 +113,15 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 
 | Module | Spec gaps | Backend rules | Rule density % | Frontend .tsx files | Audit state | T1 priority gaps |
 |---|---|---|---|---|---|---|
-| HF | 126 | 48 | 38% | 38 | NOT STARTED | unknown |
+| HF | 126 | 48 | **46% any / 21.4% DET_OK** | 38 | PARTIAL (addendum) | 29 in spec, 18 covered (62%), 11 SPEC_ONLY |
 | EP | 89 | 45 | 51% | 63 | NOT STARTED | unknown |
 | SH | 88 | 25 | 28% | 48 | NOT STARTED | unknown |
 | CAD | 90 | 76 | 84% (top) | 25 | NOT STARTED | unknown |
 | VHD | 105 | 32 | 30% | 18 | NOT STARTED | unknown |
 | PV | 105 | 33 | 31% naive / **26.7% real** | 24 | PARTIAL (addendum) | 7 in spec, 1 covered + 2 partial + 4 SPEC_ONLY |
-| **Total active** | **603** | **259** | **43% naive avg** | **216** | 1 of 6 audited | |
+| **Total active** | **603** | **259** | **43% naive avg** | **216** | 2 of 6 audited | |
 
-**Caveat:** "Rule density %" is naive (rules ÷ spec gaps). PV addendum showed real coverage diverges (33 rules → 26.7% real coverage because 9 rules are EXTRA and several map non-1:1). True per-module coverage requires Phase 0B audit per module.
+**Caveat:** "Rule density %" is naive (rules ÷ spec gaps). PV addendum showed real coverage diverges (33 rules → 26.7% real coverage because 9 rules are EXTRA and several map non-1:1). HF addendum confirmed pattern (48 rules → 46% any-coverage / 21.4% DET_OK; 1 EXTRA + broad-rule consolidation in Amyloid + HCM). True per-module coverage requires Phase 0B audit per module.
 
 Source: per-module audit docs, `backend/prisma/schema.prisma` `ModuleType` enum, `backend/src/ingestion/gaps/gapRuleEngine.ts` grep, `src/ui/*` file count.
 
@@ -142,9 +142,9 @@ Source: per-module audit docs, `backend/prisma/schema.prisma` `ModuleType` enum,
 
 ## §6 — Open critical work (top 3, priority order)
 
-1. **HF Phase 0B audit** — 7-10h, biggest signal for v2.0 (BSW pilot's most-developed module, largest spec at 126 gaps)
-2. **CAD Phase 0B audit** — 6-8h, highest rule density (76 rules), counterweight test for "more built than thought" hypothesis
-3. **EP / SH / VHD audits batched** — 18-24h, fills v2.0 picture across 5 of 6 active modules
+1. **CAD Phase 0B audit** — 6-8h, highest rule density (76 rules); counterweight test for "more built than thought" hypothesis (PV at 26.7%, HF at 46% any — CAD expected highest if hypothesis holds)
+2. **EP / SH / VHD audits batched** — 18-24h, fills v2.0 picture across 5 of 6 active modules
+3. **Phase 0C UI/UX audit** — 25-30h, completes Phase 0 deliverable set for v2.0 authorship
 
 **Audit-axis is critical-path for v2.0 (due ~2026-05-19).** Tactical security work (AUDIT-025 Phase b, AUDIT-011 Phase a/b/c/d, AUDIT-022 backfill) is queued for Phase 1.
 
@@ -171,7 +171,7 @@ Source: per-module audit docs, `backend/prisma/schema.prisma` `ModuleType` enum,
 | Phase 1 backend audit | `docs/audit/PHASE_1_REPORT.md` |
 | Phase 2 backend audit | `docs/audit/PHASE_2_REPORT.md` |
 | Phase 0B clinical audit framework | `docs/audit/PHASE_0B_CLINICAL_AUDIT_FRAMEWORK.md` |
-| Phase 0B per-module audits | `docs/audit/PHASE_0B_<MODULE>_AUDIT_REPORT*.md` |
+| Phase 0B per-module audits | `docs/audit/PHASE_0B_<MODULE>_AUDIT_REPORT*.md`, `docs/audit/PHASE_0B_<MODULE>_AUDIT_ADDENDUM.md` (PV + HF complete) |
 | Per-finding designs | `docs/audit/AUDIT_<NNN>_DESIGN.md` (AUDIT-011, AUDIT-025) |
 | Tier S remediation design | `docs/audit/TIER_S_REMEDIATION_DESIGN.md` |
 | Clinical knowledge base | `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md` |
@@ -179,6 +179,18 @@ Source: per-module audit docs, `backend/prisma/schema.prisma` `ModuleType` enum,
 | Change records | `docs/CHANGE_RECORD_*.md` |
 | Health system onboarding | `docs/HEALTH_SYSTEM_ONBOARDING_RUNBOOK.md` |
 | BUILD_STATE.md design | `docs/BUILD_STATE_LEDGER_DESIGN.md` |
+
+---
+
+## §9 — Strategic posture (per HF audit §6.3)
+
+Per operator decision 2026-05-03: when audit findings force a choice between timeline and scope, **extend timeline. Do not reduce scope.** Module Parity Principle preserved. All Tier 1+2+3 gaps in scope. Research/registry backend in scope.
+
+**Rationale:** TAILRD is clinical decision support; shortcuts in clinical content, missing modules, or skipped tiers become patient safety risk or commercial credibility failures.
+
+**Preliminary timeline revision:** 3-4 months → 7-9 months. v2.0 PATH_TO_ROBUST (due ~2026-05-19) codifies final timeline with all Phase 0 audit inputs.
+
+Source: `docs/audit/PHASE_0B_HF_AUDIT_ADDENDUM.md` §6.3.
 
 ---
 
