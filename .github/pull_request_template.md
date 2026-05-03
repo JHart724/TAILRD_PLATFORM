@@ -59,3 +59,7 @@
 - [ ] Ran smoke tests locally — all green
 - [ ] Checked the danger zones table in REGRESSION_PROTECTION.md
 - [ ] Understand what this change does and why
+
+## BUILD_STATE.md update
+- [ ] BUILD_STATE.md updated to reflect this PR's state changes
+- [ ] N/A (this PR doesn't change build state — explain why in PR description)
