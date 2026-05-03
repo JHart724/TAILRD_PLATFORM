@@ -130,6 +130,67 @@ jobs:
           path: backend/coverage/
           retention-days: 14
 
+  # ─── Migration Validation ──────────────────────────────────────────────────────
+  # AUDIT-025 Phase a (load-bearing). Catches transaction wrapping bugs (PR #220
+  # class), SQL syntax errors that pass `db push` but fail `migrate deploy`,
+  # migration ordering issues, and idempotency violations. Distinct from the
+  # `test` job's `db push --force-reset` (which bypasses the migration runner
+  # entirely). See docs/audit/AUDIT_025_DESIGN.md §5 for full design.
+  migration-validation:
+    name: Migration Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: tailrd_migrate
+          POSTGRES_PASSWORD: tailrd_migrate_pw
+          POSTGRES_DB: tailrd_migrate
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U tailrd_migrate"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://tailrd_migrate:tailrd_migrate_pw@localhost:5432/tailrd_migrate
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache backend node_modules
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: backend/node_modules
+          key: backend-deps-${{ runner.os }}-${{ hashFiles('backend/package-lock.json') }}
+          restore-keys: backend-deps-${{ runner.os }}-
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Generate Prisma client
+        working-directory: backend
+        run: npx prisma generate
+
+      - name: Run prisma migrate deploy against ephemeral postgres
+        working-directory: backend
+        run: |
+          echo "Running prisma migrate deploy against ephemeral postgres:15..."
+          npx prisma migrate deploy
+          echo "Migration validation passed."
+
+      - name: Verify migration table state via prisma migrate status
+        working-directory: backend
+        run: |
+          echo "Verifying _prisma_migrations table state..."
+          npx prisma migrate status
+
   # ─── Security Scan ─────────────────────────────────────────────────────────────
   security-scan:
     name: Security Audit
