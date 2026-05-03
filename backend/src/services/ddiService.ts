@@ -112,9 +112,12 @@ export function checkDDI(
 }
 
 export async function runPatientDDICheck(patientId: string, hospitalId: string): Promise<number> {
+  // AUDIT-011 REFACTOR (2026-05-02): hospitalId already in signature; switched
+  // findUnique → findFirst with hospitalId in where clause. Prior code ignored
+  // the hospitalId parameter, allowing cross-tenant lookups.
   try {
-    const patient = await prisma.patient.findUnique({
-      where: { id: patientId },
+    const patient = await prisma.patient.findFirst({
+      where: { id: patientId, hospitalId },
       include: { medications: { where: { status: 'ACTIVE' } } },
     });
 

@@ -13,6 +13,12 @@
 
 import prisma from '../lib/prisma';
 import { RedoxWebhookPayload } from '../types';
+import { TENANT_GUARD_BYPASS } from '../middleware/tenantGuard';
+// AUDIT-011 LEGITIMATE_BYPASS (2026-05-02): WebhookEvent operations are
+// system-internal idempotency/retry queue. Scope is derived from HMAC-validated
+// payload, not user JWT. The eventId composite includes hospitalId at write
+// time, so reads by eventId are implicitly scoped. Layer 3 reads
+// TENANT_GUARD_BYPASS to skip enforcement for these queries.
 import { createLogger } from 'winston';
 
 const logger = createLogger({ defaultMeta: { service: 'webhook-pipeline' } });
@@ -43,7 +49,8 @@ export async function checkDuplicate(idempotencyKey: string): Promise<{
   const existing = await prisma.webhookEvent.findFirst({
     where: { eventId: idempotencyKey },
     select: { id: true, status: true },
-  });
+    [TENANT_GUARD_BYPASS]: true,
+  } as any);
 
   if (existing && existing.status === 'COMPLETED') {
     logger.info('Duplicate webhook detected — already processed', { idempotencyKey });
@@ -72,7 +79,8 @@ export async function createWebhookRecord(
     await prisma.webhookEvent.update({
       where: { id: existingId },
       data: { status: 'PROCESSING', errorMessage: null },
-    });
+      [TENANT_GUARD_BYPASS]: true,
+    } as any);
     return existingId;
   }
 
@@ -86,7 +94,8 @@ export async function createWebhookRecord(
       rawPayload: payload as any,
       status: 'PROCESSING',
     },
-  });
+    [TENANT_GUARD_BYPASS]: true,
+  } as any);
   return record.id;
 }
 
@@ -96,7 +105,8 @@ export async function markCompleted(webhookEventId: string): Promise<void> {
   await prisma.webhookEvent.update({
     where: { id: webhookEventId },
     data: { status: 'COMPLETED', processedAt: new Date() },
-  });
+    [TENANT_GUARD_BYPASS]: true,
+  } as any);
 }
 
 // ── Mark failure with retry logic ───────────────────────────────────────────
@@ -108,7 +118,8 @@ export async function markFailed(
   const event = await prisma.webhookEvent.findUnique({
     where: { id: webhookEventId },
     select: { retryCount: true },
-  });
+    [TENANT_GUARD_BYPASS]: true,
+  } as any);
 
   const retryCount = (event?.retryCount || 0) + 1;
 
@@ -122,7 +133,8 @@ export async function markFailed(
         retryCount,
         processedAt: new Date(),
       },
-    });
+      [TENANT_GUARD_BYPASS]: true,
+    } as any);
     logger.error('Webhook dead-lettered', { webhookEventId, retryCount, error: error.message });
     return { shouldRetry: false };
   }
@@ -137,7 +149,8 @@ export async function markFailed(
       errorMessage: error.message,
       retryCount,
     },
-  });
+    [TENANT_GUARD_BYPASS]: true,
+  } as any);
 
   logger.warn('Webhook marked for retry', { webhookEventId, retryCount, retryAfterMs });
   return { shouldRetry: true, retryAfterMs };
@@ -153,7 +166,8 @@ export async function processRetryQueue(
     where: { status: 'RETRYING' },
     orderBy: { createdAt: 'asc' },
     take: 10, // Process in batches of 10
-  });
+    [TENANT_GUARD_BYPASS]: true,
+  } as any);
 
   let processed = 0;
   for (const event of retryableEvents) {
@@ -196,5 +210,6 @@ export async function getDeadLetterEvents(
       eventDateTime: true,
       createdAt: true,
     },
-  });
+    [TENANT_GUARD_BYPASS]: true,
+  } as any);
 }

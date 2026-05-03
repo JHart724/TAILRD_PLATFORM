@@ -308,8 +308,8 @@ This phase exists because §11's callsite audit surfaced 2 real bugs and 12 frag
 
 - Fix GAP-1 (`runGapDetectionForPatient.ts:21`) — add hospitalId to patient lookup, switch `findUnique` → `findFirst`
 - Fix GAP-2 (`crossReferralService.ts:811`) — add hospitalId parameter to `getReferralById`, update route caller
-- Refactor 12 `where: { id }` patterns in services + ingestion to include hospitalId (see §11.5 table)
-- Add `[TENANT_GUARD_BYPASS]: true` to 9 LEGITIMATE_BYPASS callsites (see §11.6 table)
+- Refactor 13 `where: { id }` patterns in services + ingestion + routes to include hospitalId (see §11.5 table; 12 from original audit + 1 found during Phase a-pre line verification at `routes/patients.ts:360`)
+- Add `[TENANT_GUARD_BYPASS]: true` to 10 LEGITIMATE_BYPASS callsites (see §11.6 table; 9 from original audit + 1 found during Phase a-pre GAP-2 implementation at `services/crossReferralService.getReferralByIdAcrossTenants` for SUPER_ADMIN cross-tenant referral access)
 - Ship as separate PR ahead of Phase b; reviewable in isolation
 
 ### Phase b: Layer 3 (Prisma extension, flag-controlled)
@@ -469,11 +469,11 @@ A query THROWS under strict Layer 3 if:
 | Category | Count | Description |
 |---|---|---|
 | **PASS** (explicit hospitalId or composite key) | 28 | Already strict-mode-ready |
-| **REFACTOR** (where: { id } pattern needs hospitalId added) | 12 | Correct today via caller validation; needs explicit hospitalId for Layer 3 |
-| **LEGITIMATE_BYPASS** (system-internal, payload-resolved scope) | 9 | Webhook ingest + audit logging |
+| **REFACTOR** (where: { id } pattern needs hospitalId added) | 13 | Correct today via caller validation; needs explicit hospitalId for Layer 3. Includes 1 site discovered during Phase a-pre line-number verification (see §11.5). |
+| **LEGITIMATE_BYPASS** (system-internal, payload-resolved scope) | 11 | Webhook ingest (9) + audit logging (1) + SUPER_ADMIN cross-tenant access (2: referral + phenotype). Added during Phase a-pre execution as role-based bypass paths surfaced — see §11.4.1, §11.4.2. |
 | **GAP** (real bug; cross-tenant exposure today) | 2 | Must fix before Layer 3 ships |
 | **EXEMPT** (archived / dev script, not production runtime) | 6 | `services/_archived/*`, `scripts/ingestSynthea.ts` |
-| **Total** | **57** | (some files have multiple callsites) |
+| **Total** | **60** | (some files have multiple callsites) |
 
 ### 11.4 GAP findings — must fix before Layer 3
 
@@ -505,6 +505,25 @@ async getReferralById(referralId: string): Promise<any | null> {
 
 **Fix:** Add `hospitalId` parameter to `getReferralById(referralId, hospitalId)` and include in where clause: `findFirst({ where: { id: referralId, hospitalId } })`. Update the route caller.
 
+**Architectural decision (2026-05-02):** Phase a-pre execution surfaced that `routes/referrals.ts:296` has a SUPER_ADMIN cross-tenant access path. Naive `getReferralById(referralId, req.user.hospitalId)` would regress this — SUPER_ADMIN would no longer see referrals from any other hospital. Resolved by introducing a second service method `getReferralByIdAcrossTenants` with `TENANT_GUARD_BYPASS` marker, dispatched from the route based on `req.user.role`. Adds 1 LEGITIMATE_BYPASS site (now 10 total).
+
+### 11.4.1 Phase a-pre execution addendum (2026-05-02)
+
+During Phase a-pre line-number verification, 1 additional REFACTOR site was discovered: `routes/patients.ts:360` (DELETE handler soft-delete). Same fragile pattern as YELLOW-2 line 299 (PUT update). Folded into the Phase a-pre PR per the robust/no-tech-debt principle — deferring would leave a known site for Layer 3 to catch later.
+
+During Phase a-pre GAP-2 implementation, 1 additional LEGITIMATE_BYPASS site was discovered: `services/crossReferralService.getReferralByIdAcrossTenants` (new method) for SUPER_ADMIN cross-tenant referral access. Route handler `routes/referrals.ts:285-302` dispatches based on `req.user.role`.
+
+This is reflected in §11.3 (REFACTOR 12 → 13, BYPASS 9 → 10, total 57 → 59) and §11.5 (13th row added) + §11.6 (10th row added).
+
+### 11.4.2 Phase a-pre lessons learned (2026-05-02)
+
+**Design audit gap surfaced:** Original §11 audit checked service-layer Prisma callsites for cross-tenant patterns but did not check route handlers for role-based bypass paths (e.g., `req.user.role === 'SUPER_ADMIN'` post-fetch validation). The crossReferralService GAP-2 fix surfaced that `routes/referrals.ts` has SUPER_ADMIN cross-tenant access via post-fetch role check; naive scoping would have regressed it.
+
+**Future Layer 3 readiness audits should:**
+1. Grep route handlers for role-based bypass patterns: `req.user.role === 'SUPER_ADMIN'`, `isSuperAdmin`, allow-listed roles
+2. Trace what cross-tenant access each enables (read or write?)
+3. Plan corresponding `*AcrossTenants` service methods OR explicit bypass-symbol callsites in advance, not as discoveries during implementation
+
 ### 11.5 REFACTOR list — `where: { id }` patterns needing hospitalId added
 
 Each is correct today (caller-validated ownership) but Layer 3 throws. Trivial 1-line edit per site: add `hospitalId` to the where clause where the function already has it in scope.
@@ -521,10 +540,11 @@ Each is correct today (caller-validated ownership) but Layer 3 throws. Trivial 1
 | `services/phenotypeService.ts` | 542 | `phenotype.findUnique({ where: { id: phenotypeId } })` | Caller has hospitalId; thread through |
 | `services/phenotypeService.ts` | 579 | `phenotype.findMany({ where: { patientId }, ... })` | Service has hospitalId; add it |
 | `services/phenotypeService.ts` | 603 | `phenotype.update({ where: { id: phenotypeId }, ... })` | Service has hospitalId; thread through |
-| `routes/patients.ts` | 299 | `patient.update({ where: { id }, ... })` | YELLOW-2 from §2.4 |
-| `routes/gaps.ts` | 161 | `therapyGap.update({ where: { id }, ... })` | YELLOW-1 from §2.4 |
+| `routes/patients.ts` | 299 | `patient.update({ where: { id }, ... })` | YELLOW-2 from §2.4 (PUT handler) |
+| `routes/patients.ts` | 360 | `patient.update({ where: { id }, ... })` (soft-delete) | YELLOW-3 — same fragile pattern as YELLOW-2, in the DELETE handler. Discovered during Phase a-pre line-number verification (2026-05-02); see §11.4.1. |
+| `routes/gaps.ts` | 157 | `therapyGap.update({ where: { id }, ... })` | YELLOW-1 from §2.4 (note: actual line is 157, not 161 as originally written; cosmetic drift) |
 
-**Total: 12 callsites. Effort: ~30 minutes mechanical edits + ~1h test updates.**
+**Total: 13 callsites. Effort: ~30 minutes mechanical edits + ~1h test updates.**
 
 ### 11.6 LEGITIMATE_BYPASS list — bypass symbol applies
 
@@ -534,8 +554,10 @@ These are intentional cross-tenant or system-internal operations. Apply `[TENANT
 |---|---|---|
 | `middleware/auditLogger.ts` | 163 | `AuditLog.create` with nullable hospitalId for unauthenticated audit events (failed-login attempts, etc.). System-level audit trail, not user-scoped. |
 | `services/webhookPipeline.ts` | 43, 72, 79, 96, 108, 117, 133, 152, 182 | `WebhookEvent` is the idempotency/retry queue for inbound Redox FHIR ingest. Scope is derived from the HMAC-validated payload, not user JWT. The eventId composite includes hospitalId at line 32 of write, so reads by `eventId` are implicitly scoped. Layer 3 should accept these explicitly via bypass. |
+| `services/crossReferralService.ts` | new method `getReferralByIdAcrossTenants` | SUPER_ADMIN cross-tenant referral access. Gated by route-level `req.user.role === 'SUPER_ADMIN'` check in `routes/referrals.ts`. Surfaced during Phase a-pre GAP-2 implementation; design audit missed role-based bypass paths in route handlers (see §11.4.2). |
+| `services/phenotypeService.ts` | new method `getPhenotypeByIdAcrossTenants` | SUPER_ADMIN cross-tenant phenotype access. Gated by route-level `req.user.role === 'SUPER_ADMIN'` check in `routes/phenotypes.ts` (PUT /:id/confirm). Same pattern as crossReferralService — surfaced during Phase a-pre Step 100.5c implementation when `getPhenotypeById` signature change forced the SUPER_ADMIN regression analysis. Confirms §11.4.2 lesson that role-based bypass paths recur across route handlers. |
 
-**Total: 9 callsites with bypass symbol.**
+**Total: 11 callsites with bypass symbol** (9 from original audit + 2 SUPER_ADMIN cross-tenant service methods discovered during Phase a-pre).
 
 ### 11.7 EXEMPT (not loaded in production runtime)
 

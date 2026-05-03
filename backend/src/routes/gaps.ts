@@ -154,8 +154,11 @@ router.post('/:moduleId/:gapId/action', authenticateToken, authorizeRole(['SUPER
       return res.status(404).json({ error: 'Gap not found' });
     }
 
+    // AUDIT-011 REFACTOR YELLOW-1 (2026-05-02): tenant-scoped update via
+    // composite key id_hospitalId added in migration 20260502000000. Caller
+    // uses the returned row, so update (not updateMany) is needed.
     const updated = await prisma.therapyGap.update({
-      where: { id: gap.id },
+      where: { id_hospitalId: { id: gap.id, hospitalId } },
       data: {
         currentStatus: action,
         resolvedAt: ['INITIATED', 'CONTRAINDICATED'].includes(action) ? new Date() : null,

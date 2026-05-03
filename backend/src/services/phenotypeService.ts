@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { logger } from '../utils/logger';
+import { TENANT_GUARD_BYPASS } from '../middleware/tenantGuard';
 
 export interface PhenotypeDetectionResult {
   id: string;
@@ -160,7 +161,7 @@ export class PhenotypeService {
   ): Promise<PhenotypeDetectionResult | null> {
     
     // Get patient data needed for screening
-    const patientData = await this.getPatientDataForScreening(patientId);
+    const patientData = await this.getPatientDataForScreening(patientId, hospitalId);
     
     if (!patientData) {
       return null;
@@ -485,11 +486,14 @@ export class PhenotypeService {
 
   /**
    * Get patient data needed for phenotype screening
+   * AUDIT-011 REFACTOR (2026-05-02): hospitalId added to signature; findUnique
+   * → findFirst with hospitalId scope. Caller (runSinglePhenotypeScreen) has
+   * hospitalId in scope.
    */
-  private async getPatientDataForScreening(patientId: string): Promise<any> {
+  private async getPatientDataForScreening(patientId: string, hospitalId: string): Promise<any> {
     try {
-      return await this.prisma.patient.findUnique({
-        where: { id: patientId },
+      return await this.prisma.patient.findFirst({
+        where: { id: patientId, hospitalId },
         include: {
           encounters: true,
           observations: {
@@ -536,15 +540,38 @@ export class PhenotypeService {
 
   /**
    * Get a single phenotype detection by ID
+   * AUDIT-011 REFACTOR (2026-05-02): hospitalId added to signature; findUnique
+   * → findFirst with hospitalId scope. Caller (routes/phenotypes.ts PUT
+   * /:id/confirm) has req.user.hospitalId in scope.
    */
-  async getPhenotypeById(phenotypeId: string): Promise<PhenotypeDetectionResult | null> {
+  async getPhenotypeById(phenotypeId: string, hospitalId: string): Promise<PhenotypeDetectionResult | null> {
     try {
-      const record = await this.prisma.phenotype.findUnique({
-        where: { id: phenotypeId }
+      const record = await this.prisma.phenotype.findFirst({
+        where: { id: phenotypeId, hospitalId }
       });
       return record as unknown as PhenotypeDetectionResult | null;
     } catch (error) {
       logger.error('Failed to get phenotype by ID', { error, phenotypeId });
+      return null;
+    }
+  }
+
+  /**
+   * SUPER_ADMIN cross-tenant phenotype lookup. Route caller validates
+   * req.user.role === 'SUPER_ADMIN' before invoking this method.
+   * AUDIT-011 LEGITIMATE_BYPASS (2026-05-02): same pattern as
+   * crossReferralService.getReferralByIdAcrossTenants — surfaced during
+   * Phase a-pre as a 2nd role-based bypass route handler.
+   */
+  async getPhenotypeByIdAcrossTenants(phenotypeId: string): Promise<PhenotypeDetectionResult | null> {
+    try {
+      const record = await this.prisma.phenotype.findUnique({
+        where: { id: phenotypeId },
+        [TENANT_GUARD_BYPASS]: true,
+      } as any);
+      return record as unknown as PhenotypeDetectionResult | null;
+    } catch (error) {
+      logger.error('Failed to get phenotype by ID (cross-tenant)', { error, phenotypeId });
       return null;
     }
   }
@@ -573,11 +600,14 @@ export class PhenotypeService {
 
   /**
    * Get phenotype history for patient
+   * AUDIT-011 REFACTOR (2026-05-02): hospitalId added to signature + where
+   * clause. Caller (routes/phenotypes.ts GET /:patientId) has
+   * req.user.hospitalId in scope.
    */
-  async getPhenotypeHistory(patientId: string): Promise<any[]> {
+  async getPhenotypeHistory(patientId: string, hospitalId: string): Promise<any[]> {
     try {
       return await this.prisma.phenotype.findMany({
-        where: { patientId },
+        where: { patientId, hospitalId },
         orderBy: { detectedAt: 'desc' },
         include: {
           hospital: {
@@ -595,13 +625,17 @@ export class PhenotypeService {
    * Update phenotype status (e.g., confirmed by physician)
    */
   async updatePhenotypeStatus(
-    phenotypeId: string, 
-    status: PhenotypeStatus, 
+    phenotypeId: string,
+    hospitalId: string,
+    status: PhenotypeStatus,
     confirmedBy?: string
   ): Promise<void> {
+    // AUDIT-011 REFACTOR (2026-05-02): hospitalId added to signature; update →
+    // updateMany with hospitalId scope. Return value not used. Caller
+    // (routes/phenotypes.ts PUT /:id/confirm) has req.user.hospitalId in scope.
     try {
-      await this.prisma.phenotype.update({
-        where: { id: phenotypeId },
+      await this.prisma.phenotype.updateMany({
+        where: { id: phenotypeId, hospitalId },
         data: {
           status,
           confirmedAt: status === PhenotypeStatus.CONFIRMED ? new Date() : null,

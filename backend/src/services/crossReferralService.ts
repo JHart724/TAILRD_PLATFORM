@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { logger } from '../utils/logger';
+import { TENANT_GUARD_BYPASS } from '../middleware/tenantGuard';
 
 export interface CrossReferralTrigger {
   patientId: string;
@@ -263,7 +264,7 @@ export class CrossReferralService {
   private async evaluateReferralTrigger(trigger: CrossReferralTrigger): Promise<CrossReferralEvaluation | null> {
     try {
       // Check if patient is eligible for target module
-      const isEligible = await this.checkModuleEligibility(trigger.patientId, trigger.toModule);
+      const isEligible = await this.checkModuleEligibility(trigger.patientId, trigger.hospitalId, trigger.toModule);
       if (!isEligible) {
         logger.debug('Patient not eligible for target module', {
           patientId: trigger.patientId,
@@ -275,6 +276,7 @@ export class CrossReferralService {
       // Check for recent similar referrals to avoid duplicates
       const recentReferral = await this.findRecentSimilarReferral(
         trigger.patientId,
+        trigger.hospitalId,
         trigger.fromModule,
         trigger.toModule,
         7 // days
@@ -370,6 +372,7 @@ export class CrossReferralService {
    */
   async updateReferralStatus(
     referralId: string,
+    hospitalId: string,
     status: ReferralStatus,
     updatedBy: string,
     notes?: string
@@ -399,8 +402,11 @@ export class CrossReferralService {
         updateData.notes = notes;
       }
 
-      await this.prisma.crossReferral.update({
-        where: { id: referralId },
+      // AUDIT-011 REFACTOR (2026-05-02): hospitalId added to signature and
+      // where clause; switched update → updateMany since return value is
+      // not used. Caller in routes/referrals.ts updated to thread hospitalId.
+      await this.prisma.crossReferral.updateMany({
+        where: { id: referralId, hospitalId },
         data: updateData
       });
 
@@ -537,10 +543,14 @@ export class CrossReferralService {
     return mappings[phenotype] || [];
   }
 
-  private async checkModuleEligibility(patientId: string, module: ModuleType): Promise<boolean> {
+  private async checkModuleEligibility(patientId: string, hospitalId: string, module: ModuleType): Promise<boolean> {
+    // AUDIT-011 REFACTOR (2026-05-02): hospitalId added to signature and where
+    // clause. findUnique → findFirst because composite where { id, hospitalId }
+    // is not a unique-key shape on Patient unless using id_hospitalId. Caller
+    // (evaluateReferralTrigger) has trigger.hospitalId in scope.
     try {
-      const patient = await this.prisma.patient.findUnique({
-        where: { id: patientId },
+      const patient = await this.prisma.patient.findFirst({
+        where: { id: patientId, hospitalId },
         include: { hospital: true }
       });
 
@@ -572,10 +582,13 @@ export class CrossReferralService {
 
   private async findRecentSimilarReferral(
     patientId: string,
+    hospitalId: string,
     fromModule: ModuleType,
     toModule: ModuleType,
     withinDays: number
   ): Promise<any> {
+    // AUDIT-011 REFACTOR (2026-05-02): hospitalId added to signature and where
+    // clause. Caller (evaluateReferralTrigger) has trigger.hospitalId in scope.
     try {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - withinDays);
@@ -583,6 +596,7 @@ export class CrossReferralService {
       return await this.prisma.crossReferral.findFirst({
         where: {
           patientId,
+          hospitalId,
           fromModule,
           toModule,
           triggeredAt: { gte: cutoffDate },
@@ -806,11 +820,35 @@ export class CrossReferralService {
     }
   }
 
-  async getReferralById(referralId: string): Promise<any | null> {
+  async getReferralById(referralId: string, hospitalId: string): Promise<any | null> {
+    // AUDIT-011 GAP-2 fix (2026-05-02): added hospitalId parameter and switched
+    // findUnique → findFirst with hospitalId in where. Prior code loaded
+    // cross-tenant referral PHI before route handler's post-fetch validation.
+    // Caller in routes/referrals.ts (PUT /:id/status) updated to thread hospitalId.
+    // SUPER_ADMIN cross-tenant access uses the sibling getReferralByIdAcrossTenants
+    // method below.
     try {
-      return await this.prisma.crossReferral.findUnique({ where: { id: referralId } });
+      return await this.prisma.crossReferral.findFirst({ where: { id: referralId, hospitalId } });
     } catch (error) {
       logger.error('Failed to get referral by id', { error, referralId });
+      return null;
+    }
+  }
+
+  async getReferralByIdAcrossTenants(referralId: string): Promise<any | null> {
+    // AUDIT-011 LEGITIMATE_BYPASS (2026-05-02): SUPER_ADMIN cross-tenant referral
+    // access. The route handler at routes/referrals.ts validates
+    // req.user.role === 'SUPER_ADMIN' before invoking this method. Layer 3
+    // (planned, AUDIT_011_DESIGN.md §6 Phase b) will read TENANT_GUARD_BYPASS
+    // and skip hospitalId enforcement for this query. Until Phase b ships,
+    // the symbol is a no-op marker.
+    try {
+      return await this.prisma.crossReferral.findUnique({
+        where: { id: referralId },
+        [TENANT_GUARD_BYPASS]: true,
+      } as any);
+    } catch (error) {
+      logger.error('Failed to get referral by id (cross-tenant)', { error, referralId });
       return null;
     }
   }

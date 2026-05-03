@@ -265,7 +265,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 
 Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see `docs/audit/AUDIT_011_DESIGN.md` §11). Bundled into AUDIT-011 remediation Phase a-pre.
 
-- **Remediation:** Defense-in-depth across 3 layers (see `docs/audit/AUDIT_011_DESIGN.md`): Layer 1 fail-loud `authorizeHospital`; Layer 2 new `enforceHospitalScope` middleware; Layer 3 Prisma client extension `TENANT_GUARD_STRICT` (env-flag rollout). Plus: 12 REFACTOR sites (where: { id } → where: { id, hospitalId }), 9 LEGITIMATE_BYPASS markers (webhook + audit logging), GAP-1 + GAP-2 fixes, 60-80 cross-tenant integration tests.
+- **Remediation:** Defense-in-depth across 3 layers (see `docs/audit/AUDIT_011_DESIGN.md`): Layer 1 fail-loud `authorizeHospital`; Layer 2 new `enforceHospitalScope` middleware; Layer 3 Prisma client extension `TENANT_GUARD_STRICT` (env-flag rollout). Plus: 13 REFACTOR sites (where: { id } → where: { id, hospitalId }; 12 from original audit + 1 found during Phase a-pre line verification at `routes/patients.ts:360`), 11 LEGITIMATE_BYPASS markers (9 from original audit + 2 found during Phase a-pre at `crossReferralService.getReferralByIdAcrossTenants` and `phenotypeService.getPhenotypeByIdAcrossTenants` for SUPER_ADMIN cross-tenant access), GAP-1 + GAP-2 fixes, 60-80 cross-tenant integration tests.
 - **Effort estimate:** Revised to M (11.5-15.5h) — original L (16-24h) lowered after §2 audit found 0 RED routes; raised again by §11 callsite audit (+3-4h pre-flag-flip work).
 - **Cross-references:** Tech debt #5, AUDIT-001, `docs/audit/AUDIT_011_DESIGN.md`
 

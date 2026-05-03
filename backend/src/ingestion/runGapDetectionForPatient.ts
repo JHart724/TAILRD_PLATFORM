@@ -18,8 +18,14 @@ export async function runGapDetectionForPatient(
   const startTime = Date.now();
 
   try {
-    const patient = await prisma.patient.findUnique({
-      where: { id: patientId },
+    // AUDIT-011 GAP-1 fix (2026-05-02): switched findUnique → findFirst with
+    // hospitalId in where. Function receives hospitalId as parameter (line 16);
+    // prior code ignored it, allowing cross-tenant patient PHI to load into
+    // memory if a webhook caller passed a mismatched (patientId, hospitalId).
+    // findFirst preserves found-row semantics (id is unique) and adds the
+    // tenant scope filter; cross-tenant lookups return null → no-op return below.
+    const patient = await prisma.patient.findFirst({
+      where: { id: patientId, hospitalId },
       include: {
         conditions: true,
         medications: { where: { status: 'ACTIVE' } },
@@ -86,9 +92,12 @@ export async function runGapDetectionForPatient(
     }
 
     if (toUpdate.length > 0) {
+      // AUDIT-011 REFACTOR (2026-05-02): update → updateMany with hospitalId
+      // scope. update.where requires unique-key shape; updateMany accepts
+      // arbitrary where. Return value not used in this transaction.
       await prisma.$transaction(
-        toUpdate.map(u => prisma.therapyGap.update({
-          where: { id: u.id },
+        toUpdate.map(u => prisma.therapyGap.updateMany({
+          where: { id: u.id, hospitalId },
           data: { currentStatus: u.status },
         }))
       );
