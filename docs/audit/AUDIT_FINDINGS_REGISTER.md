@@ -413,6 +413,41 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ---
 
+### AUDIT-024 — Prisma migration runner wraps raw SQL in transactions; CONCURRENTLY index pattern requires multi-step deploy
+
+- **Phase:** Operations / migration tooling
+- **Severity:** LOW (P3) — pattern issue, not security
+- **Status:** OPEN
+- **Tier:** C
+- **Detected:** 2026-05-03 during AUDIT-011 Phase a-pre deploy (PR #220)
+- **Evidence:** Migration `20260502000000_audit_011_tenant_scoped_unique_keys` used `CREATE UNIQUE INDEX CONCURRENTLY` to avoid write-blocking. Prisma 5.22's migrate runner wraps migration SQL in a transaction; PG rejected with error 25001 ("CREATE INDEX CONCURRENTLY cannot run inside a transaction block"). Production deploy crashlooped on `:144` until rollback to `:143`. Migration row marked `rolled_back_at` via direct UPDATE on `_prisma_migrations` (Fargate one-off task `3e56e40dbe924ff089f5ce2222ce409c`).
+- **Workaround applied (PR #221):** Removed CONCURRENTLY from this migration. At pilot-stage row counts the brief SHARE lock during index build is sub-second and acceptable.
+- **Remediation:** Investigate proper non-transactional migration pattern for future migrations on larger tables. Options:
+  - Apply CONCURRENTLY indexes via direct DB connection before deploying app code (manual ops step, two-PR pattern)
+  - Use `prisma migrate diff` to generate SQL, apply out-of-band via Fargate one-off, then `prisma migrate resolve --applied` to mark recorded
+  - Investigate if Prisma 5.x has added a `--prisma:no-transaction` directive
+- **Effort estimate:** S (2-4h) — research + runbook authoring + one test run
+- **Cross-references:** AUDIT-011 (Phase a-pre PR #220 failure), AUDIT-025 (the staging-environment gap that allowed this to ship)
+
+---
+
+### AUDIT-025 — No staging environment for Aurora schema migrations
+
+- **Phase:** Infrastructure
+- **Severity:** MEDIUM (P2) — real risk to future schema changes; surfaced via AUDIT-011 deploy failure
+- **Status:** OPEN
+- **Tier:** B
+- **Detected:** 2026-05-03 during AUDIT-011 Phase a-pre deploy
+- **Evidence:** `prisma migrate dev` (used locally + in CI) does not replicate `prisma migrate deploy`'s transaction semantics. CI test pipeline uses `prisma db push --force-reset` (per workflow inspection in Phase 95) which bypasses the migration runner entirely. There is currently no pre-prod environment where `prisma migrate deploy` runs against a production-equivalent database. AUDIT-011 Phase a-pre PR #220 (a CONCURRENTLY-using migration) passed CI cleanly and crashlooped only when the production container ran `prisma migrate deploy` for the first time.
+- **Severity rationale:** Future schema migrations have no pre-prod verification path. Any migration that interacts with `prisma migrate deploy` semantics (transaction wrapping, idempotency rules, rollback states) can fail only at production deploy time. With BSW pilot live and more migrations expected (AUDIT-022 backfill, AUDIT-016 key rotation, future feature schema), this gap will recur.
+- **Remediation:** Stand up an Aurora staging instance (single small ServerlessV2 cluster, no PHI, periodic schema sync from production) where:
+  - GitHub Actions runs `prisma migrate deploy` against staging on every PR before merging to main
+  - Failed staging migrations block PR merge
+- **Effort estimate:** M (8-12h) — Aurora staging cluster + IAM + CI workflow + backfill once
+- **Cross-references:** AUDIT-024, BSW pilot risk
+
+---
+
 ## Phase status
 
 | Phase | Dimension | Findings count | Status |

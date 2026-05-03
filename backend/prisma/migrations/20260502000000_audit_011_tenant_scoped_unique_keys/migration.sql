@@ -10,14 +10,18 @@
 -- requires the @@unique declaration to expose the id_hospitalId composite
 -- in the generated WhereUniqueInput type, which is what update.where needs.
 --
--- CONCURRENTLY: avoids any write-blocking during index build. BSW pilot
--- is live; this is the production-safe default for additive index migrations
--- going forward. Postgres rejects CONCURRENTLY inside a transaction block,
--- so this migration intentionally contains only top-level CREATE INDEX
--- statements with no BEGIN/COMMIT wrapper.
+-- HISTORICAL NOTE: PR #220's first deploy attempt used CREATE UNIQUE INDEX
+-- CONCURRENTLY here. Prisma 5.22's migrate runner wraps every migration in
+-- a transaction; Postgres rejected with error 25001 ("CREATE INDEX
+-- CONCURRENTLY cannot run inside a transaction block"). Production deploy
+-- crashlooped on :144 until rollback to :143. See AUDIT-024 (register).
+-- Removed CONCURRENTLY here; at pilot-stage row counts (Patient ~thousands,
+-- TherapyGap moderate) the SHARE lock during index build is sub-second.
+-- For future migrations on larger tables, use the multi-step deploy pattern
+-- documented under AUDIT-024 remediation.
 
-CREATE UNIQUE INDEX CONCURRENTLY "patients_id_hospitalId_key"
+CREATE UNIQUE INDEX "patients_id_hospitalId_key"
   ON "patients"("id", "hospitalId");
 
-CREATE UNIQUE INDEX CONCURRENTLY "therapy_gaps_id_hospitalId_key"
+CREATE UNIQUE INDEX "therapy_gaps_id_hospitalId_key"
   ON "therapy_gaps"("id", "hospitalId");
