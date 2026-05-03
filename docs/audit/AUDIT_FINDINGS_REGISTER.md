@@ -431,20 +431,29 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ---
 
-### AUDIT-025 — No staging environment for Aurora schema migrations
+### AUDIT-025 — Schema migration validation gate (originally framed as "no staging environment")
 
 - **Phase:** Infrastructure
 - **Severity:** MEDIUM (P2) — real risk to future schema changes; surfaced via AUDIT-011 deploy failure
-- **Status:** OPEN
+- **Status:** OPEN (design complete 2026-05-03; Phase a/b implementation pending)
 - **Tier:** B
 - **Detected:** 2026-05-03 during AUDIT-011 Phase a-pre deploy
-- **Evidence:** `prisma migrate dev` (used locally + in CI) does not replicate `prisma migrate deploy`'s transaction semantics. CI test pipeline uses `prisma db push --force-reset` (per workflow inspection in Phase 95) which bypasses the migration runner entirely. There is currently no pre-prod environment where `prisma migrate deploy` runs against a production-equivalent database. AUDIT-011 Phase a-pre PR #220 (a CONCURRENTLY-using migration) passed CI cleanly and crashlooped only when the production container ran `prisma migrate deploy` for the first time.
-- **Severity rationale:** Future schema migrations have no pre-prod verification path. Any migration that interacts with `prisma migrate deploy` semantics (transaction wrapping, idempotency rules, rollback states) can fail only at production deploy time. With BSW pilot live and more migrations expected (AUDIT-022 backfill, AUDIT-016 key rotation, future feature schema), this gap will recur.
-- **Remediation:** Stand up an Aurora staging instance (single small ServerlessV2 cluster, no PHI, periodic schema sync from production) where:
-  - GitHub Actions runs `prisma migrate deploy` against staging on every PR before merging to main
-  - Failed staging migrations block PR merge
-- **Effort estimate:** M (8-12h) — Aurora staging cluster + IAM + CI workflow + backfill once
-- **Cross-references:** AUDIT-024, BSW pilot risk
+- **Reframed scope (per `docs/audit/AUDIT_025_DESIGN.md` §2 investigation):** Investigation revealed staging Aurora cluster + ECS + deploy pipeline already operational since 2026-04-28 (per CLAUDE.md). Original "no staging environment" framing was inaccurate. Real gap is two-layered: (1) CI uses `prisma db push --force-reset` which bypasses the migration runner entirely; (2) staging deploy fires *parallel* with production post-merge, not as a pre-merge gate.
+- **Evidence:** `prisma db push` does not execute migration SQL files and does not wrap operations in transactions the way `migrate deploy` does. The CONCURRENTLY-in-transaction failure that caused PR #220 was therefore invisible to CI. Staging crashlooped identically to production at 18:25-18:35Z UTC on 2026-05-03, proving migration determinism but not the gate (timing was wrong).
+- **Severity rationale:** Future schema migrations have no pre-merge verification path against the migration runner's actual semantics. With BSW pilot live and more migrations expected (AUDIT-022 backfill, AUDIT-016 key rotation, future feature schema), this gap will recur without remediation.
+- **Remediation:** 2-phase fix using existing infrastructure (no new cluster needed):
+  - **Phase a (load-bearing, 1-2h):** New CI job `Migration Validation` runs `prisma migrate deploy` against an isolated postgres:15 service container. Required check before merge.
+  - **Phase b (belt-and-suspenders, 1-2h):** New CI job `Staging Migration Validation` runs `prisma migrate deploy` against `tailrd-staging-aurora` directly via STAGING_DATABASE_URL secret. Required check before merge. GitHub Actions concurrency group prevents PR collisions.
+  - **Phase c (deferred):** Schema drift verification.
+- **Effort estimate:** S (2-4h) — revised down from M (8-12h) after §2 investigation revealed staging cluster already operational. See `docs/audit/AUDIT_025_DESIGN.md` §9 for itemized breakdown.
+- **Cross-references:**
+  - `docs/audit/AUDIT_025_DESIGN.md` (full design)
+  - AUDIT-024 (CONCURRENTLY pattern; remediation depends on AUDIT-025 Phase b being live)
+  - AUDIT-022 (next migration that would benefit; 243 PHI rows backfill)
+  - AUDIT-011 (the finding that surfaced AUDIT-025 via PR #220 production incident)
+  - PR #220, PR #221 (the incident)
+  - BSW pilot risk
+  - **`AUDIT_025_DESIGN.md` §12.4** proposes an actionable template change for future audit design docs (Pre-flight inventory checklist, scope-speculative tagging on mid-incident register entries). Worth adopting across audits.
 
 ---
 
