@@ -3,6 +3,11 @@ import path from 'path';
 import { Request } from 'express';
 import prisma from '../lib/prisma';
 import { AuthenticatedRequest } from '../middleware/auth';
+import { TENANT_GUARD_BYPASS } from './tenantGuard';
+// AUDIT-011 LEGITIMATE_BYPASS (2026-05-02): AuditLog.create has nullable
+// hospitalId for unauthenticated audit events (failed login attempts, etc.).
+// System-level audit trail, not user-scoped. Layer 3 reads TENANT_GUARD_BYPASS
+// to skip enforcement for these writes.
 
 // ─── Audit Log Directory ────────────────────────────────────────────────────────
 const LOG_DIR = path.resolve(__dirname, '../../logs');
@@ -174,7 +179,8 @@ async function writeAuditLog(
         previousValues: entry.previousValues as any,
         newValues: entry.newValues as any,
       },
-    });
+      [TENANT_GUARD_BYPASS]: true,
+    } as any);
   } catch (dbError) {
     auditLogger.error('audit_db_write_failed', {
       error: dbError instanceof Error ? dbError.message : String(dbError),

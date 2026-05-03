@@ -281,9 +281,16 @@ router.put('/:id/status',
 
       const service = await initializeReferralService();
 
-      // Get the referral first to verify access
-      const referral = await service.getReferralById(referralId);
-      
+      // AUDIT-011 GAP-2 fix (2026-05-02): role-based dispatch.
+      // Non-SUPER_ADMIN: scoped lookup via getReferralById(referralId, hospitalId).
+      // SUPER_ADMIN: cross-tenant lookup via getReferralByIdAcrossTenants
+      // (uses TENANT_GUARD_BYPASS marker, gated by role check above).
+      // Prior code (findUnique with no hospitalId scope) loaded cross-tenant
+      // referral PHI before the post-fetch role check below.
+      const referral = req.user?.role === 'SUPER_ADMIN'
+        ? await service.getReferralByIdAcrossTenants(referralId)
+        : await service.getReferralById(referralId, req.user!.hospitalId);
+
       if (!referral) {
         return res.status(404).json({
           success: false,
@@ -292,7 +299,8 @@ router.put('/:id/status',
         } as APIResponse);
       }
 
-      // Verify user has access to this referral
+      // Defense-in-depth: post-fetch role + tenant check (redundant with the
+      // dispatch above but kept as fail-safe in case the dispatch logic regresses).
       if (req.user?.hospitalId !== referral.hospitalId && req.user?.role !== 'SUPER_ADMIN') {
         return res.status(403).json({
           success: false,
@@ -309,9 +317,16 @@ router.put('/:id/status',
         userId: req.user?.userId
       });
 
-      // Update referral status with audit trail
+      // Update referral status with audit trail.
+      // AUDIT-011 REFACTOR (2026-05-02): hospitalId threaded for tenant-scoped
+      // service write. SUPER_ADMIN cross-tenant updates use referral.hospitalId
+      // (the row already loaded above), not req.user.hospitalId.
+      const writeHospitalId = req.user?.role === 'SUPER_ADMIN'
+        ? referral.hospitalId
+        : req.user!.hospitalId;
       await service.updateReferralStatus(
         referralId,
+        writeHospitalId,
         status as ReferralStatus,
         req.user?.userId!,
         notes

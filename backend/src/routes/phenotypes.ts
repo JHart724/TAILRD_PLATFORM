@@ -76,7 +76,7 @@ router.get('/:patientId',
       const service = initializePhenotypeService();
 
       // Get phenotype history for patient
-      const phenotypes = await service.getPhenotypeHistory(patientId);
+      const phenotypes = await service.getPhenotypeHistory(patientId, req.user!.hospitalId);
 
       // Get summary statistics
       const summary = await service.getPatientPhenotypeSummary(patientId);
@@ -332,8 +332,13 @@ router.put('/:id/confirm',
 
       const service = initializePhenotypeService();
 
-      // Get the phenotype detection first
-      const phenotype = await service.getPhenotypeById(phenotypeId);
+      // AUDIT-011 GAP-2-style fix (2026-05-02): role-based dispatch.
+      // Non-SUPER_ADMIN: scoped lookup via getPhenotypeById(phenotypeId, hospitalId).
+      // SUPER_ADMIN: cross-tenant lookup via getPhenotypeByIdAcrossTenants
+      // (TENANT_GUARD_BYPASS marker, gated by role check).
+      const phenotype = req.user?.role === 'SUPER_ADMIN'
+        ? await service.getPhenotypeByIdAcrossTenants(phenotypeId)
+        : await service.getPhenotypeById(phenotypeId, req.user!.hospitalId);
 
       if (!phenotype) {
         return res.status(404).json({
@@ -343,7 +348,8 @@ router.put('/:id/confirm',
         } as APIResponse);
       }
 
-      // Verify user has access to this patient's hospital
+      // Defense-in-depth: post-fetch role + tenant check (redundant with the
+      // dispatch above but kept as fail-safe in case the dispatch logic regresses).
       if (req.user?.hospitalId !== phenotype.hospitalId && req.user?.role !== 'SUPER_ADMIN') {
         return res.status(403).json({
           success: false,
@@ -362,9 +368,15 @@ router.put('/:id/confirm',
         userId: req.user?.userId
       });
 
-      // Update phenotype status
+      // Update phenotype status.
+      // AUDIT-011 REFACTOR (2026-05-02): hospitalId threaded for tenant-scoped
+      // service write. SUPER_ADMIN cross-tenant updates use phenotype.hospitalId
+      // (the row already loaded above), not req.user.hospitalId.
       const newStatus = action === 'confirm' ? PhenotypeStatus.CONFIRMED : PhenotypeStatus.RULED_OUT;
-      await service.updatePhenotypeStatus(phenotypeId, newStatus, req.user?.userId);
+      const writeHospitalId = req.user?.role === 'SUPER_ADMIN'
+        ? phenotype.hospitalId
+        : req.user!.hospitalId;
+      await service.updatePhenotypeStatus(phenotypeId, writeHospitalId, newStatus, req.user?.userId);
 
       res.json({
         success: true,

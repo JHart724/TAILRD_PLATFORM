@@ -278,6 +278,7 @@ model Patient {
   webhookEvents         WebhookEvent[]
 
   @@unique([hospitalId, mrn]) // MRN is unique within each hospital
+  @@unique([id, hospitalId], name: "id_hospitalId") // AUDIT-011: enables tenant-scoped update.where { id_hospitalId }
   @@index([fhirPatientId])
   @@index([email])
   @@index([lastName, firstName])
@@ -1209,6 +1210,7 @@ model TherapyGap {
   barriers        Json? // Barriers to optimal therapy
   recommendations Json? // Specific recommendations
 
+  @@unique([id, hospitalId], name: "id_hospitalId") // AUDIT-011: enables tenant-scoped update.where { id_hospitalId }
   @@index([patientId, identifiedAt])
   @@index([module, gapType])
   @@index([hospitalId, module, resolvedAt])

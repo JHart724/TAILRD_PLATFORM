@@ -296,8 +296,12 @@ router.put('/:patientId',
         } as APIResponse);
       }
 
+      // AUDIT-011 REFACTOR YELLOW-2 (2026-05-02): tenant-scoped update via the
+      // composite key id_hospitalId added in migration 20260502000000. Caller
+      // returns the updated patient, so update (not updateMany) is needed for
+      // the return value. Composite key requires both id and hospitalId match.
       const patient = await prisma.patient.update({
-        where: { id: patientId },
+        where: { id_hospitalId: { id: patientId, hospitalId } },
         data: {
           ...(data.firstName && { firstName: data.firstName }),
           ...(data.lastName && { lastName: data.lastName }),
@@ -356,9 +360,13 @@ router.delete('/:patientId',
         } as APIResponse);
       }
 
-      // Soft delete — set deletedAt, keep data for HIPAA retention
-      await prisma.patient.update({
-        where: { id: patientId },
+      // Soft delete — set deletedAt, keep data for HIPAA retention.
+      // AUDIT-011 REFACTOR YELLOW-3 (2026-05-02): update → updateMany with
+      // hospitalId scope. Return value is not used; DELETE handler doesn't
+      // return the updated row. Discovered during Phase a-pre line verification
+      // (originally missed by the §11.5 audit, see AUDIT_011_DESIGN.md §11.4.1).
+      await prisma.patient.updateMany({
+        where: { id: patientId, hospitalId },
         data: { deletedAt: new Date(), isActive: false },
       });
 

@@ -140,9 +140,13 @@ export async function runGapDetection(
     }
 
     if (allToUpdate.length > 0) {
+      // AUDIT-011 REFACTOR (2026-05-02): switched update → updateMany so
+      // hospitalId can scope the where clause. update.where requires a
+      // unique-key shape; updateMany accepts arbitrary where. Return value
+      // ({ count }) is not used here.
       await prisma.$transaction(
-        allToUpdate.map(u => prisma.therapyGap.update({
-          where: { id: u.id },
+        allToUpdate.map(u => prisma.therapyGap.updateMany({
+          where: { id: u.id, hospitalId },
           data: { currentStatus: u.status },
         }))
       );
