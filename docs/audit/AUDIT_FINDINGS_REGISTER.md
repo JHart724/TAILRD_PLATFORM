@@ -431,6 +431,23 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ---
 
+### AUDIT-027 — `gdmtEngine.ts` / `gapRuleEngine` redundancy
+
+- **Phase:** Code quality / tech debt
+- **Severity:** LOW (P3) — duplication, not security or safety
+- **Status:** OPEN
+- **Tier:** C
+- **Detected:** 2026-05-03 during Phase 0B HF audit
+- **Evidence:** GDMT four-pillar logic implemented twice — once in `backend/src/ingestion/gaps/gapRuleEngine.ts` (rules tagged for GAP-HF-001/004/007/010 — beta-blocker, RAASi, MRA, SGLT2i) and once in `backend/src/services/gdmtEngine.ts` (service layer with the same four-pillar logic + contraindication checks). Both paths produce overlapping outputs.
+- **Severity rationale:** Code-level redundancy. Risk is divergence over time (rule logic and service drift apart, producing inconsistent gap detection). Currently both paths agree on output so no production impact.
+- **Remediation:** Reconcile during Phase 0A Phase 3 (data layer) audit. Decide canonical source: (a) move all GDMT logic to `gdmtEngine.ts` service and have `gapRuleEngine` call it; (b) consolidate in `gapRuleEngine` and deprecate the service; (c) keep both with explicit purpose separation documented.
+- **Effort estimate:** S (3-5h) — investigation + consolidation + test
+- **Cross-references:**
+  - `docs/audit/PHASE_0B_HF_AUDIT_ADDENDUM.md` §9 finding HF-04
+  - Phase 0A Phase 3 (data layer audit, pending)
+
+---
+
 ### AUDIT-025 — Schema migration validation gate (originally framed as "no staging environment")
 
 - **Phase:** Infrastructure
