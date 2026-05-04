@@ -58,8 +58,42 @@ interface DetectedGap {
     classOfRecommendation: string; // e.g., "Class 1"
     levelOfEvidence: string;      // e.g., "LOE A"
     exclusions?: string[];        // Conditions that would make this gap inapplicable
+    safetyClass?: 'SAFETY' | 'SAFETY_CRITICAL'; // Spec-flagged immediate-harm category. Persistence layer should write a parallel AuditLog entry per HIPAA §164.312(b) when set.
   };
 }
+
+/**
+ * HFrEF detection states. Used by EP-RC rule and any future rules that need to
+ * differentiate HFrEF / non-HFrEF / HF-with-unknown-LVEF for therapy gating.
+ */
+type HfrefStatus = 'hfref' | 'not_hfref' | 'hf_unknown_lvef';
+
+/**
+ * Determine HFrEF status from dx codes + lab values with explicit LVEF check.
+ * Returns 'hf_unknown_lvef' when HF dx is present but LVEF is missing — caller
+ * should surface a structured data gap rather than silently default to non-HFrEF.
+ *
+ * Threshold: LVEF <= 40% per 2022 AHA/ACC/HFSA HF Guideline (HFrEF definition).
+ */
+function detectHfrefStatus(hasHF: boolean, labValues: Record<string, number>): HfrefStatus {
+  if (!hasHF) return 'not_hfref';
+  const lvef = labValues['lvef'];
+  if (lvef === undefined) return 'hf_unknown_lvef';
+  return lvef <= 40 ? 'hfref' : 'not_hfref';
+}
+
+/**
+ * Feature flag for EP-017 HFrEF gating on the rate-control rule.
+ * Default: enabled (true). Set EP_RATE_CONTROL_HFREF_GATING_ENABLED=false for rollback.
+ *
+ * When disabled: rate-control rule fires with original recommendation (BB or non-DHP CCB).
+ * When enabled (default): rule recommends BB-only for HFrEF, fires SAFETY gap when
+ * HFrEF + on non-DHP CCB, fires data gap when HF dx but LVEF unknown.
+ *
+ * Rollback path: set env var to literal string 'false'. No code change required.
+ */
+const EP_RATE_CONTROL_HFREF_GATING_ENABLED =
+  process.env.EP_RATE_CONTROL_HFREF_GATING_ENABLED !== 'false';
 
 /**
  * Contraindication/exclusion check helper.
@@ -4737,36 +4771,122 @@ export function evaluateGapRules(
   }
 
   // ============================================================
-  // Gap EP-RC: Rate Control Missing in AFib
+  // Gap EP-RC + EP-017: Rate Control in AFib (HFrEF-aware)
   // ============================================================
-  // Guideline: 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE B
-  // AFib patients should be on a rate control agent (beta-blocker or non-dihydropyridine CCB)
-  // RxNorm: metoprolol (6918), carvedilol (20352), diltiazem (3443), verapamil (11170)
+  // Guideline (rate control): 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE B
+  // Guideline (EP-017 SAFETY): 2022 AHA/ACC/HFSA HF Guideline, Class 3 (Harm) for non-DHP CCB in HFrEF
+  // RxNorm:
+  //   BB (HFrEF-safe rate control): metoprolol (6918), carvedilol (20352)
+  //   Non-DHP CCB (HFrEF-DANGEROUS — Class 3 Harm in HFrEF): diltiazem (3443), verapamil (11170)
+  //
+  // Behavior is gated by EP_RATE_CONTROL_HFREF_GATING_ENABLED feature flag (default true).
+  // Pre-gating: rule recommended BB or non-DHP CCB indiscriminately (EP-XX-7 harm vector).
+  // With gating: rule recommends BB-only for HFrEF, fires SAFETY gap when HFrEF + on non-DHP CCB,
+  // fires structured data gap when HF dx is present but LVEF is missing.
   if (hasAF) {
-    const RATE_CONTROL_CODES = ['6918', '20352', '3443', '11170'];
-    const onRateControl = medCodes.some(c => RATE_CONTROL_CODES.includes(c));
-    if (!onRateControl) {
-            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-  gaps.push({
+    const BB_RATE_CONTROL_CODES = ['6918', '20352'];        // metoprolol, carvedilol
+    const NON_DHP_CCB_CODES = ['3443', '11170'];             // diltiazem, verapamil
+    const ALL_RATE_CONTROL_CODES = [...BB_RATE_CONTROL_CODES, ...NON_DHP_CCB_CODES];
+    const onAnyRateControl = medCodes.some(c => ALL_RATE_CONTROL_CODES.includes(c));
+    const onNonDhpCcb = medCodes.some(c => NON_DHP_CCB_CODES.includes(c));
+    const hfrefStatus: HfrefStatus = EP_RATE_CONTROL_HFREF_GATING_ENABLED
+      ? detectHfrefStatus(hasHF, labValues)
+      : 'not_hfref';
+
+    if (EP_RATE_CONTROL_HFREF_GATING_ENABLED) {
+      // EP-017 SAFETY: HFrEF + on non-DHP CCB → fire SAFETY gap (Class 3 Harm).
+      // This fires regardless of whether other rate-control agents are also on board —
+      // the SAFETY scenario is "patient is currently exposed to non-DHP CCB while having HFrEF."
+      if (hfrefStatus === 'hfref' && onNonDhpCcb && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+        gaps.push({
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.ELECTROPHYSIOLOGY,
-          status: 'Rate control agent not prescribed in AFib',
-          target: 'Beta-blocker or non-dihydropyridine CCB initiated',
-          medication: 'Metoprolol, Carvedilol, Diltiazem, or Verapamil',
+          status: 'SAFETY: Non-DHP CCB (diltiazem/verapamil) is contraindicated in HFrEF',
+          target: 'Switch to evidence-based beta-blocker (metoprolol succinate, carvedilol, or bisoprolol)',
+          medication: 'Replace diltiazem/verapamil with metoprolol succinate, carvedilol, or bisoprolol',
           recommendations: {
-            action: 'Consider rate control agent per 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE B',
-            guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation',
-            note: 'Avoid non-DHP CCB (diltiazem/verapamil) in patients with HFrEF',
+            action: 'Discontinue non-DHP CCB and initiate evidence-based BB per 2022 AHA/ACC/HFSA, Class 3 (Harm)',
+            guideline: '2022 AHA/ACC/HFSA Heart Failure Guideline + 2023 ACC/AHA/ACCP/HRS AF Guideline',
+            note: 'Non-DHP CCB has negative inotropic effect; in HFrEF (LVEF <=40%) this is Class 3 (Harm).',
           },
           evidence: {
-            triggerCriteria: ['AFib without rate control agent'],
-            guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for AF Management',
-            classOfRecommendation: '1',
+            triggerCriteria: [
+              'AFib (I48.x)',
+              'HFrEF detected (HF dx + LVEF <=40%)',
+              'On diltiazem (RxNorm 3443) or verapamil (RxNorm 11170)',
+            ],
+            guidelineSource: '2022 AHA/ACC/HFSA Heart Failure Guideline',
+            classOfRecommendation: '3 (Harm)',
             levelOfEvidence: 'B',
-            exclusions: ['Severe bradycardia', 'Sick sinus without pacemaker', 'Hospice/palliative care'],
+            exclusions: ['Hospice/palliative care', 'Documented contraindication to all BBs'],
+            safetyClass: 'SAFETY',
           },
         });
       }
+
+      // Structured data gap: HF dx + AF + LVEF unknown → can't evaluate HFrEF gating.
+      // Surfaces a real action (measure LVEF) rather than silently defaulting to "no HFrEF"
+      // which would preserve the EP-XX-7 harm vector.
+      if (hfrefStatus === 'hf_unknown_lvef' && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+        gaps.push({
+          type: TherapyGapType.SCREENING_DUE,
+          module: ModuleType.ELECTROPHYSIOLOGY,
+          status: 'LVEF measurement required to safely guide AF rate-control therapy in HF patient',
+          target: 'Recent echocardiogram or cardiac MRI with LVEF documented',
+          recommendations: {
+            action: 'Obtain LVEF measurement (echocardiogram or cardiac MRI) before prescribing AF rate-control therapy. Non-DHP CCB is contraindicated in HFrEF (LVEF <=40%); LVEF data is required to safely select rate-control agent.',
+            guideline: '2022 AHA/ACC/HFSA Heart Failure Guideline + 2023 ACC/AHA/ACCP/HRS AF Guideline',
+          },
+          evidence: {
+            triggerCriteria: [
+              'HF diagnosis (I50.x) present',
+              'AFib (I48.x) present',
+              'No LVEF value in lab observations',
+            ],
+            guidelineSource: '2022 AHA/ACC/HFSA Heart Failure Guideline',
+            classOfRecommendation: '1',
+            levelOfEvidence: 'C-EO',
+            exclusions: ['Hospice/palliative care'],
+          },
+        });
+      }
+    }
+
+    // Rate-control gap: fires when patient has AF and is not on any rate-control agent.
+    // HFrEF-aware recommendation: if HFrEF detected, recommend BB only (avoid non-DHP CCB).
+    if (!onAnyRateControl && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+      const isHfref = hfrefStatus === 'hfref';
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.ELECTROPHYSIOLOGY,
+        status: isHfref
+          ? 'Rate control agent not prescribed in AFib (HFrEF: avoid non-DHP CCB)'
+          : 'Rate control agent not prescribed in AFib',
+        target: isHfref
+          ? 'Beta-blocker initiated (avoid non-DHP CCB in HFrEF)'
+          : 'Beta-blocker or non-dihydropyridine CCB initiated',
+        medication: isHfref
+          ? 'Metoprolol or Carvedilol (BB only — non-DHP CCB contraindicated in HFrEF)'
+          : 'Metoprolol, Carvedilol, Diltiazem, or Verapamil',
+        recommendations: {
+          action: isHfref
+            ? 'Consider evidence-based beta-blocker per 2023 ACC/AHA/ACCP/HRS AFib Guideline + 2022 AHA/ACC/HFSA HF Guideline. Avoid diltiazem/verapamil — Class 3 (Harm) in HFrEF.'
+            : 'Consider rate control agent per 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE B',
+          guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation',
+          note: isHfref
+            ? 'HFrEF detected (LVEF <=40%): non-DHP CCB excluded from recommendation per 2022 AHA/ACC/HFSA Class 3 (Harm).'
+            : 'Avoid non-DHP CCB (diltiazem/verapamil) in patients with HFrEF',
+        },
+        evidence: {
+          triggerCriteria: isHfref
+            ? ['AFib without rate control agent', 'HFrEF detected (HF dx + LVEF <=40%)']
+            : ['AFib without rate control agent'],
+          guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for AF Management',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'B',
+          exclusions: ['Severe bradycardia', 'Sick sinus without pacemaker', 'Hospice/palliative care'],
+        },
+      });
     }
   }
 
