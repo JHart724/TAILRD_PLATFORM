@@ -1,0 +1,1251 @@
+{
+  "auditDate": "2026-05-04",
+  "auditMethod": "rule-body-citation-AUDIT-030D",
+  "crosswalkVersion": "1.0",
+  "extras": [],
+  "lessonsLearned": "",
+  "module": "VHD",
+  "rows": [
+    {
+      "auditNotes": "line 4638+ checks no-warfarin (different scenario);  line 5219+ checks no-INR-data (different scenario). Patient on warfarin with INR<target → neither rule fires. | Multiple registry ids cited: gap-vd-1-mechanical-valve-anticoag, gap-vd-3-inr-monitoring | auto-verify: broad-rule consolidation: VD-3 top-matches 5 spec gaps in subcategory \"Mechanical Valve\"; tokenJaccard=0.15; codeOverlap=[Z95.2]",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-3",
+        "evaluatorBodyLineRange": [
+          5226,
+          5250
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-3-inr-monitoring",
+        "registryLine": 864
+      },
+      "specGapId": "GAP-VHD-001",
+      "specLine": 753,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "line 5312+ (explicit RE-ALIGN trial citation, Class 3 Harm) | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-6",
+        "evaluatorBodyLineRange": [
+          5316,
+          5340
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-6-doac-mechanical-valve",
+        "registryLine": 900
+      },
+      "specGapId": "GAP-VHD-005",
+      "specLine": 754,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-002",
+      "specLine": 755,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-003",
+      "specLine": 756,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-004",
+      "specLine": 757,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-006",
+      "specLine": 758,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-007",
+      "specLine": 759,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-008",
+      "specLine": 760,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-009",
+      "specLine": 761,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per VHD addendum §5 (Bioprosthetic Valve subcategory): bioprosthetic valve annual echo surveillance covered by gap-vd-2-bioprosthetic-echo evaluator at line 4952+. Auto-classifier missed because spec uses \"Bioprosthetic Valve Surveillance\" and evaluator block name is \"VD-2\" (numeric pattern) — token-similarity heuristic insufficient.",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-2",
+        "evaluatorBodyLineRange": [
+          4961,
+          4982
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-2-bioprosthetic-echo",
+        "registryLine": 348
+      },
+      "specGapId": "GAP-VHD-010",
+      "specLine": 766,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per VHD addendum §4.6(c): broad-rule consolidation. gap-vd-11-bioprosthetic-degeneration consolidates VHD-011 + VHD-016 + VHD-017. Per §3.2.1 broad-rule rule, each gap classifies as PARTIAL_DETECTION because spec wants gap-specific discrimination the broad rule does not carry. Auto-classifier missed because vocabulary mismatch (spec \"structural valve deterioration\" vs evaluator \"Bioprosthetic Valve Degeneration Watch\").",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-11",
+        "evaluatorBodyLineRange": [
+          5467,
+          5488
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-11-bioprosthetic-degeneration",
+        "registryLine": 960
+      },
+      "specGapId": "GAP-VHD-011",
+      "specLine": 767,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-012",
+      "specLine": 768,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-013",
+      "specLine": 769,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-014",
+      "specLine": 770,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-015",
+      "specLine": 771,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per VHD addendum §4.6(c): broad-rule consolidation via gap-vd-11-bioprosthetic-degeneration (also covers VHD-011, VHD-017). PARTIAL per §3.2.1. Auto-classifier vocabulary mismatch.",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-11",
+        "evaluatorBodyLineRange": [
+          5467,
+          5488
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-11-bioprosthetic-degeneration",
+        "registryLine": 960
+      },
+      "specGapId": "GAP-VHD-016",
+      "specLine": 772,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per VHD addendum §4.6(c): broad-rule consolidation via gap-vd-11-bioprosthetic-degeneration (also covers VHD-011, VHD-016). PARTIAL per §3.2.1. Auto-classifier vocabulary mismatch.",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-11",
+        "evaluatorBodyLineRange": [
+          5467,
+          5488
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-11-bioprosthetic-degeneration",
+        "registryLine": 960
+      },
+      "specGapId": "GAP-VHD-017",
+      "specLine": 773,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-018",
+      "specLine": 778,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-019",
+      "specLine": 779,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-020",
+      "specLine": 780,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-021",
+      "specLine": 781,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-022",
+      "specLine": 782,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-023",
+      "specLine": 783,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per VHD addendum §4.6(b): cross-module satisfaction. gap-sh-2-tavr-eval (registered to SH module, line 4923+) provides VHD-024 partial coverage (severe AS AVR vs TAVR). Auto-classifier picked SH-ROSS as cross-module match instead — vocabulary collision on \"AS\" tokens. Architectural fragility documented at AUDIT-027 expanded scope.",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-2",
+        "evaluatorBodyLineRange": [
+          4928,
+          4949
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-2-tavr-eval",
+        "registryLine": 336
+      },
+      "specGapId": "GAP-VHD-024",
+      "specLine": 788,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-026",
+      "specLine": 789,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-027",
+      "specLine": 790,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-028",
+      "specLine": 791,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-029",
+      "specLine": 792,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-025",
+      "specLine": 793,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-030",
+      "specLine": 798,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-031",
+      "specLine": 799,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-032",
+      "specLine": 800,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-033",
+      "specLine": 801,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-035",
+      "specLine": 802,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-034",
+      "specLine": 803,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-036",
+      "specLine": 804,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-037",
+      "specLine": 809,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-038",
+      "specLine": 810,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: Top candidate score=0.265 between PARTIAL and HIGH thresholds; tokenJaccard=0.08; nameOverlap=1",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-TRICUSPID-SECONDARY",
+        "evaluatorBodyLineRange": [
+          10807,
+          10835
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-tricuspid-secondary",
+        "registryLine": 3168
+      },
+      "specGapId": "GAP-VHD-039",
+      "specLine": 811,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-040",
+      "specLine": 812,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-041",
+      "specLine": 813,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-042",
+      "specLine": 818,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-043",
+      "specLine": 819,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-044",
+      "specLine": 820,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-045",
+      "specLine": 821,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-046",
+      "specLine": 822,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-047",
+      "specLine": 823,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-048",
+      "specLine": 824,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-049",
+      "specLine": 825,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "No S. aureus + TEE rule in evaluator. | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-050",
+      "specLine": 830,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-051",
+      "specLine": 831,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-052",
+      "specLine": 832,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-053",
+      "specLine": 833,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-054",
+      "specLine": 834,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-055",
+      "specLine": 835,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-056",
+      "specLine": 836,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "No IE + acute HF surgical-urgency rule. | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-057",
+      "specLine": 841,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "No IE + abscess surgical rule. | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-058",
+      "specLine": 842,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "No PVE dehiscence/fistula rule. | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-061",
+      "specLine": 843,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-059",
+      "specLine": 844,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-060",
+      "specLine": 845,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-062",
+      "specLine": 846,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per VHD addendum §5 (IE Prophylaxis subcategory): dental prophylaxis covered by gap-vd-14-dental-prophylaxis evaluator at line 6332+. Auto-classifier missed because spec text uses \"infective endocarditis prophylaxis dental procedure\" and evaluator name is \"VD-14\" (numeric pattern).",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-14",
+        "evaluatorBodyLineRange": [
+          6342,
+          6361
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-14-dental-prophylaxis",
+        "registryLine": 1656
+      },
+      "specGapId": "GAP-VHD-063",
+      "specLine": 851,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-064",
+      "specLine": 852,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-065",
+      "specLine": 853,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-066",
+      "specLine": 854,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-067",
+      "specLine": 855,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE: VD-PANNUS evaluator at line 10414+ (pattern ID_NAME) was missed by prior 2026-05-04 single-pattern audit (cited as registry-only) AND by auto-classifier (no token overlap with \"gradient rise\"). Multi-pattern extraction in Phase 2 surfaced VD-PANNUS evaluator with body covering symptomatic prosthetic valve dysfunction. Spec-VHD-068 wants gradient-rise specifically (>=50% from baseline); evaluator covers symptom-driven detection. PARTIAL per §3.2.1 (broad-rule lacks discrimination). UPGRADES from prior SPEC_ONLY classification — Tier S triage queue inclusion may revise.",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-PANNUS",
+        "evaluatorBodyLineRange": [
+          10423,
+          10445
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-prosthetic-pannus",
+        "registryLine": 2172
+      },
+      "specGapId": "GAP-VHD-068",
+      "specLine": 860,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-069",
+      "specLine": 861,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-070",
+      "specLine": 862,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-071",
+      "specLine": 863,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-072",
+      "specLine": 864,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per VHD addendum §4.6(c): gap-vd-12-af-valve-anticoag covers AF + valve disease anticoagulation; partial coverage of VHD-077. PARTIAL because broad rule fires for AF+valve combination but spec-VHD-077 wants discrimination.",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-12",
+        "evaluatorBodyLineRange": [
+          5498,
+          5525
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-12-af-valve-anticoag",
+        "registryLine": 972
+      },
+      "specGapId": "GAP-VHD-077",
+      "specLine": 869,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-078",
+      "specLine": 870,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-073",
+      "specLine": 871,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-074",
+      "specLine": 872,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-075",
+      "specLine": 873,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-076",
+      "specLine": 874,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: Top candidate score=0.377 between PARTIAL and HIGH thresholds; tokenJaccard=0.05; codeOverlap=[I05]; nameOverlap=1",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-TRICUSPID-SECONDARY",
+        "evaluatorBodyLineRange": [
+          10807,
+          10835
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-tricuspid-secondary",
+        "registryLine": 3168
+      },
+      "specGapId": "GAP-VHD-079",
+      "specLine": 879,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per VHD addendum §5 (Rheumatic subcategory): screening covered by gap-vd-8-rheumatic-screen evaluator at line 5371+. Auto-classifier missed (numeric pattern naming).",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-8",
+        "evaluatorBodyLineRange": [
+          5379,
+          5399
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-8-rheumatic-screen",
+        "registryLine": 924
+      },
+      "specGapId": "GAP-VHD-080",
+      "specLine": 880,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-081",
+      "specLine": 881,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-082",
+      "specLine": 882,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-083",
+      "specLine": 883,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-084",
+      "specLine": 884,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-085",
+      "specLine": 889,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-086",
+      "specLine": 890,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-087",
+      "specLine": 891,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: Top candidate score=0.25 between PARTIAL and HIGH thresholds; tokenJaccard=0.07; nameOverlap=1",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-PULMONARY-HTN",
+        "evaluatorBodyLineRange": [
+          10775,
+          10803
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-pulmonary-htn",
+        "registryLine": 3156
+      },
+      "specGapId": "GAP-VHD-088",
+      "specLine": 892,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-089",
+      "specLine": 893,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-090",
+      "specLine": 894,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-091",
+      "specLine": 899,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-092",
+      "specLine": 900,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-093",
+      "specLine": 901,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-094",
+      "specLine": 902,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: broad-rule consolidation: VD-RADIATION top-matches 3 spec gaps in subcategory \"Radiation\"; tokenJaccard=0.10; codeOverlap=[Z92.3]; nameOverlap=1",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-RADIATION",
+        "evaluatorBodyLineRange": [
+          10456,
+          10478
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-radiation-valve",
+        "registryLine": 2184
+      },
+      "specGapId": "GAP-VHD-095",
+      "specLine": 907,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: broad-rule consolidation: VD-RADIATION top-matches 3 spec gaps in subcategory \"Radiation\"; tokenJaccard=0.07; nameOverlap=1",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-RADIATION",
+        "evaluatorBodyLineRange": [
+          10456,
+          10478
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-radiation-valve",
+        "registryLine": 2184
+      },
+      "specGapId": "GAP-VHD-096",
+      "specLine": 908,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-097",
+      "specLine": 909,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "line 5428+ broad pregnancy + valve risk rule; no LMWH dose-protocol logic | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-10",
+        "evaluatorBodyLineRange": [
+          5437,
+          5458
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-10-pregnancy-risk",
+        "registryLine": 948
+      },
+      "specGapId": "GAP-VHD-099",
+      "specLine": 914,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per VHD addendum §4.6(c): broad-rule consolidation. gap-vd-10-pregnancy-risk consolidates VHD-098 + VHD-099 + VHD-100 + VHD-101. PARTIAL per §3.2.1.",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-10",
+        "evaluatorBodyLineRange": [
+          5437,
+          5458
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-10-pregnancy-risk",
+        "registryLine": 948
+      },
+      "specGapId": "GAP-VHD-098",
+      "specLine": 915,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per VHD addendum §4.6(c): broad-rule consolidation via gap-vd-10-pregnancy-risk (also covers VHD-098, VHD-099, VHD-101). PARTIAL per §3.2.1.",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-10",
+        "evaluatorBodyLineRange": [
+          5437,
+          5458
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-10-pregnancy-risk",
+        "registryLine": 948
+      },
+      "specGapId": "GAP-VHD-100",
+      "specLine": 916,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per VHD addendum §4.6(c): broad-rule consolidation via gap-vd-10-pregnancy-risk (also covers VHD-098, VHD-099, VHD-100). PARTIAL per §3.2.1.",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-10",
+        "evaluatorBodyLineRange": [
+          5437,
+          5458
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-10-pregnancy-risk",
+        "registryLine": 948
+      },
+      "specGapId": "GAP-VHD-101",
+      "specLine": 917,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per VHD addendum §5 (Valve Progression / Mixed subcategory): AR surveillance covered by gap-vd-5-aortic-regurgitation evaluator at line 5282+. Auto-classifier missed (numeric naming pattern).",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-5",
+        "evaluatorBodyLineRange": [
+          5290,
+          5310
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-5-aortic-regurgitation",
+        "registryLine": 888
+      },
+      "specGapId": "GAP-VHD-103",
+      "specLine": 922,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-102",
+      "specLine": 923,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-104",
+      "specLine": 924,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-VHD-105",
+      "specLine": 925,
+      "tier": "T3"
+    }
+  ],
+  "sequencingNotes": "",
+  "strategicPosture": ""
+}

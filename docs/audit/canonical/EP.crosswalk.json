@@ -1,0 +1,1298 @@
+{
+  "auditDate": "2026-05-04",
+  "auditMethod": "rule-body-citation-AUDIT-030D",
+  "crosswalkVersion": "1.0",
+  "extras": [],
+  "lessonsLearned": "",
+  "module": "EP",
+  "rows": [
+    {
+      "auditNotes": "+ | Multiple registry ids cited: gap-ep-oac-afib, gap-ep-af-stroke-risk | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-OAC",
+        "evaluatorBodyLineRange": [
+          3957,
+          4010
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-oac-afib",
+        "registryLine": 228
+      },
+      "specGapId": "GAP-EP-001",
+      "specLine": 311,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "(registry only; no CrCl-gated dabigatran SAFETY check in evaluator) | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-006",
+      "specLine": 312,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE: cross-module satisfaction. GAP-EP-007 (DOAC on mechanical valve, CRITICAL SAFETY) is satisfied by VHD module evaluator VD-6 (gap-vd-6-doac-mechanical-valve, line 5312+) which fires on mechanical valve + DOAC RxNorm with explicit RE-ALIGN trial citation Class 3 Harm. Same clinical rule covers GAP-VHD-005 in VHD module. Auto-classifier picked SH-VALVE-IN-VALVE based on \"valve\" token similarity — wrong match. Architectural fragility documented at AUDIT-027 expanded scope (single rule satisfies spec gaps in two modules).",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-6",
+        "evaluatorBodyLineRange": [
+          5316,
+          5340
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-6-doac-mechanical-valve",
+        "registryLine": 900
+      },
+      "specGapId": "GAP-EP-007",
+      "specLine": 313,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "(no DOAC + MS contraindication; mitral stenosis logic at 5134+ only covers echo surveillance) | auto-verify: Top candidate score=0.425 between PARTIAL and HIGH thresholds; tokenJaccard=0.08; codeOverlap=[I05.0,I34.2]; cross-module match: evaluator owned by VHD",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "VD-4",
+        "evaluatorBodyLineRange": [
+          5260,
+          5280
+        ],
+        "evaluatorModule": "VHD",
+        "registryId": "gap-vd-4-mitral-stenosis",
+        "registryLine": 876
+      },
+      "specGapId": "GAP-EP-008",
+      "specLine": 314,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "— (no pharmacy fill data integration) | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-064",
+      "specLine": 315,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "— (no pharmacy fill data integration) | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-065",
+      "specLine": 316,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-002",
+      "specLine": 317,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— (no CrCl-DOAC dose logic) | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-003",
+      "specLine": 318,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— (no apixaban dose logic) | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-004",
+      "specLine": 319,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— (no apixaban dose logic) | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-005",
+      "specLine": 320,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— (no edoxaban-renal logic) | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-009",
+      "specLine": 321,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-066",
+      "specLine": 322,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-010",
+      "specLine": 323,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "line 3979+ | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-LAAC",
+        "evaluatorBodyLineRange": [
+          4017,
+          4045
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-laac",
+        "registryLine": 360
+      },
+      "specGapId": "GAP-EP-011",
+      "specLine": 328,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "(broad rule, no trigger differentiation) | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-LAAC",
+        "evaluatorBodyLineRange": [
+          4017,
+          4045
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-laac",
+        "registryLine": 360
+      },
+      "specGapId": "GAP-EP-012",
+      "specLine": 329,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-067",
+      "specLine": 330,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-068",
+      "specLine": 331,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-069",
+      "specLine": 332,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "line 9129+ | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-EARLY-RHYTHM",
+        "evaluatorBodyLineRange": [
+          9258,
+          9280
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-early-rhythm",
+        "registryLine": 1788
+      },
+      "specGapId": "GAP-EP-013",
+      "specLine": 337,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "line 4014+ | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-ABLATION",
+        "evaluatorBodyLineRange": [
+          4052,
+          4075
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-ablation",
+        "registryLine": 372
+      },
+      "specGapId": "GAP-EP-014",
+      "specLine": 338,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-017",
+      "specLine": 339,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "line 6819+ | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-SUBCLINICAL-AF",
+        "evaluatorBodyLineRange": [
+          6948,
+          6971
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-subclinical-af",
+        "registryLine": 1164
+      },
+      "specGapId": "GAP-EP-018",
+      "specLine": 340,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "line 4014+ | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-ABLATION",
+        "evaluatorBodyLineRange": [
+          4052,
+          4075
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-ablation",
+        "registryLine": 372
+      },
+      "specGapId": "GAP-EP-015",
+      "specLine": 341,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— (no post-CV OAC duration logic) | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-016",
+      "specLine": 342,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "line 6584+ | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-PFA",
+        "evaluatorBodyLineRange": [
+          6714,
+          6736
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-pfa",
+        "registryLine": 1080
+      },
+      "specGapId": "GAP-EP-070",
+      "specLine": 343,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: broad-rule consolidation: EP-AAD-POST-ABLATION top-matches 2 spec gaps in subcategory \"Rhythm Control\"; nameOverlap=2",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-AAD-POST-ABLATION",
+        "evaluatorBodyLineRange": [
+          7037,
+          7060
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-aad-post-ablation",
+        "registryLine": 1200
+      },
+      "specGapId": "GAP-EP-071",
+      "specLine": 344,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-072",
+      "specLine": 345,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-073",
+      "specLine": 346,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-019",
+      "specLine": 347,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "line 6618+ (WPW + age<40 risk strat, NOT med contraindication) | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-079",
+      "specLine": 352,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "(covers OAC, not CTI ablation) | auto-verify: Top candidate score=0.3 between PARTIAL and HIGH thresholds; codeOverlap=[I48.3]; nameOverlap=1",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-FLUTTER-OAC",
+        "evaluatorBodyLineRange": [
+          6809,
+          6837
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-flutter-oac",
+        "registryLine": 1116
+      },
+      "specGapId": "GAP-EP-074",
+      "specLine": 353,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "line 9195+ (generic SVT) | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-SVT-ABLATION",
+        "evaluatorBodyLineRange": [
+          9325,
+          9347
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-svt-ablation",
+        "registryLine": 1812
+      },
+      "specGapId": "GAP-EP-075",
+      "specLine": 354,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "(generic) | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-SVT-ABLATION",
+        "evaluatorBodyLineRange": [
+          9325,
+          9347
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-svt-ablation",
+        "registryLine": 1812
+      },
+      "specGapId": "GAP-EP-076",
+      "specLine": 355,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "(generic) | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-SVT-ABLATION",
+        "evaluatorBodyLineRange": [
+          9325,
+          9347
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-svt-ablation",
+        "registryLine": 1812
+      },
+      "specGapId": "GAP-EP-077",
+      "specLine": 356,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "(age<40, NOT occupation) | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-WPW",
+        "evaluatorBodyLineRange": [
+          6742,
+          6764
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-wpw",
+        "registryLine": 1092
+      },
+      "specGapId": "GAP-EP-078",
+      "specLine": 357,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-080",
+      "specLine": 358,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "line 9162+ (broad VT+ICD trigger, not VT-storm-specific) | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-VT-ABLATION",
+        "evaluatorBodyLineRange": [
+          9291,
+          9313
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-vt-ablation",
+        "registryLine": 1800
+      },
+      "specGapId": "GAP-EP-086",
+      "specLine": 363,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "(generic) | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-VT-ABLATION",
+        "evaluatorBodyLineRange": [
+          9291,
+          9313
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-vt-ablation",
+        "registryLine": 1800
+      },
+      "specGapId": "GAP-EP-020",
+      "specLine": 364,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "(generic) | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-VT-ABLATION",
+        "evaluatorBodyLineRange": [
+          9291,
+          9313
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-vt-ablation",
+        "registryLine": 1800
+      },
+      "specGapId": "GAP-EP-021",
+      "specLine": 365,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "(no AAD-failure check) | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-VT-ABLATION",
+        "evaluatorBodyLineRange": [
+          9291,
+          9313
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-vt-ablation",
+        "registryLine": 1800
+      },
+      "specGapId": "GAP-EP-022",
+      "specLine": 366,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-087",
+      "specLine": 367,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-088",
+      "specLine": 368,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "+ | Multiple registry ids cited: gap-ep-inappropriate-shocks, gap-ep-icd-programming | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-INAPPROPRIATE-SHOCKS",
+        "evaluatorBodyLineRange": [
+          9653,
+          9675
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-inappropriate-shocks",
+        "registryLine": 1944
+      },
+      "specGapId": "GAP-EP-089",
+      "specLine": 369,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "line 9229+ (syncope+male+age<45 screening, NOT confirmed-Brugada-treatment-decision) | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-BRUGADA",
+        "evaluatorBodyLineRange": [
+          9357,
+          9380
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-brugada",
+        "registryLine": 1824
+      },
+      "specGapId": "GAP-EP-023",
+      "specLine": 374,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "line 6786+ | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-LQTS-BB",
+        "evaluatorBodyLineRange": [
+          6910,
+          6937
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-lqts-bb",
+        "registryLine": 1152
+      },
+      "specGapId": "GAP-EP-024",
+      "specLine": 375,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "+  line 7001+ | Multiple registry ids cited: gap-39-qtc-safety, gap-ep-torsades | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "Gap-39",
+        "evaluatorBodyLineRange": [
+          3931,
+          3952
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-39-qtc-safety",
+        "registryLine": 156
+      },
+      "specGapId": "GAP-EP-025",
+      "specLine": 376,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per EP addendum line 131: GAP-EP-026 (Congenital LQTS QT-drug avoidance) covered by overlapping rules EP-LQTS-BB (line 6906+) and EP-TORSADES (line 7121+). PARTIAL because broad coverage of LQTS+QT-drug scenarios but not specifically the congenital subtype with QT-drug avoidance protocol.",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-LQTS-BB",
+        "evaluatorBodyLineRange": [
+          6910,
+          6937
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-lqts-bb",
+        "registryLine": 1152
+      },
+      "specGapId": "GAP-EP-026",
+      "specLine": 377,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "(screening rule, no genotype split + different stage) | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-BRUGADA",
+        "evaluatorBodyLineRange": [
+          9357,
+          9380
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-brugada",
+        "registryLine": 1824
+      },
+      "specGapId": "GAP-EP-027",
+      "specLine": 378,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: broad-rule consolidation: CAD-BETA-BLOCKER top-matches 2 spec gaps in subcategory \"Channelopathies\"; nameOverlap=2; cross-module match: evaluator owned by CAD",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-BETA-BLOCKER",
+        "evaluatorBodyLineRange": [
+          8473,
+          8500
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-beta-blocker",
+        "registryLine": 2784
+      },
+      "specGapId": "GAP-EP-028",
+      "specLine": 379,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "(broad LQT+BB; no genotype split) | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-LQTS-BB",
+        "evaluatorBodyLineRange": [
+          6910,
+          6937
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-lqts-bb",
+        "registryLine": 1152
+      },
+      "specGapId": "GAP-EP-081",
+      "specLine": 380,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-082",
+      "specLine": 381,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-083",
+      "specLine": 382,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-084",
+      "specLine": 383,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-085",
+      "specLine": 384,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "— | auto-verify: broad-rule consolidation: EP-PACEMAKER-UPGRADE top-matches 3 spec gaps in subcategory \"Pacing\"; tokenJaccard=0.07; nameOverlap=1",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-PACEMAKER-UPGRADE",
+        "evaluatorBodyLineRange": [
+          9457,
+          9479
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-pacemaker-upgrade",
+        "registryLine": 1860
+      },
+      "specGapId": "GAP-EP-029",
+      "specLine": 389,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-030",
+      "specLine": 390,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "line 4180+ (broad) | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-SYNCOPE",
+        "evaluatorBodyLineRange": [
+          4219,
+          4244
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-syncope",
+        "registryLine": 432
+      },
+      "specGapId": "GAP-EP-031",
+      "specLine": 391,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: broad-rule consolidation: EP-PACEMAKER-UPGRADE top-matches 3 spec gaps in subcategory \"Pacing\"; tokenJaccard=0.09; nameOverlap=2",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-PACEMAKER-UPGRADE",
+        "evaluatorBodyLineRange": [
+          9457,
+          9479
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-pacemaker-upgrade",
+        "registryLine": 1860
+      },
+      "specGapId": "GAP-EP-032",
+      "specLine": 392,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-033",
+      "specLine": 393,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-034",
+      "specLine": 394,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-035",
+      "specLine": 395,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-036",
+      "specLine": 396,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "line 6550+ | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-CSP",
+        "evaluatorBodyLineRange": [
+          6679,
+          6702
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-csp",
+        "registryLine": 1068
+      },
+      "specGapId": "GAP-EP-037",
+      "specLine": 397,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-038",
+      "specLine": 402,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "line 6881+ (broad) | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-LEAD-INTEGRITY",
+        "evaluatorBodyLineRange": [
+          7004,
+          7026
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-lead-integrity",
+        "registryLine": 1188
+      },
+      "specGapId": "GAP-EP-039",
+      "specLine": 403,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "(registry; evaluator unclear) | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-CIED-MRI",
+        "evaluatorBodyLineRange": [
+          9591,
+          9612
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-cied-mri",
+        "registryLine": 1920
+      },
+      "specGapId": "GAP-EP-040",
+      "specLine": 404,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-041",
+      "specLine": 405,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: broad-rule consolidation: EP-CIED-MRI top-matches 3 spec gaps in subcategory \"CIED Management\"; tokenJaccard=0.07; nameOverlap=1",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-CIED-MRI",
+        "evaluatorBodyLineRange": [
+          9591,
+          9612
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-cied-mri",
+        "registryLine": 1920
+      },
+      "specGapId": "GAP-EP-042",
+      "specLine": 406,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-090",
+      "specLine": 407,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-092",
+      "specLine": 408,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "(broad) | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-LEAD-INTEGRITY",
+        "evaluatorBodyLineRange": [
+          7004,
+          7026
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-lead-integrity",
+        "registryLine": 1188
+      },
+      "specGapId": "GAP-EP-091",
+      "specLine": 409,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per EP addendum line 177: GAP-EP-043 (Amiodarone TSH monitoring) covered by EP-AMIODARONE-MONITOR evaluator (line 4144+) which combines TSH + LFT monitoring. DET_OK.",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-AMIODARONE-MONITOR",
+        "evaluatorBodyLineRange": [
+          4148,
+          4176
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-amiodarone-monitor",
+        "registryLine": 408
+      },
+      "specGapId": "GAP-EP-043",
+      "specLine": 414,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per EP addendum line 178: GAP-EP-044 (Amiodarone LFT monitoring) covered by same EP-AMIODARONE-MONITOR evaluator (combined TSH+LFT rule). DET_OK.",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-AMIODARONE-MONITOR",
+        "evaluatorBodyLineRange": [
+          4148,
+          4176
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-amiodarone-monitor",
+        "registryLine": 408
+      },
+      "specGapId": "GAP-EP-044",
+      "specLine": 415,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per EP addendum line 179: GAP-EP-045 (Amiodarone baseline PFT/CXR) covered partially by EP-AMIODARONE-MONITOR evaluator. PARTIAL per §3.2.1: combined rule covers TSH/LFT but not PFT/CXR baseline screening that spec specifies.",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-AMIODARONE-MONITOR",
+        "evaluatorBodyLineRange": [
+          4148,
+          4176
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-amiodarone-monitor",
+        "registryLine": 408
+      },
+      "specGapId": "GAP-EP-045",
+      "specLine": 416,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "line 6646+ | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-DRONEDARONE",
+        "evaluatorBodyLineRange": [
+          6774,
+          6803
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-dronedarone",
+        "registryLine": 1104
+      },
+      "specGapId": "GAP-EP-046",
+      "specLine": 417,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-047",
+      "specLine": 418,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "line 954+ +  line 4145+ | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-DOFETILIDE-REMS",
+        "evaluatorBodyLineRange": [
+          4183,
+          4211
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-dofetilide-rems",
+        "registryLine": 420
+      },
+      "specGapId": "GAP-EP-048",
+      "specLine": 419,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-049",
+      "specLine": 420,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-INAPPROPRIATE-SHOCKS",
+        "evaluatorBodyLineRange": [
+          9653,
+          9675
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-inappropriate-shocks",
+        "registryLine": 1944
+      },
+      "specGapId": "GAP-EP-050",
+      "specLine": 421,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "line 4180+ (exact match: R55+no ECG) | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-SYNCOPE",
+        "evaluatorBodyLineRange": [
+          4219,
+          4244
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-syncope",
+        "registryLine": 432
+      },
+      "specGapId": "GAP-EP-093",
+      "specLine": 426,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "(broad; recommends echo - partial overlap) | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "EP-SYNCOPE",
+        "evaluatorBodyLineRange": [
+          4219,
+          4244
+        ],
+        "evaluatorModule": "EP",
+        "registryId": "gap-ep-syncope",
+        "registryLine": 432
+      },
+      "specGapId": "GAP-EP-094",
+      "specLine": 427,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "recommends ECG/echo, NOT ICD eval | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-095",
+      "specLine": 428,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-097",
+      "specLine": 429,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "(POTS not pure R55 syncope) | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-096",
+      "specLine": 430,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "(broad; no CSM-specific) | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-098",
+      "specLine": 431,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-099",
+      "specLine": 436,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-100",
+      "specLine": 437,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-101",
+      "specLine": 438,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-EP-102",
+      "specLine": 439,
+      "tier": "T3"
+    }
+  ],
+  "sequencingNotes": "",
+  "strategicPosture": ""
+}
