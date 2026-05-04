@@ -1,0 +1,24 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadAuroraConnectionSecrets",
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetSecretValue"
+      ],
+      "Resource": [
+        "arn:aws:secretsmanager:us-east-1:863518424332:secret:tailrd-production/app/aurora-db-password-*",
+        "arn:aws:secretsmanager:us-east-1:863518424332:secret:tailrd-production/app/aurora-writer-endpoint-*"
+      ]
+    },
+    {
+      "Sid": "ReadAcuMetric",
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:GetMetricStatistics"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

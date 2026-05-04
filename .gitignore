@@ -54,3 +54,7 @@ infrastructure/lambdas/*/node_modules/
 infrastructure/lambdas/*.zip
 .tmp-day4/
 .tmp-day5/
+
+# Claude Code session artifacts (added 2026-05-03 cleanup)
+.claude/scheduled_tasks.lock
+.context/
