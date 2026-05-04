@@ -1,0 +1,2129 @@
+{
+  "gaps": [
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Mechanical valve (Z95.2) + INR below target range at last check",
+      "domains": [
+        "D2",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-VHD-001",
+      "name": "Mechanical valve + sub-therapeutic INR",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 753,
+      "structuredDataElements": "Mech valve Z-code or history, INR target, INR value",
+      "subcategory": "Mechanical Valve",
+      "subcategoryHeaderLine": 750,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Mechanical valve + any DOAC on active med list",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-VHD-005",
+      "name": "Mechanical valve: DOAC prescribed (CRITICAL SAFETY)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": "CRITICAL_SAFETY",
+      "safetyTagLiteral": "(CRITICAL SAFETY)",
+      "specLine": 754,
+      "structuredDataElements": "Mech valve, DOAC RxNorm",
+      "subcategory": "Mechanical Valve",
+      "subcategoryHeaderLine": 750,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Standard mechanical AVR on INR target 2.0-3.0 (should be 2.5-3.5 for most)",
+      "domains": [
+        "D3",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-VHD-002",
+      "name": "Mechanical AVR INR target mismatch (non-On-X)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 755,
+      "structuredDataElements": "Valve model, INR target range",
+      "subcategory": "Mechanical Valve",
+      "subcategoryHeaderLine": 750,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "On-X AVR >3mo post-op on INR 2.5-3.5 (eligible for 1.5-2.0 + ASA 81)",
+      "domains": [
+        "D3",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-VHD-003",
+      "name": "On-X mechanical AVR: eligible lower INR not adopted",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 756,
+      "structuredDataElements": "On-X valve model, operative date, INR target",
+      "subcategory": "Mechanical Valve",
+      "subcategoryHeaderLine": 750,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Mechanical MVR on INR target 2.0-3.0",
+      "domains": [
+        "D3",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-VHD-004",
+      "name": "Mechanical MVR INR target (2.5-3.5) not met",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 757,
+      "structuredDataElements": "Valve position, INR target",
+      "subcategory": "Mechanical Valve",
+      "subcategoryHeaderLine": 750,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Mechanical valve without low-dose ASA adjunct when indicated",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-VHD-006",
+      "name": "Mechanical valve + ASA 81 adjunct gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 758,
+      "structuredDataElements": "Mech valve, ASA med",
+      "subcategory": "Mechanical Valve",
+      "subcategoryHeaderLine": 750,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Mech valve + recent procedure without documented bridging plan",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-VHD-007",
+      "name": "Mechanical valve bridging strategy for procedure",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 759,
+      "structuredDataElements": "Mech valve, procedure date, LMWH/heparin orders",
+      "subcategory": "Mechanical Valve",
+      "subcategoryHeaderLine": 750,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Chronic warfarin + repeated TTR<65% without CYP2C9/VKORC1 testing discussed",
+      "domains": [
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-VHD-008",
+      "name": "Warfarin pharmacogenomics in unstable INR",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 760,
+      "structuredDataElements": "Warfarin, INR TTR, pharmacogenomic result",
+      "subcategory": "Mechanical Valve",
+      "subcategoryHeaderLine": 750,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Mechanical valve on chronic warfarin without home INR option discussed",
+      "domains": [
+        "D3",
+        "D5",
+        "D6"
+      ],
+      "id": "GAP-VHD-009",
+      "name": "Home INR monitoring eligible but not offered",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 761,
+      "structuredDataElements": "Mech valve, INR frequency, home monitor",
+      "subcategory": "Mechanical Valve",
+      "subcategoryHeaderLine": 750,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Bioprosthetic valve (Z95.3) without annual echo",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-010",
+      "name": "Bioprosthetic valve surveillance echo gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 766,
+      "structuredDataElements": "Bio valve, echo dates",
+      "subcategory": "Bioprosthetic Valve",
+      "subcategoryHeaderLine": 763,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Serial echo gradient rise >=10 mmHg or new PVL on bio valve",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-011",
+      "name": "Bioprosthetic structural valve deterioration (SVD) signs",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 767,
+      "structuredDataElements": "Serial gradients + PVL, valve type",
+      "subcategory": "Bioprosthetic Valve",
+      "subcategoryHeaderLine": 763,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "TAVR without 4D CT at 30d-1y to screen for HALT",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-VHD-012",
+      "name": "Post-TAVR HALT (subclinical leaflet thrombosis) detection",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 768,
+      "structuredDataElements": "TAVR date, CT cardiac",
+      "subcategory": "Bioprosthetic Valve",
+      "subcategoryHeaderLine": 763,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HALT on imaging without short-course anticoagulation",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-VHD-013",
+      "name": "Post-TAVR HALT confirmed: anticoagulation consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 769,
+      "structuredDataElements": "HALT finding, anticoag",
+      "subcategory": "Bioprosthetic Valve",
+      "subcategoryHeaderLine": 763,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Recent surgical bio AVR without 3-6 mo post-op anticoagulation",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-VHD-014",
+      "name": "Post-SAVR bioprosthetic: 3-6 month warfarin bridge gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 770,
+      "structuredDataElements": "Bio AVR date, anticoag",
+      "subcategory": "Bioprosthetic Valve",
+      "subcategoryHeaderLine": 763,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Recent bio MVR without 3-6 mo post-op warfarin",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-VHD-015",
+      "name": "Post-bioprosthetic MVR: 3-6 month warfarin gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 771,
+      "structuredDataElements": "Bio MVR date, warfarin",
+      "subcategory": "Bioprosthetic Valve",
+      "subcategoryHeaderLine": 763,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Bioprosthetic valve >6mo post-op without ASA 81 lifelong",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-VHD-016",
+      "name": "Bioprosthetic valve lifelong ASA gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 772,
+      "structuredDataElements": "Bio valve, ASA med",
+      "subcategory": "Bioprosthetic Valve",
+      "subcategoryHeaderLine": 763,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "SVD of prior SAVR without heart team discussion",
+      "domains": [
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-VHD-017",
+      "name": "Failed SAVR bioprosthesis: ViV-TAVR vs redo SAVR discussion",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 773,
+      "structuredDataElements": "Prior SAVR, SVD, heart team referral",
+      "subcategory": "Bioprosthetic Valve",
+      "subcategoryHeaderLine": 763,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Primary AVR age>70 with mechanical valve without shared decision documented",
+      "domains": [
+        "D1",
+        "D7"
+      ],
+      "id": "GAP-VHD-018",
+      "name": "Prosthesis selection: age-based mismatch (mech in elderly)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 778,
+      "structuredDataElements": "Age, valve type, decision note",
+      "subcategory": "Prosthesis Selection",
+      "subcategoryHeaderLine": 775,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AVR age<50 with bioprosthetic without re-operation discussion documented",
+      "domains": [
+        "D1",
+        "D7"
+      ],
+      "id": "GAP-VHD-019",
+      "name": "Prosthesis selection: bio in young without shared decision",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 779,
+      "structuredDataElements": "Age, valve type, decision note",
+      "subcategory": "Prosthesis Selection",
+      "subcategoryHeaderLine": 775,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Severe AS + unexplained GIB without vWF multimer assessment",
+      "domains": [
+        "D2",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-VHD-020",
+      "name": "Heyde syndrome screening in severe AS + GIB",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 780,
+      "structuredDataElements": "AS dx, GIB, vWF testing",
+      "subcategory": "Prosthesis Selection",
+      "subcategoryHeaderLine": 775,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-AVR iEOA<0.65 cm2/m2 without PPM flagged",
+      "domains": [
+        "D1",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-021",
+      "name": "Patient-prosthesis mismatch (PPM) detection iEOA<0.65",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 781,
+      "structuredDataElements": "BSA, EOA, valve size, iEOA calc",
+      "subcategory": "Prosthesis Selection",
+      "subcategoryHeaderLine": 775,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Severe PPM post-AVR without intervention consideration",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-022",
+      "name": "Severe PPM (iEOA<0.55): management consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 782,
+      "structuredDataElements": "iEOA, intervention",
+      "subcategory": "Prosthesis Selection",
+      "subcategoryHeaderLine": 775,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AVR + small root + bioprosthetic indicated without sutureless option eval",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-023",
+      "name": "Sutureless/rapid-deployment valve candidate eval",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 783,
+      "structuredDataElements": "Small annulus, valve choice",
+      "subcategory": "Prosthesis Selection",
+      "subcategoryHeaderLine": 775,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AVR candidate age<50 without Ross procedure discussion",
+      "domains": [
+        "D1",
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-VHD-024",
+      "name": "Ross procedure candidate: young AVR patient eval",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 788,
+      "structuredDataElements": "Age, AVR candidacy, Ross eval",
+      "subcategory": "Surgical AVR",
+      "subcategoryHeaderLine": 785,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Aortic root disease + preserved leaflets without David procedure eval",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-026",
+      "name": "Valve-sparing root (David procedure) for aortic root disease",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 789,
+      "structuredDataElements": "Aortic root dilation, leaflet status, procedure",
+      "subcategory": "Surgical AVR",
+      "subcategoryHeaderLine": 785,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Aortic root surgery candidate without David vs Yacoub discussion",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-VHD-027",
+      "name": "Yacoub remodeling: anatomy-specific suitability",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 790,
+      "structuredDataElements": "Root anatomy, procedure selection",
+      "subcategory": "Surgical AVR",
+      "subcategoryHeaderLine": 785,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Root aneurysm + AV disease without composite graft (Bentall) eval",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-028",
+      "name": "Bentall procedure for root + valve disease",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 791,
+      "structuredDataElements": "Root size, AV disease, procedure",
+      "subcategory": "Surgical AVR",
+      "subcategoryHeaderLine": 785,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Small root + AVR without stentless valve option considered",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-029",
+      "name": "Stentless valve consideration in small root",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 792,
+      "structuredDataElements": "Annulus size, valve type",
+      "subcategory": "Surgical AVR",
+      "subcategoryHeaderLine": 785,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AVR candidate with pericardial preservation option not discussed",
+      "domains": [
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-VHD-025",
+      "name": "Ozaki procedure (AV neocuspidization) consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 793,
+      "structuredDataElements": "AVR candidacy, Ozaki referral",
+      "subcategory": "Surgical AVR",
+      "subcategoryHeaderLine": 785,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Primary MR surgical candidate at low-repair-rate center",
+      "domains": [
+        "D7",
+        "D13"
+      ],
+      "id": "GAP-VHD-030",
+      "name": "MV repair rate gap: reference center referral",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 798,
+      "structuredDataElements": "MR dx, facility repair rate",
+      "subcategory": "Surgical MVR",
+      "subcategoryHeaderLine": 795,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Isolated primary MV disease without minimally invasive/robotic option",
+      "domains": [
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-VHD-031",
+      "name": "Robotic MVR candidacy not discussed",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 799,
+      "structuredDataElements": "MV disease, procedure approach",
+      "subcategory": "Surgical MVR",
+      "subcategoryHeaderLine": 795,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "MV replacement done without documented repair feasibility assessment",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-VHD-032",
+      "name": "MV repair vs replacement: repair feasibility documentation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 800,
+      "structuredDataElements": "MV procedure, repair attempt note",
+      "subcategory": "Surgical MVR",
+      "subcategoryHeaderLine": 795,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "MV replacement without chordal preservation documentation",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-VHD-033",
+      "name": "Chordal preservation during MVR: technique documentation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 801,
+      "structuredDataElements": "MVR procedure, technique",
+      "subcategory": "Surgical MVR",
+      "subcategoryHeaderLine": 795,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "MR candidate without heart team documented device vs surgery decision",
+      "domains": [
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-VHD-035",
+      "name": "MitraClip/TEER vs surgery: heart team decision",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 802,
+      "structuredDataElements": "MR, heart team referral",
+      "subcategory": "Surgical MVR",
+      "subcategoryHeaderLine": 795,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Complex MV anatomy + incomplete repair without Alfieri stitch consideration",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-VHD-034",
+      "name": "Alfieri edge-to-edge surgical repair for complex MR",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 803,
+      "structuredDataElements": "MR complexity, Alfieri technique",
+      "subcategory": "Surgical MVR",
+      "subcategoryHeaderLine": 795,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-MV surgery without post-op monitoring for AF 30d",
+      "domains": [
+        "D7",
+        "D9",
+        "D10"
+      ],
+      "id": "GAP-VHD-036",
+      "name": "Post-MV surgery AF surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 804,
+      "structuredDataElements": "MV surgery, rhythm monitoring",
+      "subcategory": "Surgical MVR",
+      "subcategoryHeaderLine": 795,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Valve surgery + pre-op AF without concomitant Maze documented",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-VHD-037",
+      "name": "Concomitant Maze at valve surgery when AF present",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 809,
+      "structuredDataElements": "Valve surgery, AF dx, Maze CPT",
+      "subcategory": "Concomitant Procedures",
+      "subcategoryHeaderLine": 806,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Cardiac surgery + AF without LAA exclusion documented",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-VHD-038",
+      "name": "LAA exclusion (AtriClip) at cardiac surgery with AF",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 810,
+      "structuredDataElements": "Cardiac surgery, AF, AtriClip CPT",
+      "subcategory": "Concomitant Procedures",
+      "subcategoryHeaderLine": 806,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Left valve surgery + TR moderate or TA dilation without TV annuloplasty",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-039",
+      "name": "Tricuspid annuloplasty with left-sided valve surgery",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 811,
+      "structuredDataElements": "Left valve surgery, TR grade, TA size, TV procedure",
+      "subcategory": "Concomitant Procedures",
+      "subcategoryHeaderLine": 806,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Valve surgery + CAD needing revasc without concomitant CABG",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-VHD-040",
+      "name": "Concomitant CABG at valve surgery with CAD",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 812,
+      "structuredDataElements": "Valve surgery, CAD, CABG CPT",
+      "subcategory": "Concomitant Procedures",
+      "subcategoryHeaderLine": 806,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Small annulus + standard AVR without root enlargement consideration",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-041",
+      "name": "Root enlargement for small annulus",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 813,
+      "structuredDataElements": "Annulus size, root enlargement technique",
+      "subcategory": "Concomitant Procedures",
+      "subcategoryHeaderLine": 806,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "IE dx without Duke criteria components documented",
+      "domains": [
+        "D2",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-VHD-042",
+      "name": "Duke criteria 2023 documentation gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 818,
+      "structuredDataElements": "IE dx, Duke components (blood cx, echo, predisposition)",
+      "subcategory": "IE General",
+      "subcategoryHeaderLine": 815,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Suspected IE going directly to TEE without TTE",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-043",
+      "name": "IE suspected: TTE first before TEE appropriately",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 819,
+      "structuredDataElements": "Suspected IE, TTE, TEE sequence",
+      "subcategory": "IE General",
+      "subcategoryHeaderLine": 815,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Suspected IE + negative TTE without TEE follow-up",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-044",
+      "name": "IE with negative TTE: TEE gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 820,
+      "structuredDataElements": "IE suspected, TTE result, TEE",
+      "subcategory": "IE General",
+      "subcategoryHeaderLine": 815,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "BCN IE without serology for Coxiella, Bartonella, Tropheryma",
+      "domains": [
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-VHD-045",
+      "name": "Blood culture-negative IE: expanded workup gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 821,
+      "structuredDataElements": "BCN IE, serology panel",
+      "subcategory": "IE General",
+      "subcategoryHeaderLine": 815,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Prosthetic valve IE without FDG-PET/CT in diagnostic workup",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-VHD-046",
+      "name": "PVE: FDG-PET/CT consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 822,
+      "structuredDataElements": "PVE dx, FDG-PET procedure",
+      "subcategory": "IE General",
+      "subcategoryHeaderLine": 815,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "IE dx without ID consultation documented",
+      "domains": [
+        "D2",
+        "D11",
+        "D14"
+      ],
+      "id": "GAP-VHD-047",
+      "name": "IE: IDU/MDT coordination documented",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 823,
+      "structuredDataElements": "IE dx, ID consult encounter",
+      "subcategory": "IE General",
+      "subcategoryHeaderLine": 815,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "IE on abx without repeat blood cultures to confirm clearance",
+      "domains": [
+        "D5"
+      ],
+      "id": "GAP-VHD-048",
+      "name": "Repeat blood cultures during IE treatment",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 824,
+      "structuredDataElements": "IE, serial blood cx",
+      "subcategory": "IE General",
+      "subcategoryHeaderLine": 815,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "IE completion of treatment without end-of-therapy echo",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-049",
+      "name": "IE echocardiogram at end of therapy",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 825,
+      "structuredDataElements": "IE, abx completion, end-TTE",
+      "subcategory": "IE General",
+      "subcategoryHeaderLine": 815,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "aureus bacteremia: TEE indication adherence. S. aureus BSI (any) without TEE performed",
+      "domains": [
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-VHD-050",
+      "name": "S",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 830,
+      "structuredDataElements": "S. aureus cx, TEE procedure",
+      "subcategory": "IE Pathogens",
+      "subcategoryHeaderLine": 827,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Strep bovis group IE without colonoscopy for colon cancer screening",
+      "domains": [
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-VHD-051",
+      "name": "Streptococcus bovis/gallolyticus: colonoscopy gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 831,
+      "structuredDataElements": "Strep bovis cx, colonoscopy procedure",
+      "subcategory": "IE Pathogens",
+      "subcategoryHeaderLine": 827,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HACEK IE without appropriate antibiotic regimen",
+      "domains": [
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-VHD-052",
+      "name": "HACEK organisms: recognition and treatment",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 832,
+      "structuredDataElements": "HACEK cx, abx regimen",
+      "subcategory": "IE Pathogens",
+      "subcategoryHeaderLine": 827,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Candida or fungal IE without surgical referral",
+      "domains": [
+        "D5",
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-VHD-053",
+      "name": "Fungal IE: surgical consideration strongly indicated",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 833,
+      "structuredDataElements": "Fungal cx, surgical referral",
+      "subcategory": "IE Pathogens",
+      "subcategoryHeaderLine": 827,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "BCN IE + cat exposure/homelessness without Bartonella serology",
+      "domains": [
+        "D5",
+        "D7",
+        "D16"
+      ],
+      "id": "GAP-VHD-054",
+      "name": "Bartonella IE workup in BCN + exposure history",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 834,
+      "structuredDataElements": "BCN IE, Bartonella serology, SDOH flags",
+      "subcategory": "IE Pathogens",
+      "subcategoryHeaderLine": 827,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "BCN IE with culture negative x3 without Coxiella serology",
+      "domains": [
+        "D5"
+      ],
+      "id": "GAP-VHD-055",
+      "name": "Coxiella (Q fever) IE: chronic form workup",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 835,
+      "structuredDataElements": "BCN IE, Coxiella titers",
+      "subcategory": "IE Pathogens",
+      "subcategoryHeaderLine": 827,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "BCN IE with GI/arthritic symptoms without Whipple workup",
+      "domains": [
+        "D5"
+      ],
+      "id": "GAP-VHD-056",
+      "name": "Tropheryma whipplei IE: special culture/PCR",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 836,
+      "structuredDataElements": "BCN IE, T. whipplei PCR",
+      "subcategory": "IE Pathogens",
+      "subcategoryHeaderLine": 827,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "IE + new or worsening HF without surgical eval",
+      "domains": [
+        "D2",
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-VHD-057",
+      "name": "IE + acute HF: urgent surgery indicated",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 841,
+      "structuredDataElements": "IE, HF dx, surgical referral",
+      "subcategory": "IE Surgical",
+      "subcategoryHeaderLine": 838,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "IE + abscess on echo without surgical referral",
+      "domains": [
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-VHD-058",
+      "name": "IE + perivalvular abscess: surgical indication",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 842,
+      "structuredDataElements": "IE, abscess finding, referral",
+      "subcategory": "IE Surgical",
+      "subcategoryHeaderLine": 838,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PVE + dehiscence/fistula without surgical referral",
+      "domains": [
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-VHD-061",
+      "name": "PVE with dehiscence or fistula: urgent surgery",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 843,
+      "structuredDataElements": "PVE, imaging finding, surgical referral",
+      "subcategory": "IE Surgical",
+      "subcategoryHeaderLine": 838,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "IE + recurrent embolic event on abx without surgical eval",
+      "domains": [
+        "D2",
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-VHD-059",
+      "name": "IE + embolic event on therapy: surgery consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 844,
+      "structuredDataElements": "IE, embolic event, abx, surgery",
+      "subcategory": "IE Surgical",
+      "subcategoryHeaderLine": 838,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "IE + vegetation >10mm without surgical discussion",
+      "domains": [
+        "D7",
+        "D8",
+        "D14"
+      ],
+      "id": "GAP-VHD-060",
+      "name": "IE + large mobile vegetation (>10mm): surgery consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 845,
+      "structuredDataElements": "IE, vegetation size, surgical referral",
+      "subcategory": "IE Surgical",
+      "subcategoryHeaderLine": 838,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Right-sided IE + IVDU + persistent bacteremia without multi-D discussion",
+      "domains": [
+        "D2",
+        "D7",
+        "D14",
+        "D16"
+      ],
+      "id": "GAP-VHD-062",
+      "name": "Right-sided IE in IVDU: surgery vs medical management",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 846,
+      "structuredDataElements": "Right IE, IVDU dx (F11.x), surgical referral",
+      "subcategory": "IE Surgical",
+      "subcategoryHeaderLine": 838,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Prosthetic valve (Z95.2/Z95.3) + dental procedure without amoxicillin 2g",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-VHD-063",
+      "name": "IE prophylaxis pre-dental: prosthetic valve",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 851,
+      "structuredDataElements": "Prosthetic valve, dental procedure, abx",
+      "subcategory": "IE Prophylaxis",
+      "subcategoryHeaderLine": 848,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Prior IE + dental procedure without prophylaxis",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-VHD-064",
+      "name": "IE prophylaxis: prior IE pre-dental procedure",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 852,
+      "structuredDataElements": "Prior IE dx, dental CPT, abx",
+      "subcategory": "IE Prophylaxis",
+      "subcategoryHeaderLine": 848,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Unrepaired cyanotic CHD + dental/high-risk procedure without prophylaxis",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-VHD-065",
+      "name": "IE prophylaxis: unrepaired cyanotic CHD + procedure",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 853,
+      "structuredDataElements": "CHD dx, procedure, abx",
+      "subcategory": "IE Prophylaxis",
+      "subcategoryHeaderLine": 848,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Repaired CHD with residual + procedure without prophylaxis",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-VHD-066",
+      "name": "IE prophylaxis: prior CHD repair with residual defect + procedure",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 854,
+      "structuredDataElements": "CHD history, residual defect, procedure",
+      "subcategory": "IE Prophylaxis",
+      "subcategoryHeaderLine": 848,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "MVP or native valve disease without high-risk category receiving prophylaxis",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-VHD-067",
+      "name": "IE prophylaxis: inappropriate use (no indication)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 855,
+      "structuredDataElements": "Valve dx, prophylaxis med",
+      "subcategory": "IE Prophylaxis",
+      "subcategoryHeaderLine": 848,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Mech valve + gradient rise >=50% from baseline without thrombosis workup",
+      "domains": [
+        "D5",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-068",
+      "name": "Mechanical prosthetic valve thrombosis detection: elevated gradient",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 860,
+      "structuredDataElements": "Mech valve, serial gradients, workup",
+      "subcategory": "PVT",
+      "subcategoryHeaderLine": 857,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Suspected PVT without fluoroscopic leaflet motion assessment",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-VHD-069",
+      "name": "PVT confirmation: fluoroscopy/cinefluoroscopy for stuck leaflet",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 861,
+      "structuredDataElements": "PVT suspected, fluoroscopy",
+      "subcategory": "PVT",
+      "subcategoryHeaderLine": 857,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Suspected PVT without TEE",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-070",
+      "name": "PVT: TEE for thrombus visualization",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 862,
+      "structuredDataElements": "PVT suspected, TEE",
+      "subcategory": "PVT",
+      "subcategoryHeaderLine": 857,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Confirmed PVT without documented lysis-vs-surgery decision",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-VHD-071",
+      "name": "PVT treatment: fibrinolysis vs surgery decision doc",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 863,
+      "structuredDataElements": "PVT confirmed, treatment selection",
+      "subcategory": "PVT",
+      "subcategoryHeaderLine": 857,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-PVT without increased INR target + ASA adjunct",
+      "domains": [
+        "D3",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-VHD-072",
+      "name": "Post-PVT: anticoagulation intensification",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 864,
+      "structuredDataElements": "PVT history, INR target, ASA",
+      "subcategory": "PVT",
+      "subcategoryHeaderLine": 857,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-valve surgery + new AF without anticoagulation",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-VHD-077",
+      "name": "Post-valve AF: anticoagulation maintenance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 869,
+      "structuredDataElements": "Valve surgery, post-op AF, OAC",
+      "subcategory": "Post-op Surveillance",
+      "subcategoryHeaderLine": 866,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-op mean gradient >20 without workup",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-078",
+      "name": "Prosthesis dysfunction: mean gradient elevation threshold",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 870,
+      "structuredDataElements": "Post-op gradient, follow-up",
+      "subcategory": "Post-op Surveillance",
+      "subcategoryHeaderLine": 866,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Valve surgery without pre-discharge TTE",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-073",
+      "name": "Baseline post-op echo before discharge",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 871,
+      "structuredDataElements": "Valve surgery, pre-discharge echo",
+      "subcategory": "Post-op Surveillance",
+      "subcategoryHeaderLine": 866,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Valve surgery without 30-day post-op echo",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-074",
+      "name": "30-day post-op echo gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 872,
+      "structuredDataElements": "Valve surgery, 30d echo",
+      "subcategory": "Post-op Surveillance",
+      "subcategoryHeaderLine": 866,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Valve surgery without 6-month post-op echo for baseline comparison",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-075",
+      "name": "6-month post-op echo gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 873,
+      "structuredDataElements": "Valve surgery, 6-month echo",
+      "subcategory": "Post-op Surveillance",
+      "subcategoryHeaderLine": 866,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Valve surgery >1y without annual echo",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-076",
+      "name": "Annual post-op echo gap (beyond year 1)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 874,
+      "structuredDataElements": "Valve surgery date, annual echo",
+      "subcategory": "Post-op Surveillance",
+      "subcategoryHeaderLine": 866,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Rheumatic heart disease (I05-I09) without benzathine PCN prophylaxis",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-VHD-079",
+      "name": "Rheumatic fever secondary prophylaxis gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 879,
+      "structuredDataElements": "Rheumatic dx, BPG med/injection",
+      "subcategory": "Rheumatic",
+      "subcategoryHeaderLine": 876,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Rheumatic MS candidate for intervention without Wilkins score",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-080",
+      "name": "Rheumatic MS + Wilkins score for PMBC decision",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 880,
+      "structuredDataElements": "Rheumatic MS, TEE valve scoring",
+      "subcategory": "Rheumatic",
+      "subcategoryHeaderLine": 876,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Rheumatic MS with Wilkins<=8 + eligible anatomy without PMBC offered",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-081",
+      "name": "PMBC candidacy: anatomy-based selection",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 881,
+      "structuredDataElements": "MS, Wilkins, anatomy, PMBC procedure",
+      "subcategory": "Rheumatic",
+      "subcategoryHeaderLine": 876,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Rheumatic MS surgical candidate without commissurotomy vs MVR decision",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-VHD-082",
+      "name": "Commissurotomy vs MVR decision docs (rheumatic)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 882,
+      "structuredDataElements": "Rheumatic MS, procedure choice",
+      "subcategory": "Rheumatic",
+      "subcategoryHeaderLine": 876,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Rheumatic heart + AF on warfarin (DOAC contraindicated)",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-VHD-083",
+      "name": "Rheumatic heart + AF: anticoagulation adherence",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 883,
+      "structuredDataElements": "Rheumatic dx, AF, OAC type",
+      "subcategory": "Rheumatic",
+      "subcategoryHeaderLine": 876,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Family member with rheumatic heart without echo screening in FDRs",
+      "domains": [
+        "D2",
+        "D14",
+        "D17"
+      ],
+      "id": "GAP-VHD-084",
+      "name": "Rheumatic fever family screening gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 884,
+      "structuredDataElements": "Rheumatic proband, family referral",
+      "subcategory": "Rheumatic",
+      "subcategoryHeaderLine": 876,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Carcinoid syndrome suspicion without 5-HIAA measurement",
+      "domains": [
+        "D2",
+        "D5"
+      ],
+      "id": "GAP-VHD-085",
+      "name": "Carcinoid syndrome: 24-hour urinary 5-HIAA gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 889,
+      "structuredDataElements": "Carcinoid dx, 5-HIAA result",
+      "subcategory": "Carcinoid",
+      "subcategoryHeaderLine": 886,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Carcinoid syndrome without annual echo for TV/PV involvement",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-086",
+      "name": "Carcinoid heart: TV/PV surveillance echo",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 890,
+      "structuredDataElements": "Carcinoid dx, echo dates",
+      "subcategory": "Carcinoid",
+      "subcategoryHeaderLine": 886,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Carcinoid syndrome without somatostatin analog (octreotide/lanreotide)",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-VHD-087",
+      "name": "Carcinoid heart: somatostatin analog therapy",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 891,
+      "structuredDataElements": "Carcinoid dx, somatostatin analog",
+      "subcategory": "Carcinoid",
+      "subcategoryHeaderLine": 886,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Severe carcinoid TV disease + controlled primary without surgical eval",
+      "domains": [
+        "D2",
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-VHD-088",
+      "name": "Carcinoid heart: tricuspid/pulmonary valve surgery timing",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 892,
+      "structuredDataElements": "Carcinoid, TV/PV disease, surgical referral",
+      "subcategory": "Carcinoid",
+      "subcategoryHeaderLine": 886,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Carcinoid heart + hepatic mets without mets-directed therapy",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-VHD-089",
+      "name": "Carcinoid: hepatic metastasis control",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 893,
+      "structuredDataElements": "Carcinoid, liver mets, targeted therapy",
+      "subcategory": "Carcinoid",
+      "subcategoryHeaderLine": 886,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Carcinoid patient + procedure without octreotide preop protocol",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-VHD-090",
+      "name": "Carcinoid crisis prevention pre-procedure",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 894,
+      "structuredDataElements": "Carcinoid, procedure, octreotide orders",
+      "subcategory": "Carcinoid",
+      "subcategoryHeaderLine": 886,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Cabergoline/pergolide long-term without echo surveillance",
+      "domains": [
+        "D3",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-091",
+      "name": "Dopamine agonist (cabergoline/pergolide) valve surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 899,
+      "structuredDataElements": "Dopamine agonist, echo schedule",
+      "subcategory": "Drug-Induced",
+      "subcategoryHeaderLine": 896,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Chronic ergotamine without periodic echo",
+      "domains": [
+        "D3",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-092",
+      "name": "Ergotamine: valvular surveillance gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 900,
+      "structuredDataElements": "Ergotamine, echo schedule",
+      "subcategory": "Drug-Induced",
+      "subcategoryHeaderLine": 896,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "New valve disease + long-term serotonergic (MDMA, some TCAs) without drug review",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-VHD-093",
+      "name": "Serotonergic drug + valve dysfunction association check",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 901,
+      "structuredDataElements": "Valve dx, serotonergic meds",
+      "subcategory": "Drug-Induced",
+      "subcategoryHeaderLine": 896,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "History of anorectics + new valve disease without echo surveillance",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-VHD-094",
+      "name": "Benfluorex or fenfluramine history: valve surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 902,
+      "structuredDataElements": "Drug history, echo",
+      "subcategory": "Drug-Induced",
+      "subcategoryHeaderLine": 896,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Chest radiation >10y ago without periodic echo surveillance",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-095",
+      "name": "Prior chest radiation: valve surveillance gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 907,
+      "structuredDataElements": "Radiation history (Z92.3), echo schedule",
+      "subcategory": "Radiation",
+      "subcategoryHeaderLine": 904,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Radiation cardiac disease without comprehensive cardiac eval",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-096",
+      "name": "Radiation valve + CAD + pericardial: integrated management",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 908,
+      "structuredDataElements": "Radiation hx, cardiac evaluation",
+      "subcategory": "Radiation",
+      "subcategoryHeaderLine": 904,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Radiation AV disease + intervention candidate - TAVR preferred discussion",
+      "domains": [
+        "D2",
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-VHD-097",
+      "name": "Radiation valve: TAVR vs SAVR decision (high re-op risk)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 909,
+      "structuredDataElements": "Radiation, AV disease, procedure type",
+      "subcategory": "Radiation",
+      "subcategoryHeaderLine": 904,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Pregnant + mech valve + warfarin >5mg/day without LMWH transition in T1",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-VHD-099",
+      "name": "Mechanical valve + pregnancy 1st trimester: LMWH protocol",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 914,
+      "structuredDataElements": "Pregnancy, mech valve, warfarin dose, LMWH",
+      "subcategory": "Pregnancy",
+      "subcategoryHeaderLine": 911,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Pre-conception female + mechanical valve without counseling documented",
+      "domains": [
+        "D1",
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-VHD-098",
+      "name": "Mechanical valve + pregnancy: pre-conception counseling",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 915,
+      "structuredDataElements": "Sex, age, mech valve, counsel flowsheet",
+      "subcategory": "Pregnancy",
+      "subcategoryHeaderLine": 911,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Pregnant on LMWH without peak anti-Xa targeting 0.8-1.2",
+      "domains": [
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-VHD-100",
+      "name": "Mechanical valve + pregnancy: anti-Xa monitoring on LMWH",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 916,
+      "structuredDataElements": "Pregnancy, LMWH, anti-Xa levels",
+      "subcategory": "Pregnancy",
+      "subcategoryHeaderLine": 911,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Pregnant + mech valve near term without LMWH restart + delivery plan",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-VHD-101",
+      "name": "Mechanical valve + pregnancy 36 weeks: LMWH restart + delivery plan",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 917,
+      "structuredDataElements": "Pregnancy 36w+, mech valve, plan docs",
+      "subcategory": "Pregnancy",
+      "subcategoryHeaderLine": 911,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Severe AR asymptomatic + LVESD>=50 or LVEF<=55% without surgical eval",
+      "domains": [
+        "D7",
+        "D8",
+        "D14"
+      ],
+      "id": "GAP-VHD-103",
+      "name": "Severe chronic AR asymptomatic: surgical thresholds",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 922,
+      "structuredDataElements": "AR severity, LVESD, LVEF, referral",
+      "subcategory": "Valve Progression",
+      "subcategoryHeaderLine": 919,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Moderate AR without annual echo",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-VHD-102",
+      "name": "Moderate AR progression surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 923,
+      "structuredDataElements": "AR grade, echo dates",
+      "subcategory": "Valve Progression",
+      "subcategoryHeaderLine": 919,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Combined AS + MR + AR without integrated staging documented",
+      "domains": [
+        "D2",
+        "D8"
+      ],
+      "id": "GAP-VHD-104",
+      "name": "Mixed valve disease: comprehensive staging",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 924,
+      "structuredDataElements": "Multiple valve dx, severity grading",
+      "subcategory": "Valve Progression",
+      "subcategoryHeaderLine": 919,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Moderate MR by color only without EROA + RV + VC triangulation",
+      "domains": [
+        "D8"
+      ],
+      "id": "GAP-VHD-105",
+      "name": "Primary MR grade underestimation on single measure",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 925,
+      "structuredDataElements": "MR grade, EROA, RV, VC",
+      "subcategory": "Valve Progression",
+      "subcategoryHeaderLine": 919,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    }
+  ],
+  "module": "VHD",
+  "moduleHeaderLine": 749,
+  "specSection": "§6.5",
+  "specSource": "docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md",
+  "subcategories": [
+    {
+      "gapCount": 9,
+      "headerLine": 750,
+      "name": "Mechanical Valve"
+    },
+    {
+      "gapCount": 8,
+      "headerLine": 763,
+      "name": "Bioprosthetic Valve"
+    },
+    {
+      "gapCount": 6,
+      "headerLine": 775,
+      "name": "Prosthesis Selection"
+    },
+    {
+      "gapCount": 6,
+      "headerLine": 785,
+      "name": "Surgical AVR"
+    },
+    {
+      "gapCount": 7,
+      "headerLine": 795,
+      "name": "Surgical MVR"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 806,
+      "name": "Concomitant Procedures"
+    },
+    {
+      "gapCount": 8,
+      "headerLine": 815,
+      "name": "IE General"
+    },
+    {
+      "gapCount": 7,
+      "headerLine": 827,
+      "name": "IE Pathogens"
+    },
+    {
+      "gapCount": 6,
+      "headerLine": 838,
+      "name": "IE Surgical"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 848,
+      "name": "IE Prophylaxis"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 857,
+      "name": "PVT"
+    },
+    {
+      "gapCount": 6,
+      "headerLine": 866,
+      "name": "Post-op Surveillance"
+    },
+    {
+      "gapCount": 6,
+      "headerLine": 876,
+      "name": "Rheumatic"
+    },
+    {
+      "gapCount": 6,
+      "headerLine": 886,
+      "name": "Carcinoid"
+    },
+    {
+      "gapCount": 4,
+      "headerLine": 896,
+      "name": "Drug-Induced"
+    },
+    {
+      "gapCount": 3,
+      "headerLine": 904,
+      "name": "Radiation"
+    },
+    {
+      "gapCount": 4,
+      "headerLine": 911,
+      "name": "Pregnancy"
+    },
+    {
+      "gapCount": 4,
+      "headerLine": 919,
+      "name": "Valve Progression"
+    }
+  ],
+  "tierTotals": {
+    "T1": 8,
+    "T2": 72,
+    "T3": 25
+  },
+  "totalGaps": 105
+}

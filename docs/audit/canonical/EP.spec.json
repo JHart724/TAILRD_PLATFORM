@@ -1,0 +1,1805 @@
+{
+  "gaps": [
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "I48.x + CHA2DS2-VASc>=2 men or >=3 women without OAC",
+      "domains": [
+        "D1",
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-EP-001",
+      "name": "AF: Anticoagulation gap (CHA2DS2-VASc qualifying)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 311,
+      "structuredDataElements": "AF dx + CHA2DS2-VASc components (HF, HTN, age, DM, stroke/TIA, vasc, sex)",
+      "subcategory": "AF Anticoagulation",
+      "subcategoryHeaderLine": 308,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Dabigatran + severe renal impairment",
+      "domains": [
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-EP-006",
+      "name": "AF: Dabigatran in CrCl<30 (SAFETY)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": "SAFETY",
+      "safetyTagLiteral": "(SAFETY)",
+      "specLine": 312,
+      "structuredDataElements": "Dabigatran, CrCl/eGFR",
+      "subcategory": "AF Anticoagulation",
+      "subcategoryHeaderLine": 308,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "DOAC + Z95.2 or mechanical valve history",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-EP-007",
+      "name": "AF: DOAC on mechanical valve (CRITICAL SAFETY)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": "CRITICAL_SAFETY",
+      "safetyTagLiteral": "(CRITICAL SAFETY)",
+      "specLine": 313,
+      "structuredDataElements": "Valve history, DOAC",
+      "subcategory": "AF Anticoagulation",
+      "subcategoryHeaderLine": 308,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "DOAC + I05.0/I34.2 moderate-severe MS",
+      "domains": [
+        "D2",
+        "D3",
+        "D8"
+      ],
+      "id": "GAP-EP-008",
+      "name": "AF: DOAC on moderate-severe mitral stenosis",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 314,
+      "structuredDataElements": "MS dx + severity, DOAC",
+      "subcategory": "AF Anticoagulation",
+      "subcategoryHeaderLine": 308,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "OAC e-prescribed but zero pharmacy fills",
+      "domains": [
+        "D3",
+        "D21"
+      ],
+      "id": "GAP-EP-064",
+      "name": "AF: OAC prescribed but not filled (primary non-adherence)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 315,
+      "structuredDataElements": "E-Rx orders vs pharmacy claim fills",
+      "subcategory": "AF Anticoagulation",
+      "subcategoryHeaderLine": 308,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Proportion of days covered <80% in past 12mo",
+      "domains": [
+        "D21"
+      ],
+      "id": "GAP-EP-065",
+      "name": "AF: OAC adherence PDC<80% on chronic fills",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 316,
+      "structuredDataElements": "Pharmacy claim fill data with days-supply",
+      "subcategory": "AF Anticoagulation",
+      "subcategoryHeaderLine": 308,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "On warfarin with INR TTR<65% - DOAC switch",
+      "domains": [
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-EP-002",
+      "name": "AF: Warfarin with TTR<65%",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 317,
+      "structuredDataElements": "Warfarin med, serial INR values",
+      "subcategory": "AF Anticoagulation",
+      "subcategoryHeaderLine": 308,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "DOAC dose not matching CrCl-adjusted recommendation",
+      "domains": [
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-EP-003",
+      "name": "AF: DOAC dose inappropriate for CrCl",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 318,
+      "structuredDataElements": "DOAC type + dose, CrCl",
+      "subcategory": "AF Anticoagulation",
+      "subcategoryHeaderLine": 308,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Age>=80, wt<=60kg, Cr>=1.5 present but on 5 mg BID (should be 2.5)",
+      "domains": [
+        "D1",
+        "D3",
+        "D5",
+        "D6"
+      ],
+      "id": "GAP-EP-004",
+      "name": "AF: Apixaban dose reduction criteria missed",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 319,
+      "structuredDataElements": "Age, weight, Cr, apixaban dose",
+      "subcategory": "AF Anticoagulation",
+      "subcategoryHeaderLine": 308,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "On 2.5 mg BID without >=2 reduction criteria",
+      "domains": [
+        "D1",
+        "D3",
+        "D5",
+        "D6"
+      ],
+      "id": "GAP-EP-005",
+      "name": "AF: Apixaban under-dosing (2.5 BID without criteria)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 320,
+      "structuredDataElements": "Age, weight, Cr, apixaban dose",
+      "subcategory": "AF Anticoagulation",
+      "subcategoryHeaderLine": 308,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Edoxaban + CrCl>95",
+      "domains": [
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-EP-009",
+      "name": "AF: Edoxaban with CrCl>95 (reduced efficacy)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 321,
+      "structuredDataElements": "Edoxaban, CrCl",
+      "subcategory": "AF Anticoagulation",
+      "subcategoryHeaderLine": 308,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AF + recent PCI on OAC + DAPT beyond 1-6 mo per AUGUSTUS/PIONEER",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-EP-066",
+      "name": "AF: Triple therapy duration gap post-PCI",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 322,
+      "structuredDataElements": "AF, PCI date, DAPT components, OAC",
+      "subcategory": "AF Anticoagulation",
+      "subcategoryHeaderLine": 308,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Rivaroxaban prescribed - must be taken with food",
+      "domains": [
+        "D3"
+      ],
+      "id": "GAP-EP-010",
+      "name": "AF: Rivaroxaban food counseling",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 323,
+      "structuredDataElements": "Rivaroxaban med",
+      "subcategory": "AF Anticoagulation",
+      "subcategoryHeaderLine": 308,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AF + HAS-BLED high + documented OAC contraindication without LAAC referral",
+      "domains": [
+        "D2",
+        "D3",
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-EP-011",
+      "name": "LAAC: bleeding contraindication to OAC",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 328,
+      "structuredDataElements": "AF, bleeding hx, OAC hold reason, LAAC",
+      "subcategory": "LAAC",
+      "subcategoryHeaderLine": 325,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CHA2DS2-VASc>=3 + prior major bleed without LAAC discussion",
+      "domains": [
+        "D2",
+        "D14"
+      ],
+      "id": "GAP-EP-012",
+      "name": "LAAC: high CHA2DS2-VASc + bleed history",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 329,
+      "structuredDataElements": "CHA2DS2-VASc, bleed history",
+      "subcategory": "LAAC",
+      "subcategoryHeaderLine": 325,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LAAC with non-standard post-procedure antithrombotic regimen",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-EP-067",
+      "name": "Post-LAAC: antithrombotic protocol adherence",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 330,
+      "structuredDataElements": "LAAC procedure date, antithrombotic sequence",
+      "subcategory": "LAAC",
+      "subcategoryHeaderLine": 325,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LAAC without follow-up TEE",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-EP-068",
+      "name": "Post-LAAC: TEE surveillance at 45d-1y gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 331,
+      "structuredDataElements": "LAAC procedure, TEE dates",
+      "subcategory": "LAAC",
+      "subcategoryHeaderLine": 325,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LAAC with PDL>5mm on TEE without anticoagulation reassessment",
+      "domains": [
+        "D3",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-EP-069",
+      "name": "LAAC peridevice leak >5mm: management gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 332,
+      "structuredDataElements": "LAAC, PDL measurement, anticoag",
+      "subcategory": "LAAC",
+      "subcategoryHeaderLine": 325,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AF diagnosis within 12 months without rhythm control strategy",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-EP-013",
+      "name": "Early rhythm control candidate (EAST-AFNET 4)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 337,
+      "structuredDataElements": "AF onset date, AAD meds, ablation",
+      "subcategory": "Rhythm Control",
+      "subcategoryHeaderLine": 334,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AF + LVEF<=35 without ablation referral",
+      "domains": [
+        "D2",
+        "D7",
+        "D8",
+        "D14"
+      ],
+      "id": "GAP-EP-014",
+      "name": "AF ablation in HFrEF (CASTLE-AF)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 338,
+      "structuredDataElements": "AF, LVEF, ablation, referral",
+      "subcategory": "Rhythm Control",
+      "subcategoryHeaderLine": 334,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HFrEF on verapamil/diltiazem",
+      "domains": [
+        "D2",
+        "D3",
+        "D8"
+      ],
+      "id": "GAP-EP-017",
+      "name": "AF + non-DHP CCB in HFrEF (SAFETY)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": "SAFETY",
+      "safetyTagLiteral": "(SAFETY)",
+      "specLine": 339,
+      "structuredDataElements": "HF dx, LVEF, verapamil/diltiazem",
+      "subcategory": "Rhythm Control",
+      "subcategoryHeaderLine": 334,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Device-detected AHRE>=24h + CHA2DS2-VASc>=2",
+      "domains": [
+        "D1",
+        "D2",
+        "D10",
+        "D22"
+      ],
+      "id": "GAP-EP-018",
+      "name": "Subclinical AF: AHRE>=24h without anticoag eval",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 340,
+      "structuredDataElements": "AHRE from device, CHA2DS2-VASc",
+      "subcategory": "Rhythm Control",
+      "subcategoryHeaderLine": 334,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Paroxysmal AF symptomatic despite AAD",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-EP-015",
+      "name": "Symptomatic paroxysmal AF - ablation candidate",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 341,
+      "structuredDataElements": "AF, AAD history, symptoms",
+      "subcategory": "Rhythm Control",
+      "subcategoryHeaderLine": 334,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Recent cardioversion without 4+ weeks post-procedure OAC",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-EP-016",
+      "name": "Post-cardioversion anticoagulation duration gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 342,
+      "structuredDataElements": "Cardioversion CPT 92960, OAC continuation",
+      "subcategory": "Rhythm Control",
+      "subcategoryHeaderLine": 334,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Paroxysmal AF ablation candidate + pulmonary vein anatomy amenable",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-EP-070",
+      "name": "PFA ablation candidacy (pulsed field)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 343,
+      "structuredDataElements": "AF dx, PV imaging",
+      "subcategory": "Rhythm Control",
+      "subcategoryHeaderLine": 334,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-AF ablation with CHA2DS2-VASc qualifying but OAC stopped at 3mo",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-EP-071",
+      "name": "Post-ablation anticoagulation continuation gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 344,
+      "structuredDataElements": "Ablation date, OAC continuation, CHA2DS2-VASc",
+      "subcategory": "Rhythm Control",
+      "subcategoryHeaderLine": 334,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Prior AF ablation + recurrent AF symptoms at >3mo without redo discussion",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-EP-072",
+      "name": "Redo ablation consideration in recurrent AF",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 345,
+      "structuredDataElements": "Ablation history, AF recurrence",
+      "subcategory": "Rhythm Control",
+      "subcategoryHeaderLine": 334,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Surgical AF + cardiac surgery without concomitant Maze documented",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-EP-073",
+      "name": "Concomitant Maze at cardiac surgery with AF",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 346,
+      "structuredDataElements": "AF, cardiac surgery CPT, Maze CPT",
+      "subcategory": "Rhythm Control",
+      "subcategoryHeaderLine": 334,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "I63.9 cryptogenic stroke without ICM or 30-day monitor",
+      "domains": [
+        "D2",
+        "D7",
+        "D10"
+      ],
+      "id": "GAP-EP-019",
+      "name": "Cryptogenic stroke: ICM not implanted",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 347,
+      "structuredDataElements": "Stroke dx, ICM procedure",
+      "subcategory": "Rhythm Control",
+      "subcategoryHeaderLine": 334,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "WPW + AF on beta-blocker/CCB/digoxin - risk of VF",
+      "domains": [
+        "D2",
+        "D3",
+        "D9"
+      ],
+      "id": "GAP-EP-079",
+      "name": "Pre-excited AF: AV nodal blocker contraindicated (CRITICAL)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": "CRITICAL",
+      "safetyTagLiteral": "(CRITICAL)",
+      "specLine": 352,
+      "structuredDataElements": "WPW dx, AF dx, AV nodal blocker",
+      "subcategory": "Atrial Tachy/SVT",
+      "subcategoryHeaderLine": 349,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "I48.3 typical flutter + symptomatic without CTI ablation offered",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-EP-074",
+      "name": "Typical atrial flutter: CTI ablation candidate",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 353,
+      "structuredDataElements": "Atrial flutter dx, ablation procedure",
+      "subcategory": "Atrial Tachy/SVT",
+      "subcategoryHeaderLine": 349,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Recurrent focal AT symptomatic on AAD without ablation",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-EP-075",
+      "name": "Focal atrial tachycardia recurrent: ablation gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 354,
+      "structuredDataElements": "AT dx, AAD, ablation",
+      "subcategory": "Atrial Tachy/SVT",
+      "subcategoryHeaderLine": 349,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AVNRT diagnosis recurrent without ablation option discussed",
+      "domains": [
+        "D2",
+        "D3",
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-EP-076",
+      "name": "AVNRT recurrent symptomatic: ablation offered",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 355,
+      "structuredDataElements": "SVT dx, AAD, ablation referral",
+      "subcategory": "Atrial Tachy/SVT",
+      "subcategoryHeaderLine": 349,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AVRT dx without ablation",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-EP-077",
+      "name": "AVRT with concealed bypass tract: ablation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 356,
+      "structuredDataElements": "SVT dx, EP study, ablation",
+      "subcategory": "Atrial Tachy/SVT",
+      "subcategoryHeaderLine": 349,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "WPW pattern on ECG in pilot/athlete without risk stratification",
+      "domains": [
+        "D7",
+        "D9"
+      ],
+      "id": "GAP-EP-078",
+      "name": "WPW asymptomatic in high-risk occupation: EP study gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 357,
+      "structuredDataElements": "WPW ECG, EP study",
+      "subcategory": "Atrial Tachy/SVT",
+      "subcategoryHeaderLine": 349,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Athletes with ECG abnormalities without exercise + imaging workup",
+      "domains": [
+        "D7",
+        "D8",
+        "D9"
+      ],
+      "id": "GAP-EP-080",
+      "name": "Athlete's heart vs pathology: exercise stress + imaging gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 358,
+      "structuredDataElements": "ECG abnormalities, stress test, imaging",
+      "subcategory": "Atrial Tachy/SVT",
+      "subcategoryHeaderLine": 349,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "VT storm (>=3 sustained VT/24h) without escalation protocol",
+      "domains": [
+        "D2",
+        "D7",
+        "D11"
+      ],
+      "id": "GAP-EP-086",
+      "name": "VT storm: admission + sedation + ablation protocol",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 363,
+      "structuredDataElements": "VT storm pattern, ICU admission, ablation",
+      "subcategory": "VT/ICD",
+      "subcategoryHeaderLine": 360,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Ischemic heart disease + VT on AAD without ablation offered",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-EP-020",
+      "name": "Ischemic VT: catheter ablation consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 364,
+      "structuredDataElements": "CAD dx, VT dx, AAD, ablation",
+      "subcategory": "VT/ICD",
+      "subcategoryHeaderLine": 360,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "NICM + monomorphic VT without EP study",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-EP-021",
+      "name": "NICM VT: substrate mapping/ablation gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 365,
+      "structuredDataElements": "NICM dx, VT dx, EP study",
+      "subcategory": "VT/ICD",
+      "subcategoryHeaderLine": 360,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Ischemic VT + ICD shocks on AAD without ablation offered",
+      "domains": [
+        "D2",
+        "D3",
+        "D7",
+        "D10"
+      ],
+      "id": "GAP-EP-022",
+      "name": "VT ablation before amiodarone escalation (VANISH)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 366,
+      "structuredDataElements": "VT, ICD therapy log, AAD, ablation",
+      "subcategory": "VT/ICD",
+      "subcategoryHeaderLine": 360,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Ischemic VT + failed endocardial ablation without epicardial approach",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-EP-087",
+      "name": "Epicardial VT substrate: access planning",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 367,
+      "structuredDataElements": "Prior ablation, substrate imaging",
+      "subcategory": "VT/ICD",
+      "subcategoryHeaderLine": 360,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Refractory VT storm without SGB evaluation",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-EP-088",
+      "name": "Stellate ganglion block for refractory VT storm",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 368,
+      "structuredDataElements": "VT storm, SGB procedure",
+      "subcategory": "VT/ICD",
+      "subcategoryHeaderLine": 360,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ICD shock appropriateness review not documented after therapy",
+      "domains": [
+        "D10",
+        "D22"
+      ],
+      "id": "GAP-EP-089",
+      "name": "Inappropriate ICD shocks: programming optimization",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 369,
+      "structuredDataElements": "Device therapy log, programming review",
+      "subcategory": "VT/ICD",
+      "subcategoryHeaderLine": 360,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ECG type 1 Brugada pattern without formal diagnosis",
+      "domains": [
+        "D9"
+      ],
+      "id": "GAP-EP-023",
+      "name": "Brugada syndrome diagnosis gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 374,
+      "structuredDataElements": "ECG pattern",
+      "subcategory": "Channelopathies",
+      "subcategoryHeaderLine": 371,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LQTS (I49.81 or genetic) without beta-blocker",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-EP-024",
+      "name": "LQTS: beta-blocker gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 375,
+      "structuredDataElements": "LQTS dx, BB med",
+      "subcategory": "Channelopathies",
+      "subcategoryHeaderLine": 371,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "QTc>=500 on QT-prolonging drug without discontinuation",
+      "domains": [
+        "D3",
+        "D9"
+      ],
+      "id": "GAP-EP-025",
+      "name": "Acquired LQT on QT-prolonging drug (SAFETY)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": "SAFETY",
+      "safetyTagLiteral": "(SAFETY)",
+      "specLine": 376,
+      "structuredDataElements": "QTc, QT drug list (amiodarone, dronedarone, sotalol, methadone, etc.)",
+      "subcategory": "Channelopathies",
+      "subcategoryHeaderLine": 371,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LQTS dx + QT-prolonging drug prescribed",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-EP-026",
+      "name": "Congenital LQTS: QT-prolonging drug avoidance gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 377,
+      "structuredDataElements": "LQTS dx, QT drug",
+      "subcategory": "Channelopathies",
+      "subcategoryHeaderLine": 371,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Confirmed Brugada + syncope or FHx SCD without ICD",
+      "domains": [
+        "D2",
+        "D10",
+        "D17"
+      ],
+      "id": "GAP-EP-027",
+      "name": "SCN5A-mediated Brugada: device decision",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 378,
+      "structuredDataElements": "Brugada dx, syncope, FHx, ICD status",
+      "subcategory": "Channelopathies",
+      "subcategoryHeaderLine": 371,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CPVT dx without nadolol or flecainide added",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-EP-028",
+      "name": "CPVT: beta-blocker + flecainide consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 379,
+      "structuredDataElements": "CPVT dx, med list",
+      "subcategory": "Channelopathies",
+      "subcategoryHeaderLine": 371,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LQT1 on propranolol instead of nadolol",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-EP-081",
+      "name": "LQT1 genotype specific: BB choice (nadolol preferred)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 380,
+      "structuredDataElements": "LQT1 genotype, BB identity",
+      "subcategory": "Channelopathies",
+      "subcategoryHeaderLine": 371,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LQT2 genotype + auditory/postpartum triggers not counseled",
+      "domains": [
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-EP-082",
+      "name": "LQT2 trigger identification counseling gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 381,
+      "structuredDataElements": "LQT2 genotype, counseling flowsheet",
+      "subcategory": "Channelopathies",
+      "subcategoryHeaderLine": 371,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LQT3 (SCN5A gain-of-function) without mexiletine evaluated",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-EP-083",
+      "name": "LQT3 mexiletine eligibility",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 382,
+      "structuredDataElements": "LQT3 genotype, mexiletine med",
+      "subcategory": "Channelopathies",
+      "subcategoryHeaderLine": 371,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "SQTS diagnosis without quinidine evaluated",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-EP-084",
+      "name": "Short QT syndrome: quinidine consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 383,
+      "structuredDataElements": "SQTS dx, quinidine med",
+      "subcategory": "Channelopathies",
+      "subcategoryHeaderLine": 371,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ERS + VF survivor without ICD or quinidine",
+      "domains": [
+        "D2",
+        "D3",
+        "D10"
+      ],
+      "id": "GAP-EP-085",
+      "name": "Early repolarization syndrome post-VF: ICD + quinidine",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 384,
+      "structuredDataElements": "ERS dx, VF hx, ICD, quinidine",
+      "subcategory": "Channelopathies",
+      "subcategoryHeaderLine": 371,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Complete AV block, symptomatic SB, sinus node dysfunction - pacer indicated",
+      "domains": [
+        "D2",
+        "D9",
+        "D10"
+      ],
+      "id": "GAP-EP-029",
+      "name": "Pacemaker Class I indication not implanted",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 389,
+      "structuredDataElements": "AV block dx, sinus node dx, device status",
+      "subcategory": "Pacing",
+      "subcategoryHeaderLine": 386,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Bradyarrhythmia + AV nodal blocker before pacer decision",
+      "domains": [
+        "D2",
+        "D3",
+        "D6"
+      ],
+      "id": "GAP-EP-030",
+      "name": "Symptomatic bradycardia on AV nodal blocker: med reduction first",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 390,
+      "structuredDataElements": "Bradycardia dx, HR, med list",
+      "subcategory": "Pacing",
+      "subcategoryHeaderLine": 386,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Recurrent vasovagal syncope without tilt or ILR",
+      "domains": [
+        "D2",
+        "D7",
+        "D10"
+      ],
+      "id": "GAP-EP-031",
+      "name": "Vasovagal syncope recurrent: tilt or ILR",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 391,
+      "structuredDataElements": "Syncope dx, tilt procedure, ILR",
+      "subcategory": "Pacing",
+      "subcategoryHeaderLine": 386,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Single chamber RV pacemaker with >=40% pacing and HF symptoms",
+      "domains": [
+        "D2",
+        "D10",
+        "D22"
+      ],
+      "id": "GAP-EP-032",
+      "name": "Pacemaker syndrome from RV pacing >=40%: upgrade discussion",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 392,
+      "structuredDataElements": "Pacing %, device type, HF dx",
+      "subcategory": "Pacing",
+      "subcategoryHeaderLine": 386,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AF + awake HR<40 on meds without meds first, then pacer",
+      "domains": [
+        "D2",
+        "D3",
+        "D6"
+      ],
+      "id": "GAP-EP-033",
+      "name": "Chronic AF with HR<40: permanent pacing vs med adjustment",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 393,
+      "structuredDataElements": "AF, HR pattern, med list",
+      "subcategory": "Pacing",
+      "subcategoryHeaderLine": 386,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CIED + BSI without extraction planning",
+      "domains": [
+        "D2",
+        "D5",
+        "D10"
+      ],
+      "id": "GAP-EP-034",
+      "name": "Isolated left-sided CIED infection: full system removal",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 394,
+      "structuredDataElements": "Device, BSI culture, extraction procedure",
+      "subcategory": "Pacing",
+      "subcategoryHeaderLine": 386,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-AVR complete AV block or symptomatic without pacer",
+      "domains": [
+        "D2",
+        "D7",
+        "D9",
+        "D10"
+      ],
+      "id": "GAP-EP-035",
+      "name": "Post-AVR (surgical or TAVR) conduction: pacer indication",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 395,
+      "structuredDataElements": "AVR procedure, AV block dx, device status",
+      "subcategory": "Pacing",
+      "subcategoryHeaderLine": 386,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Single chamber pacer indication without leadless option discussed",
+      "domains": [
+        "D2",
+        "D7",
+        "D10"
+      ],
+      "id": "GAP-EP-036",
+      "name": "Leadless pacemaker candidate (AV block + single chamber)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 396,
+      "structuredDataElements": "Pacer indication, leadless option notation",
+      "subcategory": "Pacing",
+      "subcategoryHeaderLine": 386,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Pacer indication with expected >=40% pacing - LBBAP preferred",
+      "domains": [
+        "D7",
+        "D10"
+      ],
+      "id": "GAP-EP-037",
+      "name": "LBBAP (left bundle branch area pacing) consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 397,
+      "structuredDataElements": "Pacer indication, LBBAP procedure",
+      "subcategory": "Pacing",
+      "subcategoryHeaderLine": 386,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Device on recall list without acknowledged follow-up plan",
+      "domains": [
+        "D10",
+        "D22"
+      ],
+      "id": "GAP-EP-038",
+      "name": "CIED recall: patient notification and follow-up",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 402,
+      "structuredDataElements": "Device model + recall matching",
+      "subcategory": "CIED Management",
+      "subcategoryHeaderLine": 399,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Abandoned lead in situ without periodic surveillance",
+      "domains": [
+        "D7",
+        "D10"
+      ],
+      "id": "GAP-EP-039",
+      "name": "CIED abandoned lead: infection risk discussion",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 403,
+      "structuredDataElements": "Lead history, imaging surveillance",
+      "subcategory": "CIED Management",
+      "subcategoryHeaderLine": 399,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "MRI ordered for patient with non-conditional CIED without pathway clarified",
+      "domains": [
+        "D7",
+        "D10"
+      ],
+      "id": "GAP-EP-040",
+      "name": "CIED MRI-conditional vs non-conditional identification gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 404,
+      "structuredDataElements": "MRI order, device model",
+      "subcategory": "CIED Management",
+      "subcategoryHeaderLine": 399,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Primary prevention ICD without documented driving restrictions counsel",
+      "domains": [
+        "D6",
+        "D10"
+      ],
+      "id": "GAP-EP-041",
+      "name": "Primary prevention ICD lifestyle/driving counseling",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 405,
+      "structuredDataElements": "ICD, counsel flowsheet",
+      "subcategory": "CIED Management",
+      "subcategoryHeaderLine": 399,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Palliative care + active ICD without shock therapy deactivation discussion",
+      "domains": [
+        "D2",
+        "D10",
+        "D11"
+      ],
+      "id": "GAP-EP-042",
+      "name": "CIED at EOL: deactivation discussion",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 406,
+      "structuredDataElements": "Palliative encounter, device, deactivation flowsheet",
+      "subcategory": "CIED Management",
+      "subcategoryHeaderLine": 399,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Pocket infection without full system extraction",
+      "domains": [
+        "D2",
+        "D10"
+      ],
+      "id": "GAP-EP-090",
+      "name": "Post-CIED infection: full system extraction",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 407,
+      "structuredDataElements": "CIED, infection dx, extraction procedure",
+      "subcategory": "CIED Management",
+      "subcategoryHeaderLine": 399,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Primary prevention ICD candidate age<50 without pacing need - S-ICD",
+      "domains": [
+        "D1",
+        "D10"
+      ],
+      "id": "GAP-EP-092",
+      "name": "S-ICD candidate (young, no pacing need)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 408,
+      "structuredDataElements": "Age, pacing need, device selection",
+      "subcategory": "CIED Management",
+      "subcategoryHeaderLine": 399,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Device interrogation shows lead impedance anomaly without follow-up",
+      "domains": [
+        "D10",
+        "D22"
+      ],
+      "id": "GAP-EP-091",
+      "name": "CIED lead failure pattern detection",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 409,
+      "structuredDataElements": "Lead impedance trend from interrogation",
+      "subcategory": "CIED Management",
+      "subcategoryHeaderLine": 399,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "On amiodarone without TSH in past 6 months",
+      "domains": [
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-EP-043",
+      "name": "Amiodarone: TSH overdue",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 414,
+      "structuredDataElements": "Amiodarone med, TSH result dates",
+      "subcategory": "AAD Safety",
+      "subcategoryHeaderLine": 411,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "On amiodarone without AST/ALT in past 6 months",
+      "domains": [
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-EP-044",
+      "name": "Amiodarone: LFT overdue",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 415,
+      "structuredDataElements": "Amiodarone med, LFT result dates",
+      "subcategory": "AAD Safety",
+      "subcategoryHeaderLine": 411,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Starting amiodarone without baseline PFT or CXR",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-EP-045",
+      "name": "Amiodarone: baseline PFT/CXR gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 416,
+      "structuredDataElements": "Amiodarone start, PFT/CXR history",
+      "subcategory": "AAD Safety",
+      "subcategoryHeaderLine": 411,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Permanent AF or severe HF + dronedarone",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-EP-046",
+      "name": "Dronedarone: contraindicated in permanent AF or NYHA III-IV (SAFETY)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": "SAFETY",
+      "safetyTagLiteral": "(SAFETY)",
+      "specLine": 417,
+      "structuredDataElements": "AF type, NYHA proxy, dronedarone",
+      "subcategory": "AAD Safety",
+      "subcategoryHeaderLine": 411,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Sotalol started outpatient without documented inpatient telemetry",
+      "domains": [
+        "D3",
+        "D11"
+      ],
+      "id": "GAP-EP-047",
+      "name": "Sotalol initiation: inpatient QT monitoring gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 418,
+      "structuredDataElements": "Sotalol start, hospitalization flag",
+      "subcategory": "AAD Safety",
+      "subcategoryHeaderLine": 411,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Dofetilide without inpatient QT protocol",
+      "domains": [
+        "D3",
+        "D11"
+      ],
+      "id": "GAP-EP-048",
+      "name": "Dofetilide initiation: mandatory inpatient protocol",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 419,
+      "structuredDataElements": "Dofetilide start, inpatient encounter",
+      "subcategory": "AAD Safety",
+      "subcategoryHeaderLine": 411,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Flecainide or propafenone + CAD or structural heart disease",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-EP-049",
+      "name": "Flecainide/propafenone in structural heart disease (SAFETY)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": "SAFETY",
+      "safetyTagLiteral": "(SAFETY)",
+      "specLine": 420,
+      "structuredDataElements": "CAD/SHD dx, flecainide/propafenone",
+      "subcategory": "AAD Safety",
+      "subcategoryHeaderLine": 411,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ICD with appropriate shock alerts requiring programming optimization",
+      "domains": [
+        "D10",
+        "D22"
+      ],
+      "id": "GAP-EP-050",
+      "name": "Inappropriate ICD shocks evaluation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 421,
+      "structuredDataElements": "Device shock history",
+      "subcategory": "AAD Safety",
+      "subcategoryHeaderLine": 411,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "R55 syncope dx without ECG in encounter",
+      "domains": [
+        "D2",
+        "D9"
+      ],
+      "id": "GAP-EP-093",
+      "name": "Syncope without ECG documented",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 426,
+      "structuredDataElements": "Syncope dx, ECG date",
+      "subcategory": "Syncope",
+      "subcategoryHeaderLine": 423,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Exertional syncope without echo + exercise testing",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-EP-094",
+      "name": "Exertional syncope: structural workup gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 427,
+      "structuredDataElements": "Syncope pattern, echo, stress test",
+      "subcategory": "Syncope",
+      "subcategoryHeaderLine": 423,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Syncope + significant LVH or LVEF<35 without ICD risk assessment",
+      "domains": [
+        "D2",
+        "D8",
+        "D10"
+      ],
+      "id": "GAP-EP-095",
+      "name": "Syncope + structural heart disease: ICD eval",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 428,
+      "structuredDataElements": "Syncope, wall thickness, LVEF, ICD",
+      "subcategory": "Syncope",
+      "subcategoryHeaderLine": 423,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "OH + antihypertensive/alpha-blocker without med reconciliation",
+      "domains": [
+        "D2",
+        "D3",
+        "D6"
+      ],
+      "id": "GAP-EP-097",
+      "name": "Orthostatic hypotension: med review gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 429,
+      "structuredDataElements": "OH dx, med list",
+      "subcategory": "Syncope",
+      "subcategoryHeaderLine": 423,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Orthostatic symptoms + HR rise>30 without POTS workup",
+      "domains": [
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-EP-096",
+      "name": "POTS diagnostic gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 430,
+      "structuredDataElements": "Orthostatic vitals, POTS dx",
+      "subcategory": "Syncope",
+      "subcategoryHeaderLine": 423,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Unexplained syncope age>=60 without carotid sinus massage",
+      "domains": [
+        "D1",
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-EP-098",
+      "name": "Carotid sinus hypersensitivity: CSM documented",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 431,
+      "structuredDataElements": "Age, syncope dx, CSM documentation",
+      "subcategory": "Syncope",
+      "subcategoryHeaderLine": 423,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Cardiac arrest survivor without TTM protocol documentation",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-EP-099",
+      "name": "Post-arrest: TTM not documented",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 436,
+      "structuredDataElements": "Arrest dx (I46.x), TTM flowsheet/procedure",
+      "subcategory": "Cardiac Arrest",
+      "subcategoryHeaderLine": 433,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-arrest neuroprognostication before 72h",
+      "domains": [
+        "D2",
+        "D7",
+        "D11"
+      ],
+      "id": "GAP-EP-100",
+      "name": "Post-arrest: neurological prognostication timing",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 437,
+      "structuredDataElements": "Arrest date, neuro assessment dates",
+      "subcategory": "Cardiac Arrest",
+      "subcategoryHeaderLine": 433,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-arrest with suspected ACS without coronary angiography",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-EP-101",
+      "name": "Post-arrest: coronary angiography appropriate use",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 438,
+      "structuredDataElements": "Arrest, ACS suspicion, angio procedure",
+      "subcategory": "Cardiac Arrest",
+      "subcategoryHeaderLine": 433,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Young (age<40) cardiac arrest without family genetic evaluation",
+      "domains": [
+        "D1",
+        "D2",
+        "D14",
+        "D17"
+      ],
+      "id": "GAP-EP-102",
+      "name": "Cardiac arrest: family genetic counseling gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 439,
+      "structuredDataElements": "Age, arrest dx, genetic referral",
+      "subcategory": "Cardiac Arrest",
+      "subcategoryHeaderLine": 433,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    }
+  ],
+  "module": "EP",
+  "moduleHeaderLine": 307,
+  "specSection": "§6.2",
+  "specSource": "docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md",
+  "subcategories": [
+    {
+      "gapCount": 13,
+      "headerLine": 308,
+      "name": "AF Anticoagulation"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 325,
+      "name": "LAAC"
+    },
+    {
+      "gapCount": 11,
+      "headerLine": 334,
+      "name": "Rhythm Control"
+    },
+    {
+      "gapCount": 7,
+      "headerLine": 349,
+      "name": "Atrial Tachy/SVT"
+    },
+    {
+      "gapCount": 7,
+      "headerLine": 360,
+      "name": "VT/ICD"
+    },
+    {
+      "gapCount": 11,
+      "headerLine": 371,
+      "name": "Channelopathies"
+    },
+    {
+      "gapCount": 9,
+      "headerLine": 386,
+      "name": "Pacing"
+    },
+    {
+      "gapCount": 8,
+      "headerLine": 399,
+      "name": "CIED Management"
+    },
+    {
+      "gapCount": 8,
+      "headerLine": 411,
+      "name": "AAD Safety"
+    },
+    {
+      "gapCount": 6,
+      "headerLine": 423,
+      "name": "Syncope"
+    },
+    {
+      "gapCount": 4,
+      "headerLine": 433,
+      "name": "Cardiac Arrest"
+    }
+  ],
+  "tierTotals": {
+    "T1": 15,
+    "T2": 62,
+    "T3": 12
+  },
+  "totalGaps": 89
+}

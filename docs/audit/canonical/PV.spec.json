@@ -1,0 +1,2131 @@
+{
+  "gaps": [
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Claudication symptoms or I73.9 without ABI",
+      "domains": [
+        "D2",
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-PV-001",
+      "name": "PAD: ABI never measured in symptomatic patient",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 931,
+      "structuredDataElements": "Claudication dx, ABI flowsheet",
+      "subcategory": "PAD Detection",
+      "subcategoryHeaderLine": 928,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "DM age>=50 + smoking/neuropathy without ABI",
+      "domains": [
+        "D1",
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-PV-002",
+      "name": "Diabetic + PAD risk: ABI screening gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 932,
+      "structuredDataElements": "DM, age, risk factors, ABI",
+      "subcategory": "PAD Detection",
+      "subcategoryHeaderLine": 928,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ABI<=0.9 without I73.9 or I70.2x on problem list",
+      "domains": [
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-PV-003",
+      "name": "Abnormal ABI (<=0.9) without PAD dx coded",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 933,
+      "structuredDataElements": "ABI result, PAD dx",
+      "subcategory": "PAD Detection",
+      "subcategoryHeaderLine": 928,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ABI>1.4 without toe-brachial index",
+      "domains": [
+        "D6"
+      ],
+      "id": "GAP-PV-004",
+      "name": "Non-compressible ABI (>1.4): TBI follow-up gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 934,
+      "structuredDataElements": "ABI, TBI flowsheet",
+      "subcategory": "PAD Detection",
+      "subcategoryHeaderLine": 928,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Claudication + normal resting ABI without exercise ABI",
+      "domains": [
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-PV-005",
+      "name": "PAD: exercise ABI for normal resting ABI + symptoms",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 935,
+      "structuredDataElements": "Symptoms, resting ABI, exercise ABI",
+      "subcategory": "PAD Detection",
+      "subcategoryHeaderLine": 928,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PAD dx without Rutherford category documented",
+      "domains": [
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-PV-006",
+      "name": "PAD Rutherford classification gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 936,
+      "structuredDataElements": "PAD dx, classification flowsheet",
+      "subcategory": "PAD Detection",
+      "subcategoryHeaderLine": 928,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PAD dx without Fontaine stage documented",
+      "domains": [
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-PV-007",
+      "name": "PAD Fontaine staging",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 937,
+      "structuredDataElements": "PAD dx, Fontaine stage",
+      "subcategory": "PAD Detection",
+      "subcategoryHeaderLine": 928,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PAD without COMPASS-regimen consideration",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-PV-011",
+      "name": "PAD: rivaroxaban 2.5 BID + ASA (COMPASS/VOYAGER)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 942,
+      "structuredDataElements": "PAD, rivaroxaban 2.5, ASA",
+      "subcategory": "PAD Prevention",
+      "subcategoryHeaderLine": 939,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "I73.9 or I70.2x without any statin",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-PV-008",
+      "name": "PAD: statin not prescribed",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 943,
+      "structuredDataElements": "PAD dx, statin med",
+      "subcategory": "PAD Prevention",
+      "subcategoryHeaderLine": 939,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PAD without high-intensity statin unless intolerant",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-PV-009",
+      "name": "PAD: high-intensity statin gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 944,
+      "structuredDataElements": "PAD, statin intensity",
+      "subcategory": "PAD Prevention",
+      "subcategoryHeaderLine": 939,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PAD without ASA or clopidogrel",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-PV-010",
+      "name": "PAD: antiplatelet gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 945,
+      "structuredDataElements": "PAD, antiplatelet med",
+      "subcategory": "PAD Prevention",
+      "subcategoryHeaderLine": 939,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Claudication + Rutherford I-II without cilostazol unless CI",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-PV-012",
+      "name": "PAD: cilostazol for claudication",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 946,
+      "structuredDataElements": "Claudication, Rutherford, cilostazol, HF",
+      "subcategory": "PAD Prevention",
+      "subcategoryHeaderLine": 939,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Claudication without supervised exercise therapy referral (CPT 93668)",
+      "domains": [
+        "D2",
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-PV-013",
+      "name": "PAD: supervised exercise therapy referral",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 947,
+      "structuredDataElements": "Claudication, SET CPT",
+      "subcategory": "PAD Prevention",
+      "subcategoryHeaderLine": 939,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PAD + active smoker without cessation intervention",
+      "domains": [
+        "D2",
+        "D3",
+        "D16"
+      ],
+      "id": "GAP-PV-014",
+      "name": "PAD: smoking cessation intervention",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 948,
+      "structuredDataElements": "PAD, smoking status, cessation program",
+      "subcategory": "PAD Prevention",
+      "subcategoryHeaderLine": 939,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PAD + DM + A1c>8 without intensification",
+      "domains": [
+        "D2",
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-PV-015",
+      "name": "PAD + DM: A1c target gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 949,
+      "structuredDataElements": "PAD, DM, A1c, DM meds",
+      "subcategory": "PAD Prevention",
+      "subcategoryHeaderLine": 939,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PAD + SBP>140 without antihypertensive intensification",
+      "domains": [
+        "D2",
+        "D3",
+        "D6"
+      ],
+      "id": "GAP-PV-016",
+      "name": "PAD + BP control: SBP>140 gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 950,
+      "structuredDataElements": "PAD, SBP, antihypertensives",
+      "subcategory": "PAD Prevention",
+      "subcategoryHeaderLine": 939,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CLTI (rest pain, ulcer, gangrene) without revasc team discussion",
+      "domains": [
+        "D2",
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-PV-017",
+      "name": "CLTI: BEST-CLI-eligible heart team discussion",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 955,
+      "structuredDataElements": "CLTI dx, heart team referral",
+      "subcategory": "CLTI",
+      "subcategoryHeaderLine": 952,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CLTI + intervention without documented strategy",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-018",
+      "name": "CLTI: endovascular vs surgical decision (BEST-CLI)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 956,
+      "structuredDataElements": "CLTI, intervention type decision",
+      "subcategory": "CLTI",
+      "subcategoryHeaderLine": 952,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CLTI + diabetic foot without MDT podiatry/wound referral",
+      "domains": [
+        "D2",
+        "D14"
+      ],
+      "id": "GAP-PV-019",
+      "name": "CLTI + diabetic foot: multidisciplinary team",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 957,
+      "structuredDataElements": "CLTI, DM, foot ulcer, referrals",
+      "subcategory": "CLTI",
+      "subcategoryHeaderLine": 952,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CLTI with infrapopliteal disease without pedal loop consideration",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-PV-020",
+      "name": "Pedal loop angioplasty for distal CLTI",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 958,
+      "structuredDataElements": "CLTI, TASC lesion, pedal approach",
+      "subcategory": "CLTI",
+      "subcategoryHeaderLine": 952,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CLTI without WIfI (Wound/Ischemia/foot Infection) staging",
+      "domains": [
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-PV-021",
+      "name": "CLTI: WIfI staging documentation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 959,
+      "structuredDataElements": "CLTI, WIfI components",
+      "subcategory": "CLTI",
+      "subcategoryHeaderLine": 952,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CLTI without amputation risk stratification",
+      "domains": [
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-PV-022",
+      "name": "CLTI: SVS amputation risk assessment",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 960,
+      "structuredDataElements": "CLTI, risk stratification flowsheet",
+      "subcategory": "CLTI",
+      "subcategoryHeaderLine": 952,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Iliac disease + TASC A/B without endovascular intervention option",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-PV-023",
+      "name": "TASC II A/B iliac lesion: endovascular approach",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 965,
+      "structuredDataElements": "Iliac imaging, TASC class, procedure",
+      "subcategory": "TASC Staging",
+      "subcategoryHeaderLine": 962,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Iliac disease + TASC C/D without appropriate approach decision",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-PV-024",
+      "name": "TASC II C/D iliac: endovascular experienced operator or surgical bypass",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 966,
+      "structuredDataElements": "Iliac imaging, TASC class, procedure",
+      "subcategory": "TASC Staging",
+      "subcategoryHeaderLine": 962,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Fem-pop disease + TASC A/B without endovascular first",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-PV-025",
+      "name": "TASC II A/B fem-pop: endovascular first",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 967,
+      "structuredDataElements": "Fem-pop imaging, TASC, procedure",
+      "subcategory": "TASC Staging",
+      "subcategoryHeaderLine": 962,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Fem-pop TASC C/D without bypass vs hybrid documented",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-PV-026",
+      "name": "TASC II C/D fem-pop: hybrid vs bypass decision",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 968,
+      "structuredDataElements": "Fem-pop, TASC, procedure decision",
+      "subcategory": "TASC Staging",
+      "subcategoryHeaderLine": 962,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Complex aortoiliac without CERAB vs open decision",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-PV-027",
+      "name": "CERAB (covered endovascular reconstruction of aortic bifurcation): complex aortoiliac",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 969,
+      "structuredDataElements": "Aortoiliac imaging, procedure",
+      "subcategory": "TASC Staging",
+      "subcategoryHeaderLine": 962,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Sudden abdominal pain + risk factors without mesenteric CTA",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-028",
+      "name": "Acute mesenteric ischemia: suspected without CTA",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 974,
+      "structuredDataElements": "Abdominal pain dx, CTA abd",
+      "subcategory": "Mesenteric Ischemia",
+      "subcategoryHeaderLine": 971,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-prandial pain + weight loss without mesenteric imaging",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-029",
+      "name": "Chronic mesenteric ischemia: food fear + weight loss without workup",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 975,
+      "structuredDataElements": "Symptoms, mesenteric CTA/US",
+      "subcategory": "Mesenteric Ischemia",
+      "subcategoryHeaderLine": 971,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Chronic mesenteric ischemia + 2+ vessel disease without revasc eval",
+      "domains": [
+        "D2",
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-PV-030",
+      "name": "Confirmed CMI: revasc indication",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 976,
+      "structuredDataElements": "CMI dx, vessel disease, procedure",
+      "subcategory": "Mesenteric Ischemia",
+      "subcategoryHeaderLine": 971,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Young patient + post-prandial pain + celiac compression on imaging",
+      "domains": [
+        "D1",
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-031",
+      "name": "Median arcuate ligament syndrome consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 977,
+      "structuredDataElements": "Age, pain, celiac imaging",
+      "subcategory": "Mesenteric Ischemia",
+      "subcategoryHeaderLine": 971,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Shock + elevated lactate + abdominal pain without NOMI consideration",
+      "domains": [
+        "D2",
+        "D5",
+        "D6"
+      ],
+      "id": "GAP-PV-032",
+      "name": "Non-occlusive mesenteric ischemia (NOMI) in shock",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 978,
+      "structuredDataElements": "Shock, lactate, abdominal exam",
+      "subcategory": "Mesenteric Ischemia",
+      "subcategoryHeaderLine": 971,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "BP uncontrolled on 3+ agents including diuretic without RAS workup",
+      "domains": [
+        "D2",
+        "D3",
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-PV-033",
+      "name": "Resistant HTN: RAS screening gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 983,
+      "structuredDataElements": "BP, med count, RAS imaging",
+      "subcategory": "Renal Artery",
+      "subcategoryHeaderLine": 980,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HTN age<35 female without FMD imaging screening",
+      "domains": [
+        "D1",
+        "D2",
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-PV-034",
+      "name": "FMD (fibromuscular dysplasia) screening in young HTN female",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 984,
+      "structuredDataElements": "Age, sex, HTN, imaging",
+      "subcategory": "Renal Artery",
+      "subcategoryHeaderLine": 980,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "RAS dx + HTN controlled without documented CORAL-aligned decision",
+      "domains": [
+        "D2",
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-PV-035",
+      "name": "RAS intervention: CORAL-aligned decision docs",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 985,
+      "structuredDataElements": "RAS dx, BP control, decision",
+      "subcategory": "Renal Artery",
+      "subcategoryHeaderLine": 980,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Flash pulmonary edema + bilateral RAS without intervention",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-036",
+      "name": "Flash pulmonary edema + bilateral RAS: intervention",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 986,
+      "structuredDataElements": "Pulm edema, RAS bilateral, intervention",
+      "subcategory": "Renal Artery",
+      "subcategoryHeaderLine": 980,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Takayasu dx without serial ESR/CRP + imaging",
+      "domains": [
+        "D2",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-PV-037",
+      "name": "Takayasu arteritis: ESR/CRP monitoring + imaging surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 991,
+      "structuredDataElements": "Takayasu dx, ESR/CRP, imaging dates",
+      "subcategory": "Vasculitis",
+      "subcategoryHeaderLine": 988,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Active Takayasu without immunosuppression",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-PV-038",
+      "name": "Takayasu: glucocorticoid + steroid-sparing agent gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 992,
+      "structuredDataElements": "Takayasu, med list",
+      "subcategory": "Vasculitis",
+      "subcategoryHeaderLine": 988,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Suspected GCA age>=50 without biopsy or imaging",
+      "domains": [
+        "D1",
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-039",
+      "name": "Giant cell arteritis: temporal artery biopsy or large-vessel imaging",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 993,
+      "structuredDataElements": "Age, GCA suspected, biopsy/imaging",
+      "subcategory": "Vasculitis",
+      "subcategoryHeaderLine": 988,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "GCA dx without prompt steroid + IL-6 inhibitor consideration",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-PV-040",
+      "name": "GCA: steroid initiation + tocilizumab consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 994,
+      "structuredDataElements": "GCA dx, med list",
+      "subcategory": "Vasculitis",
+      "subcategoryHeaderLine": 988,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Buerger dx + continued smoking without intensive cessation",
+      "domains": [
+        "D2",
+        "D3",
+        "D16"
+      ],
+      "id": "GAP-PV-041",
+      "name": "Buerger disease (thromboangiitis obliterans): smoking cessation critical",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 995,
+      "structuredDataElements": "Buerger dx, smoking, cessation",
+      "subcategory": "Vasculitis",
+      "subcategoryHeaderLine": 988,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Behcet + vascular thrombosis without integrated management",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-PV-042",
+      "name": "Behcet vascular involvement: anticoag + immunosuppression",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 996,
+      "structuredDataElements": "Behcet, vascular thrombosis, meds",
+      "subcategory": "Vasculitis",
+      "subcategoryHeaderLine": 988,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "BP differential without vascular workup",
+      "domains": [
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-PV-043",
+      "name": "Subclavian stenosis: BP differential >15 mmHg arms",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1001,
+      "structuredDataElements": "Bilateral BP, imaging",
+      "subcategory": "Upper Extremity",
+      "subcategoryHeaderLine": 998,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Subclavian stenosis + vertebrobasilar symptoms without duplex/angio",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-PV-044",
+      "name": "Subclavian steal syndrome: symptoms + imaging",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1002,
+      "structuredDataElements": "Symptoms, vertebral flow imaging",
+      "subcategory": "Upper Extremity",
+      "subcategoryHeaderLine": 998,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Upper extremity symptoms + positional without TOS workup",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-045",
+      "name": "Thoracic outlet syndrome: positional workup",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1003,
+      "structuredDataElements": "Symptoms, positional maneuvers, imaging",
+      "subcategory": "Upper Extremity",
+      "subcategoryHeaderLine": 998,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Young athlete + calf claudication without PAES consideration",
+      "domains": [
+        "D1",
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-046",
+      "name": "Popliteal entrapment syndrome in young athlete",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1004,
+      "structuredDataElements": "Age, symptoms, imaging",
+      "subcategory": "Upper Extremity",
+      "subcategoryHeaderLine": 998,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Pre-dialysis CKD without vessel mapping for AVF planning",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-047",
+      "name": "Pre-dialysis access mapping gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1005,
+      "structuredDataElements": "CKD stage 4-5, vessel mapping US",
+      "subcategory": "Upper Extremity",
+      "subcategoryHeaderLine": 998,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Secondary Raynaud + digital ulcer without stepwise therapy",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-PV-049",
+      "name": "Secondary Raynaud + digital ischemia: CCB + PDE5i",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1010,
+      "structuredDataElements": "Raynaud, ulcer, med list",
+      "subcategory": "Raynaud",
+      "subcategoryHeaderLine": 1007,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Scleroderma + Raynaud without rheumatology coordination",
+      "domains": [
+        "D2",
+        "D14"
+      ],
+      "id": "GAP-PV-050",
+      "name": "Scleroderma-associated Raynaud: early referral",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1011,
+      "structuredDataElements": "Scleroderma, Raynaud, referral",
+      "subcategory": "Raynaud",
+      "subcategoryHeaderLine": 1007,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Raynaud dx without ANA + nailfold capillaroscopy",
+      "domains": [
+        "D2",
+        "D5"
+      ],
+      "id": "GAP-PV-048",
+      "name": "Raynaud primary vs secondary: distinction workup",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1012,
+      "structuredDataElements": "Raynaud dx, ANA, capillaroscopy",
+      "subcategory": "Raynaud",
+      "subcategoryHeaderLine": 1007,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AAA>=5.5 cm male without surgical/endo referral",
+      "domains": [
+        "D1",
+        "D2",
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-PV-055",
+      "name": "AAA >=5.5 cm (male) intervention threshold",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1017,
+      "structuredDataElements": "AAA size, sex, referral",
+      "subcategory": "AAA",
+      "subcategoryHeaderLine": 1014,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AAA>=5.0 cm female without surgical/endo referral",
+      "domains": [
+        "D1",
+        "D2",
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-PV-056",
+      "name": "AAA >=5.0 cm (female) intervention threshold",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1018,
+      "structuredDataElements": "AAA size, sex, referral",
+      "subcategory": "AAA",
+      "subcategoryHeaderLine": 1014,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Male age 65-75 smoking history without AAA US screening",
+      "domains": [
+        "D1",
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-051",
+      "name": "AAA screening: male age 65-75 ever-smoker",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1019,
+      "structuredDataElements": "Age, sex, smoking hx, AAA screen US",
+      "subcategory": "AAA",
+      "subcategoryHeaderLine": 1014,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AAA expanding >0.5 cm/6mo without intervention discussion",
+      "domains": [
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-PV-057",
+      "name": "AAA rapid expansion: intervention",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1020,
+      "structuredDataElements": "Serial AAA sizes, referral",
+      "subcategory": "AAA",
+      "subcategoryHeaderLine": 1014,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AAA 3.0-3.9 cm without surveillance US every 3 years",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-052",
+      "name": "AAA surveillance: 3.0-3.9 every 3 years",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1021,
+      "structuredDataElements": "AAA size, US dates",
+      "subcategory": "AAA",
+      "subcategoryHeaderLine": 1014,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AAA 4.0-4.9 cm without annual US",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-053",
+      "name": "AAA surveillance: 4.0-4.9 annual",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1022,
+      "structuredDataElements": "AAA size, US dates",
+      "subcategory": "AAA",
+      "subcategoryHeaderLine": 1014,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AAA 5.0-5.4 cm without 6-month surveillance",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-054",
+      "name": "AAA surveillance: 5.0-5.4 every 6 months",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1023,
+      "structuredDataElements": "AAA size, US dates",
+      "subcategory": "AAA",
+      "subcategoryHeaderLine": 1014,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Recent stroke/TIA + carotid stenosis>=70% without revasc within 2 weeks",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-058",
+      "name": "Symptomatic carotid stenosis>=70%: revasc within 2 weeks",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1028,
+      "structuredDataElements": "Stroke/TIA, carotid severity, CEA/CAS date",
+      "subcategory": "Carotid/CVA",
+      "subcategoryHeaderLine": 1025,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Asymptomatic carotid 70-99% without documented decision rationale",
+      "domains": [
+        "D2",
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-PV-059",
+      "name": "CREST-2 pattern: asymptomatic carotid 70-99% decision docs",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1029,
+      "structuredDataElements": "Carotid severity, symptoms, decision",
+      "subcategory": "Carotid/CVA",
+      "subcategoryHeaderLine": 1025,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-carotid revasc without antiplatelet + statin",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-PV-060",
+      "name": "Post-CEA/CAS antiplatelet + statin continuation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1030,
+      "structuredDataElements": "Carotid procedure, med list",
+      "subcategory": "Carotid/CVA",
+      "subcategoryHeaderLine": 1025,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-CEA/CAS without duplex at 1 month, then annual",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-PV-061",
+      "name": "Carotid duplex surveillance post-revasc",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1031,
+      "structuredDataElements": "Procedure, duplex dates",
+      "subcategory": "Carotid/CVA",
+      "subcategoryHeaderLine": 1025,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ICAD + stroke/TIA without SAMMPRIS-aligned medical therapy",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-PV-062",
+      "name": "Intracranial stenosis: aggressive medical therapy (SAMMPRIS)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1032,
+      "structuredDataElements": "ICAD, stroke/TIA, med list",
+      "subcategory": "Carotid/CVA",
+      "subcategoryHeaderLine": 1025,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Extensive proximal DVT without thrombolysis discussion",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-063",
+      "name": "Iliofemoral DVT: thrombolysis consideration (ATTRACT)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1037,
+      "structuredDataElements": "DVT extent, CDT procedure",
+      "subcategory": "Venous Disease",
+      "subcategoryHeaderLine": 1034,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Recurrent VTE without thrombophilia workup",
+      "domains": [
+        "D2",
+        "D5"
+      ],
+      "id": "GAP-PV-064",
+      "name": "Recurrent DVT + thrombophilia workup gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1038,
+      "structuredDataElements": "VTE history, thrombophilia labs",
+      "subcategory": "Venous Disease",
+      "subcategoryHeaderLine": 1034,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Left iliofemoral DVT without May-Thurner evaluation",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-065",
+      "name": "May-Thurner syndrome: left iliac DVT + compression check",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1039,
+      "structuredDataElements": "DVT laterality, iliac imaging",
+      "subcategory": "Venous Disease",
+      "subcategoryHeaderLine": 1034,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Upper extremity DVT in athlete/active patient without TOS workup",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-066",
+      "name": "Paget-Schroetter (upper extremity effort thrombosis)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1040,
+      "structuredDataElements": "UE DVT, TOS evaluation",
+      "subcategory": "Venous Disease",
+      "subcategoryHeaderLine": 1034,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-DVT PTS symptoms without compression therapy order",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-PV-067",
+      "name": "Post-thrombotic syndrome: compression + skin care",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1041,
+      "structuredDataElements": "DVT history, PTS dx, compression Rx",
+      "subcategory": "Venous Disease",
+      "subcategoryHeaderLine": 1034,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "IVC filter placement without documented AC contraindication",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-PV-068",
+      "name": "IVC filter placement: contraindication to AC documented",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1042,
+      "structuredDataElements": "Filter placement, AC hold reason",
+      "subcategory": "Venous Disease",
+      "subcategoryHeaderLine": 1034,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Retrievable filter placed >6 months without retrieval",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-PV-069",
+      "name": "Retrievable IVC filter: retrieval at 3-6 months gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1043,
+      "structuredDataElements": "Filter placement date, retrieval CPT",
+      "subcategory": "Venous Disease",
+      "subcategoryHeaderLine": 1034,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CEAP class 2+ without compression therapy order",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-PV-070",
+      "name": "Chronic venous insufficiency: compression therapy gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1044,
+      "structuredDataElements": "CEAP class, compression Rx",
+      "subcategory": "Venous Disease",
+      "subcategoryHeaderLine": 1034,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Varicose veins + CEAP 3+ symptomatic without ablation eval",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-071",
+      "name": "Varicose veins intervention: CEAP 3+ with symptoms",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1045,
+      "structuredDataElements": "CEAP class, symptoms, ablation procedure",
+      "subcategory": "Venous Disease",
+      "subcategoryHeaderLine": 1034,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PE dx without PESI/sPESI scoring",
+      "domains": [
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-PV-072",
+      "name": "PESI or sPESI risk stratification not documented",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1050,
+      "structuredDataElements": "PE dx, PESI components",
+      "subcategory": "PE Risk Strat",
+      "subcategoryHeaderLine": 1047,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Submassive PE with RV dysfunction without CDT eval",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-PV-073",
+      "name": "PE + RV strain: catheter-directed therapy evaluation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1051,
+      "structuredDataElements": "PE, RV size/TAPSE, CDT",
+      "subcategory": "PE Risk Strat",
+      "subcategoryHeaderLine": 1047,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Massive PE (hypotension) without lysis/embolectomy/ECMO",
+      "domains": [
+        "D2",
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-PV-074",
+      "name": "Massive PE: systemic lysis or surgical embolectomy",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1052,
+      "structuredDataElements": "PE, hemodynamics, intervention",
+      "subcategory": "PE Risk Strat",
+      "subcategoryHeaderLine": 1047,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Submassive PE without mechanical thrombectomy evaluation",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-PV-075",
+      "name": "FlowTriever/EKOS candidacy in submassive PE",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1053,
+      "structuredDataElements": "PE severity, thrombectomy procedure",
+      "subcategory": "PE Risk Strat",
+      "subcategoryHeaderLine": 1047,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PE on AC without 3-6 mo review for duration decision",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-PV-076",
+      "name": "Post-PE anticoagulation duration review",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1054,
+      "structuredDataElements": "PE date, AC continuation",
+      "subcategory": "PE Risk Strat",
+      "subcategoryHeaderLine": 1047,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Unprovoked PE without age-appropriate cancer screening",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-077",
+      "name": "Unprovoked PE: cancer screening",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1055,
+      "structuredDataElements": "Unprovoked PE, cancer screening status",
+      "subcategory": "PE Risk Strat",
+      "subcategoryHeaderLine": 1047,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CTEPH dx without pulmonary thromboendarterectomy eligibility assessment",
+      "domains": [
+        "D2",
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-PV-079",
+      "name": "CTEPH dx: PTE evaluation (operable vs not)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1060,
+      "structuredDataElements": "CTEPH dx, PTE referral",
+      "subcategory": "CTEPH",
+      "subcategoryHeaderLine": 1057,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-PE + persistent dyspnea at 3-6mo without V/Q scan",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-078",
+      "name": "Post-PE 3-6mo persistent dyspnea: V/Q for CTEPH",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1061,
+      "structuredDataElements": "PE history, dyspnea, V/Q",
+      "subcategory": "CTEPH",
+      "subcategoryHeaderLine": 1057,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Inoperable CTEPH without BPA evaluation",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-PV-080",
+      "name": "Inoperable CTEPH: balloon pulmonary angioplasty consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1062,
+      "structuredDataElements": "CTEPH inoperable, BPA procedure",
+      "subcategory": "CTEPH",
+      "subcategoryHeaderLine": 1057,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CTEPH inoperable or residual after PTE without riociguat",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-PV-081",
+      "name": "CTEPH medical therapy: riociguat",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1063,
+      "structuredDataElements": "CTEPH status, riociguat med",
+      "subcategory": "CTEPH",
+      "subcategoryHeaderLine": 1057,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PAH dx without WHO functional class in last 12mo",
+      "domains": [
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-PV-082",
+      "name": "PAH functional class not documented",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1068,
+      "structuredDataElements": "PAH dx, FC flowsheet",
+      "subcategory": "PAH",
+      "subcategoryHeaderLine": 1065,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PAH without risk stratification tool (ESC/ERS or REVEAL 2.0)",
+      "domains": [
+        "D2",
+        "D5",
+        "D6",
+        "D8"
+      ],
+      "id": "GAP-PV-083",
+      "name": "PAH risk stratification: low-intermediate-high",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1069,
+      "structuredDataElements": "PAH dx, risk tool components",
+      "subcategory": "PAH",
+      "subcategoryHeaderLine": 1065,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "New PAH without combination therapy initiation",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-PV-084",
+      "name": "PAH initial therapy: ERA + PDE5i combination",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1070,
+      "structuredDataElements": "PAH dx, med list",
+      "subcategory": "PAH",
+      "subcategoryHeaderLine": 1065,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PAH on background triple therapy without sotatercept eval",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-PV-085",
+      "name": "PAH sotatercept (STELLAR trial) candidacy",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1071,
+      "structuredDataElements": "PAH, meds, sotatercept",
+      "subcategory": "PAH",
+      "subcategoryHeaderLine": 1065,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PAH functional decline without prostacyclin escalation",
+      "domains": [
+        "D3",
+        "D6"
+      ],
+      "id": "GAP-PV-086",
+      "name": "PAH + functional decline: prostacyclin escalation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1072,
+      "structuredDataElements": "PAH, FC trend, prostacyclin",
+      "subcategory": "PAH",
+      "subcategoryHeaderLine": 1065,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PAH + intermediate-high risk on max therapy without transplant referral",
+      "domains": [
+        "D2",
+        "D3",
+        "D14"
+      ],
+      "id": "GAP-PV-087",
+      "name": "PAH lung transplant referral timing",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1073,
+      "structuredDataElements": "PAH risk, meds, transplant referral",
+      "subcategory": "PAH",
+      "subcategoryHeaderLine": 1065,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Recurrent epistaxis + telangiectasias without HHT evaluation",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-088",
+      "name": "HHT (Osler-Weber-Rendu) screening in recurrent epistaxis",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1078,
+      "structuredDataElements": "Epistaxis, telangiectasia, HHT workup",
+      "subcategory": "AVM",
+      "subcategoryHeaderLine": 1075,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Hypoxia + HHT without pulmonary AVM imaging",
+      "domains": [
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-PV-089",
+      "name": "Pulmonary AVM: hypoxia + paradoxical embolus risk",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1079,
+      "structuredDataElements": "Hypoxia, HHT, pulm AVM imaging",
+      "subcategory": "AVM",
+      "subcategoryHeaderLine": 1075,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HHT + iron deficiency anemia without GI endoscopy",
+      "domains": [
+        "D2",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-PV-090",
+      "name": "HHT: endoscopic evaluation for GI AVM",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1080,
+      "structuredDataElements": "HHT, Fe, endoscopy",
+      "subcategory": "AVM",
+      "subcategoryHeaderLine": 1075,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Dialysis access without annual flow measurement",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-PV-091",
+      "name": "AVF surveillance: annual access flow",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1085,
+      "structuredDataElements": "Dialysis, access flow",
+      "subcategory": "Vascular Access",
+      "subcategoryHeaderLine": 1082,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Recurrent AV access failure without salvage strategy",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-PV-092",
+      "name": "AV access thrombosis: salvage vs new access",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1086,
+      "structuredDataElements": "Access failure pattern, strategy",
+      "subcategory": "Vascular Access",
+      "subcategoryHeaderLine": 1082,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Prior central line + upper extremity swelling without venogram",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-093",
+      "name": "Central venous stenosis post-central line",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1087,
+      "structuredDataElements": "Line history, swelling, venogram",
+      "subcategory": "Vascular Access",
+      "subcategoryHeaderLine": 1082,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Lymphedema dx without ISL stage documented",
+      "domains": [
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-PV-094",
+      "name": "Lymphedema staging documentation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1092,
+      "structuredDataElements": "Lymphedema, staging flowsheet",
+      "subcategory": "Lymphatic/Misc",
+      "subcategoryHeaderLine": 1089,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-cancer lymphedema without CDT (complete decongestive therapy) referral",
+      "domains": [
+        "D2",
+        "D14"
+      ],
+      "id": "GAP-PV-095",
+      "name": "Secondary lymphedema after cancer: CDT referral",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1093,
+      "structuredDataElements": "Lymphedema, cancer hx, CDT referral",
+      "subcategory": "Lymphatic/Misc",
+      "subcategoryHeaderLine": 1089,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Major vascular surgery without pre-op cardiac risk (RCRI or NSQIP)",
+      "domains": [
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-PV-096",
+      "name": "Pre-vascular surgery cardiac risk stratification",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1098,
+      "structuredDataElements": "Vascular surgery, pre-op eval",
+      "subcategory": "Peri-procedure",
+      "subcategoryHeaderLine": 1095,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "eGFR<45 + vascular contrast procedure without pre-hydration",
+      "domains": [
+        "D3",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-PV-097",
+      "name": "Contrast-induced nephropathy prophylaxis in CKD + vascular procedure",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1099,
+      "structuredDataElements": "eGFR, procedure, hydration",
+      "subcategory": "Peri-procedure",
+      "subcategoryHeaderLine": 1095,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Lower extremity bypass without 3-6-12 mo duplex",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-PV-098",
+      "name": "Post-bypass surveillance: 3, 6, 12 mo duplex",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1100,
+      "structuredDataElements": "Bypass procedure, duplex schedule",
+      "subcategory": "Peri-procedure",
+      "subcategoryHeaderLine": 1095,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "EVAR without surveillance CT schedule adherence",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-PV-099",
+      "name": "EVAR surveillance: CT at 1 month, 6 months, annual",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1101,
+      "structuredDataElements": "EVAR, CT schedule",
+      "subcategory": "Peri-procedure",
+      "subcategoryHeaderLine": 1095,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "EVAR surveillance showing endoleak without intervention decision",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-PV-100",
+      "name": "Endoleak detection post-EVAR: type and management",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1102,
+      "structuredDataElements": "EVAR, endoleak type, decision",
+      "subcategory": "Peri-procedure",
+      "subcategoryHeaderLine": 1095,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "DM without annual foot exam + ABI",
+      "domains": [
+        "D2",
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-PV-101",
+      "name": "Diabetic foot: annual monofilament + ABI",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1107,
+      "structuredDataElements": "DM, foot exam flowsheet, ABI",
+      "subcategory": "Special Populations",
+      "subcategoryHeaderLine": 1104,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PAD + rural/ADI high without home-based exercise program",
+      "domains": [
+        "D2",
+        "D26"
+      ],
+      "id": "GAP-PV-102",
+      "name": "Rural/ADI-high + PAD: SET telehealth alternative",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1108,
+      "structuredDataElements": "PAD, ADI overlay, SET/home program",
+      "subcategory": "Special Populations",
+      "subcategoryHeaderLine": 1104,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Pregnancy + aortic emergency without coordinated care plan",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-PV-103",
+      "name": "Pregnancy + vascular emergency (AAA, dissection)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1109,
+      "structuredDataElements": "Pregnancy, aortic emergency, plan docs",
+      "subcategory": "Special Populations",
+      "subcategoryHeaderLine": 1104,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Elderly + PAD without CFS or frailty assessment",
+      "domains": [
+        "D1",
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-PV-105",
+      "name": "Elderly + PAD + frailty: Clinical Frailty Scale",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1110,
+      "structuredDataElements": "Age, PAD, frailty tool",
+      "subcategory": "Special Populations",
+      "subcategoryHeaderLine": 1104,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Transgender + hormone therapy without VTE risk counseling documented",
+      "domains": [
+        "D1",
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-PV-104",
+      "name": "Transgender hormone therapy + VTE risk counseling",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 1111,
+      "structuredDataElements": "Gender identity, hormone tx, counsel",
+      "subcategory": "Special Populations",
+      "subcategoryHeaderLine": 1104,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    }
+  ],
+  "module": "PV",
+  "moduleHeaderLine": 927,
+  "specSection": "§6.6",
+  "specSource": "docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md",
+  "subcategories": [
+    {
+      "gapCount": 7,
+      "headerLine": 928,
+      "name": "PAD Detection"
+    },
+    {
+      "gapCount": 9,
+      "headerLine": 939,
+      "name": "PAD Prevention"
+    },
+    {
+      "gapCount": 6,
+      "headerLine": 952,
+      "name": "CLTI"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 962,
+      "name": "TASC Staging"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 971,
+      "name": "Mesenteric Ischemia"
+    },
+    {
+      "gapCount": 4,
+      "headerLine": 980,
+      "name": "Renal Artery"
+    },
+    {
+      "gapCount": 6,
+      "headerLine": 988,
+      "name": "Vasculitis"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 998,
+      "name": "Upper Extremity"
+    },
+    {
+      "gapCount": 3,
+      "headerLine": 1007,
+      "name": "Raynaud"
+    },
+    {
+      "gapCount": 7,
+      "headerLine": 1014,
+      "name": "AAA"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 1025,
+      "name": "Carotid/CVA"
+    },
+    {
+      "gapCount": 9,
+      "headerLine": 1034,
+      "name": "Venous Disease"
+    },
+    {
+      "gapCount": 6,
+      "headerLine": 1047,
+      "name": "PE Risk Strat"
+    },
+    {
+      "gapCount": 4,
+      "headerLine": 1057,
+      "name": "CTEPH"
+    },
+    {
+      "gapCount": 6,
+      "headerLine": 1065,
+      "name": "PAH"
+    },
+    {
+      "gapCount": 3,
+      "headerLine": 1075,
+      "name": "AVM"
+    },
+    {
+      "gapCount": 3,
+      "headerLine": 1082,
+      "name": "Vascular Access"
+    },
+    {
+      "gapCount": 2,
+      "headerLine": 1089,
+      "name": "Lymphatic/Misc"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 1095,
+      "name": "Peri-procedure"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 1104,
+      "name": "Special Populations"
+    }
+  ],
+  "tierTotals": {
+    "T1": 7,
+    "T2": 82,
+    "T3": 16
+  },
+  "totalGaps": 105
+}
