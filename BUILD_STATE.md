@@ -8,13 +8,13 @@
 
 | Field | Value |
 |---|---|
-| Last updated | 2026-05-03 (Day 5 of Phase 0) — HF audit ship |
+| Last updated | 2026-05-03 (Day 5 of Phase 0) — CAD audit ship |
 | Last update by | jhart |
-| Last update commit SHA | `a5cb10c` (PR #224 — BUILD_STATE.md Tier 1 ledger) |
+| Last update commit SHA | _pending CAD audit PR_ (next: PR #226) |
 | Plan reference | `docs/PATH_TO_ROBUST.md` v1.2 (active 2026-04-28) |
-| Plan target | **Under revision per v2.0**; current v1.2 timeline (3-4 months) preliminary revised to **7-9 months** per HF audit §6.3; v2.0 PATH_TO_ROBUST due ~2026-05-19 will codify final timeline |
+| Plan target | **Under revision per v2.0**; v1.2 timeline (3-4 months) revised preliminary to **7-9 months raw scope**; per CAD audit §13, this translates to ~3-6 months AI-assisted wall-clock depending on work-mix; v2.0 PATH_TO_ROBUST due ~2026-05-19 will codify with explicit raw-scope vs wall-clock disambiguation |
 | Phase 0 day | **5 of 21** (16 days remaining in Phase 0 window) |
-| Phase 0 hours budget | **~40-60h consumed of 120-150h** (~60-90h remaining; HF audit ~7-10h logged) |
+| Phase 0 hours budget | **~46-68h raw-scope consumed of 120-150h** (~52-82h remaining; HF audit ~7-10h logged + CAD audit ~6-8h logged. Wall-clock actual much smaller per AUDIT-028) |
 | v2.0 PATH_TO_ROBUST due | end of Week 3 (~2026-05-19) |
 
 ---
@@ -36,10 +36,10 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 
 - [/] PV — codebase inventory + spec↔code addendum complete (26.7% coverage)
 - [/] HF — spec↔code addendum complete (46% any / 21.4% DET_OK; 11 T1 SPEC_ONLY)
-- [ ] CAD (~6-8h, highest rule density at 76 rules)
-- [ ] EP (~6-8h)
-- [ ] SH (~6-8h)
-- [ ] VHD (~6-8h)
+- [/] CAD — spec↔code addendum complete (61.1% any / 31.1% DET_OK; 6 T1 SPEC_ONLY)
+- [ ] EP (~6-8h raw scope; will log actual wall-clock minutes for empirical calibration of v2.0 multipliers per AUDIT-028)
+- [ ] SH (~6-8h raw scope; wall-clock logged)
+- [ ] VHD (~6-8h raw scope; wall-clock logged)
 
 ### Phase 0C — UI/UX audit (~25-30h)
 
@@ -50,9 +50,9 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 
 ### Phase 0 deliverables
 
-- [/] All audit reports committed (1 of 7 modules + Phase 1, 2 partial)
+- [/] All audit reports committed (1 of 7 modules + Phase 1, 3 partial)
 - [ ] **603-row implementation matrix** (708 minus 105 CX deferred per §3b)
-- [/] Updated `AUDIT_FINDINGS_REGISTER.md` (27 findings, current)
+- [/] Updated `AUDIT_FINDINGS_REGISTER.md` (28 findings, current; AUDIT-027 expanded scope, AUDIT-028 added)
 - [ ] **v2.0 PATH_TO_ROBUST** (due ~2026-05-19)
 
 ---
@@ -70,7 +70,7 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 | Deployment | 75% | CI + 2 deploy workflows; AUDIT-025 Phase a (Migration Validation gate) live; branch protection TODO | PR #223 |
 | Testing | 5% | 27 tests passing, 0.87% backend coverage (AUDIT-001 P0) | `PHASE_1_REPORT.md` |
 | Documentation | 70% | 7 PRs in current arc; 3 design docs; runbooks complete | `CHANGE_RECORD_*.md` |
-| Clinical KB | 15% | CK v4.0 with 708 gaps; 1 of 6 modules audited (PV partial) | CK v4.0 + PV addendum |
+| Clinical KB | 18% | CK v4.0 with 708 gaps; 3 of 6 modules audited (PV + HF + CAD addenda) | CK v4.0 + PV/HF/CAD addenda |
 
 ---
 
@@ -87,9 +87,9 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 | 7 | SH — care team | SH | care team | NOT STARTED |
 | 8 | SH — service line | SH | service line | NOT STARTED |
 | 9 | SH — executive | SH | executive | NOT STARTED |
-| 10 | CAD — care team | CAD | care team | NOT STARTED |
-| 11 | CAD — service line | CAD | service line | NOT STARTED |
-| 12 | CAD — executive | CAD | executive | NOT STARTED |
+| 10 | CAD — care team | CAD | care team | **PARTIAL** (Phase 0B addendum, spec↔code mapping) |
+| 11 | CAD — service line | CAD | service line | file-count inventory only |
+| 12 | CAD — executive | CAD | executive | file-count inventory only |
 | 13 | VHD — care team | VHD | care team | NOT STARTED |
 | 14 | VHD — service line | VHD | service line | NOT STARTED |
 | 15 | VHD — executive | VHD | executive | NOT STARTED |
@@ -99,7 +99,7 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 | 19 | Research/registry/trial | cross-cutting | all 3 views | NOT STARTED — 3 frontend files exist, 0 backend routes / 0 Prisma models |
 | 20 | Backend superuser | cross-cutting | admin | **PARTIAL** via AUDIT-011 Phase a-pre |
 
-**Audit coverage:** 2 of 20 surfaces with substantive audit work (HF care team via Phase 0B addendum 2026-05-03; PV care team via Phase 0B addendum 2026-04-29 — both spec↔code mapping). Additional partial coverage: 4 surfaces inventoried at file-count level only (HF service line + executive, PV service line + executive); 1 cross-cutting (Backend superuser) partially audited via AUDIT-011 Phase a-pre tenant isolation work. Source: `docs/audit/PHASE_0B_HF_AUDIT_ADDENDUM.md`, `docs/audit/PHASE_0B_PV_AUDIT_REPORT*.md`, `docs/audit/AUDIT_011_DESIGN.md`.
+**Audit coverage:** 3 of 20 surfaces with substantive audit work (HF care team via Phase 0B addendum 2026-05-03; CAD care team via Phase 0B addendum 2026-05-03; PV care team via Phase 0B addendum 2026-04-29 — all three spec↔code mapping). Additional partial coverage: 6 surfaces inventoried at file-count level only (HF service line + executive, CAD service line + executive, PV service line + executive); 1 cross-cutting (Backend superuser) partially audited via AUDIT-011 Phase a-pre tenant isolation work. Source: `docs/audit/PHASE_0B_HF_AUDIT_ADDENDUM.md`, `docs/audit/PHASE_0B_CAD_AUDIT_ADDENDUM.md`, `docs/audit/PHASE_0B_PV_AUDIT_REPORT*.md`, `docs/audit/AUDIT_011_DESIGN.md`.
 
 ---
 
@@ -116,12 +116,12 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 | HF | 126 | 48 | **46% any / 21.4% DET_OK** | 38 | PARTIAL (addendum) | 29 in spec, 18 covered (62%), 11 SPEC_ONLY |
 | EP | 89 | 45 | 51% | 63 | NOT STARTED | unknown |
 | SH | 88 | 25 | 28% | 48 | NOT STARTED | unknown |
-| CAD | 90 | 76 | 84% (top) | 25 | NOT STARTED | unknown |
+| CAD | 90 | 76 | **61.1% any / 31.1% DET_OK** | 25 | PARTIAL (addendum) | 18 in spec, 12 covered (67%), 6 SPEC_ONLY |
 | VHD | 105 | 32 | 30% | 18 | NOT STARTED | unknown |
 | PV | 105 | 33 | 31% naive / **26.7% real** | 24 | PARTIAL (addendum) | 7 in spec, 1 covered + 2 partial + 4 SPEC_ONLY |
-| **Total active** | **603** | **259** | **43% naive avg** | **216** | 2 of 6 audited | |
+| **Total active** | **603** | **259** | **43% naive avg** | **216** | 3 of 6 audited | |
 
-**Caveat:** "Rule density %" is naive (rules ÷ spec gaps). PV addendum showed real coverage diverges (33 rules → 26.7% real coverage because 9 rules are EXTRA and several map non-1:1). HF addendum confirmed pattern (48 rules → 46% any-coverage / 21.4% DET_OK; 1 EXTRA + broad-rule consolidation in Amyloid + HCM). True per-module coverage requires Phase 0B audit per module.
+**Caveat:** "Rule density %" is naive (rules ÷ spec gaps). PV addendum showed real coverage diverges (33 rules → 26.7% real coverage because 9 rules are EXTRA and several map non-1:1). HF addendum confirmed pattern (48 rules → 46% any-coverage / 21.4% DET_OK; 1 EXTRA + broad-rule consolidation in Amyloid + HCM). CAD addendum extended pattern at density extreme (76 rules → 61.1% any / 31.1% DET_OK; 15 EXTRA — sub-linear scaling per CAD §11). True per-module coverage requires Phase 0B audit per module.
 
 Source: per-module audit docs, `backend/prisma/schema.prisma` `ModuleType` enum, `backend/src/ingestion/gaps/gapRuleEngine.ts` grep, `src/ui/*` file count.
 
@@ -142,9 +142,9 @@ Source: per-module audit docs, `backend/prisma/schema.prisma` `ModuleType` enum,
 
 ## §6 — Open critical work (top 3, priority order)
 
-1. **CAD Phase 0B audit** — 6-8h, highest rule density (76 rules); counterweight test for "more built than thought" hypothesis (PV at 26.7%, HF at 46% any — CAD expected highest if hypothesis holds)
-2. **EP / SH / VHD audits batched** — 18-24h, fills v2.0 picture across 5 of 6 active modules
-3. **Phase 0C UI/UX audit** — 25-30h, completes Phase 0 deliverable set for v2.0 authorship
+1. **EP / SH / VHD audits batched** — 18-24h raw scope, fills v2.0 picture across 6 of 6 active modules. EP first (highest frontend file count at 63 .tsx; 45 backend rules vs 89 spec gaps = 51% naive density). Wall-clock minutes logged per audit for AUDIT-028 empirical calibration.
+2. **Phase 0C UI/UX audit** — 25-30h raw scope, completes Phase 0 deliverable set for v2.0 authorship
+3. **Phase 0A backend audits Phase 3-5** — Data layer (~10h) + Operational maturity (~10h) + HIPAA gap analysis (~15-20h); also load-bearing for v2.0
 
 **Audit-axis is critical-path for v2.0 (due ~2026-05-19).** Tactical security work (AUDIT-025 Phase b, AUDIT-011 Phase a/b/c/d, AUDIT-022 backfill) is queued for Phase 1.
 
@@ -188,9 +188,13 @@ Per operator decision 2026-05-03: when audit findings force a choice between tim
 
 **Rationale:** TAILRD is clinical decision support; shortcuts in clinical content, missing modules, or skipped tiers become patient safety risk or commercial credibility failures.
 
-**Preliminary timeline revision:** 3-4 months → 7-9 months. v2.0 PATH_TO_ROBUST (due ~2026-05-19) codifies final timeline with all Phase 0 audit inputs.
+**Preliminary timeline revision (raw scope):** 3-4 months → 7-9 months raw scope. v2.0 PATH_TO_ROBUST (due ~2026-05-19) codifies final timeline with all Phase 0 audit inputs.
 
-Source: `docs/audit/PHASE_0B_HF_AUDIT_ADDENDUM.md` §6.3.
+Per CAD audit §11 cross-module synthesis (2026-05-03): DET_OK scales SUB-LINEARLY with naive density (HF 1.78 rules per DET_OK → CAD 2.71 rules per DET_OK). Procedural-domain blind spot is platform-wide pattern (HF Device Therapy + CAD Cardiogenic Shock / Complex PCI / Stent Complications / Peri-procedure all 0% or near-0%). Phase 1 sequencing choice (module-by-module / domain-by-domain / hybrid Phase 1a framework + Phase 1b per-module) deferred to v2.0 PATH_TO_ROBUST authorship per CAD audit §11.5.
+
+Per CAD audit §13 time-unit caveat (AUDIT-028, 2026-05-04): all hour estimates in this ledger and PATH_TO_ROBUST v1.2 represent raw work-scope, NOT AI-assisted operator wall-clock. v2.0 will disambiguate. "7-9 month preliminary timeline" may translate to **3-6 months wall-clock** depending on work-mix assumptions and clinical advisor bottlenecks. v2.0 commits to wall-clock projections with stated multipliers per work-type. Begin empirical wall-clock tracking on EP/SH/VHD audits.
+
+Source: `docs/audit/PHASE_0B_HF_AUDIT_ADDENDUM.md` §6.3, `docs/audit/PHASE_0B_CAD_AUDIT_ADDENDUM.md` §11, §11.5, §13.
 
 ---
 
