@@ -67,6 +67,8 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 
 - **AUDIT-007** — 2 moderate npm vulnerabilities (`uuid` chain, `node-cron`) (Phase 1, OPEN)
 - **AUDIT-017** — `PHI_ENCRYPTION_KEY` length not validated at startup (Phase 2B, OPEN)
+- **AUDIT-027** — `gdmtEngine.ts` / `gapRuleEngine` redundancy + rule-engine naming convention reconciliation (Phase 0B HF + CAD, OPEN)
+- **AUDIT-028** — Time-unit disambiguation in timeline math (raw scope vs AI-assisted wall-clock) (Phase 0B CAD, OPEN)
 
 ### INFO
 
@@ -431,20 +433,42 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ---
 
-### AUDIT-027 — `gdmtEngine.ts` / `gapRuleEngine` redundancy
+### AUDIT-027 — `gdmtEngine.ts` / `gapRuleEngine` redundancy + rule-engine naming convention reconciliation
 
 - **Phase:** Code quality / tech debt
 - **Severity:** LOW (P3) — duplication, not security or safety
-- **Status:** OPEN
+- **Status:** OPEN (scope expanded 2026-05-03 during CAD audit)
 - **Tier:** C
-- **Detected:** 2026-05-03 during Phase 0B HF audit
-- **Evidence:** GDMT four-pillar logic implemented twice — once in `backend/src/ingestion/gaps/gapRuleEngine.ts` (rules tagged for GAP-HF-001/004/007/010 — beta-blocker, RAASi, MRA, SGLT2i) and once in `backend/src/services/gdmtEngine.ts` (service layer with the same four-pillar logic + contraindication checks). Both paths produce overlapping outputs.
-- **Severity rationale:** Code-level redundancy. Risk is divergence over time (rule logic and service drift apart, producing inconsistent gap detection). Currently both paths agree on output so no production impact.
-- **Remediation:** Reconcile during Phase 0A Phase 3 (data layer) audit. Decide canonical source: (a) move all GDMT logic to `gdmtEngine.ts` service and have `gapRuleEngine` call it; (b) consolidate in `gapRuleEngine` and deprecate the service; (c) keep both with explicit purpose separation documented.
-- **Effort estimate:** S (3-5h) — investigation + consolidation + test
+- **Detected:** 2026-05-03 during Phase 0B HF audit; expanded same day during Phase 0B CAD audit
+- **Evidence:**
+  - (a) GDMT four-pillar logic implemented twice — once in `backend/src/ingestion/gaps/gapRuleEngine.ts` (rules tagged for GAP-HF-001/004/007/010 — beta-blocker, RAASi, MRA, SGLT2i) and once in `backend/src/services/gdmtEngine.ts` (service layer with the same four-pillar logic + contraindication checks). Both paths produce overlapping outputs.
+  - (b) Rule-engine naming convention non-uniform: legacy `gap-50-dapt` (CAD module) breaks the canonical `gap-cad-*` prefix convention; cross-module rule `gap-pv-rivaroxaban` is tagged `module: 'CORONARY_INTERVENTION'` despite the `gap-pv-*` naming; HF has `gap-hf-37-fu-discharge` and `gap-hf-37-raas` colliding on same numeric prefix. Rename to canonical pattern (`gap-{module}-{descriptor}`) for consistency.
+- **Severity rationale:** Code-level redundancy and naming drift. Risk is divergence over time (rule logic and service drift apart, producing inconsistent gap detection) and reader confusion when grepping for module rules. Currently both paths agree on output so no production impact.
+- **Remediation:** Reconcile (a) gdmtEngine.ts / gapRuleEngine duplication AND (b) rule-engine naming convention reconciliation (e.g., legacy `gap-50-dapt` to `gap-cad-dapt-discontinuation`, any other non-canonical IDs surfaced during reconciliation; collision-numbered IDs renamed to descriptors). Decide canonical source: (a) move all GDMT logic to `gdmtEngine.ts` service and have `gapRuleEngine` call it; (b) consolidate in `gapRuleEngine` and deprecate the service; (c) keep both with explicit purpose separation documented.
+- **Effort estimate:** S+ (4-6h, was 3-5h) — investigation + consolidation + naming reconciliation + test
 - **Cross-references:**
-  - `docs/audit/PHASE_0B_HF_AUDIT_ADDENDUM.md` §9 finding HF-04
+  - `docs/audit/PHASE_0B_HF_AUDIT_ADDENDUM.md` §9 finding HF-04 (gdmtEngine redundancy)
+  - `docs/audit/PHASE_0B_HF_AUDIT_ADDENDUM.md` §9 finding HF-01 (numeric prefix collision)
+  - `docs/audit/PHASE_0B_CAD_AUDIT_ADDENDUM.md` §9 finding CAD-01 (gap-50-dapt naming)
   - Phase 0A Phase 3 (data layer audit, pending)
+
+---
+
+### AUDIT-028 — Time-unit disambiguation in timeline math (raw scope vs AI-assisted wall-clock)
+
+- **Phase:** Planning / strategy
+- **Severity:** LOW (P3) — methodology gap, not production risk
+- **Status:** OPEN (will be addressed in v2.0 PATH_TO_ROBUST authorship ~2026-05-19)
+- **Tier:** C
+- **Detected:** 2026-05-04 during CAD Phase 0B audit (operator surfaced)
+- **Evidence:** All hour estimates in `docs/PATH_TO_ROBUST.md` v1.2 §5, audit addenda (PV/HF/CAD), and `BUILD_STATE.md` represent raw work-scope without disambiguating AI-assisted operator wall-clock time. Wall-clock vs work-scope ratios vary significantly by work-type (5-10× speedup for audits/spec mapping/documentation, 3-5× for code generation, 2-3× for code review/clinical authorship, 1.5-2× for architecture/integration testing, 1× for clinical advisor sign-off and production incident response which remain human bottlenecks). Concrete example: CAD audit estimated 6-8h raw scope, actual operator wall-clock ~30-45 min plus ~15-20 min agent-driven analysis.
+- **Severity rationale:** Methodology gap that affects strategic-planning accuracy. Without disambiguation, v2.0 timeline math may over-correct (extending too far) or under-correct (extending too little). The "preliminary 7-9 month timeline" in BUILD_STATE.md §9 may translate to 3-6 months wall-clock depending on work-mix assumptions and clinical advisor bottlenecks — that's a 2-3× variance in commitment. Not a production risk; a planning-honesty risk.
+- **Remediation:** v2.0 PATH_TO_ROBUST authorship explicitly disambiguates raw scope vs AI-assisted wall-clock for every estimate, states work-mix assumptions per phase, applies multipliers per work-type, identifies human-bottleneck items (clinical advisor sign-off, production incidents), and computes wall-clock projections separately from raw-scope projections. Empirical calibration plan: log actual operator wall-clock minutes for EP/SH/VHD audits (next 3 modules) to back into measured multipliers per work-type.
+- **Effort estimate:** folded into v2.0 authorship (~8-12h total, no separate work item)
+- **Cross-references:**
+  - `docs/audit/PHASE_0B_CAD_AUDIT_ADDENDUM.md` §13 (full caveat)
+  - `BUILD_STATE.md` §9 (strategic posture refinement)
+  - `docs/PATH_TO_ROBUST.md` v1.2 §5 (raw-scope estimates that need wall-clock disambiguation in v2.0)
 
 ---
 
