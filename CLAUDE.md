@@ -324,7 +324,10 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 - [x] Aurora endpoint (reader): `tailrd-production-aurora.cluster-ro-csp0w6g8u5uq.us-east-1.rds.amazonaws.com:5432`
 - [x] PG 15.14, ServerlessV2 0.5-4 ACU, encrypted with production KMS
 - [x] DATABASE_URL secret (`tailrd-production/app/database-url`) flipped 2026-04-29T00:51:55Z, VersionId `3c0074fb-ac80-4b01-9402-4e6e47de7351`
-- [ ] **DECOMMISSION_PENDING:** RDS instance `tailrd-production-postgres` (db.t3.medium, PG 15.10) still exists with deletion-protection ON. 0 connections since cutover. Final HIPAA-tagged snapshot taken 2026-04-29 evening (`tailrd-production-postgres-final-pre-decom-*`, 6yr retention). Deletion scheduled Day 11 (Thursday 2026-04-30) per `docs/DAY_11_PLAN.md`.
+- [x] **DECOMMISSIONED 2026-04-29 (per Day 11 plan):** RDS instance `tailrd-production-postgres` (db.t3.medium, PG 15.10). Final HIPAA-tagged snapshot `tailrd-production-postgres-final-pre-decom-20260429` retained 6yr.
+- [x] **DECOMMISSIONED 2026-05-04 (predecessor instance, tech debt #34):** RDS instance `tailrd-production` (db.t4g.medium, PG 15.10). Created 2026-04-03, never received production traffic post-creation (CloudTrail 90d audit: 2 admin events on creation day only, 0 admin events + 0 connections across the next 60+ days). Belt-and-suspenders snapshot pair retained 6yr: `tailrd-production-archive-20260504` + `tailrd-production-final-pre-decom-20260504`. Audit log entry `cmorfspjv0001eb1ogq271i1o`. Sister-resource cleanup complete: subnet group + security group + empty ECS cluster + orphan IAM role. Master-password secret scheduled for deletion 2026-06-03 (30d window). See `docs/CHANGE_RECORD_2026_05_04_t4g_decommission.md`.
+
+> **Doc-drift note (2026-05-04):** Pre-2026-05-04 versions of §9 documented only the t3 instance (`tailrd-production-postgres`) as "DECOMMISSION_PENDING" and did not surface the predecessor t4g instance (`tailrd-production`). The dual-instance reality was discovered during Day 11 verification (Step A) when the t3 instance was already gone but a separate t4g instance remained. Both instances are now decommissioned. This drift seeded Step B.5 CLAUDE.md doc-drift audit pass.
 
 **Day 10 cutover summary (2026-04-28 to 2026-04-29):**
 - Total READ_ONLY blast window: **26 min 15 sec** (00:36:30Z → 01:02:45Z)

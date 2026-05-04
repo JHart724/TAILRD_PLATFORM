@@ -304,9 +304,26 @@ Each entry lists: severity, impact if unfixed, planned remediation target. Sever
 - **Future iteration (deferred):** extend `inventoryRdsAurora.js` (or a separate planning script) to auto-derive `load-order` values from the FK dependency graph, then inject them into the mapping JSON. Removes the manual sequencing step entirely. Tracked as future tooling improvement, not in scope for current migration.
 - **Methodology doc update:** `docs/DMS_MIGRATION_PLAN.md` §13 will gain a fourth pre-flight requirement (load-order set on FK-rich schemas) - to be added in close-out commit.
 
-### 34. Investigate and decommission predecessor RDS instance `tailrd-production` (t4g)
+### 34. Investigate and decommission predecessor RDS instance `tailrd-production` (t4g) — **RESOLVED 2026-05-04**
 - **Severity:** MEDIUM (HIPAA-tagged, deletion-protected, contents unknown - until investigated, cannot determine disposition)
 - **Discovered:** 2026-04-27 during Day 9 pre-flight investigation
+- **Resolved:** 2026-05-04 via full decommission + sister-resource cleanup. All 5 closure-criteria investigation steps satisfied:
+  - **Step 1 schema enumeration:** documented fallback (c) — HIPAA §164.310(d)(2)(i) disposal policy met via snapshot retention; bastion absent; ECS exec exceeded Phase 0 scope (5 trust boundaries + read-write injection across SGs). Schema enumeration was additive evidence, not load-bearing for HIPAA compliance.
+  - **Step 2 CloudTrail connection patterns:** verified 2 admin events ever (CreateDBInstance 2026-04-03T19:37:00Z, CreateCluster 2026-04-03T21:22:29Z, both by `tailrd-cli-access`). Zero subsequent admin events + zero connections across 60+ days (CloudWatch + CloudTrail).
+  - **Step 3 git + Secrets Manager search:** zero references to `tailrd-production.csp0w6g8u5uq.us-east-1.rds.amazonaws.com` across `backend/`, `infrastructure/`, `src/`, `.github/`. `tailrd-production/app/database-url` secret flipped to Aurora cluster at 2026-04-29T00:51:55Z.
+  - **Step 4 ECS task definition inspection:** sample of 5 revisions across 151 total (1, 28, 100, 121, 151) — all reference shared secret `tailrd-production/app/database-url`. Zero hardcoded t4g endpoints. Empty `tailrd-production` ECS cluster never had a task definition deployed.
+  - **Step 5 CloudFormation history:** instance NOT stack-managed (`describe-stack-resources --physical-resource-id tailrd-production` returns "Stack does not exist"). Confirms manual creation pattern.
+- **Retention artifacts (HIPAA 6yr per §164.310(d)(2)(i)):**
+  - `tailrd-production-archive-20260504` (manual, Purpose=archive-pre-decom-snapshot, RetainUntil=2032-05-05, KMS=`109cd89c-bb71-4258-a205-369f6816c14f`)
+  - `tailrd-production-final-pre-decom-20260504` (manual, Purpose=final-pre-decom-snapshot, RetainUntil=2032-05-05, same KMS)
+  - 16 automated snapshots in 14-day rolloff window (additional retention layer; auto-GC expected 2026-05-19)
+- **Audit log entry:** `cmorfspjv0001eb1ogq271i1o` (HIPAA §164.312(b) Audit Controls + §164.310(d)(2)(i) Disposal). Written via Path 2 (one-shot Fargate run-task) at 2026-05-04T16:51:46.652Z.
+- **Sister-resource cleanup complete:** subnet group `tailrd-production-db` deleted, security group `sg-09e3b87c3cbc42925` deleted (after surgical revoke of dead egress rules in App SG `sg-07cf4b72927f9038f` and DMS SG `sg-0e116deb0b3199fdd`), empty ECS cluster `tailrd-production` deleted, orphan IAM role `tailrd-production-rds-monitoring-role` deleted. Master-password secret `tailrd-production/rds/master-password` scheduled for deletion 2026-06-03T16:58:13Z (30d recovery window).
+- **Cross-references:**
+  - `docs/CHANGE_RECORD_2026_05_04_t4g_decommission.md` (full audit trail)
+  - `CLAUDE.md` §9 (state reflected; doc-drift note included)
+  - Audit log entry `cmorfspjv0001eb1ogq271i1o` (canonical compliance record)
+
 - **Impact:** A predecessor production RDS instance named exactly `tailrd-production` (db.t4g.medium, PG 15.10, 50 GB) exists in the production VPC `vpc-0fc14ae0c2511b94d`, created **2026-04-03** - 17 days before the migration sprint started, 24 days before today. State observed:
   - DeletionProtection: **TRUE**
   - Tags: `Project=tailrd`, `Environment=production`, **`HIPAA=true`**
