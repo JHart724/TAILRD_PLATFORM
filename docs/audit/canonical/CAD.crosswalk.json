@@ -1,0 +1,1416 @@
+{
+  "auditDate": "2026-05-04",
+  "auditMethod": "rule-body-citation-AUDIT-030D",
+  "crosswalkVersion": "1.0",
+  "extras": [],
+  "lessonsLearned": "",
+  "module": "CAD",
+  "rows": [
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-STATIN",
+        "evaluatorBodyLineRange": [
+          4332,
+          4357
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-statin",
+        "registryLine": 240
+      },
+      "specGapId": "GAP-CAD-001",
+      "specLine": 590,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-STATIN",
+        "evaluatorBodyLineRange": [
+          4332,
+          4357
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-statin",
+        "registryLine": 240
+      },
+      "specGapId": "GAP-CAD-002",
+      "specLine": 591,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-EZETIMIBE",
+        "evaluatorBodyLineRange": [
+          4502,
+          4532
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-ezetimibe",
+        "registryLine": 504
+      },
+      "specGapId": "GAP-CAD-003",
+      "specLine": 592,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-PCSK9",
+        "evaluatorBodyLineRange": [
+          7164,
+          7195
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-pcsk9",
+        "registryLine": 1248
+      },
+      "specGapId": "GAP-CAD-004",
+      "specLine": 593,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-PCSK9",
+        "evaluatorBodyLineRange": [
+          7164,
+          7195
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-pcsk9",
+        "registryLine": 1248
+      },
+      "specGapId": "GAP-CAD-005",
+      "specLine": 594,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-056",
+      "specLine": 595,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-057",
+      "specLine": 596,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-BEMPEDOIC",
+        "evaluatorBodyLineRange": [
+          7535,
+          7567
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-bempedoic",
+        "registryLine": 1380
+      },
+      "specGapId": "GAP-CAD-006",
+      "specLine": 597,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-LIPID-PANEL-FU",
+        "evaluatorBodyLineRange": [
+          8938,
+          8965
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-lipid-panel-fu",
+        "registryLine": 2964
+      },
+      "specGapId": "GAP-CAD-007",
+      "specLine": 598,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-LPA",
+        "evaluatorBodyLineRange": [
+          4466,
+          4495
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-lpa",
+        "registryLine": 492
+      },
+      "specGapId": "GAP-CAD-008",
+      "specLine": 599,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-058",
+      "specLine": 600,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-009",
+      "specLine": 601,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-CRP",
+        "evaluatorBodyLineRange": [
+          8162,
+          8188
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-crp",
+        "registryLine": 2460
+      },
+      "specGapId": "GAP-CAD-010",
+      "specLine": 602,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-STATIN",
+        "evaluatorBodyLineRange": [
+          4332,
+          4357
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-statin",
+        "registryLine": 240
+      },
+      "specGapId": "GAP-CAD-011",
+      "specLine": 607,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-STATIN",
+        "evaluatorBodyLineRange": [
+          4332,
+          4357
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-statin",
+        "registryLine": 240
+      },
+      "specGapId": "GAP-CAD-012",
+      "specLine": 608,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-OMEGA3",
+        "evaluatorBodyLineRange": [
+          7293,
+          7326
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-omega3",
+        "registryLine": 1296
+      },
+      "specGapId": "GAP-CAD-014",
+      "specLine": 609,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-013",
+      "specLine": 610,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-CALCIUM-SCORE",
+        "evaluatorBodyLineRange": [
+          8130,
+          8157
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-calcium-score",
+        "registryLine": 2448
+      },
+      "specGapId": "GAP-CAD-059",
+      "specLine": 611,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-FAMILY-SCREEN",
+        "evaluatorBodyLineRange": [
+          8096,
+          8125
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-family-screen",
+        "registryLine": 2436
+      },
+      "specGapId": "GAP-CAD-060",
+      "specLine": 612,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "+ | Multiple registry ids cited: gap-cad-ticagrelor-acs, gap-cad-prasugrel | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-TICAGRELOR-ACS",
+        "evaluatorBodyLineRange": [
+          7667,
+          7693
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-ticagrelor-acs",
+        "registryLine": 2268
+      },
+      "specGapId": "GAP-CAD-015",
+      "specLine": 617,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-PRASUGREL",
+        "evaluatorBodyLineRange": [
+          8286,
+          8317
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-prasugrel",
+        "registryLine": 2508
+      },
+      "specGapId": "GAP-CAD-016",
+      "specLine": 618,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-DAPT-DURATION",
+        "evaluatorBodyLineRange": [
+          7818,
+          7844
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-dapt-duration",
+        "registryLine": 2328
+      },
+      "specGapId": "GAP-CAD-018",
+      "specLine": 619,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "Gap-50",
+        "evaluatorBodyLineRange": [
+          4309,
+          4327
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-50-dapt",
+        "registryLine": 180
+      },
+      "specGapId": "GAP-CAD-061",
+      "specLine": 620,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "+ | Multiple registry ids cited: gap-cad-anticoag-af, gap-cad-heparin-bridge | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-ANTICOAG-AF",
+        "evaluatorBodyLineRange": [
+          7433,
+          7461
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-anticoag-af",
+        "registryLine": 1344
+      },
+      "specGapId": "GAP-CAD-062",
+      "specLine": 621,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-PRASUGREL",
+        "evaluatorBodyLineRange": [
+          8286,
+          8317
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-prasugrel",
+        "registryLine": 2508
+      },
+      "specGapId": "GAP-CAD-017",
+      "specLine": 622,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-019",
+      "specLine": 623,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-BB-POST-MI",
+        "evaluatorBodyLineRange": [
+          4399,
+          4427
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-bb-post-mi",
+        "registryLine": 468
+      },
+      "specGapId": "GAP-CAD-020",
+      "specLine": 628,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-ACEI",
+        "evaluatorBodyLineRange": [
+          4365,
+          4392
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-acei",
+        "registryLine": 456
+      },
+      "specGapId": "GAP-CAD-021",
+      "specLine": 629,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-022",
+      "specLine": 630,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-COLCHICINE",
+        "evaluatorBodyLineRange": [
+          7260,
+          7287
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-colchicine",
+        "registryLine": 1284
+      },
+      "specGapId": "GAP-CAD-023",
+      "specLine": 631,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-SGLT2-DM",
+        "evaluatorBodyLineRange": [
+          7501,
+          7529
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-sglt2-dm",
+        "registryLine": 1368
+      },
+      "specGapId": "GAP-CAD-024",
+      "specLine": 632,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-SMOKING",
+        "evaluatorBodyLineRange": [
+          4434,
+          4459
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-smoking",
+        "registryLine": 480
+      },
+      "specGapId": "GAP-CAD-025",
+      "specLine": 633,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-063",
+      "specLine": 638,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-CATHETERIZATION",
+        "evaluatorBodyLineRange": [
+          8664,
+          8691
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-catheterization",
+        "registryLine": 2856
+      },
+      "specGapId": "GAP-CAD-065",
+      "specLine": 639,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-064",
+      "specLine": 640,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-CATHETERIZATION",
+        "evaluatorBodyLineRange": [
+          8664,
+          8691
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-catheterization",
+        "registryLine": 2856
+      },
+      "specGapId": "GAP-CAD-066",
+      "specLine": 641,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-CHEST-PAIN-PROTOCOL",
+        "evaluatorBodyLineRange": [
+          9060,
+          9087
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-chest-pain-protocol",
+        "registryLine": 3012
+      },
+      "specGapId": "GAP-CAD-067",
+      "specLine": 642,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-026",
+      "specLine": 647,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "MANUAL OVERRIDE per CAD addendum line 232: cross-module satisfaction. GAP-CAD-027 (Polyvascular COMPASS dual pathway) is satisfied by PV module rule gap-pv-rivaroxaban. Note: this rule is registered under CAD module enum (module: ModuleType.CORONARY_INTERVENTION) despite gap-pv-* naming — naming convention inconsistency tracked at AUDIT-027.",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-RIVAROXABAN",
+        "evaluatorBodyLineRange": [
+          10877,
+          10905
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-rivaroxaban",
+        "registryLine": 2568
+      },
+      "specGapId": "GAP-CAD-027",
+      "specLine": 648,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-SECONDARY-PREVENTION",
+        "evaluatorBodyLineRange": [
+          9091,
+          9120
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-secondary-prevention",
+        "registryLine": 3024
+      },
+      "specGapId": "GAP-CAD-028",
+      "specLine": 653,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-REHAB",
+        "evaluatorBodyLineRange": [
+          4899,
+          4920
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-cardiac-rehab",
+        "registryLine": 324
+      },
+      "specGapId": "GAP-CAD-029",
+      "specLine": 654,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-REVASCULARIZATION",
+        "evaluatorBodyLineRange": [
+          7405,
+          7428
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-revascularization",
+        "registryLine": 1332
+      },
+      "specGapId": "GAP-CAD-030",
+      "specLine": 659,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-ISCHEMIA-GUIDED",
+        "evaluatorBodyLineRange": [
+          8725,
+          8751
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-ischemia-guided",
+        "registryLine": 2880
+      },
+      "specGapId": "GAP-CAD-031",
+      "specLine": 660,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-BETA-BLOCKER",
+        "evaluatorBodyLineRange": [
+          8473,
+          8500
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-beta-blocker",
+        "registryLine": 2784
+      },
+      "specGapId": "GAP-CAD-032",
+      "specLine": 661,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-RANOLAZINE",
+        "evaluatorBodyLineRange": [
+          7332,
+          7364
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-ranolazine",
+        "registryLine": 1308
+      },
+      "specGapId": "GAP-CAD-033",
+      "specLine": 662,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-MINOCA",
+        "evaluatorBodyLineRange": [
+          8755,
+          8781
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-minoca",
+        "registryLine": 2892
+      },
+      "specGapId": "GAP-CAD-034",
+      "specLine": 667,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "+ | Multiple registry ids cited: gap-cad-minoca, gap-cad-ivus | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-MINOCA",
+        "evaluatorBodyLineRange": [
+          8755,
+          8781
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-minoca",
+        "registryLine": 2892
+      },
+      "specGapId": "GAP-CAD-035",
+      "specLine": 668,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-MICROVASCULAR",
+        "evaluatorBodyLineRange": [
+          8877,
+          8905
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-microvascular",
+        "registryLine": 2940
+      },
+      "specGapId": "GAP-CAD-036",
+      "specLine": 669,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-VASOSPASTIC",
+        "evaluatorBodyLineRange": [
+          8845,
+          8873
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-vasospastic",
+        "registryLine": 2928
+      },
+      "specGapId": "GAP-CAD-037",
+      "specLine": 670,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "+ | Multiple registry ids cited: gap-cad-microvascular, gap-cad-nicorandil | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-MICROVASCULAR",
+        "evaluatorBodyLineRange": [
+          8877,
+          8905
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-microvascular",
+        "registryLine": 2940
+      },
+      "specGapId": "GAP-CAD-038",
+      "specLine": 671,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-FFR",
+        "evaluatorBodyLineRange": [
+          7227,
+          7254
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-ffr",
+        "registryLine": 1272
+      },
+      "specGapId": "GAP-CAD-068",
+      "specLine": 676,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-IVUS",
+        "evaluatorBodyLineRange": [
+          7201,
+          7222
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-ivus",
+        "registryLine": 1260
+      },
+      "specGapId": "GAP-CAD-069",
+      "specLine": 677,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-IVUS",
+        "evaluatorBodyLineRange": [
+          7201,
+          7222
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-ivus",
+        "registryLine": 1260
+      },
+      "specGapId": "GAP-CAD-070",
+      "specLine": 678,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-071",
+      "specLine": 683,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-072",
+      "specLine": 684,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-073",
+      "specLine": 685,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-074",
+      "specLine": 686,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-075",
+      "specLine": 691,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-076",
+      "specLine": 692,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-039",
+      "specLine": 693,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-042",
+      "specLine": 698,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-043",
+      "specLine": 699,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-040",
+      "specLine": 700,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-041",
+      "specLine": 701,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-077",
+      "specLine": 702,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-078",
+      "specLine": 703,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-DEPRESSION",
+        "evaluatorBodyLineRange": [
+          7603,
+          7628
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-depression",
+        "registryLine": 1404
+      },
+      "specGapId": "GAP-CAD-044",
+      "specLine": 708,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-INFLUENZA",
+        "evaluatorBodyLineRange": [
+          7633,
+          7658
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-influenza",
+        "registryLine": 1416
+      },
+      "specGapId": "GAP-CAD-045",
+      "specLine": 709,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-REHAB",
+        "evaluatorBodyLineRange": [
+          4899,
+          4920
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-cardiac-rehab",
+        "registryLine": 324
+      },
+      "specGapId": "GAP-CAD-046",
+      "specLine": 710,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-DRIVING",
+        "evaluatorBodyLineRange": [
+          8380,
+          8405
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-driving",
+        "registryLine": 2544
+      },
+      "specGapId": "GAP-CAD-079",
+      "specLine": 711,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-SEXUAL-HEALTH",
+        "evaluatorBodyLineRange": [
+          8351,
+          8376
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-sexual-health",
+        "registryLine": 2532
+      },
+      "specGapId": "GAP-CAD-080",
+      "specLine": 712,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "+  + | Multiple registry ids cited: gap-cad-scad, gap-cad-women-specific, gap-cad-young-mi | auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-SCAD",
+        "evaluatorBodyLineRange": [
+          8785,
+          8813
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-scad",
+        "registryLine": 2904
+      },
+      "specGapId": "GAP-CAD-081",
+      "specLine": 717,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-SCAD",
+        "evaluatorBodyLineRange": [
+          8785,
+          8813
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-scad",
+        "registryLine": 2904
+      },
+      "specGapId": "GAP-CAD-082",
+      "specLine": 718,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-083",
+      "specLine": 719,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-084",
+      "specLine": 720,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-085",
+      "specLine": 721,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-086",
+      "specLine": 722,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-CARDIAC-TRANSPLANT-CAD",
+        "evaluatorBodyLineRange": [
+          8909,
+          8934
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-cardiac-transplant-cad",
+        "registryLine": 2952
+      },
+      "specGapId": "GAP-CAD-087",
+      "specLine": 723,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-088",
+      "specLine": 724,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-CARDIAC-CT",
+        "evaluatorBodyLineRange": [
+          8256,
+          8282
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-cardiac-ct",
+        "registryLine": 2496
+      },
+      "specGapId": "GAP-CAD-047",
+      "specLine": 729,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "+ | Multiple registry ids cited: gap-cad-stress-test, gap-cad-nuclear-stress | auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-STRESS-TEST",
+        "evaluatorBodyLineRange": [
+          7369,
+          7394
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-stress-test",
+        "registryLine": 1320
+      },
+      "specGapId": "GAP-CAD-048",
+      "specLine": 730,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-STRESS-TEST",
+        "evaluatorBodyLineRange": [
+          7369,
+          7394
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-stress-test",
+        "registryLine": 1320
+      },
+      "specGapId": "GAP-CAD-089",
+      "specLine": 731,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-049",
+      "specLine": 736,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: Top candidate score=0.3 between PARTIAL and HIGH thresholds; nameOverlap=2",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-BETA-BLOCKER",
+        "evaluatorBodyLineRange": [
+          8473,
+          8500
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-beta-blocker",
+        "registryLine": 2784
+      },
+      "specGapId": "GAP-CAD-050",
+      "specLine": 737,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-051",
+      "specLine": 738,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-090",
+      "specLine": 739,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "auto-verify: preserved-from-addendum",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "CAD-RENAL-MONITOR",
+        "evaluatorBodyLineRange": [
+          7786,
+          7812
+        ],
+        "evaluatorModule": "CAD",
+        "registryId": "gap-cad-renal-monitor",
+        "registryLine": 2316
+      },
+      "specGapId": "GAP-CAD-052",
+      "specLine": 744,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-053",
+      "specLine": 745,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-054",
+      "specLine": 746,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "ruleBodyCite": null,
+      "specGapId": "GAP-CAD-055",
+      "specLine": 747,
+      "tier": "T2"
+    }
+  ],
+  "sequencingNotes": "",
+  "strategicPosture": ""
+}

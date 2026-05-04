@@ -1,0 +1,535 @@
+{
+  "codeSource": "backend/src/ingestion/gaps/gapRuleEngine.ts",
+  "evaluatorBlocks": [
+    {
+      "bodyEndLine": 4632,
+      "bodyStartLine": 4608,
+      "commentLine": 4603,
+      "commentLiteral": "// Gap SH-1: Aortic Stenosis Surveillance Imaging Overdue",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Echo surveillance overdue for aortic stenosis"
+      ],
+      "name": "SH-1"
+    },
+    {
+      "bodyEndLine": 4949,
+      "bodyStartLine": 4928,
+      "commentLine": 4923,
+      "commentLiteral": "// Gap SH-2: TAVR Evaluation for Severe Aortic Stenosis",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "TAVR evaluation not documented for severe aortic stenosis"
+      ],
+      "name": "SH-2"
+    },
+    {
+      "bodyEndLine": 5020,
+      "bodyStartLine": 4995,
+      "commentLine": 4988,
+      "commentLiteral": "// Gap SH-3: Mitral Valve Intervention Evaluation",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Mitral valve intervention evaluation recommended for review"
+      ],
+      "name": "SH-3"
+    },
+    {
+      "bodyEndLine": 5055,
+      "bodyStartLine": 5029,
+      "commentLine": 5022,
+      "commentLiteral": "// Gap SH-4: Tricuspid Valve Assessment",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Tricuspid valve assessment recommended for review"
+      ],
+      "name": "SH-4"
+    },
+    {
+      "bodyEndLine": 5087,
+      "bodyStartLine": 5067,
+      "commentLine": 5057,
+      "commentLiteral": "// Gap SH-5: Structural Heart Imaging Follow-up",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Structural heart imaging follow-up recommended for review"
+      ],
+      "name": "SH-5"
+    },
+    {
+      "bodyEndLine": 5117,
+      "bodyStartLine": 5097,
+      "commentLine": 5089,
+      "commentLiteral": "// Gap SH-6: Post-TAVR Follow-up",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Post-TAVR follow-up recommended for review"
+      ],
+      "name": "SH-6"
+    },
+    {
+      "bodyEndLine": 5151,
+      "bodyStartLine": 5131,
+      "commentLine": 5119,
+      "commentLiteral": "// Gap SH-7: Endocarditis Prophylaxis Review",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Endocarditis prophylaxis review recommended"
+      ],
+      "name": "SH-7"
+    },
+    {
+      "bodyEndLine": 5180,
+      "bodyStartLine": 5160,
+      "commentLine": 5153,
+      "commentLiteral": "// Gap SH-8: Left Atrial Appendage Assessment",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Left atrial appendage assessment recommended for review"
+      ],
+      "name": "SH-8"
+    },
+    {
+      "bodyEndLine": 5213,
+      "bodyStartLine": 5192,
+      "commentLine": 5182,
+      "commentLiteral": "// Gap SH-9: PFO Closure Evaluation",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "PFO closure evaluation recommended for review"
+      ],
+      "name": "SH-9"
+    },
+    {
+      "bodyEndLine": 6087,
+      "bodyStartLine": 6068,
+      "commentLine": 6059,
+      "commentLiteral": "// Gap SH-10: MitraClip Evaluation",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "MitraClip evaluation recommended for review in high surgical risk MR"
+      ],
+      "name": "SH-10"
+    },
+    {
+      "bodyEndLine": 6114,
+      "bodyStartLine": 6096,
+      "commentLine": 6089,
+      "commentLiteral": "// Gap SH-11: Transcatheter Mitral Valve Replacement Candidacy",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Transcatheter mitral valve replacement candidacy recommended for review"
+      ],
+      "name": "SH-11"
+    },
+    {
+      "bodyEndLine": 6145,
+      "bodyStartLine": 6127,
+      "commentLine": 6116,
+      "commentLiteral": "// Gap SH-12: Tricuspid Intervention Evaluation",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Tricuspid intervention evaluation recommended for review"
+      ],
+      "name": "SH-12"
+    },
+    {
+      "bodyEndLine": 6174,
+      "bodyStartLine": 6156,
+      "commentLine": 6147,
+      "commentLiteral": "// Gap SH-13: Paravalvular Leak Assessment Post-Valve",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Paravalvular leak assessment recommended for review post-valve replacement"
+      ],
+      "name": "SH-13"
+    },
+    {
+      "bodyEndLine": 6202,
+      "bodyStartLine": 6184,
+      "commentLine": 6176,
+      "commentLiteral": "// Gap SH-14: Adult Congenital Heart Disease Screen",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Adult congenital heart disease specialist referral recommended for review"
+      ],
+      "name": "SH-14"
+    },
+    {
+      "bodyEndLine": 6231,
+      "bodyStartLine": 6213,
+      "commentLine": 6204,
+      "commentLiteral": "// Gap SH-15: Alcohol Septal Ablation Candidacy",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Alcohol septal ablation candidacy recommended for review in symptomatic HCM"
+      ],
+      "name": "SH-15"
+    },
+    {
+      "bodyEndLine": 6257,
+      "bodyStartLine": 6240,
+      "commentLine": 6233,
+      "commentLiteral": "// Gap SH-16: WATCHMAN Device Follow-up",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "WATCHMAN device follow-up recommended for review"
+      ],
+      "name": "SH-16"
+    },
+    {
+      "bodyEndLine": 6290,
+      "bodyStartLine": 6272,
+      "commentLine": 6259,
+      "commentLiteral": "// Gap SH-17: 3D Echo for Structural Planning",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "3D echocardiography recommended for review for structural intervention planning"
+      ],
+      "name": "SH-17"
+    },
+    {
+      "bodyEndLine": 10181,
+      "bodyStartLine": 10160,
+      "commentLine": 10153,
+      "commentLiteral": "// SH-BICUSPID: Bicuspid Aortic Valve Surveillance",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider echocardiographic surveillance for bicuspid aortic valve"
+      ],
+      "name": "SH-BICUSPID"
+    },
+    {
+      "bodyEndLine": 10212,
+      "bodyStartLine": 10190,
+      "commentLine": 10183,
+      "commentLiteral": "// SH-ROSS: Ross Procedure Candidacy",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider Ross procedure candidacy evaluation for young patient with severe AS"
+      ],
+      "name": "SH-ROSS"
+    },
+    {
+      "bodyEndLine": 10245,
+      "bodyStartLine": 10223,
+      "commentLine": 10214,
+      "commentLiteral": "// SH-VALVE-IN-VALVE: Valve-in-Valve TAVR Evaluation",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider valve-in-valve TAVR evaluation for symptomatic bioprosthetic valve dysfunction"
+      ],
+      "name": "SH-VALVE-IN-VALVE"
+    },
+    {
+      "bodyEndLine": 10278,
+      "bodyStartLine": 10256,
+      "commentLine": 10247,
+      "commentLiteral": "// SH-ASD: ASD Closure Evaluation",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider ASD closure evaluation for hemodynamically significant atrial septal defect"
+      ],
+      "name": "SH-ASD"
+    },
+    {
+      "bodyEndLine": 10308,
+      "bodyStartLine": 10287,
+      "commentLine": 10280,
+      "commentLiteral": "// SH-VSD: VSD Closure Evaluation",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider VSD closure evaluation for ventricular septal defect"
+      ],
+      "name": "SH-VSD"
+    },
+    {
+      "bodyEndLine": 10341,
+      "bodyStartLine": 10319,
+      "commentLine": 10310,
+      "commentLiteral": "// SH-COARCTATION: Coarctation of Aorta Follow-up",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider coarctation surveillance and hypertension management"
+      ],
+      "name": "SH-COARCTATION"
+    },
+    {
+      "bodyEndLine": 10373,
+      "bodyStartLine": 10352,
+      "commentLine": 10343,
+      "commentLiteral": "// SH-FONTAN: Fontan Surveillance",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider comprehensive Fontan surveillance evaluation"
+      ],
+      "name": "SH-FONTAN"
+    },
+    {
+      "bodyEndLine": 10408,
+      "bodyStartLine": 10386,
+      "commentLine": 10375,
+      "commentLiteral": "// SH-CARCINOID: Carcinoid Valve Disease Screening",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider carcinoid valve disease screening and surveillance"
+      ],
+      "name": "SH-CARCINOID"
+    }
+  ],
+  "gapsPushCount": 25,
+  "module": "SH",
+  "moduleTagPattern": "module: ModuleType.STRUCTURAL_HEART",
+  "registry": [
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease",
+      "id": "gap-sh-1-as-surveillance",
+      "lastReviewDate": "2026-04-05",
+      "levelOfEvidence": "B",
+      "name": "Aortic Stenosis Echo Surveillance",
+      "nextReviewDue": "2026-10-05",
+      "registryLine": 252
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease",
+      "id": "gap-sh-2-tavr-eval",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "TAVR Evaluation for Severe AS",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 336
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease",
+      "id": "gap-sh-3-mitral-intervention",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Mitral Valve Intervention Evaluation",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 780
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease",
+      "id": "gap-sh-4-tricuspid-assessment",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "C",
+      "name": "Tricuspid Valve Assessment",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 792
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease",
+      "id": "gap-sh-5-structural-imaging",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Structural Heart Imaging Follow-up",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 804
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease",
+      "id": "gap-sh-6-post-tavr-followup",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Post-TAVR Follow-up",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 816
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2021 AHA Scientific Statement on Prevention of Infective Endocarditis",
+      "id": "gap-sh-7-endocarditis-prophylaxis",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Endocarditis Prophylaxis Review",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 828
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF",
+      "id": "gap-sh-8-laa-assessment",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Left Atrial Appendage Assessment",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 840
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2020 AHA/ASA Guideline for Prevention of Stroke in Patients with Stroke and TIA",
+      "id": "gap-sh-9-pfo-closure",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "PFO Closure Evaluation",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 852
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease (COAPT Trial)",
+      "id": "gap-sh-10-mitraclip",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B-R",
+      "name": "MitraClip Evaluation",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1548
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease",
+      "id": "gap-sh-11-tmvr",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "C",
+      "name": "Transcatheter Mitral Valve Replacement Candidacy",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1560
+    },
+    {
+      "classOfRecommendation": "2b",
+      "guidelineSource": "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; ACC TVT Registry",
+      "id": "gap-sh-12-ttvr",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "C",
+      "name": "Tricuspid Intervention Evaluation",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1572
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease",
+      "id": "gap-sh-13-paravalvular-leak",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Paravalvular Leak Assessment",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1584
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2018 AHA/ACC Guideline for the Management of Adults with Congenital Heart Disease",
+      "id": "gap-sh-14-congenital-adult",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "C",
+      "name": "Adult Congenital Heart Disease Screen",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1596
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2024 AHA/ACC Guideline for the Diagnosis and Treatment of Hypertrophic Cardiomyopathy",
+      "id": "gap-sh-15-alcohol-septal",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Alcohol Septal Ablation Candidacy",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1608
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF; WATCHMAN post-implant protocol",
+      "id": "gap-sh-16-watchman-fu",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "WATCHMAN Device Follow-up",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1620
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; ASE Structural Heart Imaging Guideline",
+      "id": "gap-sh-17-3d-echo",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "3D Echo for Structural Planning",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1632
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease",
+      "id": "gap-sh-bicuspid-surveillance",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Bicuspid Aortic Valve Surveillance",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2076
+    },
+    {
+      "classOfRecommendation": "2b",
+      "guidelineSource": "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease",
+      "id": "gap-sh-ross-procedure",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "C",
+      "name": "Ross Procedure Candidacy",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2088
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease",
+      "id": "gap-sh-valve-in-valve",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B-NR",
+      "name": "Valve-in-Valve TAVR Evaluation",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2100
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2018 AHA/ACC Guideline for the Management of Adults with Congenital Heart Disease",
+      "id": "gap-sh-asd-closure",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "ASD Closure Evaluation",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2112
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2018 AHA/ACC Guideline for the Management of Adults with Congenital Heart Disease",
+      "id": "gap-sh-vsd-closure",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "VSD Closure Evaluation",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2124
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2018 AHA/ACC Guideline for the Management of Adults with Congenital Heart Disease",
+      "id": "gap-sh-coarctation",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Coarctation Follow-up",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2136
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2018 AHA/ACC Guideline for the Management of Adults with Congenital Heart Disease",
+      "id": "gap-sh-fontan-surveillance",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Fontan Surveillance",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2148
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; ENETS Consensus Guidelines on Carcinoid Heart Disease",
+      "id": "gap-sh-carcinoid-valve",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Carcinoid Valve Disease Screen",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2160
+    }
+  ]
+}

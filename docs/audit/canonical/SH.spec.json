@@ -1,0 +1,1788 @@
+{
+  "gaps": [
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AV Vmax>=4.0, MG>=40, or AVA<=1.0 asymptomatic - not referred",
+      "domains": [
+        "D8",
+        "D14"
+      ],
+      "id": "GAP-SH-001",
+      "name": "Severe AS asymptomatic: heart team review (EARLY TAVR)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 445,
+      "structuredDataElements": "Discrete AV measures, symptom status, heart team referral",
+      "subcategory": "Aortic Stenosis",
+      "subcategoryHeaderLine": 442,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Severe AS + HF/syncope/angina - no AVR referral",
+      "domains": [
+        "D2",
+        "D8",
+        "D14"
+      ],
+      "id": "GAP-SH-002",
+      "name": "Severe AS symptomatic: AVR not referred",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 446,
+      "structuredDataElements": "AS measures, HF/syncope/angina dx, referral",
+      "subcategory": "Aortic Stenosis",
+      "subcategoryHeaderLine": 442,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LVEF<50 + AVA<1.0 + MG<40 without DSE",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-003",
+      "name": "LFLG AS: dobutamine stress echo not performed",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 447,
+      "structuredDataElements": "LVEF, AVA, MG, DSE procedure",
+      "subcategory": "Aortic Stenosis",
+      "subcategoryHeaderLine": 442,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Asymptomatic severe AS + LVEF<55% or abnormal stress",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-006",
+      "name": "Class IIa severe AS triggers: LVEF<55 or abnormal stress",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 448,
+      "structuredDataElements": "AS severity, LVEF, stress test",
+      "subcategory": "Aortic Stenosis",
+      "subcategoryHeaderLine": 442,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Normal EF + AVA<1.0 + MG<40 + SVi<35 mL/m2",
+      "domains": [
+        "D8"
+      ],
+      "id": "GAP-SH-004",
+      "name": "Paradoxical LFLG AS detection",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 449,
+      "structuredDataElements": "EF, AVA, MG, stroke volume index",
+      "subcategory": "Aortic Stenosis",
+      "subcategoryHeaderLine": 442,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Moderate AS + annual Vmax increase >0.3 m/s",
+      "domains": [
+        "D8"
+      ],
+      "id": "GAP-SH-005",
+      "name": "Moderate AS with rapid progression",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 450,
+      "structuredDataElements": "Serial Vmax with dates",
+      "subcategory": "Aortic Stenosis",
+      "subcategoryHeaderLine": 442,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Severe AS + LVESD increase on serial echo",
+      "domains": [
+        "D8"
+      ],
+      "id": "GAP-SH-007",
+      "name": "Severe AS + LV dimensional changes",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 451,
+      "structuredDataElements": "AS severity, serial LVESD",
+      "subcategory": "Aortic Stenosis",
+      "subcategoryHeaderLine": 442,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Severe AS + CAD needing revasc without staged strategy plan",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-048",
+      "name": "Severe AS + CAD: staged PCI vs combined revasc strategy",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 452,
+      "structuredDataElements": "AS, CAD dx, PCI/CABG procedure",
+      "subcategory": "Aortic Stenosis",
+      "subcategoryHeaderLine": 442,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Severe AS + unexplained GI bleeding without vWF multimer workup",
+      "domains": [
+        "D2",
+        "D5",
+        "D8"
+      ],
+      "id": "GAP-SH-049",
+      "name": "Heyde syndrome workup in severe AS + GIB",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 453,
+      "structuredDataElements": "AS, GIB dx, vWF testing",
+      "subcategory": "Aortic Stenosis",
+      "subcategoryHeaderLine": 442,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Intermediate values without annular sizing or CT-derived AVA clarification",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-050",
+      "name": "AS severity grading: moderate-severe classification gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 454,
+      "structuredDataElements": "AVA, MG, Vmax, CT annular measurements",
+      "subcategory": "Aortic Stenosis",
+      "subcategoryHeaderLine": 442,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Marfan dx without annual echo + MRI",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-051",
+      "name": "Marfan syndrome surveillance interval",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 459,
+      "structuredDataElements": "Marfan dx, surveillance imaging",
+      "subcategory": "BAV/Aortopathy",
+      "subcategoryHeaderLine": 456,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Marfan aortic dilation without BB or ARB",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-SH-052",
+      "name": "Marfan: beta-blocker or ARB prophylaxis",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 460,
+      "structuredDataElements": "Marfan dx, BB/ARB",
+      "subcategory": "BAV/Aortopathy",
+      "subcategoryHeaderLine": 456,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LDS dx + aorta>=4.0 cm (root) without surgical eval",
+      "domains": [
+        "D2",
+        "D7",
+        "D8",
+        "D14"
+      ],
+      "id": "GAP-SH-053",
+      "name": "Loeys-Dietz: lower intervention threshold gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 461,
+      "structuredDataElements": "LDS dx, aortic dim, referral",
+      "subcategory": "BAV/Aortopathy",
+      "subcategoryHeaderLine": 456,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Turner (Q96.x) without annual echo + MRI protocol",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-054",
+      "name": "Turner syndrome: cardiac surveillance gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 462,
+      "structuredDataElements": "Turner dx, surveillance imaging",
+      "subcategory": "BAV/Aortopathy",
+      "subcategoryHeaderLine": 456,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "vEDS dx without celiprolol + comprehensive vascular surveillance",
+      "domains": [
+        "D2",
+        "D3",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-055",
+      "name": "Vascular Ehlers-Danlos: celiprolol + surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 463,
+      "structuredDataElements": "EDS dx, celiprolol, imaging",
+      "subcategory": "BAV/Aortopathy",
+      "subcategoryHeaderLine": 456,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Q23.0 BAV without annual echo",
+      "domains": [
+        "D2",
+        "D8"
+      ],
+      "id": "GAP-SH-008",
+      "name": "Bicuspid AV surveillance gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 464,
+      "structuredDataElements": "BAV dx, echo dates",
+      "subcategory": "BAV/Aortopathy",
+      "subcategoryHeaderLine": 456,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "BAV + ascending aorta>=4.0 cm without CT/MRI",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-009",
+      "name": "BAV aortopathy: ascending aorta surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 465,
+      "structuredDataElements": "BAV, ascending dim, CT/MRI",
+      "subcategory": "BAV/Aortopathy",
+      "subcategoryHeaderLine": 456,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "BAV + ascending aorta>=5.0 cm - intervention consideration",
+      "domains": [
+        "D8"
+      ],
+      "id": "GAP-SH-010",
+      "name": "BAV aortopathy intervention threshold",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 466,
+      "structuredDataElements": "BAV, aortic dim",
+      "subcategory": "BAV/Aortopathy",
+      "subcategoryHeaderLine": 456,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "TAA proband without FDR screening initiated",
+      "domains": [
+        "D2",
+        "D7",
+        "D14",
+        "D17"
+      ],
+      "id": "GAP-SH-056",
+      "name": "Familial TAA: first-degree relative screening",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 467,
+      "structuredDataElements": "TAA dx, family referral",
+      "subcategory": "BAV/Aortopathy",
+      "subcategoryHeaderLine": 456,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Failed SAVR bioprosthetic with SVD without ViV-TAVR vs redo surgery discussion",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-061",
+      "name": "ViV TAVR for failed surgical bioprosthesis",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 472,
+      "structuredDataElements": "Prior SAVR, SVD signs, ViV TAVR",
+      "subcategory": "TAVR Post-op",
+      "subcategoryHeaderLine": 469,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "TAVR or SAVR with mean gradient rise>=10 mmHg from baseline",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-012",
+      "name": "Prosthetic valve structural deterioration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 473,
+      "structuredDataElements": "Valve CPT, serial gradients",
+      "subcategory": "TAVR Post-op",
+      "subcategoryHeaderLine": 469,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "TAVR follow-up echo showing moderate or severe PVL",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-013",
+      "name": "Post-TAVR paravalvular leak moderate+",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 474,
+      "structuredDataElements": "TAVR, PVL grade",
+      "subcategory": "TAVR Post-op",
+      "subcategoryHeaderLine": 469,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-TAVR new LBBB without 30d Holter or loop recorder",
+      "domains": [
+        "D7",
+        "D9",
+        "D10"
+      ],
+      "id": "GAP-SH-057",
+      "name": "Post-TAVR conduction: new LBBB follow-up",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 475,
+      "structuredDataElements": "TAVR date, ECG morphology, monitor",
+      "subcategory": "TAVR Post-op",
+      "subcategoryHeaderLine": 469,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-TAVR without CT for HALT at 30d-1y per risk",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-SH-058",
+      "name": "Post-TAVR subclinical leaflet thrombosis (HALT) surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 476,
+      "structuredDataElements": "TAVR, CT imaging, HALT assessment",
+      "subcategory": "TAVR Post-op",
+      "subcategoryHeaderLine": 469,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-TAVR on DAPT >3-6 mo without reassessment",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-SH-059",
+      "name": "Post-TAVR antithrombotic regimen review",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 477,
+      "structuredDataElements": "TAVR date, antithrombotic sequence",
+      "subcategory": "TAVR Post-op",
+      "subcategoryHeaderLine": 469,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-TAVR conduction disease without pacing decision documented",
+      "domains": [
+        "D7",
+        "D9",
+        "D10"
+      ],
+      "id": "GAP-SH-060",
+      "name": "Post-TAVR permanent pacemaker need: monitoring pathway",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 478,
+      "structuredDataElements": "TAVR, ECG, device",
+      "subcategory": "TAVR Post-op",
+      "subcategoryHeaderLine": 469,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-AVR with severe PPM without documentation",
+      "domains": [
+        "D1",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-062",
+      "name": "Prosthesis-patient mismatch detection (iEOA<0.65 cm2/m2)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 479,
+      "structuredDataElements": "AVR, valve size, BSA, iEOA calc",
+      "subcategory": "TAVR Post-op",
+      "subcategoryHeaderLine": 469,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "TAVR without echo in past 12 months",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-011",
+      "name": "Post-TAVR surveillance echo gap (annual)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 480,
+      "structuredDataElements": "TAVR CPT, echo dates",
+      "subcategory": "TAVR Post-op",
+      "subcategoryHeaderLine": 469,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "I34.0 + EROA>=0.4 or RV>=60 - no MV referral",
+      "domains": [
+        "D2",
+        "D8",
+        "D14"
+      ],
+      "id": "GAP-SH-014",
+      "name": "Severe primary MR: surgical referral",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 485,
+      "structuredDataElements": "Primary MR dx, EROA/VC/RV, referral",
+      "subcategory": "Mitral Regurg",
+      "subcategoryHeaderLine": 482,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Severe primary MR + LVEF 30-60 or LVESD>=40 without referral",
+      "domains": [
+        "D8",
+        "D14"
+      ],
+      "id": "GAP-SH-015",
+      "name": "Asymptomatic severe MR with LVEF 30-60 or LVESD>=40",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 486,
+      "structuredDataElements": "MR severity, LVEF, LVESD",
+      "subcategory": "Mitral Regurg",
+      "subcategoryHeaderLine": 482,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "EF 20-50, LVESD<=70, EROA>=0.3, on GDMT, functional MR",
+      "domains": [
+        "D2",
+        "D3",
+        "D8",
+        "D14"
+      ],
+      "id": "GAP-SH-018",
+      "name": "COAPT-eligible FMR not referred for TEER",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 487,
+      "structuredDataElements": "LVEF, LVESD, EROA, MR type, GDMT",
+      "subcategory": "Mitral Regurg",
+      "subcategoryHeaderLine": 482,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "FMR mod-severe + HF symptoms without heart team review",
+      "domains": [
+        "D2",
+        "D8",
+        "D14"
+      ],
+      "id": "GAP-SH-019",
+      "name": "Moderate-severe FMR (RESHAPE-HF2): heart team",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 488,
+      "structuredDataElements": "FMR severity, HF dx, heart team referral",
+      "subcategory": "Mitral Regurg",
+      "subcategoryHeaderLine": 482,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Severe primary MR + new AF - surgical consideration",
+      "domains": [
+        "D2",
+        "D8"
+      ],
+      "id": "GAP-SH-016",
+      "name": "Severe primary MR + new AF: surgical IIa",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 489,
+      "structuredDataElements": "MR severity, AF dx",
+      "subcategory": "Mitral Regurg",
+      "subcategoryHeaderLine": 482,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Severe primary MR + elevated PASP - surgical consideration",
+      "domains": [
+        "D8"
+      ],
+      "id": "GAP-SH-017",
+      "name": "Severe primary MR + PASP>50: surgical IIa",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 490,
+      "structuredDataElements": "MR severity, PASP",
+      "subcategory": "Mitral Regurg",
+      "subcategoryHeaderLine": 482,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Surgical MR patient at non-reference center where repair rate unclear",
+      "domains": [
+        "D7",
+        "D13"
+      ],
+      "id": "GAP-SH-063",
+      "name": "MV repair rate benchmarking gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 491,
+      "structuredDataElements": "MV surgery type, facility",
+      "subcategory": "Mitral Regurg",
+      "subcategoryHeaderLine": 482,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Severe MR ineligible for TEER without TMVR evaluation",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-064",
+      "name": "Transcatheter MVR (Tendyne/Intrepid) candidate for non-TEER anatomy",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 492,
+      "structuredDataElements": "MR dx, TEER eligibility, TMVR referral",
+      "subcategory": "Mitral Regurg",
+      "subcategoryHeaderLine": 482,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "TEER without echo in past 12 months",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-065",
+      "name": "Post-TEER surveillance echo gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 493,
+      "structuredDataElements": "TEER CPT, echo dates",
+      "subcategory": "Mitral Regurg",
+      "subcategoryHeaderLine": 482,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-TEER recurrent significant MR without reassessment",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-066",
+      "name": "Recurrent MR after TEER: redo TEER vs surgery",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 494,
+      "structuredDataElements": "TEER, serial MR grade",
+      "subcategory": "Mitral Regurg",
+      "subcategoryHeaderLine": 482,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "I34.2 or I05.0 MS without MVA and mean gradient documented",
+      "domains": [
+        "D2",
+        "D8"
+      ],
+      "id": "GAP-SH-020",
+      "name": "Mitral stenosis severity grading gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 499,
+      "structuredDataElements": "MS dx, MVA, mean gradient",
+      "subcategory": "Mitral Stenosis",
+      "subcategoryHeaderLine": 496,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "MVA<=1.5 symptomatic without intervention referral",
+      "domains": [
+        "D2",
+        "D8",
+        "D14"
+      ],
+      "id": "GAP-SH-021",
+      "name": "Severe MS: intervention evaluation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 500,
+      "structuredDataElements": "MS severity, symptoms, referral",
+      "subcategory": "Mitral Stenosis",
+      "subcategoryHeaderLine": 496,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Rheumatic MS without Wilkins/anatomical scoring for PMBC",
+      "domains": [
+        "D2",
+        "D8"
+      ],
+      "id": "GAP-SH-067",
+      "name": "Rheumatic MS + Wilkins score for PMBC eligibility",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 501,
+      "structuredDataElements": "Rheumatic MS dx, TEE valve assessment",
+      "subcategory": "Mitral Stenosis",
+      "subcategoryHeaderLine": 496,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Rheumatic heart disease without benzathine PCN prophylaxis",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-SH-068",
+      "name": "Rheumatic heart disease: secondary prophylaxis",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 502,
+      "structuredDataElements": "Rheumatic dx, BPG med",
+      "subcategory": "Mitral Stenosis",
+      "subcategoryHeaderLine": 496,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Severe or torrential TR + NYHA II+ on diuretics without T-TEER/TTVR referral",
+      "domains": [
+        "D2",
+        "D3",
+        "D8",
+        "D14"
+      ],
+      "id": "GAP-SH-022",
+      "name": "Severe TR: transcatheter evaluation gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 507,
+      "structuredDataElements": "TR severity, NYHA proxy, referral",
+      "subcategory": "Tricuspid",
+      "subcategoryHeaderLine": 504,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Severe TR ineligible for T-TEER without Evoque TTVR eval",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-069",
+      "name": "Evoque TTVR candidacy (TRISCEND)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 508,
+      "structuredDataElements": "TR dx, device selection",
+      "subcategory": "Tricuspid",
+      "subcategoryHeaderLine": 504,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Isolated tricuspid surgery referral at non-reference center",
+      "domains": [
+        "D7",
+        "D13"
+      ],
+      "id": "GAP-SH-070",
+      "name": "Isolated tricuspid surgery outcomes benchmarking",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 509,
+      "structuredDataElements": "TR, surgery type, facility",
+      "subcategory": "Tricuspid",
+      "subcategoryHeaderLine": 504,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Severe TR attributed to CIED lead without lead assessment",
+      "domains": [
+        "D8",
+        "D10"
+      ],
+      "id": "GAP-SH-071",
+      "name": "CIED-related TR: lead extraction evaluation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 510,
+      "structuredDataElements": "TR severity, lead imaging, extraction",
+      "subcategory": "Tricuspid",
+      "subcategoryHeaderLine": 504,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Severe TR + coaptation gap + RV lead assessment",
+      "domains": [
+        "D8",
+        "D10"
+      ],
+      "id": "GAP-SH-023",
+      "name": "TR device selection: coaptation gap + lead status",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 511,
+      "structuredDataElements": "TR measures, lead presence",
+      "subcategory": "Tricuspid",
+      "subcategoryHeaderLine": 504,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "TR + RV dysfunction requiring surveillance",
+      "domains": [
+        "D8"
+      ],
+      "id": "GAP-SH-024",
+      "name": "RV dysfunction in TR (TAPSE<17 or FAC<35)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 512,
+      "structuredDataElements": "TR severity, TAPSE, FAC",
+      "subcategory": "Tricuspid",
+      "subcategoryHeaderLine": 504,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Type B dissection + malperfusion/expansion without TEVAR eval",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-SH-075",
+      "name": "Aortic dissection type B complicated: TEVAR evaluation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 517,
+      "structuredDataElements": "Dissection dx, complication signs, TEVAR",
+      "subcategory": "Aortic Disease",
+      "subcategoryHeaderLine": 514,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Ascending aneurysm >=5.5 cm without surgical eval",
+      "domains": [
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-SH-072",
+      "name": "Ascending aorta intervention threshold >=5.5 cm",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 518,
+      "structuredDataElements": "Aortic dim, referral",
+      "subcategory": "Aortic Disease",
+      "subcategoryHeaderLine": 514,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Descending aneurysm threshold without TEVAR/open repair eval",
+      "domains": [
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-SH-073",
+      "name": "Descending/thoracoabdominal aneurysm >=5.5-6.0 cm: intervention",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 519,
+      "structuredDataElements": "Aortic dim, TEVAR referral",
+      "subcategory": "Aortic Disease",
+      "subcategoryHeaderLine": 514,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Type B dissection without impulse control BB + ARB + statin",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-SH-074",
+      "name": "Aortic dissection type B uncomplicated: optimal medical therapy",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 520,
+      "structuredDataElements": "Dissection dx, med list",
+      "subcategory": "Aortic Disease",
+      "subcategoryHeaderLine": 514,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "IMH dx without type-specific management documented",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-SH-077",
+      "name": "Aortic intramural hematoma (IMH): management pathway",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 521,
+      "structuredDataElements": "IMH dx, imaging, med/surgical strategy",
+      "subcategory": "Aortic Disease",
+      "subcategoryHeaderLine": 514,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Aneurysm 4.0-4.9 annual; 5.0-5.4 q6mo; not imaged",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-025",
+      "name": "Ascending aortic aneurysm surveillance by size",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 522,
+      "structuredDataElements": "Aortic dim, imaging dates",
+      "subcategory": "Aortic Disease",
+      "subcategoryHeaderLine": 514,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Prior dissection without imaging 1m, 3m, 6m, 12m, then annual",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-SH-076",
+      "name": "Aortic dissection survivor: long-term surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 523,
+      "structuredDataElements": "Dissection history, imaging schedule",
+      "subcategory": "Aortic Disease",
+      "subcategoryHeaderLine": 514,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PAU without serial imaging or intervention plan",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-SH-078",
+      "name": "Penetrating atherosclerotic ulcer (PAU): surveillance/intervention",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 524,
+      "structuredDataElements": "PAU dx, imaging, intervention",
+      "subcategory": "Aortic Disease",
+      "subcategoryHeaderLine": 514,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Aortitis imaging findings without workup",
+      "domains": [
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-SH-079",
+      "name": "Aortitis workup (Takayasu, GCA, infectious)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 525,
+      "structuredDataElements": "Aortitis imaging, serologies",
+      "subcategory": "Aortic Disease",
+      "subcategoryHeaderLine": 514,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Cryptogenic stroke age<60 with PFO without closure discussion",
+      "domains": [
+        "D1",
+        "D2",
+        "D14"
+      ],
+      "id": "GAP-SH-026",
+      "name": "PFO + cryptogenic stroke age<60: closure evaluation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 530,
+      "structuredDataElements": "Stroke dx, age, PFO, closure referral",
+      "subcategory": "PFO/ASD",
+      "subcategoryHeaderLine": 527,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ASD with RV dilation or PASP elevation without closure eval",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-027",
+      "name": "ASD significant shunt: intervention evaluation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 531,
+      "structuredDataElements": "ASD dx, RV size, PASP, closure",
+      "subcategory": "PFO/ASD",
+      "subcategoryHeaderLine": 527,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Cryptogenic stroke + PFO without RoPE score documented",
+      "domains": [
+        "D1",
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-SH-080",
+      "name": "PFO closure candidacy: RoPE score",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 532,
+      "structuredDataElements": "Stroke, PFO, RoPE components",
+      "subcategory": "PFO/ASD",
+      "subcategoryHeaderLine": 527,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-closure device without antithrombotic plan",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-SH-082",
+      "name": "Post-ASD/PFO closure: antithrombotic regimen",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 533,
+      "structuredDataElements": "Closure procedure, antithrombotic",
+      "subcategory": "PFO/ASD",
+      "subcategoryHeaderLine": 527,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-closure with residual shunt without echo surveillance",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-083",
+      "name": "Residual shunt post-closure: surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 534,
+      "structuredDataElements": "Closure history, residual on echo",
+      "subcategory": "PFO/ASD",
+      "subcategoryHeaderLine": 527,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "RA dilation + pulmonary vein anomaly on imaging without SV ASD dx",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-081",
+      "name": "Sinus venosus ASD identification",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 535,
+      "structuredDataElements": "Echo/CT findings",
+      "subcategory": "PFO/ASD",
+      "subcategoryHeaderLine": 527,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Elevated PASP without right heart cath for PAH diagnosis",
+      "domains": [
+        "D7",
+        "D8",
+        "D23"
+      ],
+      "id": "GAP-SH-084",
+      "name": "PH Group 1 (PAH) diagnostic confirmation gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 540,
+      "structuredDataElements": "PASP, RHC procedure",
+      "subcategory": "Pulmonary HTN",
+      "subcategoryHeaderLine": 537,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Elevated PASP + left-heart disease without mPAP-PCWP analysis",
+      "domains": [
+        "D8",
+        "D23"
+      ],
+      "id": "GAP-SH-085",
+      "name": "PH Group 2 (left-heart related): proper classification",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 541,
+      "structuredDataElements": "PASP, PCWP, mPAP from RHC",
+      "subcategory": "Pulmonary HTN",
+      "subcategoryHeaderLine": 537,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Elevated PASP + lung disease without PFT/CT chest",
+      "domains": [
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-SH-086",
+      "name": "PH Group 3 (lung disease): workup sequence",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 542,
+      "structuredDataElements": "PASP, lung dx, PFT, CT",
+      "subcategory": "Pulmonary HTN",
+      "subcategoryHeaderLine": 537,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PH workup without V/Q to rule out CTEPH",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-SH-087",
+      "name": "PH Group 4 (CTEPH): V/Q scan gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 543,
+      "structuredDataElements": "PH, V/Q procedure",
+      "subcategory": "Pulmonary HTN",
+      "subcategoryHeaderLine": 537,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PH without clear WHO group classification documented",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-SH-088",
+      "name": "PH Group 5 miscellaneous: etiology documentation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 544,
+      "structuredDataElements": "PH dx, workup",
+      "subcategory": "Pulmonary HTN",
+      "subcategoryHeaderLine": 537,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Submassive PE (RV strain or troponin elevation) without CDT discussion",
+      "domains": [
+        "D2",
+        "D5",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-090",
+      "name": "Intermediate-high risk PE: catheter-directed thrombolysis eval",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 549,
+      "structuredDataElements": "PE dx, RV size, troponin, CDT procedure",
+      "subcategory": "Pulmonary Embolism",
+      "subcategoryHeaderLine": 546,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Massive PE (hemodynamic instability) without systemic lysis, surgical embolectomy, or ECMO",
+      "domains": [
+        "D2",
+        "D3",
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-SH-091",
+      "name": "High-risk (massive) PE: systemic lysis or surgical embolectomy",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 550,
+      "structuredDataElements": "PE dx, hemodynamic data, intervention",
+      "subcategory": "Pulmonary Embolism",
+      "subcategoryHeaderLine": 546,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PE dx without PESI/sPESI scoring",
+      "domains": [
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-SH-089",
+      "name": "PE PESI/sPESI risk stratification not documented",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 551,
+      "structuredDataElements": "PE dx, PESI components",
+      "subcategory": "Pulmonary Embolism",
+      "subcategoryHeaderLine": 546,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PE + persistent symptoms at 3-6mo without CTEPH workup",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-SH-092",
+      "name": "Post-PE: CTEPH surveillance at 3-6 mo",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 552,
+      "structuredDataElements": "PE history, symptoms, V/Q",
+      "subcategory": "Pulmonary Embolism",
+      "subcategoryHeaderLine": 546,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Retrievable IVC filter placed >3-6 mo without retrieval planning",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-SH-093",
+      "name": "IVC filter retrieval gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 553,
+      "structuredDataElements": "Filter placement date, retrieval",
+      "subcategory": "Pulmonary Embolism",
+      "subcategoryHeaderLine": 546,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Suspected IE without TEE + blood cultures x3",
+      "domains": [
+        "D5",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-028",
+      "name": "Infective endocarditis: Duke criteria workup",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 558,
+      "structuredDataElements": "IE suspected, TEE, blood cx",
+      "subcategory": "Infective Endocarditis",
+      "subcategoryHeaderLine": 555,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "IE + HF or embolic or uncontrolled infection - surgery consideration",
+      "domains": [
+        "D2",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-SH-029",
+      "name": "IE: early surgery indications review",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 559,
+      "structuredDataElements": "IE dx, HF, embolic, abx response",
+      "subcategory": "Infective Endocarditis",
+      "subcategoryHeaderLine": 555,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "aureus bacteremia: TEE evaluation. S. aureus BSI without TEE",
+      "domains": [
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-SH-030",
+      "name": "S",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 560,
+      "structuredDataElements": "BSI culture, TEE procedure",
+      "subcategory": "Infective Endocarditis",
+      "subcategoryHeaderLine": 555,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Unrepaired or repaired coarctation without annual BP upper/lower gradient",
+      "domains": [
+        "D2",
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-SH-094",
+      "name": "Coarctation adult: repair vs surveillance gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 565,
+      "structuredDataElements": "Coarct dx, BP 4 extremity, imaging",
+      "subcategory": "ACHD",
+      "subcategoryHeaderLine": 562,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "TOF repair + RV dilation/dysfunction without PVR eval",
+      "domains": [
+        "D2",
+        "D7",
+        "D8",
+        "D14"
+      ],
+      "id": "GAP-SH-096",
+      "name": "Tetralogy of Fallot adult: pulmonary valve replacement eval",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 566,
+      "structuredDataElements": "TOF history, RV size, PVR referral",
+      "subcategory": "ACHD",
+      "subcategoryHeaderLine": 562,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Systemic RV anatomy without dedicated ACHD center f/u",
+      "domains": [
+        "D2",
+        "D11"
+      ],
+      "id": "GAP-SH-097",
+      "name": "Systemic RV (ccTGA, post-Senning/Mustard): surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 567,
+      "structuredDataElements": "ACHD dx, specialist encounter",
+      "subcategory": "ACHD",
+      "subcategoryHeaderLine": 562,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Ebstein without annual rhythm monitoring",
+      "domains": [
+        "D2",
+        "D9",
+        "D10"
+      ],
+      "id": "GAP-SH-099",
+      "name": "Ebstein anomaly: arrhythmia surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 568,
+      "structuredDataElements": "Ebstein dx, monitor/ECG",
+      "subcategory": "ACHD",
+      "subcategoryHeaderLine": 562,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Age>=18 congenital heart patient without adult cardiology transition",
+      "domains": [
+        "D1",
+        "D2",
+        "D11"
+      ],
+      "id": "GAP-SH-100",
+      "name": "ACHD transition of care: pediatric to adult",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 569,
+      "structuredDataElements": "Age, CHD dx, adult cardio encounter",
+      "subcategory": "ACHD",
+      "subcategoryHeaderLine": 562,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Unrepaired CHD + Eisenmenger without PAH therapy evaluation",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-SH-101",
+      "name": "Eisenmenger physiology: PAH-specific therapy eval",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 570,
+      "structuredDataElements": "CHD, Eisenmenger dx, PAH meds",
+      "subcategory": "ACHD",
+      "subcategoryHeaderLine": 562,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-coarctation repair without serial imaging",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-SH-095",
+      "name": "Post-coarctation repair: re-coarctation surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 571,
+      "structuredDataElements": "Coarct repair history, imaging",
+      "subcategory": "ACHD",
+      "subcategoryHeaderLine": 562,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Fontan circulation without liver imaging + labs",
+      "domains": [
+        "D2",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-SH-098",
+      "name": "Fontan physiology: liver surveillance gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 572,
+      "structuredDataElements": "Fontan history, liver imaging, LFTs",
+      "subcategory": "ACHD",
+      "subcategoryHeaderLine": 562,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Incidental mass on echo without CMR or contrast imaging",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-SH-102",
+      "name": "Cardiac mass on echo without CMR characterization",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 577,
+      "structuredDataElements": "Echo mass finding, CMR history",
+      "subcategory": "Cardiac Masses",
+      "subcategoryHeaderLine": 574,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Atrial myxoma dx without surgical referral",
+      "domains": [
+        "D2",
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-SH-103",
+      "name": "Atrial myxoma: surgical referral gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 578,
+      "structuredDataElements": "Myxoma dx, referral, surgery",
+      "subcategory": "Cardiac Masses",
+      "subcategoryHeaderLine": 574,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ASA procedure without post-procedure telemetry + ECG f/u",
+      "domains": [
+        "D7",
+        "D9"
+      ],
+      "id": "GAP-SH-104",
+      "name": "Septal alcohol ablation: post-procedure conduction surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 583,
+      "structuredDataElements": "ASA procedure, telemetry, ECG",
+      "subcategory": "HCM Interventions",
+      "subcategoryHeaderLine": 580,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HCM SRT candidate without documented decision rationale",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-SH-105",
+      "name": "Surgical myectomy vs alcohol ablation: decision docs",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 584,
+      "structuredDataElements": "HCM SRT eligibility, procedure choice",
+      "subcategory": "HCM Interventions",
+      "subcategoryHeaderLine": 580,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    }
+  ],
+  "module": "SH",
+  "moduleHeaderLine": 441,
+  "specSection": "§6.3",
+  "specSource": "docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md",
+  "subcategories": [
+    {
+      "gapCount": 10,
+      "headerLine": 442,
+      "name": "Aortic Stenosis"
+    },
+    {
+      "gapCount": 9,
+      "headerLine": 456,
+      "name": "BAV/Aortopathy"
+    },
+    {
+      "gapCount": 9,
+      "headerLine": 469,
+      "name": "TAVR Post-op"
+    },
+    {
+      "gapCount": 10,
+      "headerLine": 482,
+      "name": "Mitral Regurg"
+    },
+    {
+      "gapCount": 4,
+      "headerLine": 496,
+      "name": "Mitral Stenosis"
+    },
+    {
+      "gapCount": 6,
+      "headerLine": 504,
+      "name": "Tricuspid"
+    },
+    {
+      "gapCount": 9,
+      "headerLine": 514,
+      "name": "Aortic Disease"
+    },
+    {
+      "gapCount": 6,
+      "headerLine": 527,
+      "name": "PFO/ASD"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 537,
+      "name": "Pulmonary HTN"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 546,
+      "name": "Pulmonary Embolism"
+    },
+    {
+      "gapCount": 3,
+      "headerLine": 555,
+      "name": "Infective Endocarditis"
+    },
+    {
+      "gapCount": 8,
+      "headerLine": 562,
+      "name": "ACHD"
+    },
+    {
+      "gapCount": 2,
+      "headerLine": 574,
+      "name": "Cardiac Masses"
+    },
+    {
+      "gapCount": 2,
+      "headerLine": 580,
+      "name": "HCM Interventions"
+    }
+  ],
+  "tierTotals": {
+    "T1": 13,
+    "T2": 58,
+    "T3": 17
+  },
+  "totalGaps": 88
+}

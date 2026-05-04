@@ -1,0 +1,1842 @@
+{
+  "gaps": [
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "I25.x, I21.x, I63.x, I70.x, Z95.x without any statin",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-CAD-001",
+      "name": "ASCVD: Statin not prescribed",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 590,
+      "structuredDataElements": "ASCVD dx list, med list",
+      "subcategory": "Lipid Management",
+      "subcategoryHeaderLine": 587,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "I21.x within 12 mo not on atorva 40-80 or rosuva 20-40",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-CAD-002",
+      "name": "Post-ACS: High-intensity statin gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 591,
+      "structuredDataElements": "ACS dx date, statin type/dose",
+      "subcategory": "Lipid Management",
+      "subcategoryHeaderLine": 587,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ASCVD + LDL>=70 on max statin, no ezetimibe",
+      "domains": [
+        "D2",
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-CAD-003",
+      "name": "LDL not at goal <70: add ezetimibe",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 592,
+      "structuredDataElements": "ASCVD, LDL, statin dose, ezetimibe",
+      "subcategory": "Lipid Management",
+      "subcategoryHeaderLine": 587,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ASCVD + LDL>=70 on statin + ezetimibe",
+      "domains": [
+        "D2",
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-CAD-004",
+      "name": "LDL still not at goal: PCSK9i/inclisiran",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 593,
+      "structuredDataElements": "ASCVD, LDL, statin+ezetimibe, PCSK9i",
+      "subcategory": "Lipid Management",
+      "subcategoryHeaderLine": 587,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Polyvascular or recurrent + LDL>=55 despite max",
+      "domains": [
+        "D2",
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-CAD-005",
+      "name": "LDL<55 extreme risk not achieved",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 594,
+      "structuredDataElements": "Polyvasc pattern, LDL, meds",
+      "subcategory": "Lipid Management",
+      "subcategoryHeaderLine": 587,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Statin e-Rx with zero fills in pharmacy claims",
+      "domains": [
+        "D3",
+        "D21"
+      ],
+      "id": "GAP-CAD-056",
+      "name": "Statin prescribed but not filled (primary non-adherence)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 595,
+      "structuredDataElements": "Statin Rx vs fill data",
+      "subcategory": "Lipid Management",
+      "subcategoryHeaderLine": 587,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Chronic statin with PDC<80% in past 12mo",
+      "domains": [
+        "D21"
+      ],
+      "id": "GAP-CAD-057",
+      "name": "Statin chronic adherence PDC<80%",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 596,
+      "structuredDataElements": "Pharmacy fill data",
+      "subcategory": "Lipid Management",
+      "subcategoryHeaderLine": 587,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Documented statin intolerance + LDL elevated without bempedoic acid",
+      "domains": [
+        "D3",
+        "D5",
+        "D15"
+      ],
+      "id": "GAP-CAD-006",
+      "name": "Statin intolerance: bempedoic acid",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 597,
+      "structuredDataElements": "Statin allergy/intolerance, LDL, bempedoic",
+      "subcategory": "Lipid Management",
+      "subcategoryHeaderLine": 587,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ASCVD without LDL in past 12 months",
+      "domains": [
+        "D2",
+        "D5"
+      ],
+      "id": "GAP-CAD-007",
+      "name": "LDL not measured in secondary prevention (12mo)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 598,
+      "structuredDataElements": "ASCVD, LDL dates",
+      "subcategory": "Lipid Management",
+      "subcategoryHeaderLine": 587,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ASCVD without ever-measured Lp(a)",
+      "domains": [
+        "D2",
+        "D5"
+      ],
+      "id": "GAP-CAD-008",
+      "name": "Lp(a) never measured in ASCVD",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 599,
+      "structuredDataElements": "ASCVD, Lp(a) history",
+      "subcategory": "Lipid Management",
+      "subcategoryHeaderLine": 587,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PCSK9i prescribed + not filled due to PA/cost",
+      "domains": [
+        "D3",
+        "D21"
+      ],
+      "id": "GAP-CAD-058",
+      "name": "PCSK9i prior auth gap / cost barrier",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 600,
+      "structuredDataElements": "PCSK9i Rx, fill status, denial codes",
+      "subcategory": "Lipid Management",
+      "subcategoryHeaderLine": 587,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ASCVD or FH suspected without ApoB",
+      "domains": [
+        "D2",
+        "D5"
+      ],
+      "id": "GAP-CAD-009",
+      "name": "ApoB not measured for risk refinement",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 601,
+      "structuredDataElements": "ASCVD/FH, ApoB",
+      "subcategory": "Lipid Management",
+      "subcategoryHeaderLine": 587,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ASCVD without hs-CRP",
+      "domains": [
+        "D2",
+        "D5"
+      ],
+      "id": "GAP-CAD-010",
+      "name": "hs-CRP not measured (residual inflammatory risk)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 602,
+      "structuredDataElements": "ASCVD, hs-CRP",
+      "subcategory": "Lipid Management",
+      "subcategoryHeaderLine": 587,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Age 40-75 + PREVENT risk>=7.5 without statin",
+      "domains": [
+        "D1",
+        "D2",
+        "D3",
+        "D5",
+        "D6"
+      ],
+      "id": "GAP-CAD-011",
+      "name": "Primary prevention statin gap (PREVENT risk>=7.5)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 607,
+      "structuredDataElements": "Age, risk components, statin",
+      "subcategory": "Primary Prevention",
+      "subcategoryHeaderLine": 604,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "E11.x age>=40 without statin",
+      "domains": [
+        "D1",
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-CAD-012",
+      "name": "Diabetes primary prevention statin",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 608,
+      "structuredDataElements": "DM, age, statin",
+      "subcategory": "Primary Prevention",
+      "subcategoryHeaderLine": 604,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ASCVD + TG 150-499 + statin without icosapent",
+      "domains": [
+        "D2",
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-CAD-014",
+      "name": "Icosapent ethyl eligible",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 609,
+      "structuredDataElements": "ASCVD, TG, statin, icosapent",
+      "subcategory": "Primary Prevention",
+      "subcategoryHeaderLine": 604,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LDL>=190 without FH evaluation/genetic testing",
+      "domains": [
+        "D2",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-CAD-013",
+      "name": "Familial hypercholesterolemia screening (LDL>=190)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 610,
+      "structuredDataElements": "LDL, FH dx, genetic testing",
+      "subcategory": "Primary Prevention",
+      "subcategoryHeaderLine": 604,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Borderline/intermediate ASCVD risk without CAC score",
+      "domains": [
+        "D5",
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-CAD-059",
+      "name": "CAC score for intermediate-risk primary prevention",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 611,
+      "structuredDataElements": "PREVENT components, CAC procedure",
+      "subcategory": "Primary Prevention",
+      "subcategoryHeaderLine": 604,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Premature CAD family history without CAC + risk recalibration",
+      "domains": [
+        "D17",
+        "D7"
+      ],
+      "id": "GAP-CAD-060",
+      "name": "Polygenic risk score + CAC integration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 612,
+      "structuredDataElements": "FHx premature CAD, CAC, risk calc",
+      "subcategory": "Primary Prevention",
+      "subcategoryHeaderLine": 604,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-ACS on clopidogrel without contraindication to pras/tica",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-CAD-015",
+      "name": "Post-ACS DAPT: clopidogrel vs prasugrel/ticagrelor",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 617,
+      "structuredDataElements": "ACS date, P2Y12i type",
+      "subcategory": "DAPT",
+      "subcategoryHeaderLine": 614,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Prasugrel + stroke/TIA history",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-CAD-016",
+      "name": "Prasugrel + prior stroke/TIA (SAFETY)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": "SAFETY",
+      "safetyTagLiteral": "(SAFETY)",
+      "specLine": 618,
+      "structuredDataElements": "Stroke/TIA, prasugrel",
+      "subcategory": "DAPT",
+      "subcategoryHeaderLine": 614,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PCI date vs P2Y12i duration appropriateness",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-CAD-018",
+      "name": "Post-PCI DAPT duration review",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 619,
+      "structuredDataElements": "PCI date, P2Y12i",
+      "subcategory": "DAPT",
+      "subcategoryHeaderLine": 614,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-PCI 1-3 mo + low ischemic risk without ticagrelor monotherapy eval",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-CAD-061",
+      "name": "DAPT de-escalation post-PCI (TWILIGHT/TICO)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 620,
+      "structuredDataElements": "PCI date, risk strata, P2Y12 sequence",
+      "subcategory": "DAPT",
+      "subcategoryHeaderLine": 614,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "AF+recent PCI on OAC+DAPT beyond 1-6 mo",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-CAD-062",
+      "name": "Triple therapy AF+PCI: duration minimization (AUGUSTUS)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 621,
+      "structuredDataElements": "AF, PCI, OAC, DAPT",
+      "subcategory": "DAPT",
+      "subcategoryHeaderLine": 614,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Prasugrel in elderly/low-weight",
+      "domains": [
+        "D1",
+        "D3",
+        "D6"
+      ],
+      "id": "GAP-CAD-017",
+      "name": "Prasugrel age>75 or weight<60 (not recommended)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 622,
+      "structuredDataElements": "Age, weight, prasugrel",
+      "subcategory": "DAPT",
+      "subcategoryHeaderLine": 614,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PRECISE-DAPT>=25 on extended DAPT",
+      "domains": [
+        "D3",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-CAD-019",
+      "name": "High bleeding risk: DAPT shortening (PRECISE-DAPT>=25)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 623,
+      "structuredDataElements": "Bleed risk components, DAPT duration",
+      "subcategory": "DAPT",
+      "subcategoryHeaderLine": 614,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-ACS without BB unless contraindicated",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-CAD-020",
+      "name": "Post-ACS: beta-blocker gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 628,
+      "structuredDataElements": "ACS dx, BB",
+      "subcategory": "Post-ACS Therapies",
+      "subcategoryHeaderLine": 625,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-ACS + LVEF<40 or DM/CKD/HTN without ACEi/ARB",
+      "domains": [
+        "D2",
+        "D3",
+        "D8"
+      ],
+      "id": "GAP-CAD-021",
+      "name": "Post-ACS: ACEi/ARB gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 629,
+      "structuredDataElements": "ACS, LVEF, comorbid, med",
+      "subcategory": "Post-ACS Therapies",
+      "subcategoryHeaderLine": 625,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-MI LVEF<=35 at >=40 days without ICD consideration",
+      "domains": [
+        "D2",
+        "D8",
+        "D10"
+      ],
+      "id": "GAP-CAD-022",
+      "name": "Post-MI: ICD evaluation at day 40",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 630,
+      "structuredDataElements": "MI date, LVEF, device",
+      "subcategory": "Post-ACS Therapies",
+      "subcategoryHeaderLine": 625,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-ACS without colchicine considered",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-CAD-023",
+      "name": "Post-ACS colchicine gap (LoDoCo2)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 631,
+      "structuredDataElements": "ACS dx, colchicine",
+      "subcategory": "Post-ACS Therapies",
+      "subcategoryHeaderLine": 625,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-MI without SGLT2i even without diabetes",
+      "domains": [
+        "D2",
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-CAD-024",
+      "name": "Post-MI SGLT2i gap (EMPACT-MI/DAPA-MI)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 632,
+      "structuredDataElements": "MI, SGLT2i, eGFR",
+      "subcategory": "Post-ACS Therapies",
+      "subcategoryHeaderLine": 625,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-ACS + active smoker without cessation meds",
+      "domains": [
+        "D2",
+        "D3",
+        "D16"
+      ],
+      "id": "GAP-CAD-025",
+      "name": "Post-ACS smoking cessation pharmacotherapy gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 633,
+      "structuredDataElements": "ACS, smoking status, cessation meds",
+      "subcategory": "Post-ACS Therapies",
+      "subcategoryHeaderLine": 625,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "STEMI first medical contact to PCI >90 min",
+      "domains": [
+        "D7",
+        "D11"
+      ],
+      "id": "GAP-CAD-063",
+      "name": "STEMI door-to-balloon >90 min",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 638,
+      "structuredDataElements": "STEMI timing, PCI time",
+      "subcategory": "STEMI/ACS Timing",
+      "subcategoryHeaderLine": 635,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "NSTEMI + GRACE>=140 without angio within 24h",
+      "domains": [
+        "D2",
+        "D5",
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-CAD-065",
+      "name": "NSTEMI early invasive strategy (GRACE>=140)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 639,
+      "structuredDataElements": "NSTEMI, GRACE components, angio timing",
+      "subcategory": "STEMI/ACS Timing",
+      "subcategoryHeaderLine": 635,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "STEMI transfer to PCI center >120 min from first contact",
+      "domains": [
+        "D7",
+        "D11",
+        "D19"
+      ],
+      "id": "GAP-CAD-064",
+      "name": "STEMI transfer D2B >120 min",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 640,
+      "structuredDataElements": "Transfer pattern, PCI time",
+      "subcategory": "STEMI/ACS Timing",
+      "subcategoryHeaderLine": 635,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "NSTEMI low-intermediate risk + angio beyond 72h",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-CAD-066",
+      "name": "NSTEMI delayed strategy for GRACE<140: timing window",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 641,
+      "structuredDataElements": "NSTEMI, angio timing",
+      "subcategory": "STEMI/ACS Timing",
+      "subcategoryHeaderLine": 635,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Suspected ACS without troponin trend to differentiate",
+      "domains": [
+        "D5"
+      ],
+      "id": "GAP-CAD-067",
+      "name": "Unstable angina vs NSTEMI classification gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 642,
+      "structuredDataElements": "Suspected ACS, troponin series",
+      "subcategory": "STEMI/ACS Timing",
+      "subcategoryHeaderLine": 635,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CAD + PAD + carotid/cerebrovasc - intensification pattern",
+      "domains": [
+        "D2"
+      ],
+      "id": "GAP-CAD-026",
+      "name": "Polyvascular disease: intensified regimen",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 647,
+      "structuredDataElements": "CAD, PAD, carotid/stroke dx",
+      "subcategory": "Polyvascular",
+      "subcategoryHeaderLine": 644,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Polyvascular pattern without rivaroxaban 2.5 + ASA considered",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-CAD-027",
+      "name": "Polyvascular: COMPASS dual pathway",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 648,
+      "structuredDataElements": "Polyvasc, med list",
+      "subcategory": "Polyvascular",
+      "subcategoryHeaderLine": 644,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CABG history without statin/BB/ASA all three",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-CAD-028",
+      "name": "Post-CABG: statin + BB + ASA gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 653,
+      "structuredDataElements": "CABG procedure, med list",
+      "subcategory": "Post-CABG",
+      "subcategoryHeaderLine": 650,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CABG without cardiac rehab referral",
+      "domains": [
+        "D7",
+        "D14"
+      ],
+      "id": "GAP-CAD-029",
+      "name": "Post-CABG: cardiac rehab referral",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 654,
+      "structuredDataElements": "CABG, rehab referral (CPT 93798)",
+      "subcategory": "Post-CABG",
+      "subcategoryHeaderLine": 650,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "I25.10 + persistent angina on max GDMT without invasive eval",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-CAD-030",
+      "name": "Chronic CAD: 2024 ACC appropriateness review",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 659,
+      "structuredDataElements": "CAD dx, angina, med list, cath history",
+      "subcategory": "Chronic CAD",
+      "subcategoryHeaderLine": 656,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Stable CAD + positive stress + planned PCI without OMT trial docs",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-CAD-031",
+      "name": "ISCHEMIA trial-eligible pattern: OMT-first confirmation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 660,
+      "structuredDataElements": "Stable CAD, stress test, med list, PCI planning",
+      "subcategory": "Chronic CAD",
+      "subcategoryHeaderLine": 656,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Stable angina on monotherapy (BB alone) without additional anti-anginal",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-CAD-032",
+      "name": "Stable angina: anti-anginal optimization",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 661,
+      "structuredDataElements": "Angina, anti-anginal meds",
+      "subcategory": "Chronic CAD",
+      "subcategoryHeaderLine": 656,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Refractory angina on 2 anti-anginals without ranolazine trial",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-CAD-033",
+      "name": "Ranolazine candidate (refractory angina on 2 agents)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 662,
+      "structuredDataElements": "Angina, anti-anginal count, ranolazine",
+      "subcategory": "Chronic CAD",
+      "subcategoryHeaderLine": 656,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "MI with non-obstructive CAD without CMR",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-CAD-034",
+      "name": "MINOCA workup: CMR not obtained",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 667,
+      "structuredDataElements": "MI dx, coronary findings, CMR",
+      "subcategory": "MINOCA/INOCA",
+      "subcategoryHeaderLine": 664,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "MINOCA without intracoronary imaging to rule out plaque disruption",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-CAD-035",
+      "name": "MINOCA: IVUS/OCT for plaque disruption",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 668,
+      "structuredDataElements": "MINOCA, intracor imaging",
+      "subcategory": "MINOCA/INOCA",
+      "subcategoryHeaderLine": 664,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Stable angina + nonobstructive CAD without CFR/IMR or provocation",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-CAD-036",
+      "name": "INOCA: coronary function testing (CFR/IMR)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 669,
+      "structuredDataElements": "Angina, coronary functional testing",
+      "subcategory": "MINOCA/INOCA",
+      "subcategoryHeaderLine": 664,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Angina pattern suggesting vasospasm without acetylcholine provocation",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-CAD-037",
+      "name": "Vasospastic angina: provocation testing gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 670,
+      "structuredDataElements": "Angina pattern, provocation procedure",
+      "subcategory": "MINOCA/INOCA",
+      "subcategoryHeaderLine": 664,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Confirmed microvascular angina without stepwise therapy",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-CAD-038",
+      "name": "Microvascular angina: CCB + nitrate + nicorandil strategy",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 671,
+      "structuredDataElements": "Microvascular angina, anti-anginal escalation",
+      "subcategory": "MINOCA/INOCA",
+      "subcategoryHeaderLine": 664,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Intermediate angiographic stenosis without FFR/iFR before PCI",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-CAD-068",
+      "name": "Borderline lesion: FFR/iFR not measured",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 676,
+      "structuredDataElements": "Angio findings, FFR/iFR procedure",
+      "subcategory": "Intracoronary Imaging",
+      "subcategoryHeaderLine": 673,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LM or ostial or bifurcation or CTO without intracor imaging",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-CAD-069",
+      "name": "Complex PCI without IVUS/OCT guidance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 677,
+      "structuredDataElements": "Complex PCI type, IVUS/OCT",
+      "subcategory": "Intracoronary Imaging",
+      "subcategoryHeaderLine": 673,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Calcified lesion PCI without IVUS + strategy for expansion",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-CAD-070",
+      "name": "Stent sizing by IVUS: underexpansion risk",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 678,
+      "structuredDataElements": "PCI calcium score, IVUS, IVL/atherectomy",
+      "subcategory": "Intracoronary Imaging",
+      "subcategoryHeaderLine": 673,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Left main disease without heart team documented decision",
+      "domains": [
+        "D7",
+        "D8",
+        "D14"
+      ],
+      "id": "GAP-CAD-071",
+      "name": "LM disease: heart team review (SYNTAX II)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 683,
+      "structuredDataElements": "LM disease, heart team referral",
+      "subcategory": "Complex PCI",
+      "subcategoryHeaderLine": 680,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CTO PCI referral to high-volume center",
+      "domains": [
+        "D7",
+        "D13"
+      ],
+      "id": "GAP-CAD-072",
+      "name": "CTO PCI candidate: operator/center expertise match",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 684,
+      "structuredDataElements": "CTO, facility volume",
+      "subcategory": "Complex PCI",
+      "subcategoryHeaderLine": 680,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Calcified lesion without atherectomy or IVL adjunct",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-CAD-073",
+      "name": "Calcified lesion: rotational atherectomy/IVL consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 685,
+      "structuredDataElements": "PCI calcium, atherectomy/IVL procedure",
+      "subcategory": "Complex PCI",
+      "subcategoryHeaderLine": 680,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Bifurcation lesion without strategy documentation",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-CAD-074",
+      "name": "Bifurcation PCI strategy: provisional vs 2-stent",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 686,
+      "structuredDataElements": "Bifurcation, PCI technique",
+      "subcategory": "Complex PCI",
+      "subcategoryHeaderLine": 680,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-PCI chest pain + ST changes within 24h without repeat angio",
+      "domains": [
+        "D2",
+        "D7",
+        "D9"
+      ],
+      "id": "GAP-CAD-075",
+      "name": "Acute stent thrombosis: emergent repeat intervention",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 691,
+      "structuredDataElements": "PCI date, ST recurrence, angio",
+      "subcategory": "Stent Complications",
+      "subcategoryHeaderLine": 688,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Stent thrombosis 1-30d post-PCI + DAPT adherence review",
+      "domains": [
+        "D3",
+        "D7",
+        "D21"
+      ],
+      "id": "GAP-CAD-076",
+      "name": "Subacute stent thrombosis: DAPT compliance review",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 692,
+      "structuredDataElements": "PCI, ST, DAPT fill data",
+      "subcategory": "Stent Complications",
+      "subcategoryHeaderLine": 688,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ISR without drug-coated balloon consideration",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-CAD-039",
+      "name": "In-stent restenosis: DCB consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 693,
+      "structuredDataElements": "ISR dx, DCB procedure",
+      "subcategory": "Stent Complications",
+      "subcategoryHeaderLine": 688,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "STEMI + cardiogenic shock + no Impella placed",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-CAD-042",
+      "name": "DanGer Shock pattern - Impella in AMI-CS",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 698,
+      "structuredDataElements": "STEMI, shock (R57.0), Impella",
+      "subcategory": "Cardiogenic Shock",
+      "subcategoryHeaderLine": 695,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Cardiogenic shock on IABP without Impella/ECMO escalation",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-CAD-043",
+      "name": "MCS escalation from IABP in ongoing shock",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 699,
+      "structuredDataElements": "Shock, IABP, subsequent MCS",
+      "subcategory": "Cardiogenic Shock",
+      "subcategoryHeaderLine": 695,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "SCAI C + IABP placed without Impella escalation within 6h",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-CAD-040",
+      "name": "SCAI stage C shock + IABP only: Impella escalation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 700,
+      "structuredDataElements": "Shock dx, IABP, Impella timing",
+      "subcategory": "Cardiogenic Shock",
+      "subcategoryHeaderLine": 695,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Refractory shock without VA-ECMO evaluation",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-CAD-041",
+      "name": "SCAI stage D: ECMO evaluation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 701,
+      "structuredDataElements": "Shock severity, ECMO procedure",
+      "subcategory": "Cardiogenic Shock",
+      "subcategoryHeaderLine": 695,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "SBP<90 + tachycardia + near-shock state pattern without close monitoring",
+      "domains": [
+        "D5",
+        "D6"
+      ],
+      "id": "GAP-CAD-077",
+      "name": "SCAI Stage B pre-shock identification",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 702,
+      "structuredDataElements": "SBP, HR, lactate, escalation flag",
+      "subcategory": "Cardiogenic Shock",
+      "subcategoryHeaderLine": 695,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Cardiogenic shock without multidisciplinary shock team involvement",
+      "domains": [
+        "D2",
+        "D11",
+        "D14"
+      ],
+      "id": "GAP-CAD-078",
+      "name": "Shock team activation documentation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 703,
+      "structuredDataElements": "Shock dx, team consult notes",
+      "subcategory": "Cardiogenic Shock",
+      "subcategoryHeaderLine": 695,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-MI PHQ-9 positive without SSRI trial",
+      "domains": [
+        "D2",
+        "D3",
+        "D6"
+      ],
+      "id": "GAP-CAD-044",
+      "name": "Post-MI SSRI consideration for depression (ENRICHD pattern)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 708,
+      "structuredDataElements": "MI, PHQ, med list",
+      "subcategory": "Adjunctive",
+      "subcategoryHeaderLine": 705,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-MI without influenza vaccine current season",
+      "domains": [
+        "D2",
+        "D18"
+      ],
+      "id": "GAP-CAD-045",
+      "name": "Post-MI influenza vaccination gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 709,
+      "structuredDataElements": "MI, flu vaccine",
+      "subcategory": "Adjunctive",
+      "subcategoryHeaderLine": 705,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-ACS discharge without cardiac rehab referral",
+      "domains": [
+        "D2",
+        "D14"
+      ],
+      "id": "GAP-CAD-046",
+      "name": "Post-MI cardiac rehab referral + enrollment",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 710,
+      "structuredDataElements": "ACS, rehab referral (CPT 93798)",
+      "subcategory": "Adjunctive",
+      "subcategoryHeaderLine": 705,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-ICD without return-to-drive documentation",
+      "domains": [
+        "D6",
+        "D10"
+      ],
+      "id": "GAP-CAD-079",
+      "name": "ICD patient + drive/employment counseling",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 711,
+      "structuredDataElements": "ICD, counsel flowsheet",
+      "subcategory": "Adjunctive",
+      "subcategoryHeaderLine": 705,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-ACS at f/u without sexual activity discussion documented",
+      "domains": [
+        "D2",
+        "D6",
+        "D11"
+      ],
+      "id": "GAP-CAD-080",
+      "name": "Post-ACS sexual activity counseling",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 712,
+      "structuredDataElements": "ACS f/u, counsel flowsheet",
+      "subcategory": "Adjunctive",
+      "subcategoryHeaderLine": 705,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ACS + age<60 female + nonobstructive CAD without SCAD suspicion/FMD workup",
+      "domains": [
+        "D1",
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-CAD-081",
+      "name": "SCAD (Spontaneous Coronary Artery Dissection) in young woman",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 717,
+      "structuredDataElements": "Age, sex, ACS, SCAD dx consideration",
+      "subcategory": "Special Etiologies",
+      "subcategoryHeaderLine": 714,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "SCAD dx without BB or extracoronary FMD imaging",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-CAD-082",
+      "name": "Post-SCAD: beta-blocker + FMD screening",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 718,
+      "structuredDataElements": "SCAD, BB, FMD screening (renal/carotid)",
+      "subcategory": "Special Etiologies",
+      "subcategoryHeaderLine": 714,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Prior chest radiation + CAD without dedicated follow-up",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-CAD-083",
+      "name": "Radiation-induced CAD: proximal LAD/LM focus",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 719,
+      "structuredDataElements": "Radiation hx, CAD dx",
+      "subcategory": "Special Etiologies",
+      "subcategoryHeaderLine": 714,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "CAD in young age + systemic inflammatory features without vasculitis workup",
+      "domains": [
+        "D1",
+        "D2",
+        "D5"
+      ],
+      "id": "GAP-CAD-084",
+      "name": "Coronary vasculitis workup (Kawasaki, Takayasu)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 720,
+      "structuredDataElements": "Age, CAD, inflammatory markers",
+      "subcategory": "Special Etiologies",
+      "subcategoryHeaderLine": 714,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Substance use + cardiac dx without substance cessation referral",
+      "domains": [
+        "D2",
+        "D14",
+        "D16"
+      ],
+      "id": "GAP-CAD-085",
+      "name": "Cocaine/methamphetamine-induced CAD/CM",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 721,
+      "structuredDataElements": "Substance use dx, cardiac dx, cessation",
+      "subcategory": "Special Etiologies",
+      "subcategoryHeaderLine": 714,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Imaging bridging + angina pattern without provocation + strategy",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-CAD-086",
+      "name": "Myocardial bridging symptomatic: workup",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 722,
+      "structuredDataElements": "Bridging imaging, angina, workup",
+      "subcategory": "Special Etiologies",
+      "subcategoryHeaderLine": 714,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Heart transplant without annual IVUS or angio",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-CAD-087",
+      "name": "Cardiac allograft vasculopathy surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 723,
+      "structuredDataElements": "Transplant, annual imaging",
+      "subcategory": "Special Etiologies",
+      "subcategoryHeaderLine": 714,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Prior radiation + dual valve/coronary disease without integrated strategy",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-CAD-088",
+      "name": "Chest radiation valve + coronary combined management",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 724,
+      "structuredDataElements": "Radiation, valve + coronary dx",
+      "subcategory": "Special Etiologies",
+      "subcategoryHeaderLine": 714,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Low-intermediate pretest probability chest pain without CCTA",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-CAD-047",
+      "name": "CCTA for intermediate chest pain",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 729,
+      "structuredDataElements": "Chest pain dx, CCTA procedure",
+      "subcategory": "Cardiac Imaging",
+      "subcategoryHeaderLine": 726,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Inability to exercise routed to treadmill instead of pharm stress",
+      "domains": [
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-CAD-048",
+      "name": "Stress imaging modality mismatch",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 730,
+      "structuredDataElements": "Exercise capacity, stress modality",
+      "subcategory": "Cardiac Imaging",
+      "subcategoryHeaderLine": 726,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Serial stress tests in stable patient without guideline-supported indication",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-CAD-089",
+      "name": "Appropriate use: repeat stress testing overuse",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 731,
+      "structuredDataElements": "Stress procedure count",
+      "subcategory": "Cardiac Imaging",
+      "subcategoryHeaderLine": 726,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Non-cardiac surgery at high risk without RCRI/NSQIP calculation",
+      "domains": [
+        "D2",
+        "D5",
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-CAD-049",
+      "name": "Pre-op cardiac risk assessment not documented",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 736,
+      "structuredDataElements": "Surgery type, RCRI components",
+      "subcategory": "Peri-procedure",
+      "subcategoryHeaderLine": 733,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "High-risk surgery + no BB on board without decision documented",
+      "domains": [
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-CAD-050",
+      "name": "Pre-op beta-blocker decision documentation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 737,
+      "structuredDataElements": "Surgery risk, BB, pre-op encounter",
+      "subcategory": "Peri-procedure",
+      "subcategoryHeaderLine": 733,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Recent PCI (within 30d BMS/180d DES) + non-cardiac surgery without delay rationale",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-CAD-051",
+      "name": "Post-PCI non-cardiac surgery timing",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 738,
+      "structuredDataElements": "PCI date, subsequent surgery",
+      "subcategory": "Peri-procedure",
+      "subcategoryHeaderLine": 733,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-arrest + TTM without coronary angio appropriateness documented",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-CAD-090",
+      "name": "Post-arrest TTM with subsequent coronary angio",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 739,
+      "structuredDataElements": "Arrest, TTM, angio",
+      "subcategory": "Peri-procedure",
+      "subcategoryHeaderLine": 733,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "PCI + eGFR<45 without pre-hydration documented",
+      "domains": [
+        "D3",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-CAD-052",
+      "name": "Pre-PCI contrast-induced nephropathy risk + pre-hydration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 744,
+      "structuredDataElements": "eGFR, PCI, hydration orders",
+      "subcategory": "Post-procedure",
+      "subcategoryHeaderLine": 741,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Elective PCI via femoral without radial feasibility documented",
+      "domains": [
+        "D7"
+      ],
+      "id": "GAP-CAD-053",
+      "name": "Radial access: appropriate utilization",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 745,
+      "structuredDataElements": "PCI access, facility pattern",
+      "subcategory": "Post-procedure",
+      "subcategoryHeaderLine": 741,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Elective outpatient PCI without same-day discharge consideration",
+      "domains": [
+        "D7",
+        "D11"
+      ],
+      "id": "GAP-CAD-054",
+      "name": "Same-day discharge PCI: protocol adherence",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 746,
+      "structuredDataElements": "PCI type, discharge timing",
+      "subcategory": "Post-procedure",
+      "subcategoryHeaderLine": 741,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Post-CABG without follow-up wound eval at 2 weeks",
+      "domains": [
+        "D7",
+        "D11"
+      ],
+      "id": "GAP-CAD-055",
+      "name": "Post-CABG sternal wound surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 747,
+      "structuredDataElements": "CABG, follow-up encounter",
+      "subcategory": "Post-procedure",
+      "subcategoryHeaderLine": 741,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    }
+  ],
+  "module": "CAD",
+  "moduleHeaderLine": 586,
+  "specSection": "§6.4",
+  "specSource": "docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md",
+  "subcategories": [
+    {
+      "gapCount": 13,
+      "headerLine": 587,
+      "name": "Lipid Management"
+    },
+    {
+      "gapCount": 6,
+      "headerLine": 604,
+      "name": "Primary Prevention"
+    },
+    {
+      "gapCount": 7,
+      "headerLine": 614,
+      "name": "DAPT"
+    },
+    {
+      "gapCount": 6,
+      "headerLine": 625,
+      "name": "Post-ACS Therapies"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 635,
+      "name": "STEMI/ACS Timing"
+    },
+    {
+      "gapCount": 2,
+      "headerLine": 644,
+      "name": "Polyvascular"
+    },
+    {
+      "gapCount": 2,
+      "headerLine": 650,
+      "name": "Post-CABG"
+    },
+    {
+      "gapCount": 4,
+      "headerLine": 656,
+      "name": "Chronic CAD"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 664,
+      "name": "MINOCA/INOCA"
+    },
+    {
+      "gapCount": 3,
+      "headerLine": 673,
+      "name": "Intracoronary Imaging"
+    },
+    {
+      "gapCount": 4,
+      "headerLine": 680,
+      "name": "Complex PCI"
+    },
+    {
+      "gapCount": 3,
+      "headerLine": 688,
+      "name": "Stent Complications"
+    },
+    {
+      "gapCount": 6,
+      "headerLine": 695,
+      "name": "Cardiogenic Shock"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 705,
+      "name": "Adjunctive"
+    },
+    {
+      "gapCount": 8,
+      "headerLine": 714,
+      "name": "Special Etiologies"
+    },
+    {
+      "gapCount": 3,
+      "headerLine": 726,
+      "name": "Cardiac Imaging"
+    },
+    {
+      "gapCount": 4,
+      "headerLine": 733,
+      "name": "Peri-procedure"
+    },
+    {
+      "gapCount": 4,
+      "headerLine": 741,
+      "name": "Post-procedure"
+    }
+  ],
+  "tierTotals": {
+    "T1": 18,
+    "T2": 55,
+    "T3": 17
+  },
+  "totalGaps": 90
+}

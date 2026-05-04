@@ -1,0 +1,2020 @@
+{
+  "auditDate": "2026-05-04",
+  "auditMethod": "rule-body-verified",
+  "crosswalkVersion": "1.0",
+  "draft": true,
+  "extras": [],
+  "lessonsLearned": "",
+  "module": "HF",
+  "rows": [
+    {
+      "auditNotes": "+",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-60",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-35",
+        "evaluatorBodyLineRange": [
+          3377,
+          3401
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-35-beta-blocker",
+        "registryLine": 204
+      },
+      "specGapId": "GAP-HF-001",
+      "specLine": 124,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-61",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-35",
+        "evaluatorBodyLineRange": [
+          3377,
+          3401
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-35-beta-blocker",
+        "registryLine": 204
+      },
+      "specGapId": "GAP-HF-002",
+      "specLine": 125,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-62",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-35",
+        "evaluatorBodyLineRange": [
+          3377,
+          3401
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-35-beta-blocker",
+        "registryLine": 204
+      },
+      "specGapId": "GAP-HF-003",
+      "specLine": 126,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "+",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-63",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-37",
+        "evaluatorBodyLineRange": [
+          4745,
+          4771
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-37-raas",
+        "registryLine": 300
+      },
+      "specGapId": "GAP-HF-004",
+      "specLine": 127,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-64",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-ARNI-SWITCH",
+        "evaluatorBodyLineRange": [
+          9855,
+          9879
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-arni-switch",
+        "registryLine": 1968
+      },
+      "specGapId": "GAP-HF-005",
+      "specLine": 128,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "+",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-66",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-36",
+        "evaluatorBodyLineRange": [
+          3411,
+          3433
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-36-mra",
+        "registryLine": 216
+      },
+      "specGapId": "GAP-HF-007",
+      "specLine": 129,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "+",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-69",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-34",
+        "evaluatorBodyLineRange": [
+          3347,
+          3372
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-34-sglt2i",
+        "registryLine": 192
+      },
+      "specGapId": "GAP-HF-010",
+      "specLine": 130,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-73",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-18",
+        "evaluatorBodyLineRange": [
+          3528,
+          3544
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-18-vericiguat",
+        "registryLine": 576
+      },
+      "specGapId": "GAP-HF-014",
+      "specLine": 131,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-65",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-30",
+        "evaluatorBodyLineRange": [
+          3673,
+          3689
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-30-arni-underdosing",
+        "registryLine": 648
+      },
+      "specGapId": "GAP-HF-006",
+      "specLine": 132,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-67",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-36",
+        "evaluatorBodyLineRange": [
+          3411,
+          3433
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-36-mra",
+        "registryLine": 216
+      },
+      "specGapId": "GAP-HF-008",
+      "specLine": 133,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-68",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-K-MONITOR",
+        "evaluatorBodyLineRange": [
+          9928,
+          9951
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-potassium-monitor",
+        "registryLine": 1992
+      },
+      "specGapId": "GAP-HF-009",
+      "specLine": 134,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-70",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-34",
+        "evaluatorBodyLineRange": [
+          3347,
+          3372
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-34-sglt2i",
+        "registryLine": 192
+      },
+      "specGapId": "GAP-HF-011",
+      "specLine": 135,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-71",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-19",
+        "evaluatorBodyLineRange": [
+          3554,
+          3570
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-19-hydralazine-isdn",
+        "registryLine": 588
+      },
+      "specGapId": "GAP-HF-012",
+      "specLine": 136,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-72",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-17",
+        "evaluatorBodyLineRange": [
+          3502,
+          3518
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-17-ivabradine",
+        "registryLine": 564
+      },
+      "specGapId": "GAP-HF-013",
+      "specLine": 137,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-74",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-015",
+      "specLine": 138,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-82",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-79",
+        "evaluatorBodyLineRange": [
+          3855,
+          3875
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-79-sglt2i-hfpef",
+        "registryLine": 744
+      },
+      "specGapId": "GAP-HF-016",
+      "specLine": 143,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-83",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-017",
+      "specLine": 144,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-84",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-7",
+        "evaluatorBodyLineRange": [
+          3449,
+          3465
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-7-glp1ra",
+        "registryLine": 540
+      },
+      "specGapId": "GAP-HF-018",
+      "specLine": 145,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-85",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-21",
+        "evaluatorBodyLineRange": [
+          3601,
+          3616
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-21-hfpef-screening",
+        "registryLine": 612
+      },
+      "specGapId": "GAP-HF-019",
+      "specLine": 146,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-86",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-21",
+        "evaluatorBodyLineRange": [
+          3601,
+          3616
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-21-hfpef-screening",
+        "registryLine": 612
+      },
+      "specGapId": "GAP-HF-020",
+      "specLine": 147,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-94",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-021",
+      "specLine": 152,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-97",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-024",
+      "specLine": 153,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-98",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-025",
+      "specLine": 154,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-99",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-026",
+      "specLine": 155,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-95",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-022",
+      "specLine": 156,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-96",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-023",
+      "specLine": 157,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-100",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-HEMODYNAMIC",
+        "evaluatorBodyLineRange": [
+          10026,
+          10048
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-hemodynamic-monitor",
+        "registryLine": 2028
+      },
+      "specGapId": "GAP-HF-027",
+      "specLine": 158,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-101",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-86",
+        "evaluatorBodyLineRange": [
+          5857,
+          5876
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-86-crt-d-upgrade",
+        "registryLine": 1464
+      },
+      "specGapId": "GAP-HF-029",
+      "specLine": 159,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-102",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-030",
+      "specLine": 160,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-103",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-031",
+      "specLine": 161,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-104",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-126",
+      "specLine": 162,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-105",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-127",
+      "specLine": 163,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "+ | Multiple registry ids cited: gap-hf-84-transplant-eval, gap-hf-85-lvad-referral",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.7,
+      "parseSource": "addendum-line-113",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-84",
+        "evaluatorBodyLineRange": [
+          5797,
+          5816
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-84-transplant-eval",
+        "registryLine": 1440
+      },
+      "specGapId": "GAP-HF-028",
+      "specLine": 168,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-114",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-041",
+      "specLine": 169,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-115",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-043",
+      "specLine": 170,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-116",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-73",
+        "evaluatorBodyLineRange": [
+          3735,
+          3750
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-73-hyponatremia",
+        "registryLine": 684
+      },
+      "specGapId": "GAP-HF-132",
+      "specLine": 171,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-117",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-133",
+      "specLine": 172,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-118",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-042",
+      "specLine": 173,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "+ | Multiple registry ids cited: gap-hf-76-palliative-care, gap-hf-advance-care",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.7,
+      "parseSource": "addendum-line-119",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-76",
+        "evaluatorBodyLineRange": [
+          3806,
+          3821
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-76-palliative-care",
+        "registryLine": 720
+      },
+      "specGapId": "GAP-HF-044",
+      "specLine": 174,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "+ | Multiple registry ids cited: gap-hf-77-diuretic-resistance, gap-hf-diuretic-optimization",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.7,
+      "parseSource": "addendum-line-120",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-77",
+        "evaluatorBodyLineRange": [
+          3830,
+          3846
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-77-diuretic-resistance",
+        "registryLine": 732
+      },
+      "specGapId": "GAP-HF-045",
+      "specLine": 175,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-121",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-046",
+      "specLine": 176,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-122",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-047",
+      "specLine": 177,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-123",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-048",
+      "specLine": 178,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-124",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-049",
+      "specLine": 179,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-125",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-050",
+      "specLine": 180,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-134",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-IRON-IV-MONITORING",
+        "evaluatorBodyLineRange": [
+          10124,
+          10147
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-iron-iv-monitoring",
+        "registryLine": 2760
+      },
+      "specGapId": "GAP-HF-033",
+      "specLine": 185,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-135",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-IRON-IV-MONITORING",
+        "evaluatorBodyLineRange": [
+          10124,
+          10147
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-iron-iv-monitoring",
+        "registryLine": 2760
+      },
+      "specGapId": "GAP-HF-034",
+      "specLine": 186,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-133",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-032",
+      "specLine": 187,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-144",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-036",
+      "specLine": 192,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-143",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-37-FU",
+        "evaluatorBodyLineRange": [
+          3693,
+          3708
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-37-fu-discharge",
+        "registryLine": 660
+      },
+      "specGapId": "GAP-HF-035",
+      "specLine": 193,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-145",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-20",
+        "evaluatorBodyLineRange": [
+          3574,
+          3589
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-20-cardiac-rehab",
+        "registryLine": 600
+      },
+      "specGapId": "GAP-HF-037",
+      "specLine": 194,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-151",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-130",
+      "specLine": 195,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-152",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-131",
+      "specLine": 196,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-146",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-038",
+      "specLine": 197,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "+ | Multiple registry ids cited: gap-hf-26-osa-screening, gap-hf-91-sleep-apnea-treatment",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.7,
+      "parseSource": "addendum-line-147",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-26",
+        "evaluatorBodyLineRange": [
+          3626,
+          3641
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-26-osa-screening",
+        "registryLine": 624
+      },
+      "specGapId": "GAP-HF-039",
+      "specLine": 198,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "+ | Multiple registry ids cited: gap-hf-38-influenza-vax, gap-hf-vaccine-covid",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.7,
+      "parseSource": "addendum-line-148",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-38",
+        "evaluatorBodyLineRange": [
+          3712,
+          3727
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-38-influenza-vax",
+        "registryLine": 672
+      },
+      "specGapId": "GAP-HF-040",
+      "specLine": 199,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-149",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-128",
+      "specLine": 200,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-150",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-129",
+      "specLine": 201,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-160",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-90",
+        "evaluatorBodyLineRange": [
+          5975,
+          5993
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-90-amyloid-biomarker",
+        "registryLine": 1512
+      },
+      "specGapId": "GAP-HF-051",
+      "specLine": 206,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-162",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-90",
+        "evaluatorBodyLineRange": [
+          5975,
+          5993
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-90-amyloid-biomarker",
+        "registryLine": 1512
+      },
+      "specGapId": "GAP-HF-053",
+      "specLine": 207,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-163",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-90",
+        "evaluatorBodyLineRange": [
+          5975,
+          5993
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-90-amyloid-biomarker",
+        "registryLine": 1512
+      },
+      "specGapId": "GAP-HF-054",
+      "specLine": 208,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-161",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-90",
+        "evaluatorBodyLineRange": [
+          5975,
+          5993
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-90-amyloid-biomarker",
+        "registryLine": 1512
+      },
+      "specGapId": "GAP-HF-052",
+      "specLine": 209,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-166",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-90",
+        "evaluatorBodyLineRange": [
+          5975,
+          5993
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-90-amyloid-biomarker",
+        "registryLine": 1512
+      },
+      "specGapId": "GAP-HF-134",
+      "specLine": 210,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-164",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-90",
+        "evaluatorBodyLineRange": [
+          5975,
+          5993
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-90-amyloid-biomarker",
+        "registryLine": 1512
+      },
+      "specGapId": "GAP-HF-055",
+      "specLine": 211,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-165",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-90",
+        "evaluatorBodyLineRange": [
+          5975,
+          5993
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-90-amyloid-biomarker",
+        "registryLine": 1512
+      },
+      "specGapId": "GAP-HF-056",
+      "specLine": 212,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-174",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-12",
+        "evaluatorBodyLineRange": [
+          3473,
+          3488
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-12-hcm-screening",
+        "registryLine": 552
+      },
+      "specGapId": "GAP-HF-057",
+      "specLine": 217,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-177",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-12",
+        "evaluatorBodyLineRange": [
+          3473,
+          3488
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-12-hcm-screening",
+        "registryLine": 552
+      },
+      "specGapId": "GAP-HF-135",
+      "specLine": 218,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-175",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-12",
+        "evaluatorBodyLineRange": [
+          3473,
+          3488
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-12-hcm-screening",
+        "registryLine": 552
+      },
+      "specGapId": "GAP-HF-058",
+      "specLine": 219,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-176",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-12",
+        "evaluatorBodyLineRange": [
+          3473,
+          3488
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-12-hcm-screening",
+        "registryLine": 552
+      },
+      "specGapId": "GAP-HF-059",
+      "specLine": 220,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-178",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-136",
+      "specLine": 221,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-186",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-89",
+        "evaluatorBodyLineRange": [
+          5942,
+          5965
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-89-fabry",
+        "registryLine": 1500
+      },
+      "specGapId": "GAP-HF-060",
+      "specLine": 226,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-187",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-89",
+        "evaluatorBodyLineRange": [
+          5942,
+          5965
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-89-fabry",
+        "registryLine": 1500
+      },
+      "specGapId": "GAP-HF-061",
+      "specLine": 227,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-188",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-82",
+        "evaluatorBodyLineRange": [
+          3910,
+          3925
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-82-cardiac-sarcoidosis",
+        "registryLine": 768
+      },
+      "specGapId": "GAP-HF-062",
+      "specLine": 228,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-189",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-82",
+        "evaluatorBodyLineRange": [
+          3910,
+          3925
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-82-cardiac-sarcoidosis",
+        "registryLine": 768
+      },
+      "specGapId": "GAP-HF-063",
+      "specLine": 229,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-190",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-064",
+      "specLine": 230,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-191",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-065",
+      "specLine": 231,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-192",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-80",
+        "evaluatorBodyLineRange": [
+          3884,
+          3899
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-80-cardio-oncology",
+        "registryLine": 756
+      },
+      "specGapId": "GAP-HF-066",
+      "specLine": 232,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-193",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-80",
+        "evaluatorBodyLineRange": [
+          3884,
+          3899
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-80-cardio-oncology",
+        "registryLine": 756
+      },
+      "specGapId": "GAP-HF-067",
+      "specLine": 233,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-194",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-80",
+        "evaluatorBodyLineRange": [
+          3884,
+          3899
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-80-cardio-oncology",
+        "registryLine": 756
+      },
+      "specGapId": "GAP-HF-068",
+      "specLine": 234,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "+ | Multiple registry ids cited: gap-hf-80-cardio-oncology, gap-hf-88-myocarditis",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.7,
+      "parseSource": "addendum-line-195",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-80",
+        "evaluatorBodyLineRange": [
+          3884,
+          3899
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-80-cardio-oncology",
+        "registryLine": 756
+      },
+      "specGapId": "GAP-HF-069",
+      "specLine": 235,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-196",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-87",
+        "evaluatorBodyLineRange": [
+          5886,
+          5904
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-87-peripartum",
+        "registryLine": 1476
+      },
+      "specGapId": "GAP-HF-070",
+      "specLine": 236,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-197",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-LVNC",
+        "evaluatorBodyLineRange": [
+          9994,
+          10017
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-lvnc",
+        "registryLine": 2016
+      },
+      "specGapId": "GAP-HF-071",
+      "specLine": 237,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-198",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-072",
+      "specLine": 238,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-199",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-073",
+      "specLine": 239,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-200",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-074",
+      "specLine": 240,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-201",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-075",
+      "specLine": 241,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-209",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-137",
+      "specLine": 246,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-210",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-138",
+      "specLine": 247,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-211",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-139",
+      "specLine": 248,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-212",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-77",
+        "evaluatorBodyLineRange": [
+          3830,
+          3846
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-77-diuretic-resistance",
+        "registryLine": 732
+      },
+      "specGapId": "GAP-HF-140",
+      "specLine": 249,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-213",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-141",
+      "specLine": 250,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-225",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-146",
+      "specLine": 255,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-221",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-142",
+      "specLine": 256,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-222",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-143",
+      "specLine": 257,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-223",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-144",
+      "specLine": 258,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-224",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-145",
+      "specLine": 259,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-233",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-147",
+      "specLine": 264,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-234",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-148",
+      "specLine": 265,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-235",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-149",
+      "specLine": 266,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-236",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-150",
+      "specLine": 267,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-237",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-151",
+      "specLine": 268,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-238",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-152",
+      "specLine": 269,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-239",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-153",
+      "specLine": 270,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-241",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-155",
+      "specLine": 271,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-240",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-154",
+      "specLine": 272,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-249",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-156",
+      "specLine": 277,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-250",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-157",
+      "specLine": 278,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-251",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-158",
+      "specLine": 279,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-259",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-159",
+      "specLine": 284,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-260",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-160",
+      "specLine": 285,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-261",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-161",
+      "specLine": 286,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-269",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-076",
+      "specLine": 291,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-270",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-077",
+      "specLine": 292,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-271",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-078",
+      "specLine": 293,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-272",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-ANEMIA-HF",
+        "evaluatorBodyLineRange": [
+          10088,
+          10115
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-anemia-hf",
+        "registryLine": 2064
+      },
+      "specGapId": "GAP-HF-079",
+      "specLine": 294,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-273",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-080",
+      "specLine": 295,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-274",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-081",
+      "specLine": 296,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-275",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-082",
+      "specLine": 297,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "+ | Multiple registry ids cited: gap-hf-75-cardiac-mri, gap-hf-83-loop-without-mra",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.7,
+      "parseSource": "addendum-line-276",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-75",
+        "evaluatorBodyLineRange": [
+          3782,
+          3797
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-75-cardiac-mri",
+        "registryLine": 708
+      },
+      "specGapId": "GAP-HF-083",
+      "specLine": 298,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-277",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-084",
+      "specLine": 299,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-278",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-085",
+      "specLine": 300,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-279",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-086",
+      "specLine": 301,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-280",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-087",
+      "specLine": 302,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-281",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-088",
+      "specLine": 303,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-282",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-HF-089",
+      "specLine": 304,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-283",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-29",
+        "evaluatorBodyLineRange": [
+          3650,
+          3665
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-29-remote-monitoring",
+        "registryLine": 636
+      },
+      "specGapId": "GAP-HF-090",
+      "specLine": 305,
+      "tier": "T2"
+    }
+  ],
+  "sequencingNotes": "",
+  "strategicPosture": ""
+}

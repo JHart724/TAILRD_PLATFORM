@@ -1,0 +1,2599 @@
+{
+  "gaps": [
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HFrEF (LVEF<=40%) without evidence-based BB (carvedilol, metoprolol succinate, bisoprolol)",
+      "domains": [
+        "D2",
+        "D3",
+        "D8"
+      ],
+      "id": "GAP-HF-001",
+      "name": "HFrEF: Beta-blocker not prescribed",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 124,
+      "structuredDataElements": "HF dx (I50.2x/I50.4x), LVEF, active med RxNorm",
+      "subcategory": "HFrEF GDMT",
+      "subcategoryHeaderLine": 121,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HFrEF on atenolol, metoprolol tartrate, or nebivolol",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-HF-002",
+      "name": "HFrEF: Non-evidence-based beta-blocker",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 125,
+      "structuredDataElements": "HF dx, BB identity by RxNorm",
+      "subcategory": "HFrEF GDMT",
+      "subcategoryHeaderLine": 121,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "On evidence-based BB but below target with HR>=60 SBP>=100",
+      "domains": [
+        "D2",
+        "D3",
+        "D6"
+      ],
+      "id": "GAP-HF-003",
+      "name": "HFrEF: BB not at target dose",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 126,
+      "structuredDataElements": "BB dose, HR, SBP",
+      "subcategory": "HFrEF GDMT",
+      "subcategoryHeaderLine": 121,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HFrEF without sacubitril/valsartan, ACEi, or ARB",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-HF-004",
+      "name": "HFrEF: RAASi not prescribed",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 127,
+      "structuredDataElements": "HF dx, active med list",
+      "subcategory": "HFrEF GDMT",
+      "subcategoryHeaderLine": 121,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "On ACEi/ARB not ARNI; SBP>=100, K+<5.0, eGFR>=20",
+      "domains": [
+        "D2",
+        "D3",
+        "D5",
+        "D6"
+      ],
+      "id": "GAP-HF-005",
+      "name": "HFrEF: ARNI switch opportunity",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 128,
+      "structuredDataElements": "HF dx, med list, SBP, K+, eGFR",
+      "subcategory": "HFrEF GDMT",
+      "subcategoryHeaderLine": 121,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HFrEF without MRA; K+<5.0, eGFR>=25",
+      "domains": [
+        "D2",
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-HF-007",
+      "name": "HFrEF: MRA not prescribed",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 129,
+      "structuredDataElements": "HF dx, med list, K+, eGFR",
+      "subcategory": "HFrEF GDMT",
+      "subcategoryHeaderLine": 121,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HFrEF without dapagliflozin or empagliflozin; eGFR>=20",
+      "domains": [
+        "D2",
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-HF-010",
+      "name": "HFrEF: SGLT2i not prescribed",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 130,
+      "structuredDataElements": "HF dx, med list, eGFR",
+      "subcategory": "HFrEF GDMT",
+      "subcategoryHeaderLine": 121,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Worsening HFrEF (LVEF<45) with recent hospitalization on GDMT",
+      "domains": [
+        "D2",
+        "D3",
+        "D8",
+        "D11",
+        "D19"
+      ],
+      "id": "GAP-HF-014",
+      "name": "HFrEF: Vericiguat candidate",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 131,
+      "structuredDataElements": "HF dx, LVEF, HF hospitalization, GDMT",
+      "subcategory": "HFrEF GDMT",
+      "subcategoryHeaderLine": 121,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Sacubitril/valsartan below 97/103 mg BID",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-HF-006",
+      "name": "HFrEF: ARNI not at target dose",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 132,
+      "structuredDataElements": "HF dx, ARNI dose",
+      "subcategory": "HFrEF GDMT",
+      "subcategoryHeaderLine": 121,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "On MRA with K+>=5.5 or eGFR<20",
+      "domains": [
+        "D2",
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-HF-008",
+      "name": "HFrEF: MRA contraindicated by labs (SAFETY)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": "SAFETY",
+      "safetyTagLiteral": "(SAFETY)",
+      "specLine": 133,
+      "structuredDataElements": "HF dx, MRA active, K+, eGFR",
+      "subcategory": "HFrEF GDMT",
+      "subcategoryHeaderLine": 121,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "MRA active without K+ check in past 3 months",
+      "domains": [
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-HF-009",
+      "name": "HFrEF: MRA K+ monitoring overdue",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 134,
+      "structuredDataElements": "MRA med, K+ result dates",
+      "subcategory": "HFrEF GDMT",
+      "subcategoryHeaderLine": 121,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Eligible by dx but eGFR<20 for initiation",
+      "domains": [
+        "D2",
+        "D5"
+      ],
+      "id": "GAP-HF-011",
+      "name": "HFrEF: SGLT2i eGFR contraindication noted",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 135,
+      "structuredDataElements": "HF dx, eGFR",
+      "subcategory": "HFrEF GDMT",
+      "subcategoryHeaderLine": 121,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Black race + HFrEF on ACEi/ARB without hydralazine+ISDN",
+      "domains": [
+        "D1",
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-HF-012",
+      "name": "HFrEF: Hydralazine/ISDN gap in self-identified Black",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 136,
+      "structuredDataElements": "HF dx, race, med list",
+      "subcategory": "HFrEF GDMT",
+      "subcategoryHeaderLine": 121,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LVEF<=35, sinus rhythm, HR>=70 on max BB",
+      "domains": [
+        "D2",
+        "D3",
+        "D6",
+        "D8",
+        "D9"
+      ],
+      "id": "GAP-HF-013",
+      "name": "HFrEF: Ivabradine candidate",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 137,
+      "structuredDataElements": "HF dx, LVEF, rhythm, HR, BB dose",
+      "subcategory": "HFrEF GDMT",
+      "subcategoryHeaderLine": 121,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Age>75 + eGFR<50 + digoxin>0.125 mg",
+      "domains": [
+        "D1",
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-HF-015",
+      "name": "HF: Digoxin inappropriate use (elderly + CKD + high dose)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 138,
+      "structuredDataElements": "Age, eGFR, digoxin dose",
+      "subcategory": "HFrEF GDMT",
+      "subcategoryHeaderLine": 121,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "EF>=40% HF without SGLT2i (DELIVER/EMPEROR-Preserved)",
+      "domains": [
+        "D2",
+        "D3",
+        "D8"
+      ],
+      "id": "GAP-HF-016",
+      "name": "HFpEF/HFmrEF: SGLT2i not prescribed",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 143,
+      "structuredDataElements": "HF dx, LVEF, med list",
+      "subcategory": "HFpEF/HFmrEF",
+      "subcategoryHeaderLine": 140,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "EF>=40% HF without finerenone (FINEARTS-HF); K+<5.0, eGFR>=25",
+      "domains": [
+        "D2",
+        "D3",
+        "D5",
+        "D8"
+      ],
+      "id": "GAP-HF-017",
+      "name": "HFpEF/HFmrEF: Finerenone not prescribed",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 144,
+      "structuredDataElements": "HF dx, LVEF, med list, K+, eGFR",
+      "subcategory": "HFpEF/HFmrEF",
+      "subcategoryHeaderLine": 140,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "BMI>=30 + HFpEF without semaglutide/tirzepatide",
+      "domains": [
+        "D2",
+        "D3",
+        "D6",
+        "D8"
+      ],
+      "id": "GAP-HF-018",
+      "name": "Obese HFpEF: GLP-1 RA not prescribed",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 145,
+      "structuredDataElements": "HF dx, LVEF, BMI, med list",
+      "subcategory": "HFpEF/HFmrEF",
+      "subcategoryHeaderLine": 140,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Age>=55 + HTN/DM/obesity + NT-proBNP elevated + E/e'>14 or LAVI>=34, no HF dx",
+      "domains": [
+        "D2",
+        "D5",
+        "D8"
+      ],
+      "id": "GAP-HF-019",
+      "name": "Possible undiagnosed HFpEF",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 146,
+      "structuredDataElements": "Risk dx, NT-proBNP, discrete echo E/e' + LAVI",
+      "subcategory": "HFpEF/HFmrEF",
+      "subcategoryHeaderLine": 140,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "H2FPEF score>=6 without HF dx",
+      "domains": [
+        "D2",
+        "D3",
+        "D6",
+        "D8"
+      ],
+      "id": "GAP-HF-020",
+      "name": "H2FPEF score high probability without diagnosis",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 147,
+      "structuredDataElements": "BMI, BP meds, AF, PASP, age, E/e'",
+      "subcategory": "HFpEF/HFmrEF",
+      "subcategoryHeaderLine": 140,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LVEF<=35 + QRS>=150 + LBBB + NYHA II-IV on GDMT>=3mo",
+      "domains": [
+        "D2",
+        "D3",
+        "D8",
+        "D9",
+        "D10"
+      ],
+      "id": "GAP-HF-021",
+      "name": "CRT Class I candidate not implanted",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 152,
+      "structuredDataElements": "HF dx, LVEF, QRS duration, morphology, GDMT duration, device status",
+      "subcategory": "Device Therapy",
+      "subcategoryHeaderLine": 149,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LVEF<=35 + post-MI>=40d on GDMT>=3mo, no ICD",
+      "domains": [
+        "D2",
+        "D3",
+        "D7",
+        "D8",
+        "D10"
+      ],
+      "id": "GAP-HF-024",
+      "name": "ICD primary prevention - ischemic",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 153,
+      "structuredDataElements": "HF dx, LVEF, MI history with date, GDMT, device status",
+      "subcategory": "Device Therapy",
+      "subcategoryHeaderLine": 149,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "NICM + LVEF<=35 on GDMT>=3mo",
+      "domains": [
+        "D1",
+        "D2",
+        "D3",
+        "D8",
+        "D10"
+      ],
+      "id": "GAP-HF-025",
+      "name": "ICD primary prevention - NICM (DANISH age-stratified)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 154,
+      "structuredDataElements": "HF dx, LVEF, ischemic etiology, GDMT, age, device",
+      "subcategory": "Device Therapy",
+      "subcategoryHeaderLine": 149,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Prior sustained VT/VF without ICD",
+      "domains": [
+        "D2",
+        "D10"
+      ],
+      "id": "GAP-HF-026",
+      "name": "ICD secondary prevention",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 155,
+      "structuredDataElements": "VT/VF dx history, device status",
+      "subcategory": "Device Therapy",
+      "subcategoryHeaderLine": 149,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LVEF<=35 + QRS 130-149 + LBBB on GDMT",
+      "domains": [
+        "D2",
+        "D3",
+        "D8",
+        "D9",
+        "D10"
+      ],
+      "id": "GAP-HF-022",
+      "name": "CRT Class IIa candidate",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 156,
+      "structuredDataElements": "Same as above",
+      "subcategory": "Device Therapy",
+      "subcategoryHeaderLine": 149,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LVEF<=35 + QRS>=150 + non-LBBB on GDMT",
+      "domains": [
+        "D2",
+        "D3",
+        "D8",
+        "D9",
+        "D10"
+      ],
+      "id": "GAP-HF-023",
+      "name": "CRT Class IIb candidate",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 157,
+      "structuredDataElements": "Same as above",
+      "subcategory": "Device Therapy",
+      "subcategoryHeaderLine": 149,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "NYHA III + HF hospitalization in past 12 months",
+      "domains": [
+        "D2",
+        "D11",
+        "D19"
+      ],
+      "id": "GAP-HF-027",
+      "name": "CardioMEMS candidate",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 158,
+      "structuredDataElements": "HF dx, hospitalization, functional class proxy",
+      "subcategory": "Device Therapy",
+      "subcategoryHeaderLine": 149,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Prior CRT-D with ongoing HF hospitalizations, LV pacing <93%",
+      "domains": [
+        "D10",
+        "D11",
+        "D22"
+      ],
+      "id": "GAP-HF-029",
+      "name": "CRT non-responder: LBBAP/HBP upgrade consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 159,
+      "structuredDataElements": "Device history, HF hospitalization, LV pacing % from interrogation",
+      "subcategory": "Device Therapy",
+      "subcategoryHeaderLine": 149,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Device implant date > battery life - 12 months",
+      "domains": [
+        "D10",
+        "D22"
+      ],
+      "id": "GAP-HF-030",
+      "name": "CIED battery ERI/EOL approaching",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 160,
+      "structuredDataElements": "Device type + implant date + battery status",
+      "subcategory": "Device Therapy",
+      "subcategoryHeaderLine": 149,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Device infection, erosion, malfunction, or abandoned lead",
+      "domains": [
+        "D2",
+        "D10"
+      ],
+      "id": "GAP-HF-031",
+      "name": "Lead extraction indication",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 161,
+      "structuredDataElements": "Device status, infection dx, complication codes",
+      "subcategory": "Device Therapy",
+      "subcategoryHeaderLine": 149,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LVEF 25-45, NYHA III, narrow QRS, on GDMT - CCM eligible",
+      "domains": [
+        "D2",
+        "D3",
+        "D8",
+        "D9"
+      ],
+      "id": "GAP-HF-126",
+      "name": "Cardiac contractility modulation (CCM/Optimizer) candidate",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 162,
+      "structuredDataElements": "LVEF, NYHA proxy, QRS, GDMT",
+      "subcategory": "Device Therapy",
+      "subcategoryHeaderLine": 149,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Recent MI + LVEF<=35 in waiting period for ICD eligibility",
+      "domains": [
+        "D2",
+        "D3",
+        "D8",
+        "D10"
+      ],
+      "id": "GAP-HF-127",
+      "name": "WCD (wearable cardioverter-defibrillator) bridge to decision",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 163,
+      "structuredDataElements": "MI date, LVEF, ICD status, WCD order",
+      "subcategory": "Device Therapy",
+      "subcategoryHeaderLine": 149,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "INTERMACS 1-4 signals or inotrope-dependent, no advanced HF referral",
+      "domains": [
+        "D2",
+        "D3",
+        "D11",
+        "D14",
+        "D19"
+      ],
+      "id": "GAP-HF-028",
+      "name": "Advanced HF therapy evaluation (LVAD/transplant)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 168,
+      "structuredDataElements": "HF dx, inotrope orders, hospitalization, referral",
+      "subcategory": "Advanced HF",
+      "subcategoryHeaderLine": 165,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF hospitalization without discharge GDMT addition/uptitration",
+      "domains": [
+        "D2",
+        "D3",
+        "D11",
+        "D19"
+      ],
+      "id": "GAP-HF-041",
+      "name": "WHF event without GDMT intensification",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 169,
+      "structuredDataElements": "HF dx, hospitalization, pre/post med list",
+      "subcategory": "Advanced HF",
+      "subcategoryHeaderLine": 165,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Advanced HF trigger signal",
+      "domains": [
+        "D2",
+        "D11",
+        "D19"
+      ],
+      "id": "GAP-HF-043",
+      "name": "Frequent flyer (>=2 HF hospitalizations in 12 months)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 170,
+      "structuredDataElements": "HF dx, HF hospitalization dates",
+      "subcategory": "Advanced HF",
+      "subcategoryHeaderLine": 165,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF + Na<125 or <130 symptomatic without tolvaptan considered",
+      "domains": [
+        "D2",
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-HF-132",
+      "name": "Tolvaptan candidate for severe hyponatremia in HF",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 171,
+      "structuredDataElements": "HF dx, Na value, tolvaptan med",
+      "subcategory": "Advanced HF",
+      "subcategoryHeaderLine": 165,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF-cardiogenic shock without Impella/ECMO/VA-MCS escalation",
+      "domains": [
+        "D2",
+        "D3",
+        "D7"
+      ],
+      "id": "GAP-HF-133",
+      "name": "SCAI stage C/D HF-CS: MCS escalation gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 172,
+      "structuredDataElements": "HF dx, shock dx, MCS procedures",
+      "subcategory": "Advanced HF",
+      "subcategoryHeaderLine": 165,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LVEF decline >=10% between serial echos",
+      "domains": [
+        "D8"
+      ],
+      "id": "GAP-HF-042",
+      "name": "Serial LVEF decline",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 173,
+      "structuredDataElements": "Serial LVEF discrete with dates",
+      "subcategory": "Advanced HF",
+      "subcategoryHeaderLine": 165,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Multiple WHF + INTERMACS 5-7 without palliative consult",
+      "domains": [
+        "D2",
+        "D11",
+        "D14"
+      ],
+      "id": "GAP-HF-044",
+      "name": "Palliative care not consulted in advanced HF",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 174,
+      "structuredDataElements": "HF dx, hospitalization pattern, palliative referral",
+      "subcategory": "Advanced HF",
+      "subcategoryHeaderLine": 165,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Escalating loop dose + persistent congestion without sequential nephron blockade",
+      "domains": [
+        "D3",
+        "D6"
+      ],
+      "id": "GAP-HF-045",
+      "name": "Diuretic resistance without step-up",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 175,
+      "structuredDataElements": "Diuretic dose history, weight trend",
+      "subcategory": "Advanced HF",
+      "subcategoryHeaderLine": 165,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Prior MRA D/C for K+>=5.5 without patiromer/SZC",
+      "domains": [
+        "D3",
+        "D4",
+        "D5"
+      ],
+      "id": "GAP-HF-046",
+      "name": "Hyperkalemia preventing MRA continuation - K+ binder gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 176,
+      "structuredDataElements": "MRA history, K+, K+ binder",
+      "subcategory": "Advanced HF",
+      "subcategoryHeaderLine": 165,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Active inotrope order (milrinone, dobutamine)",
+      "domains": [
+        "D3"
+      ],
+      "id": "GAP-HF-047",
+      "name": "Advanced HF: Inotrope dependence",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 177,
+      "structuredDataElements": "Inotrope orders",
+      "subcategory": "Advanced HF",
+      "subcategoryHeaderLine": 165,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Rising Cr + LFTs + hyponatremia in HF",
+      "domains": [
+        "D5"
+      ],
+      "id": "GAP-HF-048",
+      "name": "Advanced HF: End-organ dysfunction pattern",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 178,
+      "structuredDataElements": "Serial Cr, AST, ALT, Na",
+      "subcategory": "Advanced HF",
+      "subcategoryHeaderLine": 165,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Serial SBP<90 with GDMT dose reductions",
+      "domains": [
+        "D3",
+        "D6"
+      ],
+      "id": "GAP-HF-049",
+      "name": "Advanced HF: Low BP despite GDMT reduction",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 179,
+      "structuredDataElements": "Serial SBP, GDMT changes",
+      "subcategory": "Advanced HF",
+      "subcategoryHeaderLine": 165,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Multiple GDMT discontinuations with labs/vitals",
+      "domains": [
+        "D3",
+        "D5",
+        "D6"
+      ],
+      "id": "GAP-HF-050",
+      "name": "Advanced HF: GDMT intolerance pattern",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 180,
+      "structuredDataElements": "Med D/C history, labs/vitals at D/C",
+      "subcategory": "Advanced HF",
+      "subcategoryHeaderLine": 165,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF + ferritin<100 ng/mL without IV iron",
+      "domains": [
+        "D2",
+        "D5",
+        "D7",
+        "D19"
+      ],
+      "id": "GAP-HF-033",
+      "name": "Absolute iron deficiency untreated",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 185,
+      "structuredDataElements": "HF dx, ferritin, IV iron admin records",
+      "subcategory": "Iron Deficiency",
+      "subcategoryHeaderLine": 182,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF + ferritin 100-299 + TSAT<20% without IV iron",
+      "domains": [
+        "D2",
+        "D5",
+        "D7",
+        "D19"
+      ],
+      "id": "GAP-HF-034",
+      "name": "Functional iron deficiency untreated",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 186,
+      "structuredDataElements": "HF dx, ferritin, TSAT, IV iron",
+      "subcategory": "Iron Deficiency",
+      "subcategoryHeaderLine": 182,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF without ferritin or TSAT in past 12 months",
+      "domains": [
+        "D2",
+        "D5"
+      ],
+      "id": "GAP-HF-032",
+      "name": "Iron deficiency screening overdue",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 187,
+      "structuredDataElements": "HF dx, ferritin/TSAT result dates",
+      "subcategory": "Iron Deficiency",
+      "subcategoryHeaderLine": 182,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Discharge med list missing BB, RAASi, MRA, or SGLT2i",
+      "domains": [
+        "D2",
+        "D3",
+        "D11",
+        "D19"
+      ],
+      "id": "GAP-HF-036",
+      "name": "HF discharge without all 4 GDMT pillars",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 192,
+      "structuredDataElements": "HF dx, discharge med list",
+      "subcategory": "Transitions of Care",
+      "subcategoryHeaderLine": 189,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF hospitalization discharge without HF clinic visit scheduled 7-14 days",
+      "domains": [
+        "D2",
+        "D11",
+        "D19"
+      ],
+      "id": "GAP-HF-035",
+      "name": "No follow-up visit within 14 days of HF discharge",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 193,
+      "structuredDataElements": "HF dx, admit/discharge dates, post-discharge encounters",
+      "subcategory": "Transitions of Care",
+      "subcategoryHeaderLine": 189,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HFrEF stable post-discharge without cardiac rehab referral (CPT 93798)",
+      "domains": [
+        "D2",
+        "D14"
+      ],
+      "id": "GAP-HF-037",
+      "name": "Cardiac rehab not referred post-HF hospitalization",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 194,
+      "structuredDataElements": "HF dx, cardiac rehab referral",
+      "subcategory": "Transitions of Care",
+      "subcategoryHeaderLine": 189,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF admission (DRG 291-293) within 30d of prior HF discharge",
+      "domains": [
+        "D11",
+        "D19"
+      ],
+      "id": "GAP-HF-130",
+      "name": "30-day readmission: HF DRG",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 195,
+      "structuredDataElements": "DRG history, admit/discharge dates",
+      "subcategory": "Transitions of Care",
+      "subcategoryHeaderLine": 189,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Short-stay HF encounter coded observation when inpatient criteria met",
+      "domains": [
+        "D11",
+        "D19"
+      ],
+      "id": "GAP-HF-131",
+      "name": "HF observation status misclassification",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 196,
+      "structuredDataElements": "HF dx, LOS, type of bill, observation vs inpatient code",
+      "subcategory": "Transitions of Care",
+      "subcategoryHeaderLine": 189,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF dx without PHQ-2/PHQ-9 in 12 months",
+      "domains": [
+        "D2",
+        "D6"
+      ],
+      "id": "GAP-HF-038",
+      "name": "Depression screening overdue (PHQ)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 197,
+      "structuredDataElements": "HF dx, depression screen flowsheet",
+      "subcategory": "Transitions of Care",
+      "subcategoryHeaderLine": 189,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF without STOP-BANG or polysomnography",
+      "domains": [
+        "D2",
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-HF-039",
+      "name": "Sleep apnea not screened in HF",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 198,
+      "structuredDataElements": "HF dx, STOP-BANG, PSG procedure",
+      "subcategory": "Transitions of Care",
+      "subcategoryHeaderLine": 189,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF without current flu, COVID, or pneumococcal vaccine",
+      "domains": [
+        "D2",
+        "D18"
+      ],
+      "id": "GAP-HF-040",
+      "name": "Vaccinations overdue in HF",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 199,
+      "structuredDataElements": "HF dx, immunization records",
+      "subcategory": "Transitions of Care",
+      "subcategoryHeaderLine": 189,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF discharge to home without home health referral despite NYHA III-IV",
+      "domains": [
+        "D2",
+        "D11",
+        "D14",
+        "D19"
+      ],
+      "id": "GAP-HF-128",
+      "name": "Home health referral gap post-HF discharge",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 200,
+      "structuredDataElements": "HF dx, discharge disposition, HH referral",
+      "subcategory": "Transitions of Care",
+      "subcategoryHeaderLine": 189,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF discharge without teach-back documentation on weight, salt, meds",
+      "domains": [
+        "D2",
+        "D6",
+        "D11"
+      ],
+      "id": "GAP-HF-129",
+      "name": "HF discharge education documentation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 201,
+      "structuredDataElements": "HF dx, discharge education flowsheet",
+      "subcategory": "Transitions of Care",
+      "subcategoryHeaderLine": 189,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": ">=3 of: age>=60, low-voltage ECG, NT-proBNP disproportionate to EF, bilateral carpal tunnel, spinal stenosis, conduction disease, AA race (V122I)",
+      "domains": [
+        "D1",
+        "D2",
+        "D5",
+        "D7",
+        "D8",
+        "D9"
+      ],
+      "id": "GAP-HF-051",
+      "name": "ATTR-CM screening: unexplained LVH + red flags",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 206,
+      "structuredDataElements": "Wall thickness, ECG voltage, NT-proBNP, CPT 64721 bilateral CTR, M48.0x, conduction dx, race",
+      "subcategory": "Amyloid",
+      "subcategoryHeaderLine": 203,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ATTR red flags + normal FLC without Tc-99m PYP",
+      "domains": [
+        "D2",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-HF-053",
+      "name": "Amyloid workup: PYP scan not ordered",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 207,
+      "structuredDataElements": "Red flags, FLC, PYP procedure",
+      "subcategory": "Amyloid",
+      "subcategoryHeaderLine": 203,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "E85.82 or E85.1 without tafamidis/vutrisiran/patisiran/acoramidis",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-HF-054",
+      "name": "ATTR-CM confirmed but no disease-modifying therapy",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 208,
+      "structuredDataElements": "Amyloid dx, DMT med list",
+      "subcategory": "Amyloid",
+      "subcategoryHeaderLine": 203,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ATTR red flags, kappa/lambda FLC never measured",
+      "domains": [
+        "D2",
+        "D5"
+      ],
+      "id": "GAP-HF-052",
+      "name": "Amyloid workup: FLC/immunofixation not ordered",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 209,
+      "structuredDataElements": "Red flags, FLC result history",
+      "subcategory": "Amyloid",
+      "subcategoryHeaderLine": 203,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Suspected amyloid without complete plasma cell workup",
+      "domains": [
+        "D2",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-HF-134",
+      "name": "AL amyloid workup gap (SPEP/UPEP/FLC)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 210,
+      "structuredDataElements": "Suspected amyloid, SPEP/UPEP/FLC, BMB",
+      "subcategory": "Amyloid",
+      "subcategoryHeaderLine": 203,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Amyloid dx without TTR genetic testing order",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-HF-055",
+      "name": "ATTR-CM: TTR gene sequencing gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 211,
+      "structuredDataElements": "Amyloid dx, TTR test procedure",
+      "subcategory": "Amyloid",
+      "subcategoryHeaderLine": 203,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Black race + HFpEF + age>=65 without ATTR workup",
+      "domains": [
+        "D1",
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-HF-056",
+      "name": "V122I screening in Black patients age>=65 with HFpEF",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 212,
+      "structuredDataElements": "Race, age, HFpEF dx, amyloid workup",
+      "subcategory": "Amyloid",
+      "subcategoryHeaderLine": 203,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "I42.1 + LVOT gradient>=30 rest or >=50 provoked without mavacamten/aficamten",
+      "domains": [
+        "D2",
+        "D3",
+        "D8"
+      ],
+      "id": "GAP-HF-057",
+      "name": "HCM with obstruction not on myosin inhibitor",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 217,
+      "structuredDataElements": "HCM dx, LVOT gradient discrete, med list",
+      "subcategory": "HCM",
+      "subcategoryHeaderLine": 214,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Proband HCM + FDR without screening echo + ECG",
+      "domains": [
+        "D2",
+        "D14",
+        "D17"
+      ],
+      "id": "GAP-HF-135",
+      "name": "HCM first-degree relative cascade screening gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 218,
+      "structuredDataElements": "HCM dx, family referral patterns",
+      "subcategory": "HCM",
+      "subcategoryHeaderLine": 214,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HCM persistent obstruction on max medical therapy",
+      "domains": [
+        "D2",
+        "D3",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-HF-058",
+      "name": "HCM: SRT (septal reduction) candidate",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 219,
+      "structuredDataElements": "HCM dx, gradient, med list, SRT procedure history",
+      "subcategory": "HCM",
+      "subcategoryHeaderLine": 214,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HCM without ICD risk assessment in 12 months",
+      "domains": [
+        "D2",
+        "D8",
+        "D9",
+        "D10",
+        "D17"
+      ],
+      "id": "GAP-HF-059",
+      "name": "HCM: SCD risk stratification not documented",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 220,
+      "structuredDataElements": "HCM dx, ICD status, risk factors (wall thickness, gradient, FHx SCD, syncope, NSVT)",
+      "subcategory": "HCM",
+      "subcategoryHeaderLine": 214,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LVH pattern + apical thickening + giant T-wave inversion not diagnosed",
+      "domains": [
+        "D8",
+        "D9"
+      ],
+      "id": "GAP-HF-136",
+      "name": "Apical HCM missed diagnosis",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 221,
+      "structuredDataElements": "Wall thickness by segment, ECG TWI",
+      "subcategory": "HCM",
+      "subcategoryHeaderLine": 214,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Unexplained LVH + age<55 + CKD/neuropathy without alpha-gal A",
+      "domains": [
+        "D1",
+        "D2",
+        "D5",
+        "D8"
+      ],
+      "id": "GAP-HF-060",
+      "name": "Fabry disease screening",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 226,
+      "structuredDataElements": "Wall thickness, age, CKD/neuropathy, alpha-gal A LOINC",
+      "subcategory": "Other Phenotypes",
+      "subcategoryHeaderLine": 223,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "E75.21 without agalsidase or migalastat",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-HF-061",
+      "name": "Fabry confirmed: enzyme replacement gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 227,
+      "structuredDataElements": "Fabry dx, med list",
+      "subcategory": "Other Phenotypes",
+      "subcategoryHeaderLine": 223,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "New 2nd/3rd degree AV block age<60 without sarcoid workup",
+      "domains": [
+        "D1",
+        "D2",
+        "D7",
+        "D9"
+      ],
+      "id": "GAP-HF-062",
+      "name": "Cardiac sarcoidosis: unexplained AV block <60",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 228,
+      "structuredDataElements": "Age, conduction dx, FDG-PET, sarcoid dx",
+      "subcategory": "Other Phenotypes",
+      "subcategoryHeaderLine": 223,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "D86.85 without prednisone or steroid-sparing",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-HF-063",
+      "name": "Cardiac sarcoid confirmed: immunosuppression gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 229,
+      "structuredDataElements": "Sarcoid dx, med list",
+      "subcategory": "Other Phenotypes",
+      "subcategoryHeaderLine": 223,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Endemic origin + RBBB+LAFB + CM without Chagas serology",
+      "domains": [
+        "D2",
+        "D5",
+        "D9",
+        "D16"
+      ],
+      "id": "GAP-HF-064",
+      "name": "Chagas CM screening",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 230,
+      "structuredDataElements": "Country of origin, ECG morphology, CM dx, Chagas serology",
+      "subcategory": "Other Phenotypes",
+      "subcategoryHeaderLine": 223,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "New LV dysfunction + HR>100 or PVC burden>=10% without rate/rhythm control",
+      "domains": [
+        "D3",
+        "D6",
+        "D8",
+        "D9"
+      ],
+      "id": "GAP-HF-065",
+      "name": "Tachycardia-mediated CM suspected",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 231,
+      "structuredDataElements": "HR, PVC burden, LVEF, rate control meds",
+      "subcategory": "Other Phenotypes",
+      "subcategoryHeaderLine": 223,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Anthracycline order without baseline echo + GLS",
+      "domains": [
+        "D3",
+        "D8"
+      ],
+      "id": "GAP-HF-066",
+      "name": "Pre-anthracycline baseline cardiac assessment gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 232,
+      "structuredDataElements": "Chemo orders, pre-chemo echo + GLS",
+      "subcategory": "Other Phenotypes",
+      "subcategoryHeaderLine": 223,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Serial LVEF drop >10% to <50% during therapy",
+      "domains": [
+        "D3",
+        "D8"
+      ],
+      "id": "GAP-HF-067",
+      "name": "Anthracycline-induced LVEF decline",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 233,
+      "structuredDataElements": "Anthracycline admin dates, serial LVEF",
+      "subcategory": "Other Phenotypes",
+      "subcategoryHeaderLine": 223,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Trastuzumab active without echo in past 3 months",
+      "domains": [
+        "D3",
+        "D8"
+      ],
+      "id": "GAP-HF-068",
+      "name": "HER2 therapy cardiac surveillance gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 234,
+      "structuredDataElements": "Trastuzumab orders, echo frequency",
+      "subcategory": "Other Phenotypes",
+      "subcategoryHeaderLine": 223,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Active ICI + new troponin or LVEF decline",
+      "domains": [
+        "D3",
+        "D5",
+        "D8"
+      ],
+      "id": "GAP-HF-069",
+      "name": "ICI myocarditis screen during checkpoint inhibitor",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 235,
+      "structuredDataElements": "ICI orders, troponin trend, LVEF",
+      "subcategory": "Other Phenotypes",
+      "subcategoryHeaderLine": 223,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Female + LVEF<45 last month pregnancy through 5mo postpartum",
+      "domains": [
+        "D1",
+        "D2",
+        "D8"
+      ],
+      "id": "GAP-HF-070",
+      "name": "Peripartum cardiomyopathy identification",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 236,
+      "structuredDataElements": "Sex, pregnancy/delivery dates, LVEF",
+      "subcategory": "Other Phenotypes",
+      "subcategoryHeaderLine": 223,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "I42.8 LVNC + LVEF<40 without anticoagulation",
+      "domains": [
+        "D2",
+        "D3",
+        "D8"
+      ],
+      "id": "GAP-HF-071",
+      "name": "LVNC anticoagulation gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 237,
+      "structuredDataElements": "LVNC dx, LVEF, anticoag",
+      "subcategory": "Other Phenotypes",
+      "subcategoryHeaderLine": 223,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "I51.81 without follow-up echo in 3-4 weeks",
+      "domains": [
+        "D2",
+        "D8"
+      ],
+      "id": "GAP-HF-072",
+      "name": "Takotsubo recovery monitoring gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 238,
+      "structuredDataElements": "Takotsubo dx, serial echo dates",
+      "subcategory": "Other Phenotypes",
+      "subcategoryHeaderLine": 223,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Prior chest radiation (Z92.3) + cardiac dx without annual echo",
+      "domains": [
+        "D2",
+        "D8"
+      ],
+      "id": "GAP-HF-073",
+      "name": "Radiation heart disease surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 239,
+      "structuredDataElements": "Radiation history, echo dates, cardiac dx",
+      "subcategory": "Other Phenotypes",
+      "subcategoryHeaderLine": 223,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ARVC dx without ICD risk assessment",
+      "domains": [
+        "D2",
+        "D8",
+        "D10"
+      ],
+      "id": "GAP-HF-074",
+      "name": "ARVC: ICD + exercise restriction counseling",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 240,
+      "structuredDataElements": "ARVC dx pattern, RV imaging, ICD status",
+      "subcategory": "Other Phenotypes",
+      "subcategoryHeaderLine": 223,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LAMP2 mutation + massive LVH young male without transplant eval",
+      "domains": [
+        "D1",
+        "D7",
+        "D8",
+        "D14"
+      ],
+      "id": "GAP-HF-075",
+      "name": "Danon disease transplant evaluation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 241,
+      "structuredDataElements": "Genetic test, wall thickness, age, sex, transplant referral",
+      "subcategory": "Other Phenotypes",
+      "subcategoryHeaderLine": 223,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Acute HF + AKI without nephrology coordination",
+      "domains": [
+        "D2",
+        "D5",
+        "D14"
+      ],
+      "id": "GAP-HF-137",
+      "name": "CRS type 1 (acute cardiorenal) untreated pattern",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 246,
+      "structuredDataElements": "HF dx acute, eGFR decline, nephrology referral",
+      "subcategory": "Cardiorenal Syndrome",
+      "subcategoryHeaderLine": 243,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Chronic HF + eGFR slope > -3 mL/min/y",
+      "domains": [
+        "D2",
+        "D5"
+      ],
+      "id": "GAP-HF-138",
+      "name": "CRS type 2 (chronic cardiorenal): CKD progression rate",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 247,
+      "structuredDataElements": "HF dx, serial eGFR with dates",
+      "subcategory": "Cardiorenal Syndrome",
+      "subcategoryHeaderLine": 243,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "eGFR<30 without HF screening (NT-proBNP or echo)",
+      "domains": [
+        "D5",
+        "D8"
+      ],
+      "id": "GAP-HF-139",
+      "name": "CRS type 4 (chronic renocardiac): HF screening in advanced CKD",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 248,
+      "structuredDataElements": "eGFR, NT-proBNP, echo history",
+      "subcategory": "Cardiorenal Syndrome",
+      "subcategoryHeaderLine": 243,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Diuretic-resistant congestion + rising Cr without UF evaluation",
+      "domains": [
+        "D3",
+        "D5",
+        "D6"
+      ],
+      "id": "GAP-HF-140",
+      "name": "Cardiorenal: ultrafiltration consideration in diuretic-resistant HF",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 249,
+      "structuredDataElements": "Diuretic doses, weight, Cr",
+      "subcategory": "Cardiorenal Syndrome",
+      "subcategoryHeaderLine": 243,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Acute HF in setting of sepsis without early goal-directed therapy",
+      "domains": [
+        "D2",
+        "D5",
+        "D7"
+      ],
+      "id": "GAP-HF-141",
+      "name": "CRS type 5 (systemic): sepsis or shock precipitant",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 250,
+      "structuredDataElements": "HF dx, sepsis dx, lactate, resuscitation bundle",
+      "subcategory": "Cardiorenal Syndrome",
+      "subcategoryHeaderLine": 243,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Effusion + tamponade features (RV collapse, IVC plethora) without drainage",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-HF-146",
+      "name": "Tamponade physiology on echo without drainage",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 255,
+      "structuredDataElements": "Echo tamponade markers, pericardiocentesis procedure",
+      "subcategory": "Pericardial Disease",
+      "subcategoryHeaderLine": 252,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HFpEF + prior pericardial dx/radiation/cardiac surgery + discordance without constriction workup",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-HF-142",
+      "name": "Constrictive pericarditis consideration in HFpEF pattern",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 256,
+      "structuredDataElements": "HFpEF, prior pericardial etiology, constriction imaging",
+      "subcategory": "Pericardial Disease",
+      "subcategoryHeaderLine": 252,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "I31.x recurrent pericarditis without colchicine",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-HF-143",
+      "name": "Recurrent pericarditis: colchicine gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 257,
+      "structuredDataElements": "Pericarditis dx, colchicine med",
+      "subcategory": "Pericardial Disease",
+      "subcategoryHeaderLine": 252,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Steroid-dependent recurrent pericarditis without rilonacept",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-HF-144",
+      "name": "Recurrent pericarditis refractory: IL-1 inhibitor consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 258,
+      "structuredDataElements": "Pericarditis dx, steroid history, rilonacept",
+      "subcategory": "Pericardial Disease",
+      "subcategoryHeaderLine": 252,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Moderate-large effusion on echo without etiologic workup",
+      "domains": [
+        "D5",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-HF-145",
+      "name": "Large pericardial effusion without workup",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 259,
+      "structuredDataElements": "Effusion discrete, workup labs/procedures",
+      "subcategory": "Pericardial Disease",
+      "subcategoryHeaderLine": 252,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LVAD (Z95.811) + INR not 2.0-3.0 at last check",
+      "domains": [
+        "D2",
+        "D5",
+        "D10"
+      ],
+      "id": "GAP-HF-147",
+      "name": "Post-LVAD: anticoagulation INR out of range",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 264,
+      "structuredDataElements": "LVAD device, INR history",
+      "subcategory": "LVAD/Transplant",
+      "subcategoryHeaderLine": 261,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LVAD + recurrent GIB without angiodysplasia mgmt",
+      "domains": [
+        "D2",
+        "D3",
+        "D10"
+      ],
+      "id": "GAP-HF-148",
+      "name": "Post-LVAD: GI bleeding without octreotide/ACEi mgmt",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 265,
+      "structuredDataElements": "LVAD, GIB dx, med strategies",
+      "subcategory": "LVAD/Transplant",
+      "subcategoryHeaderLine": 261,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LVAD + elevated LDH or heart failure signs without pump thrombosis workup",
+      "domains": [
+        "D5",
+        "D10"
+      ],
+      "id": "GAP-HF-149",
+      "name": "Post-LVAD: pump thrombosis screening",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 266,
+      "structuredDataElements": "LVAD, LDH, BNP, admission pattern",
+      "subcategory": "LVAD/Transplant",
+      "subcategoryHeaderLine": 261,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LVAD + fever/local findings + blood culture without full workup",
+      "domains": [
+        "D2",
+        "D5",
+        "D10"
+      ],
+      "id": "GAP-HF-150",
+      "name": "Post-LVAD: driveline infection suspicion",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 267,
+      "structuredDataElements": "LVAD, fever, blood cx, TEE",
+      "subcategory": "LVAD/Transplant",
+      "subcategoryHeaderLine": 261,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Heart transplant (Z94.1) without annual/biannual CAV assessment",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-HF-151",
+      "name": "Post-transplant: CAV surveillance angiography gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 268,
+      "structuredDataElements": "Transplant Z-code, coronary angio schedule",
+      "subcategory": "LVAD/Transplant",
+      "subcategoryHeaderLine": 261,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Heart transplant without biopsy schedule adherence year 1",
+      "domains": [
+        "D2",
+        "D7"
+      ],
+      "id": "GAP-HF-152",
+      "name": "Post-transplant: rejection surveillance biopsy schedule",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 269,
+      "structuredDataElements": "Transplant Z-code, biopsy procedures",
+      "subcategory": "LVAD/Transplant",
+      "subcategoryHeaderLine": 261,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Tacro/CsA/sirolimus without level within past 3 months",
+      "domains": [
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-HF-153",
+      "name": "Post-transplant: immunosuppression level monitoring",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 270,
+      "structuredDataElements": "Immunosuppressant meds, drug levels",
+      "subcategory": "LVAD/Transplant",
+      "subcategoryHeaderLine": 261,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LVAD + rising CVP + low CO + RV dysfunction without RV MCS discussion",
+      "domains": [
+        "D10",
+        "D23"
+      ],
+      "id": "GAP-HF-155",
+      "name": "Post-LVAD: RV failure pattern without MCS reassessment",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 271,
+      "structuredDataElements": "LVAD, RV measures, hemodynamics",
+      "subcategory": "LVAD/Transplant",
+      "subcategoryHeaderLine": 261,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Transplant first year without CMV PCR schedule",
+      "domains": [
+        "D2",
+        "D5"
+      ],
+      "id": "GAP-HF-154",
+      "name": "Post-transplant: CMV/EBV surveillance",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 272,
+      "structuredDataElements": "Transplant, CMV PCR history",
+      "subcategory": "LVAD/Transplant",
+      "subcategoryHeaderLine": 261,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "VA-ECMO without Impella/IABP unloading adjunct in LV distension",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-HF-156",
+      "name": "VA-ECMO: LV venting/unloading gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 277,
+      "structuredDataElements": "ECMO procedure, Impella/IABP codes, LV dilation on echo",
+      "subcategory": "ECMO/MCS",
+      "subcategoryHeaderLine": 274,
+      "tier": "T1",
+      "tierMarkerLiteral": "| T1 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "VA-ECMO prolonged without weaning attempt or strategy",
+      "domains": [
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-HF-157",
+      "name": "VA-ECMO: weaning protocol documentation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 278,
+      "structuredDataElements": "ECMO duration, weaning trial docs",
+      "subcategory": "ECMO/MCS",
+      "subcategoryHeaderLine": 274,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Impella CP placed for AMI-CS without SCAI stage reassessment",
+      "domains": [
+        "D7",
+        "D23"
+      ],
+      "id": "GAP-HF-158",
+      "name": "Impella in LV recovery: escalation protocol adherence",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 279,
+      "structuredDataElements": "Impella placement, SCAI stage, hemodynamics",
+      "subcategory": "ECMO/MCS",
+      "subcategoryHeaderLine": 274,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "I42.0 DCM + FDR cardiomyopathy without cascade genetic testing",
+      "domains": [
+        "D2",
+        "D7",
+        "D14",
+        "D17"
+      ],
+      "id": "GAP-HF-159",
+      "name": "Familial DCM cascade screening gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 284,
+      "structuredDataElements": "DCM dx, family hx, cascade referrals",
+      "subcategory": "Genetics",
+      "subcategoryHeaderLine": 281,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LMNA pathogenic + >=2 risk factors (NSVT, LVEF<45, male, non-missense)",
+      "domains": [
+        "D2",
+        "D7",
+        "D8",
+        "D9",
+        "D10"
+      ],
+      "id": "GAP-HF-160",
+      "name": "LMNA cardiomyopathy: early ICD consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 285,
+      "structuredDataElements": "LMNA genotype, risk factor components",
+      "subcategory": "Genetics",
+      "subcategoryHeaderLine": 281,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "FLNC mutation + cardiomyopathy without ICD risk stratification",
+      "domains": [
+        "D2",
+        "D7",
+        "D10"
+      ],
+      "id": "GAP-HF-161",
+      "name": "Filamin C cardiomyopathy: ICD consideration",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 286,
+      "structuredDataElements": "FLNC genotype, CM dx, ICD status",
+      "subcategory": "Genetics",
+      "subcategoryHeaderLine": 281,
+      "tier": "T3",
+      "tierMarkerLiteral": "| T3 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "LVEF<50 + structural changes without GDMT initiation (stage B)",
+      "domains": [
+        "D3",
+        "D8"
+      ],
+      "id": "GAP-HF-076",
+      "name": "HF + asymptomatic LV dysfunction: Stage B progression risk",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 291,
+      "structuredDataElements": "LVEF, structural changes, med list",
+      "subcategory": "Cross-cutting",
+      "subcategoryHeaderLine": 288,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Amyloid dx + AF without anticoagulation (all cardiac amyloid is high-risk)",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-HF-077",
+      "name": "Cardiac amyloidosis + AF: anticoagulation gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 292,
+      "structuredDataElements": "Amyloid dx, AF dx, anticoag",
+      "subcategory": "Cross-cutting",
+      "subcategoryHeaderLine": 288,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF + permanent AF + HR>110 without rate control optimization",
+      "domains": [
+        "D2",
+        "D3",
+        "D6"
+      ],
+      "id": "GAP-HF-078",
+      "name": "HF + chronic AF: rate vs rhythm review",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 293,
+      "structuredDataElements": "HF dx, AF dx, HR, rate meds",
+      "subcategory": "Cross-cutting",
+      "subcategoryHeaderLine": 288,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF + Hb<11 + iron deficiency without GI/hem workup",
+      "domains": [
+        "D2",
+        "D5",
+        "D14"
+      ],
+      "id": "GAP-HF-079",
+      "name": "HF + iron deficiency + anemia without etiology workup",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 294,
+      "structuredDataElements": "HF dx, Hb, iron studies, GI referral",
+      "subcategory": "Cross-cutting",
+      "subcategoryHeaderLine": 288,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF + TSH abnormal without thyroid therapy documented",
+      "domains": [
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-HF-080",
+      "name": "HF + thyroid dysfunction untreated",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 295,
+      "structuredDataElements": "HF dx, TSH, thyroid meds",
+      "subcategory": "Cross-cutting",
+      "subcategoryHeaderLine": 288,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF + DM + HbA1c>8 without intensification",
+      "domains": [
+        "D2",
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-HF-081",
+      "name": "HF + diabetes: HbA1c target gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 296,
+      "structuredDataElements": "HF dx, DM, HbA1c, DM meds",
+      "subcategory": "Cross-cutting",
+      "subcategoryHeaderLine": 288,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF + CKD + metformin with eGFR<45 without dose review",
+      "domains": [
+        "D2",
+        "D3",
+        "D5"
+      ],
+      "id": "GAP-HF-082",
+      "name": "HF + CKD + metformin: renal-dose review",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 297,
+      "structuredDataElements": "HF dx, CKD, metformin, eGFR",
+      "subcategory": "Cross-cutting",
+      "subcategoryHeaderLine": 288,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Unclear HF etiology without cardiac MRI for etiologic workup",
+      "domains": [
+        "D2",
+        "D7",
+        "D8"
+      ],
+      "id": "GAP-HF-083",
+      "name": "HF + CHEF trial flag for primary CMR",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 298,
+      "structuredDataElements": "HF dx, CMR history",
+      "subcategory": "Cross-cutting",
+      "subcategoryHeaderLine": 288,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HFrEF without any exercise capacity assessment",
+      "domains": [
+        "D2",
+        "D6",
+        "D7"
+      ],
+      "id": "GAP-HF-084",
+      "name": "HF + functional assessment (6MWT or CPET) never done",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 299,
+      "structuredDataElements": "HF dx, 6MWT flowsheet, CPET procedure",
+      "subcategory": "Cross-cutting",
+      "subcategoryHeaderLine": 288,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "ICD with delivered therapies without appropriateness review",
+      "domains": [
+        "D10",
+        "D22"
+      ],
+      "id": "GAP-HF-085",
+      "name": "HF + ICD shocks: inappropriate vs appropriate review",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 300,
+      "structuredDataElements": "Device therapy log",
+      "subcategory": "Cross-cutting",
+      "subcategoryHeaderLine": 288,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "Pregnancy + HF + teratogenic med",
+      "domains": [
+        "D2",
+        "D3"
+      ],
+      "id": "GAP-HF-086",
+      "name": "HF in pregnancy: teratogenic med review (ACEi/ARB/ARNI/SGLT2i)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 301,
+      "structuredDataElements": "Pregnancy dx, HF dx, med list",
+      "subcategory": "Cross-cutting",
+      "subcategoryHeaderLine": 288,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF + chronic opioid without OSA screen or risk review",
+      "domains": [
+        "D2",
+        "D3",
+        "D6"
+      ],
+      "id": "GAP-HF-087",
+      "name": "HF + opioid use: high-risk interaction / OSA exacerbation",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 302,
+      "structuredDataElements": "HF dx, opioid med, STOP-BANG",
+      "subcategory": "Cross-cutting",
+      "subcategoryHeaderLine": 288,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF in cancer survivor on surveillance without cardio-onc f/u",
+      "domains": [
+        "D2",
+        "D11"
+      ],
+      "id": "GAP-HF-088",
+      "name": "HF + cancer survivorship: cardio-oncology referral gap",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 303,
+      "structuredDataElements": "HF dx, cancer history, cardio-onc encounter",
+      "subcategory": "Cross-cutting",
+      "subcategoryHeaderLine": 288,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF + primary language Spanish without culturally tailored ed",
+      "domains": [
+        "D1",
+        "D2",
+        "D16"
+      ],
+      "id": "GAP-HF-089",
+      "name": "HF + Hispanic/Latino: SDOH acculturation review",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 304,
+      "structuredDataElements": "HF dx, language, SDOH codes",
+      "subcategory": "Cross-cutting",
+      "subcategoryHeaderLine": 288,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    },
+    {
+      "bswPathwayTags": [],
+      "detectionLogic": "HF + rural ADI high + no telehealth encounter in 12 months",
+      "domains": [
+        "D2",
+        "D11",
+        "D26"
+      ],
+      "id": "GAP-HF-090",
+      "name": "HF telehealth utilization (underused)",
+      "phi": "Non-PHI",
+      "safetyTagCategory": null,
+      "safetyTagLiteral": null,
+      "specLine": 305,
+      "structuredDataElements": "HF dx, encounter type, ADI overlay",
+      "subcategory": "Cross-cutting",
+      "subcategoryHeaderLine": 288,
+      "tier": "T2",
+      "tierMarkerLiteral": "| T2 |"
+    }
+  ],
+  "module": "HF",
+  "moduleHeaderLine": 120,
+  "specSection": "§6.1",
+  "specSource": "docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md",
+  "subcategories": [
+    {
+      "gapCount": 15,
+      "headerLine": 121,
+      "name": "HFrEF GDMT"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 140,
+      "name": "HFpEF/HFmrEF"
+    },
+    {
+      "gapCount": 12,
+      "headerLine": 149,
+      "name": "Device Therapy"
+    },
+    {
+      "gapCount": 13,
+      "headerLine": 165,
+      "name": "Advanced HF"
+    },
+    {
+      "gapCount": 3,
+      "headerLine": 182,
+      "name": "Iron Deficiency"
+    },
+    {
+      "gapCount": 10,
+      "headerLine": 189,
+      "name": "Transitions of Care"
+    },
+    {
+      "gapCount": 7,
+      "headerLine": 203,
+      "name": "Amyloid"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 214,
+      "name": "HCM"
+    },
+    {
+      "gapCount": 16,
+      "headerLine": 223,
+      "name": "Other Phenotypes"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 243,
+      "name": "Cardiorenal Syndrome"
+    },
+    {
+      "gapCount": 5,
+      "headerLine": 252,
+      "name": "Pericardial Disease"
+    },
+    {
+      "gapCount": 9,
+      "headerLine": 261,
+      "name": "LVAD/Transplant"
+    },
+    {
+      "gapCount": 3,
+      "headerLine": 274,
+      "name": "ECMO/MCS"
+    },
+    {
+      "gapCount": 3,
+      "headerLine": 281,
+      "name": "Genetics"
+    },
+    {
+      "gapCount": 15,
+      "headerLine": 288,
+      "name": "Cross-cutting"
+    }
+  ],
+  "tierTotals": {
+    "T1": 29,
+    "T2": 62,
+    "T3": 35
+  },
+  "totalGaps": 126
+}

@@ -1,0 +1,703 @@
+{
+  "codeSource": "backend/src/ingestion/gaps/gapRuleEngine.ts",
+  "evaluatorBlocks": [
+    {
+      "bodyEndLine": 4705,
+      "bodyStartLine": 4680,
+      "commentLine": 4675,
+      "commentLiteral": "// Gap PV-1: Statin Missing in PAD",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "High-intensity statin not prescribed in PAD"
+      ],
+      "name": "PV-1"
+    },
+    {
+      "bodyEndLine": 4735,
+      "bodyStartLine": 4712,
+      "commentLine": 4707,
+      "commentLiteral": "// Gap PV-2: ABI Screening Not Done",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "ABI screening not performed"
+      ],
+      "name": "PV-2"
+    },
+    {
+      "bodyEndLine": 5563,
+      "bodyStartLine": 5538,
+      "commentLine": 5531,
+      "commentLiteral": "// Gap PV-3: Antiplatelet in PAD",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Antiplatelet therapy missing in PAD"
+      ],
+      "name": "PV-3"
+    },
+    {
+      "bodyEndLine": 5593,
+      "bodyStartLine": 5573,
+      "commentLine": 5565,
+      "commentLiteral": "// Gap PV-4: Smoking Cessation in PAD",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Smoking cessation referral recommended for review in PAD"
+      ],
+      "name": "PV-4"
+    },
+    {
+      "bodyEndLine": 5623,
+      "bodyStartLine": 5603,
+      "commentLine": 5595,
+      "commentLiteral": "// Gap PV-5: Exercise Therapy for Claudication",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Supervised exercise therapy recommended for review in PAD with claudication"
+      ],
+      "name": "PV-5"
+    },
+    {
+      "bodyEndLine": 5654,
+      "bodyStartLine": 5633,
+      "commentLine": 5625,
+      "commentLiteral": "// Gap PV-6: Diabetes Control in PAD",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "HbA1c monitoring overdue in PAD with diabetes"
+      ],
+      "name": "PV-6"
+    },
+    {
+      "bodyEndLine": 5686,
+      "bodyStartLine": 5666,
+      "commentLine": 5656,
+      "commentLiteral": "// Gap PV-7: Wound Care Assessment",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Wound care assessment referral recommended for review in PAD"
+      ],
+      "name": "PV-7"
+    },
+    {
+      "bodyEndLine": 5716,
+      "bodyStartLine": 5696,
+      "commentLine": 5688,
+      "commentLiteral": "// Gap PV-8: Duplex Ultrasound Follow-up",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Duplex ultrasound follow-up recommended for review post-intervention"
+      ],
+      "name": "PV-8"
+    },
+    {
+      "bodyEndLine": 5748,
+      "bodyStartLine": 5727,
+      "commentLine": 5718,
+      "commentLiteral": "// Gap PV-9: AAA Screening",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Abdominal aortic aneurysm screening recommended for review"
+      ],
+      "name": "PV-9"
+    },
+    {
+      "bodyEndLine": 6515,
+      "bodyStartLine": 6492,
+      "commentLine": 6484,
+      "commentLiteral": "// Gap PV-10: Cilostazol for Claudication",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Cilostazol not prescribed for claudication in PAD"
+      ],
+      "name": "PV-10"
+    },
+    {
+      "bodyEndLine": 6549,
+      "bodyStartLine": 6525,
+      "commentLine": 6517,
+      "commentLiteral": "// Gap PV-11: ACEi/ARB in PAD with Hypertension",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "ACEi/ARB not prescribed in PAD with hypertension"
+      ],
+      "name": "PV-11"
+    },
+    {
+      "bodyEndLine": 6578,
+      "bodyStartLine": 6559,
+      "commentLine": 6551,
+      "commentLiteral": "// Gap PV-12: Renal Artery Stenosis Screen",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Renal artery stenosis screening recommended for review in PAD with HTN and renal impairment"
+      ],
+      "name": "PV-12"
+    },
+    {
+      "bodyEndLine": 6608,
+      "bodyStartLine": 6586,
+      "commentLine": 6580,
+      "commentLiteral": "// Gap PV-13: Carotid Screening in PAD",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Carotid screening recommended for review in PAD with stroke risk factors"
+      ],
+      "name": "PV-13"
+    },
+    {
+      "bodyEndLine": 6635,
+      "bodyStartLine": 6617,
+      "commentLine": 6610,
+      "commentLiteral": "// Gap PV-14: Annual Foot Exam in PAD with Diabetes",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Annual comprehensive foot exam recommended for review in PAD with diabetes"
+      ],
+      "name": "PV-14"
+    },
+    {
+      "bodyEndLine": 6664,
+      "bodyStartLine": 6646,
+      "commentLine": 6637,
+      "commentLiteral": "// Gap PV-15: Compression Therapy Assessment",
+      "commentPattern": "GAP_MOD_N",
+      "gapsPushIds": [
+        "Compression therapy assessment recommended for review in venous disease with edema"
+      ],
+      "name": "PV-15"
+    },
+    {
+      "bodyEndLine": 10905,
+      "bodyStartLine": 10877,
+      "commentLine": 10875,
+      "commentLiteral": "// PV-RIVAROXABAN: Low-Dose Rivaroxaban in PAD (COMPASS Trial)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider low-dose rivaroxaban + aspirin per COMPASS trial for PAD"
+      ],
+      "name": "PV-RIVAROXABAN"
+    },
+    {
+      "bodyEndLine": 10938,
+      "bodyStartLine": 10909,
+      "commentLine": 10907,
+      "commentLiteral": "// PV-CLOPIDOGREL: Clopidogrel for Aspirin Intolerance in PAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider clopidogrel as alternative antiplatelet for PAD with aspirin intolerance"
+      ],
+      "name": "PV-CLOPIDOGREL"
+    },
+    {
+      "bodyEndLine": 10968,
+      "bodyStartLine": 10942,
+      "commentLine": 10940,
+      "commentLiteral": "// PV-BYPASS-EVAL: Bypass Surgery Evaluation for CLI",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider surgical bypass evaluation for chronic limb-threatening ischemia"
+      ],
+      "name": "PV-BYPASS-EVAL"
+    },
+    {
+      "bodyEndLine": 10997,
+      "bodyStartLine": 10972,
+      "commentLine": 10970,
+      "commentLiteral": "// PV-ENDOVASCULAR: Endovascular Evaluation for Lifestyle-Limiting Claudication",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider endovascular intervention evaluation for lifestyle-limiting claudication"
+      ],
+      "name": "PV-ENDOVASCULAR"
+    },
+    {
+      "bodyEndLine": 11025,
+      "bodyStartLine": 11003,
+      "commentLine": 10999,
+      "commentLiteral": "// PV-VENOUS-ULCER: Venous Ulcer Management",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider comprehensive venous ulcer management protocol"
+      ],
+      "name": "PV-VENOUS-ULCER"
+    },
+    {
+      "bodyEndLine": 11055,
+      "bodyStartLine": 11030,
+      "commentLine": 11027,
+      "commentLiteral": "// PV-DVT-SCREEN: DVT Screening for Unilateral Edema",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider DVT screening for unilateral edema"
+      ],
+      "name": "PV-DVT-SCREEN"
+    },
+    {
+      "bodyEndLine": 11081,
+      "bodyStartLine": 11060,
+      "commentLine": 11057,
+      "commentLiteral": "// PV-PTS-PREVENTION: Post-Thrombotic Syndrome Prevention after DVT",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider compression therapy for post-thrombotic syndrome prevention after DVT"
+      ],
+      "name": "PV-PTS-PREVENTION"
+    },
+    {
+      "bodyEndLine": 11110,
+      "bodyStartLine": 11085,
+      "commentLine": 11083,
+      "commentLiteral": "// PV-MESENTERIC: Mesenteric Ischemia Screening in PAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider mesenteric ischemia evaluation in PAD patient with intestinal vascular symptoms"
+      ],
+      "name": "PV-MESENTERIC"
+    },
+    {
+      "bodyEndLine": 11137,
+      "bodyStartLine": 11115,
+      "commentLine": 11112,
+      "commentLiteral": "// PV-THORACIC-OUTLET: Thoracic Outlet Syndrome Evaluation",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider thoracic outlet syndrome evaluation for young patient with upper extremity vascular symptoms"
+      ],
+      "name": "PV-THORACIC-OUTLET"
+    },
+    {
+      "bodyEndLine": 11163,
+      "bodyStartLine": 11142,
+      "commentLine": 11139,
+      "commentLiteral": "// PV-VARICOSE: Varicose Vein Management",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider venous insufficiency evaluation and management for symptomatic varicose veins"
+      ],
+      "name": "PV-VARICOSE"
+    },
+    {
+      "bodyEndLine": 11189,
+      "bodyStartLine": 11168,
+      "commentLine": 11165,
+      "commentLiteral": "// PV-LYMPHEDEMA: Lymphedema Management",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider comprehensive decongestive therapy referral for lymphedema"
+      ],
+      "name": "PV-LYMPHEDEMA"
+    },
+    {
+      "bodyEndLine": 11221,
+      "bodyStartLine": 11195,
+      "commentLine": 11191,
+      "commentLiteral": "// PV-RAYNAUD: Calcium Channel Blocker for Raynaud Phenomenon",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider calcium channel blocker for Raynaud phenomenon"
+      ],
+      "name": "PV-RAYNAUD"
+    },
+    {
+      "bodyEndLine": 11252,
+      "bodyStartLine": 11225,
+      "commentLine": 11223,
+      "commentLiteral": "// PV-VASCULAR-REHAB: Vascular Rehabilitation Post-Intervention",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider supervised exercise rehabilitation post vascular intervention"
+      ],
+      "name": "PV-VASCULAR-REHAB"
+    },
+    {
+      "bodyEndLine": 11284,
+      "bodyStartLine": 11256,
+      "commentLine": 11254,
+      "commentLiteral": "// PV-PENTOXIFYLLINE: Pentoxifylline When Cilostazol Contraindicated",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider pentoxifylline for claudication in PAD patient with HF (cilostazol contraindicated)"
+      ],
+      "name": "PV-PENTOXIFYLLINE"
+    },
+    {
+      "bodyEndLine": 11315,
+      "bodyStartLine": 11288,
+      "commentLine": 11286,
+      "commentLiteral": "// PV-NAFTIDROFURYL: Naftidrofuryl for Severe Claudication",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider naftidrofuryl for severe claudication per ESC/ESVS Guideline"
+      ],
+      "name": "PV-NAFTIDROFURYL"
+    },
+    {
+      "bodyEndLine": 11348,
+      "bodyStartLine": 11323,
+      "commentLine": 11321,
+      "commentLiteral": "// PV-CRITICAL-LIMB: Critical Limb Ischemia Urgent Evaluation",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider urgent vascular evaluation for critical limb ischemia with tissue loss"
+      ],
+      "name": "PV-CRITICAL-LIMB"
+    },
+    {
+      "bodyEndLine": 11378,
+      "bodyStartLine": 11352,
+      "commentLine": 11350,
+      "commentLiteral": "// PV-GRAFT-SURVEILLANCE: Bypass Graft Surveillance",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider interval duplex surveillance for peripheral bypass graft"
+      ],
+      "name": "PV-GRAFT-SURVEILLANCE"
+    },
+    {
+      "bodyEndLine": 11409,
+      "bodyStartLine": 11382,
+      "commentLine": 11380,
+      "commentLiteral": "// PV-ANTICOAG-VTE: VTE Anticoagulation Duration Review",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider VTE anticoagulation duration review and continued need assessment"
+      ],
+      "name": "PV-ANTICOAG-VTE"
+    }
+  ],
+  "gapsPushCount": 33,
+  "module": "PV",
+  "moduleTagPattern": "module: ModuleType.PERIPHERAL_VASCULAR",
+  "registry": [
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease",
+      "id": "gap-pv-1-pad-statin",
+      "lastReviewDate": "2026-04-05",
+      "levelOfEvidence": "A",
+      "name": "PAD Statin Therapy",
+      "nextReviewDue": "2026-10-05",
+      "registryLine": 276
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease",
+      "id": "gap-pv-2-abi-screening",
+      "lastReviewDate": "2026-04-05",
+      "levelOfEvidence": "B",
+      "name": "ABI Screening",
+      "nextReviewDue": "2026-10-05",
+      "registryLine": 288
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease",
+      "id": "gap-pv-3-antiplatelet",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Antiplatelet in PAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 984
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease",
+      "id": "gap-pv-4-smoking-cessation",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Smoking Cessation in PAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 996
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease",
+      "id": "gap-pv-5-exercise-therapy",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Exercise Therapy for Claudication",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1008
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease",
+      "id": "gap-pv-6-diabetes-control",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Diabetes Control in PAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1020
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease",
+      "id": "gap-pv-7-wound-care",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Wound Care Assessment",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1032
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease",
+      "id": "gap-pv-8-duplex-followup",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Duplex Ultrasound Follow-up",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1044
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease",
+      "id": "gap-pv-9-aaa-screening",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "AAA Screening",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1056
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease",
+      "id": "gap-pv-10-cilostazol",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Cilostazol for Claudication",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1716
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease; HOPE Trial",
+      "id": "gap-pv-11-acei-pad",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "ACEi/ARB in PAD with Hypertension",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1728
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease; 2017 ACC/AHA Hypertension Guideline",
+      "id": "gap-pv-12-renal-artery",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "C",
+      "name": "Renal Artery Stenosis Screen",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1740
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease; 2021 ASA/AHA Stroke Guideline",
+      "id": "gap-pv-13-carotid",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Carotid Screening in PAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1752
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease; ADA Standards of Care 2024",
+      "id": "gap-pv-14-foot-exam",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Annual Foot Exam in PAD with Diabetes",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1764
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 ESVS/SVS Guidelines on Chronic Venous Disease; AHA Venous Disease Scientific Statement",
+      "id": "gap-pv-15-compression",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Compression Therapy Assessment",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1776
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease (COMPASS Trial)",
+      "id": "gap-pv-rivaroxaban",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Low-Dose Rivaroxaban in PAD (COMPASS)",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2568
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease (CAPRIE Trial)",
+      "id": "gap-pv-clopidogrel",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Clopidogrel for Aspirin Intolerance in PAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2580
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease; GVG CLI Guidelines",
+      "id": "gap-pv-bypass-eval",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Bypass Evaluation for CLI",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2592
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease",
+      "id": "gap-pv-endovascular",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Endovascular Evaluation for Claudication",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2604
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2023 SVS/AVF/AVLS Clinical Practice Guidelines for Venous Ulceration",
+      "id": "gap-pv-venous-ulcer",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Venous Ulcer Management",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2616
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2020 ASH Guideline on VTE Diagnosis",
+      "id": "gap-pv-dvt-screen",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "DVT Screening for Unilateral Edema",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2628
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2021 ASH Guideline on VTE Treatment (SOX Trial)",
+      "id": "gap-pv-pts-prevention",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Post-Thrombotic Syndrome Prevention",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2640
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease",
+      "id": "gap-pv-mesenteric",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "C",
+      "name": "Mesenteric Ischemia Screening in PAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2652
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "SVS Reporting Standards for Thoracic Outlet Syndrome",
+      "id": "gap-pv-thoracic-outlet",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "C",
+      "name": "Thoracic Outlet Syndrome Evaluation",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2664
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 SVS/AVF Clinical Practice Guidelines for Varicose Veins",
+      "id": "gap-pv-varicose",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Varicose Vein Management",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2676
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2020 ISL Consensus Document on Lymphedema Management",
+      "id": "gap-pv-lymphedema",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Lymphedema Management",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2688
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease",
+      "id": "gap-pv-raynaud",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Raynaud Phenomenon CCB Therapy",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2700
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease",
+      "id": "gap-pv-vascular-rehab",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Vascular Rehabilitation Post-Intervention",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2712
+    },
+    {
+      "classOfRecommendation": "2b",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease",
+      "id": "gap-pv-pentoxifylline",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Pentoxifylline When Cilostazol Contraindicated",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2724
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2024 ESC/ESVS Guideline on Peripheral Arterial and Aortic Diseases",
+      "id": "gap-pv-naftidrofuryl",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Naftidrofuryl for Severe Claudication",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2736
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease",
+      "id": "gap-pv-critical-limb",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Critical Limb Ischemia Urgent Evaluation",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 3192
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2024 ACC/AHA Guideline on Peripheral Artery Disease; SVS Practice Guidelines",
+      "id": "gap-pv-graft-surveillance",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Bypass Graft Surveillance",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 3204
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2021 ASH Guidelines on VTE Management; 2020 CHEST Guideline on Antithrombotic Therapy for VTE",
+      "id": "gap-pv-anticoag-vte",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "VTE Anticoagulation Duration Review",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 3216
+    }
+  ]
+}

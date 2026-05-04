@@ -1,0 +1,1606 @@
+{
+  "codeSource": "backend/src/ingestion/gaps/gapRuleEngine.ts",
+  "evaluatorBlocks": [
+    {
+      "bodyEndLine": 4327,
+      "bodyStartLine": 4309,
+      "commentLine": 4302,
+      "commentLiteral": "// Gap 50: Premature DAPT Discontinuation (Coronary)",
+      "commentPattern": "GAP_N",
+      "gapsPushIds": [
+        "P2Y12 inhibitor not active post-stent/CAD"
+      ],
+      "name": "Gap-50"
+    },
+    {
+      "bodyEndLine": 4357,
+      "bodyStartLine": 4332,
+      "commentLine": 4329,
+      "commentLiteral": "// Gap CAD-STATIN: High-Intensity Statin in CAD",
+      "commentPattern": "GAP_MOD_NAME",
+      "gapsPushIds": [
+        "High-intensity statin not prescribed in CAD"
+      ],
+      "name": "CAD-STATIN"
+    },
+    {
+      "bodyEndLine": 4392,
+      "bodyStartLine": 4365,
+      "commentLine": 4360,
+      "commentLiteral": "// CAD-ACEI: ACEi/ARB Post-MI",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "ACEi/ARB not prescribed post-MI"
+      ],
+      "name": "CAD-ACEI"
+    },
+    {
+      "bodyEndLine": 4427,
+      "bodyStartLine": 4399,
+      "commentLine": 4395,
+      "commentLiteral": "// CAD-BB-POST-MI: Beta-Blocker Post-MI with Reduced EF",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Beta-blocker not prescribed post-MI with reduced LVEF"
+      ],
+      "name": "CAD-BB-POST-MI"
+    },
+    {
+      "bodyEndLine": 4459,
+      "bodyStartLine": 4434,
+      "commentLine": 4430,
+      "commentLiteral": "// CAD-SMOKING: Smoking Cessation Referral",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Smoking cessation support recommended for review in CAD patient"
+      ],
+      "name": "CAD-SMOKING"
+    },
+    {
+      "bodyEndLine": 4495,
+      "bodyStartLine": 4466,
+      "commentLine": 4462,
+      "commentLiteral": "// CAD-LPA: Lipoprotein(a) Screening in Premature ASCVD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider Lipoprotein(a) screening in premature ASCVD"
+      ],
+      "name": "CAD-LPA"
+    },
+    {
+      "bodyEndLine": 4532,
+      "bodyStartLine": 4502,
+      "commentLine": 4498,
+      "commentLiteral": "// CAD-EZETIMIBE: Ezetimibe Add-on Therapy",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider ezetimibe add-on for LDL not at goal on statin"
+      ],
+      "name": "CAD-EZETIMIBE"
+    },
+    {
+      "bodyEndLine": 4565,
+      "bodyStartLine": 4539,
+      "commentLine": 4535,
+      "commentLiteral": "// CAD-DIABETES-CONTROL: A1c Monitoring in CAD + Diabetes",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "HbA1c monitoring recommended for review in CAD patient with diabetes"
+      ],
+      "name": "CAD-DIABETES-CONTROL"
+    },
+    {
+      "bodyEndLine": 4597,
+      "bodyStartLine": 4572,
+      "commentLine": 4568,
+      "commentLiteral": "// CAD-BP-CONTROL: Blood Pressure Monitoring in CAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Blood pressure monitoring recommended for review in CAD patient"
+      ],
+      "name": "CAD-BP-CONTROL"
+    },
+    {
+      "bodyEndLine": 4920,
+      "bodyStartLine": 4899,
+      "commentLine": 4894,
+      "commentLiteral": "// Gap CAD-REHAB: Cardiac Rehab Referral in CAD",
+      "commentPattern": "GAP_MOD_NAME",
+      "gapsPushIds": [
+        "Cardiac rehabilitation referral not documented"
+      ],
+      "name": "CAD-REHAB"
+    },
+    {
+      "bodyEndLine": 7195,
+      "bodyStartLine": 7164,
+      "commentLine": 7160,
+      "commentLiteral": "// CAD-PCSK9: PCSK9 Inhibitor Consideration",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider PCSK9 inhibitor for LDL not at goal on maximally tolerated statin"
+      ],
+      "name": "CAD-PCSK9"
+    },
+    {
+      "bodyEndLine": 7222,
+      "bodyStartLine": 7201,
+      "commentLine": 7197,
+      "commentLiteral": "// CAD-IVUS: Intravascular Imaging for Left Main",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider intravascular imaging for left main coronary disease"
+      ],
+      "name": "CAD-IVUS"
+    },
+    {
+      "bodyEndLine": 7254,
+      "bodyStartLine": 7227,
+      "commentLine": 7224,
+      "commentLiteral": "// CAD-FFR: Fractional Flow Reserve for Intermediate Lesions",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider physiologic assessment (FFR/iFR) for intermediate coronary lesions"
+      ],
+      "name": "CAD-FFR"
+    },
+    {
+      "bodyEndLine": 7287,
+      "bodyStartLine": 7260,
+      "commentLine": 7256,
+      "commentLiteral": "// CAD-COLCHICINE: Anti-Inflammatory Therapy with Colchicine",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider low-dose colchicine for residual inflammatory risk in CAD"
+      ],
+      "name": "CAD-COLCHICINE"
+    },
+    {
+      "bodyEndLine": 7326,
+      "bodyStartLine": 7293,
+      "commentLine": 7289,
+      "commentLiteral": "// CAD-OMEGA3: Icosapent Ethyl for Elevated Triglycerides",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider icosapent ethyl for elevated triglycerides in CAD"
+      ],
+      "name": "CAD-OMEGA3"
+    },
+    {
+      "bodyEndLine": 7364,
+      "bodyStartLine": 7332,
+      "commentLine": 7328,
+      "commentLiteral": "// CAD-RANOLAZINE: Refractory Angina Treatment",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider ranolazine for refractory angina on maximal anti-anginal therapy"
+      ],
+      "name": "CAD-RANOLAZINE"
+    },
+    {
+      "bodyEndLine": 7394,
+      "bodyStartLine": 7369,
+      "commentLine": 7366,
+      "commentLiteral": "// CAD-STRESS-TEST: Stress Test Follow-up",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider periodic stress testing or imaging follow-up in CAD"
+      ],
+      "name": "CAD-STRESS-TEST"
+    },
+    {
+      "bodyEndLine": 7428,
+      "bodyStartLine": 7405,
+      "commentLine": 7396,
+      "commentLiteral": "// CAD-REVASCULARIZATION: Revascularization Assessment",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider revascularization assessment for multivessel CAD with reduced LVEF"
+      ],
+      "name": "CAD-REVASCULARIZATION"
+    },
+    {
+      "bodyEndLine": 7461,
+      "bodyStartLine": 7433,
+      "commentLine": 7430,
+      "commentLiteral": "// CAD-ANTICOAG-AF: Anticoagulation in CAD + AF (Dual Pathway Therapy)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider oral anticoagulation in CAD patient with atrial fibrillation"
+      ],
+      "name": "CAD-ANTICOAG-AF"
+    },
+    {
+      "bodyEndLine": 7495,
+      "bodyStartLine": 7467,
+      "commentLine": 7463,
+      "commentLiteral": "// CAD-GLP1-DM: GLP-1 RA for CAD + Diabetes (CV Risk Reduction)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider GLP-1 RA for cardiovascular risk reduction in CAD + diabetes"
+      ],
+      "name": "CAD-GLP1-DM"
+    },
+    {
+      "bodyEndLine": 7529,
+      "bodyStartLine": 7501,
+      "commentLine": 7497,
+      "commentLiteral": "// CAD-SGLT2-DM: SGLT2i for CAD + Diabetes",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider SGLT2i for cardiovascular risk reduction in CAD + diabetes"
+      ],
+      "name": "CAD-SGLT2-DM"
+    },
+    {
+      "bodyEndLine": 7567,
+      "bodyStartLine": 7535,
+      "commentLine": 7531,
+      "commentLiteral": "// CAD-BEMPEDOIC: Bempedoic Acid for Statin Intolerance",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider bempedoic acid for statin-intolerant CAD patient with elevated LDL"
+      ],
+      "name": "CAD-BEMPEDOIC"
+    },
+    {
+      "bodyEndLine": 7598,
+      "bodyStartLine": 7572,
+      "commentLine": 7569,
+      "commentLiteral": "// CAD-WEIGHT-MGMT: Weight Management in CAD + Obesity",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider structured weight management program for CAD patient with obesity"
+      ],
+      "name": "CAD-WEIGHT-MGMT"
+    },
+    {
+      "bodyEndLine": 7628,
+      "bodyStartLine": 7603,
+      "commentLine": 7600,
+      "commentLiteral": "// CAD-DEPRESSION: Depression Screening in CAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider depression screening for CAD patient"
+      ],
+      "name": "CAD-DEPRESSION"
+    },
+    {
+      "bodyEndLine": 7658,
+      "bodyStartLine": 7633,
+      "commentLine": 7630,
+      "commentLiteral": "// CAD-INFLUENZA: Influenza Vaccination in CAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider annual influenza vaccination for CAD patient"
+      ],
+      "name": "CAD-INFLUENZA"
+    },
+    {
+      "bodyEndLine": 7693,
+      "bodyStartLine": 7667,
+      "commentLine": 7665,
+      "commentLiteral": "// CAD-TICAGRELOR-ACS: Ticagrelor in Acute Coronary Syndrome",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider ticagrelor for ACS per PLATO trial evidence"
+      ],
+      "name": "CAD-TICAGRELOR-ACS"
+    },
+    {
+      "bodyEndLine": 7724,
+      "bodyStartLine": 7698,
+      "commentLine": 7695,
+      "commentLiteral": "// CAD-NITRO-PRN: PRN Nitroglycerin for Angina",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider PRN nitroglycerin for angina symptom relief"
+      ],
+      "name": "CAD-NITRO-PRN"
+    },
+    {
+      "bodyEndLine": 7752,
+      "bodyStartLine": 7728,
+      "commentLine": 7726,
+      "commentLiteral": "// CAD-ECHO-CAD: Echocardiography for LVEF Assessment in CAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider echocardiography for LVEF assessment in CAD"
+      ],
+      "name": "CAD-ECHO-CAD"
+    },
+    {
+      "bodyEndLine": 7781,
+      "bodyStartLine": 7756,
+      "commentLine": 7754,
+      "commentLiteral": "// CAD-BNP-CAD: BNP/NT-proBNP Monitoring in CAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider BNP/NT-proBNP measurement for CAD risk stratification"
+      ],
+      "name": "CAD-BNP-CAD"
+    },
+    {
+      "bodyEndLine": 7812,
+      "bodyStartLine": 7786,
+      "commentLine": 7783,
+      "commentLiteral": "// CAD-RENAL-MONITOR: Renal Function Monitoring on ACEi in CAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider renal function monitoring for CAD patient on ACEi/ARB"
+      ],
+      "name": "CAD-RENAL-MONITOR"
+    },
+    {
+      "bodyEndLine": 7844,
+      "bodyStartLine": 7818,
+      "commentLine": 7814,
+      "commentLiteral": "// CAD-DAPT-DURATION: DAPT Duration Review Beyond 12 Months",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider DAPT duration review: assess continued need beyond 12 months"
+      ],
+      "name": "CAD-DAPT-DURATION"
+    },
+    {
+      "bodyEndLine": 7880,
+      "bodyStartLine": 7850,
+      "commentLine": 7846,
+      "commentLiteral": "// CAD-PPI-DAPT: PPI with DAPT for GI Risk",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider PPI for GI protection in CAD patient on DAPT with GI risk factors"
+      ],
+      "name": "CAD-PPI-DAPT"
+    },
+    {
+      "bodyEndLine": 7914,
+      "bodyStartLine": 7885,
+      "commentLine": 7882,
+      "commentLiteral": "// CAD-ALDO-POSTMI: MRA Post-MI with LVEF<=40 and HF",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider MRA for post-MI patient with LVEF<=40% and HF"
+      ],
+      "name": "CAD-ALDO-POSTMI"
+    },
+    {
+      "bodyEndLine": 7945,
+      "bodyStartLine": 7919,
+      "commentLine": 7916,
+      "commentLiteral": "// CAD-ELECTROLYTE: Electrolyte Monitoring Post-MI on Diuretic",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider potassium monitoring for post-MI patient on diuretic"
+      ],
+      "name": "CAD-ELECTROLYTE"
+    },
+    {
+      "bodyEndLine": 7973,
+      "bodyStartLine": 7949,
+      "commentLine": 7947,
+      "commentLiteral": "// CAD-ANEMIA: Anemia Screening Post-MI",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider hemoglobin assessment for post-MI patient"
+      ],
+      "name": "CAD-ANEMIA"
+    },
+    {
+      "bodyEndLine": 8002,
+      "bodyStartLine": 7977,
+      "commentLine": 7975,
+      "commentLiteral": "// CAD-THYROID: Thyroid Function in CAD with AFib",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider thyroid function testing in CAD patient with atrial fibrillation"
+      ],
+      "name": "CAD-THYROID"
+    },
+    {
+      "bodyEndLine": 8031,
+      "bodyStartLine": 8006,
+      "commentLine": 8004,
+      "commentLiteral": "// CAD-ACTIVITY: Physical Activity Counseling in CAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider physical activity counseling for CAD patient"
+      ],
+      "name": "CAD-ACTIVITY"
+    },
+    {
+      "bodyEndLine": 8062,
+      "bodyStartLine": 8035,
+      "commentLine": 8033,
+      "commentLiteral": "// CAD-DIET: Dietary Counseling in CAD with Obesity",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider dietary counseling for CAD patient with obesity"
+      ],
+      "name": "CAD-DIET"
+    },
+    {
+      "bodyEndLine": 8092,
+      "bodyStartLine": 8066,
+      "commentLine": 8064,
+      "commentLiteral": "// CAD-PSYCHOSOCIAL: Psychosocial Assessment in Elderly CAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider psychosocial assessment for elderly CAD patient"
+      ],
+      "name": "CAD-PSYCHOSOCIAL"
+    },
+    {
+      "bodyEndLine": 8125,
+      "bodyStartLine": 8096,
+      "commentLine": 8094,
+      "commentLiteral": "// CAD-FAMILY-SCREEN: Premature CAD Family Screening",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider family screening for premature CAD"
+      ],
+      "name": "CAD-FAMILY-SCREEN"
+    },
+    {
+      "bodyEndLine": 8157,
+      "bodyStartLine": 8130,
+      "commentLine": 8127,
+      "commentLiteral": "// CAD-CALCIUM-SCORE: Coronary Artery Calcium Score for Intermediate Risk",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider coronary artery calcium scoring for intermediate-risk patient"
+      ],
+      "name": "CAD-CALCIUM-SCORE"
+    },
+    {
+      "bodyEndLine": 8188,
+      "bodyStartLine": 8162,
+      "commentLine": 8159,
+      "commentLiteral": "// CAD-CRP: CRP Monitoring in CAD on Statin",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider hs-CRP measurement for residual inflammatory risk in CAD on statin"
+      ],
+      "name": "CAD-CRP"
+    },
+    {
+      "bodyEndLine": 8221,
+      "bodyStartLine": 8192,
+      "commentLine": 8190,
+      "commentLiteral": "// CAD-ADVANCE-DIR: Advance Directive Discussion in Severe CAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider advance directive discussion for CAD patient with severe LV dysfunction"
+      ],
+      "name": "CAD-ADVANCE-DIR"
+    },
+    {
+      "bodyEndLine": 8251,
+      "bodyStartLine": 8225,
+      "commentLine": 8223,
+      "commentLiteral": "// CAD-PALLIATIVE: Palliative Care Referral in Refractory CAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider palliative care referral for elderly patient with refractory angina"
+      ],
+      "name": "CAD-PALLIATIVE"
+    },
+    {
+      "bodyEndLine": 8282,
+      "bodyStartLine": 8256,
+      "commentLine": 8253,
+      "commentLiteral": "// CAD-CARDIAC-CT: Cardiac CT Angiography for Stable Chest Pain",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider CCTA for evaluation of stable chest pain"
+      ],
+      "name": "CAD-CARDIAC-CT"
+    },
+    {
+      "bodyEndLine": 8317,
+      "bodyStartLine": 8286,
+      "commentLine": 8284,
+      "commentLiteral": "// CAD-PRASUGREL: Prasugrel in ACS with PCI",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider prasugrel for ACS with PCI per TRITON-TIMI 38 evidence"
+      ],
+      "name": "CAD-PRASUGREL"
+    },
+    {
+      "bodyEndLine": 8347,
+      "bodyStartLine": 8321,
+      "commentLine": 8319,
+      "commentLiteral": "// CAD-HEPARIN-BRIDGE: Anticoagulation Bridge Assessment in CAD with AF and Procedure",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider anticoagulation bridging assessment for CAD+AF patient with upcoming procedure"
+      ],
+      "name": "CAD-HEPARIN-BRIDGE"
+    },
+    {
+      "bodyEndLine": 8376,
+      "bodyStartLine": 8351,
+      "commentLine": 8349,
+      "commentLiteral": "// CAD-SEXUAL-HEALTH: Sexual Health Counseling Post-MI",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider sexual health counseling for post-MI patient"
+      ],
+      "name": "CAD-SEXUAL-HEALTH"
+    },
+    {
+      "bodyEndLine": 8405,
+      "bodyStartLine": 8380,
+      "commentLine": 8378,
+      "commentLiteral": "// CAD-DRIVING: Post-MI Driving Restriction Documentation",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider documenting driving restrictions for post-MI patient"
+      ],
+      "name": "CAD-DRIVING"
+    },
+    {
+      "bodyEndLine": 8435,
+      "bodyStartLine": 8409,
+      "commentLine": 8407,
+      "commentLiteral": "// CAD-LIVER-STATIN: Liver Function Monitoring on Statin in CAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider liver function monitoring for CAD patient on statin therapy"
+      ],
+      "name": "CAD-LIVER-STATIN"
+    },
+    {
+      "bodyEndLine": 8469,
+      "bodyStartLine": 8442,
+      "commentLine": 8440,
+      "commentLiteral": "// CAD-ASPIRIN-PRIMARY: Aspirin Assessment in CAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider aspirin therapy assessment for established CAD"
+      ],
+      "name": "CAD-ASPIRIN-PRIMARY"
+    },
+    {
+      "bodyEndLine": 8500,
+      "bodyStartLine": 8473,
+      "commentLine": 8471,
+      "commentLiteral": "// CAD-BETA-BLOCKER: Beta-Blocker in Stable CAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider beta-blocker assessment for stable CAD"
+      ],
+      "name": "CAD-BETA-BLOCKER"
+    },
+    {
+      "bodyEndLine": 8533,
+      "bodyStartLine": 8504,
+      "commentLine": 8502,
+      "commentLiteral": "// CAD-ACE-STABLE: ACEi in Stable CAD with Hypertension",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider ACEi/ARB for stable CAD with hypertension"
+      ],
+      "name": "CAD-ACE-STABLE"
+    },
+    {
+      "bodyEndLine": 8566,
+      "bodyStartLine": 8537,
+      "commentLine": 8535,
+      "commentLiteral": "// CAD-NICORANDIL: Nicorandil for Refractory Angina",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider nicorandil for refractory angina on maximal antianginal therapy"
+      ],
+      "name": "CAD-NICORANDIL"
+    },
+    {
+      "bodyEndLine": 8599,
+      "bodyStartLine": 8570,
+      "commentLine": 8568,
+      "commentLiteral": "// CAD-TRIMETAZIDINE: Trimetazidine Consideration",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider trimetazidine for angina with metabolic comorbidities"
+      ],
+      "name": "CAD-TRIMETAZIDINE"
+    },
+    {
+      "bodyEndLine": 8629,
+      "bodyStartLine": 8603,
+      "commentLine": 8601,
+      "commentLiteral": "// CAD-CORONARY-CTA-FU: Coronary CTA Follow-Up",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider coronary CTA follow-up imaging interval review"
+      ],
+      "name": "CAD-CORONARY-CTA-FU"
+    },
+    {
+      "bodyEndLine": 8660,
+      "bodyStartLine": 8633,
+      "commentLine": 8631,
+      "commentLiteral": "// CAD-NUCLEAR-STRESS: Nuclear Stress Test Consideration",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider nuclear stress test for intermediate-risk CAD patient"
+      ],
+      "name": "CAD-NUCLEAR-STRESS"
+    },
+    {
+      "bodyEndLine": 8691,
+      "bodyStartLine": 8664,
+      "commentLine": 8662,
+      "commentLiteral": "// CAD-CATHETERIZATION: Catheterization Review for High Risk Features",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider cardiac catheterization review for high-risk CAD features"
+      ],
+      "name": "CAD-CATHETERIZATION"
+    },
+    {
+      "bodyEndLine": 8721,
+      "bodyStartLine": 8695,
+      "commentLine": 8693,
+      "commentLiteral": "// CAD-COMPLETE-REVASC: Complete Revascularization Assessment",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider complete revascularization assessment for multivessel CAD"
+      ],
+      "name": "CAD-COMPLETE-REVASC"
+    },
+    {
+      "bodyEndLine": 8751,
+      "bodyStartLine": 8725,
+      "commentLine": 8723,
+      "commentLiteral": "// CAD-ISCHEMIA-GUIDED: Ischemia-Guided Therapy Review",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider ischemia-guided therapy review per ISCHEMIA trial evidence"
+      ],
+      "name": "CAD-ISCHEMIA-GUIDED"
+    },
+    {
+      "bodyEndLine": 8781,
+      "bodyStartLine": 8755,
+      "commentLine": 8753,
+      "commentLiteral": "// CAD-MINOCA: MINOCA Workup",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider MINOCA comprehensive workup for MI with non-obstructive coronaries"
+      ],
+      "name": "CAD-MINOCA"
+    },
+    {
+      "bodyEndLine": 8813,
+      "bodyStartLine": 8785,
+      "commentLine": 8783,
+      "commentLiteral": "// CAD-SCAD: Spontaneous Coronary Artery Dissection Evaluation",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider SCAD evaluation for young female MI without atherosclerotic CAD"
+      ],
+      "name": "CAD-SCAD"
+    },
+    {
+      "bodyEndLine": 8841,
+      "bodyStartLine": 8817,
+      "commentLine": 8815,
+      "commentLiteral": "// CAD-TAKOTSUBO: Takotsubo Follow-Up",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider Takotsubo syndrome follow-up and recovery monitoring"
+      ],
+      "name": "CAD-TAKOTSUBO"
+    },
+    {
+      "bodyEndLine": 8873,
+      "bodyStartLine": 8845,
+      "commentLine": 8843,
+      "commentLiteral": "// CAD-VASOSPASTIC: Vasospastic Angina Evaluation",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider calcium channel blocker for vasospastic angina"
+      ],
+      "name": "CAD-VASOSPASTIC"
+    },
+    {
+      "bodyEndLine": 8905,
+      "bodyStartLine": 8877,
+      "commentLine": 8875,
+      "commentLiteral": "// CAD-MICROVASCULAR: Microvascular Disease Assessment",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider microvascular disease assessment for angina with non-obstructive coronaries"
+      ],
+      "name": "CAD-MICROVASCULAR"
+    },
+    {
+      "bodyEndLine": 8934,
+      "bodyStartLine": 8909,
+      "commentLine": 8907,
+      "commentLiteral": "// CAD-CARDIAC-TRANSPLANT-CAD: Cardiac Allograft Vasculopathy",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider cardiac allograft vasculopathy (CAV) surveillance in heart transplant recipient"
+      ],
+      "name": "CAD-CARDIAC-TRANSPLANT-CAD"
+    },
+    {
+      "bodyEndLine": 8965,
+      "bodyStartLine": 8938,
+      "commentLine": 8936,
+      "commentLiteral": "// CAD-LIPID-PANEL-FU: Lipid Panel Follow-Up",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider lipid panel follow-up for CAD patient on statin therapy"
+      ],
+      "name": "CAD-LIPID-PANEL-FU"
+    },
+    {
+      "bodyEndLine": 8995,
+      "bodyStartLine": 8969,
+      "commentLine": 8967,
+      "commentLiteral": "// CAD-GLUCOSE-SCREEN: Glucose Screening in CAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider glucose screening for CAD patient without known diabetes"
+      ],
+      "name": "CAD-GLUCOSE-SCREEN"
+    },
+    {
+      "bodyEndLine": 9025,
+      "bodyStartLine": 8999,
+      "commentLine": 8997,
+      "commentLiteral": "// CAD-HEMOGLOBIN-A1C-TARGET: A1c Target Review",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider A1c target review for CAD patient with diabetes and elevated A1c"
+      ],
+      "name": "CAD-HEMOGLOBIN-A1C-TARGET"
+    },
+    {
+      "bodyEndLine": 9056,
+      "bodyStartLine": 9029,
+      "commentLine": 9027,
+      "commentLiteral": "// CAD-ANTIPLATELET-REVIEW: Antiplatelet Review >1yr Post Event",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider antiplatelet duration review for long-term DAPT post MI"
+      ],
+      "name": "CAD-ANTIPLATELET-REVIEW"
+    },
+    {
+      "bodyEndLine": 9087,
+      "bodyStartLine": 9060,
+      "commentLine": 9058,
+      "commentLiteral": "// CAD-CHEST-PAIN-PROTOCOL: Chest Pain Protocol Adherence",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider chest pain protocol adherence review with troponin assessment"
+      ],
+      "name": "CAD-CHEST-PAIN-PROTOCOL"
+    },
+    {
+      "bodyEndLine": 9120,
+      "bodyStartLine": 9091,
+      "commentLine": 9089,
+      "commentLiteral": "// CAD-SECONDARY-PREVENTION: Secondary Prevention Bundle Review",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider comprehensive secondary prevention bundle review for CAD"
+      ],
+      "name": "CAD-SECONDARY-PREVENTION"
+    },
+    {
+      "bodyEndLine": 9153,
+      "bodyStartLine": 9124,
+      "commentLine": 9122,
+      "commentLiteral": "// CAD-WOMEN-SPECIFIC: Women-Specific CAD Screening",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider women-specific CAD risk assessment for female patient with cardiovascular risk factors"
+      ],
+      "name": "CAD-WOMEN-SPECIFIC"
+    },
+    {
+      "bodyEndLine": 9182,
+      "bodyStartLine": 9157,
+      "commentLine": 9155,
+      "commentLiteral": "// CAD-YOUNG-MI: Young MI Workup",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider extended workup for young MI (age <45) including thrombophilia and substance screening"
+      ],
+      "name": "CAD-YOUNG-MI"
+    },
+    {
+      "bodyEndLine": 9212,
+      "bodyStartLine": 9186,
+      "commentLine": 9184,
+      "commentLiteral": "// CAD-EXERCISE-PRESCRIPTION: Exercise Prescription Post-Rehab",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider maintenance exercise prescription for CAD patient post cardiac rehabilitation"
+      ],
+      "name": "CAD-EXERCISE-PRESCRIPTION"
+    },
+    {
+      "bodyEndLine": 9243,
+      "bodyStartLine": 9216,
+      "commentLine": 9214,
+      "commentLiteral": "// CAD-SLEEP-APNEA-CAD: Sleep Apnea Screening in CAD",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Consider sleep apnea screening for CAD patient with obesity"
+      ],
+      "name": "CAD-SLEEP-APNEA-CAD"
+    }
+  ],
+  "gapsPushCount": 76,
+  "module": "CAD",
+  "moduleTagPattern": "module: ModuleType.CORONARY_INTERVENTION",
+  "registry": [
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization",
+      "id": "gap-50-dapt",
+      "lastReviewDate": "2026-04-04",
+      "levelOfEvidence": "A",
+      "name": "DAPT Discontinuation",
+      "nextReviewDue": "2026-10-04",
+      "registryLine": 180
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2018 ACC/AHA Guideline on Management of Blood Cholesterol",
+      "id": "gap-cad-statin",
+      "lastReviewDate": "2026-04-05",
+      "levelOfEvidence": "A",
+      "name": "High-Intensity Statin in CAD",
+      "nextReviewDue": "2026-10-05",
+      "registryLine": 240
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization",
+      "id": "gap-cad-cardiac-rehab",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Cardiac Rehab Referral in CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 324
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "id": "gap-cad-acei",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "ACEi/ARB Post-MI",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 456
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "id": "gap-cad-bb-post-mi",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Beta-Blocker Post-MI",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 468
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2019 ACC/AHA Guideline on the Primary Prevention of Cardiovascular Disease",
+      "id": "gap-cad-smoking",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Smoking Cessation in CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 480
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2018 ACC/AHA Guideline on the Management of Blood Cholesterol",
+      "id": "gap-cad-lpa",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Lipoprotein(a) Screening",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 492
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2018 ACC/AHA Guideline on the Management of Blood Cholesterol (IMPROVE-IT)",
+      "id": "gap-cad-ezetimibe",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Ezetimibe Add-on Therapy",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 504
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2019 ACC/AHA Guideline on the Primary Prevention of Cardiovascular Disease",
+      "id": "gap-cad-diabetes-control",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "A1c Monitoring in CAD+DM",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 516
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2017 ACC/AHA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure",
+      "id": "gap-cad-bp-control",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Blood Pressure Monitoring in CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 528
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2018 ACC/AHA Guideline on Management of Blood Cholesterol (FOURIER, ODYSSEY)",
+      "id": "gap-cad-pcsk9",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "PCSK9 Inhibitor Consideration",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1248
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization",
+      "id": "gap-cad-ivus",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B-NR",
+      "name": "Intravascular Imaging for Left Main",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1260
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (FAME, FAME 2)",
+      "id": "gap-cad-ffr",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Fractional Flow Reserve for Intermediate Lesions",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1272
+    },
+    {
+      "classOfRecommendation": "2b",
+      "guidelineSource": "2023 AHA/ACC Guideline Update: Colchicine for Atherosclerotic CVD (COLCOT, LoDoCo2)",
+      "id": "gap-cad-colchicine",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Anti-Inflammatory Therapy with Colchicine",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1284
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2019 ACC/AHA Guideline on Primary Prevention of CVD (REDUCE-IT)",
+      "id": "gap-cad-omega3",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B-R",
+      "name": "Icosapent Ethyl for Elevated Triglycerides",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1296
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2012 ACC/AHA/AATS/PCNA/SCAI/STS Guideline for Diagnosis and Management of Stable Ischemic Heart Disease",
+      "id": "gap-cad-ranolazine",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B-R",
+      "name": "Refractory Angina Treatment",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1308
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "id": "gap-cad-stress-test",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Stress Test Follow-up",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1320
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (STICH, REVIVED-BCIS2)",
+      "id": "gap-cad-revascularization",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Revascularization Assessment",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1332
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2023 ACC/AHA/ACCP/HRS AF Guideline + 2021 ACC/AHA Revascularization (AUGUSTUS, AFIRE)",
+      "id": "gap-cad-anticoag-af",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Anticoagulation in CAD + AF",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1344
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2019 ACC/AHA Guideline on Primary Prevention of CVD (SUSTAIN-6, LEADER)",
+      "id": "gap-cad-glp1-dm",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "GLP-1 RA for CAD + Diabetes",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1356
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2019 ACC/AHA Guideline on Primary Prevention of CVD (EMPA-REG, CANVAS)",
+      "id": "gap-cad-sglt2-dm",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "SGLT2i for CAD + Diabetes",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1368
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2022 ACC Expert Consensus Decision Pathway on Nonstatin Therapies (CLEAR Outcomes)",
+      "id": "gap-cad-bempedoic",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B-R",
+      "name": "Bempedoic Acid for Statin Intolerance",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1380
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2019 ACC/AHA Guideline on Primary Prevention of CVD",
+      "id": "gap-cad-weight-mgmt",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Weight Management in CAD + Obesity",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1392
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2008 AHA Science Advisory: Depression and CHD (reaffirmed 2021)",
+      "id": "gap-cad-depression",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Depression Screening in CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1404
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2019 ACC/AHA Guideline on Primary Prevention of CVD",
+      "id": "gap-cad-influenza",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Influenza Vaccination in CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 1416
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (PLATO Trial)",
+      "id": "gap-cad-ticagrelor-acs",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Ticagrelor in ACS",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2268
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2012 ACCF/AHA/ACP/AATS/PCNA/SCAI/STS Guideline for Stable Ischemic Heart Disease",
+      "id": "gap-cad-nitro-prn",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "PRN Nitroglycerin for Angina",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2280
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "id": "gap-cad-echo-cad",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Echocardiography in CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2292
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2022 AHA/ACC/HFSA HF Guideline; 2022 ACC/AHA Chest Pain Guideline",
+      "id": "gap-cad-bnp-cad",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "BNP Monitoring in CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2304
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "id": "gap-cad-renal-monitor",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Renal Function Monitoring on ACEi in CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2316
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization",
+      "id": "gap-cad-dapt-duration",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "DAPT Duration Review",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2328
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2020 ACC Expert Consensus on GI Bleeding in Patients on Antithrombotic Therapy",
+      "id": "gap-cad-ppi-dapt",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "PPI with DAPT for GI Protection",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2340
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 AHA/ACC/HFSA HF Guideline (EPHESUS Trial)",
+      "id": "gap-cad-aldo-postmi",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "MRA Post-MI with LVEF<=40 and HF",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2352
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 AHA/ACC/HFSA HF Guideline",
+      "id": "gap-cad-electrolyte",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Electrolyte Monitoring Post-MI on Diuretic",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2364
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "id": "gap-cad-anemia",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Anemia Screening Post-MI",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2376
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF",
+      "id": "gap-cad-thyroid",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Thyroid Function in CAD with AFib",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2388
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2019 ACC/AHA Guideline on the Primary Prevention of Cardiovascular Disease",
+      "id": "gap-cad-activity",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Physical Activity Counseling in CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2400
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2019 ACC/AHA Guideline on the Primary Prevention of Cardiovascular Disease",
+      "id": "gap-cad-diet",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Dietary Counseling in CAD with Obesity",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2412
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2019 ACC/AHA Guideline on the Primary Prevention of Cardiovascular Disease",
+      "id": "gap-cad-psychosocial",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Psychosocial Assessment in Elderly CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2424
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2018 ACC/AHA Guideline on the Management of Blood Cholesterol",
+      "id": "gap-cad-family-screen",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Premature CAD Family Screening",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2436
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2019 ACC/AHA Guideline on the Primary Prevention of Cardiovascular Disease",
+      "id": "gap-cad-calcium-score",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B-NR",
+      "name": "Coronary Calcium Score for Intermediate Risk",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2448
+    },
+    {
+      "classOfRecommendation": "2b",
+      "guidelineSource": "2018 ACC/AHA Guideline on the Management of Blood Cholesterol (CANTOS Trial)",
+      "id": "gap-cad-crp",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B-R",
+      "name": "CRP Monitoring in CAD on Statin",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2460
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 AHA/ACC/HFSA HF Guideline; AHA Palliative Care Scientific Statement",
+      "id": "gap-cad-advance-dir",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "C",
+      "name": "Advance Directive Discussion in Severe CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2472
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 AHA/ACC/HFSA HF Guideline; AHA Palliative Care Scientific Statement",
+      "id": "gap-cad-palliative",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Palliative Care Referral in Refractory CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2484
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain (SCOT-HEART, PROMISE)",
+      "id": "gap-cad-cardiac-ct",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Cardiac CT for Stable Chest Pain",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2496
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (TRITON-TIMI 38)",
+      "id": "gap-cad-prasugrel",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Prasugrel in ACS with PCI",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2508
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2023 ACC/AHA/ACCP/HRS AF Guideline (BRIDGE Trial)",
+      "id": "gap-cad-heparin-bridge",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Heparin Bridging in CAD with AF and Procedure",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2520
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2012 AHA/ACC Scientific Statement on Sexual Activity and Cardiovascular Disease",
+      "id": "gap-cad-sexual-health",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Sexual Health Counseling Post-MI",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2532
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2012 ACCF/AHA/ACP/AATS/PCNA/SCAI/STS Guideline for Stable Ischemic Heart Disease",
+      "id": "gap-cad-driving",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "C",
+      "name": "Post-MI Driving Restriction Documentation",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2544
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2018 ACC/AHA Guideline on the Management of Blood Cholesterol",
+      "id": "gap-cad-liver-statin",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Liver Function Monitoring on Statin in CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2556
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization",
+      "id": "gap-cad-aspirin-primary",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Aspirin Assessment in CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2772
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2012 ACCF/AHA/ACP/AATS/PCNA/SCAI/STS Guideline for Stable Ischemic Heart Disease",
+      "id": "gap-cad-beta-blocker",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Beta-Blocker in Stable CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2784
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2017 ACC/AHA High Blood Pressure Guideline + 2012 Stable IHD Guideline",
+      "id": "gap-cad-ace-stable",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "ACEi in Stable CAD with HTN",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2796
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2019 ESC Guideline for Chronic Coronary Syndromes",
+      "id": "gap-cad-nicorandil",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Nicorandil for Refractory Angina",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2808
+    },
+    {
+      "classOfRecommendation": "2b",
+      "guidelineSource": "2019 ESC Guideline for Chronic Coronary Syndromes",
+      "id": "gap-cad-trimetazidine",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Trimetazidine Consideration in CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2820
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "id": "gap-cad-coronary-cta-fu",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B-NR",
+      "name": "Coronary CTA Follow-Up",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2832
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "id": "gap-cad-nuclear-stress",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Nuclear Stress Test Consideration",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2844
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization",
+      "id": "gap-cad-catheterization",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Catheterization Review",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2856
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (COMPLETE Trial)",
+      "id": "gap-cad-complete-revasc",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B-R",
+      "name": "Complete Revascularization Assessment",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2868
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (ISCHEMIA Trial)",
+      "id": "gap-cad-ischemia-guided",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B-R",
+      "name": "Ischemia-Guided Therapy Review",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2880
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 ACC/AHA Guideline for Evaluation and Diagnosis of Chest Pain; AHA MINOCA Scientific Statement",
+      "id": "gap-cad-minoca",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B-NR",
+      "name": "MINOCA Workup",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2892
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2018 AHA Scientific Statement on SCAD",
+      "id": "gap-cad-scad",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "C-LD",
+      "name": "SCAD Evaluation",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2904
+    },
+    {
+      "classOfRecommendation": "Expert Consensus",
+      "guidelineSource": "2018 ESC Position Statement on Takotsubo Syndrome",
+      "id": "gap-cad-takotsubo",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "C",
+      "name": "Takotsubo Follow-Up",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2916
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2019 ESC Guideline for Chronic Coronary Syndromes; JCS 2013 Vasospastic Angina Guideline",
+      "id": "gap-cad-vasospastic",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Vasospastic Angina Evaluation",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2928
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2019 ESC Guideline for Chronic Coronary Syndromes; COVADIS Criteria",
+      "id": "gap-cad-microvascular",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B-NR",
+      "name": "Microvascular Disease Assessment",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2940
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "ISHLT 2010 Guideline on Cardiac Allograft Vasculopathy",
+      "id": "gap-cad-cardiac-transplant-cad",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "C",
+      "name": "Cardiac Allograft Vasculopathy",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2952
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2018 ACC/AHA Guideline on the Management of Blood Cholesterol",
+      "id": "gap-cad-lipid-panel-fu",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Lipid Panel Follow-Up in CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2964
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2019 ACC/AHA Guideline on Primary Prevention of Cardiovascular Disease",
+      "id": "gap-cad-glucose-screen",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Glucose Screening in CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2976
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2019 ACC/AHA Guideline on Primary Prevention; ADA Standards of Care 2024",
+      "id": "gap-cad-hemoglobin-a1c-target",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "A1c Target Review in CAD+DM",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 2988
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2016 ACC/AHA Guideline Focused Update on Duration of DAPT",
+      "id": "gap-cad-antiplatelet-review",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B-R",
+      "name": "Antiplatelet Review Post-Event",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 3000
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "id": "gap-cad-chest-pain-protocol",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Chest Pain Protocol Adherence",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 3012
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2019 ACC/AHA Guideline on Primary Prevention; AHA/ACC Secondary Prevention Recommendations",
+      "id": "gap-cad-secondary-prevention",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Secondary Prevention Bundle Review",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 3024
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2019 ACC/AHA Guideline on Primary Prevention; AHA Cardiovascular Disease in Women Scientific Statement",
+      "id": "gap-cad-women-specific",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B",
+      "name": "Women-Specific CAD Screening",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 3036
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain",
+      "id": "gap-cad-young-mi",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "C-LD",
+      "name": "Young MI Workup",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 3048
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization",
+      "id": "gap-cad-exercise-prescription",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "A",
+      "name": "Exercise Prescription in CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 3060
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2019 ACC/AHA Guideline on Primary Prevention; AHA Sleep Apnea and CVD Scientific Statement",
+      "id": "gap-cad-sleep-apnea-cad",
+      "lastReviewDate": "2026-04-03",
+      "levelOfEvidence": "B-NR",
+      "name": "Sleep Apnea Screening in CAD",
+      "nextReviewDue": "2026-10-03",
+      "registryLine": 3072
+    }
+  ]
+}
