@@ -8,9 +8,9 @@
 
 | Field | Value |
 |---|---|
-| Last updated | 2026-05-03 (Day 5 of Phase 0) — CAD audit ship |
+| Last updated | 2026-05-04 (Day 6 of Phase 0) — EP audit ship + EP-XX-7 mitigation landed |
 | Last update by | jhart |
-| Last update commit SHA | _pending CAD audit PR_ (next: PR #226) |
+| Last update commit SHA | `9ac3806` (PR #229 — EP-XX-7 mitigation) + this PR pending |
 | Plan reference | `docs/PATH_TO_ROBUST.md` v1.2 (active 2026-04-28) |
 | Plan target | **Under revision per v2.0**; v1.2 timeline (3-4 months) revised preliminary to **7-9 months raw scope**; per CAD audit §13, this translates to ~3-6 months AI-assisted wall-clock depending on work-mix; v2.0 PATH_TO_ROBUST due ~2026-05-19 will codify with explicit raw-scope vs wall-clock disambiguation |
 | Phase 0 day | **5 of 21** (16 days remaining in Phase 0 window) |
@@ -36,10 +36,10 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 
 - [/] PV — codebase inventory + spec↔code addendum complete (26.7% coverage)
 - [/] HF — spec↔code addendum complete (46% any / 21.4% DET_OK; 11 T1 SPEC_ONLY)
-- [/] CAD — spec↔code addendum complete (61.1% any / 31.1% DET_OK; 6 T1 SPEC_ONLY)
-- [ ] EP (~6-8h raw scope; will log actual wall-clock minutes for empirical calibration of v2.0 multipliers per AUDIT-028)
-- [ ] SH (~6-8h raw scope; wall-clock logged)
-- [ ] VHD (~6-8h raw scope; wall-clock logged)
+- [/] CAD — spec↔code addendum complete (61.1% any / 31.1% DET_OK; 6 T1 SPEC_ONLY) [name-match]
+- [/] EP — spec↔code addendum complete (41.6% any / 20.2% DET_OK; 7 T1 SPEC_ONLY of which 1 REMEDIATED via PR #229) [**rule-body-verified — AUDIT-029 methodology adopted**]
+- [ ] SH (~6-8h raw scope; rule-body-verified from gate per Step E)
+- [ ] VHD (~6-8h raw scope; rule-body-verified from gate per Step F)
 
 ### Phase 0C — UI/UX audit (~25-30h)
 
@@ -81,9 +81,9 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 | 1 | HF — care team | HF | care team | **PARTIAL** (Phase 0B addendum, spec↔code mapping) |
 | 2 | HF — service line | HF | service line | file-count inventory only |
 | 3 | HF — executive | HF | executive | file-count inventory only |
-| 4 | EP — care team | EP | care team | NOT STARTED |
-| 5 | EP — service line | EP | service line | NOT STARTED |
-| 6 | EP — executive | EP | executive | NOT STARTED |
+| 4 | EP — care team | EP | care team | **PARTIAL** (Phase 0B addendum, **rule-body-verified**) |
+| 5 | EP — service line | EP | service line | file-count inventory only |
+| 6 | EP — executive | EP | executive | file-count inventory only |
 | 7 | SH — care team | SH | care team | NOT STARTED |
 | 8 | SH — service line | SH | service line | NOT STARTED |
 | 9 | SH — executive | SH | executive | NOT STARTED |
@@ -113,13 +113,13 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 
 | Module | Spec gaps | Backend rules | Rule density % | Frontend .tsx files | Audit state | T1 priority gaps |
 |---|---|---|---|---|---|---|
-| HF | 126 | 48 | **46% any / 21.4% DET_OK** | 38 | PARTIAL (addendum) | 29 in spec, 18 covered (62%), 11 SPEC_ONLY |
-| EP | 89 | 45 | 51% | 63 | NOT STARTED | unknown |
+| HF | 126 | 48 | **46% any / 21.4% DET_OK** | 38 | PARTIAL (addendum, name-match) | 29 in spec, 18 covered (62%), 11 SPEC_ONLY |
+| EP | 89 | 45 | 51% naive / **41.6% any / 20.2% DET_OK** [rule-body-verified] | 63 | PARTIAL (addendum) | 15 in spec, 8 covered (53%), 7 SPEC_ONLY (1 REMEDIATED via PR #229) |
 | SH | 88 | 25 | 28% | 48 | NOT STARTED | unknown |
 | CAD | 90 | 76 | **61.1% any / 31.1% DET_OK** | 25 | PARTIAL (addendum) | 18 in spec, 12 covered (67%), 6 SPEC_ONLY |
 | VHD | 105 | 32 | 30% | 18 | NOT STARTED | unknown |
 | PV | 105 | 33 | 31% naive / **26.7% real** | 24 | PARTIAL (addendum) | 7 in spec, 1 covered + 2 partial + 4 SPEC_ONLY |
-| **Total active** | **603** | **259** | **43% naive avg** | **216** | 3 of 6 audited | |
+| **Total active** | **603** | **261** (was 259; +2 from PR #229 EP-XX-7 mitigation) | **43% naive avg** | **216** | 4 of 6 audited (1 rule-body-verified) | |
 
 **Caveat:** "Rule density %" is naive (rules ÷ spec gaps). PV addendum showed real coverage diverges (33 rules → 26.7% real coverage because 9 rules are EXTRA and several map non-1:1). HF addendum confirmed pattern (48 rules → 46% any-coverage / 21.4% DET_OK; 1 EXTRA + broad-rule consolidation in Amyloid + HCM). CAD addendum extended pattern at density extreme (76 rules → 61.1% any / 31.1% DET_OK; 15 EXTRA — sub-linear scaling per CAD §11). True per-module coverage requires Phase 0B audit per module.
 
@@ -142,9 +142,10 @@ Source: per-module audit docs, `backend/prisma/schema.prisma` `ModuleType` enum,
 
 ## §6 — Open critical work (top 3, priority order)
 
-1. **EP / SH / VHD audits batched** — 18-24h raw scope, fills v2.0 picture across 6 of 6 active modules. EP first (highest frontend file count at 63 .tsx; 45 backend rules vs 89 spec gaps = 51% naive density). Wall-clock minutes logged per audit for AUDIT-028 empirical calibration.
-2. **Phase 0C UI/UX audit** — 25-30h raw scope, completes Phase 0 deliverable set for v2.0 authorship
-3. **Phase 0A backend audits Phase 3-5** — Data layer (~10h) + Operational maturity (~10h) + HIPAA gap analysis (~15-20h); also load-bearing for v2.0
+1. **SH + VHD Phase 0B audits** — ~12-16h raw scope, rule-body-verified from gate (per AUDIT-029); completes 6-of-6 module audit picture for v2.0 input
+2. **Step H retro pass on PV/HF/CAD** — ~3.8h raw scope (full retro per LOCK 1); rule-body-verifies T1 SAFETY/SAFETY-Crit/PARTIAL + broad-rule T2 across 3 prior name-match modules. Per AUDIT-029, expected ~20pp DET_OK reduction
+3. **Phase 0C UI/UX audit** — 25-30h raw scope, completes Phase 0 deliverable set for v2.0 authorship
+4. **Phase 0A backend audits Phase 3-7** — Data layer (~10h) + Operational maturity (~10h) + HIPAA gap analysis (~15-20h); also load-bearing for v2.0
 
 **Audit-axis is critical-path for v2.0 (due ~2026-05-19).** Tactical security work (AUDIT-025 Phase b, AUDIT-011 Phase a/b/c/d, AUDIT-022 backfill) is queued for Phase 1.
 
