@@ -1,0 +1,1525 @@
+{
+  "auditDate": "2026-05-04",
+  "auditMethod": "rule-body-verified",
+  "crosswalkVersion": "1.0",
+  "draft": true,
+  "extras": [],
+  "lessonsLearned": "",
+  "module": "PV",
+  "rows": [
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-66",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-2",
+        "evaluatorBodyLineRange": [
+          4712,
+          4735
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-2-abi-screening",
+        "registryLine": 288
+      },
+      "specGapId": "GAP-PV-001",
+      "specLine": 931,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-67",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-2",
+        "evaluatorBodyLineRange": [
+          4712,
+          4735
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-2-abi-screening",
+        "registryLine": 288
+      },
+      "specGapId": "GAP-PV-002",
+      "specLine": 932,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-68",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-003",
+      "specLine": 933,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-69",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-004",
+      "specLine": 934,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-70",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-005",
+      "specLine": 935,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-71",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-006",
+      "specLine": 936,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-72",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-007",
+      "specLine": 937,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-83",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-RIVAROXABAN",
+        "evaluatorBodyLineRange": [
+          10877,
+          10905
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-rivaroxaban",
+        "registryLine": 2568
+      },
+      "specGapId": "GAP-PV-011",
+      "specLine": 942,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-80",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-1",
+        "evaluatorBodyLineRange": [
+          4680,
+          4705
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-1-pad-statin",
+        "registryLine": 276
+      },
+      "specGapId": "GAP-PV-008",
+      "specLine": 943,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-81",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-1",
+        "evaluatorBodyLineRange": [
+          4680,
+          4705
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-1-pad-statin",
+        "registryLine": 276
+      },
+      "specGapId": "GAP-PV-009",
+      "specLine": 944,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-82",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-3",
+        "evaluatorBodyLineRange": [
+          5538,
+          5563
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-3-antiplatelet",
+        "registryLine": 984
+      },
+      "specGapId": "GAP-PV-010",
+      "specLine": 945,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-84",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-10",
+        "evaluatorBodyLineRange": [
+          6492,
+          6515
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-10-cilostazol",
+        "registryLine": 1716
+      },
+      "specGapId": "GAP-PV-012",
+      "specLine": 946,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-85",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-5",
+        "evaluatorBodyLineRange": [
+          5603,
+          5623
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-5-exercise-therapy",
+        "registryLine": 1008
+      },
+      "specGapId": "GAP-PV-013",
+      "specLine": 947,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-86",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-4",
+        "evaluatorBodyLineRange": [
+          5573,
+          5593
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-4-smoking-cessation",
+        "registryLine": 996
+      },
+      "specGapId": "GAP-PV-014",
+      "specLine": 948,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-87",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-6",
+        "evaluatorBodyLineRange": [
+          5633,
+          5654
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-6-diabetes-control",
+        "registryLine": 1020
+      },
+      "specGapId": "GAP-PV-015",
+      "specLine": 949,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-88",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-11",
+        "evaluatorBodyLineRange": [
+          6525,
+          6549
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-11-acei-pad",
+        "registryLine": 1728
+      },
+      "specGapId": "GAP-PV-016",
+      "specLine": 950,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-96",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-BYPASS-EVAL",
+        "evaluatorBodyLineRange": [
+          10942,
+          10968
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-bypass-eval",
+        "registryLine": 2592
+      },
+      "specGapId": "GAP-PV-017",
+      "specLine": 955,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-97",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-BYPASS-EVAL",
+        "evaluatorBodyLineRange": [
+          10942,
+          10968
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-bypass-eval",
+        "registryLine": 2592
+      },
+      "specGapId": "GAP-PV-018",
+      "specLine": 956,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-98",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-019",
+      "specLine": 957,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-99",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-020",
+      "specLine": 958,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-100",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-021",
+      "specLine": 959,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-101",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-022",
+      "specLine": 960,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-023",
+      "specLine": 965,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-024",
+      "specLine": 966,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-025",
+      "specLine": 967,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-026",
+      "specLine": 968,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-027",
+      "specLine": 969,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-113",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-028",
+      "specLine": 974,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-114",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-029",
+      "specLine": 975,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-115",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-MESENTERIC",
+        "evaluatorBodyLineRange": [
+          11085,
+          11110
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-mesenteric",
+        "registryLine": 2652
+      },
+      "specGapId": "GAP-PV-030",
+      "specLine": 976,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-116",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-031",
+      "specLine": 977,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-117",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-032",
+      "specLine": 978,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-123",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-12",
+        "evaluatorBodyLineRange": [
+          6559,
+          6578
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-12-renal-artery",
+        "registryLine": 1740
+      },
+      "specGapId": "GAP-PV-033",
+      "specLine": 983,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-124",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-034",
+      "specLine": 984,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-125",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-035",
+      "specLine": 985,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-126",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-036",
+      "specLine": 986,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-037",
+      "specLine": 991,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-038",
+      "specLine": 992,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-039",
+      "specLine": 993,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-040",
+      "specLine": 994,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-041",
+      "specLine": 995,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-042",
+      "specLine": 996,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-136",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-043",
+      "specLine": 1001,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-137",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-044",
+      "specLine": 1002,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-138",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-THORACIC-OUTLET",
+        "evaluatorBodyLineRange": [
+          11115,
+          11137
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-thoracic-outlet",
+        "registryLine": 2664
+      },
+      "specGapId": "GAP-PV-045",
+      "specLine": 1003,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-139",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-046",
+      "specLine": 1004,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-140",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-047",
+      "specLine": 1005,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-147",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-RAYNAUD",
+        "evaluatorBodyLineRange": [
+          11195,
+          11221
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-raynaud",
+        "registryLine": 2700
+      },
+      "specGapId": "GAP-PV-049",
+      "specLine": 1010,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-148",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-050",
+      "specLine": 1011,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-146",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-048",
+      "specLine": 1012,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-158",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-055",
+      "specLine": 1017,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-159",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-056",
+      "specLine": 1018,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-154",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-9",
+        "evaluatorBodyLineRange": [
+          5727,
+          5748
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-9-aaa-screening",
+        "registryLine": 1056
+      },
+      "specGapId": "GAP-PV-051",
+      "specLine": 1019,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-160",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-057",
+      "specLine": 1020,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-155",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-052",
+      "specLine": 1021,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-156",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-053",
+      "specLine": 1022,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-157",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-054",
+      "specLine": 1023,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-168",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-058",
+      "specLine": 1028,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-169",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-13",
+        "evaluatorBodyLineRange": [
+          6586,
+          6608
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-13-carotid",
+        "registryLine": 1752
+      },
+      "specGapId": "GAP-PV-059",
+      "specLine": 1029,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-170",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-060",
+      "specLine": 1030,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-171",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-061",
+      "specLine": 1031,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-172",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-062",
+      "specLine": 1032,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-180",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-063",
+      "specLine": 1037,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-181",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-064",
+      "specLine": 1038,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-182",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-DVT-SCREEN",
+        "evaluatorBodyLineRange": [
+          11030,
+          11055
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-dvt-screen",
+        "registryLine": 2628
+      },
+      "specGapId": "GAP-PV-065",
+      "specLine": 1039,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-183",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-066",
+      "specLine": 1040,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-184",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-PTS-PREVENTION",
+        "evaluatorBodyLineRange": [
+          11060,
+          11081
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-pts-prevention",
+        "registryLine": 2640
+      },
+      "specGapId": "GAP-PV-067",
+      "specLine": 1041,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-185",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-068",
+      "specLine": 1042,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-186",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-069",
+      "specLine": 1043,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-187",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-15",
+        "evaluatorBodyLineRange": [
+          6646,
+          6664
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-15-compression",
+        "registryLine": 1776
+      },
+      "specGapId": "GAP-PV-070",
+      "specLine": 1044,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-188",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-VARICOSE",
+        "evaluatorBodyLineRange": [
+          11142,
+          11163
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-varicose",
+        "registryLine": 2676
+      },
+      "specGapId": "GAP-PV-071",
+      "specLine": 1045,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-194",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-072",
+      "specLine": 1050,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-195",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-073",
+      "specLine": 1051,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-196",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-074",
+      "specLine": 1052,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-197",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-075",
+      "specLine": 1053,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-198",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-ANTICOAG-VTE",
+        "evaluatorBodyLineRange": [
+          11382,
+          11409
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-anticoag-vte",
+        "registryLine": 3216
+      },
+      "specGapId": "GAP-PV-076",
+      "specLine": 1054,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-199",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-077",
+      "specLine": 1055,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-206",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-079",
+      "specLine": 1060,
+      "tier": "T1"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-205",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-078",
+      "specLine": 1061,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-207",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-080",
+      "specLine": 1062,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-208",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-081",
+      "specLine": 1063,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-082",
+      "specLine": 1068,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-083",
+      "specLine": 1069,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-084",
+      "specLine": 1070,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-085",
+      "specLine": 1071,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-086",
+      "specLine": 1072,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "Not classified in source addendum; defaulted to SPEC_ONLY for completeness",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.3,
+      "parseSource": "addendum-default-SPEC_ONLY",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-087",
+      "specLine": 1073,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-220",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-088",
+      "specLine": 1078,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-221",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-089",
+      "specLine": 1079,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-222",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-090",
+      "specLine": 1080,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-223",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-091",
+      "specLine": 1085,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-224",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-092",
+      "specLine": 1086,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-225",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-093",
+      "specLine": 1087,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-226",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-LYMPHEDEMA",
+        "evaluatorBodyLineRange": [
+          11168,
+          11189
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-lymphedema",
+        "registryLine": 2688
+      },
+      "specGapId": "GAP-PV-094",
+      "specLine": 1092,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "",
+      "classification": "PARTIAL_DETECTION",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-227",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-LYMPHEDEMA",
+        "evaluatorBodyLineRange": [
+          11168,
+          11189
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-lymphedema",
+        "registryLine": 2688
+      },
+      "specGapId": "GAP-PV-095",
+      "specLine": 1093,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-233",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-096",
+      "specLine": 1098,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-234",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-097",
+      "specLine": 1099,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-235",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-GRAFT-SURVEILLANCE",
+        "evaluatorBodyLineRange": [
+          11352,
+          11378
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-graft-surveillance",
+        "registryLine": 3204
+      },
+      "specGapId": "GAP-PV-098",
+      "specLine": 1100,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-236",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-099",
+      "specLine": 1101,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-237",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-100",
+      "specLine": 1102,
+      "tier": "T3"
+    },
+    {
+      "auditNotes": "",
+      "classification": "DET_OK",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.95,
+      "parseSource": "addendum-line-243",
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-14",
+        "evaluatorBodyLineRange": [
+          6617,
+          6635
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-14-foot-exam",
+        "registryLine": 1764
+      },
+      "specGapId": "GAP-PV-101",
+      "specLine": 1107,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-244",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-102",
+      "specLine": 1108,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-245",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-103",
+      "specLine": 1109,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-247",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-105",
+      "specLine": 1110,
+      "tier": "T2"
+    },
+    {
+      "auditNotes": "—",
+      "classification": "SPEC_ONLY",
+      "inferredSafetyRationale": null,
+      "inferredSafetyTag": null,
+      "parseConfidence": 0.9,
+      "parseSource": "addendum-line-246",
+      "ruleBodyCite": null,
+      "specGapId": "GAP-PV-104",
+      "specLine": 1111,
+      "tier": "T3"
+    }
+  ],
+  "sequencingNotes": "",
+  "strategicPosture": ""
+}

@@ -1,0 +1,214 @@
+{
+  "countDivergences": [],
+  "evaluatorBlockCount": 25,
+  "evaluatorOrphans": [],
+  "gapsPushCount": 25,
+  "matches": [
+    {
+      "evaluatorBlockName": "SH-1",
+      "evaluatorCommentLine": 4603,
+      "matchConfidence": 0.429,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-1-as-surveillance",
+      "registryLine": 252
+    },
+    {
+      "evaluatorBlockName": "SH-2",
+      "evaluatorCommentLine": 4923,
+      "matchConfidence": 0.5,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-2-tavr-eval",
+      "registryLine": 336
+    },
+    {
+      "evaluatorBlockName": "SH-3",
+      "evaluatorCommentLine": 4988,
+      "matchConfidence": 0.667,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-3-mitral-intervention",
+      "registryLine": 780
+    },
+    {
+      "evaluatorBlockName": "SH-4",
+      "evaluatorCommentLine": 5022,
+      "matchConfidence": 0.6,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-4-tricuspid-assessment",
+      "registryLine": 792
+    },
+    {
+      "evaluatorBlockName": "SH-5",
+      "evaluatorCommentLine": 5057,
+      "matchConfidence": 0.714,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-5-structural-imaging",
+      "registryLine": 804
+    },
+    {
+      "evaluatorBlockName": "SH-6",
+      "evaluatorCommentLine": 5089,
+      "matchConfidence": 0.75,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-6-post-tavr-followup",
+      "registryLine": 816
+    },
+    {
+      "evaluatorBlockName": "SH-7",
+      "evaluatorCommentLine": 5119,
+      "matchConfidence": 0.6,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-7-endocarditis-prophylaxis",
+      "registryLine": 828
+    },
+    {
+      "evaluatorBlockName": "SH-8",
+      "evaluatorCommentLine": 5153,
+      "matchConfidence": 0.667,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-8-laa-assessment",
+      "registryLine": 840
+    },
+    {
+      "evaluatorBlockName": "SH-9",
+      "evaluatorCommentLine": 5182,
+      "matchConfidence": 0.6,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-9-pfo-closure",
+      "registryLine": 852
+    },
+    {
+      "evaluatorBlockName": "SH-10",
+      "evaluatorCommentLine": 6059,
+      "matchConfidence": 0.6,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-10-mitraclip",
+      "registryLine": 1548
+    },
+    {
+      "evaluatorBlockName": "SH-11",
+      "evaluatorCommentLine": 6089,
+      "matchConfidence": 0.75,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-11-tmvr",
+      "registryLine": 1560
+    },
+    {
+      "evaluatorBlockName": "SH-12",
+      "evaluatorCommentLine": 6116,
+      "matchConfidence": 0.667,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-12-ttvr",
+      "registryLine": 1572
+    },
+    {
+      "evaluatorBlockName": "SH-13",
+      "evaluatorCommentLine": 6147,
+      "matchConfidence": 0.5,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-13-paravalvular-leak",
+      "registryLine": 1584
+    },
+    {
+      "evaluatorBlockName": "SH-14",
+      "evaluatorCommentLine": 6176,
+      "matchConfidence": 0.75,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-14-congenital-adult",
+      "registryLine": 1596
+    },
+    {
+      "evaluatorBlockName": "SH-15",
+      "evaluatorCommentLine": 6204,
+      "matchConfidence": 0.714,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-15-alcohol-septal",
+      "registryLine": 1608
+    },
+    {
+      "evaluatorBlockName": "SH-16",
+      "evaluatorCommentLine": 6233,
+      "matchConfidence": 0.714,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-16-watchman-fu",
+      "registryLine": 1620
+    },
+    {
+      "evaluatorBlockName": "SH-17",
+      "evaluatorCommentLine": 6259,
+      "matchConfidence": 0.714,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-17-3d-echo",
+      "registryLine": 1632
+    },
+    {
+      "evaluatorBlockName": "SH-BICUSPID",
+      "evaluatorCommentLine": 10153,
+      "matchConfidence": 0.667,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-bicuspid-surveillance",
+      "registryLine": 2076
+    },
+    {
+      "evaluatorBlockName": "SH-ROSS",
+      "evaluatorCommentLine": 10183,
+      "matchConfidence": 0.6,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-ross-procedure",
+      "registryLine": 2088
+    },
+    {
+      "evaluatorBlockName": "SH-VALVE-IN-VALVE",
+      "evaluatorCommentLine": 10214,
+      "matchConfidence": 0.6,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-valve-in-valve",
+      "registryLine": 2100
+    },
+    {
+      "evaluatorBlockName": "SH-ASD",
+      "evaluatorCommentLine": 10247,
+      "matchConfidence": 0.6,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-asd-closure",
+      "registryLine": 2112
+    },
+    {
+      "evaluatorBlockName": "SH-VSD",
+      "evaluatorCommentLine": 10280,
+      "matchConfidence": 0.6,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-vsd-closure",
+      "registryLine": 2124
+    },
+    {
+      "evaluatorBlockName": "SH-COARCTATION",
+      "evaluatorCommentLine": 10310,
+      "matchConfidence": 0.5,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-coarctation",
+      "registryLine": 2136
+    },
+    {
+      "evaluatorBlockName": "SH-FONTAN",
+      "evaluatorCommentLine": 10343,
+      "matchConfidence": 0.5,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-fontan-surveillance",
+      "registryLine": 2148
+    },
+    {
+      "evaluatorBlockName": "SH-CARCINOID",
+      "evaluatorCommentLine": 10375,
+      "matchConfidence": 0.583,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-carcinoid-valve",
+      "registryLine": 2160
+    }
+  ],
+  "module": "SH",
+  "namingMismatches": [],
+  "registryCount": 25,
+  "registryOrphans": [],
+  "specGapCount": 88,
+  "status": "CLEAN"
+}
