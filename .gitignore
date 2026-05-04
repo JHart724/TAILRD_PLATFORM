@@ -58,3 +58,12 @@ infrastructure/lambdas/*.zip
 # Claude Code session artifacts (added 2026-05-03 cleanup)
 .claude/scheduled_tasks.lock
 .context/
+
+# Audit pre-flight intermediate artifacts (legacy auditPreflight.ts).
+# Canonical infrastructure under docs/audit/canonical/ is the source of truth.
+backend/scripts/preflight-out/
+docs/audit/preflight/
+
+# Audit canonical intermediate output (regenerable via verifyDraft.ts;
+# canonical .crosswalk.json files are the committed source of truth)
+docs/audit/canonical/*.crosswalk.candidate.json
