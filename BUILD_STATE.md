@@ -8,13 +8,13 @@
 
 | Field | Value |
 |---|---|
-| Last updated | 2026-05-03 (Day 5 of Phase 0) — CAD audit ship |
+| Last updated | 2026-05-04 (Day 6 of Phase 0) — Phase 0B canonical infrastructure complete |
 | Last update by | jhart |
-| Last update commit SHA | _pending CAD audit PR_ (next: PR #226) |
+| Last update commit SHA | _pending canonical infrastructure PR_ (this PR's chore commit) |
 | Plan reference | `docs/PATH_TO_ROBUST.md` v1.2 (active 2026-04-28) |
-| Plan target | **Under revision per v2.0**; v1.2 timeline (3-4 months) revised preliminary to **7-9 months raw scope**; per CAD audit §13, this translates to ~3-6 months AI-assisted wall-clock depending on work-mix; v2.0 PATH_TO_ROBUST due ~2026-05-19 will codify with explicit raw-scope vs wall-clock disambiguation |
-| Phase 0 day | **5 of 21** (16 days remaining in Phase 0 window) |
-| Phase 0 hours budget | **~46-68h raw-scope consumed of 120-150h** (~52-82h remaining; HF audit ~7-10h logged + CAD audit ~6-8h logged. Wall-clock actual much smaller per AUDIT-028) |
+| Plan target | **Under revision per v2.0**; v1.2 timeline (3-4 months) revised preliminary to **7-9 months raw scope**; per CAD audit §13, this translates to ~3-6 months AI-assisted wall-clock; canonical infrastructure (this PR) gives v2.0 author structured 603-row matrix as direct input; v2.0 PATH_TO_ROBUST due ~2026-05-19 |
+| Phase 0 day | **6 of 21** (15 days remaining in Phase 0 window) |
+| Phase 0 hours budget | **Phase 0B clinical audit: COMPLETE** (canonical infrastructure consolidated 6-module audits via auto-classifier + 21 manual overrides; ~50 min agent wall-clock for infrastructure + classification work per AUDIT-028 — see canonical PR description). ~52-82h raw-scope budget remaining; redirected to Phase 0A backend + Phase 0C UI/UX. |
 | v2.0 PATH_TO_ROBUST due | end of Week 3 (~2026-05-19) |
 
 ---
@@ -34,12 +34,14 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 
 ### Phase 0B — Per-module clinical audits (~50-70h)
 
-- [/] PV — codebase inventory + spec↔code addendum complete (26.7% coverage)
-- [/] HF — spec↔code addendum complete (46% any / 21.4% DET_OK; 11 T1 SPEC_ONLY)
-- [/] CAD — spec↔code addendum complete (61.1% any / 31.1% DET_OK; 6 T1 SPEC_ONLY)
-- [ ] EP (~6-8h raw scope; will log actual wall-clock minutes for empirical calibration of v2.0 multipliers per AUDIT-028)
-- [ ] SH (~6-8h raw scope; wall-clock logged)
-- [ ] VHD (~6-8h raw scope; wall-clock logged)
+- [x] PV — canonical addendum (16 DET_OK / 14 PARTIAL / 75 SPEC_ONLY of 105 = 29% any-coverage)
+- [x] HF — canonical addendum (22 DET_OK / 43 PARTIAL / 61 SPEC_ONLY of 126 = 52% any-coverage; 9 cross-module to EP CRT/ICD)
+- [x] CAD — canonical addendum (28 DET_OK / 28 PARTIAL / 34 SPEC_ONLY of 90 = 62% any-coverage; 1 cross-module to PV)
+- [x] EP — canonical addendum (18 DET_OK / 26 PARTIAL / 45 SPEC_ONLY of 89 = 49% any-coverage; 3 cross-module incl. EP-007 to VHD)
+- [x] SH — canonical addendum (9 DET_OK / 23 PARTIAL / 56 SPEC_ONLY of 88 = 36% any-coverage; 4 cross-module)
+- [x] VHD — canonical addendum (5 DET_OK / 16 PARTIAL / 84 SPEC_ONLY of 105 = 20% any-coverage; 1 cross-module to SH)
+- [x] **Cross-module synthesis** with Tier S triage queue, blind-spot analysis, BSW pathway distribution
+- [x] **Canonical infrastructure** (AUDIT_METHODOLOGY.md + 8 scripts + CI gates + 101 tests)
 
 ### Phase 0C — UI/UX audit (~25-30h)
 
@@ -50,9 +52,9 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 
 ### Phase 0 deliverables
 
-- [/] All audit reports committed (1 of 7 modules + Phase 1, 3 partial)
-- [ ] **603-row implementation matrix** (708 minus 105 CX deferred per §3b)
-- [/] Updated `AUDIT_FINDINGS_REGISTER.md` (28 findings, current; AUDIT-027 expanded scope, AUDIT-028 added)
+- [x] All 6 active module audit addenda committed (canonical, generated from crosswalks)
+- [x] **603-row implementation matrix** in `docs/audit/canonical/<MODULE>.crosswalk.json` files (98 DET_OK + 150 PARTIAL + 355 SPEC_ONLY = 248 covered / 603 total = 41% any-coverage)
+- [/] Updated `AUDIT_FINDINGS_REGISTER.md` (AUDIT-029, AUDIT-030, AUDIT-030.D resolved via AUDIT_METHODOLOGY.md; pending: register-batch update for ~16-19 findings surfaced during canonical work)
 - [ ] **v2.0 PATH_TO_ROBUST** (due ~2026-05-19)
 
 ---
@@ -70,7 +72,7 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 | Deployment | 75% | CI + 2 deploy workflows; AUDIT-025 Phase a (Migration Validation gate) live; branch protection TODO | PR #223 |
 | Testing | 5% | 27 tests passing, 0.87% backend coverage (AUDIT-001 P0) | `PHASE_1_REPORT.md` |
 | Documentation | 70% | 7 PRs in current arc; 3 design docs; runbooks complete | `CHANGE_RECORD_*.md` |
-| Clinical KB | 18% | CK v4.0 with 708 gaps; 3 of 6 modules audited (PV + HF + CAD addenda) | CK v4.0 + PV/HF/CAD addenda |
+| Clinical KB | 41% | CK v4.0 with 708 gaps; 6 of 6 active modules audited (canonical crosswalks); 248/603 covered any-tier; 98/603 DET_OK | `docs/audit/canonical/`, `docs/audit/AUDIT_METHODOLOGY.md` |
 
 ---
 
@@ -78,28 +80,28 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 
 | # | Surface | Module | View | Audit state |
 |---|---|---|---|---|
-| 1 | HF — care team | HF | care team | **PARTIAL** (Phase 0B addendum, spec↔code mapping) |
+| 1 | HF — care team | HF | care team | **CANONICAL** (Phase 0B canonical addendum, AUDIT-030 citation-verified) |
 | 2 | HF — service line | HF | service line | file-count inventory only |
 | 3 | HF — executive | HF | executive | file-count inventory only |
-| 4 | EP — care team | EP | care team | NOT STARTED |
+| 4 | EP — care team | EP | care team | **CANONICAL** (Phase 0B canonical addendum) |
 | 5 | EP — service line | EP | service line | NOT STARTED |
 | 6 | EP — executive | EP | executive | NOT STARTED |
-| 7 | SH — care team | SH | care team | NOT STARTED |
+| 7 | SH — care team | SH | care team | **CANONICAL** (Phase 0B canonical addendum) |
 | 8 | SH — service line | SH | service line | NOT STARTED |
 | 9 | SH — executive | SH | executive | NOT STARTED |
-| 10 | CAD — care team | CAD | care team | **PARTIAL** (Phase 0B addendum, spec↔code mapping) |
+| 10 | CAD — care team | CAD | care team | **CANONICAL** (Phase 0B canonical addendum) |
 | 11 | CAD — service line | CAD | service line | file-count inventory only |
 | 12 | CAD — executive | CAD | executive | file-count inventory only |
-| 13 | VHD — care team | VHD | care team | NOT STARTED |
+| 13 | VHD — care team | VHD | care team | **CANONICAL** (Phase 0B canonical addendum, AUDIT-030 citation-verified + 13 manual overrides) |
 | 14 | VHD — service line | VHD | service line | NOT STARTED |
 | 15 | VHD — executive | VHD | executive | NOT STARTED |
-| 16 | PV — care team | PV | care team | **PARTIAL** (Phase 0B addendum, spec↔code mapping) |
+| 16 | PV — care team | PV | care team | **CANONICAL** (Phase 0B canonical addendum) |
 | 17 | PV — service line | PV | service line | file-count inventory only |
 | 18 | PV — executive | PV | executive | file-count inventory only |
 | 19 | Research/registry/trial | cross-cutting | all 3 views | NOT STARTED — 3 frontend files exist, 0 backend routes / 0 Prisma models |
 | 20 | Backend superuser | cross-cutting | admin | **PARTIAL** via AUDIT-011 Phase a-pre |
 
-**Audit coverage:** 3 of 20 surfaces with substantive audit work (HF care team via Phase 0B addendum 2026-05-03; CAD care team via Phase 0B addendum 2026-05-03; PV care team via Phase 0B addendum 2026-04-29 — all three spec↔code mapping). Additional partial coverage: 6 surfaces inventoried at file-count level only (HF service line + executive, CAD service line + executive, PV service line + executive); 1 cross-cutting (Backend superuser) partially audited via AUDIT-011 Phase a-pre tenant isolation work. Source: `docs/audit/PHASE_0B_HF_AUDIT_ADDENDUM.md`, `docs/audit/PHASE_0B_CAD_AUDIT_ADDENDUM.md`, `docs/audit/PHASE_0B_PV_AUDIT_REPORT*.md`, `docs/audit/AUDIT_011_DESIGN.md`.
+**Audit coverage:** 6 of 20 surfaces with canonical audit coverage (all 6 module care-team views via Phase 0B canonical addenda 2026-05-04 — generated from `docs/audit/canonical/<MODULE>.crosswalk.json`). Additional partial coverage: 6 surfaces inventoried at file-count level only (HF/CAD/PV service line + executive); 1 cross-cutting (Backend superuser) partially audited via AUDIT-011 Phase a-pre tenant isolation work. Source: `docs/audit/PHASE_0B_<MODULE>_AUDIT_ADDENDUM.md` (6 modules), `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md`, `docs/audit/AUDIT_METHODOLOGY.md`, `docs/audit/AUDIT_011_DESIGN.md`.
 
 ---
 
@@ -113,21 +115,23 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 
 | Module | Spec gaps | Backend rules | Rule density % | Frontend .tsx files | Audit state | T1 priority gaps |
 |---|---|---|---|---|---|---|
-| HF | 126 | 48 | **46% any / 21.4% DET_OK** | 38 | PARTIAL (addendum) | 29 in spec, 18 covered (62%), 11 SPEC_ONLY |
-| EP | 89 | 45 | 51% | 63 | NOT STARTED | unknown |
-| SH | 88 | 25 | 28% | 48 | NOT STARTED | unknown |
-| CAD | 90 | 76 | **61.1% any / 31.1% DET_OK** | 25 | PARTIAL (addendum) | 18 in spec, 12 covered (67%), 6 SPEC_ONLY |
-| VHD | 105 | 32 | 30% | 18 | NOT STARTED | unknown |
-| PV | 105 | 33 | 31% naive / **26.7% real** | 24 | PARTIAL (addendum) | 7 in spec, 1 covered + 2 partial + 4 SPEC_ONLY |
-| **Total active** | **603** | **259** | **43% naive avg** | **216** | 3 of 6 audited | |
+| HF | 126 | 48 | **52% any / 17.5% DET_OK** | 38 | CANONICAL | 29 T1: 8 DET_OK + 14 PARTIAL + 7 SPEC_ONLY |
+| EP | 89 | 45 | **49% any / 20.2% DET_OK** | 63 | CANONICAL | 15 T1: 5 DET_OK + 4 PARTIAL + 6 SPEC_ONLY |
+| SH | 88 | 25 | **36% any / 10.2% DET_OK** | 48 | CANONICAL | 13 T1: 2 DET_OK + 6 PARTIAL + 5 SPEC_ONLY |
+| CAD | 90 | 76 | **62% any / 31.1% DET_OK** | 25 | CANONICAL | 18 T1: 7 DET_OK + 5 PARTIAL + 6 SPEC_ONLY |
+| VHD | 105 | 32 | **20% any / 4.8% DET_OK** | 18 | CANONICAL | 8 T1: 1 DET_OK + 3 PARTIAL + 4 SPEC_ONLY |
+| PV | 105 | 33 | **29% any / 15.2% DET_OK** | 24 | CANONICAL | 7 T1: 1 DET_OK + 2 PARTIAL + 4 SPEC_ONLY |
+| **Total active** | **603** | **259** | **41% any / 16.3% DET_OK** | **216** | 6 of 6 canonical | 90 T1: 24 DET_OK + 34 PARTIAL + 32 SPEC_ONLY |
 
-**Caveat:** "Rule density %" is naive (rules ÷ spec gaps). PV addendum showed real coverage diverges (33 rules → 26.7% real coverage because 9 rules are EXTRA and several map non-1:1). HF addendum confirmed pattern (48 rules → 46% any-coverage / 21.4% DET_OK; 1 EXTRA + broad-rule consolidation in Amyloid + HCM). CAD addendum extended pattern at density extreme (76 rules → 61.1% any / 31.1% DET_OK; 15 EXTRA — sub-linear scaling per CAD §11). True per-module coverage requires Phase 0B audit per module.
+**Coverage numbers** are computed from canonical crosswalks (`docs/audit/canonical/<MODULE>.crosswalk.json`) per AUDIT_METHODOLOGY.md §3. Auto-classifier with manual overrides applies §3.2.1 broad-rule consolidation per-gap (one evaluator block top-matched for ≥2 spec gaps in same subcategory → all classified PARTIAL_DETECTION unless evaluator's trigger criteria match a specific spec gap completely). 21 manual overrides documented inline in crosswalk auditNotes (13 VHD, 5 EP, 2 HF, 1 CAD).
 
-Source: per-module audit docs, `backend/prisma/schema.prisma` `ModuleType` enum, `backend/src/ingestion/gaps/gapRuleEngine.ts` grep, `src/ui/*` file count.
+Source: `docs/audit/canonical/<MODULE>.crosswalk.json` (canonical), `docs/audit/PHASE_0B_<MODULE>_AUDIT_ADDENDUM.md` (rendered), `docs/audit/AUDIT_METHODOLOGY.md` (methodology contract).
 
 ---
 
 ## §5 — Tier S findings status
+
+### §5.1 — Security Tier S (operational)
 
 | Finding | Severity | State | Notes |
 |---|---|---|---|
@@ -136,17 +140,31 @@ Source: per-module audit docs, `backend/prisma/schema.prisma` `ModuleType` enum,
 | AUDIT-013 (audit log durability) | P1 | **RESOLVED** 2026-04-30 | dual-transport CloudWatch |
 | AUDIT-015 (decrypt fail-loud) | P1 | **RESOLVED** 2026-04-30 | 51 legacy plaintext rows backfilled |
 
-**Tier S progress: 3.5 of 4 closed.** Source: `AUDIT_FINDINGS_REGISTER.md`.
+**Security Tier S progress: 3.5 of 4 closed.** Source: `AUDIT_FINDINGS_REGISTER.md`.
+
+### §5.2 — Clinical Tier S triage queue (per AUDIT_METHODOLOGY.md §6.3)
+
+Generated from canonical crosswalks. Auto-include criteria: spec-explicit SAFETY-tagged + T1 + uncovered.
+
+| Spec gap | Module | Class | SAFETY tag | Notes |
+|---|---|---|---|---|
+| GAP-EP-079 | EP | SPEC_ONLY | `(CRITICAL)` | pre-excited AF + AVN blocker → VF risk; highest priority |
+| GAP-EP-006 | EP | SPEC_ONLY | `(SAFETY)` | dabigatran in CrCl<30 |
+| GAP-EP-017 | EP | SPEC_ONLY | `(SAFETY)` | HFrEF + non-DHP CCB; evaluator EP-017 exists at line 4797 (PR #229) but no registry entry — trivial fix: add registry entry |
+| GAP-CAD-016 | CAD | PARTIAL | `(SAFETY)` | prasugrel + stroke/TIA; needs hardening for full SAFETY closure |
+
+**Clinical Tier S queue: 4 spec-explicit items.** Mitigation work tracked as separate PR series.
+Source: `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` §3.1.
 
 ---
 
 ## §6 — Open critical work (top 3, priority order)
 
-1. **EP / SH / VHD audits batched** — 18-24h raw scope, fills v2.0 picture across 6 of 6 active modules. EP first (highest frontend file count at 63 .tsx; 45 backend rules vs 89 spec gaps = 51% naive density). Wall-clock minutes logged per audit for AUDIT-028 empirical calibration.
-2. **Phase 0C UI/UX audit** — 25-30h raw scope, completes Phase 0 deliverable set for v2.0 authorship
-3. **Phase 0A backend audits Phase 3-5** — Data layer (~10h) + Operational maturity (~10h) + HIPAA gap analysis (~15-20h); also load-bearing for v2.0
+1. **Clinical Tier S mitigation PR series** — 4 patient-safety items (EP-079, EP-006, CAD-016, EP-017). EP-017 trivial (add registry entry). Others require new evaluator block authorship. Estimate ~6-12h raw scope across 4 PRs.
+2. **Phase 0A backend audits Phase 3-5** — Data layer (~10h) + Operational maturity (~10h) + HIPAA gap analysis (~15-20h); load-bearing for v2.0.
+3. **Phase 0C UI/UX audit** — 25-30h raw scope, completes Phase 0 deliverable set for v2.0 authorship.
 
-**Audit-axis is critical-path for v2.0 (due ~2026-05-19).** Tactical security work (AUDIT-025 Phase b, AUDIT-011 Phase a/b/c/d, AUDIT-022 backfill) is queued for Phase 1.
+**Audit-axis Phase 0B critical path COMPLETE.** Phase 0A + 0C remain. Tactical security work (AUDIT-025 Phase b, AUDIT-011 Phase a/b/c/d, AUDIT-022 backfill) queued for Phase 1.
 
 ---
 
@@ -170,8 +188,13 @@ Source: per-module audit docs, `backend/prisma/schema.prisma` `ModuleType` enum,
 | Backend audit framework | `docs/audit/AUDIT_FRAMEWORK.md` |
 | Phase 1 backend audit | `docs/audit/PHASE_1_REPORT.md` |
 | Phase 2 backend audit | `docs/audit/PHASE_2_REPORT.md` |
-| Phase 0B clinical audit framework | `docs/audit/PHASE_0B_CLINICAL_AUDIT_FRAMEWORK.md` |
-| Phase 0B per-module audits | `docs/audit/PHASE_0B_<MODULE>_AUDIT_REPORT*.md`, `docs/audit/PHASE_0B_<MODULE>_AUDIT_ADDENDUM.md` (PV + HF complete) |
+| Phase 0B clinical audit framework | `docs/audit/PHASE_0B_CLINICAL_AUDIT_FRAMEWORK.md` (predecessor; superseded by `AUDIT_METHODOLOGY.md`) |
+| Phase 0B per-module audits | `docs/audit/PHASE_0B_<MODULE>_AUDIT_ADDENDUM.md` (6 of 6, canonical) |
+| **Audit methodology canonical contract** | `docs/audit/AUDIT_METHODOLOGY.md` |
+| **Canonical audit artifacts (6 modules)** | `docs/audit/canonical/<MODULE>.{spec,code,reconciliation,crosswalk,crosswalk.draft}.json` |
+| **Cross-module synthesis** | `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` |
+| **Audit canonical scripts** | `backend/scripts/auditCanonical/` |
+| **Audit canonical CI gates** | `.github/workflows/auditCanonical.yml` |
 | Per-finding designs | `docs/audit/AUDIT_<NNN>_DESIGN.md` (AUDIT-011, AUDIT-025) |
 | Tier S remediation design | `docs/audit/TIER_S_REMEDIATION_DESIGN.md` |
 | Clinical knowledge base | `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md` |
@@ -195,6 +218,8 @@ Per CAD audit §11 cross-module synthesis (2026-05-03): DET_OK scales SUB-LINEAR
 Per CAD audit §13 time-unit caveat (AUDIT-028, 2026-05-04): all hour estimates in this ledger and PATH_TO_ROBUST v1.2 represent raw work-scope, NOT AI-assisted operator wall-clock. v2.0 will disambiguate. "7-9 month preliminary timeline" may translate to **3-6 months wall-clock** depending on work-mix assumptions and clinical advisor bottlenecks. v2.0 commits to wall-clock projections with stated multipliers per work-type. Begin empirical wall-clock tracking on EP/SH/VHD audits.
 
 Source: `docs/audit/PHASE_0B_HF_AUDIT_ADDENDUM.md` §6.3, `docs/audit/PHASE_0B_CAD_AUDIT_ADDENDUM.md` §11, §11.5, §13.
+
+**Canonical infrastructure (2026-05-04):** AUDIT-029 / AUDIT-030 / AUDIT-030.D methodology defects resolved via `docs/audit/AUDIT_METHODOLOGY.md` canonical contract. 6-module audits regenerated from canonical JSON crosswalks; CI gates enforce regeneration discipline. Auto-classifier accuracy: 5 of 6 modules within ±10% of prior addendum claims; VHD bridged via 13 manual overrides documenting addendum's broad-rule consolidations + cross-module satisfaction. 18 cross-module satisfaction patterns surfaced (notably HF Device Therapy → EP module CRT/ICD evaluators). Wall-clock per AUDIT-028: ~50 min agent across 8 phases for full canonical infrastructure build.
 
 ---
 
