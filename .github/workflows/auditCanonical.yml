@@ -1,0 +1,249 @@
+name: Audit Canonical Gates
+
+# Per docs/audit/AUDIT_METHODOLOGY.md §10:
+#   - PR touches gapRuleEngine.ts          → fail if regenerated code.json diverges
+#   - PR touches CLINICAL_KNOWLEDGE_BASE_v4.0.md → fail if regenerated spec.json diverges
+#   - PR touches <MODULE>.crosswalk.json   → fail if regenerated reconciliation/addendum diverges
+#   - PR touches PHASE_0B_<MOD>_AUDIT_ADDENDUM.md or CROSS_MODULE_SYNTHESIS.md
+#                                          → fail (hand-edit guard) UNLESS the corresponding
+#                                            crosswalk/canonical input also changed in the PR
+#
+# Designed to run in <60s on every PR. The extractors do no I/O beyond the source
+# files + canonical/ directory; the renderers are pure JSON → markdown transforms.
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  audit-canonical:
+    name: Audit Canonical Gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+          fetch-depth: 0 # need history to detect what changed in the PR
+
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache backend node_modules
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: backend/node_modules
+          key: backend-deps-${{ runner.os }}-${{ hashFiles('backend/package-lock.json') }}
+          restore-keys: backend-deps-${{ runner.os }}-
+
+      - name: Install backend dependencies (production-only is enough — extractors only need tsx)
+        working-directory: backend
+        run: npm ci --ignore-scripts
+
+      - name: Determine PR base for diff (PR vs push)
+        id: base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "ref=${{ github.event.pull_request.base.sha }}" >> $GITHUB_OUTPUT
+          else
+            # On push, compare against the parent commit
+            echo "ref=${{ github.event.before }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Detect changed paths
+        id: changed
+        run: |
+          BASE_REF="${{ steps.base.outputs.ref }}"
+          # If base is empty (initial commit) or invalid, fall back to comparing all tracked files
+          if [ -z "$BASE_REF" ] || ! git cat-file -e "$BASE_REF" 2>/dev/null; then
+            echo "Base ref empty or invalid; treating all gate-relevant files as changed"
+            CHANGED_FILES=$(git ls-files | grep -E '(gapRuleEngine\.ts|CLINICAL_KNOWLEDGE_BASE_v4\.0\.md|docs/audit/canonical/.*\.json|docs/audit/PHASE_0B_.*_AUDIT_ADDENDUM\.md|docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS\.md)' || true)
+          else
+            CHANGED_FILES=$(git diff --name-only "$BASE_REF" HEAD)
+          fi
+          echo "Changed files in PR:"
+          echo "$CHANGED_FILES"
+          {
+            echo 'files<<EOF'
+            echo "$CHANGED_FILES"
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
+
+          # Set per-category boolean flags for downstream steps
+          touched_engine=$(echo "$CHANGED_FILES" | grep -cE 'backend/src/ingestion/gaps/gapRuleEngine\.ts$' || true)
+          touched_spec=$(echo "$CHANGED_FILES" | grep -cE 'docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4\.0\.md$' || true)
+          touched_crosswalks=$(echo "$CHANGED_FILES" | grep -cE 'docs/audit/canonical/.*\.crosswalk\.json$' || true)
+          touched_addenda=$(echo "$CHANGED_FILES" | grep -cE 'docs/audit/PHASE_0B_.*_AUDIT_ADDENDUM\.md$' || true)
+          touched_synthesis=$(echo "$CHANGED_FILES" | grep -cE 'docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS\.md$' || true)
+          echo "engine=$touched_engine" >> $GITHUB_OUTPUT
+          echo "spec=$touched_spec" >> $GITHUB_OUTPUT
+          echo "crosswalks=$touched_crosswalks" >> $GITHUB_OUTPUT
+          echo "addenda=$touched_addenda" >> $GITHUB_OUTPUT
+          echo "synthesis=$touched_synthesis" >> $GITHUB_OUTPUT
+
+      # ─── GATE 1: hand-edit guard for generated markdown ────────────────────────
+      # Per AUDIT_METHODOLOGY.md §10.1: PHASE_0B_<MOD>_AUDIT_ADDENDUM.md and
+      # CROSS_MODULE_SYNTHESIS.md are generated. Direct edits without a corresponding
+      # crosswalk.json change are rejected.
+      - name: Gate 1 — hand-edit guard
+        if: steps.changed.outputs.addenda != '0' || steps.changed.outputs.synthesis != '0'
+        run: |
+          ADDENDA_TOUCHED='${{ steps.changed.outputs.addenda }}'
+          SYNTHESIS_TOUCHED='${{ steps.changed.outputs.synthesis }}'
+          CROSSWALKS_TOUCHED='${{ steps.changed.outputs.crosswalks }}'
+
+          # If addenda touched but no crosswalks → hand-edit
+          if [ "$ADDENDA_TOUCHED" != "0" ] && [ "$CROSSWALKS_TOUCHED" = "0" ]; then
+            echo "::error::REJECT: addendum-direct-edit"
+            echo "::error::Addendum markdown was edited without corresponding crosswalk JSON change."
+            echo "::error::Addenda are generated artifacts. Edit docs/audit/canonical/<MODULE>.crosswalk.json"
+            echo "::error::then regenerate: npx tsx backend/scripts/auditCanonical/renderAddendum.ts --all"
+            echo "::error::Hand-authored fields: strategicPosture, sequencingNotes, lessonsLearned (in crosswalk.json)"
+            exit 1
+          fi
+
+          # Synthesis is regenerated whenever any crosswalk changes; standalone synthesis edits are always rejected
+          if [ "$SYNTHESIS_TOUCHED" != "0" ] && [ "$CROSSWALKS_TOUCHED" = "0" ]; then
+            echo "::error::REJECT: synthesis-direct-edit"
+            echo "::error::PHASE_0B_CROSS_MODULE_SYNTHESIS.md was edited without any crosswalk JSON change."
+            echo "::error::Synthesis is a generated artifact. Edit one or more crosswalk JSON files,"
+            echo "::error::then regenerate: npx tsx backend/scripts/auditCanonical/renderSynthesis.ts"
+            exit 1
+          fi
+
+          echo "Gate 1 passed: addendum/synthesis changes are accompanied by crosswalk changes."
+
+      # ─── GATE 2: code.json regeneration ────────────────────────────────────────
+      - name: Gate 2 — code.json regeneration
+        if: steps.changed.outputs.engine != '0'
+        working-directory: backend
+        run: |
+          echo "gapRuleEngine.ts changed; regenerating <MODULE>.code.json for all modules..."
+          npx tsx scripts/auditCanonical/extractCode.ts --all
+          cd ..
+          if ! git diff --exit-code -- docs/audit/canonical/*.code.json; then
+            echo "::error::REJECT: code-extract-divergent"
+            echo "::error::backend/src/ingestion/gaps/gapRuleEngine.ts was modified but the committed"
+            echo "::error::docs/audit/canonical/<MODULE>.code.json files are stale. Regenerate locally:"
+            echo "::error::  npx tsx backend/scripts/auditCanonical/extractCode.ts --all"
+            echo "::error::Commit the regenerated code.json files alongside the gapRuleEngine.ts change."
+            exit 1
+          fi
+          echo "Gate 2 passed: code.json files are in sync with gapRuleEngine.ts."
+
+      # ─── GATE 3: spec.json regeneration ────────────────────────────────────────
+      - name: Gate 3 — spec.json regeneration
+        if: steps.changed.outputs.spec != '0'
+        working-directory: backend
+        run: |
+          echo "CLINICAL_KNOWLEDGE_BASE_v4.0.md changed; regenerating <MODULE>.spec.json for all modules..."
+          npx tsx scripts/auditCanonical/extractSpec.ts --all
+          cd ..
+          if ! git diff --exit-code -- docs/audit/canonical/*.spec.json; then
+            echo "::error::REJECT: spec-extract-divergent"
+            echo "::error::docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md was modified but the committed"
+            echo "::error::docs/audit/canonical/<MODULE>.spec.json files are stale. Regenerate locally:"
+            echo "::error::  npx tsx backend/scripts/auditCanonical/extractSpec.ts --all"
+            echo "::error::Commit the regenerated spec.json files alongside the CK v4.0 change."
+            exit 1
+          fi
+          echo "Gate 3 passed: spec.json files are in sync with CLINICAL_KNOWLEDGE_BASE_v4.0.md."
+
+      # ─── GATE 4: crosswalk-driven reconciliation + addendum + synthesis ────────
+      # When any crosswalk changes (or extracts changed in this PR), regenerate the
+      # downstream artifacts and verify they match what's committed.
+      - name: Gate 4 — reconciliation + addendum + synthesis regeneration
+        if: steps.changed.outputs.crosswalks != '0' || steps.changed.outputs.engine != '0' || steps.changed.outputs.spec != '0'
+        working-directory: backend
+        run: |
+          echo "Running reconcile + renderAddendum + renderSynthesis for all modules..."
+          npx tsx scripts/auditCanonical/reconcile.ts --all
+          npx tsx scripts/auditCanonical/renderAddendum.ts --all
+          npx tsx scripts/auditCanonical/renderSynthesis.ts
+          cd ..
+          if ! git diff --exit-code -- \
+            docs/audit/canonical/*.reconciliation.json \
+            docs/audit/PHASE_0B_*_AUDIT_ADDENDUM.md \
+            docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md; then
+            echo "::error::REJECT: derived-artifacts-divergent"
+            echo "::error::Crosswalk or canonical extracts changed but the regenerated reconciliation,"
+            echo "::error::addendum, or synthesis markdown does not match what's committed."
+            echo "::error::Regenerate locally:"
+            echo "::error::  npx tsx backend/scripts/auditCanonical/reconcile.ts --all"
+            echo "::error::  npx tsx backend/scripts/auditCanonical/renderAddendum.ts --all"
+            echo "::error::  npx tsx backend/scripts/auditCanonical/renderSynthesis.ts"
+            exit 1
+          fi
+          echo "Gate 4 passed: derived artifacts in sync with crosswalks + extracts."
+
+      # ─── GATE 5: crosswalk schema validation ───────────────────────────────────
+      # Run schema validation on every crosswalk regardless of what changed (cheap;
+      # surfaces drift introduced by manual JSON edits that bypass the rendering pipeline).
+      - name: Gate 5 — crosswalk schema validation
+        working-directory: backend
+        run: |
+          if [ ! -f scripts/auditCanonical/validateAllCandidates.ts ]; then
+            echo "validateAllCandidates.ts not present; skipping schema validation"
+            exit 0
+          fi
+          # The validator looks at .crosswalk.candidate.json by default. We also want
+          # to validate the canonical .crosswalk.json files in the repo. Quick wrapper:
+          cat > /tmp/validate-canonical.ts <<'EOF'
+          import * as fs from 'fs';
+          import * as path from 'path';
+          import { validateCrosswalk, summarizeValidation, Crosswalk } from './scripts/auditCanonical/crosswalkSchema';
+          import { SpecExtract, CodeExtract, ModuleCode } from './scripts/auditCanonical/lib/types';
+          import { MODULE_CONFIGS, CANONICAL_OUTPUT_DIR } from './scripts/auditCanonical/lib/modules';
+          const allCodeExtracts = new Map<ModuleCode, CodeExtract>();
+          for (const cfg of MODULE_CONFIGS) {
+            const cp = path.join(CANONICAL_OUTPUT_DIR, `${cfg.code}.code.json`);
+            if (fs.existsSync(cp)) allCodeExtracts.set(cfg.code, JSON.parse(fs.readFileSync(cp, 'utf8')) as CodeExtract);
+          }
+          let anyInvalid = false;
+          for (const cfg of MODULE_CONFIGS) {
+            const sp = path.join(CANONICAL_OUTPUT_DIR, `${cfg.code}.spec.json`);
+            const xp = path.join(CANONICAL_OUTPUT_DIR, `${cfg.code}.crosswalk.json`);
+            if (!fs.existsSync(xp)) continue;
+            const spec = JSON.parse(fs.readFileSync(sp, 'utf8')) as SpecExtract;
+            const code = allCodeExtracts.get(cfg.code)!;
+            const xw = JSON.parse(fs.readFileSync(xp, 'utf8')) as Crosswalk;
+            const r = validateCrosswalk(xw, spec, code, allCodeExtracts);
+            console.log(`  ${cfg.code}: ${summarizeValidation(r)}`);
+            if (!r.valid) {
+              anyInvalid = true;
+              for (const e of r.errors.slice(0, 5)) console.log(`    ERROR ${e.code} at ${e.path}`);
+            }
+          }
+          process.exit(anyInvalid ? 1 : 0);
+          EOF
+          npx tsx /tmp/validate-canonical.ts
+          if [ $? -ne 0 ]; then
+            echo "::error::REJECT: crosswalk-schema-invalid"
+            echo "::error::One or more <MODULE>.crosswalk.json files fail schema validation."
+            echo "::error::Run locally: npx tsx backend/scripts/auditCanonical/validateAllCandidates.ts"
+            echo "::error::See AUDIT_METHODOLOGY.md §4 for citation requirements + §6 for SAFETY-tag rules."
+            exit 1
+          fi
+          echo "Gate 5 passed: all crosswalks valid against schema."
+
+      # ─── GATE 6: tests ────────────────────────────────────────────────────────
+      # Run only the auditCanonical tests when canonical files changed (cheap subset).
+      - name: Gate 6 — auditCanonical tests
+        if: |
+          steps.changed.outputs.engine != '0' ||
+          steps.changed.outputs.spec != '0' ||
+          steps.changed.outputs.crosswalks != '0' ||
+          steps.changed.outputs.addenda != '0' ||
+          steps.changed.outputs.synthesis != '0'
+        working-directory: backend
+        run: |
+          npx jest tests/scripts/auditCanonical/ --ci
