@@ -65,6 +65,11 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-056** — `RXNORM_QT_PROLONGING.DOFETILIDE = '135447'` is donepezil (Alzheimer's drug; AAD/QT-prolonging rules false-positive on Alzheimer's patients) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
 - **AUDIT-057** — `RXNORM_QT_PROLONGING.DRONEDARONE = '997221'` is donepezil branded (EP-DRONEDARONE rule false-positive on Alzheimer's patients) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
 - **AUDIT-058** — `RXNORM_ASPIRIN.ASPIRIN_81MG = '198464'` is aspirin 300mg rectal suppository (DAPT misses 81mg oral) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
+- **AUDIT-046** — `MRA_CODES_K = ['9947', '37801']` — 9947 is sotalol (Class III AAD, NOT MRA), 37801 is terbinafine (antifungal, NOT eplerenone); HF K+ monitoring rule fired on wrong drugs and never on real MRAs (Phase 0B Cat D, **RESOLVED 2026-05-06**)
+- **AUDIT-047** — `ARNI_CODES = ['1656328']` is sacubitril alone (NOT the sacubitril/valsartan combo); HF ARNI rule never fired in production (Phase 0B Cat D, **RESOLVED 2026-05-06**)
+- **AUDIT-048** — `ARB_CODES` had 3 of 4 wrong drugs (eprosartan/telmisartan instead of valsartan/candesartan); silent ARB miss (Phase 0B Cat D, **RESOLVED 2026-05-06**)
+- **AUDIT-050** — `RATE_CONTROL_CODES_SVT = ['6918', '2991', '11170']` — 2991 is invalid CUI; SVT rate-control rule never matched diltiazem patients (Phase 0B Cat D, **RESOLVED 2026-05-06**)
+- **AUDIT-062** — `PPI_CODES_DAPT = ['7646', '36567', '40790', '283742']` — 36567 is simvastatin (statin in PPI list, drug-class collision); DAPT co-prescription rule false-fired on statin patients (Phase 0B Cat D, **RESOLVED 2026-05-06**)
 
 ### MEDIUM (P2)
 
@@ -78,6 +83,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-022** — Legacy JSON PHI not encrypted at rest (243 row-instances across 11 columns, 6 models) (Phase 2B-extended, OPEN)
 - **AUDIT-035** — `gap-ep-anticoag-interruption` registry-only orphan (Phase 0B EP, OPEN)
 - **AUDIT-037** — `Math.random()` in `cqlEngine.ts:475` default rule scoring (Phase 0B canonical, OPEN, CLAUDE.md §14 violation)
+- **AUDIT-049** — `DOAC_CODES_STROKE/TEE` use rivaroxaban formulation/pack codes; missing dabigatran + edoxaban ingredients (Phase 0B Cat D, **RESOLVED 2026-05-06**)
 
 ### LOW (P3)
 
@@ -97,6 +103,8 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-038** — Node 18 LTS deprecation tracking (Operational debt, OPEN)
 - **AUDIT-040** — Line-shift handling in canonical pipeline (Operational debt / canonical infrastructure, **RESOLVED 2026-05-05** via refreshCites.ts)
 - **AUDIT-041** — `applyOverrides.ts` candidate-default mismatch with source-change PR usage (4 prior recurrences across PRs #238/240/241/243) (Canonical infrastructure, **RESOLVED 2026-05-06** via canonical-default flag flip + `--candidate` opt-in)
+- **AUDIT-051** — `ACEI_CODES` `'50166'` is fosinopril (codebase comment claimed benazepril; class-correct, comment wrong) (Phase 0B Cat D, **RESOLVED 2026-05-06** via canonical benazepril CUI 18867)
+- **AUDIT-063** — `LOOP_DIURETIC_CODES_TH/OPT` `'4109'` is ethacrynic acid (codebase comment claimed bumetanide; class-correct, comment wrong) (Phase 0B Cat D, **RESOLVED 2026-05-06** with addition of real bumetanide 1808)
 
 ### INFO
 
@@ -830,6 +838,34 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
   - `docs/audit/AUDIT_METHODOLOGY.md` §9.1 (new section documenting canonical-default convention)
   - `backend/scripts/auditCanonical/applyOverrides.ts` (the script itself, with inline AUDIT-041 reference)
   - This PR (canonical-default flag flip + --candidate opt-in + 6 tests + methodology update)
+
+---
+
+### AUDIT-046 through AUDIT-063 — Cat D inline-array clinical-code verification batch
+
+- **Phase:** 0B clinical-code verification — Batch 2 (Cat D inline-array verification, follow-up to PR #242 Cat A canonical valuesets)
+- **Severity:** HIGH (P1) for AUDIT-046/047/048/050/062; MEDIUM (P2) for AUDIT-049; LOW (P3) for AUDIT-051/063
+- **Status:** **RESOLVED 2026-05-06** via single fix PR (this entry covers all 8 findings + AUDIT-052 partial mitigation)
+- **Detected:** 2026-05-06 via systematic Phase 2 verification of 50 inline RxNorm arrays in `gapRuleEngine.ts`. Canonical-subset codes (verified in PR #242 Cat A) skipped; 24 unique non-canonical codes RxNav-verified. Bug-rate: **8 of 24 unique codes wrong (33%)** — approximately 2× the Cat A rate (15.5%). The higher rate validates AUDIT-052 architectural concern: inline arrays bypass canonical valuesets, producing the divergence vector.
+- **Findings:**
+  - **AUDIT-046** — `MRA_CODES_K = ['9947', '37801']` in HF K+ monitoring rule. RxNav truth: 9947 = sotalol (Class III antiarrhythmic, NOT MRA); 37801 = terbinafine (oral antifungal, NOT eplerenone). Codebase comment self-disclosed "spironolactone (using sotalol proxy), eplerenone" — but the "proxy" was wrong-class, and 37801 is unrelated. Rule fired on sotalol/terbinafine patients and never on real MRAs (spironolactone 9997, eplerenone 298869).
+  - **AUDIT-047** — `ARNI_CODES = ['1656328']`. Real CUI 1656328 = sacubitril alone, not the sacubitril/valsartan combo. Real combo = 1656339 (canonical RXNORM_GDMT). HF GDMT optimization rule never fired on actual ARNI prescriptions in production.
+  - **AUDIT-048** — `ARB_CODES = ['83818', '83515', '52175', '73494']` with comment "losartan, valsartan, irbesartan, candesartan". RxNav truth: 83818 = irbesartan, 83515 = eprosartan, 52175 = losartan (matches), 73494 = telmisartan. So 3 of 4 codes don't match the comment, and valsartan (69749) + candesartan (214354) are missing entirely. HF GDMT rule fired on eprosartan/telmisartan/irbesartan and missed valsartan/candesartan.
+  - **AUDIT-049** — `DOAC_CODES_STROKE` and `DOAC_CODES_TEE` = `['1364430', '1232082', '1114195', '1549682']` with comment "apixaban, rivaroxaban, dabigatran, edoxaban". RxNav truth: 1232082 = rivaroxaban 15mg formulation; 1549682 = rivaroxaban-pack (combination product). Both are rivaroxaban-only at the SCD/Pack level; dabigatran (1037045) and edoxaban (1599538) ingredients missing. Stroke / TEE detection rule matched only apixaban + rivaroxaban-formulation patients.
+  - **AUDIT-050** — `RATE_CONTROL_CODES_SVT = ['6918', '2991', '11170']` with comment "metoprolol, diltiazem, verapamil". RxNav truth: 2991 returns empty/invalid (not a valid CUI). Real diltiazem ingredient = 3443 (canonical RXNORM_RATE_CONTROL.DILTIAZEM). SVT rate-control rule never matched diltiazem patients.
+  - **AUDIT-051** — `ACEI_CODES` last code `'50166'` with comment "benazepril". RxNav truth: 50166 = fosinopril. Drug class still ACEi (correct), but specific drug wrong. Real benazepril ingredient = 18867 (RxNav-verified this PR).
+  - **AUDIT-062** — `PPI_CODES_DAPT = ['7646', '36567', '40790', '283742']`. RxNav truth: 36567 = simvastatin (a statin, NOT a PPI). Drug class collision — DAPT co-prescription rule false-fired on patients on simvastatin as if they were on PPIs. Real PPIs (omeprazole 7646, pantoprazole 40790, esomeprazole 283742) preserved.
+  - **AUDIT-063** — `LOOP_DIURETIC_CODES_TH` and `LOOP_DIURETIC_CODES_OPT` = `['4603', '4109']` with comment "furosemide, bumetanide". RxNav truth: 4109 = ethacrynic acid (a loop diuretic — class still correct), bumetanide is 1808. Drug class correct; comment wrong; bumetanide added to arrays for full coverage.
+- **Patient-safety-active subset:** AUDIT-046, 047, 048, 050, 062 (5 of 8 — silent failure on HF MRA/ARNI/ARB/SVT-rate-control rules + false positive on DAPT-statin patients).
+- **AUDIT-052 partial mitigation:** added `RXNORM_QT_PROLONGING.PROPAFENONE = '8754'` (RxNav-verified) to canonical valueset so AAD detection inline arrays can import from canonical instead of redeclaring. Full architectural refactor (new RXNORM_DHP_CCB / RXNORM_PPI / RXNORM_LOOP_DIURETICS valuesets) deferred to focused AUDIT-052 follow-up PR per operator scoping.
+- **Resolution:** All 8 corrections applied. Where canonical valuesets cover the drug class (MRA, ARNI, ARB, DOAC ingredients, diltiazem rate control), inline arrays now import from `cardiovascularValuesets.ts` (canonical-import strategy reduces future divergence). AUDIT-051 / 063 are class-correct comment-only fixes plus added benazepril (18867) / bumetanide (1808) ingredient codes. 11 new tests in `tests/terminology/clinicalCodeCorrections.test.ts` cover constant assertions + behavior changes (positive: real drug detected; negative: wrong drug no longer false-flagged for AUDIT-046 K+ monitoring scenario). Pipeline regen: 6/6 modules VALID. AUDIT-041 fix in effect — `applyOverrides.ts (canonical)` mode applied EP=8 overrides (now includes EP-079) without manual canonical patch.
+- **Effort estimate:** RESOLVED (~85 min agent including 24 RxNav lookups + 8 corrections + propafenone canonical promotion + 11 tests + comment rephrase to avoid extractCode pattern false-positives + canonical regen + register update)
+- **Cross-references:**
+  - PR #234 (canonical infrastructure baseline)
+  - PR #242 (Cat A canonical valueset corrections — provided verified canonical references used by canonical-import strategy in this PR)
+  - PR #245 (AUDIT-041 applyOverrides canonical-default — eliminated manual canonical patch step that this PR's pipeline run consumed)
+  - This PR (Cat D inline-array corrections + AUDIT-052 partial mitigation)
+  - **AUDIT-052** (architectural follow-up; out of scope for this PR — full refactor of inline arrays to canonical imports)
 
 ---
 

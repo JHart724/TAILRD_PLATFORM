@@ -1,18 +1,65 @@
 {
   "countDivergences": [
     {
-      "delta": 1,
-      "explanation": "1 more registry entries than evaluator blocks. Suggests detection-without-registry rules OR registry-without-evaluator entries (look at orphan lists).",
+      "delta": -6,
+      "explanation": "-6 extra gaps.push call(s) without compound-comment block to account for them. Possible: registry-without-evaluator entry firing inline, OR evaluator block emitting multiple gaps.",
+      "kind": "GAPS_PUSH_VS_EVALUATOR",
+      "observed": {
+        "evaluatorCount": 53,
+        "gapsPushCount": 47,
+        "registryCount": 48
+      }
+    },
+    {
+      "delta": -5,
+      "explanation": "5 more evaluator blocks than registry entries. Suggests evaluator-without-registry case (e.g., EP-017 added in PR #229 without registry update).",
       "kind": "REGISTRY_VS_EVALUATOR",
       "observed": {
-        "evaluatorCount": 47,
+        "evaluatorCount": 53,
         "gapsPushCount": 47,
         "registryCount": 48
       }
     }
   ],
-  "evaluatorBlockCount": 47,
-  "evaluatorOrphans": [],
+  "evaluatorBlockCount": 53,
+  "evaluatorOrphans": [
+    {
+      "commentLine": 10068,
+      "evaluatorBlockName": "AUDIT-051",
+      "reason": "No registry entry matched via similarity scoring",
+      "registryId": null
+    },
+    {
+      "commentLine": 10070,
+      "evaluatorBlockName": "AUDIT-048",
+      "reason": "No registry entry matched via similarity scoring",
+      "registryId": null
+    },
+    {
+      "commentLine": 10073,
+      "evaluatorBlockName": "AUDIT-047",
+      "reason": "No registry entry matched via similarity scoring",
+      "registryId": null
+    },
+    {
+      "commentLine": 10112,
+      "evaluatorBlockName": "AUDIT-063",
+      "reason": "No registry entry matched via similarity scoring",
+      "registryId": null
+    },
+    {
+      "commentLine": 10150,
+      "evaluatorBlockName": "AUDIT-046",
+      "reason": "No registry entry matched via similarity scoring",
+      "registryId": null
+    },
+    {
+      "commentLine": 10284,
+      "evaluatorBlockName": "AUDIT-063",
+      "reason": "No registry entry matched via similarity scoring",
+      "registryId": null
+    }
+  ],
   "gapsPushCount": 47,
   "matches": [
     {
@@ -321,7 +368,7 @@
     },
     {
       "evaluatorBlockName": "HF-ARNI-SWITCH",
-      "evaluatorCommentLine": 10057,
+      "evaluatorCommentLine": 10065,
       "matchConfidence": 0.571,
       "matchMethod": "similarity",
       "registryId": "gap-hf-arni-switch",
@@ -329,7 +376,7 @@
     },
     {
       "evaluatorBlockName": "HF-THIAMINE",
-      "evaluatorCommentLine": 10097,
+      "evaluatorCommentLine": 10109,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-thiamine",
@@ -337,7 +384,7 @@
     },
     {
       "evaluatorBlockName": "HF-K-MONITOR",
-      "evaluatorCommentLine": 10134,
+      "evaluatorCommentLine": 10147,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-hf-potassium-monitor",
@@ -345,7 +392,7 @@
     },
     {
       "evaluatorBlockName": "HF-ADVANCE-CARE",
-      "evaluatorCommentLine": 10169,
+      "evaluatorCommentLine": 10184,
       "matchConfidence": 0.833,
       "matchMethod": "similarity",
       "registryId": "gap-hf-advance-care",
@@ -353,7 +400,7 @@
     },
     {
       "evaluatorBlockName": "HF-LVNC",
-      "evaluatorCommentLine": 10202,
+      "evaluatorCommentLine": 10217,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-hf-lvnc",
@@ -361,7 +408,7 @@
     },
     {
       "evaluatorBlockName": "HF-HEMODYNAMIC",
-      "evaluatorCommentLine": 10235,
+      "evaluatorCommentLine": 10250,
       "matchConfidence": 0.7,
       "matchMethod": "similarity",
       "registryId": "gap-hf-hemodynamic-monitor",
@@ -369,7 +416,7 @@
     },
     {
       "evaluatorBlockName": "HF-DIURETIC-OPT",
-      "evaluatorCommentLine": 10266,
+      "evaluatorCommentLine": 10281,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-diuretic-optimization",
@@ -377,7 +424,7 @@
     },
     {
       "evaluatorBlockName": "HF-ANEMIA-HF",
-      "evaluatorCommentLine": 10302,
+      "evaluatorCommentLine": 10318,
       "matchConfidence": 0.25,
       "matchMethod": "similarity",
       "registryId": "gap-hf-anemia-hf",
@@ -385,7 +432,7 @@
     },
     {
       "evaluatorBlockName": "HF-IRON-IV-MONITORING",
-      "evaluatorCommentLine": 10333,
+      "evaluatorCommentLine": 10349,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-hf-iron-iv-monitoring",

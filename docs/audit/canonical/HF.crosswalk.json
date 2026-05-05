@@ -90,8 +90,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-ARNI-SWITCH",
         "evaluatorBodyLineRange": [
-          10071,
-          10095
+          10083,
+          10107
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-arni-switch",
@@ -204,8 +204,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-K-MONITOR",
         "evaluatorBodyLineRange": [
-          10144,
-          10167
+          10159,
+          10182
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-potassium-monitor",
@@ -490,8 +490,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-HEMODYNAMIC",
         "evaluatorBodyLineRange": [
-          10242,
-          10264
+          10257,
+          10279
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-hemodynamic-monitor",
@@ -734,8 +734,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-IRON-IV-MONITORING",
         "evaluatorBodyLineRange": [
-          10340,
-          10363
+          10356,
+          10379
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-iron-iv-monitoring",
@@ -753,8 +753,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-IRON-IV-MONITORING",
         "evaluatorBodyLineRange": [
-          10340,
-          10363
+          10356,
+          10379
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-iron-iv-monitoring",
@@ -772,8 +772,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-IRON-IV-MONITORING",
         "evaluatorBodyLineRange": [
-          10340,
-          10363
+          10356,
+          10379
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-iron-iv-monitoring",
@@ -1337,8 +1337,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-LVNC",
         "evaluatorBodyLineRange": [
-          10210,
-          10233
+          10225,
+          10248
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-lvnc",
@@ -1356,8 +1356,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-TAKOTSUBO",
         "evaluatorBodyLineRange": [
-          9033,
-          9057
+          9036,
+          9060
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-takotsubo",
@@ -1684,8 +1684,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-EARLY-RHYTHM",
         "evaluatorBodyLineRange": [
-          9474,
-          9496
+          9477,
+          9499
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-early-rhythm",
@@ -1703,8 +1703,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-ANEMIA-HF",
         "evaluatorBodyLineRange": [
-          10304,
-          10331
+          10320,
+          10347
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-anemia-hf",
@@ -1781,8 +1781,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-INAPPROPRIATE-SHOCKS",
         "evaluatorBodyLineRange": [
-          9869,
-          9891
+          9877,
+          9899
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-inappropriate-shocks",

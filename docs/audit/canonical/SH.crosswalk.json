@@ -129,8 +129,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-COMPLETE-REVASC",
         "evaluatorBodyLineRange": [
-          8911,
-          8937
+          8914,
+          8940
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-complete-revasc",
@@ -178,8 +178,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-BETA-BLOCKER",
         "evaluatorBodyLineRange": [
-          8689,
-          8716
+          8692,
+          8719
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-beta-blocker",
@@ -227,8 +227,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-BICUSPID",
         "evaluatorBodyLineRange": [
-          10376,
-          10397
+          10392,
+          10413
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-bicuspid-surveillance",
@@ -246,8 +246,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-BICUSPID",
         "evaluatorBodyLineRange": [
-          10376,
-          10397
+          10392,
+          10413
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-bicuspid-surveillance",
@@ -285,8 +285,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-VALVE-IN-VALVE",
         "evaluatorBodyLineRange": [
-          10439,
-          10461
+          10455,
+          10477
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-valve-in-valve",
@@ -810,8 +810,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-ASD",
         "evaluatorBodyLineRange": [
-          10472,
-          10494
+          10488,
+          10510
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-asd-closure",
@@ -1017,8 +1017,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-COARCTATION",
         "evaluatorBodyLineRange": [
-          10535,
-          10557
+          10551,
+          10573
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-coarctation",
@@ -1086,8 +1086,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-COARCTATION",
         "evaluatorBodyLineRange": [
-          10535,
-          10557
+          10551,
+          10573
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-coarctation",
@@ -1105,8 +1105,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-FONTAN",
         "evaluatorBodyLineRange": [
-          10568,
-          10589
+          10584,
+          10605
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-fontan-surveillance",

@@ -203,14 +203,17 @@ export const RXNORM_GDMT = {
 /** QT-prolonging medications -- used by QTc safety gap rule.
  *  AUDIT-042 (2026-05-05): PROCAINAMIDE corrected 8787 → 8700 (8787 = propranolol, NOT procainamide).
  *  AUDIT-056: DOFETILIDE corrected 135447 → 49247 (135447 = donepezil, an Alzheimer's drug, NOT dofetilide).
- *  AUDIT-057: DRONEDARONE corrected 997221 → 233698 (997221 = donepezil hydrochloride 10 MG branded, NOT dronedarone).
- *  All current codes verified via RxNav properties.json — patient-safety-active corrections. */
+ *  AUDIT-057: DRONEDARONE corrected 997221 → 233698 (997221 = donepezil branded).
+ *  AUDIT-052 partial mitigation (2026-05-06): added PROPAFENONE (8754, RxNav-verified) so AAD detection
+ *    inline arrays can import from canonical instead of redeclaring.
+ *  All current codes verified via RxNav properties.json. */
 export const RXNORM_QT_PROLONGING = {
   AMIODARONE: '703',
   SOTALOL: '9947',
   DOFETILIDE: '49247',     // AUDIT-056 (was 135447 = donepezil)
   DRONEDARONE: '233698',   // AUDIT-057 (was 997221 = donepezil branded)
   FLECAINIDE: '4441',
+  PROPAFENONE: '8754',     // AUDIT-052 partial (canonical promotion 2026-05-06; verified RxNav)
   PROCAINAMIDE: '8700',    // AUDIT-042 (was 8787 = propranolol)
   QUINIDINE: '9068',
   HALOPERIDOL: '5093',

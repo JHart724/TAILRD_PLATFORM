@@ -8020,7 +8020,10 @@ export function evaluateGapRules(
   // CAD-PPI-DAPT: PPI with DAPT for GI Risk
   // Guideline: 2020 ACC Expert Consensus on GI Bleeding in Antithrombotic Therapy, Class 2a, LOE B
   const GI_RISK_CODES_PPI = ['K21', 'K25', 'K26', 'K27', 'K92'];
-  const PPI_CODES_DAPT = ['7646', '36567', '40790', '283742'];
+  // Fix (AUDIT-062, 2026-05-06): was '36567' = simvastatin (a statin, NOT a PPI — drug class collision).
+  // Removed; real PPIs verified: omeprazole (7646), pantoprazole (40790), esomeprazole (283742).
+  // Note (AUDIT-052): follow-up will refactor to RXNORM_PPI canonical valueset.
+  const PPI_CODES_DAPT = ['7646', '40790', '283742']; // omeprazole, pantoprazole, esomeprazole
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const onDAPTppi = medCodes.includes(ASPIRIN_CODE_DAPT) && medCodes.some(c => P2Y12_CODES_DAPT.includes(c));
     const hasGIriskPPI = dxCodes.some(dx => GI_RISK_CODES_PPI.some(gi => dx.startsWith(gi)));
@@ -9532,7 +9535,8 @@ export function evaluateGapRules(
   // Guideline: 2015 ACC/AHA/HRS SVT Guideline, Class 1, LOE B-NR
   // Recurrent SVT (I47.1) + on rate/rhythm control agents
   const hasSVT = dxCodes.some(c => c.startsWith('I47.1'));
-  const RATE_CONTROL_CODES_SVT = ['6918', '2991', '11170']; // metoprolol, diltiazem, verapamil
+  // Fix (AUDIT-050, 2026-05-06): was '2991' (invalid CUI; rule never matched diltiazem). Real diltiazem = 3443 (canonical).
+  const RATE_CONTROL_CODES_SVT = ['6918', RXNORM_RATE_CONTROL.DILTIAZEM, '11170']; // metoprolol (6918), diltiazem (3443), verapamil (11170)
   const onRateControlSVT = medCodes.some(c => RATE_CONTROL_CODES_SVT.includes(c));
   if (
     hasSVT &&
@@ -9702,7 +9706,10 @@ export function evaluateGapRules(
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     // Proxy: AF patient without OAC and without documented score = likely undocumented
-    const DOAC_CODES_STROKE = ['1364430', '1232082', '1114195', '1549682']; // apixaban, rivaroxaban, dabigatran, edoxaban
+    // Fix (AUDIT-049, 2026-05-06): was ['1364430', '1232082', '1114195', '1549682'] — 1232082 is rivaroxaban
+    // 15mg formulation, 1549682 is rivaroxaban-pack (combo). Comment claimed dabigatran/edoxaban but
+    // those ingredients were missing. Now uses canonical RXNORM_DOACS ingredient list (all 4 DOACs).
+    const DOAC_CODES_STROKE = [...DOAC_CODES_CV]; // apixaban (1364430), rivaroxaban (1114195), edoxaban (1599538), dabigatran (1037045)
     const WARFARIN_CODES_STROKE = ['11289'];
     const onAnticoagStroke = medCodes.some(c =>
       DOAC_CODES_STROKE.includes(c) || WARFARIN_CODES_STROKE.includes(c)
@@ -9768,7 +9775,8 @@ export function evaluateGapRules(
     hasAF &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
-    const DOAC_CODES_TEE = ['1364430', '1232082', '1114195', '1549682'];
+    // Fix (AUDIT-049, 2026-05-06): same correction as DOAC_CODES_STROKE — formulation codes replaced with canonical ingredient list.
+    const DOAC_CODES_TEE = [...DOAC_CODES_CV];
     const WARFARIN_CODES_TEE = ['11289'];
     const onAnticoagTEE = medCodes.some(c =>
       DOAC_CODES_TEE.includes(c) || WARFARIN_CODES_TEE.includes(c)
@@ -10057,9 +10065,13 @@ export function evaluateGapRules(
   // HF-ARNI-SWITCH: ACEi/ARB to ARNi Switch Evaluation
   // Guideline: 2022 AHA/ACC/HFSA HF Guideline (PARADIGM-HF), Class 1, LOE A
   // HFrEF + on ACEi/ARB + LVEF <=40 + not on ARNi
-  const ACEI_CODES = ['3827', '29046', '1998', '35296', '50166']; // lisinopril, enalapril, captopril, ramipril, benazepril
-  const ARB_CODES = ['83818', '83515', '52175', '73494']; // losartan, valsartan, irbesartan, candesartan
-  const ARNI_CODES = ['1656328']; // sacubitril/valsartan
+  // Fix (AUDIT-051, 2026-05-06): was '50166' = fosinopril (NOT benazepril); benazepril verified RxNav = 18867.
+  const ACEI_CODES = ['3827', '29046', '1998', '35296', '18867']; // lisinopril (29046), enalapril (3827), captopril (1998), ramipril (35296), benazepril (18867)
+  // Fix (AUDIT-048, 2026-05-06): was ['83818', '83515', '52175', '73494'] = irbesartan, eprosartan, losartan, telmisartan
+  // (3 of 4 wrong drugs vs comment). Now uses canonical RXNORM_GDMT.
+  const ARB_CODES = [RXNORM_GDMT.LOSARTAN, RXNORM_GDMT.VALSARTAN, RXNORM_GDMT.CANDESARTAN]; // losartan (52175), valsartan (69749), candesartan (214354)
+  // Fix (AUDIT-047, 2026-05-06): was '1656328' = sacubitril alone (NOT the combo). Real combo = 1656339.
+  const ARNI_CODES = [RXNORM_GDMT.SACUBITRIL_VALSARTAN]; // sacubitril/valsartan (1656339)
   const onACEiARB = medCodes.some(c => ACEI_CODES.includes(c) || ARB_CODES.includes(c));
   const onARNI = medCodes.some(c => ARNI_CODES.includes(c));
   if (
@@ -10097,7 +10109,8 @@ export function evaluateGapRules(
   // HF-THIAMINE: Thiamine Supplementation on Loop Diuretics
   // Guideline: 2022 AHA/ACC/HFSA HF Guideline; DiNicolantonio 2013, Class 2b, LOE C
   // HF + on loop diuretic + malnutrition or low BMI proxy
-  const LOOP_DIURETIC_CODES_TH = ['4603', '4109']; // furosemide, bumetanide
+  // Fix (AUDIT-063, 2026-05-06): was '4109' = ethacrynic acid (NOT bumetanide; bumetanide = 1808). Class still loop diuretic. Added 1808 for bumetanide coverage.
+  const LOOP_DIURETIC_CODES_TH = ['4603', '1808', '4109']; // furosemide (4603), bumetanide (1808), ethacrynic acid (4109)
   const onLoopTH = medCodes.some(c => LOOP_DIURETIC_CODES_TH.includes(c));
   const hasMalnutrition = dxCodes.some(c => c.startsWith('E44') || c.startsWith('E46') || c.startsWith('R63.4'));
   if (
@@ -10134,7 +10147,9 @@ export function evaluateGapRules(
   // HF-K-MONITOR: Potassium Monitoring on MRA
   // Guideline: 2022 AHA/ACC/HFSA HF Guideline, Class 1, LOE B
   // HF + on MRA + no recent potassium lab
-  const MRA_CODES_K = ['9947', '37801']; // spironolactone (using sotalol proxy), eplerenone
+  // Fix (AUDIT-046, 2026-05-06): was ['9947', '37801'] — 9947 is sotalol (Class III AAD, NOT MRA),
+  // 37801 is terbinafine (antifungal, NOT eplerenone). Now uses canonical RXNORM_GDMT MRAs.
+  const MRA_CODES_K = [RXNORM_GDMT.SPIRONOLACTONE, RXNORM_GDMT.EPLERENONE]; // spironolactone (9997), eplerenone (298869)
   const onMRA_K = medCodes.some(c => MRA_CODES_K.includes(c));
   if (
     hasHF &&
@@ -10266,7 +10281,8 @@ export function evaluateGapRules(
   // HF-DIURETIC-OPT: Diuretic Dose Optimization
   // Guideline: 2022 AHA/ACC/HFSA HF Guideline, Class 1, LOE B
   // HF + high-dose loop diuretic + signs of congestion (elevated BNP proxy)
-  const LOOP_DIURETIC_CODES_OPT = ['4603', '4109']; // furosemide, bumetanide
+  // Fix (AUDIT-063, 2026-05-06): same correction as LOOP_DIURETIC_CODES_TH.
+  const LOOP_DIURETIC_CODES_OPT = ['4603', '1808', '4109']; // furosemide (4603), bumetanide (1808), ethacrynic acid (4109)
   const onLoopOpt = medCodes.some(c => LOOP_DIURETIC_CODES_OPT.includes(c));
   if (
     hasHF &&

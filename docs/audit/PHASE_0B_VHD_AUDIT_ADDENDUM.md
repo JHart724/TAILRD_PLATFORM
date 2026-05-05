@@ -95,7 +95,7 @@ No EXTRA rules or architectural patterns surfaced. Reconciliation is clean.
 | GAP-VHD-057 | 841 | SPEC_ONLY | — | No IE + acute HF surgical-urgency rule. \| auto-verify: No candidate evaluator block above PARTIAL_MA |
 | GAP-VHD-058 | 842 | SPEC_ONLY | — | No IE + abscess surgical rule. \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-VHD-061 | 843 | SPEC_ONLY | — | No PVE dehiscence/fistula rule. \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-VHD-068 | 860 | PARTIAL_DETECTION | `gap-vd-prosthetic-pannus` (VD-PANNUS @10639-10661) | MANUAL OVERRIDE: VD-PANNUS evaluator at line 10414+ (pattern ID_NAME) was missed by prior 2026-05-04 |
+| GAP-VHD-068 | 860 | PARTIAL_DETECTION | `gap-vd-prosthetic-pannus` (VD-PANNUS @10655-10677) | MANUAL OVERRIDE: VD-PANNUS evaluator at line 10414+ (pattern ID_NAME) was missed by prior 2026-05-04 |
 | GAP-VHD-099 | 914 | PARTIAL_DETECTION | `gap-vd-10-pregnancy-risk` (VD-10 @5611-5632) | line 5428+ broad pregnancy + valve risk rule; no LMWH dose-protocol logic \| auto-verify: preserved-f |
 
 ---
