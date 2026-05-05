@@ -7,7 +7,7 @@
  *   - findIfBlockBoundaries string-literal-aware brace walking
  *
  * Integration tests run extraction against the live gapRuleEngine.ts and assert:
- *   - Per-module registry counts (HF=48, EP=45, SH=25, CAD=76, VHD=32, PV=33)
+ *   - Per-module registry counts (HF=48, EP=46, SH=25, CAD=77, VHD=32, PV=33)
  *   - Reconciliation counts match expected
  *   - VD-PANNUS evaluator is detected (under ID_NAME pattern)
  *   - EP-017 evaluator is detected (under ID_N pattern)
@@ -193,7 +193,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     ['HF', 'HEART_FAILURE', 48],
     ['EP', 'ELECTROPHYSIOLOGY', 46],
     ['SH', 'STRUCTURAL_HEART', 25],
-    ['CAD', 'CORONARY_INTERVENTION', 76],
+    ['CAD', 'CORONARY_INTERVENTION', 77],
     ['VHD', 'VALVULAR_DISEASE', 32],
     ['PV', 'PERIPHERAL_VASCULAR', 33],
   ])('module %s registry has %i entries tagged %s', (code, enumName, count) => {
@@ -201,12 +201,12 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     expect(registry.length).toBe(count);
   });
 
-  it('VHD evaluator extraction includes VD-PANNUS at line 10426', () => {
+  it('VHD evaluator extraction includes VD-PANNUS at line 10480', () => {
     const cfg = MODULE_CONFIGS.find((m) => m.code === 'VHD')!;
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(10426);
+    expect(pannus!.commentLine).toBe(10480);
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });
@@ -230,7 +230,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
 
   it.each([
     ['SH', 25, 25, 25],
-    ['CAD', 76, 76, 76],
+    ['CAD', 77, 77, 77],
     ['VHD', 32, 32, 32],
     ['PV', 33, 33, 33],
   ])(

@@ -1,12 +1,12 @@
 {
   "countDivergences": [],
-  "evaluatorBlockCount": 76,
+  "evaluatorBlockCount": 77,
   "evaluatorOrphans": [],
-  "gapsPushCount": 76,
+  "gapsPushCount": 77,
   "matches": [
     {
       "evaluatorBlockName": "Gap-50",
-      "evaluatorCommentLine": 4314,
+      "evaluatorCommentLine": 4326,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-50-dapt",
@@ -14,7 +14,7 @@
     },
     {
       "evaluatorBlockName": "CAD-STATIN",
-      "evaluatorCommentLine": 4341,
+      "evaluatorCommentLine": 4353,
       "matchConfidence": 0.8,
       "matchMethod": "similarity",
       "registryId": "gap-cad-statin",
@@ -22,7 +22,7 @@
     },
     {
       "evaluatorBlockName": "CAD-REHAB",
-      "evaluatorCommentLine": 4906,
+      "evaluatorCommentLine": 4918,
       "matchConfidence": 0.8,
       "matchMethod": "similarity",
       "registryId": "gap-cad-cardiac-rehab",
@@ -30,7 +30,7 @@
     },
     {
       "evaluatorBlockName": "CAD-ACEI",
-      "evaluatorCommentLine": 4372,
+      "evaluatorCommentLine": 4384,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-cad-acei",
@@ -38,7 +38,7 @@
     },
     {
       "evaluatorBlockName": "CAD-BB-POST-MI",
-      "evaluatorCommentLine": 4407,
+      "evaluatorCommentLine": 4419,
       "matchConfidence": 0.556,
       "matchMethod": "similarity",
       "registryId": "gap-cad-bb-post-mi",
@@ -46,7 +46,7 @@
     },
     {
       "evaluatorBlockName": "CAD-SMOKING",
-      "evaluatorCommentLine": 4442,
+      "evaluatorCommentLine": 4454,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-cad-smoking",
@@ -54,7 +54,7 @@
     },
     {
       "evaluatorBlockName": "CAD-LPA",
-      "evaluatorCommentLine": 4474,
+      "evaluatorCommentLine": 4486,
       "matchConfidence": 0.429,
       "matchMethod": "similarity",
       "registryId": "gap-cad-lpa",
@@ -62,7 +62,7 @@
     },
     {
       "evaluatorBlockName": "CAD-EZETIMIBE",
-      "evaluatorCommentLine": 4510,
+      "evaluatorCommentLine": 4522,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-cad-ezetimibe",
@@ -70,7 +70,7 @@
     },
     {
       "evaluatorBlockName": "CAD-DIABETES-CONTROL",
-      "evaluatorCommentLine": 4547,
+      "evaluatorCommentLine": 4559,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-cad-diabetes-control",
@@ -78,7 +78,7 @@
     },
     {
       "evaluatorBlockName": "CAD-BP-CONTROL",
-      "evaluatorCommentLine": 4580,
+      "evaluatorCommentLine": 4592,
       "matchConfidence": 0.857,
       "matchMethod": "similarity",
       "registryId": "gap-cad-bp-control",
@@ -86,7 +86,7 @@
     },
     {
       "evaluatorBlockName": "CAD-PCSK9",
-      "evaluatorCommentLine": 7172,
+      "evaluatorCommentLine": 7184,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-cad-pcsk9",
@@ -94,7 +94,7 @@
     },
     {
       "evaluatorBlockName": "CAD-IVUS",
-      "evaluatorCommentLine": 7209,
+      "evaluatorCommentLine": 7221,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-cad-ivus",
@@ -102,7 +102,7 @@
     },
     {
       "evaluatorBlockName": "CAD-FFR",
-      "evaluatorCommentLine": 7236,
+      "evaluatorCommentLine": 7248,
       "matchConfidence": 0.75,
       "matchMethod": "similarity",
       "registryId": "gap-cad-ffr",
@@ -110,7 +110,7 @@
     },
     {
       "evaluatorBlockName": "CAD-COLCHICINE",
-      "evaluatorCommentLine": 7268,
+      "evaluatorCommentLine": 7280,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-cad-colchicine",
@@ -118,7 +118,7 @@
     },
     {
       "evaluatorBlockName": "CAD-OMEGA3",
-      "evaluatorCommentLine": 7301,
+      "evaluatorCommentLine": 7313,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-cad-omega3",
@@ -126,7 +126,7 @@
     },
     {
       "evaluatorBlockName": "CAD-RANOLAZINE",
-      "evaluatorCommentLine": 7340,
+      "evaluatorCommentLine": 7352,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-cad-ranolazine",
@@ -134,7 +134,7 @@
     },
     {
       "evaluatorBlockName": "CAD-STRESS-TEST",
-      "evaluatorCommentLine": 7378,
+      "evaluatorCommentLine": 7390,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-cad-stress-test",
@@ -142,7 +142,7 @@
     },
     {
       "evaluatorBlockName": "CAD-REVASCULARIZATION",
-      "evaluatorCommentLine": 7408,
+      "evaluatorCommentLine": 7420,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-cad-revascularization",
@@ -150,7 +150,7 @@
     },
     {
       "evaluatorBlockName": "CAD-ANTICOAG-AF",
-      "evaluatorCommentLine": 7442,
+      "evaluatorCommentLine": 7454,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-cad-anticoag-af",
@@ -158,7 +158,7 @@
     },
     {
       "evaluatorBlockName": "CAD-GLP1-DM",
-      "evaluatorCommentLine": 7475,
+      "evaluatorCommentLine": 7487,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-cad-glp1-dm",
@@ -166,7 +166,7 @@
     },
     {
       "evaluatorBlockName": "CAD-SGLT2-DM",
-      "evaluatorCommentLine": 7509,
+      "evaluatorCommentLine": 7521,
       "matchConfidence": 0.833,
       "matchMethod": "similarity",
       "registryId": "gap-cad-sglt2-dm",
@@ -174,7 +174,7 @@
     },
     {
       "evaluatorBlockName": "CAD-BEMPEDOIC",
-      "evaluatorCommentLine": 7543,
+      "evaluatorCommentLine": 7555,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-cad-bempedoic",
@@ -182,7 +182,7 @@
     },
     {
       "evaluatorBlockName": "CAD-WEIGHT-MGMT",
-      "evaluatorCommentLine": 7581,
+      "evaluatorCommentLine": 7593,
       "matchConfidence": 0.833,
       "matchMethod": "similarity",
       "registryId": "gap-cad-weight-mgmt",
@@ -190,7 +190,7 @@
     },
     {
       "evaluatorBlockName": "CAD-DEPRESSION",
-      "evaluatorCommentLine": 7612,
+      "evaluatorCommentLine": 7624,
       "matchConfidence": 0.75,
       "matchMethod": "similarity",
       "registryId": "gap-cad-depression",
@@ -198,7 +198,7 @@
     },
     {
       "evaluatorBlockName": "CAD-INFLUENZA",
-      "evaluatorCommentLine": 7642,
+      "evaluatorCommentLine": 7654,
       "matchConfidence": 0.75,
       "matchMethod": "similarity",
       "registryId": "gap-cad-influenza",
@@ -206,7 +206,7 @@
     },
     {
       "evaluatorBlockName": "CAD-TICAGRELOR-ACS",
-      "evaluatorCommentLine": 7677,
+      "evaluatorCommentLine": 7689,
       "matchConfidence": 0.286,
       "matchMethod": "similarity",
       "registryId": "gap-cad-ticagrelor-acs",
@@ -214,7 +214,7 @@
     },
     {
       "evaluatorBlockName": "CAD-NITRO-PRN",
-      "evaluatorCommentLine": 7707,
+      "evaluatorCommentLine": 7719,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-cad-nitro-prn",
@@ -222,7 +222,7 @@
     },
     {
       "evaluatorBlockName": "CAD-ECHO-CAD",
-      "evaluatorCommentLine": 7738,
+      "evaluatorCommentLine": 7750,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-cad-echo-cad",
@@ -230,7 +230,7 @@
     },
     {
       "evaluatorBlockName": "CAD-BNP-CAD",
-      "evaluatorCommentLine": 7766,
+      "evaluatorCommentLine": 7778,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-cad-bnp-cad",
@@ -238,7 +238,7 @@
     },
     {
       "evaluatorBlockName": "CAD-RENAL-MONITOR",
-      "evaluatorCommentLine": 7795,
+      "evaluatorCommentLine": 7807,
       "matchConfidence": 0.857,
       "matchMethod": "similarity",
       "registryId": "gap-cad-renal-monitor",
@@ -246,7 +246,7 @@
     },
     {
       "evaluatorBlockName": "CAD-DAPT-DURATION",
-      "evaluatorCommentLine": 7826,
+      "evaluatorCommentLine": 7838,
       "matchConfidence": 0.375,
       "matchMethod": "similarity",
       "registryId": "gap-cad-dapt-duration",
@@ -254,7 +254,7 @@
     },
     {
       "evaluatorBlockName": "CAD-PPI-DAPT",
-      "evaluatorCommentLine": 7858,
+      "evaluatorCommentLine": 7870,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-cad-ppi-dapt",
@@ -262,7 +262,7 @@
     },
     {
       "evaluatorBlockName": "CAD-ALDO-POSTMI",
-      "evaluatorCommentLine": 7894,
+      "evaluatorCommentLine": 7906,
       "matchConfidence": 0.778,
       "matchMethod": "similarity",
       "registryId": "gap-cad-aldo-postmi",
@@ -270,7 +270,7 @@
     },
     {
       "evaluatorBlockName": "CAD-ELECTROLYTE",
-      "evaluatorCommentLine": 7928,
+      "evaluatorCommentLine": 7940,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-cad-electrolyte",
@@ -278,7 +278,7 @@
     },
     {
       "evaluatorBlockName": "CAD-ANEMIA",
-      "evaluatorCommentLine": 7959,
+      "evaluatorCommentLine": 7971,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-cad-anemia",
@@ -286,7 +286,7 @@
     },
     {
       "evaluatorBlockName": "CAD-THYROID",
-      "evaluatorCommentLine": 7987,
+      "evaluatorCommentLine": 7999,
       "matchConfidence": 0.8,
       "matchMethod": "similarity",
       "registryId": "gap-cad-thyroid",
@@ -294,7 +294,7 @@
     },
     {
       "evaluatorBlockName": "CAD-ACTIVITY",
-      "evaluatorCommentLine": 8016,
+      "evaluatorCommentLine": 8028,
       "matchConfidence": 0.8,
       "matchMethod": "similarity",
       "registryId": "gap-cad-activity",
@@ -302,7 +302,7 @@
     },
     {
       "evaluatorBlockName": "CAD-DIET",
-      "evaluatorCommentLine": 8045,
+      "evaluatorCommentLine": 8057,
       "matchConfidence": 0.833,
       "matchMethod": "similarity",
       "registryId": "gap-cad-diet",
@@ -310,7 +310,7 @@
     },
     {
       "evaluatorBlockName": "CAD-PSYCHOSOCIAL",
-      "evaluatorCommentLine": 8076,
+      "evaluatorCommentLine": 8088,
       "matchConfidence": 0.8,
       "matchMethod": "similarity",
       "registryId": "gap-cad-psychosocial",
@@ -318,7 +318,7 @@
     },
     {
       "evaluatorBlockName": "CAD-FAMILY-SCREEN",
-      "evaluatorCommentLine": 8106,
+      "evaluatorCommentLine": 8118,
       "matchConfidence": 0.833,
       "matchMethod": "similarity",
       "registryId": "gap-cad-family-screen",
@@ -326,7 +326,7 @@
     },
     {
       "evaluatorBlockName": "CAD-CALCIUM-SCORE",
-      "evaluatorCommentLine": 8139,
+      "evaluatorCommentLine": 8151,
       "matchConfidence": 0.625,
       "matchMethod": "similarity",
       "registryId": "gap-cad-calcium-score",
@@ -334,7 +334,7 @@
     },
     {
       "evaluatorBlockName": "CAD-CRP",
-      "evaluatorCommentLine": 8171,
+      "evaluatorCommentLine": 8183,
       "matchConfidence": 0.8,
       "matchMethod": "similarity",
       "registryId": "gap-cad-crp",
@@ -342,7 +342,7 @@
     },
     {
       "evaluatorBlockName": "CAD-ADVANCE-DIR",
-      "evaluatorCommentLine": 8202,
+      "evaluatorCommentLine": 8214,
       "matchConfidence": 0.857,
       "matchMethod": "similarity",
       "registryId": "gap-cad-advance-dir",
@@ -350,7 +350,7 @@
     },
     {
       "evaluatorBlockName": "CAD-PALLIATIVE",
-      "evaluatorCommentLine": 8235,
+      "evaluatorCommentLine": 8247,
       "matchConfidence": 0.833,
       "matchMethod": "similarity",
       "registryId": "gap-cad-palliative",
@@ -358,7 +358,7 @@
     },
     {
       "evaluatorBlockName": "CAD-CARDIAC-CT",
-      "evaluatorCommentLine": 8265,
+      "evaluatorCommentLine": 8277,
       "matchConfidence": 0.625,
       "matchMethod": "similarity",
       "registryId": "gap-cad-cardiac-ct",
@@ -366,251 +366,259 @@
     },
     {
       "evaluatorBlockName": "CAD-PRASUGREL",
-      "evaluatorCommentLine": 8296,
+      "evaluatorCommentLine": 8350,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-cad-prasugrel",
       "registryLine": 2520
     },
     {
-      "evaluatorBlockName": "CAD-HEPARIN-BRIDGE",
-      "evaluatorCommentLine": 8331,
-      "matchConfidence": 0.625,
+      "evaluatorBlockName": "CAD-016",
+      "evaluatorCommentLine": 8308,
+      "matchConfidence": 0.667,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-heparin-bridge",
+      "registryId": "gap-cad-016-prasugrel-stroke-safety",
       "registryLine": 2532
     },
     {
-      "evaluatorBlockName": "CAD-SEXUAL-HEALTH",
-      "evaluatorCommentLine": 8361,
-      "matchConfidence": 0.714,
+      "evaluatorBlockName": "CAD-HEPARIN-BRIDGE",
+      "evaluatorCommentLine": 8385,
+      "matchConfidence": 0.625,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-sexual-health",
+      "registryId": "gap-cad-heparin-bridge",
       "registryLine": 2544
     },
     {
-      "evaluatorBlockName": "CAD-DRIVING",
-      "evaluatorCommentLine": 8390,
+      "evaluatorBlockName": "CAD-SEXUAL-HEALTH",
+      "evaluatorCommentLine": 8415,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-driving",
+      "registryId": "gap-cad-sexual-health",
       "registryLine": 2556
     },
     {
-      "evaluatorBlockName": "CAD-LIVER-STATIN",
-      "evaluatorCommentLine": 8419,
-      "matchConfidence": 0.833,
+      "evaluatorBlockName": "CAD-DRIVING",
+      "evaluatorCommentLine": 8444,
+      "matchConfidence": 0.714,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-liver-statin",
+      "registryId": "gap-cad-driving",
       "registryLine": 2568
     },
     {
+      "evaluatorBlockName": "CAD-LIVER-STATIN",
+      "evaluatorCommentLine": 8473,
+      "matchConfidence": 0.833,
+      "matchMethod": "similarity",
+      "registryId": "gap-cad-liver-statin",
+      "registryLine": 2580
+    },
+    {
       "evaluatorBlockName": "CAD-ASPIRIN-PRIMARY",
-      "evaluatorCommentLine": 8452,
+      "evaluatorCommentLine": 8506,
       "matchConfidence": 0.8,
       "matchMethod": "similarity",
       "registryId": "gap-cad-aspirin-primary",
-      "registryLine": 2784
-    },
-    {
-      "evaluatorBlockName": "CAD-BETA-BLOCKER",
-      "evaluatorCommentLine": 8483,
-      "matchConfidence": 0.8,
-      "matchMethod": "similarity",
-      "registryId": "gap-cad-beta-blocker",
       "registryLine": 2796
     },
     {
-      "evaluatorBlockName": "CAD-ACE-STABLE",
-      "evaluatorCommentLine": 8514,
-      "matchConfidence": 0.667,
+      "evaluatorBlockName": "CAD-BETA-BLOCKER",
+      "evaluatorCommentLine": 8537,
+      "matchConfidence": 0.8,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-ace-stable",
+      "registryId": "gap-cad-beta-blocker",
       "registryLine": 2808
     },
     {
-      "evaluatorBlockName": "CAD-NICORANDIL",
-      "evaluatorCommentLine": 8547,
-      "matchConfidence": 0.6,
+      "evaluatorBlockName": "CAD-ACE-STABLE",
+      "evaluatorCommentLine": 8568,
+      "matchConfidence": 0.667,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-nicorandil",
+      "registryId": "gap-cad-ace-stable",
       "registryLine": 2820
     },
     {
-      "evaluatorBlockName": "CAD-TRIMETAZIDINE",
-      "evaluatorCommentLine": 8580,
-      "matchConfidence": 0.75,
+      "evaluatorBlockName": "CAD-NICORANDIL",
+      "evaluatorCommentLine": 8601,
+      "matchConfidence": 0.6,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-trimetazidine",
+      "registryId": "gap-cad-nicorandil",
       "registryLine": 2832
     },
     {
-      "evaluatorBlockName": "CAD-CORONARY-CTA-FU",
-      "evaluatorCommentLine": 8613,
-      "matchConfidence": 0.714,
+      "evaluatorBlockName": "CAD-TRIMETAZIDINE",
+      "evaluatorCommentLine": 8634,
+      "matchConfidence": 0.75,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-coronary-cta-fu",
+      "registryId": "gap-cad-trimetazidine",
       "registryLine": 2844
     },
     {
-      "evaluatorBlockName": "CAD-NUCLEAR-STRESS",
-      "evaluatorCommentLine": 8643,
-      "matchConfidence": 0.667,
+      "evaluatorBlockName": "CAD-CORONARY-CTA-FU",
+      "evaluatorCommentLine": 8667,
+      "matchConfidence": 0.714,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-nuclear-stress",
+      "registryId": "gap-cad-coronary-cta-fu",
       "registryLine": 2856
     },
     {
-      "evaluatorBlockName": "CAD-CATHETERIZATION",
-      "evaluatorCommentLine": 8674,
-      "matchConfidence": 0.286,
+      "evaluatorBlockName": "CAD-NUCLEAR-STRESS",
+      "evaluatorCommentLine": 8697,
+      "matchConfidence": 0.667,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-catheterization",
+      "registryId": "gap-cad-nuclear-stress",
       "registryLine": 2868
     },
     {
-      "evaluatorBlockName": "CAD-COMPLETE-REVASC",
-      "evaluatorCommentLine": 8705,
-      "matchConfidence": 0.667,
+      "evaluatorBlockName": "CAD-CATHETERIZATION",
+      "evaluatorCommentLine": 8728,
+      "matchConfidence": 0.286,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-complete-revasc",
+      "registryId": "gap-cad-catheterization",
       "registryLine": 2880
     },
     {
-      "evaluatorBlockName": "CAD-ISCHEMIA-GUIDED",
-      "evaluatorCommentLine": 8735,
+      "evaluatorBlockName": "CAD-COMPLETE-REVASC",
+      "evaluatorCommentLine": 8759,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-ischemia-guided",
+      "registryId": "gap-cad-complete-revasc",
       "registryLine": 2892
     },
     {
-      "evaluatorBlockName": "CAD-MINOCA",
-      "evaluatorCommentLine": 8765,
-      "matchConfidence": 0.5,
+      "evaluatorBlockName": "CAD-ISCHEMIA-GUIDED",
+      "evaluatorCommentLine": 8789,
+      "matchConfidence": 0.667,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-minoca",
+      "registryId": "gap-cad-ischemia-guided",
       "registryLine": 2904
     },
     {
-      "evaluatorBlockName": "CAD-SCAD",
-      "evaluatorCommentLine": 8795,
-      "matchConfidence": 0.25,
+      "evaluatorBlockName": "CAD-MINOCA",
+      "evaluatorCommentLine": 8819,
+      "matchConfidence": 0.5,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-scad",
+      "registryId": "gap-cad-minoca",
       "registryLine": 2916
     },
     {
-      "evaluatorBlockName": "CAD-TAKOTSUBO",
-      "evaluatorCommentLine": 8827,
-      "matchConfidence": 0.6,
+      "evaluatorBlockName": "CAD-SCAD",
+      "evaluatorCommentLine": 8849,
+      "matchConfidence": 0.25,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-takotsubo",
+      "registryId": "gap-cad-scad",
       "registryLine": 2928
     },
     {
-      "evaluatorBlockName": "CAD-VASOSPASTIC",
-      "evaluatorCommentLine": 8855,
+      "evaluatorBlockName": "CAD-TAKOTSUBO",
+      "evaluatorCommentLine": 8881,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-vasospastic",
+      "registryId": "gap-cad-takotsubo",
       "registryLine": 2940
     },
     {
-      "evaluatorBlockName": "CAD-MICROVASCULAR",
-      "evaluatorCommentLine": 8887,
+      "evaluatorBlockName": "CAD-VASOSPASTIC",
+      "evaluatorCommentLine": 8909,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-microvascular",
+      "registryId": "gap-cad-vasospastic",
       "registryLine": 2952
     },
     {
-      "evaluatorBlockName": "CAD-CARDIAC-TRANSPLANT-CAD",
-      "evaluatorCommentLine": 8919,
-      "matchConfidence": 0.833,
+      "evaluatorBlockName": "CAD-MICROVASCULAR",
+      "evaluatorCommentLine": 8941,
+      "matchConfidence": 0.6,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-cardiac-transplant-cad",
+      "registryId": "gap-cad-microvascular",
       "registryLine": 2964
     },
     {
-      "evaluatorBlockName": "CAD-LIPID-PANEL-FU",
-      "evaluatorCommentLine": 8948,
-      "matchConfidence": 0.857,
+      "evaluatorBlockName": "CAD-CARDIAC-TRANSPLANT-CAD",
+      "evaluatorCommentLine": 8973,
+      "matchConfidence": 0.833,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-lipid-panel-fu",
+      "registryId": "gap-cad-cardiac-transplant-cad",
       "registryLine": 2976
     },
     {
-      "evaluatorBlockName": "CAD-GLUCOSE-SCREEN",
-      "evaluatorCommentLine": 8979,
-      "matchConfidence": 0.8,
+      "evaluatorBlockName": "CAD-LIPID-PANEL-FU",
+      "evaluatorCommentLine": 9002,
+      "matchConfidence": 0.857,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-glucose-screen",
+      "registryId": "gap-cad-lipid-panel-fu",
       "registryLine": 2988
     },
     {
-      "evaluatorBlockName": "CAD-HEMOGLOBIN-A1C-TARGET",
-      "evaluatorCommentLine": 9009,
-      "matchConfidence": 0.667,
+      "evaluatorBlockName": "CAD-GLUCOSE-SCREEN",
+      "evaluatorCommentLine": 9033,
+      "matchConfidence": 0.8,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-hemoglobin-a1c-target",
+      "registryId": "gap-cad-glucose-screen",
       "registryLine": 3000
     },
     {
-      "evaluatorBlockName": "CAD-ANTIPLATELET-REVIEW",
-      "evaluatorCommentLine": 9039,
-      "matchConfidence": 0.571,
+      "evaluatorBlockName": "CAD-HEMOGLOBIN-A1C-TARGET",
+      "evaluatorCommentLine": 9063,
+      "matchConfidence": 0.667,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-antiplatelet-review",
+      "registryId": "gap-cad-hemoglobin-a1c-target",
       "registryLine": 3012
     },
     {
-      "evaluatorBlockName": "CAD-CHEST-PAIN-PROTOCOL",
-      "evaluatorCommentLine": 9070,
-      "matchConfidence": 0.667,
+      "evaluatorBlockName": "CAD-ANTIPLATELET-REVIEW",
+      "evaluatorCommentLine": 9093,
+      "matchConfidence": 0.571,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-chest-pain-protocol",
+      "registryId": "gap-cad-antiplatelet-review",
       "registryLine": 3024
     },
     {
-      "evaluatorBlockName": "CAD-SECONDARY-PREVENTION",
-      "evaluatorCommentLine": 9101,
+      "evaluatorBlockName": "CAD-CHEST-PAIN-PROTOCOL",
+      "evaluatorCommentLine": 9124,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-secondary-prevention",
+      "registryId": "gap-cad-chest-pain-protocol",
       "registryLine": 3036
     },
     {
-      "evaluatorBlockName": "CAD-WOMEN-SPECIFIC",
-      "evaluatorCommentLine": 9134,
-      "matchConfidence": 0.8,
+      "evaluatorBlockName": "CAD-SECONDARY-PREVENTION",
+      "evaluatorCommentLine": 9155,
+      "matchConfidence": 0.667,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-women-specific",
+      "registryId": "gap-cad-secondary-prevention",
       "registryLine": 3048
     },
     {
-      "evaluatorBlockName": "CAD-YOUNG-MI",
-      "evaluatorCommentLine": 9167,
-      "matchConfidence": 0.6,
+      "evaluatorBlockName": "CAD-WOMEN-SPECIFIC",
+      "evaluatorCommentLine": 9188,
+      "matchConfidence": 0.8,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-young-mi",
+      "registryId": "gap-cad-women-specific",
       "registryLine": 3060
     },
     {
-      "evaluatorBlockName": "CAD-EXERCISE-PRESCRIPTION",
-      "evaluatorCommentLine": 9196,
-      "matchConfidence": 0.5,
+      "evaluatorBlockName": "CAD-YOUNG-MI",
+      "evaluatorCommentLine": 9221,
+      "matchConfidence": 0.6,
       "matchMethod": "similarity",
-      "registryId": "gap-cad-exercise-prescription",
+      "registryId": "gap-cad-young-mi",
       "registryLine": 3072
     },
     {
+      "evaluatorBlockName": "CAD-EXERCISE-PRESCRIPTION",
+      "evaluatorCommentLine": 9250,
+      "matchConfidence": 0.5,
+      "matchMethod": "similarity",
+      "registryId": "gap-cad-exercise-prescription",
+      "registryLine": 3084
+    },
+    {
       "evaluatorBlockName": "CAD-SLEEP-APNEA-CAD",
-      "evaluatorCommentLine": 9226,
+      "evaluatorCommentLine": 9280,
       "matchConfidence": 0.8,
       "matchMethod": "similarity",
       "registryId": "gap-cad-sleep-apnea-cad",
-      "registryLine": 3084
+      "registryLine": 3096
     }
   ],
   "module": "CAD",
@@ -622,7 +630,7 @@
       "registryLine": 180
     }
   ],
-  "registryCount": 76,
+  "registryCount": 77,
   "registryOrphans": [],
   "specGapCount": 90,
   "status": "DIVERGENT"

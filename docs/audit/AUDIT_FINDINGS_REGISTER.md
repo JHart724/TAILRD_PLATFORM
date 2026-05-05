@@ -55,7 +55,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-031** — GAP-EP-079: pre-excited AF + AVN blocker (CRITICAL SAFETY, uncovered) (Phase 0B EP, OPEN, **Tier S**)
 - **AUDIT-032** — GAP-EP-006: dabigatran in CrCl<30 (SAFETY, uncovered) (Phase 0B EP, OPEN, **Tier S**)
 - **AUDIT-033** — GAP-EP-017: HFrEF + non-DHP CCB SAFETY (Phase 0B EP, **RESOLVED 2026-05-05** via registry-entry-add; closes Tier S item — queue 4→3)
-- **AUDIT-034** — GAP-CAD-016: prasugrel + stroke/TIA SAFETY — PARTIAL needs hardening (Phase 0B CAD, OPEN, **Tier S**)
+- **AUDIT-034** — GAP-CAD-016: prasugrel + stroke/TIA SAFETY (Phase 0B CAD, **RESOLVED 2026-05-05** via new SAFETY discriminator block; closes Tier S item — queue 3→2)
 
 ### MEDIUM (P2)
 
@@ -624,17 +624,19 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 - **Phase:** 0B CAD clinical audit
 - **Severity:** HIGH (P1) — patient safety, spec-explicit `(SAFETY)`
-- **Status:** OPEN — automatic Tier S
+- **Status:** **RESOLVED 2026-05-05** via new SAFETY evaluator block (this PR). Tier S queue reduced from 3 to 2.
 - **Tier:** S
 - **Detected:** 2026-05-04 via canonical audit infrastructure
-- **Evidence:** CK v4.0 §6.4 spec gap text "Prasugrel + prior stroke/TIA SAFETY". Canonical `CAD.crosswalk.json` row classification: PARTIAL_DETECTION via `gap-cad-prasugrel`. Evaluator fires for general prasugrel scenarios (post-ACS DAPT) but doesn't specifically discriminate the prior-stroke/TIA contraindication. Per FDA black-box warning, prasugrel is contraindicated in prior stroke/TIA due to fatal/intracranial bleeding risk.
-- **Severity rationale:** patient-safety risk; broad-rule covers without discrimination, missing the spec-mandated contraindication check.
-- **Remediation:** harden `gap-cad-prasugrel` evaluator with stroke/TIA history check (ICD-10 I63.x acute, I64 stroke unspecified, G45.x TIA, Z86.73 personal history of stroke). When matched, switch SAFETY recommendation to ticagrelor or clopidogrel rather than continuing prasugrel. Estimated 1-2h.
-- **Effort estimate:** XS-S (1-2h)
+- **Evidence:** CK v4.0 §6.4 line 618 spec gap text "Prasugrel + prior stroke/TIA (SAFETY). Prasugrel + stroke/TIA history". Pre-resolution: canonical `CAD.crosswalk.json` row classification was PARTIAL_DETECTION via `gap-cad-prasugrel` — but inspection during this PR's pre-flight surfaced that the cited evaluator covers the OPPOSITE clinical scenario (recommends prasugrel when patient should start it), not the SAFETY contraindication when patient is already on prasugrel with stroke history. The original PARTIAL classification was an auto-classifier token-similarity error. Per FDA Effient (prasugrel) Black-Box Warning + 2023 ACC/AHA Chronic Coronary Disease Guideline Class 3 (Harm), prasugrel + prior ischemic stroke/TIA carries fatal/intracranial bleeding risk.
+- **Severity rationale:** patient-safety risk; missing spec-mandated SAFETY contraindication check (auto-classifier mis-pointed at recommendation rule, not contraindication discriminator).
+- **Resolution:** Added new SAFETY evaluator block `// CAD-016 SAFETY:` (line 8324+) in `gapRuleEngine.ts` co-located with CAD-PRASUGREL recommendation block. Fires when patient on prasugrel (RxNorm 613391) AND has stroke/TIA history (ICD-10 I63.x cerebral infarction, I64 stroke unspecified, G45.x TIA, Z86.73 history without deficit) AND not in hospice. Recommends switch to ticagrelor (RxNorm 1116632) or clopidogrel (RxNorm 32968) preserving DAPT continuity. Class 3 (Harm) classification. New registry entry `gap-cad-016-prasugrel-stroke-safety` paired to evaluator. Hemorrhagic stroke (I60-I62) intentionally NOT in discriminator — FDA black-box specifically warns about prior ISCHEMIC stroke/TIA. 6 unit tests in `tests/gapRules/coronaryIntervention.test.ts` cover positive (acute stroke I63.5), edge (TIA-only G45.9), edge (distant history Z86.73), negative (no stroke), negative (on ticagrelor not prasugrel), edge (hospice exclusion).
+- **Effort estimate:** RESOLVED (~25 min agent including tests, canonical regen, register update)
 - **Cross-references:**
-  - `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` §3.1
-  - `docs/audit/canonical/CAD.crosswalk.json` row GAP-CAD-016
-  - PR #234
+  - `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` §3.1 (Tier S queue, now 2 items)
+  - `docs/audit/canonical/CAD.crosswalk.json` row GAP-CAD-016 (DET_OK with cite to gap-cad-016-prasugrel-stroke-safety)
+  - PR #234 (canonical infrastructure that surfaced this gap)
+  - PR #239 (refreshCites.ts pipeline script — first real-world Tier S validation; refreshed 249 cites cleanly)
+  - This PR (registry entry + new SAFETY evaluator block + override + 6 tests)
 
 ---
 

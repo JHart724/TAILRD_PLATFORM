@@ -90,20 +90,20 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-EP-001 | 311 | DET_OK | `gap-ep-oac-afib` (EP-OAC @3969-4022) | + \| Multiple registry ids cited: gap-ep-oac-afib, gap-ep-af-stroke-risk \| auto-verify: preserved-fro |
+| GAP-EP-001 | 311 | DET_OK | `gap-ep-oac-afib` (EP-OAC @3981-4034) | + \| Multiple registry ids cited: gap-ep-oac-afib, gap-ep-af-stroke-risk \| auto-verify: preserved-fro |
 | GAP-EP-006 | 312 | SPEC_ONLY | — | (registry only; no CrCl-gated dabigatran SAFETY check in evaluator) \| auto-verify: No candidate eval |
-| GAP-EP-007 | 313 | DET_OK | `gap-vd-6-doac-mechanical-valve` (VD-6 @5328-5352) **[cross-module: VHD]** | MANUAL OVERRIDE: cross-module satisfaction. GAP-EP-007 (DOAC on mechanical valve, CRITICAL SAFETY) i |
-| GAP-EP-008 | 314 | PARTIAL_DETECTION | `gap-vd-4-mitral-stenosis` (VD-4 @5272-5292) **[cross-module: VHD]** | (no DOAC + MS contraindication; mitral stenosis logic at 5134+ only covers echo surveillance) \| auto |
+| GAP-EP-007 | 313 | DET_OK | `gap-vd-6-doac-mechanical-valve` (VD-6 @5340-5364) **[cross-module: VHD]** | MANUAL OVERRIDE: cross-module satisfaction. GAP-EP-007 (DOAC on mechanical valve, CRITICAL SAFETY) i |
+| GAP-EP-008 | 314 | PARTIAL_DETECTION | `gap-vd-4-mitral-stenosis` (VD-4 @5284-5304) **[cross-module: VHD]** | (no DOAC + MS contraindication; mitral stenosis logic at 5134+ only covers echo surveillance) \| auto |
 | GAP-EP-064 | 315 | SPEC_ONLY | — | — (no pharmacy fill data integration) \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
 | GAP-EP-065 | 316 | SPEC_ONLY | — | — (no pharmacy fill data integration) \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
-| GAP-EP-011 | 328 | DET_OK | `gap-ep-laac` (EP-LAAC @4029-4057) | line 3979+ \| auto-verify: preserved-from-addendum |
-| GAP-EP-012 | 329 | PARTIAL_DETECTION | `gap-ep-laac` (EP-LAAC @4029-4057) | (broad rule, no trigger differentiation) \| auto-verify: preserved-from-addendum |
-| GAP-EP-013 | 337 | DET_OK | `gap-ep-early-rhythm` (EP-EARLY-RHYTHM @9270-9292) | line 9129+ \| auto-verify: preserved-from-addendum |
-| GAP-EP-014 | 338 | PARTIAL_DETECTION | `gap-ep-ablation` (EP-ABLATION @4064-4087) | line 4014+ \| auto-verify: preserved-from-addendum |
-| GAP-EP-017 | 339 | DET_OK | `gap-ep-017-hfref-non-dhp-ccb` (EP-017 @4812-4837) | MANUAL OVERRIDE: AUDIT-033 RESOLVED 2026-05-05 — registry entry gap-ep-017-hfref-non-dhp-ccb added ( |
-| GAP-EP-018 | 340 | DET_OK | `gap-ep-subclinical-af` (EP-SUBCLINICAL-AF @6960-6983) | line 6819+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-011 | 328 | DET_OK | `gap-ep-laac` (EP-LAAC @4041-4069) | line 3979+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-012 | 329 | PARTIAL_DETECTION | `gap-ep-laac` (EP-LAAC @4041-4069) | (broad rule, no trigger differentiation) \| auto-verify: preserved-from-addendum |
+| GAP-EP-013 | 337 | DET_OK | `gap-ep-early-rhythm` (EP-EARLY-RHYTHM @9324-9346) | line 9129+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-014 | 338 | PARTIAL_DETECTION | `gap-ep-ablation` (EP-ABLATION @4076-4099) | line 4014+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-017 | 339 | DET_OK | `gap-ep-017-hfref-non-dhp-ccb` (EP-017 @4824-4849) | MANUAL OVERRIDE: AUDIT-033 RESOLVED 2026-05-05 — registry entry gap-ep-017-hfref-non-dhp-ccb added ( |
+| GAP-EP-018 | 340 | DET_OK | `gap-ep-subclinical-af` (EP-SUBCLINICAL-AF @6972-6995) | line 6819+ \| auto-verify: preserved-from-addendum |
 | GAP-EP-079 | 352 | SPEC_ONLY | — | line 6618+ (WPW + age<40 risk strat, NOT med contraindication) \| auto-verify: No candidate evaluator |
-| GAP-EP-086 | 363 | PARTIAL_DETECTION | `gap-ep-vt-ablation` (EP-VT-ABLATION @9303-9325) | line 9162+ (broad VT+ICD trigger, not VT-storm-specific) \| auto-verify: preserved-from-addendum |
+| GAP-EP-086 | 363 | PARTIAL_DETECTION | `gap-ep-vt-ablation` (EP-VT-ABLATION @9357-9379) | line 9162+ (broad VT+ICD trigger, not VT-storm-specific) \| auto-verify: preserved-from-addendum |
 | GAP-EP-099 | 436 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 
 ---

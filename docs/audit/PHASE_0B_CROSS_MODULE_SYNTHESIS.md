@@ -13,10 +13,10 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 | HF | 126 | 22 | 43 | 61 | 65/126 (51.6%) | 17.5% |
 | EP | 89 | 19 | 26 | 44 | 45/89 (50.6%) | 21.3% |
 | SH | 88 | 9 | 23 | 56 | 32/88 (36.4%) | 10.2% |
-| CAD | 90 | 28 | 28 | 34 | 56/90 (62.2%) | 31.1% |
+| CAD | 90 | 29 | 27 | 34 | 56/90 (62.2%) | 32.2% |
 | VHD | 105 | 5 | 16 | 84 | 21/105 (20.0%) | 4.8% |
 | PV | 105 | 16 | 14 | 75 | 30/105 (28.6%) | 15.2% |
-| **TOTAL** | **603** | **99** | **150** | **354** | **249/603 (41.3%)** | **16.4%** |
+| **TOTAL** | **603** | **100** | **149** | **354** | **249/603 (41.3%)** | **16.6%** |
 
 ---
 
@@ -27,7 +27,7 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 | HF | 29 | 8 | 14 | 7 | 75.9% |
 | EP | 15 | 6 | 4 | 5 | 66.7% |
 | SH | 13 | 2 | 6 | 5 | 61.5% |
-| CAD | 18 | 7 | 5 | 6 | 66.7% |
+| CAD | 18 | 8 | 4 | 6 | 66.7% |
 | VHD | 8 | 1 | 3 | 4 | 50.0% |
 | PV | 7 | 1 | 2 | 4 | 42.9% |
 
@@ -37,11 +37,10 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 
 Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-relevant) AND (T1) AND (uncovered). Spec-explicit auto-include; structurally-inferred require operator decision.
 
-### 3.1 Spec-explicit SAFETY uncovered T1 (3 — automatic Tier S)
+### 3.1 Spec-explicit SAFETY uncovered T1 (2 — automatic Tier S)
 
 | Spec gap | Module | Spec line | Class | SAFETY tag | Detection logic (excerpt) |
 |---|---|---:|---|---|---|
-| **GAP-CAD-016** | CAD | 618 | PARTIAL_DETECTION | `(SAFETY)` | Prasugrel + stroke/TIA history |
 | **GAP-EP-006** | EP | 312 | SPEC_ONLY | `(SAFETY)` | Dabigatran + severe renal impairment |
 | **GAP-EP-079** | EP | 352 | SPEC_ONLY | `(CRITICAL)` | WPW + AF on beta-blocker/CCB/digoxin - risk of VF |
 

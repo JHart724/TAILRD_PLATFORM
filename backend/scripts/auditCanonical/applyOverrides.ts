@@ -85,6 +85,12 @@ const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
   },
   SH: {},
   CAD: {
+    'GAP-CAD-016': {
+      classification: 'DET_OK',
+      registryId: 'gap-cad-016-prasugrel-stroke-safety',
+      auditNote:
+        'MANUAL OVERRIDE: AUDIT-034 RESOLVED 2026-05-05 — new SAFETY evaluator block added (this PR) covering prasugrel + stroke/TIA contraindication per FDA black-box + 2023 ACC/AHA CCD Class 3 (Harm). Closes Tier S queue item. Override pin preserved for stability against auto-classifier matching the broader gap-cad-prasugrel recommendation rule (which fires for opposite scenario: should-be-on-prasugrel without stroke).',
+    },
     'GAP-CAD-027': {
       classification: 'PARTIAL_DETECTION',
       registryId: 'gap-pv-rivaroxaban',
