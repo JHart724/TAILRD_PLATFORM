@@ -250,6 +250,18 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'B',
   },
   {
+    id: 'gap-ep-079-wpw-af-avn-blocker',
+    name: 'Pre-excited AF + AVN blocker (CRITICAL)',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-05-05',
+    nextReviewDue: '2026-11-05',
+    classOfRecommendation: '3 (Harm)',
+    levelOfEvidence: 'B',
+  },
+  {
     id: 'gap-cad-statin',
     name: 'High-Intensity Statin in CAD',
     module: 'CORONARY_INTERVENTION',
@@ -4114,6 +4126,61 @@ export function evaluateGapRules(
         },
       });
     }
+  }
+
+  // ============================================================
+  // EP-079 CRITICAL: Pre-excited AF + AVN blocker contraindicated (risk of VF)
+  // ============================================================
+  // Guideline: 2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline, Class 3 (Harm), LOE B.
+  // Spec: CK v4.0 §6.2 line 352 — "WPW + AF on beta-blocker/CCB/digoxin - risk of VF" (CRITICAL).
+  // Mechanism: AVN blockade in WPW + AF removes the safety governor on rapid accessory-pathway
+  //   conduction → 1:1 AV conduction at AF rate → ventricular fibrillation (fatal arrhythmia).
+  // CRITICAL severity: highest CK v4.0 harm tier (escalated above plain SAFETY) — fatal arrhythmia.
+  // Recommendation: discontinue AVN blocker; switch to procainamide (RxNorm 8700) or amiodarone
+  //   (RxNorm 703) — Class 1a/III antiarrhythmics that preserve accessory-pathway refractoriness
+  //   without nodal blockade. Definitive: catheter ablation (Class 1).
+  // Verification: All RxNorm constants verified via RxNav properties.json on 2026-05-05 per
+  //   AUDIT_METHODOLOGY.md §16. Procainamide 8700 reflects post-AUDIT-042 correction (codebase
+  //   previously had 8787 = propranolol). Nadolol 7226 reflects post-AUDIT-043 correction
+  //   (codebase BB_CODES_LQTS/SCAD previously had 7512 = norepinephrine). Single-branch design
+  //   (categorical inputs only — no labs, no thresholds; no DATA gap branch needed).
+  const hasWPW_EP079 = dxCodes.some(c => c.startsWith('I45.6'));
+  // 8 BBs + 2 non-DHP CCBs + digoxin ingredient + 3 formulations (RxNav verified 2026-05-05).
+  // Nadolol 7226 = post-AUDIT-043 correction; procainamide/amiodarone (switch targets) cited in recommendation text.
+  const AVN_BLOCKER_CODES_EP079 = [
+    '6918', '20352', '19484', '7226', '1202', '8787', '49737', '6185',  // BBs: metoprolol, carvedilol, bisoprolol, nadolol, atenolol, propranolol, esmolol, labetalol
+    '3443', '11170',                                                     // non-DHP CCBs: diltiazem, verapamil
+    '3407', '197604', '197605', '197606',                                // digoxin: ingredient + 3 formulations
+  ];
+  if (
+    hasWPW_EP079 && hasAF &&
+    medCodes.some(c => AVN_BLOCKER_CODES_EP079.includes(c)) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_CONTRAINDICATED,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'CRITICAL: AV nodal blocker contraindicated in pre-excited AF (WPW + AF) — risk of ventricular fibrillation',
+      target: 'Discontinue AVN blocker; switch to procainamide or amiodarone; expedite EP referral for ablation',
+      medication: 'Replace AVN blocker (BB / non-DHP CCB / digoxin) with procainamide (RxNorm 8700) or amiodarone (RxNorm 703); definitive: catheter ablation (Class 1)',
+      recommendations: {
+        action: 'Discontinue AVN-blocking medication and substitute Class 1a (procainamide) or Class III (amiodarone) antiarrhythmic; expedite electrophysiology referral for catheter ablation per 2023 ACC/AHA/ACCP/HRS AFib Guideline Class 3 (Harm)',
+        guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline',
+        note: 'CRITICAL SAFETY: AVN blockade (beta-blocker / non-DHP CCB / digoxin) in WPW + AF removes the safety governor on rapid accessory-pathway conduction. Result: 1:1 AV conduction at AF rate → ventricular fibrillation (fatal arrhythmia). Procainamide and amiodarone preserve accessory-pathway refractoriness without nodal blockade. Catheter ablation is Class 1 for definitive management.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'WPW syndrome diagnosis (I45.6 — pre-excitation)',
+          'Atrial fibrillation diagnosis (I48.x)',
+          'Active AVN-blocking medication (beta-blocker / non-DHP CCB / digoxin)',
+        ],
+        guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline',
+        classOfRecommendation: '3 (Harm)',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+        safetyClass: 'CRITICAL',
+      },
+    });
   }
 
   // ============================================================

@@ -89,14 +89,14 @@ No EXTRA rules or architectural patterns surfaced. Reconciliation is clean.
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-VHD-001 | 753 | PARTIAL_DETECTION | `gap-vd-3-inr-monitoring` (VD-3 @5333-5357) | line 4638+ checks no-warfarin (different scenario);  line 5219+ checks no-INR-data (different scenar |
-| GAP-VHD-005 | 754 | DET_OK | `gap-vd-6-doac-mechanical-valve` (VD-6 @5423-5447) | line 5312+ (explicit RE-ALIGN trial citation, Class 3 Harm) \| auto-verify: preserved-from-addendum |
+| GAP-VHD-001 | 753 | PARTIAL_DETECTION | `gap-vd-3-inr-monitoring` (VD-3 @5400-5424) | line 4638+ checks no-warfarin (different scenario);  line 5219+ checks no-INR-data (different scenar |
+| GAP-VHD-005 | 754 | DET_OK | `gap-vd-6-doac-mechanical-valve` (VD-6 @5490-5514) | line 5312+ (explicit RE-ALIGN trial citation, Class 3 Harm) \| auto-verify: preserved-from-addendum |
 | GAP-VHD-050 | 830 | SPEC_ONLY | — | No S. aureus + TEE rule in evaluator. \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
 | GAP-VHD-057 | 841 | SPEC_ONLY | — | No IE + acute HF surgical-urgency rule. \| auto-verify: No candidate evaluator block above PARTIAL_MA |
 | GAP-VHD-058 | 842 | SPEC_ONLY | — | No IE + abscess surgical rule. \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-VHD-061 | 843 | SPEC_ONLY | — | No PVE dehiscence/fistula rule. \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-VHD-068 | 860 | PARTIAL_DETECTION | `gap-vd-prosthetic-pannus` (VD-PANNUS @10572-10594) | MANUAL OVERRIDE: VD-PANNUS evaluator at line 10414+ (pattern ID_NAME) was missed by prior 2026-05-04 |
-| GAP-VHD-099 | 914 | PARTIAL_DETECTION | `gap-vd-10-pregnancy-risk` (VD-10 @5544-5565) | line 5428+ broad pregnancy + valve risk rule; no LMWH dose-protocol logic \| auto-verify: preserved-f |
+| GAP-VHD-068 | 860 | PARTIAL_DETECTION | `gap-vd-prosthetic-pannus` (VD-PANNUS @10639-10661) | MANUAL OVERRIDE: VD-PANNUS evaluator at line 10414+ (pattern ID_NAME) was missed by prior 2026-05-04 |
+| GAP-VHD-099 | 914 | PARTIAL_DETECTION | `gap-vd-10-pregnancy-risk` (VD-10 @5611-5632) | line 5428+ broad pregnancy + valve risk rule; no LMWH dose-protocol logic \| auto-verify: preserved-f |
 
 ---
 
