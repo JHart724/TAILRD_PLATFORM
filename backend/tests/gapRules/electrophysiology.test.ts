@@ -173,3 +173,114 @@ describe('EP-RC + EP-017 (rate-control HFrEF gating, EP-XX-7 mitigation)', () =>
     expect(safetyGap).toBeUndefined();
   });
 });
+
+// ============================================================
+// EP-006 SAFETY: Dabigatran contraindicated in CrCl<30 severe renal impairment
+// AUDIT-032 mitigation (2026-05-05, fix/audit-032-ep-006-dabigatran-renal-safety)
+// ============================================================
+// Guideline: FDA Pradaxa PI + 2023 ACC/AHA/ACCP/HRS AFib Guideline Class 3 (Harm)
+// 2-branch compound:
+//   - SAFETY: dabigatran + eGFR<30 → switch to apixaban or warfarin (Class 3 Harm)
+//   - DATA gap: dabigatran on med list + eGFR undefined → eGFR measurement required
+//     (preserves harm vector via fail-loud rather than silent default)
+const RXNORM_DABIGATRAN = '1037045';
+const RXNORM_APIXABAN = '1364430';
+const HOSPICE_DX = 'Z51.5';
+
+function findDabigatranSafetyGap(gaps: any[]) {
+  return gaps.find(
+    (g) =>
+      g.status &&
+      g.status.includes('SAFETY: Dabigatran contraindicated in severe renal impairment'),
+  );
+}
+
+function findEgfrDataGap(gaps: any[]) {
+  return gaps.find(
+    (g) =>
+      g.status &&
+      g.status.includes('eGFR measurement required to evaluate dabigatran safety'),
+  );
+}
+
+describe('EP-006 SAFETY: dabigatran + eGFR<30 (AUDIT-032)', () => {
+  it('Positive: dabigatran + eGFR=25 → fires SAFETY (Class 3 Harm)', () => {
+    const dx = [AFIB_DX];
+    const labs = { egfr: 25 };
+    const meds = [RXNORM_DABIGATRAN];
+    const gaps = evaluateGapRules(dx, labs, meds, 75);
+
+    const safetyGap = findDabigatranSafetyGap(gaps);
+    expect(safetyGap).toBeDefined();
+    expect(safetyGap.evidence.classOfRecommendation).toBe('3 (Harm)');
+    expect(safetyGap.evidence.safetyClass).toBe('SAFETY');
+    expect(safetyGap.target).toContain('apixaban');
+    expect(safetyGap.target).toContain('warfarin');
+    expect(safetyGap.evidence.guidelineSource).toContain('FDA Pradaxa');
+    expect(safetyGap.evidence.guidelineSource).toContain('2023 ACC/AHA/ACCP/HRS Atrial Fibrillation');
+  });
+
+  it('Edge: dabigatran + eGFR=29 → fires SAFETY (strict <30 threshold)', () => {
+    const dx = [AFIB_DX];
+    const labs = { egfr: 29 };
+    const meds = [RXNORM_DABIGATRAN];
+    const gaps = evaluateGapRules(dx, labs, meds, 70);
+
+    expect(findDabigatranSafetyGap(gaps)).toBeDefined();
+  });
+
+  it('Negative: dabigatran + eGFR=30 → does NOT fire SAFETY (boundary, not <30)', () => {
+    const dx = [AFIB_DX];
+    const labs = { egfr: 30 };
+    const meds = [RXNORM_DABIGATRAN];
+    const gaps = evaluateGapRules(dx, labs, meds, 70);
+
+    expect(findDabigatranSafetyGap(gaps)).toBeUndefined();
+    expect(findEgfrDataGap(gaps)).toBeUndefined();
+  });
+
+  it('Negative: dabigatran + eGFR=60 → does NOT fire SAFETY (normal renal function)', () => {
+    const dx = [AFIB_DX];
+    const labs = { egfr: 60 };
+    const meds = [RXNORM_DABIGATRAN];
+    const gaps = evaluateGapRules(dx, labs, meds, 65);
+
+    expect(findDabigatranSafetyGap(gaps)).toBeUndefined();
+    expect(findEgfrDataGap(gaps)).toBeUndefined();
+  });
+
+  it('Data gap: dabigatran + eGFR undefined → fires structured DATA gap (fail-loud, no silent default)', () => {
+    const dx = [AFIB_DX];
+    const labs = {};                            // eGFR intentionally missing
+    const meds = [RXNORM_DABIGATRAN];
+    const gaps = evaluateGapRules(dx, labs, meds, 70);
+
+    const dataGap = findEgfrDataGap(gaps);
+    expect(dataGap).toBeDefined();
+    expect(dataGap.evidence.triggerCriteria).toContain('No eGFR value in lab observations');
+    expect(dataGap.target).toContain('eGFR documented');
+
+    // SAFETY should NOT fire when eGFR undefined (data gap fires instead)
+    expect(findDabigatranSafetyGap(gaps)).toBeUndefined();
+  });
+
+  it('Negative: apixaban (not dabigatran) + eGFR=25 → does NOT fire dabigatran SAFETY', () => {
+    const dx = [AFIB_DX];
+    const labs = { egfr: 25 };
+    const meds = [RXNORM_APIXABAN];
+    const gaps = evaluateGapRules(dx, labs, meds, 75);
+
+    expect(findDabigatranSafetyGap(gaps)).toBeUndefined();
+    expect(findEgfrDataGap(gaps)).toBeUndefined();
+  });
+
+  it('Edge: dabigatran + eGFR=20 + Z51.5 hospice → SAFETY does NOT fire (hospice exclusion preserved)', () => {
+    const dx = [AFIB_DX, HOSPICE_DX];
+    const labs = { egfr: 20 };
+    const meds = [RXNORM_DABIGATRAN];
+    const gaps = evaluateGapRules(dx, labs, meds, 80);
+
+    expect(findDabigatranSafetyGap(gaps)).toBeUndefined();
+    expect(findEgfrDataGap(gaps)).toBeUndefined();
+  });
+});

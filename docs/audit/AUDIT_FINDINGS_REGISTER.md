@@ -53,7 +53,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-015** — `decrypt()` returns ciphertext on integrity failure (Phase 2B, **RESOLVED 2026-04-30**)
 - **AUDIT-016** — No PHI key rotation pattern (Phase 2B, OPEN)
 - **AUDIT-031** — GAP-EP-079: pre-excited AF + AVN blocker (CRITICAL SAFETY, uncovered) (Phase 0B EP, OPEN, **Tier S**)
-- **AUDIT-032** — GAP-EP-006: dabigatran in CrCl<30 (SAFETY, uncovered) (Phase 0B EP, OPEN, **Tier S**)
+- **AUDIT-032** — GAP-EP-006: dabigatran in CrCl<30 (SAFETY, uncovered) (Phase 0B EP, **RESOLVED 2026-05-05**, ~~Tier S~~)
 - **AUDIT-033** — GAP-EP-017: HFrEF + non-DHP CCB SAFETY (Phase 0B EP, **RESOLVED 2026-05-05** via registry-entry-add; closes Tier S item — queue 4→3)
 - **AUDIT-034** — GAP-CAD-016: prasugrel + stroke/TIA SAFETY (Phase 0B CAD, **RESOLVED 2026-05-05** via new SAFETY discriminator block; closes Tier S item — queue 3→2)
 
@@ -585,17 +585,19 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 - **Phase:** 0B EP clinical audit
 - **Severity:** HIGH (P1) — patient safety, spec-explicit `(SAFETY)`
-- **Status:** OPEN — automatic Tier S
+- **Status:** **RESOLVED 2026-05-05** via new SAFETY evaluator block + registry entry (this PR). Tier S queue reduced from 2 to 1 (only EP-079 remains).
 - **Tier:** S
 - **Detected:** 2026-05-04 via canonical audit infrastructure
 - **Evidence:** spec line 312 (CK v4.0 §6.2) text "Dabigatran + severe renal impairment". Canonical `EP.crosswalk.json` row classification: SPEC_ONLY. No CrCl-gated dabigatran SAFETY check in evaluator. Bleeding risk in renal impairment is the documented harm pathway (per FDA prescribing information + 2023 ACC/AHA AFib guideline).
 - **Severity rationale:** patient-safety risk; uncovered SAFETY classification.
-- **Remediation:** author evaluator block: (RxNorm 1037045 dabigatran on active med list) + (CrCl < 30 from observations OR eGFR LOINC). Switch-to-apixaban recommendation. Estimated 1-2h.
-- **Effort estimate:** XS-S (1-2h)
+- **Resolution:** Added registry entry `gap-ep-006-dabigatran-renal-safety` to `RUNTIME_GAP_REGISTRY` (line 240) and 2-branch compound evaluator block at line 4049 in `gapRuleEngine.ts`. Branch 1 (SAFETY): dabigatran (RxNorm 1037045) + eGFR<30 fires Class 3 (Harm) gap with switch-to-apixaban (RxNorm 1364430) or warfarin (RxNorm 11289) recommendation per FDA Pradaxa PI + 2023 ACC/AHA AFib Guideline LOE B. Branch 2 (DATA gap): dabigatran on med list + eGFR undefined fires structured measurement-required gap (fail-loud, no silent default — mirrors EP-RC LVEF-data-required pattern from PR #229). Hospice exclusion (Z51.5) preserved. Canonical pipeline regenerated: EP registry 46 → 47; gapsPush 46 → 48 (+2 from 2-branch); ID_N evaluator pattern 1 → 2; `EP.crosswalk.json` row GAP-EP-006 promoted SPEC_ONLY → DET_OK with override pin. 7 new tests in `tests/gapRules/electrophysiology.test.ts` covering positive/edge/negative/data-gap/hospice scenarios. All 313 jest tests passing.
+- **Effort estimate:** RESOLVED (~30 min agent)
 - **Cross-references:**
   - `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` §3.1
   - `docs/audit/canonical/EP.crosswalk.json` row GAP-EP-006
-  - PR #234
+  - PR #234 (canonical infrastructure baseline)
+  - PR #240 (AUDIT-034 mitigation, prior Tier S resolution pattern)
+  - This PR (AUDIT-032 SAFETY evaluator + registry entry)
 
 ---
 
