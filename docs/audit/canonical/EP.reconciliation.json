@@ -27,371 +27,371 @@
   "matches": [
     {
       "evaluatorBlockName": "Gap-39",
-      "evaluatorCommentLine": 3963,
+      "evaluatorCommentLine": 3966,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-39-qtc-safety",
-      "registryLine": 156
+      "registryLine": 157
     },
     {
       "evaluatorBlockName": "EP-OAC",
-      "evaluatorCommentLine": 3990,
+      "evaluatorCommentLine": 3993,
       "matchConfidence": 0.364,
       "matchMethod": "similarity",
       "registryId": "gap-ep-oac-afib",
-      "registryLine": 228
+      "registryLine": 229
     },
     {
       "evaluatorBlockName": "EP-006",
-      "evaluatorCommentLine": 4049,
+      "evaluatorCommentLine": 4052,
       "matchConfidence": 0.75,
       "matchMethod": "similarity",
       "registryId": "gap-ep-006-dabigatran-renal-safety",
-      "registryLine": 240
+      "registryLine": 241
     },
     {
       "evaluatorBlockName": "EP-RC",
-      "evaluatorCommentLine": 4878,
+      "evaluatorCommentLine": 4881,
       "matchConfidence": 0.333,
       "matchMethod": "similarity",
       "registryId": "gap-ep-rate-control-afib",
-      "registryLine": 324
+      "registryLine": 325
     },
     {
       "evaluatorBlockName": "EP-017",
-      "evaluatorCommentLine": 4901,
+      "evaluatorCommentLine": 4904,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-ep-017-hfref-non-dhp-ccb",
-      "registryLine": 336
+      "registryLine": 337
     },
     {
       "evaluatorBlockName": "EP-LAAC",
-      "evaluatorCommentLine": 4117,
+      "evaluatorCommentLine": 4120,
       "matchConfidence": 0.375,
       "matchMethod": "similarity",
       "registryId": "gap-ep-laac",
-      "registryLine": 384
+      "registryLine": 385
     },
     {
       "evaluatorBlockName": "EP-ABLATION",
-      "evaluatorCommentLine": 4152,
+      "evaluatorCommentLine": 4155,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-ep-ablation",
-      "registryLine": 396
+      "registryLine": 397
     },
     {
       "evaluatorBlockName": "EP-DEVICE-ICD",
-      "evaluatorCommentLine": 4182,
+      "evaluatorCommentLine": 4185,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-ep-device-icd",
-      "registryLine": 408
+      "registryLine": 409
     },
     {
       "evaluatorBlockName": "EP-DEVICE-CRT",
-      "evaluatorCommentLine": 4215,
+      "evaluatorCommentLine": 4218,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-ep-device-crt",
-      "registryLine": 420
+      "registryLine": 421
     },
     {
       "evaluatorBlockName": "EP-AMIODARONE-MONITOR",
-      "evaluatorCommentLine": 4248,
+      "evaluatorCommentLine": 4251,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-ep-amiodarone-monitor",
-      "registryLine": 432
+      "registryLine": 433
     },
     {
       "evaluatorBlockName": "EP-DOFETILIDE-REMS",
-      "evaluatorCommentLine": 4283,
+      "evaluatorCommentLine": 4286,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-ep-dofetilide-rems",
-      "registryLine": 444
+      "registryLine": 445
     },
     {
       "evaluatorBlockName": "EP-SYNCOPE",
-      "evaluatorCommentLine": 4318,
+      "evaluatorCommentLine": 4321,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-ep-syncope",
-      "registryLine": 456
+      "registryLine": 457
     },
     {
       "evaluatorBlockName": "EP-REMOTE-MONITORING",
-      "evaluatorCommentLine": 4351,
+      "evaluatorCommentLine": 4354,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-ep-remote-monitoring",
-      "registryLine": 468
+      "registryLine": 469
     },
     {
       "evaluatorBlockName": "EP-CSP",
-      "evaluatorCommentLine": 6774,
+      "evaluatorCommentLine": 6777,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-ep-csp",
-      "registryLine": 1092
+      "registryLine": 1093
     },
     {
       "evaluatorBlockName": "EP-PFA",
-      "evaluatorCommentLine": 6808,
+      "evaluatorCommentLine": 6811,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-ep-pfa",
-      "registryLine": 1104
+      "registryLine": 1105
     },
     {
       "evaluatorBlockName": "EP-WPW",
-      "evaluatorCommentLine": 6842,
+      "evaluatorCommentLine": 6845,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-ep-wpw",
-      "registryLine": 1116
+      "registryLine": 1117
     },
     {
       "evaluatorBlockName": "EP-DRONEDARONE",
-      "evaluatorCommentLine": 6870,
+      "evaluatorCommentLine": 6873,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-ep-dronedarone",
-      "registryLine": 1128
+      "registryLine": 1129
     },
     {
       "evaluatorBlockName": "EP-FLUTTER-OAC",
-      "evaluatorCommentLine": 6909,
+      "evaluatorCommentLine": 6912,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-ep-flutter-oac",
-      "registryLine": 1140
+      "registryLine": 1141
     },
     {
       "evaluatorBlockName": "EP-IST-IVABRADINE",
-      "evaluatorCommentLine": 6943,
+      "evaluatorCommentLine": 6946,
       "matchConfidence": 0.75,
       "matchMethod": "similarity",
       "registryId": "gap-ep-ist-ivabradine",
-      "registryLine": 1152
+      "registryLine": 1153
     },
     {
       "evaluatorBlockName": "EP-PVC-CM",
-      "evaluatorCommentLine": 6978,
+      "evaluatorCommentLine": 6981,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-ep-pvc-cm",
-      "registryLine": 1164
+      "registryLine": 1165
     },
     {
       "evaluatorBlockName": "EP-LQTS-BB",
-      "evaluatorCommentLine": 7010,
+      "evaluatorCommentLine": 7013,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-ep-lqts-bb",
-      "registryLine": 1176
+      "registryLine": 1177
     },
     {
       "evaluatorBlockName": "EP-SUBCLINICAL-AF",
-      "evaluatorCommentLine": 7043,
+      "evaluatorCommentLine": 7046,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-ep-subclinical-af",
-      "registryLine": 1188
+      "registryLine": 1189
     },
     {
       "evaluatorBlockName": "EP-ICD-PROGRAMMING",
-      "evaluatorCommentLine": 7077,
+      "evaluatorCommentLine": 7080,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-ep-icd-programming",
-      "registryLine": 1200
+      "registryLine": 1201
     },
     {
       "evaluatorBlockName": "EP-LEAD-INTEGRITY",
-      "evaluatorCommentLine": 7105,
+      "evaluatorCommentLine": 7108,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-ep-lead-integrity",
-      "registryLine": 1212
+      "registryLine": 1213
     },
     {
       "evaluatorBlockName": "EP-AAD-POST-ABLATION",
-      "evaluatorCommentLine": 7132,
+      "evaluatorCommentLine": 7135,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-ep-aad-post-ablation",
-      "registryLine": 1224
+      "registryLine": 1225
     },
     {
       "evaluatorBlockName": "EP-SECONDARY-ICD",
-      "evaluatorCommentLine": 7166,
+      "evaluatorCommentLine": 7169,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-ep-secondary-icd",
-      "registryLine": 1236
+      "registryLine": 1237
     },
     {
       "evaluatorBlockName": "EP-ACHD-ARRHYTHMIA",
-      "evaluatorCommentLine": 7194,
+      "evaluatorCommentLine": 7197,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-ep-achd-arrhythmia",
-      "registryLine": 1248
+      "registryLine": 1249
     },
     {
       "evaluatorBlockName": "EP-TORSADES",
-      "evaluatorCommentLine": 7225,
+      "evaluatorCommentLine": 7228,
       "matchConfidence": 0.625,
       "matchMethod": "similarity",
       "registryId": "gap-ep-torsades",
-      "registryLine": 1260
+      "registryLine": 1261
     },
     {
       "evaluatorBlockName": "EP-EARLY-RHYTHM",
-      "evaluatorCommentLine": 9395,
+      "evaluatorCommentLine": 9398,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-ep-early-rhythm",
-      "registryLine": 1812
+      "registryLine": 1813
     },
     {
       "evaluatorBlockName": "EP-VT-ABLATION",
-      "evaluatorCommentLine": 9428,
+      "evaluatorCommentLine": 9431,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-ep-vt-ablation",
-      "registryLine": 1824
+      "registryLine": 1825
     },
     {
       "evaluatorBlockName": "EP-SVT-ABLATION",
-      "evaluatorCommentLine": 9461,
+      "evaluatorCommentLine": 9464,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-ep-svt-ablation",
-      "registryLine": 1836
+      "registryLine": 1837
     },
     {
       "evaluatorBlockName": "EP-BRUGADA",
-      "evaluatorCommentLine": 9495,
+      "evaluatorCommentLine": 9498,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-ep-brugada",
-      "registryLine": 1848
+      "registryLine": 1849
     },
     {
       "evaluatorBlockName": "EP-ARVC",
-      "evaluatorCommentLine": 9528,
+      "evaluatorCommentLine": 9531,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-ep-arvc",
-      "registryLine": 1860
+      "registryLine": 1861
     },
     {
       "evaluatorBlockName": "EP-CARDIAC-SARCOID-EP",
-      "evaluatorCommentLine": 9562,
+      "evaluatorCommentLine": 9565,
       "matchConfidence": 0.75,
       "matchMethod": "similarity",
       "registryId": "gap-ep-cardiac-sarcoid-ep",
-      "registryLine": 1872
+      "registryLine": 1873
     },
     {
       "evaluatorBlockName": "EP-PACEMAKER-UPGRADE",
-      "evaluatorCommentLine": 9595,
+      "evaluatorCommentLine": 9598,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-ep-pacemaker-upgrade",
-      "registryLine": 1884
+      "registryLine": 1885
     },
     {
       "evaluatorBlockName": "EP-AF-STROKE-RISK",
-      "evaluatorCommentLine": 9627,
+      "evaluatorCommentLine": 9630,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-ep-af-stroke-risk",
-      "registryLine": 1896
+      "registryLine": 1897
     },
     {
       "evaluatorBlockName": "EP-CARDIOVERSION-TIMING",
-      "evaluatorCommentLine": 9665,
+      "evaluatorCommentLine": 9668,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-ep-direct-cardioversion",
-      "registryLine": 1920
+      "registryLine": 1921
     },
     {
       "evaluatorBlockName": "EP-TEE-PRE-CV",
-      "evaluatorCommentLine": 9694,
+      "evaluatorCommentLine": 9697,
       "matchConfidence": 0.571,
       "matchMethod": "similarity",
       "registryId": "gap-ep-tee-pre-cardioversion",
-      "registryLine": 1932
+      "registryLine": 1933
     },
     {
       "evaluatorBlockName": "EP-CIED-MRI",
-      "evaluatorCommentLine": 9731,
+      "evaluatorCommentLine": 9734,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-ep-cied-mri",
-      "registryLine": 1944
+      "registryLine": 1945
     },
     {
       "evaluatorBlockName": "EP-GENERATOR-REPLACEMENT",
-      "evaluatorCommentLine": 9760,
+      "evaluatorCommentLine": 9763,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-ep-generator-replacement",
-      "registryLine": 1956
+      "registryLine": 1957
     },
     {
       "evaluatorBlockName": "EP-INAPPROPRIATE-SHOCKS",
-      "evaluatorCommentLine": 9792,
+      "evaluatorCommentLine": 9795,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-ep-inappropriate-shocks",
-      "registryLine": 1968
+      "registryLine": 1969
     },
     {
       "evaluatorBlockName": "EP-EXERCISE-EP",
-      "evaluatorCommentLine": 9823,
+      "evaluatorCommentLine": 9826,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-ep-exercise-testing-ep",
-      "registryLine": 1980
+      "registryLine": 1981
     },
     {
       "evaluatorBlockName": "EP-AF-CATHETER-TIMING",
-      "evaluatorCommentLine": 9853,
+      "evaluatorCommentLine": 9856,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-ep-af-catheter-timing",
-      "registryLine": 2784
+      "registryLine": 2785
     },
     {
       "evaluatorBlockName": "EP-PILL-IN-POCKET",
-      "evaluatorCommentLine": 9890,
+      "evaluatorCommentLine": 9893,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-ep-pill-in-pocket",
-      "registryLine": 3120
+      "registryLine": 3121
     },
     {
       "evaluatorBlockName": "EP-LEFT-ATRIAL-SIZE",
-      "evaluatorCommentLine": 9924,
+      "evaluatorCommentLine": 9927,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-ep-left-atrial-size",
-      "registryLine": 3132
+      "registryLine": 3133
     },
     {
       "evaluatorBlockName": "EP-ANTICOAG-SCORE-REASSESS",
-      "evaluatorCommentLine": 9952,
+      "evaluatorCommentLine": 9955,
       "matchConfidence": 0.778,
       "matchMethod": "similarity",
       "registryId": "gap-ep-anticoag-score-reassess",
-      "registryLine": 3144
+      "registryLine": 3145
     }
   ],
   "module": "EP",
@@ -400,7 +400,7 @@
       "actualPrefix": "gap-39-",
       "expectedPrefix": "gap-ep-",
       "registryId": "gap-39-qtc-safety",
-      "registryLine": 156
+      "registryLine": 157
     }
   ],
   "registryCount": 47,
@@ -409,7 +409,7 @@
       "evaluatorBlockName": null,
       "reason": "No evaluator body matched via similarity scoring",
       "registryId": "gap-ep-anticoag-interruption",
-      "registryLine": 1908
+      "registryLine": 1909
     }
   ],
   "specGapCount": 89,
