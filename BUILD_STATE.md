@@ -8,13 +8,13 @@
 
 | Field | Value |
 |---|---|
-| Last updated | 2026-05-04 (Day 6 of Phase 0) — Phase 0B canonical infrastructure complete |
+| Last updated | 2026-05-05 (Day 7 of Phase 0) — Tier S queue CLOSED; Cat A clinical-code verification batch shipped |
 | Last update by | jhart |
-| Last update commit SHA | _pending canonical infrastructure PR_ (this PR's chore commit) |
+| Last update commit SHA | session arc PRs #234, #235, #236, #238, #239, #240, #241, #242, #243 (10 PRs across canonical infra + Tier S series + Cat A corrections) |
 | Plan reference | `docs/PATH_TO_ROBUST.md` v1.2 (active 2026-04-28) |
-| Plan target | **Under revision per v2.0**; v1.2 timeline (3-4 months) revised preliminary to **7-9 months raw scope**; per CAD audit §13, this translates to ~3-6 months AI-assisted wall-clock; canonical infrastructure (this PR) gives v2.0 author structured 603-row matrix as direct input; v2.0 PATH_TO_ROBUST due ~2026-05-19 |
-| Phase 0 day | **6 of 21** (15 days remaining in Phase 0 window) |
-| Phase 0 hours budget | **Phase 0B clinical audit: COMPLETE** (canonical infrastructure consolidated 6-module audits via auto-classifier + 21 manual overrides; ~50 min agent wall-clock for infrastructure + classification work per AUDIT-028 — see canonical PR description). ~52-82h raw-scope budget remaining; redirected to Phase 0A backend + Phase 0C UI/UX. |
+| Plan target | **Under revision per v2.0**; v1.2 timeline (3-4 months) revised preliminary to **7-9 months raw scope**; per CAD audit §13, this translates to ~3-6 months AI-assisted wall-clock; canonical infrastructure + Tier S closure + Cat A corrections give v2.0 author structured 603-row matrix + verified-codes baseline as direct input; v2.0 PATH_TO_ROBUST due ~2026-05-19 |
+| Phase 0 day | **7 of 21** (14 days remaining in Phase 0 window) |
+| Phase 0 hours budget | **Phase 0B clinical audit: COMPLETE** (canonical infrastructure consolidated 6-module audits via auto-classifier + 21 manual overrides; **all 4 Tier S patient-safety items resolved 2026-05-05**: EP-017 (PR #238), CAD-016 (#240), EP-006 (#241), EP-079 (#243); **Cat A clinical-code verification batch shipped 2026-05-05** (PR #242, AUDIT-042..061 — 13 wrong-drug bugs / 84 codes = 15.5% bug rate corrected). ~52-82h raw-scope budget remaining; redirected to Phase 0A backend + Phase 0C UI/UX + Cat D inline-array verification (Batch 2). |
 | v2.0 PATH_TO_ROBUST due | end of Week 3 (~2026-05-19) |
 
 ---
@@ -42,6 +42,10 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 - [x] VHD — canonical addendum (5 DET_OK / 16 PARTIAL / 84 SPEC_ONLY of 105 = 20% any-coverage; 1 cross-module to SH)
 - [x] **Cross-module synthesis** with Tier S triage queue, blind-spot analysis, BSW pathway distribution
 - [x] **Canonical infrastructure** (AUDIT_METHODOLOGY.md + 8 scripts + CI gates + 101 tests)
+- [x] **Tier S queue CLOSED** (4 → 0 across PRs #238/240/241/243 — EP-017, CAD-016, EP-006, EP-079; only `(CRITICAL)`-tagged spec gap also resolved)
+- [x] **Cat A clinical-code verification batch** (PR #242 AUDIT-042..061 — 13 wrong-drug bugs corrected: dofetilide=donepezil, dronedarone=donepezil-branded, finerenone=invalid-CUI, ivabradine=invalid-CUI, sotagliflozin=bexagliflozin, procainamide=propranolol, digoxin-IV=retired aspirin combo, etc.)
+- [x] **AUDIT_METHODOLOGY.md §16** clinical-code verification standard (RxNav/LOINC/ICD-10 authoritative-source verification; cousin to §1 rule-body verification)
+- [/] **Cat D-G clinical-code verification (Batches 2-7)** — pending; ~52 inline RxNorm arrays, 11 ICD-10 valuesets, 30 LOINC keys, ~50 inline ICD-10 patterns, 4 exclusion constants. AUDIT-046..051 candidates pre-identified.
 
 ### Phase 0C — UI/UX audit (~25-30h)
 
@@ -63,16 +67,16 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 
 | Workstream | % | State (1 line) | Source |
 |---|---|---|---|
-| Backend (core APIs) | 70% | 29 routes, 21 services, 6-module rule engine (259 rules); CX absent | `CLAUDE.md` §10 |
+| Backend (core APIs) | 70% | 29 routes, 21 services, 6-module rule engine (263 rules post-Tier-S closure); CX absent | `CLAUDE.md` §10 |
 | Security | 50% | Tier S 3.5/4 closed; AUDIT-011 Phase a-pre RESOLVED; AUDIT-025 Phase a live | `AUDIT_FINDINGS_REGISTER.md` |
 | Infrastructure (AWS) | 85% | Aurora-only, RDS decommissioned 2026-05-02, staging cluster live | `CLAUDE.md` §9 |
-| Ingestion | 50% | Webhook + 259 rules across 6 modules; BSW SFTP/opportunity report not built | `CLAUDE.md` §10 |
+| Ingestion | 50% | Webhook + 263 rules across 6 modules (post-Tier-S closure); BSW SFTP/opportunity report not built | `CLAUDE.md` §10 |
 | Frontend | 35% | 6 modules × 3 tiers = 216 .tsx files; 5 of 6 use mock data | `CLAUDE.md` §10 |
 | Integration | 20% | BSW pilot live since 2026-04-27; Mount Sinai MSA framework; Epic Clarity SQL not in repo | `CLAUDE.md` §11-12 |
 | Deployment | 75% | CI + 2 deploy workflows; AUDIT-025 Phase a (Migration Validation gate) live; branch protection TODO | PR #223 |
 | Testing | 5% | 27 tests passing, 0.87% backend coverage (AUDIT-001 P0) | `PHASE_1_REPORT.md` |
 | Documentation | 70% | 7 PRs in current arc; 3 design docs; runbooks complete | `CHANGE_RECORD_*.md` |
-| Clinical KB | 41% | CK v4.0 with 708 gaps; 6 of 6 active modules audited (canonical crosswalks); 248/603 covered any-tier; 98/603 DET_OK | `docs/audit/canonical/`, `docs/audit/AUDIT_METHODOLOGY.md` |
+| Clinical KB | 42% | CK v4.0 with 708 gaps; 6 of 6 active modules audited (canonical crosswalks); 250/603 covered any-tier post-Tier-S closure; 101/603 DET_OK; Tier S queue CLOSED; Cat A canonical RxNorms verified per AUDIT_METHODOLOGY.md §16 | `docs/audit/canonical/`, `docs/audit/AUDIT_METHODOLOGY.md` |
 
 ---
 
@@ -146,25 +150,27 @@ Source: `docs/audit/canonical/<MODULE>.crosswalk.json` (canonical), `docs/audit/
 
 Generated from canonical crosswalks. Auto-include criteria: spec-explicit SAFETY-tagged + T1 + uncovered.
 
-| Spec gap | Module | Class | SAFETY tag | Notes |
-|---|---|---|---|---|
-| GAP-EP-079 | EP | SPEC_ONLY | `(CRITICAL)` | pre-excited AF + AVN blocker → VF risk; highest priority |
-| GAP-EP-006 | EP | SPEC_ONLY | `(SAFETY)` | dabigatran in CrCl<30 |
-| GAP-EP-017 | EP | SPEC_ONLY | `(SAFETY)` | HFrEF + non-DHP CCB; evaluator EP-017 exists at line 4797 (PR #229) but no registry entry — trivial fix: add registry entry |
-| GAP-CAD-016 | CAD | PARTIAL | `(SAFETY)` | prasugrel + stroke/TIA; needs hardening for full SAFETY closure |
+**Queue CLOSED 2026-05-05** — all 4 items resolved across single session arc:
 
-**Clinical Tier S queue: 4 spec-explicit items.** Mitigation work tracked as separate PR series.
+| Spec gap | Module | Class | SAFETY tag | Resolution |
+|---|---|---|---|---|
+| GAP-EP-017 | EP | DET_OK | `(SAFETY)` | **RESOLVED PR #238** (registry entry add; queue 4 → 3) |
+| GAP-CAD-016 | CAD | DET_OK | `(SAFETY)` | **RESOLVED PR #240** (new SAFETY discriminator block; queue 3 → 2) |
+| GAP-EP-006 | EP | DET_OK | `(SAFETY)` | **RESOLVED PR #241** (2-branch SAFETY + DATA gap; queue 2 → 1) |
+| GAP-EP-079 | EP | DET_OK | `(CRITICAL)` | **RESOLVED PR #243** (single-branch CRITICAL evaluator; queue 1 → 0 — **CLOSED**) |
+
+**Clinical Tier S queue: 0 items.** No spec-explicit `(SAFETY)` or `(CRITICAL)` T1 gaps remain uncovered. AUDIT-031 was the only `(CRITICAL)` safetyClass item in CK v4.0; closure means no spec-explicit CRITICAL gaps remain.
 Source: `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` §3.1.
 
 ---
 
 ## §6 — Open critical work (top 3, priority order)
 
-1. **Clinical Tier S mitigation PR series** — 4 patient-safety items (EP-079, EP-006, CAD-016, EP-017). EP-017 trivial (add registry entry). Others require new evaluator block authorship. Estimate ~6-12h raw scope across 4 PRs.
-2. **Phase 0A backend audits Phase 3-5** — Data layer (~10h) + Operational maturity (~10h) + HIPAA gap analysis (~15-20h); load-bearing for v2.0.
-3. **Phase 0C UI/UX audit** — 25-30h raw scope, completes Phase 0 deliverable set for v2.0 authorship.
+1. **AUDIT-041 fast-track fix** — `applyOverrides.ts` writes to candidate not canonical (4 recurrences across PRs #238/240/241/243). Estimate ~30-45 min agent.
+2. **Cat D inline-array clinical-code verification (Batch 2)** — ~52 inline RxNorm arrays in `gapRuleEngine.ts`; AUDIT-046..051 candidates pre-identified (e.g., `MRA_CODES_K = ['9947', '37801']` cites sotalol as "spironolactone proxy"; ARB_CODES has positions that look swapped). Estimate ~2-3h agent. Likely surfaces additional wrong-drug bugs.
+3. **Phase 0A backend audits Phase 3-5** — Data layer (~10h) + Operational maturity (~10h) + HIPAA gap analysis (~15-20h); load-bearing for v2.0.
 
-**Audit-axis Phase 0B critical path COMPLETE.** Phase 0A + 0C remain. Tactical security work (AUDIT-025 Phase b, AUDIT-011 Phase a/b/c/d, AUDIT-022 backfill) queued for Phase 1.
+**Audit-axis Phase 0B critical path COMPLETE; Tier S queue CLOSED.** Phase 0A + 0C remain. AUDIT-052 architectural refactor (inline arrays bypass canonical valuesets) is the long-tail follow-up; partial mitigation shipped in PR #242. Tactical security work (AUDIT-025 Phase b, AUDIT-011 Phase a/b/c/d, AUDIT-022 backfill) queued for Phase 1.
 
 ---
 
@@ -220,6 +226,8 @@ Per CAD audit §13 time-unit caveat (AUDIT-028, 2026-05-04): all hour estimates 
 Source: `docs/audit/PHASE_0B_HF_AUDIT_ADDENDUM.md` §6.3, `docs/audit/PHASE_0B_CAD_AUDIT_ADDENDUM.md` §11, §11.5, §13.
 
 **Canonical infrastructure (2026-05-04):** AUDIT-029 / AUDIT-030 / AUDIT-030.D methodology defects resolved via `docs/audit/AUDIT_METHODOLOGY.md` canonical contract. 6-module audits regenerated from canonical JSON crosswalks; CI gates enforce regeneration discipline. Auto-classifier accuracy: 5 of 6 modules within ±10% of prior addendum claims; VHD bridged via 13 manual overrides documenting addendum's broad-rule consolidations + cross-module satisfaction. 18 cross-module satisfaction patterns surfaced (notably HF Device Therapy → EP module CRT/ICD evaluators). Wall-clock per AUDIT-028: ~50 min agent across 8 phases for full canonical infrastructure build.
+
+**Tier S queue closure + Cat A clinical-code verification (2026-05-05):** All 4 spec-explicit Tier S patient-safety items resolved across 4 PRs in single session arc (#238 EP-017 → #240 CAD-016 → #241 EP-006 → #243 EP-079; queue 4 → 3 → 2 → 1 → 0). AUDIT-031 was the only `(CRITICAL)`-tagged spec gap; closure means no spec-explicit CRITICAL gaps remain uncovered. Mid-arc, Phase 2 systematic verification of canonical RxNorm valuesets (PR #242, AUDIT-042..061) surfaced 13 wrong-drug or invalid-CUI errors in 84 cited codes (15.5% bug rate) — patient-safety-active subset (AUDIT-042/044/053/054/055/056/057) was silently miscoding QTc surveillance + finerenone/ivabradine gap rules in production. AUDIT_METHODOLOGY.md §16 added codifying mandatory RxNav/LOINC/ICD-10 authoritative-source verification (cousin to §1 rule-body verification). refreshCites.ts (PR #239) validated on 4 real-world Tier S PRs (idempotent, ~250 cites refreshed per run). AUDIT-041 (applyOverrides canonical-mode gap) recurred 4 times — fast-track follow-up.
 
 ---
 

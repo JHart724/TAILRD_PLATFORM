@@ -283,17 +283,21 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 - Do NOT use ML/AI for gap detection -- use deterministic, rule-based logic only
 - The ECG AI pipeline (backend/src/ai/) is NOT covered by the CDS exemption and should not be activated without FDA clearance
 
-**Current gap rule status (as of April 2026):**
-- Heart Failure: 47 rules (100% coverage)
-- Electrophysiology: 44 rules (100% coverage)
-- Coronary Intervention: 76 rules (100% coverage)
+**Current gap rule status (as of 2026-05-05, post-Tier-S-closure):**
+- Heart Failure: 48 registry / 47 evaluator
+- Electrophysiology: 48 registry / 47 evaluator (post Tier S closures: EP-017, EP-006, EP-079)
+- Coronary Intervention: 77 registry / 77 evaluator (post CAD-016 SAFETY discriminator)
 - Structural Heart: 25 rules (100% coverage)
 - Valvular Disease: 32 rules (100% coverage)
 - Peripheral Vascular: 33 rules (100% coverage)
 
-257 rules execute in the runtime (full coverage of all 256 frontend gap definitions) via `ingestion/gapDetectionRunner.ts`. Each rule has guideline provenance in `RUNTIME_GAP_REGISTRY` with class of recommendation and level of evidence. The CQL engine (`cqlEngine.ts`) is scaffolding -- gap rules run directly via deterministic TypeScript, not CQL.
+263 gaps.push calls execute in the runtime (Phase 0B canonical reconciliation in `docs/audit/canonical/<MODULE>.crosswalk.json` documents 250 of 603 spec gaps any-tier-covered, 101 DET_OK). Each rule has guideline provenance in `RUNTIME_GAP_REGISTRY` with class of recommendation and level of evidence. The CQL engine (`cqlEngine.ts`) is scaffolding — gap rules run directly via deterministic TypeScript, not CQL.
+
+**Tier S queue CLOSED (2026-05-05):** All 4 spec-explicit Tier S patient-safety items resolved across PRs #238 (EP-017 HFrEF + non-DHP CCB), #240 (CAD-016 prasugrel + stroke/TIA), #241 (EP-006 dabigatran + CrCl<30), #243 (EP-079 WPW + AF + AVN blocker — only `(CRITICAL)`-tagged spec gap). No spec-explicit `(SAFETY)` or `(CRITICAL)` T1 gaps remain uncovered. Source: `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` §3.1.
 
 **Cardiovascular terminology:** `backend/src/terminology/cardiovascularValuesets.ts` contains curated LOINC, ICD-10, RxNorm, and SNOMED code sets for gap detection. When adding new gap rules, add required codes there.
+
+**Clinical-code verification (mandatory, AUDIT_METHODOLOGY.md §16):** Every new RxNorm / LOINC / ICD-10 constant must be verified against an authoritative external source before authoring or consuming it. RxNorms via RxNav properties.json (`https://rxnav.nlm.nih.gov/REST/rxcui/<cui>/properties.json`). LOINC via loinc.org. ICD-10 via CMS ICD-10-CM 2024. Codebase trust is INSUFFICIENT — Cat A verification (PR #242) surfaced 13 wrong-drug bugs in 84 cited canonical RxNorms (15.5% bug rate; e.g., `RXNORM_QT_PROLONGING.DOFETILIDE` was donepezil, an Alzheimer's drug). Cite the verified-name comment next to the code. AUDIT-052 architectural follow-up: prefer importing from canonical valuesets over inline arrays in `gapRuleEngine.ts` (~52 inline arrays bypass canonical valuesets — divergence vector).
 
 **Redis:** `backend/src/lib/redis.ts` provides a shared client singleton. Connects when `REDIS_URL` is set, falls back gracefully. Used for future rate limiter store, caching, and session management.
 
