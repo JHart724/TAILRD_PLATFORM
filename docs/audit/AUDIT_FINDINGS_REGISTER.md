@@ -81,6 +81,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-030.D** — Evaluator inventory completeness via multi-pattern detection (Phase 0B canonical, **RESOLVED 2026-05-04** via PR #234)
 - **AUDIT-036** — `gap-hf-vaccine-covid` registry-only orphan (Phase 0B HF, OPEN)
 - **AUDIT-038** — Node 18 LTS deprecation tracking (Operational debt, OPEN)
+- **AUDIT-040** — Line-shift handling in canonical pipeline (Operational debt / canonical infrastructure, **RESOLVED 2026-05-05** via refreshCites.ts)
 
 ### INFO
 
@@ -730,6 +731,25 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
   - PR #235 Security Audit failure (`gh run view 25351630120 --log-failed` on chore/step-i-register-batch)
   - PR #236 (axios upgrade)
   - AUDIT-007 (existing moderate uuid/node-cron advisories — distinct chain, separate remediation)
+
+---
+
+### AUDIT-040 — Line-shift handling in canonical pipeline (refreshCites.ts)
+
+- **Phase:** Operational debt / canonical infrastructure
+- **Severity:** LOW (P3) — pipeline ergonomics; no production / patient-safety impact
+- **Status:** **RESOLVED 2026-05-05** via `backend/scripts/auditCanonical/refreshCites.ts` (this PR)
+- **Tier:** B
+- **Detected:** 2026-05-05 via PR #238 line-shift propagation discovery
+- **Evidence:** PR #238 (AUDIT-033 mitigation) added a 12-line registry entry to `gapRuleEngine.ts`. Every cite in every committed `<MODULE>.crosswalk.json` that references downstream content (registry entries below the insertion point + evaluator blocks below it) became stale — 249 cite line-numbers across 6 modules. The existing `verifyDraft.ts` pipeline preserves stale cite line numbers from drafts when "preserving from addendum" rather than refreshing from current `code.json` (verifyDraft.ts:357-358). PR #238 worked around this with a one-off `.tmp-refresh.ts` script, but future Tier S mitigation PRs (AUDIT-031 GAP-EP-079, AUDIT-032 GAP-EP-006, AUDIT-034 GAP-CAD-016) will add new evaluator blocks producing larger line shifts — the workaround needs to become permanent infrastructure.
+- **Severity rationale:** pipeline-ergonomics gap. Failure mode: CI Gate 5 surfaces BODY_LINE_RANGE_MISMATCH / REGISTRY_LINE_MISMATCH errors; without a documented refresh path, contributors hit blocking CI failure with unclear remediation. No production or clinical risk; canonical content is correct, only line-number cites drift.
+- **Resolution:** added permanent pipeline script `backend/scripts/auditCanonical/refreshCites.ts` with byte-preservation guarantees (auditNotes, classifications, overrides preserved verbatim; only `registryLine`, `evaluatorBodyLineRange`, `specLine` updated). Cross-module cites (where row's `evaluatorModule` differs from crosswalk's module) refresh against the cited module's `code.json`. Idempotent: zero-change on already-current crosswalks. Fail-loud when registry/evaluator no longer exists (`RegistryIdNotFoundInRefresh`, `EvaluatorBlockNotFoundInRefresh`, `CrossModuleSourceMissing` structured errors). 7 unit tests in `refreshCites.test.ts` cover line-shift updates, content byte-preservation, classification preservation, cross-module refresh, idempotency, and fail-loud behavior. CI Gate 5 error message updated with `refreshCites.ts --all` hint. AUDIT_METHODOLOGY.md §10.4 documents the line-shift workflow.
+- **Effort estimate:** RESOLVED (~30 min agent including tests, docs, register entry, workflow hint)
+- **Cross-references:**
+  - PR #238 (discovery source — AUDIT-033 mitigation that surfaced the line-shift gap)
+  - PR #234 (canonical infrastructure that established the cite-line-number invariants)
+  - This PR (`refreshCites.ts` permanent script + AUDIT_METHODOLOGY.md §10.4 + workflow Gate 5 hint)
+  - `backend/scripts/auditCanonical/verifyDraft.ts:357-358` (preserve-cite logic that produced stale line numbers; not modified by this PR — `refreshCites` is a separate concern from verify)
 
 ---
 

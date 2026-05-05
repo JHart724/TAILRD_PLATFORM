@@ -194,8 +194,11 @@ jobs:
           if ! npx tsx scripts/auditCanonical/validateCanonical.ts; then
             echo "::error::REJECT: crosswalk-schema-invalid"
             echo "::error::One or more <MODULE>.crosswalk.json files fail schema validation."
-            echo "::error::Run locally: npx tsx backend/scripts/auditCanonical/validateCanonical.ts"
-            echo "::error::See AUDIT_METHODOLOGY.md §4 for citation requirements + §6 for SAFETY-tag rules."
+            echo "::error::If errors are BODY_LINE_RANGE_MISMATCH or REGISTRY_LINE_MISMATCH (line shifts):"
+            echo "::error::  npx tsx backend/scripts/auditCanonical/refreshCites.ts --all"
+            echo "::error::then re-commit the updated canonical files. Otherwise:"
+            echo "::error::  Run locally: npx tsx backend/scripts/auditCanonical/validateCanonical.ts"
+            echo "::error::See AUDIT_METHODOLOGY.md §4 (citation requirements), §6 (SAFETY-tag rules), §10.4 (line-shift workflow)."
             exit 1
           fi
           echo "Gate 5 passed: all crosswalks valid against schema."
