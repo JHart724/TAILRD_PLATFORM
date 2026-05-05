@@ -284,3 +284,89 @@ describe('EP-006 SAFETY: dabigatran + eGFR<30 (AUDIT-032)', () => {
     expect(findEgfrDataGap(gaps)).toBeUndefined();
   });
 });
+
+// ============================================================
+// EP-079 CRITICAL: Pre-excited AF + AVN blocker (risk of VF)
+// AUDIT-031 mitigation (2026-05-05, fix/audit-031-ep-079-wpw-avn-blocker-critical)
+// ============================================================
+// Guideline: 2023 ACC/AHA/ACCP/HRS AFib Guideline Class 3 (Harm) LOE B.
+// Spec: CK v4.0 §6.2 line 352 — final spec-explicit Tier S item.
+// Mechanism: AVN blockade in WPW + AF removes the safety governor on rapid
+// accessory-pathway conduction → 1:1 AV conduction at AF rate → ventricular fibrillation.
+// All 14 AVN-blocker RxNorms verified via RxNav per AUDIT_METHODOLOGY.md §16.
+const WPW_DX = 'I45.6';
+const RXNORM_DILTIAZEM_EP079 = '3443';
+const RXNORM_DIGOXIN_INGREDIENT = '3407';
+const RXNORM_PROCAINAMIDE_VERIFIED = '8700';  // post-AUDIT-042 correction (was 8787 = propranolol)
+
+function findWpwCriticalGap(gaps: any[]) {
+  return gaps.find(
+    (g) =>
+      g.status &&
+      g.status.includes('CRITICAL: AV nodal blocker contraindicated in pre-excited AF'),
+  );
+}
+
+describe('EP-079 CRITICAL: pre-excited AF + AVN blocker (AUDIT-031, final Tier S item)', () => {
+  it('Positive: WPW + AF + metoprolol → fires CRITICAL (Class 3 Harm)', () => {
+    const dx = [WPW_DX, AFIB_DX];
+    const meds = [RXNORM_METOPROLOL];
+    const gaps = evaluateGapRules(dx, {}, meds, 35);
+
+    const critical = findWpwCriticalGap(gaps);
+    expect(critical).toBeDefined();
+    expect(critical.evidence.classOfRecommendation).toBe('3 (Harm)');
+    expect(critical.evidence.safetyClass).toBe('CRITICAL');
+    expect(critical.target).toContain('procainamide');
+    expect(critical.target).toContain('amiodarone');
+    expect(critical.evidence.guidelineSource).toContain('2023 ACC/AHA/ACCP/HRS Atrial Fibrillation');
+  });
+
+  it('Positive: WPW + AF + diltiazem → fires CRITICAL (non-DHP CCB variant)', () => {
+    const dx = [WPW_DX, AFIB_DX];
+    const meds = [RXNORM_DILTIAZEM_EP079];
+    const gaps = evaluateGapRules(dx, {}, meds, 40);
+
+    expect(findWpwCriticalGap(gaps)).toBeDefined();
+  });
+
+  it('Positive: WPW + AF + digoxin (ingredient 3407) → fires CRITICAL (digoxin variant)', () => {
+    const dx = [WPW_DX, AFIB_DX];
+    const meds = [RXNORM_DIGOXIN_INGREDIENT];
+    const gaps = evaluateGapRules(dx, {}, meds, 55);
+
+    expect(findWpwCriticalGap(gaps)).toBeDefined();
+  });
+
+  it('Negative: AF + metoprolol without WPW → does NOT fire (normal AFib rate control)', () => {
+    const dx = [AFIB_DX];
+    const meds = [RXNORM_METOPROLOL];
+    const gaps = evaluateGapRules(dx, {}, meds, 65);
+
+    expect(findWpwCriticalGap(gaps)).toBeUndefined();
+  });
+
+  it('Negative: WPW alone without AF → does NOT fire (no rapid-conduction substrate)', () => {
+    const dx = [WPW_DX];
+    const meds = [RXNORM_METOPROLOL];
+    const gaps = evaluateGapRules(dx, {}, meds, 30);
+
+    expect(findWpwCriticalGap(gaps)).toBeUndefined();
+  });
+
+  it('Negative: WPW + AF + procainamide (8700) only → does NOT fire (correct therapy)', () => {
+    const dx = [WPW_DX, AFIB_DX];
+    const meds = [RXNORM_PROCAINAMIDE_VERIFIED];
+    const gaps = evaluateGapRules(dx, {}, meds, 45);
+
+    expect(findWpwCriticalGap(gaps)).toBeUndefined();
+  });
+
+  it('Edge: WPW + AF + metoprolol + Z51.5 hospice → does NOT fire (hospice exclusion preserved)', () => {
+    const dx = [WPW_DX, AFIB_DX, 'Z51.5'];
+    const meds = [RXNORM_METOPROLOL];
+    const gaps = evaluateGapRules(dx, {}, meds, 80);
+
+    expect(findWpwCriticalGap(gaps)).toBeUndefined();
+  });
+});

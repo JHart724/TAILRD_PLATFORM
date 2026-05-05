@@ -26,7 +26,7 @@ describe('Structural: Gap rule engine integrity', () => {
     content = fs.readFileSync(ENGINE_PATH, 'utf8');
   });
 
-  it('exactly 262 gap rules defined (gaps.push calls)', () => {
+  it('exactly 263 gap rules defined (gaps.push calls)', () => {
     // Count incremented from 257 to 259 by EP-XX-7 mitigation (2026-05-04, fix/ep-017-rate-control-hfref-gating):
     // - +1: EP-017 SAFETY gap (HFrEF + on non-DHP CCB → Class 3 Harm alert)
     // - +1: EP-RC LVEF-data-required gap (HF dx + AF + LVEF undefined → structured data gap, not silent default)
@@ -36,8 +36,10 @@ describe('Structural: Gap rule engine integrity', () => {
     // - +1: EP-006 SAFETY gap (Dabigatran + eGFR<30 severe renal impairment → Class 3 Harm per FDA Pradaxa PI)
     // - +1: EP-006 DATA gap (Dabigatran on med list + eGFR undefined → fail-loud structured data gap)
     // See backend/src/ingestion/gaps/gapRuleEngine.ts §"EP-006 SAFETY".
+    // Then 262 → 263 by AUDIT-031 (2026-05-05, fix/audit-031-ep-079-wpw-avn-blocker-critical):
+    // - +1: EP-079 CRITICAL gap (WPW + AF + AVN blocker → ventricular fibrillation per 2023 ACC/AHA AFib Class 3 Harm). Closes Tier S queue (final item; queue 1 → 0).
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(262);
+    expect(count).toBe(263);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

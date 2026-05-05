@@ -1,8 +1,8 @@
 {
   "extractorScript": "backend/scripts/auditCanonical/extractCode.ts",
   "extractorVersion": "1.0.0",
-  "generatedAt": "2026-05-05T15:51:13.000Z",
+  "generatedAt": "2026-05-05T17:10:40.802Z",
   "generatedBy": "extractCode",
   "module": "EP",
-  "sourceSha256": "e6bcc4a397f9b30e88063b4c8b91af30ac7051cb9f395742a93c9cbd6b113d02"
+  "sourceSha256": "510a991ce602dabe7d03f34061e725d02e5e40c5f5848d14caed33a8dcb40b26"
 }

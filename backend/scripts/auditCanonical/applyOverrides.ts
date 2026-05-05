@@ -51,6 +51,12 @@ const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
       auditNote:
         'MANUAL OVERRIDE: AUDIT-032 RESOLVED 2026-05-05 — new SAFETY evaluator block added (this PR) covering dabigatran (RxNorm 1037045) + eGFR<30 severe renal impairment per FDA Pradaxa PI + 2023 ACC/AHA AFib Class 3 (Harm) LOE B. Includes structured-data-gap branch for missing eGFR (matches EP-XX-7 LVEF-data-required pattern; preserves harm vector via fail-loud rather than silent default). Closes Tier S queue item.',
     },
+    'GAP-EP-079': {
+      classification: 'DET_OK',
+      registryId: 'gap-ep-079-wpw-af-avn-blocker',
+      auditNote:
+        'MANUAL OVERRIDE: AUDIT-031 RESOLVED 2026-05-05 — new CRITICAL evaluator block added (this PR) covering WPW (I45.6) + AF (I48.x) + AVN blocker (8 beta-blockers + 2 non-DHP CCBs + digoxin ingredient/formulations) per 2023 ACC/AHA/ACCP/HRS AFib Class 3 (Harm) LOE B. Mechanism: AVN blockade removes safety governor on rapid accessory-pathway conduction → fatal VF. Switch recommendation: procainamide (8700, post-AUDIT-042) or amiodarone (703); definitive ablation Class 1. All 14 AVN-blocker RxNorms verified via RxNav per AUDIT_METHODOLOGY.md §16. Closes Tier S queue (final item — queue 1 → 0).',
+    },
     'GAP-EP-007': {
       classification: 'DET_OK',
       registryId: 'gap-vd-6-doac-mechanical-valve',

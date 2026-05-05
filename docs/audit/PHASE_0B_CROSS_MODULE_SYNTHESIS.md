@@ -11,12 +11,12 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 | Module | Spec gaps | DET_OK | PARTIAL | SPEC_ONLY | Any-coverage | DET_OK rate |
 |---|---:|---:|---:|---:|---:|---:|
 | HF | 126 | 22 | 43 | 61 | 65/126 (51.6%) | 17.5% |
-| EP | 89 | 20 | 26 | 43 | 46/89 (51.7%) | 22.5% |
+| EP | 89 | 21 | 26 | 42 | 47/89 (52.8%) | 23.6% |
 | SH | 88 | 9 | 23 | 56 | 32/88 (36.4%) | 10.2% |
 | CAD | 90 | 29 | 27 | 34 | 56/90 (62.2%) | 32.2% |
 | VHD | 105 | 5 | 16 | 84 | 21/105 (20.0%) | 4.8% |
 | PV | 105 | 16 | 14 | 75 | 30/105 (28.6%) | 15.2% |
-| **TOTAL** | **603** | **101** | **149** | **353** | **250/603 (41.5%)** | **16.7%** |
+| **TOTAL** | **603** | **102** | **149** | **352** | **251/603 (41.6%)** | **16.9%** |
 
 ---
 
@@ -25,7 +25,7 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 | Module | T1 total | T1 DET_OK | T1 PARTIAL | T1 SPEC_ONLY | T1 any-coverage |
 |---|---:|---:|---:|---:|---:|
 | HF | 29 | 8 | 14 | 7 | 75.9% |
-| EP | 15 | 7 | 4 | 4 | 73.3% |
+| EP | 15 | 8 | 4 | 3 | 80.0% |
 | SH | 13 | 2 | 6 | 5 | 61.5% |
 | CAD | 18 | 8 | 4 | 6 | 66.7% |
 | VHD | 8 | 1 | 3 | 4 | 50.0% |
@@ -37,11 +37,9 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 
 Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-relevant) AND (T1) AND (uncovered). Spec-explicit auto-include; structurally-inferred require operator decision.
 
-### 3.1 Spec-explicit SAFETY uncovered T1 (1 — automatic Tier S)
+### 3.1 Spec-explicit SAFETY uncovered T1 (0 — automatic Tier S)
 
-| Spec gap | Module | Spec line | Class | SAFETY tag | Detection logic (excerpt) |
-|---|---|---:|---|---|---|
-| **GAP-EP-079** | EP | 352 | SPEC_ONLY | `(CRITICAL)` | WPW + AF on beta-blocker/CCB/digoxin - risk of VF |
+None. All spec-explicit SAFETY-tagged T1 gaps have at least PARTIAL coverage.
 
 ### 3.2 Structurally-inferred SAFETY (0 — operator decision required)
 

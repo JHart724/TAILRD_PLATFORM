@@ -52,7 +52,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-014** — Patient search silently broken on encrypted PHI fields (Phase 2B, OPEN)
 - **AUDIT-015** — `decrypt()` returns ciphertext on integrity failure (Phase 2B, **RESOLVED 2026-04-30**)
 - **AUDIT-016** — No PHI key rotation pattern (Phase 2B, OPEN)
-- **AUDIT-031** — GAP-EP-079: pre-excited AF + AVN blocker (CRITICAL SAFETY, uncovered) (Phase 0B EP, OPEN, **Tier S**)
+- **AUDIT-031** — GAP-EP-079: pre-excited AF + AVN blocker (CRITICAL SAFETY, uncovered) (Phase 0B EP, **RESOLVED 2026-05-05** via new CRITICAL evaluator block; closes Tier S queue — queue 1 → 0, **CLOSED**)
 - **AUDIT-032** — GAP-EP-006: dabigatran in CrCl<30 (SAFETY, uncovered) (Phase 0B EP, **RESOLVED 2026-05-05**, ~~Tier S~~)
 - **AUDIT-033** — GAP-EP-017: HFrEF + non-DHP CCB SAFETY (Phase 0B EP, **RESOLVED 2026-05-05** via registry-entry-add; closes Tier S item — queue 4→3)
 - **AUDIT-034** — GAP-CAD-016: prasugrel + stroke/TIA SAFETY (Phase 0B CAD, **RESOLVED 2026-05-05** via new SAFETY discriminator block; closes Tier S item — queue 3→2)
@@ -580,18 +580,20 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 - **Phase:** 0B EP clinical audit
 - **Severity:** HIGH (P1) — patient safety, spec-explicit `(CRITICAL)`
-- **Status:** OPEN — **automatic Tier S inclusion** per AUDIT_METHODOLOGY.md §6.3
-- **Tier:** S
+- **Status:** **RESOLVED 2026-05-05** via new CRITICAL evaluator block + registry entry (this PR). **Tier S queue CLOSED — queue 1 → 0.** All four spec-explicit Tier S items resolved across PRs #238, #240, #241, this PR. AUDIT-031 was the only `(CRITICAL)` safetyClass item; no spec-explicit CRITICAL gaps remain uncovered.
+- **Tier:** S (CLOSED)
 - **Detected:** 2026-05-04 via canonical audit infrastructure (Tier S queue surfacing)
-- **Evidence:** spec line 352 (CK v4.0 §6.2) text "WPW + AF on beta-blocker/CCB/digoxin - risk of VF". Canonical `EP.crosswalk.json` row classification: SPEC_ONLY. No evaluator block in `backend/src/ingestion/gaps/gapRuleEngine.ts` detects this scenario. **Highest-priority of the 4 Tier S items per spec-explicit `(CRITICAL)` tag indicating VF risk.** Pre-excited AF + AVN-blocking medications can trigger ventricular fibrillation; classified above `(SAFETY)`-tagged items in mitigation sequencing.
+- **Evidence:** spec line 352 (CK v4.0 §6.2) text "WPW + AF on beta-blocker/CCB/digoxin - risk of VF". Canonical `EP.crosswalk.json` row classification was SPEC_ONLY. No evaluator block detected this scenario. Highest-priority of the 4 Tier S items per spec-explicit `(CRITICAL)` tag indicating VF risk.
 - **Severity rationale:** patient-safety risk; uncovered SAFETY classification with `(CRITICAL)` modifier indicating mortality-relevant downside if missed.
-- **Remediation:** author new evaluator block detecting (AF dx I48.x + WPW dx I45.6) + (RxNorm beta-blocker / non-DHP CCB / digoxin on active med list). Recommend procainamide / amiodarone alternatives in safety message. Estimated 2-4h work (evaluator block + registry entry + tests).
-- **Effort estimate:** S (2-4h)
+- **Resolution:** Added registry entry `gap-ep-079-wpw-af-avn-blocker` to `RUNTIME_GAP_REGISTRY` (line 253) and single-branch CRITICAL evaluator block (line 4131+) in `gapRuleEngine.ts`. Trigger: WPW (I45.6) + AF (I48.x) + any AVN_BLOCKER_CODES_EP079 + !hospice. AVN_BLOCKER_CODES_EP079 = 14 verified RxNorms (8 beta-blockers: metoprolol 6918, carvedilol 20352, bisoprolol 19484, nadolol 7226, atenolol 1202, propranolol 8787, esmolol 49737, labetalol 6185; 2 non-DHP CCBs: diltiazem 3443, verapamil 11170; digoxin: ingredient 3407 + 3 formulations 197604/197605/197606). All RxNorms verified via RxNav per AUDIT_METHODOLOGY.md §16. Switch recommendation: procainamide (8700, post-AUDIT-042 correction) or amiodarone (703); definitive catheter ablation (Class 1). safetyClass: 'CRITICAL' (escalated above 'SAFETY' per spec). Class 3 (Harm) LOE B per 2023 ACC/AHA/ACCP/HRS AFib Guideline. Hospice exclusion (Z51.5) preserved. Single-branch design — categorical inputs only (no labs, no thresholds; no DATA gap branch needed). Canonical pipeline regenerated: EP registry 47 → 48; EP gapsPush 48 → 49; ID_N pattern 2 → 3; `EP.crosswalk.json` row GAP-EP-079 promoted SPEC_ONLY → DET_OK with override pin. 7 new tests in `tests/gapRules/electrophysiology.test.ts` covering all 3 AVN-blocker subcategories (BB/CCB/digoxin) + 4 negative scenarios (no WPW, no AF, on procainamide, hospice). All 342 jest tests passing.
+- **Effort estimate:** RESOLVED (~30 min agent including verified-codes-from-prior-session, evaluator authoring, tests, canonical regen, register update)
 - **Cross-references:**
-  - `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` §3.1
-  - `docs/audit/canonical/EP.crosswalk.json` row GAP-EP-079
-  - `docs/audit/canonical/EP.spec.json` gap[GAP-EP-079]
-  - PR #234
+  - `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` §3.1 (Tier S queue, now 0 — CLOSED)
+  - `docs/audit/canonical/EP.crosswalk.json` row GAP-EP-079 (DET_OK with cite to gap-ep-079-wpw-af-avn-blocker)
+  - PR #234 (canonical infrastructure baseline)
+  - PR #239 (refreshCites.ts pipeline — third real-world Tier S validation here)
+  - PR #242 (AUDIT-042..061 Cat A clinical-code corrections — provided verified procainamide/nadolol RxNorms used in this rule)
+  - This PR (registry entry + new CRITICAL evaluator block + override + 7 tests; final Tier S item)
 
 ---
 
