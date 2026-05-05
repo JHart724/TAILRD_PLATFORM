@@ -103,7 +103,7 @@ Heart Failure has **126 spec gaps** across 15 subcategories. Implementation: **2
 | GAP-HF-002 | 125 | PARTIAL_DETECTION | `gap-hf-35-beta-blocker` (HF-35 @3428-3452) | auto-verify: preserved-from-addendum |
 | GAP-HF-003 | 126 | PARTIAL_DETECTION | `gap-hf-35-beta-blocker` (HF-35 @3428-3452) | auto-verify: preserved-from-addendum |
 | GAP-HF-004 | 127 | DET_OK | `gap-hf-37-raas` (HF-37 @4919-4945) | + \| auto-verify: preserved-from-addendum |
-| GAP-HF-005 | 128 | DET_OK | `gap-hf-arni-switch` (HF-ARNI-SWITCH @10071-10095) | auto-verify: preserved-from-addendum |
+| GAP-HF-005 | 128 | DET_OK | `gap-hf-arni-switch` (HF-ARNI-SWITCH @10083-10107) | auto-verify: preserved-from-addendum |
 | GAP-HF-007 | 129 | DET_OK | `gap-hf-36-mra` (HF-36 @3462-3484) | + \| auto-verify: preserved-from-addendum |
 | GAP-HF-010 | 130 | DET_OK | `gap-hf-34-sglt2i` (HF-34 @3398-3423) | + \| auto-verify: preserved-from-addendum |
 | GAP-HF-014 | 131 | DET_OK | `gap-hf-18-vericiguat` (HF-18 @3579-3595) | auto-verify: preserved-from-addendum |
@@ -119,8 +119,8 @@ Heart Failure has **126 spec gaps** across 15 subcategories. Implementation: **2
 | GAP-HF-043 | 170 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-HF-132 | 171 | PARTIAL_DETECTION | `gap-hf-73-hyponatremia` (HF-73 @3786-3801) | auto-verify: preserved-from-addendum |
 | GAP-HF-133 | 172 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-HF-033 | 185 | PARTIAL_DETECTION | `gap-hf-iron-iv-monitoring` (HF-IRON-IV-MONITORING @10340-10363) | auto-verify: preserved-from-addendum |
-| GAP-HF-034 | 186 | PARTIAL_DETECTION | `gap-hf-iron-iv-monitoring` (HF-IRON-IV-MONITORING @10340-10363) | auto-verify: preserved-from-addendum |
+| GAP-HF-033 | 185 | PARTIAL_DETECTION | `gap-hf-iron-iv-monitoring` (HF-IRON-IV-MONITORING @10356-10379) | auto-verify: preserved-from-addendum |
+| GAP-HF-034 | 186 | PARTIAL_DETECTION | `gap-hf-iron-iv-monitoring` (HF-IRON-IV-MONITORING @10356-10379) | auto-verify: preserved-from-addendum |
 | GAP-HF-036 | 192 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-HF-051 | 206 | PARTIAL_DETECTION | `gap-hf-90-amyloid-biomarker` (HF-90 @6149-6167) | auto-verify: preserved-from-addendum |
 | GAP-HF-053 | 207 | PARTIAL_DETECTION | `gap-hf-90-amyloid-biomarker` (HF-90 @6149-6167) | auto-verify: preserved-from-addendum |

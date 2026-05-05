@@ -420,9 +420,9 @@
       "name": "HF-92"
     },
     {
-      "bodyEndLine": 10095,
-      "bodyStartLine": 10071,
-      "commentLine": 10057,
+      "bodyEndLine": 10107,
+      "bodyStartLine": 10083,
+      "commentLine": 10065,
       "commentLiteral": "// HF-ARNI-SWITCH: ACEi/ARB to ARNi Switch Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -431,9 +431,9 @@
       "name": "HF-ARNI-SWITCH"
     },
     {
-      "bodyEndLine": 10132,
-      "bodyStartLine": 10108,
-      "commentLine": 10097,
+      "bodyEndLine": 10145,
+      "bodyStartLine": 10121,
+      "commentLine": 10109,
       "commentLiteral": "// HF-THIAMINE: Thiamine Supplementation on Loop Diuretics",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -442,9 +442,9 @@
       "name": "HF-THIAMINE"
     },
     {
-      "bodyEndLine": 10167,
-      "bodyStartLine": 10144,
-      "commentLine": 10134,
+      "bodyEndLine": 10182,
+      "bodyStartLine": 10159,
+      "commentLine": 10147,
       "commentLiteral": "// HF-K-MONITOR: Potassium Monitoring on MRA",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -453,9 +453,9 @@
       "name": "HF-K-MONITOR"
     },
     {
-      "bodyEndLine": 10200,
-      "bodyStartLine": 10177,
-      "commentLine": 10169,
+      "bodyEndLine": 10215,
+      "bodyStartLine": 10192,
+      "commentLine": 10184,
       "commentLiteral": "// HF-ADVANCE-CARE: Advance Care Planning in Advanced HF",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -464,9 +464,9 @@
       "name": "HF-ADVANCE-CARE"
     },
     {
-      "bodyEndLine": 10233,
-      "bodyStartLine": 10210,
-      "commentLine": 10202,
+      "bodyEndLine": 10248,
+      "bodyStartLine": 10225,
+      "commentLine": 10217,
       "commentLiteral": "// HF-LVNC: LV Non-Compaction Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -475,9 +475,9 @@
       "name": "HF-LVNC"
     },
     {
-      "bodyEndLine": 10264,
-      "bodyStartLine": 10242,
-      "commentLine": 10235,
+      "bodyEndLine": 10279,
+      "bodyStartLine": 10257,
+      "commentLine": 10250,
       "commentLiteral": "// HF-HEMODYNAMIC: Hemodynamic Monitoring Review",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -486,9 +486,9 @@
       "name": "HF-HEMODYNAMIC"
     },
     {
-      "bodyEndLine": 10300,
-      "bodyStartLine": 10276,
-      "commentLine": 10266,
+      "bodyEndLine": 10316,
+      "bodyStartLine": 10292,
+      "commentLine": 10281,
       "commentLiteral": "// HF-DIURETIC-OPT: Diuretic Dose Optimization",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -497,9 +497,9 @@
       "name": "HF-DIURETIC-OPT"
     },
     {
-      "bodyEndLine": 10331,
-      "bodyStartLine": 10304,
-      "commentLine": 10302,
+      "bodyEndLine": 10347,
+      "bodyStartLine": 10320,
+      "commentLine": 10318,
       "commentLiteral": "// HF-ANEMIA-HF: Anemia Workup in HF — sex-specific thresholds per WHO 2011 + 2022 AHA/ACC HF",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -508,9 +508,9 @@
       "name": "HF-ANEMIA-HF"
     },
     {
-      "bodyEndLine": 10363,
-      "bodyStartLine": 10340,
-      "commentLine": 10333,
+      "bodyEndLine": 10379,
+      "bodyStartLine": 10356,
+      "commentLine": 10349,
       "commentLiteral": "// HF-IRON-IV-MONITORING: IV Iron Therapy Monitoring",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [

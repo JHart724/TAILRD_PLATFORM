@@ -221,3 +221,148 @@ describe('AUDIT-059/060/061: WARFARIN formulation labels match real strengths', 
     expect(RXNORM_WARFARIN.WARFARIN_1MG).toBe('855288');
   });
 });
+
+// ============================================================
+// AUDIT-046..063 — Cat D inline-array clinical-code corrections
+// All 8 corrections RxNav-verified per AUDIT_METHODOLOGY.md §16.
+// AUDIT-052 partial mitigation: RXNORM_QT_PROLONGING.PROPAFENONE added.
+// ============================================================
+
+describe('AUDIT-046: MRA_CODES_K corrected to canonical spironolactone + eplerenone', () => {
+  it('inline source uses canonical RXNORM_GDMT MRAs, not sotalol/terbinafine', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const src = fs.readFileSync(
+      path.join(__dirname, '../../src/ingestion/gaps/gapRuleEngine.ts'),
+      'utf8',
+    );
+    expect(src).toMatch(/MRA_CODES_K\s*=\s*\[\s*RXNORM_GDMT\.SPIRONOLACTONE/);
+    expect(src).not.toMatch(/MRA_CODES_K\s*=\s*\[\s*'9947'/);    // sotalol no longer in MRA list
+    expect(src).not.toMatch(/MRA_CODES_K\s*=\s*\[\s*'37801'/);   // terbinafine no longer in MRA list (note: '37801' substring search would also reject the canonical 298869, so check second slot too)
+  });
+  it('K+ monitoring rule: spironolactone (9997) + HF + missing K+ → fires monitoring gap', () => {
+    const gaps = evaluateGapRules(['I50.20'], {}, ['9997'], 65);
+    const monitoring = gaps.find((g: any) =>
+      g.status && /potassium|K\+/i.test(g.status),
+    );
+    expect(monitoring).toBeDefined();
+  });
+  it('K+ monitoring rule: sotalol-only (no real MRA) + HF + missing K+ → does NOT fire MRA-specific monitoring', () => {
+    // Sotalol (9947) is a Class III AAD, NOT an MRA. Pre-AUDIT-046 the rule false-fired.
+    const gaps = evaluateGapRules(['I50.20'], {}, ['9947'], 65);
+    const monitoring = gaps.find((g: any) =>
+      g.status && /potassium|K\+/i.test(g.status) && /MRA|spironolactone|eplerenone/i.test(g.status),
+    );
+    expect(monitoring).toBeUndefined();
+  });
+});
+
+describe('AUDIT-047: ARNI_CODES uses canonical sacubitril/valsartan', () => {
+  it('inline source imports from RXNORM_GDMT.SACUBITRIL_VALSARTAN', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const src = fs.readFileSync(
+      path.join(__dirname, '../../src/ingestion/gaps/gapRuleEngine.ts'),
+      'utf8',
+    );
+    expect(src).toMatch(/ARNI_CODES\s*=\s*\[\s*RXNORM_GDMT\.SACUBITRIL_VALSARTAN/);
+    expect(src).not.toMatch(/ARNI_CODES\s*=\s*\['1656328'/);
+  });
+});
+
+describe('AUDIT-048: ARB_CODES uses canonical losartan/valsartan/candesartan', () => {
+  it('inline source imports from RXNORM_GDMT (no eprosartan/telmisartan)', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const src = fs.readFileSync(
+      path.join(__dirname, '../../src/ingestion/gaps/gapRuleEngine.ts'),
+      'utf8',
+    );
+    expect(src).toMatch(/ARB_CODES\s*=\s*\[\s*RXNORM_GDMT\.LOSARTAN/);
+    // 73494 = telmisartan and 83515 = eprosartan should not appear in the corrected ARB_CODES line
+    const arbLine = src.split('\n').find((l: string) => /^\s*const ARB_CODES\s*=/.test(l)) ?? '';
+    expect(arbLine).not.toContain('73494');
+    expect(arbLine).not.toContain('83515');
+  });
+});
+
+describe('AUDIT-049: DOAC_CODES_STROKE/TEE use canonical DOAC ingredients', () => {
+  it('inline source spreads canonical DOAC_CODES_CV (covers all 4 DOACs)', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const src = fs.readFileSync(
+      path.join(__dirname, '../../src/ingestion/gaps/gapRuleEngine.ts'),
+      'utf8',
+    );
+    expect(src).toMatch(/DOAC_CODES_STROKE\s*=\s*\[\.\.\.DOAC_CODES_CV/);
+    expect(src).toMatch(/DOAC_CODES_TEE\s*=\s*\[\.\.\.DOAC_CODES_CV/);
+    // Old formulation/pack codes should be gone
+    expect(src).not.toMatch(/DOAC_CODES_STROKE\s*=\s*\['1364430', '1232082'/);
+  });
+});
+
+describe('AUDIT-050: RATE_CONTROL_CODES_SVT replaces invalid 2991 with canonical diltiazem', () => {
+  it('inline source uses RXNORM_RATE_CONTROL.DILTIAZEM (3443) — invalid 2991 removed', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const src = fs.readFileSync(
+      path.join(__dirname, '../../src/ingestion/gaps/gapRuleEngine.ts'),
+      'utf8',
+    );
+    expect(src).toMatch(/RATE_CONTROL_CODES_SVT\s*=\s*\['6918',\s*RXNORM_RATE_CONTROL\.DILTIAZEM/);
+    expect(src).not.toMatch(/RATE_CONTROL_CODES_SVT\s*=\s*\['6918',\s*'2991'/);
+  });
+});
+
+describe('AUDIT-051: ACEI_CODES corrected — fosinopril 50166 → benazepril 18867', () => {
+  it('inline source uses real benazepril CUI 18867 (RxNav-verified)', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const src = fs.readFileSync(
+      path.join(__dirname, '../../src/ingestion/gaps/gapRuleEngine.ts'),
+      'utf8',
+    );
+    expect(src).toMatch(/ACEI_CODES\s*=\s*\['3827', '29046', '1998', '35296', '18867'/);
+    expect(src).not.toMatch(/ACEI_CODES\s*=\s*\[[^\]]*'50166'/);
+  });
+});
+
+describe('AUDIT-062: PPI_CODES_DAPT removes simvastatin (drug class collision)', () => {
+  it('inline source no longer contains 36567 (simvastatin) in PPI list', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const src = fs.readFileSync(
+      path.join(__dirname, '../../src/ingestion/gaps/gapRuleEngine.ts'),
+      'utf8',
+    );
+    const ppiLine = src.split('\n').find((l: string) => /^\s*const PPI_CODES_DAPT\s*=/.test(l)) ?? '';
+    expect(ppiLine).not.toContain('36567');
+    // Real PPIs preserved
+    expect(ppiLine).toContain('7646');
+    expect(ppiLine).toContain('40790');
+    expect(ppiLine).toContain('283742');
+  });
+});
+
+describe('AUDIT-063: LOOP_DIURETIC_CODES_TH/OPT add bumetanide 1808', () => {
+  it('inline source includes 1808 (real bumetanide) alongside 4109 (ethacrynic acid)', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const src = fs.readFileSync(
+      path.join(__dirname, '../../src/ingestion/gaps/gapRuleEngine.ts'),
+      'utf8',
+    );
+    const thLine = src.split('\n').find((l: string) => /^\s*const LOOP_DIURETIC_CODES_TH\s*=/.test(l)) ?? '';
+    const optLine = src.split('\n').find((l: string) => /^\s*const LOOP_DIURETIC_CODES_OPT\s*=/.test(l)) ?? '';
+    expect(thLine).toContain('1808');
+    expect(optLine).toContain('1808');
+    expect(thLine).toContain('4603');  // furosemide preserved
+    expect(thLine).toContain('4109');  // ethacrynic acid preserved
+  });
+});
+
+describe('AUDIT-052 partial: RXNORM_QT_PROLONGING.PROPAFENONE canonical promotion', () => {
+  it('canonical valueset includes propafenone (8754, RxNav-verified)', () => {
+    expect((RXNORM_QT_PROLONGING as any).PROPAFENONE).toBe('8754');
+  });
+});

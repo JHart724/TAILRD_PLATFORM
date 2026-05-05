@@ -457,8 +457,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-TRICUSPID-SECONDARY",
         "evaluatorBodyLineRange": [
-          11023,
-          11051
+          11039,
+          11067
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-tricuspid-secondary",
@@ -765,8 +765,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-PANNUS",
         "evaluatorBodyLineRange": [
-          10639,
-          10661
+          10655,
+          10677
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-prosthetic-pannus",
@@ -893,8 +893,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-TRICUSPID-SECONDARY",
         "evaluatorBodyLineRange": [
-          11023,
-          11051
+          11039,
+          11067
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-tricuspid-secondary",
@@ -1001,8 +1001,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-PULMONARY-HTN",
         "evaluatorBodyLineRange": [
-          10991,
-          11019
+          11007,
+          11035
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-pulmonary-htn",
@@ -1080,8 +1080,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-RADIATION",
         "evaluatorBodyLineRange": [
-          10672,
-          10694
+          10688,
+          10710
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-radiation-valve",
@@ -1099,8 +1099,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-RADIATION",
         "evaluatorBodyLineRange": [
-          10672,
-          10694
+          10688,
+          10710
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-radiation-valve",

@@ -111,8 +111,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-RIVAROXABAN",
         "evaluatorBodyLineRange": [
-          11093,
-          11121
+          11109,
+          11137
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-rivaroxaban",
@@ -282,8 +282,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-BYPASS-EVAL",
         "evaluatorBodyLineRange": [
-          11158,
-          11184
+          11174,
+          11200
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-bypass-eval",
@@ -301,8 +301,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-BYPASS-EVAL",
         "evaluatorBodyLineRange": [
-          11158,
-          11184
+          11174,
+          11200
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-bypass-eval",
@@ -370,8 +370,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-BYPASS-EVAL",
         "evaluatorBodyLineRange": [
-          11158,
-          11184
+          11174,
+          11200
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-bypass-eval",
@@ -439,8 +439,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-MESENTERIC",
         "evaluatorBodyLineRange": [
-          11301,
-          11326
+          11317,
+          11342
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-mesenteric",
@@ -607,8 +607,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-THORACIC-OUTLET",
         "evaluatorBodyLineRange": [
-          11331,
-          11353
+          11347,
+          11369
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-thoracic-outlet",
@@ -646,8 +646,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-RAYNAUD",
         "evaluatorBodyLineRange": [
-          11411,
-          11437
+          11427,
+          11453
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-raynaud",
@@ -843,8 +843,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-DVT-SCREEN",
         "evaluatorBodyLineRange": [
-          11246,
-          11271
+          11262,
+          11287
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-dvt-screen",
@@ -872,8 +872,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-PTS-PREVENTION",
         "evaluatorBodyLineRange": [
-          11276,
-          11297
+          11292,
+          11313
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-pts-prevention",
@@ -930,8 +930,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-VARICOSE",
         "evaluatorBodyLineRange": [
-          11358,
-          11379
+          11374,
+          11395
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-varicose",
@@ -989,8 +989,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-ANTICOAG-VTE",
         "evaluatorBodyLineRange": [
-          11598,
-          11625
+          11614,
+          11641
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-anticoag-vte",
@@ -1178,8 +1178,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-LYMPHEDEMA",
         "evaluatorBodyLineRange": [
-          11384,
-          11405
+          11400,
+          11421
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-lymphedema",
@@ -1197,8 +1197,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-LYMPHEDEMA",
         "evaluatorBodyLineRange": [
-          11384,
-          11405
+          11400,
+          11421
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-lymphedema",
@@ -1236,8 +1236,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-GRAFT-SURVEILLANCE",
         "evaluatorBodyLineRange": [
-          11568,
-          11594
+          11584,
+          11610
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-graft-surveillance",

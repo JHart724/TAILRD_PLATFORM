@@ -167,9 +167,9 @@
       "name": "PV-15"
     },
     {
-      "bodyEndLine": 11121,
-      "bodyStartLine": 11093,
-      "commentLine": 11091,
+      "bodyEndLine": 11137,
+      "bodyStartLine": 11109,
+      "commentLine": 11107,
       "commentLiteral": "// PV-RIVAROXABAN: Low-Dose Rivaroxaban in PAD (COMPASS Trial)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -178,9 +178,9 @@
       "name": "PV-RIVAROXABAN"
     },
     {
-      "bodyEndLine": 11154,
-      "bodyStartLine": 11125,
-      "commentLine": 11123,
+      "bodyEndLine": 11170,
+      "bodyStartLine": 11141,
+      "commentLine": 11139,
       "commentLiteral": "// PV-CLOPIDOGREL: Clopidogrel for Aspirin Intolerance in PAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -189,9 +189,9 @@
       "name": "PV-CLOPIDOGREL"
     },
     {
-      "bodyEndLine": 11184,
-      "bodyStartLine": 11158,
-      "commentLine": 11156,
+      "bodyEndLine": 11200,
+      "bodyStartLine": 11174,
+      "commentLine": 11172,
       "commentLiteral": "// PV-BYPASS-EVAL: Bypass Surgery Evaluation for CLI",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -200,9 +200,9 @@
       "name": "PV-BYPASS-EVAL"
     },
     {
-      "bodyEndLine": 11213,
-      "bodyStartLine": 11188,
-      "commentLine": 11186,
+      "bodyEndLine": 11229,
+      "bodyStartLine": 11204,
+      "commentLine": 11202,
       "commentLiteral": "// PV-ENDOVASCULAR: Endovascular Evaluation for Lifestyle-Limiting Claudication",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -211,9 +211,9 @@
       "name": "PV-ENDOVASCULAR"
     },
     {
-      "bodyEndLine": 11241,
-      "bodyStartLine": 11219,
-      "commentLine": 11215,
+      "bodyEndLine": 11257,
+      "bodyStartLine": 11235,
+      "commentLine": 11231,
       "commentLiteral": "// PV-VENOUS-ULCER: Venous Ulcer Management",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -222,9 +222,9 @@
       "name": "PV-VENOUS-ULCER"
     },
     {
-      "bodyEndLine": 11271,
-      "bodyStartLine": 11246,
-      "commentLine": 11243,
+      "bodyEndLine": 11287,
+      "bodyStartLine": 11262,
+      "commentLine": 11259,
       "commentLiteral": "// PV-DVT-SCREEN: DVT Screening for Unilateral Edema",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -233,9 +233,9 @@
       "name": "PV-DVT-SCREEN"
     },
     {
-      "bodyEndLine": 11297,
-      "bodyStartLine": 11276,
-      "commentLine": 11273,
+      "bodyEndLine": 11313,
+      "bodyStartLine": 11292,
+      "commentLine": 11289,
       "commentLiteral": "// PV-PTS-PREVENTION: Post-Thrombotic Syndrome Prevention after DVT",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -244,9 +244,9 @@
       "name": "PV-PTS-PREVENTION"
     },
     {
-      "bodyEndLine": 11326,
-      "bodyStartLine": 11301,
-      "commentLine": 11299,
+      "bodyEndLine": 11342,
+      "bodyStartLine": 11317,
+      "commentLine": 11315,
       "commentLiteral": "// PV-MESENTERIC: Mesenteric Ischemia Screening in PAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -255,9 +255,9 @@
       "name": "PV-MESENTERIC"
     },
     {
-      "bodyEndLine": 11353,
-      "bodyStartLine": 11331,
-      "commentLine": 11328,
+      "bodyEndLine": 11369,
+      "bodyStartLine": 11347,
+      "commentLine": 11344,
       "commentLiteral": "// PV-THORACIC-OUTLET: Thoracic Outlet Syndrome Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -266,9 +266,9 @@
       "name": "PV-THORACIC-OUTLET"
     },
     {
-      "bodyEndLine": 11379,
-      "bodyStartLine": 11358,
-      "commentLine": 11355,
+      "bodyEndLine": 11395,
+      "bodyStartLine": 11374,
+      "commentLine": 11371,
       "commentLiteral": "// PV-VARICOSE: Varicose Vein Management",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -277,9 +277,9 @@
       "name": "PV-VARICOSE"
     },
     {
-      "bodyEndLine": 11405,
-      "bodyStartLine": 11384,
-      "commentLine": 11381,
+      "bodyEndLine": 11421,
+      "bodyStartLine": 11400,
+      "commentLine": 11397,
       "commentLiteral": "// PV-LYMPHEDEMA: Lymphedema Management",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -288,9 +288,9 @@
       "name": "PV-LYMPHEDEMA"
     },
     {
-      "bodyEndLine": 11437,
-      "bodyStartLine": 11411,
-      "commentLine": 11407,
+      "bodyEndLine": 11453,
+      "bodyStartLine": 11427,
+      "commentLine": 11423,
       "commentLiteral": "// PV-RAYNAUD: Calcium Channel Blocker for Raynaud Phenomenon",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -299,9 +299,9 @@
       "name": "PV-RAYNAUD"
     },
     {
-      "bodyEndLine": 11468,
-      "bodyStartLine": 11441,
-      "commentLine": 11439,
+      "bodyEndLine": 11484,
+      "bodyStartLine": 11457,
+      "commentLine": 11455,
       "commentLiteral": "// PV-VASCULAR-REHAB: Vascular Rehabilitation Post-Intervention",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -310,9 +310,9 @@
       "name": "PV-VASCULAR-REHAB"
     },
     {
-      "bodyEndLine": 11500,
-      "bodyStartLine": 11472,
-      "commentLine": 11470,
+      "bodyEndLine": 11516,
+      "bodyStartLine": 11488,
+      "commentLine": 11486,
       "commentLiteral": "// PV-PENTOXIFYLLINE: Pentoxifylline When Cilostazol Contraindicated",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -321,9 +321,9 @@
       "name": "PV-PENTOXIFYLLINE"
     },
     {
-      "bodyEndLine": 11531,
-      "bodyStartLine": 11504,
-      "commentLine": 11502,
+      "bodyEndLine": 11547,
+      "bodyStartLine": 11520,
+      "commentLine": 11518,
       "commentLiteral": "// PV-NAFTIDROFURYL: Naftidrofuryl for Severe Claudication",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -332,9 +332,9 @@
       "name": "PV-NAFTIDROFURYL"
     },
     {
-      "bodyEndLine": 11564,
-      "bodyStartLine": 11539,
-      "commentLine": 11537,
+      "bodyEndLine": 11580,
+      "bodyStartLine": 11555,
+      "commentLine": 11553,
       "commentLiteral": "// PV-CRITICAL-LIMB: Critical Limb Ischemia Urgent Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -343,9 +343,9 @@
       "name": "PV-CRITICAL-LIMB"
     },
     {
-      "bodyEndLine": 11594,
-      "bodyStartLine": 11568,
-      "commentLine": 11566,
+      "bodyEndLine": 11610,
+      "bodyStartLine": 11584,
+      "commentLine": 11582,
       "commentLiteral": "// PV-GRAFT-SURVEILLANCE: Bypass Graft Surveillance",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -354,9 +354,9 @@
       "name": "PV-GRAFT-SURVEILLANCE"
     },
     {
-      "bodyEndLine": 11625,
-      "bodyStartLine": 11598,
-      "commentLine": 11596,
+      "bodyEndLine": 11641,
+      "bodyStartLine": 11614,
+      "commentLine": 11612,
       "commentLiteral": "// PV-ANTICOAG-VTE: VTE Anticoagulation Duration Review",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [

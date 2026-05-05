@@ -90,7 +90,7 @@ No EXTRA rules or architectural patterns surfaced. Reconciliation is clean.
 | GAP-SH-002 | 446 | PARTIAL_DETECTION | `gap-sh-2-tavr-eval` (SH-2 @5102-5123) | (broad TAVR rule) \| auto-verify: preserved-from-addendum |
 | GAP-SH-003 | 447 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-SH-006 | 448 | PARTIAL_DETECTION | `gap-sh-2-tavr-eval` (SH-2 @5102-5123) | (broad) \| auto-verify: preserved-from-addendum |
-| GAP-SH-061 | 472 | DET_OK | `gap-sh-valve-in-valve` (SH-VALVE-IN-VALVE @10439-10461) | line 10214+ \| auto-verify: preserved-from-addendum |
+| GAP-SH-061 | 472 | DET_OK | `gap-sh-valve-in-valve` (SH-VALVE-IN-VALVE @10455-10477) | line 10214+ \| auto-verify: preserved-from-addendum |
 | GAP-SH-014 | 485 | PARTIAL_DETECTION | `gap-sh-3-mitral-intervention` (SH-3 @5169-5194) | line 4988+ +  line 6059+ \| Multiple registry ids cited: gap-sh-3-mitral-intervention, gap-sh-10-mitr |
 | GAP-SH-015 | 486 | PARTIAL_DETECTION | `gap-sh-3-mitral-intervention` (SH-3 @5169-5194) | (broad) \| auto-verify: preserved-from-addendum |
 | GAP-SH-018 | 487 | PARTIAL_DETECTION | `gap-sh-10-mitraclip` (SH-10 @6242-6261) | (broad MR + LVEF<50) \| auto-verify: preserved-from-addendum |
