@@ -2,17 +2,17 @@
 
 **Module:** Electrophysiology (EP)
 **Spec source:** `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md` §6.2
-**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=46, evaluator=45, gapsPush=46)
+**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=47, evaluator=46, gapsPush=48)
 **Crosswalk:** `docs/audit/canonical/EP.crosswalk.json` (auditMethod: rule-body-citation-AUDIT-030D)
 **Audit date:** 2026-05-04
 
 ## 1. Summary
 
-Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: **19 DET_OK + 26 PARTIAL + 44 SPEC_ONLY** (any-coverage: 45/89 = 50.6%).
+Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: **20 DET_OK + 26 PARTIAL + 43 SPEC_ONLY** (any-coverage: 46/89 = 51.7%).
 
-**Tier 1 priority status:** 6 DET_OK + 4 PARTIAL + 5 SPEC_ONLY of 15 T1 gaps (T1 any-coverage: 66.7%).
+**Tier 1 priority status:** 7 DET_OK + 4 PARTIAL + 4 SPEC_ONLY of 15 T1 gaps (T1 any-coverage: 73.3%).
 
-**Spec-explicit SAFETY-tagged gaps:** 7 total; 4 covered (DET_OK), 3 uncovered. Uncovered SAFETY gaps qualify for Tier S triage queue per §6.3.
+**Spec-explicit SAFETY-tagged gaps:** 7 total; 5 covered (DET_OK), 2 uncovered. Uncovered SAFETY gaps qualify for Tier S triage queue per §6.3.
 
 ---
 
@@ -21,9 +21,9 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 | Classification | Count | % of total |
 |---|---:|---:|
 | PRODUCTION_GRADE | 0 | 0.0% |
-| DET_OK | 19 | 21.3% |
+| DET_OK | 20 | 22.5% |
 | PARTIAL_DETECTION | 26 | 29.2% |
-| SPEC_ONLY | 44 | 49.4% |
+| SPEC_ONLY | 43 | 48.3% |
 | **Total** | **89** | **100.0%** |
 
 **PRODUCTION_GRADE = 0** is platform-wide; gated on closure of AUDIT-001 P0 (test coverage gap). Per AUDIT_METHODOLOGY.md §3.1, no rule classifies PRODUCTION_GRADE until the platform testing baseline is established.
@@ -34,10 +34,10 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 | Tier | Total | DET_OK | PARTIAL | SPEC_ONLY | Any-coverage % |
 |------|------:|-------:|--------:|----------:|---------------:|
-| **T1** | 15 | 6 | 4 | 5 | 66.7% |
+| **T1** | 15 | 7 | 4 | 4 | 73.3% |
 | **T2** | 62 | 13 | 20 | 29 | 53.2% |
 | **T3** | 12 | 0 | 2 | 10 | 16.7% |
-| **Overall** | **89** | **19** | **26** | **44** | **50.6%** |
+| **Overall** | **89** | **20** | **26** | **43** | **51.7%** |
 
 ---
 
@@ -45,7 +45,7 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 | Subcategory | T1/T2/T3 | DET_OK | PARTIAL | SPEC_ONLY | Coverage |
 |---|---|---:|---:|---:|---:|
-| AF Anticoagulation (13) | 6/6/1 | 2 | 1 | 10 | 23.1% |
+| AF Anticoagulation (13) | 6/6/1 | 3 | 1 | 9 | 30.8% |
 | LAAC (5) | 2/3/0 | 1 | 1 | 3 | 40.0% |
 | Rhythm Control (11) | 4/6/1 | 5 | 2 | 4 | 63.6% |
 | Atrial Tachy/SVT (7) | 1/5/1 | 0 | 5 | 2 | 71.4% |
@@ -61,11 +61,10 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 ## 4.5 — T1 SPEC_ONLY work items (load-bearing for v2.0 Phase 1)
 
-5 T1 spec gaps with zero implementation. These are the load-bearing v2.0 Phase 1 work items for Electrophysiology.
+4 T1 spec gaps with zero implementation. These are the load-bearing v2.0 Phase 1 work items for Electrophysiology.
 
 | GAP-ID | Spec line | Subcategory | Detection Logic (excerpt) | Spec SAFETY | BSW pathway |
 |---|---:|---|---|---|---|
-| GAP-EP-006 | 312 | AF Anticoagulation | Dabigatran + severe renal impairment | (SAFETY) | — |
 | GAP-EP-064 | 315 | AF Anticoagulation | OAC e-prescribed but zero pharmacy fills | — | — |
 | GAP-EP-065 | 316 | AF Anticoagulation | Proportion of days covered <80% in past 12mo | — | — |
 | GAP-EP-079 | 352 | Atrial Tachy/SVT | WPW + AF on beta-blocker/CCB/digoxin - risk of VF | (CRITICAL) | — |
@@ -77,7 +76,7 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 **Registry-without-evaluator (1):** registry entries with no matching evaluator block body.
 
-- `gap-ep-anticoag-interruption` (registry line 1896): No evaluator body matched via similarity scoring
+- `gap-ep-anticoag-interruption` (registry line 1908): No evaluator body matched via similarity scoring
 
 **Naming convention mismatches (1):** registry IDs not following `gap-ep-` convention.
 
@@ -90,20 +89,20 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-EP-001 | 311 | DET_OK | `gap-ep-oac-afib` (EP-OAC @3981-4034) | + \| Multiple registry ids cited: gap-ep-oac-afib, gap-ep-af-stroke-risk \| auto-verify: preserved-fro |
-| GAP-EP-006 | 312 | SPEC_ONLY | — | (registry only; no CrCl-gated dabigatran SAFETY check in evaluator) \| auto-verify: No candidate eval |
-| GAP-EP-007 | 313 | DET_OK | `gap-vd-6-doac-mechanical-valve` (VD-6 @5340-5364) **[cross-module: VHD]** | MANUAL OVERRIDE: cross-module satisfaction. GAP-EP-007 (DOAC on mechanical valve, CRITICAL SAFETY) i |
-| GAP-EP-008 | 314 | PARTIAL_DETECTION | `gap-vd-4-mitral-stenosis` (VD-4 @5284-5304) **[cross-module: VHD]** | (no DOAC + MS contraindication; mitral stenosis logic at 5134+ only covers echo surveillance) \| auto |
+| GAP-EP-001 | 311 | DET_OK | `gap-ep-oac-afib` (EP-OAC @3993-4046) | + \| Multiple registry ids cited: gap-ep-oac-afib, gap-ep-af-stroke-risk \| auto-verify: preserved-fro |
+| GAP-EP-006 | 312 | DET_OK | `gap-ep-006-dabigatran-renal-safety` (EP-006 @4064-4114) | MANUAL OVERRIDE: AUDIT-032 RESOLVED 2026-05-05 — new SAFETY evaluator block added (this PR) covering |
+| GAP-EP-007 | 313 | DET_OK | `gap-vd-6-doac-mechanical-valve` (VD-6 @5420-5444) **[cross-module: VHD]** | MANUAL OVERRIDE: cross-module satisfaction. GAP-EP-007 (DOAC on mechanical valve, CRITICAL SAFETY) i |
+| GAP-EP-008 | 314 | PARTIAL_DETECTION | `gap-vd-4-mitral-stenosis` (VD-4 @5364-5384) **[cross-module: VHD]** | (no DOAC + MS contraindication; mitral stenosis logic at 5134+ only covers echo surveillance) \| auto |
 | GAP-EP-064 | 315 | SPEC_ONLY | — | — (no pharmacy fill data integration) \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
 | GAP-EP-065 | 316 | SPEC_ONLY | — | — (no pharmacy fill data integration) \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
-| GAP-EP-011 | 328 | DET_OK | `gap-ep-laac` (EP-LAAC @4041-4069) | line 3979+ \| auto-verify: preserved-from-addendum |
-| GAP-EP-012 | 329 | PARTIAL_DETECTION | `gap-ep-laac` (EP-LAAC @4041-4069) | (broad rule, no trigger differentiation) \| auto-verify: preserved-from-addendum |
-| GAP-EP-013 | 337 | DET_OK | `gap-ep-early-rhythm` (EP-EARLY-RHYTHM @9324-9346) | line 9129+ \| auto-verify: preserved-from-addendum |
-| GAP-EP-014 | 338 | PARTIAL_DETECTION | `gap-ep-ablation` (EP-ABLATION @4076-4099) | line 4014+ \| auto-verify: preserved-from-addendum |
-| GAP-EP-017 | 339 | DET_OK | `gap-ep-017-hfref-non-dhp-ccb` (EP-017 @4824-4849) | MANUAL OVERRIDE: AUDIT-033 RESOLVED 2026-05-05 — registry entry gap-ep-017-hfref-non-dhp-ccb added ( |
-| GAP-EP-018 | 340 | DET_OK | `gap-ep-subclinical-af` (EP-SUBCLINICAL-AF @6972-6995) | line 6819+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-011 | 328 | DET_OK | `gap-ep-laac` (EP-LAAC @4121-4149) | line 3979+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-012 | 329 | PARTIAL_DETECTION | `gap-ep-laac` (EP-LAAC @4121-4149) | (broad rule, no trigger differentiation) \| auto-verify: preserved-from-addendum |
+| GAP-EP-013 | 337 | DET_OK | `gap-ep-early-rhythm` (EP-EARLY-RHYTHM @9404-9426) | line 9129+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-014 | 338 | PARTIAL_DETECTION | `gap-ep-ablation` (EP-ABLATION @4156-4179) | line 4014+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-017 | 339 | DET_OK | `gap-ep-017-hfref-non-dhp-ccb` (EP-017 @4904-4929) | MANUAL OVERRIDE: AUDIT-033 RESOLVED 2026-05-05 — registry entry gap-ep-017-hfref-non-dhp-ccb added ( |
+| GAP-EP-018 | 340 | DET_OK | `gap-ep-subclinical-af` (EP-SUBCLINICAL-AF @7052-7075) | line 6819+ \| auto-verify: preserved-from-addendum |
 | GAP-EP-079 | 352 | SPEC_ONLY | — | line 6618+ (WPW + age<40 risk strat, NOT med contraindication) \| auto-verify: No candidate evaluator |
-| GAP-EP-086 | 363 | PARTIAL_DETECTION | `gap-ep-vt-ablation` (EP-VT-ABLATION @9357-9379) | line 9162+ (broad VT+ICD trigger, not VT-storm-specific) \| auto-verify: preserved-from-addendum |
+| GAP-EP-086 | 363 | PARTIAL_DETECTION | `gap-ep-vt-ablation` (EP-VT-ABLATION @9437-9459) | line 9162+ (broad VT+ICD trigger, not VT-storm-specific) \| auto-verify: preserved-from-addendum |
 | GAP-EP-099 | 436 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 
 ---
@@ -128,18 +127,18 @@ No T1 SPEC_ONLY gaps carry literal BSW pathway tags in CK v4.0 spec text. Pathwa
 
 **For EP:** Moderate implementation coverage; medication/screening surfaces typically built, procedural surfaces often lighter.
 
-Coverage data: 45/89 any-coverage (50.6%); 19/89 DET_OK only (21.3%); 26 PARTIAL via broad-rule consolidation or partial-trigger match; 44 SPEC_ONLY.
+Coverage data: 46/89 any-coverage (51.7%); 20/89 DET_OK only (22.5%); 26 PARTIAL via broad-rule consolidation or partial-trigger match; 43 SPEC_ONLY.
 
-Rules-per-DET_OK efficiency: 46 registry rules / 19 DET_OK = 2.42.
+Rules-per-DET_OK efficiency: 47 registry rules / 20 DET_OK = 2.35.
 
 ---
 
 ## 8. Implications for v2.0
 
 v2.0 Phase 1 (T1 priority) work items for EP:
-- **5 T1 SPEC_ONLY** gaps requiring full build (detection + UI + tests)
+- **4 T1 SPEC_ONLY** gaps requiring full build (detection + UI + tests)
 - **4 T1 PARTIAL** gaps requiring hardening (broad-rule discrimination, missing exclusions, dose-protocol specificity)
-- **6 T1 DET_OK** gaps requiring test coverage + UI polish to reach PRODUCTION_GRADE
+- **7 T1 DET_OK** gaps requiring test coverage + UI polish to reach PRODUCTION_GRADE
 
 Cross-module satisfaction (HF Device Therapy → EP CRT/ICD pattern; CAD-027 → PV; etc.) is captured structurally in `ruleBodyCite.evaluatorModule` per AUDIT_METHODOLOGY.md §2.1.C.
 
@@ -147,10 +146,11 @@ Cross-module satisfaction (HF Device Therapy → EP CRT/ICD pattern; CAD-027 →
 
 ## 9. Module-specific findings
 
-### Manual classification overrides (6)
+### Manual classification overrides (7)
 
 Rows where the auto-classifier was wrong and the audit author corrected the classification with explicit reasoning:
 
+- **GAP-EP-006** (T1, DET_OK, `gap-ep-006-dabigatran-renal-safety` (EP-006)): MANUAL OVERRIDE: AUDIT-032 RESOLVED 2026-05-05 — new SAFETY evaluator block added (this PR) covering dabigatran (RxNorm 1037045) + eGFR<30 severe renal impairment per FDA Pradaxa PI + 2023 ACC/AHA AFib Class 3 (Harm) LOE B. Includes structured-data-gap branch for missing eGFR (matches EP-XX-7 LVEF-data-required pattern; preserves harm vector via fail-loud rather than silent default). Closes Tier S queue item.
 - **GAP-EP-007** (T1, DET_OK, `gap-vd-6-doac-mechanical-valve` (VD-6) cross-module to VHD): MANUAL OVERRIDE: cross-module satisfaction. GAP-EP-007 (DOAC on mechanical valve, CRITICAL SAFETY) is satisfied by VHD module evaluator VD-6 (gap-vd-6-doac-mechanical-valve, line 5312+) which fires on mechanical valve + DOAC RxNorm with explicit RE-ALIGN trial citation Class 3 Harm. Same clinical rule covers GAP-VHD-005 in VHD module. Auto-classifier picked SH-VALVE-IN-VALVE based on "valve" token similarity — wrong match. Architectural fragility documented at AUDIT-027 expanded scope (single rule satisfies spec gaps in two modules).
 - **GAP-EP-017** (T1, DET_OK, `gap-ep-017-hfref-non-dhp-ccb` (EP-017)): MANUAL OVERRIDE: AUDIT-033 RESOLVED 2026-05-05 — registry entry gap-ep-017-hfref-non-dhp-ccb added (this PR); evaluator at line 4809 fires SAFETY gap with Class 3 (Harm) classification when HFrEF + on diltiazem (RxNorm 3443) or verapamil (RxNorm 11170). Closes Tier S queue item. Override pin preserved for stability against auto-classifier similarity scoring drift.
 - **GAP-EP-026** (T2, PARTIAL_DETECTION, `gap-ep-lqts-bb` (EP-LQTS-BB)): MANUAL OVERRIDE per EP addendum line 131: GAP-EP-026 (Congenital LQTS QT-drug avoidance) covered by overlapping rules EP-LQTS-BB (line 6906+) and EP-TORSADES (line 7121+). PARTIAL because broad coverage of LQTS+QT-drug scenarios but not specifically the congenital subtype with QT-drug avoidance protocol.
@@ -209,8 +209,8 @@ Per-module wall-clock data lives in `docs/audit/canonical/audit_runs.jsonl` (app
 
 **EP module: MODERATELY BUILT.**
 
-- 19 DET_OK (21.3%), 26 PARTIAL (29.2%), 44 SPEC_ONLY (49.4%)
-- 6/15 T1 priority gaps DET_OK; 5 T1 SPEC_ONLY gaps require v2.0 Phase 1 work
+- 20 DET_OK (22.5%), 26 PARTIAL (29.2%), 43 SPEC_ONLY (48.3%)
+- 7/15 T1 priority gaps DET_OK; 4 T1 SPEC_ONLY gaps require v2.0 Phase 1 work
 - Audit method: `rule-body-citation-AUDIT-030D`. Generated from canonical crosswalk on 2026-05-04.
 
 ---

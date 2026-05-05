@@ -45,6 +45,12 @@ const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
     },
   },
   EP: {
+    'GAP-EP-006': {
+      classification: 'DET_OK',
+      registryId: 'gap-ep-006-dabigatran-renal-safety',
+      auditNote:
+        'MANUAL OVERRIDE: AUDIT-032 RESOLVED 2026-05-05 — new SAFETY evaluator block added (this PR) covering dabigatran (RxNorm 1037045) + eGFR<30 severe renal impairment per FDA Pradaxa PI + 2023 ACC/AHA AFib Class 3 (Harm) LOE B. Includes structured-data-gap branch for missing eGFR (matches EP-XX-7 LVEF-data-required pattern; preserves harm vector via fail-loud rather than silent default). Closes Tier S queue item.',
+    },
     'GAP-EP-007': {
       classification: 'DET_OK',
       registryId: 'gap-vd-6-doac-mechanical-valve',

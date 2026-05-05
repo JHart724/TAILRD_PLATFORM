@@ -237,6 +237,18 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'A',
   },
   {
+    id: 'gap-ep-006-dabigatran-renal-safety',
+    name: 'Dabigatran + CrCl<30 severe renal impairment (SAFETY)',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Pradaxa (dabigatran) Prescribing Information',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-05-05',
+    nextReviewDue: '2026-11-05',
+    classOfRecommendation: '3 (Harm)',
+    levelOfEvidence: 'B',
+  },
+  {
     id: 'gap-cad-statin',
     name: 'High-Intensity Statin in CAD',
     module: 'CORONARY_INTERVENTION',
@@ -4030,6 +4042,74 @@ export function evaluateGapRules(
           },
         });
       }
+    }
+  }
+
+  // ============================================================
+  // EP-006 SAFETY: Dabigatran contraindicated in CrCl<30 severe renal impairment
+  // ============================================================
+  // Guideline: 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 3 (Harm)
+  // Rationale: FDA Pradaxa (dabigatran) prescribing information warns against use
+  //   in patients with CrCl<30 mL/min (severe renal impairment). 80% renally
+  //   eliminated; severe impairment causes accumulation + fatal/intracranial
+  //   bleeding risk. eGFR<30 mL/min/1.73m² is clinical proxy for CrCl<30.
+  // Renal threshold per established codebase convention: labValues['egfr']
+  //   (lowercase, matches CAD-RENAL-MONITOR pattern at line 7812+).
+  // Switch recommendation: apixaban (RxNorm 1364430) — most renal-tolerant DOAC,
+  //   FDA-approved with dose adjustment (2.5mg BID) down to CrCl 15. Alternative:
+  //   warfarin (RxNorm 11289) if DOAC contraindicated otherwise.
+  // 2-branch compound: SAFETY when eGFR<30; structured DATA gap when eGFR
+  //   undefined (preserves harm vector via fail-loud, never silent default —
+  //   matches EP-RC LVEF-data-required pattern from PR #229 / EP-XX-7).
+  if (medCodes.includes('1037045') && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    if (labValues['egfr'] !== undefined && labValues['egfr'] < 30) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.ELECTROPHYSIOLOGY,
+        status: 'SAFETY: Dabigatran contraindicated in severe renal impairment (eGFR<30)',
+        target: 'Switch to apixaban (preferred) or warfarin; preserve anticoagulation continuity',
+        medication: 'Replace dabigatran with apixaban (RxNorm 1364430) 2.5-5mg BID with dose adjustment for renal function, OR warfarin (RxNorm 11289) if DOACs contraindicated',
+        recommendations: {
+          action: 'Discontinue dabigatran and substitute apixaban with renal dose adjustment per FDA Pradaxa PI + 2023 ACC/AHA AFib Class 3 (Harm)',
+          guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Pradaxa (dabigatran) Prescribing Information',
+          note: 'Dabigatran is 80% renally eliminated; severe renal impairment (CrCl<30 / eGFR<30) causes accumulation and fatal/intracranial bleeding risk. Apixaban is the most renal-tolerant DOAC (ARISTOTLE trial); warfarin is the safety net when DOACs contraindicated.',
+        },
+        evidence: {
+          triggerCriteria: [
+            'On dabigatran (RxNorm 1037045) in active medications',
+            `eGFR: ${labValues['egfr']} mL/min/1.73m² (<30, severe renal impairment per FDA Pradaxa PI)`,
+          ],
+          guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Pradaxa Prescribing Information',
+          classOfRecommendation: '3 (Harm)',
+          levelOfEvidence: 'B',
+          exclusions: ['Hospice/palliative care (Z51.5)'],
+          safetyClass: 'SAFETY',
+        },
+      });
+    } else if (labValues['egfr'] === undefined) {
+      // Missing data: fire structured DATA gap, do NOT silent-default to "no impairment".
+      // Mirrors EP-RC LVEF-data-required pattern from PR #229 / EP-XX-7 mitigation.
+      gaps.push({
+        type: TherapyGapType.MONITORING_OVERDUE,
+        module: ModuleType.ELECTROPHYSIOLOGY,
+        status: 'eGFR measurement required to evaluate dabigatran safety in renal impairment',
+        target: 'eGFR documented to assess dabigatran appropriateness',
+        recommendations: {
+          action: 'Order eGFR (LOINC 33914-3 or 62238-1) to evaluate dabigatran renal-impairment SAFETY per FDA Pradaxa PI',
+          guideline: '2023 ACC/AHA/ACCP/HRS AFib Guideline + FDA Pradaxa Prescribing Information',
+          note: 'On dabigatran without recent eGFR — cannot evaluate severe-renal-impairment SAFETY contraindication. Measure eGFR; if <30, switch to apixaban or warfarin.',
+        },
+        evidence: {
+          triggerCriteria: [
+            'On dabigatran (RxNorm 1037045) in active medications',
+            'No eGFR value in lab observations',
+          ],
+          guidelineSource: '2023 ACC/AHA/ACCP/HRS AFib Guideline + FDA Pradaxa Prescribing Information',
+          classOfRecommendation: 'Class 1 (data required for safety evaluation)',
+          levelOfEvidence: 'B',
+          exclusions: ['Hospice/palliative care (Z51.5)'],
+        },
+      });
     }
   }
 
