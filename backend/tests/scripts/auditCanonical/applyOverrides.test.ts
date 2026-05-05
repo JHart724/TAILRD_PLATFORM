@@ -57,9 +57,14 @@ function setupTmpDir(includeCanonical: boolean, includeCandidate: boolean): stri
         path.join(tmpDir, `${mod}.crosswalk.json`),
       );
     }
-    if (includeCandidate && fs.existsSync(path.join(CANONICAL_DIR, `${mod}.crosswalk.candidate.json`))) {
+    if (includeCandidate) {
+      // Candidate files share schema with canonical; copy canonical as a fixture.
+      // The committed canonical *.crosswalk.json contains the override pins applied
+      // yesterday (PRs #238/240/241/243), which is exactly what --candidate-mode tests
+      // need to assert against. The actual *.crosswalk.candidate.json is gitignored
+      // / not committed, so we synthesize the fixture from canonical here.
       fs.copyFileSync(
-        path.join(CANONICAL_DIR, `${mod}.crosswalk.candidate.json`),
+        path.join(CANONICAL_DIR, `${mod}.crosswalk.json`),
         path.join(tmpDir, `${mod}.crosswalk.candidate.json`),
       );
     }
