@@ -83,7 +83,7 @@ Heart Failure has **126 spec gaps** across 15 subcategories. Implementation: **2
 
 **Registry-without-evaluator (1):** registry entries with no matching evaluator block body.
 
-- `gap-hf-vaccine-covid` (registry line 2077): No evaluator body matched via similarity scoring
+- `gap-hf-vaccine-covid` (registry line 2089): No evaluator body matched via similarity scoring
 
 **Naming convention mismatches (4):** registry IDs not following `gap-hf-` convention.
 

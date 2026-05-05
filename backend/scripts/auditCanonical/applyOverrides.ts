@@ -1,15 +1,28 @@
 /**
- * applyOverrides.ts — apply manual classification overrides to a candidate crosswalk.
+ * applyOverrides.ts — apply manual classification overrides to a crosswalk.
  *
  * Overrides are encoded inline as a per-module dictionary {specGapId → override}.
  * Each override carries explicit auditNote citing the source (addendum section,
  * clinical reasoning, etc.) so the override is transparent in every consumer.
  *
  * Usage:
- *   npx tsx backend/scripts/auditCanonical/applyOverrides.ts --module VHD
+ *   npx tsx backend/scripts/auditCanonical/applyOverrides.ts --module VHD          # default: writes canonical
+ *   npx tsx backend/scripts/auditCanonical/applyOverrides.ts --all
+ *   npx tsx backend/scripts/auditCanonical/applyOverrides.ts --all --candidate     # opts in to legacy verifyDraft baseline workflow
  *
- * Reads:  docs/audit/canonical/<MODULE>.crosswalk.candidate.json
- * Writes: docs/audit/canonical/<MODULE>.crosswalk.candidate.json (in place)
+ * Default reads:  docs/audit/canonical/<MODULE>.crosswalk.json (canonical)
+ * Default writes: docs/audit/canonical/<MODULE>.crosswalk.json (in place)
+ *
+ * --candidate flag (legacy): reads + writes <MODULE>.crosswalk.candidate.json,
+ *   used during initial verifyDraft baseline cycle. AUDIT-041 (2026-05-06):
+ *   defaults inverted from candidate to canonical because 4 prior recurrences
+ *   (PRs #238 partial, #240, #241, #243) showed 100% miss rate on the candidate
+ *   default for source-change PRs (Tier S series + Cat A corrections). Canonical
+ *   is now the common path; candidate is an explicit opt-in for the rare baseline
+ *   cycle.
+ *
+ * Idempotency: re-running on already-applied state produces byte-identical output
+ * via stableStringify. No double-patching risk.
  */
 
 import * as fs from 'fs';
@@ -195,8 +208,8 @@ const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
   PV: {},
 };
 
-function applyOverrides(module: ModuleCode, candidatePath: string, codePath: string, allCodes: Map<ModuleCode, CodeExtract>): { applied: number; demoted: number } {
-  const xw = JSON.parse(fs.readFileSync(candidatePath, 'utf8')) as Crosswalk;
+function applyOverrides(module: ModuleCode, targetPath: string, codePath: string, allCodes: Map<ModuleCode, CodeExtract>): { applied: number; demoted: number } {
+  const xw = JSON.parse(fs.readFileSync(targetPath, 'utf8')) as Crosswalk;
   const overrides = OVERRIDES[module];
   if (!overrides || Object.keys(overrides).length === 0) {
     return { applied: 0, demoted: 0 };
@@ -217,7 +230,7 @@ function applyOverrides(module: ModuleCode, candidatePath: string, codePath: str
   const evalByModuleAndRegistry = new Map<string, { name: string; bodyStartLine: number; bodyEndLine: number }>();
   for (const [mod, code] of allCodes) {
     // Need reconciliation matches to map registry→evaluator. Load reconciliation here.
-    const reconPath = path.join(path.dirname(candidatePath), `${mod}.reconciliation.json`);
+    const reconPath = path.join(path.dirname(targetPath), `${mod}.reconciliation.json`);
     if (!fs.existsSync(reconPath)) continue;
     const recon = JSON.parse(fs.readFileSync(reconPath, 'utf8'));
     const blockByName = new Map<string, { name: string; bodyStartLine: number; bodyEndLine: number }>();
@@ -298,7 +311,7 @@ function applyOverrides(module: ModuleCode, candidatePath: string, codePath: str
   });
 
   const updated: Crosswalk = { ...xw, rows: newRows };
-  fs.writeFileSync(candidatePath, stableStringify(updated));
+  fs.writeFileSync(targetPath, stableStringify(updated));
 
   return { applied, demoted };
 }
@@ -306,6 +319,7 @@ function applyOverrides(module: ModuleCode, candidatePath: string, codePath: str
 function main(): void {
   let mod: ModuleCode | undefined;
   let all = false;
+  let useCandidate = false; // AUDIT-041: default is canonical; --candidate opts in to legacy verifyDraft workflow
   let inputDir = CANONICAL_OUTPUT_DIR;
   for (let i = 2; i < process.argv.length; i++) {
     const a = process.argv[i];
@@ -314,6 +328,8 @@ function main(): void {
       i++;
     } else if (a === '--all') {
       all = true;
+    } else if (a === '--candidate') {
+      useCandidate = true;
     } else if (a === '--input' && process.argv[i + 1]) {
       inputDir = path.resolve(process.argv[i + 1]);
       i++;
@@ -332,15 +348,16 @@ function main(): void {
   }
 
   const targets = all ? MODULE_CONFIGS : MODULE_CONFIGS.filter((m) => m.code === mod);
-  console.log('=== applyOverrides.ts ===');
+  const targetSuffix = useCandidate ? 'crosswalk.candidate.json' : 'crosswalk.json';
+  console.log(`=== applyOverrides.ts (${useCandidate ? 'candidate' : 'canonical'}) ===`);
   for (const cfg of targets) {
-    const candidatePath = path.join(inputDir, `${cfg.code}.crosswalk.candidate.json`);
+    const targetPath = path.join(inputDir, `${cfg.code}.${targetSuffix}`);
     const codePath = path.join(inputDir, `${cfg.code}.code.json`);
-    if (!fs.existsSync(candidatePath)) {
-      console.error(`  ${cfg.code}: SKIPPED — no candidate file`);
+    if (!fs.existsSync(targetPath)) {
+      console.error(`  ${cfg.code}: SKIPPED — no ${useCandidate ? 'candidate' : 'canonical'} file at ${targetPath}`);
       continue;
     }
-    const { applied, demoted } = applyOverrides(cfg.code, candidatePath, codePath, allCodes);
+    const { applied, demoted } = applyOverrides(cfg.code, targetPath, codePath, allCodes);
     console.log(`  ${cfg.code}: applied=${applied} demoted=${demoted} (out of ${Object.keys(OVERRIDES[cfg.code] ?? {}).length} configured)`);
   }
 }
