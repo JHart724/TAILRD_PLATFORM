@@ -11,6 +11,7 @@ import {
   RXNORM_DIGOXIN,
   RXNORM_QT_PROLONGING,
   RXNORM_RATE_CONTROL,
+  RXNORM_FINERENONE,
 } from '../../terminology/cardiovascularValuesets';
 
 /** Extract code arrays from valueset objects for medication matching */
@@ -3355,7 +3356,9 @@ export function evaluateGapRules(
     labValues['potassium'] !== undefined &&
     labValues['potassium'] < 5.0
   ) {
-    if (!medCodes.some(c => c === '2481926')) {
+    // Fix (AUDIT-053, 2026-05-05): was hardcoded '2481926' (UNKNOWN status — invalid CUI).
+    // Now uses RXNORM_FINERENONE.FINERENONE (2562811, verified ingredient) so the rule actually fires.
+    if (!medCodes.some(c => c === RXNORM_FINERENONE.FINERENONE)) {
             if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
           type: TherapyGapType.MEDICATION_MISSING,
@@ -3379,9 +3382,9 @@ export function evaluateGapRules(
   // Gap HF-34: SGLT2i Missing in HFrEF
   // Guideline: 2022 AHA/ACC/HFSA HF Guideline, Class 1, LOE A (DAPA-HF, EMPEROR-Reduced)
   // All HFrEF (LVEF <=40%) patients should be on SGLT2i regardless of diabetes status
-  // RxNorm: dapagliflozin (1488564), empagliflozin (1545653), sotagliflozin (2627044)
+  // RxNorm: dapagliflozin (1488564), empagliflozin (1545653), sotagliflozin (2638675)
   if (hasHF && labValues['lvef'] !== undefined && labValues['lvef'] <= 40) {
-    const SGLT2I_CODES = ['1488564', '1545653', '2627044'];
+    const SGLT2I_CODES = ['1488564', '1545653', '2638675'];
     const onSGLT2i = medCodes.some(c => SGLT2I_CODES.includes(c));
     if (!onSGLT2i) {
             if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
@@ -3533,7 +3536,7 @@ export function evaluateGapRules(
     labValues['heart_rate'] !== undefined && labValues['heart_rate'] > 70 &&
     onBBforIva &&
     !hasAF &&
-    !medCodes.includes('1649380') &&
+    !medCodes.includes('1649480') &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
@@ -3889,7 +3892,7 @@ export function evaluateGapRules(
     labValues['lvef'] !== undefined && labValues['lvef'] > 40 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
-    const SGLT2I_CODES_HFPEF = ['1488564', '1545653', '2627044'];
+    const SGLT2I_CODES_HFPEF = ['1488564', '1545653', '2638675'];
     const onSGLT2iHFpEF = medCodes.some(c => SGLT2I_CODES_HFPEF.includes(c));
     if (!onSGLT2iHFpEF) {
       gaps.push({
@@ -4283,8 +4286,8 @@ export function evaluateGapRules(
   // EP-DOFETILIDE-REMS: Dofetilide REMS Compliance
   // ============================================================
   // Guideline: FDA REMS Program, Class 1
-  // On dofetilide (RxNorm 135447) -- requires in-hospital initiation and QTc monitoring
-  if (medCodes.includes('135447') && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  // On dofetilide (RxNorm 49247) -- requires in-hospital initiation and QTc monitoring
+  if (medCodes.includes('49247') && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasQTc = labValues['qtc_interval'] !== undefined;
     const hasCreatinine = labValues['creatinine'] !== undefined;
     if (!hasQTc || !hasCreatinine) {
@@ -4301,7 +4304,7 @@ export function evaluateGapRules(
         },
         evidence: {
           triggerCriteria: [
-            'Dofetilide active (RxNorm 135447)',
+            'Dofetilide active (RxNorm 49247)',
             `QTc available: ${hasQTc ? 'Yes' : 'No'}`,
             `Creatinine available: ${hasCreatinine ? 'Yes' : 'No'}`,
           ],
@@ -6808,8 +6811,8 @@ export function evaluateGapRules(
   // EP-PFA: Pulsed Field Ablation Candidacy
   // Guideline: 2024 HRS Expert Consensus on PFA, Class 2a, LOE B-NR
   // AF + prior failed ablation proxy (AF + on antiarrhythmic = failed rhythm control proxy)
-  // AAD codes: flecainide (4441), propafenone (8754), sotalol (9947), amiodarone (703), dofetilide (135447)
-  const AAD_CODES = ['4441', '8754', '9947', '703', '135447'];
+  // AAD codes: flecainide (4441), propafenone (8754), sotalol (9947), amiodarone (703), dofetilide (49247)
+  const AAD_CODES = ['4441', '8754', '9947', '703', '49247'];
   const onAAD = medCodes.some(c => AAD_CODES.includes(c));
   if (
     hasAF &&
@@ -6869,11 +6872,11 @@ export function evaluateGapRules(
 
   // EP-DRONEDARONE: Dronedarone Contraindication Check
   // Guideline: 2023 ACC/AHA/ACCP/HRS AF Guideline (ANDROMEDA trial), Class 3 (Harm), LOE B-R
-  // AF + HF + on dronedarone (RxNorm 997221) -- CONTRAINDICATED in NYHA III/IV or decompensated HF
+  // AF + HF + on dronedarone (RxNorm 233698) -- CONTRAINDICATED in NYHA III/IV or decompensated HF
   if (
     hasAF &&
     hasHF &&
-    medCodes.includes('997221') &&
+    medCodes.includes('233698') &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     // LVEF <35% as proxy for NYHA III/IV
@@ -6895,7 +6898,7 @@ export function evaluateGapRules(
             'Atrial fibrillation diagnosis (I48.*)',
             'Heart failure diagnosis (I50.*)',
             `LVEF: ${labValues['lvef']}% (<35%, proxy for NYHA III/IV)`,
-            'Dronedarone active (RxNorm 997221)',
+            'Dronedarone active (RxNorm 233698)',
           ],
           guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (ANDROMEDA Trial)',
           classOfRecommendation: 'Class 3 (Harm)',
@@ -6947,7 +6950,7 @@ export function evaluateGapRules(
   if (
     hasIST &&
     labValues['heart_rate'] !== undefined && labValues['heart_rate'] > 100 &&
-    !medCodes.includes('1649380') && // ivabradine
+    !medCodes.includes('1649480') && // ivabradine
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
@@ -7012,7 +7015,7 @@ export function evaluateGapRules(
   // Long QT syndrome (I45.81) + no beta-blocker
   const hasLQTS = dxCodes.some(c => c.startsWith('I45.81'));
   if (hasLQTS && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const BB_CODES_LQTS = ['20352', '6918', '19484', '7512']; // carvedilol, metoprolol, bisoprolol, nadolol
+    const BB_CODES_LQTS = ['20352', '6918', '19484', '7226']; // carvedilol, metoprolol, bisoprolol, nadolol — AUDIT-043 (2026-05-05): was '7512' = norepinephrine, NOT nadolol
     const onBBforLQTS = medCodes.some(c => BB_CODES_LQTS.includes(c));
     if (!onBBforLQTS) {
       gaps.push({
@@ -7225,9 +7228,9 @@ export function evaluateGapRules(
   // EP-TORSADES: Torsades Risk with Multiple QT-Prolonging Drugs
   // Guideline: 2017 AHA/ACC/HRS VA Guideline, Class 1, LOE B-NR
   // QTc >500ms + at least 1 QT-prolonging medication
-  // QT-prolonging med codes: amiodarone (703), dofetilide (135447), sotalol (9947),
+  // QT-prolonging med codes: amiodarone (703), dofetilide (49247), sotalol (9947),
   //   ondansetron (26225), haloperidol (5093), methadone (6813)
-  const QT_PROLONGING_CODES = ['703', '135447', '9947', '26225', '5093', '6813'];
+  const QT_PROLONGING_CODES = ['703', '49247', '9947', '26225', '5093', '6813'];
   const qtProlongingMedCount = medCodes.filter(c => QT_PROLONGING_CODES.includes(c)).length;
   if (
     labValues['qtc_interval'] !== undefined && labValues['qtc_interval'] > 500 &&
@@ -7603,7 +7606,7 @@ export function evaluateGapRules(
   // CAD + T2DM + no SGLT2i
   // RxNorm dapagliflozin: 1488564
   if (hasCAD && hasDiabetes && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const SGLT2I_CODES_CAD = ['1488564', '1545653', '2627044']; // dapagliflozin, empagliflozin, sotagliflozin
+    const SGLT2I_CODES_CAD = ['1488564', '1545653', '2638675']; // dapagliflozin, empagliflozin, sotagliflozin
     const onSGLT2iCAD = medCodes.some(c => SGLT2I_CODES_CAD.includes(c));
     if (!onSGLT2iCAD) {
       gaps.push({
@@ -8586,7 +8589,7 @@ export function evaluateGapRules(
   // CAD-ASPIRIN-PRIMARY: Aspirin Assessment in CAD
   // Guideline: 2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization, Class 1, LOE A
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const ASPIRIN_CODES_CAP = ['1191', '198464'];
+    const ASPIRIN_CODES_CAP = ['1191', '243670'];
     const onAspirinCAP = medCodes.some(c => ASPIRIN_CODES_CAP.includes(c));
     if (!onAspirinCAP) {
       gaps.push({
@@ -8603,7 +8606,7 @@ export function evaluateGapRules(
         evidence: {
           triggerCriteria: [
             'Coronary artery disease (I25.*)',
-            'No aspirin (RxNorm 1191/198464) in active medications',
+            'No aspirin (RxNorm 1191/243670) in active medications',
           ],
           guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
           classOfRecommendation: 'Class 1',
@@ -8617,7 +8620,7 @@ export function evaluateGapRules(
   // CAD-BETA-BLOCKER: Beta-Blocker in Stable CAD
   // Guideline: 2012 ACCF/AHA Stable IHD Guideline, Class 2a, LOE B
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const BB_CODES_SCAD = ['20352', '6918', '19484', '7512']; // carvedilol, metoprolol, bisoprolol, nadolol
+    const BB_CODES_SCAD = ['20352', '6918', '19484', '7226']; // carvedilol, metoprolol, bisoprolol, nadolol — AUDIT-043 (2026-05-05): was '7512' = norepinephrine, NOT nadolol
     const onBBscad = medCodes.some(c => BB_CODES_SCAD.includes(c));
     if (!onBBscad) {
       gaps.push({
@@ -9395,7 +9398,7 @@ export function evaluateGapRules(
   // EP-EARLY-RHYTHM: Early Rhythm Control in Newly Diagnosed AF
   // Guideline: 2023 ACC/AHA/ACCP/HRS AF Guideline (EAST-AFNET 4), Class 2a, LOE B-R
   // AF diagnosed <1 year + no rhythm control medication
-  const RHYTHM_CONTROL_CODES_ER = ['4441', '8754', '9947', '703', '135447'];
+  const RHYTHM_CONTROL_CODES_ER = ['4441', '8754', '9947', '703', '49247'];
   const onRhythmControlER = medCodes.some(c => RHYTHM_CONTROL_CODES_ER.includes(c));
   if (
     hasAF &&
@@ -9853,7 +9856,7 @@ export function evaluateGapRules(
   // EP-AF-CATHETER-TIMING: AF Ablation Timing Optimization
   // Guideline: 2023 ACC/AHA/ACCP/HRS AF Guideline (EAST-AFNET 4, EARLY-AF), Class 2a, LOE B-R
   // AF + on AAD (proxy for drug-refractory) + no prior ablation
-  const AAD_CODES_TIMING = ['4441', '8754', '9947', '703', '135447'];
+  const AAD_CODES_TIMING = ['4441', '8754', '9947', '703', '49247'];
   const onAADtiming = medCodes.some(c => AAD_CODES_TIMING.includes(c));
   if (
     hasAF &&

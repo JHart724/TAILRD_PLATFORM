@@ -150,18 +150,24 @@ export const RXNORM_P2Y12_INHIBITORS = {
   TICAGRELOR: '1116632',
 } as const;
 
-/** Digoxin formulations -- used by digoxin toxicity gap rule */
+/** Digoxin formulations -- used by digoxin toxicity gap rule.
+ *  AUDIT-044 (2026-05-05): removed DIGOXIN_IV (197607) — that CUI is a retired
+ *    aspirin/caffeine/dihydrocodeine combo product, NOT digoxin (RxNav historystatus=NotCurrent).
+ *  AUDIT-045: relabeled 197605 (was DIGOXIN_250MCG, actually 0.2mg cap) and added
+ *    DIGOXIN_INGREDIENT (3407) so the toxicity rule catches any digoxin formulation.
+ *  All current codes verified via RxNav properties.json. */
 export const RXNORM_DIGOXIN = {
-  DIGOXIN_125MCG: '197604',
-  DIGOXIN_250MCG: '197605',
-  DIGOXIN_ELIXIR: '197606',
-  DIGOXIN_IV: '197607',
+  DIGOXIN_INGREDIENT: '3407',  // digoxin (ingredient code — covers all formulations)
+  DIGOXIN_125MCG: '197604',    // digoxin 0.125 MG Oral Tablet
+  DIGOXIN_0_2MG_CAP: '197605', // digoxin 0.2 MG Oral Capsule (was mislabeled DIGOXIN_250MCG)
+  DIGOXIN_250MCG: '197606',    // digoxin 0.25 MG Oral Tablet (was mislabeled DIGOXIN_ELIXIR)
 } as const;
 
-/** Finerenone -- used by finerenone gap rule */
+/** Finerenone -- used by finerenone gap rule.
+ *  AUDIT-053 (2026-05-05): replaced 2481926/2481928 (UNKNOWN status in RxNorm — invalid CUIs;
+ *    rule never fired in production) with 2562811 (verified finerenone ingredient via RxNav). */
 export const RXNORM_FINERENONE = {
-  FINERENONE_10MG: '2481926',
-  FINERENONE_20MG: '2481928',
+  FINERENONE: '2562811',  // finerenone (ingredient — covers all formulations)
 } as const;
 
 /** GDMT medications -- used by HF GDMT optimization */
@@ -186,22 +192,26 @@ export const RXNORM_GDMT = {
   // SGLT2 inhibitors
   DAPAGLIFLOZIN: '1488564',
   EMPAGLIFLOZIN: '1545653',
-  SOTAGLIFLOZIN: '2627044',
+  SOTAGLIFLOZIN: '2638675',  // AUDIT-054 (2026-05-05): was 2627044 = bexagliflozin (wrong drug)
   // Hydralazine/Isosorbide dinitrate
   HYDRALAZINE: '5470',
   ISOSORBIDE_DINITRATE: '6058',
   // Ivabradine
-  IVABRADINE: '1649380',
+  IVABRADINE: '1649480',  // AUDIT-055 (2026-05-05): was 1649380 = invalid CUI (UNKNOWN status, rule never fired)
 } as const;
 
-/** QT-prolonging medications -- used by QTc safety gap rule */
+/** QT-prolonging medications -- used by QTc safety gap rule.
+ *  AUDIT-042 (2026-05-05): PROCAINAMIDE corrected 8787 → 8700 (8787 = propranolol, NOT procainamide).
+ *  AUDIT-056: DOFETILIDE corrected 135447 → 49247 (135447 = donepezil, an Alzheimer's drug, NOT dofetilide).
+ *  AUDIT-057: DRONEDARONE corrected 997221 → 233698 (997221 = donepezil hydrochloride 10 MG branded, NOT dronedarone).
+ *  All current codes verified via RxNav properties.json — patient-safety-active corrections. */
 export const RXNORM_QT_PROLONGING = {
   AMIODARONE: '703',
   SOTALOL: '9947',
-  DOFETILIDE: '135447',
-  DRONEDARONE: '997221',
+  DOFETILIDE: '49247',     // AUDIT-056 (was 135447 = donepezil)
+  DRONEDARONE: '233698',   // AUDIT-057 (was 997221 = donepezil branded)
   FLECAINIDE: '4441',
-  PROCAINAMIDE: '8787',
+  PROCAINAMIDE: '8700',    // AUDIT-042 (was 8787 = propranolol)
   QUINIDINE: '9068',
   HALOPERIDOL: '5093',
   METHADONE: '6813',
@@ -213,11 +223,13 @@ export const RXNORM_QT_PROLONGING = {
   ONDANSETRON: '26225',
 } as const;
 
-/** Aspirin -- used by DAPT gap rule */
+/** Aspirin -- used by DAPT gap rule.
+ *  AUDIT-058 (2026-05-05): ASPIRIN_81MG corrected 198464 → 243670
+ *    (198464 = aspirin 300 MG Rectal Suppository, NOT 81mg oral). */
 export const RXNORM_ASPIRIN = {
   ASPIRIN: '1191',
-  ASPIRIN_81MG: '198464',
-  ASPIRIN_325MG: '198467',
+  ASPIRIN_81MG: '243670',   // AUDIT-058 (was 198464 = 300mg rectal suppository)
+  ASPIRIN_325MG: '198467',  // aspirin 325 MG Delayed Release Oral Tablet
 } as const;
 
 /** DOACs -- used by AFib anticoagulation gap rule */
@@ -228,13 +240,18 @@ export const RXNORM_DOACS = {
   DABIGATRAN: '1037045',
 } as const;
 
-/** Warfarin -- used by mechanical valve anticoagulation gap rule */
+/** Warfarin -- used by mechanical valve anticoagulation gap rule.
+ *  AUDIT-059/060/061 (2026-05-05): warfarin formulation labels corrected — codes were valid
+ *    warfarin but mislabeled to wrong strengths. Real strengths verified via RxNav:
+ *    855288=1mg ✓, 855302=2mg (added; previously missing), 855318=3mg (was labeled 5MG),
+ *    855332=5mg (was labeled 10MG), 855296=10mg (was labeled 2MG). */
 export const RXNORM_WARFARIN = {
-  WARFARIN: '11289',
-  WARFARIN_1MG: '855288',
-  WARFARIN_2MG: '855296',
-  WARFARIN_5MG: '855318',
-  WARFARIN_10MG: '855332',
+  WARFARIN: '11289',         // warfarin (ingredient)
+  WARFARIN_1MG: '855288',    // warfarin sodium 1 MG Oral Tablet
+  WARFARIN_2MG: '855302',    // AUDIT-059 (added; replaces wrong 855296=10mg)
+  WARFARIN_3MG: '855318',    // AUDIT-060 (relabeled from WARFARIN_5MG; 855318 is actually 3mg)
+  WARFARIN_5MG: '855332',    // AUDIT-061 (relabeled from WARFARIN_10MG; 855332 is actually 5mg)
+  WARFARIN_10MG: '855296',   // AUDIT-059 (relabeled from WARFARIN_2MG; 855296 is actually 10mg)
 } as const;
 
 /** Rate control agents (BB + CCB) -- used by AFib rate control gap rule */

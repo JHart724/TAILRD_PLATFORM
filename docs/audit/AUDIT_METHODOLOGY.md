@@ -732,4 +732,62 @@ Register entries follow `docs/audit/AUDIT_FRAMEWORK.md` §"Evidence requirements
 
 ---
 
-*Authored 2026-05-04 in response to compounding methodology defect cycles (AUDIT-029 → AUDIT-030 → AUDIT-030.D). This document is the contract that prevents methodology drift living in audit prose. Implementation under `backend/scripts/auditCanonical/` follows.*
+## 16. Clinical-Code Verification Standard (Cat A canonical valuesets + Cat D inline arrays)
+
+Every RxNorm, LOINC, and ICD-10 constant in the rule engine must be verified against an authoritative external source. Codebase trust (e.g., "the comment says nadolol so the code must be nadolol") is INSUFFICIENT.
+
+**Bug-rate evidence (Phase 0B clinical-code verification, 2026-05-05):** systematic Phase 2 verification of canonical valuesets in `cardiovascularValuesets.ts` surfaced **13 wrong-drug or invalid-CUI errors in 84 cited RxNorm codes (15.5% bug rate)**, including patient-safety-active errors:
+- `RXNORM_QT_PROLONGING.DOFETILIDE` and `DRONEDARONE` were donepezil/donepezil-branded (Alzheimer's drug surveilled, not antiarrhythmics)
+- `RXNORM_QT_PROLONGING.PROCAINAMIDE` was propranolol (a beta-blocker, not QT-prolonging)
+- `RXNORM_FINERENONE` and `RXNORM_GDMT.IVABRADINE` were invalid CUIs — gap rules never fired in production
+- `RXNORM_DIGOXIN.DIGOXIN_IV` was a retired aspirin/caffeine/dihydrocodeine combo
+
+This is the data-layer cousin to §1 (rule-body verification — AUDIT-029). §1 was an output discipline (audit conclusions must cite running code, not addendum text). §16 is an input discipline (rule logic must consume verified codes, not codebase-trusted constants).
+
+### 16.1 Verification sources (required)
+
+- **RxNorm**: query `https://rxnav.nlm.nih.gov/REST/rxcui/<cui>/properties.json` and assert the returned `name` field matches the constant's intended drug. For ambiguous cases, additionally query `historystatus.json` to confirm the CUI is `Active` (not retired).
+- **LOINC**: query loinc.org official browser or LOINC API. Particular attention to:
+  - eGFR formula variants (33914-3 MDRD, 62238-1 CKD-EPI 2009, 98979-8 race-free CKD-EPI 2021 — pick the one matching FHIR ingestion mapping)
+  - cTnI variants (89579-7 hs vs 48641-3 conventional)
+  - LVEF (18010-0 vs alternatives)
+- **ICD-10**: cross-reference current AHA/ACC/CDC code definitions for the rule's clinical intent, preferably via CMS ICD-10-CM 2024 official lookup or icd10data.com.
+- **CPT** (when used): AMA CPT directory or AHA Coding Clinic.
+
+### 16.2 Mandatory verification points
+
+1. **Initial constant authoring** — every new RxNorm/LOINC/ICD-10 constant must have its verified name pasted as a comment next to the code (e.g., `PROCAINAMIDE: '8700',  // procainamide (verified RxNav 2026-05-05)`).
+2. **Any rule that consumes the constant** — rule author must spot-check the constant's verified name before referencing it in detection logic.
+3. **Audit/review cycles** — Phase 0B clinical audits must include a Cat A clinical-code verification batch as a mandatory step alongside §1 rule-body verification. Bug-rate sampling required: if any cited code in a verified subset is wrong-drug, escalate to full Cat A re-verification of that valueset.
+4. **Pull-request gate** — PRs that add new RxNorm/LOINC/ICD-10 constants must cite the authoritative-source verification timestamp in the commit message or PR body.
+
+### 16.3 Inline-array discipline (architectural; AUDIT-052)
+
+The Cat A bug rate is amplified by **AUDIT-052**: `gapRuleEngine.ts` contains ~52 inline RxNorm arrays that re-declare drug classes already defined in `cardiovascularValuesets.ts`. When the canonical valueset has a wrong code, the inline array often inherits the bug; when it doesn't, the inline declares a different (sometimes also wrong) code, producing divergence.
+
+Future rule authoring SHOULD prefer importing from the canonical valueset:
+```typescript
+import { RXNORM_QT_PROLONGING } from '../../terminology/cardiovascularValuesets';
+const QT_DRUGS = [RXNORM_QT_PROLONGING.AMIODARONE, RXNORM_QT_PROLONGING.SOTALOL, ...];
+```
+not declaring inline:
+```typescript
+const QT_DRUGS = ['703', '9947', ...]; // divergence vector
+```
+
+Architectural refactor to eliminate inline arrays tracked as AUDIT-052; partial mitigation (AUDIT-042/056/057-equivalent inline copies corrected) shipped in the AUDIT-042-061 fix PR.
+
+### 16.4 Failure mode taxonomy
+
+| Class | Description | Detection | Example |
+|---|---|---|---|
+| **Wrong-drug CUI** | RxNorm code maps to entirely different drug | RxNav properties.json `name` mismatch | AUDIT-042: 8787 = propranolol, not procainamide |
+| **Invalid CUI** | RxNorm CUI returns `UNKNOWN` or `NotCurrent` status | RxNav historystatus.json | AUDIT-053: 2481926 = UNKNOWN |
+| **Retired CUI** | RxNorm CUI was retired (drug withdrawn or restructured) | RxNav historystatus.json `NotCurrent` | AUDIT-044: 197607 (retired aspirin combo) |
+| **Form/strength mislabel** | Code is correct drug but wrong dose/form per comment | RxNav properties.json `name` shows different strength/form | AUDIT-045: 197605 is 0.2mg cap, not 250mcg |
+| **Same-class wrong-drug** | Code is in the same drug class but wrong specific drug | RxNav properties.json | AUDIT-054: 2627044 = bexagliflozin (SGLT2i), not sotagliflozin (different SGLT2i) |
+| **Cross-class match** | LOINC for unrelated lab; ICD for unrelated dx | Authoritative cross-reference | (Prior fix from cardiovascularValuesets.ts: LOINC 10230-1 was QRS, not LVEF) |
+
+---
+
+*Authored 2026-05-04 in response to compounding methodology defect cycles (AUDIT-029 → AUDIT-030 → AUDIT-030.D). This document is the contract that prevents methodology drift living in audit prose. Implementation under `backend/scripts/auditCanonical/` follows. §16 added 2026-05-05 in response to Cat A clinical-code verification surfacing 15.5% wrong-drug bug rate (AUDIT-042 through AUDIT-061).*

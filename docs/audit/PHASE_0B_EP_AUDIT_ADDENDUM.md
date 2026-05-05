@@ -76,11 +76,11 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 **Registry-without-evaluator (1):** registry entries with no matching evaluator block body.
 
-- `gap-ep-anticoag-interruption` (registry line 1908): No evaluator body matched via similarity scoring
+- `gap-ep-anticoag-interruption` (registry line 1909): No evaluator body matched via similarity scoring
 
 **Naming convention mismatches (1):** registry IDs not following `gap-ep-` convention.
 
-- `gap-39-qtc-safety` (line 156): expected prefix `gap-ep-`, got `gap-39-`
+- `gap-39-qtc-safety` (line 157): expected prefix `gap-ep-`, got `gap-39-`
 
 
 ---
@@ -89,20 +89,20 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-EP-001 | 311 | DET_OK | `gap-ep-oac-afib` (EP-OAC @3993-4046) | + \| Multiple registry ids cited: gap-ep-oac-afib, gap-ep-af-stroke-risk \| auto-verify: preserved-fro |
-| GAP-EP-006 | 312 | DET_OK | `gap-ep-006-dabigatran-renal-safety` (EP-006 @4064-4114) | MANUAL OVERRIDE: AUDIT-032 RESOLVED 2026-05-05 — new SAFETY evaluator block added (this PR) covering |
-| GAP-EP-007 | 313 | DET_OK | `gap-vd-6-doac-mechanical-valve` (VD-6 @5420-5444) **[cross-module: VHD]** | MANUAL OVERRIDE: cross-module satisfaction. GAP-EP-007 (DOAC on mechanical valve, CRITICAL SAFETY) i |
-| GAP-EP-008 | 314 | PARTIAL_DETECTION | `gap-vd-4-mitral-stenosis` (VD-4 @5364-5384) **[cross-module: VHD]** | (no DOAC + MS contraindication; mitral stenosis logic at 5134+ only covers echo surveillance) \| auto |
+| GAP-EP-001 | 311 | DET_OK | `gap-ep-oac-afib` (EP-OAC @3996-4049) | + \| Multiple registry ids cited: gap-ep-oac-afib, gap-ep-af-stroke-risk \| auto-verify: preserved-fro |
+| GAP-EP-006 | 312 | DET_OK | `gap-ep-006-dabigatran-renal-safety` (EP-006 @4067-4117) | MANUAL OVERRIDE: AUDIT-032 RESOLVED 2026-05-05 — new SAFETY evaluator block added (this PR) covering |
+| GAP-EP-007 | 313 | DET_OK | `gap-vd-6-doac-mechanical-valve` (VD-6 @5423-5447) **[cross-module: VHD]** | MANUAL OVERRIDE: cross-module satisfaction. GAP-EP-007 (DOAC on mechanical valve, CRITICAL SAFETY) i |
+| GAP-EP-008 | 314 | PARTIAL_DETECTION | `gap-vd-4-mitral-stenosis` (VD-4 @5367-5387) **[cross-module: VHD]** | (no DOAC + MS contraindication; mitral stenosis logic at 5134+ only covers echo surveillance) \| auto |
 | GAP-EP-064 | 315 | SPEC_ONLY | — | — (no pharmacy fill data integration) \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
 | GAP-EP-065 | 316 | SPEC_ONLY | — | — (no pharmacy fill data integration) \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
-| GAP-EP-011 | 328 | DET_OK | `gap-ep-laac` (EP-LAAC @4121-4149) | line 3979+ \| auto-verify: preserved-from-addendum |
-| GAP-EP-012 | 329 | PARTIAL_DETECTION | `gap-ep-laac` (EP-LAAC @4121-4149) | (broad rule, no trigger differentiation) \| auto-verify: preserved-from-addendum |
-| GAP-EP-013 | 337 | DET_OK | `gap-ep-early-rhythm` (EP-EARLY-RHYTHM @9404-9426) | line 9129+ \| auto-verify: preserved-from-addendum |
-| GAP-EP-014 | 338 | PARTIAL_DETECTION | `gap-ep-ablation` (EP-ABLATION @4156-4179) | line 4014+ \| auto-verify: preserved-from-addendum |
-| GAP-EP-017 | 339 | DET_OK | `gap-ep-017-hfref-non-dhp-ccb` (EP-017 @4904-4929) | MANUAL OVERRIDE: AUDIT-033 RESOLVED 2026-05-05 — registry entry gap-ep-017-hfref-non-dhp-ccb added ( |
-| GAP-EP-018 | 340 | DET_OK | `gap-ep-subclinical-af` (EP-SUBCLINICAL-AF @7052-7075) | line 6819+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-011 | 328 | DET_OK | `gap-ep-laac` (EP-LAAC @4124-4152) | line 3979+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-012 | 329 | PARTIAL_DETECTION | `gap-ep-laac` (EP-LAAC @4124-4152) | (broad rule, no trigger differentiation) \| auto-verify: preserved-from-addendum |
+| GAP-EP-013 | 337 | DET_OK | `gap-ep-early-rhythm` (EP-EARLY-RHYTHM @9407-9429) | line 9129+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-014 | 338 | PARTIAL_DETECTION | `gap-ep-ablation` (EP-ABLATION @4159-4182) | line 4014+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-017 | 339 | DET_OK | `gap-ep-017-hfref-non-dhp-ccb` (EP-017 @4907-4932) | MANUAL OVERRIDE: AUDIT-033 RESOLVED 2026-05-05 — registry entry gap-ep-017-hfref-non-dhp-ccb added ( |
+| GAP-EP-018 | 340 | DET_OK | `gap-ep-subclinical-af` (EP-SUBCLINICAL-AF @7055-7078) | line 6819+ \| auto-verify: preserved-from-addendum |
 | GAP-EP-079 | 352 | SPEC_ONLY | — | line 6618+ (WPW + age<40 risk strat, NOT med contraindication) \| auto-verify: No candidate evaluator |
-| GAP-EP-086 | 363 | PARTIAL_DETECTION | `gap-ep-vt-ablation` (EP-VT-ABLATION @9437-9459) | line 9162+ (broad VT+ICD trigger, not VT-storm-specific) \| auto-verify: preserved-from-addendum |
+| GAP-EP-086 | 363 | PARTIAL_DETECTION | `gap-ep-vt-ablation` (EP-VT-ABLATION @9440-9462) | line 9162+ (broad VT+ICD trigger, not VT-storm-specific) \| auto-verify: preserved-from-addendum |
 | GAP-EP-099 | 436 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 
 ---

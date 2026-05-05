@@ -1,7 +1,7 @@
 {
   "extractorScript": "backend/scripts/auditCanonical/extractSpec.ts",
   "extractorVersion": "1.0.0",
-  "generatedAt": "2026-05-05T02:52:01.694Z",
+  "generatedAt": "2026-05-05T15:50:38.367Z",
   "generatedBy": "extractSpec",
   "module": "EP",
   "sourceSha256": "dd1419f8399b894fda85147d9626188646a9eaea9de66743d40f36ae49cfde3e"

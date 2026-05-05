@@ -56,6 +56,15 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-032** — GAP-EP-006: dabigatran in CrCl<30 (SAFETY, uncovered) (Phase 0B EP, **RESOLVED 2026-05-05**, ~~Tier S~~)
 - **AUDIT-033** — GAP-EP-017: HFrEF + non-DHP CCB SAFETY (Phase 0B EP, **RESOLVED 2026-05-05** via registry-entry-add; closes Tier S item — queue 4→3)
 - **AUDIT-034** — GAP-CAD-016: prasugrel + stroke/TIA SAFETY (Phase 0B CAD, **RESOLVED 2026-05-05** via new SAFETY discriminator block; closes Tier S item — queue 3→2)
+- **AUDIT-042** — `RXNORM_QT_PROLONGING.PROCAINAMIDE = '8787'` is propranolol (wrong-drug; QTc safety rule monitored wrong drug) (Phase 0B Cat A clinical-code verification, **RESOLVED 2026-05-05**)
+- **AUDIT-043** — `BB_CODES_LQTS` / `BB_CODES_SCAD` `'7512'` is norepinephrine (claimed nadolol) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
+- **AUDIT-044** — `RXNORM_DIGOXIN.DIGOXIN_IV = '197607'` is a retired aspirin/caffeine/dihydrocodeine combo, not digoxin (Phase 0B Cat A, **RESOLVED 2026-05-05**)
+- **AUDIT-053** — `RXNORM_FINERENONE` codes `2481926/2481928` UNKNOWN status — finerenone gap rule never fired in production (Phase 0B Cat A, **RESOLVED 2026-05-05**)
+- **AUDIT-054** — `RXNORM_GDMT.SOTAGLIFLOZIN = '2627044'` is bexagliflozin (wrong drug) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
+- **AUDIT-055** — `RXNORM_GDMT.IVABRADINE = '1649380'` invalid CUI — ivabradine gap rule never fired (Phase 0B Cat A, **RESOLVED 2026-05-05**)
+- **AUDIT-056** — `RXNORM_QT_PROLONGING.DOFETILIDE = '135447'` is donepezil (Alzheimer's drug; AAD/QT-prolonging rules false-positive on Alzheimer's patients) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
+- **AUDIT-057** — `RXNORM_QT_PROLONGING.DRONEDARONE = '997221'` is donepezil branded (EP-DRONEDARONE rule false-positive on Alzheimer's patients) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
+- **AUDIT-058** — `RXNORM_ASPIRIN.ASPIRIN_81MG = '198464'` is aspirin 300mg rectal suppository (DAPT misses 81mg oral) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
 
 ### MEDIUM (P2)
 
@@ -80,6 +89,11 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-030** — Per-gap classification citation requirement (Phase 0B canonical, **RESOLVED 2026-05-04** via PR #234)
 - **AUDIT-030.D** — Evaluator inventory completeness via multi-pattern detection (Phase 0B canonical, **RESOLVED 2026-05-04** via PR #234)
 - **AUDIT-036** — `gap-hf-vaccine-covid` registry-only orphan (Phase 0B HF, OPEN)
+- **AUDIT-045** — `RXNORM_DIGOXIN.DIGOXIN_250MCG/DIGOXIN_ELIXIR` strength/form labels mismatch actual codes (codes valid digoxin) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
+- **AUDIT-052** — Architectural: inline drug-class arrays in `gapRuleEngine.ts` bypass canonical valuesets in `cardiovascularValuesets.ts` (divergence vector for Cat A bugs) (Phase 0B clinical-code verification, OPEN — partial mitigation in this PR; full refactor deferred)
+- **AUDIT-059** — `RXNORM_WARFARIN.WARFARIN_2MG = '855296'` is actually warfarin 10mg tablet (label only — code is valid warfarin) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
+- **AUDIT-060** — `RXNORM_WARFARIN.WARFARIN_5MG = '855318'` is actually warfarin 3mg tablet (label only) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
+- **AUDIT-061** — `RXNORM_WARFARIN.WARFARIN_10MG = '855332'` is actually warfarin 5mg tablet (label only) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
 - **AUDIT-038** — Node 18 LTS deprecation tracking (Operational debt, OPEN)
 - **AUDIT-040** — Line-shift handling in canonical pipeline (Operational debt / canonical infrastructure, **RESOLVED 2026-05-05** via refreshCites.ts)
 
@@ -639,6 +653,37 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
   - PR #234 (canonical infrastructure that surfaced this gap)
   - PR #239 (refreshCites.ts pipeline script — first real-world Tier S validation; refreshed 249 cites cleanly)
   - This PR (registry entry + new SAFETY evaluator block + override + 6 tests)
+
+---
+
+### AUDIT-042 through AUDIT-061 — Cat A clinical-code verification batch
+
+- **Phase:** 0B clinical-code verification (new sub-phase initiated 2026-05-05 after EP-079 RxNorm spot-verify surfaced two wrong-drug bugs in canonical valuesets)
+- **Severity:** HIGH (P1) for AUDIT-042/044/053/054/055/056/057/058; MEDIUM (P2) for AUDIT-043; LOW (P3) for AUDIT-045/059/060/061
+- **Status:** **RESOLVED 2026-05-05** via single fix PR (this entry covers all 14 findings)
+- **Detected:** 2026-05-05 via systematic Phase 2 verification — RxNav `properties.json` lookup of every cited code in `cardiovascularValuesets.ts` (Category A). Bug-hit rate: 13/84 codes (15%) in canonical valuesets are wrong-drug or invalid-CUI errors.
+- **Findings:**
+  - **AUDIT-042** — `RXNORM_QT_PROLONGING.PROCAINAMIDE = '8787'` is propranolol per RxNav. Real procainamide CUI is 8700. QTc safety rule was monitoring propranolol (a beta-blocker — NOT QT-prolonging) and missing actual procainamide.
+  - **AUDIT-043** — `BB_CODES_LQTS` / `BB_CODES_SCAD` `'7512'` (commented `// nadolol`) is norepinephrine per RxNav. Real nadolol CUI is 7226. LQTS/SCAD beta-blocker exclusion logic was firing on ICU patients on norepinephrine pressors.
+  - **AUDIT-044** — `RXNORM_DIGOXIN.DIGOXIN_IV = '197607'` is a retired aspirin/caffeine/dihydrocodeine combo (`historystatus: NotCurrent`, released 2005, retired 2009). Not digoxin at all.
+  - **AUDIT-045** — `RXNORM_DIGOXIN.DIGOXIN_250MCG = '197605'` is actually a 0.2mg capsule (label mismatch); `RXNORM_DIGOXIN.DIGOXIN_ELIXIR = '197606'` is actually a 0.25mg tablet. Codes are valid digoxin formulations but mislabeled.
+  - **AUDIT-053** — `RXNORM_FINERENONE.FINERENONE_10MG = '2481926'` and `FINERENONE_20MG = '2481928'` — both `historystatus: UNKNOWN` per RxNav. Invalid CUIs. Real finerenone ingredient is 2562811. Finerenone gap rule never matched any patient prescription in production.
+  - **AUDIT-054** — `RXNORM_GDMT.SOTAGLIFLOZIN = '2627044'` is bexagliflozin per RxNav. Real sotagliflozin is 2638675. SGLT2i HF rules were firing on bexagliflozin (a different SGLT2i) and missing actual sotagliflozin (the SOLOIST-WHF drug).
+  - **AUDIT-055** — `RXNORM_GDMT.IVABRADINE = '1649380'` invalid CUI (UNKNOWN status). Real ivabradine ingredient is 1649480. HF ivabradine recommendation rule never matched any patient.
+  - **AUDIT-056** — `RXNORM_QT_PROLONGING.DOFETILIDE = '135447'` is donepezil (Aricept — Alzheimer's drug). Real dofetilide is 49247. AAD detection + QTc-prolonging detection rules were false-positive on Alzheimer's patients on donepezil and missing patients on actual dofetilide.
+  - **AUDIT-057** — `RXNORM_QT_PROLONGING.DRONEDARONE = '997221'` is donepezil hydrochloride 10 MG branded (an SBD for donepezil). Real dronedarone is 233698. EP-DRONEDARONE contraindication rule (advanced HF) was false-positive on Alzheimer's patients.
+  - **AUDIT-058** — `RXNORM_ASPIRIN.ASPIRIN_81MG = '198464'` is aspirin 300mg rectal suppository. Real 81mg oral tablet is 243670. DAPT detection missed routine 81mg oral aspirin prescriptions.
+  - **AUDIT-059/060/061** — `RXNORM_WARFARIN` formulation labels: `WARFARIN_2MG = '855296'` is actually 10mg tablet; `WARFARIN_5MG = '855318'` is actually 3mg tablet; `WARFARIN_10MG = '855332'` is actually 5mg tablet. Codes valid warfarin but mislabeled. Added `WARFARIN_2MG = '855302'` (verified) + relabeled others to match real strengths.
+- **Patient-safety-active subset:** AUDIT-042/044/053/054/055/056/057. Net effect on production: false-positive QTc-safety alerts on Alzheimer's patients (AUDIT-056/057), false-positive QT-prolonging alerts on propranolol patients (AUDIT-042), silent failure on finerenone gap (AUDIT-053) and ivabradine gap (AUDIT-055), wrong-drug surveilled in digoxin toxicity (AUDIT-044), wrong-drug-class match in SGLT2i (AUDIT-054), missed 81mg oral aspirin in DAPT (AUDIT-058).
+- **Resolution:** All 14 corrections applied to `cardiovascularValuesets.ts` and inline references in `gapRuleEngine.ts`. Each correction's RxNorm verified via RxNav `properties.json` (authoritative source). 19 new tests added in `tests/terminology/clinicalCodeCorrections.test.ts` covering both positive (real drug detected) and negative (wrong drug no longer false-flagged) for behavior-changing rules. AUDIT_METHODOLOGY.md §11 added: clinical-code verification standard (mandatory RxNav/LOINC/ICD-10 authoritative-source verification at constant authoring + audit cycles).
+- **Out of scope (tracked separately):**
+  - **AUDIT-052** (architectural) — inline drug-class arrays in `gapRuleEngine.ts` bypass canonical valuesets, producing the divergence vector that allowed AUDIT-042/056/057-equivalent inline copies. Partial mitigation in this PR (inline references to AUDIT-042-061 wrong codes are corrected); full refactor to import from canonical deferred to follow-up.
+  - **AUDIT-046 through AUDIT-051** (candidates) — additional inline-array bugs surfaced during Phase 1 inventory but NOT verified yet. Batch 2 of the Phase 0B clinical-code verification work will surface these on a clean tree post this PR.
+- **Effort estimate:** RESOLVED (~2 hours agent including 84 RxNav lookups + corrections + 19 tests + canonical regen + register/methodology updates)
+- **Cross-references:**
+  - PR #234 (canonical audit infrastructure baseline)
+  - AUDIT-029 (rule-body verification standard — methodology cousin to §11 added in this PR)
+  - This PR (Cat A canonical valueset corrections + inline reference updates + AUDIT_METHODOLOGY.md §11)
 
 ---
 
