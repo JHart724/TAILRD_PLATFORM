@@ -97,7 +97,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-030.D** — Evaluator inventory completeness via multi-pattern detection (Phase 0B canonical, **RESOLVED 2026-05-04** via PR #234)
 - **AUDIT-036** — `gap-hf-vaccine-covid` registry-only orphan (Phase 0B HF, OPEN)
 - **AUDIT-045** — `RXNORM_DIGOXIN.DIGOXIN_250MCG/DIGOXIN_ELIXIR` strength/form labels mismatch actual codes (codes valid digoxin) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
-- **AUDIT-052** — Architectural: inline drug-class arrays in `gapRuleEngine.ts` bypass canonical valuesets in `cardiovascularValuesets.ts` (divergence vector for Cat A bugs) (Phase 0B clinical-code verification, OPEN — partial mitigation in this PR; full refactor deferred)
+- **AUDIT-052** — Architectural: inline drug-class arrays in `gapRuleEngine.ts` bypass canonical valuesets in `cardiovascularValuesets.ts` (divergence vector for Cat A/D bugs) (Phase 0B clinical-code verification, **RESOLVED 2026-05-06** for the 4 major drug classes (DHP CCB / PPI / loop diuretic / thiazide) via 4 new canonical valuesets + 7 inline-array refactors)
 - **AUDIT-059** — `RXNORM_WARFARIN.WARFARIN_2MG = '855296'` is actually warfarin 10mg tablet (label only — code is valid warfarin) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
 - **AUDIT-060** — `RXNORM_WARFARIN.WARFARIN_5MG = '855318'` is actually warfarin 3mg tablet (label only) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
 - **AUDIT-061** — `RXNORM_WARFARIN.WARFARIN_10MG = '855332'` is actually warfarin 5mg tablet (label only) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
@@ -867,6 +867,51 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
   - PR #245 (AUDIT-041 applyOverrides canonical-default — eliminated manual canonical patch step that this PR's pipeline run consumed)
   - This PR (Cat D inline-array corrections + AUDIT-052 partial mitigation)
   - **AUDIT-052** (architectural follow-up; out of scope for this PR — full refactor of inline arrays to canonical imports)
+
+---
+
+### AUDIT-052 — Inline drug-class arrays bypass canonical valuesets (architectural divergence vector)
+
+- **Phase:** Canonical infrastructure / Phase 0B clinical-code verification
+- **Severity:** MEDIUM (P2) — architectural; root cause of Cat D 33% bug rate (vs Cat A 15.5%)
+- **Status:** **RESOLVED 2026-05-06** for the 4 major drug-class refactor (DHP CCB / PPI / loop diuretic / thiazide) via this PR. Smaller residual inline arrays may remain for future opportunistic refactor; not blocking.
+- **Tier:** B
+- **Detected:** 2026-05-04 (initial observation during PR #234 canonical infrastructure work; reserved as AUDIT-052 architectural follow-up); deepened 2026-05-06 (Cat D verification PR #246 surfaced 33% bug rate — 2× Cat A — confirming inline-array bypass as systemic divergence vector)
+- **Evidence:** `gapRuleEngine.ts` contained ~50 inline RxNorm arrays. Many redeclared drug classes that already had canonical valuesets in `cardiovascularValuesets.ts`. Where canonical was wrong (Cat A bugs), the inline often inherited the bug. Where canonical was right, the inline often diverged with different codes — sometimes wrong-drug, sometimes wrong-formulation, sometimes invalid CUIs. Cat D verification (PR #246) surfaced 8 wrong-code bugs in 24 unique non-canonical codes (33% rate). Higher rate than Cat A (15.5%) confirms the architectural hypothesis: inline arrays are an unverified divergence vector.
+- **Resolution:** Added 4 new canonical valuesets to `cardiovascularValuesets.ts`:
+  - `RXNORM_DHP_CCB` (5 DHP CCBs: amlodipine, nifedipine, isradipine, felodipine, nicardipine)
+  - `RXNORM_PPI` (5 standard PPIs: omeprazole, pantoprazole, esomeprazole, lansoprazole, rabeprazole)
+  - `RXNORM_LOOP_DIURETICS` (4 loop diuretics: furosemide, bumetanide, torsemide, ethacrynic acid)
+  - `RXNORM_THIAZIDES` (4 thiazide-class: hydrochlorothiazide, chlorthalidone, indapamide, metolazone)
+  - All 18 RxNorms RxNav-verified per AUDIT_METHODOLOGY.md §16.
+
+  Refactored 7 inline arrays to import from canonical:
+  - `CCB_CODES_VASOSP` → `codes(RXNORM_DHP_CCB)` (expanded from 3 to 5 DHPs — clinically intended; vasospastic angina rule covers any DHP)
+  - `CCB_CODES_RAYNAUD` → `codes(RXNORM_DHP_CCB)` (expanded from 3 to 5 DHPs — Raynaud's first-line is any DHP per ACR/ACC)
+  - `CCB_CODES_RAN` → selective `[RXNORM_RATE_CONTROL.DILTIAZEM, RXNORM_DHP_CCB.AMLODIPINE, RXNORM_DHP_CCB.NIFEDIPINE]` (preserves exact 3-drug membership; mixed non-DHP + DHP)
+  - `PPI_CODES_DAPT` → `codes(RXNORM_PPI)` (expanded from 3 to 5 PPIs)
+  - `LOOP_DIURETIC_CODES_TH` → `codes(RXNORM_LOOP_DIURETICS)` (expanded from 3 to 4 loops; added torsemide)
+  - `LOOP_DIURETIC_CODES_OPT` → `codes(RXNORM_LOOP_DIURETICS)` (same expansion)
+  - `DIURETIC_CODES_ELEC` → `[...codes(RXNORM_LOOP_DIURETICS), ...codes(RXNORM_THIAZIDES)]` (expanded from 4 drugs to 8 — covers all loops + all thiazides; clinical intent is electrolyte-monitoring on any diuretic)
+
+  Behavior changes documented per-array in inline `// Fix (AUDIT-052, ...)` comments. Behavior expansions are clinically-intent-aligned (rule semantics already cover the drug class; new canonical members make detection complete).
+
+  14 new tests in `tests/terminology/clinicalCodeCorrections.test.ts` cover canonical valueset content + inline-import-pattern assertions + drug-class separation (negative tests confirm wrong-class drugs not pulled in).
+- **AUDIT_METHODOLOGY.md §9.2 first end-to-end exercise:** this PR is the first to ship a major refactor under §9.2 (full pipeline regen mandatory after source change). Pipeline ran cleanly: 6/6 modules VALID, 251 cite refreshes propagated automatically, no manual canonical patch (AUDIT-041 canonical-default in effect).
+- **Bug-rate evidence supporting closure:**
+  - Pre-AUDIT-052: Cat A canonical valuesets 15.5% bug rate, Cat D inline arrays 33% bug rate (2× higher).
+  - Post-AUDIT-052: 7 of 7 refactored consumers now derive from canonical → no future divergence path for these classes. Future RxNav-verification work for these drug classes happens at the canonical layer only (one place to update).
+- **Architectural notes:**
+  - ~43 inline arrays remain (e.g., AAD codes, statin codes, RAAS codes, BB codes for various indications). Many of these are already canonical-derived from prior PRs (PR #242, PR #246). Future opportunistic refactor work can address residuals as they surface in clinical authoring.
+  - Optional `pipeline-all.sh` helper script (AUDIT-064 follow-up) would further reduce ergonomics friction.
+- **Effort estimate:** RESOLVED (~75 min agent including pre-flight inventory + 7 RxNav lookups for new codes + 4 canonical valueset authoring + 7 inline-array refactors + 14 tests + comment-prefix consistency + full §9.2 pipeline regen + register update)
+- **Cross-references:**
+  - PR #234 (canonical infrastructure baseline)
+  - PR #242 (AUDIT-042..061 Cat A canonical corrections — established the canonical-import pattern)
+  - PR #245 (AUDIT-041 canonical-default — eliminated manual canonical patch friction)
+  - PR #246 (AUDIT-046..063 + AUDIT-064 — Cat D 33% bug rate provided priority signal; §9.2 codified)
+  - This PR (AUDIT-052 4-class refactor closing the major divergence vectors)
+  - `docs/audit/AUDIT_METHODOLOGY.md` §16 (clinical-code verification standard) + §9.2 (full-pipeline-regen standard, exercised end-to-end this PR)
 
 ---
 

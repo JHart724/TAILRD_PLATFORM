@@ -328,7 +328,7 @@ describe('AUDIT-051: ACEI_CODES corrected — fosinopril 50166 → benazepril 18
 });
 
 describe('AUDIT-062: PPI_CODES_DAPT removes simvastatin (drug class collision)', () => {
-  it('inline source no longer contains 36567 (simvastatin) in PPI list', () => {
+  it('inline source uses canonical RXNORM_PPI (post-AUDIT-052 refactor; no 36567)', () => {
     const fs = require('fs');
     const path = require('path');
     const src = fs.readFileSync(
@@ -336,16 +336,13 @@ describe('AUDIT-062: PPI_CODES_DAPT removes simvastatin (drug class collision)',
       'utf8',
     );
     const ppiLine = src.split('\n').find((l: string) => /^\s*const PPI_CODES_DAPT\s*=/.test(l)) ?? '';
+    expect(ppiLine).toMatch(/codes\(RXNORM_PPI\)/);
     expect(ppiLine).not.toContain('36567');
-    // Real PPIs preserved
-    expect(ppiLine).toContain('7646');
-    expect(ppiLine).toContain('40790');
-    expect(ppiLine).toContain('283742');
   });
 });
 
 describe('AUDIT-063: LOOP_DIURETIC_CODES_TH/OPT add bumetanide 1808', () => {
-  it('inline source includes 1808 (real bumetanide) alongside 4109 (ethacrynic acid)', () => {
+  it('inline source uses canonical RXNORM_LOOP_DIURETICS (post-AUDIT-052 refactor; bumetanide via canonical)', () => {
     const fs = require('fs');
     const path = require('path');
     const src = fs.readFileSync(
@@ -354,15 +351,123 @@ describe('AUDIT-063: LOOP_DIURETIC_CODES_TH/OPT add bumetanide 1808', () => {
     );
     const thLine = src.split('\n').find((l: string) => /^\s*const LOOP_DIURETIC_CODES_TH\s*=/.test(l)) ?? '';
     const optLine = src.split('\n').find((l: string) => /^\s*const LOOP_DIURETIC_CODES_OPT\s*=/.test(l)) ?? '';
-    expect(thLine).toContain('1808');
-    expect(optLine).toContain('1808');
-    expect(thLine).toContain('4603');  // furosemide preserved
-    expect(thLine).toContain('4109');  // ethacrynic acid preserved
+    expect(thLine).toMatch(/codes\(RXNORM_LOOP_DIURETICS\)/);
+    expect(optLine).toMatch(/codes\(RXNORM_LOOP_DIURETICS\)/);
+    // Canonical valueset includes bumetanide (1808) — verified in earlier test in this file
+    expect(Object.values(cardio.RXNORM_LOOP_DIURETICS)).toContain('1808');
   });
 });
 
 describe('AUDIT-052 partial: RXNORM_QT_PROLONGING.PROPAFENONE canonical promotion', () => {
   it('canonical valueset includes propafenone (8754, RxNav-verified)', () => {
     expect((RXNORM_QT_PROLONGING as any).PROPAFENONE).toBe('8754');
+  });
+});
+
+// ============================================================
+// AUDIT-052 — Canonical valuesets for DHP CCB / PPI / loop diuretic / thiazide drug classes
+// All RxNorms RxNav-verified per AUDIT_METHODOLOGY.md §16.
+// 4 new canonical valuesets close the inline-array divergence vector for these drug classes.
+// ============================================================
+
+const cardio = require('../../src/terminology/cardiovascularValuesets');
+
+describe('AUDIT-052: RXNORM_DHP_CCB canonical valueset (5 DHP CCBs)', () => {
+  it('contains 5 DHP CCBs with RxNav-verified ingredient CUIs', () => {
+    expect(cardio.RXNORM_DHP_CCB.AMLODIPINE).toBe('17767');
+    expect(cardio.RXNORM_DHP_CCB.NIFEDIPINE).toBe('7417');
+    expect(cardio.RXNORM_DHP_CCB.ISRADIPINE).toBe('33910');
+    expect(cardio.RXNORM_DHP_CCB.FELODIPINE).toBe('4316');
+    expect(cardio.RXNORM_DHP_CCB.NICARDIPINE).toBe('7396');
+  });
+  it('does not contain non-DHP CCBs (diltiazem 3443, verapamil 11170 — those are RXNORM_RATE_CONTROL)', () => {
+    const values = Object.values(cardio.RXNORM_DHP_CCB);
+    expect(values).not.toContain('3443');
+    expect(values).not.toContain('11170');
+  });
+});
+
+describe('AUDIT-052: RXNORM_PPI canonical valueset (5 standard PPIs)', () => {
+  it('contains 5 PPIs with RxNav-verified ingredient CUIs', () => {
+    expect(cardio.RXNORM_PPI.OMEPRAZOLE).toBe('7646');
+    expect(cardio.RXNORM_PPI.PANTOPRAZOLE).toBe('40790');
+    expect(cardio.RXNORM_PPI.ESOMEPRAZOLE).toBe('283742');
+    expect(cardio.RXNORM_PPI.LANSOPRAZOLE).toBe('17128');
+    expect(cardio.RXNORM_PPI.RABEPRAZOLE).toBe('114979');
+  });
+  it('does not contain wrong-class drugs (e.g., simvastatin 36567, the AUDIT-062 collision)', () => {
+    const values = Object.values(cardio.RXNORM_PPI);
+    expect(values).not.toContain('36567');
+  });
+});
+
+describe('AUDIT-052: RXNORM_LOOP_DIURETICS canonical valueset (4 loops)', () => {
+  it('contains 4 loop diuretics with RxNav-verified ingredient CUIs', () => {
+    expect(cardio.RXNORM_LOOP_DIURETICS.FUROSEMIDE).toBe('4603');
+    expect(cardio.RXNORM_LOOP_DIURETICS.BUMETANIDE).toBe('1808');
+    expect(cardio.RXNORM_LOOP_DIURETICS.TORSEMIDE).toBe('38413');
+    expect(cardio.RXNORM_LOOP_DIURETICS.ETHACRYNIC_ACID).toBe('4109');
+  });
+});
+
+describe('AUDIT-052: RXNORM_THIAZIDES canonical valueset (4 thiazide-class)', () => {
+  it('contains 4 thiazide-class diuretics with RxNav-verified ingredient CUIs', () => {
+    expect(cardio.RXNORM_THIAZIDES.HYDROCHLOROTHIAZIDE).toBe('5487');
+    expect(cardio.RXNORM_THIAZIDES.CHLORTHALIDONE).toBe('2409');
+    expect(cardio.RXNORM_THIAZIDES.INDAPAMIDE).toBe('5764');
+    expect(cardio.RXNORM_THIAZIDES.METOLAZONE).toBe('6916');
+  });
+  it('does not contain loop diuretics (separation of classes)', () => {
+    const values = Object.values(cardio.RXNORM_THIAZIDES);
+    expect(values).not.toContain('4603'); // furosemide
+    expect(values).not.toContain('1808');  // bumetanide
+  });
+});
+
+describe('AUDIT-052: inline arrays refactored to canonical imports', () => {
+  it('source uses canonical references for the 7 refactored arrays', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const src = fs.readFileSync(
+      path.join(__dirname, '../../src/ingestion/gaps/gapRuleEngine.ts'),
+      'utf8',
+    );
+    // PPI_CODES_DAPT spreads canonical RXNORM_PPI
+    expect(src).toMatch(/PPI_CODES_DAPT\s*=\s*codes\(RXNORM_PPI\)/);
+    // DIURETIC_CODES_ELEC combines loops + thiazides
+    expect(src).toMatch(/DIURETIC_CODES_ELEC\s*=\s*\[\.\.\.codes\(RXNORM_LOOP_DIURETICS\),\s*\.\.\.codes\(RXNORM_THIAZIDES\)/);
+    // LOOP_DIURETIC_CODES_TH/OPT use RXNORM_LOOP_DIURETICS
+    expect(src).toMatch(/LOOP_DIURETIC_CODES_TH\s*=\s*codes\(RXNORM_LOOP_DIURETICS\)/);
+    expect(src).toMatch(/LOOP_DIURETIC_CODES_OPT\s*=\s*codes\(RXNORM_LOOP_DIURETICS\)/);
+    // CCB_CODES_VASOSP / RAYNAUD use full RXNORM_DHP_CCB
+    expect(src).toMatch(/CCB_CODES_VASOSP\s*=\s*codes\(RXNORM_DHP_CCB\)/);
+    expect(src).toMatch(/CCB_CODES_RAYNAUD\s*=\s*codes\(RXNORM_DHP_CCB\)/);
+    // CCB_CODES_RAN uses selective canonical references (preserves 3-drug membership)
+    expect(src).toMatch(/CCB_CODES_RAN\s*=\s*\[RXNORM_RATE_CONTROL\.DILTIAZEM/);
+  });
+});
+
+describe('AUDIT-052: behavior preservation for refactored consumers', () => {
+  // Spot-check: rules consuming the refactored arrays still fire on representative drugs.
+  // Full evaluateGapRules() exercise patterns are covered in tests/gapRules/ files;
+  // these tests are at the canonical-import layer, asserting drug-class detection unchanged.
+
+  it('amlodipine (17767) is in canonical RXNORM_DHP_CCB (positive: DHP CCB rule fires)', () => {
+    expect(Object.values(cardio.RXNORM_DHP_CCB)).toContain('17767');
+  });
+  it('omeprazole (7646) is in canonical RXNORM_PPI (positive: PPI-DAPT rule fires)', () => {
+    expect(Object.values(cardio.RXNORM_PPI)).toContain('7646');
+  });
+  it('furosemide (4603) is in canonical RXNORM_LOOP_DIURETICS (positive: loop diuretic rule fires)', () => {
+    expect(Object.values(cardio.RXNORM_LOOP_DIURETICS)).toContain('4603');
+  });
+  it('HCTZ (5487) is in canonical RXNORM_THIAZIDES (positive: thiazide rule fires)', () => {
+    expect(Object.values(cardio.RXNORM_THIAZIDES)).toContain('5487');
+  });
+  it('simvastatin (36567) is NOT in PPI canonical (negative: AUDIT-062 collision prevented)', () => {
+    expect(Object.values(cardio.RXNORM_PPI)).not.toContain('36567');
+  });
+  it('metoprolol (6918) is NOT in DHP CCB canonical (negative: drug-class separation)', () => {
+    expect(Object.values(cardio.RXNORM_DHP_CCB)).not.toContain('6918');
   });
 });

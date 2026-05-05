@@ -271,6 +271,57 @@ export const ICD10_BIOPROSTHETIC_VALVE = [
   'Z95.4',   // Presence of other heart valve replacement
 ] as const;
 
+/** Dihydropyridine calcium channel blockers (DHP CCBs).
+ *  AUDIT-052 partial mitigation (2026-05-06): canonical valueset created so inline arrays
+ *  CCB_CODES_RAN, CCB_CODES_VASOSP, CCB_CODES_RAYNAUD can import from canonical instead of
+ *  redeclaring. Distinct from non-DHP CCBs (diltiazem, verapamil) which live in RXNORM_RATE_CONTROL
+ *  because of their AVN-blocking effect (relevant for AFib rate control + WPW SAFETY rules).
+ *  All codes RxNav-verified per AUDIT_METHODOLOGY.md §16. */
+export const RXNORM_DHP_CCB = {
+  AMLODIPINE: '17767',
+  NIFEDIPINE: '7417',
+  ISRADIPINE: '33910',
+  FELODIPINE: '4316',
+  NICARDIPINE: '7396',
+} as const;
+
+/** Proton pump inhibitors (PPIs).
+ *  AUDIT-052 partial mitigation (2026-05-06): canonical valueset created so inline arrays
+ *  (currently PPI_CODES_DAPT) can import from canonical instead of redeclaring.
+ *  All 5 standard PPIs included; all RxNav-verified per AUDIT_METHODOLOGY.md §16. */
+export const RXNORM_PPI = {
+  OMEPRAZOLE: '7646',
+  PANTOPRAZOLE: '40790',
+  ESOMEPRAZOLE: '283742',
+  LANSOPRAZOLE: '17128',
+  RABEPRAZOLE: '114979',
+} as const;
+
+/** Loop diuretics.
+ *  AUDIT-052 partial mitigation (2026-05-06): canonical valueset created so inline arrays
+ *  LOOP_DIURETIC_CODES_TH, LOOP_DIURETIC_CODES_OPT, DIURETIC_CODES_ELEC can import from canonical.
+ *  All 4 loop diuretics included; all RxNav-verified per AUDIT_METHODOLOGY.md §16.
+ *  Note: AUDIT-063 surfaced 4109 = ethacrynic acid (codebase comment claimed bumetanide); real
+ *  bumetanide is 1808. Both are loop diuretics; both included for full coverage. */
+export const RXNORM_LOOP_DIURETICS = {
+  FUROSEMIDE: '4603',
+  BUMETANIDE: '1808',
+  TORSEMIDE: '38413',
+  ETHACRYNIC_ACID: '4109',
+} as const;
+
+/** Thiazide and thiazide-like diuretics.
+ *  AUDIT-052 partial mitigation (2026-05-06): canonical valueset created so DIURETIC_CODES_ELEC
+ *  (currently mixes loops + HCTZ) can import from canonical for both thiazides + loops.
+ *  All 4 standard thiazide-class diuretics included; all RxNav-verified per AUDIT_METHODOLOGY.md §16.
+ *  Includes thiazide-like (chlorthalidone, indapamide, metolazone) per cardiology convention. */
+export const RXNORM_THIAZIDES = {
+  HYDROCHLOROTHIAZIDE: '5487',
+  CHLORTHALIDONE: '2409',
+  INDAPAMIDE: '5764',
+  METOLAZONE: '6916',
+} as const;
+
 /** High-intensity statins -- used by PAD statin gap rule */
 export const RXNORM_STATINS = {
   ATORVASTATIN: '83367',

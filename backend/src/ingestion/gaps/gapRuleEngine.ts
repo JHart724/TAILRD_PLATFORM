@@ -12,6 +12,10 @@ import {
   RXNORM_QT_PROLONGING,
   RXNORM_RATE_CONTROL,
   RXNORM_FINERENONE,
+  RXNORM_DHP_CCB,
+  RXNORM_PPI,
+  RXNORM_LOOP_DIURETICS,
+  RXNORM_THIAZIDES,
 } from '../../terminology/cardiovascularValuesets';
 
 /** Extract code arrays from valueset objects for medication matching */
@@ -7506,7 +7510,9 @@ export function evaluateGapRules(
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasAngina = dxCodes.some(c => c.startsWith('I20'));
     const BB_CODES_RAN = ['20352', '6918', '19484'];
-    const CCB_CODES_RAN = ['3443', '17767', '7417']; // diltiazem, amlodipine, nifedipine
+    // Fix (AUDIT-052, 2026-05-06): refactored to canonical lookups (RXNORM_RATE_CONTROL + RXNORM_DHP_CCB).
+    // Keeps exact 3-drug membership (diltiazem + 2 DHPs); future canonical updates flow through automatically.
+    const CCB_CODES_RAN = [RXNORM_RATE_CONTROL.DILTIAZEM, RXNORM_DHP_CCB.AMLODIPINE, RXNORM_DHP_CCB.NIFEDIPINE];
     const onBBran = medCodes.some(c => BB_CODES_RAN.includes(c));
     const onCCBran = medCodes.some(c => CCB_CODES_RAN.includes(c));
     if (hasAngina && onBBran && onCCBran && !medCodes.includes('355019')) {
@@ -8023,7 +8029,10 @@ export function evaluateGapRules(
   // Fix (AUDIT-062, 2026-05-06): was '36567' = simvastatin (a statin, NOT a PPI — drug class collision).
   // Removed; real PPIs verified: omeprazole (7646), pantoprazole (40790), esomeprazole (283742).
   // Note (AUDIT-052): follow-up will refactor to RXNORM_PPI canonical valueset.
-  const PPI_CODES_DAPT = ['7646', '40790', '283742']; // omeprazole, pantoprazole, esomeprazole
+  // Fix (AUDIT-052, 2026-05-06): refactored to canonical RXNORM_PPI valueset (5 standard PPIs).
+  // Behavior change: expanded from 3 PPIs to 5 (added lansoprazole, rabeprazole) — clinical intent
+  // is detecting any PPI co-prescription with DAPT, so broader coverage matches rule semantics.
+  const PPI_CODES_DAPT = codes(RXNORM_PPI); // omeprazole, pantoprazole, esomeprazole, lansoprazole, rabeprazole
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const onDAPTppi = medCodes.includes(ASPIRIN_CODE_DAPT) && medCodes.some(c => P2Y12_CODES_DAPT.includes(c));
     const hasGIriskPPI = dxCodes.some(dx => GI_RISK_CODES_PPI.some(gi => dx.startsWith(gi)));
@@ -8092,7 +8101,11 @@ export function evaluateGapRules(
 
   // CAD-ELECTROLYTE: Electrolyte Monitoring Post-MI on Diuretic
   // Guideline: 2022 AHA/ACC/HFSA HF Guideline, Class 1, LOE B
-  const DIURETIC_CODES_ELEC = ['4603', '1808', '38413', '5487'];
+  // Fix (AUDIT-052, 2026-05-06): refactored to canonical RXNORM_LOOP_DIURETICS + RXNORM_THIAZIDES.
+  // Behavior change: expanded from {furosemide, bumetanide, torsemide, HCTZ} to also include
+  // ethacrynic acid + chlorthalidone + indapamide + metolazone. Rule clinical intent: detect any
+  // loop or thiazide diuretic for electrolyte-monitoring purposes — broader coverage matches intent.
+  const DIURETIC_CODES_ELEC = [...codes(RXNORM_LOOP_DIURETICS), ...codes(RXNORM_THIAZIDES)];
   if (hasRecentMI && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const onDiureticElec = medCodes.some(c => DIURETIC_CODES_ELEC.includes(c));
     if (onDiureticElec && labValues['potassium'] === undefined) {
@@ -9063,7 +9076,11 @@ export function evaluateGapRules(
   // Guideline: 2019 ESC CCS Guideline + JCS Vasospastic Angina Guideline, Class 1, LOE B
   if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasVasospasm = dxCodes.some(c => c.startsWith('I20.1'));
-    const CCB_CODES_VASOSP = ['17767', '7417', '33910']; // nifedipine, amlodipine, diltiazem
+    // Fix (AUDIT-052, 2026-05-06): refactored to canonical RXNORM_DHP_CCB valueset (5 DHP CCBs).
+    // Behavior change: expanded from 3 DHPs to 5 (added felodipine, nicardipine) — clinical intent
+    // is detecting any DHP for vasospastic angina, so broader coverage matches rule semantics.
+    // Comment correction: original said "diltiazem" but 33910 = isradipine (DHP, not non-DHP).
+    const CCB_CODES_VASOSP = codes(RXNORM_DHP_CCB);
     const onCCBvasosp = medCodes.some(c => CCB_CODES_VASOSP.includes(c));
     if (hasVasospasm && !onCCBvasosp) {
       gaps.push({
@@ -10110,7 +10127,10 @@ export function evaluateGapRules(
   // Guideline: 2022 AHA/ACC/HFSA HF Guideline; DiNicolantonio 2013, Class 2b, LOE C
   // HF + on loop diuretic + malnutrition or low BMI proxy
   // Fix (AUDIT-063, 2026-05-06): was '4109' = ethacrynic acid (NOT bumetanide; bumetanide = 1808). Class still loop diuretic. Added 1808 for bumetanide coverage.
-  const LOOP_DIURETIC_CODES_TH = ['4603', '1808', '4109']; // furosemide (4603), bumetanide (1808), ethacrynic acid (4109)
+  // Fix (AUDIT-052, 2026-05-06): refactored to canonical RXNORM_LOOP_DIURETICS valueset (4 loops).
+  // Behavior change: expanded from 3 loops to 4 (added torsemide 38413) — clinical intent is detecting
+  // any loop diuretic for thiamine-deficiency monitoring, so broader coverage matches rule semantics.
+  const LOOP_DIURETIC_CODES_TH = codes(RXNORM_LOOP_DIURETICS); // furosemide, bumetanide, torsemide, ethacrynic acid
   const onLoopTH = medCodes.some(c => LOOP_DIURETIC_CODES_TH.includes(c));
   const hasMalnutrition = dxCodes.some(c => c.startsWith('E44') || c.startsWith('E46') || c.startsWith('R63.4'));
   if (
@@ -10282,7 +10302,8 @@ export function evaluateGapRules(
   // Guideline: 2022 AHA/ACC/HFSA HF Guideline, Class 1, LOE B
   // HF + high-dose loop diuretic + signs of congestion (elevated BNP proxy)
   // Fix (AUDIT-063, 2026-05-06): same correction as LOOP_DIURETIC_CODES_TH.
-  const LOOP_DIURETIC_CODES_OPT = ['4603', '1808', '4109']; // furosemide (4603), bumetanide (1808), ethacrynic acid (4109)
+  // Fix (AUDIT-052, 2026-05-06): same refactor as LOOP_DIURETIC_CODES_TH. Adds torsemide for full coverage.
+  const LOOP_DIURETIC_CODES_OPT = codes(RXNORM_LOOP_DIURETICS);
   const onLoopOpt = medCodes.some(c => LOOP_DIURETIC_CODES_OPT.includes(c));
   if (
     hasHF &&
@@ -11423,7 +11444,9 @@ export function evaluateGapRules(
   // PV-RAYNAUD: Calcium Channel Blocker for Raynaud Phenomenon
   // Guideline: 2024 ACC/AHA PAD Guideline, Class 1, LOE A
   const hasRaynaudPV = dxCodes.some(c => c.startsWith('I73.0'));
-  const CCB_CODES_RAYNAUD = ['7417', '17767', '33910'];
+  // Fix (AUDIT-052, 2026-05-06): refactored to canonical RXNORM_DHP_CCB valueset (5 DHP CCBs).
+  // Behavior change: expanded from 3 DHPs to 5 — Raynaud's first-line is any DHP per ACR/ACC.
+  const CCB_CODES_RAYNAUD = codes(RXNORM_DHP_CCB);
   if (hasRaynaudPV && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const onCCBraynaud = medCodes.some(c => CCB_CODES_RAYNAUD.includes(c));
     if (!onCCBraynaud) {
