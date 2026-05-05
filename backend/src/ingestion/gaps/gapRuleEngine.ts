@@ -2529,6 +2529,18 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'A',
   },
   {
+    id: 'gap-cad-016-prasugrel-stroke-safety',
+    name: 'Prasugrel + prior stroke/TIA (SAFETY)',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2023 ACC/AHA Chronic Coronary Disease Guideline + FDA Effient (prasugrel) Black-Box Warning',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-05-05',
+    nextReviewDue: '2026-11-05',
+    classOfRecommendation: '3 (Harm)',
+    levelOfEvidence: 'B',
+  },
+  {
     id: 'gap-cad-heparin-bridge',
     name: 'Heparin Bridging in CAD with AF and Procedure',
     module: 'CORONARY_INTERVENTION',
@@ -8291,6 +8303,48 @@ export function evaluateGapRules(
         },
       });
     }
+  }
+
+  // CAD-016 SAFETY: Prasugrel contraindicated in prior stroke/TIA history
+  // Guideline: 2023 ACC/AHA Chronic Coronary Disease Guideline, Class 3 (Harm)
+  // Rationale: FDA Effient (prasugrel) black-box warning — prasugrel + prior stroke/TIA
+  //   carries fatal/intracranial bleeding risk per TRITON-TIMI 38 sub-analysis.
+  // Stroke/TIA codes per established convention (matches CHA2DS2-VASc scoring at line 3984):
+  //   I63.* (cerebral infarction), I64 (stroke unspecified),
+  //   G45.* (TIA), Z86.73 (history of TIA/stroke without residual deficit)
+  // Hemorrhagic stroke (I60-I62) intentionally NOT in discriminator — FDA black-box
+  //   specifically warns about prior ischemic stroke/TIA. Hemorrhagic-stroke
+  //   antiplatelet contraindication is a separate broader rule.
+  if (
+    medCodes.includes('613391') &&
+    dxCodes.some(c =>
+      c.startsWith('I63') || c.startsWith('I64') || c.startsWith('G45') || c === 'Z86.73'
+    ) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.CORONARY_INTERVENTION,
+      status: 'SAFETY: Prasugrel contraindicated in patient with prior stroke/TIA',
+      target: 'Switch to ticagrelor or clopidogrel; preserve DAPT continuity',
+      medication: 'Replace prasugrel with ticagrelor (RxNorm 1116632) or clopidogrel (RxNorm 32968)',
+      recommendations: {
+        action: 'Discontinue prasugrel and substitute ticagrelor or clopidogrel per FDA black-box + 2023 ACC/AHA CCD Class 3 (Harm)',
+        guideline: '2023 ACC/AHA Chronic Coronary Disease Guideline + FDA Effient (prasugrel) Black-Box Warning',
+        note: 'Prasugrel + prior stroke/TIA increases fatal and intracranial bleeding risk. Patient on combination therapy requires immediate switch.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'On prasugrel (RxNorm 613391) in active medications',
+          'Prior stroke/TIA history (ICD-10 I63.x cerebral infarction, I64 stroke unspecified, G45.x TIA, Z86.73 history without deficit)',
+        ],
+        guidelineSource: '2023 ACC/AHA Chronic Coronary Disease Guideline + FDA Effient Black-Box Warning',
+        classOfRecommendation: '3 (Harm)',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+        safetyClass: 'SAFETY',
+      },
+    });
   }
 
   // CAD-PRASUGREL: Prasugrel in ACS with PCI
