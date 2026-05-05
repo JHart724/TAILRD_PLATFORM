@@ -52,6 +52,10 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-014** — Patient search silently broken on encrypted PHI fields (Phase 2B, OPEN)
 - **AUDIT-015** — `decrypt()` returns ciphertext on integrity failure (Phase 2B, **RESOLVED 2026-04-30**)
 - **AUDIT-016** — No PHI key rotation pattern (Phase 2B, OPEN)
+- **AUDIT-031** — GAP-EP-079: pre-excited AF + AVN blocker (CRITICAL SAFETY, uncovered) (Phase 0B EP, OPEN, **Tier S**)
+- **AUDIT-032** — GAP-EP-006: dabigatran in CrCl<30 (SAFETY, uncovered) (Phase 0B EP, OPEN, **Tier S**)
+- **AUDIT-033** — GAP-EP-017: HFrEF + non-DHP CCB SAFETY — registry entry deferred (Phase 0B EP, OPEN, **Tier S**, trivial fix)
+- **AUDIT-034** — GAP-CAD-016: prasugrel + stroke/TIA SAFETY — PARTIAL needs hardening (Phase 0B CAD, OPEN, **Tier S**)
 
 ### MEDIUM (P2)
 
@@ -63,6 +67,8 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-019** — `FailedFhirBundle` plaintext PHI fragments (Phase 2B, OPEN)
 - **AUDIT-020** — External FHIR identifiers (`fhir*Id`) plaintext (Phase 2B, OPEN)
 - **AUDIT-022** — Legacy JSON PHI not encrypted at rest (243 row-instances across 11 columns, 6 models) (Phase 2B-extended, OPEN)
+- **AUDIT-035** — `gap-ep-anticoag-interruption` registry-only orphan (Phase 0B EP, OPEN)
+- **AUDIT-037** — `Math.random()` in `cqlEngine.ts:475` default rule scoring (Phase 0B canonical, OPEN, CLAUDE.md §14 violation)
 
 ### LOW (P3)
 
@@ -70,6 +76,11 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-017** — `PHI_ENCRYPTION_KEY` length not validated at startup (Phase 2B, OPEN)
 - **AUDIT-027** — `gdmtEngine.ts` / `gapRuleEngine` redundancy + rule-engine naming convention reconciliation (Phase 0B HF + CAD, OPEN)
 - **AUDIT-028** — Time-unit disambiguation in timeline math (raw scope vs AI-assisted wall-clock) (Phase 0B CAD, OPEN)
+- **AUDIT-029** — Rule-body verification standard for clinical audits (Phase 0B canonical, **RESOLVED 2026-05-04** via PR #234)
+- **AUDIT-030** — Per-gap classification citation requirement (Phase 0B canonical, **RESOLVED 2026-05-04** via PR #234)
+- **AUDIT-030.D** — Evaluator inventory completeness via multi-pattern detection (Phase 0B canonical, **RESOLVED 2026-05-04** via PR #234)
+- **AUDIT-036** — `gap-hf-vaccine-covid` registry-only orphan (Phase 0B HF, OPEN)
+- **AUDIT-038** — Node 18 LTS deprecation tracking (Operational debt, OPEN)
 
 ### INFO
 
@@ -499,11 +510,210 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ---
 
+### AUDIT-029 — Rule-body verification standard for clinical audits
+
+- **Phase:** 0B clinical audit methodology
+- **Severity:** LOW (P3) — methodology gap
+- **Status:** **RESOLVED 2026-05-04** via PR #234 (canonical audit infrastructure)
+- **Detected:** 2026-05-04 during VHD re-audit cycle
+- **Evidence:** name-match audits (earlier PV/HF/CAD addenda) overestimated DET_OK by counting registry-id-to-spec-gap-id matches without verifying the rule body actually fires for the spec gap's detection criteria. VHD re-audit demonstrated the divergence: naive 30.5% rule density vs rule-body-verified 23.8% any-coverage. The auto-classifier consistently under-counted relative to addendum claims for the same reason — vocabulary mismatch between spec language and code language requires reading bodies, not just IDs.
+- **Severity rationale:** methodology gap that produced over-confident audit results. No production impact, but invalidated portions of three module addenda (PV/HF/CAD) until re-audited with rule-body verification.
+- **Resolution:** `docs/audit/AUDIT_METHODOLOGY.md` §3.2 decision rules require evaluator block citation with bodyLineRange; §3.2.1 codifies broad-rule consolidation per-gap evaluation. Canonical crosswalks (`docs/audit/canonical/<MODULE>.crosswalk.json`) enforce mechanical citation via `validateCrosswalk()`. CI gate 5 (`auditCanonical.yml`) rejects any crosswalk with classification != SPEC_ONLY but ruleBodyCite null.
+- **Effort estimate:** RESOLVED (ZERO ongoing; methodology is now contract-enforced)
+- **Cross-references:**
+  - PR #234 (canonical audit infrastructure)
+  - `docs/audit/AUDIT_METHODOLOGY.md` §3.2 + §4
+  - `docs/audit/PHASE_0B_VHD_AUDIT_ADDENDUM.md` (re-audited under this standard)
+
+---
+
+### AUDIT-030 — Per-gap classification citation requirement
+
+- **Phase:** 0B clinical audit methodology
+- **Severity:** LOW (P3) — methodology gap
+- **Status:** **RESOLVED 2026-05-04** via PR #234
+- **Detected:** 2026-05-04 during VHD re-audit cycle
+- **Evidence:** VHD addendum §13 wall-clock inconsistency (claimed 120 min vs ground truth 70 min). T1 mis-classifications surfaced when spec lines weren't cited: VHD-004 and VHD-067 incorrectly labeled T1 SAFETY when CK §6.5 lines 757 and 855 confirm both T2. Inferring tier without citation produced wrong Tier S queue priorities (operator-visible defect: priorities #3 and #4 in the prior queue were based on wrong tier classifications).
+- **Severity rationale:** methodology gap with downstream commercial impact (wrong Tier S triage queue could have driven wrong mitigation priorities pre-BSW DUA). RESOLVED via mechanical citation requirement.
+- **Resolution:** `docs/audit/AUDIT_METHODOLOGY.md` §4 mandates spec-side citation (specLine + tierMarkerLiteral) and code-side citation (registryId + registryLine + evaluatorBlockName + bodyLineRange) for every crosswalk row. Schema validator rejects rows missing required fields. CI gate 5 enforces.
+- **Effort estimate:** RESOLVED
+- **Cross-references:**
+  - PR #234
+  - `docs/audit/AUDIT_METHODOLOGY.md` §4
+  - AUDIT-030.D (sub-clause: evaluator inventory completeness)
+
+---
+
+### AUDIT-030.D — Evaluator inventory completeness via multi-pattern detection
+
+- **Phase:** 0B clinical audit methodology (sub-clause of AUDIT-030)
+- **Severity:** LOW (P3) — methodology gap
+- **Status:** **RESOLVED 2026-05-04** via PR #234
+- **Detected:** 2026-05-04 during VHD re-audit cycle
+- **Evidence:** VHD re-audit's first pass missed 14 evaluator blocks at lines 10414-10837 in `gapRuleEngine.ts` because it used only the `// Gap VD-N:` comment pattern. Multi-pattern enumeration surfaced VD-PANNUS at line 10414 (under `// VD-NAME:` ID_NAME pattern) which the prior audit had listed as registry-only. Same defect class verified in EP audit (claimed 11 registry-orphans, actual 1 — gap-ep-anticoag-interruption).
+- **Severity rationale:** methodology gap where audits running under partial pattern enumeration produced under-reported coverage. The defect surfaces consistently across modules; mitigated only by enumerating all empirically-observed patterns.
+- **Resolution:** `docs/audit/AUDIT_METHODOLOGY.md` §5.1 enumerates 5 empirically-observed comment patterns (GAP_MOD_N, GAP_N, ID_NAME, GAP_MOD_NAME, ID_N) with example matches. §5.2 mandates pattern-addition workflow (script update + test + reconciliation re-run before any audit work). `extractCode.ts` implements all 5 patterns; tests assert detection per pattern.
+- **Effort estimate:** RESOLVED
+- **Cross-references:**
+  - PR #234
+  - `docs/audit/AUDIT_METHODOLOGY.md` §5
+  - AUDIT-030 (parent finding)
+
+---
+
+### AUDIT-031 — GAP-EP-079: pre-excited AF + AVN blocker (CRITICAL SAFETY, uncovered)
+
+- **Phase:** 0B EP clinical audit
+- **Severity:** HIGH (P1) — patient safety, spec-explicit `(CRITICAL)`
+- **Status:** OPEN — **automatic Tier S inclusion** per AUDIT_METHODOLOGY.md §6.3
+- **Tier:** S
+- **Detected:** 2026-05-04 via canonical audit infrastructure (Tier S queue surfacing)
+- **Evidence:** spec line 352 (CK v4.0 §6.2) text "WPW + AF on beta-blocker/CCB/digoxin - risk of VF". Canonical `EP.crosswalk.json` row classification: SPEC_ONLY. No evaluator block in `backend/src/ingestion/gaps/gapRuleEngine.ts` detects this scenario. **Highest-priority of the 4 Tier S items per spec-explicit `(CRITICAL)` tag indicating VF risk.** Pre-excited AF + AVN-blocking medications can trigger ventricular fibrillation; classified above `(SAFETY)`-tagged items in mitigation sequencing.
+- **Severity rationale:** patient-safety risk; uncovered SAFETY classification with `(CRITICAL)` modifier indicating mortality-relevant downside if missed.
+- **Remediation:** author new evaluator block detecting (AF dx I48.x + WPW dx I45.6) + (RxNorm beta-blocker / non-DHP CCB / digoxin on active med list). Recommend procainamide / amiodarone alternatives in safety message. Estimated 2-4h work (evaluator block + registry entry + tests).
+- **Effort estimate:** S (2-4h)
+- **Cross-references:**
+  - `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` §3.1
+  - `docs/audit/canonical/EP.crosswalk.json` row GAP-EP-079
+  - `docs/audit/canonical/EP.spec.json` gap[GAP-EP-079]
+  - PR #234
+
+---
+
+### AUDIT-032 — GAP-EP-006: dabigatran in CrCl<30 (SAFETY, uncovered)
+
+- **Phase:** 0B EP clinical audit
+- **Severity:** HIGH (P1) — patient safety, spec-explicit `(SAFETY)`
+- **Status:** OPEN — automatic Tier S
+- **Tier:** S
+- **Detected:** 2026-05-04 via canonical audit infrastructure
+- **Evidence:** spec line 312 (CK v4.0 §6.2) text "Dabigatran + severe renal impairment". Canonical `EP.crosswalk.json` row classification: SPEC_ONLY. No CrCl-gated dabigatran SAFETY check in evaluator. Bleeding risk in renal impairment is the documented harm pathway (per FDA prescribing information + 2023 ACC/AHA AFib guideline).
+- **Severity rationale:** patient-safety risk; uncovered SAFETY classification.
+- **Remediation:** author evaluator block: (RxNorm 1037045 dabigatran on active med list) + (CrCl < 30 from observations OR eGFR LOINC). Switch-to-apixaban recommendation. Estimated 1-2h.
+- **Effort estimate:** XS-S (1-2h)
+- **Cross-references:**
+  - `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` §3.1
+  - `docs/audit/canonical/EP.crosswalk.json` row GAP-EP-006
+  - PR #234
+
+---
+
+### AUDIT-033 — GAP-EP-017: HFrEF + non-DHP CCB SAFETY — registry entry deferred
+
+- **Phase:** 0B EP clinical audit (related: PR #229 EP-XX-7 mitigation)
+- **Severity:** HIGH (P1) — patient safety, spec-explicit `(SAFETY)`
+- **Status:** OPEN — automatic Tier S; **trivial fix path** (registry entry only)
+- **Tier:** S
+- **Detected:** 2026-05-04 via canonical audit infrastructure (correction of earlier "naming collision" interpretation)
+- **Evidence:** spec line 339 (CK v4.0 §6.2) text "AF + non-DHP CCB in HFrEF (SAFETY). HFrEF on verapamil/diltiazem". Evaluator block `EP-017` at line 4797 in `gapRuleEngine.ts` (added in PR #229 / commit 9ac3806) DOES detect this scenario at runtime — fires SAFETY gap with Class 3 (Harm) classification when HFrEF + on diltiazem (RxNorm 3443) or verapamil (RxNorm 11170). However, no registry entry exists for `gap-ep-017` (intentionally deferred per CLAUDE.md observation 'v'). Canonical `EP.crosswalk.json` shows SPEC_ONLY at registry-audit level.
+- **Severity rationale:** patient-safety risk at the audit/registry level; runtime detection IS active (mitigated by PR #229), but the missing registry entry means the gap is invisible to gap-rule provenance tooling and validateCrosswalk gate.
+- **Remediation:** add registry entry `gap-ep-017-hfref-non-dhp-ccb` to `RUNTIME_GAP_REGISTRY` array in `gapRuleEngine.ts`. Pairs with existing evaluator. Re-run extractCode + reconcile + render. Closes Tier S item with ~5-10 min agent work + a small PR. **Recommended FIRST Tier S mitigation PR.** Trivial scope closes the spec-explicit Tier S item via registry-entry-add only; the evaluator block already exists from PR #229. After this lands, Tier S queue reduces from 4 to 3 items.
+- **Effort estimate:** XS (~10 min agent + tests)
+- **Cross-references:**
+  - PR #229 (the EP-XX-7 mitigation that added the evaluator)
+  - CLAUDE.md observation 'v' (deferred registry update)
+  - `docs/audit/canonical/EP.crosswalk.json` row GAP-EP-017
+  - AUDIT-027 (rule-engine reconciliation expanded scope)
+  - PR #234
+
+---
+
+### AUDIT-034 — GAP-CAD-016: prasugrel + stroke/TIA SAFETY — PARTIAL needs hardening
+
+- **Phase:** 0B CAD clinical audit
+- **Severity:** HIGH (P1) — patient safety, spec-explicit `(SAFETY)`
+- **Status:** OPEN — automatic Tier S
+- **Tier:** S
+- **Detected:** 2026-05-04 via canonical audit infrastructure
+- **Evidence:** CK v4.0 §6.4 spec gap text "Prasugrel + prior stroke/TIA SAFETY". Canonical `CAD.crosswalk.json` row classification: PARTIAL_DETECTION via `gap-cad-prasugrel`. Evaluator fires for general prasugrel scenarios (post-ACS DAPT) but doesn't specifically discriminate the prior-stroke/TIA contraindication. Per FDA black-box warning, prasugrel is contraindicated in prior stroke/TIA due to fatal/intracranial bleeding risk.
+- **Severity rationale:** patient-safety risk; broad-rule covers without discrimination, missing the spec-mandated contraindication check.
+- **Remediation:** harden `gap-cad-prasugrel` evaluator with stroke/TIA history check (ICD-10 I63.x acute, I64 stroke unspecified, G45.x TIA, Z86.73 personal history of stroke). When matched, switch SAFETY recommendation to ticagrelor or clopidogrel rather than continuing prasugrel. Estimated 1-2h.
+- **Effort estimate:** XS-S (1-2h)
+- **Cross-references:**
+  - `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` §3.1
+  - `docs/audit/canonical/CAD.crosswalk.json` row GAP-CAD-016
+  - PR #234
+
+---
+
+### AUDIT-035 — `gap-ep-anticoag-interruption` registry-only orphan
+
+- **Phase:** 0B EP clinical audit
+- **Severity:** MEDIUM (P2) — registry-without-evaluator code-hygiene + missing clinical content
+- **Status:** OPEN
+- **Tier:** 2 (v2.0 Phase 1 build work, not Tier S — no SAFETY tag in spec)
+- **Detected:** 2026-05-04 via canonical audit infrastructure (`EP.reconciliation.json` registryOrphans)
+- **Evidence:** registry entry `gap-ep-anticoag-interruption` at line 1884 in `backend/src/ingestion/gaps/gapRuleEngine.ts` (Perioperative Anticoagulation Management, 2023 ACC/AHA/ACCP/HRS Class 1 LOE B-NR). No evaluator block anywhere in file (verified via multi-pattern grep + canonical reconciliation). Patients with anticoagulation interrupted around procedures have no detection logic for bridging guidance.
+- **Severity rationale:** missing clinical content; no patient-safety tag in spec but procedural-decision-support gap that affects perioperative AF management.
+- **Remediation:** author evaluator block detecting AF + recent procedure date + OAC discontinuation. Bridging guidance per 2022 ACC/AHA Perioperative Guidelines. Estimated 3-4h (more complex due to procedure-event timing pipeline).
+- **Effort estimate:** S-M (3-4h)
+- **Cross-references:**
+  - `docs/audit/canonical/EP.reconciliation.json` registryOrphans (`gap-ep-anticoag-interruption`)
+  - `docs/audit/PHASE_0B_EP_AUDIT_ADDENDUM.md` §4.6 EXTRA rules (registry-only orphan)
+  - PR #234
+
+---
+
+### AUDIT-036 — `gap-hf-vaccine-covid` registry-only orphan
+
+- **Phase:** 0B HF clinical audit
+- **Severity:** LOW (P3) — registry-without-evaluator code-hygiene + missing clinical content
+- **Status:** OPEN
+- **Tier:** 3 (lower priority; vaccine guidance evolving with seasonal updates)
+- **Detected:** 2026-05-04 via canonical audit infrastructure
+- **Evidence:** registry entry `gap-hf-vaccine-covid` at line 2052 in `gapRuleEngine.ts` (COVID Vaccination in HF). No evaluator. CAD has flu vaccine evaluator (line 7632) but no COVID equivalent. Per 2022 AHA/ACC/HFSA Class 1, COVID vaccination is recommended for HF patients.
+- **Severity rationale:** missing clinical content; non-safety procedural recommendation.
+- **Remediation:** author evaluator block: HF dx + no COVID vaccine immunization record. Estimated 1-2h.
+- **Effort estimate:** XS-S (1-2h)
+- **Cross-references:**
+  - `docs/audit/canonical/HF.reconciliation.json` registryOrphans (`gap-hf-vaccine-covid`)
+  - `docs/audit/PHASE_0B_HF_AUDIT_ADDENDUM.md` §4.6 EXTRA rules
+  - PR #234
+
+---
+
+### AUDIT-037 — `Math.random()` in `cqlEngine.ts:475` default rule scoring
+
+- **Phase:** Code quality (surfaced during canonical audit work)
+- **Severity:** MEDIUM (P2) — CLAUDE.md §14 "NEVER DO" violation; clinical scoring path
+- **Status:** OPEN
+- **Tier:** B
+- **Detected:** 2026-05-04 during register-batch finding inventory
+- **Evidence:** `backend/src/cql/cqlEngine.ts:475` returns `score: Math.floor(Math.random() * 100)` for default rule recommendations. Per CLAUDE.md §14 "NEVER DO": "Never use `Math.random()` for any clinical scoring or gap detection logic. Clinical scores must be deterministic and grounded in patient data." cqlEngine.ts is documented as scaffolding (CLAUDE.md §8: "the CQL engine is scaffolding — gap rules run directly via deterministic TypeScript, not CQL"), so the path may not be exercised in production. But the violation remains in source code.
+- **Severity rationale:** rule violation in clinical-scoring path. Production impact gated on whether the scaffolding path ever activates; if cqlEngine were enabled (even for testing), this would produce non-deterministic clinical recommendations.
+- **Remediation:** either (a) replace with deterministic score derived from rule's evidence attributes (classOfRecommendation + levelOfEvidence weighting), OR (b) remove the default branch entirely if cqlEngine is genuinely dead code. Decide via Phase 0A backend audit Phase 3 (data layer). Estimated 1h.
+- **Effort estimate:** XS (1h once decision made)
+- **Cross-references:**
+  - CLAUDE.md §14 "NEVER DO" rule on Math.random in clinical code
+  - CLAUDE.md §8 (cqlEngine documented as scaffolding)
+  - `backend/src/cql/cqlEngine.ts:475`
+
+---
+
+### AUDIT-038 — Node 18 LTS deprecation tracking
+
+- **Phase:** Operational debt / Phase 1 prep
+- **Severity:** LOW (P3) — not urgent but tracked
+- **Status:** OPEN
+- **Tier:** B
+- **Detected:** 2026-05-05 during register batch inventory
+- **Evidence:** Node 18 LTS support ended 2025-04-30 per Node release schedule. Current repo CI runs Node 18 (`.github/workflows/ci.yml` line 14: `NODE_VERSION: '18'`). All CI workflows including the new `auditCanonical.yml` use Node 18. Continuing on EOL Node version blocks security patches and produces CI noise as ecosystem moves to Node 20+ as baseline.
+- **Severity rationale:** operational debt; no immediate production risk (production runs in container with pinned Node from Dockerfile, not from CI runner). Risk grows as upstream packages start dropping Node 18 support.
+- **Remediation:** upgrade CI matrix to Node 20 LTS. Update workflow `NODE_VERSION` env. Verify all dependencies compatible (`npm ls` + `npm test` on Node 20). Test suite must pass on Node 20 before cutover. Estimated 2-3h.
+- **Effort estimate:** S (2-3h)
+- **Dependencies:** AUDIT-006 (outdated dependencies) — coordinated upgrade pass.
+- **Cross-references:**
+  - `.github/workflows/ci.yml` (NODE_VERSION env)
+  - `.github/workflows/auditCanonical.yml`, `deploy-staging.yml`, `deploy.yml`, `smoke-test.yml`, `aws-auth-verify.yml`
+  - AUDIT-006 (dependency upgrade context)
+
+---
+
 ### AUDIT-039 — axios HIGH-severity CVE cluster (5 new advisories 2026-05-04)
 
 - **Phase:** Operational dependency security
 - **Severity:** HIGH (P1) — patient/operator data security; multiple CVE pathways
-- **Status:** **RESOLVED 2026-05-05** via axios 1.15.0 → 1.16.0 upgrade (this PR)
+- **Status:** **RESOLVED 2026-05-05** via axios 1.15.0 → 1.16.0 upgrade (PR #236)
 - **Tier:** B
 - **Detected:** 2026-05-05 via Security Audit gate failure on PR #235 (chore/step-i-register-batch)
 - **Evidence:** 5 newly-published advisories affecting axios 1.0.0 – 1.15.1:
@@ -517,7 +727,7 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 - **Effort estimate:** XS (~10 min agent including this register entry)
 - **Cross-references:**
   - PR #235 Security Audit failure (`gh run view 25351630120 --log-failed` on chore/step-i-register-batch)
-  - This PR (axios upgrade)
+  - PR #236 (axios upgrade)
   - AUDIT-007 (existing moderate uuid/node-cron advisories — distinct chain, separate remediation)
 
 ---
@@ -533,3 +743,4 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 | 5 | HIPAA + compliance | 0 | DEFERRED (depends on Phase 1 Tier A + Phase 2) |
 | 6 | Module clinical maturity | 0 | DEFERRED |
 | 7 | Threat modeling + architecture | 0 | DEFERRED |
+| 0B | Clinical audit (canonical) | 13 (0 P0, 4 P1 Tier S, 3 P2, 6 P3, 0 INFO) | COMPLETE 2026-05-04 via PR #234; methodology defects (AUDIT-029, 030, 030.D) RESOLVED; 4 Tier S clinical items (AUDIT-031 through 034) OPEN — separate mitigation PR series; 2 registry orphans (AUDIT-035, 036) OPEN — v2.0 Phase 1 build; AUDIT-037 (Math.random) + AUDIT-038 (Node 18 EOL) OPEN — operational debt |
