@@ -597,6 +597,60 @@ REJECT: addendum-direct-edit
 
 `.github/workflows/auditCanonical.yml` — implements the above as PR checks. Fast (extracts run in <30s); can run on every PR without slowing CI materially.
 
+### 10.4 Line-shift workflow (refreshCites.ts)
+
+When `gapRuleEngine.ts` or `CLINICAL_KNOWLEDGE_BASE_v4.0.md` has a line-affecting change (e.g., adding a registry entry, a new evaluator block, or new spec gap rows), every cite in every committed `<MODULE>.crosswalk.json` that references downstream content becomes stale. Cite line numbers (`registryLine`, `evaluatorBodyLineRange`, `specLine`) drift; everything else stays correct.
+
+**Symptom (CI Gate 5 failure):**
+```
+REJECT: crosswalk-schema-invalid
+ERROR BODY_LINE_RANGE_MISMATCH at crosswalk.rows[N/GAP-X-NNN].ruleBodyCite.evaluatorBodyLineRange
+ERROR REGISTRY_LINE_MISMATCH at crosswalk.rows[N/GAP-X-NNN].ruleBodyCite.registryLine
+```
+
+**Workflow:**
+
+1. Make the source change (gapRuleEngine.ts or CK v4.0).
+2. Regenerate the affected extracts:
+   ```
+   npx tsx backend/scripts/auditCanonical/extractCode.ts --all
+   npx tsx backend/scripts/auditCanonical/extractSpec.ts --all
+   ```
+3. Run the cite refresh:
+   ```
+   npx tsx backend/scripts/auditCanonical/refreshCites.ts --all
+   ```
+4. Re-render addenda + synthesis:
+   ```
+   npx tsx backend/scripts/auditCanonical/renderAddendum.ts --all
+   npx tsx backend/scripts/auditCanonical/renderSynthesis.ts
+   ```
+5. Validate:
+   ```
+   npx tsx backend/scripts/auditCanonical/validateCanonical.ts
+   ```
+6. Commit the regenerated artifacts alongside the source change in a single PR.
+
+**What `refreshCites.ts` preserves (byte-for-byte):**
+- `auditNotes` — manual override messages, citation prose
+- `classification` (DET_OK / PARTIAL_DETECTION / SPEC_ONLY / PRODUCTION_GRADE)
+- `inferredSafetyTag` + `inferredSafetyRationale`
+- `parseSource` + `parseConfidence` (if present)
+- All top-level fields (`module`, `crosswalkVersion`, `auditDate`, `auditMethod`, `strategicPosture`, `sequencingNotes`, `lessonsLearned`, `extras`)
+
+**What `refreshCites.ts` updates (only):**
+- `ruleBodyCite.registryLine` — looked up from current `<MODULE>.code.json` by `registryId`
+- `ruleBodyCite.evaluatorBodyLineRange` — looked up by `evaluatorBlockName`
+- `specLine` — looked up from current `<MODULE>.spec.json` by `specGapId`
+
+**Cross-module cites:** when `ruleBodyCite.evaluatorModule != crosswalk.module` (e.g., GAP-EP-007 cross-module to VHD VD-6), the lookup uses the cited module's `code.json`. All 6 module code extracts are loaded unconditionally.
+
+**Fail-loud behavior:** if a cited `registryId` or `evaluatorBlockName` no longer exists in current code.json, `refreshCites.ts` throws a structured error (`RegistryIdNotFoundInRefresh`, `EvaluatorBlockNotFoundInRefresh`) and exits non-zero. The affected row needs manual review — likely the rule was deleted/renamed in source and the crosswalk row needs reclassification.
+
+**Idempotency:** running `refreshCites.ts` on an already-current crosswalk is a no-op — zero changes, byte-identical output. Safe to invoke before every commit.
+
+**Difference from `verifyDraft.ts`:** `verifyDraft` re-classifies rows from auto-classifier output and may overwrite manual classifications if drafts are re-parsed. `refreshCites` is surgical — only touches line-number fields, never classifications or notes. Use `refreshCites` for source-line-shift PRs; use `verifyDraft` only when re-bootstrapping crosswalks from addenda.
+
 ---
 
 ## 11. Addendum markdown template
