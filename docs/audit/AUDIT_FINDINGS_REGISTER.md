@@ -84,6 +84,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-035** — `gap-ep-anticoag-interruption` registry-only orphan (Phase 0B EP, OPEN)
 - **AUDIT-037** — `Math.random()` in `cqlEngine.ts:475` default rule scoring (Phase 0B canonical, OPEN, CLAUDE.md §14 violation)
 - **AUDIT-049** — `DOAC_CODES_STROKE/TEE` use rivaroxaban formulation/pack codes; missing dabigatran + edoxaban ingredients (Phase 0B Cat D, **RESOLVED 2026-05-06**)
+- **AUDIT-064** — Partial-pipeline-regen pattern after source-changing operations: reconcile/renderAddendum/renderSynthesis skipped after extractCode-affecting source changes leaves committed derived artifacts stale; CI Audit Canonical Gates rejects (2 recurrences PR #245 + PR #246) (Operational debt / canonical infrastructure, **RESOLVED 2026-05-06** via AUDIT_METHODOLOGY.md §9.2 codification)
 
 ### LOW (P3)
 
@@ -866,6 +867,25 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
   - PR #245 (AUDIT-041 applyOverrides canonical-default — eliminated manual canonical patch step that this PR's pipeline run consumed)
   - This PR (Cat D inline-array corrections + AUDIT-052 partial mitigation)
   - **AUDIT-052** (architectural follow-up; out of scope for this PR — full refactor of inline arrays to canonical imports)
+
+---
+
+### AUDIT-064 — Partial-pipeline-regen pattern after source-changing operations
+
+- **Phase:** Canonical infrastructure (operational debt surfaced via Cat A → Cat D verification batch arc)
+- **Severity:** MEDIUM (P2) — pipeline ergonomics; CI catches the divergence before merge so no production risk, but each recurrence costs ~10-15 min agent + operator review cycle
+- **Status:** **RESOLVED 2026-05-06** via AUDIT_METHODOLOGY.md §9.2 codification (this PR's fixup commit chain)
+- **Tier:** B
+- **Detected:** 2026-05-05 (PR #245 first recurrence — applyOverrides default flip required reconcile/render regen which was missed); 2026-05-06 (PR #246 second recurrence — `// AUDIT-NNN (...)` → `// Fix (AUDIT-NNN, ...)` sed rephrase required reconcile/render regen which was missed). Two recurrences = methodology gap.
+- **Evidence:** Both PRs produced commits where extractCode/refreshCites/applyOverrides were re-run but reconcile/renderAddendum/renderSynthesis were not, leaving committed `*.reconciliation.json` + addendum.md + cross-module-synthesis.md files referencing pre-change state. CI `auditCanonical.yml` regenerates these and rejects the divergence, blocking merge.
+- **Resolution:** AUDIT_METHODOLOGY.md §9.2 codifies the convention — full pipeline regen mandatory after any source-changing operation. Pipeline order: `extractCode → extractSpec → reconcile → refreshCites → applyOverrides → renderAddendum → renderSynthesis → validateCanonical`. The canonical contract is non-partial; partial pipeline runs are a methodology violation. §9.2 frames the standard as a sister to §1 (rule-body verification, output discipline) and §16 (clinical-code verification, input discipline) — together: §1 covers what audits cite, §16 covers what rules consume, §9.2 covers what PRs commit.
+- **Architectural note:** Optional `pipeline-all.sh` / `pipeline-all.ps1` helper script could replace 8 commands with 1 to enforce this via single invocation. Deferred to focused infrastructure PR per scope discipline (out of band for this fixup).
+- **Cross-references:**
+  - PR #245 (first recurrence — fixed via standalone fixup commit; methodology not codified)
+  - PR #246 (second recurrence — fixed via this PR's fixup commit chain; methodology codified)
+  - AUDIT_METHODOLOGY.md §9.2 (the codified standard)
+  - AUDIT_METHODOLOGY.md §1 (rule-body verification — sister output discipline)
+  - AUDIT_METHODOLOGY.md §16 (clinical-code verification — sister input discipline)
 
 ---
 

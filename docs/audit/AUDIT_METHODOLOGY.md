@@ -582,6 +582,32 @@ Pre-AUDIT-041 the script defaulted to candidate-write, which forced 4 manual can
 
 **Idempotency:** override application produces byte-identical output via `stableStringify` when re-run on already-applied state. No double-patching risk in either flow.
 
+### 9.2 Full-pipeline regen after source-changing operations (AUDIT-064, 2026-05-06)
+
+Whenever source code or canonical input artifacts change mid-PR — including:
+- sed/refactor operations on `gapRuleEngine.ts`, registry, or evaluator code
+- comment rephrasing (e.g., `// AUDIT-NNN (...)` → `// Fix (AUDIT-NNN, ...)` to avoid `extractCode.ts` ID_N pattern false-positive evaluator detection)
+- line-number-shifting edits (added comments, reformatting, new evaluator blocks)
+- any `backend/scripts/auditCanonical/*.ts` source change
+
+The **full** canonical pipeline must be re-run before commit, not partial steps. Pipeline order:
+
+```
+extractCode → extractSpec → reconcile → refreshCites → applyOverrides → renderAddendum → renderSynthesis → validateCanonical
+```
+
+Skipping `reconcile` / `renderAddendum` / `renderSynthesis` after source changes leaves committed `*.reconciliation.json` and `*_AUDIT_ADDENDUM.md` files referencing pre-change state. CI `auditCanonical.yml` regenerates these and detects the divergence, blocking merge.
+
+**Recurrences before codification:** 2.
+- **PR #245** (AUDIT-041) — applyOverrides default flip; reconcile/render regen missed; CI rejected; fixed via standalone fixup commit.
+- **PR #246** (AUDIT-046..063) — sed comment rephrase; reconcile/render regen missed; CI rejected; fixed via fixup commit chain (this PR).
+
+**Convention going forward:** after any source change, run the full pipeline. The canonical contract for this PR-shape is non-partial. Partial pipeline runs are a methodology violation.
+
+**Architectural note:** an optional `pipeline-all.sh` / `pipeline-all.ps1` helper script could replace 8 commands with 1 to enforce this via single invocation. Deferred to focused infrastructure PR per scope discipline.
+
+This is an operational-discipline standard — sister to §1 (rule-body verification — output discipline) and §16 (clinical-code verification — input discipline). Together: §1 covers what audits cite, §16 covers what rules consume, §9.2 covers what PRs commit.
+
 ---
 
 ## 10. CI enforcement model
