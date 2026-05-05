@@ -94,24 +94,24 @@ Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementa
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-CAD-001 | 590 | DET_OK | `gap-cad-statin` (CAD-STATIN @4332-4357) | auto-verify: preserved-from-addendum |
-| GAP-CAD-002 | 591 | DET_OK | `gap-cad-statin` (CAD-STATIN @4332-4357) | auto-verify: preserved-from-addendum |
-| GAP-CAD-003 | 592 | DET_OK | `gap-cad-ezetimibe` (CAD-EZETIMIBE @4502-4532) | auto-verify: preserved-from-addendum |
-| GAP-CAD-004 | 593 | DET_OK | `gap-cad-pcsk9` (CAD-PCSK9 @7164-7195) | auto-verify: preserved-from-addendum |
-| GAP-CAD-005 | 594 | PARTIAL_DETECTION | `gap-cad-pcsk9` (CAD-PCSK9 @7164-7195) | auto-verify: preserved-from-addendum |
+| GAP-CAD-001 | 590 | DET_OK | `gap-cad-statin` (CAD-STATIN @4344-4369) | auto-verify: preserved-from-addendum |
+| GAP-CAD-002 | 591 | DET_OK | `gap-cad-statin` (CAD-STATIN @4344-4369) | auto-verify: preserved-from-addendum |
+| GAP-CAD-003 | 592 | DET_OK | `gap-cad-ezetimibe` (CAD-EZETIMIBE @4514-4544) | auto-verify: preserved-from-addendum |
+| GAP-CAD-004 | 593 | DET_OK | `gap-cad-pcsk9` (CAD-PCSK9 @7176-7207) | auto-verify: preserved-from-addendum |
+| GAP-CAD-005 | 594 | PARTIAL_DETECTION | `gap-cad-pcsk9` (CAD-PCSK9 @7176-7207) | auto-verify: preserved-from-addendum |
 | GAP-CAD-056 | 595 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-CAD-057 | 596 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-CAD-011 | 607 | PARTIAL_DETECTION | `gap-cad-statin` (CAD-STATIN @4332-4357) | auto-verify: preserved-from-addendum |
-| GAP-CAD-012 | 608 | PARTIAL_DETECTION | `gap-cad-statin` (CAD-STATIN @4332-4357) | auto-verify: preserved-from-addendum |
-| GAP-CAD-014 | 609 | DET_OK | `gap-cad-omega3` (CAD-OMEGA3 @7293-7326) | auto-verify: preserved-from-addendum |
-| GAP-CAD-015 | 617 | DET_OK | `gap-cad-ticagrelor-acs` (CAD-TICAGRELOR-ACS @7667-7693) | + \| Multiple registry ids cited: gap-cad-ticagrelor-acs, gap-cad-prasugrel \| auto-verify: preserved- |
-| GAP-CAD-016 | 618 | PARTIAL_DETECTION | `gap-cad-prasugrel` (CAD-PRASUGREL @8286-8317) | auto-verify: preserved-from-addendum |
+| GAP-CAD-011 | 607 | PARTIAL_DETECTION | `gap-cad-statin` (CAD-STATIN @4344-4369) | auto-verify: preserved-from-addendum |
+| GAP-CAD-012 | 608 | PARTIAL_DETECTION | `gap-cad-statin` (CAD-STATIN @4344-4369) | auto-verify: preserved-from-addendum |
+| GAP-CAD-014 | 609 | DET_OK | `gap-cad-omega3` (CAD-OMEGA3 @7305-7338) | auto-verify: preserved-from-addendum |
+| GAP-CAD-015 | 617 | DET_OK | `gap-cad-ticagrelor-acs` (CAD-TICAGRELOR-ACS @7679-7705) | + \| Multiple registry ids cited: gap-cad-ticagrelor-acs, gap-cad-prasugrel \| auto-verify: preserved- |
+| GAP-CAD-016 | 618 | PARTIAL_DETECTION | `gap-cad-prasugrel` (CAD-PRASUGREL @8298-8329) | auto-verify: preserved-from-addendum |
 | GAP-CAD-063 | 638 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-CAD-065 | 639 | PARTIAL_DETECTION | `gap-cad-catheterization` (CAD-CATHETERIZATION @8664-8691) | auto-verify: preserved-from-addendum |
+| GAP-CAD-065 | 639 | PARTIAL_DETECTION | `gap-cad-catheterization` (CAD-CATHETERIZATION @8676-8703) | auto-verify: preserved-from-addendum |
 | GAP-CAD-071 | 683 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-CAD-042 | 698 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-CAD-043 | 699 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-CAD-081 | 717 | DET_OK | `gap-cad-scad` (CAD-SCAD @8785-8813) | +  + \| Multiple registry ids cited: gap-cad-scad, gap-cad-women-specific, gap-cad-young-mi \| auto-ve |
+| GAP-CAD-081 | 717 | DET_OK | `gap-cad-scad` (CAD-SCAD @8797-8825) | +  + \| Multiple registry ids cited: gap-cad-scad, gap-cad-women-specific, gap-cad-young-mi \| auto-ve |
 
 ---
 

@@ -2,9 +2,9 @@
   "codeSource": "backend/src/ingestion/gaps/gapRuleEngine.ts",
   "evaluatorBlocks": [
     {
-      "bodyEndLine": 4632,
-      "bodyStartLine": 4608,
-      "commentLine": 4603,
+      "bodyEndLine": 4644,
+      "bodyStartLine": 4620,
+      "commentLine": 4615,
       "commentLiteral": "// Gap SH-1: Aortic Stenosis Surveillance Imaging Overdue",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -13,9 +13,9 @@
       "name": "SH-1"
     },
     {
-      "bodyEndLine": 4949,
-      "bodyStartLine": 4928,
-      "commentLine": 4923,
+      "bodyEndLine": 4961,
+      "bodyStartLine": 4940,
+      "commentLine": 4935,
       "commentLiteral": "// Gap SH-2: TAVR Evaluation for Severe Aortic Stenosis",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -24,9 +24,9 @@
       "name": "SH-2"
     },
     {
-      "bodyEndLine": 5020,
-      "bodyStartLine": 4995,
-      "commentLine": 4988,
+      "bodyEndLine": 5032,
+      "bodyStartLine": 5007,
+      "commentLine": 5000,
       "commentLiteral": "// Gap SH-3: Mitral Valve Intervention Evaluation",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -35,9 +35,9 @@
       "name": "SH-3"
     },
     {
-      "bodyEndLine": 5055,
-      "bodyStartLine": 5029,
-      "commentLine": 5022,
+      "bodyEndLine": 5067,
+      "bodyStartLine": 5041,
+      "commentLine": 5034,
       "commentLiteral": "// Gap SH-4: Tricuspid Valve Assessment",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -46,9 +46,9 @@
       "name": "SH-4"
     },
     {
-      "bodyEndLine": 5087,
-      "bodyStartLine": 5067,
-      "commentLine": 5057,
+      "bodyEndLine": 5099,
+      "bodyStartLine": 5079,
+      "commentLine": 5069,
       "commentLiteral": "// Gap SH-5: Structural Heart Imaging Follow-up",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -57,9 +57,9 @@
       "name": "SH-5"
     },
     {
-      "bodyEndLine": 5117,
-      "bodyStartLine": 5097,
-      "commentLine": 5089,
+      "bodyEndLine": 5129,
+      "bodyStartLine": 5109,
+      "commentLine": 5101,
       "commentLiteral": "// Gap SH-6: Post-TAVR Follow-up",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -68,9 +68,9 @@
       "name": "SH-6"
     },
     {
-      "bodyEndLine": 5151,
-      "bodyStartLine": 5131,
-      "commentLine": 5119,
+      "bodyEndLine": 5163,
+      "bodyStartLine": 5143,
+      "commentLine": 5131,
       "commentLiteral": "// Gap SH-7: Endocarditis Prophylaxis Review",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -79,9 +79,9 @@
       "name": "SH-7"
     },
     {
-      "bodyEndLine": 5180,
-      "bodyStartLine": 5160,
-      "commentLine": 5153,
+      "bodyEndLine": 5192,
+      "bodyStartLine": 5172,
+      "commentLine": 5165,
       "commentLiteral": "// Gap SH-8: Left Atrial Appendage Assessment",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -90,9 +90,9 @@
       "name": "SH-8"
     },
     {
-      "bodyEndLine": 5213,
-      "bodyStartLine": 5192,
-      "commentLine": 5182,
+      "bodyEndLine": 5225,
+      "bodyStartLine": 5204,
+      "commentLine": 5194,
       "commentLiteral": "// Gap SH-9: PFO Closure Evaluation",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -101,9 +101,9 @@
       "name": "SH-9"
     },
     {
-      "bodyEndLine": 6087,
-      "bodyStartLine": 6068,
-      "commentLine": 6059,
+      "bodyEndLine": 6099,
+      "bodyStartLine": 6080,
+      "commentLine": 6071,
       "commentLiteral": "// Gap SH-10: MitraClip Evaluation",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -112,9 +112,9 @@
       "name": "SH-10"
     },
     {
-      "bodyEndLine": 6114,
-      "bodyStartLine": 6096,
-      "commentLine": 6089,
+      "bodyEndLine": 6126,
+      "bodyStartLine": 6108,
+      "commentLine": 6101,
       "commentLiteral": "// Gap SH-11: Transcatheter Mitral Valve Replacement Candidacy",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -123,9 +123,9 @@
       "name": "SH-11"
     },
     {
-      "bodyEndLine": 6145,
-      "bodyStartLine": 6127,
-      "commentLine": 6116,
+      "bodyEndLine": 6157,
+      "bodyStartLine": 6139,
+      "commentLine": 6128,
       "commentLiteral": "// Gap SH-12: Tricuspid Intervention Evaluation",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -134,9 +134,9 @@
       "name": "SH-12"
     },
     {
-      "bodyEndLine": 6174,
-      "bodyStartLine": 6156,
-      "commentLine": 6147,
+      "bodyEndLine": 6186,
+      "bodyStartLine": 6168,
+      "commentLine": 6159,
       "commentLiteral": "// Gap SH-13: Paravalvular Leak Assessment Post-Valve",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -145,9 +145,9 @@
       "name": "SH-13"
     },
     {
-      "bodyEndLine": 6202,
-      "bodyStartLine": 6184,
-      "commentLine": 6176,
+      "bodyEndLine": 6214,
+      "bodyStartLine": 6196,
+      "commentLine": 6188,
       "commentLiteral": "// Gap SH-14: Adult Congenital Heart Disease Screen",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -156,9 +156,9 @@
       "name": "SH-14"
     },
     {
-      "bodyEndLine": 6231,
-      "bodyStartLine": 6213,
-      "commentLine": 6204,
+      "bodyEndLine": 6243,
+      "bodyStartLine": 6225,
+      "commentLine": 6216,
       "commentLiteral": "// Gap SH-15: Alcohol Septal Ablation Candidacy",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -167,9 +167,9 @@
       "name": "SH-15"
     },
     {
-      "bodyEndLine": 6257,
-      "bodyStartLine": 6240,
-      "commentLine": 6233,
+      "bodyEndLine": 6269,
+      "bodyStartLine": 6252,
+      "commentLine": 6245,
       "commentLiteral": "// Gap SH-16: WATCHMAN Device Follow-up",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -178,9 +178,9 @@
       "name": "SH-16"
     },
     {
-      "bodyEndLine": 6290,
-      "bodyStartLine": 6272,
-      "commentLine": 6259,
+      "bodyEndLine": 6302,
+      "bodyStartLine": 6284,
+      "commentLine": 6271,
       "commentLiteral": "// Gap SH-17: 3D Echo for Structural Planning",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -189,9 +189,9 @@
       "name": "SH-17"
     },
     {
-      "bodyEndLine": 10181,
-      "bodyStartLine": 10160,
-      "commentLine": 10153,
+      "bodyEndLine": 10193,
+      "bodyStartLine": 10172,
+      "commentLine": 10165,
       "commentLiteral": "// SH-BICUSPID: Bicuspid Aortic Valve Surveillance",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -200,9 +200,9 @@
       "name": "SH-BICUSPID"
     },
     {
-      "bodyEndLine": 10212,
-      "bodyStartLine": 10190,
-      "commentLine": 10183,
+      "bodyEndLine": 10224,
+      "bodyStartLine": 10202,
+      "commentLine": 10195,
       "commentLiteral": "// SH-ROSS: Ross Procedure Candidacy",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -211,9 +211,9 @@
       "name": "SH-ROSS"
     },
     {
-      "bodyEndLine": 10245,
-      "bodyStartLine": 10223,
-      "commentLine": 10214,
+      "bodyEndLine": 10257,
+      "bodyStartLine": 10235,
+      "commentLine": 10226,
       "commentLiteral": "// SH-VALVE-IN-VALVE: Valve-in-Valve TAVR Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -222,9 +222,9 @@
       "name": "SH-VALVE-IN-VALVE"
     },
     {
-      "bodyEndLine": 10278,
-      "bodyStartLine": 10256,
-      "commentLine": 10247,
+      "bodyEndLine": 10290,
+      "bodyStartLine": 10268,
+      "commentLine": 10259,
       "commentLiteral": "// SH-ASD: ASD Closure Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -233,9 +233,9 @@
       "name": "SH-ASD"
     },
     {
-      "bodyEndLine": 10308,
-      "bodyStartLine": 10287,
-      "commentLine": 10280,
+      "bodyEndLine": 10320,
+      "bodyStartLine": 10299,
+      "commentLine": 10292,
       "commentLiteral": "// SH-VSD: VSD Closure Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -244,9 +244,9 @@
       "name": "SH-VSD"
     },
     {
-      "bodyEndLine": 10341,
-      "bodyStartLine": 10319,
-      "commentLine": 10310,
+      "bodyEndLine": 10353,
+      "bodyStartLine": 10331,
+      "commentLine": 10322,
       "commentLiteral": "// SH-COARCTATION: Coarctation of Aorta Follow-up",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -255,9 +255,9 @@
       "name": "SH-COARCTATION"
     },
     {
-      "bodyEndLine": 10373,
-      "bodyStartLine": 10352,
-      "commentLine": 10343,
+      "bodyEndLine": 10385,
+      "bodyStartLine": 10364,
+      "commentLine": 10355,
       "commentLiteral": "// SH-FONTAN: Fontan Surveillance",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -266,9 +266,9 @@
       "name": "SH-FONTAN"
     },
     {
-      "bodyEndLine": 10408,
-      "bodyStartLine": 10386,
-      "commentLine": 10375,
+      "bodyEndLine": 10420,
+      "bodyStartLine": 10398,
+      "commentLine": 10387,
       "commentLiteral": "// SH-CARCINOID: Carcinoid Valve Disease Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -299,7 +299,7 @@
       "levelOfEvidence": "A",
       "name": "TAVR Evaluation for Severe AS",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 336
+      "registryLine": 348
     },
     {
       "classOfRecommendation": "1",
@@ -309,7 +309,7 @@
       "levelOfEvidence": "B",
       "name": "Mitral Valve Intervention Evaluation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 780
+      "registryLine": 792
     },
     {
       "classOfRecommendation": "2a",
@@ -319,7 +319,7 @@
       "levelOfEvidence": "C",
       "name": "Tricuspid Valve Assessment",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 792
+      "registryLine": 804
     },
     {
       "classOfRecommendation": "1",
@@ -329,7 +329,7 @@
       "levelOfEvidence": "B",
       "name": "Structural Heart Imaging Follow-up",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 804
+      "registryLine": 816
     },
     {
       "classOfRecommendation": "1",
@@ -339,7 +339,7 @@
       "levelOfEvidence": "B",
       "name": "Post-TAVR Follow-up",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 816
+      "registryLine": 828
     },
     {
       "classOfRecommendation": "2a",
@@ -349,7 +349,7 @@
       "levelOfEvidence": "B",
       "name": "Endocarditis Prophylaxis Review",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 828
+      "registryLine": 840
     },
     {
       "classOfRecommendation": "2a",
@@ -359,7 +359,7 @@
       "levelOfEvidence": "B",
       "name": "Left Atrial Appendage Assessment",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 840
+      "registryLine": 852
     },
     {
       "classOfRecommendation": "2a",
@@ -369,7 +369,7 @@
       "levelOfEvidence": "B",
       "name": "PFO Closure Evaluation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 852
+      "registryLine": 864
     },
     {
       "classOfRecommendation": "2a",
@@ -379,7 +379,7 @@
       "levelOfEvidence": "B-R",
       "name": "MitraClip Evaluation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1548
+      "registryLine": 1560
     },
     {
       "classOfRecommendation": "2a",
@@ -389,7 +389,7 @@
       "levelOfEvidence": "C",
       "name": "Transcatheter Mitral Valve Replacement Candidacy",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1560
+      "registryLine": 1572
     },
     {
       "classOfRecommendation": "2b",
@@ -399,7 +399,7 @@
       "levelOfEvidence": "C",
       "name": "Tricuspid Intervention Evaluation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1572
+      "registryLine": 1584
     },
     {
       "classOfRecommendation": "1",
@@ -409,7 +409,7 @@
       "levelOfEvidence": "B",
       "name": "Paravalvular Leak Assessment",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1584
+      "registryLine": 1596
     },
     {
       "classOfRecommendation": "1",
@@ -419,7 +419,7 @@
       "levelOfEvidence": "C",
       "name": "Adult Congenital Heart Disease Screen",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1596
+      "registryLine": 1608
     },
     {
       "classOfRecommendation": "2a",
@@ -429,7 +429,7 @@
       "levelOfEvidence": "B",
       "name": "Alcohol Septal Ablation Candidacy",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1608
+      "registryLine": 1620
     },
     {
       "classOfRecommendation": "1",
@@ -439,7 +439,7 @@
       "levelOfEvidence": "B",
       "name": "WATCHMAN Device Follow-up",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1620
+      "registryLine": 1632
     },
     {
       "classOfRecommendation": "1",
@@ -449,7 +449,7 @@
       "levelOfEvidence": "B",
       "name": "3D Echo for Structural Planning",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1632
+      "registryLine": 1644
     },
     {
       "classOfRecommendation": "1",
@@ -459,7 +459,7 @@
       "levelOfEvidence": "B",
       "name": "Bicuspid Aortic Valve Surveillance",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2076
+      "registryLine": 2088
     },
     {
       "classOfRecommendation": "2b",
@@ -469,7 +469,7 @@
       "levelOfEvidence": "C",
       "name": "Ross Procedure Candidacy",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2088
+      "registryLine": 2100
     },
     {
       "classOfRecommendation": "2a",
@@ -479,7 +479,7 @@
       "levelOfEvidence": "B-NR",
       "name": "Valve-in-Valve TAVR Evaluation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2100
+      "registryLine": 2112
     },
     {
       "classOfRecommendation": "1",
@@ -489,7 +489,7 @@
       "levelOfEvidence": "B",
       "name": "ASD Closure Evaluation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2112
+      "registryLine": 2124
     },
     {
       "classOfRecommendation": "1",
@@ -499,7 +499,7 @@
       "levelOfEvidence": "B",
       "name": "VSD Closure Evaluation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2124
+      "registryLine": 2136
     },
     {
       "classOfRecommendation": "1",
@@ -509,7 +509,7 @@
       "levelOfEvidence": "B",
       "name": "Coarctation Follow-up",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2136
+      "registryLine": 2148
     },
     {
       "classOfRecommendation": "1",
@@ -519,7 +519,7 @@
       "levelOfEvidence": "B",
       "name": "Fontan Surveillance",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2148
+      "registryLine": 2160
     },
     {
       "classOfRecommendation": "1",
@@ -529,7 +529,7 @@
       "levelOfEvidence": "B",
       "name": "Carcinoid Valve Disease Screen",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2160
+      "registryLine": 2172
     }
   ]
 }

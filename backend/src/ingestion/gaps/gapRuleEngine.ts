@@ -321,6 +321,18 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'B',
   },
   {
+    id: 'gap-ep-017-hfref-non-dhp-ccb',
+    name: 'AF + non-DHP CCB in HFrEF (SAFETY)',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2022 AHA/ACC/HFSA Heart Failure Guideline + 2023 ACC/AHA/ACCP/HRS AF Guideline',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC/HFSA',
+    lastReviewDate: '2026-05-05',
+    nextReviewDue: '2026-11-05',
+    classOfRecommendation: '3 (Harm)',
+    levelOfEvidence: 'B',
+  },
+  {
     id: 'gap-cad-cardiac-rehab',
     name: 'Cardiac Rehab Referral in CAD',
     module: 'CORONARY_INTERVENTION',
