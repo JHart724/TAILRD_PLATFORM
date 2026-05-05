@@ -695,7 +695,7 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 - **Phase:** Operational debt / Phase 1 prep
 - **Severity:** LOW (P3) — not urgent but tracked
 - **Status:** OPEN
-- **Tier:** 3
+- **Tier:** B
 - **Detected:** 2026-05-05 during register batch inventory
 - **Evidence:** Node 18 LTS support ended 2025-04-30 per Node release schedule. Current repo CI runs Node 18 (`.github/workflows/ci.yml` line 14: `NODE_VERSION: '18'`). All CI workflows including the new `auditCanonical.yml` use Node 18. Continuing on EOL Node version blocks security patches and produces CI noise as ecosystem moves to Node 20+ as baseline.
 - **Severity rationale:** operational debt; no immediate production risk (production runs in container with pinned Node from Dockerfile, not from CI runner). Risk grows as upstream packages start dropping Node 18 support.
