@@ -191,7 +191,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
 
   it.each([
     ['HF', 'HEART_FAILURE', 48],
-    ['EP', 'ELECTROPHYSIOLOGY', 45],
+    ['EP', 'ELECTROPHYSIOLOGY', 46],
     ['SH', 'STRUCTURAL_HEART', 25],
     ['CAD', 'CORONARY_INTERVENTION', 76],
     ['VHD', 'VALVULAR_DISEASE', 32],
@@ -201,12 +201,12 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     expect(registry.length).toBe(count);
   });
 
-  it('VHD evaluator extraction includes VD-PANNUS at line 10414', () => {
+  it('VHD evaluator extraction includes VD-PANNUS at line 10426', () => {
     const cfg = MODULE_CONFIGS.find((m) => m.code === 'VHD')!;
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(10414);
+    expect(pannus!.commentLine).toBe(10426);
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });

@@ -54,7 +54,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-016** — No PHI key rotation pattern (Phase 2B, OPEN)
 - **AUDIT-031** — GAP-EP-079: pre-excited AF + AVN blocker (CRITICAL SAFETY, uncovered) (Phase 0B EP, OPEN, **Tier S**)
 - **AUDIT-032** — GAP-EP-006: dabigatran in CrCl<30 (SAFETY, uncovered) (Phase 0B EP, OPEN, **Tier S**)
-- **AUDIT-033** — GAP-EP-017: HFrEF + non-DHP CCB SAFETY — registry entry deferred (Phase 0B EP, OPEN, **Tier S**, trivial fix)
+- **AUDIT-033** — GAP-EP-017: HFrEF + non-DHP CCB SAFETY (Phase 0B EP, **RESOLVED 2026-05-05** via registry-entry-add; closes Tier S item — queue 4→3)
 - **AUDIT-034** — GAP-CAD-016: prasugrel + stroke/TIA SAFETY — PARTIAL needs hardening (Phase 0B CAD, OPEN, **Tier S**)
 
 ### MEDIUM (P2)
@@ -602,19 +602,20 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 - **Phase:** 0B EP clinical audit (related: PR #229 EP-XX-7 mitigation)
 - **Severity:** HIGH (P1) — patient safety, spec-explicit `(SAFETY)`
-- **Status:** OPEN — automatic Tier S; **trivial fix path** (registry entry only)
+- **Status:** **RESOLVED 2026-05-05** via registry-entry-add (this PR). Tier S queue reduced from 4 to 3.
 - **Tier:** S
 - **Detected:** 2026-05-04 via canonical audit infrastructure (correction of earlier "naming collision" interpretation)
-- **Evidence:** spec line 339 (CK v4.0 §6.2) text "AF + non-DHP CCB in HFrEF (SAFETY). HFrEF on verapamil/diltiazem". Evaluator block `EP-017` at line 4797 in `gapRuleEngine.ts` (added in PR #229 / commit 9ac3806) DOES detect this scenario at runtime — fires SAFETY gap with Class 3 (Harm) classification when HFrEF + on diltiazem (RxNorm 3443) or verapamil (RxNorm 11170). However, no registry entry exists for `gap-ep-017` (intentionally deferred per CLAUDE.md observation 'v'). Canonical `EP.crosswalk.json` shows SPEC_ONLY at registry-audit level.
-- **Severity rationale:** patient-safety risk at the audit/registry level; runtime detection IS active (mitigated by PR #229), but the missing registry entry means the gap is invisible to gap-rule provenance tooling and validateCrosswalk gate.
-- **Remediation:** add registry entry `gap-ep-017-hfref-non-dhp-ccb` to `RUNTIME_GAP_REGISTRY` array in `gapRuleEngine.ts`. Pairs with existing evaluator. Re-run extractCode + reconcile + render. Closes Tier S item with ~5-10 min agent work + a small PR. **Recommended FIRST Tier S mitigation PR.** Trivial scope closes the spec-explicit Tier S item via registry-entry-add only; the evaluator block already exists from PR #229. After this lands, Tier S queue reduces from 4 to 3 items.
-- **Effort estimate:** XS (~10 min agent + tests)
+- **Evidence:** spec line 339 (CK v4.0 §6.2) text "AF + non-DHP CCB in HFrEF (SAFETY). HFrEF on verapamil/diltiazem". Evaluator block `EP-017` at line 4809 in `gapRuleEngine.ts` (added in PR #229 / commit 9ac3806) detects this scenario at runtime — fires SAFETY gap with Class 3 (Harm) classification when HFrEF + on diltiazem (RxNorm 3443) or verapamil (RxNorm 11170). Pre-resolution: no registry entry existed (intentionally deferred per CLAUDE.md observation 'v'); canonical `EP.crosswalk.json` showed SPEC_ONLY at registry-audit level despite runtime detection active.
+- **Severity rationale:** patient-safety risk at the audit/registry level; runtime detection was active (mitigated by PR #229), but the missing registry entry meant the gap was invisible to gap-rule provenance tooling and validateCrosswalk gate.
+- **Resolution:** Added registry entry `gap-ep-017-hfref-non-dhp-ccb` to `RUNTIME_GAP_REGISTRY` array in `gapRuleEngine.ts` at line 324. Pairs with existing evaluator block `EP-017`. Canonical pipeline regenerated: `EP.code.json` registry count 45 → 46; `EP.reconciliation.json` evaluatorOrphans removed `EP-017`; `EP.crosswalk.json` row GAP-EP-017 promoted SPEC_ONLY → DET_OK with proper cite; `PHASE_0B_CROSS_MODULE_SYNTHESIS.md` Tier S queue 4 → 3 items (EP-079, EP-006, CAD-016 remain).
+- **Effort estimate:** RESOLVED (~10 min agent including this register update)
 - **Cross-references:**
   - PR #229 (the EP-XX-7 mitigation that added the evaluator)
-  - CLAUDE.md observation 'v' (deferred registry update)
-  - `docs/audit/canonical/EP.crosswalk.json` row GAP-EP-017
+  - CLAUDE.md observation 'v' (deferred registry update — now closed)
+  - `docs/audit/canonical/EP.crosswalk.json` row GAP-EP-017 (DET_OK with cite)
   - AUDIT-027 (rule-engine reconciliation expanded scope)
-  - PR #234
+  - PR #234 (canonical infrastructure that surfaced this gap)
+  - This PR (registry-entry-add fix)
 
 ---
 

@@ -6,7 +6,7 @@
   "matches": [
     {
       "evaluatorBlockName": "SH-1",
-      "evaluatorCommentLine": 4603,
+      "evaluatorCommentLine": 4615,
       "matchConfidence": 0.429,
       "matchMethod": "similarity",
       "registryId": "gap-sh-1-as-surveillance",
@@ -14,195 +14,195 @@
     },
     {
       "evaluatorBlockName": "SH-2",
-      "evaluatorCommentLine": 4923,
+      "evaluatorCommentLine": 4935,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-sh-2-tavr-eval",
-      "registryLine": 336
+      "registryLine": 348
     },
     {
       "evaluatorBlockName": "SH-3",
-      "evaluatorCommentLine": 4988,
+      "evaluatorCommentLine": 5000,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-sh-3-mitral-intervention",
-      "registryLine": 780
-    },
-    {
-      "evaluatorBlockName": "SH-4",
-      "evaluatorCommentLine": 5022,
-      "matchConfidence": 0.6,
-      "matchMethod": "similarity",
-      "registryId": "gap-sh-4-tricuspid-assessment",
       "registryLine": 792
     },
     {
-      "evaluatorBlockName": "SH-5",
-      "evaluatorCommentLine": 5057,
-      "matchConfidence": 0.714,
+      "evaluatorBlockName": "SH-4",
+      "evaluatorCommentLine": 5034,
+      "matchConfidence": 0.6,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-5-structural-imaging",
+      "registryId": "gap-sh-4-tricuspid-assessment",
       "registryLine": 804
     },
     {
-      "evaluatorBlockName": "SH-6",
-      "evaluatorCommentLine": 5089,
-      "matchConfidence": 0.75,
+      "evaluatorBlockName": "SH-5",
+      "evaluatorCommentLine": 5069,
+      "matchConfidence": 0.714,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-6-post-tavr-followup",
+      "registryId": "gap-sh-5-structural-imaging",
       "registryLine": 816
     },
     {
-      "evaluatorBlockName": "SH-7",
-      "evaluatorCommentLine": 5119,
-      "matchConfidence": 0.6,
+      "evaluatorBlockName": "SH-6",
+      "evaluatorCommentLine": 5101,
+      "matchConfidence": 0.75,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-7-endocarditis-prophylaxis",
+      "registryId": "gap-sh-6-post-tavr-followup",
       "registryLine": 828
     },
     {
-      "evaluatorBlockName": "SH-8",
-      "evaluatorCommentLine": 5153,
-      "matchConfidence": 0.667,
+      "evaluatorBlockName": "SH-7",
+      "evaluatorCommentLine": 5131,
+      "matchConfidence": 0.6,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-8-laa-assessment",
+      "registryId": "gap-sh-7-endocarditis-prophylaxis",
       "registryLine": 840
     },
     {
-      "evaluatorBlockName": "SH-9",
-      "evaluatorCommentLine": 5182,
-      "matchConfidence": 0.6,
+      "evaluatorBlockName": "SH-8",
+      "evaluatorCommentLine": 5165,
+      "matchConfidence": 0.667,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-9-pfo-closure",
+      "registryId": "gap-sh-8-laa-assessment",
       "registryLine": 852
     },
     {
+      "evaluatorBlockName": "SH-9",
+      "evaluatorCommentLine": 5194,
+      "matchConfidence": 0.6,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-9-pfo-closure",
+      "registryLine": 864
+    },
+    {
       "evaluatorBlockName": "SH-10",
-      "evaluatorCommentLine": 6059,
+      "evaluatorCommentLine": 6071,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-sh-10-mitraclip",
-      "registryLine": 1548
-    },
-    {
-      "evaluatorBlockName": "SH-11",
-      "evaluatorCommentLine": 6089,
-      "matchConfidence": 0.75,
-      "matchMethod": "similarity",
-      "registryId": "gap-sh-11-tmvr",
       "registryLine": 1560
     },
     {
-      "evaluatorBlockName": "SH-12",
-      "evaluatorCommentLine": 6116,
-      "matchConfidence": 0.667,
+      "evaluatorBlockName": "SH-11",
+      "evaluatorCommentLine": 6101,
+      "matchConfidence": 0.75,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-12-ttvr",
+      "registryId": "gap-sh-11-tmvr",
       "registryLine": 1572
     },
     {
-      "evaluatorBlockName": "SH-13",
-      "evaluatorCommentLine": 6147,
-      "matchConfidence": 0.5,
+      "evaluatorBlockName": "SH-12",
+      "evaluatorCommentLine": 6128,
+      "matchConfidence": 0.667,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-13-paravalvular-leak",
+      "registryId": "gap-sh-12-ttvr",
       "registryLine": 1584
     },
     {
-      "evaluatorBlockName": "SH-14",
-      "evaluatorCommentLine": 6176,
-      "matchConfidence": 0.75,
+      "evaluatorBlockName": "SH-13",
+      "evaluatorCommentLine": 6159,
+      "matchConfidence": 0.5,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-14-congenital-adult",
+      "registryId": "gap-sh-13-paravalvular-leak",
       "registryLine": 1596
     },
     {
-      "evaluatorBlockName": "SH-15",
-      "evaluatorCommentLine": 6204,
-      "matchConfidence": 0.714,
+      "evaluatorBlockName": "SH-14",
+      "evaluatorCommentLine": 6188,
+      "matchConfidence": 0.75,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-15-alcohol-septal",
+      "registryId": "gap-sh-14-congenital-adult",
       "registryLine": 1608
     },
     {
-      "evaluatorBlockName": "SH-16",
-      "evaluatorCommentLine": 6233,
+      "evaluatorBlockName": "SH-15",
+      "evaluatorCommentLine": 6216,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-16-watchman-fu",
+      "registryId": "gap-sh-15-alcohol-septal",
       "registryLine": 1620
     },
     {
-      "evaluatorBlockName": "SH-17",
-      "evaluatorCommentLine": 6259,
+      "evaluatorBlockName": "SH-16",
+      "evaluatorCommentLine": 6245,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-17-3d-echo",
+      "registryId": "gap-sh-16-watchman-fu",
       "registryLine": 1632
     },
     {
+      "evaluatorBlockName": "SH-17",
+      "evaluatorCommentLine": 6271,
+      "matchConfidence": 0.714,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-17-3d-echo",
+      "registryLine": 1644
+    },
+    {
       "evaluatorBlockName": "SH-BICUSPID",
-      "evaluatorCommentLine": 10153,
+      "evaluatorCommentLine": 10165,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-sh-bicuspid-surveillance",
-      "registryLine": 2076
-    },
-    {
-      "evaluatorBlockName": "SH-ROSS",
-      "evaluatorCommentLine": 10183,
-      "matchConfidence": 0.6,
-      "matchMethod": "similarity",
-      "registryId": "gap-sh-ross-procedure",
       "registryLine": 2088
     },
     {
-      "evaluatorBlockName": "SH-VALVE-IN-VALVE",
-      "evaluatorCommentLine": 10214,
+      "evaluatorBlockName": "SH-ROSS",
+      "evaluatorCommentLine": 10195,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-valve-in-valve",
+      "registryId": "gap-sh-ross-procedure",
       "registryLine": 2100
     },
     {
-      "evaluatorBlockName": "SH-ASD",
-      "evaluatorCommentLine": 10247,
+      "evaluatorBlockName": "SH-VALVE-IN-VALVE",
+      "evaluatorCommentLine": 10226,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-asd-closure",
+      "registryId": "gap-sh-valve-in-valve",
       "registryLine": 2112
     },
     {
-      "evaluatorBlockName": "SH-VSD",
-      "evaluatorCommentLine": 10280,
+      "evaluatorBlockName": "SH-ASD",
+      "evaluatorCommentLine": 10259,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-vsd-closure",
+      "registryId": "gap-sh-asd-closure",
       "registryLine": 2124
     },
     {
-      "evaluatorBlockName": "SH-COARCTATION",
-      "evaluatorCommentLine": 10310,
-      "matchConfidence": 0.5,
+      "evaluatorBlockName": "SH-VSD",
+      "evaluatorCommentLine": 10292,
+      "matchConfidence": 0.6,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-coarctation",
+      "registryId": "gap-sh-vsd-closure",
       "registryLine": 2136
     },
     {
-      "evaluatorBlockName": "SH-FONTAN",
-      "evaluatorCommentLine": 10343,
+      "evaluatorBlockName": "SH-COARCTATION",
+      "evaluatorCommentLine": 10322,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-fontan-surveillance",
+      "registryId": "gap-sh-coarctation",
       "registryLine": 2148
     },
     {
+      "evaluatorBlockName": "SH-FONTAN",
+      "evaluatorCommentLine": 10355,
+      "matchConfidence": 0.5,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-fontan-surveillance",
+      "registryLine": 2160
+    },
+    {
       "evaluatorBlockName": "SH-CARCINOID",
-      "evaluatorCommentLine": 10375,
+      "evaluatorCommentLine": 10387,
       "matchConfidence": 0.583,
       "matchMethod": "similarity",
       "registryId": "gap-sh-carcinoid-valve",
-      "registryLine": 2160
+      "registryLine": 2172
     }
   ],
   "module": "SH",

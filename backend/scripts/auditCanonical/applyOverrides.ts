@@ -52,6 +52,12 @@ const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
       auditNote:
         'MANUAL OVERRIDE: cross-module satisfaction. GAP-EP-007 (DOAC on mechanical valve, CRITICAL SAFETY) is satisfied by VHD module evaluator VD-6 (gap-vd-6-doac-mechanical-valve, line 5312+) which fires on mechanical valve + DOAC RxNorm with explicit RE-ALIGN trial citation Class 3 Harm. Same clinical rule covers GAP-VHD-005 in VHD module. Auto-classifier picked SH-VALVE-IN-VALVE based on "valve" token similarity — wrong match. Architectural fragility documented at AUDIT-027 expanded scope (single rule satisfies spec gaps in two modules).',
     },
+    'GAP-EP-017': {
+      classification: 'DET_OK',
+      registryId: 'gap-ep-017-hfref-non-dhp-ccb',
+      auditNote:
+        'MANUAL OVERRIDE: AUDIT-033 RESOLVED 2026-05-05 — registry entry gap-ep-017-hfref-non-dhp-ccb added (this PR); evaluator at line 4797 fires SAFETY gap with Class 3 (Harm) classification when HFrEF + on diltiazem (RxNorm 3443) or verapamil (RxNorm 11170). Closes Tier S queue item. Override pin preserved for stability against auto-classifier similarity scoring drift.',
+    },
     'GAP-EP-026': {
       classification: 'PARTIAL_DETECTION',
       registryId: 'gap-ep-lqts-bb',

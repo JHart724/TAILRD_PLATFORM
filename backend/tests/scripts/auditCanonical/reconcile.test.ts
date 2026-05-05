@@ -159,12 +159,14 @@ describe('reconcile — full integration on canonical extracts', () => {
     expect(r.evaluatorOrphans).toHaveLength(0);
   });
 
-  it('EP reconciliation surfaces gap-ep-anticoag-interruption registry orphan + EP-017 evaluator orphan', () => {
+  it('EP reconciliation surfaces gap-ep-anticoag-interruption registry orphan (EP-017 evaluator paired post-AUDIT-033 fix)', () => {
     const cfg = MODULE_CONFIGS.find((m) => m.code === 'EP')!;
     const r = buildReconciliation(specs.get('EP')!, codes.get('EP')!, cfg.codePrefix);
     expect(r.status).toBe('DIVERGENT');
     expect(r.registryOrphans.find((o) => o.registryId === 'gap-ep-anticoag-interruption')).toBeDefined();
-    expect(r.evaluatorOrphans.find((o) => o.evaluatorBlockName === 'EP-017')).toBeDefined();
+    // Post-AUDIT-033 (registry entry gap-ep-017-hfref-non-dhp-ccb added): EP-017 evaluator
+    // is now paired to its registry entry. No longer an orphan.
+    expect(r.evaluatorOrphans.find((o) => o.evaluatorBlockName === 'EP-017')).toBeUndefined();
   });
 
   it('CAD reconciliation surfaces gap-50-dapt naming mismatch', () => {
