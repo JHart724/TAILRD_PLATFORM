@@ -96,6 +96,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-061** — `RXNORM_WARFARIN.WARFARIN_10MG = '855332'` is actually warfarin 5mg tablet (label only) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
 - **AUDIT-038** — Node 18 LTS deprecation tracking (Operational debt, OPEN)
 - **AUDIT-040** — Line-shift handling in canonical pipeline (Operational debt / canonical infrastructure, **RESOLVED 2026-05-05** via refreshCites.ts)
+- **AUDIT-041** — `applyOverrides.ts` candidate-default mismatch with source-change PR usage (4 prior recurrences across PRs #238/240/241/243) (Canonical infrastructure, **RESOLVED 2026-05-06** via canonical-default flag flip + `--candidate` opt-in)
 
 ### INFO
 
@@ -801,6 +802,34 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
   - PR #234 (canonical infrastructure that established the cite-line-number invariants)
   - This PR (`refreshCites.ts` permanent script + AUDIT_METHODOLOGY.md §10.4 + workflow Gate 5 hint)
   - `backend/scripts/auditCanonical/verifyDraft.ts:357-358` (preserve-cite logic that produced stale line numbers; not modified by this PR — `refreshCites` is a separate concern from verify)
+
+---
+
+### AUDIT-041 — `applyOverrides.ts` candidate-default mismatch with source-change PR usage
+
+- **Phase:** Canonical infrastructure
+- **Severity:** LOW (P3) — pipeline ergonomics; no production / patient-safety impact (overrides are documentation/classification, not runtime logic)
+- **Status:** **RESOLVED 2026-05-06** via canonical-default flag flip in `applyOverrides.ts` + `--candidate` opt-in (this PR)
+- **Tier:** B
+- **Detected:** 2026-05-04 (first surfaced during PR #238 work; recurred 4 times before architectural fix)
+- **Evidence:** `applyOverrides.ts` (pre-fix) read and wrote `<MODULE>.crosswalk.candidate.json` only. The committed canonical artifact is `<MODULE>.crosswalk.json`. Two distinct flows existed but the script served only one:
+  - **Initial baseline flow** (one-shot per module, ran during PR #234): `verifyDraft → candidate → applyOverrides → manual promote candidate→canonical`. applyOverrides correctly modifies candidate.
+  - **Source-change PR flow** (95% of usage; Tier S series, Cat A corrections): `extractCode → extractSpec → reconcile → refreshCites → applyOverrides → renderAddendum → renderSynthesis → validateCanonical`. applyOverrides writes candidate but **canonical is never updated**. Forced manual canonical patches across 4 PRs:
+    - PR #238 (AUDIT-033 EP-017) — partial; some override prose drifted
+    - PR #240 (AUDIT-034 CAD-016) — manual canonical patch via Edit tool
+    - PR #241 (AUDIT-032 EP-006) — manual canonical patch via Edit tool
+    - PR #243 (AUDIT-031 EP-079) — manual canonical patch via Edit tool
+  - Hit rate on candidate-default for source-change PRs: **0/4 (100% miss)**.
+- **Severity rationale:** ergonomic gap — every Tier S / source-change PR required a manual canonical patch step that's easy to forget. No clinical or production risk; override pins are commentary that aids canonical consumers (renderAddendum, validateCanonical) but don't change rule runtime behavior. The recurring pattern was tracked across 4 PRs as architectural debt before this fix.
+- **Resolution:** inverted defaults in `backend/scripts/auditCanonical/applyOverrides.ts` per design option (c). Before: `applyOverrides --module EP` writes candidate. After: `applyOverrides --module EP` writes canonical (the common path). Legacy candidate workflow remains accessible via explicit `--candidate` flag for the rare verifyDraft baseline cycle. JSDoc header updated. AUDIT_METHODOLOGY.md §9.1 documents the new convention. 6 unit tests in `tests/scripts/auditCanonical/applyOverrides.test.ts` cover canonical-default mode, --candidate opt-in mode, idempotency (byte-identical re-run via `stableStringify`), missing target file graceful skip, no-op-overrides modules (SH/PV with empty OVERRIDES), and `--all` cross-module deterministic iteration. Hard gate validated pre-flip: no automated caller (CI workflows, package.json scripts, README quickstarts) depended on candidate-default.
+- **Architectural note:** candidate files are now stale relative to canonical (the 4 prior Tier S override pins live in canonical only). Per verifyDraft.ts logic, the candidate is always regenerated from scratch when a verifyDraft cycle runs — staleness has no operational impact and is cosmetic only.
+- **Effort estimate:** RESOLVED (~30-45 min agent including hard-gate consumer audit, flag flip, 6 tests, methodology section, register entry, no-op pipeline validation)
+- **Cross-references:**
+  - PRs #238, #240, #241, #243 (4 prior recurrences cited above)
+  - PR #234 (canonical infrastructure baseline that introduced the dual-file architecture)
+  - `docs/audit/AUDIT_METHODOLOGY.md` §9.1 (new section documenting canonical-default convention)
+  - `backend/scripts/auditCanonical/applyOverrides.ts` (the script itself, with inline AUDIT-041 reference)
+  - This PR (canonical-default flag flip + --candidate opt-in + 6 tests + methodology update)
 
 ---
 

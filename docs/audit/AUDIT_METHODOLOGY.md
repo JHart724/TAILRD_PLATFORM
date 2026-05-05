@@ -569,6 +569,19 @@ See §10.
 
 Each step has explicit inputs (what files), outputs (what files), and pause points (where operator review is required). See PHASE_0_AUDIT_INFRASTRUCTURE.md for the implementation plan.
 
+### 9.1 applyOverrides target-file convention (AUDIT-041, 2026-05-06)
+
+`applyOverrides.ts` writes manual classification override pins to crosswalk rows. Two flows exist:
+
+| Flow | When | Default? | Invocation |
+|---|---|---|---|
+| **Canonical** | Source-change PRs (Tier S series, Cat A corrections) — 95% of usage | DEFAULT | `npx tsx applyOverrides.ts --module <CODE>` or `--all` |
+| **Candidate** | One-shot verifyDraft baseline cycle (initial crosswalk creation per module) | opt-in | `npx tsx applyOverrides.ts --module <CODE> --candidate` |
+
+Pre-AUDIT-041 the script defaulted to candidate-write, which forced 4 manual canonical patches across PRs #238/240/241/243 because source-change PRs never reached the candidate→canonical promote step. AUDIT-041 (PR #245, 2026-05-06) inverted the default to canonical-write because the real-usage hit rate on candidate-default was 0/4 (100% miss). The legacy candidate workflow remains accessible via the explicit `--candidate` flag for the rare baseline cycle.
+
+**Idempotency:** override application produces byte-identical output via `stableStringify` when re-run on already-applied state. No double-patching risk in either flow.
+
 ---
 
 ## 10. CI enforcement model
