@@ -42,6 +42,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 
 ### HIGH (P1)
 
+- **AUDIT-039** — axios HIGH-severity CVE cluster (5 advisories 2026-05-04) (Operational deps, **RESOLVED 2026-05-05** via axios 1.15.0 → 1.16.0)
 - **AUDIT-002** — 406 `: any` usages, 779 ESLint warnings concentrated in PHI code (Phase 1, OPEN)
 - **AUDIT-003** — 69 `console.*` in production code; 16 in `server.ts` (Phase 1, OPEN)
 - **AUDIT-009** — `requireMFA` is opt-in per user (Phase 2A, **DEPLOYED 2026-04-30**; flag-off pending controlled rollout; reproduces tech debt #3)
@@ -495,6 +496,29 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
   - PR #220, PR #221 (the incident)
   - BSW pilot risk
   - **`AUDIT_025_DESIGN.md` §12.4** proposes an actionable template change for future audit design docs (Pre-flight inventory checklist, scope-speculative tagging on mid-incident register entries). Worth adopting across audits.
+
+---
+
+### AUDIT-039 — axios HIGH-severity CVE cluster (5 new advisories 2026-05-04)
+
+- **Phase:** Operational dependency security
+- **Severity:** HIGH (P1) — patient/operator data security; multiple CVE pathways
+- **Status:** **RESOLVED 2026-05-05** via axios 1.15.0 → 1.16.0 upgrade (this PR)
+- **Tier:** B
+- **Detected:** 2026-05-05 via Security Audit gate failure on PR #235 (chore/step-i-register-batch)
+- **Evidence:** 5 newly-published advisories affecting axios 1.0.0 – 1.15.1:
+  - GHSA-w9j2-pvgh-6h63 — Authentication Bypass via Prototype Pollution Gadget in `validateStatus` Merge Strategy
+  - GHSA-pmwg-cvhr-8vh7 — Incomplete Fix for CVE-2025-62718, NO_PROXY Protection Bypassed via RFC 1122 Loopback Subnet (127.0.0.0/8)
+  - GHSA-3w6x-2g7m-8v23 — Invisible JSON Response Tampering via Prototype Pollution Gadget in `parseReviver`
+  - GHSA-q8qp-cvcw-x6jj — Prototype pollution read-side gadgets in HTTP adapter that allow credential injection and request hijacking
+  - GHSA-xhjh-pmcv-23jw — Null Byte Injection via Reverse-Encoding in `AxiosURLSearchParams`
+- **Severity rationale:** patient/operator data security; auth bypass + prototype pollution + credential injection are all in the HTTP adapter chain. TAILRD uses axios for Redox webhooks + outbound HTTP calls.
+- **Remediation:** `npm audit fix` upgrades axios 1.15.0 → 1.16.0 (non-breaking semver minor; package.json `^1.6.0` constraint preserved). Transitive dep `follow-redirects` ^1.15.11 → ^1.16.0. Verified `npm audit --audit-level=high` returns exit 0 after fix.
+- **Effort estimate:** XS (~10 min agent including this register entry)
+- **Cross-references:**
+  - PR #235 Security Audit failure (`gh run view 25351630120 --log-failed` on chore/step-i-register-batch)
+  - This PR (axios upgrade)
+  - AUDIT-007 (existing moderate uuid/node-cron advisories — distinct chain, separate remediation)
 
 ---
 
