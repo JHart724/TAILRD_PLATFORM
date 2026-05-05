@@ -1,47 +1,28 @@
 {
   "countDivergences": [
     {
-      "delta": -1,
-      "explanation": "-1 extra gaps.push call(s) vs evaluator block count. 1 compound-comment block(s) account for 1 extras. -2 unexplained — investigate.",
+      "delta": 2,
+      "explanation": "2 extra gaps.push call(s) vs evaluator block count. 1 compound-comment block(s) account for 1 extras. 1 unexplained — investigate.",
       "kind": "GAPS_PUSH_VS_EVALUATOR",
       "observed": {
-        "evaluatorCount": 50,
+        "evaluatorCount": 47,
         "gapsPushCount": 49,
         "registryCount": 48
       }
     },
     {
-      "delta": -2,
-      "explanation": "2 more evaluator blocks than registry entries. Suggests evaluator-without-registry case (e.g., EP-017 added in PR #229 without registry update).",
+      "delta": 1,
+      "explanation": "1 more registry entries than evaluator blocks. Suggests detection-without-registry rules OR registry-without-evaluator entries (look at orphan lists).",
       "kind": "REGISTRY_VS_EVALUATOR",
       "observed": {
-        "evaluatorCount": 50,
+        "evaluatorCount": 47,
         "gapsPushCount": 49,
         "registryCount": 48
       }
     }
   ],
-  "evaluatorBlockCount": 50,
-  "evaluatorOrphans": [
-    {
-      "commentLine": 9538,
-      "evaluatorBlockName": "AUDIT-050",
-      "reason": "No registry entry matched via similarity scoring",
-      "registryId": null
-    },
-    {
-      "commentLine": 9709,
-      "evaluatorBlockName": "AUDIT-049",
-      "reason": "No registry entry matched via similarity scoring",
-      "registryId": null
-    },
-    {
-      "commentLine": 9778,
-      "evaluatorBlockName": "AUDIT-049",
-      "reason": "No registry entry matched via similarity scoring",
-      "registryId": null
-    }
-  ],
+  "evaluatorBlockCount": 47,
+  "evaluatorOrphans": [],
   "gapsPushCount": 49,
   "matches": [
     {

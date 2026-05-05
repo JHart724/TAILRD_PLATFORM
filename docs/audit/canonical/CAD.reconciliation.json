@@ -1,41 +1,7 @@
 {
-  "countDivergences": [
-    {
-      "delta": -2,
-      "explanation": "-2 extra gaps.push call(s) without compound-comment block to account for them. Possible: registry-without-evaluator entry firing inline, OR evaluator block emitting multiple gaps.",
-      "kind": "GAPS_PUSH_VS_EVALUATOR",
-      "observed": {
-        "evaluatorCount": 79,
-        "gapsPushCount": 77,
-        "registryCount": 77
-      }
-    },
-    {
-      "delta": -2,
-      "explanation": "2 more evaluator blocks than registry entries. Suggests evaluator-without-registry case (e.g., EP-017 added in PR #229 without registry update).",
-      "kind": "REGISTRY_VS_EVALUATOR",
-      "observed": {
-        "evaluatorCount": 79,
-        "gapsPushCount": 77,
-        "registryCount": 77
-      }
-    }
-  ],
-  "evaluatorBlockCount": 79,
-  "evaluatorOrphans": [
-    {
-      "commentLine": 8023,
-      "evaluatorBlockName": "AUDIT-062",
-      "reason": "No registry entry matched via similarity scoring",
-      "registryId": null
-    },
-    {
-      "commentLine": 8025,
-      "evaluatorBlockName": "AUDIT-052",
-      "reason": "No registry entry matched via similarity scoring",
-      "registryId": null
-    }
-  ],
+  "countDivergences": [],
+  "evaluatorBlockCount": 77,
+  "evaluatorOrphans": [],
   "gapsPushCount": 77,
   "matches": [
     {
