@@ -471,3 +471,58 @@ describe('AUDIT-052: behavior preservation for refactored consumers', () => {
     expect(Object.values(cardio.RXNORM_DHP_CCB)).not.toContain('6918');
   });
 });
+
+// ============================================================
+// AUDIT-065 / 066 / 069 — LOINC clinical-concept corrections (Batch 5 partial)
+// Verified via loinc.org + NLM Clinical Tables per AUDIT_METHODOLOGY.md §16.
+// 3 wrong-concept LOINC codes corrected (silent-failure pattern in CDS rules):
+//   QTc safety rule monitored "EKG impression" instead of Q-T interval corrected (AUDIT-065)
+//   CRT eligibility rule read "QRS axis" (degrees) instead of QRS duration (ms) (AUDIT-066)
+//   LVEF was 18010-0 (unverifiable; not in NLM LOINC index) instead of 10230-1 (AUDIT-069)
+// AUDIT-067 (ABI_RIGHT) + AUDIT-068 (ABI_LEFT) deferred to dedicated architectural fix PR
+// (LOINC has no side-specific codes; FHIR bodySite handling requires consumer + ingestion review).
+// ============================================================
+
+describe('AUDIT-065: QTC_INTERVAL corrected to 8636-3 (was 8601-7 = "EKG impression")', () => {
+  it('canonical valueset uses verified Q-T interval corrected LOINC', () => {
+    expect(cardio.LOINC_CARDIOVASCULAR_LABS.QTC_INTERVAL).toBe('8636-3');
+    expect(cardio.LOINC_CARDIOVASCULAR_LABS.QTC_INTERVAL).not.toBe('8601-7');
+  });
+});
+
+describe('AUDIT-066: QRS_DURATION corrected to 8633-0 (was 8632-2 = "QRS axis")', () => {
+  it('canonical valueset uses verified QRS duration LOINC', () => {
+    expect(cardio.LOINC_CARDIOVASCULAR_LABS.QRS_DURATION).toBe('8633-0');
+    expect(cardio.LOINC_CARDIOVASCULAR_LABS.QRS_DURATION).not.toBe('8632-2');
+  });
+});
+
+describe('AUDIT-069: LVEF corrected to 10230-1 (was 18010-0 = unverifiable / not in NLM LOINC index)', () => {
+  it('canonical valueset uses verified LVEF LOINC', () => {
+    expect(cardio.LOINC_CARDIOVASCULAR_LABS.LVEF).toBe('10230-1');
+    expect(cardio.LOINC_CARDIOVASCULAR_LABS.LVEF).not.toBe('18010-0');
+  });
+});
+
+describe('AUDIT-065/066/069: drug-class separation negative tests', () => {
+  it('LOINC canonical does not include "EKG impression" code 8601-7 (the prior wrong QTc)', () => {
+    expect(Object.values(cardio.LOINC_CARDIOVASCULAR_LABS)).not.toContain('8601-7');
+  });
+  it('LOINC canonical does not include "QRS axis" code 8632-2 (the prior wrong QRS)', () => {
+    expect(Object.values(cardio.LOINC_CARDIOVASCULAR_LABS)).not.toContain('8632-2');
+  });
+  it('LOINC canonical does not include unverifiable LVEF code 18010-0 (the prior wrong LVEF)', () => {
+    expect(Object.values(cardio.LOINC_CARDIOVASCULAR_LABS)).not.toContain('18010-0');
+  });
+});
+
+describe('AUDIT-067/068: ABI codes — DEFERRED to architectural fix PR', () => {
+  it('ABI_RIGHT remains at known-broken 44974-4 pending dedicated PR', () => {
+    // Visibility: register entry AUDIT-067 documents this as known-broken.
+    // Architectural fix requires consumer audit + ingestion-layer FHIR bodySite review.
+    expect(cardio.LOINC_CARDIOVASCULAR_LABS.ABI_RIGHT).toBe('44974-4');
+  });
+  it('ABI_LEFT remains at known-broken 44975-1 pending dedicated PR', () => {
+    expect(cardio.LOINC_CARDIOVASCULAR_LABS.ABI_LEFT).toBe('44975-1');
+  });
+});

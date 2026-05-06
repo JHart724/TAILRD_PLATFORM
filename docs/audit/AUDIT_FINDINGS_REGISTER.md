@@ -70,6 +70,11 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-048** — `ARB_CODES` had 3 of 4 wrong drugs (eprosartan/telmisartan instead of valsartan/candesartan); silent ARB miss (Phase 0B Cat D, **RESOLVED 2026-05-06**)
 - **AUDIT-050** — `RATE_CONTROL_CODES_SVT = ['6918', '2991', '11170']` — 2991 is invalid CUI; SVT rate-control rule never matched diltiazem patients (Phase 0B Cat D, **RESOLVED 2026-05-06**)
 - **AUDIT-062** — `PPI_CODES_DAPT = ['7646', '36567', '40790', '283742']` — 36567 is simvastatin (statin in PPI list, drug-class collision); DAPT co-prescription rule false-fired on statin patients (Phase 0B Cat D, **RESOLVED 2026-05-06**)
+- **AUDIT-065** — `LOINC_CARDIOVASCULAR_LABS.QTC_INTERVAL = '8601-7'` is "EKG impression" (free-text concept), NOT Q-T interval; QTc safety rule silent-failed on real Q-T measurements (Phase 0B Batch 5, **RESOLVED 2026-05-06**)
+- **AUDIT-066** — `LOINC_CARDIOVASCULAR_LABS.QRS_DURATION = '8632-2'` is "QRS axis" (degrees), NOT QRS duration (ms); CRT eligibility rule (LVEF≤35 + QRS>150) read axis values as if duration — threshold >150 effectively never triggered (Phase 0B Batch 5, **RESOLVED 2026-05-06**)
+- **AUDIT-067** — `LOINC_CARDIOVASCULAR_LABS.ABI_RIGHT = '44974-4'` is "Pulse intensity of unspecified artery palpation", NOT ABI; PAD ABI screening silent-failed on real ABI measurements (Phase 0B Batch 5, **OPEN — architectural fix deferred to dedicated PR**, see detail block)
+- **AUDIT-068** — `LOINC_CARDIOVASCULAR_LABS.ABI_LEFT = '44975-1'` is "Q-T interval" (an EKG concept!), NOT ABI; same silent-failure mechanism as AUDIT-067 (Phase 0B Batch 5, **OPEN — architectural fix deferred to dedicated PR**)
+- **AUDIT-069** — `LOINC_CARDIOVASCULAR_LABS.LVEF = '18010-0'` unverifiable per NLM Clinical Tables (search empty; loinc.org direct 500); not in NLM LOINC LVEF concept set. Real canonical LVEF = 10230-1 ("Left ventricular Ejection fraction" verified loinc.org direct + NLM). **Prior codebase fix-from comment "(was 10230-1 = QRS duration — WRONG)" was itself a regression** — 10230-1 IS LVEF per authoritative sources; the prior "fix" replaced the correct code with an unverifiable one. Every HF rule reading `labValues['lvef']` depended on this LOINC mapping (Phase 0B Batch 5, **RESOLVED 2026-05-06**)
 
 ### MEDIUM (P2)
 
@@ -912,6 +917,90 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
   - PR #246 (AUDIT-046..063 + AUDIT-064 — Cat D 33% bug rate provided priority signal; §9.2 codified)
   - This PR (AUDIT-052 4-class refactor closing the major divergence vectors)
   - `docs/audit/AUDIT_METHODOLOGY.md` §16 (clinical-code verification standard) + §9.2 (full-pipeline-regen standard, exercised end-to-end this PR)
+
+---
+
+### AUDIT-065, AUDIT-066, AUDIT-069 — LOINC clinical-concept corrections (Batch 5 partial)
+
+- **Phase:** 0B clinical-code verification — Batch 5 (LOINC, follow-up to PR #246 Cat D + PR #247 AUDIT-052)
+- **Severity:** **HIGH (P1)** for all 3 — patient-safety-active silent-failure pattern in CDS rules
+- **Status:** **RESOLVED 2026-05-06** via this PR. AUDIT-067 + AUDIT-068 (ABI codes) are documented as separate detail blocks below — both are wrong-concept LOINC bugs but require dedicated architectural fix PR (consumer audit + FHIR bodySite ingestion review). They remain OPEN, pinned with KNOWN BROKEN inline comments + register visibility per operator standard "no half-fixes."
+- **Detected:** 2026-05-06 via systematic Phase 5 LOINC verification (29 of 30 codes verified across loinc.org direct + NLM Clinical Tables fallback). Bug-rate among canonical-layer LOINC: **5 wrong-concept of 29 verified = 17.2%** (3 fixed in this PR, 2 ABI deferred). Comparable to Cat A 15.5% canonical-layer rate.
+- **Findings (RESOLVED in this PR):**
+  - **AUDIT-065** — `QTC_INTERVAL = '8601-7'` per loinc.org = "EKG impression" (a free-text concept, NOT a numeric Q-T interval measurement). QTc safety rule (`labValues['qtc_interval'] > qtcThreshold`) silent-failed on real patient observations because the LOINC code maps to text-impression observations, not numeric Q-T values. Real Q-T interval corrected = **8636-3** (verified loinc.org). Earlier codebase comment noted prior fix from 8867-4 (heart rate) to 8601-7 — but 8601-7 was also wrong; this is the second-iteration correction.
+  - **AUDIT-066** — `QRS_DURATION = '8632-2'` per loinc.org = "QRS axis" (degrees, e.g., 60°), NOT QRS duration (ms, e.g., 150ms). CRT eligibility rule (LVEF≤35 + QRS>150ms) was reading axis values: typical QRS axis range is -30° to +120°, so threshold >150 effectively never triggered. CRT-D recommendation rule silent-failed at the rule-input layer. Real QRS duration = **8633-0** (verified loinc.org).
+  - **AUDIT-069** — `LVEF = '18010-0'` per NLM Clinical Tables = unverifiable / not in LOINC index (search returns empty; direct loinc.org returns 500). Real canonical LVEF = **10230-1** ("Left ventricular Ejection fraction" verified loinc.org direct + listed in NLM LVEF concept set: `[10230-1, 55406-3, 18043-0, 8811-2, 8810-4, 8808-8, 8806-2]`). **Prior codebase fix-from comment "(was 10230-1 = QRS duration — WRONG)" was itself a regression** — 10230-1 IS LVEF per authoritative sources; the prior "fix" replaced the correct code with an unverifiable one. Every HF rule reading `labValues['lvef']` depended on this LOINC mapping. Verification path: NLM Clinical Tables `/api/loinc_items/v3/search?terms=18010-0` returns empty (only `18010-9 = "Aorta Diam US"` matched), confirming 18010-0 is not a current LOINC concept.
+- **Patient-safety-active impact:** All 3 are in actively-deployed CDS rules:
+  - QTc safety rule (drug-induced QT prolongation surveillance) — was reading "EKG impression" text
+  - CRT-D eligibility rule (LVEF≤35 + QRS>150ms guideline criterion) — was reading QRS axis (degrees)
+  - All HF rules reading `labValues['lvef']` (GDMT optimization, ATTR-CM screening, ARNI/SGLT2i prescription, etc.) — were depending on a LOINC mapping that doesn't exist
+  In all cases, the rule logic LOOKS correct (`labValues['lvef'] !== undefined && labValues['lvef'] <= 40`) but the data plumbing reads wrong / nonexistent observations. Same wrong-concept-mapped-to-right-name pattern as Cat A RxNorm bugs (AUDIT-056 dofetilide=donepezil).
+- **Resolution:** 3 corrections applied to `cardiovascularValuesets.ts`:
+  - `QTC_INTERVAL`: 8601-7 → **8636-3** ("Q-T interval corrected")
+  - `QRS_DURATION`: 8632-2 → **8633-0** ("QRS duration")
+  - `LVEF`: 18010-0 → **10230-1** ("Left ventricular Ejection fraction")
+  7 new tests in `tests/terminology/clinicalCodeCorrections.test.ts` cover constant assertions + 3 negative-class-separation assertions + 2 ABI-known-broken pinning tests for AUDIT-067/068 visibility.
+
+  Plus inline Batch 3 minor: E85 amyloidosis comment-precision fix (E85.4 was labeled "Primary AL" but real descriptor per ICD-10-CM 2024 is "Organ-limited amyloidosis"; coverage unchanged because real AL = E85.81 also in valueset).
+- **Bug-rate evidence in arc context:**
+  - Cat A canonical RxNorm valuesets: 15.5% (PR #242)
+  - Cat D inline drug-class arrays: 33% (PR #246)
+  - Batch 5 LOINC canonical: **17.2% (3 RESOLVED + 2 deferred = 5/29 in this PR)**
+  - Batch 3 ICD-10 canonical: 0% wrong-code (1 comment imprecision LOW, fixed inline)
+  - LOINC rate matches Cat A canonical-layer pattern; both ~15-17%. Cat D 33% confirms inline-array bypass amplification.
+- **Open items deferred (separate detail blocks below for AUDIT-067/068; bullets here for awareness):**
+  - **AUDIT-067 + AUDIT-068** (ABI codes) — wrong-concept LOINC bugs **DEFERRED to dedicated architectural fix PR** per operator standard. Both pinned with KNOWN BROKEN comments in cardiovascularValuesets.ts; register visibility ensures non-silent.
+  - **Batch 4** (211 inline ICD-10 startsWith patterns in gapRuleEngine.ts) — verification deferred to follow-up PR per scope discipline.
+  - **Batch 6** (96 labValues threshold comparisons) — verification deferred to follow-up PR.
+  - **Batch 7 minor** — `EXCLUSION_PREGNANCY = ['O00', 'O09', 'Z33']` narrow scope flagged for operator clinical-intent decision (see this PR's body for explicit question).
+- **Effort estimate:** RESOLVED (~110 min agent including pre-flight inventory + 29 LOINC verifications + LVEF NLM verification path + ABI architectural-deferral re-scoping + 3 corrections + Batch 3 E85 comment fix + 7 tests + §9.2 full pipeline regen + register update + course correction)
+- **Cross-references:**
+  - PR #234 (canonical infrastructure baseline)
+  - PR #242 (Cat A canonical RxNorm corrections — sister wrong-concept-mapped-to-right-name pattern)
+  - PR #246 (Cat D inline-array corrections + AUDIT-064 §9.2 codification — exercised here)
+  - PR #247 (AUDIT-052 partial — sister architectural improvement)
+  - `docs/audit/AUDIT_METHODOLOGY.md` §16 (verification standard) + §9.2 (full-pipeline-regen, exercised end-to-end)
+  - This PR (Batch 5 LOINC clinical-concept corrections — 3 of 5 RESOLVED; ABI 2 deferred to architectural PR)
+
+---
+
+### AUDIT-067 — ABI_RIGHT = '44974-4' is "Pulse intensity of unspecified artery palpation" (NOT ABI)
+
+- **Phase:** 0B clinical-code verification — Batch 5 (LOINC; deferred from initial AUDIT-065..068 batch per operator standard "no half-fixes")
+- **Severity:** **HIGH (P1)** — patient-safety-active silent-failure in PAD ABI screening rule
+- **Status:** **OPEN** — KNOWN BROKEN inline comment pinned in `cardiovascularValuesets.ts` for visibility; architectural fix deferred to dedicated PR per operator standard
+- **Tier:** B
+- **Detected:** 2026-05-06 via Batch 5 LOINC verification
+- **Evidence:** `LOINC_CARDIOVASCULAR_LABS.ABI_RIGHT = '44974-4'` per loinc.org direct = "Pulse intensity of Unspecified artery palpation" (a 0-4 ordinal scale for pulse strength on physical exam), NOT an ABI ratio (a numeric ratio of ankle to brachial systolic pressures). PAD ABI screening rule (`labValues['abi_right'] !== undefined`) silent-failed on real ABI measurements because the LOINC code maps to physical-exam pulse-strength observations, not ABI ratio observations.
+- **Why deferred (not bundled in AUDIT-065/066/069 fix):** The proper canonical replacement (LOINC 77194-9 = "Ankle-brachial index" verified NLM Clinical Tables) has **no side-specific codes** in LOINC. Side discrimination (right vs left) requires FHIR `bodySite` extension handling at ingestion time (`backend/src/services/observationService.ts` or equivalent). A simple valueset swap from 44974-4 → 77194-9 without consumer audit would:
+  1. Break the runtime mapping if `observationService` doesn't currently handle bodySite-based discrimination
+  2. Conflate left and right ABI measurements if the rule logic compares them (`abi_right` vs `abi_left`)
+  3. Require full-stack tests (FHIR ingestion + observation persistence + rule firing) to confirm side-discrimination correctness
+  Per operator standard "no half-fixes" — fixing the canonical valueset alone is strictly better than the current state but is a half-fix; the correct architectural treatment requires the full consumer + ingestion + test stack.
+- **Resolution plan (dedicated future PR):**
+  1. Consumer audit: identify all rules + services consuming `labValues['abi_right']` / `labValues['abi_left']`
+  2. Ingestion-layer review: design FHIR `bodySite` extension handling for `observationService` to discriminate right vs left ABI observations under canonical LOINC 77194-9
+  3. Full-stack tests: simulate FHIR Observation with `bodySite` = right/left lower extremity; assert correct labValues key population
+  4. Apply canonical fix: ABI_RIGHT and ABI_LEFT both → 77194-9
+  5. Pipeline regen + tests + register close
+- **Effort estimate (deferred PR):** S-M (3-6h) — consumer audit + ingestion design + full-stack tests + verification
+- **Cross-references:**
+  - This PR (deferred AUDIT-067; KNOWN BROKEN comment pinned)
+  - AUDIT-068 (sister ABI_LEFT bug — same architectural fix)
+  - `backend/src/terminology/cardiovascularValuesets.ts` line ~140 (KNOWN BROKEN comment)
+
+---
+
+### AUDIT-068 — ABI_LEFT = '44975-1' is "Q-T interval" (an EKG concept; NOT ABI)
+
+- **Phase:** 0B clinical-code verification — Batch 5
+- **Severity:** **HIGH (P1)** — patient-safety-active silent-failure in PAD ABI screening rule (left side)
+- **Status:** **OPEN** — KNOWN BROKEN inline comment pinned; architectural fix deferred to same dedicated PR as AUDIT-067
+- **Tier:** B
+- **Detected:** 2026-05-06 via Batch 5 LOINC verification
+- **Evidence:** `LOINC_CARDIOVASCULAR_LABS.ABI_LEFT = '44975-1'` per loinc.org direct = "Q-T interval {Electrocardiograph lead}" — an EKG measurement concept, not an ABI ratio. Same silent-failure mechanism as AUDIT-067 but on the left side. Particularly egregious wrong-concept mapping: the codebase had two adjacent LOINC codes (44974-4, 44975-1) labeled ABI_RIGHT and ABI_LEFT, neither of which is ABI; the second is even more divergent (an EKG concept vs an ABI screening concept).
+- **Resolution plan:** Same as AUDIT-067 — bundled architectural fix PR.
+- **Cross-references:** AUDIT-067 (sister bug)
 
 ---
 

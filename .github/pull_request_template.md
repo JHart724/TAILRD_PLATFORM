@@ -28,6 +28,34 @@
 - [ ] Guideline threshold sourced from: *(cite guideline + year)*
 - [ ] Gap rule tested for: (a) positive case, (b) negative case, (c) missing data case
 
+## §17 Clinical-Code PR Acceptance Criteria
+*(MANDATORY for any PR touching `cardiovascularValuesets.ts`, `gapRuleEngine.ts` clinical-code constants, or any RxNorm/LOINC/ICD-10 reference. See `docs/audit/AUDIT_METHODOLOGY.md` §17 for full rationale. ALL must be checked before merge.)*
+
+### Correctness (zero half-fixes)
+- [ ] Every affected rule verified to fire correctly post-fix (not "strictly better than broken")
+- [ ] Consumer code audited where canonical changes affect lookup semantics, side discrimination, or threshold comparison
+- [ ] Behavior changes documented per-array with clinical guideline citation
+
+### Verification (per §16 fully exhausted)
+- [ ] Every changed code verified against authoritative external source (RxNav, loinc.org, NLM Clinical Tables, CMS ICD-10-CM)
+- [ ] Verification path documented per code (which source, which date, which descriptor)
+- [ ] Fallback source attempted on primary failure (no first-failure punt)
+- [ ] Prior codebase "fix-from" comments treated as suspect; re-verified — they may themselves be regressions (per AUDIT-069 LVEF catch)
+
+### Scope discipline (zero silent deferrals)
+- [ ] No half-fixes shipped with "follow-up flag" framing
+- [ ] Deferred items have `AUDIT_FINDINGS_REGISTER.md` OPEN entries + KNOWN BROKEN inline comments + pinning tests
+- [ ] Methodology improvements surfaced during work codified in same PR (per §1, §16, §9.1, §9.2 precedents)
+
+### Process discipline
+- [ ] §9.2 full canonical pipeline regen executed (`extractCode → extractSpec → reconcile → refreshCites → applyOverrides → renderAddendum → renderSynthesis → validateCanonical`)
+- [ ] §16 verification standard applied to all changed codes
+- [ ] Tests cover positive (real concept fires) + negative (wrong concept removed) + behavior preservation + KNOWN BROKEN pinning
+- [ ] PR description surfaces clinical impact, deferred items, verification paths, behavior changes
+
+### Pre-PR self-review
+- [ ] §17 self-review section included in PR body with explicit ✓ + evidence per criterion (not summarized away)
+
 ## Security
 *(complete if touching auth, encryption, or access control)*
 - [ ] No PHI in logs introduced
