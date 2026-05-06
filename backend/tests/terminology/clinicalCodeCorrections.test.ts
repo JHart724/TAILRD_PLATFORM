@@ -516,13 +516,52 @@ describe('AUDIT-065/066/069: drug-class separation negative tests', () => {
   });
 });
 
-describe('AUDIT-067/068: ABI codes — DEFERRED to architectural fix PR', () => {
-  it('ABI_RIGHT remains at known-broken 44974-4 pending dedicated PR', () => {
-    // Visibility: register entry AUDIT-067 documents this as known-broken.
-    // Architectural fix requires consumer audit + ingestion-layer FHIR bodySite review.
-    expect(cardio.LOINC_CARDIOVASCULAR_LABS.ABI_RIGHT).toBe('44974-4');
+describe('AUDIT-067/068: ABI canonical reference-correctness (right-sized per §17.1 consumer audit)', () => {
+  it('ABI_RIGHT canonical LOINC corrected to 77194-9 (was 44974-4 = "Pulse intensity")', () => {
+    expect(cardio.LOINC_CARDIOVASCULAR_LABS.ABI_RIGHT).toBe('77194-9');
+    expect(cardio.LOINC_CARDIOVASCULAR_LABS.ABI_RIGHT).not.toBe('44974-4');
   });
-  it('ABI_LEFT remains at known-broken 44975-1 pending dedicated PR', () => {
-    expect(cardio.LOINC_CARDIOVASCULAR_LABS.ABI_LEFT).toBe('44975-1');
+  it('ABI_LEFT canonical LOINC corrected to 77194-9 (was 44975-1 = "Q-T interval")', () => {
+    expect(cardio.LOINC_CARDIOVASCULAR_LABS.ABI_LEFT).toBe('77194-9');
+    expect(cardio.LOINC_CARDIOVASCULAR_LABS.ABI_LEFT).not.toBe('44975-1');
+  });
+  it('Both ABI keys map to same canonical (LOINC has no side-specific codes; side via FHIR bodySite when FHIR ingestion enabled per AUDIT-070)', () => {
+    expect(cardio.LOINC_CARDIOVASCULAR_LABS.ABI_LEFT).toBe(cardio.LOINC_CARDIOVASCULAR_LABS.ABI_RIGHT);
+  });
+  it('Reference-only assertion: no active runtime path consumes LOINC ABI entries (CSV bypass; FHIR not yet mapped per AUDIT-070)', () => {
+    // The §17.1 consumer audit confirmed: LOINC_CARDIOVASCULAR_LABS.ABI_RIGHT/LEFT are declared but
+    // not consumed by any active code path. CSV path (patientWriter.ts) writes observationType='abi_right'
+    // directly from CSV column. FHIR path (observationService.ts CARDIOVASCULAR_LAB_CODES) does not
+    // include ABI mappings (latent gap = AUDIT-070). This test pins the architectural finding.
+    const fs = require('fs');
+    const path = require('path');
+    const srcDir = path.join(__dirname, '../../src');
+    const filesToScan = [
+      'ingestion/gaps/gapRuleEngine.ts',
+      'ingestion/patientWriter.ts',
+      'ingestion/gapDetectionRunner.ts',
+      'ingestion/runGapDetectionForPatient.ts',
+      'services/observationService.ts',
+    ];
+    for (const f of filesToScan) {
+      const src = fs.readFileSync(path.join(srcDir, f), 'utf8');
+      // No active code reads LOINC_CARDIOVASCULAR_LABS.ABI_RIGHT or ABI_LEFT (only the JSDoc comment in cardiovascularValuesets.ts itself)
+      expect(src).not.toMatch(/LOINC_CARDIOVASCULAR_LABS\.ABI_RIGHT/);
+      expect(src).not.toMatch(/LOINC_CARDIOVASCULAR_LABS\.ABI_LEFT/);
+    }
+  });
+});
+
+describe('Batch 7 minor: EXCLUSION_PREGNANCY scope expansion (operator clinical-intent decision)', () => {
+  // Now uses prefix-match via hasContraindication's startsWith — 'O' alone covers entire O00-O9A
+  // pregnancy/childbirth/puerperium chapter; Z33 + Z34 for routine pregnancy supervision.
+  it('source uses prefix-match pattern with broader O-chapter coverage', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const src = fs.readFileSync(
+      path.join(__dirname, '../../src/ingestion/gaps/gapRuleEngine.ts'),
+      'utf8',
+    );
+    expect(src).toMatch(/EXCLUSION_PREGNANCY\s*=\s*\['O',\s*'Z33',\s*'Z34'\]/);
   });
 });

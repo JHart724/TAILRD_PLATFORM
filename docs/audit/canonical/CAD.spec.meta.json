@@ -1,7 +1,7 @@
 {
   "extractorScript": "backend/scripts/auditCanonical/extractSpec.ts",
   "extractorVersion": "1.0.0",
-  "generatedAt": "2026-05-06T04:03:48.234Z",
+  "generatedAt": "2026-05-06T05:13:15.704Z",
   "generatedBy": "extractSpec",
   "module": "CAD",
   "sourceSha256": "dd1419f8399b894fda85147d9626188646a9eaea9de66743d40f36ae49cfde3e"

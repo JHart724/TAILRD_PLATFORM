@@ -112,7 +112,13 @@ function hasContraindication(dxCodes: string[], exclusionCodes: string[]): boole
 
 // Common exclusion code sets
 const EXCLUSION_RENAL_SEVERE = ['N18.5', 'N18.6', 'N19'];  // ESRD, stage 5 CKD
-const EXCLUSION_PREGNANCY = ['O00', 'O09', 'Z33'];          // Pregnancy
+// Fix (Batch 7 minor, 2026-05-06): expanded scope per operator clinical-intent decision (PR #248
+// review). Was ['O00', 'O09', 'Z33'] — covered only ectopic pregnancy + supervision-of-high-risk +
+// pregnant-state, missing the entire O00-O9A pregnancy/childbirth/puerperium chapter. Now uses
+// prefix 'O' to catch all ICD-10 Chapter XV codes (any pregnancy-related condition) plus Z33 +
+// Z34 for routine pregnancy supervision. hasContraindication() does prefix-match via startsWith,
+// so 'O' alone matches O00-O9A in one entry.
+const EXCLUSION_PREGNANCY = ['O', 'Z33', 'Z34'];            // All pregnancy/childbirth/puerperium (O00-O9A) + routine supervision (Z33, Z34)
 const EXCLUSION_HOSPICE = ['Z51.5'];                         // Palliative/hospice
 const EXCLUSION_ALLERGY_DOCUMENTED = ['Z88'];                // Drug allergy status
 
