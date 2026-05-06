@@ -1,47 +1,71 @@
 /**
- * PHI Encryption Middleware (current single-key state)
+ * PHI Encryption Middleware
  *
  * Wires AES-256-GCM field-level encryption into Prisma `$use` middleware.
  * Encrypts/decrypts PHI fields per HIPAA §164.312(a)(2)(iv) addressable
  * implementation specification.
  *
- * Current envelope format (V0): `enc:<iv-hex>:<authTag-hex>:<ciphertext-hex>`
- * Single key sourced from `process.env.PHI_ENCRYPTION_KEY`.
+ * Status (2026-05-07, post AUDIT-016 PR 1):
+ *   - V0 envelope (legacy untagged): `enc:<iv>:<authTag>:<ciphertext>` — DECRYPT ONLY
+ *     for backwards compatibility with existing production rows.
+ *   - V1 envelope (single-key versioned): `enc:v1:<iv>:<authTag>:<ciphertext>` —
+ *     EMITTED for all new writes by `keyRotation.encryptWithCurrent`.
+ *   - V2 envelope (KMS-wrapped DEK): `enc:v2:<wrappedDEK>:<iv>:<authTag>:<ciphertext>` —
+ *     PR 2 wires kmsService for emission; decryption stub-throws until then.
  *
- * AUDIT-016 status (HIGH P1, DESIGN PHASE COMPLETE 2026-05-07):
- *   Key rotation is NOT supported in this single-key state. Rotating the env
- *   var today would render all existing ciphertext undecryptable. Design for
- *   the rotation pattern is captured in:
+ * AUDIT-016 implementation status:
+ *   - PR 1 (this PR) — envelope schema + V0/V1 detection + V1 emission
+ *   - PR 2 (pending) — kmsService wiring (V2 emission, KMS-wrapped DEK)
+ *   - PR 3 (pending) — migrateRecord() + background re-encryption job
  *
- *     docs/architecture/AUDIT_016_KEY_ROTATION_DESIGN.md
- *
- *   Implementation will land in 3 follow-up PRs:
- *     - PR 1: V0/V1 envelope detection + V1 emission for new writes
- *     - PR 2: phiEncryption ↔ kmsService wiring (envelope encryption via KMS)
- *     - PR 3: migrateRecord() implementation + background re-encryption job
- *
- *   Until implementation PRs land, this file's encryption logic is UNCHANGED.
- *   The single-key V0 pattern remains in production. See `keyRotation.ts` for
- *   interface stubs (throw `DesignPhaseStubError` when called).
+ * AUDIT-017 (PHI_ENCRYPTION_KEY length validation) — RESOLVED 2026-05-07,
+ * bundled into AUDIT-016 PR 1. `validateKeyOrThrow` (in `keyRotation.ts`)
+ * runs at module init outside demo mode; throws on missing / wrong-length /
+ * non-hex key. Sister to AUDIT-015 fail-loud pattern.
  *
  * AUDIT-015 fail-loud invariants preserved:
  *   - Legacy plaintext rows throw unless PHI_LEGACY_PLAINTEXT_OK=true
- *   - Malformed ciphertext format throws
+ *   - Malformed ciphertext format throws (via envelopeFormat.parseEnvelope)
  *   - AES-GCM auth-tag failure propagates instead of being swallowed
+ *
+ * Cross-references:
+ *   - keyRotation.ts — owns encryptWithCurrent + decryptAny + key validation
+ *   - envelopeFormat.ts — pure parse/build for V0/V1/V2 schema
+ *   - kmsService.ts — fully implemented; PR 2 wires for V2 envelope emission
  */
 
 import crypto from 'crypto';
 import { Prisma, PrismaClient } from '@prisma/client';
+import {
+  decryptAny,
+  encryptWithCurrent,
+  validateKeyOrThrow,
+  type EncryptionContext,
+} from '../services/keyRotation';
 
 const ENCRYPTION_KEY = process.env.PHI_ENCRYPTION_KEY;
-const ALGORITHM = 'aes-256-gcm';
 const isDemoMode = process.env.DEMO_MODE === 'true';
-const isProduction = process.env.NODE_ENV === 'production';
 // AUDIT-015 remediation: when true, allow reading legacy plaintext rows from
 // PHI-encrypted columns (pre-encryption-rollout data). Default false in
 // production. Set explicitly during a one-off backfill window.
 const ALLOW_LEGACY_PLAINTEXT = process.env.PHI_LEGACY_PLAINTEXT_OK === 'true' || isDemoMode;
 let plaintextWarned = false;
+
+// AUDIT-017 (bundled with AUDIT-016 PR 1): validate PHI_ENCRYPTION_KEY at
+// module load. Skipped in demo mode where the key may be intentionally absent.
+// In any non-demo environment with a key set, an invalid key fails fast at
+// startup rather than emitting bad ciphertext and tripping at decrypt time.
+if (!isDemoMode && ENCRYPTION_KEY) {
+  validateKeyOrThrow(ENCRYPTION_KEY);
+}
+
+// Encryption context propagated to keyRotation.encryptWithCurrent /
+// decryptAny. PR 2 will extend per-record propagation (model + field) for KMS
+// EncryptionContext narrowing.
+const ENCRYPT_CONTEXT: EncryptionContext = {
+  service: 'tailrd-backend',
+  purpose: 'phi-encryption',
+};
 
 // PHI fields that must be encrypted at rest per HIPAA 164.312(a)(2)(iv)
 // PHI string fields encrypted via middleware (HIPAA 164.312(a)(2)(iv))
@@ -75,12 +99,12 @@ const PHI_FIELD_MAP: Record<string, string[]> = {
 const DATETIME_PHI_FIELDS = new Set(['dateOfBirth']);
 
 // JSON fields requiring serialize-then-encrypt (standard field encryption doesn't work on Json type)
+// AUDIT-022 §17.1 cleanup (2026-05-07): removed `inputs` and `outcomes` —
+// those fields don't exist in schema.prisma. The middleware silently no-oped
+// on them (Prisma `data` doesn't carry the field) but
+// verify-phi-legacy-json.js + audit-022 backfill mirrored them and tripped.
 const PHI_JSON_FIELDS: Record<string, string[]> = {
   WebhookEvent: ['rawPayload'],
-  // AUDIT-022 §17.1 cleanup (2026-05-07): removed `inputs` and `outcomes` —
-  // those fields don't exist in schema.prisma. The middleware silently no-oped
-  // on them (Prisma `data` doesn't carry the field) but
-  // verify-phi-legacy-json.js + audit-022 backfill mirrored them and tripped.
   RiskScoreAssessment: ['inputData', 'components'],
   InterventionTracking: ['findings', 'complications'],
   Alert: ['triggerData'],
@@ -97,7 +121,7 @@ const PHI_JSON_FIELDS: Record<string, string[]> = {
   CQLResult: ['result'],
 };
 
-function encrypt(text: string): string {
+async function encrypt(text: string): Promise<string> {
   if (!ENCRYPTION_KEY) {
     if (!isDemoMode) {
       throw new Error('FATAL: PHI_ENCRYPTION_KEY is required outside demo mode. Cannot store PHI unencrypted.');
@@ -108,73 +132,44 @@ function encrypt(text: string): string {
     }
     return text;
   }
-  const iv = crypto.randomBytes(16);
-  const key = Buffer.from(ENCRYPTION_KEY, 'hex');
-  const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
-  let encrypted = cipher.update(text, 'utf8', 'hex');
-  encrypted += cipher.final('hex');
-  const authTag = cipher.getAuthTag().toString('hex');
-  return `enc:${iv.toString('hex')}:${authTag}:${encrypted}`;
+  return encryptWithCurrent(text, ENCRYPT_CONTEXT);
 }
 
-function decrypt(encryptedText: string): string {
+async function decrypt(envelope: string): Promise<string> {
   if (!ENCRYPTION_KEY) {
     if (!isDemoMode) {
       throw new Error('FATAL: PHI_ENCRYPTION_KEY is required outside demo mode. Cannot read PHI without key.');
     }
-    return encryptedText;
+    return envelope;
   }
 
   // AUDIT-015 remediation: legacy plaintext (no enc: prefix). Throw unless
   // ALLOW_LEGACY_PLAINTEXT is set (migration window only).
-  if (!encryptedText.startsWith('enc:')) {
-    if (ALLOW_LEGACY_PLAINTEXT) return encryptedText;
+  if (!envelope.startsWith('enc:')) {
+    if (ALLOW_LEGACY_PLAINTEXT) return envelope;
     throw new Error('PHI decryption: unencrypted value found in encrypted-field column (set PHI_LEGACY_PLAINTEXT_OK=true if running a migration; otherwise this indicates corrupted data)');
   }
 
-  // AUDIT-015 remediation: malformed format. Throw rather than silently
-  // returning ciphertext.
-  const [, ivHex, authTagHex, encrypted] = encryptedText.split(':');
-  if (!ivHex || !authTagHex || !encrypted) {
-    throw new Error('PHI decryption: malformed ciphertext format (expected enc:iv:authTag:ciphertext)');
-  }
-
-  // AUDIT-015 remediation: AES-GCM auth-tag failure now propagates instead
-  // of being swallowed by catch-and-return-ciphertext. crypto.decipher.final()
-  // throws on auth-tag mismatch; let that throw bubble up.
-  const key = Buffer.from(ENCRYPTION_KEY, 'hex');
-  const iv = Buffer.from(ivHex, 'hex');
-  const authTag = Buffer.from(authTagHex, 'hex');
-  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
-  decipher.setAuthTag(authTag);
-  try {
-    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
-    return decrypted;
-  } catch (err: any) {
-    // Wrap with context so operators can distinguish integrity failure from
-    // other crypto errors. Preserve original error for observability.
-    const wrapped: any = new Error(`PHI decryption: integrity check failed (${err?.message || 'auth tag mismatch'})`);
-    wrapped.cause = err;
-    throw wrapped;
-  }
+  // Delegate to keyRotation.decryptAny — handles V0 + V1 dispatch, AUDIT-015
+  // fail-loud invariants on malformed envelope + auth-tag failure.
+  return decryptAny(envelope, ENCRYPT_CONTEXT);
 }
 
-function encryptFields(data: Record<string, any>, fields: string[]): void {
+async function encryptFields(data: Record<string, any>, fields: string[]): Promise<void> {
   for (const field of fields) {
     if (data[field] instanceof Date) {
       data[field] = (data[field] as Date).toISOString();
     }
     if (data[field] && typeof data[field] === 'string') {
-      data[field] = encrypt(data[field]);
+      data[field] = await encrypt(data[field]);
     }
   }
 }
 
-function decryptRecord(record: Record<string, any>, fields: string[]): Record<string, any> {
+async function decryptRecord(record: Record<string, any>, fields: string[]): Promise<Record<string, any>> {
   for (const field of fields) {
     if (record[field] && typeof record[field] === 'string') {
-      const decrypted = decrypt(record[field]);
+      const decrypted = await decrypt(record[field]);
       if (DATETIME_PHI_FIELDS.has(field) && typeof decrypted === 'string') {
         const d = new Date(decrypted);
         record[field] = !isNaN(d.getTime()) ? d : decrypted;
@@ -186,21 +181,21 @@ function decryptRecord(record: Record<string, any>, fields: string[]): Record<st
   return record;
 }
 
-function encryptJsonField(data: Record<string, any>, field: string): void {
+async function encryptJsonField(data: Record<string, any>, field: string): Promise<void> {
   if (data[field] != null) {
     const serialized = typeof data[field] === 'string' ? data[field] : JSON.stringify(data[field]);
-    data[field] = encrypt(serialized);
+    data[field] = await encrypt(serialized);
   }
 }
 
-function decryptJsonField(record: Record<string, any>, field: string): void {
+async function decryptJsonField(record: Record<string, any>, field: string): Promise<void> {
   if (record[field] && typeof record[field] === 'string' && record[field].startsWith('enc:')) {
     try {
-      const decrypted = decrypt(record[field]);
+      const decrypted = await decrypt(record[field]);
       record[field] = JSON.parse(decrypted);
     } catch {
-      // If JSON parse fails, return as decrypted string
-      record[field] = decrypt(record[field]);
+      // If JSON parse fails (decrypted plaintext wasn't JSON), return as decrypted string.
+      record[field] = await decrypt(record[field]);
     }
   }
 }
@@ -221,17 +216,23 @@ export function applyPHIEncryption(prisma: PrismaClient): void {
     if (['create', 'update', 'upsert', 'updateMany'].includes(params.action)) {
       const data = params.args?.data;
       if (data) {
-        encryptFields(data, fields);
-        if (jsonFields) jsonFields.forEach(jf => encryptJsonField(data, jf));
+        await encryptFields(data, fields);
+        if (jsonFields) {
+          for (const jf of jsonFields) await encryptJsonField(data, jf);
+        }
       }
       if (params.action === 'upsert') {
         if (params.args?.create) {
-          encryptFields(params.args.create, fields);
-          if (jsonFields) jsonFields.forEach(jf => encryptJsonField(params.args.create, jf));
+          await encryptFields(params.args.create, fields);
+          if (jsonFields) {
+            for (const jf of jsonFields) await encryptJsonField(params.args.create, jf);
+          }
         }
         if (params.args?.update) {
-          encryptFields(params.args.update, fields);
-          if (jsonFields) jsonFields.forEach(jf => encryptJsonField(params.args.update, jf));
+          await encryptFields(params.args.update, fields);
+          if (jsonFields) {
+            for (const jf of jsonFields) await encryptJsonField(params.args.update, jf);
+          }
         }
       }
     }
@@ -239,8 +240,10 @@ export function applyPHIEncryption(prisma: PrismaClient): void {
     if (params.action === 'createMany' && params.args?.data) {
       const rows = Array.isArray(params.args.data) ? params.args.data : [params.args.data];
       for (const row of rows) {
-        encryptFields(row, fields);
-        if (jsonFields) jsonFields.forEach(jf => encryptJsonField(row, jf));
+        await encryptFields(row, fields);
+        if (jsonFields) {
+          for (const jf of jsonFields) await encryptJsonField(row, jf);
+        }
       }
     }
 
@@ -248,13 +251,19 @@ export function applyPHIEncryption(prisma: PrismaClient): void {
 
     // Decrypt on read (string fields + JSON fields)
     if (result) {
-      const decryptOne = (r: Record<string, any>) => {
-        decryptRecord(r, fields);
-        if (jsonFields) jsonFields.forEach(jf => decryptJsonField(r, jf));
+      const decryptOne = async (r: Record<string, any>): Promise<Record<string, any>> => {
+        await decryptRecord(r, fields);
+        if (jsonFields) {
+          for (const jf of jsonFields) await decryptJsonField(r, jf);
+        }
         return r;
       };
       if (Array.isArray(result)) {
-        return result.map((r) => (typeof r === 'object' && r !== null ? decryptOne(r) : r));
+        return Promise.all(
+          result.map((r) =>
+            typeof r === 'object' && r !== null ? decryptOne(r) : Promise.resolve(r),
+          ),
+        );
       }
       if (typeof result === 'object' && result !== null) {
         return decryptOne(result);

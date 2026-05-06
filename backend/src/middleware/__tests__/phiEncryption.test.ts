@@ -104,7 +104,10 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
   });
 
   it('malformed format throws', async () => {
-    await expect((decryptModule() as any)('enc:onlyOnePart')).rejects.toThrow(/malformed ciphertext/);
+    // AUDIT-016 PR 1: error message text shifted to envelopeFormat parseEnvelope.
+    // Behavior preserved — malformed input still throws (AUDIT-015 invariant).
+    // New wording identifies version + segment count for operator triage.
+    await expect((decryptModule() as any)('enc:onlyOnePart')).rejects.toThrow(/envelope parse failed/);
   });
 
   it('plaintext (no enc: prefix) throws when PHI_LEGACY_PLAINTEXT_OK=false', async () => {
@@ -122,5 +125,76 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
     process.env.DEMO_MODE = 'true';
     const result = await (decryptModule() as any)('plain text not encrypted');
     expect(result).toBe('plain text not encrypted');
+  });
+
+  // ── AUDIT-016 PR 1: V1 envelope round-trip + AUDIT-015 invariants on V1 ──
+
+  it('AUDIT-016 PR 1: middleware write path emits V1 envelope (enc:v1: prefix)', async () => {
+    // Exercise write path by capturing the encrypted output of a create action.
+    jest.resetModules();
+    const mod = require('../phiEncryption');
+    const fakeClient: any = { $use: (fn: any) => { fakeClient._fn = fn; } };
+    mod.applyPHIEncryption(fakeClient);
+
+    const writeData: any = { firstName: 'Charlie' };
+    const params = {
+      model: 'Patient',
+      action: 'create',
+      args: { data: writeData },
+    };
+    await fakeClient._fn(params, async () => ({ id: 'r' }));
+    expect(typeof writeData.firstName).toBe('string');
+    expect(writeData.firstName.startsWith('enc:v1:')).toBe(true);
+    expect(writeData.firstName.split(':').length).toBe(5);
+  });
+
+  it('AUDIT-016 PR 1: V1 round-trip via middleware (write → encrypted; read decrypts)', async () => {
+    jest.resetModules();
+    const mod = require('../phiEncryption');
+    const fakeClient: any = { $use: (fn: any) => { fakeClient._fn = fn; } };
+    mod.applyPHIEncryption(fakeClient);
+
+    // Write — capture encrypted ciphertext from middleware.
+    const writeData: any = { firstName: 'Diana' };
+    await fakeClient._fn(
+      { model: 'Patient', action: 'create', args: { data: writeData } },
+      async () => ({ id: 'r' }),
+    );
+    const v1Envelope = writeData.firstName;
+    expect(v1Envelope.startsWith('enc:v1:')).toBe(true);
+
+    // Read — feed V1 envelope back through middleware, expect plaintext out.
+    const readResult = await fakeClient._fn(
+      { model: 'Patient', action: 'findUnique', args: {} },
+      async () => ({ firstName: v1Envelope }),
+    );
+    expect(readResult.firstName).toBe('Diana');
+  });
+
+  it('AUDIT-016 PR 1: V1 auth-tag tampering throws integrity error', async () => {
+    // Build a valid V1 ciphertext via middleware write path, tamper the tag,
+    // then assert read path throws.
+    jest.resetModules();
+    const mod = require('../phiEncryption');
+    const fakeClient: any = { $use: (fn: any) => { fakeClient._fn = fn; } };
+    mod.applyPHIEncryption(fakeClient);
+
+    const writeData: any = { firstName: 'Eve' };
+    await fakeClient._fn(
+      { model: 'Patient', action: 'create', args: { data: writeData } },
+      async () => ({ id: 'r' }),
+    );
+    const v1 = writeData.firstName;
+    const parts = v1.split(':');
+    const tagBuf = Buffer.from(parts[3], 'hex');
+    tagBuf[0] ^= 0xff;
+    const tampered = `${parts[0]}:${parts[1]}:${parts[2]}:${tagBuf.toString('hex')}:${parts[4]}`;
+
+    await expect(
+      fakeClient._fn(
+        { model: 'Patient', action: 'findUnique', args: {} },
+        async () => ({ firstName: tampered }),
+      ),
+    ).rejects.toThrow(/integrity check failed/);
   });
 });
