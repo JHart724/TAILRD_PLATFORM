@@ -57,12 +57,17 @@ export const ICD10_TYPE2_DIABETES = [
   'E11.8', 'E11.9',
 ] as const;
 
-/** Cardiac amyloidosis -- used by ATTR-CM gap rule */
+/** Cardiac amyloidosis -- used by ATTR-CM gap rule.
+ *  Fix (Batch 3 minor, 2026-05-06): E85.4 comment-precision fix per ICD-10-CM 2024 — E85.4 is
+ *  "Organ-limited amyloidosis", NOT "Primary (AL) amyloidosis". Real AL amyloidosis is E85.81
+ *  (Light chain) which is also in this set, so coverage is unchanged; only the comment was
+ *  inaccurate. E85.1 is "Neuropathic heredofamilial amyloidosis" per ICD-10-CM (ATTRv may
+ *  present neuropathic OR cardiac; either E85.1 or E85.2 may apply per phenotype). */
 export const ICD10_CARDIAC_AMYLOIDOSIS = [
-  'E85.4',   // Primary (AL) amyloidosis
+  'E85.4',   // Organ-limited amyloidosis (per ICD-10-CM 2024; NOT "Primary AL" — real AL is E85.81)
   'E85.81',  // Light chain (AL) amyloidosis
   'E85.82',  // Wild-type transthyretin amyloidosis (ATTRwt)
-  'E85.1',   // Hereditary transthyretin amyloidosis (ATTRv)
+  'E85.1',   // Neuropathic heredofamilial amyloidosis (per ICD-10-CM 2024; covers ATTRv neuropathic phenotype)
 ] as const;
 
 /** Aortic stenosis (I35.0) -- used by structural heart gap rules */
@@ -129,16 +134,35 @@ export const LOINC_CARDIOVASCULAR_LABS = {
   LPA: '10835-7',               // Lipoprotein(a)
 
   // Cardiac function
-  LVEF: '18010-0',              // Left ventricular ejection fraction by echocardiography (was 10230-1 = QRS duration — WRONG)
-  QTC_INTERVAL: '8601-7',       // QTc interval (was 8867-4 = heart rate — WRONG; 8601-7 is general QTc per LOINC)
-  QRS_DURATION: '8632-2',       // QRS duration
+  // Fix (AUDIT-065, 2026-05-06): QTC_INTERVAL was 8601-7 = "EKG impression" (a free-text concept,
+  //   NOT QTc). QTc safety rule was monitoring wrong LOINC concept. Real QTc corrected = 8636-3
+  //   (verified loinc.org). Same wrong-concept-mapped-to-right-name pattern as Cat A RxNorm bugs.
+  // Fix (AUDIT-066, 2026-05-06): QRS_DURATION was 8632-2 = "QRS axis" (degrees, e.g., 60°), NOT
+  //   QRS duration (ms, e.g., 150ms). CRT eligibility rule (LVEF≤35 + QRS>150) was reading axis as
+  //   if duration; threshold >150 effectively never triggered (axis range -30 to +120). Real QRS
+  //   duration = 8633-0 (verified loinc.org).
+  // Fix (AUDIT-069, 2026-05-06): LVEF was 18010-0 — unverifiable per NLM Clinical Tables (search
+  //   returns empty; loinc.org direct returns 500); not present in NLM LVEF concept set. Real
+  //   canonical LVEF = 10230-1 ("Left ventricular Ejection fraction" verified loinc.org direct).
+  //   Prior codebase comment "(was 10230-1 = QRS duration — WRONG)" was a regression: 10230-1 is
+  //   LVEF per loinc.org and NLM Clinical Tables; the prior "fix" replaced the correct code with
+  //   an unverifiable one. Every HF rule reading labValues['lvef'] depended on this mapping.
+  LVEF: '10230-1',              // Left ventricular Ejection fraction (verified loinc.org + NLM; was 18010-0 = unverifiable)
+  QTC_INTERVAL: '8636-3',       // Q-T interval corrected (verified loinc.org; was 8601-7 = "EKG impression")
+  QRS_DURATION: '8633-0',       // QRS duration (verified loinc.org; was 8632-2 = "QRS axis")
 
   // Other
   HEMOGLOBIN: '718-7',          // Hemoglobin
   HBA1C: '4548-4',              // Hemoglobin A1c
   INR: '6301-6',                // INR
-  ABI_RIGHT: '44974-4',        // ABI right
-  ABI_LEFT: '44975-1',         // ABI left
+  // KNOWN BROKEN — see AUDIT-067/068 register entries. Both codes are wrong-concept (44974-4 =
+  // "Pulse intensity of unspecified artery palpation"; 44975-1 = "Q-T interval"). PAD ABI screening
+  // rule is silent-failing in production. Architectural fix deferred to dedicated PR — the proper
+  // canonical (LOINC 77194-9 = "Ankle-brachial index") has no side-specific codes; side discrimination
+  // requires consumer audit + ingestion-layer review (FHIR bodySite extension handling) + full-stack
+  // tests. Not appropriate for this PR's scope.
+  ABI_RIGHT: '44974-4',         // KNOWN BROKEN per AUDIT-067 — pending dedicated architectural fix PR
+  ABI_LEFT: '44975-1',          // KNOWN BROKEN per AUDIT-068 — pending dedicated architectural fix PR
 } as const;
 
 // ── RxNorm Medication Codes ──────────────────────────────────────────────────

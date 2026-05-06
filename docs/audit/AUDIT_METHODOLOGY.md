@@ -825,8 +825,53 @@ Architectural refactor to eliminate inline arrays tracked as AUDIT-052; partial 
 | **Retired CUI** | RxNorm CUI was retired (drug withdrawn or restructured) | RxNav historystatus.json `NotCurrent` | AUDIT-044: 197607 (retired aspirin combo) |
 | **Form/strength mislabel** | Code is correct drug but wrong dose/form per comment | RxNav properties.json `name` shows different strength/form | AUDIT-045: 197605 is 0.2mg cap, not 250mcg |
 | **Same-class wrong-drug** | Code is in the same drug class but wrong specific drug | RxNav properties.json | AUDIT-054: 2627044 = bexagliflozin (SGLT2i), not sotagliflozin (different SGLT2i) |
-| **Cross-class match** | LOINC for unrelated lab; ICD for unrelated dx | Authoritative cross-reference | (Prior fix from cardiovascularValuesets.ts: LOINC 10230-1 was QRS, not LVEF) |
+| **Cross-class match** | LOINC for unrelated lab; ICD for unrelated dx | Authoritative cross-reference | AUDIT-068: ABI_LEFT 44975-1 = "Q-T interval" (an EKG concept, not ABI) |
 
 ---
 
-*Authored 2026-05-04 in response to compounding methodology defect cycles (AUDIT-029 → AUDIT-030 → AUDIT-030.D). This document is the contract that prevents methodology drift living in audit prose. Implementation under `backend/scripts/auditCanonical/` follows. §16 added 2026-05-05 in response to Cat A clinical-code verification surfacing 15.5% wrong-drug bug rate (AUDIT-042 through AUDIT-061).*
+## 17. Clinical-Code PR Acceptance Criteria (AUDIT-065..069 catalyst, 2026-05-06)
+
+A clinical-code PR is "ready to ship" only when ALL the following are explicitly satisfied. Anything failing is sent back for revision, not shipped with caveat.
+
+### 17.1 Correctness (zero half-fixes)
+
+- Every affected rule verified to fire correctly post-fix — not "strictly better than broken state." For ambiguous cases, write the test that proves correct behavior; if you can't write the test cleanly, the fix isn't done.
+- Consumer code audited wherever canonical changes affect lookup semantics, side discrimination, or threshold comparison. "Looks like the same lookup" is not consumer audit.
+- Behavior changes (expansions, narrowings, semantic shifts) documented per-array with clinical guideline citation; no silent semantic changes.
+
+### 17.2 Verification (per §16 fully exhausted)
+
+- Every changed code verified against authoritative external source (RxNav, loinc.org, NLM Clinical Tables, CMS ICD-10-CM, etc.). Codebase trust is INSUFFICIENT — including codebase comments labeled "FIX-FROM" or "verified" without provenance.
+- Verification path documented for each code: which source, which date, which descriptor matched. If primary source fails (e.g., loinc.org 500), at least one fallback (NLM Clinical Tables, fhir.loinc.org, UMLS) attempted before "verification incomplete." First-failure punt is not acceptable.
+- Where prior codebase fix-from comments exist, treat them as suspect until re-verified — they may themselves be regressions (per AUDIT-069 LVEF catch: prior comment claimed `10230-1 = QRS duration WRONG`, but re-verification confirmed 10230-1 IS LVEF — the prior "fix" was itself the regression).
+
+### 17.3 Scope discipline (zero silent deferrals)
+
+- No half-fixes shipped with "follow-up flag" framing. If correctness for shipped scope requires architectural work, EITHER expand PR scope to include the architectural fix OR pull the affected item from PR scope entirely with explicit KNOWN BROKEN inline comments + register OPEN entries + visibility tests.
+- Deferred items have `AUDIT_FINDINGS_REGISTER.md` OPEN entries with: clear architectural reason for deferral, dedicated-PR resolution plan, and pinning tests that would fail if someone "accidentally fixed" without proper architectural treatment.
+- Methodology improvements that surface during the work (recurring patterns) are codified in this same PR per §1, §16, §9.1, §9.2 precedents. Discovery + fix + codification ship together.
+
+### 17.4 Process discipline
+
+- §9.2 full canonical pipeline regen mandatory (`extractCode → extractSpec → reconcile → refreshCites → applyOverrides → renderAddendum → renderSynthesis → validateCanonical`). Partial pipeline runs are §9.2 violations.
+- §16 clinical-code verification standard for every changed code.
+- Tests cover: positive (rule fires on real concept) + negative (wrong concept doesn't false-fire) + behavior preservation (refactor doesn't change semantics unless explicitly intended). Plus pinning tests for KNOWN BROKEN deferrals.
+- PR description surfaces: clinical impact, consumer audit results, deferred items with register references, verification path per code, behavior changes with guideline citations.
+
+### 17.5 Pre-PR self-review (mandatory)
+
+Before any "PR created" status, agent runs through the §17 checklist explicitly in the execution log. Each criterion gets explicit ✓ with evidence, or "not applicable, here's why," or "uncertain — flagging for operator." Self-review is not summarized away.
+
+### 17.6 Operator review bar
+
+At approval time, operator confirms: every checkbox satisfied with evidence, deferred items have proper register entries + pinning tests, PR description gives enterprise-grade traceability, no items shipped on "good enough" basis. Anything failing → revision, not caveat-and-ship.
+
+### 17.7 Drift-prevention rationale
+
+Codified after AUDIT-067/068 ABI deferral course-correction. Pattern observed: under compression pressure, "strictly better with follow-up flag" approval drift becomes invisible erosion of the engineering bar. §17 makes the bar self-enforcing via PR template (`.github/pull_request_template.md`) + agent self-review + operator checkbox confirmation rather than judgment-call approval.
+
+§17 is sister to §1 (rule-body verification — output discipline), §9.1 (applyOverrides canonical default — pipeline ergonomics), §9.2 (full-pipeline regen — what PRs commit), and §16 (clinical-code verification — input discipline). Together: §1+§16 cover the verification disciplines; §9.1+§9.2 cover the pipeline disciplines; §17 covers the **PR shipping discipline** that wraps them all.
+
+---
+
+*Authored 2026-05-04 in response to compounding methodology defect cycles (AUDIT-029 → AUDIT-030 → AUDIT-030.D). This document is the contract that prevents methodology drift living in audit prose. Implementation under `backend/scripts/auditCanonical/` follows. §16 added 2026-05-05 in response to Cat A clinical-code verification surfacing 15.5% wrong-drug bug rate (AUDIT-042 through AUDIT-061). §17 added 2026-05-06 in response to AUDIT-067/068 ABI deferral course-correction; codifies clinical-code PR acceptance criteria as drift-prevention mechanism.*
