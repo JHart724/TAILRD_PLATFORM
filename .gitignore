@@ -67,3 +67,7 @@ docs/audit/preflight/
 # Audit canonical intermediate output (regenerable via verifyDraft.ts;
 # canonical .crosswalk.json files are the committed source of truth)
 docs/audit/canonical/*.crosswalk.candidate.json
+
+# Migration script summary artifacts (compliance evidence — operator archives
+# to S3 per AUDIT-022 runbook §5.3; not committed to git)
+backend/var/
