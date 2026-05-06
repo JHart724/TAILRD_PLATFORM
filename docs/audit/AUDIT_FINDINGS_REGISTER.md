@@ -72,8 +72,9 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-062** — `PPI_CODES_DAPT = ['7646', '36567', '40790', '283742']` — 36567 is simvastatin (statin in PPI list, drug-class collision); DAPT co-prescription rule false-fired on statin patients (Phase 0B Cat D, **RESOLVED 2026-05-06**)
 - **AUDIT-065** — `LOINC_CARDIOVASCULAR_LABS.QTC_INTERVAL = '8601-7'` is "EKG impression" (free-text concept), NOT Q-T interval; QTc safety rule silent-failed on real Q-T measurements (Phase 0B Batch 5, **RESOLVED 2026-05-06**)
 - **AUDIT-066** — `LOINC_CARDIOVASCULAR_LABS.QRS_DURATION = '8632-2'` is "QRS axis" (degrees), NOT QRS duration (ms); CRT eligibility rule (LVEF≤35 + QRS>150) read axis values as if duration — threshold >150 effectively never triggered (Phase 0B Batch 5, **RESOLVED 2026-05-06**)
-- **AUDIT-067** — `LOINC_CARDIOVASCULAR_LABS.ABI_RIGHT = '44974-4'` is "Pulse intensity of unspecified artery palpation", NOT ABI; PAD ABI screening silent-failed on real ABI measurements (Phase 0B Batch 5, **OPEN — architectural fix deferred to dedicated PR**, see detail block)
-- **AUDIT-068** — `LOINC_CARDIOVASCULAR_LABS.ABI_LEFT = '44975-1'` is "Q-T interval" (an EKG concept!), NOT ABI; same silent-failure mechanism as AUDIT-067 (Phase 0B Batch 5, **OPEN — architectural fix deferred to dedicated PR**)
+- **AUDIT-067** — `LOINC_CARDIOVASCULAR_LABS.ABI_RIGHT = '44974-4'` is "Pulse intensity of unspecified artery palpation", NOT ABI (Phase 0B Batch 5, **RESOLVED 2026-05-06** via reference-correctness fix per §17.1 consumer audit; right-sized after architectural assumption corrected mid-flight)
+- **AUDIT-068** — `LOINC_CARDIOVASCULAR_LABS.ABI_LEFT = '44975-1'` is "Q-T interval" (an EKG concept!), NOT ABI (Phase 0B Batch 5, **RESOLVED 2026-05-06** via reference-correctness fix per §17.1 consumer audit)
+- **AUDIT-070** — FHIR ingestion expansion gap: `observationService.CARDIOVASCULAR_LAB_CODES` does not include ABI LOINC mappings; FHIR-ingested patients with ABI observations don't reach PAD screening rule (CSV path unaffected — uses observationType bypass). Latent risk, not active patient-safety. (Phase 0B clinical-code, **OPEN** — dedicated FHIR ingestion expansion PR; will also audit other LOINC entries similarly absent from CARDIOVASCULAR_LAB_CODES.)
 - **AUDIT-069** — `LOINC_CARDIOVASCULAR_LABS.LVEF = '18010-0'` unverifiable per NLM Clinical Tables (search empty; loinc.org direct 500); not in NLM LOINC LVEF concept set. Real canonical LVEF = 10230-1 ("Left ventricular Ejection fraction" verified loinc.org direct + NLM). **Prior codebase fix-from comment "(was 10230-1 = QRS duration — WRONG)" was itself a regression** — 10230-1 IS LVEF per authoritative sources; the prior "fix" replaced the correct code with an unverifiable one. Every HF rule reading `labValues['lvef']` depended on this LOINC mapping (Phase 0B Batch 5, **RESOLVED 2026-05-06**)
 
 ### MEDIUM (P2)
@@ -964,43 +965,53 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ---
 
-### AUDIT-067 — ABI_RIGHT = '44974-4' is "Pulse intensity of unspecified artery palpation" (NOT ABI)
+### AUDIT-067 / AUDIT-068 — ABI canonical LOINC reference-correctness (right-sized per §17.1)
 
-- **Phase:** 0B clinical-code verification — Batch 5 (LOINC; deferred from initial AUDIT-065..068 batch per operator standard "no half-fixes")
-- **Severity:** **HIGH (P1)** — patient-safety-active silent-failure in PAD ABI screening rule
-- **Status:** **OPEN** — KNOWN BROKEN inline comment pinned in `cardiovascularValuesets.ts` for visibility; architectural fix deferred to dedicated PR per operator standard
+- **Phase:** 0B clinical-code verification — Batch 5 (LOINC) + §17.1 consumer audit (mid-flight scope correction)
+- **Severity:** ~~HIGH (P1)~~ → **MEDIUM (P2)** post-consumer-audit (reference-correctness, not active silent-failure; CSV path bypasses LOINC; FHIR path doesn't currently ingest ABI per AUDIT-070 latent gap)
+- **Status:** **RESOLVED 2026-05-06** via reference-correctness fix
 - **Tier:** B
-- **Detected:** 2026-05-06 via Batch 5 LOINC verification
-- **Evidence:** `LOINC_CARDIOVASCULAR_LABS.ABI_RIGHT = '44974-4'` per loinc.org direct = "Pulse intensity of Unspecified artery palpation" (a 0-4 ordinal scale for pulse strength on physical exam), NOT an ABI ratio (a numeric ratio of ankle to brachial systolic pressures). PAD ABI screening rule (`labValues['abi_right'] !== undefined`) silent-failed on real ABI measurements because the LOINC code maps to physical-exam pulse-strength observations, not ABI ratio observations.
-- **Why deferred (not bundled in AUDIT-065/066/069 fix):** The proper canonical replacement (LOINC 77194-9 = "Ankle-brachial index" verified NLM Clinical Tables) has **no side-specific codes** in LOINC. Side discrimination (right vs left) requires FHIR `bodySite` extension handling at ingestion time (`backend/src/services/observationService.ts` or equivalent). A simple valueset swap from 44974-4 → 77194-9 without consumer audit would:
-  1. Break the runtime mapping if `observationService` doesn't currently handle bodySite-based discrimination
-  2. Conflate left and right ABI measurements if the rule logic compares them (`abi_right` vs `abi_left`)
-  3. Require full-stack tests (FHIR ingestion + observation persistence + rule firing) to confirm side-discrimination correctness
-  Per operator standard "no half-fixes" — fixing the canonical valueset alone is strictly better than the current state but is a half-fix; the correct architectural treatment requires the full consumer + ingestion + test stack.
-- **Resolution plan (dedicated future PR):**
-  1. Consumer audit: identify all rules + services consuming `labValues['abi_right']` / `labValues['abi_left']`
-  2. Ingestion-layer review: design FHIR `bodySite` extension handling for `observationService` to discriminate right vs left ABI observations under canonical LOINC 77194-9
-  3. Full-stack tests: simulate FHIR Observation with `bodySite` = right/left lower extremity; assert correct labValues key population
-  4. Apply canonical fix: ABI_RIGHT and ABI_LEFT both → 77194-9
-  5. Pipeline regen + tests + register close
-- **Effort estimate (deferred PR):** S-M (3-6h) — consumer audit + ingestion design + full-stack tests + verification
+- **Detected:** 2026-05-06 via Batch 5 LOINC verification (initial framing); architectural picture corrected mid-flight via §17.1 consumer audit
+- **Evidence:** `LOINC_CARDIOVASCULAR_LABS.ABI_RIGHT = '44974-4'` = "Pulse intensity of Unspecified artery palpation"; `ABI_LEFT = '44975-1'` = "Q-T interval {Electrocardiograph lead}". Both wrong-concept LOINC codes. Initial framing assumed these participated in active runtime silent-failure on PAD screening rule. **§17.1 consumer audit corrected the assumption:**
+  - **Active CSV path** (`patientWriter.ts:91`): writes `observationType='abi_right'`/`'abi_left'` directly from CSV column names, bypassing LOINC entirely. PAD rule fires correctly on CSV-ingested patients today.
+  - **FHIR path** (`observationService.ts CARDIOVASCULAR_LAB_CODES`): does not currently include ABI mappings — FHIR-ingested ABI observations don't reach the rule (this is a separate ingestion-coverage gap, filed as AUDIT-070).
+  - **Conclusion:** the wrong LOINC codes never participated in any active runtime path. They were reference-correctness bugs (canonical valueset misleading future FHIR ingestion code that consumes it), not silent-failure bugs.
+- **§17.1 catch — methodology working as designed:** initial AUDIT-067/068 framing led to 110-min architectural deferral (PR #248) based on assumption that fixing LOINC alone would "break runtime mapping" and "conflate left/right." Consumer audit at this PR's pre-flight verified neither concern applied — the LOINC entries are reference-only. Right-sized fix is canonical correction + JSDoc documentation. The over-scoped framing was caught by the §17 self-review discipline before shipping the wrong-sized PR. **This PR is the §17.1 architectural-precedent reference: consumer audit corrected scope mid-flight.**
+- **Resolution:**
+  - `LOINC_CARDIOVASCULAR_LABS.ABI_RIGHT`: 44974-4 → **77194-9** ("Ankle-brachial index" verified loinc.org + NLM Clinical Tables)
+  - `LOINC_CARDIOVASCULAR_LABS.ABI_LEFT`: 44975-1 → **77194-9** (same canonical; LOINC has no side-specific codes)
+  - JSDoc documents architecture: CSV path bypasses LOINC; FHIR path needs `bodySite` extension handling when ABI ingestion enabled (AUDIT-070 dedicated PR)
+  - 4 new tests in `tests/terminology/clinicalCodeCorrections.test.ts`: corrected-code constants + ABI-keys-equal + reference-only assertion (greps src/ to verify no active runtime path consumes `LOINC_CARDIOVASCULAR_LABS.ABI_RIGHT/LEFT`)
+- **Effort estimate:** RESOLVED (~30 min agent — pre-flight + consumer audit + scope correction + canonical fix + JSDoc + tests + register update)
 - **Cross-references:**
-  - This PR (deferred AUDIT-067; KNOWN BROKEN comment pinned)
-  - AUDIT-068 (sister ABI_LEFT bug — same architectural fix)
-  - `backend/src/terminology/cardiovascularValuesets.ts` line ~140 (KNOWN BROKEN comment)
+  - PR #248 (initial framing; KNOWN BROKEN pinning until architectural fix)
+  - This PR (right-sized reference-correctness fix; AUDIT-070 filed for FHIR ingestion gap)
+  - **AUDIT-070** (FHIR ingestion expansion gap — separate dedicated PR for `observationService.CARDIOVASCULAR_LAB_CODES` mapping + bodySite handling)
+  - `AUDIT_METHODOLOGY.md` §17.1 (correctness — zero half-fixes; consumer audit prevents over-scoped framing)
 
 ---
 
-### AUDIT-068 — ABI_LEFT = '44975-1' is "Q-T interval" (an EKG concept; NOT ABI)
+### AUDIT-070 — FHIR ingestion expansion gap: CARDIOVASCULAR_LAB_CODES missing ABI (and other LOINC entries)
 
-- **Phase:** 0B clinical-code verification — Batch 5
-- **Severity:** **HIGH (P1)** — patient-safety-active silent-failure in PAD ABI screening rule (left side)
-- **Status:** **OPEN** — KNOWN BROKEN inline comment pinned; architectural fix deferred to same dedicated PR as AUDIT-067
+- **Phase:** 0B clinical-code verification — surfaced via §17.1 consumer audit during AUDIT-067/068 architectural reframing
+- **Severity:** MEDIUM (P2) — latent risk, not active patient-safety. CSV path unaffected; FHIR path inactive for ABI today.
+- **Status:** **OPEN** — dedicated FHIR ingestion expansion PR
 - **Tier:** B
-- **Detected:** 2026-05-06 via Batch 5 LOINC verification
-- **Evidence:** `LOINC_CARDIOVASCULAR_LABS.ABI_LEFT = '44975-1'` per loinc.org direct = "Q-T interval {Electrocardiograph lead}" — an EKG measurement concept, not an ABI ratio. Same silent-failure mechanism as AUDIT-067 but on the left side. Particularly egregious wrong-concept mapping: the codebase had two adjacent LOINC codes (44974-4, 44975-1) labeled ABI_RIGHT and ABI_LEFT, neither of which is ABI; the second is even more divergent (an EKG concept vs an ABI screening concept).
-- **Resolution plan:** Same as AUDIT-067 — bundled architectural fix PR.
-- **Cross-references:** AUDIT-067 (sister bug)
+- **Detected:** 2026-05-06 via §17.1 consumer audit
+- **Evidence:** `backend/src/services/observationService.ts CARDIOVASCULAR_LAB_CODES` includes BNP, NT-proBNP, Troponin, CK-MB, lipids, HbA1c, creatinine, eGFR, INR, PT, PTT, D-dimer — but does NOT include LOINC mappings for ABI (77194-9), LVEF (10230-1), QTc (8636-3), QRS duration (8633-0), or others. FHIR-ingested patients with these observations would not reach the gap rules because the LOINC→observationType translation layer doesn't exist for them. Active production path is CSV (patientWriter writes observationType directly from CSV columns); FHIR path is functional for the labs in CARDIOVASCULAR_LAB_CODES but inactive for ABI/LVEF/QTc/QRS.
+- **Architectural scope of dedicated PR:**
+  1. Audit `LOINC_CARDIOVASCULAR_LABS` — for each entry, verify whether observationService currently maps it. Categorize: mapped ✓ / unmapped (latent gap) / N/A (not used by rules).
+  2. Add LOINC mappings to `CARDIOVASCULAR_LAB_CODES` for: ABI 77194-9 (with FHIR `bodySite` extension handling for right/left side discrimination → `observationType='abi_right'`/`'abi_left'`), LVEF 10230-1, QTc corrected 8636-3, QRS duration 8633-0, ferritin 2276-4, TSAT 2502-3, etc.
+  3. Implement FHIR `bodySite` extension handling for ABI: same LOINC + bodySite=lower-extremity-right → observationType='abi_right'; bodySite=lower-extremity-left → observationType='abi_left'.
+  4. Full-stack tests: simulate FHIR Observation with bodySite = right/left lower extremity → assert correct labValues key population in gapDetectionRunner.
+  5. Verify all rules fire correctly on FHIR-ingested patients post-mapping (parity with CSV path).
+- **Effort estimate (dedicated PR):** S-M (3-6h) — observationService audit + LOINC mappings + bodySite extension handling + full-stack tests
+- **Cross-references:**
+  - AUDIT-067 / AUDIT-068 (sister; this gap surfaced via §17.1 consumer audit during their reference-correctness fix)
+  - `backend/src/services/observationService.ts CARDIOVASCULAR_LAB_CODES` (lines 40-56)
+  - `backend/src/terminology/cardiovascularValuesets.ts LOINC_CARDIOVASCULAR_LABS` (the canonical valueset that should drive observationService mapping)
+  - `AUDIT_METHODOLOGY.md` §17.3 (scope discipline — zero silent deferrals; this OPEN entry is the §17.3 visibility mechanism)
+  - This PR (AUDIT-067/068 reference-correctness fix that surfaced AUDIT-070 latent gap)
 
 ---
 

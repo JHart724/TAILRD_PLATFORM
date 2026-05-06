@@ -155,14 +155,25 @@ export const LOINC_CARDIOVASCULAR_LABS = {
   HEMOGLOBIN: '718-7',          // Hemoglobin
   HBA1C: '4548-4',              // Hemoglobin A1c
   INR: '6301-6',                // INR
-  // KNOWN BROKEN — see AUDIT-067/068 register entries. Both codes are wrong-concept (44974-4 =
-  // "Pulse intensity of unspecified artery palpation"; 44975-1 = "Q-T interval"). PAD ABI screening
-  // rule is silent-failing in production. Architectural fix deferred to dedicated PR — the proper
-  // canonical (LOINC 77194-9 = "Ankle-brachial index") has no side-specific codes; side discrimination
-  // requires consumer audit + ingestion-layer review (FHIR bodySite extension handling) + full-stack
-  // tests. Not appropriate for this PR's scope.
-  ABI_RIGHT: '44974-4',         // KNOWN BROKEN per AUDIT-067 — pending dedicated architectural fix PR
-  ABI_LEFT: '44975-1',          // KNOWN BROKEN per AUDIT-068 — pending dedicated architectural fix PR
+  // Fix (AUDIT-067/068, 2026-05-06): canonical LOINC corrected to 77194-9 ("Ankle-brachial index"
+  //   verified loinc.org direct + NLM Clinical Tables). Was 44974-4 = "Pulse intensity of unspecified
+  //   artery palpation" (wrong concept) and 44975-1 = "Q-T interval" (an EKG concept!).
+  //
+  // Architectural note (per §17.1 consumer audit, 2026-05-06): these LOINC entries are CURRENTLY
+  //   REFERENCE-ONLY — they are declared in the canonical valueset but NOT consumed by any active
+  //   runtime path. CSV ingestion (`patientWriter.ts:91`) writes `observationType='abi_right'` /
+  //   `'abi_left'` directly from CSV column names, bypassing LOINC entirely. FHIR ingestion
+  //   (`observationService.ts CARDIOVASCULAR_LAB_CODES`) does not currently include ABI mappings,
+  //   so FHIR-ingested ABI observations don't reach the rule (latent gap tracked as AUDIT-070).
+  //   The PAD screening rule (`gapRuleEngine.ts:4891`) reads `labValues['abi_right']` /
+  //   `labValues['abi_left']` keyed by ingestion-side `observationType`, not by LOINC.
+  //
+  // LOINC has NO side-specific codes for ABI — both keys map to the same canonical 77194-9. When
+  //   FHIR ABI ingestion is added (AUDIT-070 dedicated PR), side discrimination will require
+  //   FHIR `bodySite` extension handling: the same LOINC 77194-9 + bodySite=lower-extremity-right
+  //   → `observationType='abi_right'`; bodySite=lower-extremity-left → `observationType='abi_left'`.
+  ABI_RIGHT: '77194-9',         // Ankle-brachial index (LOINC 77194-9; reference-only — see JSDoc above)
+  ABI_LEFT: '77194-9',          // Ankle-brachial index (LOINC 77194-9; reference-only — same code; side via FHIR bodySite when FHIR ingestion enabled per AUDIT-070)
 } as const;
 
 // ── RxNorm Medication Codes ──────────────────────────────────────────────────
