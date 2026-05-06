@@ -1,73 +1,150 @@
 /**
- * Key Rotation Service — DESIGN PHASE STUBS
+ * Key Rotation Service — AUDIT-016 implementation
  *
- * Interface stubs for AUDIT-016 PHI key rotation. All exported functions
- * throw `DesignPhaseStubError` when called.
- *
- * Implementation lands in 3 follow-up PRs per the design plan:
- *   - PR 1: Envelope format V0/V1 + version tag (~5-7h)
- *   - PR 2: phiEncryption ↔ kmsService wiring (~5-8h)
- *   - PR 3: Migration handler + background job (~4-7h)
+ * Status (2026-05-07):
+ *   - PR 1 (this PR) — V0/V1 envelope detection + V1 emission for new writes;
+ *     AUDIT-017 PHI_ENCRYPTION_KEY validation bundled (D4).
+ *   - PR 2 (pending) — kmsService wiring (V2 envelope emission, KMS-wrapped DEK).
+ *   - PR 3 (pending) — migrateRecord() + background re-encryption job.
  *
  * Design source of truth: docs/architecture/AUDIT_016_KEY_ROTATION_DESIGN.md
+ *   Note: design doc §5 was revised inline 2026-05-07 to V0/V1/V2 schema (was
+ *   single-V1 with placeholder wrappedDEK). Driver: §17.1 consumer audit during
+ *   PR 1 implementation flagged signal-shape-honesty problem with placeholder
+ *   wrappedDEK. Fifth §17.1 architectural-precedent finding of the arc.
  *
- * Operator decisions (2026-05-07):
- *   - Option B: AWS KMS (wire existing kmsService.ts; not currently consumed by phiEncryption)
- *   - Rotation cadence: 180-day app-layer DEK + 365-day AWS-layer KEK
- *   - Key custody: framework in design doc; specifics in operator runbook
- *   - Migration: background job + access-fallback; 30-day target completion window
+ * Backwards-compat contract (PR 1):
+ *   - All existing V0 ciphertext continues to decrypt without modification
+ *   - New writes emit V1
+ *   - Mixed-state queries (V0 + V1 in same result set) decrypt cleanly per-row
+ *   - AUDIT-015 fail-loud invariants preserved on both V0 and V1 paths
+ *   - PHI_LEGACY_PLAINTEXT_OK gate preserved (in phiEncryption.ts caller)
  *
  * Cross-references:
- *   - AUDIT-016 register entry (HIGH P1) — docs/audit/AUDIT_FINDINGS_REGISTER.md
+ *   - AUDIT-016 register entry — docs/audit/AUDIT_FINDINGS_REGISTER.md
+ *   - AUDIT-017 register entry — RESOLVED 2026-05-07 (validateKeyOrThrow + module init)
+ *   - AUDIT-015 fail-loud pattern — backend/src/middleware/phiEncryption.ts
+ *   - AUDIT-022 migration filter compatibility — verified (both V0 and V1 match `enc:%`)
  *   - HIPAA §164.312(a)(2)(iv) — addressable encryption/decryption implementation spec
- *   - kmsService.ts — fully implemented, awaiting wiring in implementation PR 2
- *   - phiEncryption.ts — current single-key middleware; JSDoc updated this PR
+ *   - kmsService.ts — fully implemented; PR 2 wires this for V2 envelope emission
+ *   - envelopeFormat.ts — pure parse/build utilities; sister module to this one
  */
 
+import crypto from 'crypto';
+import {
+  parseEnvelope,
+  buildV1,
+  EnvelopeFormatError,
+  type Envelope,
+  type EnvelopeV0,
+  type EnvelopeV1,
+  type EnvelopeV2,
+  type KeyVersion,
+} from './envelopeFormat';
+
+// Re-export envelope types so existing consumers (keyRotation.test.ts) don't
+// need to update their imports. envelopeFormat.ts is the canonical home.
+export type { Envelope, EnvelopeV0, EnvelopeV1, EnvelopeV2, KeyVersion };
+export { EnvelopeFormatError };
+
+// ── Constants ───────────────────────────────────────────────────────────────
+
+const ALGORITHM = 'aes-256-gcm';
+const EXPECTED_KEY_HEX_LENGTH = 64;        // 256-bit AES key = 32 bytes = 64 hex chars
+const HEX_REGEX = /^[0-9a-fA-F]+$/;
+
+// ── Stub error (rotateKey + migrateRecord still throw) ──────────────────────
+
 /**
- * Thrown when any keyRotation export is called during the design phase.
- * Implementation PRs will replace these stubs with real implementations.
+ * Thrown when `rotateKey()` or `migrateRecord()` is called during the design
+ * phase. Replaced by real implementations in AUDIT-016 PR 2 + PR 3.
  *
- * Design source: docs/architecture/AUDIT_016_KEY_ROTATION_DESIGN.md
+ * Design source: docs/architecture/AUDIT_016_KEY_ROTATION_DESIGN.md §10
  */
 export class DesignPhaseStubError extends Error {
   constructor(operation: string) {
     super(
       `AUDIT-016 design phase: ${operation} is not yet implemented. ` +
       `See docs/architecture/AUDIT_016_KEY_ROTATION_DESIGN.md §10 for the 3-PR ` +
-      `implementation plan. Status: DESIGN PHASE COMPLETE per AUDIT-016 register entry.`,
+      `implementation plan. PR 1 ships envelope format + V1 emission; PR 2 ships ` +
+      `KMS wiring (V2 emission); PR 3 ships rotateKey + migrateRecord implementations.`,
     );
     this.name = 'DesignPhaseStubError';
   }
 }
 
-// ── Types ───────────────────────────────────────────────────────────────────
+// ── AUDIT-017 — PHI_ENCRYPTION_KEY validation (bundled per D4) ─────────────
 
 /**
- * Key version marker for ciphertext envelope.
- *
- * V0 = legacy (current production state): enc:<iv>:<authTag>:<ciphertext>
- *   - Single key sourced from process.env.PHI_ENCRYPTION_KEY
- *   - No version tag; no wrapped DEK
- *   - All current PHI rows in production are V0
- *
- * V1 = post-rotation deploy: enc:v1:<wrappedDEK>:<iv>:<authTag>:<ciphertext>
- *   - DEK generated per encrypt call via KMS GenerateDataKey
- *   - DEK wrapped by KMS-managed KEK
- *   - DEK never persisted in plaintext
- *
- * Future versions reserved:
- *   V2 = per-tenant DEK wrapping (multi-tenant isolation; future v2.0 scope)
- *   V3 = post-quantum hybrid (NIST PQC migration; ~2030 horizon)
+ * Thrown when PHI_ENCRYPTION_KEY is missing, wrong-length, or non-hex.
+ * Sister to AUDIT-015 fail-loud pattern: caller never proceeds with invalid
+ * key material; throw propagates so deployment fails fast at startup.
  */
-export type KeyVersion = 'v0' | 'v1';
+export class KeyValidationError extends Error {
+  constructor(reason: string) {
+    super(`PHI_ENCRYPTION_KEY validation failed: ${reason}`);
+    this.name = 'KeyValidationError';
+  }
+}
+
+/**
+ * Validate PHI_ENCRYPTION_KEY material per AUDIT-017.
+ *
+ * Requirements (HIPAA §164.312(a)(2)(iv) + NIST FIPS 197 AES-256):
+ *   - Must be set (non-empty string)
+ *   - Must be 64 hex characters (32 bytes / 256-bit AES key)
+ *   - Must contain only hex characters [0-9a-fA-F]
+ *
+ * @throws KeyValidationError on any invariant violation
+ */
+export function validateKeyOrThrow(key: string | undefined): asserts key is string {
+  if (!key) {
+    throw new KeyValidationError(
+      'key is not set (required for AES-256-GCM encryption per HIPAA §164.312(a)(2)(iv))',
+    );
+  }
+  if (key.length !== EXPECTED_KEY_HEX_LENGTH) {
+    throw new KeyValidationError(
+      `key length is ${key.length} chars; expected ${EXPECTED_KEY_HEX_LENGTH} hex chars (256-bit AES key per NIST FIPS 197)`,
+    );
+  }
+  if (!HEX_REGEX.test(key)) {
+    throw new KeyValidationError(
+      `key contains non-hex characters; expected ${EXPECTED_KEY_HEX_LENGTH} hex chars`,
+    );
+  }
+}
+
+// Cache validation result so we only re-validate when env changes.
+let _validatedKey: string | null = null;
+let _validatedFor: string | undefined = undefined;
+
+function ensureValidatedKey(): string {
+  const env = process.env.PHI_ENCRYPTION_KEY;
+  if (_validatedKey !== null && _validatedFor === env) {
+    return _validatedKey;
+  }
+  validateKeyOrThrow(env);
+  _validatedKey = env;
+  _validatedFor = env;
+  return env;
+}
+
+/** Test helper — clear validation cache so env-mutating tests re-validate. */
+export function _resetKeyValidationCacheForTests(): void {
+  _validatedKey = null;
+  _validatedFor = undefined;
+}
+
+// ── Types ───────────────────────────────────────────────────────────────────
 
 /**
  * Encryption context for KMS calls — narrows access scope and provides audit trail.
  * Per `kmsService.ts` existing pattern: { service: 'tailrd-backend', purpose: 'phi-encryption' }
  *
- * Per-record propagation extension (added in implementation PR 2): includes model + field name
- * so that an attacker with cross-context decrypt access cannot redirect ciphertext between fields.
+ * Per-record propagation extension (added in PR 2): includes model + field name
+ * so an attacker with cross-context decrypt access cannot redirect ciphertext
+ * between fields.
  */
 export interface EncryptionContext {
   readonly service: string;
@@ -76,119 +153,116 @@ export interface EncryptionContext {
   readonly field?: string;
 }
 
-/**
- * V0 envelope (legacy) — current production state.
- * Schema: enc:<iv-hex>:<authTag-hex>:<ciphertext-hex>
- * 4 colon-delimited segments.
- */
-export interface EnvelopeV0 {
-  readonly version: 'v0';
-  readonly iv: string;
-  readonly authTag: string;
-  readonly ciphertext: string;
-}
-
-/**
- * V1 envelope (target post-rotation) — KMS envelope encryption.
- * Schema: enc:v1:<wrappedDEK-base64>:<iv-base64>:<authTag-base64>:<ciphertext-base64>
- * 6 colon-delimited segments (includes 'v1' marker after 'enc:' prefix).
- */
-export interface EnvelopeV1 {
-  readonly version: 'v1';
-  readonly wrappedDEK: string;
-  readonly iv: string;
-  readonly authTag: string;
-  readonly ciphertext: string;
-}
-
-export type Envelope = EnvelopeV0 | EnvelopeV1;
-
-/**
- * Result of a single record migration (V0 → V1).
- */
+/** Result of a single record migration (V0 / V1 → V2). PR 3 implements migrateRecord(). */
 export interface MigrationResult {
   readonly recordId: string;
   readonly table: string;
   readonly fromVersion: KeyVersion;
   readonly toVersion: KeyVersion;
   readonly fieldsConverted: number;
-  readonly skipped: boolean;          // true if record was already V1 (idempotent no-op)
+  readonly skipped: boolean;
   readonly migratedAt: Date;
 }
 
-// ── Stub function signatures ────────────────────────────────────────────────
+// ── Public API ──────────────────────────────────────────────────────────────
 
 /**
- * Trigger key rotation: KMS-managed KEK rotation is automatic at the AWS layer (365-day).
- * This function manages app-layer DEK-rotation discipline (180-day cadence).
+ * Encrypt plaintext, emit V1 envelope.
  *
- * Implementation will:
- *   1. Query KMS for current KEK metadata (kmsService.getKeyInfo)
- *   2. Mark current DEK-rotation watermark in app-side metadata table
- *   3. Trigger background re-encryption job for records with DEKs older than 180 days
- *   4. Return new key version marker
+ * Single-key AES-256-GCM with PHI_ENCRYPTION_KEY. Caller-supplied
+ * EncryptionContext is currently unused by V1 path; PR 2 propagates context
+ * into KMS GenerateDataKey for V2 emission.
  *
- * @returns the new active key version after rotation
- * @throws DesignPhaseStubError until implementation PR 2 lands
+ * @throws KeyValidationError if PHI_ENCRYPTION_KEY is invalid
+ */
+export async function encryptWithCurrent(
+  plaintext: string,
+  _context: EncryptionContext,
+): Promise<string> {
+  const keyHex = ensureValidatedKey();
+  const keyBuf = Buffer.from(keyHex, 'hex');
+  const iv = crypto.randomBytes(16);
+  const cipher = crypto.createCipheriv(ALGORITHM, keyBuf, iv);
+  let encrypted = cipher.update(plaintext, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  const authTag = cipher.getAuthTag().toString('hex');
+  return buildV1(iv.toString('hex'), authTag, encrypted);
+}
+
+/**
+ * Decrypt any envelope version. Routes V0 + V1 through single-key AES-256-GCM
+ * with PHI_ENCRYPTION_KEY. V2 routing throws DesignPhaseStubError until PR 2
+ * ships kmsService wiring.
+ *
+ * Fail-loud per AUDIT-015 pattern: malformed envelope (EnvelopeFormatError),
+ * integrity check failure (auth-tag mismatch), or unsupported envelope version
+ * all throw with explicit context. Caller never silently receives ciphertext.
+ *
+ * @throws EnvelopeFormatError on malformed envelope
+ * @throws Error wrapped with `cause` on integrity check failure
+ * @throws DesignPhaseStubError on V2 envelope (PR 2 lands V2 decrypt)
+ * @throws KeyValidationError if PHI_ENCRYPTION_KEY is invalid
+ */
+export async function decryptAny(
+  envelope: string,
+  _context: EncryptionContext,
+): Promise<string> {
+  const parsed: Envelope = parseEnvelope(envelope);
+
+  if (parsed.version === 'v0' || parsed.version === 'v1') {
+    return decryptSingleKey(parsed, envelope);
+  }
+
+  // V2 — KMS-wrapped DEK; PR 2 wires kmsService.envelopeDecrypt.
+  throw new DesignPhaseStubError(
+    `decryptAny() V2 path (envelope version: ${parsed.version}; ships in AUDIT-016 PR 2)`,
+  );
+}
+
+/**
+ * Internal — V0/V1 single-key AES-256-GCM decrypt path.
+ * Both V0 and V1 use the same key material (PHI_ENCRYPTION_KEY); the only
+ * difference is the envelope's serialized layout (V0 untagged vs V1 versioned).
+ */
+function decryptSingleKey(parsed: EnvelopeV0 | EnvelopeV1, originalEnvelope: string): string {
+  const keyHex = ensureValidatedKey();
+  const keyBuf = Buffer.from(keyHex, 'hex');
+  const iv = Buffer.from(parsed.iv, 'hex');
+  const authTag = Buffer.from(parsed.authTag, 'hex');
+  const decipher = crypto.createDecipheriv(ALGORITHM, keyBuf, iv);
+  decipher.setAuthTag(authTag);
+  try {
+    let decrypted = decipher.update(parsed.ciphertext, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
+  } catch (err: any) {
+    // AUDIT-015 fail-loud — wrap with explicit context preserving envelope version.
+    const wrapped: any = new Error(
+      `PHI decryption: integrity check failed (envelope=${parsed.version}; ${err?.message || 'auth tag mismatch'})`,
+    );
+    wrapped.cause = err;
+    wrapped.envelopeVersion = parsed.version;
+    wrapped.envelopePreview = originalEnvelope.slice(0, 32);
+    throw wrapped;
+  }
+}
+
+// ── Stub functions (PR 2 + PR 3) ────────────────────────────────────────────
+
+/**
+ * Trigger key rotation. PR 3 implements; throws stub error in PR 1.
+ *
+ * @throws DesignPhaseStubError until AUDIT-016 PR 3 lands
  */
 export async function rotateKey(): Promise<KeyVersion> {
   throw new DesignPhaseStubError('rotateKey()');
 }
 
 /**
- * Encrypt plaintext using the current active key version (V1 in target state).
- * Generates a fresh DEK per call via KMS, wraps it, and emits V1 envelope.
+ * Migrate a single record's PHI fields from V0 / V1 to V2 envelope.
+ * PR 3 implements; throws stub error in PR 1 + PR 2.
  *
- * @param plaintext UTF-8 string to encrypt (no length limit — envelope encryption handles arbitrary size)
- * @param context EncryptionContext for KMS audit trail + access narrowing
- * @returns serialized envelope string (enc:v1:<wrappedDEK>:<iv>:<authTag>:<ciphertext>)
- * @throws DesignPhaseStubError until implementation PR 1 lands
- */
-export async function encryptWithCurrent(
-  _plaintext: string,
-  _context: EncryptionContext,
-): Promise<string> {
-  throw new DesignPhaseStubError('encryptWithCurrent()');
-}
-
-/**
- * Decrypt any version of envelope. Detects V0 vs V1 by parsing prefix.
- *
- * V0 path: parse legacy 4-segment envelope; decrypt with process.env.PHI_ENCRYPTION_KEY
- * V1 path: parse 6-segment envelope; unwrap DEK via KMS; decrypt with DEK
- *
- * Fail-loud per AUDIT-015 pattern: malformed envelope, integrity check failure,
- * KMS API failure, or context mismatch all throw with explicit context.
- *
- * @param envelope serialized ciphertext envelope (V0 or V1)
- * @param context EncryptionContext for V1 KMS calls (ignored for V0)
- * @returns decrypted plaintext
- * @throws DesignPhaseStubError until implementation PR 1 lands
- */
-export async function decryptAny(
-  _envelope: string,
-  _context: EncryptionContext,
-): Promise<string> {
-  throw new DesignPhaseStubError('decryptAny()');
-}
-
-/**
- * Migrate a single record from V0 to V1 envelope (idempotent on V1 input).
- *
- * Implementation will:
- *   1. Read record's PHI fields via Prisma
- *   2. For each PHI field: decrypt as V0 → re-encrypt as V1
- *   3. Write back via Prisma update (triggers existing applyPHIEncryption middleware)
- *   4. Return migration result (counts + idempotency flag)
- *
- * Used by:
- *   - Background re-encryption job (PR 3)
- *   - Optional access-fallback re-encryption (PHI_REENCRYPT_ON_READ env var, off by default)
- *
- * @param recordId Prisma record primary key
- * @param table model name in PHI_FIELD_MAP or PHI_JSON_FIELDS
- * @returns MigrationResult with conversion counts + idempotency flag
- * @throws DesignPhaseStubError until implementation PR 3 lands
+ * @throws DesignPhaseStubError until AUDIT-016 PR 3 lands
  */
 export async function migrateRecord(
   _recordId: string,

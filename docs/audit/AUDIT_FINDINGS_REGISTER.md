@@ -95,7 +95,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 ### LOW (P3)
 
 - **AUDIT-007** — 2 moderate npm vulnerabilities (`uuid` chain, `node-cron`) (Phase 1, OPEN)
-- **AUDIT-017** — `PHI_ENCRYPTION_KEY` length not validated at startup (Phase 2B, OPEN)
+- **AUDIT-017** — `PHI_ENCRYPTION_KEY` length not validated at startup (Phase 2B, RESOLVED 2026-05-07 — bundled into AUDIT-016 PR 1 per operator decision D4)
 - **AUDIT-027** — `gdmtEngine.ts` / `gapRuleEngine` redundancy + rule-engine naming convention reconciliation (Phase 0B HF + CAD, OPEN)
 - **AUDIT-028** — Time-unit disambiguation in timeline math (raw scope vs AI-assisted wall-clock) (Phase 0B CAD, OPEN)
 - **AUDIT-029** — Rule-body verification standard for clinical audits (Phase 0B canonical, **RESOLVED 2026-05-04** via PR #234)
@@ -378,9 +378,9 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
   - Key custody: framework in design doc (Secrets Manager + KMS EncryptionContext + IAM least-privilege + break-glass procedure); specifics deferred to operator runbook
   - Deliverables: `docs/architecture/AUDIT_016_KEY_ROTATION_DESIGN.md` (full design doc), `backend/src/services/keyRotation.ts` (interface stubs throwing `DesignPhaseStubError`), `backend/src/middleware/phiEncryption.ts` JSDoc update (no logic change), `backend/src/services/__tests__/keyRotation.test.ts` (stub tests)
 - **Implementation PR plan (3 sub-PRs, ~14-22h total):**
-  - **Implementation PR 1** (~5-7h): Envelope format V0 (legacy) detection + V1 emission for new writes; placeholder DEK for v1-format-correctness testing
-  - **Implementation PR 2** (~5-8h): phiEncryption ↔ kmsService wiring; replace placeholder DEK with real `kmsService.envelopeEncrypt`; EncryptionContext per-record propagation (model + field); production-mode + demo-mode parity
-  - **Implementation PR 3** (~4-7h): `migrateRecord()` real implementation + background re-encryption job + audit logging + operator runbook
+  - **Implementation PR 1** ✅ **SHIPPED 2026-05-07** (~5-7h + ~1h AUDIT-017 bundle): V0/V1/V2 envelope schema (revised inline from original V0/V1; signal-shape-honesty per fifth §17.1 architectural-precedent) + V1 emission for new writes (single-key versioned) + AUDIT-017 PHI_ENCRYPTION_KEY validation bundled per operator D4. Test count: 464/464 passing (417 prior + 47 net new). New module: `backend/src/services/envelopeFormat.ts` (pure parse/build for V0/V1/V2 + EnvelopeFormatError). Refactored: `keyRotation.ts` real implementations for `decryptAny` + `encryptWithCurrent`; `phiEncryption.ts` async-propagation through middleware. AUDIT-022 SQL-filter compatibility verified (all three versions match `enc:%`).
+  - **Implementation PR 2** (~5-8h): V2 envelope emission via kmsService; replace V1 single-key path with real `kmsService.envelopeEncrypt`; EncryptionContext per-record propagation (model + field); production-mode + demo-mode parity. PR 1 V2 schema + parser already in place; PR 2 wires kmsService into V2 emission + decrypt.
+  - **Implementation PR 3** (~4-7h): `migrateRecord()` real implementation + background re-encryption job (V0 + V1 → V2) + audit logging + operator runbook. AUDIT-016 status flips OPEN → RESOLVED at PR 3 merge.
 - **Effort estimate (revised):** ~14-22h implementation (down from original L estimate of 24-40h; reduction = kmsService already-implemented saves 8-15h of KMS service authoring)
 - **Cross-references:**
   - `docs/architecture/AUDIT_016_KEY_ROTATION_DESIGN.md` (design source of truth)
@@ -399,12 +399,16 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 - **Phase:** 2B
 - **Severity:** LOW (P3)
-- **Status:** OPEN
-- **Location:** `backend/src/server.ts:38-45`
-- **Evidence:** Existence check only. AES-256 requires 32 bytes (64 hex chars). Malformed key throws on first encryption, not at startup.
-- **Severity rationale:** Operational, not security.
-- **Remediation:** Add `Buffer.from(...).length === 32` check to startup validation.
-- **Effort estimate:** XS (15 min)
+- **Status:** RESOLVED 2026-05-07 (bundled into AUDIT-016 PR 1 per operator decision D4)
+- **Resolution PR:** AUDIT-016 implementation PR 1 — `feat(security): AUDIT-016 implementation PR 1 — V0/V1/V2 envelope schema + V1 emission + AUDIT-017 key validation (bundled)`
+- **Resolution evidence:**
+  - `backend/src/services/keyRotation.ts` `validateKeyOrThrow()` — checks presence + 64-hex-char length + hex regex; throws `KeyValidationError` (sister to AUDIT-015 fail-loud pattern)
+  - `backend/src/middleware/phiEncryption.ts` module init calls `validateKeyOrThrow(ENCRYPTION_KEY)` outside demo mode — invalid key fails fast at startup, not at first encrypt
+  - 6 tests in `backend/src/services/__tests__/keyRotation.test.ts §validateKeyOrThrow()` — covers undefined / empty / too-short / too-long / non-hex / valid (64-hex)
+  - Cross-referenced from AUDIT-022 `preFlightValidate` (PR #253) which surfaced the awareness as a runtime warning; now formalized as fail-loud validation at module init
+- **Original location:** `backend/src/server.ts:38-45` (existence check only). Resolution moved validation into `keyRotation.ts` so it lives with the encryption surface, not the server bootstrap surface.
+- **Original severity rationale (preserved):** Operational, not security.
+- **Cross-references:** AUDIT-016 (this PR's parent), AUDIT-015 (fail-loud pattern), AUDIT-022 PR #253 (`preFlightValidate` raised this as a warning surface)
 
 ### AUDIT-018 — `AuditLog.description` accepts arbitrary input, not encrypted
 

@@ -110,7 +110,9 @@ This is the second §17.1-architectural-precedent finding (sister to AUDIT-067/0
 
 ## 5. Ciphertext envelope format
 
-### V0 (legacy — current production)
+> **2026-05-07 inline revision** — original design collapsed V1 + KMS into a single "v1" envelope carrying a placeholder wrappedDEK during PR 1 + a real KMS-wrapped DEK in PR 2. §17.1 consumer audit during PR 1 implementation flagged signal-shape-honesty problem (a `wrappedDEK` field not actually wrapping anything is signal-shape-lying). Revised to V0/V1/V2 explicit split. See §11 cross-references for the fifth §17.1 architectural-precedent acknowledgment.
+
+### V0 (legacy — current production, decrypt-only)
 
 ```
 enc:<iv-hex>:<authTag-hex>:<ciphertext-hex>
@@ -120,24 +122,55 @@ enc:<iv-hex>:<authTag-hex>:<ciphertext-hex>
 - All current PHI rows in production use this format
 - Single key sourced from `process.env.PHI_ENCRYPTION_KEY`
 - No version tag; no wrapped DEK
+- **PR 1**: detected on read; decrypted via legacy single-key path
+- **PR 3**: migrated to V2 by background job
 
-### V1 (target — post-rotation deploy)
+### V1 (single-key versioned — AUDIT-016 PR 1 emission)
 
 ```
-enc:v1:<wrappedDEK-base64>:<iv-base64>:<authTag-base64>:<ciphertext-base64>
+enc:v1:<iv-hex>:<authTag-hex>:<ciphertext-hex>
 ```
 
-- 6 colon-delimited segments (includes `v1` version marker after `enc:` prefix)
+- 5 colon-delimited segments (`enc` + `v1` + iv + authTag + ciphertext)
+- Single key sourced from `process.env.PHI_ENCRYPTION_KEY` (same as V0)
+- No wrapped DEK (placeholder is the same env-var key — version tag IS the only signal)
+- Emitted by `keyRotation.encryptWithCurrent` for all new writes after PR 1 deploy
+- **PR 1**: emitted + decrypted; production write path
+- **PR 3**: migrated to V2 by background job (same handler as V0 → V2)
+
+### V2 (KMS-wrapped DEK — AUDIT-016 PR 2 emission)
+
+```
+enc:v2:<wrappedDEK-base64>:<iv-base64>:<authTag-base64>:<ciphertext-base64>
+```
+
+- 6 colon-delimited segments (includes `v2` version marker + wrappedDEK)
 - DEK is generated per encrypt call via KMS `GenerateDataKey`
 - DEK is encrypted-at-rest via KMS (the `wrappedDEK` segment)
 - Plaintext DEK is short-lived (single encrypt operation) and never persisted
 - Decryption requires KMS `Decrypt` call to unwrap DEK + local AES-256-GCM
+- **PR 1**: schema reserved + parser routes; decrypt throws `DesignPhaseStubError`
+- **PR 2**: emission + decryption wired to kmsService; production write path swaps from V1 to V2
+
+### Production data flow (V0 → V1 → V2)
+
+```
+[Today's production]                    (V0 only)
+       ↓ AUDIT-016 PR 1 deploys
+[Mixed: V0 read + V1 write]             (V0 legacy + V1 new writes)
+       ↓ AUDIT-016 PR 2 deploys
+[Mixed: V0 + V1 read + V2 write]        (V0 + V1 legacy + V2 new writes)
+       ↓ AUDIT-016 PR 3 background job
+[V2 only after migration window]        (V0 + V1 → V2; 30-day target)
+```
+
+Each stage is observable: a `LIKE 'enc:v%'` SQL filter or `grep -c 'enc:v1:' / 'enc:v2:'` audit gives operator a real-time migration progress view. The original collapsed-V1 schema would have hidden whether ciphertext is "V1 placeholder" or "V1 KMS-wrapped" behind the same prefix.
 
 ### Future versions
 
 Reserved version slots:
-- `v2`: per-tenant DEK wrapping (multi-tenant isolation; future v2.0 PATH_TO_ROBUST scope)
-- `v3`: post-quantum hybrid (per NIST PQC migration; ~2030 horizon)
+- `v3`: per-tenant DEK wrapping (multi-tenant isolation; future v2.0 PATH_TO_ROBUST scope)
+- `v4`: post-quantum hybrid (per NIST PQC migration; ~2030 horizon)
 
 ---
 
@@ -287,38 +320,45 @@ Target: 30 days post Phase A deploy. Bounded by:
 
 ## 10. Implementation phase scope breakdown (3 follow-up PRs)
 
-### Implementation PR 1 — Envelope format + version tag (~5-7h)
+### Implementation PR 1 — V0/V1 envelope schema + V1 emission + AUDIT-017 bundle (~5-7h + ~1h AUDIT-017)
+
+**Status:** SHIPPED 2026-05-07.
+
+**Scope (per 2026-05-07 V0/V1/V2 schema revision):**
+- New `backend/src/services/envelopeFormat.ts` — pure parse/build for V0/V1/V2; `parseEnvelope` returns discriminated union; `buildV0`/`V1`/`V2` serialize. EnvelopeFormatError fail-loud sister to AUDIT-015.
+- Refactor `backend/src/services/keyRotation.ts` — replace `decryptAny` + `encryptWithCurrent` stubs with real implementations. V0 + V1 single-key paths share AES-256-GCM with `process.env.PHI_ENCRYPTION_KEY`. V2 throws `DesignPhaseStubError` (PR 2 lands).
+- Refactor `backend/src/middleware/phiEncryption.ts` — delegate `encrypt` / `decrypt` to keyRotation; preserve `PHI_LEGACY_PLAINTEXT_OK` gate; preserve AUDIT-015 fail-loud invariants. Async-propagate through middleware (`encryptFields` / `decryptRecord` / `encryptJsonField` / `decryptJsonField` / `applyPHIEncryption.$use`).
+- AUDIT-017 bundled per operator decision D4 — `validateKeyOrThrow()` runs at module init for `phiEncryption.ts` outside demo mode; throws `KeyValidationError` on missing / wrong-length / non-hex key. Sister to AUDIT-015.
+- Tests: 47 net new (23 envelopeFormat parse/build + 26 keyRotation real-behavior + AUDIT-017 + 3 phiEncryption V1 round-trip; minus 2 stub tests removed).
+
+**Does NOT include:** kmsService wiring (PR 2). V2 parsing routes correctly but decrypt throws stub error.
+
+### Implementation PR 2 — V2 envelope emission + kmsService wiring (~5-8h)
+
+**Status:** PENDING.
 
 **Scope:**
-- Update `phiEncryption.ts` decryption path to detect V0 vs V1 envelope (regex on prefix)
-- Add `decryptV0` (current legacy logic, unchanged) + `decryptV1` (parses wrappedDEK + calls kmsService.envelopeDecrypt)
-- Update encryption path to ALWAYS emit V1 for new writes
-- Add `wrappedDEK` field type to envelope schema
-- Tests: V0 + V1 round-trip; mixed result sets; legacy backward-compat
-
-**Does NOT include:** wiring kmsService for actual envelope; uses placeholder DEK derived from existing PHI_ENCRYPTION_KEY for v1-format-correctness testing.
-
-### Implementation PR 2 — phiEncryption ↔ kmsService wiring (~5-8h)
-
-**Scope:**
-- Replace placeholder DEK in `encryptWithCurrent` with real `kmsService.envelopeEncrypt` call
-- Replace V1 decryption stub with real `kmsService.envelopeDecrypt` call
-- EncryptionContext propagation per-record (model + field name)
-- Production-mode + demo-mode parity (kmsService local-fallback covers demo)
-- Tests: integration with kmsService mocks; EncryptionContext narrowing; KMS failure handling
-- Production deploy ready after PR 2 merges
+- Replace single-key V1 emission in `encryptWithCurrent` with real `kmsService.envelopeEncrypt` → V2 envelope (`enc:v2:<wrappedDEK>:<iv>:<authTag>:<ciphertext>`).
+- Replace V2 stub-throw in `decryptAny` with `kmsService.envelopeDecrypt` call.
+- EncryptionContext propagation per-record (model + field name).
+- Production-mode + demo-mode parity (kmsService local-fallback covers demo).
+- Tests: integration with kmsService mocks; EncryptionContext narrowing; KMS failure handling; V0+V1+V2 mixed-state batch decrypt.
+- Production deploy ready after PR 2 merges (V0 + V1 still decrypt; V2 emitted for new writes).
 
 **Risk:** KMS API cost calibration — measured during integration tests. Default 4KB envelope size + N writes per minute = bounded cost.
 
 ### Implementation PR 3 — Migration handler + background job (~4-7h)
 
+**Status:** PENDING.
+
 **Scope:**
-- `migrateRecord(recordId, table)` real implementation
-- Background re-encryption job (Fargate task or Lambda)
-- Idempotency via envelope detection
-- Audit logging per batch
-- Operator-runbook for invocation + completion verification
-- Tests: idempotency, partial-failure handling, counts verification
+- `migrateRecord(recordId, table)` real implementation — reads V0 OR V1; re-encrypts as V2; writes back.
+- Background re-encryption job (Fargate task or Lambda).
+- Idempotency via envelope detection (V2 records skipped).
+- Audit logging per batch.
+- Operator-runbook for invocation + completion verification.
+- Tests: idempotency, partial-failure handling, counts verification.
+- AUDIT-016 register status flips OPEN → RESOLVED at PR 3 merge.
 
 **Risk:** background-job ops surface — first scheduled task at TAILRD; runbook quality matters.
 
@@ -333,8 +373,8 @@ Target: 30 days post Phase A deploy. Bounded by:
 ## 11. Cross-references
 
 - **AUDIT-016** (this work) — `docs/audit/AUDIT_FINDINGS_REGISTER.md`
-- **AUDIT-017** (LOW P3) — PHI_ENCRYPTION_KEY length not validated at startup; bundled-eligible with implementation PR 1
-- **AUDIT-022** (MEDIUM P2) — Legacy JSON PHI not encrypted at rest; benefits from rotation pattern in eventual re-encryption work; PR 3 of today's session-arc plan
+- **AUDIT-017** (LOW P3) — PHI_ENCRYPTION_KEY length not validated at startup; **RESOLVED 2026-05-07** bundled into PR 1 per operator decision D4 (`validateKeyOrThrow` + module-init validation)
+- **AUDIT-022** (MEDIUM P2) — Legacy JSON PHI not encrypted at rest; **RESOLVED 2026-05-07** PR #253 (production-grade backfill tooling + operator runbook)
 - **HIPAA Security Rule §164.312(a)(2)(iv)** — Encryption and Decryption (addressable implementation specification)
 - **NIST SP 800-57 Part 1 Rev 5** — Cryptoperiod guidance (180-day DEK basis)
 - **NIST FIPS 197** — AES algorithm (AES-256-GCM)
@@ -359,3 +399,25 @@ Target: 30 days post Phase A deploy. Bounded by:
 ---
 
 *Authored 2026-05-07 during PR 2 of session 3-PR arc. Catalyst: AUDIT-016 (HIGH P1) HIPAA §164.312(a)(2)(iv) gap. §17.1 consumer audit corrected register's "scaffolded but unwired" framing for kmsService.ts (actually implemented but unconsumed) — second §17.1-architectural-precedent finding after AUDIT-067/068 (PR #249).*
+
+---
+
+## Inline revision history
+
+### 2026-05-07 — V0/V1/V2 envelope schema split (fifth §17.1 architectural-precedent)
+
+**Catalyst:** §17.1 consumer audit during PR 1 implementation (~4 hours after this design doc shipped in PR #252) flagged a signal-shape-honesty problem with the original V1 schema. The original design collapsed two distinct production data-flow stages — single-key versioned (PR 1) and KMS-wrapped DEK (PR 2) — into one "V1" envelope carrying a placeholder `wrappedDEK` field. A `wrappedDEK` field that's not actually wrapping anything is signal-shape lying: operators grepping production logs for `enc:v1:` could not distinguish "PR 1 placeholder" from "PR 2 KMS-wrapped" ciphertext.
+
+**Revision:** §5 envelope format split into V0 (legacy, no version tag) / V1 (single-key versioned, no wrappedDEK) / V2 (KMS-wrapped DEK). §10 implementation phase scope updated: PR 1 ships V0/V1 detection + V1 emission (single-key); PR 2 ships V2 emission (KMS); PR 3 migrates V0 + V1 → V2.
+
+**§17.1 architectural-precedent count post-revision: 5 exercises in the arc.**
+
+1. AUDIT-067/068 LOINC reference-only (PR #249) — 3-6h architectural estimate → 50-min right-sized fix
+2. AUDIT-069 LVEF — prior codebase fix-from comment was itself a regression; only NLM fallback verification caught
+3. AUDIT-016 kmsService reframing (this design doc, original authorship) — register's "scaffolded but unwired" framing → 305 LOC fully implemented but unconsumed; effort 24-40h → 14-22h
+4. AUDIT-022 PHI_JSON_FIELDS broader than register snapshot + 2 stale refs cleaned + production-grade quality bar correction (PR #253) — register's 11-column snapshot → middleware 30-column reality + 2 dead references
+5. **2026-05-07 V0/V1/V2 schema revision (this revision)** — operator-side derivative drift caught against authoritative design doc within 4 hours of shipping. Methodology working as designed against my own design doc.
+
+**Why this matters operationally:** the methodology stack (§17.1 consumer audit) caught my own design's signal-shape-lying problem during the FIRST implementation PR — before any production write ever emitted a placeholder-wrappedDEK envelope. If we had shipped the original schema, every "V1" log entry across the 30-day migration window would have ambiguous semantics, and PR 2 would have needed to either (a) silently change V1 semantics from "placeholder DEK" to "KMS DEK" (silent breaking change) or (b) introduce V2 anyway. Option (a) trades short-term cleanliness for long-term audit confusion; option (b) means the design always wanted V0/V1/V2 but described it differently. Either way, V0/V1/V2 is the structurally honest design.
+
+**This is the pattern:** when a methodology stack catches a derivative drift within 4 hours of authorship, that's not failure of the original design — that's the methodology paying for itself.
