@@ -76,6 +76,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-068** — `LOINC_CARDIOVASCULAR_LABS.ABI_LEFT = '44975-1'` is "Q-T interval" (an EKG concept!), NOT ABI (Phase 0B Batch 5, **RESOLVED 2026-05-06** via reference-correctness fix per §17.1 consumer audit)
 - **AUDIT-070** — FHIR ingestion expansion gap: `observationService.CARDIOVASCULAR_LAB_CODES` does not include ABI LOINC mappings; FHIR-ingested patients with ABI observations don't reach PAD screening rule (CSV path unaffected — uses observationType bypass). Latent risk, not active patient-safety. (Phase 0B clinical-code, **OPEN** — dedicated FHIR ingestion expansion PR; will also audit other LOINC entries similarly absent from CARDIOVASCULAR_LAB_CODES.)
 - **AUDIT-069** — `LOINC_CARDIOVASCULAR_LABS.LVEF = '18010-0'` unverifiable per NLM Clinical Tables (search empty; loinc.org direct 500); not in NLM LOINC LVEF concept set. Real canonical LVEF = 10230-1 ("Left ventricular Ejection fraction" verified loinc.org direct + NLM). **Prior codebase fix-from comment "(was 10230-1 = QRS duration — WRONG)" was itself a regression** — 10230-1 IS LVEF per authoritative sources; the prior "fix" replaced the correct code with an unverifiable one. Every HF rule reading `labValues['lvef']` depended on this LOINC mapping (Phase 0B Batch 5, **RESOLVED 2026-05-06**)
+- **AUDIT-071** — cdsHooks cross-tenant patient lookup + missing fhirPatientId per-tenant unique (Phase 3 area b, **OPEN — PRODUCTION-READINESS GATE — HIGH P1 IMMEDIATE; dedicated mitigation PR is the next work block after Phase 3 audit merge**)
 
 ### MEDIUM (P2)
 
@@ -107,7 +108,16 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-059** — `RXNORM_WARFARIN.WARFARIN_2MG = '855296'` is actually warfarin 10mg tablet (label only — code is valid warfarin) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
 - **AUDIT-060** — `RXNORM_WARFARIN.WARFARIN_5MG = '855318'` is actually warfarin 3mg tablet (label only) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
 - **AUDIT-061** — `RXNORM_WARFARIN.WARFARIN_10MG = '855332'` is actually warfarin 5mg tablet (label only) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
+- **AUDIT-072** — Soft-delete coverage gap + DELETE patient does not cascade (Phase 3, OPEN)
+- **AUDIT-073** — Per-tenant unique gap on Order.fhirOrderId + CarePlan.fhirCarePlanId (Phase 3, OPEN — PRODUCTION-READINESS GATE; bundled with AUDIT-071)
+- **AUDIT-075** — PHI encryption coverage gaps (errorMessage / description / notes plaintext) (Phase 3, OPEN — PRODUCTION-READINESS GATE)
+- **AUDIT-078** — Production Aurora backup config not in IaC; restore procedure untested (Phase 3, OPEN — PRODUCTION-READINESS GATE)
+- **AUDIT-080** — Zod validation coverage gap (21 of 26 mutating-route files) (Phase 3, OPEN — PRODUCTION-READINESS GATE)
 - **AUDIT-038** — Node 18 LTS deprecation tracking (Operational debt, OPEN)
+- **AUDIT-074** — Schema-reading hygiene gaps (onDelete defaults + missing hospitalId index) (Phase 3, OPEN)
+- **AUDIT-076** — `HIPAA_GRADE_ACTIONS` set narrow; some clinically-significant events best-effort (Phase 3, OPEN)
+- **AUDIT-077** — Tenant-isolation defense-in-depth hygiene gaps (Phase 3, OPEN)
+- **AUDIT-079** — connection_limit not explicit in DATABASE_URL nor Prisma client (Phase 3, OPEN)
 - **AUDIT-040** — Line-shift handling in canonical pipeline (Operational debt / canonical infrastructure, **RESOLVED 2026-05-05** via refreshCites.ts)
 - **AUDIT-041** — `applyOverrides.ts` candidate-default mismatch with source-change PR usage (4 prior recurrences across PRs #238/240/241/243) (Canonical infrastructure, **RESOLVED 2026-05-06** via canonical-default flag flip + `--candidate` opt-in)
 - **AUDIT-051** — `ACEI_CODES` `'50166'` is fosinopril (codebase comment claimed benazepril; class-correct, comment wrong) (Phase 0B Cat D, **RESOLVED 2026-05-06** via canonical benazepril CUI 18867)
@@ -1050,6 +1060,275 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ---
 
+### AUDIT-071 — cdsHooks cross-tenant patient lookup + missing fhirPatientId per-tenant unique
+
+- **Phase:** 3 (data layer audit; multi-tenancy enforcement)
+- **Severity:** **HIGH (P1)**
+- **Status:** **OPEN — PRODUCTION-READINESS GATE — HIGH P1 IMMEDIATE; remediation required before further deferrable work blocks; data-state-independent (PHI may arrive any day; today's structural cross-tenant filter bug is tomorrow's PHI exposure on same code path).** Dedicated mitigation PR is the next work block after Phase 3 audit merge.
+- **Detected:** 2026-05-07 during Phase 3 audit area b (multi-tenancy enforcement), front-loaded per operator decision D1
+- **Location:**
+  - `backend/src/routes/cdsHooks.ts:117-123` — `tailrd-cardiovascular-gaps` hook
+  - `backend/src/routes/cdsHooks.ts:294-300` — `tailrd-discharge-gaps` hook
+  - `backend/prisma/schema.prisma:242, 282` — `Patient.fhirPatientId String?` + `@@index([fhirPatientId])` (no `@@unique([hospitalId, fhirPatientId])`)
+  - `backend/src/server.ts:189` — `app.use('/cds-services', cdsLimiter, require('./routes/cdsHooks').default);` (NOT mounted under `authenticateToken`)
+- **Evidence:** Both cdsHooks endpoints use the pattern `const hospitalId = (req as any).user?.hospitalId; ... if (hospitalId) patientWhere.hospitalId = hospitalId; const patient = await prisma.patient.findFirst({ where: patientWhere });`. The conditional filter is **structurally always-false** because (a) cdsHooks routes are mounted at server.ts:189 under `cdsLimiter` only — not under `authenticateToken`, and (b) `verifyCDSHooksJWT` (cdsHooks.ts:26-51) returns a boolean only — it does not populate `req.user`. In dev/test (NODE_ENV !== 'production') line 31 returns `true` unconditionally. In production with valid CDS Hooks JWT, the JWT payload is EHR-issued (Epic App Orchard) and does not carry our `hospitalId` claim. Result: **cross-tenant patient lookup by `fhirPatientId` in BOTH dev AND production**. Reinforced by `Patient.fhirPatientId` having `@@index` only — no per-tenant unique constraint — so two tenants could legitimately share the same fhirPatientId for different patients.
+- **Severity rationale:** **HIPAA §164.312(a)(1) access control + §164.502 minimum necessary.** Active CDS Hooks endpoint surface that produces clinical recommendations (cards) based on cross-tenant patient match. Today's BSW pilot is at pre-DUA pre-data-flow state (operator confirmation 2026-05-07: no production hospital data) so the bug exposes nothing today because there's nothing to expose. **Production-readiness is data-state-independent** — PHI may arrive any day, and the structural bug exposes PHI on the same code path the moment data flows. Filing as HIGH P1 per §18 register-literal classification: structural bug on production code path; remediation required before further deferrable work blocks regardless of data state.
+- **Remediation (fix-shape):**
+  1. Mount `cdsHooks` routes under a JWT-extracting middleware that populates `req.user.hospitalId` from a verified source. Two paths: (a) for EHR-initiated CDS Hooks JWT, extract hospitalId from a TAILRD-side mapping table keyed on `iss`/issuerUrl + verify Patient.fhirPatientId is in that hospital; (b) for non-EHR-initiated requests, require platform-issued JWT with `hospitalId` claim.
+  2. Replace the conditional `if (hospitalId) patientWhere.hospitalId = hospitalId;` with **mandatory** `patientWhere.hospitalId = hospitalId;` — no permissive fallback. If `hospitalId` is undefined, fail-loud (return empty cards or 401, never cross-tenant lookup).
+  3. **Bundled per §17.3 scope discipline:** schema migration adding `@@unique([hospitalId, fhirPatientId])` to enforce per-tenant uniqueness. Pre-migration data integrity check: zero duplicates expected (single-tenant production today); migration safe.
+  4. Tests: cross-tenant lookup attempt returns empty cards (or 401); same-tenant lookup succeeds; schema migration blocks duplicate fhirPatientId within tenant.
+- **Effort estimate:** ~3-5h (consumer audit + JWT-subject-extraction wiring + schema migration + tests + documentation)
+- **Cross-references:**
+  - `docs/audit/PHASE_3_REPORT.md` (this audit)
+  - AUDIT-011 (HIGH P1) — multi-tenancy enforcement Layer 3 Prisma extension (defense-in-depth backstop; AUDIT-071 demonstrates app-layer discipline alone is insufficient)
+  - AUDIT-020 (MEDIUM P2) — sister finding for other fhir*Id fields' per-tenant uniqueness; the `[hospitalId, fhirPatientId]` constraint complements that family
+  - HIPAA Security Rule §164.312(a)(1) (access control standard)
+  - HIPAA §164.502(b) (minimum necessary)
+
+---
+
+### AUDIT-072 — Soft-delete coverage gap + DELETE patient does not cascade
+
+- **Phase:** 3 (data layer audit; soft-delete coverage)
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Detected:** 2026-05-07 during Phase 3 audit area h (soft-delete coverage)
+- **Location:**
+  - 6 soft-delete-aware models: User, Patient, Encounter, Observation, Order, Alert (`prisma/schema.prisma` — `deletedAt DateTime?` field on each)
+  - 3 route files filter `deletedAt: null`: `routes/patients.ts`, `routes/dataRequests.ts`, `routes/internalOps.ts`
+  - All other readers do NOT filter: `ingestion/gapDetectionRunner.ts`, `ingestion/runGapDetectionForPatient.ts`, `routes/cdsHooks.ts`, `routes/cqlRules.ts`, `routes/modules.ts`, `routes/admin.ts`, `routes/gaps.ts`, `routes/godView.ts`, `services/encounterService.ts`, `routes/auth.ts` (uses `!user.isActive` only)
+  - `backend/src/routes/patients.ts:368-371` — DELETE soft-deletes Patient row only, no cascade
+- **Evidence:** Per-model read-site survey (Phase 3 area h):
+  - Patient: 57 read sites; ~6 use `deletedAt: null` filter; ~51 do not.
+  - Encounter: 3 read sites; 1 uses filter (patients.ts:398); 2 do not (encounterService.ts:460, archived visitService).
+  - Observation: 2 read sites; 1 uses filter (patients.ts:430); 1 does not (archived resultsService).
+  - Order: 1 read site; 0 use filter (ordersService.ts:76).
+  - Alert: 6 read sites; 0 use filter.
+  - User: 27 read sites; 3 use filter (internalOps.ts); 24 do not — auth.ts:50-58, 187-193 use `!user.isActive` as proxy but not `deletedAt` directly.
+- **Severity rationale:** Silent soft-deleted-record exposure. PHI from soft-deleted patients can surface in CDS Hooks responses, module dashboards, gap analytics, admin counts, and gap re-evaluation runs. HIPAA-relevant for deceased-patient records and for HIPAA right-to-deletion fulfillment (`PatientDataRequest`) where `dataRequests.ts:451-501` properly cascades but `patients.ts:368-371` simple DELETE does not. Inconsistent cascade semantics between the two delete paths is itself a bug surface.
+- **Remediation:**
+  1. Apply consistent `deletedAt: null` filter discipline at all read sites for the 6 soft-delete models (audit + retrofit).
+  2. `DELETE /api/patients/:id` (`patients.ts:368-371`) must cascade soft-delete to dependent Encounter / Observation / Order / Alert rows. Mirror the discipline in `dataRequests.ts:451-501`.
+  3. `auth.ts` login flow add explicit `deletedAt: null` filter alongside `!user.isActive` defense-in-depth.
+  4. Consider Prisma middleware to inject `deletedAt: null` automatically for soft-delete-aware models (sister to PHI encryption middleware pattern).
+- **Effort estimate:** M (4-8h — audit + retrofit + middleware investigation + tests)
+- **Cross-references:**
+  - `docs/audit/PHASE_3_REPORT.md` (this audit)
+  - AUDIT-011 (tenant isolation Layer 3) — Prisma middleware pattern from that effort applies here
+
+---
+
+### AUDIT-073 — Per-tenant unique constraint gap on Order.fhirOrderId + CarePlan.fhirCarePlanId
+
+- **Phase:** 3 (data layer audit; schema review)
+- **Severity:** MEDIUM (P2)
+- **Status:** **OPEN — PRODUCTION-READINESS GATE** (bundled with AUDIT-071 mitigation per §17.3 — same schema migration)
+- **Detected:** 2026-05-07 during Phase 3 audit area a (schema review)
+- **Location:**
+  - `backend/prisma/schema.prisma:425` — `Order.fhirOrderId String?` (line 433: `@@index([fhirOrderId])` only; no per-tenant unique)
+  - `backend/prisma/schema.prisma:1928` — `CarePlan.fhirCarePlanId String?` (no index, no per-tenant unique)
+- **Evidence:** Schema has 8 per-tenant uniques on fhir*Id fields (`Encounter`, `Observation`, `Medication`, `Condition`, `Procedure`, `Device`, `Allergy`, `Patient.mrn`). Two fhir*Id fields are NOT covered: `Order.fhirOrderId` and `CarePlan.fhirCarePlanId`. Sister to AUDIT-020 (which addressed the existing 8). Sister to AUDIT-071 fhirPatientId.
+- **Severity rationale:** Same family as AUDIT-020 + AUDIT-071. Two tenants could share an EHR-supplied fhirOrderId or fhirCarePlanId without schema rejection, enabling subtle cross-tenant matches if a query were ever written using bare `fhirOrderId` or `fhirCarePlanId`. Defense-in-depth + structural correctness. Production-readiness gate item — data-state-independent.
+- **Remediation:** Schema migration adding `@@unique([hospitalId, fhirOrderId])` on Order and `@@unique([hospitalId, fhirCarePlanId])` on CarePlan. Pre-migration data integrity check: zero duplicates expected (no production hospital data today per single-tenant verification); migration safe. Bundle into AUDIT-071 mitigation PR per §17.3.
+- **Effort estimate:** XS-S (1-2h, bundled with AUDIT-071 schema migration)
+- **Cross-references:**
+  - `docs/audit/PHASE_3_REPORT.md` (this audit)
+  - AUDIT-020 (MEDIUM P2) — sister finding for the existing 8 fhir*Id per-tenant uniques
+  - AUDIT-071 (HIGH P1) — bundled per §17.3 (same migration)
+
+---
+
+### AUDIT-074 — Schema-reading hygiene gaps (onDelete defaults + missing hospitalId index)
+
+- **Phase:** 3 (data layer audit; schema review)
+- **Severity:** LOW (P3) — hygiene only; no security or correctness impact
+- **Status:** OPEN
+- **Detected:** 2026-05-07 during Phase 3 audit area a
+- **Location:**
+  - 14 child-side relations missing explicit `onDelete`: lines 238, 489, 568, 2322, 2338, 2355, 2374, 2397, 2419, 2462, 2483, 2484, 2508, 2509 in `backend/prisma/schema.prisma`
+  - 10 models with `hospitalId` field but NO `hospitalId`-leading `@@index`: User, LoginSession, CQLResult, Phenotype, CrossReferral, DrugTitration, QualityMeasure, DeviceEligibility, BreachIncident, FailedFhirBundle
+- **Evidence:** 66 explicit `onDelete` declarations exist (53 Restrict / 11 SetNull / 2 Cascade); 14 child-side relations rely on Prisma defaults (NoAction-equivalent, safe but inconsistent). Of 54 models, 10 have `hospitalId` field but no `[hospitalId, ...]`-leading index — tenant-scoped queries on these tables use less-optimal indexes.
+- **Severity rationale:** Hygiene only. Default Postgres NoAction is safe for HIPAA retention. Missing `[hospitalId, ...]` indexes have performance impact (full-scan or weaker index pick) but no correctness impact at current scale.
+- **Remediation:**
+  1. Add explicit `onDelete: Restrict` (or appropriate behavior) to the 14 child-side relations.
+  2. Add `@@index([hospitalId, ...])` to the 10 models, leading on `hospitalId` followed by next-most-common filter column.
+- **Effort estimate:** S (2-4h — schema edits + migration + verification)
+- **Cross-references:**
+  - `docs/audit/PHASE_3_REPORT.md` (this audit)
+
+---
+
+### AUDIT-075 — PHI encryption-at-rest coverage gaps (errorMessage / description / notes plaintext)
+
+- **Phase:** 3 (data layer audit; PHI encryption coverage)
+- **Severity:** MEDIUM (P2)
+- **Status:** **OPEN — PRODUCTION-READINESS GATE**
+- **Detected:** 2026-05-07 during Phase 3 audit area d
+- **Location:**
+  - `errorMessage` plaintext on 5 tables (sister to AUDIT-019 `FailedFhirBundle`):
+    - `WebhookEvent` (`schema.prisma` ~line 558)
+    - `UploadJob`
+    - `ReportGeneration`
+    - `ErrorLog`
+    - `UserActivity`
+  - `Recommendation.description` plaintext (`Recommendation` model)
+  - `CarePlan.description` plaintext (CarePlan.title IS in PHI_FIELD_MAP; description is not)
+  - `Onboarding.notes` plaintext
+  - `PatientDataRequest.notes` plaintext (HIPAA right-to-deletion flow accepts operator-supplied free-form input)
+  - **Sub-finding (defense-in-depth):** `User.email`, `User.firstName`, `User.lastName` plaintext (staff PII; not strict PHI per HIPAA "individually identifiable health information" definition but high-value for offline attacker reconnaissance)
+- **Evidence:** `backend/src/middleware/phiEncryption.ts` PHI_FIELD_MAP covers 38 fields across 14 models; PHI_JSON_FIELDS covers 28 fields across 15 models. The above fields are in concerning models (error-tracking, clinical-content free-form, request-fulfillment) but absent from both maps. Same pattern as already-filed AUDIT-018 (`AuditLog.description`) + AUDIT-019 (`FailedFhirBundle.errorMessage` + `originalPath`).
+- **Severity rationale:** HIPAA §164.312(a)(2)(iv) addressable encryption/decryption. Error-message tables accumulate raw input fragments that may include partial PHI (same logic as AUDIT-019). Free-form description/notes columns receive operator-supplied PHI-rich content. DB compromise leaks plaintext fragments. Production-readiness gate item — data-state-independent. Today's pre-DUA pre-data-flow state means nothing is currently leaking because nothing is currently in the columns; remediation discipline doesn't depend on that.
+- **Remediation:**
+  1. Add the 5 `errorMessage` fields, 2 `description` fields, 2 `notes` fields, and 3 `User` PII fields to `PHI_FIELD_MAP` in `phiEncryption.ts`.
+  2. Coordinate with AUDIT-018, AUDIT-019, AUDIT-020 if pursuing as a single PR (sister-family PHI coverage hardening).
+  3. Re-run `verify-phi-legacy-json.js` and `audit-022-legacy-json-phi-backfill.ts` post-extension to confirm clean state.
+  4. Consider source-side sanitization for error tables: redact PHI fragments at write time rather than encrypt-and-store (sister to error-message log redaction patterns).
+- **Effort estimate:** S-M (4-8h — PHI map extensions + backfill + tests; coordinate with AUDIT-018/019/020)
+- **Cross-references:**
+  - `docs/audit/PHASE_3_REPORT.md` (this audit)
+  - AUDIT-018 (MEDIUM P2) — `AuditLog.description` plaintext (sister)
+  - AUDIT-019 (MEDIUM P2) — `FailedFhirBundle` plaintext PHI fragments (sister)
+  - AUDIT-020 (MEDIUM P2) — fhir*Id plaintext (related family)
+  - AUDIT-022 PR #253 — `audit-022-legacy-json-phi-backfill.ts` will need to extend coverage post-AUDIT-075 PHI map updates
+  - HIPAA §164.312(a)(2)(iv)
+
+---
+
+### AUDIT-076 — `HIPAA_GRADE_ACTIONS` set is narrow; some clinically-significant events are best-effort
+
+- **Phase:** 3 (data layer audit; audit log integrity)
+- **Severity:** LOW (P3)
+- **Status:** OPEN
+- **Detected:** 2026-05-07 during Phase 3 audit area e
+- **Location:** `backend/src/middleware/auditLogger.ts:77-88` — `HIPAA_GRADE_ACTIONS` Set
+- **Evidence:** `HIPAA_GRADE_ACTIONS` contains 10 entries: LOGIN_SUCCESS, LOGIN_FAILED, LOGOUT, PHI_VIEW, PHI_EXPORT, PATIENT_CREATED/UPDATED/DELETED, BREACH_DATA_ACCESSED/MODIFIED. Per AUDIT-013 remediation, HIPAA-grade actions THROW on DB write failure (caller surfaces 500); non-HIPAA-grade actions are best-effort (file + Console transports still capture; DB failure logged but not thrown). Several clinically-significant events are NOT HIPAA-graded:
+  - `DATA_REQUEST_FULFILLED` (HIPAA right-to-deletion completion)
+  - `BREACH_INCIDENT_CREATED`, `BREACH_INCIDENT_UPDATED` (the BREACH_DATA_* actions cover view/modify but not creation/lifecycle)
+  - `MFA_ENABLED`, `MFA_DISABLED`
+  - `INVITE_ACCEPTED`
+  - `GAP_RESOLVED` (clinical decision provenance)
+- **Severity rationale:** Per HIPAA §164.308(a)(1)(ii)(D) Information System Activity Review, covered entities must implement procedures to regularly review records of information system activity. The HIPAA-grade subset that throws on DB write failure is too narrow for full compliance posture; events listed above also belong to "information system activity records." File + Console transports capture them, but the throw-on-DB-failure escalation is the strong signal that distinguishes HIPAA-grade from best-effort. LOW P3 because file/CloudWatch capture provides redundant coverage; the gap is procedural rigor, not data loss.
+- **Remediation:** Audit existing audit-event call-sites; promote actions matching the criteria above to `HIPAA_GRADE_ACTIONS`. Consider a tier system rather than binary flag (e.g., HIPAA_GRADE_REQUIRED / HIPAA_GRADE_RECOMMENDED).
+- **Effort estimate:** XS (30-60 min — set extension + audit of call-site coverage)
+- **Cross-references:**
+  - `docs/audit/PHASE_3_REPORT.md` (this audit)
+  - AUDIT-013 (RESOLVED 2026-04-30) — dual-transport audit logger; this finding refines the boundary policy
+  - HIPAA §164.308(a)(1)(ii)(D)
+
+---
+
+### AUDIT-077 — Tenant-isolation defense-in-depth hygiene gaps
+
+- **Phase:** 3 (data layer audit; areas b + f)
+- **Severity:** LOW (P3)
+- **Status:** OPEN
+- **Detected:** 2026-05-07 during Phase 3 audit areas b + f
+- **Location:**
+  - `backend/src/routes/cqlRules.ts:271, 630` — role-comparison bug
+  - `backend/src/routes/dataRequests.ts:478` — `tx.webhookEvent.updateMany({ where: { patientId } })` missing `hospitalId` filter
+  - `backend/src/routes/dataRequests.ts:498-501` — `tx.patient.update({ where: { id: patientId } })` uses bare `id` instead of AUDIT-011 `id_hospitalId` composite
+  - `backend/src/ingestion/patientWriter.ts:51-56` — same bare-`id` pattern (`prisma.patient.update({ where: { id: existing.id } })`)
+- **Evidence:**
+  - cqlRules.ts: `req.user?.role?.toLowerCase().replace(/_/g, '-') !== 'SUPER_ADMIN'` is structurally always-true (lowercase-hyphenated `'super-admin'` never equals uppercase-underscored `'SUPER_ADMIN'`). Tenant check ALWAYS RUNS — fail-safe (over-strict, not under-strict) but locks SUPER_ADMIN out of `/api/cql/results/:patientId` routes inconsistent with codebase pattern.
+  - dataRequests.ts:478: webhookEvent records have `patientId` FK to a Patient row that's already tenant-scoped, but the explicit `hospitalId` filter is the codebase convention.
+  - dataRequests.ts:498-501 + patientWriter.ts:51-56: bare-id update bypasses the AUDIT-011 `id_hospitalId` composite key. Prior queries scoped tenant correctly so this isn't an active leak, but defense-in-depth would use `id_hospitalId`.
+- **Severity rationale:** All three are defense-in-depth gaps — no active leak today, but the pattern weakens the multi-layer isolation model that AUDIT-011 design relies on. LOW P3.
+- **Remediation:**
+  1. cqlRules.ts: fix the role comparison to compare uppercase-underscored against `'SUPER_ADMIN'`.
+  2. dataRequests.ts:478: add `hospitalId` to webhookEvent.updateMany WHERE.
+  3. dataRequests.ts:498-501 + patientWriter.ts:51-56: convert bare-id updates to `where: { id_hospitalId: { id, hospitalId } }`.
+- **Effort estimate:** XS (30-60 min — three small edits + unit tests)
+- **Cross-references:**
+  - `docs/audit/PHASE_3_REPORT.md` (this audit)
+  - AUDIT-011 (HIGH P1) — `id_hospitalId` composite key from Phase a-pre
+
+---
+
+### AUDIT-078 — Production Aurora backup config not in IaC; restore procedure untested
+
+- **Phase:** 3 (data layer audit; backup + restore)
+- **Severity:** MEDIUM (P2)
+- **Status:** **OPEN — PRODUCTION-READINESS GATE**
+- **Detected:** 2026-05-07 during Phase 3 audit area g
+- **Location:**
+  - `infrastructure/cloudformation/` directory contains only `tailrd-staging.yml` — production Aurora cluster not codified
+  - `docs/CHANGE_RECORD_2026_04_29_day10_aurora_cutover.md` — Day 10 cutover snapshot evidence
+  - `docs/CHANGE_RECORD_2026_04_29_day11_rds_decommission.md:118-123` — restore procedure documented (4-step recipe), never end-to-end tested
+- **Evidence:** Production Aurora cluster `tailrd-production-aurora.cluster-csp0w6g8u5uq.us-east-1.rds.amazonaws.com` was provisioned out-of-band (likely manually or via a different mechanism). `BackupRetentionPeriod`, `DeletionProtection`, snapshot lifecycle policy are AWS console state, not version-controlled. Day 10/11 work proved snapshots are taken and tagged for 6-yr HIPAA retention (final pre-decom snapshot: `tailrd-production-postgres-final-pre-decom-20260429`). Restore procedure documented at Day 11 §"If catastrophic discovery" but never executed end-to-end.
+- **Severity rationale:** **HIPAA §164.308(a)(7)(ii)(B) Disaster Recovery Plan testing.** Configuration drift between staging (codified) and production (console-managed) creates audit reproducibility risk. Untested restore procedure means RTO is theoretical. Production-readiness gate item — data-state-independent (codified backup posture + proven restore capability is required for production-ready posture; PHI may arrive any day).
+- **Remediation:**
+  1. Author `infrastructure/cloudformation/tailrd-production.yml` matching production state. Use AWS CLI introspection (`aws rds describe-db-clusters`) to capture current production config; commit as IaC.
+  2. Set `BackupRetentionPeriod: 35` (max for Aurora automated backups) on production via the CFN stack import flow.
+  3. Set `DeletionProtection: true` on production cluster.
+  4. Document snapshot lifecycle: automated daily backups (35-day rolling) + monthly HIPAA-tagged snapshot (6-year retention) per audit needs.
+  5. **End-to-end restore test:** restore latest pre-cutover snapshot (`tailrd-production-aurora-pre-cutover-20260428-231342`) into a temporary cluster + `tailrd-production-aurora-restore-test`; verify schema + sample row count parity; document RTO (target <30 min); destroy test cluster.
+  6. Bundle into a dedicated operator-side ops PR (separate from app-code PRs).
+- **Effort estimate:** M (6-10h — CFN authoring + import + restore-test + runbook)
+- **Cross-references:**
+  - `docs/audit/PHASE_3_REPORT.md` (this audit)
+  - `docs/CHANGE_RECORD_2026_04_29_day10_aurora_cutover.md` (snapshot evidence)
+  - `docs/CHANGE_RECORD_2026_04_29_day11_rds_decommission.md` §"If catastrophic discovery" (untested restore procedure)
+  - HIPAA §164.308(a)(7)(ii)(B) Disaster Recovery Plan testing requirement
+
+---
+
+### AUDIT-079 — `connection_limit` not explicit in DATABASE_URL nor Prisma client
+
+- **Phase:** 3 (data layer audit; connection pooling)
+- **Severity:** LOW (P3) — hygiene only
+- **Status:** OPEN
+- **Detected:** 2026-05-07 during Phase 3 audit area i
+- **Location:** `backend/src/lib/prisma.ts:6` — `new PrismaClient({ log: ... })`; no pool configuration
+- **Evidence:** Prisma's default pool size is `num_physical_cpus * 2 + 1`. ECS Fargate task at `vcpu=1` yields default pool of 3 connections — adequate for current scale (single Fargate task, low concurrency, Aurora ServerlessV2 0.5-4 ACU max_connections scales with ACU; default 0.5 ACU ≈ 90 connections). DATABASE_URL does not include `?connection_limit=N` parameter (per Day 10 docs). No PgBouncer / RDS Proxy.
+- **Severity rationale:** Hygiene only at current scale. Becomes more material at multi-Fargate-task scale where total connection count = task_count × pool_size and may approach Aurora max_connections. Revisit at multi-tenant production scale.
+- **Remediation:**
+  1. Add explicit `?connection_limit=N` to DATABASE_URL OR `connectionLimit: N` in PrismaClient config. Suggested baseline: 10 per Fargate task.
+  2. At multi-Fargate-task production scale, evaluate RDS Proxy or PgBouncer for connection multiplexing.
+- **Effort estimate:** XS (15 min for explicit limit; M for Proxy/PgBouncer evaluation)
+- **Cross-references:**
+  - `docs/audit/PHASE_3_REPORT.md` (this audit)
+
+---
+
+### AUDIT-080 — Zod validation coverage gap (21 of 26 mutating-route files lack Zod)
+
+- **Phase:** 3 (data layer audit; data validation)
+- **Severity:** MEDIUM (P2)
+- **Status:** **OPEN — PRODUCTION-READINESS GATE**
+- **Detected:** 2026-05-07 during Phase 3 audit area j
+- **Location:** 21 of 26 route files with POST/PUT/PATCH endpoints lack Zod schema validation:
+  - `auth.ts` (4 mutating endpoints, 0 zod) — login, register, refresh, MFA
+  - `mfa.ts` (4 mutating endpoints, 0 zod) — MFA enrollment + verification
+  - `admin.ts` (11 mutating endpoints, 0 zod) — admin operations
+  - `modules.ts` (15 mutating endpoints, 0 zod) — module dashboard mutations
+  - `patients.ts` (2 mutating endpoints, 0 zod) — patient CRUD
+  - `cdsHooks.ts` (4 mutating endpoints, 0 zod)
+  - `clinicalIntelligence.ts` (6, 0)
+  - `cqlRules.ts` (3, 0)
+  - `gaps.ts` (1, 0)
+  - `godView.ts` (1, 0)
+  - `internalOps.ts` (4, 0)
+  - `invite.ts` (2, 0)
+  - `notifications.ts` (3, 0)
+  - `onboarding.ts` (3, 0)
+  - `phenotypes.ts` (2, 0)
+  - … + others
+- **Evidence:** `grep -cE 'z\.object\(\|safeParse\|parse\(' src/routes/*.ts` survey. CLAUDE.md §2 backend stack lists "Zod for request validation" — discipline gap vs stated practice. Files that DO use Zod: `accountSecurity.ts` (4/4), `auditExport.ts`, `breachNotification.ts` (2/2), `dataRequests.ts` (3/4), `files.ts` (2/3).
+- **Severity rationale:** Malformed input can produce unexpected behavior. Prisma is type-coerce-permissive on some inputs; missing-required-field handling depends on Prisma's runtime error path. The auth/mfa surfaces are the highest-risk because they're pre-authentication or bootstrapping authentication — input validation is the first line of defense. Implementation discipline gap reaches across most of the codebase.
+- **Remediation:** Phased rollout per route-file priority:
+  1. **Phase 1 (highest priority):** auth.ts, mfa.ts — pre-auth surface (4-6h)
+  2. **Phase 2:** admin.ts, patients.ts, internalOps.ts — privileged-mutation surface (4-6h)
+  3. **Phase 3:** modules.ts (highest LOC; 15 endpoints; ~4-6h)
+  4. **Phase 4:** remaining 13 files (~4-6h)
+  5. Add ESLint rule to require Zod parse on body before any prisma.create/update call (codebase-wide enforcement).
+- **Effort estimate:** L (12-20h total across phases)
+- **Cross-references:**
+  - `docs/audit/PHASE_3_REPORT.md` (this audit)
+  - CLAUDE.md §2 (Zod stated as backend stack discipline)
+
+---
+
 ### AUDIT-064 — Partial-pipeline-regen pattern after source-changing operations
 
 - **Phase:** Canonical infrastructure (operational debt surfaced via Cat A → Cat D verification batch arc)
@@ -1075,7 +1354,7 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 |-------|-----------|---------------:|--------|
 | 1 | Code quality + tech debt reconciliation | 8 (1 P0, 2 P1, 4 P2, 1 P3, 1 INFO) | COMPLETE 2026-04-29 |
 | 2 | Security posture | 14 (0 P0, 7 P1, 5 P2, 1 P3, 1 INFO) | COMPLETE 2026-04-29; Tier S findings RESOLVED 2026-04-30 (AUDIT-009 deployed flag-off, AUDIT-013 + AUDIT-015 RESOLVED); AUDIT-011 pending; AUDIT-022 added 2026-04-30 |
-| 3 | Data layer | 0 | DEFERRED |
+| 3 | Data layer | 10 (1 P1, 5 P2, 4 P3) | COMPLETE 2026-05-07 — CONDITIONAL PASS; production posture NOT production-ready today; 5 production-readiness gate items require immediate remediation (data-state-independent); AUDIT-071 mitigation PR is next work block; see `docs/audit/PHASE_3_REPORT.md` |
 | 4 | Operational maturity | 0 | DEFERRED |
 | 5 | HIPAA + compliance | 0 | DEFERRED (depends on Phase 1 Tier A + Phase 2) |
 | 6 | Module clinical maturity | 0 | DEFERRED |
