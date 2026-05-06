@@ -369,8 +369,12 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 - **Location:** `backend/src/middleware/phiEncryption.ts:4`
 - **Evidence:** Key loaded once at module init. No version tag in `enc:` format. No multi-key fallback. `kmsService.ts` scaffolded but unwired.
 - **Severity rationale:** HIPAA §164.312(a)(2)(iv) implementation specification expects periodic key rotation. Rotating today would make all existing ciphertext unreadable.
+- **Severity reconciliation 2026-05-07:** HIGH (P1) confirmed per HIPAA §164.312(a)(2)(iv) addressable spec + production BSW PHI exposure (live pilot since 2026-04-27) + no compensating rotation pathway (compromise scenario unrecoverable; rotating today destroys all existing ciphertext). Reconciliation triggered after agent-side status-surface drift on 2026-05-06 (drift to LOW P3 / MEDIUM P2 across multiple status surfaces during PR #248-#250 work). Future status surfaces MUST copy this severity literally — do not re-classify based on Phase 2B (prior phase) tag, "deferred" framing, or "v2.0 backlog" framing. Phase-tag is provenance, not severity. See AUDIT_METHODOLOGY.md §18 for status-surface discipline codification.
 - **Remediation:** Key-version tag in ciphertext; multi-key map; re-encrypt-on-rotation background job; optionally wire `kmsService.ts` for envelope encryption.
-- **Effort estimate:** L (24-40h)
+- **Effort estimate:** L (24-40h) — design phase + implementation phase across multi-PR arc.
+- **Cross-references:**
+  - AUDIT_METHODOLOGY.md §18 (status-surface discipline; codified after this drift)
+  - HIPAA Security Rule §164.312(a)(2)(iv) (addressable encryption/decryption implementation specification)
 
 ### AUDIT-017 — `PHI_ENCRYPTION_KEY` length not validated at startup
 

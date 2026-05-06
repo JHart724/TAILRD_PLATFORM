@@ -874,4 +874,61 @@ Codified after AUDIT-067/068 ABI deferral course-correction. Pattern observed: u
 
 ---
 
-*Authored 2026-05-04 in response to compounding methodology defect cycles (AUDIT-029 → AUDIT-030 → AUDIT-030.D). This document is the contract that prevents methodology drift living in audit prose. Implementation under `backend/scripts/auditCanonical/` follows. §16 added 2026-05-05 in response to Cat A clinical-code verification surfacing 15.5% wrong-drug bug rate (AUDIT-042 through AUDIT-061). §17 added 2026-05-06 in response to AUDIT-067/068 ABI deferral course-correction; codifies clinical-code PR acceptance criteria as drift-prevention mechanism.*
+## 18. Status-Surface Discipline (AUDIT-016 reconciliation catalyst, 2026-05-07)
+
+Status surfaces (priority tables, OPEN-findings lists, ledger refreshes, post-merge surfaces) MUST copy `AUDIT_FINDINGS_REGISTER.md` severity verbatim. Agent re-classification of severity at status-surface time is a methodology violation.
+
+### 18.1 The drift pattern
+
+Catalyst observation (2026-05-06): agent (Claude) drifted on AUDIT-016 across multiple status surfaces in a single session:
+
+| Surface | Severity stated | Register truth |
+|---|---|---|
+| Post-PR-#248 status surface | LOW (P3) | HIGH (P1) |
+| Strategic_continuity status surface | LOW (P3) | HIGH (P1) |
+| PR #250 ledger close OPEN findings | MEDIUM (P2) | HIGH (P1) |
+
+Root cause: agent treated AUDIT-016 as "Phase 2B / prior phase / deferred" categorically and inferred severity downward from the phase tag, without re-reading the register's actual severity classification.
+
+### 18.2 The discipline rule
+
+**Status surfaces are not severity-judgment surfaces.** They are register-mirroring surfaces. Severity is owned by the register's detail blocks (which capture full HIPAA / patient-safety / production-exposure analysis). Status-surface ordering can sub-axis on:
+- Active vs latent
+- Patient-safety-active vs administrative
+- Operator-priority for next session
+
+But severity (HIGH P1 / MEDIUM P2 / LOW P3 / INFO) MUST come from the register, character-for-character.
+
+### 18.3 Hard rules for status surfaces
+
+1. **Copy register severity literally.** When listing OPEN findings in any status surface, paste the register's exact severity label.
+2. **Phase tag is provenance, not severity.** "Phase 2B" / "Phase 0B" / "v2.0 deferred" / "prior session" are PROVENANCE annotations. They do NOT downgrade severity. A HIGH P1 finding from Phase 2B is still HIGH P1 in 2026-05-07's status surface.
+3. **"Deferred" / "v2.0 backlog" framing does not override severity.** A HIGH P1 finding deferred to v2.0 is still HIGH P1 in priority tables.
+4. **Severity reclassification requires register edit + dated reconciliation note.** If agent or operator believes severity should change, the change happens at the register layer (with an explicit dated reconciliation note explaining the rubric reasoning) — never at the status-surface layer alone.
+5. **Self-check before any status-surface output:** "Did I read the register's severity for each item I'm listing? Or did I infer it from phase tag / 'deferred' framing?" If inferred — go back and read the register.
+
+### 18.4 Drift-prevention mechanism
+
+Strategic_continuity protocol step 5 ("STATUS SURFACE — mandatory after every PR merge") is the operator-side trigger. §18.3 rule 1 ("copy register severity literally") is the agent-side discipline that must be self-checked before any status surface is emitted.
+
+When the operator catches drift, agent runs reconciliation via §18:
+1. Read register's actual severity (detail block, not just severity-table line)
+2. Surface findings table comparing register severity vs status-surface severity
+3. Determine whether register is correct (most common) or status-surface had it right (rare; would require register edit)
+4. If register correct: add dated reconciliation note to register's detail block + cross-reference §18
+5. If register wrong: register edit + dated reconciliation note + cross-reference §18
+
+### 18.5 Sister disciplines
+
+§18 is sister to:
+- **§17 PR shipping discipline** — what gets committed
+- **§16 clinical-code verification** — what rules consume
+- **§9.1 + §9.2** — what pipeline produces
+- **§1 rule-body verification** — what audits cite
+- **§18 status-surface discipline** (NEW) — what the running OPEN-findings table claims
+
+Together these disciplines form the methodology stack; each catches a different drift class. §18's drift class is the "summarize-and-soft-classify" failure that surfaces in priority tables and ledger refreshes.
+
+---
+
+*Authored 2026-05-04 in response to compounding methodology defect cycles (AUDIT-029 → AUDIT-030 → AUDIT-030.D). This document is the contract that prevents methodology drift living in audit prose. Implementation under `backend/scripts/auditCanonical/` follows. §16 added 2026-05-05 in response to Cat A clinical-code verification surfacing 15.5% wrong-drug bug rate (AUDIT-042 through AUDIT-061). §17 added 2026-05-06 in response to AUDIT-067/068 ABI deferral course-correction; codifies clinical-code PR acceptance criteria as drift-prevention mechanism. §18 added 2026-05-07 in response to AUDIT-016 status-surface drift across PR #248-#250 work; codifies status-surface discipline (register severity is authoritative; agent must not re-classify at status-surface time).*
