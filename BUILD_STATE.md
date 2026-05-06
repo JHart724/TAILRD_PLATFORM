@@ -8,13 +8,13 @@
 
 | Field | Value |
 |---|---|
-| Last updated | 2026-05-05 (Day 7 of Phase 0) — Tier S queue CLOSED; Cat A clinical-code verification batch shipped |
+| Last updated | 2026-05-06 (Day 8 of Phase 0) — Phase 0B clinical-code verification arc materially complete; methodology stack §17 codified |
 | Last update by | jhart |
-| Last update commit SHA | session arc PRs #234, #235, #236, #238, #239, #240, #241, #242, #243 (10 PRs across canonical infra + Tier S series + Cat A corrections) |
+| Last update commit SHA | 17-PR session arc 2026-05-05/06: PRs #234-#249 (canonical infra + Tier S series + Cat A/D + AUDIT-052 + AUDIT-041 §9.1 + Cat D §9.2 + LOINC + ABI §17.1) |
 | Plan reference | `docs/PATH_TO_ROBUST.md` v1.2 (active 2026-04-28) |
-| Plan target | **Under revision per v2.0**; v1.2 timeline (3-4 months) revised preliminary to **7-9 months raw scope**; per CAD audit §13, this translates to ~3-6 months AI-assisted wall-clock; canonical infrastructure + Tier S closure + Cat A corrections give v2.0 author structured 603-row matrix + verified-codes baseline as direct input; v2.0 PATH_TO_ROBUST due ~2026-05-19 |
-| Phase 0 day | **7 of 21** (14 days remaining in Phase 0 window) |
-| Phase 0 hours budget | **Phase 0B clinical audit: COMPLETE** (canonical infrastructure consolidated 6-module audits via auto-classifier + 21 manual overrides; **all 4 Tier S patient-safety items resolved 2026-05-05**: EP-017 (PR #238), CAD-016 (#240), EP-006 (#241), EP-079 (#243); **Cat A clinical-code verification batch shipped 2026-05-05** (PR #242, AUDIT-042..061 — 13 wrong-drug bugs / 84 codes = 15.5% bug rate corrected). ~52-82h raw-scope budget remaining; redirected to Phase 0A backend + Phase 0C UI/UX + Cat D inline-array verification (Batch 2). |
+| Plan target | **Under revision per v2.0**; v1.2 timeline (3-4 months) revised preliminary to **7-9 months raw scope**; per CAD audit §13, this translates to ~3-6 months AI-assisted wall-clock. Canonical infrastructure + Tier S closure + Cat A/D/AUDIT-052 corrections + LOINC corrections + methodology stack (§1, §9.1, §9.2, §16, §17) give v2.0 author structured 603-row matrix + verified-codes baseline + drift-prevention discipline as direct input. AI-assisted multiplier observed sustained at higher rate than initial estimate (17 PRs in ~14-15h operator wall-clock + ~9-12h agent over 2 days); feeds v2.0 timeline calibration. v2.0 PATH_TO_ROBUST due ~2026-05-19 |
+| Phase 0 day | **8 of 21** (13 days remaining in Phase 0 window) |
+| Phase 0 hours budget | **Phase 0B clinical-code verification arc: MATERIALLY COMPLETE.** Tier S queue CLOSED 4→0 (PRs #238/240/241/243). Cat A canonical RxNorm verification: 13 bugs in 84 codes corrected (PR #242). Cat D inline drug-class arrays: 8 bugs in 24 codes corrected (PR #246). AUDIT-052 architectural: 4 new canonical valuesets (DHP CCB / PPI / loop diuretic / thiazide; PR #247). AUDIT-041 applyOverrides §9.1 canonical-default (PR #245). Batch 5 LOINC: 5 wrong-concept bugs (3 RESOLVED PR #248 + 2 RESOLVED PR #249). Methodology stack codified: §1, §9.1, §9.2, §16, §17. **Remaining clinical-code verification debt: Batch 4 (211 inline ICD-10 patterns) + Batch 6 (96 threshold comparisons) + AUDIT-070 (FHIR ingestion expansion) — not blocking, latent risk only.** ~52-82h raw-scope budget partially consumed; redirected to Phase 0A backend Phases 3-5 (data + ops + HIPAA) + Phase 0C UI/UX. |
 | v2.0 PATH_TO_ROBUST due | end of Week 3 (~2026-05-19) |
 
 ---
@@ -43,9 +43,16 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 - [x] **Cross-module synthesis** with Tier S triage queue, blind-spot analysis, BSW pathway distribution
 - [x] **Canonical infrastructure** (AUDIT_METHODOLOGY.md + 8 scripts + CI gates + 101 tests)
 - [x] **Tier S queue CLOSED** (4 → 0 across PRs #238/240/241/243 — EP-017, CAD-016, EP-006, EP-079; only `(CRITICAL)`-tagged spec gap also resolved)
-- [x] **Cat A clinical-code verification batch** (PR #242 AUDIT-042..061 — 13 wrong-drug bugs corrected: dofetilide=donepezil, dronedarone=donepezil-branded, finerenone=invalid-CUI, ivabradine=invalid-CUI, sotagliflozin=bexagliflozin, procainamide=propranolol, digoxin-IV=retired aspirin combo, etc.)
-- [x] **AUDIT_METHODOLOGY.md §16** clinical-code verification standard (RxNav/LOINC/ICD-10 authoritative-source verification; cousin to §1 rule-body verification)
-- [/] **Cat D-G clinical-code verification (Batches 2-7)** — pending; ~52 inline RxNorm arrays, 11 ICD-10 valuesets, 30 LOINC keys, ~50 inline ICD-10 patterns, 4 exclusion constants. AUDIT-046..051 candidates pre-identified.
+- [x] **Cat A clinical-code verification batch** (PR #242 AUDIT-042..061 — 13 wrong-drug bugs / 84 codes = 15.5%)
+- [x] **Cat D inline-array verification batch** (PR #246 AUDIT-046..063 — 8 wrong-code bugs / 24 unique non-canonical = 33%)
+- [x] **AUDIT-052 architectural** (PR #247 — 4 new canonical valuesets DHP CCB / PPI / loop diuretic / thiazide; 7 inline arrays refactored to canonical imports)
+- [x] **AUDIT-041 §9.1 applyOverrides canonical-default** (PR #245 — eliminated manual canonical patch workaround)
+- [x] **Batch 5 LOINC verification** (PRs #248 + #249 AUDIT-065/066/067/068/069 — 5 wrong-concept LOINC codes corrected: QTc/QRS/LVEF/ABI; LVEF marquee finding caught a prior fix-from regression)
+- [x] **AUDIT_METHODOLOGY.md methodology stack codified:** §1 (rule-body verification), §9.1 (applyOverrides canonical-default), §9.2 (full-pipeline-regen), §16 (clinical-code verification), §17 (clinical-code PR acceptance criteria)
+- [x] **PR template enforcement** (`.github/pull_request_template.md` §17 checklist)
+- [/] **Batch 4 ICD-10 inline patterns** (211 startsWith patterns) — not blocking; deferred to follow-up
+- [/] **Batch 6 labValues threshold verification** (96 comparisons) — not blocking; deferred to follow-up
+- [/] **AUDIT-070 FHIR ingestion expansion** — latent gap (CSV path unaffected); dedicated PR planned
 
 ### Phase 0C — UI/UX audit (~25-30h)
 
@@ -166,11 +173,23 @@ Source: `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` §3.1.
 
 ## §6 — Open critical work (top 3, priority order)
 
-1. **AUDIT-041 fast-track fix** — `applyOverrides.ts` writes to candidate not canonical (4 recurrences across PRs #238/240/241/243). Estimate ~30-45 min agent.
-2. **Cat D inline-array clinical-code verification (Batch 2)** — ~52 inline RxNorm arrays in `gapRuleEngine.ts`; AUDIT-046..051 candidates pre-identified (e.g., `MRA_CODES_K = ['9947', '37801']` cites sotalol as "spironolactone proxy"; ARB_CODES has positions that look swapped). Estimate ~2-3h agent. Likely surfaces additional wrong-drug bugs.
-3. **Phase 0A backend audits Phase 3-5** — Data layer (~10h) + Operational maturity (~10h) + HIPAA gap analysis (~15-20h); load-bearing for v2.0.
+**Phase 0B clinical-code verification arc materially COMPLETE (2026-05-06).** Recommended starting points for next session (operator decides at session start):
 
-**Audit-axis Phase 0B critical path COMPLETE; Tier S queue CLOSED.** Phase 0A + 0C remain. AUDIT-052 architectural refactor (inline arrays bypass canonical valuesets) is the long-tail follow-up; partial mitigation shipped in PR #242. Tactical security work (AUDIT-025 Phase b, AUDIT-011 Phase a/b/c/d, AUDIT-022 backfill) queued for Phase 1.
+1. **Phase 0A Phase 3 (data layer)** — ~10h agent; load-bearing for v2.0 PATH_TO_ROBUST authorship (due ~2026-05-19). HIGHEST regulatory + architectural priority.
+2. **Phase 0A Phase 5 (HIPAA gap analysis)** — ~15-20h agent; load-bearing; pairs with Phase 3 data layer review. Required for production compliance posture.
+3. **AUDIT-070 FHIR ingestion expansion** — ~3-6h agent; closes the latent gap surfaced by §17.1 consumer audit (PR #249). Completes Phase 0B clinical-code arc fully (not just materially).
+
+**Lower priority (capacity-calibrated alternatives):**
+- AUDIT-016 PHI key rotation pattern (HIPAA-foundations work; can pair with Phase 5)
+- AUDIT-022 legacy JSON PHI backfill (Phase 2B-extended; HIPAA-relevant)
+- Batch 4 ICD-10 inline pattern verification (~2-3h; mechanical; deferrable)
+- Batch 6 labValues threshold verification (~3-4h; needs guideline cross-references; mechanical)
+- AUDIT-035/036 registry orphans (v2.0-deferred per prior design)
+- Phase 0C UI/UX audit (~25-30h; lower-priority; appropriate for capacity-calibrated work)
+
+**Anti-recommendation:** v2.0 PATH_TO_ROBUST authorship — load-bearing, novel architectural decisions, never appropriate at fatigue tail.
+
+Tactical security work (AUDIT-025 Phase b, AUDIT-011 Phase a/b/c/d) queued for Phase 1.
 
 ---
 
@@ -228,6 +247,8 @@ Source: `docs/audit/PHASE_0B_HF_AUDIT_ADDENDUM.md` §6.3, `docs/audit/PHASE_0B_C
 **Canonical infrastructure (2026-05-04):** AUDIT-029 / AUDIT-030 / AUDIT-030.D methodology defects resolved via `docs/audit/AUDIT_METHODOLOGY.md` canonical contract. 6-module audits regenerated from canonical JSON crosswalks; CI gates enforce regeneration discipline. Auto-classifier accuracy: 5 of 6 modules within ±10% of prior addendum claims; VHD bridged via 13 manual overrides documenting addendum's broad-rule consolidations + cross-module satisfaction. 18 cross-module satisfaction patterns surfaced (notably HF Device Therapy → EP module CRT/ICD evaluators). Wall-clock per AUDIT-028: ~50 min agent across 8 phases for full canonical infrastructure build.
 
 **Tier S queue closure + Cat A clinical-code verification (2026-05-05):** All 4 spec-explicit Tier S patient-safety items resolved across 4 PRs in single session arc (#238 EP-017 → #240 CAD-016 → #241 EP-006 → #243 EP-079; queue 4 → 3 → 2 → 1 → 0). AUDIT-031 was the only `(CRITICAL)`-tagged spec gap; closure means no spec-explicit CRITICAL gaps remain uncovered. Mid-arc, Phase 2 systematic verification of canonical RxNorm valuesets (PR #242, AUDIT-042..061) surfaced 13 wrong-drug or invalid-CUI errors in 84 cited codes (15.5% bug rate) — patient-safety-active subset (AUDIT-042/044/053/054/055/056/057) was silently miscoding QTc surveillance + finerenone/ivabradine gap rules in production. AUDIT_METHODOLOGY.md §16 added codifying mandatory RxNav/LOINC/ICD-10 authoritative-source verification (cousin to §1 rule-body verification). refreshCites.ts (PR #239) validated on 4 real-world Tier S PRs (idempotent, ~250 cites refreshed per run). AUDIT-041 (applyOverrides canonical-mode gap) recurred 4 times — fast-track follow-up.
+
+**Phase 0B clinical-code verification arc materially complete (2026-05-06):** Cat D inline-array verification (PR #246, AUDIT-046..063) surfaced 8 wrong-code bugs in 24 unique non-canonical codes (33% bug rate — 2× canonical-layer rate, validating AUDIT-052 architectural divergence-vector thesis). AUDIT-052 partial mitigation (PR #247) shipped 4 new canonical valuesets (DHP CCB, PPI, loop diuretic, thiazide) + 7 inline-array refactors. Methodology stack expanded: §9.1 applyOverrides canonical-default (PR #245), §9.2 full-pipeline-regen-after-source-change (PR #246 AUDIT-064), §17 clinical-code PR acceptance criteria (PR #248 — drift-prevention sister to §1/§16/§9.1/§9.2). Batch 5 LOINC verification (PRs #248 + #249) corrected 5 wrong-concept codes including marquee AUDIT-069 LVEF regression catch (prior codebase fix-from comment was itself wrong; only NLM Clinical Tables fallback verification caught it). PR #249 was first §17.1-architectural-precedent: consumer audit corrected over-scoped framing mid-flight (3-6h architectural estimate → 50min right-sized fix). AUDIT-070 NEW filed (FHIR ingestion expansion gap); latent risk only (CSV path unaffected). Methodology working as designed. Total session arc: 17 PRs across 2 days; ~14-15h operator wall-clock + ~9-12h agent. AI-assisted multiplier sustained at higher rate than initial Phase 0 estimate; data point for v2.0 PATH_TO_ROBUST timeline calibration.
 
 ---
 

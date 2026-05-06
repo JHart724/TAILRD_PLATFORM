@@ -295,9 +295,20 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 
 **Tier S queue CLOSED (2026-05-05):** All 4 spec-explicit Tier S patient-safety items resolved across PRs #238 (EP-017 HFrEF + non-DHP CCB), #240 (CAD-016 prasugrel + stroke/TIA), #241 (EP-006 dabigatran + CrCl<30), #243 (EP-079 WPW + AF + AVN blocker — only `(CRITICAL)`-tagged spec gap). No spec-explicit `(SAFETY)` or `(CRITICAL)` T1 gaps remain uncovered. Source: `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` §3.1.
 
+**Phase 0B clinical-code verification arc materially complete (2026-05-06):** Cat A canonical RxNorm verification + Cat D inline-array verification + AUDIT-052 partial canonical refactor + Batch 5 LOINC verification all shipped across PRs #234-#249 (17-PR arc). AUDIT-070 (FHIR ingestion expansion gap) filed as remaining latent risk; CSV path unaffected. Batch 4 (211 inline ICD-10 patterns) + Batch 6 (96 threshold comparisons) deferred — not blocking.
+
 **Cardiovascular terminology:** `backend/src/terminology/cardiovascularValuesets.ts` contains curated LOINC, ICD-10, RxNorm, and SNOMED code sets for gap detection. When adding new gap rules, add required codes there.
 
-**Clinical-code verification (mandatory, AUDIT_METHODOLOGY.md §16):** Every new RxNorm / LOINC / ICD-10 constant must be verified against an authoritative external source before authoring or consuming it. RxNorms via RxNav properties.json (`https://rxnav.nlm.nih.gov/REST/rxcui/<cui>/properties.json`). LOINC via loinc.org. ICD-10 via CMS ICD-10-CM 2024. Codebase trust is INSUFFICIENT — Cat A verification (PR #242) surfaced 13 wrong-drug bugs in 84 cited canonical RxNorms (15.5% bug rate; e.g., `RXNORM_QT_PROLONGING.DOFETILIDE` was donepezil, an Alzheimer's drug). Cite the verified-name comment next to the code. AUDIT-052 architectural follow-up: prefer importing from canonical valuesets over inline arrays in `gapRuleEngine.ts` (~52 inline arrays bypass canonical valuesets — divergence vector).
+**Clinical-code methodology stack (mandatory; see `docs/audit/AUDIT_METHODOLOGY.md`):**
+- **§1 rule-body verification standard** — audit conclusions must cite running code, not addendum text (output discipline)
+- **§9.1 applyOverrides canonical-default** — pipeline ergonomics; `applyOverrides.ts` writes canonical by default, `--candidate` opt-in for legacy verifyDraft baseline
+- **§9.2 full-pipeline-regen** — every source-changing PR must run extractCode → extractSpec → reconcile → refreshCites → applyOverrides → renderAddendum → renderSynthesis → validateCanonical (no partial pipeline runs)
+- **§16 clinical-code verification standard** — every new RxNorm / LOINC / ICD-10 constant must be verified against an authoritative external source. RxNorms via RxNav `properties.json`. LOINC via loinc.org / NLM Clinical Tables. ICD-10 via CMS ICD-10-CM 2024. Codebase trust is INSUFFICIENT — including codebase fix-from comments (per AUDIT-069 LVEF regression catch). Cat A 15.5% wrong-drug rate; Cat D 33% inline-array rate; Batch 5 17.2% LOINC rate.
+- **§17 clinical-code PR acceptance criteria** — drift-prevention discipline. Mandatory PR self-review: correctness + verification + scope discipline + process. PR template (`.github/pull_request_template.md`) enforces §17 checklist. §17.1 architectural-precedent reference: consumer audit corrects over-scoped framing mid-flight (PR #249).
+
+**AUDIT-052 architectural follow-up:** prefer importing from canonical valuesets over inline arrays. PR #247 closed major divergence vectors (DHP CCB, PPI, loop diuretic, thiazide); ~43 inline arrays remain (most already canonical-derived; opportunistic refactor).
+
+**AUDIT-070 cross-reference:** FHIR ingestion expansion track planned. `observationService.ts CARDIOVASCULAR_LAB_CODES` does not include LOINC mappings for ABI / LVEF / QTc / QRS — FHIR-ingested patients with these observations don't reach gap rules. CSV path unaffected. Dedicated PR with 5-step scope (audit + LOINC mappings + FHIR `bodySite` extension handling + full-stack tests + parity verification with CSV path).
 
 **Redis:** `backend/src/lib/redis.ts` provides a shared client singleton. Connects when `REDIS_URL` is set, falls back gracefully. Used for future rate limiter store, caching, and session management.
 
