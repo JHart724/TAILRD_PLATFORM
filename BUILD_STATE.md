@@ -8,13 +8,13 @@
 
 | Field | Value |
 |---|---|
-| Last updated | 2026-05-06 (Day 8 of Phase 0) — Phase 0B clinical-code verification arc materially complete; methodology stack §17 codified |
+| Last updated | 2026-05-07 (Day 8 of Phase 0) — HIPAA-foundations arc complete; methodology stack §18 codified |
 | Last update by | jhart |
-| Last update commit SHA | 17-PR session arc 2026-05-05/06: PRs #234-#249 (canonical infra + Tier S series + Cat A/D + AUDIT-052 + AUDIT-041 §9.1 + Cat D §9.2 + LOINC + ABI §17.1) |
+| Last update commit SHA | 20-PR session arc 2026-05-05/07: PRs #234-#253 (canonical infra + Tier S series + Cat A/D + AUDIT-052 + AUDIT-041 §9.1 + Cat D §9.2 + LOINC + ABI §17.1; HIPAA-foundations arc PR #251 AUDIT-016 reconciliation + §18 codification + PR #252 AUDIT-016 PHI key rotation DESIGN PHASE COMPLETE + PR #253 AUDIT-022 production-grade backfill + operator runbook) |
 | Plan reference | `docs/PATH_TO_ROBUST.md` v1.2 (active 2026-04-28) |
-| Plan target | **Under revision per v2.0**; v1.2 timeline (3-4 months) revised preliminary to **7-9 months raw scope**; per CAD audit §13, this translates to ~3-6 months AI-assisted wall-clock. Canonical infrastructure + Tier S closure + Cat A/D/AUDIT-052 corrections + LOINC corrections + methodology stack (§1, §9.1, §9.2, §16, §17) give v2.0 author structured 603-row matrix + verified-codes baseline + drift-prevention discipline as direct input. AI-assisted multiplier observed sustained at higher rate than initial estimate (17 PRs in ~14-15h operator wall-clock + ~9-12h agent over 2 days); feeds v2.0 timeline calibration. v2.0 PATH_TO_ROBUST due ~2026-05-19 |
-| Phase 0 day | **8 of 21** (13 days remaining in Phase 0 window) |
-| Phase 0 hours budget | **Phase 0B clinical-code verification arc: MATERIALLY COMPLETE.** Tier S queue CLOSED 4→0 (PRs #238/240/241/243). Cat A canonical RxNorm verification: 13 bugs in 84 codes corrected (PR #242). Cat D inline drug-class arrays: 8 bugs in 24 codes corrected (PR #246). AUDIT-052 architectural: 4 new canonical valuesets (DHP CCB / PPI / loop diuretic / thiazide; PR #247). AUDIT-041 applyOverrides §9.1 canonical-default (PR #245). Batch 5 LOINC: 5 wrong-concept bugs (3 RESOLVED PR #248 + 2 RESOLVED PR #249). Methodology stack codified: §1, §9.1, §9.2, §16, §17. **Remaining clinical-code verification debt: Batch 4 (211 inline ICD-10 patterns) + Batch 6 (96 threshold comparisons) + AUDIT-070 (FHIR ingestion expansion) — not blocking, latent risk only.** ~52-82h raw-scope budget partially consumed; redirected to Phase 0A backend Phases 3-5 (data + ops + HIPAA) + Phase 0C UI/UX. |
+| Plan target | **Under revision per v2.0**; v1.2 timeline (3-4 months) revised preliminary to **7-9 months raw scope**; per CAD audit §13, this translates to ~3-6 months AI-assisted wall-clock. Canonical infrastructure + Tier S closure + Cat A/D/AUDIT-052 corrections + LOINC corrections + HIPAA-foundations arc + methodology stack (§1, §9.1, §9.2, §16, §17, §18) give v2.0 author structured 603-row matrix + verified-codes baseline + drift-prevention discipline + status-surface discipline + production-grade migration tooling pattern as direct input. AI-assisted multiplier observed sustained at higher rate than initial estimate (20 PRs in ~14-18h operator wall-clock + ~12-16h agent over 3 days); feeds v2.0 timeline calibration. v2.0 PATH_TO_ROBUST due ~2026-05-19 |
+| Phase 0 day | **8 of ~21** (13 days remaining in Phase 0 window) |
+| Phase 0 hours budget | **Phase 0B clinical-code verification arc: MATERIALLY COMPLETE.** Tier S queue CLOSED 4→0 (PRs #238/240/241/243). Cat A canonical RxNorm verification: 13 bugs in 84 codes corrected (PR #242). Cat D inline drug-class arrays: 8 bugs in 24 codes corrected (PR #246). AUDIT-052 architectural: 4 new canonical valuesets (DHP CCB / PPI / loop diuretic / thiazide; PR #247). AUDIT-041 applyOverrides §9.1 canonical-default (PR #245). Batch 5 LOINC: 5 wrong-concept bugs (3 RESOLVED PR #248 + 2 RESOLVED PR #249). Methodology stack codified: §1, §9.1, §9.2, §16, §17, §18. **HIPAA-foundations arc COMPLETE 2026-05-07** (PRs #251/252/253): AUDIT-016 PHI key rotation DESIGN PHASE COMPLETE + AUDIT-022 production-grade backfill + §18 status-surface discipline + production-grade migration tooling pattern (precedent for future PHI-touching migrations). **Remaining clinical-code verification debt: Batch 4 (211 inline ICD-10 patterns) + Batch 6 (96 threshold comparisons) + AUDIT-070 (FHIR ingestion expansion) — not blocking, latent risk only.** ~52-82h raw-scope budget partially consumed; redirected to Phase 0A backend Phases 3-5 (data + ops + HIPAA) + Phase 0C UI/UX. |
 | v2.0 PATH_TO_ROBUST due | end of Week 3 (~2026-05-19) |
 
 ---
@@ -26,7 +26,7 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 ### Phase 0A — Backend audit Phase 2-7 continuation (~50-70h)
 
 - [x] Phase 1 — Code quality + tech debt reconciliation (`PHASE_1_REPORT.md`, CONDITIONAL PASS)
-- [/] Phase 2 — Security posture (Tier S 3.5 of 4 closed; AUDIT-011 Phase a-pre RESOLVED; 2 P2/P3 items remain — AUDIT-022, AUDIT-024)
+- [/] Phase 2 — Security posture (Tier S 3.5 of 4 closed; AUDIT-011 Phase a-pre RESOLVED; AUDIT-022 RESOLVED 2026-05-07; AUDIT-016 DESIGN PHASE COMPLETE 2026-05-07 with 3-sub-PR implementation queue; AUDIT-024 LOW + AUDIT-025 MEDIUM remain)
 - [ ] Phase 3 — Data layer (~10h)
 - [ ] Phase 4 — Operational maturity (~10h)
 - [ ] Phase 5 — HIPAA gap analysis (~15-20h)
@@ -75,7 +75,7 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 | Workstream | % | State (1 line) | Source |
 |---|---|---|---|
 | Backend (core APIs) | 70% | 29 routes, 21 services, 6-module rule engine (263 rules post-Tier-S closure); CX absent | `CLAUDE.md` §10 |
-| Security | 50% | Tier S 3.5/4 closed; AUDIT-011 Phase a-pre RESOLVED; AUDIT-025 Phase a live | `AUDIT_FINDINGS_REGISTER.md` |
+| Security | 55% | Tier S 3.5/4 closed; AUDIT-011 Phase a-pre RESOLVED; AUDIT-022 RESOLVED 2026-05-07; AUDIT-016 DESIGN PHASE COMPLETE 2026-05-07 (3-sub-PR queue); AUDIT-025 Phase a live | `AUDIT_FINDINGS_REGISTER.md` |
 | Infrastructure (AWS) | 85% | Aurora-only, RDS decommissioned 2026-05-02, staging cluster live | `CLAUDE.md` §9 |
 | Ingestion | 50% | Webhook + 263 rules across 6 modules (post-Tier-S closure); BSW SFTP/opportunity report not built | `CLAUDE.md` §10 |
 | Frontend | 35% | 6 modules × 3 tiers = 216 .tsx files; 5 of 6 use mock data | `CLAUDE.md` §10 |
@@ -173,23 +173,55 @@ Source: `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` §3.1.
 
 ## §6 — Open critical work (top 3, priority order)
 
-**Phase 0B clinical-code verification arc materially COMPLETE (2026-05-06).** Recommended starting points for next session (operator decides at session start):
+**Phase 0B clinical-code verification arc materially COMPLETE (2026-05-06).** **HIPAA-foundations arc COMPLETE (2026-05-07).** Recommended starting points for next session (operator decides at session start):
 
 1. **Phase 0A Phase 3 (data layer)** — ~10h agent; load-bearing for v2.0 PATH_TO_ROBUST authorship (due ~2026-05-19). HIGHEST regulatory + architectural priority.
 2. **Phase 0A Phase 5 (HIPAA gap analysis)** — ~15-20h agent; load-bearing; pairs with Phase 3 data layer review. Required for production compliance posture.
 3. **AUDIT-070 FHIR ingestion expansion** — ~3-6h agent; closes the latent gap surfaced by §17.1 consumer audit (PR #249). Completes Phase 0B clinical-code arc fully (not just materially).
 
 **Lower priority (capacity-calibrated alternatives):**
-- AUDIT-016 PHI key rotation pattern (HIPAA-foundations work; can pair with Phase 5)
-- AUDIT-022 legacy JSON PHI backfill (Phase 2B-extended; HIPAA-relevant)
+- AUDIT-016 PHI key rotation **implementation** (3 sub-PRs; ~14-22h total — see §6.2 below; design phase shipped PR #252)
 - Batch 4 ICD-10 inline pattern verification (~2-3h; mechanical; deferrable)
 - Batch 6 labValues threshold verification (~3-4h; needs guideline cross-references; mechanical)
-- AUDIT-035/036 registry orphans (v2.0-deferred per prior design)
+- AUDIT-035 / AUDIT-036 registry orphans (v2.0-deferred per prior design)
 - Phase 0C UI/UX audit (~25-30h; lower-priority; appropriate for capacity-calibrated work)
 
 **Anti-recommendation:** v2.0 PATH_TO_ROBUST authorship — load-bearing, novel architectural decisions, never appropriate at fatigue tail.
 
 Tactical security work (AUDIT-025 Phase b, AUDIT-011 Phase a/b/c/d) queued for Phase 1.
+
+### §6.1 — OPEN findings inventory (per §18 register-literal severity)
+
+Mirror of `docs/audit/AUDIT_FINDINGS_REGISTER.md` for non-Tier-S OPEN findings. Severity copied verbatim from register per §18 status-surface discipline. Register is source of truth; on disagreement, register wins.
+
+| Finding | Severity | Status | Notes |
+|---|---|---|---|
+| AUDIT-024 | LOW (P3) | OPEN | Prisma migrate wraps SQL in transaction; CONCURRENTLY index pattern requires multi-step deploy. Pattern issue, not security. |
+| AUDIT-025 | MEDIUM (P2) | OPEN (design complete 2026-05-03; Phase a/b implementation pending) | Schema migration validation gate. |
+| AUDIT-035 | MEDIUM (P2) | OPEN (v2.0-deferred per prior design) | `gap-ep-anticoag-interruption` registry-only orphan. |
+| AUDIT-036 | LOW (P3) | OPEN (v2.0-deferred per prior design) | `gap-hf-vaccine-covid` registry-only orphan. |
+| AUDIT-037 | MEDIUM (P2) | OPEN | `Math.random()` in `cqlEngine.ts:475` default rule scoring; CLAUDE.md §14 "NEVER DO" violation; clinical scoring path. |
+| AUDIT-038 | LOW (P3) | OPEN | Node 18 LTS deprecation tracking. |
+| AUDIT-070 | MEDIUM (P2) | OPEN | FHIR ingestion expansion gap: `CARDIOVASCULAR_LAB_CODES` missing ABI + other LOINC entries. Latent risk only; CSV path unaffected. |
+
+**Recently resolved (2026-05-07 HIPAA-foundations arc, removed from OPEN):**
+
+| Finding | Severity | Resolution |
+|---|---|---|
+| AUDIT-016 | HIGH (P1) | DESIGN PHASE COMPLETE 2026-05-07 (PR #252). Implementation queue: 3 sub-PRs ~14-22h total — see §6.2. |
+| AUDIT-022 | MEDIUM (P2) | RESOLVED 2026-05-07 (PR #253). Production-grade tooling shipped; production --execute timing operator-side per `docs/runbooks/AUDIT_022_PRODUCTION_RUNBOOK.md`. |
+
+### §6.2 — AUDIT-016 implementation queue (PHI key rotation, 3 sub-PRs)
+
+Design source: `docs/architecture/AUDIT_016_KEY_ROTATION_DESIGN.md` (shipped PR #252). Effort estimates revised post §17.1 consumer audit: total ~14-22h (down from initial 24-40h after `kmsService.ts` was found fully implemented at 305 LOC awaiting wiring).
+
+| Sub-PR | Scope | Effort | Status |
+|---|---|---|---|
+| PR 1 | Envelope format V0/V1 + version tag emission for new writes | ~5-7h | NOT STARTED |
+| PR 2 | `phiEncryption` ↔ `kmsService` wiring (envelope encryption via KMS GenerateDataKey + KEK wrapping) | ~5-8h | NOT STARTED |
+| PR 3 | `migrateRecord()` implementation + background re-encryption job (V0 → V1) | ~4-7h | NOT STARTED |
+
+`backend/src/services/keyRotation.ts` ships as DESIGN PHASE STUBS (`DesignPhaseStubError` thrown by every export). Implementation PRs replace stubs in order. AUDIT-016 status flips OPEN → RESOLVED at PR 3 merge.
 
 ---
 
@@ -221,6 +253,8 @@ Tactical security work (AUDIT-025 Phase b, AUDIT-011 Phase a/b/c/d) queued for P
 | **Audit canonical scripts** | `backend/scripts/auditCanonical/` |
 | **Audit canonical CI gates** | `.github/workflows/auditCanonical.yml` |
 | Per-finding designs | `docs/audit/AUDIT_<NNN>_DESIGN.md` (AUDIT-011, AUDIT-025) |
+| **AUDIT-016 PHI key rotation design** | `docs/architecture/AUDIT_016_KEY_ROTATION_DESIGN.md` (shipped PR #252; 3-sub-PR implementation queue) |
+| **AUDIT-022 production runbook** | `docs/runbooks/AUDIT_022_PRODUCTION_RUNBOOK.md` (shipped PR #253; 8-section operator runbook for legacy-JSON-PHI backfill execution) |
 | Tier S remediation design | `docs/audit/TIER_S_REMEDIATION_DESIGN.md` |
 | Clinical knowledge base | `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md` |
 | Migration history (Day 9-11) | `docs/DAY_<N>_PLAN.md`, `docs/DAY_<N>_*_RUNBOOK.md` |
@@ -249,6 +283,8 @@ Source: `docs/audit/PHASE_0B_HF_AUDIT_ADDENDUM.md` §6.3, `docs/audit/PHASE_0B_C
 **Tier S queue closure + Cat A clinical-code verification (2026-05-05):** All 4 spec-explicit Tier S patient-safety items resolved across 4 PRs in single session arc (#238 EP-017 → #240 CAD-016 → #241 EP-006 → #243 EP-079; queue 4 → 3 → 2 → 1 → 0). AUDIT-031 was the only `(CRITICAL)`-tagged spec gap; closure means no spec-explicit CRITICAL gaps remain uncovered. Mid-arc, Phase 2 systematic verification of canonical RxNorm valuesets (PR #242, AUDIT-042..061) surfaced 13 wrong-drug or invalid-CUI errors in 84 cited codes (15.5% bug rate) — patient-safety-active subset (AUDIT-042/044/053/054/055/056/057) was silently miscoding QTc surveillance + finerenone/ivabradine gap rules in production. AUDIT_METHODOLOGY.md §16 added codifying mandatory RxNav/LOINC/ICD-10 authoritative-source verification (cousin to §1 rule-body verification). refreshCites.ts (PR #239) validated on 4 real-world Tier S PRs (idempotent, ~250 cites refreshed per run). AUDIT-041 (applyOverrides canonical-mode gap) recurred 4 times — fast-track follow-up.
 
 **Phase 0B clinical-code verification arc materially complete (2026-05-06):** Cat D inline-array verification (PR #246, AUDIT-046..063) surfaced 8 wrong-code bugs in 24 unique non-canonical codes (33% bug rate — 2× canonical-layer rate, validating AUDIT-052 architectural divergence-vector thesis). AUDIT-052 partial mitigation (PR #247) shipped 4 new canonical valuesets (DHP CCB, PPI, loop diuretic, thiazide) + 7 inline-array refactors. Methodology stack expanded: §9.1 applyOverrides canonical-default (PR #245), §9.2 full-pipeline-regen-after-source-change (PR #246 AUDIT-064), §17 clinical-code PR acceptance criteria (PR #248 — drift-prevention sister to §1/§16/§9.1/§9.2). Batch 5 LOINC verification (PRs #248 + #249) corrected 5 wrong-concept codes including marquee AUDIT-069 LVEF regression catch (prior codebase fix-from comment was itself wrong; only NLM Clinical Tables fallback verification caught it). PR #249 was first §17.1-architectural-precedent: consumer audit corrected over-scoped framing mid-flight (3-6h architectural estimate → 50min right-sized fix). AUDIT-070 NEW filed (FHIR ingestion expansion gap); latent risk only (CSV path unaffected). Methodology working as designed. Total session arc: 17 PRs across 2 days; ~14-15h operator wall-clock + ~9-12h agent. AI-assisted multiplier sustained at higher rate than initial Phase 0 estimate; data point for v2.0 PATH_TO_ROBUST timeline calibration.
+
+**HIPAA-foundations arc complete (2026-05-07):** 3-PR arc closed three drift / readiness gaps in HIPAA-relevant PHI handling. PR #251 (`fix(audit): AUDIT-016 dated severity reconciliation + §18 status-surface discipline`) added `AUDIT_METHODOLOGY.md §18` codifying register-literal severity copy as drift-prevention discipline (preceded by an operator-caught AUDIT-016 LOW P3 → MEDIUM P2 → HIGH P1 cross-surface drift during PR #248-#250 work). PR #252 (`feat(security): AUDIT-016 PHI key rotation DESIGN PHASE COMPLETE`) shipped the design doc + interface stubs (`backend/src/services/keyRotation.ts` with `DesignPhaseStubError`) for Option-B AWS KMS envelope encryption (180-day app-layer DEK + 365-day AWS-managed KEK; 3-sub-PR implementation queue). PR #253 (`feat(security): AUDIT-022 Legacy JSON PHI backfill — production-grade migration tooling + operator runbook + 28-column coverage`) shipped 574-LOC migration script + 22 tests (417/417 full suite) + 247-LOC operator runbook with confirmation gate (`AUDIT_022_EXECUTE_CONFIRMED=yes`) + pre-flight env validation + rate-limiting + summary artifact + backup-reminder + `cds_hooks_sessions.fhirContext`/`cards` schema-drift skip. Production --execute timing is operator-side per runbook; tooling readiness ships independent of timing. **§17.1 architectural-precedent count: 4 exercises** (AUDIT-067/068 LOINC reference-only PR #249 50min fix; AUDIT-069 LVEF prior-fix-was-itself-regression PR #248; AUDIT-016 `kmsService.ts` 305 LOC fully-implemented vs register's "scaffolded but unwired" PR #252 effort 24-40h → 14-22h; AUDIT-022 PHI_JSON_FIELDS broader than register snapshot + 2 stale refs cleaned + production-grade quality bar correction PR #253). Methodology stack now §1 / §9.1 / §9.2 / §16 / §17 / §18. Total HIPAA-foundations arc: 3 PRs in ~3-4h operator wall-clock + ~3-4h agent on 2026-05-07. Sustains AI-assisted multiplier. Production-grade migration tooling pattern (confirmation gate + pre-flight + rate-limit + artifact + runbook) is now precedent for any future PHI-touching migration script.
 
 ---
 
