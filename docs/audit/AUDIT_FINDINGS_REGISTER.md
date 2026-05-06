@@ -51,7 +51,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-013** — Audit log written to ephemeral ECS local storage (Phase 2A, **RESOLVED 2026-04-30**)
 - **AUDIT-014** — Patient search silently broken on encrypted PHI fields (Phase 2B, OPEN)
 - **AUDIT-015** — `decrypt()` returns ciphertext on integrity failure (Phase 2B, **RESOLVED 2026-04-30**)
-- **AUDIT-016** — No PHI key rotation pattern (Phase 2B, OPEN)
+- **AUDIT-016** — No PHI key rotation pattern (Phase 2B, **DESIGN PHASE COMPLETE 2026-05-07**; implementation pending in 3 follow-up PRs per `docs/architecture/AUDIT_016_KEY_ROTATION_DESIGN.md`)
 - **AUDIT-031** — GAP-EP-079: pre-excited AF + AVN blocker (CRITICAL SAFETY, uncovered) (Phase 0B EP, **RESOLVED 2026-05-05** via new CRITICAL evaluator block; closes Tier S queue — queue 1 → 0, **CLOSED**)
 - **AUDIT-032** — GAP-EP-006: dabigatran in CrCl<30 (SAFETY, uncovered) (Phase 0B EP, **RESOLVED 2026-05-05**, ~~Tier S~~)
 - **AUDIT-033** — GAP-EP-017: HFrEF + non-DHP CCB SAFETY (Phase 0B EP, **RESOLVED 2026-05-05** via registry-entry-add; closes Tier S item — queue 4→3)
@@ -365,16 +365,35 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 - **Phase:** 2B
 - **Severity:** HIGH (P1)
-- **Status:** OPEN
+- **Status:** **DESIGN PHASE COMPLETE 2026-05-07** — implementation pending in 3 follow-up PRs
 - **Location:** `backend/src/middleware/phiEncryption.ts:4`
-- **Evidence:** Key loaded once at module init. No version tag in `enc:` format. No multi-key fallback. `kmsService.ts` scaffolded but unwired.
+- **Evidence:** Key loaded once at module init. No version tag in `enc:` format. No multi-key fallback.
+- **Original evidence (corrected by §17.1 consumer audit):** `kmsService.ts` was described as "scaffolded but unwired." A consumer audit during this PR's design phase corrected the framing: kmsService.ts is **fully implemented (305 LOC of working AWS KMS envelope encryption + EncryptionContext + local-fallback)** but **zero callers in `backend/src/`** — implementation exists but is not wired into the phiEncryption middleware. This is the second §17.1-architectural-precedent finding (sister to AUDIT-067/068 ABI consumer audit, PR #249). Effort estimate revised downward: 14-22h implementation across 3 sub-PRs (was 24-40h before consumer audit).
 - **Severity rationale:** HIPAA §164.312(a)(2)(iv) implementation specification expects periodic key rotation. Rotating today would make all existing ciphertext unreadable.
 - **Severity reconciliation 2026-05-07:** HIGH (P1) confirmed per HIPAA §164.312(a)(2)(iv) addressable spec + production BSW PHI exposure (live pilot since 2026-04-27) + no compensating rotation pathway (compromise scenario unrecoverable; rotating today destroys all existing ciphertext). Reconciliation triggered after agent-side status-surface drift on 2026-05-06 (drift to LOW P3 / MEDIUM P2 across multiple status surfaces during PR #248-#250 work). Future status surfaces MUST copy this severity literally — do not re-classify based on Phase 2B (prior phase) tag, "deferred" framing, or "v2.0 backlog" framing. Phase-tag is provenance, not severity. See AUDIT_METHODOLOGY.md §18 for status-surface discipline codification.
-- **Remediation:** Key-version tag in ciphertext; multi-key map; re-encrypt-on-rotation background job; optionally wire `kmsService.ts` for envelope encryption.
-- **Effort estimate:** L (24-40h) — design phase + implementation phase across multi-PR arc.
+- **Design phase resolution (this PR, 2026-05-07):**
+  - Architecture: Option B — AWS KMS envelope encryption (wire existing kmsService into phiEncryption middleware)
+  - Layered rotation cadence: 365-day AWS-managed KEK + 180-day app-layer DEK discipline (per NIST SP 800-57 cryptoperiod guidance)
+  - Migration: background re-encryption job + access-fallback for legacy V0 untagged ciphertext; 30-day target completion window
+  - Key custody: framework in design doc (Secrets Manager + KMS EncryptionContext + IAM least-privilege + break-glass procedure); specifics deferred to operator runbook
+  - Deliverables: `docs/architecture/AUDIT_016_KEY_ROTATION_DESIGN.md` (full design doc), `backend/src/services/keyRotation.ts` (interface stubs throwing `DesignPhaseStubError`), `backend/src/middleware/phiEncryption.ts` JSDoc update (no logic change), `backend/src/services/__tests__/keyRotation.test.ts` (stub tests)
+- **Implementation PR plan (3 sub-PRs, ~14-22h total):**
+  - **Implementation PR 1** (~5-7h): Envelope format V0 (legacy) detection + V1 emission for new writes; placeholder DEK for v1-format-correctness testing
+  - **Implementation PR 2** (~5-8h): phiEncryption ↔ kmsService wiring; replace placeholder DEK with real `kmsService.envelopeEncrypt`; EncryptionContext per-record propagation (model + field); production-mode + demo-mode parity
+  - **Implementation PR 3** (~4-7h): `migrateRecord()` real implementation + background re-encryption job + audit logging + operator runbook
+- **Effort estimate (revised):** ~14-22h implementation (down from original L estimate of 24-40h; reduction = kmsService already-implemented saves 8-15h of KMS service authoring)
 - **Cross-references:**
+  - `docs/architecture/AUDIT_016_KEY_ROTATION_DESIGN.md` (design source of truth)
+  - `backend/src/services/keyRotation.ts` (interface stubs; implementation deferred)
+  - `backend/src/services/kmsService.ts` (305 LOC fully implemented; awaiting wiring in implementation PR 2)
+  - AUDIT_METHODOLOGY.md §17.1 (consumer audit precedent; second architectural-precedent finding)
+  - AUDIT_METHODOLOGY.md §17.3 (scope discipline — design-phase-only ships; implementation deferred)
   - AUDIT_METHODOLOGY.md §18 (status-surface discipline; codified after this drift)
+  - AUDIT-017 (LOW P3) — PHI_ENCRYPTION_KEY length not validated; bundled-eligible with implementation PR 1
+  - AUDIT-022 (MEDIUM P2) — Legacy JSON PHI not encrypted at rest; benefits from rotation pattern in eventual re-encryption work; PR 3 of today's session-arc plan
   - HIPAA Security Rule §164.312(a)(2)(iv) (addressable encryption/decryption implementation specification)
+  - NIST SP 800-57 Part 1 Rev 5 (cryptoperiod guidance)
+  - NIST FIPS 197 (AES algorithm)
 
 ### AUDIT-017 — `PHI_ENCRYPTION_KEY` length not validated at startup
 

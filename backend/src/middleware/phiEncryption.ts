@@ -1,3 +1,35 @@
+/**
+ * PHI Encryption Middleware (current single-key state)
+ *
+ * Wires AES-256-GCM field-level encryption into Prisma `$use` middleware.
+ * Encrypts/decrypts PHI fields per HIPAA §164.312(a)(2)(iv) addressable
+ * implementation specification.
+ *
+ * Current envelope format (V0): `enc:<iv-hex>:<authTag-hex>:<ciphertext-hex>`
+ * Single key sourced from `process.env.PHI_ENCRYPTION_KEY`.
+ *
+ * AUDIT-016 status (HIGH P1, DESIGN PHASE COMPLETE 2026-05-07):
+ *   Key rotation is NOT supported in this single-key state. Rotating the env
+ *   var today would render all existing ciphertext undecryptable. Design for
+ *   the rotation pattern is captured in:
+ *
+ *     docs/architecture/AUDIT_016_KEY_ROTATION_DESIGN.md
+ *
+ *   Implementation will land in 3 follow-up PRs:
+ *     - PR 1: V0/V1 envelope detection + V1 emission for new writes
+ *     - PR 2: phiEncryption ↔ kmsService wiring (envelope encryption via KMS)
+ *     - PR 3: migrateRecord() implementation + background re-encryption job
+ *
+ *   Until implementation PRs land, this file's encryption logic is UNCHANGED.
+ *   The single-key V0 pattern remains in production. See `keyRotation.ts` for
+ *   interface stubs (throw `DesignPhaseStubError` when called).
+ *
+ * AUDIT-015 fail-loud invariants preserved:
+ *   - Legacy plaintext rows throw unless PHI_LEGACY_PLAINTEXT_OK=true
+ *   - Malformed ciphertext format throws
+ *   - AES-GCM auth-tag failure propagates instead of being swallowed
+ */
+
 import crypto from 'crypto';
 import { Prisma, PrismaClient } from '@prisma/client';
 
