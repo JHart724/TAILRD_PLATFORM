@@ -86,7 +86,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-018** — `AuditLog.description` accepts arbitrary input, not encrypted (Phase 2B, OPEN)
 - **AUDIT-019** — `FailedFhirBundle` plaintext PHI fragments (Phase 2B, OPEN)
 - **AUDIT-020** — External FHIR identifiers (`fhir*Id`) plaintext (Phase 2B, OPEN)
-- **AUDIT-022** — Legacy JSON PHI not encrypted at rest (243 row-instances across 11 columns, 6 models) (Phase 2B-extended, OPEN)
+- **AUDIT-022** — Legacy JSON PHI not encrypted at rest (243 row-instances across 11 columns, 6 models) (Phase 2B-extended, RESOLVED 2026-05-07 — production-grade tooling shipped; production execution timing operator-side)
 - **AUDIT-035** — `gap-ep-anticoag-interruption` registry-only orphan (Phase 0B EP, OPEN)
 - **AUDIT-037** — `Math.random()` in `cqlEngine.ts:475` default rule scoring (Phase 0B canonical, OPEN, CLAUDE.md §14 violation)
 - **AUDIT-049** — `DOAC_CODES_STROKE/TEE` use rivaroxaban formulation/pack codes; missing dabigatran + edoxaban ingredients (Phase 0B Cat D, **RESOLVED 2026-05-06**)
@@ -457,27 +457,35 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 - **Phase:** 2B-extended (surfaced 2026-04-30 during AUDIT-015 diagnostic)
 - **Severity:** MEDIUM (P2)
-- **Status:** OPEN
+- **Status:** RESOLVED 2026-05-07 (production-grade tooling shipped; production execution timing is operator-side per runbook)
 - **Discovered:** 2026-04-30
-- **Location:** 11 JSON columns across 6 models, 243 legacy row-instances:
-  - `risk_score_assessments.inputData` (4)
-  - `risk_score_assessments.components` (4)
-  - `intervention_tracking.findings` (2)
-  - `alerts.triggerData` (5)
-  - `phenotypes.evidence` (7)
-  - `contraindication_assessments.reasons` (2)
-  - `contraindication_assessments.alternatives` (2)
-  - `contraindication_assessments.monitoring` (2)
-  - `therapy_gaps.recommendations` (211)
-  - `drug_titrations.barriers` (2)
-  - `drug_titrations.monitoringPlan` (2)
-- **Evidence:** `verify-phi-legacy-json.js` Fargate task run 2026-04-30 (`2e8c333d8bb745ab891a8f13d9061e7e`), `cleanForFlagFlip: false`, 243 total legacy JSON-field row-instances. Detail per-column counts available at `infrastructure/scripts/phase-2d/verify-phi-legacy-json.js` for replay.
-- **Runtime safety analysis:** `decryptJsonField` (`phiEncryption.ts:160-170`) gates the `decrypt()` call on `typeof === 'string' && startsWith('enc:')`. Legacy JSON values are `typeof === 'object'` (Prisma returns parsed JSON), so they skip the decrypt path entirely and are returned as-is. **Cannot cause runtime errors under any flag state.**
-- **Severity rationale:** HIPAA §164.312(a)(2)(iv) encryption-at-rest is an addressable implementation specification. PHI stored in plaintext in JSON columns violates the principle even though no runtime exposure exists today (cipher tag wouldn't catch tampering on these specific rows; if anyone DUMPS the database via DBA path, these rows leak). Cannot fail formal HIPAA audit on this finding alone but contributes to the at-rest encryption gap surface.
-- **Remediation:** Separate JSON-aware backfill script mirroring `backfillPHIEncryption.js` pattern. Read each JSON value via Prisma `findUnique`, write back via `prisma.<model>.update()` to trigger `encryptJsonField` middleware. Per-row try/catch + post-verify discipline. Bulk concern: `therapy_gaps.recommendations` has 211 rows — same approach, just larger batch.
-- **Effort estimate:** M (4-8h, larger row count + JSON serialization edge cases)
-- **Dependencies:** Independent of AUDIT-015 closeout. Should be addressed before Phase 2 verdict upgrade to PASS. Becomes Tier B (defensibility hardening) per `PHASE_2_REPORT.md` §6.
-- **Cross-references:** AUDIT-015 (parallel finding for string columns; same remediation pattern with file-name parallel)
+- **Resolution PR:** see commit `feat(security): AUDIT-022 Legacy JSON PHI backfill — production-grade migration tooling + operator runbook + 28-column coverage`
+- **Resolution evidence (2026-05-07):**
+  - Migration script: `backend/scripts/migrations/audit-022-legacy-json-phi-backfill.ts`
+  - Test coverage: 22 tests in `backend/tests/scripts/migrations/audit-022-legacy-json-phi-backfill.test.ts` (10 design behaviors + 4 parseArgs + 4 preFlightValidate + 3 confirmation-gate + 1 TARGETS coverage). Full suite: 417/417 passing (395 prior + 22 new).
+  - Operator runbook: `docs/runbooks/AUDIT_022_PRODUCTION_RUNBOOK.md` (8 sections — pre-flight, execution, monitoring, post-run validation, rollback, concurrent-write safety)
+  - Dev-environment dry-run: targetsScanned=28, targetsSkipped=2 (post §17.1 cleanup), totalLegacyBefore=0, exit code 0
+  - Dev-environment --execute: cleanForCloseout=true, totalRowsAttempted=0 (dev DB clean), exit code 0
+  - Idempotent re-run: identical output (modulo timestamp), exit code 0
+  - Summary artifact: `backend/var/audit-022-execute-{ISO}.json` written each run (gitignored; archived to S3 per runbook §5.3)
+- **§17.1 architectural-precedent reframing (2026-05-07):**
+  - Original register snapshot reported 11 columns / 6 models / 243 rows. Consumer audit during implementation revealed phiEncryption.ts PHI_JSON_FIELDS map covers 30 (table, column) pairs across 16 models — broader than register snapshot. Migration tooling targets the full middleware surface, not the register snapshot.
+  - Two stale references discovered + cleaned up in this PR: `RiskScoreAssessment.inputs` and `InterventionTracking.outcomes` were declared in PHI_JSON_FIELDS but do not exist in `schema.prisma`. Middleware silently no-oped on them; verify-phi-legacy-json.js + migration tooling tripped on them. Removed from middleware + verify script + migration TARGETS array. Active coverage: 28 (table, column) pairs across 15 models post-cleanup.
+  - Local-DB migration drift: `CdsHooksSession.fhirContext` + `cards` exist in schema but not in local dev DB (older migration). Production has the columns. Skip-on-missing-column pre-flight handles both classes of drift.
+  - Third architectural-precedent example after AUDIT-067/068 (LOINC reference-only) and AUDIT-016 kmsService (305 LOC fully implemented vs register's "scaffolded but unwired").
+- **Production-grade tooling pattern (precedent for future PHI-touching migrations):**
+  - Confirmation gate: `--execute` requires `AUDIT_022_EXECUTE_CONFIRMED=yes` env var; without it, exit 1 + runbook pointer. Forces operator into runbook flow.
+  - Pre-flight env validation: DATABASE_URL + PHI_ENCRYPTION_KEY checked before any DB query. AUDIT-017 awareness on key length (warning, not blocking).
+  - Rate-limiting: `--pause-ms` flag (default 100) sleeps between batches AND between targets. Bounds DB load for arbitrary row counts.
+  - Summary artifact: every run writes timestamped JSON envelope to `backend/var/audit-022-{mode}-{ISO}.json` for compliance archival (HIPAA §164.312(b)).
+  - Backup-reminder warning: --execute prints informational warning before run (informational, doesn't block).
+  - Audit trail: dual transport per AUDIT-013 — file (winston DailyRotateFile, 6yr retention) + Console JSON → ECS stdout → CloudWatch Logs. Plus per-batch DB AuditLog entries with `action='PHI_BACKFILL_BATCH'`.
+- **Envelope version:** V0 (legacy `enc:iv:authTag:ciphertext`). AUDIT-016 PR 3 will re-encrypt to V1 (KMS-wrapped DEK) once the rotation pipeline ships. V0 → V1 migration is independent of AUDIT-022.
+- **Production execution timing:** separate operator-side action outside this PR. Tooling ships ready. Runbook §2 captures pre-flight (RDS snapshot mandatory), §3 execution, §5 validation, §6 rollback. Recommended: off-hours window with maintenance mode or no concurrent writers on PHI_JSON_FIELDS columns.
+- **Original location (preserved for historical reference):** 11 JSON columns across 6 models, 243 legacy row-instances per `verify-phi-legacy-json.js` Fargate task run 2026-04-30 (`2e8c333d8bb745ab891a8f13d9061e7e`).
+- **Original runtime safety analysis:** `decryptJsonField` gates on `typeof === 'string' && startsWith('enc:')`. Legacy JSON values are `typeof === 'object'`, so they skip the decrypt path entirely and are returned as-is. Cannot cause runtime errors under any flag state.
+- **Severity rationale (preserved):** HIPAA §164.312(a)(2)(iv) encryption-at-rest is an addressable implementation specification. PHI stored in plaintext in JSON columns violates the principle even though no runtime exposure exists today.
+- **Cross-references:** AUDIT-015 (parallel finding for string columns; same remediation pattern), AUDIT-013 (dual-transport audit logger backing this script's audit trail), AUDIT-016 (V0 → V1 envelope migration follow-on), AUDIT-017 (key validation; surfaced as warning), `docs/runbooks/AUDIT_022_PRODUCTION_RUNBOOK.md` (operator runbook)
 
 ---
 

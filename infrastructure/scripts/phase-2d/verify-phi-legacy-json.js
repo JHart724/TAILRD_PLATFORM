@@ -63,10 +63,10 @@ const TARGETS = [
   { table: 'webhook_events',                column: 'rawPayload' },
   { table: 'risk_score_assessments',        column: 'inputData' },
   { table: 'risk_score_assessments',        column: 'components' },
-  { table: 'risk_score_assessments',        column: 'inputs' },
+  // AUDIT-022 §17.1 cleanup (2026-05-07): removed risk_score_assessments.inputs
+  // and intervention_tracking.outcomes — neither exists in schema.prisma.
   { table: 'intervention_tracking',         column: 'findings' },
   { table: 'intervention_tracking',         column: 'complications' },
-  { table: 'intervention_tracking',         column: 'outcomes' },
   { table: 'alerts',                        column: 'triggerData' },
   { table: 'phenotypes',                    column: 'evidence' },
   { table: 'contraindication_assessments',  column: 'reasons' },

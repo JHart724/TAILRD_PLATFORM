@@ -77,8 +77,12 @@ const DATETIME_PHI_FIELDS = new Set(['dateOfBirth']);
 // JSON fields requiring serialize-then-encrypt (standard field encryption doesn't work on Json type)
 const PHI_JSON_FIELDS: Record<string, string[]> = {
   WebhookEvent: ['rawPayload'],
-  RiskScoreAssessment: ['inputData', 'components', 'inputs'],
-  InterventionTracking: ['findings', 'complications', 'outcomes'],
+  // AUDIT-022 §17.1 cleanup (2026-05-07): removed `inputs` and `outcomes` —
+  // those fields don't exist in schema.prisma. The middleware silently no-oped
+  // on them (Prisma `data` doesn't carry the field) but
+  // verify-phi-legacy-json.js + audit-022 backfill mirrored them and tripped.
+  RiskScoreAssessment: ['inputData', 'components'],
+  InterventionTracking: ['findings', 'complications'],
   Alert: ['triggerData'],
   Phenotype: ['evidence'],
   ContraindicationAssessment: ['reasons', 'alternatives', 'monitoring'],
