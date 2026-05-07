@@ -191,4 +191,51 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
       ),
     ).rejects.toThrow(/integrity check failed/);
   });
+
+  // T7: per-record EncryptionContext plumbing through middleware
+  it('AUDIT-016 PR 2 T7: middleware plumbs { model, field } context through to keyRotation.encryptWithCurrent', async () => {
+    // Spy on keyRotation.encryptWithCurrent via mock
+    const spyEncryptWithCurrent = jest.fn(async (text: string, _ctx: any) => `enc:v1:fakeIv:fakeTag:${Buffer.from(text).toString('hex')}`);
+
+    jest.resetModules();
+    jest.doMock('../../services/keyRotation', () => {
+      const actual = jest.requireActual('../../services/keyRotation');
+      return {
+        ...actual,
+        encryptWithCurrent: spyEncryptWithCurrent,
+      };
+    });
+
+    const mod = require('../phiEncryption');
+    const fakeClient: any = { $use: (fn: any) => { fakeClient._fn = fn; } };
+    mod.applyPHIEncryption(fakeClient);
+
+    const writeData: any = { firstName: 'Frank', lastName: 'Foo' };
+    await fakeClient._fn(
+      { model: 'Patient', action: 'create', args: { data: writeData } },
+      async () => ({ id: 'r' }),
+    );
+
+    // Both firstName and lastName should have been encrypted with model=Patient
+    // and the corresponding field name in EncryptionContext
+    const firstNameCall = spyEncryptWithCurrent.mock.calls.find((c: any[]) => c[0] === 'Frank');
+    const lastNameCall = spyEncryptWithCurrent.mock.calls.find((c: any[]) => c[0] === 'Foo');
+
+    expect(firstNameCall).toBeDefined();
+    expect(firstNameCall![1]).toEqual({
+      service: 'tailrd-backend',
+      purpose: 'phi-encryption',
+      model: 'Patient',
+      field: 'firstName',
+    });
+    expect(lastNameCall).toBeDefined();
+    expect(lastNameCall![1]).toEqual({
+      service: 'tailrd-backend',
+      purpose: 'phi-encryption',
+      model: 'Patient',
+      field: 'lastName',
+    });
+
+    jest.dontMock('../../services/keyRotation');
+  });
 });

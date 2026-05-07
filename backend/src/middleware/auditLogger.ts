@@ -92,6 +92,12 @@ const HIPAA_GRADE_ACTIONS = new Set<string>([
   'CDS_HOOKS_UNMAPPED_ISSUER',
   'CDS_HOOKS_CROSS_TENANT_ATTEMPT_BLOCKED',
   'CDS_HOOKS_NO_TENANT_RESOLVED',
+  // AUDIT-016 PR 2 — V2 envelope KMS events. KEY_VALIDATION_FAILURE +
+  // ENVELOPE_DECRYPT_FAILURE are HIPAA-graded (security events: bad config or
+  // potential ciphertext tampering). KMS_DEK_GENERATED + KMS_DEK_UNWRAPPED
+  // remain best-effort (informational). Continues AUDIT-076 partial closure.
+  'KMS_KEY_VALIDATION_FAILURE',
+  'KMS_ENVELOPE_DECRYPT_FAILURE',
 ]);
 
 // ─── Types ──────────────────────────────────────────────────────────────────────
