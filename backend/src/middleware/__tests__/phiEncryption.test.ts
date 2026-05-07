@@ -30,6 +30,36 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
     process.env = originalEnv;
   });
 
+  // ── $extends-aware fake-client helpers ────────────────────────────────
+  // 2026-05-07 phiEncryption migrated $use → $extends per AUDIT-011 Phase
+  // b/c §8. Fake clients capture the registered wrapper from
+  // `$extends({ query: { $allModels: { $allOperations: ... } } })` and
+  // expose it via `_fn`. Test bodies retain the (params, next) calling
+  // convention via the `invokeMiddleware` adapter — minimal body changes.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function makeFakeExtendsClient(): any {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fakeClient: any = {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fakeClient.$extends = (ext: any) => {
+      fakeClient._fn = ext.query.$allModels.$allOperations;
+      return fakeClient; // chainable; mirrors real Prisma extends-return
+    };
+    return fakeClient;
+  }
+  // Adapter — preserves the (params, next) calling convention used by
+  // existing tests. Maps OLD `$use` shape → NEW `$extends` shape:
+  //   params.action → operation, params.args → args, next → query
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async function invokeMiddleware(fakeClient: any, params: any, next: any): Promise<any> {
+    return fakeClient._fn({
+      args: params.args,
+      model: params.model,
+      operation: params.action,
+      query: next,
+    });
+  }
+
   // The decrypt function isn't directly exported; we exercise it via the
   // Prisma middleware which uses both encrypt/decrypt internally. Tests
   // verify the encrypted format, integrity guarantees, and error behavior
@@ -61,11 +91,7 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
       // applyPHIEncryption and stubbing prisma.$use. Since the module
       // doesn't export decrypt, we test via a derived path: round-trip
       // via encryptLocal + applyPHIEncryption read.
-      const fakeClient: any = {
-        $use: (fn: any) => {
-          (fakeClient as any)._fn = fn;
-        },
-      };
+      const fakeClient = makeFakeExtendsClient();
       mod.applyPHIEncryption(fakeClient);
       const params = {
         model: 'Patient',
@@ -73,7 +99,7 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
         args: {},
       };
       // Patient model has firstName in PHI_FIELD_MAP, so read-path should decrypt it
-      const promise = (fakeClient as any)._fn(params, async () => ({ firstName: input }));
+      const promise = invokeMiddleware(fakeClient, params, async () => ({ firstName: input }));
       // The middleware is async; convert to sync for test by returning the promise
       return promise.then((r: any) => r.firstName).catch((err: Error) => {
         throw err;
@@ -127,7 +153,7 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
     // Exercise write path by capturing the encrypted output of a create action.
     jest.resetModules();
     const mod = require('../phiEncryption');
-    const fakeClient: any = { $use: (fn: any) => { fakeClient._fn = fn; } };
+    const fakeClient = makeFakeExtendsClient();
     mod.applyPHIEncryption(fakeClient);
 
     const writeData: any = { firstName: 'Charlie' };
@@ -136,7 +162,7 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
       action: 'create',
       args: { data: writeData },
     };
-    await fakeClient._fn(params, async () => ({ id: 'r' }));
+    await invokeMiddleware(fakeClient, params, async () => ({ id: 'r' }));
     expect(typeof writeData.firstName).toBe('string');
     expect(writeData.firstName.startsWith('enc:v1:')).toBe(true);
     expect(writeData.firstName.split(':').length).toBe(5);
@@ -145,12 +171,13 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
   it('AUDIT-016 PR 1: V1 round-trip via middleware (write → encrypted; read decrypts)', async () => {
     jest.resetModules();
     const mod = require('../phiEncryption');
-    const fakeClient: any = { $use: (fn: any) => { fakeClient._fn = fn; } };
+    const fakeClient = makeFakeExtendsClient();
     mod.applyPHIEncryption(fakeClient);
 
     // Write — capture encrypted ciphertext from middleware.
     const writeData: any = { firstName: 'Diana' };
-    await fakeClient._fn(
+    await invokeMiddleware(
+      fakeClient,
       { model: 'Patient', action: 'create', args: { data: writeData } },
       async () => ({ id: 'r' }),
     );
@@ -158,7 +185,8 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
     expect(v1Envelope.startsWith('enc:v1:')).toBe(true);
 
     // Read — feed V1 envelope back through middleware, expect plaintext out.
-    const readResult = await fakeClient._fn(
+    const readResult = await invokeMiddleware(
+      fakeClient,
       { model: 'Patient', action: 'findUnique', args: {} },
       async () => ({ firstName: v1Envelope }),
     );
@@ -170,11 +198,12 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
     // then assert read path throws.
     jest.resetModules();
     const mod = require('../phiEncryption');
-    const fakeClient: any = { $use: (fn: any) => { fakeClient._fn = fn; } };
+    const fakeClient = makeFakeExtendsClient();
     mod.applyPHIEncryption(fakeClient);
 
     const writeData: any = { firstName: 'Eve' };
-    await fakeClient._fn(
+    await invokeMiddleware(
+      fakeClient,
       { model: 'Patient', action: 'create', args: { data: writeData } },
       async () => ({ id: 'r' }),
     );
@@ -185,7 +214,8 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
     const tampered = `${parts[0]}:${parts[1]}:${parts[2]}:${tagBuf.toString('hex')}:${parts[4]}`;
 
     await expect(
-      fakeClient._fn(
+      invokeMiddleware(
+        fakeClient,
         { model: 'Patient', action: 'findUnique', args: {} },
         async () => ({ firstName: tampered }),
       ),
@@ -207,11 +237,12 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
     });
 
     const mod = require('../phiEncryption');
-    const fakeClient: any = { $use: (fn: any) => { fakeClient._fn = fn; } };
+    const fakeClient = makeFakeExtendsClient();
     mod.applyPHIEncryption(fakeClient);
 
     const writeData: any = { firstName: 'Frank', lastName: 'Foo' };
-    await fakeClient._fn(
+    await invokeMiddleware(
+      fakeClient,
       { model: 'Patient', action: 'create', args: { data: writeData } },
       async () => ({ id: 'r' }),
     );

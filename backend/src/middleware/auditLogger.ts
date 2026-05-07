@@ -3,11 +3,13 @@ import path from 'path';
 import { Request } from 'express';
 import prisma from '../lib/prisma';
 import { AuthenticatedRequest } from '../middleware/auth';
-import { TENANT_GUARD_BYPASS } from './tenantGuard';
-// AUDIT-011 LEGITIMATE_BYPASS (2026-05-02): AuditLog.create has nullable
-// hospitalId for unauthenticated audit events (failed login attempts, etc.).
-// System-level audit trail, not user-scoped. Layer 3 reads TENANT_GUARD_BYPASS
-// to skip enforcement for these writes.
+// AUDIT-011 LEGITIMATE_BYPASS (2026-05-02; marker pattern migrated 2026-05-07):
+// AuditLog.create has nullable hospitalId for unauthenticated audit events
+// (failed login attempts, etc.). System-level audit trail, not user-scoped.
+// Layer 3 (`prismaTenantGuard.ts`) reads `__tenantGuardBypass: true` on args
+// to skip enforcement for these writes. String-keyed pattern survives Prisma
+// 5.22 `$extends` args sanitization (Symbol.for() does not — see Step 1.0/1.0.1
+// verification in `backend/src/lib/__tests__/prismaTenantGuardSymbolSurvival.test.ts`).
 
 // ─── Audit Log Directory ────────────────────────────────────────────────────────
 const LOG_DIR = path.resolve(__dirname, '../../logs');
@@ -98,6 +100,13 @@ const HIPAA_GRADE_ACTIONS = new Set<string>([
   // remain best-effort (informational). Continues AUDIT-076 partial closure.
   'KMS_KEY_VALIDATION_FAILURE',
   'KMS_ENVELOPE_DECRYPT_FAILURE',
+  // AUDIT-011 Phase b/c (2026-05-07) — emitted by prismaTenantGuard.ts when
+  // allow-list model query lacks hospitalId in args.where; HIPAA-graded for
+  // tenant-isolation incident audit trail per HIPAA §164.312(b) audit
+  // controls. Producer-consumer string parity verified via grep at Step 4
+  // commit time; const-assertion-union tightening tracked in design
+  // refinement note §13.1.
+  'TENANT_GUARD_VIOLATION',
 ]);
 
 // ─── Types ──────────────────────────────────────────────────────────────────────
@@ -192,7 +201,7 @@ async function writeAuditLog(
         previousValues: entry.previousValues as any,
         newValues: entry.newValues as any,
       },
-      [TENANT_GUARD_BYPASS]: true,
+      __tenantGuardBypass: true,
     } as any);
   } catch (dbError) {
     auditLogger.error('audit_db_write_failed', {

@@ -45,10 +45,6 @@ jest.mock('../../../src/middleware/auditLogger', () => ({
   },
 }));
 
-jest.mock('../../../src/middleware/tenantGuard', () => ({
-  TENANT_GUARD_BYPASS: Symbol('TENANT_GUARD_BYPASS_MOCK'),
-}));
-
 // Mock fs.promises so writeSummaryArtifact doesn't touch the filesystem.
 const fsMkdir = jest.fn().mockResolvedValue(undefined);
 const fsWriteFile = jest.fn().mockResolvedValue(undefined);
