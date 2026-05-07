@@ -40,6 +40,7 @@ import {
   decryptAny,
   encryptWithCurrent,
   validateKeyOrThrow,
+  validateEnvelopeConfigOrThrow,
   type EncryptionContext,
 } from '../services/keyRotation';
 
@@ -59,13 +60,23 @@ if (!isDemoMode && ENCRYPTION_KEY) {
   validateKeyOrThrow(ENCRYPTION_KEY);
 }
 
-// Encryption context propagated to keyRotation.encryptWithCurrent /
-// decryptAny. PR 2 will extend per-record propagation (model + field) for KMS
-// EncryptionContext narrowing.
-const ENCRYPT_CONTEXT: EncryptionContext = {
+// AUDIT-016 PR 2: validate V2 envelope config at module load. If
+// PHI_ENVELOPE_VERSION=v2 is set without AWS_KMS_PHI_KEY_ALIAS, throws
+// EnvelopeConfigError so deployment fails fast at startup. Sister to
+// AUDIT-017 validateKeyOrThrow pattern.
+validateEnvelopeConfigOrThrow();
+
+// Base encryption context. AUDIT-016 PR 2 D2: extended per-record with
+// model + field at each encrypt call site for HIPAA audit-trail anchor
+// (CloudTrail kms:Decrypt event payload). See `contextFor()` below.
+const BASE_ENCRYPT_CONTEXT: EncryptionContext = {
   service: 'tailrd-backend',
   purpose: 'phi-encryption',
 };
+
+function contextFor(model: string, field: string): EncryptionContext {
+  return { ...BASE_ENCRYPT_CONTEXT, model, field };
+}
 
 // PHI fields that must be encrypted at rest per HIPAA 164.312(a)(2)(iv)
 // PHI string fields encrypted via middleware (HIPAA 164.312(a)(2)(iv))
@@ -121,7 +132,7 @@ const PHI_JSON_FIELDS: Record<string, string[]> = {
   CQLResult: ['result'],
 };
 
-async function encrypt(text: string): Promise<string> {
+async function encrypt(text: string, model: string, field: string): Promise<string> {
   if (!ENCRYPTION_KEY) {
     if (!isDemoMode) {
       throw new Error('FATAL: PHI_ENCRYPTION_KEY is required outside demo mode. Cannot store PHI unencrypted.');
@@ -132,10 +143,10 @@ async function encrypt(text: string): Promise<string> {
     }
     return text;
   }
-  return encryptWithCurrent(text, ENCRYPT_CONTEXT);
+  return encryptWithCurrent(text, contextFor(model, field));
 }
 
-async function decrypt(envelope: string): Promise<string> {
+async function decrypt(envelope: string, model: string, field: string): Promise<string> {
   if (!ENCRYPTION_KEY) {
     if (!isDemoMode) {
       throw new Error('FATAL: PHI_ENCRYPTION_KEY is required outside demo mode. Cannot read PHI without key.');
@@ -150,26 +161,28 @@ async function decrypt(envelope: string): Promise<string> {
     throw new Error('PHI decryption: unencrypted value found in encrypted-field column (set PHI_LEGACY_PLAINTEXT_OK=true if running a migration; otherwise this indicates corrupted data)');
   }
 
-  // Delegate to keyRotation.decryptAny — handles V0 + V1 dispatch, AUDIT-015
-  // fail-loud invariants on malformed envelope + auth-tag failure.
-  return decryptAny(envelope, ENCRYPT_CONTEXT);
+  // Delegate to keyRotation.decryptAny — handles V0 + V1 + V2 dispatch,
+  // AUDIT-015 fail-loud invariants on malformed envelope + auth-tag failure.
+  // Per-record context (model + field) propagated for KMS audit-trail anchor
+  // (HIPAA §164.312(b) — CloudTrail kms:Decrypt event payload).
+  return decryptAny(envelope, contextFor(model, field));
 }
 
-async function encryptFields(data: Record<string, any>, fields: string[]): Promise<void> {
+async function encryptFields(data: Record<string, any>, fields: string[], model: string): Promise<void> {
   for (const field of fields) {
     if (data[field] instanceof Date) {
       data[field] = (data[field] as Date).toISOString();
     }
     if (data[field] && typeof data[field] === 'string') {
-      data[field] = await encrypt(data[field]);
+      data[field] = await encrypt(data[field], model, field);
     }
   }
 }
 
-async function decryptRecord(record: Record<string, any>, fields: string[]): Promise<Record<string, any>> {
+async function decryptRecord(record: Record<string, any>, fields: string[], model: string): Promise<Record<string, any>> {
   for (const field of fields) {
     if (record[field] && typeof record[field] === 'string') {
-      const decrypted = await decrypt(record[field]);
+      const decrypted = await decrypt(record[field], model, field);
       if (DATETIME_PHI_FIELDS.has(field) && typeof decrypted === 'string') {
         const d = new Date(decrypted);
         record[field] = !isNaN(d.getTime()) ? d : decrypted;
@@ -181,21 +194,21 @@ async function decryptRecord(record: Record<string, any>, fields: string[]): Pro
   return record;
 }
 
-async function encryptJsonField(data: Record<string, any>, field: string): Promise<void> {
+async function encryptJsonField(data: Record<string, any>, field: string, model: string): Promise<void> {
   if (data[field] != null) {
     const serialized = typeof data[field] === 'string' ? data[field] : JSON.stringify(data[field]);
-    data[field] = await encrypt(serialized);
+    data[field] = await encrypt(serialized, model, field);
   }
 }
 
-async function decryptJsonField(record: Record<string, any>, field: string): Promise<void> {
+async function decryptJsonField(record: Record<string, any>, field: string, model: string): Promise<void> {
   if (record[field] && typeof record[field] === 'string' && record[field].startsWith('enc:')) {
     try {
-      const decrypted = await decrypt(record[field]);
+      const decrypted = await decrypt(record[field], model, field);
       record[field] = JSON.parse(decrypted);
     } catch {
       // If JSON parse fails (decrypted plaintext wasn't JSON), return as decrypted string.
-      record[field] = await decrypt(record[field]);
+      record[field] = await decrypt(record[field], model, field);
     }
   }
 }
@@ -216,22 +229,22 @@ export function applyPHIEncryption(prisma: PrismaClient): void {
     if (['create', 'update', 'upsert', 'updateMany'].includes(params.action)) {
       const data = params.args?.data;
       if (data) {
-        await encryptFields(data, fields);
+        await encryptFields(data, fields, model);
         if (jsonFields) {
-          for (const jf of jsonFields) await encryptJsonField(data, jf);
+          for (const jf of jsonFields) await encryptJsonField(data, jf, model);
         }
       }
       if (params.action === 'upsert') {
         if (params.args?.create) {
-          await encryptFields(params.args.create, fields);
+          await encryptFields(params.args.create, fields, model);
           if (jsonFields) {
-            for (const jf of jsonFields) await encryptJsonField(params.args.create, jf);
+            for (const jf of jsonFields) await encryptJsonField(params.args.create, jf, model);
           }
         }
         if (params.args?.update) {
-          await encryptFields(params.args.update, fields);
+          await encryptFields(params.args.update, fields, model);
           if (jsonFields) {
-            for (const jf of jsonFields) await encryptJsonField(params.args.update, jf);
+            for (const jf of jsonFields) await encryptJsonField(params.args.update, jf, model);
           }
         }
       }
@@ -240,9 +253,9 @@ export function applyPHIEncryption(prisma: PrismaClient): void {
     if (params.action === 'createMany' && params.args?.data) {
       const rows = Array.isArray(params.args.data) ? params.args.data : [params.args.data];
       for (const row of rows) {
-        await encryptFields(row, fields);
+        await encryptFields(row, fields, model);
         if (jsonFields) {
-          for (const jf of jsonFields) await encryptJsonField(row, jf);
+          for (const jf of jsonFields) await encryptJsonField(row, jf, model);
         }
       }
     }
@@ -252,9 +265,9 @@ export function applyPHIEncryption(prisma: PrismaClient): void {
     // Decrypt on read (string fields + JSON fields)
     if (result) {
       const decryptOne = async (r: Record<string, any>): Promise<Record<string, any>> => {
-        await decryptRecord(r, fields);
+        await decryptRecord(r, fields, model);
         if (jsonFields) {
-          for (const jf of jsonFields) await decryptJsonField(r, jf);
+          for (const jf of jsonFields) await decryptJsonField(r, jf, model);
         }
         return r;
       };

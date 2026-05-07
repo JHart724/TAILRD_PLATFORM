@@ -335,17 +335,27 @@ Target: 30 days post Phase A deploy. Bounded by:
 
 ### Implementation PR 2 — V2 envelope emission + kmsService wiring (~5-8h)
 
-**Status:** PENDING.
+**Status:** SHIPPED 2026-05-07 (~7-8h actual; D7 in-scope expansion + bonus `kmsService.test.ts`).
 
-**Scope:**
-- Replace single-key V1 emission in `encryptWithCurrent` with real `kmsService.envelopeEncrypt` → V2 envelope (`enc:v2:<wrappedDEK>:<iv>:<authTag>:<ciphertext>`).
-- Replace V2 stub-throw in `decryptAny` with `kmsService.envelopeDecrypt` call.
-- EncryptionContext propagation per-record (model + field name).
-- Production-mode + demo-mode parity (kmsService local-fallback covers demo).
-- Tests: integration with kmsService mocks; EncryptionContext narrowing; KMS failure handling; V0+V1+V2 mixed-state batch decrypt.
-- Production deploy ready after PR 2 merges (V0 + V1 still decrypt; V2 emitted for new writes).
+**Scope (as shipped):**
+- `keyRotation.ts` — `encryptWithCurrent` dispatches V1/V2 via runtime gate `shouldEmitV2(env)`; V2 path calls `kmsService.envelopeEncrypt(plaintext, context)` and serializes via `buildV2(...)` to `enc:v2:<wrappedDEK>:<iv>:<authTag>:<ciphertext>`. `decryptAny` V2 case replaces PR 1 `DesignPhaseStubError` with `kmsService.envelopeDecrypt({ ciphertext, encryptedDataKey: wrappedDEK, iv, authTag }, context)`.
+- `kmsService.ts` parameterized — new `KmsEncryptionContext` interface `{ service, purpose, model?, field? }`, `DEFAULT_KMS_CONTEXT` + `DEFAULT_KMS_FIELD_CONTEXT` constants, `toAwsEncryptionContext` projector. `envelopeEncrypt(plaintext, context = DEFAULT_KMS_CONTEXT)` and `envelopeDecrypt(encrypted, context = DEFAULT_KMS_CONTEXT)` accept context arg with backwards-compat default.
+- `phiEncryption.ts` middleware — plumbs `model` + `field` through every call path. Renamed `ENCRYPT_CONTEXT` to `BASE_ENCRYPT_CONTEXT`; new `contextFor(model, field)` helper. Modified `encrypt`, `decrypt`, `encryptFields`, `decryptRecord`, `encryptJsonField`, `decryptJsonField` signatures and Prisma `$use` callback paths (create / update / upsert / updateMany / createMany / findUnique-decrypt).
+- `validateEnvelopeConfigOrThrow(env)` runs at module init in `phiEncryption.ts` — fails fast if `PHI_ENVELOPE_VERSION=v2` without `AWS_KMS_PHI_KEY_ALIAS`. Sister to AUDIT-017 `validateKeyOrThrow` (PR 1) and AUDIT-013 fail-closed pattern.
+- AUDIT-076 partial closure — `KMS_KEY_VALIDATION_FAILURE` + `KMS_ENVELOPE_DECRYPT_FAILURE` promoted to `HIPAA_GRADE_ACTIONS` Set in `auditLogger.ts` (DB write failures throw).
+- Tests: 27 net new (10 keyRotation V2 round-trip + flag-flip + decrypt-not-gated + V0/V1/V2 mixed-batch + validateEnvelopeConfigOrThrow + AUDIT-022 SQL filter compat; 16 kmsService — local-fallback / production KMS API path / strict fail-loud T3a-d / ARN vs alias resolution / getKeyInfo; 1 phiEncryption T7 EncryptionContext plumb spy). jest 510/510.
+- Design refinement note: `docs/architecture/AUDIT_016_PR_2_V2_KMS_WIRING_NOTES.md` (~310 LOC, 10 sections, D1-D7 + future-work deferral).
 
-**Risk:** KMS API cost calibration — measured during integration tests. Default 4KB envelope size + N writes per minute = bounded cost.
+**Load-bearing properties (verified):**
+- **Decrypt-is-not-gated** (T1) — `PHI_ENVELOPE_VERSION=v1` stops V2 emission; existing V2 ciphertext continues to decrypt. Safe rollback.
+- **Strict fail-loud** (D4) — KMS unreachable / `KeyNotFoundException` / `AccessDeniedException` / `InvalidCiphertextException` → throw; no V1 fallback.
+- **Per-record EncryptionContext** — `{ service: 'tailrd-backend', purpose: 'phi-encryption', model, field }` propagated to KMS as `Record<string, string>`. CloudTrail audit-trail anchor per HIPAA §164.312(b).
+- **AUDIT-022 SQL filter compatibility** (T5) — `enc:%` matches all V0/V1/V2 envelopes; legacy backfill tooling unaffected.
+- **Dev-vs-prod separation** — dev V2 uses `kmsService` localEncrypt-as-DEK-wrap (intentional; not portable across env crossings). Acceptable because dev DBs are seeded fresh.
+
+**Does NOT include:** legacy V0/V1 record migration to V2 (PR 3). After PR 2 merge: V0 + V1 + V2 all decrypt; V2 emitted for new writes when `PHI_ENVELOPE_VERSION=v2` AND `AWS_KMS_PHI_KEY_ALIAS` set.
+
+**Risk realized:** none; localEncrypt path covers dev + test runs. Production KMS calibration deferred to integration test (gated by `RUN_INTEGRATION_TESTS=1` + AWS credentials).
 
 ### Implementation PR 3 — Migration handler + background job (~4-7h)
 
