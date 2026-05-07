@@ -180,22 +180,18 @@ async function auditFailure(
   metadata: Record<string, unknown>,
   hospitalId: string | null = null,
 ): Promise<void> {
-  try {
-    await writeAuditLog(
-      cdsHooksAuditReq(req, hospitalId),
-      action,
-      'CdsHooks',
-      null,
-      description,
-      null,
-      metadata,
-    );
-  } catch (err) {
-    // writeAuditLog throws on HIPAA-grade DB write failure (per AUDIT-013).
-    // The 4 actions above are HIPAA-graded per AUDIT-076 boundary refinement.
-    // Surface the throw to the caller so the request fails closed.
-    throw err;
-  }
+  // writeAuditLog throws on HIPAA-grade DB write failure (per AUDIT-013). The
+  // 4 actions handled here are HIPAA-graded per AUDIT-076 boundary refinement.
+  // We let the throw propagate to the caller so the request fails closed.
+  await writeAuditLog(
+    cdsHooksAuditReq(req, hospitalId),
+    action,
+    'CdsHooks',
+    null,
+    description,
+    null,
+    metadata,
+  );
 }
 
 // ── Middleware ─────────────────────────────────────────────────────────────
