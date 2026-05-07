@@ -312,27 +312,30 @@ This phase exists because §11's callsite audit surfaced 2 real bugs and 12 frag
 - Add `[TENANT_GUARD_BYPASS]: true` to 10 LEGITIMATE_BYPASS callsites (see §11.6 table; 9 from original audit + 1 found during Phase a-pre GAP-2 implementation at `services/crossReferralService.getReferralByIdAcrossTenants` for SUPER_ADMIN cross-tenant referral access)
 - Ship as separate PR ahead of Phase b; reviewable in isolation
 
-### Phase b: Layer 3 (Prisma extension, flag-controlled)
+### Phase b: Layer 3 (Prisma extension, flag-controlled) — **SHIPPED 2026-05-07**
 
-- Implement `prismaTenantGuard.ts`
-- Wire into `lib/prisma.ts` singleton
-- Gate behind `TENANT_GUARD_STRICT` env flag, default `false` in production
-- Add allowlist for SUPER_ADMIN tooling (admin/godView/internalOps)
-- Comprehensive unit tests for: PHI model + missing hospitalId → throw; PHI model + hospitalId → pass; non-PHI model → pass; SUPER_ADMIN bypass → pass
-- Ship as separate PR
-- Deploy with flag off → smoke test → flip to true → soak window → declare done
+- ✅ Implement `prismaTenantGuard.ts` (473 LOC; `$extends`-based per Step 1)
+- ✅ Wire into `lib/prisma.ts` singleton (Layer 3 first, encryption second per design refinement note §8.6 locked order; type-erasure cast per 11th §17.1 architectural-precedent)
+- ✅ Gate behind `TENANT_GUARD_MODE` env flag (revised from binary `TENANT_GUARD_STRICT` to three-state `off | audit | strict`; default `audit` for robustness-first soak-mode posture per design refinement note §5)
+- ✅ Add allowlist for SUPER_ADMIN tooling — 9 system-bypass models (ErrorLog / FailedFhirBundle / PerformanceMetric / PerformanceRequestLog / BusinessMetric / LoginSession / InviteToken / Onboarding / UserActivity) + 14 production callsite bypass markers (11 Phase a-pre existing + 3 FeatureUsage analytics-read added per PAUSE 2.7 (b) refinement)
+- ✅ Comprehensive unit tests — `backend/src/lib/__tests__/prismaTenantGuard.test.ts` (380 LOC; 14 tests across 6 groups: detection branches / bypass marker / allow-list / action discipline / 3-state flag matrix / module-init validation)
+- ✅ Ship as separate PR — implementation lands on main via this PR (commit pending)
+- Deployment lifecycle: deploy with `TENANT_GUARD_MODE=audit` (default; soak collection mode) → 14-day soak window observation → flip to `TENANT_GUARD_MODE=strict` (Phase d trigger; operator-side env flip + ECS task restart; no code revert needed)
 
-### Phase c: Cross-tenant integration test suite
+### Phase c: Cross-tenant integration test suite — **SHIPPED 2026-05-07**
 
-Independent of Phases a/b. Builds the missing detection layer:
+- ✅ 79-test gated integration suite — `backend/tests/integration/audit-011-cross-tenant.test.ts` (635 LOC; sister to AUDIT-016 PR 2 + AUDIT-071 schema-constraint integration scaffold pattern)
+- ✅ 8 test groups (per design refinement note §9.3): I — Allow-list model coverage (33 tests; ALL HIPAA_GRADE_TENANT_MODELS) / II — Bypass marker honored (6) / III — System-bypass models (6; false-positive prevention) / IV — 3-state flag matrix (9) / V — Where-clause detection (6; incl. real production query shapes) / VI — Edge cases + regression (12; concurrency / $transaction / bulk / connection pool) / VII — Soak-mode operational readiness (4; Phase d GO/NO-GO confidence gate) / VIII — Cleanup & isolation discipline (3)
+- ✅ Run as part of operator-side Phase d GO/NO-GO gate — `RUN_INTEGRATION_TESTS=1 npx jest audit-011-cross-tenant` against soak DB before strict-mode flip
+- ✅ Closes AUDIT-001 (0% coverage) for the tenant-isolation slice specifically — 14 unit tests (default-suite) + 79 integration tests (gated; opt-in) = 93 net new tests for AUDIT-011 Phase b/c
 
-- Integration test: forge JWT with `hospitalId=B`, hit every PHI route, expect 403/404 for cross-tenant access, 200 for same-tenant
-- Run as part of CI
-- Closes AUDIT-001 (0% coverage) for the tenant-isolation slice specifically
+### Phase d: Remove flag once stable — PENDING (post-soak operator-side PR)
 
-### Phase d: Remove flag once stable
+**Phase d strict-mode flip deferred to post-14-day-soak operator-side PR per design §6.** Trigger: zero `TENANT_GUARD_VIOLATION` events captured during 14-day audit-mode soak across all 33 allow-list models (verified via `audit_logs WHERE action = 'TENANT_GUARD_VIOLATION'` query; sister to Group VII.3 queryability test). Operator-side PR flips `TENANT_GUARD_MODE=audit → strict` via env var; no code revert needed (single-line ECS task definition update).
 
-After 14-day clean window with `TENANT_GUARD_STRICT=true`, remove the flag and ship as default.
+**Phase d GO/NO-GO confidence gate:** the 79-test gated integration suite (`audit-011-cross-tenant.test.ts`) IS the gate. Operator runs the suite against soak-mode DB before flipping; pass = green-light to flip; any failure = root-cause and re-soak.
+
+After 14-day clean window, remove the env-var read entirely + inline `mode = 'strict'` constant (single-line PR cleanup); sister-discipline to AUDIT-009 / AUDIT-015 staged-rollout-then-flag-removal pattern.
 
 ---
 

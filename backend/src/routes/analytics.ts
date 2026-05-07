@@ -81,6 +81,10 @@ router.get('/dashboard',
         }).then(users => users.filter(u => u.userId).length),
 
         // Feature usage aggregation
+        // AUDIT-011 LEGITIMATE_BYPASS (PAUSE 2.7 (b) refinement, 2026-05-07):
+        // SUPER_ADMIN cross-tenant aggregation when targetHospitalId is null.
+        // Conditional bypass — Layer 3 still enforces on regular users
+        // (whose targetHospitalId === user.hospitalId always set).
         prisma.featureUsage.aggregate({
           where: {
             periodStart: {
@@ -93,8 +97,9 @@ router.get('/dashboard',
           _sum: {
             usageCount: true,
             totalDuration: true
-          }
-        }),
+          },
+          ...(!targetHospitalId && { __tenantGuardBypass: true }),
+        } as any),
 
         // Performance metrics — averaged across per-request samples
         prisma.performanceRequestLog.aggregate({
@@ -115,6 +120,8 @@ router.get('/dashboard',
         }),
 
         // Top features by usage
+        // AUDIT-011 LEGITIMATE_BYPASS (PAUSE 2.7 (b) refinement, 2026-05-07):
+        // sister conditional bypass — see :84 above.
         prisma.featureUsage.groupBy({
           by: ['featureName', 'moduleType'],
           where: {
@@ -134,8 +141,9 @@ router.get('/dashboard',
               usageCount: 'desc'
             }
           },
-          take: 10
-        }),
+          take: 10,
+          ...(!targetHospitalId && { __tenantGuardBypass: true }),
+        } as any),
 
         // Activity by module
         prisma.userActivity.groupBy({
@@ -396,6 +404,11 @@ router.get('/feature-usage',
           orderBy = { periodStart: 'desc' };
       }
 
+      // AUDIT-011 LEGITIMATE_BYPASS (PAUSE 2.7 (b) refinement, 2026-05-07):
+      // SUPER_ADMIN cross-tenant aggregation — whereClause.hospitalId is NOT
+      // set when user.role === 'SUPER_ADMIN' (per :273-275 above). Conditional
+      // bypass — Layer 3 still enforces on regular users (whereClause.hospitalId
+      // = user.hospitalId always set for non-SUPER_ADMIN).
       const featureUsage = await prisma.featureUsage.groupBy({
         by: groupByFields as any,
         where: whereClause,
@@ -407,8 +420,9 @@ router.get('/feature-usage',
           totalDuration: true
         },
         orderBy,
-        take: 100
-      });
+        take: 100,
+        ...(user.role === 'SUPER_ADMIN' && !whereClause.hospitalId && { __tenantGuardBypass: true }),
+      } as any);
 
       await trackFeature(req, 'Feature Usage Analytics', ModuleType.ANALYTICS);
 

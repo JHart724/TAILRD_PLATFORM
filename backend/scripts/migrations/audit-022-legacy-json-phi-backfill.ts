@@ -66,7 +66,9 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import prisma from '../../src/lib/prisma';
 import { auditLogger } from '../../src/middleware/auditLogger';
-import { TENANT_GUARD_BYPASS } from '../../src/middleware/tenantGuard';
+// AUDIT-011 marker pattern migrated 2026-05-07: removed import; use string-keyed
+// `__tenantGuardBypass: true` directly on Prisma args (survives Prisma 5.22
+// $extends sanitization).
 
 // ── TARGETS ─────────────────────────────────────────────────────────────────
 // Mirrors PHI_JSON_FIELDS in phiEncryption.ts. 30 columns × 16 models (15 listed
@@ -401,7 +403,7 @@ async function migrateTarget(t: Target, batchSize: number, pauseMs: number): Pro
             runningFailed: report.rowsFailed,
           } as any,
         },
-        [TENANT_GUARD_BYPASS]: true,
+        __tenantGuardBypass: true,
       } as any);
     } catch (dbErr) {
       auditLogger.error('audit_db_write_failed', {

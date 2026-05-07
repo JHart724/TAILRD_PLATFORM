@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { logger } from '../utils/logger';
-import { TENANT_GUARD_BYPASS } from '../middleware/tenantGuard';
+// AUDIT-011 marker pattern migrated 2026-05-07: removed import; use string-keyed
+// `__tenantGuardBypass: true` directly on Prisma args (survives Prisma 5.22
+// $extends sanitization; Symbol.for() does not).
 
 export interface CrossReferralTrigger {
   patientId: string;
@@ -839,13 +841,13 @@ export class CrossReferralService {
     // AUDIT-011 LEGITIMATE_BYPASS (2026-05-02): SUPER_ADMIN cross-tenant referral
     // access. The route handler at routes/referrals.ts validates
     // req.user.role === 'SUPER_ADMIN' before invoking this method. Layer 3
-    // (planned, AUDIT_011_DESIGN.md §6 Phase b) will read TENANT_GUARD_BYPASS
-    // and skip hospitalId enforcement for this query. Until Phase b ships,
-    // the symbol is a no-op marker.
+    // (Phase b/c implementation 2026-05-07) reads `__tenantGuardBypass: true`
+    // on args and skips hospitalId enforcement for this query. Marker pattern
+    // migrated from Symbol.for() to string-keyed per Step 1.0/1.0.1 verification.
     try {
       return await this.prisma.crossReferral.findUnique({
         where: { id: referralId },
-        [TENANT_GUARD_BYPASS]: true,
+        __tenantGuardBypass: true,
       } as any);
     } catch (error) {
       logger.error('Failed to get referral by id (cross-tenant)', { error, referralId });

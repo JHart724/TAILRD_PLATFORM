@@ -35,7 +35,7 @@
  */
 
 import crypto from 'crypto';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import {
   decryptAny,
   encryptWithCurrent,
@@ -213,78 +213,123 @@ async function decryptJsonField(record: Record<string, any>, field: string, mode
   }
 }
 
-export function applyPHIEncryption(prisma: PrismaClient): void {
-  prisma.$use(async (params: Prisma.MiddlewareParams, next: (params: Prisma.MiddlewareParams) => Promise<any>) => {
-    const model = params.model as string | undefined;
-    const stringFields = model ? PHI_FIELD_MAP[model] : undefined;
-    const jsonFields = model ? PHI_JSON_FIELDS[model] : undefined;
+/**
+ * Wire PHI field-level AES-256-GCM encryption onto a Prisma client.
+ *
+ * 2026-05-07 migration ($use → $extends per AUDIT-011 Phase b/c §8):
+ *   Original implementation used `prisma.$use(async (params, next) => ...)`;
+ *   migrated to Prisma 5+ `$extends({ query: { $allModels: { $allOperations
+ *   } } })` API per AUDIT-011 Phase b/c design §8 — coordinated migration
+ *   with Layer 3 tenant guard so the codebase doesn't propagate $use legacy
+ *   tech debt (PR-bundled per §17.3).
+ *
+ * API mapping (per design refinement note §8.2):
+ *   params.model       → model        (string)
+ *   params.action      → operation    (string; same value space)
+ *   params.args        → args         (object; preserved unchanged)
+ *   next(params)       → query(args)  (function call)
+ *
+ * Behavior identity: encrypt-on-write + decrypt-on-read logic preserved
+ * verbatim from the $use middleware. Per-record EncryptionContext
+ * propagation (PR 2 — `{ service, purpose, model, field }`) carries
+ * through unchanged.
+ *
+ * Returns the extended Prisma client (NEW signature 2026-05-07; was void
+ * for $use which mutated in place). Caller stores the returned client as
+ * the singleton; downstream consumers import the singleton.
+ *
+ * Wire-in order (per AUDIT-011 design refinement note §8.6 — locked):
+ *   const tenantGuarded = applyPrismaTenantGuard(baseClient);
+ *   const fullyExtended = applyPHIEncryption(tenantGuarded);
+ *   export default fullyExtended;
+ *
+ * Layer 3 (tenant guard) registers FIRST → encryption SECOND. Tenant
+ * violations throw before encryption runs (PHI plaintext never touched on
+ * rejected queries; defense-in-depth).
+ */
+export function applyPHIEncryption<TClient extends PrismaClient>(
+  prisma: TClient,
+): ReturnType<TClient['$extends']> {
+  return prisma.$extends({
+    name: 'audit-016-phi-encryption',
+    query: {
+      $allModels: {
+        $allOperations: async ({ args, model, operation, query }) => {
+          const stringFields = PHI_FIELD_MAP[model];
+          const jsonFields = PHI_JSON_FIELDS[model];
 
-    if (!model || (!stringFields && !jsonFields)) {
-      return next(params);
-    }
-
-    const fields = stringFields || [];
-
-    // Encrypt on write (string fields + JSON fields)
-    if (['create', 'update', 'upsert', 'updateMany'].includes(params.action)) {
-      const data = params.args?.data;
-      if (data) {
-        await encryptFields(data, fields, model);
-        if (jsonFields) {
-          for (const jf of jsonFields) await encryptJsonField(data, jf, model);
-        }
-      }
-      if (params.action === 'upsert') {
-        if (params.args?.create) {
-          await encryptFields(params.args.create, fields, model);
-          if (jsonFields) {
-            for (const jf of jsonFields) await encryptJsonField(params.args.create, jf, model);
+          if (!stringFields && !jsonFields) {
+            return query(args);
           }
-        }
-        if (params.args?.update) {
-          await encryptFields(params.args.update, fields, model);
-          if (jsonFields) {
-            for (const jf of jsonFields) await encryptJsonField(params.args.update, jf, model);
+
+          const fields = stringFields || [];
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const argsAny = args as any;
+
+          // Encrypt on write (string fields + JSON fields)
+          if (['create', 'update', 'upsert', 'updateMany'].includes(operation)) {
+            const data = argsAny?.data;
+            if (data) {
+              await encryptFields(data, fields, model);
+              if (jsonFields) {
+                for (const jf of jsonFields) await encryptJsonField(data, jf, model);
+              }
+            }
+            if (operation === 'upsert') {
+              if (argsAny?.create) {
+                await encryptFields(argsAny.create, fields, model);
+                if (jsonFields) {
+                  for (const jf of jsonFields) await encryptJsonField(argsAny.create, jf, model);
+                }
+              }
+              if (argsAny?.update) {
+                await encryptFields(argsAny.update, fields, model);
+                if (jsonFields) {
+                  for (const jf of jsonFields) await encryptJsonField(argsAny.update, jf, model);
+                }
+              }
+            }
           }
-        }
-      }
-    }
 
-    if (params.action === 'createMany' && params.args?.data) {
-      const rows = Array.isArray(params.args.data) ? params.args.data : [params.args.data];
-      for (const row of rows) {
-        await encryptFields(row, fields, model);
-        if (jsonFields) {
-          for (const jf of jsonFields) await encryptJsonField(row, jf, model);
-        }
-      }
-    }
+          if (operation === 'createMany' && argsAny?.data) {
+            const rows = Array.isArray(argsAny.data) ? argsAny.data : [argsAny.data];
+            for (const row of rows) {
+              await encryptFields(row, fields, model);
+              if (jsonFields) {
+                for (const jf of jsonFields) await encryptJsonField(row, jf, model);
+              }
+            }
+          }
 
-    const result = await next(params);
+          const result = await query(args);
 
-    // Decrypt on read (string fields + JSON fields)
-    if (result) {
-      const decryptOne = async (r: Record<string, any>): Promise<Record<string, any>> => {
-        await decryptRecord(r, fields, model);
-        if (jsonFields) {
-          for (const jf of jsonFields) await decryptJsonField(r, jf, model);
-        }
-        return r;
-      };
-      if (Array.isArray(result)) {
-        return Promise.all(
-          result.map((r) =>
-            typeof r === 'object' && r !== null ? decryptOne(r) : Promise.resolve(r),
-          ),
-        );
-      }
-      if (typeof result === 'object' && result !== null) {
-        return decryptOne(result);
-      }
-    }
+          // Decrypt on read (string fields + JSON fields)
+          if (result) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const decryptOne = async (r: Record<string, any>): Promise<Record<string, any>> => {
+              await decryptRecord(r, fields, model);
+              if (jsonFields) {
+                for (const jf of jsonFields) await decryptJsonField(r, jf, model);
+              }
+              return r;
+            };
+            if (Array.isArray(result)) {
+              return Promise.all(
+                result.map((r) =>
+                  typeof r === 'object' && r !== null ? decryptOne(r) : Promise.resolve(r),
+                ),
+              );
+            }
+            if (typeof result === 'object' && result !== null) {
+              return decryptOne(result);
+            }
+          }
 
-    return result;
-  });
+          return result;
+        },
+      },
+    },
+  }) as ReturnType<TClient['$extends']>;
 }
 
 // Generate a new 256-bit encryption key (run once, store in Secrets Manager)

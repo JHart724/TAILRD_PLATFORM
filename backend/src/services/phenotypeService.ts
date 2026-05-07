@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { logger } from '../utils/logger';
-import { TENANT_GUARD_BYPASS } from '../middleware/tenantGuard';
+// AUDIT-011 marker pattern migrated 2026-05-07: removed import; use string-keyed
+// `__tenantGuardBypass: true` directly on Prisma args (survives Prisma 5.22
+// $extends sanitization; Symbol.for() does not).
 
 export interface PhenotypeDetectionResult {
   id: string;
@@ -567,7 +569,7 @@ export class PhenotypeService {
     try {
       const record = await this.prisma.phenotype.findUnique({
         where: { id: phenotypeId },
-        [TENANT_GUARD_BYPASS]: true,
+        __tenantGuardBypass: true,
       } as any);
       return record as unknown as PhenotypeDetectionResult | null;
     } catch (error) {
