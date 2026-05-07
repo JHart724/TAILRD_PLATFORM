@@ -16,13 +16,13 @@
 
 // ── Mocks ──────────────────────────────────────────────────────────────────
 
-const mockSend = jest.fn();
+const mockKmsSend = jest.fn();
 
 jest.mock('@aws-sdk/client-kms', () => {
   const actual = jest.requireActual('@aws-sdk/client-kms');
   return {
     ...actual,
-    KMSClient: jest.fn().mockImplementation(() => ({ send: mockSend })),
+    KMSClient: jest.fn().mockImplementation(() => ({ send: mockKmsSend })),
   };
 });
 
@@ -76,7 +76,7 @@ describe('kmsService — local fallback (NODE_ENV !== production)', () => {
     expect(decrypted).toBe('Patient MRN-12345');
 
     // No real KMS calls
-    expect(mockSend).not.toHaveBeenCalled();
+    expect(mockKmsSend).not.toHaveBeenCalled();
   });
 
   it('envelopeEncrypt accepts per-record EncryptionContext (D6 parameterization)', async () => {
@@ -122,7 +122,7 @@ describe('kmsService — production mode KMS API calls', () => {
     process.env.AWS_KMS_PHI_KEY_ALIAS = 'alias/tailrd-test-phi';
 
     // Mock GenerateDataKey response
-    mockSend.mockResolvedValueOnce({
+    mockKmsSend.mockResolvedValueOnce({
       Plaintext: new Uint8Array(32).fill(7), // 256-bit "DEK"
       CiphertextBlob: new Uint8Array(64).fill(8), // wrapped-DEK
     });
@@ -135,8 +135,8 @@ describe('kmsService — production mode KMS API calls', () => {
       field: 'firstName',
     });
 
-    expect(mockSend).toHaveBeenCalledTimes(1);
-    const command = mockSend.mock.calls[0][0];
+    expect(mockKmsSend).toHaveBeenCalledTimes(1);
+    const command = mockKmsSend.mock.calls[0][0];
     expect(command.input.KeyId).toBe('alias/tailrd-test-phi');
     expect(command.input.KeySpec).toBe('AES_256');
     expect(command.input.EncryptionContext).toEqual({
@@ -158,7 +158,7 @@ describe('kmsService — production mode KMS API calls', () => {
     const dek = new Uint8Array(32).fill(7);
     const wrappedDek = new Uint8Array(64).fill(8);
 
-    mockSend
+    mockKmsSend
       .mockResolvedValueOnce({ Plaintext: dek, CiphertextBlob: wrappedDek })   // GenerateDataKey
       .mockResolvedValueOnce({ Plaintext: dek });                              // Decrypt
 
@@ -170,13 +170,13 @@ describe('kmsService — production mode KMS API calls', () => {
     expect(decrypted).toBe('Alice');
 
     // Verify both KMS calls received the same EncryptionContext
-    expect(mockSend.mock.calls[0][0].input.EncryptionContext).toEqual({
+    expect(mockKmsSend.mock.calls[0][0].input.EncryptionContext).toEqual({
       service: 'tailrd-backend',
       purpose: 'phi-encryption',
       model: 'Patient',
       field: 'firstName',
     });
-    expect(mockSend.mock.calls[1][0].input.EncryptionContext).toEqual({
+    expect(mockKmsSend.mock.calls[1][0].input.EncryptionContext).toEqual({
       service: 'tailrd-backend',
       purpose: 'phi-encryption',
       model: 'Patient',
@@ -189,7 +189,7 @@ describe('kmsService — production mode KMS API calls', () => {
     process.env.NODE_ENV = 'production';
     process.env.AWS_KMS_PHI_KEY_ALIAS = 'alias/test';
 
-    mockSend.mockRejectedValueOnce(Object.assign(new Error('socket hang up'), { name: 'NetworkError' }));
+    mockKmsSend.mockRejectedValueOnce(Object.assign(new Error('socket hang up'), { name: 'NetworkError' }));
 
     const { envelopeEncrypt } = await import('../kmsService');
     await expect(envelopeEncrypt('payload')).rejects.toThrow(/socket hang up/);
@@ -199,7 +199,7 @@ describe('kmsService — production mode KMS API calls', () => {
     process.env.NODE_ENV = 'production';
     process.env.AWS_KMS_PHI_KEY_ALIAS = 'alias/missing-key';
 
-    mockSend.mockRejectedValueOnce(Object.assign(new Error('Key does not exist'), { name: 'NotFoundException' }));
+    mockKmsSend.mockRejectedValueOnce(Object.assign(new Error('Key does not exist'), { name: 'NotFoundException' }));
 
     const { envelopeEncrypt } = await import('../kmsService');
     await expect(envelopeEncrypt('payload')).rejects.toThrow(/Key does not exist/);
@@ -209,7 +209,7 @@ describe('kmsService — production mode KMS API calls', () => {
     process.env.NODE_ENV = 'production';
     process.env.AWS_KMS_PHI_KEY_ALIAS = 'alias/test';
 
-    mockSend.mockRejectedValueOnce(Object.assign(new Error('User is not authorized'), { name: 'AccessDeniedException' }));
+    mockKmsSend.mockRejectedValueOnce(Object.assign(new Error('User is not authorized'), { name: 'AccessDeniedException' }));
 
     const { envelopeDecrypt } = await import('../kmsService');
     await expect(
@@ -221,7 +221,7 @@ describe('kmsService — production mode KMS API calls', () => {
     process.env.NODE_ENV = 'production';
     process.env.AWS_KMS_PHI_KEY_ALIAS = 'alias/test';
 
-    mockSend.mockRejectedValueOnce(
+    mockKmsSend.mockRejectedValueOnce(
       Object.assign(new Error('InvalidCiphertextException'), { name: 'InvalidCiphertextException' }),
     );
 
@@ -238,7 +238,7 @@ describe('kmsService — production mode KMS API calls', () => {
     process.env.NODE_ENV = 'production';
     process.env.AWS_KMS_PHI_KEY_ALIAS = 'alias/test';
 
-    mockSend.mockResolvedValueOnce({ Plaintext: undefined, CiphertextBlob: new Uint8Array(64) });
+    mockKmsSend.mockResolvedValueOnce({ Plaintext: undefined, CiphertextBlob: new Uint8Array(64) });
 
     const { envelopeEncrypt } = await import('../kmsService');
     await expect(envelopeEncrypt('payload')).rejects.toThrow(/no key material/);
@@ -248,7 +248,7 @@ describe('kmsService — production mode KMS API calls', () => {
     process.env.NODE_ENV = 'production';
     process.env.AWS_KMS_PHI_KEY_ALIAS = 'alias/test';
 
-    mockSend.mockResolvedValueOnce({ Plaintext: undefined });
+    mockKmsSend.mockResolvedValueOnce({ Plaintext: undefined });
 
     const { envelopeDecrypt } = await import('../kmsService');
     await expect(
@@ -265,7 +265,7 @@ describe('kmsService — ARN vs alias resolution (D1)', () => {
     process.env.NODE_ENV = 'production';
     process.env.AWS_KMS_PHI_KEY_ALIAS = 'alias/foo';
 
-    mockSend.mockResolvedValueOnce({
+    mockKmsSend.mockResolvedValueOnce({
       Plaintext: new Uint8Array(32),
       CiphertextBlob: new Uint8Array(64),
     });
@@ -273,14 +273,14 @@ describe('kmsService — ARN vs alias resolution (D1)', () => {
     const { envelopeEncrypt } = await import('../kmsService');
     await envelopeEncrypt('payload');
 
-    expect(mockSend.mock.calls[0][0].input.KeyId).toBe('alias/foo');
+    expect(mockKmsSend.mock.calls[0][0].input.KeyId).toBe('alias/foo');
   });
 
   it('T8b: AWS_KMS_PHI_KEY_ALIAS=arn:aws:kms:... → KMSClient receives full ARN (no alias/ prepend)', async () => {
     process.env.NODE_ENV = 'production';
     process.env.AWS_KMS_PHI_KEY_ALIAS = 'arn:aws:kms:us-east-1:123456789012:key/abcd-efgh';
 
-    mockSend.mockResolvedValueOnce({
+    mockKmsSend.mockResolvedValueOnce({
       Plaintext: new Uint8Array(32),
       CiphertextBlob: new Uint8Array(64),
     });
@@ -288,11 +288,11 @@ describe('kmsService — ARN vs alias resolution (D1)', () => {
     const { envelopeEncrypt } = await import('../kmsService');
     await envelopeEncrypt('payload');
 
-    expect(mockSend.mock.calls[0][0].input.KeyId).toBe(
+    expect(mockKmsSend.mock.calls[0][0].input.KeyId).toBe(
       'arn:aws:kms:us-east-1:123456789012:key/abcd-efgh',
     );
     // No alias/ prefix prepended; ARN passed through untouched
-    expect(mockSend.mock.calls[0][0].input.KeyId).not.toMatch(/^alias\//);
+    expect(mockKmsSend.mock.calls[0][0].input.KeyId).not.toMatch(/^alias\//);
   });
 });
 
@@ -311,7 +311,7 @@ describe('kmsService — getKeyInfo', () => {
     process.env.NODE_ENV = 'production';
     delete process.env.DEMO_MODE;
 
-    mockSend.mockResolvedValueOnce({
+    mockKmsSend.mockResolvedValueOnce({
       KeyMetadata: {
         KeyId: 'abc-123',
         Arn: 'arn:aws:kms:us-east-1:000:key/abc-123',
