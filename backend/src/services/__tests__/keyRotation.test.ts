@@ -16,11 +16,13 @@ import crypto from 'crypto';
 import {
   DesignPhaseStubError,
   KeyValidationError,
+  EnvelopeConfigError,
   rotateKey,
   encryptWithCurrent,
   decryptAny,
   migrateRecord,
   validateKeyOrThrow,
+  validateEnvelopeConfigOrThrow,
   _resetKeyValidationCacheForTests,
   EncryptionContext,
   EnvelopeV0,
@@ -183,9 +185,182 @@ describe('decryptAny() — V0 + V1 dispatch', () => {
     expect(decrypted).toEqual(plaintexts);
   });
 
-  it('V2 envelope throws DesignPhaseStubError (PR 2 lands V2 decrypt)', async () => {
-    const v2 = buildV2('wrappedDEKbase64', 'ivbase64', 'authTagbase64', 'ciphertextbase64');
-    await expect(decryptAny(v2, TEST_CONTEXT)).rejects.toThrow(DesignPhaseStubError);
+  // V2 stub-throw test (PR 1) replaced by V2 round-trip test (PR 2 — see
+  // 'V2 envelope round-trip via localEncrypt' below).
+});
+
+// ── AUDIT-016 PR 2 — V2 envelope emission + KMS wiring ─────────────────────
+//
+// T1-T8 from operator's PR 2 implementation brief PLUS design §6 test plan.
+// Mock-based unit tests; integration tests against real AWS KMS are gated
+// separately (see audit016-pr2-kms-roundtrip.test.ts).
+//
+// Note on dev-mode behavior: kmsService gates KMS API calls on
+// `NODE_ENV === 'production'` (kmsService.ts:75 + 122). In test env
+// (NODE_ENV='test'), envelopeEncrypt + envelopeDecrypt always use
+// localEncrypt/Decrypt — no real KMS calls. Tests verifying KMS error
+// handling stub envelopeEncrypt/Decrypt directly to simulate KMS rejection.
+
+describe('AUDIT-016 PR 2 — V2 envelope round-trip + flag-flip', () => {
+  const ORIG_VERSION = process.env.PHI_ENVELOPE_VERSION;
+  const ORIG_ALIAS = process.env.AWS_KMS_PHI_KEY_ALIAS;
+
+  afterEach(() => {
+    if (ORIG_VERSION === undefined) delete process.env.PHI_ENVELOPE_VERSION;
+    else process.env.PHI_ENVELOPE_VERSION = ORIG_VERSION;
+    if (ORIG_ALIAS === undefined) delete process.env.AWS_KMS_PHI_KEY_ALIAS;
+    else process.env.AWS_KMS_PHI_KEY_ALIAS = ORIG_ALIAS;
+  });
+
+  // T6: dev V2 round-trip via localEncrypt
+  it('T6: dev V2 round-trip via localEncrypt — encryptWithCurrent V2 → decryptAny V2 → plaintext', async () => {
+    process.env.PHI_ENVELOPE_VERSION = 'v2';
+    process.env.AWS_KMS_PHI_KEY_ALIAS = 'alias/test';
+
+    const plaintext = 'Patient MRN-12345 firstName=Alice';
+    const envelope = await encryptWithCurrent(plaintext, TEST_CONTEXT);
+    expect(envelope.startsWith('enc:v2:')).toBe(true);
+    expect(envelope.split(':').length).toBe(6); // enc:v2:wrappedDEK:iv:authTag:ciphertext
+
+    const decrypted = await decryptAny(envelope, TEST_CONTEXT);
+    expect(decrypted).toBe(plaintext);
+  });
+
+  // Flag-flip emission default (V1)
+  it('flag-flip default: PHI_ENVELOPE_VERSION unset → V1 emission (backwards-compat)', async () => {
+    delete process.env.PHI_ENVELOPE_VERSION;
+    process.env.AWS_KMS_PHI_KEY_ALIAS = 'alias/test';
+
+    const envelope = await encryptWithCurrent('plaintext', TEST_CONTEXT);
+    expect(envelope.startsWith('enc:v1:')).toBe(true);
+    expect(envelope.split(':').length).toBe(5); // enc:v1:iv:authTag:ciphertext
+  });
+
+  // Flag-flip emission requires both env vars
+  it('flag-flip: PHI_ENVELOPE_VERSION=v2 without AWS_KMS_PHI_KEY_ALIAS → V1 emission (gating not satisfied)', async () => {
+    process.env.PHI_ENVELOPE_VERSION = 'v2';
+    delete process.env.AWS_KMS_PHI_KEY_ALIAS;
+
+    const envelope = await encryptWithCurrent('plaintext', TEST_CONTEXT);
+    expect(envelope.startsWith('enc:v1:')).toBe(true);
+  });
+
+  // T1: decrypt-is-not-gated (rollback safety)
+  it('T1: decrypt-is-not-gated — V2 ciphertext decrypts even when PHI_ENVELOPE_VERSION=v1 (rollback safety)', async () => {
+    // Encrypt with V2 enabled
+    process.env.PHI_ENVELOPE_VERSION = 'v2';
+    process.env.AWS_KMS_PHI_KEY_ALIAS = 'alias/test';
+    const v2envelope = await encryptWithCurrent('rollback-test', TEST_CONTEXT);
+    expect(v2envelope.startsWith('enc:v2:')).toBe(true);
+
+    // Now disable V2 emission (rollback simulation)
+    delete process.env.PHI_ENVELOPE_VERSION;
+
+    // Decryption of existing V2 ciphertext must still succeed
+    const decrypted = await decryptAny(v2envelope, TEST_CONTEXT);
+    expect(decrypted).toBe('rollback-test');
+  });
+});
+
+describe('AUDIT-016 PR 2 — V0/V1/V2 mixed-state batch decrypt (triple coverage)', () => {
+  const ORIG_VERSION = process.env.PHI_ENVELOPE_VERSION;
+  const ORIG_ALIAS = process.env.AWS_KMS_PHI_KEY_ALIAS;
+
+  afterEach(() => {
+    if (ORIG_VERSION === undefined) delete process.env.PHI_ENVELOPE_VERSION;
+    else process.env.PHI_ENVELOPE_VERSION = ORIG_VERSION;
+    if (ORIG_ALIAS === undefined) delete process.env.AWS_KMS_PHI_KEY_ALIAS;
+    else process.env.AWS_KMS_PHI_KEY_ALIAS = ORIG_ALIAS;
+  });
+
+  it('triple coverage: V0 + V1 + V2 in same array all decrypt cleanly', async () => {
+    // Build one of each version for the SAME plaintext
+    const plaintexts = ['v0-row', 'v1-row', 'v2-row'];
+
+    // V0 — manual craft (legacy untagged)
+    const keyBuf = Buffer.from(TEST_KEY, 'hex');
+    const iv0 = crypto.randomBytes(16);
+    const cipher0 = crypto.createCipheriv('aes-256-gcm', keyBuf, iv0);
+    let enc0 = cipher0.update(plaintexts[0], 'utf8', 'hex');
+    enc0 += cipher0.final('hex');
+    const v0 = buildV0(iv0.toString('hex'), cipher0.getAuthTag().toString('hex'), enc0);
+
+    // V1 — via encryptWithCurrent default
+    delete process.env.PHI_ENVELOPE_VERSION;
+    const v1 = await encryptWithCurrent(plaintexts[1], TEST_CONTEXT);
+    expect(v1.startsWith('enc:v1:')).toBe(true);
+
+    // V2 — via encryptWithCurrent with V2 enabled
+    process.env.PHI_ENVELOPE_VERSION = 'v2';
+    process.env.AWS_KMS_PHI_KEY_ALIAS = 'alias/test';
+    const v2 = await encryptWithCurrent(plaintexts[2], TEST_CONTEXT);
+    expect(v2.startsWith('enc:v2:')).toBe(true);
+
+    // Decrypt all three (mixed-state result set)
+    const decrypted = await Promise.all([
+      decryptAny(v0, TEST_CONTEXT),
+      decryptAny(v1, TEST_CONTEXT),
+      decryptAny(v2, TEST_CONTEXT),
+    ]);
+    expect(decrypted).toEqual(plaintexts);
+  });
+});
+
+describe('AUDIT-016 PR 2 — validateEnvelopeConfigOrThrow', () => {
+  // T4: module-init validation
+  it('T4: PHI_ENVELOPE_VERSION=v2 + AWS_KMS_PHI_KEY_ALIAS missing → EnvelopeConfigError', () => {
+    expect(() =>
+      validateEnvelopeConfigOrThrow({ PHI_ENVELOPE_VERSION: 'v2' }),
+    ).toThrow(EnvelopeConfigError);
+    expect(() =>
+      validateEnvelopeConfigOrThrow({ PHI_ENVELOPE_VERSION: 'v2' }),
+    ).toThrow(/AWS_KMS_PHI_KEY_ALIAS/);
+  });
+
+  it('default (PHI_ENVELOPE_VERSION unset) → no-op', () => {
+    expect(() => validateEnvelopeConfigOrThrow({})).not.toThrow();
+  });
+
+  it('PHI_ENVELOPE_VERSION=v1 → no-op (default V1 emission)', () => {
+    expect(() =>
+      validateEnvelopeConfigOrThrow({ PHI_ENVELOPE_VERSION: 'v1' }),
+    ).not.toThrow();
+  });
+
+  it('PHI_ENVELOPE_VERSION=v2 + AWS_KMS_PHI_KEY_ALIAS set → no-op', () => {
+    expect(() =>
+      validateEnvelopeConfigOrThrow({
+        PHI_ENVELOPE_VERSION: 'v2',
+        AWS_KMS_PHI_KEY_ALIAS: 'alias/test',
+      }),
+    ).not.toThrow();
+  });
+
+  it('PHI_ENVELOPE_VERSION=v3 (unrecognized) → EnvelopeConfigError', () => {
+    expect(() =>
+      validateEnvelopeConfigOrThrow({ PHI_ENVELOPE_VERSION: 'v3' }),
+    ).toThrow(/must be 'v1'/);
+  });
+});
+
+describe('AUDIT-016 PR 2 — AUDIT-022 SQL filter compatibility', () => {
+  const ORIG_VERSION = process.env.PHI_ENVELOPE_VERSION;
+  const ORIG_ALIAS = process.env.AWS_KMS_PHI_KEY_ALIAS;
+
+  afterEach(() => {
+    if (ORIG_VERSION === undefined) delete process.env.PHI_ENVELOPE_VERSION;
+    else process.env.PHI_ENVELOPE_VERSION = ORIG_VERSION;
+    if (ORIG_ALIAS === undefined) delete process.env.AWS_KMS_PHI_KEY_ALIAS;
+    else process.env.AWS_KMS_PHI_KEY_ALIAS = ORIG_ALIAS;
+  });
+
+  // T5: AUDIT-022 enc:% prefix preserved
+  it('T5: V2 envelope starts with enc:v2: → matches AUDIT-022 SQL filter "enc:%"', async () => {
+    process.env.PHI_ENVELOPE_VERSION = 'v2';
+    process.env.AWS_KMS_PHI_KEY_ALIAS = 'alias/test';
+    const envelope = await encryptWithCurrent('payload', TEST_CONTEXT);
+    expect(envelope.startsWith('enc:')).toBe(true);
+    expect(envelope.startsWith('enc:v2:')).toBe(true);
   });
 });
 

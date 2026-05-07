@@ -36,7 +36,9 @@ const kmsClient = new KMSClient({
   }),
 });
 
-// KMS key alias for PHI encryption
+// KMS key alias OR ARN for PHI encryption. AWS SDK accepts either format
+// natively in `KeyId` parameter (arn:aws:kms:... or alias/foo).
+// Default alias remains for backwards compatibility with pre-AUDIT-016-PR-2 callers.
 const PHI_KEY_ALIAS = process.env.AWS_KMS_PHI_KEY_ALIAS || 'alias/tailrd-production-phi';
 
 // Local fallback key (dev/demo mode only)
@@ -49,6 +51,45 @@ interface EnvelopeEncryptResult {
   encryptedDataKey: string; // Base64-encoded encrypted data key (store alongside ciphertext)
   iv: string;               // Base64-encoded IV
   authTag: string;          // Base64-encoded GCM auth tag
+}
+
+/**
+ * EncryptionContext shape passed to AWS KMS GenerateDataKey + Decrypt.
+ * Per AUDIT-016 PR 2 D2: per-record context provides HIPAA audit-trail
+ * anchor via CloudTrail kms:Decrypt event payload. KMS verifies context
+ * matches at decrypt time (mismatch → AccessDeniedException) — tamper-
+ * evidence + cross-field decrypt prevention.
+ *
+ * Required fields: service, purpose. Optional: model, field (per-record).
+ * AWS KMS EncryptionContext is `Record<string, string>`; we project the
+ * typed shape into that flat record at the boundary.
+ */
+export interface KmsEncryptionContext {
+  readonly service: string;
+  readonly purpose: string;
+  readonly model?: string;
+  readonly field?: string;
+}
+
+const DEFAULT_KMS_CONTEXT: KmsEncryptionContext = {
+  service: 'tailrd-backend',
+  purpose: 'phi-encryption',
+};
+
+const DEFAULT_KMS_FIELD_CONTEXT: KmsEncryptionContext = {
+  service: 'tailrd-backend',
+  purpose: 'phi-field',
+};
+
+/** Project structured context into AWS SDK's flat `Record<string, string>`. */
+function toAwsEncryptionContext(ctx: KmsEncryptionContext): Record<string, string> {
+  const out: Record<string, string> = {
+    service: ctx.service,
+    purpose: ctx.purpose,
+  };
+  if (ctx.model) out.model = ctx.model;
+  if (ctx.field) out.field = ctx.field;
+  return out;
 }
 
 interface KeyInfo {
@@ -71,19 +112,19 @@ interface KeyInfo {
  *
  * This minimizes KMS API calls while maintaining key management in HSM.
  */
-export async function envelopeEncrypt(plaintext: string): Promise<EnvelopeEncryptResult> {
+export async function envelopeEncrypt(
+  plaintext: string,
+  context: KmsEncryptionContext = DEFAULT_KMS_CONTEXT,
+): Promise<EnvelopeEncryptResult> {
   if (isDemoMode || !isProduction) {
     return localEncrypt(plaintext);
   }
 
-  // Step 1: Get a data key from KMS
+  // Step 1: Get a data key from KMS with per-record EncryptionContext (AUDIT-016 PR 2 D2)
   const dataKeyCommand = new GenerateDataKeyCommand({
     KeyId: PHI_KEY_ALIAS,
     KeySpec: 'AES_256',
-    EncryptionContext: {
-      service: 'tailrd-backend',
-      purpose: 'phi-encryption',
-    },
+    EncryptionContext: toAwsEncryptionContext(context),
   });
 
   const dataKeyResult = await kmsClient.send(dataKeyCommand);
@@ -118,18 +159,19 @@ export async function envelopeEncrypt(plaintext: string): Promise<EnvelopeEncryp
  * 1. Send the encrypted data key to KMS for decryption
  * 2. Use the plaintext data key to AES-256-GCM decrypt locally
  */
-export async function envelopeDecrypt(encrypted: EnvelopeEncryptResult): Promise<string> {
+export async function envelopeDecrypt(
+  encrypted: EnvelopeEncryptResult,
+  context: KmsEncryptionContext = DEFAULT_KMS_CONTEXT,
+): Promise<string> {
   if (isDemoMode || !isProduction) {
     return localDecrypt(encrypted);
   }
 
-  // Step 1: Decrypt the data key via KMS
+  // Step 1: Decrypt the data key via KMS with the SAME per-record context
+  // supplied at encrypt time (KMS rejects on mismatch — tamper evidence).
   const decryptKeyCommand = new DecryptCommand({
     CiphertextBlob: Buffer.from(encrypted.encryptedDataKey, 'base64'),
-    EncryptionContext: {
-      service: 'tailrd-backend',
-      purpose: 'phi-encryption',
-    },
+    EncryptionContext: toAwsEncryptionContext(context),
   });
 
   const decryptKeyResult = await kmsClient.send(decryptKeyCommand);

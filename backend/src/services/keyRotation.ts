@@ -34,6 +34,7 @@ import crypto from 'crypto';
 import {
   parseEnvelope,
   buildV1,
+  buildV2,
   EnvelopeFormatError,
   type Envelope,
   type EnvelopeV0,
@@ -41,6 +42,7 @@ import {
   type EnvelopeV2,
   type KeyVersion,
 } from './envelopeFormat';
+import { envelopeEncrypt, envelopeDecrypt } from './kmsService';
 
 // Re-export envelope types so existing consumers (keyRotation.test.ts) don't
 // need to update their imports. envelopeFormat.ts is the canonical home.
@@ -85,6 +87,62 @@ export class KeyValidationError extends Error {
     super(`PHI_ENCRYPTION_KEY validation failed: ${reason}`);
     this.name = 'KeyValidationError';
   }
+}
+
+// ── AUDIT-016 PR 2 — V2 envelope config validation ─────────────────────────
+
+/**
+ * Thrown when V2 envelope emission config is misconfigured at startup.
+ * Sister to KeyValidationError pattern. Fail-fast at module init prevents
+ * inconsistent runtime state where some emit paths use V2 and others V1.
+ *
+ * Common causes:
+ *   - PHI_ENVELOPE_VERSION=v2 set but AWS_KMS_PHI_KEY_ALIAS not set
+ *   - PHI_ENVELOPE_VERSION set to an unrecognized value (e.g., 'v3')
+ */
+export class EnvelopeConfigError extends Error {
+  constructor(reason: string) {
+    super(`V2 envelope config invalid: ${reason}`);
+    this.name = 'EnvelopeConfigError';
+  }
+}
+
+/**
+ * Validate envelope-emission configuration at module init.
+ *
+ * Default (PHI_ENVELOPE_VERSION unset OR 'v1'): no-op; V1 emission path used.
+ *
+ * V2 opt-in (PHI_ENVELOPE_VERSION='v2'): requires AWS_KMS_PHI_KEY_ALIAS to be
+ * set. Fails fast otherwise per D3 (explicit gating + AUDIT-013 sister
+ * fail-closed pattern).
+ *
+ * @throws EnvelopeConfigError on misconfiguration
+ */
+export function validateEnvelopeConfigOrThrow(env: NodeJS.ProcessEnv = process.env): void {
+  const version = env.PHI_ENVELOPE_VERSION;
+  if (version === undefined || version === '' || version === 'v1') return;
+  if (version === 'v2') {
+    if (!env.AWS_KMS_PHI_KEY_ALIAS) {
+      throw new EnvelopeConfigError(
+        'PHI_ENVELOPE_VERSION=v2 requires AWS_KMS_PHI_KEY_ALIAS to be set. ' +
+        'Either set AWS_KMS_PHI_KEY_ALIAS (alias or ARN) or unset PHI_ENVELOPE_VERSION to fall back to V1.',
+      );
+    }
+    return;
+  }
+  throw new EnvelopeConfigError(
+    `PHI_ENVELOPE_VERSION must be 'v1' (default) or 'v2'; got: '${version}'`,
+  );
+}
+
+/**
+ * Determine whether `encryptWithCurrent` should emit V2 envelopes for the
+ * current process. Reads env at call time so deployment env flips take
+ * effect on the next encrypt without process restart (sister to
+ * `auth.ts isMfaEnforced` pattern).
+ */
+function shouldEmitV2(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env.PHI_ENVELOPE_VERSION === 'v2' && Boolean(env.AWS_KMS_PHI_KEY_ALIAS);
 }
 
 /**
@@ -167,18 +225,33 @@ export interface MigrationResult {
 // ── Public API ──────────────────────────────────────────────────────────────
 
 /**
- * Encrypt plaintext, emit V1 envelope.
+ * Encrypt plaintext, emit current envelope version.
  *
- * Single-key AES-256-GCM with PHI_ENCRYPTION_KEY. Caller-supplied
- * EncryptionContext is currently unused by V1 path; PR 2 propagates context
- * into KMS GenerateDataKey for V2 emission.
+ * Routing (per AUDIT-016 PR 2 D3 explicit gating):
+ *   - PHI_ENVELOPE_VERSION='v2' AND AWS_KMS_PHI_KEY_ALIAS set → V2 emission
+ *     via kmsService.envelopeEncrypt (KMS-wrapped DEK + per-record
+ *     EncryptionContext for HIPAA audit-trail anchor)
+ *   - else → V1 emission (single-key AES-256-GCM with PHI_ENCRYPTION_KEY;
+ *     default; backwards-compat)
  *
- * @throws KeyValidationError if PHI_ENCRYPTION_KEY is invalid
+ * @throws KeyValidationError if PHI_ENCRYPTION_KEY is invalid (V1 path)
+ * @throws when KMS unreachable (V2 path; strict fail-loud per D4 — no V1 fallback)
  */
 export async function encryptWithCurrent(
   plaintext: string,
-  _context: EncryptionContext,
+  context: EncryptionContext,
 ): Promise<string> {
+  if (shouldEmitV2()) {
+    return encryptV2(plaintext, context);
+  }
+  return encryptV1(plaintext);
+}
+
+/**
+ * V1 emission path (single-key AES-256-GCM with PHI_ENCRYPTION_KEY).
+ * Internal — invoked when V2 gating is not satisfied (default).
+ */
+function encryptV1(plaintext: string): string {
   const keyHex = ensureValidatedKey();
   const keyBuf = Buffer.from(keyHex, 'hex');
   const iv = crypto.randomBytes(16);
@@ -190,22 +263,38 @@ export async function encryptWithCurrent(
 }
 
 /**
- * Decrypt any envelope version. Routes V0 + V1 through single-key AES-256-GCM
- * with PHI_ENCRYPTION_KEY. V2 routing throws DesignPhaseStubError until PR 2
- * ships kmsService wiring.
+ * V2 emission path (KMS envelope encryption with per-record context).
+ * Bridges kmsService's object-shape result → envelopeFormat colon-delimited V2 string.
+ */
+async function encryptV2(plaintext: string, context: EncryptionContext): Promise<string> {
+  const result = await envelopeEncrypt(plaintext, context);
+  return buildV2(result.encryptedDataKey, result.iv, result.authTag, result.ciphertext);
+}
+
+/**
+ * Decrypt any envelope version.
  *
- * Fail-loud per AUDIT-015 pattern: malformed envelope (EnvelopeFormatError),
- * integrity check failure (auth-tag mismatch), or unsupported envelope version
+ * Routing:
+ *   - V0 + V1 → single-key AES-256-GCM with PHI_ENCRYPTION_KEY
+ *   - V2 → kmsService.envelopeDecrypt with the same EncryptionContext
+ *     supplied at encrypt time (KMS rejects on context mismatch)
+ *
+ * **Decrypt is NOT gated by `PHI_ENVELOPE_VERSION` flag** (per design note §2):
+ * once V2 ciphertext exists in production, decryption must succeed regardless
+ * of whether emission has been disabled (rollback safety).
+ *
+ * Fail-loud per AUDIT-015 pattern: malformed envelope, integrity check
+ * failure, KMS rejection (network / KeyNotFound / AccessDenied / ContextMismatch)
  * all throw with explicit context. Caller never silently receives ciphertext.
  *
  * @throws EnvelopeFormatError on malformed envelope
- * @throws Error wrapped with `cause` on integrity check failure
- * @throws DesignPhaseStubError on V2 envelope (PR 2 lands V2 decrypt)
- * @throws KeyValidationError if PHI_ENCRYPTION_KEY is invalid
+ * @throws Error wrapped with `cause` on integrity check failure (V0 / V1)
+ * @throws when KMS unreachable or rejects (V2)
+ * @throws KeyValidationError if PHI_ENCRYPTION_KEY is invalid (V0 / V1)
  */
 export async function decryptAny(
   envelope: string,
-  _context: EncryptionContext,
+  context: EncryptionContext,
 ): Promise<string> {
   const parsed: Envelope = parseEnvelope(envelope);
 
@@ -213,9 +302,15 @@ export async function decryptAny(
     return decryptSingleKey(parsed, envelope);
   }
 
-  // V2 — KMS-wrapped DEK; PR 2 wires kmsService.envelopeDecrypt.
-  throw new DesignPhaseStubError(
-    `decryptAny() V2 path (envelope version: ${parsed.version}; ships in AUDIT-016 PR 2)`,
+  // V2 — KMS-wrapped DEK. Bridge envelope object-fields → kmsService input shape.
+  return envelopeDecrypt(
+    {
+      ciphertext: parsed.ciphertext,
+      encryptedDataKey: parsed.wrappedDEK,
+      iv: parsed.iv,
+      authTag: parsed.authTag,
+    },
+    context,
   );
 }
 
