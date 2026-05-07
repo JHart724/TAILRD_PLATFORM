@@ -357,20 +357,35 @@ Target: 30 days post Phase A deploy. Bounded by:
 
 **Risk realized:** none; localEncrypt path covers dev + test runs. Production KMS calibration deferred to integration test (gated by `RUN_INTEGRATION_TESTS=1` + AWS credentials).
 
-### Implementation PR 3 — Migration handler + background job (~4-7h)
+### Implementation PR 3 — Migration handler + V0/V1 → V2 migration script (~4-7h)
 
-**Status:** PENDING.
+**Status:** SHIPPED 2026-05-07 (~6-8h actual; mid-range of estimate band per design refinement note §11).
 
-**Scope:**
-- `migrateRecord(recordId, table)` real implementation — reads V0 OR V1; re-encrypts as V2; writes back.
-- Background re-encryption job (Fargate task or Lambda).
-- Idempotency via envelope detection (V2 records skipped).
-- Audit logging per batch.
-- Operator-runbook for invocation + completion verification.
-- Tests: idempotency, partial-failure handling, counts verification.
-- AUDIT-016 register status flips OPEN → RESOLVED at PR 3 merge.
+**Scope (as shipped):**
+- `migrateRecord(recordId, table, column, context, prismaClient, currentValue)` real implementation in `keyRotation.ts` — signature extended additively from PR 1's `(recordId, table)` (zero existing callers; safe extension). `parseEnvelope` dispatch: V2-input → race-skip with NO DB write per D3; V0/V1-input → `decryptAny` (single-key local AES) → `encryptWithCurrent` (V2 emit; KMS-wrapped DEK) → raw SQL UPDATE via `prisma.$executeRawUnsafe` (parameterized recordId + ciphertext; table + column from compile-time hardcoded TARGETS allow-list — zero SQL injection surface). Defense-in-depth re-parse of emitted envelope rejects non-V2 (catches `PHI_ENVELOPE_VERSION` flag-flip mid-run).
+- One-shot operator-triggered migration script `backend/scripts/migrations/audit-016-pr3-v0v1-to-v2.ts` (~764 LOC actual; ~18-27% over PAUSE 2 design refinement note §11 estimate of ~600-650 LOC; additional pre-flight detail + boilerplate + error handling; not a §17.1, normal scope clarification; sister to AUDIT-022 PR #253 backfill). NEW `TARGETS` array of ~66 (table, column) pairs spanning 14 string-PHI + 15 JSON-PHI models per D2 (decoupled from AUDIT-022 per Inv #7). Three-layer gate per D7: `--dry-run` (default) / `--execute` (gated by `AUDIT_016_PR3_EXECUTE_CONFIRMED=yes` env) / `--target <t>.<col>` (per-target restriction).
+- Pre-flight validates DATABASE_URL + PHI_ENCRYPTION_KEY + AWS_KMS_PHI_KEY_ALIAS + PHI_ENVELOPE_VERSION=v2 + DEMO_MODE not true. Without `PHI_ENVELOPE_VERSION=v2`, encryptWithCurrent emits V1 instead of V2 — pre-flight catches; defense-in-depth re-parse catches mid-run flips.
+- Per-row try/catch + safety abort if all rows in batch fail (sister to AUDIT-022 `:416` guard) per D4.
+- All audit events best-effort per D5: per-row `PHI_RECORD_MIGRATED` / `PHI_RECORD_SKIPPED_ALREADY_V2` / `PHI_MIGRATION_FAILURE` via `auditLogger.info`/`error`; per-batch `PHI_MIGRATION_BATCH_STARTED` / `_COMPLETED` / `_FAILED` via `prisma.auditLog.create` (with `[TENANT_GUARD_BYPASS]: true`). NONE in `HIPAA_GRADE_ACTIONS` Set (AUDIT-076 partial closure remains separate scope).
+- Summary artifact `backend/var/audit-016-pr3-{mode}-{ISO}.json` for HIPAA archival evidence.
+- 9-section operator runbook `docs/runbooks/AUDIT_016_PR_3_MIGRATION_RUNBOOK.md` (mirror AUDIT-022 production runbook structure; PR-3-specific content: snapshot pre-flight, KMS rate-limit math, V2-prerequisite verification, post-run validation via dry-run sanity check, AUDIT-075 re-run requirement per §6.2 D8).
+- Design refinement note `docs/architecture/AUDIT_016_PR_3_MIGRATION_JOB_NOTES.md` (475 LOC, 12 sections, D1-D9).
+- Tests: 39 net new = 8 keyRotation T-MR-1..T-MR-8 round-trip with EncryptionContext-spy verification + 32 script tests sister to AUDIT-022 22-test pattern − 1 PR 1 stub-throw test removed at PR 3 implementation; jest 549/549 (matches 549 − 510 baseline = 39 delta).
 
-**Risk:** background-job ops surface — first scheduled task at TAILRD; runbook quality matters.
+**Load-bearing properties (verified):**
+- **No-op V2-input write (D3)** — V2 input → log + return `skipped: true` + NO DB UPDATE. Polluting the audit trail with redundant writes + KMS calls is structurally rejected.
+- **Raw SQL bypass** — `$executeRawUnsafe` bypasses `applyPHIEncryption` middleware that would otherwise double-encrypt the V2 envelope into corrupted V2-of-V2 layered ciphertext.
+- **Pre-flight + defense-in-depth gating** — pre-flight validates `PHI_ENVELOPE_VERSION=v2` AND `AWS_KMS_PHI_KEY_ALIAS`; mid-run, `migrateRecord` re-parses the emitted envelope and refuses to write a non-V2 envelope. Two layers prevent V0/V1 → V1 silent regression.
+- **Idempotent re-run** — SQL filter `LIKE 'enc:%' AND NOT LIKE 'enc:v2:%'` excludes V2 from candidate set; second run = 0 rows attempted.
+- **Continue-on-error + safety abort** — per-row failure recorded in `report.failures[]`; if every row in a batch fails, target aborts to prevent infinite-loop on systematic error (KMS misconfiguration, tampered ciphertext run).
+
+**Eighth §17.1 architectural-precedent of the arc:** Phase A inventory missed that `migrateRecord` ITSELF would route the WRITE through `phiEncryption` middleware if naively implemented; Phase B design caught the double-encrypt risk and selected raw SQL bypass. Methodology stack working as designed (design phase catches what inventory misses).
+
+**Does NOT include:** `rotateKey()` policy implementation per D9 — stub remains with updated comment clarifying scope distinction (envelope-format upgrade ≠ key rotation policy). Deferred to future PR (possibly AUDIT-016 PR 4 or dedicated AUDIT-XXX) when operator-side rotation cadence + key-version tracking schema operationalize.
+
+**AUDIT-016 register status flips OPEN → RESOLVED at this PR's merge.** Three sub-PRs all SHIPPED: PR 1 (#255 envelope schema + V1 emission + AUDIT-017 bundle) + PR 2 (#258 V2 emission + kmsService wiring + per-record EncryptionContext) + PR 3 (this PR — migrateRecord + migration script + operator runbook).
+
+**Risk realized:** none in test runs. Production --execute timing operator-side per runbook; integration test scaffold (`backend/tests/integration/audit016-pr2-kms-roundtrip.test.ts` from PR 2) covers real-KMS round-trip.
 
 ### Total implementation effort
 

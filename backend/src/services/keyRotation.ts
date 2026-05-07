@@ -211,10 +211,21 @@ export interface EncryptionContext {
   readonly field?: string;
 }
 
-/** Result of a single record migration (V0 / V1 → V2). PR 3 implements migrateRecord(). */
+/**
+ * Result of a single (record, column) migration (V0 / V1 → V2).
+ *
+ * AUDIT-016 PR 3 (2026-05-07): signature extended from `(recordId, table)` (PR 1
+ * committed shape) to `(recordId, table, column, context)`. The column-narrowing
+ * additive change is required because migration operates on (table, column)
+ * pairs — multiple PHI columns per row are migrated independently with
+ * per-column EncryptionContext for HIPAA audit-trail anchor.
+ *
+ * Zero PR 1/PR 2 callers per inventory; signature extension is non-breaking.
+ */
 export interface MigrationResult {
   readonly recordId: string;
   readonly table: string;
+  readonly column: string;
   readonly fromVersion: KeyVersion;
   readonly toVersion: KeyVersion;
   readonly fieldsConverted: number;
@@ -342,26 +353,137 @@ function decryptSingleKey(parsed: EnvelopeV0 | EnvelopeV1, originalEnvelope: str
   }
 }
 
-// ── Stub functions (PR 2 + PR 3) ────────────────────────────────────────────
+// ── rotateKey — deferred per AUDIT-016 PR 3 D9 ───────────────────────────────
 
 /**
- * Trigger key rotation. PR 3 implements; throws stub error in PR 1.
+ * Trigger ongoing key rotation policy (KEK or PHI_ENCRYPTION_KEY material per
+ * NIST SP 800-57 365-day cryptoperiod).
  *
- * @throws DesignPhaseStubError until AUDIT-016 PR 3 lands
+ * Deferred: AUDIT-016 PR 3 migrates V0/V1 envelope → V2 envelope (envelope-
+ * format upgrade); `rotateKey()` implements KEK / key-material rotation policy
+ * and is **out of PR 3 scope**. Will be implemented when ongoing-rotation
+ * policy is operationalized — likely a future PR (possibly AUDIT-016 PR 4 or
+ * a dedicated AUDIT-XXX) once the operator-side rotation cadence + key-version
+ * tracking schema land.
+ *
+ * Stub remains because the signature is committed contract; consumers can
+ * import the symbol now and the implementation lands later without breakage.
+ *
+ * @throws DesignPhaseStubError until ongoing key rotation policy is implemented
  */
 export async function rotateKey(): Promise<KeyVersion> {
   throw new DesignPhaseStubError('rotateKey()');
 }
 
+// ── migrateRecord — AUDIT-016 PR 3 implementation ───────────────────────────
+
 /**
- * Migrate a single record's PHI fields from V0 / V1 to V2 envelope.
- * PR 3 implements; throws stub error in PR 1 + PR 2.
+ * Migrate a single record's PHI column from V0 / V1 to V2 envelope.
  *
- * @throws DesignPhaseStubError until AUDIT-016 PR 3 lands
+ * Flow:
+ *   1. Caller supplies the existing column value (already filtered by
+ *      `LIKE 'enc:%' AND NOT LIKE 'enc:v2:%'` at the migration script's SQL
+ *      discovery layer — this function does NOT re-fetch the value).
+ *   2. `parseEnvelope` discriminates V0 / V1 / V2.
+ *   3. If V2: log race-protected skip (per AUDIT-016 PR 3 D3) and return
+ *      `skipped: true` with NO DB write. (Race protection: a concurrent writer
+ *      could have V2-encrypted between SQL fetch and this call.)
+ *   4. Else: `decryptAny` (V0/V1 single-key local AES path) → `encryptWithCurrent`
+ *      (V2 emit path; KMS-wrapped DEK via kmsService) → raw SQL UPDATE bypassing
+ *      `applyPHIEncryption` middleware (which would double-encrypt the V2
+ *      envelope).
+ *
+ * Raw SQL UPDATE rationale (eighth §17.1 architectural-precedent of the arc):
+ *   `prisma.<model>.update({ data: { <col>: v2envelope } })` would re-route
+ *   through `applyPHIEncryption.$use`, encrypting the already-encrypted V2
+ *   envelope and producing double-wrapped corruption. `$executeRawUnsafe` with
+ *   parameterized id + ciphertext bypasses the middleware. table + column come
+ *   from the migration script's hardcoded TARGETS allow-list (compile-time
+ *   constants), NOT user input — zero SQL injection surface.
+ *
+ * V2-input no-op write discipline (D3):
+ *   When parseEnvelope returns V2, the function returns immediately with
+ *   `skipped: true`. NO DB UPDATE is issued (writes pollute audit trail and
+ *   waste KMS calls). Sister to AUDIT-022 idempotency pattern.
+ *
+ * @param recordId  primary-key id of the record to migrate
+ * @param table     table name (from hardcoded TARGETS allow-list)
+ * @param column    column name (from hardcoded TARGETS allow-list)
+ * @param context   per-record EncryptionContext for KMS audit-trail anchor
+ *                  (HIPAA §164.312(b) CloudTrail kms:Decrypt event payload)
+ * @param prismaClient  Prisma client with `$executeRawUnsafe` — caller-injected
+ *                      to keep the function pure-function-testable
+ * @param currentValue  current column value (already encrypted; supplied by caller)
+ *
+ * @throws EnvelopeFormatError on malformed envelope
+ * @throws Error wrapped on integrity check failure
+ * @throws when KMS unreachable (V2 emit; no V1 fallback per D4)
+ * @throws when SQL UPDATE fails (caller's responsibility to record + continue)
  */
 export async function migrateRecord(
-  _recordId: string,
-  _table: string,
+  recordId: string,
+  table: string,
+  column: string,
+  context: EncryptionContext,
+  prismaClient: { $executeRawUnsafe: (query: string, ...values: unknown[]) => Promise<number> },
+  currentValue: string,
 ): Promise<MigrationResult> {
-  throw new DesignPhaseStubError('migrateRecord()');
+  const migratedAt = new Date();
+  const parsed: Envelope = parseEnvelope(currentValue);
+
+  // V2-input race protection: caller's SQL filter excluded V2, but a concurrent
+  // writer between fetch and this call could have V2-encrypted. Skip-and-log
+  // with NO DB write per D3.
+  if (parsed.version === 'v2') {
+    return {
+      recordId,
+      table,
+      column,
+      fromVersion: 'v2',
+      toVersion: 'v2',
+      fieldsConverted: 0,
+      skipped: true,
+      migratedAt,
+    };
+  }
+
+  // V0/V1 → V2 path. decryptAny handles both V0 untagged and V1 versioned
+  // single-key envelopes via the local AES-256-GCM path with PHI_ENCRYPTION_KEY.
+  const plaintext = await decryptAny(currentValue, context);
+
+  // encryptWithCurrent dispatches V2 emit when shouldEmitV2(env) is true
+  // (PHI_ENVELOPE_VERSION=v2 AND AWS_KMS_PHI_KEY_ALIAS set). Migration script's
+  // pre-flight verifies these env vars before the run starts.
+  const v2envelope = await encryptWithCurrent(plaintext, context);
+
+  // Defense-in-depth: verify the just-emitted envelope is actually V2. If env
+  // gating fell back to V1 (PHI_ENVELOPE_VERSION unset mid-run), refuse to
+  // write — would migrate V0/V1 → V1 instead of V2, defeating the migration.
+  const emitted: Envelope = parseEnvelope(v2envelope);
+  if (emitted.version !== 'v2') {
+    throw new Error(
+      `migrateRecord: encryptWithCurrent did not emit V2 envelope (got ${emitted.version}). ` +
+      `Verify PHI_ENVELOPE_VERSION=v2 and AWS_KMS_PHI_KEY_ALIAS are set before --execute.`,
+    );
+  }
+
+  // Raw SQL UPDATE bypasses applyPHIEncryption middleware. table + column come
+  // from compile-time constants in the migration script TARGETS array; recordId
+  // + v2envelope are parameterized via $executeRawUnsafe positional args.
+  await prismaClient.$executeRawUnsafe(
+    `UPDATE "${table}" SET "${column}" = $1 WHERE id = $2`,
+    v2envelope,
+    recordId,
+  );
+
+  return {
+    recordId,
+    table,
+    column,
+    fromVersion: parsed.version,
+    toVersion: 'v2',
+    fieldsConverted: 1,
+    skipped: false,
+    migratedAt,
+  };
 }

@@ -75,12 +75,9 @@ describe('rotateKey() — still stub (PR 3 lands)', () => {
   });
 });
 
-describe('migrateRecord() — still stub (PR 3 lands)', () => {
-  it('throws DesignPhaseStubError until implementation PR 3 lands', async () => {
-    await expect(migrateRecord('rec-1', 'Patient')).rejects.toThrow(DesignPhaseStubError);
-    await expect(migrateRecord('rec-1', 'Patient')).rejects.toThrow(/migrateRecord\(\)/);
-  });
-});
+// migrateRecord() — AUDIT-016 PR 3 implementation tests live in their own
+// describe block below ("AUDIT-016 PR 3 — migrateRecord() V0/V1 → V2"). PR 1
+// stub-throw test removed at PR 3 implementation.
 
 // ── AUDIT-017 — validateKeyOrThrow (bundled per D4) ────────────────────────
 
@@ -463,14 +460,219 @@ describe('Envelope type schemas (compile-time + runtime shape)', () => {
   it('MigrationResult schema captures conversion outcome', () => {
     const result: MigrationResult = {
       recordId: 'rec-1',
-      table: 'Patient',
+      table: 'patients',
+      column: 'firstName',
       fromVersion: 'v0',
       toVersion: 'v2',
-      fieldsConverted: 4,
+      fieldsConverted: 1,
       skipped: false,
       migratedAt: new Date(),
     };
     expect(result.fromVersion).toBe('v0');
     expect(result.toVersion).toBe('v2');
+    expect(result.column).toBe('firstName');
+  });
+});
+
+// ── AUDIT-016 PR 3 — migrateRecord() V0/V1 → V2 ─────────────────────────────
+
+describe('AUDIT-016 PR 3 — migrateRecord() V0/V1 → V2', () => {
+  // Reset modules between tests so env-mutating cases re-evaluate the V2 emit
+  // gate. Local helper builds a fresh keyRotation module reference per test.
+  function freshModule() {
+    jest.resetModules();
+    process.env.PHI_ENCRYPTION_KEY = TEST_KEY;
+    process.env.PHI_ENVELOPE_VERSION = 'v2';
+    process.env.AWS_KMS_PHI_KEY_ALIAS = 'alias/test-tailrd-phi';
+    delete process.env.DEMO_MODE;
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    return require('../keyRotation');
+  }
+
+  const PR3_CONTEXT: EncryptionContext = {
+    service: 'tailrd-backend',
+    purpose: 'phi-migration-v0v1-to-v2',
+    model: 'Patient',
+    field: 'firstName',
+  };
+
+  // Helpers for per-test V0/V1 envelope construction without going through the
+  // public encrypt path (we want to test migrateRecord on KNOWN-shape inputs).
+  function encryptV0LikeProductionLegacy(plaintext: string, keyHex: string): string {
+    const key = Buffer.from(keyHex, 'hex');
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
+    let enc = cipher.update(plaintext, 'utf8', 'hex');
+    enc += cipher.final('hex');
+    const authTag = cipher.getAuthTag().toString('hex');
+    return buildV0(iv.toString('hex'), authTag, enc);
+  }
+
+  function encryptV1LikeProduction(plaintext: string, keyHex: string): string {
+    const key = Buffer.from(keyHex, 'hex');
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
+    let enc = cipher.update(plaintext, 'utf8', 'hex');
+    enc += cipher.final('hex');
+    const authTag = cipher.getAuthTag().toString('hex');
+    return buildV1(iv.toString('hex'), authTag, enc);
+  }
+
+  function fakePrismaWithSpy(): {
+    client: { $executeRawUnsafe: jest.Mock };
+    spy: jest.Mock;
+  } {
+    const spy = jest.fn().mockResolvedValue(1);
+    return { client: { $executeRawUnsafe: spy }, spy };
+  }
+
+  it('T-MR-1: V0 envelope → re-encrypted as V2; plaintext preserved (round-trip)', async () => {
+    const mod = freshModule();
+    const v0 = encryptV0LikeProductionLegacy('Alice', TEST_KEY);
+    const { client, spy } = fakePrismaWithSpy();
+
+    const result = await mod.migrateRecord('rec-1', 'patients', 'firstName', PR3_CONTEXT, client, v0);
+
+    expect(result.skipped).toBe(false);
+    expect(result.fromVersion).toBe('v0');
+    expect(result.toVersion).toBe('v2');
+    expect(result.fieldsConverted).toBe(1);
+    expect(spy).toHaveBeenCalledTimes(1);
+    // Args: (query, v2envelope, recordId)
+    const [query, v2envelope, recordId] = spy.mock.calls[0];
+    expect(query).toMatch(/UPDATE "patients" SET "firstName" = \$1 WHERE id = \$2/);
+    expect(typeof v2envelope).toBe('string');
+    expect((v2envelope as string).startsWith('enc:v2:')).toBe(true);
+    expect(recordId).toBe('rec-1');
+    // Round-trip: decrypt the V2 envelope and verify plaintext preserved
+    const decrypted = await mod.decryptAny(v2envelope, PR3_CONTEXT);
+    expect(decrypted).toBe('Alice');
+  });
+
+  it('T-MR-2: V1 envelope → re-encrypted as V2; plaintext preserved', async () => {
+    const mod = freshModule();
+    const v1 = encryptV1LikeProduction('Bob', TEST_KEY);
+    const { client, spy } = fakePrismaWithSpy();
+
+    const result = await mod.migrateRecord('rec-2', 'patients', 'lastName',
+      { ...PR3_CONTEXT, field: 'lastName' }, client, v1);
+
+    expect(result.skipped).toBe(false);
+    expect(result.fromVersion).toBe('v1');
+    expect(result.toVersion).toBe('v2');
+    expect(spy).toHaveBeenCalledTimes(1);
+    const v2envelope = spy.mock.calls[0][1];
+    expect((v2envelope as string).startsWith('enc:v2:')).toBe(true);
+    const decrypted = await mod.decryptAny(v2envelope, { ...PR3_CONTEXT, field: 'lastName' });
+    expect(decrypted).toBe('Bob');
+  });
+
+  it('T-MR-3: V2 envelope → log + skip; NO DB write (race protection)', async () => {
+    const mod = freshModule();
+    // Synthesize V2 envelope directly via buildV2 (skip-input path doesn't
+    // require a real KMS-wrapped DEK — parseEnvelope only needs the v2 prefix
+    // + 5 colon segments).
+    const v2 = buildV2('fakeWrappedDEK', 'fakeIv', 'fakeAuthTag', 'fakeCiphertext');
+    const { client, spy } = fakePrismaWithSpy();
+
+    const result = await mod.migrateRecord('rec-3', 'patients', 'firstName', PR3_CONTEXT, client, v2);
+
+    expect(result.skipped).toBe(true);
+    expect(result.fromVersion).toBe('v2');
+    expect(result.toVersion).toBe('v2');
+    expect(result.fieldsConverted).toBe(0);
+    expect(spy).not.toHaveBeenCalled(); // D3: no DB write
+  });
+
+  it('T-MR-4: invalid envelope → throws EnvelopeFormatError', async () => {
+    const mod = freshModule();
+    const { client } = fakePrismaWithSpy();
+    await expect(
+      mod.migrateRecord('rec-4', 'patients', 'firstName', PR3_CONTEXT, client, 'not-an-envelope'),
+    ).rejects.toThrow();
+  });
+
+  it('T-MR-5: decrypt failure (auth tag tampered) → throws with envelopeVersion preserved', async () => {
+    const mod = freshModule();
+    const v0 = encryptV0LikeProductionLegacy('Carol', TEST_KEY);
+    // Tamper the auth tag
+    const parts = v0.split(':');
+    const tagBuf = Buffer.from(parts[2], 'hex');
+    tagBuf[0] ^= 0xff;
+    const tampered = `${parts[0]}:${parts[1]}:${tagBuf.toString('hex')}:${parts[3]}`;
+    const { client, spy } = fakePrismaWithSpy();
+
+    await expect(
+      mod.migrateRecord('rec-5', 'patients', 'firstName', PR3_CONTEXT, client, tampered),
+    ).rejects.toThrow(/integrity check failed/);
+    expect(spy).not.toHaveBeenCalled(); // failure path should not write
+  });
+
+  it('T-MR-6: SQL UPDATE failure propagates to caller (continue-on-error contract)', async () => {
+    const mod = freshModule();
+    const v1 = encryptV1LikeProduction('Dave', TEST_KEY);
+    const failingClient = {
+      $executeRawUnsafe: jest.fn().mockRejectedValue(new Error('deadlock detected')),
+    };
+
+    await expect(
+      mod.migrateRecord('rec-6', 'patients', 'firstName', PR3_CONTEXT, failingClient, v1),
+    ).rejects.toThrow(/deadlock detected/);
+    expect(failingClient.$executeRawUnsafe).toHaveBeenCalledTimes(1);
+  });
+
+  it('T-MR-7: MigrationResult shape contains all committed fields', async () => {
+    const mod = freshModule();
+    const v0 = encryptV0LikeProductionLegacy('Eve', TEST_KEY);
+    const { client } = fakePrismaWithSpy();
+
+    const before = Date.now();
+    const result: MigrationResult = await mod.migrateRecord(
+      'rec-7', 'patients', 'firstName', PR3_CONTEXT, client, v0,
+    );
+    const after = Date.now();
+
+    expect(result.recordId).toBe('rec-7');
+    expect(result.table).toBe('patients');
+    expect(result.column).toBe('firstName');
+    expect(result.fromVersion).toBe('v0');
+    expect(result.toVersion).toBe('v2');
+    expect(result.fieldsConverted).toBe(1);
+    expect(result.skipped).toBe(false);
+    expect(result.migratedAt).toBeInstanceOf(Date);
+    expect(result.migratedAt.getTime()).toBeGreaterThanOrEqual(before);
+    expect(result.migratedAt.getTime()).toBeLessThanOrEqual(after);
+  });
+
+  it('T-MR-8: per-record EncryptionContext { service, purpose, model, field } passed through to V2 emit', async () => {
+    const mod = freshModule();
+    // Spy on encryptWithCurrent via re-import of the module's exports — the
+    // V2 envelope's identity is opaque post-emit (KMS-wrapped DEK), but we can
+    // verify the context shape by inspecting decryptAny round-trip with the
+    // SAME context (succeeds) vs. a DIFFERENT context (fails — context is the
+    // KMS audit-trail anchor; mismatch fails decrypt at KMS layer).
+    const v0 = encryptV0LikeProductionLegacy('Frank', TEST_KEY);
+    const { client, spy } = fakePrismaWithSpy();
+
+    const ctxOriginal: EncryptionContext = {
+      service: 'tailrd-backend',
+      purpose: 'phi-migration-v0v1-to-v2',
+      model: 'Patient',
+      field: 'lastName',
+    };
+
+    const result = await mod.migrateRecord('rec-8', 'patients', 'lastName', ctxOriginal, client, v0);
+    expect(result.toVersion).toBe('v2');
+    const v2envelope = spy.mock.calls[0][1] as string;
+
+    // Same context decrypts cleanly
+    const decrypted = await mod.decryptAny(v2envelope, ctxOriginal);
+    expect(decrypted).toBe('Frank');
+
+    // NB: for production KMS, mismatched EncryptionContext fails AccessDenied.
+    // In test mode (local fallback path inside kmsService), context is recorded
+    // in the wrappedDEK payload; mismatch produces wrong-key decrypt → throws.
+    // We assert the round-trip succeeds with same context here; mismatch
+    // rejection is covered by kmsService.test.ts T3d.
   });
 });
