@@ -105,10 +105,45 @@ model Hospital {
   bpciEpisodes         BpciEpisode[]
   drugInteractionAlerts DrugInteractionAlert[]
 
+  // AUDIT-071 — CDS Hooks tenant isolation: maps EHR issuer URLs to this hospital
+  ehrIssuers           HospitalEhrIssuer[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("hospitals")
+}
+
+// AUDIT-071 — CDS Hooks tenant isolation
+//
+// Maps EHR issuer URLs (CDS Hooks JWT `iss` claim values) to TAILRD hospitals.
+// Required for Path A (EHR-initiated CDS Hooks) tenant resolution: incoming
+// JWT's `iss` is verified, then looked up here to resolve hospitalId before
+// any patient query. 1:N from Hospital so a single hospital may register
+// multiple EHR endpoints (e.g., Epic Production + Epic Sandbox + DR instance).
+//
+// `issuerUrl` is globally unique — one URL maps to exactly one hospital. This
+// prevents two hospitals from claiming the same Epic instance.
+//
+// Soft-disable via `isActive` for tenant offboarding without losing historical
+// mapping (preserved for audit log forensics).
+//
+// See `docs/architecture/AUDIT_071_CDS_HOOKS_TENANT_ISOLATION_DESIGN.md` §1.
+model HospitalEhrIssuer {
+  id          String   @id @default(cuid())
+  hospitalId  String
+  hospital    Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  issuerUrl   String   // CDS Hooks JWT `iss` claim value; e.g., "https://fhir.epic.com/interconnect-fhir-oauth"
+  label       String?  // Operator-readable identifier; e.g., "Epic Production", "Cerner Sandbox"
+  isActive    Boolean  @default(true)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([issuerUrl])              // Global uniqueness — one issuer URL ↔ one hospital
+  @@index([hospitalId, isActive])
+  @@map("hospital_ehr_issuers")
 }
 
 // User model with role-based permissions
@@ -279,6 +314,7 @@ model Patient {
 
   @@unique([hospitalId, mrn]) // MRN is unique within each hospital
   @@unique([id, hospitalId], name: "id_hospitalId") // AUDIT-011: enables tenant-scoped update.where { id_hospitalId }
+  @@unique([hospitalId, fhirPatientId]) // AUDIT-071: per-tenant FHIR patient identifier uniqueness; structurally prevents cross-tenant collision on EHR-supplied IDs
   @@index([fhirPatientId])
   @@index([email])
   @@index([lastName, firstName])
@@ -428,6 +464,7 @@ model Order {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
+  @@unique([hospitalId, fhirOrderId]) // AUDIT-073: per-tenant FHIR order identifier uniqueness
   @@index([hospitalId, orderedDateTime])
   @@index([patientId, orderType])
   @@index([fhirOrderId])
@@ -1930,8 +1967,10 @@ model CarePlan {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([hospitalId, fhirCarePlanId]) // AUDIT-073: per-tenant FHIR CarePlan identifier uniqueness
   @@index([patientId, status])
   @@index([hospitalId, moduleType])
+  @@index([fhirCarePlanId]) // AUDIT-073: enables FHIR-id lookup; was missing pre-mitigation
   @@map("care_plans")
 }
 

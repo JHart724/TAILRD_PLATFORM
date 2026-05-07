@@ -76,7 +76,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-068** — `LOINC_CARDIOVASCULAR_LABS.ABI_LEFT = '44975-1'` is "Q-T interval" (an EKG concept!), NOT ABI (Phase 0B Batch 5, **RESOLVED 2026-05-06** via reference-correctness fix per §17.1 consumer audit)
 - **AUDIT-070** — FHIR ingestion expansion gap: `observationService.CARDIOVASCULAR_LAB_CODES` does not include ABI LOINC mappings; FHIR-ingested patients with ABI observations don't reach PAD screening rule (CSV path unaffected — uses observationType bypass). Latent risk, not active patient-safety. (Phase 0B clinical-code, **OPEN** — dedicated FHIR ingestion expansion PR; will also audit other LOINC entries similarly absent from CARDIOVASCULAR_LAB_CODES.)
 - **AUDIT-069** — `LOINC_CARDIOVASCULAR_LABS.LVEF = '18010-0'` unverifiable per NLM Clinical Tables (search empty; loinc.org direct 500); not in NLM LOINC LVEF concept set. Real canonical LVEF = 10230-1 ("Left ventricular Ejection fraction" verified loinc.org direct + NLM). **Prior codebase fix-from comment "(was 10230-1 = QRS duration — WRONG)" was itself a regression** — 10230-1 IS LVEF per authoritative sources; the prior "fix" replaced the correct code with an unverifiable one. Every HF rule reading `labValues['lvef']` depended on this LOINC mapping (Phase 0B Batch 5, **RESOLVED 2026-05-06**)
-- **AUDIT-071** — cdsHooks cross-tenant patient lookup + missing fhirPatientId per-tenant unique (Phase 3 area b, **OPEN — PRODUCTION-READINESS GATE — HIGH P1 IMMEDIATE; dedicated mitigation PR is the next work block after Phase 3 audit merge**)
+- **AUDIT-071** — cdsHooks cross-tenant patient lookup + missing fhirPatientId per-tenant unique (Phase 3 area b, **RESOLVED 2026-05-07** — first production-readiness gate item closed; mitigation PR ships HospitalEhrIssuer model + cdsHooksAuth middleware + mandatory tenant filter + 4 HIPAA-graded audit actions + 14 tests + design doc + operator runbook)
 
 ### MEDIUM (P2)
 
@@ -109,7 +109,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-060** — `RXNORM_WARFARIN.WARFARIN_5MG = '855318'` is actually warfarin 3mg tablet (label only) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
 - **AUDIT-061** — `RXNORM_WARFARIN.WARFARIN_10MG = '855332'` is actually warfarin 5mg tablet (label only) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
 - **AUDIT-072** — Soft-delete coverage gap + DELETE patient does not cascade (Phase 3, OPEN)
-- **AUDIT-073** — Per-tenant unique gap on Order.fhirOrderId + CarePlan.fhirCarePlanId (Phase 3, OPEN — PRODUCTION-READINESS GATE; bundled with AUDIT-071)
+- **AUDIT-073** — Per-tenant unique gap on Order.fhirOrderId + CarePlan.fhirCarePlanId (Phase 3, **RESOLVED 2026-05-07** — bundled with AUDIT-071 per §17.3; same schema migration)
 - **AUDIT-075** — PHI encryption coverage gaps (errorMessage / description / notes plaintext) (Phase 3, OPEN — PRODUCTION-READINESS GATE)
 - **AUDIT-078** — Production Aurora backup config not in IaC; restore procedure untested (Phase 3, OPEN — PRODUCTION-READINESS GATE)
 - **AUDIT-080** — Zod validation coverage gap (21 of 26 mutating-route files) (Phase 3, OPEN — PRODUCTION-READINESS GATE)
@@ -1062,29 +1062,38 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ### AUDIT-071 — cdsHooks cross-tenant patient lookup + missing fhirPatientId per-tenant unique
 
-- **Phase:** 3 (data layer audit; multi-tenancy enforcement)
+- **Phase:** 3 (data layer audit; multi-tenancy enforcement) — surfaced via Phase 3 audit area b (front-loaded high-risk surface per operator decision D1)
 - **Severity:** **HIGH (P1)**
-- **Status:** **OPEN — PRODUCTION-READINESS GATE — HIGH P1 IMMEDIATE; remediation required before further deferrable work blocks; data-state-independent (PHI may arrive any day; today's structural cross-tenant filter bug is tomorrow's PHI exposure on same code path).** Dedicated mitigation PR is the next work block after Phase 3 audit merge.
-- **Detected:** 2026-05-07 during Phase 3 audit area b (multi-tenancy enforcement), front-loaded per operator decision D1
-- **Location:**
-  - `backend/src/routes/cdsHooks.ts:117-123` — `tailrd-cardiovascular-gaps` hook
-  - `backend/src/routes/cdsHooks.ts:294-300` — `tailrd-discharge-gaps` hook
-  - `backend/prisma/schema.prisma:242, 282` — `Patient.fhirPatientId String?` + `@@index([fhirPatientId])` (no `@@unique([hospitalId, fhirPatientId])`)
-  - `backend/src/server.ts:189` — `app.use('/cds-services', cdsLimiter, require('./routes/cdsHooks').default);` (NOT mounted under `authenticateToken`)
-- **Evidence:** Both cdsHooks endpoints use the pattern `const hospitalId = (req as any).user?.hospitalId; ... if (hospitalId) patientWhere.hospitalId = hospitalId; const patient = await prisma.patient.findFirst({ where: patientWhere });`. The conditional filter is **structurally always-false** because (a) cdsHooks routes are mounted at server.ts:189 under `cdsLimiter` only — not under `authenticateToken`, and (b) `verifyCDSHooksJWT` (cdsHooks.ts:26-51) returns a boolean only — it does not populate `req.user`. In dev/test (NODE_ENV !== 'production') line 31 returns `true` unconditionally. In production with valid CDS Hooks JWT, the JWT payload is EHR-issued (Epic App Orchard) and does not carry our `hospitalId` claim. Result: **cross-tenant patient lookup by `fhirPatientId` in BOTH dev AND production**. Reinforced by `Patient.fhirPatientId` having `@@index` only — no per-tenant unique constraint — so two tenants could legitimately share the same fhirPatientId for different patients.
-- **Severity rationale:** **HIPAA §164.312(a)(1) access control + §164.502 minimum necessary.** Active CDS Hooks endpoint surface that produces clinical recommendations (cards) based on cross-tenant patient match. Today's BSW pilot is at pre-DUA pre-data-flow state (operator confirmation 2026-05-07: no production hospital data) so the bug exposes nothing today because there's nothing to expose. **Production-readiness is data-state-independent** — PHI may arrive any day, and the structural bug exposes PHI on the same code path the moment data flows. Filing as HIGH P1 per §18 register-literal classification: structural bug on production code path; remediation required before further deferrable work blocks regardless of data state.
-- **Remediation (fix-shape):**
-  1. Mount `cdsHooks` routes under a JWT-extracting middleware that populates `req.user.hospitalId` from a verified source. Two paths: (a) for EHR-initiated CDS Hooks JWT, extract hospitalId from a TAILRD-side mapping table keyed on `iss`/issuerUrl + verify Patient.fhirPatientId is in that hospital; (b) for non-EHR-initiated requests, require platform-issued JWT with `hospitalId` claim.
-  2. Replace the conditional `if (hospitalId) patientWhere.hospitalId = hospitalId;` with **mandatory** `patientWhere.hospitalId = hospitalId;` — no permissive fallback. If `hospitalId` is undefined, fail-loud (return empty cards or 401, never cross-tenant lookup).
-  3. **Bundled per §17.3 scope discipline:** schema migration adding `@@unique([hospitalId, fhirPatientId])` to enforce per-tenant uniqueness. Pre-migration data integrity check: zero duplicates expected (single-tenant production today); migration safe.
-  4. Tests: cross-tenant lookup attempt returns empty cards (or 401); same-tenant lookup succeeds; schema migration blocks duplicate fhirPatientId within tenant.
-- **Effort estimate:** ~3-5h (consumer audit + JWT-subject-extraction wiring + schema migration + tests + documentation)
+- **Status:** **RESOLVED 2026-05-07** (mitigation PR shipped as the work block immediately following Phase 3 audit; production-readiness gate item closed)
+- **Resolution PR:** `feat(security): AUDIT-071 cdsHooks tenant isolation + AUDIT-073 schema migration — HIGH P1 production-readiness gate item RESOLVED`
+- **§18-dated reconciliation note (2026-05-07):** Phase A pre-flight inventory (during mitigation) expanded the original "2 callsites" framing to **3 vulnerable callsites + production header-skip**:
+  - `cdsHooks.ts:121-123` patient.findFirst — original Phase 3 B1 finding
+  - `cdsHooks.ts:158-167` cdsHooksSession.create at line 163 sets `hospitalId: patient.hospitalId` — silent cross-tenant SESSION WRITE downstream of cross-tenant READ (newly surfaced)
+  - `cdsHooks.ts:298-300` patient.findFirst — sister to the first callsite
+  - In production, JWT verification was skipped entirely when `req.body.fhirAuthorization` was absent (lines 98, 193, 279) — bug worse than original framing
+  - All 4 issues bundled into AUDIT-071 mitigation per §17.3. Severity stays HIGH P1 per §18 register-literal classification — inventory expansion confirms AND deepens the original framing rather than weakening it.
+- **Original location:** `backend/src/routes/cdsHooks.ts:117-123, 294-300`; `backend/prisma/schema.prisma:242, 282`; `backend/src/server.ts:189`
+- **Original evidence:** Both cdsHooks endpoints used `const hospitalId = (req as any).user?.hospitalId; ... if (hospitalId) patientWhere.hospitalId = hospitalId; const patient = await prisma.patient.findFirst({ where: patientWhere });`. The conditional filter was structurally always-false because (a) cdsHooks routes were mounted at server.ts:189 under `cdsLimiter` only — not under `authenticateToken`, and (b) `verifyCDSHooksJWT` returned a boolean only — it did not populate `req.user`. Result: cross-tenant patient lookup by `fhirPatientId` in BOTH dev AND production. Reinforced by `Patient.fhirPatientId` having `@@index` only — no per-tenant unique constraint.
+- **Severity rationale:** **HIPAA §164.312(a)(1) access control + §164.502 minimum necessary.** Active CDS Hooks endpoint surface that produces clinical recommendations based on cross-tenant patient match. Production-readiness is data-state-independent; the bug exposed nothing today only because there was no production hospital data to expose, but the structural cross-tenant filter bug would expose PHI on the same code path the moment data flowed.
+- **Resolution evidence (2026-05-07):**
+  - **New `HospitalEhrIssuer` model (1:N from Hospital)** — maps EHR JWT `iss` claim → `hospitalId` for CDS Hooks tenant resolution. `@@unique([issuerUrl])` global uniqueness, `@@index([hospitalId, isActive])` for soft-disable filtering, `onDelete: Restrict` for HIPAA retention.
+  - **New `backend/src/middleware/cdsHooksAuth.ts`** — verifies JWT signature against issuer JWKS via `jose@6.2.2`, validates required claims (iss/iat/exp/jti), checks JWT iss matches fhirAuthorization.subject (defends against subject spoofing), looks up HospitalEhrIssuer with `isActive: true` filter, populates `req.cdsHooks = { hospitalId, issuerUrl, ehrIssuerId }`. Discovery + feedback exempt (no PHI). Demo-mode explicitly NOT inherited (would re-introduce the vulnerability).
+  - **Refactored `backend/src/routes/cdsHooks.ts`** — replaces conditional with **MANDATORY** `where: { hospitalId: ctx.hospitalId, ... }` filter at all 3 callsites. Mandatory filter at the read site means `cdsHooksSession.create` at line 163 inherits correct tenant by construction (fix-by-construction for the 3rd vulnerable callsite).
+  - **`server.ts:189` mount sequence:** `cdsLimiter` → `cdsHooksAuth` → router
+  - **Schema migration `20260507000000_audit_071_073_cds_hooks_tenant_isolation`:** `HospitalEhrIssuer` table + `@@unique([hospitalId, fhirPatientId])` on Patient + AUDIT-073 bundled (`@@unique([hospitalId, fhirOrderId])` on Order, `@@unique([hospitalId, fhirCarePlanId])` + `@@index([fhirCarePlanId])` on CarePlan). Pre-flight duplicate check confirmed 0 dups in dev DB.
+  - **4 audit actions promoted to `HIPAA_GRADE_ACTIONS`** per AUDIT-076 boundary refinement (D6): `CDS_HOOKS_JWT_VALIDATION_FAILURE`, `CDS_HOOKS_UNMAPPED_ISSUER`, `CDS_HOOKS_CROSS_TENANT_ATTEMPT_BLOCKED`, `CDS_HOOKS_NO_TENANT_RESOLVED`.
+  - **14 new tests** in `backend/src/middleware/__tests__/cdsHooksAuth.test.ts` — covers happy path, Path B deny, JWT failures, iss mismatch, unmapped issuer, isActive=false filter, discovery/feedback exemptions, demo-mode non-inheritance, system-identity audit, HIPAA-grade throw propagation. jest 478/478 pass (464 prior + 14 new).
+  - **Operator runbook:** `docs/runbooks/AUDIT_071_HOSPITAL_EHR_ISSUER_REGISTRATION.md` (7-section operator playbook)
+  - **Design doc:** `docs/architecture/AUDIT_071_CDS_HOOKS_TENANT_ISOLATION_DESIGN.md`
+- **Operator decisions captured (D1-D6):** D1 Option 1 (`HospitalEhrIssuer` 1:N) / D2 sub-option 2b (deny non-EHR via 200+empty+audit) / D3 (200+empty for context-resolution; 401 for JWT-signature only) / D4 (do NOT bundle AUDIT-077; separate follow-up PR) / D5 (3 schema unique constraints + CarePlan index) / D6 (4 HIPAA-graded promotions).
 - **Cross-references:**
-  - `docs/audit/PHASE_3_REPORT.md` (this audit)
-  - AUDIT-011 (HIGH P1) — multi-tenancy enforcement Layer 3 Prisma extension (defense-in-depth backstop; AUDIT-071 demonstrates app-layer discipline alone is insufficient)
-  - AUDIT-020 (MEDIUM P2) — sister finding for other fhir*Id fields' per-tenant uniqueness; the `[hospitalId, fhirPatientId]` constraint complements that family
-  - HIPAA Security Rule §164.312(a)(1) (access control standard)
-  - HIPAA §164.502(b) (minimum necessary)
+  - `docs/architecture/AUDIT_071_CDS_HOOKS_TENANT_ISOLATION_DESIGN.md` (design doc)
+  - `docs/runbooks/AUDIT_071_HOSPITAL_EHR_ISSUER_REGISTRATION.md` (operator runbook)
+  - AUDIT-073 (bundled per §17.3 — same schema migration)
+  - AUDIT-076 (partial closure via D6 — 4 of the suggested HIPAA-grade promotions land here)
+  - AUDIT-013 (dual-transport audit logger pattern preserved)
+  - AUDIT-011 (HIGH P1) — Layer 3 Prisma extension is the structural backstop; this PR is a CDS-Hooks-specific Layer 2 fix
+  - HIPAA Security Rule §164.312(a)(1) + §164.502(b)
 
 ---
 
@@ -1123,15 +1132,15 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 - **Phase:** 3 (data layer audit; schema review)
 - **Severity:** MEDIUM (P2)
-- **Status:** **OPEN — PRODUCTION-READINESS GATE** (bundled with AUDIT-071 mitigation per §17.3 — same schema migration)
+- **Status:** **RESOLVED 2026-05-07** (bundled with AUDIT-071 mitigation per §17.3 — same schema migration)
+- **Resolution PR:** see AUDIT-071 RESOLVED entry
 - **Detected:** 2026-05-07 during Phase 3 audit area a (schema review)
-- **Location:**
+- **Original location:**
   - `backend/prisma/schema.prisma:425` — `Order.fhirOrderId String?` (line 433: `@@index([fhirOrderId])` only; no per-tenant unique)
   - `backend/prisma/schema.prisma:1928` — `CarePlan.fhirCarePlanId String?` (no index, no per-tenant unique)
-- **Evidence:** Schema has 8 per-tenant uniques on fhir*Id fields (`Encounter`, `Observation`, `Medication`, `Condition`, `Procedure`, `Device`, `Allergy`, `Patient.mrn`). Two fhir*Id fields are NOT covered: `Order.fhirOrderId` and `CarePlan.fhirCarePlanId`. Sister to AUDIT-020 (which addressed the existing 8). Sister to AUDIT-071 fhirPatientId.
+- **Original evidence:** Schema had 8 per-tenant uniques on fhir*Id fields (`Encounter`, `Observation`, `Medication`, `Condition`, `Procedure`, `Device`, `Allergy`, `Patient.mrn`). Two fhir*Id fields not covered: `Order.fhirOrderId` and `CarePlan.fhirCarePlanId`. Sister to AUDIT-020 (which addressed the existing 8). Sister to AUDIT-071 fhirPatientId.
 - **Severity rationale:** Same family as AUDIT-020 + AUDIT-071. Two tenants could share an EHR-supplied fhirOrderId or fhirCarePlanId without schema rejection, enabling subtle cross-tenant matches if a query were ever written using bare `fhirOrderId` or `fhirCarePlanId`. Defense-in-depth + structural correctness. Production-readiness gate item — data-state-independent.
-- **Remediation:** Schema migration adding `@@unique([hospitalId, fhirOrderId])` on Order and `@@unique([hospitalId, fhirCarePlanId])` on CarePlan. Pre-migration data integrity check: zero duplicates expected (no production hospital data today per single-tenant verification); migration safe. Bundle into AUDIT-071 mitigation PR per §17.3.
-- **Effort estimate:** XS-S (1-2h, bundled with AUDIT-071 schema migration)
+- **Resolution evidence (2026-05-07):** Schema migration `20260507000000_audit_071_073_cds_hooks_tenant_isolation` adds `@@unique([hospitalId, fhirOrderId])` on Order + `@@unique([hospitalId, fhirCarePlanId])` + `@@index([fhirCarePlanId])` on CarePlan. Pre-flight duplicate check confirmed 0 duplicates in dev DB. Postgres NULL semantics permit multiple rows where `fhir*Id IS NULL` — existing rows with NULL identifiers remain valid post-migration.
 - **Cross-references:**
   - `docs/audit/PHASE_3_REPORT.md` (this audit)
   - AUDIT-020 (MEDIUM P2) — sister finding for the existing 8 fhir*Id per-tenant uniques
@@ -1199,7 +1208,7 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 - **Phase:** 3 (data layer audit; audit log integrity)
 - **Severity:** LOW (P3)
-- **Status:** OPEN
+- **Status:** **OPEN — partial closure 2026-05-07** via AUDIT-071 mitigation D6: 4 actions promoted (`CDS_HOOKS_JWT_VALIDATION_FAILURE`, `CDS_HOOKS_UNMAPPED_ISSUER`, `CDS_HOOKS_CROSS_TENANT_ATTEMPT_BLOCKED`, `CDS_HOOKS_NO_TENANT_RESOLVED`). Remaining boundary review (DATA_REQUEST_FULFILLED, BREACH_INCIDENT_CREATED, MFA_ENABLED/DISABLED, INVITE_ACCEPTED, GAP_RESOLVED) deserves its own PR scope.
 - **Detected:** 2026-05-07 during Phase 3 audit area e
 - **Location:** `backend/src/middleware/auditLogger.ts:77-88` — `HIPAA_GRADE_ACTIONS` Set
 - **Evidence:** `HIPAA_GRADE_ACTIONS` contains 10 entries: LOGIN_SUCCESS, LOGIN_FAILED, LOGOUT, PHI_VIEW, PHI_EXPORT, PATIENT_CREATED/UPDATED/DELETED, BREACH_DATA_ACCESSED/MODIFIED. Per AUDIT-013 remediation, HIPAA-grade actions THROW on DB write failure (caller surfaces 500); non-HIPAA-grade actions are best-effort (file + Console transports still capture; DB failure logged but not thrown). Several clinically-significant events are NOT HIPAA-graded:

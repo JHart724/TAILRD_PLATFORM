@@ -5,49 +5,58 @@
  *   GET  /cds-services                              — Discovery
  *   POST /cds-services/tailrd-cardiovascular-gaps    — patient-view hook
  *   POST /cds-services/tailrd-drug-interaction-check — order-select hook
+ *   POST /cds-services/tailrd-discharge-gaps         — encounter-discharge hook
  *   POST /cds-services/:hookId/feedback              — Feedback
  *
- * CDS Hooks must always return HTTP 200. Never return 4xx or 5xx from hook endpoints.
+ * CDS Hooks return HTTP 200 + empty cards on context-resolution failure (per
+ * spec). 401 reserved for JWT-signature-level auth failures only (per AUDIT-071
+ * design D3).
+ *
+ * AUDIT-071 mitigation (2026-05-07): tenant resolution moved to upstream
+ * `cdsHooksAuth` middleware which populates `req.cdsHooks = { hospitalId, ... }`.
+ * Handlers below MUST use `req.cdsHooks.hospitalId` as a MANDATORY filter on
+ * every Patient query — no conditional pattern. Discovery + feedback bypass
+ * the middleware (no PHI; spec-required public).
  */
 
 import { Router, Request, Response } from 'express';
 import prisma from '../lib/prisma';
 import { logger } from '../utils/logger';
 import crypto from 'crypto';
+import { writeAuditLog } from '../middleware/auditLogger';
+import type { CdsHooksAuthenticatedRequest } from '../middleware/cdsHooksAuth';
 
 const router = Router();
 
-// ─── CDS Hooks JWT Verification (per CDS Hooks 2.0 spec) ─────────────────
-// Required for Epic App Orchard. Verifies JWT from EHR's JWKS endpoint.
-// jose is ESM-only — must use dynamic import() to avoid CJS require-time crash.
-
-const jwksCache = new Map<string, any>();
-
-async function verifyCDSHooksJWT(
-  authHeader: string | undefined,
-  hookId: string,
-  issuerUrl: string
-): Promise<boolean> {
-  if (process.env.NODE_ENV !== 'production') return true;
-  if (!authHeader?.startsWith('Bearer ')) {
-    logger.warn('CDS Hooks missing JWT', { hookId });
-    return false;
-  }
-  try {
-    const { createRemoteJWKSet, jwtVerify } = await import('jose');
-    const jwksUrl = new URL('/.well-known/jwks.json', issuerUrl);
-    if (!jwksCache.has(issuerUrl)) {
-      jwksCache.set(issuerUrl, createRemoteJWKSet(jwksUrl));
+// AUDIT-071: defense-in-depth helper — hooks should never reach handler code
+// without `req.cdsHooks` populated (cdsHooksAuth middleware short-circuits on
+// failure). If middleware bypass happens (routing misconfiguration), fail
+// closed: audit + return empty cards.
+async function requireCdsHooksContext(
+  req: Request,
+  res: Response,
+): Promise<{ hospitalId: string; ehrIssuerId: string; issuerUrl: string } | null> {
+  const ctx = (req as CdsHooksAuthenticatedRequest).cdsHooks;
+  if (!ctx) {
+    try {
+      await writeAuditLog(
+        Object.assign(req, { user: { userId: 'system:cds-hooks', email: 'system@cds-hooks.tailrd-heart.com', role: 'SYSTEM', hospitalId: null } }) as Request,
+        'CDS_HOOKS_CROSS_TENANT_ATTEMPT_BLOCKED',
+        'CdsHooks',
+        null,
+        'Handler reached without tenant context — middleware bypass',
+        null,
+        { path: req.path, method: req.method },
+      );
+    } catch {
+      // audit log failure already throws for HIPAA-grade actions; swallow here
+      // because we still want to return empty cards (spec-strict). The throw
+      // is captured by AUDIT-013 file + Console transports.
     }
-    const { payload } = await jwtVerify(authHeader.slice(7), jwksCache.get(issuerUrl)!, {
-      audience: `${process.env.API_URL || 'https://api.tailrd-heart.com'}/cds-services`,
-    });
-    if (!payload.iss || !payload.iat || !payload.exp || !payload.jti) return false;
-    return true;
-  } catch (error) {
-    logger.error('CDS Hooks JWT failed', { hookId, error: error instanceof Error ? error.message : String(error) });
-    return false;
+    res.status(200).json({ cards: [] });
+    return null;
   }
+  return ctx;
 }
 
 // Discovery endpoint — required by CDS Hooks spec
@@ -94,15 +103,11 @@ router.get('/', (_req: Request, res: Response) => {
 router.post('/tailrd-cardiovascular-gaps', async (req: Request, res: Response) => {
   const hookStart = Date.now();
   try {
-    // JWT verification in production
-    if (process.env.NODE_ENV === 'production' && req.body.fhirAuthorization?.subject) {
-      const valid = await verifyCDSHooksJWT(
-        req.headers.authorization as string,
-        'tailrd-cardiovascular-gaps',
-        req.body.fhirAuthorization.subject
-      );
-      if (!valid) return res.json({ cards: [] });
-    }
+    // AUDIT-071: tenant resolution upstream in cdsHooksAuth middleware.
+    // req.cdsHooks.hospitalId is populated; defense-in-depth requireCdsHooksContext
+    // catches middleware-bypass routing misconfiguration.
+    const ctx = await requireCdsHooksContext(req, res);
+    if (!ctx) return;
 
     const { context } = req.body;
     const patientFhirId = context?.patientId;
@@ -111,15 +116,17 @@ router.post('/tailrd-cardiovascular-gaps', async (req: Request, res: Response) =
       return res.json({ cards: [] });
     }
 
-    // Tenant-scope patient lookup to prevent cross-hospital data exposure.
-    // hospitalId comes from the authenticated user (JWT) if present,
-    // or we return empty cards for unauthenticated CDS calls.
-    const hospitalId = (req as any).user?.hospitalId;
-    const patientWhere: Record<string, unknown> = { fhirPatientId: patientFhirId, isActive: true };
-    if (hospitalId) patientWhere.hospitalId = hospitalId;
-
+    // AUDIT-071: MANDATORY tenant filter — no conditional pattern. The
+    // @@unique([hospitalId, fhirPatientId]) constraint (added in this PR's
+    // migration) makes findFirst structurally tenant-scoped at the schema
+    // layer; combined with the explicit where clause, this is fail-closed
+    // by both code and schema.
     const patient = await prisma.patient.findFirst({
-      where: patientWhere,
+      where: {
+        fhirPatientId: patientFhirId,
+        hospitalId: ctx.hospitalId,
+        isActive: true,
+      },
     });
 
     if (!patient) {
@@ -185,19 +192,16 @@ router.post('/tailrd-cardiovascular-gaps', async (req: Request, res: Response) =
   }
 });
 
-// order-select hook — drug interaction checking
+// order-select hook — drug interaction checking.
+// AUDIT-071: this handler does NOT do patient lookup (operates on draftOrders +
+// prefetch payload only). Middleware still resolves tenant for audit-trail
+// completeness, but no per-row tenant filter is applied because no row read
+// occurs.
 router.post('/tailrd-drug-interaction-check', async (req: Request, res: Response) => {
   const hookStart = Date.now();
   try {
-    // JWT verification in production
-    if (process.env.NODE_ENV === 'production' && req.body.fhirAuthorization?.subject) {
-      const valid = await verifyCDSHooksJWT(
-        req.headers.authorization as string,
-        'tailrd-drug-interaction-check',
-        req.body.fhirAuthorization.subject
-      );
-      if (!valid) return res.json({ cards: [] });
-    }
+    const ctx = await requireCdsHooksContext(req, res);
+    if (!ctx) return;
 
     const { context, prefetch } = req.body;
     const draftOrders = context?.draftOrders?.entry || [];
@@ -275,28 +279,22 @@ router.post('/tailrd-drug-interaction-check', async (req: Request, res: Response
 router.post('/tailrd-discharge-gaps', async (req: Request, res: Response) => {
   const hookStart = Date.now();
   try {
-    // JWT verification in production
-    if (process.env.NODE_ENV === 'production' && req.body.fhirAuthorization?.subject) {
-      const valid = await verifyCDSHooksJWT(
-        req.headers.authorization as string,
-        'tailrd-discharge-gaps',
-        req.body.fhirAuthorization.subject
-      );
-      if (!valid) return res.json({ cards: [] });
-    }
+    // AUDIT-071: tenant resolution upstream in cdsHooksAuth middleware.
+    const ctx = await requireCdsHooksContext(req, res);
+    if (!ctx) return;
 
     const { context } = req.body;
     const patientFhirId = context?.patientId;
 
     if (!patientFhirId) return res.json({ cards: [] });
 
-    // Tenant-scope patient lookup — same pattern as cardiovascular-gaps hook
-    const dischargeHospitalId = (req as any).user?.hospitalId;
-    const dischargePatientWhere: Record<string, unknown> = { fhirPatientId: patientFhirId, isActive: true };
-    if (dischargeHospitalId) dischargePatientWhere.hospitalId = dischargeHospitalId;
-
+    // AUDIT-071: MANDATORY tenant filter (same pattern as cardiovascular-gaps)
     const patient = await prisma.patient.findFirst({
-      where: dischargePatientWhere,
+      where: {
+        fhirPatientId: patientFhirId,
+        hospitalId: ctx.hospitalId,
+        isActive: true,
+      },
     });
 
     if (!patient) return res.json({ cards: [] });

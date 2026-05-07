@@ -56,15 +56,11 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
     // Strategy: build a minimal Prisma-like next() to flow data through.
     return (input: string) => {
       // Test surface workaround: emulate the middleware's read path which
-      // calls decryptRecord internally. We construct a fake "result" object
-      // and a fake params with read action, then run middleware.
-      let captured = '';
-      const fakeNext = async () => ({ id: 'r', firstName: input });
-      // Synchronously evaluate the middleware logic for read-path
-      // by importing the real applyPHIEncryption and stubbing prisma.$use.
-      // Simpler: directly require the internal helper via runtime patching.
-      // Since the module doesn't export decrypt, we test via a derived path:
-      // round-trip via encryptLocal + applyPHIEncryption read.
+      // calls decryptRecord internally. We synchronously evaluate the
+      // middleware logic for read-path by importing the real
+      // applyPHIEncryption and stubbing prisma.$use. Since the module
+      // doesn't export decrypt, we test via a derived path: round-trip
+      // via encryptLocal + applyPHIEncryption read.
       const fakeClient: any = {
         $use: (fn: any) => {
           (fakeClient as any)._fn = fn;
@@ -76,8 +72,6 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
         action: 'findUnique',
         args: {},
       };
-      // Invoke read with our crafted ciphertext as firstName
-      let result: any = null;
       // Patient model has firstName in PHI_FIELD_MAP, so read-path should decrypt it
       const promise = (fakeClient as any)._fn(params, async () => ({ firstName: input }));
       // The middleware is async; convert to sync for test by returning the promise

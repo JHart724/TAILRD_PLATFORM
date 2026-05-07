@@ -85,6 +85,13 @@ const HIPAA_GRADE_ACTIONS = new Set<string>([
   'PATIENT_DELETED',
   'BREACH_DATA_ACCESSED',
   'BREACH_DATA_MODIFIED',
+  // AUDIT-071 mitigation — CDS Hooks tenant isolation events. Promoted per
+  // operator decision D6 (partial closure of AUDIT-076 HIPAA_GRADE_ACTIONS
+  // boundary refinement). DB write failure throws so caller fails closed.
+  'CDS_HOOKS_JWT_VALIDATION_FAILURE',
+  'CDS_HOOKS_UNMAPPED_ISSUER',
+  'CDS_HOOKS_CROSS_TENANT_ATTEMPT_BLOCKED',
+  'CDS_HOOKS_NO_TENANT_RESOLVED',
 ]);
 
 // ─── Types ──────────────────────────────────────────────────────────────────────

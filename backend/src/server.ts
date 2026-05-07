@@ -186,7 +186,15 @@ const cdsLimiter = rateLimit({
   legacyHeaders: false,
   message: { success: false, error: 'CDS Hooks rate limit exceeded. Try again in 1 minute.' },
 });
-app.use('/cds-services', cdsLimiter, require('./routes/cdsHooks').default);
+// AUDIT-071: cdsHooksAuth resolves tenant (HospitalEhrIssuer lookup) BEFORE
+// the handler runs any patient query. Discovery + feedback endpoints are
+// exempt within the middleware (no PHI exposure on those paths).
+app.use(
+  '/cds-services',
+  cdsLimiter,
+  require('./middleware/cdsHooksAuth').cdsHooksAuth,
+  require('./routes/cdsHooks').default,
+);
 
 const healthHandler: express.RequestHandler = (_req, res) => {
   res.status(200).json({
