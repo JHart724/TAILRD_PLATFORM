@@ -110,7 +110,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-061** — `RXNORM_WARFARIN.WARFARIN_10MG = '855332'` is actually warfarin 5mg tablet (label only) (Phase 0B Cat A, **RESOLVED 2026-05-05**)
 - **AUDIT-072** — Soft-delete coverage gap + DELETE patient does not cascade (Phase 3, OPEN)
 - **AUDIT-073** — Per-tenant unique gap on Order.fhirOrderId + CarePlan.fhirCarePlanId (Phase 3, **RESOLVED 2026-05-07** — bundled with AUDIT-071 per §17.3; same schema migration)
-- **AUDIT-075** — PHI encryption-at-rest coverage gaps (~13-15 columns per PAUSE 1 inventory; bundles AUDIT-018 + AUDIT-019 per D3) (Phase 3, **IN PROGRESS — Phase C SHIPPED 2026-05-07**; flips RESOLVED at PR merge; 12th §17.1 architectural-precedent codified; AUDIT-081 filed for User.email blind-index deferral)
+- **AUDIT-075** — PHI encryption-at-rest coverage gaps (~13-15 columns per PAUSE 1 inventory; bundles AUDIT-018 + AUDIT-019 per D3) (Phase 3, **RESOLVED 2026-05-08 via PR #263** (squash-merge `48eac39`); sister-bundle AUDIT-018 + AUDIT-019 also RESOLVED; 12th §17.1 architectural-precedent codified; AUDIT-081 filed for User.email blind-index deferral)
 - **AUDIT-078** — Production Aurora backup config not in IaC; restore procedure untested (Phase 3, OPEN — PRODUCTION-READINESS GATE)
 - **AUDIT-080** — Zod validation coverage gap (21 of 26 mutating-route files) (Phase 3, OPEN — PRODUCTION-READINESS GATE)
 - **AUDIT-038** — Node 18 LTS deprecation tracking (Operational debt, OPEN)
@@ -425,26 +425,28 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 - **Phase:** 2B
 - **Severity:** MEDIUM (P2)
-- **Status:** **IN PROGRESS — Phase C SHIPPED 2026-05-07; bundled into AUDIT-075 PR per D3; flips RESOLVED at AUDIT-075 PR merge**
+- **Status:** **RESOLVED 2026-05-08 via PR #263** (squash-merge `48eac39`; sister-bundle with AUDIT-019 + AUDIT-075 per D3 closure pattern)
 - **Location:** `backend/prisma/schema.prisma` (AuditLog model)
 - **Evidence:** All current `writeAuditLog` callers (16 sites) pass non-PHI templated strings. Field accepts arbitrary input.
 - **Severity rationale:** Latent risk; no active leak today.
 - **Remediation:** Add `description` to `PHI_FIELD_MAP.AuditLog` (D2 layered sanitize-at-write + encrypt-residual approach per AUDIT-075 design refinement note §7); ESLint rule on free-form interpolation in `writeAuditLog` calls is the alternative considered + rejected (encryption is the primary control; lint provides write-time discipline reminder, not control).
 - **Effort estimate:** S (1h) — folded into AUDIT-075 ~12-16h bundle
-- **2026-05-07 reconciliation note:** Bundled into AUDIT-075 PR per D3 sister-family closure pattern. Status flips IN PROGRESS → RESOLVED at AUDIT-075 PR merge.
+- **2026-05-07 reconciliation note:** Bundled into AUDIT-075 PR per D3 sister-family closure pattern.
+- **2026-05-08 RESOLVED note:** PR #263 merged `48eac39`. AuditLog.description now in PHI_FIELD_MAP (`backend/src/middleware/phiEncryption.ts:115`); sanitize-at-write applied at `writeAuditLog` wrapper (`backend/src/middleware/auditLogger.ts:175`; CONSERVATIVE pattern set per design §4.2). Single-point integration eliminates 16-callsite fan-out duplication. AUDIT-016 PR 3 TARGETS extension covers backfill (`scripts/migrations/audit-016-pr3-v0v1-to-v2.ts`; AUDIT-018 sister-bundle attribution inline).
 - **2026-05-07 Phase C reconciliation:** AuditLog.description added to PHI_FIELD_MAP (`backend/src/middleware/phiEncryption.ts:115`); sanitize-at-write applied at `writeAuditLog` wrapper (`backend/src/middleware/auditLogger.ts:175`; CONSERVATIVE pattern set per design §4.2). Single-point integration eliminates 16-callsite fan-out duplication. Encryption + redaction layered defense live in AUDIT-075 PR branch. AUDIT-016 PR 3 TARGETS extension covers backfill (`scripts/migrations/audit-016-pr3-v0v1-to-v2.ts`; AUDIT-018 sister-bundle attribution inline). Test coverage: Group I.3 sanitized round-trip + Group K.2 callsite integration spy on `prisma.auditLog.create`.
 
 ### AUDIT-019 — `FailedFhirBundle` plaintext PHI fragments
 
 - **Phase:** 2B
 - **Severity:** MEDIUM (P2)
-- **Status:** **IN PROGRESS — Phase C SHIPPED 2026-05-07; bundled into AUDIT-075 PR per D3; flips RESOLVED at AUDIT-075 PR merge**
+- **Status:** **RESOLVED 2026-05-08 via PR #263** (squash-merge `48eac39`; sister-bundle with AUDIT-018 + AUDIT-075 per D3 closure pattern)
 - **Location:** `backend/prisma/schema.prisma` (FailedFhirBundle model)
 - **Evidence:** `errorMessage` and `originalPath` plaintext. FHIR ingest failures typically include partial bundle JSON; S3 paths sometimes carry patient identifiers.
 - **Severity rationale:** Failed-bundle table accumulates raw FHIR fragments with potential PHI in clear text.
 - **Remediation:** D2 layered sanitize-at-write + encrypt-residual approach (sister to AMBIGUOUS errorMessage columns in AUDIT-075 inventory). Add `errorMessage` + `originalPath` to `PHI_FIELD_MAP.FailedFhirBundle`. 30-day retention prune deferred to operational follow-up (not blocking encryption coverage). Full design in AUDIT-075 design refinement note §7.
 - **Effort estimate:** S-M (4-8h) — folded into AUDIT-075 ~12-16h bundle
-- **2026-05-07 reconciliation note:** Bundled into AUDIT-075 PR per D3 sister-family closure pattern. Status flips IN PROGRESS → RESOLVED at AUDIT-075 PR merge.
+- **2026-05-07 reconciliation note:** Bundled into AUDIT-075 PR per D3 sister-family closure pattern.
+- **2026-05-08 RESOLVED note:** PR #263 merged `48eac39`. FailedFhirBundle.errorMessage + originalPath now in PHI_FIELD_MAP (`backend/src/middleware/phiEncryption.ts:118`); D2 AGGRESSIVE pattern set routing per design §4.2. Zero current write callsites (forward-looking encrypt layer covers any future writes). 30-day retention prune deferred to operational follow-up per `docs/architecture/AUDIT_075_PHI_ENCRYPTION_COVERAGE_NOTES.md` §13. AUDIT-016 PR 3 TARGETS extension covers backfill (AUDIT-019 sister-bundle attribution inline).
 - **2026-05-07 Phase C reconciliation:** FailedFhirBundle.errorMessage + originalPath added to PHI_FIELD_MAP (`backend/src/middleware/phiEncryption.ts:118`); D2 AGGRESSIVE pattern set routing per design §4.2 (FHIR bundle PHI surface justifies opt-in NAME pattern). Zero current write callsites (verified via grep at Step 4); encryption layer covers any future writes (forward-looking). 30-day retention prune deferred to operational follow-up per `docs/architecture/AUDIT_075_PHI_ENCRYPTION_COVERAGE_NOTES.md` §13. AUDIT-016 PR 3 TARGETS extension covers backfill (AUDIT-019 sister-bundle attribution inline at `scripts/migrations/audit-016-pr3-v0v1-to-v2.ts`).
 
 ### AUDIT-020 — External FHIR identifiers (`fhir*Id`) plaintext
@@ -1177,7 +1179,8 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 - **Phase:** 3 (data layer audit; PHI encryption coverage)
 - **Severity:** MEDIUM (P2) (per §18 register-literal discipline; scope expansion does not auto-promote severity)
-- **Status:** **IN PROGRESS — Phase C SHIPPED 2026-05-07; flips RESOLVED at PR merge**
+- **Status:** **RESOLVED 2026-05-08 via PR #263** (squash-merge `48eac39`; sister-bundle AUDIT-018 + AUDIT-019 per D3 closure pattern)
+- **2026-05-08 RESOLVED note:** PR #263 merged `48eac39` at 2026-05-08T03:33:30Z. Default-suite advanced 588 → 603 in this PR (cumulative 566 → 603 across Day 8 PR arc; +37 net new tests across 4 files). 12th §17.1 codified live on main. AUDIT-018 + AUDIT-019 sister-bundle entries also flipped RESOLVED in same PR. AUDIT-081 NEW (User.email blind-index DEFERRED per D4 option-C). No AUDIT-076 promotions in this PR; cumulative tally stays at 7.
 - **2026-05-07 Phase C reconciliation:** Steps 1.0/1/2/3/4/5/6/7 complete.
   - **phiRedaction.ts NEW** (`backend/src/utils/phiRedaction.ts`; 215 LOC; 4 CONSERVATIVE patterns SSN/MRN/EMAIL/PHONE + 1 AGGRESSIVE NAME pattern; module-init `validatePatternsOrThrow` fail-loud; PAUSE 2.5 DOB removed per HIGH-FP analysis on operational ISO timestamps).
   - **PHI_FIELD_MAP +16 columns / 10 models touched** at `backend/src/middleware/phiEncryption.ts:99-122` (CarePlan.description / Recommendation NEW / PatientDataRequest.notes / InternalNote NEW / WebhookEvent.errorMessage / ReportGeneration.errorMessage / UploadJob.errorMessage / AuditLog.description / FailedFhirBundle.{errorMessage, originalPath} / User.{firstName, lastName}). User.email DEFERRED to AUDIT-081 per D4 option-C blind-index requirement.
