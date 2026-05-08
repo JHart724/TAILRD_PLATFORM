@@ -5,6 +5,7 @@ import { parseCSV } from '../ingestion/csvParser';
 import { writePatients } from '../ingestion/patientWriter';
 import { runGapDetection } from '../ingestion/gapDetectionRunner';
 import { writeAuditLog } from '../middleware/auditLogger';
+import { redactPHIFragments } from '../utils/phiRedaction';
 import prisma from '../lib/prisma';
 
 const router = Router();
@@ -45,7 +46,8 @@ router.post('/upload', authenticateToken, async (req: AuthenticatedRequest, res:
           status: 'REJECTED_PHI',
           phiDetected: true,
           completedAt: new Date(),
-          errorMessage: 'Potential PHI detected in file',
+          // AUDIT-075 D2: CONSERVATIVE per §4.2 (static literal here; sanitize for consistency / idempotent on no-match)
+          errorMessage: redactPHIFragments('Potential PHI detected in file'),
         },
       });
       await writeAuditLog(req, 'FILE_REJECTED_PHI', 'UploadJob', job.id, 'PHI detected in upload');
@@ -63,7 +65,8 @@ router.post('/upload', authenticateToken, async (req: AuthenticatedRequest, res:
         data: {
           status: 'FAILED',
           completedAt: new Date(),
-          errorMessage: parseResult.headerErrors.join('; '),
+          // AUDIT-075 D2: CONSERVATIVE per §4.2 (operator-CSV-content; sanitize before persist)
+          errorMessage: redactPHIFragments(parseResult.headerErrors.join('; ')),
         },
       });
       return res.status(400).json({

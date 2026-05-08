@@ -270,3 +270,182 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
     jest.dontMock('../../services/keyRotation');
   });
 });
+
+// ─── AUDIT-075 — PHI_FIELD_MAP coverage round-trip (Groups H/I/J) ─────────────
+//
+// Step 5 ships two test layers:
+//   - Groups H/I/J (this describe block): middleware-scope encrypt/decrypt
+//     round-trip semantics across AUDIT-075 NEW PHI_FIELD_MAP entries.
+//   - Group K (backend/src/services/__tests__/webhookPipeline-sanitize.test.ts):
+//     write-path callsite integration — verifies sanitize-at-write actually
+//     applied at prisma boundary. Without Group K, Step 4 callsite redaction
+//     could silently regress and middleware-scope tests would still pass.
+//
+// Helpers (per CONCERN C):
+//   assertRoundTripStandard(model, field, plaintext) — encrypt → decrypt via
+//     middleware; asserts V1 envelope shape + decrypt fidelity.
+//   assertRoundTripSanitized(model, field, plaintextWithPHI, redactedExpected)
+//     — pre-sanitizes via redactPHIFragments (simulating Step 4 callsite
+//     integration), then runs middleware round-trip on the redacted string.
+//     SCOPE: middleware encrypt/decrypt on already-redacted input. Does NOT
+//     verify write-path integration (Group K covers that).
+
+describe('AUDIT-075 — PHI_FIELD_MAP coverage round-trip (Groups H/I/J)', () => {
+  const originalEnv = { ...process.env };
+
+  beforeEach(() => {
+    jest.resetModules();
+    process.env.PHI_ENCRYPTION_KEY = TEST_KEY;
+    process.env.NODE_ENV = 'test';
+    delete process.env.DEMO_MODE;
+    delete process.env.PHI_LEGACY_PLAINTEXT_OK;
+  });
+
+  afterAll(() => {
+    process.env = originalEnv;
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function makeFakeExtendsClient(): any {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fakeClient: any = {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fakeClient.$extends = (ext: any) => {
+      fakeClient._fn = ext.query.$allModels.$allOperations;
+      return fakeClient;
+    };
+    return fakeClient;
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async function invokeMiddleware(fakeClient: any, params: any, next: any): Promise<any> {
+    return fakeClient._fn({
+      args: params.args,
+      model: params.model,
+      operation: params.action,
+      query: next,
+    });
+  }
+
+  async function assertRoundTripStandard(
+    model: string,
+    field: string,
+    plaintext: string,
+  ): Promise<void> {
+    jest.resetModules();
+    const mod = require('../phiEncryption');
+    const fakeClient = makeFakeExtendsClient();
+    mod.applyPHIEncryption(fakeClient);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const writeData: any = { [field]: plaintext };
+    await invokeMiddleware(
+      fakeClient,
+      { model, action: 'create', args: { data: writeData } },
+      async () => ({ id: 'r' }),
+    );
+    const envelope = writeData[field];
+    expect(typeof envelope).toBe('string');
+    expect(envelope.startsWith('enc:v1:')).toBe(true);
+    expect(envelope.split(':').length).toBe(5);
+
+    const readResult = await invokeMiddleware(
+      fakeClient,
+      { model, action: 'findUnique', args: {} },
+      async () => ({ [field]: envelope }),
+    );
+    expect(readResult[field]).toBe(plaintext);
+  }
+
+  async function assertRoundTripSanitized(
+    model: string,
+    field: string,
+    plaintextWithPHI: string,
+    redactedExpected: string,
+  ): Promise<void> {
+    const { redactPHIFragments } = require('../../utils/phiRedaction');
+    const redacted = redactPHIFragments(plaintextWithPHI);
+    expect(redacted).toBe(redactedExpected);
+    expect(redacted).not.toBe(plaintextWithPHI); // PHI was actually present + redacted
+
+    await assertRoundTripStandard(model, field, redacted);
+  }
+
+  // ─── Group H — Standard round-trip (NEW PHI_FIELD_MAP models) ──────────────
+
+  describe('Group H — standard round-trip (NEW PHI_FIELD_MAP models)', () => {
+    it('H.1: WebhookEvent.errorMessage encrypts + decrypts via middleware', async () => {
+      await assertRoundTripStandard(
+        'WebhookEvent',
+        'errorMessage',
+        'Connection refused at upstream endpoint',
+      );
+    });
+
+    it('H.2: UploadJob.errorMessage encrypts + decrypts via middleware', async () => {
+      await assertRoundTripStandard(
+        'UploadJob',
+        'errorMessage',
+        'CSV parse failure: invalid header row 3',
+      );
+    });
+
+    it('H.3: AuditLog.description encrypts + decrypts via middleware', async () => {
+      await assertRoundTripStandard(
+        'AuditLog',
+        'description',
+        'User accessed patient roster',
+      );
+    });
+
+    it('H.4: InternalNote.content encrypts + decrypts via middleware', async () => {
+      await assertRoundTripStandard(
+        'InternalNote',
+        'content',
+        'Care team reviewed clinical context for follow-up',
+      );
+    });
+  });
+
+  // ─── Group I — Sanitized round-trip middleware-scope ──────────────────────
+
+  describe('Group I — sanitized round-trip middleware-scope', () => {
+    it('I.1: WebhookEvent.errorMessage sanitized SSN round-trips as redacted', async () => {
+      await assertRoundTripSanitized(
+        'WebhookEvent',
+        'errorMessage',
+        'Failed for SSN: 123-45-6789',
+        'Failed for SSN: [REDACTED-SSN]',
+      );
+    });
+
+    it('I.2: UploadJob.errorMessage sanitized EMAIL round-trips as redacted', async () => {
+      await assertRoundTripSanitized(
+        'UploadJob',
+        'errorMessage',
+        'Header validation failed; contact patient@email.com for source',
+        'Header validation failed; contact [REDACTED-EMAIL] for source',
+      );
+    });
+
+    it('I.3: AuditLog.description sanitized PHONE round-trips as redacted', async () => {
+      await assertRoundTripSanitized(
+        'AuditLog',
+        'description',
+        'Patient contact phone 555-123-4567 logged',
+        'Patient contact phone [REDACTED-PHONE] logged',
+      );
+    });
+  });
+
+  // ─── Group J — Encrypt-only PII (PatientDataRequest.notes) ────────────────
+
+  describe('Group J — encrypt-only PII standard round-trip', () => {
+    it('J.1: PatientDataRequest.notes encrypts + decrypts via middleware', async () => {
+      await assertRoundTripStandard(
+        'PatientDataRequest',
+        'notes',
+        'Right-to-deletion request submitted via portal',
+      );
+    });
+  });
+});
