@@ -3,6 +3,7 @@ import path from 'path';
 import { Request } from 'express';
 import prisma from '../lib/prisma';
 import { AuthenticatedRequest } from '../middleware/auth';
+import { redactPHIFragments } from '../utils/phiRedaction';
 // AUDIT-011 LEGITIMATE_BYPASS (2026-05-02; marker pattern migrated 2026-05-07):
 // AuditLog.create has nullable hospitalId for unauthenticated audit events
 // (failed login attempts, etc.). System-level audit trail, not user-scoped.
@@ -164,6 +165,15 @@ async function writeAuditLog(
   // anonymous webhook traffic, etc.). The DB column is nullable to allow this.
   // Earlier behavior wrote the literal string 'unknown' which violated the
   // hospitals FK and caused every failed-login audit write to be rejected.
+  // AUDIT-018 sister-bundle (D3) + AUDIT-075 D2: sanitize-at-write redaction
+  // applied at single-point integration here so both file (auditLogger.info) +
+  // DB (prisma.auditLog.create) transports persist the sanitized form.
+  // CONSERVATIVE pattern set per design §4.2 (templated strings from 16
+  // existing writeAuditLog callers are non-PHI per AUDIT-018 evidence; defense-
+  // in-depth applies sanitize anyway in case future callers pass operator-
+  // supplied free-form input).
+  const sanitizedDescription = description !== null ? redactPHIFragments(description) : null;
+
   const entry: AuditEntry = {
     timestamp: new Date().toISOString(),
     userId: user?.userId || 'anonymous',
@@ -174,7 +184,7 @@ async function writeAuditLog(
     resourceType,
     resourceId,
     ipAddress: getClientIp(req),
-    description,
+    description: sanitizedDescription,
     previousValues: previousValues || null,
     newValues: newValues || null,
   };

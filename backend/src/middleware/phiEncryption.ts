@@ -96,12 +96,30 @@ const PHI_FIELD_MAP: Record<string, string[]> = {
   Alert: ['message'],
   DrugTitration: ['drugName'],
   CrossReferral: ['reason', 'notes'],
-  CarePlan: ['title'],
+  CarePlan: ['title', 'description'],  // AUDIT-075: +description (PAUSE 1 inventory; PHI patient-tied)
+  // Clinical recommendation (AUDIT-075 NEW model — PAUSE 1 expanded scan)
+  Recommendation: ['title', 'description', 'evidence', 'implementationNotes'],
   // Intervention tracking
   InterventionTracking: ['interventionName', 'indication', 'performingProvider', 'outcome'],
   // Breach and data requests
   BreachIncident: ['description'],
-  PatientDataRequest: ['requestedBy', 'requestorEmail'],
+  PatientDataRequest: ['requestedBy', 'requestorEmail', 'notes'],  // AUDIT-075: +notes (right-to-deletion operator-supplied)
+  // Internal notes (AUDIT-075 NEW model — PAUSE 1 expanded scan; CLINICAL noteType holds PHI)
+  InternalNote: ['title', 'content'],
+  // Error-tracking + ingest models (AUDIT-075 D2 layered sanitize-at-write + encrypt-residual)
+  // Sanitize-at-write integration in routes/services per Step 4 callsite edits.
+  WebhookEvent: ['errorMessage'],          // AUDIT-075 D2: CONSERVATIVE pattern set
+  ReportGeneration: ['errorMessage'],      // AUDIT-075 D2: CONSERVATIVE pattern set
+  UploadJob: ['errorMessage'],             // AUDIT-075 D2: CONSERVATIVE pattern set
+  // AUDIT-018 sister-bundle (D3): AuditLog.description sanitize-at-write at writeAuditLog wrapper
+  AuditLog: ['description'],
+  // AUDIT-019 sister-bundle (D3): FailedFhirBundle plaintext PHI fragments per register entry
+  // D2 AGGRESSIVE pattern set (FHIR bundle PHI surface justifies opt-in NAME pattern per design §4.2)
+  FailedFhirBundle: ['errorMessage', 'originalPath'],
+  // Staff PII (AUDIT-075 D4 partial — defense-in-depth posture; not strict PHI per HIPAA §164.514)
+  // User.email DEFERRED to AUDIT-XXX-future (blind-index requirement per auth.ts:52 case-insensitive
+  // findFirst lookup; non-deterministic AES-256-GCM ciphertext breaks equals match). Sister to AUDIT-014.
+  User: ['firstName', 'lastName'],
   // MFA secrets (not PHI but equally sensitive — DB compromise must not expose TOTP)
   UserMFA: ['secret'],
 };

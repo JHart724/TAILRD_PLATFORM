@@ -159,7 +159,13 @@ export const TARGETS: readonly Target[] = [
   { table: 'cross_referrals', model: 'CrossReferral', column: 'reason', kind: 'string' },
   { table: 'cross_referrals', model: 'CrossReferral', column: 'notes',  kind: 'string' },
   // CarePlan
-  { table: 'care_plans', model: 'CarePlan', column: 'title', kind: 'string' },
+  { table: 'care_plans', model: 'CarePlan', column: 'title',       kind: 'string' },
+  { table: 'care_plans', model: 'CarePlan', column: 'description', kind: 'string' },  // AUDIT-075 D2
+  // Recommendation (AUDIT-075 NEW model — clinical recommendation; PAUSE 1 expanded scan)
+  { table: 'recommendations', model: 'Recommendation', column: 'title',               kind: 'string' },  // AUDIT-075 D2
+  { table: 'recommendations', model: 'Recommendation', column: 'description',         kind: 'string' },  // AUDIT-075 D2
+  { table: 'recommendations', model: 'Recommendation', column: 'evidence',            kind: 'string' },  // AUDIT-075 D2
+  { table: 'recommendations', model: 'Recommendation', column: 'implementationNotes', kind: 'string' },  // AUDIT-075 D2
   // InterventionTracking
   { table: 'intervention_tracking', model: 'InterventionTracking', column: 'interventionName',   kind: 'string' },
   { table: 'intervention_tracking', model: 'InterventionTracking', column: 'indication',         kind: 'string' },
@@ -170,8 +176,30 @@ export const TARGETS: readonly Target[] = [
   // PatientDataRequest
   { table: 'patient_data_requests', model: 'PatientDataRequest', column: 'requestedBy',     kind: 'string' },
   { table: 'patient_data_requests', model: 'PatientDataRequest', column: 'requestorEmail',  kind: 'string' },
+  { table: 'patient_data_requests', model: 'PatientDataRequest', column: 'notes',           kind: 'string' },  // AUDIT-075 D2
   // UserMFA
   { table: 'user_mfa', model: 'UserMFA', column: 'secret', kind: 'string' },
+
+  // ─── AUDIT-075 D2 — NEW PHI_FIELD_MAP entries (sister to phiEncryption.ts L99-L122) ───
+  // Layered defense: sanitize-at-write redaction (Step 4 callsites) + encrypt-residual
+  // via this migration script. Per design refinement note §6 + §3 attribution.
+
+  // InternalNote (AUDIT-075 NEW model — CLINICAL noteType holds PHI)
+  { table: 'internal_notes', model: 'InternalNote', column: 'title',   kind: 'string' },  // AUDIT-075 D2
+  { table: 'internal_notes', model: 'InternalNote', column: 'content', kind: 'string' },  // AUDIT-075 D2
+  // Error-tracking + ingest (CONSERVATIVE pattern set per design §4.2)
+  { table: 'webhook_events',     model: 'WebhookEvent',     column: 'errorMessage', kind: 'string' },  // AUDIT-075 D2
+  { table: 'report_generations', model: 'ReportGeneration', column: 'errorMessage', kind: 'string' },  // AUDIT-075 D2
+  { table: 'upload_jobs',        model: 'UploadJob',        column: 'errorMessage', kind: 'string' },  // AUDIT-075 D2
+  // AuditLog.description — sanitize-at-write at writeAuditLog wrapper
+  { table: 'audit_logs', model: 'AuditLog', column: 'description', kind: 'string' },  // AUDIT-018 sister-bundle
+  // FailedFhirBundle — AGGRESSIVE pattern set per design §4.2 (FHIR bundle PHI surface)
+  { table: 'failed_fhir_bundles', model: 'FailedFhirBundle', column: 'errorMessage', kind: 'string' },  // AUDIT-019 sister-bundle
+  { table: 'failed_fhir_bundles', model: 'FailedFhirBundle', column: 'originalPath', kind: 'string' },  // AUDIT-019 sister-bundle
+  // User PII (D4 partial — defense-in-depth posture; not strict PHI per §164.514).
+  // User.email DEFERRED to AUDIT-XXX-future (blind-index requirement per design §5).
+  { table: 'users', model: 'User', column: 'firstName', kind: 'string' },  // AUDIT-075 D4
+  { table: 'users', model: 'User', column: 'lastName',  kind: 'string' },  // AUDIT-075 D4
 
   // ─── JSON PHI columns (mirror PHI_JSON_FIELDS in phiEncryption.ts) ───
   // The applyPHIEncryption middleware serializes JSON values to encrypted

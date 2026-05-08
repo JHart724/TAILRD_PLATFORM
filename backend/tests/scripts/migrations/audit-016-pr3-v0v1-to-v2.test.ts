@@ -270,13 +270,15 @@ describe('checkExecuteConfirmation', () => {
 });
 
 describe('TARGETS array', () => {
-  it('covers ~66 (table, column) pairs spanning string + json kinds', () => {
+  it('covers (table, column) pairs spanning string + json kinds', () => {
+    // Range relaxed at AUDIT-075 PR (Phase C Step 6) — TARGETS extended +16 → 82.
+    // Bounds permissive to accommodate future additions without churn.
     expect(TARGETS.length).toBeGreaterThanOrEqual(60);
-    expect(TARGETS.length).toBeLessThanOrEqual(75);
+    expect(TARGETS.length).toBeLessThanOrEqual(150);
     const stringCount = TARGETS.filter(t => t.kind === 'string').length;
     const jsonCount = TARGETS.filter(t => t.kind === 'json').length;
-    expect(stringCount).toBeGreaterThan(30);   // ~38 string fields
-    expect(jsonCount).toBeGreaterThan(20);     // ~28 json columns
+    expect(stringCount).toBeGreaterThan(30);
+    expect(jsonCount).toBeGreaterThan(20);
   });
   it('every target has table + model + column + kind', () => {
     for (const t of TARGETS) {
@@ -285,6 +287,186 @@ describe('TARGETS array', () => {
       expect(typeof t.column).toBe('string');
       expect(['string', 'json']).toContain(t.kind);
     }
+  });
+});
+
+// ─── AUDIT-075 — TARGETS extension shape + partial-resume idempotency ─────
+//
+// Phase C Step 7 (per work-block authorization spec): 5 tests covering the
+// 16 new TARGETS entries added at Step 6 (PHI_FIELD_MAP extension mirror).
+// Test 5 exercises CONCERN B partial-resume idempotency — verifies that
+// re-running the script after a partial migration (original-66 already V2;
+// new-16 still V0/V1) processes only the new entries via the V2-input
+// race-skip semantics established in AUDIT-016 PR 3 D3.
+//
+// Sister to AUDIT-022 backfill mirror discipline: TARGETS array IS the
+// canonical mirror of PHI_FIELD_MAP at script merge time; tests assert
+// the extension landed in expected shape.
+
+describe('AUDIT-075 — TARGETS extension (Step 6 mirror)', () => {
+  it('Step 7 Test 1: TARGETS array length === 82 + samples 5 new entries by (table, column)', () => {
+    expect(TARGETS.length).toBe(82);
+    // Sample 5 of the 16 new entries spanning all attribution clusters
+    // (AUDIT-075 D2 + sister-bundle D3 + D4)
+    const findEntry = (table: string, column: string) =>
+      TARGETS.find(t => t.table === table && t.column === column);
+    expect(findEntry('webhook_events', 'errorMessage')).toBeDefined();        // AUDIT-075 D2
+    expect(findEntry('audit_logs', 'description')).toBeDefined();              // AUDIT-018 sister-bundle
+    expect(findEntry('failed_fhir_bundles', 'errorMessage')).toBeDefined();    // AUDIT-019 sister-bundle
+    expect(findEntry('users', 'firstName')).toBeDefined();                     // AUDIT-075 D4
+    expect(findEntry('recommendations', 'evidence')).toBeDefined();            // AUDIT-075 D2 NEW model
+  });
+
+  it('Step 7 Test 2: each new entry has correct shape (table + model + column + kind)', () => {
+    const newEntries = [
+      { table: 'recommendations', model: 'Recommendation', column: 'title' },
+      { table: 'recommendations', model: 'Recommendation', column: 'description' },
+      { table: 'recommendations', model: 'Recommendation', column: 'evidence' },
+      { table: 'recommendations', model: 'Recommendation', column: 'implementationNotes' },
+      { table: 'care_plans', model: 'CarePlan', column: 'description' },
+      { table: 'patient_data_requests', model: 'PatientDataRequest', column: 'notes' },
+      { table: 'internal_notes', model: 'InternalNote', column: 'title' },
+      { table: 'internal_notes', model: 'InternalNote', column: 'content' },
+      { table: 'webhook_events', model: 'WebhookEvent', column: 'errorMessage' },
+      { table: 'report_generations', model: 'ReportGeneration', column: 'errorMessage' },
+      { table: 'upload_jobs', model: 'UploadJob', column: 'errorMessage' },
+      { table: 'audit_logs', model: 'AuditLog', column: 'description' },
+      { table: 'failed_fhir_bundles', model: 'FailedFhirBundle', column: 'errorMessage' },
+      { table: 'failed_fhir_bundles', model: 'FailedFhirBundle', column: 'originalPath' },
+      { table: 'users', model: 'User', column: 'firstName' },
+      { table: 'users', model: 'User', column: 'lastName' },
+    ];
+    expect(newEntries.length).toBe(16);
+    for (const expected of newEntries) {
+      const found = TARGETS.find(
+        t => t.table === expected.table && t.column === expected.column,
+      );
+      expect(found).toBeDefined();
+      expect(found!.model).toBe(expected.model);
+      expect(found!.kind).toBe('string');
+    }
+  });
+
+  it('Step 7 Test 3: all 16 new entries are kind=string (no JSON columns in AUDIT-075 scope)', () => {
+    // PHI_FIELD_MAP routing only — AUDIT-075 D2 design §3 explicitly excludes
+    // JSON column extension (PHI_JSON_FIELDS unchanged). Verifies we didn't
+    // accidentally classify any new entry as 'json'.
+    const newTablesAndColumns = new Set([
+      'recommendations.title',
+      'recommendations.description',
+      'recommendations.evidence',
+      'recommendations.implementationNotes',
+      'care_plans.description',
+      'patient_data_requests.notes',
+      'internal_notes.title',
+      'internal_notes.content',
+      'webhook_events.errorMessage',
+      'report_generations.errorMessage',
+      'upload_jobs.errorMessage',
+      'audit_logs.description',
+      'failed_fhir_bundles.errorMessage',
+      'failed_fhir_bundles.originalPath',
+      'users.firstName',
+      'users.lastName',
+    ]);
+    for (const t of TARGETS) {
+      const k = `${t.table}.${t.column}`;
+      if (newTablesAndColumns.has(k)) {
+        expect(t.kind).toBe('string');
+      }
+    }
+  });
+
+  it('Step 7 Test 4: script header comments reference operator runbook §6 (re-run trigger)', () => {
+    // Sister-run trigger doc cross-reference: when AUDIT-075 lands and extends
+    // PHI_FIELD_MAP, the migration script must be re-run. Operator runbook §6
+    // documents this. Test guards against cross-reference removal.
+    //
+    // `fs` is jest.mock'd at file scope (L52); use jest.requireActual to read
+    // the real source file.
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const realFs = jest.requireActual('fs');
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const path = require('path');
+    const scriptPath = path.resolve(
+      __dirname,
+      '../../../scripts/migrations/audit-016-pr3-v0v1-to-v2.ts',
+    );
+    const source = realFs.readFileSync(scriptPath, 'utf8');
+    expect(source).toMatch(/AUDIT_016_PR_3_MIGRATION_RUNBOOK\.md/);
+    expect(source).toMatch(/runbook §6/);
+    expect(source).toMatch(/AUDIT-075/);
+  });
+
+  it('Step 7 Test 5 (CONCERN B): partial-resume idempotency — re-run after partial migration touches only V0/V1 candidates', async () => {
+    // Setup: original-66 TARGETS already 100% V2 (from prior run); new-16
+    // TARGETS each have 1 V0/V1 candidate row pending. Run --execute (no
+    // target restriction). Assert: only the 16 new entries get rows fetched +
+    // written; original-66 fast-skip via v0v1=0 early-return at migrateTarget
+    // (sister to existing 'migrateTarget direct-call' test L572-586).
+    //
+    // This validates the V2-input race-skip-no-write semantics from AUDIT-016
+    // PR 3 D3: SQL filter excludes already-V2 rows, so partial-resume is
+    // structurally guaranteed at the discovery filter, not just at write time.
+    const script = emptyScript();
+
+    // Identify the 16 new (table, column) pairs from Test 2's enumeration
+    const newPairs = new Set([
+      'recommendations.title',
+      'recommendations.description',
+      'recommendations.evidence',
+      'recommendations.implementationNotes',
+      'care_plans.description',
+      'patient_data_requests.notes',
+      'internal_notes.title',
+      'internal_notes.content',
+      'webhook_events.errorMessage',
+      'report_generations.errorMessage',
+      'upload_jobs.errorMessage',
+      'audit_logs.description',
+      'failed_fhir_bundles.errorMessage',
+      'failed_fhir_bundles.originalPath',
+      'users.firstName',
+      'users.lastName',
+    ]);
+
+    for (const t of TARGETS) {
+      const k = `${t.table}.${t.column}`;
+      if (newPairs.has(k)) {
+        // NEW-16: 1 V0/V1 candidate row pending
+        script.totals.set(k, 1);
+        script.v2.set(k, 0);
+        script.v0v1.set(k, 1);
+        script.plaintext.set(k, 0);
+        script.rows.set(k, [{ id: `rec-${k}`, value: makeV0(`pt-${k}`) }]);
+      } else {
+        // ORIGINAL-66: 100% V2 (already migrated; partial-resume baseline)
+        script.totals.set(k, 100);
+        script.v2.set(k, 100);
+        script.v0v1.set(k, 0);
+        script.plaintext.set(k, 0);
+        script.rows.set(k, []);
+      }
+    }
+    queryRawUnsafe.mockImplementation(routeSql(script));
+
+    const opts: CliOptions = { mode: 'execute', batch: 50, pauseMs: 0, target: null };
+    const code = await main(opts);
+
+    expect(code).toBe(0);
+    // Only the 16 new entries got rows fetched + written
+    expect(executeRawUnsafe).toHaveBeenCalledTimes(16);
+    // Each write was on one of the 16 new (table, column) pairs
+    const writeTablesColumns = executeRawUnsafe.mock.calls.map(c => {
+      const sql = String(c[0]);
+      const m = sql.match(/UPDATE "([^"]+)"\s+SET "([^"]+)"/);
+      return m ? `${m[1]}.${m[2]}` : '';
+    });
+    for (const tc of writeTablesColumns) {
+      expect(newPairs.has(tc)).toBe(true);
+    }
+    // 16 distinct (table, column) pairs covered (no duplicate writes from re-fetch)
+    expect(new Set(writeTablesColumns).size).toBe(16);
   });
 });
 

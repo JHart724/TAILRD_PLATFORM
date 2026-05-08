@@ -13,6 +13,7 @@
 
 import prisma from '../lib/prisma';
 import { RedoxWebhookPayload } from '../types';
+import { redactPHIFragments } from '../utils/phiRedaction';
 // AUDIT-011 LEGITIMATE_BYPASS (2026-05-02; marker pattern migrated 2026-05-07):
 // WebhookEvent operations are system-internal idempotency/retry queue. Scope
 // is derived from HMAC-validated payload, not user JWT. The eventId composite
@@ -131,7 +132,8 @@ export async function markFailed(
       where: { id: webhookEventId },
       data: {
         status: 'FAILED',
-        errorMessage: `Dead-letter after ${MAX_RETRIES} retries: ${error.message}`,
+        // AUDIT-075 D2: CONSERVATIVE per §4.2 (sanitize-at-write before encrypt-residual via PHI_FIELD_MAP.WebhookEvent)
+        errorMessage: redactPHIFragments(`Dead-letter after ${MAX_RETRIES} retries: ${error.message}`),
         retryCount,
         processedAt: new Date(),
       },
@@ -148,7 +150,8 @@ export async function markFailed(
     where: { id: webhookEventId },
     data: {
       status: 'RETRYING',
-      errorMessage: error.message,
+      // AUDIT-075 D2: CONSERVATIVE per §4.2
+      errorMessage: redactPHIFragments(error.message),
       retryCount,
     },
     __tenantGuardBypass: true,
