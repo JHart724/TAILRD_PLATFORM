@@ -1385,6 +1385,37 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ---
 
+### AUDIT-083 — `fast-xml-builder` transitive CVE remediation (GHSA-5wm8-gmm8-39j9 + GHSA-45c6-75p6-83cc)
+
+- **Phase:** 2 (security posture; CI gate)
+- **Severity:** HIGH (P1) — `npm audit --audit-level=high` blocks ALL PR merges including AUDIT-078 PR #265; CI-gate-blocking by virtue of pipeline behavior; sister to AUDIT-079 connection_limit operational-debt severity classification by gate-impact discipline
+- **Status:** **IN PROGRESS — fix shipping in this PR; flips RESOLVED at this PR's merge** per AUDIT-011 sister-discipline merge-time-flip pattern
+- **Detected:** 2026-05-08 during AUDIT-078 PR #265 CI run (Security Audit step `npm audit --audit-level=high` failed)
+- **Numbering note:** AUDIT-082 reserved for terraform/ stale-state on AUDIT-078 PR #265 branch (not yet on main); AUDIT-083 used here to avoid rebase-conflict on AUDIT-078 merge.
+- **Location:** `backend/package-lock.json` (transitive only; `isDirect: false`)
+  - Dependency chain: `tailrd-backend@1.0.0 → @aws-sdk/client-cloudwatch@3.1032.0 → @aws-sdk/core@3.974.6 → @aws-sdk/xml-builder@3.972.21 → fast-xml-parser@5.7.2 → fast-xml-builder@1.1.5` (5 levels deep)
+- **Evidence:** Two GHSA advisories published 2026-05-07 by NaturalIntelligence org (upstream maintainer of fast-xml-parser + fast-xml-builder):
+  - **GHSA-5wm8-gmm8-39j9** (high; CWE-611 XXE-related) — fast-xml-builder allows attribute values with unwanted quotes to bypass malicious or unwanted attributes
+  - **GHSA-45c6-75p6-83cc** (moderate; CWE-91 XML injection regex bypass) — fast-xml-builder Comment Value regex can be bypassed
+  - `npm audit --json` output: `vulnerabilities.fast-xml-builder.range: <=1.1.6`; `fixAvailable: true`; affected version 1.1.5
+  - Pre-existing CVE; published BETWEEN PR #264 (passed Security Audit 2026-05-08) and PR #265 (failed Security Audit 2026-05-08); NOT introduced by AUDIT-078 work block
+- **Severity rationale:** **HIGH (P1) by CI-gate-blocking impact** — npm audit --audit-level=high blocks all subsequent PR merges; AUDIT-078 PR #265 already blocked. Transitive nature (no direct backend code touches fast-xml-builder; flows through @aws-sdk/client-cloudwatch CloudWatch metrics XML serialization path) does not reduce CI-gate-blocking severity. HIPAA §164.308(a)(1)(ii)(B) Risk Management framing: an XXE-class vulnerability in CloudWatch metrics path is theoretical low-impact (no PHI flows through XML metrics), but the CI gate is the load-bearing concern.
+- **Remediation:** `npm audit fix` (lockfile-only impact; no backend/package.json changes; no application code changes):
+  - **fast-xml-builder 1.1.5 → 1.2.0** (minor version bump; semver-safe; backward-compatible per upstream)
+  - **+ xml-naming@0.1.0 NEW transitive** (helper package; XML name validation per XML 1.0/1.1 spec; supply-chain verified pre-execute via `npm view xml-naming`: NaturalIntelligence org maintainer + MIT license + zero deps + 18.7 kB unpacked size + same-org-as-fast-xml-builder-parent provenance; pre-1.0 version flagged for §13 follow-up)
+  - jest 603/603 pass post-fix (unchanged from baseline; lockfile-only fix has zero test-impact)
+  - npm audit --audit-level=high re-verified clean post-fix (`found 0 vulnerabilities`)
+- **Effort estimate:** XS (~30-45 min — supply-chain verify + dry-run + apply + test + ledger + PR)
+- **Cross-references:**
+  - GHSA-5wm8-gmm8-39j9 (https://github.com/advisories/GHSA-5wm8-gmm8-39j9)
+  - GHSA-45c6-75p6-83cc (https://github.com/advisories/GHSA-45c6-75p6-83cc)
+  - AUDIT-078 PR #265 (blocking-blocked-by relationship; this PR unblocks #265 via clean Security Audit re-run post-rebase)
+  - `AUDIT-XXX-future-pre-1-0-transitive-audit` — NEW deferred follow-up: xml-naming@0.1.0 is pre-1.0 stability tier; defense-in-depth supply-chain audit pattern; consider periodic transitive-version-audit cadence in CI as sister to AUDIT-XXX-future-ci-shellcheck-coverage tooling-coverage gap
+  - AUDIT-079 connection_limit operational-debt (sister CI-gate-blocking severity classification pattern)
+  - HIPAA §164.308(a)(1)(ii)(B) Risk Management
+
+---
+
 ### AUDIT-064 — Partial-pipeline-regen pattern after source-changing operations
 
 - **Phase:** Canonical infrastructure (operational debt surfaced via Cat A → Cat D verification batch arc)
