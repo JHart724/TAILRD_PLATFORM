@@ -1283,22 +1283,24 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 - **Phase:** 3 (data layer audit; backup + restore)
 - **Severity:** MEDIUM (P2)
-- **Status:** **OPEN — PRODUCTION-READINESS GATE**
+- **Status:** **IN PROGRESS — Phase C SHIPPED 2026-05-08; flips RESOLVED at PR merge** (sister to AUDIT-075/AUDIT-018/AUDIT-019 mid-arc status pattern; sister-PR cadence per AUDIT-011 merge-time-flip discipline)
 - **Detected:** 2026-05-07 during Phase 3 audit area g
+- **2026-05-08 reconciliation note:** α scope Phase C SHIPPED. Production-side `modify-db-cluster` apply EXECUTED + VERIFIED 2026-05-08 (BackupRetentionPeriod 7 → 35; DeletionProtection true idempotent reaffirm; instant apply; zero downtime). Repo-side deliverables: design refinement note (`docs/architecture/AUDIT_078_AURORA_BACKUP_RESTORE_NOTES.md` 14-section + §6.5 + α reframe + PAUSE 2.6 OUTCOME A two-key architecture + 4 §13 follow-ups including AUDIT-XXX-future-iam-db-auth + AUDIT-XXX-future-encryption-at-rest-architecture-summary + AUDIT-XXX-future-aurora-pg-param-group-customize + AUDIT-XXX-future-ci-shellcheck-coverage); 9-section operator runbook (`docs/runbooks/AUDIT_078_AURORA_BACKUP_RESTORE_RUNBOOK.md`); 4 CLI scripts (`infrastructure/scripts/audit-078/{00-preflight,03-execute-restore-test,04-rotate-cadence,05-verify-backup-config}.sh`); cadence-logs/.gitkeep. End-to-end restore-test execution + RTO measurement + D3 (a)+(b)+(d) pass-criteria verification REMAIN OPERATOR-SIDE (per runbook §5 + sister-PR sign-off pattern; sister to AUDIT-016 PR 3 production-execute timing). Deferred per §17.3 scope discipline: CFN stack-import (AUDIT-XXX-future-aurora-cfn-import); design context preserved at design note §6 + §6.5. AUDIT-082 (terraform/ stale-state) deferral path locked; no action this PR.
+- **2026-05-08 §17.1 architectural-precedent codified:** 13th IaC-FRAMEWORK axis (PAUSE 1 inventory caught register Location section enumerated only `infrastructure/cloudformation/`; missed parallel `terraform/` tree codifying decommissioned RDS predecessor; sister to 10th SCOPE + 12th NAME-PATTERN axes; coherent 9th-13th axis cluster: INPUT/SCOPE/TYPE/NAME-PATTERN/IaC-FRAMEWORK). Full text in design note §14.
 - **Location:**
   - `infrastructure/cloudformation/` directory contains only `tailrd-staging.yml` — production Aurora cluster not codified
   - `docs/CHANGE_RECORD_2026_04_29_day10_aurora_cutover.md` — Day 10 cutover snapshot evidence
   - `docs/CHANGE_RECORD_2026_04_29_day11_rds_decommission.md:118-123` — restore procedure documented (4-step recipe), never end-to-end tested
 - **Evidence:** Production Aurora cluster `tailrd-production-aurora.cluster-csp0w6g8u5uq.us-east-1.rds.amazonaws.com` was provisioned out-of-band (likely manually or via a different mechanism). `BackupRetentionPeriod`, `DeletionProtection`, snapshot lifecycle policy are AWS console state, not version-controlled. Day 10/11 work proved snapshots are taken and tagged for 6-yr HIPAA retention (final pre-decom snapshot: `tailrd-production-postgres-final-pre-decom-20260429`). Restore procedure documented at Day 11 §"If catastrophic discovery" but never executed end-to-end.
 - **Severity rationale:** **HIPAA §164.308(a)(7)(ii)(B) Disaster Recovery Plan testing.** Configuration drift between staging (codified) and production (console-managed) creates audit reproducibility risk. Untested restore procedure means RTO is theoretical. Production-readiness gate item — data-state-independent (codified backup posture + proven restore capability is required for production-ready posture; PHI may arrive any day).
-- **Remediation:**
-  1. Author `infrastructure/cloudformation/tailrd-production.yml` matching production state. Use AWS CLI introspection (`aws rds describe-db-clusters`) to capture current production config; commit as IaC.
-  2. Set `BackupRetentionPeriod: 35` (max for Aurora automated backups) on production via the CFN stack import flow.
-  3. Set `DeletionProtection: true` on production cluster.
-  4. Document snapshot lifecycle: automated daily backups (35-day rolling) + monthly HIPAA-tagged snapshot (6-year retention) per audit needs.
-  5. **End-to-end restore test:** restore latest pre-cutover snapshot (`tailrd-production-aurora-pre-cutover-20260428-231342`) into a temporary cluster + `tailrd-production-aurora-restore-test`; verify schema + sample row count parity; document RTO (target <30 min); destroy test cluster.
-  6. Bundle into a dedicated operator-side ops PR (separate from app-code PRs).
-- **Effort estimate:** M (6-10h — CFN authoring + import + restore-test + runbook)
+- **Remediation (α scope — locked 2026-05-08 per PAUSE 2.5 fresh-attention pivot; document-and-defer-IaC reframe):**
+  1. **Operator-side aws-cli backup config apply** (replaces original step 1+2+3 CFN stack-import path; CFN-import deferred to AUDIT-XXX-future-aurora-cfn-import): `aws rds modify-db-cluster --db-cluster-identifier tailrd-production-aurora --backup-retention-period 35 --deletion-protection --apply-immediately`; verify post-apply via `aws rds describe-db-clusters` query. Closes BackupRetentionPeriod + DeletionProtection HIPAA gap without CFN-import rollback risk on live BSW-pilot cluster.
+  2. **Document snapshot lifecycle** in operator runbook: automated daily backups (35-day rolling) + monthly HIPAA-tagged snapshot (6-year retention) per HIPAA §164.530(j)(2) audit needs. Manual operator action for monthly tagging (Lambda automation deferred to AUDIT-XXX-future per design note §13).
+  3. **End-to-end restore test:** restore latest pre-cutover snapshot (`tailrd-production-aurora-pre-cutover-20260428-231342`) into a temporary cluster `tailrd-production-aurora-restore-test`; verify schema + sample-row count parity + PHI-decrypt KMS context end-to-end (D3 (a)+(b)+(d) per design note §4); document RTO (target <30 min) per D4 RTO measurement methodology (timer wall-clock from `restore-db-cluster-from-snapshot` to first `psql` connection); destroy test cluster.
+  4. **Operator runbook + CLI scaffolding** at `docs/runbooks/AUDIT_078_AURORA_BACKUP_RESTORE_RUNBOOK.md` + `infrastructure/scripts/audit-078/` (8-section runbook + 4 CLI scripts: preflight + execute-restore-test + rotate-cadence + verify-backup-config). Sister-discipline: AUDIT-022 PR #253 + AUDIT-016 PR 3 production-grade tooling pattern.
+  5. **Bundle into a single repo PR** (3 explicit Review Section A/B/C headers per design note CONCERN C strategy lock; sister to AUDIT-075 PR #263 cadence). Operator-side execution + sign-off ledger PR follows merge.
+  6. **CFN stack-import + IaC codification** — DEFERRED to **AUDIT-XXX-future-aurora-cfn-import** per α reframe; design context preserved at `docs/architecture/AUDIT_078_AURORA_BACKUP_RESTORE_NOTES.md` §6 + §6.5 (CFN production template authoring plan + stack-import risk + dry-run protocol + import-rollback recovery procedure).
+- **Effort estimate:** S-M (3-4h α scope; reduced from original 6-10h via CFN-import deferral)
 - **Cross-references:**
   - `docs/audit/PHASE_3_REPORT.md` (this audit)
   - `docs/CHANGE_RECORD_2026_04_29_day10_aurora_cutover.md` (snapshot evidence)
@@ -1385,13 +1387,42 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ---
 
+### AUDIT-082 — `terraform/` tree codifies decommissioned RDS predecessor; reconciliation deferred
+
+- **Phase:** 3 (data layer audit; IaC reconciliation; deferred from AUDIT-078 α reframe)
+- **Severity:** LOW (P3) (operational debt; not blocking AUDIT-078 closure; not security-relevant)
+- **Status:** OPEN — DEFERRED per AUDIT-078 D6 + α reframe pivot 2026-05-08
+- **Detected:** 2026-05-08 during AUDIT-078 PAUSE 1 inventory item 1.1 IaC repo presence; surfaced as 13th §17.1 architectural-precedent (IaC-FRAMEWORK axis)
+- **Location:**
+  - `terraform/` directory (13 `.tf` files + `terraform.tfvars`; last edited April 5-9 2026 per `ls -la`)
+  - `terraform/main.tf` configures S3 backend at `tailrd-terraform-state-863518424332`
+  - `terraform/rds.tf` codifies `aws_db_instance` (single Postgres RDS) with identifier `${local.name_prefix}-postgres` → `tailrd-production-postgres`
+  - `terraform/terraform.tfvars` declares `environment = "production"`
+- **Evidence:** terraform/ tree codifies the predecessor RDS instance (`tailrd-production-postgres`, db.t3.medium, PG 15.10) decommissioned 2026-04-30 per Day 11 RDS decommission runbook (`docs/CHANGE_RECORD_2026_04_29_day11_rds_decommission.md`). Zero Aurora references in terraform/ tree (`grep -rln "aurora\|Aurora\|aws_rds_cluster" terraform/` returns empty). terraform/ files predate Aurora cutover (2026-04-29) AND predecessor RDS decommission (2026-04-30) by ~3 weeks. terraform.tfvars declares environment=production but the production database resource it codifies no longer exists. Drift state: terraform/ either (i) was never applied, (ii) applied to predecessor only and `terraform.tfstate` (S3) now has stale resource references, or (iii) was applied to a different account/region. Operator-side investigation required.
+- **Severity rationale:** **LOW (P3) — operational debt, not security-relevant.** terraform/ is not a live dependency of any production code path; no PHI flows through it; no clinical logic depends on it. AUDIT-078 closes the production Aurora codification gap via `infrastructure/cloudformation/tailrd-production.yml` (CFN-scoped α reframe path); terraform/ stale-state is a separate concern with its own decision-tree (which framework wins long-term). Per HIPAA §164.308(a)(1)(ii)(B) Risk Management framing, operational debt that does not introduce data-exposure or audit-trail risk is appropriately deferred.
+- **Remediation:** Three remediation paths surface (operator picks at AUDIT-082 work block start):
+  - **(i) Delete terraform/ tree + S3 backend state** — fastest closure; assumes CFN wins long-term IaC framework decision; clean exit
+  - **(ii) Migrate Aurora codification into terraform/aurora.tf + decommission terraform/rds.tf** — assumes Terraform wins long-term IaC framework decision; preserves terraform/ ECS+ALB+ElastiCache+etc. work
+  - **(iii) Mark terraform/ legacy with README.md note** — defers framework decision; preserves terraform/ for reference but freezes maintenance
+  
+  Decision deferred to dedicated work block + platform-level IaC framework decision. Sister to AUDIT-052 architectural-divergence-vector deferral pattern (resolution requires architectural-decision input separate from mechanical mitigation).
+- **Effort estimate:** S-M (2-4h depending on path: (i) ~2h, (ii) ~4h, (iii) ~30 min)
+- **Cross-references:**
+  - AUDIT-078 (deferred-from; α reframe pivot 2026-05-08; design refinement note `docs/architecture/AUDIT_078_AURORA_BACKUP_RESTORE_NOTES.md` §2.2 + §4 D6 captures rejected alternatives)
+  - CLAUDE.md §9 Aurora cutover (2026-04-29 → Aurora) + §17 last-known-working task definition
+  - `docs/CHANGE_RECORD_2026_04_29_day11_rds_decommission.md` (predecessor RDS deletion record)
+  - HIPAA §164.308(a)(1)(ii)(B) Risk Management (operational debt risk classification)
+  - 13th §17.1 architectural-precedent (IaC-FRAMEWORK axis; AUDIT-078 design note §14)
+
+---
+
 ### AUDIT-083 — `fast-xml-builder` transitive CVE remediation (GHSA-5wm8-gmm8-39j9 + GHSA-45c6-75p6-83cc)
 
 - **Phase:** 2 (security posture; CI gate)
 - **Severity:** HIGH (P1) — `npm audit --audit-level=high` blocks ALL PR merges including AUDIT-078 PR #265; CI-gate-blocking by virtue of pipeline behavior; sister to AUDIT-079 connection_limit operational-debt severity classification by gate-impact discipline
-- **Status:** **IN PROGRESS — fix shipping in this PR; flips RESOLVED at this PR's merge** per AUDIT-011 sister-discipline merge-time-flip pattern
+- **Status:** **RESOLVED 2026-05-09 via PR #266** (squash-merge `bdbc1b0`; unblocks AUDIT-078 PR #265 Security Audit re-run)
 - **Detected:** 2026-05-08 during AUDIT-078 PR #265 CI run (Security Audit step `npm audit --audit-level=high` failed)
-- **Numbering note:** AUDIT-082 reserved for terraform/ stale-state on AUDIT-078 PR #265 branch (not yet on main); AUDIT-083 used here to avoid rebase-conflict on AUDIT-078 merge.
+- **Numbering note:** AUDIT-082 reserved for terraform/ stale-state on AUDIT-078 PR #265 branch (not yet on main at filing time); AUDIT-083 used here to avoid rebase-conflict on AUDIT-078 merge. Conflict resolved cleanly at AUDIT-078 rebase post-PR-#266 merge: both entries preserved in numerical order (082 then 083).
 - **Location:** `backend/package-lock.json` (transitive only; `isDirect: false`)
   - Dependency chain: `tailrd-backend@1.0.0 → @aws-sdk/client-cloudwatch@3.1032.0 → @aws-sdk/core@3.974.6 → @aws-sdk/xml-builder@3.972.21 → fast-xml-parser@5.7.2 → fast-xml-builder@1.1.5` (5 levels deep)
 - **Evidence:** Two GHSA advisories published 2026-05-07 by NaturalIntelligence org (upstream maintainer of fast-xml-parser + fast-xml-builder):

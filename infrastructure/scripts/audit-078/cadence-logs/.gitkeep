@@ -1,0 +1,3 @@
+# AUDIT-078 quarterly cadence log artifacts directory.
+# 04-rotate-cadence.sh writes cadence-<quarter>-<timestamp>.log files here.
+# Sister-discipline: AUDIT-022 PR #253 summary-artifact directory pattern.
