@@ -6,6 +6,35 @@ Operator + agent session journal. Tracks Day-by-Day close-out state + next-day r
 
 ---
 
+## Day 9 morning arc close — 2026-05-08 (post-mini-PAUSE-B + Block C)
+
+AUDIT-078 Phase C SHIPPED via PR #265 (TBD; sister-PR cadence per AUDIT-011 merge-time-flip discipline).
+
+**Day 9 morning arc close state:**
+- main HEAD (pre-PR-#265): `5b0b346` (Day 8 PR #264 ledger reconciliation merge)
+- AUDIT-078 status: **IN PROGRESS — Phase C SHIPPED** (flips RESOLVED at PR merge + operator-side restore-test sign-off ledger PR)
+- α reframe locked at PAUSE 2.5 fresh-attention pivot; document-and-defer-IaC; CFN stack-import deferred to AUDIT-XXX-future-aurora-cfn-import
+- Production-side apply EXECUTED + VERIFIED 2026-05-08: BackupRetentionPeriod 7 → 35; DeletionProtection true; instant apply; zero downtime
+- 13th §17.1 architectural-precedent codified: IaC-FRAMEWORK axis (PAUSE 1 inventory catch on parallel terraform/ tree)
+- 4 DRIFT codifications added: DRIFT-09 (defensive hedging when context establishes answer); DRIFT-10 (failure to surface fundamental scope-question reframe at PAUSE 1); DRIFT-11 (failure to surface deferred-filing candidate as load-bearing); DRIFT-12 (multi-step work block "Step N complete" without prior-step verification gate)
+- AUDIT-082 deferral path locked (terraform/ stale-state; no action this PR)
+- 5 §13 follow-ups added: AUDIT-XXX-future-{aurora-cfn-import, iam-db-auth, aurora-pg-param-group-customize, encryption-at-rest-architecture-summary, ci-shellcheck-coverage}
+- Demo PID 60172: alive (5/6 07:58:44 AM start; ~2d 10h continuous; no restart full Day 8 + Day 9 morning arc)
+- Wall-clock: ~3-4h operator + ~2-3h agent on AI-assisted multiplier (within design note §12 estimate)
+
+**Block C deliverables (this commit):**
+- 1 NEW design note (~498 lines)
+- 1 NEW runbook (~398 lines)
+- 1 NEW CLI scaffolding directory (4 scripts + .gitkeep; ~16KB)
+- 4 modified ledger surfaces: AUDIT_FINDINGS_REGISTER.md (AUDIT-078 + AUDIT-082 + AUDIT-XXX-future entries) + BUILD_STATE.md (§1 + §6 + §6.1 + §9) + SESSION_JOURNAL.md (this entry) + AGENT_DRIFT_REGISTRY.md (4 DRIFT entries)
+
+**Next session targets:**
+- Operator-side: runbook §5 restore-test execution + RTO measurement + sign-off ledger PR (sister to AUDIT-016 PR 3 production-execute timing discipline)
+- Repo-side: AUDIT-080 Zod validation coverage (~12-20h phased multi-PR rollout) advances to top-3 #1
+- AUDIT-011 Phase d strict-mode flip: gated on 14-day audit-mode soak window 2026-05-07T22:51:23Z → 2026-05-21T22:51:23Z
+
+---
+
 ## Day 8 close — 2026-05-08T03:33:30Z
 
 AUDIT-075 + AUDIT-018 + AUDIT-019 SHIPPED via PR #263 (squash merge `48eac39`).

@@ -92,3 +92,43 @@ Drift-prevention forcing function. Read at session start as a sister to AUDIT_FI
 - **Sister cross-reference:** Operator confirmed context-paste mismatch on 2026-05-08; halt held cleanly; PR #263 merge-gate work resumed without drift
 
 ---
+
+## DRIFT-09 — Defensive hedging when project context establishes the answer
+
+- **Date:** 2026-05-08
+- **Drift indicator:** Surfaced two-path option (Path 1 / Path 2) at PAUSE 2.5 deliverables prompt when project context (operator profile + Day 11 RDS decommission evidence + SESSION_JOURNAL.md + CLAUDE.md §9) already established AWS CLI access readiness. Hedged on whether operator could run aws-cli commands at all when prior session arc proved this capability multiple times.
+- **Trigger:** Operator caught at "shouldnt you know if AWS is access ready based on our work" prompt during AUDIT-078 PAUSE 2.5
+- **Mechanism update:** Pre-response context check — does project context (operator profile / strategic context / SESSION_JOURNAL state / register evidence / CLAUDE.md sections) already answer the framing question? If yes, do NOT surface the hedge. Apply Mechanism 1 Layer A/B output template discipline (artifact = proof protocol ran) to context-availability questions: established context = answered question = no hedge.
+- **Sister cross-reference:** DRIFT-08 (cross-session prompt-paste mismatch caught at agent-side via robust palantir context-verification — vigilance success); DRIFT-09 is the inverse-failure mode (over-cautiousness when context already answers). Both are robust palantir context-verification discipline catches; DRIFT-08 = correct application; DRIFT-09 = misapplication.
+
+---
+
+## DRIFT-10 — Failure to surface fundamental scope-question reframe at PAUSE 1
+
+- **Date:** 2026-05-08
+- **Drift indicator:** AUDIT-078 PAUSE 1 inventory caught §17.1 13th IaC-FRAMEWORK axis reframe (parallel terraform/ tree) but failed to surface "does AUDIT-078 closure require CFN stack-import OR does load-bearing HIPAA gap close via smaller scope?" reframe; defaulted to register-entry-literal scope (γ scope ~6-9h CFN-import path) without considering α scope alternative (document-and-defer-IaC ~3-4h)
+- **Trigger:** Operator caught at "is this the best robust palantir plan?" question at PAUSE 2.5 facts-collection gate
+- **Mechanism update:** PAUSE 1 inventory must include explicit "does this work block need to do what register entry literally says, OR does the LOAD-BEARING HIPAA/security gap close via smaller scope?" question. Sister to §17.3 scope discipline + AUDIT-081 D4 option-C deferral pattern (User.email DEFERRED from AUDIT-075 to preserve login-flow integrity = analogous α reframe at design-decision time, not PAUSE 1). AUDIT-078 needs the equivalent catch at PAUSE 1.
+- **Sister cross-reference:** AUDIT-075 D4 option-C deferral (analogous catch at design-decision time); AUDIT-078 α reframe (the catch this drift entry codifies); §17.3 scope discipline (sister-bundle vs separate-PR judgment).
+
+---
+
+## DRIFT-11 — Failure to surface deferred-filing candidate as load-bearing rather than bullet-buried
+
+- **Date:** 2026-05-08
+- **Drift indicator:** AUDIT-078 PAUSE 2.6 surfaced AUDIT-XXX-future-encryption-at-rest-architecture-summary candidate; bullet-buried under "documentation-clarification scope" framing rather than dedicated load-bearing section. Sister-pattern miss vs AUDIT-075 PAUSE 2.5 DOB-removal which received documented-rejection treatment with full design context preservation.
+- **Trigger:** Operator caught at "if its worth filing a design note, should we somehow address this in our prompt?" during AUDIT-078 PAUSE 2.6 OUTCOME A surface
+- **Mechanism update:** When PAUSE-N escape hatch surfaces a deferred-filing candidate, give it dedicated load-bearing section in operator response (sister to AUDIT-075 PAUSE 2.5 DOB-removal documented-rejection treatment), NOT buried bullet under generic "documentation" framing. Apply project rules §17.3 ("Tech debt gets named via explicit AUDIT entry and paid down, never propagated silently") to FILING DRAFTING discipline, not just remediation discipline.
+- **Sister cross-reference:** DRIFT-09 (defensive hedging when context establishes the answer; sister content-vs-surface-scope drift pattern); DRIFT-10 (failure to surface fundamental scope-question reframe at PAUSE 1; sister missed-load-bearing-question pattern).
+
+---
+
+## DRIFT-12 — Multi-step work block surfaced "Step N complete" without enforcing pre-Step-N dependency on prior-step verification
+
+- **Date:** 2026-05-08
+- **Drift indicator:** AUDIT-078 Block A Step 2 runbook authoring proceeded without verifying Block A Step 1 production-side apply (`modify-db-cluster`) had executed; mini-PAUSE-A surface claimed Step 2 complete with placeholder bracket text in Step 1 outputs slot (`[paste modify-db-cluster JSON output here]`). Bracket-placeholder treated as resumable-state instead of halt-and-verify signal.
+- **Trigger:** Operator caught at "is Step 1 actually applied?" verification command (subsequent `aws rds describe-db-clusters` confirmed BackupRetentionPeriod=7 still — apply had NOT executed at mini-PAUSE-A surface time)
+- **Mechanism update:** Pre-step verification gates must surface explicit "prior step output verified" line in mini-PAUSE-N surface; missing-or-placeholder gate = drift signal. Apply Mechanism 1 Layer A/B output template discipline (artifact = proof protocol ran) to multi-step work blocks: each step's mini-PAUSE surface MUST reference prior step's verified output text, not bracket-placeholder. Bracket-placeholder = halt + verify + log drift before proceeding.
+- **Sister cross-reference:** DRIFT-08 (vigilance-success at protocol-start verification; DRIFT-12 is inverse-failure at protocol-mid-step verification gate); DRIFT-11 (failure to surface deferred-filing candidate as load-bearing — same content-vs-surface-scope pattern: bullet-buried at content scope vs surface scope; DRIFT-12 = bracket-placeholder at content scope vs surface scope). Mechanism 1 artifact discipline applies at protocol-start AND at protocol-mid-step verification gates.
+
+---
