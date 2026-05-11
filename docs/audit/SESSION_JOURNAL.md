@@ -28,6 +28,19 @@ DRIFT-26 codified: sister to DRIFT-13 at infrastructure-environment layer; runbo
 **Next-session targets:**
 AUDIT-085 ledger PR merge → image verification (read-only ECR inspection) → RunTask command override design → operator-side run-task invocation for STEP 1.3 dry-run retry → resume β1 Phase 1 sequence from PAUSE 1.3.4.
 
+**Mid-day footer (added 2026-05-11; sister to PR #269 SESSION_JOURNAL reconciliation footer cadence):**
+
+STEP 1.5 PHI migration execute launched on production task UUID `6ffd2410bde2487d85215f23be2861ef` at 2026-05-11T18:42:44Z via ECS RunTask command override (Option A from AUDIT-085 architectural decision; sister to PR #270 implementation). Per-row PHI re-encryption + per-row PHI_RECORD_MIGRATED audit events streamed cleanly; first per-target PHI_MIGRATION_BATCH_COMPLETED audit write at 18:52:11Z failed with Prisma "Unknown argument `__tenantGuardBypass`" error → PAUSE 1.5.1 fired via DRIFT-21 sister-mechanism (implausibly-wrong state at tail probe).
+
+Read-only investigation (probes 1-4 across `__tenantGuardBypass` callsites + `prismaTenantGuard.ts` wrapper + `lib/prisma.ts` construction + `middleware/` inventory) classified the defect as OUTCOME 1: single-file strip-middleware gap in `prismaTenantGuard.ts` `$allOperations` wrapper. Test coverage gap surfaced: GROUP B B1 test exercised only where-style args (findUnique); never create-with-bypass. Prisma 5.22 where-clause ops tolerate extra top-level keys (false-clean signal); create() ops are strict and reject.
+
+Broader regression surface: same pattern at `auditLogger.ts:214` means every production `writeAuditLog()` DB write had been failing-silent for ~24h since :183 deploy on 2026-05-10. HIPAA_GRADE_ACTIONS would have 500'd authenticated traffic on first auth-path request; low-traffic β1 work-block window masked exposure.
+
+Operator decision: GO-A Path A.2 (single PR consolidates AUDIT-086 register entry + `prismaTenantGuard.ts` strip-at-entry fix + 3 GROUP G unit tests + DRIFT-27 codification + this footer; sister to PR #268/#269/#270 cadence; not Phase 1 sign-off, that comes after STEPs 1.5-1.8 complete). STAGE 1 stop-task fired operator-side 2026-05-11T18:42:49Z PT (`containerExitCode=137 SIGKILL`; `stopCode=UserInitiated`; total execution wall-clock 33 min 24 sec before stop; migration is idempotent so re-run wastes only the already-V2 slots). STAGE 2 fix authoring complete; STAGE 3 verification + STAGE 4 commit/push/PR pending.
+
+**Next-session targets (post AUDIT-086 PR merge):**
+CI/CD auto-deploy verification (sister to STAGE 2 verification battery from morning) → empirical confirmation of new task def + PHI env vars carry-forward → re-launch STEP 1.5 RunTask (idempotent; auto-skips already-V2 rows on patients.firstName + partial patients.city) → resume monitoring per STEP 1.5 original plan → STEPs 1.6-1.8 → Phase 1 sign-off PR including deferred DRIFT-28 (Git Bash MSYS `/ecs/...` path mangling; sister-discovery: `PYTHONUTF8=1` required to bypass AWS CLI charmap codec when Python stdout encoding default is cp1252 on Windows) + DRIFT-29 (SUMMARY_ARTIFACT path drift) candidates.
+
 ---
 
 ### Day 9 afternoon arc + Day 10 morning resume — β1 single-arc Pre-Phase-1 sub-arc closure
