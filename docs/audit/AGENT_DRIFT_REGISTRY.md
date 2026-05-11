@@ -132,3 +132,123 @@ Drift-prevention forcing function. Read at session start as a sister to AUDIT_FI
 - **Sister cross-reference:** DRIFT-08 (vigilance-success at protocol-start verification; DRIFT-12 is inverse-failure at protocol-mid-step verification gate); DRIFT-11 (failure to surface deferred-filing candidate as load-bearing — same content-vs-surface-scope pattern: bullet-buried at content scope vs surface scope; DRIFT-12 = bracket-placeholder at content scope vs surface scope). Mechanism 1 artifact discipline applies at protocol-start AND at protocol-mid-step verification gates.
 
 ---
+
+## DRIFT-13 — Runbook section references executable procedure artifact that does not exist on filesystem
+
+- **Date:** 2026-05-09
+- **Drift indicator:** AUDIT-078 runbook §6.3 references backend/scripts/audit-078/sample-row-decrypt.sh; filesystem check returned "No such file or directory"
+- **Trigger:** Sub-step 2 PHI-row-state inventory verified script absent during evidence-source read for D3 (d) verification framing decision
+- **Mechanism update:** Runbook authoring at PAUSE 3 verification battery + Lever 4 self-check must include filesystem-existence check on every script reference + cross-file artifact reference. Add to AUDIT-METHODOLOGY.md verification battery checklist.
+- **Sister cross-reference:** DRIFT-12 (multi-step "Step N complete" without prior-step verification — surface-vs-reality verification gap pattern); DRIFT-11 (deferred-filing candidate bullet-buried — surface-vs-content-scope pattern). DRIFT-13 = surface-vs-filesystem verification gap pattern.
+
+---
+
+## DRIFT-14 — Multi-terminal paste-target drift (operator-side caught)
+
+- **Date:** 2026-05-09
+- **Drift indicator:** Operator pasted natural-language Sub-step 2 prompt content into PowerShell instead of Claude Code agent terminal; PowerShell threw multiple cmdlet-not-found errors; zero AWS state change but caught at next surface
+- **Trigger:** Operator caught at PowerShell error output in Sub-step 2 retry sequence
+- **Mechanism update:** When operator-side prompt-author narrates multi-step instructions involving 2+ terminals (operator-side PowerShell + Claude Code agent terminal), label EVERY paste-block with explicit terminal target at top of code block (e.g., "PASTE TO POWERSHELL:" or "PASTE TO CLAUDE CODE AGENT TERMINAL:"). Sister to AUDIT-016 PR 3 confirmation-gate label discipline.
+- **Sister cross-reference:** DRIFT-08 (cross-session prompt-paste mismatch caught at agent-side via context-verification — vigilance success); DRIFT-14 is sister-failure-mode (paste-target drift caught at terminal-error-output instead of pre-paste verification).
+
+---
+
+## DRIFT-15 — Operator-side wall-clock estimate anchoring to raw-scope rather than empirical AI-assisted multiplier
+
+- **Date:** 2026-05-09
+- **Drift indicator:** Operator-side prompt-author systematically over-estimated agent wall-clock across multiple turns this arc (Block B 4m26s vs ~1-1.5h estimate; Block C ~5min vs ~10-20min recalibrated band; both well under estimate). Pattern repeated even after Block B evidence.
+- **Trigger:** Self-catch on Block C surface; recalibration logged at PAUSE 3.1
+- **Mechanism update:** Recalibrate estimates against empirical multiplier from same session, not raw-scope assumptions. After 2+ data points within session, anchor to observed multiplier band.
+- **Sister cross-reference:** DRIFT-09 (defensive hedging when context establishes answer; DRIFT-15 is sister content-ignored-context drift pattern); capacity-calibration discipline at strategic_continuity Step 4.
+
+---
+
+## DRIFT-16 — Rationalizing path-of-least-resistance as scope discipline when robust posture demands extending timeline rather than reducing scope
+
+- **Date:** 2026-05-09
+- **Drift indicator:** Decision 1 (α V0-only D3 (d) framing vs β V2-verified-via-AUDIT-016-PR-3-pre-execute) initially recommended α via §17.3 scope discipline framing; operator-side caught when explicitly asking "no tech debt" question twice. α was path-of-least-resistance (~3-4h closure today vs multi-hour AUDIT-016 PR 3 production-execute today); §17.3 scope-discipline framing was rationalization not robust posture. β IS the structurally-correct call per <strategic_context> 2026-05-03 ("extend timeline, do not reduce scope") + <decision_frameworks> ("robust over consistent-with-existing").
+- **Trigger:** Operator caught at "no tech debt" reframe question (asked twice); Decision 1 reframed α → β1 single-arc
+- **Mechanism update:** When enumerated options reduce scope of a multi-select pass-criteria locked at prior PAUSE (e.g., D3 (a)+(b)+(d) reduced to (a)+(b)+(d-V0-only)), surface explicitly as scope-reduction not scope-discipline. Sister to §17.3 scope discipline rule itself: scope-discipline = "ship separate work blocks separately" NOT "reduce locked scope." Tech-debt named via explicit AUDIT entry, not propagated via deferred-filing-pattern.
+- **Sister cross-reference:** DRIFT-09 (defensive hedging when context establishes answer; DRIFT-16 is sister context-rationalized-away drift pattern); §17.3 scope discipline rule clarification needed.
+
+---
+
+## DRIFT-17 — PR-merged ≠ deployed-to-production verification gap
+
+- **Date:** 2026-05-09
+- **Drift indicator:** AUDIT-016 PR 2 shipped envelope-emission infrastructure 2026-05-07 with task-def env wiring assumed; production task def lacked PHI_ENVELOPE_VERSION + AWS_KMS_PHI_KEY_ALIAS env vars for ~2 days; surfaced by Observation 3-EXTENDED ECS describe-task-definition probe at Pre-Phase-1 substance check
+- **Trigger:** Agent-surfaced at PAUSE 2.20.0a Observation 3-EXTENDED probe
+- **Mechanism update:** Add "production task def env-var diff verification" as standard step in clinical-code PR §17 acceptance criteria for any PR that introduces or relies on backend env-var contract changes; sister to §17.5 self-review filesystem-existence check codified at DRIFT-13.
+- **Sister cross-reference:** DRIFT-13 (surface-vs-filesystem verification gap; same shape but at deployment layer); DRIFT-12 (multi-step "Step N complete" without prior-step verification).
+
+---
+
+## DRIFT-18 — Defensive hedging on operator-vs-agent execution split when <operator_profile> establishes the answer
+
+- **Date:** 2026-05-09
+- **Drift indicator:** Agent's PAUSE 2.20.0b pre-recommendation pulled P3 (register-task-definition mutating) + P5 (update-service mutating) to agent-side execution citing "reversibility" rationale. <operator_profile> establishes operator-execution discipline for mutating actions regardless of reversibility classification. Sister-discipline integrity to AUDIT-016 PR 3 / AUDIT-022 PR #253 / AUDIT-078 Step C operator-side production-execute pattern.
+- **Trigger:** Operator-side prompt-author caught at PAUSE 2.20.0b substance-check; reframed Decision A from (i) to (ii) + Decision B with operator-side split for mutating actions
+- **Mechanism update:** Mutating-action classification (creates/modifies/deletes external state) takes precedence over reversibility classification when determining agent-vs-operator execution split. Add to AUDIT-METHODOLOGY.md §17 acceptance criteria: "any tool invocation that creates/modifies/deletes external state (AWS / database production write / external API state-change) is operator-side regardless of reversibility classification."
+- **Sister cross-reference:** DRIFT-09 (defensive hedging when project context establishes answer); DRIFT-16 (path-of-least-resistance rationalized as scope discipline). DRIFT-18 = operator-vs-agent execution-split drift pattern.
+
+---
+
+## DRIFT-19 — Pre-flight inventory operating on referenced-snapshot rather than empirical-current-state
+
+- **Date:** 2026-05-09
+- **Drift indicator:** Step P1 task-def inventory ran `aws ecs describe-task-definition --task-definition tailrd-backend:123` based on prior-session-arc reference (Observation 3-EXTENDED probe earlier today). Agent assumed :123 was current production state. Latest active revision at execute-time was actually :182 (59 revisions ahead). DRAFT against :123 base would have created revision based on 11+ day old container config; deploy would have regressed 59 revisions of config evolution.
+- **Trigger:** Operator-side pre-flight verification at PAUSE 2.20.0b.1 (V2 collision check against revision 124) → diagnostic R1-R6 → DRIFT-19 caught at substance-check
+- **Mechanism update:** Pre-flight inventory of mutating-state must include BOTH (1) identity-by-reference check (what does this specific identifier look like?) AND (2) identity-as-current check (what is the latest / what is running / what is deployed?). Single-identifier reference checks are insufficient when underlying state evolves continuously (CI-driven deploys / external mutation cadence). Sister-discipline to AUDIT-078 PAUSE 2.5-α facts-dump verify-before-execute.
+- **Sister cross-reference:** DRIFT-13 (surface-vs-filesystem verification gap); DRIFT-17 (PR-merged ≠ deployed-to-production); DRIFT-19 = referenced-snapshot-vs-current-state verification gap pattern.
+
+---
+
+## DRIFT-20 — Operator-side prompt-author drafted bash one-liner without testing syntax against operator's shell environment
+
+- **Date:** 2026-05-09
+- **Drift indicator:** S1 revision-cadence diagnostic used xargs -I{} pattern that failed in Git Bash on Windows (xargs interpreted JSON array brackets as invalid identifiers; AWS CLI rejected). Operator-side caught at S1 error output.
+- **Trigger:** S1 paste produced multiple "Family contains invalid characters" + "Invalid revision number" errors
+- **Mechanism update:** Bash one-liners involving JSON parsing / piping / xargs must use simpler patterns (for loops over xargs; jq over awk one-liners) AND verify against operator's known shell environment (Git Bash on Windows specifically) before paste. Sister to DRIFT-13 surface-vs-execution-validity verification gap pattern.
+- **Sister cross-reference:** DRIFT-13 (surface-vs-filesystem verification gap; DRIFT-20 = surface-vs-execution-validity verification gap pattern at one-liner-drafting layer).
+
+---
+
+## DRIFT-21 — Verification-script bug producing false-clean state masked underlying empirical reality
+
+- **Date:** 2026-05-09
+- **Drift indicator:** Agent's initial draft script at PAUSE 2.20.0b-revised mutated dict before writing base-copy, producing zero-diff false-clean state for what should have been a +2-env-var addition. Agent self-caught + fixed via copy.deepcopy isolation before producing misleading output.
+- **Trigger:** Agent self-catch at PAUSE 2.20.0b-revised draft output (zero-diff for an intended +2-env-var addition is structurally implausible)
+- **Mechanism update:** Any verification-output that's "expected to show changes but shows nothing" should trigger investigation rather than acceptance. The empty diff for a +2-env-var add is structurally implausible; should be a pause signal. Sister to §17.5 self-review codification (DRIFT-13 mechanism precedent). Codify "implausible-clean-state pause signal" as verification-script discipline.
+- **Sister cross-reference:** DRIFT-13 (surface-vs-filesystem verification gap); DRIFT-21 = verification-script-output-implausibly-clean pattern.
+
+---
+
+## DRIFT-22 — Operator-side step-skip when sister-discipline pre-flight gate is mid-sequence
+
+- **Date:** 2026-05-10
+- **Drift indicator:** After REBASE cleanup, operator pasted Step P3 register-task-definition directly without running T1 race-recheck immediately prior. T1 was the gating pre-flight step for P3 register; step-skip risk was implicit in multi-step narration without explicit gating bundling.
+- **Trigger:** P3 register paste arrived in next operator turn without T1 paste in between
+- **Mechanism update:** When narrating multi-step instructions where later steps gate on earlier verifications, bundle gate-and-execute into single paste-block with inline gate logic. Do not rely on operator to remember + sequence + paste gating verifications separately. Sister to DRIFT-23 combined-paste-block discipline + cygpath / bash-script-file pattern for multi-step scripts.
+- **Sister cross-reference:** DRIFT-12 (multi-step "Step N complete" without prior-step verification gate); DRIFT-22 = operator-side gate-skip vs DRIFT-12 agent-side prior-step-verify-skip.
+
+---
+
+## DRIFT-23 — Combined-paste-block with set -e + exit 1 pasted directly into interactive Git Bash terminates parent shell window
+
+- **Date:** 2026-05-10
+- **Drift indicator:** Operator-side prompt-author drafted combined STAGE 1-8 bash block with `set -e` + `exit 1` for fail-fast gating; operator pasted directly into interactive Git Bash; first `exit 1` (or fail-fast trigger) terminated parent shell window since interactive shell has no subshell isolation.
+- **Trigger:** Operator-side caught when Git Bash window closed during STAGE 1-8 paste
+- **Mechanism update:** Combined multi-stage bash scripts that use `set -e` + `exit` for fail-fast MUST ship as files + run via `bash <script>` invocation (creates subshell; exit terminates script not parent shell), NOT paste-as-interactive-block. Add to operator-side prompt-author discipline: any bash block >5 lines or using set -e + exit gating ships as script-file, not paste-block.
+- **Sister cross-reference:** DRIFT-20 (drafted bash one-liner without testing operator's shell environment; same surface-vs-execution-validity gap at one-liner layer); DRIFT-23 = surface-vs-execution-validity gap at multi-step-script-paste layer.
+
+---
+
+## DRIFT-24 — Prompt-author meta-drift: bracketed-placeholder references to "prior bootstrap" content across fresh-context session boundaries
+
+- **Date:** 2026-05-10
+- **Drift indicator:** Operator-side prompt-author drafted refined bootstrap with placeholder-references ("[full text per prior bootstrap]" / "[unchanged from above]") that did not carry into fresh-context Claude Code session; agent caught at STAGE 3 PAUSE 3-pre via bracket-placeholder + missing-content vigilance discipline
+- **Trigger:** Fresh-context Claude Code session start; agent halted at STAGE 4 file editing because referenced content was not in agent's session memory; recovery path 1 selected (paste full inline content)
+- **Mechanism update:** Multi-content bootstrap MUST ship as single paste-block with all referenced content inline; placeholder-references across fresh-context session boundaries are explicit anti-pattern. Add to operator-side prompt-author discipline: any bootstrap intended to author multiple files must inline every referenced content block; "see prior turn" / "per prior bootstrap" / "[unchanged]" is fabrication-by-extrapolation risk if not present in agent context.
+- **Sister cross-reference:** DRIFT-08 (cross-session prompt-paste mismatch caught at agent-side via robust palantir context-verification — vigilance success); DRIFT-22 (operator-side step-skip with sister-discipline gate mid-sequence; DRIFT-24 = prompt-author meta-drift sister-pattern at fresh-context boundary).
+
+---
