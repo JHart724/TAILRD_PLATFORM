@@ -399,46 +399,66 @@ export function applyPrismaTenantGuard<TClient extends PrismaClient>(
         $allOperations: async ({ args, model, operation, query }) => {
           const mode = getCurrentMode();
 
+          // AUDIT-086: Strip TENANT_GUARD_BYPASS_KEY from args before any
+          // query() call. The marker is Layer 3 metadata, not a Prisma
+          // schema field; Prisma 5.22 `create` / `createMany` strict args
+          // validation rejects unknown top-level keys ("Unknown argument
+          // `__tenantGuardBypass`"). Where-clause operations tolerate
+          // extras at runtime, but consistent strip is hygiene and avoids
+          // future regressions if Prisma tightens validation across more
+          // operation types. Capture `bypassPresent` boolean BEFORE strip
+          // so downstream routing (bypass-present branch + violation
+          // descriptor's `bypassMarkerPresent` field) preserves correct
+          // presence signal. Sister to AUDIT-011 Phase b/c string-keyed
+          // marker contract; closes test-coverage gap surfaced mid-flight
+          // by AUDIT-016 PR 3 STEP 1.5 production execute (PAUSE 1.5.1).
+          const bypassPresent = hasBypassMarker(args);
+          let cleanArgs = args;
+          if (bypassPresent && args && typeof args === 'object') {
+            const { [TENANT_GUARD_BYPASS_KEY]: _bypass, ...rest } =
+              args as Record<string, unknown>;
+            cleanArgs = rest as typeof args;
+          }
+
           // Mode `off` — completely inert; no inspection, no logging.
           if (mode === 'off') {
-            return query(args);
+            return query(cleanArgs);
           }
 
           // Allow-list check — only enforce on HIPAA-graded tenant-bound models.
           if (!HIPAA_GRADE_TENANT_MODELS.has(model)) {
-            return query(args);
+            return query(cleanArgs);
           }
 
           // Create operations skip enforcement — schema-typed `data` payload
           // is the compile-time guarantee (hospitalId required as schema field).
           if (CREATE_ACTIONS.has(operation)) {
-            return query(args);
+            return query(cleanArgs);
           }
 
           // Forward-compat — operations not in ENFORCED_ACTIONS pass through.
           // New Prisma operations default to "not enforced" until allow-list
           // is extended (fail-safe).
           if (!ENFORCED_ACTIONS.has(operation)) {
-            return query(args);
+            return query(cleanArgs);
           }
 
           // Bypass marker — explicit opt-out for legitimate cross-tenant /
           // system-internal callsites. 14 production callsites today
           // (auditLogger × 1, webhookPipeline × 8, crossReferralService × 1,
           // phenotypeService × 1, analytics × 3 conditional).
-          const bypassPresent = hasBypassMarker(args);
           if (bypassPresent) {
-            return query(args);
+            return query(cleanArgs);
           }
 
           // Structural inspection — does where carry hospitalId at any
           // supported position?
-          if (hasHospitalIdInWhere(args)) {
-            return query(args);
+          if (hasHospitalIdInWhere(cleanArgs)) {
+            return query(cleanArgs);
           }
 
           // VIOLATION — record for forensic triage.
-          const argsObj = (args as { where?: Record<string, unknown> }) || {};
+          const argsObj = (cleanArgs as { where?: Record<string, unknown> }) || {};
           const providedWhereKeys: readonly string[] = argsObj.where && typeof argsObj.where === 'object'
             ? Object.keys(argsObj.where)
             : [];
@@ -458,7 +478,7 @@ export function applyPrismaTenantGuard<TClient extends PrismaClient>(
           }
 
           // Mode `audit` — log/audit emitted above; query proceeds.
-          return query(args);
+          return query(cleanArgs);
         },
       },
     },

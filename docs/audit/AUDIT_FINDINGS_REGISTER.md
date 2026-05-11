@@ -1530,6 +1530,40 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ---
 
+### AUDIT-086 - Prisma tenant-guard middleware fails to strip TENANT_GUARD_BYPASS_KEY from args; Prisma 5.22 create() schema rejects unknown top-level key
+
+- **Phase:** 2 (security posture; defense-in-depth Layer 3 tenant isolation hygiene) + Operations (production audit-trail integrity)
+- **Severity:** HIGH (P1); latent production HIPAA §164.312(b) primary-durable-record regression + AUDIT-016 PR 3 STEP 1.5 mid-flight aggregate-audit failure
+- **Status:** RESOLVED 2026-05-11 (this PR: strip-at-entry implementation + 3 new unit tests + register entry + DRIFT-27 codification)
+- **Detected:** 2026-05-11 mid-flight β1 single-arc Phase 1 STEP 1.5 PHI migration execute on production task UUID 6ffd2410bde2487d85215f23be2861ef. PAUSE 1.5.1 fired at first per-target PHI_MIGRATION_BATCH_COMPLETED audit write failure at 2026-05-11T18:52:11Z (~9 min into execute; patients.firstName target boundary). Caught via CloudWatch tail probe.
+- **Location:**
+  - PRIMARY: `backend/src/lib/prismaTenantGuard.ts` $allOperations wrapper (pre-fix passes args UNMODIFIED including TENANT_GUARD_BYPASS_KEY to query())
+  - SISTER (latent broader regression): `backend/src/middleware/auditLogger.ts:200-215` writeAuditLog() prisma.auditLog.create({ data, __tenantGuardBypass: true })
+  - AFFECTED CALLSITES (transitive; fix is at middleware layer): `backend/src/routes/analytics.ts:101,145,424` (3 conditional bypass calls) + `backend/src/services/crossReferralService.ts:850` + `backend/scripts/migrations/audit-016-pr3-v0v1-to-v2.ts:601` + webhookPipeline ×8 (per AUDIT-011 Phase b/c documentation)
+- **Evidence:**
+  - Production execute STEP 1.5 launched 2026-05-11T18:42:44.987Z; first PHI_MIGRATION_BATCH_COMPLETED write at 2026-05-11T18:52:11.216Z failed: `Unknown argument `__tenantGuardBypass`. Available options are marked with ?.`
+  - Migration script line 601 calls `prisma.auditLog.create({ data: {...}, __tenantGuardBypass: true } as any);`; per-row PHI_RECORD_MIGRATED audit writes succeed via Winston `auditLogger.info` direct call (different code path; no bypass marker required)
+  - `prismaTenantGuard.ts` CREATE_ACTIONS branch pre-fix: `return query(args)` passes args UNMODIFIED → bypass marker reaches Prisma → Prisma 5.22 create() strict args schema rejects unknown top-level keys (`{ data, select, include }` only)
+  - Test coverage gap: `prismaTenantGuard.test.ts:218-247` GROUP B uses where-style args (findUnique); never exercised create-with-bypass. Prisma 5.22 where-clause operations tolerate extra top-level keys at runtime (B1 false-clean signal); create() does not. Schema differential missed by test design.
+  - Sister-evidence (broader regression): same pattern at `auditLogger.ts:214` means every production writeAuditLog() DB write fails since :183 deploy on 2026-05-10 (~24h latent). HIPAA_GRADE_ACTIONS (LOGIN_SUCCESS, LOGIN_FAILED, PHI_VIEW, PHI_EXPORT, TENANT_GUARD_VIOLATION, KMS_KEY_VALIDATION_FAILURE, KMS_ENVELOPE_DECRYPT_FAILURE, CDS_HOOKS_*) throw on DB write failure per AUDIT-013 design → would 500 production traffic on next authenticated user request. Low-traffic post-:183 window (β1 work-blocks; no real user auth flows) masked the regression.
+- **Severity rationale:** HIGH (P1); latent production HIPAA §164.312(b) primary-durable-record gap. Primary canonical audit-trail (DB AuditLog table) was failing; CloudWatch Logs preserved equivalent info per AUDIT-013 dual-transport design but DB write is the compliance-canonical artifact. Test coverage gap is the root cause; closing it prevents regression of same shape across any future $extends-based middleware adding metadata-flag pattern.
+- **Architectural classification:** OUTCOME 1 (1-line conceptual / ~25-line literal fix). Single file (`prismaTenantGuard.ts`); single $extends wrapper; destructure-and-reassign strip pattern at wrapper entry; no architectural redesign. Strip-at-entry preserves all existing routing logic (bypassPresent boolean captured BEFORE strip for downstream routing + violation descriptor field).
+- **Remediation (this PR):**
+  1. Strip TENANT_GUARD_BYPASS_KEY from args at top of $allOperations wrapper (before any query() call); capture bypassPresent boolean BEFORE strip; use cleanArgs for ALL query() call sites (off-mode + non-allow-list + CREATE_ACTIONS + non-ENFORCED_ACTIONS + bypass-present + structural-pass + violation-audit-mode branches)
+  2. 3 new unit tests (GROUP G in `prismaTenantGuard.test.ts`): G1 create-with-bypass strip; G2 update-with-bypass strip parity; G3 off-mode-with-bypass strip (hygiene invariant across modes)
+  3. No changes required to TENANT_GUARD_BYPASS_KEY constant, hasBypassMarker helper, or any of the 11+ production callsites. Args shape is unchanged at callsite layer; middleware strips on their behalf transparently.
+- **Effort estimate:** XS (~30 min: fix ~10 min + 3 tests ~15 min + register entry + DRIFT codification + session journal footer ~15 min)
+- **Cross-references:**
+  - AUDIT-011 Phase b/c (defines TENANT_GUARD_BYPASS_KEY string-keyed marker pattern; sister-finding origin; missing strip semantics)
+  - AUDIT-016 PR 3 STEP 1.5 (catalyst: mid-flight production migration discovery surface; PAUSE 1.5.1 surfacing point)
+  - AUDIT-013 (HIPAA-grade dual-transport audit-log design; CloudWatch Logs as durable fallback minimized blast radius of latent regression)
+  - DRIFT-21 (verification-script false-clean state, sister-mechanism: implausibly-WRONG-state at tail probe surfaces real defect, here implausibly-WRONG audit_db_write_failed at first per-target boundary)
+  - DRIFT-27 codified inline this PR (inspect-only-vs-strip middleware verification gap at create-vs-where operation surface)
+  - HIPAA §164.312(b) Audit Controls (primary durable record compliance gate)
+  - β1 single-arc Phase 1 STEP 1.5 PAUSE 1.5.1 surfacing + Path A.2 resolution cadence
+
+---
+
 ### AUDIT-XXX-future-iam-cli-access-least-privilege
 
 - **Phase:** 2 (security posture; defense-in-depth identity)

@@ -378,3 +378,104 @@ describe('GROUP F — TENANT_GUARD_MODE config validation', () => {
     expect(validateTenantGuardModeOrThrow({} as NodeJS.ProcessEnv)).toBe('audit');
   });
 });
+
+// ─── GROUP G - Bypass marker strip behavior (AUDIT-086) ─────────────────
+//
+// Coverage gap closed mid-flight by AUDIT-016 PR 3 STEP 1.5 PAUSE 1.5.1:
+// the existing B1 test exercises bypass marker on a `findUnique` (where-
+// style) args shape, where Prisma 5.22 tolerates extra top-level keys at
+// runtime. The production failure surface was `prisma.auditLog.create({
+// data, __tenantGuardBypass: true })`. Prisma's `create` schema is strict
+// and rejects unknown top-level keys ("Unknown argument
+// `__tenantGuardBypass`"). These three tests assert the marker is stripped
+// from args BEFORE the underlying `query()` is called, regardless of
+// operation type or mode. Sister to B1 (which verifies routing); G group
+// verifies args sanitization.
+
+describe('GROUP G: bypass marker strip before query() (AUDIT-086)', () => {
+  it('G1: create-with-bypass; marker stripped before query() so Prisma create() sees clean args', async () => {
+    const fakeClient = setupClient({ mode: 'strict' });
+    let capturedArgs: unknown;
+    const result = await invokeMiddleware(
+      fakeClient,
+      {
+        model: 'AuditLog',
+        operation: 'create',
+        args: {
+          data: { hospitalId: null, action: 'LOGIN_SUCCESS' },
+          __tenantGuardBypass: true,
+        },
+      },
+      async (args) => {
+        capturedArgs = args;
+        return { id: 'a1' };
+      },
+    );
+    expect(result).toEqual({ id: 'a1' });
+    expect(violationEventCount()).toBe(0);
+    // CRITICAL invariant: Prisma 5.22 create() rejects unknown top-level
+    // keys with "Unknown argument" error; args reaching Prisma must be clean.
+    expect(capturedArgs).not.toHaveProperty('__tenantGuardBypass');
+    // `data` payload preserved verbatim
+    expect(capturedArgs).toHaveProperty('data');
+    expect((capturedArgs as { data: unknown }).data).toEqual({
+      hospitalId: null,
+      action: 'LOGIN_SUCCESS',
+    });
+  });
+
+  it('G2: update-with-bypass; strip parity across non-create operation types', async () => {
+    const fakeClient = setupClient({ mode: 'strict' });
+    let capturedArgs: unknown;
+    const result = await invokeMiddleware(
+      fakeClient,
+      {
+        model: 'Patient',
+        operation: 'update',
+        args: {
+          where: { id: 'p1' },
+          data: { firstName: 'Bob' },
+          __tenantGuardBypass: true,
+        },
+      },
+      async (args) => {
+        capturedArgs = args;
+        return { id: 'p1' };
+      },
+    );
+    expect(result).toEqual({ id: 'p1' });
+    // Bypass marker present → enforcement skipped, no violation
+    expect(violationEventCount()).toBe(0);
+    // Strip happens regardless of operation type (hygiene)
+    expect(capturedArgs).not.toHaveProperty('__tenantGuardBypass');
+    expect(capturedArgs).toHaveProperty('where');
+    expect(capturedArgs).toHaveProperty('data');
+  });
+
+  it('G3: off-mode-with-bypass; strip still happens even when enforcement is inert', async () => {
+    const fakeClient = setupClient({ mode: 'off' });
+    let capturedArgs: unknown;
+    const result = await invokeMiddleware(
+      fakeClient,
+      {
+        model: 'AuditLog',
+        operation: 'create',
+        args: {
+          data: { hospitalId: null, action: 'TEST' },
+          __tenantGuardBypass: true,
+        },
+      },
+      async (args) => {
+        capturedArgs = args;
+        return { id: 'a1' };
+      },
+    );
+    expect(result).toEqual({ id: 'a1' });
+    // Mode=off: no inspection, no logging, no audit
+    expect(violationEventCount()).toBe(0);
+    // Strip is unconditional; same hygiene invariant regardless of mode
+    // (avoids divergent args shape between off-mode and audit/strict modes)
+    expect(capturedArgs).not.toHaveProperty('__tenantGuardBypass');
+    expect(capturedArgs).toHaveProperty('data');
+  });
+});
