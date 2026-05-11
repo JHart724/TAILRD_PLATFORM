@@ -6,6 +6,34 @@ Operator + agent session journal. Tracks Day-by-Day close-out state + next-day r
 
 ---
 
+### Day 9 afternoon arc + Day 10 morning resume — β1 single-arc Pre-Phase-1 sub-arc closure
+
+**2026-05-09 afternoon arc through 2026-05-10 morning resume; ~4-6h operator wall-clock**
+
+**β1 single-arc decision context:**
+Following Day 9 morning arc close (AUDIT-078 PR #265 + AUDIT-083 PR #266 merged), operator pivoted to β1 single-arc reframe per "no tech debt" robust palantir framing. β1 sequences: Phase 1 AUDIT-016 PR 3 production-execute (V0/V1 → V2 envelope migration on ~6,147 Synthea Patient rows × N PHI columns) → snapshot creation → Phase 2 AUDIT-078 restore-test execution (full V0+V2 D3 (d) PHI-decrypt verification on V2-containing snapshot). Sister-discipline carryover: AUDIT-016 PR 3 production-execute timing operator-side discipline + AUDIT-022 PR #253 production-execute sister-pattern + AUDIT-078 α reframe documented-rejection.
+
+**Pre-Phase-1 sub-arc:**
+Substance check identified AUDIT-016 PR 2 task-def deployment gap (DRIFT-17): production task def tailrd-backend:123 (AUDIT-016 PR 2 merge time) lacked PHI_ENVELOPE_VERSION + AWS_KMS_PHI_KEY_ALIAS env vars; gap persisted ~2 days; production backend emitted V1 envelopes when V2-required by AUDIT-016 PR 2 §7.1 design. Sub-arc remediated via revision 183 register + deploy (operator-side production-execute discipline preserved per DRIFT-18).
+
+**Operator-side execution outputs (β1 Pre-Phase-1 sub-arc):**
+- P3: register-task-definition tailrd-backend:183 ACTIVE 2026-05-10T11:50:58 -0700 (registeredBy tailrd-cli-access)
+- P5: update-service --force-new-deployment fired; deploymentId ecs-svc/9130118381098689272
+- P6: rolloutState COMPLETED at iter 6 (~1.5 min wall-clock; runningCount=1)
+- P7: health endpoint HTTP 200; uptime 201s; version 1.0.0; environment production
+- P8: running task confirmed RUNNING HEALTHY on revision 183 with PHI_ENVELOPE_VERSION=v2 + AWS_KMS_PHI_KEY_ALIAS=alias/tailrd-production-phi + PHI_LEGACY_PLAINTEXT_OK=false env vars active
+
+**DRIFT accumulation summary (12 new entries this sub-arc):**
+DRIFT-13 (runbook references nonexistent script) + DRIFT-14 (multi-terminal paste-target drift) + DRIFT-15 (wall-clock estimate anchoring) + DRIFT-16 (path-of-least-resistance rationalized as scope discipline) + DRIFT-17 (PR-merged ≠ deployed-to-production) + DRIFT-18 (operator-vs-agent execution split) + DRIFT-19 (referenced-snapshot-vs-current-state) + DRIFT-20 (bash one-liner not tested against operator shell) + DRIFT-21 (verification-script false-clean state) + DRIFT-22 (operator-side step-skip with sister-gate mid-sequence) + DRIFT-23 (combined-paste-block exit terminates parent shell) + DRIFT-24 (prompt-author meta-drift across fresh-context boundaries). Codified in Pre-Phase-1 sign-off PR per chronological-codify discipline (sister to AUDIT-075 PR #264 batch-codify pattern).
+
+**Future filings:**
+AUDIT-XXX-future-iam-cli-access-least-privilege (MEDIUM P2) + AUDIT-XXX-future-claudemd-aurora-acu-doc-refresh (LOW P3).
+
+**Next-session targets:**
+Phase 1 AUDIT-016 PR 3 production-execute (~multi-hour wall-clock; ~6,147 rows × N PHI columns × 1 KMS GenerateDataKey per row; ~50-100 KMS RPS peak vs 5,500 RPS quota = 55× headroom; estimated ~1-3.5h wall-clock per CHECK 5) → snapshot creation (force manual via aws rds create-db-cluster-snapshot; sister to AUDIT-022 PR #253 backfill snapshot pattern) → Phase 2 AUDIT-078 restore-test execution (~30-60 min) → Phase 2 sign-off PR.
+
+---
+
 ## Day 9 morning arc close — 2026-05-08 (post-mini-PAUSE-B + Block C)
 
 AUDIT-078 Phase C SHIPPED via PR #265 (TBD; sister-PR cadence per AUDIT-011 merge-time-flip discipline).

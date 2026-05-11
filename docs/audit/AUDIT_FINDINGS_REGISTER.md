@@ -1447,6 +1447,84 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ---
 
+### AUDIT-084 — AUDIT-016 PR 2 task-def deployment gap (PHI_ENVELOPE_VERSION + AWS_KMS_PHI_KEY_ALIAS env wiring missed at deploy time)
+
+- **Phase:** 2 (security posture; encryption-at-rest deployment integrity)
+- **Severity:** HIGH (P1) — was load-bearing; AUDIT-016 PR 2 envelope-emission infrastructure shipped 2026-05-07 but production task def lacked PHI_ENVELOPE_VERSION + AWS_KMS_PHI_KEY_ALIAS env vars for ~2 days; production backend emitted V1 envelopes instead of V2; new PHI writes during gap window would have lacked KMS-wrapped DEK + per-record EncryptionContext per AUDIT-016 PR 2 §7.1 design
+- **Status:** **RESOLVED 2026-05-10 via revision 183 register + deploy** (revision 183 deployed 2026-05-10T11:52:30 -0700; rolloutState COMPLETED ~1.5 min wall-clock; health HTTP 200 uptime 201s post-deploy; env vars confirmed active on running container)
+- **Detected:** 2026-05-09 during AUDIT-078 β1 single-arc Pre-Phase-1 substance check (Observation 3-EXTENDED ECS describe-task-definition probe; agent-surfaced)
+- **Location:** Production ECS task definition tailrd-backend:123 (AUDIT-016 PR 2 deploy time); persisted through tailrd-backend:182 (latest pre-resolution)
+- **Evidence:**
+  - AUDIT-016 PR 2 merge SHA 092658b 2026-05-07T20:34:52 -0700 shipped envelope-emission infrastructure (backend/src/middleware/phiEncryption.ts V2 envelope; backend/src/services/keyRotation.ts KMS GenerateDataKey wiring)
+  - Production task def tailrd-backend:123 (registered ~2026-05-07 post-PR-#262 merge) lacked PHI_ENVELOPE_VERSION + AWS_KMS_PHI_KEY_ALIAS env vars
+  - 59 subsequent task-def revisions (:124 through :182) all lacked same env vars (CI-driven cadence preserved gap)
+  - Gap persisted from 2026-05-07 through 2026-05-09 (~2 days; ~minimal production write activity pre-DUA per CLAUDE.md §9 BSW pilot status)
+  - Discovery via ECS describe-task-definition probe at Pre-Phase-1 Observation 3-EXTENDED (agent-surfaced 2026-05-09)
+- **Severity rationale:** HIGH (P1) by load-bearing-architectural-gap impact — production backend emitted V1 envelopes for ~2 days when AUDIT-016 PR 2 architecture was V2-required; pre-DUA state means minimal PHI traffic but the gap itself violates AUDIT-016 PR 2 deployment contract; HIPAA §164.312(a)(2)(iv) encryption-at-rest implementation completeness implicated
+- **Remediation:** Pre-Phase-1 sub-arc of β1 single-arc (sister to AUDIT-022 PR #253 production-execute timing operator-side discipline):
+  - P1-REVISED: inventory tailrd-backend:182 (after :123 staleness caught per DRIFT-19; 59 revisions ahead)
+  - P2-REVISED: draft tailrd-backend:183 with +2 env vars (PHI_ENVELOPE_VERSION=v2 + AWS_KMS_PHI_KEY_ALIAS=alias/tailrd-production-phi) against :182 base; preserve all other config verbatim (image SHA fdb54e5 + 18 existing env vars including PHI_LEGACY_PLAINTEXT_OK + 4 secrets[] + cpu/memory/network/roles)
+  - P3-REVISED: operator-side `aws ecs register-task-definition` → revision 183 ACTIVE 2026-05-10T11:50:58 -0700
+  - P5-REVISED: operator-side `aws ecs update-service --force-new-deployment` → deployment ecs-svc/9130118381098689272
+  - P6-REVISED: rolloutState COMPLETED at iter 6 (~1.5 min)
+  - P7: health verification HTTP 200; uptime 201s; version 1.0.0; environment production
+  - P8: running task confirmed RUNNING HEALTHY on revision 183 with all 3 PHI env vars active (PHI_ENVELOPE_VERSION=v2 + AWS_KMS_PHI_KEY_ALIAS=alias/tailrd-production-phi + PHI_LEGACY_PLAINTEXT_OK=false preserved verbatim)
+- **Effort estimate:** L (~4-6h operator-side wall-clock; β1 single-arc Pre-Phase-1 sub-arc with 11 DRIFT codifications surfaced during verify-before-execute discipline)
+- **Cross-references:**
+  - AUDIT-016 PR 2 (gap origin; merge SHA 092658b)
+  - DRIFT-17 (PR-merged ≠ deployed-to-production verification gap mechanism)
+  - DRIFT-19 (referenced-snapshot-vs-current-state — caught :123 staleness)
+  - §17.3 scope discipline (Pre-Phase-1 sub-arc ships as separate ledger PR)
+  - HIPAA §164.312(a)(2)(iv) encryption-at-rest implementation completeness
+  - β1 single-arc strategic context (AUDIT-078 PR #265 + AUDIT-016 PR 3 + AUDIT-084 unified work block)
+
+---
+
+### AUDIT-XXX-future-iam-cli-access-least-privilege
+
+- **Phase:** 2 (security posture; defense-in-depth identity)
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN — deferred to dedicated work block post-Phase-2 closure
+- **Detected:** 2026-05-09 during Pre-Phase-1 IAM verification sub-step (Sub-step 1 follow-up)
+- **Location:** AWS IAM user tailrd-cli-access (arn:aws:iam::863518424332:user/tailrd-cli-access)
+- **Evidence:**
+  - `aws iam list-attached-user-policies --user-name tailrd-cli-access` surfaces AdministratorAccess + AmazonS3FullAccess attached
+  - User has full AWS account control via AdministratorAccess (RDS / ECS / KMS / S3 / IAM / Secrets Manager / all services)
+  - Long-lived credentials (IAM user not assumed-role with session expiration); blast radius if credentials compromised includes full account control
+  - HIPAA §164.312(a)(1) least-privilege concern; defense-in-depth identity layer gap
+- **Severity rationale:** MEDIUM (P2) — not blocking pre-DUA (Synthea synthetic only on production; zero real PHI); becomes load-bearing pre-DUA-signature; sister to AUDIT-XXX-future-iam-db-auth defense-in-depth identity pattern
+- **Remediation:** scope tailrd-cli-access permissions to specific RDS + KMS + Secrets Manager + S3 + ECS actions needed for operator-side ops (scope per actual operator-side work pattern); migrate to assumed-role pattern with session expiration (sister to AWS best-practice for long-lived service-user credentials); add MFA-required policy condition; consider separate principals for read-only-describes vs mutating-execute scopes
+- **Effort estimate:** M (~4-6h IAM policy authoring + permission audit + soak window + verification)
+- **Cross-references:**
+  - AUDIT-XXX-future-iam-db-auth (defense-in-depth identity pattern)
+  - DRIFT-18 (operator-vs-agent execution-split mechanism; relies on operator-side execution; least-privilege scoping reinforces that boundary)
+  - HIPAA §164.312(a)(1) access-control least-privilege
+  - AUDIT-009 MFA enforcement (sister-pattern)
+
+---
+
+### AUDIT-XXX-future-claudemd-aurora-acu-doc-refresh
+
+- **Phase:** Documentation hygiene (low-severity infrastructure doc-vs-live drift)
+- **Severity:** LOW (P3)
+- **Status:** OPEN — non-blocking; doc-refresh queued for next CLAUDE.md update cycle
+- **Detected:** 2026-05-09 during Pre-Phase-1 CHECK 4 production cluster pre-flight probe
+- **Location:** docs/CLAUDE.md §9 (Aurora cluster configuration documentation)
+- **Evidence:**
+  - CLAUDE.md §9 documents Aurora ServerlessV2 capacity as 0.5-4 ACU
+  - Live Aurora cluster config (per `aws rds describe-db-clusters --db-cluster-identifier tailrd-production-aurora`) shows ServerlessV2 0.5-16 ACU
+  - Documentation drift; live config more permissive than documented (4× max-capacity headroom)
+  - Likely from intermediate ACU adjustment between CLAUDE.md authoring and live state (CI / IaC / manual mutation)
+- **Severity rationale:** LOW (P3) — not blocking; doc-drift not architectural-drift; live config is more permissive (favorable for Phase 1 KMS rate spike per CHECK 5); cosmetic but worth refresh for operator-decision-context accuracy
+- **Remediation:** refresh CLAUDE.md §9 to match live config (0.5-16 ACU); verify all CLAUDE.md infrastructure-config sections against live state in single doc-refresh pass (e.g., BackupRetentionPeriod which is now 35 not 7 post-AUDIT-078 apply; verify any other config drift)
+- **Effort estimate:** XS (~30 min CLAUDE.md edit + verification + commit)
+- **Cross-references:**
+  - DRIFT-17 (PR-merged ≠ deployed-to-production; doc-drift is sister-pattern at documentation layer)
+  - CHECK 4 evidence (Pre-Phase-1 substance check capture)
+  - AUDIT-078 Day 9 morning arc BackupRetentionPeriod modification (sister doc-refresh candidate)
+
+---
+
 ### AUDIT-064 — Partial-pipeline-regen pattern after source-changing operations
 
 - **Phase:** Canonical infrastructure (operational debt surfaced via Cat A → Cat D verification batch arc)
