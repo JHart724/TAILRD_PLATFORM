@@ -1477,6 +1477,7 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
   - §17.3 scope discipline (Pre-Phase-1 sub-arc ships as separate ledger PR)
   - HIPAA §164.312(a)(2)(iv) encryption-at-rest implementation completeness
   - β1 single-arc strategic context (AUDIT-078 PR #265 + AUDIT-016 PR 3 + AUDIT-084 unified work block)
+  - Reconciliation 2026-05-11: production task def evolved :183 → :184 via CI/CD auto-deploy on PR #268 merge (per CLAUDE.md §15 RULE 5); env-var carry-forward verified intact; codified as DRIFT-25 (fresh-context bootstrap stale-anchor pattern across CI/CD-cadence boundary); AUDIT-084 RESOLVED state preserved on :184 baseline.
 
 ---
 
