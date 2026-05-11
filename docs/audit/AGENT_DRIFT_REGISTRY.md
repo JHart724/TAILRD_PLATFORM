@@ -262,3 +262,13 @@ Drift-prevention forcing function. Read at session start as a sister to AUDIT_FI
 - **Sister-cross-reference:** DRIFT-19 (referenced-snapshot-vs-current-state at agent pre-flight inventory layer; DRIFT-25 = sister-pattern at operator-prompt-author layer across CI/CD-cadence boundary); DRIFT-24 (prompt-author meta-drift across fresh-context session boundaries; DRIFT-25 = sister at CI/CD-deploy-cadence boundary specifically); CLAUDE.md §15 RULE 5 (CI/CD auto-deploy on main merge as documented + expected behavior, not the drift).
 
 ---
+
+## DRIFT-26 — Runbook assumes execution environment that operator does not possess (sister to DRIFT-13 at infrastructure layer)
+
+- **Date:** 2026-05-11
+- **Drift indicator:** AUDIT-016 PR 3 + AUDIT-022 PR #253 production runbooks both prescribe `npx tsx <script> --execute` with no execution-environment provision. Sister to DRIFT-13 (runbook references nonexistent script — surface-vs-filesystem verification gap) but at infrastructure-environment layer instead of filesystem layer. Operator's local Windows + PowerShell host lacks VPC route to production Aurora; runbooks assumed connectivity that doesn't exist for that operator-host.
+- **Trigger:** β1 Phase 1 STEP 1.3 dry-run PrismaClientInitializationError; Aurora endpoint unreachable from operator-local; investigated 3 runbooks + register + CLAUDE.md §9 + §15; gap fundamental + not previously recognized.
+- **Mechanism update:** Runbook authoring discipline must include "execution environment" §0 prerequisites surfacing: which host runs the command; what VPC connectivity that host has; what IAM credentials it presents; what env-var inheritance path it uses. Add to AUDIT-METHODOLOGY.md §17 acceptance criteria for any runbook that prescribes operator-executed commands against VPC-private infrastructure: must specify execution host + connectivity provision + verification step.
+- **Sister-cross-reference:** DRIFT-13 (surface-vs-filesystem verification gap at script-reference layer); DRIFT-17 (PR-merged ≠ deployed-to-production verification gap at deployment layer); DRIFT-26 = surface-vs-environment verification gap at runtime-host + connectivity layer. AUDIT-085 codifies the architectural resolution.
+
+---

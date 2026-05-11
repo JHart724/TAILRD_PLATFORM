@@ -1481,6 +1481,55 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ---
 
+### AUDIT-085 — Production migration execution environment gap (Prisma-driven migration scripts cannot reach VPC-isolated Aurora from operator's local machine)
+
+- **Phase:** Operations / production-execute infrastructure
+- **Severity:** HIGH (P1) — load-bearing for AUDIT-016 PR 3 + AUDIT-022 PR #253 + any future Prisma-driven migration script targeting production Aurora
+- **Status:** OPEN — architectural decision to Option A (ECS RunTask with command override); implementation pending
+- **Detected:** 2026-05-11 during β1 Phase 1 STEP 1.3 dry-run attempt; PrismaClientInitializationError on private Aurora endpoint from operator's local Windows + PowerShell host
+- **Location:** Sister-precedent gap across:
+  - docs/runbooks/AUDIT_016_PR_3_MIGRATION_RUNBOOK.md §3.1 (npx tsx ... --execute; no host specified)
+  - docs/runbooks/AUDIT_022_PRODUCTION_RUNBOOK.md §3.1 (sister; same shape; same gap)
+  - docs/architecture/AUDIT_016_PR_3_MIGRATION_JOB_NOTES.md §1 D1 (one-shot operator-triggered pattern; no operator-host specified)
+- **Evidence:**
+  - AUDIT-022 PR #253 RESOLVED 2026-05-07 against DEV DB only; "production execution timing operator-side outside this PR" framing; production migration never executed
+  - AUDIT-016 PR 3 runbook shipped 2026-05-07 with identical connectivity assumption
+  - Production Aurora cluster tailrd-production-aurora.cluster-csp0w6g8u5uq.us-east-1.rds.amazonaws.com:5432 is VPC-private (no public ingress per HIPAA + security posture)
+  - CLAUDE.md §9 (Aurora endpoint listed as VPC DNS; no public access provision) + §15 RULES 1-9 (no operator-Aurora connectivity provision)
+  - Register grep for bastion|ssm-session-manager|vpn|ecs-exec|aurora-data-api|jumphost|private-endpoint|vpc-endpoint returned no matches; gap not previously recognized
+- **Severity rationale:** HIGH (P1) load-bearing pre-DUA gate. AUDIT-016 PR 3 + AUDIT-022 PR #253 + any future PHI-touching migration cannot execute against production without resolution. Pre-DUA window (no real PHI flows yet) allows resolution before commercial pressure.
+- **Architectural decision (logged 2026-05-11):** Option A — ECS RunTask with command override against tailrd-backend task definition family.
+- **Rationale for Option A:**
+  1. All prerequisites already in place at production layer (DATABASE_URL + PHI_ENCRYPTION_KEY via Secrets Manager; PHI_ENVELOPE_VERSION=v2 + AWS_KMS_PHI_KEY_ALIAS=alias/tailrd-production-phi on :184; VPC + SG + IAM correct)
+  2. Same container image SHA a11f3df contains migration script source
+  3. AWS-industry-standard pattern for one-shot DB migrations on ECS Fargate
+  4. Isolation: RunTask spawns dedicated container instance; does not share lifecycle with production server workload
+  5. Audit trail: existing CloudWatch Logs group; meets HIPAA §164.312(b) audit requirements
+  6. Open verification gate (read-only ECR inspection): production image must contain tsx + migration script TypeScript source bundled (Dockerfile may strip backend/scripts/ or dev dependencies from production stage)
+- **Options considered + rejected:**
+  - Option B (ECS Exec into live tailrd-production-backend task): mixes migration workload with live production server; lifecycle coupling
+  - Option C (SSM Session Manager + port-forwarding): requires SSM-managed instance in VPC; no such instance today
+  - Option D (Bastion EC2 + SSH tunnel): anti-pattern for modern AWS; SSH key mgmt + SG hardening ongoing cost
+  - Option E (AWS Client VPN): viable but ~2-4h setup; ongoing operator-environment cost
+  - Option F (AWS Lambda + invoke): 15-min runtime limit incompatible with ~1-3.5h migration wall-clock
+  - Option G (Aurora Data API): Prisma incompatibility; would require AWS SDK rewrite of script
+- **Remediation plan:**
+  1. Verify production image contains tsx + migration script source (read-only ECR inspection / docker pull + introspect)
+  2. Design RunTask command override (--task-definition tailrd-backend:184 + --overrides container-name + command + environment + cpu/memory)
+  3. Verify IAM execution role has CloudWatch Logs write + Secrets Manager read + KMS Decrypt permissions (should already be true given production server task uses same role)
+  4. Surface operator-side aws ecs run-task invocation paste-block with dry-run command override
+  5. Operator-side run-task invocation (mutating); output via CloudWatch Logs Live Tail or describe-tasks polling
+  6. Iterate Option A on dry-run first; then Option A on --execute after PAUSE 2.20.1 GO/NO-GO
+- **Effort estimate:** L (~3-6h: image verification ~30 min + RunTask design ~1h + IAM verification ~30 min + dry-run iteration ~30-60 min + execute iteration ~1-3.5h)
+- **Cross-references:**
+  - AUDIT-016 PR 3 production-execute gap (this finding's catalyst)
+  - AUDIT-022 PR #253 production-execute gap (sister; same gap; production execute STILL pending; will use AUDIT-085 Option A path)
+  - DRIFT-26 (sister to DRIFT-13 — runbook references execution environment that operator does not possess; codified inline this PR)
+  - HIPAA §164.312(a)(2)(iv) encryption-at-rest implementation completeness (migration completion gate for AUDIT-016 PR 2)
+  - β1 single-arc Phase 1 STEP 1.3 PAUSE 1.3.4 surfacing point
+
+---
+
 ### AUDIT-XXX-future-iam-cli-access-least-privilege
 
 - **Phase:** 2 (security posture; defense-in-depth identity)
