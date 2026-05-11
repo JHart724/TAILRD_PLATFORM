@@ -252,3 +252,13 @@ Drift-prevention forcing function. Read at session start as a sister to AUDIT_FI
 - **Sister cross-reference:** DRIFT-08 (cross-session prompt-paste mismatch caught at agent-side via robust palantir context-verification — vigilance success); DRIFT-22 (operator-side step-skip with sister-discipline gate mid-sequence; DRIFT-24 = prompt-author meta-drift sister-pattern at fresh-context boundary).
 
 ---
+
+## DRIFT-25 — Fresh-context bootstrap stale-anchor pattern: bootstrap-author state at authorship time differs from agent-execute time when CI/CD pipeline operates between
+
+- **Date:** 2026-05-11
+- **Drift indicator:** β1 Phase 1 fresh-context bootstrap authored anchor-by-reference to production task def revision :183 (state at Pre-Phase-1 sub-arc close 2026-05-10T05:52:54Z). PR #268 squash-merge to main triggered CI/CD pipeline (per CLAUDE.md §15 RULE 5: register new task def with commit SHA); :184 registered + deployed automatically with merge commit a11f3df at 2026-05-10T22:54:24 -0700 (~11h after Pre-Phase-1 close). All 3 PHI env vars carried forward verbatim from :183 → :184 (PHI_ENVELOPE_VERSION=v2 + AWS_KMS_PHI_KEY_ALIAS=alias/tailrd-production-phi + PHI_LEGACY_PLAINTEXT_OK=false). Benign carry-forward; not a regression.
+- **Trigger:** Agent caught at STAGE 2 Verification 1 of Phase 1 bootstrap; PAUSE 3-pre fired correctly per DRIFT-19 sister-signal. Operator approved GO + amend recovery path.
+- **Mechanism update:** Multi-day fresh-context bootstraps that reference deploy-time-mutating-state (ECS task def revision; running container SHA; AWS resource versions) must include explicit "verify-current-state" framing instead of "anchor-by-reference-from-prior-session" framing. Add to operator-side prompt-author discipline: bootstrap-authoring across CI/CD-pipeline-cadence must use latest-current-state probes (e.g., "verify production task def revision matches PHI env-var spec; revision number unknown at bootstrap-author time") rather than literal-SHA references.
+- **Sister-cross-reference:** DRIFT-19 (referenced-snapshot-vs-current-state at agent pre-flight inventory layer; DRIFT-25 = sister-pattern at operator-prompt-author layer across CI/CD-cadence boundary); DRIFT-24 (prompt-author meta-drift across fresh-context session boundaries; DRIFT-25 = sister at CI/CD-deploy-cadence boundary specifically); CLAUDE.md §15 RULE 5 (CI/CD auto-deploy on main merge as documented + expected behavior, not the drift).
+
+---
