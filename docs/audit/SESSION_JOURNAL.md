@@ -6,6 +6,30 @@ Operator + agent session journal. Tracks Day-by-Day close-out state + next-day r
 
 ---
 
+### Day 11 — β1 single-arc Phase 1 STEP 1.3 PAUSE 1.3.4 + AUDIT-085 architectural-gap codification
+
+**2026-05-11 morning arc; ~1-2h operator wall-clock on architectural decision + ledger authoring**
+
+**Context:**
+β1 Phase 1 STEP 1.1 (pre-execute Aurora snapshot) completed clean at 2026-05-11T07:00:00.381Z (~3min 41s wall-clock). STEP 1.2 (operator-side secret extraction) completed clean (all 4 preFlightValidate gates pass).
+
+**Discovery:**
+STEP 1.3 dry-run failed at PrismaClientInitializationError; operator's local Windows + PowerShell host cannot reach VPC-isolated Aurora cluster. Predicted PAUSE 1.3.4 failure mode fired correctly per STEP 1.3 readiness surface enumeration.
+
+**Investigation:**
+Read-only inventory across docs/runbooks/AUDIT_016_PR_3_MIGRATION_RUNBOOK.md (352 lines) + docs/runbooks/AUDIT_022_PRODUCTION_RUNBOOK.md (248 lines; sister-precedent) + docs/architecture/AUDIT_016_PR_3_MIGRATION_JOB_NOTES.md + AUDIT_FINDINGS_REGISTER + CLAUDE.md §9 + §15. Gap confirmed structurally: both runbooks silent on connectivity; AUDIT-022 PR #253 RESOLVED 2026-05-07 with dev-DB-only execute (production migration never executed); production Aurora is VPC-private by design; register grep for bastion|ssm-session-manager|vpn|ecs-exec|aurora-data-api|jumphost|private-endpoint|vpc-endpoint returned zero matches.
+
+**Architectural decision:**
+AUDIT-085 filed HIGH P1. 7 options considered (A-G). Option A — ECS RunTask with command override — selected per: existing task-definition family wiring + Secrets Manager + VPC + IAM + same container image; AWS-industry-standard one-shot migration pattern; isolation; HIPAA §164.312(b) audit-trail compliance via CloudWatch Logs. Open verification gate: production image must contain tsx + migration script source.
+
+**DRIFT codification:**
+DRIFT-26 codified: sister to DRIFT-13 at infrastructure-environment layer; runbook authoring discipline must include execution-environment §0 prerequisites.
+
+**Next-session targets:**
+AUDIT-085 ledger PR merge → image verification (read-only ECR inspection) → RunTask command override design → operator-side run-task invocation for STEP 1.3 dry-run retry → resume β1 Phase 1 sequence from PAUSE 1.3.4.
+
+---
+
 ### Day 9 afternoon arc + Day 10 morning resume — β1 single-arc Pre-Phase-1 sub-arc closure
 
 **2026-05-09 afternoon arc through 2026-05-10 morning resume; ~4-6h operator wall-clock**
