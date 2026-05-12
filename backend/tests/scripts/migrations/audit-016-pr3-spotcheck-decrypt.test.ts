@@ -46,12 +46,13 @@ import {
   contextFor,
   filterNonZeroV2Targets,
   parseArgs,
+  sampleRowsForTarget,
   shapeCheck,
   type ShapeCheckResult,
   type SampleResult,
   type Opts,
-} from '../audit-016-pr3-spotcheck-decrypt';
-import { TARGETS } from '../audit-016-pr3-v0v1-to-v2';
+} from '../../../scripts/migrations/audit-016-pr3-spotcheck-decrypt';
+import { TARGETS } from '../../../scripts/migrations/audit-016-pr3-v0v1-to-v2';
 import type { EncryptionContext } from '../../../src/services/keyRotation';
 
 const queryRawMock = prisma.$queryRawUnsafe as jest.Mock;
@@ -368,5 +369,65 @@ describe('GROUP E: PHI-exposure surface regression guard', () => {
     // errors do not leak record values. Sanity check: no obvious PHI patterns.
     expect(result.decryptError).not.toMatch(/\b\d{3}-\d{2}-\d{4}\b/); // no SSN
     expect(result.decryptError).not.toMatch(/\b\d{10,}\b/); // no MRN-like long digit run
+  });
+});
+
+// ─── GROUP F: kind-aware SQL composition (jsonb vs text columns) ──────────
+// AUDIT-016 PR 3 STEP 1.7 attempt-1 failed exitCode 2 on PostgreSQL error
+// 42883 (operator does not exist: jsonb ~~ unknown). Sister to AUDIT-086
+// GROUP G discipline: middleware-bypass code paths need explicit type-aware
+// coverage. The migration script's TARGETS const discriminates kind:
+// 'string' | 'json'; both filterNonZeroV2Targets and sampleRowsForTarget
+// must branch SQL composition accordingly. These tests assert the SQL
+// string composition (captured from $queryRawUnsafe mock arg) matches
+// expected jsonb-cast pattern for json-kind targets and raw column ref
+// pattern for string-kind targets.
+describe('GROUP F: kind-aware SQL composition (jsonb vs text)', () => {
+  test('F.1: filterNonZeroV2Targets uses ::text cast + leading-quote pattern for json-kind target', async () => {
+    const jsonTarget = TARGETS.find(t => t.kind === 'json');
+    expect(jsonTarget).toBeDefined();
+    queryRawMock.mockResolvedValueOnce([{ count: 42 }]);
+    await filterNonZeroV2Targets(prisma, [jsonTarget!]);
+    expect(queryRawMock).toHaveBeenCalledTimes(1);
+    const sql = queryRawMock.mock.calls[0][0] as string;
+    expect(sql).toContain('::text');
+    expect(sql).toContain(`'"enc:v2:%'`);
+    expect(sql).not.toMatch(/"[a-zA-Z]+"\s+LIKE\s+'enc:v2:%'/);
+  });
+
+  test('F.2: filterNonZeroV2Targets uses raw column ref + no-cast pattern for string-kind target (regression guard)', async () => {
+    const stringTarget = TARGETS.find(t => t.kind === 'string');
+    expect(stringTarget).toBeDefined();
+    queryRawMock.mockResolvedValueOnce([{ count: 42 }]);
+    await filterNonZeroV2Targets(prisma, [stringTarget!]);
+    expect(queryRawMock).toHaveBeenCalledTimes(1);
+    const sql = queryRawMock.mock.calls[0][0] as string;
+    expect(sql).not.toContain('::text');
+    expect(sql).toContain(`LIKE 'enc:v2:%'`);
+    expect(sql).not.toContain(`'"enc:v2:%'`);
+  });
+
+  test('F.3: sampleRowsForTarget uses #>>{} SELECT + ::text LIKE WHERE for json-kind target', async () => {
+    const jsonTarget = TARGETS.find(t => t.kind === 'json');
+    expect(jsonTarget).toBeDefined();
+    queryRawMock.mockResolvedValueOnce([]);
+    await sampleRowsForTarget(prisma, jsonTarget!, 5);
+    expect(queryRawMock).toHaveBeenCalledTimes(1);
+    const sql = queryRawMock.mock.calls[0][0] as string;
+    expect(sql).toContain(`#>>'{}'`);
+    expect(sql).toContain('::text LIKE');
+    expect(sql).toContain(`'"enc:v2:%'`);
+  });
+
+  test('F.4: sampleRowsForTarget uses raw column ref in SELECT for string-kind target (regression guard)', async () => {
+    const stringTarget = TARGETS.find(t => t.kind === 'string');
+    expect(stringTarget).toBeDefined();
+    queryRawMock.mockResolvedValueOnce([]);
+    await sampleRowsForTarget(prisma, stringTarget!, 5);
+    expect(queryRawMock).toHaveBeenCalledTimes(1);
+    const sql = queryRawMock.mock.calls[0][0] as string;
+    expect(sql).not.toContain(`#>>'{}'`);
+    expect(sql).not.toContain('::text');
+    expect(sql).toContain(`LIKE 'enc:v2:%'`);
   });
 });
