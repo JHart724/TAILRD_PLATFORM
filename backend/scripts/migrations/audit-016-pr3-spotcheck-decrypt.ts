@@ -107,8 +107,10 @@ export async function filterNonZeroV2Targets(
 ): Promise<NonZeroV2Target[]> {
   const results: NonZeroV2Target[] = [];
   for (const t of allTargets) {
+    const colExpr = t.kind === 'json' ? `"${t.column}"::text` : `"${t.column}"`;
+    const pattern = t.kind === 'json' ? "'\"enc:v2:%'" : "'enc:v2:%'";
     const rows = await prismaClient.$queryRawUnsafe<Array<{ count: bigint | number }>>(
-      `SELECT COUNT(*)::bigint AS count FROM "${t.table}" WHERE "${t.column}" LIKE 'enc:v2:%'`,
+      `SELECT COUNT(*)::bigint AS count FROM "${t.table}" WHERE ${colExpr} LIKE ${pattern}`,
     );
     const count = Number(rows[0]?.count ?? 0);
     if (count > 0) {
@@ -131,9 +133,11 @@ export async function sampleRowsForTarget(
 ): Promise<SampleRow[]> {
   // Raw SQL bypasses Prisma phiEncryption middleware to fetch CIPHERTEXT
   // directly. Middleware would auto-decrypt; we need encoded envelope.
+  const selectExpr = t.kind === 'json' ? `"${t.column}"#>>'{}'` : `"${t.column}"`;
+  const whereExpr = t.kind === 'json' ? `"${t.column}"::text LIKE '"enc:v2:%'` : `"${t.column}" LIKE 'enc:v2:%'`;
   return prismaClient.$queryRawUnsafe<SampleRow[]>(
-    `SELECT id, "${t.column}" AS envelope FROM "${t.table}"
-     WHERE "${t.column}" LIKE 'enc:v2:%'
+    `SELECT id, ${selectExpr} AS envelope FROM "${t.table}"
+     WHERE ${whereExpr}
      ORDER BY random()
      LIMIT ${n}`,
   );
