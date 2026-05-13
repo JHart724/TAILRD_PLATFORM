@@ -487,3 +487,100 @@ export async function migrateRecord(
     migratedAt,
   };
 }
+
+
+/**
+ * rekeyV2Record - re-encrypt V2 envelope under a new EncryptionContext.
+ *
+ * Sister to migrateRecord (V0/V1 -> V2 path) but for V2 -> V2 purpose
+ * reconciliation. Used by AUDIT-016 PR3 STEP 1.7 audit_logs.description
+ * remediation (architectural finding Day 13): migration script wrote
+ * V2 envelopes under purpose 'phi-migration-v0v1-to-v2'; production
+ * middleware uses canonical purpose 'phi-encryption'. This function
+ * re-encrypts V2 envelopes under the canonical purpose so production
+ * middleware reads succeed.
+ *
+ * Behavior:
+ *   1. Decrypt the current V2 envelope under oldContext via decryptAny.
+ *      decryptAny dispatches V2 to envelopeDecrypt (kmsService) which
+ *      passes oldContext to KMS Decrypt. KMS verifies EncryptionContext
+ *      matches the wrapped DEK; mismatch throws (caller records + skips).
+ *   2. Re-encrypt the plaintext under newContext via encryptWithCurrent.
+ *      Same V2 emit dispatch as migrateRecord; same defense-in-depth
+ *      verification that emitted envelope is V2.
+ *   3. Raw SQL UPDATE bypasses applyPHIEncryption middleware (sister to
+ *      migrateRecord write pattern).
+ *
+ * Idempotency:
+ *   - Decrypt with oldContext failure (KMS AccessDenied) indicates the
+ *     record was NOT encrypted under oldContext (e.g., already under
+ *     newContext from prior rekey OR was production-middleware-written
+ *     and never touched by STEP 1.5 migration). Caller's responsibility
+ *     to record + skip; this function throws.
+ *   - Records already encrypted under newContext are detected via
+ *     decrypt-with-oldContext-failure pattern. Sister to AUDIT-086 fix-
+ *     cycle discipline: graceful skip when expected mismatch occurs.
+ *
+ * PHI handling discipline (HIPAA section 164.312 subsection b):
+ *   - Plaintext is held in memory ONLY between decrypt + encrypt calls.
+ *   - Plaintext is NEVER logged, persisted, or returned.
+ *   - Audit-trail anchor preserved: KMS Decrypt under oldContext +
+ *     KMS GenerateDataKey under newContext both emit CloudTrail events
+ *     with their respective EncryptionContext payloads.
+ *
+ * @param recordId DB primary key of the row to rekey
+ * @param table Table name (compile-time constant from caller's TARGETS)
+ * @param column Column name (compile-time constant from caller's TARGETS)
+ * @param oldContext EncryptionContext the envelope was encrypted under
+ * @param newContext EncryptionContext to re-encrypt under (canonical)
+ * @param prismaClient Prisma client supporting executeRawUnsafe
+ * @param currentValue Current V2 envelope on disk
+ * @returns MigrationResult with fromVersion=v2 toVersion=v2 fieldsConverted=1
+ * @throws when input is not a V2 envelope (caller's SQL filter responsibility)
+ * @throws when KMS Decrypt fails under oldContext (record was not encrypted
+ *         under oldContext; caller skips + records)
+ * @throws when re-emit is not V2 envelope (env config drift; refuses write)
+ * @throws when SQL UPDATE fails
+ */
+export async function rekeyV2Record(
+  recordId: string,
+  table: string,
+  column: string,
+  oldContext: EncryptionContext,
+  newContext: EncryptionContext,
+  prismaClient: { $executeRawUnsafe: (query: string, ...values: unknown[]) => Promise<number> },
+  currentValue: string,
+): Promise<MigrationResult> {
+  const migratedAt = new Date();
+  const parsed: Envelope = parseEnvelope(currentValue);
+  if (parsed.version !== 'v2') {
+    throw new Error(
+      `rekeyV2Record: expected V2 envelope; got ${parsed.version}. ` +
+      `Caller SQL filter (LIKE 'enc:v2:%') failed to exclude non-V2 rows.`,
+    );
+  }
+  const plaintext = await decryptAny(currentValue, oldContext);
+  const v2envelope = await encryptWithCurrent(plaintext, newContext);
+  const emitted: Envelope = parseEnvelope(v2envelope);
+  if (emitted.version !== 'v2') {
+    throw new Error(
+      `rekeyV2Record: encryptWithCurrent did not emit V2 envelope (got ${emitted.version}). ` +
+      `Verify PHI_ENVELOPE_VERSION=v2 and AWS_KMS_PHI_KEY_ALIAS are set before --execute.`,
+    );
+  }
+  await prismaClient.$executeRawUnsafe(
+    `UPDATE "${table}" SET "${column}" = $1 WHERE id = $2`,
+    v2envelope,
+    recordId,
+  );
+  return {
+    recordId,
+    table,
+    column,
+    fromVersion: 'v2',
+    toVersion: 'v2',
+    fieldsConverted: 1,
+    skipped: false,
+    migratedAt,
+  };
+}

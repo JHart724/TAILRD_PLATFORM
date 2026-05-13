@@ -676,3 +676,162 @@ describe('AUDIT-016 PR 3 — migrateRecord() V0/V1 → V2', () => {
     // rejection is covered by kmsService.test.ts T3d.
   });
 });
+
+
+// AUDIT-016 PR3 STEP 1.7 Day 13 - rekeyV2Record() V2 -> V2 purpose reconciliation
+describe('AUDIT-016 PR3 STEP 1.7 - rekeyV2Record() V2 -> V2 purpose reconciliation', () => {
+  // Sister to migrateRecord describe block: V2 emission gated on env vars.
+  // Local helpers (sister-copy of migrateRecord describe helpers to keep this
+  // block self-contained; see migrateRecord describe at line 479 for source).
+  function freshModule() {
+    jest.resetModules();
+    process.env.PHI_ENCRYPTION_KEY = TEST_KEY;
+    process.env.PHI_ENVELOPE_VERSION = 'v2';
+    process.env.AWS_KMS_PHI_KEY_ALIAS = 'alias/test-tailrd-phi';
+    delete process.env.DEMO_MODE;
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    return require('../keyRotation');
+  }
+  function fakePrismaWithSpy(): { client: { $executeRawUnsafe: jest.Mock }; spy: jest.Mock } {
+    const spy = jest.fn().mockResolvedValue(1);
+    return { client: { $executeRawUnsafe: spy }, spy };
+  }
+  function encryptV0LikeProductionLegacy(plaintext: string, keyHex: string): string {
+    const key = Buffer.from(keyHex, 'hex');
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
+    let enc = cipher.update(plaintext, 'utf8', 'hex');
+    enc += cipher.final('hex');
+    const authTag = cipher.getAuthTag().toString('hex');
+    return buildV0(iv.toString('hex'), authTag, enc);
+  }
+  const ORIG_VERSION = process.env.PHI_ENVELOPE_VERSION;
+  const ORIG_ALIAS = process.env.AWS_KMS_PHI_KEY_ALIAS;
+  beforeEach(() => {
+    process.env.PHI_ENVELOPE_VERSION = 'v2';
+    process.env.AWS_KMS_PHI_KEY_ALIAS = 'alias/test';
+  });
+  afterAll(() => {
+    if (ORIG_VERSION === undefined) delete process.env.PHI_ENVELOPE_VERSION;
+    else process.env.PHI_ENVELOPE_VERSION = ORIG_VERSION;
+    if (ORIG_ALIAS === undefined) delete process.env.AWS_KMS_PHI_KEY_ALIAS;
+    else process.env.AWS_KMS_PHI_KEY_ALIAS = ORIG_ALIAS;
+  });
+
+  const OLD_CONTEXT: EncryptionContext = {
+    service: 'tailrd-backend',
+    purpose: 'phi-migration-v0v1-to-v2',
+    model: 'AuditLog',
+    field: 'description',
+  };
+  const NEW_CONTEXT: EncryptionContext = {
+    service: 'tailrd-backend',
+    purpose: 'phi-encryption',
+    model: 'AuditLog',
+    field: 'description',
+  };
+
+  it('T-REKEY-1: V2 envelope decrypted under oldContext re-encrypted under newContext; plaintext preserved (round-trip)', async () => {
+    const mod = freshModule();
+    const v2under_old = await mod.encryptWithCurrent('Heart failure NYHA III', OLD_CONTEXT);
+    expect(v2under_old.startsWith('enc:v2:')).toBe(true);
+    const { client, spy } = fakePrismaWithSpy();
+    const result = await mod.rekeyV2Record(
+      'rec-1', 'audit_logs', 'description', OLD_CONTEXT, NEW_CONTEXT, client, v2under_old,
+    );
+    expect(result.fromVersion).toBe('v2');
+    expect(result.toVersion).toBe('v2');
+    expect(result.fieldsConverted).toBe(1);
+    expect(result.skipped).toBe(false);
+    const v2under_new = spy.mock.calls[0][1] as string;
+    expect(v2under_new.startsWith('enc:v2:')).toBe(true);
+    expect(v2under_new).not.toBe(v2under_old);
+    const decrypted = await mod.decryptAny(v2under_new, NEW_CONTEXT);
+    expect(decrypted).toBe('Heart failure NYHA III');
+  });
+
+  it('T-REKEY-2: V0 envelope input throws (caller SQL filter contract violation)', async () => {
+    const mod = freshModule();
+    const v0 = encryptV0LikeProductionLegacy('plaintext-x', TEST_KEY);
+    const { client } = fakePrismaWithSpy();
+    await expect(
+      mod.rekeyV2Record('rec-2', 'audit_logs', 'description', OLD_CONTEXT, NEW_CONTEXT, client, v0),
+    ).rejects.toThrow(/expected V2 envelope; got v0/);
+  });
+
+  it('T-REKEY-3: V1 envelope input throws (caller SQL filter contract violation)', async () => {
+    const mod = freshModule();
+    delete process.env.PHI_ENVELOPE_VERSION;
+    const v1 = await mod.encryptWithCurrent('plaintext-y', OLD_CONTEXT);
+    expect(v1.startsWith('enc:v1:')).toBe(true);
+    process.env.PHI_ENVELOPE_VERSION = 'v2';
+    const { client } = fakePrismaWithSpy();
+    await expect(
+      mod.rekeyV2Record('rec-3', 'audit_logs', 'description', OLD_CONTEXT, NEW_CONTEXT, client, v1),
+    ).rejects.toThrow(/expected V2 envelope; got v1/);
+  });
+
+  it('T-REKEY-4: test-mode local fallback allows context mismatch (production KMS enforces; NB ref kmsService.test.ts T3d)', async () => {
+    const mod = freshModule();
+    const v2under_new = await mod.encryptWithCurrent('plaintext-z', NEW_CONTEXT);
+    const { client } = fakePrismaWithSpy();
+    // NB: In production KMS, EncryptionContext mismatch fails AccessDenied
+    // (covered by kmsService.test.ts T3d). In test mode (local fallback),
+    // context is recorded in wrappedDEK but not authenticated; mismatch passes.
+    // This test verifies rekey COMPLETES in test mode; production rejection
+    // is integration-tested via STEP 1.7 spotcheck against real KMS.
+    const result = await mod.rekeyV2Record(
+      'rec-4', 'audit_logs', 'description', OLD_CONTEXT, NEW_CONTEXT, client, v2under_new,
+    );
+    expect(result.toVersion).toBe('v2');
+  });
+
+  it('T-REKEY-5: SQL UPDATE failure propagates to caller (continue-on-error contract)', async () => {
+    const mod = freshModule();
+    const v2under_old = await mod.encryptWithCurrent('plaintext-w', OLD_CONTEXT);
+    const failingClient = {
+      $executeRawUnsafe: jest.fn().mockRejectedValue(new Error('DB connection lost')),
+    };
+    await expect(
+      mod.rekeyV2Record('rec-5', 'audit_logs', 'description', OLD_CONTEXT, NEW_CONTEXT, failingClient, v2under_old),
+    ).rejects.toThrow(/DB connection lost/);
+  });
+
+  it('T-REKEY-6: MigrationResult shape contains all committed fields', async () => {
+    const mod = freshModule();
+    const v2under_old = await mod.encryptWithCurrent('Mary', OLD_CONTEXT);
+    const { client } = fakePrismaWithSpy();
+    const before = Date.now();
+    const result: MigrationResult = await mod.rekeyV2Record(
+      'rec-6', 'audit_logs', 'description', OLD_CONTEXT, NEW_CONTEXT, client, v2under_old,
+    );
+    const after = Date.now();
+    expect(result.recordId).toBe('rec-6');
+    expect(result.table).toBe('audit_logs');
+    expect(result.column).toBe('description');
+    expect(result.fromVersion).toBe('v2');
+    expect(result.toVersion).toBe('v2');
+    expect(result.fieldsConverted).toBe(1);
+    expect(result.skipped).toBe(false);
+    expect(result.migratedAt).toBeInstanceOf(Date);
+    expect(result.migratedAt.getTime()).toBeGreaterThanOrEqual(before);
+    expect(result.migratedAt.getTime()).toBeLessThanOrEqual(after);
+  });
+
+  it('T-REKEY-7: rekey emits envelope decryptable with newContext (oldContext rejection covered by kmsService.test.ts T3d + production STEP 1.7)', async () => {
+    const mod = freshModule();
+    const v2under_old = await mod.encryptWithCurrent('Robert', OLD_CONTEXT);
+    const { client, spy } = fakePrismaWithSpy();
+    const result = await mod.rekeyV2Record(
+      'rec-7', 'audit_logs', 'description', OLD_CONTEXT, NEW_CONTEXT, client, v2under_old,
+    );
+    expect(result.toVersion).toBe('v2');
+    const v2under_new = spy.mock.calls[0][1] as string;
+    // newContext decrypts cleanly (rekey emitted V2 under newContext)
+    const decryptedWithNew = await mod.decryptAny(v2under_new, NEW_CONTEXT);
+    expect(decryptedWithNew).toBe('Robert');
+    // NB: In production KMS, decryptAny(v2under_new, OLD_CONTEXT) throws
+    // AccessDenied (covered by kmsService.test.ts T3d). Test-mode local
+    // fallback does not authenticate context; mismatch passes silently.
+  });
+});
