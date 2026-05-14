@@ -1,4 +1,4 @@
-# AUDIT-016 PR 3 — V0/V1 → V2 Envelope Migration Production Runbook
+# AUDIT-016 PR 3 - V0/V1 → V2 Envelope Migration Production Runbook
 
 **Status:** Operator-ready
 **Owner:** Security / Compliance lead
@@ -56,8 +56,8 @@ aws ssm get-parameter --name /tailrd/production/AWS_KMS_PHI_KEY_ALIAS --query Pa
 ```
 
 Expected:
-- `phi-encryption-key` length = 65 (64 hex chars + newline) — AUDIT-017 validates at module init.
-- `PHI_ENVELOPE_VERSION` = `v2`. **Without v2, `encryptWithCurrent` emits V1 instead of V2 — defeats the migration.** PR 3 pre-flight + `migrateRecord` defense-in-depth re-parse will reject a non-V2 emit, but flip the flag first.
+- `phi-encryption-key` length = 65 (64 hex chars + newline) - AUDIT-017 validates at module init.
+- `PHI_ENVELOPE_VERSION` = `v2`. **Without v2, `encryptWithCurrent` emits V1 instead of V2 - defeats the migration.** PR 3 pre-flight + `migrateRecord` defense-in-depth re-parse will reject a non-V2 emit, but flip the flag first.
 - `AWS_KMS_PHI_KEY_ALIAS` matches the deployed config (alias OR ARN both accepted by AWS SDK natively).
 
 ### 2.3 Verify PR 2 deploy is in production
@@ -85,7 +85,7 @@ PHI_ENVELOPE_VERSION=v2 \
 Inspect the JSON envelope at the bottom of the log:
 
 - Confirm `targetsScanned` ≈ 66 (post-cleanup if any) and `targetsSkipped` is reasonable (column-not-found drift is expected for any model that hasn't been migrated yet).
-- Capture `totalV0V1Before` — the number of rows that will migrate.
+- Capture `totalV0V1Before` - the number of rows that will migrate.
 - Confirm `cleanForCloseout` = false (always false in dry-run; this is expected).
 
 ### 2.5 Confirm dry-run counts are reasonable
@@ -203,7 +203,7 @@ Watch the Aurora writer instance CloudWatch dashboard. ServerlessV2 ACU should r
 
 ## 5. Post-Run Validation
 
-### 5.1 Re-run `--dry-run` — confirm v0v1=0 across all targets
+### 5.1 Re-run `--dry-run` - confirm v0v1=0 across all targets
 
 ```bash
 PHI_ENVELOPE_VERSION=v2 \
@@ -227,7 +227,7 @@ await prisma.\$disconnect();
 "
 ```
 
-The output should be plain decrypted strings (not the `enc:v2:...` envelope — middleware decrypts on read).
+The output should be plain decrypted strings (not the `enc:v2:...` envelope - middleware decrypts on read).
 
 ### 5.3 Archive summary artifact
 
@@ -254,9 +254,9 @@ Edit `docs/audit/AUDIT_FINDINGS_REGISTER.md`: AUDIT-016 status → RESOLVED with
 
 | Sub-PR | Status | PR |
 |---|---|---|
-| PR 1 — V0/V1/V2 envelope schema + V1 emission + AUDIT-017 bundle | SHIPPED | #255 |
-| PR 2 — V2 envelope emission + kmsService wiring + per-record EncryptionContext | SHIPPED | #258 |
-| PR 3 — `migrateRecord()` + V0/V1 → V2 migration script (this) | SHIPPED | (this PR) |
+| PR 1 - V0/V1/V2 envelope schema + V1 emission + AUDIT-017 bundle | SHIPPED | #255 |
+| PR 2 - V2 envelope emission + kmsService wiring + per-record EncryptionContext | SHIPPED | #258 |
+| PR 3 - `migrateRecord()` + V0/V1 → V2 migration script (this) | SHIPPED | (this PR) |
 
 AUDIT-016 register status flips OPEN → RESOLVED at PR 3 merge.
 
@@ -269,9 +269,9 @@ When `AUDIT-075` lands and extends `PHI_FIELD_MAP` / `PHI_JSON_FIELDS` with the 
 3. Re-run `--execute` on those columns specifically (use `--target` filter to avoid re-scanning already-V2 columns).
 4. Update register: AUDIT-075 RESOLVED + AUDIT-016 re-run cross-reference.
 
-This re-run requirement is a known follow-up — capture it explicitly so future AUDIT-075 work doesn't drop coverage.
+This re-run requirement is a known follow-up - capture it explicitly so future AUDIT-075 work doesn't drop coverage.
 
-### 6.3 Future work — `rotateKey()` policy implementation
+### 6.3 Future work - `rotateKey()` policy implementation
 
 `keyRotation.rotateKey()` remains a `DesignPhaseStubError` after PR 3. PR 3 is **envelope-format upgrade** (V0/V1 → V2); `rotateKey()` is **ongoing key rotation policy** (rotating the AWS KMS KEK or `PHI_ENCRYPTION_KEY` material per NIST SP 800-57 365-day cycle). Different concept; deferred to a future PR (possibly AUDIT-016 PR 4 or a dedicated AUDIT-XXX) once the operator-side rotation cadence + key-version tracking schema land.
 
@@ -349,3 +349,292 @@ A future enhancement (separate AUDIT) could add `SELECT ... FOR UPDATE` row-leve
 - HIPAA §164.312(b) audit controls
 - NIST SP 800-57 Part 1 Rev 5 cryptoperiod guidance
 - Day 10 Aurora cutover precedent: `docs/CHANGE_RECORD_2026_04_29_day10_aurora_cutover.md`
+
+---
+
+## 10. V2 to V2 EncryptionContext.purpose Rekey (STEP 1.7 attempt-3 path)
+
+### 10.1 Scope
+
+This section covers the V2 to V2 EncryptionContext.purpose rekey path executed via `backend/scripts/migrations/audit-016-pr3-v2-rekey-purpose.ts`. Sections 1 through 9 cover the V0/V1 to V2 envelope-format migration; section 10 covers a downstream architectural correction where V2 envelopes written by the STEP 1.5 migration script under a non-canonical `EncryptionContext.purpose` value are re-encrypted under the canonical production purpose value.
+
+Run section 10 only after sections 1 through 6 have completed cleanly, after STEP 1.7 attempt-2 has surfaced `audit_logs.description decryptError=UnknownError 5/5`, and after the operator has confirmed the architectural cause is the dual-purpose mismatch documented in section 10.2.
+
+### 10.2 Why this exists
+
+STEP 1.5 (Day 11 V0/V1 to V2 migration) wrote V2 envelopes under `EncryptionContext.purpose='phi-migration-v0v1-to-v2'` (per `ENCRYPT_CONTEXT_BASE` in `backend/scripts/migrations/audit-016-pr3-v0v1-to-v2.ts`). Production `phiEncryption` middleware uses `EncryptionContext.purpose='phi-encryption'` (per `BASE_ENCRYPT_CONTEXT` in `backend/src/middleware/phiEncryption.ts` line 74). AWS KMS authenticates `EncryptionContext` at decrypt time; any mismatch surfaces as `InvalidCiphertextException` and bubbles through `keyRotation.decryptAny` as `UnknownError`.
+
+STEP 1.7 attempt-2 (Day 12) detected this empirically: production spot-check decrypted 20 of 25 PHI targets successfully and failed 5 of 5 on `audit_logs.description`. Robust-Palantir Fix Option 1B (locked Day 13) re-encrypts every STEP-1.5-touched V2 envelope under the canonical `phi-encryption` purpose. End state is single canonical purpose; no multi-purpose tolerance code in the production hot path; no tech debt.
+
+### 10.3 Pre-flight checks
+
+Run each step in order. Stop if any step fails; do not proceed with `--execute` until all four items are clean. These checks are additive to section 2 pre-flight; do not skip section 2 for the V2 to V2 rekey.
+
+#### 10.3.1 HEAD on main is the rekey-script merge
+
+```powershell
+git log --oneline -1
+```
+
+Expected: `2f5058d feat(audit-016-pr3-step-1-7): V2 to V2 EncryptionContext.purpose rekey for audit_logs.description canonical alignment (#274)`.
+
+#### 10.3.2 ECS production task-def is post-PR-#274
+
+```powershell
+aws ecs describe-services `
+  --cluster tailrd-production-cluster `
+  --services tailrd-production-backend `
+  --query "services[0].deployments[0].{Status:status,RolloutState:rolloutState,TaskDef:taskDefinition,DesiredCount:desiredCount,RunningCount:runningCount}" `
+  --output json
+```
+
+Expected: `TaskDef` ends `tailrd-backend:190`, `Status=PRIMARY`, `RolloutState=COMPLETED`, `DesiredCount=1`, `RunningCount=1`.
+
+#### 10.3.3 Pre-execute Aurora snapshot is preserved
+
+```powershell
+aws rds describe-db-cluster-snapshots `
+  --db-cluster-snapshot-identifier tailrd-pre-audit-016-pr3-step-1-7-2026-05-12 `
+  --query "DBClusterSnapshots[0].{Status:Status,Percent:PercentProgress}" `
+  --output json
+```
+
+Expected: `Status=available`, `Percent=100`. Do not skip this check; section 10.9 rollback restores from this exact snapshot identifier.
+
+#### 10.3.4 Dry-run candidate count baseline
+
+Run the canonical dry-run via ECS RunTask (operator local machine cannot reach VPC-isolated Aurora; see AUDIT-085).
+
+```powershell
+aws ecs run-task `
+  --cluster tailrd-production-cluster `
+  --task-definition tailrd-backend:190 `
+  --launch-type FARGATE `
+  --platform-version 1.4.0 `
+  --network-configuration "awsvpcConfiguration={subnets=[subnet-0e606d5eea0f4c89b,subnet-0071588b7174f200a],securityGroups=[sg-07cf4b72927f9038f],assignPublicIp=DISABLED}" `
+  --overrides file://runtask-override-rekey-dryrun-fixed.json `
+  --output json
+```
+
+Override file `runtask-override-rekey-dryrun-fixed.json` (in-image-path discipline applied per section 10.4.1):
+
+```json
+{
+  "containerOverrides": [
+    {
+      "name": "tailrd-backend",
+      "environment": [
+        { "name": "PHI_ENVELOPE_VERSION", "value": "v2" }
+      ],
+      "command": [
+        "npx",
+        "tsx",
+        "scripts/migrations/audit-016-pr3-v2-rekey-purpose.ts",
+        "--dry-run"
+      ]
+    }
+  ]
+}
+```
+
+Expected dry-run baseline (Day 14): approximately 515,000 V2 candidates across 82 targets. Confirm `totalV2Candidates` is within 10 percent of this baseline before authorizing execute. Inspect the CloudWatch log stream (see section 10.6) for the full summary JSON.
+
+### 10.4 Execute command
+
+Production execute runs via ECS RunTask per the AUDIT-085 Option A pattern. Operator local machine cannot reach VPC-isolated Aurora; ECS RunTask is the only sanctioned path.
+
+```powershell
+aws ecs run-task `
+  --cluster tailrd-production-cluster `
+  --task-definition tailrd-backend:190 `
+  --launch-type FARGATE `
+  --platform-version 1.4.0 `
+  --network-configuration "awsvpcConfiguration={subnets=[subnet-0e606d5eea0f4c89b,subnet-0071588b7174f200a],securityGroups=[sg-07cf4b72927f9038f],assignPublicIp=DISABLED}" `
+  --overrides file://runtask-override-rekey-execute.json `
+  --output json
+```
+
+Override file `runtask-override-rekey-execute.json` (in-image-path discipline applied per section 10.4.1):
+
+```json
+{
+  "containerOverrides": [
+    {
+      "name": "tailrd-backend",
+      "environment": [
+        { "name": "AUDIT_016_PR3_REKEY_CONFIRMED", "value": "yes" },
+        { "name": "PHI_ENVELOPE_VERSION", "value": "v2" }
+      ],
+      "command": [
+        "npx",
+        "tsx",
+        "scripts/migrations/audit-016-pr3-v2-rekey-purpose.ts",
+        "--execute",
+        "--batch",
+        "50",
+        "--pause-ms",
+        "100"
+      ]
+    }
+  ]
+}
+```
+
+Without `AUDIT_016_PR3_REKEY_CONFIRMED=yes` the script exits 1 at the confirmation gate with a pointer to section 10. Without `PHI_ENVELOPE_VERSION=v2` the script exits 1 at pre-flight env validation; `encryptWithCurrent` would otherwise emit V1 and the defense-in-depth re-parse rejects any non-V2 emit.
+
+Expected wall-clock: approximately 30 to 60 minutes on 515,000 records at `--batch 50 --pause-ms 100`. KMS rate-limit headroom: approximately 27x at default config (1 KMS Decrypt + 1 KMS Encrypt call per rekeyed row, approximately 100 to 200 RPS sustained vs the 5,500 RPS account quota).
+
+#### 10.4.1 Path-discipline lesson (Day 14 in-image-path catch)
+
+The production Dockerfile uses `backend/` as the build context; image `WORKDIR` is `/app`. Source path `backend/scripts/migrations/audit-016-pr3-v2-rekey-purpose.ts` becomes in-image path `/app/scripts/migrations/audit-016-pr3-v2-rekey-purpose.ts`. The ECS RunTask `command` override must use the in-image path; drop the `backend/` prefix.
+
+```
+Source path:    backend/scripts/migrations/audit-016-pr3-v2-rekey-purpose.ts
+In-image path:  scripts/migrations/audit-016-pr3-v2-rekey-purpose.ts
+```
+
+Day 14 first attempt used the source path verbatim and failed at task start with `tsx: cannot find scripts/migrations/...`. Corrected override file `runtask-override-rekey-dryrun-fixed.json` carries the fix. Sister discipline: the V0/V1 to V2 migration command at section 3.1 runs from operator local where source paths are correct; ECS RunTask overrides require in-image paths.
+
+### 10.5 Graceful-skip discipline
+
+The rekey script auto-skips records already encrypted under the canonical purpose. Per-row decrypt-with-old-purpose probe (purpose `phi-migration-v0v1-to-v2`) is wrapped in try/catch; any failure pattern in the allow-list below routes the row to `rowsSkippedCanonical`, NOT `rowsFailed`:
+
+| KMS / decrypt error | Interpretation | Routing |
+|---|---|---|
+| `InvalidCiphertextException` | Record already canonical purpose; EncryptionContext mismatch on old-purpose probe | rowsSkippedCanonical |
+| `AccessDenied` (decrypt phase) | Record already canonical purpose; KMS rejects old context | rowsSkippedCanonical |
+| `integrity check failed` | Record already canonical purpose; AES-GCM authTag mismatch on old context | rowsSkippedCanonical |
+| `UnknownError` (KMS wrapper) | Record already canonical purpose; wrapper masked the underlying KMS exception | rowsSkippedCanonical |
+
+The rekey is fully idempotent. Re-running on a column whose rows are all canonical produces `rowsSkippedCanonical=N, rowsRekeyed=0, rowsFailed=0` and exits clean. Re-runs after a partial failure are safe; only unprocessed-or-failed rows attempt a rekey on the next run.
+
+### 10.6 Real-time monitoring
+
+#### 10.6.1 Task lifecycle poll
+
+```powershell
+$taskArn = "<paste arn from run-task output>"
+aws ecs describe-tasks `
+  --cluster tailrd-production-cluster `
+  --tasks $taskArn `
+  --query "tasks[0].{LastStatus:lastStatus,DesiredStatus:desiredStatus,ExitCode:containers[0].exitCode,StoppedReason:stoppedReason}" `
+  --output json
+```
+
+Poll every 60 to 90 seconds. `LastStatus` transitions PROVISIONING -> PENDING -> RUNNING -> DEACTIVATING -> STOPPING -> STOPPED. Desired final state: `LastStatus=STOPPED, ExitCode=0`.
+
+#### 10.6.2 CloudWatch Logs
+
+Log group `/ecs/tailrd-production-backend`. Log stream `tailrd-backend/tailrd-backend/<taskId>` where `<taskId>` is the last segment of `taskArn`.
+
+```powershell
+$taskId = ($taskArn -split "/")[-1]
+aws logs get-log-events `
+  --log-group-name /ecs/tailrd-production-backend `
+  --log-stream-name "tailrd-backend/tailrd-backend/$taskId" `
+  --output json
+```
+
+Expected per-batch log line: `PHI_REKEY_BATCH_COMPLETED` with structured fields `target`, `batchIndex`, `rowsRekeyed`, `rowsSkippedCanonical`, `rowsFailed`. Final log line carries the `SUMMARY_ARTIFACT` pointer plus the full JSON envelope (see section 10.10).
+
+#### 10.6.3 KMS API metrics
+
+Watch CloudWatch namespace `AWS/KMS` for the production KMS key alias `alias/tailrd-production-phi`. Per-row rekey calls `Decrypt` once + `Encrypt` once, so 2 KMS calls per rekeyed row. A 515,000-row rekey emits approximately 1,030,000 KMS calls. Account-level shared quota: 5,500 RPS. Sustained throughput at default config: approximately 100 to 200 RPS. Headroom: approximately 27x.
+
+If `ThrottlingException` appears, raise `--pause-ms` to 250 or 500 and re-run from a fresh dry-run baseline (idempotent on re-run; see section 10.5).
+
+### 10.7 STEP 1.7 attempt-3 verification
+
+Post-execute verification re-runs the production spot-check decrypt task. The canonical verification target is `audit_logs.description` (the original STEP 1.7 attempt-2 failure target).
+
+```powershell
+aws ecs run-task `
+  --cluster tailrd-production-cluster `
+  --task-definition tailrd-backend:190 `
+  --launch-type FARGATE `
+  --platform-version 1.4.0 `
+  --network-configuration "awsvpcConfiguration={subnets=[subnet-0e606d5eea0f4c89b,subnet-0071588b7174f200a],securityGroups=[sg-07cf4b72927f9038f],assignPublicIp=DISABLED}" `
+  --overrides file://runtask-override-step-1-7-spotcheck-execute.json `
+  --output json
+```
+
+Pass criteria: 25 of 25 PHI targets decrypt-success including `audit_logs.description`. Spot-check summary JSON in CloudWatch logs lists each target with `decryptStatus=success` and `samplesPassed=5/5`.
+
+If any target reports decrypt failure: capture `(table, column, sampleId, errorPattern)` tuples; do NOT re-run the rekey script (it is idempotent and any remaining failures are likely outside the canonical-purpose scope); proceed to section 10.9 rollback.
+
+### 10.8 Post-execute Aurora snapshot (STEP 1.8)
+
+After STEP 1.7 attempt-3 verification passes, capture a post-execute Aurora cluster snapshot. This is the canonical end-of-arc artifact.
+
+```powershell
+$ts = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHHmmssZ")
+aws rds create-db-cluster-snapshot `
+  --db-cluster-identifier tailrd-production-aurora `
+  --db-cluster-snapshot-identifier "tailrd-post-audit-016-pr3-step-1-7-$ts" `
+  --tags Key=Purpose,Value=AUDIT-016-PR3-STEP-1-7-post-execute Key=HIPAA,Value=6yr-retention
+```
+
+Record snapshot ARN + timestamp in the run log. Sister to section 2.1 snapshot cadence; this snapshot is the audit-trail artifact for the rekey-arc closeout.
+
+### 10.9 Rollback procedure
+
+If STEP 1.7 attempt-3 verification (section 10.7) fails, or if the rekey script reports `rowsFailed > 0` outside the section 10.5 allow-list, restore from the pre-execute snapshot.
+
+#### 10.9.1 Stop the ECS service
+
+```powershell
+aws ecs update-service `
+  --cluster tailrd-production-cluster `
+  --service tailrd-production-backend `
+  --desired-count 0
+```
+
+Wait for `RunningCount=0` before restoring; concurrent writers during restore corrupt the rolled-back state.
+
+#### 10.9.2 Restore from pre-execute snapshot
+
+```powershell
+aws rds restore-db-cluster-from-snapshot `
+  --db-cluster-identifier tailrd-production-aurora-restore `
+  --snapshot-identifier tailrd-pre-audit-016-pr3-step-1-7-2026-05-12 `
+  --engine aurora-postgresql
+```
+
+Swap `DATABASE_URL` in Secrets Manager once the restored cluster is healthy (preserve old VersionId for audit). Force a new ECS task deployment. Reference `docs/CHANGE_RECORD_2026_04_29_day10_aurora_cutover.md` for the full cutover pattern.
+
+#### 10.9.3 Re-cut feature branch for forward fix
+
+```powershell
+git fetch origin
+git checkout main
+git pull
+git checkout -b feat/audit-016-pr3-step-1-7-attempt-4
+```
+
+File a follow-up register entry capturing: pre-execute snapshot ID, failure mode, time-to-detect, time-to-rollback, blast radius (rows touched before rollback), forward-fix scope.
+
+### 10.10 Summary artifact
+
+The rekey script writes the summary artifact to in-image path `/app/var/audit-016-pr3-v2-rekey-execute-<ISO-timestamp>.json`. The Fargate task filesystem is ephemeral; the artifact is NOT recoverable from disk after task stop.
+
+The full JSON envelope is also emitted to stdout as a single log entry tagged `SUMMARY_ARTIFACT`. Capture the artifact via CloudWatch:
+
+```powershell
+$taskId = ($taskArn -split "/")[-1]
+aws logs filter-log-events `
+  --log-group-name /ecs/tailrd-production-backend `
+  --log-stream-names "tailrd-backend/tailrd-backend/$taskId" `
+  --filter-pattern "SUMMARY_ARTIFACT" `
+  --output json `
+  > audit-016-pr3-v2-rekey-execute-summary.json
+```
+
+Move the captured JSON plus the full task log into the compliance evidence store:
+
+```powershell
+$today = (Get-Date).ToUniversalTime().ToString("yyyyMMdd")
+aws s3 cp audit-016-pr3-v2-rekey-execute-summary.json `
+  s3://tailrd-compliance-evidence/AUDIT-016-PR-3-STEP-1-7/$today/
+```
+
+Sister to section 5.3 archive cadence. Capture the artifact for HIPAA section 164.312(b) audit-control retention; keep for 6 years minimum.
