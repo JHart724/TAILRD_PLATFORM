@@ -376,7 +376,7 @@ Run each step in order. Stop if any step fails; do not proceed with `--execute` 
 git log --oneline -1
 ```
 
-Expected: `48930aa feat(audit-016-pr3-step-1-7): V2 to V2 EncryptionContext.purpose rekey for audit_logs.description canonical alignment (#274)`.
+Expected: `48930aa fix(audit-016-pr3-step-1-7): keyset cursor + all-skip safety abort closes skip-canonical re-iteration loop on already-canonical V2 targets (#276)`.
 
 #### 10.3.2 ECS production task-def is post-PR-#274
 
