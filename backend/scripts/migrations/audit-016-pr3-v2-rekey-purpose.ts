@@ -244,11 +244,25 @@ export async function countTarget(t: Target): Promise<RekeyTargetCounts> {
   };
 }
 
-export async function fetchV2Rows(t: Target, limit: number): Promise<Array<{ id: string; value: string }>> {
+// Keyset cursor: `afterId` advances past prior-batch tail to prevent the
+// rekey loop from re-fetching skip-canonical rows that the SQL WHERE clause
+// cannot discriminate (both pre-rekey and post-rekey states are byte-
+// identical `enc:v2:%` envelopes). Without the cursor, a target with
+// 100 percent already-canonical rows yields an infinite loop because the
+// candidate set never shrinks. Sister to audit-016-pr3-v0v1-to-v2.ts ORDER
+// BY id discipline (line 429), tightened for the rekey same-prefix case.
+// afterId is sourced from prior-batch row.id (UUID/CUID from DB); single-
+// quote escape is defense-in-depth.
+export async function fetchV2Rows(
+  t: Target,
+  limit: number,
+  afterId: string | null = null,
+): Promise<Array<{ id: string; value: string }>> {
   const selectExpr = t.kind === 'json' ? `"${t.column}"#>>'{}'` : `"${t.column}"`;
   const whereExpr = t.kind === 'json' ? `"${t.column}"::text LIKE '"enc:v2:%'` : `"${t.column}" LIKE 'enc:v2:%'`;
+  const cursorExpr = afterId !== null ? ` AND id > '${afterId.replace(/'/g, "''")}'` : '';
   const rows = await prisma.$queryRawUnsafe<Array<{ id: string; value: string }>>(
-    `SELECT id, ${selectExpr} AS value FROM "${t.table}" WHERE ${whereExpr} LIMIT ${limit}`,
+    `SELECT id, ${selectExpr} AS value FROM "${t.table}" WHERE ${whereExpr}${cursorExpr} ORDER BY id ASC LIMIT ${limit}`,
   );
   return rows;
 }
@@ -278,11 +292,23 @@ export async function rekeyTarget(t: Target, batchSize: number, pauseMs: number)
 
   auditLogger.info(`PHI_REKEY_TARGET_START table=${t.table} column=${t.column} kind=${t.kind} v2Count=${beforeCounts.v2}`);
 
+  // Keyset cursor: tracks last-seen id to advance past skip-canonical rows.
+  // Without this cursor, the WHERE clause `LIKE 'enc:v2:%'` cannot
+  // discriminate pre-rekey from post-rekey state (both byte-identical V2
+  // envelopes); candidate set never shrinks; loop infinite on
+  // already-canonical targets. Sister-pattern to audit-016-pr3-v0v1-to-v2.ts
+  // ORDER BY id discipline, hardened for the rekey same-prefix case.
+  let cursor: string | null = null;
+
   while (true) {
-    const rows = await fetchV2Rows(t, batchSize);
+    const rows = await fetchV2Rows(t, batchSize, cursor);
     if (rows.length === 0) break;
 
     auditLogger.info(`PHI_REKEY_BATCH_START table=${t.table} column=${t.column} batchSize=${rows.length}`);
+
+    let batchSkippedCanonical = 0;
+    let batchRekeyed = 0;
+    let batchFailed = 0;
 
     for (const row of rows) {
       rowsAttempted++;
@@ -298,8 +324,10 @@ export async function rekeyTarget(t: Target, batchSize: number, pauseMs: number)
         );
         if (result.skipped) {
           rowsSkippedCanonical++;
+          batchSkippedCanonical++;
         } else {
           rowsRekeyed++;
+          batchRekeyed++;
         }
       } catch (err: any) {
         // Graceful-skip: decrypt-under-oldContext failure means the record is already
@@ -313,9 +341,11 @@ export async function rekeyTarget(t: Target, batchSize: number, pauseMs: number)
                                   msg.includes('InvalidCiphertextException');
         if (isContextMismatch) {
           rowsSkippedCanonical++;
+          batchSkippedCanonical++;
           auditLogger.info(`PHI_REKEY_SKIP_CANONICAL table=${t.table} column=${t.column} recordId=${row.id}`);
         } else {
           rowsFailed++;
+          batchFailed++;
           errors.push({ recordId: row.id, message: msg });
           auditLogger.error(`PHI_REKEY_ROW_FAIL table=${t.table} column=${t.column} recordId=${row.id} err=${msg}`);
         }
@@ -323,6 +353,27 @@ export async function rekeyTarget(t: Target, batchSize: number, pauseMs: number)
     }
 
     auditLogger.info(`PHI_REKEY_BATCH_COMPLETED table=${t.table} column=${t.column} rekeyed=${rowsRekeyed} skipped=${rowsSkippedCanonical} failed=${rowsFailed}`);
+
+    // Cursor advance: last row's id is the next iteration's exclusive lower
+    // bound. Combined with ORDER BY id ASC in fetchV2Rows, this guarantees
+    // forward progress even when every row in a batch was skip-canonical
+    // (legacy SQL filter cannot discriminate post-rekey envelopes).
+    cursor = rows[rows.length - 1].id;
+
+    // Option B safety abort: if every row in the batch was skip-canonical,
+    // assume the target has converged and stop. Mirrors sister-script
+    // audit-016-pr3-v0v1-to-v2.ts:615-617 all-fail abort, inverted for the
+    // rekey case where all-skip (not all-fail) is the convergence signal.
+    // The cursor alone prevents infinite loops; this guard short-circuits
+    // tail-end scans on already-canonical targets.
+    const batchAllSkipped =
+      rows.length > 0 && batchSkippedCanonical === rows.length && batchRekeyed === 0 && batchFailed === 0;
+    if (batchAllSkipped) {
+      auditLogger.info(
+        `PHI_REKEY_BATCH_ALL_SKIPPED table=${t.table} column=${t.column} batchSize=${rows.length} cursor=${cursor}`,
+      );
+      break;
+    }
 
     if (rows.length < batchSize) break;
     await sleep(pauseMs);

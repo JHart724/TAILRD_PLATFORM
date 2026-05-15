@@ -638,3 +638,57 @@ aws s3 cp audit-016-pr3-v2-rekey-execute-summary.json `
 ```
 
 Sister to section 5.3 archive cadence. Capture the artifact for HIPAA section 164.312(b) audit-control retention; keep for 6 years minimum.
+
+### 10.11 Day 15 rekey defect plus Option A plus B fix
+
+This section captures the Day 15 production-halt defect discovered during the STEP 1.7 attempt-3 execute run, the architectural delta vs the sister script `audit-016-pr3-v0v1-to-v2.ts`, and the two-layer fix (Option A keyset cursor plus Option B all-skip safety abort).
+
+#### 10.11.1 Original bug: skip-canonical re-iteration loop
+
+Symptom: on target 1 of 82 (`audit_logs.description`), the execute run elapsed 2h45min while reporting a `rowsSkippedCanonical` count of 274x the table row count and zero `rowsRekeyed`. No forward progress; the same `description` records were re-fetched and re-skipped each loop iteration.
+
+Root cause: the fetch SQL filter `WHERE description LIKE 'enc:v2:%'` cannot discriminate pre-rekey from post-rekey envelopes because both are byte-identical V2 envelopes (rekey only swaps `EncryptionContext.purpose`, not the envelope-format prefix). On a target that is already 100 percent canonical, every fetch returns the same N rows, every row is skipped (decrypt-context-mismatch on the legacy purpose), the offset never advances past N, and the loop never terminates absent an external bound.
+
+Blast radius: production rekey run on target 1 of 82 was halted at 2h45min wall by operator. No data corruption (skip path is read-only); the defect is a non-progressing fetch loop, not an incorrect-write loop.
+
+#### 10.11.2 Architectural delta vs sister script
+
+`backend/scripts/migrations/audit-016-pr3-v0v1-to-v2.ts` (legacy-to-V2 path) does NOT exhibit this defect because the fetch SQL filter `WHERE description LIKE 'enc:v0:%' OR description LIKE 'enc:v1:%'` produces a SHRINKING candidate set: each successful rekey converts a v0/v1 record into a v2 record, which is then excluded from subsequent fetches. The SQL prefix filter IS a valid progress discriminator for v0/v1-to-v2.
+
+`audit-016-pr3-v2-rekey-purpose.ts` (V2-to-V2 path) cannot rely on this discriminator: pre-rekey and post-rekey envelopes both match `LIKE 'enc:v2:%'`. The candidate set does not shrink as the rekey proceeds; the SQL filter cannot distinguish pending rows from completed rows.
+
+The architectural invariant `sister scripts share fetch-loop progress semantics` was violated because `audit-016-pr3-v2-rekey-purpose.ts` adopted the v0v1 fetch-loop shape verbatim without adapting the candidate-set-advance layer to the V2-to-V2 SQL discriminator gap.
+
+#### 10.11.3 Option A keyset cursor
+
+Fix layer 1: `fetchV2Rows` advances by row id, not by SQL filter contraction.
+
+The fetch SQL gains a keyset clause `WHERE id > $lastFetchedId` (parameterized; empty-string sentinel on first iteration via composed SQL prefix omission). After each fetch, the rekey loop records the largest fetched `id` and passes it as `$lastFetchedId` for the next fetch. Forward progress is guaranteed regardless of whether rekey succeeded, skipped, or failed on each row; the cursor advances on every row consumed.
+
+Implementation: `backend/scripts/migrations/audit-016-pr3-v2-rekey-purpose.ts` `fetchV2Rows` accepts a `lastFetchedId` parameter; SQL composition appends the keyset predicate when the parameter is nonempty. Test coverage: GROUP G `T-REKEY-LOOP-2` asserts the second fetch SQL contains `id > 'rec-bbb'` after the first fetch returned a row with id `rec-bbb`.
+
+#### 10.11.4 Option B all-skip safety abort
+
+Fix layer 2: the rekey loop aborts if a fetch iteration returns rows but every row is recorded as `rowsSkippedCanonical`.
+
+This is the sister of the v0v1 all-fail abort at `backend/scripts/migrations/audit-016-pr3-v0v1-to-v2.ts:571-617`, which aborts if every row in a fetch iteration is recorded as `rowsFailed` (interpreted as a systemic failure mode rather than per-row error noise). The V2-to-V2 sister of that invariant is: every row skipped-canonical in a fetch iteration means the candidate set is fully canonical and there is no further work; abort and report.
+
+Implementation: rekey loop tracks per-iteration skip count; if `rowsSkippedCanonicalInIteration === rows.length` and `rows.length > 0`, the loop emits an `ALL_SKIP_ABORT` log entry and returns. Test coverage: GROUP G `T-REKEY-LOOP-1` asserts a 100 percent already-canonical target terminates in exactly 1 fetch with `rowsAttempted=2`, `rowsSkippedCanonical=2`, `rowsRekeyed=0`, `rowsFailed=0`.
+
+#### 10.11.5 Test class gap closure
+
+GROUP G added to `backend/tests/scripts/migrations/audit-016-pr3-v2-rekey-purpose.test.ts`:
+
+- `T-REKEY-LOOP-1`: 100 percent already-canonical target terminates in 1 iteration via all-skip safety abort. Exactly 1 fetch call.
+- `T-REKEY-LOOP-2`: mixed legacy plus canonical; cursor advances past skip-canonical rows. 2 fetch calls. First fetch SQL does NOT contain `id > '`. Second fetch SQL contains `id > 'rec-bbb'`.
+- `T-REKEY-LOOP-3`: 0 candidate rows terminates on `rows.length===0` before any rekey call.
+
+Pre-Day-15 coverage gap: GROUPS A through F asserted parseArgs, preFlightValidate, checkRekeyConfirmation, countTarget SQL, fetchV2Rows SQL composition, and rekeyTarget graceful-skip semantics. None of those groups asserted fetch-loop termination invariants on a 100 percent already-canonical target. GROUP G closes that gap.
+
+#### 10.11.6 Sister-pattern invariant-preservation discipline (forward link)
+
+`docs/audit/AUDIT_METHODOLOGY.md §17 PR acceptance criteria` will be amended in a follow-up methodology PR to require sister-script invariant-preservation declaration: when a new migration script is forked from a sister, the PR description must enumerate the invariants the sister relies on, and declare which the new script preserves vs which require an adapted implementation. The Day 15 defect was a missed adaptation of the candidate-set-advance invariant; a forward declaration would have caught the gap at PR review.
+
+#### 10.11.7 DRIFT-32 cross-reference
+
+This defect is logged as DRIFT-32 in `docs/audit/AGENT_DRIFT_REGISTRY.md`. Indicator: sister-pattern adoption gap (SQL discriminator vs post-fetch in-memory discriminator at candidate-set-advance layer). Trigger: production halt at 2h45min on target 1 of 82 with skip count 274x expected row count. Mechanism update: AUDIT_METHODOLOGY.md §17 PR acceptance criteria addition (see 10.11.6).

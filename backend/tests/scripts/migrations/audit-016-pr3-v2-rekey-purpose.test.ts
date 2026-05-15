@@ -8,6 +8,7 @@
  *   GROUP D: countTarget SQL composition (kind-aware; 2 tests)
  *   GROUP E: fetchV2Rows SQL composition (kind-aware with json unwrap; 2 tests)
  *   GROUP F: rekeyTarget graceful-skip on canonical-purpose records (3 tests)
+ *   GROUP G: rekeyTarget loop-termination invariants (3 tests; Day 15 cursor-fix)
  *
  * Test mocking discipline:
  *   - prisma client: jest.mock at module level
@@ -253,5 +254,95 @@ describe('GROUP F: rekeyTarget graceful-skip on canonical-purpose records', () =
     expect(report.errors).toHaveLength(1);
     expect(report.errors[0].recordId).toBe('rec-1');
     expect(report.errors[0].message).toMatch(/connection terminated/);
+  });
+});
+
+// ===== GROUP G: rekeyTarget loop-termination invariants (Day 15 cursor-fix) =====
+//
+// Closes test coverage gap caught at Day 15 production halt: target with
+// 100 percent already-canonical rows caused an infinite loop because the SQL
+// WHERE clause `LIKE 'enc:v2:%'` cannot discriminate pre-rekey from
+// post-rekey state (both byte-identical V2 envelopes). Fix combines:
+//   Option A: keyset cursor `id > <last-row-id>` in fetchV2Rows (forward
+//             progress invariant regardless of SQL-filter discriminator gap)
+//   Option B: all-skip safety abort (short-circuit tail-end scans on
+//             already-canonical targets; sister to v0v1-to-v2.ts all-fail
+//             abort line 615-617)
+//
+// Sister-pattern parity: audit-016-pr3-v0v1-to-v2.ts:485-488 + 571-617 used
+// shrinking-candidate-set discipline (SQL filter shrinks as migrations
+// succeed) plus all-fail safety abort. The rekey case requires the keyset
+// cursor because the same-prefix SQL filter cannot shrink the candidate set.
+describe('GROUP G: rekeyTarget loop-termination invariants', () => {
+  const target = { table: 'audit_logs', column: 'description', model: 'auditLog', kind: 'string' as const };
+
+  beforeEach(() => {
+    queryRawMock
+      .mockResolvedValueOnce([{ c: 100n }])
+      .mockResolvedValueOnce([{ c: 100n }]);
+  });
+
+  it('T-REKEY-LOOP-1: 100 percent already-canonical target terminates in 1 iteration via all-skip safety abort', async () => {
+    queryRawMock.mockResolvedValueOnce([
+      { id: 'rec-1', value: 'enc:v2:canonical-1' },
+      { id: 'rec-2', value: 'enc:v2:canonical-2' },
+    ]);
+    rekeyMock.mockRejectedValue(new Error('UnknownError'));
+
+    const report = await rekeyTarget(target, 2, 0);
+
+    const fetchCalls = queryRawMock.mock.calls.filter((c) => {
+      const sql = c[0] as string;
+      return sql.includes('SELECT id,') && sql.includes('AS value');
+    });
+    expect(fetchCalls).toHaveLength(1);
+    expect(report.rowsAttempted).toBe(2);
+    expect(report.rowsSkippedCanonical).toBe(2);
+    expect(report.rowsRekeyed).toBe(0);
+    expect(report.rowsFailed).toBe(0);
+  });
+
+  it('T-REKEY-LOOP-2: mixed legacy plus canonical advances cursor past skip-canonical rows', async () => {
+    queryRawMock
+      .mockResolvedValueOnce([
+        { id: 'rec-aaa', value: 'enc:v2:legacy' },
+        { id: 'rec-bbb', value: 'enc:v2:canonical' },
+      ])
+      .mockResolvedValueOnce([]);
+    rekeyMock
+      .mockResolvedValueOnce({
+        recordId: 'rec-aaa', table: 'audit_logs', column: 'description',
+        fromVersion: 'v2', toVersion: 'v2', fieldsConverted: 1,
+        skipped: false, migratedAt: new Date(),
+      })
+      .mockRejectedValueOnce(new Error('UnknownError'));
+
+    const report = await rekeyTarget(target, 2, 0);
+
+    const fetchCalls = queryRawMock.mock.calls.filter((c) => {
+      const sql = c[0] as string;
+      return sql.includes('SELECT id,') && sql.includes('AS value');
+    });
+    expect(fetchCalls).toHaveLength(2);
+    const firstFetchSql = fetchCalls[0][0] as string;
+    expect(firstFetchSql).not.toContain("id > '");
+    const secondFetchSql = fetchCalls[1][0] as string;
+    expect(secondFetchSql).toContain("id > 'rec-bbb'");
+    expect(report.rowsAttempted).toBe(2);
+    expect(report.rowsRekeyed).toBe(1);
+    expect(report.rowsSkippedCanonical).toBe(1);
+    expect(report.rowsFailed).toBe(0);
+  });
+
+  it('T-REKEY-LOOP-3: target with 0 candidate rows terminates on rows.length===0 before any rekey call', async () => {
+    queryRawMock.mockResolvedValueOnce([]);
+
+    const report = await rekeyTarget(target, 50, 0);
+
+    expect(rekeyMock).not.toHaveBeenCalled();
+    expect(report.rowsAttempted).toBe(0);
+    expect(report.rowsRekeyed).toBe(0);
+    expect(report.rowsSkippedCanonical).toBe(0);
+    expect(report.rowsFailed).toBe(0);
   });
 });
