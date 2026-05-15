@@ -376,7 +376,7 @@ Run each step in order. Stop if any step fails; do not proceed with `--execute` 
 git log --oneline -1
 ```
 
-Expected: `2f5058d feat(audit-016-pr3-step-1-7): V2 to V2 EncryptionContext.purpose rekey for audit_logs.description canonical alignment (#274)`.
+Expected: `48930aa fix(audit-016-pr3-step-1-7): keyset cursor + all-skip safety abort closes skip-canonical re-iteration loop on already-canonical V2 targets (#276)`.
 
 #### 10.3.2 ECS production task-def is post-PR-#274
 
@@ -388,7 +388,7 @@ aws ecs describe-services `
   --output json
 ```
 
-Expected: `TaskDef` ends `tailrd-backend:190`, `Status=PRIMARY`, `RolloutState=COMPLETED`, `DesiredCount=1`, `RunningCount=1`.
+Expected: `TaskDef` ends `tailrd-backend:192`, `Status=PRIMARY`, `RolloutState=COMPLETED`, `DesiredCount=1`, `RunningCount=1`.
 
 #### 10.3.3 Pre-execute Aurora snapshot is preserved
 
@@ -408,7 +408,7 @@ Run the canonical dry-run via ECS RunTask (operator local machine cannot reach V
 ```powershell
 aws ecs run-task `
   --cluster tailrd-production-cluster `
-  --task-definition tailrd-backend:190 `
+  --task-definition tailrd-backend:192 `
   --launch-type FARGATE `
   --platform-version 1.4.0 `
   --network-configuration "awsvpcConfiguration={subnets=[subnet-0e606d5eea0f4c89b,subnet-0071588b7174f200a],securityGroups=[sg-07cf4b72927f9038f],assignPublicIp=DISABLED}" `
@@ -446,7 +446,7 @@ Production execute runs via ECS RunTask per the AUDIT-085 Option A pattern. Oper
 ```powershell
 aws ecs run-task `
   --cluster tailrd-production-cluster `
-  --task-definition tailrd-backend:190 `
+  --task-definition tailrd-backend:192 `
   --launch-type FARGATE `
   --platform-version 1.4.0 `
   --network-configuration "awsvpcConfiguration={subnets=[subnet-0e606d5eea0f4c89b,subnet-0071588b7174f200a],securityGroups=[sg-07cf4b72927f9038f],assignPublicIp=DISABLED}" `
@@ -550,7 +550,7 @@ Post-execute verification re-runs the production spot-check decrypt task. The ca
 ```powershell
 aws ecs run-task `
   --cluster tailrd-production-cluster `
-  --task-definition tailrd-backend:190 `
+  --task-definition tailrd-backend:192 `
   --launch-type FARGATE `
   --platform-version 1.4.0 `
   --network-configuration "awsvpcConfiguration={subnets=[subnet-0e606d5eea0f4c89b,subnet-0071588b7174f200a],securityGroups=[sg-07cf4b72927f9038f],assignPublicIp=DISABLED}" `
