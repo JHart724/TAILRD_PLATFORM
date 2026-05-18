@@ -405,6 +405,7 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
   - HIPAA Security Rule §164.312(a)(2)(iv) (addressable encryption/decryption implementation specification)
   - NIST SP 800-57 Part 1 Rev 5 (cryptoperiod guidance)
   - NIST FIPS 197 (AES algorithm)
+- **2026-05-16 STEP 1.7 attempt-4 progress note:** AUDIT-016 PR3 STEP 1.7 V2-to-V2 EncryptionContext.purpose rekey arc moved forward. §10.4 production-execute PASSED at 2026-05-16T02:57:48Z (rowsFailed=0, v2Before=515,711 matches Day 16 dry-run baseline 0.000% drift, rowsRekeyed=495,362 across 82 targets, 2h 55min 58s wall clock, task 3a2c8f91a99344c7afc40db2e5c2cd30 on tailrd-backend:192). §10.7 verification BLOCKED at GO/NO-GO verdict construction (missing override file + spotcheck-script-vs-rekey purpose mismatch caught chat-side pre-invocation). §10.7 unblock via PR #278 (audit-016-pr3-step-1-7-spotcheck-canonical-purpose) which flips spotcheck reader to canonical 'phi-encryption' purpose + authors missing override file at repo root. §10.8 post-execute Aurora snapshot remains NO-GO pending §10.7 25-of-25 corroboration post-PR-#278 merge + image-build + task-def-bump. 14th §17.1 architectural-precedent codified (coordinated migration of sister verification tooling). DRIFT-35 codified (sister verification tooling not coordinated-migrated at canonical-primitive introduction).
 
 ### AUDIT-017 — `PHI_ENCRYPTION_KEY` length not validated at startup
 

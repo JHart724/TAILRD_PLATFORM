@@ -1,0 +1,12 @@
+{
+  "containerOverrides": [
+    {
+      "name": "tailrd-backend",
+      "command": [
+        "sh",
+        "-c",
+        "cd /app && npx tsx scripts/migrations/audit-016-pr3-spotcheck-decrypt.ts --batch-size 5"
+      ]
+    }
+  ]
+}
