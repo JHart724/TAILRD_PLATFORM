@@ -66,12 +66,18 @@ if (!isDemoMode && ENCRYPTION_KEY) {
 // AUDIT-017 validateKeyOrThrow pattern.
 validateEnvelopeConfigOrThrow();
 
+// Canonical PHI encryption purpose. Single source of truth per AUDIT-016
+// PR3 STEP 1.7 §17.1 15th-entry catalog (codified 2026-05-18): readers
+// import this constant; do not hardcode. Sister discipline to 14th-entry
+// coordinated migration of verification tooling (PR #278).
+export const CANONICAL_PHI_PURPOSE = 'phi-encryption' as const;
+
 // Base encryption context. AUDIT-016 PR 2 D2: extended per-record with
 // model + field at each encrypt call site for HIPAA audit-trail anchor
 // (CloudTrail kms:Decrypt event payload). See `contextFor()` below.
 const BASE_ENCRYPT_CONTEXT: EncryptionContext = {
   service: 'tailrd-backend',
-  purpose: 'phi-encryption',
+  purpose: CANONICAL_PHI_PURPOSE,
 };
 
 function contextFor(model: string, field: string): EncryptionContext {
