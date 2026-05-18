@@ -4,7 +4,8 @@
  * Test scope (Decision 5B from PAUSE A.2.5):
  *   GROUP A: parseArgs (CLI argument handling)
  *   GROUP B: contextFor (EncryptionContext anchor; regression guard against
- *            drift from migration script line 455-457)
+ *            drift from canonical middleware BASE_ENCRYPT_CONTEXT at
+ *            backend/src/middleware/phiEncryption.ts:72-79)
  *   GROUP C: filterNonZeroV2Targets (target filter logic)
  *   GROUP D: shapeCheck predicates (4 success/failure paths + PHI-exposure
  *            surface contract)
@@ -95,7 +96,7 @@ describe('GROUP A: parseArgs', () => {
 // ─── GROUP B: contextFor (regression guard) ────────────────────────────────
 
 describe('GROUP B: contextFor (EncryptionContext anchor)', () => {
-  test('B.1: context matches migration script line 455-457 verbatim', () => {
+  test('B.1: context matches canonical middleware BASE_ENCRYPT_CONTEXT verbatim', () => {
     const t = {
       table: 'patients',
       model: 'Patient',
@@ -105,7 +106,7 @@ describe('GROUP B: contextFor (EncryptionContext anchor)', () => {
     const context: EncryptionContext = contextFor(t);
 
     expect(context.service).toBe('tailrd-backend');
-    expect(context.purpose).toBe('phi-migration-v0v1-to-v2');
+    expect(context.purpose).toBe('phi-encryption');
     expect(context.model).toBe('Patient');
     expect(context.field).toBe('firstName');
   });
@@ -127,7 +128,7 @@ describe('GROUP B: contextFor (EncryptionContext anchor)', () => {
     const contexts = TARGETS.slice(0, 5).map(t => contextFor(t));
     for (const c of contexts) {
       expect(c.service).toBe('tailrd-backend');
-      expect(c.purpose).toBe('phi-migration-v0v1-to-v2');
+      expect(c.purpose).toBe('phi-encryption');
     }
   });
 });
@@ -198,7 +199,7 @@ describe('GROUP C: filterNonZeroV2Targets', () => {
 describe('GROUP D: shapeCheck predicates', () => {
   const context: EncryptionContext = {
     service: 'tailrd-backend',
-    purpose: 'phi-migration-v0v1-to-v2',
+    purpose: 'phi-encryption',
     model: 'Patient',
     field: 'firstName',
   };
@@ -303,7 +304,7 @@ describe('GROUP E: PHI-exposure surface regression guard', () => {
       'enc:v2:envelope',
       {
         service: 'tailrd-backend',
-        purpose: 'phi-migration-v0v1-to-v2',
+        purpose: 'phi-encryption',
         model: 'Patient',
         field: 'firstName',
       },
@@ -356,7 +357,7 @@ describe('GROUP E: PHI-exposure surface regression guard', () => {
       'malformed-envelope',
       {
         service: 'tailrd-backend',
-        purpose: 'phi-migration-v0v1-to-v2',
+        purpose: 'phi-encryption',
         model: 'Patient',
         field: 'firstName',
       },

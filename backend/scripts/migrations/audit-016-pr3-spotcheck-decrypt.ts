@@ -30,10 +30,14 @@
  *   - READ-access audit-trail anchor per §164.312(b).
  *
  * EncryptionContext binding (CRITICAL):
- *   The context must match the migration script's contextFor() exactly
- *   (audit-016-pr3-v0v1-to-v2.ts:455-457). KMS EncryptionContext is
- *   binding at the envelopeDecrypt layer; any mismatch causes decrypt
- *   failure regardless of key material.
+ *   The context must match the canonical production-middleware base exactly
+ *   (backend/src/middleware/phiEncryption.ts:72-79, BASE_ENCRYPT_CONTEXT +
+ *   contextFor; purpose: 'phi-encryption'). KMS EncryptionContext is binding
+ *   at the envelopeDecrypt layer; any mismatch causes decrypt failure
+ *   regardless of key material. Post AUDIT-016 PR3 STEP 1.7 V2-to-V2 rekey
+ *   (PR #274 series), every persistent V2 envelope is encrypted under the
+ *   canonical purpose; this spot-check reads under the same canonical
+ *   purpose so verification mirrors production-runtime decryption.
  *
  * Usage:
  *   npx tsx backend/scripts/migrations/audit-016-pr3-spotcheck-decrypt.ts
@@ -58,12 +62,15 @@ import { TARGETS, preFlightValidate } from './audit-016-pr3-v0v1-to-v2';
 
 type Target = (typeof TARGETS)[number];
 
-// ── Constants (sister to migration script line 450-457) ────────────────────
-// EncryptionContext base MUST match migration script exactly. KMS context
-// is binding at the envelopeDecrypt layer.
+// ── Constants (sister to canonical middleware BASE_ENCRYPT_CONTEXT) ────────
+// EncryptionContext base MUST match the canonical production-middleware base
+// exactly (backend/src/middleware/phiEncryption.ts:72-79). KMS context is
+// binding at the envelopeDecrypt layer. Post AUDIT-016 PR3 STEP 1.7 V2-to-V2
+// rekey (PR #274 series), every persistent V2 envelope is encrypted under
+// the canonical purpose 'phi-encryption'.
 const ENCRYPT_CONTEXT_BASE = {
   service: 'tailrd-backend',
-  purpose: 'phi-migration-v0v1-to-v2',
+  purpose: 'phi-encryption',
 } as const;
 
 export function contextFor(t: Target): EncryptionContext {
