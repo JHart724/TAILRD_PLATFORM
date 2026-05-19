@@ -1671,6 +1671,36 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ---
 
+### AUDIT-087 - Phase 0A Phase 4 methodology codification arc (6 §17.1 entries + 2 DRIFT entries + 2 gitignore patterns)
+
+- **Phase:** Methodology codification (Phase 0A Phase 4 sister-arc; standalone methodology PR)
+- **Severity:** LOW (P3); drift-prevention discipline; no production-risk; methodology-debt paydown across 4 surface layers (`AUDIT_METHODOLOGY.md` inline §17.1 catalog, `AGENT_DRIFT_REGISTRY.md`, `.gitignore`, `BUILD_STATE.md` narrative)
+- **Status:** **RESOLVED 2026-05-19** at this methodology PR's merge
+- **Tier:** B (methodology-discipline; sister to AUDIT-064)
+- **Detected:** 2026-05-19; methodology-debt accumulated across PR #284 §6 (§17.1 16th-entry codification deferral; gitignore pattern pre-flight anchoring discipline) + PR #285 §9.2 (5 §17.1 candidates from Phase 4 audit) + same-session arc DRIFT-44 trigger events (PR #284 chat-side + PR #285 agent-side em-dash slips) + same-session arc DRIFT-45 trigger events (PAUSE B.1 Source C scope sourcing + PAUSE M.1 `/pr-body-*.md` duplicate)
+- **Evidence:**
+  - `docs/audit/PHASE_4_REPORT.md` §9.2 (5 §17.1 candidates verbatim; codified inline as entries 17-21)
+  - PR #284 commit body §6 (§17.1 16th-entry deferral; codified inline as entry 16)
+  - DRIFT-44 catalyst events: PR #284 pr-body chat-side em-dash slip (2-round Select-String catch, 4 initial + 7 secondary = 11 total); PR #285 pr-body agent-side em-dash slip (9 em-dashes caught at B.4.10 pre-flight scan; fixed via 3 Edit replacements to 0)
+  - DRIFT-45 catalyst events: PAUSE B.1 Source C scope sourcing not canonical-grep-verified against `PATH_TO_ROBUST.md` v1.2 L60; PAUSE M.1 scope item 5 included `/pr-body-*.md` as new gitignore addition but pattern already present at `.gitignore` L82 per PR #284 (M.1.6 finding 3 caught the duplicate)
+- **Resolution:** This methodology PR ships across 5 files:
+  - `docs/audit/AUDIT_METHODOLOGY.md` §17.1 catalog 15 to 21 inline entries (entries 16-21 added; entries 1-13 remain in design-refinement-notes per existing convention)
+  - `docs/audit/AGENT_DRIFT_REGISTRY.md` DRIFT-43 to DRIFT-45 (DRIFT-44 em-dash discipline + DRIFT-45 chat-side canonical-doc grep pre-flight; mechanism updates active for future PR-authoring + scope-prompt-authoring steps)
+  - `.gitignore` 10 patterns to 12 patterns (2 new patterns `/docs/audit/V2_*_DAY11.md` + `/docs/audit/AGENT_DRIFT_REGISTRY_DRAFTS_*.md` covering 5 pre-existing DAY11 draft files; sister-section to AUDIT-016 PR #284 backlog with leading-slash anchoring per §17.1 16th entry)
+  - `BUILD_STATE.md` 2026-05-19 narrative entry (sister-arc to Phase 4 audit closure entry; co-located 2 entries dated 2026-05-19)
+  - This AUDIT-087 register entry (per AUDIT-064 standalone-methodology-PR precedent; LOW P3, RESOLVED at PR merge)
+- **Architectural note:** §17.1 entries 1-13 inline consolidation deferred to future engineering-tightening PR per `AUDIT_METHODOLOGY.md` §13 AUDIT-XXX-future-methodology-17.1-consolidation follow-up entry. This PR adds entries 16-21 inline; pre-existing convention of 14-15 inline + 1-13 in design notes preserved.
+- **Cross-references:**
+  - AUDIT-064 (sister methodology-codification register precedent; §9.2 full-pipeline-regen codification, 2026-05-06)
+  - `AUDIT_METHODOLOGY.md` §17.1 entries 16-21 (the codified content)
+  - `AGENT_DRIFT_REGISTRY.md` DRIFT-44 + DRIFT-45 (the codified drift mechanisms)
+  - Phase 4 closure PR #285 (source-of-truth for §17.1 entries 17-21 via PHASE_4_REPORT.md §9.2 sister §9.2 deferred-candidate enumeration)
+  - PR #284 §6 (source-of-truth for §17.1 16th entry + sister origin for DRIFT-44 chat-side trigger event)
+  - `BUILD_STATE.md` 2026-05-19 methodology-PR-sister-arc narrative entry (operational ledger surface)
+  - §17.3 scope discipline (named tech-debt items NOT bundled here; `AUDIT_FINDINGS_REGISTER.md` L54 stale `#258 (PR 2)` reference scheduled for separate ledger-reconciliation PR)
+
+---
+
 ## Phase status
 
 | Phase | Dimension | Findings count | Status |

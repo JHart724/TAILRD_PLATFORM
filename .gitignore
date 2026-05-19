@@ -83,3 +83,7 @@ backend/var/
 /done-*.json
 /ct-events.json
 /commit-msg-*.txt
+
+# Phase 0A Phase 4 audit pre-existing draft artifacts (added 2026-05-19 methodology PR; sister-section to AUDIT-016 PR3 STEP 1.7 backlog above; leading-slash anchoring per §17.1 16th entry)
+/docs/audit/V2_*_DAY11.md
+/docs/audit/AGENT_DRIFT_REGISTRY_DRAFTS_*.md
