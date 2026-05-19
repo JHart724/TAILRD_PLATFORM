@@ -389,3 +389,21 @@ Drift-prevention forcing function. Read at session start as a sister to AUDIT_FI
 - **Sister-cross-reference:** DRIFT-36 (parent indicator at PR-artifact-bundling layer; DRIFT-41 is sister at sister-tooling-bundling surface within the same arc). DRIFT-33 (path-of-least-resistance rationalization at priority-recommendation layer). §17.1 14th entry (coordinated migration of sister verification tooling; DRIFT-41 codifies one operational violation form). §17.1 15th entry (canonical-purpose single-source-of-truth; sister discipline at the same coordinated-migration surface).
 
 ---
+
+## DRIFT-42 - Chat-side missed-attached-document parsing on R2 output (recurrence of DRIFT-39 at attached-evidence-dismissal surface)
+
+- **Date:** 2026-05-18
+- **Catalyst PR / surface:** AUDIT-016 PR3 STEP 1.7 Phase G.5 R2 writer-hunt prompt dispatch; chat-side received partial R2 evidence document attached to operator follow-up turn and dismissed it as a re-paste of prior content ("Re-paste; same state as prior turn"). Self-correction triggered by operator follow-up turn asking "isn't this the output?"
+- **Mechanism update:** Existing Mechanism 2 indicator from DRIFT-39 already covers; this entry pairs the dated catch with the existing mechanism as recurrence evidence. Pattern: attached document with new content parsed as identical to prior turn's document because the visible diff was small and surface-level (same probe verdict header, partial new evidence below the fold).
+- **Sister-cross-reference:** DRIFT-39 parent (missed-attached-document); DRIFT-40 + DRIFT-41 family of chat-side recurrence entries from PR #283 / R2 arc.
+
+---
+
+## DRIFT-43 - Chat-side memory-anchor prompt authoring on AUDIT-016 canonical PR-number assertion (recurrence of DRIFT-38 at canonical-PR-identifier surface)
+
+- **Date:** 2026-05-18
+- **Catalyst PR / surface:** Phase A PAUSE A.2 DESIGN release prompt; chat-side asserted "PRs #255 + #258 + #259" for the AUDIT-016 implementation arc in the proposed BUILD_STATE.md row 242 fix text. Agent grep-verified via `git log --oneline --all | grep -E "#255|#258|#259|#260|#261"`; canonical truth is `#255 + #260 + #261` (verified via merge commit SHAs `20534e3` + `fbd6f18` + `dfc8519`).
+- **Mechanism update:** Existing Mechanism 2 indicator from DRIFT-38 already covers; this entry pairs the dated catch with the existing mechanism as recurrence evidence. Pattern: canonical-identifier anchors (PR numbers, commit SHAs, test counts) authored from chat-side memory without pre-flight git log verification; canonical truth diverges. Bonus drift surfaced and named (out-of-scope per §17.3; scheduled for separate ledger-reconciliation PR): `docs/audit/AUDIT_FINDINGS_REGISTER.md` L54 contains the same stale "#258 (PR 2)" reference.
+- **Sister-cross-reference:** DRIFT-38 parent (memory-anchor prompt authoring); DRIFT-40 + DRIFT-42 family of chat-side recurrence entries from PR #283 / Phase A arc.
+
+---
