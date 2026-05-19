@@ -356,3 +356,36 @@ Drift-prevention forcing function. Read at session start as a sister to AUDIT_FI
 - **Sister-cross-reference:** DRIFT-19 (referenced-snapshot-vs-current-state at agent pre-flight inventory layer; DRIFT-38 is sister at chat-side prompt-author layer; same shape: stale memory of prior state vs current canonical state). DRIFT-25 (fresh-context bootstrap stale-anchor pattern; DRIFT-38 is sister within-context memory-anchor pattern; same shape: anchor assumed valid by recency rather than current verification). <thinking_guidance> "Pre-flight inventory before architecture" principle (canonical agent-side discipline; DRIFT-38 codifies the same principle's chat-side analog). DRIFT-13 (surface-vs-filesystem verification gap; DRIFT-38 is sister at surface-vs-canonical-doc verification gap; both fall under the broader pre-action-verification mechanism).
 
 ---
+
+## DRIFT-39 - Chat-side missed-attached-document parsing: responding to operator message without scanning attached documents
+
+- **Date:** 2026-05-18
+- **Catalyst PR / surface:** AUDIT-016 PR3 STEP 1.7 Phase G.4 PAUSE G4.2 confirmation turn; operator pasted PAUSE G4.2 approval output as a document attachment with empty-string message body.
+- **Drift indicator:** Chat-side responded "Empty message received" instead of processing the document attachment content. The PAUSE G4.2 approval + NOTES A through D were in the attached document; treating the message as content-empty silently dropped the approval signal AND the operator-provided NOTES that scoped the next PAUSE.
+- **Trigger:** Operator corrected with "not empty." Single-turn catch; no propagation.
+- **Mechanism update:** New Mechanism 2 indicator: "Responding to an operator message without scanning attached documents" maps to correction "scan attached documents before declaring content empty or missing." Sister rule: when an operator message body appears empty or terse, the FIRST check is whether documents are attached and the SECOND check is whether the documents contain the actual content. The body-empty short-circuit is a chat-side framing failure, not an actual signal absence.
+- **Sister-cross-reference:** DRIFT-38 (asserting canonical-source content from memory without verification; DRIFT-39 is sister at input-parsing surface; same shape - chat-side bypassed a verification step that would have surfaced the truth). DRIFT-19 (referenced-snapshot-vs-current-state at agent pre-flight inventory layer; DRIFT-39 is sister at message-content-inventory layer; same shape - operating on inferred state vs verified state). Mechanism 2 broad pattern: "verify before declaring."
+
+---
+
+## DRIFT-40 - Chat-side test-count assertion from memory without verification (recurrence of DRIFT-38 pattern at test-count surface)
+
+- **Date:** 2026-05-18
+- **Catalyst PR / surface:** AUDIT-016 PR3 STEP 1.7 Phase G.4 PAUSE G4.2 spec authoring; chat-side wrote "Expected: 56 spotcheck + 8 probe = 64/64 PASS" in the jest verification step instructions.
+- **Drift indicator:** Chat-side asserted spotcheck test count from memory. Actual spotcheck.test.ts has had 26 tests since PR #273 (kind-aware SQL jsonb-fix sub-arc; codified at L431-475 of the test file). The "56" was a memory-anchor conflation with keyRotation.test.ts (which has 56 tests since prior key-rotation work). Agent verified at PAUSE G4.2 Section G and surfaced reconciliation: actual was 26 spotcheck + 32 probe = 58/58 PASS. The agent-side verify-and-surface step worked; this DRIFT entry documents the chat-side memory-anchor that motivated the verification.
+- **Trigger:** Agent surfaced the discrepancy at PAUSE G4.2 Section G with explicit reconciliation. Operator approved at PAUSE G4.3 entry. Single-turn catch via agent-side verify-and-surface.
+- **Mechanism update:** Existing Mechanism 2 indicator from DRIFT-38 ("Asserting canonical-source content - commit SHA, line ref, config value, anchor - in a prompt from memory") ALREADY covers test counts. This DRIFT entry does NOT add a new indicator; it pairs the dated 2026-05-18 catch with the existing mechanism as evidence of recurrence and mechanism-firing-correctly. The lesson: the existing rule's "anchor" category is broader than commit SHAs - it includes ANY canonical-source numeric or text value that can be grepped or counted (test counts, LOC counts, file paths, env var names, etc.).
+- **Sister-cross-reference:** DRIFT-38 (parent indicator; DRIFT-40 is literal recurrence at test-count surface; same shape - chat-side memory anchor without verification, agent-side verify-and-surface catches it). DRIFT-19 (referenced-snapshot-vs-current-state at agent pre-flight inventory layer; DRIFT-40 is sister at chat-side test-count-recall layer). DRIFT-38 mechanism reads: "Asserting canonical-source content ... maps to correction 'require agent to verify by grep / view first before prompt is locked.'" DRIFT-40 extends the indicator's surface to test counts, file LOC counts, and similar numeric grep-targets.
+
+---
+
+## DRIFT-41 - Chat-side deferred sister-verification override file authoring post-PR-merge (recurrence of DRIFT-36 pattern at sister-tooling-bundling surface)
+
+- **Date:** 2026-05-18
+- **Catalyst PR / surface:** AUDIT-016 PR3 STEP 1.7 PR #283 PAUSE G4.4 approval prompt; chat-side wrote "probe override file authoring deferred to post-PR-merge work block."
+- **Drift indicator:** Sister-verification tooling (the ECS RunTask override file required to invoke the probe script) deferred to post-merge follow-on work rather than bundled into the same PR as the probe script + tests. PR #278 got this right (spotcheck override file landed in initial commit alongside spotcheck script + tests). PR #283 missed the sister-pattern lesson. Self-caught at PAUSE G4.4 post-PR-open review before CI terminal state; force-push amend dispatched.
+- **Trigger:** Chat-side self-catch reviewing the post-merge sequence section of PAUSE G4.4 output; surfaced the same path-of-least-resistance pattern as the register-sub-note deferral caught at PAUSE G4.3 entry. Third instance in the PR #283 arc (PAUSE G4.3 entry caught register-sub-note deferral; PAUSE G4.4 post-open caught override-file deferral; both same shape).
+- **Mechanism update:** Existing Mechanism 2 indicator "Path-of-least-resistance framing on architectural choice / artifact-bundling decision" (per DRIFT-33, DRIFT-36) ALREADY covers. This DRIFT entry pairs the dated 2026-05-18 catch with the existing mechanism as third evidence of recurrence within the same multi-PR arc. The lesson: sister-tooling-bundling (probe + override + tests in one PR) is the §17.1 14th-entry directive's specific operational form; deferring any single artifact splits the coordinated migration. The chat-side keeps proposing deferral; the robust correction is the consistent answer.
+- **Sister-cross-reference:** DRIFT-36 (parent indicator at PR-artifact-bundling layer; DRIFT-41 is sister at sister-tooling-bundling surface within the same arc). DRIFT-33 (path-of-least-resistance rationalization at priority-recommendation layer). §17.1 14th entry (coordinated migration of sister verification tooling; DRIFT-41 codifies one operational violation form). §17.1 15th entry (canonical-purpose single-source-of-truth; sister discipline at the same coordinated-migration surface).
+
+---

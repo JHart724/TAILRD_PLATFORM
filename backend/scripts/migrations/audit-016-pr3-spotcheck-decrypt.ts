@@ -54,6 +54,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import prisma from '../../src/lib/prisma';
 import { auditLogger } from '../../src/middleware/auditLogger';
+import { CANONICAL_PHI_PURPOSE } from '../../src/middleware/phiEncryption';
 import {
   decryptAny,
   type EncryptionContext,
@@ -67,10 +68,12 @@ type Target = (typeof TARGETS)[number];
 // exactly (backend/src/middleware/phiEncryption.ts:72-79). KMS context is
 // binding at the envelopeDecrypt layer. Post AUDIT-016 PR3 STEP 1.7 V2-to-V2
 // rekey (PR #274 series), every persistent V2 envelope is encrypted under
-// the canonical purpose 'phi-encryption'.
+// the canonical purpose imported from phiEncryption.ts per AUDIT-016
+// PR3 STEP 1.7 §17.1 15th-entry single-source-of-truth discipline
+// (codified 2026-05-18; readers import, do not hardcode).
 const ENCRYPT_CONTEXT_BASE = {
   service: 'tailrd-backend',
-  purpose: 'phi-encryption',
+  purpose: CANONICAL_PHI_PURPOSE,
 } as const;
 
 export function contextFor(t: Target): EncryptionContext {

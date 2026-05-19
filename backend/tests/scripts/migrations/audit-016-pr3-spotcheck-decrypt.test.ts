@@ -54,6 +54,7 @@ import {
   type Opts,
 } from '../../../scripts/migrations/audit-016-pr3-spotcheck-decrypt';
 import { TARGETS } from '../../../scripts/migrations/audit-016-pr3-v0v1-to-v2';
+import { CANONICAL_PHI_PURPOSE } from '../../../src/middleware/phiEncryption';
 import type { EncryptionContext } from '../../../src/services/keyRotation';
 
 const queryRawMock = prisma.$queryRawUnsafe as jest.Mock;
@@ -106,7 +107,7 @@ describe('GROUP B: contextFor (EncryptionContext anchor)', () => {
     const context: EncryptionContext = contextFor(t);
 
     expect(context.service).toBe('tailrd-backend');
-    expect(context.purpose).toBe('phi-encryption');
+    expect(context.purpose).toBe(CANONICAL_PHI_PURPOSE);
     expect(context.model).toBe('Patient');
     expect(context.field).toBe('firstName');
   });
@@ -128,7 +129,7 @@ describe('GROUP B: contextFor (EncryptionContext anchor)', () => {
     const contexts = TARGETS.slice(0, 5).map(t => contextFor(t));
     for (const c of contexts) {
       expect(c.service).toBe('tailrd-backend');
-      expect(c.purpose).toBe('phi-encryption');
+      expect(c.purpose).toBe(CANONICAL_PHI_PURPOSE);
     }
   });
 });
