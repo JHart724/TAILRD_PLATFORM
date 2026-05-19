@@ -51,7 +51,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-013** — Audit log written to ephemeral ECS local storage (Phase 2A, **RESOLVED 2026-04-30**)
 - **AUDIT-014** — Patient search silently broken on encrypted PHI fields (Phase 2B, OPEN)
 - **AUDIT-015** — `decrypt()` returns ciphertext on integrity failure (Phase 2B, **RESOLVED 2026-04-30**)
-- **AUDIT-016** — No PHI key rotation pattern (Phase 2B, **RESOLVED 2026-05-07** — full implementation arc complete: PR #255 (PR 1 envelope schema + V1 emission + AUDIT-017 bundle) + PR #258 (PR 2 V2 emission + kmsService wiring + per-record EncryptionContext) + PR 3 (migrateRecord + V0/V1 → V2 migration script + operator runbook))
+- **AUDIT-016** - No PHI key rotation pattern (Phase 2B, **RESOLVED 2026-05-07** - full implementation arc complete: PR #255 (PR 1 envelope schema + V1 emission + AUDIT-017 bundle) + PR #260 (PR 2 V2 emission + kmsService wiring + per-record EncryptionContext) + PR #261 (PR 3 migrateRecord + V0/V1 → V2 migration script + operator runbook))
 - **AUDIT-031** — GAP-EP-079: pre-excited AF + AVN blocker (CRITICAL SAFETY, uncovered) (Phase 0B EP, **RESOLVED 2026-05-05** via new CRITICAL evaluator block; closes Tier S queue — queue 1 → 0, **CLOSED**)
 - **AUDIT-032** — GAP-EP-006: dabigatran in CrCl<30 (SAFETY, uncovered) (Phase 0B EP, **RESOLVED 2026-05-05**, ~~Tier S~~)
 - **AUDIT-033** — GAP-EP-017: HFrEF + non-DHP CCB SAFETY (Phase 0B EP, **RESOLVED 2026-05-05** via registry-entry-add; closes Tier S item — queue 4→3)
@@ -376,7 +376,7 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 - **Phase:** 2B
 - **Severity:** HIGH (P1)
-- **Status:** **RESOLVED 2026-05-07** — full implementation arc complete (3 sub-PRs: #255 + #258 + this PR)
+- **Status:** **RESOLVED 2026-05-07** - full implementation arc complete (3 sub-PRs: #255 + #260 + #261)
 - **Location:** `backend/src/middleware/phiEncryption.ts:4`
 - **Evidence:** Key loaded once at module init. No version tag in `enc:` format. No multi-key fallback.
 - **Original evidence (corrected by §17.1 consumer audit):** `kmsService.ts` was described as "scaffolded but unwired." A consumer audit during this PR's design phase corrected the framing: kmsService.ts is **fully implemented (305 LOC of working AWS KMS envelope encryption + EncryptionContext + local-fallback)** but **zero callers in `backend/src/`** — implementation exists but is not wired into the phiEncryption middleware. This is the second §17.1-architectural-precedent finding (sister to AUDIT-067/068 ABI consumer audit, PR #249). Effort estimate revised downward: 14-22h implementation across 3 sub-PRs (was 24-40h before consumer audit).
@@ -1697,7 +1697,7 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
   - Phase 4 closure PR #285 (source-of-truth for §17.1 entries 17-21 via PHASE_4_REPORT.md §9.2 sister §9.2 deferred-candidate enumeration)
   - PR #284 §6 (source-of-truth for §17.1 16th entry + sister origin for DRIFT-44 chat-side trigger event)
   - `BUILD_STATE.md` 2026-05-19 methodology-PR-sister-arc narrative entry (operational ledger surface)
-  - §17.3 scope discipline (named tech-debt items NOT bundled here; `AUDIT_FINDINGS_REGISTER.md` L54 stale `#258 (PR 2)` reference scheduled for separate ledger-reconciliation PR)
+  - §17.3 scope discipline (named tech-debt items NOT bundled here; `AUDIT_FINDINGS_REGISTER.md` L54 stale `#258 (PR 2)` reference RESOLVED in ledger-reconciliation PR (sister to AUDIT-087))
 
 ---
 
