@@ -2240,6 +2240,640 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 
 ---
 
+## Phase 0A Phase 0C UI/UX Audit Findings (2026-05-20)
+
+**Phase 0C of Phase 0A audit arc.** Companion report: `docs/audit/PHASE_0C_REPORT.md`. Verdict: **CONDITIONAL PASS** sister to Phase 1/2/3/4/5 precedent. Scope: canonical `PATH_TO_ROBUST.md` L73-L80 verbatim (Option B-CANONICAL per B0C.2 scope-lock; ~25-30h budget; audit + design system documentation framing).
+
+**Severity totals (63 unique IDs across 16 domains):**
+
+| Severity | Count |
+|---|---|
+| HIGH (P1) GATE | 8 |
+| MEDIUM (P2) + MEDIUM-DOCUMENTATION | 16 |
+| LOW (P3) + LOW-DOCUMENTATION | 13 |
+| DOCUMENTATION (incl CROSSREF) | 22 |
+| **Total** | **59** (4 additional IDs are CROSSREF-only meta-pointers to §5.1 + §5.2 substantive engineering signal sections; total unique-ID count 63) |
+
+Severity column copied verbatim from PHASE_0C_REPORT.md §3 per §18 register-literal discipline. Citations follow §1 rule-body verification.
+
+### 0C-CAT-01 - Route + page catalog
+
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Route catalog at `src/App.tsx` + `src/pages/`; no standalone documentation enumerating all routes + per-route persona-mapping
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.10 + per-finding prose
+- **Cross-references:** see 0C-NAV-06; see 0C-MOD-01 through 06
+- **Remediation:** Author `docs/architecture/ROUTES_CATALOG.md` (~3-5h); v2.0 design system codification arc per L117
+
+### 0C-CAT-02 - Component catalog
+
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** 365 .tsx files in `src/`; no standalone component catalog
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.10
+- **Cross-references:** see 0C-CMP-01; see 0C-CMP-03
+- **Remediation:** Author `docs/architecture/COMPONENT_CATALOG.md` (~10-15h) OR Storybook deployment per 0C-CMP-03 (~40-60h); v2.0 territory
+
+### 0C-COL-01 - Design system token-conflict (see §5.1)
+
+- **Severity:** MEDIUM (P2) DOCUMENTATION
+- **Status:** OPEN; flagged for SEPARATE methodology PR per §17.3
+- **Description:** Single-source-of-truth violation at `tokens.ts` + `semanticColors.ts` competing exports for `semantic` + `chartColors`
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §5.1 substantive engineering signal section
+- **Cross-references:** see §5.1 detailed treatment; see §17.1 entry 15 canonical-purpose single-source-of-truth (PR #283 sister precedent); §17.1 candidate "design token strategy" PROMOTED via this finding
+- **Remediation:** 7-step path documented at §5.1; ~6-10h consolidation + ~2-4h methodology PR codification; v2.0 Phase 2 design system codification per L117
+
+### 0C-COL-02 - Color palette completeness
+
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** 3x 11-stop palettes (Chrome Blue + Arterial / Carmona Red + Titanium Neutrals) documented at `tokens.ts:9-53`; palette depth comprehensive
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.11
+- **Cross-references:** see 0C-COL-01; see §5.1
+- **Remediation:** Document in `docs/architecture/DESIGN_SYSTEM_SPEC.md`; bundled with §5.1 consolidation
+
+### 0C-COL-03 - Module identity colors
+
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** 6 cardio modules with mid + glow + peak colors per `tokens.ts:100-107`; module identity color system mature
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.11
+- **Cross-references:** see §5.2; see 0C-MOD-01 through 06
+- **Remediation:** Document in `docs/architecture/DESIGN_SYSTEM_SPEC.md`; bundled
+
+### 0C-COL-04 - Dark mode coverage
+
+- **Severity:** LOW (P3) DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Dark mode essentially unused (2 occurrences in `src/index.css:2` only); no ThemeProvider; no theme switching surface
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.11
+- **Cross-references:** see §5.2; see 0C-A11Y-01
+- **Remediation:** v2.0 architectural decision: implement OR document N/A; ~20-40h implementation OR ~30min N/A documentation
+
+### 0C-COL-05 - Colorblind considerations
+
+- **Severity:** LOW (P3) DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Chart palette + status color verification under deuteranopia / protanopia / tritanopia simulations not documented
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.11
+- **Cross-references:** see 0C-A11Y-01; see §5.1
+- **Remediation:** Coblis / Stark simulator verification (~3-5h); v2.0 Phase 2 territory
+
+### 0C-TYP-01 - 3-family typography stack
+
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Playfair Display (display) + DM Sans (body) + IBM Plex Mono (data) at `tokens.ts:165-180`; luxury-positioned font selection
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.12
+- **Cross-references:** see §5.2 luxury-positioning sister; see 0C-TYP-02
+- **Remediation:** Document in `docs/architecture/DESIGN_SYSTEM_SPEC.md`; bundled
+
+### 0C-TYP-02 - Web font loading strategy
+
+- **Severity:** LOW (P3) DOCUMENTATION
+- **Status:** OPEN (already conformant per evidence)
+- **Description:** Strong loading strategy: preconnect + display=swap deployed at `public/index.html:L26-L28`
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.12
+- **Cross-references:** see 0C-TYP-01; see 0C-PERF-01 LCP
+- **Remediation:** No action; document conformance; optional self-hosted-fonts for privacy
+
+### 0C-TYP-03 - Clinical-density readability
+
+- **Severity:** LOW (P3) DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Line-height + measure + size hierarchy for dense clinical data not codified at spec layer
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.12
+- **Cross-references:** see 0C-TYP-01; see 0C-A11Y-01 SC 1.4.12
+- **Remediation:** Spec + per-view audit (~2-3h spec + ~variable); v2.0 Phase 2 territory
+
+### 0C-SPC-01 - 8-tier spacing scale
+
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** 8-tier scale at `tokens.ts:182-192` (4-8-16-24-32-48-64px); Tailwind-aligned
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.13
+- **Cross-references:** see 0C-CMP-01; see Tailwind config
+- **Remediation:** Document in `docs/architecture/DESIGN_SYSTEM_SPEC.md`; bundled
+
+### 0C-SPC-02 - Grid system + container patterns
+
+- **Severity:** LOW (P3) DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Tailwind utility-class layer (grid-cols-N + container mx-auto); no design-system-codified Grid component
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.13
+- **Cross-references:** see 0C-SPC-01; see 0C-CMP-02
+- **Remediation:** Grid + Container primitives + per-view responsive audit (~6-10h); v2.0 Phase 2 territory
+
+### 0C-CMP-01 - Current component library inventory
+
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** 7 design-system components (AppShell + Badge + DotScale + LockedOverlay + SectionCard + Sidebar + TopBar) + 2 token files
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.5
+- **Cross-references:** see 0C-CMP-02; see §5.1
+- **Remediation:** Document inventory in `docs/architecture/DESIGN_SYSTEM_SPEC.md` (~1-2h bundled)
+
+### 0C-CMP-02 - Component coverage gaps
+
+- **Severity:** MEDIUM (P2) DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Missing primitives (Button + Card + Modal + Form + Input + Select + Tabs + Toast + Tooltip + DataTable + Dialog + Combobox + Switch + Radio + Checkbox + Accordion + Breadcrumb + Skeleton + Spinner + Progress + Avatar + Divider)
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.5
+- **Cross-references:** see 0C-CMP-01; see §17.1 candidate 1
+- **Remediation:** v2.0 design system codification arc per L117 (~80-120h for primitives)
+
+### 0C-CMP-03 - Storybook absence
+
+- **Severity:** MEDIUM (P2) DOCUMENTATION
+- **Status:** OPEN
+- **Description:** No Storybook config; component documentation surface absent; sister 0C-TEST-04 visual regression
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.5
+- **Cross-references:** see 0C-CMP-01; see 0C-TEST-04
+- **Remediation:** v2.0 design system codification (~40-60h Storybook deployment)
+
+### 0C-CMP-04 - Form handling pattern
+
+- **Severity:** LOW-DOCUMENTATION
+- **Status:** OPEN
+- **Description:** No React Hook Form / Formik; 7 handleSubmit native form patterns; not codified
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.5
+- **Cross-references:** see §17.1 candidate 6; see 0C-A11Y-05
+- **Remediation:** v2.0 design system codification; React Hook Form selection (~6-10h selection + ~20-30h migration)
+
+### 0C-CMP-05 - Library-vs-deployment pattern (framer-motion sparse)
+
+- **Severity:** LOW-DOCUMENTATION
+- **Status:** OPEN
+- **Description:** framer-motion installed but 1-file deployment; library-vs-deployment mismatch; sister 0C-PAT-04
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.5
+- **Cross-references:** see 0C-PAT-04; see §17.1 candidate 1
+- **Remediation:** v2.0 architectural decision (expand / deprecate / document); ~2-4h decision
+
+### 0C-PAT-01 - Glassmorphism canonical visual treatment (see §5.2)
+
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Module-color-tinted backdrop-filter blur classes per `tokens.ts:110-117`; 48 occurrences across 13 files; accessibility + performance discipline visible
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §5.2 substantive engineering signal section
+- **Cross-references:** see §5.2 detailed treatment; see 0C-MOD-01 through 06
+- **Remediation:** Document canonical pattern in `docs/architecture/DESIGN_SYSTEM_SPEC.md`; bundled
+
+### 0C-PAT-02 - Gradient deployment characterization
+
+- **Severity:** LOW (P3) DOCUMENTATION
+- **Status:** OPEN
+- **Description:** 80+ occurrences across 15 files; widespread deployment; canonical visual treatment sister
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.14
+- **Cross-references:** see §5.2; see 0C-COL-01
+- **Remediation:** Per-gradient palette-source audit + canonical gradient catalog (~3-5h); v2.0 design system codification
+
+### 0C-PAT-03 - Shadow elevation system
+
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** 8 tokens at `tokens.ts:151-163`; 93+ occurrences across 15 files; canonical pattern established
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.14
+- **Cross-references:** see §5.2; see 0C-PAT-01
+- **Remediation:** Document usage convention in `docs/architecture/DESIGN_SYSTEM_SPEC.md`; bundled
+
+### 0C-PAT-04 - Motion-sparse-deployment
+
+- **Severity:** LOW (P3) DOCUMENTATION
+- **Status:** OPEN
+- **Description:** framer-motion 1-file deployment; sister 0C-CMP-05 library-vs-deployment pattern
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.14
+- **Cross-references:** see 0C-A11Y-07 (reduce-motion conformant); see 0C-CMP-05; see §17.1 candidate 1
+- **Remediation:** v2.0 architectural decision; bundled with 0C-CMP-05
+
+### 0C-PAT-05 - lucide-react canonical iconography
+
+- **Severity:** LOW (P3) DOCUMENTATION
+- **Status:** OPEN
+- **Description:** 254 lucide-react imports across 250 files; WIDESPREAD canonical deployment (sister glassmorphism depth)
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.14
+- **Cross-references:** see 0C-A11Y-06 SC 2.5.8; see 0C-CMP-02
+- **Remediation:** IconButton primitive + size-discipline lint rule (~6-10h); v2.0 design system codification
+
+### 0C-PAT-06 - Border radius system
+
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** 6 tokens at `tokens.ts:194-203`; Tailwind-aligned; widespread utility-class deployment
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.14
+- **Cross-references:** see 0C-SPC-01; see 0C-CMP-01
+- **Remediation:** Document convention in `docs/architecture/DESIGN_SYSTEM_SPEC.md`; bundled
+
+### 0C-A11Y-01 - WCAG 2.2 AA conformance unverified
+
+- **Severity:** **HIGH (P1) GATE**
+- **Status:** OPEN - PHASE 0C GATE
+- **Description:** Repository-wide WCAG 2.2 Level AA conformance unverified; no axe-core / lighthouse-ci / pa11y config; 69 ARIA patterns across 15 files (4.1% file-level density); Section 508 + ADA enforcement risk
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.1 + §4.1
+- **Cross-references:** see AUDIT-001 (sister foundational gap); see WCAG 2.2 SC list; see Section 508 Revised
+- **Remediation:** axe-core + lighthouse-ci integration + baseline scan + per-SC remediation arc; ~4-6h baseline + ~40-80h remediation arc; v2.0 Phase 2 territory per L117
+
+### 0C-A11Y-02 - WCAG 1.4.3 contrast minimum unverified
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** Color contrast ratios unverified against `tokens.ts` palette stops; semantic colors + chartColors WCAG 1.4.3 ratios not documented
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.1
+- **Cross-references:** see 0C-A11Y-01; see 0C-COL-01
+- **Remediation:** Contrast-ratio matrix + WCAG conformance tier annotation + stylelint rule (~3-5h)
+
+### 0C-A11Y-03 - Keyboard navigation patterns ad-hoc
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** No documented tab-order convention or skip-link; 28 keyboard handlers across 14 files
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.1
+- **Cross-references:** see 0C-A11Y-01; see 0C-NAV-01 / 0C-NAV-02
+- **Remediation:** Tab-order audit + skip-to-content link + modal focus-trap verification (~4-6h)
+
+### 0C-A11Y-04 - ARIA 1.2 widget pattern conformance unverified
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** 69 ARIA patterns across 15 files; per-widget pattern conformance (combobox / dialog / tab / tooltip / menu / treegrid) unverified
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.1
+- **Cross-references:** see 0C-A11Y-01; see 0C-A11Y-03
+- **Remediation:** Per-pattern inventory + eslint-plugin-jsx-a11y + remediation arc (~6-10h inventory + ~20-40h remediation); v2.0 Phase 2 territory
+
+### 0C-A11Y-05 - Focus management on route transitions + modals + forms
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** React Router 6.20.0 does NOT auto-manage focus; route transition + modal + form focus-management unverified
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.1
+- **Cross-references:** see 0C-A11Y-01; see 0C-A11Y-04
+- **Remediation:** Route-transition focus-shift + modal focus-trap audit + focus-visible polyfill (~8-12h); v2.0 Phase 2 territory
+
+### 0C-A11Y-06 - WCAG 2.2 SC 2.5.8 Target Size Minimum
+
+- **Severity:** LOW (P3)
+- **Status:** OPEN
+- **Description:** 24x24 CSS pixels minimum unverified across button + link + icon-button surfaces
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.1
+- **Cross-references:** see 0C-A11Y-01; see 0C-PAT-05 (lucide-react)
+- **Remediation:** Tailwind config min-target-size utility + per-component audit (~4-6h audit + ~6-10h remediation)
+
+### 0C-A11Y-07 - Reduce-motion respect
+
+- **Severity:** DOCUMENTATION (already conformant)
+- **Status:** RESOLVED (conformance verified)
+- **Description:** CONFORMANT per `src/index.css:1130` + `src/hooks/usePerformanceOptimization.ts:73`
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.1
+- **Cross-references:** see 0C-A11Y-01; see 0C-PAT-04 (motion sparse)
+- **Remediation:** None required; document conformance in `docs/architecture/DESIGN_SYSTEM_SPEC.md`
+
+### 0C-CLI-01 - ACC/AHA Class of Recommendation display
+
+- **Severity:** **HIGH (P1) GATE; §16 TRIGGERED**
+- **Status:** OPEN - PHASE 0C GATE
+- **Description:** Class (I / IIa / IIb / III) display conventions unverified; asymmetric deployment (`DeviceUnderutilizationPanel.tsx:10` Class refs but `GDMTOptimizationTracker.tsx` + `TherapyGapDashboard.tsx` 0 refs); per CLAUDE.md §8 FDA CDS exemption
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.2 + §4.2
+- **Cross-references:** see CLAUDE.md §8; see Phase 4 4-OMP-01 + §17.1 entry 20; see 0C-CLI-02
+- **Remediation:** Audit Class-display consistency + RecommendationBadge component + §16 verification + non-directive language verification (~6-10h audit + ~4-6h codification); v2.0 Phase 2
+
+### 0C-CLI-02 - ACC/AHA Level of Evidence display
+
+- **Severity:** **HIGH (P1) GATE; §16 TRIGGERED**
+- **Status:** OPEN - PHASE 0C GATE
+- **Description:** LOE (A / B-R / B-NR / C-LD / C-EO) display conventions; sister 0C-CLI-01 pattern
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.2 + §4.2
+- **Cross-references:** see 0C-CLI-01; see ACC/AHA Methodology document
+- **Remediation:** Bundled with 0C-CLI-01 RecommendationBadge codification
+
+### 0C-CLI-03 - Risk score rendering accuracy
+
+- **Severity:** **HIGH (P1) GATE; §16 TRIGGERED**
+- **Status:** OPEN - PHASE 0C GATE
+- **Description:** 12 risk calculator UI components at `src/components/riskCalculators/` (CHA2DS2VASc / CRTICDEligibility / FRAMINGHAMHF / GRACEScore / HASBLED / INTERMACS / MAGGIC / ORBITBleeding / STSRisk / SYNTAXScore / WIFIClassification / WellsPE); §16 verification against published scoring algorithms required
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.2 + §4.2
+- **Cross-references:** see Phase 0B per-module addenda; see AUDIT-METHODOLOGY §16
+- **Remediation:** Per-calculator §16 verification arc (~1-1.5h per × 12 = ~12-18h); v2.0 Phase 2 territory
+
+### 0C-CLI-04 - Drug interaction surfacing
+
+- **Severity:** MEDIUM (P2); §16 TRIGGERED
+- **Status:** OPEN
+- **Description:** DDI UI rendering against `backend/src/services/ddiService.ts` unverified for Lexicomp / Micromedex / AHFS DI accuracy
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.2
+- **Cross-references:** see 0C-CLI-03 sister verification pattern
+- **Remediation:** Frontend grep + per-drug-pair §16 verification + annotation (~4-6h + ~2-4h); v2.0 Phase 2
+
+### 0C-CLI-05 - Gap detection UI rendering (dismissal-at-consumption)
+
+- **Severity:** MEDIUM (P2); §16 TRIGGERED
+- **Status:** OPEN
+- **Description:** Asymmetric Class/LOE rendering across `src/components/therapyGap/` 3 components; per Phase 4 §17.1 entry 20 dismissal-at-consumption framing
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.2
+- **Cross-references:** see Phase 4 4-OMP-01 + §17.1 entry 20; see AUDIT-071 (RESOLVED)
+- **Remediation:** Audit GDMTOptimizationTracker + TherapyGapDashboard parity + RecommendationBadge per 0C-CLI-01 (~6-10h); v2.0 Phase 2
+
+### 0C-CLI-06 - Clinical alert banner
+
+- **Severity:** MEDIUM (P2); §16 TRIGGERED
+- **Status:** OPEN
+- **Description:** `ClinicalAlertBanner.tsx` 4 ARIA patterns; severity rendering + non-directive language + CDS Hooks 2.0 Card spec compliance unverified
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.2
+- **Cross-references:** see AUDIT-071; see CDS Hooks 2.0 spec §Cards; see CLAUDE.md §8 + §14
+- **Remediation:** Severity audit + non-directive language audit + ARIA live-region verification (~4-6h); v2.0 Phase 2
+
+### 0C-CLI-07 - Phenotype detection rendering
+
+- **Severity:** MEDIUM (P2); §16 TRIGGERED
+- **Status:** OPEN
+- **Description:** Phenotype UI accuracy against `backend/src/services/phenotypeService.ts` definitions
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.2
+- **Cross-references:** see backend phenotypeService; see Phase 0B addenda; see 0C-CLI-03
+- **Remediation:** Per-phenotype UI-vs-backend accuracy audit + annotation + tests (~6-10h); v2.0 Phase 2
+
+### 0C-CLI-08 - Clinical visualizations
+
+- **Severity:** MEDIUM (P2); conditional §16
+- **Status:** OPEN
+- **Description:** recharts + react-leaflet rendering; accessibility (chart alternatives + labels + colorblind) + accuracy (data binding) audit
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.2
+- **Cross-references:** see 0C-A11Y-04; see 0C-COL-05; see 0C-PERF-04
+- **Remediation:** Per-visualization accessibility + accuracy audit (~6-10h); v2.0 Phase 2
+
+### 0C-NAV-01 - Primary navigation (Sidebar)
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** `Sidebar.tsx` 2 aria-label/nav patterns; responsive collapse + active-route highlighting + per-module color-tinting deployment depth + accessibility TBD
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.6
+- **Cross-references:** see 0C-NAV-02; see 0C-A11Y-01; see §5.2
+- **Remediation:** Per-route accessibility audit + responsive-collapse keyboard accessibility (~3-5h); v2.0 Phase 2
+
+### 0C-NAV-02 - Secondary navigation (TopBar)
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** `TopBar.tsx` 1 nav pattern + 8 UserMenu ARIA; menubutton + dropdown focus-trap + notifications-panel keyboard accessibility TBD
+- **Source:** `docs/audit/PHASE_0C_REPORT.md` §3.6
+- **Cross-references:** see 0C-NAV-01; see 0C-A11Y-04 (menubutton pattern)
+- **Remediation:** Per-control accessibility audit + WAI-ARIA APG menubutton conformance (~3-5h); v2.0 Phase 2
+
+### 0C-NAV-03 - Breadcrumb absence
+
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** No dedicated Breadcrumb component; per-module breadcrumb navigation absent
+- **Cross-references:** see 0C-CMP-02; see 0C-NAV-05
+- **Remediation:** Breadcrumb primitive + WAI-ARIA APG conformance (~3-5h); v2.0 design system codification
+
+### 0C-NAV-04 - Search surface (admin-only)
+
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** `src/ui/admin/GodView/GlobalSearch.tsx` admin-scoped only; clinician personas lack patient-search / module-level search
+- **Cross-references:** see 0C-NAV-05; see Phase 4 4-3PL-02
+- **Remediation:** SearchInput primitive + per-persona search surface (~6-10h); v2.0 design system codification
+
+### 0C-NAV-05 - User-flow audit
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** Canonical flows (login + MFA + module-entry + patient-detail + gap-detail + recommendation-action); per-flow click-depth + abandonment-risk + accessibility TBD
+- **Cross-references:** see 0C-NAV-01 / 02; see 0C-MOD-01 through 06
+- **Remediation:** Per-persona journey map + per-flow accessibility (~10-15h); v2.0 Phase 2
+
+### 0C-NAV-06 - Information architecture
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** Per Phase 4 4-3PL-02 sister: admin / godView / internalOps share UI shell with patient-data routes
+- **Cross-references:** see Phase 4 4-3PL-01 / 02 + §17.1 entry 17; see 0C-NAV-05
+- **Remediation:** v2.0 architectural decision per Phase 4 §17.1 entry 17 trigger conditions; ~4-6h IA documentation
+
+### 0C-MOD-01 - Heart Failure (HF)
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** `src/ui/heartFailure/` + `src/components/heartFailure/` (10 components; highest depth); Chrome Blue Dark / `glass-chrome-blue`; MAGGIC + FRAMINGHAM + GDMT + Phenotype clinical-UI
+- **Cross-references:** see Phase 0B HF addendum; see 0C-CLI-03; see §5.2
+- **Remediation:** Per-module maturity audit (~4-6h); v2.0 Phase 2
+
+### 0C-MOD-02 - Electrophysiology (EP)
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** `src/ui/electrophysiology/` deep view + component structure; Chrome Blue Mid; CHA2DS2VASc + LAAC + Anticoagulation + Phenotype clinical-UI
+- **Cross-references:** see Phase 0B EP addendum; see 0C-CLI-03; see 0C-CLI-04
+- **Remediation:** Per-module maturity audit (~4-6h); v2.0 Phase 2
+
+### 0C-MOD-03 - Structural Heart (SH)
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** `src/ui/structuralHeart/` views; Carmona Red / `glass-carmona-red`; STS + SYNTAX clinical-UI
+- **Cross-references:** see Phase 0B SH addendum; see 0C-CLI-03; see §5.2
+- **Remediation:** Per-module maturity audit (~4-6h); v2.0 Phase 2
+
+### 0C-MOD-04 - Coronary Intervention (CAD)
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** `src/ui/coronaryIntervention/` views + config; Deep Forest / `glass-forest-green`; GRACE + TIMI + SYNTAX clinical-UI
+- **Cross-references:** see Phase 0B CAD addendum; see 0C-CLI-03
+- **Remediation:** Per-module maturity audit (~4-6h); v2.0 Phase 2
+
+### 0C-MOD-05 - Valvular Disease (VHD)
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** `src/ui/valvularDisease/` full view + component cluster; Aged Gold / `glass-liquid-teal`; 2020 ACC/AHA VHD Guideline severity grading
+- **Cross-references:** see Phase 0B VHD addendum; see 0C-CLI-03
+- **Remediation:** Per-module maturity audit (~4-6h); v2.0 Phase 2
+
+### 0C-MOD-06 - Peripheral Vascular (PVD)
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** `src/ui/peripheralVascular/` full view + component cluster; Gunmetal / `glass-gunmetal`; WIfI + 2024 ACC/AHA PAD Guideline; sister AUDIT-067/068 ABI consumer audit precedent
+- **Cross-references:** see Phase 0B PV addendum; see AUDIT-067/068; see 0C-CLI-03
+- **Remediation:** Per-module maturity audit (~4-6h); v2.0 Phase 2
+
+### 0C-SLR-01 - Per-module triple-view pattern audit
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** ExecutiveView + ServiceLineView + CareTeamView consistent across 6 modules per L78; per-view depth TBD
+- **Cross-references:** see 0C-MOD-01 through 06
+- **Remediation:** Per-view audit (~4-6h × 6 = ~24-36h); v2.0 Phase 2
+
+### 0C-SLR-02 - Research persona views
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** `src/ui/research/views/` 3-view structure; clinical-trial + registry workflows TBD
+- **Cross-references:** see 0C-SLR-01; see Phase 0B CAD audit §11
+- **Remediation:** Per-research-view audit (~4-6h); v2.0 Phase 2
+
+### 0C-SLR-03 - Revenue Cycle views
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** `src/ui/revenueCycle/` RC Module + ExecutiveView + OperationsView + CDIView; DRG + CDI + financial-waterfall workflows
+- **Cross-references:** see 0C-SLR-01; see Phase 4 4-3PL-02
+- **Remediation:** Per-RC-view audit (~4-6h); v2.0 Phase 2
+
+### 0C-SLR-04 - Admin + Data Management views
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** `src/ui/admin/` + `GodView/` super-admin surface; control-plane persona per Phase 4 4-3PL-02
+- **Cross-references:** see Phase 4 4-3PL-02; see 0C-NAV-04; see Phase 5 5-PRV-08
+- **Remediation:** Per-admin-view audit + plane-separation visual cue (~4-6h); v2.0 Phase 2
+
+### 0C-PERF-01 - Web Vitals baseline absence
+
+- **Severity:** **HIGH (P1) GATE**
+- **Status:** OPEN - PHASE 0C GATE
+- **Description:** No Lighthouse / web-vitals / perf budget; Core Web Vitals baseline unknown; heavy deps ~2.9MB without measurement
+- **Cross-references:** see Phase 4 §17.1 entry 21 sister; see 0C-PERF-02
+- **Remediation:** lighthouse-ci + web-vitals + perf budget JSON + baseline (~6-10h + ~4-6h); v2.0 Phase 2
+
+### 0C-PERF-02 - RUM instrumentation absence
+
+- **Severity:** **HIGH (P1) GATE**
+- **Status:** OPEN - PHASE 0C GATE
+- **Description:** No frontend RUM; production user experience invisible
+- **Cross-references:** see Phase 4 4-ALR-01/02 sister; see §17.1 entry 21; see 0C-OBS-01/02
+- **Remediation:** Sentry (unified surface) recommended (~6-10h); v2.0 Phase 2
+
+### 0C-PERF-03 - Bundle size visibility
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** No bundle analyzer; ~2.9MB heavy deps (xlsx + recharts + react-leaflet + framer-motion + jspdf)
+- **Cross-references:** see 0C-PERF-04
+- **Remediation:** webpack-bundle-analyzer + bundlesize CI (~2-3h); v2.0 Phase 2
+
+### 0C-PERF-04 - Heavy component performance
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** Route-level + per-module lazy-loading TBD; admin / research / revenueCycle on-demand opportunity
+- **Cross-references:** see 0C-PERF-01; see 0C-PERF-03
+- **Remediation:** Lazy-loading + dynamic imports (~6-10h); v2.0 Phase 2
+
+### 0C-PERF-05 - Performance budget definitions
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** No per-route + per-bundle thresholds
+- **Cross-references:** see 0C-PERF-01; see 0C-PERF-03
+- **Remediation:** Bundled with 0C-PERF-01/03 (~2-3h after tooling); v2.0 Phase 2
+
+### 0C-I18N-01 - i18n N/A current state
+
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** English-only US deployment; no react-intl / next-intl / i18next
+- **Cross-references:** see Phase 5 5-OMN-05 N/A pattern
+- **Remediation:** Document N/A + trigger conditions (~30min); v2.0 implementation if triggered (~80-120h)
+
+### 0C-I18N-02 - Date / time / number / currency localization
+
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Native Intl formatting ad-hoc; centralized formatting not codified
+- **Cross-references:** see 0C-I18N-01
+- **Remediation:** Centralized formatting helpers (~10-15h); v2.0
+
+### 0C-TEST-01 - Unit test coverage foundational gap
+
+- **Severity:** **HIGH (P1) GATE CONFIRMED**
+- **Status:** OPEN - PHASE 0C GATE
+- **Description:** 1 test file in 365 .tsx = 0.27% coverage; sister AUDIT-001 Tier A backend foundational gap; frontend WORSE
+- **Cross-references:** see AUDIT-001 (Tier A); see CLAUDE.md §11; see Phase 5 §164.312(b) + 5-ADM-08
+- **Remediation:** Jest + RTL baseline + per-component coverage + CI gate (~60-100h); v2.0 Phase 2
+
+### 0C-TEST-02 - Integration / component test absence
+
+- **Severity:** **HIGH (P1) GATE CONFIRMED**
+- **Status:** OPEN - PHASE 0C GATE
+- **Description:** No @testing-library/react integration tests at scale
+- **Cross-references:** see 0C-TEST-01
+- **Remediation:** Bundled with 0C-TEST-01
+
+### 0C-TEST-03 - E2E test absence
+
+- **Severity:** **HIGH (P1) GATE CONFIRMED**
+- **Status:** OPEN - PHASE 0C GATE
+- **Description:** No playwright.config.* / cypress.config.*; end-to-end regression invisible
+- **Cross-references:** see 0C-TEST-01; see AUDIT-001
+- **Remediation:** Playwright + critical-flow tests + CI (~15-25h); v2.0 Phase 2
+
+### 0C-TEST-04 - Visual regression test absence
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** No Chromatic / Percy / Playwright snapshots; visual regressions invisible
+- **Cross-references:** see 0C-CMP-03 Storybook sister
+- **Remediation:** Bundled with 0C-CMP-03 + 0C-TEST-03 (~6-10h)
+
+### 0C-OBS-01 - Frontend error tracking absence
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** No Sentry / Datadog / Bugsnag; 24 ErrorBoundary patterns but no external reporting; production errors invisible
+- **Cross-references:** see Phase 4 4-ALR-01/02 + 4-APM-01 sister; see §17.1 entry 21; see 0C-PERF-02
+- **Remediation:** Sentry (unified) + ErrorBoundary callback + handlers (~6-10h); v2.0 Phase 2
+
+### 0C-OBS-02 - RUM (sister 0C-PERF-02)
+
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** Sister to 0C-PERF-02 at observability layer
+- **Cross-references:** see 0C-PERF-02; see §17.1 entry 21
+- **Remediation:** Bundled with 0C-PERF-02 + 0C-OBS-01 (Sentry unifies)
+
+### 0C-OBS-03 - Structured frontend logging
+
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Ad-hoc console.* usage; no centralized logger primitive with PHI-scrubbing format; PHI-leak risk per CLAUDE.md §14
+- **Cross-references:** see CLAUDE.md §14; see backend logger.ts; see 5-TEC-03
+- **Remediation:** Frontend logger primitive + lint rule (~6-10h); v2.0 Phase 2
+
+### 0C-CNT-01 - Clinical terminology accuracy
+
+- **Severity:** LOW (P3) DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Per-module clinical-vocabulary audit against ACC/AHA + HRS + 2024 PAD terminology
+- **Cross-references:** see 0C-CLI-01 / 02; see Phase 0B addenda
+- **Remediation:** Per-module audit (~6-10h × modules); v2.0 Phase 2
+
+### 0C-CNT-02 - Empty state messaging
+
+- **Severity:** LOW (P3) DOCUMENTATION
+- **Status:** OPEN
+- **Description:** `ChartEmptyState.tsx` + per-module ad-hoc; per-context consistency TBD
+- **Cross-references:** see 0C-CMP-02 (EmptyState primitive)
+- **Remediation:** EmptyState primitive + conventions (~3-5h); v2.0 design system codification
+
+### 0C-CNT-03 - Error message consistency + non-PHI-leak
+
+- **Severity:** LOW (P3) DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Per CLAUDE.md §14: no PHI in error messages; `ErrorHandler.ts` + `ErrorFallback.tsx` PHI-leak audit TBD
+- **Cross-references:** see CLAUDE.md §14; see 0C-OBS-03; see 5-TEC-03
+- **Remediation:** Error surface PHI-leak audit + ARIA live-region (~4-6h); v2.0 Phase 2
+
+### 0C-CNT-04 - Tooltip + help text density
+
+- **Severity:** LOW (P3) DOCUMENTATION
+- **Status:** OPEN
+- **Description:** 27 Tooltip occurrences across 10 files; ARIA tooltip pattern + clinical-context help density TBD
+- **Cross-references:** see 0C-A11Y-04; see 0C-CMP-02
+- **Remediation:** Tooltip primitive + accessibility audit (~6-10h); v2.0 design system codification
+
+---
+
 ## Phase status
 
 | Phase | Dimension | Findings count | Status |
@@ -2249,6 +2883,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 | 3 | Data layer | 10 (1 P1, 5 P2, 4 P3) | COMPLETE 2026-05-07 — CONDITIONAL PASS; production posture NOT production-ready today; 5 production-readiness gate items require immediate remediation (data-state-independent); AUDIT-071 mitigation PR is next work block; see `docs/audit/PHASE_3_REPORT.md` |
 | 4 | Operational maturity | 21 (0 P0, 3 P1, 5 P2, 6 P3, 6 INFO, 1 N/A) | COMPLETE 2026-05-19 - CONDITIONAL PASS; 3 HIGH P1 gate items (4-ALR-01, 4-ALR-02, 4-APM-01; operational-monitoring cluster) pending remediation per PHASE_4_REPORT.md §10.2; 5 §17.1 architectural-precedent candidates flagged for separate methodology PR per §17.3; see `docs/audit/PHASE_4_REPORT.md` |
 | 5 | HIPAA + compliance | 52 (2 HIGH P1 GATE, 5 MED P2, 7 MED-DOC, 4 LOW P3, 6 LOW-DOC, 19 DOC, 7 CROSSREF, 2 N/A) | COMPLETE 2026-05-20 - CONDITIONAL PASS; 2 HIGH P1 GATE items (5-ADM-09 BAA execution, 5-BRC-06 §164.410 BA-to-CE notification workflow) pending remediation per PHASE_5_REPORT.md §7; pre-BSW-DUA-signature timing aligns with gate-closure window; see `docs/audit/PHASE_5_REPORT.md` |
+| 0C | UI/UX audit | 63 (8 HIGH P1 GATE, 16 MED P2, 13 LOW P3 + LOW-DOC, 22 DOC) | COMPLETE 2026-05-20 - CONDITIONAL PASS; 4 HIGH P1 GATE clusters (0C-A11Y WCAG 2.2 AA conformance unverified, 0C-CLI §16 PARTIAL-TRIGGER Class/LOE/risk-score rendering, 0C-PERF Web Vitals + RUM baselines, 0C-TEST frontend test coverage sister AUDIT-001 Tier A) pending remediation per PHASE_0C_REPORT.md §8; v2.0 Phase 2 territory per L117 for substantive remediation; §17.1 architectural-precedent design-token-strategy promoted via §5.1 token-conflict to codification target for SEPARATE methodology PR per §17.3; see `docs/audit/PHASE_0C_REPORT.md` |
 | 6 | Module clinical maturity | 0 | DEFERRED |
 | 7 | Threat modeling + architecture | 0 | DEFERRED |
 | 0B | Clinical audit (canonical) | 13 (0 P0, 4 P1 Tier S, 3 P2, 6 P3, 0 INFO) | COMPLETE 2026-05-04 via PR #234; methodology defects (AUDIT-029, 030, 030.D) RESOLVED; 4 Tier S clinical items (AUDIT-031 through 034) OPEN — separate mitigation PR series; 2 registry orphans (AUDIT-035, 036) OPEN — v2.0 Phase 1 build; AUDIT-037 (Math.random) + AUDIT-038 (Node 18 EOL) OPEN — operational debt |
