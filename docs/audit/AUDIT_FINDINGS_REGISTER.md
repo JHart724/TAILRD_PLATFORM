@@ -1701,6 +1701,545 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ---
 
+## Phase 5 HIPAA Compliance Gap Analysis Findings (2026-05-20)
+
+**Phase 5 of Phase 0A audit arc.** Companion report: `docs/audit/PHASE_5_REPORT.md`. Verdict: **CONDITIONAL PASS** sister to Phase 1/2/3/4 precedent. Scope: Option A full HIPAA compliance gap analysis (45 CFR Part 164 Subparts A + C + D + E; 45 CFR Part 160; Omnibus 2013 cross-cutting). TAILRD classification: Business Associate per B5.2.0 canonical-grep determination.
+
+**Severity totals (52 entries):**
+
+| Severity | Count |
+|---|---|
+| HIGH (P1) GATE | 2 |
+| MEDIUM (P2) | 5 |
+| MEDIUM-DOCUMENTATION | 7 |
+| LOW (P3) | 4 |
+| LOW-DOCUMENTATION | 6 |
+| DOCUMENTATION | 19 |
+| CROSSREF | 7 |
+| N/A | 2 |
+| **Total** | **52** |
+
+Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-literal discipline. Citations follow §1 rule-body verification (file:line where applicable).
+
+### 5-CLS-01 - BA classification attestation documentation
+
+- **CFR:** 45 CFR §164.103 Definitions
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** TAILRD BA classification established by canonical-grep at B5.2.0 but not formally documented as HIPAA compliance attestation
+- **Code-surface:** `docs/BAA_REGISTER.md:1`; `docs/BAA_REQUIREMENTS.md:1-38`
+- **Cross-references:** see 5-ADM-09; see 5-OMN-01
+- **Remediation:** Author `docs/HIPAA_CLASSIFICATION.md` (~1-2h)
+
+### 5-CLS-02 - General Security Rule requirements documentation
+
+- **CFR:** 45 CFR §164.306 Security standards general rules
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Flexibility-of-approach decisions across audit arc not consolidated into §164.306 compliance posture statement
+- **Code-surface:** None (policy-layer)
+- **Cross-references:** see AUDIT-016, AUDIT-011, AUDIT-076 (flexibility exemplars); see 5-PNP-01
+- **Remediation:** Section in `docs/HIPAA_CLASSIFICATION.md` (~1-2h bundled)
+
+### 5-ADM-01 - Security management process documentation
+
+- **CFR:** 45 CFR §164.308(a)(1)(i)-(ii)
+- **Severity:** MEDIUM-DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Risk analysis (Required spec) + sanction policy + info system activity review cadence not formally consolidated; partial coverage via AUDIT-076 + AUDIT-082 + AUDIT-083 + Phase 1-5 audit arc
+- **Code-surface:** None (policy-layer)
+- **Cross-references:** see AUDIT-076, AUDIT-082, AUDIT-083; see Phase 1-5 reports
+- **Remediation:** Author `docs/HIPAA_RISK_ANALYSIS.md` (~6-10h)
+
+### 5-ADM-02 - Assigned security responsibility documentation
+
+- **CFR:** 45 CFR §164.308(a)(2)
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Designated security official not formally documented
+- **Code-surface:** None (policy-layer)
+- **Cross-references:** see 5-ADM-01, 5-ADM-05
+- **Remediation:** Section in `docs/HIPAA_POLICIES.md` or `CLAUDE.md` (~30min)
+
+### 5-ADM-03 - Workforce security procedures
+
+- **CFR:** 45 CFR §164.308(a)(3)
+- **Severity:** MEDIUM-DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Workforce authorization / supervision / clearance / termination procedures not documented
+- **Code-surface:** None (policy-layer; cross-ref AUDIT-011 infrastructure-layer)
+- **Cross-references:** see AUDIT-011; see 5-ADM-04, 5-ADM-05
+- **Remediation:** Author `docs/HIPAA_WORKFORCE_SECURITY.md` (~4-6h)
+
+### 5-ADM-04 - Information access management documentation
+
+- **CFR:** 45 CFR §164.308(a)(4)
+- **Severity:** LOW-DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Strong technical controls via AUDIT-011 Layer 3; documentation gap for workflow + access establishment / modification procedure
+- **Code-surface:** `backend/src/lib/prismaTenantGuard.ts`
+- **Cross-references:** see AUDIT-011, AUDIT-077; see 4-3PL-02
+- **Remediation:** Author `docs/HIPAA_ACCESS_MANAGEMENT.md` (~2-3h)
+
+### 5-ADM-05 - Security awareness and training program
+
+- **CFR:** 45 CFR §164.308(a)(5)
+- **Severity:** MEDIUM-DOCUMENTATION
+- **Status:** OPEN
+- **Description:** HIPAA security awareness + training program not documented
+- **Code-surface:** None (policy-layer)
+- **Cross-references:** see 5-ADM-02, 5-ADM-03; see 5-ENF-04
+- **Remediation:** Author `docs/HIPAA_TRAINING_PROGRAM.md` (~3-5h); v2.0 carry-forward for workforce expansion
+
+### 5-ADM-06 - Security incident procedures runbook gap
+
+- **CFR:** 45 CFR §164.308(a)(6)
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN - CROSSREF to Phase 4 4-RNB-02
+- **Description:** No per-incident-class actionable runbooks (5xx surge / auth-failure-storm / PHI breach response) per Phase 4 4-RNB-02 sister finding
+- **Code-surface:** `backend/docs/incident-runbooks.md` (broad prose only)
+- **Cross-references:** see 4-RNB-02; see 5-BRC-06
+- **Remediation:** Author `docs/runbooks/INCIDENT_PHI_BREACH.md` + sister runbooks (~4-6h)
+
+### 5-ADM-07 - Contingency plan documentation + testing cadence
+
+- **CFR:** 45 CFR §164.308(a)(7)(i)-(ii)
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN - CROSSREF to AUDIT-078 IN-PROGRESS
+- **Description:** Aurora backup posture covered by AUDIT-078; periodic-testing cadence + criticality analysis documentation gap
+- **Code-surface:** `docs/runbooks/AUDIT_078_AURORA_BACKUP_RESTORE_RUNBOOK.md`
+- **Cross-references:** see AUDIT-078; see 5-PHY-04
+- **Remediation:** Author `docs/HIPAA_CONTINGENCY_PLAN.md` bundled with AUDIT-078 closure (~2-3h consolidation)
+
+### 5-ADM-08 - Periodic evaluation cadence documentation
+
+- **CFR:** 45 CFR §164.308(a)(8)
+- **Severity:** LOW (P3)
+- **Status:** OPEN
+- **Description:** Audit framework partially satisfies; periodic evaluation cadence not formally documented
+- **Code-surface:** None (process-layer)
+- **Cross-references:** see AUDIT-001 (Tier A test coverage); see Phase 1-5 reports
+- **Remediation:** Section in `docs/HIPAA_POLICIES.md` (~1h)
+
+### 5-ADM-09 - BA contracts execution gap (sub-vendor + customer-hospital surfaces)
+
+- **CFR:** 45 CFR §164.308(b)(1)-(4)
+- **Severity:** **HIGH (P1) GATE**
+- **Status:** OPEN - PHASE 5 GATE
+- **Description:** Two surfaces: (a) sub-vendor BAAs PENDING (AWS / Redox / ElastiCache per `docs/BAA_REGISTER.md`); (b) customer-hospital BAA tracking capability gap (no automated PHI-flow-gating against BAA-execution state)
+- **Code-surface:** `docs/BAA_REGISTER.md`; `backend/src/routes/internalOps.ts:31-48`; `docs/TAILRD_COMPLETE_PLATFORM_AUDIT.md:889`
+- **Severity rationale:** Direct OCR enforcement trigger per Omnibus 2013 BA direct liability; PHI flow pre-BAA-execution is §164.308(b) Administrative Safeguards violation + §164.502(e) Privacy Rule violation (cross-ref 5-PRV-03). Severity floor preserved per B5.4.1 evidence; not downgradeable until both surfaces close.
+- **Cross-references:** see AUDIT-082, AUDIT-085; see 5-ORG-01, 5-PRV-03, 5-OMN-02
+- **Remediation:** (1) Operator-side BAA execution (~2-4h; accept AWS BAA via AWS Artifact + execute Redox BAA + verify ElastiCache umbrella); (2) Customer-hospital PHI-flow-gating capability (~8-16h or v2.0 carry-forward per pre-DUA timing tolerance)
+
+### 5-PHY-01 - Facility access controls cross-reference documentation
+
+- **CFR:** 45 CFR §164.310(a)(1)-(2)
+- **Severity:** DOCUMENTATION-CROSSREF
+- **Status:** OPEN
+- **Description:** AWS shared-responsibility model covers datacenter physical access; cross-reference documentation gap
+- **Code-surface:** None (compliance posture cross-reference layer)
+- **Cross-references:** see 5-ADM-09 (AWS BAA PENDING); see `docs/BAA_REGISTER.md`
+- **Remediation:** Section in `docs/HIPAA_POLICIES.md` cross-referencing AWS SOC 2 + AWS BAA (~1h)
+
+### 5-PHY-02 - Workstation use policy
+
+- **CFR:** 45 CFR §164.310(b)
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** No documented workstation use policy
+- **Code-surface:** None (policy-layer)
+- **Cross-references:** see 5-ADM-03, 5-ADM-05
+- **Remediation:** Author `docs/HIPAA_WORKSTATION_POLICY.md` (~1-2h); v2.0 carry-forward
+
+### 5-PHY-03 - Workstation security hardening policy
+
+- **CFR:** 45 CFR §164.310(c)
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** No documented workstation hardening policy (FDE / screen-lock / removable-media)
+- **Code-surface:** None (policy-layer)
+- **Cross-references:** see 5-PHY-02
+- **Remediation:** Bundle with 5-PHY-02
+
+### 5-PHY-04 - Device and media controls policy
+
+- **CFR:** 45 CFR §164.310(d)(1)-(2)
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Aurora backup posture covered by AUDIT-078; device-disposal policy + secure-deletion verification procedure not documented
+- **Code-surface:** `docs/runbooks/AUDIT_078_AURORA_BACKUP_RESTORE_RUNBOOK.md`
+- **Cross-references:** see AUDIT-078, AUDIT-082; see 5-ADM-07
+- **Remediation:** Section in `docs/HIPAA_POLICIES.md` (~1-2h)
+
+### 5-TEC-01 - Access control documentation + emergency access procedure
+
+- **CFR:** 45 CFR §164.312(a)(1)
+- **Severity:** LOW (P3)
+- **Status:** OPEN
+- **Description:** Strong technical controls via AUDIT-009/011/071; gaps are emergency-access procedure documentation + automatic-logoff configuration in policy doc
+- **Code-surface:** `backend/src/middleware/auth.ts`; `backend/src/lib/prismaTenantGuard.ts`; `backend/src/middleware/cdsHooksAuth.ts`
+- **Cross-references:** see AUDIT-009, AUDIT-010, AUDIT-011, AUDIT-071
+- **Remediation:** Document emergency-access procedure + automatic-logoff config bundled with 4-RNB-02 + 5-ADM-04 (~2-3h bundled)
+
+### 5-TEC-02 - Encryption-at-rest CROSSREF
+
+- **CFR:** 45 CFR §164.312(a)(2)(iv)
+- **Severity:** CROSSREF
+- **Status:** OPEN - tracked via AUDIT-085 (other findings RESOLVED)
+- **Description:** AUDIT-016 + AUDIT-022 + AUDIT-075 + AUDIT-084 RESOLVED; AUDIT-085 OPEN-tracked
+- **Code-surface:** `backend/src/middleware/phiEncryption.ts`; `backend/src/services/keyRotation.ts`; `backend/src/services/kmsService.ts`
+- **Cross-references:** see AUDIT-016, AUDIT-022, AUDIT-075, AUDIT-084 (RESOLVED); see AUDIT-085 (OPEN)
+- **Remediation:** AUDIT-085 progresses through its own remediation arc; no new Phase 5 action
+
+### 5-TEC-03 - Audit controls CROSSREF
+
+- **CFR:** 45 CFR §164.312(b)
+- **Severity:** CROSSREF
+- **Status:** OPEN - tracked via AUDIT-076
+- **Description:** AUDIT-013 RESOLVED dual-transport; AUDIT-076 OPEN-tracked (HIPAA_GRADE_ACTIONS narrow set); AUDIT-086 RESOLVED
+- **Code-surface:** `backend/src/middleware/auditLogger.ts`; `backend/src/utils/logger.ts`
+- **Cross-references:** see AUDIT-013, AUDIT-076, AUDIT-086; see 4-ALR-01, 4-ALR-02, 4-APM-01 (Phase 4 logs-only-observability sister cluster per §17.1 entry 21)
+- **Remediation:** AUDIT-076 progresses through its own remediation arc
+
+### 5-TEC-04 - Integrity controls documentation
+
+- **CFR:** 45 CFR §164.312(c)(1)-(2)
+- **Severity:** LOW-DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Strong technical controls via AUDIT-015 + AUDIT-016 V2 envelope AEAD; gap is policy + cadence documentation
+- **Code-surface:** `backend/src/middleware/phiEncryption.ts`; `backend/src/services/keyRotation.ts`
+- **Cross-references:** see AUDIT-015, AUDIT-016; see 5-TEC-02
+- **Remediation:** Section in `docs/HIPAA_POLICIES.md` (~1-2h)
+
+### 5-TEC-05 - Person-or-entity authentication CROSSREF
+
+- **CFR:** 45 CFR §164.312(d)
+- **Severity:** LOW (P3) CROSSREF
+- **Status:** OPEN - CROSSREF AUDIT-009
+- **Description:** AUDIT-009 MFA opt-in DEPLOYED flag-off; AUDIT-012 RESOLVED
+- **Code-surface:** `backend/src/middleware/auth.ts`
+- **Cross-references:** see AUDIT-009, AUDIT-012
+- **Remediation:** Document MFA flag-on timeline bundled with 5-ADM-04 + 5-TEC-01
+
+### 5-TEC-06 - Transmission security IaC codification gap
+
+- **CFR:** 45 CFR §164.312(e)(1)-(2)
+- **Severity:** **MEDIUM (P2)** (downgraded from B5.3 HIGH P1 escalation candidate per B5.4.1 evidence)
+- **Status:** OPEN
+- **Description:** Strong TLS at staging (`tailrd-staging.yml:578` ELBSecurityPolicy-TLS13-1-2-2021-06) + strong HSTS at app layer (`server.ts:129-133` 1-year maxAge + preload); gap is production IaC codification (sister to AUDIT-082 + 4-APM-02)
+- **Code-surface:** `backend/src/server.ts:120-134`; `infrastructure/cloudformation/tailrd-staging.yml:576-579`; `infrastructure/lambdas/dmsRollback/index.js:142,176` (weak posture cross-ref)
+- **Severity rationale:** Per `decision_frameworks` classify Tier 1 + downgrade with evidence; runtime posture strong; gap is IaC codification completeness + Lambda hygiene
+- **Cross-references:** see AUDIT-082, AUDIT-078; see 4-APM-02, 4-3PL-03
+- **Remediation:** (1) Codify production ALB SslPolicy in CFN (~2-4h; bundle with AUDIT-XXX-future-aurora-cfn-import); (2) DMS rollback Lambda hygiene (~1-2h or bundled with AUDIT-082); (3) Operator-side TLS posture verification via openssl (~15min)
+
+### 5-ORG-01 - BA contract terms audit
+
+- **CFR:** 45 CFR §164.314(a)(1)-(2)
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** Sister to 5-ADM-09 at BA contract terms layer; no audit of actual BAA contract terms against §164.314(a)(2) required provisions checklist
+- **Code-surface:** `docs/BAA_REGISTER.md`; `docs/BAA_REQUIREMENTS.md`
+- **Cross-references:** see 5-ADM-09; see 5-PRV-03, 5-PRV-04
+- **Remediation:** Append BAA contract-terms checklist to `docs/BAA_REQUIREMENTS.md` (~3-4h)
+
+### 5-ORG-02 - Group health plan requirements
+
+- **CFR:** 45 CFR §164.314(b)
+- **Severity:** N/A
+- **Status:** N/A
+- **Description:** TAILRD is a CDS BA; not a group health plan; provision categorically inapplicable
+- **Remediation:** None required; out-of-scope per §2.4
+
+### 5-PNP-01 - HIPAA policies and procedures consolidation
+
+- **CFR:** 45 CFR §164.316(a)
+- **Severity:** MEDIUM-DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Substantial operational documentation exists (`docs/runbooks/`, `CLAUDE.md`, `BAA_REQUIREMENTS.md`) but no consolidated HIPAA-specific P&P document set
+- **Code-surface:** `docs/runbooks/`; `CLAUDE.md`
+- **Cross-references:** see all 5-ADM findings; see 5-CLS-01, 5-CLS-02
+- **Remediation:** Author `docs/HIPAA_POLICIES.md` consolidating Phase 5 documentation deliverables (~8-12h)
+
+### 5-PNP-02 - Documentation retention policy
+
+- **CFR:** 45 CFR §164.316(b)(1)-(2)
+- **Severity:** LOW-DOCUMENTATION
+- **Status:** OPEN
+- **Description:** No documented 6-year retention policy for HIPAA P&P documentation
+- **Code-surface:** None (policy-layer)
+- **Cross-references:** see 5-PNP-01; see 5-PHY-04
+- **Remediation:** Section in `docs/HIPAA_POLICIES.md` (~30min bundled)
+
+### 5-BRC-01 - Breach + unsecured PHI definitions documentation
+
+- **CFR:** 45 CFR §164.400-401
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Definitions consolidation; AUDIT-016 V2 envelope AES-256-GCM satisfies §164.402 unsecured-PHI safe-harbor
+- **Code-surface:** None (definitions-layer)
+- **Cross-references:** see AUDIT-016; see 5-BRC-02
+- **Remediation:** Definitions section in `docs/runbooks/INCIDENT_PHI_BREACH.md` (~1h bundled)
+
+### 5-BRC-02 - 4-factor risk assessment framework documentation
+
+- **CFR:** 45 CFR §164.402
+- **Severity:** MEDIUM-DOCUMENTATION
+- **Status:** OPEN
+- **Description:** 4-factor risk assessment framework not codified; `breachNotification.ts` schema lacks structured 4-factor fields
+- **Code-surface:** `backend/src/routes/breachNotification.ts:25-37`
+- **Cross-references:** see 5-BRC-06, 5-OMN-03
+- **Remediation:** Schema extension + workflow documentation bundled with 5-BRC-06 (~2-4h)
+
+### 5-BRC-03 - Individual notification BA-cooperation workflow
+
+- **CFR:** 45 CFR §164.404
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Description:** `breachNotification.ts:42` includes `INDIVIDUALS_NOTIFIED` status but no BAA-delegation determination (CE vs BA-delegated)
+- **Code-surface:** `backend/src/routes/breachNotification.ts:42`
+- **Cross-references:** see 5-BRC-06, 5-ORG-01
+- **Remediation:** Schema field + runbook section bundled with 5-BRC-06 (~1-2h)
+
+### 5-BRC-04 - Media notification BA-cooperation procedure
+
+- **CFR:** 45 CFR §164.406
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** `breachNotification.ts:107` calculates 500+ trigger; BA-CE-delegation procedure not documented
+- **Code-surface:** `backend/src/routes/breachNotification.ts:107`
+- **Cross-references:** see 5-BRC-03
+- **Remediation:** Runbook section (~30min bundled)
+
+### 5-BRC-05 - HHS Secretary notification BA-cooperation workflow
+
+- **CFR:** 45 CFR §164.408
+- **Severity:** MEDIUM-DOCUMENTATION
+- **Status:** OPEN
+- **Description:** `breachNotification.ts:74-76` calculates 60-day HHS deadline; sister gap to 5-BRC-06 (workflow positions TAILRD as CE-to-HHS direct)
+- **Code-surface:** `backend/src/routes/breachNotification.ts:74-76`
+- **Cross-references:** see 5-BRC-06
+- **Remediation:** Bundled with 5-BRC-06 schema rework
+
+### 5-BRC-06 - BA-to-CE notification workflow gap (§164.410)
+
+- **CFR:** 45 CFR §164.410 (TAILRD primary obligation as BA)
+- **Severity:** **HIGH (P1) GATE**
+- **Status:** OPEN - PHASE 5 GATE
+- **Description:** `breachNotification.ts:1-348` implements CE-to-HHS direct workflow; MISSING §164.410 BA-primary-obligation path: no `ceNotifiedAt` field, no `CE_NOTIFIED` status, no CE-side endpoint, no BA-as-agent determination per §164.402
+- **Code-surface:** `backend/src/routes/breachNotification.ts:1-348`
+- **Severity rationale:** BA-primary obligation MISSING in implementation; severe CMP exposure per Omnibus 2013 tiered structure ($50K min - $1.5M cap per §160.404 willful-neglect tier); severity floor preserved per B5.4.1 evidence
+- **Cross-references:** see AUDIT-076; see 4-RNB-02; see AUDIT-013; see 5-BRC-02, 5-OMN-03, 5-ADM-06
+- **Remediation:** (1) Schema extension (add `ceNotifiedAt`, `CE_NOTIFIED` status, `baActsAsAgent` flag); (2) Timeline calculation rework; (3) CE-receive endpoint; (4) §164.410(c) content audit; (5) `HIPAA_GRADE_ACTIONS` promotion. Estimated ~12-20h implementation + ~4-8h CE-side workflow design with BSW + Mount Sinai
+
+### 5-BRC-07 - Law enforcement delay procedure
+
+- **CFR:** 45 CFR §164.412
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** No documented law-enforcement-delay procedure
+- **Code-surface:** None (policy-layer)
+- **Cross-references:** see 5-BRC-06, 5-ADM-06
+- **Remediation:** Runbook section (~30min bundled)
+
+### 5-BRC-08 - Burden of proof + 4-factor retention documentation
+
+- **CFR:** 45 CFR §164.414(a)-(b)
+- **Severity:** MEDIUM-DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Burden-of-proof retention policy not codified; structured 4-factor fields missing from schema (sister 5-BRC-02)
+- **Code-surface:** `backend/src/routes/breachNotification.ts:39-55`
+- **Cross-references:** see 5-BRC-02, 5-BRC-06; see AUDIT-013
+- **Remediation:** Bundled with 5-BRC-02 + 5-BRC-06 schema rework + 5-PNP-02 retention policy
+
+### 5-PRV-01 - BA permitted uses + disclosures documentation
+
+- **CFR:** 45 CFR §164.502(a)(3)-(5)
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN - conditional on 5-ADM-09 closure
+- **Description:** BA-permitted-use scope not formally documented; conditional on BAA execution
+- **Code-surface:** None (BAA terms layer)
+- **Cross-references:** see 5-ADM-09, 5-PRV-03, 5-PRV-04
+- **Remediation:** Section in `docs/HIPAA_POLICIES.md` (~1h bundled)
+
+### 5-PRV-02 - Minimum necessary treatment-exception documentation
+
+- **CFR:** 45 CFR §164.502(b)
+- **Severity:** LOW-DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Gap detection workflow returns full clinical context; complies with §164.502(b)(2)(i) treatment exception per §17.1 entry 20 dismissal-at-consumption framing
+- **Code-surface:** `backend/src/ingestion/gaps/gapRuleEngine.ts`
+- **Cross-references:** see §17.1 entry 20 (AUDIT_METHODOLOGY); see 4-OMP-01; see 5-PRV-01
+- **Remediation:** Section in `docs/HIPAA_POLICIES.md` (~1h)
+
+### 5-PRV-03 - Disclosures to BAs (sub-BAs) documentation
+
+- **CFR:** 45 CFR §164.502(e)(1)-(ii)
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN - CROSSREF to 5-ADM-09
+- **Description:** Sub-BA disclosure chain documentation gap; same execution-layer gap as 5-ADM-09 at documentation surface
+- **Code-surface:** `docs/BAA_REGISTER.md`
+- **Cross-references:** see 5-ADM-09, 5-PRV-04; see `docs/BAA_REGISTER.md`
+- **Remediation:** Bundled with 5-ADM-09 closure
+
+### 5-PRV-04 - BA contract terms CROSSREF
+
+- **CFR:** 45 CFR §164.504(e)
+- **Severity:** CROSSREF
+- **Status:** OPEN - CROSSREF to 5-ORG-01
+- **Description:** Sister surface at BA contract terms
+- **Code-surface:** `docs/BAA_REQUIREMENTS.md`
+- **Cross-references:** see 5-ORG-01, 5-ADM-09
+- **Remediation:** Bundled with 5-ORG-01
+
+### 5-PRV-05 - De-identification + limited data sets
+
+- **CFR:** 45 CFR §164.514
+- **Severity:** LOW-DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Current workflow does not produce de-identified data sets; documentation gap forward-looking; cross-references AUDIT-020 fhir*Id-as-PHI sister surface
+- **Code-surface:** `backend/src/redox/fhirResourceHandlers.ts`
+- **Cross-references:** see AUDIT-020; see 5-PRV-01
+- **Remediation:** Section in `docs/HIPAA_POLICIES.md` documenting N/A status + trigger conditions (~30min)
+
+### 5-PRV-06 - Right of access BA-cooperation documentation
+
+- **CFR:** 45 CFR §164.524
+- **Severity:** LOW-DOCUMENTATION
+- **Status:** OPEN
+- **Description:** `dataRequests.ts` PatientDataRequest workflow exists; BA-cooperation framing (BA-provides-PHI-to-CE-which-provides-to-individual) not documented
+- **Code-surface:** `backend/src/routes/dataRequests.ts`
+- **Cross-references:** see 5-BRC-06 (sister CE-vs-BA workflow positioning); see 5-ORG-01
+- **Remediation:** Documentation + route header docstring (~1h)
+
+### 5-PRV-07 - Right of amendment BA-cooperation
+
+- **CFR:** 45 CFR §164.526
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN - v2.0 carry-forward
+- **Description:** No PHI-amendment workflow surface; forward-looking gap
+- **Code-surface:** None
+- **Cross-references:** see 5-PRV-06, 5-ORG-01
+- **Remediation:** Documentation now (~30min); implementation deferred to v2.0
+
+### 5-PRV-08 - Accounting of disclosures endpoint implementation
+
+- **CFR:** 45 CFR §164.528
+- **Severity:** LOW (P3)
+- **Status:** OPEN
+- **Description:** AuditLog data exists; accounting-report generation workflow not implemented
+- **Code-surface:** `backend/src/middleware/auditLogger.ts`; `backend/prisma/schema.prisma` AuditLog model
+- **Cross-references:** see AUDIT-013, AUDIT-076; see 5-TEC-03
+- **Remediation:** Implement `/api/dataRequests/:id/accounting` endpoint (~4-6h)
+
+### 5-PRV-09 - Safeguards CROSSREF (BA-applicable per Omnibus)
+
+- **CFR:** 45 CFR §164.530(c)(1)
+- **Severity:** CROSSREF
+- **Status:** OPEN - CROSSREF to 5-TEC + 5-PHY + 5-ADM
+- **Description:** Sister cross-reference to entire Security Rule
+- **Code-surface:** (cross-ref domains)
+- **Cross-references:** see all 5-ADM / 5-PHY / 5-TEC findings
+- **Remediation:** Closure of 5-ADM / 5-PHY / 5-TEC domains closes 5-PRV-09
+
+### 5-ENF-01 - Enforcement Rule general provisions documentation
+
+- **CFR:** 45 CFR Part 160 Subpart A
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Enforcement Rule applicability documentation gap
+- **Code-surface:** None (policy-layer)
+- **Cross-references:** see 5-CLS-01, 5-OMN-04
+- **Remediation:** Section in `docs/HIPAA_POLICIES.md` (~30min bundled)
+
+### 5-ENF-02 - State law preemption analysis
+
+- **CFR:** 45 CFR Part 160 Subpart B
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN - v2.0 carry-forward legal review
+- **Description:** Texas (BSW) + New York (Mount Sinai) state PHI / data-breach laws preemption analysis required
+- **Code-surface:** None (legal-review flag)
+- **Cross-references:** see 5-BRC-06, 5-CLS-01
+- **Remediation:** Engage legal counsel for preemption analysis (~4-8h legal + 1h documentation)
+
+### 5-ENF-03 - OCR investigation cooperation procedure
+
+- **CFR:** 45 CFR Part 160 Subpart C
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** No documented OCR-investigation-cooperation procedure
+- **Code-surface:** None (policy-layer)
+- **Cross-references:** see 5-ADM-06, 5-PNP-02
+- **Remediation:** Section in `docs/HIPAA_POLICIES.md` (~1h bundled)
+
+### 5-ENF-04 - CMP tier awareness documentation
+
+- **CFR:** 45 CFR Part 160 Subpart D + §160.404
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** CMP tier awareness + training-program inclusion gap
+- **Code-surface:** None (policy-layer)
+- **Cross-references:** see 5-ADM-05, 5-OMN-04
+- **Remediation:** Section in `docs/HIPAA_TRAINING_PROGRAM.md` (~1h bundled)
+
+### 5-ENF-05 - Procedures for hearings
+
+- **CFR:** 45 CFR Part 160 Subpart E
+- **Severity:** N/A
+- **Status:** N/A
+- **Description:** Procedural-regulatory; applicable only after enforcement action; not applicable at current pre-incident posture
+- **Remediation:** None required; out-of-scope per §2.4
+
+### 5-OMN-01 - Omnibus BA direct liability framework documentation
+
+- **Modification:** Omnibus 2013 BA direct liability under Security + Breach + select Privacy
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Direct-liability framework not formally documented
+- **Code-surface:** None
+- **Cross-references:** see 5-CLS-01; see all Security Rule + 5-BRC findings; see 5-PRV
+- **Remediation:** Section in `docs/HIPAA_POLICIES.md` (~1h bundled)
+
+### 5-OMN-02 - BA + sub-BA accountability chain CROSSREF
+
+- **Modification:** Omnibus sub-BA flowdown requirements
+- **Severity:** CROSSREF
+- **Status:** OPEN - CROSSREF to 5-ADM-09
+- **Description:** Sister at sub-BA accountability chain surface
+- **Code-surface:** `docs/BAA_REGISTER.md`
+- **Cross-references:** see 5-ADM-09, 5-PRV-03
+- **Remediation:** Bundled with 5-ADM-09 closure
+
+### 5-OMN-03 - 4-factor risk assessment framework CROSSREF
+
+- **Modification:** Omnibus 4-factor framework replacing pre-2013 harm-threshold
+- **Severity:** CROSSREF
+- **Status:** OPEN - CROSSREF to 5-BRC-02
+- **Description:** Sister at framework codification surface
+- **Cross-references:** see 5-BRC-02, 5-BRC-06, 5-BRC-08
+- **Remediation:** Bundled with 5-BRC schema rework
+
+### 5-OMN-04 - Tiered CMP structure CROSSREF
+
+- **Modification:** Omnibus 4-tier CMP structure
+- **Severity:** CROSSREF
+- **Status:** OPEN - CROSSREF to 5-ENF-04
+- **Description:** Sister at CMP awareness layer
+- **Cross-references:** see 5-ENF-04, 5-ADM-05
+- **Remediation:** Bundled with 5-ENF-04 + 5-ADM-05
+
+### 5-OMN-05 - Privacy Rule modifications inapplicability documentation
+
+- **Modification:** Omnibus Privacy modifications (marketing / fundraising / research / decedent rights)
+- **Severity:** DOCUMENTATION
+- **Status:** OPEN
+- **Description:** Mostly N/A for CDS BA at current pilot scale; trigger conditions documentation
+- **Code-surface:** None
+- **Cross-references:** see 5-PRV-01, 5-CLS-01
+- **Remediation:** Section in `docs/HIPAA_POLICIES.md` documenting inapplicability + trigger conditions (~1h bundled)
+
+---
+
 ## Phase status
 
 | Phase | Dimension | Findings count | Status |
@@ -1709,7 +2248,7 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 | 2 | Security posture | 14 (0 P0, 7 P1, 5 P2, 1 P3, 1 INFO) | COMPLETE 2026-04-29; Tier S findings RESOLVED 2026-04-30 (AUDIT-009 deployed flag-off, AUDIT-013 + AUDIT-015 RESOLVED); AUDIT-011 pending; AUDIT-022 added 2026-04-30 |
 | 3 | Data layer | 10 (1 P1, 5 P2, 4 P3) | COMPLETE 2026-05-07 — CONDITIONAL PASS; production posture NOT production-ready today; 5 production-readiness gate items require immediate remediation (data-state-independent); AUDIT-071 mitigation PR is next work block; see `docs/audit/PHASE_3_REPORT.md` |
 | 4 | Operational maturity | 21 (0 P0, 3 P1, 5 P2, 6 P3, 6 INFO, 1 N/A) | COMPLETE 2026-05-19 - CONDITIONAL PASS; 3 HIGH P1 gate items (4-ALR-01, 4-ALR-02, 4-APM-01; operational-monitoring cluster) pending remediation per PHASE_4_REPORT.md §10.2; 5 §17.1 architectural-precedent candidates flagged for separate methodology PR per §17.3; see `docs/audit/PHASE_4_REPORT.md` |
-| 5 | HIPAA + compliance | 0 | DEFERRED (depends on Phase 1 Tier A + Phase 2) |
+| 5 | HIPAA + compliance | 52 (2 HIGH P1 GATE, 5 MED P2, 7 MED-DOC, 4 LOW P3, 6 LOW-DOC, 19 DOC, 7 CROSSREF, 2 N/A) | COMPLETE 2026-05-20 - CONDITIONAL PASS; 2 HIGH P1 GATE items (5-ADM-09 BAA execution, 5-BRC-06 §164.410 BA-to-CE notification workflow) pending remediation per PHASE_5_REPORT.md §7; pre-BSW-DUA-signature timing aligns with gate-closure window; see `docs/audit/PHASE_5_REPORT.md` |
 | 6 | Module clinical maturity | 0 | DEFERRED |
 | 7 | Threat modeling + architecture | 0 | DEFERRED |
 | 0B | Clinical audit (canonical) | 13 (0 P0, 4 P1 Tier S, 3 P2, 6 P3, 0 INFO) | COMPLETE 2026-05-04 via PR #234; methodology defects (AUDIT-029, 030, 030.D) RESOLVED; 4 Tier S clinical items (AUDIT-031 through 034) OPEN — separate mitigation PR series; 2 registry orphans (AUDIT-035, 036) OPEN — v2.0 Phase 1 build; AUDIT-037 (Math.random) + AUDIT-038 (Node 18 EOL) OPEN — operational debt |
