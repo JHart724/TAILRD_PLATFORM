@@ -13,6 +13,25 @@ import { z } from 'zod';
 import prisma from '../lib/prisma';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
 import { writeAuditLog } from '../middleware/auditLogger';
+import {
+  queueCeNotification,
+  sendCeNotification,
+  recordCeDelivery,
+  recordCeAcknowledgment,
+  recordCeFollowupRequest,
+  recordCeFollowupResponse,
+  closeCeNotification,
+  InvalidStateTransitionError,
+  CoveredEntityNotLinkedError,
+  BreachIncidentNotFoundError,
+  NotImplementedError as ChannelNotImplementedError,
+  BreachCeNotificationServiceError,
+  type NotificationChannel,
+} from '../services/breachCeNotificationService';
+import {
+  TenantScopeViolationError,
+  type AuthenticatedActor,
+} from '../services/coveredEntityService';
 
 const router = Router();
 
@@ -343,6 +362,333 @@ export async function checkBreachDeadlines(): Promise<{ overdue: number; approac
 
   return { overdue, approaching };
 }
+
+// ── 5-BRC-06 BA-to-CE notification workflow handlers (Q-5BRC-J sister bundle) ──
+
+const queueCeSchema = z.object({
+  coveredEntityId: z.string().min(1),
+});
+
+const sendCeSchema = z.object({
+  channel: z.enum(['email', 'signedPdf', 'securePortal', 'sms']),
+});
+
+const recordCeDeliverySchema = z.object({
+  channel: z.enum(['email', 'signedPdf', 'securePortal', 'sms']),
+  deliveredAt: z.string().datetime(),
+  recipientConfirmation: z.string().min(1).max(4096),
+  externalMessageId: z.string().max(255).nullable().optional(),
+});
+
+const recordCeAckSchema = z.object({
+  acknowledgedAt: z.string().datetime(),
+  acknowledgmentSource: z.enum(['email', 'phone', 'signed_document', 'portal_v3']),
+  recordedBy: z.string().min(1).max(255),
+  notes: z.string().max(4096).nullable().optional(),
+});
+
+const recordCeFollowupRequestSchema = z.object({
+  requestedAt: z.string().datetime(),
+  question: z.string().min(1).max(4096),
+  requestedBy: z.string().min(1).max(255),
+});
+
+const recordCeFollowupResponseSchema = z.object({
+  respondedAt: z.string().datetime(),
+  response: z.string().min(1).max(4096),
+  recordedBy: z.string().min(1).max(255),
+});
+
+const fourFactorRiskSchema = z.object({
+  fourFactorRiskAssessment: z.record(z.unknown()),
+  fourFactorRiskCompletedAt: z.string().datetime(),
+  fourFactorRiskCompletedBy: z.string().min(1).max(255),
+});
+
+const baActsAsAgentSchema = z.object({
+  baActsAsAgent: z.boolean(),
+  baActsAsAgentRationale: z.string().min(1).max(4096),
+});
+
+const lawEnforcementDelaySchema = z.object({
+  lawEnforcementDelayActive: z.boolean(),
+  lawEnforcementDelayUntil: z.string().datetime().optional(),
+  lawEnforcementDelayRationale: z.string().min(1).max(4096),
+});
+
+function extractCeActor(req: AuthenticatedRequest): AuthenticatedActor {
+  // Re-derive tenantId per CLAUDE.md 14 rule 8 (NEVER trust client-supplied tenantId).
+  const user = req.user!;
+  return {
+    userId: user.userId,
+    email: user.email,
+    role: user.role,
+    hospitalId: user.hospitalId,
+  };
+}
+
+function mapCeErrorToResponse(err: unknown, res: Response): Response {
+  if (err instanceof InvalidStateTransitionError) {
+    return res.status(409).json({
+      success: false,
+      error: err.message,
+      code: err.code,
+      currentStatus: err.currentStatus,
+      attemptedStatus: err.attemptedStatus,
+    });
+  }
+  if (err instanceof TenantScopeViolationError) {
+    return res.status(403).json({ success: false, error: err.message, code: err.code });
+  }
+  if (err instanceof CoveredEntityNotLinkedError) {
+    return res.status(409).json({ success: false, error: err.message, code: err.code });
+  }
+  if (err instanceof BreachIncidentNotFoundError) {
+    return res.status(404).json({ success: false, error: err.message, code: err.code });
+  }
+  if (err instanceof ChannelNotImplementedError) {
+    return res.status(501).json({
+      success: false,
+      error: err.message,
+      code: err.code,
+      feature: err.feature,
+    });
+  }
+  if (err instanceof BreachCeNotificationServiceError) {
+    return res.status(400).json({ success: false, error: err.message, code: err.code });
+  }
+  const message = err instanceof Error ? err.message : String(err);
+  return res.status(500).json({ success: false, error: message });
+}
+
+// POST /:id/ce-notification/queue
+router.post('/:id/ce-notification/queue', async (req: AuthenticatedRequest, res: Response): Promise<Response | void> => {
+  try {
+    const parsed = queueCeSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ success: false, error: 'Validation failed', details: parsed.error.flatten().fieldErrors });
+    }
+    const actor = extractCeActor(req);
+    const updated = await queueCeNotification(actor.hospitalId, req.params.id, parsed.data.coveredEntityId, actor);
+    await writeAuditLog(req, 'BREACH_DATA_MODIFIED', 'BreachIncident', updated.id, `CE notification queued for CE ${parsed.data.coveredEntityId}`);
+    return res.json({ success: true, data: updated });
+  } catch (err) {
+    return mapCeErrorToResponse(err, res);
+  }
+});
+
+// POST /:id/ce-notification/send
+router.post('/:id/ce-notification/send', async (req: AuthenticatedRequest, res: Response): Promise<Response | void> => {
+  try {
+    const parsed = sendCeSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ success: false, error: 'Validation failed', details: parsed.error.flatten().fieldErrors });
+    }
+    const actor = extractCeActor(req);
+    const channel: NotificationChannel = { type: parsed.data.channel };
+    const updated = await sendCeNotification(actor.hospitalId, req.params.id, channel, actor);
+    // Q-5BRC-F dual-emission: route-layer notification-level audit (HIPAA-graded action).
+    await writeAuditLog(req, 'BREACH_CE_NOTIFIED', 'BreachIncident', updated.id, `CE notification sent via ${parsed.data.channel}`);
+    return res.json({ success: true, data: updated });
+  } catch (err) {
+    return mapCeErrorToResponse(err, res);
+  }
+});
+
+// POST /:id/ce-notification/delivery
+router.post('/:id/ce-notification/delivery', async (req: AuthenticatedRequest, res: Response): Promise<Response | void> => {
+  try {
+    const parsed = recordCeDeliverySchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ success: false, error: 'Validation failed', details: parsed.error.flatten().fieldErrors });
+    }
+    const actor = extractCeActor(req);
+    const updated = await recordCeDelivery(
+      actor.hospitalId,
+      req.params.id,
+      {
+        channel: parsed.data.channel,
+        deliveredAt: new Date(parsed.data.deliveredAt),
+        recipientConfirmation: parsed.data.recipientConfirmation,
+        externalMessageId: parsed.data.externalMessageId ?? null,
+      },
+      actor,
+    );
+    await writeAuditLog(req, 'BREACH_DATA_MODIFIED', 'BreachIncident', updated.id, `CE delivery confirmation recorded via ${parsed.data.channel}`);
+    return res.json({ success: true, data: updated });
+  } catch (err) {
+    return mapCeErrorToResponse(err, res);
+  }
+});
+
+// POST /:id/ce-acknowledgment
+router.post('/:id/ce-acknowledgment', async (req: AuthenticatedRequest, res: Response): Promise<Response | void> => {
+  try {
+    const parsed = recordCeAckSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ success: false, error: 'Validation failed', details: parsed.error.flatten().fieldErrors });
+    }
+    const actor = extractCeActor(req);
+    const updated = await recordCeAcknowledgment(
+      actor.hospitalId,
+      req.params.id,
+      {
+        acknowledgedAt: new Date(parsed.data.acknowledgedAt),
+        acknowledgmentSource: parsed.data.acknowledgmentSource,
+        recordedBy: parsed.data.recordedBy,
+        notes: parsed.data.notes ?? null,
+      },
+      actor,
+    );
+    // Q-5BRC-F dual-emission: route-layer HIPAA-graded audit + 164.414(b) burden-of-proof anchor.
+    await writeAuditLog(req, 'BREACH_CE_ACKNOWLEDGED', 'BreachIncident', updated.id, `CE acknowledged via ${parsed.data.acknowledgmentSource}`);
+    return res.json({ success: true, data: updated });
+  } catch (err) {
+    return mapCeErrorToResponse(err, res);
+  }
+});
+
+// POST /:id/ce-followup-request
+router.post('/:id/ce-followup-request', async (req: AuthenticatedRequest, res: Response): Promise<Response | void> => {
+  try {
+    const parsed = recordCeFollowupRequestSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ success: false, error: 'Validation failed', details: parsed.error.flatten().fieldErrors });
+    }
+    const actor = extractCeActor(req);
+    const updated = await recordCeFollowupRequest(
+      actor.hospitalId,
+      req.params.id,
+      {
+        requestedAt: new Date(parsed.data.requestedAt),
+        question: parsed.data.question,
+        requestedBy: parsed.data.requestedBy,
+      },
+      actor,
+    );
+    await writeAuditLog(req, 'BREACH_CE_FOLLOWUP_REQUESTED', 'BreachIncident', updated.id, 'CE followup question recorded');
+    return res.json({ success: true, data: updated });
+  } catch (err) {
+    return mapCeErrorToResponse(err, res);
+  }
+});
+
+// POST /:id/ce-followup-response
+router.post('/:id/ce-followup-response', async (req: AuthenticatedRequest, res: Response): Promise<Response | void> => {
+  try {
+    const parsed = recordCeFollowupResponseSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ success: false, error: 'Validation failed', details: parsed.error.flatten().fieldErrors });
+    }
+    const actor = extractCeActor(req);
+    const updated = await recordCeFollowupResponse(
+      actor.hospitalId,
+      req.params.id,
+      {
+        respondedAt: new Date(parsed.data.respondedAt),
+        response: parsed.data.response,
+        recordedBy: parsed.data.recordedBy,
+      },
+      actor,
+    );
+    await writeAuditLog(req, 'BREACH_CE_FOLLOWUP_RESPONDED', 'BreachIncident', updated.id, 'CE followup response recorded');
+    return res.json({ success: true, data: updated });
+  } catch (err) {
+    return mapCeErrorToResponse(err, res);
+  }
+});
+
+// POST /:id/ce-close
+router.post('/:id/ce-close', async (req: AuthenticatedRequest, res: Response): Promise<Response | void> => {
+  try {
+    const actor = extractCeActor(req);
+    const updated = await closeCeNotification(actor.hospitalId, req.params.id, actor);
+    await writeAuditLog(req, 'BREACH_DATA_MODIFIED', 'BreachIncident', updated.id, 'CE notification workflow closed');
+    return res.json({ success: true, data: updated });
+  } catch (err) {
+    return mapCeErrorToResponse(err, res);
+  }
+});
+
+// POST /:id/four-factor-risk-assessment (5-BRC-02 + 5-BRC-08 sister-bundle)
+router.post('/:id/four-factor-risk-assessment', async (req: AuthenticatedRequest, res: Response): Promise<Response | void> => {
+  try {
+    const parsed = fourFactorRiskSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ success: false, error: 'Validation failed', details: parsed.error.flatten().fieldErrors });
+    }
+    const tenantId = req.user!.hospitalId;
+    const existing = await prisma.breachIncident.findFirst({ where: { id: req.params.id, hospitalId: tenantId } });
+    if (!existing) {
+      return res.status(404).json({ success: false, error: 'BreachIncident not found in tenant scope' });
+    }
+    const updated = await prisma.breachIncident.update({
+      where: { id: req.params.id },
+      data: {
+        fourFactorRiskAssessment: parsed.data.fourFactorRiskAssessment as any,
+        fourFactorRiskCompletedAt: new Date(parsed.data.fourFactorRiskCompletedAt),
+        fourFactorRiskCompletedBy: parsed.data.fourFactorRiskCompletedBy,
+      },
+    });
+    await writeAuditLog(req, 'BREACH_DATA_MODIFIED', 'BreachIncident', updated.id, '4-factor risk assessment recorded per 164.402');
+    return res.json({ success: true, data: updated });
+  } catch (err: any) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// POST /:id/ba-acts-as-agent (5-BRC-03 sister-bundle)
+router.post('/:id/ba-acts-as-agent', async (req: AuthenticatedRequest, res: Response): Promise<Response | void> => {
+  try {
+    const parsed = baActsAsAgentSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ success: false, error: 'Validation failed', details: parsed.error.flatten().fieldErrors });
+    }
+    const tenantId = req.user!.hospitalId;
+    const existing = await prisma.breachIncident.findFirst({ where: { id: req.params.id, hospitalId: tenantId } });
+    if (!existing) {
+      return res.status(404).json({ success: false, error: 'BreachIncident not found in tenant scope' });
+    }
+    const updated = await prisma.breachIncident.update({
+      where: { id: req.params.id },
+      data: {
+        baActsAsAgent: parsed.data.baActsAsAgent,
+        baActsAsAgentRationale: parsed.data.baActsAsAgentRationale,
+      },
+    });
+    await writeAuditLog(req, 'BREACH_DATA_MODIFIED', 'BreachIncident', updated.id, `BA-acts-as-agent determination recorded: ${parsed.data.baActsAsAgent}`);
+    return res.json({ success: true, data: updated });
+  } catch (err: any) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// POST /:id/law-enforcement-delay (5-BRC-07 sister-bundle)
+router.post('/:id/law-enforcement-delay', async (req: AuthenticatedRequest, res: Response): Promise<Response | void> => {
+  try {
+    const parsed = lawEnforcementDelaySchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ success: false, error: 'Validation failed', details: parsed.error.flatten().fieldErrors });
+    }
+    const tenantId = req.user!.hospitalId;
+    const existing = await prisma.breachIncident.findFirst({ where: { id: req.params.id, hospitalId: tenantId } });
+    if (!existing) {
+      return res.status(404).json({ success: false, error: 'BreachIncident not found in tenant scope' });
+    }
+    const updated = await prisma.breachIncident.update({
+      where: { id: req.params.id },
+      data: {
+        lawEnforcementDelayActive: parsed.data.lawEnforcementDelayActive,
+        lawEnforcementDelayUntil: parsed.data.lawEnforcementDelayUntil ? new Date(parsed.data.lawEnforcementDelayUntil) : null,
+        lawEnforcementDelayRationale: parsed.data.lawEnforcementDelayRationale,
+      },
+    });
+    await writeAuditLog(req, 'BREACH_DATA_MODIFIED', 'BreachIncident', updated.id, `Law-enforcement delay per 164.412: active=${parsed.data.lawEnforcementDelayActive}`);
+    return res.json({ success: true, data: updated });
+  } catch (err: any) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
 
 module.exports = router;
 export default router;
