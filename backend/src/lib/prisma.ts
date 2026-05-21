@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { applyPrismaTenantGuard } from './prismaTenantGuard';
+import { applyPrismaBaaGuard } from './prismaBaaGuard';
 import { applyPHIEncryption } from '../middleware/phiEncryption';
 
 // Shared Prisma client — single instance for the entire backend.
@@ -50,6 +51,13 @@ const baseClient = new PrismaClient({
 // scope/axis reframings caught at design time); 11th catches a
 // type-inference gap caught at integration time.
 const tenantGuarded = applyPrismaTenantGuard(baseClient) as unknown as PrismaClient;
-const prisma = applyPHIEncryption(tenantGuarded) as unknown as PrismaClient;
+// 5-ADM-09 P1.3.3b wire-in (Q-5ADM-B Path (c) Layer 3 PHI-flow-gating).
+// Chain order: tenant guard (cheapest structural reject) -> BAA guard
+// (cached Hospital.baaExecuted lookup, HIPAA §164.308(b)(1)) -> encryption
+// (most expensive, never wasted on rejected queries). Sister precedent
+// AUDIT-011 prismaTenantGuard wire-in + prismaBaaGuard.ts lines 340-344
+// defense-in-depth axes.
+const baaGuarded = applyPrismaBaaGuard(tenantGuarded) as unknown as PrismaClient;
+const prisma = applyPHIEncryption(baaGuarded) as unknown as PrismaClient;
 
 export default prisma;
