@@ -108,6 +108,15 @@ const HIPAA_GRADE_ACTIONS = new Set<string>([
   // commit time; const-assertion-union tightening tracked in design
   // refinement note §13.1.
   'TENANT_GUARD_VIOLATION',
+  // 5-BRC-06 BA-to-CE notification workflow per §164.410(b) burden-of-proof.
+  // Promoted per Q-5BRC-F + PHASE_5_REPORT.md §4.7 remediation step 7 +
+  // sister AUDIT-076 promotion. Each state transition emits a HIPAA-graded
+  // audit entry; DB write failure throws so caller surfaces 500 rather than
+  // silently losing the §164.410(b) burden-of-proof record.
+  'BREACH_CE_NOTIFIED',
+  'BREACH_CE_ACKNOWLEDGED',
+  'BREACH_CE_FOLLOWUP_REQUESTED',
+  'BREACH_CE_FOLLOWUP_RESPONDED',
 ]);
 
 // ─── Types ──────────────────────────────────────────────────────────────────────
