@@ -1794,6 +1794,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 - **Code-surface:** `docs/BAA_REGISTER.md:1`; `docs/BAA_REQUIREMENTS.md:1-38`
 - **Cross-references:** see 5-ADM-09; see 5-OMN-01
 - **Remediation:** Author `docs/HIPAA_CLASSIFICATION.md` (~1-2h)
+- **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (BA classification documentation surface).
 
 ### 5-CLS-02 - General Security Rule requirements documentation
 
@@ -1895,6 +1896,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 - **Severity rationale:** Direct OCR enforcement trigger per Omnibus 2013 BA direct liability; PHI flow pre-BAA-execution is §164.308(b) Administrative Safeguards violation + §164.502(e) Privacy Rule violation (cross-ref 5-PRV-03). Severity floor preserved per B5.4.1 evidence; not downgradeable until both surfaces close.
 - **Cross-references:** see AUDIT-082, AUDIT-085; see 5-ORG-01, 5-PRV-03, 5-OMN-02
 - **Remediation:** (1) Operator-side BAA execution (~2-4h; accept AWS BAA via AWS Artifact + execute Redox BAA + verify ElastiCache umbrella); (2) Customer-hospital PHI-flow-gating capability (~8-16h or v2.0 carry-forward per pre-DUA timing tolerance)
+- **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; primary catalyst for Q-5ADM-J 8-finding sister-bundle (5-ADM-09 + 5-PRV-03 + 5-OMN-02 + 5-PRV-01 + 5-PHY-01 + 5-ORG-01 + 5-PRV-04 + 5-CLS-01) per most-robust posture (2026-05-03 extend-timeline-not-scope + 2026-05-07 robust-over-consistent-with-existing); P1.3.2 operator decisions locked Q-5ADM-A Path 2 both-surfaces-in-scope + Q-5ADM-B Path (c) Prisma extension Layer 3 + Q-5ADM-C reuse-CoveredEntity-baaExecutedAt + Q-5ADM-D signed-BAA-S3-upload-in-scope + Q-5ADM-E 8-finding-bundle + Q-5ADM-F BAA_REGISTER.md+HIPAA_POLICIES.md repo artifacts + Q-5ADM-G 4-sub-phase decomposition + Q-5ADM-H NOT-v2.0-carry-forward + Q-5ADM-I retroactive-transition-log-discipline + Q-5ADM-J sister-PR register-reconciliation pattern; P1.3.3a schema + migration sub-phase follows.
 
 ### 5-PHY-01 - Facility access controls cross-reference documentation
 
@@ -1905,6 +1907,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 - **Code-surface:** None (compliance posture cross-reference layer)
 - **Cross-references:** see 5-ADM-09 (AWS BAA PENDING); see `docs/BAA_REGISTER.md`
 - **Remediation:** Section in `docs/HIPAA_POLICIES.md` cross-referencing AWS SOC 2 + AWS BAA (~1h)
+- **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (AWS BAA shared-responsibility facility access surface).
 
 ### 5-PHY-02 - Workstation use policy
 
@@ -2006,6 +2009,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 - **Code-surface:** `docs/BAA_REGISTER.md`; `docs/BAA_REQUIREMENTS.md`
 - **Cross-references:** see 5-ADM-09; see 5-PRV-03, 5-PRV-04
 - **Remediation:** Append BAA contract-terms checklist to `docs/BAA_REQUIREMENTS.md` (~3-4h)
+- **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (BA contract-terms layer; §164.314(a) sister).
 
 ### 5-ORG-02 - Group health plan requirements
 
@@ -2131,6 +2135,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 - **Code-surface:** None (BAA terms layer)
 - **Cross-references:** see 5-ADM-09, 5-PRV-03, 5-PRV-04
 - **Remediation:** Section in `docs/HIPAA_POLICIES.md` (~1h bundled)
+- **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (BA permitted uses + disclosures documentation surface; conditional on 5-ADM-09 closure).
 
 ### 5-PRV-02 - Minimum necessary treatment-exception documentation
 
@@ -2151,6 +2156,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 - **Code-surface:** `docs/BAA_REGISTER.md`
 - **Cross-references:** see 5-ADM-09, 5-PRV-04; see `docs/BAA_REGISTER.md`
 - **Remediation:** Bundled with 5-ADM-09 closure
+- **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (sub-BA disclosure documentation surface).
 
 ### 5-PRV-04 - BA contract terms CROSSREF
 
@@ -2161,6 +2167,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 - **Code-surface:** `docs/BAA_REQUIREMENTS.md`
 - **Cross-references:** see 5-ORG-01, 5-ADM-09
 - **Remediation:** Bundled with 5-ORG-01
+- **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (BA contract terms downstream of 5-ORG-01).
 
 ### 5-PRV-05 - De-identification + limited data sets
 
@@ -2279,6 +2286,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 - **Code-surface:** `docs/BAA_REGISTER.md`
 - **Cross-references:** see 5-ADM-09, 5-PRV-03
 - **Remediation:** Bundled with 5-ADM-09 closure
+- **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (sub-BA accountability chain surface).
 
 ### 5-OMN-03 - 4-factor risk assessment framework CROSSREF
 

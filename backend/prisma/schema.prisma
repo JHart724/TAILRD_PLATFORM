@@ -115,9 +115,21 @@ model Hospital {
   coveredEntity   CoveredEntity?  @relation("CoveredEntityHospitals", fields: [coveredEntityId], references: [id])
   coveredEntities CoveredEntity[] @relation("HospitalCoveredEntities")
 
+  // 5-ADM-09 P1.3.3a BAA execution tracking (derived cache + signed-BAA upload metadata)
+  // Q-5ADM-C single source of truth: CoveredEntity.baaExecutedAt + baaExpiresAt + baaDocumentUrl (shipped via PR #292)
+  // Q-5ADM-B Path (c): foundation for P1.3.3b Layer 3 Prisma extension PHI-flow-gating middleware (sister AUDIT-011 prismaTenantGuard precedent)
+  // Q-5ADM-D signed-BAA S3 upload: per-hospital upload metadata fields (KMS envelope-encrypted per AUDIT-016 v2 foundation)
+  // baaExecuted is derived computed-cached boolean; updated by P1.3.3b service layer on CoveredEntity write; do NOT write directly
+  baaExecuted         Boolean   @default(false)
+  baaExecutedAt       DateTime?
+  signedBaaS3Key      String?
+  signedBaaUploadedAt DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([baaExecuted], map: "idx_hospital_baa_executed")
+  @@index([baaExecutedAt], map: "idx_hospital_baa_executed_at")
   @@map("hospitals")
 }
 
