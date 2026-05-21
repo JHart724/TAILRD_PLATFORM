@@ -1701,6 +1701,70 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ---
 
+### AUDIT-088 - BreachIncident.hospitalId lacks @relation FK declaration (schema-integrity gap)
+
+- **Phase:** 5 (5-BRC-06 P1.3.3c sister-arc discovery)
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Discovered:** 2026-05-20 during P1.3.3c integrity verification of D6 breachNotification.ts handlers; surfaced when authoring tenant-isolation tests against `prisma.breachIncident.findFirst({ where: { id, hospitalId } })`
+- **Location:** `backend/prisma/schema.prisma:2113-2115` (model BreachIncident; hospitalId String? declared without `hospital Hospital @relation(...)`)
+- **Evidence:** All sister patient-data models declare `hospitalId String` + `hospital Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)` together (verified at schema.prisma:174-175 RedoxEHRConnection, :202-203 RedoxConnection, :275-276 User, :374-375 Encounter, :424-425 Observation, :477-478 Order, :523-524 Diagnosis, etc.). BreachIncident.hospitalId at :2115 carries the column without the relation. Practical effect: no FK constraint at DB layer; ON DELETE Restrict not enforced; `prisma.hospital.findUnique({ include: { breachIncidents: true } })` cannot work; orphan BreachIncident rows possible after hospital delete.
+- **Severity rationale:** Tenant-isolation at application layer (`coveredEntityService.assertTenantScope` + Layer 3 prismaTenantGuard) currently provides defense; absence of DB-layer FK is hygiene-tier risk for v2.0+ scale (orphan row backfill cost if a hospital is ever hard-deleted). NOT a Phase 5 GATE item; v3.0 schema hygiene track.
+- **Remediation:** Schema migration adding `hospital Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)` with explicit relation name to disambiguate from CoveredEntity relation. Validate no orphan rows exist before applying (`SELECT id FROM "BreachIncident" WHERE "hospitalId" IS NOT NULL AND "hospitalId" NOT IN (SELECT id FROM "Hospital")`). v3.0 schema-hygiene PR.
+- **Effort estimate:** S (1-2h migration + verification; sister to existing FK pattern)
+- **Dependencies:** None hard; coordinates naturally with any future BreachIncident schema work
+- **Cross-references:** see 5-BRC-06 (sister parent finding); see AUDIT-011 (tenant-isolation Layer 3 currently compensates); see AUDIT-074 (schema-reading hygiene gaps; sister-pattern); see `backend/prisma/schema.prisma:174-175` (canonical sister-model FK declaration pattern)
+
+---
+
+### AUDIT-089 - breachNotification.ts dual-export hygiene (module.exports overrides export default)
+
+- **Phase:** 5 (5-BRC-06 P1.3.3c sister-arc discovery)
+- **Severity:** LOW (P3)
+- **Status:** OPEN
+- **Discovered:** 2026-05-20 during P1.3.3c D10 jest execution; 19 of 48 route-handler tests initially failed with `TypeError: Cannot read properties of undefined (reading 'stack')` when accessing `require('../routes/breachNotification').default.stack`
+- **Location:** `backend/src/routes/breachNotification.ts:693-694` (`module.exports = router;` immediately precedes `export default router;`)
+- **Evidence:** TypeScript compiles `export default router` to roughly `exports.default = router`. The preceding `module.exports = router` REPLACES the module.exports binding with the router function; the local `exports` reference is now stale (still pointing at the original empty object). The subsequent `exports.default = router` sets `.default` on the stale (now-orphaned) object. Net effect: `require('../routes/breachNotification')` returns the router function; `require('../routes/breachNotification').default` returns `undefined`. D10 getHandler test helper required `mod.default ?? mod` workaround (codified at `backend/src/__tests__/breachCeNotification.test.ts:212-219` with explicit AUDIT-089 reference comment).
+- **Severity rationale:** No production-runtime impact; existing routes/mounting work fine because Express imports the default mount. Tests + future tooling that assume canonical TS `export default` semantics will silently get undefined. Hygiene-tier finding.
+- **Remediation:** Delete `module.exports = router;` at L693; rely solely on `export default router;` at L694 (canonical ES module pattern; matches all other route files including coveredEntity.ts:321). After remediation, remove the `mod.default ?? mod` workaround in `breachCeNotification.test.ts:212-219`.
+- **Effort estimate:** XS (5min single-line deletion + 1-line test cleanup)
+- **Dependencies:** None
+- **Cross-references:** see 5-BRC-06 (sister parent finding); see `backend/src/__tests__/breachCeNotification.test.ts:212-219` (test-side workaround codified inline); see canonical sister-route pattern at `backend/src/routes/coveredEntity.ts:321` (single `export default router;`)
+
+---
+
+### AUDIT-090 - PDF-signing infrastructure absence (§164.410(c) signedPdf channel deferral)
+
+- **Phase:** 5 (5-BRC-06 P1.3.3c sister-arc discovery)
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Discovered:** 2026-05-20 during P1.3.3b breachCeNotificationService NotificationChannel framework authoring (Q-5BRC-B v1.0 channel scope)
+- **Location:** `backend/src/services/breachCeNotificationService.ts:315-323` (dispatchChannel.signedPdf throws NotImplementedError); `backend/src/routes/breachNotification.ts:481-496` (POST /:id/ce-notification/send returns 501 for signedPdf channel)
+- **Evidence:** Q-5BRC-B locked channel framework with 4 NotificationChannel types (email, signedPdf, securePortal, sms). v1.0 scope ships email channel concrete (AWS SES via emailService.sendEmail). signedPdf channel currently throws `NotImplementedError('signedPdf channel', 'PDF-signing infrastructure deferred to v3.0 per Q-5BRC-B; AUDIT entry filed at P1.3.3c per Deliverable 11')`. No PDF-signing dependency in package.json (no `pdf-lib` + `node-signpdf` + DocuSign SDK + AWS Signer client). §164.410 does not REQUIRE PDF as a notification format (email + securePortal + signed-document acknowledgment paths all permissible per §164.404(c)(1)(F) contact-procedures flexibility), but PDF is preferred by many CEs for record-retention discipline + statutory archival.
+- **Severity rationale:** v1.0 production-deployable through email channel alone for current pilot scope (single CE per tenant; BSW + Mount Sinai pilot phase). v3.0 multi-tenant + many-CE scaling pressure surfaces PDF requirement as differentiator for sales conversations + enterprise BAA negotiations.
+- **Remediation:** Three-step v3.0 work block: (1) PDF-signing library evaluation (pdf-lib + node-signpdf for self-signed PKI vs DocuSign SDK for managed e-signature vs AWS Signer for cloud-managed); (2) certificate/key management strategy (KMS-issued cert vs CA-issued vs managed-DocuSign); (3) breach-ce-notification template PDF rendering branch + dispatchChannel.signedPdf concrete implementation. Recommend §17.1 architectural-precedent candidate codification at P1.3.4 self-review (pattern: notification-channel-deferral-with-explicit-NotImplementedError sister to AUDIT-022 phased-rollout precedent).
+- **Effort estimate:** v3.0 scope (~20-40h depending on library choice + cert strategy)
+- **Dependencies:** Q-5BRC-B v3.0 channel-expansion scope; potential dependency on enterprise BAA negotiations that surface PDF as contractual requirement
+- **Cross-references:** see 5-BRC-06 (sister parent finding); see Q-5BRC-B (channel framework lock decision); see §17.1 candidate at P1.3.4; see `backend/src/services/breachCeNotificationService.ts:315-323` (deferred dispatch path); see `backend/src/services/breachCeNotificationService.ts:36-42` (channel framework v1.0 scope rationale)
+
+---
+
+### AUDIT-091 - P1.3.3b prisma generate Docker discipline (WSL stale-client risk during 5-BRC-06 sister-arc)
+
+- **Phase:** 5 (5-BRC-06 P1.3.3b sister-arc discovery)
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Discovered:** 2026-05-20 during P1.3.3b coveredEntityService + breachCeNotificationService authoring; Prisma client types for new CoveredEntity model + BreachIncident extensions (ceNotifiedAt + ceAcknowledgedAt + ceFollowupRequestedAt + ceFollowupRespondedAt + baActsAsAgent + baActsAsAgentRationale + fourFactorRiskAssessment + fourFactorRiskCompletedAt + fourFactorRiskCompletedBy + lawEnforcementDelayActive + lawEnforcementDelayUntil + lawEnforcementDelayRationale + burdenOfProofRetentionUntil) added in P1.3.3a migration require `npx prisma generate` to materialize TypeScript types
+- **Location:** `backend/prisma/schema.prisma` (P1.3.3a additions); local WSL Prisma client regeneration disciplines per CLAUDE.md §15 RULE 6 + §18 stale Prisma type detection
+- **Evidence:** CLAUDE.md §15 RULE 6 explicitly notes "WSL cannot run `prisma generate` locally against Windows filesystem" + §18 "When `tsc` shows errors for fields that exist in `schema.prisma`, these are stale-client errors from WSL. Do NOT add `as any` casts. Verify the field exists in schema.prisma, note it as a stale-client error, and move on. These resolve in Docker build where `prisma generate` runs correctly." P1.3.3c TypeScript compile PASSED locally (exit 0) at RESUME.1 gate, indicating the Windows-side Prisma client was successfully regenerated post-P1.3.3a migration. If a WSL-only operator re-runs the workflow without Docker-build verification, stale-client errors will surface on new schema fields.
+- **Severity rationale:** Operator-discipline finding rather than code-defect. Mitigated for current operator via Windows-side regen success. Risk surfaces if future maintainer operates from WSL-only environment + skips Docker-build verification step.
+- **Remediation:** Two-step v2.0 codification: (1) Promote `docs/POST_MIGRATION_PRISMA_GENERATE_PROTOCOL.md` if not extant + cross-reference from CLAUDE.md §18 stale-Prisma-detection rule; (2) CI/CD pre-merge gate that runs `docker build --target=builder` against the PR's schema.prisma + verifies Prisma client compiles. Sister to CLAUDE.md §15 RULE 3 "Test the container locally before every push" but specifically scoped to schema-change PRs.
+- **Effort estimate:** v2.0 scope (~4-8h for protocol doc + ~6-10h for CI/CD gate)
+- **Dependencies:** None hard; coordinates naturally with AUDIT-085 production-migration-execution-environment work + AUDIT-091 itself rolls into broader schema-hygiene track
+- **Cross-references:** see 5-BRC-06 P1.3.3a migration (catalyst); see CLAUDE.md §15 RULE 6 + §18 (precedent stale-client discipline); see AUDIT-085 (sister production-migration-execution-environment finding); see CLAUDE.md §15 RULE 3 (sister "test container locally" discipline)
+
+---
+
 ## Phase 5 HIPAA Compliance Gap Analysis Findings (2026-05-20)
 
 **Phase 5 of Phase 0A audit arc.** Companion report: `docs/audit/PHASE_5_REPORT.md`. Verdict: **CONDITIONAL PASS** sister to Phase 1/2/3/4 precedent. Scope: Option A full HIPAA compliance gap analysis (45 CFR Part 164 Subparts A + C + D + E; 45 CFR Part 160; Omnibus 2013 cross-cutting). TAILRD classification: Business Associate per B5.2.0 canonical-grep determination.
@@ -1985,21 +2049,23 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 
 - **CFR:** 45 CFR §164.402
 - **Severity:** MEDIUM-DOCUMENTATION
-- **Status:** OPEN
+- **Status:** FIXED
 - **Description:** 4-factor risk assessment framework not codified; `breachNotification.ts` schema lacks structured 4-factor fields
 - **Code-surface:** `backend/src/routes/breachNotification.ts:25-37`
 - **Cross-references:** see 5-BRC-06, 5-OMN-03
 - **Remediation:** Schema extension + workflow documentation bundled with 5-BRC-06 (~2-4h)
+- **Status note:** 2026-05-20 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-BRC-06 PR per PHASE_5_REPORT.md §4.7 co-remediation framing + P1.3.2 operator Q-5BRC-J lock; transitioned IN_PROGRESS to FIXED 2026-05-20 at 5-BRC-06 P1.3.4 PR commit (D1-D12 bundle complete: schema migration P1.3.3a adds fourFactorRiskAssessment + fourFactorRiskCompletedAt + fourFactorRiskCompletedBy on BreachIncident; POST /:id/four-factor-risk-assessment route handler shipped at breachNotification.ts:613-638; D10 test coverage at breachCeNotification.test.ts sister-bundle suite). RESOLVED transition pending PR merge confirmation per P1.3.3c.RESUME.13 sister-PR scope.
 
 ### 5-BRC-03 - Individual notification BA-cooperation workflow
 
 - **CFR:** 45 CFR §164.404
 - **Severity:** MEDIUM (P2)
-- **Status:** OPEN
+- **Status:** FIXED
 - **Description:** `breachNotification.ts:42` includes `INDIVIDUALS_NOTIFIED` status but no BAA-delegation determination (CE vs BA-delegated)
 - **Code-surface:** `backend/src/routes/breachNotification.ts:42`
 - **Cross-references:** see 5-BRC-06, 5-ORG-01
 - **Remediation:** Schema field + runbook section bundled with 5-BRC-06 (~1-2h)
+- **Status note:** 2026-05-20 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-BRC-06 PR per PHASE_5_REPORT.md §4.7 co-remediation framing + P1.3.2 operator Q-5BRC-J lock; transitioned IN_PROGRESS to FIXED 2026-05-20 at 5-BRC-06 P1.3.4 PR commit (P1.3.3a schema migration adds baActsAsAgent Boolean + baActsAsAgentRationale String on BreachIncident per §164.402 agency-determination; POST /:id/ba-acts-as-agent route handler shipped at breachNotification.ts:640-664; template `agentLine` renders per-determination notification language at breach-ce-notification.ts:141-143; D10 test coverage). RESOLVED transition pending PR merge confirmation per P1.3.3c.RESUME.13 sister-PR scope.
 
 ### 5-BRC-04 - Media notification BA-cooperation procedure
 
@@ -2015,42 +2081,46 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 
 - **CFR:** 45 CFR §164.408
 - **Severity:** MEDIUM-DOCUMENTATION
-- **Status:** OPEN
+- **Status:** FIXED
 - **Description:** `breachNotification.ts:74-76` calculates 60-day HHS deadline; sister gap to 5-BRC-06 (workflow positions TAILRD as CE-to-HHS direct)
 - **Code-surface:** `backend/src/routes/breachNotification.ts:74-76`
 - **Cross-references:** see 5-BRC-06
 - **Remediation:** Bundled with 5-BRC-06 schema rework
+- **Status note:** 2026-05-20 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-BRC-06 PR per PHASE_5_REPORT.md §4.7 co-remediation framing + P1.3.2 operator Q-5BRC-J lock; transitioned IN_PROGRESS to FIXED 2026-05-20 at 5-BRC-06 P1.3.4 PR commit (BA-to-CE workflow now provides the cooperation path: BA notifies CE per §164.410 within 60 days; CE then bears §164.408 HHS notification responsibility; baActsAsAgent determination at §164.402 resolves clock-start ambiguity; cross-referenced in breach-ce-notification template §164.410 Agency Determination section). RESOLVED transition pending PR merge confirmation per P1.3.3c.RESUME.13 sister-PR scope.
 
 ### 5-BRC-06 - BA-to-CE notification workflow gap (§164.410)
 
 - **CFR:** 45 CFR §164.410 (TAILRD primary obligation as BA)
 - **Severity:** **HIGH (P1) GATE**
-- **Status:** OPEN - PHASE 5 GATE
+- **Status:** FIXED - PHASE 5 GATE
 - **Description:** `breachNotification.ts:1-348` implements CE-to-HHS direct workflow; MISSING §164.410 BA-primary-obligation path: no `ceNotifiedAt` field, no `CE_NOTIFIED` status, no CE-side endpoint, no BA-as-agent determination per §164.402
 - **Code-surface:** `backend/src/routes/breachNotification.ts:1-348`
 - **Severity rationale:** BA-primary obligation MISSING in implementation; severe CMP exposure per Omnibus 2013 tiered structure ($50K min - $1.5M cap per §160.404 willful-neglect tier); severity floor preserved per B5.4.1 evidence
-- **Cross-references:** see AUDIT-076; see 4-RNB-02; see AUDIT-013; see 5-BRC-02, 5-OMN-03, 5-ADM-06
+- **Cross-references:** see AUDIT-076; see 4-RNB-02; see AUDIT-013; see 5-BRC-02, 5-OMN-03, 5-ADM-06; see AUDIT-088 (FK absence sister); see AUDIT-089 (dual-export hygiene sister); see AUDIT-090 (PDF-signing absence sister); see AUDIT-091 (prisma generate Docker discipline sister)
 - **Remediation:** (1) Schema extension (add `ceNotifiedAt`, `CE_NOTIFIED` status, `baActsAsAgent` flag); (2) Timeline calculation rework; (3) CE-receive endpoint; (4) §164.410(c) content audit; (5) `HIPAA_GRADE_ACTIONS` promotion. Estimated ~12-20h implementation + ~4-8h CE-side workflow design with BSW + Mount Sinai
+- **Status note:** 2026-05-20 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-BRC-06 PR per PHASE_5_REPORT.md §4.7 co-remediation framing + P1.3.2 operator Q-5BRC-J lock; transitioned IN_PROGRESS to FIXED 2026-05-20 at 5-BRC-06 P1.3.4 PR commit. D1-D12 bundle shipped: (D1) P1.3.3a CoveredEntity model + BreachIncident sister-bundle field extensions + 7 new BreachStatus enum values (CE_NOTIFICATION_QUEUED + CE_NOTIFICATION_SENT + CE_NOTIFICATION_DELIVERED + CE_ACKNOWLEDGED + CE_FOLLOWUP_REQUESTED + CE_FOLLOWUP_RESPONDED + CE_CLOSED) + 6 HIPAA_GRADE_ACTIONS promotions (BREACH_CE_QUEUED + BREACH_CE_NOTIFIED + BREACH_CE_DELIVERED + BREACH_CE_ACKNOWLEDGED + BREACH_CE_FOLLOWUP_REQUESTED + BREACH_CE_FOLLOWUP_RESPONDED + BREACH_CE_CLOSED); (D2) P1.3.3b coveredEntityService.ts (7 CRUD functions + 4 structured error classes + tenant-isolation at service layer); (D3) P1.3.3b breachCeNotificationService.ts (7 state-transition methods + VALID_STATE_TRANSITIONS map + NotificationChannel discriminated union + projectBreachToTemplateInput + dispatchChannel + 4 structured error classes); (D4) P1.3.3b auditLogger.ts auditLogger promotion (Winston named export); (D5) P1.3.3c coveredEntity.ts routes (7 CRUD endpoints + Zod validation + extractActor + mapErrorToResponse + writeAuditLog dual-emission per Q-5BRC-F); (D6) P1.3.3c breachNotification.ts 7 BA-to-CE workflow handlers + 3 sister-bundle handlers (4-factor-risk-assessment + ba-acts-as-agent + law-enforcement-delay); (D7) P1.3.3b breach-ce-notification.ts template (§164.404(c)(1)(A)-(F) required content + §164.410 agency determination + §164.414(b) acknowledgment request); (D9) coveredEntity.test.ts (48 tests PASS); (D10) breachCeNotification.test.ts (48 tests PASS); (D11) 4 NEW AUDIT entries AUDIT-088 + AUDIT-089 + AUDIT-090 + AUDIT-091 filed; (D12) docs/PHASE_5_5BRC_BUNDLE_REMEDIATION_NOTES.md authored. RESOLVED transition pending PR merge confirmation per P1.3.3c.RESUME.13 sister-PR scope.
 
 ### 5-BRC-07 - Law enforcement delay procedure
 
 - **CFR:** 45 CFR §164.412
 - **Severity:** DOCUMENTATION
-- **Status:** OPEN
+- **Status:** FIXED
 - **Description:** No documented law-enforcement-delay procedure
-- **Code-surface:** None (policy-layer)
+- **Code-surface:** `backend/src/routes/breachNotification.ts:666-691`
 - **Cross-references:** see 5-BRC-06, 5-ADM-06
 - **Remediation:** Runbook section (~30min bundled)
+- **Status note:** 2026-05-20 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-BRC-06 PR per PHASE_5_REPORT.md §4.7 co-remediation framing + P1.3.2 operator Q-5BRC-J lock; transitioned IN_PROGRESS to FIXED 2026-05-20 at 5-BRC-06 P1.3.4 PR commit (P1.3.3a schema migration adds lawEnforcementDelayActive Boolean + lawEnforcementDelayUntil DateTime? + lawEnforcementDelayRationale String? on BreachIncident per §164.412; POST /:id/law-enforcement-delay route handler shipped at breachNotification.ts:666-691; D10 test coverage including 4-active/inactive cycle + tenant-isolation; runbook documentation pattern codified inline via route-handler audit-log message). RESOLVED transition pending PR merge confirmation per P1.3.3c.RESUME.13 sister-PR scope.
 
 ### 5-BRC-08 - Burden of proof + 4-factor retention documentation
 
 - **CFR:** 45 CFR §164.414(a)-(b)
 - **Severity:** MEDIUM-DOCUMENTATION
-- **Status:** OPEN
+- **Status:** FIXED
 - **Description:** Burden-of-proof retention policy not codified; structured 4-factor fields missing from schema (sister 5-BRC-02)
 - **Code-surface:** `backend/src/routes/breachNotification.ts:39-55`
 - **Cross-references:** see 5-BRC-02, 5-BRC-06; see AUDIT-013
 - **Remediation:** Bundled with 5-BRC-02 + 5-BRC-06 schema rework + 5-PNP-02 retention policy
+- **Status note:** 2026-05-20 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-BRC-06 PR per PHASE_5_REPORT.md §4.7 co-remediation framing + P1.3.2 operator Q-5BRC-J lock; transitioned IN_PROGRESS to FIXED 2026-05-20 at 5-BRC-06 P1.3.4 PR commit (P1.3.3a schema migration adds burdenOfProofRetentionUntil DateTime? on BreachIncident; recordCeAcknowledgment service method auto-computes 6-year retention window from discoveredAt per §164.414(b) burden-of-proof timeline anchor; 4-factor structured fields shared with 5-BRC-02 sister via P1.3.3a fourFactorRiskAssessment + fourFactorRiskCompletedAt + fourFactorRiskCompletedBy migration; D10 test coverage verifies retention math + audit-event payload). RESOLVED transition pending PR merge confirmation per P1.3.3c.RESUME.13 sister-PR scope.
 
 ### 5-PRV-01 - BA permitted uses + disclosures documentation
 
