@@ -1,31 +1,38 @@
 import { PrismaClient } from '@prisma/client';
 import { applyPrismaTenantGuard } from './prismaTenantGuard';
+import { applyPrismaBaaGuard } from './prismaBaaGuard';
 import { applyPHIEncryption } from '../middleware/phiEncryption';
 
-// Shared Prisma client — single instance for the entire backend.
+// Shared Prisma client - single instance for the entire backend.
 // Avoids connection pool exhaustion from multiple `new PrismaClient()` calls.
 //
-// 2026-05-07 wire-in (AUDIT-011 Phase b/c §8.6 locked extension order):
-//   Layer 3 (tenant guard) registers FIRST → encryption SECOND.
-//   - Tenant violations throw / log BEFORE encryption runs (PHI plaintext
-//     never touched on rejected queries; defense-in-depth posture).
-//   - Encryption work not wasted on tenant-violating queries.
-//   - Sister to AUDIT-013 fail-closed pattern (gate before action;
-//     structural rejection before content processing).
+// Layer 3 extension chain (3 stacked extensions, 5-ADM-09 P1.3.3b wire-in
+// 2026-05-22 superseded the prior 2-layer order locked at AUDIT-011 Phase b/c
+// §8.6 on 2026-05-07; Q-5ADM-B Path (c) defense-in-depth axes):
+//   1. tenant guard (AUDIT-011 Phase b/c, 2026-05-07): rejects on structural
+//      absence of hospitalId BEFORE downstream layers; PHI plaintext never
+//      touched on rejected queries; sister to AUDIT-013 fail-closed pattern.
+//   2. BAA guard (5-ADM-09 P1.3.3b, 2026-05-22): cached Hospital.baaExecuted
+//      lookup rejects PHI flow for hospitals without executed BAA per HIPAA
+//      §164.308(b)(1); HIPAA-grade audit emission on violation.
+//   3. PHI encryption (AUDIT-016): field-level AES-256-GCM applied last so
+//      encryption work is never wasted on rejected queries.
 //
-// Wrapper-call order (outermost → innermost — Prisma `$extends` semantics):
-//   caller → Layer 3 (tenant guard) → encryption → Prisma engine → DB
+// Wrapper-call order (outermost to innermost; Prisma `$extends` semantics):
+//   caller -> tenant guard -> BAA guard -> PHI encryption -> Prisma engine -> DB
 //
 // Cross-references:
 //   - docs/architecture/AUDIT_011_PHASE_BCD_PRISMA_EXTENSION_NOTES.md §8.6
-//   - backend/src/lib/prismaTenantGuard.ts (Layer 3 extension)
-//   - backend/src/middleware/phiEncryption.ts (encryption extension)
+//   - backend/src/lib/prismaTenantGuard.ts (Layer 3 tenant guard)
+//   - backend/src/lib/prismaBaaGuard.ts (Layer 3 BAA guard; 5-ADM-09 P1.3.3b)
+//   - backend/src/middleware/phiEncryption.ts (PHI encryption)
 const baseClient = new PrismaClient({
   log: process.env.NODE_ENV === 'development' ? ['warn', 'error'] : ['error'],
 });
 
-// Layer 3 first — structural multi-tenancy backstop (AUDIT-011 Phase b/c).
-// Encryption second — PHI field-level AES-256-GCM (AUDIT-016).
+// Tenant guard first - structural multi-tenancy backstop (AUDIT-011 Phase b/c).
+// BAA guard second - cached Hospital.baaExecuted gate (5-ADM-09 P1.3.3b).
+// PHI encryption third - field-level AES-256-GCM (AUDIT-016).
 //
 // Type-erasure cast at the wire-in boundary (11th §17.1 architectural-
 // precedent of the 3-day arc, 2026-05-07): `applyPrismaTenantGuard` +
@@ -50,6 +57,13 @@ const baseClient = new PrismaClient({
 // scope/axis reframings caught at design time); 11th catches a
 // type-inference gap caught at integration time.
 const tenantGuarded = applyPrismaTenantGuard(baseClient) as unknown as PrismaClient;
-const prisma = applyPHIEncryption(tenantGuarded) as unknown as PrismaClient;
+// 5-ADM-09 P1.3.3b wire-in (Q-5ADM-B Path (c) Layer 3 PHI-flow-gating).
+// Chain order: tenant guard (cheapest structural reject) -> BAA guard
+// (cached Hospital.baaExecuted lookup, HIPAA §164.308(b)(1)) -> encryption
+// (most expensive, never wasted on rejected queries). Sister precedent
+// AUDIT-011 prismaTenantGuard wire-in + prismaBaaGuard.ts lines 340-344
+// defense-in-depth axes.
+const baaGuarded = applyPrismaBaaGuard(tenantGuarded) as unknown as PrismaClient;
+const prisma = applyPHIEncryption(baaGuarded) as unknown as PrismaClient;
 
 export default prisma;

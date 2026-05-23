@@ -271,6 +271,10 @@ app.use('/api/internal', require('./routes/internalOps'));
 app.use('/api/account', require('./routes/accountSecurity'));
 app.use('/api/data-requests', require('./routes/dataRequests'));
 app.use('/api/breach-incidents', require('./routes/breachNotification'));
+// 5-ADM-09 P1.3.3c.IMPLEMENT-1: mount sister-precedent PR #292 coveredEntity router
+// (previously unmounted at PR #292 merge time; surfaced at PAUSE A.IMPLEMENT-1.5
+// inventory). Hosts CRUD + PUT /:id/baa-execution (5-ADM-09 BAA execution route).
+app.use('/api/coveredEntities', require('./routes/coveredEntity').default);
 app.use('/api/audit', require('./routes/auditExport'));
 app.use('/api/files', require('./routes/files'));
 app.use('/api/data', require('./routes/upload'));

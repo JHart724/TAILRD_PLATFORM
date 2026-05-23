@@ -29,12 +29,18 @@ import {
   deleteCoveredEntity,
   linkHospitalToCoveredEntity,
   unlinkHospitalFromCoveredEntity,
+  upsertCoveredEntityBaaExecution,
   CoveredEntityServiceError,
   CoveredEntityNotFoundError,
   TenantScopeViolationError,
   CoveredEntityAccessDeniedError,
   CoveredEntityValidationError,
+  BAANotExecutedError,
+  BAAExpiredError,
+  HospitalBaaCacheStaleError,
+  InvalidBaaTransitionError,
   type AuthenticatedActor,
+  type UpsertBaaExecutionInput,
 } from '../services/coveredEntityService';
 
 const router = Router();
@@ -65,6 +71,15 @@ const updateCoveredEntitySchema = createCoveredEntitySchema.partial();
 const listFiltersSchema = z.object({
   ceType: z.string().max(64).optional(),
   baaExpiringBefore: z.string().datetime().optional(),
+});
+
+// 5-ADM-09 P1.3.3c.IMPLEMENT-1 BAA execution input schema.
+// `baaExecutedAt` is required (null = revoke, ISO string = record/update);
+// `baaExpiresAt` + `baaDocumentUrl` are optional (undefined = leave unchanged).
+const upsertBaaExecutionSchema = z.object({
+  baaExecutedAt: z.string().datetime().nullable(),
+  baaExpiresAt: z.string().datetime().nullable().optional(),
+  baaDocumentUrl: z.string().max(2048).nullable().optional(),
 });
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
@@ -110,6 +125,55 @@ function parseOptionalDate(value: string | null | undefined): Date | null | unde
   if (value === undefined) return undefined;
   if (value === null) return null;
   return new Date(value);
+}
+
+// 5-ADM-09 P1.3.3c.IMPLEMENT-1 Q-5ADM-Q Path A finer-grained error-to-HTTP
+// mapping for BAA execution route. Differs from mapErrorToResponse (used by
+// CE CRUD): CoveredEntityValidationError maps to 422 here (validation
+// semantic) vs 400 there; BAA-specific errors get dedicated HTTP semantic
+// mappings. Tenant scope violations route to 403 NOT 404 to avoid
+// resource-existence leak (sister AUDIT-011 fail-closed posture).
+function mapBaaErrorToResponse(err: unknown, res: Response): Response {
+  if (err instanceof CoveredEntityNotFoundError) {
+    return res.status(404).json({ success: false, error: err.message, code: err.code });
+  }
+  if (err instanceof BAANotExecutedError) {
+    return res.status(404).json({ success: false, error: err.message, code: err.code });
+  }
+  if (err instanceof BAAExpiredError) {
+    return res.status(409).json({ success: false, error: err.message, code: err.code });
+  }
+  if (err instanceof InvalidBaaTransitionError) {
+    return res.status(422).json({
+      success: false,
+      error: err.message,
+      code: err.code,
+      fromState: err.fromState,
+      toState: err.toState,
+    });
+  }
+  if (err instanceof CoveredEntityValidationError) {
+    return res.status(422).json({
+      success: false,
+      error: err.message,
+      code: err.code,
+      field: err.field,
+    });
+  }
+  if (err instanceof HospitalBaaCacheStaleError) {
+    return res.status(500).json({ success: false, error: err.message, code: err.code });
+  }
+  if (err instanceof TenantScopeViolationError) {
+    return res.status(403).json({ success: false, error: err.message, code: err.code });
+  }
+  if (err instanceof CoveredEntityAccessDeniedError) {
+    return res.status(403).json({ success: false, error: err.message, code: err.code });
+  }
+  if (err instanceof CoveredEntityServiceError) {
+    return res.status(500).json({ success: false, error: err.message, code: err.code });
+  }
+  const message = err instanceof Error ? err.message : String(err);
+  return res.status(500).json({ success: false, error: message });
 }
 
 // ── Routes ──────────────────────────────────────────────────────────────────
@@ -314,6 +378,85 @@ router.delete(
       return res.json({ success: true, message: 'Hospital unlinked from CoveredEntity' });
     } catch (err) {
       return mapErrorToResponse(err, res);
+    }
+  },
+);
+
+/**
+ * PUT /api/coveredEntities/:id/baa-execution
+ *
+ * 5-ADM-09 P1.3.3c.IMPLEMENT-1 BAA execution route. Records / revokes /
+ * updates CoveredEntity-level BAA execution state and propagates the
+ * authoritative cache to all linked Hospital.baaExecuted columns via
+ * F2 upsertCoveredEntityBaaExecution transactional composer.
+ *
+ * Q-5ADM-K Path B PUT verb HTTP idiom: aligns with F2 idempotent-skip
+ * discipline (no CE write + no F1 dispatch + no audit emission when
+ * authoritative state matches input).
+ *
+ * Q-5ADM-L Path B defense-in-depth authorization: authorizeRole route
+ * middleware (SUPER_ADMIN + HOSPITAL_ADMIN) + service-layer
+ * assertCanManage + assertTenantScope.
+ *
+ * Body (UpsertBaaExecutionInput):
+ *   - baaExecutedAt: ISO 8601 string (record/update) OR null (revoke)
+ *   - baaExpiresAt: optional ISO 8601 string OR null
+ *   - baaDocumentUrl: optional reference URL OR null
+ *
+ * Response: 200 OK with { coveredEntity, hospitalCache }.
+ * Errors map per Q-5ADM-Q Path A (mapBaaErrorToResponse).
+ */
+router.put(
+  '/:id/baa-execution',
+  authorizeRole(['SUPER_ADMIN', 'HOSPITAL_ADMIN']),
+  async (req: AuthenticatedRequest, res: Response): Promise<Response | void> => {
+    try {
+      const parsed = upsertBaaExecutionSchema.safeParse(req.body);
+      if (!parsed.success) {
+        return res.status(422).json({
+          success: false,
+          error: 'Validation failed',
+          details: parsed.error.flatten().fieldErrors,
+        });
+      }
+      const actor = extractActor(req);
+      const input: UpsertBaaExecutionInput = {
+        baaExecutedAt:
+          parsed.data.baaExecutedAt === null
+            ? null
+            : new Date(parsed.data.baaExecutedAt),
+        ...(parsed.data.baaExpiresAt !== undefined && {
+          baaExpiresAt:
+            parsed.data.baaExpiresAt === null
+              ? null
+              : new Date(parsed.data.baaExpiresAt),
+        }),
+        ...(parsed.data.baaDocumentUrl !== undefined && {
+          baaDocumentUrl: parsed.data.baaDocumentUrl,
+        }),
+      };
+      const result = await upsertCoveredEntityBaaExecution(
+        actor.hospitalId,
+        req.params.id,
+        input,
+        actor,
+      );
+      const auditAction =
+        input.baaExecutedAt === null
+          ? 'BAA_EXECUTION_REVOKED'
+          : 'BAA_EXECUTION_RECORDED';
+      await writeAuditLog(
+        req,
+        auditAction,
+        'CoveredEntity',
+        req.params.id,
+        auditAction === 'BAA_EXECUTION_REVOKED'
+          ? `Revoked BAA execution for CoveredEntity ${req.params.id}`
+          : `Recorded BAA execution for CoveredEntity ${req.params.id}`,
+      );
+      return res.json({ success: true, data: result });
+    } catch (err) {
+      return mapBaaErrorToResponse(err, res);
     }
   },
 );

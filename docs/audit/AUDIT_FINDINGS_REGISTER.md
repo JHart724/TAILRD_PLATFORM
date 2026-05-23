@@ -1765,6 +1765,91 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 
 ---
 
+### AUDIT-092 - emitAudit CE-binding refactor candidate (5-ADM-09 P1.3.3b sister-arc discovery)
+
+- **Phase:** 5 (5-ADM-09 P1.3.3c.IMPLEMENT-2 sister-arc discovery)
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Discovered:** 2026-05-22 during 5-ADM-09 P1.3.3c.IMPLEMENT-2A test authoring; F1 updateHospitalBaaCache + F2 upsertCoveredEntityBaaExecution audit-emission divergence surfaced (F1 uses inline `auditLogger.info` with `resourceType='Hospital'`; F2 uses `emitAudit` helper hardcoded to `resourceType='CoveredEntity'`)
+- **Location:** `backend/src/services/coveredEntityService.ts` (`emitAudit` helper hardcoded CE binding; F1 `updateHospitalBaaCache` inlines `auditLogger.info` for Hospital scope)
+- **Evidence:** `emitAudit` was designed for CE-scoped audit events per PR #292 D8 + D9. F1 audit emission for Hospital scope cannot reuse helper without resourceType parameterization OR per-scope helper split. Current divergence is functionally correct (verified at 42 IMPLEMENT-2A test PASS) but creates two parallel audit-emission idioms in the same module + adds a third pattern in `baaDocumentService.ts` (SIGNED_BAA_UPLOADED + SIGNED_BAA_RETRIEVED inline). Three idioms across one BAA arc create sister-precedent divergence cost as future audit-resource scopes are added.
+- **Severity rationale:** Maintenance-burden finding rather than runtime defect. Mitigated for current behavior via 118 IMPLEMENT-2 test PASS coverage. Risk surfaces as audit-emission patterns multiply across BAA + breach-notification + CE management surfaces; refactor would unify discipline.
+- **Remediation:** Refactor `emitAudit` to accept `resourceType` + `resourceId` parameters; OR split into `emitCeAudit` + `emitHospitalAudit` + `emitBaaDocumentAudit` per scope. Migration touches `coveredEntityService.ts` + `baaDocumentService.ts` + IMPLEMENT-2A + IMPLEMENT-2B + IMPLEMENT-2C test assertions.
+- **Effort estimate:** ~4-8h (refactor + test update)
+- **Dependencies:** None hard; coordinates naturally with future audit-emission patterns across BAA + breach-notification + CE management surfaces
+- **Cross-references:** see 5-ADM-09 P1.3.3b commit 81dbea4 (catalyst); see PR #292 D8 + D9 (emitAudit helper origin); see `backend/src/services/coveredEntityService.ts` emitAudit helper; see `backend/src/services/baaDocumentService.ts` SIGNED_BAA_UPLOADED inline pattern
+- **Status note:** 2026-05-22 OPEN at P1.3.3c.IMPLEMENT-3 batch-filing per Q-5ADM-O Default decomposition.
+
+---
+
+### AUDIT-093 - HospitalNotFoundError candidate addition to CE error hierarchy (5-ADM-09 P1.3.3b sister-arc discovery)
+
+- **Phase:** 5 (5-ADM-09 P1.3.3c.IMPLEMENT-1 + IMPLEMENT-2A sister-arc discovery)
+- **Severity:** LOW (P3)
+- **Status:** OPEN
+- **Discovered:** 2026-05-22 during 5-ADM-09 P1.3.3c.IMPLEMENT-2A F1 test authoring; Hospital-not-found path surfaces via `CoveredEntityValidationError('hospitalId', ...)` per F1 + IMPLEMENT-1 sister-precedent `linkHospitalToCoveredEntity` discipline (line 532)
+- **Location:** `backend/src/services/coveredEntityService.ts` CE error hierarchy (CoveredEntityServiceError base + CoveredEntityNotFoundError + TenantScopeViolationError + CoveredEntityAccessDeniedError + CoveredEntityValidationError + BAANotExecutedError + HospitalBaaCacheStaleError + InvalidBaaTransitionError + BAAExpiredError; 9 error classes)
+- **Evidence:** F1 + IMPLEMENT-1 currently use `CoveredEntityValidationError('hospitalId', 'Hospital h-XXX not found...')` for Hospital-not-found semantics. Dedicated `HospitalNotFoundError` would improve error-path semantic clarity + downstream route-layer HTTP mapping precision (404 vs 422 per Q-5ADM-Q finer-grained mapping decision).
+- **Severity rationale:** Quality-of-design finding rather than runtime defect. Current behavior correct; verified at IMPLEMENT-2A coveredEntityValidationError-class assertion. HTTP mapping at IMPLEMENT-1 routes already maps validation-class to 422; promotion to HospitalNotFoundError would shift to 404 (more precise per Q-5ADM-Q decision).
+- **Remediation:** Add `HospitalNotFoundError` class extending `CoveredEntityServiceError`; update F1 `updateHospitalBaaCache` + `linkHospitalToCoveredEntity` to throw new class; update IMPLEMENT-1 route error-mapper for 404; update IMPLEMENT-2A test assertions.
+- **Effort estimate:** ~1-2h
+- **Dependencies:** None hard; coordinates with Q-5ADM-Q finer-grained error-to-HTTP mapping (already partially applied at IMPLEMENT-1)
+- **Cross-references:** see 5-ADM-09 P1.3.3b commit 81dbea4 (catalyst); see Q-5ADM-Q Path A error-to-HTTP mapping decision; see `backend/src/services/coveredEntityService.ts` CE error hierarchy
+- **Status note:** 2026-05-22 OPEN at P1.3.3c.IMPLEMENT-3 batch-filing per Q-5ADM-O Default decomposition.
+
+---
+
+### AUDIT-094 - KmsEncryptionContext 4-field shape extension candidate (5-ADM-09 P1.3.3b sister-arc discovery)
+
+- **Phase:** 5 (5-ADM-09 P1.3.3b sister-arc discovery)
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Discovered:** 2026-05-22 during 5-ADM-09 P1.3.3b `baaDocumentService.ts` authoring; KmsEncryptionContext 4-field shape `{service, purpose, model, field}` forced JSON envelope sidecar pattern for tenant + uploader attribution
+- **Location:** `backend/src/services/kmsService.ts` KmsEncryptionContext type definition + `envelopeEncrypt` + `envelopeDecrypt` signatures; `backend/src/services/baaDocumentService.ts` signed-BAA upload uses sidecar metadata JSON for `hospitalId` + `uploadedBy` attribution
+- **Evidence:** Current KmsEncryptionContext `{service, purpose, model, field}` fixed 4-field shape per AUDIT-016 v2 envelope encryption design. Tenant + uploader attribution for signed-BAA documents is carried in separate sidecar JSON metadata blob (not in KMS encryption context). Tampering with sidecar JSON does NOT invalidate KMS decryption; only KMS-context tampering does. Extension to include `hospitalId` + `uploadedBy` in KMS context itself would consolidate attribution in single tamper-evidenced surface.
+- **Severity rationale:** Defense-in-depth posture improvement; current pattern is secure (KMS context binds blob to service / purpose / model / field; tampering would corrupt decryption). Extension would push tenant + uploader attribution into KMS-enforced surface for stronger tamper evidence + remove sidecar parsing burden in retrieval path.
+- **Remediation:** Extend KmsEncryptionContext to `{service, purpose, model, field, tenantId, uploadedBy}` OR equivalent; update `kmsService.envelopeEncrypt` + `envelopeDecrypt` signatures; migrate `baaDocumentService.ts` signed-BAA upload pattern; migrate all other callers (PHI encryption surface + future breach-notification signed-PDF surface).
+- **Effort estimate:** ~6-10h
+- **Dependencies:** AUDIT-016 v2 envelope encryption pattern (sister-precedent); coordinates with future audit-emission attribution discipline + AUDIT-090 signed-PDF infrastructure work
+- **Cross-references:** see 5-ADM-09 P1.3.3b commit 81dbea4 (catalyst); see AUDIT-016 v2 envelope encryption design; see `backend/src/services/kmsService.ts` KmsEncryptionContext type; see `backend/src/services/baaDocumentService.ts` signed-BAA upload sidecar pattern; see AUDIT-090 (sister signed-PDF infrastructure track)
+- **Status note:** 2026-05-22 OPEN at P1.3.3c.IMPLEMENT-3 batch-filing per Q-5ADM-O Default decomposition.
+
+---
+
+### AUDIT-095 - Circular import via BAANotExecutedError refactor candidate (5-ADM-09 P1.3.3b sister-arc discovery)
+
+- **Phase:** 5 (5-ADM-09 P1.3.3b sister-arc discovery)
+- **Severity:** LOW (P3)
+- **Status:** OPEN
+- **Discovered:** 2026-05-22 during 5-ADM-09 P1.3.3b extension chain wire-in; `prismaBaaGuard.ts` imports `BAANotExecutedError` from `coveredEntityService.ts` which imports `prisma` from `../lib/prisma` which itself wires in `prismaBaaGuard` via extension chain; three-hop dependency cycle resolves load-safe via CommonJS lazy-default-access semantics; tsc verification confirms no type-cycle
+- **Location:** `backend/src/lib/prismaBaaGuard.ts` (imports `BAANotExecutedError` from `../services/coveredEntityService`); `backend/src/services/coveredEntityService.ts` (imports `prisma` from `../lib/prisma`); `backend/src/lib/prisma.ts` (imports + wires `prismaBaaGuard`)
+- **Evidence:** Three-hop import chain: `prisma.ts -> prismaBaaGuard.ts -> coveredEntityService.ts -> prisma.ts`. Load-safe per CommonJS lazy-default-access semantics; `tsc --noEmit` exit 0 at IMPLEMENT-1 + IMPLEMENT-2 verification gates confirms no type-cycle. Functional behavior verified at 118/118 IMPLEMENT-2 test PASS.
+- **Severity rationale:** Architectural-discipline finding rather than runtime defect; current behavior correct + verified. Refactor candidate to break cycle architecturally for cleaner dependency graph + reduced future-maintenance load-order risk.
+- **Remediation:** Extract `BAANotExecutedError` + related BAA error classes (`BAAExpiredError` + `HospitalBaaCacheStaleError` + `InvalidBaaTransitionError`) to shared errors module (e.g., `backend/src/services/errors/baaErrors.ts`); update both `prismaBaaGuard.ts` + `coveredEntityService.ts` imports; verify cycle broken via dependency-graph tool.
+- **Effort estimate:** ~3-5h
+- **Dependencies:** None hard; coordinates naturally with broader CE error hierarchy maintenance (AUDIT-093 sister)
+- **Cross-references:** see 5-ADM-09 P1.3.3b commit 81dbea4 (catalyst); see AUDIT-093 (sister CE error hierarchy track); see `backend/src/lib/prismaBaaGuard.ts` (catalyst location); see `backend/src/services/coveredEntityService.ts` (BAA error class origin)
+- **Status note:** 2026-05-22 OPEN at P1.3.3c.IMPLEMENT-3 batch-filing per Q-5ADM-O Default decomposition.
+
+---
+
+### AUDIT-096 - PR-merges-shipping-unmounted-routers architectural class (silent capability gap)
+
+- **Phase:** 5 (5-ADM-09 P1.3.3c.IMPLEMENT-1 sister-precedent catch)
+- **Severity:** MEDIUM (P2)
+- **Status:** OPEN
+- **Discovered:** 2026-05-22 during 5-ADM-09 P1.3.3c.IMPLEMENT-1 PAUSE A sister-precedent canonical-grep; PR #292 (5-BRC-06 CoveredEntity service) was authored + landed with `backend/src/routes/coveredEntity.ts` router export but without the matching `app.use('/api/coveredEntities', coveredEntityRouter)` mount line in `backend/src/server.ts`. CE CRUD operations were unreachable in production until IMPLEMENT-1 added the mount line inline.
+- **Location:** `backend/src/server.ts` (router mount sequence); `backend/src/routes/*.ts` (router exports); CI/CD pipeline (no integration test verifies mount completeness against routes/ directory listing)
+- **Evidence:** PR #292 merged + landed without server.ts mount; capability unreachable until P1.3.3c.IMPLEMENT-1 added the mount line. No CI check + no integration test + no PR review prompt caught the absence. Sister to AUDIT-089 ESM/CJS export hygiene catch (different architectural class but same surface: routes/ directory hygiene + mount discipline). HIGH compliance impact for HIPAA-sensitive routers (CE management + BAA execution + breach notification + signed-BAA upload).
+- **Severity rationale:** Silent capability gap with HIGH compliance impact for §164.308(b) BA contract execution + §164.404 breach notification hot paths. Mitigated retroactively for PR #292 via P1.3.3c.IMPLEMENT-1 mount fix; risk persists for future router-shipping PRs absent CI/CD or PR-template gate.
+- **Remediation:** Two-track v2.0 codification: (1) CI check that scans `backend/src/routes/*.ts` for default-exported routers + verifies each has matching `app.use()` mount in `backend/src/server.ts`; PR-blocking on mismatch. (2) PR template checklist item: "Router added? Verify server.ts mount line added." Lower-effort interim mitigation.
+- **Effort estimate:** ~2-4h (CI check authoring + integration with existing CI pipeline) + ~30min (PR template item)
+- **Dependencies:** None hard; coordinates naturally with AUDIT-091 schema-hygiene CI/CD discipline + AUDIT-089 ESM/CJS export hygiene track
+- **Cross-references:** see PR #292 (5-BRC-06 CoveredEntity service catalyst); see 5-ADM-09 P1.3.3c.IMPLEMENT-1 (sister-precedent catch surface); see AUDIT-089 (sister routes/ directory hygiene); see AUDIT-091 (sister CI/CD-pre-merge-gate discipline); see `backend/src/server.ts` (mount sequence location)
+- **Status note:** 2026-05-22 OPEN at P1.3.3c.IMPLEMENT-3 batch-filing per Q-5ADM-O AMENDMENT (recommended at IMPLEMENT-3 scope; acceptance proceeded under most-robust posture given A.IMPLEMENT-3.4 surfaced no existing routing-mount-verification entry).
+
+---
+
 ## Phase 5 HIPAA Compliance Gap Analysis Findings (2026-05-20)
 
 **Phase 5 of Phase 0A audit arc.** Companion report: `docs/audit/PHASE_5_REPORT.md`. Verdict: **CONDITIONAL PASS** sister to Phase 1/2/3/4 precedent. Scope: Option A full HIPAA compliance gap analysis (45 CFR Part 164 Subparts A + C + D + E; 45 CFR Part 160; Omnibus 2013 cross-cutting). TAILRD classification: Business Associate per B5.2.0 canonical-grep determination.
@@ -1789,11 +1874,14 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 
 - **CFR:** 45 CFR §164.103 Definitions
 - **Severity:** DOCUMENTATION
-- **Status:** OPEN
+- **Status:** IN_PROGRESS
 - **Description:** TAILRD BA classification established by canonical-grep at B5.2.0 but not formally documented as HIPAA compliance attestation
 - **Code-surface:** `docs/BAA_REGISTER.md:1`; `docs/BAA_REQUIREMENTS.md:1-38`
 - **Cross-references:** see 5-ADM-09; see 5-OMN-01
 - **Remediation:** Author `docs/HIPAA_CLASSIFICATION.md` (~1-2h)
+- **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (BA classification documentation surface).
+- **Status note:** 2026-05-22 P1.3.3c.SCOPE operator decisions locked per 5-ADM-09 primary catalyst (Q-5ADM-K Path B PUT verb HTTP idiom + Q-5ADM-L Path B defense-in-depth route+service authorization + Q-5ADM-M Path A per-service-file tests + Q-5ADM-N Path B extended PR body + Q-5ADM-O default 4 NEW AUDIT + 2 cross-references + Q-5ADM-P Path A JSDoc inline fix + Q-5ADM-Q Path A finer-grained error-to-HTTP mapping + Q-5ADM-R Path A multi-hospital per-cardinality tests + Q-5ADM-S Path A comprehensive BUILD_STATE narrative + Q-5ADM-T Path A 5 atomic sub-blocks); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
+- **Status note:** 2026-05-22 P1.3.3c.IMPLEMENT-3 transitioned OPEN to IN_PROGRESS per §18 register-literal lifecycle per 5-ADM-09 primary catalyst; sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
 
 ### 5-CLS-02 - General Security Rule requirements documentation
 
@@ -1889,22 +1977,28 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 
 - **CFR:** 45 CFR §164.308(b)(1)-(4)
 - **Severity:** **HIGH (P1) GATE**
-- **Status:** OPEN - PHASE 5 GATE
+- **Status:** IN_PROGRESS - PHASE 5 GATE
 - **Description:** Two surfaces: (a) sub-vendor BAAs PENDING (AWS / Redox / ElastiCache per `docs/BAA_REGISTER.md`); (b) customer-hospital BAA tracking capability gap (no automated PHI-flow-gating against BAA-execution state)
 - **Code-surface:** `docs/BAA_REGISTER.md`; `backend/src/routes/internalOps.ts:31-48`; `docs/TAILRD_COMPLETE_PLATFORM_AUDIT.md:889`
 - **Severity rationale:** Direct OCR enforcement trigger per Omnibus 2013 BA direct liability; PHI flow pre-BAA-execution is §164.308(b) Administrative Safeguards violation + §164.502(e) Privacy Rule violation (cross-ref 5-PRV-03). Severity floor preserved per B5.4.1 evidence; not downgradeable until both surfaces close.
 - **Cross-references:** see AUDIT-082, AUDIT-085; see 5-ORG-01, 5-PRV-03, 5-OMN-02
 - **Remediation:** (1) Operator-side BAA execution (~2-4h; accept AWS BAA via AWS Artifact + execute Redox BAA + verify ElastiCache umbrella); (2) Customer-hospital PHI-flow-gating capability (~8-16h or v2.0 carry-forward per pre-DUA timing tolerance)
+- **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; primary catalyst for Q-5ADM-J 8-finding sister-bundle (5-ADM-09 + 5-PRV-03 + 5-OMN-02 + 5-PRV-01 + 5-PHY-01 + 5-ORG-01 + 5-PRV-04 + 5-CLS-01) per most-robust posture (2026-05-03 extend-timeline-not-scope + 2026-05-07 robust-over-consistent-with-existing); P1.3.2 operator decisions locked Q-5ADM-A Path 2 both-surfaces-in-scope + Q-5ADM-B Path (c) Prisma extension Layer 3 + Q-5ADM-C reuse-CoveredEntity-baaExecutedAt + Q-5ADM-D signed-BAA-S3-upload-in-scope + Q-5ADM-E 8-finding-bundle + Q-5ADM-F BAA_REGISTER.md+HIPAA_POLICIES.md repo artifacts + Q-5ADM-G 4-sub-phase decomposition + Q-5ADM-H NOT-v2.0-carry-forward + Q-5ADM-I retroactive-transition-log-discipline + Q-5ADM-J sister-PR register-reconciliation pattern; P1.3.3a schema + migration sub-phase follows.
+- **Status note:** 2026-05-22 P1.3.3c.SCOPE operator decisions locked per most-robust posture (2026-05-03 extend-timeline-not-scope + 2026-05-07 robust-over-consistent-with-existing); Q-5ADM-K Path B PUT verb HTTP idiom (PUT /api/coveredEntities/:id/baa-execution + PUT /api/hospitals/:id/baa-document + GET /api/hospitals/:id/baa-document; REST idiom aligning with F2 idempotent-skip discipline); Q-5ADM-L Path B defense-in-depth (requireRole route middleware + service-layer assertCanManage + assertTenantScope; sister Q-5ADM-B Path (c) Layer 3 philosophy); Q-5ADM-M Path A per-service-file test suite (coveredEntityBaaExecution.test.ts + baaDocumentService.test.ts + prismaBaaGuard.integration.test.ts; ~65-105 tests; sister-precedent PR #292 D10 48-test pattern); Q-5ADM-N Path B PR body extended 10-section (8 PR #292 sections + §17.1 architectural-precedent reuse documentation + filing rationale); Q-5ADM-O Default decomposition (AUDIT-092 NEW emitAudit CE-binding refactor + AUDIT-093 NEW HospitalNotFoundError addition + AUDIT-094 NEW KmsEncryptionContext extension + AUDIT-095 NEW BAANotExecutedError circular import refactor + cross-ref S3 orphan -> AUDIT-053 + cross-ref prisma.ts JSDoc -> IMPLEMENT-1 inline fix); Q-5ADM-P Path A prisma.ts JSDoc inline fix at IMPLEMENT-1; Q-5ADM-Q Path A finer-grained error-to-HTTP mapping (422 validation + 409 conflict + 404 not-found + 403 forbidden + 500 server-error + tenant-scope-violation NOT 404 to avoid resource-existence leak); Q-5ADM-R Path A multi-hospital fan-out per-cardinality test coverage (0-linked + 1-linked + N>=3-linked + transactional rollback verification); Q-5ADM-S Path A BUILD_STATE.md comprehensive narrative entry; Q-5ADM-T Path A 5 atomic sub-blocks per V.5-RECOVERY discipline (SCOPE + SCOPE.LOCK + IMPLEMENT-1 routes + IMPLEMENT-2 tests + IMPLEMENT-3 AUDIT+BUILD_STATE+Status-flips + IMPLEMENT-4 main PR commit+push+auto-merge); P1.3.3c.IMPLEMENT-1 routes authoring follows fresh-context kickoff per V.5-RECOVERY discipline.
+- **Status note:** 2026-05-22 P1.3.3c.IMPLEMENT-3 transitioned OPEN to IN_PROGRESS per §18 register-literal lifecycle; 5 NEW AUDIT entries filed (AUDIT-092 emitAudit CE-binding refactor + AUDIT-093 HospitalNotFoundError candidate + AUDIT-094 KmsEncryptionContext 4-field shape extension + AUDIT-095 BAANotExecutedError circular import refactor + AUDIT-096 PR-merges-shipping-unmounted-routers silent capability gap per Q-5ADM-O AMENDMENT proceeded under most-robust posture given A.IMPLEMENT-3.4 surfaced no existing routing-mount-verification entry); 2 cross-references documented in BUILD_STATE.md narrative (S3 orphan -> AUDIT-053 + prisma.ts JSDoc inline-fixed at IMPLEMENT-1); BUILD_STATE.md comprehensive narrative entry per Q-5ADM-S Path A authored; 118 cumulative tests across 3 IMPLEMENT-2 test files (42 + 34 + 42 PASS at jest EXIT_CODE=0); IMPLEMENT-4 main PR commit + push + auto-merge --squash next sub-block to transition IN_PROGRESS to FIXED.
 
 ### 5-PHY-01 - Facility access controls cross-reference documentation
 
 - **CFR:** 45 CFR §164.310(a)(1)-(2)
 - **Severity:** DOCUMENTATION-CROSSREF
-- **Status:** OPEN
+- **Status:** IN_PROGRESS
 - **Description:** AWS shared-responsibility model covers datacenter physical access; cross-reference documentation gap
 - **Code-surface:** None (compliance posture cross-reference layer)
 - **Cross-references:** see 5-ADM-09 (AWS BAA PENDING); see `docs/BAA_REGISTER.md`
 - **Remediation:** Section in `docs/HIPAA_POLICIES.md` cross-referencing AWS SOC 2 + AWS BAA (~1h)
+- **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (AWS BAA shared-responsibility facility access surface).
+- **Status note:** 2026-05-22 P1.3.3c.SCOPE operator decisions locked per 5-ADM-09 primary catalyst (Q-5ADM-K Path B PUT verb HTTP idiom + Q-5ADM-L Path B defense-in-depth route+service authorization + Q-5ADM-M Path A per-service-file tests + Q-5ADM-N Path B extended PR body + Q-5ADM-O default 4 NEW AUDIT + 2 cross-references + Q-5ADM-P Path A JSDoc inline fix + Q-5ADM-Q Path A finer-grained error-to-HTTP mapping + Q-5ADM-R Path A multi-hospital per-cardinality tests + Q-5ADM-S Path A comprehensive BUILD_STATE narrative + Q-5ADM-T Path A 5 atomic sub-blocks); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
+- **Status note:** 2026-05-22 P1.3.3c.IMPLEMENT-3 transitioned OPEN to IN_PROGRESS per §18 register-literal lifecycle per 5-ADM-09 primary catalyst; sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
 
 ### 5-PHY-02 - Workstation use policy
 
@@ -2001,11 +2095,14 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 
 - **CFR:** 45 CFR §164.314(a)(1)-(2)
 - **Severity:** MEDIUM (P2)
-- **Status:** OPEN
+- **Status:** IN_PROGRESS
 - **Description:** Sister to 5-ADM-09 at BA contract terms layer; no audit of actual BAA contract terms against §164.314(a)(2) required provisions checklist
 - **Code-surface:** `docs/BAA_REGISTER.md`; `docs/BAA_REQUIREMENTS.md`
 - **Cross-references:** see 5-ADM-09; see 5-PRV-03, 5-PRV-04
 - **Remediation:** Append BAA contract-terms checklist to `docs/BAA_REQUIREMENTS.md` (~3-4h)
+- **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (BA contract-terms layer; §164.314(a) sister).
+- **Status note:** 2026-05-22 P1.3.3c.SCOPE operator decisions locked per 5-ADM-09 primary catalyst (Q-5ADM-K Path B PUT verb HTTP idiom + Q-5ADM-L Path B defense-in-depth route+service authorization + Q-5ADM-M Path A per-service-file tests + Q-5ADM-N Path B extended PR body + Q-5ADM-O default 4 NEW AUDIT + 2 cross-references + Q-5ADM-P Path A JSDoc inline fix + Q-5ADM-Q Path A finer-grained error-to-HTTP mapping + Q-5ADM-R Path A multi-hospital per-cardinality tests + Q-5ADM-S Path A comprehensive BUILD_STATE narrative + Q-5ADM-T Path A 5 atomic sub-blocks); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
+- **Status note:** 2026-05-22 P1.3.3c.IMPLEMENT-3 transitioned OPEN to IN_PROGRESS per §18 register-literal lifecycle per 5-ADM-09 primary catalyst; sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
 
 ### 5-ORG-02 - Group health plan requirements
 
@@ -2126,11 +2223,14 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 
 - **CFR:** 45 CFR §164.502(a)(3)-(5)
 - **Severity:** DOCUMENTATION
-- **Status:** OPEN - conditional on 5-ADM-09 closure
+- **Status:** IN_PROGRESS - conditional on 5-ADM-09 closure
 - **Description:** BA-permitted-use scope not formally documented; conditional on BAA execution
 - **Code-surface:** None (BAA terms layer)
 - **Cross-references:** see 5-ADM-09, 5-PRV-03, 5-PRV-04
 - **Remediation:** Section in `docs/HIPAA_POLICIES.md` (~1h bundled)
+- **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (BA permitted uses + disclosures documentation surface; conditional on 5-ADM-09 closure).
+- **Status note:** 2026-05-22 P1.3.3c.SCOPE operator decisions locked per 5-ADM-09 primary catalyst (Q-5ADM-K Path B PUT verb HTTP idiom + Q-5ADM-L Path B defense-in-depth route+service authorization + Q-5ADM-M Path A per-service-file tests + Q-5ADM-N Path B extended PR body + Q-5ADM-O default 4 NEW AUDIT + 2 cross-references + Q-5ADM-P Path A JSDoc inline fix + Q-5ADM-Q Path A finer-grained error-to-HTTP mapping + Q-5ADM-R Path A multi-hospital per-cardinality tests + Q-5ADM-S Path A comprehensive BUILD_STATE narrative + Q-5ADM-T Path A 5 atomic sub-blocks); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
+- **Status note:** 2026-05-22 P1.3.3c.IMPLEMENT-3 transitioned OPEN to IN_PROGRESS per §18 register-literal lifecycle per 5-ADM-09 primary catalyst; sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
 
 ### 5-PRV-02 - Minimum necessary treatment-exception documentation
 
@@ -2146,21 +2246,27 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 
 - **CFR:** 45 CFR §164.502(e)(1)-(ii)
 - **Severity:** DOCUMENTATION
-- **Status:** OPEN - CROSSREF to 5-ADM-09
+- **Status:** IN_PROGRESS - CROSSREF to 5-ADM-09
 - **Description:** Sub-BA disclosure chain documentation gap; same execution-layer gap as 5-ADM-09 at documentation surface
 - **Code-surface:** `docs/BAA_REGISTER.md`
 - **Cross-references:** see 5-ADM-09, 5-PRV-04; see `docs/BAA_REGISTER.md`
 - **Remediation:** Bundled with 5-ADM-09 closure
+- **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (sub-BA disclosure documentation surface).
+- **Status note:** 2026-05-22 P1.3.3c.SCOPE operator decisions locked per 5-ADM-09 primary catalyst (Q-5ADM-K Path B PUT verb HTTP idiom + Q-5ADM-L Path B defense-in-depth route+service authorization + Q-5ADM-M Path A per-service-file tests + Q-5ADM-N Path B extended PR body + Q-5ADM-O default 4 NEW AUDIT + 2 cross-references + Q-5ADM-P Path A JSDoc inline fix + Q-5ADM-Q Path A finer-grained error-to-HTTP mapping + Q-5ADM-R Path A multi-hospital per-cardinality tests + Q-5ADM-S Path A comprehensive BUILD_STATE narrative + Q-5ADM-T Path A 5 atomic sub-blocks); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
+- **Status note:** 2026-05-22 P1.3.3c.IMPLEMENT-3 transitioned OPEN to IN_PROGRESS per §18 register-literal lifecycle per 5-ADM-09 primary catalyst; sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
 
 ### 5-PRV-04 - BA contract terms CROSSREF
 
 - **CFR:** 45 CFR §164.504(e)
 - **Severity:** CROSSREF
-- **Status:** OPEN - CROSSREF to 5-ORG-01
+- **Status:** IN_PROGRESS - CROSSREF to 5-ORG-01
 - **Description:** Sister surface at BA contract terms
 - **Code-surface:** `docs/BAA_REQUIREMENTS.md`
 - **Cross-references:** see 5-ORG-01, 5-ADM-09
 - **Remediation:** Bundled with 5-ORG-01
+- **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (BA contract terms downstream of 5-ORG-01).
+- **Status note:** 2026-05-22 P1.3.3c.SCOPE operator decisions locked per 5-ADM-09 primary catalyst (Q-5ADM-K Path B PUT verb HTTP idiom + Q-5ADM-L Path B defense-in-depth route+service authorization + Q-5ADM-M Path A per-service-file tests + Q-5ADM-N Path B extended PR body + Q-5ADM-O default 4 NEW AUDIT + 2 cross-references + Q-5ADM-P Path A JSDoc inline fix + Q-5ADM-Q Path A finer-grained error-to-HTTP mapping + Q-5ADM-R Path A multi-hospital per-cardinality tests + Q-5ADM-S Path A comprehensive BUILD_STATE narrative + Q-5ADM-T Path A 5 atomic sub-blocks); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
+- **Status note:** 2026-05-22 P1.3.3c.IMPLEMENT-3 transitioned OPEN to IN_PROGRESS per §18 register-literal lifecycle per 5-ADM-09 primary catalyst; sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
 
 ### 5-PRV-05 - De-identification + limited data sets
 
@@ -2274,11 +2380,14 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 
 - **Modification:** Omnibus sub-BA flowdown requirements
 - **Severity:** CROSSREF
-- **Status:** OPEN - CROSSREF to 5-ADM-09
+- **Status:** IN_PROGRESS - CROSSREF to 5-ADM-09
 - **Description:** Sister at sub-BA accountability chain surface
 - **Code-surface:** `docs/BAA_REGISTER.md`
 - **Cross-references:** see 5-ADM-09, 5-PRV-03
 - **Remediation:** Bundled with 5-ADM-09 closure
+- **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (sub-BA accountability chain surface).
+- **Status note:** 2026-05-22 P1.3.3c.SCOPE operator decisions locked per 5-ADM-09 primary catalyst (Q-5ADM-K Path B PUT verb HTTP idiom + Q-5ADM-L Path B defense-in-depth route+service authorization + Q-5ADM-M Path A per-service-file tests + Q-5ADM-N Path B extended PR body + Q-5ADM-O default 4 NEW AUDIT + 2 cross-references + Q-5ADM-P Path A JSDoc inline fix + Q-5ADM-Q Path A finer-grained error-to-HTTP mapping + Q-5ADM-R Path A multi-hospital per-cardinality tests + Q-5ADM-S Path A comprehensive BUILD_STATE narrative + Q-5ADM-T Path A 5 atomic sub-blocks); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
+- **Status note:** 2026-05-22 P1.3.3c.IMPLEMENT-3 transitioned OPEN to IN_PROGRESS per §18 register-literal lifecycle per 5-ADM-09 primary catalyst; sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
 
 ### 5-OMN-03 - 4-factor risk assessment framework CROSSREF
 

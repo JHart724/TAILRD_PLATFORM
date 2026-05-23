@@ -117,6 +117,17 @@ const HIPAA_GRADE_ACTIONS = new Set<string>([
   'BREACH_CE_ACKNOWLEDGED',
   'BREACH_CE_FOLLOWUP_REQUESTED',
   'BREACH_CE_FOLLOWUP_RESPONDED',
+  // 5-ADM-09 P1.3.3b BAA execution + signed-BAA upload + PHI-flow-gating events.
+  // Promoted per Q-5ADM-B Path (c) Layer 3 enforcement + Q-5ADM-C single-source-
+  // of-truth discipline + sister AUDIT-076 BREACH_CE_* promotion. Each event
+  // anchors HIPAA §164.308(b)(1) BAA-execution audit trail OR §164.312(b) PHI
+  // access-control audit trail; DB write failure throws so caller fails closed.
+  'BAA_EXECUTION_RECORDED',
+  'BAA_EXECUTION_REVOKED',
+  'SIGNED_BAA_UPLOADED',
+  'SIGNED_BAA_RETRIEVED',
+  'PHI_FLOW_BLOCKED_BAA_NOT_EXECUTED',
+  'HOSPITAL_BAA_CACHE_UPDATED',
 ]);
 
 // ─── Types ──────────────────────────────────────────────────────────────────────
