@@ -1848,6 +1848,18 @@ Both bugs are pre-existing. Detected via Layer 3 deployment-readiness audit (see
 - **Cross-references:** see PR #292 (5-BRC-06 CoveredEntity service catalyst); see 5-ADM-09 P1.3.3c.IMPLEMENT-1 (sister-precedent catch surface); see AUDIT-089 (sister routes/ directory hygiene); see AUDIT-091 (sister CI/CD-pre-merge-gate discipline); see `backend/src/server.ts` (mount sequence location)
 - **Status note:** 2026-05-22 OPEN at P1.3.3c.IMPLEMENT-3 batch-filing per Q-5ADM-O AMENDMENT (recommended at IMPLEMENT-3 scope; acceptance proceeded under most-robust posture given A.IMPLEMENT-3.4 surfaced no existing routing-mount-verification entry).
 
+### AUDIT-097 - Standalone methodology PR sister-arc: 6 §17.1 codifications from P1.3.3 5-ADM-09 closure arc
+
+- **Phase:** 5 (5-ADM-09 P1.3.3 closure arc sister-arc methodology PR)
+- **Severity:** LOW (P3)
+- **Status:** OPEN
+- **Tier:** DRIFT-PREVENTION
+- **Detected:** 2026-05-25 methodology-debt-paydown standalone PR per Q-5ADM-U Path (c) sister-precedent AUDIT-087 / PR #287; 6 §17.1 codifications (entries 22-27) + §13 tracking entry filing (broadened Candidate 6 mechanism per Q-METH-B fold housekeeping) + DRIFT-44 + DRIFT-45 sustained
+- **Evidence:** 6 architectural-precedent candidates surfaced across P1.3.3 5-ADM-09 closure arc; methodology debt accumulated during no-live-clients window; sister AUDIT-087 register entry pattern (LOW P3 drift-prevention discipline; RESOLVED at methodology PR merge)
+- **Resolution:** RESOLVED YYYY-MM-DD at this methodology PR's merge
+- **Architectural note:** Sister-arc to PR #287 standalone-methodology-PR-during-no-live-clients-window precedent; AUDIT_METHODOLOGY.md §17.1 catalog advances 21 to 27 inline entries (entries 22-27 codified inline per AUDIT-087 entries 16-21 sister-precedent format); AGENT_DRIFT_REGISTRY.md DRIFT-45 sustained (no new DRIFT entries this PR; §17.1 entries cover the same patterns at architectural-precedent surface vs drift-event surface); §13 tracking entry for AUDIT-097 future methodology 17.1 consolidation tracking filed per Q-METH-B fold housekeeping to close documentation-narrative-vs-canonical-state divergence at filing surface
+- **Cross-references:** see AUDIT-087 sister-precedent methodology PR; see PR #287 sister-arc; see PR #294 + PR #295 + PR #296 P1.3.3 5-ADM-09 closure arc catalyst; see Q-5ADM-U Path (c) operator decision; see Q-METH-A Path (b) standalone Candidate 6 operator decision; see Q-METH-B fold §13-tracking-entry-missing operator decision
+
 ---
 
 ## Phase 5 HIPAA Compliance Gap Analysis Findings (2026-05-20)
