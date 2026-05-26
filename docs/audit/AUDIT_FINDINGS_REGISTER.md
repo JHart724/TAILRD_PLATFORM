@@ -1874,7 +1874,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 
 - **CFR:** 45 CFR §164.103 Definitions
 - **Severity:** DOCUMENTATION
-- **Status:** IN_PROGRESS
+- **Status:** FIXED
 - **Description:** TAILRD BA classification established by canonical-grep at B5.2.0 but not formally documented as HIPAA compliance attestation
 - **Code-surface:** `docs/BAA_REGISTER.md:1`; `docs/BAA_REQUIREMENTS.md:1-38`
 - **Cross-references:** see 5-ADM-09; see 5-OMN-01
@@ -1882,6 +1882,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 - **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (BA classification documentation surface).
 - **Status note:** 2026-05-22 P1.3.3c.SCOPE operator decisions locked per 5-ADM-09 primary catalyst (Q-5ADM-K Path B PUT verb HTTP idiom + Q-5ADM-L Path B defense-in-depth route+service authorization + Q-5ADM-M Path A per-service-file tests + Q-5ADM-N Path B extended PR body + Q-5ADM-O default 4 NEW AUDIT + 2 cross-references + Q-5ADM-P Path A JSDoc inline fix + Q-5ADM-Q Path A finer-grained error-to-HTTP mapping + Q-5ADM-R Path A multi-hospital per-cardinality tests + Q-5ADM-S Path A comprehensive BUILD_STATE narrative + Q-5ADM-T Path A 5 atomic sub-blocks); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
 - **Status note:** 2026-05-22 P1.3.3c.IMPLEMENT-3 transitioned OPEN to IN_PROGRESS per §18 register-literal lifecycle per 5-ADM-09 primary catalyst; sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
+- **Status note:** 2026-05-25 FIXED-on-main per PR #294 merge (5-ADM-09 P1.3.3c primary catalyst, commit 3cc3370a61be3de2162b76dbe8b92f6a847de64a, mergedAt 2026-05-23T01:18:53Z UTC); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern next work block (P1.3.4 scope).
 
 ### 5-CLS-02 - General Security Rule requirements documentation
 
@@ -1977,7 +1978,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 
 - **CFR:** 45 CFR §164.308(b)(1)-(4)
 - **Severity:** **HIGH (P1) GATE**
-- **Status:** IN_PROGRESS - PHASE 5 GATE
+- **Status:** FIXED - PHASE 5 GATE
 - **Description:** Two surfaces: (a) sub-vendor BAAs PENDING (AWS / Redox / ElastiCache per `docs/BAA_REGISTER.md`); (b) customer-hospital BAA tracking capability gap (no automated PHI-flow-gating against BAA-execution state)
 - **Code-surface:** `docs/BAA_REGISTER.md`; `backend/src/routes/internalOps.ts:31-48`; `docs/TAILRD_COMPLETE_PLATFORM_AUDIT.md:889`
 - **Severity rationale:** Direct OCR enforcement trigger per Omnibus 2013 BA direct liability; PHI flow pre-BAA-execution is §164.308(b) Administrative Safeguards violation + §164.502(e) Privacy Rule violation (cross-ref 5-PRV-03). Severity floor preserved per B5.4.1 evidence; not downgradeable until both surfaces close.
@@ -1986,12 +1987,13 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 - **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; primary catalyst for Q-5ADM-J 8-finding sister-bundle (5-ADM-09 + 5-PRV-03 + 5-OMN-02 + 5-PRV-01 + 5-PHY-01 + 5-ORG-01 + 5-PRV-04 + 5-CLS-01) per most-robust posture (2026-05-03 extend-timeline-not-scope + 2026-05-07 robust-over-consistent-with-existing); P1.3.2 operator decisions locked Q-5ADM-A Path 2 both-surfaces-in-scope + Q-5ADM-B Path (c) Prisma extension Layer 3 + Q-5ADM-C reuse-CoveredEntity-baaExecutedAt + Q-5ADM-D signed-BAA-S3-upload-in-scope + Q-5ADM-E 8-finding-bundle + Q-5ADM-F BAA_REGISTER.md+HIPAA_POLICIES.md repo artifacts + Q-5ADM-G 4-sub-phase decomposition + Q-5ADM-H NOT-v2.0-carry-forward + Q-5ADM-I retroactive-transition-log-discipline + Q-5ADM-J sister-PR register-reconciliation pattern; P1.3.3a schema + migration sub-phase follows.
 - **Status note:** 2026-05-22 P1.3.3c.SCOPE operator decisions locked per most-robust posture (2026-05-03 extend-timeline-not-scope + 2026-05-07 robust-over-consistent-with-existing); Q-5ADM-K Path B PUT verb HTTP idiom (PUT /api/coveredEntities/:id/baa-execution + PUT /api/hospitals/:id/baa-document + GET /api/hospitals/:id/baa-document; REST idiom aligning with F2 idempotent-skip discipline); Q-5ADM-L Path B defense-in-depth (requireRole route middleware + service-layer assertCanManage + assertTenantScope; sister Q-5ADM-B Path (c) Layer 3 philosophy); Q-5ADM-M Path A per-service-file test suite (coveredEntityBaaExecution.test.ts + baaDocumentService.test.ts + prismaBaaGuard.integration.test.ts; ~65-105 tests; sister-precedent PR #292 D10 48-test pattern); Q-5ADM-N Path B PR body extended 10-section (8 PR #292 sections + §17.1 architectural-precedent reuse documentation + filing rationale); Q-5ADM-O Default decomposition (AUDIT-092 NEW emitAudit CE-binding refactor + AUDIT-093 NEW HospitalNotFoundError addition + AUDIT-094 NEW KmsEncryptionContext extension + AUDIT-095 NEW BAANotExecutedError circular import refactor + cross-ref S3 orphan -> AUDIT-053 + cross-ref prisma.ts JSDoc -> IMPLEMENT-1 inline fix); Q-5ADM-P Path A prisma.ts JSDoc inline fix at IMPLEMENT-1; Q-5ADM-Q Path A finer-grained error-to-HTTP mapping (422 validation + 409 conflict + 404 not-found + 403 forbidden + 500 server-error + tenant-scope-violation NOT 404 to avoid resource-existence leak); Q-5ADM-R Path A multi-hospital fan-out per-cardinality test coverage (0-linked + 1-linked + N>=3-linked + transactional rollback verification); Q-5ADM-S Path A BUILD_STATE.md comprehensive narrative entry; Q-5ADM-T Path A 5 atomic sub-blocks per V.5-RECOVERY discipline (SCOPE + SCOPE.LOCK + IMPLEMENT-1 routes + IMPLEMENT-2 tests + IMPLEMENT-3 AUDIT+BUILD_STATE+Status-flips + IMPLEMENT-4 main PR commit+push+auto-merge); P1.3.3c.IMPLEMENT-1 routes authoring follows fresh-context kickoff per V.5-RECOVERY discipline.
 - **Status note:** 2026-05-22 P1.3.3c.IMPLEMENT-3 transitioned OPEN to IN_PROGRESS per §18 register-literal lifecycle; 5 NEW AUDIT entries filed (AUDIT-092 emitAudit CE-binding refactor + AUDIT-093 HospitalNotFoundError candidate + AUDIT-094 KmsEncryptionContext 4-field shape extension + AUDIT-095 BAANotExecutedError circular import refactor + AUDIT-096 PR-merges-shipping-unmounted-routers silent capability gap per Q-5ADM-O AMENDMENT proceeded under most-robust posture given A.IMPLEMENT-3.4 surfaced no existing routing-mount-verification entry); 2 cross-references documented in BUILD_STATE.md narrative (S3 orphan -> AUDIT-053 + prisma.ts JSDoc inline-fixed at IMPLEMENT-1); BUILD_STATE.md comprehensive narrative entry per Q-5ADM-S Path A authored; 118 cumulative tests across 3 IMPLEMENT-2 test files (42 + 34 + 42 PASS at jest EXIT_CODE=0); IMPLEMENT-4 main PR commit + push + auto-merge --squash next sub-block to transition IN_PROGRESS to FIXED.
+- **Status note:** 2026-05-25 PR #294 merged to main as commit 3cc3370a61be3de2162b76dbe8b92f6a847de64a (mergedAt 2026-05-23T01:18:53Z UTC); 5-ADM-09 P1.3.3c BAA execution gap remediation FIXED-on-main; 5 NEW AUDIT entries (AUDIT-092 through AUDIT-096) landed; 4 IMPLEMENT-1 src files + 3 IMPLEMENT-2 test files (118 tests / 118 PASS) + AUDIT_FINDINGS_REGISTER.md + BUILD_STATE.md merged; Q-5ADM-V Path (b) post-merge fresh-context FIXED transition pattern; sister-PR P1.3.4 reconciliation FIXED-to-RESOLVED next per Q-5ADM-J sister-precedent (PR #287 / PR #293 timing pattern); branch feat/phase-1-5-adm-09-baa-execution deleted on remote per deleteBranchOnMerge=true.
 
 ### 5-PHY-01 - Facility access controls cross-reference documentation
 
 - **CFR:** 45 CFR §164.310(a)(1)-(2)
 - **Severity:** DOCUMENTATION-CROSSREF
-- **Status:** IN_PROGRESS
+- **Status:** FIXED
 - **Description:** AWS shared-responsibility model covers datacenter physical access; cross-reference documentation gap
 - **Code-surface:** None (compliance posture cross-reference layer)
 - **Cross-references:** see 5-ADM-09 (AWS BAA PENDING); see `docs/BAA_REGISTER.md`
@@ -1999,6 +2001,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 - **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (AWS BAA shared-responsibility facility access surface).
 - **Status note:** 2026-05-22 P1.3.3c.SCOPE operator decisions locked per 5-ADM-09 primary catalyst (Q-5ADM-K Path B PUT verb HTTP idiom + Q-5ADM-L Path B defense-in-depth route+service authorization + Q-5ADM-M Path A per-service-file tests + Q-5ADM-N Path B extended PR body + Q-5ADM-O default 4 NEW AUDIT + 2 cross-references + Q-5ADM-P Path A JSDoc inline fix + Q-5ADM-Q Path A finer-grained error-to-HTTP mapping + Q-5ADM-R Path A multi-hospital per-cardinality tests + Q-5ADM-S Path A comprehensive BUILD_STATE narrative + Q-5ADM-T Path A 5 atomic sub-blocks); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
 - **Status note:** 2026-05-22 P1.3.3c.IMPLEMENT-3 transitioned OPEN to IN_PROGRESS per §18 register-literal lifecycle per 5-ADM-09 primary catalyst; sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
+- **Status note:** 2026-05-25 FIXED-on-main per PR #294 merge (5-ADM-09 P1.3.3c primary catalyst, commit 3cc3370a61be3de2162b76dbe8b92f6a847de64a, mergedAt 2026-05-23T01:18:53Z UTC); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern next work block (P1.3.4 scope).
 
 ### 5-PHY-02 - Workstation use policy
 
@@ -2095,7 +2098,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 
 - **CFR:** 45 CFR §164.314(a)(1)-(2)
 - **Severity:** MEDIUM (P2)
-- **Status:** IN_PROGRESS
+- **Status:** FIXED
 - **Description:** Sister to 5-ADM-09 at BA contract terms layer; no audit of actual BAA contract terms against §164.314(a)(2) required provisions checklist
 - **Code-surface:** `docs/BAA_REGISTER.md`; `docs/BAA_REQUIREMENTS.md`
 - **Cross-references:** see 5-ADM-09; see 5-PRV-03, 5-PRV-04
@@ -2103,6 +2106,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 - **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (BA contract-terms layer; §164.314(a) sister).
 - **Status note:** 2026-05-22 P1.3.3c.SCOPE operator decisions locked per 5-ADM-09 primary catalyst (Q-5ADM-K Path B PUT verb HTTP idiom + Q-5ADM-L Path B defense-in-depth route+service authorization + Q-5ADM-M Path A per-service-file tests + Q-5ADM-N Path B extended PR body + Q-5ADM-O default 4 NEW AUDIT + 2 cross-references + Q-5ADM-P Path A JSDoc inline fix + Q-5ADM-Q Path A finer-grained error-to-HTTP mapping + Q-5ADM-R Path A multi-hospital per-cardinality tests + Q-5ADM-S Path A comprehensive BUILD_STATE narrative + Q-5ADM-T Path A 5 atomic sub-blocks); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
 - **Status note:** 2026-05-22 P1.3.3c.IMPLEMENT-3 transitioned OPEN to IN_PROGRESS per §18 register-literal lifecycle per 5-ADM-09 primary catalyst; sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
+- **Status note:** 2026-05-25 FIXED-on-main per PR #294 merge (5-ADM-09 P1.3.3c primary catalyst, commit 3cc3370a61be3de2162b76dbe8b92f6a847de64a, mergedAt 2026-05-23T01:18:53Z UTC); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern next work block (P1.3.4 scope).
 
 ### 5-ORG-02 - Group health plan requirements
 
@@ -2223,7 +2227,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 
 - **CFR:** 45 CFR §164.502(a)(3)-(5)
 - **Severity:** DOCUMENTATION
-- **Status:** IN_PROGRESS - conditional on 5-ADM-09 closure
+- **Status:** FIXED - conditional on 5-ADM-09 closure
 - **Description:** BA-permitted-use scope not formally documented; conditional on BAA execution
 - **Code-surface:** None (BAA terms layer)
 - **Cross-references:** see 5-ADM-09, 5-PRV-03, 5-PRV-04
@@ -2231,6 +2235,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 - **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (BA permitted uses + disclosures documentation surface; conditional on 5-ADM-09 closure).
 - **Status note:** 2026-05-22 P1.3.3c.SCOPE operator decisions locked per 5-ADM-09 primary catalyst (Q-5ADM-K Path B PUT verb HTTP idiom + Q-5ADM-L Path B defense-in-depth route+service authorization + Q-5ADM-M Path A per-service-file tests + Q-5ADM-N Path B extended PR body + Q-5ADM-O default 4 NEW AUDIT + 2 cross-references + Q-5ADM-P Path A JSDoc inline fix + Q-5ADM-Q Path A finer-grained error-to-HTTP mapping + Q-5ADM-R Path A multi-hospital per-cardinality tests + Q-5ADM-S Path A comprehensive BUILD_STATE narrative + Q-5ADM-T Path A 5 atomic sub-blocks); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
 - **Status note:** 2026-05-22 P1.3.3c.IMPLEMENT-3 transitioned OPEN to IN_PROGRESS per §18 register-literal lifecycle per 5-ADM-09 primary catalyst; sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
+- **Status note:** 2026-05-25 FIXED-on-main per PR #294 merge (5-ADM-09 P1.3.3c primary catalyst, commit 3cc3370a61be3de2162b76dbe8b92f6a847de64a, mergedAt 2026-05-23T01:18:53Z UTC); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern next work block (P1.3.4 scope).
 
 ### 5-PRV-02 - Minimum necessary treatment-exception documentation
 
@@ -2246,7 +2251,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 
 - **CFR:** 45 CFR §164.502(e)(1)-(ii)
 - **Severity:** DOCUMENTATION
-- **Status:** IN_PROGRESS - CROSSREF to 5-ADM-09
+- **Status:** FIXED - CROSSREF to 5-ADM-09
 - **Description:** Sub-BA disclosure chain documentation gap; same execution-layer gap as 5-ADM-09 at documentation surface
 - **Code-surface:** `docs/BAA_REGISTER.md`
 - **Cross-references:** see 5-ADM-09, 5-PRV-04; see `docs/BAA_REGISTER.md`
@@ -2254,12 +2259,13 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 - **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (sub-BA disclosure documentation surface).
 - **Status note:** 2026-05-22 P1.3.3c.SCOPE operator decisions locked per 5-ADM-09 primary catalyst (Q-5ADM-K Path B PUT verb HTTP idiom + Q-5ADM-L Path B defense-in-depth route+service authorization + Q-5ADM-M Path A per-service-file tests + Q-5ADM-N Path B extended PR body + Q-5ADM-O default 4 NEW AUDIT + 2 cross-references + Q-5ADM-P Path A JSDoc inline fix + Q-5ADM-Q Path A finer-grained error-to-HTTP mapping + Q-5ADM-R Path A multi-hospital per-cardinality tests + Q-5ADM-S Path A comprehensive BUILD_STATE narrative + Q-5ADM-T Path A 5 atomic sub-blocks); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
 - **Status note:** 2026-05-22 P1.3.3c.IMPLEMENT-3 transitioned OPEN to IN_PROGRESS per §18 register-literal lifecycle per 5-ADM-09 primary catalyst; sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
+- **Status note:** 2026-05-25 FIXED-on-main per PR #294 merge (5-ADM-09 P1.3.3c primary catalyst, commit 3cc3370a61be3de2162b76dbe8b92f6a847de64a, mergedAt 2026-05-23T01:18:53Z UTC); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern next work block (P1.3.4 scope).
 
 ### 5-PRV-04 - BA contract terms CROSSREF
 
 - **CFR:** 45 CFR §164.504(e)
 - **Severity:** CROSSREF
-- **Status:** IN_PROGRESS - CROSSREF to 5-ORG-01
+- **Status:** FIXED - CROSSREF to 5-ORG-01
 - **Description:** Sister surface at BA contract terms
 - **Code-surface:** `docs/BAA_REQUIREMENTS.md`
 - **Cross-references:** see 5-ORG-01, 5-ADM-09
@@ -2267,6 +2273,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 - **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (BA contract terms downstream of 5-ORG-01).
 - **Status note:** 2026-05-22 P1.3.3c.SCOPE operator decisions locked per 5-ADM-09 primary catalyst (Q-5ADM-K Path B PUT verb HTTP idiom + Q-5ADM-L Path B defense-in-depth route+service authorization + Q-5ADM-M Path A per-service-file tests + Q-5ADM-N Path B extended PR body + Q-5ADM-O default 4 NEW AUDIT + 2 cross-references + Q-5ADM-P Path A JSDoc inline fix + Q-5ADM-Q Path A finer-grained error-to-HTTP mapping + Q-5ADM-R Path A multi-hospital per-cardinality tests + Q-5ADM-S Path A comprehensive BUILD_STATE narrative + Q-5ADM-T Path A 5 atomic sub-blocks); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
 - **Status note:** 2026-05-22 P1.3.3c.IMPLEMENT-3 transitioned OPEN to IN_PROGRESS per §18 register-literal lifecycle per 5-ADM-09 primary catalyst; sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
+- **Status note:** 2026-05-25 FIXED-on-main per PR #294 merge (5-ADM-09 P1.3.3c primary catalyst, commit 3cc3370a61be3de2162b76dbe8b92f6a847de64a, mergedAt 2026-05-23T01:18:53Z UTC); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern next work block (P1.3.4 scope).
 
 ### 5-PRV-05 - De-identification + limited data sets
 
@@ -2380,7 +2387,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 
 - **Modification:** Omnibus sub-BA flowdown requirements
 - **Severity:** CROSSREF
-- **Status:** IN_PROGRESS - CROSSREF to 5-ADM-09
+- **Status:** FIXED - CROSSREF to 5-ADM-09
 - **Description:** Sister at sub-BA accountability chain surface
 - **Code-surface:** `docs/BAA_REGISTER.md`
 - **Cross-references:** see 5-ADM-09, 5-PRV-03
@@ -2388,6 +2395,7 @@ Severity column copied verbatim from PHASE_5_REPORT.md §4.X per §18 register-l
 - **Status note:** 2026-05-21 transitioned OPEN to IN_PROGRESS at P1.3.2 scope-lock; bundled with 5-ADM-09 closure per Q-5ADM-J 8-finding sister-bundle (sub-BA accountability chain surface).
 - **Status note:** 2026-05-22 P1.3.3c.SCOPE operator decisions locked per 5-ADM-09 primary catalyst (Q-5ADM-K Path B PUT verb HTTP idiom + Q-5ADM-L Path B defense-in-depth route+service authorization + Q-5ADM-M Path A per-service-file tests + Q-5ADM-N Path B extended PR body + Q-5ADM-O default 4 NEW AUDIT + 2 cross-references + Q-5ADM-P Path A JSDoc inline fix + Q-5ADM-Q Path A finer-grained error-to-HTTP mapping + Q-5ADM-R Path A multi-hospital per-cardinality tests + Q-5ADM-S Path A comprehensive BUILD_STATE narrative + Q-5ADM-T Path A 5 atomic sub-blocks); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
 - **Status note:** 2026-05-22 P1.3.3c.IMPLEMENT-3 transitioned OPEN to IN_PROGRESS per §18 register-literal lifecycle per 5-ADM-09 primary catalyst; sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern (P1.3.4 scope).
+- **Status note:** 2026-05-25 FIXED-on-main per PR #294 merge (5-ADM-09 P1.3.3c primary catalyst, commit 3cc3370a61be3de2162b76dbe8b92f6a847de64a, mergedAt 2026-05-23T01:18:53Z UTC); sister-bundle closure tracking per Q-5ADM-J sister-PR FIXED-to-RESOLVED reconciliation pattern next work block (P1.3.4 scope).
 
 ### 5-OMN-03 - 4-factor risk assessment framework CROSSREF
 
