@@ -15,7 +15,7 @@ import crypto from 'crypto';
 // Build a 32-byte (256-bit) hex key for AES-256-GCM
 const TEST_KEY = crypto.randomBytes(32).toString('hex');
 
-describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
+describe('phiEncryption decrypt() - AUDIT-015 fail-loud behavior', () => {
   const originalEnv = { ...process.env };
 
   beforeEach(() => {
@@ -35,7 +35,7 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
   // b/c §8. Fake clients capture the registered wrapper from
   // `$extends({ query: { $allModels: { $allOperations: ... } } })` and
   // expose it via `_fn`. Test bodies retain the (params, next) calling
-  // convention via the `invokeMiddleware` adapter — minimal body changes.
+  // convention via the `invokeMiddleware` adapter - minimal body changes.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function makeFakeExtendsClient(): any {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,7 +47,7 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
     };
     return fakeClient;
   }
-  // Adapter — preserves the (params, next) calling convention used by
+  // Adapter - preserves the (params, next) calling convention used by
   // existing tests. Maps OLD `$use` shape → NEW `$extends` shape:
   //   params.action → operation, params.args → args, next → query
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -125,7 +125,7 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
 
   it('malformed format throws', async () => {
     // AUDIT-016 PR 1: error message text shifted to envelopeFormat parseEnvelope.
-    // Behavior preserved — malformed input still throws (AUDIT-015 invariant).
+    // Behavior preserved - malformed input still throws (AUDIT-015 invariant).
     // New wording identifies version + segment count for operator triage.
     await expect((decryptModule() as any)('enc:onlyOnePart')).rejects.toThrow(/envelope parse failed/);
   });
@@ -174,7 +174,7 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
     const fakeClient = makeFakeExtendsClient();
     mod.applyPHIEncryption(fakeClient);
 
-    // Write — capture encrypted ciphertext from middleware.
+    // Write - capture encrypted ciphertext from middleware.
     const writeData: any = { firstName: 'Diana' };
     await invokeMiddleware(
       fakeClient,
@@ -184,7 +184,7 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
     const v1Envelope = writeData.firstName;
     expect(v1Envelope.startsWith('enc:v1:')).toBe(true);
 
-    // Read — feed V1 envelope back through middleware, expect plaintext out.
+    // Read - feed V1 envelope back through middleware, expect plaintext out.
     const readResult = await invokeMiddleware(
       fakeClient,
       { model: 'Patient', action: 'findUnique', args: {} },
@@ -271,26 +271,26 @@ describe('phiEncryption decrypt() — AUDIT-015 fail-loud behavior', () => {
   });
 });
 
-// ─── AUDIT-075 — PHI_FIELD_MAP coverage round-trip (Groups H/I/J) ─────────────
+// ─── AUDIT-075 - PHI_FIELD_MAP coverage round-trip (Groups H/I/J) ─────────────
 //
 // Step 5 ships two test layers:
 //   - Groups H/I/J (this describe block): middleware-scope encrypt/decrypt
 //     round-trip semantics across AUDIT-075 NEW PHI_FIELD_MAP entries.
 //   - Group K (backend/src/services/__tests__/webhookPipeline-sanitize.test.ts):
-//     write-path callsite integration — verifies sanitize-at-write actually
+//     write-path callsite integration - verifies sanitize-at-write actually
 //     applied at prisma boundary. Without Group K, Step 4 callsite redaction
 //     could silently regress and middleware-scope tests would still pass.
 //
 // Helpers (per CONCERN C):
-//   assertRoundTripStandard(model, field, plaintext) — encrypt → decrypt via
+//   assertRoundTripStandard(model, field, plaintext) - encrypt → decrypt via
 //     middleware; asserts V1 envelope shape + decrypt fidelity.
 //   assertRoundTripSanitized(model, field, plaintextWithPHI, redactedExpected)
-//     — pre-sanitizes via redactPHIFragments (simulating Step 4 callsite
+//     - pre-sanitizes via redactPHIFragments (simulating Step 4 callsite
 //     integration), then runs middleware round-trip on the redacted string.
 //     SCOPE: middleware encrypt/decrypt on already-redacted input. Does NOT
 //     verify write-path integration (Group K covers that).
 
-describe('AUDIT-075 — PHI_FIELD_MAP coverage round-trip (Groups H/I/J)', () => {
+describe('AUDIT-075 - PHI_FIELD_MAP coverage round-trip (Groups H/I/J)', () => {
   const originalEnv = { ...process.env };
 
   beforeEach(() => {
@@ -370,9 +370,9 @@ describe('AUDIT-075 — PHI_FIELD_MAP coverage round-trip (Groups H/I/J)', () =>
     await assertRoundTripStandard(model, field, redacted);
   }
 
-  // ─── Group H — Standard round-trip (NEW PHI_FIELD_MAP models) ──────────────
+  // ─── Group H - Standard round-trip (NEW PHI_FIELD_MAP models) ──────────────
 
-  describe('Group H — standard round-trip (NEW PHI_FIELD_MAP models)', () => {
+  describe('Group H - standard round-trip (NEW PHI_FIELD_MAP models)', () => {
     it('H.1: WebhookEvent.errorMessage encrypts + decrypts via middleware', async () => {
       await assertRoundTripStandard(
         'WebhookEvent',
@@ -406,9 +406,9 @@ describe('AUDIT-075 — PHI_FIELD_MAP coverage round-trip (Groups H/I/J)', () =>
     });
   });
 
-  // ─── Group I — Sanitized round-trip middleware-scope ──────────────────────
+  // ─── Group I - Sanitized round-trip middleware-scope ──────────────────────
 
-  describe('Group I — sanitized round-trip middleware-scope', () => {
+  describe('Group I - sanitized round-trip middleware-scope', () => {
     it('I.1: WebhookEvent.errorMessage sanitized SSN round-trips as redacted', async () => {
       await assertRoundTripSanitized(
         'WebhookEvent',
@@ -437,9 +437,9 @@ describe('AUDIT-075 — PHI_FIELD_MAP coverage round-trip (Groups H/I/J)', () =>
     });
   });
 
-  // ─── Group J — Encrypt-only PII (PatientDataRequest.notes) ────────────────
+  // ─── Group J - Encrypt-only PII (PatientDataRequest.notes) ────────────────
 
-  describe('Group J — encrypt-only PII standard round-trip', () => {
+  describe('Group J - encrypt-only PII standard round-trip', () => {
     it('J.1: PatientDataRequest.notes encrypts + decrypts via middleware', async () => {
       await assertRoundTripStandard(
         'PatientDataRequest',
