@@ -81,7 +81,7 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 | Frontend | 35% | 6 modules × 3 tiers = 216 .tsx files; 5 of 6 use mock data | `CLAUDE.md` §10 |
 | Integration | 20% | BSW pilot live since 2026-04-27; Mount Sinai MSA framework; Epic Clarity SQL not in repo | `CLAUDE.md` §11-12 |
 | Deployment | 75% | CI + 2 deploy workflows; AUDIT-025 Phase a (Migration Validation gate) live; branch protection TODO | PR #223 |
-| Testing | 5% | 27 tests passing, 0.87% backend coverage (AUDIT-001 P0) | `PHASE_1_REPORT.md` |
+| Testing | 5% | 1161+ tests passing across 54 suites; 95.5%+ avg coverage across 7 middleware source files (AUDIT-001 RESOLVED 2026-05-27 at AUDIT-001.E closure PR) | `PHASE_1_REPORT.md` |
 | Documentation | 70% | 7 PRs in current arc; 3 design docs; runbooks complete | `CHANGE_RECORD_*.md` |
 | Clinical KB | 42% | CK v4.0 with 708 gaps; 6 of 6 active modules audited (canonical crosswalks); 250/603 covered any-tier post-Tier-S closure; 101/603 DET_OK; Tier S queue CLOSED; Cat A canonical RxNorms verified per AUDIT_METHODOLOGY.md §16 | `docs/audit/canonical/`, `docs/audit/AUDIT_METHODOLOGY.md` |
 
