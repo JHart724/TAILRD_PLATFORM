@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { applyPrismaTenantGuard } from './prismaTenantGuard';
 import { applyPrismaBaaGuard } from './prismaBaaGuard';
 import { applyPHIEncryption } from '../middleware/phiEncryption';
+import { applyPrismaTracing } from '../middleware/tracing';
 
 // Shared Prisma client - single instance for the entire backend.
 // Avoids connection pool exhaustion from multiple `new PrismaClient()` calls.
@@ -64,6 +65,11 @@ const tenantGuarded = applyPrismaTenantGuard(baseClient) as unknown as PrismaCli
 // AUDIT-011 prismaTenantGuard wire-in + prismaBaaGuard.ts lines 340-344
 // defense-in-depth axes.
 const baaGuarded = applyPrismaBaaGuard(tenantGuarded) as unknown as PrismaClient;
-const prisma = applyPHIEncryption(baaGuarded) as unknown as PrismaClient;
+const phiEncrypted = applyPHIEncryption(baaGuarded) as unknown as PrismaClient;
+// 4-APM-01: X-Ray tracing applied OUTERMOST so each per-operation subsegment
+// spans the full Prisma call (tenant guard + BAA guard + PHI encryption +
+// engine + DB round trip). Subsegments carry model + operation name only; no
+// SQL, no args, no PHI. No-op unless XRAY_ENABLED=true.
+const prisma = applyPrismaTracing(phiEncrypted) as unknown as PrismaClient;
 
 export default prisma;

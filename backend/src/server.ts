@@ -13,6 +13,7 @@ import { loginRateLimit, upgradeAuthRateLimitStores } from './middleware/authRat
 import { authenticateToken, requireMFA } from './middleware/auth';
 import { readOnlyGuard } from './middleware/readOnly';
 import getRedisClient, { createRedisRateLimitStore } from './lib/redis';
+import { openSegment, scrubSegmentUrl, closeSegment } from './middleware/tracing';
 
 config();
 
@@ -116,6 +117,13 @@ const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-CSRF-Token'],
 };
+
+// X-Ray segment open (4-APM-01). Mounted FIRST so the segment spans the entire
+// request. scrubSegmentUrl removes patient identifiers from the auto-captured
+// URL before the segment is flushed. Both are no-op pass-throughs unless
+// XRAY_ENABLED=true. closeSegment is mounted LAST, after the global error handler.
+app.use(openSegment());
+app.use(scrubSegmentUrl());
 
 app.use(helmet({
   contentSecurityPolicy: {
@@ -312,6 +320,11 @@ app.use((error: any, req: express.Request, res: express.Response, next: express.
     ...(NODE_ENV === 'development' && { stack: error.stack })
   } as APIResponse);
 });
+
+// X-Ray segment close (4-APM-01). Mounted LAST, after the global error handler,
+// per the aws-xray-sdk-express documented pattern. No-op pass-through unless
+// XRAY_ENABLED=true.
+app.use(closeSegment());
 
 process.on('unhandledRejection', (reason: any, promise) => {
   logger.error('Unhandled Rejection at:', { promise, reason: reason?.message || reason });
