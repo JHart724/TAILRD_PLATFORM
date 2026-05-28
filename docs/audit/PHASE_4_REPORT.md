@@ -11,9 +11,9 @@
 
 ## 1. Executive summary
 
-**Verdict: CONDITIONAL PASS.**
+**Verdict: PASS** (post-remediation 2026-05-28; original 2026-05-19 audit CONDITIONAL PASS, conditioned solely on the 3 HIGH P1 gate items, now all RESOLVED).
 
-Derived from §10 register-severity table per §18 status-surface discipline. 3 HIGH P1 gate items (4-ALR-01 ZERO operational CloudWatch alarms, 4-ALR-02 ZERO SNS/PagerDuty routing, 4-APM-01 ZERO APM tooling) exist with documented remediation roadmap in §10.2. Phase passes pending those remediations. Sister to Phase 1/2/3 CONDITIONAL PASS precedent.
+Derived from §10 register-severity table per §18 status-surface discipline. 3 HIGH P1 gate items (4-ALR-01 ZERO operational CloudWatch alarms, 4-ALR-02 ZERO SNS/PagerDuty routing, 4-APM-01 ZERO APM tooling) existed at the 2026-05-19 audit with documented remediation roadmap in §10.2. Phase originally passed pending those remediations. Sister to Phase 1/2/3 CONDITIONAL PASS precedent. Post-remediation update 2026-05-28: all 3 HIGH P1 gate items RESOLVED via PR #309 (4-ALR-01) + #310 (4-ALR-02) + #311 (4-APM-01); the conditional basis is satisfied and the phase verdict advances to PASS. Non-gate MEDIUM P2 / LOW P3 findings remain on the opportunistic-remediation roadmap in §10.2 and do not gate the phase verdict.
 
 **Phase 4 scope = UNION of three sources** per 2026-05-19 operator robust-posture decision:
 - Source A (`PATH_TO_ROBUST.md` v1.2 L60): observability gaps, runbook coverage, alerting completeness
@@ -31,7 +31,7 @@ Derived from §10 register-severity table per §18 status-surface discipline. 3 
 - CONDITIONAL PASS: gate-class findings exist with documented remediation roadmap; phase passes pending those remediations
 - FAIL: HIGH P1 findings concentrated above remediation-tolerable density; phase blocks downstream phases
 
-3 HIGH P1 gate items + remediation roadmap in §10.2 → **CONDITIONAL PASS**.
+3 HIGH P1 gate items + remediation roadmap in §10.2 originally yielded **CONDITIONAL PASS** (2026-05-19). Post-remediation 2026-05-28: all 3 gate items RESOLVED (PR #309/#310/#311), conditional basis satisfied, verdict advances to **PASS**.
 
 ---
 
@@ -242,9 +242,9 @@ Per §18.3 rule 1: copy register severity verbatim. Severities below mirror the 
 
 | Finding ID | Severity | Status |
 |---|---|---|
-| 4-ALR-01 | HIGH (P1) | OPEN - PHASE 4 GATE |
-| 4-ALR-02 | HIGH (P1) | OPEN - PHASE 4 GATE |
-| 4-APM-01 | HIGH (P1) | OPEN - PHASE 4 GATE |
+| 4-ALR-01 | HIGH (P1) | RESOLVED 2026-05-28 (PR #309) |
+| 4-ALR-02 | HIGH (P1) | RESOLVED 2026-05-28 (PR #310) |
+| 4-APM-01 | HIGH (P1) | RESOLVED 2026-05-28 (PR #311) |
 | 4-OBS-01 | MEDIUM (P2) | OPEN |
 | 4-RNB-02 | MEDIUM (P2) | OPEN |
 | 4-3PL-02 | MEDIUM (P2) | OPEN |
@@ -266,11 +266,11 @@ Per §18.3 rule 1: copy register severity verbatim. Severities below mirror the 
 
 **Severity totals:** 3 HIGH P1 / 5 MEDIUM P2 / 6 LOW P3 / 6 INFO / 1 N/A = 21 entries.
 
-**Verdict: CONDITIONAL PASS** (3 HIGH P1 gate items + documented remediation roadmap in §10.2; per B.1 decision (3) rubric).
+**Verdict: PASS** (post-remediation 2026-05-28; the 3 HIGH P1 gate items RESOLVED via PR #309/#310/#311; original 2026-05-19 audit verdict CONDITIONAL PASS per B.1 decision (3) rubric, conditioned solely on those 3 gate items, condition now met). Non-gate MEDIUM P2 / LOW P3 / INFO findings remain OPEN on the §10.2 opportunistic roadmap and do not gate the phase verdict.
 
 ### 10.2 Remediation roadmap
 
-**Phase 4 gate items (HIGH P1; remediate before Phase 5 HIPAA gap analysis scaling work):**
+**Phase 4 gate items (HIGH P1) - ALL RESOLVED 2026-05-28 via PR #309 (4-ALR-01) + #310 (4-ALR-02) + #311 (4-APM-01). Original roadmap (remediate before Phase 5 HIPAA gap analysis scaling work) retained below as the work record:**
 
 1. **4-APM-01 + 4-OBS-01 (~10-14h):** Select + deploy APM (X-Ray + Application Signals recommended for AWS-native baseline). Add `requestId` middleware in `server.ts` + propagate via AsyncLocalStorage to logger metadata.
 2. **4-ALR-01 + 4-ALR-02 (~7-11h):** Author `infrastructure/cloudformation/operational-alarms.yml` with 6 baseline alarms (ECS unhealthy task count, Aurora CPU > 80%/95%, ALB 5xx > 5%, ALB unhealthy host > 0, audit-log write-failure > 0); provision SNS topic `tailrd-production-ops-alerts`; subscribe operator email + PagerDuty/OpsGenie; wire AlarmActions across all operational alarms; backfill AlarmActions on `waf-cloudtrail.yaml:308,323,338,353` security alarms.
@@ -309,6 +309,7 @@ Per §18.3 rule 1: copy register severity verbatim. Severities below mirror the 
 - `BUILD_STATE.md` §6.1 status table row + narrative entry appended same PR
 - 5 §17.1 architectural-precedent candidates flagged for separate methodology PR (§9.2)
 - v1.2 L60 scope update deferred to v2.0 PATH_TO_ROBUST authorship (§10.3)
-- Verdict CONDITIONAL PASS derived from §10.1 register-severity totals per §18 status-surface discipline
+- Verdict originally CONDITIONAL PASS (2026-05-19) derived from §10.1 register-severity totals per §18 status-surface discipline; advanced to PASS post-remediation 2026-05-28 (3 HIGH P1 gate items RESOLVED via PR #309/#310/#311; conditional basis satisfied)
+- Reconciliation 2026-05-28: Phase 4 operational-monitoring cluster (4-ALR-01 operational CloudWatch alarms + 4-ALR-02 SNS AlarmActions routing + 4-APM-01 X-Ray APM instrumentation) RESOLVED via PR #309 + #310 + #311; §10.1 status flips + verdict transition mirrored to `AUDIT_FINDINGS_REGISTER.md` L1646-1648 (L1642 verbatim-mirror invariant) + indexed in `BUILD_STATE.md` §1 Phase 4 ledger
 
 *Methodology stack §1 / §16 (PARTIAL; not triggered this phase) / §17 / §17.1 / §18 sustained. §17.3 scope discipline preserved (architectural-precedent codifications deferred to separate methodology PR). Phase 4 sister to Phase 3 CONDITIONAL PASS precedent + Phase 3 §6 cross-phase recommendation arc.*
