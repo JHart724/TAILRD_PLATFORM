@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  TAILRD Phase 4 4-ALR-02 operational alerting SNS topic
+  (tailrd-production-ops-alerts) with conditional email and HTTPS integration
+  subscriptions. The topic ARN is exported for operational-alarms.yml and
+  waf-cloudtrail.yaml AlarmActions consumption via Parameter passthrough.
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: production
+    AllowedValues: [production, staging, development]
+    Description: Deployment environment name used in the topic name and export name.
+
+  OperatorEmail:
+    Type: String
+    Default: ''
+    Description: >
+      Operator email address for the SNS email subscription. Empty default allows
+      a topic-only deploy with no subscriptions wired.
+
+  PagerDutyOpsGenieEndpoint:
+    Type: String
+    Default: ''
+    Description: >
+      PagerDuty or OpsGenie HTTPS integration endpoint URL supplied by the operator
+      at deploy time. Integration keys stay off-repo. Empty default allows deploy
+      without a paging integration subscription.
+
+Conditions:
+  HasEmailSubscription: !Not [!Equals [!Ref OperatorEmail, '']]
+  HasIntegrationEndpoint: !Not [!Equals [!Ref PagerDutyOpsGenieEndpoint, '']]
+
+Resources:
+  # SNS topic carrying operational and security CloudWatch alarm state-change
+  # notifications. Alarm metadata (name, state, metric namespace, threshold,
+  # breaching value) is operational telemetry and not ePHI, so the topic is
+  # provisioned without KmsMasterKeyId.
+  OpsAlertsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub 'tailrd-${EnvironmentName}-ops-alerts'
+      DisplayName: !Sub 'TAILRD ${EnvironmentName} ops alerts'
+
+  # Email subscription provisioned only when OperatorEmail is supplied. Email
+  # subscriptions require manual confirmation by the recipient before delivery.
+  OpsAlertsEmailSubscription:
+    Type: AWS::SNS::Subscription
+    Condition: HasEmailSubscription
+    Properties:
+      Protocol: email
+      Endpoint: !Ref OperatorEmail
+      TopicArn: !Ref OpsAlertsTopic
+
+  # HTTPS integration subscription (PagerDuty or OpsGenie) provisioned only when
+  # the endpoint is supplied. The endpoint URL is operator-supplied at deploy
+  # time and never committed to the repo.
+  OpsAlertsIntegrationSubscription:
+    Type: AWS::SNS::Subscription
+    Condition: HasIntegrationEndpoint
+    Properties:
+      Protocol: https
+      Endpoint: !Ref PagerDutyOpsGenieEndpoint
+      TopicArn: !Ref OpsAlertsTopic
+
+Outputs:
+  OpsAlertsTopicArn:
+    Description: SNS topic ARN for operational and security AlarmActions consumption.
+    Value: !Ref OpsAlertsTopic
+    Export:
+      Name: !Sub 'tailrd-${EnvironmentName}-ops-alerts-topic-arn'

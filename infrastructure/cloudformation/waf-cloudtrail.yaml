@@ -19,8 +19,17 @@ Parameters:
     Description: ARN of the Application Load Balancer to protect
     Default: ''
 
+  OperationalAlertsTopicArn:
+    Type: String
+    Default: ''
+    Description: >
+      SNS topic ARN for AlarmActions. Empty default allows this template to deploy
+      before the operational SNS topic exists per 4-ALR-02 dependency ordering.
+      When empty, AlarmActions is omitted entirely via the HasOpsTopic condition.
+
 Conditions:
   HasALB: !Not [!Equals [!Ref ALBArn, '']]
+  HasOpsTopic: !Not [!Equals [!Ref OperationalAlertsTopicArn, '']]
 
 Resources:
   # ------ WAF Web ACL ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -314,6 +323,7 @@ Resources:
       Threshold: 5
       ComparisonOperator: GreaterThanThreshold
       TreatMissingData: notBreaching
+      AlarmActions: !If [HasOpsTopic, [!Ref OperationalAlertsTopicArn], !Ref 'AWS::NoValue']
 
   # Alarm: Root account usage
   RootAccountUsageAlarm:
@@ -329,6 +339,7 @@ Resources:
       Threshold: 0
       ComparisonOperator: GreaterThanThreshold
       TreatMissingData: notBreaching
+      AlarmActions: !If [HasOpsTopic, [!Ref OperationalAlertsTopicArn], !Ref 'AWS::NoValue']
 
   # Alarm: Security group changes
   SecurityGroupChangesAlarm:
@@ -344,6 +355,7 @@ Resources:
       Threshold: 0
       ComparisonOperator: GreaterThanThreshold
       TreatMissingData: notBreaching
+      AlarmActions: !If [HasOpsTopic, [!Ref OperationalAlertsTopicArn], !Ref 'AWS::NoValue']
 
   # Alarm: IAM policy changes
   IAMPolicyChangesAlarm:
@@ -359,6 +371,7 @@ Resources:
       Threshold: 0
       ComparisonOperator: GreaterThanThreshold
       TreatMissingData: notBreaching
+      AlarmActions: !If [HasOpsTopic, [!Ref OperationalAlertsTopicArn], !Ref 'AWS::NoValue']
 
   # ------ CloudWatch Log Groups for Application ------------------------------------------------------------------------------------------------------
 
