@@ -1,0 +1,303 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  TAILRD Phase 4 4-ALR-01 operational baseline CloudWatch alarms
+  (ECS unhealthy task count, Aurora CPU warning + paging, ALB target 5xx
+  ratio, ALB unhealthy host count, audit log write-failure) per HIGH P1
+  GATE acceptance criteria. AlarmActions wiring to the operational SNS
+  topic is provisioned by 4-ALR-02 (PR following this one); this template
+  deploys standalone with empty OperationalAlertsTopicArn and alarms remain
+  visible in ALARM state without notification routing until that topic is set.
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: production
+    AllowedValues: [production, staging, development]
+    Description: Deployment environment name used in alarm name prefixes.
+
+  ECSClusterName:
+    Type: String
+    Description: ECS cluster name (ClusterName dimension for the ECS task-count alarm).
+
+  ECSServiceName:
+    Type: String
+    Description: ECS service name (ServiceName dimension for the ECS task-count alarm).
+
+  AuroraDBClusterIdentifier:
+    Type: String
+    Description: Aurora DB cluster identifier (DBClusterIdentifier dimension for the Aurora CPU alarms).
+
+  ALBFullName:
+    Type: String
+    Description: >
+      ALB full name in the format app/load-balancer-name/random-hex used as the
+      LoadBalancer dimension value for AWS/ApplicationELB metrics.
+
+  ALBTargetGroupFullName:
+    Type: String
+    Description: >
+      Target group full name in the format targetgroup/tg-name/random-hex used as
+      the TargetGroup dimension value for AWS/ApplicationELB metrics.
+
+  OperationalAlertsTopicArn:
+    Type: String
+    Default: ''
+    Description: >
+      SNS topic ARN for AlarmActions. Empty default allows this template to deploy
+      before the operational SNS topic exists per 4-ALR-02 dependency ordering.
+      When empty, AlarmActions is omitted entirely via the HasOpsTopic condition.
+
+  AlarmLogGroupName:
+    Type: String
+    Default: ''
+    Description: >
+      CloudWatch Logs log group name receiving the audit log JSON stream (the
+      ECS task awslogs target carrying the audit_db_write_failed event). Empty
+      default falls back to the conventional per-environment audit log group.
+
+Conditions:
+  HasOpsTopic: !Not [!Equals [!Ref OperationalAlertsTopicArn, '']]
+  HasAlarmLogGroup: !Not [!Equals [!Ref AlarmLogGroupName, '']]
+
+Resources:
+  # Alarm 1: ECS unhealthy task count.
+  # AWS/ECS base namespace exposes only CPU and memory utilization; task-count
+  # metrics (DesiredTaskCount, RunningTaskCount) live in the ECS/ContainerInsights
+  # namespace and require Container Insights enabled on the cluster. The metric
+  # math expression DesiredTaskCount minus RunningTaskCount is the orchestration
+  # level unhealthy-task signal, semantically distinct from the ALB target health
+  # signal in Alarm 5.
+  Alarm1ECSUnhealthyTask:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub tailrd-${EnvironmentName}-ecs-unhealthy-task-count
+      AlarmDescription: >
+        ECS service has one or more desired tasks not in the running state
+        (DesiredTaskCount minus RunningTaskCount greater than 0). Requires
+        Container Insights enabled on the cluster.
+      Metrics:
+        - Id: m1
+          ReturnData: false
+          MetricStat:
+            Metric:
+              Namespace: ECS/ContainerInsights
+              MetricName: DesiredTaskCount
+              Dimensions:
+                - Name: ClusterName
+                  Value: !Ref ECSClusterName
+                - Name: ServiceName
+                  Value: !Ref ECSServiceName
+            Period: 300
+            Stat: Maximum
+        - Id: m2
+          ReturnData: false
+          MetricStat:
+            Metric:
+              Namespace: ECS/ContainerInsights
+              MetricName: RunningTaskCount
+              Dimensions:
+                - Name: ClusterName
+                  Value: !Ref ECSClusterName
+                - Name: ServiceName
+                  Value: !Ref ECSServiceName
+            Period: 300
+            Stat: Minimum
+        - Id: e1
+          Expression: m1 - m2
+          Label: UnhealthyTaskCount
+          ReturnData: true
+      EvaluationPeriods: 2
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: !If [HasOpsTopic, [!Ref OperationalAlertsTopicArn], !Ref 'AWS::NoValue']
+
+  # Alarm 2: Aurora CPU utilization warning tier (over 80 percent).
+  Alarm2AuroraCPU80:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub tailrd-${EnvironmentName}-aurora-cpu-80
+      AlarmDescription: Aurora cluster CPU utilization over 80 percent (warning tier).
+      Namespace: AWS/RDS
+      MetricName: CPUUtilization
+      Dimensions:
+        - Name: DBClusterIdentifier
+          Value: !Ref AuroraDBClusterIdentifier
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 80
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: !If [HasOpsTopic, [!Ref OperationalAlertsTopicArn], !Ref 'AWS::NoValue']
+
+  # Alarm 3: Aurora CPU utilization paging tier (over 95 percent).
+  Alarm3AuroraCPU95Paging:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub tailrd-${EnvironmentName}-aurora-cpu-95-paging
+      AlarmDescription: >
+        Aurora cluster CPU utilization over 95 percent (paging tier; sustained
+        saturation requiring immediate operator attention).
+      Namespace: AWS/RDS
+      MetricName: CPUUtilization
+      Dimensions:
+        - Name: DBClusterIdentifier
+          Value: !Ref AuroraDBClusterIdentifier
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 95
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: !If [HasOpsTopic, [!Ref OperationalAlertsTopicArn], !Ref 'AWS::NoValue']
+
+  # Alarm 4: ALB target 5xx error rate over 5 percent.
+  # Metric math computes the 5xx response percentage of total request count at
+  # the target group. When request count is zero the expression yields no data
+  # point and TreatMissingData notBreaching suppresses a false alarm.
+  Alarm4ALB5xxRatio:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub tailrd-${EnvironmentName}-alb-target-5xx-ratio
+      AlarmDescription: >
+        ALB target group 5xx responses exceed 5 percent of request volume over
+        the evaluation window.
+      Metrics:
+        - Id: m5xx
+          ReturnData: false
+          MetricStat:
+            Metric:
+              Namespace: AWS/ApplicationELB
+              MetricName: HTTPCode_Target_5XX_Count
+              Dimensions:
+                - Name: LoadBalancer
+                  Value: !Ref ALBFullName
+                - Name: TargetGroup
+                  Value: !Ref ALBTargetGroupFullName
+            Period: 300
+            Stat: Sum
+        - Id: mreq
+          ReturnData: false
+          MetricStat:
+            Metric:
+              Namespace: AWS/ApplicationELB
+              MetricName: RequestCount
+              Dimensions:
+                - Name: LoadBalancer
+                  Value: !Ref ALBFullName
+                - Name: TargetGroup
+                  Value: !Ref ALBTargetGroupFullName
+            Period: 300
+            Stat: Sum
+        - Id: e1
+          Expression: 100 * (m5xx / mreq)
+          Label: Target5xxPercent
+          ReturnData: true
+      EvaluationPeriods: 2
+      Threshold: 5
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: !If [HasOpsTopic, [!Ref OperationalAlertsTopicArn], !Ref 'AWS::NoValue']
+
+  # Alarm 5: ALB unhealthy host count over 0.
+  Alarm5ALBUnhealthyHost:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub tailrd-${EnvironmentName}-alb-unhealthy-host
+      AlarmDescription: ALB target group reports one or more unhealthy hosts.
+      Namespace: AWS/ApplicationELB
+      MetricName: UnHealthyHostCount
+      Dimensions:
+        - Name: TargetGroup
+          Value: !Ref ALBTargetGroupFullName
+        - Name: LoadBalancer
+          Value: !Ref ALBFullName
+      Statistic: Maximum
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: !If [HasOpsTopic, [!Ref OperationalAlertsTopicArn], !Ref 'AWS::NoValue']
+
+  # Alarm 6 source: CloudWatch Logs metric filter deriving the audit log
+  # write-failure metric from the audit_db_write_failed event already emitted by
+  # the backend audit logger (no backend change). DefaultValue 0 reports a zero
+  # data point in quiet periods so the alarm has continuous data.
+  Alarm6AuditLogWriteFailureFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      LogGroupName: !If
+        - HasAlarmLogGroup
+        - !Ref AlarmLogGroupName
+        - !Sub '/tailrd/${EnvironmentName}/audit'
+      FilterPattern: '"audit_db_write_failed"'
+      MetricTransformations:
+        - MetricName: AuditLogWriteFailure
+          MetricNamespace: TAILRD/Application
+          MetricValue: '1'
+          DefaultValue: 0
+
+  # Alarm 6: audit log write-failure events over 0.
+  # EvaluationPeriods 1 so a single HIPAA-grade audit write failure alarms
+  # immediately rather than requiring two consecutive breaching windows.
+  Alarm6AuditLogWriteFailure:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub tailrd-${EnvironmentName}-audit-log-write-failure
+      AlarmDescription: >
+        One or more audit log database write failures detected (audit_db_write_failed
+        event). HIPAA audit control durability signal; pages on any occurrence.
+      Namespace: TAILRD/Application
+      MetricName: AuditLogWriteFailure
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: !If [HasOpsTopic, [!Ref OperationalAlertsTopicArn], !Ref 'AWS::NoValue']
+
+Outputs:
+  Alarm1Arn:
+    Description: ECS unhealthy task count alarm ARN.
+    Value: !GetAtt Alarm1ECSUnhealthyTask.Arn
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-alarm-ecs-unhealthy-task-count
+
+  Alarm2Arn:
+    Description: Aurora CPU 80 percent warning alarm ARN.
+    Value: !GetAtt Alarm2AuroraCPU80.Arn
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-alarm-aurora-cpu-80
+
+  Alarm3Arn:
+    Description: Aurora CPU 95 percent paging alarm ARN.
+    Value: !GetAtt Alarm3AuroraCPU95Paging.Arn
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-alarm-aurora-cpu-95-paging
+
+  Alarm4Arn:
+    Description: ALB target 5xx ratio alarm ARN.
+    Value: !GetAtt Alarm4ALB5xxRatio.Arn
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-alarm-alb-target-5xx-ratio
+
+  Alarm5Arn:
+    Description: ALB unhealthy host count alarm ARN.
+    Value: !GetAtt Alarm5ALBUnhealthyHost.Arn
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-alarm-alb-unhealthy-host
+
+  Alarm6Arn:
+    Description: Audit log write-failure alarm ARN.
+    Value: !GetAtt Alarm6AuditLogWriteFailure.Arn
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-alarm-audit-log-write-failure
+
+  Alarm6MetricFilterName:
+    Description: Audit log write-failure CloudWatch Logs metric filter name.
+    Value: !Ref Alarm6AuditLogWriteFailureFilter
+    Export:
+      Name: !Sub tailrd-${EnvironmentName}-metric-filter-audit-log-write-failure
