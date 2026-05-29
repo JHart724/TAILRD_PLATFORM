@@ -9,6 +9,8 @@
 
 ## Scope
 
+> **CX-deferral reconciliation note (active build scope = 603).** The 708 figure below is the full 7-module clinical catalog, including the deferred Cross-module / Disparities / Safety (CX) module (105 gaps: 17 T1 + 71 T2 + 17 T3), deferred per operator decision 2026-05-03 (revisit at v3.0). Active build scope is 603 gaps (90 T1 + 391 T2 + 122 T3) across the 6 active cardiovascular modules. Build planning uses the active 603 / 90-T1 figure, not the full-catalog 708 / 107-T1 figure. Source-wins for active scope: PATH_TO_ROBUST.md L18 + §5.2.
+
 708 structured clinical decision gaps across 7 modules:
 - Heart Failure & Cardiomyopathy (HF): 126 gaps
 - Electrophysiology (EP): 89 gaps
@@ -43,7 +45,7 @@ Each gap is scored on 5 dimensions (1-5 each, total 5-25):
 
 ## Top 25 Priority Gaps with ROI Pathway Tagging
 
-The 25 gaps below are the highest-leverage individual gaps across the catalog. Each is tagged with its dominant ROI pathway (and secondary pathway where applicable). These 25 gaps are where the executive conversation anchors. The full 708-gap catalog is in Part 6 as reference.
+The 25 gaps below are the highest-leverage individual gaps across the catalog. Each is tagged with its dominant ROI pathway (and secondary pathway where applicable). These 25 gaps are where the executive conversation anchors. The full 708-gap catalog is in Part 6 as reference. (708 is the full 7-module catalog including the deferred CX module; active build scope is 603 across the 6 active modules - see the Scope reconciliation note above and PATH_TO_ROBUST.md L18.)
 | Rank | Gap ID | Gap Name | ROI Pathway | Rationale |
 |---|---|---|---|---|
 | 1 | GAP-HF-010 | HFrEF: SGLT2i not prescribed | Specialty pharma + Readmission | HFrEF SGLT2i. Highest-volume HFrEF gap. Mortality and HF hospitalisation signal from DAPA-HF and EMPEROR-Reduced. Specialty pharma revenue driver. Very high panel actionability. |
@@ -105,6 +107,9 @@ Tier Distribution Across the Catalog
 | Peripheral Vascular | 105 | 7 | 82 | 16 |
 | Cross-module / Disparities / Safety | 105 | 17 | 71 | 17 |
 | Total | 708 | 107 | 462 | 139 |
+
+> **Full-catalog-incl-deferred-CX.** This Total row (708 / 107 T1 / 462 T2 / 139 T3) is the full 7-module catalog including the deferred CX module (105: 17 T1 + 71 T2 + 17 T3). Active build subtotal across the 6 active modules is 603 (90 T1 + 391 T2 + 122 T3) per PATH_TO_ROBUST.md L18 + §5.2.
+
 Module Catalogue Structure
 Module Summary
 | Module | Code | Total | T1 | T2 | T3 | Key Clinical Focus |
