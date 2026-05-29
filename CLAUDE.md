@@ -566,3 +566,66 @@ If deploy verification fails:
 1. Immediately update service to last known working task def
 2. Do NOT debug on production -- pull the image and run locally
 3. Fix, push, and redeploy through normal PR flow
+
+## 19. Finding-Remediation PAUSE Procedure
+
+This section encodes the finding-remediation workflow as a self-run procedure. The agent constructs its own PAUSE stages, halts at the real gates, and the operator approves inline. This does NOT remove any gate; it removes the mechanical chat-relay of pre-state while preserving every verification, clinical/PHI, and commit gate. Invoke via the `/finding <id>` slash command, or follow this procedure directly. Because this block is always loaded, forgetting the command never bypasses the gates.
+
+This procedure preserves operator authority over the always-stop classes per `AUDIT_METHODOLOGY.md` §17.1 Entry 25 (agent-side gate-bypass under autonomous-mode framing is itself a logged failure mode). "Make the reasonable call" framing is NEVER license to bypass an always-stop gate.
+
+### 19.1 Six-stage PAUSE decomposition
+
+Every stage OPENS with canonical-grep (see §19.5). Never infer disk, remote, or methodology state from prior session memory or prior chat history.
+
+- **PAUSE A (inventory + design surface):** canonical-grep repo state, the finding from `AUDIT_FINDINGS_REGISTER.md` (+ relevant `PHASE_N_REPORT.md`), and all paths the fix will touch. Surface the design, scope, and any Q-decision forks. Author NOTHING at A.
+- **PAUSE B (authoring):** create the branch, author the changeset per the A-locked design.
+- **PAUSE C (verification):** §17.5 self-review, DRIFT-44 scan, scope check, and (as applicable) cfn-lint / aws-validate / tsc / eslint / tests / §18 status-surface checks. Re-confirm any mirror-invariant.
+- **PAUSE D (reconciliation):** ledger/register/BUILD_STATE edits IF in scope; verify source-wins ordering per §18.
+- **PAUSE E (commit / PR):** apply the footprint-split commit gate (§19.4). Stage the scoped files (NEVER `.claude/settings.local.json`, RULE 9), commit, push, open PR.
+- **PAUSE F (merge + post-merge verify):** monitor CI; on merge run the on-main verification (git fetch + canonical-grep the landed change on origin/main).
+
+### 19.2 Auto-proceed rule (A to B to C to D without an operator STOP)
+
+The agent may move between stages WITHOUT an operator STOP only when ALL five hold:
+1. Every Q-decision path resolves to the agent recommendation (no genuine fork).
+2. Scope is unchanged from the PAUSE-A-locked scope.
+3. The changeset touches NO clinical-logic, PHI, auth, or encryption path (see §19.4 backend superset).
+4. No new V.5-RECOVERY catch surfaced.
+5. All applicable verification passes (cfn-lint / aws-validate / tsc / eslint / tests / §18).
+
+If any condition fails, STOP and surface.
+
+### 19.3 Always-stop gates (operator-gated regardless of auto-proceed)
+
+STOP for operator approval at any of:
+- (a) PAUSE E commit/PR when the footprint is operator-gated per §19.4.
+- (b) ANY clinical-logic, guideline-ambiguity, or PHI-handling design decision.
+- (c) ANY new V.5-RECOVERY catch.
+- (d) ANY scope expansion OR robust-vs-existing-pattern fork.
+- (e) ANY verification FAIL.
+- (f) ANY genuine Q-decision fork.
+
+### 19.4 Footprint-split commit gate (mechanical, default-deny)
+
+Classification is mechanical via `git diff --name-only` against explicit path globs. It is NEVER a per-PR judgment call.
+
+- **AUTO-MERGE-ELIGIBLE** (PAUSE E may auto-proceed to merge): the changeset matches ONLY `docs/**` OR repo-root `*.md` OR `infrastructure/**/*.yml` OR `infrastructure/**/*.yaml`, AND the deterministic CI backstops are green (cfn-lint + aws-validate for CFN; CI for docs).
+- **ALWAYS-OPERATOR-GATED at PAUSE E:** the changeset touches ANY path matching `backend/**`. This superset covers every clinical-rule, auth, encryption, PHI, and `backend/prisma/schema.prisma` path.
+- **DEFAULT-DENY:** any path class not explicitly in the auto-eligible set routes to operator-gated. This includes `infrastructure/**/*.js`, `infrastructure/**/*.json`, `infrastructure/**/*.sh`, `.claude/**` (including `.claude/**/*.md`), frontend `src/**`, and root config. The auto-eligible infra glob is STRICTLY `*.yml` + `*.yaml`, NEVER `infrastructure/**`: lambdas, IAM policies, and deploy scripts are executable or security-bearing without a deterministic cfn-lint-class backstop.
+- **PRECEDENCE (default-deny wins):** auto-eligible requires that EVERY changed path match an auto-eligible glob AND that NO changed path match `backend/**` or any default-deny class. A gated class always wins over the `*.md` glob: the `*.md` glob is scoped to `docs/**` and repo-root markdown only, NEVER `.claude/**` or any other gated directory. A `.md` file under a gated path (e.g. `.claude/commands/finding.md`) is operator-gated, not auto-eligible.
+
+**Documented defense-in-depth signals** (legibility aids that explain WHY `backend/**` is gated; NOT the mechanical gate):
+- Clinical rules: `backend/src/ingestion/gaps/gapRuleEngine.ts` (the 263 runtime `gaps.push`) plus content-grep `classOfRecommendation|levelOfEvidence|guidelineSource|gaps.push|RUNTIME_GAP_REGISTRY`.
+- Schema: `backend/prisma/schema.prisma`.
+- Auth / encryption / PHI: `backend/src/middleware/{auth,phiEncryption,csrfProtection,cognitoAuth}.ts` + `backend/src/lib/{prisma,prismaBaaGuard}.ts` + `backend/src/services/{kmsService,keyRotation,envelopeFormat}.ts` + `backend/src/utils/phiRedaction.ts`.
+
+### 19.5 Canonical-grep-first discipline + catch logging
+
+- Per `AUDIT_METHODOLOGY.md` §17.1 Entry 23 (V.5-RECOVERY) and DRIFT-45 (`docs/audit/AGENT_DRIFT_REGISTRY.md`): canonical-grep + Read-File + `git diff` at EVERY state-bearing assertion, in kickoff authoring AND in post-event recovery. Never infer disk state from memory; never infer remote state from prior gh output.
+- When disk/remote/methodology state diverges from the assumed pre-state, that is a V.5-RECOVERY catch: STOP (always-stop gate (c)), surface it verbatim, and let the operator decide. Increment the sustained catch count.
+- Formatting follows DRIFT-44 (hyphen-only; no em-dashes or en-dashes; `§` is the only permitted non-ASCII). Severity at any status surface is copied verbatim from `AUDIT_FINDINGS_REGISTER.md` per §18; never re-classified.
+- PR self-review follows §17.5 (explicit checklist with evidence) and scope discipline follows §17.3 (no half-fixes with follow-up-flag framing; expand scope or pull the item with KNOWN BROKEN markers + register entries).
+
+### 19.6 Pilot posture
+
+The first auto-merged CFN/docs PR under this procedure is a watched pilot. One-revert rollback is ready: revert this §19 block. The PR that establishes this machinery is itself the auto-merge-eligible footprint class (docs + `.claude/commands/` config); the pilot's first real test is a SUBSEQUENT finding-PR.
