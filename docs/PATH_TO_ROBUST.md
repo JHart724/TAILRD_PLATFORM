@@ -17,6 +17,8 @@ Ship a fully production-grade TAILRD platform across 6 active cardiovascular mod
 
 **Tier breakdown (audit-baseline verified at PR #290 matrix verification):** 90 T1 + 391 T2 + 122 T3 = 603 active gaps. Per `MATRIX_VERIFICATION_2026_05_20.md` §2 distribution.
 
+**Scope reconciliation:** see `docs/clinical/SCOPE_RECONCILIATION.md` for how this active 6-module figure reconciles with the full 7-module catalog in `CLINICAL_KNOWLEDGE_BASE_v4.0.md` via the CX deferral.
+
 **CX deferral:** Cross-module / Disparities / Safety (CX; 105 gaps) deferred per 2026-05-03 operator decision. Revisit at v3.0 per §13 Module Parity Principle. Matrix already CX-stripped at canonical layer (no CX.crosswalk.json). This is a deliberate scope reduction from v1.2's 708-row framing, taken to honor empirical capacity reality while preserving the Module Parity Principle across the 6 active cardiovascular modules. The 105 CX gaps are not abandoned; they re-enter the planning surface at v3.0 authorship checkpoint (end-of-Phase-1), at which point Phase 1 completion state + capacity-vs-scope reality determine whether CX rejoins the v1.0 release surface or carries forward to v1.1.
 
 **Production-grade means:** every active gap implemented with detection logic; every T1 gap (90) with full UI polish + validated calculators; every T2 gap (391) functional with strong templated UI; every T3 gap (122) cataloged and surfaced; backend bulletproof with full test coverage (AUDIT-001 P0 closure dependency); UI/UX unified design system applied consistently (per Phase 0C §5.1 + §5.2 substantive engineering signals); 14 HIGH P1 GATE items closed (per §5 + §6 sequencing); no known tech debt; defensible against any enterprise due diligence or formal compliance audit.
