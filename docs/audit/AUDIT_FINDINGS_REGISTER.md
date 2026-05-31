@@ -38,7 +38,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 
 ### CRITICAL (P0)
 
-- **AUDIT-001** — Test coverage 0.87% with auth-critical middleware at 0% (Phase 1, OPEN)
+- **AUDIT-001** — Test coverage 0.87% with auth-critical middleware at 0% (Phase 1, RESOLVED 2026-05-27, PR #307)
 
 ### HIGH (P1)
 

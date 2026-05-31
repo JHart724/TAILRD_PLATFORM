@@ -60,9 +60,9 @@ The v2.0 strategic posture is grounded in a 7-PR audit closure arc executed acro
 
 What this arc surfaced (beyond raw finding counts): the operational maturity gap cluster (Phase 4 4-ALR-01/02 + 4-APM-01) sits at the deployment-readiness layer, where ZERO operational CloudWatch alarms + ZERO SNS / PagerDuty routing + ZERO APM tooling means a production incident currently has no automated detection or notification surface. The HIPAA compliance gap cluster (Phase 5 5-ADM-09 + 5-BRC-06) sits at the BSW pilot dependency layer, where BAA execution + §164.410 BA-to-CE notification workflow gaps block the DUA execution that enables BSW real-patient data flow. The UI/UX gap cluster (Phase 0C 0C-A11Y-01 + 0C-CLI-01/02/03 + 0C-PERF-01/02 + 0C-TEST-01/02/03) sits at the v1.0 readiness layer, where WCAG 2.2 AA conformance + ACC/AHA Class/LOE display conventions + 12-calculator §16 verification + Web Vitals baseline + frontend test coverage all gate the enterprise-defensible UI/UX claim. The aggregation of 14 HIGH P1 GATE items is not a tactical to-do list; it is the structural readiness debt v1.0 must clear.
 
-**Backend:** Phase 1 backend audit complete (CONDITIONAL PASS). AUDIT-001 P0 platform-wide test coverage gap (0.87%) OPEN; foundational dependency for PRODUCTION_GRADE tier-attainment per `AUDIT_METHODOLOGY.md` L318 ("PRODUCTION_GRADE ceiling currently zero across all audited modules because of platform-wide test coverage gap (AUDIT-001 P0). Until AUDIT-001 is closed, no gap can be PRODUCTION_GRADE.").
+**Backend:** Phase 1 backend audit complete (CONDITIONAL PASS). AUDIT-001 P0 platform-wide test coverage gap (0.87%) RESOLVED 2026-05-27 (PR #307; Tier-A auth-middleware scope, 7 of 7 files to 95.5%+ avg coverage); the foundational dependency for PRODUCTION_GRADE tier-attainment per `AUDIT_METHODOLOGY.md` L318 ("PRODUCTION_GRADE ceiling currently zero across all audited modules because of platform-wide test coverage gap (AUDIT-001 P0). Until AUDIT-001 is closed, no gap can be PRODUCTION_GRADE.").
 
-This is the single highest-impact dependency in the v2.0 plan. The PRODUCTION_GRADE tier represents the v1.0 quality bar. Until AUDIT-001 closes, every gap (across all 6 modules + all 3 tiers) carries a ceiling at TESTED_OK or DET_OK, not PRODUCTION_GRADE. The §5.3 placement decision (Phase 1 vs Phase 2) for AUDIT-001 is therefore one of the few operator decisions deferred in this plan; both placements are viable, the tradeoff is upstream gating (Phase 1: Tier A auth middleware to 80%+ gates production-readiness) versus downstream coverage breadth (Phase 2: Tier B services + routes coverage gates Tier 2 PRODUCTION_GRADE attainment).
+This is the single highest-impact dependency in the v2.0 plan. The PRODUCTION_GRADE tier represents the v1.0 quality bar. AUDIT-001 is now RESOLVED 2026-05-27 (PR #307) via the Tier-A / Phase-1 path (auth middleware to 95.5%+), so the §5.3 placement decision (Phase 1 vs Phase 2) is MOOT and the Tier-A / Phase-1 path was taken. The AUDIT-001 ceiling that previously held every gap (across all 6 modules + all 3 tiers) at TESTED_OK or DET_OK is lifted at the gate level; PRODUCTION_GRADE attainment still depends on the §5.4 criteria (bespoke UI + validated calculators) and on Tier-B services + routes coverage breadth, which gates Tier 2 PRODUCTION_GRADE attainment and remains PENDING.
 
 **Matrix state at PR #290 HEAD `6b9b709`** (per `MATRIX_VERIFICATION_2026_05_20.md` §2):
 
@@ -76,7 +76,7 @@ This is the single highest-impact dependency in the v2.0 plan. The PRODUCTION_GR
 | PV | 105 | 16 | 14 | 75 | 28.6% | 15.2% |
 | **TOTAL** | **603** | **102** | **149** | **352** | **41.6%** | **16.9%** |
 
-PRODUCTION_GRADE rate: **0%** (gated by AUDIT-001 P0 closure).
+PRODUCTION_GRADE rate: **0%** (AUDIT-001 P0 gate lifted per RESOLVED 2026-05-27; rate remains 0% pending §5.4 criteria + Tier-B coverage, so the gate closure alone does not unlock it).
 
 Module-disparity interpretation: CAD leads at 62.2% any-coverage (29 DET_OK + 27 PARTIAL); VHD trails at 20.0% (5 DET_OK + 16 PARTIAL). The 42-point disparity between best-covered and worst-covered modules is real engineering debt against the Module Parity Principle (§13). Phase 1 + Phase 2 module-parity discipline (per §8 burnout-watch checkpoints + §13 operational rules) must converge these rates as Tier 1 + Tier 2 builds advance. Sequencing principle: parallel module advancement, gap-type batching across modules, rebalance toward lagging modules at every 2-week checkpoint per §13 operational rule 4.
 
@@ -141,7 +141,7 @@ Phase boundaries are calendar checkpoints, not deliverable hard-cuts; a Phase 1 
 
 ## 5. Phase 1 Detailed (production-readiness + Tier 1 build)
 
-Phase 1 is the foundational phase. It clears the production-readiness gate-item cluster (operational maturity + pre-BSW-DUA-signature HIPAA cluster), builds the 90 T1 gaps to bespoke production-grade UI, and (per §5.3) places the AUDIT-001 P0 test coverage closure at either Phase 1 (Tier A) or Phase 2 (Tier B). Phase 1 success unblocks Phase 2 Tier 2 scale + Phase 0C cluster closure.
+Phase 1 is the foundational phase. It clears the production-readiness gate-item cluster (operational maturity + pre-BSW-DUA-signature HIPAA cluster), builds the 90 T1 gaps to bespoke production-grade UI, and (per §5.3, now MOOT) reflects the AUDIT-001 P0 Tier-A test coverage closure already RESOLVED 2026-05-27 (Phase-1 path), with Tier-B (services + routes) coverage remaining for Phase 2. Phase 1 success unblocks Phase 2 Tier 2 scale + Phase 0C cluster closure.
 
 ### 5.1 Gate-item remediation arc (~50-80h; pre-BSW-DUA-signature timing alignment for HIPAA gate items)
 
@@ -186,6 +186,8 @@ Per gap: verify detection logic + validate clinical content against guidelines +
 The per-gap budget breakdown: ~30-45min detection-logic verification (read existing rule, verify against current guidelines, cite class + LOE); ~30-45min clinical content validation (verify guideline citations are current, cross-reference any related CV-04 mass-update Clinical Knowledge Base entries); ~45-60min calculator implementation or polish (where applicable; the 12 risk calculators in 0C-CLI-03 are exercised here); ~60-90min bespoke UI surface (per-gap workflow design, integration with shared components); ~30-45min tests (unit tests for detection rule + UI component tests + integration test coverage). The 5-hour upper bound accommodates gaps with §16 PARTIAL-TRIGGER status (clinical-code verification not yet complete), which add ~30-60min of verification overhead per code.
 
 ### 5.3 AUDIT-001 P0 placement decision (operator-side)
+
+**STATUS 2026-05-27: MOOT.** AUDIT-001 is RESOLVED 2026-05-27 (PR #307) via the Tier-A / Phase-1 path (7 of 7 auth-middleware files to 95.5%+ avg coverage). The placement framing below is preserved as historical context; no forward Phase-1-vs-Phase-2 choice remains. The resolution covered Tier-A (auth middleware) only; Tier-B (services + routes) coverage that the Phase-2 reasoning ties to PRODUCTION_GRADE unlock remains PENDING and is tracked separately.
 
 Foundational dependency for PRODUCTION_GRADE tier-attainment across all 603 rows. Phase 1 or Phase 2 placement is operator decision; v2.0 surfaces both options:
 
@@ -397,7 +399,7 @@ The $5-10K total is bounded specifically because the operator-side commitment is
 | 4 | Spinal surgery during execution | Carry-forward; plan absorbs 2-3 week pause |
 | 5 | BSW scoping more comprehensive than current build | Audit confirms working hypothesis (41.6% any-coverage); v2.0 reflects |
 | **6 (NEW)** | Gate-item remediation timeline slippage | Pre-BSW-DUA timing alignment for 5-ADM-09 + 5-BRC-06; slippage delays BSW data flow |
-| **7 (NEW)** | PRODUCTION_GRADE tier-attainment gated by AUDIT-001 P0 closure | Sister §5.3 placement decision; v1.0 success criterion conditional |
+| **7 (NEW)** | PRODUCTION_GRADE tier-attainment gated by AUDIT-001 P0 closure | AUDIT-001 RESOLVED 2026-05-27 (PR #307, Tier-A): gate lifted, §5.3 placement MOOT; residual risk is Tier-B coverage + §5.4 criteria, not AUDIT-001 |
 | **8 (NEW)** | Clinical-UI accuracy §16 trigger scope | 0C-CLI-01 + 02 + 03 verification arc; 12-calculator §16 verification + Class/LOE display audit; ~22-34h Phase 2 cluster |
 
 **Risk 1 (scope creep):** the durable §17.3 scope-discipline mechanism (codified in `AUDIT_METHODOLOGY.md`) catches scope-creep at PR self-review time. The mechanism activates when a PR surfaces work beyond its stated scope; the operator can accept the expansion (filed as register entry) or reject (deferred to follow-up PR). The mechanism does not prevent in-flight discovery; it prevents silent scope expansion.
@@ -412,7 +414,7 @@ The $5-10K total is bounded specifically because the operator-side commitment is
 
 **Risk 6 (NEW) gate-item slippage:** the pre-BSW-DUA-signature timing alignment for 5-ADM-09 + 5-BRC-06 is the critical-path constraint. Slippage past BSW DUA signature would block real-patient data flow into the production environment, blocking pilot operationalization. Phase 1 §5.1 sequences these items as Phase 1 cluster items rather than later-Phase items specifically to absorb the timing alignment.
 
-**Risk 7 (NEW) AUDIT-001 P0 dependency:** the §11 success-criterion conditional on PRODUCTION_GRADE tier-attainment is gated by AUDIT-001 closure. If AUDIT-001 closure slips into Phase 3 or later, the v1.0 success criterion is conditional. The §5.3 placement decision (Phase 1 vs Phase 2) determines the earliest closure timing.
+**Risk 7 (NEW) AUDIT-001 P0 dependency:** the §11 success-criterion conditional on PRODUCTION_GRADE tier-attainment was gated by AUDIT-001 closure. AUDIT-001 is now RESOLVED 2026-05-27 (PR #307, Tier-A auth-middleware scope), so the closure-timing slip risk did not materialize and the §5.3 placement decision (Phase 1 vs Phase 2) is MOOT (Tier-A / Phase-1 path taken). Residual: PRODUCTION_GRADE attainment still depends on Tier-B (services + routes) coverage + §5.4 criteria, not on AUDIT-001.
 
 **Risk 8 (NEW) §16 clinical-UI accuracy:** the Phase 0C 0C-CLI-01 + 02 + 03 cluster triggered §16 verification scope at the UI display layer. The 12-calculator verification arc is the largest single sub-scope; if §16 verification surfaces material discrepancies (consistent with Phase 0B empirical 15-33% wrong-code rates), remediation expands beyond the ~22-34h cluster budget. Phase 2 §6.5 budget upper bound (1100h) accommodates this expansion.
 
@@ -423,12 +425,12 @@ The $5-10K total is bounded specifically because the operator-side commitment is
 End of v2.0 execution, platform is robust if:
 
 - [ ] All 7 backend audit phases COMPLETE per PASS or CONDITIONAL PASS with documented remediation (Phase 1 + 2 + 3 + 4 + 5 done; Phase 6 + 7 DEFERRED per CLAUDE.md §13-equivalent operator decisions)
-- [ ] **AUDIT-001 P0 Tier A + Tier B complete; project-wide coverage > 70%** (PRODUCTION_GRADE tier-attainment dependency per `AUDIT_METHODOLOGY.md` L318)
+- [ ] **AUDIT-001 P0 Tier A + Tier B complete; project-wide coverage > 70%** (Tier A RESOLVED 2026-05-27 PR #307, 7/7 auth-middleware 95.5%+; Tier B services + routes + project-wide > 70% PENDING; PRODUCTION_GRADE tier-attainment dependency per `AUDIT_METHODOLOGY.md` L318)
 - [ ] AUDIT-002 reduced to < 50 ESLint warnings
 - [ ] AUDIT-003 reduced to 0 in production code paths (scripts excepted)
 - [ ] **All 603 active gaps with documented audit verdict per gap** (reconciled from v1.2 L217 708 framing; CX deferred to v3.0 revisit)
 - [ ] **All 14 HIGH P1 GATE items remediated to OPEN -> RESOLVED status per §18 register-literal** (5 Phase 1 + 9 Phase 2 cluster per §5 + §6 sequencing)
-- [ ] **PRODUCTION_GRADE tier-attainment capability** (gated by AUDIT-001 P0 closure per L318 codification)
+- [ ] **PRODUCTION_GRADE tier-attainment capability** (AUDIT-001 P0 gate lifted per RESOLVED 2026-05-27; capability still PENDING Tier-B coverage + §5.4 criteria per L318 codification)
 - [ ] All 90 T1 gaps production-grade with bespoke UI + validated calculators (distributed across all 6 modules)
 - [ ] All 391 T2 gaps functional with templated UI + citations (distributed across all 6 modules)
 - [ ] All 122 T3 gaps detection-coded + catalog-surfaced + cited (distributed across all 6 modules)
