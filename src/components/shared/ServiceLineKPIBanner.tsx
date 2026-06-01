@@ -41,8 +41,8 @@ const ServiceLineKPIBanner: React.FC<ServiceLineKPIBannerProps> = ({
     };
   }, [moduleSlug]);
 
-  const totalPatients: number | undefined = dashboard?.data?.summary?.totalPatients;
-  const totalOpenGaps: number | undefined = dashboard?.data?.summary?.totalOpenGaps;
+  const totalPatients: number | undefined = dashboard?.summary?.totalPatients;
+  const totalOpenGaps: number | undefined = dashboard?.summary?.totalOpenGaps;
   const isLoading = dashboardLoading || rosterLoading;
   const hasLiveData =
     typeof totalPatients === 'number' ||

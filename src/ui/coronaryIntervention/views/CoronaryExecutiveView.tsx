@@ -230,7 +230,7 @@ const CoronaryExecutiveView: React.FC = () => {
 
  {/* Clinical Gap Intelligence */}
  <GapIntelligenceCard data={{
-   totalGaps: dashboard?.data?.summary?.totalOpenGaps ?? 26,
+   totalGaps: dashboard?.summary?.totalOpenGaps ?? 26,
    categories: [
      { name: 'Therapy', patients: 900, color: '#2C4A60' },
      { name: 'Safety', patients: 340, color: '#9B2438' },
@@ -305,7 +305,7 @@ const CoronaryExecutiveView: React.FC = () => {
  <div className="p-2 rounded-lg" style={{ background: '#B8C9D9' }}><Users className="w-6 h-6" style={{ color: '#2C4A60' }} /></div>
  <span className="text-sm font-medium text-titanium-600">Patient Population</span>
  </div>
- <div className="text-3xl font-bold" style={{ color: '#2C4A60' }}>{dashboard?.data?.summary?.totalPatients?.toLocaleString() ?? coronaryInterventionConfig.kpiData.totalPatients}</div>
+ <div className="text-3xl font-bold" style={{ color: '#2C4A60' }}>{dashboard?.summary?.totalPatients?.toLocaleString() ?? coronaryInterventionConfig.kpiData.totalPatients}</div>
  <div className="text-sm text-titanium-500 mt-1">{coronaryInterventionConfig.kpiData.totalPatientsSub}</div>
  </div>
  {/* Revenue Opportunity → Metallic Gold */}
