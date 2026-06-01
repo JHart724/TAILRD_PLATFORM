@@ -163,7 +163,7 @@ const ValvularExecutiveView: React.FC = () => {
   // ── KPI Cards Data ─────────────────────────────────────────────
   // Colors: Chrome Blue (patients), Metallic Gold (revenue), Racing Green (quality), Copper Bronze (avg revenue)
   const kpiCards = [
- { label: 'Total Patients', value: dashboard?.data?.summary?.totalPatients?.toLocaleString() ?? config.kpiData.totalPatients, sub: config.kpiData.totalPatientsSub, icon: <HeartIcon />, valueColor: '#2C4A60', bg: '#EFF4F8', border: '#B8C9D9' },
+ { label: 'Total Patients', value: dashboard?.summary?.totalPatients?.toLocaleString() ?? config.kpiData.totalPatients, sub: config.kpiData.totalPatientsSub, icon: <HeartIcon />, valueColor: '#2C4A60', bg: '#EFF4F8', border: '#B8C9D9' },
  { label: 'Revenue Opportunity', value: config.kpiData.totalOpportunity, sub: config.kpiData.totalOpportunitySub, icon: <DollarIcon />, valueColor: '#8B6914', bg: '#FAF6E8', border: '#D4B85C' },
  { label: 'Optimal Therapy Rate', value: config.kpiData.gdmtOptimization, sub: config.kpiData.gdmtOptimizationSub, icon: <ChartIcon />, valueColor: '#2D6147', bg: '#EEF6F2', border: '#A8D0BC' },
  { label: 'Avg Revenue / Patient', value: config.kpiData.avgRoi, sub: config.kpiData.avgRoiSub, icon: <TrendUpIcon />, valueColor: '#8B5A2B', bg: '#FAF3EC', border: '#DDBA98' },
@@ -185,7 +185,7 @@ const ValvularExecutiveView: React.FC = () => {
 
  {/* Clinical Gap Intelligence */}
  <GapIntelligenceCard data={{
-   totalGaps: dashboard?.data?.summary?.totalOpenGaps ?? 6,
+   totalGaps: dashboard?.summary?.totalOpenGaps ?? 6,
    categories: [
      { name: 'Quality', patients: 313, color: '#C8D4DC' },
      { name: 'Safety', patients: 59, color: '#9B2438' },

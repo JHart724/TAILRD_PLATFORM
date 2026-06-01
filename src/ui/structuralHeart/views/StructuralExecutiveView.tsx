@@ -493,7 +493,7 @@ const StructuralExecutiveView: React.FC = () => {
 
 	{/* Clinical Gap Intelligence */}
 	<GapIntelligenceCard data={{
-	  totalGaps: dashboard?.data?.summary?.totalOpenGaps ?? 8,
+	  totalGaps: dashboard?.summary?.totalOpenGaps ?? 8,
 	  categories: [
 	    { name: 'Therapy', patients: 180, color: '#2C4A60' },
 	    { name: 'Safety', patients: 90, color: '#9B2438' },

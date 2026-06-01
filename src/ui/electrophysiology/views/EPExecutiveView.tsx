@@ -493,7 +493,7 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 
 		{/* Clinical Gap Intelligence */}
 	<GapIntelligenceCard data={{
-	  totalGaps: dashboard?.data?.summary?.totalOpenGaps ?? 20,
+	  totalGaps: dashboard?.summary?.totalOpenGaps ?? 20,
 	  categories: [
 	    { name: 'Therapy', patients: 680, color: '#2C4A60' },
 	    { name: 'Safety', patients: 290, color: '#9B2438' },
