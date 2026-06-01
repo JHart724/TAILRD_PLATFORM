@@ -3482,11 +3482,11 @@ export function evaluateGapRules(
           medication: 'Spironolactone or Eplerenone',
           recommendations: { action: 'Consider MRA per 2022 AHA/ACC/HFSA, Class 1, LOE A (RALES/EMPHASIS-HF)' },
               evidence: {
-          triggerCriteria: ['Evidence-based beta-blocker not prescribed in HFrEF'],
-          guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
+          triggerCriteria: ['HFrEF (LVEF <=40%) with K<5.0 and eGFR>30, no MRA (spironolactone/eplerenone) in active medications'],
+          guidelineSource: '2022 AHA/ACC/HFSA Heart Failure Guideline (RALES/EMPHASIS-HF)',
           classOfRecommendation: '1',
           levelOfEvidence: 'A',
-          exclusions: ['Severe bradycardia (HR < 50)', 'Cardiogenic shock', 'Hospice/palliative care'],
+          exclusions: ['Hyperkalemia (K >= 5.0)', 'eGFR < 30', 'Hospice/palliative care'],
         },
   });
       }
@@ -4529,11 +4529,11 @@ export function evaluateGapRules(
             guideline: '2018 ACC/AHA Cholesterol Management',
           },
               evidence: {
-          triggerCriteria: ['Digoxin toxicity risk'],
-          guidelineSource: 'DIG Trial Post-Hoc Analysis; 2022 AHA/ACC/HFSA Guideline',
+          triggerCriteria: ['CAD (ICD-10 I25.*) with no statin in active medications'],
+          guidelineSource: '2018 ACC/AHA Cholesterol Guideline',
           classOfRecommendation: '1',
-          levelOfEvidence: 'B',
-          exclusions: ['Hospice/palliative care'],
+          levelOfEvidence: 'A',
+          exclusions: ['Documented statin intolerance', 'Active liver disease', 'Hospice/palliative care'],
         },
   });
       }
@@ -4943,11 +4943,11 @@ export function evaluateGapRules(
             preferred: 'Sacubitril/Valsartan (ARNI) per PARADIGM-HF',
           },
               evidence: {
-          triggerCriteria: ['High-intensity statin not prescribed in PAD'],
-          guidelineSource: '2024 ACC/AHA Guideline for Peripheral Artery Disease',
+          triggerCriteria: ['HFrEF (LVEF <=40%) with no RAAS inhibitor (ACEi/ARB/ARNi) in active medications'],
+          guidelineSource: '2022 AHA/ACC/HFSA Heart Failure Guideline (PARADIGM-HF)',
           classOfRecommendation: '1',
           levelOfEvidence: 'A',
-          exclusions: ['Documented statin intolerance', 'Active liver disease', 'Hospice/palliative care'],
+          exclusions: ['Hyperkalemia (K >= 5.0)', 'Bilateral renal artery stenosis', 'History of angioedema', 'Pregnancy', 'Hospice/palliative care'],
         },
   });
       }
