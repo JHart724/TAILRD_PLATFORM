@@ -15,3 +15,13 @@ These predate the `BUILD_STATE.md` ledger pattern (introduced PR #224 on 2026-05
 - `SYSTEM_STATE_2026_04_24_pre_day8.md` (25K)
 
 Reference these only for historical context (e.g., v2.0 PATH_TO_ROBUST authorship, retroactive analysis). For current state, see `BUILD_STATE.md`.
+
+### CLAUDE.md relocations (2026-06-01 trim under 40k TUI threshold)
+
+Content moved out of the always-loaded `CLAUDE.md` to keep it under the 40k-character performance threshold. The numbered section headings remain in `CLAUDE.md` with one-line pointers; the full content lives here. None of this is gate-bearing.
+
+- `PROJECT_STRUCTURE.md` - the repo directory tree (was CLAUDE.md section 3)
+- `GSTACK_SKILLS_REFERENCE.md` - the full gstack skills table (was CLAUDE.md section 7; the live list is harness-injected each session)
+- `PRODUCTION_INCIDENT_HISTORY.md` - April 7-8 2026 outage post-mortems (was CLAUDE.md section 16; the rules distilled from them remain inline as section 15)
+
+Two other relocations from the same trim live outside `archive/`: deployment state moved to `PRODUCTION_READINESS.md` (root), and frontend-backend wiring detail moved to `docs/WIRING_STATUS.md`.
