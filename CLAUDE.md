@@ -55,75 +55,7 @@ Each module has 3 view tiers: Executive (CMO/VP level), Service Line (director l
 
 ## 3. Project Structure
 
-```
-TAILRD_PLATFORM-main/
-├── src/                              # Frontend React app
-│   ├── App.tsx                       # Root component + routing
-│   ├��─ components/                   # Feature components
-│   │   ├── shared/                   # Reusable UI (KPICard, GapCard, ModuleLayout, etc.)
-│   │   ├── heartFailure/             # HF-specific components
-│   │   ├── electrophysiology/        # EP components
-│   │   ��── therapyGap/               # Gap analysis panels
-│   │   ├── phenotypeDetection/       # Phenotype screening
-│   │   ├── riskCalculators/          # Clinical risk tools
-│   │   ├── visualizations/           # Charts, tables, maps
-��   │   └── notifications/            # Alert system
-│   ├── ui/                           # Page-level views (by module)
-│   │   ├── heartFailure/             # HF executive/service/care views + config
-│   │   ├── electrophysiology/        # EP views
-│   │   ├── coronaryIntervention/     # PCI views
-│   ���   ├── structuralHeart/          # Structural views
-│   │   ├── valvularDisease/          # Valvular views
-│   │   ├── peripheralVascular/       # PVD views
-│   │   ├── admin/                    # Admin dashboard + GodView
-│   │   └── auth/                     # Login, MFA, invite accept
-│   ├── design-system/                # AppShell, Sidebar, TopBar, tokens
-│   ├── theme/                        # Semantic tokens, color palettes
-│   ├── apiClient/                    # API communication layer
-│   ├── services/                     # Frontend business logic (api.ts, apiService.ts)
-│   ├── hooks/                        # Custom React hooks
-│   ├── auth/                         # AuthContext + auth logic
-│   ���── types/                        # TypeScript type definitions
-│   ├── config/                       # Feature flags, data source config
-│   ├── data/                         # Static data, platform totals
-│   ├── adapters/                     # Data transformation adapters
-│   ├── styles/                       # Global CSS, premium colors
-│   └── utils/                        # Utility functions
-├── backend/
-│   ├── src/
-│   │   ├── server.ts                 # Express app entry point
-│   │   ├── routes/                   # 25 Express route files
-│   │   ├── services/                 # 21 business logic services
-│   │   ├── middleware/               # auth, audit, rate-limit, PHI encryption, CSRF
-│   │   ├── cql/                      # Clinical Quality Language engine + gap rules
-│   │   │   └── gapRules/             # Individual gap rule definitions
-│   │   ├── redox/                    # EHR integration (FHIR handlers, batch gap detection)
-│   │   ├── ingestion/                # CSV parser, patient writer, gap detection runner
-│   │   ├── ai/                       # ECG inference pipeline
-│   │   ├── config/                   # Role permissions
-│   │   ├── lib/                      # Prisma client singleton (ALWAYS import from here)
-│   │   ├── types/                    # Backend TypeScript interfaces
-���   │   ├── utils/                    # Logger, helpers
-│   │   └── validation/               # Zod schemas
-│   ├── prisma/
-│   │   ├─��� schema.prisma             # Database schema (40+ models)
-│   │   ├── migrations/               # Migration history
-│   │   └── seed.ts                   # Database seeder
-│   ├── scripts/                      # CLI tools (processSynthea, createSuperAdmin, etc.)
-│   └── package.json                  # Backend dependencies
-├── infrastructure/
-│   ├── cloudformation/               # VPC, S3/KMS, WAF/CloudTrail templates
-│   ├── iam-policies/                 # AWS IAM role definitions
-│   └── deploy.sh                     # Deployment script
-├── docs/                             # Audit docs, module structure docs
-├── docker-compose.yml                # Local dev stack (postgres, redis, nginx)
-├── Dockerfile                        # Multi-stage production build
-├── .github/workflows/ci.yml          # GitHub Actions CI
-├── package.json                      # Frontend dependencies
-├── tsconfig.json                     # Frontend TypeScript config
-├── tailwind.config.js                # Tailwind theme config
-└── CLAUDE.md                         # This file
-```
+The full repo directory tree is archived at `docs/archive/PROJECT_STRUCTURE.md` (moved out 2026-06-01 to keep this file under the 40k TUI threshold). High level: frontend React app in `src/` (components, `ui/` page-views by module, design-system, services, hooks, auth); backend Express app in `backend/src/` (routes, services, middleware, `cql/` gap engine, redox, ingestion, `lib/` Prisma singleton); `infrastructure/` (CloudFormation, IAM, deploy); `docs/` (audit + state docs); Docker + CI at repo root.
 
 ## 4. Development Setup
 
@@ -163,7 +95,7 @@ npm start                       # Starts on port 3000
 
 ## 5. Branch & Git Conventions
 
-- **Current working branch:** `feat/gap-navigation-polish`
+- **Workflow:** all work on short-lived feature branches off `main`; never push to `main` directly (branch protection enforced, see section 15 RULE 7).
 - **Main branch:** `main`
 - All work should be committed and pushed at the end of every session.
 - Commit messages: use conventional commits (`feat:`, `fix:`, `chore:`, `refactor:`, `docs:`)
@@ -171,71 +103,13 @@ npm start                       # Starts on port 3000
 
 ## 6. Living Audit Document
 
-The platform audit lives at `docs/PLATFORM_AUDIT_2026_04.md`.
-
-**At the start of every work session:**
-1. Read `docs/PLATFORM_AUDIT_2026_04.md`
-2. Check off any items completed in the prior session
-3. Identify the highest priority unchecked P0 or P1 item
-4. Confirm the plan with Jonathan before starting work
-
-**At the end of every work session:**
-1. Review git diff of all changed files
-2. Check off completed action items in `docs/PLATFORM_AUDIT_2026_04.md`
-3. Add any new issues discovered to the audit doc under the relevant section with appropriate priority
-4. Update readiness scores if they changed materially
-5. Add a session log entry at the top of the audit doc:
-   `Date | Files changed | Items completed | New issues found`
-6. Commit and push all changes including the updated audit doc
+The living audit workflow is the findings register at `docs/audit/AUDIT_FINDINGS_REGISTER.md` plus the section 19 Finding-Remediation PAUSE Procedure (invoked via `/finding <id>`). Canonical state-of-the-build lives in `BUILD_STATE.md` (root). The former start/end-of-session ritual against `docs/PLATFORM_AUDIT_2026_04.md` is superseded; that April doc is retained for history only.
 
 ## 7. Gstack Skills
 
 **Browser rule:** Use the `/browse` skill from gstack for ALL web browsing. Never use `mcp__claude-in-chrome__*` tools.
 
-Available skills for specialized workflows:
-
-| Skill | When to use |
-|-------|-------------|
-| `/office-hours` | Product ideas, brainstorming, YC-style forcing questions |
-| `/plan-ceo-review` | Product strategy and scope decisions |
-| `/plan-eng-review` | Before starting any major feature |
-| `/plan-design-review` | Designer's eye plan review |
-| `/plan-devex-review` | Developer experience plan review |
-| `/design-consultation` | Design system, brand, aesthetic direction |
-| `/design-shotgun` | Generate multiple design variants for comparison |
-| `/design-html` | Production-quality HTML/CSS from approved designs |
-| `/review` | After any significant change, before PRs |
-| `/ship` | Deploy, push, create PR |
-| `/land-and-deploy` | Merge PR, wait for CI, verify production |
-| `/canary` | Post-deploy canary monitoring |
-| `/benchmark` | Performance regression detection |
-| `/browse` | Visual QA, site dogfooding, headless browser |
-| `/connect-chrome` | Launch AI-controlled visible Chromium |
-| `/qa` | Test the site, find and fix bugs |
-| `/qa-only` | Report-only QA (no fixes) |
-| `/design-review` | Visual audit, design polish |
-| `/setup-browser-cookies` | Import cookies for authenticated testing |
-| `/setup-deploy` | Configure deployment settings |
-| `/retro` | Weekly engineering retrospective |
-| `/investigate` | Debug errors, root cause analysis |
-| `/document-release` | Post-ship documentation update |
-| `/codex` | OpenAI Codex review, challenge, or consult |
-| `/cso` | Security audit (OWASP, STRIDE, secrets, supply chain) |
-| `/autoplan` | Auto-review pipeline (CEO + design + eng + DX) |
-| `/devex-review` | Live developer experience audit |
-| `/careful` | Safety guardrails for destructive commands |
-| `/freeze` | Restrict edits to a specific directory |
-| `/guard` | Full safety mode (careful + freeze) |
-| `/unfreeze` | Clear freeze boundary |
-| `/checkpoint` | Save and resume working state |
-| `/health` | Code quality dashboard |
-| `/learn` | Manage project learnings |
-| `/gstack-upgrade` | Upgrade gstack to latest version |
-
-If gstack skills are not working, run:
-```bash
-cd .claude/skills/gstack && ./setup
-```
+The full gstack skills table is archived at `docs/archive/GSTACK_SKILLS_REFERENCE.md`; the live skill list is injected by the harness each session. If gstack skills are not working: `cd .claude/skills/gstack && ./setup`. Routing rules are below.
 
 ## Skill routing
 
@@ -283,19 +157,7 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 - Do NOT use ML/AI for gap detection -- use deterministic, rule-based logic only
 - The ECG AI pipeline (backend/src/ai/) is NOT covered by the CDS exemption and should not be activated without FDA clearance
 
-**Current gap rule status (as of 2026-05-05, post-Tier-S-closure):**
-- Heart Failure: 48 registry / 47 evaluator
-- Electrophysiology: 48 registry / 47 evaluator (post Tier S closures: EP-017, EP-006, EP-079)
-- Coronary Intervention: 77 registry / 77 evaluator (post CAD-016 SAFETY discriminator)
-- Structural Heart: 25 rules (100% coverage)
-- Valvular Disease: 32 rules (100% coverage)
-- Peripheral Vascular: 33 rules (100% coverage)
-
-263 gaps.push calls execute in the runtime (Phase 0B canonical reconciliation in `docs/audit/canonical/<MODULE>.crosswalk.json` documents 250 of 603 spec gaps any-tier-covered, 101 DET_OK). Each rule has guideline provenance in `RUNTIME_GAP_REGISTRY` with class of recommendation and level of evidence. The CQL engine (`cqlEngine.ts`) is scaffolding — gap rules run directly via deterministic TypeScript, not CQL.
-
-**Tier S queue CLOSED (2026-05-05):** All 4 spec-explicit Tier S patient-safety items resolved across PRs #238 (EP-017 HFrEF + non-DHP CCB), #240 (CAD-016 prasugrel + stroke/TIA), #241 (EP-006 dabigatran + CrCl<30), #243 (EP-079 WPW + AF + AVN blocker — only `(CRITICAL)`-tagged spec gap). No spec-explicit `(SAFETY)` or `(CRITICAL)` T1 gaps remain uncovered. Source: `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` §3.1.
-
-**Phase 0B clinical-code verification arc materially complete (2026-05-06):** Cat A canonical RxNorm verification + Cat D inline-array verification + AUDIT-052 partial canonical refactor + Batch 5 LOINC verification all shipped across PRs #234-#249 (17-PR arc). AUDIT-070 (FHIR ingestion expansion gap) filed as remaining latent risk; CSV path unaffected. Batch 4 (211 inline ICD-10 patterns) + Batch 6 (96 threshold comparisons) deferred — not blocking.
+**Gap rule status & counts:** per-module registry/evaluator counts, the 263 runtime `gaps.push` reconciliation, the closed Tier S patient-safety queue, and the Phase 0B clinical-code verification arc are tracked canonically in `docs/audit/AUDIT_FINDINGS_REGISTER.md` + `docs/audit/PHASE_0B_CROSS_MODULE_SYNTHESIS.md` (point-in-time snapshots removed from this file 2026-06-01). The CQL engine (`cqlEngine.ts`) is scaffolding; gap rules run as deterministic TypeScript, not CQL.
 
 **Cardiovascular terminology:** `backend/src/terminology/cardiovascularValuesets.ts` contains curated LOINC, ICD-10, RxNorm, and SNOMED code sets for gap detection. When adding new gap rules, add required codes there.
 
@@ -306,114 +168,23 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 - **§16 clinical-code verification standard** — every new RxNorm / LOINC / ICD-10 constant must be verified against an authoritative external source. RxNorms via RxNav `properties.json`. LOINC via loinc.org / NLM Clinical Tables. ICD-10 via CMS ICD-10-CM 2024. Codebase trust is INSUFFICIENT — including codebase fix-from comments (per AUDIT-069 LVEF regression catch). Cat A 15.5% wrong-drug rate; Cat D 33% inline-array rate; Batch 5 17.2% LOINC rate.
 - **§17 clinical-code PR acceptance criteria** — drift-prevention discipline. Mandatory PR self-review: correctness + verification + scope discipline + process. PR template (`.github/pull_request_template.md`) enforces §17 checklist. §17.1 architectural-precedent reference: consumer audit corrects over-scoped framing mid-flight (PR #249).
 
-**AUDIT-052 architectural follow-up:** prefer importing from canonical valuesets over inline arrays. PR #247 closed major divergence vectors (DHP CCB, PPI, loop diuretic, thiazide); ~43 inline arrays remain (most already canonical-derived; opportunistic refactor).
+**AUDIT-052 (canonical valuesets):** prefer importing from canonical valuesets over inline arrays; ~43 inline arrays remain as an opportunistic refactor. Tracked in the findings register.
 
-**AUDIT-070 cross-reference:** FHIR ingestion expansion track planned. `observationService.ts CARDIOVASCULAR_LAB_CODES` does not include LOINC mappings for ABI / LVEF / QTc / QRS — FHIR-ingested patients with these observations don't reach gap rules. CSV path unaffected. Dedicated PR with 5-step scope (audit + LOINC mappings + FHIR `bodySite` extension handling + full-stack tests + parity verification with CSV path).
+**AUDIT-070 (FHIR ingestion expansion):** `observationService.ts CARDIOVASCULAR_LAB_CODES` lacks LOINC mappings for ABI / LVEF / QTc / QRS, so FHIR-ingested patients with those observations do not reach gap rules; the CSV path is unaffected. Planned dedicated PR. Tracked in the findings register.
 
 **Redis:** `backend/src/lib/redis.ts` provides a shared client singleton. Connects when `REDIS_URL` is set, falls back gracefully. Used for future rate limiter store, caching, and session management.
 
 ## 9. Deployment & Production Readiness
 
-**Current state:** The platform runs locally only. There is no production deployment.
+Production is LIVE (since April 7, 2026): backend on ECS Fargate at api.tailrd-heart.com, Aurora Serverless v2 PostgreSQL (RDS-to-Aurora cutover 2026-04-29), CloudFront + ALB, ElastiCache Redis, Secrets Manager, CI/CD GitHub Actions -> ECR -> ECS (new task def per commit). Staging is live (CloudFormation stack `tailrd-staging`). Not yet done: frontend deploy + app.tailrd-heart.com DNS; staging CI/CD job.
 
-**What exists:**
-- Dockerfile (multi-stage build, needs `npm ci` fix for devDeps in build stage)
-- docker-compose.yml (postgres, redis, nginx)
-- CloudFormation templates for VPC, S3/KMS, WAF/CloudTrail
-- GitHub Actions CI (lint, typecheck, test, security scan -- deploy step is a no-op)
-- Synthea pipeline reads from S3 and persists to database
-- seedFromSynthea.ts creates 3 demo health system tenants
+**Last known working task definition:** `tailrd-backend:123` (Day 10 cutover, 2026-04-29, `READ_ONLY=false`, on Aurora). Update after every deploy.
 
-**Production is live (as of April 7, 2026):**
-- [x] ECS Fargate (backend) -- api.tailrd-heart.com
-- [x] **Aurora Serverless v2 PostgreSQL** (cutover from RDS 2026-04-29T00:51:55Z)
-- [x] CloudFront + ALB
-- [x] ElastiCache Redis
-- [x] Secrets Manager (JWT_SECRET, PHI_ENCRYPTION_KEY, DATABASE_URL)
-- [x] CI/CD: GitHub Actions → ECR → ECS (new task def per commit)
-- [ ] Frontend deployment (Netlify/Vercel with REACT_APP_USE_REAL_API=true)
-- [ ] DNS for app.tailrd-heart.com (frontend)
-
-**Production database (post Day 10 cutover, 2026-04-29):**
-- [x] Aurora endpoint (writer): `tailrd-production-aurora.cluster-csp0w6g8u5uq.us-east-1.rds.amazonaws.com:5432`
-- [x] Aurora endpoint (reader): `tailrd-production-aurora.cluster-ro-csp0w6g8u5uq.us-east-1.rds.amazonaws.com:5432`
-- [x] PG 15.14, ServerlessV2 0.5-4 ACU, encrypted with production KMS
-- [x] DATABASE_URL secret (`tailrd-production/app/database-url`) flipped 2026-04-29T00:51:55Z, VersionId `3c0074fb-ac80-4b01-9402-4e6e47de7351`
-- [ ] **DECOMMISSION_PENDING:** RDS instance `tailrd-production-postgres` (db.t3.medium, PG 15.10) still exists with deletion-protection ON. 0 connections since cutover. Final HIPAA-tagged snapshot taken 2026-04-29 evening (`tailrd-production-postgres-final-pre-decom-*`, 6yr retention). Deletion scheduled Day 11 (Thursday 2026-04-30) per `docs/DAY_11_PLAN.md`.
-
-**Day 10 cutover summary (2026-04-28 to 2026-04-29):**
-- Total READ_ONLY blast window: **26 min 15 sec** (00:36:30Z → 01:02:45Z)
-- Total cutover wall clock (READ_ONLY=true → soak launched): **~38 min**
-- Pre-cutover snapshots: `tailrd-production-postgres-pre-cutover-20260428-231342` + `tailrd-production-aurora-pre-cutover-20260428-231342`
-- Cutover task def progression: `tailrd-backend:121` → `:122` (READ_ONLY=true) → `:123` (READ_ONLY=false post-cutover)
-- Post-cutover validation: `ready_for_soak: true`, all 7 checks (1 latency warning, expected during ACU ramp)
-- 24-hour soak monitor running; `postCutoverSoakMonitor.sh` with trap-detach IAM safety
-- Cutover record: `docs/CHANGE_RECORD_2026_04_29_day10_aurora_cutover.md`
-
-**Staging is live (as of April 28, 2026):**
-- [x] CloudFormation stack `tailrd-staging` (Aurora Serverless v2 + ECS Fargate + ALB)
-- [x] Aurora endpoint: `tailrd-staging-aurora.cluster-csp0w6g8u5uq.us-east-1.rds.amazonaws.com` (PG 15.14, parity with production)
-- [x] ALB DNS: `tailrd-staging-alb-76101504.us-east-1.elb.amazonaws.com`
-- [x] DNS: `staging-api.tailrd-heart.com` (Wix CNAME → ALB)
-- [x] ACM cert ARN: `arn:aws:acm:us-east-1:863518424332:certificate/a13fe1f5-5999-410d-bc08-92d063579e7a` (ISSUED, expires 2026-11-10)
-- [x] Secrets namespace: `tailrd-staging-aurora/app/{aurora-db-password,database-url,jwt-secret,phi-encryption-key}`
-- [ ] Synthea seed (in progress at session close: 25K patient load running on Fargate task `f1e1fe4e13c742c4a0aeea98926024ca`, post-PHI-key-fix retry)
-- [ ] CI/CD staging deploy job (not yet wired; production deploy on merge-to-main is the only automated pipeline)
-
-**Last known working task definition:** `tailrd-backend:123` (deployed 2026-04-29T01:02:45Z — Day 10 cutover, `READ_ONLY=false`, on Aurora). Prior milestones: `:122` (READ_ONLY=true, cutover transient), `:106` (April 28 SES email wiring, PR #189), `:28` (April 10 Sprint B-1 PR-A Heart Failure wire-up).
-
-**Production env flags:**
-- `USE_SES_EMAIL` is currently UNSET (defaults to false). SES is plumbed but emails are logged as `EMAIL_DISABLED` events. Flip to `true` after AWS Support approves SES production-access request (case 177716470300327, currently in sandbox).
-- All other production env flags unchanged from prior state.
-
-**Today's main commits (2026-04-28):**
-```
-e67ceb7 Day 9 staging environment (#187)
-3efe423 Wave 2 close-out, 22 tables, 1.82M rows, CDC active (#188)
-2ed470d tech debt #34 — predecessor tailrd-production RDS investigation pending (#186)
-09d84d9 SES email wiring behind USE_SES_EMAIL flag (#189)
-```
+The full deployment-state record (Aurora endpoints, Day 10 cutover summary, staging endpoints, RDS decommission status, env flags) is the authoritative section at the top of `PRODUCTION_READINESS.md` (root); update it there after every cutover or deploy milestone.
 
 ## 10. Frontend-Backend Wiring Status
 
-**The clinical UI currently runs on hardcoded mock data in demo mode.** When `REACT_APP_USE_REAL_API=true`, the frontend calls the real backend. But most module dashboards have inline mock data that renders regardless of the API flag.
-
-**Wired to real backend:**
-- Login/logout/refresh (AuthContext.tsx)
-- Health check (TopBar.tsx)
-- Platform totals (platformTotals.ts)
-- Gap actions (useGapActions.ts)
-- File upload (DataManagementPortal.tsx)
-- MFA setup/verify
-- Invite accept
-- Admin analytics
-- GodView
-- Notifications (GET /api/notifications — Sprint B-1a, PR #96)
-- Admin user activity (GET /api/admin/users/:id/activity — Sprint B-1a, PR #96)
-- **Heart Failure module (Sprint B-1 PR-A through PR-C, PRs #98-#102):**
-  - Executive View: KPI cards, Gap Intelligence card (dashboard endpoint)
-  - Care Team View: GDMT pillars, safety alerts, recent activity (dashboard endpoint)
-  - Patient Worklist: real patient roster with gap badges (worklist endpoint)
-  - Care Gap Analyzer: gap breakdown with patient drill-down (dashboard + worklist)
-  - Clinical Gap Detection Dashboard: API-first with hfGapData.ts fallback
-  - GDMT Analytics Dashboard: pillar coverage with patient drill-down (dashboard + worklist)
-  - Device Pathway Funnel: device candidate count + patient list (dashboard + worklist)
-  - Real-Time Hospital Alerts: real gap alerts (dashboard), vitals/labs = EHR pending
-  - Team Collaboration Panel: full EHR placeholder (no messaging backend)
-  - Referral Tracker: referral gap count (dashboard), details = EHR pending
-  - Provider Scorecard: full EHR placeholder (no provider aggregation backend)
-
-**NOT wired (hardcoded mock data):**
-- EP, Coronary, Structural, Valvular, Peripheral module views (5 of 6 modules)
-- Notification panel (mock data in sub-components, not wired to GET /api/notifications yet)
-- All admin tabs (users, audit, config, data, health systems, customer success)
-- Phenotype screening panel
-- Risk calculators
-
-**To wire a module to real data:**
-1. Replace the hardcoded gap data array with an API call to `GET /api/gaps?hospitalId=X&module=Y`
-2. Replace the hardcoded patient list with `GET /api/patients?hospitalId=X`
-3. Replace KPI calculations with `GET /api/analytics/dashboard?module=Y`
+The Heart Failure module is API-first with a mock-data fallback (real backend when `REACT_APP_USE_REAL_API=true`; mock renders only on loading/error/empty). The other five modules, the notification panel, all admin tabs, phenotype screening, and risk calculators still render hardcoded mock data pending wire-up. Full per-view wiring detail is at `docs/WIRING_STATUS.md`; the silent-mock / fabricated-KPI surface on the non-HF Executive views is tracked as AUDIT-099 in the findings register.
 
 ## 11. Testing
 
@@ -497,21 +268,12 @@ This file stores Claude Code session context and can contain tokens that trigger
 
 ## 16. Production Incident History
 
-### April 7, 2026 — ~4 hour outage during Phase 1 remediation sprint
-**Root causes:** `var newToken` in auth.ts, schema migration before matching image, `tsc || true` suppressing 28 errors, CI using force-new-deployment without new task def.
-**Resolution:** Fixed var to let, removed tsc||true, added prisma migrate to CMD, updated CI, fixed all TS errors.
-**Prevention:** Local container test before every push.
-
-### April 8, 2026 — All endpoints returning 500 after Phase 1 deploy
-**Root cause:** CORS origin callback in `server.ts:79` blocked requests without an `Origin` header in production (`!origin && NODE_ENV !== 'production'`). Every non-browser request (curl, ALB health checks) hit `new Error('Not allowed by CORS')` → global error handler → 500.
-**Resolution:** PR #59 removed the production-only restriction. CORS is a browser mechanism; requests without Origin headers should always pass.
-**Compounding factor:** Deploy workflow used `force-new-deployment` without registering a new task def, so the fix image wasn't picked up until task def 10 was manually registered.
-**Prevention:** Deploy workflow now registers a new task def per commit (PR #XX).
+Narrative post-mortems for the April 7 2026 outage (var-in-auth, migration-before-image, `tsc || true`, force-new-deployment) and the April 8 2026 CORS-no-Origin 500s are archived at `docs/archive/PRODUCTION_INCIDENT_HISTORY.md`. The load-bearing lessons are distilled inline as the RULE 1-9 set in section 15.
 
 ## 17. ECS Deployment Runbook
 - **Container won't start, no logs:** Module import error or Prisma mismatch. Pull and run locally.
 - **Roll back first:** `aws ecs update-service --cluster tailrd-production-cluster --service tailrd-production-backend --task-definition tailrd-backend:LAST_WORKING`. Never leave production down while debugging.
-- **Last known working task def:** `tailrd-backend:28`
+- **Last known working task def:** `tailrd-backend:123` (kept in sync with section 9 / `PRODUCTION_READINESS.md`).
 
 ## 18. Phase 2 Operating Rules
 
