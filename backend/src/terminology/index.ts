@@ -9,8 +9,8 @@ export * from './types';
 
 // Code systems
 export * as ICD10 from './icd10';
-export * as RxNorm from './rxnorm';
-export * as LOINC from './loinc';
+// AUDIT-105 (2026-06-02): rxnorm.ts + loinc.ts deleted (verified-dead + systematically corrupted;
+// canonical drug/lab codes live in cardiovascularValuesets.ts). Re-exports removed.
 export * as CPT from './cpt';
 export * as MSDRG from './msdrg';
 export * as NPI from './npi';
