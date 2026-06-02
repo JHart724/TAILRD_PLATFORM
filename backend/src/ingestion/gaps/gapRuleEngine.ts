@@ -12,6 +12,7 @@ import {
   RXNORM_QT_PROLONGING,
   RXNORM_RATE_CONTROL,
   RXNORM_FINERENONE,
+  RXNORM_GLP1_RA,
   RXNORM_DHP_CCB,
   RXNORM_PPI,
   RXNORM_LOOP_DIURETICS,
@@ -35,6 +36,7 @@ const RAAS_CODES_CV = [RXNORM_GDMT.LISINOPRIL, RXNORM_GDMT.ENALAPRIL, RXNORM_GDM
 const AAD_CODES_CV = [RXNORM_QT_PROLONGING.FLECAINIDE, RXNORM_QT_PROLONGING.AMIODARONE, RXNORM_QT_PROLONGING.SOTALOL, RXNORM_QT_PROLONGING.DOFETILIDE, RXNORM_QT_PROLONGING.DRONEDARONE];
 const RATE_CONTROL_CODES_CV = codes(RXNORM_RATE_CONTROL);
 const OAC_CODES_CV = [...codes(RXNORM_DOACS), RXNORM_WARFARIN.WARFARIN];
+const GLP1_RA_CODES_CV = codes(RXNORM_GLP1_RA); // AUDIT-104: canonical GLP-1 RA set consumed by HF-7 + gap-cad-glp1
 
 
 /**
@@ -3505,7 +3507,7 @@ export function evaluateGapRules(
     hasHF &&
     (hasObesity || bmiOver30) &&
     labValues['lvef'] !== undefined && labValues['lvef'] >= 50 &&
-    !medCodes.some(c => ['2551758', '475968'].includes(c)) &&
+    !medCodes.some(c => GLP1_RA_CODES_CV.includes(c)) &&  // AUDIT-104: canonical RXNORM_GLP1_RA (was ['2551758','475968']; 2551758 dead, dulaglutide now included per union membership)
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
@@ -6667,11 +6669,11 @@ export function evaluateGapRules(
 
   // Gap PV-10: Cilostazol for Claudication
   // Guideline: 2024 ACC/AHA PAD Guideline, Class 2a, LOE A
-  // PAD + claudication (I73.9) + no cilostazol (19847)
+  // PAD + claudication (I73.9) + no cilostazol (21107) -- AUDIT-104: was 19847 = bumadizone (an NSAID); nominal 24592 is NotCurrent, do not use
   if (
     hasPAD &&
     dxCodes.some(c => c.startsWith('I73.9')) &&
-    !medCodes.includes('19847') &&
+    !medCodes.includes('21107') && // AUDIT-104: cilostazol (was 19847 = bumadizone)
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     // Cilostazol is contraindicated in HF
@@ -6687,7 +6689,7 @@ export function evaluateGapRules(
           triggerCriteria: [
             'Peripheral artery disease (I73.9)',
             'Claudication symptoms',
-            'No cilostazol on active medication list (RxNorm 19847)',
+            'No cilostazol on active medication list (RxNorm 21107)',
           ],
           guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
           classOfRecommendation: 'Class 2a',
@@ -7344,11 +7346,11 @@ export function evaluateGapRules(
   // CAD-PCSK9: PCSK9 Inhibitor Consideration
   // Guideline: 2018 ACC/AHA Cholesterol Guideline (FOURIER, ODYSSEY), Class 2a, LOE A
   // CAD + on max statin + LDL still >70
-  // RxNorm: evolocumab (1657974), alirocumab (1659149)
+  // RxNorm: evolocumab (1665684), alirocumab (1659152) -- AUDIT-102: was 1657974 = tocilizumab, 1659149 = piperacillin/tazobactam
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const STATIN_CODES_PCSK9 = ['83367', '301542', '36567', '42463'];
     const onStatinPCSK9 = medCodes.some(c => STATIN_CODES_PCSK9.includes(c));
-    const PCSK9_CODES = ['1657974', '1659149'];
+    const PCSK9_CODES = ['1665684', '1659152']; // AUDIT-102: evolocumab, alirocumab (was 1657974 tocilizumab, 1659149 pip/tazo)
     const onPCSK9 = medCodes.some(c => PCSK9_CODES.includes(c));
     if (onStatinPCSK9 && !onPCSK9 && labValues['ldl'] !== undefined && labValues['ldl'] > 70) {
       gaps.push({
@@ -7473,14 +7475,14 @@ export function evaluateGapRules(
   // CAD-OMEGA3: Icosapent Ethyl for Elevated Triglycerides
   // Guideline: 2019 ACC/AHA Primary Prevention Guideline (REDUCE-IT), Class 2a, LOE B-R
   // CAD + TG >150 + on statin + no icosapent ethyl
-  // RxNorm icosapent ethyl: 1546275
+  // RxNorm icosapent ethyl: 1304974 -- AUDIT-102: was 1546275 = iodide ion
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const STATIN_CODES_O3 = ['83367', '301542', '36567', '42463'];
     const onStatinO3 = medCodes.some(c => STATIN_CODES_O3.includes(c));
     if (
       onStatinO3 &&
       labValues['triglycerides'] !== undefined && labValues['triglycerides'] > 150 &&
-      !medCodes.includes('1546275')
+      !medCodes.includes('1304974') // AUDIT-102: icosapent ethyl (was 1546275 = iodide ion)
     ) {
       gaps.push({
         type: TherapyGapType.MEDICATION_MISSING,
@@ -7498,7 +7500,7 @@ export function evaluateGapRules(
             'Coronary artery disease (I25.*)',
             'Currently on statin therapy',
             `Triglycerides: ${labValues['triglycerides']} mg/dL (>150)`,
-            'Icosapent ethyl not in active medications (RxNorm 1546275)',
+            'Icosapent ethyl not in active medications (RxNorm 1304974)',
           ],
           guidelineSource: '2019 ACC/AHA Guideline on Primary Prevention of CVD (REDUCE-IT)',
           classOfRecommendation: 'Class 2a',
@@ -7512,7 +7514,7 @@ export function evaluateGapRules(
   // CAD-RANOLAZINE: Refractory Angina Treatment
   // Guideline: 2012 ACC/AHA Stable Ischemic Heart Disease Guideline (updated 2023), Class 2a, LOE B-R
   // CAD + still symptomatic proxy (angina I20.* + on beta-blocker + on CCB = max therapy) + no ranolazine
-  // RxNorm ranolazine: 355019
+  // RxNorm ranolazine: 35829 -- AUDIT-104: was 355019 = UNKNOWN/invalid CUI
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasAngina = dxCodes.some(c => c.startsWith('I20'));
     const BB_CODES_RAN = ['20352', '6918', '19484'];
@@ -7521,7 +7523,7 @@ export function evaluateGapRules(
     const CCB_CODES_RAN = [RXNORM_RATE_CONTROL.DILTIAZEM, RXNORM_DHP_CCB.AMLODIPINE, RXNORM_DHP_CCB.NIFEDIPINE];
     const onBBran = medCodes.some(c => BB_CODES_RAN.includes(c));
     const onCCBran = medCodes.some(c => CCB_CODES_RAN.includes(c));
-    if (hasAngina && onBBran && onCCBran && !medCodes.includes('355019')) {
+    if (hasAngina && onBBran && onCCBran && !medCodes.includes('35829')) { // AUDIT-104: ranolazine (was 355019 = UNKNOWN)
       gaps.push({
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
@@ -7538,7 +7540,7 @@ export function evaluateGapRules(
             'Coronary artery disease (I25.*)',
             'Angina diagnosis (I20.*)',
             'On beta-blocker and calcium channel blocker (max therapy proxy)',
-            'Ranolazine not in active medications (RxNorm 355019)',
+            'Ranolazine not in active medications (RxNorm 35829)',
           ],
           guidelineSource: '2012 ACC/AHA/AATS/PCNA/SCAI/STS Guideline for Diagnosis and Management of Stable Ischemic Heart Disease',
           classOfRecommendation: 'Class 2a',
@@ -7649,9 +7651,9 @@ export function evaluateGapRules(
   // CAD-GLP1-DM: GLP-1 RA for CAD + Diabetes (CV Risk Reduction)
   // Guideline: 2019 ACC/AHA Primary Prevention Guideline (SUSTAIN-6, LEADER), Class 1, LOE A
   // CAD + T2DM + no GLP-1 RA
-  // RxNorm semaglutide: 2551758
+  // RxNorm GLP-1 RA: canonical RXNORM_GLP1_RA (AUDIT-104; was inline ['2551758','475968','1803932'] - 2551758 dead/UNKNOWN, 1803932 = leucovorin)
   if (hasCAD && hasDiabetes && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const GLP1_CODES = ['2551758', '475968', '1803932']; // semaglutide, liraglutide, dulaglutide
+    const GLP1_CODES = GLP1_RA_CODES_CV; // AUDIT-104: canonical RXNORM_GLP1_RA (semaglutide, liraglutide, dulaglutide)
     const onGLP1 = medCodes.some(c => GLP1_CODES.includes(c));
     if (!onGLP1) {
       gaps.push({
@@ -7717,13 +7719,13 @@ export function evaluateGapRules(
   // CAD-BEMPEDOIC: Bempedoic Acid for Statin Intolerance
   // Guideline: 2022 ACC Expert Consensus on Nonstatin Therapies (CLEAR Outcomes), Class 2a, LOE B-R
   // CAD + statin allergy/intolerance (Z88.*) + high LDL + no bempedoic acid
-  // RxNorm bempedoic acid: 2390411
+  // RxNorm bempedoic acid: 2282403 -- AUDIT-104: was 2390411 = NotCurrent/invalid CUI
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasStatinIntolerance = dxCodes.some(c => c.startsWith('Z88'));
     if (
       hasStatinIntolerance &&
       labValues['ldl'] !== undefined && labValues['ldl'] > 70 &&
-      !medCodes.includes('2390411')
+      !medCodes.includes('2282403') // AUDIT-104: bempedoic acid (was 2390411 = NotCurrent)
     ) {
       gaps.push({
         type: TherapyGapType.MEDICATION_MISSING,
@@ -7741,7 +7743,7 @@ export function evaluateGapRules(
             'Coronary artery disease (I25.*)',
             'Drug allergy/intolerance documented (Z88.*)',
             `LDL: ${labValues['ldl']} mg/dL (>70)`,
-            'Bempedoic acid not in active medications (RxNorm 2390411)',
+            'Bempedoic acid not in active medications (RxNorm 2282403)',
           ],
           guidelineSource: '2022 ACC Expert Consensus Decision Pathway on Nonstatin Therapies (CLEAR Outcomes)',
           classOfRecommendation: 'Class 2a',
@@ -7882,7 +7884,7 @@ export function evaluateGapRules(
   // Guideline: 2012 ACCF/AHA Stable Ischemic Heart Disease Guideline, Class 1, LOE B
   const hasAnginaNitro = dxCodes.some(c => c.startsWith('I20'));
   if (hasAnginaNitro && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const onNitro = medCodes.includes('7832');
+    const onNitro = medCodes.includes('4917'); // AUDIT-104: nitroglycerin (was 7832 = 4-aminohippuric acid)
     if (!onNitro) {
       gaps.push({
         type: TherapyGapType.MEDICATION_MISSING,
@@ -7898,7 +7900,7 @@ export function evaluateGapRules(
         evidence: {
           triggerCriteria: [
             'Angina pectoris (I20.*)',
-            'No nitroglycerin (RxNorm 7832) in active medications',
+            'No nitroglycerin (RxNorm 4917) in active medications',
           ],
           guidelineSource: '2012 ACCF/AHA/ACP/AATS/PCNA/SCAI/STS Guideline for Stable Ischemic Heart Disease',
           classOfRecommendation: 'Class 1',
@@ -11515,7 +11517,7 @@ export function evaluateGapRules(
   // PV-PENTOXIFYLLINE: Pentoxifylline When Cilostazol Contraindicated
   // Guideline: 2024 ACC/AHA PAD Guideline, Class 2b, LOE B
   if (hasPAD && hasHF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const onPentoxifyllinePV = medCodes.includes('7979');
+    const onPentoxifyllinePV = medCodes.includes('8013'); // AUDIT-104: pentoxifylline (was 7979 = NotCurrent)
     const hasClaudicationPent = dxCodes.some(c => c.startsWith('I73.9'));
     if (hasClaudicationPent && !onPentoxifyllinePV) {
       gaps.push({
@@ -11533,7 +11535,7 @@ export function evaluateGapRules(
           triggerCriteria: [
             'Peripheral artery disease with claudication (I73.9)',
             'Heart failure (I50.*) -- cilostazol contraindicated',
-            'No pentoxifylline (RxNorm 7979) in active medications',
+            'No pentoxifylline (RxNorm 8013) in active medications',
           ],
           guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
           classOfRecommendation: 'Class 2b',

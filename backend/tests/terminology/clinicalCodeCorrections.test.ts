@@ -565,3 +565,179 @@ describe('Batch 7 minor: EXCLUSION_PREGNANCY scope expansion (operator clinical-
     expect(src).toMatch(/EXCLUSION_PREGNANCY\s*=\s*\['O',\s*'Z33',\s*'Z34'\]/);
   });
 });
+
+// ============================================================
+// AUDIT-102: CAD lipid-ladder wrong-drug RxNorm corrections (live gating)
+//   PCSK9_CODES 1657974/1659149 -> 1665684/1659152 (were tocilizumab / piperacillin-tazobactam)
+//   icosapent ethyl 1546275 -> 1304974 (was iodide ion)
+// FALSE-POSITIVE / WRONG-SUPPRESSION class: the old code never matched a real
+// prescription, so the "already on therapy" suppressor failed and the gap over-fired.
+// All replacements RxNav properties.json-verified (IN tty) 2026-06-01.
+// ============================================================
+describe('AUDIT-102: gap-cad-pcsk9 PCSK9_CODES corrected to evolocumab/alirocumab', () => {
+  const labs = { ldl: 100 };
+  it('inline PCSK9_CODES source uses 1665684/1659152, not 1657974/1659149', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const src = fs.readFileSync(path.join(__dirname, '../../src/ingestion/gaps/gapRuleEngine.ts'), 'utf8');
+    expect(src).toMatch(/PCSK9_CODES\s*=\s*\['1665684',\s*'1659152'\]/);
+    expect(src).not.toMatch(/PCSK9_CODES\s*=\s*\[[^\]]*'1657974'/);
+    expect(src).not.toMatch(/PCSK9_CODES\s*=\s*\[[^\]]*'1659149'/);
+  });
+  it('positive: real evolocumab (1665684) or alirocumab (1659152) suppresses the PCSK9 gap', () => {
+    expect(evaluateGapRules(['I25.10'], labs, ['83367'], 65)
+      .find(g => g.status && g.status.includes('Consider PCSK9 inhibitor'))).toBeDefined();
+    expect(evaluateGapRules(['I25.10'], labs, ['83367', '1665684'], 65)
+      .find(g => g.status && g.status.includes('Consider PCSK9 inhibitor'))).toBeUndefined();
+    expect(evaluateGapRules(['I25.10'], labs, ['83367', '1659152'], 65)
+      .find(g => g.status && g.status.includes('Consider PCSK9 inhibitor'))).toBeUndefined();
+  });
+  it('negative: OLD code 1657974 (tocilizumab) no longer suppresses -> gap still fires', () => {
+    expect(evaluateGapRules(['I25.10'], labs, ['83367', '1657974'], 65)
+      .find(g => g.status && g.status.includes('Consider PCSK9 inhibitor'))).toBeDefined();
+  });
+});
+
+describe('AUDIT-102: gap-cad-omega3 icosapent ethyl corrected to 1304974', () => {
+  const labs = { triglycerides: 200 };
+  it('inline gate source uses includes(1304974), not includes(1546275)', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const src = fs.readFileSync(path.join(__dirname, '../../src/ingestion/gaps/gapRuleEngine.ts'), 'utf8');
+    expect(src).toMatch(/includes\('1304974'\)/);
+    expect(src).not.toMatch(/includes\('1546275'\)/);
+  });
+  it('positive: real icosapent ethyl (1304974) suppresses the gap', () => {
+    expect(evaluateGapRules(['I25.10'], labs, ['83367'], 65)
+      .find(g => g.status && g.status.includes('icosapent ethyl'))).toBeDefined();
+    expect(evaluateGapRules(['I25.10'], labs, ['83367', '1304974'], 65)
+      .find(g => g.status && g.status.includes('icosapent ethyl'))).toBeUndefined();
+  });
+  it('negative: OLD code 1546275 (iodide ion) no longer suppresses -> gap still fires', () => {
+    expect(evaluateGapRules(['I25.10'], labs, ['83367', '1546275'], 65)
+      .find(g => g.status && g.status.includes('icosapent ethyl'))).toBeDefined();
+  });
+});
+
+// ============================================================
+// AUDIT-104: seven more live-gating wrong/dead RxNorm codes across seven gaps.
+//   GLP-1 (2 gates: gap-cad-glp1 + HF-7) canonicalized to RXNORM_GLP1_RA (first AUDIT-052 instance).
+//   ranolazine 355019 -> 35829; bempedoic 2390411 -> 2282403; cilostazol 19847 -> 21107;
+//   nitroglycerin 7832 -> 4917; pentoxifylline 7979 -> 8013 (minimal in-place swaps).
+// Same FALSE-POSITIVE / WRONG-SUPPRESSION class as AUDIT-102. All RxNav-verified (IN) 2026-06-01.
+// ============================================================
+describe('AUDIT-104: canonical RXNORM_GLP1_RA valueset (first AUDIT-052 instance)', () => {
+  it('contains the 3 RxNav-verified GLP-1 RA ingredient CUIs', () => {
+    expect(cardio.RXNORM_GLP1_RA.SEMAGLUTIDE).toBe('1991302');
+    expect(cardio.RXNORM_GLP1_RA.LIRAGLUTIDE).toBe('475968');
+    expect(cardio.RXNORM_GLP1_RA.DULAGLUTIDE).toBe('1551291');
+  });
+  it('does not contain the dead/wrong prior codes (2551758 UNKNOWN, 1803932 leucovorin)', () => {
+    const values = Object.values(cardio.RXNORM_GLP1_RA);
+    expect(values).not.toContain('2551758');
+    expect(values).not.toContain('1803932');
+  });
+  it('both GLP-1 gates resolve through the canonical array GLP1_RA_CODES_CV', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const src = fs.readFileSync(path.join(__dirname, '../../src/ingestion/gaps/gapRuleEngine.ts'), 'utf8');
+    expect(src).toMatch(/GLP1_RA_CODES_CV\s*=\s*codes\(RXNORM_GLP1_RA\)/);
+    expect(src).toMatch(/GLP1_CODES\s*=\s*GLP1_RA_CODES_CV/);            // gap-cad-glp1
+    expect(src).toMatch(/GLP1_RA_CODES_CV\.includes\(c\)/);             // HF-7
+  });
+});
+
+describe('AUDIT-104: gap-cad-glp1 (CAD + T2DM) resolves through canonical GLP1_RA', () => {
+  const dx = ['I25.10', 'E11.9'];
+  const STATUS = 'GLP-1 RA for cardiovascular risk reduction';
+  it('positive: real semaglutide (1991302) or dulaglutide (1551291) suppresses the gap', () => {
+    expect(evaluateGapRules(dx, {}, [], 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
+    expect(evaluateGapRules(dx, {}, ['1991302'], 65).find(g => g.status && g.status.includes(STATUS))).toBeUndefined();
+    expect(evaluateGapRules(dx, {}, ['1551291'], 65).find(g => g.status && g.status.includes(STATUS))).toBeUndefined();
+  });
+  it('negative: OLD codes 2551758 (UNKNOWN) / 1803932 (leucovorin) no longer suppress -> gap still fires', () => {
+    expect(evaluateGapRules(dx, {}, ['2551758'], 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
+    expect(evaluateGapRules(dx, {}, ['1803932'], 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
+  });
+});
+
+describe('AUDIT-104: HF-7 (GLP-1 RA for HFpEF + obesity) - union membership adds dulaglutide', () => {
+  const dx = ['I50.30', 'E66.9'];
+  const labs = { lvef: 55 };
+  const STATUS = 'GLP-1 RA not prescribed in HFpEF';
+  it('positive: real semaglutide (1991302) suppresses the HF-7 gap', () => {
+    expect(evaluateGapRules(dx, labs, [], 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
+    expect(evaluateGapRules(dx, labs, ['1991302'], 65).find(g => g.status && g.status.includes(STATUS))).toBeUndefined();
+  });
+  it('CLINICAL CHANGE (operator-approved union): dulaglutide (1551291) now suppresses HF-7 (was absent from the narrow {sema,lira} set)', () => {
+    expect(evaluateGapRules(dx, labs, ['1551291'], 65).find(g => g.status && g.status.includes(STATUS))).toBeUndefined();
+  });
+  it('negative: OLD dead code 2551758 no longer suppresses -> gap still fires', () => {
+    expect(evaluateGapRules(dx, labs, ['2551758'], 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
+  });
+});
+
+describe('AUDIT-104: gap-cad-ranolazine corrected to 35829', () => {
+  const dx = ['I25.10', 'I20.9'];
+  const maxTherapy = ['20352', '3443']; // carvedilol (BB) + diltiazem (CCB) = maximal anti-anginal proxy
+  const STATUS = 'ranolazine for refractory angina';
+  it('positive: real ranolazine (35829) suppresses the gap', () => {
+    expect(evaluateGapRules(dx, {}, maxTherapy, 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
+    expect(evaluateGapRules(dx, {}, [...maxTherapy, '35829'], 65).find(g => g.status && g.status.includes(STATUS))).toBeUndefined();
+  });
+  it('negative: OLD dead code 355019 no longer suppresses -> gap still fires', () => {
+    expect(evaluateGapRules(dx, {}, [...maxTherapy, '355019'], 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
+  });
+});
+
+describe('AUDIT-104: gap-cad-bempedoic corrected to 2282403', () => {
+  const dx = ['I25.10', 'Z88.0']; // CAD + statin intolerance
+  const labs = { ldl: 100 };
+  const STATUS = 'bempedoic acid for statin-intolerant';
+  it('positive: real bempedoic acid (2282403) suppresses the gap', () => {
+    expect(evaluateGapRules(dx, labs, [], 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
+    expect(evaluateGapRules(dx, labs, ['2282403'], 65).find(g => g.status && g.status.includes(STATUS))).toBeUndefined();
+  });
+  it('negative: OLD dead code 2390411 no longer suppresses -> gap still fires', () => {
+    expect(evaluateGapRules(dx, labs, ['2390411'], 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
+  });
+});
+
+describe('AUDIT-104: PAD cilostazol corrected to 21107', () => {
+  const dx = ['I73.9']; // PAD claudication, NO HF (cilostazol gate requires !hasHF)
+  const STATUS = 'Cilostazol not prescribed';
+  it('positive: real cilostazol (21107) suppresses the gap', () => {
+    expect(evaluateGapRules(dx, {}, [], 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
+    expect(evaluateGapRules(dx, {}, ['21107'], 65).find(g => g.status && g.status.includes(STATUS))).toBeUndefined();
+  });
+  it('negative: OLD code 19847 (bumadizone) no longer suppresses -> gap still fires', () => {
+    expect(evaluateGapRules(dx, {}, ['19847'], 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
+  });
+});
+
+describe('AUDIT-104: angina nitroglycerin corrected to 4917', () => {
+  const dx = ['I20.9'];
+  const STATUS = 'PRN nitroglycerin';
+  it('positive: real nitroglycerin (4917) suppresses the gap', () => {
+    expect(evaluateGapRules(dx, {}, [], 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
+    expect(evaluateGapRules(dx, {}, ['4917'], 65).find(g => g.status && g.status.includes(STATUS))).toBeUndefined();
+  });
+  it('negative: OLD code 7832 (4-aminohippuric acid) no longer suppresses -> gap still fires', () => {
+    expect(evaluateGapRules(dx, {}, ['7832'], 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
+  });
+  it('trimetazidine 47832 is a distinct code, NOT the nitroglycerin guard (substring exclusion preserved)', () => {
+    expect(evaluateGapRules(dx, {}, ['47832'], 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
+  });
+});
+
+describe('AUDIT-104: PAD+HF pentoxifylline corrected to 8013', () => {
+  const dx = ['I73.9', 'I50.30']; // PAD claudication + HF (pentoxifylline gate requires hasHF)
+  const STATUS = 'pentoxifylline for claudication';
+  it('positive: real pentoxifylline (8013) suppresses the gap', () => {
+    expect(evaluateGapRules(dx, {}, [], 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
+    expect(evaluateGapRules(dx, {}, ['8013'], 65).find(g => g.status && g.status.includes(STATUS))).toBeUndefined();
+  });
+  it('negative: OLD dead code 7979 no longer suppresses -> gap still fires', () => {
+    expect(evaluateGapRules(dx, {}, ['7979'], 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
+  });
+});
