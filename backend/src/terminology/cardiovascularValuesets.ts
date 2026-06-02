@@ -235,6 +235,23 @@ export const RXNORM_GDMT = {
   IVABRADINE: '1649480',  // AUDIT-055 (2026-05-05): was 1649380 = invalid CUI (UNKNOWN status, rule never fired)
 } as const;
 
+/** GLP-1 receptor agonists -- used by HF-7 (GLP-1 RA for HFpEF with obesity) and
+ *  gap-cad-glp1 (GLP-1 RA in CAD + T2DM).
+ *  AUDIT-104 (2026-06-01): first canonical-valueset instance realizing the AUDIT-052 pattern.
+ *    Both gates previously carried inline arrays gating on the dead semaglutide CUI 2551758
+ *    (UNKNOWN in RxNorm) and dulaglutide 1803932 (= leucovorin); HF-7 additionally omitted
+ *    dulaglutide entirely. Canonicalized here so both gates resolve through one verified set.
+ *    Union membership {sema, lira, dula} per operator clinical-logic decision 2026-06-01:
+ *    HF-7's detection set expands to include dulaglutide (a valid GLP-1 RA; a patient on it
+ *    should suppress the gap), correcting a latent narrow-set over-fire.
+ *    All codes RxNav properties.json-verified (IN tty) 2026-06-01. Do NOT source from the dead
+ *    rxnorm.ts DRUG_CLASSES (AUDIT-105). */
+export const RXNORM_GLP1_RA = {
+  SEMAGLUTIDE: '1991302',  // AUDIT-104 (was 2551758 = UNKNOWN/invalid CUI)
+  LIRAGLUTIDE: '475968',
+  DULAGLUTIDE: '1551291',  // AUDIT-104 (was 1803932 = leucovorin; newly added to HF-7 per approved union membership)
+} as const;
+
 /** QT-prolonging medications -- used by QTc safety gap rule.
  *  AUDIT-042 (2026-05-05): PROCAINAMIDE corrected 8787 → 8700 (8787 = propranolol, NOT procainamide).
  *  AUDIT-056: DOFETILIDE corrected 135447 → 49247 (135447 = donepezil, an Alzheimer's drug, NOT dofetilide).

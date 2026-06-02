@@ -14,12 +14,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-3",
         "evaluatorBodyLineRange": [
-          5410,
-          5434
+          5412,
+          5436
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-3-inr-monitoring",
-        "registryLine": 911
+        "registryLine": 913
       },
       "specGapId": "GAP-VHD-001",
       "specLine": 753,
@@ -33,12 +33,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-6",
         "evaluatorBodyLineRange": [
-          5500,
-          5524
+          5502,
+          5526
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-6-doac-mechanical-valve",
-        "registryLine": 947
+        "registryLine": 949
       },
       "specGapId": "GAP-VHD-005",
       "specLine": 754,
@@ -122,12 +122,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-2",
         "evaluatorBodyLineRange": [
-          5145,
-          5166
+          5147,
+          5168
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-2-bioprosthetic-echo",
-        "registryLine": 395
+        "registryLine": 397
       },
       "specGapId": "GAP-VHD-010",
       "specLine": 766,
@@ -141,12 +141,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-11",
         "evaluatorBodyLineRange": [
-          5651,
-          5672
+          5653,
+          5674
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-11-bioprosthetic-degeneration",
-        "registryLine": 1007
+        "registryLine": 1009
       },
       "specGapId": "GAP-VHD-011",
       "specLine": 767,
@@ -200,12 +200,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-11",
         "evaluatorBodyLineRange": [
-          5651,
-          5672
+          5653,
+          5674
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-11-bioprosthetic-degeneration",
-        "registryLine": 1007
+        "registryLine": 1009
       },
       "specGapId": "GAP-VHD-016",
       "specLine": 772,
@@ -219,12 +219,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-11",
         "evaluatorBodyLineRange": [
-          5651,
-          5672
+          5653,
+          5674
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-11-bioprosthetic-degeneration",
-        "registryLine": 1007
+        "registryLine": 1009
       },
       "specGapId": "GAP-VHD-017",
       "specLine": 773,
@@ -298,12 +298,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-2",
         "evaluatorBodyLineRange": [
-          5112,
-          5133
+          5114,
+          5135
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-2-tavr-eval",
-        "registryLine": 383
+        "registryLine": 385
       },
       "specGapId": "GAP-VHD-024",
       "specLine": 788,
@@ -457,12 +457,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-TRICUSPID-SECONDARY",
         "evaluatorBodyLineRange": [
-          11066,
-          11094
+          11068,
+          11096
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-tricuspid-secondary",
-        "registryLine": 3227
+        "registryLine": 3229
       },
       "specGapId": "GAP-VHD-039",
       "specLine": 811,
@@ -706,12 +706,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-14",
         "evaluatorBodyLineRange": [
-          6526,
-          6545
+          6528,
+          6547
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-14-dental-prophylaxis",
-        "registryLine": 1703
+        "registryLine": 1705
       },
       "specGapId": "GAP-VHD-063",
       "specLine": 851,
@@ -765,12 +765,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-PANNUS",
         "evaluatorBodyLineRange": [
-          10682,
-          10704
+          10684,
+          10706
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-prosthetic-pannus",
-        "registryLine": 2219
+        "registryLine": 2221
       },
       "specGapId": "GAP-VHD-068",
       "specLine": 860,
@@ -824,12 +824,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-12",
         "evaluatorBodyLineRange": [
-          5682,
-          5709
+          5684,
+          5711
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-12-af-valve-anticoag",
-        "registryLine": 1019
+        "registryLine": 1021
       },
       "specGapId": "GAP-VHD-077",
       "specLine": 869,
@@ -893,12 +893,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-TRICUSPID-SECONDARY",
         "evaluatorBodyLineRange": [
-          11066,
-          11094
+          11068,
+          11096
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-tricuspid-secondary",
-        "registryLine": 3227
+        "registryLine": 3229
       },
       "specGapId": "GAP-VHD-079",
       "specLine": 879,
@@ -912,12 +912,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-8",
         "evaluatorBodyLineRange": [
-          5563,
-          5583
+          5565,
+          5585
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-8-rheumatic-screen",
-        "registryLine": 971
+        "registryLine": 973
       },
       "specGapId": "GAP-VHD-080",
       "specLine": 880,
@@ -1001,12 +1001,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-PULMONARY-HTN",
         "evaluatorBodyLineRange": [
-          11034,
-          11062
+          11036,
+          11064
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-pulmonary-htn",
-        "registryLine": 3215
+        "registryLine": 3217
       },
       "specGapId": "GAP-VHD-088",
       "specLine": 892,
@@ -1080,12 +1080,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-RADIATION",
         "evaluatorBodyLineRange": [
-          10715,
-          10737
+          10717,
+          10739
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-radiation-valve",
-        "registryLine": 2231
+        "registryLine": 2233
       },
       "specGapId": "GAP-VHD-095",
       "specLine": 907,
@@ -1099,12 +1099,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-RADIATION",
         "evaluatorBodyLineRange": [
-          10715,
-          10737
+          10717,
+          10739
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-radiation-valve",
-        "registryLine": 2231
+        "registryLine": 2233
       },
       "specGapId": "GAP-VHD-096",
       "specLine": 908,
@@ -1128,12 +1128,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-10",
         "evaluatorBodyLineRange": [
-          5621,
-          5642
+          5623,
+          5644
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-10-pregnancy-risk",
-        "registryLine": 995
+        "registryLine": 997
       },
       "specGapId": "GAP-VHD-099",
       "specLine": 914,
@@ -1147,12 +1147,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-10",
         "evaluatorBodyLineRange": [
-          5621,
-          5642
+          5623,
+          5644
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-10-pregnancy-risk",
-        "registryLine": 995
+        "registryLine": 997
       },
       "specGapId": "GAP-VHD-098",
       "specLine": 915,
@@ -1166,12 +1166,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-10",
         "evaluatorBodyLineRange": [
-          5621,
-          5642
+          5623,
+          5644
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-10-pregnancy-risk",
-        "registryLine": 995
+        "registryLine": 997
       },
       "specGapId": "GAP-VHD-100",
       "specLine": 916,
@@ -1185,12 +1185,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-10",
         "evaluatorBodyLineRange": [
-          5621,
-          5642
+          5623,
+          5644
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-10-pregnancy-risk",
-        "registryLine": 995
+        "registryLine": 997
       },
       "specGapId": "GAP-VHD-101",
       "specLine": 917,
@@ -1204,12 +1204,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-5",
         "evaluatorBodyLineRange": [
-          5474,
-          5494
+          5476,
+          5496
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-5-aortic-regurgitation",
-        "registryLine": 935
+        "registryLine": 937
       },
       "specGapId": "GAP-VHD-103",
       "specLine": 922,
