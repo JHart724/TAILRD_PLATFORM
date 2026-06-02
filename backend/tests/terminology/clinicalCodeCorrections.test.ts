@@ -741,3 +741,82 @@ describe('AUDIT-104: PAD+HF pentoxifylline corrected to 8013', () => {
     expect(evaluateGapRules(dx, {}, ['7979'], 65).find(g => g.status && g.status.includes(STATUS))).toBeDefined();
   });
 });
+
+// ============================================================
+// AUDIT-103: evidence-object provenance corrections (SH-2 TAVR / VD-1 mechanical-valve warfarin)
+// Two evidence objects were copy-pasted from unrelated donor gaps and never corrected:
+//   SH-2 (TAVR for severe AS): the WHOLE evidence object was an AF-rate-control donor.
+//   VD-1 (mechanical-valve warfarin): only triggerCriteria was a donor (the AS-echo gap status).
+// Rewritten against each rule's own comment + recommendations text per the AUDIT-100 pattern.
+// VD-1 LOE resolved to B (operator clinical read: Class 1 settled, but the evidence base is
+// observational + the halted RE-ALIGN phase-II trial; the NOAC-vs-warfarin RCTs excluded
+// mechanical valves, so no multi-RCT base for A). VD-1 self-text comment+action corrected
+// A->B for three-way agreement. SH-2 LOE A is correct (TAVR-for-severe-AS has the RCT base).
+// These are the static-consistency assertions the planned evidence-object validator will
+// later enforce mechanically across all gaps.push objects.
+// ============================================================
+
+const engineSrc = require('fs').readFileSync(
+  require('path').join(__dirname, '../../src/ingestion/gaps/gapRuleEngine.ts'),
+  'utf8',
+);
+
+// Extract the gaps.push({ ... }) block whose body contains `statusText` (brace-matched),
+// so field assertions are scoped to ONE rule (the donor strings legitimately survive in
+// their real source rules, so whole-file negatives would be unsound).
+function gapBlockFor(src: string, statusText: string): string {
+  const statusIdx = src.indexOf(statusText);
+  if (statusIdx === -1) throw new Error('status not found: ' + statusText);
+  const pushIdx = src.lastIndexOf('gaps.push({', statusIdx);
+  let depth = 0;
+  let j = src.indexOf('{', pushIdx);
+  const start = j;
+  for (; j < src.length; j++) {
+    const c = src[j];
+    if (c === '{') depth++;
+    else if (c === '}') { depth--; if (depth === 0) { j++; break; } }
+  }
+  return src.slice(start, j);
+}
+
+describe('AUDIT-103: SH-2 TAVR evidence object rewritten to TAVR/VHD provenance', () => {
+  const block = gapBlockFor(engineSrc, 'TAVR evaluation not documented for severe aortic stenosis');
+  it('guidelineSource is 2020 ACC/AHA VHD, not the 2023 AF Management donor', () => {
+    expect(block).toMatch(/guidelineSource: '2020 ACC\/AHA Guideline for Valvular Heart Disease'/);
+    expect(block).not.toContain('2023 ACC/AHA/ACCP/HRS Guideline for AF Management');
+  });
+  it('classOfRecommendation 1 / levelOfEvidence A (TAVR-for-severe-AS RCT base)', () => {
+    expect(block).toMatch(/classOfRecommendation: '1'/);
+    expect(block).toMatch(/levelOfEvidence: 'A'/);
+  });
+  it('triggerCriteria describes the rule own gating (severe AS + age + LVEF + no TAVR eval)', () => {
+    expect(block).toMatch(/Severe aortic stenosis \(I35\.0\)/);
+    expect(block).not.toContain('Rate control agent not prescribed in AFib');
+  });
+  it('AF-donor exclusions (bradycardia / sick sinus) are gone; only the gated hospice exclusion remains', () => {
+    expect(block).not.toContain('Severe bradycardia');
+    expect(block).not.toContain('Sick sinus syndrome without pacemaker');
+    expect(block).toMatch(/exclusions: \['Hospice\/palliative care'\]/);
+  });
+});
+
+describe('AUDIT-103: VD-1 mechanical-valve warfarin evidence object + three-way LOE agreement', () => {
+  const block = gapBlockFor(engineSrc, 'Warfarin not active with mechanical valve');
+  it('triggerCriteria describes mechanical-valve gating, not the AS-echo donor string', () => {
+    expect(block).toMatch(/Mechanical heart valve \(Z95\.2\/Z95\.3\/Z95\.4\)/);
+    expect(block).not.toContain('Echo surveillance overdue for aortic stenosis');
+  });
+  it('guidelineSource + classOfRecommendation unchanged (already correct)', () => {
+    expect(block).toMatch(/guidelineSource: '2020 ACC\/AHA Guideline for Valvular Heart Disease'/);
+    expect(block).toMatch(/classOfRecommendation: '1'/);
+  });
+  it('THREE-WAY LOE agreement: evidence object, action, and comment all say B', () => {
+    // evidence object + action live inside the gaps.push block
+    expect(block).toMatch(/levelOfEvidence: 'B'/);
+    expect(block).toMatch(/action: 'Consider warfarin per 2020 ACC\/AHA VHD Guideline, Class 1, LOE B'/);
+    // the rule comment sits ABOVE the block -> assert against full source, scoped to VD-1
+    expect(engineSrc).toMatch(/Gap VD-1: Anticoagulation Missing in Mechanical Valve\r?\n\s*\/\/ Guideline: 2020 ACC\/AHA VHD Guideline, Class 1, LOE B/);
+    // the prior LOE-A self-text contradiction is gone
+    expect(engineSrc).not.toContain('Consider warfarin per 2020 ACC/AHA VHD Guideline, Class 1, LOE A');
+  });
+});
