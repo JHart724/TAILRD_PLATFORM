@@ -4822,7 +4822,7 @@ export function evaluateGapRules(
   // ============================================================
 
   // Gap VD-1: Anticoagulation Missing in Mechanical Valve
-  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE A
+  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
   // All mechanical valve patients require lifelong warfarin (INR 2.5-3.5)
   // RxNorm warfarin: 11289
   const hasMechanicalValve = dxCodes.some(c =>
@@ -4839,11 +4839,11 @@ export function evaluateGapRules(
           target: 'Warfarin prescribed with target INR 2.5-3.5',
           medication: 'Warfarin',
           recommendations: {
-            action: 'Consider warfarin per 2020 ACC/AHA VHD Guideline, Class 1, LOE A',
+            action: 'Consider warfarin per 2020 ACC/AHA VHD Guideline, Class 1, LOE B',
             guideline: '2020 ACC/AHA Valvular Heart Disease',
           },
               evidence: {
-          triggerCriteria: ['Echo surveillance overdue for aortic stenosis'],
+          triggerCriteria: ['Mechanical heart valve (Z95.2/Z95.3/Z95.4)', 'Warfarin (RxNorm 11289) not on active medication list'],
           guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
           classOfRecommendation: '1',
           levelOfEvidence: 'B',
@@ -5124,11 +5124,11 @@ export function evaluateGapRules(
           note: 'All patients >= 65 with severe AS should be evaluated by a multidisciplinary heart valve team',
         },
             evidence: {
-          triggerCriteria: ['Rate control agent not prescribed in AFib'],
-          guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for AF Management',
+          triggerCriteria: ['Severe aortic stenosis (I35.0)', 'Age >= 65', 'LVEF available (echo performed)', 'No documented TAVR evaluation'],
+          guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
           classOfRecommendation: '1',
-          levelOfEvidence: 'B',
-          exclusions: ['Severe bradycardia', 'Sick sinus syndrome without pacemaker', 'Hospice/palliative care'],
+          levelOfEvidence: 'A',
+          exclusions: ['Hospice/palliative care'],
         },
   });
     }
