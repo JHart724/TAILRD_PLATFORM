@@ -286,6 +286,7 @@ Design source: `docs/architecture/AUDIT_016_KEY_ROTATION_DESIGN.md` (shipped PR 
 | Domain | Source doc |
 |---|---|
 | Strategic plan | `docs/PATH_TO_ROBUST.md` v1.2 |
+| v2.0 harvest (platform-hardening inputs) | `docs/planning/V2_HARVEST_PLATFORM_HARDENING.md` (sanitized input to v2.0 PATH_TO_ROBUST authorship, added 2026-06-03; NOT a plan, no sequencing or hours - adoptions + deferred-capability triggers + fingerprint-first open decision) |
 | Operational state | `CLAUDE.md` |
 | Security findings register | `docs/audit/AUDIT_FINDINGS_REGISTER.md` |
 | Backend audit framework | `docs/audit/AUDIT_FRAMEWORK.md` |
