@@ -78,6 +78,17 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-069** — `LOINC_CARDIOVASCULAR_LABS.LVEF = '18010-0'` unverifiable per NLM Clinical Tables (search empty; loinc.org direct 500); not in NLM LOINC LVEF concept set. Real canonical LVEF = 10230-1 ("Left ventricular Ejection fraction" verified loinc.org direct + NLM). **Prior codebase fix-from comment "(was 10230-1 = QRS duration — WRONG)" was itself a regression** — 10230-1 IS LVEF per authoritative sources; the prior "fix" replaced the correct code with an unverifiable one. Every HF rule reading `labValues['lvef']` depended on this LOINC mapping (Phase 0B Batch 5, **RESOLVED 2026-05-06**)
 - **AUDIT-071** — cdsHooks cross-tenant patient lookup + missing fhirPatientId per-tenant unique (Phase 3 area b, **RESOLVED 2026-05-07** — first production-readiness gate item closed; mitigation PR ships HospitalEhrIssuer model + cdsHooksAuth middleware + mandatory tenant filter + 4 HIPAA-graded audit actions + 14 tests + design doc + operator runbook)
 
+- **AUDIT-098** - Double-unwrap `dashboard?.data?.summary` silently renders mock KPI on 5 non-HF Executive views + shared ServiceLineKPIBanner under USE_REAL_API (Phase 0A/0C frontend, **RESOLVED 2026-06-01** PR #322)
+- **AUDIT-099** - Non-HF Executive views: fabricated KPI cells, no Demo-Data indicator, dead `dashboardError` state (silent-mock on loading/error/empty) (Phase 0A/0C frontend, OPEN)
+- **AUDIT-100** - Three DET_OK gap rules carry copy-pasted `evidence` objects with wrong clinical provenance (MRA / RAAS / CAD-statin) (Phase 0B clinical-code, **RESOLVED 2026-06-01** PR #326)
+- **AUDIT-101** - gap-cad-statin ingredient-level `STATIN_CODES` cannot encode high-intensity dose - FALSE-NEGATIVE / missed-gap (Phase 0B clinical-code, OPEN)
+- **AUDIT-102** - Two wrong-drug RxNorm miscodes in CAD lipid gates (gap-cad-pcsk9 + gap-cad-omega3) - FALSE-POSITIVE (Phase 0B clinical-code, **RESOLVED 2026-06-02** PR #332)
+- **AUDIT-103** - Two more copy-pasted wrong-provenance `evidence` objects (SH-2 TAVR / VD-1 warfarin) + VD-1 LOE contradiction (Phase 0B clinical-code, **RESOLVED 2026-06-02**)
+- **AUDIT-104** - Seven more LIVE-gating RxNorm codes wrong-drug or non-current across seven gap rules (Phase 0B clinical-code, **RESOLVED 2026-06-02** PR #332)
+- **AUDIT-107** - Post-deploy Login verification regressed on prod ~2026-05-07 (70 consecutive failures); gate also non-blocking decoration (Operational maturity / production verification, OPEN)
+
+> Index reconciliation (2026-06-03): the AUDIT-098 through AUDIT-105 detail entries were filed during the 2026-05-31..06-02 arc WITHOUT their severity-index rows; the rows above (098-104 here in HIGH, 105 in MEDIUM) restore index completeness, and AUDIT-107 is filed with its index row in the same pass. Adding the severity-index row is part of filing discipline going forward (sister to DRIFT-47). AUDIT-099 + AUDIT-101 are the OPEN HIGH items that were missing from this index.
+
 ### MEDIUM (P2)
 
 - **AUDIT-004** — `@ts-nocheck` on `gapRuleEngine.ts` (11,292 LOC, 22% of source) (Phase 1, OPEN)
@@ -92,6 +103,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-037** — `Math.random()` in `cqlEngine.ts:475` default rule scoring (Phase 0B canonical, OPEN, CLAUDE.md §14 violation)
 - **AUDIT-049** — `DOAC_CODES_STROKE/TEE` use rivaroxaban formulation/pack codes; missing dabigatran + edoxaban ingredients (Phase 0B Cat D, **RESOLVED 2026-05-06**)
 - **AUDIT-064** — Partial-pipeline-regen pattern after source-changing operations: reconcile/renderAddendum/renderSynthesis skipped after extractCode-affecting source changes leaves committed derived artifacts stale; CI Audit Canonical Gates rejects (2 recurrences PR #245 + PR #246) (Operational debt / canonical infrastructure, **RESOLVED 2026-05-06** via AUDIT_METHODOLOGY.md §9.2 codification)
+- **AUDIT-105** - terminology registries `rxnorm.ts` / `loinc.ts` systematically corrupted (~40 of 68 RxCUIs) AND dead (no gating consumer) (Phase 0B clinical-code, **RESOLVED 2026-06-02** DELETE fork) (index-reconciled 2026-06-03)
 
 ### LOW (P3)
 
@@ -2113,6 +2125,40 @@ Documents the evidence-object validator shipped alongside AUDIT-106, the standin
 - **Prefix-hygiene backlog (385 items, flagged-not-rewritten):** the validator reports 385 prefix-hygiene items (193 `"Class "`-prefixed COR values + 192 `"LOE "`-prefixed LOE values) as non-failing HYGIENE. These are stylistic prefixes in the source `evidence` strings ('Class 1' vs bare '1', 'LOE B' vs bare 'B'); the validator FLAGS them but deliberately does NOT rewrite source, and they are decoupled from the hard gate so a clean-baseline regression gate ships now. Recorded as a minor hygiene backlog (cosmetic normalization, no clinical impact), to be addressed opportunistically.
 - **Behavior:** PURE HARD GATE, no allowlist - the runtime baseline is clean post-AUDIT-103, so any future inconsistency fails CI immediately rather than being grandfathered.
 - **Cross-references:** prevents the AUDIT-100 + AUDIT-103 defect class (both RESOLVED); deferred follow-on AUDIT-106 (A<->B cross-structure axis); see `AUDIT_METHODOLOGY.md` §1 (rule-body verification - the validator asserts against running code) + §16 (clinical-code verification standard); see CLAUDE.md §14 (gap-rule evidence-object requirement + FDA CDS transparency surface) + §8 (clinical accuracy non-negotiable).
+
+---
+
+### AUDIT-107 - Post-deploy Login verification regressed on production ~2026-05-07 (70 consecutive smoke-test failures); the gate is also non-blocking decoration so deploys ship unverified
+
+- **Phase:** Operational maturity / production verification (surfaced during the 2026-06-03 security-verification block, PART C smoke-test scoping + STEP 0 run-history check)
+- **Severity:** HIGH (P1)
+- **Status:** OPEN
+- **Discovered:** 2026-06-03 during the security-verification block. PART C scoped the Post-Deploy Smoke Test as non-blocking decoration; STEP 0 then pulled the full `gh run` history, which showed the gate has been failing at the Login step for a long unbroken streak with a real prior-success baseline (so this is a REGRESSION, not a never-functional gate).
+- **Location (`.github/workflows/smoke-test.yml`):**
+  - Trigger L3-8: `workflow_run` on `["Build & Deploy to ECS"]` `completed`, plus `workflow_dispatch`. Runs AFTER the deploy workflow finishes.
+  - Login step L44-57: `curl -sf -X POST $API_BASE/api/auth/login` with `LOGIN_EMAIL` / `LOGIN_PASSWORD`, asserting `success == True` (`[ "$SUCCESS" = "True" ] || exit 1`).
+- **Evidence (gh run history, read-only; verified 2026-06-03):**
+  - 187 total runs; 22 successes; LAST success `2026-05-07T20:54:07Z` (run 25521519631). First failure after = `2026-05-07T22:57:29Z` (~2h later). 70 consecutive failures from then through `2026-06-03T22:08:33Z` (run 26916087062 - the deploy from merge 411239b / PR #337), all `completed / failure`.
+  - Failure locus: the Health-check step passes; the Login step fails (curl `-sf` exits non-zero on HTTP >= 400, or `success != True`). Subsequent module-dashboard / patient-endpoint steps never run.
+  - Non-blocking design: the smoke workflow is a SEPARATE `workflow_run` that fires only after "Build & Deploy to ECS" has already completed; NOTHING downstream consumes its conclusion (no rollback, no required-check gating, no status reference). Production deploys ship regardless of smoke outcome.
+  - Credential source: GitHub Actions repo secrets `secrets.SMOKE_TEST_EMAIL` / `secrets.SMOKE_TEST_PASSWORD` (L47-48). The seed scripts (`backend/prisma/seed.ts`, `backend/scripts/seedBSW.ts`) create NO account matching these secrets, so the smoke account must be provisioned on production out-of-band; the streak is consistent with no such provisioned account (or a rotated password / changed login response shape).
+- **Correction to the initial PART C scoping (§1 evidence discipline):** the first-pass observation framed this as "8 consecutive failures since ~2026-06-01." The STEP 0 full-history pull corrects that to LAST success `2026-05-07` and 70 consecutive failures over ~4 weeks. The accurate boundary is recorded here; the original 8/06-01 figure was a truncated-window artifact.
+- **Severity rationale:** HIGH (P1). A prior-success baseline exists (last 2026-05-07), so production has had NO working post-deploy auth + dashboard verification signal for ~4 weeks; a real auth or module-endpoint regression would have shipped undetected. Per the classify-up default and the regression framing, HIGH is the floor. Tempering note (operator may weigh): the gate is non-blocking by design, so it never gated a deploy - the harm is the loss of the only post-deploy verification signal, not a removed safety control. Not itself a live exploit / PHI / encryption defect.
+- **BLOCKING operator action (immediate, OUT of this PR's scope):** manually verify production login at `api.tailrd-heart.com` NOW - 4 weeks of deploys are unverified at the auth + dashboard surface.
+- **Remediation (separate operator-gated work; NOT in this PR):** (1) provision a dedicated smoke-test account on production matching the `SMOKE_TEST_*` secrets (or repair the secrets / login-response-shape assertion); (2) decide the gate's blocking posture (gate the deploy on smoke success, or wire a failure alert) so a future regression is not silent. This PR FILES the finding only; smoke-account provisioning and workflow changes are explicitly out of scope.
+- **Effort estimate:** provisioning + assertion repair ~1-2h; blocking-posture decision + wiring ~2-4h (operator-side, fork-dependent).
+- **Dependencies:** relates to the CLAUDE.md §18 deploy-verification login credential (the `JHart@tailrd-heart.com` smoke credential is not created by any seed script); relates to the April-review crosswalk note below (the same production-auth surface the April Phase 1 findings covered).
+- **Cross-references:** `.github/workflows/smoke-test.yml`; the 2026-06-03 security-verification block PART C; CLAUDE.md §18 (deploy verification sequence); `backend/prisma/seed.ts` + `backend/scripts/seedBSW.ts` (no matching smoke account).
+- **Status note:** 2026-06-03 OPEN at filing. Filed as an operator-gated docs PR. NOT marked RESOLVED until a provisioned smoke account makes the Login step pass on a post-deploy run AND the blocking-posture decision lands.
+
+---
+
+### Reconciliation note - April Master Platform Review Phase 1 crosswalk (2026-06-03)
+
+The April 2026 Master Platform Review (`docs/MASTER_PLATFORM_REVIEW_2026_04.md`, Phase 1 COMPLETE) used a `FINDING-1.1-NNN` id namespace that was never transcribed into this register's `AUDIT-NNN` namespace. A 2026-06-03 §1 reproduction check on `main` (`411239b`) confirmed the two candidate Phase 1 findings flagged as possibly-unabsorbed are in fact FIXED on main; these dated notes close the crosswalk lineage. No new findings filed (both verified-fixed).
+
+- **April FINDING-1.1-001 (CRITICAL: "Demo Mode Accepts Tampered Tokens as Super-Admin"):** DOES NOT REPRODUCE on main. The current `backend/src/middleware/auth.ts` catch block (L77-94) always rejects a provided-but-invalid token with HTTP 403 (comment L87-88: "A token was provided but failed verification - always reject. Demo fallback only applies when NO token is provided"). The demo super-admin payload is reachable only in the no-token branch (L97-100). Fixed at commit `9469918` / PR #112 ("fix(CRITICAL): 12 P0 fixes from master platform review", 2026-04-12). Residual (documented design, not the finding): when `DEMO_MODE=true` the middleware bypasses auth/authorization wholesale per CLAUDE.md §14; `DEMO_MODE` defaults false (`auth.ts:17`).
+- **April FINDING-1.1-008 (HIGH: "JWT Secret Entropy Not Validated"):** DOES NOT REPRODUCE on main. `backend/src/server.ts:48-66` (gated `if (!isDemoMode)`) FATAL-exits on missing `JWT_SECRET`, on length < 32 chars (L58), and on a weak-value blocklist (L62-66). Distinct from AUDIT-017's `PHI_ENCRYPTION_KEY` validator - this is a dedicated JWT_SECRET block. Fixed at commit `b71942c` / PR #117 ("fix(security+infra): logout auth, JWT entropy...", 2026-04-12). Un-adopted hardening noted: the April RS256-migration suggestion was not taken (still HS256, `auth.ts:55`), and the check is length + weak-substring rather than measured Shannon entropy.
 
 ---
 
