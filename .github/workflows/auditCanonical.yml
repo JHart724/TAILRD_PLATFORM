@@ -215,3 +215,52 @@ jobs:
         working-directory: backend
         run: |
           npx jest tests/scripts/auditCanonical/ --ci
+
+  # ---------------------------------------------------------------------------
+  # evidence-consistency - standalone hard gate, independent of the canonical
+  # pipeline above. Parses ONLY backend/src/ingestion/gaps/gapRuleEngine.ts and
+  # asserts every gaps.push evidence object's classOfRecommendation /
+  # levelOfEvidence / guidelineSource agrees with its own recommendations text
+  # (the AUDIT-103 / AUDIT-100 wrong-provenance defect class). No canonical-JSON
+  # input and no dependency on Gates 2-5. Runs on every PR/push so a future
+  # gapRuleEngine.ts edit cannot reintroduce a divergent evidence object.
+  # ---------------------------------------------------------------------------
+  evidence-consistency:
+    name: Evidence Object Consistency
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache backend node_modules
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: backend/node_modules
+          key: backend-deps-${{ runner.os }}-${{ hashFiles('backend/package-lock.json') }}
+          restore-keys: backend-deps-${{ runner.os }}-
+
+      - name: Install backend dependencies (extractors only need tsx + typescript)
+        working-directory: backend
+        run: npm ci --ignore-scripts
+
+      - name: Evidence-object consistency hard gate
+        working-directory: backend
+        run: |
+          if ! npx tsx scripts/auditCanonical/validateEvidenceObjects.ts; then
+            echo "::error::REJECT: evidence-object-inconsistent"
+            echo "::error::A gaps.push evidence object's classOfRecommendation, levelOfEvidence,"
+            echo "::error::or guidelineSource disagrees with the same rule's recommendations text."
+            echo "::error::Run locally: npx tsx backend/scripts/auditCanonical/validateEvidenceObjects.ts"
+            echo "::error::Correct the evidence object (or recommendations) so all three agree."
+            exit 1
+          fi
+          echo "Evidence-object consistency gate passed."
+
+      - name: Evidence-object validator tests (incl. negative control)
+        working-directory: backend
+        run: |
+          npx jest tests/scripts/auditCanonical/validateEvidenceObjects.test.ts --ci
