@@ -1,9 +1,10 @@
 # PATH TO ROBUST - TAILRD HEART PLATFORM v2.1 (Report-Spine Reorganization)
 
 **Author:** Jonathan Hart
-**Version:** v2.1 (DRAFT for operator review)
+**Version:** v2.1
 **Date:** 2026-06-04
-**Status:** DRAFT - reorganizes v2.0 (2026-05-20) around the report-deliverable spine; supersedes v2.0 on operator approval. NOT merged.
+**Status:** ACTIVE (operator-approved 2026-06-04) - reorganizes v2.0 (2026-05-20) around the report-deliverable spine; supersedes v2.0.
+**Operator decision (2026-06-04):** v2.1 label confirmed; fingerprint-first NOT-adopted disposition confirmed (Section 7); **cut-line = A-as-60-day-milestone within C's extend-posture** - all-6 module trust + report class (a) per-module inventories land in the 60-day window; classes (b) service-line cuts / (c) 4-pathway ROI / (d) research-registry continue immediately after off the SAME spine; NO scope cut (Section 8: cut-line A milestone executed under cut-line C extend-timeline posture).
 **Supersedes:** v2.0 (2026-05-20); v1.2 archived at `docs/PATH_TO_ROBUST_v1.2_ARCHIVE.md`
 **Companions:** `docs/audit/AUDIT_METHODOLOGY.md`, `docs/audit/AUDIT_FINDINGS_REGISTER.md`, `BUILD_STATE.md`, `docs/planning/V2_HARVEST_PLATFORM_HARDENING.md`, `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md`, `CLAUDE.md`
 
