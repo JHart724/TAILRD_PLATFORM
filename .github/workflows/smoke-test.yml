@@ -47,13 +47,28 @@ jobs:
           LOGIN_EMAIL: ${{ secrets.SMOKE_TEST_EMAIL }}
           LOGIN_PASSWORD: ${{ secrets.SMOKE_TEST_PASSWORD }}
         run: |
-          RESPONSE=$(curl -sf -X POST ${{ env.API_BASE }}/api/auth/login \
+          # AUDIT-107: drop -f so the HTTP status is captured (not swallowed); the
+          # step is self-diagnosing about WHY login failed (401 vs 500 vs 000).
+          HTTP_CODE=$(curl -s -o /tmp/login.json -w '%{http_code}' -X POST ${{ env.API_BASE }}/api/auth/login \
             -H "Content-Type: application/json" \
             -d "{\"email\":\"$LOGIN_EMAIL\",\"password\":\"$LOGIN_PASSWORD\"}")
-          SUCCESS=$(echo "$RESPONSE" | python3 -c "import sys,json; print(json.load(sys.stdin).get('success', False))")
-          TOKEN=$(echo "$RESPONSE" | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['token'])")
-          echo "Login: $SUCCESS"
-          [ "$SUCCESS" = "True" ] || exit 1
+          echo "Login HTTP status: $HTTP_CODE"
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::error::Login failed with HTTP $HTTP_CODE (expected 200)."
+            case "$HTTP_CODE" in
+              401) echo "::error::401 = credentials rejected. Rotate SMOKE_TEST_* per docs/runbooks/AUDIT_107_SMOKE_ROTATION_RUNBOOK.md." ;;
+              500) echo "::error::500 = server error on login (decrypt path / data-state). See AUDIT-108 + AUDIT-109." ;;
+              000) echo "::error::000 = no response (DNS / network / service down)." ;;
+            esac
+            exit 1
+          fi
+          SUCCESS=$(python3 -c "import json; print(json.load(open('/tmp/login.json')).get('success', False))")
+          if [ "$SUCCESS" != "True" ]; then
+            echo "::error::HTTP 200 but success != True (unexpected login response shape)."
+            exit 1
+          fi
+          TOKEN=$(python3 -c "import json; print(json.load(open('/tmp/login.json'))['data']['token'])")
+          echo "Login: PASS (HTTP 200, success=True)"
           echo "token=$TOKEN" >> $GITHUB_OUTPUT
 
       - name: Verify all 6 module dashboards
@@ -126,3 +141,24 @@ jobs:
           echo "- API: ${{ env.API_BASE }}" >> $GITHUB_STEP_SUMMARY
           echo "- Trigger: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
           echo "- Time: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_STEP_SUMMARY
+
+      # AUDIT-107 blocking-posture OPTION (A) - alert-only. This notifies on a
+      # failed post-deploy smoke; it does NOT gate the deploy. OPTION (B)
+      # deploy-gating remains an open operator decision (see runbook). Deduped:
+      # at most one open smoke-failure issue at a time (avoids run-per-failure spam).
+      - name: Notify on smoke failure (AUDIT-107 alert-only)
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          EXISTING=$(gh issue list --state open --search "Post-deploy smoke test FAILED in:title" --json number --jq 'length' 2>/dev/null || echo "")
+          if [ -n "$EXISTING" ] && [ "$EXISTING" != "0" ]; then
+            echo "An open smoke-failure issue already exists; not duplicating."
+            exit 0
+          fi
+          gh issue create \
+            --title "Post-deploy smoke test FAILED on main" \
+            --body "The Post-Deploy Smoke Test failed. Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+AUDIT-107 alert-only posture: this notifies but does NOT gate the deploy. Deploy-gating (option B) is a deferred operator decision. See docs/runbooks/AUDIT_107_SMOKE_ROTATION_RUNBOOK.md." \
+            2>&1 || echo "gh issue create failed (token/permission?); see run logs above for the failing step."
