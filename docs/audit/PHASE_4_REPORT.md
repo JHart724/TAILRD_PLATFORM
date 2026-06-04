@@ -250,7 +250,7 @@ Per §18.3 rule 1: copy register severity verbatim. Severities below mirror the 
 | 4-3PL-02 | MEDIUM (P2) | OPEN |
 | 4-TEN-02 | MEDIUM (P2) | OPEN |
 | 4-TEN-03 | MEDIUM (P2) | OPEN |
-| 4-OBS-02 | LOW (P3) | OPEN |
+| 4-OBS-02 | LOW (P3) | RESOLVED 2026-06-04 (by removal; AUDIT-109 PR, branch `audit-109-prod-error-logging`) |
 | 4-RNB-01 | LOW (P3) | OPEN |
 | 4-RNB-04 | LOW (P3) | OPEN |
 | 4-APM-02 | LOW (P3) | OPEN |
