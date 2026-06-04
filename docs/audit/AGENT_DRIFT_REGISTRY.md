@@ -440,3 +440,14 @@ Drift-prevention forcing function. Read at session start as a sister to AUDIT_FI
 - **Sister-cross-reference:** DRIFT-45 parent (chat-side canonical-doc grep pre-flight; scope-sourcing surface; DRIFT-46 is sister at module-wiring-state surface); DRIFT-38 / DRIFT-40 / DRIFT-43 family (Mechanism 2 indicator "asserting canonical-source content from memory without verification"); section 19.5 canonical-grep-first discipline (PAUSE A inventory grep is the catch surface); AUDIT-098 (catalyst register entry; the silent-mock-when-live defect this catch surfaced).
 
 ---
+
+## DRIFT-47 - Next-step ordering drift elevating a presentation-layer P1 (AUDIT-099) over a clinical-detection P1 (AUDIT-101)
+
+- **Date:** 2026-06-03
+- **Catalyst PR / surface:** 2026-06-03 security-verification block; next-step framing during the register-reconciliation work. AUDIT-099 (non-HF Executive fabricated-KPI presentation defect) and AUDIT-101 (gap-cad-statin dose-blind FALSE-NEGATIVE / missed-gap) are both OPEN HIGH (P1). Next-step framing elevated AUDIT-099 (UI / presentation) ahead of AUDIT-101 (clinical-detection) without a severity-class basis.
+- **Drift indicator:** Ordering drift at next-step / top-3 prioritization. Two equal-severity (HIGH P1) OPEN findings were ranked by presentation-surface salience rather than clinical-harm class: a UI silent-mock defect (AUDIT-099) was framed as the next step ahead of a missed guideline-directed-therapy gap (AUDIT-101). A missed-gap clinical-detection defect is patient-safety-adjacent and outranks a presentation-layer fabricated-KPI defect at equal register-literal severity.
+- **Trigger:** Operator correction ("is it really the next step"). Surfaced that AUDIT-101 (clinical-detection false-negative) should rank ahead of AUDIT-099 (presentation-layer) within the same HIGH P1 tier.
+- **Mechanism update:** The standing top-3 is re-ranked with AUDIT-101 at the patient-safety rank. Tie-break rule WITHIN a severity tier: clinical-detection defects (missed-gap / wrong-drug / dose-blind on the gap-engine correctness surface) OUTRANK presentation-layer P1s (silent-mock / fabricated-KPI / UI) when both carry equal register-literal severity. Next-step / top-3 framing must apply this clinical-harm-class tie-break, not presentation-surface salience or recency. This is a within-tier ORDERING rule only; it never re-classifies register-literal severity (per §18).
+- **Sister-cross-reference:** AUDIT-101 (clinical-detection false-negative; patient-safety-class HIGH P1); AUDIT-099 (presentation-layer fabricated-KPI HIGH P1); CLAUDE.md §8 (clinical accuracy non-negotiable); DRIFT-33 (priority-check drift via path-of-least-resistance rationalization; sister at prioritization surface); §18 register-literal severity discipline (the tie-break operates within a tier, never re-classifies severity).
+
+---
