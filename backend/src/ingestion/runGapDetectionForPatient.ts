@@ -51,9 +51,18 @@ export async function runGapDetectionForPatient(
       labValues[obs.observationType] = obs.valueNumeric;
     }
     const medCodes = patient.medications.map((m: any) => m.rxNormCode).filter(Boolean);
+    // AUDIT-101: thread dose-bearing medication records so dose-dependent gates
+    // (high-intensity statin) can test strength, not ingredient presence.
+    const meds = patient.medications.map((m: any) => ({
+      rxNormCode: m.rxNormCode ?? null,
+      doseValue: m.doseValue ?? null,
+      doseUnit: m.doseUnit ?? null,
+      genericName: m.genericName ?? null,
+      medicationName: m.medicationName ?? null,
+    }));
     const age = Math.floor((Date.now() - patient.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
 
-    const detectedGaps = evaluateGapRules(dxCodes, labValues, medCodes, age, patient.gender, patient.race ?? undefined);
+    const detectedGaps = evaluateGapRules(dxCodes, labValues, medCodes, age, patient.gender, patient.race ?? undefined, meds);
 
     // Load existing gaps for this patient
     const existingGaps = await prisma.therapyGap.findMany({

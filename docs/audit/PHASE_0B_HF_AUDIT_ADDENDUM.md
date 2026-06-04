@@ -83,14 +83,14 @@ Heart Failure has **126 spec gaps** across 15 subcategories. Implementation: **2
 
 **Registry-without-evaluator (1):** registry entries with no matching evaluator block body.
 
-- `gap-hf-vaccine-covid` (registry line 2101): No evaluator body matched via similarity scoring
+- `gap-hf-vaccine-covid` (registry line 2191): No evaluator body matched via similarity scoring
 
 **Naming convention mismatches (4):** registry IDs not following `gap-hf-` convention.
 
-- `gap-1-attr-cm` (line 133): expected prefix `gap-hf-`, got `gap-1-`
-- `gap-2-iron-deficiency` (line 145): expected prefix `gap-hf-`, got `gap-2-`
-- `gap-6-finerenone` (line 157): expected prefix `gap-hf-`, got `gap-6-`
-- `gap-44-digoxin-toxicity` (line 181): expected prefix `gap-hf-`, got `gap-44-`
+- `gap-1-attr-cm` (line 223): expected prefix `gap-hf-`, got `gap-1-`
+- `gap-2-iron-deficiency` (line 235): expected prefix `gap-hf-`, got `gap-2-`
+- `gap-6-finerenone` (line 247): expected prefix `gap-hf-`, got `gap-6-`
+- `gap-44-digoxin-toxicity` (line 271): expected prefix `gap-hf-`, got `gap-44-`
 
 
 ---
@@ -99,33 +99,33 @@ Heart Failure has **126 spec gaps** across 15 subcategories. Implementation: **2
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-HF-001 | 124 | DET_OK | `gap-hf-35-beta-blocker` (HF-35 @3440-3464) | + \| auto-verify: preserved-from-addendum |
-| GAP-HF-002 | 125 | PARTIAL_DETECTION | `gap-hf-35-beta-blocker` (HF-35 @3440-3464) | auto-verify: preserved-from-addendum |
-| GAP-HF-003 | 126 | PARTIAL_DETECTION | `gap-hf-35-beta-blocker` (HF-35 @3440-3464) | auto-verify: preserved-from-addendum |
-| GAP-HF-004 | 127 | DET_OK | `gap-hf-37-raas` (HF-37 @4931-4957) | + \| auto-verify: preserved-from-addendum |
-| GAP-HF-005 | 128 | DET_OK | `gap-hf-arni-switch` (HF-ARNI-SWITCH @10108-10132) | auto-verify: preserved-from-addendum |
-| GAP-HF-007 | 129 | DET_OK | `gap-hf-36-mra` (HF-36 @3474-3496) | + \| auto-verify: preserved-from-addendum |
-| GAP-HF-010 | 130 | DET_OK | `gap-hf-34-sglt2i` (HF-34 @3410-3435) | + \| auto-verify: preserved-from-addendum |
-| GAP-HF-014 | 131 | DET_OK | `gap-hf-18-vericiguat` (HF-18 @3591-3607) | auto-verify: preserved-from-addendum |
-| GAP-HF-016 | 143 | DET_OK | `gap-hf-79-sglt2i-hfpef` (HF-79 @3918-3938) | auto-verify: preserved-from-addendum |
+| GAP-HF-001 | 124 | DET_OK | `gap-hf-35-beta-blocker` (HF-35 @3536-3560) | + \| auto-verify: preserved-from-addendum |
+| GAP-HF-002 | 125 | PARTIAL_DETECTION | `gap-hf-35-beta-blocker` (HF-35 @3536-3560) | auto-verify: preserved-from-addendum |
+| GAP-HF-003 | 126 | PARTIAL_DETECTION | `gap-hf-35-beta-blocker` (HF-35 @3536-3560) | auto-verify: preserved-from-addendum |
+| GAP-HF-004 | 127 | DET_OK | `gap-hf-37-raas` (HF-37 @5057-5083) | + \| auto-verify: preserved-from-addendum |
+| GAP-HF-005 | 128 | DET_OK | `gap-hf-arni-switch` (HF-ARNI-SWITCH @10234-10258) | auto-verify: preserved-from-addendum |
+| GAP-HF-007 | 129 | DET_OK | `gap-hf-36-mra` (HF-36 @3570-3592) | + \| auto-verify: preserved-from-addendum |
+| GAP-HF-010 | 130 | DET_OK | `gap-hf-34-sglt2i` (HF-34 @3506-3531) | + \| auto-verify: preserved-from-addendum |
+| GAP-HF-014 | 131 | DET_OK | `gap-hf-18-vericiguat` (HF-18 @3687-3703) | auto-verify: preserved-from-addendum |
+| GAP-HF-016 | 143 | DET_OK | `gap-hf-79-sglt2i-hfpef` (HF-79 @4014-4034) | auto-verify: preserved-from-addendum |
 | GAP-HF-017 | 144 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-HF-018 | 145 | DET_OK | `gap-hf-7-glp1ra` (HF-7 @3512-3528) | auto-verify: preserved-from-addendum |
-| GAP-HF-021 | 152 | PARTIAL_DETECTION | `gap-ep-device-crt` (EP-DEVICE-CRT @4305-4327) **[cross-module: EP]** | — \| auto-verify: broad-rule consolidation: EP-DEVICE-CRT top-matches 3 spec gaps in subcategory "Dev |
-| GAP-HF-024 | 153 | PARTIAL_DETECTION | `gap-ep-device-icd` (EP-DEVICE-ICD @4268-4294) **[cross-module: EP]** | — \| auto-verify: broad-rule consolidation: EP-DEVICE-ICD top-matches 2 spec gaps in subcategory "Dev |
-| GAP-HF-025 | 154 | PARTIAL_DETECTION | `gap-ep-device-icd` (EP-DEVICE-ICD @4268-4294) **[cross-module: EP]** | — \| auto-verify: broad-rule consolidation: EP-DEVICE-ICD top-matches 2 spec gaps in subcategory "Dev |
-| GAP-HF-026 | 155 | PARTIAL_DETECTION | `gap-ep-secondary-icd` (EP-SECONDARY-ICD @7252-7274) **[cross-module: EP]** | — \| auto-verify: Top candidate score=0.404 between PARTIAL and HIGH thresholds; tokenJaccard=0.07; n |
-| GAP-HF-028 | 168 | PARTIAL_DETECTION | `gap-hf-84-transplant-eval` (HF-84 @5983-6002) | + \| Multiple registry ids cited: gap-hf-84-transplant-eval, gap-hf-85-lvad-referral \| auto-verify: p |
+| GAP-HF-018 | 145 | DET_OK | `gap-hf-7-glp1ra` (HF-7 @3608-3624) | auto-verify: preserved-from-addendum |
+| GAP-HF-021 | 152 | PARTIAL_DETECTION | `gap-ep-device-crt` (EP-DEVICE-CRT @4401-4423) **[cross-module: EP]** | — \| auto-verify: broad-rule consolidation: EP-DEVICE-CRT top-matches 3 spec gaps in subcategory "Dev |
+| GAP-HF-024 | 153 | PARTIAL_DETECTION | `gap-ep-device-icd` (EP-DEVICE-ICD @4364-4390) **[cross-module: EP]** | — \| auto-verify: broad-rule consolidation: EP-DEVICE-ICD top-matches 2 spec gaps in subcategory "Dev |
+| GAP-HF-025 | 154 | PARTIAL_DETECTION | `gap-ep-device-icd` (EP-DEVICE-ICD @4364-4390) **[cross-module: EP]** | — \| auto-verify: broad-rule consolidation: EP-DEVICE-ICD top-matches 2 spec gaps in subcategory "Dev |
+| GAP-HF-026 | 155 | PARTIAL_DETECTION | `gap-ep-secondary-icd` (EP-SECONDARY-ICD @7378-7400) **[cross-module: EP]** | — \| auto-verify: Top candidate score=0.404 between PARTIAL and HIGH thresholds; tokenJaccard=0.07; n |
+| GAP-HF-028 | 168 | PARTIAL_DETECTION | `gap-hf-84-transplant-eval` (HF-84 @6109-6128) | + \| Multiple registry ids cited: gap-hf-84-transplant-eval, gap-hf-85-lvad-referral \| auto-verify: p |
 | GAP-HF-041 | 169 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-HF-043 | 170 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-HF-132 | 171 | PARTIAL_DETECTION | `gap-hf-73-hyponatremia` (HF-73 @3798-3813) | auto-verify: preserved-from-addendum |
+| GAP-HF-132 | 171 | PARTIAL_DETECTION | `gap-hf-73-hyponatremia` (HF-73 @3894-3909) | auto-verify: preserved-from-addendum |
 | GAP-HF-133 | 172 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-HF-033 | 185 | PARTIAL_DETECTION | `gap-hf-iron-iv-monitoring` (HF-IRON-IV-MONITORING @10385-10408) | auto-verify: preserved-from-addendum |
-| GAP-HF-034 | 186 | PARTIAL_DETECTION | `gap-hf-iron-iv-monitoring` (HF-IRON-IV-MONITORING @10385-10408) | auto-verify: preserved-from-addendum |
+| GAP-HF-033 | 185 | PARTIAL_DETECTION | `gap-hf-iron-iv-monitoring` (HF-IRON-IV-MONITORING @10511-10534) | auto-verify: preserved-from-addendum |
+| GAP-HF-034 | 186 | PARTIAL_DETECTION | `gap-hf-iron-iv-monitoring` (HF-IRON-IV-MONITORING @10511-10534) | auto-verify: preserved-from-addendum |
 | GAP-HF-036 | 192 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-HF-051 | 206 | PARTIAL_DETECTION | `gap-hf-90-amyloid-biomarker` (HF-90 @6161-6179) | auto-verify: preserved-from-addendum |
-| GAP-HF-053 | 207 | PARTIAL_DETECTION | `gap-hf-90-amyloid-biomarker` (HF-90 @6161-6179) | auto-verify: preserved-from-addendum |
-| GAP-HF-054 | 208 | PARTIAL_DETECTION | `gap-hf-90-amyloid-biomarker` (HF-90 @6161-6179) | auto-verify: preserved-from-addendum |
-| GAP-HF-057 | 217 | PARTIAL_DETECTION | `gap-hf-12-hcm-screening` (HF-12 @3536-3551) | auto-verify: preserved-from-addendum |
+| GAP-HF-051 | 206 | PARTIAL_DETECTION | `gap-hf-90-amyloid-biomarker` (HF-90 @6287-6305) | auto-verify: preserved-from-addendum |
+| GAP-HF-053 | 207 | PARTIAL_DETECTION | `gap-hf-90-amyloid-biomarker` (HF-90 @6287-6305) | auto-verify: preserved-from-addendum |
+| GAP-HF-054 | 208 | PARTIAL_DETECTION | `gap-hf-90-amyloid-biomarker` (HF-90 @6287-6305) | auto-verify: preserved-from-addendum |
+| GAP-HF-057 | 217 | PARTIAL_DETECTION | `gap-hf-12-hcm-screening` (HF-12 @3632-3647) | auto-verify: preserved-from-addendum |
 | GAP-HF-147 | 264 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-HF-156 | 277 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 

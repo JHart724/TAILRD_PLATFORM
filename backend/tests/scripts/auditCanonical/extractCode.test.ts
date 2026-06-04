@@ -201,12 +201,12 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     expect(registry.length).toBe(count);
   });
 
-  it('VHD evaluator extraction includes VD-PANNUS at line 10675', () => {
+  it('VHD evaluator extraction includes VD-PANNUS at line 10801', () => {
     const cfg = MODULE_CONFIGS.find((m) => m.code === 'VHD')!;
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(10675);
+    expect(pannus!.commentLine).toBe(10801);
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });
