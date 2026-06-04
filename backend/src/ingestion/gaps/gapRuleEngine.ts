@@ -38,6 +38,96 @@ const RATE_CONTROL_CODES_CV = codes(RXNORM_RATE_CONTROL);
 const OAC_CODES_CV = [...codes(RXNORM_DOACS), RXNORM_WARFARIN.WARFARIN];
 const GLP1_RA_CODES_CV = codes(RXNORM_GLP1_RA); // AUDIT-104: canonical GLP-1 RA set consumed by HF-7 + gap-cad-glp1
 
+// =============================================================================
+// Dose-aware high-intensity statin detection (AUDIT-101; shared infrastructure)
+// =============================================================================
+//
+// High-intensity statin per the 2018 AHA/ACC Blood Cholesterol Guideline
+// (Grundy et al., Circulation 2019;139:e1082-e1143) = LDL-C reduction >=50%:
+//   atorvastatin 40-80 mg  OR  rosuvastatin 20-40 mg.
+// No other agent/dose qualifies; simvastatin and pravastatin are moderate/low
+// intensity at every approved dose.
+//
+// AUDIT-101 root cause: an ingredient-level RxCUI (TTY=IN) maps to the
+// ingredient, NOT the strength - atorvastatin 10mg and 80mg are both 83367 - so
+// "on high-intensity statin" is structurally undetectable from rxNormCode alone.
+// Detection is therefore by AGENT (ingredient identity) + doseValue THRESHOLD,
+// using the dose fields the Medication record already carries. This helper is
+// shared infrastructure: every future dose-dependent rule should consume it
+// rather than re-deriving dose from a flat code list.
+//
+// §16 (RxNav properties.json, verified 2026-06-04; TTY=IN):
+//   atorvastatin 83367; rosuvastatin 301542.
+// Full §16 log: docs/architecture/AUDIT_101_STATIN_INTENSITY_NOTES.md §4.
+const RXNORM_ATORVASTATIN_IN = '83367';
+const RXNORM_ROSUVASTATIN_IN = '301542';
+// Minimum high-intensity daily dose (mg), keyed by ingredient RxCUI.
+const HIGH_INTENSITY_STATIN_MIN_MG: Record<string, number> = {
+  [RXNORM_ATORVASTATIN_IN]: 40,
+  [RXNORM_ROSUVASTATIN_IN]: 20,
+};
+
+/**
+ * A medication with the dose fields threaded from the Medication record.
+ * Legacy callers that pass only a flat code list are adapted to this shape
+ * (dose undefined) so the engine degrades to 'agent present, dose unknown'
+ * rather than silently treating ingredient presence as high-intensity.
+ */
+interface MedicationDose {
+  rxNormCode: string | null;
+  doseValue?: number | null;
+  doseUnit?: string | null;
+  genericName?: string | null;
+  medicationName?: string | null;
+}
+
+type HighIntensityStatinStatus =
+  | 'on_high_intensity'   // atorvastatin >=40mg or rosuvastatin >=20mg, dose documented
+  | 'agent_dose_unknown'  // on atorvastatin/rosuvastatin but dose not documented -> qualified fire
+  | 'not_high_intensity'; // no statin, a non-high-intensity agent, or a documented sub-threshold dose
+
+/** Resolve a medication to the high-intensity-eligible ingredient (atorvastatin/rosuvastatin), or null. */
+function highIntensityStatinAgent(med: MedicationDose): string | null {
+  const code = med.rxNormCode ?? '';
+  if (code === RXNORM_ATORVASTATIN_IN) return RXNORM_ATORVASTATIN_IN;
+  if (code === RXNORM_ROSUVASTATIN_IN) return RXNORM_ROSUVASTATIN_IN;
+  // rxNormCode may be a dose-level SCD/SBD rather than the ingredient; fall back
+  // to the name so agent identity survives whichever code level was ingested.
+  const text = `${med.genericName ?? ''} ${med.medicationName ?? ''}`.toLowerCase();
+  if (text.includes('atorvastatin')) return RXNORM_ATORVASTATIN_IN;
+  if (text.includes('rosuvastatin')) return RXNORM_ROSUVASTATIN_IN;
+  return null;
+}
+
+/**
+ * Classify a medication list for high-intensity statin therapy (AUDIT-101).
+ * - 'on_high_intensity' if any med is atorvastatin >=40mg / rosuvastatin >=20mg
+ *   with a usable mg dose;
+ * - else 'agent_dose_unknown' if a high-intensity-eligible agent is present but
+ *   no usable mg dose is documented (fail-loud: surface for confirm/intensify,
+ *   never silent-suppress);
+ * - else 'not_high_intensity' (no statin, a non-high-intensity agent such as
+ *   simvastatin/pravastatin, or a documented sub-threshold atorva/rosuva dose).
+ */
+function highIntensityStatinStatus(meds: MedicationDose[]): HighIntensityStatinStatus {
+  let agentDoseUnknown = false;
+  for (const med of meds) {
+    const agent = highIntensityStatinAgent(med);
+    if (!agent) continue;
+    const minMg = HIGH_INTENSITY_STATIN_MIN_MG[agent];
+    const unitOk = !med.doseUnit || med.doseUnit.toLowerCase().startsWith('mg');
+    if (typeof med.doseValue === 'number' && med.doseValue > 0 && unitOk) {
+      if (med.doseValue >= minMg) return 'on_high_intensity';
+      // documented sub-threshold dose -> not high-intensity; keep scanning in
+      // case another medication is high-intensity.
+    } else {
+      // high-intensity-eligible agent present but dose not usable -> qualified.
+      agentDoseUnknown = true;
+    }
+  }
+  return agentDoseUnknown ? 'agent_dose_unknown' : 'not_high_intensity';
+}
+
 
 /**
  * DetectedGap -- the output of a gap rule evaluation.
@@ -3294,6 +3384,12 @@ export function evaluateGapRules(
   age: number,
   gender?: string,
   race?: string,
+  // Dose-bearing medication records (AUDIT-101), threaded so dose-dependent gates
+  // (high-intensity statin) can test strength, not ingredient presence. Defaults
+  // to [] so legacy callers degrade to 'agent present, dose unknown' rather than
+  // silently treating ingredient presence as high-intensity. The flat medCodes
+  // array is retained for all dose-agnostic gates (backward compatible).
+  meds: MedicationDose[] = [],
 ): DetectedGap[] {
   const gaps: DetectedGap[] = [];
   const hasHF = dxCodes.some(c => c.startsWith('I50'));
@@ -4513,32 +4609,47 @@ export function evaluateGapRules(
   }
 
   // Gap CAD-STATIN: High-Intensity Statin in CAD
-  // Guideline: 2018 ACC/AHA Cholesterol Guideline, Class 1, LOE A
-  // All ASCVD patients should be on high-intensity statin
+  // Guideline: 2018 AHA/ACC/Multisociety Blood Cholesterol Guideline
+  //   (Grundy et al., Circulation 2019;139:e1082-e1143), Class 1, LOE A.
+  // Clinical ASCVD (hasCAD, ICD-10 I25.*) warrants HIGH-INTENSITY statin therapy:
+  // atorvastatin 40-80mg or rosuvastatin 20-40mg (LDL-C reduction >=50%).
+  // Detection is dose-aware (AUDIT-101) via highIntensityStatinStatus (agent
+  // identity + mg threshold), NOT ingredient presence. The prior ingredient set
+  // ['83367','301542','36567','42463'] could not encode dose and wrongly included
+  // simvastatin/pravastatin, silently suppressing the gap for patients NOT on
+  // high-intensity therapy. The gap now fires for everyone not on high-intensity,
+  // with a QUALIFIED status when a statin is on file but the dose is undocumented
+  // (structured-data / fail-loud, sibling to the L-code data-quality pattern).
   if (hasCAD) {
-    const STATIN_CODES = ['83367', '301542', '36567', '42463'];
-    const onStatin = medCodes.some(c => STATIN_CODES.includes(c));
-    if (!onStatin) {
-            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-  gaps.push({
+    const statinStatus = highIntensityStatinStatus(meds);
+    if (statinStatus !== 'on_high_intensity' && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+      const doseUnknown = statinStatus === 'agent_dose_unknown';
+      gaps.push({
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.CORONARY_INTERVENTION,
-          status: 'High-intensity statin not prescribed in CAD',
+          status: doseUnknown
+            ? 'Statin present; high-intensity dosing not documented in CAD - confirm or intensify'
+            : 'High-intensity statin not prescribed in CAD',
           target: 'Statin therapy initiated',
           medication: 'Atorvastatin 40-80mg or Rosuvastatin 20-40mg',
           recommendations: {
-            action: 'Consider high-intensity statin per 2018 ACC/AHA Cholesterol, Class 1, LOE A',
+            action: doseUnknown
+              ? 'Statin on file without a documented high-intensity dose; confirm current dose or intensify to atorvastatin 40-80mg or rosuvastatin 20-40mg per 2018 ACC/AHA Cholesterol, Class 1, LOE A'
+              : 'Consider high-intensity statin per 2018 ACC/AHA Cholesterol, Class 1, LOE A',
             guideline: '2018 ACC/AHA Cholesterol Management',
           },
               evidence: {
-          triggerCriteria: ['CAD (ICD-10 I25.*) with no statin in active medications'],
+          triggerCriteria: [
+            doseUnknown
+              ? 'CAD (ICD-10 I25.*) on atorvastatin/rosuvastatin with high-intensity dose not documented'
+              : 'CAD (ICD-10 I25.*) with no high-intensity statin in active medications',
+          ],
           guidelineSource: '2018 ACC/AHA Cholesterol Guideline',
           classOfRecommendation: '1',
           levelOfEvidence: 'A',
           exclusions: ['Documented statin intolerance', 'Active liver disease', 'Hospice/palliative care'],
         },
   });
-      }
     }
   }
 
@@ -4858,35 +4969,50 @@ export function evaluateGapRules(
   // Peripheral Vascular Module
   // ============================================================
 
-  // Gap PV-1: Statin Missing in PAD
-  // Guideline: 2024 ACC/AHA PAD Guideline, Class 1, LOE A
-  // All PAD patients should be on high-intensity statin therapy
-  // RxNorm statins: atorvastatin (36567), rosuvastatin (301542)
+  // Gap PV-1: High-Intensity Statin Missing in PAD
+  // Guideline: 2024 ACC/AHA/Multisociety Lower Extremity PAD Guideline
+  //   (Gornik et al., Circulation 2024;149:e1313-e1410), Class 1, LOE A:
+  //   patients with symptomatic / established lower-extremity PAD (I70.2*, I73.9)
+  //   should be treated with HIGH-INTENSITY statin therapy. The high-intensity
+  //   tier is the same as ASCVD secondary prevention (atorvastatin 40-80mg or
+  //   rosuvastatin 20-40mg, LDL-C reduction >=50%; 2018 AHA/ACC Cholesterol
+  //   Guideline tier referenced directly by the PAD guideline).
+  // Dose-aware detection (AUDIT-101) via highIntensityStatinStatus, shared with the
+  // CAD high-intensity gate. Identical prior ingredient-set defect (could not
+  // encode dose; wrongly included simvastatin/pravastatin) is corrected here too.
+  // Fires for everyone not on high-intensity, with a QUALIFIED status on
+  // documented-statin / undocumented-dose (fail-loud, never silent-suppress).
   const hasPAD = dxCodes.some(c => c.startsWith('I73.9') || c.startsWith('I70.2'));
   if (hasPAD) {
-    const STATIN_CODES = ['83367', '301542', '36567', '42463']; // atorvastatin, rosuvastatin, simvastatin, pravastatin
-    const onStatin = medCodes.some(c => STATIN_CODES.includes(c));
-    if (!onStatin) {
-            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-  gaps.push({
+    const padStatinStatus = highIntensityStatinStatus(meds);
+    if (padStatinStatus !== 'on_high_intensity' && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+      const doseUnknown = padStatinStatus === 'agent_dose_unknown';
+      gaps.push({
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.PERIPHERAL_VASCULAR,
-          status: 'High-intensity statin not prescribed in PAD',
+          status: doseUnknown
+            ? 'Statin present; high-intensity dosing not documented in PAD - confirm or intensify'
+            : 'High-intensity statin not prescribed in PAD',
           target: 'Statin therapy initiated',
-          medication: 'Atorvastatin or Rosuvastatin',
+          medication: 'Atorvastatin 40-80mg or Rosuvastatin 20-40mg',
           recommendations: {
-            action: 'Consider high-intensity statin per 2024 ACC/AHA PAD Guideline, Class 1, LOE A',
+            action: doseUnknown
+              ? 'Statin on file without a documented high-intensity dose; confirm current dose or intensify to atorvastatin 40-80mg or rosuvastatin 20-40mg per 2024 ACC/AHA PAD Guideline, Class 1, LOE A'
+              : 'Consider high-intensity statin per 2024 ACC/AHA PAD Guideline, Class 1, LOE A',
             guideline: '2024 ACC/AHA Peripheral Artery Disease',
           },
           evidence: {
-            triggerCriteria: ['PAD without high-intensity statin'],
+            triggerCriteria: [
+              doseUnknown
+                ? 'PAD (ICD-10 I70.2*/I73.9) on atorvastatin/rosuvastatin with high-intensity dose not documented'
+                : 'PAD (ICD-10 I70.2*/I73.9) without high-intensity statin',
+            ],
             guidelineSource: '2024 ACC/AHA Guideline for Peripheral Artery Disease',
             classOfRecommendation: '1',
             levelOfEvidence: 'A',
             exclusions: ['Statin intolerance', 'Active liver disease', 'Hospice/palliative care'],
           },
         });
-      }
     }
   }
 

@@ -98,12 +98,21 @@ export async function runGapDetection(
         labValues[obs.observationType] = obs.valueNumeric;
       }
       const medCodes = patient.medications.map((m: any) => m.rxNormCode).filter(Boolean) as string[];
+      // AUDIT-101: thread dose-bearing medication records so dose-dependent gates
+      // (high-intensity statin) can test strength, not ingredient presence.
+      const meds = patient.medications.map((m: any) => ({
+        rxNormCode: m.rxNormCode ?? null,
+        doseValue: m.doseValue ?? null,
+        doseUnit: m.doseUnit ?? null,
+        genericName: m.genericName ?? null,
+        medicationName: m.medicationName ?? null,
+      }));
       const age = Math.floor(
         (Date.now() - new Date(patient.dateOfBirth).getTime()) / (365.25 * 24 * 60 * 60 * 1000),
       );
 
       try {
-        const detectedGaps = evaluateGapRules(dxCodes, labValues, medCodes, age, patient.gender, patient.race ?? undefined);
+        const detectedGaps = evaluateGapRules(dxCodes, labValues, medCodes, age, patient.gender, patient.race ?? undefined, meds);
 
         if (detectedGaps.length === 0) continue;
 
