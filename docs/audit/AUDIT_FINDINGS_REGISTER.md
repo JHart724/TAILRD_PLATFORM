@@ -39,6 +39,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 ### CRITICAL (P0)
 
 - **AUDIT-001** — Test coverage 0.87% with auth-critical middleware at 0% (Phase 1, RESOLVED 2026-05-27, PR #307)
+- **AUDIT-108** - Production authentication outage (total): every found-User login 500s on fail-closed decrypt of un-backfilled plaintext User.firstName/lastName (encryption-expected since PR #263) (Production incident / data-state, OPEN; mitigated - synthetic pre-DUA, zero real-user exposure)
 
 ### HIGH (P1)
 
@@ -85,7 +86,8 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-102** - Two wrong-drug RxNorm miscodes in CAD lipid gates (gap-cad-pcsk9 + gap-cad-omega3) - FALSE-POSITIVE (Phase 0B clinical-code, **RESOLVED 2026-06-02** PR #332)
 - **AUDIT-103** - Two more copy-pasted wrong-provenance `evidence` objects (SH-2 TAVR / VD-1 warfarin) + VD-1 LOE contradiction (Phase 0B clinical-code, **RESOLVED 2026-06-02**)
 - **AUDIT-104** - Seven more LIVE-gating RxNorm codes wrong-drug or non-current across seven gap rules (Phase 0B clinical-code, **RESOLVED 2026-06-02** PR #332)
-- **AUDIT-107** - Post-deploy Login verification regressed on prod ~2026-05-07 (70 consecutive failures); gate also non-blocking decoration (Operational maturity / production verification, OPEN)
+- **AUDIT-107** - Post-deploy Login verification regressed on prod ~2026-05-07 (70 consecutive failures); gate also non-blocking decoration (Operational maturity / production verification, OPEN; 2026-06-03 mechanism resolved to HTTP 500 not credential - the detection-gap finding whose predicted harm materialized as AUDIT-108)
+- **AUDIT-109** - Production 500 error handler emits no exception/stack to CloudWatch; production failures undiagnosable from logs (Operational maturity / observability, OPEN)
 
 > Index reconciliation (2026-06-03): the AUDIT-098 through AUDIT-105 detail entries were filed during the 2026-05-31..06-02 arc WITHOUT their severity-index rows; the rows above (098-104 here in HIGH, 105 in MEDIUM) restore index completeness, and AUDIT-107 is filed with its index row in the same pass. Adding the severity-index row is part of filing discipline going forward (sister to DRIFT-47). AUDIT-099 + AUDIT-101 are the OPEN HIGH items that were missing from this index.
 
@@ -2150,6 +2152,7 @@ Documents the evidence-object validator shipped alongside AUDIT-106, the standin
 - **Dependencies:** relates to the CLAUDE.md §18 deploy-verification login credential (the `JHart@tailrd-heart.com` smoke credential is not created by any seed script); relates to the April-review crosswalk note below (the same production-auth surface the April Phase 1 findings covered).
 - **Cross-references:** `.github/workflows/smoke-test.yml`; the 2026-06-03 security-verification block PART C; CLAUDE.md §18 (deploy verification sequence); `backend/prisma/seed.ts` + `backend/scripts/seedBSW.ts` (no matching smoke account).
 - **Status note:** 2026-06-03 OPEN at filing. Filed as an operator-gated docs PR. NOT marked RESOLVED until a provisioned smoke account makes the Login step pass on a post-deploy run AND the blocking-posture decision lands.
+- **Status note (mechanism resolved):** 2026-06-03 the smoke Login failure was root-caused to HTTP 500, NOT a credential/account miss. An operator probe of `POST /api/auth/login` returned 500 for a real account; a nonexistent-user probe returned a clean 401. The 500 is the AUDIT-108 production authentication outage (fail-closed decrypt on un-backfilled plaintext User fields). AUDIT-107 is therefore reframed as the DETECTION-GAP finding: a non-blocking post-deploy gate let a total auth outage ship unverified for ~4 weeks - the predicted harm materialized as AUDIT-108. AUDIT-107 stays OPEN pending smoke-account provisioning + the blocking-posture decision (a working smoke also requires AUDIT-108 to be fixed first). See AUDIT-108 (outage) + AUDIT-109 (no error logging).
 
 ---
 
@@ -2159,6 +2162,49 @@ The April 2026 Master Platform Review (`docs/MASTER_PLATFORM_REVIEW_2026_04.md`,
 
 - **April FINDING-1.1-001 (CRITICAL: "Demo Mode Accepts Tampered Tokens as Super-Admin"):** DOES NOT REPRODUCE on main. The current `backend/src/middleware/auth.ts` catch block (L77-94) always rejects a provided-but-invalid token with HTTP 403 (comment L87-88: "A token was provided but failed verification - always reject. Demo fallback only applies when NO token is provided"). The demo super-admin payload is reachable only in the no-token branch (L97-100). Fixed at commit `9469918` / PR #112 ("fix(CRITICAL): 12 P0 fixes from master platform review", 2026-04-12). Residual (documented design, not the finding): when `DEMO_MODE=true` the middleware bypasses auth/authorization wholesale per CLAUDE.md §14; `DEMO_MODE` defaults false (`auth.ts:17`).
 - **April FINDING-1.1-008 (HIGH: "JWT Secret Entropy Not Validated"):** DOES NOT REPRODUCE on main. `backend/src/server.ts:48-66` (gated `if (!isDemoMode)`) FATAL-exits on missing `JWT_SECRET`, on length < 32 chars (L58), and on a weak-value blocklist (L62-66). Distinct from AUDIT-017's `PHI_ENCRYPTION_KEY` validator - this is a dedicated JWT_SECRET block. Fixed at commit `b71942c` / PR #117 ("fix(security+infra): logout auth, JWT entropy...", 2026-04-12). Un-adopted hardening noted: the April RS256-migration suggestion was not taken (still HS256, `auth.ts:55`), and the check is length + weak-substring rather than measured Shannon entropy.
+
+---
+
+### AUDIT-108 - Production authentication outage (total): every found-User login returns HTTP 500 because fail-closed decrypt throws on un-backfilled plaintext User.firstName/lastName (encryption-expected since PR #263)
+
+- **Phase:** Production incident / clinical-data-state (surfaced 2026-06-03 during the security-verification block; root-caused via STEP 1-3 read-only trace + one operator-authorized prod probe)
+- **Severity:** CRITICAL (P0)
+- **Status:** OPEN
+- **Discovered:** 2026-06-03. The non-blocking post-deploy smoke (AUDIT-107) had been failing its Login step for 70 consecutive runs. An operator manual probe of `POST /api/auth/login` with a real account returned HTTP 500, and a discriminator probe with a nonexistent user returned a clean 401 - localizing the fault to post-lookup processing of a found User row.
+- **Location (current main):**
+  - Throw site: `backend/src/middleware/phiEncryption.ts:185` - `decrypt()` throws `'PHI decryption: unencrypted value found in encrypted-field column ...'` on any value lacking the `enc:` prefix (the AUDIT-015 fail-closed control; header `:27`, opt-out flag `PHI_LEGACY_PLAINTEXT_OK` `:49-53`).
+  - Encryption-expected columns: `User: ['firstName', 'lastName']` in `PHI_FIELD_MAP` (`phiEncryption.ts:128`), added by PR #263 / AUDIT-075 (2026-05-08). (`User.email` deferred per AUDIT-081.)
+  - Read result-handler: `decryptRecord` (`phiEncryption.ts:206`) runs inside the phiEncryption `$extends` read path on every returned row.
+  - Login trigger: `prisma.user.findFirst({ where:{email...}, include:{hospital:true} })` returns the full User row (`backend/src/routes/auth.ts:52-55`); the decrypt throws on the `await`, before any audit write.
+- **Evidence:**
+  - Operator probe 2026-06-03T23:30:58Z: `{"success":false,"error":"Internal server error"}` HTTP 500 for a real account.
+  - Discriminator probe (same class, operator-authorized) 2026-06-03T23:49:51Z: nonexistent user -> HTTP 401 `Invalid credentials` (clean lookup-miss path; no row to decrypt). The 500-only-on-found-user split is the proof the throw is in returned-row decrypt.
+  - The 500 emitted NO audit event (no `LOGIN_SUCCESS`/`LOGIN_FAILED`), consistent with the throw at `auth.ts:52` before the audit writes at `:57`/`:68`. (The 401 path DID log `LOGIN_FAILED` - see AUDIT-109 for why the 500 logged nothing.)
+  - No plaintext->ciphertext backfill exists: the only User-touching migration is the V0/V1->V2 envelope re-wrap (`backend/scripts/migrations/audit-016-pr3-v0v1-to-v2.ts:201`, `users.firstName`), which assumes values are ALREADY encrypted and whose production `--execute` is operator-deferred. Existing User rows (created before #263) therefore hold plaintext firstName/lastName.
+- **Mechanism: DATA-STATE, not a code bug.** The decrypt control is fail-closed by design (AUDIT-015: never silently return ciphertext/plaintext). The defect is un-backfilled plaintext data meeting newly-encryption-expected columns. `PHI_LEGACY_PLAINTEXT_OK` is a migration-only flag and is not set in production.
+- **Scope:** every read of any `User` row -> total production authentication outage (all logins 500). Latently, every read of ANY encrypted-field column holding legacy plaintext across ALL models shares the same throw path; those endpoints are auth-gated (hence unreachable to confirm) but would 500 identically. The `/health` check passes because it reads no encrypted field.
+- **Mitigating context (recorded inline; does NOT lower the P0 floor):** no public entry path; synthetic-only, pre-DUA pilot; zero real-user / real-PHI exposure; the data at risk is synthetic.
+- **Boundary refinement (recorded):** the prior pin to the #262 deploy (2026-05-07) is corrected. The confirmed persistent mechanism requires PR #263 (2026-05-08 User-field encryption), so the current outage is #263-driven. The #262-era first smoke failures (2026-05-07 22:57Z onward) predate #263 and remain unattributed - the production stack is unavailable (AUDIT-109), so their exact cause (the `$use -> $extends` migration, or transient) is not confirmed. The unbroken streak spans the #262/#263 encryption-arc deploys.
+- **Remediation (separate operator-gated `backend/**` work block; NOT in this PR):** author + run a plaintext->ciphertext backfill for `User.firstName`/`lastName` (and any other plaintext-holding encrypted columns surfaced by the production data-state census), scoped by that census; then confirm reads succeed and the smoke Login passes. The existing V0/V1->V2 migration does NOT cover plaintext->ciphertext.
+  - **Stopgap EVALUATED and REJECTED:** setting `PHI_LEGACY_PLAINTEXT_OK=true` in production would restore login immediately, but it is a PLATFORM-WIDE disable of the AUDIT-015 fail-closed control (every encrypted column on every model would silently read plaintext), re-opening the exact integrity-failure class AUDIT-015 closed. Rejected as a global control-disable; the targeted backfill is the correct fix. (A narrower revert - temporarily removing `User.firstName/lastName` from `PHI_FIELD_MAP` - is less broad but still defers encryption; both are operator decisions, not taken here.)
+- **Severity rationale:** CRITICAL (P0) by classify-up - a total functional outage of production authentication (and latently broad encrypted-read failure) is the highest functional-impact class. The mitigating synthetic/pre-DUA context is recorded but does not lower the floor per the classify-up default; it informs urgency sequencing, not the severity label.
+- **Cross-references:** AUDIT-015 (the fail-closed decrypt control that correctly throws here); AUDIT-075 + `phiEncryption.ts:128` (the #263 User-field encryption that created the encryption-expected columns); AUDIT-016 PR3 (`audit-016-pr3-v0v1-to-v2.ts`; V0/V1->V2 re-wrap, NOT a plaintext backfill; production execute operator-deferred); AUDIT-107 (the non-blocking smoke gate that let this ship unverified for 4 weeks); AUDIT-109 (no production error logging - why the stack was unavailable); AUDIT-081 (User.email deferral); CLAUDE.md §16 (production incident history) + §9 (deployment state).
+- **Status note:** 2026-06-03 OPEN at filing. Filed as an operator-gated docs PR. This is a CONFIRMED LIVE production outage (mitigated: synthetic, pre-DUA, no real users). NOT marked RESOLVED until the backfill lands, found-User reads succeed, and a post-deploy smoke Login passes.
+
+---
+
+### AUDIT-109 - Production 500 error handler emits no exception/stack to CloudWatch; production failures are undiagnosable from logs
+
+- **Phase:** Operational maturity / observability (surfaced 2026-06-03 during the AUDIT-108 root-cause trace, STEP 2)
+- **Severity:** HIGH (P1)
+- **Status:** OPEN
+- **Discovered:** 2026-06-03. While retrieving the production stack trace for the AUDIT-108 login 500, CloudWatch held no error line for the failing request across all candidate log groups.
+- **Location:** the global Express error handler / route try/catch path that returns `{ success:false, error:'Internal server error' }` HTTP 500 (e.g. `backend/src/routes/auth.ts` login catch) does not write the caught exception/stack to the logger before responding.
+- **Evidence (read-only CloudWatch, 2026-06-03):** for the operator probe 500 at 2026-06-03T23:30:58Z, `filter-log-events` over `/ecs/tailrd-production-backend`, `/tailrd/production/application`, and `/tailrd/production/security` in the 23:29-23:51Z window returned ZERO error lines and ZERO audit event for that request (the only events were the 5-minute `WebhookEvent` tenant-guard cron + the 401 probe's `LOGIN_FAILED`). By contrast the 401 path DID emit a `LOGIN_FAILED` audit event - so login failures are observable but login 500s are not.
+- **Severity rationale:** HIGH (P1). A production outage that emits no stack is undiagnosable from logs; AUDIT-108 required a live operator probe + source reading to root-cause precisely because the logs were silent. Not PHI/auth/encryption itself; the floor is HIGH for an observability gap that blocks incident response on a P0.
+- **Remediation (separate operator-gated `backend/**` PR; NOT in this PR):** add error-path logging (logger.error with the exception + stack) on the 500 handler, with PHI-safe redaction (route through the existing `phiRedaction` utility per AUDIT-075; never log raw PHI in the stack/message). Confirm a synthetic 500 produces a redacted stack line in CloudWatch.
+- **Cross-references:** AUDIT-108 (the outage whose stack was unavailable, motivating this finding); AUDIT-075 / `phiRedaction.ts` (PHI-safe redaction for the error logging); CLAUDE.md §14 (never leave PHI in logs - the redaction requirement) + §16 (production incident history).
+- **Status note:** 2026-06-03 OPEN at filing. NOT marked RESOLVED until the 500 handler logs a PHI-safe stack and that is verified in CloudWatch on a synthetic error.
 
 ---
 
