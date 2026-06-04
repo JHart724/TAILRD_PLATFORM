@@ -128,7 +128,14 @@ router.post('/login', async (req: Request, res: Response) => {
       timestamp: new Date().toISOString(),
     } as APIResponse);
   } catch (error) {
-    logger.error('Login error:', { error: error instanceof Error ? error.message : String(error) });
+    // AUDIT-109: log the stack (not just the message) so a production login 500 is
+    // diagnosable from CloudWatch, matching the global error handler in server.ts.
+    // The logger's format-layer redaction (logger.ts) strips PHI fragments from
+    // both message and stack before they reach any transport.
+    logger.error('Login error:', {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return res.status(500).json({
       success: false,
       error: 'Internal server error',
