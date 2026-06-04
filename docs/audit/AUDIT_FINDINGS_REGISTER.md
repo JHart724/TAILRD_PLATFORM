@@ -39,7 +39,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 ### CRITICAL (P0)
 
 - **AUDIT-001** — Test coverage 0.87% with auth-critical middleware at 0% (Phase 1, RESOLVED 2026-05-27, PR #307)
-- **AUDIT-108** - Production authentication outage (total): every found-User login 500s on fail-closed decrypt of un-backfilled plaintext User.firstName/lastName (encryption-expected since PR #263) (Production incident / data-state, OPEN; mitigated - synthetic pre-DUA, zero real-user exposure)
+- **AUDIT-108** - Production authentication outage (total): every found-User login 500s on fail-closed decrypt of un-backfilled plaintext User.firstName/lastName (encryption-expected since PR #263) (Production incident / data-state, **RESOLVED 2026-06-04** - targeted plaintext->V2 backfill executed + verified on production, PR #342; mitigated - synthetic pre-DUA, zero real-user exposure)
 
 ### HIGH (P1)
 
