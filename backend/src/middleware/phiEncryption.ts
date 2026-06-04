@@ -80,7 +80,11 @@ const BASE_ENCRYPT_CONTEXT: EncryptionContext = {
   purpose: CANONICAL_PHI_PURPOSE,
 };
 
-function contextFor(model: string, field: string): EncryptionContext {
+// Exported so out-of-band PHI backfills (e.g. AUDIT-108 plaintext->V2) build
+// the byte-identical EncryptionContext the read path reconstructs - the writer
+// and reader MUST share this single source of truth or KMS Decrypt fails on a
+// context mismatch (no reimplementation; coordinated-migration discipline).
+export function contextFor(model: string, field: string): EncryptionContext {
   return { ...BASE_ENCRYPT_CONTEXT, model, field };
 }
 

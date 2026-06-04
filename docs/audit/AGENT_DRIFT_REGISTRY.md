@@ -451,3 +451,15 @@ Drift-prevention forcing function. Read at session start as a sister to AUDIT_FI
 - **Sister-cross-reference:** AUDIT-101 (clinical-detection false-negative; patient-safety-class HIGH P1); AUDIT-099 (presentation-layer fabricated-KPI HIGH P1); CLAUDE.md §8 (clinical accuracy non-negotiable); DRIFT-33 (priority-check drift via path-of-least-resistance rationalization; sister at prioritization surface); §18 register-literal severity discipline (the tie-break operates within a tier, never re-classifies severity).
 
 ---
+
+## DRIFT-48 - --delete-branch on the base of an open stacked PR auto-closed the dependent
+
+- **Date:** 2026-06-03
+- **Catalyst PR / surface:** AUDIT-108 work-block merge sequencing. The operator authorized merging the docs-PR stack #338 / #339 / #340, where #340 was stacked (base = #339 head branch `feat/register-reconciliation-june03`). Merging #339 with `gh pr merge 339 --squash --delete-branch` deleted #339 head branch, which was #340 BASE - GitHub auto-CLOSED #340 (state CLOSED, CONFLICTING) rather than retargeting it, so #340 content (AUDIT-108/109 + AUDIT-107 update) did not land on the first attempt.
+- **Drift indicator:** Merging a stacked PR set base-first with `--delete-branch` on the base. Deleting the base branch of an OPEN dependent PR closes the dependent. The dependency direction (leaf depends on base) was not consulted before choosing the merge order + the branch-delete flag.
+- **Trigger:** Self-caught immediately post-merge during the verification read (`gh pr view 340` returned state=CLOSED). No data lost - the head branch and its commit survived (only the base branch was deleted).
+- **Mechanism update:** When merging a stacked PR set, either (a) merge LEAF-first (dependents before their base), or (b) retarget dependents to the base-of-base BEFORE deleting any base branch (`gh pr edit <dependent> --base main`), or (c) omit `--delete-branch` on any branch that is the base of an open PR. Before any `--delete-branch`, check whether the branch is the base of an open PR (`gh pr list --base <branch>`).
+- **Recovery:** cherry-picked the dependent single commit (`6fee852`) onto updated main as a fresh PR #341 (clean - main already equalled the squashed base content), which landed the AUDIT-108/109 content. Logged so the merge-order check becomes standard for future stacked-PR landings.
+- **Sister-cross-reference:** DRIFT-12 (multi-step work block surfaced completion without a prior-step verification gate; sister at sequencing-gate surface); section 19.5 canonical-grep-first discipline (the post-merge `gh pr view` read is the catch surface); CLAUDE.md §5 + RULE 7 (PR-based workflow; stacked-PR landing discipline).
+
+---

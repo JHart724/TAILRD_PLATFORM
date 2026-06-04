@@ -306,7 +306,7 @@ print('Health:', d['data']['status'])
 " && \
 curl -s -X POST https://api.tailrd-heart.com/api/auth/login \
   -H 'Content-Type: application/json' \
-  -d '{\"email\":\"JHart@tailrd-heart.com\",\"password\":\"Demo2026!\"}' | python3 -c "
+  -d "{\"email\":\"\$SMOKE_TEST_EMAIL\",\"password\":\"\$SMOKE_TEST_PASSWORD\"}" | python3 -c "
 import sys,json
 d=json.load(sys.stdin)
 print('Login:', d.get('success'))
@@ -322,6 +322,8 @@ aws ecs describe-tasks --cluster tailrd-production-cluster \
 ```
 
 All three must pass: Health: healthy, Login: True (or valid error), Running SHA matches pushed commit.
+
+**Credential handling (AUDIT-108 scrub, 2026-06-03):** the login probe now reads `$SMOKE_TEST_EMAIL` / `$SMOKE_TEST_PASSWORD` from the environment (the same GitHub secrets the post-deploy smoke uses), NOT a hardcoded plaintext credential. The prior hardcoded `JHart@tailrd-heart.com` / `Demo2026!` was used in diagnostic probes and is BURNED - that password MUST be rotated in production and the `SMOKE_TEST_*` secrets updated to the rotated value (see `docs/runbooks/AUDIT_108_BACKFILL_RUNBOOK.md` §7). Note the pass-criteria difference vs the post-deploy smoke (AUDIT-107): this §18 check uses `curl -s` and tolerates "a valid error" (e.g. a 401), whereas `.github/workflows/smoke-test.yml` uses `curl -sf` which hard-fails on any HTTP >= 400 - so a "valid error" that passes here still fails the smoke gate.
 
 ### Rollback protocol
 If deploy verification fails:
