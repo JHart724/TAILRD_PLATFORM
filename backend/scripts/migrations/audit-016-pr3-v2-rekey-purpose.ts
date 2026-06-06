@@ -306,10 +306,6 @@ export async function rekeyTarget(t: Target, batchSize: number, pauseMs: number)
 
     auditLogger.info(`PHI_REKEY_BATCH_START table=${t.table} column=${t.column} batchSize=${rows.length}`);
 
-    let batchSkippedCanonical = 0;
-    let batchRekeyed = 0;
-    let batchFailed = 0;
-
     for (const row of rows) {
       rowsAttempted++;
       try {
@@ -324,10 +320,8 @@ export async function rekeyTarget(t: Target, batchSize: number, pauseMs: number)
         );
         if (result.skipped) {
           rowsSkippedCanonical++;
-          batchSkippedCanonical++;
         } else {
           rowsRekeyed++;
-          batchRekeyed++;
         }
       } catch (err: any) {
         // Graceful-skip: decrypt-under-oldContext failure means the record is already
@@ -341,11 +335,9 @@ export async function rekeyTarget(t: Target, batchSize: number, pauseMs: number)
                                   msg.includes('InvalidCiphertextException');
         if (isContextMismatch) {
           rowsSkippedCanonical++;
-          batchSkippedCanonical++;
           auditLogger.info(`PHI_REKEY_SKIP_CANONICAL table=${t.table} column=${t.column} recordId=${row.id}`);
         } else {
           rowsFailed++;
-          batchFailed++;
           errors.push({ recordId: row.id, message: msg });
           auditLogger.error(`PHI_REKEY_ROW_FAIL table=${t.table} column=${t.column} recordId=${row.id} err=${msg}`);
         }
@@ -354,26 +346,32 @@ export async function rekeyTarget(t: Target, batchSize: number, pauseMs: number)
 
     auditLogger.info(`PHI_REKEY_BATCH_COMPLETED table=${t.table} column=${t.column} rekeyed=${rowsRekeyed} skipped=${rowsSkippedCanonical} failed=${rowsFailed}`);
 
-    // Cursor advance: last row's id is the next iteration's exclusive lower
-    // bound. Combined with ORDER BY id ASC in fetchV2Rows, this guarantees
-    // forward progress even when every row in a batch was skip-canonical
-    // (legacy SQL filter cannot discriminate post-rekey envelopes).
-    cursor = rows[rows.length - 1].id;
-
-    // Option B safety abort: if every row in the batch was skip-canonical,
-    // assume the target has converged and stop. Mirrors sister-script
-    // audit-016-pr3-v0v1-to-v2.ts:615-617 all-fail abort, inverted for the
-    // rekey case where all-skip (not all-fail) is the convergence signal.
-    // The cursor alone prevents infinite loops; this guard short-circuits
-    // tail-end scans on already-canonical targets.
-    const batchAllSkipped =
-      rows.length > 0 && batchSkippedCanonical === rows.length && batchRekeyed === 0 && batchFailed === 0;
-    if (batchAllSkipped) {
-      auditLogger.info(
-        `PHI_REKEY_BATCH_ALL_SKIPPED table=${t.table} column=${t.column} batchSize=${rows.length} cursor=${cursor}`,
+    // Keyset cursor advance + non-progress tripwire (AUDIT-113 fix; REPLACED the
+    // former all-skip-per-batch abort). The cursor's exclusive lower bound
+    // (id > lastId, ORDER BY id ASC) guarantees forward progress; the loop then
+    // terminates correctly via the partial/empty-batch breaks below. The ONLY
+    // pathological condition is the cursor failing to ADVANCE between batches -
+    // the original Day-15 pre-cursor infinite loop, where the `LIKE 'enc:v2:%'`
+    // filter cannot discriminate pre/post-rekey state, so a non-advancing cursor
+    // re-fetches the same rows forever. Guard exactly that.
+    //
+    // Why the prior all-skip abort was a defect (AUDIT-113 first remediation
+    // attempt): an all-skip batch is a NORMAL occurrence on a front-loaded
+    // canonical distribution (a leading run of already-canonical rows by id), NOT
+    // a convergence signal. The abort halted the patients.firstName rekey at
+    // batch 1 / rowsRekeyed=0, before reaching the 5,780 legacy-purpose records
+    // at higher ids, and exited 0 - a silent no-op caught only by the
+    // rowsRekeyed count invariant. The cursor + batch-break termination is the
+    // correct convergence mechanism; an all-skip batch must not stop the scan.
+    const nextCursor = rows[rows.length - 1].id;
+    if (cursor !== null && nextCursor === cursor) {
+      throw new Error(
+        `PHI_REKEY_CURSOR_NONPROGRESS table=${t.table} column=${t.column} ` +
+          `cursor=${cursor} did not advance between batches ` +
+          `(keyset cursor regression; aborting to prevent the Day-15 infinite-loop pathology)`,
       );
-      break;
     }
+    cursor = nextCursor;
 
     if (rows.length < batchSize) break;
     await sleep(pauseMs);

@@ -257,22 +257,27 @@ describe('GROUP F: rekeyTarget graceful-skip on canonical-purpose records', () =
   });
 });
 
-// ===== GROUP G: rekeyTarget loop-termination invariants (Day 15 cursor-fix) =====
+// ===== GROUP G: rekeyTarget loop-termination invariants (Day 15 cursor-fix;
+//                AUDIT-113 abort-replacement 2026-06-06) =====
 //
 // Closes test coverage gap caught at Day 15 production halt: target with
 // 100 percent already-canonical rows caused an infinite loop because the SQL
 // WHERE clause `LIKE 'enc:v2:%'` cannot discriminate pre-rekey from
-// post-rekey state (both byte-identical V2 envelopes). Fix combines:
-//   Option A: keyset cursor `id > <last-row-id>` in fetchV2Rows (forward
-//             progress invariant regardless of SQL-filter discriminator gap)
-//   Option B: all-skip safety abort (short-circuit tail-end scans on
-//             already-canonical targets; sister to v0v1-to-v2.ts all-fail
-//             abort line 615-617)
+// post-rekey state (both byte-identical V2 envelopes). The fix is the keyset
+// cursor `id > <last-row-id>` in fetchV2Rows: forward-progress invariant
+// regardless of the SQL-filter discriminator gap; the loop terminates via the
+// partial/empty-batch breaks.
 //
-// Sister-pattern parity: audit-016-pr3-v0v1-to-v2.ts:485-488 + 571-617 used
-// shrinking-candidate-set discipline (SQL filter shrinks as migrations
-// succeed) plus all-fail safety abort. The rekey case requires the keyset
-// cursor because the same-prefix SQL filter cannot shrink the candidate set.
+// AUDIT-113 (2026-06-06): the former "all-skip safety abort" (stop when one
+// batch is entirely skip-canonical) was REMOVED - it was a defect, not a safety
+// net. An all-skip batch is a NORMAL occurrence on a front-loaded canonical
+// distribution (leading already-canonical rows by id), NOT a convergence
+// signal; it halted the patients.firstName rekey at batch 1 / rowsRekeyed=0
+// before reaching the 5,780 legacy-purpose records at higher ids, exiting 0
+// (silent no-op). It is replaced by a cursor NON-PROGRESS tripwire that guards
+// the ACTUAL Day-15 pathology: the keyset cursor failing to advance between
+// batches (re-fetching the same rows forever). Termination on a converged
+// target is the cursor + empty/partial-batch break, not a premature abort.
 describe('GROUP G: rekeyTarget loop-termination invariants', () => {
   const target = { table: 'audit_logs', column: 'description', model: 'auditLog', kind: 'string' as const };
 
@@ -282,11 +287,13 @@ describe('GROUP G: rekeyTarget loop-termination invariants', () => {
       .mockResolvedValueOnce([{ c: 100n }]);
   });
 
-  it('T-REKEY-LOOP-1: 100 percent already-canonical target terminates in 1 iteration via all-skip safety abort', async () => {
-    queryRawMock.mockResolvedValueOnce([
-      { id: 'rec-1', value: 'enc:v2:canonical-1' },
-      { id: 'rec-2', value: 'enc:v2:canonical-2' },
-    ]);
+  it('T-REKEY-LOOP-1: 100 percent already-canonical target terminates via cursor + empty-batch break (NOT a premature all-skip abort)', async () => {
+    queryRawMock
+      .mockResolvedValueOnce([
+        { id: 'rec-1', value: 'enc:v2:canonical-1' },
+        { id: 'rec-2', value: 'enc:v2:canonical-2' },
+      ])
+      .mockResolvedValueOnce([]); // cursor advanced past rec-2; no more rows -> terminate
     rekeyMock.mockRejectedValue(new Error('UnknownError'));
 
     const report = await rekeyTarget(target, 2, 0);
@@ -295,7 +302,11 @@ describe('GROUP G: rekeyTarget loop-termination invariants', () => {
       const sql = c[0] as string;
       return sql.includes('SELECT id,') && sql.includes('AS value');
     });
-    expect(fetchCalls).toHaveLength(1);
+    // Two fetches: an all-skip batch must NOT stop the scan (that was the
+    // AUDIT-113 defect). The cursor advances and the empty second batch
+    // terminates the loop - convergence by cursor, not by a premature abort.
+    expect(fetchCalls).toHaveLength(2);
+    expect(fetchCalls[1][0] as string).toContain("id > 'rec-2'");
     expect(report.rowsAttempted).toBe(2);
     expect(report.rowsSkippedCanonical).toBe(2);
     expect(report.rowsRekeyed).toBe(0);
@@ -344,5 +355,62 @@ describe('GROUP G: rekeyTarget loop-termination invariants', () => {
     expect(report.rowsRekeyed).toBe(0);
     expect(report.rowsSkippedCanonical).toBe(0);
     expect(report.rowsFailed).toBe(0);
+  });
+
+  // AUDIT-113 regression: the exact production distribution that broke the
+  // firstName rekey - already-canonical records FRONT-LOADED by id, with the
+  // legacy-purpose (rekeyable) records at HIGHER ids in a later batch. The old
+  // all-skip abort stopped at batch 1 (rowsRekeyed=0); the cursor-driven loop
+  // MUST proceed past the all-skip batch and rekey the later records.
+  it('T-REKEY-LOOP-4: front-loaded canonical batch does NOT stop the scan; later legacy-purpose batch is rekeyed', async () => {
+    queryRawMock
+      .mockResolvedValueOnce([
+        { id: 'rec-1', value: 'enc:v2:canonical-1' },
+        { id: 'rec-2', value: 'enc:v2:canonical-2' },
+      ])
+      .mockResolvedValueOnce([
+        { id: 'rec-3', value: 'enc:v2:legacy-3' },
+        { id: 'rec-4', value: 'enc:v2:legacy-4' },
+      ])
+      .mockResolvedValueOnce([]);
+    rekeyMock
+      .mockRejectedValueOnce(new Error('UnknownError')) // rec-1 already canonical -> skip
+      .mockRejectedValueOnce(new Error('UnknownError')) // rec-2 already canonical -> skip
+      .mockResolvedValueOnce({
+        recordId: 'rec-3', table: 'audit_logs', column: 'description',
+        fromVersion: 'v2', toVersion: 'v2', fieldsConverted: 1, skipped: false, migratedAt: new Date(),
+      })
+      .mockResolvedValueOnce({
+        recordId: 'rec-4', table: 'audit_logs', column: 'description',
+        fromVersion: 'v2', toVersion: 'v2', fieldsConverted: 1, skipped: false, migratedAt: new Date(),
+      });
+
+    const report = await rekeyTarget(target, 2, 0);
+
+    const fetchCalls = queryRawMock.mock.calls.filter((c) => {
+      const sql = c[0] as string;
+      return sql.includes('SELECT id,') && sql.includes('AS value');
+    });
+    expect(fetchCalls).toHaveLength(3);
+    expect(fetchCalls[1][0] as string).toContain("id > 'rec-2'"); // advanced past the all-skip batch
+    expect(fetchCalls[2][0] as string).toContain("id > 'rec-4'");
+    expect(report.rowsAttempted).toBe(4);
+    expect(report.rowsRekeyed).toBe(2); // the later legacy records WERE reached + rekeyed
+    expect(report.rowsSkippedCanonical).toBe(2);
+    expect(report.rowsFailed).toBe(0);
+  });
+
+  // The replacement tripwire: if the keyset cursor fails to advance between
+  // batches (the actual Day-15 pre-cursor infinite-loop pathology), abort loud.
+  it('T-REKEY-LOOP-5: cursor non-progress (same last id re-fetched) throws PHI_REKEY_CURSOR_NONPROGRESS', async () => {
+    queryRawMock
+      .mockResolvedValueOnce([{ id: 'rec-9', value: 'enc:v2:legacy-9' }])
+      .mockResolvedValueOnce([{ id: 'rec-9', value: 'enc:v2:legacy-9' }]); // cursor did NOT advance
+    rekeyMock.mockResolvedValue({
+      recordId: 'rec-9', table: 'audit_logs', column: 'description',
+      fromVersion: 'v2', toVersion: 'v2', fieldsConverted: 1, skipped: false, migratedAt: new Date(),
+    });
+
+    await expect(rekeyTarget(target, 1, 0)).rejects.toThrow(/PHI_REKEY_CURSOR_NONPROGRESS/);
   });
 });
