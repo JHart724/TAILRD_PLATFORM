@@ -160,5 +160,5 @@ jobs:
             --title "Post-deploy smoke test FAILED on main" \
             --body "The Post-Deploy Smoke Test failed. Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-AUDIT-107 alert-only posture: this notifies but does NOT gate the deploy. Deploy-gating (option B) is a deferred operator decision. See docs/runbooks/AUDIT_107_SMOKE_ROTATION_RUNBOOK.md." \
+          AUDIT-107 alert-only posture: this notifies but does NOT gate the deploy. Deploy-gating (option B) is a deferred operator decision. See docs/runbooks/AUDIT_107_SMOKE_ROTATION_RUNBOOK.md." \
             2>&1 || echo "gh issue create failed (token/permission?); see run logs above for the failing step."
