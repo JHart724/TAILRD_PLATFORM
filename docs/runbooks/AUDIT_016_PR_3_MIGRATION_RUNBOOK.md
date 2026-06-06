@@ -667,21 +667,23 @@ The fetch SQL gains a keyset clause `WHERE id > $lastFetchedId` (parameterized; 
 
 Implementation: `backend/scripts/migrations/audit-016-pr3-v2-rekey-purpose.ts` `fetchV2Rows` accepts a `lastFetchedId` parameter; SQL composition appends the keyset predicate when the parameter is nonempty. Test coverage: GROUP G `T-REKEY-LOOP-2` asserts the second fetch SQL contains `id > 'rec-bbb'` after the first fetch returned a row with id `rec-bbb`.
 
-#### 10.11.4 Option B all-skip safety abort
+#### 10.11.4 Cursor non-progress tripwire (AUDIT-113 2026-06-06; REPLACES the former all-skip safety abort)
 
-Fix layer 2: the rekey loop aborts if a fetch iteration returns rows but every row is recorded as `rowsSkippedCanonical`.
+The keyset cursor (10.11.3) is the sole termination mechanism: the loop ends when a fetch returns a partial/empty batch (`rows.length < batchSize` / `=== 0`). The only pathological condition is the cursor failing to ADVANCE between batches - the original Day-15 pre-cursor behaviour, where the `LIKE 'enc:v2:%'` filter cannot discriminate pre/post-rekey state, so a non-advancing cursor re-fetches the same rows forever. The rekey loop now guards exactly that: it compares the new batch's last id to the prior cursor and, if they are equal, throws `PHI_REKEY_CURSOR_NONPROGRESS` (fail-loud, exit 2).
 
-This is the sister of the v0v1 all-fail abort at `backend/scripts/migrations/audit-016-pr3-v0v1-to-v2.ts:571-617`, which aborts if every row in a fetch iteration is recorded as `rowsFailed` (interpreted as a systemic failure mode rather than per-row error noise). The V2-to-V2 sister of that invariant is: every row skipped-canonical in a fetch iteration means the candidate set is fully canonical and there is no further work; abort and report.
+**Why the prior "all-skip safety abort" was removed (it was a defect, not a safety net):** the old layer-2 stopped the loop the moment one fetch iteration was entirely `rowsSkippedCanonical`, on the theory that "all-skip means the candidate set is fully canonical." That theory is false for a FRONT-LOADED distribution: when already-canonical rows occupy the lowest ids (an original seed population) and the rekeyable legacy-purpose rows sit at higher ids, the FIRST batch is all-skip while the real work is later in the scan. On 2026-06-06 the AUDIT-113 `patients.firstName` rekey hit exactly this - batch 1 (the ~367 canonical seed rows by id) was all-skip, the abort fired, the run exited 0 with `rowsRekeyed=0`, and the 5,780 legacy-purpose `phi-migration-v0v1-to-v2` records at higher ids were never reached. The silent no-op was caught only by the operator's `rowsRekeyed ~= 5,780` count invariant, NOT by the exit code. An all-skip batch is a normal occurrence and must never stop the scan; the cursor + batch-break is the correct convergence signal.
 
-Implementation: rekey loop tracks per-iteration skip count; if `rowsSkippedCanonicalInIteration === rows.length` and `rows.length > 0`, the loop emits an `ALL_SKIP_ABORT` log entry and returns. Test coverage: GROUP G `T-REKEY-LOOP-1` asserts a 100 percent already-canonical target terminates in exactly 1 fetch with `rowsAttempted=2`, `rowsSkippedCanonical=2`, `rowsRekeyed=0`, `rowsFailed=0`.
+Implementation: `audit-016-pr3-v2-rekey-purpose.ts` `rekeyTarget` loop - after each batch, `nextCursor = rows[last].id`; if `cursor !== null && nextCursor === cursor` throw `PHI_REKEY_CURSOR_NONPROGRESS`; else advance. The per-batch skip counters that fed the old abort were removed. Test coverage: GROUP G `T-REKEY-LOOP-1` (a 100 percent already-canonical target now terminates via the cursor + empty-batch break, 2 fetches, no premature abort), `T-REKEY-LOOP-4` (front-loaded canonical-then-legacy: the scan proceeds past the all-skip batch and rekeys the later records), `T-REKEY-LOOP-5` (a stuck cursor throws `PHI_REKEY_CURSOR_NONPROGRESS`).
 
 #### 10.11.5 Test class gap closure
 
 GROUP G added to `backend/tests/scripts/migrations/audit-016-pr3-v2-rekey-purpose.test.ts`:
 
-- `T-REKEY-LOOP-1`: 100 percent already-canonical target terminates in 1 iteration via all-skip safety abort. Exactly 1 fetch call.
+- `T-REKEY-LOOP-1`: 100 percent already-canonical target terminates via the cursor + empty-batch break (2 fetch calls; the all-skip batch does NOT abort the scan). Second fetch SQL contains `id > 'rec-2'`.
 - `T-REKEY-LOOP-2`: mixed legacy plus canonical; cursor advances past skip-canonical rows. 2 fetch calls. First fetch SQL does NOT contain `id > '`. Second fetch SQL contains `id > 'rec-bbb'`.
 - `T-REKEY-LOOP-3`: 0 candidate rows terminates on `rows.length===0` before any rekey call.
+- `T-REKEY-LOOP-4` (AUDIT-113 regression): front-loaded canonical batch then a later legacy-purpose batch; the scan proceeds past the all-skip first batch (3 fetch calls; second fetch `id > 'rec-2'`, third `id > 'rec-4'`) and rekeys the later records (`rowsRekeyed=2`). This is the exact distribution that the removed all-skip abort failed on.
+- `T-REKEY-LOOP-5` (AUDIT-113 replacement tripwire): a stuck cursor (same last id re-fetched) throws `PHI_REKEY_CURSOR_NONPROGRESS`.
 
 Pre-Day-15 coverage gap: GROUPS A through F asserted parseArgs, preFlightValidate, checkRekeyConfirmation, countTarget SQL, fetchV2Rows SQL composition, and rekeyTarget graceful-skip semantics. None of those groups asserted fetch-loop termination invariants on a 100 percent already-canonical target. GROUP G closes that gap.
 
