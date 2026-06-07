@@ -172,6 +172,13 @@ jobs:
         if: failure()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # AUDIT-114 mechanism 2: this job runs no actions/checkout, so there is
+          # no local git remote for `gh` to resolve the repo from - `gh issue
+          # list`/`create` would fail with "not a git repository" (NOT a 403; the
+          # issues: write grant is fine). GH_REPO gives gh explicit repo context
+          # for both the dedup list and the create. Exposed by the rung-1 synthetic
+          # verification once the `|| echo` swallow was removed.
+          GH_REPO: ${{ github.repository }}
         run: |
           EXISTING=$(gh issue list --state open --search "Post-deploy smoke test FAILED in:title" --json number --jq 'length' 2>/dev/null || echo "")
           if [ -n "$EXISTING" ] && [ "$EXISTING" != "0" ]; then
