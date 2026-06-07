@@ -2,6 +2,20 @@ name: Build & Deploy to ECS
 
 on:
   workflow_dispatch:
+    inputs:
+      override_smoke_hold:
+        description: 'Override an AUDIT-107 rung-2 smoke-hold (requires override_reason). Audited to the run summary + hold issue.'
+        type: boolean
+        default: false
+      override_reason:
+        description: 'Reason for overriding the smoke-hold (required when override_smoke_hold=true).'
+        type: string
+        default: ''
+        required: false
+      gate_only_dryrun:
+        description: 'Evaluate the smoke-hold gate then exit BEFORE build (verification only; no image promotion).'
+        type: boolean
+        default: false
   push:
     branches: [main]
 
@@ -18,11 +32,108 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      actions: read       # AUDIT-107 rung-2: gh run list/view the smoke-test history
+      issues: write       # AUDIT-107 rung-2: file the deploy-hold alert issue
+    outputs:
+      run_build: ${{ steps.smoke_gate.outputs.run_build }}
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
+      # AUDIT-107 option-(B) rung 2: deploy-time hold on the most recent DECISIVE
+      # smoke JOB conclusion on main. Placed first (after checkout, before build) so
+      # a hold wastes no build and never reaches ECR push or ECS promotion.
+      # CRITICAL: read the smoke JOB conclusion, NEVER the workflow conclusion. A
+      # held deploy still fires smoke via workflow_run; that smoke job SKIPS on its
+      # `conclusion == 'success'` guard, and an all-skipped run concludes SUCCESS at
+      # the workflow level. Reading the workflow conclusion would let a red deploy
+      # manufacture a false green and silently clear its own hold.
+      - name: Smoke-hold gate (AUDIT-107 option-B rung 2)
+        id: smoke_gate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          OVERRIDE: ${{ github.event.inputs.override_smoke_hold }}
+          OVERRIDE_REASON: ${{ github.event.inputs.override_reason }}
+          DRYRUN: ${{ github.event.inputs.gate_only_dryrun }}
+        run: |
+          set +e   # manage errors here -> FAIL-OPEN; never wedge the pipeline on a gh hiccup
+          summary() { echo "$1" >> "$GITHUB_STEP_SUMMARY"; }
+          THIS_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          IDS="$(gh run list --workflow smoke-test.yml --branch main --status completed --limit 5 --json databaseId --jq '.[].databaseId' 2>/dev/null)"
+          if [ -z "$IDS" ]; then
+            echo "::warning::smoke-hold gate: no completed smoke runs (or gh/API error) - FAIL-OPEN, proceeding."
+            summary "## Smoke-hold gate: FAIL-OPEN (no signal / API error) - proceeded with a warning"
+            echo "run_build=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Scan newest-first for the first DECISIVE smoke JOB conclusion.
+          SIGNAL=""
+          SIGNAL_RUN=""
+          while IFS= read -r id; do
+            [ -z "$id" ] && continue
+            CONC="$(gh run view "$id" --json jobs --jq '.jobs[] | select(.name=="Production Smoke Test") | .conclusion' 2>/dev/null)"
+            if [ "$CONC" = "success" ]; then SIGNAL="success"; SIGNAL_RUN="$id"; break; fi
+            if [ "$CONC" = "failure" ]; then SIGNAL="failure"; SIGNAL_RUN="$id"; break; fi
+            # skipped / cancelled / empty job conclusion = no-signal, keep scanning
+          done <<< "$IDS"
+
+          if [ -z "$SIGNAL" ]; then
+            echo "::warning::smoke-hold gate: no success|failure smoke JOB conclusion in the last 5 completed runs - FAIL-OPEN, proceeding."
+            summary "## Smoke-hold gate: FAIL-OPEN (no decisive job signal in 5 candidates) - proceeded with a warning"
+            echo "run_build=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          SMOKE_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${SIGNAL_RUN}"
+
+          if [ "$SIGNAL" = "success" ]; then
+            echo "smoke-hold gate: last decisive smoke JOB = success (run ${SIGNAL_RUN}) - PROCEED."
+            summary "## Smoke-hold gate: PROCEED (last decisive smoke job success, run ${SIGNAL_RUN})"
+          else
+            # HOLD path: last decisive smoke JOB = failure.
+            if [ "$OVERRIDE" = "true" ]; then
+              if [ -z "$OVERRIDE_REASON" ]; then
+                echo "::error::smoke-hold gate: override_smoke_hold=true but override_reason is empty - REJECTED; HOLD stands."
+                summary "## Smoke-hold gate: OVERRIDE REJECTED (empty reason); HOLD stands (red smoke run ${SIGNAL_RUN})"
+                exit 1
+              fi
+              echo "::warning::smoke-hold gate: HOLD OVERRIDDEN by @${{ github.actor }} - reason: ${OVERRIDE_REASON}"
+              summary "## Smoke-hold gate: OVERRIDDEN by @${{ github.actor }}"
+              summary "- Held on red smoke run ${SIGNAL_RUN}"
+              summary "- Reason: ${OVERRIDE_REASON}"
+              HOLD_ISSUE="$(gh issue list --state open --search 'Deploy held: smoke red in:title' --json number --jq '.[0].number' 2>/dev/null)"
+              if [ -n "$HOLD_ISSUE" ]; then
+                gh issue comment "$HOLD_ISSUE" --body "Deploy ${THIS_URL} proceeded via OVERRIDE by @${{ github.actor }}. Reason: ${OVERRIDE_REASON}. (Held on red smoke run ${SMOKE_URL}.)" 2>/dev/null || echo "::warning::override audit comment failed to post (non-fatal; the run summary still records the override)."
+              fi
+              # fall through to the dry-run check below
+            else
+              echo "::error::smoke-hold gate: last decisive smoke JOB = failure (run ${SIGNAL_RUN}) - HOLDING this deploy before image promotion."
+              summary "## Smoke-hold gate: HOLD (last decisive smoke job FAILURE, run ${SIGNAL_RUN})"
+              EXISTING="$(gh issue list --state open --search 'Deploy held: smoke red in:title' --json number --jq 'length' 2>/dev/null || echo '')"
+              if [ -n "$EXISTING" ] && [ "$EXISTING" != "0" ]; then
+                echo "An open deploy-hold issue already exists; not duplicating."
+              else
+                gh issue create --title "Deploy held: smoke red on main" --body "Deploy ${THIS_URL} was HELD before image promotion: the most recent decisive post-deploy smoke JOB on main concluded FAILURE (run ${SMOKE_URL}). Resolve the smoke failure (or run a green smoke dispatch), or re-dispatch this deploy with override_smoke_hold=true + override_reason. AUDIT-107 option-(B) rung 2." || echo "::warning::deploy-hold issue create failed; the red job is still the loud signal."
+              fi
+              exit 1
+            fi
+          fi
+
+          # Proceed path (success, or overridden hold). Honor dry-run BEFORE build.
+          if [ "$DRYRUN" = "true" ]; then
+            echo "gate_only_dryrun=true - exiting after gate evaluation, before build (no image promotion)."
+            summary "## Smoke-hold gate: gate_only_dryrun - exited after gate (no build / no deploy)"
+            echo "run_build=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "run_build=true" >> "$GITHUB_OUTPUT"
+          echo "smoke-hold gate complete - continuing to build."
+
       - name: Configure AWS credentials
+        if: steps.smoke_gate.outputs.run_build == 'true'
         uses: aws-actions/configure-aws-credentials@ff717079ee2060e4bcee96c4779b553acc87447c # v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -31,9 +142,11 @@ jobs:
 
       - name: Login to ECR
         id: ecr-login
+        if: steps.smoke_gate.outputs.run_build == 'true'
         uses: aws-actions/amazon-ecr-login@f2e9fc6c2b355c1890b65e6f6f0e2ac3e6e22f78 # v2
 
       - name: Build, tag, and push image
+        if: steps.smoke_gate.outputs.run_build == 'true'
         env:
           ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
@@ -44,6 +157,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
       - name: Deploy to ECS and verify
+        if: steps.smoke_gate.outputs.run_build == 'true'
         env:
           ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
@@ -94,6 +208,8 @@ jobs:
 
   deploy-frontend:
     needs: deploy
+    # Only when the gate let the backend actually build/promote (not a hold/dry-run).
+    if: needs.deploy.outputs.run_build == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
