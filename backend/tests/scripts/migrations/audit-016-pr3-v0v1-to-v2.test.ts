@@ -767,6 +767,136 @@ describe('migrateTarget direct-call', () => {
   });
 });
 
+// --- AUDIT-116 - quote-aware kind:'json' discovery/count filters -------------
+//
+// Defect: the kind:'json' discovery/count filters compared a jsonb-stored
+// envelope (`"enc:v2:..."`, WITH the JSON quote prefix) against the bare
+// `LIKE 'enc:%'`, matching ZERO json-v2 rows (mis-bucketed as plaintext) and
+// silently MISSING any json v0/v1 envelope. Fix mirrors the rekey script:
+// `<col>::text LIKE '"enc:%'` for matching + `#>>'{}'` for value extraction.
+// 28-target census (ECS task 0a1b286c) found 0 json v0/v1 victims -> the
+// realized impact was cosmetic mis-bucketing; this is drift-prevention.
+
+const JSON_PREFIX = '"enc:'; // jsonb-rendered prefix (leading JSON quote)
+
+// Quote-aware SQL router: routes counts/fetch on the QUOTED envelope prefix,
+// so it models a json column. Same ordering discipline as routeSql (v0v1 first).
+function routeSqlJson(script: SqlScript) {
+  return (sql: unknown, ..._params: unknown[]) => {
+    const s = String(sql);
+    if (s.includes('information_schema.columns')) {
+      return Promise.resolve([{ data_type: 'jsonb' }]);
+    }
+    const m = s.match(/FROM "([^"]+)"\s+WHERE "([^"]+)"/);
+    if (!m) return Promise.resolve([{ c: 0n }]);
+    const [, table, column] = m;
+    const k = `${table}.${column}`;
+    if (s.includes('COUNT(*)::bigint')) {
+      if (s.includes(`LIKE '${JSON_PREFIX}%'`) && s.includes(`NOT LIKE '${JSON_PREFIX}v2:%'`)) {
+        return Promise.resolve([{ c: BigInt(script.v0v1.get(k) ?? 0) }]);
+      }
+      if (s.includes(`LIKE '${JSON_PREFIX}v2:%'`)) {
+        return Promise.resolve([{ c: BigInt(script.v2.get(k) ?? 0) }]);
+      }
+      if (s.includes(`NOT LIKE '${JSON_PREFIX}%'`)) {
+        return Promise.resolve([{ c: BigInt(script.plaintext.get(k) ?? 0) }]);
+      }
+      return Promise.resolve([{ c: BigInt(script.totals.get(k) ?? 0) }]);
+    }
+    if (s.includes('SELECT id') && s.includes('LIMIT')) {
+      const limitMatch = s.match(/LIMIT\s+(\d+)/);
+      const limit = limitMatch ? Number.parseInt(limitMatch[1], 10) : 50;
+      const remaining = script.rows.get(k) ?? [];
+      const taken = remaining.splice(0, limit);
+      script.rows.set(k, remaining);
+      return Promise.resolve(taken);
+    }
+    return Promise.resolve([{ c: 0n }]);
+  };
+}
+
+describe('AUDIT-116 - quote-aware kind:json filters', () => {
+  const jsonTarget = () => {
+    const t = TARGETS.find(t => t.table === 'audit_logs' && t.column === 'newValues')!;
+    expect(t.kind).toBe('json'); // guard: this test depends on the json kind
+    return t;
+  };
+
+  it('(a) json-v2 is counted as v2, not plaintext: countTarget emits the QUOTED prefix', async () => {
+    const script = emptyScript();
+    const k = 'audit_logs.newValues';
+    // Production census shape (ECS task abd4a721): 7101 json-v2 + 204 non-v2.
+    script.totals.set(k, 7305);
+    script.v2.set(k, 7101);
+    script.v0v1.set(k, 0);
+    script.plaintext.set(k, 204);
+    queryRawUnsafe.mockImplementation(routeSqlJson(script));
+
+    const counts = await countTarget(jsonTarget());
+    // Pre-fix, json-v2 mis-bucketed as plaintext (v2=0, plaintext=7305).
+    expect(counts).toEqual({ total: 7305, v2: 7101, v0v1: 0, plaintext: 204 });
+
+    const sqls = queryRawUnsafe.mock.calls.map(c => String(c[0]));
+    // The quoted prefix IS used...
+    expect(sqls.some(s => s.includes(`LIKE '${JSON_PREFIX}v2:%'`))).toBe(true);
+    expect(sqls.some(s => s.includes(`LIKE '${JSON_PREFIX}%'`))).toBe(true);
+    // ...and the bare (defective) prefix is NEVER used for a json target.
+    expect(sqls.every(s => !/LIKE 'enc:/.test(s))).toBe(true);
+  });
+
+  it('(b) a quoted json v1/v0 envelope IS matched by the discovery filter (the silent-miss class) + value extracted unquoted', async () => {
+    const script = emptyScript();
+    const k = 'audit_logs.newValues';
+    script.totals.set(k, 3);
+    script.v2.set(k, 0);
+    script.v0v1.set(k, 3); // three v0/v1 json envelopes pending
+    script.plaintext.set(k, 0);
+    script.rows.set(k, [
+      { id: 'j1', value: makeV1('alpha') },
+      { id: 'j2', value: makeV0('beta') },
+      { id: 'j3', value: makeV1('gamma') },
+    ]);
+    queryRawUnsafe.mockImplementation(routeSqlJson(script));
+
+    // countTarget finds them (pre-fix: 0, silently missed).
+    const counts = await countTarget(jsonTarget());
+    expect(counts.v0v1).toBe(3);
+
+    // fetchV0V1Rows returns them, and emits the quote-aware WHERE + #>>'{}' value.
+    const rows = await fetchV0V1Rows(jsonTarget(), 50);
+    expect(rows.map(r => r.id)).toEqual(['j1', 'j2', 'j3']);
+
+    const fetchSql = String(
+      queryRawUnsafe.mock.calls.map(c => String(c[0])).find(s => s.includes('SELECT id')),
+    );
+    expect(fetchSql).toContain(`LIKE '${JSON_PREFIX}%'`);
+    expect(fetchSql).toContain(`NOT LIKE '${JSON_PREFIX}v2:%'`);
+    expect(fetchSql).toContain(`#>>'{}'`); // unquoted envelope extraction
+    expect(/LIKE 'enc:/.test(fetchSql)).toBe(false); // never the bare prefix
+  });
+
+  it('(c) JSON-null literals and SQL NULLs are excluded from the v2/v0v1 envelope buckets', async () => {
+    const script = emptyScript();
+    const k = 'audit_logs.newValues';
+    // Column holds: 3 json-v2 + 5 JSON-null literals + 2 SQL NULL.
+    //   total  = COUNT(... IS NOT NULL)            -> 8 (SQL NULL excluded)
+    //   v2     = quoted '"enc:v2:%'                -> 3
+    //   v0v1   = quoted '"enc:%' AND NOT v2        -> 0 (json-null is not an envelope)
+    //   plaintext = NOT LIKE '"enc:%'             -> 5 (the JSON-null literals)
+    script.totals.set(k, 8);
+    script.v2.set(k, 3);
+    script.v0v1.set(k, 0);
+    script.plaintext.set(k, 5);
+    queryRawUnsafe.mockImplementation(routeSqlJson(script));
+
+    const counts = await countTarget(jsonTarget());
+    expect(counts.v2).toBe(3);
+    expect(counts.v0v1).toBe(0); // JSON-null + SQL NULL never counted as v0/v1
+    expect(counts.plaintext).toBe(5); // JSON-null literals land in plaintext (AUDIT-022 domain)
+    expect(counts.total).toBe(8); // SQL NULLs excluded from total
+  });
+});
+
 describe('Audit log cardinality', () => {
   it('emits PHI_MIGRATION_BATCH_STARTED before each batch', async () => {
     const script = emptyScript();
