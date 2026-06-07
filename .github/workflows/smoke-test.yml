@@ -6,6 +6,12 @@ on:
     types: [completed]
     branches: [main]
   workflow_dispatch:
+    inputs:
+      simulate_failure:
+        description: 'Synthetic failure to exercise the AUDIT-114 alert path (no production endpoints called). Leave false for real smoke runs.'
+        type: boolean
+        default: false
+        required: false
 
 env:
   API_BASE: https://api.tailrd-heart.com
@@ -14,9 +20,25 @@ jobs:
   smoke-test:
     name: Production Smoke Test
     runs-on: ubuntu-latest
+    # AUDIT-114: least-privilege job-level grant so the if: failure() notify step
+    # can file a smoke-failure issue with the default GITHUB_TOKEN (issues: write
+    # also confers issues read for the dedup `gh issue list`). No other scope is
+    # needed - the job runs no checkout and the curl probes use SMOKE_TEST_* secrets.
+    permissions:
+      issues: write
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
+      # AUDIT-114 synthetic alert-path test. Runs ONLY on manual workflow_dispatch
+      # with simulate_failure=true; never on workflow_run/scheduled runs. Placed
+      # FIRST so the job goes red without calling any production endpoint, letting
+      # the if: failure() notify path be exercised on demand.
+      - name: Simulate failure (synthetic alert-path test - dispatch-only)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.simulate_failure }}
+        run: |
+          echo "::error::AUDIT-114 synthetic failure (simulate_failure=true): no-op test of the if: failure() notify path. No production endpoints were called."
+          exit 1
+
       - name: Wait for ECS stabilization
         run: |
           echo "Polling for healthy status (max 2 min)..."
@@ -156,9 +178,11 @@ jobs:
             echo "An open smoke-failure issue already exists; not duplicating."
             exit 0
           fi
+          # AUDIT-114: no `|| echo` swallow - if `gh issue create` fails (e.g. a
+          # missing issues: write grant), the step fails LOUDLY rather than masking
+          # the alert gap as a green step.
           gh issue create \
             --title "Post-deploy smoke test FAILED on main" \
             --body "The Post-Deploy Smoke Test failed. Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-          AUDIT-107 alert-only posture: this notifies but does NOT gate the deploy. Deploy-gating (option B) is a deferred operator decision. See docs/runbooks/AUDIT_107_SMOKE_ROTATION_RUNBOOK.md." \
-            2>&1 || echo "gh issue create failed (token/permission?); see run logs above for the failing step."
+          AUDIT-107 alert-only posture: this notifies but does NOT gate the deploy. Deploy-gating (option B) is a deferred operator decision. See docs/runbooks/AUDIT_107_SMOKE_ROTATION_RUNBOOK.md."
