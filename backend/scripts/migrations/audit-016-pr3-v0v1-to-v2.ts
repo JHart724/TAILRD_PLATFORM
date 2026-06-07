@@ -371,10 +371,19 @@ export async function writeSummaryArtifact(
 }
 
 // ── SQL helpers ─────────────────────────────────────────────────────────────
-// Discovery filter (D2):
-//   v0v1Candidates: column LIKE 'enc:%' AND column NOT LIKE 'enc:v2:%'
-//   alreadyV2:      column LIKE 'enc:v2:%'
-//   plaintext:      column NOT LIKE 'enc:%' (excluded from PR 3 scope; AUDIT-022 owns)
+// Discovery filter (D2), kind-aware per AUDIT-116:
+//   string target: column LIKE 'enc:%'  (bare envelope `enc:v2:...`)
+//   json target:   column::text LIKE '"enc:%'  (jsonb renders the stored string
+//                  envelope WITH surrounding JSON quotes: `"enc:v2:..."`)
+//   v0v1Candidates: <col> LIKE '<P>%' AND <col> NOT LIKE '<P>v2:%'
+//   alreadyV2:      <col> LIKE '<P>v2:%'
+//   plaintext:      <col> NOT LIKE '<P>%' (excluded from PR 3 scope; AUDIT-022 owns)
+// where <P> = '"enc:' for json, 'enc:' for string. Mirrors the correct json
+// handling in audit-016-pr3-v2-rekey-purpose.ts (colExpr/pattern/selectExpr).
+// AUDIT-116: the prior kind-blind 'enc:%' prefix matched ZERO json-v2 rows
+// (mis-bucketing them as plaintext) and would have SILENTLY MISSED any json
+// v0/v1 envelope (`"enc:v1:...` does not match LIKE 'enc:%'). 28-target census
+// (ECS task 0a1b286c) confirmed 0 json v0/v1 victims, so this is drift-prevention.
 
 export interface TargetCounts {
   readonly total: number;
@@ -392,22 +401,25 @@ async function columnExists(t: Target): Promise<boolean> {
 }
 
 export async function countTarget(t: Target): Promise<TargetCounts> {
+  // AUDIT-116: kind-aware envelope-prefix matching (see SQL-helpers comment).
+  const col = `"${t.column}"::text`;
+  const encPrefix = t.kind === 'json' ? '"enc:' : 'enc:';
   const totalRows = await prisma.$queryRawUnsafe<Array<{ c: bigint }>>(
     `SELECT COUNT(*)::bigint AS c FROM "${t.table}" WHERE "${t.column}" IS NOT NULL`,
   );
   const v2Rows = await prisma.$queryRawUnsafe<Array<{ c: bigint }>>(
     `SELECT COUNT(*)::bigint AS c FROM "${t.table}"
-     WHERE "${t.column}" IS NOT NULL AND "${t.column}"::text LIKE 'enc:v2:%'`,
+     WHERE "${t.column}" IS NOT NULL AND ${col} LIKE '${encPrefix}v2:%'`,
   );
   const v0v1Rows = await prisma.$queryRawUnsafe<Array<{ c: bigint }>>(
     `SELECT COUNT(*)::bigint AS c FROM "${t.table}"
      WHERE "${t.column}" IS NOT NULL
-       AND "${t.column}"::text LIKE 'enc:%'
-       AND "${t.column}"::text NOT LIKE 'enc:v2:%'`,
+       AND ${col} LIKE '${encPrefix}%'
+       AND ${col} NOT LIKE '${encPrefix}v2:%'`,
   );
   const plaintextRows = await prisma.$queryRawUnsafe<Array<{ c: bigint }>>(
     `SELECT COUNT(*)::bigint AS c FROM "${t.table}"
-     WHERE "${t.column}" IS NOT NULL AND "${t.column}"::text NOT LIKE 'enc:%'`,
+     WHERE "${t.column}" IS NOT NULL AND ${col} NOT LIKE '${encPrefix}%'`,
   );
   return {
     total: Number(totalRows[0].c),
@@ -421,11 +433,18 @@ export async function fetchV0V1Rows(
   t: Target,
   limit: number,
 ): Promise<Array<{ id: string; value: string }>> {
+  // AUDIT-116: kind-aware. For json, match the quoted envelope prefix and
+  // extract the UNQUOTED envelope string via #>>'{}' so migrateRecord's
+  // parseEnvelope receives `enc:v1:...`, not `"enc:v1:..."`. Mirrors the rekey
+  // script's selectExpr (#>>'{}') + whereExpr ('"enc:%').
+  const col = `"${t.column}"::text`;
+  const encPrefix = t.kind === 'json' ? '"enc:' : 'enc:';
+  const valueExpr = t.kind === 'json' ? `"${t.column}"#>>'{}'` : `"${t.column}"::text`;
   const rows = await prisma.$queryRawUnsafe<Array<{ id: string; value: string }>>(
-    `SELECT id, "${t.column}"::text AS value FROM "${t.table}"
+    `SELECT id, ${valueExpr} AS value FROM "${t.table}"
      WHERE "${t.column}" IS NOT NULL
-       AND "${t.column}"::text LIKE 'enc:%'
-       AND "${t.column}"::text NOT LIKE 'enc:v2:%'
+       AND ${col} LIKE '${encPrefix}%'
+       AND ${col} NOT LIKE '${encPrefix}v2:%'
      ORDER BY id
      LIMIT ${limit}`,
   );
