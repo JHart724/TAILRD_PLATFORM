@@ -405,6 +405,7 @@ PARK = a verified, scoped candidate gap that is deliberately NOT yet built and N
 | Candidate | Class | Honest tier | Status | Sequencing |
 |---|---|---|---|---|
 | Enbumyst (bumetanide nasal spray, Corstasis; FDA-approved 2025-09) | HF DECONGESTION / readmission-avoidance | likely SPEC_ONLY or low-tier (NOT COR-anchored) | PARK candidate (no rule authored) | HF decongestion gap class when the Path-1 loop reaches it, OR deliberate operator-prioritized pull-forward |
+| EP Pacing subcategory (9 gaps) re-anchor to **2024 HRS Cardiac Physiologic Pacing** guideline | EP Pacing guideline-currency (re-anchor, not a new gap) | Pacing 9 = **SPEC_ONLY-until-re-anchored** | candidate horizon (no rule/spec change; filed 2026-06-08 EP audit Batch 1) | EP audit Pacing batch (re-anchor before trusting Pacing classification), OR a v2.0 guideline-currency pass |
 
 **Enbumyst (bumetanide nasal spray) - PARK candidate detail (filed 2026-05-31):**
 

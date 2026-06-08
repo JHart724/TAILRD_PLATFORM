@@ -49,7 +49,7 @@ also listed; harmless for `startsWith`-style matching (no detection defect).
 |---|---|---|---|---|---|
 | GAP-EP-001 (EP-OAC) | T1 | AF Anticoag | DET_OK | **PARTIAL_DETECTION (flip)** | Logic sound (CHA2DS2-VASc + OAC check), but the OAC-membership set carries the DABIGATRAN SCD defect -> false-positive for dabigatran 75/110mg patients (read as "not on OAC"). |
 | GAP-EP-006 (EP-006) | T1 | AF Anticoag (SAFETY) | DET_OK | **PARTIAL_DETECTION (flip)** | Well-structured 2-branch eGFR rule, but the trigger code `1037045` (150mg SCD) MISSES dabigatran 75mg - the dose used in renal impairment - so eGFR<30-on-75mg (the danger scenario) is a false-negative on a Class-3-Harm SAFETY rule. |
-| GAP-EP-007 | T1 | AF Anticoag | DET_OK (cross-module VD-6) | DET_OK (hold) | Mechanical-valve+DOAC; codes (Z95.2-.4) verified. |
+| GAP-EP-007 | T1 | AF Anticoag | DET_OK (cross-module VD-6) | **PARTIAL_DETECTION (flip)** | Mechanical-valve+DOAC; valve codes (Z95.2-.4) verified, but DOAC detection inherits the AUDIT-118 no-expansion under-detection -> the "DOAC in mechanical valve" contraindication can be missed for product-coded meds. |
 | GAP-EP-008 | T1 | AF Anticoag | PARTIAL | PARTIAL (hold) | MS contraindication, cross-module VD-4. |
 | GAP-EP-002/003/004/005/009/010/064/065/066 | T1-T3 | AF Anticoag | SPEC_ONLY | SPEC_ONLY (hold) | Not implemented (pharmacy-fill/TTR/dose-by-CrCl); no codes to verify in-rule. |
 | GAP-EP-043/044 | T2 | AAD Safety | DET_OK | DET_OK (hold) | Amiodarone TSH/LFT monitor; amiodarone 703 verified. |
@@ -60,13 +60,22 @@ also listed; harmless for `startsWith`-style matching (no detection defect).
 | GAP-EP-050 (EP-INAPPROPRIATE-SHOCKS) | T2 | AAD Safety | DET_OK | DET_OK (hold) | ICD shock programming; AF ICD-10 verified. |
 | **GAP-EP-049** | T2 | AAD Safety (**uncovered SAFETY**) | SPEC_ONLY | SPEC_ONLY (hold; **Tier S queue**) | Flecainide/propafenone in CAD/SHD (CAST). No evaluator. Codes 4441/8754 verified correct for when implemented. Remains the 1 uncovered SAFETY gap. |
 
-**Net proposed flips:** 2 (GAP-EP-001, GAP-EP-006: DET_OK -> PARTIAL_DETECTION), both driven by the
-single DABIGATRAN code defect. All other Batch-1 classifications hold (their verified codes are correct).
+**Net proposed flips:** 3 (GAP-EP-001, GAP-EP-006, GAP-EP-007: DET_OK -> PARTIAL_DETECTION). GAP-EP-001/006
+are driven by the DABIGATRAN code defect (AUDIT-117); GAP-EP-007 by the no-expansion under-detection
+(AUDIT-118). The AAD ingredient-matched DET_OK rules (GAP-EP-043/044/046/048) carry the SAME AUDIT-118
+vulnerability (amiodarone 703, dronedarone 233698, dofetilide 49247 are all ingredient codes matched by
+exact membership) - whether to cascade-flip them on the cross-cutting finding is an operator decision
+(recorded, not auto-applied here).
+
+**Matching-mechanism resolution (STEP 1):** confirmed ABSENT - `medCodes = patient.medications.map(m =>
+m.rxNormCode)` (`runGapDetectionForPatient.ts:53` + `gapDetectionRunner.ts:100`), exact-string membership,
+no ingredient->descendant expansion; ingestion stores the FHIR `coding.code` verbatim (`ingestSynthea.ts:309`,
+Synthea = SCD/product-level). So the dabigatran ingredient fix (1037045->1037042) is NECESSARY but NOT
+SUFFICIENT, and the cross-DOAC finding does NOT downgrade - it generalizes to all medication-presence rules.
 
 ## 3. New finding (candidate, recorded - NOT fixed in this audit pass)
 
-**AUDIT-XXX-future-ep-dabigatran-single-formulation-code** (proposed MEDIUM-HIGH; **patient-safety-active**;
-operator confirms severity per §18):
+**Filed as AUDIT-117** (HIGH P1; **patient-safety-active**; operator confirms severity per §18):
 - **Defect:** `RXNORM_DOACS.DABIGATRAN = '1037045'` (`cardiovascularValuesets.ts:295`) is the
   Semantic Clinical Drug "dabigatran etexilate 150 MG Oral Capsule" (tty=SCD), **not** the
   ingredient. The other three DOACs in the same object are ingredient-level (IN). Verified RxNav 2026-06-08.
@@ -82,26 +91,29 @@ operator confirms severity per §18):
 - **Sister:** the AUDIT-042/056/057 Cat A clinical-code class - but this is **wrong-granularity**
   (formulation-SCD vs ingredient), a new sub-class, not wrong-drug.
 
-**Architectural observation (broader, not a single-code fix):** EP-OAC + EP-006 match medications by
-**exact RxCUI membership** (`medCodes.includes(...)`). Even the correctly-ingredient-coded DOACs
-(apixaban 1364430 IN, etc.) will MISS patient meds coded at SCD/SBD/branded granularity (e.g. an
-"Eliquis 5 MG Oral Tablet" SCD). Robust detection should ingredient-normalize (RxNorm
-ingredient/precise-ingredient rollup) rather than exact-match. Flagged for the operator as a
-likely cross-DOAC under-detection vector; separate from the single-code dabigatran fix.
+**Filed as AUDIT-118** (HIGH P1 candidate; cross-medication under-detection): EP-OAC + EP-006 (and all
+medication-presence rules) match by **exact RxCUI membership** (`medCodes.includes(...)`) with **no
+ingredient->descendant expansion** (`runGapDetectionForPatient.ts:53`; `gapDetectionRunner.ts:100`).
+Even correctly-ingredient-coded DOACs (apixaban 1364430 IN, etc.) MISS patient meds coded at SCD/SBD/
+branded granularity (e.g. an "Eliquis 5 MG Oral Tablet" SCD) - and Synthea (`ingestSynthea.ts:309`)
+emits SCD-level codes. Robust detection must ingredient-normalize or enumerate descendants. Blast radius
+is module-wide / all medication-presence rules, not DOAC-only.
 
 ## 4. STEP-3 findings (recorded WITHOUT acting on inventory)
 
 **(a) 2024 HRS Cardiac Physiologic Pacing under-anchoring (Pacing subcategory, 9 gaps).** No EP rule
 or spec gap cites the 2024 HRS Cardiac Physiologic Pacing guideline; the Pacing gaps anchor to older
-guidance. Candidate-horizon entry: the Pacing 9 should be re-anchored against 2024 HRS CPP before
-classification is trusted - treat as **SPEC_ONLY-until-re-anchored** for v2.0 sequencing. Not actioned
-here (frozen denominator; Pacing is a later batch).
+guidance. **Recorded to the CANDIDATE HORIZON (BUILD_STATE §10), NOT the register** (per operator) as a
+v2.0 re-anchor: treat the Pacing 9 as **SPEC_ONLY-until-re-anchored**. Not actioned here (frozen
+denominator; Pacing is a later batch).
 
-**(b) registry/evaluator/gapsPush 48/47/49 mismatch for EP.** The EP module reports registry=48,
-evaluator=47, gapsPush=49 (EP addendum header). The three counts not reconciling indicates at least
-one registry entry without an evaluator block (PARTIAL-at-best) and/or a `gaps.push` without a
-registry id (provenance-unguarded, the AUDIT-106 class). Recorded as a structural reconciliation
-finding; full enumeration is a later-batch task (not actioned here).
+**(b) registry/evaluator/gapsPush 48/47/49 mismatch -> filed AUDIT-119 (MEDIUM P2).** registry=48,
+evaluator=47, gapsPush=49 (`EP.code.json`). Fold-in enumeration: the registry-without-evaluator is
+**`gap-ep-anticoag-interruption`** (registry `:2023`, no EP evaluator - the only periprocedural-anticoag
+block `CAD-HEPARIN-BRIDGE` `:8685` is a CAD gap), i.e. the already-filed **AUDIT-035** orphan (silently
+never fires). Automated reconciliation FAILED (no registry<->evaluator join key; fuzzy match false-flagged
+EP-RC/EP-CARDIOVERSION-TIMING which have evaluators) - found only via the AUDIT-035 cross-ref. The
+gaps.push(49)>registry(48) is unguarded provenance (AUDIT-106 B-axis).
 
 ## 5. PAUSE-C + STOP
 
