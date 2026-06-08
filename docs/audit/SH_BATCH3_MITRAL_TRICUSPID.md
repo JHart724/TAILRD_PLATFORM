@@ -28,8 +28,8 @@ review; canonical crosswalk/addendum NOT edited.
 
 | DET_OK gap | Evaluator | Match (file:line) | §16.5 | §16.6 concept | Result |
 |---|---|---|---|---|---|
-| GAP-SH-064 (TMVR candidacy) | SH-11 | `hasMR10 (I34.0) && age > 80` `:6404-6426` | N/A (dx) | I34.0 mitral = correct | **DET_OK hold** (severity-breadth noted) |
-| GAP-SH-022 (severe TR transcath eval) | SH-4 | `I36.1 && (R60\|R16\|R18)` `:5337-5367` | N/A (dx) | I36.1 TR = correct | **DET_OK hold** (under-anchor flag, sec. 5) |
+| GAP-SH-064 (TMVR candidacy) | SH-11 | `hasMR10 (I34.0) && age > 80` `:6404-6426` | N/A (dx) | concept OK; **(iii) FAIL** | **DET_OK -> PARTIAL (flip)** - AUDIT-125 (severity; gap targets severe MR) |
+| GAP-SH-022 (severe TR transcath eval) | SH-4 | `I36.1 && (R60\|R16\|R18)` `:5337-5367` | N/A (dx) | concept OK; **(iii) FAIL** | **DET_OK -> PARTIAL (flip)** - AUDIT-125 (severity) [+ under-anchor flag, sec. 5] |
 
 ## 3. §16.5 axis - per-gap
 
@@ -40,14 +40,18 @@ is SPEC_ONLY (no rule), so its medication arm is not implemented.
 ## 4. §16.6 over-detection / concept-match
 
 - **Concept-match (i):** both DET_OK pass - I34.0 (mitral regurg) and I36.1 (TR) match their rules' intent.
-  No concept-mismatch flip in Batch 3 (contrast AUDIT-122 I34.0-on-an-aortic-gap, which was wrong-context).
-- **Over-broad (ii) - severity-breadth, NOTED not flipped:** SH-11 (`I34.0 + age>80`) and SH-4 (`I36.1 +
-  symptoms`) do not encode lesion SEVERITY (ICD-10 I34.0/I36.1 carry no severity grade), so each fires on a
-  non-severe-MR/TR patient who meets the age/symptom proxy. This is a WITHIN-TARGET granularity limitation
-  (correct condition, imprecise severity), categorically different from §16.6's WRONG-TARGET cases
-  (AUDIT-120 allergy-on-OAC, AUDIT-122 mitral-on-aortic). Per that distinction it is a noted proxy
-  limitation, not a wrong-target flip; the original DET_OK is held. (If the operator wants severity-breadth
-  to flip uniformly, that is a separate cross-module policy call - flagged, not assumed.)
+  No concept-mismatch flip (contrast AUDIT-122 I34.0-on-an-aortic-gap, which was wrong-context).
+- **Over-broad / wrong-target (ii):** no Batch-3 (ii) flip (the DET_OK rules fire on the correct condition).
+- **Severity-encoding (iii) - FLIPPED (operator codified §16.6(iii) + AUDIT-125, 2026-06-08):** the earlier
+  "noted not flipped / within-target granularity" framing is SUPERSEDED. Per §16.6(iii) the predicate is that
+  severity IS echo-encoded in `labValues` and the rule IGNORES it, so a dx + age/symptom rule targeting a
+  SEVERE gap over-detects on sub-threshold lesions and cannot be DET_OK:
+  - **GAP-SH-064** (SH-11, `I34.0 + age>80`) - spec gap targets SEVERE MR ("ineligible for TEER"); zero
+    severity gate -> **DET_OK -> PARTIAL (AUDIT-125).**
+  - **GAP-SH-022** (SH-4, `I36.1 + R60/R16/R18`) - spec gap targets SEVERE/torrential TR; zero TR-grade gate
+    -> **DET_OK -> PARTIAL (AUDIT-125).**
+  Already-PARTIAL §16.6(iii)-affected rules (no flip): SH-1/SH-2 (AS, `I35.0` + LVEF flag - LVEF is not an
+  AS-severity gate); SH-3 (MR, LVEF<60-or-symptom); SH-12 (TR, symptom-only).
 
 ## 5. Under-anchoring (precise bar) - the transcatheter-tricuspid candidate-horizon flag
 
@@ -69,20 +73,25 @@ focused update. NOT a register finding.
 
 ## 6. Batch-3 distribution
 
-| | Baseline (2026-05-04) | Revised (2026-06-08) | Delta |
+| | Baseline (2026-05-04) | Revised (2026-06-08, §16.6(iii) applied) | Delta |
 |---|---:|---:|---:|
-| DET_OK | 2 (SH-064, SH-022) | **2** | 0 |
-| PARTIAL_DETECTION | 7 | **7** | 0 |
+| DET_OK | 2 (SH-064, SH-022) | **0** | -2 |
+| PARTIAL_DETECTION | 7 | **9** (+SH-064, SH-022) | +2 |
 | SPEC_ONLY | 11 | 11 | 0 |
 | **Total** | **20** | **20** | reconciles |
 
-- **0 flips in Batch 3.** §16 new defects 0 (all codes verified correct); §16.5 flips 0; §16.6 concept-match
-  flips 0 (severity-breadth noted, not flipped); under-anchoring 1 candidate-horizon flag (transcatheter
-  tricuspid, classifications held provisional).
-- **Cumulative 57/88. Cumulative flips: 4** (SH-008 Batch 1; SH-013 + SH-061 + SH-011 Batch 2).
+- **2 flips in Batch 3 (operator codified §16.6(iii) + AUDIT-125, 2026-06-08):** GAP-SH-064 + GAP-SH-022,
+  both DET_OK -> PARTIAL (dx + age/symptom, zero echo-severity gate, gaps target severe lesions). This
+  SUPERSEDES the original Batch-3 "0 flips / severity-breadth noted" result.
+- §16 new code defects 0 (all codes correct); §16.5 flips 0; §16.6(i)/(ii) flips 0; §16.6(iii) flips 2.
+- Under-anchoring: 1 candidate-horizon flag (transcatheter tricuspid, BUILD_STATE §10, provisional).
+- **Cumulative 57/88. Cumulative flips: 6** (SH-008 B1; SH-013 + SH-061 + SH-011 B2; SH-064 + SH-022 B3).
 
 ## 7. PAUSE + STOP
 
-Batch 3 close (cumulative 57/88). **STOP for operator review before Batch 4 (PFO/ASD + ACHD + HCM).** No
-source code changed; no canonical crosswalk/addendum edited. Transcatheter-tricuspid re-anchor added to
-BUILD_STATE §10 candidate horizon. Wall-clock in `audit_runs.jsonl` (run `SH-2026-06-08-batch3`).
+Batch 3 close (cumulative 57/88). **UPDATED 2026-06-08:** the operator codified §16.6(iii) + filed AUDIT-125,
+which FLIPS GAP-SH-064 + GAP-SH-022 DET_OK -> PARTIAL (superseding the original 0-flip result); revised
+Batch-3 distribution **0 DET_OK / 9 PARTIAL / 11 SPEC_ONLY**. No source code changed; no canonical
+crosswalk/addendum edited (flips PROPOSED for the SH module-close regen). Transcatheter-tricuspid re-anchor in
+BUILD_STATE §10. Wall-clock: `SH-2026-06-08-batch3` + this update `batch3-s166iii`. **Batch 4 (PFO/ASD + ACHD
++ HCM) proceeds in this same block under the full stack incl. §16.6(iii).**

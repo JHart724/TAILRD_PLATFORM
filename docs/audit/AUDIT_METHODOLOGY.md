@@ -859,14 +859,14 @@ build time, with tests proving an SCD-coded med matches its ingredient value set
 and affected gaps are re-classified on their rule-body merits. Recorded under §18 register-literal
 discipline: severity/state of AUDIT-117/118 are copied from the register, not re-inferred.
 
-### 16.6 Over-detection / concept-match axis (AUDIT-120, AUDIT-121, AUDIT-122, AUDIT-123)
+### 16.6 Over-detection / concept-match axis (AUDIT-120, AUDIT-121, AUDIT-122, AUDIT-123, AUDIT-125)
 
 §16.5 governs UNDER-detection (a correct concept matched too narrowly). §16.6 is its mirror: it governs
 OVER-detection and concept-mismatch. Every implemented rule (DET_OK + PARTIAL) is checked on BOTH axes -
 (a) under-detection per §16.5, and (b) over-detection / concept-match per this section. Born from
 AUDIT-120/121 the same way §16.5 was born from AUDIT-118.
 
-**Two sub-checks (both must pass for DET_OK):**
+**Three sub-checks (all must pass for DET_OK):**
 - **(i) CONCEPT-MATCH:** each code's authoritative descriptor (NLM Clinical Tables for ICD-10 / LOINC,
   RxNav for RxNorm) must MATCH the clinical concept the rule intends, not merely EXIST. A code that
   resolves to a different concept FAILS even when it is a valid code. Exemplars: AUDIT-121 (`Q23.1` =
@@ -880,8 +880,22 @@ AUDIT-120/121 the same way §16.5 was born from AUDIT-118.
   fires, not whether the fired population is plausibly cardiac. Exemplar: AUDIT-122 (GAP-SH-013 is
   PVL-specific for an aortic prosthesis; `I34.0` mitral regurgitation fires on post-prosthetic patients
   with unrelated mitral regurg and NO paravalvular leak - a non-target firing).
+- **(iii) SEVERITY-ENCODING:** a rule targeting a SEVERITY-GATED gap (spec target "severe" / "moderate+" /
+  a named grade or threshold) must gate on an echo-severity signal in `labValues` that addresses the gap's
+  TARGET severity axis - EROA / regurgitant volume / valve area / mean gradient / RV grade, as appropriate
+  to the lesion. A `dx + age/symptom` rule with NO such threshold over-detects on sub-threshold (mild)
+  lesions of the CORRECT valve/condition and cannot be `DET_OK`; it is `PARTIAL_DETECTION`. **Predicate:**
+  this is over-detection from IGNORING AVAILABLE DATA (severity IS echo-encoded in `labValues`, which the
+  rule could read), NOT an inherent ICD-10 limitation - that predicate is what separates (iii) from a
+  "severity is unknowable from a dx code" defense. A proxy for a DIFFERENT axis does NOT satisfy the gate:
+  LVEF (an LV-function measure) does not gate MR / TR / AS lesion severity (which are EROA / valve area /
+  mean gradient), so an LVEF flag where the gap targets lesion severity still FAILS (iii). The classification
+  follows this standard now; whether a severity gate is ADDABLE in the ingested data is the separate
+  REMEDIATION question (the §16.5 / AUDIT-118 data-coupling pattern: classify on the rule, defer the data
+  question). Exemplar: AUDIT-125 (GAP-SH-064 `I34.0 + age>80`; GAP-SH-022 `I36.1 + symptoms` - both target
+  severe lesions with zero severity gate).
 
-**Classification effect:** a rule that fails EITHER sub-check cannot be `DET_OK` / `PRODUCTION_GRADE`; it
+**Classification effect:** a rule that fails ANY of the three sub-checks cannot be `DET_OK` / `PRODUCTION_GRADE`; it
 is `PARTIAL_DETECTION` until the code or match is corrected (with a test proving a non-target patient does
 NOT fire and - for concept-match - that the correct code DOES). Direction: over-detection (false-positive),
 the mirror of §16.5's under-detection (false-negative). A single rule can fail both axes (a wrong-valve-type
@@ -898,8 +912,9 @@ rules: `code | rule | claimed concept | authoritative descriptor | match Y/N | s
 concept-match auditable rather than asserted.
 
 **Lifecycle:** the `PARTIAL_DETECTION` floor lifts when the code/match is corrected and a test proves
-(a) a non-target patient does NOT fire and (b) the true target DOES. Severity/state of
-AUDIT-120/121/122/123 are copied from the register per §18 register-literal discipline, not re-inferred.
+(a) a non-target patient does NOT fire and (b) the true target DOES; for (iii) the test is that a
+sub-threshold (mild) lesion does NOT fire and a target-severity lesion DOES. Severity/state of
+AUDIT-120/121/122/123/125 are copied from the register per §18 register-literal discipline, not re-inferred.
 
 ---
 
