@@ -43,14 +43,25 @@ fail() { printf '[AUDIT-078 restore-test] FAIL: %s\n' "$*" >&2; exit 1; }
 
 log "confirmation gate passed; restore-test execution starting"
 
-# Step 1: identify FRESH latest snapshot (do NOT reuse pre-flight value)
-latest_snapshot=$(aws rds describe-db-cluster-snapshots \
-  --db-cluster-identifier "$PROD_CLUSTER" \
-  --snapshot-type automated \
-  --query 'DBClusterSnapshots[?Status==`available`] | sort_by(@, &SnapshotCreateTime) | [-1].DBClusterSnapshotIdentifier' \
-  --output text)
-[ -n "$latest_snapshot" ] && [ "$latest_snapshot" != "None" ] \
-  || fail "no available automated snapshots"
+# Step 1: resolve the restore-source snapshot. SNAPSHOT_IDENTIFIER (env) pins a
+# named manual snapshot (e.g. a sign-off snapshot like beta1-phase1-signoff-...);
+# when unset, default to the newest available AUTOMATED snapshot.
+if [ -n "${SNAPSHOT_IDENTIFIER:-}" ]; then
+  latest_snapshot="$SNAPSHOT_IDENTIFIER"
+  snap_status=$(aws rds describe-db-cluster-snapshots \
+    --db-cluster-snapshot-identifier "$latest_snapshot" \
+    --query 'DBClusterSnapshots[0].Status' --output text)
+  [ "$snap_status" = "available" ] \
+    || fail "snapshot $latest_snapshot not found or not available (status: $snap_status)"
+else
+  latest_snapshot=$(aws rds describe-db-cluster-snapshots \
+    --db-cluster-identifier "$PROD_CLUSTER" \
+    --snapshot-type automated \
+    --query 'DBClusterSnapshots[?Status==`available`] | sort_by(@, &SnapshotCreateTime) | [-1].DBClusterSnapshotIdentifier' \
+    --output text)
+  [ -n "$latest_snapshot" ] && [ "$latest_snapshot" != "None" ] \
+    || fail "no available automated snapshots"
+fi
 log "restore source snapshot: $latest_snapshot"
 
 # Step 2: RTO timer start
@@ -63,7 +74,6 @@ aws rds restore-db-cluster-from-snapshot \
   --db-cluster-identifier "$TEST_CLUSTER" \
   --snapshot-identifier "$latest_snapshot" \
   --engine aurora-postgresql \
-  --engine-version 15.14 \
   --vpc-security-group-ids "$VPC_SECURITY_GROUP_ID" \
   --db-subnet-group-name "$DB_SUBNET_GROUP" \
   --kms-key-id "$STORAGE_KMS_KEY_ARN" \
@@ -111,12 +121,14 @@ table_count=$(PGPASSWORD="$PSQL_PASSWORD" psql -h "$endpoint" -U tailrd_admin -d
 log "D3 (a) smoke check OK: $table_count public tables present"
 
 # Step 9: D3 (b) sample-row integrity (envelope-prefix check)
+# AUDIT-078 fix: query the real Prisma @@map table `patients` (was `"Patient"`,
+# which does not exist) AND drop the `2>/dev/null || printf '0'` mask so a failed
+# query fails LOUD under set -e instead of silently reporting 0 (the silent-success
+# class). The restored copy carries synthetic enc: PHI, so >0 is expected.
 log "D3 (b) sample-row integrity check..."
 phi_row_count=$(PGPASSWORD="$PSQL_PASSWORD" psql -h "$endpoint" -U tailrd_admin -d tailrd -At -c \
-  "SELECT count(*) FROM \"Patient\" WHERE \"firstName\" LIKE 'enc:%' LIMIT 10;" 2>/dev/null || printf '0')
+  "SELECT count(*) FROM patients WHERE \"firstName\" LIKE 'enc:%';")
 log "D3 (b) sample-row PHI envelope rows found: $phi_row_count"
-# NOTE: 0 is acceptable in pre-DUA state (no PHI ingested yet); operator interprets per current data state
-# Per CLAUDE.md: BSW pre-DUA pre-data-flow; production currently has no real PHI
 
 # Step 10: D3 (d) PHI-decrypt KMS context end-to-end — operator runs separately via runbook §6.3
 # NOTE: This script does NOT execute D3 (d) end-to-end decrypt — requires production PHI_ENCRYPTION_KEY +
@@ -128,7 +140,7 @@ log "D3 (d) PHI-decrypt verification: SKIPPED in this script; operator runs runb
 log ""
 log "===== Pass-Criteria Summary ====="
 log "D3 (a) schema integrity:   OK ($table_count public tables)"
-log "D3 (b) sample-row prefix:  OK ($phi_row_count rows; 0 acceptable pre-DUA)"
+log "D3 (b) sample-row prefix:  OK ($phi_row_count enc: rows in patients.firstName)"
 log "D3 (d) PHI-decrypt:        SKIPPED (operator runs runbook §6.3 manually)"
 log "D4 RTO target:             $([ "$rto_total" -lt "$RTO_TARGET_SECONDS" ] && printf 'PASS' || printf 'FAIL') (${rto_total}s vs ${RTO_TARGET_SECONDS}s target)"
 log "================================"
