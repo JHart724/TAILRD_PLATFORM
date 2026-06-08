@@ -317,8 +317,11 @@ function buildUserFromResponse(apiUser: Record<string, any>, backendPerms?: User
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // ── On startup: clear any stale demo tokens so login is always required ──
+  // -- On startup: clear any stale tokens so login is always required --
+  // Demo mode is exempt: demo sessions are persisted (see the demo-login path) so
+  // they survive a page reload, instead of bouncing the user back to /login.
   useEffect(() => {
+    if (isDemoMode) return;
     localStorage.removeItem('tailrd-session-token');
     localStorage.removeItem('tailrd-refresh-token');
     localStorage.removeItem('tailrd-user');
@@ -338,10 +341,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, [state.sessionExpiry, state.isAuthenticated]);
 
-  // ── Session restoration on app load (non-demo) ──
+  // -- Session restoration on app load (incl. demo: demo sessions persist) --
   useEffect(() => {
-    if (isDemoMode) return; // Demo mode auto-logins above
-
     const savedToken = localStorage.getItem('tailrd-session-token');
     const savedRefreshToken = localStorage.getItem('tailrd-refresh-token');
     const savedUser = localStorage.getItem('tailrd-user');
@@ -447,6 +448,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const sessionToken = generateSecureToken();
     const refreshToken = generateSecureToken();
+
+    // Persist the demo session so it survives a page reload (mirrors the real-API path above).
+    localStorage.setItem('tailrd-session-token', sessionToken);
+    localStorage.setItem('tailrd-refresh-token', refreshToken);
+    localStorage.setItem('tailrd-user', JSON.stringify(user));
 
     dispatch({ type: 'LOGIN_SUCCESS', payload: { user, sessionToken, refreshToken } });
     return true;
