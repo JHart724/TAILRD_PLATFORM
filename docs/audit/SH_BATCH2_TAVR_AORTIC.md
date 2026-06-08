@@ -57,14 +57,15 @@ Every distinct code in the IMPLEMENTED Batch-1 rules (1 DET_OK + 8 PARTIAL), ver
 
 | DET_OK gap | Evaluator | Match (file:line) | §16.5 | §16.6 | Result |
 |---|---|---|---|---|---|
-| GAP-SH-061 (ViV TAVR) | SH-VALVE-IN-VALVE | `Z95.2 && (R06\|R00\|R55)` `:10604-10632` | N/A (dx) | **FAIL** | **AUDIT-123-affected** - PARTIAL candidate, operator-deferred |
+| GAP-SH-061 (ViV TAVR) | SH-VALVE-IN-VALVE | `Z95.2 && (R06\|R00\|R55)` `:10604-10632` | N/A (dx) | **FAIL** | **DET_OK -> PARTIAL (flip)** - AUDIT-123 (Z95.2 concept-match) |
 | GAP-SH-013 (post-TAVR PVL) | SH-13 | `Z95.2 && (I35.1\|I34.0)` `:6462-6486` | N/A (dx) | **FAIL** | **DET_OK -> PARTIAL (flip)** - AUDIT-122 (I34.0 over-detect) [+ AUDIT-123 Z95.2] |
-| GAP-SH-011 (post-TAVR surveil echo) | SH-6 | `Z95.2 && hasAorticStenosis (I35.0)` `:5404-5429` | N/A (dx) | **FAIL** | **AUDIT-123-affected** - PARTIAL candidate, operator-deferred |
+| GAP-SH-011 (post-TAVR surveil echo) | SH-6 | `Z95.2 && hasAorticStenosis (I35.0)` `:5404-5429` | N/A (dx) | **FAIL** | **DET_OK -> PARTIAL (flip)** - AUDIT-123 (Z95.2 concept-match) |
 
 All 3 DET_OK are dx/device-based (§16.5 N/A - 0 §16.5 flips, hypothesis holds). But ALL 3 fail §16.6: each
 gates on `Z95.2` for a bioprosthetic/TAVR target (AUDIT-123), and SH-13 additionally over-detects via I34.0
-(AUDIT-122). **1 flip APPLIED this block (SH-013, AUDIT-122); 2 PARTIAL candidates DEFERRED to operator
-(SH-061, SH-011, AUDIT-123).**
+(AUDIT-122). **All 3 flip DET_OK -> PARTIAL (operator-decided 2026-06-08): SH-013 (AUDIT-122) + SH-061 +
+SH-011 (AUDIT-123). The data-coupling caveat + 81-ref remediation are deferred; the classification is not
+(underclaim per AUDIT-118). Revised Batch-2 = 0 DET_OK / 5 PARTIAL / 13 SPEC_ONLY.**
 
 ## 3. §16.5 axis - per-gap
 
@@ -84,21 +85,22 @@ already cites - a build-time note, not an under-anchoring flag here.
 
 ## 5. Batch-2 distribution
 
-| | Baseline (2026-05-04) | Revised - APPLIED | If operator approves AUDIT-123 flips |
+| | Baseline (2026-05-04) | Revised (operator-decided 2026-06-08) | Delta |
 |---|---:|---:|---:|
-| DET_OK | 3 (SH-061, SH-013, SH-011) | **2** (SH-061, SH-011) | **0** |
-| PARTIAL_DETECTION | 2 (SH-012, SH-060) | **3** (+SH-013) | **5** (+SH-061, SH-011) |
-| SPEC_ONLY | 13 | 13 | 13 |
-| **Total** | **18** | **18** | **18** |
+| DET_OK | 3 (SH-061, SH-013, SH-011) | **0** | -3 |
+| PARTIAL_DETECTION | 2 (SH-012, SH-060) | **5** (+SH-013, SH-061, SH-011) | +3 |
+| SPEC_ONLY | 13 | 13 | 0 |
+| **Total** | **18** | **18** | reconciles |
 
-- **1 flip APPLIED this block: GAP-SH-013 DET_OK -> PARTIAL** (AUDIT-122, §16.6 over-detect via I34.0;
-  operator pre-authorized in STEP 2). Revised Batch-2 = 2 DET_OK / 3 PARTIAL / 13 SPEC_ONLY.
-- **2 flips DEFERRED to operator (AUDIT-123):** GAP-SH-061 + GAP-SH-011 fail §16.6 (Z95.2-as-bioprosthetic),
-  but the classification impact is data-coding-dependent (Z95.2 vs Z95.3 in ingested data, the AUDIT-118
-  pattern) and the blast radius is cross-module (81 refs) - operator-gated per §19.3(b). If approved,
-  Batch-2 = 0 DET_OK / 5 PARTIAL / 13 SPEC_ONLY.
+- **3 flips (all operator-decided 2026-06-08):** GAP-SH-013 (AUDIT-122, §16.6 over-detect via I34.0) +
+  GAP-SH-061 + GAP-SH-011 (AUDIT-123, §16.6 concept-match on Z95.2-as-bioprosthetic). Revised Batch-2 =
+  **0 DET_OK / 5 PARTIAL / 13 SPEC_ONLY.**
+- The data-coupling caveat (Z95.2 vs Z95.3 in ingested data) + the 81-ref cross-module remediation are
+  operator-gated and deferred; the classification is NOT (underclaim per AUDIT-118 / §16.6).
+- The SAFETY vector (VD-1 warfarin over-treatment of bioprosthetic) is split to **AUDIT-124** (MEDIUM,
+  escalate-to-HIGH at DUA).
 - AUDIT-121 (Q23.1) unaffected here (no Batch-2 SH gap uses Q23.1).
-- **Cumulative 37/88. Cumulative flips APPLIED: 2** (GAP-SH-008 Batch 1 + GAP-SH-013 Batch 2); +2 deferred.
+- **Cumulative 37/88. Cumulative flips: 4** (SH-008 Batch 1; SH-013 + SH-061 + SH-011 Batch 2).
 
 ## 6. §16.6 retro-confirm (Batches 1-2, all implemented DET_OK + PARTIAL)
 
@@ -123,18 +125,20 @@ retroactively to every implemented Batch-1 + Batch-2 rule. Per-batch §16 concep
   the second exemplar).
 - **Batch-1 retro:** SH-1 / SH-2 (I35.0) pass §16.6 (correct concept, fire only on AS-target). SH-BICUSPID
   already flipped (AUDIT-121). No new Batch-1 §16.6 finding.
-- **Cross-module / clinical-safety angle (AUDIT-123):** the VD-1 warfarin rule (`:4939`) treats all
-  prosthetic valves incl. bioprosthetic (Z95.3) as needing lifelong warfarin - a bioprosthetic
-  over-treatment direction; flagged for the VHD re-audit + operator severity call.
+- **Cross-module / clinical-safety angle:** the VD-1 warfarin rule (`:4939`) treats all prosthetic valves
+  incl. bioprosthetic (Z95.3) as needing lifelong warfarin - a bioprosthetic over-treatment direction; this
+  SAFETY vector is split into **AUDIT-124** (MEDIUM, escalate-to-HIGH at DUA). VD-1's full reclassification
+  stays with the VHD re-audit.
 
-## 7. PAUSE + STOP
+## 7. RESOLUTION (operator-decided 2026-06-08) + STOP
 
-Batch 2 close (cumulative 37/88), updated with the §16.6 codification + retro-confirm. This block:
-codified §16.6 (AUDIT_METHODOLOGY.md); flipped GAP-SH-013 DET_OK -> PARTIAL (AUDIT-122, operator
-pre-authorized); filed AUDIT-123 (systematic Z95.2/Z95.3 valve-type inversion, 81-ref cross-module sweep);
-and DEFERRED the GAP-SH-061 + GAP-SH-011 AUDIT-123 flips to operator adjudication (data-coding dependency).
-**STOP for operator review: (1) AUDIT-123 severity (MEDIUM P2 proposed; note the VD-1 warfarin sub-angle);
-(2) the SH-061 + SH-011 DET_OK -> PARTIAL flips; (3) then Batch 3 (Mitral Regurg + Mitral Stenosis +
-Tricuspid).** No source code changed; no canonical crosswalk/addendum edited (all flips PROPOSED; regen at
-SH module-close after approval). Register: AUDIT-122 + AUDIT-123 filed, AUDIT-121 cross-ref updated.
-Wall-clock in `audit_runs.jsonl` (run `SH-2026-06-08-batch2-s166`).
+Batch 2 fully resolved under the standing §16/§16.5/§16.6 stack. Sequence: codified §16.6
+(AUDIT_METHODOLOGY.md); flipped GAP-SH-013 (AUDIT-122, operator pre-authorized); filed AUDIT-123 (Z95.2/Z95.3
+inversion, 81-ref cross-module sweep); **operator then decided (2026-06-08): GAP-SH-061 + GAP-SH-011 ->
+PROPOSED PARTIAL** (underclaim, not held DET_OK), and **split the SAFETY vector to AUDIT-124** (VD-1 warfarin
+over-treatment of bioprosthetic, MEDIUM now / escalate-to-HIGH at DUA). **Final Batch-2 distribution: 0
+DET_OK / 5 PARTIAL / 13 SPEC_ONLY** (3 flips: SH-013, SH-061, SH-011). The data-coupling caveat + 81-ref
+remediation remain operator-gated/deferred; the classifications are settled. No source code changed; no
+canonical crosswalk/addendum edited (all flips PROPOSED; regen at SH module-close). Register: AUDIT-122 +
+AUDIT-123 + AUDIT-124 filed, AUDIT-121 cross-ref updated. **Proceed to Batch 3 (Mitral Regurg + Mitral
+Stenosis + Tricuspid).** Wall-clock: `SH-2026-06-08-batch2-s166` + this resolution under `batch2-resolve`.
