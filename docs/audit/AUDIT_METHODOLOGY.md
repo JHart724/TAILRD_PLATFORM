@@ -879,7 +879,12 @@ AUDIT-120/121 the same way §16.5 was born from AUDIT-118.
   the rule over-detects. **"Clinically related" is NOT a pass** - the test is whether a non-target patient
   fires, not whether the fired population is plausibly cardiac. Exemplar: AUDIT-122 (GAP-SH-013 is
   PVL-specific for an aortic prosthesis; `I34.0` mitral regurgitation fires on post-prosthetic patients
-  with unrelated mitral regurg and NO paravalvular leak - a non-target firing).
+  with unrelated mitral regurg and NO paravalvular leak - a non-target firing). **Overlap rule:**
+  classification follows TRUE-POSITIVE OVERLAP with the gap's target, NOT mapping existence. A wrong-target
+  rule that PARTIALLY OVERLAPS the target is `PARTIAL_DETECTION` (AUDIT-122: the PVL rule still catches the
+  aortic-regurg PVLs it was meant to, plus over-fires on mitral regurg); a rule FULLY DISJOINT from the
+  target - zero true-positive overlap - is `SPEC_ONLY` (AUDIT-126: the ASA-candidacy rule shares no patients
+  with the post-ASA-surveillance gap). "Mapped to a rule" is NOT a PARTIAL floor.
 - **(iii) SEVERITY-ENCODING:** a rule targeting a SEVERITY-GATED gap (spec target "severe" / "moderate+" /
   a named grade or threshold) must gate on an echo-severity signal in `labValues` that addresses the gap's
   TARGET severity axis - EROA / regurgitant volume / valve area / mean gradient / RV grade, as appropriate
