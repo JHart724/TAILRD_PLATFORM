@@ -40,11 +40,12 @@ Every distinct code in the IMPLEMENTED Batch-1 rules (1 DET_OK + 8 PARTIAL), ver
 | R06 / R00 / R55 | SH-VALVE-IN-VALVE | breathing / heart-beat / syncope symptom codes | OK (standard symptom proxies) |
 | Z51.5 | exclusion (all) | "Encounter for palliative care" | OK |
 
-- **Observation (not a defect / not a flip):** SH-13 (post-aortic-prosthetic PVL) matches `I35.1 || I34.0`
-  as "new regurgitation". I35.1 (aortic insufficiency) is the correct target for an aortic-prosthesis PVL;
-  I34.0 (MITRAL insufficiency) is a slightly over-broad co-finding proxy. The rule still correctly detects
-  the I35.1 aortic-regurg target, so GAP-SH-013 holds DET_OK; the I34.0 inclusion is minor over-breadth
-  (milder + clinically-related, unlike AUDIT-120's wholly-unrelated Z88). Noted for transparency.
+- **SH-13 I34.0 - REOPENED + ADJUDICATED under the new §16.6 axis (see section 6):** the original Batch-2
+  "minor / clinically-related, holds DET_OK" framing was WRONG. The §16.6 (ii) test - does a NON-target
+  patient fire? - flips it: GAP-SH-013 is PVL-specific (aortic prosthesis; spec name "Post-TAVR paravalvular
+  leak moderate+", structuredDataElements "TAVR, PVL grade"), so `I34.0` (mitral regurg) fires on
+  post-prosthetic patients with no PVL -> **AUDIT-122 (LOW), GAP-SH-013 DET_OK -> PARTIAL.** Separately, all
+  3 Batch-2 DET_OK gate on `Z95.2` for bioprosthetic/TAVR targets -> **AUDIT-123** (Z95.2/Z95.3 inversion).
 - **No T82.x (prosthetic-device complication) in any Batch-2 implemented rule** (the rules use Z95.2
   presence). The PPM / HALT / PPM-mismatch gaps that would use T82 are SPEC_ONLY.
 - **Aortic Disease (9): all 9 SPEC_ONLY - zero implemented rules**, so no running-code I71.x/dissection
@@ -54,13 +55,16 @@ Every distinct code in the IMPLEMENTED Batch-1 rules (1 DET_OK + 8 PARTIAL), ver
 
 ## 2. §1 direct read of the 3 DET_OK
 
-| DET_OK gap | Evaluator | Match (file:line) | Med-presence? | §16.5 | Result |
+| DET_OK gap | Evaluator | Match (file:line) | §16.5 | §16.6 | Result |
 |---|---|---|---|---|---|
-| GAP-SH-061 (ViV TAVR) | SH-VALVE-IN-VALVE | `Z95.2 && (R06\|R00\|R55)` `:10604-10632` | NO (dx) | N/A | **DET_OK hold** |
-| GAP-SH-013 (post-TAVR PVL) | SH-13 | `Z95.2 && (I35.1\|I34.0)` `:6462-6486` | NO (dx) | N/A | **DET_OK hold** (I34.0 obs above) |
-| GAP-SH-011 (post-TAVR surveil echo) | SH-6 | `Z95.2 && hasAorticStenosis (I35.0)` `:5404-5429` | NO (dx) | N/A | **DET_OK hold** |
+| GAP-SH-061 (ViV TAVR) | SH-VALVE-IN-VALVE | `Z95.2 && (R06\|R00\|R55)` `:10604-10632` | N/A (dx) | **FAIL** | **AUDIT-123-affected** - PARTIAL candidate, operator-deferred |
+| GAP-SH-013 (post-TAVR PVL) | SH-13 | `Z95.2 && (I35.1\|I34.0)` `:6462-6486` | N/A (dx) | **FAIL** | **DET_OK -> PARTIAL (flip)** - AUDIT-122 (I34.0 over-detect) [+ AUDIT-123 Z95.2] |
+| GAP-SH-011 (post-TAVR surveil echo) | SH-6 | `Z95.2 && hasAorticStenosis (I35.0)` `:5404-5429` | N/A (dx) | **FAIL** | **AUDIT-123-affected** - PARTIAL candidate, operator-deferred |
 
-All 3 DET_OK are dx/device-based; codes correct. **0 flips.**
+All 3 DET_OK are dx/device-based (§16.5 N/A - 0 §16.5 flips, hypothesis holds). But ALL 3 fail §16.6: each
+gates on `Z95.2` for a bioprosthetic/TAVR target (AUDIT-123), and SH-13 additionally over-detects via I34.0
+(AUDIT-122). **1 flip APPLIED this block (SH-013, AUDIT-122); 2 PARTIAL candidates DEFERRED to operator
+(SH-061, SH-011, AUDIT-123).**
 
 ## 3. §16.5 axis - per-gap
 
@@ -80,20 +84,57 @@ already cites - a build-time note, not an under-anchoring flag here.
 
 ## 5. Batch-2 distribution
 
-| | Baseline (2026-05-04) | Revised (2026-06-08) | Delta |
+| | Baseline (2026-05-04) | Revised - APPLIED | If operator approves AUDIT-123 flips |
 |---|---:|---:|---:|
-| DET_OK | 3 (SH-061, SH-013, SH-011) | **3** | 0 |
-| PARTIAL_DETECTION | 2 (SH-012, SH-060) | **2** | 0 |
-| SPEC_ONLY | 13 | 13 | 0 |
-| **Total** | **18** | **18** | reconciles |
+| DET_OK | 3 (SH-061, SH-013, SH-011) | **2** (SH-061, SH-011) | **0** |
+| PARTIAL_DETECTION | 2 (SH-012, SH-060) | **3** (+SH-013) | **5** (+SH-061, SH-011) |
+| SPEC_ONLY | 13 | 13 | 13 |
+| **Total** | **18** | **18** | **18** |
 
-- **0 flips in Batch 2.** §16.5 flips 0; §16 new SH defects 0 (1 observation, no flip); under-anchoring 0.
-- AUDIT-121 blast-radius expanded cross-module (2 VHD sites), but no Batch-2 SH gap uses Q23.1, so no
-  Batch-2 flip from it.
-- **Cumulative 37/88. Cumulative flips: 1** (GAP-SH-008, Batch 1).
+- **1 flip APPLIED this block: GAP-SH-013 DET_OK -> PARTIAL** (AUDIT-122, §16.6 over-detect via I34.0;
+  operator pre-authorized in STEP 2). Revised Batch-2 = 2 DET_OK / 3 PARTIAL / 13 SPEC_ONLY.
+- **2 flips DEFERRED to operator (AUDIT-123):** GAP-SH-061 + GAP-SH-011 fail §16.6 (Z95.2-as-bioprosthetic),
+  but the classification impact is data-coding-dependent (Z95.2 vs Z95.3 in ingested data, the AUDIT-118
+  pattern) and the blast radius is cross-module (81 refs) - operator-gated per §19.3(b). If approved,
+  Batch-2 = 0 DET_OK / 5 PARTIAL / 13 SPEC_ONLY.
+- AUDIT-121 (Q23.1) unaffected here (no Batch-2 SH gap uses Q23.1).
+- **Cumulative 37/88. Cumulative flips APPLIED: 2** (GAP-SH-008 Batch 1 + GAP-SH-013 Batch 2); +2 deferred.
 
-## 6. PAUSE + STOP
+## 6. §16.6 retro-confirm (Batches 1-2, all implemented DET_OK + PARTIAL)
 
-Batch 2 close (cumulative 37/88). **STOP for operator review before Batch 3 (Mitral Regurg + Mitral
-Stenosis + Tricuspid).** No source code changed; no canonical crosswalk/addendum edited. AUDIT-121 register
-entry updated (cross-module blast radius). Wall-clock in `audit_runs.jsonl` (run `SH-2026-06-08-batch2`).
+§16.6 (over-detection / concept-match) was codified this block (AUDIT_METHODOLOGY.md §16.6) and applied
+retroactively to every implemented Batch-1 + Batch-2 rule. Per-batch §16 concept-match verification table:
+
+| Code | Rule | Claimed concept | NLM/authoritative descriptor | Match | Finding |
+|---|---|---|---|---|---|
+| I35.0 | SH-1, SH-2, SH-6 | aortic stenosis | "Nonrheumatic aortic (valve) stenosis" | Y | - |
+| Q23.1 | SH-BICUSPID | bicuspid aortic valve | "Congenital insufficiency of aortic valve" | **N** | AUDIT-121 |
+| I35.1 | SH-13 | aortic regurgitation | "Nonrheumatic aortic (valve) insufficiency" | Y | - |
+| I34.0 | SH-13 | "new regurgitation" (aortic PVL gap) | "Nonrheumatic MITRAL (valve) insufficiency" | **N** | AUDIT-122 |
+| Z95.2 | SH-6, SH-13, SH-VALVE-IN-VALVE | bioprosthetic/TAVR valve | "Presence of prosthetic [mechanical] heart valve" | **N** | AUDIT-123 |
+| Z95.3 | (codebase, VD rules) | "mechanical" | "Presence of XENOGENIC [bioprosthetic] heart valve" | **N** | AUDIT-123 |
+| Z51.5 | EXCLUSION_HOSPICE | palliative care | "Encounter for palliative care" | Y | - |
+| R06/R00/R55 | SH-VALVE-IN-VALVE | dyspnea / palpitations / syncope | matching symptom categories | Y | - |
+
+- **§16.6 (i) concept-match failures:** AUDIT-121 (Q23.1), AUDIT-123 (Z95.2/Z95.3 inversion).
+- **§16.6 (ii) over-broad failures:** AUDIT-122 (I34.0 mitral on aortic-PVL gap).
+- **Propagation sweeps:** AUDIT-121 Q23.1 (3 sites / 2 modules - the first exemplar, run in Batch-2 STEP 0);
+  AUDIT-123 Z95.2/Z95.3/Z95.4 (81 refs across SH + VHD valve + anticoag rules, self-contradictory labels -
+  the second exemplar).
+- **Batch-1 retro:** SH-1 / SH-2 (I35.0) pass §16.6 (correct concept, fire only on AS-target). SH-BICUSPID
+  already flipped (AUDIT-121). No new Batch-1 §16.6 finding.
+- **Cross-module / clinical-safety angle (AUDIT-123):** the VD-1 warfarin rule (`:4939`) treats all
+  prosthetic valves incl. bioprosthetic (Z95.3) as needing lifelong warfarin - a bioprosthetic
+  over-treatment direction; flagged for the VHD re-audit + operator severity call.
+
+## 7. PAUSE + STOP
+
+Batch 2 close (cumulative 37/88), updated with the §16.6 codification + retro-confirm. This block:
+codified §16.6 (AUDIT_METHODOLOGY.md); flipped GAP-SH-013 DET_OK -> PARTIAL (AUDIT-122, operator
+pre-authorized); filed AUDIT-123 (systematic Z95.2/Z95.3 valve-type inversion, 81-ref cross-module sweep);
+and DEFERRED the GAP-SH-061 + GAP-SH-011 AUDIT-123 flips to operator adjudication (data-coding dependency).
+**STOP for operator review: (1) AUDIT-123 severity (MEDIUM P2 proposed; note the VD-1 warfarin sub-angle);
+(2) the SH-061 + SH-011 DET_OK -> PARTIAL flips; (3) then Batch 3 (Mitral Regurg + Mitral Stenosis +
+Tricuspid).** No source code changed; no canonical crosswalk/addendum edited (all flips PROPOSED; regen at
+SH module-close after approval). Register: AUDIT-122 + AUDIT-123 filed, AUDIT-121 cross-ref updated.
+Wall-clock in `audit_runs.jsonl` (run `SH-2026-06-08-batch2-s166`).
