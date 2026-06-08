@@ -52,20 +52,23 @@ also listed; harmless for `startsWith`-style matching (no detection defect).
 | GAP-EP-007 | T1 | AF Anticoag | DET_OK (cross-module VD-6) | **PARTIAL_DETECTION (flip)** | Mechanical-valve+DOAC; valve codes (Z95.2-.4) verified, but DOAC detection inherits the AUDIT-118 no-expansion under-detection -> the "DOAC in mechanical valve" contraindication can be missed for product-coded meds. |
 | GAP-EP-008 | T1 | AF Anticoag | PARTIAL | PARTIAL (hold) | MS contraindication, cross-module VD-4. |
 | GAP-EP-002/003/004/005/009/010/064/065/066 | T1-T3 | AF Anticoag | SPEC_ONLY | SPEC_ONLY (hold) | Not implemented (pharmacy-fill/TTR/dose-by-CrCl); no codes to verify in-rule. |
-| GAP-EP-043/044 | T2 | AAD Safety | DET_OK | DET_OK (hold) | Amiodarone TSH/LFT monitor; amiodarone 703 verified. |
+| GAP-EP-043/044 | T2 | AAD Safety | DET_OK | **PARTIAL_DETECTION (flip)** | Amiodarone TSH/LFT monitor; amiodarone 703 code verified, but matched ingredient-exact (`medCodes.includes('703')` :4430), no expansion -> AUDIT-118 modifier (§16.5) applies. |
 | GAP-EP-045 | T2 | AAD Safety | PARTIAL | PARTIAL (hold) | Amiodarone PFT baseline. |
-| GAP-EP-046 (EP-DRONEDARONE) | T2 | AAD Safety (SAFETY) | DET_OK | DET_OK (hold) | Dronedarone 233698 + LVEF 10230-1 + HF/AF ICD-10 all verified. |
-| GAP-EP-048 (EP-DOFETILIDE-REMS) | T2 | AAD Safety | DET_OK | DET_OK (hold) | Dofetilide 49247 + QTc 8636-3 + creatinine 2160-0 all verified. |
+| GAP-EP-046 (EP-DRONEDARONE) | T2 | AAD Safety (SAFETY) | DET_OK | **PARTIAL_DETECTION (flip)** | Dronedarone 233698 + LVEF 10230-1 + HF/AF ICD-10 all verified, but dronedarone matched ingredient-exact (`medCodes.includes('233698')` :7084), no expansion -> AUDIT-118 modifier (§16.5) applies. |
+| GAP-EP-048 (EP-DOFETILIDE-REMS) | T2 | AAD Safety | DET_OK | **PARTIAL_DETECTION (flip)** | Dofetilide 49247 + QTc 8636-3 + creatinine 2160-0 all verified, but dofetilide matched ingredient-exact (`medCodes.includes('49247')` :4465), no expansion -> AUDIT-118 modifier (§16.5) applies. |
 | GAP-EP-047 | T2 | AAD Safety | SPEC_ONLY | SPEC_ONLY (hold) | Sotalol inpatient QT monitoring; not implemented (sotalol 9947 verified for when built). |
 | GAP-EP-050 (EP-INAPPROPRIATE-SHOCKS) | T2 | AAD Safety | DET_OK | DET_OK (hold) | ICD shock programming; AF ICD-10 verified. |
 | **GAP-EP-049** | T2 | AAD Safety (**uncovered SAFETY**) | SPEC_ONLY | SPEC_ONLY (hold; **Tier S queue**) | Flecainide/propafenone in CAD/SHD (CAST). No evaluator. Codes 4441/8754 verified correct for when implemented. Remains the 1 uncovered SAFETY gap. |
 
-**Net proposed flips:** 3 (GAP-EP-001, GAP-EP-006, GAP-EP-007: DET_OK -> PARTIAL_DETECTION). GAP-EP-001/006
-are driven by the DABIGATRAN code defect (AUDIT-117); GAP-EP-007 by the no-expansion under-detection
-(AUDIT-118). The AAD ingredient-matched DET_OK rules (GAP-EP-043/044/046/048) carry the SAME AUDIT-118
-vulnerability (amiodarone 703, dronedarone 233698, dofetilide 49247 are all ingredient codes matched by
-exact membership) - whether to cascade-flip them on the cross-cutting finding is an operator decision
-(recorded, not auto-applied here).
+**Net flips:** 7 (DET_OK -> PARTIAL_DETECTION), under the operator-confirmed AUDIT-118 classification
+modifier (AUDIT_METHODOLOGY.md §16.5):
+- GAP-EP-001, GAP-EP-006 - DABIGATRAN code defect (AUDIT-117) + the no-expansion modifier.
+- GAP-EP-007 - no-expansion under-detection (AUDIT-118).
+- GAP-EP-043, GAP-EP-044, GAP-EP-046, GAP-EP-048 - cascade APPLIED: each matches an ingredient code by
+  exact membership with no expansion (amiodarone `:4430`, dronedarone `:7084`, dofetilide `:4465`), none
+  exempt (no descendant enumeration, no AUDIT-101 resolver), so the §16.5 modifier caps them at PARTIAL.
+GAP-EP-045 was already PARTIAL (no change). GAP-EP-050 (EP-INAPPROPRIATE-SHOCKS) is device/dx-based, not
+medication-presence -> modifier does not apply -> DET_OK holds.
 
 **Matching-mechanism resolution (STEP 1):** confirmed ABSENT - `medCodes = patient.medications.map(m =>
 m.rxNormCode)` (`runGapDetectionForPatient.ts:53` + `gapDetectionRunner.ts:100`), exact-string membership,

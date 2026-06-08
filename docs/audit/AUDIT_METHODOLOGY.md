@@ -828,6 +828,37 @@ Architectural refactor to eliminate inline arrays tracked as AUDIT-052; partial 
 | **Same-class wrong-drug** | Code is in the same drug class but wrong specific drug | RxNav properties.json | AUDIT-054: 2627044 = bexagliflozin (SGLT2i), not sotagliflozin (different SGLT2i) |
 | **Cross-class match** | LOINC for unrelated lab; ICD for unrelated dx | Authoritative cross-reference | AUDIT-068: ABI_LEFT 44975-1 = "Q-T interval" (an EKG concept, not ABI) |
 
+### 16.5 Medication-match-architecture classification modifier (AUDIT-118)
+
+A code can be the correct concept (passes §16.1-16.4) yet still under-detect because of HOW it is
+matched against patient data. This modifier governs classification, not code-correctness.
+
+**Rule:** a medication-presence gap (one whose detection asserts "patient is ON drug X" by testing
+membership of a value set in the patient's `medCodes`) **cannot be classified `DET_OK` or
+`PRODUCTION_GRADE`** while ALL of the following hold; it is **`PARTIAL_DETECTION`** until AUDIT-118
+is remediated:
+1. the value set is ingredient-level (RxNorm tty=IN / precise-ingredient), AND
+2. matching is exact-string membership (`medCodes.some(c => SET.includes(c))` / `medCodes.includes(...)`)
+   with **no RxNorm ingredient->descendant (IN->SCD/SBD) expansion** in the path, AND
+3. the ingested `medCodes` are product-coded (the FHIR/Synthea path stores `coding.code` verbatim at
+   SCD/clinical-drug granularity - `ingestSynthea.ts:309`).
+Under (1)+(2)+(3) the ingredient value set silently misses product-coded patient meds (a SAFETY rule
+can false-negative; a presence/absence rule can false-fire). See AUDIT-118 (the architecture finding)
+and AUDIT-117 (the dabigatran instance, doubly broken by also using a single SCD).
+
+**Exemptions (remain eligible for `DET_OK`):**
+- Gaps whose value set **enumerates the descendant product codes** alongside the ingredient (e.g.
+  `RXNORM_RATE_CONTROL` digoxin "ingredient + 3 formulations", `gapRuleEngine.ts:4256-4261`).
+- Gaps that route medications through the **AUDIT-101 SCD/SBD->ingredient resolver**
+  (`gapRuleEngine.ts:89-94`) before matching.
+- Gaps that do not match medications at all (diagnosis-only / lab-only detection).
+
+**Lifecycle:** this modifier is a temporary classification floor tied to AUDIT-118. When AUDIT-118 is
+remediated (ingredient-normalized matching at match time, or full descendant enumeration at value-set
+build time, with tests proving an SCD-coded med matches its ingredient value set), the modifier lifts
+and affected gaps are re-classified on their rule-body merits. Recorded under §18 register-literal
+discipline: severity/state of AUDIT-117/118 are copied from the register, not re-inferred.
+
 ---
 
 ## 17. Clinical-Code PR Acceptance Criteria (AUDIT-065..069 catalyst, 2026-05-06)
