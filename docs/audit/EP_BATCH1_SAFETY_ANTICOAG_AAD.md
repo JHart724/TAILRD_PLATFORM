@@ -1,7 +1,8 @@
 # EP Audit - Batch 1: Safety-critical Anticoagulation + AAD Safety (§16 + §1)
 
-**Date:** 2026-06-08. **Scope:** AF Anticoagulation (13) + AAD Safety (8) + the 1 uncovered
-SAFETY gap = 22 EP gaps. **Frozen denominator:** CLINICAL_KNOWLEDGE_BASE_v4.0 (no gap
+**Date:** 2026-06-08. **Scope:** AF Anticoagulation (13) + AAD Safety (8, including the 1 uncovered
+SAFETY gap GAP-EP-049) = 21 EP gaps. [Count corrected 22->21: GAP-EP-049 is one of the 8 AAD Safety
+gaps, not a 22nd; the earlier "+1 uncovered SAFETY" double-counted it.] **Frozen denominator:** CLINICAL_KNOWLEDGE_BASE_v4.0 (no gap
 additions). **Method:** §16 external clinical-code verification (RxNav `properties.json` for
 RxNorm; NLM Clinical Tables for LOINC; ICD-10-CM for diagnosis) + §1 rule-body re-classification,
 reconciled against the 2026-05-04 EP coverage addendum. **PROPOSED classifications below are for
