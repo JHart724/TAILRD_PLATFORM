@@ -89,12 +89,15 @@ describe('applyOverrides — AUDIT-041 canonical-default behavior', () => {
     expect(result.stdout).toContain('=== applyOverrides.ts (canonical) ===');
     expect(result.stdout).toMatch(/EP: applied=\d+/);
 
-    // EP has GAP-EP-079 override (AUDIT-031 mitigation pin)
+    // GAP-EP-079 is a PARTIAL override (2026-06-08 EP audit flip, AUDIT-118 / §16.5):
+    // the CRITICAL WPW AVN-blocker rule under-detects SCD-coded BB/CCB. A PARTIAL
+    // override MUST preserve its registryId-derived ruleBodyCite (without a resolvable
+    // registryId it demotes to SPEC_ONLY) - the exact mechanic the 13 EP flips rely on.
     const xw = readJson(path.join(tmpDir, 'EP.crosswalk.json'));
     const row = findRow(xw, 'GAP-EP-079');
     expect(row).toBeDefined();
-    expect(row.classification).toBe('DET_OK');
-    expect(row.auditNotes).toContain('AUDIT-031 RESOLVED');
+    expect(row.classification).toBe('PARTIAL_DETECTION');
+    expect(row.auditNotes).toContain('AUDIT-118');
     expect(row.ruleBodyCite).toBeDefined();
     expect(row.ruleBodyCite.evaluatorBlockName).toBe('EP-079');
 
@@ -110,8 +113,8 @@ describe('applyOverrides — AUDIT-041 canonical-default behavior', () => {
     const xw = readJson(path.join(tmpDir, 'EP.crosswalk.candidate.json'));
     const row = findRow(xw, 'GAP-EP-079');
     expect(row).toBeDefined();
-    expect(row.classification).toBe('DET_OK');
-    expect(row.auditNotes).toContain('AUDIT-031 RESOLVED');
+    expect(row.classification).toBe('PARTIAL_DETECTION');
+    expect(row.auditNotes).toContain('AUDIT-118');
 
     // Canonical file in tmp dir should NOT have been written (we didn't include it; --candidate mode targets candidate only)
     expect(fs.existsSync(path.join(tmpDir, 'EP.crosswalk.json'))).toBe(false);
@@ -166,12 +169,27 @@ describe('applyOverrides — AUDIT-041 canonical-default behavior', () => {
     expect(lines.length).toBe(6);
 
     // Module-specific overrides should land correctly per-module.
-    // HF has 2 overrides; EP has 7 (incl. EP-079 from AUDIT-031); CAD has 2; VHD has 13; SH/PV have 0.
-    const epXw = readJson(path.join(tmpDir, 'EP.crosswalk.json'));
-    expect(findRow(epXw, 'GAP-EP-079').classification).toBe('DET_OK');
-
+    // DET_OK-preservation pin: CAD-016 stays DET_OK through the override pass (the
+    // canonical DET_OK-override exemplar; EP no longer has any DET_OK override).
     const cadXw = readJson(path.join(tmpDir, 'CAD.crosswalk.json'));
     expect(findRow(cadXw, 'GAP-CAD-016').classification).toBe('DET_OK');
+
+    // PARTIAL-with-cite regression: EP-079 flipped to PARTIAL (AUDIT-118 / §16.5) but
+    // must keep its registryId-derived ruleBodyCite (else it would demote to SPEC_ONLY).
+    const epXw = readJson(path.join(tmpDir, 'EP.crosswalk.json'));
+    const ep079 = findRow(epXw, 'GAP-EP-079');
+    expect(ep079.classification).toBe('PARTIAL_DETECTION');
+    expect(ep079.ruleBodyCite).toBeDefined();
+    expect(ep079.auditNotes).toContain('AUDIT-118');
+
+    // Override-count invariant (dynamic - no frozen integer): every configured EP
+    // override applied and none demoted (a demote means a PARTIAL override lost its
+    // registryId). Parse the script's own dict-derived "(out of N configured)" count.
+    const epLine = result.stdout.split('\n').find(l => /EP: applied=/.test(l)) ?? '';
+    const m = epLine.match(/EP: applied=(\d+) demoted=(\d+) \(out of (\d+) configured\)/);
+    expect(m).not.toBeNull();
+    expect(Number(m![1])).toBe(Number(m![3])); // applied === configured (count of EP keys in OVERRIDES)
+    expect(Number(m![2])).toBe(0);             // demoted === 0
 
     const vhdXw = readJson(path.join(tmpDir, 'VHD.crosswalk.json'));
     // VHD-005 is a manual override per existing OVERRIDES.VHD entries (DET_OK with cross-module cite)
