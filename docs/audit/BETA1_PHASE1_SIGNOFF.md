@@ -69,6 +69,17 @@ then torn down. **Zero `update-service` calls, zero writes to the production dat
 - **RTO (D4):** restore call 00:12:31Z -> first verified DB connection 00:32:30Z = **~1,199s
   (~20 min)**, **under the 30-min target**. (Cluster-available sub-leg ~812s / 13.5 min; the
   remainder is Fargate scheduling for the verify task.)
+- **RPO (D5, set by snapshot cadence):** RTO is now measured; RPO is set by backup cadence and
+  is stated explicitly here so the two are not conflated. Production cluster
+  `tailrd-production-aurora` runs Aurora continuous backups with `BackupRetentionPeriod = 35`
+  days (preferred window 09:00-10:00 UTC). Point-in-time restore is therefore available to any
+  second within a rolling 35-day window (verified live at capture: EarliestRestorableTime
+  2026-05-03T09:08:14Z, LatestRestorableTime 2026-06-08T00:59:30Z). The latest-restorable time
+  trails wall-clock by Aurora's continuous-capture lag (single-digit minutes), so the routine
+  recovery-point guarantee is **bounded data loss of roughly the last few minutes via PITR, NOT
+  a daily-snapshot 24h window**. Manual HIPAA snapshots (e.g. `beta1-phase1-signoff-20260607`,
+  6-yr retention) are coarse on-demand point artifacts layered on top: they extend retention,
+  they do not set the routine RPO. DeletionProtection is ON in production.
 - **Verification** (ECS RunTask, throwaway task-def `tailrd-backend:276` with `DATABASE_URL`
   env-overridden to the scratch writer, `PHI_ENCRYPTION_KEY` + taskRole + region unchanged;
   task `ec192573`; evidence `docs/audit/sweeps/step7-restore-verify.js`):
@@ -101,6 +112,47 @@ then torn down. **Zero `update-service` calls, zero writes to the production dat
   deregistered (latest ACTIVE reverts to `:275`); scratch DATABASE_URL secret force-deleted
   (`ResourceNotFoundException`). Cost: ~20 min of Serverless v2 (Min 0.5 ACU) + small storage
   proration, well under $1.
+
+### Design choice (IAM-respecting) and a known transient
+The scratch verification was wired with a **throwaway task-def `tailrd-backend:276` carrying
+`DATABASE_URL` as an ECS environment OVERRIDE** to the scratch writer, reusing the existing
+taskRole / execRole / region / `PHI_ENCRYPTION_KEY` unchanged. This was deliberate: it performs
+**no IAM mutation** (no new secret, no new policy, no role or grant edit), so a DR test cannot
+drift production IAM posture.
+
+Known transient (recorded, not hidden): a `DATABASE_URL` passed as an ECS env override is
+**visible in plaintext via `ecs:DescribeTasks`** (the container `overrides` block) for the life
+of the task. It is acceptable here because (a) the credential pointed ONLY at the scratch
+cluster, which is now destroyed, so the value is dead, and (b) the task was short-lived and
+read-only. Future restore-test runbooks should either **accept the same transient explicitly**,
+or **pre-provision a scratch secret path that already sits within the execRole's existing
+Secrets Manager grants** and pass it as a `secrets` reference instead of an env override (which
+keeps the value out of DescribeTasks) - chosen so it still requires no IAM mutation.
+
+### Leak verification (independent re-check 2026-06-08, live AWS describe, read-only)
+Re-confirmed after teardown (us-east-1):
+- Scratch cluster `tailrd-signoff-restore-20260607`: `describe-db-clusters` ->
+  `DBClusterNotFoundFault`.
+- Scratch writer `tailrd-signoff-restore-20260607-writer`: `describe-db-instances` ->
+  `DBInstanceNotFound`.
+- **No orphan snapshot from the scratch cluster's own deletion** (`--skip-final-snapshot` was
+  set on both deletes): `describe-db-cluster-snapshots --db-cluster-identifier <scratch>` =
+  `[]`; the cluster-snapshot sweep for any id containing `signoff-restore` = `[]`;
+  `describe-db-cluster-automated-backups <scratch>` -> `DBClusterAutomatedBackupNotFoundFault`;
+  the instance-snapshot sweep for `signoff` = `[]`. Nothing to delete.
+- The retained manual snapshot `beta1-phase1-signoff-20260607` is sourced from the PRODUCTION
+  cluster (`DBClusterIdentifier = tailrd-production-aurora`, manual, available, 15.15); it is
+  the intended durable sign-off artifact, NOT an orphan of the scratch cluster.
+- Scratch DATABASE_URL secret: `describe-secret` -> `ResourceNotFoundException`; the name sweep
+  for signoff / restore / scratch = `[]`. Force-delete removes a secret immediately, so absence
+  is the deleted state.
+- Task definitions: the latest ACTIVE `tailrd-backend` revision is **`:275`**; the throwaway
+  `:276` is `INACTIVE` (deregistered); the active `:275` carries no `signoff-restore` reference
+  (its `DATABASE_URL` value was not echoed, to avoid leaking the production credential).
+- Artifact sweep: `/tmp/scratch` is absent; no temp file carries the scratch endpoint;
+  `signoff-restore` appears in the repo only as the cluster NAME inside committed evidence docs
+  (no `rds.amazonaws.com` endpoint is committed anywhere). `docs/audit/sweeps/step7-restore-verify.js`
+  is retained as evidence and reads `DATABASE_URL` from the environment (no hardcoded host).
 
 ### Note on the 7,305 -> 7,316 census-to-T0 delta (so future readers do not read it as a discrepancy)
 The 2026-06-07 censuses recorded `audit_logs` total 7,305. The T0 baseline (2026-06-07, later)
