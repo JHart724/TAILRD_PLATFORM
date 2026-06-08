@@ -37,7 +37,7 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 - [x] PV — canonical addendum (16 DET_OK / 14 PARTIAL / 75 SPEC_ONLY of 105 = 29% any-coverage)
 - [x] HF — canonical addendum (22 DET_OK / 43 PARTIAL / 61 SPEC_ONLY of 126 = 52% any-coverage; 9 cross-module to EP CRT/ICD)
 - [x] CAD — canonical addendum (28 DET_OK / 28 PARTIAL / 34 SPEC_ONLY of 90 = 62% any-coverage; 1 cross-module to PV)
-- [x] EP — canonical addendum (18 DET_OK / 26 PARTIAL / 45 SPEC_ONLY of 89 = 49% any-coverage; 3 cross-module incl. EP-007 to VHD)
+- [x] EP - canonical addendum (re-audit 2026-06-08 supersedes 2026-05-04: **8 DET_OK / 39 PARTIAL / 42 SPEC_ONLY** of 89 = 52.8% any-coverage UNCHANGED, DET_OK 23.6% -> 9.0%; 13 DET_OK -> PARTIAL flips via §16 + §16.5 re-audit; AUDIT-117/118 HIGH P1 + AUDIT-119 MEDIUM P2 + AUDIT-120 LOW P3; 3 cross-module incl. EP-007 to VHD)
 - [x] SH — canonical addendum (9 DET_OK / 23 PARTIAL / 56 SPEC_ONLY of 88 = 36% any-coverage; 4 cross-module)
 - [x] VHD — canonical addendum (5 DET_OK / 16 PARTIAL / 84 SPEC_ONLY of 105 = 20% any-coverage; 1 cross-module to SH)
 - [x] **Cross-module synthesis** with Tier S triage queue, blind-spot analysis, BSW pathway distribution
@@ -127,14 +127,14 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 | Module | Spec gaps | Backend rules | Rule density % | Frontend .tsx files | Audit state | T1 priority gaps |
 |---|---|---|---|---|---|---|
 | HF | 126 | 48 | **52% any / 17.5% DET_OK** | 38 | CANONICAL | 29 T1: 8 DET_OK + 14 PARTIAL + 7 SPEC_ONLY |
-| EP | 89 | 45 | **49% any / 20.2% DET_OK** | 63 | CANONICAL | 15 T1: 5 DET_OK + 4 PARTIAL + 6 SPEC_ONLY |
+| EP | 89 | 45 | **52.8% any / 9.0% DET_OK** | 63 | CANONICAL | 15 T1: 1 DET_OK + 11 PARTIAL + 3 SPEC_ONLY |
 | SH | 88 | 25 | **36% any / 10.2% DET_OK** | 48 | CANONICAL | 13 T1: 2 DET_OK + 6 PARTIAL + 5 SPEC_ONLY |
 | CAD | 90 | 76 | **62% any / 31.1% DET_OK** | 25 | CANONICAL | 18 T1: 7 DET_OK + 5 PARTIAL + 6 SPEC_ONLY |
 | VHD | 105 | 32 | **20% any / 4.8% DET_OK** | 18 | CANONICAL | 8 T1: 1 DET_OK + 3 PARTIAL + 4 SPEC_ONLY |
 | PV | 105 | 33 | **29% any / 15.2% DET_OK** | 24 | CANONICAL | 7 T1: 1 DET_OK + 2 PARTIAL + 4 SPEC_ONLY |
-| **Total active** | **603** | **259** | **41% any / 16.3% DET_OK** | **216** | 6 of 6 canonical | 90 T1: 24 DET_OK + 34 PARTIAL + 32 SPEC_ONLY |
+| **Total active** | **603** | **259** | **41.6% any / 14.8% DET_OK** | **216** | 6 of 6 canonical | 90 T1: 20 DET_OK + 41 PARTIAL + 29 SPEC_ONLY |
 
-**Coverage numbers** are computed from canonical crosswalks (`docs/audit/canonical/<MODULE>.crosswalk.json`) per AUDIT_METHODOLOGY.md §3. Auto-classifier with manual overrides applies §3.2.1 broad-rule consolidation per-gap (one evaluator block top-matched for ≥2 spec gaps in same subcategory → all classified PARTIAL_DETECTION unless evaluator's trigger criteria match a specific spec gap completely). 21 manual overrides documented inline in crosswalk auditNotes (13 VHD, 5 EP, 2 HF, 1 CAD).
+**Coverage numbers** are computed from canonical crosswalks (`docs/audit/canonical/<MODULE>.crosswalk.json`) per AUDIT_METHODOLOGY.md §3. Auto-classifier with manual overrides applies §3.2.1 broad-rule consolidation per-gap (one evaluator block top-matched for >=2 spec gaps in same subcategory -> all classified PARTIAL_DETECTION unless evaluator's trigger criteria match a specific spec gap completely). 32 manual overrides documented inline in crosswalk auditNotes (15 EP, 13 VHD, 2 HF, 2 CAD).
 
 Source: `docs/audit/canonical/<MODULE>.crosswalk.json` (canonical), `docs/audit/PHASE_0B_<MODULE>_AUDIT_ADDENDUM.md` (rendered), `docs/audit/AUDIT_METHODOLOGY.md` (methodology contract).
 
@@ -405,6 +405,7 @@ PARK = a verified, scoped candidate gap that is deliberately NOT yet built and N
 | Candidate | Class | Honest tier | Status | Sequencing |
 |---|---|---|---|---|
 | Enbumyst (bumetanide nasal spray, Corstasis; FDA-approved 2025-09) | HF DECONGESTION / readmission-avoidance | likely SPEC_ONLY or low-tier (NOT COR-anchored) | PARK candidate (no rule authored) | HF decongestion gap class when the Path-1 loop reaches it, OR deliberate operator-prioritized pull-forward |
+| EP Pacing subcategory (9 gaps) re-anchor to **2024 HRS Cardiac Physiologic Pacing** guideline | EP Pacing guideline-currency (re-anchor, not a new gap) | Pacing 9 = **SPEC_ONLY-until-re-anchored** | candidate horizon (no rule/spec change; filed 2026-06-08 EP audit Batch 1) | EP audit Pacing batch (re-anchor before trusting Pacing classification), OR a v2.0 guideline-currency pass |
 
 **Enbumyst (bumetanide nasal spray) - PARK candidate detail (filed 2026-05-31):**
 
