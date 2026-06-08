@@ -1,14 +1,14 @@
 {
-  "auditDate": "2026-05-04",
+  "auditDate": "2026-06-08",
   "auditMethod": "rule-body-citation-AUDIT-030D",
   "crosswalkVersion": "1.0",
   "extras": [],
-  "lessonsLearned": "",
+  "lessonsLearned": "**Verdict on the 2026-05-04 working hypothesis (that the DET_OK classifications were materially over-credited): CONFIRMED.** 13 of 21 DET_OK flipped to PARTIAL - 12 driven by the medication-match architecture (AUDIT-118) and 1 by an over-broad code (AUDIT-120). Any-coverage is unchanged (52.8%); only the trustworthiness tier moved. **Lessons for the SH audit (next module):** (1) DROP the extraction subagent - it confabulated in 2 of 3 batches (fabricated a Gap-39 QT-drug array, mis-mapped evaluators, enumerated only 13 of 22 gaps); pull the authoritative gap list straight from <MODULE>.spec.json plus <MODULE>.crosswalk.json. (2) Read EVERY DET_OK match expression directly from the running code - the subagent is a map, never a source of truth. (3) Apply the §16.5 medication-match modifier to every medication-presence DET_OK (subject unless the value set enumerates descendants or routes through the AUDIT-101 resolver). (4) §16-verify every code against the external source (RxNav / NLM); the donepezil/propranolol miscode class stayed clean here, but a new wrong-granularity defect (dabigatran SCD, AUDIT-117) and an over-broad code (Z88, AUDIT-120) were still found. **Time-unit caveat (AUDIT-028 / §13):** EP module-completion wall-clock was ~72 min AI-assisted for the full 89-gap §16 + §1 + §16.5 classification (~61 min excluding Batch-2 methodology authoring) plus ~40 external code verifications, ~1.2 gaps/min. This is the FIRST EP empirical AI-assisted data point - the AI-assisted reference, NOT a replacement for the raw §7.2 floor (~120-150 min per module, measured without AI and excluding §16). A second module is needed before a stable multiplier; do not conflate AI-assisted wall-clock with raw scope.",
   "module": "EP",
   "rows": [
     {
-      "auditNotes": "+ | Multiple registry ids cited: gap-ep-oac-afib, gap-ep-af-stroke-risk | auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per AUDIT_METHODOLOGY.md §16.5 / AUDIT-118. EP-OAC tests OAC presence by exact-RxCUI membership (OAC_CODES) with no ingredient->descendant expansion, so SCD/product-coded patient meds under-detect; the DABIGATRAN code (1037045) is also a single 150mg SCD not the ingredient (AUDIT-117). Evaluator retained; PARTIAL until AUDIT-117/118 remediated.",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -26,8 +26,8 @@
       "tier": "T1"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE: AUDIT-032 RESOLVED 2026-05-05 — new SAFETY evaluator block added (this PR) covering dabigatran (RxNorm 1037045) + eGFR<30 severe renal impairment per FDA Pradaxa PI + 2023 ACC/AHA AFib Class 3 (Harm) LOE B. Includes structured-data-gap branch for missing eGFR (matches EP-XX-7 LVEF-data-required pattern; preserves harm vector via fail-loud rather than silent default). Closes Tier S queue item.",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-117 + AUDIT-118. The Class-3-Harm dabigatran renal-safety rule triggers on medCodes.includes(1037045) = dabigatran 150mg SCD (not the ingredient, AUDIT-117) and matches with no ingredient->descendant expansion, so dabigatran 75mg (renal-impairment dose) + eGFR<30 - the precise contraindication - is a false-negative. Evaluator retained; PARTIAL until AUDIT-117/118 remediated. (Prior 2026-05-05 AUDIT-032 logic closure stands; trustworthiness capped by the matching defect.)",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -45,8 +45,8 @@
       "tier": "T1"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE: cross-module satisfaction. GAP-EP-007 (DOAC on mechanical valve, CRITICAL SAFETY) is satisfied by VHD module evaluator VD-6 (gap-vd-6-doac-mechanical-valve, line 5312+) which fires on mechanical valve + DOAC RxNorm with explicit RE-ALIGN trial citation Class 3 Harm. Same clinical rule covers GAP-VHD-005 in VHD module. Auto-classifier picked SH-VALVE-IN-VALVE based on \"valve\" token similarity — wrong match. Architectural fragility documented at AUDIT-027 expanded scope (single rule satisfies spec gaps in two modules).",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. Cross-module satisfaction by VHD VD-6 (DOAC + mechanical valve, Class 3 Harm) is intact, but the DOAC match is exact-RxCUI membership with no ingredient expansion, so product-coded DOAC meds under-detect the contraindication. Evaluator retained; PARTIAL until AUDIT-118 remediated.",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -173,8 +173,8 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "line 3979+ | auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 5): DET_OK -> PARTIAL per AUDIT-120 (over-detection, distinct from §16.5). EP-LAAC uses dxCodes.startsWith(Z88) as an OAC-contraindication, but ICD-10 Z88 is \"Allergy status\" to any drug class, so the LAAC gap over-fires on any AF + age>=65 patient with any drug allergy (e.g. penicillin). Evaluator retained; PARTIAL until AUDIT-120 remediated (narrow or drop Z88).",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -241,8 +241,8 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "line 9129+ | auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-EARLY-RHYTHM tests rhythm-control (AAD) presence by exact-RxCUI membership (RHYTHM_CONTROL_CODES_ER) with no expansion, so SCD-coded AAD meds read as not-on-rhythm-control. Evaluator retained; PARTIAL until AUDIT-118 remediated.",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -279,8 +279,8 @@
       "tier": "T1"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE: AUDIT-033 RESOLVED 2026-05-05 — registry entry gap-ep-017-hfref-non-dhp-ccb added (this PR); evaluator at line 4797 fires SAFETY gap with Class 3 (Harm) classification when HFrEF + on diltiazem (RxNorm 3443) or verapamil (RxNorm 11170). Closes Tier S queue item. Override pin preserved for stability against auto-classifier similarity scoring drift.",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. The Class-3-Harm HFrEF + non-DHP-CCB SAFETY rule matches diltiazem/verapamil ingredient-exact (NON_DHP_CCB_CODES) with no expansion, so SCD-coded CCB meds under-detect. Evaluator retained; PARTIAL until AUDIT-118 remediated. (Prior 2026-05-05 AUDIT-033 logic closure stands.)",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -346,8 +346,8 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "line 6584+ | auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-PFA tests AAD presence (AAD_CODES) ingredient-exact with no expansion. Evaluator retained; PARTIAL until AUDIT-118 remediated.",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -414,8 +414,8 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE: AUDIT-031 RESOLVED 2026-05-05 — new CRITICAL evaluator block added (this PR) covering WPW (I45.6) + AF (I48.x) + AVN blocker (8 beta-blockers + 2 non-DHP CCBs + digoxin ingredient/formulations) per 2023 ACC/AHA/ACCP/HRS AFib Class 3 (Harm) LOE B. Mechanism: AVN blockade removes safety governor on rapid accessory-pathway conduction → fatal VF. Switch recommendation: procainamide (8700, post-AUDIT-042) or amiodarone (703); definitive ablation Class 1. All 14 AVN-blocker RxNorms verified via RxNav per AUDIT_METHODOLOGY.md §16. Closes Tier S queue (final item — queue 1 → 0).",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. The CRITICAL WPW+AF AVN-blocker rule matches medCodes via AVN_BLOCKER_CODES_EP079, a MIXED set: digoxin is descendant-enumerated (exempt) but the 8 beta-blockers + 2 non-DHP CCBs are ingredient-only, so a WPW+AF patient on an SCD-coded BB/CCB under-detects the fatal-VF contraindication. Evaluator retained; PARTIAL until AUDIT-118 remediated. (Prior 2026-05-05 AUDIT-031 logic closure stands; all 14 codes RxNav-verified.)",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -672,8 +672,8 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "line 6786+ | auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 3): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-LQTS-BB tests beta-blocker presence (BB_CODES_LQTS) ingredient-exact with no expansion, so a LQTS patient on an SCD-coded beta-blocker false-fires \"BB not prescribed.\" Evaluator retained; PARTIAL until AUDIT-118 remediated.",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -1068,8 +1068,8 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE per EP addendum line 177: GAP-EP-043 (Amiodarone TSH monitoring) covered by EP-AMIODARONE-MONITOR evaluator (line 4144+) which combines TSH + LFT monitoring. DET_OK.",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-AMIODARONE-MONITOR (TSH) tests amiodarone presence (703) ingredient-exact with no expansion, so SCD-coded amiodarone under-detects. Evaluator retained; PARTIAL until AUDIT-118 remediated.",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -1087,8 +1087,8 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE per EP addendum line 178: GAP-EP-044 (Amiodarone LFT monitoring) covered by same EP-AMIODARONE-MONITOR evaluator (combined TSH+LFT rule). DET_OK.",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-AMIODARONE-MONITOR (LFT) tests amiodarone presence (703) ingredient-exact with no expansion. Evaluator retained; PARTIAL until AUDIT-118 remediated.",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -1125,8 +1125,8 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "line 6646+ | auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-DRONEDARONE (SAFETY) tests dronedarone presence (233698) ingredient-exact with no expansion, so SCD-coded dronedarone under-detects the NYHA III/IV contraindication. Evaluator retained; PARTIAL until AUDIT-118 remediated.",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -1154,8 +1154,8 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "line 954+ +  line 4145+ | auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-DOFETILIDE-REMS tests dofetilide presence (49247) ingredient-exact with no expansion. Evaluator retained; PARTIAL until AUDIT-118 remediated.",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -1320,6 +1320,6 @@
       "tier": "T3"
     }
   ],
-  "sequencingNotes": "",
-  "strategicPosture": ""
+  "sequencingNotes": "**Sequencing:** the 13 flips are classification corrections, not build work - no EP rule is rewritten in this pass. The AUDIT-118 remediation (ingredient-normalize the medication match) is the single highest-leverage v2.0 item: it lifts 12 of 13 EP flips and the same modifier applies across all 6 modules. **Quantified retroactive magnitude (cross-module synthesis input):** EP lost 62% of its DET_OK (13 of 21) to the §16.5 modifier plus AUDIT-117/120. The merged PV/HF/CAD medication-based DET_OK predate this modifier and are subject to the same correction at v2.0 Module-Parity reconciliation (PATH_TO_ROBUST §5); their DET_OK rates likely overstate trustworthy coverage by a similar magnitude and must be re-applied before any module's DET_OK number is reported as trustworthy. SH and VHD have not yet been audited to the §16 standard at all.",
+  "strategicPosture": "**Re-audit 2026-06-08 (supersedes the 2026-05-04 version; prior retained in git history).** EP's detection LOGIC is broadly present - any-coverage is 52.8% and UNCHANGED - but the 2026-05-04 audit materially OVER-CREDITED the trustworthiness tier: DET_OK fell 23.6% -> 9.0% once §16 plus the §16.5 medication-match modifier were applied. The rules exist and fire; they are capped at PARTIAL because the platform matches medications by exact-RxCUI membership with no ingredient-to-descendant expansion (AUDIT-118), so product-coded (SCD) patient meds under-detect. High-leverage posture: a SINGLE AUDIT-118 ingredient-normalize-at-match fix restores 12 of the 13 flips at once (the 13th is AUDIT-120, a one-line Z88 narrowing). EP is therefore not 'lightly built' in logic - it is 'broadly built but trust-capped pending one architectural fix.'"
 }

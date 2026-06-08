@@ -58,30 +58,46 @@ const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
     },
   },
   EP: {
+    // EP audit 2026-06-08 (operator-approved): 13 DET_OK -> PARTIAL_DETECTION flips. 12 are the
+    // AUDIT-118 / §16.5 medication-match modifier (exact-RxCUI membership, no ingredient->descendant
+    // expansion against product-coded data); 1 is AUDIT-120 (Z88 over-broad). Each retains its evaluator
+    // (registryId) so the rule-body cite is preserved; the cap is PARTIAL until AUDIT-117/118/120 remediate.
+    'GAP-EP-001': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-ep-oac-afib',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per AUDIT_METHODOLOGY.md §16.5 / AUDIT-118. EP-OAC tests OAC presence by exact-RxCUI membership (OAC_CODES) with no ingredient->descendant expansion, so SCD/product-coded patient meds under-detect; the DABIGATRAN code (1037045) is also a single 150mg SCD not the ingredient (AUDIT-117). Evaluator retained; PARTIAL until AUDIT-117/118 remediated.',
+    },
     'GAP-EP-006': {
-      classification: 'DET_OK',
+      classification: 'PARTIAL_DETECTION',
       registryId: 'gap-ep-006-dabigatran-renal-safety',
       auditNote:
-        'MANUAL OVERRIDE: AUDIT-032 RESOLVED 2026-05-05 — new SAFETY evaluator block added (this PR) covering dabigatran (RxNorm 1037045) + eGFR<30 severe renal impairment per FDA Pradaxa PI + 2023 ACC/AHA AFib Class 3 (Harm) LOE B. Includes structured-data-gap branch for missing eGFR (matches EP-XX-7 LVEF-data-required pattern; preserves harm vector via fail-loud rather than silent default). Closes Tier S queue item.',
-    },
-    'GAP-EP-079': {
-      classification: 'DET_OK',
-      registryId: 'gap-ep-079-wpw-af-avn-blocker',
-      auditNote:
-        'MANUAL OVERRIDE: AUDIT-031 RESOLVED 2026-05-05 — new CRITICAL evaluator block added (this PR) covering WPW (I45.6) + AF (I48.x) + AVN blocker (8 beta-blockers + 2 non-DHP CCBs + digoxin ingredient/formulations) per 2023 ACC/AHA/ACCP/HRS AFib Class 3 (Harm) LOE B. Mechanism: AVN blockade removes safety governor on rapid accessory-pathway conduction → fatal VF. Switch recommendation: procainamide (8700, post-AUDIT-042) or amiodarone (703); definitive ablation Class 1. All 14 AVN-blocker RxNorms verified via RxNav per AUDIT_METHODOLOGY.md §16. Closes Tier S queue (final item — queue 1 → 0).',
+        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-117 + AUDIT-118. The Class-3-Harm dabigatran renal-safety rule triggers on medCodes.includes(1037045) = dabigatran 150mg SCD (not the ingredient, AUDIT-117) and matches with no ingredient->descendant expansion, so dabigatran 75mg (renal-impairment dose) + eGFR<30 - the precise contraindication - is a false-negative. Evaluator retained; PARTIAL until AUDIT-117/118 remediated. (Prior 2026-05-05 AUDIT-032 logic closure stands; trustworthiness capped by the matching defect.)',
     },
     'GAP-EP-007': {
-      classification: 'DET_OK',
+      classification: 'PARTIAL_DETECTION',
       registryId: 'gap-vd-6-doac-mechanical-valve',
       evaluatorModule: 'VHD',
       auditNote:
-        'MANUAL OVERRIDE: cross-module satisfaction. GAP-EP-007 (DOAC on mechanical valve, CRITICAL SAFETY) is satisfied by VHD module evaluator VD-6 (gap-vd-6-doac-mechanical-valve, line 5312+) which fires on mechanical valve + DOAC RxNorm with explicit RE-ALIGN trial citation Class 3 Harm. Same clinical rule covers GAP-VHD-005 in VHD module. Auto-classifier picked SH-VALVE-IN-VALVE based on "valve" token similarity — wrong match. Architectural fragility documented at AUDIT-027 expanded scope (single rule satisfies spec gaps in two modules).',
+        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. Cross-module satisfaction by VHD VD-6 (DOAC + mechanical valve, Class 3 Harm) is intact, but the DOAC match is exact-RxCUI membership with no ingredient expansion, so product-coded DOAC meds under-detect the contraindication. Evaluator retained; PARTIAL until AUDIT-118 remediated.',
+    },
+    'GAP-EP-013': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-ep-early-rhythm',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-EARLY-RHYTHM tests rhythm-control (AAD) presence by exact-RxCUI membership (RHYTHM_CONTROL_CODES_ER) with no expansion, so SCD-coded AAD meds read as not-on-rhythm-control. Evaluator retained; PARTIAL until AUDIT-118 remediated.',
     },
     'GAP-EP-017': {
-      classification: 'DET_OK',
+      classification: 'PARTIAL_DETECTION',
       registryId: 'gap-ep-017-hfref-non-dhp-ccb',
       auditNote:
-        'MANUAL OVERRIDE: AUDIT-033 RESOLVED 2026-05-05 — registry entry gap-ep-017-hfref-non-dhp-ccb added (this PR); evaluator at line 4797 fires SAFETY gap with Class 3 (Harm) classification when HFrEF + on diltiazem (RxNorm 3443) or verapamil (RxNorm 11170). Closes Tier S queue item. Override pin preserved for stability against auto-classifier similarity scoring drift.',
+        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. The Class-3-Harm HFrEF + non-DHP-CCB SAFETY rule matches diltiazem/verapamil ingredient-exact (NON_DHP_CCB_CODES) with no expansion, so SCD-coded CCB meds under-detect. Evaluator retained; PARTIAL until AUDIT-118 remediated. (Prior 2026-05-05 AUDIT-033 logic closure stands.)',
+    },
+    'GAP-EP-024': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-ep-lqts-bb',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 3): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-LQTS-BB tests beta-blocker presence (BB_CODES_LQTS) ingredient-exact with no expansion, so a LQTS patient on an SCD-coded beta-blocker false-fires "BB not prescribed." Evaluator retained; PARTIAL until AUDIT-118 remediated.',
     },
     'GAP-EP-026': {
       classification: 'PARTIAL_DETECTION',
@@ -90,22 +106,52 @@ const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'MANUAL OVERRIDE per EP addendum line 131: GAP-EP-026 (Congenital LQTS QT-drug avoidance) covered by overlapping rules EP-LQTS-BB (line 6906+) and EP-TORSADES (line 7121+). PARTIAL because broad coverage of LQTS+QT-drug scenarios but not specifically the congenital subtype with QT-drug avoidance protocol.',
     },
     'GAP-EP-043': {
-      classification: 'DET_OK',
+      classification: 'PARTIAL_DETECTION',
       registryId: 'gap-ep-amiodarone-monitor',
       auditNote:
-        'MANUAL OVERRIDE per EP addendum line 177: GAP-EP-043 (Amiodarone TSH monitoring) covered by EP-AMIODARONE-MONITOR evaluator (line 4144+) which combines TSH + LFT monitoring. DET_OK.',
+        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-AMIODARONE-MONITOR (TSH) tests amiodarone presence (703) ingredient-exact with no expansion, so SCD-coded amiodarone under-detects. Evaluator retained; PARTIAL until AUDIT-118 remediated.',
     },
     'GAP-EP-044': {
-      classification: 'DET_OK',
+      classification: 'PARTIAL_DETECTION',
       registryId: 'gap-ep-amiodarone-monitor',
       auditNote:
-        'MANUAL OVERRIDE per EP addendum line 178: GAP-EP-044 (Amiodarone LFT monitoring) covered by same EP-AMIODARONE-MONITOR evaluator (combined TSH+LFT rule). DET_OK.',
+        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-AMIODARONE-MONITOR (LFT) tests amiodarone presence (703) ingredient-exact with no expansion. Evaluator retained; PARTIAL until AUDIT-118 remediated.',
     },
     'GAP-EP-045': {
       classification: 'PARTIAL_DETECTION',
       registryId: 'gap-ep-amiodarone-monitor',
       auditNote:
         'MANUAL OVERRIDE per EP addendum line 179: GAP-EP-045 (Amiodarone baseline PFT/CXR) covered partially by EP-AMIODARONE-MONITOR evaluator. PARTIAL per §3.2.1: combined rule covers TSH/LFT but not PFT/CXR baseline screening that spec specifies.',
+    },
+    'GAP-EP-046': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-ep-dronedarone',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-DRONEDARONE (SAFETY) tests dronedarone presence (233698) ingredient-exact with no expansion, so SCD-coded dronedarone under-detects the NYHA III/IV contraindication. Evaluator retained; PARTIAL until AUDIT-118 remediated.',
+    },
+    'GAP-EP-048': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-ep-dofetilide-rems',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-DOFETILIDE-REMS tests dofetilide presence (49247) ingredient-exact with no expansion. Evaluator retained; PARTIAL until AUDIT-118 remediated.',
+    },
+    'GAP-EP-070': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-ep-pfa',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-PFA tests AAD presence (AAD_CODES) ingredient-exact with no expansion. Evaluator retained; PARTIAL until AUDIT-118 remediated.',
+    },
+    'GAP-EP-079': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-ep-079-wpw-af-avn-blocker',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. The CRITICAL WPW+AF AVN-blocker rule matches medCodes via AVN_BLOCKER_CODES_EP079, a MIXED set: digoxin is descendant-enumerated (exempt) but the 8 beta-blockers + 2 non-DHP CCBs are ingredient-only, so a WPW+AF patient on an SCD-coded BB/CCB under-detects the fatal-VF contraindication. Evaluator retained; PARTIAL until AUDIT-118 remediated. (Prior 2026-05-05 AUDIT-031 logic closure stands; all 14 codes RxNav-verified.)',
+    },
+    'GAP-EP-011': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-ep-laac',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 5): DET_OK -> PARTIAL per AUDIT-120 (over-detection, distinct from §16.5). EP-LAAC uses dxCodes.startsWith(Z88) as an OAC-contraindication, but ICD-10 Z88 is "Allergy status" to any drug class, so the LAAC gap over-fires on any AF + age>=65 patient with any drug allergy (e.g. penicillin). Evaluator retained; PARTIAL until AUDIT-120 remediated (narrow or drop Z88).',
     },
   },
   SH: {},
