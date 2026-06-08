@@ -279,6 +279,8 @@ LIMIT 10;
 
 ### 6.3 D3 (d) — PHI-decrypt KMS context end-to-end
 
+**AS-EXECUTED 2026-06-07 (preferred method; supersedes the inline-secret command below):** the 2026-06-07 sign-off restore test ran D3(d) via **ECS RunTask** with a throwaway `tailrd-backend` task-def revision whose `DATABASE_URL` is env-overridden to the scratch writer endpoint, with `PHI_ENCRYPTION_KEY` kept as the existing Secrets Manager secret (taskRole + region unchanged) so **no secret values are ever echoed** - NOT the inline `PHI_ENCRYPTION_KEY="<production-PHI-key>"` command below, and NOT a scratch-secret `valueFrom`. Result: `audit_logs.{description,newValues}` = 14,417 envelopes / 0 failures. Evidence script `docs/audit/sweeps/step7-restore-verify.js`; see `docs/audit/BETA1_PHASE1_SIGNOFF.md`. The inline block below is retained for operator-ramp/diagnosis only.
+
 **Load-bearing for AUDIT-016 + AUDIT-017 + AUDIT-075 sister-discipline:** verifies BOTH encryption layers (Aurora storage + AUDIT-016 application envelope) work on restored cluster. If either layer broken, this verification fails distinctly.
 
 Operator runs the existing PHI decryption tooling against restore-test cluster:
