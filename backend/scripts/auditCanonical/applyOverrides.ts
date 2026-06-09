@@ -154,7 +154,72 @@ const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 5): DET_OK -> PARTIAL per AUDIT-120 (over-detection, distinct from §16.5). EP-LAAC uses dxCodes.startsWith(Z88) as an OAC-contraindication, but ICD-10 Z88 is "Allergy status" to any drug class, so the LAAC gap over-fires on any AF + age>=65 patient with any drug allergy (e.g. penicillin). Evaluator retained; PARTIAL until AUDIT-120 remediated (narrow or drop Z88).',
     },
   },
-  SH: {},
+  SH: {
+    // SH audit 2026-06-08 (operator-approved, Batches 1-5 + Batch-5 STEP-0 re-verification): 10
+    // classification flips. 8 DET_OK -> PARTIAL_DETECTION (16.6(i)/(ii)/(iii) + 16.5 detection-quality
+    // defects; each retains its evaluator/registryId, capped PARTIAL until AUDIT-121..128 remediate).
+    // 2 -> SPEC_ONLY: GAP-SH-104 (DET_OK, AUDIT-126) + GAP-SH-028 (PARTIAL, AUDIT-129) where the mapped
+    // rule is FULLY DISJOINT from the gap target, so registryId is dropped per the 16.6(ii) overlap rule
+    // (partial overlap -> PARTIAL; disjoint -> SPEC_ONLY). Drivers: AUDIT-121..129.
+    'GAP-SH-008': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-sh-bicuspid-surveillance',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 1): DET_OK -> PARTIAL per AUDIT_METHODOLOGY.md 16.6(ii) / AUDIT-121. SH-BICUSPID gates dxCodes.startsWith(Q23.1) (congenital aortic insufficiency) for "bicuspid aortic valve", but bicuspid is Q23.81; the rule misses true bicuspid patients and false-fires on congenital AI. Partial overlap -> PARTIAL not SPEC_ONLY. Evaluator retained; PARTIAL until AUDIT-121 remediated (Q23.1 -> Q23.81).',
+    },
+    'GAP-SH-013': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-sh-13-paravalvular-leak',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 2): DET_OK -> PARTIAL per 16.6(ii) / AUDIT-122. SH-13 matches I35.1 OR I34.0 as "new regurgitation", but the gap is aortic-prosthesis PVL-specific: I35.1 (aortic insufficiency) is correct while I34.0 (mitral insufficiency) over-fires on unrelated post-prosthetic mitral regurg with no PVL. Partial overlap -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-122 remediated (drop I34.0, keep I35.1).',
+    },
+    'GAP-SH-061': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-sh-valve-in-valve',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 2): DET_OK -> PARTIAL per 16.6(i) concept-match / AUDIT-123. SH-VALVE-IN-VALVE gates on Z95.2 treated as bioprosthetic, but per NLM Z95.2 = prosthetic/mechanical and Z95.3 = xenogenic/bioprosthetic (inverted codebase-wide), so the ViV rule misses real bioprosthetic (Z95.3) and false-fires on mechanical. Data-coupled defect flips to PARTIAL per the AUDIT-118 precedent. Evaluator retained; PARTIAL until AUDIT-123 remediated (correct Z95.2/Z95.3 semantics).',
+    },
+    'GAP-SH-011': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-sh-6-post-tavr-followup',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 2): DET_OK -> PARTIAL per 16.6(i) concept-match / AUDIT-123. SH-6 post-TAVR surveillance rests on the same inverted Z95.2/Z95.3 valve-type semantics (Z95.2 mechanical mislabeled bioprosthetic), so it misses real bioprosthetic (Z95.3) and false-fires on mechanical. Data-coupled defect -> PARTIAL per the AUDIT-118 precedent. Evaluator retained; PARTIAL until AUDIT-123 remediated.',
+    },
+    'GAP-SH-064': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-sh-11-tmvr',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 3): DET_OK -> PARTIAL per 16.6(iii) severity-encoding / AUDIT-125. SH-11 (TMVR) gates I34.0 + age>80 with no echo-severity threshold (EROA / regurgitant volume), but the gap targets severe MR, so it over-detects sub-threshold (mild) mitral regurg. Severity IS echo-encoded in labValues and the rule ignores it -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-125 remediated (add the lesion-appropriate echo-severity gate).',
+    },
+    'GAP-SH-022': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-sh-4-tricuspid-assessment',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 3): DET_OK -> PARTIAL per 16.6(iii) severity-encoding / AUDIT-125. SH-4 gates I36.1 + right-heart symptoms with no TR-severity threshold, but the gap targets severe/torrential TR, so it over-detects sub-threshold lesions; the transcatheter-tricuspid recommendation is also under-anchored. -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-125 remediated (add severity gate + re-anchor).',
+    },
+    'GAP-SH-026': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-sh-9-pfo-closure',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 4, STEP-0): DET_OK -> PARTIAL per 16.6(ii) over-detection / AUDIT-127. SH-9 fires on I63.9 + age<60 + Q21.1 with no coded stroke-etiology exclusion; the rule own evidence object names "alternative stroke etiology" as an exclusion but the match logic never checks it, so it over-fires on non-cryptogenic (e.g. AF-cardioembolic) strokes. Partial overlap (true cryptogenic still caught) -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-127 remediated (add the coded etiology exclusion the evidence already names).',
+    },
+    'GAP-SH-027': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-sh-asd-closure',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 4, STEP-0): DET_OK -> PARTIAL per 16.5 under-detection / AUDIT-128. SH-ASD gates significance on I50.81 (right heart failure), but the gap significance signals are RV size + Qp:Qs + PASP; RV failure is a late proxy, so a significant ASD with RV dilation or PASP elevation but not yet RV failure is missed. Under-detection -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-128 remediated (gate on RV size / Qp:Qs / PASP echo signals).',
+    },
+    'GAP-SH-104': {
+      classification: 'SPEC_ONLY',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 4, STEP-0): DET_OK -> SPEC_ONLY per 16.6(ii) wrong-target / AUDIT-126. SH-15 detects PRE-procedure ASA candidacy (I42.1 obstructive HCM + obstruction symptoms), but GAP-SH-104 targets POST-ASA conduction surveillance; the two are fully disjoint (zero true-positive overlap), so PARTIAL would overclaim. Per the 16.6(ii) overlap rule, disjoint -> SPEC_ONLY. registryId dropped (no genuine coverage); SH-15 correctly serves the sibling GAP-SH-105. Remediation = a post-ASA procedure-history gate for GAP-SH-104 (AUDIT-126).',
+    },
+    'GAP-SH-028': {
+      classification: 'SPEC_ONLY',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 5): PARTIAL -> SPEC_ONLY per 16.6(ii) wrong-target / AUDIT-129. SH-7 detects endocarditis PROPHYLAXIS candidates (prosthetic valve Z95.2/3/4 + high-risk procedure Z01.2/Z96), but GAP-SH-028 targets SUSPECTED-IE Duke-criteria diagnostic workup; prevention vs diagnosis share zero true positives (fully disjoint), so PARTIAL would overclaim. Per the 16.6(ii) overlap rule, disjoint -> SPEC_ONLY. registryId dropped (no genuine coverage). Remediation = a suspected-IE detection rule for GAP-SH-028 (AUDIT-129).',
+    },
+  },
   CAD: {
     'GAP-CAD-016': {
       classification: 'DET_OK',

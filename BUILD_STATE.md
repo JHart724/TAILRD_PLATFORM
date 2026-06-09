@@ -38,7 +38,7 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 - [x] HF — canonical addendum (22 DET_OK / 43 PARTIAL / 61 SPEC_ONLY of 126 = 52% any-coverage; 9 cross-module to EP CRT/ICD)
 - [x] CAD — canonical addendum (28 DET_OK / 28 PARTIAL / 34 SPEC_ONLY of 90 = 62% any-coverage; 1 cross-module to PV)
 - [x] EP - canonical addendum (re-audit 2026-06-08 supersedes 2026-05-04: **8 DET_OK / 39 PARTIAL / 42 SPEC_ONLY** of 89 = 52.8% any-coverage UNCHANGED, DET_OK 23.6% -> 9.0%; 13 DET_OK -> PARTIAL flips via §16 + §16.5 re-audit; AUDIT-117/118 HIGH P1 + AUDIT-119 MEDIUM P2 + AUDIT-120 LOW P3; 3 cross-module incl. EP-007 to VHD)
-- [x] SH — canonical addendum (9 DET_OK / 23 PARTIAL / 56 SPEC_ONLY of 88 = 36% any-coverage; 4 cross-module)
+- [x] SH — canonical addendum (0 DET_OK / 30 PARTIAL / 58 SPEC_ONLY of 88 = 34.1% any-coverage; 4 cross-module; AUDIT-121..129 OPEN)
 - [x] VHD — canonical addendum (5 DET_OK / 16 PARTIAL / 84 SPEC_ONLY of 105 = 20% any-coverage; 1 cross-module to SH)
 - [x] **Cross-module synthesis** with Tier S triage queue, blind-spot analysis, BSW pathway distribution
 - [x] **Canonical infrastructure** (AUDIT_METHODOLOGY.md + 8 scripts + CI gates + 101 tests)
@@ -128,7 +128,7 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 |---|---|---|---|---|---|---|
 | HF | 126 | 48 | **52% any / 17.5% DET_OK** | 38 | CANONICAL | 29 T1: 8 DET_OK + 14 PARTIAL + 7 SPEC_ONLY |
 | EP | 89 | 45 | **52.8% any / 9.0% DET_OK** | 63 | CANONICAL | 15 T1: 1 DET_OK + 11 PARTIAL + 3 SPEC_ONLY |
-| SH | 88 | 25 | **36% any / 10.2% DET_OK** | 48 | CANONICAL | 13 T1: 2 DET_OK + 6 PARTIAL + 5 SPEC_ONLY |
+| SH | 88 | 25 | **34.1% any / 0.0% DET_OK** | 48 | CANONICAL (2026-06-08; AUDIT-121..129 OPEN) | 13 T1: 0 DET_OK + 8 PARTIAL + 5 SPEC_ONLY |
 | CAD | 90 | 76 | **62% any / 31.1% DET_OK** | 25 | CANONICAL | 18 T1: 7 DET_OK + 5 PARTIAL + 6 SPEC_ONLY |
 | VHD | 105 | 32 | **20% any / 4.8% DET_OK** | 18 | CANONICAL | 8 T1: 1 DET_OK + 3 PARTIAL + 4 SPEC_ONLY |
 | PV | 105 | 33 | **29% any / 15.2% DET_OK** | 24 | CANONICAL | 7 T1: 1 DET_OK + 2 PARTIAL + 4 SPEC_ONLY |

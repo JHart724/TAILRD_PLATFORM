@@ -12,11 +12,11 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 |---|---:|---:|---:|---:|---:|---:|
 | HF | 126 | 22 | 43 | 61 | 65/126 (51.6%) | 17.5% |
 | EP | 89 | 8 | 39 | 42 | 47/89 (52.8%) | 9.0% |
-| SH | 88 | 9 | 23 | 56 | 32/88 (36.4%) | 10.2% |
+| SH | 88 | 0 | 30 | 58 | 30/88 (34.1%) | 0.0% |
 | CAD | 90 | 29 | 27 | 34 | 56/90 (62.2%) | 32.2% |
 | VHD | 105 | 5 | 16 | 84 | 21/105 (20.0%) | 4.8% |
 | PV | 105 | 16 | 14 | 75 | 30/105 (28.6%) | 15.2% |
-| **TOTAL** | **603** | **89** | **162** | **352** | **251/603 (41.6%)** | **14.8%** |
+| **TOTAL** | **603** | **80** | **169** | **354** | **249/603 (41.3%)** | **13.3%** |
 
 ---
 
@@ -26,7 +26,7 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 |---|---:|---:|---:|---:|---:|
 | HF | 29 | 8 | 14 | 7 | 75.9% |
 | EP | 15 | 1 | 11 | 3 | 80.0% |
-| SH | 13 | 2 | 6 | 5 | 61.5% |
+| SH | 13 | 0 | 8 | 5 | 61.5% |
 | CAD | 18 | 8 | 4 | 6 | 66.7% |
 | VHD | 8 | 1 | 3 | 4 | 50.0% |
 | PV | 7 | 1 | 2 | 4 | 42.9% |
@@ -109,6 +109,7 @@ Subcategories with 0% any-coverage indicate entire procedural surfaces missing i
 | SH | Aortic Disease | 9 | 0 | 0 | 9 |
 | SH | Pulmonary HTN | 5 | 0 | 0 | 5 |
 | SH | Pulmonary Embolism | 5 | 0 | 0 | 5 |
+| SH | Infective Endocarditis | 3 | 0 | 0 | 3 |
 | SH | Cardiac Masses | 2 | 0 | 0 | 2 |
 | CAD | Complex PCI | 4 | 0 | 0 | 4 |
 | CAD | Stent Complications | 3 | 0 | 0 | 3 |
@@ -125,7 +126,7 @@ Subcategories with 0% any-coverage indicate entire procedural surfaces missing i
 | PV | AVM | 3 | 0 | 0 | 3 |
 | PV | Vascular Access | 3 | 0 | 0 | 3 |
 
-**Total: 23 subcategories with 0% any-coverage across 6 modules.**
+**Total: 24 subcategories with 0% any-coverage across 6 modules.**
 
 ---
 
