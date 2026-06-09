@@ -194,6 +194,13 @@ export async function apiFetch<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
+  // Demo mode: never issue a live request. Return empty -- do NOT throw, since a
+  // throw re-surfaces "unable to reach API server" in the UI. Real-API builds
+  // (demoMode false AND useRealApi true) are untouched.
+  if (DATA_SOURCE.demoMode || !DATA_SOURCE.useRealApi) {
+    return undefined as unknown as T;
+  }
+
   const token = localStorage.getItem('tailrd-session-token');
 
   const headers: Record<string, string> = {

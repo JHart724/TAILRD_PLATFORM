@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search } from 'lucide-react';
+import { DATA_SOURCE } from '../config/dataSource';
 
 export function PatientListView() {
   const [searchParams] = useSearchParams();
@@ -11,6 +12,13 @@ export function PatientListView() {
 
   useEffect(() => {
     if (!searchTerm) return;
+    // Demo mode: no live request -- render empty results, no network call.
+    if (DATA_SOURCE.demoMode || !DATA_SOURCE.useRealApi) {
+      setPatients([]);
+      setError(null);
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
     setError(null);
     const token = localStorage.getItem('tailrd-session-token');

@@ -3,6 +3,8 @@
  * Centralized service for backend API calls
  */
 
+import { DATA_SOURCE } from '../config/dataSource';
+
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
 export interface APIResponse<T = unknown> {
@@ -123,6 +125,10 @@ export interface STSRiskResult {
 
 class APIService {
   private async request<T>(endpoint: string, options?: RequestInit): Promise<APIResponse<T>> {
+    // Demo mode: never issue a live request. Return empty, do NOT throw.
+    if (DATA_SOURCE.demoMode || !DATA_SOURCE.useRealApi) {
+      return undefined as unknown as APIResponse<T>;
+    }
  try {
  const token = localStorage.getItem('tailrd-session-token');
  const headers: Record<string, string> = {
