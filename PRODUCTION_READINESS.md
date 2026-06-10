@@ -16,7 +16,7 @@ This block was moved out of `CLAUDE.md` to keep the always-loaded project-instru
 - [ ] Frontend deployment (Netlify/Vercel with REACT_APP_USE_REAL_API=true)
 - [ ] DNS for app.tailrd-heart.com (frontend)
 
-**Last known working task definition:** `tailrd-backend:123` (deployed 2026-04-29T01:02:45Z - Day 10 cutover, `READ_ONLY=false`, on Aurora). Prior milestones: `:122` (READ_ONLY=true, cutover transient), `:106` (April 28 SES email wiring, PR #189), `:28` (April 10 Sprint B-1 PR-A Heart Failure wire-up). Update this line after every successful deploy.
+**Last known working task definition:** `tailrd-backend:280` (deployed 2026-06-10, merge SHA `48b7aeb`, health-verified: /health healthy + running image tag = merge SHA, on Aurora). Prior milestones: `:123` (2026-04-29 Day 10 cutover, `READ_ONLY=false`), `:122` (READ_ONLY=true, cutover transient), `:106` (April 28 SES email wiring, PR #189), `:28` (April 10 Sprint B-1 PR-A Heart Failure wire-up). Update this line after every successful deploy.
 
 **Production database (post Day 10 cutover, 2026-04-29):**
 - [x] Aurora endpoint (writer): `tailrd-production-aurora.cluster-csp0w6g8u5uq.us-east-1.rds.amazonaws.com:5432`
