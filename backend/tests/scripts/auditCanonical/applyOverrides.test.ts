@@ -80,6 +80,31 @@ function findRow(crosswalk: any, specGapId: string): any | undefined {
   return crosswalk.rows.find((r: any) => r.specGapId === specGapId);
 }
 
+interface ModuleSummary {
+  code: string;
+  applied: number;
+  demoted: number;
+  configured: number;
+}
+
+// Parse the script's per-module summary lines:
+//   "  <CODE>: applied=<A> demoted=<D> (out of <N> configured)"
+// N is dict-derived inside applyOverrides.ts, so tests read counts here instead of
+// hardcoding any module name or integer.
+function parseSummaryLines(stdout: string): ModuleSummary[] {
+  const re = /(HF|EP|SH|CAD|VHD|PV): applied=(\d+) demoted=(\d+) \(out of (\d+) configured\)/;
+  return stdout
+    .split('\n')
+    .map((l) => l.match(re))
+    .filter((m): m is RegExpMatchArray => m !== null)
+    .map((m) => ({
+      code: m[1],
+      applied: Number(m[2]),
+      demoted: Number(m[3]),
+      configured: Number(m[4]),
+    }));
+}
+
 describe('applyOverrides — AUDIT-041 canonical-default behavior', () => {
   jest.setTimeout(60000); // CLI subprocess; allow time for tsx warmup
 
@@ -147,15 +172,42 @@ describe('applyOverrides — AUDIT-041 canonical-default behavior', () => {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 
-  it('module without overrides (SH/PV with empty OVERRIDES table) runs cleanly with applied=0', () => {
+  it('empty-override modules (N=0 configured) run cleanly: applied=0, demoted=0, crosswalk byte-identical to source', () => {
     const tmpDir = setupTmpDir(/*canonical*/ true, /*candidate*/ false);
-    const result = runApplyOverrides(['--module', 'SH'], tmpDir);
-    expect(result.stdout).toMatch(/SH: applied=0 demoted=0 \(out of 0 configured\)/);
+    const result = runApplyOverrides(['--all'], tmpDir);
 
-    // SH crosswalk should not have changed (idempotent on no-op)
-    const before = fs.readFileSync(path.join(CANONICAL_DIR, 'SH.crosswalk.json'), 'utf8');
-    const after = fs.readFileSync(path.join(tmpDir, 'SH.crosswalk.json'), 'utf8');
-    expect(stableStringify(JSON.parse(after))).toBe(stableStringify(JSON.parse(before)));
+    // Select empty-override modules DYNAMICALLY from the script's own dict-derived
+    // summary lines. Which modules have an empty OVERRIDES table is a property of the
+    // script, not a constant: this test NEVER names a module and NEVER freezes a count,
+    // so adding overrides to a previously-empty module must not require a test edit.
+    const summary = parseSummaryLines(result.stdout);
+    const emptyModules = summary.filter((s) => s.configured === 0);
+
+    if (emptyModules.length === 0) {
+      // Skip-with-loud-reason: do NOT silently pass. If no module is empty anymore, the
+      // zero-override code path (applyOverrides early-return at applied=0/demoted=0) can
+      // no longer be exercised here and the coverage gap must be visible in CI logs.
+      console.warn(
+        '[applyOverrides.test] WARNING: no module has an empty OVERRIDES table at this commit. ' +
+          'The zero-override code path (applyOverrides early-return, no file write) can no longer be ' +
+          'exercised by this test. Restore an empty-override module or add a deliberately-empty fixture ' +
+          'module to keep this path covered.',
+      );
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+      return;
+    }
+
+    for (const m of emptyModules) {
+      expect(m.applied).toBe(0);
+      expect(m.demoted).toBe(0);
+
+      // Empty-override modules early-return WITHOUT writing the target file
+      // (applyOverrides.ts: applied=0/demoted=0 short-circuit), so the tmp crosswalk
+      // must be byte-identical to the source canonical it was copied from.
+      const before = fs.readFileSync(path.join(CANONICAL_DIR, `${m.code}.crosswalk.json`), 'utf8');
+      const after = fs.readFileSync(path.join(tmpDir, `${m.code}.crosswalk.json`), 'utf8');
+      expect(after).toBe(before);
+    }
 
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
@@ -182,14 +234,16 @@ describe('applyOverrides — AUDIT-041 canonical-default behavior', () => {
     expect(ep079.ruleBodyCite).toBeDefined();
     expect(ep079.auditNotes).toContain('AUDIT-118');
 
-    // Override-count invariant (dynamic - no frozen integer): every configured EP
-    // override applied and none demoted (a demote means a PARTIAL override lost its
-    // registryId). Parse the script's own dict-derived "(out of N configured)" count.
-    const epLine = result.stdout.split('\n').find(l => /EP: applied=/.test(l)) ?? '';
-    const m = epLine.match(/EP: applied=(\d+) demoted=(\d+) \(out of (\d+) configured\)/);
-    expect(m).not.toBeNull();
-    expect(Number(m![1])).toBe(Number(m![3])); // applied === configured (count of EP keys in OVERRIDES)
-    expect(Number(m![2])).toBe(0);             // demoted === 0
+    // Override-count invariant (dynamic - no frozen integer, no module names): for
+    // EVERY module with N>0 configured overrides, applied===configured and demoted===0.
+    // A demote means a PARTIAL override lost its registryId. Counts are read straight
+    // from the script's own dict-derived "(out of N configured)" summary lines.
+    const populated = parseSummaryLines(result.stdout).filter((s) => s.configured > 0);
+    expect(populated.length).toBeGreaterThan(0);
+    for (const s of populated) {
+      expect(s.applied).toBe(s.configured); // every configured override applied
+      expect(s.demoted).toBe(0);            // none demoted (no PARTIAL override lost its registryId)
+    }
 
     const vhdXw = readJson(path.join(tmpDir, 'VHD.crosswalk.json'));
     // VHD-005 is a manual override per existing OVERRIDES.VHD entries (DET_OK with cross-module cite)
