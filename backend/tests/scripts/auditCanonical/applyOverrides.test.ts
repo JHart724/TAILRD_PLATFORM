@@ -92,7 +92,7 @@ interface ModuleSummary {
 // N is dict-derived inside applyOverrides.ts, so tests read counts here instead of
 // hardcoding any module name or integer.
 function parseSummaryLines(stdout: string): ModuleSummary[] {
-  const re = /(HF|EP|SH|CAD|VHD|PV): applied=(\d+) demoted=(\d+) \(out of (\d+) configured\)/;
+  const re = /([A-Z]{2,4}): applied=(\d+) demoted=(\d+) \(out of (\d+) configured\)/;
   return stdout
     .split('\n')
     .map((l) => l.match(re))
