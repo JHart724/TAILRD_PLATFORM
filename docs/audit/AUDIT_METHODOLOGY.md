@@ -859,6 +859,68 @@ build time, with tests proving an SCD-coded med matches its ingredient value set
 and affected gaps are re-classified on their rule-body merits. Recorded under §18 register-literal
 discipline: severity/state of AUDIT-117/118 are copied from the register, not re-inferred.
 
+### 16.6 Over-detection / concept-match axis (AUDIT-120, AUDIT-121, AUDIT-122, AUDIT-123, AUDIT-125)
+
+§16.5 governs UNDER-detection (a correct concept matched too narrowly). §16.6 is its mirror: it governs
+OVER-detection and concept-mismatch. Every implemented rule (DET_OK + PARTIAL) is checked on BOTH axes -
+(a) under-detection per §16.5, and (b) over-detection / concept-match per this section. Born from
+AUDIT-120/121 the same way §16.5 was born from AUDIT-118.
+
+**Three sub-checks (all must pass for DET_OK):**
+- **(i) CONCEPT-MATCH:** each code's authoritative descriptor (NLM Clinical Tables for ICD-10 / LOINC,
+  RxNav for RxNorm) must MATCH the clinical concept the rule intends, not merely EXIST. A code that
+  resolves to a different concept FAILS even when it is a valid code. Exemplars: AUDIT-121 (`Q23.1` =
+  "Congenital insufficiency of aortic valve", used as bicuspid; bicuspid is `Q23.81`); AUDIT-120 (`Z88` =
+  "Allergy status, any drug", used as OAC-contraindication); AUDIT-123 (`Z95.3` = "Presence of xenogenic
+  [bioprosthetic] heart valve", used in the codebase as "mechanical" - inverted vs `Z95.2` = "Presence of
+  prosthetic [mechanical] heart valve").
+- **(ii) OVER-BROAD / WRONG-TARGET MATCH:** the rule must not fire on a population OUTSIDE the spec gap's
+  target. The test is MECHANICAL: construct a non-target patient who satisfies the match; if one exists,
+  the rule over-detects. **"Clinically related" is NOT a pass** - the test is whether a non-target patient
+  fires, not whether the fired population is plausibly cardiac. Exemplar: AUDIT-122 (GAP-SH-013 is
+  PVL-specific for an aortic prosthesis; `I34.0` mitral regurgitation fires on post-prosthetic patients
+  with unrelated mitral regurg and NO paravalvular leak - a non-target firing). **Overlap rule:**
+  classification follows TRUE-POSITIVE OVERLAP with the gap's target, NOT mapping existence. A wrong-target
+  rule that PARTIALLY OVERLAPS the target is `PARTIAL_DETECTION` (AUDIT-122: the PVL rule still catches the
+  aortic-regurg PVLs it was meant to, plus over-fires on mitral regurg); a rule FULLY DISJOINT from the
+  target - zero true-positive overlap - is `SPEC_ONLY` (AUDIT-126: the ASA-candidacy rule shares no patients
+  with the post-ASA-surveillance gap). "Mapped to a rule" is NOT a PARTIAL floor.
+- **(iii) SEVERITY-ENCODING:** a rule targeting a SEVERITY-GATED gap (spec target "severe" / "moderate+" /
+  a named grade or threshold) must gate on an echo-severity signal in `labValues` that addresses the gap's
+  TARGET severity axis - EROA / regurgitant volume / valve area / mean gradient / RV grade, as appropriate
+  to the lesion. A `dx + age/symptom` rule with NO such threshold over-detects on sub-threshold (mild)
+  lesions of the CORRECT valve/condition and cannot be `DET_OK`; it is `PARTIAL_DETECTION`. **Predicate:**
+  this is over-detection from IGNORING AVAILABLE DATA (severity IS echo-encoded in `labValues`, which the
+  rule could read), NOT an inherent ICD-10 limitation - that predicate is what separates (iii) from a
+  "severity is unknowable from a dx code" defense. A proxy for a DIFFERENT axis does NOT satisfy the gate:
+  LVEF (an LV-function measure) does not gate MR / TR / AS lesion severity (which are EROA / valve area /
+  mean gradient), so an LVEF flag where the gap targets lesion severity still FAILS (iii). The classification
+  follows this standard now; whether a severity gate is ADDABLE in the ingested data is the separate
+  REMEDIATION question (the §16.5 / AUDIT-118 data-coupling pattern: classify on the rule, defer the data
+  question). Exemplar: AUDIT-125 (GAP-SH-064 `I34.0 + age>80`; GAP-SH-022 `I36.1 + symptoms` - both target
+  severe lesions with zero severity gate).
+
+**Classification effect:** a rule that fails ANY of the three sub-checks cannot be `DET_OK` / `PRODUCTION_GRADE`; it
+is `PARTIAL_DETECTION` until the code or match is corrected (with a test proving a non-target patient does
+NOT fire and - for concept-match - that the correct code DOES). Direction: over-detection (false-positive),
+the mirror of §16.5's under-detection (false-negative). A single rule can fail both axes (a wrong-valve-type
+code both misses the true target and fires on the wrong one).
+
+**Propagation sweep (mandatory on any code defect):** any code found to fail §16.6 triggers a repo-wide
+grep of that EXACT code across ALL modules - copy-paste is assumed until disproven; the defect is filed
+with its full cross-module blast radius, not just the gap that surfaced it. Exemplars: AUDIT-121's `Q23.1`
+sweep (3 rule sites / 2 modules: SH-BICUSPID + 2 unmapped VHD evaluators); AUDIT-123's `Z95.2/Z95.3/Z95.4`
+sweep (81 references across SH + VHD valve + anticoagulation rules, with self-contradictory labels).
+
+**Per-batch §16 verification table (mandatory):** every batch records, for each code in its implemented
+rules: `code | rule | claimed concept | authoritative descriptor | match Y/N | source`. The table makes
+concept-match auditable rather than asserted.
+
+**Lifecycle:** the `PARTIAL_DETECTION` floor lifts when the code/match is corrected and a test proves
+(a) a non-target patient does NOT fire and (b) the true target DOES; for (iii) the test is that a
+sub-threshold (mild) lesion does NOT fire and a target-severity lesion DOES. Severity/state of
+AUDIT-120/121/122/123/125 are copied from the register per §18 register-literal discipline, not re-inferred.
+
 ---
 
 ## 17. Clinical-Code PR Acceptance Criteria (AUDIT-065..069 catalyst, 2026-05-06)

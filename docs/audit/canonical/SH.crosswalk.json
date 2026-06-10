@@ -1,9 +1,9 @@
 {
-  "auditDate": "2026-05-04",
+  "auditDate": "2026-06-08",
   "auditMethod": "rule-body-citation-AUDIT-030D",
   "crosswalkVersion": "1.0",
   "extras": [],
-  "lessonsLearned": "",
+  "lessonsLearned": "(a) Over-detection (16.6) was the dominant SH defect class: severity-encoding 16.6(iii), wrong-concept 16.6(i), and disjoint-target 16.6(ii). (b) DET_OK deflated 10.2% -> 0.0% under rigorous over-detection review; this is expected, not an error. (c) The Z95.2/Z95.3 inversion (AUDIT-123) is a cross-module data-coupling class that VHD inherits. (d) The disjoint-target -> SPEC_ONLY rule (16.6(ii)) drove SH-104 and SH-028. (e) VHD carries 16 / 16.5 / 16.6 forward and absorbs the AUDIT-121 VD orphans plus AUDIT-123 / AUDIT-124 (VD-1).",
   "module": "SH",
   "rows": [
     {
@@ -220,8 +220,8 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "line 10153+ | auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (SH audit Batch 1): DET_OK -> PARTIAL per AUDIT_METHODOLOGY.md 16.6(ii) / AUDIT-121. SH-BICUSPID gates dxCodes.startsWith(Q23.1) (congenital aortic insufficiency) for \"bicuspid aortic valve\", but bicuspid is Q23.81; the rule misses true bicuspid patients and false-fires on congenital AI. Partial overlap -> PARTIAL not SPEC_ONLY. Evaluator retained; PARTIAL until AUDIT-121 remediated (Q23.1 -> Q23.81).",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -278,8 +278,8 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "line 10214+ | auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (SH audit Batch 2): DET_OK -> PARTIAL per 16.6(i) concept-match / AUDIT-123. SH-VALVE-IN-VALVE gates on Z95.2 treated as bioprosthetic, but per NLM Z95.2 = prosthetic/mechanical and Z95.3 = xenogenic/bioprosthetic (inverted codebase-wide), so the ViV rule misses real bioprosthetic (Z95.3) and false-fires on mechanical. Data-coupled defect flips to PARTIAL per the AUDIT-118 precedent. Evaluator retained; PARTIAL until AUDIT-123 remediated (correct Z95.2/Z95.3 semantics).",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -316,8 +316,8 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (SH audit Batch 2): DET_OK -> PARTIAL per 16.6(ii) / AUDIT-122. SH-13 matches I35.1 OR I34.0 as \"new regurgitation\", but the gap is aortic-prosthesis PVL-specific: I35.1 (aortic insufficiency) is correct while I34.0 (mitral insufficiency) over-fires on unrelated post-prosthetic mitral regurg with no PVL. Partial overlap -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-122 remediated (drop I34.0, keep I35.1).",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -394,8 +394,8 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (SH audit Batch 2): DET_OK -> PARTIAL per 16.6(i) concept-match / AUDIT-123. SH-6 post-TAVR surveillance rests on the same inverted Z95.2/Z95.3 valve-type semantics (Z95.2 mechanical mislabeled bioprosthetic), so it misses real bioprosthetic (Z95.3) and false-fires on mechanical. Data-coupled defect -> PARTIAL per the AUDIT-118 precedent. Evaluator retained; PARTIAL until AUDIT-123 remediated.",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -510,8 +510,8 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "line 6089+ | auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (SH audit Batch 3): DET_OK -> PARTIAL per 16.6(iii) severity-encoding / AUDIT-125. SH-11 (TMVR) gates I34.0 + age>80 with no echo-severity threshold (EROA / regurgitant volume), but the gap targets severe MR, so it over-detects sub-threshold (mild) mitral regurg. Severity IS echo-encoded in labValues and the rule ignores it -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-125 remediated (add the lesion-appropriate echo-severity gate).",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -598,8 +598,8 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "line 5022+ +  line 6116+ | Multiple registry ids cited: gap-sh-4-tricuspid-assessment, gap-sh-12-ttvr | auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (SH audit Batch 3): DET_OK -> PARTIAL per 16.6(iii) severity-encoding / AUDIT-125. SH-4 gates I36.1 + right-heart symptoms with no TR-severity threshold, but the gap targets severe/torrential TR, so it over-detects sub-threshold lesions; the transcatheter-tricuspid recommendation is also under-anchored. -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-125 remediated (add severity gate + re-anchor).",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -784,8 +784,8 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "line 5182+ | auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (SH audit Batch 4, STEP-0): DET_OK -> PARTIAL per 16.6(ii) over-detection / AUDIT-127. SH-9 fires on I63.9 + age<60 + Q21.1 with no coded stroke-etiology exclusion; the rule own evidence object names \"alternative stroke etiology\" as an exclusion but the match logic never checks it, so it over-fires on non-cryptogenic (e.g. AF-cardioembolic) strokes. Partial overlap (true cryptogenic still caught) -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-127 remediated (add the coded etiology exclusion the evidence already names).",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -803,8 +803,8 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "line 10247+ | auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (SH audit Batch 4, STEP-0): DET_OK -> PARTIAL per 16.5 under-detection / AUDIT-128. SH-ASD gates significance on I50.81 (right heart failure), but the gap significance signals are RV size + Qp:Qs + PASP; RV failure is a late proxy, so a significant ASD with RV dilation or PASP elevation but not yet RV failure is missed. Under-detection -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-128 remediated (gate on RV size / Qp:Qs / PASP echo signals).",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
@@ -971,20 +971,11 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "line 5119+ (covers prophylaxis, not Duke workup) | auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (SH audit Batch 5): PARTIAL -> SPEC_ONLY per 16.6(ii) wrong-target / AUDIT-129. SH-7 detects endocarditis PROPHYLAXIS candidates (prosthetic valve Z95.2/3/4 + high-risk procedure Z01.2/Z96), but GAP-SH-028 targets SUSPECTED-IE Duke-criteria diagnostic workup; prevention vs diagnosis share zero true positives (fully disjoint), so PARTIAL would overclaim. Per the 16.6(ii) overlap rule, disjoint -> SPEC_ONLY. registryId dropped (no genuine coverage). Remediation = a suspected-IE detection rule for GAP-SH-028 (AUDIT-129).",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "SH-7",
-        "evaluatorBodyLineRange": [
-          5443,
-          5463
-        ],
-        "evaluatorModule": "SH",
-        "registryId": "gap-sh-7-endocarditis-prophylaxis",
-        "registryLine": 967
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-SH-028",
       "specLine": 558,
       "tier": "T2"
@@ -1137,20 +1128,11 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "line 6204+ | auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (SH audit Batch 4, STEP-0): DET_OK -> SPEC_ONLY per 16.6(ii) wrong-target / AUDIT-126. SH-15 detects PRE-procedure ASA candidacy (I42.1 obstructive HCM + obstruction symptoms), but GAP-SH-104 targets POST-ASA conduction surveillance; the two are fully disjoint (zero true-positive overlap), so PARTIAL would overclaim. Per the 16.6(ii) overlap rule, disjoint -> SPEC_ONLY. registryId dropped (no genuine coverage); SH-15 correctly serves the sibling GAP-SH-105. Remediation = a post-ASA procedure-history gate for GAP-SH-104 (AUDIT-126).",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "SH-15",
-        "evaluatorBodyLineRange": [
-          6525,
-          6543
-        ],
-        "evaluatorModule": "SH",
-        "registryId": "gap-sh-15-alcohol-septal",
-        "registryLine": 1747
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-SH-104",
       "specLine": 583,
       "tier": "T2"
@@ -1175,6 +1157,6 @@
       "tier": "T2"
     }
   ],
-  "sequencingNotes": "",
-  "strategicPosture": ""
+  "sequencingNotes": "SH SPEC_ONLY implementation scoping (58 of 88 gaps) and the cross-module Z95.2/Z95.3 valve-type remediation (AUDIT-123) are deferred to v2.0 authorship, not decided mid-audit. The audit classifies and files findings; build sequencing and the cross-module data-coupling fix are v2.0 work items.",
+  "strategicPosture": "2026-06-08 re-audit supersedes the 2026-05-04 baseline (9/23/56 -> 0/30/58); the 2026-05-04 baseline is preserved in git history, BUILD_STATE, and the register. SH's detection logic is sparse, and the 2026-05-04 audit over-credited the trustworthiness tier: DET_OK fell 10.2% -> 0.0% once the detection-quality checks were applied (16.6(i) wrong-concept, 16.6(ii) wrong-target, 16.6(iii) missing-severity-gate, 16.5 late-proxy under-detection), while any-coverage moved only 36.4% -> 34.1%. Unlike EP (broadly built, trust-capped pending the single AUDIT-118 RxCUI-expansion fix), SH is genuinely lightly built: 58 of 88 gaps have no implemented rule, and the 8 PARTIAL flips are heterogeneous detection-quality defects with no shared root cause. Posture: SH needs v2.0 build-out of the SPEC_ONLY surface plus per-rule remediation; the cross-module Z95.2/Z95.3 valve-type inversion (AUDIT-123) is the one shared data-coupling class VHD inherits."
 }
