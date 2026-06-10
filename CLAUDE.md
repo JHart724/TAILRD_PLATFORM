@@ -178,7 +178,7 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 
 Production is LIVE (since April 7, 2026): backend on ECS Fargate at api.tailrd-heart.com, Aurora Serverless v2 PostgreSQL (RDS-to-Aurora cutover 2026-04-29), CloudFront + ALB, ElastiCache Redis, Secrets Manager, CI/CD GitHub Actions -> ECR -> ECS (new task def per commit). Staging is live (CloudFormation stack `tailrd-staging`). Not yet done: frontend deploy + app.tailrd-heart.com DNS; staging CI/CD job.
 
-**Last known working task definition:** `tailrd-backend:123` (Day 10 cutover, 2026-04-29, `READ_ONLY=false`, on Aurora). Update after every deploy.
+**Last known working task definition:** `tailrd-backend:280` (merge SHA `48b7aeb`, 2026-06-10, health-verified on Aurora). Update after every deploy.
 
 The full deployment-state record (Aurora endpoints, Day 10 cutover summary, staging endpoints, RDS decommission status, env flags) is the authoritative section at the top of `PRODUCTION_READINESS.md` (root); update it there after every cutover or deploy milestone.
 
@@ -273,7 +273,7 @@ Narrative post-mortems for the April 7 2026 outage (var-in-auth, migration-befor
 ## 17. ECS Deployment Runbook
 - **Container won't start, no logs:** Module import error or Prisma mismatch. Pull and run locally.
 - **Roll back first:** `aws ecs update-service --cluster tailrd-production-cluster --service tailrd-production-backend --task-definition tailrd-backend:LAST_WORKING`. Never leave production down while debugging.
-- **Last known working task def:** `tailrd-backend:123` (kept in sync with section 9 / `PRODUCTION_READINESS.md`).
+- **Last known working task def:** `tailrd-backend:280` (kept in sync with section 9 / `PRODUCTION_READINESS.md`).
 
 ## 18. Phase 2 Operating Rules
 

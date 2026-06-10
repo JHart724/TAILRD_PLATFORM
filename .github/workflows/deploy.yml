@@ -208,8 +208,14 @@ jobs:
 
   deploy-frontend:
     needs: deploy
-    # Only when the gate let the backend actually build/promote (not a hold/dry-run).
-    if: needs.deploy.outputs.run_build == 'true'
+    # DISABLED BY DEFAULT (AUDIT-130): the single Netlify site tailrddemo.netlify.app is
+    # deliberately locked as the frozen demo as of 2026-06-08. Production frontend deploys
+    # are disabled until a dedicated second site exists (see AUDIT-130 in
+    # docs/audit/AUDIT_FINDINGS_REGISTER.md). Re-enable by setting the repo variable
+    # DEPLOY_FRONTEND_ENABLED=true after re-pointing NETLIFY_SITE_ID at the new site.
+    # The run_build half of the gate is preserved: only when the backend gate actually
+    # let the image build/promote (not a hold/dry-run).
+    if: ${{ needs.deploy.outputs.run_build == 'true' && vars.DEPLOY_FRONTEND_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
