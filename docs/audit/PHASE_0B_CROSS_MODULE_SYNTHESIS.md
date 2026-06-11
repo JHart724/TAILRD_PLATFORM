@@ -14,9 +14,9 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 | EP | 89 | 8 | 39 | 42 | 47/89 (52.8%) | 9.0% |
 | SH | 88 | 0 | 30 | 58 | 30/88 (34.1%) | 0.0% |
 | CAD | 90 | 29 | 27 | 34 | 56/90 (62.2%) | 32.2% |
-| VHD | 105 | 5 | 16 | 84 | 21/105 (20.0%) | 4.8% |
+| VHD | 105 | 0 | 11 | 94 | 11/105 (10.5%) | 0.0% |
 | PV | 105 | 16 | 14 | 75 | 30/105 (28.6%) | 15.2% |
-| **TOTAL** | **603** | **80** | **169** | **354** | **249/603 (41.3%)** | **13.3%** |
+| **TOTAL** | **603** | **75** | **164** | **364** | **239/603 (39.6%)** | **12.4%** |
 
 ---
 
@@ -28,7 +28,7 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 | EP | 15 | 1 | 11 | 3 | 80.0% |
 | SH | 13 | 0 | 8 | 5 | 61.5% |
 | CAD | 18 | 8 | 4 | 6 | 66.7% |
-| VHD | 8 | 1 | 3 | 4 | 50.0% |
+| VHD | 8 | 0 | 2 | 6 | 25.0% |
 | PV | 7 | 1 | 2 | 4 | 42.9% |
 
 ---
@@ -37,7 +37,7 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 
 Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-relevant) AND (T1) AND (uncovered). Spec-explicit auto-include; structurally-inferred require operator decision.
 
-### 3.1 Spec-explicit SAFETY uncovered T1 (4 — automatic Tier S)
+### 3.1 Spec-explicit SAFETY uncovered T1 (5 — automatic Tier S)
 
 | Spec gap | Module | Spec line | Class | SAFETY tag | Detection logic (excerpt) |
 |---|---|---:|---|---|---|
@@ -45,10 +45,13 @@ Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-rel
 | **GAP-EP-007** | EP | 313 | PARTIAL_DETECTION | `(CRITICAL SAFETY)` | DOAC + Z95.2 or mechanical valve history |
 | **GAP-EP-017** | EP | 339 | PARTIAL_DETECTION | `(SAFETY)` | HFrEF on verapamil/diltiazem |
 | **GAP-EP-079** | EP | 352 | PARTIAL_DETECTION | `(CRITICAL)` | WPW + AF on beta-blocker/CCB/digoxin - risk of VF |
+| **GAP-VHD-005** | VHD | 754 | PARTIAL_DETECTION | `(CRITICAL SAFETY)` | Mechanical valve + any DOAC on active med list |
 
-### 3.2 Structurally-inferred SAFETY (0 — operator decision required)
+### 3.2 Structurally-inferred SAFETY (1 — operator decision required)
 
-None.
+| Spec gap | Module | Spec line | Class | inferredSafetyTag | Rationale |
+|---|---|---:|---|---|---|
+| GAP-VHD-099 | VHD | 914 | SPEC_ONLY | STRUCTURAL_SAFETY | Mechanical valve + pregnancy 1st trimester: warfarin >5mg/day is teratogenic (warfarin embryopathy)  |
 
 ---
 
@@ -119,14 +122,17 @@ Subcategories with 0% any-coverage indicate entire procedural surfaces missing i
 | VHD | IE General | 8 | 0 | 0 | 8 |
 | VHD | IE Pathogens | 7 | 0 | 0 | 7 |
 | VHD | IE Surgical | 6 | 0 | 0 | 6 |
+| VHD | Rheumatic | 6 | 0 | 0 | 6 |
+| VHD | Carcinoid | 6 | 0 | 0 | 6 |
 | VHD | Drug-Induced | 4 | 0 | 0 | 4 |
+| VHD | Valve Progression | 4 | 0 | 0 | 4 |
 | PV | Vasculitis | 6 | 0 | 0 | 6 |
 | PV | CTEPH | 4 | 0 | 0 | 4 |
 | PV | PAH | 6 | 0 | 0 | 6 |
 | PV | AVM | 3 | 0 | 0 | 3 |
 | PV | Vascular Access | 3 | 0 | 0 | 3 |
 
-**Total: 24 subcategories with 0% any-coverage across 6 modules.**
+**Total: 27 subcategories with 0% any-coverage across 6 modules.**
 
 ---
 
