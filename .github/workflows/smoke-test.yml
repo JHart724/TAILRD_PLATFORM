@@ -39,10 +39,12 @@ jobs:
           echo "::error::AUDIT-114 synthetic failure (simulate_failure=true): no-op test of the if: failure() notify path. No production endpoints were called."
           exit 1
 
+      # Window widened 2026-06-11 to match deploy.yml's stabilization gate (20 polls x 15s = 5 min);
+      # the prior 2-min window (24 x 5s) false-failed on real single-task rollouts (issue #375, AUDIT-138).
       - name: Wait for ECS stabilization
         run: |
-          echo "Polling for healthy status (max 2 min)..."
-          for i in $(seq 1 24); do
+          echo "Polling for healthy status (max 5 min)..."
+          for i in $(seq 1 20); do
             STATUS=$(curl -sf ${{ env.API_BASE }}/health | \
               python3 -c "import sys,json; \
               print(json.load(sys.stdin)['data']['status'])" 2>/dev/null)
@@ -50,10 +52,10 @@ jobs:
               echo "Healthy after attempt $i"
               exit 0
             fi
-            echo "Attempt $i: $STATUS — retrying in 5s"
-            sleep 5
+            echo "Attempt $i: $STATUS - retrying in 15s"
+            sleep 15
           done
-          echo "FAIL: service not healthy after 2 minutes"
+          echo "FAIL: service not healthy after 5 minutes"
           exit 1
 
       - name: Health check
