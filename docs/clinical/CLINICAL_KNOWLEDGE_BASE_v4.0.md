@@ -461,7 +461,7 @@ BAV/Aortopathy (9 gaps)
 | T2 | GAP-SH-053 | Loeys-Dietz: lower intervention threshold gap. LDS dx + aorta>=4.0 cm (root) without surgical eval | LDS dx, aortic dim, referral | D2, D7, D8, D14 | Non-PHI |
 | T2 | GAP-SH-054 | Turner syndrome: cardiac surveillance gap. Turner (Q96.x) without annual echo + MRI protocol | Turner dx, surveillance imaging | D2, D7, D8 | Non-PHI |
 | T2 | GAP-SH-055 | Vascular Ehlers-Danlos: celiprolol + surveillance. vEDS dx without celiprolol + comprehensive vascular surveillance | EDS dx, celiprolol, imaging | D2, D3, D7, D8 | Non-PHI |
-| T3 | GAP-SH-008 | Bicuspid AV surveillance gap. Q23.0 BAV without annual echo | BAV dx, echo dates | D2, D8 | Non-PHI |
+| T3 | GAP-SH-008 | Bicuspid AV surveillance gap. Q23.81 BAV without annual echo | BAV dx, echo dates | D2, D8 | Non-PHI |
 | T3 | GAP-SH-009 | BAV aortopathy: ascending aorta surveillance. BAV + ascending aorta>=4.0 cm without CT/MRI | BAV, ascending dim, CT/MRI | D7, D8 | Non-PHI |
 | T3 | GAP-SH-010 | BAV aortopathy intervention threshold. BAV + ascending aorta>=5.0 cm - intervention consideration | BAV, aortic dim | D8 | Non-PHI |
 | T3 | GAP-SH-056 | Familial TAA: first-degree relative screening. TAA proband without FDR screening initiated | TAA dx, family referral | D2, D7, D14, D17 | Non-PHI |
