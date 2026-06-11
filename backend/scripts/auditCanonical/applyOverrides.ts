@@ -44,7 +44,7 @@ interface Override {
   readonly inferredSafetyRationale?: string;
 }
 
-const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
+export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
   HF: {
     'GAP-HF-073': {
       classification: 'SPEC_ONLY',
