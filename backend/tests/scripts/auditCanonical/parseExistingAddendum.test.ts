@@ -122,11 +122,21 @@ describe('parseAddendumToDraft — full integration', () => {
     expect(crosswalk.draft).toBe(true);
     expect(crosswalk.module).toBe('VHD');
     expect(crosswalk.rows.length).toBe(spec.totalGaps);
-    // VHD-005 was T1 DET_OK in re-audit
+    // VHD-005 is a T1 gap always present in the rendered addendum table: it must be
+    // PARSED from the addendum, not default-filled - without pinning the clinical
+    // verdict, which the audit layer owns and may legitimately change (AUDIT-110).
     const vhd5 = crosswalk.rows.find((r) => r.specGapId === 'GAP-VHD-005');
     expect(vhd5).toBeDefined();
-    expect(vhd5!.classification).toBe('DET_OK');
-    // Defaulted SPEC_ONLY count should match parseStats
+    // Provenance: parsed rows carry parseSource 'addendum-line-<N>'; default-filled rows
+    // carry the 'addendum-default-SPEC_ONLY' sentinel. parseConfidence does NOT
+    // discriminate the two here (rendered T1 tables have no tier cell, so even a clean
+    // parse scores 0.3 - the same as a defaulted row), so assert provenance by source.
+    expect(vhd5!.parseSource).toMatch(/^addendum-line-\d+$/);
+    expect(['PRODUCTION_GRADE', 'DET_OK', 'PARTIAL_DETECTION', 'SPEC_ONLY'])
+      .toContain(vhd5!.classification);
+    // Default-fill bookkeeping must reconcile: defaulted-row count === parseStats
+    const defaulted = crosswalk.rows.filter((r) => r.parseSource === 'addendum-default-SPEC_ONLY');
+    expect(defaulted.length).toBe(parseStats.missingSpecGaps);
     expect(parseStats.missingSpecGaps).toBeGreaterThan(0); // VHD compresses T2/T3
   });
 });
