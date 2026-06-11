@@ -293,7 +293,7 @@
     },
     {
       "bswPathwayTags": [],
-      "detectionLogic": "Q23.0 BAV without annual echo",
+      "detectionLogic": "Q23.81 BAV without annual echo",
       "domains": [
         "D2",
         "D8"
