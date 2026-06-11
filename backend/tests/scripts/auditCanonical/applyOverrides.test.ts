@@ -5,17 +5,20 @@
  * canonical-default behavior, --candidate opt-in flag, idempotency, missing-file
  * graceful skip, no-op-overrides modules, and cross-module --all coverage.
  *
- * The script's OVERRIDES dictionary is module-scoped (not parameterizable from
- * tests). To stay deterministic, these tests run the actual CLI against fixture
- * canonical/candidate files in an isolated tmp dir using --input <dir> and use
- * known-good override entries from the live OVERRIDES dict (e.g., GAP-VHD-005,
- * GAP-EP-079) to assert on output content.
+ * The script's OVERRIDES dictionary is not parameterizable from tests. To stay
+ * deterministic, these tests run the actual CLI against fixture canonical/candidate
+ * files in an isolated tmp dir using --input <dir>. Assertions on override content
+ * anchor to the exported OVERRIDES dict (imported below) rather than hardcoded
+ * clinical-verdict literals, so a re-audit that re-classifies a gap cannot strand
+ * this suite (AUDIT-110).
  */
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import { execSync } from 'child_process';
 import { stableStringify } from '../../../scripts/auditCanonical/lib/utils';
+// Side-effect-free import: applyOverrides.ts gates its CLI main() behind require.main === module.
+import { OVERRIDES } from '../../../scripts/auditCanonical/applyOverrides';
 
 const SCRIPT = path.join(__dirname, '../../../scripts/auditCanonical/applyOverrides.ts');
 const CANONICAL_DIR = path.join(__dirname, '../../../../docs/audit/canonical');
@@ -114,15 +117,19 @@ describe('applyOverrides — AUDIT-041 canonical-default behavior', () => {
     expect(result.stdout).toContain('=== applyOverrides.ts (canonical) ===');
     expect(result.stdout).toMatch(/EP: applied=\d+/);
 
-    // GAP-EP-079 is a PARTIAL override (2026-06-08 EP audit flip, AUDIT-118 / §16.5):
-    // the CRITICAL WPW AVN-blocker rule under-detects SCD-coded BB/CCB. A PARTIAL
-    // override MUST preserve its registryId-derived ruleBodyCite (without a resolvable
-    // registryId it demotes to SPEC_ONLY) - the exact mechanic the 13 EP flips rely on.
+    // GAP-EP-079 is the named write-path exemplar. Its classification and auditNote
+    // are asserted against the exported OVERRIDES dict, not hardcoded clinical-verdict
+    // literals, so a re-audit that re-classifies the gap cannot strand this test
+    // (AUDIT-110). A non-SPEC_ONLY override MUST preserve its registryId-derived
+    // ruleBodyCite (without a resolvable registryId it demotes to SPEC_ONLY) - the
+    // exact mechanic the 13 EP flips rely on.
+    const expected = OVERRIDES.EP['GAP-EP-079'];
+    expect(expected).toBeDefined();
     const xw = readJson(path.join(tmpDir, 'EP.crosswalk.json'));
     const row = findRow(xw, 'GAP-EP-079');
     expect(row).toBeDefined();
-    expect(row.classification).toBe('PARTIAL_DETECTION');
-    expect(row.auditNotes).toContain('AUDIT-118');
+    expect(row.classification).toBe(expected.classification);
+    expect(row.auditNotes).toContain(expected.auditNote);
     expect(row.ruleBodyCite).toBeDefined();
     expect(row.ruleBodyCite.evaluatorBlockName).toBe('EP-079');
 
@@ -134,12 +141,15 @@ describe('applyOverrides — AUDIT-041 canonical-default behavior', () => {
     const result = runApplyOverrides(['--module', 'EP', '--candidate'], tmpDir);
     expect(result.stdout).toContain('=== applyOverrides.ts (candidate) ===');
 
-    // Candidate file should contain the override (was already pinned in the live candidate file from prior verifyDraft cycle)
+    // Candidate file should contain the override (was already pinned in the live candidate file from prior verifyDraft cycle).
+    // Dict-anchored: asserted against OVERRIDES.EP, not a hardcoded clinical verdict (AUDIT-110).
+    const expected = OVERRIDES.EP['GAP-EP-079'];
+    expect(expected).toBeDefined();
     const xw = readJson(path.join(tmpDir, 'EP.crosswalk.candidate.json'));
     const row = findRow(xw, 'GAP-EP-079');
     expect(row).toBeDefined();
-    expect(row.classification).toBe('PARTIAL_DETECTION');
-    expect(row.auditNotes).toContain('AUDIT-118');
+    expect(row.classification).toBe(expected.classification);
+    expect(row.auditNotes).toContain(expected.auditNote);
 
     // Canonical file in tmp dir should NOT have been written (we didn't include it; --candidate mode targets candidate only)
     expect(fs.existsSync(path.join(tmpDir, 'EP.crosswalk.json'))).toBe(false);
@@ -221,18 +231,56 @@ describe('applyOverrides — AUDIT-041 canonical-default behavior', () => {
     expect(lines.length).toBe(6);
 
     // Module-specific overrides should land correctly per-module.
-    // DET_OK-preservation pin: CAD-016 stays DET_OK through the override pass (the
-    // canonical DET_OK-override exemplar; EP no longer has any DET_OK override).
-    const cadXw = readJson(path.join(tmpDir, 'CAD.crosswalk.json'));
-    expect(findRow(cadXw, 'GAP-CAD-016').classification).toBe('DET_OK');
+    // DET_OK-preservation: the exemplar is selected DYNAMICALLY from the exported
+    // OVERRIDES dict (any module, declared classification DET_OK) instead of naming a
+    // gap, so a re-audit that re-classifies the current exemplar cannot strand this
+    // test (AUDIT-110). Loud skip if the class is empty - a silently-hollow pass would
+    // hide the coverage gap.
+    const detOkExemplars = Object.entries(OVERRIDES).flatMap(([mod, entries]) =>
+      Object.entries(entries)
+        .filter(([, o]) => o.classification === 'DET_OK')
+        .map(([gapId, o]) => ({ mod, gapId, o })),
+    );
+    if (detOkExemplars.length === 0) {
+      console.warn(
+        '[applyOverrides.test] WARNING: no override in the OVERRIDES dict declares DET_OK at this ' +
+          'commit. The DET_OK-preservation path (a DET_OK override surviving the --all pass) is no ' +
+          'longer exercised by this test. Add a DET_OK override or a deliberately-DET_OK fixture ' +
+          'entry to keep this path covered.',
+      );
+    } else {
+      const { mod, gapId, o } = detOkExemplars[0];
+      const detXw = readJson(path.join(tmpDir, `${mod}.crosswalk.json`));
+      const detRow = findRow(detXw, gapId);
+      expect(detRow).toBeDefined();
+      expect(detRow.classification).toBe(o.classification);
+    }
 
-    // PARTIAL-with-cite regression: EP-079 flipped to PARTIAL (AUDIT-118 / §16.5) but
-    // must keep its registryId-derived ruleBodyCite (else it would demote to SPEC_ONLY).
-    const epXw = readJson(path.join(tmpDir, 'EP.crosswalk.json'));
-    const ep079 = findRow(epXw, 'GAP-EP-079');
-    expect(ep079.classification).toBe('PARTIAL_DETECTION');
-    expect(ep079.ruleBodyCite).toBeDefined();
-    expect(ep079.auditNotes).toContain('AUDIT-118');
+    // PARTIAL-with-cite regression: a PARTIAL_DETECTION override with a registryId must
+    // keep its registryId-derived ruleBodyCite (else it would demote to SPEC_ONLY).
+    // Exemplar selected dynamically from the exported dict (AUDIT-110); loud skip if
+    // the class is empty.
+    const partialCiteExemplars = Object.entries(OVERRIDES).flatMap(([mod, entries]) =>
+      Object.entries(entries)
+        .filter(([, o]) => o.classification === 'PARTIAL_DETECTION' && o.registryId !== undefined)
+        .map(([gapId, o]) => ({ mod, gapId, o })),
+    );
+    if (partialCiteExemplars.length === 0) {
+      console.warn(
+        '[applyOverrides.test] WARNING: no override in the OVERRIDES dict declares ' +
+          'PARTIAL_DETECTION with a registryId at this commit. The PARTIAL-with-cite path (cite ' +
+          'preserved, no demote to SPEC_ONLY) is no longer exercised by this test. Add such an ' +
+          'override or a deliberately-shaped fixture entry to keep this path covered.',
+      );
+    } else {
+      const { mod, gapId, o } = partialCiteExemplars[0];
+      const partXw = readJson(path.join(tmpDir, `${mod}.crosswalk.json`));
+      const partRow = findRow(partXw, gapId);
+      expect(partRow).toBeDefined();
+      expect(partRow.classification).toBe(o.classification);
+      expect(partRow.ruleBodyCite).toBeDefined();
+      expect(partRow.auditNotes).toContain(o.auditNote);
+    }
 
     // Override-count invariant (dynamic - no frozen integer, no module names): for
     // EVERY module with N>0 configured overrides, applied===configured and demoted===0.
@@ -246,7 +294,9 @@ describe('applyOverrides — AUDIT-041 canonical-default behavior', () => {
     }
 
     const vhdXw = readJson(path.join(tmpDir, 'VHD.crosswalk.json'));
-    // VHD-005 is a manual override per existing OVERRIDES.VHD entries (DET_OK with cross-module cite)
+    // VHD-005 has a manual override in OVERRIDES.VHD (cross-module cite). Presence-only
+    // assertion - the clinical verdict is owned by the audit layer and may legitimately
+    // change on re-audit (AUDIT-110).
     expect(findRow(vhdXw, 'GAP-VHD-005')).toBeDefined();
 
     fs.rmSync(tmpDir, { recursive: true, force: true });
