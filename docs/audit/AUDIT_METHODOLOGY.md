@@ -1255,4 +1255,127 @@ Together these disciplines form the methodology stack; each catches a different 
 
 ---
 
-*Authored 2026-05-04 in response to compounding methodology defect cycles (AUDIT-029 → AUDIT-030 → AUDIT-030.D). This document is the contract that prevents methodology drift living in audit prose. Implementation under `backend/scripts/auditCanonical/` follows. §16 added 2026-05-05 in response to Cat A clinical-code verification surfacing 15.5% wrong-drug bug rate (AUDIT-042 through AUDIT-061). §17 added 2026-05-06 in response to AUDIT-067/068 ABI deferral course-correction; codifies clinical-code PR acceptance criteria as drift-prevention mechanism. §18 added 2026-05-07 in response to AUDIT-016 status-surface drift across PR #248-#250 work; codifies status-surface discipline (register severity is authoritative; agent must not re-classify at status-surface time).*
+## 20. Aggregation + Provenance Verification Standard (service-line / rollup surfaces)
+
+**Numbering note:** this section is deliberately numbered §20, skipping §19, because unprefixed "§19" already has a reserved meaning inside this document and across the audit corpus: the CLAUDE.md §19 Finding-Remediation PAUSE Procedure (see §17.1 Entry 32, which says "a 2026-05-29 §19 auto-merge run" and "the §19 PAUSE-C verbatim read-back" with no doc prefix). Minting an AUDIT_METHODOLOGY §19 would make every future unprefixed "§19" reference ambiguous between a gate procedure and an audit methodology. §19 is permanently skipped in this document.
+
+**What this section governs.** The service-line / rollup data class: surfaces that AGGREGATE per-module clinical output into cross-module counts, totals, rates, and dollar figures, and the PROVENANCE labeling of those figures. This is a different defect class from per-patient gap detection: §16.5/§16.6 ask "does this rule fire on the right patient" - a per-rule, per-code question with NLM/RxNav as ground truth. Aggregation surfaces have no codes to verify and no per-patient firing; their failure modes are double-counting, denominator drift, cohort misattribution, mock/real divergence, and provenance-blind labeling. §16.5/§16.6 do NOT transfer; this section is their aggregation-class analogue.
+
+**Prerequisite artifact (mandatory before applying any axis):** a render-to-data-source map of the surface - every displayed figure traced to its source (real-derived / mock-derived / hardcoded-literal), every aggregation operation identified with its combinator, every provenance indicator identified with its input signal. The axes below are applied AGAINST this map; applying them from memory or from component names is the §1 violation transposed to this class (conclusions must cite running code).
+
+### 20.1 Scope: the audited surface set
+
+Six surfaces, fixed at authoring (2026-06-11, main `a6776f6`); the classification pass walks all six, and any new rollup surface added later joins this set:
+
+1. `src/data/platformTotals.ts` - frontend rollup const (`PLATFORM_TOTALS`) + `fetchRealPlatformTotals()` real-path wrapper.
+2. `backend/src/routes/platform.ts` - `GET /api/platform/totals`, the backend rollup the real path calls.
+3. `backend/src/routes/godView.ts` - SUPER_ADMIN cross-module rollups (module metrics, patient coverage, financial summary, risk distribution).
+4. `backend/src/routes/gaps.ts` - `GET /gaps/summary/all` per-hospital cross-module gap summary.
+5. `backend/src/services/vbcService.ts` - CMS/HEDIS quality-measure rate computation.
+6. `src/components/free-tier/FreeTierDashboard.tsx` + `src/components/free-tier/data.ts` + `sections/*` - the `/service-line` dashboard render surface and its static tables.
+
+**Scope-boundary note (AUDIT-099 non-overlap):** the static-table surface (`data.ts` constants `CMS_KPIS`, `QUALITY_BENCHMARKS`, `MODULE_TILES`, `FINANCIAL_SUMMARY`, `DRG_TABLE_DATA`, `MODULE_DETAIL_DATA`, plus the inline-literal sections) is IN SCOPE here under Axis 1. It is NOT covered by AUDIT-099: AUDIT-099's scope is the per-module `*ExecutiveView.tsx` files (fabricated KPI cells with NO indicator); the `/service-line` static tables are a distinct, currently-unfiled location with a DIFFERENT disclosure posture (everything badged "CMS Estimate" by a provenance-blind signal, see Axis 1). The classification pass files the `/service-line` surface as its own finding in the AUDIT-099 fabricated-executive-KPI CLASS, cross-referencing AUDIT-099 - it does not punt to or re-scope AUDIT-099.
+
+### 20.2 Axis 1 - PROVENANCE / HONESTY
+
+**Definition:** every displayed figure has an actual provenance (real-derived from live clinical data; mock-derived, computed from mock arrays; or hardcoded-literal, a constant never computed from anything), and every provenance indicator on the surface (badge, label, subtitle, disclosure line) must be WIRED to that actual provenance. A surface is honest when a reader can tell, from the surface alone, which figures are real and which are not - in every reachable state, including future states the wiring already implies.
+
+**Mechanical test:**
+1. Enumerate every displayed figure from the render-to-data-source map; assign each one of: REAL-DERIVED / MOCK-DERIVED / HARDCODED-LITERAL.
+2. Enumerate every provenance indicator and identify its INPUT SIGNAL (what variable/condition selects its state).
+3. Flip test: for each indicator, ask "what change of state would flip this indicator?" If the answer is a signal that is not data provenance (a UI flag, an upload flag, a hardcoded const), the indicator is provenance-blind.
+4. Reachability test: enumerate the indicator's states; for each, ask whether it can ever render given the actual wiring (a "Verified"/"Live" state gated on a constant `false` is unreachable).
+5. Future-state test: trace the real-data path (even if currently disconnected); ask what the indicator shows when real data flows or when the real path errors. An indicator that is benign today but will mislabel real data (or mislabel mock-as-real on silent fallback) fails latently.
+
+**Failure signatures:**
+- **PROVENANCE-BLIND INDICATOR:** badge/label keyed to a non-provenance signal (exemplar: `Badge variant={hasUploadedFiles ? 'verified' : 'estimate'}` where `hasUploadedFiles` is unrelated to whether the rendered number is real).
+- **UNREACHABLE-HONEST-STATE:** a "Verified"/"Live" indicator state that cannot render under the actual wiring (gate constant, dead code path).
+- **FABRICATED-LITERAL-WITHOUT-DISCLOSURE:** a hardcoded-literal figure presented with no estimate/demo indicator at all (the AUDIT-099 signature).
+- **LATENT-MISLABEL:** an indicator or fallback that is benign in the current mock-only posture but will mislabel once the live path connects (exemplar: a catch-all fallback that silently returns mock data on real-API error, leaving the surface indistinguishable from a successful real load).
+
+### 20.3 Axis 2 - CROSS-MODULE PATIENT-SET DEDUP
+
+**Definition:** a cross-module aggregation that claims to count PATIENTS must count each patient once, regardless of how many modules or gaps the patient appears in. Cardiovascular comorbidity makes multi-module membership the NORM (an HF patient with AF and CAD is in three modules), so a summed-not-unioned combinator is not an edge case - it inflates the headline number structurally.
+
+**Mechanical test:**
+1. Identify each aggregation operation that combines per-module quantities into a cross-module figure.
+2. Classify its combinator: arithmetic SUM of per-module counts, or UNION of patient-id sets (e.g. a single `groupBy patientId` across modules, or a set-union before counting).
+3. Construct the concrete multi-module case: a patient with open gaps in HF AND CAD (or module flags in both). Trace the patient through the operation: counted once, or once per module?
+4. For any derived ratio (coverage = managed/total): test whether the numerator's multiplicity allows the ratio to exceed 100%.
+5. Distinguish LABEL from QUANTITY: a sum of per-module memberships is a legitimate quantity ("module enrollments") - the defect is presenting it under a patient-count label ("N patients").
+
+**Failure signatures:**
+- **SUMMED-NOT-UNIONED:** cross-module total = sum of per-module counts under a patient-count label; the constructed HF+CAD patient counts twice.
+- **COVERAGE-OVER-100:** a ratio whose numerator multi-counts against a deduped denominator.
+- **MIXED SEMANTICS:** dedup applied within module but not across (per-module distinct counts summed across modules) - the subtlest form, because each per-module figure is individually correct.
+
+### 20.4 Axis 3 - DENOMINATOR / COHORT DEFINITION
+
+**Definition:** every rate, percentage, per-X figure, and projected dollar amount has a denominator (or multiplier) and a cohort. Each must be (a) DEFINED - identifiable from the code, (b) DERIVED - computed from data rather than a magic constant, or carrying explicit sourced provenance when a constant is clinically/financially legitimate, and (c) POPULATION-MATCHED - the denominator's population must be the population the numerator is drawn from.
+
+**Mechanical test:**
+1. For each computed figure, write its formula explicitly as numerator/denominator (or input x multiplier).
+2. For each denominator and multiplier, classify: DERIVED (from a query/data) or HARDCODED. For HARDCODED: does a citation, config source, or dated comment justify the value? An unsourced constant is a magic multiplier.
+3. Population-match check: state the numerator's population and the denominator's population in words; if they differ (e.g. numerator = patients with a CAD-measure gap, denominator = ALL active patients including never-eligible), the rate is computed over the wrong cohort.
+4. Cohort-definition check: for each "patients in module X" style cohort, locate the membership predicate; flag predicates that mix independent membership sources (e.g. a manually-set flag OR an open-gap existence test) without a reconciliation rule, since the two sources can drift.
+
+**Failure signatures:**
+- **MAGIC MULTIPLIER:** an unsourced hardcoded factor in a displayed figure (exemplars from the PHASE-0 inventory: `quarterlyActionable = totalOpportunity * 0.3`; `REVENUE_PER_GAP_ESTIMATE = 2500`).
+- **IMPLICIT / UNDEFINED COHORT:** a figure whose population cannot be stated from the code, or whose membership predicate mixes unreconciled sources.
+- **NUMERATOR/DENOMINATOR POPULATION MISMATCH:** a rate over a denominator population broader or narrower than the numerator's eligibility (exemplar: a CMS measure rate with numerator = gap-holders in measure-mapped gap types, denominator = every active patient in the hospital).
+
+### 20.5 Axis 4 - MOCK/REAL SEMANTIC PARITY + INTERNAL CONSISTENCY
+
+**Definition:** (a) PARITY - where a figure has both a mock source and a real source under one label, the two paths must compute the SAME QUANTITY (same set definition, same dedup semantics, same cohort), so that flipping to real data changes the VALUE, never the MEANING; (b) CONSISTENCY - a quantity displayed in more than one place on a surface must show one value from one source.
+
+**Mechanical test:**
+1. For each labeled figure with both a mock and a real path, write down in set-theoretic terms what each path computes (e.g. "sum over all gaps of per-gap cohort size" vs "sum over modules of count of distinct patientIds with any gap in that module"). Identical quantity or not?
+2. For each labeled quantity rendered in multiple locations on the surface, enumerate the locations and their sources from the render-to-data-source map; compare values and sources.
+3. Unit/scope check: confirm the mock and real paths agree on scope qualifiers (per-hospital vs platform-wide; open-gaps-only vs all-gaps; active-patients-only vs all).
+
+**Failure signatures:**
+- **PARITY BREAK:** mock and real paths compute different quantities for the same label (the flip from demo to live silently redefines the number).
+- **INTERNAL INCONSISTENCY:** the same quantity shows two different values on one surface (exemplar from the PHASE-0 inventory: a computed HF patient total in the gap-intelligence banner vs an independent hardcoded HF `patients` value in the module tiles, on the same page).
+- **SCOPE MISMATCH:** mock figure is platform-wide while the real endpoint is hospital-scoped (or open-gaps vs all-gaps), so the comparison an executive would make across states is invalid.
+
+### 20.6 Verdict taxonomy
+
+The clinical taxonomy (PRODUCTION_GRADE / DET_OK / PARTIAL_DETECTION / SPEC_ONLY) encodes DEGREE OF DETECTION COVERAGE of a rule against a spec target. Aggregation surfaces have no spec target and no coverage degree: a rollup either computes the quantity its label claims, or it does not, or the defect is armed but not yet expressed. Forcing PARTIAL onto "double-counts by 30%" would erase that distinction. The taxonomy for this class is therefore per-surface-per-axis:
+
+- **CORRECT** - the axis's mechanical test passes on this surface.
+- **DEFECT** - the test fails on the CURRENT posture (the failure is expressed today, on whatever data path is live).
+- **LATENT** - the test fails only on a future-state trace (the wiring guarantees the failure once the real path connects or errors, but the current mock-only posture masks it). LATENT is a real verdict, not a pass: this module is mock-primary today, so most provenance and parity defects in it are armed-but-masked, and a taxonomy without LATENT would report a false clean bill.
+- **N/A** - the axis does not apply to the surface (e.g. Axis 2 on a surface that aggregates no patient counts).
+
+The output of a classification pass is the per-surface x per-axis verdict MATRIX (6 surfaces x 4 axes), each cell CORRECT / DEFECT / LATENT / N/A with a one-line mechanical-test citation (file:line). Severity is NOT part of the verdict: each DEFECT/LATENT cell files into `AUDIT_FINDINGS_REGISTER.md` as (or under) an AUDIT-NNN finding, and severity is assigned and owned at the register layer per §18 (status surfaces copy it verbatim). One register finding may cover multiple cells when they share a root cause (the §16.6 propagation-sweep principle transposed: same defect, full blast radius, one filing).
+
+### 20.7 Worked example: `src/data/platformTotals.ts` (all four axes, end to end)
+
+Illustrative application against the PHASE-0 render-to-data-source map (2026-06-11, main `a6776f6`). These verdicts are the methodology's template output; the classification pass re-runs the tests and files the register findings.
+
+**Surface summary:** `PLATFORM_TOTALS` is computed at module load: `sumModule()` reduces each of the 6 modules' mock gap arrays (`patients: gaps.reduce((s,g) => s + g.patientCount, 0)`, same for `dollarOpportunity`; `platformTotals.ts:15-21`), then `totalPatients` / `totalOpportunity` sum the 6 module results (`:30-31`) and `quarterlyActionable = Math.round(totalOpportunity * 0.3)` (`:36`). `fetchRealPlatformTotals()` (`:44-52`) returns mock unless `DATA_SOURCE.useRealApi`, calls `GET /api/platform/totals` when set, and on ANY error silently returns the mock object. Consumers: `FreeTierDashboard.tsx` (imports the static `PLATFORM_TOTALS`, never the fetch wrapper) and `PremiumUnlock.tsx`.
+
+**Axis 1 (provenance/honesty) - verdict: LATENT (silent-fallback mislabel), with a consumer-side aggravator.**
+Test trace: every PLATFORM_TOTALS figure is MOCK-DERIVED (computed, but from mock arrays). Indicator inventory at the consumer: the gap-intelligence banner carries an inline "Demo data - Representative 12-hospital cardiovascular program" disclosure (honest TODAY). Flip test on `fetchRealPlatformTotals`: the function returns `PLATFORM_TOTALS` (mock) on real-API error with NO provenance marker in the return value - the caller cannot distinguish "real data" from "mock fallback", and the backend's own `source: 'mock' | 'database'` field (platform.ts) is discarded by the silent catch. Future-state test: once a consumer calls the wrapper with `useRealApi=true`, an API outage renders mock numbers under whatever "live" framing that consumer has - the LATENT-MISLABEL signature. Reachability: no "Verified"-class state exists on this surface itself (the badge defect lives on the FreeTierDashboard surface, where `hasUploadedFiles` is the hardcoded-false badge input - filed against THAT surface, not this one).
+
+**Axis 2 (cross-module dedup) - verdict: DEFECT (summed-not-unioned, two layers).**
+Test trace: combinator at `:30` is an arithmetic sum of 6 module totals; each module total is itself a sum of PER-GAP cohort sizes (`:17`), not a patient-id set (the mock arrays carry no patient ids, so a union is not even constructible from these inputs). Concrete case: a patient population represented in both an HF gap's `patientCount` and a CAD gap's `patientCount` contributes to both module sums and is double-counted at `:30`; within one module, a patient in two HF gaps is double-counted at `:17`. The consumer label is "patients with identified care gaps" (FreeTierDashboard banner) - a patient-count claim over a gap-enrollment quantity. Both the cross-module and within-module multiplicities fail the label.
+
+**Axis 3 (denominator/cohort) - verdict: DEFECT (magic multiplier).**
+Test trace: `quarterlyActionable = Math.round(totalOpportunity * 0.3)` (`:36`). The 0.3 is HARDCODED with no citation, no config source, no dated comment - an unsourced business assumption rendered as a dollar figure ("actionable this quarter" at the OpportunityBanner consumer). The `patients`/`opportunity` sums themselves have a DEFINED cohort (all gaps in the module arrays) - no implicit-cohort failure there; the failure is the multiplier.
+
+**Axis 4 (mock/real parity + consistency) - verdict: DEFECT (parity break under one label).**
+Test trace, set-theoretic: mock `totalPatients` = sum over all gaps in all modules of per-gap cohort size. Real `totalPatients` (platform.ts `:39-55`) = sum over 6 modules of |distinct patientIds with any therapyGap in that module|, hospital-scoped. Different quantities three ways: (a) per-gap-multiplicity vs within-module-distinct; (b) platform-wide mock vs hospital-scoped real (scope mismatch); (c) mock counts gap-array cohort estimates, real counts DB rows. Flipping `useRealApi` silently redefines what "totalPatients" means. Internal consistency WITHIN this surface: passes - `PLATFORM_TOTALS` is a single const and both consumers read the same object (the two-different-HF-counts inconsistency is a FreeTierDashboard-surface cell: computed banner total vs hardcoded `MODULE_TILES` patients - filed there).
+
+**Template note:** this is the per-surface output shape the classification pass produces for each of the six surfaces: per axis, the mechanical-test trace with file:line, the verdict, and an explicit pointer when a related defect belongs to a DIFFERENT surface's cell (no double-filing).
+
+### 20.8 Lifecycle + cross-references
+
+- A DEFECT cell clears to CORRECT when the computation (or indicator wiring) is corrected AND a test pins the corrected semantics (for Axis 2: a constructed multi-module patient counted once; for Axis 1: an indicator state assertion per provenance; for Axis 3: the multiplier sourced or derived; for Axis 4: a parity assertion between paths or a single-source refactor).
+- A LATENT cell clears when the future-state trace no longer fails (the fallback surfaces its provenance, the indicator is wired to provenance) - NOT merely because the real path remains disconnected.
+- Register findings produced under this section follow §18 (severity register-owned, status surfaces copy verbatim) and §17 PR discipline (scope, self-review, no half-fixes).
+- Sister sections: §16.5/§16.6 (the per-patient detection analogues this section deliberately does not reuse); §1 (cite running code - the render-to-data-source map is this class's §1 instrument); §18 (severity ownership). Related findings at authoring: AUDIT-099 (fabricated-executive-KPI class, per-module ExecutiveViews - see the §20.1 scope-boundary note), AUDIT-098 (RESOLVED; the ServiceLineKPIBanner honest-badge pattern is the Axis 1 reference implementation), AUDIT-052/AUDIT-110 (single-source-of-truth discipline precedents).
+
+---
+
+*Authored 2026-05-04 in response to compounding methodology defect cycles (AUDIT-029 -> AUDIT-030 -> AUDIT-030.D). This document is the contract that prevents methodology drift living in audit prose. Implementation under `backend/scripts/auditCanonical/` follows. §16 added 2026-05-05 in response to Cat A clinical-code verification surfacing 15.5% wrong-drug bug rate (AUDIT-042 through AUDIT-061). §17 added 2026-05-06 in response to AUDIT-067/068 ABI deferral course-correction; codifies clinical-code PR acceptance criteria as drift-prevention mechanism. §18 added 2026-05-07 in response to AUDIT-016 status-surface drift across PR #248-#250 work; codifies status-surface discipline (register severity is authoritative; agent must not re-classify at status-surface time). §20 added 2026-06-11 (§19 permanently skipped to avoid collision with the CLAUDE.md §19 PAUSE procedure referenced unprefixed throughout the corpus) for the service-line aggregation + provenance surface class; authored from the PHASE-0 service-line inventory, ahead of the first classification pass.*
