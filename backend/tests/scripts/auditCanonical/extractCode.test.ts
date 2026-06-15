@@ -7,7 +7,7 @@
  *   - findIfBlockBoundaries string-literal-aware brace walking
  *
  * Integration tests run extraction against the live gapRuleEngine.ts and assert:
- *   - Per-module registry counts (HF=48, EP=48, SH=25, CAD=77, VHD=32, PV=33)
+ *   - Per-module registry counts (HF=56, EP=48, SH=25, CAD=77, VHD=32, PV=33)
  *   - Reconciliation counts match expected
  *   - VD-PANNUS evaluator is detected (under ID_NAME pattern)
  *   - EP-017 evaluator is detected (under ID_N pattern)
@@ -190,7 +190,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
   });
 
   it.each([
-    ['HF', 'HEART_FAILURE', 48],
+    ['HF', 'HEART_FAILURE', 56], // 48 + 8 (v3.0 HF buildout calibration sample, 2026-06-15)
     ['EP', 'ELECTROPHYSIOLOGY', 48],
     ['SH', 'STRUCTURAL_HEART', 25],
     ['CAD', 'CORONARY_INTERVENTION', 77],
@@ -201,15 +201,16 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     expect(registry.length).toBe(count);
   });
 
-  it('VHD evaluator extraction includes VD-PANNUS at line 10806', () => {
-    // AUDIT-110 line-pinned-assertion recurrence: the AUDIT-118 matcher fix
-    // shifted gapRuleEngine.ts by +5 lines (10801 -> 10806). Literal bumped here;
-    // the content-anchor remediation remains AUDIT-110's separate scope.
+  it('VHD evaluator extraction includes VD-PANNUS at line 11125', () => {
+    // AUDIT-110 line-pinned-assertion recurrence: the v3.0 HF buildout calibration
+    // sample (8 new HF evaluators + value-set imports + 8 registry entries) shifted
+    // gapRuleEngine.ts (10806 -> 11015 evaluators -> 11125 with the registry entries).
+    // Literal bumped here; the content-anchor remediation remains AUDIT-110's separate scope.
     const cfg = MODULE_CONFIGS.find((m) => m.code === 'VHD')!;
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(10806);
+    expect(pannus!.commentLine).toBe(11125);
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });

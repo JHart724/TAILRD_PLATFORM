@@ -26,7 +26,7 @@ describe('Structural: Gap rule engine integrity', () => {
     content = fs.readFileSync(ENGINE_PATH, 'utf8');
   });
 
-  it('exactly 263 gap rules defined (gaps.push calls)', () => {
+  it('exactly 271 gap rules defined (gaps.push calls)', () => {
     // Count incremented from 257 to 259 by EP-XX-7 mitigation (2026-05-04, fix/ep-017-rate-control-hfref-gating):
     // - +1: EP-017 SAFETY gap (HFrEF + on non-DHP CCB → Class 3 Harm alert)
     // - +1: EP-RC LVEF-data-required gap (HF dx + AF + LVEF undefined → structured data gap, not silent default)
@@ -38,8 +38,11 @@ describe('Structural: Gap rule engine integrity', () => {
     // See backend/src/ingestion/gaps/gapRuleEngine.ts §"EP-006 SAFETY".
     // Then 262 → 263 by AUDIT-031 (2026-05-05, fix/audit-031-ep-079-wpw-avn-blocker-critical):
     // - +1: EP-079 CRITICAL gap (WPW + AF + AVN blocker → ventricular fibrillation per 2023 ACC/AHA AFib Class 3 Harm). Closes Tier S queue (final item; queue 1 → 0).
+    // Then 263 -> 271 by the v3.0 HF buildout calibration sample (2026-06-15, feat/hf-calibration-buildout):
+    // - +8: GAP-HF-017 finerenone, HF-077 amyloid+AF anticoag, HF-081 HbA1c, HF-008 MRA-contra (SAFETY),
+    //   HF-033 IV iron, HF-143 colchicine, HF-054 ATTR-DMT, HF-002 non-EBM beta-blocker.
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(263);
+    expect(count).toBe(271);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

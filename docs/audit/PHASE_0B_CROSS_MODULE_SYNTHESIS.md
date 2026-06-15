@@ -10,13 +10,13 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 
 | Module | Spec gaps | DET_OK | PARTIAL | SPEC_ONLY | Any-coverage | DET_OK rate |
 |---|---:|---:|---:|---:|---:|---:|
-| HF | 126 | 22 | 43 | 61 | 65/126 (51.6%) | 17.5% |
+| HF | 126 | 30 | 39 | 57 | 69/126 (54.8%) | 23.8% |
 | EP | 89 | 18 | 29 | 42 | 47/89 (52.8%) | 20.2% |
 | SH | 88 | 0 | 30 | 58 | 30/88 (34.1%) | 0.0% |
 | CAD | 90 | 29 | 27 | 34 | 56/90 (62.2%) | 32.2% |
 | VHD | 105 | 0 | 11 | 94 | 11/105 (10.5%) | 0.0% |
 | PV | 105 | 16 | 14 | 75 | 30/105 (28.6%) | 15.2% |
-| **TOTAL** | **603** | **85** | **154** | **364** | **239/603 (39.6%)** | **14.1%** |
+| **TOTAL** | **603** | **93** | **150** | **360** | **243/603 (40.3%)** | **15.4%** |
 
 ---
 
@@ -24,7 +24,7 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 
 | Module | T1 total | T1 DET_OK | T1 PARTIAL | T1 SPEC_ONLY | T1 any-coverage |
 |---|---:|---:|---:|---:|---:|
-| HF | 29 | 8 | 14 | 7 | 75.9% |
+| HF | 29 | 12 | 11 | 6 | 79.3% |
 | EP | 15 | 5 | 7 | 3 | 80.0% |
 | SH | 13 | 0 | 8 | 5 | 61.5% |
 | CAD | 18 | 8 | 4 | 6 | 66.7% |
@@ -101,7 +101,6 @@ Subcategories with 0% any-coverage indicate entire procedural surfaces missing i
 
 | Module | Subcategory | Gaps | DET_OK | PARTIAL | SPEC_ONLY |
 |---|---|---:|---:|---:|---:|
-| HF | Pericardial Disease | 5 | 0 | 0 | 5 |
 | HF | LVAD/Transplant | 9 | 0 | 0 | 9 |
 | HF | ECMO/MCS | 3 | 0 | 0 | 3 |
 | HF | Genetics | 3 | 0 | 0 | 3 |
@@ -129,7 +128,7 @@ Subcategories with 0% any-coverage indicate entire procedural surfaces missing i
 | PV | AVM | 3 | 0 | 0 | 3 |
 | PV | Vascular Access | 3 | 0 | 0 | 3 |
 
-**Total: 27 subcategories with 0% any-coverage across 6 modules.**
+**Total: 26 subcategories with 0% any-coverage across 6 modules.**
 
 ---
 

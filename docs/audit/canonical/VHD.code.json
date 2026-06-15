@@ -2,9 +2,9 @@
   "codeSource": "backend/src/ingestion/gaps/gapRuleEngine.ts",
   "evaluatorBlocks": [
     {
-      "bodyEndLine": 4971,
-      "bodyStartLine": 4947,
-      "commentLine": 4940,
+      "bodyEndLine": 5073,
+      "bodyStartLine": 5049,
+      "commentLine": 5042,
       "commentLiteral": "// Gap VD-1: Anticoagulation Missing in Mechanical Valve",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -13,9 +13,9 @@
       "name": "VD-1"
     },
     {
-      "bodyEndLine": 5299,
-      "bodyStartLine": 5278,
-      "commentLine": 5269,
+      "bodyEndLine": 5401,
+      "bodyStartLine": 5380,
+      "commentLine": 5371,
       "commentLiteral": "// Gap VD-2: Echo Surveillance for Bioprosthetic Valve",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -24,9 +24,9 @@
       "name": "VD-2"
     },
     {
-      "bodyEndLine": 5567,
-      "bodyStartLine": 5543,
-      "commentLine": 5536,
+      "bodyEndLine": 5669,
+      "bodyStartLine": 5645,
+      "commentLine": 5638,
       "commentLiteral": "// Gap VD-3: INR Monitoring for Mechanical Valve",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -35,9 +35,9 @@
       "name": "VD-3"
     },
     {
-      "bodyEndLine": 5597,
-      "bodyStartLine": 5577,
-      "commentLine": 5569,
+      "bodyEndLine": 5699,
+      "bodyStartLine": 5679,
+      "commentLine": 5671,
       "commentLiteral": "// Gap VD-4: Mitral Stenosis Surveillance",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -46,9 +46,9 @@
       "name": "VD-4"
     },
     {
-      "bodyEndLine": 5627,
-      "bodyStartLine": 5607,
-      "commentLine": 5599,
+      "bodyEndLine": 5729,
+      "bodyStartLine": 5709,
+      "commentLine": 5701,
       "commentLiteral": "// Gap VD-5: Aortic Regurgitation Monitoring",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -57,9 +57,9 @@
       "name": "VD-5"
     },
     {
-      "bodyEndLine": 5657,
-      "bodyStartLine": 5633,
-      "commentLine": 5629,
+      "bodyEndLine": 5759,
+      "bodyStartLine": 5735,
+      "commentLine": 5731,
       "commentLiteral": "// Gap VD-6: DOAC Contraindicated in Mechanical Valve",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -68,9 +68,9 @@
       "name": "VD-6"
     },
     {
-      "bodyEndLine": 5686,
-      "bodyStartLine": 5666,
-      "commentLine": 5659,
+      "bodyEndLine": 5788,
+      "bodyStartLine": 5768,
+      "commentLine": 5761,
       "commentLiteral": "// Gap VD-7: Exercise Restriction in Severe AS",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -79,9 +79,9 @@
       "name": "VD-7"
     },
     {
-      "bodyEndLine": 5716,
-      "bodyStartLine": 5696,
-      "commentLine": 5688,
+      "bodyEndLine": 5818,
+      "bodyStartLine": 5798,
+      "commentLine": 5790,
       "commentLiteral": "// Gap VD-8: Rheumatic Heart Disease Screen",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -90,9 +90,9 @@
       "name": "VD-8"
     },
     {
-      "bodyEndLine": 5743,
-      "bodyStartLine": 5724,
-      "commentLine": 5718,
+      "bodyEndLine": 5845,
+      "bodyStartLine": 5826,
+      "commentLine": 5820,
       "commentLiteral": "// Gap VD-9: Endocarditis Education",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -101,9 +101,9 @@
       "name": "VD-9"
     },
     {
-      "bodyEndLine": 5775,
-      "bodyStartLine": 5754,
-      "commentLine": 5745,
+      "bodyEndLine": 5877,
+      "bodyStartLine": 5856,
+      "commentLine": 5847,
       "commentLiteral": "// Gap VD-10: Pregnancy Risk in Valve Disease",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -112,9 +112,9 @@
       "name": "VD-10"
     },
     {
-      "bodyEndLine": 5805,
-      "bodyStartLine": 5784,
-      "commentLine": 5777,
+      "bodyEndLine": 5907,
+      "bodyStartLine": 5886,
+      "commentLine": 5879,
       "commentLiteral": "// Gap VD-11: Bioprosthetic Valve Degeneration Watch",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -123,9 +123,9 @@
       "name": "VD-11"
     },
     {
-      "bodyEndLine": 5842,
-      "bodyStartLine": 5815,
-      "commentLine": 5807,
+      "bodyEndLine": 5944,
+      "bodyStartLine": 5917,
+      "commentLine": 5909,
       "commentLiteral": "// Gap VD-12: Anticoagulation in AF + Valve Disease",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -134,9 +134,9 @@
       "name": "VD-12"
     },
     {
-      "bodyEndLine": 6645,
-      "bodyStartLine": 6620,
-      "commentLine": 6613,
+      "bodyEndLine": 6747,
+      "bodyStartLine": 6722,
+      "commentLine": 6715,
       "commentLiteral": "// Gap VD-13: Anticoagulation First 3 Months Post-Bioprosthetic",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -145,9 +145,9 @@
       "name": "VD-13"
     },
     {
-      "bodyEndLine": 6678,
-      "bodyStartLine": 6659,
-      "commentLine": 6647,
+      "bodyEndLine": 6780,
+      "bodyStartLine": 6761,
+      "commentLine": 6749,
       "commentLiteral": "// Gap VD-14: Dental Prophylaxis in High-Risk Valve",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -156,9 +156,9 @@
       "name": "VD-14"
     },
     {
-      "bodyEndLine": 6707,
-      "bodyStartLine": 6689,
-      "commentLine": 6680,
+      "bodyEndLine": 6809,
+      "bodyStartLine": 6791,
+      "commentLine": 6782,
       "commentLiteral": "// Gap VD-15: Aortic Root Dilation Monitoring",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -167,9 +167,9 @@
       "name": "VD-15"
     },
     {
-      "bodyEndLine": 6733,
-      "bodyStartLine": 6716,
-      "commentLine": 6709,
+      "bodyEndLine": 6835,
+      "bodyStartLine": 6818,
+      "commentLine": 6811,
       "commentLiteral": "// Gap VD-16: Mixed Valve Disease Assessment",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -178,9 +178,9 @@
       "name": "VD-16"
     },
     {
-      "bodyEndLine": 6764,
-      "bodyStartLine": 6746,
-      "commentLine": 6735,
+      "bodyEndLine": 6866,
+      "bodyStartLine": 6848,
+      "commentLine": 6837,
       "commentLiteral": "// Gap VD-17: Hemolysis Monitoring Post-Valve",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -189,9 +189,9 @@
       "name": "VD-17"
     },
     {
-      "bodyEndLine": 6795,
-      "bodyStartLine": 6777,
-      "commentLine": 6766,
+      "bodyEndLine": 6897,
+      "bodyStartLine": 6879,
+      "commentLine": 6868,
       "commentLiteral": "// Gap VD-18: Exercise Testing in Asymptomatic Severe Valve Disease",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -200,9 +200,9 @@
       "name": "VD-18"
     },
     {
-      "bodyEndLine": 10837,
-      "bodyStartLine": 10815,
-      "commentLine": 10806,
+      "bodyEndLine": 11156,
+      "bodyStartLine": 11134,
+      "commentLine": 11125,
       "commentLiteral": "// VD-PANNUS: Prosthetic Valve Pannus/Thrombosis Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -211,9 +211,9 @@
       "name": "VD-PANNUS"
     },
     {
-      "bodyEndLine": 10870,
-      "bodyStartLine": 10848,
-      "commentLine": 10839,
+      "bodyEndLine": 11189,
+      "bodyStartLine": 11167,
+      "commentLine": 11158,
       "commentLiteral": "// VD-RADIATION: Radiation-Associated Valve Disease",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -222,9 +222,9 @@
       "name": "VD-RADIATION"
     },
     {
-      "bodyEndLine": 10902,
-      "bodyStartLine": 10880,
-      "commentLine": 10872,
+      "bodyEndLine": 11221,
+      "bodyStartLine": 11199,
+      "commentLine": 11191,
       "commentLiteral": "// VD-ENDOCARDITIS-SURV: Infective Endocarditis Surveillance",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -233,9 +233,9 @@
       "name": "VD-ENDOCARDITIS-SURV"
     },
     {
-      "bodyEndLine": 10934,
-      "bodyStartLine": 10912,
-      "commentLine": 10904,
+      "bodyEndLine": 11253,
+      "bodyStartLine": 11231,
+      "commentLine": 11223,
       "commentLiteral": "// VD-BICUSPID-AORTOPATHY: Bicuspid Valve Aortopathy Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -244,9 +244,9 @@
       "name": "VD-BICUSPID-AORTOPATHY"
     },
     {
-      "bodyEndLine": 10963,
-      "bodyStartLine": 10942,
-      "commentLine": 10936,
+      "bodyEndLine": 11282,
+      "bodyStartLine": 11261,
+      "commentLine": 11255,
       "commentLiteral": "// VD-ANTICOAG-REVERSAL: Anticoagulation Reversal Emergency Plan",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -255,9 +255,9 @@
       "name": "VD-ANTICOAG-REVERSAL"
     },
     {
-      "bodyEndLine": 10997,
-      "bodyStartLine": 10974,
-      "commentLine": 10965,
+      "bodyEndLine": 11316,
+      "bodyStartLine": 11293,
+      "commentLine": 11284,
       "commentLiteral": "// VD-TRANSCATHETER-MV: Transcatheter Mitral Intervention Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -266,9 +266,9 @@
       "name": "VD-TRANSCATHETER-MV"
     },
     {
-      "bodyEndLine": 11029,
-      "bodyStartLine": 11007,
-      "commentLine": 10999,
+      "bodyEndLine": 11348,
+      "bodyStartLine": 11326,
+      "commentLine": 11318,
       "commentLiteral": "// VD-RHC: Right Heart Catheterization for Valve + PH",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -277,9 +277,9 @@
       "name": "VD-RHC"
     },
     {
-      "bodyEndLine": 11066,
-      "bodyStartLine": 11044,
-      "commentLine": 11031,
+      "bodyEndLine": 11385,
+      "bodyStartLine": 11363,
+      "commentLine": 11350,
       "commentLiteral": "// VD-VALVE-CLINIC: Multidisciplinary Valve Clinic Referral",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -288,9 +288,9 @@
       "name": "VD-VALVE-CLINIC"
     },
     {
-      "bodyEndLine": 11102,
-      "bodyStartLine": 11078,
-      "commentLine": 11073,
+      "bodyEndLine": 11421,
+      "bodyStartLine": 11397,
+      "commentLine": 11392,
       "commentLiteral": "// VD-ECHO-INTERVAL: Echo Surveillance Interval Adherence",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -299,9 +299,9 @@
       "name": "VD-ECHO-INTERVAL"
     },
     {
-      "bodyEndLine": 11134,
-      "bodyStartLine": 11106,
-      "commentLine": 11104,
+      "bodyEndLine": 11453,
+      "bodyStartLine": 11425,
+      "commentLine": 11423,
       "commentLiteral": "// VD-FUNCTIONAL-STATUS: Functional Status Assessment in Valve Disease",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -310,9 +310,9 @@
       "name": "VD-FUNCTIONAL-STATUS"
     },
     {
-      "bodyEndLine": 11163,
-      "bodyStartLine": 11138,
-      "commentLine": 11136,
+      "bodyEndLine": 11482,
+      "bodyStartLine": 11457,
+      "commentLine": 11455,
       "commentLiteral": "// VD-PREOP-ASSESSMENT: Preoperative Assessment for Valve Surgery",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -321,9 +321,9 @@
       "name": "VD-PREOP-ASSESSMENT"
     },
     {
-      "bodyEndLine": 11195,
-      "bodyStartLine": 11167,
-      "commentLine": 11165,
+      "bodyEndLine": 11514,
+      "bodyStartLine": 11486,
+      "commentLine": 11484,
       "commentLiteral": "// VD-PULMONARY-HTN: Pulmonary Hypertension Screen in Valve Disease",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -332,9 +332,9 @@
       "name": "VD-PULMONARY-HTN"
     },
     {
-      "bodyEndLine": 11227,
-      "bodyStartLine": 11199,
-      "commentLine": 11197,
+      "bodyEndLine": 11546,
+      "bodyStartLine": 11518,
+      "commentLine": 11516,
       "commentLiteral": "// VD-TRICUSPID-SECONDARY: Secondary Tricuspid Regurgitation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -343,9 +343,9 @@
       "name": "VD-TRICUSPID-SECONDARY"
     },
     {
-      "bodyEndLine": 11261,
-      "bodyStartLine": 11231,
-      "commentLine": 11229,
+      "bodyEndLine": 11580,
+      "bodyStartLine": 11550,
+      "commentLine": 11548,
       "commentLiteral": "// VD-ANTIPLATELET-BIOPROSTHETIC: Antiplatelet After Bioprosthetic Valve >3 Months",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -366,7 +366,7 @@
       "levelOfEvidence": "A",
       "name": "Mechanical Valve Anticoagulation",
       "nextReviewDue": "2026-10-05",
-      "registryLine": 391
+      "registryLine": 395
     },
     {
       "classOfRecommendation": "1",
@@ -376,7 +376,7 @@
       "levelOfEvidence": "C",
       "name": "Echo Surveillance for Bioprosthetic Valve",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 487
+      "registryLine": 491
     },
     {
       "classOfRecommendation": "1",
@@ -386,7 +386,7 @@
       "levelOfEvidence": "A",
       "name": "INR Monitoring for Mechanical Valve",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1003
+      "registryLine": 1007
     },
     {
       "classOfRecommendation": "1",
@@ -396,7 +396,7 @@
       "levelOfEvidence": "B",
       "name": "Mitral Stenosis Surveillance",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1015
+      "registryLine": 1019
     },
     {
       "classOfRecommendation": "1",
@@ -406,7 +406,7 @@
       "levelOfEvidence": "B",
       "name": "Aortic Regurgitation Monitoring",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1027
+      "registryLine": 1031
     },
     {
       "classOfRecommendation": "3 (Harm)",
@@ -416,7 +416,7 @@
       "levelOfEvidence": "B",
       "name": "DOAC Contraindicated in Mechanical Valve",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1039
+      "registryLine": 1043
     },
     {
       "classOfRecommendation": "1",
@@ -426,7 +426,7 @@
       "levelOfEvidence": "C",
       "name": "Exercise Restriction in Severe AS",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1051
+      "registryLine": 1055
     },
     {
       "classOfRecommendation": "1",
@@ -436,7 +436,7 @@
       "levelOfEvidence": "B",
       "name": "Rheumatic Heart Disease Screen",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1063
+      "registryLine": 1067
     },
     {
       "classOfRecommendation": "1",
@@ -446,7 +446,7 @@
       "levelOfEvidence": "C",
       "name": "Endocarditis Education",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1075
+      "registryLine": 1079
     },
     {
       "classOfRecommendation": "1",
@@ -456,7 +456,7 @@
       "levelOfEvidence": "C",
       "name": "Pregnancy Risk in Valve Disease",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1087
+      "registryLine": 1091
     },
     {
       "classOfRecommendation": "1",
@@ -466,7 +466,7 @@
       "levelOfEvidence": "B",
       "name": "Bioprosthetic Valve Degeneration Watch",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1099
+      "registryLine": 1103
     },
     {
       "classOfRecommendation": "1",
@@ -476,7 +476,7 @@
       "levelOfEvidence": "A",
       "name": "Anticoagulation in AF + Valve Disease",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1111
+      "registryLine": 1115
     },
     {
       "classOfRecommendation": "2a",
@@ -486,7 +486,7 @@
       "levelOfEvidence": "B",
       "name": "Anticoagulation First 3 Months Post-Bioprosthetic",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1783
+      "registryLine": 1787
     },
     {
       "classOfRecommendation": "1",
@@ -496,7 +496,7 @@
       "levelOfEvidence": "B",
       "name": "Dental Prophylaxis in High-Risk Valve",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1795
+      "registryLine": 1799
     },
     {
       "classOfRecommendation": "1",
@@ -506,7 +506,7 @@
       "levelOfEvidence": "B",
       "name": "Aortic Root Dilation Monitoring",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1807
+      "registryLine": 1811
     },
     {
       "classOfRecommendation": "1",
@@ -516,7 +516,7 @@
       "levelOfEvidence": "C",
       "name": "Mixed Valve Disease Assessment",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1819
+      "registryLine": 1823
     },
     {
       "classOfRecommendation": "1",
@@ -526,7 +526,7 @@
       "levelOfEvidence": "C",
       "name": "Hemolysis Monitoring Post-Valve",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1831
+      "registryLine": 1835
     },
     {
       "classOfRecommendation": "2a",
@@ -536,7 +536,7 @@
       "levelOfEvidence": "B",
       "name": "Exercise Testing in Asymptomatic Severe Valve Disease",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1843
+      "registryLine": 1847
     },
     {
       "classOfRecommendation": "1",
@@ -546,7 +546,7 @@
       "levelOfEvidence": "B",
       "name": "Prosthetic Valve Pannus/Thrombosis Screen",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2311
+      "registryLine": 2315
     },
     {
       "classOfRecommendation": "2a",
@@ -556,7 +556,7 @@
       "levelOfEvidence": "B",
       "name": "Radiation-Associated Valve Disease",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2323
+      "registryLine": 2327
     },
     {
       "classOfRecommendation": "1",
@@ -566,7 +566,7 @@
       "levelOfEvidence": "B",
       "name": "Infective Endocarditis Surveillance",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2335
+      "registryLine": 2339
     },
     {
       "classOfRecommendation": "1",
@@ -576,7 +576,7 @@
       "levelOfEvidence": "B",
       "name": "Bicuspid Valve Aortopathy Screening",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2347
+      "registryLine": 2351
     },
     {
       "classOfRecommendation": "1",
@@ -586,7 +586,7 @@
       "levelOfEvidence": "C",
       "name": "Anticoagulation Reversal Plan",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2359
+      "registryLine": 2363
     },
     {
       "classOfRecommendation": "2a",
@@ -596,7 +596,7 @@
       "levelOfEvidence": "B-R",
       "name": "Transcatheter Mitral Intervention Evaluation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2371
+      "registryLine": 2375
     },
     {
       "classOfRecommendation": "1",
@@ -606,7 +606,7 @@
       "levelOfEvidence": "C",
       "name": "Right Heart Catheterization for Valve Surgery",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2383
+      "registryLine": 2387
     },
     {
       "classOfRecommendation": "1",
@@ -616,7 +616,7 @@
       "levelOfEvidence": "C",
       "name": "Multidisciplinary Valve Clinic Referral",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2395
+      "registryLine": 2399
     },
     {
       "classOfRecommendation": "1",
@@ -626,7 +626,7 @@
       "levelOfEvidence": "B",
       "name": "Echo Surveillance Interval Adherence",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3271
+      "registryLine": 3275
     },
     {
       "classOfRecommendation": "1",
@@ -636,7 +636,7 @@
       "levelOfEvidence": "C",
       "name": "Functional Status Assessment in Valve Disease",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3283
+      "registryLine": 3287
     },
     {
       "classOfRecommendation": "1",
@@ -646,7 +646,7 @@
       "levelOfEvidence": "B",
       "name": "Preoperative Assessment for Valve Surgery",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3295
+      "registryLine": 3299
     },
     {
       "classOfRecommendation": "1",
@@ -656,7 +656,7 @@
       "levelOfEvidence": "B",
       "name": "Pulmonary Hypertension Screen in Valve Disease",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3307
+      "registryLine": 3311
     },
     {
       "classOfRecommendation": "2a",
@@ -666,7 +666,7 @@
       "levelOfEvidence": "B-NR",
       "name": "Secondary Tricuspid Regurgitation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3319
+      "registryLine": 3323
     },
     {
       "classOfRecommendation": "2a",
@@ -676,7 +676,7 @@
       "levelOfEvidence": "B",
       "name": "Antiplatelet After Bioprosthetic Valve",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3331
+      "registryLine": 3335
     }
   ]
 }

@@ -56,6 +56,49 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
       auditNote:
         'MANUAL OVERRIDE: auto-classifier matched HF-151 (post-cardiac-transplant HF) to CAD-CARDIAC-TRANSPLANT-CAD cross-module evaluator. FALSE POSITIVE — CAD evaluator covers cardiac allograft vasculopathy (CAV; post-transplant CAD), distinct from HF graft dysfunction. HF-151 has no specific evaluator coverage. SPEC_ONLY.',
     },
+    // v3.0 HF buildout calibration sample (2026-06-15): 8 new evaluators authored + firing
+    // (backend/tests/gapRules/hfCalibrationBuildout.test.ts), operator clinical sign-off 2026-06-15.
+    // Explicit DET_OK flip (reconcile is fuzzy name-match per AUDIT-106; overrides are deterministic).
+    'GAP-HF-017': {
+      classification: 'DET_OK',
+      registryId: 'gap-hf-017-finerenone-mref',
+      auditNote: 'BUILT 2026-06-15 (v3.0 HF calibration): HF-FINERENONE-MREF evaluator - LVEF>=40 + K<5.0 + eGFR>=25 + not-on-finerenone. COR 2a, FINEARTS-HF (NEJM 2024). Proof: hfCalibrationBuildout.test.ts. SPEC_ONLY -> DET_OK.',
+    },
+    'GAP-HF-077': {
+      classification: 'DET_OK',
+      registryId: 'gap-hf-077-amyloid-af-oac',
+      auditNote: 'BUILT 2026-06-15 (v3.0 HF calibration): HF-AMYLOID-AF-OAC evaluator - E85.82/E85.1 + AF + not-on-OAC. COR 2a, 2023 ACC Consensus. Operator ruling: E85.4 dropped. Proof: hfCalibrationBuildout.test.ts. SPEC_ONLY -> DET_OK.',
+    },
+    'GAP-HF-081': {
+      classification: 'DET_OK',
+      registryId: 'gap-hf-081-dm-hba1c',
+      auditNote: 'BUILT 2026-06-15 (v3.0 HF calibration): HF-DM-HBA1C evaluator - HF + DM (E10/E11) + HbA1c>8. COR 1. Operator ruling Path B: intensification-status data element not ingestible, documented over-fire note. Proof: hfCalibrationBuildout.test.ts. SPEC_ONLY -> DET_OK.',
+    },
+    'GAP-HF-008': {
+      classification: 'DET_OK',
+      registryId: 'gap-hf-008-mra-contra',
+      auditNote: 'BUILT 2026-06-15 (v3.0 HF calibration): HF-MRA-CONTRA SAFETY evaluator - on MRA + (K>=5.5 or eGFR<30). COR 3 (Harm). Operator ruling: eGFR threshold <30 (protective). Proof: hfCalibrationBuildout.test.ts. PARTIAL -> DET_OK.',
+    },
+    'GAP-HF-033': {
+      classification: 'DET_OK',
+      registryId: 'gap-hf-033-iron-def-iv',
+      auditNote: 'BUILT 2026-06-15 (v3.0 HF calibration): HF-IRON-DEF-IV evaluator - HF + ferritin<100 + not-on-IV-iron. COR 2a, AFFIRM-AHF/IRONMAN. Scoped to absolute iron deficiency (functional = GAP-HF-034). Proof: hfCalibrationBuildout.test.ts. PARTIAL -> DET_OK.',
+    },
+    'GAP-HF-143': {
+      classification: 'DET_OK',
+      registryId: 'gap-hf-143-pericarditis-colch',
+      auditNote: 'BUILT 2026-06-15 (v3.0 HF calibration): HF-PERICARDITIS-COLCH evaluator - I30 or I31.9 + not-on-colchicine. COR 1, 2015 ESC. Operator ruling: I30+I31.9 only (drop effusion/hemopericardium/tamponade I31.2/.3/.4). Proof: hfCalibrationBuildout.test.ts. SPEC_ONLY -> DET_OK.',
+    },
+    'GAP-HF-054': {
+      classification: 'DET_OK',
+      registryId: 'gap-hf-054-attr-dmt',
+      auditNote: 'BUILT 2026-06-15 (v3.0 HF calibration): HF-ATTR-DMT evaluator - E85.82/E85.1 + not-on-DMT. COR 1, ATTR-ACT. Operator ruling: DMT set = tafamidis/acoramidis/vutrisiran (patisiran dropped - polyneuropathy). Proof: hfCalibrationBuildout.test.ts. PARTIAL -> DET_OK.',
+    },
+    'GAP-HF-002': {
+      classification: 'DET_OK',
+      registryId: 'gap-hf-002-bb-non-ebm',
+      auditNote: 'BUILT 2026-06-15 (v3.0 HF calibration): HF-BB-NON-EBM evaluator - HFrEF (LVEF<=40) + on atenolol. COR 1. Operator ruling: nebivolol dropped (SENIORS). Data-limit: metoprolol-tartrate not IN-distinguishable from succinate. Proof: hfCalibrationBuildout.test.ts. PARTIAL -> DET_OK.',
+    },
   },
   EP: {
     // EP audit 2026-06-08 (operator-approved): 13 DET_OK -> PARTIAL_DETECTION flips. 12 are the
