@@ -81,6 +81,10 @@ interface MedicationDose {
   rxNormCode: string | null;
   doseValue?: number | null;
   doseUnit?: string | null;
+  // v3.0 ingest work-unit 1: med start-date (stored from FHIR authoredOn) threaded so
+  // duration/recency gates (GDMT >=3mo, HF-081 recent-intensification) can test temporality.
+  // Optional - legacy callers omit it; date-dependent gates fail-open to 'duration unknown'.
+  startDate?: Date | string | null;
   genericName?: string | null;
   medicationName?: string | null;
 }
@@ -3497,6 +3501,11 @@ export function evaluateGapRules(
   // silently treating ingredient presence as high-intensity. The flat medCodes
   // array is retained for all dose-agnostic gates (backward compatible).
   meds: MedicationDose[] = [],
+  // v3.0 ingest work-unit 1: procedure codes (CPT + SNOMED) from the patient's Procedure
+  // records, threaded so procedure-gated gaps (surgical/peri-op, device-implant timing,
+  // prior-procedure history) can detect. Defaults to [] so every existing caller and test
+  // is unaffected (additive, backward-compatible; the AUDIT-101 meds-param precedent).
+  procedureCodes: string[] = [],
 ): DetectedGap[] {
   const gaps: DetectedGap[] = [];
   const hasHF = dxCodes.some(c => c.startsWith('I50'));

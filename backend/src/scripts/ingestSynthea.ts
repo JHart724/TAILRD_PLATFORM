@@ -57,6 +57,7 @@ interface IngestStats {
   medications: number;
   observations: number;
   encounters: number;
+  procedures: number;
   errors: number;
   skipped: number;
 }
@@ -109,12 +110,13 @@ async function downloadBundle(key: string): Promise<any> {
 
 // ── FHIR Resource Extractors ────────────────────────────────────────────────
 
-function extractResources(bundle: any): {
+export function extractResources(bundle: any): {
   patient: any | null;
   conditions: any[];
   medications: any[];
   observations: any[];
   encounters: any[];
+  procedures: any[];
 } {
   const entries = bundle.entry || [];
   return {
@@ -123,6 +125,9 @@ function extractResources(bundle: any): {
     medications: entries.filter((e: any) => e.resource?.resourceType === 'MedicationRequest').map((e: any) => e.resource),
     observations: entries.filter((e: any) => e.resource?.resourceType === 'Observation').map((e: any) => e.resource),
     encounters: entries.filter((e: any) => e.resource?.resourceType === 'Encounter').map((e: any) => e.resource),
+    // v3.0 ingest work-unit 1: Synthea bundles emit Procedure resources; ingest them so the
+    // procedure-gated gaps (surgical/peri-op, device-implant timing) are pre-DUA testable.
+    procedures: entries.filter((e: any) => e.resource?.resourceType === 'Procedure').map((e: any) => e.resource),
   };
 }
 
@@ -204,10 +209,10 @@ function determineModuleFlags(conditions: any[]): Record<string, boolean> {
 // ── Bundle Processor ────────────────────────────────────────────────────────
 
 async function processBundle(key: string): Promise<IngestStats> {
-  const stats: IngestStats = { patients: 0, conditions: 0, medications: 0, observations: 0, encounters: 0, errors: 0, skipped: 0 };
+  const stats: IngestStats = { patients: 0, conditions: 0, medications: 0, observations: 0, encounters: 0, procedures: 0, errors: 0, skipped: 0 };
 
   const bundle = await downloadBundle(key);
-  const { patient, conditions, medications, observations, encounters } = extractResources(bundle);
+  const { patient, conditions, medications, observations, encounters, procedures } = extractResources(bundle);
 
   if (!patient) {
     stats.skipped++;
@@ -369,6 +374,36 @@ async function processBundle(key: string): Promise<IngestStats> {
     }
   }
 
+  // 4b. Batch insert Procedures (v3.0 ingest work-unit 1). Synthea codes procedures with
+  //     SNOMED CT; store the code in snomedCode (or cptCode if a CPT coding is present) so
+  //     the procedure-gated gaps can detect on either system.
+  if (procedures.length > 0) {
+    const procData = procedures.map((p: any) => {
+      const codings: any[] = p.code?.coding || [];
+      const snomed = codings.find((c) => (c.system || '').includes('snomed'));
+      const cpt = codings.find((c) => (c.system || '').includes('cpt') || (c.system || '').includes('ama-assn'));
+      const performed = p.performedDateTime || p.performedPeriod?.start || null;
+      return {
+        patientId: dbPatient.id,
+        hospitalId: HOSPITAL_ID,
+        fhirProcedureId: p.id,
+        cptCode: cpt?.code ?? null,
+        snomedCode: snomed?.code ?? codings[0]?.code ?? null,
+        procedureName: p.code?.text || codings[0]?.display || 'Unknown',
+        status: p.status || 'completed',
+        procedureDate: performed ? new Date(performed) : null,
+      };
+    });
+    for (let i = 0; i < procData.length; i += 500) {
+      try {
+        await prisma.procedure.createMany({ data: procData.slice(i, i + 500), skipDuplicates: true });
+        stats.procedures += Math.min(500, procData.length - i);
+      } catch (e) {
+        stats.errors++;
+      }
+    }
+  }
+
   // 5. Batch insert Encounters
   if (encounters.length > 0) {
     const encData = encounters.map((e: any) => {
@@ -432,7 +467,7 @@ function saveProgress(progress: Progress) {
 // ── Parallel Worker Pool ────────────────────────────────────────────────────
 
 async function runWorkerPool(keys: string[], progress: Progress): Promise<IngestStats> {
-  const totals: IngestStats = { patients: 0, conditions: 0, medications: 0, observations: 0, encounters: 0, errors: 0, skipped: 0 };
+  const totals: IngestStats = { patients: 0, conditions: 0, medications: 0, observations: 0, encounters: 0, procedures: 0, errors: 0, skipped: 0 };
   const processed = new Set(progress.processedKeys);
   let pending: Promise<void>[] = [];
   let completed = 0;
@@ -452,6 +487,7 @@ async function runWorkerPool(keys: string[], progress: Progress): Promise<Ingest
         totals.medications += stats.medications;
         totals.observations += stats.observations;
         totals.encounters += stats.encounters;
+        totals.procedures += stats.procedures;
         totals.errors += stats.errors;
         totals.skipped += stats.skipped;
 
@@ -571,11 +607,16 @@ async function main() {
   console.log(`║  Medications:   ${String(stats.medications).padStart(8)}`);
   console.log(`║  Observations:  ${String(stats.observations).padStart(8)}`);
   console.log(`║  Encounters:    ${String(stats.encounters).padStart(8)}`);
+  console.log(`║  Procedures:    ${String(stats.procedures).padStart(8)}`);
   console.log(`║  Errors:        ${String(stats.errors).padStart(8)}`);
   console.log(`║  Skipped:       ${String(stats.skipped).padStart(8)}`);
   console.log('╚══════════════════════════════════════════════════════════════╝');
 }
 
-main()
-  .catch(console.error)
-  .finally(() => prisma.$disconnect());
+// Only run as a CLI; importing the module (e.g. for extractResources in tests) must NOT
+// trigger the S3-reading main() loop.
+if (require.main === module) {
+  main()
+    .catch(console.error)
+    .finally(() => prisma.$disconnect());
+}

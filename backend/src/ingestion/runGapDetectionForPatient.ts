@@ -31,6 +31,7 @@ export async function runGapDetectionForPatient(
         conditions: true,
         medications: { where: { status: 'ACTIVE' } },
         observations: { orderBy: { observedDateTime: 'desc' } },
+        procedures: true, // v3.0 ingest work-unit 1: procedure codes thread to the engine
       },
     });
 
@@ -65,10 +66,13 @@ export async function runGapDetectionForPatient(
       doseUnit: m.doseUnit ?? null,
       genericName: m.genericName ?? null,
       medicationName: m.medicationName ?? null,
+      startDate: m.startDate ?? null, // v3.0 ingest work-unit 1: thread med start-date (FHIR authoredOn)
     }));
+    // v3.0 ingest work-unit 1: procedure codes (CPT + SNOMED) for procedure-gated gaps.
+    const procedureCodes = (patient.procedures ?? []).flatMap((p: any) => [p.cptCode, p.snomedCode]).filter(Boolean);
     const age = Math.floor((Date.now() - patient.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
 
-    const detectedGaps = evaluateGapRules(dxCodes, labValues, medCodes, age, patient.gender, patient.race ?? undefined, meds);
+    const detectedGaps = evaluateGapRules(dxCodes, labValues, medCodes, age, patient.gender, patient.race ?? undefined, meds, procedureCodes);
 
     // Load existing gaps for this patient
     const existingGaps = await prisma.therapyGap.findMany({
