@@ -1,0 +1,2512 @@
+{
+  "generatedFrom": "backend/src/ingestion/gaps/gapRuleEngine.ts",
+  "registryCount": 263,
+  "pushCount": 263,
+  "certifiedReuseOnly": false,
+  "exceptionSet": [
+    {
+      "pushLine": 3737,
+      "module": "HEART_FAILURE",
+      "status": "Sacubitril/valsartan dose optimization review recommended",
+      "gapId": "gap-hf-30-arni-underdosing",
+      "confidence": 0.176,
+      "flag": "reuse",
+      "resolution": "comment-context"
+    },
+    {
+      "pushLine": 3799,
+      "module": "HEART_FAILURE",
+      "status": "Hyponatremia detected: sodium   mEq/L",
+      "gapId": "gap-hf-73-hyponatremia",
+      "confidence": 0.167,
+      "flag": "reuse",
+      "resolution": "dynamic-status"
+    },
+    {
+      "pushLine": 3999,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "QTc  :  ms (threshold  ms)",
+      "gapId": "gap-39-qtc-safety",
+      "confidence": 0.2,
+      "flag": "reuse",
+      "resolution": "dynamic-status"
+    },
+    {
+      "pushLine": 4119,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "eGFR measurement required to evaluate dabigatran safety in renal impairment",
+      "gapId": "gap-ep-anticoag-interruption",
+      "confidence": 0.028,
+      "flag": "reuse",
+      "resolution": "comment-context"
+    },
+    {
+      "pushLine": 4306,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider CRT evaluation for LVEF <=35% with wide QRS",
+      "gapId": "gap-ep-device-crt",
+      "confidence": 0.158,
+      "flag": "reuse",
+      "resolution": "comment-context"
+    },
+    {
+      "pushLine": 5045,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Rate control agent not prescribed in AFib (HFrEF: avoid non-DHP CCB) Rate control agent not prescribed in AFib",
+      "gapId": "gap-ep-rate-control-afib",
+      "confidence": 0.3,
+      "flag": "reuse",
+      "resolution": "dynamic-status"
+    },
+    {
+      "pushLine": 5914,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Abdominal aortic aneurysm screening recommended for review",
+      "gapId": "gap-pv-9-aaa-screening",
+      "confidence": 0.045,
+      "flag": "reuse",
+      "resolution": "action+slug"
+    },
+    {
+      "pushLine": 6964,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Dronedarone contraindicated in advanced heart failure",
+      "gapId": "gap-ep-dronedarone",
+      "confidence": 0.138,
+      "flag": "reuse",
+      "resolution": "comment-context"
+    },
+    {
+      "pushLine": 7191,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider lead integrity assessment for aging ICD system",
+      "gapId": "gap-ep-lead-integrity",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "action+slug"
+    },
+    {
+      "pushLine": 7356,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider PCSK9 inhibitor for LDL not at goal on maximally tolerated statin",
+      "gapId": "gap-cad-antiplatelet-review",
+      "confidence": 0.021,
+      "flag": "reuse",
+      "resolution": "comment-context"
+    },
+    {
+      "pushLine": 7417,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider physiologic assessment (FFR/iFR) for intermediate coronary lesions",
+      "gapId": "gap-cad-ffr",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "action+slug"
+    },
+    {
+      "pushLine": 8815,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider trimetazidine for angina with metabolic comorbidities",
+      "gapId": "gap-cad-trimetazidine",
+      "confidence": 0.176,
+      "flag": "reuse",
+      "resolution": "comment-context"
+    },
+    {
+      "pushLine": 9404,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider extended workup for young MI (age <45) including thrombophilia and substance screening",
+      "gapId": "gap-cad-scad",
+      "confidence": 0.04,
+      "flag": "reuse",
+      "resolution": "comment-context"
+    },
+    {
+      "pushLine": 10354,
+      "module": "HEART_FAILURE",
+      "status": "Consider anemia workup for HF patient with hemoglobin <  g/dL",
+      "gapId": "gap-hf-anemia-hf",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "dynamic-status"
+    },
+    {
+      "pushLine": 11207,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider surgical bypass evaluation for chronic limb-threatening ischemia",
+      "gapId": "gap-pv-bypass-eval",
+      "confidence": 0.182,
+      "flag": "reuse",
+      "resolution": "comment-context"
+    }
+  ],
+  "assignments": [
+    {
+      "pushLine": 3316,
+      "module": "HEART_FAILURE",
+      "status": "ATTR-CM screening recommended for review",
+      "gapId": "gap-1-attr-cm",
+      "confidence": 1,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3349,
+      "module": "HEART_FAILURE",
+      "status": "Iron deficiency untreated in HF with LVEF ≤45%",
+      "gapId": "gap-2-iron-deficiency",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3387,
+      "module": "HEART_FAILURE",
+      "status": "Finerenone not prescribed (CKD + T2DM)",
+      "gapId": "gap-6-finerenone",
+      "confidence": 1,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3415,
+      "module": "HEART_FAILURE",
+      "status": "SGLT2i not prescribed in HFrEF",
+      "gapId": "gap-hf-34-sglt2i",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3445,
+      "module": "HEART_FAILURE",
+      "status": "Evidence-based beta-blocker not prescribed in HFrEF",
+      "gapId": "gap-hf-35-beta-blocker",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3479,
+      "module": "HEART_FAILURE",
+      "status": "MRA not prescribed in HFrEF with LVEF<=40%",
+      "gapId": "gap-hf-36-mra",
+      "confidence": 0.4,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3513,
+      "module": "HEART_FAILURE",
+      "status": "GLP-1 RA not prescribed in HFpEF with obesity",
+      "gapId": "gap-hf-7-glp1ra",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3537,
+      "module": "HEART_FAILURE",
+      "status": "HCM evaluation recommended for review",
+      "gapId": "gap-hf-12-hcm-screening",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3566,
+      "module": "HEART_FAILURE",
+      "status": "Ivabradine not prescribed in HFrEF with elevated HR on max beta-blocker",
+      "gapId": "gap-hf-17-ivabradine",
+      "confidence": 0.25,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3592,
+      "module": "HEART_FAILURE",
+      "status": "Vericiguat not prescribed in worsening HF",
+      "gapId": "gap-hf-18-vericiguat",
+      "confidence": 1,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3618,
+      "module": "HEART_FAILURE",
+      "status": "Hydralazine-ISDN not prescribed in self-identified Black patient with HFrEF",
+      "gapId": "gap-hf-19-hydralazine-isdn",
+      "confidence": 0.571,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3638,
+      "module": "HEART_FAILURE",
+      "status": "Cardiac rehabilitation referral not documented for HF",
+      "gapId": "gap-hf-20-cardiac-rehab",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3665,
+      "module": "HEART_FAILURE",
+      "status": "Undiagnosed HFpEF screening recommended for review",
+      "gapId": "gap-hf-21-hfpef-screening",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3690,
+      "module": "HEART_FAILURE",
+      "status": "Obstructive sleep apnea screening not documented in HF with obesity",
+      "gapId": "gap-hf-91-sleep-apnea-treatment",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3714,
+      "module": "HEART_FAILURE",
+      "status": "Remote patient monitoring not documented in high-risk HF",
+      "gapId": "gap-hf-29-remote-monitoring",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3737,
+      "module": "HEART_FAILURE",
+      "status": "Sacubitril/valsartan dose optimization review recommended",
+      "gapId": "gap-hf-30-arni-underdosing",
+      "confidence": 0.176,
+      "flag": "reuse",
+      "resolution": "comment-context"
+    },
+    {
+      "pushLine": 3757,
+      "module": "HEART_FAILURE",
+      "status": "Post-discharge follow-up not documented within 7 days",
+      "gapId": "gap-hf-37-fu-discharge",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3776,
+      "module": "HEART_FAILURE",
+      "status": "Influenza vaccination status not documented in HF",
+      "gapId": "gap-hf-38-influenza-vax",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3799,
+      "module": "HEART_FAILURE",
+      "status": "Hyponatremia detected: sodium   mEq/L",
+      "gapId": "gap-hf-73-hyponatremia",
+      "confidence": 0.167,
+      "flag": "reuse",
+      "resolution": "dynamic-status"
+    },
+    {
+      "pushLine": 3822,
+      "module": "HEART_FAILURE",
+      "status": "NT-proBNP/BNP monitoring not documented in HF",
+      "gapId": "gap-hf-74-bnp-monitoring",
+      "confidence": 0.833,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3846,
+      "module": "HEART_FAILURE",
+      "status": "Cardiac MRI not documented for non-ischemic cardiomyopathy",
+      "gapId": "gap-hf-75-cardiac-mri",
+      "confidence": 0.714,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3870,
+      "module": "HEART_FAILURE",
+      "status": "Palliative care consult not documented in advanced HF",
+      "gapId": "gap-hf-76-palliative-care",
+      "confidence": 1,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3894,
+      "module": "HEART_FAILURE",
+      "status": "Diuretic resistance assessment recommended in HF with persistent congestion",
+      "gapId": "gap-hf-77-diuretic-resistance",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3922,
+      "module": "HEART_FAILURE",
+      "status": "SGLT2i not prescribed in HFmrEF/HFpEF",
+      "gapId": "gap-hf-79-sglt2i-hfpef",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3948,
+      "module": "HEART_FAILURE",
+      "status": "Cardio-oncology evaluation not documented in HF with cancer",
+      "gapId": "gap-hf-80-cardio-oncology",
+      "confidence": 0.75,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3974,
+      "module": "HEART_FAILURE",
+      "status": "Cardiac sarcoidosis screening recommended for review",
+      "gapId": "gap-hf-82-cardiac-sarcoidosis",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 3999,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "QTc  :  ms (threshold  ms)",
+      "gapId": "gap-39-qtc-safety",
+      "confidence": 0.2,
+      "flag": "reuse",
+      "resolution": "dynamic-status"
+    },
+    {
+      "pushLine": 4048,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Oral anticoagulant not prescribed in AFib",
+      "gapId": "gap-ep-oac-afib",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4093,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "SAFETY: Dabigatran contraindicated in severe renal impairment (eGFR<30)",
+      "gapId": "gap-ep-006-dabigatran-renal-safety",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4119,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "eGFR measurement required to evaluate dabigatran safety in renal impairment",
+      "gapId": "gap-ep-anticoag-interruption",
+      "confidence": 0.028,
+      "flag": "reuse",
+      "resolution": "comment-context"
+    },
+    {
+      "pushLine": 4172,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "CRITICAL: AV nodal blocker contraindicated in pre-excited AF (WPW + AF) — risk of ventricular fibrillation",
+      "gapId": "gap-ep-079-wpw-af-avn-blocker",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4208,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider LAAC device evaluation for AFib with OAC contraindication",
+      "gapId": "gap-ep-laac",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4239,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider AFib catheter ablation referral",
+      "gapId": "gap-ep-ablation",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4271,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider ICD evaluation for primary prevention in HFrEF",
+      "gapId": "gap-ep-device-icd",
+      "confidence": 0.333,
+      "flag": "AMBIGUOUS",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4306,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider CRT evaluation for LVEF <=35% with wide QRS",
+      "gapId": "gap-ep-device-crt",
+      "confidence": 0.158,
+      "flag": "reuse",
+      "resolution": "comment-context"
+    },
+    {
+      "pushLine": 4338,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Amiodarone toxicity monitoring recommended for review",
+      "gapId": "gap-ep-amiodarone-monitor",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4373,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Dofetilide REMS monitoring recommended for review",
+      "gapId": "gap-ep-dofetilide-rems",
+      "confidence": 0.4,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4408,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider syncope workup evaluation",
+      "gapId": "gap-ep-syncope",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4439,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider remote monitoring enrollment for cardiac implantable device",
+      "gapId": "gap-ep-remote-monitoring",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4469,
+      "module": "HEART_FAILURE",
+      "status": "Digoxin toxicity risk",
+      "gapId": "gap-44-digoxin-toxicity",
+      "confidence": 1,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4497,
+      "module": "CORONARY_INTERVENTION",
+      "status": "P2Y12 inhibitor not active post-stent/CAD",
+      "gapId": "gap-cad-pcsk9",
+      "confidence": 0.286,
+      "flag": "AMBIGUOUS",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4523,
+      "module": "CORONARY_INTERVENTION",
+      "status": "High-intensity statin not prescribed in CAD",
+      "gapId": "gap-cad-statin",
+      "confidence": 1,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4555,
+      "module": "CORONARY_INTERVENTION",
+      "status": "ACEi/ARB not prescribed post-MI",
+      "gapId": "gap-cad-acei",
+      "confidence": 0.8,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4589,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Beta-blocker not prescribed post-MI with reduced LVEF",
+      "gapId": "gap-cad-bb-post-mi",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4623,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Smoking cessation support recommended for review in CAD patient",
+      "gapId": "gap-cad-smoking",
+      "confidence": 0.75,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4657,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider Lipoprotein(a) screening in premature ASCVD",
+      "gapId": "gap-cad-lpa",
+      "confidence": 0.2,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4693,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider ezetimibe add-on for LDL not at goal on statin",
+      "gapId": "gap-cad-ezetimibe",
+      "confidence": 0.286,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4728,
+      "module": "CORONARY_INTERVENTION",
+      "status": "HbA1c monitoring recommended for review in CAD patient with diabetes",
+      "gapId": "gap-cad-diabetes-control",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4761,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Blood pressure monitoring recommended for review in CAD patient",
+      "gapId": "gap-cad-bp-control",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4799,
+      "module": "STRUCTURAL_HEART",
+      "status": "Echo surveillance overdue for aortic stenosis",
+      "gapId": "gap-sh-1-as-surveillance",
+      "confidence": 0.571,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4835,
+      "module": "VALVULAR_DISEASE",
+      "status": "Warfarin not active with mechanical valve",
+      "gapId": "gap-vd-1-mechanical-valve-anticoag",
+      "confidence": 0.333,
+      "flag": "AMBIGUOUS",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4871,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "High-intensity statin not prescribed in PAD",
+      "gapId": "gap-pv-1-pad-statin",
+      "confidence": 0.4,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4902,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "ABI screening not performed",
+      "gapId": "gap-pv-2-abi-screening",
+      "confidence": 0.25,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4936,
+      "module": "HEART_FAILURE",
+      "status": "ACEi/ARB/ARNi not prescribed in HFrEF",
+      "gapId": "gap-hf-37-raas",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 4987,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "SAFETY: Non-DHP CCB (diltiazem/verapamil) is contraindicated in HFrEF",
+      "gapId": "gap-ep-017-hfref-non-dhp-ccb",
+      "confidence": 0.455,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5017,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "LVEF measurement required to safely guide AF rate-control therapy in HF patient",
+      "gapId": null,
+      "confidence": 0,
+      "flag": "UNMATCHED",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5045,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Rate control agent not prescribed in AFib (HFrEF: avoid non-DHP CCB) Rate control agent not prescribed in AFib",
+      "gapId": "gap-ep-rate-control-afib",
+      "confidence": 0.3,
+      "flag": "reuse",
+      "resolution": "dynamic-status"
+    },
+    {
+      "pushLine": 5087,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Cardiac rehabilitation referral not documented",
+      "gapId": "gap-cad-cardiac-rehab",
+      "confidence": 0.4,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5116,
+      "module": "STRUCTURAL_HEART",
+      "status": "TAVR evaluation not documented for severe aortic stenosis",
+      "gapId": "gap-sh-2-tavr-eval",
+      "confidence": 0.286,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5149,
+      "module": "VALVULAR_DISEASE",
+      "status": "Echo surveillance overdue for bioprosthetic valve",
+      "gapId": "gap-vd-2-bioprosthetic-echo",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5185,
+      "module": "STRUCTURAL_HEART",
+      "status": "Mitral valve intervention evaluation recommended for review",
+      "gapId": "gap-sh-3-mitral-intervention",
+      "confidence": 0.75,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5221,
+      "module": "STRUCTURAL_HEART",
+      "status": "Tricuspid valve assessment recommended for review",
+      "gapId": "gap-sh-4-tricuspid-assessment",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5254,
+      "module": "STRUCTURAL_HEART",
+      "status": "Structural heart imaging follow-up recommended for review",
+      "gapId": "gap-sh-5-structural-imaging",
+      "confidence": 0.833,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5284,
+      "module": "STRUCTURAL_HEART",
+      "status": "Post-TAVR follow-up recommended for review",
+      "gapId": "gap-sh-6-post-tavr-followup",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5318,
+      "module": "STRUCTURAL_HEART",
+      "status": "Endocarditis prophylaxis review recommended",
+      "gapId": "gap-sh-7-endocarditis-prophylaxis",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5347,
+      "module": "STRUCTURAL_HEART",
+      "status": "Left atrial appendage assessment recommended for review",
+      "gapId": "gap-sh-8-laa-assessment",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5379,
+      "module": "STRUCTURAL_HEART",
+      "status": "PFO closure evaluation recommended for review",
+      "gapId": "gap-sh-9-pfo-closure",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5415,
+      "module": "VALVULAR_DISEASE",
+      "status": "INR monitoring overdue for mechanical valve on warfarin",
+      "gapId": "gap-vd-3-inr-monitoring",
+      "confidence": 0.571,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5447,
+      "module": "VALVULAR_DISEASE",
+      "status": "Echo surveillance overdue for mitral stenosis",
+      "gapId": "gap-vd-4-mitral-stenosis",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5477,
+      "module": "VALVULAR_DISEASE",
+      "status": "Echo surveillance overdue for aortic regurgitation",
+      "gapId": "gap-vd-5-aortic-regurgitation",
+      "confidence": 0.286,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5506,
+      "module": "VALVULAR_DISEASE",
+      "status": "DOAC detected in mechanical valve patient -- contraindicated",
+      "gapId": "gap-vd-6-doac-mechanical-valve",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5536,
+      "module": "VALVULAR_DISEASE",
+      "status": "Exercise restriction documentation recommended for review in severe AS",
+      "gapId": "gap-vd-7-exercise-restriction-as",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5566,
+      "module": "VALVULAR_DISEASE",
+      "status": "Rheumatic heart disease screening recommended for review",
+      "gapId": "gap-vd-8-rheumatic-screen",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5594,
+      "module": "VALVULAR_DISEASE",
+      "status": "Endocarditis education documentation recommended for review",
+      "gapId": "gap-vd-9-endocarditis-education",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5624,
+      "module": "VALVULAR_DISEASE",
+      "status": "Pregnancy risk assessment recommended for review in valve disease",
+      "gapId": "gap-vd-10-pregnancy-risk",
+      "confidence": 0.8,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5654,
+      "module": "VALVULAR_DISEASE",
+      "status": "Bioprosthetic valve degeneration monitoring recommended for review",
+      "gapId": "gap-vd-11-bioprosthetic-degeneration",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5688,
+      "module": "VALVULAR_DISEASE",
+      "status": "Oral anticoagulation missing in AF with valve disease",
+      "gapId": "gap-vd-12-af-valve-anticoag",
+      "confidence": 0.571,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5728,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Antiplatelet therapy missing in PAD",
+      "gapId": "gap-pv-3-antiplatelet",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5760,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Smoking cessation referral recommended for review in PAD",
+      "gapId": "gap-pv-4-smoking-cessation",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5790,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Supervised exercise therapy recommended for review in PAD with claudication",
+      "gapId": "gap-pv-5-exercise-therapy",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5820,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "HbA1c monitoring overdue in PAD with diabetes",
+      "gapId": "gap-pv-6-diabetes-control",
+      "confidence": 0.286,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5853,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Wound care assessment referral recommended for review in PAD",
+      "gapId": "gap-pv-7-wound-care",
+      "confidence": 0.4,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5883,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Duplex ultrasound follow-up recommended for review post-intervention",
+      "gapId": "gap-pv-8-duplex-followup",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5914,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Abdominal aortic aneurysm screening recommended for review",
+      "gapId": "gap-pv-9-aaa-screening",
+      "confidence": 0.045,
+      "flag": "reuse",
+      "resolution": "action+slug"
+    },
+    {
+      "pushLine": 5952,
+      "module": "HEART_FAILURE",
+      "status": "Loop diuretic without MRA in HFrEF",
+      "gapId": "gap-hf-83-loop-without-mra",
+      "confidence": 0.833,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 5984,
+      "module": "HEART_FAILURE",
+      "status": "Cardiac transplant evaluation referral recommended for review",
+      "gapId": "gap-hf-84-transplant-eval",
+      "confidence": 0.4,
+      "flag": "AMBIGUOUS",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6014,
+      "module": "HEART_FAILURE",
+      "status": "LVAD referral recommended for review in refractory advanced HF",
+      "gapId": "gap-hf-85-lvad-referral",
+      "confidence": 0.8,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6044,
+      "module": "HEART_FAILURE",
+      "status": "CRT-D upgrade evaluation recommended for review",
+      "gapId": "gap-hf-86-crt-d-upgrade",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6073,
+      "module": "HEART_FAILURE",
+      "status": "Peripartum cardiomyopathy screening recommended for review",
+      "gapId": "gap-hf-87-peripartum",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6101,
+      "module": "HEART_FAILURE",
+      "status": "Acute myocarditis follow-up recommended for review",
+      "gapId": "gap-hf-88-myocarditis",
+      "confidence": 0.8,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6132,
+      "module": "HEART_FAILURE",
+      "status": "Fabry disease screening recommended for review in unexplained LVH",
+      "gapId": "gap-hf-89-fabry",
+      "confidence": 0.4,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6162,
+      "module": "HEART_FAILURE",
+      "status": "Amyloid biomarker follow-up overdue (no recent BNP/NT-proBNP)",
+      "gapId": "gap-hf-90-amyloid-biomarker",
+      "confidence": 0.4,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6193,
+      "module": "HEART_FAILURE",
+      "status": "Sleep-disordered breathing treatment not documented in HF",
+      "gapId": "gap-hf-26-osa-screening",
+      "confidence": 0.143,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6222,
+      "module": "HEART_FAILURE",
+      "status": "Volume status monitoring recommended for review in HF with elevated BNP",
+      "gapId": "gap-hf-92-volume-status",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6255,
+      "module": "STRUCTURAL_HEART",
+      "status": "MitraClip evaluation recommended for review in high surgical risk MR",
+      "gapId": "gap-sh-10-mitraclip",
+      "confidence": 0.167,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6283,
+      "module": "STRUCTURAL_HEART",
+      "status": "Transcatheter mitral valve replacement candidacy recommended for review",
+      "gapId": "gap-sh-11-tmvr",
+      "confidence": 0.714,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6314,
+      "module": "STRUCTURAL_HEART",
+      "status": "Tricuspid intervention evaluation recommended for review",
+      "gapId": "gap-sh-12-ttvr",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6343,
+      "module": "STRUCTURAL_HEART",
+      "status": "Paravalvular leak assessment recommended for review post-valve replacement",
+      "gapId": "gap-sh-13-paravalvular-leak",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6371,
+      "module": "STRUCTURAL_HEART",
+      "status": "Adult congenital heart disease specialist referral recommended for review",
+      "gapId": "gap-sh-14-congenital-adult",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6400,
+      "module": "STRUCTURAL_HEART",
+      "status": "Alcohol septal ablation candidacy recommended for review in symptomatic HCM",
+      "gapId": "gap-sh-15-alcohol-septal",
+      "confidence": 0.571,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6427,
+      "module": "STRUCTURAL_HEART",
+      "status": "WATCHMAN device follow-up recommended for review",
+      "gapId": "gap-sh-16-watchman-fu",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6459,
+      "module": "STRUCTURAL_HEART",
+      "status": "3D echocardiography recommended for review for structural intervention planning",
+      "gapId": "gap-sh-17-3d-echo",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6495,
+      "module": "VALVULAR_DISEASE",
+      "status": "Anticoagulation/antiplatelet not documented in early post-bioprosthetic valve period",
+      "gapId": "gap-vd-antiplatelet-bioprosthetic",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6529,
+      "module": "VALVULAR_DISEASE",
+      "status": "Dental prophylaxis antibiotic recommended for review in prosthetic valve patient",
+      "gapId": "gap-vd-14-dental-prophylaxis",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6559,
+      "module": "VALVULAR_DISEASE",
+      "status": "Aortic root dilation monitoring recommended for review",
+      "gapId": "gap-vd-15-aortic-root",
+      "confidence": 0.8,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6586,
+      "module": "VALVULAR_DISEASE",
+      "status": "Mixed aortic valve disease assessment recommended for review",
+      "gapId": "gap-vd-16-mixed-valve",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6616,
+      "module": "VALVULAR_DISEASE",
+      "status": "Hemolysis monitoring recommended for review in prosthetic valve with anemia",
+      "gapId": "gap-vd-17-hemolysis",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6647,
+      "module": "VALVULAR_DISEASE",
+      "status": "Exercise testing recommended for review in asymptomatic severe valve disease",
+      "gapId": "gap-vd-18-exercise-testing",
+      "confidence": 0.857,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6681,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Cilostazol not prescribed for claudication in PAD",
+      "gapId": "gap-pv-10-cilostazol",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6715,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "ACEi/ARB not prescribed in PAD with hypertension",
+      "gapId": "gap-pv-11-acei-pad",
+      "confidence": 0.8,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6746,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Renal artery stenosis screening recommended for review in PAD with HTN and renal impairment",
+      "gapId": "gap-pv-12-renal-artery",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6776,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Carotid screening recommended for review in PAD with stroke risk factors",
+      "gapId": "gap-pv-13-carotid",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6804,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Annual comprehensive foot exam recommended for review in PAD with diabetes",
+      "gapId": "gap-pv-14-foot-exam",
+      "confidence": 0.714,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6833,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Compression therapy assessment recommended for review in venous disease with edema",
+      "gapId": "gap-pv-15-compression",
+      "confidence": 0.2,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6866,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider conduction system pacing evaluation",
+      "gapId": "gap-ep-csp",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6901,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider pulsed field ablation candidacy evaluation",
+      "gapId": "gap-ep-pfa",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6929,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider EP study for WPW syndrome risk stratification",
+      "gapId": "gap-ep-wpw",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 6964,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Dronedarone contraindicated in advanced heart failure",
+      "gapId": "gap-ep-dronedarone",
+      "confidence": 0.138,
+      "flag": "reuse",
+      "resolution": "comment-context"
+    },
+    {
+      "pushLine": 6999,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Oral anticoagulant not prescribed in atrial flutter",
+      "gapId": "gap-ep-flutter-oac",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7035,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider ivabradine for inappropriate sinus tachycardia",
+      "gapId": "gap-ep-ist-ivabradine",
+      "confidence": 0.571,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7069,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider PVC-induced cardiomyopathy evaluation",
+      "gapId": "gap-ep-pvc-cm",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7100,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Beta-blocker not prescribed in Long QT syndrome",
+      "gapId": "gap-ep-lqts-bb",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7135,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider subclinical AF screening via device interrogation",
+      "gapId": "gap-ep-subclinical-af",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7164,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider ICD programming optimization review",
+      "gapId": "gap-ep-icd-programming",
+      "confidence": 0.75,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7191,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider lead integrity assessment for aging ICD system",
+      "gapId": "gap-ep-lead-integrity",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "action+slug"
+    },
+    {
+      "pushLine": 7224,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider antiarrhythmic drug review post-ablation",
+      "gapId": "gap-ep-aad-post-ablation",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7253,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider secondary prevention ICD evaluation for cardiac arrest survivor",
+      "gapId": "gap-ep-secondary-icd",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7284,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider arrhythmia screening in adult congenital heart disease",
+      "gapId": "gap-ep-achd-arrhythmia",
+      "confidence": 0.25,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7319,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Torsades de pointes risk: prolonged QTc with QT-prolonging medication(s)",
+      "gapId": "gap-ep-torsades",
+      "confidence": 0.364,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7356,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider PCSK9 inhibitor for LDL not at goal on maximally tolerated statin",
+      "gapId": "gap-cad-antiplatelet-review",
+      "confidence": 0.021,
+      "flag": "reuse",
+      "resolution": "comment-context"
+    },
+    {
+      "pushLine": 7388,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider intravascular imaging for left main coronary disease",
+      "gapId": "gap-cad-ivus",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7417,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider physiologic assessment (FFR/iFR) for intermediate coronary lesions",
+      "gapId": "gap-cad-ffr",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "action+slug"
+    },
+    {
+      "pushLine": 7449,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider low-dose colchicine for residual inflammatory risk in CAD",
+      "gapId": "gap-cad-colchicine",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7487,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider icosapent ethyl for elevated triglycerides in CAD",
+      "gapId": "gap-cad-omega3",
+      "confidence": 0.833,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7527,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider ranolazine for refractory angina on maximal anti-anginal therapy",
+      "gapId": "gap-cad-ranolazine",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7560,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider periodic stress testing or imaging follow-up in CAD",
+      "gapId": "gap-cad-stress-test",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7594,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider revascularization assessment for multivessel CAD with reduced LVEF",
+      "gapId": "gap-cad-revascularization",
+      "confidence": 0.4,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7625,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider oral anticoagulation in CAD patient with atrial fibrillation",
+      "gapId": "gap-cad-anticoag-af",
+      "confidence": 0.286,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7659,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider GLP-1 RA for cardiovascular risk reduction in CAD + diabetes",
+      "gapId": "gap-cad-glp1-dm",
+      "confidence": 0.444,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7693,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider SGLT2i for cardiovascular risk reduction in CAD + diabetes",
+      "gapId": "gap-cad-sglt2-dm",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7730,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider bempedoic acid for statin-intolerant CAD patient with elevated LDL",
+      "gapId": "gap-cad-bempedoic",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7764,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider structured weight management program for CAD patient with obesity",
+      "gapId": "gap-cad-weight-mgmt",
+      "confidence": 0.571,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7794,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider depression screening for CAD patient",
+      "gapId": "gap-cad-depression",
+      "confidence": 1,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7824,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider annual influenza vaccination for CAD patient",
+      "gapId": "gap-cad-influenza",
+      "confidence": 0.75,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7858,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider ticagrelor for ACS per PLATO trial evidence",
+      "gapId": "gap-cad-ticagrelor-acs",
+      "confidence": 0.286,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7889,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider PRN nitroglycerin for angina symptom relief",
+      "gapId": "gap-cad-nitro-prn",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7918,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider echocardiography for LVEF assessment in CAD",
+      "gapId": "gap-cad-echo-cad",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7947,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider BNP/NT-proBNP measurement for CAD risk stratification",
+      "gapId": "gap-cad-bnp-cad",
+      "confidence": 0.25,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 7977,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider renal function monitoring for CAD patient on ACEi/ARB",
+      "gapId": "gap-cad-renal-monitor",
+      "confidence": 0.714,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8010,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider DAPT duration review: assess continued need beyond 12 months",
+      "gapId": "gap-50-dapt",
+      "confidence": 0.111,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8049,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider PPI for GI protection in CAD patient on DAPT with GI risk factors",
+      "gapId": "gap-cad-ppi-dapt",
+      "confidence": 0.714,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8083,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider MRA for post-MI patient with LVEF<=40% and HF",
+      "gapId": "gap-cad-aldo-postmi",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8120,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider potassium monitoring for post-MI patient on diuretic",
+      "gapId": "gap-cad-electrolyte",
+      "confidence": 0.571,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8149,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider hemoglobin assessment for post-MI patient",
+      "gapId": "gap-cad-anemia",
+      "confidence": 0.4,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8177,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider thyroid function testing in CAD patient with atrial fibrillation",
+      "gapId": "gap-cad-thyroid",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8207,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider physical activity counseling for CAD patient",
+      "gapId": "gap-cad-activity",
+      "confidence": 1,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8237,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider dietary counseling for CAD patient with obesity",
+      "gapId": "gap-cad-diet",
+      "confidence": 0.8,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8267,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider psychosocial assessment for elderly CAD patient",
+      "gapId": "gap-cad-psychosocial",
+      "confidence": 1,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8299,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider family screening for premature CAD",
+      "gapId": "gap-cad-family-screen",
+      "confidence": 0.75,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8331,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider coronary artery calcium scoring for intermediate-risk patient",
+      "gapId": "gap-cad-calcium-score",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8363,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider hs-CRP measurement for residual inflammatory risk in CAD on statin",
+      "gapId": "gap-cad-crp",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8395,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider advance directive discussion for CAD patient with severe LV dysfunction",
+      "gapId": "gap-cad-advance-dir",
+      "confidence": 0.625,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8426,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider palliative care referral for elderly patient with refractory angina",
+      "gapId": "gap-cad-palliative",
+      "confidence": 0.571,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8457,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider CCTA for evaluation of stable chest pain",
+      "gapId": "gap-cad-cardiac-ct",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8499,
+      "module": "CORONARY_INTERVENTION",
+      "status": "SAFETY: Prasugrel contraindicated in patient with prior stroke/TIA",
+      "gapId": "gap-cad-016-prasugrel-stroke-safety",
+      "confidence": 0.714,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8531,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider prasugrel for ACS with PCI per TRITON-TIMI 38 evidence",
+      "gapId": "gap-cad-prasugrel",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8564,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider anticoagulation bridging assessment for CAD+AF patient with upcoming procedure",
+      "gapId": "gap-cad-heparin-bridge",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8594,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider sexual health counseling for post-MI patient",
+      "gapId": "gap-cad-sexual-health",
+      "confidence": 0.833,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8623,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider documenting driving restrictions for post-MI patient",
+      "gapId": "gap-cad-driving",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8652,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider liver function monitoring for CAD patient on statin therapy",
+      "gapId": "gap-cad-liver-statin",
+      "confidence": 1,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8686,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider aspirin therapy assessment for established CAD",
+      "gapId": "gap-cad-aspirin-primary",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8717,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider beta-blocker assessment for stable CAD",
+      "gapId": "gap-cad-beta-blocker",
+      "confidence": 1,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8749,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider ACEi/ARB for stable CAD with hypertension",
+      "gapId": "gap-cad-ace-stable",
+      "confidence": 0.429,
+      "flag": "AMBIGUOUS",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8782,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider nicorandil for refractory angina on maximal antianginal therapy",
+      "gapId": "gap-cad-nicorandil",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8815,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider trimetazidine for angina with metabolic comorbidities",
+      "gapId": "gap-cad-trimetazidine",
+      "confidence": 0.176,
+      "flag": "reuse",
+      "resolution": "comment-context"
+    },
+    {
+      "pushLine": 8846,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider coronary CTA follow-up imaging interval review",
+      "gapId": "gap-cad-coronary-cta-fu",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8877,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider nuclear stress test for intermediate-risk CAD patient",
+      "gapId": "gap-cad-nuclear-stress",
+      "confidence": 0.571,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8908,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider cardiac catheterization review for high-risk CAD features",
+      "gapId": "gap-cad-catheterization",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8939,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider complete revascularization assessment for multivessel CAD",
+      "gapId": "gap-cad-complete-revasc",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8969,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider ischemia-guided therapy review per ISCHEMIA trial evidence",
+      "gapId": "gap-cad-ischemia-guided",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 8999,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider MINOCA comprehensive workup for MI with non-obstructive coronaries",
+      "gapId": "gap-cad-minoca",
+      "confidence": 0.25,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9030,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider SCAD evaluation for young female MI without atherosclerotic CAD",
+      "gapId": "gap-cad-young-mi",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9060,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider Takotsubo syndrome follow-up and recovery monitoring",
+      "gapId": "gap-cad-takotsubo",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9094,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider calcium channel blocker for vasospastic angina",
+      "gapId": "gap-cad-vasospastic",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9126,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider microvascular disease assessment for angina with non-obstructive coronaries",
+      "gapId": "gap-cad-microvascular",
+      "confidence": 0.286,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9156,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider cardiac allograft vasculopathy (CAV) surveillance in heart transplant recipient",
+      "gapId": "gap-cad-cardiac-transplant-cad",
+      "confidence": 0.444,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9186,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider lipid panel follow-up for CAD patient on statin therapy",
+      "gapId": "gap-cad-lipid-panel-fu",
+      "confidence": 0.714,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9216,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider glucose screening for CAD patient without known diabetes",
+      "gapId": "gap-cad-glucose-screen",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9246,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider A1c target review for CAD patient with diabetes and elevated A1c",
+      "gapId": "gap-cad-hemoglobin-a1c-target",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9277,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider antiplatelet duration review for long-term DAPT post MI",
+      "gapId": "gap-cad-dapt-duration",
+      "confidence": 0.25,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9308,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider chest pain protocol adherence review with troponin assessment",
+      "gapId": "gap-cad-chest-pain-protocol",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9342,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider comprehensive secondary prevention bundle review for CAD",
+      "gapId": "gap-cad-secondary-prevention",
+      "confidence": 0.8,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9374,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider women-specific CAD risk assessment for female patient with cardiovascular risk factors",
+      "gapId": "gap-cad-women-specific",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9404,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider extended workup for young MI (age <45) including thrombophilia and substance screening",
+      "gapId": "gap-cad-scad",
+      "confidence": 0.04,
+      "flag": "reuse",
+      "resolution": "comment-context"
+    },
+    {
+      "pushLine": 9433,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider maintenance exercise prescription for CAD patient post cardiac rehabilitation",
+      "gapId": "gap-cad-exercise-prescription",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9464,
+      "module": "CORONARY_INTERVENTION",
+      "status": "Consider sleep apnea screening for CAD patient with obesity",
+      "gapId": "gap-cad-sleep-apnea-cad",
+      "confidence": 0.75,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9503,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider early rhythm control strategy evaluation for atrial fibrillation",
+      "gapId": "gap-ep-early-rhythm",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9536,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider VT ablation referral for recurrent ventricular tachycardia with ICD shocks",
+      "gapId": "gap-ep-vt-ablation",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9571,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider catheter ablation referral for recurrent supraventricular tachycardia",
+      "gapId": "gap-ep-svt-ablation",
+      "confidence": 0.25,
+      "flag": "AMBIGUOUS",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9603,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider Brugada syndrome screening in young male with unexplained syncope",
+      "gapId": "gap-ep-brugada",
+      "confidence": 0.286,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9637,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider ARVC evaluation in young patient with cardiomyopathy and ventricular tachycardia",
+      "gapId": "gap-ep-arvc",
+      "confidence": 0.167,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9671,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider cardiac sarcoidosis arrhythmia evaluation",
+      "gapId": "gap-ep-cardiac-sarcoid-ep",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9703,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider pacemaker upgrade to CRT evaluation",
+      "gapId": "gap-ep-pacemaker-upgrade",
+      "confidence": 0.75,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9743,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider formal CHA2DS2-VASc score documentation for AF stroke risk stratification",
+      "gapId": "gap-ep-af-stroke-risk",
+      "confidence": 0.545,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9774,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider cardioversion timing assessment for atrial fibrillation",
+      "gapId": "gap-ep-direct-cardioversion",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9810,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider TEE before cardioversion in AF without adequate anticoagulation",
+      "gapId": "gap-ep-tee-pre-cardioversion",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9841,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider MRI-conditional status documentation for cardiac implantable device",
+      "gapId": "gap-ep-cied-mri",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9872,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider generator replacement planning review for aging CIED patient",
+      "gapId": "gap-ep-generator-replacement",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9903,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider ICD programming review for inappropriate shock prevention in AF patient",
+      "gapId": "gap-ep-inappropriate-shocks",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9934,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider exercise stress testing for arrhythmia characterization",
+      "gapId": "gap-ep-exercise-testing-ep",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 9966,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider catheter ablation timing optimization for AF on antiarrhythmic therapy",
+      "gapId": "gap-ep-af-catheter-timing",
+      "confidence": 0.714,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10001,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider pill-in-pocket strategy for paroxysmal AF without structural heart disease",
+      "gapId": "gap-ep-pill-in-pocket",
+      "confidence": 0.455,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10031,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider left atrial size documentation for AF management planning",
+      "gapId": "gap-ep-left-atrial-size",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10061,
+      "module": "ELECTROPHYSIOLOGY",
+      "status": "Consider annual CHA2DS2-VASc score reassessment for AF patient on anticoagulation",
+      "gapId": "gap-ep-anticoag-score-reassess",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10109,
+      "module": "HEART_FAILURE",
+      "status": "Consider ACEi/ARB to ARNi switch evaluation for HFrEF",
+      "gapId": "gap-hf-arni-switch",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10150,
+      "module": "HEART_FAILURE",
+      "status": "Consider thiamine supplementation for HF patient on loop diuretics with malnutrition",
+      "gapId": "gap-hf-thiamine",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10188,
+      "module": "HEART_FAILURE",
+      "status": "Consider potassium monitoring for HF patient on mineralocorticoid receptor antagonist",
+      "gapId": "gap-hf-potassium-monitor",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10221,
+      "module": "HEART_FAILURE",
+      "status": "Consider advance care planning discussion for advanced heart failure",
+      "gapId": "gap-hf-advance-care",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10254,
+      "module": "HEART_FAILURE",
+      "status": "Consider LV non-compaction evaluation in young patient with unexplained cardiomyopathy",
+      "gapId": "gap-hf-lvnc",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10286,
+      "module": "HEART_FAILURE",
+      "status": "Consider hemodynamic assessment review for HF with elevated BNP",
+      "gapId": "gap-hf-hemodynamic-monitor",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10322,
+      "module": "HEART_FAILURE",
+      "status": "Consider diuretic dose optimization for persistent congestion in HF",
+      "gapId": "gap-hf-diuretic-optimization",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10354,
+      "module": "HEART_FAILURE",
+      "status": "Consider anemia workup for HF patient with hemoglobin <  g/dL",
+      "gapId": "gap-hf-anemia-hf",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "dynamic-status"
+    },
+    {
+      "pushLine": 10386,
+      "module": "HEART_FAILURE",
+      "status": "Consider IV iron therapy monitoring with follow-up ferritin and TSAT",
+      "gapId": "gap-hf-iron-iv-monitoring",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10422,
+      "module": "STRUCTURAL_HEART",
+      "status": "Consider echocardiographic surveillance for bicuspid aortic valve",
+      "gapId": "gap-sh-bicuspid-surveillance",
+      "confidence": 0.667,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10452,
+      "module": "STRUCTURAL_HEART",
+      "status": "Consider Ross procedure candidacy evaluation for young patient with severe AS",
+      "gapId": "gap-sh-ross-procedure",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10485,
+      "module": "STRUCTURAL_HEART",
+      "status": "Consider valve-in-valve TAVR evaluation for symptomatic bioprosthetic valve dysfunction",
+      "gapId": "gap-sh-valve-in-valve",
+      "confidence": 0.286,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10518,
+      "module": "STRUCTURAL_HEART",
+      "status": "Consider ASD closure evaluation for hemodynamically significant atrial septal defect",
+      "gapId": "gap-sh-asd-closure",
+      "confidence": 0.25,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10549,
+      "module": "STRUCTURAL_HEART",
+      "status": "Consider VSD closure evaluation for ventricular septal defect",
+      "gapId": "gap-sh-vsd-closure",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10581,
+      "module": "STRUCTURAL_HEART",
+      "status": "Consider coarctation surveillance and hypertension management",
+      "gapId": "gap-sh-coarctation",
+      "confidence": 0.143,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10614,
+      "module": "STRUCTURAL_HEART",
+      "status": "Consider comprehensive Fontan surveillance evaluation",
+      "gapId": "gap-sh-fontan-surveillance",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10648,
+      "module": "STRUCTURAL_HEART",
+      "status": "Consider carcinoid valve disease screening and surveillance",
+      "gapId": "gap-sh-carcinoid-valve",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10685,
+      "module": "VALVULAR_DISEASE",
+      "status": "Consider pannus vs thrombosis evaluation for prosthetic valve with new symptoms",
+      "gapId": "gap-vd-prosthetic-pannus",
+      "confidence": 0.444,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10718,
+      "module": "VALVULAR_DISEASE",
+      "status": "Consider radiation-associated valve disease evaluation",
+      "gapId": "gap-vd-radiation-valve",
+      "confidence": 0.8,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10750,
+      "module": "VALVULAR_DISEASE",
+      "status": "Consider infective endocarditis evaluation for prosthetic valve patient with fever",
+      "gapId": "gap-vd-infective-endo",
+      "confidence": 0.25,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10782,
+      "module": "VALVULAR_DISEASE",
+      "status": "Consider aortic surveillance for bicuspid valve-associated aortopathy",
+      "gapId": "gap-vd-bicuspid-aneurysm",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10812,
+      "module": "VALVULAR_DISEASE",
+      "status": "Consider anticoagulation reversal emergency plan documentation for mechanical valve",
+      "gapId": "gap-vd-anticoag-reversal",
+      "confidence": 0.333,
+      "flag": "AMBIGUOUS",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10844,
+      "module": "VALVULAR_DISEASE",
+      "status": "Consider transcatheter mitral valve intervention evaluation for high-risk MR patient",
+      "gapId": "gap-vd-transcatheter-mv",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10877,
+      "module": "VALVULAR_DISEASE",
+      "status": "Consider right heart catheterization for valve disease with pulmonary hypertension",
+      "gapId": "gap-vd-right-heart-cath",
+      "confidence": 0.4,
+      "flag": "AMBIGUOUS",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10914,
+      "module": "VALVULAR_DISEASE",
+      "status": "Consider multidisciplinary valve clinic referral for symptomatic valve disease",
+      "gapId": "gap-vd-valve-clinic-referral",
+      "confidence": 0.571,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10949,
+      "module": "VALVULAR_DISEASE",
+      "status": "Consider echocardiographic surveillance interval review for valve disease",
+      "gapId": "gap-vd-echo-interval",
+      "confidence": 0.25,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 10980,
+      "module": "VALVULAR_DISEASE",
+      "status": "Consider functional status assessment (NYHA class) for symptomatic valve disease",
+      "gapId": "gap-vd-functional-status",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11010,
+      "module": "VALVULAR_DISEASE",
+      "status": "Consider preoperative risk assessment for potential valve intervention",
+      "gapId": "gap-vd-preop-assessment",
+      "confidence": 0.222,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11040,
+      "module": "VALVULAR_DISEASE",
+      "status": "Consider pulmonary hypertension screening in valve disease patient with dyspnea",
+      "gapId": "gap-vd-pulmonary-htn",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11074,
+      "module": "VALVULAR_DISEASE",
+      "status": "Consider secondary tricuspid regurgitation assessment in left heart disease",
+      "gapId": "gap-vd-tricuspid-secondary",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11106,
+      "module": "VALVULAR_DISEASE",
+      "status": "Consider low-dose aspirin for bioprosthetic valve >3 months post-implant",
+      "gapId": "gap-vd-13-anticoag-first3mo",
+      "confidence": 0.231,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11142,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider low-dose rivaroxaban + aspirin per COMPASS trial for PAD",
+      "gapId": "gap-pv-rivaroxaban",
+      "confidence": 0.556,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11175,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider clopidogrel as alternative antiplatelet for PAD with aspirin intolerance",
+      "gapId": "gap-pv-clopidogrel",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11207,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider surgical bypass evaluation for chronic limb-threatening ischemia",
+      "gapId": "gap-pv-bypass-eval",
+      "confidence": 0.182,
+      "flag": "reuse",
+      "resolution": "comment-context"
+    },
+    {
+      "pushLine": 11236,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider endovascular intervention evaluation for lifestyle-limiting claudication",
+      "gapId": "gap-pv-endovascular",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11265,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider comprehensive venous ulcer management protocol",
+      "gapId": "gap-pv-venous-ulcer",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11294,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider DVT screening for unilateral edema",
+      "gapId": "gap-pv-dvt-screen",
+      "confidence": 0.6,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11322,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider compression therapy for post-thrombotic syndrome prevention after DVT",
+      "gapId": "gap-pv-pts-prevention",
+      "confidence": 0.444,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11349,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider mesenteric ischemia evaluation in PAD patient with intestinal vascular symptoms",
+      "gapId": "gap-pv-mesenteric",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11377,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider thoracic outlet syndrome evaluation for young patient with upper extremity vascular symptoms",
+      "gapId": "gap-pv-thoracic-outlet",
+      "confidence": 0.333,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11404,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider venous insufficiency evaluation and management for symptomatic varicose veins",
+      "gapId": "gap-pv-varicose",
+      "confidence": 0.25,
+      "flag": "AMBIGUOUS",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11430,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider comprehensive decongestive therapy referral for lymphedema",
+      "gapId": "gap-pv-lymphedema",
+      "confidence": 0.167,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11461,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider calcium channel blocker for Raynaud phenomenon",
+      "gapId": "gap-pv-raynaud",
+      "confidence": 0.286,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11492,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider supervised exercise rehabilitation post vascular intervention",
+      "gapId": "gap-pv-vascular-rehab",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11523,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider pentoxifylline for claudication in PAD patient with HF (cilostazol contraindicated)",
+      "gapId": "gap-pv-pentoxifylline",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11555,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider naftidrofuryl for severe claudication per ESC/ESVS Guideline",
+      "gapId": "gap-pv-naftidrofuryl",
+      "confidence": 0.375,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11590,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider urgent vascular evaluation for critical limb ischemia with tissue loss",
+      "gapId": "gap-pv-critical-limb",
+      "confidence": 0.5,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11618,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider interval duplex surveillance for peripheral bypass graft",
+      "gapId": "gap-pv-graft-surveillance",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    },
+    {
+      "pushLine": 11650,
+      "module": "PERIPHERAL_VASCULAR",
+      "status": "Consider VTE anticoagulation duration review and continued need assessment",
+      "gapId": "gap-pv-anticoag-vte",
+      "confidence": 0.429,
+      "flag": "reuse",
+      "resolution": "plain-status"
+    }
+  ]
+}

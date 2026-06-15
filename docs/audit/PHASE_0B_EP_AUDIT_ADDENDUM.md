@@ -8,11 +8,11 @@
 
 ## 1. Summary
 
-Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: **8 DET_OK + 39 PARTIAL + 42 SPEC_ONLY** (any-coverage: 47/89 = 52.8%).
+Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: **18 DET_OK + 29 PARTIAL + 42 SPEC_ONLY** (any-coverage: 47/89 = 52.8%).
 
-**Tier 1 priority status:** 1 DET_OK + 11 PARTIAL + 3 SPEC_ONLY of 15 T1 gaps (T1 any-coverage: 80.0%).
+**Tier 1 priority status:** 5 DET_OK + 7 PARTIAL + 3 SPEC_ONLY of 15 T1 gaps (T1 any-coverage: 80.0%).
 
-**Spec-explicit SAFETY-tagged gaps:** 7 total; 1 covered (DET_OK), 6 uncovered. Uncovered SAFETY gaps qualify for Tier S triage queue per §6.3.
+**Spec-explicit SAFETY-tagged gaps:** 7 total; 5 covered (DET_OK), 2 uncovered. Uncovered SAFETY gaps qualify for Tier S triage queue per §6.3.
 
 ---
 
@@ -21,8 +21,8 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 | Classification | Count | % of total |
 |---|---:|---:|
 | PRODUCTION_GRADE | 0 | 0.0% |
-| DET_OK | 8 | 9.0% |
-| PARTIAL_DETECTION | 39 | 43.8% |
+| DET_OK | 18 | 20.2% |
+| PARTIAL_DETECTION | 29 | 32.6% |
 | SPEC_ONLY | 42 | 47.2% |
 | **Total** | **89** | **100.0%** |
 
@@ -34,10 +34,10 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 | Tier | Total | DET_OK | PARTIAL | SPEC_ONLY | Any-coverage % |
 |------|------:|-------:|--------:|----------:|---------------:|
-| **T1** | 15 | 1 | 11 | 3 | 80.0% |
-| **T2** | 62 | 7 | 26 | 29 | 53.2% |
+| **T1** | 15 | 5 | 7 | 3 | 80.0% |
+| **T2** | 62 | 13 | 20 | 29 | 53.2% |
 | **T3** | 12 | 0 | 2 | 10 | 16.7% |
-| **Overall** | **89** | **8** | **39** | **42** | **52.8%** |
+| **Overall** | **89** | **18** | **29** | **42** | **52.8%** |
 
 ---
 
@@ -45,15 +45,15 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 | Subcategory | T1/T2/T3 | DET_OK | PARTIAL | SPEC_ONLY | Coverage |
 |---|---|---:|---:|---:|---:|
-| AF Anticoagulation (13) | 6/6/1 | 0 | 4 | 9 | 30.8% |
+| AF Anticoagulation (13) | 6/6/1 | 1 | 3 | 9 | 30.8% |
 | LAAC (5) | 2/3/0 | 0 | 2 | 3 | 40.0% |
-| Rhythm Control (11) | 4/6/1 | 2 | 5 | 4 | 63.6% |
-| Atrial Tachy/SVT (7) | 1/5/1 | 0 | 6 | 1 | 85.7% |
+| Rhythm Control (11) | 4/6/1 | 5 | 2 | 4 | 63.6% |
+| Atrial Tachy/SVT (7) | 1/5/1 | 1 | 5 | 1 | 85.7% |
 | VT/ICD (7) | 1/6/0 | 1 | 4 | 2 | 71.4% |
-| Channelopathies (11) | 0/6/5 | 2 | 5 | 4 | 63.6% |
+| Channelopathies (11) | 0/6/5 | 3 | 4 | 4 | 63.6% |
 | Pacing (9) | 0/9/0 | 1 | 3 | 5 | 44.4% |
 | CIED Management (8) | 0/7/1 | 0 | 4 | 4 | 50.0% |
-| AAD Safety (8) | 0/8/0 | 1 | 5 | 2 | 75.0% |
+| AAD Safety (8) | 0/8/0 | 5 | 1 | 2 | 75.0% |
 | Syncope (6) | 0/4/2 | 1 | 1 | 4 | 33.3% |
 | Cardiac Arrest (4) | 1/2/1 | 0 | 0 | 4 | 0.0% |
 
@@ -88,20 +88,20 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-EP-001 | 311 | PARTIAL_DETECTION | `gap-ep-oac-afib` (EP-OAC @4116-4169) | MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per AUDIT_METHODOLOGY.md §16.5 / AU |
-| GAP-EP-006 | 312 | PARTIAL_DETECTION | `gap-ep-006-dabigatran-renal-safety` (EP-006 @4187-4237) | MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-117 + AUDIT-118.  |
-| GAP-EP-007 | 313 | PARTIAL_DETECTION | `gap-vd-6-doac-mechanical-valve` (VD-6 @5628-5652) **[cross-module: VHD]** | MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. Cross-module |
-| GAP-EP-008 | 314 | PARTIAL_DETECTION | `gap-vd-4-mitral-stenosis` (VD-4 @5572-5592) **[cross-module: VHD]** | (no DOAC + MS contraindication; mitral stenosis logic at 5134+ only covers echo surveillance) \| auto |
+| GAP-EP-001 | 311 | PARTIAL_DETECTION | `gap-ep-oac-afib` (EP-OAC @4121-4174) | MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per AUDIT_METHODOLOGY.md §16.5 / AU |
+| GAP-EP-006 | 312 | PARTIAL_DETECTION | `gap-ep-006-dabigatran-renal-safety` (EP-006 @4192-4242) | MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-117 + AUDIT-118.  |
+| GAP-EP-007 | 313 | DET_OK | `gap-vd-6-doac-mechanical-valve` (VD-6 @5633-5657) **[cross-module: VHD]** | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033; expandToIngredients ingredie |
+| GAP-EP-008 | 314 | PARTIAL_DETECTION | `gap-vd-4-mitral-stenosis` (VD-4 @5577-5597) **[cross-module: VHD]** | (no DOAC + MS contraindication; mitral stenosis logic at 5134+ only covers echo surveillance) \| auto |
 | GAP-EP-064 | 315 | SPEC_ONLY | — | — (no pharmacy fill data integration) \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
 | GAP-EP-065 | 316 | SPEC_ONLY | — | — (no pharmacy fill data integration) \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
-| GAP-EP-011 | 328 | PARTIAL_DETECTION | `gap-ep-laac` (EP-LAAC @4299-4327) | MANUAL OVERRIDE 2026-06-08 (EP audit Batch 5): DET_OK -> PARTIAL per AUDIT-120 (over-detection, dist |
-| GAP-EP-012 | 329 | PARTIAL_DETECTION | `gap-ep-laac` (EP-LAAC @4299-4327) | (broad rule, no trigger differentiation) \| auto-verify: preserved-from-addendum |
-| GAP-EP-013 | 337 | PARTIAL_DETECTION | `gap-ep-early-rhythm` (EP-EARLY-RHYTHM @9628-9650) | MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-EARLY-RHY |
-| GAP-EP-014 | 338 | PARTIAL_DETECTION | `gap-ep-ablation` (EP-ABLATION @4334-4357) | line 4014+ \| auto-verify: preserved-from-addendum |
-| GAP-EP-017 | 339 | PARTIAL_DETECTION | `gap-ep-017-hfref-non-dhp-ccb` (EP-017 @5112-5137) | MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. The Class-3- |
-| GAP-EP-018 | 340 | DET_OK | `gap-ep-subclinical-af` (EP-SUBCLINICAL-AF @7260-7283) | line 6819+ \| auto-verify: preserved-from-addendum |
-| GAP-EP-079 | 352 | PARTIAL_DETECTION | `gap-ep-079-wpw-af-avn-blocker` (EP-079 @4267-4292) | MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. The CRITICAL |
-| GAP-EP-086 | 363 | PARTIAL_DETECTION | `gap-ep-vt-ablation` (EP-VT-ABLATION @9661-9683) | line 9162+ (broad VT+ICD trigger, not VT-storm-specific) \| auto-verify: preserved-from-addendum |
+| GAP-EP-011 | 328 | PARTIAL_DETECTION | `gap-ep-laac` (EP-LAAC @4304-4332) | MANUAL OVERRIDE 2026-06-08 (EP audit Batch 5): DET_OK -> PARTIAL per AUDIT-120 (over-detection, dist |
+| GAP-EP-012 | 329 | PARTIAL_DETECTION | `gap-ep-laac` (EP-LAAC @4304-4332) | (broad rule, no trigger differentiation) \| auto-verify: preserved-from-addendum |
+| GAP-EP-013 | 337 | DET_OK | `gap-ep-early-rhythm` (EP-EARLY-RHYTHM @9633-9655) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-EARLY-RHYTHM is an AAD-A |
+| GAP-EP-014 | 338 | PARTIAL_DETECTION | `gap-ep-ablation` (EP-ABLATION @4339-4362) | line 4014+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-017 | 339 | DET_OK | `gap-ep-017-hfref-non-dhp-ccb` (EP-017 @5117-5142) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The Class-3-Harm HFrEF + no |
+| GAP-EP-018 | 340 | DET_OK | `gap-ep-subclinical-af` (EP-SUBCLINICAL-AF @7265-7288) | line 6819+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-079 | 352 | DET_OK | `gap-ep-079-wpw-af-avn-blocker` (EP-079 @4272-4297) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The CRITICAL WPW+AF AVN-blo |
+| GAP-EP-086 | 363 | PARTIAL_DETECTION | `gap-ep-vt-ablation` (EP-VT-ABLATION @9666-9688) | line 9162+ (broad VT+ICD trigger, not VT-storm-specific) \| auto-verify: preserved-from-addendum |
 | GAP-EP-099 | 436 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 
 ---
@@ -124,11 +124,11 @@ No T1 SPEC_ONLY gaps carry literal BSW pathway tags in CK v4.0 spec text. Pathwa
 
 ## 7. Working hypothesis verdict
 
-**For EP:** Light implementation coverage; significant v2.0 Phase 1 build work required.
+**For EP:** Moderate implementation coverage; medication/screening surfaces typically built, procedural surfaces often lighter.
 
-Coverage data: 47/89 any-coverage (52.8%); 8/89 DET_OK only (9.0%); 39 PARTIAL via broad-rule consolidation or partial-trigger match; 42 SPEC_ONLY.
+Coverage data: 47/89 any-coverage (52.8%); 18/89 DET_OK only (20.2%); 29 PARTIAL via broad-rule consolidation or partial-trigger match; 42 SPEC_ONLY.
 
-Rules-per-DET_OK efficiency: 48 registry rules / 8 DET_OK = 6.00.
+Rules-per-DET_OK efficiency: 48 registry rules / 18 DET_OK = 2.67.
 
 ---
 
@@ -136,8 +136,8 @@ Rules-per-DET_OK efficiency: 48 registry rules / 8 DET_OK = 6.00.
 
 v2.0 Phase 1 (T1 priority) work items for EP:
 - **3 T1 SPEC_ONLY** gaps requiring full build (detection + UI + tests)
-- **11 T1 PARTIAL** gaps requiring hardening (broad-rule discrimination, missing exclusions, dose-protocol specificity)
-- **1 T1 DET_OK** gaps requiring test coverage + UI polish to reach PRODUCTION_GRADE
+- **7 T1 PARTIAL** gaps requiring hardening (broad-rule discrimination, missing exclusions, dose-protocol specificity)
+- **5 T1 DET_OK** gaps requiring test coverage + UI polish to reach PRODUCTION_GRADE
 
 Cross-module satisfaction (HF Device Therapy → EP CRT/ICD pattern; CAD-027 → PV; etc.) is captured structurally in `ruleBodyCite.evaluatorModule` per AUDIT_METHODOLOGY.md §2.1.C.
 
@@ -151,19 +151,19 @@ Rows where the auto-classifier was wrong and the audit author corrected the clas
 
 - **GAP-EP-001** (T1, PARTIAL_DETECTION, `gap-ep-oac-afib` (EP-OAC)): MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per AUDIT_METHODOLOGY.md §16.5 / AUDIT-118. EP-OAC tests OAC presence by exact-RxCUI membership (OAC_CODES) with no ingredient->descendant expansion, so SCD/product-coded patient meds under-detect; the DABIGATRAN code (1037045) is also a single 150mg SCD not the ingredient (AUDIT-117). Evaluator retained; PARTIAL until AUDIT-117/118 remediated.
 - **GAP-EP-006** (T1, PARTIAL_DETECTION, `gap-ep-006-dabigatran-renal-safety` (EP-006)): MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-117 + AUDIT-118. The Class-3-Harm dabigatran renal-safety rule triggers on medCodes.includes(1037045) = dabigatran 150mg SCD (not the ingredient, AUDIT-117) and matches with no ingredient->descendant expansion, so dabigatran 75mg (renal-impairment dose) + eGFR<30 - the precise contraindication - is a false-negative. Evaluator retained; PARTIAL until AUDIT-117/118 remediated. (Prior 2026-05-05 AUDIT-032 logic closure stands; trustworthiness capped by the matching defect.)
-- **GAP-EP-007** (T1, PARTIAL_DETECTION, `gap-vd-6-doac-mechanical-valve` (VD-6) cross-module to VHD): MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. Cross-module satisfaction by VHD VD-6 (DOAC + mechanical valve, Class 3 Harm) is intact, but the DOAC match is exact-RxCUI membership with no ingredient expansion, so product-coded DOAC meds under-detect the contraindication. Evaluator retained; PARTIAL until AUDIT-118 remediated.
+- **GAP-EP-007** (T1, DET_OK, `gap-vd-6-doac-mechanical-valve` (VD-6) cross-module to VHD): UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033; expandToIngredients ingredient-normalization at the runner construction points). VHD VD-6 (DOAC + mechanical valve, Class 3 Harm) now detects product-coded (SCD/SBD) DOAC meds - a mechanical-valve patient on an apixaban SCD fires the contraindication. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118 (exact-RxCUI membership, no expansion).
 - **GAP-EP-011** (T1, PARTIAL_DETECTION, `gap-ep-laac` (EP-LAAC)): MANUAL OVERRIDE 2026-06-08 (EP audit Batch 5): DET_OK -> PARTIAL per AUDIT-120 (over-detection, distinct from §16.5). EP-LAAC uses dxCodes.startsWith(Z88) as an OAC-contraindication, but ICD-10 Z88 is "Allergy status" to any drug class, so the LAAC gap over-fires on any AF + age>=65 patient with any drug allergy (e.g. penicillin). Evaluator retained; PARTIAL until AUDIT-120 remediated (narrow or drop Z88).
-- **GAP-EP-013** (T1, PARTIAL_DETECTION, `gap-ep-early-rhythm` (EP-EARLY-RHYTHM)): MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-EARLY-RHYTHM tests rhythm-control (AAD) presence by exact-RxCUI membership (RHYTHM_CONTROL_CODES_ER) with no expansion, so SCD-coded AAD meds read as not-on-rhythm-control. Evaluator retained; PARTIAL until AUDIT-118 remediated.
-- **GAP-EP-017** (T1, PARTIAL_DETECTION, `gap-ep-017-hfref-non-dhp-ccb` (EP-017)): MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. The Class-3-Harm HFrEF + non-DHP-CCB SAFETY rule matches diltiazem/verapamil ingredient-exact (NON_DHP_CCB_CODES) with no expansion, so SCD-coded CCB meds under-detect. Evaluator retained; PARTIAL until AUDIT-118 remediated. (Prior 2026-05-05 AUDIT-033 logic closure stands.)
-- **GAP-EP-070** (T2, PARTIAL_DETECTION, `gap-ep-pfa` (EP-PFA)): MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-PFA tests AAD presence (AAD_CODES) ingredient-exact with no expansion. Evaluator retained; PARTIAL until AUDIT-118 remediated.
-- **GAP-EP-079** (T1, PARTIAL_DETECTION, `gap-ep-079-wpw-af-avn-blocker` (EP-079)): MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. The CRITICAL WPW+AF AVN-blocker rule matches medCodes via AVN_BLOCKER_CODES_EP079, a MIXED set: digoxin is descendant-enumerated (exempt) but the 8 beta-blockers + 2 non-DHP CCBs are ingredient-only, so a WPW+AF patient on an SCD-coded BB/CCB under-detects the fatal-VF contraindication. Evaluator retained; PARTIAL until AUDIT-118 remediated. (Prior 2026-05-05 AUDIT-031 logic closure stands; all 14 codes RxNav-verified.)
-- **GAP-EP-024** (T2, PARTIAL_DETECTION, `gap-ep-lqts-bb` (EP-LQTS-BB)): MANUAL OVERRIDE 2026-06-08 (EP audit Batch 3): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-LQTS-BB tests beta-blocker presence (BB_CODES_LQTS) ingredient-exact with no expansion, so a LQTS patient on an SCD-coded beta-blocker false-fires "BB not prescribed." Evaluator retained; PARTIAL until AUDIT-118 remediated.
+- **GAP-EP-013** (T1, DET_OK, `gap-ep-early-rhythm` (EP-EARLY-RHYTHM)): UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-EARLY-RHYTHM is an AAD-ABSENCE rule (fires when AF + not-on-rhythm-control); the cap was an OVER-detection (raw SCD-AAD read as not-on-AAD -> false-fired). Now the AAD is detected, so an AF patient on an SCD-coded AAD correctly SUPPRESSES the early-rhythm-control gap. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw false-fires -> expanded suppresses). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.
+- **GAP-EP-017** (T1, DET_OK, `gap-ep-017-hfref-non-dhp-ccb` (EP-017)): UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The Class-3-Harm HFrEF + non-DHP-CCB SAFETY rule now detects SCD-coded diltiazem/verapamil (INs 3443/11170 in the ingredient map), so an HFrEF + AF patient on an SCD-coded non-DHP CCB fires the contraindication. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Prior 2026-05-05 AUDIT-033 logic closure stands. Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.
+- **GAP-EP-070** (T2, DET_OK, `gap-ep-pfa` (EP-PFA)): UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-PFA (AAD-PRESENCE proxy for failed rhythm control) now detects SCD-coded AADs (AAD_CODES INs in the ingredient map), so an AF patient on an SCD-coded AAD fires the PFA-candidacy gap. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.
+- **GAP-EP-079** (T1, DET_OK, `gap-ep-079-wpw-af-avn-blocker` (EP-079)): UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The CRITICAL WPW+AF AVN-blocker rule now detects SCD-coded beta-blockers and non-DHP CCBs (the previously ingredient-only arms of AVN_BLOCKER_CODES_EP079; the digoxin arm was simplified to the IN in the same fix). A WPW+AF patient on an SCD-coded metoprolol fires the fatal-VF contraindication. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Prior 2026-05-05 AUDIT-031 logic closure stands. Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.
+- **GAP-EP-024** (T2, DET_OK, `gap-ep-lqts-bb` (EP-LQTS-BB)): UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-LQTS-BB is a beta-blocker-ABSENCE rule; the cap was an OVER-detection (raw SCD-BB read as not-on-BB -> false-fired "BB not prescribed"). Now the BB is detected (BB_CODES_LQTS INs in the ingredient map), so a LQTS patient on an SCD-coded beta-blocker correctly SUPPRESSES the gap. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw false-fires -> expanded suppresses). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.
 - **GAP-EP-026** (T2, PARTIAL_DETECTION, `gap-ep-lqts-bb` (EP-LQTS-BB)): MANUAL OVERRIDE per EP addendum line 131: GAP-EP-026 (Congenital LQTS QT-drug avoidance) covered by overlapping rules EP-LQTS-BB (line 6906+) and EP-TORSADES (line 7121+). PARTIAL because broad coverage of LQTS+QT-drug scenarios but not specifically the congenital subtype with QT-drug avoidance protocol.
-- **GAP-EP-043** (T2, PARTIAL_DETECTION, `gap-ep-amiodarone-monitor` (EP-AMIODARONE-MONITOR)): MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-AMIODARONE-MONITOR (TSH) tests amiodarone presence (703) ingredient-exact with no expansion, so SCD-coded amiodarone under-detects. Evaluator retained; PARTIAL until AUDIT-118 remediated.
-- **GAP-EP-044** (T2, PARTIAL_DETECTION, `gap-ep-amiodarone-monitor` (EP-AMIODARONE-MONITOR)): MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-AMIODARONE-MONITOR (LFT) tests amiodarone presence (703) ingredient-exact with no expansion. Evaluator retained; PARTIAL until AUDIT-118 remediated.
+- **GAP-EP-043** (T2, DET_OK, `gap-ep-amiodarone-monitor` (EP-AMIODARONE-MONITOR)): UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-AMIODARONE-MONITOR (TSH) now detects SCD-coded amiodarone - amiodarone IN 703 is in the ingredient map and an amiodarone SCD expands to it, so the TSH-monitoring gap fires. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.
+- **GAP-EP-044** (T2, DET_OK, `gap-ep-amiodarone-monitor` (EP-AMIODARONE-MONITOR)): UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-AMIODARONE-MONITOR (LFT) now detects SCD-coded amiodarone (IN 703 in the ingredient map). Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.
 - **GAP-EP-045** (T2, PARTIAL_DETECTION, `gap-ep-amiodarone-monitor` (EP-AMIODARONE-MONITOR)): MANUAL OVERRIDE per EP addendum line 179: GAP-EP-045 (Amiodarone baseline PFT/CXR) covered partially by EP-AMIODARONE-MONITOR evaluator. PARTIAL per §3.2.1: combined rule covers TSH/LFT but not PFT/CXR baseline screening that spec specifies.
-- **GAP-EP-046** (T2, PARTIAL_DETECTION, `gap-ep-dronedarone` (EP-DRONEDARONE)): MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-DRONEDARONE (SAFETY) tests dronedarone presence (233698) ingredient-exact with no expansion, so SCD-coded dronedarone under-detects the NYHA III/IV contraindication. Evaluator retained; PARTIAL until AUDIT-118 remediated.
-- **GAP-EP-048** (T2, PARTIAL_DETECTION, `gap-ep-dofetilide-rems` (EP-DOFETILIDE-REMS)): MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-DOFETILIDE-REMS tests dofetilide presence (49247) ingredient-exact with no expansion. Evaluator retained; PARTIAL until AUDIT-118 remediated.
+- **GAP-EP-046** (T2, DET_OK, `gap-ep-dronedarone` (EP-DRONEDARONE)): UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-DRONEDARONE (SAFETY) now detects SCD-coded dronedarone (IN 233698 in the ingredient map), so the NYHA III/IV contraindication fires for an SCD-coded dronedarone patient with severe HF. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.
+- **GAP-EP-048** (T2, DET_OK, `gap-ep-dofetilide-rems` (EP-DOFETILIDE-REMS)): UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-DOFETILIDE-REMS now detects SCD-coded dofetilide (IN 49247 in the ingredient map), so the REMS-monitoring gap fires for an SCD-coded dofetilide patient. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.
 
 
 ---
@@ -188,7 +188,7 @@ Rows where the auto-classifier was wrong and the audit author corrected the clas
 
 | Spec gap | Tier | Class | Owning module | Evaluator block |
 |---|---|---|---|---|
-| GAP-EP-007 | T1 | PARTIAL_DETECTION | VHD | `VD-6` |
+| GAP-EP-007 | T1 | DET_OK | VHD | `VD-6` |
 | GAP-EP-008 | T1 | PARTIAL_DETECTION | VHD | `VD-4` |
 | GAP-EP-028 | T2 | PARTIAL_DETECTION | CAD | `CAD-BETA-BLOCKER` |
 
@@ -214,10 +214,10 @@ Per-module wall-clock data lives in `docs/audit/canonical/audit_runs.jsonl` (app
 
 ## 14. Audit verdict
 
-**EP module: LIGHTLY BUILT.**
+**EP module: MODERATELY BUILT.**
 
-- 8 DET_OK (9.0%), 39 PARTIAL (43.8%), 42 SPEC_ONLY (47.2%)
-- 1/15 T1 priority gaps DET_OK; 3 T1 SPEC_ONLY gaps require v2.0 Phase 1 work
+- 18 DET_OK (20.2%), 29 PARTIAL (32.6%), 42 SPEC_ONLY (47.2%)
+- 5/15 T1 priority gaps DET_OK; 3 T1 SPEC_ONLY gaps require v2.0 Phase 1 work
 - Audit method: `rule-body-citation-AUDIT-030D`. Generated from canonical crosswalk on 2026-06-08.
 
 ---

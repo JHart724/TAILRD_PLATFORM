@@ -1,0 +1,414 @@
+{
+  "finding": "AUDIT-118",
+  "generator": "backend/scripts/genRxnormIngredientMap.mjs",
+  "source": "https://rxnav.nlm.nih.gov/REST/rxcui/{IN}/related.json?tty=SCD+SBD+SCDC+SCDG+SBDG+BPCK+GPCK",
+  "retrieved": "2026-06-14",
+  "candidateUniverse": {
+    "valuesets": 85,
+    "engineInline": 68,
+    "union": 109
+  },
+  "ingredientINCount": 94,
+  "mapEntryCount": 3369,
+  "multiIngredientEntries": 316,
+  "perIngredient": {
+    "703": {
+      "name": "amiodarone",
+      "descendantCount": 29
+    },
+    "1191": {
+      "name": "aspirin",
+      "descendantCount": 339
+    },
+    "1202": {
+      "name": "atenolol",
+      "descendantCount": 37
+    },
+    "1808": {
+      "name": "bumetanide",
+      "descendantCount": 38
+    },
+    "1998": {
+      "name": "captopril",
+      "descendantCount": 17
+    },
+    "2015": {
+      "name": "carbenicillin",
+      "descendantCount": 4
+    },
+    "2017": {
+      "name": "carbenoxolone",
+      "descendantCount": 4
+    },
+    "2018": {
+      "name": "carbenoxolone sodium",
+      "descendantCount": 0
+    },
+    "2019": {
+      "name": "carbidopa",
+      "descendantCount": 88
+    },
+    "2020": {
+      "name": "carbimazole",
+      "descendantCount": 6
+    },
+    "2023": {
+      "name": "carbocysteine",
+      "descendantCount": 16
+    },
+    "2409": {
+      "name": "chlorthalidone",
+      "descendantCount": 41
+    },
+    "2551": {
+      "name": "ciprofloxacin",
+      "descendantCount": 60
+    },
+    "3407": {
+      "name": "digoxin",
+      "descendantCount": 38
+    },
+    "3443": {
+      "name": "diltiazem",
+      "descendantCount": 108
+    },
+    "3827": {
+      "name": "enalapril",
+      "descendantCount": 35
+    },
+    "4053": {
+      "name": "erythromycin",
+      "descendantCount": 108
+    },
+    "4109": {
+      "name": "ethacrynic acid",
+      "descendantCount": 9
+    },
+    "4316": {
+      "name": "felodipine",
+      "descendantCount": 13
+    },
+    "4441": {
+      "name": "flecainide",
+      "descendantCount": 11
+    },
+    "4603": {
+      "name": "furosemide",
+      "descendantCount": 67
+    },
+    "5093": {
+      "name": "haloperidol",
+      "descendantCount": 44
+    },
+    "5470": {
+      "name": "hydralazine",
+      "descendantCount": 28
+    },
+    "5487": {
+      "name": "hydrochlorothiazide",
+      "descendantCount": 272
+    },
+    "5764": {
+      "name": "indapamide",
+      "descendantCount": 22
+    },
+    "6058": {
+      "name": "isosorbide dinitrate",
+      "descendantCount": 47
+    },
+    "6185": {
+      "name": "labetalol",
+      "descendantCount": 31
+    },
+    "6472": {
+      "name": "lovastatin",
+      "descendantCount": 20
+    },
+    "6759": {
+      "name": "mepivacaine",
+      "descendantCount": 30
+    },
+    "6813": {
+      "name": "methadone",
+      "descendantCount": 32
+    },
+    "6916": {
+      "name": "metolazone",
+      "descendantCount": 10
+    },
+    "6918": {
+      "name": "metoprolol",
+      "descendantCount": 64
+    },
+    "7226": {
+      "name": "nadolol",
+      "descendantCount": 20
+    },
+    "7396": {
+      "name": "nicardipine",
+      "descendantCount": 20
+    },
+    "7417": {
+      "name": "nifedipine",
+      "descendantCount": 39
+    },
+    "7646": {
+      "name": "omeprazole",
+      "descendantCount": 87
+    },
+    "8700": {
+      "name": "procainamide",
+      "descendantCount": 20
+    },
+    "8754": {
+      "name": "propafenone",
+      "descendantCount": 18
+    },
+    "8787": {
+      "name": "propranolol",
+      "descendantCount": 62
+    },
+    "9068": {
+      "name": "quinidine",
+      "descendantCount": 17
+    },
+    "9947": {
+      "name": "sotalol",
+      "descendantCount": 43
+    },
+    "9997": {
+      "name": "spironolactone",
+      "descendantCount": 55
+    },
+    "11170": {
+      "name": "verapamil",
+      "descendantCount": 62
+    },
+    "11289": {
+      "name": "warfarin",
+      "descendantCount": 45
+    },
+    "17128": {
+      "name": "lansoprazole",
+      "descendantCount": 21
+    },
+    "17767": {
+      "name": "amlodipine",
+      "descendantCount": 176
+    },
+    "18631": {
+      "name": "azithromycin",
+      "descendantCount": 41
+    },
+    "18867": {
+      "name": "benazepril",
+      "descendantCount": 54
+    },
+    "19484": {
+      "name": "bisoprolol",
+      "descendantCount": 24
+    },
+    "20352": {
+      "name": "carvedilol",
+      "descendantCount": 28
+    },
+    "26225": {
+      "name": "ondansetron",
+      "descendantCount": 28
+    },
+    "29046": {
+      "name": "lisinopril",
+      "descendantCount": 42
+    },
+    "32968": {
+      "name": "clopidogrel",
+      "descendantCount": 10
+    },
+    "33910": {
+      "name": "isradipine",
+      "descendantCount": 10
+    },
+    "35296": {
+      "name": "ramipril",
+      "descendantCount": 30
+    },
+    "36567": {
+      "name": "simvastatin",
+      "descendantCount": 49
+    },
+    "38413": {
+      "name": "torsemide",
+      "descendantCount": 28
+    },
+    "40790": {
+      "name": "pantoprazole",
+      "descendantCount": 23
+    },
+    "41127": {
+      "name": "fluvastatin",
+      "descendantCount": 12
+    },
+    "42463": {
+      "name": "pravastatin",
+      "descendantCount": 16
+    },
+    "49247": {
+      "name": "dofetilide",
+      "descendantCount": 13
+    },
+    "49737": {
+      "name": "esmolol",
+      "descendantCount": 12
+    },
+    "52175": {
+      "name": "losartan",
+      "descendantCount": 29
+    },
+    "69749": {
+      "name": "valsartan",
+      "descendantCount": 93
+    },
+    "82122": {
+      "name": "levofloxacin",
+      "descendantCount": 25
+    },
+    "83367": {
+      "name": "atorvastatin",
+      "descendantCount": 51
+    },
+    "83515": {
+      "name": "eprosartan",
+      "descendantCount": 12
+    },
+    "83818": {
+      "name": "irbesartan",
+      "descendantCount": 22
+    },
+    "114979": {
+      "name": "rabeprazole",
+      "descendantCount": 16
+    },
+    "139462": {
+      "name": "moxifloxacin",
+      "descendantCount": 17
+    },
+    "214354": {
+      "name": "candesartan",
+      "descendantCount": 28
+    },
+    "233698": {
+      "name": "dronedarone",
+      "descendantCount": 7
+    },
+    "283742": {
+      "name": "esomeprazole",
+      "descendantCount": 49
+    },
+    "298869": {
+      "name": "eplerenone",
+      "descendantCount": 12
+    },
+    "301542": {
+      "name": "rosuvastatin",
+      "descendantCount": 42
+    },
+    "321064": {
+      "name": "olmesartan",
+      "descendantCount": 51
+    },
+    "475968": {
+      "name": "liraglutide",
+      "descendantCount": 13
+    },
+    "613391": {
+      "name": "prasugrel",
+      "descendantCount": 10
+    },
+    "861634": {
+      "name": "pitavastatin",
+      "descendantCount": 32
+    },
+    "1037042": {
+      "name": "dabigatran etexilate",
+      "descendantCount": 31
+    },
+    "1114195": {
+      "name": "rivaroxaban",
+      "descendantCount": 23
+    },
+    "1116632": {
+      "name": "ticagrelor",
+      "descendantCount": 10
+    },
+    "1364430": {
+      "name": "apixaban",
+      "descendantCount": 12
+    },
+    "1488564": {
+      "name": "dapagliflozin",
+      "descendantCount": 34
+    },
+    "1545653": {
+      "name": "empagliflozin",
+      "descendantCount": 52
+    },
+    "1551291": {
+      "name": "dulaglutide",
+      "descendantCount": 14
+    },
+    "1599538": {
+      "name": "edoxaban",
+      "descendantCount": 13
+    },
+    "1649480": {
+      "name": "ivabradine",
+      "descendantCount": 15
+    },
+    "1656339": {
+      "name": "sacubitril / valsartan",
+      "descendantCount": 26
+    },
+    "1659152": {
+      "name": "alirocumab",
+      "descendantCount": 8
+    },
+    "1665684": {
+      "name": "evolocumab",
+      "descendantCount": 10
+    },
+    "1991302": {
+      "name": "semaglutide",
+      "descendantCount": 65
+    },
+    "2562811": {
+      "name": "finerenone",
+      "descendantCount": 13
+    },
+    "2638675": {
+      "name": "sotagliflozin",
+      "descendantCount": 10
+    }
+  },
+  "unresolvedCandidates": [
+    {
+      "rxcui": "2010",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "2012",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "2016",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "2022",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "2024",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    }
+  ]
+}

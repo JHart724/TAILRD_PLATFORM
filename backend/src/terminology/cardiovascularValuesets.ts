@@ -292,7 +292,12 @@ export const RXNORM_DOACS = {
   APIXABAN: '1364430',
   RIVAROXABAN: '1114195',
   EDOXABAN: '1599538',
-  DABIGATRAN: '1037045',
+  // AUDIT-117/AUDIT-118 (2026-06-14): was '1037045' = dabigatran etexilate 150 MG
+  // Oral Capsule (TTY=SCD), which matched ONLY the 150mg product and missed the
+  // 75mg renal-impairment dose. '1037042' is the dabigatran ingredient (TTY=IN,
+  // RxNav-verified); with expandToIngredients() every dabigatran product rolls up
+  // to it. Consumed by DOAC_CODES_CV / OAC_CODES_CV in gapRuleEngine.ts.
+  DABIGATRAN: '1037042',
 } as const;
 
 /** Warfarin -- used by mechanical valve anticoagulation gap rule.

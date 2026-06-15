@@ -9,6 +9,7 @@
 import prisma from '../lib/prisma';
 import { logger } from '../utils/logger';
 import { evaluateGapRules } from './gaps/gapRuleEngine';
+import { expandToIngredients } from '../terminology/expandToIngredients';
 import { Prisma } from '@prisma/client';
 
 // FINDING-3.7-002: Observation staleness cutoffs
@@ -97,7 +98,12 @@ export async function runGapDetection(
         }
         labValues[obs.observationType] = obs.valueNumeric;
       }
-      const medCodes = patient.medications.map((m: any) => m.rxNormCode).filter(Boolean) as string[];
+      // AUDIT-118: ingredient-expand at construction so product-coded (SCD/SBD)
+      // meds match the ingredient-level (TTY=IN) value sets. medCodes MUST be
+      // built via expandToIngredients(); raw membership silently under-detects.
+      const medCodes = expandToIngredients(
+        patient.medications.map((m: any) => m.rxNormCode).filter(Boolean) as string[],
+      );
       // AUDIT-101: thread dose-bearing medication records so dose-dependent gates
       // (high-intensity statin) can test strength, not ingredient presence.
       const meds = patient.medications.map((m: any) => ({
