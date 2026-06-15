@@ -86,6 +86,19 @@ Tier ordering within each module follows the crosswalk tier markers (T1 safety/h
 
 **A.4 - the surgical peri-operative completeness tranche (NEW buildout addition, KB-completeness class).** The 528 figure is the buildout of gaps that EXIST in the KB. A distinct, newly-surfaced layer is the **KB-completeness / spec-completeness** class: clinically-real, guideline-grounded gaps that are ABSENT from the KB and so were structurally invisible to the code-vs-KB Phase-0B audits (which can only find a gap the KB already specifies). The anchor finding is **AUDIT-163 (POAF prophylaxis absent; COR I; cardiac-surgery population; HIGH P1, FINALIZED 2026-06-15)**; the read-only spot-check found **7 of 8 peri-operative quality concerns absent** (prolonged ventilation, post-op AKI, re-operation for bleeding, post-op delirium, peri-op glucose, early extubation/mobilization, LOS-as-care-process), indicating a systematic surgical blind spot rather than a one-off. **This tranche GROWS the SPEC_ONLY denominator before it is built** (spec-add then code-build), predominantly SH/CAD/EP-owned (cardiac-surgery population + rhythm prophylaxis). Sizing is pending the full surgical KB-completeness audit (the methodology + audit are the next steps after AUDIT-163 is filed); the 528 buildout total will increase by that tranche's count once scoped. Sequenced as a pre-commercial-claim concern for any cardiac-surgery quality surface. See `docs/audit/AUDIT_FINDINGS_REGISTER.md` (KB-Completeness Findings section) + AUDIT-163.
 
+**A.5 - the DUA-deferred (data-blocked) tranche, tracked not built.** A distinct layer from A.0-A.4: gaps blocked on a data element NO current source (Synthea generation or the FHIR/CSV pipeline) provides - device-interrogation, genetic/molecular, ECG-morphology, and REAL-EHR-only echo/imaging. These are NOT synthetic-testable pre-DUA; they are recorded and ready-to-build when real EHR data lands (Redox / Epic FHIR), and explicitly NOT counted in the pre-DUA buildout. Procedure-presence and medication-temporal dependencies are EXCLUDED (unblocked by PR #396 engine-signature threading). The full per-gap register, with each gap tagged on two axes (SYNTHEA-EXPANDABLE vs REAL-EHR-ONLY; HIGH-PILOT-VALUE vs STANDARD-BACKFILL), is at `docs/audit/DUA_DEFERRED_GAP_REGISTER.md`.
+
+The 510 non-DET_OK gaps decompose exactly (re-derived from the canonical spec.json structuredDataElements joined to crosswalk classifications):
+
+| Tier | Count | Pre-DUA buildable? |
+|---|---:|---|
+| Buildable-now (no blocked element) | 273 | YES (un-authored) |
+| Tranche 2 - Synthea-expansion candidate (synthesizable echo/physiologic numeric) | 108 | YES, with Synthea-generation expansion |
+| Tranche 3 - process/documentation-gated (real-EHR-only docs) | 50 | NO |
+| **Tranche 1 - DUA-DEFERRED (device / genetic / ECG-morphology / REAL-EHR-only echo)** | **79** | **NO - the DUA-gated register** |
+
+Check: 273 + 108 + 79 + 50 = 510. Element-type ingestion worklist (Tranche-1 gaps unblocked, ranked): echo-morphology 34, genetic-molecular 23, device-interrogation 12, ECG-morphology 10. The quantitative-echo numeric feed is the single highest-leverage ingestion target (142 gaps across Tranche 1+2). The (Synthea-expandable AND high-pilot-value) intersection - 44 gaps, SH/VHD-dominated valve-severity grading - is the candidate set for early-unblock via Synthea expansion. NOTE: the re-derivation lands at 79 DUA-deferred vs the earlier ~52 estimate; the +27 delta is the REAL-EHR-only echo subset and the Tranche-1/2 boundary is the tuning knob (see register Section 1).
+
 ### Track B - UI REBUILD
 
 Build-to spec: `UI_CANON.md` (the rules) + `UI_DESIGN_DECISIONS.md` (the locked values - navy primary, navy-CTA so red is never a button, 12px card radius, logo-as-direction). The AUDIT-149..162 findings are the **deltas** between the current UI and the canon.
