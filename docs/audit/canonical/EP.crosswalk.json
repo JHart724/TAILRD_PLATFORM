@@ -14,8 +14,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-OAC",
         "evaluatorBodyLineRange": [
-          4116,
-          4169
+          4121,
+          4174
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-oac-afib",
@@ -33,8 +33,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-006",
         "evaluatorBodyLineRange": [
-          4187,
-          4237
+          4192,
+          4242
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-006-dabigatran-renal-safety",
@@ -45,15 +45,15 @@
       "tier": "T1"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. Cross-module satisfaction by VHD VD-6 (DOAC + mechanical valve, Class 3 Harm) is intact, but the DOAC match is exact-RxCUI membership with no ingredient expansion, so product-coded DOAC meds under-detect the contraindication. Evaluator retained; PARTIAL until AUDIT-118 remediated.",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033; expandToIngredients ingredient-normalization at the runner construction points). VHD VD-6 (DOAC + mechanical valve, Class 3 Harm) now detects product-coded (SCD/SBD) DOAC meds - a mechanical-valve patient on an apixaban SCD fires the contraindication. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118 (exact-RxCUI membership, no expansion).",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-6",
         "evaluatorBodyLineRange": [
-          5628,
-          5652
+          5633,
+          5657
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-6-doac-mechanical-valve",
@@ -71,8 +71,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-4",
         "evaluatorBodyLineRange": [
-          5572,
-          5592
+          5577,
+          5597
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-4-mitral-stenosis",
@@ -180,8 +180,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-LAAC",
         "evaluatorBodyLineRange": [
-          4299,
-          4327
+          4304,
+          4332
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-laac",
@@ -199,8 +199,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-LAAC",
         "evaluatorBodyLineRange": [
-          4299,
-          4327
+          4304,
+          4332
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-laac",
@@ -248,8 +248,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-EARLY-RHYTHM",
         "evaluatorBodyLineRange": [
-          9628,
-          9650
+          9633,
+          9655
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-early-rhythm",
@@ -267,8 +267,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-ABLATION",
         "evaluatorBodyLineRange": [
-          4334,
-          4357
+          4339,
+          4362
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-ablation",
@@ -286,8 +286,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-017",
         "evaluatorBodyLineRange": [
-          5112,
-          5137
+          5117,
+          5142
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-017-hfref-non-dhp-ccb",
@@ -305,8 +305,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-SUBCLINICAL-AF",
         "evaluatorBodyLineRange": [
-          7260,
-          7283
+          7265,
+          7288
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-subclinical-af",
@@ -324,8 +324,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-ABLATION",
         "evaluatorBodyLineRange": [
-          4334,
-          4357
+          4339,
+          4362
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-ablation",
@@ -353,8 +353,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-PFA",
         "evaluatorBodyLineRange": [
-          7026,
-          7048
+          7031,
+          7053
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-pfa",
@@ -372,8 +372,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-AAD-POST-ABLATION",
         "evaluatorBodyLineRange": [
-          7349,
-          7372
+          7354,
+          7377
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-aad-post-ablation",
@@ -421,8 +421,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-079",
         "evaluatorBodyLineRange": [
-          4267,
-          4292
+          4272,
+          4297
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-079-wpw-af-avn-blocker",
@@ -440,8 +440,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-FLUTTER-OAC",
         "evaluatorBodyLineRange": [
-          7121,
-          7149
+          7126,
+          7154
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-flutter-oac",
@@ -459,8 +459,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-SVT-ABLATION",
         "evaluatorBodyLineRange": [
-          9696,
-          9718
+          9701,
+          9723
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-svt-ablation",
@@ -478,8 +478,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-SVT-ABLATION",
         "evaluatorBodyLineRange": [
-          9696,
-          9718
+          9701,
+          9723
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-svt-ablation",
@@ -497,8 +497,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-SVT-ABLATION",
         "evaluatorBodyLineRange": [
-          9696,
-          9718
+          9701,
+          9723
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-svt-ablation",
@@ -516,8 +516,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-WPW",
         "evaluatorBodyLineRange": [
-          7054,
-          7076
+          7059,
+          7081
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-wpw",
@@ -545,8 +545,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-VT-ABLATION",
         "evaluatorBodyLineRange": [
-          9661,
-          9683
+          9666,
+          9688
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-vt-ablation",
@@ -564,8 +564,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-VT-ABLATION",
         "evaluatorBodyLineRange": [
-          9661,
-          9683
+          9666,
+          9688
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-vt-ablation",
@@ -583,8 +583,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-VT-ABLATION",
         "evaluatorBodyLineRange": [
-          9661,
-          9683
+          9666,
+          9688
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-vt-ablation",
@@ -602,8 +602,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-VT-ABLATION",
         "evaluatorBodyLineRange": [
-          9661,
-          9683
+          9666,
+          9688
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-vt-ablation",
@@ -641,8 +641,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-INAPPROPRIATE-SHOCKS",
         "evaluatorBodyLineRange": [
-          10028,
-          10050
+          10033,
+          10055
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-inappropriate-shocks",
@@ -660,8 +660,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-BRUGADA",
         "evaluatorBodyLineRange": [
-          9728,
-          9751
+          9733,
+          9756
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-brugada",
@@ -679,8 +679,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-LQTS-BB",
         "evaluatorBodyLineRange": [
-          7222,
-          7249
+          7227,
+          7254
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-lqts-bb",
@@ -698,8 +698,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "Gap-39",
         "evaluatorBodyLineRange": [
-          4090,
-          4111
+          4095,
+          4116
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-39-qtc-safety",
@@ -717,8 +717,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-LQTS-BB",
         "evaluatorBodyLineRange": [
-          7222,
-          7249
+          7227,
+          7254
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-lqts-bb",
@@ -736,8 +736,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-BRUGADA",
         "evaluatorBodyLineRange": [
-          9728,
-          9751
+          9733,
+          9756
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-brugada",
@@ -755,8 +755,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-BETA-BLOCKER",
         "evaluatorBodyLineRange": [
-          8839,
-          8866
+          8844,
+          8871
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-beta-blocker",
@@ -774,8 +774,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-LQTS-BB",
         "evaluatorBodyLineRange": [
-          7222,
-          7249
+          7227,
+          7254
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-lqts-bb",
@@ -833,8 +833,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-PACEMAKER-UPGRADE",
         "evaluatorBodyLineRange": [
-          9828,
-          9850
+          9833,
+          9855
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-pacemaker-upgrade",
@@ -862,8 +862,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-SYNCOPE",
         "evaluatorBodyLineRange": [
-          4501,
-          4526
+          4506,
+          4531
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-syncope",
@@ -881,8 +881,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-PACEMAKER-UPGRADE",
         "evaluatorBodyLineRange": [
-          9828,
-          9850
+          9833,
+          9855
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-pacemaker-upgrade",
@@ -940,8 +940,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-CSP",
         "evaluatorBodyLineRange": [
-          6991,
-          7014
+          6996,
+          7019
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-csp",
@@ -969,8 +969,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-LEAD-INTEGRITY",
         "evaluatorBodyLineRange": [
-          7316,
-          7338
+          7321,
+          7343
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-lead-integrity",
@@ -988,8 +988,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-CIED-MRI",
         "evaluatorBodyLineRange": [
-          9966,
-          9987
+          9971,
+          9992
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-cied-mri",
@@ -1017,8 +1017,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-CIED-MRI",
         "evaluatorBodyLineRange": [
-          9966,
-          9987
+          9971,
+          9992
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-cied-mri",
@@ -1056,8 +1056,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-LEAD-INTEGRITY",
         "evaluatorBodyLineRange": [
-          7316,
-          7338
+          7321,
+          7343
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-lead-integrity",
@@ -1068,15 +1068,15 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-AMIODARONE-MONITOR (TSH) tests amiodarone presence (703) ingredient-exact with no expansion, so SCD-coded amiodarone under-detects. Evaluator retained; PARTIAL until AUDIT-118 remediated.",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-AMIODARONE-MONITOR (TSH) now detects SCD-coded amiodarone - amiodarone IN 703 is in the ingredient map and an amiodarone SCD expands to it, so the TSH-monitoring gap fires. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-AMIODARONE-MONITOR",
         "evaluatorBodyLineRange": [
-          4430,
-          4458
+          4435,
+          4463
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-amiodarone-monitor",
@@ -1087,15 +1087,15 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-AMIODARONE-MONITOR (LFT) tests amiodarone presence (703) ingredient-exact with no expansion. Evaluator retained; PARTIAL until AUDIT-118 remediated.",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-AMIODARONE-MONITOR (LFT) now detects SCD-coded amiodarone (IN 703 in the ingredient map). Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-AMIODARONE-MONITOR",
         "evaluatorBodyLineRange": [
-          4430,
-          4458
+          4435,
+          4463
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-amiodarone-monitor",
@@ -1113,8 +1113,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-AMIODARONE-MONITOR",
         "evaluatorBodyLineRange": [
-          4430,
-          4458
+          4435,
+          4463
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-amiodarone-monitor",
@@ -1125,15 +1125,15 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-DRONEDARONE (SAFETY) tests dronedarone presence (233698) ingredient-exact with no expansion, so SCD-coded dronedarone under-detects the NYHA III/IV contraindication. Evaluator retained; PARTIAL until AUDIT-118 remediated.",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-DRONEDARONE (SAFETY) now detects SCD-coded dronedarone (IN 233698 in the ingredient map), so the NYHA III/IV contraindication fires for an SCD-coded dronedarone patient with severe HF. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-DRONEDARONE",
         "evaluatorBodyLineRange": [
-          7086,
-          7115
+          7091,
+          7120
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-dronedarone",
@@ -1154,15 +1154,15 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-DOFETILIDE-REMS tests dofetilide presence (49247) ingredient-exact with no expansion. Evaluator retained; PARTIAL until AUDIT-118 remediated.",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-DOFETILIDE-REMS now detects SCD-coded dofetilide (IN 49247 in the ingredient map), so the REMS-monitoring gap fires for an SCD-coded dofetilide patient. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-DOFETILIDE-REMS",
         "evaluatorBodyLineRange": [
-          4465,
-          4493
+          4470,
+          4498
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-dofetilide-rems",
@@ -1190,8 +1190,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-INAPPROPRIATE-SHOCKS",
         "evaluatorBodyLineRange": [
-          10028,
-          10050
+          10033,
+          10055
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-inappropriate-shocks",
@@ -1209,8 +1209,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-SYNCOPE",
         "evaluatorBodyLineRange": [
-          4501,
-          4526
+          4506,
+          4531
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-syncope",
@@ -1228,8 +1228,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-SYNCOPE",
         "evaluatorBodyLineRange": [
-          4501,
-          4526
+          4506,
+          4531
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-syncope",

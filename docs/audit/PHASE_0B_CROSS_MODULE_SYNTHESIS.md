@@ -11,12 +11,12 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 | Module | Spec gaps | DET_OK | PARTIAL | SPEC_ONLY | Any-coverage | DET_OK rate |
 |---|---:|---:|---:|---:|---:|---:|
 | HF | 126 | 22 | 43 | 61 | 65/126 (51.6%) | 17.5% |
-| EP | 89 | 8 | 39 | 42 | 47/89 (52.8%) | 9.0% |
+| EP | 89 | 13 | 34 | 42 | 47/89 (52.8%) | 14.6% |
 | SH | 88 | 0 | 30 | 58 | 30/88 (34.1%) | 0.0% |
 | CAD | 90 | 29 | 27 | 34 | 56/90 (62.2%) | 32.2% |
 | VHD | 105 | 0 | 11 | 94 | 11/105 (10.5%) | 0.0% |
 | PV | 105 | 16 | 14 | 75 | 30/105 (28.6%) | 15.2% |
-| **TOTAL** | **603** | **75** | **164** | **364** | **239/603 (39.6%)** | **12.4%** |
+| **TOTAL** | **603** | **80** | **159** | **364** | **239/603 (39.6%)** | **13.3%** |
 
 ---
 
@@ -25,7 +25,7 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 | Module | T1 total | T1 DET_OK | T1 PARTIAL | T1 SPEC_ONLY | T1 any-coverage |
 |---|---:|---:|---:|---:|---:|
 | HF | 29 | 8 | 14 | 7 | 75.9% |
-| EP | 15 | 1 | 11 | 3 | 80.0% |
+| EP | 15 | 2 | 10 | 3 | 80.0% |
 | SH | 13 | 0 | 8 | 5 | 61.5% |
 | CAD | 18 | 8 | 4 | 6 | 66.7% |
 | VHD | 8 | 0 | 2 | 6 | 25.0% |
@@ -37,12 +37,11 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 
 Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-relevant) AND (T1) AND (uncovered). Spec-explicit auto-include; structurally-inferred require operator decision.
 
-### 3.1 Spec-explicit SAFETY uncovered T1 (5 — automatic Tier S)
+### 3.1 Spec-explicit SAFETY uncovered T1 (4 — automatic Tier S)
 
 | Spec gap | Module | Spec line | Class | SAFETY tag | Detection logic (excerpt) |
 |---|---|---:|---|---|---|
 | **GAP-EP-006** | EP | 312 | PARTIAL_DETECTION | `(SAFETY)` | Dabigatran + severe renal impairment |
-| **GAP-EP-007** | EP | 313 | PARTIAL_DETECTION | `(CRITICAL SAFETY)` | DOAC + Z95.2 or mechanical valve history |
 | **GAP-EP-017** | EP | 339 | PARTIAL_DETECTION | `(SAFETY)` | HFrEF on verapamil/diltiazem |
 | **GAP-EP-079** | EP | 352 | PARTIAL_DETECTION | `(CRITICAL)` | WPW + AF on beta-blocker/CCB/digoxin - risk of VF |
 | **GAP-VHD-005** | VHD | 754 | PARTIAL_DETECTION | `(CRITICAL SAFETY)` | Mechanical valve + any DOAC on active med list |
@@ -86,7 +85,7 @@ Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-rel
 | GAP-HF-072 | T3 | PARTIAL_DETECTION | HF | `CAD-TAKOTSUBO` | CAD |
 | GAP-HF-078 | T2 | PARTIAL_DETECTION | HF | `EP-EARLY-RHYTHM` | EP |
 | GAP-HF-085 | T2 | PARTIAL_DETECTION | HF | `EP-INAPPROPRIATE-SHOCKS` | EP |
-| GAP-EP-007 | T1 | PARTIAL_DETECTION | EP | `VD-6` | VHD |
+| GAP-EP-007 | T1 | DET_OK | EP | `VD-6` | VHD |
 | GAP-EP-008 | T1 | PARTIAL_DETECTION | EP | `VD-4` | VHD |
 | GAP-EP-028 | T2 | PARTIAL_DETECTION | EP | `CAD-BETA-BLOCKER` | CAD |
 | GAP-SH-048 | T2 | PARTIAL_DETECTION | SH | `CAD-COMPLETE-REVASC` | CAD |

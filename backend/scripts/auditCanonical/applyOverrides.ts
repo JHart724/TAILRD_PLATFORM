@@ -75,11 +75,11 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-117 + AUDIT-118. The Class-3-Harm dabigatran renal-safety rule triggers on medCodes.includes(1037045) = dabigatran 150mg SCD (not the ingredient, AUDIT-117) and matches with no ingredient->descendant expansion, so dabigatran 75mg (renal-impairment dose) + eGFR<30 - the precise contraindication - is a false-negative. Evaluator retained; PARTIAL until AUDIT-117/118 remediated. (Prior 2026-05-05 AUDIT-032 logic closure stands; trustworthiness capped by the matching defect.)',
     },
     'GAP-EP-007': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-vd-6-doac-mechanical-valve',
       evaluatorModule: 'VHD',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. Cross-module satisfaction by VHD VD-6 (DOAC + mechanical valve, Class 3 Harm) is intact, but the DOAC match is exact-RxCUI membership with no ingredient expansion, so product-coded DOAC meds under-detect the contraindication. Evaluator retained; PARTIAL until AUDIT-118 remediated.',
+        'UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033; expandToIngredients ingredient-normalization at the runner construction points). VHD VD-6 (DOAC + mechanical valve, Class 3 Harm) now detects product-coded (SCD/SBD) DOAC meds - a mechanical-valve patient on an apixaban SCD fires the contraindication. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118 (exact-RxCUI membership, no expansion).',
     },
     'GAP-EP-013': {
       classification: 'PARTIAL_DETECTION',
@@ -106,16 +106,16 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'MANUAL OVERRIDE per EP addendum line 131: GAP-EP-026 (Congenital LQTS QT-drug avoidance) covered by overlapping rules EP-LQTS-BB (line 6906+) and EP-TORSADES (line 7121+). PARTIAL because broad coverage of LQTS+QT-drug scenarios but not specifically the congenital subtype with QT-drug avoidance protocol.',
     },
     'GAP-EP-043': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-ep-amiodarone-monitor',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-AMIODARONE-MONITOR (TSH) tests amiodarone presence (703) ingredient-exact with no expansion, so SCD-coded amiodarone under-detects. Evaluator retained; PARTIAL until AUDIT-118 remediated.',
+        'UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-AMIODARONE-MONITOR (TSH) now detects SCD-coded amiodarone - amiodarone IN 703 is in the ingredient map and an amiodarone SCD expands to it, so the TSH-monitoring gap fires. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.',
     },
     'GAP-EP-044': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-ep-amiodarone-monitor',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-AMIODARONE-MONITOR (LFT) tests amiodarone presence (703) ingredient-exact with no expansion. Evaluator retained; PARTIAL until AUDIT-118 remediated.',
+        'UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-AMIODARONE-MONITOR (LFT) now detects SCD-coded amiodarone (IN 703 in the ingredient map). Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.',
     },
     'GAP-EP-045': {
       classification: 'PARTIAL_DETECTION',
@@ -124,16 +124,16 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'MANUAL OVERRIDE per EP addendum line 179: GAP-EP-045 (Amiodarone baseline PFT/CXR) covered partially by EP-AMIODARONE-MONITOR evaluator. PARTIAL per §3.2.1: combined rule covers TSH/LFT but not PFT/CXR baseline screening that spec specifies.',
     },
     'GAP-EP-046': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-ep-dronedarone',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-DRONEDARONE (SAFETY) tests dronedarone presence (233698) ingredient-exact with no expansion, so SCD-coded dronedarone under-detects the NYHA III/IV contraindication. Evaluator retained; PARTIAL until AUDIT-118 remediated.',
+        'UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-DRONEDARONE (SAFETY) now detects SCD-coded dronedarone (IN 233698 in the ingredient map), so the NYHA III/IV contraindication fires for an SCD-coded dronedarone patient with severe HF. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.',
     },
     'GAP-EP-048': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-ep-dofetilide-rems',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-DOFETILIDE-REMS tests dofetilide presence (49247) ingredient-exact with no expansion. Evaluator retained; PARTIAL until AUDIT-118 remediated.',
+        'UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-DOFETILIDE-REMS now detects SCD-coded dofetilide (IN 49247 in the ingredient map), so the REMS-monitoring gap fires for an SCD-coded dofetilide patient. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.',
     },
     'GAP-EP-070': {
       classification: 'PARTIAL_DETECTION',
