@@ -82,18 +82,14 @@ Heart Failure has **126 spec gaps** across 15 subcategories. Implementation: **3
 
 **Registry-without-evaluator (1):** registry entries with no matching evaluator block body.
 
-- `gap-hf-vaccine-covid` (registry line 2195): No evaluator body matched via similarity scoring
-
-**Evaluator-without-registry (1):** evaluator blocks with no registry entry.
-
-- `AUDIT-118` (line 3485): No registry entry matched via similarity scoring
+- `gap-hf-vaccine-covid` (registry line 2199): No evaluator body matched via similarity scoring
 
 **Naming convention mismatches (4):** registry IDs not following `gap-hf-` convention.
 
-- `gap-1-attr-cm` (line 227): expected prefix `gap-hf-`, got `gap-1-`
-- `gap-2-iron-deficiency` (line 239): expected prefix `gap-hf-`, got `gap-2-`
-- `gap-6-finerenone` (line 251): expected prefix `gap-hf-`, got `gap-6-`
-- `gap-44-digoxin-toxicity` (line 275): expected prefix `gap-hf-`, got `gap-44-`
+- `gap-1-attr-cm` (line 231): expected prefix `gap-hf-`, got `gap-1-`
+- `gap-2-iron-deficiency` (line 243): expected prefix `gap-hf-`, got `gap-2-`
+- `gap-6-finerenone` (line 255): expected prefix `gap-hf-`, got `gap-6-`
+- `gap-44-digoxin-toxicity` (line 279): expected prefix `gap-hf-`, got `gap-44-`
 
 
 ---

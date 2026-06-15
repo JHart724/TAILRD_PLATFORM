@@ -75,11 +75,11 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 **Registry-without-evaluator (1):** registry entries with no matching evaluator block body.
 
-- `gap-ep-anticoag-interruption` (registry line 2027): No evaluator body matched via similarity scoring
+- `gap-ep-anticoag-interruption` (registry line 2031): No evaluator body matched via similarity scoring
 
 **Naming convention mismatches (1):** registry IDs not following `gap-ep-` convention.
 
-- `gap-39-qtc-safety` (line 263): expected prefix `gap-ep-`, got `gap-39-`
+- `gap-39-qtc-safety` (line 267): expected prefix `gap-ep-`, got `gap-39-`
 
 
 ---

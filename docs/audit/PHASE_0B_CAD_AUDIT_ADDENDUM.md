@@ -85,7 +85,7 @@ Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementa
 
 **Naming convention mismatches (1):** registry IDs not following `gap-cad-` convention.
 
-- `gap-50-dapt` (line 287): expected prefix `gap-cad-`, got `gap-50-`
+- `gap-50-dapt` (line 291): expected prefix `gap-cad-`, got `gap-50-`
 
 
 ---
