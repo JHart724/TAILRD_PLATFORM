@@ -4,13 +4,13 @@
   "source": "https://rxnav.nlm.nih.gov/REST/rxcui/{IN}/related.json?tty=SCD+SBD+SCDC+SCDG+SBDG+BPCK+GPCK",
   "retrieved": "2026-06-15",
   "candidateUniverse": {
-    "valuesets": 96,
+    "valuesets": 94,
     "engineInline": 65,
-    "union": 119
+    "union": 117
   },
-  "ingredientINCount": 103,
-  "mapEntryCount": 3475,
-  "multiIngredientEntries": 322,
+  "ingredientINCount": 101,
+  "mapEntryCount": 3452,
+  "multiIngredientEntries": 316,
   "perIngredient": {
     "703": {
       "name": "amiodarone",
@@ -228,10 +228,6 @@
       "name": "lisinopril",
       "descendantCount": 42
     },
-    "31555": {
-      "name": "nebivolol",
-      "descendantCount": 22
-    },
     "32968": {
       "name": "clopidogrel",
       "descendantCount": 10
@@ -399,10 +395,6 @@
     "1991302": {
       "name": "semaglutide",
       "descendantCount": 65
-    },
-    "2053490": {
-      "name": "patisiran",
-      "descendantCount": 5
     },
     "2274394": {
       "name": "ferric derisomaltose",

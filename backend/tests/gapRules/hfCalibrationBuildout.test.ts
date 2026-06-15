@@ -50,9 +50,12 @@ describe('GAP-HF-008 MRA contraindicated by labs (SAFETY)', () => {
   it('fires: on MRA + K>=5.5', () => {
     expect(fired(ev(['I50.20'], { potassium: 5.7 }, ['9997']), F)).toBe(true);
   });
-  it('fires: on MRA SCD-coded + eGFR<20 (ingredient-expand path)', () => {
+  it('fires: on MRA SCD-coded + eGFR=25 (corrected <30 threshold; ingredient-expand path)', () => {
     // spironolactone is IN 9997; route a raw code through expand to mirror the runner
-    expect(fired(ev(['I50.20'], { egfr: 18 }, expandToIngredients(['9997'])), F)).toBe(true);
+    expect(fired(ev(['I50.20'], { egfr: 25 }, expandToIngredients(['9997'])), F)).toBe(true);
+  });
+  it('suppressed: eGFR=35 (above the <30 cutoff) + K+ normal', () => {
+    expect(fired(ev(['I50.20'], { egfr: 35, potassium: 4.5 }, ['9997']), F)).toBe(false);
   });
   it('suppressed: labs in range', () => {
     expect(fired(ev(['I50.20'], { potassium: 4.5, egfr: 50 }, ['9997']), F)).toBe(false);
@@ -75,23 +78,35 @@ describe('GAP-HF-033 absolute iron deficiency untreated', () => {
   });
 });
 
-describe('GAP-HF-143 recurrent pericarditis colchicine', () => {
+describe('GAP-HF-143 pericarditis colchicine (corrected: I30 + I31.9 only)', () => {
   const F = 'Colchicine not prescribed in pericarditis';
-  it('fires: pericarditis + no colchicine', () => {
+  it('fires: acute pericarditis I30 + no colchicine', () => {
+    expect(fired(ev(['I30.9'], {}, []), F)).toBe(true);
+  });
+  it('fires: I31.9 unspecified pericarditis', () => {
     expect(fired(ev(['I31.9'], {}, []), F)).toBe(true);
   });
+  it('does NOT fire on I31.4 tamponade (structural complication, not pericarditis)', () => {
+    expect(fired(ev(['I31.4'], {}, []), F)).toBe(false);
+  });
+  it('does NOT fire on I31.3 effusion', () => {
+    expect(fired(ev(['I31.3'], {}, []), F)).toBe(false);
+  });
   it('suppressed: on colchicine (2683)', () => {
-    expect(fired(ev(['I31.9'], {}, ['2683']), F)).toBe(false);
+    expect(fired(ev(['I30.9'], {}, ['2683']), F)).toBe(false);
   });
 });
 
-describe('GAP-HF-054 ATTR-CM disease-modifying therapy', () => {
+describe('GAP-HF-054 ATTR-CM disease-modifying therapy (corrected: patisiran dropped)', () => {
   const F = 'ATTR cardiac amyloidosis without disease-modifying therapy';
   it('fires: ATTR (E85.82) + no DMT', () => {
     expect(fired(ev(['E85.82'], {}, []), F)).toBe(true);
   });
   it('suppressed: on tafamidis (1545063)', () => {
     expect(fired(ev(['E85.82'], {}, ['1545063']), F)).toBe(false);
+  });
+  it('still FIRES on patisiran-only (2053490) - polyneuropathy drug, NOT an ATTR-CM DMT', () => {
+    expect(fired(ev(['E85.82'], {}, ['2053490']), F)).toBe(true);
   });
 });
 

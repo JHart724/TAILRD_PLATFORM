@@ -206,13 +206,13 @@ export const RXNORM_FINERENONE = {
 } as const;
 
 /** ATTR-CM disease-modifying therapy (GAP-HF-054). All ingredient (TTY=IN), RxNav-verified 2026-06-15.
- *  Source: RxNav rxcui.json?name=. tafamidis 1545063, vutrisiran 2604578, patisiran 2053490,
- *  acoramidis 2698312. v3.0 HF buildout (calibration sample). */
+ *  Source: RxNav rxcui.json?name=. tafamidis 1545063, acoramidis 2698312, vutrisiran 2604578.
+ *  Operator clinical ruling 2026-06-15: patisiran (2053490) DROPPED - polyneuropathy-indicated,
+ *  not ATTR-CM (APOLLO-B not approved for CM). v3.0 HF buildout (calibration sample). */
 export const RXNORM_ATTR_DMT = {
   TAFAMIDIS: '1545063',
-  VUTRISIRAN: '2604578',
-  PATISIRAN: '2053490',
   ACORAMIDIS: '2698312',
+  VUTRISIRAN: '2604578',
 } as const;
 
 /** Colchicine (GAP-HF-143 recurrent pericarditis). Ingredient (TTY=IN), RxNav-verified 2026-06-15. */
@@ -230,13 +230,13 @@ export const RXNORM_IV_IRON = {
 } as const;
 
 /** Non-evidence-based beta-blockers in HFrEF (GAP-HF-002). Ingredient (TTY=IN),
- *  RxNav-verified 2026-06-15: atenolol 1202, nebivolol 31555. NOTE: metoprolol tartrate
- *  cannot be distinguished from metoprolol succinate at ingredient level (both = metoprolol
- *  IN 6918) - tartrate-specific detection requires the product/name path (AUDIT-101 precedent),
- *  so this set covers atenolol + nebivolol only. See the HF-calibration data-limit note. */
+ *  RxNav-verified 2026-06-15: atenolol 1202. Operator clinical ruling 2026-06-15: nebivolol
+ *  (31555) DROPPED - SENIORS-trial evidence in elderly HF makes it too defensible to flag as an
+ *  error. NOTE: metoprolol tartrate cannot be distinguished from metoprolol succinate at
+ *  ingredient level (both = metoprolol IN 6918) - tartrate-specific detection requires the
+ *  product/name path (AUDIT-101 precedent), so this set covers atenolol only (data-limit). */
 export const RXNORM_NON_EBM_BB_HF = {
   ATENOLOL: '1202',
-  NEBIVOLOL: '31555',
 } as const;
 
 /** GDMT medications -- used by HF GDMT optimization */

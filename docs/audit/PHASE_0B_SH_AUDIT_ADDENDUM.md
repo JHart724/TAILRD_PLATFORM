@@ -86,16 +86,16 @@ No EXTRA rules or architectural patterns surfaced. Reconciliation is clean.
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-SH-001 | 445 | PARTIAL_DETECTION | `gap-sh-2-tavr-eval` (SH-2 @5245-5266) | line 4923+ (covers severe AS+age>=65; no asymptomatic-specific check, no Vmax/MG/AVA severity gradin |
-| GAP-SH-002 | 446 | PARTIAL_DETECTION | `gap-sh-2-tavr-eval` (SH-2 @5245-5266) | (broad TAVR rule) \| auto-verify: preserved-from-addendum |
+| GAP-SH-001 | 445 | PARTIAL_DETECTION | `gap-sh-2-tavr-eval` (SH-2 @5347-5368) | line 4923+ (covers severe AS+age>=65; no asymptomatic-specific check, no Vmax/MG/AVA severity gradin |
+| GAP-SH-002 | 446 | PARTIAL_DETECTION | `gap-sh-2-tavr-eval` (SH-2 @5347-5368) | (broad TAVR rule) \| auto-verify: preserved-from-addendum |
 | GAP-SH-003 | 447 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-SH-006 | 448 | PARTIAL_DETECTION | `gap-sh-2-tavr-eval` (SH-2 @5245-5266) | (broad) \| auto-verify: preserved-from-addendum |
-| GAP-SH-061 | 472 | PARTIAL_DETECTION | `gap-sh-valve-in-valve` (SH-VALVE-IN-VALVE @10615-10637) | MANUAL OVERRIDE 2026-06-08 (SH audit Batch 2): DET_OK -> PARTIAL per 16.6(i) concept-match / AUDIT-1 |
-| GAP-SH-014 | 485 | PARTIAL_DETECTION | `gap-sh-3-mitral-intervention` (SH-3 @5312-5337) | line 4988+ +  line 6059+ \| Multiple registry ids cited: gap-sh-3-mitral-intervention, gap-sh-10-mitr |
-| GAP-SH-015 | 486 | PARTIAL_DETECTION | `gap-sh-3-mitral-intervention` (SH-3 @5312-5337) | (broad) \| auto-verify: preserved-from-addendum |
-| GAP-SH-018 | 487 | PARTIAL_DETECTION | `gap-sh-10-mitraclip` (SH-10 @6385-6404) | (broad MR + LVEF<50) \| auto-verify: preserved-from-addendum |
+| GAP-SH-006 | 448 | PARTIAL_DETECTION | `gap-sh-2-tavr-eval` (SH-2 @5347-5368) | (broad) \| auto-verify: preserved-from-addendum |
+| GAP-SH-061 | 472 | PARTIAL_DETECTION | `gap-sh-valve-in-valve` (SH-VALVE-IN-VALVE @10934-10956) | MANUAL OVERRIDE 2026-06-08 (SH audit Batch 2): DET_OK -> PARTIAL per 16.6(i) concept-match / AUDIT-1 |
+| GAP-SH-014 | 485 | PARTIAL_DETECTION | `gap-sh-3-mitral-intervention` (SH-3 @5414-5439) | line 4988+ +  line 6059+ \| Multiple registry ids cited: gap-sh-3-mitral-intervention, gap-sh-10-mitr |
+| GAP-SH-015 | 486 | PARTIAL_DETECTION | `gap-sh-3-mitral-intervention` (SH-3 @5414-5439) | (broad) \| auto-verify: preserved-from-addendum |
+| GAP-SH-018 | 487 | PARTIAL_DETECTION | `gap-sh-10-mitraclip` (SH-10 @6487-6506) | (broad MR + LVEF<50) \| auto-verify: preserved-from-addendum |
 | GAP-SH-019 | 488 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-SH-022 | 507 | PARTIAL_DETECTION | `gap-sh-4-tricuspid-assessment` (SH-4 @5346-5372) | MANUAL OVERRIDE 2026-06-08 (SH audit Batch 3): DET_OK -> PARTIAL per 16.6(iii) severity-encoding / A |
+| GAP-SH-022 | 507 | PARTIAL_DETECTION | `gap-sh-4-tricuspid-assessment` (SH-4 @5448-5474) | MANUAL OVERRIDE 2026-06-08 (SH audit Batch 3): DET_OK -> PARTIAL per 16.6(iii) severity-encoding / A |
 | GAP-SH-075 | 517 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-SH-090 | 549 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-SH-091 | 550 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
