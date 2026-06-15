@@ -75,11 +75,11 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 **Registry-without-evaluator (1):** registry entries with no matching evaluator block body.
 
-- `gap-ep-anticoag-interruption` (registry line 2027): No evaluator body matched via similarity scoring
+- `gap-ep-anticoag-interruption` (registry line 2031): No evaluator body matched via similarity scoring
 
 **Naming convention mismatches (1):** registry IDs not following `gap-ep-` convention.
 
-- `gap-39-qtc-safety` (line 263): expected prefix `gap-ep-`, got `gap-39-`
+- `gap-39-qtc-safety` (line 267): expected prefix `gap-ep-`, got `gap-39-`
 
 
 ---
@@ -88,20 +88,20 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-EP-001 | 311 | PARTIAL_DETECTION | `gap-ep-oac-afib` (EP-OAC @4223-4276) | MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per AUDIT_METHODOLOGY.md §16.5 / AU |
-| GAP-EP-006 | 312 | PARTIAL_DETECTION | `gap-ep-006-dabigatran-renal-safety` (EP-006 @4294-4344) | MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-117 + AUDIT-118.  |
-| GAP-EP-007 | 313 | DET_OK | `gap-vd-6-doac-mechanical-valve` (VD-6 @5735-5759) **[cross-module: VHD]** | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033; expandToIngredients ingredie |
-| GAP-EP-008 | 314 | PARTIAL_DETECTION | `gap-vd-4-mitral-stenosis` (VD-4 @5679-5699) **[cross-module: VHD]** | (no DOAC + MS contraindication; mitral stenosis logic at 5134+ only covers echo surveillance) \| auto |
+| GAP-EP-001 | 311 | PARTIAL_DETECTION | `gap-ep-oac-afib` (EP-OAC @4232-4285) | MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per AUDIT_METHODOLOGY.md §16.5 / AU |
+| GAP-EP-006 | 312 | PARTIAL_DETECTION | `gap-ep-006-dabigatran-renal-safety` (EP-006 @4303-4353) | MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-117 + AUDIT-118.  |
+| GAP-EP-007 | 313 | DET_OK | `gap-vd-6-doac-mechanical-valve` (VD-6 @5744-5768) **[cross-module: VHD]** | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033; expandToIngredients ingredie |
+| GAP-EP-008 | 314 | PARTIAL_DETECTION | `gap-vd-4-mitral-stenosis` (VD-4 @5688-5708) **[cross-module: VHD]** | (no DOAC + MS contraindication; mitral stenosis logic at 5134+ only covers echo surveillance) \| auto |
 | GAP-EP-064 | 315 | SPEC_ONLY | — | — (no pharmacy fill data integration) \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
 | GAP-EP-065 | 316 | SPEC_ONLY | — | — (no pharmacy fill data integration) \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
-| GAP-EP-011 | 328 | PARTIAL_DETECTION | `gap-ep-laac` (EP-LAAC @4406-4434) | MANUAL OVERRIDE 2026-06-08 (EP audit Batch 5): DET_OK -> PARTIAL per AUDIT-120 (over-detection, dist |
-| GAP-EP-012 | 329 | PARTIAL_DETECTION | `gap-ep-laac` (EP-LAAC @4406-4434) | (broad rule, no trigger differentiation) \| auto-verify: preserved-from-addendum |
-| GAP-EP-013 | 337 | DET_OK | `gap-ep-early-rhythm` (EP-EARLY-RHYTHM @9735-9757) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-EARLY-RHYTHM is an AAD-A |
-| GAP-EP-014 | 338 | PARTIAL_DETECTION | `gap-ep-ablation` (EP-ABLATION @4441-4464) | line 4014+ \| auto-verify: preserved-from-addendum |
-| GAP-EP-017 | 339 | DET_OK | `gap-ep-017-hfref-non-dhp-ccb` (EP-017 @5219-5244) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The Class-3-Harm HFrEF + no |
-| GAP-EP-018 | 340 | DET_OK | `gap-ep-subclinical-af` (EP-SUBCLINICAL-AF @7367-7390) | line 6819+ \| auto-verify: preserved-from-addendum |
-| GAP-EP-079 | 352 | DET_OK | `gap-ep-079-wpw-af-avn-blocker` (EP-079 @4374-4399) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The CRITICAL WPW+AF AVN-blo |
-| GAP-EP-086 | 363 | PARTIAL_DETECTION | `gap-ep-vt-ablation` (EP-VT-ABLATION @9768-9790) | line 9162+ (broad VT+ICD trigger, not VT-storm-specific) \| auto-verify: preserved-from-addendum |
+| GAP-EP-011 | 328 | PARTIAL_DETECTION | `gap-ep-laac` (EP-LAAC @4415-4443) | MANUAL OVERRIDE 2026-06-08 (EP audit Batch 5): DET_OK -> PARTIAL per AUDIT-120 (over-detection, dist |
+| GAP-EP-012 | 329 | PARTIAL_DETECTION | `gap-ep-laac` (EP-LAAC @4415-4443) | (broad rule, no trigger differentiation) \| auto-verify: preserved-from-addendum |
+| GAP-EP-013 | 337 | DET_OK | `gap-ep-early-rhythm` (EP-EARLY-RHYTHM @9744-9766) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-EARLY-RHYTHM is an AAD-A |
+| GAP-EP-014 | 338 | PARTIAL_DETECTION | `gap-ep-ablation` (EP-ABLATION @4450-4473) | line 4014+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-017 | 339 | DET_OK | `gap-ep-017-hfref-non-dhp-ccb` (EP-017 @5228-5253) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The Class-3-Harm HFrEF + no |
+| GAP-EP-018 | 340 | DET_OK | `gap-ep-subclinical-af` (EP-SUBCLINICAL-AF @7376-7399) | line 6819+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-079 | 352 | DET_OK | `gap-ep-079-wpw-af-avn-blocker` (EP-079 @4383-4408) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The CRITICAL WPW+AF AVN-blo |
+| GAP-EP-086 | 363 | PARTIAL_DETECTION | `gap-ep-vt-ablation` (EP-VT-ABLATION @9777-9799) | line 9162+ (broad VT+ICD trigger, not VT-storm-specific) \| auto-verify: preserved-from-addendum |
 | GAP-EP-099 | 436 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 
 ---
