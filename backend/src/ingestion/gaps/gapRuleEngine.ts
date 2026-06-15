@@ -3380,6 +3380,11 @@ export const RUNTIME_GAP_REGISTRY = [
 export function evaluateGapRules(
   dxCodes: string[],
   labValues: Record<string, number>,
+  // AUDIT-118: medCodes MUST be ingredient-expanded via expandToIngredients()
+  // before being passed here. Raw product-coded (SCD/SBD) membership silently
+  // under-detects against the ingredient-level (TTY=IN) value sets. The two gap
+  // runners are the only callers and both expand; a new caller must too
+  // (enforced by audit118CallerGuard.test.ts).
   medCodes: string[],
   age: number,
   gender?: string,
@@ -4137,7 +4142,7 @@ export function evaluateGapRules(
 
     const threshold = isFemale ? 3 : 2;
     if (cha2Score >= threshold) {
-      const OAC_CODES = ['1364430', '1114195', '1599538', '1037045', '11289']; // DOACs + warfarin
+      const OAC_CODES = ['1364430', '1114195', '1599538', '1037042', '11289']; // DOACs + warfarin
       const onOAC = medCodes.some(c => OAC_CODES.includes(c));
       if (!onOAC && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
         const activeComponents = Object.entries(scoreComponents).filter(([, v]) => v > 0).map(([k, v]) => `${k}+${v}`).join(', ');
@@ -4184,7 +4189,7 @@ export function evaluateGapRules(
   // 2-branch compound: SAFETY when eGFR<30; structured DATA gap when eGFR
   //   undefined (preserves harm vector via fail-loud, never silent default —
   //   matches EP-RC LVEF-data-required pattern from PR #229 / EP-XX-7).
-  if (medCodes.includes('1037045') && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  if (medCodes.includes('1037042') && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     if (labValues['egfr'] !== undefined && labValues['egfr'] < 30) {
       gaps.push({
         type: TherapyGapType.MEDICATION_MISSING,
@@ -4199,7 +4204,7 @@ export function evaluateGapRules(
         },
         evidence: {
           triggerCriteria: [
-            'On dabigatran (RxNorm 1037045) in active medications',
+            'On dabigatran (RxNorm 1037042) in active medications',
             `eGFR: ${labValues['egfr']} mL/min/1.73m² (<30, severe renal impairment per FDA Pradaxa PI)`,
           ],
           guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Pradaxa Prescribing Information',
@@ -4224,7 +4229,7 @@ export function evaluateGapRules(
         },
         evidence: {
           triggerCriteria: [
-            'On dabigatran (RxNorm 1037045) in active medications',
+            'On dabigatran (RxNorm 1037042) in active medications',
             'No eGFR value in lab observations',
           ],
           guidelineSource: '2023 ACC/AHA/ACCP/HRS AFib Guideline + FDA Pradaxa Prescribing Information',
@@ -4258,7 +4263,7 @@ export function evaluateGapRules(
   const AVN_BLOCKER_CODES_EP079 = [
     '6918', '20352', '19484', '7226', '1202', '8787', '49737', '6185',  // BBs: metoprolol, carvedilol, bisoprolol, nadolol, atenolol, propranolol, esmolol, labetalol
     '3443', '11170',                                                     // non-DHP CCBs: diltiazem, verapamil
-    '3407', '197604', '197605', '197606',                                // digoxin: ingredient + 3 formulations
+    '3407',                                                              // digoxin ingredient (AUDIT-118: formulations roll up via expandToIngredients)
   ];
   if (
     hasWPW_EP079 && hasAF &&
@@ -4560,7 +4565,7 @@ export function evaluateGapRules(
     labValues['egfr'] !== undefined &&
     labValues['egfr'] < 50
   ) {
-    if (medCodes.some(c => ['197604', '197605', '197606'].includes(c))) {
+    if (medCodes.includes('3407')) { // digoxin ingredient (AUDIT-118: formulations roll up via expandToIngredients)
             if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
           type: TherapyGapType.MEDICATION_CONTRAINDICATED,
@@ -5624,9 +5629,9 @@ export function evaluateGapRules(
   // Gap VD-6: DOAC Contraindicated in Mechanical Valve
   // Guideline: 2020 ACC/AHA VHD (RE-ALIGN Trial), Class 3 (Harm), LOE B
   // DOACs are contraindicated in mechanical valve patients -- warfarin is required
-  // DOAC RxNorm: apixaban (1364430), rivaroxaban (1114195), dabigatran (1037045), edoxaban (1599538)
+  // DOAC RxNorm: apixaban (1364430), rivaroxaban (1114195), dabigatran (1037042), edoxaban (1599538)
   if (hasMechanicalValve && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const DOAC_CODES = ['1364430', '1114195', '1037045', '1599538'];
+    const DOAC_CODES = ['1364430', '1114195', '1037042', '1599538'];
     const onDOAC = medCodes.some(c => DOAC_CODES.includes(c));
     if (onDOAC) {
       gaps.push({
@@ -5802,13 +5807,13 @@ export function evaluateGapRules(
   // Gap VD-12: Anticoagulation in AF + Valve Disease
   // Guideline: 2023 ACC/AHA AFib Guideline, Class 1, LOE A
   // AF + any valve dx + no oral anticoagulant
-  // OAC RxNorm: warfarin (11289), apixaban (1364430), rivaroxaban (1114195), dabigatran (1037045), edoxaban (1599538)
+  // OAC RxNorm: warfarin (11289), apixaban (1364430), rivaroxaban (1114195), dabigatran (1037042), edoxaban (1599538)
   if (
     hasAF &&
     hasAnyValveDx &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
-    const OAC_CODES = ['11289', '1364430', '1114195', '1037045', '1599538'];
+    const OAC_CODES = ['11289', '1364430', '1114195', '1037042', '1599538'];
     const onOAC = medCodes.some(c => OAC_CODES.includes(c));
     if (!onOAC) {
       gaps.push({
@@ -6613,7 +6618,7 @@ export function evaluateGapRules(
     hasBioprosthetic13 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
-    const OAC_CODES_VD13 = ['11289', '1364430', '1114195', '1037045', '1599538']; // warfarin + DOACs
+    const OAC_CODES_VD13 = ['11289', '1364430', '1114195', '1037042', '1599538']; // warfarin + DOACs
     const onOAC13 = medCodes.some(c => OAC_CODES_VD13.includes(c));
     const ANTIPLATELET_VD13 = ['1191']; // aspirin as minimum
     const onASA13 = medCodes.some(c => ANTIPLATELET_VD13.includes(c));
@@ -7119,7 +7124,7 @@ export function evaluateGapRules(
   // Atrial flutter (I48.3/I48.4) + age>=65 + no OAC -- same stroke risk as AFib
   const hasFlutter = dxCodes.some(c => c.startsWith('I48.3') || c.startsWith('I48.4'));
   if (hasFlutter && age >= 65 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const OAC_CODES_FLUTTER = ['1364430', '1114195', '1599538', '1037045', '11289'];
+    const OAC_CODES_FLUTTER = ['1364430', '1114195', '1599538', '1037042', '11289'];
     const onOACFlutter = medCodes.some(c => OAC_CODES_FLUTTER.includes(c));
     if (!onOACFlutter) {
       gaps.push({
@@ -7745,7 +7750,7 @@ export function evaluateGapRules(
   // Guideline: 2023 ACC/AHA/ACCP/HRS AF Guideline + 2021 ACC/AHA Revasc (AUGUSTUS, AFIRE), Class 1, LOE A
   // CAD + AF + not on OAC
   if (hasCAD && hasAF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const OAC_CODES_CAD_AF = ['1364430', '1114195', '1599538', '1037045', '11289'];
+    const OAC_CODES_CAD_AF = ['1364430', '1114195', '1599538', '1037042', '11289'];
     const onOACforCADAF = medCodes.some(c => OAC_CODES_CAD_AF.includes(c));
     if (!onOACforCADAF) {
       gaps.push({
@@ -9860,7 +9865,7 @@ export function evaluateGapRules(
     // Fix (AUDIT-049, 2026-05-06): was ['1364430', '1232082', '1114195', '1549682'] — 1232082 is rivaroxaban
     // 15mg formulation, 1549682 is rivaroxaban-pack (combo). Comment claimed dabigatran/edoxaban but
     // those ingredients were missing. Now uses canonical RXNORM_DOACS ingredient list (all 4 DOACs).
-    const DOAC_CODES_STROKE = [...DOAC_CODES_CV]; // apixaban (1364430), rivaroxaban (1114195), edoxaban (1599538), dabigatran (1037045)
+    const DOAC_CODES_STROKE = [...DOAC_CODES_CV]; // apixaban (1364430), rivaroxaban (1114195), edoxaban (1599538), dabigatran (1037042)
     const WARFARIN_CODES_STROKE = ['11289'];
     const onAnticoagStroke = medCodes.some(c =>
       DOAC_CODES_STROKE.includes(c) || WARFARIN_CODES_STROKE.includes(c)
@@ -10181,7 +10186,7 @@ export function evaluateGapRules(
   // EP-ANTICOAG-SCORE-REASSESS: Annual CHA2DS2-VASc Reassessment
   // Guideline: 2023 ACC/AHA/ACCP/HRS AF Guideline, Class 1, LOE B
   if (hasAF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const OAC_CODES_REASSESS = ['11289', '1364430', '1114195', '1037045', '1599538'];
+    const OAC_CODES_REASSESS = ['11289', '1364430', '1114195', '1037042', '1599538'];
     const onOACreassess = medCodes.some(c => OAC_CODES_REASSESS.includes(c));
     if (onOACreassess && labValues['cha2ds2_vasc_date'] === undefined) {
       gaps.push({
@@ -11770,7 +11775,7 @@ export function evaluateGapRules(
   // Guideline: 2021 ASH VTE Guidelines + 2020 CHEST Antithrombotic Guideline, Class 1, LOE B
   if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasVTE = dxCodes.some(c => c.startsWith('I82'));
-    const OAC_CODES_VTE = ['11289', '1364430', '1114195', '1037045', '1599538'];
+    const OAC_CODES_VTE = ['11289', '1364430', '1114195', '1037042', '1599538'];
     const onOACvte = medCodes.some(c => OAC_CODES_VTE.includes(c));
     if (hasVTE && onOACvte) {
       gaps.push({

@@ -201,12 +201,15 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     expect(registry.length).toBe(count);
   });
 
-  it('VHD evaluator extraction includes VD-PANNUS at line 10801', () => {
+  it('VHD evaluator extraction includes VD-PANNUS at line 10806', () => {
+    // AUDIT-110 line-pinned-assertion recurrence: the AUDIT-118 matcher fix
+    // shifted gapRuleEngine.ts by +5 lines (10801 -> 10806). Literal bumped here;
+    // the content-anchor remediation remains AUDIT-110's separate scope.
     const cfg = MODULE_CONFIGS.find((m) => m.code === 'VHD')!;
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(10801);
+    expect(pannus!.commentLine).toBe(10806);
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });

@@ -17,6 +17,7 @@
  */
 
 import { evaluateGapRules } from '../../src/ingestion/gaps/gapRuleEngine';
+import { expandToIngredients } from '../../src/terminology/expandToIngredients';
 
 const AFIB_DX = 'I48.0';                    // AF
 const HF_DX = 'I50.20';                     // HFrEF
@@ -183,6 +184,9 @@ describe('EP-RC + EP-017 (rate-control HFrEF gating, EP-XX-7 mitigation)', () =>
 //   - SAFETY: dabigatran + eGFR<30 → switch to apixaban or warfarin (Class 3 Harm)
 //   - DATA gap: dabigatran on med list + eGFR undefined → eGFR measurement required
 //     (preserves harm vector via fail-loud rather than silent default)
+// dabigatran 150 MG capsule SCD (the granularity a patient record actually
+// carries). Routed through expandToIngredients() below so it rolls up to the
+// ingredient IN 1037042 the rule matches on (AUDIT-118 + AUDIT-117).
 const RXNORM_DABIGATRAN = '1037045';
 const RXNORM_APIXABAN = '1364430';
 const HOSPICE_DX = 'Z51.5';
@@ -207,7 +211,7 @@ describe('EP-006 SAFETY: dabigatran + eGFR<30 (AUDIT-032)', () => {
   it('Positive: dabigatran + eGFR=25 → fires SAFETY (Class 3 Harm)', () => {
     const dx = [AFIB_DX];
     const labs = { egfr: 25 };
-    const meds = [RXNORM_DABIGATRAN];
+    const meds = expandToIngredients([RXNORM_DABIGATRAN]);
     const gaps = evaluateGapRules(dx, labs, meds, 75);
 
     const safetyGap = findDabigatranSafetyGap(gaps);
@@ -223,7 +227,7 @@ describe('EP-006 SAFETY: dabigatran + eGFR<30 (AUDIT-032)', () => {
   it('Edge: dabigatran + eGFR=29 → fires SAFETY (strict <30 threshold)', () => {
     const dx = [AFIB_DX];
     const labs = { egfr: 29 };
-    const meds = [RXNORM_DABIGATRAN];
+    const meds = expandToIngredients([RXNORM_DABIGATRAN]);
     const gaps = evaluateGapRules(dx, labs, meds, 70);
 
     expect(findDabigatranSafetyGap(gaps)).toBeDefined();
@@ -232,7 +236,7 @@ describe('EP-006 SAFETY: dabigatran + eGFR<30 (AUDIT-032)', () => {
   it('Negative: dabigatran + eGFR=30 → does NOT fire SAFETY (boundary, not <30)', () => {
     const dx = [AFIB_DX];
     const labs = { egfr: 30 };
-    const meds = [RXNORM_DABIGATRAN];
+    const meds = expandToIngredients([RXNORM_DABIGATRAN]);
     const gaps = evaluateGapRules(dx, labs, meds, 70);
 
     expect(findDabigatranSafetyGap(gaps)).toBeUndefined();
@@ -242,7 +246,7 @@ describe('EP-006 SAFETY: dabigatran + eGFR<30 (AUDIT-032)', () => {
   it('Negative: dabigatran + eGFR=60 → does NOT fire SAFETY (normal renal function)', () => {
     const dx = [AFIB_DX];
     const labs = { egfr: 60 };
-    const meds = [RXNORM_DABIGATRAN];
+    const meds = expandToIngredients([RXNORM_DABIGATRAN]);
     const gaps = evaluateGapRules(dx, labs, meds, 65);
 
     expect(findDabigatranSafetyGap(gaps)).toBeUndefined();
@@ -252,7 +256,7 @@ describe('EP-006 SAFETY: dabigatran + eGFR<30 (AUDIT-032)', () => {
   it('Data gap: dabigatran + eGFR undefined → fires structured DATA gap (fail-loud, no silent default)', () => {
     const dx = [AFIB_DX];
     const labs = {};                            // eGFR intentionally missing
-    const meds = [RXNORM_DABIGATRAN];
+    const meds = expandToIngredients([RXNORM_DABIGATRAN]);
     const gaps = evaluateGapRules(dx, labs, meds, 70);
 
     const dataGap = findEgfrDataGap(gaps);
@@ -277,7 +281,7 @@ describe('EP-006 SAFETY: dabigatran + eGFR<30 (AUDIT-032)', () => {
   it('Edge: dabigatran + eGFR=20 + Z51.5 hospice → SAFETY does NOT fire (hospice exclusion preserved)', () => {
     const dx = [AFIB_DX, HOSPICE_DX];
     const labs = { egfr: 20 };
-    const meds = [RXNORM_DABIGATRAN];
+    const meds = expandToIngredients([RXNORM_DABIGATRAN]);
     const gaps = evaluateGapRules(dx, labs, meds, 80);
 
     expect(findDabigatranSafetyGap(gaps)).toBeUndefined();
