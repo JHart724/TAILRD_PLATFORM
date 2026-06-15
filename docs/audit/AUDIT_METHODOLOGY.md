@@ -1378,4 +1378,107 @@ Test trace, set-theoretic: mock `totalPatients` = sum over all gaps in all modul
 
 ---
 
-*Authored 2026-05-04 in response to compounding methodology defect cycles (AUDIT-029 -> AUDIT-030 -> AUDIT-030.D). This document is the contract that prevents methodology drift living in audit prose. Implementation under `backend/scripts/auditCanonical/` follows. §16 added 2026-05-05 in response to Cat A clinical-code verification surfacing 15.5% wrong-drug bug rate (AUDIT-042 through AUDIT-061). §17 added 2026-05-06 in response to AUDIT-067/068 ABI deferral course-correction; codifies clinical-code PR acceptance criteria as drift-prevention mechanism. §18 added 2026-05-07 in response to AUDIT-016 status-surface drift across PR #248-#250 work; codifies status-surface discipline (register severity is authoritative; agent must not re-classify at status-surface time). §20 added 2026-06-11 (§19 permanently skipped to avoid collision with the CLAUDE.md §19 PAUSE procedure referenced unprefixed throughout the corpus) for the service-line aggregation + provenance surface class; authored from the PHASE-0 service-line inventory, ahead of the first classification pass.*
+## 21. KB-Completeness (Spec-Completeness) Verification Standard (KB vs external clinical reality)
+
+**What this section governs.** Every prior clinical discipline in this document measures CODE against the KB: §16 verifies a value-set code is the right code, §16.5/§16.6 verify a rule fires on the right patient, and the Phase-0B crosswalk verifies each KB-specified gap has a correct detecting rule. All of them take `CLINICAL_KNOWLEDGE_BASE_v4.0.md` as ground truth and ask whether the platform implements it. This section governs the inverted question: is the KB ITSELF complete against external clinical reality? A code-vs-KB audit is structurally BLIND to a clinically-real, guideline-grounded gap the KB never specified - the detecting code cannot be "wrong" about a gap that does not exist in the spec, so no amount of code-vs-KB rigor surfaces it. This is the **KB-completeness / spec-completeness** class (the missed-and-unknown class): the KB audited against an authoritative external reference standard, not the code audited against the KB.
+
+**Reference standard and remediation differ from every sibling.** §16/§16.5/§16.6 use NLM/RxNav/CMS as ground truth for a CODE; this section uses curated CLINICAL QUALITY STANDARDS (registries, society quality measures, guideline concept sets) as ground truth for the KB's COVERAGE. And the remediation inverts: a code-vs-KB finding is fixed by changing code; a KB-completeness finding is remediated by ADDING the gap to the KB, which then feeds the v3.0 clinical buildout as new spec (it grows the SPEC_ONLY denominator BEFORE it is built).
+
+**Anchor case.** AUDIT-163 (POAF prophylaxis absent from the KB for the cardiac-surgery population) is the proof this discipline finds real gaps the code-vs-KB audit cannot: peri-operative beta-blocker prophylaxis is COR I, POAF incidence is 30-50% post-CABG/valve, and the gap was invisible to every Phase-0B pass because it was never in the spec to audit. The §21.7 worked example walks POAF through this methodology end to end.
+
+### 21.1 The two-prong architecture
+
+KB-completeness auditing is two-pronged, and the prongs are ASYMMETRIC by design - Prong A is the deterministic spine, Prong B is the gated frontier:
+
+- **Prong A - structured reference-standard mapping (primary, deterministic, auditable).** Map the KB against a FINITE, CURATED, ENUMERABLE external concept set (a registry field list, a society quality-measure set). Per concept: COVERED / PARTIAL / ABSENT. This catches the ESTABLISHED-but-unencoded gaps - the POAF class - and it is the spine because its reference standard is bounded and version-able, so a coverage claim is reproducible.
+- **Prong B - literature-augmented fill (secondary, gated, expert-reviewed).** Two jobs: attach the evidence (COR/LOE + trial endpoints) that turns a Prong-A ABSENT concept into a buildable evidence-cited rule, and detect FRONTIER concepts not yet in any structured standard. Prong B is GATED behind expert/curated review and is SECONDARY to Prong A for the reason stated in §21.3: unbounded literature-primary gap-finding is a firehose.
+
+The ordering is load-bearing: **Prong A runs first and DEFINES THE SURFACE; Prong B fills against that surface.** Running Prong B first (mining the literature for "missing gaps") produces an unbounded, contested candidate set with no denominator - the failure mode §21.3 exists to prevent.
+
+### 21.2 Prong A - Structured reference-standard mapping (the spine)
+
+**Standard.** For a clinical domain: (1) identify the authoritative STRUCTURED reference - a finite curated concept set whose membership is enumerable and version-pinnable; (2) enumerate its concepts; (3) for each concept, assign a KB-coverage verdict (§21.4) by searching the KB + per-module spec.json/crosswalk for a gap that DETECTS that concept (not merely mentions an adjacent one). The output is a per-concept coverage table; every ABSENT row is a candidate new gap.
+
+**Reference standards per domain (the reference SURFACES; confirm per-domain when each runs).**
+- **Surgical / peri-operative (runs FIRST, step 3):** the STS Adult Cardiac Surgery Database data-specification fields + the STS cardiac-surgery quality measures (the tracked operative-morbidity and process concepts: POAF, prolonged ventilation, post-op renal failure, re-exploration for bleeding, deep sternal-wound infection / mediastinitis, post-op stroke, peri-operative glucose, early extubation, length-of-stay).
+- **Per-module analogues (extension, AFTER Prong A is validated surgically):** HF = the AHA Get-With-The-Guidelines-HF / HFSA registry measure set; EP = the HRS quality-measure / device-registry concept set; CAD = the NCDR CathPCI + Chest Pain-MI registry data sets; VHD/SH = the STS/ACC TVT Registry + STS valve concept set; PV = the SVS Vascular Quality Initiative (VQI) registries. These are stated as the reference SURFACES; the exact field/measure enumeration is confirmed per-domain when that domain's audit runs (a registry data-spec version is pinned then, not now).
+
+**PROVENANCE DISCIPLINE (mandatory - the spine is only as good as the standard's provenance).** This is the IN-map precedent (AUDIT-118: a clinical reference asset is generated, fully verified at generation time, committed as a static version-pinned artifact, never an ad-hoc in-prose list). For EACH reference standard, the audit must state:
+- **SOURCE:** the exact document/registry + version/year (e.g. "STS ACSD data specifications v4.20.2"). A coverage claim ("the KB is X% complete against STS") is only as defensible as the cited version of the standard it measures against.
+- **PROVENANCE CLASS:** CURATED/VENDORED (the concept set is committed as a static reference asset under version control - the default and REQUIRED class for any standard that drives a coverage percentage or a buildout tranche) vs SCRAPEABLE (a live/derived list - acceptable only as an input to GENERATE a curated asset, never as the live ground truth, for the same determinism reason the gap engine never makes a live RxNav call per the CDS rule).
+- **CAPTURE:** how the enumeration was obtained and WHERE the curated asset lives (a committed reference file, sibling to the canonical artifacts), so the coverage table is reproducible and re-runnable against a later version of the standard.
+
+A Prong-A pass that measures the KB against an uncited or un-versioned "STS-ish" list is a §1 violation transposed to this class: the conclusion (a coverage percentage) must cite a real, version-pinned, committed reference standard, not a remembered or hand-typed approximation.
+
+**Output of Prong A:** the per-concept coverage table (reference-standard concept x KB-coverage verdict, with the detecting gap-id for COVERED/PARTIAL and a KB + per-module spec.json/crosswalk search citation for ABSENT). The ABSENT rows are the candidate new-gap set that feeds Prong B and then the buildout.
+
+### 21.3 Prong B - Literature-augmented fill (frontier + evidence, expert-gated)
+
+**Standard.** Prong B has two jobs, run AGAINST the Prong-A reference surface (never free-floating):
+- **(a) EVIDENCE ATTACHMENT.** For each Prong-A ABSENT concept, attach the citation that makes it a buildable, evidence-cited rule per §8 / the CLAUDE.md gap-rule requirements: the guideline source, class of recommendation, level of evidence, the trial endpoint(s) that ground it, and the codes (CPT/ICD-10/RxNorm) the rule will key on. A Prong-A ABSENT verdict says "the KB lacks this concept"; Prong B supplies the evidence object the eventual buildout rule requires.
+- **(b) FRONTIER DETECTION.** Surface emerging concepts NOT yet in the structured standards - genuinely new evidence or practice ahead of the registries/measure sets (a recent pivotal trial, a just-published guideline update). This is the only legitimate way the KB grows BEYOND the structured spine.
+
+**The KOL / PubMed tool (Prong B's engine) - spec.** Prong B is operationalized by a literature/guideline-retrieval tool, specified here and BUILT AFTER the surgical Prong-A audit validates the approach (spec-now / build-after-proof, the same discipline as the IN-map generator: the tool is built once the surgical audit proves Prong A produces a bounded, real candidate set worth enriching):
+- **JOB:** run against the Prong-A reference surface - for each ABSENT concept, retrieve the COR/LOE-bearing guideline + the pivotal-trial citations (evidence attachment); separately, scan for frontier concepts in the domain.
+- **PROVENANCE:** PubMed / guideline-body sources with CITATION CAPTURE (every retrieved claim carries its source identifier - PMID, guideline doc + section - so a KB addition is traceable to a publication, mirroring the §16 external-source-capture discipline).
+- **GATE:** nothing the tool surfaces enters the KB without EXPERT / CURATED REVIEW. The tool produces CANDIDATES; a clinician (or the operator) adjudicates COR/LOE and clinical validity before a concept becomes a KB gap.
+
+**THE FAILURE MODE (why Prong B is gated and secondary).** Literature-PRIMARY gap-finding is a firehose: the published literature contains an unbounded supply of "consider X" signals of every evidence quality, and mining it for "gaps the KB is missing" with no structured denominator fills the KB with contested, low-LOE, or frankly wrong candidate gaps - the exact opposite of a defensible spec. This is why Prong A (bounded, curated, enumerable) is the spine and Prong B is gated and secondary: the structured standard provides the DENOMINATOR and the QUALITY FLOOR the literature alone does not. The standing evidence discipline applies verbatim: **a publication is a predicate to verify, not a fact to trust** (the §1 / §16 "cite running code / verify against the authoritative source" rule, applied to the clinical literature). A frontier concept (Prong B job b) carries a HIGHER evidence bar than an established one (Prong A) precisely because it lacks the structured standard's vetting.
+
+### 21.4 Verdict taxonomy (per reference-standard concept)
+
+The clinical taxonomy (DET_OK / PARTIAL / SPEC_ONLY) and the §20 aggregation taxonomy (CORRECT/DEFECT/LATENT/N-A) both measure something the KB already contains. KB-completeness measures PRESENCE-IN-SPEC, so its taxonomy is per reference-standard concept:
+
+- **COVERED** - the KB has a real DETECTING gap for this concept (a gap whose detection logic actually captures the concept's population, not merely a mention). Cite the gap-id.
+- **PARTIAL** - the KB has a RELATED gap that does not cover this concept (an adjacent target, a different population, a treatment-vs-prevention mismatch). Cite the related gap-id and state the gap in coverage. (The POAF anchor: GAP-VHD-077 / GAP-EP-073 / GAP-CAD-055 are all PARTIAL-adjacent, none COVERED.)
+- **ABSENT** - no KB gap covers or is even adjacent to this concept: a genuine missed-and-unknown gap. File as a KB-completeness finding (§21.6) and carry to Prong B for evidence attachment.
+
+The rigor mirrors §20.6: the verdict is per-concept with a mechanical citation (the detecting gap-id for COVERED/PARTIAL; the KB + per-module spec.json/crosswalk search result for ABSENT), and severity is NOT part of the verdict - each ABSENT concept files into the register where severity is assigned and owned per §18 (AUDIT-163 was filed ABSENT; severity FINALIZED HIGH at the register layer). One register finding may cover multiple ABSENT concepts that share a clinical cluster (the §16.6 propagation principle: one filing, full blast radius) - though for KB-completeness the more common pattern is one finding per concept, anchoring its eventual buildout gap.
+
+### 21.5 Cross-listing discipline
+
+Peri-operative / surgical-population concepts are inherently CROSS-MODULE: the population is defined by a surgical procedure (CABG = CAD; valve = SH/VHD) while the clinical logic may belong to another module (POAF prophylaxis = EP rhythm logic). A KB-completeness finding is therefore owned by a PRIMARY module and CROSS-LISTED to the population module(s), per the AUDIT-163 precedent (EP-primary, cross-listed SH + CAD): the primary module owns the eventual gap-id and the detection logic's clinical domain; the cross-list records the trigger population so the buildout authors the procedure-code trigger correctly and the cross-module report surfaces it. The owner is the module whose CLINICAL LOGIC the rule expresses, not necessarily the module whose population triggers it - state both, recommend the primary, and let the operator finalize per §18 (as with severity).
+
+### 21.6 Output + feed (the pipeline)
+
+A KB-completeness audit produces a candidate new-gap set that feeds the v3.0 clinical buildout as a NEW TRANCHE (for the surgical run: the `PATH_TO_ROBUST_v3.0.md` Track A.4 surgical-completeness tranche). The pipeline, stated explicitly so the boundary between this discipline and the buildout is clean:
+
+```
+reference standard (curated, version-pinned)
+      |  Prong A: per-concept coverage map
+      v
+ABSENT concepts  (candidate new gaps)
+      |  Prong B: evidence attachment (COR/LOE + trial + codes) + frontier scan, expert-gated
+      v
+evidence-cited candidate gaps
+      |  operator / clinician confirm (severity + owner per §18; clinical validity)
+      v
+KB addition  (new gap in CLINICAL_KNOWLEDGE_BASE_v4.0.md; grows SPEC_ONLY)
+      |  v3.0 buildout authoring (detection rule + evidence object + codes + tests)
+      v
+DET_OK gap  (the normal Phase-0B code-vs-KB discipline resumes here)
+```
+
+The hand-off is explicit: KB-completeness OWNS everything up to the KB addition; the v3.0 buildout OWNS the detection-rule authoring; once the gap is in the KB, the ordinary code-vs-KB disciplines (§16/§16.5/§16.6, the crosswalk) govern its implementation. A KB-completeness finding does NOT author code - it grows the spec.
+
+### 21.7 Worked example: POAF (AUDIT-163) end to end
+
+The anchor case walked through the methodology (the template output shape):
+
+- **Prong A (structured mapping).** Reference standard: STS cardiac-surgery quality concepts (POAF is a tracked operative-morbidity rate - a curated, enumerable registry concept, the spine's ideal input). KB-coverage search: no gap detects "cardiac-surgery patient without peri-operative beta-blocker prophylaxis"; the three adjacent gaps are GAP-VHD-077 (post-valve AF anticoagulation - treats established AF), GAP-EP-073 (concomitant Maze - pre-existing AF), GAP-CAD-055 (sternal-wound surveillance - not AF). **Verdict: ABSENT** (none COVERED; the three are PARTIAL-adjacent at best).
+- **Prong B (evidence + frontier).** Evidence attachment: peri-operative beta-blocker prophylaxis is COR I (STS practice guideline + 2023 ACC/AHA/ACCP/HRS AF guidance); amiodarone prophylaxis COR IIa for high-risk; trigger codes = cardiac-surgery CPT/ICD-10-PCS + beta-blocker RxNorm absence + contraindication exclusion. Frontier scan: NONE - POAF prophylaxis is long-established standard of care, not a frontier concept (it should have been in the spec; its absence is a completeness defect, not an evidence-frontier discovery). This is the COMMON case: most Prong-A ABSENT findings are established-but-unencoded, and Prong B's job for them is evidence attachment, not frontier discovery.
+- **Verdict + filing:** ABSENT -> filed as AUDIT-163, the KB-completeness class anchor; severity FINALIZED HIGH (P1) at the register layer (anchor of a 7/8-absent systematic blind spot).
+- **Cross-listing:** EP-primary (rhythm-prophylaxis logic; eventual gap-id GAP-EP-NNN), cross-listed SH + CAD (valve + CABG trigger population).
+- **Feed:** the candidate gap feeds `PATH_TO_ROBUST_v3.0.md` Track A.4 (surgical-completeness tranche); spec-add then buildout authoring.
+
+The spot-check that surrounded POAF (7 of 8 STS peri-operative concerns ABSENT: prolonged ventilation, post-op AKI, re-operation for bleeding, post-op delirium, peri-op glucose, early extubation/mobilization, LOS-as-care-process; only sternal-wound surveillance PARTIAL) is the Prong-A surface in miniature - it is what the full surgical run (step 3) enumerates and verdicts concept-by-concept.
+
+### 21.8 Scope + sequencing
+
+- **Surgical peri-operative runs FIRST** (step 3, under this section): the proven hot spot (POAF + the 7/8 spot-check), against the STS reference surface. It is the VALIDATION run for Prong A; the KOL/PubMed tool (Prong B engine) is built AFTER it proves the approach.
+- **Extension to the other domains** (HF / EP / CAD / VHD / SH / PV against their named reference standards, §21.2) follows once Prong A is validated surgically. Each domain pins its reference standard's version at the time it runs. Do NOT pre-run the other domains; the surgical run calibrates the per-concept verdict rate and the Prong-B gate before the discipline scales.
+- **Cross-references:** §1 (cite running code - here, cite the version-pinned reference standard + the KB-search result, not memory); §8 (gap-rule evidence-object requirements that Prong B attaches); §16 (the external-source-capture + version-pinning discipline the reference-standard provenance mirrors); §18 (severity + owner register-owned); §20 (sibling external-reference discipline for the aggregation class); AUDIT-163 (the anchor finding); `PATH_TO_ROBUST_v3.0.md` Track A.4 (the buildout feed).
+
+---
+
+*Authored 2026-05-04 in response to compounding methodology defect cycles (AUDIT-029 -> AUDIT-030 -> AUDIT-030.D). This document is the contract that prevents methodology drift living in audit prose. Implementation under `backend/scripts/auditCanonical/` follows. §16 added 2026-05-05 in response to Cat A clinical-code verification surfacing 15.5% wrong-drug bug rate (AUDIT-042 through AUDIT-061). §17 added 2026-05-06 in response to AUDIT-067/068 ABI deferral course-correction; codifies clinical-code PR acceptance criteria as drift-prevention mechanism. §18 added 2026-05-07 in response to AUDIT-016 status-surface drift across PR #248-#250 work; codifies status-surface discipline (register severity is authoritative; agent must not re-classify at status-surface time). §20 added 2026-06-11 (§19 permanently skipped to avoid collision with the CLAUDE.md §19 PAUSE procedure referenced unprefixed throughout the corpus) for the service-line aggregation + provenance surface class; authored from the PHASE-0 service-line inventory, ahead of the first classification pass. §21 added 2026-06-15 in response to AUDIT-163 (POAF prophylaxis absent from KB) for the KB-completeness / spec-completeness class - the inverted discipline (KB vs external clinical reality, not code vs KB); two-pronged (structured reference-standard mapping + expert-gated literature fill); authored ahead of the surgical peri-operative audit (step 3) it governs.*
