@@ -82,3 +82,86 @@ describe('AUDIT-118 cascade-flip: PARTIAL -> DET_OK confirmed on running fixed-m
     expect(expHits).toBe(4);
   });
 });
+
+/**
+ * Cascade-flip EXTENSION - the 5 additional EP gaps that carry the same
+ * "PARTIAL until AUDIT-118 remediated" criterion (013/017/024/070/079).
+ * Two rule shapes:
+ *   PRESENCE (EP-017/070/079): raw SCD misses -> expanded fires the target.
+ *   ABSENCE  (EP-013/024): raw SCD under-detects the drug -> FALSE-FIRES the
+ *     "drug not prescribed" gap; expanded detects the drug -> correctly SUPPRESSES.
+ * Real SCDs (RxNav-verified 2026-06-14): metoprolol tartrate 866411 -> IN 6918;
+ * diltiazem HCl 830794 -> IN 3443; amiodarone HCl 833527 -> IN 703.
+ */
+const LQTS_DX = 'I45.81';
+const WPW_DX = 'I45.6';
+const METOPROLOL_SCD = '866411';
+const DILTIAZEM_SCD = '830794';
+const AMIODARONE_SCD_EXT = '833527';
+
+describe('AUDIT-118 cascade-flip extension: the 5 remaining EP gaps', () => {
+  it('GAP-EP-017 (PRESENCE, Class-3 non-DHP-CCB in HFrEF): diltiazem SCD - raw misses, expanded fires', () => {
+    const dx = ['I50.20', 'I48.0']; // HFrEF + AF (the EP-017 rule context)
+    const labs = { lvef: 30 };
+    const f = 'Non-DHP CCB (diltiazem/verapamil) is contraindicated in HFrEF';
+    expect(fired(evaluateGapRules(dx, labs, [DILTIAZEM_SCD], 65), f)).toBe(false);
+    expect(fired(evaluateGapRules(dx, labs, expandToIngredients([DILTIAZEM_SCD]), 65), f)).toBe(true);
+  });
+
+  it('GAP-EP-070 (PRESENCE, PFA candidacy): AF + amiodarone SCD - raw misses, expanded fires', () => {
+    const dx = ['I48.0'];
+    const f = 'pulsed field ablation candidacy';
+    expect(fired(evaluateGapRules(dx, {}, [AMIODARONE_SCD_EXT], 65), f)).toBe(false);
+    expect(fired(evaluateGapRules(dx, {}, expandToIngredients([AMIODARONE_SCD_EXT]), 65), f)).toBe(true);
+  });
+
+  it('GAP-EP-079 (PRESENCE, CRITICAL fatal-VF): WPW+AF + metoprolol SCD - raw misses, expanded fires', () => {
+    const dx = [WPW_DX, 'I48.0'];
+    const f = 'pre-excited';
+    expect(fired(evaluateGapRules(dx, {}, [METOPROLOL_SCD], 65), f)).toBe(false);
+    expect(fired(evaluateGapRules(dx, {}, expandToIngredients([METOPROLOL_SCD]), 65), f)).toBe(true);
+  });
+
+  it('GAP-EP-013 (ABSENCE, early rhythm control): AF + amiodarone SCD - raw FALSE-FIRES, expanded SUPPRESSES', () => {
+    const dx = ['I48.0'];
+    const f = 'early rhythm control strategy evaluation';
+    expect(fired(evaluateGapRules(dx, {}, [AMIODARONE_SCD_EXT], 65), f)).toBe(true); // raw: AAD under-detected -> over-fires
+    expect(fired(evaluateGapRules(dx, {}, expandToIngredients([AMIODARONE_SCD_EXT]), 65), f)).toBe(false); // expanded: AAD detected -> suppressed
+  });
+
+  it('GAP-EP-024 (ABSENCE, LQTS beta-blocker): LQTS + metoprolol SCD - raw FALSE-FIRES, expanded SUPPRESSES', () => {
+    const dx = [LQTS_DX];
+    const f = 'Beta-blocker not prescribed in Long QT syndrome';
+    expect(fired(evaluateGapRules(dx, {}, [METOPROLOL_SCD], 65), f)).toBe(true); // raw: BB under-detected -> false-fires
+    expect(fired(evaluateGapRules(dx, {}, expandToIngredients([METOPROLOL_SCD]), 65), f)).toBe(false); // expanded: BB detected -> suppressed
+  });
+
+  it('summary: all 5 remaining targets resolve correctly after expansion (presence fires / absence suppresses)', () => {
+    // presence: expanded MUST fire; absence: expanded MUST suppress (raw was wrong in both directions)
+    const presence = [
+      { g: 'EP-017', dx: ['I50.20', 'I48.0'], labs: { lvef: 30 } as Record<string, number>, scd: DILTIAZEM_SCD, f: 'Non-DHP CCB (diltiazem/verapamil) is contraindicated in HFrEF' },
+      { g: 'EP-070', dx: ['I48.0'], labs: {} as Record<string, number>, scd: AMIODARONE_SCD_EXT, f: 'pulsed field ablation candidacy' },
+      { g: 'EP-079', dx: [WPW_DX, 'I48.0'], labs: {} as Record<string, number>, scd: METOPROLOL_SCD, f: 'pre-excited' },
+    ];
+    const absence = [
+      { g: 'EP-013', dx: ['I48.0'], labs: {} as Record<string, number>, scd: AMIODARONE_SCD_EXT, f: 'early rhythm control strategy evaluation' },
+      { g: 'EP-024', dx: [LQTS_DX], labs: {} as Record<string, number>, scd: METOPROLOL_SCD, f: 'Beta-blocker not prescribed in Long QT syndrome' },
+    ];
+    let resolved = 0;
+    for (const c of presence) {
+      const raw = fired(evaluateGapRules(c.dx, c.labs, [c.scd], 65), c.f);
+      const exp = fired(evaluateGapRules(c.dx, c.labs, expandToIngredients([c.scd]), 65), c.f);
+      if (!raw && exp) resolved += 1;
+      // eslint-disable-next-line no-console
+      console.log(`[AUDIT-118 cascade-ext] ${c.g} PRESENCE: raw=${raw} -> expanded=${exp} (want false->true)`);
+    }
+    for (const c of absence) {
+      const raw = fired(evaluateGapRules(c.dx, c.labs, [c.scd], 65), c.f);
+      const exp = fired(evaluateGapRules(c.dx, c.labs, expandToIngredients([c.scd]), 65), c.f);
+      if (raw && !exp) resolved += 1;
+      // eslint-disable-next-line no-console
+      console.log(`[AUDIT-118 cascade-ext] ${c.g} ABSENCE: raw=${raw} -> expanded=${exp} (want true->false)`);
+    }
+    expect(resolved).toBe(5);
+  });
+});

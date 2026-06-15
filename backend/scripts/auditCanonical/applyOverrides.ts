@@ -82,22 +82,22 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033; expandToIngredients ingredient-normalization at the runner construction points). VHD VD-6 (DOAC + mechanical valve, Class 3 Harm) now detects product-coded (SCD/SBD) DOAC meds - a mechanical-valve patient on an apixaban SCD fires the contraindication. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118 (exact-RxCUI membership, no expansion).',
     },
     'GAP-EP-013': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-ep-early-rhythm',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-EARLY-RHYTHM tests rhythm-control (AAD) presence by exact-RxCUI membership (RHYTHM_CONTROL_CODES_ER) with no expansion, so SCD-coded AAD meds read as not-on-rhythm-control. Evaluator retained; PARTIAL until AUDIT-118 remediated.',
+        'UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-EARLY-RHYTHM is an AAD-ABSENCE rule (fires when AF + not-on-rhythm-control); the cap was an OVER-detection (raw SCD-AAD read as not-on-AAD -> false-fired). Now the AAD is detected, so an AF patient on an SCD-coded AAD correctly SUPPRESSES the early-rhythm-control gap. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw false-fires -> expanded suppresses). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.',
     },
     'GAP-EP-017': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-ep-017-hfref-non-dhp-ccb',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. The Class-3-Harm HFrEF + non-DHP-CCB SAFETY rule matches diltiazem/verapamil ingredient-exact (NON_DHP_CCB_CODES) with no expansion, so SCD-coded CCB meds under-detect. Evaluator retained; PARTIAL until AUDIT-118 remediated. (Prior 2026-05-05 AUDIT-033 logic closure stands.)',
+        'UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The Class-3-Harm HFrEF + non-DHP-CCB SAFETY rule now detects SCD-coded diltiazem/verapamil (INs 3443/11170 in the ingredient map), so an HFrEF + AF patient on an SCD-coded non-DHP CCB fires the contraindication. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Prior 2026-05-05 AUDIT-033 logic closure stands. Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.',
     },
     'GAP-EP-024': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-ep-lqts-bb',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 3): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-LQTS-BB tests beta-blocker presence (BB_CODES_LQTS) ingredient-exact with no expansion, so a LQTS patient on an SCD-coded beta-blocker false-fires "BB not prescribed." Evaluator retained; PARTIAL until AUDIT-118 remediated.',
+        'UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-LQTS-BB is a beta-blocker-ABSENCE rule; the cap was an OVER-detection (raw SCD-BB read as not-on-BB -> false-fired "BB not prescribed"). Now the BB is detected (BB_CODES_LQTS INs in the ingredient map), so a LQTS patient on an SCD-coded beta-blocker correctly SUPPRESSES the gap. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw false-fires -> expanded suppresses). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.',
     },
     'GAP-EP-026': {
       classification: 'PARTIAL_DETECTION',
@@ -136,16 +136,16 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-DOFETILIDE-REMS now detects SCD-coded dofetilide (IN 49247 in the ingredient map), so the REMS-monitoring gap fires for an SCD-coded dofetilide patient. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.',
     },
     'GAP-EP-070': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-ep-pfa',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. EP-PFA tests AAD presence (AAD_CODES) ingredient-exact with no expansion. Evaluator retained; PARTIAL until AUDIT-118 remediated.',
+        'UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-PFA (AAD-PRESENCE proxy for failed rhythm control) now detects SCD-coded AADs (AAD_CODES INs in the ingredient map), so an AF patient on an SCD-coded AAD fires the PFA-candidacy gap. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.',
     },
     'GAP-EP-079': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-ep-079-wpw-af-avn-blocker',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 2): DET_OK -> PARTIAL per §16.5 / AUDIT-118. The CRITICAL WPW+AF AVN-blocker rule matches medCodes via AVN_BLOCKER_CODES_EP079, a MIXED set: digoxin is descendant-enumerated (exempt) but the 8 beta-blockers + 2 non-DHP CCBs are ingredient-only, so a WPW+AF patient on an SCD-coded BB/CCB under-detects the fatal-VF contraindication. Evaluator retained; PARTIAL until AUDIT-118 remediated. (Prior 2026-05-05 AUDIT-031 logic closure stands; all 14 codes RxNav-verified.)',
+        'UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The CRITICAL WPW+AF AVN-blocker rule now detects SCD-coded beta-blockers and non-DHP CCBs (the previously ingredient-only arms of AVN_BLOCKER_CODES_EP079; the digoxin arm was simplified to the IN in the same fix). A WPW+AF patient on an SCD-coded metoprolol fires the fatal-VF contraindication. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Prior 2026-05-05 AUDIT-031 logic closure stands. Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.',
     },
     'GAP-EP-011': {
       classification: 'PARTIAL_DETECTION',
