@@ -148,9 +148,9 @@ describe('validateEvidenceObjects - live gapRuleEngine.ts baseline', () => {
   const src = fs.readFileSync(EVALUATOR_PATH, 'utf8');
   const result = analyzeSource(src, 'gapRuleEngine.ts');
 
-  it('finds 263 gaps.push nodes, all with an evidence object', () => {
-    expect(result.pushCount).toBe(263);
-    expect(result.evidenceCount).toBe(263);
+  it('finds 271 gaps.push nodes, all with an evidence object', () => {
+    expect(result.pushCount).toBe(271); // 263 + 8 (v3.0 HF buildout calibration sample, 2026-06-15)
+    expect(result.evidenceCount).toBe(271);
   });
 
   it('reports ZERO inconsistencies (clean baseline post-AUDIT-103)', () => {

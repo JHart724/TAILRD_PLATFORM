@@ -2,15 +2,15 @@
   "finding": "AUDIT-118",
   "generator": "backend/scripts/genRxnormIngredientMap.mjs",
   "source": "https://rxnav.nlm.nih.gov/REST/rxcui/{IN}/related.json?tty=SCD+SBD+SCDC+SCDG+SBDG+BPCK+GPCK",
-  "retrieved": "2026-06-14",
+  "retrieved": "2026-06-15",
   "candidateUniverse": {
-    "valuesets": 85,
-    "engineInline": 68,
-    "union": 109
+    "valuesets": 96,
+    "engineInline": 65,
+    "union": 119
   },
-  "ingredientINCount": 94,
-  "mapEntryCount": 3369,
-  "multiIngredientEntries": 316,
+  "ingredientINCount": 103,
+  "mapEntryCount": 3475,
+  "multiIngredientEntries": 322,
   "perIngredient": {
     "703": {
       "name": "amiodarone",
@@ -63,6 +63,10 @@
     "2551": {
       "name": "ciprofloxacin",
       "descendantCount": 60
+    },
+    "2683": {
+      "name": "colchicine",
+      "descendantCount": 25
     },
     "3407": {
       "name": "digoxin",
@@ -212,6 +216,10 @@
       "name": "carvedilol",
       "descendantCount": 28
     },
+    "24909": {
+      "name": "iron sucrose",
+      "descendantCount": 9
+    },
     "26225": {
       "name": "ondansetron",
       "descendantCount": 28
@@ -219,6 +227,10 @@
     "29046": {
       "name": "lisinopril",
       "descendantCount": 42
+    },
+    "31555": {
+      "name": "nebivolol",
+      "descendantCount": 22
     },
     "32968": {
       "name": "clopidogrel",
@@ -344,9 +356,17 @@
       "name": "apixaban",
       "descendantCount": 12
     },
+    "1433693": {
+      "name": "ferric carboxymaltose",
+      "descendantCount": 9
+    },
     "1488564": {
       "name": "dapagliflozin",
       "descendantCount": 34
+    },
+    "1545063": {
+      "name": "tafamidis",
+      "descendantCount": 12
     },
     "1545653": {
       "name": "empagliflozin",
@@ -380,13 +400,29 @@
       "name": "semaglutide",
       "descendantCount": 65
     },
+    "2053490": {
+      "name": "patisiran",
+      "descendantCount": 5
+    },
+    "2274394": {
+      "name": "ferric derisomaltose",
+      "descendantCount": 9
+    },
     "2562811": {
       "name": "finerenone",
       "descendantCount": 13
     },
+    "2604578": {
+      "name": "vutrisiran",
+      "descendantCount": 5
+    },
     "2638675": {
       "name": "sotagliflozin",
       "descendantCount": 10
+    },
+    "2698312": {
+      "name": "acoramidis",
+      "descendantCount": 7
     }
   },
   "unresolvedCandidates": [

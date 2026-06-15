@@ -205,6 +205,40 @@ export const RXNORM_FINERENONE = {
   FINERENONE: '2562811',  // finerenone (ingredient — covers all formulations)
 } as const;
 
+/** ATTR-CM disease-modifying therapy (GAP-HF-054). All ingredient (TTY=IN), RxNav-verified 2026-06-15.
+ *  Source: RxNav rxcui.json?name=. tafamidis 1545063, vutrisiran 2604578, patisiran 2053490,
+ *  acoramidis 2698312. v3.0 HF buildout (calibration sample). */
+export const RXNORM_ATTR_DMT = {
+  TAFAMIDIS: '1545063',
+  VUTRISIRAN: '2604578',
+  PATISIRAN: '2053490',
+  ACORAMIDIS: '2698312',
+} as const;
+
+/** Colchicine (GAP-HF-143 recurrent pericarditis). Ingredient (TTY=IN), RxNav-verified 2026-06-15. */
+export const RXNORM_COLCHICINE = {
+  COLCHICINE: '2683',
+} as const;
+
+/** IV iron formulations (GAP-HF-033 absolute iron deficiency). All ingredient (TTY=IN),
+ *  RxNav-verified 2026-06-15: ferric carboxymaltose 1433693, iron sucrose 24909,
+ *  ferric derisomaltose 2274394. */
+export const RXNORM_IV_IRON = {
+  FERRIC_CARBOXYMALTOSE: '1433693',
+  IRON_SUCROSE: '24909',
+  FERRIC_DERISOMALTOSE: '2274394',
+} as const;
+
+/** Non-evidence-based beta-blockers in HFrEF (GAP-HF-002). Ingredient (TTY=IN),
+ *  RxNav-verified 2026-06-15: atenolol 1202, nebivolol 31555. NOTE: metoprolol tartrate
+ *  cannot be distinguished from metoprolol succinate at ingredient level (both = metoprolol
+ *  IN 6918) - tartrate-specific detection requires the product/name path (AUDIT-101 precedent),
+ *  so this set covers atenolol + nebivolol only. See the HF-calibration data-limit note. */
+export const RXNORM_NON_EBM_BB_HF = {
+  ATENOLOL: '1202',
+  NEBIVOLOL: '31555',
+} as const;
+
 /** GDMT medications -- used by HF GDMT optimization */
 export const RXNORM_GDMT = {
   // ACE inhibitors

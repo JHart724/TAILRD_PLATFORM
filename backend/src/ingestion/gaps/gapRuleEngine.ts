@@ -17,6 +17,10 @@ import {
   RXNORM_PPI,
   RXNORM_LOOP_DIURETICS,
   RXNORM_THIAZIDES,
+  RXNORM_ATTR_DMT,
+  RXNORM_COLCHICINE,
+  RXNORM_IV_IRON,
+  RXNORM_NON_EBM_BB_HF,
 } from '../../terminology/cardiovascularValuesets';
 
 /** Extract code arrays from valueset objects for medication matching */
@@ -10534,6 +10538,211 @@ export function evaluateGapRules(
         classOfRecommendation: 'Class 2a',
         levelOfEvidence: 'LOE B-R',
         exclusions: ['Hospice/palliative care (Z51.5)', 'Ferritin >300 (repleted)', 'IV iron not initiated'],
+      },
+    });
+  }
+
+  // ============================================================
+  // v3.0 HF BUILDOUT - calibration sample (8 gaps). medCodes is ingredient-
+  // expanded (AUDIT-118); med sets are IN-level. Each carries a full evidence
+  // object (CLAUDE.md §14). Stable ids threaded for AUDIT-106 registry mapping.
+  // ============================================================
+
+  // HF-FINERENONE-MREF: Finerenone not prescribed in HFmrEF/HFpEF (GAP-HF-017)
+  // Guideline: 2023 ESC HF Update / FINEARTS-HF, Class 2a, LOE B-R
+  if (
+    hasHF &&
+    labValues['lvef'] !== undefined && labValues['lvef'] >= 40 &&
+    labValues['potassium'] !== undefined && labValues['potassium'] < 5.0 &&
+    labValues['egfr'] !== undefined && labValues['egfr'] >= 25 &&
+    !medCodes.includes(RXNORM_FINERENONE.FINERENONE) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Consider finerenone in HFmrEF/HFpEF (FINEARTS-HF)',
+      target: 'Finerenone initiated or contraindication documented',
+      medication: 'Finerenone',
+      recommendations: { action: 'Consider finerenone for LVEF>=40% HF per FINEARTS-HF (reduced HF events); K+ and eGFR within initiation range' },
+      evidence: {
+        triggerCriteria: [`LVEF: ${labValues['lvef']}% (>=40%)`, `K+: ${labValues['potassium']} (<5.0)`, `eGFR: ${labValues['egfr']} (>=25)`, 'Not on finerenone'],
+        guidelineSource: '2023 ESC Heart Failure Guideline Update (FINEARTS-HF)',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'K+ >=5.0', 'eGFR <25'],
+      },
+    });
+  }
+
+  // HF-AMYLOID-AF-OAC: Cardiac amyloidosis + AF without anticoagulation (GAP-HF-077)
+  // Guideline: 2023 ACC Expert Consensus on Cardiac Amyloidosis, Class 2a (all cardiac amyloid high-risk regardless of CHA2DS2-VASc)
+  if (
+    dxCodes.some(c => c.startsWith('E85.82') || c.startsWith('E85.1') || c.startsWith('E85.4')) &&
+    hasAF &&
+    !medCodes.some(c => OAC_CODES_CV.includes(c)) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Anticoagulation gap in cardiac amyloidosis with atrial fibrillation',
+      target: 'Anticoagulation initiated or contraindication documented',
+      recommendations: { action: 'Consider anticoagulation: cardiac amyloidosis with AF is high thromboembolic risk independent of CHA2DS2-VASc per 2023 ACC consensus' },
+      evidence: {
+        triggerCriteria: ['Cardiac amyloidosis (E85.82/E85.1/E85.4)', 'Atrial fibrillation (I48.*)', 'Not on anticoagulation'],
+        guidelineSource: '2023 ACC Expert Consensus Decision Pathway on Cardiac Amyloidosis',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Active bleeding', 'Anticoagulation contraindication'],
+      },
+    });
+  }
+
+  // HF-DM-HBA1C: HF + diabetes with HbA1c above target (GAP-HF-081)
+  // Guideline: 2022 AHA/ACC/HFSA HF Guideline + ADA Standards of Care, Class 1
+  if (
+    hasHF &&
+    dxCodes.some(c => c.startsWith('E11') || c.startsWith('E10')) &&
+    labValues['hba1c'] !== undefined && labValues['hba1c'] > 8 &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MONITORING_OVERDUE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Diabetes above glycemic target in heart failure',
+      target: 'HbA1c reassessed and therapy intensified per individualized target',
+      recommendations: { action: 'Consider glycemic therapy intensification (SGLT2i preferred in HF) for HbA1c above individualized target' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', 'Diabetes mellitus (E10/E11)', `HbA1c: ${labValues['hba1c']}% (>8%)`],
+        guidelineSource: '2022 AHA/ACC/HFSA HF Guideline; ADA Standards of Care',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Individualized higher target documented'],
+      },
+    });
+  }
+
+  // HF-MRA-CONTRA: MRA contraindicated by labs in HF (GAP-HF-008, SAFETY)
+  // Guideline: 2022 AHA/ACC/HFSA HF Guideline, Class 3 (Harm) - MRA contraindicated at K+>=5.5 or eGFR<30 (spec threshold <20)
+  if (
+    hasHF &&
+    medCodes.some(c => MRA_CODES_CV.includes(c)) &&
+    ((labValues['potassium'] !== undefined && labValues['potassium'] >= 5.5) ||
+     (labValues['egfr'] !== undefined && labValues['egfr'] < 20)) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_CONTRAINDICATED,
+      module: ModuleType.HEART_FAILURE,
+      status: 'SAFETY: MRA contraindicated by hyperkalemia or severe renal impairment',
+      target: 'MRA held/discontinued and electrolytes/renal function reassessed',
+      recommendations: { action: 'SAFETY ALERT: Consider holding MRA - K+>=5.5 or eGFR<20 contraindicates MRA per 2022 AHA/ACC/HFSA (hyperkalemia/AKI risk)' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', 'On an MRA (spironolactone/eplerenone)', `K+>=5.5 or eGFR<20 (K+ ${labValues['potassium']}, eGFR ${labValues['egfr']})`],
+        guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
+        classOfRecommendation: '3 (Harm)',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+        safetyClass: 'SAFETY',
+      },
+    });
+  }
+
+  // HF-IRON-DEF-IV: Absolute iron deficiency untreated in HF (GAP-HF-033)
+  // Guideline: 2022 AHA/ACC/HFSA HF Guideline, Class 2a (AFFIRM-AHF, IRONMAN) - IV iron for ferritin<100
+  if (
+    hasHF &&
+    labValues['ferritin'] !== undefined && labValues['ferritin'] < 100 &&
+    !medCodes.some(c => codes(RXNORM_IV_IRON).includes(c)) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Absolute iron deficiency untreated in heart failure',
+      target: 'IV iron repletion administered',
+      medication: 'IV iron (ferric carboxymaltose or ferric derisomaltose)',
+      recommendations: { action: 'Consider IV iron repletion for ferritin<100 ng/mL in HF per AFFIRM-AHF/IRONMAN (improves symptoms, reduces HF hospitalization)' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', `Ferritin: ${labValues['ferritin']} ng/mL (<100)`, 'No IV iron administered'],
+        guidelineSource: '2022 AHA/ACC/HFSA HF Guideline (AFFIRM-AHF, IRONMAN)',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Active infection', 'IV iron already administered'],
+      },
+    });
+  }
+
+  // HF-PERICARDITIS-COLCH: Recurrent pericarditis without colchicine (GAP-HF-143)
+  // Guideline: 2015 ESC Pericardial Disease Guideline, Class 1, LOE A (colchicine first-line adjunct)
+  if (
+    dxCodes.some(c => c.startsWith('I31')) &&
+    !medCodes.includes(RXNORM_COLCHICINE.COLCHICINE) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Colchicine not prescribed in pericarditis',
+      target: 'Colchicine initiated or contraindication documented',
+      medication: 'Colchicine',
+      recommendations: { action: 'Consider colchicine as first-line adjunct to reduce recurrence in acute/recurrent pericarditis per 2015 ESC' },
+      evidence: {
+        triggerCriteria: ['Pericarditis (I31.*)', 'Not on colchicine'],
+        guidelineSource: '2015 ESC Guideline for the Diagnosis and Management of Pericardial Diseases',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Severe renal/hepatic impairment', 'Colchicine intolerance'],
+      },
+    });
+  }
+
+  // HF-ATTR-DMT: ATTR-CM confirmed without disease-modifying therapy (GAP-HF-054)
+  // Guideline: 2023 ACC Expert Consensus on Cardiac Amyloidosis, Class 1 (ATTR-ACT tafamidis)
+  if (
+    dxCodes.some(c => c.startsWith('E85.82') || c.startsWith('E85.1')) &&
+    !medCodes.some(c => codes(RXNORM_ATTR_DMT).includes(c)) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.HEART_FAILURE,
+      status: 'ATTR cardiac amyloidosis without disease-modifying therapy',
+      target: 'ATTR disease-modifying therapy initiated or contraindication documented',
+      medication: 'Tafamidis, acoramidis, vutrisiran, or patisiran',
+      recommendations: { action: 'Consider ATTR disease-modifying therapy (tafamidis per ATTR-ACT) for confirmed ATTR-CM to reduce mortality and HF hospitalization' },
+      evidence: {
+        triggerCriteria: ['ATTR amyloidosis (E85.82/E85.1)', 'No ATTR disease-modifying therapy'],
+        guidelineSource: '2023 ACC Expert Consensus Decision Pathway on Cardiac Amyloidosis (ATTR-ACT)',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'DMT already prescribed', 'NYHA IV / advanced disease where DMT not indicated'],
+      },
+    });
+  }
+
+  // HF-BB-NON-EBM: Non-evidence-based beta-blocker in HFrEF (GAP-HF-002, PARTIAL data-limit: atenolol/nebivolol only)
+  // Guideline: 2022 AHA/ACC/HFSA HF Guideline, Class 1 - only carvedilol/metoprolol-succinate/bisoprolol are evidence-based in HFrEF
+  if (
+    hasHF &&
+    labValues['lvef'] !== undefined && labValues['lvef'] <= 40 &&
+    medCodes.some(c => codes(RXNORM_NON_EBM_BB_HF).includes(c)) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Non-evidence-based beta-blocker in HFrEF',
+      target: 'Switch to an evidence-based beta-blocker (carvedilol, metoprolol succinate, or bisoprolol)',
+      medication: 'Carvedilol, Metoprolol Succinate, or Bisoprolol',
+      recommendations: { action: 'Consider switching to an evidence-based beta-blocker: only carvedilol/metoprolol-succinate/bisoprolol have mortality benefit in HFrEF' },
+      evidence: {
+        triggerCriteria: ['HFrEF (LVEF<=40%)', 'On atenolol or nebivolol (non-evidence-based in HFrEF)'],
+        guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
       },
     });
   }
