@@ -369,6 +369,78 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'B',
   },
   {
+    id: 'gap-ep-003-rivaroxaban-renal-dose',
+    name: 'Rivaroxaban renal dose not adjusted for CrCl',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Xarelto Prescribing Information',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-ep-004-apixaban-underdose-criteria',
+    name: 'Apixaban dose reduction criteria met but on full dose',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Eliquis Prescribing Information',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-ep-005-apixaban-inappropriate-underdose',
+    name: 'Apixaban inappropriately reduced without criteria',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Eliquis Prescribing Information',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-ep-008-doac-mitral-stenosis',
+    name: 'DOAC contraindicated in moderate-severe mitral stenosis',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + 2020 ACC/AHA Valvular Heart Disease Guideline',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '3 (Harm)',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-ep-009-edoxaban-high-crcl',
+    name: 'Edoxaban reduced efficacy at high CrCl',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Savaysa Prescribing Information (boxed warning)',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '3 (Harm)',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-ep-012-laac-high-risk-bleed',
+    name: 'LAAC for high stroke risk with prior major bleed',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
+  },
+  {
     id: 'gap-ep-079-wpw-af-avn-blocker',
     name: 'Pre-excited AF + AVN blocker (CRITICAL)',
     module: 'ELECTROPHYSIOLOGY',
@@ -4782,6 +4854,225 @@ export function evaluateGapRules(
   }
 
   // ============================================================
+  // EP CHUNK 1 (v3.0 EP buildout, 2026-06-16): AF anticoagulation + dosing.
+  // DOAC RxNorm constants are RxNav-verified ingredient (IN) codes per AUDIT_METHODOLOGY.md
+  // section 16 (RXNORM_DOACS / RXNORM_WARFARIN in cardiovascularValuesets.ts); medCodes is
+  // ingredient-expanded upstream (AUDIT-118) so IN-level membership matches every formulation.
+  // CrCl gates use labValues['egfr'] as the renal proxy (eGFR-for-CrCl, the established EP-006 /
+  // CAD-RENAL-MONITOR pattern; the CrCl-vs-Cockcroft-Gault nuance is a documented Path-B limit -
+  // patient weight is not ingested). Dose read from threaded meds[] (AUDIT-101).
+  // ============================================================
+
+  // EP-003: Rivaroxaban renal dose not adjusted for CrCl.
+  // Guideline: 2023 ACC/AHA/ACCP/HRS AFib Guideline (renal dose-adjust, Class 1) + FDA Xarelto PI.
+  // Rivaroxaban nonvalvular AF: 20 mg daily if CrCl>50; reduce to 15 mg if CrCl 15-50; avoid if CrCl<15.
+  // Scope note: covers rivaroxaban specifically (apixaban=EP-004/005, dabigatran=EP-006, edoxaban=EP-009).
+  // Path-B: eGFR proxies CrCl (weight not ingested). Fires on rivaroxaban + eGFR 15-50 at >=20 mg, OR eGFR<15.
+  if (medCodes.includes('1114195') && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const rivaDose = meds.find(m => m.rxNormCode === '1114195')?.doseValue;
+    const egfrRiva = labValues['egfr'];
+    const rivaOverForRenal = egfrRiva !== undefined && egfrRiva >= 15 && egfrRiva < 50 && rivaDose !== undefined && rivaDose !== null && rivaDose >= 20;
+    const rivaAvoidLowCrCl = egfrRiva !== undefined && egfrRiva < 15;
+    if (rivaOverForRenal || rivaAvoidLowCrCl) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_CONTRAINDICATED,
+        module: ModuleType.ELECTROPHYSIOLOGY,
+        status: 'DOAC dose not adjusted for renal function (rivaroxaban)',
+        target: rivaAvoidLowCrCl ? 'Switch off rivaroxaban (CrCl<15) per FDA Xarelto PI' : 'Reduce rivaroxaban to 15 mg daily for CrCl 15-50',
+        medication: 'Rivaroxaban (RxNorm 1114195)',
+        recommendations: {
+          action: 'Consider renal dose adjustment of rivaroxaban per 2023 ACC/AHA/ACCP/HRS AFib + FDA Xarelto PI',
+          guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Xarelto (rivaroxaban) Prescribing Information',
+          note: 'Rivaroxaban nonvalvular AF: 20 mg daily if CrCl>50; 15 mg if CrCl 15-50; avoid if CrCl<15. CrCl approximated by eGFR (Cockcroft-Gault weight not ingested - Path-B).',
+        },
+        evidence: {
+          triggerCriteria: [
+            'On rivaroxaban (RxNorm 1114195) in active medications',
+            rivaAvoidLowCrCl ? `eGFR: ${egfrRiva} mL/min/1.73m2 (<15, rivaroxaban to be avoided)` : `eGFR: ${egfrRiva} mL/min/1.73m2 (15-50) on >=20 mg (should be 15 mg)`,
+          ],
+          guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Xarelto Prescribing Information',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Weight-based CrCl may differ from eGFR proxy (Path-B data limit)'],
+        },
+      });
+    }
+  }
+
+  // EP-004: Apixaban dose-reduction criteria met but on full 5 mg dose.
+  // Guideline: 2023 ACC/AHA/ACCP/HRS AFib Guideline + FDA Eliquis PI. Reduce to 2.5 mg BID when >=2 of:
+  //   age>=80, weight<=60 kg, serum creatinine>=1.5 mg/dL. Path-B: weight not ingested, so this fires only on
+  //   the age>=80 AND creatinine>=1.5 pair (2 criteria confirmed without weight - UNDER-detects, never false-positive).
+  if (medCodes.includes('1364430') && age >= 80 && labValues['creatinine'] !== undefined && labValues['creatinine'] >= 1.5
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const apixDose4 = meds.find(m => m.rxNormCode === '1364430')?.doseValue;
+    if (apixDose4 !== undefined && apixDose4 !== null && apixDose4 >= 5) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_CONTRAINDICATED,
+        module: ModuleType.ELECTROPHYSIOLOGY,
+        status: 'Apixaban dose reduction criteria met but on full dose',
+        target: 'Reduce apixaban to 2.5 mg BID (>=2 reduction criteria met)',
+        medication: 'Apixaban (RxNorm 1364430)',
+        recommendations: {
+          action: 'Consider reducing apixaban to 2.5 mg BID per 2023 ACC/AHA AFib + FDA Eliquis PI (>=2 of age>=80, weight<=60 kg, Cr>=1.5)',
+          guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Eliquis (apixaban) Prescribing Information',
+          note: 'Age>=80 and Cr>=1.5 mg/dL are 2 of 3 reduction criteria; full 5 mg dose raises bleeding risk. Weight<=60 kg criterion not ingested (Path-B - this rule under-detects weight-driven pairs).',
+        },
+        evidence: {
+          triggerCriteria: [
+            'On apixaban (RxNorm 1364430) at >=5 mg',
+            `Age: ${age} (>=80)`,
+            `Serum creatinine: ${labValues['creatinine']} mg/dL (>=1.5)`,
+            '2 of 3 reduction criteria met (weight arm not ingested - Path-B)',
+          ],
+          guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Eliquis Prescribing Information',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Weight<=60 kg not ingested (Path-B under-detect)'],
+        },
+      });
+    }
+  }
+
+  // EP-005: Apixaban inappropriately reduced to 2.5 mg without dose-reduction criteria (reduced efficacy).
+  // Guideline: 2023 ACC/AHA/ACCP/HRS AFib Guideline + FDA Eliquis PI. 2.5 mg BID requires >=2 of age>=80,
+  //   weight<=60 kg, Cr>=1.5. Path-B: with age<80 AND Cr<1.5, at most 1 criterion is possible even if weight<=60,
+  //   so <2 criteria is certain - under-dosing is inappropriate regardless of the un-ingested weight. Safe to fire.
+  if (medCodes.includes('1364430') && age < 80 && labValues['creatinine'] !== undefined && labValues['creatinine'] < 1.5
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const apixDose5 = meds.find(m => m.rxNormCode === '1364430')?.doseValue;
+    if (apixDose5 !== undefined && apixDose5 !== null && apixDose5 <= 2.5) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_UNDERDOSED,
+        module: ModuleType.ELECTROPHYSIOLOGY,
+        status: 'Apixaban inappropriately reduced without criteria',
+        target: 'Increase apixaban to 5 mg BID (no dose-reduction criteria met)',
+        medication: 'Apixaban (RxNorm 1364430)',
+        recommendations: {
+          action: 'Consider increasing apixaban to 5 mg BID per 2023 ACC/AHA AFib + FDA Eliquis PI (under-dosing reduces stroke protection)',
+          guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Eliquis (apixaban) Prescribing Information',
+          note: 'Age<80 and Cr<1.5 mg/dL means at most 1 of 3 reduction criteria can be met (even if weight<=60), so 2.5 mg is sub-therapeutic. Inappropriate dose reduction associates with higher stroke risk.',
+        },
+        evidence: {
+          triggerCriteria: [
+            'On apixaban (RxNorm 1364430) at <=2.5 mg',
+            `Age: ${age} (<80)`,
+            `Serum creatinine: ${labValues['creatinine']} mg/dL (<1.5)`,
+            '<2 reduction criteria possible (weight arm cannot supply a 2nd - Path-B)',
+          ],
+          guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Eliquis Prescribing Information',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'B',
+          exclusions: ['Hospice/palliative care (Z51.5)'],
+        },
+      });
+    }
+  }
+
+  // EP-008: DOAC contraindicated in moderate-severe mitral stenosis (rheumatic AF requires warfarin).
+  // Guideline: 2023 ACC/AHA/ACCP/HRS AFib + 2020 ACC/AHA VHD, Class 3 (Harm). DOACs are contraindicated in
+  //   moderate-severe MS (excluded from RE-LY/ROCKET/ARISTOTLE; INVICTUS confirmed warfarin superiority).
+  // MS codes I05.0 (rheumatic) / I34.2 (nonrheumatic) reuse the verified set from gap-vd-4 (line ~6112).
+  const hasModSevereMS_EP008 = dxCodes.some(c => c.startsWith('I05.0') || c.startsWith('I34.2'));
+  const onDOAC_EP008 = medCodes.includes('1364430') || medCodes.includes('1114195') || medCodes.includes('1599538') || medCodes.includes('1037042');
+  if (hasModSevereMS_EP008 && onDOAC_EP008 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_CONTRAINDICATED,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'DOAC contraindicated in moderate-severe mitral stenosis',
+      target: 'Switch from DOAC to warfarin (INR 2.0-3.0) for AF with rheumatic/significant MS',
+      medication: 'Warfarin (RxNorm 11289) in place of the current DOAC',
+      recommendations: {
+        action: 'Consider switching from DOAC to warfarin per 2023 ACC/AHA AFib + 2020 ACC/AHA VHD Class 3 (Harm)',
+        guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + 2020 ACC/AHA Valvular Heart Disease Guideline',
+        note: 'DOACs are not established in moderate-severe mitral stenosis (excluded from the pivotal DOAC trials; INVICTUS showed warfarin superiority in rheumatic AF). Warfarin (INR 2.0-3.0) is the standard.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Moderate-severe mitral stenosis (I05.0 rheumatic or I34.2 nonrheumatic)',
+          'On a DOAC (apixaban / rivaroxaban / edoxaban / dabigatran)',
+        ],
+        guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + 2020 ACC/AHA VHD Guideline',
+        classOfRecommendation: '3 (Harm)',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Already on warfarin'],
+      },
+    });
+  }
+
+  // EP-009: Edoxaban reduced efficacy at high CrCl (CrCl>95).
+  // Guideline: 2023 ACC/AHA/ACCP/HRS AFib + FDA Savaysa boxed warning. Edoxaban should NOT be used in
+  //   nonvalvular AF when CrCl>95 (ENGAGE AF-TIMI 48: higher ischemic-stroke rate vs warfarin at high CrCl).
+  // Path-B: eGFR proxies CrCl (weight not ingested). Fires on edoxaban + eGFR>95.
+  if (medCodes.includes('1599538') && labValues['egfr'] !== undefined && labValues['egfr'] > 95
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_CONTRAINDICATED,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'Edoxaban reduced efficacy at high CrCl',
+      target: 'Switch off edoxaban (CrCl>95) to an alternative OAC per FDA Savaysa boxed warning',
+      medication: 'Alternative DOAC or warfarin in place of edoxaban (RxNorm 1599538)',
+      recommendations: {
+        action: 'Consider switching off edoxaban per 2023 ACC/AHA AFib + FDA Savaysa boxed warning (do not use if CrCl>95)',
+        guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Savaysa (edoxaban) Prescribing Information (boxed warning)',
+        note: 'Edoxaban carries a boxed warning against use in nonvalvular AF with CrCl>95 (reduced efficacy / higher ischemic-stroke rate vs warfarin in ENGAGE AF-TIMI 48). CrCl approximated by eGFR (weight not ingested - Path-B).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'On edoxaban (RxNorm 1599538) in active medications',
+          `eGFR: ${labValues['egfr']} mL/min/1.73m2 (>95, edoxaban boxed-warning threshold)`,
+        ],
+        guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + FDA Savaysa Prescribing Information (boxed warning)',
+        classOfRecommendation: '3 (Harm)',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Weight-based CrCl may differ from eGFR proxy (Path-B data limit)'],
+      },
+    });
+  }
+
+  // EP-012: LAAC evaluation for high stroke risk with prior major bleed.
+  // Guideline: 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 2a, LOE B. Distinct from EP-011 (OAC contraindication):
+  //   EP-012 = high CHA2DS2-VASc (>=3) AND a prior major bleed, where LAAC is a guideline alternative to lifelong OAC.
+  // Prior-major-bleed set reuses the verified EP-LAAC codes (D68.3, K92.2, I60-I62). LAAC-already-done excluded via
+  //   threaded procedureCodes (CPT 33340). CHA2DS2-VASc computed inline (mirrors EP-OAC scoring).
+  if (hasAF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE) && !procedureCodes.includes('33340')) {
+    let cha012 = 0;
+    if (dxCodes.some(c => c.startsWith('I50'))) cha012 += 1;
+    if (dxCodes.some(c => c.startsWith('I10') || c.startsWith('I11') || c.startsWith('I12') || c.startsWith('I13') || c.startsWith('I15'))) cha012 += 1;
+    if (age >= 75) cha012 += 2; else if (age >= 65) cha012 += 1;
+    if (dxCodes.some(c => c.startsWith('E10') || c.startsWith('E11') || c.startsWith('E13') || c.startsWith('E14'))) cha012 += 1;
+    if (dxCodes.some(c => c.startsWith('I63') || c.startsWith('I64') || c.startsWith('G45') || c === 'Z86.73')) cha012 += 2;
+    if (dxCodes.some(c => c.startsWith('I21') || c.startsWith('I22') || c === 'I73.9' || c.startsWith('I70.2'))) cha012 += 1;
+    if (gender && (gender.toUpperCase() === 'FEMALE' || gender.toUpperCase() === 'F')) cha012 += 1;
+    const priorMajorBleed_EP012 = dxCodes.some(c => c.startsWith('D68.3') || c.startsWith('K92.2') || c.startsWith('I60') || c.startsWith('I61') || c.startsWith('I62'));
+    if (cha012 >= 3 && priorMajorBleed_EP012) {
+      gaps.push({
+        type: TherapyGapType.DEVICE_ELIGIBLE,
+        module: ModuleType.ELECTROPHYSIOLOGY,
+        status: 'LAAC evaluation for high stroke risk with prior major bleed',
+        target: 'LAAC candidacy evaluated by EP specialist',
+        recommendations: {
+          action: 'Consider referral for Left Atrial Appendage Closure (LAAC) evaluation per 2023 ACC/AHA/ACCP/HRS AFib (Class 2a)',
+          guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline',
+          note: 'High stroke risk (CHA2DS2-VASc>=3) with a documented prior major bleed: LAAC is a guideline alternative to lifelong oral anticoagulation. EP evaluation recommended for review.',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Atrial fibrillation diagnosis (I48.*)',
+            `CHA2DS2-VASc score: ${cha012} (>=3)`,
+            'Prior major bleed (D68.3 hemorrhagic disorder, K92.2 GI hemorrhage, or I60-I62 intracranial hemorrhage)',
+            'No prior LAAC procedure (CPT 33340)',
+          ],
+          guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF',
+          classOfRecommendation: '2a',
+          levelOfEvidence: 'B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Prior LAAC (CPT 33340)'],
+        },
+      });
+    }
+  }
+
+  // ============================================================
   // EP-079 CRITICAL: Pre-excited AF + AVN blocker contraindicated (risk of VF)
   // ============================================================
   // Guideline: 2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline, Class 3 (Harm), LOE B.
@@ -4842,8 +5133,11 @@ export function evaluateGapRules(
   // Guideline: 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 2a, LOE B
   // AFib + age>=65 + contraindication to OAC (documented allergy Z88 or bleeding history)
   if (hasAF && age >= 65 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    // EP-011 upgrade (AUDIT-120, v3.0 EP chunk 1 2026-06-16): removed the bare `Z88` (allergy status to
+    // ANY drug) over-detection - it fired on penicillin/sulfa allergy etc., not an OAC contraindication.
+    // The OAC-contraindication trigger is a documented bleeding/hemorrhagic-disorder history only.
     const hasOACContraindication = dxCodes.some(c =>
-      c.startsWith('Z88') || c.startsWith('D68.3') || c.startsWith('K92.2') || c.startsWith('I60') || c.startsWith('I61') || c.startsWith('I62')
+      c.startsWith('D68.3') || c.startsWith('K92.2') || c.startsWith('I60') || c.startsWith('I61') || c.startsWith('I62')
     );
     if (hasOACContraindication) {
       gaps.push({
