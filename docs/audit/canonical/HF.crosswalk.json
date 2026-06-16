@@ -14,12 +14,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-35",
         "evaluatorBodyLineRange": [
-          3652,
-          3676
+          4071,
+          4095
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-35-beta-blocker",
-        "registryLine": 315
+        "registryLine": 324
       },
       "specGapId": "GAP-HF-001",
       "specLine": 124,
@@ -33,31 +33,31 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-BB-NON-EBM",
         "evaluatorBodyLineRange": [
-          10851,
-          10867
+          11283,
+          11299
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-002-bb-non-ebm",
-        "registryLine": 3473
+        "registryLine": 3482
       },
       "specGapId": "GAP-HF-002",
       "specLine": 125,
       "tier": "T1"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-BB-TARGET-DOSE - HFrEF + BB doseValue<target + HR>=60 + SBP>=100. COR 1. PARTIAL -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "HF-35",
+        "evaluatorBlockName": "HF-BB-TARGET-DOSE",
         "evaluatorBodyLineRange": [
-          3652,
-          3676
+          11342,
+          11358
         ],
         "evaluatorModule": "HF",
-        "registryId": "gap-hf-35-beta-blocker",
-        "registryLine": 315
+        "registryId": "gap-hf-003-bb-target-dose",
+        "registryLine": 3496
       },
       "specGapId": "GAP-HF-003",
       "specLine": 126,
@@ -71,12 +71,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-37",
         "evaluatorBodyLineRange": [
-          5173,
-          5199
+          5602,
+          5628
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-37-raas",
-        "registryLine": 435
+        "registryLine": 444
       },
       "specGapId": "GAP-HF-004",
       "specLine": 127,
@@ -90,12 +90,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-ARNI-SWITCH",
         "evaluatorBodyLineRange": [
-          10350,
-          10374
+          10782,
+          10806
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-arni-switch",
-        "registryLine": 2115
+        "registryLine": 2124
       },
       "specGapId": "GAP-HF-005",
       "specLine": 128,
@@ -109,12 +109,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-36",
         "evaluatorBodyLineRange": [
-          3686,
-          3708
+          4105,
+          4127
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-36-mra",
-        "registryLine": 327
+        "registryLine": 336
       },
       "specGapId": "GAP-HF-007",
       "specLine": 129,
@@ -128,12 +128,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-34",
         "evaluatorBodyLineRange": [
-          3622,
-          3647
+          4041,
+          4066
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-34-sglt2i",
-        "registryLine": 303
+        "registryLine": 312
       },
       "specGapId": "GAP-HF-010",
       "specLine": 130,
@@ -147,12 +147,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-18",
         "evaluatorBodyLineRange": [
-          3803,
-          3819
+          4224,
+          4240
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-18-vericiguat",
-        "registryLine": 723
+        "registryLine": 732
       },
       "specGapId": "GAP-HF-014",
       "specLine": 131,
@@ -166,12 +166,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-30",
         "evaluatorBodyLineRange": [
-          3948,
-          3964
+          4377,
+          4393
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-30-arni-underdosing",
-        "registryLine": 795
+        "registryLine": 804
       },
       "specGapId": "GAP-HF-006",
       "specLine": 132,
@@ -185,12 +185,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-MRA-CONTRA",
         "evaluatorBodyLineRange": [
-          10750,
-          10766
+          11182,
+          11198
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-008-mra-contra",
-        "registryLine": 3425
+        "registryLine": 3434
       },
       "specGapId": "GAP-HF-008",
       "specLine": 133,
@@ -204,31 +204,31 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-K-MONITOR",
         "evaluatorBodyLineRange": [
-          10429,
-          10452
+          10861,
+          10884
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-potassium-monitor",
-        "registryLine": 2139
+        "registryLine": 2148
       },
       "specGapId": "GAP-HF-009",
       "specLine": 134,
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-SGLT2I-EGFR-FLOOR - HF + eGFR<20 + no SGLT2i (awareness/documentation). COR 1. PARTIAL -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "HF-34",
+        "evaluatorBlockName": "HF-SGLT2I-EGFR-FLOOR",
         "evaluatorBodyLineRange": [
-          3622,
-          3647
+          11370,
+          11385
         ],
         "evaluatorModule": "HF",
-        "registryId": "gap-hf-34-sglt2i",
-        "registryLine": 303
+        "registryId": "gap-hf-011-sglt2i-egfr-floor",
+        "registryLine": 3508
       },
       "specGapId": "GAP-HF-011",
       "specLine": 135,
@@ -242,12 +242,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-19",
         "evaluatorBodyLineRange": [
-          3829,
-          3845
+          4250,
+          4266
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-19-hydralazine-isdn",
-        "registryLine": 735
+        "registryLine": 744
       },
       "specGapId": "GAP-HF-012",
       "specLine": 136,
@@ -261,23 +261,32 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-17",
         "evaluatorBodyLineRange": [
-          3777,
-          3793
+          4198,
+          4214
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-17-ivabradine",
-        "registryLine": 711
+        "registryLine": 720
       },
       "specGapId": "GAP-HF-013",
       "specLine": 137,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-DIGOXIN-HIGH-ELDERLY SAFETY - HF + age>75 + eGFR<50 + digoxin>0.125. COR 3 (Harm). SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-DIGOXIN-HIGH-ELDERLY",
+        "evaluatorBodyLineRange": [
+          11400,
+          11417
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-015-digoxin-high-elderly",
+        "registryLine": 3520
+      },
       "specGapId": "GAP-HF-015",
       "specLine": 138,
       "tier": "T2"
@@ -290,12 +299,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-79",
         "evaluatorBodyLineRange": [
-          4130,
-          4150
+          4559,
+          4579
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-79-sglt2i-hfpef",
-        "registryLine": 891
+        "registryLine": 900
       },
       "specGapId": "GAP-HF-016",
       "specLine": 143,
@@ -309,12 +318,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-FINERENONE-MREF",
         "evaluatorBodyLineRange": [
-          10669,
-          10685
+          11101,
+          11117
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-017-finerenone-mref",
-        "registryLine": 3389
+        "registryLine": 3398
       },
       "specGapId": "GAP-HF-017",
       "specLine": 144,
@@ -328,12 +337,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-7",
         "evaluatorBodyLineRange": [
-          3724,
-          3740
+          4145,
+          4161
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-7-glp1ra",
-        "registryLine": 687
+        "registryLine": 696
       },
       "specGapId": "GAP-HF-018",
       "specLine": 145,
@@ -347,12 +356,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-21",
         "evaluatorBodyLineRange": [
-          3876,
-          3891
+          4298,
+          4313
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-21-hfpef-screening",
-        "registryLine": 759
+        "registryLine": 768
       },
       "specGapId": "GAP-HF-019",
       "specLine": 146,
@@ -366,12 +375,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-21",
         "evaluatorBodyLineRange": [
-          3876,
-          3891
+          4298,
+          4313
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-21-hfpef-screening",
-        "registryLine": 759
+        "registryLine": 768
       },
       "specGapId": "GAP-HF-020",
       "specLine": 147,
@@ -385,69 +394,69 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-DEVICE-CRT",
         "evaluatorBodyLineRange": [
-          4517,
-          4539
+          4946,
+          4968
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-device-crt",
-        "registryLine": 543
+        "registryLine": 552
       },
       "specGapId": "GAP-HF-021",
       "specLine": 152,
       "tier": "T1"
     },
     {
-      "auditNotes": "— | auto-verify: broad-rule consolidation: EP-DEVICE-ICD top-matches 2 spec gaps in subcategory \"Device Therapy\"; tokenJaccard=0.10; nameOverlap=1; cross-module match: evaluator owned by EP",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-ICD-PRIMARY-ISCHEMIC - LVEF<=35 + ischemic + BB+RAASi + GDMT>=3mo + no ICD. COR 1. Pattern C duration gate. PARTIAL -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "EP-DEVICE-ICD",
+        "evaluatorBlockName": "HF-ICD-PRIMARY-ISCHEMIC",
         "evaluatorBodyLineRange": [
-          4480,
-          4506
+          11432,
+          11447
         ],
-        "evaluatorModule": "EP",
-        "registryId": "gap-ep-device-icd",
-        "registryLine": 531
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-024-icd-primary-ischemic",
+        "registryLine": 3532
       },
       "specGapId": "GAP-HF-024",
       "specLine": 153,
       "tier": "T1"
     },
     {
-      "auditNotes": "— | auto-verify: broad-rule consolidation: EP-DEVICE-ICD top-matches 2 spec gaps in subcategory \"Device Therapy\"; tokenJaccard=0.08; nameOverlap=1; cross-module match: evaluator owned by EP",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-ICD-PRIMARY-NICM - LVEF<=35 + NICM(I42.0/.9) + BB+RAASi + no ICD. COR 1. Operator: +I42.9. PARTIAL -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "EP-DEVICE-ICD",
+        "evaluatorBlockName": "HF-ICD-PRIMARY-NICM",
         "evaluatorBodyLineRange": [
-          4480,
-          4506
+          11463,
+          11478
         ],
-        "evaluatorModule": "EP",
-        "registryId": "gap-ep-device-icd",
-        "registryLine": 531
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-025-icd-primary-nicm",
+        "registryLine": 3544
       },
       "specGapId": "GAP-HF-025",
       "specLine": 154,
       "tier": "T1"
     },
     {
-      "auditNotes": "— | auto-verify: Top candidate score=0.404 between PARTIAL and HIGH thresholds; tokenJaccard=0.07; nameOverlap=2; cross-module match: evaluator owned by EP",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-ICD-SECONDARY - VT(I47.2)/VF(I49.01/.02)/arrest(I46) + no ICD. COR 1. Specific subcodes (Pattern A). PARTIAL -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "EP-SECONDARY-ICD",
+        "evaluatorBlockName": "HF-ICD-SECONDARY",
         "evaluatorBodyLineRange": [
-          7494,
-          7516
+          11488,
+          11503
         ],
-        "evaluatorModule": "EP",
-        "registryId": "gap-ep-secondary-icd",
-        "registryLine": 1359
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-026-icd-secondary",
+        "registryLine": 3556
       },
       "specGapId": "GAP-HF-026",
       "specLine": 155,
@@ -461,12 +470,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-DEVICE-CRT",
         "evaluatorBodyLineRange": [
-          4517,
-          4539
+          4946,
+          4968
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-device-crt",
-        "registryLine": 543
+        "registryLine": 552
       },
       "specGapId": "GAP-HF-022",
       "specLine": 156,
@@ -480,31 +489,31 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-DEVICE-CRT",
         "evaluatorBodyLineRange": [
-          4517,
-          4539
+          4946,
+          4968
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-device-crt",
-        "registryLine": 543
+        "registryLine": 552
       },
       "specGapId": "GAP-HF-023",
       "specLine": 157,
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-CARDIOMEMS - HF + NYHA III + elevated NP (GUIDE-HF arm) + no CardioMEMS. COR 2b. NP-arm substitution. PARTIAL -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "HF-HEMODYNAMIC",
+        "evaluatorBlockName": "HF-CARDIOMEMS",
         "evaluatorBodyLineRange": [
-          10527,
-          10549
+          12155,
+          12170
         ],
         "evaluatorModule": "HF",
-        "registryId": "gap-hf-hemodynamic-monitor",
-        "registryLine": 2175
+        "registryId": "gap-hf-027-cardiomems",
+        "registryLine": 3844
       },
       "specGapId": "GAP-HF-027",
       "specLine": 158,
@@ -518,12 +527,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-86",
         "evaluatorBodyLineRange": [
-          6285,
-          6304
+          6714,
+          6733
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-86-crt-d-upgrade",
-        "registryLine": 1611
+        "registryLine": 1620
       },
       "specGapId": "GAP-HF-029",
       "specLine": 159,
@@ -540,31 +549,58 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-LEAD-EXTRACTION - CIED + device infection/complication (T82.6/.7/.1). COR 1. SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-LEAD-EXTRACTION",
+        "evaluatorBodyLineRange": [
+          11513,
+          11528
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-031-lead-extraction",
+        "registryLine": 3568
+      },
       "specGapId": "GAP-HF-031",
       "specLine": 161,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-CCM-CANDIDATE - LVEF 25-45 + NYHA III + QRS<130 + GDMT. COR 2b. Path-B nyha/qrs keys. SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-CCM-CANDIDATE",
+        "evaluatorBodyLineRange": [
+          11541,
+          11556
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-126-ccm-candidate",
+        "registryLine": 3580
+      },
       "specGapId": "GAP-HF-126",
       "specLine": 162,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-WCD-BRIDGE - recent MI + LVEF<=35 + no ICD. COR 2b. Path-B: post-MI window not timed. SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-WCD-BRIDGE",
+        "evaluatorBodyLineRange": [
+          11567,
+          11582
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-127-wcd-bridge",
+        "registryLine": 3592
+      },
       "specGapId": "GAP-HF-127",
       "specLine": 163,
       "tier": "T2"
@@ -577,12 +613,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-84",
         "evaluatorBodyLineRange": [
-          6225,
-          6244
+          6654,
+          6673
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-84-transplant-eval",
-        "registryLine": 1587
+        "registryLine": 1596
       },
       "specGapId": "GAP-HF-028",
       "specLine": 168,
@@ -609,30 +645,39 @@
       "tier": "T1"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-TOLVAPTAN-HYPONATREMIA - HF + Na<125 + no tolvaptan (mgmt eval). COR 2b. Soft framing. PARTIAL -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "HF-73",
+        "evaluatorBlockName": "HF-TOLVAPTAN-HYPONATREMIA",
         "evaluatorBodyLineRange": [
-          4010,
-          4025
+          12045,
+          12060
         ],
         "evaluatorModule": "HF",
-        "registryId": "gap-hf-73-hyponatremia",
-        "registryLine": 831
+        "registryId": "gap-hf-132-tolvaptan-hyponatremia",
+        "registryLine": 3796
       },
       "specGapId": "GAP-HF-132",
       "specLine": 171,
       "tier": "T1"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-CS-MCS-ESCALATION - HF + shock (R57.0) + inotrope + no MCS (CPT). COR 2a. Inotrope-refractory proxy. SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-CS-MCS-ESCALATION",
+        "evaluatorBodyLineRange": [
+          12074,
+          12089
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-133-cs-mcs-escalation",
+        "registryLine": 3808
+      },
       "specGapId": "GAP-HF-133",
       "specLine": 172,
       "tier": "T1"
@@ -655,12 +700,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-76",
         "evaluatorBodyLineRange": [
-          4081,
-          4096
+          4510,
+          4525
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-76-palliative-care",
-        "registryLine": 867
+        "registryLine": 876
       },
       "specGapId": "GAP-HF-044",
       "specLine": 174,
@@ -674,12 +719,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-77",
         "evaluatorBodyLineRange": [
-          4105,
-          4121
+          4534,
+          4550
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-77-diuretic-resistance",
-        "registryLine": 879
+        "registryLine": 888
       },
       "specGapId": "GAP-HF-045",
       "specLine": 175,
@@ -696,11 +741,20 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-INOTROPE-DEPENDENCE - HF + on milrinone/dobutamine. COR 1 (advanced HF referral). SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-INOTROPE-DEPENDENCE",
+        "evaluatorBodyLineRange": [
+          12019,
+          12034
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-047-inotrope-dependence",
+        "registryLine": 3784
+      },
       "specGapId": "GAP-HF-047",
       "specLine": 177,
       "tier": "T2"
@@ -743,61 +797,70 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-IRON-DEF-IV",
         "evaluatorBodyLineRange": [
-          10775,
-          10791
+          11207,
+          11223
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-033-iron-def-iv",
-        "registryLine": 3437
+        "registryLine": 3446
       },
       "specGapId": "GAP-HF-033",
       "specLine": 185,
       "tier": "T1"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-IRON-FUNCTIONAL - HF + ferritin 100-299 + TSAT<20 + no IV iron. COR 2a. Complements HF-033. PARTIAL -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "HF-IRON-IV-MONITORING",
+        "evaluatorBlockName": "HF-IRON-FUNCTIONAL",
         "evaluatorBodyLineRange": [
-          10627,
-          10650
+          11792,
+          11808
         ],
         "evaluatorModule": "HF",
-        "registryId": "gap-hf-iron-iv-monitoring",
-        "registryLine": 2919
+        "registryId": "gap-hf-034-iron-functional",
+        "registryLine": 3700
       },
       "specGapId": "GAP-HF-034",
       "specLine": 186,
       "tier": "T1"
     },
     {
-      "auditNotes": "— | auto-verify: broad-rule consolidation: HF-IRON-IV-MONITORING top-matches 3 spec gaps in subcategory \"Iron Deficiency\"; tokenJaccard=0.07; nameOverlap=1",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-IRON-SCREEN - anemic HF (Hgb<12) + ferritin absent. COR 1. Path-B narrowing to anemic (operator). PARTIAL -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "HF-IRON-IV-MONITORING",
+        "evaluatorBlockName": "HF-IRON-SCREEN",
         "evaluatorBodyLineRange": [
-          10627,
-          10650
+          11766,
+          11781
         ],
         "evaluatorModule": "HF",
-        "registryId": "gap-hf-iron-iv-monitoring",
-        "registryLine": 2919
+        "registryId": "gap-hf-032-iron-screen",
+        "registryLine": 3688
       },
       "specGapId": "GAP-HF-032",
       "specLine": 187,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-GDMT-INCOMPLETE - HFrEF + <=2 of 4 pillars. COR 1. Pattern B: reframed to current meds. SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-GDMT-INCOMPLETE",
+        "evaluatorBodyLineRange": [
+          11858,
+          11873
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-036-gdmt-incomplete",
+        "registryLine": 3712
+      },
       "specGapId": "GAP-HF-036",
       "specLine": 192,
       "tier": "T1"
@@ -810,12 +873,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-37-FU",
         "evaluatorBodyLineRange": [
-          3968,
-          3983
+          4397,
+          4412
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-37-fu-discharge",
-        "registryLine": 807
+        "registryLine": 816
       },
       "specGapId": "GAP-HF-035",
       "specLine": 193,
@@ -829,12 +892,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-20",
         "evaluatorBodyLineRange": [
-          3849,
-          3864
+          4270,
+          4285
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-20-cardiac-rehab",
-        "registryLine": 747
+        "registryLine": 756
       },
       "specGapId": "GAP-HF-037",
       "specLine": 194,
@@ -878,12 +941,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-26",
         "evaluatorBodyLineRange": [
-          3901,
-          3916
+          4323,
+          4338
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-26-osa-screening",
-        "registryLine": 771
+        "registryLine": 780
       },
       "specGapId": "GAP-HF-039",
       "specLine": 198,
@@ -897,12 +960,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-38",
         "evaluatorBodyLineRange": [
-          3987,
-          4002
+          4416,
+          4431
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-38-influenza-vax",
-        "registryLine": 819
+        "registryLine": 828
       },
       "specGapId": "GAP-HF-040",
       "specLine": 199,
@@ -936,12 +999,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-90",
         "evaluatorBodyLineRange": [
-          6403,
-          6421
+          6835,
+          6853
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-90-amyloid-biomarker",
-        "registryLine": 1659
+        "registryLine": 1668
       },
       "specGapId": "GAP-HF-051",
       "specLine": 206,
@@ -955,12 +1018,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-90",
         "evaluatorBodyLineRange": [
-          6403,
-          6421
+          6835,
+          6853
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-90-amyloid-biomarker",
-        "registryLine": 1659
+        "registryLine": 1668
       },
       "specGapId": "GAP-HF-053",
       "specLine": 207,
@@ -974,12 +1037,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-ATTR-DMT",
         "evaluatorBodyLineRange": [
-          10826,
-          10842
+          11258,
+          11274
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-054-attr-dmt",
-        "registryLine": 3461
+        "registryLine": 3470
       },
       "specGapId": "GAP-HF-054",
       "specLine": 208,
@@ -993,12 +1056,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-90",
         "evaluatorBodyLineRange": [
-          6403,
-          6421
+          6835,
+          6853
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-90-amyloid-biomarker",
-        "registryLine": 1659
+        "registryLine": 1668
       },
       "specGapId": "GAP-HF-052",
       "specLine": 209,
@@ -1012,12 +1075,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-90",
         "evaluatorBodyLineRange": [
-          6403,
-          6421
+          6835,
+          6853
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-90-amyloid-biomarker",
-        "registryLine": 1659
+        "registryLine": 1668
       },
       "specGapId": "GAP-HF-134",
       "specLine": 210,
@@ -1031,12 +1094,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-90",
         "evaluatorBodyLineRange": [
-          6403,
-          6421
+          6835,
+          6853
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-90-amyloid-biomarker",
-        "registryLine": 1659
+        "registryLine": 1668
       },
       "specGapId": "GAP-HF-055",
       "specLine": 211,
@@ -1050,12 +1113,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-90",
         "evaluatorBodyLineRange": [
-          6403,
-          6421
+          6835,
+          6853
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-90-amyloid-biomarker",
-        "registryLine": 1659
+        "registryLine": 1668
       },
       "specGapId": "GAP-HF-056",
       "specLine": 212,
@@ -1069,12 +1132,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-12",
         "evaluatorBodyLineRange": [
-          3748,
-          3763
+          4169,
+          4184
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-12-hcm-screening",
-        "registryLine": 699
+        "registryLine": 708
       },
       "specGapId": "GAP-HF-057",
       "specLine": 217,
@@ -1088,12 +1151,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-12",
         "evaluatorBodyLineRange": [
-          3748,
-          3763
+          4169,
+          4184
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-12-hcm-screening",
-        "registryLine": 699
+        "registryLine": 708
       },
       "specGapId": "GAP-HF-135",
       "specLine": 218,
@@ -1107,12 +1170,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-12",
         "evaluatorBodyLineRange": [
-          3748,
-          3763
+          4169,
+          4184
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-12-hcm-screening",
-        "registryLine": 699
+        "registryLine": 708
       },
       "specGapId": "GAP-HF-058",
       "specLine": 219,
@@ -1126,12 +1189,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-12",
         "evaluatorBodyLineRange": [
-          3748,
-          3763
+          4169,
+          4184
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-12-hcm-screening",
-        "registryLine": 699
+        "registryLine": 708
       },
       "specGapId": "GAP-HF-059",
       "specLine": 220,
@@ -1155,69 +1218,69 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-89",
         "evaluatorBodyLineRange": [
-          6370,
-          6393
+          6802,
+          6825
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-89-fabry",
-        "registryLine": 1647
+        "registryLine": 1656
       },
       "specGapId": "GAP-HF-060",
       "specLine": 226,
       "tier": "T3"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-FABRY-ERT - Fabry (E75.21) + no agalsidase/migalastat. COR 1. RXNORM_FABRY_DMT RxNav-verified. PARTIAL -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "HF-89",
+        "evaluatorBlockName": "HF-FABRY-ERT",
         "evaluatorBodyLineRange": [
-          6370,
-          6393
+          11597,
+          11613
         ],
         "evaluatorModule": "HF",
-        "registryId": "gap-hf-89-fabry",
-        "registryLine": 1647
+        "registryId": "gap-hf-061-fabry-ert",
+        "registryLine": 3604
       },
       "specGapId": "GAP-HF-061",
       "specLine": 227,
       "tier": "T3"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-SARCOID-AVBLOCK - age<60 + AV block (I44.1/.2) + no D86. COR 2a. PARTIAL -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "HF-82",
+        "evaluatorBlockName": "HF-SARCOID-AVBLOCK",
         "evaluatorBodyLineRange": [
-          4185,
-          4200
+          11626,
+          11641
         ],
         "evaluatorModule": "HF",
-        "registryId": "gap-hf-82-cardiac-sarcoidosis",
-        "registryLine": 915
+        "registryId": "gap-hf-062-sarcoid-avblock",
+        "registryLine": 3616
       },
       "specGapId": "GAP-HF-062",
       "specLine": 228,
       "tier": "T3"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-SARCOID-IMMUNOSUPP - cardiac sarcoid (D86.85) + no corticosteroid/steroid-sparing. COR 2a. PARTIAL -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "HF-82",
+        "evaluatorBlockName": "HF-SARCOID-IMMUNOSUPP",
         "evaluatorBodyLineRange": [
-          4185,
-          4200
+          11652,
+          11668
         ],
         "evaluatorModule": "HF",
-        "registryId": "gap-hf-82-cardiac-sarcoidosis",
-        "registryLine": 915
+        "registryId": "gap-hf-063-sarcoid-immunosupp",
+        "registryLine": 3628
       },
       "specGapId": "GAP-HF-063",
       "specLine": 229,
@@ -1234,11 +1297,20 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-TACHY-CM - HF + LVEF<50 + HR>100 + no rate/rhythm control. COR 2a. Path-B: PVC-burden arm dropped. SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-TACHY-CM",
+        "evaluatorBodyLineRange": [
+          11681,
+          11696
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-065-tachy-cm",
+        "registryLine": 3640
+      },
       "specGapId": "GAP-HF-065",
       "specLine": 231,
       "tier": "T3"
@@ -1251,12 +1323,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-80",
         "evaluatorBodyLineRange": [
-          4159,
-          4174
+          4588,
+          4603
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-80-cardio-oncology",
-        "registryLine": 903
+        "registryLine": 912
       },
       "specGapId": "GAP-HF-066",
       "specLine": 232,
@@ -1270,12 +1342,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-80",
         "evaluatorBodyLineRange": [
-          4159,
-          4174
+          4588,
+          4603
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-80-cardio-oncology",
-        "registryLine": 903
+        "registryLine": 912
       },
       "specGapId": "GAP-HF-067",
       "specLine": 233,
@@ -1289,12 +1361,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-80",
         "evaluatorBodyLineRange": [
-          4159,
-          4174
+          4588,
+          4603
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-80-cardio-oncology",
-        "registryLine": 903
+        "registryLine": 912
       },
       "specGapId": "GAP-HF-068",
       "specLine": 234,
@@ -1308,12 +1380,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-80",
         "evaluatorBodyLineRange": [
-          4159,
-          4174
+          4588,
+          4603
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-80-cardio-oncology",
-        "registryLine": 903
+        "registryLine": 912
       },
       "specGapId": "GAP-HF-069",
       "specLine": 235,
@@ -1327,12 +1399,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-87",
         "evaluatorBodyLineRange": [
-          6314,
-          6332
+          6746,
+          6764
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-87-peripartum",
-        "registryLine": 1623
+        "registryLine": 1632
       },
       "specGapId": "GAP-HF-070",
       "specLine": 236,
@@ -1346,52 +1418,70 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-LVNC",
         "evaluatorBodyLineRange": [
-          10495,
-          10518
+          10927,
+          10950
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-lvnc",
-        "registryLine": 2163
+        "registryLine": 2172
       },
       "specGapId": "GAP-HF-071",
       "specLine": 237,
       "tier": "T3"
     },
     {
-      "auditNotes": "— | auto-verify: Top candidate score=0.448 between PARTIAL and HIGH thresholds; tokenJaccard=0.10; codeOverlap=[I51.81]; nameOverlap=1; cross-module match: evaluator owned by CAD",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-TAKOTSUBO-ECHO - Takotsubo (I51.81) + no recovery echo (echo_months>=2). COR 2a. PARTIAL -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "CAD-TAKOTSUBO",
+        "evaluatorBlockName": "HF-TAKOTSUBO-ECHO",
         "evaluatorBodyLineRange": [
-          9299,
-          9323
+          11707,
+          11722
         ],
-        "evaluatorModule": "CAD",
-        "registryId": "gap-cad-takotsubo",
-        "registryLine": 3075
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-072-takotsubo-echo",
+        "registryLine": 3652
       },
       "specGapId": "GAP-HF-072",
       "specLine": 238,
       "tier": "T3"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE: auto-classifier matched HF-073 (radiation cardiomyopathy) to VD-RADIATION cross-module evaluator. FALSE POSITIVE — VD-RADIATION covers radiation valve disease, different clinical scenario. HF-073 has no in-module or cross-module evaluator coverage. SPEC_ONLY.",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-RADIATION-SURV - radiation (Z92.3) + structural cardiac dx + echo_months>=12. COR 2a. Pattern A narrowing. SPEC_ONLY -> DET_OK (supersedes prior MANUAL OVERRIDE).",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-RADIATION-SURV",
+        "evaluatorBodyLineRange": [
+          11738,
+          11753
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-073-radiation-surv",
+        "registryLine": 3664
+      },
       "specGapId": "GAP-HF-073",
       "specLine": 239,
       "tier": "T3"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-ARVC-ICD - I42.8 + sustained VT (I47.2) + no ICD. COR 1. Operator: I42.8+VT pairing (Pattern A, no specific ARVC code). SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-ARVC-ICD",
+        "evaluatorBodyLineRange": [
+          11820,
+          11835
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-074-arvc-icd",
+        "registryLine": 3676
+      },
       "specGapId": "GAP-HF-074",
       "specLine": 240,
       "tier": "T3"
@@ -1427,11 +1517,20 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-CRS4-SCREEN - no HF + eGFR<30 + no NP. COR 2a. Path-B NP-absence proxy. SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-CRS4-SCREEN",
+        "evaluatorBodyLineRange": [
+          12099,
+          12114
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-139-crs4-screen",
+        "registryLine": 3820
+      },
       "specGapId": "GAP-HF-139",
       "specLine": 248,
       "tier": "T2"
@@ -1444,12 +1543,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-77",
         "evaluatorBodyLineRange": [
-          4105,
-          4121
+          4534,
+          4550
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-77-diuretic-resistance",
-        "registryLine": 879
+        "registryLine": 888
       },
       "specGapId": "GAP-HF-140",
       "specLine": 249,
@@ -1493,23 +1592,32 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-PERICARDITIS-COLCH",
         "evaluatorBodyLineRange": [
-          10802,
-          10818
+          11234,
+          11250
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-143-pericarditis-colch",
-        "registryLine": 3449
+        "registryLine": 3458
       },
       "specGapId": "GAP-HF-143",
       "specLine": 257,
       "tier": "T3"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-PERICARDITIS-IL1 - pericarditis (I30) + corticosteroid + no IL-1 inhibitor. COR 2a. RHAPSODY. SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-PERICARDITIS-IL1",
+        "evaluatorBodyLineRange": [
+          12126,
+          12142
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-144-pericarditis-il1",
+        "registryLine": 3832
+      },
       "specGapId": "GAP-HF-144",
       "specLine": 258,
       "tier": "T3"
@@ -1525,21 +1633,39 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-LVAD-INR SAFETY - LVAD (Z95.811) + INR outside 2.0-3.0. COR 1. SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-LVAD-INR",
+        "evaluatorBodyLineRange": [
+          12186,
+          12202
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-147-lvad-inr",
+        "registryLine": 3856
+      },
       "specGapId": "GAP-HF-147",
       "specLine": 264,
       "tier": "T1"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-LVAD-GIB - LVAD + GI hemorrhage (K92.0/.1/.2) + no octreotide. COR 2b. SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-LVAD-GIB",
+        "evaluatorBodyLineRange": [
+          12213,
+          12229
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-148-lvad-gib",
+        "registryLine": 3868
+      },
       "specGapId": "GAP-HF-148",
       "specLine": 265,
       "tier": "T2"
@@ -1565,21 +1691,39 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE: auto-classifier matched HF-151 (post-cardiac-transplant HF) to CAD-CARDIAC-TRANSPLANT-CAD cross-module evaluator. FALSE POSITIVE — CAD evaluator covers cardiac allograft vasculopathy (CAV; post-transplant CAD), distinct from HF graft dysfunction. HF-151 has no specific evaluator coverage. SPEC_ONLY.",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-TRANSPLANT-CAV - transplant (Z94.1) + coronary_cta_months>=12. COR 1. SPEC_ONLY -> DET_OK (supersedes prior MANUAL OVERRIDE).",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-TRANSPLANT-CAV",
+        "evaluatorBodyLineRange": [
+          12239,
+          12254
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-151-transplant-cav",
+        "registryLine": 3880
+      },
       "specGapId": "GAP-HF-151",
       "specLine": 268,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-TRANSPLANT-BIOPSY - transplant (Z94.1) + no EMB (CPT 93505). COR 1. Presence proxy. SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-TRANSPLANT-BIOPSY",
+        "evaluatorBodyLineRange": [
+          12265,
+          12280
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-152-transplant-biopsy",
+        "registryLine": 3892
+      },
       "specGapId": "GAP-HF-152",
       "specLine": 269,
       "tier": "T2"
@@ -1675,11 +1819,20 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-STAGE-B - no HF dx + LVEF<40 + MI/CAD + no ACEi-ARB/BB. COR 1. Operator: LVEF<40 tighten. SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-STAGE-B",
+        "evaluatorBodyLineRange": [
+          11885,
+          11900
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-076-stage-b",
+        "registryLine": 3724
+      },
       "specGapId": "GAP-HF-076",
       "specLine": 291,
       "tier": "T2"
@@ -1692,31 +1845,31 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-AMYLOID-AF-OAC",
         "evaluatorBodyLineRange": [
-          10694,
-          10709
+          11126,
+          11141
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-077-amyloid-af-oac",
-        "registryLine": 3401
+        "registryLine": 3410
       },
       "specGapId": "GAP-HF-077",
       "specLine": 292,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: Top candidate score=0.259 between PARTIAL and HIGH thresholds; tokenJaccard=0.07; nameOverlap=1; cross-module match: evaluator owned by EP",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-AF-RATE - HF + chronic AF (I48.2/.1x) + HR>110 + no rate control. COR 1. PARTIAL -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "EP-EARLY-RHYTHM",
+        "evaluatorBlockName": "HF-AF-RATE",
         "evaluatorBodyLineRange": [
-          9744,
-          9766
+          11910,
+          11925
         ],
-        "evaluatorModule": "EP",
-        "registryId": "gap-ep-early-rhythm",
-        "registryLine": 1935
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-078-af-rate",
+        "registryLine": 3736
       },
       "specGapId": "GAP-HF-078",
       "specLine": 293,
@@ -1730,23 +1883,32 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-ANEMIA-HF",
         "evaluatorBodyLineRange": [
-          10591,
-          10618
+          11023,
+          11050
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-anemia-hf",
-        "registryLine": 2211
+        "registryLine": 2220
       },
       "specGapId": "GAP-HF-079",
       "specLine": 294,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-THYROID - HF + overt thyroid (TSH>10/<0.1) + untreated. COR 1. Operator: overt-only. SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-THYROID",
+        "evaluatorBodyLineRange": [
+          11938,
+          11953
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-080-thyroid",
+        "registryLine": 3748
+      },
       "specGapId": "GAP-HF-080",
       "specLine": 295,
       "tier": "T2"
@@ -1759,23 +1921,32 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-DM-HBA1C",
         "evaluatorBodyLineRange": [
-          10723,
-          10738
+          11155,
+          11170
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-081-dm-hba1c",
-        "registryLine": 3413
+        "registryLine": 3422
       },
       "specGapId": "GAP-HF-081",
       "specLine": 296,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-METFORMIN-RENAL SAFETY - HF + CKD + metformin + eGFR<45. COR 3 (Harm) at <30. SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-METFORMIN-RENAL",
+        "evaluatorBodyLineRange": [
+          11963,
+          11980
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-082-metformin-renal",
+        "registryLine": 3760
+      },
       "specGapId": "GAP-HF-082",
       "specLine": 297,
       "tier": "T2"
@@ -1788,12 +1959,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-75",
         "evaluatorBodyLineRange": [
-          4057,
-          4072
+          4486,
+          4501
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-75-cardiac-mri",
-        "registryLine": 855
+        "registryLine": 864
       },
       "specGapId": "GAP-HF-083",
       "specLine": 298,
@@ -1817,23 +1988,32 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-INAPPROPRIATE-SHOCKS",
         "evaluatorBodyLineRange": [
-          10144,
-          10166
+          10576,
+          10598
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-inappropriate-shocks",
-        "registryLine": 2091
+        "registryLine": 2100
       },
       "specGapId": "GAP-HF-085",
       "specLine": 300,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-15 (v3.0 HF batch): HF-PREG-TERATOGEN SAFETY - HF + pregnancy (O/Z33/Z34) + teratogenic GDMT. COR 3 (Harm). SPEC_ONLY -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "HF-PREG-TERATOGEN",
+        "evaluatorBodyLineRange": [
+          11990,
+          12006
+        ],
+        "evaluatorModule": "HF",
+        "registryId": "gap-hf-086-preg-teratogen",
+        "registryLine": 3772
+      },
       "specGapId": "GAP-HF-086",
       "specLine": 301,
       "tier": "T2"
@@ -1876,12 +2056,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-29",
         "evaluatorBodyLineRange": [
-          3925,
-          3940
+          4347,
+          4362
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-29-remote-monitoring",
-        "registryLine": 783
+        "registryLine": 792
       },
       "specGapId": "GAP-HF-090",
       "specLine": 305,

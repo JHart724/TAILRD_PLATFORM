@@ -92,12 +92,12 @@ No EXTRA rules or architectural patterns surfaced. Reconciliation is clean.
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
 | GAP-VHD-001 | 753 | SPEC_ONLY | — | MANUAL OVERRIDE 2026-06-10 (VHD audit, AUDIT-133): PARTIAL -> SPEC_ONLY. The prior cite (VD-3 gap-vd |
-| GAP-VHD-005 | 754 | PARTIAL_DETECTION | `gap-vd-6-doac-mechanical-valve` (VD-6 @5744-5768) | MANUAL OVERRIDE 2026-06-10 (VHD audit): DET_OK -> PARTIAL per §16.6(i) concept-match / AUDIT-123 + § |
+| GAP-VHD-005 | 754 | PARTIAL_DETECTION | `gap-vd-6-doac-mechanical-valve` (VD-6 @6173-6197) | MANUAL OVERRIDE 2026-06-10 (VHD audit): DET_OK -> PARTIAL per §16.6(i) concept-match / AUDIT-123 + § |
 | GAP-VHD-050 | 830 | SPEC_ONLY | — | No S. aureus + TEE rule in evaluator. \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
 | GAP-VHD-057 | 841 | SPEC_ONLY | — | No IE + acute HF surgical-urgency rule. \| auto-verify: No candidate evaluator block above PARTIAL_MA |
 | GAP-VHD-058 | 842 | SPEC_ONLY | — | No IE + abscess surgical rule. \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-VHD-061 | 843 | SPEC_ONLY | — | No PVE dehiscence/fistula rule. \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-VHD-068 | 860 | PARTIAL_DETECTION | `gap-vd-prosthetic-pannus` (VD-PANNUS @11143-11165) | MANUAL OVERRIDE 2026-06-10 (VHD audit): PARTIAL hold (T1). VD-PANNUS (gap-vd-prosthetic-pannus) cove |
+| GAP-VHD-068 | 860 | PARTIAL_DETECTION | `gap-vd-prosthetic-pannus` (VD-PANNUS @12556-12578) | MANUAL OVERRIDE 2026-06-10 (VHD audit): PARTIAL hold (T1). VD-PANNUS (gap-vd-prosthetic-pannus) cove |
 | GAP-VHD-099 | 914 | SPEC_ONLY | — | MANUAL OVERRIDE 2026-06-10 (VHD audit, AUDIT-136): PARTIAL -> SPEC_ONLY. VD-10 (gap-vd-10-pregnancy- |
 
 ---

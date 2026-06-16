@@ -45,12 +45,15 @@ describe('AUDIT-118 caller guard - expandToIngredients is the one medCodes path'
     expect(hits.sort()).toEqual([...RUNNERS].sort());
   });
 
-  it('raw .rxNormCode access inside the engine is confined to the orthogonal statin dose resolver', () => {
-    // The IN-map handles PRESENCE; the AUDIT-101 dose resolver handles STRENGTH
-    // (atorvastatin 10mg and 80mg share one IN, so dose cannot come from a code).
-    // That resolver is the ONE allowed raw-code reader inside the engine.
+  it('raw .rxNormCode access inside the engine is confined to dose/temporal resolvers (not presence)', () => {
+    // The IN-map handles PRESENCE; raw .rxNormCode is allowed ONLY for the AUDIT-101 STRENGTH class
+    // (a dose cannot come from an ingredient code - atorvastatin 10mg/80mg share one IN) and the
+    // PR #396 TEMPORAL class (med start-date). Count: 1 (statin resolver) + 8 added by the v3.0 HF full
+    // buildout batch 2026-06-15: HF-003 BB dose-target (x2), HF-015 digoxin dose (x2), HF-006 ARNI dose
+    // (x1), Pattern-C GDMT >=3mo duration helper (x2), HF-006 legacy dose-gate (x1). All dose/temporal,
+    // never presence (presence still routes via medCodes/expandToIngredients).
     const engine = read('ingestion/gaps/gapRuleEngine.ts');
     const rawAccesses = (engine.match(/\.rxNormCode\b/g) || []).length;
-    expect(rawAccesses).toBe(1);
+    expect(rawAccesses).toBe(9);
   });
 });

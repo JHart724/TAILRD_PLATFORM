@@ -26,7 +26,7 @@ describe('Structural: Gap rule engine integrity', () => {
     content = fs.readFileSync(ENGINE_PATH, 'utf8');
   });
 
-  it('exactly 271 gap rules defined (gaps.push calls)', () => {
+  it('exactly 305 gap rules defined (gaps.push calls)', () => {
     // Count incremented from 257 to 259 by EP-XX-7 mitigation (2026-05-04, fix/ep-017-rate-control-hfref-gating):
     // - +1: EP-017 SAFETY gap (HFrEF + on non-DHP CCB → Class 3 Harm alert)
     // - +1: EP-RC LVEF-data-required gap (HF dx + AF + LVEF undefined → structured data gap, not silent default)
@@ -41,8 +41,12 @@ describe('Structural: Gap rule engine integrity', () => {
     // Then 263 -> 271 by the v3.0 HF buildout calibration sample (2026-06-15, feat/hf-calibration-buildout):
     // - +8: GAP-HF-017 finerenone, HF-077 amyloid+AF anticoag, HF-081 HbA1c, HF-008 MRA-contra (SAFETY),
     //   HF-033 IV iron, HF-143 colchicine, HF-054 ATTR-DMT, HF-002 non-EBM beta-blocker.
+    // Then 271 -> 305 by the v3.0 HF FULL buildout batch (2026-06-15, feat/hf-buildable-gap-batch):
+    // - +34: the buildable HF gaps across 5 chunks (GDMT/device HF-003/011/015/024/025/026/031/126/127;
+    //   phenotypes/iron HF-061/062/063/065/072/073/074/032/034; cross-cutting HF-036/076/078/080/082/086;
+    //   advanced/cardiorenal/pericardial HF-047/132/133/139/144/027; LVAD/transplant HF-147/148/151/152).
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(271);
+    expect(count).toBe(305);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

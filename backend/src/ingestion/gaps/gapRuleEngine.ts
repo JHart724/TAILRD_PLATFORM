@@ -21,6 +21,15 @@ import {
   RXNORM_COLCHICINE,
   RXNORM_IV_IRON,
   RXNORM_NON_EBM_BB_HF,
+  RXNORM_FABRY_DMT,
+  RXNORM_INOTROPES,
+  RXNORM_TOLVAPTAN,
+  RXNORM_THYROID_THERAPY,
+  RXNORM_METFORMIN,
+  RXNORM_CORTICOSTEROIDS,
+  RXNORM_STEROID_SPARING,
+  RXNORM_IL1_INHIBITORS,
+  RXNORM_OCTREOTIDE,
 } from '../../terminology/cardiovascularValuesets';
 
 /** Extract code arrays from valueset objects for medication matching */
@@ -3481,6 +3490,416 @@ export const RUNTIME_GAP_REGISTRY = [
     classOfRecommendation: '1',
     levelOfEvidence: 'A',
   },
+  // v3.0 HF FULL buildout batch (2026-06-15, feat/hf-buildable-gap-batch): 34 new evaluators, registry
+  // entries for cite reconstruction. All clinically reviewed; proof hfBuildoutBatch.test.ts.
+  {
+    id: 'gap-hf-003-bb-target-dose',
+    name: 'HFrEF beta-blocker below target dose',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC/HFSA',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-hf-011-sglt2i-egfr-floor',
+    name: 'SGLT2i deferred below eGFR floor',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2022 AHA/ACC/HFSA HF Guideline; FDA SGLT2i labels',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC/HFSA',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-hf-015-digoxin-high-elderly',
+    name: 'High-dose digoxin in elderly with CKD',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2019 AGS Beers Criteria; 2022 AHA/ACC/HFSA HF Guideline',
+    guidelineVersion: '2019',
+    guidelineOrg: 'AGS/AHA/ACC/HFSA',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '3 (Harm)',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-hf-024-icd-primary-ischemic',
+    name: 'Primary-prevention ICD (ischemic)',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2017 AHA/ACC/HRS Guideline for VA/SCD',
+    guidelineVersion: '2017',
+    guidelineOrg: 'AHA/ACC/HRS',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-hf-025-icd-primary-nicm',
+    name: 'Primary-prevention ICD (non-ischemic)',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2017 AHA/ACC/HRS Guideline; DANISH (NEJM 2016)',
+    guidelineVersion: '2017',
+    guidelineOrg: 'AHA/ACC/HRS',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-hf-026-icd-secondary',
+    name: 'Secondary-prevention ICD',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2017 AHA/ACC/HRS Guideline for VA/SCD',
+    guidelineVersion: '2017',
+    guidelineOrg: 'AHA/ACC/HRS',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-hf-031-lead-extraction',
+    name: 'CIED lead extraction indication',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2017 HRS Expert Consensus on CIED Lead Management',
+    guidelineVersion: '2017',
+    guidelineOrg: 'HRS',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-hf-126-ccm-candidate',
+    name: 'Cardiac contractility modulation candidacy',
+    module: 'HEART_FAILURE',
+    guidelineSource: 'FDA approval (FIX-HF-5C); 2023 HF device-therapy consensus',
+    guidelineVersion: '2023',
+    guidelineOrg: 'FDA/ACC',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '2b',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-hf-127-wcd-bridge',
+    name: 'WCD bridge post-MI',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2017 AHA/ACC/HRS Guideline; VEST (NEJM 2018)',
+    guidelineVersion: '2017',
+    guidelineOrg: 'AHA/ACC/HRS',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '2b',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-hf-061-fabry-ert',
+    name: 'Fabry disease-modifying therapy',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2021 International Expert Consensus on Fabry Disease',
+    guidelineVersion: '2021',
+    guidelineOrg: 'Fabry Consensus',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-hf-062-sarcoid-avblock',
+    name: 'Cardiac sarcoid AV-block workup',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2014 HRS Expert Consensus on Cardiac Sarcoidosis',
+    guidelineVersion: '2014',
+    guidelineOrg: 'HRS',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-hf-063-sarcoid-immunosupp',
+    name: 'Cardiac sarcoid immunosuppression',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2014 HRS Expert Consensus on Cardiac Sarcoidosis',
+    guidelineVersion: '2014',
+    guidelineOrg: 'HRS',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-hf-065-tachy-cm',
+    name: 'Tachycardia-mediated cardiomyopathy',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2019 AHA Scientific Statement on Tachycardia-Induced CM',
+    guidelineVersion: '2019',
+    guidelineOrg: 'AHA',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-hf-072-takotsubo-echo',
+    name: 'Takotsubo recovery echo',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2018 International Takotsubo Diagnostic Criteria (InterTAK)',
+    guidelineVersion: '2018',
+    guidelineOrg: 'InterTAK',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-hf-073-radiation-surv',
+    name: 'Radiation heart disease surveillance',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2013 EACVI/ASE Consensus on Radiation-Induced Heart Disease',
+    guidelineVersion: '2013',
+    guidelineOrg: 'EACVI/ASE',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-hf-074-arvc-icd',
+    name: 'ARVC with VT ICD evaluation',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2019 HRS Expert Consensus on ARVC',
+    guidelineVersion: '2019',
+    guidelineOrg: 'HRS',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-hf-032-iron-screen',
+    name: 'Iron studies in anemic HF',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC/HFSA',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-hf-034-iron-functional',
+    name: 'Functional iron deficiency in HF',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2022 AHA/ACC/HFSA HF Guideline (AFFIRM-AHF, IRONMAN)',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC/HFSA',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-hf-036-gdmt-incomplete',
+    name: 'HFrEF GDMT substantially incomplete',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC/HFSA',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-hf-076-stage-b',
+    name: 'Stage B asymptomatic LV dysfunction',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2022 AHA/ACC/HFSA HF Guideline (Stage B)',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC/HFSA',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-hf-078-af-rate',
+    name: 'HF + chronic AF rate control',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/HRS',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-hf-080-thyroid',
+    name: 'HF + untreated overt thyroid dysfunction',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC/HFSA',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-hf-082-metformin-renal',
+    name: 'Metformin renal review in HF + CKD',
+    module: 'HEART_FAILURE',
+    guidelineSource: 'FDA metformin label; 2022 AHA/ACC/HFSA HF Guideline',
+    guidelineVersion: '2022',
+    guidelineOrg: 'FDA/AHA/ACC/HFSA',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '3 (Harm)',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-hf-086-preg-teratogen',
+    name: 'Teratogenic HF medication in pregnancy',
+    module: 'HEART_FAILURE',
+    guidelineSource: 'FDA pregnancy labeling; 2022 AHA/ACC/HFSA HF Guideline',
+    guidelineVersion: '2022',
+    guidelineOrg: 'FDA/AHA/ACC/HFSA',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '3 (Harm)',
+    levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-hf-047-inotrope-dependence',
+    name: 'Inotrope dependence advanced HF referral',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2022 AHA/ACC/HFSA HF Guideline (Stage D)',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC/HFSA',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-hf-132-tolvaptan-hyponatremia',
+    name: 'Severe hyponatremia management in HF',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2022 AHA/ACC/HFSA HF Guideline (EVEREST, SALT)',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC/HFSA',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '2b',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-hf-133-cs-mcs-escalation',
+    name: 'Inotrope-refractory cardiogenic shock MCS',
+    module: 'HEART_FAILURE',
+    guidelineSource: 'SCAI Cardiogenic Shock Classification; 2022 AHA/ACC/HFSA',
+    guidelineVersion: '2022',
+    guidelineOrg: 'SCAI/AHA/ACC/HFSA',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-hf-139-crs4-screen',
+    name: 'Advanced CKD HF screening (cardiorenal type 4)',
+    module: 'HEART_FAILURE',
+    guidelineSource: 'KDIGO CKD Guideline; cardiorenal syndrome consensus',
+    guidelineVersion: '2024',
+    guidelineOrg: 'KDIGO',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-hf-144-pericarditis-il1',
+    name: 'Recurrent pericarditis IL-1 inhibitor',
+    module: 'HEART_FAILURE',
+    guidelineSource: 'RHAPSODY trial (rilonacept, NEJM 2021)',
+    guidelineVersion: '2021',
+    guidelineOrg: 'RHAPSODY',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-hf-027-cardiomems',
+    name: 'CardioMEMS PA-pressure monitor candidacy',
+    module: 'HEART_FAILURE',
+    guidelineSource: '2022 AHA/ACC/HFSA HF Guideline (CHAMPION, GUIDE-HF)',
+    guidelineVersion: '2022',
+    guidelineOrg: 'AHA/ACC/HFSA',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '2b',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-hf-147-lvad-inr',
+    name: 'Post-LVAD INR out of range',
+    module: 'HEART_FAILURE',
+    guidelineSource: 'ISHLT Mechanical Circulatory Support guidelines',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ISHLT',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-hf-148-lvad-gib',
+    name: 'Post-LVAD GI bleeding management',
+    module: 'HEART_FAILURE',
+    guidelineSource: 'ISHLT MCS guidance; LVAD GI-bleeding registry data',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ISHLT',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '2b',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-hf-151-transplant-cav',
+    name: 'Post-transplant CAV surveillance',
+    module: 'HEART_FAILURE',
+    guidelineSource: 'ISHLT Heart Transplant guidelines (CAV surveillance)',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ISHLT',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-hf-152-transplant-biopsy',
+    name: 'Post-transplant rejection-surveillance biopsy',
+    module: 'HEART_FAILURE',
+    guidelineSource: 'ISHLT Heart Transplant guidelines (rejection surveillance)',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ISHLT',
+    lastReviewDate: '2026-06-15',
+    nextReviewDue: '2026-12-15',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C-LD',
+  },
 ] as const;
 
 export function evaluateGapRules(
@@ -3713,7 +4132,9 @@ export function evaluateGapRules(
 
   // Gap HF-7: GLP-1 RA for HFpEF with Obesity
   // Guideline: 2023 ACC Expert Consensus Decision Pathway on Management of HFpEF
-  const hasObesity = dxCodes.some(c => c.startsWith('E66'));
+  // Legacy-review fix 2026-06-15: exclude E66.3 (overweight, BMI 25-29.9); the obese-HFpEF/OSA gaps
+  // target obesity (BMI>=30) and bmiOver30 is the alternate gate.
+  const hasObesity = dxCodes.some(c => c.startsWith('E66') && !c.startsWith('E66.3'));
   const bmiOver30 = labValues['bmi'] !== undefined && labValues['bmi'] > 30;
   if (
     hasHF &&
@@ -3866,12 +4287,13 @@ export function evaluateGapRules(
   // Gap HF-21: Undiagnosed HFpEF Screening
   // Guideline: 2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure
   const hasHTN = dxCodes.some(c => c.startsWith('I10'));
+  // Legacy-review fix 2026-06-15: HTN AND DM -> HTN OR DM. HFpEF risk is additive across factors, not a
+  // required conjunction; requiring both under-fired vs the H2FPEF/guideline intent (operator ruling).
   if (
     !hasHF &&
     age > 65 &&
     labValues['bnp'] !== undefined && labValues['bnp'] > 125 &&
-    hasHTN &&
-    hasDiabetes &&
+    (hasHTN || hasDiabetes) &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
@@ -3881,7 +4303,7 @@ export function evaluateGapRules(
       target: 'Echocardiographic evaluation for HFpEF completed',
       recommendations: { action: 'Guideline suggests echocardiographic evaluation for occult HFpEF per 2022 AHA/ACC/HFSA' },
       evidence: {
-        triggerCriteria: ['Age > 65', 'Elevated BNP > 125', 'Hypertension (I10)', 'Type 2 diabetes (E11)', 'No HF diagnosis'],
+        triggerCriteria: ['Age > 65', 'Elevated BNP > 125', 'Hypertension (I10) OR Type 2 diabetes (E11)', 'No HF diagnosis'],
         guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
         classOfRecommendation: '1',
         levelOfEvidence: 'C',
@@ -3941,20 +4363,27 @@ export function evaluateGapRules(
 
   // Gap HF-30: ARNi Underdosing Review
   // Guideline: 2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure
+  // Legacy-review fix 2026-06-15: added a DOSE GATE (was firing on ARNI presence alone -> over-fired on
+  // patients already at target). Now fires only when a dose-bearing ARNI entry is below the 97 mg target
+  // (sacubitril component of the 97/103 mg target tablet). No dose data -> suppressed (avoids the
+  // over-fire). Data-limit (Path-B, HF-003 precedent): ingredient-coded entries matched; product-coded
+  // or dose-less entries under-detect (safe direction); doseValue interpretation (component vs total) flagged.
+  const hfARNIUnderdosed = meds.some((m: any) => m.rxNormCode === '1656339' &&
+    m.doseValue !== null && m.doseValue !== undefined && m.doseValue < 97);
   if (
     hasHF &&
-    medCodes.includes('1656339') &&
+    hfARNIUnderdosed &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
       type: TherapyGapType.MEDICATION_UNDERDOSED,
       module: ModuleType.HEART_FAILURE,
       status: 'Sacubitril/valsartan dose optimization review recommended',
-      target: 'ARNi dose titrated to target or documented rationale',
+      target: 'ARNi dose titrated to target (97/103 mg BID) or documented rationale',
       medication: 'Sacubitril/Valsartan',
-      recommendations: { action: 'Recommended for review: ARNi dose optimization per 2022 AHA/ACC/HFSA' },
+      recommendations: { action: 'Recommended for review: ARNi below target dose - consider uptitration to 97/103 mg BID per 2022 AHA/ACC/HFSA', note: 'Data-limit (Path-B): dose-target check uses ingredient-coded meds[].doseValue < 97; BID/component-vs-total interpretation not fully resolved (HF-003 precedent).' },
       evidence: {
-        triggerCriteria: ['On sacubitril/valsartan (RxNorm 1656339)', 'Dose optimization not confirmed'],
+        triggerCriteria: ['On sacubitril/valsartan (RxNorm 1656339) below target dose (<97 mg)', 'Dose below 97/103 mg BID target'],
         guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
         classOfRecommendation: '1',
         levelOfEvidence: 'B-R',
@@ -6307,7 +6736,10 @@ export function evaluateGapRules(
   // Guideline: 2022 AHA/ACC/HFSA HF Guideline; ESC Position Statement on PPCM
   // O90.3 or (female + recent pregnancy codes + LVEF < 45)
   const hasPPCMcode = dxCodes.some(c => c.startsWith('O90.3'));
-  const hasRecentPregnancy = dxCodes.some(c => c.startsWith('O') && !c.startsWith('O90.3'));
+  // Legacy-review fix 2026-06-15 (Pattern A): narrowed from the over-broad 'O' chapter prefix (which
+  // captured ectopic/abortion/routine-antenatal) to the peripartum/postpartum WINDOW - puerperium
+  // complications (O85-O92) + postpartum care (Z39). PPCM occurs late-pregnancy through ~5mo postpartum.
+  const hasRecentPregnancy = dxCodes.some(c => /^O8[5-9]/.test(c) || /^O9[0-2]/.test(c) || c.startsWith('Z39'));
   if (
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE) &&
     (hasPPCMcode || (gender === 'FEMALE' && hasRecentPregnancy && labValues['lvef'] !== undefined && labValues['lvef'] < 45))
@@ -10861,6 +11293,987 @@ export function evaluateGapRules(
         guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
         classOfRecommendation: '1',
         levelOfEvidence: 'A',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // ============================================================
+  // v3.0 HF BUILDOUT BATCH (2026-06-15) - CHUNK 1: GDMT + Device Therapy
+  // Autonomous build; chunked clinical review. Stable ids per AUDIT-106.
+  // Helper booleans re-derived locally (batch-self-contained, no scope coupling).
+  // ============================================================
+  const hfHasICD = dxCodes.some(c => c.startsWith('Z95.810') || c.startsWith('Z95.0'));
+  const hfHasCIED = hfHasICD || dxCodes.some(c => c.startsWith('Z95.818'));
+  const hfHasRecentMI = dxCodes.some(c => c.startsWith('I21') || c.startsWith('I22'));
+  const hfIsHFrEF = labValues['lvef'] !== undefined && labValues['lvef'] <= 40;
+  // Pattern C (operator-locked 2026-06-15): GDMT proxy = beta-blocker + RAASi present (NOT all-4-pillars).
+  // >=3-month duration gated via the threaded med start-date (PR #396) WHEN present; Path-B (proceed +
+  // note) when no GDMT-med start-date is available. Matches ingredient-coded GDMT entries (product-coded
+  // entries fall through to Path-B). The documented start-date limitation feeds the ingestion worklist.
+  const hfGDMTSet = new Set<string>([...BB_CODES_CV, ...RAAS_CODES_CV]);
+  const hfGDMTDated = meds.filter((m: any) => m.rxNormCode !== null && hfGDMTSet.has(m.rxNormCode) && m.startDate);
+  const hfGDMT3moOK =
+    hfGDMTDated.length === 0 || // Path-B: no GDMT start-date data -> proceed (duration documented as ungated)
+    hfGDMTDated.some((m: any) => (Date.now() - new Date(m.startDate).getTime()) >= 90 * 24 * 60 * 60 * 1000);
+
+  // HF-BB-TARGET-DOSE: HFrEF on beta-blocker below target dose (GAP-HF-003)
+  // Guideline: 2022 AHA/ACC/HFSA HF Guideline, COR 1, LOE A (titrate GDMT to target/max-tolerated dose).
+  // Data-limit note (HF-081 Path-B precedent): compares threaded meds[].doseValue (AUDIT-101) to
+  // per-ingredient TOTAL-DAILY target; only matches ingredient-coded BB entries (product-coded entries
+  // under-detect, the safe direction). BID schedules + weight-based carvedilol target (25 vs 50 mg/d by
+  // <85 kg) are NOT captured (no frequency/weight element). HR>=60 + SBP>=100 gate ensures uptitration
+  // headroom (not bradycardia/hypotension-limited).
+  const hfBBTarget: Record<string, number> = {
+    [RXNORM_GDMT.CARVEDILOL]: 50,
+    [RXNORM_GDMT.METOPROLOL_SUCCINATE]: 200,
+    [RXNORM_GDMT.BISOPROLOL]: 10,
+  };
+  const hfBBBelowTarget = meds.some((m: any) =>
+    m.rxNormCode !== null && m.doseValue !== null && m.doseValue !== undefined &&
+    hfBBTarget[m.rxNormCode] !== undefined && m.doseValue < hfBBTarget[m.rxNormCode]
+  );
+  if (
+    hasHF && hfIsHFrEF &&
+    hfBBBelowTarget &&
+    labValues['heart_rate'] !== undefined && labValues['heart_rate'] >= 60 &&
+    labValues['systolic_bp'] !== undefined && labValues['systolic_bp'] >= 100 &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_UNDERDOSED,
+      module: ModuleType.HEART_FAILURE,
+      status: 'HFrEF beta-blocker below target dose with uptitration headroom',
+      target: 'Beta-blocker uptitrated to target/max-tolerated dose or intolerance documented',
+      medication: 'Beta-blocker (carvedilol/metoprolol succinate/bisoprolol)',
+      recommendations: { action: 'Consider beta-blocker uptitration toward target (carvedilol 50, metoprolol succinate 200, bisoprolol 10 mg/day) - HR>=60 and SBP>=100 indicate headroom', note: 'Data-limit (Path-B): dose-target check uses ingredient-coded meds[].doseValue vs total-daily target; BID/weight-based dosing not captured - may under-detect product-coded entries.' },
+      evidence: {
+        triggerCriteria: ['HFrEF (LVEF<=40%)', 'On an evidence-based beta-blocker below target daily dose', `HR ${labValues['heart_rate']} (>=60)`, `SBP ${labValues['systolic_bp']} (>=100)`],
+        guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'HR<60', 'SBP<100', 'Documented intolerance'],
+      },
+    });
+  }
+
+  // HF-SGLT2I-EGFR-FLOOR: SGLT2i deferred below initiation eGFR floor (GAP-HF-011)
+  // Guideline: 2022 AHA/ACC/HFSA HF Guideline (SGLT2i COR 1 in HFrEF) + FDA labels - do NOT initiate
+  // dapagliflozin at eGFR<25, empagliflozin at eGFR<20. JUDGMENT FLAG: this is framed as a
+  // documentation/awareness annotation (not a missing-therapy gap) - it marks WHY the SGLT2i-missing
+  // gap is suppressed. Operator to rule: keep as awareness, reframe, or drop.
+  if (
+    hasHF &&
+    labValues['egfr'] !== undefined && labValues['egfr'] < 20 &&
+    !medCodes.some(c => SGLT2I_CODES_CV.includes(c)) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.DOCUMENTATION_GAP,
+      module: ModuleType.HEART_FAILURE,
+      status: 'SGLT2i initiation deferred below eGFR floor',
+      target: 'Deferral documented; reassess SGLT2i if renal function recovers',
+      recommendations: { action: 'Document SGLT2i deferral: eGFR<20 is below the initiation floor (dapagliflozin <25, empagliflozin <20 per FDA label); reassess if eGFR recovers. Continuation of an already-started SGLT2i may proceed per tolerance.' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', `eGFR ${labValues['egfr']} (<20, below SGLT2i initiation floor)`, 'Not on an SGLT2i'],
+        guidelineSource: '2022 AHA/ACC/HFSA HF Guideline; FDA dapagliflozin/empagliflozin labels',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Already on an SGLT2i'],
+      },
+    });
+  }
+
+  // HF-DIGOXIN-HIGH-ELDERLY: High-dose digoxin in elderly + CKD (GAP-HF-015, SAFETY)
+  // Guideline: 2019 AGS Beers Criteria + 2022 AHA/ACC/HFSA - avoid digoxin >0.125 mg/day in age>75 or
+  // CKD (reduced clearance -> toxicity). COR 3 (Harm). Data-limit: dose check matches digoxin entries
+  // with doseValue>0.125; tablet-vs-daily ambiguity flagged.
+  const hfHighDoseDigoxin = meds.some((m: any) =>
+    m.rxNormCode !== null && DIGOXIN_CODES_CV.includes(m.rxNormCode) &&
+    m.doseValue !== null && m.doseValue !== undefined && m.doseValue > 0.125
+  );
+  if (
+    hasHF && age > 75 &&
+    labValues['egfr'] !== undefined && labValues['egfr'] < 50 &&
+    hfHighDoseDigoxin &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_CONTRAINDICATED,
+      module: ModuleType.HEART_FAILURE,
+      status: 'SAFETY: high-dose digoxin in elderly patient with renal impairment',
+      target: 'Digoxin reduced to <=0.125 mg/day and level checked',
+      medication: 'Digoxin',
+      recommendations: { action: 'SAFETY: Consider reducing digoxin to <=0.125 mg/day - age>75 + eGFR<50 reduces clearance (toxicity risk) per Beers Criteria / 2022 AHA/ACC/HFSA', note: 'Data-limit: dose interpreted from meds[].doseValue (mg/day assumed); verify against tablet strength/frequency.' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', `Age ${age} (>75)`, `eGFR ${labValues['egfr']} (<50)`, 'Digoxin daily dose >0.125 mg'],
+        guidelineSource: '2019 AGS Beers Criteria; 2022 AHA/ACC/HFSA HF Guideline',
+        classOfRecommendation: '3 (Harm)',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+        safetyClass: 'SAFETY',
+      },
+    });
+  }
+
+  // HF-ICD-PRIMARY-ISCHEMIC: Primary-prevention ICD eligible, ischemic (GAP-HF-024)
+  // Guideline: 2017 AHA/ACC/HRS Guideline for VA/SCD, COR 1, LOE A (LVEF<=35, ischemic, >40d post-MI,
+  // >3mo GDMT, NYHA II-III, expected survival >1y).
+  // Data-limit FLAG: the ">40 days post-MI" window cannot be tested (dx codes carry no onset date) - the
+  // I21/I22 dx is used as the MI marker WITHOUT the 40-day gate (may over-fire in the acute window).
+  // GDMT-duration uses presence (>=3mo via med start-date not yet gated here; flagged for chunk-review).
+  if (
+    hasHF && labValues['lvef'] !== undefined && labValues['lvef'] <= 35 &&
+    (hfHasRecentMI || hasCAD) &&
+    medCodes.some(c => BB_CODES_CV.includes(c)) && medCodes.some(c => RAAS_CODES_CV.includes(c)) &&
+    hfGDMT3moOK &&
+    !hfHasICD &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.DEVICE_ELIGIBLE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Primary-prevention ICD eligibility (ischemic cardiomyopathy)',
+      target: 'ICD evaluation/referral or documented decline/contraindication',
+      recommendations: { action: 'Consider primary-prevention ICD referral: ischemic LVEF<=35% on GDMT (BB+RAASi) >=3 months per 2017 AHA/ACC/HRS', note: 'Pattern C: GDMT >=3mo gated via med start-date when present (Path-B when absent). Data-limit: >40-day post-MI window not gated (no MI onset date); confirm timing clinically. Sequential with WCD bridge (HF-127) in the early post-MI window.' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', `LVEF ${labValues['lvef']}% (<=35)`, 'Ischemic (prior MI I21/I22 or CAD I25)', 'On beta-blocker + RAASi', 'No ICD (Z95.810/Z95.0)'],
+        guidelineSource: '2017 AHA/ACC/HRS Guideline for Management of Patients with Ventricular Arrhythmias and Prevention of SCD',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Existing ICD', 'Expected survival <1 year', '<40 days post-MI (verify clinically)'],
+      },
+    });
+  }
+
+  // HF-ICD-PRIMARY-NICM: Primary-prevention ICD eligible, non-ischemic (GAP-HF-025)
+  // Guideline: 2017 AHA/ACC/HRS, COR 1, LOE B-R (NICM, LVEF<=35, NYHA II-III on GDMT). DANISH (2016):
+  // benefit attenuates with age - age noted in trigger for the age-stratified read.
+  // NICM = I42.0 (dilated CM) + I42.9 (unspecified CM) per operator ruling 2026-06-15 (specific-subcode
+  // discipline, Pattern A; unspecified CM in a non-ischemic LVEF<=35 patient is the target population).
+  // Excludes HCM (I42.1/.2) and secondary CM (I42.6/.7/.8) and ischemic (no I21/I22/I25).
+  const hfNICM = dxCodes.some(c => c.startsWith('I42.0') || c.startsWith('I42.9'));
+  if (
+    hasHF && labValues['lvef'] !== undefined && labValues['lvef'] <= 35 &&
+    hfNICM && !hfHasRecentMI && !hasCAD &&
+    medCodes.some(c => BB_CODES_CV.includes(c)) && medCodes.some(c => RAAS_CODES_CV.includes(c)) &&
+    hfGDMT3moOK &&
+    !hfHasICD &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.DEVICE_ELIGIBLE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Primary-prevention ICD eligibility (non-ischemic cardiomyopathy)',
+      target: 'ICD evaluation/referral or documented decline (age-stratified per DANISH)',
+      recommendations: { action: `Consider primary-prevention ICD referral: non-ischemic LVEF<=35% on GDMT (BB+RAASi) >=3 months per 2017 AHA/ACC/HRS (DANISH age-stratified; patient age ${age})`, note: 'Pattern C: GDMT >=3mo gated via med start-date when present (Path-B when absent). DANISH suggests weighing benefit by age/comorbidity.' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', `LVEF ${labValues['lvef']}% (<=35)`, 'Non-ischemic (I42.0/I42.9, no MI/CAD)', 'On beta-blocker + RAASi', 'No ICD', `Age ${age} (DANISH stratification)`],
+        guidelineSource: '2017 AHA/ACC/HRS Guideline; DANISH trial (NEJM 2016)',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Existing ICD', 'Expected survival <1 year'],
+      },
+    });
+  }
+
+  // HF-ICD-SECONDARY: Secondary-prevention ICD eligible (GAP-HF-026)
+  // Guideline: 2017 AHA/ACC/HRS, COR 1, LOE B - survivors of sustained VT/VF or SCA without reversible
+  // cause. ICD-breadth FLAG: VT I47.2, VF/flutter I49.01/I49.02, cardiac arrest I46.* - NOT the broad
+  // I49 prefix (would catch benign ectopy).
+  if (
+    dxCodes.some(c => c.startsWith('I47.2') || c.startsWith('I49.01') || c.startsWith('I49.02') || c.startsWith('I46')) &&
+    !hfHasICD &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.DEVICE_ELIGIBLE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Secondary-prevention ICD eligibility (prior VT/VF/cardiac arrest)',
+      target: 'ICD evaluation/referral or documented reversible cause / decline',
+      recommendations: { action: 'Consider secondary-prevention ICD referral: history of sustained VT/VF or cardiac arrest without reversible cause per 2017 AHA/ACC/HRS' },
+      evidence: {
+        triggerCriteria: ['Sustained VT (I47.2) / VF or flutter (I49.01/I49.02) / cardiac arrest (I46.*)', 'No ICD (Z95.810/Z95.0)'],
+        guidelineSource: '2017 AHA/ACC/HRS Guideline for VA/SCD',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Existing ICD', 'Reversible/transient cause documented'],
+      },
+    });
+  }
+
+  // HF-LEAD-EXTRACTION: CIED lead/device complication - extraction indication (GAP-HF-031)
+  // Guideline: 2017 HRS Expert Consensus on CIED Lead Management, COR 1 (complete device + lead removal
+  // for CIED infection). ICD-breadth FLAG: device infection T82.6/T82.7, mechanical complication T82.1
+  // of cardiac device; requires a CIED present (Z95.0/Z95.810/Z95.818).
+  if (
+    hfHasCIED &&
+    dxCodes.some(c => c.startsWith('T82.6') || c.startsWith('T82.7') || c.startsWith('T82.1')) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.HEART_FAILURE,
+      status: 'CIED infection/complication - lead extraction evaluation',
+      target: 'Lead/device extraction evaluation or referral',
+      recommendations: { action: 'Consider CIED extraction evaluation: device infection or lead complication warrants complete hardware removal per 2017 HRS Lead Management consensus' },
+      evidence: {
+        triggerCriteria: ['CIED present (Z95.0/Z95.810/Z95.818)', 'Device infection (T82.6/T82.7) or mechanical complication (T82.1)'],
+        guidelineSource: '2017 HRS Expert Consensus Statement on CIED Lead Management and Extraction',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // HF-CCM-CANDIDATE: Cardiac contractility modulation (Optimizer) candidate (GAP-HF-126)
+  // Guideline: FDA-approved (FIX-HF-5C); 2023 device-therapy reviews - LVEF 25-45%, NYHA III, narrow
+  // QRS (CRT-ineligible) on optimal GDMT. COR 2b. Data-limit (Path-B): nyha_class + qrs_duration are
+  // CSV/Synthea-populated keys; FHIR mapping pending (AUDIT-070 class).
+  if (
+    hasHF &&
+    labValues['lvef'] !== undefined && labValues['lvef'] >= 25 && labValues['lvef'] <= 45 &&
+    labValues['nyha_class'] !== undefined && labValues['nyha_class'] === 3 &&
+    labValues['qrs_duration'] !== undefined && labValues['qrs_duration'] < 130 &&
+    medCodes.some(c => BB_CODES_CV.includes(c)) && medCodes.some(c => RAAS_CODES_CV.includes(c)) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.DEVICE_ELIGIBLE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Cardiac contractility modulation (CCM/Optimizer) candidacy',
+      target: 'CCM evaluation/referral or documented decline',
+      recommendations: { action: 'Consider CCM (Optimizer) referral: LVEF 25-45%, NYHA III, narrow QRS on GDMT (CRT-ineligible) per FDA approval / FIX-HF-5C', note: 'Data-limit (Path-B): NYHA class + QRS duration are CSV/Synthea-ingested keys; FHIR mapping pending (AUDIT-070 class).' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', `LVEF ${labValues['lvef']}% (25-45)`, 'NYHA III', `QRS ${labValues['qrs_duration']} ms (<130, narrow)`, 'On beta-blocker + RAASi'],
+        guidelineSource: 'FDA approval (FIX-HF-5C, Abraham et al.); 2023 HF device-therapy consensus',
+        classOfRecommendation: '2b',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'CRT-eligible (wide QRS)'],
+      },
+    });
+  }
+
+  // HF-WCD-BRIDGE: Wearable cardioverter-defibrillator bridge post-MI (GAP-HF-127)
+  // Guideline: 2017 AHA/ACC/HRS, COR 2b for WCD in the early post-MI LVEF<=35% ICD-waiting window
+  // (VEST trial mixed). Data-limit FLAG: the 40-90 day post-MI "waiting period" cannot be precisely
+  // timed (no MI onset date); WCD order status not ingested. Fires on recent-MI dx + LVEF<=35 + no ICD.
+  if (
+    hfHasRecentMI &&
+    labValues['lvef'] !== undefined && labValues['lvef'] <= 35 &&
+    !hfHasICD &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.DEVICE_ELIGIBLE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'WCD bridge consideration in early post-MI LV dysfunction',
+      target: 'WCD consideration or documented decline during the ICD-waiting period',
+      recommendations: { action: 'Consider WCD during the post-MI ICD-waiting period: LVEF<=35% early post-MI per 2017 AHA/ACC/HRS (COR 2b; VEST mixed)', note: 'Data-limit: the 40-90 day post-MI waiting window cannot be timed (no MI onset date); confirm the patient is within the bridge window. Sequential with the primary-prevention ICD gap (HF-024): WCD bridges the post-MI window BEFORE ICD eligibility - both firing on one patient is the expected WCD-now/ICD-later pathway, not a duplicate.' },
+      evidence: {
+        triggerCriteria: ['Recent MI (I21/I22)', `LVEF ${labValues['lvef']}% (<=35)`, 'No ICD'],
+        guidelineSource: '2017 AHA/ACC/HRS Guideline; VEST trial (NEJM 2018)',
+        classOfRecommendation: '2b',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Existing ICD', 'Outside the post-MI bridge window'],
+      },
+    });
+  }
+
+  // ============================================================
+  // v3.0 HF BUILDOUT BATCH (2026-06-15) - CHUNK 2: Phenotypes + Iron
+  // Patterns A (specific subcodes), B (Path-B data-limit notes) applied per operator ruling.
+  // ============================================================
+
+  // HF-FABRY-ERT: Fabry disease without enzyme replacement / chaperone (GAP-HF-061)
+  // Guideline: 2021 international Fabry consensus (Ortiz et al.) - ERT (agalsidase) or oral chaperone
+  // (migalastat, amenable mutations) for classic Fabry with cardiac involvement. COR 1 (disease-specific).
+  // Specific code E75.21 (Fabry [-Anderson] disease).
+  if (
+    dxCodes.some(c => c.startsWith('E75.21')) &&
+    !medCodes.some(c => codes(RXNORM_FABRY_DMT).includes(c)) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Fabry disease without disease-modifying therapy',
+      target: 'ERT (agalsidase) or chaperone (migalastat) initiated or contraindication documented',
+      medication: 'Agalsidase alfa/beta or migalastat',
+      recommendations: { action: 'Consider Fabry disease-modifying therapy (ERT agalsidase or chaperone migalastat) per 2021 international Fabry consensus - delays cardiac/renal progression' },
+      evidence: {
+        triggerCriteria: ['Fabry disease (E75.21)', 'Not on agalsidase or migalastat'],
+        guidelineSource: '2021 International Expert Consensus on Fabry Disease (Ortiz et al.)',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // HF-SARCOID-AVBLOCK: Unexplained high-grade AV block <60y - sarcoid workup (GAP-HF-062)
+  // Guideline: 2014 HRS Expert Consensus on Arrhythmias in Cardiac Sarcoidosis - unexplained Mobitz II /
+  // high-grade or complete AV block age<60 warrants sarcoidosis evaluation. COR 2a.
+  // Specific: I44.1 (2nd-degree AV block) + I44.2 (complete AV block). Age<60. No existing sarcoid (D86.*).
+  // FLAG: I44.1 includes Mobitz I (benign) - no separate Mobitz-II code exists (breadth caveat).
+  // Data-limit (Path-B): "unexplained"/"new" not testable; FDG-PET workup not ingested.
+  if (
+    age < 60 &&
+    dxCodes.some(c => c.startsWith('I44.1') || c.startsWith('I44.2')) &&
+    !dxCodes.some(c => c.startsWith('D86')) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.SCREENING_DUE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Unexplained high-grade AV block under 60 - cardiac sarcoidosis workup',
+      target: 'Cardiac sarcoidosis evaluation (advanced imaging) or alternative etiology documented',
+      recommendations: { action: 'Consider cardiac sarcoidosis workup: high-grade AV block under age 60 without explanation warrants advanced imaging (FDG-PET/CMR) per 2014 HRS consensus', note: 'FLAG: I44.1 includes Mobitz I (benign) - no Mobitz-II-specific code. Data-limit: "unexplained" and the FDG-PET workup status are not ingested.' },
+      evidence: {
+        triggerCriteria: [`Age ${age} (<60)`, 'High-grade AV block (I44.1 second-degree / I44.2 complete)', 'No existing sarcoidosis dx (D86.*)'],
+        guidelineSource: '2014 HRS Expert Consensus Statement on Arrhythmias in Cardiac Sarcoidosis',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Existing sarcoidosis dx'],
+      },
+    });
+  }
+
+  // HF-SARCOID-IMMUNOSUPP: Cardiac sarcoidosis without immunosuppression (GAP-HF-063)
+  // Guideline: 2014 HRS / sarcoid consensus - corticosteroids are first-line for cardiac sarcoid with
+  // active disease; steroid-sparing agents for chronic/steroid-intolerant. COR 2a.
+  // Specific D86.85 (sarcoid myocarditis = cardiac sarcoidosis).
+  if (
+    dxCodes.some(c => c.startsWith('D86.85')) &&
+    !medCodes.some(c => codes(RXNORM_CORTICOSTEROIDS).includes(c)) &&
+    !medCodes.some(c => codes(RXNORM_STEROID_SPARING).includes(c)) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Cardiac sarcoidosis without immunosuppressive therapy',
+      target: 'Corticosteroid or steroid-sparing therapy initiated or inactive-disease documented',
+      medication: 'Corticosteroid (prednisone) or steroid-sparing (methotrexate/azathioprine/MMF)',
+      recommendations: { action: 'Consider immunosuppression for cardiac sarcoidosis: corticosteroids first-line for active disease, steroid-sparing for chronic, per 2014 HRS consensus', note: 'Data-limit: disease-activity (FDG-PET uptake) not ingested - confirm active inflammation before initiating.' },
+      evidence: {
+        triggerCriteria: ['Cardiac sarcoidosis (D86.85)', 'Not on a corticosteroid or steroid-sparing agent'],
+        guidelineSource: '2014 HRS Expert Consensus on Arrhythmias in Cardiac Sarcoidosis',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Inactive disease documented'],
+      },
+    });
+  }
+
+  // HF-TACHY-CM: Tachycardia-mediated cardiomyopathy suspected (GAP-HF-065)
+  // Guideline: 2019 AHA Scientific Statement on tachycardia-induced cardiomyopathy - reduced LVEF with
+  // persistent tachycardia (HR>100) and no adequate rate/rhythm control. COR 2a.
+  // Data-limit (Path-B): PVC-burden arm dropped (device/Holter not ingested); "new" LV dysfunction not
+  // testable - uses current LVEF<50 + HR>100.
+  if (
+    hasHF && labValues['lvef'] !== undefined && labValues['lvef'] < 50 &&
+    labValues['heart_rate'] !== undefined && labValues['heart_rate'] > 100 &&
+    !medCodes.some(c => RATE_CONTROL_CODES_CV.includes(c)) &&
+    !medCodes.some(c => AAD_CODES_CV.includes(c)) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Possible tachycardia-mediated cardiomyopathy without rate/rhythm control',
+      target: 'Rate or rhythm control initiated and LVEF reassessed',
+      recommendations: { action: 'Consider rate/rhythm control: reduced LVEF with persistent tachycardia (HR>100) may be tachycardia-mediated and potentially reversible per 2019 AHA statement', note: 'Data-limit (Path-B): PVC-burden arm not ingested (device/Holter); fires on HR>100 only. Confirm sustained tachycardia.' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', `LVEF ${labValues['lvef']}% (<50)`, `HR ${labValues['heart_rate']} (>100)`, 'Not on rate-control or antiarrhythmic'],
+        guidelineSource: '2019 AHA Scientific Statement on Tachycardia-Induced Cardiomyopathy',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // HF-TAKOTSUBO-ECHO: Takotsubo without recovery echo (GAP-HF-072)
+  // Guideline: 2018 International Takotsubo Diagnostic Criteria (InterTAK) - follow-up echo at 3-6 weeks
+  // to confirm LVEF recovery. COR 2a (consensus). Specific I51.81 (Takotsubo syndrome).
+  // Data-limit (Path-B): echo_months is a CSV/Synthea key (FHIR pending); months granularity approximates
+  // the 3-6 week window as >=2 months overdue; undefined (no echo recorded) also fires (never-echoed).
+  if (
+    dxCodes.some(c => c.startsWith('I51.81')) &&
+    (labValues['echo_months'] === undefined || labValues['echo_months'] >= 2) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Takotsubo syndrome without recovery echocardiogram',
+      target: 'Follow-up echo to confirm LVEF recovery',
+      recommendations: { action: 'Consider follow-up echocardiogram to confirm LVEF recovery in Takotsubo syndrome (typically 3-6 weeks) per InterTAK consensus', note: 'Data-limit (Path-B): echo recency from echo_months (CSV/Synthea key, FHIR pending); months granularity approximates the 3-6 week window.' },
+      evidence: {
+        triggerCriteria: ['Takotsubo syndrome (I51.81)', 'No recovery echo (echo_months >=2 or none recorded)'],
+        guidelineSource: '2018 International Takotsubo Diagnostic Criteria (InterTAK)',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // HF-RADIATION-SURV: Radiation heart disease surveillance (GAP-HF-073)
+  // Guideline: 2013 EACVI/ASE Expert Consensus on multimodality imaging in radiation-induced heart
+  // disease - periodic echo surveillance after thoracic radiation. COR 2a.
+  // Specific Z92.3 (personal history of irradiation) + a STRUCTURAL cardiac dx. echo_months>=12 annual.
+  // Pattern A (operator ruling 2026-06-15): narrowed from the broad I-chapter prefix to the specific
+  // radiation-cardiotoxicity target set - HF (I50), cardiomyopathy (I42), CAD (I25), valve disease
+  // (I34-I37), pericardial disease (I30/I31). Isolated HTN/arrhythmia no longer triggers surveillance.
+  if (
+    dxCodes.some(c => c.startsWith('Z92.3')) &&
+    dxCodes.some(c => c.startsWith('I50') || c.startsWith('I42') || c.startsWith('I25') ||
+      c.startsWith('I34') || c.startsWith('I35') || c.startsWith('I36') || c.startsWith('I37') ||
+      c.startsWith('I30') || c.startsWith('I31')) &&
+    (labValues['echo_months'] === undefined || labValues['echo_months'] >= 12) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Prior thoracic radiation with cardiac disease - surveillance echo overdue',
+      target: 'Surveillance echocardiogram per radiation-heart-disease protocol',
+      recommendations: { action: 'Consider surveillance echocardiography: prior thoracic radiation with structural cardiac disease warrants periodic imaging for radiation-induced valve/myocardial/pericardial disease per 2013 EACVI/ASE consensus', note: 'Pattern A: narrowed to a specific structural-cardiac dx set (HF/CM/CAD/valve/pericardial). Data-limit: echo recency from echo_months (CSV/Synthea key).' },
+      evidence: {
+        triggerCriteria: ['Personal history of irradiation (Z92.3)', 'Structural cardiac dx (HF I50 / CM I42 / CAD I25 / valve I34-I37 / pericardial I30-I31)', 'No annual echo (echo_months >=12 or none)'],
+        guidelineSource: '2013 EACVI/ASE Expert Consensus on Multimodality Imaging in Radiation-Induced Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // HF-IRON-SCREEN: Iron studies overdue in anemic HF (GAP-HF-032)
+  // Guideline: 2022 AHA/ACC/HFSA HF Guideline - assess iron status in HF (COR 1 for symptomatic HFrEF).
+  // Path-B NARROWING (operator-reviewable): the spec's universal "no ferritin/TSAT in 12mo" would over-fire
+  // on every HF patient (ferritin FHIR-mapping pending; absence indistinguishable from not-ingested), so
+  // this is GATED on anemia (hemoglobin present + <12) where iron studies are most clearly indicated, and
+  // fires only when ferritin is absent. KNOWN under-detect of non-anemic screening; feeds ingestion track.
+  if (
+    hasHF &&
+    labValues['hemoglobin'] !== undefined && labValues['hemoglobin'] < 12 &&
+    labValues['ferritin'] === undefined &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.SCREENING_DUE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Iron studies overdue in anemic heart failure',
+      target: 'Ferritin and TSAT obtained',
+      recommendations: { action: 'Consider iron studies (ferritin + TSAT): anemic HF without documented iron status; iron deficiency is common and treatable in HF per 2022 AHA/ACC/HFSA', note: 'Path-B narrowing: gated on anemia (Hgb<12) because ferritin absence is FHIR-mapping-pending; the spec intent (universal HF iron screening) is broader - under-detects non-anemic patients pending ferritin ingestion.' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', `Hemoglobin ${labValues['hemoglobin']} (<12, anemic)`, 'Ferritin not measured'],
+        guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // HF-IRON-FUNCTIONAL: Functional iron deficiency untreated in HF (GAP-HF-034)
+  // Guideline: 2022 AHA/ACC/HFSA (AFFIRM-AHF, IRONMAN) - IV iron for functional iron deficiency
+  // (ferritin 100-299 ng/mL + TSAT<20%). COR 2a. Complements HF-033 (absolute, ferritin<100).
+  if (
+    hasHF &&
+    labValues['ferritin'] !== undefined && labValues['ferritin'] >= 100 && labValues['ferritin'] < 300 &&
+    labValues['tsat'] !== undefined && labValues['tsat'] < 20 &&
+    !medCodes.some(c => codes(RXNORM_IV_IRON).includes(c)) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Functional iron deficiency untreated in heart failure',
+      target: 'IV iron repletion administered',
+      medication: 'IV iron (ferric carboxymaltose or ferric derisomaltose)',
+      recommendations: { action: 'Consider IV iron repletion for functional iron deficiency (ferritin 100-299 + TSAT<20%) in HF per AFFIRM-AHF/IRONMAN' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', `Ferritin ${labValues['ferritin']} (100-299)`, `TSAT ${labValues['tsat']}% (<20)`, 'No IV iron administered'],
+        guidelineSource: '2022 AHA/ACC/HFSA HF Guideline (AFFIRM-AHF, IRONMAN)',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // HF-ARVC-ICD: ARVC with ventricular arrhythmia - ICD risk assessment (GAP-HF-074)
+  // Guideline: 2019 HRS Expert Consensus on ARVC - ICD for ARVC with sustained VT / aborted SCA (COR 1).
+  // ARVC has NO specific ICD-10 (coded I42.8 "other cardiomyopathies"); per Pattern A + operator ruling
+  // 2026-06-15 it is NARROWED by pairing I42.8 with a sustained-VT dx (I47.2) - the ARVC-with-VT
+  // population is specific enough to satisfy Pattern A; bare I42.8 (over-broad) is NOT built.
+  if (
+    dxCodes.some(c => c.startsWith('I42.8')) &&
+    dxCodes.some(c => c.startsWith('I47.2')) &&
+    !hfHasICD &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.DEVICE_ELIGIBLE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'ARVC with ventricular tachycardia - ICD evaluation',
+      target: 'ICD evaluation/referral and exercise-restriction counseling, or documented decline',
+      recommendations: { action: 'Consider ICD evaluation: cardiomyopathy with sustained VT (ARVC phenotype) meets secondary-prevention ICD criteria per 2019 HRS ARVC consensus; counsel exercise restriction', note: 'Pattern A: ARVC has no specific ICD-10; built on I42.8 narrowed by a sustained-VT (I47.2) pairing - confirm ARVC phenotype clinically (I42.8 also covers other cardiomyopathies).' },
+      evidence: {
+        triggerCriteria: ['Other cardiomyopathy (I42.8, ARVC phenotype)', 'Sustained VT (I47.2)', 'No ICD (Z95.810/Z95.0)'],
+        guidelineSource: '2019 HRS Expert Consensus Statement on Arrhythmogenic Right Ventricular Cardiomyopathy',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Existing ICD'],
+      },
+    });
+  }
+
+  // ============================================================
+  // v3.0 HF BUILDOUT BATCH (2026-06-15) - CHUNK 3: Cross-cutting
+  // Patterns A/B/C applied. HF-084 (functional capacity) + HF-087 (opioid+OSA) deferred (no ingested
+  // representation; flagged for the data-blocked register).
+  // ============================================================
+
+  // HF-GDMT-INCOMPLETE: HFrEF GDMT regimen substantially incomplete (GAP-HF-036)
+  // Guideline: 2022 AHA/ACC/HFSA - quadruple therapy (BB, RAASi/ARNI, MRA, SGLT2i) for HFrEF, COR 1.
+  // Reframed (Pattern B) from the spec's discharge-med-list context to the CURRENT med list (no
+  // encounter/discharge data). THRESHOLD: fires when <=2 of 4 pillar classes present (missing >=2) - the
+  // "substantially incomplete" threshold (operator-reviewable vs missing>=1). Roll-up; may overlap
+  // per-pillar gaps.
+  const hfPillarCount = [
+    medCodes.some(c => BB_CODES_CV.includes(c)),
+    medCodes.some(c => RAAS_CODES_CV.includes(c)),
+    medCodes.some(c => MRA_CODES_CV.includes(c)),
+    medCodes.some(c => SGLT2I_CODES_CV.includes(c)),
+  ].filter(Boolean).length;
+  if (
+    hasHF && hfIsHFrEF && hfPillarCount <= 2 &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.HEART_FAILURE,
+      status: `HFrEF GDMT substantially incomplete (${hfPillarCount} of 4 pillars)`,
+      target: 'GDMT advanced toward quadruple therapy or intolerances documented',
+      recommendations: { action: `Consider advancing GDMT: only ${hfPillarCount} of 4 pillars (BB, RAASi/ARNI, MRA, SGLT2i) present in HFrEF per 2022 AHA/ACC/HFSA quadruple-therapy standard`, note: 'Pattern B: reframed from discharge-med-list to current meds (no encounter data). Roll-up summary - may overlap per-pillar gaps; threshold is missing>=2 pillars.' },
+      evidence: {
+        triggerCriteria: ['HFrEF (LVEF<=40%)', `${hfPillarCount} of 4 GDMT pillar classes present (<=2)`],
+        guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Documented intolerances'],
+      },
+    });
+  }
+
+  // HF-STAGE-B: Asymptomatic LV dysfunction (Stage B) without GDMT (GAP-HF-076)
+  // Guideline: 2022 AHA/ACC/HFSA - Stage B (structural disease, no HF symptoms): ACEi/ARB + BB for
+  // LVEF<=40, COR 1. Path-B: "asymptomatic" proxied by ABSENCE of an I50 HF dx; "structural changes"
+  // proxied by LVEF<40 + a structural substrate (prior MI / CAD). LVEF threshold tightened to <40 per
+  // operator ruling 2026-06-15 (the COR-1 Stage-B GDMT range; excludes HFmrEF 40-50).
+  if (
+    !hasHF && labValues['lvef'] !== undefined && labValues['lvef'] < 40 &&
+    (hfHasRecentMI || hasCAD) &&
+    !medCodes.some(c => RAAS_CODES_CV.includes(c)) && !medCodes.some(c => BB_CODES_CV.includes(c)) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Stage B (asymptomatic LV dysfunction) without GDMT initiation',
+      target: 'ACEi/ARB + beta-blocker initiated to prevent progression to symptomatic HF',
+      recommendations: { action: 'Consider ACEi/ARB + beta-blocker: asymptomatic LV dysfunction (LVEF<40) with structural substrate (Stage B) without GDMT per 2022 AHA/ACC/HFSA (prevents progression)', note: 'Path-B: asymptomatic proxied by absence of an I50 HF dx (imperfect). LVEF<40 = COR-1 Stage-B range per operator ruling.' },
+      evidence: {
+        triggerCriteria: [`LVEF ${labValues['lvef']}% (<40)`, 'Structural substrate (prior MI I21/I22 or CAD I25)', 'No HF dx (asymptomatic proxy)', 'Not on ACEi/ARB or beta-blocker'],
+        guidelineSource: '2022 AHA/ACC/HFSA HF Guideline (Stage B)',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // HF-AF-RATE: HF + chronic/permanent AF with uncontrolled rate (GAP-HF-078)
+  // Guideline: 2023 ACC/AHA/HRS AF Guideline - rate control (lenient resting HR target <110 per RACE II)
+  // in permanent AF. COR 1. Specific I48.2 (chronic/permanent AF) + I48.1x (persistent). HR>110.
+  if (
+    hasHF && dxCodes.some(c => c.startsWith('I48.2') || c.startsWith('I48.1')) &&
+    labValues['heart_rate'] !== undefined && labValues['heart_rate'] > 110 &&
+    !medCodes.some(c => RATE_CONTROL_CODES_CV.includes(c)) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.HEART_FAILURE,
+      status: 'HF + chronic AF with uncontrolled ventricular rate',
+      target: 'Rate-control therapy initiated (resting HR <110)',
+      recommendations: { action: 'Consider rate control: HF with chronic/permanent AF and resting HR>110 without a rate-control agent per 2023 ACC/AHA AF Guideline (RACE II lenient target <110)' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', 'Chronic/persistent AF (I48.2/I48.1x)', `HR ${labValues['heart_rate']} (>110)`, 'Not on a rate-control agent'],
+        guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for the Diagnosis and Management of Atrial Fibrillation',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // HF-THYROID: HF + untreated thyroid dysfunction (GAP-HF-080)
+  // Guideline: 2022 AHA/ACC/HFSA - thyroid dysfunction worsens HF outcomes; treat. OVERT-ONLY thresholds
+  // per operator ruling 2026-06-15: TSH>10 (overt hypothyroid -> levothyroxine), TSH<0.1 (overt
+  // hyperthyroid -> antithyroid). Subclinical ranges (4.5-10 / 0.1-0.4) excluded. tsh key (CSV/Synthea).
+  const hfHypoUntreated = labValues['tsh'] !== undefined && labValues['tsh'] > 10 &&
+    !medCodes.includes(RXNORM_THYROID_THERAPY.LEVOTHYROXINE);
+  const hfHyperUntreated = labValues['tsh'] !== undefined && labValues['tsh'] < 0.1 &&
+    !medCodes.includes(RXNORM_THYROID_THERAPY.METHIMAZOLE) && !medCodes.includes(RXNORM_THYROID_THERAPY.PROPYLTHIOURACIL);
+  if (
+    hasHF && (hfHypoUntreated || hfHyperUntreated) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Heart failure with untreated thyroid dysfunction',
+      target: 'Thyroid dysfunction treated (levothyroxine for hypo / antithyroid for hyper)',
+      recommendations: { action: `Consider thyroid therapy: ${hfHypoUntreated ? 'overt hypothyroidism (TSH>10) without levothyroxine' : 'overt hyperthyroidism (TSH<0.1) without antithyroid therapy'} in HF per 2022 AHA/ACC/HFSA (thyroid dysfunction worsens HF)`, note: 'Overt-only (TSH>10 / <0.1) per operator ruling; subclinical excluded. tsh is a CSV/Synthea key (FHIR pending).' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', `TSH ${labValues['tsh']} (>10 overt hypo or <0.1 overt hyper)`, 'Not on corresponding thyroid therapy'],
+        guidelineSource: '2022 AHA/ACC/HFSA HF Guideline',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Subclinical dysfunction (TSH 4.5-10 / 0.1-0.4)'],
+      },
+    });
+  }
+
+  // HF-METFORMIN-RENAL: HF + CKD + metformin at low eGFR - renal/safety review (GAP-HF-082, SAFETY)
+  // Guideline: FDA metformin label - contraindicated eGFR<30; do-not-initiate/dose-reduce 30-45 (lactic
+  // acidosis risk, heightened in HF). THRESHOLD: eGFR<45 triggers review; <30 is contraindication.
+  if (
+    hasHF && dxCodes.some(c => c.startsWith('N18')) &&
+    medCodes.includes(RXNORM_METFORMIN.METFORMIN) &&
+    labValues['egfr'] !== undefined && labValues['egfr'] < 45 &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MONITORING_OVERDUE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'SAFETY: metformin at reduced eGFR in HF + CKD - renal-dose review',
+      target: 'Metformin dose reviewed (reduce 30-45; discontinue if eGFR<30)',
+      medication: 'Metformin',
+      recommendations: { action: `SAFETY: Review metformin - eGFR ${labValues['egfr']} (<45) in HF + CKD raises lactic-acidosis risk; FDA label = dose-reduce 30-45, contraindicated <30`, note: 'THRESHOLD: <45 review vs <30 contraindication.' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', 'CKD (N18.*)', 'On metformin', `eGFR ${labValues['egfr']} (<45)`],
+        guidelineSource: 'FDA metformin label; 2022 AHA/ACC/HFSA HF Guideline',
+        classOfRecommendation: '3 (Harm) at eGFR<30',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+        safetyClass: 'SAFETY',
+      },
+    });
+  }
+
+  // HF-PREG-TERATOGEN: HF in pregnancy on teratogenic GDMT (GAP-HF-086, SAFETY)
+  // Guideline: ACEi/ARB/ARNI (fetal renal/skull) + SGLT2i contraindicated in pregnancy. COR 3 (Harm).
+  // INVERSE of the usual pregnancy exclusion: here pregnancy + a teratogenic GDMT med = safety alert.
+  // Pregnancy via O-chapter / Z33 / Z34.
+  if (
+    hasHF && dxCodes.some(c => /^O/.test(c) || c.startsWith('Z33') || c.startsWith('Z34')) &&
+    (medCodes.some(c => RAAS_CODES_CV.includes(c)) || medCodes.some(c => SGLT2I_CODES_CV.includes(c))) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_CONTRAINDICATED,
+      module: ModuleType.HEART_FAILURE,
+      status: 'SAFETY: teratogenic HF medication in pregnancy',
+      target: 'Teratogenic agent stopped and pregnancy-compatible regimen substituted',
+      recommendations: { action: 'SAFETY ALERT: Consider stopping ACEi/ARB/ARNI/SGLT2i in pregnancy (teratogenic/fetotoxic); substitute a pregnancy-compatible HF regimen (e.g. hydralazine/nitrates, beta-blocker)' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', 'Pregnancy (O-chapter / Z33 / Z34)', 'On a teratogenic GDMT agent (ACEi/ARB/ARNI or SGLT2i)'],
+        guidelineSource: 'FDA pregnancy labeling; 2022 AHA/ACC/HFSA HF Guideline',
+        classOfRecommendation: '3 (Harm)',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+        safetyClass: 'SAFETY',
+      },
+    });
+  }
+
+  // ============================================================
+  // v3.0 HF BUILDOUT BATCH (2026-06-15) - CHUNK 4: Advanced / Cardiorenal / Pericardial / Transitions
+  // Patterns A/B/C applied. Uses the threaded procedureCodes (PR #396) for MCS/device gaps.
+  // ============================================================
+
+  // HF-INOTROPE-DEPENDENCE: Inotrope dependence - advanced HF referral (GAP-HF-047)
+  // Guideline: 2022 AHA/ACC/HFSA - continuous/intermittent inotrope dependence defines advanced (Stage D)
+  // HF; refer for advanced therapies (transplant/MCS) or palliative care. COR 1.
+  if (
+    hasHF && medCodes.some(c => codes(RXNORM_INOTROPES).includes(c)) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.REFERRAL_NEEDED,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Inotrope dependence - advanced heart failure referral',
+      target: 'Advanced HF / MCS / transplant evaluation or palliative-care referral',
+      recommendations: { action: 'Consider advanced HF referral: inotrope dependence (milrinone/dobutamine) indicates Stage D HF - evaluate for transplant/MCS or palliative care per 2022 AHA/ACC/HFSA' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', 'On a continuous inotrope (milrinone or dobutamine)'],
+        guidelineSource: '2022 AHA/ACC/HFSA HF Guideline (Stage D / advanced HF)',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // HF-TOLVAPTAN-HYPONATREMIA: Severe hyponatremia in HF without vaptan evaluation (GAP-HF-132)
+  // Guideline: 2022 AHA/ACC/HFSA - tolvaptan COR 2b for short-term management of symptomatic
+  // hypervolemic hyponatremia (EVEREST: symptom/Na improvement, no mortality benefit). THRESHOLD: Na<125
+  // (severe). FLAG: tolvaptan is LATER-LINE (after fluid restriction/diuretic adjustment); "symptomatic"
+  // not testable; framed as a management-evaluation gap, not a strict missing-drug.
+  if (
+    hasHF && labValues['sodium'] !== undefined && labValues['sodium'] < 125 &&
+    !medCodes.includes(RXNORM_TOLVAPTAN.TOLVAPTAN) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MONITORING_OVERDUE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Severe hyponatremia in heart failure - management evaluation',
+      target: 'Hyponatremia management optimized (fluid restriction, diuretic adjustment; tolvaptan if refractory)',
+      recommendations: { action: 'Consider hyponatremia management: severe hyponatremia (Na<125) in HF - optimize fluid restriction/diuretics first; tolvaptan (COR 2b) for refractory symptomatic hypervolemic hyponatremia per 2022 AHA/ACC/HFSA', note: 'FLAG: tolvaptan is later-line (EVEREST: no mortality benefit); this flags evaluation, not a strict missing drug. "Symptomatic" not testable.' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', `Sodium ${labValues['sodium']} (<125, severe)`, 'Not on tolvaptan'],
+        guidelineSource: '2022 AHA/ACC/HFSA HF Guideline (EVEREST, SALT)',
+        classOfRecommendation: '2b',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // HF-CS-MCS-ESCALATION: Inotrope-refractory cardiogenic shock without MCS (GAP-HF-133)
+  // Guideline: 2022 AHA/ACC/HFSA + SCAI shock - inotrope-refractory cardiogenic shock warrants temporary
+  // MCS (Impella/IABP/ECMO) evaluation. COR 2a. Uses threaded procedureCodes (PR #396) for MCS presence.
+  // FLAG: SCAI stage not ingested - inotrope-on-board + shock dx proxies the inotrope-refractory stage;
+  // MCS detected via CPT (Impella 33990-33993, ECMO 33946-33949, IABP 33967/33970/33973).
+  const hfMCSCodes = ['33990', '33991', '33992', '33993', '33946', '33947', '33948', '33949', '33967', '33970', '33973'];
+  const hfHasMCS = procedureCodes.some((c: string) => hfMCSCodes.includes(c));
+  if (
+    hasHF && dxCodes.some(c => c.startsWith('R57.0')) &&
+    medCodes.some(c => codes(RXNORM_INOTROPES).includes(c)) &&
+    !hfHasMCS &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Inotrope-refractory cardiogenic shock without mechanical circulatory support',
+      target: 'Temporary MCS evaluation (Impella/IABP/ECMO) or escalation/de-escalation decision',
+      recommendations: { action: 'Consider temporary MCS evaluation: cardiogenic shock on inotropes without mechanical support may warrant Impella/IABP/ECMO per SCAI shock / 2022 AHA/ACC/HFSA', note: 'FLAG (Path-B): SCAI stage not ingested; inotrope-on-board + shock dx proxies inotrope-refractory. Confirm SCAI stage and candidacy clinically.' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', 'Cardiogenic shock (R57.0)', 'On an inotrope', 'No MCS procedure (Impella/ECMO/IABP CPT)'],
+        guidelineSource: 'SCAI Cardiogenic Shock Classification; 2022 AHA/ACC/HFSA HF Guideline',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // HF-CRS4-SCREEN: Advanced CKD without HF screening (cardiorenal type 4) (GAP-HF-139)
+  // Guideline: KDIGO + cardiorenal consensus - advanced CKD (eGFR<30) carries high HF risk; screen with
+  // natriuretic peptide. COR 2a (screening). Path-B: nt_probnp ABSENCE = not screened; echo arm dropped.
+  // Gated on NO existing HF dx (screening, not management).
+  if (
+    !hasHF && labValues['egfr'] !== undefined && labValues['egfr'] < 30 &&
+    labValues['nt_probnp'] === undefined && labValues['bnp'] === undefined &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.SCREENING_DUE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Advanced CKD without heart-failure screening (cardiorenal type 4)',
+      target: 'Natriuretic peptide (or echo) obtained to screen for occult HF',
+      recommendations: { action: 'Consider HF screening: advanced CKD (eGFR<30) carries high occult-HF risk - obtain a natriuretic peptide per cardiorenal consensus', note: 'Path-B: natriuretic-peptide absence = not screened (CSV/Synthea key, FHIR pending); echo-history arm dropped.' },
+      evidence: {
+        triggerCriteria: [`eGFR ${labValues['egfr']} (<30, advanced CKD)`, 'No natriuretic peptide measured', 'No existing HF dx'],
+        guidelineSource: 'KDIGO CKD Guideline; cardiorenal syndrome consensus',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // HF-PERICARDITIS-IL1: Steroid-dependent recurrent pericarditis without IL-1 inhibitor (GAP-HF-144)
+  // Guideline: 2023 evidence (RHAPSODY) - rilonacept (IL-1 inhibitor) for recurrent pericarditis,
+  // particularly steroid-dependent/colchicine-resistant. COR 2a. Specific I30 (acute/recurrent
+  // pericarditis). FLAG: "recurrent/steroid-dependent" proxied by pericarditis dx + on corticosteroid
+  // (recurrence not confirmable from a single dx); IL-1 set = rilonacept/anakinra/canakinumab.
+  if (
+    dxCodes.some(c => c.startsWith('I30')) &&
+    medCodes.includes(RXNORM_CORTICOSTEROIDS.PREDNISONE) &&
+    !medCodes.some(c => codes(RXNORM_IL1_INHIBITORS).includes(c)) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Steroid-dependent recurrent pericarditis without IL-1 inhibitor',
+      target: 'IL-1 inhibitor (rilonacept) evaluation to enable steroid taper',
+      medication: 'Rilonacept (IL-1 inhibitor)',
+      recommendations: { action: 'Consider an IL-1 inhibitor (rilonacept): steroid-dependent recurrent pericarditis benefits from IL-1 blockade to reduce recurrence and enable steroid taper per RHAPSODY', note: 'FLAG: recurrence/steroid-dependence proxied by pericarditis dx + active corticosteroid (single-dx recurrence not confirmable).' },
+      evidence: {
+        triggerCriteria: ['Acute/recurrent pericarditis (I30.*)', 'On a corticosteroid (steroid-dependence proxy)', 'Not on an IL-1 inhibitor'],
+        guidelineSource: 'RHAPSODY trial (rilonacept, NEJM 2021); 2023 pericarditis management',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // HF-CARDIOMEMS: Pulmonary-artery pressure monitor (CardioMEMS) candidacy (GAP-HF-027)
+  // Guideline: 2022 AHA/ACC/HFSA COR 2b (CHAMPION/GUIDE-HF) - PA pressure monitoring in NYHA III with a
+  // recent HF event OR elevated natriuretic peptides. Path-B: the HF-hospitalization arm is not ingested,
+  // so the GUIDE-HF NATRIURETIC-PEPTIDE entry arm is used (BNP>=125 or NT-proBNP>=300). Not already
+  // implanted (CardioMEMS CPT 33289). nyha_class key (CSV/Synthea; FHIR pending).
+  if (
+    hasHF && labValues['nyha_class'] !== undefined && labValues['nyha_class'] === 3 &&
+    ((labValues['bnp'] !== undefined && labValues['bnp'] >= 125) ||
+     (labValues['nt_probnp'] !== undefined && labValues['nt_probnp'] >= 300)) &&
+    !procedureCodes.includes('33289') &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.DEVICE_ELIGIBLE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'CardioMEMS PA-pressure monitor candidacy (NYHA III + elevated natriuretic peptide)',
+      target: 'CardioMEMS evaluation/referral or documented decline',
+      recommendations: { action: 'Consider CardioMEMS (PA pressure monitor) referral: NYHA III HF with elevated natriuretic peptide per GUIDE-HF/CHAMPION (COR 2b) - reduces HF hospitalizations', note: 'Path-B: the HF-hospitalization entry criterion is not ingested; the GUIDE-HF natriuretic-peptide arm (BNP>=125 / NT-proBNP>=300) is used instead.' },
+      evidence: {
+        triggerCriteria: ['Heart failure (I50.*)', 'NYHA III', 'Elevated natriuretic peptide (BNP>=125 or NT-proBNP>=300)', 'No CardioMEMS (CPT 33289)'],
+        guidelineSource: '2022 AHA/ACC/HFSA HF Guideline (CHAMPION, GUIDE-HF)',
+        classOfRecommendation: '2b',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Already implanted'],
+      },
+    });
+  }
+
+  // ============================================================
+  // v3.0 HF BUILDOUT BATCH (2026-06-15) - CHUNK 5: LVAD / Transplant (final new-gap chunk)
+  // Patterns A/B/C applied; threaded procedureCodes (PR #396) used for biopsy detection.
+  // HF-149 (pump-thrombosis screening) deferred - discriminating signal is LDH (hemolysis), no ingested key.
+  // ============================================================
+
+  // HF-LVAD-INR: Post-LVAD INR out of therapeutic range (GAP-HF-147, SAFETY)
+  // Guideline: ISHLT MCS / device IFU - LVAD anticoagulation INR target 2.0-3.0 (device-specific; some
+  // HeartMate 3 protocols 2.0-2.5). INR<2 = pump-thrombosis risk; INR>3 = bleeding. COR 1 (device mgmt).
+  // Specific Z95.811 (presence of heart assist device). FLAG: target is device-specific; 2.0-3.0 used.
+  if (
+    dxCodes.some(c => c.startsWith('Z95.811')) &&
+    labValues['inr'] !== undefined && (labValues['inr'] < 2.0 || labValues['inr'] > 3.0) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MONITORING_OVERDUE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'SAFETY: post-LVAD INR outside therapeutic range',
+      target: 'INR corrected to the device target (2.0-3.0) and anticoagulation adjusted',
+      recommendations: { action: `SAFETY: Adjust LVAD anticoagulation - INR ${labValues['inr']} is outside the 2.0-3.0 target (INR<2 pump-thrombosis risk, INR>3 bleeding) per ISHLT MCS guidance`, note: 'FLAG: target range is device-specific (some HeartMate 3 protocols use 2.0-2.5); 2.0-3.0 used as default.' },
+      evidence: {
+        triggerCriteria: ['LVAD (Z95.811)', `INR ${labValues['inr']} (outside 2.0-3.0)`],
+        guidelineSource: 'ISHLT Mechanical Circulatory Support guidelines; device IFU',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+        safetyClass: 'SAFETY',
+      },
+    });
+  }
+
+  // HF-LVAD-GIB: Post-LVAD GI bleeding without anti-angiodysplasia therapy (GAP-HF-148)
+  // Guideline: LVAD GI bleeding from acquired von Willebrand deficiency + angiodysplasia; octreotide
+  // reduces rebleeding (observational/registry). COR 2b. Specific Z95.811 + GI hemorrhage (K92.0/.1/.2).
+  // FLAG: "recurrent" not confirmable from a single dx; octreotide is one of several strategies.
+  if (
+    dxCodes.some(c => c.startsWith('Z95.811')) &&
+    dxCodes.some(c => c.startsWith('K92.0') || c.startsWith('K92.1') || c.startsWith('K92.2')) &&
+    !medCodes.includes(RXNORM_OCTREOTIDE.OCTREOTIDE) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Post-LVAD GI bleeding without anti-angiodysplasia therapy',
+      target: 'Octreotide (or alternative anti-angiodysplasia strategy) considered',
+      medication: 'Octreotide',
+      recommendations: { action: 'Consider octreotide: recurrent LVAD GI bleeding from angiodysplasia (acquired vWF deficiency) may respond to octreotide per registry data; also consider AC/antiplatelet adjustment', note: 'FLAG (Path-B): "recurrent" not confirmable from a single GI-bleed dx; octreotide is one of several strategies (also digoxin, ACEi, thalidomide).' },
+      evidence: {
+        triggerCriteria: ['LVAD (Z95.811)', 'GI hemorrhage (K92.0/K92.1/K92.2)', 'Not on octreotide'],
+        guidelineSource: 'ISHLT MCS guidance; LVAD GI-bleeding registry data',
+        classOfRecommendation: '2b',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // HF-TRANSPLANT-CAV: Post-heart-transplant CAV surveillance overdue (GAP-HF-151)
+  // Guideline: ISHLT - periodic (typically annual) coronary angiography for cardiac allograft vasculopathy
+  // surveillance. COR 1. Specific Z94.1 (heart transplant status). coronary_cta_months>=12 recency proxy.
+  // FLAG: CAV surveillance is invasive coronary angiography; coronary_cta_months is the closest recency key.
+  if (
+    dxCodes.some(c => c.startsWith('Z94.1')) &&
+    (labValues['coronary_cta_months'] === undefined || labValues['coronary_cta_months'] >= 12) &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Post-heart-transplant CAV surveillance overdue',
+      target: 'Coronary angiography (or CTA) for cardiac allograft vasculopathy surveillance',
+      recommendations: { action: 'Consider CAV surveillance: heart transplant without recent coronary assessment; ISHLT recommends periodic coronary angiography for cardiac allograft vasculopathy', note: 'FLAG: CAV surveillance is invasive coronary angiography; coronary_cta_months is the closest ingested recency key (CSV/Synthea, FHIR pending).' },
+      evidence: {
+        triggerCriteria: ['Heart transplant (Z94.1)', 'No coronary assessment within 12 months (or none recorded)'],
+        guidelineSource: 'ISHLT Heart Transplant guidelines (CAV surveillance)',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // HF-TRANSPLANT-BIOPSY: Post-heart-transplant rejection-surveillance biopsy gap (GAP-HF-152)
+  // Guideline: ISHLT - scheduled endomyocardial biopsy for rejection surveillance (most intensive in
+  // year 1). COR 1. Specific Z94.1 + no EMB procedure recorded (CPT 93505). FLAG: the biopsy SCHEDULE /
+  // timing is not ingested - fires on biopsy-procedure ABSENCE (procedureCodes), a presence proxy, not a
+  // schedule-adherence check; non-invasive rejection surveillance (gene-expression/dd-cfDNA) also absent.
+  if (
+    dxCodes.some(c => c.startsWith('Z94.1')) &&
+    !procedureCodes.includes('93505') &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Post-heart-transplant rejection-surveillance biopsy not documented',
+      target: 'Endomyocardial biopsy (or non-invasive surveillance) per the ISHLT schedule',
+      recommendations: { action: 'Consider rejection surveillance: heart transplant without a documented endomyocardial biopsy; ISHLT recommends scheduled surveillance (biopsy or non-invasive gene-expression/dd-cfDNA), most intensive in year 1', note: 'FLAG (Path-B): biopsy schedule/timing not ingested; fires on EMB-procedure absence (CPT 93505) - a presence proxy. Confirm the surveillance schedule clinically.' },
+      evidence: {
+        triggerCriteria: ['Heart transplant (Z94.1)', 'No endomyocardial biopsy recorded (CPT 93505)'],
+        guidelineSource: 'ISHLT Heart Transplant guidelines (rejection surveillance)',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-LD',
         exclusions: ['Hospice/palliative care (Z51.5)'],
       },
     });

@@ -2,9 +2,9 @@
   "codeSource": "backend/src/ingestion/gaps/gapRuleEngine.ts",
   "evaluatorBlocks": [
     {
-      "bodyEndLine": 3550,
-      "bodyStartLine": 3520,
-      "commentLine": 3517,
+      "bodyEndLine": 3969,
+      "bodyStartLine": 3939,
+      "commentLine": 3936,
       "commentLiteral": "// Gap 1: ATTR-CM Detection (HF)",
       "commentPattern": "GAP_N",
       "gapsPushIds": [
@@ -13,9 +13,9 @@
       "name": "Gap-1"
     },
     {
-      "bodyEndLine": 3580,
-      "bodyStartLine": 3556,
-      "commentLine": 3552,
+      "bodyEndLine": 3999,
+      "bodyStartLine": 3975,
+      "commentLine": 3971,
       "commentLiteral": "// Gap 2: Iron Deficiency in HF — gated on LVEF ≤45% per AFFIRM-AHF/IRONMAN",
       "commentPattern": "GAP_N",
       "gapsPushIds": [
@@ -24,9 +24,9 @@
       "name": "Gap-2"
     },
     {
-      "bodyEndLine": 3616,
-      "bodyStartLine": 3594,
-      "commentLine": 3582,
+      "bodyEndLine": 4035,
+      "bodyStartLine": 4013,
+      "commentLine": 4001,
       "commentLiteral": "// Gap 6: Finerenone for CKD with Type 2 Diabetes (HF comorbidity)",
       "commentPattern": "GAP_N",
       "gapsPushIds": [
@@ -35,9 +35,9 @@
       "name": "Gap-6"
     },
     {
-      "bodyEndLine": 3647,
-      "bodyStartLine": 3622,
-      "commentLine": 3618,
+      "bodyEndLine": 4066,
+      "bodyStartLine": 4041,
+      "commentLine": 4037,
       "commentLiteral": "// Gap HF-34: SGLT2i Missing in HFrEF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -46,9 +46,9 @@
       "name": "HF-34"
     },
     {
-      "bodyEndLine": 3676,
-      "bodyStartLine": 3652,
-      "commentLine": 3649,
+      "bodyEndLine": 4095,
+      "bodyStartLine": 4071,
+      "commentLine": 4068,
       "commentLiteral": "// Gap HF-35: Beta-Blocker Missing in HFrEF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -57,9 +57,9 @@
       "name": "HF-35"
     },
     {
-      "bodyEndLine": 3708,
-      "bodyStartLine": 3686,
-      "commentLine": 3678,
+      "bodyEndLine": 4127,
+      "bodyStartLine": 4105,
+      "commentLine": 4097,
       "commentLiteral": "// Gap HF-36: MRA Missing in HFrEF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -68,9 +68,9 @@
       "name": "HF-36"
     },
     {
-      "bodyEndLine": 3740,
-      "bodyStartLine": 3724,
-      "commentLine": 3714,
+      "bodyEndLine": 4161,
+      "bodyStartLine": 4145,
+      "commentLine": 4133,
       "commentLiteral": "// Gap HF-7: GLP-1 RA for HFpEF with Obesity",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -79,9 +79,9 @@
       "name": "HF-7"
     },
     {
-      "bodyEndLine": 3763,
-      "bodyStartLine": 3748,
-      "commentLine": 3742,
+      "bodyEndLine": 4184,
+      "bodyStartLine": 4169,
+      "commentLine": 4163,
       "commentLiteral": "// Gap HF-12: HCM Screening",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -90,9 +90,9 @@
       "name": "HF-12"
     },
     {
-      "bodyEndLine": 3793,
-      "bodyStartLine": 3777,
-      "commentLine": 3765,
+      "bodyEndLine": 4214,
+      "bodyStartLine": 4198,
+      "commentLine": 4186,
       "commentLiteral": "// Gap HF-17: Ivabradine in HFrEF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -101,9 +101,9 @@
       "name": "HF-17"
     },
     {
-      "bodyEndLine": 3819,
-      "bodyStartLine": 3803,
-      "commentLine": 3795,
+      "bodyEndLine": 4240,
+      "bodyStartLine": 4224,
+      "commentLine": 4216,
       "commentLiteral": "// Gap HF-18: Vericiguat in Worsening HF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -112,9 +112,9 @@
       "name": "HF-18"
     },
     {
-      "bodyEndLine": 3845,
-      "bodyStartLine": 3829,
-      "commentLine": 3821,
+      "bodyEndLine": 4266,
+      "bodyStartLine": 4250,
+      "commentLine": 4242,
       "commentLiteral": "// Gap HF-19: Hydralazine-ISDN for Black Patients with HFrEF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -123,9 +123,9 @@
       "name": "HF-19"
     },
     {
-      "bodyEndLine": 3864,
-      "bodyStartLine": 3849,
-      "commentLine": 3847,
+      "bodyEndLine": 4285,
+      "bodyStartLine": 4270,
+      "commentLine": 4268,
       "commentLiteral": "// Gap HF-20: Cardiac Rehab Referral in HF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -134,9 +134,9 @@
       "name": "HF-20"
     },
     {
-      "bodyEndLine": 3891,
-      "bodyStartLine": 3876,
-      "commentLine": 3866,
+      "bodyEndLine": 4313,
+      "bodyStartLine": 4298,
+      "commentLine": 4287,
       "commentLiteral": "// Gap HF-21: Undiagnosed HFpEF Screening",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -145,9 +145,9 @@
       "name": "HF-21"
     },
     {
-      "bodyEndLine": 3916,
-      "bodyStartLine": 3901,
-      "commentLine": 3893,
+      "bodyEndLine": 4338,
+      "bodyStartLine": 4323,
+      "commentLine": 4315,
       "commentLiteral": "// Gap HF-26: OSA Screening in HF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -156,9 +156,9 @@
       "name": "HF-26"
     },
     {
-      "bodyEndLine": 3940,
-      "bodyStartLine": 3925,
-      "commentLine": 3918,
+      "bodyEndLine": 4362,
+      "bodyStartLine": 4347,
+      "commentLine": 4340,
       "commentLiteral": "// Gap HF-29: Remote Patient Monitoring in HF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -167,9 +167,9 @@
       "name": "HF-29"
     },
     {
-      "bodyEndLine": 3964,
-      "bodyStartLine": 3948,
-      "commentLine": 3942,
+      "bodyEndLine": 4393,
+      "bodyStartLine": 4377,
+      "commentLine": 4364,
       "commentLiteral": "// Gap HF-30: ARNi Underdosing Review",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -178,9 +178,9 @@
       "name": "HF-30"
     },
     {
-      "bodyEndLine": 3983,
-      "bodyStartLine": 3968,
-      "commentLine": 3966,
+      "bodyEndLine": 4412,
+      "bodyStartLine": 4397,
+      "commentLine": 4395,
       "commentLiteral": "// Gap HF-37-FU: Discharge Follow-up in HF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -189,9 +189,9 @@
       "name": "HF-37-FU"
     },
     {
-      "bodyEndLine": 4002,
-      "bodyStartLine": 3987,
-      "commentLine": 3985,
+      "bodyEndLine": 4431,
+      "bodyStartLine": 4416,
+      "commentLine": 4414,
       "commentLiteral": "// Gap HF-38: Influenza Vaccination in HF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -200,9 +200,9 @@
       "name": "HF-38"
     },
     {
-      "bodyEndLine": 4025,
-      "bodyStartLine": 4010,
-      "commentLine": 4004,
+      "bodyEndLine": 4454,
+      "bodyStartLine": 4439,
+      "commentLine": 4433,
       "commentLiteral": "// Gap HF-73: Hyponatremia Monitoring in HF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -211,9 +211,9 @@
       "name": "HF-73"
     },
     {
-      "bodyEndLine": 4048,
-      "bodyStartLine": 4033,
-      "commentLine": 4027,
+      "bodyEndLine": 4477,
+      "bodyStartLine": 4462,
+      "commentLine": 4456,
       "commentLiteral": "// Gap HF-74: NT-proBNP Serial Monitoring in HF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -222,9 +222,9 @@
       "name": "HF-74"
     },
     {
-      "bodyEndLine": 4072,
-      "bodyStartLine": 4057,
-      "commentLine": 4050,
+      "bodyEndLine": 4501,
+      "bodyStartLine": 4486,
+      "commentLine": 4479,
       "commentLiteral": "// Gap HF-75: Cardiac MRI Referral for Non-Ischemic Cardiomyopathy",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -233,9 +233,9 @@
       "name": "HF-75"
     },
     {
-      "bodyEndLine": 4096,
-      "bodyStartLine": 4081,
-      "commentLine": 4074,
+      "bodyEndLine": 4525,
+      "bodyStartLine": 4510,
+      "commentLine": 4503,
       "commentLiteral": "// Gap HF-76: Palliative Care Consult in Advanced HF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -244,9 +244,9 @@
       "name": "HF-76"
     },
     {
-      "bodyEndLine": 4121,
-      "bodyStartLine": 4105,
-      "commentLine": 4098,
+      "bodyEndLine": 4550,
+      "bodyStartLine": 4534,
+      "commentLine": 4527,
       "commentLiteral": "// Gap HF-77: Diuretic Resistance Assessment",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -255,9 +255,9 @@
       "name": "HF-77"
     },
     {
-      "bodyEndLine": 4150,
-      "bodyStartLine": 4130,
-      "commentLine": 4123,
+      "bodyEndLine": 4579,
+      "bodyStartLine": 4559,
+      "commentLine": 4552,
       "commentLiteral": "// Gap HF-79: SGLT2i for HFpEF/HFmrEF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -266,9 +266,9 @@
       "name": "HF-79"
     },
     {
-      "bodyEndLine": 4174,
-      "bodyStartLine": 4159,
-      "commentLine": 4152,
+      "bodyEndLine": 4603,
+      "bodyStartLine": 4588,
+      "commentLine": 4581,
       "commentLiteral": "// Gap HF-80: Cardio-Oncology Screening",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -277,9 +277,9 @@
       "name": "HF-80"
     },
     {
-      "bodyEndLine": 4200,
-      "bodyStartLine": 4185,
-      "commentLine": 4176,
+      "bodyEndLine": 4629,
+      "bodyStartLine": 4614,
+      "commentLine": 4605,
       "commentLiteral": "// Gap HF-82: Cardiac Sarcoidosis Screening",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -288,9 +288,9 @@
       "name": "HF-82"
     },
     {
-      "bodyEndLine": 4698,
-      "bodyStartLine": 4678,
-      "commentLine": 4673,
+      "bodyEndLine": 5127,
+      "bodyStartLine": 5107,
+      "commentLine": 5102,
       "commentLiteral": "// Gap 44: Digoxin Toxicity (HF)",
       "commentPattern": "GAP_N",
       "gapsPushIds": [
@@ -299,9 +299,9 @@
       "name": "Gap-44"
     },
     {
-      "bodyEndLine": 5199,
-      "bodyStartLine": 5173,
-      "commentLine": 5166,
+      "bodyEndLine": 5628,
+      "bodyStartLine": 5602,
+      "commentLine": 5595,
       "commentLiteral": "// Gap HF-37: ACEi/ARB/ARNi Missing in HFrEF (First pillar of GDMT)",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -310,9 +310,9 @@
       "name": "HF-37"
     },
     {
-      "bodyEndLine": 6215,
-      "bodyStartLine": 6190,
-      "commentLine": 6182,
+      "bodyEndLine": 6644,
+      "bodyStartLine": 6619,
+      "commentLine": 6611,
       "commentLiteral": "// Gap HF-83: Loop Diuretic Without MRA in HFrEF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -321,9 +321,9 @@
       "name": "HF-83"
     },
     {
-      "bodyEndLine": 6244,
-      "bodyStartLine": 6225,
-      "commentLine": 6217,
+      "bodyEndLine": 6673,
+      "bodyStartLine": 6654,
+      "commentLine": 6646,
       "commentLiteral": "// Gap HF-84: Transplant Evaluation Referral",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -332,9 +332,9 @@
       "name": "HF-84"
     },
     {
-      "bodyEndLine": 6274,
-      "bodyStartLine": 6255,
-      "commentLine": 6246,
+      "bodyEndLine": 6703,
+      "bodyStartLine": 6684,
+      "commentLine": 6675,
       "commentLiteral": "// Gap HF-85: LVAD Referral for Advanced HF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -343,9 +343,9 @@
       "name": "HF-85"
     },
     {
-      "bodyEndLine": 6304,
-      "bodyStartLine": 6285,
-      "commentLine": 6276,
+      "bodyEndLine": 6733,
+      "bodyStartLine": 6714,
+      "commentLine": 6705,
       "commentLiteral": "// Gap HF-86: CRT-D Upgrade Evaluation",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -354,9 +354,9 @@
       "name": "HF-86"
     },
     {
-      "bodyEndLine": 6332,
-      "bodyStartLine": 6314,
-      "commentLine": 6306,
+      "bodyEndLine": 6764,
+      "bodyStartLine": 6746,
+      "commentLine": 6735,
       "commentLiteral": "// Gap HF-87: Peripartum Cardiomyopathy Screen",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -365,9 +365,9 @@
       "name": "HF-87"
     },
     {
-      "bodyEndLine": 6360,
-      "bodyStartLine": 6342,
-      "commentLine": 6334,
+      "bodyEndLine": 6792,
+      "bodyStartLine": 6774,
+      "commentLine": 6766,
       "commentLiteral": "// Gap HF-88: Acute Myocarditis Follow-up",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -376,9 +376,9 @@
       "name": "HF-88"
     },
     {
-      "bodyEndLine": 6393,
-      "bodyStartLine": 6370,
-      "commentLine": 6362,
+      "bodyEndLine": 6825,
+      "bodyStartLine": 6802,
+      "commentLine": 6794,
       "commentLiteral": "// Gap HF-89: Fabry Disease Screening",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -387,9 +387,9 @@
       "name": "HF-89"
     },
     {
-      "bodyEndLine": 6421,
-      "bodyStartLine": 6403,
-      "commentLine": 6395,
+      "bodyEndLine": 6853,
+      "bodyStartLine": 6835,
+      "commentLine": 6827,
       "commentLiteral": "// Gap HF-90: Amyloid Biomarker Follow-up",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -398,9 +398,9 @@
       "name": "HF-90"
     },
     {
-      "bodyEndLine": 6454,
-      "bodyStartLine": 6431,
-      "commentLine": 6423,
+      "bodyEndLine": 6886,
+      "bodyStartLine": 6863,
+      "commentLine": 6855,
       "commentLiteral": "// Gap HF-91: CSA/OSA Treatment in HF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -409,9 +409,9 @@
       "name": "HF-91"
     },
     {
-      "bodyEndLine": 6481,
-      "bodyStartLine": 6463,
-      "commentLine": 6456,
+      "bodyEndLine": 6913,
+      "bodyStartLine": 6895,
+      "commentLine": 6888,
       "commentLiteral": "// Gap HF-92: Volume Status Monitoring in HF",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -420,9 +420,9 @@
       "name": "HF-92"
     },
     {
-      "bodyEndLine": 10374,
-      "bodyStartLine": 10350,
-      "commentLine": 10332,
+      "bodyEndLine": 10806,
+      "bodyStartLine": 10782,
+      "commentLine": 10764,
       "commentLiteral": "// HF-ARNI-SWITCH: ACEi/ARB to ARNi Switch Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -431,9 +431,9 @@
       "name": "HF-ARNI-SWITCH"
     },
     {
-      "bodyEndLine": 10415,
-      "bodyStartLine": 10391,
-      "commentLine": 10376,
+      "bodyEndLine": 10847,
+      "bodyStartLine": 10823,
+      "commentLine": 10808,
       "commentLiteral": "// HF-THIAMINE: Thiamine Supplementation on Loop Diuretics",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -442,9 +442,9 @@
       "name": "HF-THIAMINE"
     },
     {
-      "bodyEndLine": 10452,
-      "bodyStartLine": 10429,
-      "commentLine": 10417,
+      "bodyEndLine": 10884,
+      "bodyStartLine": 10861,
+      "commentLine": 10849,
       "commentLiteral": "// HF-K-MONITOR: Potassium Monitoring on MRA",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -453,9 +453,9 @@
       "name": "HF-K-MONITOR"
     },
     {
-      "bodyEndLine": 10485,
-      "bodyStartLine": 10462,
-      "commentLine": 10454,
+      "bodyEndLine": 10917,
+      "bodyStartLine": 10894,
+      "commentLine": 10886,
       "commentLiteral": "// HF-ADVANCE-CARE: Advance Care Planning in Advanced HF",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -464,9 +464,9 @@
       "name": "HF-ADVANCE-CARE"
     },
     {
-      "bodyEndLine": 10518,
-      "bodyStartLine": 10495,
-      "commentLine": 10487,
+      "bodyEndLine": 10950,
+      "bodyStartLine": 10927,
+      "commentLine": 10919,
       "commentLiteral": "// HF-LVNC: LV Non-Compaction Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -475,9 +475,9 @@
       "name": "HF-LVNC"
     },
     {
-      "bodyEndLine": 10549,
-      "bodyStartLine": 10527,
-      "commentLine": 10520,
+      "bodyEndLine": 10981,
+      "bodyStartLine": 10959,
+      "commentLine": 10952,
       "commentLiteral": "// HF-HEMODYNAMIC: Hemodynamic Monitoring Review",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -486,9 +486,9 @@
       "name": "HF-HEMODYNAMIC"
     },
     {
-      "bodyEndLine": 10587,
-      "bodyStartLine": 10563,
-      "commentLine": 10551,
+      "bodyEndLine": 11019,
+      "bodyStartLine": 10995,
+      "commentLine": 10983,
       "commentLiteral": "// HF-DIURETIC-OPT: Diuretic Dose Optimization",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -497,9 +497,9 @@
       "name": "HF-DIURETIC-OPT"
     },
     {
-      "bodyEndLine": 10618,
-      "bodyStartLine": 10591,
-      "commentLine": 10589,
+      "bodyEndLine": 11050,
+      "bodyStartLine": 11023,
+      "commentLine": 11021,
       "commentLiteral": "// HF-ANEMIA-HF: Anemia Workup in HF — sex-specific thresholds per WHO 2011 + 2022 AHA/ACC HF",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -508,9 +508,9 @@
       "name": "HF-ANEMIA-HF"
     },
     {
-      "bodyEndLine": 10650,
-      "bodyStartLine": 10627,
-      "commentLine": 10620,
+      "bodyEndLine": 11082,
+      "bodyStartLine": 11059,
+      "commentLine": 11052,
       "commentLiteral": "// HF-IRON-IV-MONITORING: IV Iron Therapy Monitoring",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -519,9 +519,9 @@
       "name": "HF-IRON-IV-MONITORING"
     },
     {
-      "bodyEndLine": 10685,
-      "bodyStartLine": 10669,
-      "commentLine": 10658,
+      "bodyEndLine": 11117,
+      "bodyStartLine": 11101,
+      "commentLine": 11090,
       "commentLiteral": "// HF-FINERENONE-MREF: Finerenone not prescribed in HFmrEF/HFpEF (GAP-HF-017)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -530,9 +530,9 @@
       "name": "HF-FINERENONE-MREF"
     },
     {
-      "bodyEndLine": 10709,
-      "bodyStartLine": 10694,
-      "commentLine": 10687,
+      "bodyEndLine": 11141,
+      "bodyStartLine": 11126,
+      "commentLine": 11119,
       "commentLiteral": "// HF-AMYLOID-AF-OAC: Cardiac amyloidosis + AF without anticoagulation (GAP-HF-077)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -541,9 +541,9 @@
       "name": "HF-AMYLOID-AF-OAC"
     },
     {
-      "bodyEndLine": 10738,
-      "bodyStartLine": 10723,
-      "commentLine": 10711,
+      "bodyEndLine": 11170,
+      "bodyStartLine": 11155,
+      "commentLine": 11143,
       "commentLiteral": "// HF-DM-HBA1C: HF + diabetes with HbA1c above target (GAP-HF-081)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -552,9 +552,9 @@
       "name": "HF-DM-HBA1C"
     },
     {
-      "bodyEndLine": 10766,
-      "bodyStartLine": 10750,
-      "commentLine": 10740,
+      "bodyEndLine": 11198,
+      "bodyStartLine": 11182,
+      "commentLine": 11172,
       "commentLiteral": "// HF-MRA-CONTRA: MRA contraindicated by labs in HF (GAP-HF-008, SAFETY)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -563,9 +563,9 @@
       "name": "HF-MRA-CONTRA"
     },
     {
-      "bodyEndLine": 10791,
-      "bodyStartLine": 10775,
-      "commentLine": 10768,
+      "bodyEndLine": 11223,
+      "bodyStartLine": 11207,
+      "commentLine": 11200,
       "commentLiteral": "// HF-IRON-DEF-IV: Absolute iron deficiency untreated in HF (GAP-HF-033)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -574,9 +574,9 @@
       "name": "HF-IRON-DEF-IV"
     },
     {
-      "bodyEndLine": 10818,
-      "bodyStartLine": 10802,
-      "commentLine": 10793,
+      "bodyEndLine": 11250,
+      "bodyStartLine": 11234,
+      "commentLine": 11225,
       "commentLiteral": "// HF-PERICARDITIS-COLCH: Acute/recurrent pericarditis without colchicine (GAP-HF-143)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -585,9 +585,9 @@
       "name": "HF-PERICARDITIS-COLCH"
     },
     {
-      "bodyEndLine": 10842,
-      "bodyStartLine": 10826,
-      "commentLine": 10820,
+      "bodyEndLine": 11274,
+      "bodyStartLine": 11258,
+      "commentLine": 11252,
       "commentLiteral": "// HF-ATTR-DMT: ATTR-CM confirmed without disease-modifying therapy (GAP-HF-054)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -596,18 +596,403 @@
       "name": "HF-ATTR-DMT"
     },
     {
-      "bodyEndLine": 10867,
-      "bodyStartLine": 10851,
-      "commentLine": 10844,
+      "bodyEndLine": 11299,
+      "bodyStartLine": 11283,
+      "commentLine": 11276,
       "commentLiteral": "// HF-BB-NON-EBM: Non-evidence-based beta-blocker in HFrEF (GAP-HF-002, data-limit: atenolol only; nebivolol dropped per operator, metoprolol-tartrate not IN-distinguishable)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
         "Non-evidence-based beta-blocker in HFrEF"
       ],
       "name": "HF-BB-NON-EBM"
+    },
+    {
+      "bodyEndLine": 11358,
+      "bodyStartLine": 11342,
+      "commentLine": 11320,
+      "commentLiteral": "// HF-BB-TARGET-DOSE: HFrEF on beta-blocker below target dose (GAP-HF-003)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "HFrEF beta-blocker below target dose with uptitration headroom"
+      ],
+      "name": "HF-BB-TARGET-DOSE"
+    },
+    {
+      "bodyEndLine": 11385,
+      "bodyStartLine": 11370,
+      "commentLine": 11360,
+      "commentLiteral": "// HF-SGLT2I-EGFR-FLOOR: SGLT2i deferred below initiation eGFR floor (GAP-HF-011)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "SGLT2i initiation deferred below eGFR floor"
+      ],
+      "name": "HF-SGLT2I-EGFR-FLOOR"
+    },
+    {
+      "bodyEndLine": 11417,
+      "bodyStartLine": 11400,
+      "commentLine": 11387,
+      "commentLiteral": "// HF-DIGOXIN-HIGH-ELDERLY: High-dose digoxin in elderly + CKD (GAP-HF-015, SAFETY)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "SAFETY: high-dose digoxin in elderly patient with renal impairment"
+      ],
+      "name": "HF-DIGOXIN-HIGH-ELDERLY"
+    },
+    {
+      "bodyEndLine": 11447,
+      "bodyStartLine": 11432,
+      "commentLine": 11419,
+      "commentLiteral": "// HF-ICD-PRIMARY-ISCHEMIC: Primary-prevention ICD eligible, ischemic (GAP-HF-024)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Primary-prevention ICD eligibility (ischemic cardiomyopathy)"
+      ],
+      "name": "HF-ICD-PRIMARY-ISCHEMIC"
+    },
+    {
+      "bodyEndLine": 11478,
+      "bodyStartLine": 11463,
+      "commentLine": 11449,
+      "commentLiteral": "// HF-ICD-PRIMARY-NICM: Primary-prevention ICD eligible, non-ischemic (GAP-HF-025)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Primary-prevention ICD eligibility (non-ischemic cardiomyopathy)"
+      ],
+      "name": "HF-ICD-PRIMARY-NICM"
+    },
+    {
+      "bodyEndLine": 11503,
+      "bodyStartLine": 11488,
+      "commentLine": 11480,
+      "commentLiteral": "// HF-ICD-SECONDARY: Secondary-prevention ICD eligible (GAP-HF-026)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Secondary-prevention ICD eligibility (prior VT/VF/cardiac arrest)"
+      ],
+      "name": "HF-ICD-SECONDARY"
+    },
+    {
+      "bodyEndLine": 11528,
+      "bodyStartLine": 11513,
+      "commentLine": 11505,
+      "commentLiteral": "// HF-LEAD-EXTRACTION: CIED lead/device complication - extraction indication (GAP-HF-031)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "CIED infection/complication - lead extraction evaluation"
+      ],
+      "name": "HF-LEAD-EXTRACTION"
+    },
+    {
+      "bodyEndLine": 11556,
+      "bodyStartLine": 11541,
+      "commentLine": 11530,
+      "commentLiteral": "// HF-CCM-CANDIDATE: Cardiac contractility modulation (Optimizer) candidate (GAP-HF-126)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Cardiac contractility modulation (CCM/Optimizer) candidacy"
+      ],
+      "name": "HF-CCM-CANDIDATE"
+    },
+    {
+      "bodyEndLine": 11582,
+      "bodyStartLine": 11567,
+      "commentLine": 11558,
+      "commentLiteral": "// HF-WCD-BRIDGE: Wearable cardioverter-defibrillator bridge post-MI (GAP-HF-127)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "WCD bridge consideration in early post-MI LV dysfunction"
+      ],
+      "name": "HF-WCD-BRIDGE"
+    },
+    {
+      "bodyEndLine": 11613,
+      "bodyStartLine": 11597,
+      "commentLine": 11589,
+      "commentLiteral": "// HF-FABRY-ERT: Fabry disease without enzyme replacement / chaperone (GAP-HF-061)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Fabry disease without disease-modifying therapy"
+      ],
+      "name": "HF-FABRY-ERT"
+    },
+    {
+      "bodyEndLine": 11641,
+      "bodyStartLine": 11626,
+      "commentLine": 11615,
+      "commentLiteral": "// HF-SARCOID-AVBLOCK: Unexplained high-grade AV block <60y - sarcoid workup (GAP-HF-062)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Unexplained high-grade AV block under 60 - cardiac sarcoidosis workup"
+      ],
+      "name": "HF-SARCOID-AVBLOCK"
+    },
+    {
+      "bodyEndLine": 11668,
+      "bodyStartLine": 11652,
+      "commentLine": 11643,
+      "commentLiteral": "// HF-SARCOID-IMMUNOSUPP: Cardiac sarcoidosis without immunosuppression (GAP-HF-063)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Cardiac sarcoidosis without immunosuppressive therapy"
+      ],
+      "name": "HF-SARCOID-IMMUNOSUPP"
+    },
+    {
+      "bodyEndLine": 11696,
+      "bodyStartLine": 11681,
+      "commentLine": 11670,
+      "commentLiteral": "// HF-TACHY-CM: Tachycardia-mediated cardiomyopathy suspected (GAP-HF-065)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Possible tachycardia-mediated cardiomyopathy without rate/rhythm control"
+      ],
+      "name": "HF-TACHY-CM"
+    },
+    {
+      "bodyEndLine": 11722,
+      "bodyStartLine": 11707,
+      "commentLine": 11698,
+      "commentLiteral": "// HF-TAKOTSUBO-ECHO: Takotsubo without recovery echo (GAP-HF-072)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Takotsubo syndrome without recovery echocardiogram"
+      ],
+      "name": "HF-TAKOTSUBO-ECHO"
+    },
+    {
+      "bodyEndLine": 11753,
+      "bodyStartLine": 11738,
+      "commentLine": 11724,
+      "commentLiteral": "// HF-RADIATION-SURV: Radiation heart disease surveillance (GAP-HF-073)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Prior thoracic radiation with cardiac disease - surveillance echo overdue"
+      ],
+      "name": "HF-RADIATION-SURV"
+    },
+    {
+      "bodyEndLine": 11781,
+      "bodyStartLine": 11766,
+      "commentLine": 11755,
+      "commentLiteral": "// HF-IRON-SCREEN: Iron studies overdue in anemic HF (GAP-HF-032)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Iron studies overdue in anemic heart failure"
+      ],
+      "name": "HF-IRON-SCREEN"
+    },
+    {
+      "bodyEndLine": 11808,
+      "bodyStartLine": 11792,
+      "commentLine": 11783,
+      "commentLiteral": "// HF-IRON-FUNCTIONAL: Functional iron deficiency untreated in HF (GAP-HF-034)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Functional iron deficiency untreated in heart failure"
+      ],
+      "name": "HF-IRON-FUNCTIONAL"
+    },
+    {
+      "bodyEndLine": 11835,
+      "bodyStartLine": 11820,
+      "commentLine": 11810,
+      "commentLiteral": "// HF-ARVC-ICD: ARVC with ventricular arrhythmia - ICD risk assessment (GAP-HF-074)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "ARVC with ventricular tachycardia - ICD evaluation"
+      ],
+      "name": "HF-ARVC-ICD"
+    },
+    {
+      "bodyEndLine": 11873,
+      "bodyStartLine": 11858,
+      "commentLine": 11843,
+      "commentLiteral": "// HF-GDMT-INCOMPLETE: HFrEF GDMT regimen substantially incomplete (GAP-HF-036)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "HFrEF GDMT substantially incomplete (${hfPillarCount} of 4 pillars)"
+      ],
+      "name": "HF-GDMT-INCOMPLETE"
+    },
+    {
+      "bodyEndLine": 11900,
+      "bodyStartLine": 11885,
+      "commentLine": 11875,
+      "commentLiteral": "// HF-STAGE-B: Asymptomatic LV dysfunction (Stage B) without GDMT (GAP-HF-076)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Stage B (asymptomatic LV dysfunction) without GDMT initiation"
+      ],
+      "name": "HF-STAGE-B"
+    },
+    {
+      "bodyEndLine": 11925,
+      "bodyStartLine": 11910,
+      "commentLine": 11902,
+      "commentLiteral": "// HF-AF-RATE: HF + chronic/permanent AF with uncontrolled rate (GAP-HF-078)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "HF + chronic AF with uncontrolled ventricular rate"
+      ],
+      "name": "HF-AF-RATE"
+    },
+    {
+      "bodyEndLine": 11953,
+      "bodyStartLine": 11938,
+      "commentLine": 11927,
+      "commentLiteral": "// HF-THYROID: HF + untreated thyroid dysfunction (GAP-HF-080)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Heart failure with untreated thyroid dysfunction"
+      ],
+      "name": "HF-THYROID"
+    },
+    {
+      "bodyEndLine": 11980,
+      "bodyStartLine": 11963,
+      "commentLine": 11955,
+      "commentLiteral": "// HF-METFORMIN-RENAL: HF + CKD + metformin at low eGFR - renal/safety review (GAP-HF-082, SAFETY)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "SAFETY: metformin at reduced eGFR in HF + CKD - renal-dose review"
+      ],
+      "name": "HF-METFORMIN-RENAL"
+    },
+    {
+      "bodyEndLine": 12006,
+      "bodyStartLine": 11990,
+      "commentLine": 11982,
+      "commentLiteral": "// HF-PREG-TERATOGEN: HF in pregnancy on teratogenic GDMT (GAP-HF-086, SAFETY)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "SAFETY: teratogenic HF medication in pregnancy"
+      ],
+      "name": "HF-PREG-TERATOGEN"
+    },
+    {
+      "bodyEndLine": 12034,
+      "bodyStartLine": 12019,
+      "commentLine": 12013,
+      "commentLiteral": "// HF-INOTROPE-DEPENDENCE: Inotrope dependence - advanced HF referral (GAP-HF-047)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Inotrope dependence - advanced heart failure referral"
+      ],
+      "name": "HF-INOTROPE-DEPENDENCE"
+    },
+    {
+      "bodyEndLine": 12060,
+      "bodyStartLine": 12045,
+      "commentLine": 12036,
+      "commentLiteral": "// HF-TOLVAPTAN-HYPONATREMIA: Severe hyponatremia in HF without vaptan evaluation (GAP-HF-132)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Severe hyponatremia in heart failure - management evaluation"
+      ],
+      "name": "HF-TOLVAPTAN-HYPONATREMIA"
+    },
+    {
+      "bodyEndLine": 12089,
+      "bodyStartLine": 12074,
+      "commentLine": 12062,
+      "commentLiteral": "// HF-CS-MCS-ESCALATION: Inotrope-refractory cardiogenic shock without MCS (GAP-HF-133)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Inotrope-refractory cardiogenic shock without mechanical circulatory support"
+      ],
+      "name": "HF-CS-MCS-ESCALATION"
+    },
+    {
+      "bodyEndLine": 12114,
+      "bodyStartLine": 12099,
+      "commentLine": 12091,
+      "commentLiteral": "// HF-CRS4-SCREEN: Advanced CKD without HF screening (cardiorenal type 4) (GAP-HF-139)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Advanced CKD without heart-failure screening (cardiorenal type 4)"
+      ],
+      "name": "HF-CRS4-SCREEN"
+    },
+    {
+      "bodyEndLine": 12142,
+      "bodyStartLine": 12126,
+      "commentLine": 12116,
+      "commentLiteral": "// HF-PERICARDITIS-IL1: Steroid-dependent recurrent pericarditis without IL-1 inhibitor (GAP-HF-144)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Steroid-dependent recurrent pericarditis without IL-1 inhibitor"
+      ],
+      "name": "HF-PERICARDITIS-IL1"
+    },
+    {
+      "bodyEndLine": 12170,
+      "bodyStartLine": 12155,
+      "commentLine": 12144,
+      "commentLiteral": "// HF-CARDIOMEMS: Pulmonary-artery pressure monitor (CardioMEMS) candidacy (GAP-HF-027)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "CardioMEMS PA-pressure monitor candidacy (NYHA III + elevated natriuretic peptide)"
+      ],
+      "name": "HF-CARDIOMEMS"
+    },
+    {
+      "bodyEndLine": 12202,
+      "bodyStartLine": 12186,
+      "commentLine": 12175,
+      "commentLiteral": "// HF-149 (pump-thrombosis screening) deferred - discriminating signal is LDH (hemolysis), no ingested key.",
+      "commentPattern": "ID_N",
+      "gapsPushIds": [
+        "SAFETY: post-LVAD INR outside therapeutic range"
+      ],
+      "name": "HF-149"
+    },
+    {
+      "bodyEndLine": 12202,
+      "bodyStartLine": 12186,
+      "commentLine": 12178,
+      "commentLiteral": "// HF-LVAD-INR: Post-LVAD INR out of therapeutic range (GAP-HF-147, SAFETY)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "SAFETY: post-LVAD INR outside therapeutic range"
+      ],
+      "name": "HF-LVAD-INR"
+    },
+    {
+      "bodyEndLine": 12229,
+      "bodyStartLine": 12213,
+      "commentLine": 12204,
+      "commentLiteral": "// HF-LVAD-GIB: Post-LVAD GI bleeding without anti-angiodysplasia therapy (GAP-HF-148)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Post-LVAD GI bleeding without anti-angiodysplasia therapy"
+      ],
+      "name": "HF-LVAD-GIB"
+    },
+    {
+      "bodyEndLine": 12254,
+      "bodyStartLine": 12239,
+      "commentLine": 12231,
+      "commentLiteral": "// HF-TRANSPLANT-CAV: Post-heart-transplant CAV surveillance overdue (GAP-HF-151)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Post-heart-transplant CAV surveillance overdue"
+      ],
+      "name": "HF-TRANSPLANT-CAV"
+    },
+    {
+      "bodyEndLine": 12280,
+      "bodyStartLine": 12265,
+      "commentLine": 12256,
+      "commentLiteral": "// HF-TRANSPLANT-BIOPSY: Post-heart-transplant rejection-surveillance biopsy gap (GAP-HF-152)",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Post-heart-transplant rejection-surveillance biopsy not documented"
+      ],
+      "name": "HF-TRANSPLANT-BIOPSY"
     }
   ],
-  "gapsPushCount": 55,
+  "gapsPushCount": 89,
   "module": "HF",
   "moduleTagPattern": "module: ModuleType.HEART_FAILURE",
   "registry": [
@@ -619,7 +1004,7 @@
       "levelOfEvidence": "B-NR",
       "name": "ATTR-CM Detection",
       "nextReviewDue": "2026-10-04",
-      "registryLine": 231
+      "registryLine": 240
     },
     {
       "classOfRecommendation": "2a",
@@ -629,7 +1014,7 @@
       "levelOfEvidence": "B-R",
       "name": "Iron Deficiency in HF",
       "nextReviewDue": "2026-10-04",
-      "registryLine": 243
+      "registryLine": 252
     },
     {
       "classOfRecommendation": "1",
@@ -639,7 +1024,7 @@
       "levelOfEvidence": "A",
       "name": "Finerenone for CKD with T2DM",
       "nextReviewDue": "2026-10-04",
-      "registryLine": 255
+      "registryLine": 264
     },
     {
       "classOfRecommendation": "2b",
@@ -649,7 +1034,7 @@
       "levelOfEvidence": "B-R",
       "name": "Digoxin Toxicity Risk",
       "nextReviewDue": "2026-10-04",
-      "registryLine": 279
+      "registryLine": 288
     },
     {
       "classOfRecommendation": "1",
@@ -659,7 +1044,7 @@
       "levelOfEvidence": "A",
       "name": "SGLT2i in HFrEF",
       "nextReviewDue": "2026-10-05",
-      "registryLine": 303
+      "registryLine": 312
     },
     {
       "classOfRecommendation": "1",
@@ -669,7 +1054,7 @@
       "levelOfEvidence": "A",
       "name": "Beta-Blocker in HFrEF",
       "nextReviewDue": "2026-10-05",
-      "registryLine": 315
+      "registryLine": 324
     },
     {
       "classOfRecommendation": "1",
@@ -679,7 +1064,7 @@
       "levelOfEvidence": "A",
       "name": "MRA in HFrEF",
       "nextReviewDue": "2026-10-05",
-      "registryLine": 327
+      "registryLine": 336
     },
     {
       "classOfRecommendation": "1",
@@ -689,7 +1074,7 @@
       "levelOfEvidence": "A",
       "name": "ACEi/ARB/ARNi in HFrEF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 435
+      "registryLine": 444
     },
     {
       "classOfRecommendation": "2a",
@@ -699,7 +1084,7 @@
       "levelOfEvidence": "B-R",
       "name": "GLP-1 RA for HFpEF with Obesity",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 687
+      "registryLine": 696
     },
     {
       "classOfRecommendation": "1",
@@ -709,7 +1094,7 @@
       "levelOfEvidence": "B",
       "name": "HCM Screening",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 699
+      "registryLine": 708
     },
     {
       "classOfRecommendation": "2a",
@@ -719,7 +1104,7 @@
       "levelOfEvidence": "B-R",
       "name": "Ivabradine in HFrEF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 711
+      "registryLine": 720
     },
     {
       "classOfRecommendation": "2b",
@@ -729,7 +1114,7 @@
       "levelOfEvidence": "B-R",
       "name": "Vericiguat in Worsening HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 723
+      "registryLine": 732
     },
     {
       "classOfRecommendation": "1",
@@ -739,7 +1124,7 @@
       "levelOfEvidence": "A",
       "name": "Hydralazine-ISDN for Black Patients with HFrEF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 735
+      "registryLine": 744
     },
     {
       "classOfRecommendation": "2a",
@@ -749,7 +1134,7 @@
       "levelOfEvidence": "B-R",
       "name": "Cardiac Rehab Referral in HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 747
+      "registryLine": 756
     },
     {
       "classOfRecommendation": "1",
@@ -759,7 +1144,7 @@
       "levelOfEvidence": "C",
       "name": "Undiagnosed HFpEF Screening",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 759
+      "registryLine": 768
     },
     {
       "classOfRecommendation": "2a",
@@ -769,7 +1154,7 @@
       "levelOfEvidence": "B",
       "name": "OSA Screening in HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 771
+      "registryLine": 780
     },
     {
       "classOfRecommendation": "2b",
@@ -779,7 +1164,7 @@
       "levelOfEvidence": "B-R",
       "name": "Remote Patient Monitoring in HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 783
+      "registryLine": 792
     },
     {
       "classOfRecommendation": "1",
@@ -789,7 +1174,7 @@
       "levelOfEvidence": "B-R",
       "name": "ARNi Underdosing Review",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 795
+      "registryLine": 804
     },
     {
       "classOfRecommendation": "1",
@@ -799,7 +1184,7 @@
       "levelOfEvidence": "B",
       "name": "Discharge Follow-up in HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 807
+      "registryLine": 816
     },
     {
       "classOfRecommendation": "1",
@@ -809,7 +1194,7 @@
       "levelOfEvidence": "B",
       "name": "Influenza Vaccination in HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 819
+      "registryLine": 828
     },
     {
       "classOfRecommendation": "1",
@@ -819,7 +1204,7 @@
       "levelOfEvidence": "C",
       "name": "Hyponatremia Monitoring in HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 831
+      "registryLine": 840
     },
     {
       "classOfRecommendation": "2a",
@@ -829,7 +1214,7 @@
       "levelOfEvidence": "B",
       "name": "NT-proBNP Serial Monitoring in HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 843
+      "registryLine": 852
     },
     {
       "classOfRecommendation": "2a",
@@ -839,7 +1224,7 @@
       "levelOfEvidence": "B",
       "name": "Cardiac MRI Referral for Non-Ischemic Cardiomyopathy",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 855
+      "registryLine": 864
     },
     {
       "classOfRecommendation": "1",
@@ -849,7 +1234,7 @@
       "levelOfEvidence": "B",
       "name": "Palliative Care Consult in Advanced HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 867
+      "registryLine": 876
     },
     {
       "classOfRecommendation": "1",
@@ -859,7 +1244,7 @@
       "levelOfEvidence": "C",
       "name": "Diuretic Resistance Assessment",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 879
+      "registryLine": 888
     },
     {
       "classOfRecommendation": "2a",
@@ -869,7 +1254,7 @@
       "levelOfEvidence": "B-R",
       "name": "SGLT2i for HFpEF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 891
+      "registryLine": 900
     },
     {
       "classOfRecommendation": "1",
@@ -879,7 +1264,7 @@
       "levelOfEvidence": "C",
       "name": "Cardio-Oncology Screening",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 903
+      "registryLine": 912
     },
     {
       "classOfRecommendation": "2a",
@@ -889,7 +1274,7 @@
       "levelOfEvidence": "C",
       "name": "Cardiac Sarcoidosis Screening",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 915
+      "registryLine": 924
     },
     {
       "classOfRecommendation": "1",
@@ -899,7 +1284,7 @@
       "levelOfEvidence": "A",
       "name": "Loop Diuretic Without MRA in HFrEF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1575
+      "registryLine": 1584
     },
     {
       "classOfRecommendation": "1",
@@ -909,7 +1294,7 @@
       "levelOfEvidence": "C",
       "name": "Transplant Evaluation Referral",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1587
+      "registryLine": 1596
     },
     {
       "classOfRecommendation": "2a",
@@ -919,7 +1304,7 @@
       "levelOfEvidence": "B",
       "name": "LVAD Referral for Advanced HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1599
+      "registryLine": 1608
     },
     {
       "classOfRecommendation": "1",
@@ -929,7 +1314,7 @@
       "levelOfEvidence": "A",
       "name": "CRT-D Upgrade Evaluation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1611
+      "registryLine": 1620
     },
     {
       "classOfRecommendation": "1",
@@ -939,7 +1324,7 @@
       "levelOfEvidence": "C",
       "name": "Peripartum Cardiomyopathy Screen",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1623
+      "registryLine": 1632
     },
     {
       "classOfRecommendation": "1",
@@ -949,7 +1334,7 @@
       "levelOfEvidence": "C",
       "name": "Acute Myocarditis Follow-up",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1635
+      "registryLine": 1644
     },
     {
       "classOfRecommendation": "2a",
@@ -959,7 +1344,7 @@
       "levelOfEvidence": "C",
       "name": "Fabry Disease Screening",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1647
+      "registryLine": 1656
     },
     {
       "classOfRecommendation": "1",
@@ -969,7 +1354,7 @@
       "levelOfEvidence": "B-NR",
       "name": "Amyloid Biomarker Follow-up",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1659
+      "registryLine": 1668
     },
     {
       "classOfRecommendation": "2a",
@@ -979,7 +1364,7 @@
       "levelOfEvidence": "B",
       "name": "CSA/OSA Treatment in HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1671
+      "registryLine": 1680
     },
     {
       "classOfRecommendation": "1",
@@ -989,7 +1374,7 @@
       "levelOfEvidence": "B",
       "name": "Volume Status Monitoring in HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1683
+      "registryLine": 1692
     },
     {
       "classOfRecommendation": "1",
@@ -999,7 +1384,7 @@
       "levelOfEvidence": "A",
       "name": "ACEi/ARB to ARNi Switch",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2115
+      "registryLine": 2124
     },
     {
       "classOfRecommendation": "2b",
@@ -1009,7 +1394,7 @@
       "levelOfEvidence": "C",
       "name": "Thiamine Supplementation in HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2127
+      "registryLine": 2136
     },
     {
       "classOfRecommendation": "1",
@@ -1019,7 +1404,7 @@
       "levelOfEvidence": "B",
       "name": "Potassium Monitoring on MRA",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2139
+      "registryLine": 2148
     },
     {
       "classOfRecommendation": "1",
@@ -1029,7 +1414,7 @@
       "levelOfEvidence": "C",
       "name": "Advance Care Planning in Advanced HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2151
+      "registryLine": 2160
     },
     {
       "classOfRecommendation": "2a",
@@ -1039,7 +1424,7 @@
       "levelOfEvidence": "C",
       "name": "LV Non-Compaction Screening",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2163
+      "registryLine": 2172
     },
     {
       "classOfRecommendation": "2b",
@@ -1049,7 +1434,7 @@
       "levelOfEvidence": "B-R",
       "name": "Hemodynamic Monitoring Review",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2175
+      "registryLine": 2184
     },
     {
       "classOfRecommendation": "1",
@@ -1059,7 +1444,7 @@
       "levelOfEvidence": "B",
       "name": "Diuretic Dose Optimization",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2187
+      "registryLine": 2196
     },
     {
       "classOfRecommendation": "1",
@@ -1069,7 +1454,7 @@
       "levelOfEvidence": "C",
       "name": "COVID Vaccination in HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2199
+      "registryLine": 2208
     },
     {
       "classOfRecommendation": "1",
@@ -1079,7 +1464,7 @@
       "levelOfEvidence": "B",
       "name": "Anemia Workup in HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2211
+      "registryLine": 2220
     },
     {
       "classOfRecommendation": "2a",
@@ -1089,7 +1474,7 @@
       "levelOfEvidence": "B-R",
       "name": "IV Iron Therapy Monitoring",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2919
+      "registryLine": 2928
     },
     {
       "classOfRecommendation": "2a",
@@ -1099,7 +1484,7 @@
       "levelOfEvidence": "B-R",
       "name": "Finerenone in HFmrEF/HFpEF",
       "nextReviewDue": "2026-12-15",
-      "registryLine": 3389
+      "registryLine": 3398
     },
     {
       "classOfRecommendation": "2a",
@@ -1109,7 +1494,7 @@
       "levelOfEvidence": "C-LD",
       "name": "Cardiac amyloidosis AF anticoagulation",
       "nextReviewDue": "2026-12-15",
-      "registryLine": 3401
+      "registryLine": 3410
     },
     {
       "classOfRecommendation": "1",
@@ -1119,7 +1504,7 @@
       "levelOfEvidence": "A",
       "name": "HF diabetes HbA1c target",
       "nextReviewDue": "2026-12-15",
-      "registryLine": 3413
+      "registryLine": 3422
     },
     {
       "classOfRecommendation": "3 (Harm)",
@@ -1129,7 +1514,7 @@
       "levelOfEvidence": "B",
       "name": "MRA contraindicated by labs",
       "nextReviewDue": "2026-12-15",
-      "registryLine": 3425
+      "registryLine": 3434
     },
     {
       "classOfRecommendation": "2a",
@@ -1139,7 +1524,7 @@
       "levelOfEvidence": "B-R",
       "name": "Absolute iron deficiency IV iron",
       "nextReviewDue": "2026-12-15",
-      "registryLine": 3437
+      "registryLine": 3446
     },
     {
       "classOfRecommendation": "1",
@@ -1149,7 +1534,7 @@
       "levelOfEvidence": "A",
       "name": "Pericarditis colchicine",
       "nextReviewDue": "2026-12-15",
-      "registryLine": 3449
+      "registryLine": 3458
     },
     {
       "classOfRecommendation": "1",
@@ -1159,7 +1544,7 @@
       "levelOfEvidence": "B-R",
       "name": "ATTR-CM disease-modifying therapy",
       "nextReviewDue": "2026-12-15",
-      "registryLine": 3461
+      "registryLine": 3470
     },
     {
       "classOfRecommendation": "1",
@@ -1169,7 +1554,347 @@
       "levelOfEvidence": "A",
       "name": "Non-evidence-based beta-blocker HFrEF",
       "nextReviewDue": "2026-12-15",
-      "registryLine": 3473
+      "registryLine": 3482
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure",
+      "id": "gap-hf-003-bb-target-dose",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "A",
+      "name": "HFrEF beta-blocker below target dose",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3496
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 AHA/ACC/HFSA HF Guideline; FDA SGLT2i labels",
+      "id": "gap-hf-011-sglt2i-egfr-floor",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "A",
+      "name": "SGLT2i deferred below eGFR floor",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3508
+    },
+    {
+      "classOfRecommendation": "3 (Harm)",
+      "guidelineSource": "2019 AGS Beers Criteria; 2022 AHA/ACC/HFSA HF Guideline",
+      "id": "gap-hf-015-digoxin-high-elderly",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "B",
+      "name": "High-dose digoxin in elderly with CKD",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3520
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2017 AHA/ACC/HRS Guideline for VA/SCD",
+      "id": "gap-hf-024-icd-primary-ischemic",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "A",
+      "name": "Primary-prevention ICD (ischemic)",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3532
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2017 AHA/ACC/HRS Guideline; DANISH (NEJM 2016)",
+      "id": "gap-hf-025-icd-primary-nicm",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "B-R",
+      "name": "Primary-prevention ICD (non-ischemic)",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3544
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2017 AHA/ACC/HRS Guideline for VA/SCD",
+      "id": "gap-hf-026-icd-secondary",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "B",
+      "name": "Secondary-prevention ICD",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3556
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2017 HRS Expert Consensus on CIED Lead Management",
+      "id": "gap-hf-031-lead-extraction",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "B-NR",
+      "name": "CIED lead extraction indication",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3568
+    },
+    {
+      "classOfRecommendation": "2b",
+      "guidelineSource": "FDA approval (FIX-HF-5C); 2023 HF device-therapy consensus",
+      "id": "gap-hf-126-ccm-candidate",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "B-R",
+      "name": "Cardiac contractility modulation candidacy",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3580
+    },
+    {
+      "classOfRecommendation": "2b",
+      "guidelineSource": "2017 AHA/ACC/HRS Guideline; VEST (NEJM 2018)",
+      "id": "gap-hf-127-wcd-bridge",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "B-R",
+      "name": "WCD bridge post-MI",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3592
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2021 International Expert Consensus on Fabry Disease",
+      "id": "gap-hf-061-fabry-ert",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "B",
+      "name": "Fabry disease-modifying therapy",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3604
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2014 HRS Expert Consensus on Cardiac Sarcoidosis",
+      "id": "gap-hf-062-sarcoid-avblock",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "C-LD",
+      "name": "Cardiac sarcoid AV-block workup",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3616
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2014 HRS Expert Consensus on Cardiac Sarcoidosis",
+      "id": "gap-hf-063-sarcoid-immunosupp",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "C-LD",
+      "name": "Cardiac sarcoid immunosuppression",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3628
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2019 AHA Scientific Statement on Tachycardia-Induced CM",
+      "id": "gap-hf-065-tachy-cm",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "B-NR",
+      "name": "Tachycardia-mediated cardiomyopathy",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3640
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2018 International Takotsubo Diagnostic Criteria (InterTAK)",
+      "id": "gap-hf-072-takotsubo-echo",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "C-LD",
+      "name": "Takotsubo recovery echo",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3652
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2013 EACVI/ASE Consensus on Radiation-Induced Heart Disease",
+      "id": "gap-hf-073-radiation-surv",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "C-LD",
+      "name": "Radiation heart disease surveillance",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3664
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2019 HRS Expert Consensus on ARVC",
+      "id": "gap-hf-074-arvc-icd",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "B-NR",
+      "name": "ARVC with VT ICD evaluation",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3676
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure",
+      "id": "gap-hf-032-iron-screen",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "C-LD",
+      "name": "Iron studies in anemic HF",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3688
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "2022 AHA/ACC/HFSA HF Guideline (AFFIRM-AHF, IRONMAN)",
+      "id": "gap-hf-034-iron-functional",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "B-R",
+      "name": "Functional iron deficiency in HF",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3700
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure",
+      "id": "gap-hf-036-gdmt-incomplete",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "A",
+      "name": "HFrEF GDMT substantially incomplete",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3712
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 AHA/ACC/HFSA HF Guideline (Stage B)",
+      "id": "gap-hf-076-stage-b",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "A",
+      "name": "Stage B asymptomatic LV dysfunction",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3724
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline",
+      "id": "gap-hf-078-af-rate",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "B-R",
+      "name": "HF + chronic AF rate control",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3736
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure",
+      "id": "gap-hf-080-thyroid",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "C-LD",
+      "name": "HF + untreated overt thyroid dysfunction",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3748
+    },
+    {
+      "classOfRecommendation": "3 (Harm)",
+      "guidelineSource": "FDA metformin label; 2022 AHA/ACC/HFSA HF Guideline",
+      "id": "gap-hf-082-metformin-renal",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "C-LD",
+      "name": "Metformin renal review in HF + CKD",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3760
+    },
+    {
+      "classOfRecommendation": "3 (Harm)",
+      "guidelineSource": "FDA pregnancy labeling; 2022 AHA/ACC/HFSA HF Guideline",
+      "id": "gap-hf-086-preg-teratogen",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "B-NR",
+      "name": "Teratogenic HF medication in pregnancy",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3772
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "2022 AHA/ACC/HFSA HF Guideline (Stage D)",
+      "id": "gap-hf-047-inotrope-dependence",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "C-LD",
+      "name": "Inotrope dependence advanced HF referral",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3784
+    },
+    {
+      "classOfRecommendation": "2b",
+      "guidelineSource": "2022 AHA/ACC/HFSA HF Guideline (EVEREST, SALT)",
+      "id": "gap-hf-132-tolvaptan-hyponatremia",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "B-R",
+      "name": "Severe hyponatremia management in HF",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3796
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "SCAI Cardiogenic Shock Classification; 2022 AHA/ACC/HFSA",
+      "id": "gap-hf-133-cs-mcs-escalation",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "C-LD",
+      "name": "Inotrope-refractory cardiogenic shock MCS",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3808
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "KDIGO CKD Guideline; cardiorenal syndrome consensus",
+      "id": "gap-hf-139-crs4-screen",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "C-LD",
+      "name": "Advanced CKD HF screening (cardiorenal type 4)",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3820
+    },
+    {
+      "classOfRecommendation": "2a",
+      "guidelineSource": "RHAPSODY trial (rilonacept, NEJM 2021)",
+      "id": "gap-hf-144-pericarditis-il1",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "B-R",
+      "name": "Recurrent pericarditis IL-1 inhibitor",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3832
+    },
+    {
+      "classOfRecommendation": "2b",
+      "guidelineSource": "2022 AHA/ACC/HFSA HF Guideline (CHAMPION, GUIDE-HF)",
+      "id": "gap-hf-027-cardiomems",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "B-R",
+      "name": "CardioMEMS PA-pressure monitor candidacy",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3844
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "ISHLT Mechanical Circulatory Support guidelines",
+      "id": "gap-hf-147-lvad-inr",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "C-LD",
+      "name": "Post-LVAD INR out of range",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3856
+    },
+    {
+      "classOfRecommendation": "2b",
+      "guidelineSource": "ISHLT MCS guidance; LVAD GI-bleeding registry data",
+      "id": "gap-hf-148-lvad-gib",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "C-LD",
+      "name": "Post-LVAD GI bleeding management",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3868
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "ISHLT Heart Transplant guidelines (CAV surveillance)",
+      "id": "gap-hf-151-transplant-cav",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "C-LD",
+      "name": "Post-transplant CAV surveillance",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3880
+    },
+    {
+      "classOfRecommendation": "1",
+      "guidelineSource": "ISHLT Heart Transplant guidelines (rejection surveillance)",
+      "id": "gap-hf-152-transplant-biopsy",
+      "lastReviewDate": "2026-06-15",
+      "levelOfEvidence": "C-LD",
+      "name": "Post-transplant rejection-surveillance biopsy",
+      "nextReviewDue": "2026-12-15",
+      "registryLine": 3892
     }
   ]
 }

@@ -423,3 +423,74 @@ export const RXNORM_STATINS = {
   LOVASTATIN: '6472',
   FLUVASTATIN: '41127',
 } as const;
+
+// ============================================================
+// v3.0 HF buildout batch (2026-06-15). All ingredient (TTY=IN), RxNav-verified
+// via rxcui.json?name=<drug>&tty=IN (the name->IN lookup, which structurally
+// avoids the hand-entered wrong-CUI class - AUDIT-042/053/054/055/056/057/104).
+// Provenance per set: source RxNav, date 2026-06-15, count = members.
+// ============================================================
+
+/** Fabry disease-modifying therapy (GAP-HF-061). Source: RxNav tty=IN, 2026-06-15, count 3.
+ *  agalsidase alfa 2691830, agalsidase beta 338817, migalastat 2054252. */
+export const RXNORM_FABRY_DMT = {
+  AGALSIDASE_ALFA: '2691830',
+  AGALSIDASE_BETA: '338817',
+  MIGALASTAT: '2054252',
+} as const;
+
+/** IV inotropes (GAP-HF-047 inotrope dependence). Source: RxNav tty=IN, 2026-06-15, count 2.
+ *  milrinone 52769, dobutamine 3616. */
+export const RXNORM_INOTROPES = {
+  MILRINONE: '52769',
+  DOBUTAMINE: '3616',
+} as const;
+
+/** Tolvaptan - vasopressin V2 antagonist for hypervolemic/euvolemic hyponatremia (GAP-HF-132).
+ *  Source: RxNav tty=IN, 2026-06-15, count 1. tolvaptan 358257. */
+export const RXNORM_TOLVAPTAN = {
+  TOLVAPTAN: '358257',
+} as const;
+
+/** Thyroid-directed therapy (GAP-HF-080 HF + thyroid dysfunction untreated). Covers both
+ *  hypothyroid replacement and hyperthyroid suppression. Source: RxNav tty=IN, 2026-06-15, count 3.
+ *  levothyroxine 10582, methimazole 6835, propylthiouracil 8794. */
+export const RXNORM_THYROID_THERAPY = {
+  LEVOTHYROXINE: '10582',
+  METHIMAZOLE: '6835',
+  PROPYLTHIOURACIL: '8794',
+} as const;
+
+/** Metformin (GAP-HF-082 HF + CKD + metformin renal-dose review). Source: RxNav tty=IN, 2026-06-15, count 1.
+ *  metformin 6809. */
+export const RXNORM_METFORMIN = {
+  METFORMIN: '6809',
+} as const;
+
+/** Corticosteroids (GAP-HF-063 cardiac sarcoid immunosuppression; GAP-HF-144 pericarditis steroid).
+ *  Source: RxNav tty=IN, 2026-06-15, count 1. prednisone 8640. */
+export const RXNORM_CORTICOSTEROIDS = {
+  PREDNISONE: '8640',
+} as const;
+
+/** Steroid-sparing immunosuppressants (GAP-HF-063 cardiac sarcoid). Source: RxNav tty=IN, 2026-06-15, count 3.
+ *  methotrexate 6851, azathioprine 1256, mycophenolate mofetil 68149. */
+export const RXNORM_STEROID_SPARING = {
+  METHOTREXATE: '6851',
+  AZATHIOPRINE: '1256',
+  MYCOPHENOLATE_MOFETIL: '68149',
+} as const;
+
+/** IL-1 inhibitors (GAP-HF-144 recurrent pericarditis refractory). Source: RxNav tty=IN, 2026-06-15, count 3.
+ *  rilonacept 763450 (RHAPSODY-approved for recurrent pericarditis), anakinra 72435, canakinumab 853491. */
+export const RXNORM_IL1_INHIBITORS = {
+  RILONACEPT: '763450',
+  ANAKINRA: '72435',
+  CANAKINUMAB: '853491',
+} as const;
+
+/** Octreotide (GAP-HF-148 post-LVAD GI bleeding from angiodysplasia). Source: RxNav tty=IN, 2026-06-15, count 1.
+ *  octreotide 7617. */
+export const RXNORM_OCTREOTIDE = {
+  OCTREOTIDE: '7617',
+} as const;
