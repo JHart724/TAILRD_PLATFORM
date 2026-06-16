@@ -237,6 +237,20 @@ These rules are non-negotiable. Violating any of them creates clinical, security
 - **Never use ML/AI for gap detection.** All gap rules must be deterministic, rule-based, and transparent. The clinician must be able to trace exactly why a gap fired.
 - **Never create a gap rule without an `evidence` object.** Every gap must carry its trigger criteria, guideline source, class, and level of evidence for FDA CDS exemption compliance.
 
+## Destructive-Command Discipline
+
+Catalyst: a near-miss this session - a repo-deletion `gh api -X DELETE repos/:owner/:repo` was written as a careless task-list "noop placeholder". The auto-mode classifier blocked it and nothing was deleted, but a typed destructive command is one classifier-miss from execution. This is a standing forcing function, read at session start alongside the other disciplines.
+
+1. **Destructive commands are NEVER placeholders, noops, or stand-ins for a benign action.** This includes: `gh api -X DELETE` (repo / branch / release deletion), `git push --force` to `main` or any shared branch, `rm -rf`, `DROP` / `TRUNCATE` on any database, `prisma migrate reset`, AWS resource deletion (`ecs` / `rds` / `kms` delete), and ANY command that removes rather than adds.
+
+2. **"Do nothing" means do nothing.** If a task calls for a no-op or clearing a placeholder, the answer is to do nothing, or to use the appropriate benign tool (the task tool, a code comment) - NEVER to write a destructive command one does not intend to run. A destructive command typed as a placeholder is a latent catastrophe.
+
+3. **Any genuinely-needed destructive command is explicitly operator-gated.** It must be authorized in the prompt with the specific target named, and the actual target verified against the intended target before execution. The production-data-mutation protocol (verified snapshot -> dry-run -> explicit execute-GO, per section 18 / `docs/runbooks`) applies.
+
+4. **Defense in depth - credential scope is the mechanism backstop.** The agent's gh / aws / db credentials should be scoped to add/modify rights, not destroy rights (operator-side hardening). This instruction is the behavioral layer; the credential scope is the mechanism layer; both apply.
+
+5. **Destructive != benign, ever, regardless of context.** No framing - "cleanup", "noop", "placeholder", "autonomous mode", "just a stand-in" - converts a destructive command into a benign one. When a destructive action is not explicitly authorized for a named target, the correct move is to STOP and ask, never to type the command "as a placeholder".
+
 ## 15. Deployment Rules (Learned from April 7, 2026 Production Incident)
 
 ### RULE 1: NEVER use `tsc || true` in the Dockerfile
