@@ -602,6 +602,12 @@ Skipping `reconcile` / `renderAddendum` / `renderSynthesis` after source changes
 - **PR #245** (AUDIT-041) — applyOverrides default flip; reconcile/render regen missed; CI rejected; fixed via standalone fixup commit.
 - **PR #246** (AUDIT-046..063) — sed comment rephrase; reconcile/render regen missed; CI rejected; fixed via fixup commit chain (this PR).
 
+**Post-codification recurrence (`reconcile` specifically):** 2 more, both from skipping `reconcile.ts` (not the render steps).
+- **PR #396** (engine-signature expansion) - local pipeline ran extractCode + the render/validate tail but skipped `reconcile`; the committed `*.reconciliation.json` referenced pre-change body line-ranges; CI Gate 4 failed `derived-artifacts-divergent`. Fixed by re-running the full chain in canonical order.
+- **HF buildout PART-2 close** - the same `reconcile`-skip was caught pre-push during the canonical close (the registry reformatting had shifted body line-ranges; running `refreshCites` before `reconcile` produced `BODY_LINE_RANGE_MISMATCH` across all modules). Fixed by re-running in canonical order: extractCode -> extractSpec -> reconcile -> refreshCites -> applyOverrides -> renderAddendum -> renderSynthesis -> validateCanonical.
+
+**`reconcile` is not optional and the order is not a suggestion.** The eight steps run in the exact sequence above. `reconcile.ts` must run after `extractCode`/`extractSpec` (so the crosswalk pairs the post-change spec+code) and before `refreshCites`/`applyOverrides`/`render*` (which consume the reconciliation's body line-ranges). Skipping `reconcile`, or running a later step against a stale reconciliation, is the single most common Gate-4 `derived-artifacts-divergent` cause. Never run a subset; never reorder.
+
 **Convention going forward:** after any source change, run the full pipeline. The canonical contract for this PR-shape is non-partial. Partial pipeline runs are a methodology violation.
 
 **Architectural note:** an optional `pipeline-all.sh` / `pipeline-all.ps1` helper script could replace 8 commands with 1 to enforce this via single invocation. Deferred to focused infrastructure PR per scope discipline.
