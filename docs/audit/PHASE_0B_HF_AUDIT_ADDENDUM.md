@@ -2,15 +2,15 @@
 
 **Module:** Heart Failure (HF)
 **Spec source:** `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md` §6.1
-**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=56, evaluator=55, gapsPush=55)
+**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=90, evaluator=90, gapsPush=89)
 **Crosswalk:** `docs/audit/canonical/HF.crosswalk.json` (auditMethod: rule-body-citation-AUDIT-030D)
 **Audit date:** 2026-05-04
 
 ## 1. Summary
 
-Heart Failure has **126 spec gaps** across 15 subcategories. Implementation: **30 DET_OK + 39 PARTIAL + 57 SPEC_ONLY** (any-coverage: 69/126 = 54.8%).
+Heart Failure has **126 spec gaps** across 15 subcategories. Implementation: **64 DET_OK + 25 PARTIAL + 37 SPEC_ONLY** (any-coverage: 89/126 = 70.6%).
 
-**Tier 1 priority status:** 12 DET_OK + 11 PARTIAL + 6 SPEC_ONLY of 29 T1 gaps (T1 any-coverage: 79.3%).
+**Tier 1 priority status:** 21 DET_OK + 5 PARTIAL + 3 SPEC_ONLY of 29 T1 gaps (T1 any-coverage: 89.7%).
 
 **Spec-explicit SAFETY-tagged gaps:** 1 total; 1 covered (DET_OK), 0 uncovered. All SAFETY gaps covered.
 
@@ -21,9 +21,9 @@ Heart Failure has **126 spec gaps** across 15 subcategories. Implementation: **3
 | Classification | Count | % of total |
 |---|---:|---:|
 | PRODUCTION_GRADE | 0 | 0.0% |
-| DET_OK | 30 | 23.8% |
-| PARTIAL_DETECTION | 39 | 31.0% |
-| SPEC_ONLY | 57 | 45.2% |
+| DET_OK | 64 | 50.8% |
+| PARTIAL_DETECTION | 25 | 19.8% |
+| SPEC_ONLY | 37 | 29.4% |
 | **Total** | **126** | **100.0%** |
 
 **PRODUCTION_GRADE = 0** is platform-wide; gated on closure of AUDIT-001 P0 (test coverage gap). Per AUDIT_METHODOLOGY.md §3.1, no rule classifies PRODUCTION_GRADE until the platform testing baseline is established.
@@ -34,10 +34,10 @@ Heart Failure has **126 spec gaps** across 15 subcategories. Implementation: **3
 
 | Tier | Total | DET_OK | PARTIAL | SPEC_ONLY | Any-coverage % |
 |------|------:|-------:|--------:|----------:|---------------:|
-| **T1** | 29 | 12 | 11 | 6 | 79.3% |
-| **T2** | 62 | 13 | 15 | 34 | 45.2% |
-| **T3** | 35 | 5 | 13 | 17 | 51.4% |
-| **Overall** | **126** | **30** | **39** | **57** | **54.8%** |
+| **T1** | 29 | 21 | 5 | 3 | 89.7% |
+| **T2** | 62 | 30 | 11 | 21 | 66.1% |
+| **T3** | 35 | 13 | 9 | 13 | 62.9% |
+| **Overall** | **126** | **64** | **25** | **37** | **70.6%** |
 
 ---
 
@@ -45,51 +45,44 @@ Heart Failure has **126 spec gaps** across 15 subcategories. Implementation: **3
 
 | Subcategory | T1/T2/T3 | DET_OK | PARTIAL | SPEC_ONLY | Coverage |
 |---|---|---:|---:|---:|---:|
-| HFrEF GDMT (15) | 8/7/0 | 12 | 2 | 1 | 93.3% |
+| HFrEF GDMT (15) | 8/7/0 | 15 | 0 | 0 | 100.0% |
 | HFpEF/HFmrEF (5) | 3/2/0 | 4 | 1 | 0 | 100.0% |
-| Device Therapy (12) | 4/8/0 | 0 | 8 | 4 | 66.7% |
-| Advanced HF (13) | 5/8/0 | 1 | 3 | 9 | 30.8% |
-| Iron Deficiency (3) | 2/1/0 | 1 | 2 | 0 | 100.0% |
-| Transitions of Care (10) | 1/4/5 | 3 | 1 | 6 | 40.0% |
+| Device Therapy (12) | 4/8/0 | 7 | 4 | 1 | 91.7% |
+| Advanced HF (13) | 5/8/0 | 4 | 2 | 7 | 46.2% |
+| Iron Deficiency (3) | 2/1/0 | 3 | 0 | 0 | 100.0% |
+| Transitions of Care (10) | 1/4/5 | 4 | 1 | 5 | 50.0% |
 | Amyloid (7) | 3/2/2 | 1 | 6 | 0 | 100.0% |
 | HCM (5) | 1/1/3 | 0 | 4 | 1 | 80.0% |
-| Other Phenotypes (16) | 0/0/16 | 2 | 9 | 5 | 68.8% |
-| Cardiorenal Syndrome (5) | 0/5/0 | 0 | 1 | 4 | 20.0% |
-| Pericardial Disease (5) | 0/1/4 | 1 | 0 | 4 | 20.0% |
-| LVAD/Transplant (9) | 1/7/1 | 0 | 0 | 9 | 0.0% |
+| Other Phenotypes (16) | 0/0/16 | 9 | 5 | 2 | 87.5% |
+| Cardiorenal Syndrome (5) | 0/5/0 | 1 | 1 | 3 | 40.0% |
+| Pericardial Disease (5) | 0/1/4 | 2 | 0 | 3 | 40.0% |
+| LVAD/Transplant (9) | 1/7/1 | 4 | 0 | 5 | 44.4% |
 | ECMO/MCS (3) | 1/1/1 | 0 | 0 | 3 | 0.0% |
 | Genetics (3) | 0/0/3 | 0 | 0 | 3 | 0.0% |
-| Cross-cutting (15) | 0/15/0 | 5 | 2 | 8 | 46.7% |
+| Cross-cutting (15) | 0/15/0 | 10 | 1 | 4 | 73.3% |
 
 ---
 
 ## 4.5 — T1 SPEC_ONLY work items (load-bearing for v2.0 Phase 1)
 
-6 T1 spec gaps with zero implementation. These are the load-bearing v2.0 Phase 1 work items for Heart Failure.
+3 T1 spec gaps with zero implementation. These are the load-bearing v2.0 Phase 1 work items for Heart Failure.
 
 | GAP-ID | Spec line | Subcategory | Detection Logic (excerpt) | Spec SAFETY | BSW pathway |
 |---|---:|---|---|---|---|
 | GAP-HF-041 | 169 | Advanced HF | HF hospitalization without discharge GDMT addition/uptitration | — | — |
 | GAP-HF-043 | 170 | Advanced HF | Advanced HF trigger signal | — | — |
-| GAP-HF-133 | 172 | Advanced HF | HF-cardiogenic shock without Impella/ECMO/VA-MCS escalation | — | — |
-| GAP-HF-036 | 192 | Transitions of Care | Discharge med list missing BB, RAASi, MRA, or SGLT2i | — | — |
-| GAP-HF-147 | 264 | LVAD/Transplant | LVAD (Z95.811) + INR not 2.0-3.0 at last check | — | — |
 | GAP-HF-156 | 277 | ECMO/MCS | VA-ECMO without Impella/IABP unloading adjunct in LV distension | — | — |
 
 ---
 
 ## 4.6 — EXTRA rules + architectural patterns
 
-**Registry-without-evaluator (1):** registry entries with no matching evaluator block body.
-
-- `gap-hf-vaccine-covid` (registry line 2199): No evaluator body matched via similarity scoring
-
 **Naming convention mismatches (4):** registry IDs not following `gap-hf-` convention.
 
-- `gap-1-attr-cm` (line 231): expected prefix `gap-hf-`, got `gap-1-`
-- `gap-2-iron-deficiency` (line 243): expected prefix `gap-hf-`, got `gap-2-`
-- `gap-6-finerenone` (line 255): expected prefix `gap-hf-`, got `gap-6-`
-- `gap-44-digoxin-toxicity` (line 279): expected prefix `gap-hf-`, got `gap-44-`
+- `gap-1-attr-cm` (line 240): expected prefix `gap-hf-`, got `gap-1-`
+- `gap-2-iron-deficiency` (line 252): expected prefix `gap-hf-`, got `gap-2-`
+- `gap-6-finerenone` (line 264): expected prefix `gap-hf-`, got `gap-6-`
+- `gap-44-digoxin-toxicity` (line 288): expected prefix `gap-hf-`, got `gap-44-`
 
 
 ---
@@ -98,34 +91,34 @@ Heart Failure has **126 spec gaps** across 15 subcategories. Implementation: **3
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-HF-001 | 124 | DET_OK | `gap-hf-35-beta-blocker` (HF-35 @3652-3676) | + \| auto-verify: preserved-from-addendum |
-| GAP-HF-002 | 125 | DET_OK | `gap-hf-002-bb-non-ebm` (HF-BB-NON-EBM @10851-10867) | BUILT 2026-06-15 (v3.0 HF calibration): HF-BB-NON-EBM evaluator - HFrEF (LVEF<=40) + on atenolol. CO |
-| GAP-HF-003 | 126 | PARTIAL_DETECTION | `gap-hf-35-beta-blocker` (HF-35 @3652-3676) | auto-verify: preserved-from-addendum |
-| GAP-HF-004 | 127 | DET_OK | `gap-hf-37-raas` (HF-37 @5173-5199) | + \| auto-verify: preserved-from-addendum |
-| GAP-HF-005 | 128 | DET_OK | `gap-hf-arni-switch` (HF-ARNI-SWITCH @10350-10374) | auto-verify: preserved-from-addendum |
-| GAP-HF-007 | 129 | DET_OK | `gap-hf-36-mra` (HF-36 @3686-3708) | + \| auto-verify: preserved-from-addendum |
-| GAP-HF-010 | 130 | DET_OK | `gap-hf-34-sglt2i` (HF-34 @3622-3647) | + \| auto-verify: preserved-from-addendum |
-| GAP-HF-014 | 131 | DET_OK | `gap-hf-18-vericiguat` (HF-18 @3803-3819) | auto-verify: preserved-from-addendum |
-| GAP-HF-016 | 143 | DET_OK | `gap-hf-79-sglt2i-hfpef` (HF-79 @4130-4150) | auto-verify: preserved-from-addendum |
-| GAP-HF-017 | 144 | DET_OK | `gap-hf-017-finerenone-mref` (HF-FINERENONE-MREF @10669-10685) | BUILT 2026-06-15 (v3.0 HF calibration): HF-FINERENONE-MREF evaluator - LVEF>=40 + K<5.0 + eGFR>=25 + |
-| GAP-HF-018 | 145 | DET_OK | `gap-hf-7-glp1ra` (HF-7 @3724-3740) | auto-verify: preserved-from-addendum |
-| GAP-HF-021 | 152 | PARTIAL_DETECTION | `gap-ep-device-crt` (EP-DEVICE-CRT @4517-4539) **[cross-module: EP]** | — \| auto-verify: broad-rule consolidation: EP-DEVICE-CRT top-matches 3 spec gaps in subcategory "Dev |
-| GAP-HF-024 | 153 | PARTIAL_DETECTION | `gap-ep-device-icd` (EP-DEVICE-ICD @4480-4506) **[cross-module: EP]** | — \| auto-verify: broad-rule consolidation: EP-DEVICE-ICD top-matches 2 spec gaps in subcategory "Dev |
-| GAP-HF-025 | 154 | PARTIAL_DETECTION | `gap-ep-device-icd` (EP-DEVICE-ICD @4480-4506) **[cross-module: EP]** | — \| auto-verify: broad-rule consolidation: EP-DEVICE-ICD top-matches 2 spec gaps in subcategory "Dev |
-| GAP-HF-026 | 155 | PARTIAL_DETECTION | `gap-ep-secondary-icd` (EP-SECONDARY-ICD @7494-7516) **[cross-module: EP]** | — \| auto-verify: Top candidate score=0.404 between PARTIAL and HIGH thresholds; tokenJaccard=0.07; n |
-| GAP-HF-028 | 168 | PARTIAL_DETECTION | `gap-hf-84-transplant-eval` (HF-84 @6225-6244) | + \| Multiple registry ids cited: gap-hf-84-transplant-eval, gap-hf-85-lvad-referral \| auto-verify: p |
+| GAP-HF-001 | 124 | DET_OK | `gap-hf-35-beta-blocker` (HF-35 @4071-4095) | + \| auto-verify: preserved-from-addendum |
+| GAP-HF-002 | 125 | DET_OK | `gap-hf-002-bb-non-ebm` (HF-BB-NON-EBM @11283-11299) | BUILT 2026-06-15 (v3.0 HF calibration): HF-BB-NON-EBM evaluator - HFrEF (LVEF<=40) + on atenolol. CO |
+| GAP-HF-003 | 126 | DET_OK | `gap-hf-003-bb-target-dose` (HF-BB-TARGET-DOSE @11342-11358) | BUILT 2026-06-15 (v3.0 HF batch): HF-BB-TARGET-DOSE - HFrEF + BB doseValue<target + HR>=60 + SBP>=10 |
+| GAP-HF-004 | 127 | DET_OK | `gap-hf-37-raas` (HF-37 @5602-5628) | + \| auto-verify: preserved-from-addendum |
+| GAP-HF-005 | 128 | DET_OK | `gap-hf-arni-switch` (HF-ARNI-SWITCH @10782-10806) | auto-verify: preserved-from-addendum |
+| GAP-HF-007 | 129 | DET_OK | `gap-hf-36-mra` (HF-36 @4105-4127) | + \| auto-verify: preserved-from-addendum |
+| GAP-HF-010 | 130 | DET_OK | `gap-hf-34-sglt2i` (HF-34 @4041-4066) | + \| auto-verify: preserved-from-addendum |
+| GAP-HF-014 | 131 | DET_OK | `gap-hf-18-vericiguat` (HF-18 @4224-4240) | auto-verify: preserved-from-addendum |
+| GAP-HF-016 | 143 | DET_OK | `gap-hf-79-sglt2i-hfpef` (HF-79 @4559-4579) | auto-verify: preserved-from-addendum |
+| GAP-HF-017 | 144 | DET_OK | `gap-hf-017-finerenone-mref` (HF-FINERENONE-MREF @11101-11117) | BUILT 2026-06-15 (v3.0 HF calibration): HF-FINERENONE-MREF evaluator - LVEF>=40 + K<5.0 + eGFR>=25 + |
+| GAP-HF-018 | 145 | DET_OK | `gap-hf-7-glp1ra` (HF-7 @4145-4161) | auto-verify: preserved-from-addendum |
+| GAP-HF-021 | 152 | PARTIAL_DETECTION | `gap-ep-device-crt` (EP-DEVICE-CRT @4946-4968) **[cross-module: EP]** | — \| auto-verify: broad-rule consolidation: EP-DEVICE-CRT top-matches 3 spec gaps in subcategory "Dev |
+| GAP-HF-024 | 153 | DET_OK | `gap-hf-024-icd-primary-ischemic` (HF-ICD-PRIMARY-ISCHEMIC @11432-11447) | BUILT 2026-06-15 (v3.0 HF batch): HF-ICD-PRIMARY-ISCHEMIC - LVEF<=35 + ischemic + BB+RAASi + GDMT>=3 |
+| GAP-HF-025 | 154 | DET_OK | `gap-hf-025-icd-primary-nicm` (HF-ICD-PRIMARY-NICM @11463-11478) | BUILT 2026-06-15 (v3.0 HF batch): HF-ICD-PRIMARY-NICM - LVEF<=35 + NICM(I42.0/.9) + BB+RAASi + no IC |
+| GAP-HF-026 | 155 | DET_OK | `gap-hf-026-icd-secondary` (HF-ICD-SECONDARY @11488-11503) | BUILT 2026-06-15 (v3.0 HF batch): HF-ICD-SECONDARY - VT(I47.2)/VF(I49.01/.02)/arrest(I46) + no ICD.  |
+| GAP-HF-028 | 168 | PARTIAL_DETECTION | `gap-hf-84-transplant-eval` (HF-84 @6654-6673) | + \| Multiple registry ids cited: gap-hf-84-transplant-eval, gap-hf-85-lvad-referral \| auto-verify: p |
 | GAP-HF-041 | 169 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-HF-043 | 170 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-HF-132 | 171 | PARTIAL_DETECTION | `gap-hf-73-hyponatremia` (HF-73 @4010-4025) | auto-verify: preserved-from-addendum |
-| GAP-HF-133 | 172 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-HF-033 | 185 | DET_OK | `gap-hf-033-iron-def-iv` (HF-IRON-DEF-IV @10775-10791) | BUILT 2026-06-15 (v3.0 HF calibration): HF-IRON-DEF-IV evaluator - HF + ferritin<100 + not-on-IV-iro |
-| GAP-HF-034 | 186 | PARTIAL_DETECTION | `gap-hf-iron-iv-monitoring` (HF-IRON-IV-MONITORING @10627-10650) | auto-verify: preserved-from-addendum |
-| GAP-HF-036 | 192 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-HF-051 | 206 | PARTIAL_DETECTION | `gap-hf-90-amyloid-biomarker` (HF-90 @6403-6421) | auto-verify: preserved-from-addendum |
-| GAP-HF-053 | 207 | PARTIAL_DETECTION | `gap-hf-90-amyloid-biomarker` (HF-90 @6403-6421) | auto-verify: preserved-from-addendum |
-| GAP-HF-054 | 208 | DET_OK | `gap-hf-054-attr-dmt` (HF-ATTR-DMT @10826-10842) | BUILT 2026-06-15 (v3.0 HF calibration): HF-ATTR-DMT evaluator - E85.82/E85.1 + not-on-DMT. COR 1, AT |
-| GAP-HF-057 | 217 | PARTIAL_DETECTION | `gap-hf-12-hcm-screening` (HF-12 @3748-3763) | auto-verify: preserved-from-addendum |
-| GAP-HF-147 | 264 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
+| GAP-HF-132 | 171 | DET_OK | `gap-hf-132-tolvaptan-hyponatremia` (HF-TOLVAPTAN-HYPONATREMIA @12045-12060) | BUILT 2026-06-15 (v3.0 HF batch): HF-TOLVAPTAN-HYPONATREMIA - HF + Na<125 + no tolvaptan (mgmt eval) |
+| GAP-HF-133 | 172 | DET_OK | `gap-hf-133-cs-mcs-escalation` (HF-CS-MCS-ESCALATION @12074-12089) | BUILT 2026-06-15 (v3.0 HF batch): HF-CS-MCS-ESCALATION - HF + shock (R57.0) + inotrope + no MCS (CPT |
+| GAP-HF-033 | 185 | DET_OK | `gap-hf-033-iron-def-iv` (HF-IRON-DEF-IV @11207-11223) | BUILT 2026-06-15 (v3.0 HF calibration): HF-IRON-DEF-IV evaluator - HF + ferritin<100 + not-on-IV-iro |
+| GAP-HF-034 | 186 | DET_OK | `gap-hf-034-iron-functional` (HF-IRON-FUNCTIONAL @11792-11808) | BUILT 2026-06-15 (v3.0 HF batch): HF-IRON-FUNCTIONAL - HF + ferritin 100-299 + TSAT<20 + no IV iron. |
+| GAP-HF-036 | 192 | DET_OK | `gap-hf-036-gdmt-incomplete` (HF-GDMT-INCOMPLETE @11858-11873) | BUILT 2026-06-15 (v3.0 HF batch): HF-GDMT-INCOMPLETE - HFrEF + <=2 of 4 pillars. COR 1. Pattern B: r |
+| GAP-HF-051 | 206 | PARTIAL_DETECTION | `gap-hf-90-amyloid-biomarker` (HF-90 @6835-6853) | auto-verify: preserved-from-addendum |
+| GAP-HF-053 | 207 | PARTIAL_DETECTION | `gap-hf-90-amyloid-biomarker` (HF-90 @6835-6853) | auto-verify: preserved-from-addendum |
+| GAP-HF-054 | 208 | DET_OK | `gap-hf-054-attr-dmt` (HF-ATTR-DMT @11258-11274) | BUILT 2026-06-15 (v3.0 HF calibration): HF-ATTR-DMT evaluator - E85.82/E85.1 + not-on-DMT. COR 1, AT |
+| GAP-HF-057 | 217 | PARTIAL_DETECTION | `gap-hf-12-hcm-screening` (HF-12 @4169-4184) | auto-verify: preserved-from-addendum |
+| GAP-HF-147 | 264 | DET_OK | `gap-hf-147-lvad-inr` (HF-LVAD-INR @12186-12202) | BUILT 2026-06-15 (v3.0 HF batch): HF-LVAD-INR SAFETY - LVAD (Z95.811) + INR outside 2.0-3.0. COR 1.  |
 | GAP-HF-156 | 277 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 
 ---
@@ -148,20 +141,20 @@ No T1 SPEC_ONLY gaps carry literal BSW pathway tags in CK v4.0 spec text. Pathwa
 
 ## 7. Working hypothesis verdict
 
-**For HF:** Moderate implementation coverage; medication/screening surfaces typically built, procedural surfaces often lighter.
+**For HF:** Strong implementation coverage; module is broadly built.
 
-Coverage data: 69/126 any-coverage (54.8%); 30/126 DET_OK only (23.8%); 39 PARTIAL via broad-rule consolidation or partial-trigger match; 57 SPEC_ONLY.
+Coverage data: 89/126 any-coverage (70.6%); 64/126 DET_OK only (50.8%); 25 PARTIAL via broad-rule consolidation or partial-trigger match; 37 SPEC_ONLY.
 
-Rules-per-DET_OK efficiency: 56 registry rules / 30 DET_OK = 1.87.
+Rules-per-DET_OK efficiency: 90 registry rules / 64 DET_OK = 1.41.
 
 ---
 
 ## 8. Implications for v2.0
 
 v2.0 Phase 1 (T1 priority) work items for HF:
-- **6 T1 SPEC_ONLY** gaps requiring full build (detection + UI + tests)
-- **11 T1 PARTIAL** gaps requiring hardening (broad-rule discrimination, missing exclusions, dose-protocol specificity)
-- **12 T1 DET_OK** gaps requiring test coverage + UI polish to reach PRODUCTION_GRADE
+- **3 T1 SPEC_ONLY** gaps requiring full build (detection + UI + tests)
+- **5 T1 PARTIAL** gaps requiring hardening (broad-rule discrimination, missing exclusions, dose-protocol specificity)
+- **21 T1 DET_OK** gaps requiring test coverage + UI polish to reach PRODUCTION_GRADE
 
 Cross-module satisfaction (HF Device Therapy → EP CRT/ICD pattern; CAD-027 → PV; etc.) is captured structurally in `ruleBodyCite.evaluatorModule` per AUDIT_METHODOLOGY.md §2.1.C.
 
@@ -173,8 +166,8 @@ Cross-module satisfaction (HF Device Therapy → EP CRT/ICD pattern; CAD-027 →
 
 Rows where the auto-classifier was wrong and the audit author corrected the classification with explicit reasoning:
 
-- **GAP-HF-073** (T3, SPEC_ONLY, no cite): MANUAL OVERRIDE: auto-classifier matched HF-073 (radiation cardiomyopathy) to VD-RADIATION cross-module evaluator. FALSE POSITIVE — VD-RADIATION covers radiation valve disease, different clinical scenario. HF-073 has no in-module or cross-module evaluator coverage. SPEC_ONLY.
-- **GAP-HF-151** (T2, SPEC_ONLY, no cite): MANUAL OVERRIDE: auto-classifier matched HF-151 (post-cardiac-transplant HF) to CAD-CARDIAC-TRANSPLANT-CAD cross-module evaluator. FALSE POSITIVE — CAD evaluator covers cardiac allograft vasculopathy (CAV; post-transplant CAD), distinct from HF graft dysfunction. HF-151 has no specific evaluator coverage. SPEC_ONLY.
+- **GAP-HF-073** (T3, DET_OK, `gap-hf-073-radiation-surv` (HF-RADIATION-SURV)): BUILT 2026-06-15 (v3.0 HF batch): HF-RADIATION-SURV - radiation (Z92.3) + structural cardiac dx + echo_months>=12. COR 2a. Pattern A narrowing. SPEC_ONLY -> DET_OK (supersedes prior MANUAL OVERRIDE).
+- **GAP-HF-151** (T2, DET_OK, `gap-hf-151-transplant-cav` (HF-TRANSPLANT-CAV)): BUILT 2026-06-15 (v3.0 HF batch): HF-TRANSPLANT-CAV - transplant (Z94.1) + coronary_cta_months>=12. COR 1. SPEC_ONLY -> DET_OK (supersedes prior MANUAL OVERRIDE).
 
 
 ---
@@ -195,18 +188,13 @@ Rows where the auto-classifier was wrong and the audit author corrected the clas
 
 ## 11. Cross-module synthesis (per-module slice)
 
-9 cross-module satisfaction case(s) where HF spec gap is satisfied by an evaluator owned by another module:
+4 cross-module satisfaction case(s) where HF spec gap is satisfied by an evaluator owned by another module:
 
 | Spec gap | Tier | Class | Owning module | Evaluator block |
 |---|---|---|---|---|
 | GAP-HF-021 | T1 | PARTIAL_DETECTION | EP | `EP-DEVICE-CRT` |
-| GAP-HF-024 | T1 | PARTIAL_DETECTION | EP | `EP-DEVICE-ICD` |
-| GAP-HF-025 | T1 | PARTIAL_DETECTION | EP | `EP-DEVICE-ICD` |
-| GAP-HF-026 | T1 | PARTIAL_DETECTION | EP | `EP-SECONDARY-ICD` |
 | GAP-HF-022 | T2 | PARTIAL_DETECTION | EP | `EP-DEVICE-CRT` |
 | GAP-HF-023 | T2 | PARTIAL_DETECTION | EP | `EP-DEVICE-CRT` |
-| GAP-HF-072 | T3 | PARTIAL_DETECTION | CAD | `CAD-TAKOTSUBO` |
-| GAP-HF-078 | T2 | PARTIAL_DETECTION | EP | `EP-EARLY-RHYTHM` |
 | GAP-HF-085 | T2 | PARTIAL_DETECTION | EP | `EP-INAPPROPRIATE-SHOCKS` |
 
 ### 11.5 — Sequencing notes
@@ -231,10 +219,10 @@ Per-module wall-clock data lives in `docs/audit/canonical/audit_runs.jsonl` (app
 
 ## 14. Audit verdict
 
-**HF module: MODERATELY BUILT.**
+**HF module: BROADLY BUILT.**
 
-- 30 DET_OK (23.8%), 39 PARTIAL (31.0%), 57 SPEC_ONLY (45.2%)
-- 12/29 T1 priority gaps DET_OK; 6 T1 SPEC_ONLY gaps require v2.0 Phase 1 work
+- 64 DET_OK (50.8%), 25 PARTIAL (19.8%), 37 SPEC_ONLY (29.4%)
+- 21/29 T1 priority gaps DET_OK; 3 T1 SPEC_ONLY gaps require v2.0 Phase 1 work
 - Audit method: `rule-body-citation-AUDIT-030D`. Generated from canonical crosswalk on 2026-05-04.
 
 ---

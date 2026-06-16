@@ -2,15 +2,15 @@
   "finding": "AUDIT-118",
   "generator": "backend/scripts/genRxnormIngredientMap.mjs",
   "source": "https://rxnav.nlm.nih.gov/REST/rxcui/{IN}/related.json?tty=SCD+SBD+SCDC+SCDG+SBDG+BPCK+GPCK",
-  "retrieved": "2026-06-15",
+  "retrieved": "2026-06-16",
   "candidateUniverse": {
-    "valuesets": 94,
+    "valuesets": 112,
     "engineInline": 65,
-    "union": 117
+    "union": 135
   },
-  "ingredientINCount": 101,
-  "mapEntryCount": 3452,
-  "multiIngredientEntries": 316,
+  "ingredientINCount": 119,
+  "mapEntryCount": 4201,
+  "multiIngredientEntries": 363,
   "perIngredient": {
     "703": {
       "name": "amiodarone",
@@ -23,6 +23,10 @@
     "1202": {
       "name": "atenolol",
       "descendantCount": 37
+    },
+    "1256": {
+      "name": "azathioprine",
+      "descendantCount": 21
     },
     "1808": {
       "name": "bumetanide",
@@ -75,6 +79,10 @@
     "3443": {
       "name": "diltiazem",
       "descendantCount": 108
+    },
+    "3616": {
+      "name": "dobutamine",
+      "descendantCount": 12
     },
     "3827": {
       "name": "enalapril",
@@ -132,9 +140,21 @@
       "name": "mepivacaine",
       "descendantCount": 30
     },
+    "6809": {
+      "name": "metformin",
+      "descendantCount": 204
+    },
     "6813": {
       "name": "methadone",
       "descendantCount": 32
+    },
+    "6835": {
+      "name": "methimazole",
+      "descendantCount": 28
+    },
+    "6851": {
+      "name": "methotrexate",
+      "descendantCount": 98
     },
     "6916": {
       "name": "metolazone",
@@ -156,9 +176,17 @@
       "name": "nifedipine",
       "descendantCount": 39
     },
+    "7617": {
+      "name": "octreotide",
+      "descendantCount": 37
+    },
     "7646": {
       "name": "omeprazole",
       "descendantCount": 87
+    },
+    "8640": {
+      "name": "prednisone",
+      "descendantCount": 35
     },
     "8700": {
       "name": "procainamide",
@@ -172,6 +200,10 @@
       "name": "propranolol",
       "descendantCount": 62
     },
+    "8794": {
+      "name": "propylthiouracil",
+      "descendantCount": 4
+    },
     "9068": {
       "name": "quinidine",
       "descendantCount": 17
@@ -183,6 +215,10 @@
     "9997": {
       "name": "spironolactone",
       "descendantCount": 55
+    },
+    "10582": {
+      "name": "levothyroxine",
+      "descendantCount": 242
     },
     "11170": {
       "name": "verapamil",
@@ -272,9 +308,21 @@
       "name": "losartan",
       "descendantCount": 29
     },
+    "52769": {
+      "name": "milrinone",
+      "descendantCount": 8
+    },
+    "68149": {
+      "name": "mycophenolate mofetil",
+      "descendantCount": 22
+    },
     "69749": {
       "name": "valsartan",
       "descendantCount": 93
+    },
+    "72435": {
+      "name": "anakinra",
+      "descendantCount": 5
     },
     "82122": {
       "name": "levofloxacin",
@@ -324,6 +372,14 @@
       "name": "olmesartan",
       "descendantCount": 51
     },
+    "338817": {
+      "name": "agalsidase beta",
+      "descendantCount": 8
+    },
+    "358257": {
+      "name": "tolvaptan",
+      "descendantCount": 35
+    },
     "475968": {
       "name": "liraglutide",
       "descendantCount": 13
@@ -331,6 +387,14 @@
     "613391": {
       "name": "prasugrel",
       "descendantCount": 10
+    },
+    "763450": {
+      "name": "rilonacept",
+      "descendantCount": 5
+    },
+    "853491": {
+      "name": "canakinumab",
+      "descendantCount": 5
     },
     "861634": {
       "name": "pitavastatin",
@@ -396,6 +460,10 @@
       "name": "semaglutide",
       "descendantCount": 65
     },
+    "2054252": {
+      "name": "migalastat",
+      "descendantCount": 9
+    },
     "2274394": {
       "name": "ferric derisomaltose",
       "descendantCount": 9
@@ -411,6 +479,10 @@
     "2638675": {
       "name": "sotagliflozin",
       "descendantCount": 10
+    },
+    "2691830": {
+      "name": "agalsidase alfa",
+      "descendantCount": 0
     },
     "2698312": {
       "name": "acoramidis",

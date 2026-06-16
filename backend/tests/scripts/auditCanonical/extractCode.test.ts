@@ -190,7 +190,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
   });
 
   it.each([
-    ['HF', 'HEART_FAILURE', 56], // 48 + 8 (v3.0 HF buildout calibration sample, 2026-06-15)
+    ['HF', 'HEART_FAILURE', 90], // 56 + 34 (v3.0 HF full buildout batch, 2026-06-15, feat/hf-buildable-gap-batch)
     ['EP', 'ELECTROPHYSIOLOGY', 48],
     ['SH', 'STRUCTURAL_HEART', 25],
     ['CAD', 'CORONARY_INTERVENTION', 77],
@@ -201,16 +201,16 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     expect(registry.length).toBe(count);
   });
 
-  it('VHD evaluator extraction includes VD-PANNUS at line 11134', () => {
-    // AUDIT-110 line-pinned-assertion recurrence: the v3.0 HF buildout calibration
-    // sample (8 new HF evaluators + value-set imports + 8 registry entries) shifted
-    // gapRuleEngine.ts (10806 -> 11015 evaluators -> 11134 with the ingest signature-expansion).
+  it('VHD evaluator extraction includes VD-PANNUS at line 12547', () => {
+    // AUDIT-110 line-pinned-assertion recurrence: the v3.0 HF buildout shifted gapRuleEngine.ts
+    // (10806 -> 11015 -> 11134 ingest signature-expansion -> 12547 by the v3.0 HF FULL buildout
+    // batch, 2026-06-15: 34 new HF evaluators across 5 chunks + value-set imports + 5 legacy fixes).
     // Literal bumped here; the content-anchor remediation remains AUDIT-110's separate scope.
     const cfg = MODULE_CONFIGS.find((m) => m.code === 'VHD')!;
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(11134);
+    expect(pannus!.commentLine).toBe(12547);
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });

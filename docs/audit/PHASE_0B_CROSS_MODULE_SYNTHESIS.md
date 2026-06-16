@@ -10,13 +10,13 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 
 | Module | Spec gaps | DET_OK | PARTIAL | SPEC_ONLY | Any-coverage | DET_OK rate |
 |---|---:|---:|---:|---:|---:|---:|
-| HF | 126 | 30 | 39 | 57 | 69/126 (54.8%) | 23.8% |
+| HF | 126 | 64 | 25 | 37 | 89/126 (70.6%) | 50.8% |
 | EP | 89 | 18 | 29 | 42 | 47/89 (52.8%) | 20.2% |
 | SH | 88 | 0 | 30 | 58 | 30/88 (34.1%) | 0.0% |
 | CAD | 90 | 29 | 27 | 34 | 56/90 (62.2%) | 32.2% |
 | VHD | 105 | 0 | 11 | 94 | 11/105 (10.5%) | 0.0% |
 | PV | 105 | 16 | 14 | 75 | 30/105 (28.6%) | 15.2% |
-| **TOTAL** | **603** | **93** | **150** | **360** | **243/603 (40.3%)** | **15.4%** |
+| **TOTAL** | **603** | **127** | **136** | **340** | **263/603 (43.6%)** | **21.1%** |
 
 ---
 
@@ -24,7 +24,7 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 
 | Module | T1 total | T1 DET_OK | T1 PARTIAL | T1 SPEC_ONLY | T1 any-coverage |
 |---|---:|---:|---:|---:|---:|
-| HF | 29 | 12 | 11 | 6 | 79.3% |
+| HF | 29 | 21 | 5 | 3 | 89.7% |
 | EP | 15 | 5 | 7 | 3 | 80.0% |
 | SH | 13 | 0 | 8 | 5 | 61.5% |
 | CAD | 18 | 8 | 4 | 6 | 66.7% |
@@ -54,7 +54,7 @@ Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-rel
 
 ## 4. Cross-module satisfaction patterns
 
-18 cross-module satisfaction case(s) where a spec gap in module X is satisfied by an evaluator owned by module Y.
+13 cross-module satisfaction case(s) where a spec gap in module X is satisfied by an evaluator owned by module Y.
 
 ### Pattern summary
 
@@ -63,8 +63,7 @@ Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-rel
 | CAD | PV | 1 | GAP-CAD-027 |
 | EP | CAD | 1 | GAP-EP-028 |
 | EP | VHD | 2 | GAP-EP-007, GAP-EP-008 |
-| HF | CAD | 1 | GAP-HF-072 |
-| HF | EP | 8 | GAP-HF-021, GAP-HF-024, GAP-HF-025, GAP-HF-026, ... |
+| HF | EP | 4 | GAP-HF-021, GAP-HF-022, GAP-HF-023, GAP-HF-085 |
 | SH | CAD | 2 | GAP-SH-048, GAP-SH-052 |
 | SH | EP | 1 | GAP-SH-060 |
 | SH | VHD | 1 | GAP-SH-020 |
@@ -75,13 +74,8 @@ Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-rel
 | Spec gap | Tier | Class | From module | Owning evaluator block | To module |
 |---|---|---|---|---|---|
 | GAP-HF-021 | T1 | PARTIAL_DETECTION | HF | `EP-DEVICE-CRT` | EP |
-| GAP-HF-024 | T1 | PARTIAL_DETECTION | HF | `EP-DEVICE-ICD` | EP |
-| GAP-HF-025 | T1 | PARTIAL_DETECTION | HF | `EP-DEVICE-ICD` | EP |
-| GAP-HF-026 | T1 | PARTIAL_DETECTION | HF | `EP-SECONDARY-ICD` | EP |
 | GAP-HF-022 | T2 | PARTIAL_DETECTION | HF | `EP-DEVICE-CRT` | EP |
 | GAP-HF-023 | T2 | PARTIAL_DETECTION | HF | `EP-DEVICE-CRT` | EP |
-| GAP-HF-072 | T3 | PARTIAL_DETECTION | HF | `CAD-TAKOTSUBO` | CAD |
-| GAP-HF-078 | T2 | PARTIAL_DETECTION | HF | `EP-EARLY-RHYTHM` | EP |
 | GAP-HF-085 | T2 | PARTIAL_DETECTION | HF | `EP-INAPPROPRIATE-SHOCKS` | EP |
 | GAP-EP-007 | T1 | DET_OK | EP | `VD-6` | VHD |
 | GAP-EP-008 | T1 | PARTIAL_DETECTION | EP | `VD-4` | VHD |
@@ -101,7 +95,6 @@ Subcategories with 0% any-coverage indicate entire procedural surfaces missing i
 
 | Module | Subcategory | Gaps | DET_OK | PARTIAL | SPEC_ONLY |
 |---|---|---:|---:|---:|---:|
-| HF | LVAD/Transplant | 9 | 0 | 0 | 9 |
 | HF | ECMO/MCS | 3 | 0 | 0 | 3 |
 | HF | Genetics | 3 | 0 | 0 | 3 |
 | EP | Cardiac Arrest | 4 | 0 | 0 | 4 |
@@ -128,7 +121,7 @@ Subcategories with 0% any-coverage indicate entire procedural surfaces missing i
 | PV | AVM | 3 | 0 | 0 | 3 |
 | PV | Vascular Access | 3 | 0 | 0 | 3 |
 
-**Total: 26 subcategories with 0% any-coverage across 6 modules.**
+**Total: 25 subcategories with 0% any-coverage across 6 modules.**
 
 ---
 

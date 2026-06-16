@@ -57,7 +57,8 @@ describe('AUDIT-118 expandToIngredients - behavior', () => {
 describe('AUDIT-118 coverage guard - asset covers every medication code the live value sets reference', () => {
   // Codes that are NOT RxNorm med concepts (guideline-year string literals caught
   // by the extraction regex); RxNav returns no TTY for these. Documented allowlist.
-  const NON_DRUG_LITERALS = new Set(['2010', '2012', '2016', '2022', '2024']);
+  // 2013 (EACVI/ASE radiation) + 2014 (HRS sarcoid) guidelineVersion years added by the v3.0 HF batch.
+  const NON_DRUG_LITERALS = new Set(['2010', '2012', '2013', '2014', '2016', '2022', '2024']);
 
   const QUOTED_RXCUI = /'(\d{3,7})'/g;
 

@@ -46,16 +46,8 @@ interface Override {
 
 export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
   HF: {
-    'GAP-HF-073': {
-      classification: 'SPEC_ONLY',
-      auditNote:
-        'MANUAL OVERRIDE: auto-classifier matched HF-073 (radiation cardiomyopathy) to VD-RADIATION cross-module evaluator. FALSE POSITIVE — VD-RADIATION covers radiation valve disease, different clinical scenario. HF-073 has no in-module or cross-module evaluator coverage. SPEC_ONLY.',
-    },
-    'GAP-HF-151': {
-      classification: 'SPEC_ONLY',
-      auditNote:
-        'MANUAL OVERRIDE: auto-classifier matched HF-151 (post-cardiac-transplant HF) to CAD-CARDIAC-TRANSPLANT-CAD cross-module evaluator. FALSE POSITIVE — CAD evaluator covers cardiac allograft vasculopathy (CAV; post-transplant CAD), distinct from HF graft dysfunction. HF-151 has no specific evaluator coverage. SPEC_ONLY.',
-    },
+    // (GAP-HF-073 + GAP-HF-151 prior MANUAL OVERRIDE SPEC_ONLY entries removed 2026-06-15: both now have
+    //  authored evaluators in the v3.0 HF full buildout batch -> DET_OK entries below.)
     // v3.0 HF buildout calibration sample (2026-06-15): 8 new evaluators authored + firing
     // (backend/tests/gapRules/hfCalibrationBuildout.test.ts), operator clinical sign-off 2026-06-15.
     // Explicit DET_OK flip (reconcile is fuzzy name-match per AUDIT-106; overrides are deterministic).
@@ -99,6 +91,43 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
       registryId: 'gap-hf-002-bb-non-ebm',
       auditNote: 'BUILT 2026-06-15 (v3.0 HF calibration): HF-BB-NON-EBM evaluator - HFrEF (LVEF<=40) + on atenolol. COR 1. Operator ruling: nebivolol dropped (SENIORS). Data-limit: metoprolol-tartrate not IN-distinguishable from succinate. Proof: hfCalibrationBuildout.test.ts. PARTIAL -> DET_OK.',
     },
+    // v3.0 HF FULL buildout batch (2026-06-15, feat/hf-buildable-gap-batch): 34 new evaluators across 5
+    // chunks, clinically reviewed in paced chunks (operator sign-off 2026-06-15). Patterns A/B/C.
+    // Proof: backend/tests/ingestion/hfBuildoutBatch.test.ts. Explicit DET_OK flips (reconcile is fuzzy).
+    'GAP-HF-003': { classification: 'DET_OK', registryId: 'gap-hf-003-bb-target-dose', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-BB-TARGET-DOSE - HFrEF + BB doseValue<target + HR>=60 + SBP>=100. COR 1. PARTIAL -> DET_OK.' },
+    'GAP-HF-011': { classification: 'DET_OK', registryId: 'gap-hf-011-sglt2i-egfr-floor', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-SGLT2I-EGFR-FLOOR - HF + eGFR<20 + no SGLT2i (awareness/documentation). COR 1. PARTIAL -> DET_OK.' },
+    'GAP-HF-015': { classification: 'DET_OK', registryId: 'gap-hf-015-digoxin-high-elderly', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-DIGOXIN-HIGH-ELDERLY SAFETY - HF + age>75 + eGFR<50 + digoxin>0.125. COR 3 (Harm). SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-024': { classification: 'DET_OK', registryId: 'gap-hf-024-icd-primary-ischemic', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-ICD-PRIMARY-ISCHEMIC - LVEF<=35 + ischemic + BB+RAASi + GDMT>=3mo + no ICD. COR 1. Pattern C duration gate. PARTIAL -> DET_OK.' },
+    'GAP-HF-025': { classification: 'DET_OK', registryId: 'gap-hf-025-icd-primary-nicm', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-ICD-PRIMARY-NICM - LVEF<=35 + NICM(I42.0/.9) + BB+RAASi + no ICD. COR 1. Operator: +I42.9. PARTIAL -> DET_OK.' },
+    'GAP-HF-026': { classification: 'DET_OK', registryId: 'gap-hf-026-icd-secondary', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-ICD-SECONDARY - VT(I47.2)/VF(I49.01/.02)/arrest(I46) + no ICD. COR 1. Specific subcodes (Pattern A). PARTIAL -> DET_OK.' },
+    'GAP-HF-031': { classification: 'DET_OK', registryId: 'gap-hf-031-lead-extraction', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-LEAD-EXTRACTION - CIED + device infection/complication (T82.6/.7/.1). COR 1. SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-126': { classification: 'DET_OK', registryId: 'gap-hf-126-ccm-candidate', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-CCM-CANDIDATE - LVEF 25-45 + NYHA III + QRS<130 + GDMT. COR 2b. Path-B nyha/qrs keys. SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-127': { classification: 'DET_OK', registryId: 'gap-hf-127-wcd-bridge', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-WCD-BRIDGE - recent MI + LVEF<=35 + no ICD. COR 2b. Path-B: post-MI window not timed. SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-061': { classification: 'DET_OK', registryId: 'gap-hf-061-fabry-ert', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-FABRY-ERT - Fabry (E75.21) + no agalsidase/migalastat. COR 1. RXNORM_FABRY_DMT RxNav-verified. PARTIAL -> DET_OK.' },
+    'GAP-HF-062': { classification: 'DET_OK', registryId: 'gap-hf-062-sarcoid-avblock', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-SARCOID-AVBLOCK - age<60 + AV block (I44.1/.2) + no D86. COR 2a. PARTIAL -> DET_OK.' },
+    'GAP-HF-063': { classification: 'DET_OK', registryId: 'gap-hf-063-sarcoid-immunosupp', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-SARCOID-IMMUNOSUPP - cardiac sarcoid (D86.85) + no corticosteroid/steroid-sparing. COR 2a. PARTIAL -> DET_OK.' },
+    'GAP-HF-065': { classification: 'DET_OK', registryId: 'gap-hf-065-tachy-cm', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-TACHY-CM - HF + LVEF<50 + HR>100 + no rate/rhythm control. COR 2a. Path-B: PVC-burden arm dropped. SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-072': { classification: 'DET_OK', registryId: 'gap-hf-072-takotsubo-echo', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-TAKOTSUBO-ECHO - Takotsubo (I51.81) + no recovery echo (echo_months>=2). COR 2a. PARTIAL -> DET_OK.' },
+    'GAP-HF-073': { classification: 'DET_OK', registryId: 'gap-hf-073-radiation-surv', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-RADIATION-SURV - radiation (Z92.3) + structural cardiac dx + echo_months>=12. COR 2a. Pattern A narrowing. SPEC_ONLY -> DET_OK (supersedes prior MANUAL OVERRIDE).' },
+    'GAP-HF-074': { classification: 'DET_OK', registryId: 'gap-hf-074-arvc-icd', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-ARVC-ICD - I42.8 + sustained VT (I47.2) + no ICD. COR 1. Operator: I42.8+VT pairing (Pattern A, no specific ARVC code). SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-032': { classification: 'DET_OK', registryId: 'gap-hf-032-iron-screen', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-IRON-SCREEN - anemic HF (Hgb<12) + ferritin absent. COR 1. Path-B narrowing to anemic (operator). PARTIAL -> DET_OK.' },
+    'GAP-HF-034': { classification: 'DET_OK', registryId: 'gap-hf-034-iron-functional', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-IRON-FUNCTIONAL - HF + ferritin 100-299 + TSAT<20 + no IV iron. COR 2a. Complements HF-033. PARTIAL -> DET_OK.' },
+    'GAP-HF-036': { classification: 'DET_OK', registryId: 'gap-hf-036-gdmt-incomplete', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-GDMT-INCOMPLETE - HFrEF + <=2 of 4 pillars. COR 1. Pattern B: reframed to current meds. SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-076': { classification: 'DET_OK', registryId: 'gap-hf-076-stage-b', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-STAGE-B - no HF dx + LVEF<40 + MI/CAD + no ACEi-ARB/BB. COR 1. Operator: LVEF<40 tighten. SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-078': { classification: 'DET_OK', registryId: 'gap-hf-078-af-rate', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-AF-RATE - HF + chronic AF (I48.2/.1x) + HR>110 + no rate control. COR 1. PARTIAL -> DET_OK.' },
+    'GAP-HF-080': { classification: 'DET_OK', registryId: 'gap-hf-080-thyroid', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-THYROID - HF + overt thyroid (TSH>10/<0.1) + untreated. COR 1. Operator: overt-only. SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-082': { classification: 'DET_OK', registryId: 'gap-hf-082-metformin-renal', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-METFORMIN-RENAL SAFETY - HF + CKD + metformin + eGFR<45. COR 3 (Harm) at <30. SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-086': { classification: 'DET_OK', registryId: 'gap-hf-086-preg-teratogen', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-PREG-TERATOGEN SAFETY - HF + pregnancy (O/Z33/Z34) + teratogenic GDMT. COR 3 (Harm). SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-047': { classification: 'DET_OK', registryId: 'gap-hf-047-inotrope-dependence', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-INOTROPE-DEPENDENCE - HF + on milrinone/dobutamine. COR 1 (advanced HF referral). SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-132': { classification: 'DET_OK', registryId: 'gap-hf-132-tolvaptan-hyponatremia', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-TOLVAPTAN-HYPONATREMIA - HF + Na<125 + no tolvaptan (mgmt eval). COR 2b. Soft framing. PARTIAL -> DET_OK.' },
+    'GAP-HF-133': { classification: 'DET_OK', registryId: 'gap-hf-133-cs-mcs-escalation', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-CS-MCS-ESCALATION - HF + shock (R57.0) + inotrope + no MCS (CPT). COR 2a. Inotrope-refractory proxy. SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-139': { classification: 'DET_OK', registryId: 'gap-hf-139-crs4-screen', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-CRS4-SCREEN - no HF + eGFR<30 + no NP. COR 2a. Path-B NP-absence proxy. SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-144': { classification: 'DET_OK', registryId: 'gap-hf-144-pericarditis-il1', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-PERICARDITIS-IL1 - pericarditis (I30) + corticosteroid + no IL-1 inhibitor. COR 2a. RHAPSODY. SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-027': { classification: 'DET_OK', registryId: 'gap-hf-027-cardiomems', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-CARDIOMEMS - HF + NYHA III + elevated NP (GUIDE-HF arm) + no CardioMEMS. COR 2b. NP-arm substitution. PARTIAL -> DET_OK.' },
+    'GAP-HF-147': { classification: 'DET_OK', registryId: 'gap-hf-147-lvad-inr', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-LVAD-INR SAFETY - LVAD (Z95.811) + INR outside 2.0-3.0. COR 1. SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-148': { classification: 'DET_OK', registryId: 'gap-hf-148-lvad-gib', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-LVAD-GIB - LVAD + GI hemorrhage (K92.0/.1/.2) + no octreotide. COR 2b. SPEC_ONLY -> DET_OK.' },
+    'GAP-HF-151': { classification: 'DET_OK', registryId: 'gap-hf-151-transplant-cav', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-TRANSPLANT-CAV - transplant (Z94.1) + coronary_cta_months>=12. COR 1. SPEC_ONLY -> DET_OK (supersedes prior MANUAL OVERRIDE).' },
+    'GAP-HF-152': { classification: 'DET_OK', registryId: 'gap-hf-152-transplant-biopsy', auditNote: 'BUILT 2026-06-15 (v3.0 HF batch): HF-TRANSPLANT-BIOPSY - transplant (Z94.1) + no EMB (CPT 93505). COR 1. Presence proxy. SPEC_ONLY -> DET_OK.' },
   },
   EP: {
     // EP audit 2026-06-08 (operator-approved): 13 DET_OK -> PARTIAL_DETECTION flips. 12 are the
