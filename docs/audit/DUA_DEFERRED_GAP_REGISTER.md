@@ -350,3 +350,18 @@ The intersection (Tranche-2 SYNTHEA-EXPANDABLE AND HIGH-PILOT-VALUE) is the cand
 - **DET_OK-watch exclusions:** four EP gaps (GAP-EP-018 AHRE, GAP-EP-023 Brugada, GAP-EP-050 / GAP-EP-089 inappropriate-ICD-shocks) carry a DET_OK evaluator that fires on a proxy rather than the true blocked trigger (device-interrogation / ECG-morphology). They are NOT counted here (filter excludes DET_OK) but are flagged: their detection is proxy-only until the real device/ECG feed lands.
 - **Clinical-tier (T1/T2/T3) in the tables is the spec clinical-priority marker, NOT the tranche number.** Do not confuse with Tranche 1/2/3.
 - This register is docs-only and changes no gap rule, spec, or canonical artifact. It records scope; it does not build.
+
+---
+
+## CPT-verification-blocked sub-tranche (NEW, 2026-06-17)
+
+**Distinct from Tranche 1 (DUA echo-morphology), Tranche 2 (Synthea-expandable numeric), and Tranche 3 (process/doc).** These gaps are NOT data-blocked: the `procedureCodes` param is threaded engine-wide (PR #396) and both runners populate it. They are VERIFICATION-blocked: they must gate on a structural-procedure CPT, and there is NO authoritative CPT-verification source available (CPT is AMA-proprietary; no free programmatic API like NLM RxNav/LOINC/ICD-10; free verification BLOCKED across CMS/AMA/AAPC in SH chunk 4). Per section-16 no-guess, they are NOT authored on unverified candidate CPTs, and a loose dx-proxy is NOT an acceptable fallback where the proxy mis-fires. Buildable when an authoritative CPT source (operator-provided or licensed) verifies the closure CPT set.
+
+| GAP-ID | Module | Title | CPT needed (UNVERIFIED candidates - do NOT author on these) | Why no dx-proxy | Buildable when |
+|---|---|---|---|---|---|
+| GAP-SH-082 | SH | Post-ASD/PFO closure: antithrombotic regimen | ASD/PFO percutaneous closure (candidate 93580/93581) | Q21.0/Q21.12 = the defect (present before AND after closure); Z95.818 = any cardiac implant (over-broad). No code distinguishes "closure device implanted". | a verified closure CPT lands; then `procedureCodes.includes(<closure CPT>) && !onAntithrombotic` |
+| GAP-SH-083 | SH | Residual shunt post-closure: surveillance | ASD/PFO percutaneous closure (candidate 93580/93581) | same closure-detection problem as SH-082 | same as SH-082 |
+
+**Optional same-tranche cleanup (not a new gap):** the VHD LAAC-TEE-follow-up gap currently detects LAAC via the over-broad `Z95.818` (any cardiac/vascular implant) instead of the section-16-verified `LAAC_CPT` (33340) that the EP module already uses. Migrate it onto CPT 33340 for consistency + precision when the CPT-cleanup pass runs. Not blocking; opportunistic.
+
+**Related finding:** AUDIT-168 (suspect-provenance structural CPTs in `allGapValueSets.ts` - quarantine/verify when a CPT source is available).

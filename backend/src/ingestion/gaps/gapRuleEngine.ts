@@ -8864,6 +8864,246 @@ export function evaluateGapRules(
     });
   }
 
+  // ===== v3.0 SH chunk 5: PFO/ASD, IE, PE, ACHD, cardiac masses (recommend-only / reliable-dx gaps) =====
+  // All codes section-16-verified vs NLM Clinical Tables 2026-06-17 (ICD-10-CM): PFO Q21.12 (distinct from ASD
+  // Q21.1x), TOF Q21.3, Ebstein Q22.5, Eisenmenger I27.83, IE I33.0, massive PE I26.0x (with acute cor
+  // pulmonale), cardiogenic shock R57.0, cerebral infarction I63.x, sepsis A41/R65.2, benign cardiac neoplasm
+  // D15.1. CPT-DEPENDENT post-closure gaps (SH-082 antithrombotic, SH-083 residual-shunt surveillance) are
+  // PARKED to the CPT-verification-blocked tranche (no authoritative closure-CPT source available; the
+  // procedureCodes param is ready, only the verified CPT set is missing). Every recommended procedure is named
+  // as text, no CPT numeral.
+  const hasPFO_SH = dxCodes.some(c => c.startsWith('Q21.12'));
+  const hasASD_SH = dxCodes.some(c => c.startsWith('Q21.1') && !c.startsWith('Q21.12'));
+  const hasStroke_SH = dxCodes.some(c => c.startsWith('I63'));
+  const hasAF_SH5 = dxCodes.some(c => c.startsWith('I48'));
+  const hasEisenmenger_SH = dxCodes.some(c => c.startsWith('I27.83'));
+  const hasIE_SH = dxCodes.some(c => c.startsWith('I33.0'));
+  const hasMassivePE_SH = dxCodes.some(c => c.startsWith('I26.0'));
+  const hasShock_SH = dxCodes.some(c => c.startsWith('R57.0'));
+  const hasTOF_SH = dxCodes.some(c => c.startsWith('Q21.3'));
+  const hasEbstein_SH = dxCodes.some(c => c.startsWith('Q22.5'));
+  const hasCardiacMyxoma_SH = dxCodes.some(c => c.startsWith('D15.1'));
+
+  // Gap SH-026: PFO + cryptogenic stroke (age<60) -> closure evaluation
+  // Guideline: 2020 ACC/AHA VHD + 2021 AAN PFO/stroke; RESPECT/CLOSE/REDUCE (closure superior to medical for
+  // cryptogenic stroke + PFO in young patients). STANDING SUBGROUP CHECK: cryptogenic (PFO-attributable) vs
+  // cardioembolic-from-AF - a stroke patient WITH AF (I48.x) is cardioembolic (treat the AF), NOT a PFO-closure
+  // candidate, so AF is excluded. Path-B: full RoPE-score components (cortical infarct, absent vascular risk
+  // factors) are mostly not codable - this surfaces the candidate population for a RoPE-scored closure discussion.
+  if (hasPFO_SH && hasStroke_SH && age < 60 && !hasAF_SH5 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'PFO + cryptogenic stroke (age<60): closure evaluation gap',
+      target: 'Heart-team / neurology PFO-closure discussion with RoPE-score assessment',
+      recommendations: {
+        action: 'Consider transcatheter PFO closure evaluation (with RoPE-score assessment) for cryptogenic stroke + PFO in a patient under 60 per 2020 ACC/AHA VHD and the RESPECT/CLOSE/REDUCE evidence',
+        guideline: '2020 ACC/AHA VHD; RESPECT / CLOSE / REDUCE',
+        note: 'Subgroup-aware: AF (I48.x) excluded as a cardioembolic source (treat the AF, not the PFO). Path-B: RoPE-score components (cortical infarct, vascular risk factors) mostly not codable.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Patent foramen ovale (Q21.12)',
+          'Cerebral infarction (I63.x)',
+          `Age: ${age} (<60)`,
+          'No atrial fibrillation (cardioembolic source excluded)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; RESPECT/CLOSE/REDUCE',
+        classOfRecommendation: 'Class 2a',
+        levelOfEvidence: 'LOE B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Atrial fibrillation (cardioembolic, routes to anticoagulation)', 'Other identified stroke etiology'],
+      },
+    });
+  }
+
+  // Gap SH-027: Hemodynamically significant ASD -> closure evaluation
+  // Guideline: 2020 ACC/AHA VHD; 2018 AHA/ACC ACHD (Class 1 closure for RV volume overload). STANDING SUBGROUP
+  // CHECK: Eisenmenger physiology (I27.83, fixed severe PAH) is a CONTRAINDICATION to closure - excluded. Path-B:
+  // shunt magnitude (Qp:Qs) + RV dilation are not threaded; elevated PASP (threaded) is the significance proxy.
+  if (hasASD_SH && labValues['pasp'] !== undefined && labValues['pasp'] >= 40 && !hasEisenmenger_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Hemodynamically significant ASD: closure evaluation gap',
+      target: 'ASD closure candidacy assessed (shunt magnitude + RV assessment at heart team)',
+      recommendations: {
+        action: 'Consider ASD closure evaluation for a hemodynamically significant atrial septal defect per 2020 ACC/AHA VHD and 2018 ACHD guidance',
+        guideline: '2020 ACC/AHA VHD; 2018 AHA/ACC ACHD',
+        note: 'Subgroup-aware: Eisenmenger physiology (fixed severe PAH, I27.83) excluded - closure contraindicated. Path-B: Qp:Qs + RV dilation not threaded; elevated PASP used as the significance proxy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Atrial septal defect (Q21.1x, not PFO)',
+          `Elevated PASP: ${labValues['pasp']} mmHg (>=40, significance proxy)`,
+          'Not Eisenmenger physiology',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; 2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Eisenmenger physiology (I27.83) - closure contraindicated', 'Small non-significant shunt'],
+      },
+    });
+  }
+
+  // Gap SH-029: Infective endocarditis with an early-surgery indication -> surgery review
+  // Guideline: 2020 ACC/AHA VHD (Class 1 early surgery for HF, uncontrolled infection, or embolic events).
+  const hasIEHF_SH = dxCodes.some(c => c.startsWith('I50'));
+  const hasIEEmbolic_SH = dxCodes.some(c => c.startsWith('I74') || c.startsWith('I63'));
+  const hasIEUncontrolled_SH = dxCodes.some(c => c.startsWith('A41') || c.startsWith('R65.2'));
+  if (hasIE_SH && (hasIEHF_SH || hasIEEmbolic_SH || hasIEUncontrolled_SH) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Infective endocarditis with an early-surgery indication: surgery evaluation gap',
+      target: 'Endocarditis-team early-surgery evaluation completed',
+      recommendations: {
+        action: 'Consider early surgery evaluation for infective endocarditis with HF, uncontrolled infection, or embolic events per 2020 ACC/AHA VHD (Class 1)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Early-surgery indication present via a threaded proxy (HF I50, embolic I74/I63, or uncontrolled infection A41/R65.2). Path-B: vegetation size + persistent bacteremia duration not threaded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Acute/subacute infective endocarditis (I33.0)',
+          `Early-surgery indication: ${hasIEHF_SH ? 'heart failure' : hasIEEmbolic_SH ? 'embolic event' : 'uncontrolled infection'}`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Surgery already performed this episode'],
+      },
+    });
+  }
+
+  // Gap SH-091: High-risk (massive) PE -> systemic lysis / embolectomy / ECMO evaluation
+  // Guideline: 2019 ESC / 2020 ACC PE; massive (hemodynamically unstable) PE warrants reperfusion. STANDING
+  // SUBGROUP CHECK: massive (shock/instability) vs submassive (intermediate-risk) - only the massive subgroup
+  // gets primary reperfusion; submassive is NOT in scope (would over-treat). Gate = PE with acute cor pulmonale
+  // (I26.0x) + cardiogenic shock (R57.0).
+  if (hasMassivePE_SH && hasShock_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Massive (high-risk) PE with instability: reperfusion evaluation gap',
+      target: 'Systemic thrombolysis, surgical embolectomy, or ECMO/PERT evaluation',
+      recommendations: {
+        action: 'Consider urgent reperfusion (systemic thrombolysis, catheter or surgical embolectomy, or ECMO via a PE response team) for massive PE with hemodynamic instability per 2019 ESC / 2020 ACC PE guidance',
+        guideline: '2019 ESC / 2020 ACC Pulmonary Embolism',
+        note: 'Subgroup-aware: massive (shock) only - submassive/intermediate-risk PE is NOT in scope. Path-B: RV/troponin risk stratification beyond the cor-pulmonale + shock codes not fully threaded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Pulmonary embolism with acute cor pulmonale (I26.0x)',
+          'Cardiogenic shock (R57.0) - hemodynamic instability',
+        ],
+        guidelineSource: '2019 ESC Guideline on Acute Pulmonary Embolism; 2020 ACC Pulmonary Embolism guidance',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Absolute thrombolysis contraindication (then embolectomy/ECMO)', 'Reperfusion already delivered'],
+      },
+    });
+  }
+
+  // Gap SH-101: Eisenmenger physiology -> PAH-specific therapy evaluation
+  // Guideline: 2018 AHA/ACC ACHD; 2022 ESC/ERS PH (PAH-specific therapy improves outcomes in Eisenmenger).
+  if (hasEisenmenger_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Eisenmenger physiology without PAH-specific therapy evaluation',
+      target: 'PAH-specific therapy evaluation at a PH/ACHD center',
+      recommendations: {
+        action: 'Consider PAH-specific therapy evaluation (endothelin-receptor antagonist, PDE5 inhibitor, or prostacyclin pathway) at a PH/ACHD center for Eisenmenger physiology per 2018 AHA/ACC ACHD and 2022 ESC/ERS PH',
+        guideline: '2018 AHA/ACC ACHD; 2022 ESC/ERS Pulmonary Hypertension',
+        note: 'Eisenmenger is a high-risk ACHD/PAH subgroup requiring specialist-directed therapy. Path-B: current PAH-drug status not gated here - surfaces the population for specialist evaluation.',
+      },
+      evidence: {
+        triggerCriteria: [
+          "Eisenmenger's syndrome (I27.83)",
+        ],
+        guidelineSource: '2018 AHA/ACC Adult Congenital Heart Disease Guideline; 2022 ESC/ERS Pulmonary Hypertension Guideline',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Already under PH-center management on PAH therapy'],
+      },
+    });
+  }
+
+  // Gap SH-096: Adult repaired Tetralogy of Fallot -> pulmonary valve replacement evaluation
+  // Guideline: 2018 AHA/ACC ACHD (PVR for RV dilation/dysfunction in repaired TOF).
+  if (hasTOF_SH && age >= 18 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Adult Tetralogy of Fallot: pulmonary valve replacement evaluation gap',
+      target: 'CMR-based RV assessment + pulmonary valve replacement candidacy evaluation',
+      recommendations: {
+        action: 'Consider cardiac MRI-based RV assessment and pulmonary valve replacement evaluation for an adult with repaired Tetralogy of Fallot per 2018 AHA/ACC ACHD',
+        guideline: '2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+        note: 'Path-B: RV dilation/dysfunction (CMR RV end-diastolic volume) is the intervention trigger but is not threaded - this surfaces the adult repaired-TOF population for protocolized RV surveillance/PVR evaluation.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Tetralogy of Fallot (Q21.3)',
+          `Adult (age ${age} >=18)`,
+        ],
+        guidelineSource: '2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+        classOfRecommendation: 'Class 2a',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent CMR/PVR evaluation on file'],
+      },
+    });
+  }
+
+  // Gap SH-099: Ebstein anomaly -> arrhythmia surveillance
+  // Guideline: 2018 AHA/ACC ACHD (atrial + accessory-pathway arrhythmia risk in Ebstein).
+  if (hasEbstein_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MONITORING_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Ebstein anomaly without arrhythmia surveillance on file',
+      target: 'Periodic rhythm monitoring (atrial arrhythmia + accessory-pathway screening)',
+      recommendations: {
+        action: 'Consider periodic rhythm monitoring for Ebstein anomaly (atrial arrhythmia and accessory-pathway risk) per 2018 AHA/ACC ACHD',
+        guideline: '2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+        note: 'Path-B: monitoring dates are not tracked - surfaces the Ebstein population for scheduled rhythm surveillance.',
+      },
+      evidence: {
+        triggerCriteria: [
+          "Ebstein's anomaly (Q22.5)",
+        ],
+        guidelineSource: '2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent rhythm monitoring within interval'],
+      },
+    });
+  }
+
+  // Gap SH-103: Benign cardiac neoplasm (atrial myxoma) -> surgical referral
+  // Guideline: surgical resection is standard for atrial myxoma given embolic + obstruction risk.
+  if (hasCardiacMyxoma_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Benign cardiac neoplasm (atrial myxoma): surgical referral gap',
+      target: 'Cardiac surgery referral for resection evaluation',
+      recommendations: {
+        action: 'Consider cardiac surgery referral for resection evaluation of a benign cardiac neoplasm (atrial myxoma carries embolic and obstruction risk)',
+        guideline: 'ACC/AHA cardiac-masses consensus; standard of care for atrial myxoma',
+        note: 'D15.1 covers benign cardiac neoplasms (atrial myxoma is the predominant one). Path-B: referral status not tracked - surfaces the dx for a resection discussion.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Benign neoplasm of heart (D15.1) - atrial myxoma',
+        ],
+        guidelineSource: 'ACC/AHA cardiac-masses consensus; standard surgical management of atrial myxoma',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Resection already performed', 'Prohibitive operative risk'],
+      },
+    });
+  }
+
   // Gap VD-16: Mixed Valve Disease Assessment
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE C
   // Concurrent AS + AR (I35.2 mixed aortic valve disease)
