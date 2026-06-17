@@ -142,6 +142,18 @@ describe('EP-012 LAAC high-risk + prior bleed', () => {
     const g = evaluateGapRules([AF, 'I61.9'], {}, [], 60, 'MALE');
     expect(find(g, 'LAAC evaluation for high stroke risk with prior major bleed')).toBeFalsy();
   });
+  it('fires: GU bleed R31.0 gross hematuria (operator ruling) as the major bleed', () => {
+    const g = evaluateGapRules([AF, 'I10', 'R31.0'], {}, [], 78, 'MALE');
+    expect(find(g, 'LAAC evaluation for high stroke risk with prior major bleed')).toBeTruthy();
+  });
+  it('fires: GU bleed N02.8 recurrent/persistent hematuria as the major bleed', () => {
+    const g = evaluateGapRules([AF, 'I10', 'N02.8'], {}, [], 78, 'MALE');
+    expect(find(g, 'LAAC evaluation for high stroke risk with prior major bleed')).toBeTruthy();
+  });
+  it('gates: microscopic hematuria R31.1 (NOT a major bleed - deliberately excluded)', () => {
+    const g = evaluateGapRules([AF, 'I10', 'R31.1'], {}, [], 78, 'MALE');
+    expect(find(g, 'LAAC evaluation for high stroke risk with prior major bleed')).toBeFalsy();
+  });
 });
 
 // ---- EP-011: EP-LAAC upgrade (AUDIT-120: drop Z88 any-allergy over-detection) ----
@@ -152,6 +164,14 @@ describe('EP-011 LAAC contraindication (AUDIT-120 upgrade)', () => {
   });
   it('gates (the fix): AF + age 70 + drug allergy Z88.0 only (no bleed)', () => {
     const g = evaluateGapRules([AF, 'Z88.0'], {}, [], 70, 'MALE');
+    expect(find(g, 'Consider LAAC device evaluation for AFib with OAC contraindication')).toBeFalsy();
+  });
+  it('fires: GU bleed R31.0 gross hematuria (operator ruling)', () => {
+    const g = evaluateGapRules([AF, 'R31.0'], {}, [], 70, 'MALE');
+    expect(find(g, 'Consider LAAC device evaluation for AFib with OAC contraindication')).toBeTruthy();
+  });
+  it('gates: microscopic hematuria R31.1 only (excluded - not a major bleed)', () => {
+    const g = evaluateGapRules([AF, 'R31.1'], {}, [], 70, 'MALE');
     expect(find(g, 'Consider LAAC device evaluation for AFib with OAC contraindication')).toBeFalsy();
   });
 });

@@ -30,6 +30,7 @@ import {
   RXNORM_STEROID_SPARING,
   RXNORM_IL1_INHIBITORS,
   RXNORM_OCTREOTIDE,
+  EP_ABLATION_CPT,
 } from '../../terminology/cardiovascularValuesets';
 
 /** Extract code arrays from valueset objects for medication matching */
@@ -438,6 +439,66 @@ export const RUNTIME_GAP_REGISTRY = [
     lastReviewDate: '2026-06-16',
     nextReviewDue: '2026-12-16',
     classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-ep-014-af-ablation-hfref',
+    name: 'AF ablation not referred in HFrEF (CASTLE-AF)',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline (CASTLE-AF)',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-ep-071-post-ablation-oac',
+    name: 'Anticoagulation not continued after AF ablation',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-ep-072-redo-af-ablation',
+    name: 'Redo AF ablation evaluation after recurrence',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-ep-074-flutter-cti-ablation',
+    name: 'CTI ablation not offered for typical atrial flutter',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-ep-076-svt-ablation',
+    name: 'SVT ablation not offered for recurrent SVT on antiarrhythmic',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline (SVT management)',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '1',
     levelOfEvidence: 'B',
   },
   {
@@ -5044,7 +5105,9 @@ export function evaluateGapRules(
     if (dxCodes.some(c => c.startsWith('I63') || c.startsWith('I64') || c.startsWith('G45') || c === 'Z86.73')) cha012 += 2;
     if (dxCodes.some(c => c.startsWith('I21') || c.startsWith('I22') || c === 'I73.9' || c.startsWith('I70.2'))) cha012 += 1;
     if (gender && (gender.toUpperCase() === 'FEMALE' || gender.toUpperCase() === 'F')) cha012 += 1;
-    const priorMajorBleed_EP012 = dxCodes.some(c => c.startsWith('D68.3') || c.startsWith('K92.2') || c.startsWith('I60') || c.startsWith('I61') || c.startsWith('I62'));
+    // GU major-bleed added (operator ruling 2026-06-16): R31.0 gross hematuria + N02 recurrent/persistent
+    // hematuria (microscopic R31.1/R31.2 and epistaxis R04.0 excluded). ICD-10-CM verified per section 16.
+    const priorMajorBleed_EP012 = dxCodes.some(c => c.startsWith('D68.3') || c.startsWith('K92.2') || c.startsWith('I60') || c.startsWith('I61') || c.startsWith('I62') || c === 'R31.0' || c.startsWith('N02'));
     if (cha012 >= 3 && priorMajorBleed_EP012) {
       gaps.push({
         type: TherapyGapType.DEVICE_ELIGIBLE,
@@ -5070,6 +5133,177 @@ export function evaluateGapRules(
         },
       });
     }
+  }
+
+  // ============================================================
+  // EP CHUNK 2 (v3.0 EP buildout, 2026-06-16): AF rhythm + ablation. FIRST EP consumer of the
+  // threaded procedureCodes param (PR #396) + the new EP_ABLATION_CPT value set (CPT verified via
+  // AMA CPT Assistant / AAPC / ACC per AUDIT_METHODOLOGY.md section 16; CPT source is AMA, not RxNav).
+  // Pattern A: AF (non-flutter) is the specific I48.0/.1/.2/.91 set, EXCLUDING flutter I48.3/.4.
+  // Pattern B: ablation/recurrence TIMING is not ingested (procedureCodes carry no dates), so duration
+  //   arms are dropped and documented. Pattern C: prior-procedure presence detected via procedureCodes.
+  // EP-075 (focal AT) and EP-077 (concealed AVRT) are NOT built here: ICD-10 lumps AVNRT/AVRT/focal-AT
+  //   under I47.1 (no mechanism-specific code), and EP-077 explicitly needs an EP study (data-blocked).
+  // ============================================================
+  const hasAFnonFlutter_EP = dxCodes.some(c => c.startsWith('I48.0') || c.startsWith('I48.1') || c.startsWith('I48.2') || c.startsWith('I48.91'));
+
+  // EP-014: AF ablation not referred in HFrEF (CASTLE-AF). COR 2a.
+  // Trigger: AF (non-flutter) + LVEF<=35 + no prior AF ablation (CPT 93656 absent).
+  if (hasAFnonFlutter_EP && labValues['lvef'] !== undefined && labValues['lvef'] <= 35
+      && !procedureCodes.includes(EP_ABLATION_CPT.AF_PVI) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'AF ablation not referred in HFrEF (CASTLE-AF)',
+      target: 'Catheter ablation evaluation for AF with HFrEF',
+      recommendations: {
+        action: 'Consider referral for AF catheter ablation per 2023 ACC/AHA/ACCP/HRS AFib (CASTLE-AF, Class 2a)',
+        guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline (CASTLE-AF)',
+        note: 'In symptomatic AF with HFrEF (LVEF<=35%), catheter ablation reduced death/HF-hospitalization vs medical therapy (CASTLE-AF). No prior PVI (CPT 93656) on record.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Atrial fibrillation, non-flutter (I48.0/.1/.2/.91)',
+          `LVEF: ${labValues['lvef']}% (<=35, HFrEF)`,
+          'No prior AF ablation procedure (CPT 93656)',
+        ],
+        guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline (CASTLE-AF)',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prior AF ablation (CPT 93656)'],
+      },
+    });
+  }
+
+  // EP-071: Anticoagulation not continued after AF ablation. COR 1.
+  // Trigger: prior AF ablation (CPT 93656 present) + CHA2DS2-VASc qualifying + not on OAC.
+  // Path-B: the spec "OAC stopped at 3mo" duration is not ingested (procedureCodes carry no dates);
+  //   this fires on the stroke-risk-qualifying + no-current-OAC state, which is the harm vector.
+  if (procedureCodes.includes(EP_ABLATION_CPT.AF_PVI) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    let cha071 = 0;
+    if (dxCodes.some(c => c.startsWith('I50'))) cha071 += 1;
+    if (dxCodes.some(c => c.startsWith('I10') || c.startsWith('I11') || c.startsWith('I12') || c.startsWith('I13') || c.startsWith('I15'))) cha071 += 1;
+    if (age >= 75) cha071 += 2; else if (age >= 65) cha071 += 1;
+    if (dxCodes.some(c => c.startsWith('E10') || c.startsWith('E11') || c.startsWith('E13') || c.startsWith('E14'))) cha071 += 1;
+    if (dxCodes.some(c => c.startsWith('I63') || c.startsWith('I64') || c.startsWith('G45') || c === 'Z86.73')) cha071 += 2;
+    if (dxCodes.some(c => c.startsWith('I21') || c.startsWith('I22') || c === 'I73.9' || c.startsWith('I70.2'))) cha071 += 1;
+    const isFemale071 = gender !== undefined && (gender.toUpperCase() === 'FEMALE' || gender.toUpperCase() === 'F');
+    if (isFemale071) cha071 += 1;
+    const qualifies071 = cha071 >= (isFemale071 ? 3 : 2);
+    const onOAC071 = OAC_CODES_CV.some(c => medCodes.includes(c));
+    if (qualifies071 && !onOAC071) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.ELECTROPHYSIOLOGY,
+        status: 'Anticoagulation not continued after AF ablation',
+        target: 'Resume/continue OAC after AF ablation (stroke risk is driven by CHA2DS2-VASc, not ablation success)',
+        medication: 'Apixaban, Rivaroxaban, Edoxaban, or Warfarin',
+        recommendations: {
+          action: 'Consider continuing OAC after AF ablation per 2023 ACC/AHA/ACCP/HRS AFib (Class 1; decision is CHA2DS2-VASc-driven, independent of rhythm outcome)',
+          guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline',
+          note: 'Post-ablation stroke prophylaxis is governed by CHA2DS2-VASc, NOT by ablation success. Prior PVI (CPT 93656) on record, stroke-risk-qualifying, with no current OAC. Path-B: the "stopped at 3 months" duration is not ingested - this fires on the qualifying + off-OAC state.',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Prior AF ablation procedure (CPT 93656)',
+            `CHA2DS2-VASc score: ${cha071} (qualifying)`,
+            'No current oral anticoagulant',
+          ],
+          guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline',
+          classOfRecommendation: '1',
+          levelOfEvidence: 'B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Ablation-procedure date not ingested (Path-B)'],
+        },
+      });
+    }
+  }
+
+  // EP-072: Redo AF ablation evaluation after recurrence. COR 2a.
+  // Trigger: prior AF ablation (CPT 93656 present) + AF still coded (recurrent/persistent).
+  // Path-B (heavy): "recurrent symptoms at >3mo" - neither symptom status nor the 3-month blanking
+  //   period is ingested; this fires on the post-ablation + AF-still-on-problem-list state.
+  if (procedureCodes.includes(EP_ABLATION_CPT.AF_PVI) && hasAFnonFlutter_EP && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'Redo AF ablation evaluation after recurrence',
+      target: 'Re-evaluate for redo ablation vs rhythm-vs-rate strategy after AF recurrence',
+      recommendations: {
+        action: 'Consider redo-ablation evaluation for recurrent AF after prior PVI per 2023 ACC/AHA/ACCP/HRS AFib (Class 2a)',
+        guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline',
+        note: 'Prior AF ablation (CPT 93656) with AF still on the active problem list suggests recurrence; redo ablation is reasonable for symptomatic recurrence. Path-B: symptom status and the 3-month post-ablation blanking period are not ingested - clinician confirms genuine recurrence.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Prior AF ablation procedure (CPT 93656)',
+          'Atrial fibrillation still coded (I48.0/.1/.2/.91) - possible recurrence',
+        ],
+        guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Symptom status + blanking-period timing not ingested (Path-B)'],
+      },
+    });
+  }
+
+  // EP-074: CTI ablation not offered for typical atrial flutter. COR 1.
+  // Trigger: typical atrial flutter (I48.3) + no prior SVT/CTI ablation (CPT 93653 absent).
+  // Path-B: "symptomatic" status is not ingested - dropped.
+  if (dxCodes.some(c => c.startsWith('I48.3')) && !procedureCodes.includes(EP_ABLATION_CPT.SVT)
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'CTI ablation not offered for typical atrial flutter',
+      target: 'Cavotricuspid isthmus (CTI) ablation evaluation for typical atrial flutter',
+      recommendations: {
+        action: 'Consider CTI catheter ablation for typical atrial flutter per 2023 ACC/AHA/ACCP/HRS AFib (Class 1; high success, low risk)',
+        guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline',
+        note: 'CTI ablation for typical (cavotricuspid-isthmus-dependent) atrial flutter is Class 1 - high success, durable, low complication. No prior SVT/CTI ablation (CPT 93653) on record. Path-B: symptom status not ingested.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Typical atrial flutter (I48.3)',
+          'No prior SVT/CTI ablation procedure (CPT 93653)',
+        ],
+        guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prior CTI ablation (CPT 93653)', 'Symptom status not ingested (Path-B)'],
+      },
+    });
+  }
+
+  // EP-076: SVT ablation not offered for recurrent SVT on antiarrhythmic. COR 1.
+  // Trigger: SVT (I47.1) + on an antiarrhythmic (AAD) + no prior SVT ablation (CPT 93653 absent).
+  // Scope note: ICD-10 I47.1 does NOT distinguish AVNRT / AVRT / focal AT (no mechanism-specific code),
+  //   so this single rule covers the detectable recurrent-SVT-on-AAD population collectively. EP-075 (focal
+  //   AT) and EP-077 (concealed AVRT, needs EP study) are not separately buildable from ingested data.
+  // Path-B: "recurrent" status is not ingested; the on-AAD gate is the proxy for failed medical therapy.
+  if (dxCodes.some(c => c.startsWith('I47.1')) && AAD_CODES_CV.some(c => medCodes.includes(c))
+      && !procedureCodes.includes(EP_ABLATION_CPT.SVT) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'SVT ablation not offered for recurrent SVT on antiarrhythmic',
+      target: 'Catheter ablation evaluation for symptomatic SVT on antiarrhythmic therapy',
+      recommendations: {
+        action: 'Consider catheter ablation for recurrent symptomatic SVT on antiarrhythmic per 2023 ACC/AHA/ACCP/HRS AFib/SVT (Class 1)',
+        guideline: '2023 ACC/AHA/ACCP/HRS Guideline (SVT management)',
+        note: 'Recurrent SVT (I47.1 - AVNRT/AVRT/focal AT) on an antiarrhythmic is a Class 1 catheter-ablation indication (curative, AAD-sparing). No prior SVT ablation (CPT 93653). Mechanism (AVNRT vs AVRT vs AT) is not ICD-codable; clinician confirms at EP study. Path-B: recurrence not ingested - on-AAD is the failed-medical-therapy proxy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Supraventricular tachycardia (I47.1)',
+          'On an antiarrhythmic drug (flecainide / amiodarone / sotalol / dofetilide / dronedarone)',
+          'No prior SVT ablation procedure (CPT 93653)',
+        ],
+        guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline (SVT management)',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prior SVT ablation (CPT 93653)', 'Mechanism not ICD-codable; recurrence not ingested (Path-B)'],
+      },
+    });
   }
 
   // ============================================================
@@ -5136,8 +5370,12 @@ export function evaluateGapRules(
     // EP-011 upgrade (AUDIT-120, v3.0 EP chunk 1 2026-06-16): removed the bare `Z88` (allergy status to
     // ANY drug) over-detection - it fired on penicillin/sulfa allergy etc., not an OAC contraindication.
     // The OAC-contraindication trigger is a documented bleeding/hemorrhagic-disorder history only.
+    // GU major-bleed added (operator ruling 2026-06-16): R31.0 gross hematuria (visible blood; microscopic
+    // R31.1/R31.2 deliberately EXCLUDED - not a major bleed) + N02 recurrent/persistent hematuria. Epistaxis
+    // (R04.0) kept OUT per ruling. ICD-10-CM verified via icd10data / AAPC per AUDIT_METHODOLOGY.md section 16.
     const hasOACContraindication = dxCodes.some(c =>
       c.startsWith('D68.3') || c.startsWith('K92.2') || c.startsWith('I60') || c.startsWith('I61') || c.startsWith('I62')
+      || c === 'R31.0' || c.startsWith('N02')
     );
     if (hasOACContraindication) {
       gaps.push({

@@ -356,6 +356,27 @@ export const RXNORM_RATE_CONTROL = {
   VERAPAMIL: '11170',
 } as const;
 
+/**
+ * EP catheter-ablation CPT codes -- used by the v3.0 EP rhythm/ablation gap rules (chunk 2).
+ * These match the patient's threaded procedureCodes (PR #396) to detect prior ablation (presence)
+ * or its absence (an unoffered-ablation gap).
+ *
+ * CPT VERIFICATION (AUDIT_METHODOLOGY.md section 16 - CPT source is AMA CPT, NOT RxNav):
+ *   Verified 2026-06-16 against AMA CPT Assistant (Dec 2021, "Reporting Cardiac Ablation 93653/93654/93656"),
+ *   AAPC Codify, and ACC "New 2022 Cardiovascular CPT Codes". 2022 descriptor revision bundles add-ons.
+ *   93653 = comprehensive EP study with ablation of SUPRAVENTRICULAR tachycardia (fast/slow AV-nodal pathway,
+ *           accessory AV connection, cavo-tricuspid isthmus, or other single atrial focus / atrial re-entry).
+ *           Covers AVNRT, AVRT, typical atrial flutter (CTI), and focal atrial tachycardia.
+ *   93654 = comprehensive EP study with ablation of VENTRICULAR tachycardia / ventricular ectopy focus.
+ *   93656 = comprehensive EP study with ablation of ATRIAL FIBRILLATION by pulmonary vein isolation (PVI).
+ *           NOTE per AMA: 93653 is not reported in conjunction with 93656.
+ */
+export const EP_ABLATION_CPT = {
+  SVT: '93653',   // SVT/AVNRT/AVRT/typical-flutter(CTI)/focal-AT ablation
+  VT: '93654',    // ventricular tachycardia ablation
+  AF_PVI: '93656', // atrial fibrillation ablation by pulmonary vein isolation
+} as const;
+
 /** Bioprosthetic valve presence -- used by echo surveillance gap rule */
 export const ICD10_BIOPROSTHETIC_VALVE = [
   'Z95.2',   // Presence of prosthetic heart valve
