@@ -6600,7 +6600,7 @@ export function evaluateGapRules(
             guideline: '2020 ACC/AHA Valvular Heart Disease',
           },
               evidence: {
-          triggerCriteria: ['Mechanical heart valve (Z95.2/Z95.3/Z95.4)', 'Warfarin (RxNorm 11289) not on active medication list'],
+          triggerCriteria: ['Mechanical heart valve (Z95.2 or Z95.4)', 'Warfarin (RxNorm 11289) not on active medication list'],
           guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
           classOfRecommendation: '1',
           levelOfEvidence: 'B',
@@ -7064,11 +7064,14 @@ export function evaluateGapRules(
   // Gap VD-2: Echo Surveillance for Bioprosthetic Valve
   // ============================================================
   // Guideline: 2020 ACC/AHA Valvular Heart Disease Guideline, Class 1, LOE C
-  // Bioprosthetic valve patients (Z95.2, Z95.4) require annual echo surveillance
-  // to monitor for structural valve deterioration (SVD)
+  // Bioprosthetic valve patients require annual echo surveillance for structural valve deterioration (SVD).
+  // Fix (AUDIT-123, 2026-06-17): broad predicate = Z95.3 (xenogenic/bioprosthetic, the ACTUAL bio code) OR
+  //   Z95.2 (prosthetic, generic) OR Z95.4 (other replacement). The prior set excluded Z95.3, so it MISSED
+  //   genuine bioprosthetic patients. Broad is safety-first here per operator ruling: missing a bio patient is
+  //   the harm; a mechanical patient getting a surveillance-echo nudge is harmless. (Z95.4 kept from prior.)
   // Fires when: bioprosthetic valve present AND no recent echo (LVEF not available as proxy)
   const hasBioprostheticValve = dxCodes.some(c =>
-    c.startsWith('Z95.2') || c.startsWith('Z95.4')
+    c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4')
   );
   if (hasBioprostheticValve && labValues['lvef'] === undefined) {
         if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
@@ -7350,8 +7353,10 @@ export function evaluateGapRules(
 
   // Gap SH-6: Post-TAVR Follow-up
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
-  // Patients with prosthetic aortic valve (Z95.2) AND aortic stenosis history need follow-up
-  const hasProstheticAorticValve = dxCodes.some(c => c.startsWith('Z95.2'));
+  // Patients with prosthetic aortic valve AND aortic stenosis history need post-procedure follow-up.
+  // Fix (AUDIT-123, 2026-06-17, GAP-SH-011): added Z95.3 (xenogenic) - TAVR/SAVR tissue valves are bioprosthetic
+  //   and may be coded Z95.3 or the generic Z95.2, so the prior Z95.2-only predicate missed Z95.3-coded patients.
+  const hasProstheticAorticValve = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.3'));
   if (
     hasProstheticAorticValve &&
     hasAorticStenosis &&
@@ -7367,7 +7372,7 @@ export function evaluateGapRules(
       },
       evidence: {
         triggerCriteria: [
-          'Prosthetic aortic valve (Z95.2)',
+          'Prosthetic aortic valve (Z95.2 or Z95.3 xenogenic)',
           'History of aortic stenosis (I35.0)',
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
@@ -7498,7 +7503,7 @@ export function evaluateGapRules(
         },
         evidence: {
           triggerCriteria: [
-            'Mechanical valve (Z95.2, Z95.3, or Z95.4)',
+            'Mechanical valve (Z95.2 or Z95.4)',
             'Active warfarin therapy',
             'No recent INR value on file',
           ],
@@ -7589,7 +7594,7 @@ export function evaluateGapRules(
         },
         evidence: {
           triggerCriteria: [
-            'Mechanical valve (Z95.2, Z95.3, or Z95.4)',
+            'Mechanical valve (Z95.2 or Z95.4)',
             'Active DOAC therapy detected (apixaban, rivaroxaban, dabigatran, or edoxaban)',
           ],
           guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease (RE-ALIGN Trial)',
@@ -7738,7 +7743,7 @@ export function evaluateGapRules(
       },
       evidence: {
         triggerCriteria: [
-          'Bioprosthetic valve (Z95.2 or Z95.4)',
+          'Bioprosthetic valve (Z95.2, Z95.3, or Z95.4)',
           `Age: ${age} (> 65, increased degeneration risk proxy)`,
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
@@ -8417,8 +8422,10 @@ export function evaluateGapRules(
 
   // Gap SH-13: Paravalvular Leak Assessment Post-Valve
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
-  // Z95.2 (prosthetic valve) + new murmur proxy (I35.1 aortic regurgitation)
-  const hasProsthetic13 = dxCodes.some(c => c.startsWith('Z95.2'));
+  // Prosthetic valve + new murmur proxy (I35.1 aortic regurgitation). Paravalvular leak affects ANY prosthesis.
+  // Fix (AUDIT-123, 2026-06-17): broadened from Z95.2-only to Z95.2||Z95.3||Z95.4 - PVL is not type-specific, so
+  //   the prior Z95.2-only predicate under-detected bioprosthetic (Z95.3) and other-replacement (Z95.4) valves.
+  const hasProsthetic13 = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4'));
   const hasNewRegurg13 = dxCodes.some(c => c.startsWith('I35.1') || c.startsWith('I34.0'));
   if (
     hasProsthetic13 &&
@@ -8433,7 +8440,7 @@ export function evaluateGapRules(
       recommendations: { action: 'Consider paravalvular leak assessment with echocardiography for prosthetic valve with new regurgitation per 2020 ACC/AHA VHD' },
       evidence: {
         triggerCriteria: [
-          'Prosthetic valve (Z95.2)',
+          'Prosthetic valve (Z95.2, Z95.3, or Z95.4)',
           'New regurgitation detected (I35.1 or I34.0)',
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
@@ -8566,8 +8573,10 @@ export function evaluateGapRules(
 
   // Gap VD-13: Anticoagulation First 3 Months Post-Bioprosthetic
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 2a, LOE B
-  // Z95.2/Z95.4 (bioprosthetic valve) + recent implant proxy + no anticoagulant
-  const hasBioprosthetic13 = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.4'));
+  // Bioprosthetic valve + recent-implant proxy + no anticoagulant.
+  // Fix (AUDIT-123, 2026-06-17): broad bio predicate adds Z95.3 (xenogenic/bioprosthetic), the code the prior
+  //   Z95.2||Z95.4 set wrongly excluded. Missing a bio patient in the first-3-months anticoag window is the harm.
+  const hasBioprosthetic13 = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4'));
   if (
     hasBioprosthetic13 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
@@ -8586,7 +8595,7 @@ export function evaluateGapRules(
         recommendations: { action: 'Consider anticoagulation or aspirin for early post-bioprosthetic valve period per 2020 ACC/AHA VHD' },
         evidence: {
           triggerCriteria: [
-            'Bioprosthetic valve (Z95.2 or Z95.4)',
+            'Bioprosthetic valve (Z95.2, Z95.3, or Z95.4)',
             'No anticoagulant or aspirin on active medication list',
           ],
           guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
@@ -14226,8 +14235,13 @@ export function evaluateGapRules(
 
   // SH-VALVE-IN-VALVE: Valve-in-Valve TAVR Evaluation
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 2a, LOE B-NR
-  // Bioprosthetic valve (Z95.2) + new symptoms (R06 dyspnea)
-  const hasBioprostheticVIV = dxCodes.some(c => c.startsWith('Z95.2'));
+  // Failed bioprosthetic valve + new symptoms (R06 dyspnea). Valve-in-valve TAVR is for a degenerated
+  //   BIOPROSTHETIC valve - a mechanical valve is NOT a ViV target, so this must not false-fire on mechanical.
+  // Fix (AUDIT-123, 2026-06-17, GAP-SH-061): Z95.3-ONLY (xenogenic/bioprosthetic, definitive). The prior
+  //   Z95.2-only predicate was the inversion - Z95.2 is generic (could be mechanical), so firing ViV on it would
+  //   false-fire on a mechanical valve. Z95.3-only never false-fires on mechanical. Path-B: a bioprosthetic coded
+  //   generically as Z95.2 is the accepted miss (no mechanical-specific ICD-10 code to disambiguate it from).
+  const hasBioprostheticVIV = dxCodes.some(c => c.startsWith('Z95.3'));
   const hasNewSymptomsVIV = dxCodes.some(c => c.startsWith('R06') || c.startsWith('R00') || c.startsWith('R55'));
   if (
     hasBioprostheticVIV &&
@@ -14246,7 +14260,7 @@ export function evaluateGapRules(
       },
       evidence: {
         triggerCriteria: [
-          'Bioprosthetic valve in situ (Z95.2)',
+          'Bioprosthetic (xenogenic) valve in situ (Z95.3)',
           'New symptoms (dyspnea R06, palpitations R00, or syncope R55)',
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
@@ -14426,8 +14440,9 @@ export function evaluateGapRules(
 
   // VD-PANNUS: Prosthetic Valve Pannus/Thrombosis Screening
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
-  // Prosthetic valve (Z95.2 or Z95.4) + new gradient increase proxy (R06 dyspnea)
-  const hasProstheticValveVD = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.4'));
+  // Prosthetic valve + new gradient-increase proxy (R06 dyspnea). Obstruction/thrombosis affects ANY prosthesis.
+  // Fix (AUDIT-123, 2026-06-17): added Z95.3 (xenogenic/bioprosthetic) to the prior Z95.2||Z95.4 set.
+  const hasProstheticValveVD = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4'));
   const hasNewGradientProxy = dxCodes.some(c => c.startsWith('R06') || c.startsWith('R00'));
   if (
     hasProstheticValveVD &&
@@ -14446,7 +14461,7 @@ export function evaluateGapRules(
       },
       evidence: {
         triggerCriteria: [
-          'Prosthetic heart valve (Z95.2 or Z95.4)',
+          'Prosthetic heart valve (Z95.2, Z95.3, or Z95.4)',
           'New symptoms (dyspnea R06 or palpitations R00)',
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
@@ -14511,7 +14526,7 @@ export function evaluateGapRules(
       },
       evidence: {
         triggerCriteria: [
-          'Prosthetic heart valve (Z95.2 or Z95.4)',
+          'Prosthetic heart valve (Z95.2, Z95.3, or Z95.4)',
           'Fever (R50.*)',
         ],
         guidelineSource: '2015 AHA Scientific Statement on Infective Endocarditis; 2023 ESC Guidelines on Endocarditis',
@@ -14850,11 +14865,14 @@ export function evaluateGapRules(
   // VD-ANTIPLATELET-BIOPROSTHETIC: Antiplatelet After Bioprosthetic Valve >3 Months
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 2a, LOE B
   if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasBioprosthetic = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.4')); // bioprosthetic valve proxy
-    const noMechanicalValveBio = !dxCodes.some(c => c.startsWith('Z95.3')); // not mechanical
+    // Fix (AUDIT-123, 2026-06-17): this rule was INVERTED - it gated on Z95.2||Z95.4 AND !Z95.3 with a comment
+    //   calling Z95.3 "mechanical". Z95.3 (xenogenic) IS the bioprosthetic code. Per operator ruling, a
+    //   DRUG-BEARING antiplatelet recommendation must be Z95.3-ONLY (never recommend antiplatelet-only to a
+    //   possibly-mechanical patient coded by the generic Z95.2). Now fires on the definitively-bioprosthetic Z95.3.
+    const hasBioprosthetic = dxCodes.some(c => c.startsWith('Z95.3')); // Z95.3 = xenogenic / bioprosthetic (definitive)
     const ASPIRIN_CODE_BIO = '1191';
     const onAspirinBio = medCodes.includes(ASPIRIN_CODE_BIO);
-    if (hasBioprosthetic && noMechanicalValveBio && !onAspirinBio) {
+    if (hasBioprosthetic && !onAspirinBio) {
       gaps.push({
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.VALVULAR_DISEASE,
@@ -14868,8 +14886,7 @@ export function evaluateGapRules(
         },
         evidence: {
           triggerCriteria: [
-            'Bioprosthetic valve (Z95.2/Z95.4)',
-            'Not a mechanical valve (Z95.3)',
+            'Bioprosthetic (xenogenic) valve (Z95.3)',
             'No aspirin in active medications',
           ],
           guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',

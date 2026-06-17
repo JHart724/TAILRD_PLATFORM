@@ -807,7 +807,8 @@ describe('AUDIT-103: SH-2 (GAP-SH-002) AVR evidence object - VHD provenance (v3.
 describe('AUDIT-103: VD-1 mechanical-valve warfarin evidence object + three-way LOE agreement', () => {
   const block = gapBlockFor(engineSrc, 'Warfarin not active with mechanical valve');
   it('triggerCriteria describes mechanical-valve gating, not the AS-echo donor string', () => {
-    expect(block).toMatch(/Mechanical heart valve \(Z95\.2\/Z95\.3\/Z95\.4\)/);
+    // AUDIT-123 (2026-06-17): the string now matches the AUDIT-164 predicate (Z95.3 excluded - it is bioprosthetic).
+    expect(block).toMatch(/Mechanical heart valve \(Z95\.2 or Z95\.4\)/);
     expect(block).not.toContain('Echo surveillance overdue for aortic stenosis');
   });
   it('guidelineSource + classOfRecommendation unchanged (already correct)', () => {
