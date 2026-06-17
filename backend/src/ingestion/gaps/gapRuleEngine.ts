@@ -1239,14 +1239,38 @@ export const RUNTIME_GAP_REGISTRY = [
   },
   {
     id: 'gap-sh-3-mitral-intervention',
-    name: 'Mitral Valve Intervention Evaluation',
+    name: 'Severe primary MR - surgical referral',
     module: 'STRUCTURAL_HEART',
     guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
     guidelineVersion: '2020',
     guidelineOrg: 'ACC/AHA',
-    lastReviewDate: '2026-04-03',
-    nextReviewDue: '2026-10-03',
+    lastReviewDate: '2026-06-17',
+    nextReviewDue: '2026-12-17',
     classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-016-mr-primary-af',
+    name: 'Severe primary MR + new AF - surgical IIa',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-17',
+    nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-017-mr-primary-ph',
+    name: 'Severe primary MR + pulmonary hypertension - surgical IIa',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-17',
+    nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a',
     levelOfEvidence: 'B',
   },
   {
@@ -6858,10 +6882,13 @@ export function evaluateGapRules(
   // measures (echo-severity threading unlock, PR #404): aortic_valve_mean_gradient / aortic_valve_area /
   // aortic_valve_vmax / valve_severity (0-5 ordinal). Pattern A: AS = I35.0 specifically (not broad I35).
   // ============================================================
-  // severeAS: guideline severe-AS gate (2020 ACC/AHA VHD) - any-of the echo-severity criteria.
-  const severeAS =
+  // concordantSevereAS: the CONFIRMED severe-AS gate for the AVR-INTERVENE gaps (SH-002/006). Operator LFLG
+  // ruling (2026-06-17, confirm-then-intervene): use ONLY the unambiguous high-gradient definitions (mean
+  // gradient>=40 OR Vmax>=4.0) plus an explicit severe grade (valve_severity>=5). AVA<=1.0 ALONE is NOT used
+  // here - a small AVA with a LOW gradient is LFLG (severity UNCERTAIN pending DSE), which routes to SH-003
+  // (low-EF LFLG -> DSE) / SH-004 (paradoxical LFLG -> confirm) for severity confirmation FIRST, not to AVR.
+  const concordantSevereAS =
     (labValues['aortic_valve_mean_gradient'] !== undefined && labValues['aortic_valve_mean_gradient'] >= 40) ||
-    (labValues['aortic_valve_area'] !== undefined && labValues['aortic_valve_area'] <= 1.0) ||
     (labValues['aortic_valve_vmax'] !== undefined && labValues['aortic_valve_vmax'] >= 4.0) ||
     (labValues['valve_severity'] !== undefined && labValues['valve_severity'] >= 5);
   // Any prosthetic AV already present (Z95.2/.3/.4) = already replaced -> exclude from "AVR not done" gaps.
@@ -6875,7 +6902,7 @@ export function evaluateGapRules(
   // NO severity gate -> over-detected mild/moderate AS). Now gated on the threaded severe-AS severity + a symptom dx.
   // Path-B: AVR-referral/procedure status is not ingested (no AVR/TAVR CPT set yet, chunk-2/3) - the prosthetic-valve
   // exclusion removes already-replaced patients; the referral-absence arm is a documented Path-B.
-  if (hasAorticStenosis && severeAS && symptomaticAS && !hasAnyProstheticValve_SH
+  if (hasAorticStenosis && concordantSevereAS && symptomaticAS && !hasAnyProstheticValve_SH
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
       type: TherapyGapType.PROCEDURE_INDICATED,
@@ -6893,7 +6920,7 @@ export function evaluateGapRules(
       evidence: {
         triggerCriteria: [
           'Aortic stenosis (I35.0)',
-          'Severe AS (mean gradient >=40, AVA <=1.0, Vmax >=4.0, or valve_severity >=5)',
+          'Concordant severe AS (mean gradient >=40, Vmax >=4.0, or valve_severity >=5; AVA-alone-low-gradient LFLG routes to SH-003/004)',
           'Symptomatic (HF I50 / syncope R55 / angina I20)',
           'No prosthetic aortic valve already present',
         ],
@@ -6908,7 +6935,7 @@ export function evaluateGapRules(
   // GAP-SH-006: Asymptomatic severe AS + LV dysfunction (Class IIa AVR). COR 2a.
   // Trigger: severe AS + LVEF<55 + NOT symptomatic + no prosthetic AV. (LVEF<50 subset is Class 1 - surfaced
   // for operator; the >=50-<55 band + the abnormal-stress arm are the 2a triggers; stress-test result not threaded.)
-  if (hasAorticStenosis && severeAS && labValues['lvef'] !== undefined && labValues['lvef'] < 55
+  if (hasAorticStenosis && concordantSevereAS && labValues['lvef'] !== undefined && labValues['lvef'] < 55
       && !symptomaticAS && !hasAnyProstheticValve_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
       type: TherapyGapType.PROCEDURE_INDICATED,
@@ -6923,7 +6950,7 @@ export function evaluateGapRules(
       evidence: {
         triggerCriteria: [
           'Aortic stenosis (I35.0)',
-          'Severe AS (mean gradient >=40, AVA <=1.0, Vmax >=4.0, or valve_severity >=5)',
+          'Concordant severe AS (mean gradient >=40, Vmax >=4.0, or valve_severity >=5; AVA-alone-low-gradient LFLG routes to SH-003/004)',
           `LVEF: ${labValues['lvef']}% (<55)`,
           'Asymptomatic (no HF/syncope/angina dx)',
           'No prosthetic aortic valve already present',
@@ -7070,38 +7097,114 @@ export function evaluateGapRules(
   // NEW Structural Heart Rules (SH-3 through SH-9)
   // ============================================================
 
-  // Gap SH-3: Mitral Valve Intervention Evaluation
-  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
-  // Mitral regurgitation (I34.0) with LVEF < 60 or symptomatic warrants intervention evaluation
+  // ============================================================
+  // SH CHUNK 2 (v3.0 SH buildout, 2026-06-17): Mitral regurgitation severity. Reads the threaded MR severity
+  // (echo-severity unlock PR #404): mitral_eroa / mitral_regurg_grade (0-4) / valve_severity (0-5) / pasp.
+  // PRIMARY vs SECONDARY MR: ICD-10 I34.0 covers BOTH (no separate code). secondaryMRContext (functional MR
+  // from LV dysfunction) is proxied by HF (I50) + reduced LVEF; the PRIMARY (degenerative) gaps below EXCLUDE it
+  // because secondary MR is GDMT-first-then-TEER (COAPT), NOT primary surgical repair (the MR subgroup distinction).
+  // ============================================================
   const hasMitralRegurg = dxCodes.some(c => c.startsWith('I34.0'));
-  if (
-    hasMitralRegurg &&
-    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
-  ) {
-    const lvefBelow60 = labValues['lvef'] !== undefined && labValues['lvef'] < 60;
-    const symptomatic = dxCodes.some(c => c.startsWith('R06') || c.startsWith('R00')); // Dyspnea, palpitations
-    if (lvefBelow60 || symptomatic) {
-      gaps.push({
-        type: TherapyGapType.PROCEDURE_INDICATED,
-        module: ModuleType.STRUCTURAL_HEART,
-        status: 'Mitral valve intervention evaluation recommended for review',
-        target: 'Mitral valve intervention assessment completed',
-        recommendations: {
-          action: 'Consider referral to heart valve team for mitral valve intervention evaluation per 2020 ACC/AHA VHD',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Mitral regurgitation (I34.0)',
-            `LVEF: ${labValues['lvef'] ?? 'N/A'}% (threshold < 60%)`,
-            `Symptomatic: ${symptomatic ? 'Yes' : 'No'}`,
-          ],
-          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
-          classOfRecommendation: '1',
-          levelOfEvidence: 'B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Life expectancy < 1 year'],
-        },
-      });
-    }
+  const severeMR =
+    (labValues['mitral_eroa'] !== undefined && labValues['mitral_eroa'] >= 0.40) ||
+    (labValues['mitral_regurg_grade'] !== undefined && labValues['mitral_regurg_grade'] >= 4) ||
+    (labValues['valve_severity'] !== undefined && labValues['valve_severity'] >= 5);
+  // secondaryMRContext: functional MR driven by LV systolic dysfunction (HF + reduced EF). Such patients route
+  // to GDMT-first then TEER (COAPT) - NOT to the primary surgical gaps. Path-B: a definitive primary-vs-secondary
+  // echo classification is not ingested; HF + LVEF<50 is the secondary proxy.
+  const secondaryMRContext = hasHF && labValues['lvef'] !== undefined && labValues['lvef'] < 50;
+  const symptomaticMR = dxCodes.some(c => c.startsWith('R06') || c.startsWith('R00') || c.startsWith('I50'));
+
+  // Gap SH-3 / GAP-SH-014: Severe PRIMARY MR - surgical referral. COR 1 (symptomatic) / 2a (asymptomatic + LV trigger).
+  // AUDIT-125 TIGHTENING: the prior rule fired on I34.0 + (LVEF<60 OR symptomatic) with NO severity gate (over-
+  // detected mild/moderate MR). Now gated on the threaded severe-MR severity + PRIMARY context.
+  if (hasMitralRegurg && severeMR && !secondaryMRContext
+      && (symptomaticMR || (labValues['lvef'] !== undefined && labValues['lvef'] <= 60))
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Surgical referral not documented for severe primary mitral regurgitation',
+      target: 'Heart valve team mitral surgery evaluation (repair preferred over replacement)',
+      recommendations: {
+        // STANDING SUBGROUP CHECK: PRIMARY (degenerative) severe MR -> SURGICAL MV REPAIR (preferred) or
+        // replacement, NOT TEER. TEER is for SECONDARY MR (GDMT-first, COAPT) or prohibitive-surgical-risk primary
+        // MR - those are excluded here (secondaryMRContext) so this never recommends primary surgery to a
+        // functional-MR patient. Repair-vs-replacement is heart-team-determined by valve anatomy.
+        action: 'Refer to heart valve team for mitral valve surgery (repair preferred over replacement) per 2020 ACC/AHA VHD (Class 1 if symptomatic; Class 2a if asymptomatic with LVEF 30-60% or LV dilation)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Severe PRIMARY (degenerative) MR with symptoms or LV dysfunction warrants surgical MV repair (durable, preferred) over replacement. This is distinct from SECONDARY/functional MR (GDMT-first then TEER per COAPT), which is excluded here.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mitral regurgitation (I34.0)',
+          'Severe MR (EROA >=0.40, regurg grade >=4, or valve_severity >=5)',
+          'Primary/degenerative context (not HF+LVEF<50 secondary/functional MR)',
+          'Symptomatic (R06/R00/I50) or LVEF <=60%',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Secondary/functional MR (routes to GDMT/TEER)', 'Prior MV intervention not position-specifically codable (Path-B)'],
+      },
+    });
+  }
+
+  // GAP-SH-016: Severe primary MR + new AF - surgical Class IIa.
+  if (hasMitralRegurg && severeMR && !secondaryMRContext && dxCodes.some(c => c.startsWith('I48'))
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Surgery not considered for severe primary MR with new atrial fibrillation (Class IIa)',
+      target: 'Heart valve team MV repair evaluation for severe primary MR + AF',
+      recommendations: {
+        action: 'Consider MV surgery (repair preferred) for asymptomatic severe primary MR with new AF per 2020 ACC/AHA VHD (Class 2a)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'New AF in asymptomatic severe PRIMARY MR is a Class 2a trigger for MV surgery (repair preferred). Secondary/functional MR excluded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mitral regurgitation (I34.0)',
+          'Severe MR (EROA >=0.40, regurg grade >=4, or valve_severity >=5)',
+          'Primary/degenerative context',
+          'Atrial fibrillation (I48.*)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Secondary/functional MR'],
+      },
+    });
+  }
+
+  // GAP-SH-017: Severe primary MR + pulmonary hypertension (PASP>50) - surgical Class IIa.
+  if (hasMitralRegurg && severeMR && !secondaryMRContext
+      && labValues['pasp'] !== undefined && labValues['pasp'] > 50
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Surgery not considered for severe primary MR with pulmonary hypertension (Class IIa)',
+      target: 'Heart valve team MV repair evaluation for severe primary MR + PASP>50',
+      recommendations: {
+        action: 'Consider MV surgery (repair preferred) for asymptomatic severe primary MR with PASP>50 mmHg per 2020 ACC/AHA VHD (Class 2a)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Pulmonary hypertension (resting PASP>50) in asymptomatic severe PRIMARY MR is a Class 2a surgical trigger (repair preferred). Secondary/functional MR excluded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mitral regurgitation (I34.0)',
+          'Severe MR (EROA >=0.40, regurg grade >=4, or valve_severity >=5)',
+          'Primary/degenerative context',
+          `PASP: ${labValues['pasp']} mmHg (>50)`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Secondary/functional MR'],
+      },
+    });
   }
 
   // Gap SH-4: Tricuspid Valve Assessment
@@ -8174,12 +8277,16 @@ export function evaluateGapRules(
     });
   }
 
-  // Gap SH-11: Transcatheter Mitral Valve Replacement Candidacy
-  // Guideline: 2020 ACC/AHA VHD Guideline, Class 2a, LOE C
-  // Severe MR (I34.0) + age > 80
+  // Gap SH-11 / GAP-SH-064: Transcatheter MVR candidacy for severe MR with non-TEER anatomy. COR 2a.
+  // Guideline: 2020 ACC/AHA VHD Guideline.
+  // AUDIT-125 TIGHTENING (v3.0 SH chunk 2): the prior rule fired on I34.0 + age>80 with NO severity gate (over-
+  // detected mild/moderate MR). Now gated on the threaded severe-MR severity. Path-B: TEER-eligibility / valve
+  // anatomy (the "non-TEER anatomy" qualifier) is not ingested - this fires on severe MR + high-surgical-risk age;
+  // the structural heart team confirms TEER-ineligibility vs TMVR candidacy.
   if (
     hasMR10 &&
-    age > 80 &&
+    severeMR &&
+    age > 75 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
@@ -8187,11 +8294,12 @@ export function evaluateGapRules(
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Transcatheter mitral valve replacement candidacy recommended for review',
       target: 'TMVR candidacy evaluation by structural heart team completed',
-      recommendations: { action: 'Consider TMVR candidacy evaluation for severe MR in elderly patient per 2020 ACC/AHA VHD' },
+      recommendations: { action: 'Consider TMVR candidacy evaluation for severe MR with high surgical risk and TEER-unfavorable anatomy per 2020 ACC/AHA VHD' },
       evidence: {
         triggerCriteria: [
-          'Severe mitral regurgitation (I34.0)',
-          `Age: ${age} (> 80)`,
+          'Severe mitral regurgitation (EROA >=0.40, regurg grade >=4, or valve_severity >=5)',
+          `Age: ${age} (>75, high surgical risk proxy)`,
+          'TEER-eligibility / valve anatomy not ingested (Path-B)',
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
         classOfRecommendation: 'Class 2a',

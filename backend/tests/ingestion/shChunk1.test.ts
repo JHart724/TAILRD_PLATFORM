@@ -19,9 +19,14 @@ describe('SH-002 severe symptomatic AS -> AVR', () => {
     const g = evaluateGapRules([AS, HF], { aortic_valve_mean_gradient: 48 }, [], 75, 'MALE');
     expect(find(g, 'AVR not referred for severe symptomatic aortic stenosis')).toBeTruthy();
   });
-  it('fires: severe via AVA<=1.0 or valve_severity>=5', () => {
-    expect(find(evaluateGapRules([AS, HF], { aortic_valve_area: 0.8 }, [], 70, 'MALE'), 'AVR not referred for severe symptomatic')).toBeTruthy();
+  it('fires: concordant severe via Vmax>=4.0 or valve_severity>=5', () => {
+    expect(find(evaluateGapRules([AS, HF], { aortic_valve_vmax: 4.5 }, [], 70, 'MALE'), 'AVR not referred for severe symptomatic')).toBeTruthy();
     expect(find(evaluateGapRules([AS, HF], { valve_severity: 5 }, [], 70, 'MALE'), 'AVR not referred for severe symptomatic')).toBeTruthy();
+  });
+  it('LFLG partition: symptomatic AVA<1.0 + low gradient + no severe grade -> NOT SH-002 (routes to SH-003 for confirmation)', () => {
+    const g = evaluateGapRules([AS, HF], { aortic_valve_area: 0.8, aortic_valve_mean_gradient: 30, lvef: 40 }, [], 70, 'MALE');
+    expect(find(g, 'AVR not referred for severe symptomatic')).toBeFalsy();
+    expect(find(g, 'Low-flow low-gradient AS: dobutamine stress echo')).toBeTruthy();
   });
   it('subgroup-aware recommendation: AVR by SAVR-vs-TAVR (not blanket TAVR)', () => {
     const gap = find(evaluateGapRules([AS, HF], { aortic_valve_mean_gradient: 48 }, [], 75, 'MALE'), 'AVR not referred for severe symptomatic');
@@ -48,16 +53,16 @@ describe('SH-002 severe symptomatic AS -> AVR', () => {
 
 // ---- SH-006: asymptomatic severe AS + LVEF<55 (Class IIa) ----
 describe('SH-006 asymptomatic severe AS + LV dysfunction', () => {
-  it('fires: severe AS (AVA 0.8) + LVEF 50 + asymptomatic', () => {
-    const g = evaluateGapRules([AS], { aortic_valve_area: 0.8, lvef: 50 }, [], 70, 'MALE');
+  it('fires: concordant severe AS (gradient 48) + LVEF 50 + asymptomatic', () => {
+    const g = evaluateGapRules([AS], { aortic_valve_mean_gradient: 48, lvef: 50 }, [], 70, 'MALE');
     expect(find(g, 'asymptomatic severe AS with LV dysfunction')).toBeTruthy();
   });
   it('gates: symptomatic (routes to SH-002)', () => {
-    const g = evaluateGapRules([AS, HF], { aortic_valve_area: 0.8, lvef: 50 }, [], 70, 'MALE');
+    const g = evaluateGapRules([AS, HF], { aortic_valve_mean_gradient: 48, lvef: 50 }, [], 70, 'MALE');
     expect(find(g, 'asymptomatic severe AS with LV dysfunction')).toBeFalsy();
   });
   it('gates: LVEF 60 (no LV dysfunction)', () => {
-    const g = evaluateGapRules([AS], { aortic_valve_area: 0.8, lvef: 60 }, [], 70, 'MALE');
+    const g = evaluateGapRules([AS], { aortic_valve_mean_gradient: 48, lvef: 60 }, [], 70, 'MALE');
     expect(find(g, 'asymptomatic severe AS with LV dysfunction')).toBeFalsy();
   });
 });

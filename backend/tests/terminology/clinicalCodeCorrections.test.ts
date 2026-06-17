@@ -793,7 +793,7 @@ describe('AUDIT-103: SH-2 (GAP-SH-002) AVR evidence object - VHD provenance (v3.
   });
   it('triggerCriteria now carries the AUDIT-125 severity gate (severe AS via threaded echo measures)', () => {
     expect(block).toMatch(/Aortic stenosis \(I35\.0\)/);
-    expect(block).toMatch(/Severe AS \(mean gradient/);
+    expect(block).toMatch(/Concordant severe AS \(mean gradient/); // v3.0 SH chunk 1 LFLG partition (concordant high-gradient only)
     expect(block).not.toContain('Rate control agent not prescribed in AFib');
   });
   it('AF-donor exclusions (bradycardia / sick sinus) are gone; hospice exclusion + the SH-002 gates remain', () => {
