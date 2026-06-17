@@ -64,7 +64,7 @@ const FinancialSummary: React.FC<FinancialSummaryProps> = ({
 
   const getMarginColor = (margin: number): string => {
  if (margin >= 0) return 'text-teal-700';
- return 'text-red-600';
+ return 'text-amber-600'; // AUDIT-153: negative margin is data-negative (amber), not clinical alarm (red)
   };
 
   return (

@@ -161,11 +161,11 @@ const FinancialBenchmarking: React.FC<FinancialBenchmarkingProps> = ({
                 {isPositive ? (
                   <TrendingUp className="w-3 h-3 text-teal-700" />
                 ) : (
-                  <TrendingDown className="w-3 h-3 text-arterial-600" />
+                  <TrendingDown className="w-3 h-3 text-amber-600" />
                 )}
                 <span
                   className={`text-xs font-body font-medium ${
-                    isPositive ? 'text-teal-700' : 'text-arterial-600'
+                    isPositive ? 'text-teal-700' : 'text-amber-600'
                   }`}
                 >
                   {item.trend.value}

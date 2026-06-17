@@ -409,7 +409,7 @@ const QualityReportGenerator: React.FC<QualityReportGeneratorProps> = ({ classNa
  <label className="block text-sm font-medium text-titanium-700 mb-2">Actions</label>
  <button
  onClick={exportTableData}
- className="w-full px-3 py-2 bg-crimson-500 text-white rounded-lg hover:bg-crimson-600 transition-colors duration-200 flex items-center justify-center gap-2 text-sm"
+ className="w-full px-3 py-2 bg-chrome-700 text-white rounded-lg hover:bg-chrome-800 transition-colors duration-200 flex items-center justify-center gap-2 text-sm"
  >
  <Database className="w-4 h-4" />
  Export CSV

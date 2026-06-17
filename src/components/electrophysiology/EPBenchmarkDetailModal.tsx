@@ -47,7 +47,7 @@ const EPBenchmarkDetailModal: React.FC<EPBenchmarkDetailModalProps> = ({
  {ourValue}{unit}
  </div>
  <div className={`flex items-center text-lg font-semibold ${
- isPositiveTrend ? 'text-teal-700' : 'text-red-600'
+ isPositiveTrend ? 'text-teal-700' : 'text-amber-600'
  }`}>
  {isPositiveTrend ? <TrendingUp className="w-5 h-5 mr-1" /> : <TrendingDown className="w-5 h-5 mr-1" />}
  {formatDelta(delta, unit)} vs national ({toFixed(trendPercentage, 1)}%)
