@@ -101,6 +101,7 @@ export async function writePatients(
         'lvef', 'bnp', 'nt_probnp', 'ferritin', 'tsat', 'sodium', 'potassium', 'egfr',
         'ldl', 'lpa', 'triglycerides', 'qtc_interval', 'qrs_duration', 'kccq_score',
         'abi_right', 'abi_left',
+        'inr', // coag lab - mechanical-valve / LVAD / AF anticoag (AUDIT-170 INR slug-fix, CSV path)
         // echo-severity numerics (AUDIT-165 remediation)
         'aortic_valve_vmax', 'aortic_valve_mean_gradient', 'aortic_valve_area', 'mitral_regurg_grade', 'sts_score',
         // TR + vena-contracta numerics (v3.0 SH chunk 3)
@@ -223,6 +224,7 @@ function getUnit(field: string): string {
     mitral_eroa: 'cm2',
     pasp: 'mmHg',
     ascending_aorta: 'cm',
+    inr: 'ratio',
   };
   return units[field] || '';
 }
@@ -259,6 +261,7 @@ function getObservationName(field: string): string {
     mitral_eroa: 'Mitral Effective Regurgitant Orifice Area',
     pasp: 'Pulmonary Artery Systolic Pressure',
     ascending_aorta: 'Ascending Aorta Diameter',
+    inr: 'International Normalized Ratio (INR)',
   };
   return names[field] || field;
 }

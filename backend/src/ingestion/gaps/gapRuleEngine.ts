@@ -3933,6 +3933,21 @@ export const RUNTIME_GAP_REGISTRY = [
     guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
     classOfRecommendation: '2a', levelOfEvidence: 'B-NR',
   },
+  // v3.0 VHD buildout chunk 3 registry entries (mechanical anticoagulation, post INR slug-fix, 2026-06-17).
+  {
+    id: 'gap-vhd-001-subtherapeutic-inr',
+    name: 'Mechanical Valve Sub-Therapeutic INR', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-006-mech-asa-adjunct',
+    name: 'Mechanical Valve ASA Adjunct With Vascular Disease', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'B-NR',
+  },
   {
     id: 'gap-pv-critical-limb',
     name: 'Critical Limb Ischemia Urgent Evaluation',
@@ -7977,6 +7992,80 @@ export function evaluateGapRules(
     });
   }
 
+  // ===== v3.0 VHD chunk 3: mechanical/bioprosthetic anticoagulation (post INR slug-fix) =====
+  // The AUDIT-170 slug-fix threads INR (LOINC 34714-6 -> 'inr') to labValues['inr'], so the INR-VALUE rules below
+  // can now read it (before the fix the threaded INR never reached them). Mechanical = Z95.2 (generic, treated-as-
+  // mech) || Z95.4 (the AUDIT-123-corrected predicate). Warfarin RxNorm 11289; aspirin 1191.
+  const hasMechValve_VHD3 = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.4'));
+  const onWarfarin_VHD3 = medCodes.includes('11289');
+
+  // Gap VHD-001: Mechanical valve on warfarin with sub-therapeutic INR (AUDIT-133 / post slug-fix)
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 maintain INR in the valve-specific therapeutic range).
+  // Tightening (AUDIT-133): the prior VD-3 only detected INR-ABSENT (monitoring overdue); this is the INR-VALUE gap - a
+  // sub-therapeutic INR is under-anticoagulation (valve-thrombosis / thromboembolism risk). Path-B: the target
+  // range is valve-position-dependent (aortic 2.0-3.0, mitral 2.5-3.5) and position is not codable; INR < 2.0 is
+  // the definite-sub-therapeutic threshold for ANY mechanical valve (the 2.0-2.5 mitral-subtherapeutic band is the
+  // documented Path-B residual). Safety-first: under-anticoagulating a mechanical valve is catastrophic.
+  if (hasMechValve_VHD3 && onWarfarin_VHD3
+      && labValues['inr'] !== undefined && labValues['inr'] < 2.0
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Mechanical valve with sub-therapeutic INR: warfarin management gap',
+      target: 'INR brought into the valve-specific therapeutic range (warfarin dose / adherence review)',
+      recommendations: {
+        action: 'Consider warfarin management (dose adjustment, adherence and time-in-therapeutic-range review) for a mechanical valve with a sub-therapeutic INR per 2020 ACC/AHA VHD (Class 1) - a sub-therapeutic INR is under-anticoagulation with valve-thrombosis and thromboembolism risk',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Subgroup: the INR target is valve-position-dependent (aortic mechanical 2.0-3.0, mitral mechanical 2.5-3.5). Path-B: valve position is not codable, so INR < 2.0 is the definite-sub-therapeutic gate for any mechanical valve; the 2.0-2.5 mitral-subtherapeutic band is not captured.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mechanical prosthetic valve (Z95.2 or Z95.4)',
+          'On warfarin (RxNorm 11289)',
+          `INR: ${labValues['inr']} (<2.0, sub-therapeutic for any mechanical valve)`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recently adjusted dose pending re-check', 'Documented goal-INR override'],
+      },
+    });
+  }
+
+  // Gap VHD-006: Mechanical valve + atherosclerotic disease without low-dose ASA adjunct
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 2a low-dose ASA adjunct to VKA for a mechanical valve WITH
+  // concomitant atherosclerotic vascular disease - the "when indicated" qualifier; routine ASA adjunct without a
+  // vascular indication was downgraded for bleeding risk).
+  const hasAtheroscleroticDz_VHD = dxCodes.some(c => c.startsWith('I25') || c.startsWith('I70'));
+  const onAspirin_VHD6 = medCodes.includes('1191');
+  if (hasMechValve_VHD3 && onWarfarin_VHD3 && hasAtheroscleroticDz_VHD && !onAspirin_VHD6
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Mechanical valve with atherosclerotic disease without low-dose ASA adjunct',
+      target: 'Low-dose aspirin adjunct to warfarin (with the bleeding-risk trade-off documented)',
+      recommendations: {
+        action: 'Consider low-dose aspirin (75-100 mg) adjunct to warfarin for a mechanical valve with concomitant atherosclerotic vascular disease per 2020 ACC/AHA VHD (Class 2a), weighing the incremental bleeding risk',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'The ASA adjunct is indicated by the concomitant vascular disease (the "when indicated" qualifier) - routine ASA adjunct without a vascular indication was downgraded for bleeding risk. Bioprosthetic ASA is a separate gap (VD-ANTIPLATELET).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mechanical prosthetic valve (Z95.2 or Z95.4)',
+          'On warfarin (RxNorm 11289)',
+          'Concomitant atherosclerotic vascular disease (I25 or I70)',
+          'No aspirin on the active medication list',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Active bleeding / high bleeding risk', 'Aspirin intolerance'],
+      },
+    });
+  }
+
   // Gap VD-6: DOAC Contraindicated in Mechanical Valve
   // Guideline: 2020 ACC/AHA VHD (RE-ALIGN Trial), Class 3 (Harm), LOE B
   // DOACs are contraindicated in mechanical valve patients -- warfarin is required
@@ -9015,9 +9104,14 @@ export function evaluateGapRules(
     c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4')
   );
   const hasDentalProcedure = dxCodes.some(c => c.startsWith('Z01.2'));
+  // Fix (AUDIT-135, 2026-06-17): the therapy-ABSENT guard - the prior rule fired on prosthetic-valve + dental
+  // regardless of whether prophylaxis was already prescribed, over-firing on already-treated patients. Now gates
+  // on the prophylaxis abx being ABSENT. Amoxicillin 723, clindamycin 2582 (RxNav-verified IN).
+  const onProphylaxisAbx_VD14 = medCodes.includes('723') || medCodes.includes('2582');
   if (
     hasProstheticVD14 &&
     hasDentalProcedure &&
+    !onProphylaxisAbx_VD14 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE) &&
     !hasContraindication(dxCodes, EXCLUSION_ALLERGY_DOCUMENTED)
   ) {
@@ -9612,33 +9706,14 @@ export function evaluateGapRules(
     });
   }
 
-  // Gap SH-012: Prosthetic valve structural deterioration (elevated gradient)
-  // Guideline: 2020 ACC/AHA VHD; rising prosthetic gradient signals structural valve deterioration (SVD).
-  const hasAnyProsthetic_SH12 = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4'));
-  const elevatedProstheticGradient_SH = labValues['aortic_valve_mean_gradient'] !== undefined && labValues['aortic_valve_mean_gradient'] >= 20;
-  if (hasAnyProsthetic_SH12 && elevatedProstheticGradient_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    gaps.push({
-      type: TherapyGapType.PROCEDURE_INDICATED,
-      module: ModuleType.STRUCTURAL_HEART,
-      status: 'Prosthetic valve with elevated gradient: structural deterioration evaluation gap',
-      target: 'Structural valve deterioration assessment + redo-intervention candidacy reviewed',
-      recommendations: {
-        action: 'Consider structural valve deterioration evaluation (and redo-intervention candidacy: valve-in-valve vs redo surgery) for a prosthetic valve with an elevated mean gradient per 2020 ACC/AHA VHD',
-        guideline: '2020 ACC/AHA Valvular Heart Disease',
-        note: 'Path-B: the spec trigger is a gradient RISE >=10 mmHg from baseline; serial/baseline gradients are not threaded, so an absolute elevated prosthetic mean gradient (>=20 mmHg) is the proxy. Native severe AS is handled separately (SH-002, which excludes prosthetic valves).',
-      },
-      evidence: {
-        triggerCriteria: [
-          'Prosthetic valve (Z95.2, Z95.3, or Z95.4)',
-          `Prosthetic mean gradient: ${labValues['aortic_valve_mean_gradient']} mmHg (>=20, elevated for a prosthesis)`,
-        ],
-        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
-        classOfRecommendation: 'Class 1',
-        levelOfEvidence: 'LOE C-LD',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Known stable elevated baseline gradient', 'Recent SVD assessment on file'],
-      },
-    });
-  }
+  // Gap SH-012: SUPERSEDED 2026-06-17 by the type-aware VHD-068 / VHD-011 (v3.0 VHD chunk 2). Firing removed.
+  // Superseded (AUDIT-169): SH-012 was the GENERAL, un-partitioned prosthetic-SVD gap - it gated ANY prosthetic
+  // (Z95.2/.3/.4) + elevated AORTIC gradient and applied an SVD/ViV-vs-redo recommendation UNIFORMLY, including to
+  // MECHANICAL valves (for which an elevated gradient is thrombosis/pannus, NOT structural deterioration). The
+  // chunk-2 partition strictly improves on it: VHD-068 (mechanical Z95.2/.4 -> PVT workup) + VHD-011 (bioprosthetic
+  // Z95.3 -> SVD / ViV-vs-redo), each with the type-correct recommendation, AND extended to the MITRAL prosthesis
+  // (mitral_valve_mean_gradient). No coverage lost (aortic still covered, mitral added, type-partition added).
+  // Supersede-not-delete: firing removed here; the SH registry entry is reconciled at the SH/VHD close.
 
   // Gap SH-092: Post-PE CTEPH surveillance
   // Guideline: 2019 ESC PE / 2022 ESC-ERS PH; persistent dyspnea after PE warrants chronic thromboembolic

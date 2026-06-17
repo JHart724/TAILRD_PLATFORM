@@ -4388,3 +4388,26 @@ Severity column copied verbatim from PHASE_0C_REPORT.md §3 per §18 register-li
 - **CPT-verification blocker:** CPT is AMA-proprietary with no free programmatic source (unlike RxNav/LOINC/ICD-10 via NLM); free verification of structural CPTs was BLOCKED in SH chunk 4 (TEVAR) - 403/paywall/redirect across CMS/AMA/AAPC. Remediation requires operator-provided verification or a licensed CPT source.
 - **Recommendation:** quarantine (annotate the suspect CPTs as UNVERIFIED in-file) + verify against an authoritative CPT source when available; do NOT silently trust; do NOT wire `ALL_GAP_VALUE_SETS` into a firing path until verified. Deferred to the CPT-verification-blocked tranche.
 - **Cross-references:** the SH chunk-4 TEVAR CPT-verification blocker; the echo-severity investigation (18148-8/77912-1 mislabels); the section-16 clinical-code verification standard; the parked SH-082/SH-083 (DUA_DEFERRED_GAP_REGISTER.md CPT-verification-blocked sub-tranche).
+
+---
+
+### AUDIT-169 - SH-012 (general prosthetic-SVD gap) superseded by the type-aware VHD-068/011: it applied SVD-framing to mechanical valves
+
+- **Phase:** v3.0 VHD buildout chunk 2 (operator ruling 2026-06-17).
+- **Severity:** LOW (P3). Recommendation-quality defect (wrong subgroup framing); no missed-gap/PHI harm. Detection-correct-recommendation-wrong class. Operator-confirmed per section 18.
+- **Status:** RESOLVED 2026-06-17 (v3.0 VHD buildout, branch `feat/vhd-chunk1-ar-severity`).
+- **Defect:** SH-012 (`gap-sh-012`, v3.0 SH chunk 6) was the GENERAL, un-partitioned prosthetic-dysfunction gap - it gated ANY prosthetic valve (`Z95.2/.3/.4`) + elevated AORTIC mean gradient (>=20) and applied a structural-valve-deterioration (SVD) / valve-in-valve-vs-redo recommendation UNIFORMLY. For a MECHANICAL valve, an elevated gradient is prosthetic-valve THROMBOSIS / pannus (-> anticoagulation/lysis/surgery), NOT structural deterioration - so SH-012 gave the wrong subgroup framing to mechanical-valve patients. It was also aortic-only (no mitral prosthesis coverage).
+- **Fix:** SH-012 firing removed (supersede-not-delete). The chunk-2 type-partition strictly improves on it: **VHD-068** (mechanical `Z95.2/.4` -> PVT workup) + **VHD-011** (bioprosthetic `Z95.3` -> SVD / ViV-vs-redo), each with the type-correct recommendation, AND extended to the MITRAL prosthesis (`mitral_valve_mean_gradient`). No coverage lost (aortic still covered, mitral added, type-partition added). Same supersede precedent as SH-12 -> SH-022 (AUDIT-167) and the legacy PFO/ASD retirements (AUDIT-127/128).
+- **Tests:** `shChunk6.test.ts` updated (the bioprosthetic case now fires VHD-011; the old general SH-012 status is asserted gone). `vhdChunk2.test.ts` covers the PVT-vs-SVD partition.
+- **Cross-references:** SH-012 (the superseded general gap); VHD-068 + VHD-011 (the type-aware replacements); AUDIT-167 (the SH-12 supersede precedent).
+
+---
+
+### AUDIT-170 - INR slug-case-mismatch: threaded INR never reached the mechanical-valve / LVAD gaps (AUDIT-070 lineage)
+
+- **Phase:** v3.0 VHD buildout chunk 3 (surfaced in the VHD re-scope, fixed 2026-06-17).
+- **Severity:** MEDIUM (P2). Silent UNDER-detection on a SAFETY-relevant cluster (mechanical-valve anticoagulation + LVAD INR) - the gaps could never fire on threaded INR. Mitigated synthetic/pre-DUA. AUDIT-070 lineage (FHIR ingestion slug-mismatch). Operator-confirmed per section 18.
+- **Status:** RESOLVED 2026-06-17 (v3.0 VHD buildout, branch `feat/vhd-chunk1-ar-severity`).
+- **Defect:** INR LOINC `34714-6` was NOT in `ECHO_LOINC_TO_SLUG` (the persist-site LOINC->slug map), so the FHIR transform persisted `observationType` = the raw LOINC `'34714-6'`. But VD-3 (INR monitoring), the new VHD-001 (sub-therapeutic INR), and the LVAD INR-out-of-range gap all read `labValues['inr']` (lowercase slug). Neither `'34714-6'` nor the `CARDIOVASCULAR_LAB_CODES` category-label `'INR'` (uppercase) equals `'inr'`, so threaded INR never reached any of them - silent under-detection. The CSV path had no `inr` column either.
+- **Fix:** (1) FHIR - mapped `'34714-6' -> 'inr'` in `ECHO_LOINC_TO_SLUG` (observationService.ts). (2) CSV - added `'inr'` to the `patientWriter` labFields allow-list (LABORATORY category) + `VD_COLUMNS` (csvSchema) + getUnit/getObservationName. Threaded INR now reaches `labValues['inr']` on both paths. Guarded by an assertion in `echoSeverityThreading.test.ts` (`ECHO_LOINC_TO_SLUG['34714-6'] === 'inr'` + the CSV writer carries `inr`). This unblocked the AUDIT-133 sub-therapeutic-INR tightening (VHD-001).
+- **Cross-references:** AUDIT-070 (the FHIR-ingestion slug-mismatch lineage); AUDIT-133 (the sub-therapeutic-INR detection the slug-fix unblocks); VD-3 + VHD-001 + the LVAD INR gap (the consumers); `cardiovascularValuesets` / `observationService.ts ECHO_LOINC_TO_SLUG`.
