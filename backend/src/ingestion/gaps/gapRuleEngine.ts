@@ -9322,6 +9322,135 @@ export function evaluateGapRules(
     });
   }
 
+  // ===== v3.0 SH chunk 7: CPT-unblocked post-procedure gaps (manufacturer-confirmed CPTs) =====
+  // These detect a prior PROCEDURE via the engine-wide procedureCodes param (8th arg, PR #396) - no threading.
+  // CPTs cleared the two-key bar (manufacturer reimbursement guide + operator sign-off): 93580 = ASD/PFO closure
+  // (Abbott Amplatzer guide; covers both ASD and PFO, no distinct PFO code), 93581 = VSD closure, 33418 = mitral
+  // TEER initial / 33419 = each additional (Abbott MitraClip guide; MITRAL, not tricuspid). STILL PARKED: SH-104
+  // (alcohol septal ablation 93583 - confirmed only via non-manufacturer sources, no device guide exists for the
+  // technique, so it does not clear the operator CPT bar). All recommended procedures named as text.
+  const onAnyAntithrombotic_SH = medCodes.includes('1191')
+    || P2Y12_CODES_CV.some(c => medCodes.includes(c))
+    || OAC_CODES_CV.some(c => medCodes.includes(c));
+  const hasSeptalClosure_SH = procedureCodes.includes('93580') || procedureCodes.includes('93581');
+  const hasMitralTEER_SH = procedureCodes.includes('33418') || procedureCodes.includes('33419');
+  const echoOverdueProxy_SH = labValues['lvef'] === undefined;
+  const hasAF_SH7 = dxCodes.some(c => c.startsWith('I48'));
+
+  // Gap SH-082: Post-ASD/PFO/VSD closure without an antithrombotic regimen
+  // Guideline: 2020 ACC/AHA VHD + closure-device IFUs; post-closure antiplatelet (aspirin +/- clopidogrel for
+  // ~6 months, then aspirin) is standard; OAC if atrial fibrillation. SUBGROUP-AWARE: AF -> OAC; else antiplatelet.
+  if (procedureCodes.includes('93580') || procedureCodes.includes('93581')) {
+    if (!onAnyAntithrombotic_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.STRUCTURAL_HEART,
+        status: 'Post-septal-closure device without an antithrombotic regimen',
+        target: 'Antithrombotic regimen documented (antiplatelet, or oral anticoagulation if atrial fibrillation)',
+        recommendations: {
+          action: hasAF_SH7
+            ? 'Consider an antithrombotic regimen after septal-closure device placement - oral anticoagulation is indicated with concurrent atrial fibrillation per 2020 ACC/AHA VHD and device IFUs'
+            : 'Consider an antiplatelet regimen (aspirin, with clopidogrel for the initial post-implant period) after septal-closure device placement per 2020 ACC/AHA VHD and device IFUs',
+          guideline: '2020 ACC/AHA Valvular Heart Disease; closure-device IFUs',
+          note: 'Detected via the procedureCodes param (CPT 93580 ASD/PFO or 93581 VSD closure, manufacturer-confirmed). Subgroup-aware: AF -> OAC; else antiplatelet. Path-B: implant date / duration not threaded.',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Prior septal-closure device (CPT 93580 ASD/PFO or 93581 VSD)',
+            'No antithrombotic (antiplatelet or anticoagulant) on the active medication list',
+            hasAF_SH7 ? 'Concurrent atrial fibrillation (I48.x)' : 'No atrial fibrillation (antiplatelet pathway)',
+          ],
+          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; closure-device Instructions for Use',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE C-EO',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Active bleeding / antithrombotic contraindication', 'Already on antithrombotic for another indication'],
+        },
+      });
+    }
+
+    // Gap SH-083: Post-closure residual-shunt surveillance echo
+    // Guideline: post-closure follow-up echo detects residual shunt and device-related complications.
+    if (echoOverdueProxy_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+      gaps.push({
+        type: TherapyGapType.IMAGING_OVERDUE,
+        module: ModuleType.STRUCTURAL_HEART,
+        status: 'Post-septal-closure without surveillance echo (residual-shunt assessment)',
+        target: 'Post-closure surveillance echocardiogram (residual shunt + device position) completed',
+        recommendations: {
+          action: 'Consider a post-closure surveillance echocardiogram to assess for residual shunt and device position after septal-closure device placement',
+          guideline: '2020 ACC/AHA Valvular Heart Disease; closure-device follow-up',
+          note: 'Detected via the procedureCodes param (CPT 93580/93581, manufacturer-confirmed). Path-B: residual-shunt magnitude is not quantified in structured data; the surveillance echo is the detection vehicle. Echo-overdue proxied by absent LVEF.',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Prior septal-closure device (CPT 93580 ASD/PFO or 93581 VSD)',
+            'No recent echocardiogram on file (surveillance-overdue proxy)',
+          ],
+          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE C-LD',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Recent surveillance echo within interval'],
+        },
+      });
+    }
+  }
+
+  // Gap SH-065: Post-mitral-TEER surveillance echo
+  // Guideline: 2020 ACC/AHA VHD; annual echo surveillance after transcatheter mitral repair (TEER).
+  if (hasMitralTEER_SH && echoOverdueProxy_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Post-mitral-TEER without annual surveillance echo',
+      target: 'Annual transthoracic echocardiogram after mitral TEER completed',
+      recommendations: {
+        action: 'Consider annual surveillance echocardiography after transcatheter edge-to-edge mitral repair (TEER) per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Detected via the procedureCodes param (CPT 33418/33419 mitral TEER, Abbott MitraClip-confirmed). Echo-overdue proxied by absent LVEF.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Prior mitral TEER (CPT 33418 or 33419)',
+          'No recent echocardiogram on file (surveillance-overdue proxy)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent surveillance echo within interval'],
+      },
+    });
+  }
+
+  // Gap SH-066: Recurrent significant MR after mitral TEER -> reassessment (redo TEER vs surgery)
+  // Guideline: 2020 ACC/AHA VHD; recurrent/residual significant MR after TEER warrants heart-team reassessment.
+  const recurrentSignificantMR_SH =
+    (labValues['mitral_eroa'] !== undefined && labValues['mitral_eroa'] >= 0.30) ||
+    (labValues['mitral_regurg_grade'] !== undefined && labValues['mitral_regurg_grade'] >= 3) ||
+    (labValues['valve_severity'] !== undefined && labValues['valve_severity'] >= 4);
+  if (hasMitralTEER_SH && recurrentSignificantMR_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Recurrent significant MR after mitral TEER: heart-team reassessment gap',
+      target: 'Heart-team reassessment (redo TEER vs mitral surgery) for recurrent/residual MR',
+      recommendations: {
+        action: 'Consider heart-team reassessment (redo TEER versus mitral valve surgery) for recurrent or residual significant mitral regurgitation after TEER per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Detected via the procedureCodes param (CPT 33418/33419 mitral TEER) + threaded MR severity. Path-B: the serial pre/post-TEER MR-grade trend is not threaded; current moderate-severe-or-worse MR is the recurrence proxy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Prior mitral TEER (CPT 33418 or 33419)',
+          'Recurrent/residual significant MR (EROA >=0.30, regurg grade >=3, or valve_severity >=4)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: 'Class 2a',
+        levelOfEvidence: 'LOE C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative + redo-transcatheter risk', 'Reassessment already documented'],
+      },
+    });
+  }
+
   // Gap VD-16: Mixed Valve Disease Assessment
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE C
   // Concurrent AS + AR (I35.2 mixed aortic valve disease)

@@ -355,13 +355,18 @@ The intersection (Tranche-2 SYNTHEA-EXPANDABLE AND HIGH-PILOT-VALUE) is the cand
 
 ## CPT-verification-blocked sub-tranche (NEW, 2026-06-17)
 
-**Distinct from Tranche 1 (DUA echo-morphology), Tranche 2 (Synthea-expandable numeric), and Tranche 3 (process/doc).** These gaps are NOT data-blocked: the `procedureCodes` param is threaded engine-wide (PR #396) and both runners populate it. They are VERIFICATION-blocked: they must gate on a structural-procedure CPT, and there is NO authoritative CPT-verification source available (CPT is AMA-proprietary; no free programmatic API like NLM RxNav/LOINC/ICD-10; free verification BLOCKED across CMS/AMA/AAPC in SH chunk 4). Per section-16 no-guess, they are NOT authored on unverified candidate CPTs, and a loose dx-proxy is NOT an acceptable fallback where the proxy mis-fires. Buildable when an authoritative CPT source (operator-provided or licensed) verifies the closure CPT set.
+**Distinct from Tranche 1 (DUA echo-morphology), Tranche 2 (Synthea-expandable numeric), and Tranche 3 (process/doc).** These gaps are NOT data-blocked: the `procedureCodes` param is threaded engine-wide (PR #396) and both runners populate it. They are VERIFICATION-blocked: they must gate on a structural-procedure CPT.
 
-| GAP-ID | Module | Title | CPT needed (UNVERIFIED candidates - do NOT author on these) | Why no dx-proxy | Buildable when |
+**UNBLOCKED 2026-06-17 (manufacturer-guide verification + operator sign-off):** the CPT bar was met for the closure + mitral-TEER codes via device-manufacturer reimbursement guides (the reachable authoritative public source - see §16.7). The following moved OUT of this tranche and are now BUILT: GAP-SH-082 + GAP-SH-083 (gate on `93580` ASD/PFO or `93581` VSD closure - Abbott Amplatzer guide), GAP-SH-065 + GAP-SH-066 (gate on `33418`/`33419` mitral TEER - Abbott MitraClip guide; MITRAL, not the mislabeled tricuspid `0544T/0545T`). Each consumes the existing `procedureCodes` param; no threading needed.
+
+**STILL PARKED (did not clear the two-key CPT bar):**
+
+| GAP-ID | Module | Title | CPT needed | Why still parked | Buildable when |
 |---|---|---|---|---|---|
-| GAP-SH-082 | SH | Post-ASD/PFO closure: antithrombotic regimen | ASD/PFO percutaneous closure (candidate 93580/93581) | Q21.0/Q21.12 = the defect (present before AND after closure); Z95.818 = any cardiac implant (over-broad). No code distinguishes "closure device implanted". | a verified closure CPT lands; then `procedureCodes.includes(<closure CPT>) && !onAntithrombotic` |
-| GAP-SH-083 | SH | Residual shunt post-closure: surveillance | ASD/PFO percutaneous closure (candidate 93580/93581) | same closure-detection problem as SH-082 | same as SH-082 |
+| GAP-SH-104 | SH | Septal alcohol ablation: post-procedure conduction surveillance | alcohol septal ablation (candidate 93583) | 93583 is confirmable only via NON-manufacturer sources (encyclopedia / generic coding pages); no device reimbursement guide exists for an alcohol-and-balloon technique, so it does NOT clear the §16.7 two-key bar. | an authoritative source (AMA/AHA Coding Clinic, or operator-direct) confirms 93583 |
 
-**Optional same-tranche cleanup (not a new gap):** the VHD LAAC-TEE-follow-up gap currently detects LAAC via the over-broad `Z95.818` (any cardiac/vascular implant) instead of the section-16-verified `LAAC_CPT` (33340) that the EP module already uses. Migrate it onto CPT 33340 for consistency + precision when the CPT-cleanup pass runs. Not blocking; opportunistic.
+**TEVAR currency note (no gap parked here):** SH-075 names TEVAR as recommendation text (no CPT gate), so no action. For any FUTURE TEVAR CPT gate, use the CPT-2026-current set `{33880, 33881, 33882, 33883, 33886}`; the formerly-candidate `33884/33889/33891` were DELETED in CPT 2026 (per §16.7 annual-currency).
 
-**Related finding:** AUDIT-168 (suspect-provenance structural CPTs in `allGapValueSets.ts` - quarantine/verify when a CPT source is available).
+**Optional cleanup (not a new gap):** the VHD LAAC-TEE-follow-up gap detects LAAC via the over-broad `Z95.818` instead of the manufacturer-confirmed `LAAC_CPT` (33340, Boston Scientific Watchman guide) that the EP module already uses. Migrate to 33340 when the CPT-cleanup pass runs. Not blocking; opportunistic.
+
+**Related finding:** AUDIT-168 (RESOLVED 2026-06-17 - the suspect structural CPTs were manufacturer-verified; the confirmed-wrong `0544T/0545T` tricuspid-TEER mislabel was corrected to `0569T/0570T`).

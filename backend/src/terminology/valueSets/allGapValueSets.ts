@@ -359,7 +359,10 @@ const GAP_064: GapValueSet = { gapId: 'GAP-064', gapName: 'GLP-1 RA in ASCVD + T
 // --- SH Module (Gaps 66-80) ---
 const GAP_066: GapValueSet = { gapId: 'GAP-066', gapName: 'TAVR Candidacy Evaluation', module: 'SH', diagnosisCodes: ['I35.0', 'I35.2'], exclusionCodes: [], procedureCodes: ['33361', '33363', '33365'], medicationCodes: [], labCodes: ['18148-8', '77912-1', '18010-0'], labThresholds: [], deviceCodes: [] };
 const GAP_067: GapValueSet = { gapId: 'GAP-067', gapName: 'TEER (MitraClip) Candidacy', module: 'SH', diagnosisCodes: ['I34.0', 'I50.x'], exclusionCodes: [], procedureCodes: ['33418', '33419'], medicationCodes: [], labCodes: ['18010-0'], labThresholds: [], deviceCodes: [] };
-const GAP_068: GapValueSet = { gapId: 'GAP-068', gapName: 'Tricuspid TEER Candidacy', module: 'SH', diagnosisCodes: ['I36.1'], exclusionCodes: [], procedureCodes: ['0544T', '0545T'], medicationCodes: [], labCodes: [], labThresholds: [], deviceCodes: [] };
+// Fix (AUDIT-168, 2026-06-17): tricuspid TEER (edge-to-edge, TriClip) = 0569T/0570T per the Abbott TriClip
+// coding guide. The prior 0544T/0545T are Transcatheter Valve Annulus Reconstruction (Cardioband) - 0544T mitral,
+// 0545T tricuspid - NOT edge-to-edge TEER. Corrected to 0569T/0570T.
+const GAP_068: GapValueSet = { gapId: 'GAP-068', gapName: 'Tricuspid TEER Candidacy', module: 'SH', diagnosisCodes: ['I36.1'], exclusionCodes: [], procedureCodes: ['0569T', '0570T'], medicationCodes: [], labCodes: [], labThresholds: [], deviceCodes: [] };
 const GAP_069: GapValueSet = { gapId: 'GAP-069', gapName: 'Bicuspid Aortic Valve Surveillance', module: 'SH', diagnosisCodes: ['Q23.1'], exclusionCodes: [], procedureCodes: ['93306'], medicationCodes: [], labCodes: [], labThresholds: [], deviceCodes: [] };
 const GAP_070: GapValueSet = { gapId: 'GAP-070', gapName: 'Obstructive HCM - Mavacamten', module: 'SH', diagnosisCodes: ['I42.1'], exclusionCodes: [], procedureCodes: [], medicationCodes: ['2551804', '2606847'], labCodes: ['18010-0'], labThresholds: [{ loincCode: '18010-0', operator: '>=', value: 55, unit: '%' }], deviceCodes: [] };
 const GAP_071: GapValueSet = { gapId: 'GAP-071', gapName: 'Septal Reduction Therapy in HCM', module: 'SH', diagnosisCodes: ['I42.1'], exclusionCodes: [], procedureCodes: [], medicationCodes: [], labCodes: [], labThresholds: [], deviceCodes: [] };
