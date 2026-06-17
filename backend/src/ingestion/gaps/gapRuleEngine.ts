@@ -3948,6 +3948,42 @@ export const RUNTIME_GAP_REGISTRY = [
     guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
     classOfRecommendation: '2a', levelOfEvidence: 'B-NR',
   },
+  // v3.0 VHD buildout chunk 4 registry entries (IE-surgical-dx + rheumatic, 2026-06-17).
+  {
+    id: 'gap-vhd-057-ie-hf-surgery',
+    name: 'IE With Heart Failure Urgent Surgery', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-059-ie-embolic-surgery',
+    name: 'IE Embolic Event On Therapy Surgery', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-064-prior-ie-dental-prophylaxis',
+    name: 'Prior IE Dental Antibiotic Prophylaxis', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2021 AHA Scientific Statement on Prevention of Infective Endocarditis',
+    guidelineVersion: '2021', guidelineOrg: 'AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-079-rheumatic-prophylaxis',
+    name: 'Rheumatic Heart Disease Benzathine Prophylaxis', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 AHA / World Heart Federation Rheumatic Heart Disease guidance',
+    guidelineVersion: '2020', guidelineOrg: 'AHA/WHF', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-083-rheumatic-af-warfarin',
+    name: 'Rheumatic Heart Disease AF Warfarin', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; INVICTUS',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-R',
+  },
   {
     id: 'gap-pv-critical-limb',
     name: 'Critical Limb Ischemia Urgent Evaluation',
@@ -8062,6 +8098,166 @@ export function evaluateGapRules(
         classOfRecommendation: '2a',
         levelOfEvidence: 'B-NR',
         exclusions: ['Hospice/palliative care (Z51.5)', 'Active bleeding / high bleeding risk', 'Aspirin intolerance'],
+      },
+    });
+  }
+
+  // ===== v3.0 VHD chunk 4: IE-surgical-indication (dx-driven) + rheumatic =====
+  // The IE early-surgery indications that are dx-CODABLE (HF from valve dysfunction I50; recurrent embolic event)
+  // are buildable per the SH-029 precedent; the culture/vegetation-dependent indications (uncontrolled infection /
+  // persistent bacteremia, large-vegetation embolism prevention) are NOT codable -> Path-B, documented. All ICDs
+  // section-16-verified vs NLM 2026-06-17. benzathine penicillin RxCUI 7982 (RxNav-verified, reused from SH).
+  // OVERLAP FLAGS (for the VHD close): VHD-057/059 overlap the SH-module SH-029 (lumped IE-surgery); VHD-083
+  // overlaps VD-12 (general AF+valve OAC-missing) + EP-008 (rheumatic-MS DOAC-contraindication).
+  const hasIE_VHD = dxCodes.some(c => c.startsWith('I33.0'));
+  const hasRheumatic_VHD = dxCodes.some(c =>
+    c.startsWith('I05') || c.startsWith('I06') || c.startsWith('I07') || c.startsWith('I08') || c.startsWith('I09')
+  );
+  const onBenzathinePCN_VHD = medCodes.includes('7982');
+
+  // Gap VHD-057: Infective endocarditis + heart failure -> urgent surgery indication
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 early/urgent surgery for IE with valve dysfunction causing HF).
+  if (hasIE_VHD && dxCodes.some(c => c.startsWith('I50')) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Infective endocarditis with heart failure: urgent surgery indication gap',
+      target: 'Urgent endocarditis-team valve surgery evaluation (HF from valve dysfunction)',
+      recommendations: {
+        action: 'Consider URGENT valve surgery evaluation for infective endocarditis complicated by heart failure from valve dysfunction per 2020 ACC/AHA VHD (Class 1) - this is the most urgent early-surgery indication',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Subgroup-aware: IE-with-HF is the URGENT (often within days) early-surgery indication, distinct from the elective indications. Path-B: that the HF is FROM the valve lesion (vs incidental) is proxied by the I33.0 + I50 co-occurrence.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Acute/subacute infective endocarditis (I33.0)',
+          'Heart failure (I50) - valve-dysfunction-driven',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Surgery already performed this episode'],
+      },
+    });
+  }
+
+  // Gap VHD-059: Infective endocarditis + embolic event on anticoagulation -> surgery consideration
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 2a surgery for recurrent emboli despite appropriate therapy).
+  const hasEmbolic_VHD = dxCodes.some(c => c.startsWith('I74') || c.startsWith('I63'));
+  const onAnticoag_VHD = ['11289', '1364430', '1114195', '1037042', '1599538'].some(c => medCodes.includes(c));
+  if (hasIE_VHD && hasEmbolic_VHD && onAnticoag_VHD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Infective endocarditis with embolic event on therapy: surgery consideration gap',
+      target: 'Endocarditis-team surgery evaluation for embolism despite appropriate antithrombotic/antimicrobial therapy',
+      recommendations: {
+        action: 'Consider valve surgery evaluation for infective endocarditis with an embolic event despite appropriate therapy per 2020 ACC/AHA VHD (Class 2a) - recurrent embolism on treatment is a surgical indication',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Path-B: a recurrent embolic event despite antimicrobial therapy is the surgical trigger; "on therapy" is proxied by a concurrent anticoagulant, and the embolic dx (I74 arterial / I63 cerebral) is the event proxy. Vegetation-size-driven prophylactic surgery is a separate, echo-morphology-blocked indication.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Acute/subacute infective endocarditis (I33.0)',
+          'Embolic event (I74 arterial or I63 cerebral)',
+          'On anticoagulation (appropriate-therapy proxy)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Surgery already performed this episode'],
+      },
+    });
+  }
+
+  // Gap VHD-064: Prior infective endocarditis + dental procedure without antibiotic prophylaxis
+  // Guideline: 2021 AHA Endocarditis Prevention (Class 1 prophylaxis for previous IE - a highest-risk condition).
+  const hasPriorIE_VHD = hasIE_VHD || dxCodes.some(c => c.startsWith('Z86.79'));
+  const hasDental_VHD = dxCodes.some(c => c.startsWith('Z01.2'));
+  const onProphylaxisAbx_VHD = medCodes.includes('723') || medCodes.includes('2582');
+  if (hasPriorIE_VHD && hasDental_VHD && !onProphylaxisAbx_VHD
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE) && !hasContraindication(dxCodes, EXCLUSION_ALLERGY_DOCUMENTED)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Prior infective endocarditis: dental antibiotic prophylaxis gap',
+      target: 'Endocarditis prophylaxis prescribed prior to dental procedure (previous-IE high-risk condition)',
+      medication: 'Amoxicillin 2g (or clindamycin if penicillin allergic)',
+      recommendations: {
+        action: 'Consider antibiotic prophylaxis prior to the dental procedure for a patient with previous infective endocarditis per 2021 AHA Endocarditis Prevention (Class 1 - previous IE is a highest-risk condition)',
+        guideline: '2021 AHA Scientific Statement on Prevention of Infective Endocarditis',
+        note: 'Previous IE is one of the four highest-risk conditions warranting prophylaxis. Path-B: a clean history-of-IE code is limited - I33.0 (current/recent) or Z86.79 (circulatory history) is the proxy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Previous / current infective endocarditis (I33.0 or Z86.79)',
+          'Dental procedure encounter (Z01.2)',
+          'No prophylaxis antibiotic on the active medication list',
+        ],
+        guidelineSource: '2021 AHA Scientific Statement on Prevention of Infective Endocarditis',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Documented penicillin allergy -- use alternative', 'Non-invasive dental procedure'],
+      },
+    });
+  }
+
+  // Gap VHD-079: Rheumatic heart disease without benzathine penicillin secondary prophylaxis
+  // Guideline: 2020 AHA RHD / WHF (Class 1 secondary prophylaxis - benzathine penicillin G every 3-4 weeks).
+  if (hasRheumatic_VHD && !onBenzathinePCN_VHD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Rheumatic heart disease without benzathine penicillin secondary prophylaxis',
+      target: 'Benzathine penicillin G secondary prophylaxis (with the duration set by age/risk)',
+      medication: 'Benzathine penicillin G',
+      recommendations: {
+        action: 'Consider benzathine penicillin G secondary prophylaxis for rheumatic heart disease per 2020 AHA/WHF RHD guidance (Class 1)',
+        guideline: '2020 AHA / World Heart Federation Rheumatic Heart Disease guidance',
+        note: 'Subgroup-aware: prophylaxis DURATION is age/risk-dependent (typically 10 years or until age 21 for RHD without carditis; longer - until age 40 or lifelong - for RHD with carditis/residual valve disease). Path-B: the duration nuance and penicillin-allergy alternative (a macrolide) are surfaced for clinician selection.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Chronic rheumatic heart disease (I05-I09)',
+          'No benzathine penicillin on the active medication list',
+        ],
+        guidelineSource: '2020 AHA / World Heart Federation Rheumatic Heart Disease guidance',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Penicillin allergy (use a macrolide alternative)', 'Beyond the indicated prophylaxis duration'],
+      },
+    });
+  }
+
+  // Gap VHD-083: Rheumatic heart disease + AF not on warfarin -> anticoagulation (warfarin, DOAC contraindicated)
+  // Guideline: 2020 ACC/AHA VHD; INVICTUS (warfarin superior to a DOAC in rheumatic AF). SAFETY subgroup: the OAC
+  // for rheumatic-MS-associated AF must be WARFARIN, not a DOAC.
+  const hasAF_VHD4 = dxCodes.some(c => c.startsWith('I48'));
+  const onWarfarin_VHD4 = medCodes.includes('11289');
+  if (hasRheumatic_VHD && hasAF_VHD4 && !onWarfarin_VHD4 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const onDOAC_VHD4 = ['1364430', '1114195', '1037042', '1599538'].some(c => medCodes.includes(c));
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Rheumatic heart disease + atrial fibrillation not on warfarin (DOAC contraindicated)',
+      target: 'Warfarin (INR 2.0-3.0) for rheumatic AF - DOACs are not established in rheumatic mitral stenosis',
+      recommendations: {
+        action: onDOAC_VHD4
+          ? 'SAFETY: Consider switching from the DOAC to warfarin (INR 2.0-3.0) for rheumatic heart disease with atrial fibrillation - DOACs are contraindicated/not established in rheumatic mitral stenosis (INVICTUS showed warfarin superiority) per 2020 ACC/AHA VHD'
+          : 'Consider warfarin (INR 2.0-3.0) for rheumatic heart disease with atrial fibrillation per 2020 ACC/AHA VHD - warfarin is the established anticoagulant (DOACs are not established in rheumatic mitral stenosis)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease; INVICTUS',
+        note: 'SAFETY subgroup: rheumatic-MS-associated AF requires WARFARIN, not a DOAC (the DOAC-contraindication subgroup). Fires whether the patient is on a DOAC (switch) or on no OAC (start warfarin).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Chronic rheumatic heart disease (I05-I09)',
+          'Atrial fibrillation (I48)',
+          onDOAC_VHD4 ? 'On a DOAC (contraindicated in rheumatic MS)' : 'Not on warfarin',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; INVICTUS trial',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Anticoagulation contraindicated', 'Already on warfarin'],
       },
     });
   }
