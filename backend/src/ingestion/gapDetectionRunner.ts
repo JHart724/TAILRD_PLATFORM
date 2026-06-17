@@ -23,6 +23,8 @@ const IMAGING_TYPES = new Set([
   // (echos are ~annual), not the 180-day LAB cutoff. Covers both the CSV slugs and the path-2 FHIR slugs.
   'aortic_valve_vmax', 'aortic_valve_mean_gradient', 'aortic_valve_area', 'mitral_regurg_grade',
   'mitral_eroa', 'mitral_valve_area', 'valve_severity', 'sts_score',
+  // TR + vena-contracta (v3.0 SH chunk 3)
+  'tr_regurg_grade', 'tr_regurg_vmax', 'mitral_vena_contracta', 'aortic_vena_contracta', 'tricuspid_vena_contracta',
 ]);
 
 export { runGapDetectionForPatient } from './runGapDetectionForPatient';

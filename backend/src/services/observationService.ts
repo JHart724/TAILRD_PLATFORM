@@ -61,10 +61,13 @@ const CARDIOVASCULAR_LAB_CODES: Record<string, string[]> = {
 // numerics reach the SH/VHD severity rules. Applied at the observationType persist sites only (section 17.3:
 // one map + one lookup, no broader ingestion refactor).
 //
-// EVERY LOINC here is section-16 VERIFIED against NLM Clinical Tables 2026-06-17 (the AUDIT-069 source; that
-// audit found a 17.2% LOINC error rate + that AUDIT-070's earlier echo-LOINC guesses 18148-8/77912-1 were
-// WRONG - hence no-guess verification). OMITTED because NLM verification returned empty (no fabrication):
-// tricuspid-regurgitation peak velocity/grade, LV end-systolic diameter (LVESD), mitral vena contracta -
+// EVERY LOINC here is section-16 VERIFIED against NLM Clinical Tables (the AUDIT-069 source; that audit found a
+// 17.2% LOINC error rate + that AUDIT-070's earlier echo-LOINC guesses 18148-8/77912-1 were WRONG - hence
+// no-guess verification). v3.0 SH chunk 3 (2026-06-17) ADDED the TR + vena-contracta set, each re-verified
+// against NLM: 18115-6 "Tricuspid valve Regurgitation degree", 18166-9 "Tricuspid valve Maximum regurgitant
+// blood flow velocity during systole", 77913-2 "Mitral valve Vena contracta diameter", 77908-2 "Aortic valve
+// Vena contracta diameter", 77917-3 "Tricuspid valve Vena contracta diameter".
+// STILL OMITTED because NLM verification returned empty (no fabrication): LV end-systolic diameter (LVESD) -
 // to be verified with alternate search terms in a follow-up before adding.
 //
 // DUA-TIME UNKNOWN: this is the STANDARD-NLM-LOINC default. Whether BSW Epic emits echo as these coded numeric
@@ -83,6 +86,11 @@ export const ECHO_LOINC_TO_SLUG: Record<string, string> = {
   '81395-6': 'mitral_regurg_fraction', '80056-5': 'mitral_regurg_fraction',
   '80055-7': 'mitral_regurg_fraction',                                                // MR regurgitant fraction
   '18012-5': 'ascending_aorta',                                                       // ascending thoracic aorta diameter by US
+  '18115-6': 'tr_regurg_grade',                                                       // TR regurgitation degree (NLM-verified)
+  '18166-9': 'tr_regurg_vmax',                                                        // TR max regurgitant velocity (NLM-verified)
+  '77913-2': 'mitral_vena_contracta',                                                 // MV vena contracta diameter (NLM-verified)
+  '77908-2': 'aortic_vena_contracta',                                                 // AV vena contracta diameter (NLM-verified)
+  '77917-3': 'tricuspid_vena_contracta',                                              // TV vena contracta diameter (NLM-verified)
 };
 
 const VITAL_SIGNS_CODES: Record<string, string[]> = {

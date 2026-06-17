@@ -72,6 +72,38 @@ describe('SH-017 severe primary MR + PASP>50', () => {
   });
 });
 
+// ---- SH-10: secondary MR -> TEER, GDMT-FIRST (AUDIT-166) ----
+describe('SH-10 secondary MR TEER - GDMT-first subgroup (AUDIT-166)', () => {
+  // secondary MR context: I34.0 + LVEF<50 + moderate-severe MR (EROA>=0.30) + age>75
+  it('NOT on GDMT -> recommends GDMT-first, does NOT jump to TEER', () => {
+    const g = evaluateGapRules([MR, HF], { lvef: 35, mitral_eroa: 0.35 }, [], 78, 'MALE');
+    const gap = find(g, 'optimize GDMT before transcatheter repair');
+    expect(gap).toBeTruthy();
+    expect(gap.recommendations.action).toContain('Optimize');
+    expect(gap.recommendations.action).not.toContain('Consider TEER');
+  });
+  // GDMT proxy reads RxCUIs: carvedilol 20352 (BB), lisinopril 29046 (RAASi)
+  it('on BB + RAASi -> TEER candidacy', () => {
+    const g = evaluateGapRules([MR, HF], { lvef: 35, mitral_eroa: 0.35 }, ['20352', '29046'], 78, 'MALE');
+    const gap = find(g, 'persistent despite optimized GDMT');
+    expect(gap).toBeTruthy();
+    expect(gap.recommendations.action).toContain('TEER');
+  });
+  it('on BB only (no RAASi) -> still GDMT-first (proxy requires both)', () => {
+    const g = evaluateGapRules([MR, HF], { lvef: 35, mitral_eroa: 0.35 }, ['20352'], 78, 'MALE');
+    expect(find(g, 'optimize GDMT before transcatheter repair')).toBeTruthy();
+  });
+  it('AUDIT-125 severity gate: I34.0 + LVEF<50 but NO MR severity -> does NOT fire (old over-detector did)', () => {
+    const g = evaluateGapRules([MR, HF], { lvef: 35 }, ['20352', '29046'], 78, 'MALE');
+    expect(find(g, 'secondary MR')).toBeFalsy();
+    expect(find(g, 'optimized GDMT')).toBeFalsy();
+  });
+  it('gates: moderate-severe via valve_severity 4 fires; sub-threshold (grade 2) does not', () => {
+    expect(find(evaluateGapRules([MR, HF], { lvef: 35, valve_severity: 4 }, [], 78, 'MALE'), 'optimize GDMT before transcatheter')).toBeTruthy();
+    expect(find(evaluateGapRules([MR, HF], { lvef: 35, mitral_regurg_grade: 2 }, [], 78, 'MALE'), 'optimize GDMT before transcatheter')).toBeFalsy();
+  });
+});
+
 // ---- SH-064: TMVR candidacy for severe MR (AUDIT-125 tightened) ----
 describe('SH-064 TMVR candidacy for severe MR', () => {
   it('fires: severe MR (EROA 0.45) + age 78', () => {

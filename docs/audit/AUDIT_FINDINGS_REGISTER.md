@@ -4343,3 +4343,16 @@ Severity column copied verbatim from PHASE_0C_REPORT.md §3 per §18 register-li
 - **Tests:** `backend/tests/ingestion/echoSeverityThreading.test.ts` (15) - ordinal map, LOINC map, IMAGING freshness, end-to-end labValues read, writer-drop regression.
 - **Classification effect:** NONE on the canonical (this build threads DATA; it authors no gaps + flips no classification). It UNBLOCKS the next-block SH+VHD severity-gap authoring (~64 gaps).
 - **Cross-references:** **AUDIT-125** (severity-encoding over-detection - its "add the echo-severity gate, data-coupled" remediation is UNBLOCKED by this threading); **AUDIT-070** (FHIR LOINC->observationType gap - this build's PATH 2 fixes the LVEF slug-mismatch for echo as a by-product, scope overlap noted); a related fixture-LOINC catch this pass - `sample-patients.json` had `18153-7` (RV wall thickness) mislabeled "Aortic valve area" and `20216-8` (deceleration slope) mislabeled "AV mean gradient"; both corrected to the section-16-verified `18089-3` / `18066-1` (AUDIT-070-class mislabel).
+
+---
+
+### AUDIT-166 - SH-10 secondary-MR TEER recommended without a GDMT-first gate (premature transcatheter intervention)
+
+- **Phase:** v3.0 SH buildout chunk 2 - MR severity (surfaced 2026-06-17 during the standing recommendation-subgroup check).
+- **Severity:** MEDIUM (P2). Detection-correct-but-recommendation-PREMATURE class (sibling to the EP-001 mech-valve / AS SAVR-vs-TAVR subgroup catches). No missed-gap/PHI harm; mitigated synthetic/pre-DUA, but recommending TEER to a GDMT-naive patient is clinically premature. Operator confirms per section 18.
+- **Status:** RESOLVED 2026-06-17 (v3.0 SH buildout, branch `feat/sh-chunk1-as-severity`).
+- **Defect:** SH-10 (gap-sh-10-mitraclip, COAPT) fired on `I34.0 + LVEF<50 + age>75` and recommended "MitraClip evaluation for secondary MR" with (a) NO MR-severity gate (AUDIT-125 class - over-detected mild/moderate MR) and (b) NO GDMT-first gate. COAPT enrolled GDMT-OPTIMIZED patients with PERSISTENT severe secondary MR - TEER for a GDMT-naive secondary-MR patient is premature (GDMT is the prerequisite, and optimizing GDMT alone reduces functional MR in many patients).
+- **Fix:** (a) AUDIT-125 severity gate added - moderate-severe+ secondary MR (valve_severity>=4 OR mitral_eroa>=0.30 OR mitral_regurg_grade>=3, the COAPT band, via the threaded echo severity). (b) STANDING SUBGROUP CHECK - the recommendation now BRANCHES on GDMT status (BB + RAASi present, the HF Pattern-C minimum): GDMT-naive -> "optimize GDMT FIRST, then TEER if severe MR persists"; GDMT-optimized -> TEER candidacy.
+- **Regression test:** `backend/tests/ingestion/shChunk2.test.ts` - secondary severe MR NOT on GDMT -> recommends GDMT-first (does NOT jump to TEER); secondary severe MR on BB+RAASi -> TEER candidacy.
+- **Classification effect:** the severity + GDMT gate narrows SH-10 (DET_OK -> tightened DET_OK at the SH canonical close; no SPEC/PARTIAL change - the rule still detects, more correctly). Confirmed at the SH close.
+- **Cross-references:** `gapRuleEngine.ts` SH-10; COAPT trial (GDMT-optimized enrolment); AUDIT-125 (the severity-gate class); the EP-001 / AS-SAVR-vs-TAVR subgroup-awareness precedents; the v3.0 SH chunk 2 primary-vs-secondary MR routing.

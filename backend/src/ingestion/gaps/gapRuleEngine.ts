@@ -6898,7 +6898,7 @@ export function evaluateGapRules(
   const symptomaticAS = dxCodes.some(c => c.startsWith('I50') || c.startsWith('R55') || c.startsWith('I20'));
 
   // Gap SH-2 / GAP-SH-002: Severe SYMPTOMATIC AS - AVR not referred. COR 1.
-  // AUDIT-125 TIGHTENING: the prior rule fired on I35.0 + age>=65 + LVEF-present (an "echo-performed" proxy with
+  // Tightening (AUDIT-125): the prior rule fired on I35.0 + age>=65 + LVEF-present (an "echo-performed" proxy with
   // NO severity gate -> over-detected mild/moderate AS). Now gated on the threaded severe-AS severity + a symptom dx.
   // Path-B: AVR-referral/procedure status is not ingested (no AVR/TAVR CPT set yet, chunk-2/3) - the prosthetic-valve
   // exclusion removes already-replaced patients; the referral-absence arm is a documented Path-B.
@@ -7116,7 +7116,7 @@ export function evaluateGapRules(
   const symptomaticMR = dxCodes.some(c => c.startsWith('R06') || c.startsWith('R00') || c.startsWith('I50'));
 
   // Gap SH-3 / GAP-SH-014: Severe PRIMARY MR - surgical referral. COR 1 (symptomatic) / 2a (asymptomatic + LV trigger).
-  // AUDIT-125 TIGHTENING: the prior rule fired on I34.0 + (LVEF<60 OR symptomatic) with NO severity gate (over-
+  // Tightening (AUDIT-125): the prior rule fired on I34.0 + (LVEF<60 OR symptomatic) with NO severity gate (over-
   // detected mild/moderate MR). Now gated on the threaded severe-MR severity + PRIMARY context.
   if (hasMitralRegurg && severeMR && !secondaryMRContext
       && (symptomaticMR || (labValues['lvef'] !== undefined && labValues['lvef'] <= 60))
@@ -7207,36 +7207,110 @@ export function evaluateGapRules(
     });
   }
 
-  // Gap SH-4: Tricuspid Valve Assessment
-  // Guideline: 2020 ACC/AHA VHD Guideline, Class 2a, LOE C
-  // Tricuspid regurgitation (I36.1) with right heart symptoms warrants assessment
-  const hasTricuspidRegurg = dxCodes.some(c => c.startsWith('I36.1'));
-  if (
-    hasTricuspidRegurg &&
-    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
-  ) {
-    // Right heart symptom proxies: peripheral edema (R60), hepatomegaly (R16), ascites (R18)
-    const hasRightHeartSymptoms = dxCodes.some(c =>
-      c.startsWith('R60') || c.startsWith('R16') || c.startsWith('R18')
-    );
-    if (hasRightHeartSymptoms) {
+  // ===== v3.0 SH chunk 3: Tricuspid regurgitation severity (SH-022 / SH-069 / SH-023) =====
+  // Severe TR now reads the THREADED echo severity (PR #404 + chunk-3 LOINC map-add): tr_regurg_grade is a
+  // 0-4 numeric TR grade (4 = severe), and valve_severity is the cross-valve 0-5 ordinal (5 = severe). The
+  // 2017 ASE extended scale (massive/torrential) maps to valve_severity 5 / tr_regurg_grade 4.
+  const hasTRdx = dxCodes.some(c => c.startsWith('I36.1'));
+  const severeTR =
+    (labValues['tr_regurg_grade'] !== undefined && labValues['tr_regurg_grade'] >= 4) ||
+    (labValues['valve_severity'] !== undefined && labValues['valve_severity'] >= 5);
+  // NYHA II+ proxy (Path-B for true NYHA + diuretic status): right-heart congestion - peripheral edema (R60),
+  // hepatomegaly (R16), ascites (R18), right HF (I50.81).
+  const trCongestionSymptoms = dxCodes.some(c =>
+    c.startsWith('R60') || c.startsWith('R16') || c.startsWith('R18') || c.startsWith('I50.81')
+  );
+  // CIED lead presence (Z95.0 pacemaker, Z95.810 ICD) partitions SH-023 (lead present) vs SH-069 (no lead),
+  // so for any severe symptomatic-TR patient exactly one device-pathway gap layers onto SH-022.
+  const hasCIEDLead_TR = dxCodes.some(c => c.startsWith('Z95.0') || c.startsWith('Z95.810'));
+
+  // Gap SH-022: Severe TR -> transcatheter (T-TEER/TTVR) evaluation gap (AUDIT-125 severity-gated)
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 2a for severe symptomatic TR); TRILUMINATE / CLASP-TR.
+  // Tightening (AUDIT-125, v3.0 chunk 3): the prior SH-4 fired on I36.1 + congestion symptoms with NO severity
+  // gate, so mild TR + edema-of-another-cause over-detected. Now gated on SEVERE TR. Path-B: T-TEER/TTVR
+  // referral status is not ingested, so this surfaces the underreferred severe-TR population, not a confirmed
+  // referral gap.
+  if (hasTRdx && severeTR && trCongestionSymptoms && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Severe symptomatic TR: transcatheter tricuspid (T-TEER/TTVR) evaluation gap',
+      target: 'Heart-team transcatheter tricuspid evaluation (T-TEER vs TTVR) completed',
+      recommendations: {
+        action: 'Consider heart-team transcatheter tricuspid evaluation (T-TEER or TTVR) for severe symptomatic TR per 2020 ACC/AHA VHD (Class 2a); TRILUMINATE / CLASP-TR pathways',
+        guideline: '2020 ACC/AHA Valvular Heart Disease; TRILUMINATE / CLASP-TR',
+        note: 'Severity-gated on threaded echo (tr_regurg_grade>=4 or valve_severity>=5). Path-B: NYHA class + diuretic status + prior-referral status not ingested - surfaces the underreferred severe-TR population.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Tricuspid regurgitation (I36.1)',
+          'Severe TR (tr_regurg_grade >=4 or valve_severity >=5)',
+          'Right-heart congestion (edema R60, hepatomegaly R16, ascites R18, or right HF I50.81) - NYHA II+ proxy',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; TRILUMINATE / CLASP-TR',
+        classOfRecommendation: 'Class 2a',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Severe pulmonary hypertension as primary etiology', 'Irreversible RV dysfunction'],
+      },
+    });
+
+    // Gap SH-069: Evoque TTVR (TRISCEND) candidacy - the NO-lead severe-TR device pathway
+    // Guideline: 2020 ACC/AHA VHD Guideline; TRISCEND II (Evoque transcatheter tricuspid valve REPLACEMENT).
+    // Device selection: patients with severe TR whose valve anatomy is unsuitable for edge-to-edge repair
+    // (large coaptation gap) are TTVR candidates. Path-B: coaptation-gap morphology / T-TEER eligibility is
+    // NOT threaded (echo-morphology, DUA-deferred per the deferred-gap register), so this surfaces the
+    // non-lead severe-TR population for TTVR-vs-TEER device selection, not a confirmed T-TEER-ineligible call.
+    if (!hasCIEDLead_TR) {
       gaps.push({
-        type: TherapyGapType.SCREENING_DUE,
+        type: TherapyGapType.PROCEDURE_INDICATED,
         module: ModuleType.STRUCTURAL_HEART,
-        status: 'Tricuspid valve assessment recommended for review',
-        target: 'Tricuspid valve evaluation completed',
+        status: 'Severe TR (no CIED lead): Evoque TTVR (TRISCEND) candidacy for device selection',
+        target: 'TTVR-vs-T-TEER device selection assessed (coaptation-gap morphology at heart team)',
         recommendations: {
-          action: 'Consider tricuspid valve assessment for symptomatic tricuspid regurgitation per 2020 ACC/AHA VHD',
+          action: 'Consider transcatheter tricuspid valve replacement (Evoque/TRISCEND) candidacy when valve anatomy is unsuitable for edge-to-edge repair, per 2020 ACC/AHA VHD device-selection pathway',
+          guideline: '2020 ACC/AHA Valvular Heart Disease; TRISCEND II (Evoque TTVR)',
+          note: 'Path-B: coaptation-gap morphology / T-TEER eligibility not ingested (echo-morphology, DUA-deferred). Partitioned to the NO-CIED-lead severe-TR population.',
         },
         evidence: {
           triggerCriteria: [
             'Tricuspid regurgitation (I36.1)',
-            'Right heart symptoms present (edema, hepatomegaly, or ascites)',
+            'Severe TR (tr_regurg_grade >=4 or valve_severity >=5)',
+            'No CIED lead present (not Z95.0 / Z95.810)',
+          ],
+          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; TRISCEND II',
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE B-NR',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'CIED lead present (routes to SH-023 lead-status pathway)', 'Irreversible RV dysfunction'],
+        },
+      });
+    }
+
+    // Gap SH-023: TR device selection with CIED lead - lead-status + coaptation-gap pathway
+    // Guideline: 2020 ACC/AHA VHD Guideline. A transvalvular RV lead (Z95.0/Z95.810) can be a CONTRIBUTOR to
+    // severe TR and complicates transcatheter device selection (a lead in the coaptation plane affects T-TEER).
+    // Lead status must be assessed (and lead extraction considered) before/with device selection.
+    // Path-B: coaptation-gap morphology is NOT threaded (echo-morphology); lead presence IS (Z95.0/Z95.810).
+    if (hasCIEDLead_TR) {
+      gaps.push({
+        type: TherapyGapType.PROCEDURE_INDICATED,
+        module: ModuleType.STRUCTURAL_HEART,
+        status: 'Severe TR with CIED lead: device selection requires lead-status + coaptation-gap assessment',
+        target: 'Lead-status (lead-induced TR / extraction candidacy) and coaptation-gap device selection assessed',
+        recommendations: {
+          action: 'Consider lead-status assessment (transvalvular RV lead as TR contributor; lead-extraction candidacy) alongside transcatheter device selection for severe TR per 2020 ACC/AHA VHD',
+          guideline: '2020 ACC/AHA Valvular Heart Disease',
+          note: 'Path-B: coaptation-gap morphology not ingested (echo-morphology, DUA-deferred). CIED lead presence (Z95.0/Z95.810) IS threaded - partitioned to the lead-present severe-TR population.',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Tricuspid regurgitation (I36.1)',
+            'Severe TR (tr_regurg_grade >=4 or valve_severity >=5)',
+            'CIED lead present (Z95.0 pacemaker or Z95.810 ICD) - transvalvular lead may contribute to TR',
           ],
           guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
-          classOfRecommendation: '2a',
-          levelOfEvidence: 'C',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Severe pulmonary hypertension as primary cause'],
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE C-LD',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Irreversible RV dysfunction'],
         },
       });
     }
@@ -8247,27 +8321,50 @@ export function evaluateGapRules(
   // NEW Structural Heart Rules (SH-10 through SH-17)
   // ============================================================
 
-  // Gap SH-10: MitraClip Evaluation
-  // Guideline: 2020 ACC/AHA VHD Guideline (COAPT Trial), Class 2a, LOE B-R
-  // I34.0 (mitral regurgitation) + LVEF < 50 + high surgical risk (age > 75 proxy)
+  // Gap SH-10: Secondary MR transcatheter repair (TEER) - GDMT-FIRST. COR 2a (COAPT).
+  // Guideline: 2020 ACC/AHA VHD Guideline (COAPT Trial).
+  // Fix (AUDIT-166, v3.0 SH chunk 2): COAPT enrolled GDMT-OPTIMIZED patients with persistent severe secondary MR.
+  // The prior rule recommended MitraClip/TEER on I34.0 + LVEF<50 + age>75 with NO GDMT gate and NO severity gate -
+  // premature TEER for a GDMT-naive patient. Now: (a) AUDIT-125 severity gate (moderate-severe+ secondary MR via
+  // valve_severity>=4 OR EROA>=0.30 OR regurg grade>=3, the COAPT band), and (b) STANDING SUBGROUP CHECK - the
+  // recommendation BRANCHES on GDMT status: GDMT-naive -> "optimize GDMT first, then TEER if MR persists";
+  // GDMT-optimized -> TEER candidacy. Path-B: GDMT proxy = BB + RAASi present (the HF Pattern-C minimum).
   const hasMR10 = dxCodes.some(c => c.startsWith('I34.0'));
+  const modSevereSecondaryMR =
+    (labValues['valve_severity'] !== undefined && labValues['valve_severity'] >= 4) ||
+    (labValues['mitral_eroa'] !== undefined && labValues['mitral_eroa'] >= 0.30) ||
+    (labValues['mitral_regurg_grade'] !== undefined && labValues['mitral_regurg_grade'] >= 3);
+  const onGDMT_SH10 = BB_CODES_CV.some(c => medCodes.includes(c)) && RAAS_CODES_CV.some(c => medCodes.includes(c));
   if (
     hasMR10 &&
     labValues['lvef'] !== undefined && labValues['lvef'] < 50 &&
+    modSevereSecondaryMR &&
     age > 75 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
-      status: 'MitraClip evaluation recommended for review in high surgical risk MR',
-      target: 'Transcatheter mitral valve repair candidacy assessed',
-      recommendations: { action: 'Consider MitraClip evaluation for secondary MR with high surgical risk per 2020 ACC/AHA VHD (COAPT trial)' },
+      status: onGDMT_SH10
+        ? 'TEER (MitraClip) evaluation for secondary MR persistent despite optimized GDMT'
+        : 'Secondary MR: optimize GDMT before transcatheter repair (TEER)',
+      target: onGDMT_SH10
+        ? 'Transcatheter mitral valve repair candidacy assessed'
+        : 'GDMT optimized (beta-blocker + RAASi + as tolerated MRA/SGLT2i), then re-assess MR for TEER',
+      recommendations: {
+        action: onGDMT_SH10
+          ? 'Consider TEER (MitraClip) for secondary MR that persists despite optimized GDMT per 2020 ACC/AHA VHD (COAPT, Class 2a)'
+          : 'Optimize guideline-directed medical therapy (beta-blocker + RAASi) FIRST; refer for TEER only if severe secondary MR persists despite optimized GDMT per COAPT (premature TEER without GDMT optimization is not COAPT-supported)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease (COAPT Trial)',
+        note: 'COAPT enrolled GDMT-optimized patients with persistent severe secondary MR. GDMT is the prerequisite: optimize first, then TEER if MR persists. This rule branches on GDMT status (BB + RAASi present).',
+      },
       evidence: {
         triggerCriteria: [
-          'Mitral regurgitation (I34.0)',
-          `LVEF: ${labValues['lvef']}% (< 50%)`,
-          `Age: ${age} (> 75, high surgical risk proxy)`,
+          'Mitral regurgitation (I34.0), secondary/functional (LVEF<50)',
+          'Moderate-severe+ MR (valve_severity >=4, EROA >=0.30, or regurg grade >=3 - COAPT band)',
+          `LVEF: ${labValues['lvef']}% (<50%)`,
+          `Age: ${age} (>75, high surgical risk proxy)`,
+          `GDMT status: ${onGDMT_SH10 ? 'on BB + RAASi (optimized)' : 'NOT on BB + RAASi (optimize first)'}`,
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease (COAPT Trial)',
         classOfRecommendation: 'Class 2a',
@@ -8279,7 +8376,7 @@ export function evaluateGapRules(
 
   // Gap SH-11 / GAP-SH-064: Transcatheter MVR candidacy for severe MR with non-TEER anatomy. COR 2a.
   // Guideline: 2020 ACC/AHA VHD Guideline.
-  // AUDIT-125 TIGHTENING (v3.0 SH chunk 2): the prior rule fired on I34.0 + age>80 with NO severity gate (over-
+  // Tightening (AUDIT-125, v3.0 SH chunk 2): the prior rule fired on I34.0 + age>80 with NO severity gate (over-
   // detected mild/moderate MR). Now gated on the threaded severe-MR severity. Path-B: TEER-eligibility / valve
   // anatomy (the "non-TEER anatomy" qualifier) is not ingested - this fires on severe MR + high-surgical-risk age;
   // the structural heart team confirms TEER-ineligibility vs TMVR candidacy.

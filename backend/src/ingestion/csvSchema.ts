@@ -55,6 +55,13 @@ export const SH_COLUMNS: CSVColumn[] = [
   { name: 'aortic_valve_area', required: false, type: 'number' },
   { name: 'mitral_regurg_grade', required: false, type: 'number', validation: { min: 0, max: 4 } },
   { name: 'sts_score', required: false, type: 'number' },
+  // TR + vena-contracta (v3.0 SH chunk 3). tr_regurg_grade is a 0-4 numeric TR grade (4 = severe),
+  // mirroring mitral_regurg_grade; the coded valve_severity (0-5) is the cross-valve fallback.
+  { name: 'tr_regurg_grade', required: false, type: 'number', validation: { min: 0, max: 4 } },
+  { name: 'tr_regurg_vmax', required: false, type: 'number' },
+  { name: 'mitral_vena_contracta', required: false, type: 'number' },
+  { name: 'aortic_vena_contracta', required: false, type: 'number' },
+  { name: 'tricuspid_vena_contracta', required: false, type: 'number' },
 ];
 
 export const PV_COLUMNS: CSVColumn[] = [
