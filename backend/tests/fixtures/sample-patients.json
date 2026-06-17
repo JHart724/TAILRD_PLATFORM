@@ -831,7 +831,7 @@
               "coding": [
                 {
                   "system": "http://loinc.org",
-                  "code": "18153-7",
+                  "code": "18089-3",
                   "display": "Aortic valve area by US"
                 }
               ]
@@ -867,7 +867,7 @@
               "coding": [
                 {
                   "system": "http://loinc.org",
-                  "code": "20216-8",
+                  "code": "18066-1",
                   "display": "Aortic valve Mean gradient by US"
                 }
               ]

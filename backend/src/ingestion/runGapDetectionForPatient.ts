@@ -8,9 +8,15 @@ import { evaluateGapRules } from './gaps/gapRuleEngine';
 import { expandToIngredients } from '../terminology/expandToIngredients';
 import { Prisma } from '@prisma/client';
 
-const ECHO_CUTOFF_MS = 365 * 24 * 60 * 60 * 1000;
-const LAB_CUTOFF_MS = 180 * 24 * 60 * 60 * 1000;
-const IMAGING_TYPES = new Set(['lvef', 'LVEF', 'qrs_duration', 'QRS_DURATION', 'echo_lvef', 'lv_ejection_fraction']);
+export const ECHO_CUTOFF_MS = 365 * 24 * 60 * 60 * 1000;
+export const LAB_CUTOFF_MS = 180 * 24 * 60 * 60 * 1000;
+export const IMAGING_TYPES = new Set([
+  'lvef', 'LVEF', 'qrs_duration', 'QRS_DURATION', 'echo_lvef', 'lv_ejection_fraction',
+  // v3.0 echo-severity threading (2026-06-17): valve echo measurements get the 365-day ECHO freshness window
+  // (echos are ~annual), not the 180-day LAB cutoff. Covers both the CSV slugs and the path-2 FHIR slugs.
+  'aortic_valve_vmax', 'aortic_valve_mean_gradient', 'aortic_valve_area', 'mitral_regurg_grade',
+  'mitral_eroa', 'mitral_valve_area', 'valve_severity', 'sts_score',
+]);
 
 export async function runGapDetectionForPatient(
   patientId: string,

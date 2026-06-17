@@ -55,6 +55,36 @@ const CARDIOVASCULAR_LAB_CODES: Record<string, string[]> = {
   'D-dimer': ['48065-7'],
 };
 
+// === Echo LOINC -> engine slug map (v3.0 echo-severity threading PATH 2, 2026-06-17) ===
+// The FHIR transform persists observationType = the raw LOINC, but the gap engine reads labValues by SLUG
+// (e.g. 'aortic_valve_mean_gradient'). This map closes that gap for echo measurements so FHIR-ingested echo
+// numerics reach the SH/VHD severity rules. Applied at the observationType persist sites only (section 17.3:
+// one map + one lookup, no broader ingestion refactor).
+//
+// EVERY LOINC here is section-16 VERIFIED against NLM Clinical Tables 2026-06-17 (the AUDIT-069 source; that
+// audit found a 17.2% LOINC error rate + that AUDIT-070's earlier echo-LOINC guesses 18148-8/77912-1 were
+// WRONG - hence no-guess verification). OMITTED because NLM verification returned empty (no fabrication):
+// tricuspid-regurgitation peak velocity/grade, LV end-systolic diameter (LVESD), mitral vena contracta -
+// to be verified with alternate search terms in a follow-up before adding.
+//
+// DUA-TIME UNKNOWN: this is the STANDARD-NLM-LOINC default. Whether BSW Epic emits echo as these coded numeric
+// Observations (vs a DiagnosticReport narrative) and which LOINCs it attaches is an integration-confirmation
+// point at DUA. If Epic uses local codes, this map gets an additive supplement - no redesign.
+// (Fixes the AUDIT-070 LVEF slug-mismatch for FHIR as a by-product - scope overlap noted, no collision.)
+export const ECHO_LOINC_TO_SLUG: Record<string, string> = {
+  '10230-1': 'lvef',                                                                  // AUDIT-069 verified
+  '79964-3': 'aortic_valve_vmax', '20183-0': 'aortic_valve_vmax',                     // AV peak velocity (Vmax)
+  '18066-1': 'aortic_valve_mean_gradient', '79962-7': 'aortic_valve_mean_gradient',   // AV mean gradient
+  '18089-3': 'aortic_valve_area', '18090-1': 'aortic_valve_area',
+  '18091-9': 'aortic_valve_area', '18093-5': 'aortic_valve_area',                     // AVA (US + continuity)
+  '29448-8': 'mitral_eroa',                                                           // MR effective regurgitant orifice area (PISA)
+  '18097-6': 'mitral_valve_area', '78179-9': 'mitral_valve_area',                     // MVA (PHT + planimetry)
+  '18059-6': 'mitral_valve_mean_gradient',                                            // MV mean gradient
+  '81395-6': 'mitral_regurg_fraction', '80056-5': 'mitral_regurg_fraction',
+  '80055-7': 'mitral_regurg_fraction',                                                // MR regurgitant fraction
+  '18012-5': 'ascending_aorta',                                                       // ascending thoracic aorta diameter by US
+};
+
 const VITAL_SIGNS_CODES: Record<string, string[]> = {
   'Blood Pressure Systolic': ['8480-6'],
   'Blood Pressure Diastolic': ['8462-4'],
@@ -300,7 +330,7 @@ export const processObservationData = async (
       patientId,
       hospitalId,
       encounterId: encounterId || null,
-      observationType: transformed.code,
+      observationType: ECHO_LOINC_TO_SLUG[transformed.code] ?? transformed.code,
       observationName: transformed.display,
       category: mapCategory(transformed.category),
       valueNumeric: typeof transformed.value === 'number' ? transformed.value : null,
@@ -392,7 +422,7 @@ export const processObservationsBatch = async (
         patientId: item.patientId,
         hospitalId: item.hospitalId,
         encounterId: item.encounterId || null,
-        observationType: transformed.code,
+        observationType: ECHO_LOINC_TO_SLUG[transformed.code] ?? transformed.code,
         observationName: transformed.display,
         category: mapCategory(transformed.category),
         valueNumeric: typeof transformed.value === 'number' ? transformed.value : null,
