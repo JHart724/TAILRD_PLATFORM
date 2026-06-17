@@ -135,16 +135,16 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
     // expansion against product-coded data); 1 is AUDIT-120 (Z88 over-broad). Each retains its evaluator
     // (registryId) so the rule-body cite is preserved; the cap is PARTIAL until AUDIT-117/118/120 remediate.
     'GAP-EP-001': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-ep-oac-afib',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per AUDIT_METHODOLOGY.md §16.5 / AUDIT-118. EP-OAC tests OAC presence by exact-RxCUI membership (OAC_CODES) with no ingredient->descendant expansion, so SCD/product-coded patient meds under-detect; the DABIGATRAN code (1037045) is also a single 150mg SCD not the ingredient (AUDIT-117). Evaluator retained; PARTIAL until AUDIT-117/118 remediated.',
+        'UN-CAP + verify 2026-06-16 (v3.0 EP close) PARTIAL -> DET_OK: AUDIT-118 remediated (medCodes ingredient-expanded), so EP-OAC IN-level OAC membership now detects product-coded meds. The mechanical-valve subgroup recommendation was corrected the same pass (operator ruling): mech valve (Z95.2/Z95.4) -> warfarin recommendation, else DOAC - the detection was already correct, the harmful DOAC-for-mech-valve recommendation is now subgroup-aware. CHA2DS2-VASc M>=2/F>=3, Class 1/A. Test: backend/tests/ingestion/epChunk1.test.ts (mech-valve fires warfarin not DOAC).',
     },
     'GAP-EP-006': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-ep-006-dabigatran-renal-safety',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 1): DET_OK -> PARTIAL per §16.5 / AUDIT-117 + AUDIT-118. The Class-3-Harm dabigatran renal-safety rule triggers on medCodes.includes(1037045) = dabigatran 150mg SCD (not the ingredient, AUDIT-117) and matches with no ingredient->descendant expansion, so dabigatran 75mg (renal-impairment dose) + eGFR<30 - the precise contraindication - is a false-negative. Evaluator retained; PARTIAL until AUDIT-117/118 remediated. (Prior 2026-05-05 AUDIT-032 logic closure stands; trustworthiness capped by the matching defect.)',
+        'UN-CAP + verify 2026-06-16 (v3.0 EP close) PARTIAL -> DET_OK: AUDIT-118 remediated (dabigatran IN 1037042, ingredient-expanded). Re-reviewed clean: correct IN code, eGFR<30 matches the FDA Pradaxa CrCl<30 contraindication, Class 3 (Harm), fail-loud eGFR-undefined DATA branch. Test: backend/tests/ingestion/epChunk1.test.ts (dabigatran + eGFR 25 fires; eGFR 50 gates).',
     },
     'GAP-EP-007': {
       classification: 'DET_OK',
@@ -220,11 +220,34 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The CRITICAL WPW+AF AVN-blocker rule now detects SCD-coded beta-blockers and non-DHP CCBs (the previously ingredient-only arms of AVN_BLOCKER_CODES_EP079; the digoxin arm was simplified to the IN in the same fix). A WPW+AF patient on an SCD-coded metoprolol fires the fatal-VF contraindication. Proof: backend/tests/gapRules/audit118CascadeFlip.test.ts (raw SCD misses -> expanded fires). Prior 2026-05-05 AUDIT-031 logic closure stands. Was: MANUAL OVERRIDE 2026-06-08 DET_OK -> PARTIAL per §16.5 / AUDIT-118.',
     },
     'GAP-EP-011': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-ep-laac',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (EP audit Batch 5): DET_OK -> PARTIAL per AUDIT-120 (over-detection, distinct from §16.5). EP-LAAC uses dxCodes.startsWith(Z88) as an OAC-contraindication, but ICD-10 Z88 is "Allergy status" to any drug class, so the LAAC gap over-fires on any AF + age>=65 patient with any drug allergy (e.g. penicillin). Evaluator retained; PARTIAL until AUDIT-120 remediated (narrow or drop Z88).',
+        'RESOLVED 2026-06-16 (v3.0 EP close) PARTIAL -> DET_OK: AUDIT-120 fixed. The bare Z88 (allergy-status to ANY drug) was dropped from the OAC-contraindication gate; it is now bleeding/hemorrhage-history only (D68.3/K92.2/I60-I62) plus operator-ruling GU major-bleed (R31.0 gross hematuria, N02). Regression test: backend/tests/ingestion/epChunk1.test.ts (Z88.0-only gates; bleed fires).',
     },
+    // v3.0 EP buildout 2026-06-16: 21 new evaluators authored across 4 chunks (AF anticoag/dosing, AF rhythm/
+    // ablation, VT/CIED, brady/syncope/LAAC), all clinically reviewed + tested. SPEC_ONLY/PARTIAL -> DET_OK.
+    'GAP-EP-003': { classification: 'DET_OK', registryId: 'gap-ep-003-rivaroxaban-renal-dose', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 1): rivaroxaban (IN 1114195) renal dose vs eGFR proxy; >=20mg at eGFR 15-50 or any dose <15. FDA Xarelto PI, Class 1. SPEC_ONLY -> DET_OK.' },
+    'GAP-EP-004': { classification: 'DET_OK', registryId: 'gap-ep-004-apixaban-underdose-criteria', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 1): apixaban should-be-reduced (age>=80 AND Cr>=1.5, on >=5mg). Path-B weight arm (not ingested). FDA Eliquis PI, Class 1. SPEC_ONLY -> DET_OK.' },
+    'GAP-EP-005': { classification: 'DET_OK', registryId: 'gap-ep-005-apixaban-inappropriate-underdose', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 1): apixaban inappropriately reduced (age<80 AND Cr<1.5, on <=2.5mg; <2 criteria certain). FDA Eliquis PI, Class 1. SPEC_ONLY -> DET_OK.' },
+    'GAP-EP-008': { classification: 'DET_OK', registryId: 'gap-ep-008-doac-mitral-stenosis', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 1): DOAC + moderate-severe MS (I05.0/I34.2). 2020 VHD / INVICTUS, Class 3 (Harm). SPEC_ONLY -> DET_OK.' },
+    'GAP-EP-009': { classification: 'DET_OK', registryId: 'gap-ep-009-edoxaban-high-crcl', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 1): edoxaban (1599538) + eGFR>95 (boxed warning, reduced efficacy). FDA Savaysa, Class 3 (Harm). SPEC_ONLY -> DET_OK.' },
+    'GAP-EP-012': { classification: 'DET_OK', registryId: 'gap-ep-012-laac-high-risk-bleed', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 1): distinct LAAC evaluator (CHA2DS2-VASc>=3 + prior major bleed incl R31.0/N02 + no CPT 33340). 2023 AFib, Class 2a. Was reconciled to gap-ep-laac (PARTIAL); now own evaluator. -> DET_OK.' },
+    'GAP-EP-014': { classification: 'DET_OK', registryId: 'gap-ep-014-af-ablation-hfref', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 2): AF (non-flutter) + LVEF<=35 + no CPT 93656. CASTLE-AF, Class 2a. First procedureCodes consumer (PR #396). PARTIAL -> DET_OK.' },
+    'GAP-EP-071': { classification: 'DET_OK', registryId: 'gap-ep-071-post-ablation-oac', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 2): post-PVI (CPT 93656) + CHA2DS2-VASc qualifying + no OAC. Path-B timing. 2023 AFib, Class 1. PARTIAL -> DET_OK.' },
+    'GAP-EP-072': { classification: 'DET_OK', registryId: 'gap-ep-072-redo-af-ablation', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 2, tightened): post-PVI (93656) + AF coded + on-AAD (recurrence proxy). Path-B blanking/symptom. 2023 AFib, Class 2a. SPEC_ONLY -> DET_OK.' },
+    'GAP-EP-074': { classification: 'DET_OK', registryId: 'gap-ep-074-flutter-cti-ablation', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 2): typical flutter (I48.3) + no CPT 93653. 2023 AFib, Class 1. PARTIAL -> DET_OK.' },
+    'GAP-EP-076': { classification: 'DET_OK', registryId: 'gap-ep-076-svt-ablation', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 2): SVT (I47.1) + on-AAD + no CPT 93653. Covers AVNRT/AVRT/AT collectively (I47.1 lumps them). 2023 SVT, Class 1. PARTIAL -> DET_OK.' },
+    'GAP-EP-020': { classification: 'DET_OK', registryId: 'gap-ep-020-ischemic-vt-ablation', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 3): VT (I47.2) + ischemic (I25) + on-AAD + no CPT 93654. 2017 VA, Class 2a. PARTIAL -> DET_OK.' },
+    'GAP-EP-021': { classification: 'DET_OK', registryId: 'gap-ep-021-nicm-vt-substrate', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 3): VT + NICM (I42.0/.8/.9) + not-ischemic + no CPT 93654. 2017 VA, Class 2a. PARTIAL -> DET_OK.' },
+    'GAP-EP-022': { classification: 'DET_OK', registryId: 'gap-ep-022-vt-ablation-vanish', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 3): ischemic VT + ICD (33249/33270) + amiodarone + no CPT 93654. Path-B (shock log not ingested). VANISH, Class 2a. PARTIAL -> DET_OK.' },
+    'GAP-EP-029': { classification: 'DET_OK', registryId: 'gap-ep-029-pacemaker-class1', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 3, corrected): complete AV block (I44.2) or SSS (I49.5) + no CIED. I44.1 dropped (asymptomatic-Mobitz Path-B). 2018 Bradycardia, Class 1. PARTIAL -> DET_OK.' },
+    'GAP-EP-034': { classification: 'DET_OK', registryId: 'gap-ep-034-cied-infection-extraction', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 3): CIED present + infection (T82.7) + no extraction CPT. Covers EP-090. 2017 HRS CIED Infection, Class 1. PARTIAL -> DET_OK.' },
+    'GAP-EP-092': { classification: 'DET_OK', registryId: 'gap-ep-092-sicd-candidate', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 3): LVEF<=35 + age<50 + no pacing dx + no defib + QRS<150 (standing subgroup check excludes CRT). 2017 VA, Class 2a. PARTIAL -> DET_OK.' },
+    'GAP-EP-030': { classification: 'DET_OK', registryId: 'gap-ep-030-brady-avn-blocker-reduce', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 4): HR<50 + AV-nodal blocker + not-I44.2 (standing subgroup check) + no pacemaker. 2018 Bradycardia, Class 1. SPEC_ONLY -> DET_OK.' },
+    'GAP-EP-033': { classification: 'DET_OK', registryId: 'gap-ep-033-af-slow-rate-pacing', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 4): AF + HR<40 + rate-control + no pacemaker. Path-B awake pattern. 2023 AFib + 2018 Brady, Class 2a. SPEC_ONLY -> DET_OK.' },
+    'GAP-EP-097': { classification: 'DET_OK', registryId: 'gap-ep-097-orthostatic-hypotension-med-review', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 4): orthostatic hypotension (I95.1) + BP-lowering agent (incl RxNav-verified RXNORM_ALPHA_BLOCKERS). 2017 Syncope, Class 1. SPEC_ONLY -> DET_OK.' },
+    'GAP-EP-067': { classification: 'DET_OK', registryId: 'gap-ep-067-post-laac-antithrombotic', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 4): LAAC (CPT 33340) + no antithrombotic (OAC/P2Y12/aspirin). Standing subgroup check: antiplatelet-based, bleed-aware rec. 2023 AFib + IFU, Class 2a. SPEC_ONLY -> DET_OK.' },
   },
   SH: {
     // SH audit 2026-06-08 (operator-approved, Batches 1-5 + Batch-5 STEP-0 re-verification): 10

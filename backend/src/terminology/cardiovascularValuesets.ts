@@ -348,6 +348,22 @@ export const RXNORM_WARFARIN = {
   WARFARIN_10MG: '855296',   // AUDIT-059 (relabeled from WARFARIN_2MG; 855296 is actually 10mg)
 } as const;
 
+/**
+ * Alpha-1 adrenergic blockers -- used by the EP-097 orthostatic-hypotension medication-review gap.
+ * A common iatrogenic cause of orthostatic hypotension (uroselective + non-selective).
+ * VERIFICATION (AUDIT_METHODOLOGY.md section 16): every RxCUI is an IN-level ingredient verified via RxNav
+ *   rxcui.json?name=<drug>&tty=IN on 2026-06-16. Note: alfuzosin=17300 and silodosin=720825 were RxNav-corrected
+ *   from initial guesses (519494 / 880658) - the name->IN lookup caught both.
+ */
+export const RXNORM_ALPHA_BLOCKERS = {
+  TAMSULOSIN: '77492',
+  DOXAZOSIN: '49276',
+  TERAZOSIN: '37798',
+  ALFUZOSIN: '17300',
+  SILODOSIN: '720825',
+  PRAZOSIN: '8629',
+} as const;
+
 /** Rate control agents (BB + CCB) -- used by AFib rate control gap rule */
 export const RXNORM_RATE_CONTROL = {
   METOPROLOL: '6918',

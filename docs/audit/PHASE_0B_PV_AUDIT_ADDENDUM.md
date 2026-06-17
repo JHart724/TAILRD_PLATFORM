@@ -91,9 +91,9 @@ No EXTRA rules or architectural patterns surfaced. Reconciliation is clean.
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-PV-011 | 942 | DET_OK | `gap-pv-rivaroxaban` (PV-RIVAROXABAN @13010-13038) | auto-verify: preserved-from-addendum |
-| GAP-PV-017 | 955 | PARTIAL_DETECTION | `gap-pv-bypass-eval` (PV-BYPASS-EVAL @13075-13101) | auto-verify: preserved-from-addendum |
-| GAP-PV-018 | 956 | PARTIAL_DETECTION | `gap-pv-bypass-eval` (PV-BYPASS-EVAL @13075-13101) | auto-verify: preserved-from-addendum |
+| GAP-PV-011 | 942 | DET_OK | `gap-pv-rivaroxaban` (PV-RIVAROXABAN @14064-14092) | auto-verify: preserved-from-addendum |
+| GAP-PV-017 | 955 | PARTIAL_DETECTION | `gap-pv-bypass-eval` (PV-BYPASS-EVAL @14129-14155) | auto-verify: preserved-from-addendum |
+| GAP-PV-018 | 956 | PARTIAL_DETECTION | `gap-pv-bypass-eval` (PV-BYPASS-EVAL @14129-14155) | auto-verify: preserved-from-addendum |
 | GAP-PV-055 | 1017 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-PV-056 | 1018 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-PV-058 | 1028 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |

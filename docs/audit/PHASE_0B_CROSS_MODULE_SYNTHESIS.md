@@ -11,12 +11,12 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 | Module | Spec gaps | DET_OK | PARTIAL | SPEC_ONLY | Any-coverage | DET_OK rate |
 |---|---:|---:|---:|---:|---:|---:|
 | HF | 126 | 64 | 25 | 37 | 89/126 (70.6%) | 50.8% |
-| EP | 89 | 18 | 29 | 42 | 47/89 (52.8%) | 20.2% |
+| EP | 89 | 42 | 16 | 31 | 58/89 (65.2%) | 47.2% |
 | SH | 88 | 0 | 30 | 58 | 30/88 (34.1%) | 0.0% |
 | CAD | 90 | 29 | 27 | 34 | 56/90 (62.2%) | 32.2% |
 | VHD | 105 | 0 | 11 | 94 | 11/105 (10.5%) | 0.0% |
 | PV | 105 | 16 | 14 | 75 | 30/105 (28.6%) | 15.2% |
-| **TOTAL** | **603** | **127** | **136** | **340** | **263/603 (43.6%)** | **21.1%** |
+| **TOTAL** | **603** | **151** | **123** | **329** | **274/603 (45.4%)** | **25.0%** |
 
 ---
 
@@ -25,7 +25,7 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 | Module | T1 total | T1 DET_OK | T1 PARTIAL | T1 SPEC_ONLY | T1 any-coverage |
 |---|---:|---:|---:|---:|---:|
 | HF | 29 | 21 | 5 | 3 | 89.7% |
-| EP | 15 | 5 | 7 | 3 | 80.0% |
+| EP | 15 | 11 | 1 | 3 | 80.0% |
 | SH | 13 | 0 | 8 | 5 | 61.5% |
 | CAD | 18 | 8 | 4 | 6 | 66.7% |
 | VHD | 8 | 0 | 2 | 6 | 25.0% |
@@ -37,11 +37,10 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 
 Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-relevant) AND (T1) AND (uncovered). Spec-explicit auto-include; structurally-inferred require operator decision.
 
-### 3.1 Spec-explicit SAFETY uncovered T1 (2 — automatic Tier S)
+### 3.1 Spec-explicit SAFETY uncovered T1 (1 — automatic Tier S)
 
 | Spec gap | Module | Spec line | Class | SAFETY tag | Detection logic (excerpt) |
 |---|---|---:|---|---|---|
-| **GAP-EP-006** | EP | 312 | PARTIAL_DETECTION | `(SAFETY)` | Dabigatran + severe renal impairment |
 | **GAP-VHD-005** | VHD | 754 | PARTIAL_DETECTION | `(CRITICAL SAFETY)` | Mechanical valve + any DOAC on active med list |
 
 ### 3.2 Structurally-inferred SAFETY (1 — operator decision required)
@@ -54,7 +53,7 @@ Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-rel
 
 ## 4. Cross-module satisfaction patterns
 
-13 cross-module satisfaction case(s) where a spec gap in module X is satisfied by an evaluator owned by module Y.
+12 cross-module satisfaction case(s) where a spec gap in module X is satisfied by an evaluator owned by module Y.
 
 ### Pattern summary
 
@@ -62,7 +61,7 @@ Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-rel
 |---|---|---:|---|
 | CAD | PV | 1 | GAP-CAD-027 |
 | EP | CAD | 1 | GAP-EP-028 |
-| EP | VHD | 2 | GAP-EP-007, GAP-EP-008 |
+| EP | VHD | 1 | GAP-EP-007 |
 | HF | EP | 4 | GAP-HF-021, GAP-HF-022, GAP-HF-023, GAP-HF-085 |
 | SH | CAD | 2 | GAP-SH-048, GAP-SH-052 |
 | SH | EP | 1 | GAP-SH-060 |
@@ -78,7 +77,6 @@ Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-rel
 | GAP-HF-023 | T2 | PARTIAL_DETECTION | HF | `EP-DEVICE-CRT` | EP |
 | GAP-HF-085 | T2 | PARTIAL_DETECTION | HF | `EP-INAPPROPRIATE-SHOCKS` | EP |
 | GAP-EP-007 | T1 | DET_OK | EP | `VD-6` | VHD |
-| GAP-EP-008 | T1 | PARTIAL_DETECTION | EP | `VD-4` | VHD |
 | GAP-EP-028 | T2 | PARTIAL_DETECTION | EP | `CAD-BETA-BLOCKER` | CAD |
 | GAP-SH-048 | T2 | PARTIAL_DETECTION | SH | `CAD-COMPLETE-REVASC` | CAD |
 | GAP-SH-052 | T2 | PARTIAL_DETECTION | SH | `CAD-BETA-BLOCKER` | CAD |

@@ -34,6 +34,7 @@ import {
   CIED_IMPLANT_CPT,
   CIED_EXTRACTION_CPT,
   LAAC_CPT,
+  RXNORM_ALPHA_BLOCKERS,
 } from '../../terminology/cardiovascularValuesets';
 
 /** Extract code arrays from valueset objects for medication matching */
@@ -1048,7 +1049,7 @@ export const RUNTIME_GAP_REGISTRY = [
     id: 'gap-hf-29-remote-monitoring',
     name: 'Remote Patient Monitoring in HF',
     module: 'HEART_FAILURE',
-    guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure (TIM-HF2 Trial)',
+    guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure (remote monitoring; PA-pressure-sensor 2b basis per GUIDE-HF/CHAMPION, supporting telemonitoring trial TIM-HF2)',
     guidelineVersion: '2022',
     guidelineOrg: 'AHA/ACC/HFSA',
     lastReviewDate: '2026-04-03',
@@ -1576,7 +1577,7 @@ export const RUNTIME_GAP_REGISTRY = [
     id: 'gap-ep-subclinical-af',
     name: 'Subclinical AF Detection in Device Patients',
     module: 'ELECTROPHYSIOLOGY',
-    guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (ASSERT, NOAH-AFNET 6)',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (ASSERT)',
     guidelineVersion: '2023',
     guidelineOrg: 'ACC/AHA/ACCP/HRS',
     lastReviewDate: '2026-04-03',
@@ -4594,7 +4595,11 @@ export function evaluateGapRules(
   }
 
   // Gap HF-29: Remote Patient Monitoring in HF
-  // Guideline: 2022 AHA/ACC/HFSA Guideline (TIM-HF2 Trial)
+  // Guideline: 2022 AHA/ACC/HFSA HF Guideline, remote-monitoring section. Citation corrected 2026-06-16
+  //   (HF-090 fold-in): TIM-HF2 was mis-cited as THE guideline basis. The guideline addresses three RPM
+  //   modalities - implantable PA-pressure sensor (GUIDE-HF/CHAMPION; the Class-2b/B-R basis), noninvasive
+  //   telemonitoring (TIM-HF2 is one supporting trial, not the guideline's class basis), and device-based
+  //   monitoring. TIM-HF2 is now positioned as a supporting telemonitoring trial, not the source of the 2b/B-R.
   if (
     hasHF &&
     ((labValues['bnp'] !== undefined && labValues['bnp'] > 300) ||
@@ -4606,10 +4611,10 @@ export function evaluateGapRules(
       module: ModuleType.HEART_FAILURE,
       status: 'Remote patient monitoring not documented in high-risk HF',
       target: 'Remote monitoring enrollment considered',
-      recommendations: { action: 'Consider remote patient monitoring for high-risk HF per 2022 AHA/ACC/HFSA (TIM-HF2)' },
+      recommendations: { action: 'Consider remote monitoring for high-risk HF per 2022 AHA/ACC/HFSA (implantable PA-pressure sensor per GUIDE-HF/CHAMPION, or noninvasive telemonitoring)' },
       evidence: {
         triggerCriteria: ['Heart failure diagnosis', 'BNP > 300 or LVEF < 30%'],
-        guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure (TIM-HF2 Trial)',
+        guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure (remote monitoring; PA-pressure-sensor 2b basis per GUIDE-HF/CHAMPION, supporting telemonitoring trial TIM-HF2)',
         classOfRecommendation: '2b',
         levelOfEvidence: 'B-R',
         exclusions: ['Already enrolled in remote monitoring', 'Hospice/palliative care'],
@@ -4891,8 +4896,12 @@ export function evaluateGapRules(
   if (labValues['qtc_interval'] !== undefined) {
     const qtcThreshold = gender === 'FEMALE' ? 470 : 450;
     if (labValues['qtc_interval'] > qtcThreshold) {
+      // Dedup with EP-TORSADES (2026-06-16): when QTc>500 AND on a QT-prolonging drug, EP-TORSADES owns the
+      // (drug-specific, more actionable) alert - EP-025 yields that case to avoid a redundant CRITICAL double-fire.
+      const qtProlongingDrugs_025 = ['703', '49247', '9947', '26225', '5093', '6813']; // mirrors EP-TORSADES set
+      const torsadesOwnsIt = labValues['qtc_interval'] > 500 && medCodes.some(c => qtProlongingDrugs_025.includes(c));
       const severity = labValues['qtc_interval'] > 500 ? 'CRITICAL' : 'HIGH';
-            if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+            if (!torsadesOwnsIt && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
           type: TherapyGapType.MEDICATION_CONTRAINDICATED,
           module: ModuleType.ELECTROPHYSIOLOGY,
@@ -5226,7 +5235,7 @@ export function evaluateGapRules(
 
   // EP-012: LAAC evaluation for high stroke risk with prior major bleed.
   // Guideline: 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 2a, LOE B. Distinct from EP-011 (OAC contraindication):
-  //   EP-012 = high CHA2DS2-VASc (>=3) AND a prior major bleed, where LAAC is a guideline alternative to lifelong OAC.
+  //   this rule fires on high CHA2DS2-VASc (>=3) AND a prior major bleed, where LAAC is a guideline alternative to lifelong OAC.
   // Prior-major-bleed set reuses the verified EP-LAAC codes (D68.3, K92.2, I60-I62). LAAC-already-done excluded via
   //   threaded procedureCodes (CPT 33340). CHA2DS2-VASc computed inline (mirrors EP-OAC scoring).
   if (hasAF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE) && !procedureCodes.includes(LAAC_CPT.LAAC)) {
@@ -5275,7 +5284,7 @@ export function evaluateGapRules(
   // Pattern A: AF (non-flutter) is the specific I48.0/.1/.2/.91 set, EXCLUDING flutter I48.3/.4.
   // Pattern B: ablation/recurrence TIMING is not ingested (procedureCodes carry no dates), so duration
   //   arms are dropped and documented. Pattern C: prior-procedure presence detected via procedureCodes.
-  // EP-075 (focal AT) and EP-077 (concealed AVRT) are NOT built here: ICD-10 lumps AVNRT/AVRT/focal-AT
+  // Deferred (focal AT EP-075, concealed AVRT EP-077) are NOT built here: ICD-10 lumps AVNRT/AVRT/focal-AT
   //   under I47.1 (no mechanism-specific code), and EP-077 explicitly needs an EP study (data-blocked).
   // ============================================================
   const hasAFnonFlutter_EP = dxCodes.some(c => c.startsWith('I48.0') || c.startsWith('I48.1') || c.startsWith('I48.2') || c.startsWith('I48.91'));
@@ -5719,11 +5728,11 @@ export function evaluateGapRules(
   }
 
   // EP-097: Orthostatic hypotension on BP-lowering therapy - medication review. COR 1.
-  // Trigger: orthostatic hypotension (I95.1) + on a BP-lowering agent (RAAS / beta-blocker / CCB / diuretic).
-  // Path-B: alpha-blockers (a common OH culprit, e.g. tamsulosin/doxazosin) are not in a current value set -
-  //   the alpha-blocker arm is not covered; this under-detects that subgroup.
+  // Trigger: orthostatic hypotension (I95.1) + on a BP-lowering agent (RAAS / beta-blocker / CCB / diuretic /
+  //   alpha-blocker). Alpha-blockers (RXNORM_ALPHA_BLOCKERS - tamsulosin/doxazosin/terazosin/alfuzosin/silodosin/
+  //   prazosin; a common OH culprit) added to the set 2026-06-16, closing the prior Path-B under-detection.
   if (dxCodes.some(c => c.startsWith('I95.1'))
-      && ([...RAAS_CODES_CV, ...BB_CODES_CV, ...RATE_CONTROL_CODES_CV, ...codes(RXNORM_LOOP_DIURETICS), ...codes(RXNORM_THIAZIDES)].some(c => medCodes.includes(c)))
+      && ([...RAAS_CODES_CV, ...BB_CODES_CV, ...RATE_CONTROL_CODES_CV, ...codes(RXNORM_LOOP_DIURETICS), ...codes(RXNORM_THIAZIDES), ...codes(RXNORM_ALPHA_BLOCKERS)].some(c => medCodes.includes(c)))
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
       type: TherapyGapType.MEDICATION_CONTRAINDICATED,
@@ -5733,17 +5742,17 @@ export function evaluateGapRules(
       recommendations: {
         action: 'Consider medication review and deprescribing of BP-lowering agents per 2017 ACC/AHA Syncope Guideline (orthostatic hypotension)',
         guideline: '2017 ACC/AHA/HRS Guideline for the Evaluation and Management of Syncope',
-        note: 'Orthostatic hypotension is frequently iatrogenic - antihypertensives, vasodilators, and diuretics commonly precipitate or worsen it. A structured medication review/deprescribing pass is first-line. Path-B: alpha-blockers (a common OH culprit) are not in a current value set - that subgroup is under-detected.',
+        note: 'Orthostatic hypotension is frequently iatrogenic - antihypertensives, vasodilators, diuretics, and alpha-blockers commonly precipitate or worsen it. A structured medication review/deprescribing pass is first-line.',
       },
       evidence: {
         triggerCriteria: [
           'Orthostatic hypotension (I95.1)',
-          'On a BP-lowering agent (RAAS / beta-blocker / CCB / loop or thiazide diuretic)',
+          'On a BP-lowering agent (RAAS / beta-blocker / CCB / loop or thiazide diuretic / alpha-blocker)',
         ],
         guidelineSource: '2017 ACC/AHA/HRS Guideline for the Evaluation and Management of Syncope',
         classOfRecommendation: '1',
         levelOfEvidence: 'B',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Alpha-blocker culprit not ingested (Path-B under-detect)'],
+        exclusions: ['Hospice/palliative care (Z51.5)'],
       },
     });
   }
@@ -5845,7 +5854,7 @@ export function evaluateGapRules(
   // Guideline: 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 2a, LOE B
   // AFib + age>=65 + contraindication to OAC (documented allergy Z88 or bleeding history)
   if (hasAF && age >= 65 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    // EP-011 upgrade (AUDIT-120, v3.0 EP chunk 1 2026-06-16): removed the bare `Z88` (allergy status to
+    // Upgrade for the LAAC rule (AUDIT-120 / GAP-EP-011, v3.0 EP chunk 1 2026-06-16): removed the bare `Z88` (allergy status to
     // ANY drug) over-detection - it fired on penicillin/sulfa allergy etc., not an OAC contraindication.
     // The OAC-contraindication trigger is a documented bleeding/hemorrhagic-disorder history only.
     // GU major-bleed added (operator ruling 2026-06-16): R31.0 gross hematuria (visible blood; microscopic
@@ -5882,31 +5891,36 @@ export function evaluateGapRules(
   }
 
   // ============================================================
-  // EP-ABLATION: AFib Ablation Referral
+  // EP-ABLATION: AFib catheter-ablation candidate (symptomatic AF on antiarrhythmic, NOT yet ablated)
   // ============================================================
-  // Guideline: 2023 ACC/AHA AFib (CASTLE-AF, CABANA trials), Class 2a, LOE B-R
-  // AFib + age<80 + symptomatic (AF + HF combo as proxy for symptomatic AF)
-  if (hasAF && age < 80 && hasHF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  // Guideline: 2023 ACC/AHA AFib (CABANA), Class 2a, LOE B-R.
+  // Relabel of GAP-EP-015 (2026-06-16): previously fired on AF + HF (which is the CASTLE-AF population - now owned by
+  // EP-014). This rule is now the NON-HF symptomatic-AF pathway: AF + on an antiarrhythmic (failed/ongoing
+  // rhythm-control = symptomatic proxy) + age<80 + NOT yet ablated (no CPT 93656). HF cases route to EP-014.
+  if (hasAF && !hasHF && age < 80 && AAD_CODES_CV.some(c => medCodes.includes(c))
+      && !procedureCodes.includes(EP_ABLATION_CPT.AF_PVI) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.ELECTROPHYSIOLOGY,
-      status: 'Consider AFib catheter ablation referral',
+      status: 'Consider AFib catheter ablation referral (symptomatic AF on antiarrhythmic)',
       target: 'EP consultation for ablation candidacy completed',
       recommendations: {
-        action: 'Consider referral to electrophysiology for catheter ablation evaluation',
-        guideline: '2023 ACC/AHA AFib Guideline (CASTLE-AF, CABANA)',
-        note: 'Recommended for review in symptomatic AFib patients with concurrent heart failure',
+        action: 'Consider referral to electrophysiology for catheter ablation evaluation per 2023 ACC/AHA AFib (CABANA, Class 2a)',
+        guideline: '2023 ACC/AHA AFib Guideline (CABANA)',
+        note: 'Symptomatic AF on antiarrhythmic therapy and not yet ablated - catheter ablation is a Class 2a rhythm-control option. HF + AF (CASTLE-AF) is handled by EP-014. Path-B: symptom status is proxied by being on an antiarrhythmic.',
       },
       evidence: {
         triggerCriteria: [
           'Atrial fibrillation diagnosis (I48.*)',
+          'On an antiarrhythmic drug (symptomatic-AF / rhythm-control proxy)',
           `Age: ${age} (<80)`,
-          'Heart failure diagnosis (I50.*) as proxy for symptomatic AFib',
+          'No heart failure (HF + AF routes to EP-014 / CASTLE-AF)',
+          'No prior AF ablation (CPT 93656)',
         ],
-        guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (CASTLE-AF, CABANA)',
+        guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (CABANA)',
         classOfRecommendation: 'Class 2a',
         levelOfEvidence: 'LOE B-R',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Age >= 80', 'Prior ablation documented'],
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Age >= 80', 'Prior AF ablation (CPT 93656)', 'HF present (routes to EP-014)'],
       },
     });
   }
@@ -6491,8 +6505,13 @@ export function evaluateGapRules(
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
   // All mechanical valve patients require lifelong warfarin (INR 2.5-3.5)
   // RxNorm warfarin: 11289
+  // Fix (AUDIT-164, 2026-06-16): DROPPED Z95.3 (xenogenic / BIOPROSTHETIC valve) from the mechanical-valve set.
+  // Bioprosthetic valves neither contraindicate a DOAC nor mandate lifelong warfarin - including Z95.3 caused
+  // a CRITICAL-severity false-positive in the shared EP DOAC-contraindication rule (gap-vd-6, RE-ALIGN Class 3
+  // Harm) AND an over-broad fire in the VD mechanical-valve-warfarin rule. Mechanical = Z95.2 (prosthetic) +
+  // Z95.4 (other replacement) only. ICD-10-CM verified per AUDIT_METHODOLOGY.md section 16.
   const hasMechanicalValve = dxCodes.some(c =>
-    c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4')
+    c.startsWith('Z95.2') || c.startsWith('Z95.4')
   );
   if (hasMechanicalValve) {
     const onWarfarin = medCodes.includes('11289');
@@ -8540,6 +8559,11 @@ export function evaluateGapRules(
   // EP-CSP: Conduction System Pacing Evaluation
   // Guideline: 2023 HRS/APHRS/LAHRS Guideline on Cardiac Physiologic Pacing, Class 2a, LOE B-R
   // LVEF <=35% + pacing indication (existing pacemaker Z95.0 or AV block I44.*)
+  // Note (2026-06-16): the Z95.0 arm is intentionally dual-purpose - it captures BOTH a new pacing indication
+  //   (I44 AV block, no device yet) AND an EXISTING-device patient (Z95.0) with HF + low EF who is a CSP/CRT
+  //   UPGRADE candidate (to minimize RV-pacing-induced cardiomyopathy). The "existing CRT device" exclusion in
+  //   the evidence object is not separately enforced (CRT-vs-RV-pacing device type is not ingested) - so an
+  //   already-optimized CRT patient could fire; clinician confirms device type. Documented limitation.
   const hasPacingIndication = dxCodes.some(c => c.startsWith('Z95.0') || c.startsWith('I44'));
   if (
     hasHF &&
@@ -8635,35 +8659,37 @@ export function evaluateGapRules(
 
   // EP-DRONEDARONE: Dronedarone Contraindication Check
   // Guideline: 2023 ACC/AHA/ACCP/HRS AF Guideline (ANDROMEDA trial), Class 3 (Harm), LOE B-R
-  // AF + HF + on dronedarone (RxNorm 233698) -- CONTRAINDICATED in NYHA III/IV or decompensated HF
+  // AF + on dronedarone (RxNorm 233698) -- CONTRAINDICATED in (a) advanced HF NYHA III/IV (ANDROMEDA) OR
+  // (b) PERMANENT AF (PALLAS - increased CV death/stroke/HF-hospitalization). Both are Class 3 (Harm).
+  // Dronedarone permanent-AF arm (GAP-EP-046) added 2026-06-16: I48.21 (permanent AF) fires independent of HF status.
   if (
     hasAF &&
-    hasHF &&
     medCodes.includes('233698') &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
-    // LVEF <35% as proxy for NYHA III/IV
-    const severeHF = labValues['lvef'] !== undefined && labValues['lvef'] < 35;
-    if (severeHF) {
+    // LVEF <35% as proxy for NYHA III/IV (requires an HF dx); permanent AF is the second, HF-independent arm.
+    const severeHF = hasHF && labValues['lvef'] !== undefined && labValues['lvef'] < 35;
+    const hasPermanentAF = dxCodes.some(c => c.startsWith('I48.21')); // permanent AF (PALLAS)
+    if (severeHF || hasPermanentAF) {
+      const arm = severeHF ? 'advanced heart failure (NYHA III/IV proxy)' : 'permanent atrial fibrillation';
       gaps.push({
         type: TherapyGapType.MEDICATION_CONTRAINDICATED,
         module: ModuleType.ELECTROPHYSIOLOGY,
-        status: 'Dronedarone contraindicated in advanced heart failure',
-        target: 'Dronedarone discontinued or HF severity reassessed',
+        status: `Dronedarone contraindicated in ${arm}`,
+        target: 'Dronedarone discontinued; reassess rhythm-vs-rate strategy',
         medication: 'Dronedarone',
         recommendations: {
-          action: 'Consider discontinuing dronedarone: contraindicated in NYHA Class III/IV or decompensated HF per ANDROMEDA trial',
+          action: 'Consider discontinuing dronedarone: contraindicated in NYHA III/IV / decompensated HF (ANDROMEDA) and in permanent AF (PALLAS) per 2023 ACC/AHA/ACCP/HRS AF Guideline Class 3 (Harm)',
           guideline: '2023 ACC/AHA/ACCP/HRS AF Guideline',
-          note: 'SAFETY ALERT: Dronedarone associated with increased mortality in advanced HF (ANDROMEDA)',
+          note: 'SAFETY ALERT: dronedarone increases mortality in advanced HF (ANDROMEDA) and CV events in permanent AF (PALLAS).',
         },
         evidence: {
           triggerCriteria: [
             'Atrial fibrillation diagnosis (I48.*)',
-            'Heart failure diagnosis (I50.*)',
-            `LVEF: ${labValues['lvef']}% (<35%, proxy for NYHA III/IV)`,
             'Dronedarone active (RxNorm 233698)',
+            severeHF ? `Heart failure + LVEF: ${labValues['lvef']}% (<35%, proxy for NYHA III/IV) - ANDROMEDA arm` : 'Permanent atrial fibrillation (I48.21) - PALLAS arm',
           ],
-          guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (ANDROMEDA Trial)',
+          guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (ANDROMEDA + PALLAS Trials)',
           classOfRecommendation: 'Class 3 (Harm)',
           levelOfEvidence: 'LOE B-R',
           exclusions: ['Hospice/palliative care (Z51.5)'],
@@ -8776,6 +8802,11 @@ export function evaluateGapRules(
   // EP-LQTS-BB: Long QT Syndrome Beta-Blocker
   // Guideline: 2017 AHA/ACC/HRS VA Guideline, Class 1, LOE B
   // Long QT syndrome (I45.81) + no beta-blocker
+  // Path-B genotype limit (noted 2026-06-16): LQTS subtype is not ingested. The preferred BBs in LQTS are the
+  //   non-selective NADOLOL / PROPRANOLOL; the "treated" set here also counts metoprolol/carvedilol/bisoprolol
+  //   (less effective for LQTS, esp. LQT2). And LQT3 (SCN5A) responds less to BB and may prefer mexiletine - the
+  //   genotype-specific tailoring is DUA-deferred (ties to EP-081 LQT1-nadolol / EP-083 LQT3-mexiletine). The
+  //   primary no-BB-at-all gap below remains correct; the subtype refinement awaits genotype ingestion.
   const hasLQTS = dxCodes.some(c => c.startsWith('I45.81'));
   if (hasLQTS && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const BB_CODES_LQTS = ['20352', '6918', '19484', '7226']; // carvedilol, metoprolol, bisoprolol, nadolol — AUDIT-043 (2026-05-05): was '7512' = norepinephrine, NOT nadolol
@@ -8806,9 +8837,15 @@ export function evaluateGapRules(
     }
   }
 
-  // EP-SUBCLINICAL-AF: Subclinical AF Detection in Device Patients
-  // Guideline: 2023 ACC/AHA/ACCP/HRS AF Guideline (ASSERT, NOAH-AFNET 6), Class 2a, LOE B-R
-  // Cardiac device (Z95.0) + no AF diagnosis -- device may detect subclinical atrial high-rate episodes
+  // EP-SUBCLINICAL-AF: Subclinical AF Detection in Device Patients (PROXY)
+  // Guideline: 2023 ACC/AHA/ACCP/HRS AF Guideline (ASSERT), Class 2a, LOE B-R.
+  // Citation corrected 2026-06-16: NOAH-AFNET 6 was NEGATIVE for ANTICOAGULATING device-detected AHRE - it does
+  //   NOT support a screen-and-anticoagulate rationale, so it is removed. ASSERT established the AHRE-stroke
+  //   association that motivates REVIEWING the interrogation (the action here); the decision to anticoagulate is
+  //   left to the clinician (NOAH/ARTESIA nuance). The recommendation is review-only, not anticoagulate.
+  // PROXY/breadth: this fires on EVERY cardiac-device patient (Z95.0) >=65 without an AF dx - a broad screening
+  //   prompt. The AHRE burden threshold (e.g. >=24h) is NOT checkable (device telemetry not ingested - EP-018 is a
+  //   DUA-deferred device-interrogation gap). Benign "consider reviewing interrogation" prompt only.
   const hasPacemaker = dxCodes.some(c => c.startsWith('Z95.0'));
   if (
     hasPacemaker &&
@@ -8824,7 +8861,7 @@ export function evaluateGapRules(
       recommendations: {
         action: 'Consider reviewing device interrogation for subclinical atrial high-rate episodes (AHREs)',
         guideline: '2023 ACC/AHA/ACCP/HRS AF Guideline',
-        note: 'Recommended for review: subclinical AF detected by CIEDs is associated with increased stroke risk',
+        note: 'Recommended for review: device-detected AHRE is associated with increased stroke risk (ASSERT). Whether to anticoagulate is individualized (NOAH-AFNET 6 / ARTESIA showed a modest, bleed-offset benefit) - this prompt is review-only.',
       },
       evidence: {
         triggerCriteria: [
@@ -8832,10 +8869,10 @@ export function evaluateGapRules(
           'No atrial fibrillation diagnosis on problem list',
           `Age: ${age} (>=65)`,
         ],
-        guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (ASSERT, NOAH-AFNET 6)',
+        guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for Diagnosis and Management of AF (ASSERT)',
         classOfRecommendation: 'Class 2a',
         levelOfEvidence: 'LOE B-R',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Known AF already on anticoagulation'],
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Known AF already on anticoagulation', 'PROXY: AHRE burden threshold not ingested (DUA-deferred device-interrogation); broad screening prompt'],
       },
     });
   }
@@ -11275,35 +11312,38 @@ export function evaluateGapRules(
     });
   }
 
-  // EP-BRUGADA: Brugada Syndrome Screening
+  // EP-BRUGADA: Brugada Syndrome Screening (PROXY)
   // Guideline: 2017 AHA/ACC/HRS VA Guideline, Class 1, LOE C
-  // Syncope (R55) + male + age <45
+  // Syncope (R55) + age <45 (BOTH sexes - the MALE-only restriction was removed 2026-06-16: Brugada affects
+  //   women too, and a female-restricted screen misses real cases).
+  // PROXY/breadth note: R55 is generic syncope (mostly benign vasovagal); this is a broad screening prompt, not a
+  //   confirmed gap. The "vasovagal syncope documented" exclusion is NOT enforceable (vasovagal is not separately
+  //   ICD-codable under R55). True Brugada confirmation needs ECG-pattern morphology (not ingested - EP-023 carries
+  //   a DUA-deferred ECG-morphology dependency); this fires as a benign "consider screening" prompt only.
   if (
     dxCodes.some(c => c.startsWith('R55')) &&
-    gender === 'MALE' &&
     age < 45 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
       type: TherapyGapType.SCREENING_DUE,
       module: ModuleType.ELECTROPHYSIOLOGY,
-      status: 'Consider Brugada syndrome screening in young male with unexplained syncope',
+      status: 'Consider Brugada syndrome screening in young patient with unexplained syncope',
       target: 'Brugada screening ECG and/or provocative testing completed',
       recommendations: {
-        action: 'Consider ECG evaluation for Brugada pattern in young male with syncope per 2017 AHA/ACC/HRS VA Guideline',
+        action: 'Consider ECG evaluation for Brugada pattern in a young patient with syncope per 2017 AHA/ACC/HRS VA Guideline',
         guideline: '2017 AHA/ACC/HRS Ventricular Arrhythmia Guideline',
-        note: 'Recommended for review: Brugada syndrome is a leading cause of sudden cardiac death in young males',
+        note: 'Recommended for review: Brugada syndrome is a cause of sudden cardiac death in young adults of both sexes. PROXY: R55 is generic syncope; ECG-pattern confirmation is not ingested.',
       },
       evidence: {
         triggerCriteria: [
-          'Syncope (R55)',
-          `Gender: ${gender}`,
+          'Syncope (R55 - generic; vasovagal cannot be excluded by code)',
           `Age: ${age} (<45)`,
         ],
         guidelineSource: '2017 AHA/ACC/HRS Guideline for Management of Patients with Ventricular Arrhythmias',
         classOfRecommendation: 'Class 1',
         levelOfEvidence: 'LOE C',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Known Brugada diagnosis', 'Vasovagal syncope documented'],
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Known Brugada diagnosis', 'Vasovagal syncope (NOT enforceable - not codable under R55; proxy breadth)', 'PROXY: ECG-pattern morphology not ingested (DUA-deferred)'],
       },
     });
   }
@@ -11576,9 +11616,13 @@ export function evaluateGapRules(
     });
   }
 
-  // EP-INAPPROPRIATE-SHOCKS: ICD Inappropriate Shock Workup
+  // EP-INAPPROPRIATE-SHOCKS: ICD Inappropriate Shock Workup (PROXY; serves GAP-EP-050 + GAP-EP-089)
   // Guideline: 2023 HRS Expert Consensus on ICD Programming (MADIT-RIT), Class 1, LOE B
-  // ICD (Z95.810) + AF (I48) = risk for inappropriate shocks
+  // ICD (Z95.810) + AF (I48) = risk for inappropriate shocks.
+  // PROXY/breadth: this fires on EVERY ICD+AF patient regardless of whether any shock has occurred - the actual
+  //   delivered-shock log is device-telemetry (not ingested; EP-050/089 are DUA-deferred device-interrogation gaps).
+  //   AF-as-shock-risk is the proxy. The "recent programming optimization" / "deactivation" exclusions are NOT
+  //   enforceable (programming history not ingested). Benign preventive "consider programming review" prompt only.
   if (
     dxCodes.some(c => c.startsWith('Z95.810')) &&
     hasAF &&
@@ -11602,7 +11646,7 @@ export function evaluateGapRules(
         guidelineSource: '2023 HRS Expert Consensus on ICD Programming (MADIT-RIT)',
         classOfRecommendation: 'Class 1',
         levelOfEvidence: 'LOE B',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent ICD programming optimization', 'ICD deactivation documented'],
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent ICD programming optimization (NOT enforceable - history not ingested)', 'ICD deactivation documented (NOT enforceable)', 'PROXY: delivered-shock log not ingested (DUA-deferred); broad preventive prompt'],
       },
     });
   }
