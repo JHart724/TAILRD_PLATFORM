@@ -747,15 +747,63 @@ export const RUNTIME_GAP_REGISTRY = [
   },
   {
     id: 'gap-sh-2-tavr-eval',
-    name: 'TAVR Evaluation for Severe AS',
+    name: 'Severe symptomatic AS - AVR not referred',
     module: 'STRUCTURAL_HEART',
     guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
     guidelineVersion: '2020',
     guidelineOrg: 'ACC/AHA',
-    lastReviewDate: '2026-04-03',
-    nextReviewDue: '2026-10-03',
+    lastReviewDate: '2026-06-17',
+    nextReviewDue: '2026-12-17',
     classOfRecommendation: '1',
     levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-sh-006-as-asymptomatic-lvef',
+    name: 'Asymptomatic severe AS with LV dysfunction (Class IIa AVR)',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-17',
+    nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-003-lflg-as-dse',
+    name: 'Low-flow low-gradient AS: dobutamine stress echo not performed',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-17',
+    nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-004-paradoxical-lflg-as',
+    name: 'Paradoxical low-flow low-gradient AS detection',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-17',
+    nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-050-as-grading-clarification',
+    name: 'Moderate AS: severity-grading surveillance / integrated clarification',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-17',
+    nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C-EO',
   },
   {
     id: 'gap-vd-2-bioprosthetic-echo',
@@ -6806,32 +6854,183 @@ export function evaluateGapRules(
   }
 
   // ============================================================
-  // Gap SH-2: TAVR Evaluation for Severe Aortic Stenosis
+  // SH CHUNK 1 (v3.0 SH buildout, 2026-06-17): Aortic stenosis severity. Reads the now-threaded echo-severity
+  // measures (echo-severity threading unlock, PR #404): aortic_valve_mean_gradient / aortic_valve_area /
+  // aortic_valve_vmax / valve_severity (0-5 ordinal). Pattern A: AS = I35.0 specifically (not broad I35).
   // ============================================================
-  // Guideline: 2020 ACC/AHA Valvular Heart Disease Guideline, Class 1, LOE A
-  // Patients with severe AS (I35.0), age >= 65, and LVEF available (suggests symptomatic/evaluated)
-  // should be evaluated for TAVR by a heart valve team
-  if (hasAorticStenosis && age >= 65 && labValues['lvef'] !== undefined) {
-        if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-  gaps.push({
-        type: TherapyGapType.PROCEDURE_INDICATED,
-        module: ModuleType.STRUCTURAL_HEART,
-        status: 'TAVR evaluation not documented for severe aortic stenosis',
-        target: 'Heart valve team evaluation for TAVR completed',
-        recommendations: {
-          action: 'Refer to heart valve team for TAVR evaluation per 2020 ACC/AHA VHD, Class 1, LOE A',
-          guideline: '2020 ACC/AHA Valvular Heart Disease',
-          note: 'All patients >= 65 with severe AS should be evaluated by a multidisciplinary heart valve team',
-        },
-            evidence: {
-          triggerCriteria: ['Severe aortic stenosis (I35.0)', 'Age >= 65', 'LVEF available (echo performed)', 'No documented TAVR evaluation'],
-          guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
-          classOfRecommendation: '1',
-          levelOfEvidence: 'A',
-          exclusions: ['Hospice/palliative care'],
-        },
-  });
-    }
+  // severeAS: guideline severe-AS gate (2020 ACC/AHA VHD) - any-of the echo-severity criteria.
+  const severeAS =
+    (labValues['aortic_valve_mean_gradient'] !== undefined && labValues['aortic_valve_mean_gradient'] >= 40) ||
+    (labValues['aortic_valve_area'] !== undefined && labValues['aortic_valve_area'] <= 1.0) ||
+    (labValues['aortic_valve_vmax'] !== undefined && labValues['aortic_valve_vmax'] >= 4.0) ||
+    (labValues['valve_severity'] !== undefined && labValues['valve_severity'] >= 5);
+  // Any prosthetic AV already present (Z95.2/.3/.4) = already replaced -> exclude from "AVR not done" gaps.
+  // (ANY replacement code is correct here, independent of the Z95.2/Z95.3 mechanical-vs-bio inversion that the
+  // AUDIT-123/124 cluster concerns - that inversion lands at the valve-CHOICE recommendation, NOT this exclusion.)
+  const hasAnyProstheticValve_SH = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4'));
+  const symptomaticAS = dxCodes.some(c => c.startsWith('I50') || c.startsWith('R55') || c.startsWith('I20'));
+
+  // Gap SH-2 / GAP-SH-002: Severe SYMPTOMATIC AS - AVR not referred. COR 1.
+  // AUDIT-125 TIGHTENING: the prior rule fired on I35.0 + age>=65 + LVEF-present (an "echo-performed" proxy with
+  // NO severity gate -> over-detected mild/moderate AS). Now gated on the threaded severe-AS severity + a symptom dx.
+  // Path-B: AVR-referral/procedure status is not ingested (no AVR/TAVR CPT set yet, chunk-2/3) - the prosthetic-valve
+  // exclusion removes already-replaced patients; the referral-absence arm is a documented Path-B.
+  if (hasAorticStenosis && severeAS && symptomaticAS && !hasAnyProstheticValve_SH
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'AVR not referred for severe symptomatic aortic stenosis',
+      target: 'Heart valve team AVR evaluation (SAVR vs TAVR by age/surgical-risk/anatomy)',
+      recommendations: {
+        // STANDING SUBGROUP CHECK: symptomatic severe AS is a Class 1 intervention indication, but the MODALITY
+        // is subgroup-dependent (younger/low-risk -> SAVR; older/high-risk -> TAVR) - recommend heart-team AVR
+        // evaluation, NOT blanket TAVR (the prior rule's error for young low-risk patients).
+        action: 'Refer to heart valve team for AVR evaluation per 2020 ACC/AHA VHD (Class 1, LOE A); modality (SAVR vs TAVR) by age, surgical risk, and valve anatomy',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Symptomatic severe AS is a Class 1 AVR indication. Modality is heart-team-determined: SAVR is generally preferred at younger age / lower surgical risk; TAVR at older age / higher risk or favorable anatomy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Aortic stenosis (I35.0)',
+          'Severe AS (mean gradient >=40, AVA <=1.0, Vmax >=4.0, or valve_severity >=5)',
+          'Symptomatic (HF I50 / syncope R55 / angina I20)',
+          'No prosthetic aortic valve already present',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prosthetic AV already present (Z95.2/.3/.4)', 'AVR-referral status not ingested (Path-B)'],
+      },
+    });
+  }
+
+  // GAP-SH-006: Asymptomatic severe AS + LV dysfunction (Class IIa AVR). COR 2a.
+  // Trigger: severe AS + LVEF<55 + NOT symptomatic + no prosthetic AV. (LVEF<50 subset is Class 1 - surfaced
+  // for operator; the >=50-<55 band + the abnormal-stress arm are the 2a triggers; stress-test result not threaded.)
+  if (hasAorticStenosis && severeAS && labValues['lvef'] !== undefined && labValues['lvef'] < 55
+      && !symptomaticAS && !hasAnyProstheticValve_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'AVR not referred for asymptomatic severe AS with LV dysfunction (Class IIa)',
+      target: 'Heart valve team AVR evaluation for asymptomatic severe AS with LVEF<55',
+      recommendations: {
+        action: 'Consider heart valve team AVR evaluation for asymptomatic severe AS with LVEF<55 per 2020 ACC/AHA VHD (Class 2a; LVEF<50 is Class 1)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Asymptomatic severe AS with declining LV function warrants AVR before irreversible LV damage. LVEF<50 is a Class 1 indication; LVEF 50-<55 (or an abnormal exercise test, not ingested) is Class 2a. Modality (SAVR vs TAVR) is heart-team-determined.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Aortic stenosis (I35.0)',
+          'Severe AS (mean gradient >=40, AVA <=1.0, Vmax >=4.0, or valve_severity >=5)',
+          `LVEF: ${labValues['lvef']}% (<55)`,
+          'Asymptomatic (no HF/syncope/angina dx)',
+          'No prosthetic aortic valve already present',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prosthetic AV present (Z95.2/.3/.4)', 'Exercise-test arm not ingested (Path-B)'],
+      },
+    });
+  }
+
+  // GAP-SH-003: Low-flow low-gradient (classical, low-EF) AS - dobutamine stress echo not performed. COR 1.
+  // Trigger: LVEF<50 + AVA<1.0 + mean gradient<40 (the classical LFLG pattern). DSE differentiates true-severe
+  // from pseudo-severe AS. Path-B: a DSE/stress-echo procedure code is not ingested (no stress-echo CPT set yet) -
+  // fires on the LFLG-pattern recognition; the DSE-done exclusion is a documented Path-B.
+  if (hasAorticStenosis && labValues['lvef'] !== undefined && labValues['lvef'] < 50
+      && labValues['aortic_valve_area'] !== undefined && labValues['aortic_valve_area'] < 1.0
+      && labValues['aortic_valve_mean_gradient'] !== undefined && labValues['aortic_valve_mean_gradient'] < 40
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Low-flow low-gradient AS: dobutamine stress echo not performed',
+      target: 'Dobutamine stress echo to differentiate true-severe from pseudo-severe AS',
+      recommendations: {
+        action: 'Consider dobutamine stress echocardiography for classical low-flow low-gradient AS per 2020 ACC/AHA VHD (Class 1)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Low EF + small AVA + low mean gradient is classical LFLG AS - dobutamine stress echo distinguishes true-severe AS (which benefits from AVR) from pseudo-severe AS (afterload-mismatch). Path-B: stress-echo procedure status not ingested.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Aortic stenosis (I35.0)',
+          `LVEF: ${labValues['lvef']}% (<50)`,
+          `AVA: ${labValues['aortic_valve_area']} cm2 (<1.0)`,
+          `Mean gradient: ${labValues['aortic_valve_mean_gradient']} mmHg (<40) - low-flow low-gradient`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Stress-echo procedure status not ingested (Path-B)'],
+      },
+    });
+  }
+
+  // GAP-SH-004: Paradoxical low-flow low-gradient AS (preserved EF). COR 2a.
+  // Trigger: LVEF>=50 + AVA<1.0 + mean gradient<40 (small valve area, low gradient, NORMAL EF). Path-B: the
+  // confirmatory stroke-volume index (SVi<35) is NOT threaded - this fires on the preserved-EF discordant pattern
+  // and recommends an integrated SVi/flow assessment to confirm paradoxical-LFLG severe AS.
+  if (hasAorticStenosis && labValues['lvef'] !== undefined && labValues['lvef'] >= 50
+      && labValues['aortic_valve_area'] !== undefined && labValues['aortic_valve_area'] < 1.0
+      && labValues['aortic_valve_mean_gradient'] !== undefined && labValues['aortic_valve_mean_gradient'] < 40
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Paradoxical low-flow low-gradient AS: stroke-volume/flow assessment needed',
+      target: 'Integrated stroke-volume-index / flow assessment to confirm paradoxical-LFLG severe AS',
+      recommendations: {
+        action: 'Consider stroke-volume-index and integrated flow assessment for preserved-EF discordant AS per 2020 ACC/AHA VHD (Class 2a)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Small AVA + low gradient with PRESERVED EF suggests paradoxical low-flow low-gradient severe AS (low stroke-volume index despite normal EF). Confirm with SVi (<35 mL/m2) and integrated assessment. Path-B: stroke-volume index not ingested.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Aortic stenosis (I35.0)',
+          `LVEF: ${labValues['lvef']}% (>=50, preserved)`,
+          `AVA: ${labValues['aortic_valve_area']} cm2 (<1.0)`,
+          `Mean gradient: ${labValues['aortic_valve_mean_gradient']} mmHg (<40) - discordant with small AVA`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Stroke-volume index (SVi) not ingested (Path-B)'],
+      },
+    });
+  }
+
+  // GAP-SH-050: Moderate AS - severity-grading / surveillance + integrated clarification. COR 1 (surveillance).
+  // Trigger: AS + AVA in the moderate range (1.0 < AVA <= 1.5). Path-B: CT-derived annular sizing is not threaded;
+  // the recommendation is periodic re-grading + integrated (CT-AVA) clarification when echo is discordant.
+  // Scope note: the severe (SH-002/006) and LFLG (SH-003/004, AVA<1.0) cases are handled above; SH-050 is the
+  // moderate-range watch. Overlap boundary with the LFLG gaps flagged for operator review.
+  if (hasAorticStenosis && labValues['aortic_valve_area'] !== undefined
+      && labValues['aortic_valve_area'] > 1.0 && labValues['aortic_valve_area'] <= 1.5
+      && !hasAnyProstheticValve_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Moderate AS: severity-grading surveillance / integrated clarification',
+      target: 'Periodic AS re-grading; integrated (CT-AVA) clarification when echo measures are discordant',
+      recommendations: {
+        action: 'Consider periodic re-grading of moderate AS and integrated (CT-derived AVA / annular) clarification when echo is discordant per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Moderate AS (AVA 1.0-1.5 cm2) warrants periodic surveillance; when echo measures are discordant or borderline, CT-derived AVA / annular sizing clarifies severity. Path-B: CT-annular measurements not ingested.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Aortic stenosis (I35.0)',
+          `AVA: ${labValues['aortic_valve_area']} cm2 (1.0-1.5, moderate range)`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-EO',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prosthetic AV present (Z95.2/.3/.4)', 'CT-annular sizing not ingested (Path-B)'],
+      },
+    });
   }
 
   // ============================================================
