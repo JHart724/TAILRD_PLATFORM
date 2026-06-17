@@ -12,11 +12,11 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 |---|---:|---:|---:|---:|---:|---:|
 | HF | 126 | 64 | 25 | 37 | 89/126 (70.6%) | 50.8% |
 | EP | 89 | 42 | 16 | 31 | 58/89 (65.2%) | 47.2% |
-| SH | 88 | 0 | 30 | 58 | 30/88 (34.1%) | 0.0% |
+| SH | 88 | 31 | 18 | 39 | 49/88 (55.7%) | 35.2% |
 | CAD | 90 | 29 | 27 | 34 | 56/90 (62.2%) | 32.2% |
 | VHD | 105 | 0 | 11 | 94 | 11/105 (10.5%) | 0.0% |
 | PV | 105 | 16 | 14 | 75 | 30/105 (28.6%) | 15.2% |
-| **TOTAL** | **603** | **151** | **123** | **329** | **274/603 (45.4%)** | **25.0%** |
+| **TOTAL** | **603** | **182** | **111** | **310** | **293/603 (48.6%)** | **30.2%** |
 
 ---
 
@@ -26,7 +26,7 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 |---|---:|---:|---:|---:|---:|
 | HF | 29 | 21 | 5 | 3 | 89.7% |
 | EP | 15 | 11 | 1 | 3 | 80.0% |
-| SH | 13 | 0 | 8 | 5 | 61.5% |
+| SH | 13 | 7 | 2 | 4 | 69.2% |
 | CAD | 18 | 8 | 4 | 6 | 66.7% |
 | VHD | 8 | 0 | 2 | 6 | 25.0% |
 | PV | 7 | 1 | 2 | 4 | 42.9% |
@@ -53,7 +53,7 @@ Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-rel
 
 ## 4. Cross-module satisfaction patterns
 
-12 cross-module satisfaction case(s) where a spec gap in module X is satisfied by an evaluator owned by module Y.
+10 cross-module satisfaction case(s) where a spec gap in module X is satisfied by an evaluator owned by module Y.
 
 ### Pattern summary
 
@@ -63,8 +63,7 @@ Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-rel
 | EP | CAD | 1 | GAP-EP-028 |
 | EP | VHD | 1 | GAP-EP-007 |
 | HF | EP | 4 | GAP-HF-021, GAP-HF-022, GAP-HF-023, GAP-HF-085 |
-| SH | CAD | 2 | GAP-SH-048, GAP-SH-052 |
-| SH | EP | 1 | GAP-SH-060 |
+| SH | CAD | 1 | GAP-SH-048 |
 | SH | VHD | 1 | GAP-SH-020 |
 | VHD | SH | 1 | GAP-VHD-024 |
 
@@ -79,11 +78,9 @@ Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-rel
 | GAP-EP-007 | T1 | DET_OK | EP | `VD-6` | VHD |
 | GAP-EP-028 | T2 | PARTIAL_DETECTION | EP | `CAD-BETA-BLOCKER` | CAD |
 | GAP-SH-048 | T2 | PARTIAL_DETECTION | SH | `CAD-COMPLETE-REVASC` | CAD |
-| GAP-SH-052 | T2 | PARTIAL_DETECTION | SH | `CAD-BETA-BLOCKER` | CAD |
-| GAP-SH-060 | T2 | PARTIAL_DETECTION | SH | `EP-REMOTE-MONITORING` | EP |
 | GAP-SH-020 | T2 | PARTIAL_DETECTION | SH | `VD-4` | VHD |
 | GAP-CAD-027 | T2 | PARTIAL_DETECTION | CAD | `PV-RIVAROXABAN` | PV |
-| GAP-VHD-024 | T2 | PARTIAL_DETECTION | VHD | `SH-2` | SH |
+| GAP-VHD-024 | T2 | PARTIAL_DETECTION | VHD | `SH-002` | SH |
 
 ---
 
@@ -96,11 +93,7 @@ Subcategories with 0% any-coverage indicate entire procedural surfaces missing i
 | HF | ECMO/MCS | 3 | 0 | 0 | 3 |
 | HF | Genetics | 3 | 0 | 0 | 3 |
 | EP | Cardiac Arrest | 4 | 0 | 0 | 4 |
-| SH | Aortic Disease | 9 | 0 | 0 | 9 |
 | SH | Pulmonary HTN | 5 | 0 | 0 | 5 |
-| SH | Pulmonary Embolism | 5 | 0 | 0 | 5 |
-| SH | Infective Endocarditis | 3 | 0 | 0 | 3 |
-| SH | Cardiac Masses | 2 | 0 | 0 | 2 |
 | CAD | Complex PCI | 4 | 0 | 0 | 4 |
 | CAD | Stent Complications | 3 | 0 | 0 | 3 |
 | CAD | Cardiogenic Shock | 6 | 0 | 0 | 6 |
@@ -119,7 +112,7 @@ Subcategories with 0% any-coverage indicate entire procedural surfaces missing i
 | PV | AVM | 3 | 0 | 0 | 3 |
 | PV | Vascular Access | 3 | 0 | 0 | 3 |
 
-**Total: 25 subcategories with 0% any-coverage across 6 modules.**
+**Total: 21 subcategories with 0% any-coverage across 6 modules.**
 
 ---
 

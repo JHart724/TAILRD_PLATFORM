@@ -192,7 +192,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
   it.each([
     ['HF', 'HEART_FAILURE', 90], // 56 + 34 (v3.0 HF full buildout batch, 2026-06-15, feat/hf-buildable-gap-batch)
     ['EP', 'ELECTROPHYSIOLOGY', 69], // 48 + 21 (v3.0 EP module buildout, 2026-06-16, feat/ep-chunk1-af-anticoag)
-    ['SH', 'STRUCTURAL_HEART', 25],
+    ['SH', 'STRUCTURAL_HEART', 60], // 25 + 35 (v3.0 SH module close, 2026-06-17, feat/sh-chunk1-as-severity)
     ['CAD', 'CORONARY_INTERVENTION', 77],
     ['VHD', 'VALVULAR_DISEASE', 32],
     ['PV', 'PERIPHERAL_VASCULAR', 33],
@@ -201,7 +201,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     expect(registry.length).toBe(count);
   });
 
-  it('VHD evaluator extraction includes VD-PANNUS at line 13601', () => {
+  it('VHD evaluator extraction includes VD-PANNUS at line 14931', () => {
     // AUDIT-110 line-pinned-assertion recurrence: the v3.0 HF buildout shifted gapRuleEngine.ts
     // (10806 -> 11015 -> 11134 ingest signature-expansion -> 12547 by the v3.0 HF FULL buildout
     // batch, 2026-06-15 -> 13601 by the v3.0 EP module buildout, 2026-06-16: 21 new EP evaluators +
@@ -210,7 +210,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(13601);
+    expect(pannus!.commentLine).toBe(14931); // -> 14931 by the v3.0 SH module close (2026-06-17)
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });
@@ -233,7 +233,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
   });
 
   it.each([
-    ['SH', 25, 25, 25],
+    ['SH', 60, 55, 55],
     ['CAD', 77, 77, 77],
     ['VHD', 32, 32, 32],
     ['PV', 33, 33, 33],

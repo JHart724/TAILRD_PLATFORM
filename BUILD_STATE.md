@@ -38,7 +38,7 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 - [x] HF — canonical addendum (22 DET_OK / 43 PARTIAL / 61 SPEC_ONLY of 126 = 52% any-coverage; 9 cross-module to EP CRT/ICD)
 - [x] CAD — canonical addendum (28 DET_OK / 28 PARTIAL / 34 SPEC_ONLY of 90 = 62% any-coverage; 1 cross-module to PV)
 - [x] EP - canonical addendum (re-audit 2026-06-08 supersedes 2026-05-04: **8 DET_OK / 39 PARTIAL / 42 SPEC_ONLY** of 89 = 52.8% any-coverage UNCHANGED, DET_OK 23.6% -> 9.0%; 13 DET_OK -> PARTIAL flips via §16 + §16.5 re-audit; AUDIT-117/118 HIGH P1 + AUDIT-119 MEDIUM P2 + AUDIT-120 LOW P3; 3 cross-module incl. EP-007 to VHD)
-- [x] SH — canonical addendum (0 DET_OK / 30 PARTIAL / 58 SPEC_ONLY of 88 = 34.1% any-coverage; 4 cross-module; AUDIT-121..129 OPEN)
+- [x] SH - canonical addendum (v3.0 SH module close 2026-06-17: **31 DET_OK / 18 PARTIAL / 39 SPEC_ONLY** of 88 = 55.7% any-coverage, was 0/30/58 = 34.1%; DET_OK 0% -> 35.2%; 4 cross-module; v3.0 SH buildout chunks 1-7 + AUDIT-123/124/125/127/128 RESOLVED + AUDIT-165/166/167/168 filed; 3 legacy over-detectors retired SH-12/SH-9/SH-ASD)
 - [x] VHD - canonical addendum (re-audit 2026-06-10 supersedes 2026-05-04: **0 DET_OK / 11 PARTIAL / 94 SPEC_ONLY** of 105 = 10.5% any-coverage, was 5/16/84 = 20%; Tier 1 priority status: 0 DET_OK + 2 PARTIAL + 6 SPEC_ONLY of 8 T1 gaps (T1 any-coverage: 25.0%); 21 manual overrides; AUDIT-133..137 OPEN + AUDIT-123 VHD-side fold; 1 cross-module to SH)
 - [x] **Cross-module synthesis** with Tier S triage queue, blind-spot analysis, BSW pathway distribution
 - [x] **Canonical infrastructure** (AUDIT_METHODOLOGY.md + 8 scripts + CI gates + 101 tests)
@@ -64,7 +64,7 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 ### Phase 0 deliverables
 
 - [x] All 6 active module audit addenda committed (canonical, generated from crosswalks)
-- [x] **603-row implementation matrix** in `docs/audit/canonical/<MODULE>.crosswalk.json` files (98 DET_OK + 150 PARTIAL + 355 SPEC_ONLY = 248 covered / 603 total = 41% any-coverage)
+- [x] **603-row implementation matrix** in `docs/audit/canonical/<MODULE>.crosswalk.json` files (v3.0 SH close 2026-06-17: 182 DET_OK + 111 PARTIAL + 310 SPEC_ONLY = 293 covered / 603 total = 48.6% any-coverage; was 98/150/355 = 41%)
 - [/] Updated `AUDIT_FINDINGS_REGISTER.md` (AUDIT-029, AUDIT-030, AUDIT-030.D resolved via AUDIT_METHODOLOGY.md; pending: register-batch update for ~16-19 findings surfaced during canonical work)
 - [x] **v2.0 PATH_TO_ROBUST** (due ~2026-05-19; ACTIVE since 2026-05-20 per `docs/PATH_TO_ROBUST.md`, supersedes v1.2)
 
@@ -83,7 +83,7 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 | Deployment | 75% | CI + 2 deploy workflows; AUDIT-025 Phase a (Migration Validation gate) live; branch protection TODO | PR #223 |
 | Testing | 5% | 1161+ tests passing across 54 suites; 95.5%+ avg coverage across 7 middleware source files (AUDIT-001 RESOLVED 2026-05-27 at AUDIT-001.E closure PR) | `PHASE_1_REPORT.md` |
 | Documentation | 70% | 7 PRs in current arc; 3 design docs; runbooks complete | `CHANGE_RECORD_*.md` |
-| Clinical KB | 42% | CK v4.0 with 708 gaps; 6 of 6 active modules audited (canonical crosswalks); 250/603 covered any-tier post-Tier-S closure; 101/603 DET_OK; Tier S queue CLOSED; Cat A canonical RxNorms verified per AUDIT_METHODOLOGY.md §16 | `docs/audit/canonical/`, `docs/audit/AUDIT_METHODOLOGY.md` |
+| Clinical KB | 49% | CK v4.0 with 708 gaps; 6 of 6 active modules audited (canonical crosswalks); 293/603 covered any-tier (v3.0 SH close 2026-06-17); 182/603 DET_OK; Tier S queue CLOSED; Cat A canonical RxNorms verified per AUDIT_METHODOLOGY.md §16 | `docs/audit/canonical/`, `docs/audit/AUDIT_METHODOLOGY.md` |
 
 ---
 
@@ -128,11 +128,11 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 |---|---|---|---|---|---|---|
 | HF | 126 | 48 | **52% any / 17.5% DET_OK** | 38 | CANONICAL | 29 T1: 8 DET_OK + 14 PARTIAL + 7 SPEC_ONLY |
 | EP | 89 | 45 | **52.8% any / 9.0% DET_OK** | 63 | CANONICAL | 15 T1: 1 DET_OK + 11 PARTIAL + 3 SPEC_ONLY |
-| SH | 88 | 25 | **34.1% any / 0.0% DET_OK** | 48 | CANONICAL (2026-06-08; AUDIT-121..129 OPEN) | 13 T1: 0 DET_OK + 8 PARTIAL + 5 SPEC_ONLY |
+| SH | 88 | 55 | **55.7% any / 35.2% DET_OK** | 48 | CANONICAL (v3.0 close 2026-06-17; AUDIT-123/124/125/127/128 RESOLVED) | 13 T1: 7 DET_OK + 2 PARTIAL + 4 SPEC_ONLY |
 | CAD | 90 | 76 | **62% any / 31.1% DET_OK** | 25 | CANONICAL | 18 T1: 7 DET_OK + 5 PARTIAL + 6 SPEC_ONLY |
 | VHD | 105 | 32 | **10.5% any / 0.0% DET_OK** | 18 | CANONICAL (re-audit 2026-06-10; AUDIT-133..137 OPEN) | 8 T1: 0 DET_OK + 2 PARTIAL + 6 SPEC_ONLY |
 | PV | 105 | 33 | **29% any / 15.2% DET_OK** | 24 | CANONICAL | 7 T1: 1 DET_OK + 2 PARTIAL + 4 SPEC_ONLY |
-| **Total active** | **603** | **259** | **39.6% any / 12.3% DET_OK** | **216** | 6 of 6 canonical | 90 T1: 17 DET_OK + 42 PARTIAL + 31 SPEC_ONLY |
+| **Total active** | **603** | **289** | **48.6% any / 30.2% DET_OK** | **216** | 6 of 6 canonical | 90 T1: 24 DET_OK + 36 PARTIAL + 30 SPEC_ONLY |
 
 **Coverage numbers** are computed from canonical crosswalks (`docs/audit/canonical/<MODULE>.crosswalk.json`) per AUDIT_METHODOLOGY.md §3. Auto-classifier with manual overrides applies §3.2.1 broad-rule consolidation per-gap (one evaluator block top-matched for >=2 spec gaps in same subcategory -> all classified PARTIAL_DETECTION unless evaluator's trigger criteria match a specific spec gap completely). 50 manual overrides documented inline in crosswalk auditNotes (21 VHD, 15 EP, 10 SH, 2 HF, 2 CAD).
 

@@ -92,12 +92,12 @@ No EXTRA rules or architectural patterns surfaced. Reconciliation is clean.
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
 | GAP-VHD-001 | 753 | SPEC_ONLY | — | MANUAL OVERRIDE 2026-06-10 (VHD audit, AUDIT-133): PARTIAL -> SPEC_ONLY. The prior cite (VD-3 gap-vd |
-| GAP-VHD-005 | 754 | PARTIAL_DETECTION | `gap-vd-6-doac-mechanical-valve` (VD-6 @7202-7226) | MANUAL OVERRIDE 2026-06-10 (VHD audit): DET_OK -> PARTIAL per §16.6(i) concept-match / AUDIT-123 + § |
+| GAP-VHD-005 | 754 | PARTIAL_DETECTION | `gap-vd-6-doac-mechanical-valve` (VD-6 @7761-7785) | MANUAL OVERRIDE 2026-06-10 (VHD audit): DET_OK -> PARTIAL per §16.6(i) concept-match / AUDIT-123 + § |
 | GAP-VHD-050 | 830 | SPEC_ONLY | — | No S. aureus + TEE rule in evaluator. \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
 | GAP-VHD-057 | 841 | SPEC_ONLY | — | No IE + acute HF surgical-urgency rule. \| auto-verify: No candidate evaluator block above PARTIAL_MA |
 | GAP-VHD-058 | 842 | SPEC_ONLY | — | No IE + abscess surgical rule. \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-VHD-061 | 843 | SPEC_ONLY | — | No PVE dehiscence/fistula rule. \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-VHD-068 | 860 | PARTIAL_DETECTION | `gap-vd-prosthetic-pannus` (VD-PANNUS @13610-13632) | MANUAL OVERRIDE 2026-06-10 (VHD audit): PARTIAL hold (T1). VD-PANNUS (gap-vd-prosthetic-pannus) cove |
+| GAP-VHD-068 | 860 | PARTIAL_DETECTION | `gap-vd-prosthetic-pannus` (VD-PANNUS @14941-14963) | MANUAL OVERRIDE 2026-06-10 (VHD audit): PARTIAL hold (T1). VD-PANNUS (gap-vd-prosthetic-pannus) cove |
 | GAP-VHD-099 | 914 | SPEC_ONLY | — | MANUAL OVERRIDE 2026-06-10 (VHD audit, AUDIT-136): PARTIAL -> SPEC_ONLY. VD-10 (gap-vd-10-pregnancy- |
 
 ---
@@ -151,7 +151,7 @@ Rows where the auto-classifier was wrong and the audit author corrected the clas
 - **GAP-VHD-011** (T2, PARTIAL_DETECTION, `gap-vd-11-bioprosthetic-degeneration` (VD-11)): MANUAL OVERRIDE 2026-06-10 (VHD audit): PARTIAL hold. VD-11 (gap-vd-11-bioprosthetic-degeneration) is a broad bioprosthetic-degeneration rule; PARTIAL per §3.2.1 because the broad rule lacks the gap-specific discrimination the spec wants. Evaluator retained.
 - **GAP-VHD-016** (T2, PARTIAL_DETECTION, `gap-vd-antiplatelet-bioprosthetic` (VD-ANTIPLATELET-BIOPROSTHETIC)): MANUAL OVERRIDE 2026-06-10 (VHD audit Batch 5): PARTIAL hold, RE-CITED from VD-11 (gap-vd-11-bioprosthetic-degeneration) to VD-ANTIPLATELET-BIOPROSTHETIC (gap-vd-antiplatelet-bioprosthetic). The prior VD-11 consolidation cite was imprecise; the antiplatelet-after-bioprosthetic rule is the more precise partial-coverage evaluator. PARTIAL per §3.2.1. Evaluator retained.
 - **GAP-VHD-017** (T2, SPEC_ONLY, no cite): MANUAL OVERRIDE 2026-06-10 (VHD audit Batch 5, D-B5-2): PARTIAL -> SPEC_ONLY. The prior VD-11 (gap-vd-11-bioprosthetic-degeneration) consolidation cite does not genuinely detect the VHD-017 spec target (underclaim governs; coverage incidental, not the spec target). registryId dropped.
-- **GAP-VHD-024** (T2, PARTIAL_DETECTION, `gap-sh-2-tavr-eval` (SH-2) cross-module to SH): MANUAL OVERRIDE 2026-06-10 (VHD audit): PARTIAL hold, cross-module. gap-sh-2-tavr-eval (SH module, SH-2) provides partial coverage of VHD-024 (severe AS AVR-vs-TAVR). PARTIAL per §3.2.1. Evaluator retained.
+- **GAP-VHD-024** (T2, PARTIAL_DETECTION, `gap-sh-2-tavr-eval` (SH-002) cross-module to SH): MANUAL OVERRIDE 2026-06-10 (VHD audit): PARTIAL hold, cross-module. gap-sh-2-tavr-eval (SH module, SH-2) provides partial coverage of VHD-024 (severe AS AVR-vs-TAVR). PARTIAL per §3.2.1. Evaluator retained.
 - **GAP-VHD-039** (T2, PARTIAL_DETECTION, `gap-vd-tricuspid-secondary` (VD-TRICUSPID-SECONDARY)): MANUAL OVERRIDE 2026-06-10 (VHD audit): PARTIAL hold. VD-TRICUSPID-SECONDARY (gap-vd-tricuspid-secondary) partially covers VHD-039; PARTIAL per §3.2.1 (broad rule lacks gap-specific discrimination). Evaluator retained.
 - **GAP-VHD-063** (T2, PARTIAL_DETECTION, `gap-vd-14-dental-prophylaxis` (VD-14)): MANUAL OVERRIDE 2026-06-10 (VHD audit): DET_OK -> PARTIAL. The 2026-05-04 baseline DET_OK override (VD-14 dental IE prophylaxis) over-credited fidelity; under §16.6 over-detection / §3.2.1 broad-rule review VD-14 partially covers the VHD-063 target but lacks the gap-specific discrimination the spec wants. Evaluator retained; PARTIAL.
 - **GAP-VHD-068** (T1, PARTIAL_DETECTION, `gap-vd-prosthetic-pannus` (VD-PANNUS)): MANUAL OVERRIDE 2026-06-10 (VHD audit): PARTIAL hold (T1). VD-PANNUS (gap-vd-prosthetic-pannus) covers symptom-driven prosthetic valve dysfunction; spec VHD-068 wants gradient-rise >=50% from baseline specifically, so PARTIAL per §3.2.1. Evaluator retained.
@@ -190,7 +190,7 @@ Rows where the auto-classifier was wrong and the audit author corrected the clas
 
 | Spec gap | Tier | Class | Owning module | Evaluator block |
 |---|---|---|---|---|
-| GAP-VHD-024 | T2 | PARTIAL_DETECTION | SH | `SH-2` |
+| GAP-VHD-024 | T2 | PARTIAL_DETECTION | SH | `SH-002` |
 
 ### 11.5 — Sequencing notes
 

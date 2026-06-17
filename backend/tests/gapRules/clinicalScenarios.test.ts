@@ -26,7 +26,7 @@ describe('Structural: Gap rule engine integrity', () => {
     content = fs.readFileSync(ENGINE_PATH, 'utf8');
   });
 
-  it('exactly 305 gap rules defined (gaps.push calls)', () => {
+  it('exactly 356 gap rules defined (gaps.push calls)', () => {
     // Count incremented from 257 to 259 by EP-XX-7 mitigation (2026-05-04, fix/ep-017-rate-control-hfref-gating):
     // - +1: EP-017 SAFETY gap (HFrEF + on non-DHP CCB → Class 3 Harm alert)
     // - +1: EP-RC LVEF-data-required gap (HF dx + AF + LVEF undefined → structured data gap, not silent default)
@@ -48,8 +48,12 @@ describe('Structural: Gap rule engine integrity', () => {
     // Then 305 -> 326 by the v3.0 EP module buildout (2026-06-16, feat/ep-chunk1-af-anticoag):
     // - +21: new EP evaluators across 4 chunks (AF anticoag/dosing EP-003/004/005/008/009/012; AF rhythm/
     //   ablation EP-014/071/072/074/076; VT/CIED EP-020/021/022/029/034/092; brady/syncope/LAAC EP-030/033/097/067).
+    // Then 326 -> 356 by the v3.0 SH module close (2026-06-17, feat/sh-chunk1-as-severity):
+    // - net +30: ~33 new SH evaluators across 7 chunks (AS/MR/TR severity, aortic syndromes + genetic dx,
+    //   PFO/ASD/IE/PE/ACHD/masses, valve-procedure post-op, CPT-unblocked post-procedure) minus the 3 retired
+    //   legacy over-detectors (SH-12 tricuspid AUDIT-167, SH-9 PFO + SH-ASD AUDIT-127/128).
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(326);
+    expect(count).toBe(356);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

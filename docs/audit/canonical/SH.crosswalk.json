@@ -7,34 +7,25 @@
   "module": "SH",
   "rows": [
     {
-      "auditNotes": "line 4923+ (covers severe AS+age>=65; no asymptomatic-specific check, no Vmax/MG/AVA severity grading) | auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "v3.0 SH close: GAP-SH-001 (asymptomatic very-severe AS, EARLY-TAVR heart-team) has no distinct evaluator - the chunk-1 AS build covers symptomatic AVR (GAP-SH-002) + LVEF<55 (GAP-SH-006) + the LFLG partition (GAP-SH-003/004), not a dedicated early-TAVR-very-severe gate. The stale SH-2 cite (from the pre-chunk-1 single AS block) is cleared. SPEC_ONLY until a dedicated very-severe-asymptomatic gate is built.",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "SH-2",
-        "evaluatorBodyLineRange": [
-          6814,
-          6835
-        ],
-        "evaluatorModule": "SH",
-        "registryId": "gap-sh-2-tavr-eval",
-        "registryLine": 749
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-SH-001",
       "specLine": 445,
       "tier": "T1"
     },
     {
-      "auditNotes": "(broad TAVR rule) | auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "v3.0 SH chunk 1 (AUDIT-125 tightened): severe symptomatic AS -> AVR now gates on concordant severe AS via threaded echo (mean gradient>=40 / vmax>=4.0 / valve_severity>=5) + symptomatic + no prosthetic AV; subgroup-aware SAVR-vs-TAVR. LFLG routes to SH-003/004. shChunk1.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "SH-2",
+        "evaluatorBlockName": "SH-002",
         "evaluatorBodyLineRange": [
-          6814,
-          6835
+          7110,
+          7137
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-2-tavr-eval",
@@ -45,40 +36,58 @@
       "tier": "T1"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 1: classical low-flow low-gradient AS (LVEF<50 + AVA<1.0 + mean gradient<40) -> dobutamine stress echo. shChunk1.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-003",
+        "evaluatorBodyLineRange": [
+          7177,
+          7201
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-003-lflg-classical",
+        "registryLine": 2812
+      },
       "specGapId": "GAP-SH-003",
       "specLine": 447,
       "tier": "T1"
     },
     {
-      "auditNotes": "(broad) | auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "v3.0 SH chunk 1: asymptomatic severe AS + LVEF<55 -> AVR evaluation (Class IIa; LVEF<50 Class 1). Concordant severe gate + LFLG partition routes to SH-003/004. shChunk1.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "SH-2",
+        "evaluatorBlockName": "SH-006",
         "evaluatorBodyLineRange": [
-          6814,
-          6835
+          7143,
+          7168
         ],
         "evaluatorModule": "SH",
-        "registryId": "gap-sh-2-tavr-eval",
-        "registryLine": 749
+        "registryId": "gap-sh-006-asymptomatic-as",
+        "registryLine": 2826
       },
       "specGapId": "GAP-SH-006",
       "specLine": 448,
       "tier": "T1"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 1: paradoxical low-flow low-gradient AS (preserved EF + AVA<1.0 + low gradient). shChunk1.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-004",
+        "evaluatorBodyLineRange": [
+          7210,
+          7234
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-004-lflg-paradoxical",
+        "registryLine": 2819
+      },
       "specGapId": "GAP-SH-004",
       "specLine": 449,
       "tier": "T2"
@@ -91,8 +100,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-1",
         "evaluatorBodyLineRange": [
-          6474,
-          6498
+          6750,
+          6774
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-1-as-surveillance",
@@ -110,8 +119,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-1",
         "evaluatorBodyLineRange": [
-          6474,
-          6498
+          6750,
+          6774
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-1-as-surveillance",
@@ -122,26 +131,26 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: Top candidate score=0.379 between PARTIAL and HIGH thresholds; tokenJaccard=0.05; nameOverlap=2; cross-module match: evaluator owned by CAD",
+      "auditNotes": "â€” | auto-verify: Top candidate score=0.379 between PARTIAL and HIGH thresholds; tokenJaccard=0.05; nameOverlap=2; cross-module match: evaluator owned by CAD",
       "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-COMPLETE-REVASC",
         "evaluatorBodyLineRange": [
-          10656,
-          10682
+          12007,
+          12033
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-complete-revasc",
-        "registryLine": 3293
+        "registryLine": 3569
       },
       "specGapId": "GAP-SH-048",
       "specLine": 452,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -151,17 +160,26 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 1: moderate AS (AVA 1.0-1.5) -> severity-grading surveillance. Path-B: CT-annular measures not ingested. shChunk1.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-050",
+        "evaluatorBodyLineRange": [
+          7243,
+          7265
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-050-moderate-as-grading",
+        "registryLine": 2833
+      },
       "specGapId": "GAP-SH-050",
       "specLine": 454,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -171,26 +189,26 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: Top candidate score=0.3 between PARTIAL and HIGH thresholds; nameOverlap=2; cross-module match: evaluator owned by CAD",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "v3.0 SH chunk 4: Marfan (Q87.40/41x) + aortic dilation (Q87.410 / I71.2x / ascending_aorta>=4.0) not on BB or ARB -> aortic-growth prophylaxis. shChunk4.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "CAD-BETA-BLOCKER",
+        "evaluatorBlockName": "SH-052",
         "evaluatorBodyLineRange": [
-          10434,
-          10461
+          8884,
+          8908
         ],
-        "evaluatorModule": "CAD",
-        "registryId": "gap-cad-beta-blocker",
-        "registryLine": 3209
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-052-marfan-bb-arb",
+        "registryLine": 2672
       },
       "specGapId": "GAP-SH-052",
       "specLine": 460,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -200,21 +218,39 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 4: Turner (Q96) without echo data on file -> cardiac + aortic surveillance. shChunk4.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-054",
+        "evaluatorBodyLineRange": [
+          9002,
+          9024
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-054-turner-surveillance",
+        "registryLine": 2693
+      },
       "specGapId": "GAP-SH-054",
       "specLine": 462,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 4: vascular EDS (Q79.63, section-16-verified - not Q79.61 classical) not on celiprolol (RxCUI 20498) -> celiprolol + vascular surveillance. shChunk4.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-055",
+        "evaluatorBodyLineRange": [
+          9030,
+          9052
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-055-veds-celiprolol",
+        "registryLine": 2700
+      },
       "specGapId": "GAP-SH-055",
       "specLine": 463,
       "tier": "T2"
@@ -227,12 +263,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-BICUSPID",
         "evaluatorBodyLineRange": [
-          13347,
-          13368
+          14698,
+          14719
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-bicuspid-surveillance",
-        "registryLine": 2489
+        "registryLine": 2561
       },
       "specGapId": "GAP-SH-008",
       "specLine": 464,
@@ -246,29 +282,38 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-BICUSPID",
         "evaluatorBodyLineRange": [
-          13347,
-          13368
+          14698,
+          14719
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-bicuspid-surveillance",
-        "registryLine": 2489
+        "registryLine": 2561
       },
       "specGapId": "GAP-SH-009",
       "specLine": 465,
       "tier": "T3"
     },
     {
-      "auditNotes": "(no intervention-trigger logic) | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 2 (AUDIT-166 fix): secondary-MR TEER (COAPT) now GDMT-first - branches on BB+RAASi proxy (GDMT-naive -> optimize GDMT first; GDMT-optimized -> TEER candidacy) + the AUDIT-125 severity gate. Deterministic override (reconcile greedy-matched gap-sh-10-mitraclip to a sibling mitral eval). shChunk2.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-10",
+        "evaluatorBodyLineRange": [
+          8527,
+          8558
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-10-mitraclip",
+        "registryLine": 2033
+      },
       "specGapId": "GAP-SH-010",
       "specLine": 466,
       "tier": "T3"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -278,19 +323,19 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (SH audit Batch 2): DET_OK -> PARTIAL per 16.6(i) concept-match / AUDIT-123. SH-VALVE-IN-VALVE gates on Z95.2 treated as bioprosthetic, but per NLM Z95.2 = prosthetic/mechanical and Z95.3 = xenogenic/bioprosthetic (inverted codebase-wide), so the ViV rule misses real bioprosthetic (Z95.3) and false-fires on mechanical. Data-coupled defect flips to PARTIAL per the AUDIT-118 precedent. Evaluator retained; PARTIAL until AUDIT-123 remediated (correct Z95.2/Z95.3 semantics).",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-123 fixed - ViV (SH-VALVE-IN-VALVE) is now Z95.3-ONLY (xenogenic/bioprosthetic, the definitive code), never false-firing on a mechanical valve. Guarded by audit123Bioprosthetic.test.ts (Z95.3 fires ViV; Z95.2-mechanical does not). Path-B residual: a bioprosthetic miscoded as generic Z95.2 is the accepted ICD-10 ambiguity (no mechanical-specific code).",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-VALVE-IN-VALVE",
         "evaluatorBodyLineRange": [
-          13410,
-          13432
+          14766,
+          14788
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-valve-in-valve",
-        "registryLine": 2513
+        "registryLine": 2585
       },
       "specGapId": "GAP-SH-061",
       "specLine": 472,
@@ -304,12 +349,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-6",
         "evaluatorBodyLineRange": [
-          6983,
-          7003
+          7568,
+          7588
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-6-post-tavr-followup",
-        "registryLine": 1229
+        "registryLine": 1301
       },
       "specGapId": "GAP-SH-012",
       "specLine": 473,
@@ -323,29 +368,38 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-13",
         "evaluatorBodyLineRange": [
-          8045,
-          8063
+          8612,
+          8630
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-13-paravalvular-leak",
-        "registryLine": 1997
+        "registryLine": 2069
       },
       "specGapId": "GAP-SH-013",
       "specLine": 474,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 6: post-AVR + new LBBB (I44.7) -> ambulatory rhythm monitoring. shChunk6.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-057",
+        "evaluatorBodyLineRange": [
+          9340,
+          9362
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-057-postavr-lbbb",
+        "registryLine": 2749
+      },
       "specGapId": "GAP-SH-057",
       "specLine": 475,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -355,36 +409,45 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 6: post-AVR (Z95.2/Z95.3 + AS hx) on DAPT -> antithrombotic de-escalation. Subgroup-aware: AF -> OAC; else single antiplatelet (POPular-TAVI). Path-B: time-since-implant not coded. shChunk6.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-059",
+        "evaluatorBodyLineRange": [
+          9309,
+          9334
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-059-postavr-antithrombotic",
+        "registryLine": 2742
+      },
       "specGapId": "GAP-SH-059",
       "specLine": 477,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: Top candidate score=0.25 between PARTIAL and HIGH thresholds; tokenJaccard=0.07; nameOverlap=1; cross-module match: evaluator owned by EP",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "v3.0 SH chunk 6: post-AVR + high-grade/complete AV block (I44.1/I44.2) -> permanent pacing decision. Subgroup-separated from SH-057 (LBBB->monitor). shChunk6.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "EP-REMOTE-MONITORING",
+        "evaluatorBlockName": "SH-060",
         "evaluatorBodyLineRange": [
-          6103,
-          6124
+          9368,
+          9390
         ],
-        "evaluatorModule": "EP",
-        "registryId": "gap-ep-remote-monitoring",
-        "registryLine": 857
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-060-postavr-pacing",
+        "registryLine": 2756
       },
       "specGapId": "GAP-SH-060",
       "specLine": 478,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -394,58 +457,49 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (SH audit Batch 2): DET_OK -> PARTIAL per 16.6(i) concept-match / AUDIT-123. SH-6 post-TAVR surveillance rests on the same inverted Z95.2/Z95.3 valve-type semantics (Z95.2 mechanical mislabeled bioprosthetic), so it misses real bioprosthetic (Z95.3) and false-fires on mechanical. Data-coupled defect -> PARTIAL per the AUDIT-118 precedent. Evaluator retained; PARTIAL until AUDIT-123 remediated.",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-123 fixed - SH-6 post-TAVR follow-up now gates Z95.2 OR Z95.3 (TAVR tissue valves may be coded either way), so it no longer misses Z95.3-coded bioprosthetic patients. Guarded by audit123Bioprosthetic.test.ts (Z95.3 + AS history fires post-TAVR).",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-6",
         "evaluatorBodyLineRange": [
-          6983,
-          7003
+          7568,
+          7588
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-6-post-tavr-followup",
-        "registryLine": 1229
+        "registryLine": 1301
       },
       "specGapId": "GAP-SH-011",
       "specLine": 480,
       "tier": "T3"
     },
     {
-      "auditNotes": "line 4988+ +  line 6059+ | Multiple registry ids cited: gap-sh-3-mitral-intervention, gap-sh-10-mitraclip | auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "v3.0 SH chunk 2 (AUDIT-125 tightened): severe PRIMARY MR (EROA>=0.40 / grade>=4 / valve_severity>=5) + symptomatic -> surgical REPAIR (subgroup-aware, excludes secondary MR). shChunk2.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "SH-3",
+        "evaluatorBlockName": "SH-014",
         "evaluatorBodyLineRange": [
-          6881,
-          6906
+          7330,
+          7358
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-3-mitral-intervention",
-        "registryLine": 1193
+        "registryLine": 1241
       },
       "specGapId": "GAP-SH-014",
       "specLine": 485,
       "tier": "T1"
     },
     {
-      "auditNotes": "(broad) | auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "v3.0 SH close: GAP-SH-015 has no distinct evaluator after the MR block split (the chunk-2 MR build covers GAP-SH-014/016/017). The stale SH-3 cite is cleared. SPEC_ONLY.",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "SH-3",
-        "evaluatorBodyLineRange": [
-          6881,
-          6906
-        ],
-        "evaluatorModule": "SH",
-        "registryId": "gap-sh-3-mitral-intervention",
-        "registryLine": 1193
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-SH-015",
       "specLine": 486,
       "tier": "T1"
@@ -458,19 +512,19 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-10",
         "evaluatorBodyLineRange": [
-          7957,
-          7976
+          8527,
+          8558
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-10-mitraclip",
-        "registryLine": 1961
+        "registryLine": 2033
       },
       "specGapId": "GAP-SH-018",
       "specLine": 487,
       "tier": "T1"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -480,27 +534,45 @@
       "tier": "T1"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 2: severe primary MR + new AF (Class IIa). shChunk2.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-064",
+        "evaluatorBodyLineRange": [
+          8571,
+          8590
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-016-primary-mr-af",
+        "registryLine": 2840
+      },
       "specGapId": "GAP-SH-016",
       "specLine": 489,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 2: severe primary MR + PASP>50 (Class IIa). shChunk2.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-017",
+        "evaluatorBodyLineRange": [
+          7391,
+          7415
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-017-primary-mr-pasp",
+        "registryLine": 2847
+      },
       "specGapId": "GAP-SH-017",
       "specLine": 490,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -510,65 +582,83 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (SH audit Batch 3): DET_OK -> PARTIAL per 16.6(iii) severity-encoding / AUDIT-125. SH-11 (TMVR) gates I34.0 + age>80 with no echo-severity threshold (EROA / regurgitant volume), but the gap targets severe MR, so it over-detects sub-threshold (mild) mitral regurg. Severity IS echo-encoded in labValues and the rule ignores it -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-125 remediated (add the lesion-appropriate echo-severity gate).",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-125 fixed (v3.0 SH chunk 2) - TMVR (SH-11) now gates on the threaded MR severity (mitral_eroa>=0.40 / mitral_regurg_grade>=4 / valve_severity>=5) in addition to age, so it no longer over-detects sub-threshold MR. Guarded by shChunk2.test.ts (AUDIT-125 gate: sub-threshold EROA does not fire).",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "SH-11",
+        "evaluatorBlockName": "SH-096",
         "evaluatorBodyLineRange": [
-          7985,
-          8003
+          9220,
+          9242
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-11-tmvr",
-        "registryLine": 1973
+        "registryLine": 2045
       },
       "specGapId": "GAP-SH-064",
       "specLine": 492,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 7: mitral TEER (CPT 33418/33419, Abbott MitraClip-confirmed) + echo-overdue -> annual surveillance echo. CPT-gated via the procedureCodes param. shChunk7.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-065",
+        "evaluatorBodyLineRange": [
+          9578,
+          9600
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-065-postteer-echo",
+        "registryLine": 2798
+      },
       "specGapId": "GAP-SH-065",
       "specLine": 493,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 7: mitral TEER + recurrent significant MR (EROA>=0.30 / grade>=3 / valve_severity>=4) -> redo-TEER-vs-surgery reassessment. PARTIAL: the serial pre/post-TEER MR-grade trend is not threaded (current severity is the recurrence proxy). shChunk7.test.ts.",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-066",
+        "evaluatorBodyLineRange": [
+          9608,
+          9630
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-066-recurrent-mr-teer",
+        "registryLine": 2805
+      },
       "specGapId": "GAP-SH-066",
       "specLine": 494,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: Top candidate score=0.425 between PARTIAL and HIGH thresholds; tokenJaccard=0.08; codeOverlap=[I34.2,I05.0]; cross-module match: evaluator owned by VHD",
+      "auditNotes": "â€” | auto-verify: Top candidate score=0.425 between PARTIAL and HIGH thresholds; tokenJaccard=0.08; codeOverlap=[I34.2,I05.0]; cross-module match: evaluator owned by VHD",
       "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-4",
         "evaluatorBodyLineRange": [
-          7146,
-          7166
+          7705,
+          7725
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-4-mitral-stenosis",
-        "registryLine": 1289
+        "registryLine": 1361
       },
       "specGapId": "GAP-SH-020",
       "specLine": 499,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -578,7 +668,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -588,7 +678,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -598,45 +688,45 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (SH audit Batch 3): DET_OK -> PARTIAL per 16.6(iii) severity-encoding / AUDIT-125. SH-4 gates I36.1 + right-heart symptoms with no TR-severity threshold, but the gap targets severe/torrential TR, so it over-detects sub-threshold lesions; the transcatheter-tricuspid recommendation is also under-anchored. -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-125 remediated (add severity gate + re-anchor).",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-125 fixed (v3.0 SH chunk 3) - severe-TR transcatheter-eval (SH-022, tightening the old SH-4) now gates on threaded TR severity (tr_regurg_grade>=4 OR valve_severity>=5) + congestion, no longer over-detecting mild TR. The legacy un-gated SH-12 was retired (AUDIT-167). Guarded by shChunk3.test.ts (AUDIT-125 regression: no severity -> does not fire).",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "SH-4",
+        "evaluatorBlockName": "SH-012",
         "evaluatorBodyLineRange": [
-          6915,
-          6941
+          9396,
+          9418
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-4-tricuspid-assessment",
-        "registryLine": 1205
+        "registryLine": 1277
       },
       "specGapId": "GAP-SH-022",
       "specLine": 507,
       "tier": "T1"
     },
     {
-      "auditNotes": "(broad, no Evoque-specific) | auto-verify: preserved-from-addendum",
+      "auditNotes": "v3.0 SH chunk 3: severe TR (threaded) + no CIED lead -> Evoque TTVR (TRISCEND) candidacy. PARTIAL: coaptation-gap morphology / T-TEER eligibility is echo-morphology (DUA-deferred), not threaded. shChunk3.test.ts.",
       "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "SH-12",
+        "evaluatorBlockName": "SH-069",
         "evaluatorBodyLineRange": [
-          8016,
-          8034
+          7470,
+          7493
         ],
         "evaluatorModule": "SH",
-        "registryId": "gap-sh-12-ttvr",
-        "registryLine": 1985
+        "registryId": "gap-sh-069-evoque-ttvr",
+        "registryLine": 2658
       },
       "specGapId": "GAP-SH-069",
       "specLine": 508,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -646,7 +736,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -656,55 +746,55 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "(broad) | auto-verify: preserved-from-addendum",
+      "auditNotes": "v3.0 SH chunk 3: severe TR + CIED lead (Z95.0/Z95.810) -> lead-status + device-selection. PARTIAL: coaptation-gap morphology not threaded (echo-morphology, DUA-deferred); lead presence IS threaded. shChunk3.test.ts.",
       "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "SH-12",
+        "evaluatorBlockName": "SH-023",
         "evaluatorBodyLineRange": [
-          8016,
-          8034
+          7500,
+          7523
         ],
         "evaluatorModule": "SH",
-        "registryId": "gap-sh-12-ttvr",
-        "registryLine": 1985
+        "registryId": "gap-sh-023-tr-device-lead",
+        "registryLine": 2665
       },
       "specGapId": "GAP-SH-023",
       "specLine": 511,
       "tier": "T3"
     },
     {
-      "auditNotes": "(broad) | auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "v3.0 SH close: GAP-SH-024 (RV dysfunction in TR: TAPSE<17 or FAC<35) is data-blocked - TAPSE/FAC are not threaded (echo-morphology). The stale SH-4 cite (pre-rename tricuspid block) is cleared. SPEC_ONLY / data-blocked.",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "SH-4",
-        "evaluatorBodyLineRange": [
-          6915,
-          6941
-        ],
-        "evaluatorModule": "SH",
-        "registryId": "gap-sh-4-tricuspid-assessment",
-        "registryLine": 1205
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-SH-024",
       "specLine": 512,
       "tier": "T3"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 4: complicated type-B dissection (malperfusion proxy K55.0x/N17/I74.3-5) -> urgent TEVAR eval. PARTIAL: malperfusion is a proxy + rapid-aortic-expansion is not coded (Path-B). TEVAR named as text (no CPT). shChunk4.test.ts.",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-075",
+        "evaluatorBodyLineRange": [
+          8973,
+          8995
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-075-typeb-tevar",
+        "registryLine": 2686
+      },
       "specGapId": "GAP-SH-075",
       "specLine": 517,
       "tier": "T1"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -714,7 +804,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -724,17 +814,26 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 4: uncomplicated type-B dissection (I71.012/I71.03, no malperfusion) not on full OMT (BB+statin proxy) -> optimal medical therapy. shChunk4.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-074",
+        "evaluatorBodyLineRange": [
+          8946,
+          8969
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-074-typeb-omt",
+        "registryLine": 2679
+      },
       "specGapId": "GAP-SH-074",
       "specLine": 520,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -744,7 +843,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -754,7 +853,7 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -764,7 +863,7 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -774,7 +873,7 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -784,84 +883,93 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (SH audit Batch 4, STEP-0): DET_OK -> PARTIAL per 16.6(ii) over-detection / AUDIT-127. SH-9 fires on I63.9 + age<60 + Q21.1 with no coded stroke-etiology exclusion; the rule own evidence object names \"alternative stroke etiology\" as an exclusion but the match logic never checks it, so it over-fires on non-cryptogenic (e.g. AF-cardioembolic) strokes. Partial overlap (true cryptogenic still caught) -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-127 remediated (add the coded etiology exclusion the evidence already names).",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-127 fully closed - SH-026 gates PFO (Q21.12 specific) + cryptogenic stroke (I63.x) + age<60 + EXCLUDES AF (I48.x, the cardioembolic source the over-detection named), and the legacy un-gated gap-sh-9-pfo-closure was RETIRED this close (superseded-not-delete). RoPE-score components are a Path-B refinement, not a detection defect. shChunk5.test.ts + the AUDIT-127 retirement note.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "SH-9",
+        "evaluatorBlockName": "SH-026",
         "evaluatorBodyLineRange": [
-          7078,
-          7099
+          9080,
+          9104
         ],
         "evaluatorModule": "SH",
-        "registryId": "gap-sh-9-pfo-closure",
-        "registryLine": 1265
+        "registryId": "gap-sh-026-pfo-cryptogenic-closure",
+        "registryLine": 2707
       },
       "specGapId": "GAP-SH-026",
       "specLine": 530,
       "tier": "T2"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE 2026-06-08 (SH audit Batch 4, STEP-0): DET_OK -> PARTIAL per 16.5 under-detection / AUDIT-128. SH-ASD gates significance on I50.81 (right heart failure), but the gap significance signals are RV size + Qp:Qs + PASP; RV failure is a late proxy, so a significant ASD with RV dilation or PASP elevation but not yet RV failure is missed. Under-detection -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-128 remediated (gate on RV size / Qp:Qs / PASP echo signals).",
+      "auditNotes": "v3.0 SH close: AUDIT-128 over-detection closed (the legacy late-RV-failure-proxy gap-sh-asd-closure was RETIRED; the lineage registry id is retained and now maps to the chunk-5 SH-027 evaluator). SH-027 gates significant ASD (Q21.1x not PFO) on threaded PASP>=40 + EXCLUDES Eisenmenger. Held PARTIAL: RV size + Qp:Qs (2 of the 3 significance signals) are not threaded (echo-morphology) - only PASP is. shChunk5.test.ts.",
       "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "SH-ASD",
+        "evaluatorBlockName": "SH-027",
         "evaluatorBodyLineRange": [
-          13443,
-          13465
+          9110,
+          9133
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-asd-closure",
-        "registryLine": 2525
+        "registryLine": 2597
       },
       "specGapId": "GAP-SH-027",
       "specLine": 531,
       "tier": "T2"
     },
     {
-      "auditNotes": "(broad; no RoPE) | auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "v3.0 SH close: GAP-SH-080 (PFO-closure candidacy: RoPE score documented) is process/data-blocked - the RoPE-score components (cortical infarct on imaging, absent vascular risk factors) are not threaded. The PFO-closure DETECTION is now SH-026 (GAP-SH-026); this RoPE-score-documentation gap has no evaluator. Its cite to the retired legacy SH-9 PFO block is cleared. SPEC_ONLY / Tranche-3 process-doc.",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "SH-9",
-        "evaluatorBodyLineRange": [
-          7078,
-          7099
-        ],
-        "evaluatorModule": "SH",
-        "registryId": "gap-sh-9-pfo-closure",
-        "registryLine": 1265
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-SH-080",
       "specLine": 532,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 7: post-septal-closure (CPT 93580 ASD/PFO or 93581 VSD, manufacturer-confirmed) + no antithrombotic -> antithrombotic regimen. Subgroup-aware: AF -> OAC; else antiplatelet. CPT-gated via the procedureCodes param. shChunk7.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-082",
+        "evaluatorBodyLineRange": [
+          9521,
+          9574
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-082-postclosure-antithrombotic",
+        "registryLine": 2784
+      },
       "specGapId": "GAP-SH-082",
       "specLine": 533,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 7: post-closure (CPT 93580/93581) + echo-overdue -> residual-shunt surveillance echo. PARTIAL: residual-shunt magnitude is not quantified in structured data (the surveillance echo is the detection vehicle). shChunk7.test.ts.",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-083",
+        "evaluatorBodyLineRange": [
+          9551,
+          9573
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-083-postclosure-surveillance",
+        "registryLine": 2791
+      },
       "specGapId": "GAP-SH-083",
       "specLine": 534,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -871,7 +979,7 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -881,7 +989,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -891,7 +999,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -901,7 +1009,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -911,7 +1019,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -921,7 +1029,7 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -931,17 +1039,26 @@
       "tier": "T1"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 5: massive PE (I26.0x) + cardiogenic shock (R57.0) -> reperfusion (lysis/embolectomy/ECMO). Subgroup: submassive excluded. shChunk5.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-091",
+        "evaluatorBodyLineRange": [
+          9169,
+          9191
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-091-massive-pe-reperfusion",
+        "registryLine": 2721
+      },
       "specGapId": "GAP-SH-091",
       "specLine": 550,
       "tier": "T1"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -951,17 +1068,26 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 6: PE history (I26.x/Z86.711) + persistent dyspnea -> CTEPH workup. Path-B: 3-6mo window not coded. shChunk6.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-092",
+        "evaluatorBodyLineRange": [
+          9425,
+          9447
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-092-cteph-surveillance",
+        "registryLine": 2763
+      },
       "specGapId": "GAP-SH-092",
       "specLine": 552,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -981,17 +1107,26 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 5: IE (I33.0) + early-surgery indication (HF I50 / embolic I74-I63 / uncontrolled infection A41-R65.2) -> surgery eval. shChunk5.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-029",
+        "evaluatorBodyLineRange": [
+          9140,
+          9162
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-029-ie-early-surgery",
+        "registryLine": 2714
+      },
       "specGapId": "GAP-SH-029",
       "specLine": 559,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -1008,19 +1143,19 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-COARCTATION",
         "evaluatorBodyLineRange": [
-          13506,
-          13528
+          14836,
+          14858
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-coarctation",
-        "registryLine": 2549
+        "registryLine": 2621
       },
       "specGapId": "GAP-SH-094",
       "specLine": 565,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -1030,27 +1165,45 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 6: systemic RV (ccTGA Q20.5 / d-TGA Q20.3) -> ACHD-center surveillance. shChunk6.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-097",
+        "evaluatorBodyLineRange": [
+          9480,
+          9501
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-097-systemic-rv",
+        "registryLine": 2777
+      },
       "specGapId": "GAP-SH-097",
       "specLine": 567,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 5: Ebstein anomaly (Q22.5) -> arrhythmia surveillance. Path-B: monitoring dates not tracked (surveillance-due proxy). shChunk5.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-099",
+        "evaluatorBodyLineRange": [
+          9246,
+          9267
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-099-ebstein-arrhythmia",
+        "registryLine": 2735
+      },
       "specGapId": "GAP-SH-099",
       "specLine": 568,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -1060,29 +1213,38 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 5: Eisenmenger (I27.83) -> PAH-specific therapy evaluation. shChunk5.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-101",
+        "evaluatorBodyLineRange": [
+          9195,
+          9216
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-101-eisenmenger-pah",
+        "registryLine": 2728
+      },
       "specGapId": "GAP-SH-101",
       "specLine": 570,
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "v3.0 SH chunk 6: coarctation (Q25.1) -> serial imaging surveillance. Path-B: repair status not coded (fires native + repaired). shChunk6.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "SH-COARCTATION",
+        "evaluatorBlockName": "SH-095",
         "evaluatorBodyLineRange": [
-          13506,
-          13528
+          9453,
+          9474
         ],
         "evaluatorModule": "SH",
-        "registryId": "gap-sh-coarctation",
-        "registryLine": 2549
+        "registryId": "gap-sh-095-coarctation-surveillance",
+        "registryLine": 2770
       },
       "specGapId": "GAP-SH-095",
       "specLine": 571,
@@ -1096,19 +1258,19 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-FONTAN",
         "evaluatorBodyLineRange": [
-          13539,
-          13560
+          14869,
+          14890
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-fontan-surveillance",
-        "registryLine": 2561
+        "registryLine": 2633
       },
       "specGapId": "GAP-SH-098",
       "specLine": 572,
       "tier": "T3"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "â€” | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -1118,11 +1280,20 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "v3.0 SH chunk 5: benign cardiac neoplasm / atrial myxoma (D15.1) -> surgical referral. shChunk5.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-103",
+        "evaluatorBodyLineRange": [
+          9271,
+          9292
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-103-atrial-myxoma",
+        "registryLine": 2854
+      },
       "specGapId": "GAP-SH-103",
       "specLine": 578,
       "tier": "T3"
@@ -1145,12 +1316,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-15",
         "evaluatorBodyLineRange": [
-          8102,
-          8120
+          8669,
+          8687
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-15-alcohol-septal",
-        "registryLine": 2021
+        "registryLine": 2093
       },
       "specGapId": "GAP-SH-105",
       "specLine": 584,
