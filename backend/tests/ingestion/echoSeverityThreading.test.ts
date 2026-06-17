@@ -95,6 +95,13 @@ describe('IMAGING_TYPES freshness for valve echo', () => {
     ['tr_regurg_grade', 'tr_regurg_vmax', 'mitral_vena_contracta', 'aortic_vena_contracta', 'tricuspid_vena_contracta']
       .forEach((s) => expect(IMAGING_TYPES.has(s)).toBe(true));
   });
+  it('mitral_eroa / pasp / ascending_aorta are in IMAGING_TYPES (chunk-3 acceptance + chunk-4 path-prep)', () => {
+    ['mitral_eroa', 'pasp', 'ascending_aorta'].forEach((s) => expect(IMAGING_TYPES.has(s)).toBe(true));
+  });
+  it('the CSV writer allow-list now carries mitral_eroa / pasp / ascending_aorta (were CSV-dropped, AUDIT-165 class)', () => {
+    const src = fs.readFileSync(path.join(__dirname, '../../src/ingestion/patientWriter.ts'), 'utf8');
+    ['mitral_eroa', 'pasp', 'ascending_aorta'].forEach((f) => expect(src).toContain(`'${f}'`));
+  });
   it('a TR echo grade at 300 days threads; at 400 days it is excluded', () => {
     const day = 24 * 60 * 60 * 1000;
     const fresh = buildLabValues([{ observationType: 'tr_regurg_grade', valueNumeric: 4, ageMs: 300 * day }]);

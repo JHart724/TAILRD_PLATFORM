@@ -4356,3 +4356,16 @@ Severity column copied verbatim from PHASE_0C_REPORT.md §3 per §18 register-li
 - **Regression test:** `backend/tests/ingestion/shChunk2.test.ts` - secondary severe MR NOT on GDMT -> recommends GDMT-first (does NOT jump to TEER); secondary severe MR on BB+RAASi -> TEER candidacy.
 - **Classification effect:** the severity + GDMT gate narrows SH-10 (DET_OK -> tightened DET_OK at the SH canonical close; no SPEC/PARTIAL change - the rule still detects, more correctly). Confirmed at the SH close.
 - **Cross-references:** `gapRuleEngine.ts` SH-10; COAPT trial (GDMT-optimized enrolment); AUDIT-125 (the severity-gate class); the EP-001 / AS-SAVR-vs-TAVR subgroup-awareness precedents; the v3.0 SH chunk 2 primary-vs-secondary MR routing.
+
+---
+
+### AUDIT-167 - SH-12 (gap-sh-12-ttvr) retired as a superseded un-gated TR over-detector (AUDIT-125 lineage)
+
+- **Phase:** v3.0 SH buildout chunk 3 acceptance (operator ruling 2026-06-17).
+- **Severity:** LOW (P3). Duplicate-detection + over-detection cleanup; no missed-gap/PHI harm. AUDIT-125 lineage (severity-gate-missing class). Operator-confirmed per section 18.
+- **Status:** RESOLVED 2026-06-17 (v3.0 SH buildout, branch `feat/sh-chunk1-as-severity`).
+- **Defect:** SH-12 (`gap-sh-12-ttvr`) fired on `I36.1 + right-heart-failure symptoms` with NO TR-severity gate - the same un-gated over-detector pattern as the old SH-4. After chunk 3 added the severity-gated SH-022, SH-12 (a) co-fired with SH-022 on every severe-symptomatic-TR patient (duplicate detection) and (b) still over-detected mild TR + edema-of-another-cause.
+- **Fix:** SH-12 firing removed (supersede-not-delete): the runtime `gaps.push` is replaced with a dated superseded note pointing to SH-022; the registry entry `gap-sh-12-ttvr` is retained for canonical lineage and reconciled at the SH close. SH-022 (severe TR via threaded echo + congestion) is the canonical transcatheter-tricuspid-evaluation gap; SH-069/SH-023 layer the device-selection pathway.
+- **Precedent:** same supersede pattern as SH-002 superseding `gap-sh-2-tavr-eval` (chunk 1) and SH-014 superseding `gap-sh-3` (chunk 2).
+- **Classification effect:** removes one SH runtime `gaps.push`; reconciled at the SH canonical close (registry retained, evaluator firing removed).
+- **Cross-references:** AUDIT-125 (the severity-gate lineage); SH-022 (the canonical replacement); the v3.0 SH chunk 3 TR-severity build.

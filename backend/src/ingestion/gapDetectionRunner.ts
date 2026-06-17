@@ -25,6 +25,8 @@ const IMAGING_TYPES = new Set([
   'mitral_eroa', 'mitral_valve_area', 'valve_severity', 'sts_score',
   // TR + vena-contracta (v3.0 SH chunk 3)
   'tr_regurg_grade', 'tr_regurg_vmax', 'mitral_vena_contracta', 'aortic_vena_contracta', 'tricuspid_vena_contracta',
+  // PASP (echo-derived) + ascending aorta dimension (v3.0 SH chunk 3 acceptance + chunk 4)
+  'pasp', 'ascending_aorta',
 ]);
 
 export { runGapDetectionForPatient } from './runGapDetectionForPatient';

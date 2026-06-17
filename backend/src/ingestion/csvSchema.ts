@@ -62,6 +62,12 @@ export const SH_COLUMNS: CSVColumn[] = [
   { name: 'mitral_vena_contracta', required: false, type: 'number' },
   { name: 'aortic_vena_contracta', required: false, type: 'number' },
   { name: 'tricuspid_vena_contracta', required: false, type: 'number' },
+  // Chunk-2 MR rules read these but the CSV path silently dropped them (AUDIT-165 class); mitral_eroa also
+  // threads via FHIR (29448-8), pasp via neither until now. ascending_aorta added for chunk-4 aortic-dimension
+  // gaps (already in the FHIR map 18012-5).
+  { name: 'mitral_eroa', required: false, type: 'number' },
+  { name: 'pasp', required: false, type: 'number' },
+  { name: 'ascending_aorta', required: false, type: 'number' },
 ];
 
 export const PV_COLUMNS: CSVColumn[] = [

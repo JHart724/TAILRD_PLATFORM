@@ -8406,36 +8406,14 @@ export function evaluateGapRules(
     });
   }
 
-  // Gap SH-12: Tricuspid Intervention Evaluation
-  // Guideline: 2020 ACC/AHA VHD Guideline; ACC TVT Registry
-  // I36.1 (tricuspid regurgitation) + right heart failure (edema R60, hepatomegaly R16, ascites R18)
-  const hasTR12 = dxCodes.some(c => c.startsWith('I36.1'));
-  const hasRHFsymptoms12 = dxCodes.some(c =>
-    c.startsWith('R60') || c.startsWith('R16') || c.startsWith('R18') || c.startsWith('I50.81')
-  );
-  if (
-    hasTR12 &&
-    hasRHFsymptoms12 &&
-    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
-  ) {
-    gaps.push({
-      type: TherapyGapType.PROCEDURE_INDICATED,
-      module: ModuleType.STRUCTURAL_HEART,
-      status: 'Tricuspid intervention evaluation recommended for review',
-      target: 'Transcatheter tricuspid intervention candidacy assessed',
-      recommendations: { action: 'Consider tricuspid intervention evaluation for symptomatic TR with right heart failure per 2020 ACC/AHA VHD' },
-      evidence: {
-        triggerCriteria: [
-          'Tricuspid regurgitation (I36.1)',
-          'Right heart failure symptoms (edema, hepatomegaly, or ascites)',
-        ],
-        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; ACC TVT Registry',
-        classOfRecommendation: 'Class 2b',
-        levelOfEvidence: 'LOE C',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Severe pulmonary hypertension as primary etiology', 'Irreversible RV dysfunction'],
-      },
-    });
-  }
+  // Gap SH-12 (gap-sh-12-ttvr): SUPERSEDED 2026-06-17 by SH-022 (v3.0 SH chunk 3).
+  // Superseded (AUDIT-125 lineage): SH-12 fired on I36.1 + right-heart-failure symptoms with NO TR-severity gate
+  // - the same un-gated over-detector pattern as the old SH-4, and it co-fired with the new severity-gated
+  // tricuspid gap on every severe-symptomatic-TR patient while still over-detecting mild TR + edema. The
+  // canonical transcatheter-tricuspid-evaluation gap is now SH-022 (severe TR via threaded echo + congestion),
+  // with the SH-069 / SH-023 device-selection pathway layered on. Firing removed here (supersede-not-delete: the
+  // registry entry gap-sh-12-ttvr is retained for canonical lineage and reconciled at the SH close). Same
+  // precedent as the SH-002 supersede of gap-sh-2-tavr-eval and the SH-014 supersede of gap-sh-3.
 
   // Gap SH-13: Paravalvular Leak Assessment Post-Valve
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
@@ -8678,6 +8656,210 @@ export function evaluateGapRules(
         classOfRecommendation: 'Class 1',
         levelOfEvidence: 'LOE B',
         exclusions: ['Hospice/palliative care (Z51.5)', 'Recent aortic imaging within guideline interval', 'Post-aortic root replacement'],
+      },
+    });
+  }
+
+  // ===== v3.0 SH chunk 4: Aortic syndromes + genetic-syndrome dx =====
+  // All codes section-16-verified vs NLM Clinical Tables 2026-06-17 (ICD-10-CM): Marfan Q87.40 (unspecified) + Q87.41x
+  // (aortic-dilation Q87.410 / other-CV Q87.418); Turner Q96.x; vascular EDS Q79.63 (NOT Q79.61 = classical);
+  // bicuspid AV Q23.81; aortic dissection I71.010 ascending(Type A) / I71.012 descending-thoracic(Type B) /
+  // I71.03 thoracoabdominal; thoracic aneurysm I71.2x. DEFERRED: GAP-SH-053 (Loeys-Dietz has no dedicated
+  // dx code, collapses to non-specific Q87.89) and GAP-SH-073 (descending-aorta dimension not threaded -
+  // only ascending_aorta has a slug). Threaded dimension: ascending_aorta (cm). Serial growth-rate NOT threaded
+  // (Path-B). celiprolol RxCUI 20498 (RxNav-verified IN). TEVAR named by procedure - CPT numerals unverifiable
+  // via free AMA/CMS sources, omitted per the no-fabrication discipline (the engine has no procedure-code input
+  // anyway, so a CPT would be reference-text only).
+  const hasMarfan_SH = dxCodes.some(c => c.startsWith('Q87.40') || c.startsWith('Q87.41'));
+  const hasTurner_SH = dxCodes.some(c => c.startsWith('Q96'));
+  const hasVascularEDS_SH = dxCodes.some(c => c.startsWith('Q79.63'));
+  const hasBicuspidAV_SH = dxCodes.some(c => c.startsWith('Q23.81'));
+  const ascAorta_SH = labValues['ascending_aorta']; // cm
+  const onBB_SH = BB_CODES_CV.some(c => medCodes.includes(c));
+  const ARB_CODES_AORTOPATHY = [RXNORM_GDMT.LOSARTAN, RXNORM_GDMT.VALSARTAN, RXNORM_GDMT.CANDESARTAN];
+  const onARB_SH = ARB_CODES_AORTOPATHY.some(c => medCodes.includes(c));
+  const onStatin_SH = STATIN_CODES_CV.some(c => medCodes.includes(c));
+  const onCeliprolol_SH = medCodes.includes('20498');
+  // Type-B dissection = descending thoracic (I71.012) or thoracoabdominal (I71.03); EXCLUDES ascending Type A
+  // (I71.010 -> surgical, not the medical/TEVAR pathway). Unspecified-site (I71.00/I71.019) left out to avoid
+  // mis-routing a Type A (Path-B: Stanford type not always coded).
+  const hasTypeBDissection_SH = dxCodes.some(c => c.startsWith('I71.012') || c.startsWith('I71.03'));
+  // Malperfusion proxy for complicated type-B (acute end-organ ischemia): mesenteric K55.0x, AKI N17,
+  // limb/iliac arterial occlusion I74.3/I74.4/I74.5. Path-B: rapid-expansion + dissection-attribution not coded.
+  const hasMalperfusion_SH = dxCodes.some(c =>
+    c.startsWith('K55.0') || c.startsWith('N17') || c.startsWith('I74.3') || c.startsWith('I74.4') || c.startsWith('I74.5')
+  );
+
+  // Gap SH-052: Marfan syndrome -> beta-blocker or ARB to slow aortic growth
+  // Guideline: 2022 ACC/AHA/AATS/STS Aortic Disease Guideline (Class 1 for BB/ARB in Marfan with aortic dilation).
+  const hasMarfanAorticDilation_SH = dxCodes.some(c => c.startsWith('Q87.410') || c.startsWith('I71.2')) ||
+    (ascAorta_SH !== undefined && ascAorta_SH >= 4.0);
+  if (hasMarfan_SH && hasMarfanAorticDilation_SH && !(onBB_SH || onARB_SH) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Marfan with aortic dilation not on beta-blocker or ARB (aortic-growth prophylaxis)',
+      target: 'Beta-blocker or ARB (losartan) started to slow aortic root/ascending growth',
+      recommendations: {
+        action: 'Consider beta-blocker OR ARB (losartan) to slow aortic dilation in Marfan syndrome per 2022 ACC/AHA/AATS/STS Aortic Disease Guideline (Class 1)',
+        guideline: '2022 ACC/AHA/AATS/STS Aortic Disease Guideline',
+        note: 'Syndrome-specific: Marfan aortopathy. BB and ARB are both Class 1; losartan (AT1 blockade) is the trial-supported ARB.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Marfan syndrome (Q87.40 / Q87.41x)',
+          hasMarfanAorticDilation_SH && ascAorta_SH !== undefined && ascAorta_SH >= 4.0
+            ? `Ascending aorta: ${ascAorta_SH} cm (>=4.0, dilated)` : 'Aortic dilation (Q87.410 or thoracic aneurysm I71.2x)',
+          'Not on a beta-blocker or ARB',
+        ],
+        guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Beta-blocker / ARB intolerance', 'Already on BB or ARB'],
+      },
+    });
+  }
+
+  // Gap SH-072: Ascending aorta at intervention threshold -> surgical evaluation (SUBGROUP-AWARE threshold)
+  // Guideline: 2022 ACC/AHA/AATS/STS Aortic Disease Guideline. The intervention DIAMETER differs by underlying
+  // dx: Marfan >=5.0 cm (>=4.5 with risk features - Path-B, risk features not threaded); bicuspid aortopathy
+  // >=5.5 cm (>=5.0 with risk - Path-B); non-syndromic >=5.5 cm. STANDING SUBGROUP CHECK: the threshold + the
+  // recommendation are syndrome-specific (mis-applying the 5.5 cm non-syndromic cut to a Marfan patient would
+  // under-refer). vascular EDS routed to SH-055; Loeys-Dietz deferred (no ICD).
+  let ascThreshold_SH = 5.5;
+  let ascSubgroup_SH = 'non-syndromic';
+  if (hasMarfan_SH) { ascThreshold_SH = 5.0; ascSubgroup_SH = 'Marfan (>=5.0 cm; >=4.5 with risk features)'; }
+  else if (hasBicuspidAV_SH) { ascThreshold_SH = 5.5; ascSubgroup_SH = 'bicuspid aortopathy (>=5.5 cm; >=5.0 with risk features)'; }
+  if (ascAorta_SH !== undefined && ascAorta_SH >= ascThreshold_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: `Ascending aorta at the ${ascSubgroup_SH} intervention threshold: surgical evaluation gap`,
+      target: 'Aortic surgery (ascending/root replacement) evaluation at a reference aortic center',
+      recommendations: {
+        action: `Consider referral for ascending aortic surgery evaluation - ${ascAorta_SH} cm meets the ${ascSubgroup_SH} threshold per 2022 ACC/AHA/AATS/STS Aortic Disease Guideline`,
+        guideline: '2022 ACC/AHA/AATS/STS Aortic Disease Guideline',
+        note: 'Subgroup-aware threshold (Marfan 5.0 / bicuspid 5.5 / non-syndromic 5.5 cm). Path-B: the lower with-risk-feature cut (family history of dissection, rapid growth, planned pregnancy) is not threaded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          `Ascending aorta: ${ascAorta_SH} cm (>= ${ascThreshold_SH} cm ${ascSubgroup_SH} threshold)`,
+          `Aortopathy subgroup: ${ascSubgroup_SH}`,
+        ],
+        guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Prior ascending/root replacement'],
+      },
+    });
+  }
+
+  // Gap SH-074: Uncomplicated type-B aortic dissection -> optimal medical therapy (impulse control)
+  // Guideline: 2022 ACC/AHA/AATS/STS Aortic Disease Guideline (Class 1 anti-impulse BB + BP control + statin).
+  if (hasTypeBDissection_SH && !hasMalperfusion_SH && !(onBB_SH && onStatin_SH) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Uncomplicated type-B aortic dissection not on optimal medical therapy (impulse control)',
+      target: 'Anti-impulse beta-blocker + BP control (ARB/ACEi) + statin optimized',
+      recommendations: {
+        action: 'Consider optimizing medical therapy for uncomplicated type-B dissection: anti-impulse beta-blocker (HR/BP control) + ARB or ACEi + statin per 2022 ACC/AHA/AATS/STS Aortic Disease Guideline (Class 1)',
+        guideline: '2022 ACC/AHA/AATS/STS Aortic Disease Guideline',
+        note: 'Uncomplicated type-B (no malperfusion proxy). OMT proxy = beta-blocker + statin present; full OMT also includes ARB/ACEi BP control. Path-B: target HR/BP values not ingested.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Type-B aortic dissection (descending I71.012 or thoracoabdominal I71.03)',
+          'No malperfusion proxy (uncomplicated)',
+          `Not on full medical therapy (beta-blocker: ${onBB_SH ? 'yes' : 'no'}, statin: ${onStatin_SH ? 'yes' : 'no'})`,
+        ],
+        guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Complicated dissection (routes to SH-075 TEVAR)', 'Beta-blocker intolerance'],
+      },
+    });
+  }
+
+  // Gap SH-075: Complicated type-B aortic dissection -> urgent TEVAR evaluation
+  // Guideline: 2022 ACC/AHA/AATS/STS Aortic Disease Guideline (Class 1 TEVAR for complicated type-B).
+  if (hasTypeBDissection_SH && hasMalperfusion_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Complicated type-B aortic dissection (malperfusion): urgent TEVAR evaluation gap',
+      target: 'Urgent TEVAR (thoracic endovascular aortic repair) evaluation at an aortic center',
+      recommendations: {
+        action: 'Consider urgent TEVAR (thoracic endovascular aortic repair) evaluation for complicated type-B dissection with malperfusion per 2022 ACC/AHA/AATS/STS Aortic Disease Guideline (Class 1)',
+        guideline: '2022 ACC/AHA/AATS/STS Aortic Disease Guideline',
+        note: 'Complicated = malperfusion proxy (mesenteric K55.0x / AKI N17 / limb-iliac I74.3-5). Path-B: rapid aortic expansion + refractory pain/hypertension not coded. TEVAR named by procedure; CPT not cited (unverifiable via free AMA/CMS).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Type-B aortic dissection (descending I71.012 or thoracoabdominal I71.03)',
+          'Malperfusion proxy: acute mesenteric ischemia (K55.0x), AKI (N17), or limb/iliac arterial occlusion (I74.3-I74.5)',
+        ],
+        guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Prior TEVAR for this segment'],
+      },
+    });
+  }
+
+  // Gap SH-054: Turner syndrome -> cardiac surveillance (echo + aortic imaging)
+  // Guideline: 2022 ACC/AHA/AATS/STS Aortic Disease Guideline; Turner-syndrome care standards. Turner carries
+  // BAV, coarctation, and aortic-dilation/dissection risk -> protocolized echo + cross-sectional aortic imaging.
+  // Path-B: imaging dates not precisely tracked; absence of any echo-derived value is the surveillance-due proxy.
+  const noEchoData_SH = labValues['lvef'] === undefined && ascAorta_SH === undefined;
+  if (hasTurner_SH && noEchoData_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Turner syndrome without cardiac surveillance on file (echo + aortic imaging)',
+      target: 'Protocolized echocardiography + cross-sectional aortic imaging completed',
+      recommendations: {
+        action: 'Consider protocolized cardiac surveillance (echocardiography + cross-sectional aortic imaging) for Turner syndrome per 2022 ACC/AHA/AATS/STS Aortic Disease Guideline and Turner care standards',
+        guideline: '2022 ACC/AHA/AATS/STS Aortic Disease Guideline',
+        note: 'Syndrome-specific: Turner carries bicuspid aortic valve, coarctation, and aortic-dilation risk. Path-B: imaging dates not ingested; no echo-derived value on file used as the surveillance-due proxy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Turner syndrome (Q96.x)',
+          'No echo-derived value on file (LVEF and ascending-aorta both absent) - surveillance-due proxy',
+        ],
+        guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent surveillance imaging within protocol interval'],
+      },
+    });
+  }
+
+  // Gap SH-055: Vascular Ehlers-Danlos (Q79.63) -> celiprolol + comprehensive vascular surveillance
+  // Guideline: 2022 ACC/AHA/AATS/STS Aortic Disease Guideline; BBEST trial (celiprolol reduces arterial events
+  // in vEDS). vEDS carries spontaneous arterial dissection/rupture risk -> celiprolol + whole-body vascular
+  // surveillance.
+  if (hasVascularEDS_SH && !onCeliprolol_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Vascular Ehlers-Danlos not on celiprolol / comprehensive vascular surveillance',
+      target: 'Celiprolol (or alternative beta-blocker where unavailable) + whole-body vascular surveillance',
+      recommendations: {
+        action: 'Consider celiprolol (BBEST-trial evidence in vascular EDS) plus comprehensive vascular surveillance per 2022 ACC/AHA/AATS/STS Aortic Disease Guideline; where celiprolol is unavailable, an alternative beta-blocker',
+        guideline: '2022 ACC/AHA/AATS/STS Aortic Disease Guideline; BBEST trial',
+        note: 'Syndrome-specific: vEDS (Q79.63) arterial-fragility phenotype. Celiprolol (RxCUI 20498) is the trial-supported agent; US availability varies, so an alternative beta-blocker is the fallback.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Vascular Ehlers-Danlos syndrome (Q79.63)',
+          'Not on celiprolol',
+        ],
+        guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease; BBEST trial',
+        classOfRecommendation: 'Class 2a',
+        levelOfEvidence: 'LOE B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Beta-blocker intolerance', 'Already on celiprolol'],
       },
     });
   }
