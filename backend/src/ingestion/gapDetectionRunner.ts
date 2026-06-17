@@ -17,7 +17,13 @@ import { Prisma } from '@prisma/client';
 // Lab observations must be within 6 months.
 const ECHO_CUTOFF_MS = 365 * 24 * 60 * 60 * 1000;  // 12 months
 const LAB_CUTOFF_MS = 180 * 24 * 60 * 60 * 1000;    // 6 months
-const IMAGING_TYPES = new Set(['lvef', 'LVEF', 'qrs_duration', 'QRS_DURATION', 'echo_lvef', 'lv_ejection_fraction']);
+const IMAGING_TYPES = new Set([
+  'lvef', 'LVEF', 'qrs_duration', 'QRS_DURATION', 'echo_lvef', 'lv_ejection_fraction',
+  // v3.0 echo-severity threading (2026-06-17): valve echo measurements get the 365-day ECHO freshness window
+  // (echos are ~annual), not the 180-day LAB cutoff. Covers both the CSV slugs and the path-2 FHIR slugs.
+  'aortic_valve_vmax', 'aortic_valve_mean_gradient', 'aortic_valve_area', 'mitral_regurg_grade',
+  'mitral_eroa', 'mitral_valve_area', 'valve_severity', 'sts_score',
+]);
 
 export { runGapDetectionForPatient } from './runGapDetectionForPatient';
 export { RUNTIME_GAP_REGISTRY } from './gaps/gapRuleEngine';
