@@ -52,8 +52,10 @@ describe('AUDIT-118 caller guard - expandToIngredients is the one medCodes path'
     // buildout batch 2026-06-15: HF-003 BB dose-target (x2), HF-015 digoxin dose (x2), HF-006 ARNI dose
     // (x1), Pattern-C GDMT >=3mo duration helper (x2), HF-006 legacy dose-gate (x1). All dose/temporal,
     // never presence (presence still routes via medCodes/expandToIngredients).
+    // +3 by the v3.0 EP buildout 2026-06-16: EP-003/004/005 dose-bearing gaps (rivaroxaban / apixaban dose
+    // resolvers via meds.find(...).doseValue). All dose, never presence (presence still routes via medCodes).
     const engine = read('ingestion/gaps/gapRuleEngine.ts');
     const rawAccesses = (engine.match(/\.rxNormCode\b/g) || []).length;
-    expect(rawAccesses).toBe(9);
+    expect(rawAccesses).toBe(12);
   });
 });

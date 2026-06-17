@@ -2,9 +2,9 @@
   "codeSource": "backend/src/ingestion/gaps/gapRuleEngine.ts",
   "evaluatorBlocks": [
     {
-      "bodyEndLine": 5154,
-      "bodyStartLine": 5136,
-      "commentLine": 5129,
+      "bodyEndLine": 6178,
+      "bodyStartLine": 6160,
+      "commentLine": 6153,
       "commentLiteral": "// Gap 50: Premature DAPT Discontinuation (Coronary)",
       "commentPattern": "GAP_N",
       "gapsPushIds": [
@@ -13,18 +13,18 @@
       "name": "Gap-50"
     },
     {
-      "bodyEndLine": 5199,
-      "bodyStartLine": 5168,
-      "commentLine": 5156,
+      "bodyEndLine": 6223,
+      "bodyStartLine": 6192,
+      "commentLine": 6180,
       "commentLiteral": "// Gap CAD-STATIN: High-Intensity Statin in CAD",
       "commentPattern": "GAP_MOD_NAME",
       "gapsPushIds": [],
       "name": "CAD-STATIN"
     },
     {
-      "bodyEndLine": 5234,
-      "bodyStartLine": 5207,
-      "commentLine": 5202,
+      "bodyEndLine": 6258,
+      "bodyStartLine": 6231,
+      "commentLine": 6226,
       "commentLiteral": "// CAD-ACEI: ACEi/ARB Post-MI",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -33,9 +33,9 @@
       "name": "CAD-ACEI"
     },
     {
-      "bodyEndLine": 5269,
-      "bodyStartLine": 5241,
-      "commentLine": 5237,
+      "bodyEndLine": 6293,
+      "bodyStartLine": 6265,
+      "commentLine": 6261,
       "commentLiteral": "// CAD-BB-POST-MI: Beta-Blocker Post-MI with Reduced EF",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -44,9 +44,9 @@
       "name": "CAD-BB-POST-MI"
     },
     {
-      "bodyEndLine": 5301,
-      "bodyStartLine": 5276,
-      "commentLine": 5272,
+      "bodyEndLine": 6325,
+      "bodyStartLine": 6300,
+      "commentLine": 6296,
       "commentLiteral": "// CAD-SMOKING: Smoking Cessation Referral",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -55,9 +55,9 @@
       "name": "CAD-SMOKING"
     },
     {
-      "bodyEndLine": 5337,
-      "bodyStartLine": 5308,
-      "commentLine": 5304,
+      "bodyEndLine": 6361,
+      "bodyStartLine": 6332,
+      "commentLine": 6328,
       "commentLiteral": "// CAD-LPA: Lipoprotein(a) Screening in Premature ASCVD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -66,9 +66,9 @@
       "name": "CAD-LPA"
     },
     {
-      "bodyEndLine": 5374,
-      "bodyStartLine": 5344,
-      "commentLine": 5340,
+      "bodyEndLine": 6398,
+      "bodyStartLine": 6368,
+      "commentLine": 6364,
       "commentLiteral": "// CAD-EZETIMIBE: Ezetimibe Add-on Therapy",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -77,9 +77,9 @@
       "name": "CAD-EZETIMIBE"
     },
     {
-      "bodyEndLine": 5407,
-      "bodyStartLine": 5381,
-      "commentLine": 5377,
+      "bodyEndLine": 6431,
+      "bodyStartLine": 6405,
+      "commentLine": 6401,
       "commentLiteral": "// CAD-DIABETES-CONTROL: A1c Monitoring in CAD + Diabetes",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -88,9 +88,9 @@
       "name": "CAD-DIABETES-CONTROL"
     },
     {
-      "bodyEndLine": 5439,
-      "bodyStartLine": 5414,
-      "commentLine": 5410,
+      "bodyEndLine": 6463,
+      "bodyStartLine": 6438,
+      "commentLine": 6434,
       "commentLiteral": "// CAD-BP-CONTROL: Blood Pressure Monitoring in CAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -99,9 +99,9 @@
       "name": "CAD-BP-CONTROL"
     },
     {
-      "bodyEndLine": 5777,
-      "bodyStartLine": 5756,
-      "commentLine": 5751,
+      "bodyEndLine": 6806,
+      "bodyStartLine": 6785,
+      "commentLine": 6780,
       "commentLiteral": "// Gap CAD-REHAB: Cardiac Rehab Referral in CAD",
       "commentPattern": "GAP_MOD_NAME",
       "gapsPushIds": [
@@ -110,9 +110,9 @@
       "name": "CAD-REHAB"
     },
     {
-      "bodyEndLine": 8055,
-      "bodyStartLine": 8024,
-      "commentLine": 8020,
+      "bodyEndLine": 9102,
+      "bodyStartLine": 9071,
+      "commentLine": 9067,
       "commentLiteral": "// CAD-PCSK9: PCSK9 Inhibitor Consideration",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -121,9 +121,9 @@
       "name": "CAD-PCSK9"
     },
     {
-      "bodyEndLine": 8082,
-      "bodyStartLine": 8061,
-      "commentLine": 8057,
+      "bodyEndLine": 9129,
+      "bodyStartLine": 9108,
+      "commentLine": 9104,
       "commentLiteral": "// CAD-IVUS: Intravascular Imaging for Left Main",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -132,9 +132,9 @@
       "name": "CAD-IVUS"
     },
     {
-      "bodyEndLine": 8114,
-      "bodyStartLine": 8087,
-      "commentLine": 8084,
+      "bodyEndLine": 9161,
+      "bodyStartLine": 9134,
+      "commentLine": 9131,
       "commentLiteral": "// CAD-FFR: Fractional Flow Reserve for Intermediate Lesions",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -143,9 +143,9 @@
       "name": "CAD-FFR"
     },
     {
-      "bodyEndLine": 8147,
-      "bodyStartLine": 8120,
-      "commentLine": 8116,
+      "bodyEndLine": 9194,
+      "bodyStartLine": 9167,
+      "commentLine": 9163,
       "commentLiteral": "// CAD-COLCHICINE: Anti-Inflammatory Therapy with Colchicine",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -154,9 +154,9 @@
       "name": "CAD-COLCHICINE"
     },
     {
-      "bodyEndLine": 8186,
-      "bodyStartLine": 8153,
-      "commentLine": 8149,
+      "bodyEndLine": 9233,
+      "bodyStartLine": 9200,
+      "commentLine": 9196,
       "commentLiteral": "// CAD-OMEGA3: Icosapent Ethyl for Elevated Triglycerides",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -165,9 +165,9 @@
       "name": "CAD-OMEGA3"
     },
     {
-      "bodyEndLine": 8226,
-      "bodyStartLine": 8192,
-      "commentLine": 8188,
+      "bodyEndLine": 9273,
+      "bodyStartLine": 9239,
+      "commentLine": 9235,
       "commentLiteral": "// CAD-RANOLAZINE: Refractory Angina Treatment",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -176,9 +176,9 @@
       "name": "CAD-RANOLAZINE"
     },
     {
-      "bodyEndLine": 8256,
-      "bodyStartLine": 8231,
-      "commentLine": 8228,
+      "bodyEndLine": 9303,
+      "bodyStartLine": 9278,
+      "commentLine": 9275,
       "commentLiteral": "// CAD-STRESS-TEST: Stress Test Follow-up",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -187,9 +187,9 @@
       "name": "CAD-STRESS-TEST"
     },
     {
-      "bodyEndLine": 8290,
-      "bodyStartLine": 8267,
-      "commentLine": 8258,
+      "bodyEndLine": 9337,
+      "bodyStartLine": 9314,
+      "commentLine": 9305,
       "commentLiteral": "// CAD-REVASCULARIZATION: Revascularization Assessment",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -198,9 +198,9 @@
       "name": "CAD-REVASCULARIZATION"
     },
     {
-      "bodyEndLine": 8323,
-      "bodyStartLine": 8295,
-      "commentLine": 8292,
+      "bodyEndLine": 9370,
+      "bodyStartLine": 9342,
+      "commentLine": 9339,
       "commentLiteral": "// CAD-ANTICOAG-AF: Anticoagulation in CAD + AF (Dual Pathway Therapy)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -209,9 +209,9 @@
       "name": "CAD-ANTICOAG-AF"
     },
     {
-      "bodyEndLine": 8357,
-      "bodyStartLine": 8329,
-      "commentLine": 8325,
+      "bodyEndLine": 9404,
+      "bodyStartLine": 9376,
+      "commentLine": 9372,
       "commentLiteral": "// CAD-GLP1-DM: GLP-1 RA for CAD + Diabetes (CV Risk Reduction)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -220,9 +220,9 @@
       "name": "CAD-GLP1-DM"
     },
     {
-      "bodyEndLine": 8391,
-      "bodyStartLine": 8363,
-      "commentLine": 8359,
+      "bodyEndLine": 9438,
+      "bodyStartLine": 9410,
+      "commentLine": 9406,
       "commentLiteral": "// CAD-SGLT2-DM: SGLT2i for CAD + Diabetes",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -231,9 +231,9 @@
       "name": "CAD-SGLT2-DM"
     },
     {
-      "bodyEndLine": 8429,
-      "bodyStartLine": 8397,
-      "commentLine": 8393,
+      "bodyEndLine": 9476,
+      "bodyStartLine": 9444,
+      "commentLine": 9440,
       "commentLiteral": "// CAD-BEMPEDOIC: Bempedoic Acid for Statin Intolerance",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -242,9 +242,9 @@
       "name": "CAD-BEMPEDOIC"
     },
     {
-      "bodyEndLine": 8460,
-      "bodyStartLine": 8434,
-      "commentLine": 8431,
+      "bodyEndLine": 9507,
+      "bodyStartLine": 9481,
+      "commentLine": 9478,
       "commentLiteral": "// CAD-WEIGHT-MGMT: Weight Management in CAD + Obesity",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -253,9 +253,9 @@
       "name": "CAD-WEIGHT-MGMT"
     },
     {
-      "bodyEndLine": 8490,
-      "bodyStartLine": 8465,
-      "commentLine": 8462,
+      "bodyEndLine": 9537,
+      "bodyStartLine": 9512,
+      "commentLine": 9509,
       "commentLiteral": "// CAD-DEPRESSION: Depression Screening in CAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -264,9 +264,9 @@
       "name": "CAD-DEPRESSION"
     },
     {
-      "bodyEndLine": 8520,
-      "bodyStartLine": 8495,
-      "commentLine": 8492,
+      "bodyEndLine": 9567,
+      "bodyStartLine": 9542,
+      "commentLine": 9539,
       "commentLiteral": "// CAD-INFLUENZA: Influenza Vaccination in CAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -275,9 +275,9 @@
       "name": "CAD-INFLUENZA"
     },
     {
-      "bodyEndLine": 8555,
-      "bodyStartLine": 8529,
-      "commentLine": 8527,
+      "bodyEndLine": 9602,
+      "bodyStartLine": 9576,
+      "commentLine": 9574,
       "commentLiteral": "// CAD-TICAGRELOR-ACS: Ticagrelor in Acute Coronary Syndrome",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -286,9 +286,9 @@
       "name": "CAD-TICAGRELOR-ACS"
     },
     {
-      "bodyEndLine": 8586,
-      "bodyStartLine": 8560,
-      "commentLine": 8557,
+      "bodyEndLine": 9633,
+      "bodyStartLine": 9607,
+      "commentLine": 9604,
       "commentLiteral": "// CAD-NITRO-PRN: PRN Nitroglycerin for Angina",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -297,9 +297,9 @@
       "name": "CAD-NITRO-PRN"
     },
     {
-      "bodyEndLine": 8614,
-      "bodyStartLine": 8590,
-      "commentLine": 8588,
+      "bodyEndLine": 9661,
+      "bodyStartLine": 9637,
+      "commentLine": 9635,
       "commentLiteral": "// CAD-ECHO-CAD: Echocardiography for LVEF Assessment in CAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -308,9 +308,9 @@
       "name": "CAD-ECHO-CAD"
     },
     {
-      "bodyEndLine": 8643,
-      "bodyStartLine": 8618,
-      "commentLine": 8616,
+      "bodyEndLine": 9690,
+      "bodyStartLine": 9665,
+      "commentLine": 9663,
       "commentLiteral": "// CAD-BNP-CAD: BNP/NT-proBNP Monitoring in CAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -319,9 +319,9 @@
       "name": "CAD-BNP-CAD"
     },
     {
-      "bodyEndLine": 8674,
-      "bodyStartLine": 8648,
-      "commentLine": 8645,
+      "bodyEndLine": 9721,
+      "bodyStartLine": 9695,
+      "commentLine": 9692,
       "commentLiteral": "// CAD-RENAL-MONITOR: Renal Function Monitoring on ACEi in CAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -330,9 +330,9 @@
       "name": "CAD-RENAL-MONITOR"
     },
     {
-      "bodyEndLine": 8706,
-      "bodyStartLine": 8680,
-      "commentLine": 8676,
+      "bodyEndLine": 9753,
+      "bodyStartLine": 9727,
+      "commentLine": 9723,
       "commentLiteral": "// CAD-DAPT-DURATION: DAPT Duration Review Beyond 12 Months",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -341,9 +341,9 @@
       "name": "CAD-DAPT-DURATION"
     },
     {
-      "bodyEndLine": 8748,
-      "bodyStartLine": 8718,
-      "commentLine": 8708,
+      "bodyEndLine": 9795,
+      "bodyStartLine": 9765,
+      "commentLine": 9755,
       "commentLiteral": "// CAD-PPI-DAPT: PPI with DAPT for GI Risk",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -352,9 +352,9 @@
       "name": "CAD-PPI-DAPT"
     },
     {
-      "bodyEndLine": 8782,
-      "bodyStartLine": 8753,
-      "commentLine": 8750,
+      "bodyEndLine": 9829,
+      "bodyStartLine": 9800,
+      "commentLine": 9797,
       "commentLiteral": "// CAD-ALDO-POSTMI: MRA Post-MI with LVEF<=40 and HF",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -363,9 +363,9 @@
       "name": "CAD-ALDO-POSTMI"
     },
     {
-      "bodyEndLine": 8817,
-      "bodyStartLine": 8791,
-      "commentLine": 8784,
+      "bodyEndLine": 9864,
+      "bodyStartLine": 9838,
+      "commentLine": 9831,
       "commentLiteral": "// CAD-ELECTROLYTE: Electrolyte Monitoring Post-MI on Diuretic",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -374,9 +374,9 @@
       "name": "CAD-ELECTROLYTE"
     },
     {
-      "bodyEndLine": 8845,
-      "bodyStartLine": 8821,
-      "commentLine": 8819,
+      "bodyEndLine": 9892,
+      "bodyStartLine": 9868,
+      "commentLine": 9866,
       "commentLiteral": "// CAD-ANEMIA: Anemia Screening Post-MI",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -385,9 +385,9 @@
       "name": "CAD-ANEMIA"
     },
     {
-      "bodyEndLine": 8874,
-      "bodyStartLine": 8849,
-      "commentLine": 8847,
+      "bodyEndLine": 9921,
+      "bodyStartLine": 9896,
+      "commentLine": 9894,
       "commentLiteral": "// CAD-THYROID: Thyroid Function in CAD with AFib",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -396,9 +396,9 @@
       "name": "CAD-THYROID"
     },
     {
-      "bodyEndLine": 8903,
-      "bodyStartLine": 8878,
-      "commentLine": 8876,
+      "bodyEndLine": 9950,
+      "bodyStartLine": 9925,
+      "commentLine": 9923,
       "commentLiteral": "// CAD-ACTIVITY: Physical Activity Counseling in CAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -407,9 +407,9 @@
       "name": "CAD-ACTIVITY"
     },
     {
-      "bodyEndLine": 8934,
-      "bodyStartLine": 8907,
-      "commentLine": 8905,
+      "bodyEndLine": 9981,
+      "bodyStartLine": 9954,
+      "commentLine": 9952,
       "commentLiteral": "// CAD-DIET: Dietary Counseling in CAD with Obesity",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -418,9 +418,9 @@
       "name": "CAD-DIET"
     },
     {
-      "bodyEndLine": 8964,
-      "bodyStartLine": 8938,
-      "commentLine": 8936,
+      "bodyEndLine": 10011,
+      "bodyStartLine": 9985,
+      "commentLine": 9983,
       "commentLiteral": "// CAD-PSYCHOSOCIAL: Psychosocial Assessment in Elderly CAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -429,9 +429,9 @@
       "name": "CAD-PSYCHOSOCIAL"
     },
     {
-      "bodyEndLine": 8997,
-      "bodyStartLine": 8968,
-      "commentLine": 8966,
+      "bodyEndLine": 10044,
+      "bodyStartLine": 10015,
+      "commentLine": 10013,
       "commentLiteral": "// CAD-FAMILY-SCREEN: Premature CAD Family Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -440,9 +440,9 @@
       "name": "CAD-FAMILY-SCREEN"
     },
     {
-      "bodyEndLine": 9029,
-      "bodyStartLine": 9002,
-      "commentLine": 8999,
+      "bodyEndLine": 10076,
+      "bodyStartLine": 10049,
+      "commentLine": 10046,
       "commentLiteral": "// CAD-CALCIUM-SCORE: Coronary Artery Calcium Score for Intermediate Risk",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -451,9 +451,9 @@
       "name": "CAD-CALCIUM-SCORE"
     },
     {
-      "bodyEndLine": 9060,
-      "bodyStartLine": 9034,
-      "commentLine": 9031,
+      "bodyEndLine": 10107,
+      "bodyStartLine": 10081,
+      "commentLine": 10078,
       "commentLiteral": "// CAD-CRP: CRP Monitoring in CAD on Statin",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -462,9 +462,9 @@
       "name": "CAD-CRP"
     },
     {
-      "bodyEndLine": 9093,
-      "bodyStartLine": 9064,
-      "commentLine": 9062,
+      "bodyEndLine": 10140,
+      "bodyStartLine": 10111,
+      "commentLine": 10109,
       "commentLiteral": "// CAD-ADVANCE-DIR: Advance Directive Discussion in Severe CAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -473,9 +473,9 @@
       "name": "CAD-ADVANCE-DIR"
     },
     {
-      "bodyEndLine": 9123,
-      "bodyStartLine": 9097,
-      "commentLine": 9095,
+      "bodyEndLine": 10170,
+      "bodyStartLine": 10144,
+      "commentLine": 10142,
       "commentLiteral": "// CAD-PALLIATIVE: Palliative Care Referral in Refractory CAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -484,9 +484,9 @@
       "name": "CAD-PALLIATIVE"
     },
     {
-      "bodyEndLine": 9154,
-      "bodyStartLine": 9128,
-      "commentLine": 9125,
+      "bodyEndLine": 10201,
+      "bodyStartLine": 10175,
+      "commentLine": 10172,
       "commentLiteral": "// CAD-CARDIAC-CT: Cardiac CT Angiography for Stable Chest Pain",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -495,9 +495,9 @@
       "name": "CAD-CARDIAC-CT"
     },
     {
-      "bodyEndLine": 9196,
-      "bodyStartLine": 9172,
-      "commentLine": 9156,
+      "bodyEndLine": 10243,
+      "bodyStartLine": 10219,
+      "commentLine": 10203,
       "commentLiteral": "// CAD-016 SAFETY: Prasugrel contraindicated in prior stroke/TIA history",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -506,9 +506,9 @@
       "name": "CAD-016"
     },
     {
-      "bodyEndLine": 9231,
-      "bodyStartLine": 9200,
-      "commentLine": 9198,
+      "bodyEndLine": 10278,
+      "bodyStartLine": 10247,
+      "commentLine": 10245,
       "commentLiteral": "// CAD-PRASUGREL: Prasugrel in ACS with PCI",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -517,9 +517,9 @@
       "name": "CAD-PRASUGREL"
     },
     {
-      "bodyEndLine": 9261,
-      "bodyStartLine": 9235,
-      "commentLine": 9233,
+      "bodyEndLine": 10308,
+      "bodyStartLine": 10282,
+      "commentLine": 10280,
       "commentLiteral": "// CAD-HEPARIN-BRIDGE: Anticoagulation Bridge Assessment in CAD with AF and Procedure",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -528,9 +528,9 @@
       "name": "CAD-HEPARIN-BRIDGE"
     },
     {
-      "bodyEndLine": 9290,
-      "bodyStartLine": 9265,
-      "commentLine": 9263,
+      "bodyEndLine": 10337,
+      "bodyStartLine": 10312,
+      "commentLine": 10310,
       "commentLiteral": "// CAD-SEXUAL-HEALTH: Sexual Health Counseling Post-MI",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -539,9 +539,9 @@
       "name": "CAD-SEXUAL-HEALTH"
     },
     {
-      "bodyEndLine": 9319,
-      "bodyStartLine": 9294,
-      "commentLine": 9292,
+      "bodyEndLine": 10366,
+      "bodyStartLine": 10341,
+      "commentLine": 10339,
       "commentLiteral": "// CAD-DRIVING: Post-MI Driving Restriction Documentation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -550,9 +550,9 @@
       "name": "CAD-DRIVING"
     },
     {
-      "bodyEndLine": 9349,
-      "bodyStartLine": 9323,
-      "commentLine": 9321,
+      "bodyEndLine": 10396,
+      "bodyStartLine": 10370,
+      "commentLine": 10368,
       "commentLiteral": "// CAD-LIVER-STATIN: Liver Function Monitoring on Statin in CAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -561,9 +561,9 @@
       "name": "CAD-LIVER-STATIN"
     },
     {
-      "bodyEndLine": 9383,
-      "bodyStartLine": 9356,
-      "commentLine": 9354,
+      "bodyEndLine": 10430,
+      "bodyStartLine": 10403,
+      "commentLine": 10401,
       "commentLiteral": "// CAD-ASPIRIN-PRIMARY: Aspirin Assessment in CAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -572,9 +572,9 @@
       "name": "CAD-ASPIRIN-PRIMARY"
     },
     {
-      "bodyEndLine": 9414,
-      "bodyStartLine": 9387,
-      "commentLine": 9385,
+      "bodyEndLine": 10461,
+      "bodyStartLine": 10434,
+      "commentLine": 10432,
       "commentLiteral": "// CAD-BETA-BLOCKER: Beta-Blocker in Stable CAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -583,9 +583,9 @@
       "name": "CAD-BETA-BLOCKER"
     },
     {
-      "bodyEndLine": 9447,
-      "bodyStartLine": 9418,
-      "commentLine": 9416,
+      "bodyEndLine": 10494,
+      "bodyStartLine": 10465,
+      "commentLine": 10463,
       "commentLiteral": "// CAD-ACE-STABLE: ACEi in Stable CAD with Hypertension",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -594,9 +594,9 @@
       "name": "CAD-ACE-STABLE"
     },
     {
-      "bodyEndLine": 9480,
-      "bodyStartLine": 9451,
-      "commentLine": 9449,
+      "bodyEndLine": 10527,
+      "bodyStartLine": 10498,
+      "commentLine": 10496,
       "commentLiteral": "// CAD-NICORANDIL: Nicorandil for Refractory Angina",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -605,9 +605,9 @@
       "name": "CAD-NICORANDIL"
     },
     {
-      "bodyEndLine": 9513,
-      "bodyStartLine": 9484,
-      "commentLine": 9482,
+      "bodyEndLine": 10560,
+      "bodyStartLine": 10531,
+      "commentLine": 10529,
       "commentLiteral": "// CAD-TRIMETAZIDINE: Trimetazidine Consideration",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -616,9 +616,9 @@
       "name": "CAD-TRIMETAZIDINE"
     },
     {
-      "bodyEndLine": 9543,
-      "bodyStartLine": 9517,
-      "commentLine": 9515,
+      "bodyEndLine": 10590,
+      "bodyStartLine": 10564,
+      "commentLine": 10562,
       "commentLiteral": "// CAD-CORONARY-CTA-FU: Coronary CTA Follow-Up",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -627,9 +627,9 @@
       "name": "CAD-CORONARY-CTA-FU"
     },
     {
-      "bodyEndLine": 9574,
-      "bodyStartLine": 9547,
-      "commentLine": 9545,
+      "bodyEndLine": 10621,
+      "bodyStartLine": 10594,
+      "commentLine": 10592,
       "commentLiteral": "// CAD-NUCLEAR-STRESS: Nuclear Stress Test Consideration",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -638,9 +638,9 @@
       "name": "CAD-NUCLEAR-STRESS"
     },
     {
-      "bodyEndLine": 9605,
-      "bodyStartLine": 9578,
-      "commentLine": 9576,
+      "bodyEndLine": 10652,
+      "bodyStartLine": 10625,
+      "commentLine": 10623,
       "commentLiteral": "// CAD-CATHETERIZATION: Catheterization Review for High Risk Features",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -649,9 +649,9 @@
       "name": "CAD-CATHETERIZATION"
     },
     {
-      "bodyEndLine": 9635,
-      "bodyStartLine": 9609,
-      "commentLine": 9607,
+      "bodyEndLine": 10682,
+      "bodyStartLine": 10656,
+      "commentLine": 10654,
       "commentLiteral": "// CAD-COMPLETE-REVASC: Complete Revascularization Assessment",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -660,9 +660,9 @@
       "name": "CAD-COMPLETE-REVASC"
     },
     {
-      "bodyEndLine": 9665,
-      "bodyStartLine": 9639,
-      "commentLine": 9637,
+      "bodyEndLine": 10712,
+      "bodyStartLine": 10686,
+      "commentLine": 10684,
       "commentLiteral": "// CAD-ISCHEMIA-GUIDED: Ischemia-Guided Therapy Review",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -671,9 +671,9 @@
       "name": "CAD-ISCHEMIA-GUIDED"
     },
     {
-      "bodyEndLine": 9695,
-      "bodyStartLine": 9669,
-      "commentLine": 9667,
+      "bodyEndLine": 10742,
+      "bodyStartLine": 10716,
+      "commentLine": 10714,
       "commentLiteral": "// CAD-MINOCA: MINOCA Workup",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -682,9 +682,9 @@
       "name": "CAD-MINOCA"
     },
     {
-      "bodyEndLine": 9727,
-      "bodyStartLine": 9699,
-      "commentLine": 9697,
+      "bodyEndLine": 10774,
+      "bodyStartLine": 10746,
+      "commentLine": 10744,
       "commentLiteral": "// CAD-SCAD: Spontaneous Coronary Artery Dissection Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -693,9 +693,9 @@
       "name": "CAD-SCAD"
     },
     {
-      "bodyEndLine": 9755,
-      "bodyStartLine": 9731,
-      "commentLine": 9729,
+      "bodyEndLine": 10802,
+      "bodyStartLine": 10778,
+      "commentLine": 10776,
       "commentLiteral": "// CAD-TAKOTSUBO: Takotsubo Follow-Up",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -704,9 +704,9 @@
       "name": "CAD-TAKOTSUBO"
     },
     {
-      "bodyEndLine": 9791,
-      "bodyStartLine": 9759,
-      "commentLine": 9757,
+      "bodyEndLine": 10838,
+      "bodyStartLine": 10806,
+      "commentLine": 10804,
       "commentLiteral": "// CAD-VASOSPASTIC: Vasospastic Angina Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -715,9 +715,9 @@
       "name": "CAD-VASOSPASTIC"
     },
     {
-      "bodyEndLine": 9823,
-      "bodyStartLine": 9795,
-      "commentLine": 9793,
+      "bodyEndLine": 10870,
+      "bodyStartLine": 10842,
+      "commentLine": 10840,
       "commentLiteral": "// CAD-MICROVASCULAR: Microvascular Disease Assessment",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -726,9 +726,9 @@
       "name": "CAD-MICROVASCULAR"
     },
     {
-      "bodyEndLine": 9852,
-      "bodyStartLine": 9827,
-      "commentLine": 9825,
+      "bodyEndLine": 10899,
+      "bodyStartLine": 10874,
+      "commentLine": 10872,
       "commentLiteral": "// CAD-CARDIAC-TRANSPLANT-CAD: Cardiac Allograft Vasculopathy",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -737,9 +737,9 @@
       "name": "CAD-CARDIAC-TRANSPLANT-CAD"
     },
     {
-      "bodyEndLine": 9883,
-      "bodyStartLine": 9856,
-      "commentLine": 9854,
+      "bodyEndLine": 10930,
+      "bodyStartLine": 10903,
+      "commentLine": 10901,
       "commentLiteral": "// CAD-LIPID-PANEL-FU: Lipid Panel Follow-Up",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -748,9 +748,9 @@
       "name": "CAD-LIPID-PANEL-FU"
     },
     {
-      "bodyEndLine": 9913,
-      "bodyStartLine": 9887,
-      "commentLine": 9885,
+      "bodyEndLine": 10960,
+      "bodyStartLine": 10934,
+      "commentLine": 10932,
       "commentLiteral": "// CAD-GLUCOSE-SCREEN: Glucose Screening in CAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -759,9 +759,9 @@
       "name": "CAD-GLUCOSE-SCREEN"
     },
     {
-      "bodyEndLine": 9943,
-      "bodyStartLine": 9917,
-      "commentLine": 9915,
+      "bodyEndLine": 10990,
+      "bodyStartLine": 10964,
+      "commentLine": 10962,
       "commentLiteral": "// CAD-HEMOGLOBIN-A1C-TARGET: A1c Target Review",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -770,9 +770,9 @@
       "name": "CAD-HEMOGLOBIN-A1C-TARGET"
     },
     {
-      "bodyEndLine": 9974,
-      "bodyStartLine": 9947,
-      "commentLine": 9945,
+      "bodyEndLine": 11021,
+      "bodyStartLine": 10994,
+      "commentLine": 10992,
       "commentLiteral": "// CAD-ANTIPLATELET-REVIEW: Antiplatelet Review >1yr Post Event",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -781,9 +781,9 @@
       "name": "CAD-ANTIPLATELET-REVIEW"
     },
     {
-      "bodyEndLine": 10005,
-      "bodyStartLine": 9978,
-      "commentLine": 9976,
+      "bodyEndLine": 11052,
+      "bodyStartLine": 11025,
+      "commentLine": 11023,
       "commentLiteral": "// CAD-CHEST-PAIN-PROTOCOL: Chest Pain Protocol Adherence",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -792,9 +792,9 @@
       "name": "CAD-CHEST-PAIN-PROTOCOL"
     },
     {
-      "bodyEndLine": 10038,
-      "bodyStartLine": 10009,
-      "commentLine": 10007,
+      "bodyEndLine": 11085,
+      "bodyStartLine": 11056,
+      "commentLine": 11054,
       "commentLiteral": "// CAD-SECONDARY-PREVENTION: Secondary Prevention Bundle Review",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -803,9 +803,9 @@
       "name": "CAD-SECONDARY-PREVENTION"
     },
     {
-      "bodyEndLine": 10071,
-      "bodyStartLine": 10042,
-      "commentLine": 10040,
+      "bodyEndLine": 11118,
+      "bodyStartLine": 11089,
+      "commentLine": 11087,
       "commentLiteral": "// CAD-WOMEN-SPECIFIC: Women-Specific CAD Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -814,9 +814,9 @@
       "name": "CAD-WOMEN-SPECIFIC"
     },
     {
-      "bodyEndLine": 10100,
-      "bodyStartLine": 10075,
-      "commentLine": 10073,
+      "bodyEndLine": 11147,
+      "bodyStartLine": 11122,
+      "commentLine": 11120,
       "commentLiteral": "// CAD-YOUNG-MI: Young MI Workup",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -825,9 +825,9 @@
       "name": "CAD-YOUNG-MI"
     },
     {
-      "bodyEndLine": 10130,
-      "bodyStartLine": 10104,
-      "commentLine": 10102,
+      "bodyEndLine": 11177,
+      "bodyStartLine": 11151,
+      "commentLine": 11149,
       "commentLiteral": "// CAD-EXERCISE-PRESCRIPTION: Exercise Prescription Post-Rehab",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -836,9 +836,9 @@
       "name": "CAD-EXERCISE-PRESCRIPTION"
     },
     {
-      "bodyEndLine": 10161,
-      "bodyStartLine": 10134,
-      "commentLine": 10132,
+      "bodyEndLine": 11208,
+      "bodyStartLine": 11181,
+      "commentLine": 11179,
       "commentLiteral": "// CAD-SLEEP-APNEA-CAD: Sleep Apnea Screening in CAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -859,7 +859,7 @@
       "levelOfEvidence": "A",
       "name": "DAPT Discontinuation",
       "nextReviewDue": "2026-10-04",
-      "registryLine": 300
+      "registryLine": 305
     },
     {
       "classOfRecommendation": "1",
@@ -869,7 +869,7 @@
       "levelOfEvidence": "A",
       "name": "High-Intensity Statin in CAD",
       "nextReviewDue": "2026-10-05",
-      "registryLine": 384
+      "registryLine": 641
     },
     {
       "classOfRecommendation": "1",
@@ -879,7 +879,7 @@
       "levelOfEvidence": "A",
       "name": "Cardiac Rehab Referral in CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 480
+      "registryLine": 737
     },
     {
       "classOfRecommendation": "1",
@@ -889,7 +889,7 @@
       "levelOfEvidence": "A",
       "name": "ACEi/ARB Post-MI",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 612
+      "registryLine": 869
     },
     {
       "classOfRecommendation": "1",
@@ -899,7 +899,7 @@
       "levelOfEvidence": "A",
       "name": "Beta-Blocker Post-MI",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 624
+      "registryLine": 881
     },
     {
       "classOfRecommendation": "1",
@@ -909,7 +909,7 @@
       "levelOfEvidence": "A",
       "name": "Smoking Cessation in CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 636
+      "registryLine": 893
     },
     {
       "classOfRecommendation": "2a",
@@ -919,7 +919,7 @@
       "levelOfEvidence": "B",
       "name": "Lipoprotein(a) Screening",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 648
+      "registryLine": 905
     },
     {
       "classOfRecommendation": "1",
@@ -929,7 +929,7 @@
       "levelOfEvidence": "A",
       "name": "Ezetimibe Add-on Therapy",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 660
+      "registryLine": 917
     },
     {
       "classOfRecommendation": "1",
@@ -939,7 +939,7 @@
       "levelOfEvidence": "A",
       "name": "A1c Monitoring in CAD+DM",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 672
+      "registryLine": 929
     },
     {
       "classOfRecommendation": "1",
@@ -949,7 +949,7 @@
       "levelOfEvidence": "A",
       "name": "Blood Pressure Monitoring in CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 684
+      "registryLine": 941
     },
     {
       "classOfRecommendation": "2a",
@@ -959,7 +959,7 @@
       "levelOfEvidence": "A",
       "name": "PCSK9 Inhibitor Consideration",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1404
+      "registryLine": 1661
     },
     {
       "classOfRecommendation": "2a",
@@ -969,7 +969,7 @@
       "levelOfEvidence": "B-NR",
       "name": "Intravascular Imaging for Left Main",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1416
+      "registryLine": 1673
     },
     {
       "classOfRecommendation": "1",
@@ -979,7 +979,7 @@
       "levelOfEvidence": "A",
       "name": "Fractional Flow Reserve for Intermediate Lesions",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1428
+      "registryLine": 1685
     },
     {
       "classOfRecommendation": "2b",
@@ -989,7 +989,7 @@
       "levelOfEvidence": "A",
       "name": "Anti-Inflammatory Therapy with Colchicine",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1440
+      "registryLine": 1697
     },
     {
       "classOfRecommendation": "2a",
@@ -999,7 +999,7 @@
       "levelOfEvidence": "B-R",
       "name": "Icosapent Ethyl for Elevated Triglycerides",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1452
+      "registryLine": 1709
     },
     {
       "classOfRecommendation": "2a",
@@ -1009,7 +1009,7 @@
       "levelOfEvidence": "B-R",
       "name": "Refractory Angina Treatment",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1464
+      "registryLine": 1721
     },
     {
       "classOfRecommendation": "1",
@@ -1019,7 +1019,7 @@
       "levelOfEvidence": "B",
       "name": "Stress Test Follow-up",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1476
+      "registryLine": 1733
     },
     {
       "classOfRecommendation": "2a",
@@ -1029,7 +1029,7 @@
       "levelOfEvidence": "B",
       "name": "Revascularization Assessment",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1488
+      "registryLine": 1745
     },
     {
       "classOfRecommendation": "1",
@@ -1039,7 +1039,7 @@
       "levelOfEvidence": "A",
       "name": "Anticoagulation in CAD + AF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1500
+      "registryLine": 1757
     },
     {
       "classOfRecommendation": "1",
@@ -1049,7 +1049,7 @@
       "levelOfEvidence": "A",
       "name": "GLP-1 RA for CAD + Diabetes",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1512
+      "registryLine": 1769
     },
     {
       "classOfRecommendation": "1",
@@ -1059,7 +1059,7 @@
       "levelOfEvidence": "A",
       "name": "SGLT2i for CAD + Diabetes",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1524
+      "registryLine": 1781
     },
     {
       "classOfRecommendation": "2a",
@@ -1069,7 +1069,7 @@
       "levelOfEvidence": "B-R",
       "name": "Bempedoic Acid for Statin Intolerance",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1536
+      "registryLine": 1793
     },
     {
       "classOfRecommendation": "1",
@@ -1079,7 +1079,7 @@
       "levelOfEvidence": "B",
       "name": "Weight Management in CAD + Obesity",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1548
+      "registryLine": 1805
     },
     {
       "classOfRecommendation": "1",
@@ -1089,7 +1089,7 @@
       "levelOfEvidence": "B",
       "name": "Depression Screening in CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1560
+      "registryLine": 1817
     },
     {
       "classOfRecommendation": "1",
@@ -1099,7 +1099,7 @@
       "levelOfEvidence": "B",
       "name": "Influenza Vaccination in CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1572
+      "registryLine": 1829
     },
     {
       "classOfRecommendation": "1",
@@ -1109,7 +1109,7 @@
       "levelOfEvidence": "A",
       "name": "Ticagrelor in ACS",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2424
+      "registryLine": 2681
     },
     {
       "classOfRecommendation": "1",
@@ -1119,7 +1119,7 @@
       "levelOfEvidence": "B",
       "name": "PRN Nitroglycerin for Angina",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2436
+      "registryLine": 2693
     },
     {
       "classOfRecommendation": "1",
@@ -1129,7 +1129,7 @@
       "levelOfEvidence": "B",
       "name": "Echocardiography in CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2448
+      "registryLine": 2705
     },
     {
       "classOfRecommendation": "2a",
@@ -1139,7 +1139,7 @@
       "levelOfEvidence": "B",
       "name": "BNP Monitoring in CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2460
+      "registryLine": 2717
     },
     {
       "classOfRecommendation": "1",
@@ -1149,7 +1149,7 @@
       "levelOfEvidence": "B",
       "name": "Renal Function Monitoring on ACEi in CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2472
+      "registryLine": 2729
     },
     {
       "classOfRecommendation": "2a",
@@ -1159,7 +1159,7 @@
       "levelOfEvidence": "A",
       "name": "DAPT Duration Review",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2484
+      "registryLine": 2741
     },
     {
       "classOfRecommendation": "2a",
@@ -1169,7 +1169,7 @@
       "levelOfEvidence": "B",
       "name": "PPI with DAPT for GI Protection",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2496
+      "registryLine": 2753
     },
     {
       "classOfRecommendation": "1",
@@ -1179,7 +1179,7 @@
       "levelOfEvidence": "A",
       "name": "MRA Post-MI with LVEF<=40 and HF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2508
+      "registryLine": 2765
     },
     {
       "classOfRecommendation": "1",
@@ -1189,7 +1189,7 @@
       "levelOfEvidence": "B",
       "name": "Electrolyte Monitoring Post-MI on Diuretic",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2520
+      "registryLine": 2777
     },
     {
       "classOfRecommendation": "1",
@@ -1199,7 +1199,7 @@
       "levelOfEvidence": "B",
       "name": "Anemia Screening Post-MI",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2532
+      "registryLine": 2789
     },
     {
       "classOfRecommendation": "1",
@@ -1209,7 +1209,7 @@
       "levelOfEvidence": "B",
       "name": "Thyroid Function in CAD with AFib",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2544
+      "registryLine": 2801
     },
     {
       "classOfRecommendation": "1",
@@ -1219,7 +1219,7 @@
       "levelOfEvidence": "A",
       "name": "Physical Activity Counseling in CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2556
+      "registryLine": 2813
     },
     {
       "classOfRecommendation": "1",
@@ -1229,7 +1229,7 @@
       "levelOfEvidence": "A",
       "name": "Dietary Counseling in CAD with Obesity",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2568
+      "registryLine": 2825
     },
     {
       "classOfRecommendation": "2a",
@@ -1239,7 +1239,7 @@
       "levelOfEvidence": "B",
       "name": "Psychosocial Assessment in Elderly CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2580
+      "registryLine": 2837
     },
     {
       "classOfRecommendation": "2a",
@@ -1249,7 +1249,7 @@
       "levelOfEvidence": "B",
       "name": "Premature CAD Family Screening",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2592
+      "registryLine": 2849
     },
     {
       "classOfRecommendation": "2a",
@@ -1259,7 +1259,7 @@
       "levelOfEvidence": "B-NR",
       "name": "Coronary Calcium Score for Intermediate Risk",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2604
+      "registryLine": 2861
     },
     {
       "classOfRecommendation": "2b",
@@ -1269,7 +1269,7 @@
       "levelOfEvidence": "B-R",
       "name": "CRP Monitoring in CAD on Statin",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2616
+      "registryLine": 2873
     },
     {
       "classOfRecommendation": "1",
@@ -1279,7 +1279,7 @@
       "levelOfEvidence": "C",
       "name": "Advance Directive Discussion in Severe CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2628
+      "registryLine": 2885
     },
     {
       "classOfRecommendation": "1",
@@ -1289,7 +1289,7 @@
       "levelOfEvidence": "B",
       "name": "Palliative Care Referral in Refractory CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2640
+      "registryLine": 2897
     },
     {
       "classOfRecommendation": "1",
@@ -1299,7 +1299,7 @@
       "levelOfEvidence": "A",
       "name": "Cardiac CT for Stable Chest Pain",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2652
+      "registryLine": 2909
     },
     {
       "classOfRecommendation": "1",
@@ -1309,7 +1309,7 @@
       "levelOfEvidence": "A",
       "name": "Prasugrel in ACS with PCI",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2664
+      "registryLine": 2921
     },
     {
       "classOfRecommendation": "3 (Harm)",
@@ -1319,7 +1319,7 @@
       "levelOfEvidence": "B",
       "name": "Prasugrel + prior stroke/TIA (SAFETY)",
       "nextReviewDue": "2026-11-05",
-      "registryLine": 2676
+      "registryLine": 2933
     },
     {
       "classOfRecommendation": "2a",
@@ -1329,7 +1329,7 @@
       "levelOfEvidence": "B",
       "name": "Heparin Bridging in CAD with AF and Procedure",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2688
+      "registryLine": 2945
     },
     {
       "classOfRecommendation": "2a",
@@ -1339,7 +1339,7 @@
       "levelOfEvidence": "B",
       "name": "Sexual Health Counseling Post-MI",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2700
+      "registryLine": 2957
     },
     {
       "classOfRecommendation": "1",
@@ -1349,7 +1349,7 @@
       "levelOfEvidence": "C",
       "name": "Post-MI Driving Restriction Documentation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2712
+      "registryLine": 2969
     },
     {
       "classOfRecommendation": "1",
@@ -1359,7 +1359,7 @@
       "levelOfEvidence": "B",
       "name": "Liver Function Monitoring on Statin in CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2724
+      "registryLine": 2981
     },
     {
       "classOfRecommendation": "1",
@@ -1369,7 +1369,7 @@
       "levelOfEvidence": "A",
       "name": "Aspirin Assessment in CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2940
+      "registryLine": 3197
     },
     {
       "classOfRecommendation": "2a",
@@ -1379,7 +1379,7 @@
       "levelOfEvidence": "B",
       "name": "Beta-Blocker in Stable CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2952
+      "registryLine": 3209
     },
     {
       "classOfRecommendation": "1",
@@ -1389,7 +1389,7 @@
       "levelOfEvidence": "A",
       "name": "ACEi in Stable CAD with HTN",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2964
+      "registryLine": 3221
     },
     {
       "classOfRecommendation": "2a",
@@ -1399,7 +1399,7 @@
       "levelOfEvidence": "B",
       "name": "Nicorandil for Refractory Angina",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2976
+      "registryLine": 3233
     },
     {
       "classOfRecommendation": "2b",
@@ -1409,7 +1409,7 @@
       "levelOfEvidence": "B",
       "name": "Trimetazidine Consideration in CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2988
+      "registryLine": 3245
     },
     {
       "classOfRecommendation": "2a",
@@ -1419,7 +1419,7 @@
       "levelOfEvidence": "B-NR",
       "name": "Coronary CTA Follow-Up",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3000
+      "registryLine": 3257
     },
     {
       "classOfRecommendation": "1",
@@ -1429,7 +1429,7 @@
       "levelOfEvidence": "B",
       "name": "Nuclear Stress Test Consideration",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3012
+      "registryLine": 3269
     },
     {
       "classOfRecommendation": "1",
@@ -1439,7 +1439,7 @@
       "levelOfEvidence": "A",
       "name": "Catheterization Review",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3024
+      "registryLine": 3281
     },
     {
       "classOfRecommendation": "2a",
@@ -1449,7 +1449,7 @@
       "levelOfEvidence": "B-R",
       "name": "Complete Revascularization Assessment",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3036
+      "registryLine": 3293
     },
     {
       "classOfRecommendation": "2a",
@@ -1459,7 +1459,7 @@
       "levelOfEvidence": "B-R",
       "name": "Ischemia-Guided Therapy Review",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3048
+      "registryLine": 3305
     },
     {
       "classOfRecommendation": "1",
@@ -1469,7 +1469,7 @@
       "levelOfEvidence": "B-NR",
       "name": "MINOCA Workup",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3060
+      "registryLine": 3317
     },
     {
       "classOfRecommendation": "1",
@@ -1479,7 +1479,7 @@
       "levelOfEvidence": "C-LD",
       "name": "SCAD Evaluation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3072
+      "registryLine": 3329
     },
     {
       "classOfRecommendation": "Expert Consensus",
@@ -1489,7 +1489,7 @@
       "levelOfEvidence": "C",
       "name": "Takotsubo Follow-Up",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3084
+      "registryLine": 3341
     },
     {
       "classOfRecommendation": "1",
@@ -1499,7 +1499,7 @@
       "levelOfEvidence": "B",
       "name": "Vasospastic Angina Evaluation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3096
+      "registryLine": 3353
     },
     {
       "classOfRecommendation": "2a",
@@ -1509,7 +1509,7 @@
       "levelOfEvidence": "B-NR",
       "name": "Microvascular Disease Assessment",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3108
+      "registryLine": 3365
     },
     {
       "classOfRecommendation": "1",
@@ -1519,7 +1519,7 @@
       "levelOfEvidence": "C",
       "name": "Cardiac Allograft Vasculopathy",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3120
+      "registryLine": 3377
     },
     {
       "classOfRecommendation": "1",
@@ -1529,7 +1529,7 @@
       "levelOfEvidence": "A",
       "name": "Lipid Panel Follow-Up in CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3132
+      "registryLine": 3389
     },
     {
       "classOfRecommendation": "1",
@@ -1539,7 +1539,7 @@
       "levelOfEvidence": "B",
       "name": "Glucose Screening in CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3144
+      "registryLine": 3401
     },
     {
       "classOfRecommendation": "1",
@@ -1549,7 +1549,7 @@
       "levelOfEvidence": "A",
       "name": "A1c Target Review in CAD+DM",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3156
+      "registryLine": 3413
     },
     {
       "classOfRecommendation": "2a",
@@ -1559,7 +1559,7 @@
       "levelOfEvidence": "B-R",
       "name": "Antiplatelet Review Post-Event",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3168
+      "registryLine": 3425
     },
     {
       "classOfRecommendation": "1",
@@ -1569,7 +1569,7 @@
       "levelOfEvidence": "B",
       "name": "Chest Pain Protocol Adherence",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3180
+      "registryLine": 3437
     },
     {
       "classOfRecommendation": "1",
@@ -1579,7 +1579,7 @@
       "levelOfEvidence": "A",
       "name": "Secondary Prevention Bundle Review",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3192
+      "registryLine": 3449
     },
     {
       "classOfRecommendation": "1",
@@ -1589,7 +1589,7 @@
       "levelOfEvidence": "B",
       "name": "Women-Specific CAD Screening",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3204
+      "registryLine": 3461
     },
     {
       "classOfRecommendation": "1",
@@ -1599,7 +1599,7 @@
       "levelOfEvidence": "C-LD",
       "name": "Young MI Workup",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3216
+      "registryLine": 3473
     },
     {
       "classOfRecommendation": "1",
@@ -1609,7 +1609,7 @@
       "levelOfEvidence": "A",
       "name": "Exercise Prescription in CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3228
+      "registryLine": 3485
     },
     {
       "classOfRecommendation": "2a",
@@ -1619,7 +1619,7 @@
       "levelOfEvidence": "B-NR",
       "name": "Sleep Apnea Screening in CAD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3240
+      "registryLine": 3497
     }
   ]
 }

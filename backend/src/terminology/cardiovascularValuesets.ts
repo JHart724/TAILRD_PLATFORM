@@ -348,12 +348,97 @@ export const RXNORM_WARFARIN = {
   WARFARIN_10MG: '855296',   // AUDIT-059 (relabeled from WARFARIN_2MG; 855296 is actually 10mg)
 } as const;
 
+/**
+ * Alpha-1 adrenergic blockers -- used by the EP-097 orthostatic-hypotension medication-review gap.
+ * A common iatrogenic cause of orthostatic hypotension (uroselective + non-selective).
+ * VERIFICATION (AUDIT_METHODOLOGY.md section 16): every RxCUI is an IN-level ingredient verified via RxNav
+ *   rxcui.json?name=<drug>&tty=IN on 2026-06-16. Note: alfuzosin=17300 and silodosin=720825 were RxNav-corrected
+ *   from initial guesses (519494 / 880658) - the name->IN lookup caught both.
+ */
+export const RXNORM_ALPHA_BLOCKERS = {
+  TAMSULOSIN: '77492',
+  DOXAZOSIN: '49276',
+  TERAZOSIN: '37798',
+  ALFUZOSIN: '17300',
+  SILODOSIN: '720825',
+  PRAZOSIN: '8629',
+} as const;
+
 /** Rate control agents (BB + CCB) -- used by AFib rate control gap rule */
 export const RXNORM_RATE_CONTROL = {
   METOPROLOL: '6918',
   CARVEDILOL: '20352',
   DILTIAZEM: '3443',
   VERAPAMIL: '11170',
+} as const;
+
+/**
+ * EP catheter-ablation CPT codes -- used by the v3.0 EP rhythm/ablation gap rules (chunk 2).
+ * These match the patient's threaded procedureCodes (PR #396) to detect prior ablation (presence)
+ * or its absence (an unoffered-ablation gap).
+ *
+ * CPT VERIFICATION (AUDIT_METHODOLOGY.md section 16 - CPT source is AMA CPT, NOT RxNav):
+ *   Verified 2026-06-16 against AMA CPT Assistant (Dec 2021, "Reporting Cardiac Ablation 93653/93654/93656"),
+ *   AAPC Codify, and ACC "New 2022 Cardiovascular CPT Codes". 2022 descriptor revision bundles add-ons.
+ *   93653 = comprehensive EP study with ablation of SUPRAVENTRICULAR tachycardia (fast/slow AV-nodal pathway,
+ *           accessory AV connection, cavo-tricuspid isthmus, or other single atrial focus / atrial re-entry).
+ *           Covers AVNRT, AVRT, typical atrial flutter (CTI), and focal atrial tachycardia.
+ *   93654 = comprehensive EP study with ablation of VENTRICULAR tachycardia / ventricular ectopy focus.
+ *   93656 = comprehensive EP study with ablation of ATRIAL FIBRILLATION by pulmonary vein isolation (PVI).
+ *           NOTE per AMA: 93653 is not reported in conjunction with 93656.
+ */
+export const EP_ABLATION_CPT = {
+  SVT: '93653',   // SVT/AVNRT/AVRT/typical-flutter(CTI)/focal-AT ablation
+  VT: '93654',    // ventricular tachycardia ablation
+  AF_PVI: '93656', // atrial fibrillation ablation by pulmonary vein isolation
+} as const;
+
+/**
+ * CIED (cardiac implantable electronic device) implant CPT codes -- v3.0 EP buildout chunk 3.
+ * Matched against threaded procedureCodes (PR #396) to detect device presence/absence.
+ * CPT VERIFICATION (section 16 - AMA CPT, not RxNav): verified 2026-06-16 against CMS coverage articles
+ *   (A54929/A54931), AAPC Codify, and Medtronic/Philips coding guides.
+ *   33206 = permanent pacemaker, transvenous, ATRIAL (single-chamber).
+ *   33207 = permanent pacemaker, transvenous, VENTRICULAR (single-chamber).
+ *   33208 = permanent pacemaker, transvenous, ATRIAL + VENTRICULAR (dual-chamber).
+ *   33249 = insertion/replacement of permanent ICD with transvenous lead(s) (single or dual chamber).
+ *   33270 = insertion/replacement of permanent SUBCUTANEOUS ICD (S-ICD) system.
+ *   33274 = transcatheter insertion/replacement of permanent LEADLESS pacemaker (right ventricular).
+ */
+export const CIED_IMPLANT_CPT = {
+  PACEMAKER_ATRIAL: '33206',
+  PACEMAKER_VENTRICULAR: '33207',
+  PACEMAKER_DUAL: '33208',
+  ICD: '33249',
+  SICD: '33270',
+  LEADLESS_PACEMAKER: '33274',
+} as const;
+
+/**
+ * CIED extraction/removal CPT codes -- v3.0 EP buildout chunk 3 (used for the CIED-infection
+ * full-system-extraction gap; absence of an extraction code = extraction not yet performed).
+ * CPT VERIFICATION (section 16 - AMA CPT): verified 2026-06-16 against AAPC Codify + Medtronic coding scenarios.
+ *   33244 = removal of single/dual-chamber ICD ELECTRODE(s) by transvenous extraction.
+ *   33241 = removal of ICD pulse generator only.
+ *   33234 = removal of pacemaker ELECTRODE, single-lead system.
+ *   33235 = removal of pacemaker ELECTRODE, dual-lead system.
+ */
+export const CIED_EXTRACTION_CPT = {
+  ICD_LEAD_EXTRACTION: '33244',
+  ICD_GENERATOR_REMOVAL: '33241',
+  PACEMAKER_LEAD_REMOVAL_SINGLE: '33234',
+  PACEMAKER_LEAD_REMOVAL_DUAL: '33235',
+} as const;
+
+/**
+ * LAAC (left atrial appendage closure) CPT -- v3.0 EP buildout (EP-012, EP-067).
+ * CPT VERIFICATION (section 16 - AMA CPT): verified 2026-06-16 against AAPC Codify + CMS + Boston Scientific
+ *   reimbursement guide. 33340 = percutaneous transcatheter closure of the LAA with endocardial implant
+ *   (e.g. WATCHMAN), including fluoroscopy, transseptal puncture, catheter placement, LA/LAA angiography, and
+ *   radiological supervision/interpretation. An alternative to long-term oral anticoagulation for stroke prevention.
+ */
+export const LAAC_CPT = {
+  LAAC: '33340',
 } as const;
 
 /** Bioprosthetic valve presence -- used by echo surveillance gap rule */

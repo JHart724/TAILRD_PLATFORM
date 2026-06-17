@@ -2,14 +2,14 @@
   "finding": "AUDIT-118",
   "generator": "backend/scripts/genRxnormIngredientMap.mjs",
   "source": "https://rxnav.nlm.nih.gov/REST/rxcui/{IN}/related.json?tty=SCD+SBD+SCDC+SCDG+SBDG+BPCK+GPCK",
-  "retrieved": "2026-06-16",
+  "retrieved": "2026-06-17",
   "candidateUniverse": {
-    "valuesets": 112,
-    "engineInline": 65,
-    "union": 135
+    "valuesets": 132,
+    "engineInline": 67,
+    "union": 157
   },
-  "ingredientINCount": 119,
-  "mapEntryCount": 4201,
+  "ingredientINCount": 125,
+  "mapEntryCount": 4304,
   "multiIngredientEntries": 363,
   "perIngredient": {
     "703": {
@@ -184,6 +184,10 @@
       "name": "omeprazole",
       "descendantCount": 87
     },
+    "8629": {
+      "name": "prazosin",
+      "descendantCount": 24
+    },
     "8640": {
       "name": "prednisone",
       "descendantCount": 35
@@ -231,6 +235,10 @@
     "17128": {
       "name": "lansoprazole",
       "descendantCount": 21
+    },
+    "17300": {
+      "name": "alfuzosin",
+      "descendantCount": 9
     },
     "17767": {
       "name": "amlodipine",
@@ -280,6 +288,10 @@
       "name": "simvastatin",
       "descendantCount": 49
     },
+    "37798": {
+      "name": "terazosin",
+      "descendantCount": 20
+    },
     "38413": {
       "name": "torsemide",
       "descendantCount": 28
@@ -299,6 +311,10 @@
     "49247": {
       "name": "dofetilide",
       "descendantCount": 13
+    },
+    "49276": {
+      "name": "doxazosin",
+      "descendantCount": 20
     },
     "49737": {
       "name": "esmolol",
@@ -323,6 +339,10 @@
     "72435": {
       "name": "anakinra",
       "descendantCount": 5
+    },
+    "77492": {
+      "name": "tamsulosin",
+      "descendantCount": 14
     },
     "82122": {
       "name": "levofloxacin",
@@ -386,6 +406,10 @@
     },
     "613391": {
       "name": "prasugrel",
+      "descendantCount": 10
+    },
+    "720825": {
+      "name": "silodosin",
       "descendantCount": 10
     },
     "763450": {
@@ -499,6 +523,14 @@
       "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
     },
     {
+      "rxcui": "2013",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "2014",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
       "rxcui": "2016",
       "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
     },
@@ -508,6 +540,62 @@
     },
     {
       "rxcui": "2024",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "33206",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "33207",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "33208",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "33234",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "33235",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "33241",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "33244",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "33249",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "33270",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "33274",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "33340",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "93653",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "93654",
+      "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
+    },
+    {
+      "rxcui": "93656",
       "reason": "no TTY (not an RxNorm concept; likely a dose/age literal)"
     }
   ]

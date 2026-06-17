@@ -45,8 +45,11 @@ describe('Structural: Gap rule engine integrity', () => {
     // - +34: the buildable HF gaps across 5 chunks (GDMT/device HF-003/011/015/024/025/026/031/126/127;
     //   phenotypes/iron HF-061/062/063/065/072/073/074/032/034; cross-cutting HF-036/076/078/080/082/086;
     //   advanced/cardiorenal/pericardial HF-047/132/133/139/144/027; LVAD/transplant HF-147/148/151/152).
+    // Then 305 -> 326 by the v3.0 EP module buildout (2026-06-16, feat/ep-chunk1-af-anticoag):
+    // - +21: new EP evaluators across 4 chunks (AF anticoag/dosing EP-003/004/005/008/009/012; AF rhythm/
+    //   ablation EP-014/071/072/074/076; VT/CIED EP-020/021/022/029/034/092; brady/syncope/LAAC EP-030/033/097/067).
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(305);
+    expect(count).toBe(326);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

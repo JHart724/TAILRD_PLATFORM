@@ -79,10 +79,10 @@ Heart Failure has **126 spec gaps** across 15 subcategories. Implementation: **6
 
 **Naming convention mismatches (4):** registry IDs not following `gap-hf-` convention.
 
-- `gap-1-attr-cm` (line 240): expected prefix `gap-hf-`, got `gap-1-`
-- `gap-2-iron-deficiency` (line 252): expected prefix `gap-hf-`, got `gap-2-`
-- `gap-6-finerenone` (line 264): expected prefix `gap-hf-`, got `gap-6-`
-- `gap-44-digoxin-toxicity` (line 288): expected prefix `gap-hf-`, got `gap-44-`
+- `gap-1-attr-cm` (line 245): expected prefix `gap-hf-`, got `gap-1-`
+- `gap-2-iron-deficiency` (line 257): expected prefix `gap-hf-`, got `gap-2-`
+- `gap-6-finerenone` (line 269): expected prefix `gap-hf-`, got `gap-6-`
+- `gap-44-digoxin-toxicity` (line 293): expected prefix `gap-hf-`, got `gap-44-`
 
 
 ---
@@ -91,34 +91,34 @@ Heart Failure has **126 spec gaps** across 15 subcategories. Implementation: **6
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-HF-001 | 124 | DET_OK | `gap-hf-35-beta-blocker` (HF-35 @4071-4095) | + \| auto-verify: preserved-from-addendum |
-| GAP-HF-002 | 125 | DET_OK | `gap-hf-002-bb-non-ebm` (HF-BB-NON-EBM @11283-11299) | BUILT 2026-06-15 (v3.0 HF calibration): HF-BB-NON-EBM evaluator - HFrEF (LVEF<=40) + on atenolol. CO |
-| GAP-HF-003 | 126 | DET_OK | `gap-hf-003-bb-target-dose` (HF-BB-TARGET-DOSE @11342-11358) | BUILT 2026-06-15 (v3.0 HF batch): HF-BB-TARGET-DOSE - HFrEF + BB doseValue<target + HR>=60 + SBP>=10 |
-| GAP-HF-004 | 127 | DET_OK | `gap-hf-37-raas` (HF-37 @5602-5628) | + \| auto-verify: preserved-from-addendum |
-| GAP-HF-005 | 128 | DET_OK | `gap-hf-arni-switch` (HF-ARNI-SWITCH @10782-10806) | auto-verify: preserved-from-addendum |
-| GAP-HF-007 | 129 | DET_OK | `gap-hf-36-mra` (HF-36 @4105-4127) | + \| auto-verify: preserved-from-addendum |
-| GAP-HF-010 | 130 | DET_OK | `gap-hf-34-sglt2i` (HF-34 @4041-4066) | + \| auto-verify: preserved-from-addendum |
-| GAP-HF-014 | 131 | DET_OK | `gap-hf-18-vericiguat` (HF-18 @4224-4240) | auto-verify: preserved-from-addendum |
-| GAP-HF-016 | 143 | DET_OK | `gap-hf-79-sglt2i-hfpef` (HF-79 @4559-4579) | auto-verify: preserved-from-addendum |
-| GAP-HF-017 | 144 | DET_OK | `gap-hf-017-finerenone-mref` (HF-FINERENONE-MREF @11101-11117) | BUILT 2026-06-15 (v3.0 HF calibration): HF-FINERENONE-MREF evaluator - LVEF>=40 + K<5.0 + eGFR>=25 + |
-| GAP-HF-018 | 145 | DET_OK | `gap-hf-7-glp1ra` (HF-7 @4145-4161) | auto-verify: preserved-from-addendum |
-| GAP-HF-021 | 152 | PARTIAL_DETECTION | `gap-ep-device-crt` (EP-DEVICE-CRT @4946-4968) **[cross-module: EP]** | — \| auto-verify: broad-rule consolidation: EP-DEVICE-CRT top-matches 3 spec gaps in subcategory "Dev |
-| GAP-HF-024 | 153 | DET_OK | `gap-hf-024-icd-primary-ischemic` (HF-ICD-PRIMARY-ISCHEMIC @11432-11447) | BUILT 2026-06-15 (v3.0 HF batch): HF-ICD-PRIMARY-ISCHEMIC - LVEF<=35 + ischemic + BB+RAASi + GDMT>=3 |
-| GAP-HF-025 | 154 | DET_OK | `gap-hf-025-icd-primary-nicm` (HF-ICD-PRIMARY-NICM @11463-11478) | BUILT 2026-06-15 (v3.0 HF batch): HF-ICD-PRIMARY-NICM - LVEF<=35 + NICM(I42.0/.9) + BB+RAASi + no IC |
-| GAP-HF-026 | 155 | DET_OK | `gap-hf-026-icd-secondary` (HF-ICD-SECONDARY @11488-11503) | BUILT 2026-06-15 (v3.0 HF batch): HF-ICD-SECONDARY - VT(I47.2)/VF(I49.01/.02)/arrest(I46) + no ICD.  |
-| GAP-HF-028 | 168 | PARTIAL_DETECTION | `gap-hf-84-transplant-eval` (HF-84 @6654-6673) | + \| Multiple registry ids cited: gap-hf-84-transplant-eval, gap-hf-85-lvad-referral \| auto-verify: p |
+| GAP-HF-001 | 124 | DET_OK | `gap-hf-35-beta-blocker` (HF-35 @4328-4352) | + \| auto-verify: preserved-from-addendum |
+| GAP-HF-002 | 125 | DET_OK | `gap-hf-002-bb-non-ebm` (HF-BB-NON-EBM @12337-12353) | BUILT 2026-06-15 (v3.0 HF calibration): HF-BB-NON-EBM evaluator - HFrEF (LVEF<=40) + on atenolol. CO |
+| GAP-HF-003 | 126 | DET_OK | `gap-hf-003-bb-target-dose` (HF-BB-TARGET-DOSE @12396-12412) | BUILT 2026-06-15 (v3.0 HF batch): HF-BB-TARGET-DOSE - HFrEF + BB doseValue<target + HR>=60 + SBP>=10 |
+| GAP-HF-004 | 127 | DET_OK | `gap-hf-37-raas` (HF-37 @6631-6657) | + \| auto-verify: preserved-from-addendum |
+| GAP-HF-005 | 128 | DET_OK | `gap-hf-arni-switch` (HF-ARNI-SWITCH @11836-11860) | auto-verify: preserved-from-addendum |
+| GAP-HF-007 | 129 | DET_OK | `gap-hf-36-mra` (HF-36 @4362-4384) | + \| auto-verify: preserved-from-addendum |
+| GAP-HF-010 | 130 | DET_OK | `gap-hf-34-sglt2i` (HF-34 @4298-4323) | + \| auto-verify: preserved-from-addendum |
+| GAP-HF-014 | 131 | DET_OK | `gap-hf-18-vericiguat` (HF-18 @4481-4497) | auto-verify: preserved-from-addendum |
+| GAP-HF-016 | 143 | DET_OK | `gap-hf-79-sglt2i-hfpef` (HF-79 @4820-4840) | auto-verify: preserved-from-addendum |
+| GAP-HF-017 | 144 | DET_OK | `gap-hf-017-finerenone-mref` (HF-FINERENONE-MREF @12155-12171) | BUILT 2026-06-15 (v3.0 HF calibration): HF-FINERENONE-MREF evaluator - LVEF>=40 + K<5.0 + eGFR>=25 + |
+| GAP-HF-018 | 145 | DET_OK | `gap-hf-7-glp1ra` (HF-7 @4402-4418) | auto-verify: preserved-from-addendum |
+| GAP-HF-021 | 152 | PARTIAL_DETECTION | `gap-ep-device-crt` (EP-DEVICE-CRT @5970-5992) **[cross-module: EP]** | — \| auto-verify: broad-rule consolidation: EP-DEVICE-CRT top-matches 3 spec gaps in subcategory "Dev |
+| GAP-HF-024 | 153 | DET_OK | `gap-hf-024-icd-primary-ischemic` (HF-ICD-PRIMARY-ISCHEMIC @12486-12501) | BUILT 2026-06-15 (v3.0 HF batch): HF-ICD-PRIMARY-ISCHEMIC - LVEF<=35 + ischemic + BB+RAASi + GDMT>=3 |
+| GAP-HF-025 | 154 | DET_OK | `gap-hf-025-icd-primary-nicm` (HF-ICD-PRIMARY-NICM @12517-12532) | BUILT 2026-06-15 (v3.0 HF batch): HF-ICD-PRIMARY-NICM - LVEF<=35 + NICM(I42.0/.9) + BB+RAASi + no IC |
+| GAP-HF-026 | 155 | DET_OK | `gap-hf-026-icd-secondary` (HF-ICD-SECONDARY @12542-12557) | BUILT 2026-06-15 (v3.0 HF batch): HF-ICD-SECONDARY - VT(I47.2)/VF(I49.01/.02)/arrest(I46) + no ICD.  |
+| GAP-HF-028 | 168 | PARTIAL_DETECTION | `gap-hf-84-transplant-eval` (HF-84 @7683-7702) | + \| Multiple registry ids cited: gap-hf-84-transplant-eval, gap-hf-85-lvad-referral \| auto-verify: p |
 | GAP-HF-041 | 169 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-HF-043 | 170 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-HF-132 | 171 | DET_OK | `gap-hf-132-tolvaptan-hyponatremia` (HF-TOLVAPTAN-HYPONATREMIA @12045-12060) | BUILT 2026-06-15 (v3.0 HF batch): HF-TOLVAPTAN-HYPONATREMIA - HF + Na<125 + no tolvaptan (mgmt eval) |
-| GAP-HF-133 | 172 | DET_OK | `gap-hf-133-cs-mcs-escalation` (HF-CS-MCS-ESCALATION @12074-12089) | BUILT 2026-06-15 (v3.0 HF batch): HF-CS-MCS-ESCALATION - HF + shock (R57.0) + inotrope + no MCS (CPT |
-| GAP-HF-033 | 185 | DET_OK | `gap-hf-033-iron-def-iv` (HF-IRON-DEF-IV @11207-11223) | BUILT 2026-06-15 (v3.0 HF calibration): HF-IRON-DEF-IV evaluator - HF + ferritin<100 + not-on-IV-iro |
-| GAP-HF-034 | 186 | DET_OK | `gap-hf-034-iron-functional` (HF-IRON-FUNCTIONAL @11792-11808) | BUILT 2026-06-15 (v3.0 HF batch): HF-IRON-FUNCTIONAL - HF + ferritin 100-299 + TSAT<20 + no IV iron. |
-| GAP-HF-036 | 192 | DET_OK | `gap-hf-036-gdmt-incomplete` (HF-GDMT-INCOMPLETE @11858-11873) | BUILT 2026-06-15 (v3.0 HF batch): HF-GDMT-INCOMPLETE - HFrEF + <=2 of 4 pillars. COR 1. Pattern B: r |
-| GAP-HF-051 | 206 | PARTIAL_DETECTION | `gap-hf-90-amyloid-biomarker` (HF-90 @6835-6853) | auto-verify: preserved-from-addendum |
-| GAP-HF-053 | 207 | PARTIAL_DETECTION | `gap-hf-90-amyloid-biomarker` (HF-90 @6835-6853) | auto-verify: preserved-from-addendum |
-| GAP-HF-054 | 208 | DET_OK | `gap-hf-054-attr-dmt` (HF-ATTR-DMT @11258-11274) | BUILT 2026-06-15 (v3.0 HF calibration): HF-ATTR-DMT evaluator - E85.82/E85.1 + not-on-DMT. COR 1, AT |
-| GAP-HF-057 | 217 | PARTIAL_DETECTION | `gap-hf-12-hcm-screening` (HF-12 @4169-4184) | auto-verify: preserved-from-addendum |
-| GAP-HF-147 | 264 | DET_OK | `gap-hf-147-lvad-inr` (HF-LVAD-INR @12186-12202) | BUILT 2026-06-15 (v3.0 HF batch): HF-LVAD-INR SAFETY - LVAD (Z95.811) + INR outside 2.0-3.0. COR 1.  |
+| GAP-HF-132 | 171 | DET_OK | `gap-hf-132-tolvaptan-hyponatremia` (HF-TOLVAPTAN-HYPONATREMIA @13099-13114) | BUILT 2026-06-15 (v3.0 HF batch): HF-TOLVAPTAN-HYPONATREMIA - HF + Na<125 + no tolvaptan (mgmt eval) |
+| GAP-HF-133 | 172 | DET_OK | `gap-hf-133-cs-mcs-escalation` (HF-CS-MCS-ESCALATION @13128-13143) | BUILT 2026-06-15 (v3.0 HF batch): HF-CS-MCS-ESCALATION - HF + shock (R57.0) + inotrope + no MCS (CPT |
+| GAP-HF-033 | 185 | DET_OK | `gap-hf-033-iron-def-iv` (HF-IRON-DEF-IV @12261-12277) | BUILT 2026-06-15 (v3.0 HF calibration): HF-IRON-DEF-IV evaluator - HF + ferritin<100 + not-on-IV-iro |
+| GAP-HF-034 | 186 | DET_OK | `gap-hf-034-iron-functional` (HF-IRON-FUNCTIONAL @12846-12862) | BUILT 2026-06-15 (v3.0 HF batch): HF-IRON-FUNCTIONAL - HF + ferritin 100-299 + TSAT<20 + no IV iron. |
+| GAP-HF-036 | 192 | DET_OK | `gap-hf-036-gdmt-incomplete` (HF-GDMT-INCOMPLETE @12912-12927) | BUILT 2026-06-15 (v3.0 HF batch): HF-GDMT-INCOMPLETE - HFrEF + <=2 of 4 pillars. COR 1. Pattern B: r |
+| GAP-HF-051 | 206 | PARTIAL_DETECTION | `gap-hf-90-amyloid-biomarker` (HF-90 @7864-7882) | auto-verify: preserved-from-addendum |
+| GAP-HF-053 | 207 | PARTIAL_DETECTION | `gap-hf-90-amyloid-biomarker` (HF-90 @7864-7882) | auto-verify: preserved-from-addendum |
+| GAP-HF-054 | 208 | DET_OK | `gap-hf-054-attr-dmt` (HF-ATTR-DMT @12312-12328) | BUILT 2026-06-15 (v3.0 HF calibration): HF-ATTR-DMT evaluator - E85.82/E85.1 + not-on-DMT. COR 1, AT |
+| GAP-HF-057 | 217 | PARTIAL_DETECTION | `gap-hf-12-hcm-screening` (HF-12 @4426-4441) | auto-verify: preserved-from-addendum |
+| GAP-HF-147 | 264 | DET_OK | `gap-hf-147-lvad-inr` (HF-LVAD-INR @13240-13256) | BUILT 2026-06-15 (v3.0 HF batch): HF-LVAD-INR SAFETY - LVAD (Z95.811) + INR outside 2.0-3.0. COR 1.  |
 | GAP-HF-156 | 277 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 
 ---
