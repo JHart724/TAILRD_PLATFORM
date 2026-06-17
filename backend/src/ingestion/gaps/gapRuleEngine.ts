@@ -3918,6 +3918,21 @@ export const RUNTIME_GAP_REGISTRY = [
     guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
     classOfRecommendation: '1', levelOfEvidence: 'C-LD',
   },
+  // v3.0 VHD buildout chunk 2 registry entries (prosthetic-valve dysfunction PVT/SVD partition, 2026-06-17).
+  {
+    id: 'gap-vhd-068-mech-pvt-gradient',
+    name: 'Mechanical Prosthetic Valve Thrombosis Gradient', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-011-bio-svd-gradient',
+    name: 'Bioprosthetic Structural Valve Deterioration Gradient', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'B-NR',
+  },
   {
     id: 'gap-pv-critical-limb',
     name: 'Critical Limb Ischemia Urgent Evaluation',
@@ -7890,6 +7905,74 @@ export function evaluateGapRules(
         classOfRecommendation: '1',
         levelOfEvidence: 'C-LD',
         exclusions: ['Hospice/palliative care (Z51.5)', 'Quantitative MR assessment already on file'],
+      },
+    });
+  }
+
+  // ===== v3.0 VHD chunk 2: prosthetic-valve dysfunction (PVT vs SVD partition) =====
+  // Reads the threaded prosthetic-valve gradients (aortic_valve_mean_gradient / mitral_valve_mean_gradient) +
+  // the AUDIT-123-corrected Z95.x semantics. STANDING SUBGROUP CHECK: a MECHANICAL valve with an elevated
+  // gradient is prosthetic-valve THROMBOSIS / pannus (-> anticoag/lysis/surgery workup), whereas a BIOPROSTHETIC
+  // valve is structural valve DETERIORATION (-> ViV-TAVR vs redo surgery) - the valve TYPE drives the
+  // recommendation. Mechanical = Z95.2 (generic, treated-as-mechanical) || Z95.4; bioprosthetic = Z95.3 (xenogenic,
+  // definitive). Path-B: the serial gradient-DELTA (rise>=10 mmHg / rise>=50%) and new-PVL arms are not threaded
+  // (no serial/baseline gradients); the ABSOLUTE elevated prosthetic gradient is the proxy (aortic >=20, mitral
+  // >=10 mmHg). The aortic-prosthesis case overlaps SH-012 (general SVD eval, aortic-only) - flagged for the close.
+  const hasMechValve_VHD2 = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.4'));
+  const hasBioValve_VHD2 = dxCodes.some(c => c.startsWith('Z95.3'));
+  const elevatedProstheticGradient_VHD =
+    (labValues['aortic_valve_mean_gradient'] !== undefined && labValues['aortic_valve_mean_gradient'] >= 20) ||
+    (labValues['mitral_valve_mean_gradient'] !== undefined && labValues['mitral_valve_mean_gradient'] >= 10);
+
+  // Gap VHD-068: Mechanical prosthetic valve + elevated gradient -> thrombosis (PVT) workup
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 urgent TTE/TEE + fluoroscopy for suspected prosthetic valve
+  // thrombosis with an elevated gradient).
+  if (hasMechValve_VHD2 && elevatedProstheticGradient_VHD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Mechanical prosthetic valve with elevated gradient: thrombosis (PVT) workup gap',
+      target: 'Prosthetic valve thrombosis workup (TEE + cinefluoroscopy) + anticoagulation review',
+      recommendations: {
+        action: 'Consider urgent prosthetic valve thrombosis workup (transesophageal echo + cinefluoroscopy) and anticoagulation review for a mechanical valve with an elevated gradient; thrombolysis vs surgery is determined by thrombus burden and symptoms, per 2020 ACC/AHA VHD (Class 1)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Subgroup: mechanical valve -> THROMBOSIS/pannus pathway (not SVD). Obstructive PVT is a surgical/thrombolysis emergency. Path-B: the gradient-rise-from-baseline (>=50%) arm is not threaded; the absolute elevated gradient (aortic >=20 / mitral >=10 mmHg) is the proxy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mechanical prosthetic valve (Z95.2 or Z95.4)',
+          'Elevated prosthetic mean gradient (aortic >=20 or mitral >=10 mmHg)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Known stable elevated baseline gradient', 'Recent PVT workup on file'],
+      },
+    });
+  }
+
+  // Gap VHD-011: Bioprosthetic valve + elevated gradient -> structural valve deterioration (SVD) evaluation
+  // Guideline: 2020 ACC/AHA VHD Guideline (SVD with hemodynamic significance -> ViV-TAVR vs redo surgery, Class 2a).
+  if (hasBioValve_VHD2 && elevatedProstheticGradient_VHD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Bioprosthetic valve with elevated gradient: structural deterioration (SVD) evaluation gap',
+      target: 'Structural valve deterioration assessment + redo-intervention candidacy (ViV-TAVR vs redo surgery)',
+      recommendations: {
+        action: 'Consider structural valve deterioration evaluation and redo-intervention candidacy (valve-in-valve TAVR vs redo surgery) for a bioprosthetic valve with an elevated gradient per 2020 ACC/AHA VHD (Class 2a)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Subgroup: bioprosthetic valve -> structural DETERIORATION pathway (not thrombosis). Path-B: the gradient-rise-from-baseline (>=10 mmHg) and new-paravalvular-leak arms are not threaded; the absolute elevated gradient (aortic >=20 / mitral >=10 mmHg) is the proxy. Distinct from the mechanical PVT pathway (VHD-068).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Bioprosthetic (xenogenic) valve (Z95.3)',
+          'Elevated prosthetic mean gradient (aortic >=20 or mitral >=10 mmHg)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Known stable elevated baseline gradient', 'Recent SVD assessment on file'],
       },
     });
   }
