@@ -123,9 +123,9 @@ export async function writePatients(
           });
         }
       }
-      // valve_severity: a coded grade string (none/mild/moderate/severe). Ordinal-encode to 0/1/2/3 and persist
-      // as valueNumeric (design option A - zero engine-signature ripple, mirrors the mitral_regurg_grade 0-4
-      // ordinal). The engine reads labValues['valve_severity'] >= 3 for severe. valueText is NOT threaded.
+      // valve_severity: a coded grade string. Ordinal-encode to the grade-preserving 0-5 scale and persist as
+      // valueNumeric (design option A - zero engine-signature ripple). The engine reads labValues['valve_severity']
+      // >= 5 for severe (>= 4 includes moderate-severe; >= 3 is moderate-or-worse). valueText is NOT threaded.
       const severityRaw = row.data['valve_severity'];
       const severityOrdinal = encodeValveSeverity(severityRaw == null ? null : String(severityRaw));
       if (severityOrdinal !== null) {
@@ -161,19 +161,24 @@ function mapGender(sex: string | null): Gender {
   return Gender.OTHER;
 }
 
-// Ordinal encoding of the coded valve_severity grade (design option A; SURFACED for clinical sign-off).
-// none/trivial/trace -> 0, mild -> 1, moderate -> 2, severe/torrential -> 3. Intermediate grades round DOWN
-// (conservative - under-detects rather than over-refers). Unrecognized -> null (treated as absent / Path-B,
-// never mis-encoded - the AUDIT-070 no-guess discipline applied to severity strings).
+// Ordinal encoding of the coded valve_severity grade (operator clinical sign-off 2026-06-17).
+// GRADE-PRESERVING 0-5 scale: each half-grade is a DISTINCT ordinal (NOT round-collapsed), so each SH/VHD gap
+// can set its own clinically-correct threshold during authoring - severe-only = >=5; severe-or-moderate-severe
+// = >=4; moderate-or-worse = >=3. Distinct from mitral_regurg_grade's standard 0-4 MR scale (read the right
+// threshold per field).
+//   none/trivial/trace -> 0 | mild -> 1 | mild-moderate -> 2 | moderate -> 3 | moderate-severe -> 4 | severe/torrential -> 5
+// Unrecognized -> null (treated as absent / Path-B, never mis-encoded - the AUDIT-070 no-guess discipline).
 export function encodeValveSeverity(raw: string | null): number | null {
   if (raw == null) return null;
   const s = raw.trim().toLowerCase();
   if (s === '') return null;
   const map: Record<string, number> = {
     none: 0, trivial: 0, trace: 0,
-    mild: 1, 'mild-moderate': 1, 'mild to moderate': 1,
-    moderate: 2, 'moderate-severe': 2, 'moderate to severe': 2,
-    severe: 3, torrential: 3,
+    mild: 1,
+    'mild-moderate': 2, 'mild to moderate': 2,
+    moderate: 3,
+    'moderate-severe': 4, 'moderate to severe': 4,
+    severe: 5, torrential: 5,
   };
   return s in map ? map[s] : null;
 }

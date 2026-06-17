@@ -25,25 +25,26 @@ function buildLabValues(obs: { observationType: string; valueNumeric: number | n
 }
 
 // ---- encodeValveSeverity (ordinal grade encoding, design option A) ----
-describe('encodeValveSeverity - ordinal grade map (for operator sign-off)', () => {
-  it('canonical grades: none/mild/moderate/severe -> 0/1/2/3', () => {
+describe('encodeValveSeverity - grade-preserving 0-5 ordinal (operator sign-off 2026-06-17)', () => {
+  it('canonical grades on the 0-5 scale: none/mild/moderate/severe -> 0/1/3/5', () => {
     expect(encodeValveSeverity('none')).toBe(0);
     expect(encodeValveSeverity('mild')).toBe(1);
-    expect(encodeValveSeverity('moderate')).toBe(2);
-    expect(encodeValveSeverity('severe')).toBe(3);
+    expect(encodeValveSeverity('moderate')).toBe(3);
+    expect(encodeValveSeverity('severe')).toBe(5);
+  });
+  it('half-grades PRESERVED as distinct ordinals (not collapsed)', () => {
+    expect(encodeValveSeverity('mild-moderate')).toBe(2);
+    expect(encodeValveSeverity('moderate-severe')).toBe(4);
+    expect(encodeValveSeverity('moderate to severe')).toBe(4);
   });
   it('case-insensitive + trimmed', () => {
-    expect(encodeValveSeverity('  Severe ')).toBe(3);
-    expect(encodeValveSeverity('MODERATE')).toBe(2);
+    expect(encodeValveSeverity('  Severe ')).toBe(5);
+    expect(encodeValveSeverity('MODERATE')).toBe(3);
   });
-  it('synonyms: trivial/trace -> 0, torrential -> 3', () => {
+  it('synonyms: trivial/trace -> 0, torrential -> 5', () => {
     expect(encodeValveSeverity('trivial')).toBe(0);
     expect(encodeValveSeverity('trace')).toBe(0);
-    expect(encodeValveSeverity('torrential')).toBe(3);
-  });
-  it('intermediate grades round DOWN (conservative)', () => {
-    expect(encodeValveSeverity('mild-moderate')).toBe(1);
-    expect(encodeValveSeverity('moderate-severe')).toBe(2);
+    expect(encodeValveSeverity('torrential')).toBe(5);
   });
   it('unrecognized / null / empty -> null (Path-B, never mis-encoded)', () => {
     expect(encodeValveSeverity('unknown')).toBeNull();
@@ -111,10 +112,12 @@ describe('PATH 1 end-to-end: valve numeric -> labValues -> severity read', () =>
     const lv = buildLabValues([{ observationType: 'lvef', valueNumeric: 55, ageMs: 30 * day }]);
     expect(lv['aortic_valve_mean_gradient']).toBeUndefined();
   });
-  it('valve_severity ordinal threads: severe(3) reads >=3', () => {
-    const sev = encodeValveSeverity('severe');
-    const lv = buildLabValues([{ observationType: 'valve_severity', valueNumeric: sev!, ageMs: 30 * day }]);
-    expect(lv['valve_severity'] >= 3).toBe(true);
+  it('valve_severity ordinal threads on the 0-5 scale: severe(5) reads >=5; moderate-severe(4) reads >=4 but not >=5', () => {
+    const severe = buildLabValues([{ observationType: 'valve_severity', valueNumeric: encodeValveSeverity('severe')!, ageMs: 30 * day }]);
+    expect(severe['valve_severity'] >= 5).toBe(true);
+    const modSevere = buildLabValues([{ observationType: 'valve_severity', valueNumeric: encodeValveSeverity('moderate-severe')!, ageMs: 30 * day }]);
+    expect(modSevere['valve_severity'] >= 4).toBe(true);
+    expect(modSevere['valve_severity'] >= 5).toBe(false);
   });
 });
 
