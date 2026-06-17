@@ -55,6 +55,19 @@ export const SH_COLUMNS: CSVColumn[] = [
   { name: 'aortic_valve_area', required: false, type: 'number' },
   { name: 'mitral_regurg_grade', required: false, type: 'number', validation: { min: 0, max: 4 } },
   { name: 'sts_score', required: false, type: 'number' },
+  // TR + vena-contracta (v3.0 SH chunk 3). tr_regurg_grade is a 0-4 numeric TR grade (4 = severe),
+  // mirroring mitral_regurg_grade; the coded valve_severity (0-5) is the cross-valve fallback.
+  { name: 'tr_regurg_grade', required: false, type: 'number', validation: { min: 0, max: 4 } },
+  { name: 'tr_regurg_vmax', required: false, type: 'number' },
+  { name: 'mitral_vena_contracta', required: false, type: 'number' },
+  { name: 'aortic_vena_contracta', required: false, type: 'number' },
+  { name: 'tricuspid_vena_contracta', required: false, type: 'number' },
+  // Chunk-2 MR rules read these but the CSV path silently dropped them (AUDIT-165 class); mitral_eroa also
+  // threads via FHIR (29448-8), pasp via neither until now. ascending_aorta added for chunk-4 aortic-dimension
+  // gaps (already in the FHIR map 18012-5).
+  { name: 'mitral_eroa', required: false, type: 'number' },
+  { name: 'pasp', required: false, type: 'number' },
+  { name: 'ascending_aorta', required: false, type: 'number' },
 ];
 
 export const PV_COLUMNS: CSVColumn[] = [

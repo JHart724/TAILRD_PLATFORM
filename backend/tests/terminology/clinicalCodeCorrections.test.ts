@@ -779,31 +779,36 @@ function gapBlockFor(src: string, statusText: string): string {
   return src.slice(start, j);
 }
 
-describe('AUDIT-103: SH-2 TAVR evidence object rewritten to TAVR/VHD provenance', () => {
-  const block = gapBlockFor(engineSrc, 'TAVR evaluation not documented for severe aortic stenosis');
+describe('AUDIT-103: SH-2 (GAP-SH-002) AVR evidence object - VHD provenance (v3.0 SH chunk 1: AUDIT-125 tightened)', () => {
+  // v3.0 SH chunk 1 (2026-06-17): the SH-2 rule was tightened (AUDIT-125) from the I35.0+LVEF-present
+  // over-detector to severe-AS-severity-gated + symptomatic; the status string changed accordingly.
+  const block = gapBlockFor(engineSrc, 'AVR not referred for severe symptomatic aortic stenosis');
   it('guidelineSource is 2020 ACC/AHA VHD, not the 2023 AF Management donor', () => {
     expect(block).toMatch(/guidelineSource: '2020 ACC\/AHA Guideline for Valvular Heart Disease'/);
     expect(block).not.toContain('2023 ACC/AHA/ACCP/HRS Guideline for AF Management');
   });
-  it('classOfRecommendation 1 / levelOfEvidence A (TAVR-for-severe-AS RCT base)', () => {
+  it('classOfRecommendation 1 / levelOfEvidence A (AVR-for-severe-symptomatic-AS RCT base)', () => {
     expect(block).toMatch(/classOfRecommendation: '1'/);
     expect(block).toMatch(/levelOfEvidence: 'A'/);
   });
-  it('triggerCriteria describes the rule own gating (severe AS + age + LVEF + no TAVR eval)', () => {
-    expect(block).toMatch(/Severe aortic stenosis \(I35\.0\)/);
+  it('triggerCriteria now carries the AUDIT-125 severity gate (severe AS via threaded echo measures)', () => {
+    expect(block).toMatch(/Aortic stenosis \(I35\.0\)/);
+    expect(block).toMatch(/Concordant severe AS \(mean gradient/); // v3.0 SH chunk 1 LFLG partition (concordant high-gradient only)
     expect(block).not.toContain('Rate control agent not prescribed in AFib');
   });
-  it('AF-donor exclusions (bradycardia / sick sinus) are gone; only the gated hospice exclusion remains', () => {
+  it('AF-donor exclusions (bradycardia / sick sinus) are gone; hospice exclusion + the SH-002 gates remain', () => {
     expect(block).not.toContain('Severe bradycardia');
     expect(block).not.toContain('Sick sinus syndrome without pacemaker');
-    expect(block).toMatch(/exclusions: \['Hospice\/palliative care'\]/);
+    expect(block).toContain('Hospice/palliative care (Z51.5)');
+    expect(block).toContain('Prosthetic AV already present'); // v3.0 SH chunk 1 subgroup exclusion
   });
 });
 
 describe('AUDIT-103: VD-1 mechanical-valve warfarin evidence object + three-way LOE agreement', () => {
   const block = gapBlockFor(engineSrc, 'Warfarin not active with mechanical valve');
   it('triggerCriteria describes mechanical-valve gating, not the AS-echo donor string', () => {
-    expect(block).toMatch(/Mechanical heart valve \(Z95\.2\/Z95\.3\/Z95\.4\)/);
+    // AUDIT-123 (2026-06-17): the string now matches the AUDIT-164 predicate (Z95.3 excluded - it is bioprosthetic).
+    expect(block).toMatch(/Mechanical heart valve \(Z95\.2 or Z95\.4\)/);
     expect(block).not.toContain('Echo surveillance overdue for aortic stenosis');
   });
   it('guidelineSource + classOfRecommendation unchanged (already correct)', () => {

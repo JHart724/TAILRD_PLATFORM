@@ -747,15 +747,63 @@ export const RUNTIME_GAP_REGISTRY = [
   },
   {
     id: 'gap-sh-2-tavr-eval',
-    name: 'TAVR Evaluation for Severe AS',
+    name: 'Severe symptomatic AS - AVR not referred',
     module: 'STRUCTURAL_HEART',
     guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
     guidelineVersion: '2020',
     guidelineOrg: 'ACC/AHA',
-    lastReviewDate: '2026-04-03',
-    nextReviewDue: '2026-10-03',
+    lastReviewDate: '2026-06-17',
+    nextReviewDue: '2026-12-17',
     classOfRecommendation: '1',
     levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-sh-006-as-asymptomatic-lvef',
+    name: 'Asymptomatic severe AS with LV dysfunction (Class IIa AVR)',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-17',
+    nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-003-lflg-as-dse',
+    name: 'Low-flow low-gradient AS: dobutamine stress echo not performed',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-17',
+    nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-004-paradoxical-lflg-as',
+    name: 'Paradoxical low-flow low-gradient AS detection',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-17',
+    nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-050-as-grading-clarification',
+    name: 'Moderate AS: severity-grading surveillance / integrated clarification',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-17',
+    nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C-EO',
   },
   {
     id: 'gap-vd-2-bioprosthetic-echo',
@@ -1191,14 +1239,38 @@ export const RUNTIME_GAP_REGISTRY = [
   },
   {
     id: 'gap-sh-3-mitral-intervention',
-    name: 'Mitral Valve Intervention Evaluation',
+    name: 'Severe primary MR - surgical referral',
     module: 'STRUCTURAL_HEART',
     guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
     guidelineVersion: '2020',
     guidelineOrg: 'ACC/AHA',
-    lastReviewDate: '2026-04-03',
-    nextReviewDue: '2026-10-03',
+    lastReviewDate: '2026-06-17',
+    nextReviewDue: '2026-12-17',
     classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-016-mr-primary-af',
+    name: 'Severe primary MR + new AF - surgical IIa',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-17',
+    nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-017-mr-primary-ph',
+    name: 'Severe primary MR + pulmonary hypertension - surgical IIa',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-17',
+    nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a',
     levelOfEvidence: 'B',
   },
   {
@@ -2580,6 +2652,210 @@ export const RUNTIME_GAP_REGISTRY = [
     nextReviewDue: '2026-10-03',
     classOfRecommendation: '1',
     levelOfEvidence: 'B',
+  },
+  // v3.0 SH buildout registry entries (chunks 1-7, 2026-06-17). One entry per new evaluator.
+  {
+    id: 'gap-sh-069-evoque-ttvr',
+    name: 'Evoque TTVR (TRISCEND) Candidacy', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; TRISCEND II',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-sh-023-tr-device-lead',
+    name: 'TR Device Selection Lead Status', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-sh-052-marfan-bb-arb',
+    name: 'Marfan Aortic Growth Prophylaxis', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease',
+    guidelineVersion: '2022', guidelineOrg: 'ACC/AHA/AATS/STS', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-sh-074-typeb-omt',
+    name: 'Type B Dissection Optimal Medical Therapy', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease',
+    guidelineVersion: '2022', guidelineOrg: 'ACC/AHA/AATS/STS', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-sh-075-typeb-tevar',
+    name: 'Complicated Type B Dissection TEVAR Evaluation', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease',
+    guidelineVersion: '2022', guidelineOrg: 'ACC/AHA/AATS/STS', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-sh-054-turner-surveillance',
+    name: 'Turner Syndrome Cardiac Surveillance', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease',
+    guidelineVersion: '2022', guidelineOrg: 'ACC/AHA/AATS/STS', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-sh-055-veds-celiprolol',
+    name: 'Vascular EDS Celiprolol Surveillance', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease; BBEST trial',
+    guidelineVersion: '2022', guidelineOrg: 'ACC/AHA/AATS/STS', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-sh-026-pfo-cryptogenic-closure',
+    name: 'PFO Cryptogenic Stroke Closure Evaluation', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; RESPECT/CLOSE/REDUCE',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-sh-029-ie-early-surgery',
+    name: 'Infective Endocarditis Early Surgery Indication', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-sh-091-massive-pe-reperfusion',
+    name: 'Massive PE Reperfusion Evaluation', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2019 ESC Guideline on Acute Pulmonary Embolism',
+    guidelineVersion: '2019', guidelineOrg: 'ESC', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-sh-101-eisenmenger-pah',
+    name: 'Eisenmenger PAH-Specific Therapy', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2018 AHA/ACC Adult Congenital Heart Disease Guideline; 2022 ESC/ERS Pulmonary Hypertension Guideline',
+    guidelineVersion: '2018', guidelineOrg: 'AHA/ACC', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-sh-099-ebstein-arrhythmia',
+    name: 'Ebstein Anomaly Arrhythmia Surveillance', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+    guidelineVersion: '2018', guidelineOrg: 'AHA/ACC', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-sh-059-postavr-antithrombotic',
+    name: 'Post-AVR Antithrombotic Regimen Review', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; POPular-TAVI',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-sh-057-postavr-lbbb',
+    name: 'Post-AVR New LBBB Monitoring', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-sh-060-postavr-pacing',
+    name: 'Post-AVR High-Grade AV Block Pacing Decision', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2018 ACC/AHA/HRS Guideline on the Evaluation and Management of Bradycardia',
+    guidelineVersion: '2018', guidelineOrg: 'ACC/AHA/HRS', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-sh-092-cteph-surveillance',
+    name: 'Post-PE CTEPH Surveillance', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2019 ESC Guideline on Acute Pulmonary Embolism; 2022 ESC/ERS Pulmonary Hypertension Guideline',
+    guidelineVersion: '2019', guidelineOrg: 'ESC', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-sh-095-coarctation-surveillance',
+    name: 'Coarctation Imaging Surveillance', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+    guidelineVersion: '2018', guidelineOrg: 'AHA/ACC', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-sh-097-systemic-rv',
+    name: 'Systemic Right Ventricle ACHD Surveillance', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+    guidelineVersion: '2018', guidelineOrg: 'AHA/ACC', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-sh-082-postclosure-antithrombotic',
+    name: 'Post-Septal-Closure Antithrombotic', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; closure-device IFUs',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C-EO',
+  },
+  {
+    id: 'gap-sh-083-postclosure-surveillance',
+    name: 'Post-Closure Residual Shunt Surveillance', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-sh-065-postteer-echo',
+    name: 'Post-Mitral-TEER Surveillance Echo', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-sh-066-recurrent-mr-teer',
+    name: 'Recurrent MR After Mitral TEER', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-sh-003-lflg-classical',
+    name: 'Low-Flow Low-Gradient AS Classical DSE', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-004-lflg-paradoxical',
+    name: 'Paradoxical Low-Flow Low-Gradient AS', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-006-asymptomatic-as',
+    name: 'Asymptomatic Severe AS LV Dysfunction', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-sh-050-moderate-as-grading',
+    name: 'Moderate AS Severity Grading Surveillance', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-sh-016-primary-mr-af',
+    name: 'Severe Primary MR New Atrial Fibrillation', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-sh-017-primary-mr-pasp',
+    name: 'Severe Primary MR Pulmonary Hypertension', module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-sh-103-atrial-myxoma',
+    name: 'Atrial Myxoma Surgical Referral', module: 'STRUCTURAL_HEART',
+    guidelineSource: 'ACC/AHA cardiac-masses consensus; standard surgical management of atrial myxoma',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C-LD',
   },
   {
     id: 'gap-vd-prosthetic-pannus',
@@ -6528,7 +6804,7 @@ export function evaluateGapRules(
             guideline: '2020 ACC/AHA Valvular Heart Disease',
           },
               evidence: {
-          triggerCriteria: ['Mechanical heart valve (Z95.2/Z95.3/Z95.4)', 'Warfarin (RxNorm 11289) not on active medication list'],
+          triggerCriteria: ['Mechanical heart valve (Z95.2 or Z95.4)', 'Warfarin (RxNorm 11289) not on active medication list'],
           guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
           classOfRecommendation: '1',
           levelOfEvidence: 'B',
@@ -6806,43 +7082,200 @@ export function evaluateGapRules(
   }
 
   // ============================================================
-  // Gap SH-2: TAVR Evaluation for Severe Aortic Stenosis
+  // SH CHUNK 1 (v3.0 SH buildout, 2026-06-17): Aortic stenosis severity. Reads the now-threaded echo-severity
+  // measures (echo-severity threading unlock, PR #404): aortic_valve_mean_gradient / aortic_valve_area /
+  // aortic_valve_vmax / valve_severity (0-5 ordinal). Pattern A: AS = I35.0 specifically (not broad I35).
   // ============================================================
-  // Guideline: 2020 ACC/AHA Valvular Heart Disease Guideline, Class 1, LOE A
-  // Patients with severe AS (I35.0), age >= 65, and LVEF available (suggests symptomatic/evaluated)
-  // should be evaluated for TAVR by a heart valve team
-  if (hasAorticStenosis && age >= 65 && labValues['lvef'] !== undefined) {
-        if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-  gaps.push({
-        type: TherapyGapType.PROCEDURE_INDICATED,
-        module: ModuleType.STRUCTURAL_HEART,
-        status: 'TAVR evaluation not documented for severe aortic stenosis',
-        target: 'Heart valve team evaluation for TAVR completed',
-        recommendations: {
-          action: 'Refer to heart valve team for TAVR evaluation per 2020 ACC/AHA VHD, Class 1, LOE A',
-          guideline: '2020 ACC/AHA Valvular Heart Disease',
-          note: 'All patients >= 65 with severe AS should be evaluated by a multidisciplinary heart valve team',
-        },
-            evidence: {
-          triggerCriteria: ['Severe aortic stenosis (I35.0)', 'Age >= 65', 'LVEF available (echo performed)', 'No documented TAVR evaluation'],
-          guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
-          classOfRecommendation: '1',
-          levelOfEvidence: 'A',
-          exclusions: ['Hospice/palliative care'],
-        },
-  });
-    }
+  // concordantSevereAS: the CONFIRMED severe-AS gate for the AVR-INTERVENE gaps (SH-002/006). Operator LFLG
+  // ruling (2026-06-17, confirm-then-intervene): use ONLY the unambiguous high-gradient definitions (mean
+  // gradient>=40 OR Vmax>=4.0) plus an explicit severe grade (valve_severity>=5). AVA<=1.0 ALONE is NOT used
+  // here - a small AVA with a LOW gradient is LFLG (severity UNCERTAIN pending DSE), which routes to SH-003
+  // (low-EF LFLG -> DSE) / SH-004 (paradoxical LFLG -> confirm) for severity confirmation FIRST, not to AVR.
+  const concordantSevereAS =
+    (labValues['aortic_valve_mean_gradient'] !== undefined && labValues['aortic_valve_mean_gradient'] >= 40) ||
+    (labValues['aortic_valve_vmax'] !== undefined && labValues['aortic_valve_vmax'] >= 4.0) ||
+    (labValues['valve_severity'] !== undefined && labValues['valve_severity'] >= 5);
+  // Any prosthetic AV already present (Z95.2/.3/.4) = already replaced -> exclude from "AVR not done" gaps.
+  // (ANY replacement code is correct here, independent of the Z95.2/Z95.3 mechanical-vs-bio inversion that the
+  // AUDIT-123/124 cluster concerns - that inversion lands at the valve-CHOICE recommendation, NOT this exclusion.)
+  const hasAnyProstheticValve_SH = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4'));
+  const symptomaticAS = dxCodes.some(c => c.startsWith('I50') || c.startsWith('R55') || c.startsWith('I20'));
+
+  // Gap SH-002: Severe SYMPTOMATIC AS - AVR not referred. COR 1.
+  // Tightening (AUDIT-125): the prior rule fired on I35.0 + age>=65 + LVEF-present (an "echo-performed" proxy with
+  // NO severity gate -> over-detected mild/moderate AS). Now gated on the threaded severe-AS severity + a symptom dx.
+  // Path-B: AVR-referral/procedure status is not ingested (no AVR/TAVR CPT set yet, chunk-2/3) - the prosthetic-valve
+  // exclusion removes already-replaced patients; the referral-absence arm is a documented Path-B.
+  if (hasAorticStenosis && concordantSevereAS && symptomaticAS && !hasAnyProstheticValve_SH
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'AVR not referred for severe symptomatic aortic stenosis',
+      target: 'Heart valve team AVR evaluation (SAVR vs TAVR by age/surgical-risk/anatomy)',
+      recommendations: {
+        // STANDING SUBGROUP CHECK: symptomatic severe AS is a Class 1 intervention indication, but the MODALITY
+        // is subgroup-dependent (younger/low-risk -> SAVR; older/high-risk -> TAVR) - recommend heart-team AVR
+        // evaluation, NOT blanket TAVR (the prior rule's error for young low-risk patients).
+        action: 'Refer to heart valve team for AVR evaluation per 2020 ACC/AHA VHD (Class 1, LOE A); modality (SAVR vs TAVR) by age, surgical risk, and valve anatomy',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Symptomatic severe AS is a Class 1 AVR indication. Modality is heart-team-determined: SAVR is generally preferred at younger age / lower surgical risk; TAVR at older age / higher risk or favorable anatomy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Aortic stenosis (I35.0)',
+          'Concordant severe AS (mean gradient >=40, Vmax >=4.0, or valve_severity >=5; AVA-alone-low-gradient LFLG routes to SH-003/004)',
+          'Symptomatic (HF I50 / syncope R55 / angina I20)',
+          'No prosthetic aortic valve already present',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prosthetic AV already present (Z95.2/.3/.4)', 'AVR-referral status not ingested (Path-B)'],
+      },
+    });
+  }
+
+  // Gap SH-006: Asymptomatic severe AS + LV dysfunction (Class IIa AVR). COR 2a.
+  // Trigger: severe AS + LVEF<55 + NOT symptomatic + no prosthetic AV. (The lower-LVEF subset escalates per
+  // guideline; the >=50-<55 band + the abnormal-stress arm are the 2a triggers; stress-test result not threaded.)
+  if (hasAorticStenosis && concordantSevereAS && labValues['lvef'] !== undefined && labValues['lvef'] < 55
+      && !symptomaticAS && !hasAnyProstheticValve_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'AVR not referred for asymptomatic severe AS with LV dysfunction (Class IIa)',
+      target: 'Heart valve team AVR evaluation for asymptomatic severe AS with LVEF<55',
+      recommendations: {
+        action: 'Consider heart valve team AVR evaluation for asymptomatic severe AS with LVEF<55 per 2020 ACC/AHA VHD (Class 2a)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Asymptomatic severe AS with declining LV function warrants AVR before irreversible LV damage. LVEF<50 is a Class 1 indication; LVEF 50-<55 (or an abnormal exercise test, not ingested) is Class 2a. Modality (SAVR vs TAVR) is heart-team-determined.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Aortic stenosis (I35.0)',
+          'Concordant severe AS (mean gradient >=40, Vmax >=4.0, or valve_severity >=5; AVA-alone-low-gradient LFLG routes to SH-003/004)',
+          `LVEF: ${labValues['lvef']}% (<55)`,
+          'Asymptomatic (no HF/syncope/angina dx)',
+          'No prosthetic aortic valve already present',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prosthetic AV present (Z95.2/.3/.4)', 'Exercise-test arm not ingested (Path-B)'],
+      },
+    });
+  }
+
+  // Gap SH-003: Low-flow low-gradient (classical, low-EF) AS - dobutamine stress echo not performed. COR 1.
+  // Trigger: LVEF<50 + AVA<1.0 + mean gradient<40 (the classical LFLG pattern). DSE differentiates true-severe
+  // from pseudo-severe AS. Path-B: a DSE/stress-echo procedure code is not ingested (no stress-echo CPT set yet) -
+  // fires on the LFLG-pattern recognition; the DSE-done exclusion is a documented Path-B.
+  if (hasAorticStenosis && labValues['lvef'] !== undefined && labValues['lvef'] < 50
+      && labValues['aortic_valve_area'] !== undefined && labValues['aortic_valve_area'] < 1.0
+      && labValues['aortic_valve_mean_gradient'] !== undefined && labValues['aortic_valve_mean_gradient'] < 40
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Low-flow low-gradient AS: dobutamine stress echo not performed',
+      target: 'Dobutamine stress echo to differentiate true-severe from pseudo-severe AS',
+      recommendations: {
+        action: 'Consider dobutamine stress echocardiography for classical low-flow low-gradient AS per 2020 ACC/AHA VHD (Class 1)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Low EF + small AVA + low mean gradient is classical LFLG AS - dobutamine stress echo distinguishes true-severe AS (which benefits from AVR) from pseudo-severe AS (afterload-mismatch). Path-B: stress-echo procedure status not ingested.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Aortic stenosis (I35.0)',
+          `LVEF: ${labValues['lvef']}% (<50)`,
+          `AVA: ${labValues['aortic_valve_area']} cm2 (<1.0)`,
+          `Mean gradient: ${labValues['aortic_valve_mean_gradient']} mmHg (<40) - low-flow low-gradient`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Stress-echo procedure status not ingested (Path-B)'],
+      },
+    });
+  }
+
+  // Gap SH-004: Paradoxical low-flow low-gradient AS (preserved EF). COR 2a.
+  // Trigger: LVEF>=50 + AVA<1.0 + mean gradient<40 (small valve area, low gradient, NORMAL EF). Path-B: the
+  // confirmatory stroke-volume index (SVi<35) is NOT threaded - this fires on the preserved-EF discordant pattern
+  // and recommends an integrated SVi/flow assessment to confirm paradoxical-LFLG severe AS.
+  if (hasAorticStenosis && labValues['lvef'] !== undefined && labValues['lvef'] >= 50
+      && labValues['aortic_valve_area'] !== undefined && labValues['aortic_valve_area'] < 1.0
+      && labValues['aortic_valve_mean_gradient'] !== undefined && labValues['aortic_valve_mean_gradient'] < 40
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Paradoxical low-flow low-gradient AS: stroke-volume/flow assessment needed',
+      target: 'Integrated stroke-volume-index / flow assessment to confirm paradoxical-LFLG severe AS',
+      recommendations: {
+        action: 'Consider stroke-volume-index and integrated flow assessment for preserved-EF discordant AS per 2020 ACC/AHA VHD (Class 2a)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Small AVA + low gradient with PRESERVED EF suggests paradoxical low-flow low-gradient severe AS (low stroke-volume index despite normal EF). Confirm with SVi (<35 mL/m2) and integrated assessment. Path-B: stroke-volume index not ingested.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Aortic stenosis (I35.0)',
+          `LVEF: ${labValues['lvef']}% (>=50, preserved)`,
+          `AVA: ${labValues['aortic_valve_area']} cm2 (<1.0)`,
+          `Mean gradient: ${labValues['aortic_valve_mean_gradient']} mmHg (<40) - discordant with small AVA`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Stroke-volume index (SVi) not ingested (Path-B)'],
+      },
+    });
+  }
+
+  // Gap SH-050: Moderate AS - severity-grading / surveillance + integrated clarification. COR 1 (surveillance).
+  // Trigger: AS + AVA in the moderate range (1.0 < AVA <= 1.5). Path-B: CT-derived annular sizing is not threaded;
+  // the recommendation is periodic re-grading + integrated (CT-AVA) clarification when echo is discordant.
+  // Scope note: the severe (SH-002/006) and LFLG (SH-003/004, AVA<1.0) cases are handled above; SH-050 is the
+  // moderate-range watch. Overlap boundary with the LFLG gaps flagged for operator review.
+  if (hasAorticStenosis && labValues['aortic_valve_area'] !== undefined
+      && labValues['aortic_valve_area'] > 1.0 && labValues['aortic_valve_area'] <= 1.5
+      && !hasAnyProstheticValve_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Moderate AS: severity-grading surveillance / integrated clarification',
+      target: 'Periodic AS re-grading; integrated (CT-AVA) clarification when echo measures are discordant',
+      recommendations: {
+        action: 'Consider periodic re-grading of moderate AS and integrated (CT-derived AVA / annular) clarification when echo is discordant per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Moderate AS (AVA 1.0-1.5 cm2) warrants periodic surveillance; when echo measures are discordant or borderline, CT-derived AVA / annular sizing clarifies severity. Path-B: CT-annular measurements not ingested.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Aortic stenosis (I35.0)',
+          `AVA: ${labValues['aortic_valve_area']} cm2 (1.0-1.5, moderate range)`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-EO',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prosthetic AV present (Z95.2/.3/.4)', 'CT-annular sizing not ingested (Path-B)'],
+      },
+    });
   }
 
   // ============================================================
   // Gap VD-2: Echo Surveillance for Bioprosthetic Valve
   // ============================================================
   // Guideline: 2020 ACC/AHA Valvular Heart Disease Guideline, Class 1, LOE C
-  // Bioprosthetic valve patients (Z95.2, Z95.4) require annual echo surveillance
-  // to monitor for structural valve deterioration (SVD)
+  // Bioprosthetic valve patients require annual echo surveillance for structural valve deterioration (SVD).
+  // Fix (AUDIT-123, 2026-06-17): broad predicate = Z95.3 (xenogenic/bioprosthetic, the ACTUAL bio code) OR
+  //   Z95.2 (prosthetic, generic) OR Z95.4 (other replacement). The prior set excluded Z95.3, so it MISSED
+  //   genuine bioprosthetic patients. Broad is safety-first here per operator ruling: missing a bio patient is
+  //   the harm; a mechanical patient getting a surveillance-echo nudge is harmless. (Z95.4 kept from prior.)
   // Fires when: bioprosthetic valve present AND no recent echo (LVEF not available as proxy)
   const hasBioprostheticValve = dxCodes.some(c =>
-    c.startsWith('Z95.2') || c.startsWith('Z95.4')
+    c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4')
   );
   if (hasBioprostheticValve && labValues['lvef'] === undefined) {
         if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
@@ -6871,70 +7304,220 @@ export function evaluateGapRules(
   // NEW Structural Heart Rules (SH-3 through SH-9)
   // ============================================================
 
-  // Gap SH-3: Mitral Valve Intervention Evaluation
-  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
-  // Mitral regurgitation (I34.0) with LVEF < 60 or symptomatic warrants intervention evaluation
+  // ============================================================
+  // SH CHUNK 2 (v3.0 SH buildout, 2026-06-17): Mitral regurgitation severity. Reads the threaded MR severity
+  // (echo-severity unlock PR #404): mitral_eroa / mitral_regurg_grade (0-4) / valve_severity (0-5) / pasp.
+  // PRIMARY vs SECONDARY MR: ICD-10 I34.0 covers BOTH (no separate code). secondaryMRContext (functional MR
+  // from LV dysfunction) is proxied by HF (I50) + reduced LVEF; the PRIMARY (degenerative) gaps below EXCLUDE it
+  // because secondary MR is GDMT-first-then-TEER (COAPT), NOT primary surgical repair (the MR subgroup distinction).
+  // ============================================================
   const hasMitralRegurg = dxCodes.some(c => c.startsWith('I34.0'));
-  if (
-    hasMitralRegurg &&
-    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
-  ) {
-    const lvefBelow60 = labValues['lvef'] !== undefined && labValues['lvef'] < 60;
-    const symptomatic = dxCodes.some(c => c.startsWith('R06') || c.startsWith('R00')); // Dyspnea, palpitations
-    if (lvefBelow60 || symptomatic) {
+  const severeMR =
+    (labValues['mitral_eroa'] !== undefined && labValues['mitral_eroa'] >= 0.40) ||
+    (labValues['mitral_regurg_grade'] !== undefined && labValues['mitral_regurg_grade'] >= 4) ||
+    (labValues['valve_severity'] !== undefined && labValues['valve_severity'] >= 5);
+  // secondaryMRContext: functional MR driven by LV systolic dysfunction (HF + reduced EF). Such patients route
+  // to GDMT-first then TEER (COAPT) - NOT to the primary surgical gaps. Path-B: a definitive primary-vs-secondary
+  // echo classification is not ingested; HF + LVEF<50 is the secondary proxy.
+  const secondaryMRContext = hasHF && labValues['lvef'] !== undefined && labValues['lvef'] < 50;
+  const symptomaticMR = dxCodes.some(c => c.startsWith('R06') || c.startsWith('R00') || c.startsWith('I50'));
+
+  // Gap SH-014: Severe PRIMARY MR - surgical referral. COR 1 (symptomatic) / 2a (asymptomatic + LV trigger).
+  // Tightening (AUDIT-125): the prior rule fired on I34.0 + (LVEF<60 OR symptomatic) with NO severity gate (over-
+  // detected mild/moderate MR). Now gated on the threaded severe-MR severity + PRIMARY context.
+  if (hasMitralRegurg && severeMR && !secondaryMRContext
+      && (symptomaticMR || (labValues['lvef'] !== undefined && labValues['lvef'] <= 60))
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Surgical referral not documented for severe primary mitral regurgitation',
+      target: 'Heart valve team mitral surgery evaluation (repair preferred over replacement)',
+      recommendations: {
+        // STANDING SUBGROUP CHECK: PRIMARY (degenerative) severe MR -> SURGICAL MV REPAIR (preferred) or
+        // replacement, NOT TEER. TEER is for SECONDARY MR (GDMT-first, COAPT) or prohibitive-surgical-risk primary
+        // MR - those are excluded here (secondaryMRContext) so this never recommends primary surgery to a
+        // functional-MR patient. Repair-vs-replacement is heart-team-determined by valve anatomy.
+        action: 'Refer to heart valve team for mitral valve surgery (repair preferred over replacement) per 2020 ACC/AHA VHD (Class 1)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Class 1 when symptomatic; the asymptomatic-with-LV-trigger subset (LVEF 30-60% or LV dilation) is a Class 2a indication. Severe PRIMARY (degenerative) MR warrants surgical MV repair (durable, preferred) over replacement. Distinct from SECONDARY/functional MR (GDMT-first then TEER per COAPT), which is excluded here.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mitral regurgitation (I34.0)',
+          'Severe MR (EROA >=0.40, regurg grade >=4, or valve_severity >=5)',
+          'Primary/degenerative context (not HF+LVEF<50 secondary/functional MR)',
+          'Symptomatic (R06/R00/I50) or LVEF <=60%',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Secondary/functional MR (routes to GDMT/TEER)', 'Prior MV intervention not position-specifically codable (Path-B)'],
+      },
+    });
+  }
+
+  // Gap SH-016: Severe primary MR + new AF - surgical Class IIa.
+  if (hasMitralRegurg && severeMR && !secondaryMRContext && dxCodes.some(c => c.startsWith('I48'))
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Surgery not considered for severe primary MR with new atrial fibrillation (Class IIa)',
+      target: 'Heart valve team MV repair evaluation for severe primary MR + AF',
+      recommendations: {
+        action: 'Consider MV surgery (repair preferred) for asymptomatic severe primary MR with new AF per 2020 ACC/AHA VHD (Class 2a)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'New AF in asymptomatic severe PRIMARY MR is a Class 2a trigger for MV surgery (repair preferred). Secondary/functional MR excluded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mitral regurgitation (I34.0)',
+          'Severe MR (EROA >=0.40, regurg grade >=4, or valve_severity >=5)',
+          'Primary/degenerative context',
+          'Atrial fibrillation (I48.*)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Secondary/functional MR'],
+      },
+    });
+  }
+
+  // Gap SH-017: Severe primary MR + pulmonary hypertension (PASP>50) - surgical Class IIa.
+  if (hasMitralRegurg && severeMR && !secondaryMRContext
+      && labValues['pasp'] !== undefined && labValues['pasp'] > 50
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Surgery not considered for severe primary MR with pulmonary hypertension (Class IIa)',
+      target: 'Heart valve team MV repair evaluation for severe primary MR + PASP>50',
+      recommendations: {
+        action: 'Consider MV surgery (repair preferred) for asymptomatic severe primary MR with PASP>50 mmHg per 2020 ACC/AHA VHD (Class 2a)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Pulmonary hypertension (resting PASP>50) in asymptomatic severe PRIMARY MR is a Class 2a surgical trigger (repair preferred). Secondary/functional MR excluded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mitral regurgitation (I34.0)',
+          'Severe MR (EROA >=0.40, regurg grade >=4, or valve_severity >=5)',
+          'Primary/degenerative context',
+          `PASP: ${labValues['pasp']} mmHg (>50)`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Secondary/functional MR'],
+      },
+    });
+  }
+
+  // ===== v3.0 SH chunk 3: Tricuspid regurgitation severity (SH-022 / SH-069 / SH-023) =====
+  // Severe TR now reads the THREADED echo severity (PR #404 + chunk-3 LOINC map-add): tr_regurg_grade is a
+  // 0-4 numeric TR grade (4 = severe), and valve_severity is the cross-valve 0-5 ordinal (5 = severe). The
+  // 2017 ASE extended scale (massive/torrential) maps to valve_severity 5 / tr_regurg_grade 4.
+  const hasTRdx = dxCodes.some(c => c.startsWith('I36.1'));
+  const severeTR =
+    (labValues['tr_regurg_grade'] !== undefined && labValues['tr_regurg_grade'] >= 4) ||
+    (labValues['valve_severity'] !== undefined && labValues['valve_severity'] >= 5);
+  // NYHA II+ proxy (Path-B for true NYHA + diuretic status): right-heart congestion - peripheral edema (R60),
+  // hepatomegaly (R16), ascites (R18), right HF (I50.81).
+  const trCongestionSymptoms = dxCodes.some(c =>
+    c.startsWith('R60') || c.startsWith('R16') || c.startsWith('R18') || c.startsWith('I50.81')
+  );
+  // CIED lead presence (Z95.0 pacemaker, Z95.810 ICD) partitions SH-023 (lead present) vs SH-069 (no lead),
+  // so for any severe symptomatic-TR patient exactly one device-pathway gap layers onto SH-022.
+  const hasCIEDLead_TR = dxCodes.some(c => c.startsWith('Z95.0') || c.startsWith('Z95.810'));
+
+  // Gap SH-022: Severe TR -> transcatheter (T-TEER/TTVR) evaluation gap (AUDIT-125 severity-gated)
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 2a for severe symptomatic TR); TRILUMINATE / CLASP-TR.
+  // Tightening (AUDIT-125, v3.0 chunk 3): the prior SH-4 fired on I36.1 + congestion symptoms with NO severity
+  // gate, so mild TR + edema-of-another-cause over-detected. Now gated on SEVERE TR. Path-B: T-TEER/TTVR
+  // referral status is not ingested, so this surfaces the underreferred severe-TR population, not a confirmed
+  // referral gap.
+  if (hasTRdx && severeTR && trCongestionSymptoms && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Severe symptomatic TR: transcatheter tricuspid (T-TEER/TTVR) evaluation gap',
+      target: 'Heart-team transcatheter tricuspid evaluation (T-TEER vs TTVR) completed',
+      recommendations: {
+        action: 'Consider heart-team transcatheter tricuspid evaluation (T-TEER or TTVR) for severe symptomatic TR per 2020 ACC/AHA VHD (Class 2a); TRILUMINATE / CLASP-TR pathways',
+        guideline: '2020 ACC/AHA Valvular Heart Disease; TRILUMINATE / CLASP-TR',
+        note: 'Severity-gated on threaded echo (tr_regurg_grade>=4 or valve_severity>=5). Path-B: NYHA class + diuretic status + prior-referral status not ingested - surfaces the underreferred severe-TR population.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Tricuspid regurgitation (I36.1)',
+          'Severe TR (tr_regurg_grade >=4 or valve_severity >=5)',
+          'Right-heart congestion (edema R60, hepatomegaly R16, ascites R18, or right HF I50.81) - NYHA II+ proxy',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; TRILUMINATE / CLASP-TR',
+        classOfRecommendation: 'Class 2a',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Severe pulmonary hypertension as primary etiology', 'Irreversible RV dysfunction'],
+      },
+    });
+
+    // Gap SH-069: Evoque TTVR (TRISCEND) candidacy - the NO-lead severe-TR device pathway
+    // Guideline: 2020 ACC/AHA VHD Guideline; TRISCEND II (Evoque transcatheter tricuspid valve REPLACEMENT).
+    // Device selection: patients with severe TR whose valve anatomy is unsuitable for edge-to-edge repair
+    // (large coaptation gap) are TTVR candidates. Path-B: coaptation-gap morphology / T-TEER eligibility is
+    // NOT threaded (echo-morphology, DUA-deferred per the deferred-gap register), so this surfaces the
+    // non-lead severe-TR population for TTVR-vs-TEER device selection, not a confirmed T-TEER-ineligible call.
+    if (!hasCIEDLead_TR) {
       gaps.push({
         type: TherapyGapType.PROCEDURE_INDICATED,
         module: ModuleType.STRUCTURAL_HEART,
-        status: 'Mitral valve intervention evaluation recommended for review',
-        target: 'Mitral valve intervention assessment completed',
+        status: 'Severe TR (no CIED lead): Evoque TTVR (TRISCEND) candidacy for device selection',
+        target: 'TTVR-vs-T-TEER device selection assessed (coaptation-gap morphology at heart team)',
         recommendations: {
-          action: 'Consider referral to heart valve team for mitral valve intervention evaluation per 2020 ACC/AHA VHD',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Mitral regurgitation (I34.0)',
-            `LVEF: ${labValues['lvef'] ?? 'N/A'}% (threshold < 60%)`,
-            `Symptomatic: ${symptomatic ? 'Yes' : 'No'}`,
-          ],
-          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
-          classOfRecommendation: '1',
-          levelOfEvidence: 'B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Life expectancy < 1 year'],
-        },
-      });
-    }
-  }
-
-  // Gap SH-4: Tricuspid Valve Assessment
-  // Guideline: 2020 ACC/AHA VHD Guideline, Class 2a, LOE C
-  // Tricuspid regurgitation (I36.1) with right heart symptoms warrants assessment
-  const hasTricuspidRegurg = dxCodes.some(c => c.startsWith('I36.1'));
-  if (
-    hasTricuspidRegurg &&
-    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
-  ) {
-    // Right heart symptom proxies: peripheral edema (R60), hepatomegaly (R16), ascites (R18)
-    const hasRightHeartSymptoms = dxCodes.some(c =>
-      c.startsWith('R60') || c.startsWith('R16') || c.startsWith('R18')
-    );
-    if (hasRightHeartSymptoms) {
-      gaps.push({
-        type: TherapyGapType.SCREENING_DUE,
-        module: ModuleType.STRUCTURAL_HEART,
-        status: 'Tricuspid valve assessment recommended for review',
-        target: 'Tricuspid valve evaluation completed',
-        recommendations: {
-          action: 'Consider tricuspid valve assessment for symptomatic tricuspid regurgitation per 2020 ACC/AHA VHD',
+          action: 'Consider transcatheter tricuspid valve replacement (Evoque/TRISCEND) candidacy when valve anatomy is unsuitable for edge-to-edge repair, per 2020 ACC/AHA VHD device-selection pathway',
+          guideline: '2020 ACC/AHA Valvular Heart Disease; TRISCEND II (Evoque TTVR)',
+          note: 'Path-B: coaptation-gap morphology / T-TEER eligibility not ingested (echo-morphology, DUA-deferred). Partitioned to the NO-CIED-lead severe-TR population.',
         },
         evidence: {
           triggerCriteria: [
             'Tricuspid regurgitation (I36.1)',
-            'Right heart symptoms present (edema, hepatomegaly, or ascites)',
+            'Severe TR (tr_regurg_grade >=4 or valve_severity >=5)',
+            'No CIED lead present (not Z95.0 / Z95.810)',
+          ],
+          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; TRISCEND II',
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE B-NR',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'CIED lead present (routes to SH-023 lead-status pathway)', 'Irreversible RV dysfunction'],
+        },
+      });
+    }
+
+    // Gap SH-023: TR device selection with CIED lead - lead-status + coaptation-gap pathway
+    // Guideline: 2020 ACC/AHA VHD Guideline. A transvalvular RV lead (Z95.0/Z95.810) can be a CONTRIBUTOR to
+    // severe TR and complicates transcatheter device selection (a lead in the coaptation plane affects T-TEER).
+    // Lead status must be assessed (and lead extraction considered) before/with device selection.
+    // Path-B: coaptation-gap morphology is NOT threaded (echo-morphology); lead presence IS (Z95.0/Z95.810).
+    if (hasCIEDLead_TR) {
+      gaps.push({
+        type: TherapyGapType.PROCEDURE_INDICATED,
+        module: ModuleType.STRUCTURAL_HEART,
+        status: 'Severe TR with CIED lead: device selection requires lead-status + coaptation-gap assessment',
+        target: 'Lead-status (lead-induced TR / extraction candidacy) and coaptation-gap device selection assessed',
+        recommendations: {
+          action: 'Consider lead-status assessment (transvalvular RV lead as TR contributor; lead-extraction candidacy) alongside transcatheter device selection for severe TR per 2020 ACC/AHA VHD',
+          guideline: '2020 ACC/AHA Valvular Heart Disease',
+          note: 'Path-B: coaptation-gap morphology not ingested (echo-morphology, DUA-deferred). CIED lead presence (Z95.0/Z95.810) IS threaded - partitioned to the lead-present severe-TR population.',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Tricuspid regurgitation (I36.1)',
+            'Severe TR (tr_regurg_grade >=4 or valve_severity >=5)',
+            'CIED lead present (Z95.0 pacemaker or Z95.810 ICD) - transvalvular lead may contribute to TR',
           ],
           guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
-          classOfRecommendation: '2a',
-          levelOfEvidence: 'C',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Severe pulmonary hypertension as primary cause'],
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE C-LD',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Irreversible RV dysfunction'],
         },
       });
     }
@@ -6974,8 +7557,10 @@ export function evaluateGapRules(
 
   // Gap SH-6: Post-TAVR Follow-up
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
-  // Patients with prosthetic aortic valve (Z95.2) AND aortic stenosis history need follow-up
-  const hasProstheticAorticValve = dxCodes.some(c => c.startsWith('Z95.2'));
+  // Patients with prosthetic aortic valve AND aortic stenosis history need post-procedure follow-up.
+  // Fix (AUDIT-123, 2026-06-17, GAP-SH-011): added Z95.3 (xenogenic) - TAVR/SAVR tissue valves are bioprosthetic
+  //   and may be coded Z95.3 or the generic Z95.2, so the prior Z95.2-only predicate missed Z95.3-coded patients.
+  const hasProstheticAorticValve = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.3'));
   if (
     hasProstheticAorticValve &&
     hasAorticStenosis &&
@@ -6991,7 +7576,7 @@ export function evaluateGapRules(
       },
       evidence: {
         triggerCriteria: [
-          'Prosthetic aortic valve (Z95.2)',
+          'Prosthetic aortic valve (Z95.2 or Z95.3 xenogenic)',
           'History of aortic stenosis (I35.0)',
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
@@ -7065,38 +7650,12 @@ export function evaluateGapRules(
     });
   }
 
-  // Gap SH-9: PFO Closure Evaluation
-  // Guideline: 2020 AHA/ASA Stroke Prevention, Class 2a, LOE B
-  // Cryptogenic stroke (I63.9) + age < 60 + PFO (Q21.1)
-  const hasCryptogenicStroke = dxCodes.some(c => c.startsWith('I63.9'));
-  const hasPFO = dxCodes.some(c => c.startsWith('Q21.1'));
-  if (
-    hasCryptogenicStroke &&
-    age < 60 &&
-    hasPFO &&
-    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
-  ) {
-    gaps.push({
-      type: TherapyGapType.PROCEDURE_INDICATED,
-      module: ModuleType.STRUCTURAL_HEART,
-      status: 'PFO closure evaluation recommended for review',
-      target: 'PFO closure candidacy assessment completed',
-      recommendations: {
-        action: 'Consider PFO closure evaluation for cryptogenic stroke prevention per 2020 AHA/ASA guideline',
-      },
-      evidence: {
-        triggerCriteria: [
-          'Cryptogenic stroke (I63.9)',
-          `Age: ${age} (< 60 threshold)`,
-          'Patent foramen ovale (Q21.1)',
-        ],
-        guidelineSource: '2020 AHA/ASA Guideline for Prevention of Stroke in Patients with Stroke and TIA',
-        classOfRecommendation: '2a',
-        levelOfEvidence: 'B',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Known alternative stroke etiology', 'Active endocarditis'],
-      },
-    });
-  }
+  // Gap SH-9 (gap-sh-9-pfo-closure): SUPERSEDED 2026-06-17 by SH-026 (v3.0 SH chunk 5). Firing removed.
+  // Superseded (AUDIT-127 resolution): the legacy PFO-closure rule fired on I63.9 + age<60 + Q21.1 (broad ASD/PFO
+  // code) with NO coded stroke-etiology exclusion, over-firing on non-cryptogenic (e.g. AF-cardioembolic) strokes
+  // - the AUDIT-127 over-detection. The properly-scoped SH-026 (PFO Q21.12 specific + cryptogenic I63.x + age<60 +
+  // EXCLUDES AF I48.x) replaces it. Supersede-not-delete: the registry entry gap-sh-9-pfo-closure is retained for
+  // canonical lineage (reconciled at this close to SPEC_ONLY). Same precedent as SH-12 -> SH-022 (AUDIT-167).
 
   // ============================================================
   // NEW Valvular Disease Rules (VD-3 through VD-12)
@@ -7122,7 +7681,7 @@ export function evaluateGapRules(
         },
         evidence: {
           triggerCriteria: [
-            'Mechanical valve (Z95.2, Z95.3, or Z95.4)',
+            'Mechanical valve (Z95.2 or Z95.4)',
             'Active warfarin therapy',
             'No recent INR value on file',
           ],
@@ -7213,7 +7772,7 @@ export function evaluateGapRules(
         },
         evidence: {
           triggerCriteria: [
-            'Mechanical valve (Z95.2, Z95.3, or Z95.4)',
+            'Mechanical valve (Z95.2 or Z95.4)',
             'Active DOAC therapy detected (apixaban, rivaroxaban, dabigatran, or edoxaban)',
           ],
           guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease (RE-ALIGN Trial)',
@@ -7362,7 +7921,7 @@ export function evaluateGapRules(
       },
       evidence: {
         triggerCriteria: [
-          'Bioprosthetic valve (Z95.2 or Z95.4)',
+          'Bioprosthetic valve (Z95.2, Z95.3, or Z95.4)',
           `Age: ${age} (> 65, increased degeneration risk proxy)`,
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
@@ -7945,27 +8504,50 @@ export function evaluateGapRules(
   // NEW Structural Heart Rules (SH-10 through SH-17)
   // ============================================================
 
-  // Gap SH-10: MitraClip Evaluation
-  // Guideline: 2020 ACC/AHA VHD Guideline (COAPT Trial), Class 2a, LOE B-R
-  // I34.0 (mitral regurgitation) + LVEF < 50 + high surgical risk (age > 75 proxy)
+  // Gap SH-10: Secondary MR transcatheter repair (TEER) - GDMT-FIRST. COR 2a (COAPT).
+  // Guideline: 2020 ACC/AHA VHD Guideline (COAPT Trial).
+  // Fix (AUDIT-166, v3.0 SH chunk 2): COAPT enrolled GDMT-OPTIMIZED patients with persistent severe secondary MR.
+  // The prior rule recommended MitraClip/TEER on I34.0 + LVEF<50 + age>75 with NO GDMT gate and NO severity gate -
+  // premature TEER for a GDMT-naive patient. Now: (a) AUDIT-125 severity gate (moderate-severe+ secondary MR via
+  // valve_severity>=4 OR EROA>=0.30 OR regurg grade>=3, the COAPT band), and (b) STANDING SUBGROUP CHECK - the
+  // recommendation BRANCHES on GDMT status: GDMT-naive -> "optimize GDMT first, then TEER if MR persists";
+  // GDMT-optimized -> TEER candidacy. Path-B: GDMT proxy = BB + RAASi present (the HF Pattern-C minimum).
   const hasMR10 = dxCodes.some(c => c.startsWith('I34.0'));
+  const modSevereSecondaryMR =
+    (labValues['valve_severity'] !== undefined && labValues['valve_severity'] >= 4) ||
+    (labValues['mitral_eroa'] !== undefined && labValues['mitral_eroa'] >= 0.30) ||
+    (labValues['mitral_regurg_grade'] !== undefined && labValues['mitral_regurg_grade'] >= 3);
+  const onGDMT_SH10 = BB_CODES_CV.some(c => medCodes.includes(c)) && RAAS_CODES_CV.some(c => medCodes.includes(c));
   if (
     hasMR10 &&
     labValues['lvef'] !== undefined && labValues['lvef'] < 50 &&
+    modSevereSecondaryMR &&
     age > 75 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
-      status: 'MitraClip evaluation recommended for review in high surgical risk MR',
-      target: 'Transcatheter mitral valve repair candidacy assessed',
-      recommendations: { action: 'Consider MitraClip evaluation for secondary MR with high surgical risk per 2020 ACC/AHA VHD (COAPT trial)' },
+      status: onGDMT_SH10
+        ? 'TEER (MitraClip) evaluation for secondary MR persistent despite optimized GDMT'
+        : 'Secondary MR: optimize GDMT before transcatheter repair (TEER)',
+      target: onGDMT_SH10
+        ? 'Transcatheter mitral valve repair candidacy assessed'
+        : 'GDMT optimized (beta-blocker + RAASi + as tolerated MRA/SGLT2i), then re-assess MR for TEER',
+      recommendations: {
+        action: onGDMT_SH10
+          ? 'Consider TEER (MitraClip) for secondary MR that persists despite optimized GDMT per 2020 ACC/AHA VHD (COAPT, Class 2a)'
+          : 'Optimize guideline-directed medical therapy (beta-blocker + RAASi) FIRST; refer for TEER only if severe secondary MR persists despite optimized GDMT per COAPT (premature TEER without GDMT optimization is not COAPT-supported)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease (COAPT Trial)',
+        note: 'COAPT enrolled GDMT-optimized patients with persistent severe secondary MR. GDMT is the prerequisite: optimize first, then TEER if MR persists. This rule branches on GDMT status (BB + RAASi present).',
+      },
       evidence: {
         triggerCriteria: [
-          'Mitral regurgitation (I34.0)',
-          `LVEF: ${labValues['lvef']}% (< 50%)`,
-          `Age: ${age} (> 75, high surgical risk proxy)`,
+          'Mitral regurgitation (I34.0), secondary/functional (LVEF<50)',
+          'Moderate-severe+ MR (valve_severity >=4, EROA >=0.30, or regurg grade >=3 - COAPT band)',
+          `LVEF: ${labValues['lvef']}% (<50%)`,
+          `Age: ${age} (>75, high surgical risk proxy)`,
+          `GDMT status: ${onGDMT_SH10 ? 'on BB + RAASi (optimized)' : 'NOT on BB + RAASi (optimize first)'}`,
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease (COAPT Trial)',
         classOfRecommendation: 'Class 2a',
@@ -7975,12 +8557,16 @@ export function evaluateGapRules(
     });
   }
 
-  // Gap SH-11: Transcatheter Mitral Valve Replacement Candidacy
-  // Guideline: 2020 ACC/AHA VHD Guideline, Class 2a, LOE C
-  // Severe MR (I34.0) + age > 80
+  // Gap SH-064: Transcatheter MVR candidacy for severe MR with non-TEER anatomy. COR 2a.
+  // Guideline: 2020 ACC/AHA VHD Guideline.
+  // Tightening (AUDIT-125, v3.0 SH chunk 2): the prior rule fired on I34.0 + age>80 with NO severity gate (over-
+  // detected mild/moderate MR). Now gated on the threaded severe-MR severity. Path-B: TEER-eligibility / valve
+  // anatomy (the "non-TEER anatomy" qualifier) is not ingested - this fires on severe MR + high-surgical-risk age;
+  // the structural heart team confirms TEER-ineligibility vs TMVR candidacy.
   if (
     hasMR10 &&
-    age > 80 &&
+    severeMR &&
+    age > 75 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
@@ -7988,11 +8574,12 @@ export function evaluateGapRules(
       module: ModuleType.STRUCTURAL_HEART,
       status: 'Transcatheter mitral valve replacement candidacy recommended for review',
       target: 'TMVR candidacy evaluation by structural heart team completed',
-      recommendations: { action: 'Consider TMVR candidacy evaluation for severe MR in elderly patient per 2020 ACC/AHA VHD' },
+      recommendations: { action: 'Consider TMVR candidacy evaluation for severe MR with high surgical risk and TEER-unfavorable anatomy per 2020 ACC/AHA VHD' },
       evidence: {
         triggerCriteria: [
-          'Severe mitral regurgitation (I34.0)',
-          `Age: ${age} (> 80)`,
+          'Severe mitral regurgitation (EROA >=0.40, regurg grade >=4, or valve_severity >=5)',
+          `Age: ${age} (>75, high surgical risk proxy)`,
+          'TEER-eligibility / valve anatomy not ingested (Path-B)',
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
         classOfRecommendation: 'Class 2a',
@@ -8002,41 +8589,21 @@ export function evaluateGapRules(
     });
   }
 
-  // Gap SH-12: Tricuspid Intervention Evaluation
-  // Guideline: 2020 ACC/AHA VHD Guideline; ACC TVT Registry
-  // I36.1 (tricuspid regurgitation) + right heart failure (edema R60, hepatomegaly R16, ascites R18)
-  const hasTR12 = dxCodes.some(c => c.startsWith('I36.1'));
-  const hasRHFsymptoms12 = dxCodes.some(c =>
-    c.startsWith('R60') || c.startsWith('R16') || c.startsWith('R18') || c.startsWith('I50.81')
-  );
-  if (
-    hasTR12 &&
-    hasRHFsymptoms12 &&
-    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
-  ) {
-    gaps.push({
-      type: TherapyGapType.PROCEDURE_INDICATED,
-      module: ModuleType.STRUCTURAL_HEART,
-      status: 'Tricuspid intervention evaluation recommended for review',
-      target: 'Transcatheter tricuspid intervention candidacy assessed',
-      recommendations: { action: 'Consider tricuspid intervention evaluation for symptomatic TR with right heart failure per 2020 ACC/AHA VHD' },
-      evidence: {
-        triggerCriteria: [
-          'Tricuspid regurgitation (I36.1)',
-          'Right heart failure symptoms (edema, hepatomegaly, or ascites)',
-        ],
-        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; ACC TVT Registry',
-        classOfRecommendation: 'Class 2b',
-        levelOfEvidence: 'LOE C',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Severe pulmonary hypertension as primary etiology', 'Irreversible RV dysfunction'],
-      },
-    });
-  }
+  // Gap SH-12 (gap-sh-12-ttvr): SUPERSEDED 2026-06-17 by SH-022 (v3.0 SH chunk 3).
+  // Superseded (AUDIT-125 lineage): SH-12 fired on I36.1 + right-heart-failure symptoms with NO TR-severity gate
+  // - the same un-gated over-detector pattern as the old SH-4, and it co-fired with the new severity-gated
+  // tricuspid gap on every severe-symptomatic-TR patient while still over-detecting mild TR + edema. The
+  // canonical transcatheter-tricuspid-evaluation gap is now SH-022 (severe TR via threaded echo + congestion),
+  // with the SH-069 / SH-023 device-selection pathway layered on. Firing removed here (supersede-not-delete: the
+  // registry entry gap-sh-12-ttvr is retained for canonical lineage and reconciled at the SH close). Same
+  // precedent as the SH-002 supersede of gap-sh-2-tavr-eval and the SH-014 supersede of gap-sh-3.
 
   // Gap SH-13: Paravalvular Leak Assessment Post-Valve
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
-  // Z95.2 (prosthetic valve) + new murmur proxy (I35.1 aortic regurgitation)
-  const hasProsthetic13 = dxCodes.some(c => c.startsWith('Z95.2'));
+  // Prosthetic valve + new murmur proxy (I35.1 aortic regurgitation). Paravalvular leak affects ANY prosthesis.
+  // Fix (AUDIT-123, 2026-06-17): broadened from Z95.2-only to Z95.2||Z95.3||Z95.4 - PVL is not type-specific, so
+  //   the prior Z95.2-only predicate under-detected bioprosthetic (Z95.3) and other-replacement (Z95.4) valves.
+  const hasProsthetic13 = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4'));
   const hasNewRegurg13 = dxCodes.some(c => c.startsWith('I35.1') || c.startsWith('I34.0'));
   if (
     hasProsthetic13 &&
@@ -8051,7 +8618,7 @@ export function evaluateGapRules(
       recommendations: { action: 'Consider paravalvular leak assessment with echocardiography for prosthetic valve with new regurgitation per 2020 ACC/AHA VHD' },
       evidence: {
         triggerCriteria: [
-          'Prosthetic valve (Z95.2)',
+          'Prosthetic valve (Z95.2, Z95.3, or Z95.4)',
           'New regurgitation detected (I35.1 or I34.0)',
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
@@ -8184,8 +8751,10 @@ export function evaluateGapRules(
 
   // Gap VD-13: Anticoagulation First 3 Months Post-Bioprosthetic
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 2a, LOE B
-  // Z95.2/Z95.4 (bioprosthetic valve) + recent implant proxy + no anticoagulant
-  const hasBioprosthetic13 = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.4'));
+  // Bioprosthetic valve + recent-implant proxy + no anticoagulant.
+  // Fix (AUDIT-123, 2026-06-17): broad bio predicate adds Z95.3 (xenogenic/bioprosthetic), the code the prior
+  //   Z95.2||Z95.4 set wrongly excluded. Missing a bio patient in the first-3-months anticoag window is the harm.
+  const hasBioprosthetic13 = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4'));
   if (
     hasBioprosthetic13 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
@@ -8204,7 +8773,7 @@ export function evaluateGapRules(
         recommendations: { action: 'Consider anticoagulation or aspirin for early post-bioprosthetic valve period per 2020 ACC/AHA VHD' },
         evidence: {
           triggerCriteria: [
-            'Bioprosthetic valve (Z95.2 or Z95.4)',
+            'Bioprosthetic valve (Z95.2, Z95.3, or Z95.4)',
             'No anticoagulant or aspirin on active medication list',
           ],
           guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
@@ -8274,6 +8843,788 @@ export function evaluateGapRules(
         classOfRecommendation: 'Class 1',
         levelOfEvidence: 'LOE B',
         exclusions: ['Hospice/palliative care (Z51.5)', 'Recent aortic imaging within guideline interval', 'Post-aortic root replacement'],
+      },
+    });
+  }
+
+  // ===== v3.0 SH chunk 4: Aortic syndromes + genetic-syndrome dx =====
+  // All codes section-16-verified vs NLM Clinical Tables 2026-06-17 (ICD-10-CM): Marfan Q87.40 (unspecified) + Q87.41x
+  // (aortic-dilation Q87.410 / other-CV Q87.418); Turner Q96.x; vascular EDS Q79.63 (NOT Q79.61 = classical);
+  // bicuspid AV Q23.81; aortic dissection I71.010 ascending(Type A) / I71.012 descending-thoracic(Type B) /
+  // I71.03 thoracoabdominal; thoracic aneurysm I71.2x. DEFERRED: GAP-SH-053 (Loeys-Dietz has no dedicated
+  // dx code, collapses to non-specific Q87.89) and GAP-SH-073 (descending-aorta dimension not threaded -
+  // only ascending_aorta has a slug). Threaded dimension: ascending_aorta (cm). Serial growth-rate NOT threaded
+  // (Path-B). celiprolol RxCUI 20498 (RxNav-verified IN). TEVAR named by procedure - CPT numerals unverifiable
+  // via free AMA/CMS sources, omitted per the no-fabrication discipline (the engine has no procedure-code input
+  // anyway, so a CPT would be reference-text only).
+  const hasMarfan_SH = dxCodes.some(c => c.startsWith('Q87.40') || c.startsWith('Q87.41'));
+  const hasTurner_SH = dxCodes.some(c => c.startsWith('Q96'));
+  const hasVascularEDS_SH = dxCodes.some(c => c.startsWith('Q79.63'));
+  const hasBicuspidAV_SH = dxCodes.some(c => c.startsWith('Q23.81'));
+  const ascAorta_SH = labValues['ascending_aorta']; // cm
+  const onBB_SH = BB_CODES_CV.some(c => medCodes.includes(c));
+  const ARB_CODES_AORTOPATHY = [RXNORM_GDMT.LOSARTAN, RXNORM_GDMT.VALSARTAN, RXNORM_GDMT.CANDESARTAN];
+  const onARB_SH = ARB_CODES_AORTOPATHY.some(c => medCodes.includes(c));
+  const onStatin_SH = STATIN_CODES_CV.some(c => medCodes.includes(c));
+  const onCeliprolol_SH = medCodes.includes('20498');
+  // Type-B dissection = descending thoracic (I71.012) or thoracoabdominal (I71.03); EXCLUDES ascending Type A
+  // (I71.010 -> surgical, not the medical/TEVAR pathway). Unspecified-site (I71.00/I71.019) left out to avoid
+  // mis-routing a Type A (Path-B: Stanford type not always coded).
+  const hasTypeBDissection_SH = dxCodes.some(c => c.startsWith('I71.012') || c.startsWith('I71.03'));
+  // Malperfusion proxy for complicated type-B (acute end-organ ischemia): mesenteric K55.0x, AKI N17,
+  // limb/iliac arterial occlusion I74.3/I74.4/I74.5. Path-B: rapid-expansion + dissection-attribution not coded.
+  const hasMalperfusion_SH = dxCodes.some(c =>
+    c.startsWith('K55.0') || c.startsWith('N17') || c.startsWith('I74.3') || c.startsWith('I74.4') || c.startsWith('I74.5')
+  );
+
+  // Gap SH-052: Marfan syndrome -> beta-blocker or ARB to slow aortic growth
+  // Guideline: 2022 ACC/AHA/AATS/STS Aortic Disease Guideline (Class 1 for BB/ARB in Marfan with aortic dilation).
+  const hasMarfanAorticDilation_SH = dxCodes.some(c => c.startsWith('Q87.410') || c.startsWith('I71.2')) ||
+    (ascAorta_SH !== undefined && ascAorta_SH >= 4.0);
+  if (hasMarfan_SH && hasMarfanAorticDilation_SH && !(onBB_SH || onARB_SH) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Marfan with aortic dilation not on beta-blocker or ARB (aortic-growth prophylaxis)',
+      target: 'Beta-blocker or ARB (losartan) started to slow aortic root/ascending growth',
+      recommendations: {
+        action: 'Consider beta-blocker OR ARB (losartan) to slow aortic dilation in Marfan syndrome per 2022 ACC/AHA/AATS/STS Aortic Disease Guideline (Class 1)',
+        guideline: '2022 ACC/AHA/AATS/STS Aortic Disease Guideline',
+        note: 'Syndrome-specific: Marfan aortopathy. BB and ARB are both Class 1; losartan (AT1 blockade) is the trial-supported ARB.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Marfan syndrome (Q87.40 / Q87.41x)',
+          hasMarfanAorticDilation_SH && ascAorta_SH !== undefined && ascAorta_SH >= 4.0
+            ? `Ascending aorta: ${ascAorta_SH} cm (>=4.0, dilated)` : 'Aortic dilation (Q87.410 or thoracic aneurysm I71.2x)',
+          'Not on a beta-blocker or ARB',
+        ],
+        guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Beta-blocker / ARB intolerance', 'Already on BB or ARB'],
+      },
+    });
+  }
+
+  // Gap SH-072: Ascending aorta at intervention threshold -> surgical evaluation (SUBGROUP-AWARE threshold)
+  // Guideline: 2022 ACC/AHA/AATS/STS Aortic Disease Guideline. The intervention DIAMETER differs by underlying
+  // dx: Marfan >=5.0 cm (>=4.5 with risk features - Path-B, risk features not threaded); bicuspid aortopathy
+  // >=5.5 cm (>=5.0 with risk - Path-B); non-syndromic >=5.5 cm. STANDING SUBGROUP CHECK: the threshold + the
+  // recommendation are syndrome-specific (mis-applying the 5.5 cm non-syndromic cut to a Marfan patient would
+  // under-refer). vascular EDS routed to SH-055; Loeys-Dietz deferred (no ICD).
+  let ascThreshold_SH = 5.5;
+  let ascSubgroup_SH = 'non-syndromic';
+  if (hasMarfan_SH) { ascThreshold_SH = 5.0; ascSubgroup_SH = 'Marfan (>=5.0 cm; >=4.5 with risk features)'; }
+  else if (hasBicuspidAV_SH) { ascThreshold_SH = 5.5; ascSubgroup_SH = 'bicuspid aortopathy (>=5.5 cm; >=5.0 with risk features)'; }
+  if (ascAorta_SH !== undefined && ascAorta_SH >= ascThreshold_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: `Ascending aorta at the ${ascSubgroup_SH} intervention threshold: surgical evaluation gap`,
+      target: 'Aortic surgery (ascending/root replacement) evaluation at a reference aortic center',
+      recommendations: {
+        action: `Consider referral for ascending aortic surgery evaluation - ${ascAorta_SH} cm meets the ${ascSubgroup_SH} threshold per 2022 ACC/AHA/AATS/STS Aortic Disease Guideline`,
+        guideline: '2022 ACC/AHA/AATS/STS Aortic Disease Guideline',
+        note: 'Subgroup-aware threshold (Marfan 5.0 / bicuspid 5.5 / non-syndromic 5.5 cm). Path-B: the lower with-risk-feature cut (family history of dissection, rapid growth, planned pregnancy) is not threaded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          `Ascending aorta: ${ascAorta_SH} cm (>= ${ascThreshold_SH} cm ${ascSubgroup_SH} threshold)`,
+          `Aortopathy subgroup: ${ascSubgroup_SH}`,
+        ],
+        guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Prior ascending/root replacement'],
+      },
+    });
+  }
+
+  // Gap SH-074: Uncomplicated type-B aortic dissection -> optimal medical therapy (impulse control)
+  // Guideline: 2022 ACC/AHA/AATS/STS Aortic Disease Guideline (Class 1 anti-impulse BB + BP control + statin).
+  if (hasTypeBDissection_SH && !hasMalperfusion_SH && !(onBB_SH && onStatin_SH) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Uncomplicated type-B aortic dissection not on optimal medical therapy (impulse control)',
+      target: 'Anti-impulse beta-blocker + BP control (ARB/ACEi) + statin optimized',
+      recommendations: {
+        action: 'Consider optimizing medical therapy for uncomplicated type-B dissection: anti-impulse beta-blocker (HR/BP control) + ARB or ACEi + statin per 2022 ACC/AHA/AATS/STS Aortic Disease Guideline (Class 1)',
+        guideline: '2022 ACC/AHA/AATS/STS Aortic Disease Guideline',
+        note: 'Uncomplicated type-B (no malperfusion proxy). OMT proxy = beta-blocker + statin present; full OMT also includes ARB/ACEi BP control. Path-B: target HR/BP values not ingested.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Type-B aortic dissection (descending I71.012 or thoracoabdominal I71.03)',
+          'No malperfusion proxy (uncomplicated)',
+          `Not on full medical therapy (beta-blocker: ${onBB_SH ? 'yes' : 'no'}, statin: ${onStatin_SH ? 'yes' : 'no'})`,
+        ],
+        guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Complicated dissection (routes to SH-075 TEVAR)', 'Beta-blocker intolerance'],
+      },
+    });
+  }
+
+  // Gap SH-075: Complicated type-B aortic dissection -> urgent TEVAR evaluation
+  // Guideline: 2022 ACC/AHA/AATS/STS Aortic Disease Guideline (Class 1 TEVAR for complicated type-B).
+  if (hasTypeBDissection_SH && hasMalperfusion_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Complicated type-B aortic dissection (malperfusion): urgent TEVAR evaluation gap',
+      target: 'Urgent TEVAR (thoracic endovascular aortic repair) evaluation at an aortic center',
+      recommendations: {
+        action: 'Consider urgent TEVAR (thoracic endovascular aortic repair) evaluation for complicated type-B dissection with malperfusion per 2022 ACC/AHA/AATS/STS Aortic Disease Guideline (Class 1)',
+        guideline: '2022 ACC/AHA/AATS/STS Aortic Disease Guideline',
+        note: 'Complicated = malperfusion proxy (mesenteric K55.0x / AKI N17 / limb-iliac I74.3-5). Path-B: rapid aortic expansion + refractory pain/hypertension not coded. TEVAR named by procedure; CPT not cited (unverifiable via free AMA/CMS).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Type-B aortic dissection (descending I71.012 or thoracoabdominal I71.03)',
+          'Malperfusion proxy: acute mesenteric ischemia (K55.0x), AKI (N17), or limb/iliac arterial occlusion (I74.3-I74.5)',
+        ],
+        guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Prior TEVAR for this segment'],
+      },
+    });
+  }
+
+  // Gap SH-054: Turner syndrome -> cardiac surveillance (echo + aortic imaging)
+  // Guideline: 2022 ACC/AHA/AATS/STS Aortic Disease Guideline; Turner-syndrome care standards. Turner carries
+  // BAV, coarctation, and aortic-dilation/dissection risk -> protocolized echo + cross-sectional aortic imaging.
+  // Path-B: imaging dates not precisely tracked; absence of any echo-derived value is the surveillance-due proxy.
+  const noEchoData_SH = labValues['lvef'] === undefined && ascAorta_SH === undefined;
+  if (hasTurner_SH && noEchoData_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Turner syndrome without cardiac surveillance on file (echo + aortic imaging)',
+      target: 'Protocolized echocardiography + cross-sectional aortic imaging completed',
+      recommendations: {
+        action: 'Consider protocolized cardiac surveillance (echocardiography + cross-sectional aortic imaging) for Turner syndrome per 2022 ACC/AHA/AATS/STS Aortic Disease Guideline and Turner care standards',
+        guideline: '2022 ACC/AHA/AATS/STS Aortic Disease Guideline',
+        note: 'Syndrome-specific: Turner carries bicuspid aortic valve, coarctation, and aortic-dilation risk. Path-B: imaging dates not ingested; no echo-derived value on file used as the surveillance-due proxy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Turner syndrome (Q96.x)',
+          'No echo-derived value on file (LVEF and ascending-aorta both absent) - surveillance-due proxy',
+        ],
+        guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent surveillance imaging within protocol interval'],
+      },
+    });
+  }
+
+  // Gap SH-055: Vascular Ehlers-Danlos (Q79.63) -> celiprolol + comprehensive vascular surveillance
+  // Guideline: 2022 ACC/AHA/AATS/STS Aortic Disease Guideline; BBEST trial (celiprolol reduces arterial events
+  // in vEDS). vEDS carries spontaneous arterial dissection/rupture risk -> celiprolol + whole-body vascular
+  // surveillance.
+  if (hasVascularEDS_SH && !onCeliprolol_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Vascular Ehlers-Danlos not on celiprolol / comprehensive vascular surveillance',
+      target: 'Celiprolol (or alternative beta-blocker where unavailable) + whole-body vascular surveillance',
+      recommendations: {
+        action: 'Consider celiprolol (BBEST-trial evidence in vascular EDS) plus comprehensive vascular surveillance per 2022 ACC/AHA/AATS/STS Aortic Disease Guideline; where celiprolol is unavailable, an alternative beta-blocker',
+        guideline: '2022 ACC/AHA/AATS/STS Aortic Disease Guideline; BBEST trial',
+        note: 'Syndrome-specific: vEDS (Q79.63) arterial-fragility phenotype. Celiprolol (RxCUI 20498) is the trial-supported agent; US availability varies, so an alternative beta-blocker is the fallback.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Vascular Ehlers-Danlos syndrome (Q79.63)',
+          'Not on celiprolol',
+        ],
+        guidelineSource: '2022 ACC/AHA/AATS/STS Guideline for the Diagnosis and Management of Aortic Disease; BBEST trial',
+        classOfRecommendation: 'Class 2a',
+        levelOfEvidence: 'LOE B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Beta-blocker intolerance', 'Already on celiprolol'],
+      },
+    });
+  }
+
+  // ===== v3.0 SH chunk 5: PFO/ASD, IE, PE, ACHD, cardiac masses (recommend-only / reliable-dx gaps) =====
+  // All codes section-16-verified vs NLM Clinical Tables 2026-06-17 (ICD-10-CM): PFO Q21.12 (distinct from ASD
+  // Q21.1x), TOF Q21.3, Ebstein Q22.5, Eisenmenger I27.83, IE I33.0, massive PE I26.0x (with acute cor
+  // pulmonale), cardiogenic shock R57.0, cerebral infarction I63.x, sepsis A41/R65.2, benign cardiac neoplasm
+  // D15.1. CPT-DEPENDENT post-closure gaps (SH-082 antithrombotic, SH-083 residual-shunt surveillance) are
+  // PARKED to the CPT-verification-blocked tranche (no authoritative closure-CPT source available; the
+  // procedureCodes param is ready, only the verified CPT set is missing). Every recommended procedure is named
+  // as text, no CPT numeral.
+  const hasPFO_SH = dxCodes.some(c => c.startsWith('Q21.12'));
+  const hasASD_SH = dxCodes.some(c => c.startsWith('Q21.1') && !c.startsWith('Q21.12'));
+  const hasStroke_SH = dxCodes.some(c => c.startsWith('I63'));
+  const hasAF_SH5 = dxCodes.some(c => c.startsWith('I48'));
+  const hasEisenmenger_SH = dxCodes.some(c => c.startsWith('I27.83'));
+  const hasIE_SH = dxCodes.some(c => c.startsWith('I33.0'));
+  const hasMassivePE_SH = dxCodes.some(c => c.startsWith('I26.0'));
+  const hasShock_SH = dxCodes.some(c => c.startsWith('R57.0'));
+  const hasTOF_SH = dxCodes.some(c => c.startsWith('Q21.3'));
+  const hasEbstein_SH = dxCodes.some(c => c.startsWith('Q22.5'));
+  const hasCardiacMyxoma_SH = dxCodes.some(c => c.startsWith('D15.1'));
+
+  // Gap SH-026: PFO + cryptogenic stroke (age<60) -> closure evaluation
+  // Guideline: 2020 ACC/AHA VHD + 2021 AAN PFO/stroke; RESPECT/CLOSE/REDUCE (closure superior to medical for
+  // cryptogenic stroke + PFO in young patients). STANDING SUBGROUP CHECK: cryptogenic (PFO-attributable) vs
+  // cardioembolic-from-AF - a stroke patient WITH AF (I48.x) is cardioembolic (treat the AF), NOT a PFO-closure
+  // candidate, so AF is excluded. Path-B: full RoPE-score components (cortical infarct, absent vascular risk
+  // factors) are mostly not codable - this surfaces the candidate population for a RoPE-scored closure discussion.
+  if (hasPFO_SH && hasStroke_SH && age < 60 && !hasAF_SH5 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'PFO + cryptogenic stroke (age<60): closure evaluation gap',
+      target: 'Heart-team / neurology PFO-closure discussion with RoPE-score assessment',
+      recommendations: {
+        action: 'Consider transcatheter PFO closure evaluation (with RoPE-score assessment) for cryptogenic stroke + PFO in a patient under 60 per 2020 ACC/AHA VHD and the RESPECT/CLOSE/REDUCE evidence',
+        guideline: '2020 ACC/AHA VHD; RESPECT / CLOSE / REDUCE',
+        note: 'Subgroup-aware: AF (I48.x) excluded as a cardioembolic source (treat the AF, not the PFO). Path-B: RoPE-score components (cortical infarct, vascular risk factors) mostly not codable.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Patent foramen ovale (Q21.12)',
+          'Cerebral infarction (I63.x)',
+          `Age: ${age} (<60)`,
+          'No atrial fibrillation (cardioembolic source excluded)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; RESPECT/CLOSE/REDUCE',
+        classOfRecommendation: 'Class 2a',
+        levelOfEvidence: 'LOE B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Atrial fibrillation (cardioembolic, routes to anticoagulation)', 'Other identified stroke etiology'],
+      },
+    });
+  }
+
+  // Gap SH-027: Hemodynamically significant ASD -> closure evaluation
+  // Guideline: 2020 ACC/AHA VHD; 2018 AHA/ACC ACHD (Class 1 closure for RV volume overload). STANDING SUBGROUP
+  // CHECK: Eisenmenger physiology (I27.83, fixed severe PAH) is a CONTRAINDICATION to closure - excluded. Path-B:
+  // shunt magnitude (Qp:Qs) + RV dilation are not threaded; elevated PASP (threaded) is the significance proxy.
+  if (hasASD_SH && labValues['pasp'] !== undefined && labValues['pasp'] >= 40 && !hasEisenmenger_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Hemodynamically significant ASD: closure evaluation gap',
+      target: 'ASD closure candidacy assessed (shunt magnitude + RV assessment at heart team)',
+      recommendations: {
+        action: 'Consider ASD closure evaluation for a hemodynamically significant atrial septal defect per 2020 ACC/AHA VHD and 2018 ACHD guidance',
+        guideline: '2020 ACC/AHA VHD; 2018 AHA/ACC ACHD',
+        note: 'Subgroup-aware: Eisenmenger physiology (fixed severe PAH, I27.83) excluded - closure contraindicated. Path-B: Qp:Qs + RV dilation not threaded; elevated PASP used as the significance proxy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Atrial septal defect (Q21.1x, not PFO)',
+          `Elevated PASP: ${labValues['pasp']} mmHg (>=40, significance proxy)`,
+          'Not Eisenmenger physiology',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; 2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Eisenmenger physiology (I27.83) - closure contraindicated', 'Small non-significant shunt'],
+      },
+    });
+  }
+
+  // Gap SH-029: Infective endocarditis with an early-surgery indication -> surgery review
+  // Guideline: 2020 ACC/AHA VHD (Class 1 early surgery for HF, uncontrolled infection, or embolic events).
+  const hasIEHF_SH = dxCodes.some(c => c.startsWith('I50'));
+  const hasIEEmbolic_SH = dxCodes.some(c => c.startsWith('I74') || c.startsWith('I63'));
+  const hasIEUncontrolled_SH = dxCodes.some(c => c.startsWith('A41') || c.startsWith('R65.2'));
+  if (hasIE_SH && (hasIEHF_SH || hasIEEmbolic_SH || hasIEUncontrolled_SH) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Infective endocarditis with an early-surgery indication: surgery evaluation gap',
+      target: 'Endocarditis-team early-surgery evaluation completed',
+      recommendations: {
+        action: 'Consider early surgery evaluation for infective endocarditis with HF, uncontrolled infection, or embolic events per 2020 ACC/AHA VHD (Class 1)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Early-surgery indication present via a threaded proxy (HF I50, embolic I74/I63, or uncontrolled infection A41/R65.2). Path-B: vegetation size + persistent bacteremia duration not threaded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Acute/subacute infective endocarditis (I33.0)',
+          `Early-surgery indication: ${hasIEHF_SH ? 'heart failure' : hasIEEmbolic_SH ? 'embolic event' : 'uncontrolled infection'}`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Surgery already performed this episode'],
+      },
+    });
+  }
+
+  // Gap SH-091: High-risk (massive) PE -> systemic lysis / embolectomy / ECMO evaluation
+  // Guideline: 2019 ESC / 2020 ACC PE; massive (hemodynamically unstable) PE warrants reperfusion. STANDING
+  // SUBGROUP CHECK: massive (shock/instability) vs submassive (intermediate-risk) - only the massive subgroup
+  // gets primary reperfusion; submassive is NOT in scope (would over-treat). Gate = PE with acute cor pulmonale
+  // (I26.0x) + cardiogenic shock (R57.0).
+  if (hasMassivePE_SH && hasShock_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Massive (high-risk) PE with instability: reperfusion evaluation gap',
+      target: 'Systemic thrombolysis, surgical embolectomy, or ECMO/PERT evaluation',
+      recommendations: {
+        action: 'Consider urgent reperfusion (systemic thrombolysis, catheter or surgical embolectomy, or ECMO via a PE response team) for massive PE with hemodynamic instability per 2019 ESC / 2020 ACC PE guidance',
+        guideline: '2019 ESC / 2020 ACC Pulmonary Embolism',
+        note: 'Subgroup-aware: massive (shock) only - submassive/intermediate-risk PE is NOT in scope. Path-B: RV/troponin risk stratification beyond the cor-pulmonale + shock codes not fully threaded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Pulmonary embolism with acute cor pulmonale (I26.0x)',
+          'Cardiogenic shock (R57.0) - hemodynamic instability',
+        ],
+        guidelineSource: '2019 ESC Guideline on Acute Pulmonary Embolism; 2020 ACC Pulmonary Embolism guidance',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Absolute thrombolysis contraindication (then embolectomy/ECMO)', 'Reperfusion already delivered'],
+      },
+    });
+  }
+
+  // Gap SH-101: Eisenmenger physiology -> PAH-specific therapy evaluation
+  // Guideline: 2018 AHA/ACC ACHD; 2022 ESC/ERS PH (PAH-specific therapy improves outcomes in Eisenmenger).
+  if (hasEisenmenger_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Eisenmenger physiology without PAH-specific therapy evaluation',
+      target: 'PAH-specific therapy evaluation at a PH/ACHD center',
+      recommendations: {
+        action: 'Consider PAH-specific therapy evaluation (endothelin-receptor antagonist, PDE5 inhibitor, or prostacyclin pathway) at a PH/ACHD center for Eisenmenger physiology per 2018 AHA/ACC ACHD and 2022 ESC/ERS PH',
+        guideline: '2018 AHA/ACC ACHD; 2022 ESC/ERS Pulmonary Hypertension',
+        note: 'Eisenmenger is a high-risk ACHD/PAH subgroup requiring specialist-directed therapy. Path-B: current PAH-drug status not gated here - surfaces the population for specialist evaluation.',
+      },
+      evidence: {
+        triggerCriteria: [
+          "Eisenmenger's syndrome (I27.83)",
+        ],
+        guidelineSource: '2018 AHA/ACC Adult Congenital Heart Disease Guideline; 2022 ESC/ERS Pulmonary Hypertension Guideline',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Already under PH-center management on PAH therapy'],
+      },
+    });
+  }
+
+  // Gap SH-096: Adult repaired Tetralogy of Fallot -> pulmonary valve replacement evaluation
+  // Guideline: 2018 AHA/ACC ACHD (PVR for RV dilation/dysfunction in repaired TOF).
+  if (hasTOF_SH && age >= 18 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Adult Tetralogy of Fallot: pulmonary valve replacement evaluation gap',
+      target: 'CMR-based RV assessment + pulmonary valve replacement candidacy evaluation',
+      recommendations: {
+        action: 'Consider cardiac MRI-based RV assessment and pulmonary valve replacement evaluation for an adult with repaired Tetralogy of Fallot per 2018 AHA/ACC ACHD',
+        guideline: '2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+        note: 'Path-B: RV dilation/dysfunction (CMR RV end-diastolic volume) is the intervention trigger but is not threaded - this surfaces the adult repaired-TOF population for protocolized RV surveillance/PVR evaluation.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Tetralogy of Fallot (Q21.3)',
+          `Adult (age ${age} >=18)`,
+        ],
+        guidelineSource: '2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+        classOfRecommendation: 'Class 2a',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent CMR/PVR evaluation on file'],
+      },
+    });
+  }
+
+  // Gap SH-099: Ebstein anomaly -> arrhythmia surveillance
+  // Guideline: 2018 AHA/ACC ACHD (atrial + accessory-pathway arrhythmia risk in Ebstein).
+  if (hasEbstein_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MONITORING_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Ebstein anomaly without arrhythmia surveillance on file',
+      target: 'Periodic rhythm monitoring (atrial arrhythmia + accessory-pathway screening)',
+      recommendations: {
+        action: 'Consider periodic rhythm monitoring for Ebstein anomaly (atrial arrhythmia and accessory-pathway risk) per 2018 AHA/ACC ACHD',
+        guideline: '2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+        note: 'Path-B: monitoring dates are not tracked - surfaces the Ebstein population for scheduled rhythm surveillance.',
+      },
+      evidence: {
+        triggerCriteria: [
+          "Ebstein's anomaly (Q22.5)",
+        ],
+        guidelineSource: '2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent rhythm monitoring within interval'],
+      },
+    });
+  }
+
+  // Gap SH-103: Benign cardiac neoplasm (atrial myxoma) -> surgical referral
+  // Guideline: surgical resection is standard for atrial myxoma given embolic + obstruction risk.
+  if (hasCardiacMyxoma_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Benign cardiac neoplasm (atrial myxoma): surgical referral gap',
+      target: 'Cardiac surgery referral for resection evaluation',
+      recommendations: {
+        action: 'Consider cardiac surgery referral for resection evaluation of a benign cardiac neoplasm (atrial myxoma carries embolic and obstruction risk)',
+        guideline: 'ACC/AHA cardiac-masses consensus; standard of care for atrial myxoma',
+        note: 'D15.1 covers benign cardiac neoplasms (atrial myxoma is the predominant one). Path-B: referral status not tracked - surfaces the dx for a resection discussion.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Benign neoplasm of heart (D15.1) - atrial myxoma',
+        ],
+        guidelineSource: 'ACC/AHA cardiac-masses consensus; standard surgical management of atrial myxoma',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Resection already performed', 'Prohibitive operative risk'],
+      },
+    });
+  }
+
+  // ===== v3.0 SH chunk 6: valve-procedure + remaining buildable SH gaps =====
+  // Built on the RESOLVED AUDIT-123/124 Z95.x semantics: Z95.2 = prosthetic (generic), Z95.3 = xenogenic
+  // (bioprosthetic), Z95.4 = other replacement. Post-AVR proxy = Z95.2||Z95.3 + AS history (no aortic-position
+  // or TAVR-vs-SAVR ICD code; Path-B). All ICDs section-16-verified vs NLM Clinical Tables 2026-06-17. Procedures
+  // named as recommendation text (no CPT numeral). CPT-gated post-procedure gaps (SH-065/066 TEER, SH-082/083
+  // closure, SH-104 ASA) STAY PARKED in the CPT-verification-blocked tranche. SH-058 (HALT CT) + SH-062 (iEOA PPM)
+  // stay DUA-deferred (CT/echo-morphology + indexed-EOA not threaded).
+  const hasPriorAVR_SH = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.3')) && dxCodes.some(c => c.startsWith('I35.0'));
+  const onAspirin_SH6 = medCodes.includes('1191');
+  const onP2Y12_SH6 = P2Y12_CODES_CV.some(c => medCodes.includes(c));
+  const hasAF_SH6 = dxCodes.some(c => c.startsWith('I48'));
+
+  // Gap SH-059: Post-AVR antithrombotic regimen review (de-escalation)
+  // Guideline: 2020 ACC/AHA VHD; POPular-TAVI (aspirin monotherapy, not indefinite DAPT, post-TAVR absent another
+  // indication; OAC if AF). SUBGROUP-AWARE: AF -> OAC; no other indication -> single antiplatelet.
+  if (hasPriorAVR_SH && onAspirin_SH6 && onP2Y12_SH6 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Post-AVR on dual antiplatelet: antithrombotic regimen reassessment gap',
+      target: 'Antithrombotic de-escalation reviewed (single antiplatelet, or OAC if atrial fibrillation)',
+      recommendations: {
+        action: hasAF_SH6
+          ? 'Consider reassessing antithrombotic therapy post-AVR with concurrent atrial fibrillation - oral anticoagulation (not dual antiplatelet) is generally indicated per 2020 ACC/AHA VHD'
+          : 'Consider de-escalating dual antiplatelet to single antiplatelet post-AVR absent another DAPT indication, per 2020 ACC/AHA VHD and POPular-TAVI',
+        guideline: '2020 ACC/AHA Valvular Heart Disease; POPular-TAVI',
+        note: 'Subgroup-aware: AF -> OAC; no other indication -> single antiplatelet. Path-B: time-since-implant (>3-6 mo) and TAVR-vs-SAVR not coded; post-AVR proxy = prosthetic AV (Z95.2/Z95.3) + AS history.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Prosthetic aortic valve (Z95.2 or Z95.3 xenogenic) with aortic stenosis history',
+          'On dual antiplatelet (aspirin + a P2Y12 inhibitor)',
+          hasAF_SH6 ? 'Concurrent atrial fibrillation (I48.x)' : 'No other documented DAPT indication',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; POPular-TAVI',
+        classOfRecommendation: 'Class 2a',
+        levelOfEvidence: 'LOE B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent PCI or other active DAPT indication', 'Bleeding risk reassessed within interval'],
+      },
+    });
+  }
+
+  // Gap SH-057: Post-AVR new LBBB -> ambulatory rhythm monitoring
+  // Guideline: 2020 ACC/AHA VHD; post-TAVR conduction pathway (new LBBB warrants ambulatory monitoring for
+  // delayed high-grade AV block).
+  const hasNewLBBB_SH = dxCodes.some(c => c.startsWith('I44.7'));
+  if (hasPriorAVR_SH && hasNewLBBB_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MONITORING_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Post-AVR new LBBB without ambulatory rhythm monitoring',
+      target: 'Ambulatory rhythm monitoring (30-day Holter or loop recorder) for delayed AV block',
+      recommendations: {
+        action: 'Consider ambulatory rhythm monitoring (30-day Holter or loop recorder) for new LBBB after aortic valve replacement to detect delayed high-grade AV block per 2020 ACC/AHA VHD post-TAVR conduction pathway',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Path-B: TAVR-vs-SAVR, time-since-implant, and monitoring-completed status not coded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Prosthetic aortic valve (Z95.2 or Z95.3) with aortic stenosis history',
+          'New left bundle-branch block (I44.7)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: 'Class 2a',
+        levelOfEvidence: 'LOE C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Pacemaker already present', 'Recent ambulatory monitoring on file'],
+      },
+    });
+  }
+
+  // Gap SH-060: Post-AVR high-grade AV block -> permanent pacing decision
+  // Guideline: 2018 ACC/AHA/HRS bradycardia; post-TAVR high-grade/complete AV block is a Class 1 pacing indication.
+  // SUBGROUP-AWARE vs SH-057: LBBB -> monitor (SH-057); high-grade/complete block -> pace (this gap).
+  const hasHighGradeAVB_SH = dxCodes.some(c => c.startsWith('I44.1') || c.startsWith('I44.2'));
+  if (hasPriorAVR_SH && hasHighGradeAVB_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Post-AVR high-grade AV block: permanent pacing decision gap',
+      target: 'Permanent pacemaker decision documented for post-AVR high-grade AV block',
+      recommendations: {
+        action: 'Consider permanent pacemaker evaluation for high-grade or complete AV block after aortic valve replacement per 2018 ACC/AHA/HRS bradycardia guideline (Class 1)',
+        guideline: '2018 ACC/AHA/HRS Bradycardia Guideline',
+        note: 'Subgroup-aware: complete/high-grade AV block -> pacing decision (vs isolated LBBB -> monitoring, SH-057). Path-B: time-since-implant not coded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Prosthetic aortic valve (Z95.2 or Z95.3) with aortic stenosis history',
+          'Second-degree (I44.1) or complete (I44.2) AV block',
+        ],
+        guidelineSource: '2018 ACC/AHA/HRS Guideline on the Evaluation and Management of Bradycardia',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Pacemaker already present (Z95.0)', 'Reversible cause documented'],
+      },
+    });
+  }
+
+  // Gap SH-012: Prosthetic valve structural deterioration (elevated gradient)
+  // Guideline: 2020 ACC/AHA VHD; rising prosthetic gradient signals structural valve deterioration (SVD).
+  const hasAnyProsthetic_SH12 = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4'));
+  const elevatedProstheticGradient_SH = labValues['aortic_valve_mean_gradient'] !== undefined && labValues['aortic_valve_mean_gradient'] >= 20;
+  if (hasAnyProsthetic_SH12 && elevatedProstheticGradient_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Prosthetic valve with elevated gradient: structural deterioration evaluation gap',
+      target: 'Structural valve deterioration assessment + redo-intervention candidacy reviewed',
+      recommendations: {
+        action: 'Consider structural valve deterioration evaluation (and redo-intervention candidacy: valve-in-valve vs redo surgery) for a prosthetic valve with an elevated mean gradient per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Path-B: the spec trigger is a gradient RISE >=10 mmHg from baseline; serial/baseline gradients are not threaded, so an absolute elevated prosthetic mean gradient (>=20 mmHg) is the proxy. Native severe AS is handled separately (SH-002, which excludes prosthetic valves).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Prosthetic valve (Z95.2, Z95.3, or Z95.4)',
+          `Prosthetic mean gradient: ${labValues['aortic_valve_mean_gradient']} mmHg (>=20, elevated for a prosthesis)`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Known stable elevated baseline gradient', 'Recent SVD assessment on file'],
+      },
+    });
+  }
+
+  // Gap SH-092: Post-PE CTEPH surveillance
+  // Guideline: 2019 ESC PE / 2022 ESC-ERS PH; persistent dyspnea after PE warrants chronic thromboembolic
+  // pulmonary hypertension (CTEPH) workup (echo + V/Q scan).
+  const hasPEHistory_SH = dxCodes.some(c => c.startsWith('I26') || c.startsWith('Z86.711'));
+  const hasPersistentDyspnea_SH = dxCodes.some(c => c.startsWith('R06'));
+  if (hasPEHistory_SH && hasPersistentDyspnea_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.SCREENING_DUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Post-PE persistent dyspnea: CTEPH surveillance workup gap',
+      target: 'CTEPH workup (echocardiography + ventilation-perfusion scan) completed',
+      recommendations: {
+        action: 'Consider CTEPH workup (echocardiography and ventilation-perfusion scan) for persistent dyspnea after pulmonary embolism per 2019 ESC PE / 2022 ESC-ERS PH',
+        guideline: '2019 ESC Pulmonary Embolism; 2022 ESC/ERS Pulmonary Hypertension',
+        note: 'Path-B: the 3-6 month post-PE window is not coded; PE history + persistent dyspnea is the surveillance-due proxy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Pulmonary embolism, current or history (I26.x or Z86.711)',
+          'Persistent dyspnea (R06.x)',
+        ],
+        guidelineSource: '2019 ESC Guideline on Acute Pulmonary Embolism; 2022 ESC/ERS Pulmonary Hypertension Guideline',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'CTEPH already evaluated/diagnosed', 'Recent workup within interval'],
+      },
+    });
+  }
+
+  // Gap SH-095: Coarctation of the aorta -> serial imaging surveillance
+  // Guideline: 2018 AHA/ACC ACHD; coarctation (native or repaired) needs lifelong serial imaging for
+  // re-coarctation, aneurysm, and pseudoaneurysm.
+  const hasCoarctation_SH = dxCodes.some(c => c.startsWith('Q25.1'));
+  if (hasCoarctation_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Coarctation of the aorta without serial imaging surveillance',
+      target: 'Serial cross-sectional imaging (CTA or MRA) surveillance completed',
+      recommendations: {
+        action: 'Consider serial cross-sectional aortic imaging (CTA or MRA) surveillance for coarctation of the aorta (re-coarctation, aneurysm, pseudoaneurysm) per 2018 AHA/ACC ACHD',
+        guideline: '2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+        note: 'Path-B: repair status is not coded (Q25.1 persists post-repair); serial imaging is recommended for native and repaired coarctation alike.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Coarctation of the aorta (Q25.1)',
+        ],
+        guidelineSource: '2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent cross-sectional imaging within interval'],
+      },
+    });
+  }
+
+  // Gap SH-097: Systemic right ventricle (ccTGA / d-TGA post-atrial-switch) -> ACHD-center surveillance
+  // Guideline: 2018 AHA/ACC ACHD; a systemic RV (congenitally corrected TGA Q20.5, or d-TGA Q20.3 post
+  // Senning/Mustard) is at risk of systemic-RV failure and systemic-AV-valve regurgitation -> specialist f/u.
+  const hasSystemicRV_SH = dxCodes.some(c => c.startsWith('Q20.5') || c.startsWith('Q20.3'));
+  if (hasSystemicRV_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.FOLLOWUP_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Systemic right ventricle (ccTGA / TGA) without dedicated ACHD-center surveillance',
+      target: 'Dedicated ACHD-center surveillance (systemic-RV function + systemic-AV-valve assessment)',
+      recommendations: {
+        action: 'Consider dedicated ACHD-center surveillance for a systemic right ventricle (congenitally corrected TGA, or transposition post atrial switch) - systemic-RV failure and systemic AV-valve regurgitation risk - per 2018 AHA/ACC ACHD',
+        guideline: '2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+        note: 'Path-B: post-atrial-switch (Senning/Mustard) procedure status is not separately coded; the discordant-connection dx (Q20.5 ccTGA, Q20.3 d-TGA) is the systemic-RV proxy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Systemic RV anatomy: discordant AV connection (Q20.5, ccTGA) or discordant VA connection (Q20.3, d-TGA)',
+        ],
+        guidelineSource: '2018 AHA/ACC Adult Congenital Heart Disease Guideline',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Already under ACHD-center management'],
+      },
+    });
+  }
+
+  // ===== v3.0 SH chunk 7: CPT-unblocked post-procedure gaps (manufacturer-confirmed CPTs) =====
+  // These detect a prior PROCEDURE via the engine-wide procedureCodes param (8th arg, PR #396) - no threading.
+  // CPTs cleared the two-key bar (manufacturer reimbursement guide + operator sign-off): 93580 = ASD/PFO closure
+  // (Abbott Amplatzer guide; covers both ASD and PFO, no distinct PFO code), 93581 = VSD closure, 33418 = mitral
+  // TEER initial / 33419 = each additional (Abbott MitraClip guide; MITRAL, not tricuspid). STILL PARKED: SH-104
+  // (alcohol septal ablation 93583 - confirmed only via non-manufacturer sources, no device guide exists for the
+  // technique, so it does not clear the operator CPT bar). All recommended procedures named as text.
+  const onAnyAntithrombotic_SH = medCodes.includes('1191')
+    || P2Y12_CODES_CV.some(c => medCodes.includes(c))
+    || OAC_CODES_CV.some(c => medCodes.includes(c));
+  const hasSeptalClosure_SH = procedureCodes.includes('93580') || procedureCodes.includes('93581');
+  const hasMitralTEER_SH = procedureCodes.includes('33418') || procedureCodes.includes('33419');
+  const echoOverdueProxy_SH = labValues['lvef'] === undefined;
+  const hasAF_SH7 = dxCodes.some(c => c.startsWith('I48'));
+
+  // Gap SH-082: Post-ASD/PFO/VSD closure without an antithrombotic regimen
+  // Guideline: 2020 ACC/AHA VHD + closure-device IFUs; post-closure antiplatelet (aspirin +/- clopidogrel for
+  // ~6 months, then aspirin) is standard; OAC if atrial fibrillation. SUBGROUP-AWARE: AF -> OAC; else antiplatelet.
+  if (procedureCodes.includes('93580') || procedureCodes.includes('93581')) {
+    if (!onAnyAntithrombotic_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.STRUCTURAL_HEART,
+        status: 'Post-septal-closure device without an antithrombotic regimen',
+        target: 'Antithrombotic regimen documented (antiplatelet, or oral anticoagulation if atrial fibrillation)',
+        recommendations: {
+          action: hasAF_SH7
+            ? 'Consider an antithrombotic regimen after septal-closure device placement - oral anticoagulation is indicated with concurrent atrial fibrillation per 2020 ACC/AHA VHD and device IFUs'
+            : 'Consider an antiplatelet regimen (aspirin, with clopidogrel for the initial post-implant period) after septal-closure device placement per 2020 ACC/AHA VHD and device IFUs',
+          guideline: '2020 ACC/AHA Valvular Heart Disease; closure-device IFUs',
+          note: 'Detected via the procedureCodes param (CPT 93580 ASD/PFO or 93581 VSD closure, manufacturer-confirmed). Subgroup-aware: AF -> OAC; else antiplatelet. Path-B: implant date / duration not threaded.',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Prior septal-closure device (CPT 93580 ASD/PFO or 93581 VSD)',
+            'No antithrombotic (antiplatelet or anticoagulant) on the active medication list',
+            hasAF_SH7 ? 'Concurrent atrial fibrillation (I48.x)' : 'No atrial fibrillation (antiplatelet pathway)',
+          ],
+          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; closure-device Instructions for Use',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE C-EO',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Active bleeding / antithrombotic contraindication', 'Already on antithrombotic for another indication'],
+        },
+      });
+    }
+
+    // Gap SH-083: Post-closure residual-shunt surveillance echo
+    // Guideline: post-closure follow-up echo detects residual shunt and device-related complications.
+    if (echoOverdueProxy_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+      gaps.push({
+        type: TherapyGapType.IMAGING_OVERDUE,
+        module: ModuleType.STRUCTURAL_HEART,
+        status: 'Post-septal-closure without surveillance echo (residual-shunt assessment)',
+        target: 'Post-closure surveillance echocardiogram (residual shunt + device position) completed',
+        recommendations: {
+          action: 'Consider a post-closure surveillance echocardiogram to assess for residual shunt and device position after septal-closure device placement',
+          guideline: '2020 ACC/AHA Valvular Heart Disease; closure-device follow-up',
+          note: 'Detected via the procedureCodes param (CPT 93580/93581, manufacturer-confirmed). Path-B: residual-shunt magnitude is not quantified in structured data; the surveillance echo is the detection vehicle. Echo-overdue proxied by absent LVEF.',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Prior septal-closure device (CPT 93580 ASD/PFO or 93581 VSD)',
+            'No recent echocardiogram on file (surveillance-overdue proxy)',
+          ],
+          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE C-LD',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Recent surveillance echo within interval'],
+        },
+      });
+    }
+  }
+
+  // Gap SH-065: Post-mitral-TEER surveillance echo
+  // Guideline: 2020 ACC/AHA VHD; annual echo surveillance after transcatheter mitral repair (TEER).
+  if (hasMitralTEER_SH && echoOverdueProxy_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Post-mitral-TEER without annual surveillance echo',
+      target: 'Annual transthoracic echocardiogram after mitral TEER completed',
+      recommendations: {
+        action: 'Consider annual surveillance echocardiography after transcatheter edge-to-edge mitral repair (TEER) per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Detected via the procedureCodes param (CPT 33418/33419 mitral TEER, Abbott MitraClip-confirmed). Echo-overdue proxied by absent LVEF.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Prior mitral TEER (CPT 33418 or 33419)',
+          'No recent echocardiogram on file (surveillance-overdue proxy)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent surveillance echo within interval'],
+      },
+    });
+  }
+
+  // Gap SH-066: Recurrent significant MR after mitral TEER -> reassessment (redo TEER vs surgery)
+  // Guideline: 2020 ACC/AHA VHD; recurrent/residual significant MR after TEER warrants heart-team reassessment.
+  const recurrentSignificantMR_SH =
+    (labValues['mitral_eroa'] !== undefined && labValues['mitral_eroa'] >= 0.30) ||
+    (labValues['mitral_regurg_grade'] !== undefined && labValues['mitral_regurg_grade'] >= 3) ||
+    (labValues['valve_severity'] !== undefined && labValues['valve_severity'] >= 4);
+  if (hasMitralTEER_SH && recurrentSignificantMR_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Recurrent significant MR after mitral TEER: heart-team reassessment gap',
+      target: 'Heart-team reassessment (redo TEER vs mitral surgery) for recurrent/residual MR',
+      recommendations: {
+        action: 'Consider heart-team reassessment (redo TEER versus mitral valve surgery) for recurrent or residual significant mitral regurgitation after TEER per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Detected via the procedureCodes param (CPT 33418/33419 mitral TEER) + threaded MR severity. Path-B: the serial pre/post-TEER MR-grade trend is not threaded; current moderate-severe-or-worse MR is the recurrence proxy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Prior mitral TEER (CPT 33418 or 33419)',
+          'Recurrent/residual significant MR (EROA >=0.30, regurg grade >=3, or valve_severity >=4)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: 'Class 2a',
+        levelOfEvidence: 'LOE C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative + redo-transcatheter risk', 'Reassessment already documented'],
       },
     });
   }
@@ -13400,8 +14751,13 @@ export function evaluateGapRules(
 
   // SH-VALVE-IN-VALVE: Valve-in-Valve TAVR Evaluation
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 2a, LOE B-NR
-  // Bioprosthetic valve (Z95.2) + new symptoms (R06 dyspnea)
-  const hasBioprostheticVIV = dxCodes.some(c => c.startsWith('Z95.2'));
+  // Failed bioprosthetic valve + new symptoms (R06 dyspnea). Valve-in-valve TAVR is for a degenerated
+  //   BIOPROSTHETIC valve - a mechanical valve is NOT a ViV target, so this must not false-fire on mechanical.
+  // Fix (AUDIT-123, 2026-06-17, GAP-SH-061): Z95.3-ONLY (xenogenic/bioprosthetic, definitive). The prior
+  //   Z95.2-only predicate was the inversion - Z95.2 is generic (could be mechanical), so firing ViV on it would
+  //   false-fire on a mechanical valve. Z95.3-only never false-fires on mechanical. Path-B: a bioprosthetic coded
+  //   generically as Z95.2 is the accepted miss (no mechanical-specific ICD-10 code to disambiguate it from).
+  const hasBioprostheticVIV = dxCodes.some(c => c.startsWith('Z95.3'));
   const hasNewSymptomsVIV = dxCodes.some(c => c.startsWith('R06') || c.startsWith('R00') || c.startsWith('R55'));
   if (
     hasBioprostheticVIV &&
@@ -13420,7 +14776,7 @@ export function evaluateGapRules(
       },
       evidence: {
         triggerCriteria: [
-          'Bioprosthetic valve in situ (Z95.2)',
+          'Bioprosthetic (xenogenic) valve in situ (Z95.3)',
           'New symptoms (dyspnea R06, palpitations R00, or syncope R55)',
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
@@ -13431,38 +14787,12 @@ export function evaluateGapRules(
     });
   }
 
-  // SH-ASD: ASD Closure Evaluation
-  // Guideline: 2018 AHA/ACC Guideline for Adults with CHD, Class 1, LOE B
-  // Atrial septal defect (Q21.1) + RV dilation proxy (right heart failure, I50.810)
-  const hasASD = dxCodes.some(c => c.startsWith('Q21.1'));
-  const hasRVdilation = dxCodes.some(c => c.startsWith('I50.810') || c.startsWith('I50.81'));
-  if (
-    hasASD &&
-    hasRVdilation &&
-    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
-  ) {
-    gaps.push({
-      type: TherapyGapType.REFERRAL_NEEDED,
-      module: ModuleType.STRUCTURAL_HEART,
-      status: 'Consider ASD closure evaluation for hemodynamically significant atrial septal defect',
-      target: 'ASD closure candidacy evaluated by structural heart team',
-      recommendations: {
-        action: 'Consider percutaneous or surgical ASD closure for ASD with RV volume overload per 2018 AHA/ACC CHD Guideline',
-        guideline: '2018 AHA/ACC Guideline for Adults with CHD',
-        note: 'Recommended for review: hemodynamically significant ASDs with RV dilation benefit from closure to prevent RV failure',
-      },
-      evidence: {
-        triggerCriteria: [
-          'Atrial septal defect (Q21.1)',
-          'Right ventricular dilation or right heart failure (I50.81*)',
-        ],
-        guidelineSource: '2018 AHA/ACC Guideline for the Management of Adults with Congenital Heart Disease',
-        classOfRecommendation: 'Class 1',
-        levelOfEvidence: 'LOE B',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Eisenmenger syndrome', 'Severe pulmonary hypertension (irreversible)'],
-      },
-    });
-  }
+  // SH-ASD (gap-sh-asd-closure): SUPERSEDED 2026-06-17 by SH-027 (v3.0 SH chunk 5). Firing removed.
+  // Superseded (AUDIT-128 resolution): the legacy ASD-closure rule gated significance on I50.81 (right heart
+  // failure) - a LATE proxy that MISSED a significant ASD with RV dilation or PASP elevation but not yet RV
+  // failure (the AUDIT-128 under-detection). The properly-scoped SH-027 (ASD Q21.1x-not-PFO + threaded PASP>=40
+  // significance + EXCLUDES Eisenmenger I27.83) replaces it. Supersede-not-delete: the registry entry
+  // gap-sh-asd-closure is retained for canonical lineage (reconciled to SPEC_ONLY). Same precedent as SH-12/SH-9.
 
   // SH-VSD: VSD Closure Evaluation
   // Guideline: 2018 AHA/ACC Guideline for Adults with CHD, Class 1, LOE B
@@ -13600,8 +14930,9 @@ export function evaluateGapRules(
 
   // VD-PANNUS: Prosthetic Valve Pannus/Thrombosis Screening
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
-  // Prosthetic valve (Z95.2 or Z95.4) + new gradient increase proxy (R06 dyspnea)
-  const hasProstheticValveVD = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.4'));
+  // Prosthetic valve + new gradient-increase proxy (R06 dyspnea). Obstruction/thrombosis affects ANY prosthesis.
+  // Fix (AUDIT-123, 2026-06-17): added Z95.3 (xenogenic/bioprosthetic) to the prior Z95.2||Z95.4 set.
+  const hasProstheticValveVD = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4'));
   const hasNewGradientProxy = dxCodes.some(c => c.startsWith('R06') || c.startsWith('R00'));
   if (
     hasProstheticValveVD &&
@@ -13620,7 +14951,7 @@ export function evaluateGapRules(
       },
       evidence: {
         triggerCriteria: [
-          'Prosthetic heart valve (Z95.2 or Z95.4)',
+          'Prosthetic heart valve (Z95.2, Z95.3, or Z95.4)',
           'New symptoms (dyspnea R06 or palpitations R00)',
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
@@ -13685,7 +15016,7 @@ export function evaluateGapRules(
       },
       evidence: {
         triggerCriteria: [
-          'Prosthetic heart valve (Z95.2 or Z95.4)',
+          'Prosthetic heart valve (Z95.2, Z95.3, or Z95.4)',
           'Fever (R50.*)',
         ],
         guidelineSource: '2015 AHA Scientific Statement on Infective Endocarditis; 2023 ESC Guidelines on Endocarditis',
@@ -14024,11 +15355,14 @@ export function evaluateGapRules(
   // VD-ANTIPLATELET-BIOPROSTHETIC: Antiplatelet After Bioprosthetic Valve >3 Months
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 2a, LOE B
   if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasBioprosthetic = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.4')); // bioprosthetic valve proxy
-    const noMechanicalValveBio = !dxCodes.some(c => c.startsWith('Z95.3')); // not mechanical
+    // Fix (AUDIT-123, 2026-06-17): this rule was INVERTED - it gated on Z95.2||Z95.4 AND !Z95.3 with a comment
+    //   calling Z95.3 "mechanical". Z95.3 (xenogenic) IS the bioprosthetic code. Per operator ruling, a
+    //   DRUG-BEARING antiplatelet recommendation must be Z95.3-ONLY (never recommend antiplatelet-only to a
+    //   possibly-mechanical patient coded by the generic Z95.2). Now fires on the definitively-bioprosthetic Z95.3.
+    const hasBioprosthetic = dxCodes.some(c => c.startsWith('Z95.3')); // Z95.3 = xenogenic / bioprosthetic (definitive)
     const ASPIRIN_CODE_BIO = '1191';
     const onAspirinBio = medCodes.includes(ASPIRIN_CODE_BIO);
-    if (hasBioprosthetic && noMechanicalValveBio && !onAspirinBio) {
+    if (hasBioprosthetic && !onAspirinBio) {
       gaps.push({
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.VALVULAR_DISEASE,
@@ -14042,8 +15376,7 @@ export function evaluateGapRules(
         },
         evidence: {
           triggerCriteria: [
-            'Bioprosthetic valve (Z95.2/Z95.4)',
-            'Not a mechanical valve (Z95.3)',
+            'Bioprosthetic (xenogenic) valve (Z95.3)',
             'No aspirin in active medications',
           ],
           guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',

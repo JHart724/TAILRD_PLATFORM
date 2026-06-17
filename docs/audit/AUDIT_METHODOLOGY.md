@@ -798,7 +798,7 @@ This is the data-layer cousin to §1 (rule-body verification — AUDIT-029). §1
   - cTnI variants (89579-7 hs vs 48641-3 conventional)
   - LVEF (18010-0 vs alternatives)
 - **ICD-10**: cross-reference current AHA/ACC/CDC code definitions for the rule's clinical intent, preferably via CMS ICD-10-CM 2024 official lookup or icd10data.com.
-- **CPT** (when used): AMA CPT directory or AHA Coding Clinic.
+- **CPT** (when used): AMA CPT directory or AHA Coding Clinic. The AMA full-descriptor API is paywalled; the reachable authoritative public source is the **device-manufacturer reimbursement/coding guide** (Edwards/Medtronic TAVR, Abbott MitraClip/TriClip, Boston Scientific Watchman, Cook/Gore/Medtronic TEVAR, etc.) - these publish the exact descriptor + the ICD-10 pairing as market-access material. See §16.7 for the CPT-specific two-key + annual-currency discipline.
 
 ### 16.2 Mandatory verification points
 
@@ -926,6 +926,15 @@ concept-match auditable rather than asserted.
 (a) a non-target patient does NOT fire and (b) the true target DOES; for (iii) the test is that a
 sub-threshold (mild) lesion does NOT fire and a target-severity lesion DOES. Severity/state of
 AUDIT-120/121/122/123/125 are copied from the register per §18 register-literal discipline, not re-inferred.
+
+### 16.7 CPT-specific discipline: two-key gate + annual currency (AUDIT-168 catalyst, 2026-06-17)
+
+CPT has two properties that the RxNorm/LOINC/ICD-10 standard does not, so it carries an extra discipline:
+
+1. **Two-key gate (manufacturer-source + operator-confirm).** A CPT enters a firing gate ONLY when its descriptor is confirmed from an authoritative source AND the operator clinically confirms it. The reachable authoritative source is the device-manufacturer reimbursement/coding guide; non-manufacturer sources (encyclopedias, generic coding blogs) do NOT clear the gate. Example holds: `93583` (alcohol septal ablation) is confirmable only via non-manufacturer pages - no device guide exists for an alcohol-and-balloon technique - so it stays parked. A code that does not clear the two-key bar stays in the CPT-verification-blocked tranche (`DUA_DEFERRED_GAP_REGISTER.md`), never in a gate.
+2. **Annual currency.** CPT is revised every January (additions / deletions / revisions). A verified-once CPT can go STALE. Exemplar: the TEVAR range `33880-33891` - `33884/33889/33891` were DELETED and `33882` added in CPT 2026; a gate built on the old range would reference deleted codes. Therefore: every gated CPT must be verified against the CURRENT-year code set, and re-checked at each annual CPT revision. Record the verification year with the code (e.g. `// 33418 mitral TEER, Abbott MitraClip guide, CPT-2026-current`).
+
+The MISMATCH-flag discipline (§16.4 wrong-concept axis) applies to CPT exactly as to ICD-10: a candidate code whose manufacturer descriptor names a different procedure is WRONG, not merely unverified. Exemplar: `0544T/0545T` are Cardioband annulus reconstruction, NOT tricuspid edge-to-edge TEER (= `0569T/0570T`, Abbott TriClip guide) - the CPT analogue of the vEDS `Q79.61`-vs-`Q79.63` catch.
 
 ---
 

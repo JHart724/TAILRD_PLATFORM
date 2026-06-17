@@ -92,6 +92,10 @@ export async function writePatients(
       const ECHO_FIELDS = new Set([
         'aortic_valve_vmax', 'aortic_valve_mean_gradient', 'aortic_valve_area', 'mitral_regurg_grade',
         'sts_score', 'valve_severity',
+        // TR + vena-contracta numerics (v3.0 SH chunk 3)
+        'tr_regurg_grade', 'tr_regurg_vmax', 'mitral_vena_contracta', 'aortic_vena_contracta', 'tricuspid_vena_contracta',
+        // chunk-3 acceptance + chunk-4 path-prep: MR/PASP CSV-path consistency + ascending aorta dimension
+        'mitral_eroa', 'pasp', 'ascending_aorta',
       ]);
       const labFields = [
         'lvef', 'bnp', 'nt_probnp', 'ferritin', 'tsat', 'sodium', 'potassium', 'egfr',
@@ -99,6 +103,10 @@ export async function writePatients(
         'abi_right', 'abi_left',
         // echo-severity numerics (AUDIT-165 remediation)
         'aortic_valve_vmax', 'aortic_valve_mean_gradient', 'aortic_valve_area', 'mitral_regurg_grade', 'sts_score',
+        // TR + vena-contracta numerics (v3.0 SH chunk 3)
+        'tr_regurg_grade', 'tr_regurg_vmax', 'mitral_vena_contracta', 'aortic_vena_contracta', 'tricuspid_vena_contracta',
+        // chunk-3 acceptance + chunk-4 path-prep
+        'mitral_eroa', 'pasp', 'ascending_aorta',
       ];
       const observationBatch: any[] = [];
       for (const field of labFields) {
@@ -207,6 +215,14 @@ function getUnit(field: string): string {
     kccq_score: 'points',
     abi_right: 'ratio',
     abi_left: 'ratio',
+    tr_regurg_grade: 'grade',
+    tr_regurg_vmax: 'm/s',
+    mitral_vena_contracta: 'cm',
+    aortic_vena_contracta: 'cm',
+    tricuspid_vena_contracta: 'cm',
+    mitral_eroa: 'cm2',
+    pasp: 'mmHg',
+    ascending_aorta: 'cm',
   };
   return units[field] || '';
 }
@@ -235,6 +251,14 @@ function getObservationName(field: string): string {
     kccq_score: 'KCCQ-12 Score',
     abi_right: 'Ankle-Brachial Index (Right)',
     abi_left: 'Ankle-Brachial Index (Left)',
+    tr_regurg_grade: 'Tricuspid Regurgitation Grade',
+    tr_regurg_vmax: 'Tricuspid Regurgitation Peak Velocity',
+    mitral_vena_contracta: 'Mitral Vena Contracta Diameter',
+    aortic_vena_contracta: 'Aortic Vena Contracta Diameter',
+    tricuspid_vena_contracta: 'Tricuspid Vena Contracta Diameter',
+    mitral_eroa: 'Mitral Effective Regurgitant Orifice Area',
+    pasp: 'Pulmonary Artery Systolic Pressure',
+    ascending_aorta: 'Ascending Aorta Diameter',
   };
   return names[field] || field;
 }

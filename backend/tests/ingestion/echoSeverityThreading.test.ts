@@ -69,12 +69,17 @@ describe('ECHO_LOINC_TO_SLUG - verified FHIR echo LOINC mapping', () => {
     expect(toObsType('18066-1')).toBe('aortic_valve_mean_gradient'); // FHIR echo -> slug
     expect(toObsType('33747-0')).toBe('33747-0');                    // BNP LOINC unchanged
   });
-  it('omits the LOINCs that NLM verification could not confirm (no fabrication)', () => {
-    // TR peak velocity, LVESD, vena contracta returned empty from NLM Clinical Tables -> deliberately absent.
+  it('maps the v3.0 chunk-3 TR + vena-contracta LOINCs (each re-verified against NLM Clinical Tables)', () => {
+    expect(ECHO_LOINC_TO_SLUG['18115-6']).toBe('tr_regurg_grade');          // Tricuspid valve Regurgitation degree
+    expect(ECHO_LOINC_TO_SLUG['18166-9']).toBe('tr_regurg_vmax');           // TR max regurgitant velocity
+    expect(ECHO_LOINC_TO_SLUG['77913-2']).toBe('mitral_vena_contracta');    // MV vena contracta diameter
+    expect(ECHO_LOINC_TO_SLUG['77908-2']).toBe('aortic_vena_contracta');    // AV vena contracta diameter
+    expect(ECHO_LOINC_TO_SLUG['77917-3']).toBe('tricuspid_vena_contracta'); // TV vena contracta diameter
+  });
+  it('still omits the LOINCs that NLM verification could not confirm (no fabrication)', () => {
+    // LVESD returned empty from NLM Clinical Tables -> deliberately absent until verified with alternate terms.
     const slugs = Object.values(ECHO_LOINC_TO_SLUG);
-    expect(slugs).not.toContain('tr_vmax');
     expect(slugs).not.toContain('lvesd');
-    expect(slugs).not.toContain('mitral_vena_contracta');
   });
 });
 
@@ -85,6 +90,24 @@ describe('IMAGING_TYPES freshness for valve echo', () => {
      'mitral_eroa', 'mitral_valve_area', 'valve_severity'].forEach((s) => {
       expect(IMAGING_TYPES.has(s)).toBe(true);
     });
+  });
+  it('TR + vena-contracta slugs are in IMAGING_TYPES (365-day window) - v3.0 chunk 3', () => {
+    ['tr_regurg_grade', 'tr_regurg_vmax', 'mitral_vena_contracta', 'aortic_vena_contracta', 'tricuspid_vena_contracta']
+      .forEach((s) => expect(IMAGING_TYPES.has(s)).toBe(true));
+  });
+  it('mitral_eroa / pasp / ascending_aorta are in IMAGING_TYPES (chunk-3 acceptance + chunk-4 path-prep)', () => {
+    ['mitral_eroa', 'pasp', 'ascending_aorta'].forEach((s) => expect(IMAGING_TYPES.has(s)).toBe(true));
+  });
+  it('the CSV writer allow-list now carries mitral_eroa / pasp / ascending_aorta (were CSV-dropped, AUDIT-165 class)', () => {
+    const src = fs.readFileSync(path.join(__dirname, '../../src/ingestion/patientWriter.ts'), 'utf8');
+    ['mitral_eroa', 'pasp', 'ascending_aorta'].forEach((f) => expect(src).toContain(`'${f}'`));
+  });
+  it('a TR echo grade at 300 days threads; at 400 days it is excluded', () => {
+    const day = 24 * 60 * 60 * 1000;
+    const fresh = buildLabValues([{ observationType: 'tr_regurg_grade', valueNumeric: 4, ageMs: 300 * day }]);
+    expect(fresh['tr_regurg_grade']).toBe(4);
+    const stale = buildLabValues([{ observationType: 'tr_regurg_grade', valueNumeric: 4, ageMs: 400 * day }]);
+    expect(stale['tr_regurg_grade']).toBeUndefined();
   });
   it('a valve echo at 300 days threads; at 400 days it is excluded', () => {
     const day = 24 * 60 * 60 * 1000;

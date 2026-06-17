@@ -269,40 +269,40 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 2): DET_OK -> PARTIAL per 16.6(ii) / AUDIT-122. SH-13 matches I35.1 OR I34.0 as "new regurgitation", but the gap is aortic-prosthesis PVL-specific: I35.1 (aortic insufficiency) is correct while I34.0 (mitral insufficiency) over-fires on unrelated post-prosthetic mitral regurg with no PVL. Partial overlap -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-122 remediated (drop I34.0, keep I35.1).',
     },
     'GAP-SH-061': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-sh-valve-in-valve',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 2): DET_OK -> PARTIAL per 16.6(i) concept-match / AUDIT-123. SH-VALVE-IN-VALVE gates on Z95.2 treated as bioprosthetic, but per NLM Z95.2 = prosthetic/mechanical and Z95.3 = xenogenic/bioprosthetic (inverted codebase-wide), so the ViV rule misses real bioprosthetic (Z95.3) and false-fires on mechanical. Data-coupled defect flips to PARTIAL per the AUDIT-118 precedent. Evaluator retained; PARTIAL until AUDIT-123 remediated (correct Z95.2/Z95.3 semantics).',
+        'RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-123 fixed - ViV (SH-VALVE-IN-VALVE) is now Z95.3-ONLY (xenogenic/bioprosthetic, the definitive code), never false-firing on a mechanical valve. Guarded by audit123Bioprosthetic.test.ts (Z95.3 fires ViV; Z95.2-mechanical does not). Path-B residual: a bioprosthetic miscoded as generic Z95.2 is the accepted ICD-10 ambiguity (no mechanical-specific code).',
     },
     'GAP-SH-011': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-sh-6-post-tavr-followup',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 2): DET_OK -> PARTIAL per 16.6(i) concept-match / AUDIT-123. SH-6 post-TAVR surveillance rests on the same inverted Z95.2/Z95.3 valve-type semantics (Z95.2 mechanical mislabeled bioprosthetic), so it misses real bioprosthetic (Z95.3) and false-fires on mechanical. Data-coupled defect -> PARTIAL per the AUDIT-118 precedent. Evaluator retained; PARTIAL until AUDIT-123 remediated.',
+        'RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-123 fixed - SH-6 post-TAVR follow-up now gates Z95.2 OR Z95.3 (TAVR tissue valves may be coded either way), so it no longer misses Z95.3-coded bioprosthetic patients. Guarded by audit123Bioprosthetic.test.ts (Z95.3 + AS history fires post-TAVR).',
     },
     'GAP-SH-064': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-sh-11-tmvr',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 3): DET_OK -> PARTIAL per 16.6(iii) severity-encoding / AUDIT-125. SH-11 (TMVR) gates I34.0 + age>80 with no echo-severity threshold (EROA / regurgitant volume), but the gap targets severe MR, so it over-detects sub-threshold (mild) mitral regurg. Severity IS echo-encoded in labValues and the rule ignores it -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-125 remediated (add the lesion-appropriate echo-severity gate).',
+        'RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-125 fixed (v3.0 SH chunk 2) - TMVR (SH-11) now gates on the threaded MR severity (mitral_eroa>=0.40 / mitral_regurg_grade>=4 / valve_severity>=5) in addition to age, so it no longer over-detects sub-threshold MR. Guarded by shChunk2.test.ts (AUDIT-125 gate: sub-threshold EROA does not fire).',
     },
     'GAP-SH-022': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-sh-4-tricuspid-assessment',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 3): DET_OK -> PARTIAL per 16.6(iii) severity-encoding / AUDIT-125. SH-4 gates I36.1 + right-heart symptoms with no TR-severity threshold, but the gap targets severe/torrential TR, so it over-detects sub-threshold lesions; the transcatheter-tricuspid recommendation is also under-anchored. -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-125 remediated (add severity gate + re-anchor).',
+        'RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-125 fixed (v3.0 SH chunk 3) - severe-TR transcatheter-eval (SH-022, tightening the old SH-4) now gates on threaded TR severity (tr_regurg_grade>=4 OR valve_severity>=5) + congestion, no longer over-detecting mild TR. The legacy un-gated SH-12 was retired (AUDIT-167). Guarded by shChunk3.test.ts (AUDIT-125 regression: no severity -> does not fire).',
     },
     'GAP-SH-026': {
-      classification: 'PARTIAL_DETECTION',
-      registryId: 'gap-sh-9-pfo-closure',
+      classification: 'DET_OK',
+      registryId: 'gap-sh-026-pfo-cryptogenic-closure',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 4, STEP-0): DET_OK -> PARTIAL per 16.6(ii) over-detection / AUDIT-127. SH-9 fires on I63.9 + age<60 + Q21.1 with no coded stroke-etiology exclusion; the rule own evidence object names "alternative stroke etiology" as an exclusion but the match logic never checks it, so it over-fires on non-cryptogenic (e.g. AF-cardioembolic) strokes. Partial overlap (true cryptogenic still caught) -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-127 remediated (add the coded etiology exclusion the evidence already names).',
+        'RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-127 fully closed - SH-026 gates PFO (Q21.12 specific) + cryptogenic stroke (I63.x) + age<60 + EXCLUDES AF (I48.x, the cardioembolic source the over-detection named), and the legacy un-gated gap-sh-9-pfo-closure was RETIRED this close (superseded-not-delete). RoPE-score components are a Path-B refinement, not a detection defect. shChunk5.test.ts + the AUDIT-127 retirement note.',
     },
     'GAP-SH-027': {
       classification: 'PARTIAL_DETECTION',
       registryId: 'gap-sh-asd-closure',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 4, STEP-0): DET_OK -> PARTIAL per 16.5 under-detection / AUDIT-128. SH-ASD gates significance on I50.81 (right heart failure), but the gap significance signals are RV size + Qp:Qs + PASP; RV failure is a late proxy, so a significant ASD with RV dilation or PASP elevation but not yet RV failure is missed. Under-detection -> PARTIAL. Evaluator retained; PARTIAL until AUDIT-128 remediated (gate on RV size / Qp:Qs / PASP echo signals).',
+        'v3.0 SH close: AUDIT-128 over-detection closed (the legacy late-RV-failure-proxy gap-sh-asd-closure was RETIRED; the lineage registry id is retained and now maps to the chunk-5 SH-027 evaluator). SH-027 gates significant ASD (Q21.1x not PFO) on threaded PASP>=40 + EXCLUDES Eisenmenger. Held PARTIAL: RV size + Qp:Qs (2 of the 3 significance signals) are not threaded (echo-morphology) - only PASP is. shChunk5.test.ts.',
     },
     'GAP-SH-104': {
       classification: 'SPEC_ONLY',
@@ -313,6 +313,151 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
       classification: 'SPEC_ONLY',
       auditNote:
         'MANUAL OVERRIDE 2026-06-08 (SH audit Batch 5): PARTIAL -> SPEC_ONLY per 16.6(ii) wrong-target / AUDIT-129. SH-7 detects endocarditis PROPHYLAXIS candidates (prosthetic valve Z95.2/3/4 + high-risk procedure Z01.2/Z96), but GAP-SH-028 targets SUSPECTED-IE Duke-criteria diagnostic workup; prevention vs diagnosis share zero true positives (fully disjoint), so PARTIAL would overclaim. Per the 16.6(ii) overlap rule, disjoint -> SPEC_ONLY. registryId dropped (no genuine coverage). Remediation = a suspected-IE detection rule for GAP-SH-028 (AUDIT-129).',
+    },
+    // v3.0 SH buildout (chunks 1-7, 2026-06-17) - classifications for the newly-authored evaluators.
+    // DET_OK = detects via threaded dx/labs/meds/procedureCodes; PARTIAL = a material Path-B arm remains.
+    'GAP-SH-002': {
+      classification: 'DET_OK', registryId: 'gap-sh-2-tavr-eval',
+      auditNote: 'v3.0 SH chunk 1 (AUDIT-125 tightened): severe symptomatic AS -> AVR now gates on concordant severe AS via threaded echo (mean gradient>=40 / vmax>=4.0 / valve_severity>=5) + symptomatic + no prosthetic AV; subgroup-aware SAVR-vs-TAVR. LFLG routes to SH-003/004. shChunk1.test.ts.',
+    },
+    'GAP-SH-010': {
+      classification: 'DET_OK', registryId: 'gap-sh-10-mitraclip',
+      auditNote: 'v3.0 SH chunk 2 (AUDIT-166 fix): secondary-MR TEER (COAPT) now GDMT-first - branches on BB+RAASi proxy (GDMT-naive -> optimize GDMT first; GDMT-optimized -> TEER candidacy) + the AUDIT-125 severity gate. Deterministic override (reconcile greedy-matched gap-sh-10-mitraclip to a sibling mitral eval). shChunk2.test.ts.',
+    },
+    'GAP-SH-069': {
+      classification: 'PARTIAL_DETECTION', registryId: 'gap-sh-069-evoque-ttvr',
+      auditNote: 'v3.0 SH chunk 3: severe TR (threaded) + no CIED lead -> Evoque TTVR (TRISCEND) candidacy. PARTIAL: coaptation-gap morphology / T-TEER eligibility is echo-morphology (DUA-deferred), not threaded. shChunk3.test.ts.',
+    },
+    'GAP-SH-023': {
+      classification: 'PARTIAL_DETECTION', registryId: 'gap-sh-023-tr-device-lead',
+      auditNote: 'v3.0 SH chunk 3: severe TR + CIED lead (Z95.0/Z95.810) -> lead-status + device-selection. PARTIAL: coaptation-gap morphology not threaded (echo-morphology, DUA-deferred); lead presence IS threaded. shChunk3.test.ts.',
+    },
+    'GAP-SH-052': {
+      classification: 'DET_OK', registryId: 'gap-sh-052-marfan-bb-arb',
+      auditNote: 'v3.0 SH chunk 4: Marfan (Q87.40/41x) + aortic dilation (Q87.410 / I71.2x / ascending_aorta>=4.0) not on BB or ARB -> aortic-growth prophylaxis. shChunk4.test.ts.',
+    },
+    'GAP-SH-074': {
+      classification: 'DET_OK', registryId: 'gap-sh-074-typeb-omt',
+      auditNote: 'v3.0 SH chunk 4: uncomplicated type-B dissection (I71.012/I71.03, no malperfusion) not on full OMT (BB+statin proxy) -> optimal medical therapy. shChunk4.test.ts.',
+    },
+    'GAP-SH-075': {
+      classification: 'PARTIAL_DETECTION', registryId: 'gap-sh-075-typeb-tevar',
+      auditNote: 'v3.0 SH chunk 4: complicated type-B dissection (malperfusion proxy K55.0x/N17/I74.3-5) -> urgent TEVAR eval. PARTIAL: malperfusion is a proxy + rapid-aortic-expansion is not coded (Path-B). TEVAR named as text (no CPT). shChunk4.test.ts.',
+    },
+    'GAP-SH-054': {
+      classification: 'DET_OK', registryId: 'gap-sh-054-turner-surveillance',
+      auditNote: 'v3.0 SH chunk 4: Turner (Q96) without echo data on file -> cardiac + aortic surveillance. shChunk4.test.ts.',
+    },
+    'GAP-SH-055': {
+      classification: 'DET_OK', registryId: 'gap-sh-055-veds-celiprolol',
+      auditNote: 'v3.0 SH chunk 4: vascular EDS (Q79.63, section-16-verified - not Q79.61 classical) not on celiprolol (RxCUI 20498) -> celiprolol + vascular surveillance. shChunk4.test.ts.',
+    },
+    'GAP-SH-029': {
+      classification: 'DET_OK', registryId: 'gap-sh-029-ie-early-surgery',
+      auditNote: 'v3.0 SH chunk 5: IE (I33.0) + early-surgery indication (HF I50 / embolic I74-I63 / uncontrolled infection A41-R65.2) -> surgery eval. shChunk5.test.ts.',
+    },
+    'GAP-SH-091': {
+      classification: 'DET_OK', registryId: 'gap-sh-091-massive-pe-reperfusion',
+      auditNote: 'v3.0 SH chunk 5: massive PE (I26.0x) + cardiogenic shock (R57.0) -> reperfusion (lysis/embolectomy/ECMO). Subgroup: submassive excluded. shChunk5.test.ts.',
+    },
+    'GAP-SH-101': {
+      classification: 'DET_OK', registryId: 'gap-sh-101-eisenmenger-pah',
+      auditNote: 'v3.0 SH chunk 5: Eisenmenger (I27.83) -> PAH-specific therapy evaluation. shChunk5.test.ts.',
+    },
+    'GAP-SH-099': {
+      classification: 'DET_OK', registryId: 'gap-sh-099-ebstein-arrhythmia',
+      auditNote: 'v3.0 SH chunk 5: Ebstein anomaly (Q22.5) -> arrhythmia surveillance. Path-B: monitoring dates not tracked (surveillance-due proxy). shChunk5.test.ts.',
+    },
+    'GAP-SH-059': {
+      classification: 'DET_OK', registryId: 'gap-sh-059-postavr-antithrombotic',
+      auditNote: 'v3.0 SH chunk 6: post-AVR (Z95.2/Z95.3 + AS hx) on DAPT -> antithrombotic de-escalation. Subgroup-aware: AF -> OAC; else single antiplatelet (POPular-TAVI). Path-B: time-since-implant not coded. shChunk6.test.ts.',
+    },
+    'GAP-SH-057': {
+      classification: 'DET_OK', registryId: 'gap-sh-057-postavr-lbbb',
+      auditNote: 'v3.0 SH chunk 6: post-AVR + new LBBB (I44.7) -> ambulatory rhythm monitoring. shChunk6.test.ts.',
+    },
+    'GAP-SH-060': {
+      classification: 'DET_OK', registryId: 'gap-sh-060-postavr-pacing',
+      auditNote: 'v3.0 SH chunk 6: post-AVR + high-grade/complete AV block (I44.1/I44.2) -> permanent pacing decision. Subgroup-separated from SH-057 (LBBB->monitor). shChunk6.test.ts.',
+    },
+    'GAP-SH-092': {
+      classification: 'DET_OK', registryId: 'gap-sh-092-cteph-surveillance',
+      auditNote: 'v3.0 SH chunk 6: PE history (I26.x/Z86.711) + persistent dyspnea -> CTEPH workup. Path-B: 3-6mo window not coded. shChunk6.test.ts.',
+    },
+    'GAP-SH-095': {
+      classification: 'DET_OK', registryId: 'gap-sh-095-coarctation-surveillance',
+      auditNote: 'v3.0 SH chunk 6: coarctation (Q25.1) -> serial imaging surveillance. Path-B: repair status not coded (fires native + repaired). shChunk6.test.ts.',
+    },
+    'GAP-SH-097': {
+      classification: 'DET_OK', registryId: 'gap-sh-097-systemic-rv',
+      auditNote: 'v3.0 SH chunk 6: systemic RV (ccTGA Q20.5 / d-TGA Q20.3) -> ACHD-center surveillance. shChunk6.test.ts.',
+    },
+    'GAP-SH-082': {
+      classification: 'DET_OK', registryId: 'gap-sh-082-postclosure-antithrombotic',
+      auditNote: 'v3.0 SH chunk 7: post-septal-closure (CPT 93580 ASD/PFO or 93581 VSD, manufacturer-confirmed) + no antithrombotic -> antithrombotic regimen. Subgroup-aware: AF -> OAC; else antiplatelet. CPT-gated via the procedureCodes param. shChunk7.test.ts.',
+    },
+    'GAP-SH-083': {
+      classification: 'PARTIAL_DETECTION', registryId: 'gap-sh-083-postclosure-surveillance',
+      auditNote: 'v3.0 SH chunk 7: post-closure (CPT 93580/93581) + echo-overdue -> residual-shunt surveillance echo. PARTIAL: residual-shunt magnitude is not quantified in structured data (the surveillance echo is the detection vehicle). shChunk7.test.ts.',
+    },
+    'GAP-SH-065': {
+      classification: 'DET_OK', registryId: 'gap-sh-065-postteer-echo',
+      auditNote: 'v3.0 SH chunk 7: mitral TEER (CPT 33418/33419, Abbott MitraClip-confirmed) + echo-overdue -> annual surveillance echo. CPT-gated via the procedureCodes param. shChunk7.test.ts.',
+    },
+    'GAP-SH-066': {
+      classification: 'PARTIAL_DETECTION', registryId: 'gap-sh-066-recurrent-mr-teer',
+      auditNote: 'v3.0 SH chunk 7: mitral TEER + recurrent significant MR (EROA>=0.30 / grade>=3 / valve_severity>=4) -> redo-TEER-vs-surgery reassessment. PARTIAL: the serial pre/post-TEER MR-grade trend is not threaded (current severity is the recurrence proxy). shChunk7.test.ts.',
+    },
+    // v3.0 SH close (2026-06-17): chunk-1/2 AS+MR gaps that gained clean evaluator blocks after the comment
+    // normalization, each given a dedicated registry + deterministic override (reconcile is fuzzy).
+    'GAP-SH-003': {
+      classification: 'DET_OK', registryId: 'gap-sh-003-lflg-classical',
+      auditNote: 'v3.0 SH chunk 1: classical low-flow low-gradient AS (LVEF<50 + AVA<1.0 + mean gradient<40) -> dobutamine stress echo. shChunk1.test.ts.',
+    },
+    'GAP-SH-004': {
+      classification: 'DET_OK', registryId: 'gap-sh-004-lflg-paradoxical',
+      auditNote: 'v3.0 SH chunk 1: paradoxical low-flow low-gradient AS (preserved EF + AVA<1.0 + low gradient). shChunk1.test.ts.',
+    },
+    'GAP-SH-006': {
+      classification: 'DET_OK', registryId: 'gap-sh-006-asymptomatic-as',
+      auditNote: 'v3.0 SH chunk 1: asymptomatic severe AS + LVEF<55 -> AVR evaluation (Class IIa; LVEF<50 Class 1). Concordant severe gate + LFLG partition routes to SH-003/004. shChunk1.test.ts.',
+    },
+    'GAP-SH-050': {
+      classification: 'DET_OK', registryId: 'gap-sh-050-moderate-as-grading',
+      auditNote: 'v3.0 SH chunk 1: moderate AS (AVA 1.0-1.5) -> severity-grading surveillance. Path-B: CT-annular measures not ingested. shChunk1.test.ts.',
+    },
+    'GAP-SH-014': {
+      classification: 'DET_OK', registryId: 'gap-sh-3-mitral-intervention',
+      auditNote: 'v3.0 SH chunk 2 (AUDIT-125 tightened): severe PRIMARY MR (EROA>=0.40 / grade>=4 / valve_severity>=5) + symptomatic -> surgical REPAIR (subgroup-aware, excludes secondary MR). shChunk2.test.ts.',
+    },
+    'GAP-SH-016': {
+      classification: 'DET_OK', registryId: 'gap-sh-016-primary-mr-af',
+      auditNote: 'v3.0 SH chunk 2: severe primary MR + new AF (Class IIa). shChunk2.test.ts.',
+    },
+    'GAP-SH-017': {
+      classification: 'DET_OK', registryId: 'gap-sh-017-primary-mr-pasp',
+      auditNote: 'v3.0 SH chunk 2: severe primary MR + PASP>50 (Class IIa). shChunk2.test.ts.',
+    },
+    'GAP-SH-103': {
+      classification: 'DET_OK', registryId: 'gap-sh-103-atrial-myxoma',
+      auditNote: 'v3.0 SH chunk 5: benign cardiac neoplasm / atrial myxoma (D15.1) -> surgical referral. shChunk5.test.ts.',
+    },
+    // Spec gaps with no distinct evaluator (the old single-block split / data-blocked) -> SPEC_ONLY, cite cleared.
+    'GAP-SH-001': {
+      classification: 'SPEC_ONLY',
+      auditNote: 'v3.0 SH close: GAP-SH-001 (asymptomatic very-severe AS, EARLY-TAVR heart-team) has no distinct evaluator - the chunk-1 AS build covers symptomatic AVR (GAP-SH-002) + LVEF<55 (GAP-SH-006) + the LFLG partition (GAP-SH-003/004), not a dedicated early-TAVR-very-severe gate. The stale SH-2 cite (from the pre-chunk-1 single AS block) is cleared. SPEC_ONLY until a dedicated very-severe-asymptomatic gate is built.',
+    },
+    'GAP-SH-015': {
+      classification: 'SPEC_ONLY',
+      auditNote: 'v3.0 SH close: GAP-SH-015 has no distinct evaluator after the MR block split (the chunk-2 MR build covers GAP-SH-014/016/017). The stale SH-3 cite is cleared. SPEC_ONLY.',
+    },
+    'GAP-SH-024': {
+      classification: 'SPEC_ONLY',
+      auditNote: 'v3.0 SH close: GAP-SH-024 (RV dysfunction in TR: TAPSE<17 or FAC<35) is data-blocked - TAPSE/FAC are not threaded (echo-morphology). The stale SH-4 cite (pre-rename tricuspid block) is cleared. SPEC_ONLY / data-blocked.',
+    },
+    'GAP-SH-080': {
+      classification: 'SPEC_ONLY',
+      auditNote: 'v3.0 SH close: GAP-SH-080 (PFO-closure candidacy: RoPE score documented) is process/data-blocked - the RoPE-score components (cortical infarct on imaging, absent vascular risk factors) are not threaded. The PFO-closure DETECTION is now SH-026 (GAP-SH-026); this RoPE-score-documentation gap has no evaluator. Its cite to the retired legacy SH-9 PFO block is cleared. SPEC_ONLY / Tranche-3 process-doc.',
     },
   },
   CAD: {

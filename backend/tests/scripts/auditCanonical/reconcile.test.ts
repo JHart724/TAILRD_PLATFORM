@@ -146,7 +146,6 @@ describe('reconcile — full integration on canonical extracts', () => {
   });
 
   it.each([
-    ['SH', 'CLEAN'],
     ['VHD', 'CLEAN'],
     ['PV', 'CLEAN'],
   ])('module %s reconciles as %s', (code, expectedStatus) => {
@@ -156,6 +155,17 @@ describe('reconcile — full integration on canonical extracts', () => {
     const r = buildReconciliation(spec, codeX, cfg.codePrefix);
     expect(r.status).toBe(expectedStatus);
     expect(r.registryOrphans).toHaveLength(0);
+    expect(r.evaluatorOrphans).toHaveLength(0);
+  });
+
+  it('SH reconciles as DIVERGENT post-v3.0-close (lineage-retained retirements + dedicated-registry reconciliation)', () => {
+    // v3.0 SH module close (2026-06-17): SH moved CLEAN -> DIVERGENT. evaluatorOrphans=0 (every evaluator maps),
+    // but registry > evaluator: supersede-not-delete keeps the retired SH-12/SH-9/SH-ASD registries for lineage,
+    // and the chunk-1/2 AS+MR gaps were given dedicated registries that the fuzzy greedy match did not all pair
+    // (their classifications are pinned deterministically via applyOverrides registryId, not the fuzzy match).
+    const cfg = MODULE_CONFIGS.find((m) => m.code === 'SH')!;
+    const r = buildReconciliation(specs.get('SH')!, codes.get('SH')!, cfg.codePrefix);
+    expect(r.status).toBe('DIVERGENT');
     expect(r.evaluatorOrphans).toHaveLength(0);
   });
 
