@@ -21,15 +21,15 @@ The 510 non-DET_OK gaps decompose exactly into four buckets:
 
 | Tier | Count | Buildable pre-DUA? | Description |
 |---|---|---|---|
-| Buildable-now | 268 | YES | needs no blocked element - dx + standard labs + meds (+ start-date) + procedures + EF-number + age/sex/race. Un-authored, not data-blocked. (Was 273; the HF buildout reclassified 3 HF gaps - HF-084/087/149 - as data-blocked: HF-084/149 to Tranche 1, HF-087 to Tranche 3. The EP buildout chunk 2 reclassified 2 more - EP-075/077 - to Tranche 1.) |
+| Buildable-now | 263 | YES | needs no blocked element - dx + standard labs + meds (+ start-date) + procedures + EF-number + age/sex/race. Un-authored, not data-blocked. (Was 273; the HF buildout reclassified 3 HF gaps - HF-084/087/149. The EP buildout reclassified 7 more - EP-075/077/086/035 to Tranche 1, EP-031/036/094 to Tranche 3. EP-101 stays here as deferred-buildable: it needs a coronary-angiography CPT set, not real-EHR data.) |
 | Tranche 2 - Synthea-expansion candidate | 108 | YES, if Synthea generation is expanded | blocked only on a synthesizable echo/physiologic numeric (valve gradient/area, EROA, aortic/AAA diameter, ABI, stenosis %, PASP, E/e', GLS, wall thickness, TAPSE). A synthetic numeric enables build+test pre-DUA. |
-| Tranche 3 - process/doc-gated | 51 | NO (needs real EHR) | real-EHR-only documentation: pharmacy fill/PDC, shared-decision/heart-team/counseling notes, staging flowsheets, risk scores. |
-| **Tranche 1 - DUA-DEFERRED** | **83** | **NO (needs real EHR)** | **device-interrogation + genetic-molecular + ECG-morphology + REAL-EHR-ONLY echo/imaging + (HF-buildout reconciliation) functional-capacity + (EP-buildout reconciliation) EP-study-mechanism. The DUA-gated set.** |
+| Tranche 3 - process/doc-gated | 54 | NO (needs real EHR) | real-EHR-only documentation: pharmacy fill/PDC, shared-decision/heart-team/counseling notes, staging flowsheets, risk scores. |
+| **Tranche 1 - DUA-DEFERRED** | **85** | **NO (needs real EHR)** | **device-interrogation + genetic-molecular + ECG-morphology + REAL-EHR-ONLY echo/imaging + (HF-buildout reconciliation) functional-capacity + (EP-buildout reconciliation) EP-study-mechanism + procedure-sequence. The DUA-gated set.** |
 
-Check: 268 + 108 + 83 + 51 = 510 (all non-DET_OK accounted).
+Check: 263 + 108 + 85 + 54 = 510 (all non-DET_OK accounted).
 
 **Pre-DUA buildable surface** = 270 (buildable-now) + 108 (Tranche 2, with Synthea-generation investment) = **378**.
-**DUA-gated** = 83 (Tranche 1) + 51 (Tranche 3 documentation) = 134, of which the **83 Tranche-1 set is the DUA-deferred gap register** below. The AUDIT-163 surgical-completeness (KB-completeness) tranche is tracked separately in the findings register and is NOT part of this accounting.
+**DUA-gated** = 85 (Tranche 1) + 54 (Tranche 3 documentation) = 139, of which the **85 Tranche-1 set is the DUA-deferred gap register** below. The AUDIT-163 surgical-completeness (KB-completeness) tranche is tracked separately in the findings register and is NOT part of this accounting.
 
 **Reconciliation to the earlier estimate:** the v3.0 scoping pass estimated ~52 DUA-deferred after the ~69 threading-unblock. The deterministic re-derivation lands at **79** under the locked narrow definition. The +27 delta is the REAL-EHR-ONLY echo/imaging subset (34 gaps: endocarditis/PVT TEE findings, HALT, Wilkins scoring, GLS strain, cardiac-mass characterization, valve-model identity) that the analysis judged genuinely unsynthesizable rather than Synthea-expandable. The earlier ~52 corresponds approximately to device + genetic + ECG-morphology + the few hardest echo findings; the boundary between "REAL-EHR-ONLY echo" (Tranche 1) and "synthesizable echo" (Tranche 2) is the single tuning knob that moves the count.
 
@@ -37,7 +37,7 @@ Check: 268 + 108 + 83 + 51 = 510 (all non-DET_OK accounted).
 
 ---
 
-## 2. Tranche 1 - DUA-DEFERRED register (83)
+## 2. Tranche 1 - DUA-DEFERRED register (85)
 
 The genuinely-data-source-blocked set. Build+test when real EHR data lands. Columns: GAP-ID, Module, Clin-Tier (clinical priority T1/T2/T3 from spec - NOT the tranche number), Classification, Title, Data element(s) needed, Element-type, Synthesizability, Pilot-value.
 
@@ -58,6 +58,8 @@ The genuinely-data-source-blocked set. Build+test when real EHR data lands. Colu
 | GAP-EP-091 | EP | T3 | PARTIAL_DETECTION | CIED lead failure pattern detection | lead impedance trend | device-interrogation | SYNTHEA-EXPANDABLE | HIGH-PILOT-VALUE |
 | GAP-EP-075 | EP | T2 | PARTIAL_DETECTION | Focal atrial tachycardia recurrent: ablation gap | EP-study mechanism (ICD-10 I47.1 lumps AVNRT/AVRT/focal-AT; no focal-AT-specific code) | EP-study-mechanism | REAL-EHR-ONLY | STANDARD-BACKFILL |
 | GAP-EP-077 | EP | T2 | PARTIAL_DETECTION | AVRT concealed bypass tract: ablation | EP-study mechanism (concealed accessory pathway has no surface-ECG marker) | EP-study-mechanism | REAL-EHR-ONLY | STANDARD-BACKFILL |
+| GAP-EP-035 | EP | T2 | SPEC_ONLY | Post-AVR conduction: pacer indication | AVR (structural) procedure linkage + post-procedure conduction-onset timing | procedure-sequence | REAL-EHR-ONLY | STANDARD-BACKFILL |
+| GAP-EP-086 | EP | T1 | PARTIAL_DETECTION | VT storm: admission + sedation + ablation protocol | VT-storm episode count (>=3 sustained VT/24h) from device telemetry / shock log | device-interrogation | REAL-EHR-ONLY | HIGH-PILOT-VALUE |
 | GAP-HF-021 | HF | T1 | PARTIAL_DETECTION | CRT Class I candidate not implanted | QRS duration + LBBB morphology | ECG-morphology | SYNTHEA-EXPANDABLE | HIGH-PILOT-VALUE |
 | GAP-HF-022 | HF | T2 | PARTIAL_DETECTION | CRT Class IIa candidate not implanted | QRS duration + LBBB/non-LBBB morphology | ECG-morphology | SYNTHEA-EXPANDABLE | HIGH-PILOT-VALUE |
 | GAP-HF-023 | HF | T2 | SPEC_ONLY | CRT Class IIb candidate not considered | QRS duration + non-LBBB morphology | ECG-morphology | SYNTHEA-EXPANDABLE | STANDARD-BACKFILL |
@@ -127,7 +129,7 @@ The genuinely-data-source-blocked set. Build+test when real EHR data lands. Colu
 | GAP-VHD-096 | VHD | T3 | PARTIAL_DETECTION | Radiation valve + CAD + pericardial: integrated | multi-structure imaging eval | echo-morphology | REAL-EHR-ONLY | STANDARD-BACKFILL |
 | GAP-VHD-097 | VHD | T3 | SPEC_ONLY | Radiation valve: TAVR vs SAVR decision | AV severity + decision doc | echo-morphology | REAL-EHR-ONLY | STANDARD-BACKFILL |
 
-(83 rows.)
+(85 rows.)
 
 ---
 
@@ -250,7 +252,7 @@ Blocked on a synthesizable echo/physiologic numeric. NOT DUA-deferred: a Synthea
 
 ---
 
-## 4. Tranche 3 - process/documentation-gated (51)
+## 4. Tranche 3 - process/documentation-gated (54)
 
 Real-EHR-only documentation (pharmacy fill/PDC, shared-decision/heart-team/counseling notes, staging flowsheets, risk scores). Not synthesizable in a way that proves real behavior; requires real EHR data flow. NOT part of the DUA-deferred count, recorded for completeness.
 
@@ -264,6 +266,9 @@ Real-EHR-only documentation (pharmacy fill/PDC, shared-decision/heart-team/couns
 | GAP-CAD-078 | CAD | T2 | SPEC_ONLY | Shock team activation documentation | shock-team consult notes | social-process-doc | REAL-EHR-ONLY | STANDARD-BACKFILL |
 | GAP-CAD-079 | CAD | T3 | PARTIAL_DETECTION | ICD patient + drive/employment counseling | counseling flowsheet | social-process-doc | REAL-EHR-ONLY | STANDARD-BACKFILL |
 | GAP-EP-002 | EP | T2 | SPEC_ONLY | AF: Warfarin with TTR<65% | serial INR / TTR longitudinal | social-process-doc | REAL-EHR-ONLY | STANDARD-BACKFILL |
+| GAP-EP-031 | EP | T2 | PARTIAL_DETECTION | Vasovagal syncope recurrent: tilt or ILR | vasovagal subtype + recurrence (R55 generic; not codable) | social-process-doc | REAL-EHR-ONLY | STANDARD-BACKFILL |
+| GAP-EP-036 | EP | T2 | SPEC_ONLY | Leadless pacemaker candidate: option discussion | leadless-option shared-decision documentation | social-process-doc | REAL-EHR-ONLY | STANDARD-BACKFILL |
+| GAP-EP-094 | EP | T2 | PARTIAL_DETECTION | Exertional syncope: structural workup gap | exertional-syncope pattern (clinical context; not codable) | social-process-doc | REAL-EHR-ONLY | STANDARD-BACKFILL |
 | GAP-EP-064 | EP | T1 | SPEC_ONLY | AF: OAC prescribed but not filled | e-Rx vs pharmacy fill | social-process-doc | REAL-EHR-ONLY | STANDARD-BACKFILL |
 | GAP-EP-065 | EP | T1 | SPEC_ONLY | AF: OAC adherence PDC<80% | pharmacy claim fills | social-process-doc | REAL-EHR-ONLY | STANDARD-BACKFILL |
 | GAP-HF-087 | HF | T3 | SPEC_ONLY | Chronic opioid + untreated OSA in HF: risk review | OSA documentation (sleep-study AHI / STOP-BANG) + opioid list | social-process-doc | REAL-EHR-ONLY | STANDARD-BACKFILL |
@@ -308,7 +313,7 @@ Real-EHR-only documentation (pharmacy fill/PDC, shared-decision/heart-team/couns
 | GAP-VHD-100 | VHD | T2 | SPEC_ONLY | Mech valve + pregnancy: anti-Xa monitoring | peak anti-Xa level | social-process-doc | REAL-EHR-ONLY | STANDARD-BACKFILL |
 | GAP-VHD-101 | VHD | T2 | SPEC_ONLY | Mech valve + pregnancy 36wk: delivery plan | gestational-age + delivery-plan doc | social-process-doc | REAL-EHR-ONLY | STANDARD-BACKFILL |
 
-(51 rows.)
+(54 rows.)
 
 ---
 
@@ -320,10 +325,11 @@ Ranked by Tranche-1 (DUA-deferred) gaps unblocked. This is the future ingestion 
 |---|---|---|
 | echo-morphology (REAL-EHR-ONLY imaging) | 34 | endocarditis/PVT TEE findings, HALT/CT-leaflet, Wilkins scoring, GLS strain, cardiac-mass characterization, valve anatomy. Tranche-2 adds 108 more echo gaps that a synthesizable numeric would unblock. |
 | genetic-molecular | 23 | amyloid typing (PYP/FLC/immunofixation), inherited-CM genotype (TTR, LMNA, FLNC, LAMP2), channelopathy genotype (LQT1/2/3), FH/PRS/ApoB, thrombophilia, pharmacogenomics. |
-| device-interrogation | 13 | CIED pacing %, shocks/therapy log, lead impedance/history, device model/recall/MRI-conditional, valve-model identity, LVAD pump telemetry (power/PI). |
+| device-interrogation | 14 | CIED pacing %, shocks/therapy log, lead impedance/history, device model/recall/MRI-conditional, valve-model identity, LVAD pump telemetry (power/PI), VT-storm episode count (EP-086). |
 | ECG-morphology | 10 | QRS duration + LBBB/RBBB morphology (CRT), low-voltage, fragmented QRS/TWI, ST-segment, conduction-disease post-procedure. (AUDIT-070: QRS/QTc not FHIR-ingested.) |
 | functional-capacity (REAL-EHR-ONLY) | 1 | HF-084 6-minute-walk distance / CPET peak VO2. Added in the HF-buildout reconciliation; not emitted by the current Synthea generator. (HF-087, the OSA/STOP-BANG case, is social-process-doc -> Tranche 3, not counted here.) |
 | EP-study-mechanism (REAL-EHR-ONLY) | 2 | EP-075 focal AT + EP-077 concealed AVRT. Added in the EP-buildout chunk-2 reconciliation: ICD-10 I47.1 does not distinguish AVNRT/AVRT/focal-AT, and a concealed accessory pathway has no surface-ECG marker - the mechanism needs an electrophysiology-study report (not ingested). |
+| procedure-sequence (REAL-EHR-ONLY) | 1 | EP-035 post-AVR conduction pacer indication. Added in the EP-buildout chunk-3 reconciliation: needs the AVR (structural) procedure linkage plus the post-procedure conduction-onset timing (new AV block AFTER the valve replacement) - neither the AVR CPT linkage nor the temporal sequence is ingested. |
 
 Cross-tier ingestion leverage (all tranches, ranked by total gaps a feed unblocks):
 - Quantitative echo/imaging numeric feed (valve gradient/area, EROA, dimensions, ABI, stenosis %, PASP, E/e', GLS, TAPSE): 142 gaps (34 Tranche-1 REAL + 108 Tranche-2 synthesizable). The single highest-leverage ingestion target.
@@ -339,7 +345,7 @@ The intersection (Tranche-2 SYNTHEA-EXPANDABLE AND HIGH-PILOT-VALUE) is the cand
 ## 7. Method and caveats
 
 - **Ingested-data baseline (what does NOT block a gap):** ICD-10 dx; RxNorm meds (ingredient-expanded per AUDIT-118) + med start-date (PR #396); procedure codes CPT+SNOMED (PR #396); age/sex/race; labs BNP, NT-proBNP, Troponin, CK-MB, Total Cholesterol, LDL, HDL, Triglycerides, HbA1c, Creatinine, eGFR, INR, PT, PTT, D-dimer; vitals BP sys/dia, HR, RR, Temp, O2 sat, Weight, Height, BMI; LVEF numeric.
-- **Tranche rule (deterministic):** Tranche 1 if element-type is device-interrogation OR genetic-molecular OR ECG-morphology OR (echo-morphology AND REAL-EHR-ONLY) OR functional-capacity OR EP-study-mechanism. Tranche 2 if echo-morphology AND SYNTHEA-EXPANDABLE. Tranche 3 if social-process-doc. (functional-capacity was added to the Tranche-1 clause in the 2026-06-16 HF-buildout reconciliation - HF-084 6MWT/CPET, real-EHR-only and not emitted by the current Synthea generator. HF-087, the OSA/STOP-BANG case, is social-process-doc and therefore Tranche 3 per this rule. HF-149 (LVAD pump-thrombosis) is Tranche 1 via device-interrogation (LVAD pump telemetry); its LDH / plasma-free-Hb adjunct is also a non-ingested lab, not in the baseline panel above. EP-study-mechanism was added in the 2026-06-16 EP-buildout chunk-2 reconciliation - EP-075 focal AT and EP-077 concealed AVRT need an electrophysiology-study mechanism distinction that ICD-10 / surface ECG cannot supply; real-EHR-only, not synthesizable.)
+- **Tranche rule (deterministic):** Tranche 1 if element-type is device-interrogation OR genetic-molecular OR ECG-morphology OR (echo-morphology AND REAL-EHR-ONLY) OR functional-capacity OR EP-study-mechanism OR procedure-sequence. Tranche 2 if echo-morphology AND SYNTHEA-EXPANDABLE. Tranche 3 if social-process-doc. (functional-capacity was added to the Tranche-1 clause in the 2026-06-16 HF-buildout reconciliation - HF-084 6MWT/CPET, real-EHR-only and not emitted by the current Synthea generator. HF-087, the OSA/STOP-BANG case, is social-process-doc and therefore Tranche 3 per this rule. HF-149 (LVAD pump-thrombosis) is Tranche 1 via device-interrogation (LVAD pump telemetry); its LDH / plasma-free-Hb adjunct is also a non-ingested lab, not in the baseline panel above. EP-study-mechanism was added in the 2026-06-16 EP-buildout chunk-2 reconciliation - EP-075 focal AT and EP-077 concealed AVRT need an electrophysiology-study mechanism distinction that ICD-10 / surface ECG cannot supply; real-EHR-only, not synthesizable.)
 - **The 79 vs ~52 estimate:** see Section 1 reconciliation. The Tranche-1/Tranche-2 boundary (REAL-EHR-ONLY vs SYNTHEA-EXPANDABLE echo) is a per-gap clinical judgment and the single knob that moves the count; the synthesizability column is recorded per-gap so the boundary can be retuned on review.
 - **DET_OK-watch exclusions:** four EP gaps (GAP-EP-018 AHRE, GAP-EP-023 Brugada, GAP-EP-050 / GAP-EP-089 inappropriate-ICD-shocks) carry a DET_OK evaluator that fires on a proxy rather than the true blocked trigger (device-interrogation / ECG-morphology). They are NOT counted here (filter excludes DET_OK) but are flagged: their detection is proxy-only until the real device/ECG feed lands.
 - **Clinical-tier (T1/T2/T3) in the tables is the spec clinical-priority marker, NOT the tranche number.** Do not confuse with Tranche 1/2/3.

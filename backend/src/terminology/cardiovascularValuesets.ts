@@ -414,6 +414,17 @@ export const CIED_EXTRACTION_CPT = {
   PACEMAKER_LEAD_REMOVAL_DUAL: '33235',
 } as const;
 
+/**
+ * LAAC (left atrial appendage closure) CPT -- v3.0 EP buildout (EP-012, EP-067).
+ * CPT VERIFICATION (section 16 - AMA CPT): verified 2026-06-16 against AAPC Codify + CMS + Boston Scientific
+ *   reimbursement guide. 33340 = percutaneous transcatheter closure of the LAA with endocardial implant
+ *   (e.g. WATCHMAN), including fluoroscopy, transseptal puncture, catheter placement, LA/LAA angiography, and
+ *   radiological supervision/interpretation. An alternative to long-term oral anticoagulation for stroke prevention.
+ */
+export const LAAC_CPT = {
+  LAAC: '33340',
+} as const;
+
 /** Bioprosthetic valve presence -- used by echo surveillance gap rule */
 export const ICD10_BIOPROSTHETIC_VALVE = [
   'Z95.2',   // Presence of prosthetic heart valve

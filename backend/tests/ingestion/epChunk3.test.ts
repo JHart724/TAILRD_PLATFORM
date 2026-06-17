@@ -94,6 +94,10 @@ describe('EP-029 pacemaker Class I indication', () => {
     const g = evaluateGapRules([AVBLOCK], {}, [], 72, 'MALE', undefined, [], [ICD_CPT]);
     expect(find(g, 'Pacemaker not implanted for Class I bradycardia indication')).toBeFalsy();
   });
+  it('gates (I44.1 dropped): Mobitz/2nd-degree alone does not fire (symptomatic-only, not ingested)', () => {
+    const g = evaluateGapRules(['I44.1'], {}, [], 72, 'MALE', undefined, [], []);
+    expect(find(g, 'Pacemaker not implanted for Class I bradycardia indication')).toBeFalsy();
+  });
 });
 
 // ---- EP-034 (covers EP-090): CIED infection full extraction ----

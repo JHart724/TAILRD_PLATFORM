@@ -33,6 +33,7 @@ import {
   EP_ABLATION_CPT,
   CIED_IMPLANT_CPT,
   CIED_EXTRACTION_CPT,
+  LAAC_CPT,
 } from '../../terminology/cardiovascularValuesets';
 
 /** Extract code arrays from valueset objects for medication matching */
@@ -574,6 +575,54 @@ export const RUNTIME_GAP_REGISTRY = [
     nextReviewDue: '2026-12-16',
     classOfRecommendation: '2a',
     levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-ep-030-brady-avn-blocker-reduce',
+    name: 'Bradycardia on AV-nodal blocker: reduce drug before pacemaker',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2018 ACC/AHA/HRS Guideline on Evaluation and Management of Bradycardia',
+    guidelineVersion: '2018',
+    guidelineOrg: 'ACC/AHA/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-ep-033-af-slow-rate-pacing',
+    name: 'Chronic AF with HR<40 on rate control: adjust medication vs pacing',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS AFib + 2018 ACC/AHA/HRS Bradycardia Guideline',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-ep-097-orthostatic-hypotension-med-review',
+    name: 'Orthostatic hypotension on BP-lowering therapy: medication review',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2017 ACC/AHA/HRS Guideline for the Evaluation and Management of Syncope',
+    guidelineVersion: '2017',
+    guidelineOrg: 'ACC/AHA/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-ep-067-post-laac-antithrombotic',
+    name: 'Post-LAAC patient not on any antithrombotic therapy',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + LAAC device IFU',
+    guidelineVersion: '2023',
+    guidelineOrg: 'ACC/AHA/ACCP/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B',
   },
   {
     id: 'gap-ep-079-wpw-af-avn-blocker',
@@ -5180,7 +5229,7 @@ export function evaluateGapRules(
   //   EP-012 = high CHA2DS2-VASc (>=3) AND a prior major bleed, where LAAC is a guideline alternative to lifelong OAC.
   // Prior-major-bleed set reuses the verified EP-LAAC codes (D68.3, K92.2, I60-I62). LAAC-already-done excluded via
   //   threaded procedureCodes (CPT 33340). CHA2DS2-VASc computed inline (mirrors EP-OAC scoring).
-  if (hasAF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE) && !procedureCodes.includes('33340')) {
+  if (hasAF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE) && !procedureCodes.includes(LAAC_CPT.LAAC)) {
     let cha012 = 0;
     if (dxCodes.some(c => c.startsWith('I50'))) cha012 += 1;
     if (dxCodes.some(c => c.startsWith('I10') || c.startsWith('I11') || c.startsWith('I12') || c.startsWith('I13') || c.startsWith('I15'))) cha012 += 1;
@@ -5501,10 +5550,14 @@ export function evaluateGapRules(
   }
 
   // EP-029: Pacemaker not implanted for Class I bradycardia indication. COR 1.
-  // Trigger: complete AV block (I44.2) OR sick sinus syndrome (I49.5) OR Mobitz/2nd-degree (I44.1) + NO existing
-  //   CIED (a pacemaker/leadless OR an ICD - ICDs pace transvenously, so they close the gap).
-  // Path-B: symptom status for SND/2nd-degree is not ingested; complete AV block (I44.2) is Class 1 regardless.
-  if (dxCodes.some(c => c.startsWith('I44.2') || c.startsWith('I44.1') || c.startsWith('I49.5'))
+  // Trigger: complete AV block (I44.2) OR sick sinus syndrome (I49.5) + NO existing CIED (a pacemaker/leadless OR
+  //   an ICD - ICDs pace transvenously, so they close the gap).
+  // Intervention-stakes breadth (operator ruling 2026-06-16): I44.1 (Mobitz/2nd-degree) DROPPED from the trigger -
+  //   2nd-degree block is Class 1 only when SYMPTOMATIC, and symptom status is not ingested; a pacemaker IMPLANT
+  //   should not fire on asymptomatic Mobitz-I. The symptomatic-2nd-degree population is a Path-B deferral
+  //   (buildable once symptom/flowsheet data is ingested). Complete AV block (I44.2) is Class 1 regardless of
+  //   symptoms; SND (I49.5) symptom status is itself a Path-B note below.
+  if (dxCodes.some(c => c.startsWith('I44.2') || c.startsWith('I49.5'))
       && !hasAnyCIED_EP && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
       type: TherapyGapType.PROCEDURE_INDICATED,
@@ -5512,19 +5565,19 @@ export function evaluateGapRules(
       status: 'Pacemaker not implanted for Class I bradycardia indication',
       target: 'Permanent pacemaker evaluation for high-grade AV block or sinus node dysfunction',
       recommendations: {
-        action: 'Consider permanent pacemaker for high-grade AV block / symptomatic SND per 2018 ACC/AHA/HRS Bradycardia Guideline (Class 1)',
+        action: 'Consider permanent pacemaker for complete AV block / symptomatic SND per 2018 ACC/AHA/HRS Bradycardia Guideline (Class 1)',
         guideline: '2018 ACC/AHA/HRS Guideline on Evaluation and Management of Bradycardia',
-        note: 'Complete (third-degree) AV block is a Class 1 pacing indication independent of symptoms; sick sinus syndrome and Mobitz II are Class 1 when symptomatic. No pacemaker/ICD on record. Path-B: symptom status for SND/second-degree not ingested - clinician confirms.',
+        note: 'Complete (third-degree) AV block is a Class 1 pacing indication independent of symptoms; sick sinus syndrome is Class 1 when symptomatic. No pacemaker/ICD on record. Mobitz/2nd-degree (I44.1) is excluded from this trigger (Class 1 only when symptomatic; symptom not ingested - Path-B). Path-B: SND symptom status not ingested - clinician confirms.',
       },
       evidence: {
         triggerCriteria: [
-          'High-grade AV block (I44.2 complete / I44.1 second-degree) or sick sinus syndrome (I49.5)',
+          'Complete AV block (I44.2) or sick sinus syndrome (I49.5)',
           'No existing pacemaker, leadless pacemaker, or ICD on record',
         ],
         guidelineSource: '2018 ACC/AHA/HRS Guideline on Evaluation and Management of Bradycardia',
         classOfRecommendation: '1',
         levelOfEvidence: 'B',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Existing CIED', 'Symptom status for SND/2nd-degree not ingested (Path-B)'],
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Existing CIED', 'Asymptomatic Mobitz-I / 2nd-degree (I44.1) - symptom not ingested (Path-B)', 'SND symptom status not ingested (Path-B)'],
       },
     });
   }
@@ -5592,6 +5645,143 @@ export function evaluateGapRules(
         exclusions: ['Hospice/palliative care (Z51.5)', 'Pacing indication (AV block / SND)', 'CRT candidate (QRS>=150)', 'Existing defibrillator'],
       },
     });
+  }
+
+  // ============================================================
+  // EP CHUNK 4 (v3.0 EP buildout, 2026-06-16): bradycardia/syncope + LAAC remainder (final EP authoring chunk).
+  // dx: I95.1 orthostatic hypotension (section-16 verified); reuses RATE_CONTROL_CODES_CV / RAAS_CODES_CV /
+  // OAC_CODES_CV / P2Y12_CODES_CV. Standing recommendation-subgroup check applied per gap.
+  // Deferred (data-blocked, to register): EP-031 (vasovagal/recurrence not codable - R55 too broad), EP-094
+  // (exertional pattern not codable), EP-101 (needs a coronary-angiography CPT set + acute-inpatient pathway).
+  // ============================================================
+  const onAVNBlocker_EP = RATE_CONTROL_CODES_CV.some(c => medCodes.includes(c)) || medCodes.includes('3407'); // BB/non-DHP CCB + digoxin
+
+  // EP-030: Symptomatic bradycardia on AV-nodal blocker - reduce/stop the drug before a pacer decision. COR 1.
+  // Trigger: HR<50 + on an AV-nodal blocker (BB / non-DHP CCB / digoxin) + NO pacemaker yet.
+  // STANDING SUBGROUP CHECK: complete AV block (I44.2) is EXCLUDED - it is structural/drug-independent and needs
+  //   pacing (EP-029), NOT "reduce the drug first"; the med-reduction recommendation would be wrong for that subgroup.
+  if (labValues['heart_rate'] !== undefined && labValues['heart_rate'] < 50 && onAVNBlocker_EP
+      && !dxCodes.some(c => c.startsWith('I44.2')) && !hasPacemaker_EP
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_CONTRAINDICATED,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'Bradycardia on AV-nodal blocker: reduce drug before pacemaker decision',
+      target: 'Reduce/discontinue the AV-nodal blocker and reassess before committing to a pacemaker',
+      recommendations: {
+        action: 'Consider reducing or stopping the AV-nodal blocker (reversible cause) before a pacemaker decision per 2018 ACC/AHA/HRS Bradycardia Guideline',
+        guideline: '2018 ACC/AHA/HRS Guideline on Evaluation and Management of Bradycardia',
+        note: 'Drug-induced bradycardia is a reversible cause - guidelines advise removing the offending AV-nodal agent (beta-blocker / non-DHP CCB / digoxin) and reassessing the rhythm before implanting a permanent pacemaker. Complete AV block (structural) is excluded - that needs pacing, not dose reduction.',
+      },
+      evidence: {
+        triggerCriteria: [
+          `Heart rate: ${labValues['heart_rate']} bpm (<50)`,
+          'On an AV-nodal blocker (beta-blocker / non-DHP CCB / digoxin)',
+          'No complete AV block (I44.2) - reversible drug cause plausible',
+          'No existing pacemaker',
+        ],
+        guidelineSource: '2018 ACC/AHA/HRS Guideline on Evaluation and Management of Bradycardia',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Complete AV block (I44.2 - needs pacing)', 'Existing pacemaker'],
+      },
+    });
+  }
+
+  // EP-033: Chronic AF with awake HR<40 on rate-control - adjust meds vs permanent pacing. COR.
+  // Trigger: AF + HR<40 + on a rate-control agent + NO pacemaker. Path-B: "awake" qualifier and sustained
+  //   pattern are not ingested (a single low HR could be nocturnal); clinician confirms the awake pattern.
+  if (hasAF && labValues['heart_rate'] !== undefined && labValues['heart_rate'] < 40 && onAVNBlocker_EP
+      && !hasPacemaker_EP && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_CONTRAINDICATED,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'Chronic AF with HR<40 on rate control: adjust medication vs pacing',
+      target: 'Reduce rate-control dose first; pace if bradycardia persists off/at minimal rate control',
+      recommendations: {
+        action: 'Consider reducing rate-control medication before pacing for AF with HR<40 per 2023 ACC/AHA/ACCP/HRS AFib + 2018 Bradycardia Guideline',
+        guideline: '2023 ACC/AHA/ACCP/HRS AFib + 2018 ACC/AHA/HRS Bradycardia Guideline',
+        note: 'In chronic AF with an excessively slow ventricular response (HR<40) on rate-control therapy, over-suppression is often iatrogenic - reduce the rate-control agent first; pace only if symptomatic bradycardia persists at minimal/no rate control. Path-B: the awake/sustained pattern is not ingested.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Atrial fibrillation (I48.*)',
+          `Heart rate: ${labValues['heart_rate']} bpm (<40)`,
+          'On a rate-control agent',
+          'No existing pacemaker',
+        ],
+        guidelineSource: '2023 ACC/AHA/ACCP/HRS AFib + 2018 ACC/AHA/HRS Bradycardia Guideline',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Existing pacemaker', 'Awake/sustained pattern not ingested (Path-B)'],
+      },
+    });
+  }
+
+  // EP-097: Orthostatic hypotension on BP-lowering therapy - medication review. COR 1.
+  // Trigger: orthostatic hypotension (I95.1) + on a BP-lowering agent (RAAS / beta-blocker / CCB / diuretic).
+  // Path-B: alpha-blockers (a common OH culprit, e.g. tamsulosin/doxazosin) are not in a current value set -
+  //   the alpha-blocker arm is not covered; this under-detects that subgroup.
+  if (dxCodes.some(c => c.startsWith('I95.1'))
+      && ([...RAAS_CODES_CV, ...BB_CODES_CV, ...RATE_CONTROL_CODES_CV, ...codes(RXNORM_LOOP_DIURETICS), ...codes(RXNORM_THIAZIDES)].some(c => medCodes.includes(c)))
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_CONTRAINDICATED,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'Orthostatic hypotension on BP-lowering therapy: medication review',
+      target: 'Reconcile/deprescribe BP-lowering agents contributing to orthostatic hypotension',
+      recommendations: {
+        action: 'Consider medication review and deprescribing of BP-lowering agents per 2017 ACC/AHA Syncope Guideline (orthostatic hypotension)',
+        guideline: '2017 ACC/AHA/HRS Guideline for the Evaluation and Management of Syncope',
+        note: 'Orthostatic hypotension is frequently iatrogenic - antihypertensives, vasodilators, and diuretics commonly precipitate or worsen it. A structured medication review/deprescribing pass is first-line. Path-B: alpha-blockers (a common OH culprit) are not in a current value set - that subgroup is under-detected.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Orthostatic hypotension (I95.1)',
+          'On a BP-lowering agent (RAAS / beta-blocker / CCB / loop or thiazide diuretic)',
+        ],
+        guidelineSource: '2017 ACC/AHA/HRS Guideline for the Evaluation and Management of Syncope',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Alpha-blocker culprit not ingested (Path-B under-detect)'],
+      },
+    });
+  }
+
+  // EP-067: Post-LAAC antithrombotic protocol - patient on NO antithrombotic after LAAC. COR.
+  // Trigger: LAAC implant (CPT 33340) present + NOT on any antithrombotic (no OAC, no P2Y12, no aspirin).
+  // Path-B: the precise post-LAAC sequence (e.g. OAC/DAPT 45d -> DAPT -> aspirin) and its timing are not ingested;
+  //   this fires on the clear SAFETY floor - a post-LAAC patient on nothing (device-thrombus / stroke risk).
+  // STANDING SUBGROUP CHECK: the recommendation is the post-LAAC ANTIPLATELET protocol (DAPT then aspirin) - it
+  //   does NOT blanket-recommend OAC, since many LAAC patients had LAAC precisely because OAC was contraindicated.
+  if (procedureCodes.includes(LAAC_CPT.LAAC) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const onAntithrombotic_EP067 = OAC_CODES_CV.some(c => medCodes.includes(c))
+      || P2Y12_CODES_CV.some(c => medCodes.includes(c))
+      || medCodes.includes('1191'); // aspirin (acetylsalicylic acid ingredient)
+    if (!onAntithrombotic_EP067) {
+      gaps.push({
+        type: TherapyGapType.MEDICATION_MISSING,
+        module: ModuleType.ELECTROPHYSIOLOGY,
+        status: 'Post-LAAC patient not on any antithrombotic therapy',
+        target: 'Antithrombotic per post-LAAC protocol (antiplatelet-based; OAC only if not contraindicated)',
+        medication: 'Post-LAAC antiplatelet regimen (e.g. DAPT then aspirin); OAC only if not contraindicated',
+        recommendations: {
+          action: 'Consider the guideline post-LAAC antithrombotic regimen per device IFU / 2023 ACC/AHA/ACCP/HRS AFib (device-thrombus and residual stroke risk persist)',
+          guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + LAAC device IFU',
+          note: 'A post-LAAC patient on NO antithrombotic is at risk of device-related thrombus and residual stroke during endothelialization. The protocol is antiplatelet-based (DAPT then aspirin); OAC is recommended ONLY if not contraindicated (many LAAC patients had an absolute OAC contraindication - do not blanket-recommend OAC). Path-B: the exact post-procedure sequence/timing is not ingested.',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Prior LAAC implant (CPT 33340)',
+            'No oral anticoagulant, no P2Y12 inhibitor, and no aspirin on the active medication list',
+          ],
+          guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + LAAC device IFU',
+          classOfRecommendation: '2a',
+          levelOfEvidence: 'B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Post-procedure regimen sequence/timing not ingested (Path-B)'],
+        },
+      });
+    }
   }
 
   // ============================================================
