@@ -31,6 +31,8 @@ import {
   RXNORM_IL1_INHIBITORS,
   RXNORM_OCTREOTIDE,
   EP_ABLATION_CPT,
+  CIED_IMPLANT_CPT,
+  CIED_EXTRACTION_CPT,
 } from '../../terminology/cardiovascularValuesets';
 
 /** Extract code arrays from valueset objects for medication matching */
@@ -500,6 +502,78 @@ export const RUNTIME_GAP_REGISTRY = [
     nextReviewDue: '2026-12-16',
     classOfRecommendation: '1',
     levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-ep-020-ischemic-vt-ablation',
+    name: 'VT ablation not offered for ischemic VT on antiarrhythmic',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2017 AHA/ACC/HRS Guideline for Management of Ventricular Arrhythmias',
+    guidelineVersion: '2017',
+    guidelineOrg: 'AHA/ACC/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-ep-021-nicm-vt-substrate',
+    name: 'VT substrate evaluation not pursued in non-ischemic cardiomyopathy',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2017 AHA/ACC/HRS Guideline for Management of Ventricular Arrhythmias',
+    guidelineVersion: '2017',
+    guidelineOrg: 'AHA/ACC/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-ep-022-vt-ablation-vanish',
+    name: 'VT ablation not considered before amiodarone escalation (VANISH)',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2017 AHA/ACC/HRS Guideline for Management of Ventricular Arrhythmias (VANISH)',
+    guidelineVersion: '2017',
+    guidelineOrg: 'AHA/ACC/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-ep-029-pacemaker-class1',
+    name: 'Pacemaker not implanted for Class I bradycardia indication',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2018 ACC/AHA/HRS Guideline on Evaluation and Management of Bradycardia',
+    guidelineVersion: '2018',
+    guidelineOrg: 'ACC/AHA/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-ep-034-cied-infection-extraction',
+    name: 'Full CIED system extraction not performed for device infection',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2017 HRS Expert Consensus on Lead Management and CIED Infection',
+    guidelineVersion: '2017',
+    guidelineOrg: 'HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-ep-092-sicd-candidate',
+    name: 'S-ICD not considered for young primary-prevention candidate without pacing need',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2017 AHA/ACC/HRS Guideline for Management of Ventricular Arrhythmias',
+    guidelineVersion: '2017',
+    guidelineOrg: 'AHA/ACC/HRS',
+    lastReviewDate: '2026-06-16',
+    nextReviewDue: '2026-12-16',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-NR',
   },
   {
     id: 'gap-ep-079-wpw-af-avn-blocker',
@@ -4819,14 +4893,22 @@ export function evaluateGapRules(
       const onOAC = medCodes.some(c => OAC_CODES.includes(c));
       if (!onOAC && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
         const activeComponents = Object.entries(scoreComponents).filter(([, v]) => v > 0).map(([k, v]) => `${k}+${v}`).join(', ');
+        // Subgroup-aware recommendation (operator safety ruling 2026-06-16): a mechanical heart valve makes
+        // DOACs CONTRAINDICATED (RE-ALIGN: dabigatran harmful in mech valves) - mech-valve AF patients need
+        // WARFARIN, not a DOAC. The detection (OAC missing) is correct for both subgroups; only the drug
+        // recommendation differs. Mech-valve set Z95.2 (prosthetic) + Z95.4 (other replacement); Z95.3
+        // (xenogenic/bioprosthetic) is EXCLUDED - bioprosthetic AF may use DOACs. ICD-10-CM verified per section 16.
+        const hasMechValveEP001 = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.4'));
         gaps.push({
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.ELECTROPHYSIOLOGY,
           status: 'Oral anticoagulant not prescribed in AFib',
           target: 'OAC therapy initiated',
-          medication: 'Apixaban, Rivaroxaban, or Edoxaban',
+          medication: hasMechValveEP001 ? 'Warfarin (INR target per valve type/position; DOACs contraindicated with a mechanical valve)' : 'Apixaban, Rivaroxaban, or Edoxaban',
           recommendations: {
-            action: 'Consider DOAC per 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE A',
+            action: hasMechValveEP001
+              ? 'Consider warfarin with valve-appropriate INR target per 2023 ACC/AHA/ACCP/HRS AFib + 2020 ACC/AHA VHD (DOACs contraindicated with a mechanical heart valve - RE-ALIGN)'
+              : 'Consider DOAC per 2023 ACC/AHA/ACCP/HRS AFib Guideline, Class 1, LOE A',
             guideline: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation',
           },
           evidence: {
@@ -4839,7 +4921,9 @@ export function evaluateGapRules(
             guidelineSource: '2023 ACC/AHA/ACCP/HRS Guideline for AF Management',
             classOfRecommendation: '1',
             levelOfEvidence: 'A',
-            exclusions: ['Active major bleeding', 'Mechanical heart valve', 'Hospice/palliative care'],
+            // Mechanical heart valve is NO LONGER an exclusion (it is a handled subgroup - warfarin recommended
+            // instead of DOAC; see hasMechValveEP001 above). Active major bleeding remains a clinical caveat.
+            exclusions: ['Active major bleeding', 'Hospice/palliative care'],
           },
         });
       }
@@ -5219,10 +5303,13 @@ export function evaluateGapRules(
   }
 
   // EP-072: Redo AF ablation evaluation after recurrence. COR 2a.
-  // Trigger: prior AF ablation (CPT 93656 present) + AF still coded (recurrent/persistent).
-  // Path-B (heavy): "recurrent symptoms at >3mo" - neither symptom status nor the 3-month blanking
-  //   period is ingested; this fires on the post-ablation + AF-still-on-problem-list state.
-  if (procedureCodes.includes(EP_ABLATION_CPT.AF_PVI) && hasAFnonFlutter_EP && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  // Trigger: prior AF ablation (CPT 93656 present) + AF still coded + ON an antiarrhythmic (AAD).
+  // Tightened (operator ruling 2026-06-16): the on-AAD gate distinguishes GENUINE recurrence (back on
+  //   rhythm-control drug post-ablation) from a lingering AF problem-list code, suppressing the noise case.
+  // Path-B (ingestion worklist): symptom status and the 3-month post-ablation blanking period are not
+  //   ingested - on-AAD is the recurrence proxy until ablation dates + symptom flowsheets are available.
+  if (procedureCodes.includes(EP_ABLATION_CPT.AF_PVI) && hasAFnonFlutter_EP
+      && AAD_CODES_CV.some(c => medCodes.includes(c)) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
@@ -5236,7 +5323,8 @@ export function evaluateGapRules(
       evidence: {
         triggerCriteria: [
           'Prior AF ablation procedure (CPT 93656)',
-          'Atrial fibrillation still coded (I48.0/.1/.2/.91) - possible recurrence',
+          'Atrial fibrillation still coded (I48.0/.1/.2/.91)',
+          'On an antiarrhythmic drug (recurrence proxy - back on rhythm control post-ablation)',
         ],
         guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline',
         classOfRecommendation: '2a',
@@ -5302,6 +5390,206 @@ export function evaluateGapRules(
         classOfRecommendation: '1',
         levelOfEvidence: 'B',
         exclusions: ['Hospice/palliative care (Z51.5)', 'Prior SVT ablation (CPT 93653)', 'Mechanism not ICD-codable; recurrence not ingested (Path-B)'],
+      },
+    });
+  }
+
+  // ============================================================
+  // EP CHUNK 3 (v3.0 EP buildout, 2026-06-16): VT/VF ablation + CIED management. Uses threaded
+  // procedureCodes (PR #396) + EP_ABLATION_CPT (93654 VT) + the new CIED_IMPLANT_CPT / CIED_EXTRACTION_CPT
+  // value sets (all CPT verified via AMA/CMS/AAPC per AUDIT_METHODOLOGY.md section 16). dx codes: I47.2 VT,
+  // I42.0/.8/.9 non-ischemic CM, I44.1/.2 AV block, I49.5 sick sinus, T82.7 CIED infection (all section-16 verified).
+  // Deferred (NOT built): EP-035 (post-AVR pacer - needs an AVR CPT set, out of CIED scope; its AV-block signal
+  // is subsumed by EP-029), EP-036 (leadless-discussion - process/counseling gap), EP-086 (VT storm - the >=3
+  // episodes/24h count is device-telemetry-blocked), EP-090 (near-duplicate of EP-034, same extraction evaluator).
+  // ============================================================
+  const hasVT_EP = dxCodes.some(c => c.startsWith('I47.2'));
+  const hasNICM_EP = dxCodes.some(c => c.startsWith('I42.0') || c.startsWith('I42.8') || c.startsWith('I42.9'));
+  const onAmiodarone_EP = medCodes.includes('703'); // amiodarone (RXNORM_QT_PROLONGING.AMIODARONE)
+  const hasPacemaker_EP = [CIED_IMPLANT_CPT.PACEMAKER_ATRIAL, CIED_IMPLANT_CPT.PACEMAKER_VENTRICULAR, CIED_IMPLANT_CPT.PACEMAKER_DUAL, CIED_IMPLANT_CPT.LEADLESS_PACEMAKER].some(c => procedureCodes.includes(c));
+  const hasICD_EP = [CIED_IMPLANT_CPT.ICD, CIED_IMPLANT_CPT.SICD].some(c => procedureCodes.includes(c));
+  const hasAnyCIED_EP = hasPacemaker_EP || hasICD_EP;
+  const hasVTablation_EP = procedureCodes.includes(EP_ABLATION_CPT.VT);
+  const hasExtraction_EP = Object.values(CIED_EXTRACTION_CPT).some(c => procedureCodes.includes(c));
+
+  // EP-020: VT catheter ablation not offered for ischemic VT on antiarrhythmic. COR 2a.
+  // Trigger: VT (I47.2) + ischemic heart disease (I25) + on an AAD + no prior VT ablation (CPT 93654).
+  if (hasVT_EP && hasCAD && AAD_CODES_CV.some(c => medCodes.includes(c)) && !hasVTablation_EP
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'VT catheter ablation not offered for ischemic VT on antiarrhythmic',
+      target: 'Catheter ablation evaluation for ischemic ventricular tachycardia',
+      recommendations: {
+        action: 'Consider VT catheter ablation for ischemic VT on antiarrhythmic per 2017 AHA/ACC/HRS VA Guideline (Class 2a)',
+        guideline: '2017 AHA/ACC/HRS Guideline for Management of Ventricular Arrhythmias',
+        note: 'Recurrent ischemic VT on antiarrhythmic therapy is a Class 2a catheter-ablation indication (scar-related re-entry substrate). No prior VT ablation (CPT 93654) on record.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Ventricular tachycardia (I47.2)',
+          'Ischemic heart disease (I25.*)',
+          'On an antiarrhythmic drug',
+          'No prior VT ablation (CPT 93654)',
+        ],
+        guidelineSource: '2017 AHA/ACC/HRS Guideline for Management of Ventricular Arrhythmias',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prior VT ablation (CPT 93654)'],
+      },
+    });
+  }
+
+  // EP-021: VT substrate evaluation not pursued in non-ischemic cardiomyopathy. COR 2a.
+  // Trigger: VT (I47.2) + non-ischemic CM (I42.0/.8/.9) + NOT ischemic (distinguishes from EP-020) + no VT ablation.
+  if (hasVT_EP && hasNICM_EP && !hasCAD && !hasVTablation_EP && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'VT substrate evaluation not pursued in non-ischemic cardiomyopathy',
+      target: 'EP study / substrate mapping for VT in non-ischemic cardiomyopathy',
+      recommendations: {
+        action: 'Consider EP study and substrate-based VT ablation for NICM-associated VT per 2017 AHA/ACC/HRS VA Guideline (Class 2a)',
+        guideline: '2017 AHA/ACC/HRS Guideline for Management of Ventricular Arrhythmias',
+        note: 'NICM-associated monomorphic VT warrants EP study / substrate mapping (often epicardial substrate). No prior VT ablation (CPT 93654). Ischemic disease absent - this is the non-ischemic substrate pathway.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Ventricular tachycardia (I47.2)',
+          'Non-ischemic cardiomyopathy (I42.0/.8/.9)',
+          'No ischemic heart disease (I25) coded',
+          'No prior VT ablation (CPT 93654)',
+        ],
+        guidelineSource: '2017 AHA/ACC/HRS Guideline for Management of Ventricular Arrhythmias',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prior VT ablation (CPT 93654)'],
+      },
+    });
+  }
+
+  // EP-022: VT ablation not considered before amiodarone escalation (VANISH). COR 2a.
+  // Trigger: ischemic VT + ICD present (CPT 33249/33270) + on amiodarone + no VT ablation (CPT 93654).
+  // Path-B: VANISH enrolled ICD patients with VT despite AAD; ICD-delivered-shock counts are not ingested,
+  //   so ICD-presence + on-amiodarone is the proxy for the recurrent-VT-on-amiodarone population.
+  if (hasVT_EP && hasCAD && hasICD_EP && onAmiodarone_EP && !hasVTablation_EP
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'VT ablation not considered before amiodarone escalation (VANISH)',
+      target: 'Catheter ablation as an alternative to escalating amiodarone for recurrent VT with an ICD',
+      recommendations: {
+        action: 'Consider VT catheter ablation rather than escalating amiodarone per VANISH / 2017 AHA/ACC/HRS VA Guideline (Class 2a)',
+        guideline: '2017 AHA/ACC/HRS Guideline for Management of Ventricular Arrhythmias (VANISH)',
+        note: 'VANISH: in ICD patients with ischemic VT recurring despite antiarrhythmic, catheter ablation reduced the composite of death/VT-storm/appropriate-shock vs escalating antiarrhythmic. ICD present + on amiodarone + no prior VT ablation. Path-B: ICD-shock counts not ingested - ICD-presence + amiodarone is the recurrence proxy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Ventricular tachycardia (I47.2) with ischemic heart disease (I25)',
+          'Implantable defibrillator present (CPT 33249 or 33270)',
+          'On amiodarone (RxNorm 703)',
+          'No prior VT ablation (CPT 93654)',
+        ],
+        guidelineSource: '2017 AHA/ACC/HRS Guideline for Management of Ventricular Arrhythmias (VANISH)',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prior VT ablation (CPT 93654)', 'ICD-shock counts not ingested (Path-B)'],
+      },
+    });
+  }
+
+  // EP-029: Pacemaker not implanted for Class I bradycardia indication. COR 1.
+  // Trigger: complete AV block (I44.2) OR sick sinus syndrome (I49.5) OR Mobitz/2nd-degree (I44.1) + NO existing
+  //   CIED (a pacemaker/leadless OR an ICD - ICDs pace transvenously, so they close the gap).
+  // Path-B: symptom status for SND/2nd-degree is not ingested; complete AV block (I44.2) is Class 1 regardless.
+  if (dxCodes.some(c => c.startsWith('I44.2') || c.startsWith('I44.1') || c.startsWith('I49.5'))
+      && !hasAnyCIED_EP && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'Pacemaker not implanted for Class I bradycardia indication',
+      target: 'Permanent pacemaker evaluation for high-grade AV block or sinus node dysfunction',
+      recommendations: {
+        action: 'Consider permanent pacemaker for high-grade AV block / symptomatic SND per 2018 ACC/AHA/HRS Bradycardia Guideline (Class 1)',
+        guideline: '2018 ACC/AHA/HRS Guideline on Evaluation and Management of Bradycardia',
+        note: 'Complete (third-degree) AV block is a Class 1 pacing indication independent of symptoms; sick sinus syndrome and Mobitz II are Class 1 when symptomatic. No pacemaker/ICD on record. Path-B: symptom status for SND/second-degree not ingested - clinician confirms.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'High-grade AV block (I44.2 complete / I44.1 second-degree) or sick sinus syndrome (I49.5)',
+          'No existing pacemaker, leadless pacemaker, or ICD on record',
+        ],
+        guidelineSource: '2018 ACC/AHA/HRS Guideline on Evaluation and Management of Bradycardia',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Existing CIED', 'Symptom status for SND/2nd-degree not ingested (Path-B)'],
+      },
+    });
+  }
+
+  // EP-034 (covers EP-090): Full CIED system extraction not performed for device infection. COR 1.
+  // Trigger: a CIED present (CPT 33206/.07/.08/33249/33270/33274) + CIED infection (T82.7) + NO extraction
+  //   procedure (CPT 33244/33241/33234/33235) on record.
+  if (hasAnyCIED_EP && dxCodes.some(c => c.startsWith('T82.7')) && !hasExtraction_EP
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'Full CIED system extraction not performed for device infection',
+      target: 'Complete device + lead extraction for confirmed CIED infection',
+      recommendations: {
+        action: 'Consider complete CIED system (generator + all leads) extraction for device infection per 2017 HRS CIED Infection Consensus (Class 1)',
+        guideline: '2017 HRS Expert Consensus on Lead Management and CIED Infection',
+        note: 'A confirmed CIED infection (pocket or systemic) requires COMPLETE hardware removal - partial removal / antibiotics alone is inadequate (Class 1). A CIED is present, an infection is coded, and no extraction procedure is on record. Re-implantation is staged after clearance.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'CIED present (pacemaker / ICD / leadless - CPT 33206-33208 / 33249 / 33270 / 33274)',
+          'CIED infection (T82.7*)',
+          'No extraction procedure (CPT 33244 / 33241 / 33234 / 33235)',
+        ],
+        guidelineSource: '2017 HRS Expert Consensus on Lead Management and CIED Infection',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Extraction already performed'],
+      },
+    });
+  }
+
+  // EP-092: S-ICD not considered for young primary-prevention ICD candidate without pacing need. COR 2a.
+  // Trigger: LVEF<=35 (primary-prevention ICD substrate) + age<50 + NO pacing indication (no AV block / SND)
+  //   + NO existing defibrillator + QRS<150 (NOT a CRT candidate). STANDING RECOMMENDATION-SUBGROUP CHECK:
+  //   an S-ICD cannot pace, so the S-ICD recommendation does NOT hold for a CRT-eligible patient (LVEF<=35 +
+  //   wide QRS needs a transvenous CRT-D), nor for a bradycardia-pacing patient - both are excluded here.
+  if (labValues['lvef'] !== undefined && labValues['lvef'] <= 35 && age < 50
+      && !dxCodes.some(c => c.startsWith('I44.2') || c.startsWith('I44.1') || c.startsWith('I49.5'))
+      && !hasICD_EP && !hasPacemaker_EP
+      && !(labValues['qrs_duration'] !== undefined && labValues['qrs_duration'] >= 150)
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.DEVICE_ELIGIBLE,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'S-ICD not considered for young primary-prevention ICD candidate without pacing need',
+      target: 'Subcutaneous ICD (S-ICD) evaluation for a young patient with no pacing/CRT indication',
+      recommendations: {
+        action: 'Consider a subcutaneous ICD (S-ICD) for a young primary-prevention candidate with no pacing or CRT need per 2017 AHA/ACC/HRS VA Guideline (Class 2a)',
+        guideline: '2017 AHA/ACC/HRS Guideline for Management of Ventricular Arrhythmias',
+        note: 'A young (age<50) primary-prevention ICD candidate (LVEF<=35) with NO bradycardia-pacing indication and NO CRT indication (QRS<150) avoids decades of transvenous-lead risk with an S-ICD. Excluded if pacing/CRT is needed (S-ICD cannot pace). Path-B: ICD candidacy inferred from LVEF; anti-tachycardia-pacing need not separately ingested.',
+      },
+      evidence: {
+        triggerCriteria: [
+          `LVEF: ${labValues['lvef']}% (<=35, primary-prevention ICD substrate)`,
+          `Age: ${age} (<50)`,
+          'No bradycardia-pacing indication (no AV block / SND)',
+          'No CRT indication (QRS<150)',
+          'No existing defibrillator',
+        ],
+        guidelineSource: '2017 AHA/ACC/HRS Guideline for Management of Ventricular Arrhythmias',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Pacing indication (AV block / SND)', 'CRT candidate (QRS>=150)', 'Existing defibrillator'],
       },
     });
   }

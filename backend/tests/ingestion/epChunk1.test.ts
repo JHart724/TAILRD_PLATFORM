@@ -186,6 +186,19 @@ describe('EP-001 OAC in AFib (verify post-AUDIT-118)', () => {
     const g = evaluateGapRules([AF], {}, [APIXABAN], 76, 'MALE');
     expect(find(g, 'Oral anticoagulant not prescribed in AFib')).toBeFalsy();
   });
+  it('mech valve (Z95.2) + no OAC: fires with WARFARIN recommendation, not DOAC (subgroup-aware)', () => {
+    const g = evaluateGapRules([AF, 'Z95.2'], {}, [], 76, 'MALE');
+    const gap = find(g, 'Oral anticoagulant not prescribed in AFib');
+    expect(gap).toBeTruthy();
+    expect(gap.medication).toContain('Warfarin');
+    expect(gap.medication).not.toContain('Apixaban');
+    expect(gap.recommendations.action).toContain('mechanical');
+  });
+  it('no valve + no OAC: fires with the DOAC recommendation (default subgroup)', () => {
+    const g = evaluateGapRules([AF], {}, [], 76, 'MALE');
+    const gap = find(g, 'Oral anticoagulant not prescribed in AFib');
+    expect(gap.medication).toContain('Apixaban');
+  });
 });
 
 // ---- EP-006: dabigatran renal safety verify already-correct post-AUDIT-118 ----

@@ -60,18 +60,22 @@ describe('EP-071 post-ablation OAC continuation', () => {
   });
 });
 
-// ---- EP-072: Redo AF ablation after recurrence ----
+// ---- EP-072: Redo AF ablation after recurrence (tightened: on-AAD recurrence proxy) ----
 describe('EP-072 redo AF ablation', () => {
-  it('fires: prior PVI + AF still coded', () => {
-    const g = evaluateGapRules([AF], {}, [], 60, 'MALE', undefined, [], [AF_PVI]);
+  it('fires: prior PVI + AF still coded + on AAD (genuine recurrence proxy)', () => {
+    const g = evaluateGapRules([AF], {}, [FLECAINIDE], 60, 'MALE', undefined, [], [AF_PVI]);
     expect(find(g, 'Redo AF ablation evaluation after recurrence')).toBeTruthy();
   });
-  it('gates: no prior ablation', () => {
-    const g = evaluateGapRules([AF], {}, [], 60, 'MALE', undefined, [], []);
+  it('gates (noise suppressed): prior PVI + AF code but NOT on AAD (lingering problem-list code)', () => {
+    const g = evaluateGapRules([AF], {}, [], 60, 'MALE', undefined, [], [AF_PVI]);
     expect(find(g, 'Redo AF ablation evaluation after recurrence')).toBeFalsy();
   });
-  it('gates: prior ablation but AF no longer coded', () => {
-    const g = evaluateGapRules(['I10'], {}, [], 60, 'MALE', undefined, [], [AF_PVI]);
+  it('gates: no prior ablation', () => {
+    const g = evaluateGapRules([AF], {}, [FLECAINIDE], 60, 'MALE', undefined, [], []);
+    expect(find(g, 'Redo AF ablation evaluation after recurrence')).toBeFalsy();
+  });
+  it('gates: prior ablation + on AAD but AF no longer coded', () => {
+    const g = evaluateGapRules(['I10'], {}, [FLECAINIDE], 60, 'MALE', undefined, [], [AF_PVI]);
     expect(find(g, 'Redo AF ablation evaluation after recurrence')).toBeFalsy();
   });
 });

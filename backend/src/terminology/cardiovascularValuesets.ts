@@ -377,6 +377,43 @@ export const EP_ABLATION_CPT = {
   AF_PVI: '93656', // atrial fibrillation ablation by pulmonary vein isolation
 } as const;
 
+/**
+ * CIED (cardiac implantable electronic device) implant CPT codes -- v3.0 EP buildout chunk 3.
+ * Matched against threaded procedureCodes (PR #396) to detect device presence/absence.
+ * CPT VERIFICATION (section 16 - AMA CPT, not RxNav): verified 2026-06-16 against CMS coverage articles
+ *   (A54929/A54931), AAPC Codify, and Medtronic/Philips coding guides.
+ *   33206 = permanent pacemaker, transvenous, ATRIAL (single-chamber).
+ *   33207 = permanent pacemaker, transvenous, VENTRICULAR (single-chamber).
+ *   33208 = permanent pacemaker, transvenous, ATRIAL + VENTRICULAR (dual-chamber).
+ *   33249 = insertion/replacement of permanent ICD with transvenous lead(s) (single or dual chamber).
+ *   33270 = insertion/replacement of permanent SUBCUTANEOUS ICD (S-ICD) system.
+ *   33274 = transcatheter insertion/replacement of permanent LEADLESS pacemaker (right ventricular).
+ */
+export const CIED_IMPLANT_CPT = {
+  PACEMAKER_ATRIAL: '33206',
+  PACEMAKER_VENTRICULAR: '33207',
+  PACEMAKER_DUAL: '33208',
+  ICD: '33249',
+  SICD: '33270',
+  LEADLESS_PACEMAKER: '33274',
+} as const;
+
+/**
+ * CIED extraction/removal CPT codes -- v3.0 EP buildout chunk 3 (used for the CIED-infection
+ * full-system-extraction gap; absence of an extraction code = extraction not yet performed).
+ * CPT VERIFICATION (section 16 - AMA CPT): verified 2026-06-16 against AAPC Codify + Medtronic coding scenarios.
+ *   33244 = removal of single/dual-chamber ICD ELECTRODE(s) by transvenous extraction.
+ *   33241 = removal of ICD pulse generator only.
+ *   33234 = removal of pacemaker ELECTRODE, single-lead system.
+ *   33235 = removal of pacemaker ELECTRODE, dual-lead system.
+ */
+export const CIED_EXTRACTION_CPT = {
+  ICD_LEAD_EXTRACTION: '33244',
+  ICD_GENERATOR_REMOVAL: '33241',
+  PACEMAKER_LEAD_REMOVAL_SINGLE: '33234',
+  PACEMAKER_LEAD_REMOVAL_DUAL: '33235',
+} as const;
+
 /** Bioprosthetic valve presence -- used by echo surveillance gap rule */
 export const ICD10_BIOPROSTHETIC_VALVE = [
   'Z95.2',   // Presence of prosthetic heart valve
