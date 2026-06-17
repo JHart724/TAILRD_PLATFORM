@@ -337,8 +337,10 @@
     top: 0;
     bottom: 0;
     width: 2px;
-    background: linear-gradient(180deg, rgba(155,36,56,0.5), #9B2438, #7A1A2E, rgba(92,16,34,0.5));
-    box-shadow: 0 0 10px rgba(155,36,56,0.6), 0 0 3px rgba(155,36,56,0.8);
+    /* AUDIT-153: active-nav indicator is SELECTION, not alarm (UI_CANON 4.2).
+       Reassigned off carmine to bright chrome - visible on the dark navy sidebar, on-palette. */
+    background: linear-gradient(180deg, rgba(143,168,188,0.5), #8FA8BC, #C8D4DC, rgba(200,212,220,0.5));
+    box-shadow: 0 0 10px rgba(143,168,188,0.6), 0 0 3px rgba(200,212,220,0.8);
   }
 
   .sb-live {
@@ -430,7 +432,9 @@
   }
 
   .export-btn {
-    background: linear-gradient(145deg, #8C1F32 0%, #9B2438 40%, #7A1A2E 100%);
+    /* AUDIT-153: export is a utility CTA, not an alarm - red is never a button (UI_CANON 4.2).
+       Reassigned carmine -> navy CTA, matching .btn-primary. */
+    background: linear-gradient(145deg, #1A3B5C 0%, #2C4A60 40%, #1A3B5C 100%);
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -769,8 +773,10 @@
 
   .status-glow-warning {
     width: 8px; height: 8px; border-radius: 50%;
-    background: #6B7280;
-    box-shadow: 0 0 8px rgba(107, 114, 128, 0.50), 0 0 16px rgba(107, 114, 128, 0.25);
+    /* AUDIT-153/154: warning is gold, not gray (off-token #6B7280 was both off-palette
+       and wrong-semantic for a warning state). */
+    background: #C4982A;
+    box-shadow: 0 0 8px rgba(196, 152, 42, 0.50), 0 0 16px rgba(196, 152, 42, 0.25);
   }
 
   .status-glow-healthy {

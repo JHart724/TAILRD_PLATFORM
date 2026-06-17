@@ -826,14 +826,6 @@ const EPCareGapAnalyzer: React.FC = () => {
 
  {/* Action Buttons */}
  <div className="flex items-center justify-between pt-4 border-t border-titanium-200">
- <div className="flex gap-3">
- <button className="px-4 py-2 bg-porsche-600 text-white text-sm rounded-lg hover:bg-porsche-700 transition-colors">
- Start Action Plan
- </button>
- <button className="px-4 py-2 bg-chrome-50 text-teal-700 text-sm rounded-lg hover:bg-chrome-100 transition-colors border border-chrome-100">
- Assign to Team
- </button>
- </div>
  <div className="flex items-center gap-2 text-sm text-titanium-600">
  <span>View Details</span>
  <ArrowRight className="w-4 h-4" />

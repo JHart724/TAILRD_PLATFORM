@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send, CheckCircle, Clock, XCircle, AlertTriangle } from 'lucide-react';
+import { CheckCircle, Clock, XCircle, AlertTriangle } from 'lucide-react';
 
 interface EPReferral {
   id: string;
@@ -214,18 +214,6 @@ const EPReferralTracker: React.FC = () => {
  </div>
  </div>
  )}
-
- <div className="flex gap-2">
- <button className="px-4 py-2 bg-gradient-to-r from-porsche-600 to-porsche-700 text-white text-sm rounded-lg hover:from-porsche-700 hover:to-porsche-800 transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center gap-2 font-medium border border-titanium-200">
- <Send className="w-4 h-4" />
- Follow Up
- </button>
- {referral.status === 'pending' && (
- <button className="px-4 py-2 bg-gradient-to-r from-[#F0F5FA]/80 to-[#C8D4DC]/80 text-teal-700 text-sm rounded-lg hover:from-[#C8D4DC]/90 hover:to-[#C8D4DC]/90 transition-all duration-300 transform hover:scale-105 hover:shadow-md font-medium border border-titanium-300/40">
- Mark Scheduled
- </button>
- )}
- </div>
  </div>
  ))}
  </div>

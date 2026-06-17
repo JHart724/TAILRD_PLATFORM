@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MessageCircle, Users, Bell, Send, Clock, CheckCircle, AlertTriangle, User, Phone, Video, ExternalLink, X, Heart, Thermometer, Droplets, Shield, Pill, FileText, Calendar, Activity } from 'lucide-react';
+import { MessageCircle, Users, Bell, Clock, CheckCircle, AlertTriangle, User, ExternalLink, X, Heart, Thermometer, Droplets, Shield, Pill, FileText, Calendar, Activity } from 'lucide-react';
 
 interface EPTeamMember {
   id: string;
@@ -739,14 +739,6 @@ const EPTeamCollaborationPanel: React.FC = () => {
  className="flex-1 p-3 border border-titanium-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-porsche-500"
  rows={3}
  />
- <div className="flex flex-col gap-2">
- <button className="p-3 bg-porsche-600 text-white rounded-lg hover:bg-porsche-700 transition-colors">
- <Send className="w-5 h-5" />
- </button>
- <button className="p-3 bg-medical-red-600 text-white rounded-lg hover:bg-medical-red-700 transition-colors">
- <AlertTriangle className="w-5 h-5" />
- </button>
- </div>
  </div>
  </div>
  </div>
@@ -772,14 +764,6 @@ const EPTeamCollaborationPanel: React.FC = () => {
  <div className="text-xs text-titanium-500">{member.specialty}</div>
  )}
  </div>
- </div>
- <div className="flex gap-2">
- <button className="p-2 bg-green-50 text-green-600 rounded-lg hover:bg-titanium-300 transition-colors">
- <Phone className="w-4 h-4" />
- </button>
- <button className="p-2 bg-porsche-100 text-porsche-600 rounded-lg hover:bg-porsche-200 transition-colors">
- <Video className="w-4 h-4" />
- </button>
  </div>
  </div>
  
@@ -844,12 +828,6 @@ const EPTeamCollaborationPanel: React.FC = () => {
  </div>
  
  <div className="text-titanium-800 mb-3">{alert.message}</div>
- 
- {!alert.acknowledged && (
- <button className="px-4 py-2 bg-teal-700 text-white text-sm rounded-lg hover:bg-teal-700 transition-colors">
- Acknowledge
- </button>
- )}
  </div>
  ))}
  </div>
@@ -1100,10 +1078,6 @@ const EPTeamCollaborationPanel: React.FC = () => {
 
  {/* Action Buttons */}
  <div className="flex gap-3 pt-4 border-t border-gray-200">
- <button className="flex-1 px-4 py-3 bg-porsche-600 text-white rounded-lg font-medium hover:bg-porsche-700 transition-colors">
- <MessageCircle className="w-4 h-4 inline mr-2" />
- Message Team About Patient
- </button>
  <button
  className="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
  onClick={() => {

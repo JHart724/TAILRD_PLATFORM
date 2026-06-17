@@ -13,7 +13,6 @@ import {
   ChevronDown,
   ChevronRight,
   Plus,
-  Edit,
   Trash2,
   UserCheck,
   Pill,
@@ -273,14 +272,6 @@ const CoronaryWorklist: React.FC = () => {
  ? []
  : filteredPatients.map(p => p.id)
  );
-  };
-
-  const bulkScheduleCathLab = () => {
- {}
-  };
-
-  const bulkOrderCardiacRehab = () => {
- {}
   };
 
   const exportToCSV = () => {
@@ -543,27 +534,6 @@ const CoronaryWorklist: React.FC = () => {
  Export CSV
  </button>
  </div>
-
- {/* Bulk Actions */}
- {selectedPatients.length > 0 && (
- <div className="flex items-center gap-2 mt-4 p-3 bg-porsche-50 border border-porsche-200 rounded-lg">
- <span className="text-sm text-porsche-700 font-medium">
- {selectedPatients.length} patients selected
- </span>
- <button
- onClick={bulkScheduleCathLab}
- className="px-3 py-1 bg-porsche-600 text-white rounded text-sm hover:bg-porsche-700 transition-colors"
- >
- Schedule Cath Lab
- </button>
- <button
- onClick={bulkOrderCardiacRehab}
- className="px-3 py-1 bg-titanium-300 text-white rounded text-sm hover:bg-titanium-300 transition-colors"
- >
- Order Cardiac Rehab
- </button>
- </div>
- )}
  </div>
 
  {/* Patient Table */}
@@ -669,9 +639,6 @@ const CoronaryWorklist: React.FC = () => {
  className="p-1 text-titanium-600 hover:text-titanium-800 hover:bg-titanium-100 rounded transition-colors"
  >
  {expandedPatient === patient.id ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
- </button>
- <button className="p-1 text-titanium-600 hover:text-titanium-800 hover:bg-titanium-100 rounded transition-colors">
- <Edit className="w-4 h-4" />
  </button>
  </div>
  </td>

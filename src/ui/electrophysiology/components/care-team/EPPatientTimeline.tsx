@@ -266,9 +266,6 @@ const EPPatientTimeline: React.FC<EPPatientTimelineProps> = ({ patientId, patien
  >
  Close
  </button>
- <button className="px-4 py-2 bg-chrome-600 text-white rounded-lg hover:bg-chrome-700 transition-colors">
- Add Follow-up
- </button>
  </div>
  </div>
  </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send, CheckCircle, Clock, XCircle, AlertTriangle, User, Calendar, MapPin, MessageCircle, ExternalLink, X, Heart, Thermometer, Droplets, Shield, Pill, FileText, Activity } from 'lucide-react';
+import { CheckCircle, Clock, XCircle, AlertTriangle, User, Calendar, MapPin, ExternalLink, X, Heart, Thermometer, Droplets, Shield, Pill, FileText, Activity } from 'lucide-react';
 
 interface EPReferral {
   id: string;
@@ -751,23 +751,7 @@ const EPReferralTrackerEnhanced: React.FC = () => {
  )}
 
  {/* Action Buttons */}
- <div className="flex items-center justify-between pt-4 border-t border-titanium-200">
- <div className="flex gap-3">
- <button className="flex items-center gap-2 px-4 py-2 bg-porsche-600 text-white text-sm rounded-lg hover:bg-porsche-700 transition-colors">
- <MessageCircle className="w-4 h-4" />
- Follow Up
- </button>
- {referral.status === 'pending' && (
- <button className="px-4 py-2 bg-green-50 text-green-600 text-sm rounded-lg hover:bg-titanium-300 transition-colors border border-green-100">
- Mark Scheduled
- </button>
- )}
- {referral.status === 'scheduled' && (
- <button className="px-4 py-2 bg-crimson-100 text-crimson-700 text-sm rounded-lg hover:bg-crimson-100 transition-colors border border-crimson-200">
- Send Reminder
- </button>
- )}
- </div>
+ <div className="flex items-center justify-end pt-4 border-t border-titanium-200">
  <div className="text-sm text-titanium-600">
  {referral.followUpRequired && (
  <span className="flex items-center gap-1">
@@ -973,10 +957,6 @@ const EPReferralTrackerEnhanced: React.FC = () => {
 
  {/* Action Buttons */}
  <div className="flex gap-3 pt-4 border-t border-gray-200">
- <button className="flex-1 px-4 py-3 bg-porsche-600 text-white rounded-lg font-medium hover:bg-porsche-700 transition-colors">
- <Send className="w-4 h-4 inline mr-2" />
- Create New Referral
- </button>
  <button
  className="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
  onClick={() => {

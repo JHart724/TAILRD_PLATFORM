@@ -25,11 +25,12 @@ const GDMTHeatmap: React.FC<GDMTHeatmapProps> = ({ data }) => {
   );
 
   const getHeatColor = (score: number): string => {
- if (score >= 80) return "bg-chrome-50";
- if (score >= 75) return "bg-titanium-300";
- if (score >= 70) return "bg-chrome-50";
- if (score >= 65) return "bg-chrome-50";
- return "bg-red-500";
+ // AUDIT-150: distinct monotonic bands. Was 80/70/65 all collapsing to bg-chrome-50
+ // (plus off-palette bg-red-500). On-palette per UI_CANON 4.2/6: green good,
+ // gold moderate, arterial needs-attention. Numeric + bar-width carry the exact value.
+ if (score >= 80) return "bg-green-600";
+ if (score >= 65) return "bg-amber-500";
+ return "bg-arterial-500";
   };
 
   return (
@@ -67,16 +68,16 @@ const GDMTHeatmap: React.FC<GDMTHeatmapProps> = ({ data }) => {
  <span>Performance Key:</span>
  <div className="flex gap-2">
  <div className="flex items-center gap-1">
- <div className="w-3 h-3 rounded bg-chrome-50"></div>
- <span>≥80%</span>
+ <div className="w-3 h-3 rounded bg-green-600"></div>
+ <span>80%+ Optimized</span>
  </div>
  <div className="flex items-center gap-1">
- <div className="w-3 h-3 rounded bg-chrome-50"></div>
- <span>70-79%</span>
+ <div className="w-3 h-3 rounded bg-amber-500"></div>
+ <span>65-79% Moderate</span>
  </div>
  <div className="flex items-center gap-1">
- <div className="w-3 h-3 rounded bg-red-500"></div>
- <span>&lt;65%</span>
+ <div className="w-3 h-3 rounded bg-arterial-500"></div>
+ <span>&lt;65% Needs Attention</span>
  </div>
  </div>
  </div>
