@@ -3889,6 +3889,35 @@ export const RUNTIME_GAP_REGISTRY = [
     classOfRecommendation: '2a',
     levelOfEvidence: 'B',
   },
+  // v3.0 VHD buildout chunk 1 registry entries (AR + mixed/integrated valve severity, 2026-06-17).
+  {
+    id: 'gap-vhd-103-severe-ar-surgical',
+    name: 'Severe Asymptomatic AR LV Dysfunction Surgical', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-102-ar-surveillance',
+    name: 'Aortic Regurgitation Surveillance Echo', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-104-mixed-valve-staging',
+    name: 'Mixed Multi-Valve Integrated Staging', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-vhd-105-mr-quant-triangulation',
+    name: 'Moderate MR Quantitative Triangulation', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C-LD',
+  },
   {
     id: 'gap-pv-critical-limb',
     name: 'Critical Limb Ischemia Urgent Evaluation',
@@ -7724,32 +7753,143 @@ export function evaluateGapRules(
     });
   }
 
-  // Gap VD-5: Aortic Regurgitation Monitoring
-  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
-  // Aortic regurgitation (I35.1) requires periodic echo surveillance
-  const hasAorticRegurg = dxCodes.some(c => c.startsWith('I35.1'));
-  if (
-    hasAorticRegurg &&
-    labValues['lvef'] === undefined &&
-    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
-  ) {
+  // ===== v3.0 VHD chunk 1: AR + mixed/integrated valve severity =====
+  // Reads the threaded echo severity (echo-severity unlock PR #404 + SH chunk-3 vena-contracta map-add):
+  // valve_severity (0-5 grade-preserving), aortic_vena_contracta (cm, AR width), mitral_eroa, mitral_regurg_grade,
+  // mitral_vena_contracta, lvef. Severe AR = valve_severity>=5 OR aortic_vena_contracta>=0.6 cm (a vena-contracta
+  // width >=0.6 cm is the guideline severe-AR cut). LVESD is NOT threaded (Path-B arm dropped, documented).
+  const hasAorticRegurg = dxCodes.some(c => c.startsWith('I35.1') || c.startsWith('I35.2'));
+  const severeAR =
+    (labValues['valve_severity'] !== undefined && labValues['valve_severity'] >= 5) ||
+    (labValues['aortic_vena_contracta'] !== undefined && labValues['aortic_vena_contracta'] >= 0.6);
+  const anyAREchoValue =
+    labValues['lvef'] !== undefined || labValues['valve_severity'] !== undefined ||
+    labValues['aortic_vena_contracta'] !== undefined;
+  const symptomaticVHD = dxCodes.some(c =>
+    c.startsWith('I50') || c.startsWith('R55') || c.startsWith('I20') || c.startsWith('R06')
+  );
+
+  // Gap VHD-103: Severe chronic asymptomatic AR with LV dysfunction -> surgical evaluation (AUDIT-134 tightened)
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 AVR for severe AR + LVEF<=55%, or LVESD threshold).
+  // Tightening (AUDIT-134): the prior VD-5 fired on I35.1 + lvef-ABSENT (an echo-existence proxy mis-credited as a
+  // severity gate). Now gated on threaded SEVERE AR (valve_severity>=5 or aortic_vena_contracta>=0.6) + asymptomatic
+  // + LVEF<=55. STANDING SUBGROUP CHECK: AR surgery is subgroup-dependent - valve-sparing root/repair for select
+  // anatomy vs valve replacement (AVR); the recommendation is heart-team repair-vs-replace, not a blanket AVR.
+  // Path-B: the LVESD>=50 mm arm of the Class-1 trigger is not threaded (LVESD unmapped); the LVEF<=55 arm is built.
+  if (hasAorticRegurg && severeAR && !symptomaticVHD
+      && labValues['lvef'] !== undefined && labValues['lvef'] <= 55
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
-      type: TherapyGapType.IMAGING_OVERDUE,
+      type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.VALVULAR_DISEASE,
-      status: 'Echo surveillance overdue for aortic regurgitation',
-      target: 'Transthoracic echocardiogram completed',
+      status: 'Severe asymptomatic AR with LV dysfunction: surgical evaluation gap',
+      target: 'Heart-team aortic valve surgery evaluation (valve-sparing/repair vs replacement)',
       recommendations: {
-        action: 'Consider echocardiographic surveillance for aortic regurgitation per 2020 ACC/AHA VHD',
+        action: 'Consider heart-team aortic valve surgery evaluation (valve-sparing root repair vs aortic valve replacement, by anatomy) for severe asymptomatic aortic regurgitation with LVEF <=55% per 2020 ACC/AHA VHD (Class 1)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Subgroup-aware: repair (valve-sparing/David) for select root anatomy vs replacement (AVR) - heart-team-determined. Path-B: the LVESD>=50 mm Class-1 trigger arm is not threaded; the LVEF<=55 arm is gated.',
       },
       evidence: {
         triggerCriteria: [
-          'Aortic regurgitation (I35.1)',
-          'No recent echocardiogram data available',
+          'Aortic regurgitation (I35.1 or I35.2)',
+          'Severe AR (valve_severity >=5 or aortic vena contracta >=0.6 cm)',
+          'Asymptomatic (no HF/syncope/angina/dyspnea dx)',
+          `LVEF: ${labValues['lvef']}% (<=55, LV dysfunction)`,
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
         classOfRecommendation: '1',
-        levelOfEvidence: 'B',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent echo within guideline interval'],
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Aortic valve already replaced (Z95.2/.3/.4)'],
+      },
+    });
+  }
+
+  // Gap VHD-102: Moderate aortic regurgitation without surveillance echo
+  // Guideline: 2020 ACC/AHA VHD Guideline (periodic surveillance for chronic AR). The existence-proxy is
+  // LEGITIMATE here (a surveillance gap fires on absence of a recent echo, by design). Path-B: AR severity is not
+  // confirmable from the dx alone (I35.1 does not encode grade); this surfaces the AR population due for surveillance.
+  if (hasAorticRegurg && !anyAREchoValue && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Aortic regurgitation without surveillance echo on file',
+      target: 'Periodic surveillance echocardiogram (AR severity grading + LV size/function)',
+      recommendations: {
+        action: 'Consider periodic surveillance echocardiography (AR severity grading and LV size/function) for chronic aortic regurgitation per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Path-B: AR grade is not encoded in the dx; no echo-derived value on file is the surveillance-due proxy. The surveillance interval scales with severity (annual for moderate, every 6-12 mo for severe).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Aortic regurgitation (I35.1 or I35.2)',
+          'No echo-derived value on file (surveillance-due proxy)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent echo within the guideline interval'],
+      },
+    });
+  }
+
+  // Gap VHD-104: Mixed / multi-valve disease without integrated staging
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 integrated assessment when >1 valve lesion; the dominant
+  // lesion drives management). Multi-valve = >=2 of AS (I35.0) / MR (I34.0) / AR (I35.1), or mixed aortic I35.2.
+  const hasAS_VHD = dxCodes.some(c => c.startsWith('I35.0'));
+  const hasMR_VHD = dxCodes.some(c => c.startsWith('I34.0'));
+  const hasAR_VHD = dxCodes.some(c => c.startsWith('I35.1'));
+  const multiValveCount = [hasAS_VHD, hasMR_VHD, hasAR_VHD].filter(Boolean).length;
+  const hasMixedAortic = dxCodes.some(c => c.startsWith('I35.2'));
+  if ((multiValveCount >= 2 || hasMixedAortic) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.SCREENING_DUE,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Mixed / multi-valve disease without integrated severity staging',
+      target: 'Integrated multi-valve severity staging (dominant-lesion-driven management)',
+      recommendations: {
+        action: 'Consider integrated multi-valve severity staging - the dominant lesion drives management, and combined lesions can mask single-valve severity - per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Combined lesions (e.g. AS + MR) alter loading and can under- or over-estimate single-valve severity; integrated staging clarifies the dominant lesion. Path-B: documentation of prior integrated staging is not ingested.',
+      },
+      evidence: {
+        triggerCriteria: [
+          hasMixedAortic ? 'Mixed aortic valve disease (I35.2)' : 'Multiple valve lesions (>=2 of AS I35.0 / MR I34.0 / AR I35.1)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent integrated staging documented'],
+      },
+    });
+  }
+
+  // Gap VHD-105: Moderate MR graded by color Doppler without quantitative triangulation
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 quantitative grading - EROA + vena contracta + regurgitant
+  // volume - especially for moderate MR where color-flow alone is unreliable).
+  const hasModerateMRColor = labValues['mitral_regurg_grade'] !== undefined &&
+    labValues['mitral_regurg_grade'] >= 2 && labValues['mitral_regurg_grade'] <= 3;
+  const hasMRQuant = labValues['mitral_eroa'] !== undefined || labValues['mitral_vena_contracta'] !== undefined;
+  if (hasMR_VHD && hasModerateMRColor && !hasMRQuant && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.SCREENING_DUE,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Moderate MR by color Doppler without quantitative (EROA/vena-contracta) triangulation',
+      target: 'Quantitative MR grading (EROA + vena contracta + regurgitant volume)',
+      recommendations: {
+        action: 'Consider quantitative MR grading (effective regurgitant orifice area + vena contracta + regurgitant volume) for moderate MR graded by color Doppler alone per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Color-flow grading alone is unreliable in the moderate band and can underestimate severe MR; quantitative triangulation reclassifies a meaningful fraction. Path-B: regurgitant-volume is not separately threaded; EROA + vena contracta are the threaded quantitative measures.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mitral regurgitation (I34.0)',
+          `MR grade ${labValues['mitral_regurg_grade']} (moderate band, color Doppler)`,
+          'No quantitative measure on file (EROA and vena contracta both absent)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Quantitative MR assessment already on file'],
       },
     });
   }
