@@ -2,18 +2,18 @@
   "codeSource": "backend/src/ingestion/gaps/gapRuleEngine.ts",
   "evaluatorBlocks": [
     {
-      "bodyEndLine": 6867,
-      "bodyStartLine": 6836,
-      "commentLine": 6822,
+      "bodyEndLine": 6994,
+      "bodyStartLine": 6963,
+      "commentLine": 6949,
       "commentLiteral": "// Gap PV-1: High-Intensity Statin Missing in PAD",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [],
       "name": "PV-1"
     },
     {
-      "bodyEndLine": 6897,
-      "bodyStartLine": 6874,
-      "commentLine": 6869,
+      "bodyEndLine": 7024,
+      "bodyStartLine": 7001,
+      "commentLine": 6996,
       "commentLiteral": "// Gap PV-2: ABI Screening Not Done",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -22,9 +22,9 @@
       "name": "PV-2"
     },
     {
-      "bodyEndLine": 8008,
-      "bodyStartLine": 7983,
-      "commentLine": 7976,
+      "bodyEndLine": 8685,
+      "bodyStartLine": 8660,
+      "commentLine": 8653,
       "commentLiteral": "// Gap PV-3: Antiplatelet in PAD",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -33,9 +33,9 @@
       "name": "PV-3"
     },
     {
-      "bodyEndLine": 8038,
-      "bodyStartLine": 8018,
-      "commentLine": 8010,
+      "bodyEndLine": 8715,
+      "bodyStartLine": 8695,
+      "commentLine": 8687,
       "commentLiteral": "// Gap PV-4: Smoking Cessation in PAD",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -44,9 +44,9 @@
       "name": "PV-4"
     },
     {
-      "bodyEndLine": 8068,
-      "bodyStartLine": 8048,
-      "commentLine": 8040,
+      "bodyEndLine": 8745,
+      "bodyStartLine": 8725,
+      "commentLine": 8717,
       "commentLiteral": "// Gap PV-5: Exercise Therapy for Claudication",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -55,9 +55,9 @@
       "name": "PV-5"
     },
     {
-      "bodyEndLine": 8099,
-      "bodyStartLine": 8078,
-      "commentLine": 8070,
+      "bodyEndLine": 8776,
+      "bodyStartLine": 8755,
+      "commentLine": 8747,
       "commentLiteral": "// Gap PV-6: Diabetes Control in PAD",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -66,9 +66,9 @@
       "name": "PV-6"
     },
     {
-      "bodyEndLine": 8131,
-      "bodyStartLine": 8111,
-      "commentLine": 8101,
+      "bodyEndLine": 8808,
+      "bodyStartLine": 8788,
+      "commentLine": 8778,
       "commentLiteral": "// Gap PV-7: Wound Care Assessment",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -77,9 +77,9 @@
       "name": "PV-7"
     },
     {
-      "bodyEndLine": 8161,
-      "bodyStartLine": 8141,
-      "commentLine": 8133,
+      "bodyEndLine": 8838,
+      "bodyStartLine": 8818,
+      "commentLine": 8810,
       "commentLiteral": "// Gap PV-8: Duplex Ultrasound Follow-up",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -88,9 +88,9 @@
       "name": "PV-8"
     },
     {
-      "bodyEndLine": 8193,
-      "bodyStartLine": 8172,
-      "commentLine": 8163,
+      "bodyEndLine": 8870,
+      "bodyStartLine": 8849,
+      "commentLine": 8840,
       "commentLiteral": "// Gap PV-9: AAA Screening",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -99,9 +99,9 @@
       "name": "PV-9"
     },
     {
-      "bodyEndLine": 9755,
-      "bodyStartLine": 9732,
-      "commentLine": 9724,
+      "bodyEndLine": 10426,
+      "bodyStartLine": 10403,
+      "commentLine": 10395,
       "commentLiteral": "// Gap PV-10: Cilostazol for Claudication",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -110,9 +110,9 @@
       "name": "PV-10"
     },
     {
-      "bodyEndLine": 9789,
-      "bodyStartLine": 9765,
-      "commentLine": 9757,
+      "bodyEndLine": 10460,
+      "bodyStartLine": 10436,
+      "commentLine": 10428,
       "commentLiteral": "// Gap PV-11: ACEi/ARB in PAD with Hypertension",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -121,9 +121,9 @@
       "name": "PV-11"
     },
     {
-      "bodyEndLine": 9818,
-      "bodyStartLine": 9799,
-      "commentLine": 9791,
+      "bodyEndLine": 10489,
+      "bodyStartLine": 10470,
+      "commentLine": 10462,
       "commentLiteral": "// Gap PV-12: Renal Artery Stenosis Screen",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -132,9 +132,9 @@
       "name": "PV-12"
     },
     {
-      "bodyEndLine": 9848,
-      "bodyStartLine": 9826,
-      "commentLine": 9820,
+      "bodyEndLine": 10519,
+      "bodyStartLine": 10497,
+      "commentLine": 10491,
       "commentLiteral": "// Gap PV-13: Carotid Screening in PAD",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -143,9 +143,9 @@
       "name": "PV-13"
     },
     {
-      "bodyEndLine": 9875,
-      "bodyStartLine": 9857,
-      "commentLine": 9850,
+      "bodyEndLine": 10546,
+      "bodyStartLine": 10528,
+      "commentLine": 10521,
       "commentLiteral": "// Gap PV-14: Annual Foot Exam in PAD with Diabetes",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -154,9 +154,9 @@
       "name": "PV-14"
     },
     {
-      "bodyEndLine": 9904,
-      "bodyStartLine": 9886,
-      "commentLine": 9877,
+      "bodyEndLine": 10575,
+      "bodyStartLine": 10557,
+      "commentLine": 10548,
       "commentLiteral": "// Gap PV-15: Compression Therapy Assessment",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -165,9 +165,9 @@
       "name": "PV-15"
     },
     {
-      "bodyEndLine": 15425,
-      "bodyStartLine": 15397,
-      "commentLine": 15395,
+      "bodyEndLine": 16096,
+      "bodyStartLine": 16068,
+      "commentLine": 16066,
       "commentLiteral": "// PV-RIVAROXABAN: Low-Dose Rivaroxaban in PAD (COMPASS Trial)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -176,9 +176,9 @@
       "name": "PV-RIVAROXABAN"
     },
     {
-      "bodyEndLine": 15458,
-      "bodyStartLine": 15429,
-      "commentLine": 15427,
+      "bodyEndLine": 16129,
+      "bodyStartLine": 16100,
+      "commentLine": 16098,
       "commentLiteral": "// PV-CLOPIDOGREL: Clopidogrel for Aspirin Intolerance in PAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -187,9 +187,9 @@
       "name": "PV-CLOPIDOGREL"
     },
     {
-      "bodyEndLine": 15488,
-      "bodyStartLine": 15462,
-      "commentLine": 15460,
+      "bodyEndLine": 16159,
+      "bodyStartLine": 16133,
+      "commentLine": 16131,
       "commentLiteral": "// PV-BYPASS-EVAL: Bypass Surgery Evaluation for CLI",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -198,9 +198,9 @@
       "name": "PV-BYPASS-EVAL"
     },
     {
-      "bodyEndLine": 15517,
-      "bodyStartLine": 15492,
-      "commentLine": 15490,
+      "bodyEndLine": 16188,
+      "bodyStartLine": 16163,
+      "commentLine": 16161,
       "commentLiteral": "// PV-ENDOVASCULAR: Endovascular Evaluation for Lifestyle-Limiting Claudication",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -209,9 +209,9 @@
       "name": "PV-ENDOVASCULAR"
     },
     {
-      "bodyEndLine": 15545,
-      "bodyStartLine": 15523,
-      "commentLine": 15519,
+      "bodyEndLine": 16216,
+      "bodyStartLine": 16194,
+      "commentLine": 16190,
       "commentLiteral": "// PV-VENOUS-ULCER: Venous Ulcer Management",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -220,9 +220,9 @@
       "name": "PV-VENOUS-ULCER"
     },
     {
-      "bodyEndLine": 15575,
-      "bodyStartLine": 15550,
-      "commentLine": 15547,
+      "bodyEndLine": 16246,
+      "bodyStartLine": 16221,
+      "commentLine": 16218,
       "commentLiteral": "// PV-DVT-SCREEN: DVT Screening for Unilateral Edema",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -231,9 +231,9 @@
       "name": "PV-DVT-SCREEN"
     },
     {
-      "bodyEndLine": 15601,
-      "bodyStartLine": 15580,
-      "commentLine": 15577,
+      "bodyEndLine": 16272,
+      "bodyStartLine": 16251,
+      "commentLine": 16248,
       "commentLiteral": "// PV-PTS-PREVENTION: Post-Thrombotic Syndrome Prevention after DVT",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -242,9 +242,9 @@
       "name": "PV-PTS-PREVENTION"
     },
     {
-      "bodyEndLine": 15630,
-      "bodyStartLine": 15605,
-      "commentLine": 15603,
+      "bodyEndLine": 16301,
+      "bodyStartLine": 16276,
+      "commentLine": 16274,
       "commentLiteral": "// PV-MESENTERIC: Mesenteric Ischemia Screening in PAD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -253,9 +253,9 @@
       "name": "PV-MESENTERIC"
     },
     {
-      "bodyEndLine": 15657,
-      "bodyStartLine": 15635,
-      "commentLine": 15632,
+      "bodyEndLine": 16328,
+      "bodyStartLine": 16306,
+      "commentLine": 16303,
       "commentLiteral": "// PV-THORACIC-OUTLET: Thoracic Outlet Syndrome Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -264,9 +264,9 @@
       "name": "PV-THORACIC-OUTLET"
     },
     {
-      "bodyEndLine": 15683,
-      "bodyStartLine": 15662,
-      "commentLine": 15659,
+      "bodyEndLine": 16354,
+      "bodyStartLine": 16333,
+      "commentLine": 16330,
       "commentLiteral": "// PV-VARICOSE: Varicose Vein Management",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -275,9 +275,9 @@
       "name": "PV-VARICOSE"
     },
     {
-      "bodyEndLine": 15709,
-      "bodyStartLine": 15688,
-      "commentLine": 15685,
+      "bodyEndLine": 16380,
+      "bodyStartLine": 16359,
+      "commentLine": 16356,
       "commentLiteral": "// PV-LYMPHEDEMA: Lymphedema Management",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -286,9 +286,9 @@
       "name": "PV-LYMPHEDEMA"
     },
     {
-      "bodyEndLine": 15743,
-      "bodyStartLine": 15717,
-      "commentLine": 15711,
+      "bodyEndLine": 16414,
+      "bodyStartLine": 16388,
+      "commentLine": 16382,
       "commentLiteral": "// PV-RAYNAUD: Calcium Channel Blocker for Raynaud Phenomenon",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -297,9 +297,9 @@
       "name": "PV-RAYNAUD"
     },
     {
-      "bodyEndLine": 15774,
-      "bodyStartLine": 15747,
-      "commentLine": 15745,
+      "bodyEndLine": 16445,
+      "bodyStartLine": 16418,
+      "commentLine": 16416,
       "commentLiteral": "// PV-VASCULAR-REHAB: Vascular Rehabilitation Post-Intervention",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -308,9 +308,9 @@
       "name": "PV-VASCULAR-REHAB"
     },
     {
-      "bodyEndLine": 15806,
-      "bodyStartLine": 15778,
-      "commentLine": 15776,
+      "bodyEndLine": 16477,
+      "bodyStartLine": 16449,
+      "commentLine": 16447,
       "commentLiteral": "// PV-PENTOXIFYLLINE: Pentoxifylline When Cilostazol Contraindicated",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -319,9 +319,9 @@
       "name": "PV-PENTOXIFYLLINE"
     },
     {
-      "bodyEndLine": 15837,
-      "bodyStartLine": 15810,
-      "commentLine": 15808,
+      "bodyEndLine": 16508,
+      "bodyStartLine": 16481,
+      "commentLine": 16479,
       "commentLiteral": "// PV-NAFTIDROFURYL: Naftidrofuryl for Severe Claudication",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -330,9 +330,9 @@
       "name": "PV-NAFTIDROFURYL"
     },
     {
-      "bodyEndLine": 15870,
-      "bodyStartLine": 15845,
-      "commentLine": 15843,
+      "bodyEndLine": 16541,
+      "bodyStartLine": 16516,
+      "commentLine": 16514,
       "commentLiteral": "// PV-CRITICAL-LIMB: Critical Limb Ischemia Urgent Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -341,9 +341,9 @@
       "name": "PV-CRITICAL-LIMB"
     },
     {
-      "bodyEndLine": 15900,
-      "bodyStartLine": 15874,
-      "commentLine": 15872,
+      "bodyEndLine": 16571,
+      "bodyStartLine": 16545,
+      "commentLine": 16543,
       "commentLiteral": "// PV-GRAFT-SURVEILLANCE: Bypass Graft Surveillance",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -352,9 +352,9 @@
       "name": "PV-GRAFT-SURVEILLANCE"
     },
     {
-      "bodyEndLine": 15931,
-      "bodyStartLine": 15904,
-      "commentLine": 15902,
+      "bodyEndLine": 16602,
+      "bodyStartLine": 16575,
+      "commentLine": 16573,
       "commentLiteral": "// PV-ANTICOAG-VTE: VTE Anticoagulation Duration Review",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -675,7 +675,7 @@
       "levelOfEvidence": "A",
       "name": "Critical Limb Ischemia Urgent Evaluation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3893
+      "registryLine": 4017
     },
     {
       "classOfRecommendation": "1",
@@ -685,7 +685,7 @@
       "levelOfEvidence": "B",
       "name": "Bypass Graft Surveillance",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3905
+      "registryLine": 4029
     },
     {
       "classOfRecommendation": "1",
@@ -695,7 +695,7 @@
       "levelOfEvidence": "B",
       "name": "VTE Anticoagulation Duration Review",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3917
+      "registryLine": 4041
     }
   ]
 }

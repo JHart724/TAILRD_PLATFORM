@@ -54,16 +54,21 @@ describe('SH-057 / SH-060 post-AVR conduction subgroup', () => {
   });
 });
 
-// ---- SH-012: prosthetic valve structural deterioration (elevated gradient) ----
-describe('SH-012 prosthetic SVD', () => {
-  it('fires: prosthetic valve + elevated mean gradient 25', () => {
-    expect(find(evaluateGapRules([BIOAV], { aortic_valve_mean_gradient: 25 }, [], 75, 'MALE'), 'structural deterioration evaluation gap')).toBeTruthy();
+// ---- SH-012 SUPERSEDED 2026-06-17 (AUDIT-169) by the type-aware VHD-068/011. A bioprosthetic (Z95.3) valve
+//      with an elevated gradient now fires VHD-011 (bioprosthetic SVD), with the type-correct recommendation. ----
+describe('SH-012 -> VHD-011 prosthetic SVD (superseded)', () => {
+  it('fires: bioprosthetic valve + elevated mean gradient 25 -> VHD-011 SVD', () => {
+    expect(find(evaluateGapRules([BIOAV], { aortic_valve_mean_gradient: 25 }, [], 75, 'MALE'), 'structural deterioration (SVD) evaluation gap')).toBeTruthy();
   });
   it('gate: gradient 12 (normal for a prosthesis)', () => {
-    expect(find(evaluateGapRules([BIOAV], { aortic_valve_mean_gradient: 12 }, [], 75, 'MALE'), 'structural deterioration evaluation gap')).toBeFalsy();
+    expect(find(evaluateGapRules([BIOAV], { aortic_valve_mean_gradient: 12 }, [], 75, 'MALE'), 'structural deterioration (SVD) evaluation gap')).toBeFalsy();
   });
   it('null Path-B: no gradient on file -> does not fire', () => {
-    expect(find(evaluateGapRules([BIOAV], {}, [], 75, 'MALE'), 'structural deterioration evaluation gap')).toBeFalsy();
+    expect(find(evaluateGapRules([BIOAV], {}, [], 75, 'MALE'), 'structural deterioration (SVD) evaluation gap')).toBeFalsy();
+  });
+  it('the old general SH-012 status is gone (superseded)', () => {
+    const g = evaluateGapRules([BIOAV], { aortic_valve_mean_gradient: 25 }, [], 75, 'MALE');
+    expect(find(g, 'Prosthetic valve with elevated gradient: structural deterioration evaluation gap')).toBeFalsy();
   });
 });
 

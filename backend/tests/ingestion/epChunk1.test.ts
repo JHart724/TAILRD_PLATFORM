@@ -88,13 +88,14 @@ describe('EP-005 apixaban inappropriately under-dosed', () => {
   });
 });
 
-// ---- EP-008: DOAC contraindicated in moderate-severe mitral stenosis ----
+// ---- EP-008: DOAC contraindicated in NONRHEUMATIC moderate-severe mitral stenosis (AUDIT-172: rheumatic -> VHD-083) ----
 describe('EP-008 DOAC in mitral stenosis', () => {
-  it('fires: rheumatic MS (I05.0) + apixaban', () => {
+  it('AUDIT-172 reconciliation: rheumatic MS (I05.0) + AF + apixaban no longer fires EP-008 (VHD-083 owns rheumatic)', () => {
     const g = evaluateGapRules([AF, 'I05.0'], {}, [APIXABAN], 70);
-    expect(find(g, 'DOAC contraindicated in moderate-severe mitral stenosis')).toBeTruthy();
+    expect(find(g, 'DOAC contraindicated in moderate-severe mitral stenosis')).toBeFalsy(); // EP-008 narrowed out
+    expect(find(g, 'not on warfarin (DOAC contraindicated)')).toBeTruthy(); // VHD-083 fires (switch from DOAC to warfarin)
   });
-  it('fires: nonrheumatic MS (I34.2) + rivaroxaban', () => {
+  it('fires: nonrheumatic MS (I34.2) + rivaroxaban (EP-008 retains nonrheumatic MS)', () => {
     const g = evaluateGapRules(['I34.2'], {}, [RIVAROXABAN], 70);
     expect(find(g, 'DOAC contraindicated in moderate-severe mitral stenosis')).toBeTruthy();
   });
@@ -102,8 +103,8 @@ describe('EP-008 DOAC in mitral stenosis', () => {
     const g = evaluateGapRules([AF], {}, [APIXABAN], 70);
     expect(find(g, 'DOAC contraindicated in moderate-severe mitral stenosis')).toBeFalsy();
   });
-  it('gates: MS but on warfarin (appropriate)', () => {
-    const g = evaluateGapRules([AF, 'I05.0'], {}, [WARFARIN], 70);
+  it('gates: nonrheumatic MS but on warfarin (appropriate)', () => {
+    const g = evaluateGapRules([AF, 'I34.2'], {}, [WARFARIN], 70);
     expect(find(g, 'DOAC contraindicated in moderate-severe mitral stenosis')).toBeFalsy();
   });
 });

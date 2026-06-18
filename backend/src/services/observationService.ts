@@ -91,6 +91,11 @@ export const ECHO_LOINC_TO_SLUG: Record<string, string> = {
   '77913-2': 'mitral_vena_contracta',                                                 // MV vena contracta diameter (NLM-verified)
   '77908-2': 'aortic_vena_contracta',                                                 // AV vena contracta diameter (NLM-verified)
   '77917-3': 'tricuspid_vena_contracta',                                              // TV vena contracta diameter (NLM-verified)
+  // Fix (AUDIT-170, 2026-06-17): INR is a coag lab, not echo, but this is the persist-site LOINC->slug map - the
+  // mechanical-valve INR cluster (VD-3, VHD-001) + the LVAD INR gap read labValues['inr'], but without a slug
+  // mapping the FHIR transform persisted observationType = the raw LOINC '34714-6', so threaded INR never reached
+  // them (AUDIT-070-class silent under-detection). Mapping 34714-6 -> 'inr' threads it to labValues['inr'].
+  '34714-6': 'inr',                                                                   // INR (NLM LOINC 34714-6)
 };
 
 const VITAL_SIGNS_CODES: Record<string, string[]> = {

@@ -2,7 +2,7 @@
 
 **Module:** Structural Heart (SH)
 **Spec source:** `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md` §6.3
-**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=60, evaluator=55, gapsPush=55)
+**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=60, evaluator=54, gapsPush=54)
 **Crosswalk:** `docs/audit/canonical/SH.crosswalk.json` (auditMethod: rule-body-citation-AUDIT-030D)
 **Audit date:** 2026-06-08
 
@@ -77,8 +77,9 @@ Structural Heart has **88 spec gaps** across 14 subcategories. Implementation: *
 
 ## 4.6 — EXTRA rules + architectural patterns
 
-**Registry-without-evaluator (5):** registry entries with no matching evaluator block body.
+**Registry-without-evaluator (6):** registry entries with no matching evaluator block body.
 
+- `gap-sh-9-pfo-closure` (registry line 1337): No evaluator body matched via similarity scoring
 - `gap-sh-003-lflg-classical` (registry line 2812): No evaluator body matched via similarity scoring
 - `gap-sh-004-lflg-paradoxical` (registry line 2819): No evaluator body matched via similarity scoring
 - `gap-sh-006-asymptomatic-as` (registry line 2826): No evaluator body matched via similarity scoring
@@ -93,18 +94,18 @@ Structural Heart has **88 spec gaps** across 14 subcategories. Implementation: *
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
 | GAP-SH-001 | 445 | SPEC_ONLY | — | v3.0 SH close: GAP-SH-001 (asymptomatic very-severe AS, EARLY-TAVR heart-team) has no distinct evalu |
-| GAP-SH-002 | 446 | DET_OK | `gap-sh-2-tavr-eval` (SH-002 @7110-7137) | v3.0 SH chunk 1 (AUDIT-125 tightened): severe symptomatic AS -> AVR now gates on concordant severe A |
-| GAP-SH-003 | 447 | DET_OK | `gap-sh-003-lflg-classical` (SH-003 @7177-7201) | v3.0 SH chunk 1: classical low-flow low-gradient AS (LVEF<50 + AVA<1.0 + mean gradient<40) -> dobuta |
-| GAP-SH-006 | 448 | DET_OK | `gap-sh-006-asymptomatic-as` (SH-006 @7143-7168) | v3.0 SH chunk 1: asymptomatic severe AS + LVEF<55 -> AVR evaluation (Class IIa; LVEF<50 Class 1). Co |
-| GAP-SH-061 | 472 | DET_OK | `gap-sh-valve-in-valve` (SH-VALVE-IN-VALVE @14766-14788) | RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-123 fixed - ViV (SH-VALVE-IN-VALVE) is |
-| GAP-SH-014 | 485 | DET_OK | `gap-sh-3-mitral-intervention` (SH-014 @7330-7358) | v3.0 SH chunk 2 (AUDIT-125 tightened): severe PRIMARY MR (EROA>=0.40 / grade>=4 / valve_severity>=5) |
+| GAP-SH-002 | 446 | DET_OK | `gap-sh-2-tavr-eval` (SH-002 @7237-7264) | v3.0 SH chunk 1 (AUDIT-125 tightened): severe symptomatic AS -> AVR now gates on concordant severe A |
+| GAP-SH-003 | 447 | DET_OK | `gap-sh-003-lflg-classical` (SH-003 @7304-7328) | v3.0 SH chunk 1: classical low-flow low-gradient AS (LVEF<50 + AVA<1.0 + mean gradient<40) -> dobuta |
+| GAP-SH-006 | 448 | DET_OK | `gap-sh-006-asymptomatic-as` (SH-006 @7270-7295) | v3.0 SH chunk 1: asymptomatic severe AS + LVEF<55 -> AVR evaluation (Class IIa; LVEF<50 Class 1). Co |
+| GAP-SH-061 | 472 | DET_OK | `gap-sh-valve-in-valve` (SH-VALVE-IN-VALVE @15437-15459) | RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-123 fixed - ViV (SH-VALVE-IN-VALVE) is |
+| GAP-SH-014 | 485 | DET_OK | `gap-sh-3-mitral-intervention` (SH-014 @7457-7485) | v3.0 SH chunk 2 (AUDIT-125 tightened): severe PRIMARY MR (EROA>=0.40 / grade>=4 / valve_severity>=5) |
 | GAP-SH-015 | 486 | SPEC_ONLY | — | v3.0 SH close: GAP-SH-015 has no distinct evaluator after the MR block split (the chunk-2 MR build c |
-| GAP-SH-018 | 487 | PARTIAL_DETECTION | `gap-sh-10-mitraclip` (SH-10 @8527-8558) | (broad MR + LVEF<50) \| auto-verify: preserved-from-addendum |
+| GAP-SH-018 | 487 | PARTIAL_DETECTION | `gap-sh-10-mitraclip` (SH-10 @9204-9235) | (broad MR + LVEF<50) \| auto-verify: preserved-from-addendum |
 | GAP-SH-019 | 488 | SPEC_ONLY | — | â€” \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-SH-022 | 507 | DET_OK | `gap-sh-4-tricuspid-assessment` (SH-012 @9396-9418) | RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-125 fixed (v3.0 SH chunk 3) - severe-T |
-| GAP-SH-075 | 517 | PARTIAL_DETECTION | `gap-sh-075-typeb-tevar` (SH-075 @8973-8995) | v3.0 SH chunk 4: complicated type-B dissection (malperfusion proxy K55.0x/N17/I74.3-5) -> urgent TEV |
+| GAP-SH-022 | 507 | DET_OK | `gap-sh-022-tricuspid-assessment` (SH-022 @7567-7651) | RESOLVED 2026-06-17 (v3.0 SH close; registryId migrated 2026-06-17 v3.0 VHD close, AUDIT-171): PARTI |
+| GAP-SH-075 | 517 | PARTIAL_DETECTION | `gap-sh-075-typeb-tevar` (SH-075 @9655-9677) | v3.0 SH chunk 4: complicated type-B dissection (malperfusion proxy K55.0x/N17/I74.3-5) -> urgent TEV |
 | GAP-SH-090 | 549 | SPEC_ONLY | — | â€” \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-SH-091 | 550 | DET_OK | `gap-sh-091-massive-pe-reperfusion` (SH-091 @9169-9191) | v3.0 SH chunk 5: massive PE (I26.0x) + cardiogenic shock (R57.0) -> reperfusion (lysis/embolectomy/E |
+| GAP-SH-091 | 550 | DET_OK | `gap-sh-091-massive-pe-reperfusion` (SH-091 @9857-9879) | v3.0 SH chunk 5: massive PE (I26.0x) + cardiogenic shock (R57.0) -> reperfusion (lysis/embolectomy/E |
 
 ---
 

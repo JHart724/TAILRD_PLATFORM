@@ -17,7 +17,7 @@
   "matches": [
     {
       "evaluatorBlockName": "Gap-1",
-      "evaluatorCommentLine": 4469,
+      "evaluatorCommentLine": 4593,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-1-attr-cm",
@@ -25,7 +25,7 @@
     },
     {
       "evaluatorBlockName": "Gap-2",
-      "evaluatorCommentLine": 4504,
+      "evaluatorCommentLine": 4628,
       "matchConfidence": 0.3,
       "matchMethod": "similarity",
       "registryId": "gap-2-iron-deficiency",
@@ -33,7 +33,7 @@
     },
     {
       "evaluatorBlockName": "Gap-6",
-      "evaluatorCommentLine": 4534,
+      "evaluatorCommentLine": 4658,
       "matchConfidence": 0.286,
       "matchMethod": "similarity",
       "registryId": "gap-6-finerenone",
@@ -41,7 +41,7 @@
     },
     {
       "evaluatorBlockName": "Gap-44",
-      "evaluatorCommentLine": 6402,
+      "evaluatorCommentLine": 6529,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-44-digoxin-toxicity",
@@ -49,7 +49,7 @@
     },
     {
       "evaluatorBlockName": "HF-34",
-      "evaluatorCommentLine": 4570,
+      "evaluatorCommentLine": 4694,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-34-sglt2i",
@@ -57,7 +57,7 @@
     },
     {
       "evaluatorBlockName": "HF-35",
-      "evaluatorCommentLine": 4601,
+      "evaluatorCommentLine": 4725,
       "matchConfidence": 0.571,
       "matchMethod": "similarity",
       "registryId": "gap-hf-35-beta-blocker",
@@ -65,7 +65,7 @@
     },
     {
       "evaluatorBlockName": "HF-36",
-      "evaluatorCommentLine": 4630,
+      "evaluatorCommentLine": 4754,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-36-mra",
@@ -73,7 +73,7 @@
     },
     {
       "evaluatorBlockName": "HF-37",
-      "evaluatorCommentLine": 6900,
+      "evaluatorCommentLine": 7027,
       "matchConfidence": 0.333,
       "matchMethod": "similarity",
       "registryId": "gap-hf-37-raas",
@@ -81,7 +81,7 @@
     },
     {
       "evaluatorBlockName": "HF-7",
-      "evaluatorCommentLine": 4666,
+      "evaluatorCommentLine": 4790,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-hf-7-glp1ra",
@@ -89,7 +89,7 @@
     },
     {
       "evaluatorBlockName": "HF-12",
-      "evaluatorCommentLine": 4696,
+      "evaluatorCommentLine": 4820,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-hf-12-hcm-screening",
@@ -97,7 +97,7 @@
     },
     {
       "evaluatorBlockName": "HF-17",
-      "evaluatorCommentLine": 4719,
+      "evaluatorCommentLine": 4843,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-hf-17-ivabradine",
@@ -105,7 +105,7 @@
     },
     {
       "evaluatorBlockName": "HF-18",
-      "evaluatorCommentLine": 4749,
+      "evaluatorCommentLine": 4873,
       "matchConfidence": 0.8,
       "matchMethod": "similarity",
       "registryId": "gap-hf-18-vericiguat",
@@ -113,7 +113,7 @@
     },
     {
       "evaluatorBlockName": "HF-19",
-      "evaluatorCommentLine": 4775,
+      "evaluatorCommentLine": 4899,
       "matchConfidence": 0.75,
       "matchMethod": "similarity",
       "registryId": "gap-hf-19-hydralazine-isdn",
@@ -121,7 +121,7 @@
     },
     {
       "evaluatorBlockName": "HF-20",
-      "evaluatorCommentLine": 4801,
+      "evaluatorCommentLine": 4925,
       "matchConfidence": 0.833,
       "matchMethod": "similarity",
       "registryId": "gap-hf-20-cardiac-rehab",
@@ -129,7 +129,7 @@
     },
     {
       "evaluatorBlockName": "HF-21",
-      "evaluatorCommentLine": 4820,
+      "evaluatorCommentLine": 4944,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-hf-21-hfpef-screening",
@@ -137,7 +137,7 @@
     },
     {
       "evaluatorBlockName": "HF-26",
-      "evaluatorCommentLine": 4848,
+      "evaluatorCommentLine": 4972,
       "matchConfidence": 0.8,
       "matchMethod": "similarity",
       "registryId": "gap-hf-26-osa-screening",
@@ -145,7 +145,7 @@
     },
     {
       "evaluatorBlockName": "HF-29",
-      "evaluatorCommentLine": 4873,
+      "evaluatorCommentLine": 4997,
       "matchConfidence": 0.833,
       "matchMethod": "similarity",
       "registryId": "gap-hf-29-remote-monitoring",
@@ -153,7 +153,7 @@
     },
     {
       "evaluatorBlockName": "HF-30",
-      "evaluatorCommentLine": 4901,
+      "evaluatorCommentLine": 5025,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-hf-30-arni-underdosing",
@@ -161,7 +161,7 @@
     },
     {
       "evaluatorBlockName": "HF-37-FU",
-      "evaluatorCommentLine": 4932,
+      "evaluatorCommentLine": 5056,
       "matchConfidence": 0.857,
       "matchMethod": "similarity",
       "registryId": "gap-hf-37-fu-discharge",
@@ -169,7 +169,7 @@
     },
     {
       "evaluatorBlockName": "HF-38",
-      "evaluatorCommentLine": 4951,
+      "evaluatorCommentLine": 5075,
       "matchConfidence": 0.8,
       "matchMethod": "similarity",
       "registryId": "gap-hf-38-influenza-vax",
@@ -177,7 +177,7 @@
     },
     {
       "evaluatorBlockName": "HF-73",
-      "evaluatorCommentLine": 4970,
+      "evaluatorCommentLine": 5094,
       "matchConfidence": 0.8,
       "matchMethod": "similarity",
       "registryId": "gap-hf-73-hyponatremia",
@@ -185,7 +185,7 @@
     },
     {
       "evaluatorBlockName": "HF-74",
-      "evaluatorCommentLine": 4993,
+      "evaluatorCommentLine": 5117,
       "matchConfidence": 0.857,
       "matchMethod": "similarity",
       "registryId": "gap-hf-74-bnp-monitoring",
@@ -193,7 +193,7 @@
     },
     {
       "evaluatorBlockName": "HF-75",
-      "evaluatorCommentLine": 5016,
+      "evaluatorCommentLine": 5140,
       "matchConfidence": 0.778,
       "matchMethod": "similarity",
       "registryId": "gap-hf-75-cardiac-mri",
@@ -201,7 +201,7 @@
     },
     {
       "evaluatorBlockName": "HF-76",
-      "evaluatorCommentLine": 5040,
+      "evaluatorCommentLine": 5164,
       "matchConfidence": 0.857,
       "matchMethod": "similarity",
       "registryId": "gap-hf-76-palliative-care",
@@ -209,7 +209,7 @@
     },
     {
       "evaluatorBlockName": "HF-77",
-      "evaluatorCommentLine": 5064,
+      "evaluatorCommentLine": 5188,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-hf-77-diuretic-resistance",
@@ -217,7 +217,7 @@
     },
     {
       "evaluatorBlockName": "HF-79",
-      "evaluatorCommentLine": 5089,
+      "evaluatorCommentLine": 5213,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-79-sglt2i-hfpef",
@@ -225,7 +225,7 @@
     },
     {
       "evaluatorBlockName": "HF-80",
-      "evaluatorCommentLine": 5118,
+      "evaluatorCommentLine": 5242,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-hf-80-cardio-oncology",
@@ -233,7 +233,7 @@
     },
     {
       "evaluatorBlockName": "HF-82",
-      "evaluatorCommentLine": 5142,
+      "evaluatorCommentLine": 5266,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-hf-82-cardiac-sarcoidosis",
@@ -241,7 +241,7 @@
     },
     {
       "evaluatorBlockName": "HF-83",
-      "evaluatorCommentLine": 8199,
+      "evaluatorCommentLine": 8876,
       "matchConfidence": 0.75,
       "matchMethod": "similarity",
       "registryId": "gap-hf-83-loop-without-mra",
@@ -249,7 +249,7 @@
     },
     {
       "evaluatorBlockName": "HF-84",
-      "evaluatorCommentLine": 8234,
+      "evaluatorCommentLine": 8911,
       "matchConfidence": 0.75,
       "matchMethod": "similarity",
       "registryId": "gap-hf-84-transplant-eval",
@@ -257,7 +257,7 @@
     },
     {
       "evaluatorBlockName": "HF-85",
-      "evaluatorCommentLine": 8263,
+      "evaluatorCommentLine": 8940,
       "matchConfidence": 0.833,
       "matchMethod": "similarity",
       "registryId": "gap-hf-85-lvad-referral",
@@ -265,7 +265,7 @@
     },
     {
       "evaluatorBlockName": "HF-86",
-      "evaluatorCommentLine": 8293,
+      "evaluatorCommentLine": 8970,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-hf-86-crt-d-upgrade",
@@ -273,7 +273,7 @@
     },
     {
       "evaluatorBlockName": "HF-87",
-      "evaluatorCommentLine": 8323,
+      "evaluatorCommentLine": 9000,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-hf-87-peripartum",
@@ -281,7 +281,7 @@
     },
     {
       "evaluatorBlockName": "HF-88",
-      "evaluatorCommentLine": 8354,
+      "evaluatorCommentLine": 9031,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-hf-88-myocarditis",
@@ -289,7 +289,7 @@
     },
     {
       "evaluatorBlockName": "HF-89",
-      "evaluatorCommentLine": 8382,
+      "evaluatorCommentLine": 9059,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-hf-89-fabry",
@@ -297,7 +297,7 @@
     },
     {
       "evaluatorBlockName": "HF-90",
-      "evaluatorCommentLine": 8415,
+      "evaluatorCommentLine": 9092,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-hf-90-amyloid-biomarker",
@@ -305,7 +305,7 @@
     },
     {
       "evaluatorBlockName": "HF-91",
-      "evaluatorCommentLine": 8443,
+      "evaluatorCommentLine": 9120,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-hf-91-sleep-apnea-treatment",
@@ -313,7 +313,7 @@
     },
     {
       "evaluatorBlockName": "HF-92",
-      "evaluatorCommentLine": 8476,
+      "evaluatorCommentLine": 9153,
       "matchConfidence": 0.833,
       "matchMethod": "similarity",
       "registryId": "gap-hf-92-volume-status",
@@ -321,7 +321,7 @@
     },
     {
       "evaluatorBlockName": "HF-ARNI-SWITCH",
-      "evaluatorCommentLine": 13169,
+      "evaluatorCommentLine": 13840,
       "matchConfidence": 0.571,
       "matchMethod": "similarity",
       "registryId": "gap-hf-arni-switch",
@@ -329,7 +329,7 @@
     },
     {
       "evaluatorBlockName": "HF-THIAMINE",
-      "evaluatorCommentLine": 13213,
+      "evaluatorCommentLine": 13884,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-thiamine",
@@ -337,7 +337,7 @@
     },
     {
       "evaluatorBlockName": "HF-K-MONITOR",
-      "evaluatorCommentLine": 13254,
+      "evaluatorCommentLine": 13925,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-hf-potassium-monitor",
@@ -345,7 +345,7 @@
     },
     {
       "evaluatorBlockName": "HF-ADVANCE-CARE",
-      "evaluatorCommentLine": 13291,
+      "evaluatorCommentLine": 13962,
       "matchConfidence": 0.833,
       "matchMethod": "similarity",
       "registryId": "gap-hf-advance-care",
@@ -353,7 +353,7 @@
     },
     {
       "evaluatorBlockName": "HF-LVNC",
-      "evaluatorCommentLine": 13324,
+      "evaluatorCommentLine": 13995,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-hf-lvnc",
@@ -361,7 +361,7 @@
     },
     {
       "evaluatorBlockName": "HF-HEMODYNAMIC",
-      "evaluatorCommentLine": 13357,
+      "evaluatorCommentLine": 14028,
       "matchConfidence": 0.7,
       "matchMethod": "similarity",
       "registryId": "gap-hf-hemodynamic-monitor",
@@ -369,7 +369,7 @@
     },
     {
       "evaluatorBlockName": "HF-DIURETIC-OPT",
-      "evaluatorCommentLine": 13388,
+      "evaluatorCommentLine": 14059,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-diuretic-optimization",
@@ -377,7 +377,7 @@
     },
     {
       "evaluatorBlockName": "HF-149",
-      "evaluatorCommentLine": 14580,
+      "evaluatorCommentLine": 15251,
       "matchConfidence": 0.071,
       "matchMethod": "similarity",
       "registryId": "gap-hf-vaccine-covid",
@@ -385,7 +385,7 @@
     },
     {
       "evaluatorBlockName": "HF-ANEMIA-HF",
-      "evaluatorCommentLine": 13426,
+      "evaluatorCommentLine": 14097,
       "matchConfidence": 0.25,
       "matchMethod": "similarity",
       "registryId": "gap-hf-anemia-hf",
@@ -393,7 +393,7 @@
     },
     {
       "evaluatorBlockName": "HF-IRON-IV-MONITORING",
-      "evaluatorCommentLine": 13457,
+      "evaluatorCommentLine": 14128,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-hf-iron-iv-monitoring",
@@ -401,339 +401,339 @@
     },
     {
       "evaluatorBlockName": "HF-FINERENONE-MREF",
-      "evaluatorCommentLine": 13495,
+      "evaluatorCommentLine": 14166,
       "matchConfidence": 0.333,
       "matchMethod": "similarity",
       "registryId": "gap-hf-017-finerenone-mref",
-      "registryLine": 3931
+      "registryLine": 4055
     },
     {
       "evaluatorBlockName": "HF-AMYLOID-AF-OAC",
-      "evaluatorCommentLine": 13524,
+      "evaluatorCommentLine": 14195,
       "matchConfidence": 0.545,
       "matchMethod": "similarity",
       "registryId": "gap-hf-077-amyloid-af-oac",
-      "registryLine": 3943
+      "registryLine": 4067
     },
     {
       "evaluatorBlockName": "HF-DM-HBA1C",
-      "evaluatorCommentLine": 13548,
+      "evaluatorCommentLine": 14219,
       "matchConfidence": 0.556,
       "matchMethod": "similarity",
       "registryId": "gap-hf-081-dm-hba1c",
-      "registryLine": 3955
+      "registryLine": 4079
     },
     {
       "evaluatorBlockName": "HF-MRA-CONTRA",
-      "evaluatorCommentLine": 13577,
+      "evaluatorCommentLine": 14248,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-008-mra-contra",
-      "registryLine": 3967
+      "registryLine": 4091
     },
     {
       "evaluatorBlockName": "HF-IRON-DEF-IV",
-      "evaluatorCommentLine": 13605,
+      "evaluatorCommentLine": 14276,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-033-iron-def-iv",
-      "registryLine": 3979
+      "registryLine": 4103
     },
     {
       "evaluatorBlockName": "HF-PERICARDITIS-COLCH",
-      "evaluatorCommentLine": 13630,
+      "evaluatorCommentLine": 14301,
       "matchConfidence": 0.333,
       "matchMethod": "similarity",
       "registryId": "gap-hf-143-pericarditis-colch",
-      "registryLine": 3991
+      "registryLine": 4115
     },
     {
       "evaluatorBlockName": "HF-ATTR-DMT",
-      "evaluatorCommentLine": 13657,
+      "evaluatorCommentLine": 14328,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-054-attr-dmt",
-      "registryLine": 4003
+      "registryLine": 4127
     },
     {
       "evaluatorBlockName": "HF-BB-NON-EBM",
-      "evaluatorCommentLine": 13681,
+      "evaluatorCommentLine": 14352,
       "matchConfidence": 0.333,
       "matchMethod": "similarity",
       "registryId": "gap-hf-002-bb-non-ebm",
-      "registryLine": 4015
+      "registryLine": 4139
     },
     {
       "evaluatorBlockName": "HF-BB-TARGET-DOSE",
-      "evaluatorCommentLine": 13725,
+      "evaluatorCommentLine": 14396,
       "matchConfidence": 0.636,
       "matchMethod": "similarity",
       "registryId": "gap-hf-003-bb-target-dose",
-      "registryLine": 4029
+      "registryLine": 4153
     },
     {
       "evaluatorBlockName": "HF-SGLT2I-EGFR-FLOOR",
-      "evaluatorCommentLine": 13765,
+      "evaluatorCommentLine": 14436,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-011-sglt2i-egfr-floor",
-      "registryLine": 4041
+      "registryLine": 4165
     },
     {
       "evaluatorBlockName": "HF-DIGOXIN-HIGH-ELDERLY",
-      "evaluatorCommentLine": 13792,
+      "evaluatorCommentLine": 14463,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-015-digoxin-high-elderly",
-      "registryLine": 4053
+      "registryLine": 4177
     },
     {
       "evaluatorBlockName": "HF-ICD-PRIMARY-ISCHEMIC",
-      "evaluatorCommentLine": 13824,
+      "evaluatorCommentLine": 14495,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-024-icd-primary-ischemic",
-      "registryLine": 4065
+      "registryLine": 4189
     },
     {
       "evaluatorBlockName": "HF-ICD-PRIMARY-NICM",
-      "evaluatorCommentLine": 13854,
+      "evaluatorCommentLine": 14525,
       "matchConfidence": 0.409,
       "matchMethod": "similarity",
       "registryId": "gap-hf-025-icd-primary-nicm",
-      "registryLine": 4077
+      "registryLine": 4201
     },
     {
       "evaluatorBlockName": "HF-ICD-SECONDARY",
-      "evaluatorCommentLine": 13885,
+      "evaluatorCommentLine": 14556,
       "matchConfidence": 0.375,
       "matchMethod": "similarity",
       "registryId": "gap-hf-026-icd-secondary",
-      "registryLine": 4089
+      "registryLine": 4213
     },
     {
       "evaluatorBlockName": "HF-LEAD-EXTRACTION",
-      "evaluatorCommentLine": 13910,
+      "evaluatorCommentLine": 14581,
       "matchConfidence": 0.4,
       "matchMethod": "similarity",
       "registryId": "gap-hf-031-lead-extraction",
-      "registryLine": 4101
+      "registryLine": 4225
     },
     {
       "evaluatorBlockName": "HF-CCM-CANDIDATE",
-      "evaluatorCommentLine": 13935,
+      "evaluatorCommentLine": 14606,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-126-ccm-candidate",
-      "registryLine": 4113
+      "registryLine": 4237
     },
     {
       "evaluatorBlockName": "HF-WCD-BRIDGE",
-      "evaluatorCommentLine": 13963,
+      "evaluatorCommentLine": 14634,
       "matchConfidence": 0.364,
       "matchMethod": "similarity",
       "registryId": "gap-hf-127-wcd-bridge",
-      "registryLine": 4125
+      "registryLine": 4249
     },
     {
       "evaluatorBlockName": "HF-FABRY-ERT",
-      "evaluatorCommentLine": 13994,
+      "evaluatorCommentLine": 14665,
       "matchConfidence": 0.273,
       "matchMethod": "similarity",
       "registryId": "gap-hf-061-fabry-ert",
-      "registryLine": 4137
+      "registryLine": 4261
     },
     {
       "evaluatorBlockName": "HF-SARCOID-AVBLOCK",
-      "evaluatorCommentLine": 14020,
+      "evaluatorCommentLine": 14691,
       "matchConfidence": 0.385,
       "matchMethod": "similarity",
       "registryId": "gap-hf-062-sarcoid-avblock",
-      "registryLine": 4149
+      "registryLine": 4273
     },
     {
       "evaluatorBlockName": "HF-SARCOID-IMMUNOSUPP",
-      "evaluatorCommentLine": 14048,
+      "evaluatorCommentLine": 14719,
       "matchConfidence": 0.4,
       "matchMethod": "similarity",
       "registryId": "gap-hf-063-sarcoid-immunosupp",
-      "registryLine": 4161
+      "registryLine": 4285
     },
     {
       "evaluatorBlockName": "HF-TACHY-CM",
-      "evaluatorCommentLine": 14075,
+      "evaluatorCommentLine": 14746,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-065-tachy-cm",
-      "registryLine": 4173
+      "registryLine": 4297
     },
     {
       "evaluatorBlockName": "HF-TAKOTSUBO-ECHO",
-      "evaluatorCommentLine": 14103,
+      "evaluatorCommentLine": 14774,
       "matchConfidence": 0.375,
       "matchMethod": "similarity",
       "registryId": "gap-hf-072-takotsubo-echo",
-      "registryLine": 4185
+      "registryLine": 4309
     },
     {
       "evaluatorBlockName": "HF-RADIATION-SURV",
-      "evaluatorCommentLine": 14129,
+      "evaluatorCommentLine": 14800,
       "matchConfidence": 0.556,
       "matchMethod": "similarity",
       "registryId": "gap-hf-073-radiation-surv",
-      "registryLine": 4197
+      "registryLine": 4321
     },
     {
       "evaluatorBlockName": "HF-ARVC-ICD",
-      "evaluatorCommentLine": 14215,
+      "evaluatorCommentLine": 14886,
       "matchConfidence": 0.2,
       "matchMethod": "similarity",
       "registryId": "gap-hf-074-arvc-icd",
-      "registryLine": 4209
+      "registryLine": 4333
     },
     {
       "evaluatorBlockName": "HF-IRON-SCREEN",
-      "evaluatorCommentLine": 14160,
+      "evaluatorCommentLine": 14831,
       "matchConfidence": 0.556,
       "matchMethod": "similarity",
       "registryId": "gap-hf-032-iron-screen",
-      "registryLine": 4221
+      "registryLine": 4345
     },
     {
       "evaluatorBlockName": "HF-IRON-FUNCTIONAL",
-      "evaluatorCommentLine": 14188,
+      "evaluatorCommentLine": 14859,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-034-iron-functional",
-      "registryLine": 4233
+      "registryLine": 4357
     },
     {
       "evaluatorBlockName": "HF-GDMT-INCOMPLETE",
-      "evaluatorCommentLine": 14248,
+      "evaluatorCommentLine": 14919,
       "matchConfidence": 0.444,
       "matchMethod": "similarity",
       "registryId": "gap-hf-036-gdmt-incomplete",
-      "registryLine": 4245
+      "registryLine": 4369
     },
     {
       "evaluatorBlockName": "HF-STAGE-B",
-      "evaluatorCommentLine": 14280,
+      "evaluatorCommentLine": 14951,
       "matchConfidence": 0.333,
       "matchMethod": "similarity",
       "registryId": "gap-hf-076-stage-b",
-      "registryLine": 4257
+      "registryLine": 4381
     },
     {
       "evaluatorBlockName": "HF-AF-RATE",
-      "evaluatorCommentLine": 14307,
+      "evaluatorCommentLine": 14978,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-078-af-rate",
-      "registryLine": 4269
+      "registryLine": 4393
     },
     {
       "evaluatorBlockName": "HF-THYROID",
-      "evaluatorCommentLine": 14332,
+      "evaluatorCommentLine": 15003,
       "matchConfidence": 0.571,
       "matchMethod": "similarity",
       "registryId": "gap-hf-080-thyroid",
-      "registryLine": 4281
+      "registryLine": 4405
     },
     {
       "evaluatorBlockName": "HF-METFORMIN-RENAL",
-      "evaluatorCommentLine": 14360,
+      "evaluatorCommentLine": 15031,
       "matchConfidence": 0.417,
       "matchMethod": "similarity",
       "registryId": "gap-hf-082-metformin-renal",
-      "registryLine": 4293
+      "registryLine": 4417
     },
     {
       "evaluatorBlockName": "HF-PREG-TERATOGEN",
-      "evaluatorCommentLine": 14387,
+      "evaluatorCommentLine": 15058,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-086-preg-teratogen",
-      "registryLine": 4305
+      "registryLine": 4429
     },
     {
       "evaluatorBlockName": "HF-INOTROPE-DEPENDENCE",
-      "evaluatorCommentLine": 14418,
+      "evaluatorCommentLine": 15089,
       "matchConfidence": 0.625,
       "matchMethod": "similarity",
       "registryId": "gap-hf-047-inotrope-dependence",
-      "registryLine": 4317
+      "registryLine": 4441
     },
     {
       "evaluatorBlockName": "HF-TOLVAPTAN-HYPONATREMIA",
-      "evaluatorCommentLine": 14441,
+      "evaluatorCommentLine": 15112,
       "matchConfidence": 0.4,
       "matchMethod": "similarity",
       "registryId": "gap-hf-132-tolvaptan-hyponatremia",
-      "registryLine": 4329
+      "registryLine": 4453
     },
     {
       "evaluatorBlockName": "HF-CS-MCS-ESCALATION",
-      "evaluatorCommentLine": 14467,
+      "evaluatorCommentLine": 15138,
       "matchConfidence": 0.583,
       "matchMethod": "similarity",
       "registryId": "gap-hf-133-cs-mcs-escalation",
-      "registryLine": 4341
+      "registryLine": 4465
     },
     {
       "evaluatorBlockName": "HF-CRS4-SCREEN",
-      "evaluatorCommentLine": 14496,
+      "evaluatorCommentLine": 15167,
       "matchConfidence": 0.692,
       "matchMethod": "similarity",
       "registryId": "gap-hf-139-crs4-screen",
-      "registryLine": 4353
+      "registryLine": 4477
     },
     {
       "evaluatorBlockName": "HF-PERICARDITIS-IL1",
-      "evaluatorCommentLine": 14521,
+      "evaluatorCommentLine": 15192,
       "matchConfidence": 0.417,
       "matchMethod": "similarity",
       "registryId": "gap-hf-144-pericarditis-il1",
-      "registryLine": 4365
+      "registryLine": 4489
     },
     {
       "evaluatorBlockName": "HF-CARDIOMEMS",
-      "evaluatorCommentLine": 14549,
+      "evaluatorCommentLine": 15220,
       "matchConfidence": 0.364,
       "matchMethod": "similarity",
       "registryId": "gap-hf-027-cardiomems",
-      "registryLine": 4377
+      "registryLine": 4501
     },
     {
       "evaluatorBlockName": "HF-LVAD-INR",
-      "evaluatorCommentLine": 14583,
+      "evaluatorCommentLine": 15254,
       "matchConfidence": 0.455,
       "matchMethod": "similarity",
       "registryId": "gap-hf-147-lvad-inr",
-      "registryLine": 4389
+      "registryLine": 4513
     },
     {
       "evaluatorBlockName": "HF-LVAD-GIB",
-      "evaluatorCommentLine": 14609,
+      "evaluatorCommentLine": 15280,
       "matchConfidence": 0.385,
       "matchMethod": "similarity",
       "registryId": "gap-hf-148-lvad-gib",
-      "registryLine": 4401
+      "registryLine": 4525
     },
     {
       "evaluatorBlockName": "HF-TRANSPLANT-CAV",
-      "evaluatorCommentLine": 14636,
+      "evaluatorCommentLine": 15307,
       "matchConfidence": 0.4,
       "matchMethod": "similarity",
       "registryId": "gap-hf-151-transplant-cav",
-      "registryLine": 4413
+      "registryLine": 4537
     },
     {
       "evaluatorBlockName": "HF-TRANSPLANT-BIOPSY",
-      "evaluatorCommentLine": 14661,
+      "evaluatorCommentLine": 15332,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-hf-152-transplant-biopsy",
-      "registryLine": 4425
+      "registryLine": 4549
     }
   ],
   "module": "HF",

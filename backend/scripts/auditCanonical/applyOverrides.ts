@@ -288,9 +288,9 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
     },
     'GAP-SH-022': {
       classification: 'DET_OK',
-      registryId: 'gap-sh-4-tricuspid-assessment',
+      registryId: 'gap-sh-022-tricuspid-assessment',
       auditNote:
-        'RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-125 fixed (v3.0 SH chunk 3) - severe-TR transcatheter-eval (SH-022, tightening the old SH-4) now gates on threaded TR severity (tr_regurg_grade>=4 OR valve_severity>=5) + congestion, no longer over-detecting mild TR. The legacy un-gated SH-12 was retired (AUDIT-167). Guarded by shChunk3.test.ts (AUDIT-125 regression: no severity -> does not fire).',
+        'RESOLVED 2026-06-17 (v3.0 SH close; registryId migrated 2026-06-17 v3.0 VHD close, AUDIT-171): PARTIAL -> DET_OK. AUDIT-125 fixed (v3.0 SH chunk 3) - severe-TR transcatheter-eval (SH-022, tightening the old SH-4) now gates on threaded TR severity (tr_regurg_grade>=4 OR valve_severity>=5) + congestion, no longer over-detecting mild TR. The legacy un-gated SH-12 was retired (AUDIT-167). AUDIT-171: the SH close renamed the evaluator SH-4 -> SH-022 but left the registry id gap-sh-4-tricuspid-assessment, so the cite could not pair (regOrphan -> applyOverrides demotion). Registry id migrated to gap-sh-022-tricuspid-assessment to match the evaluator + spec GAP-SH-022. Guarded by shChunk3.test.ts (AUDIT-125 regression: no severity -> does not fire).',
     },
     'GAP-SH-026': {
       classification: 'DET_OK',
@@ -484,6 +484,14 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
     // D-B5-4, AUDIT-136). 9 holds at PARTIAL (one re-cited: VHD-016 -> VD-ANTIPLATELET-BIOPROSTHETIC).
     // VHD-099 is a structurally-inferred Tier-S SAFETY item (ESCALATE-AT-DUA). PARTIAL entries retain
     // registryId; SPEC_ONLY entries drop it per the §16.6(ii) overlap rule.
+    //
+    // v3.0 VHD BUILD CLOSE 2026-06-17 (supersedes the 2026-06-10 0/11/94 read-only baseline above): chunks 1-5
+    // authored 17 purpose-built gap-vhd-* evaluators (test-guarded). Reclassified here against their genuine
+    // detection: 12 DET_OK (001/006/057/064/079/083/091/092/098/102/104/105) + 5 PARTIAL (011/059/068/099/103,
+    // each held by §16 underclaim-governs where a spec sub-arm needs un-threaded data: serial-gradient-delta,
+    // LVESD, warfarin-dose/trimester, or the on-abx-vs-on-anticoag axis). AUDIT-133/134/135 RESOLVED;
+    // AUDIT-169/170 filed in chunk 3. The pre-build broad-VD-* cites (VD-3/5/10/11/PANNUS/TRICUSPID) are
+    // re-cited to the purpose-built evaluators; legacy VD-5 retained as a regOrphan for lineage.
 
     // --- DET_OK -> PARTIAL (1) ---
     'GAP-VHD-005': {
@@ -502,9 +510,9 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
     // --- holds at PARTIAL ---
     'GAP-VHD-011': {
       classification: 'PARTIAL_DETECTION',
-      registryId: 'gap-vd-11-bioprosthetic-degeneration',
+      registryId: 'gap-vhd-011-bio-svd-gradient',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-10 (VHD audit): PARTIAL hold. VD-11 (gap-vd-11-bioprosthetic-degeneration) is a broad bioprosthetic-degeneration rule; PARTIAL per §3.2.1 because the broad rule lacks the gap-specific discrimination the spec wants. Evaluator retained.',
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 2 close): RE-CITED from the broad VD-11 to the purpose-built gap-vhd-011-bio-svd-gradient evaluator (bioprosthetic Z95.3 + elevated mean gradient -> SVD/ViV-vs-redo). Holds at PARTIAL per §16 underclaim-governs: the spec wants serial gradient rise >=10 mmHg from baseline OR new PVL; baseline-delta and PVL are not threaded, so the evaluator detects elevated absolute gradient as a proxy. Evaluator retained.',
     },
     'GAP-VHD-016': {
       classification: 'PARTIAL_DETECTION',
@@ -527,9 +535,9 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
     },
     'GAP-VHD-068': {
       classification: 'PARTIAL_DETECTION',
-      registryId: 'gap-vd-prosthetic-pannus',
+      registryId: 'gap-vhd-068-mech-pvt-gradient',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-10 (VHD audit): PARTIAL hold (T1). VD-PANNUS (gap-vd-prosthetic-pannus) covers symptom-driven prosthetic valve dysfunction; spec VHD-068 wants gradient-rise >=50% from baseline specifically, so PARTIAL per §3.2.1. Evaluator retained.',
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 2 close): RE-CITED from the broad VD-PANNUS to the purpose-built gap-vhd-068-mech-pvt-gradient evaluator (mechanical Z95.2/Z95.4 + elevated mean gradient -> PVT workup). Holds at PARTIAL per §16 underclaim-governs: the spec wants gradient rise >=50% from baseline specifically; baseline-delta is not threaded, so the evaluator detects elevated absolute gradient as a proxy. T1. Evaluator retained.',
     },
     'GAP-VHD-077': {
       classification: 'PARTIAL_DETECTION',
@@ -550,16 +558,17 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'MANUAL OVERRIDE 2026-06-10 (VHD audit): PARTIAL hold. VD-RADIATION (gap-vd-radiation-valve) broad radiation-valve consolidation rule (also covers VHD-095); PARTIAL per §3.2.1. Evaluator retained.',
     },
     'GAP-VHD-098': {
-      classification: 'PARTIAL_DETECTION',
-      registryId: 'gap-vd-10-pregnancy-risk',
+      classification: 'DET_OK',
+      registryId: 'gap-vhd-098-mech-valve-preconception',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-10 (VHD audit): PARTIAL hold. VD-10 (gap-vd-10-pregnancy-risk) is a broad pregnancy + valve-risk rule partially covering VHD-098; PARTIAL per §3.2.1. Siblings VHD-099/100/101 downgraded to SPEC_ONLY (AUDIT-136) because the broad rule does not carry their gap-specific protocols. Evaluator retained.',
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 5 close): PARTIAL -> DET_OK. RE-CITED from the broad VD-10 to the purpose-built gap-vhd-098-mech-valve-preconception evaluator (mechanical Z95.2/Z95.4 + reproductive-age female + not-pregnant -> pre-conception anticoagulation-strategy counseling). Genuinely detects the spec target (pre-conception female + mechanical valve without counseling). VD-10 remains the broader valve-disease pre-conception rule; this is the mechanical-valve-specific layer.',
     },
     // --- PARTIAL -> SPEC_ONLY downgrades (registryId dropped per §16.6(ii)) ---
     'GAP-VHD-001': {
-      classification: 'SPEC_ONLY',
+      classification: 'DET_OK',
+      registryId: 'gap-vhd-001-subtherapeutic-inr',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-10 (VHD audit, AUDIT-133): PARTIAL -> SPEC_ONLY. The prior cite (VD-3 gap-vd-3-inr-monitoring) does not detect the VHD-001 target: VD-3 fires on no-INR-data and the mechanical-valve anticoag rule fires on no-warfarin, so a mechanical-valve patient on warfarin with INR below target fires neither rule (zero true-positive overlap). Per §16.6(ii) disjoint-target -> SPEC_ONLY; registryId dropped.',
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 3 close, AUDIT-133 RESOLVED): SPEC_ONLY -> DET_OK. The 2026-06-10 disjoint-target finding (VD-3 fires on no-INR-data; the anticoag rule on no-warfarin) is resolved by the purpose-built gap-vhd-001-subtherapeutic-inr evaluator: mechanical valve (Z95.2/Z95.4) + warfarin + inr < 2.0, reading the AUDIT-170 INR slug-fix (LOINC 34714-6 -> inr). Genuinely detects the spec target. Position-specific INR target is a documented Path-B refinement, not a detection gap.',
     },
     'GAP-VHD-017': {
       classification: 'SPEC_ONLY',
@@ -567,9 +576,10 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'MANUAL OVERRIDE 2026-06-10 (VHD audit Batch 5, D-B5-2): PARTIAL -> SPEC_ONLY. The prior VD-11 (gap-vd-11-bioprosthetic-degeneration) consolidation cite does not genuinely detect the VHD-017 spec target (underclaim governs; coverage incidental, not the spec target). registryId dropped.',
     },
     'GAP-VHD-079': {
-      classification: 'SPEC_ONLY',
+      classification: 'DET_OK',
+      registryId: 'gap-vhd-079-rheumatic-prophylaxis',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-10 (VHD audit Batch 5, D-B5-3): PARTIAL -> SPEC_ONLY. The prior VD-TRICUSPID-SECONDARY (gap-vd-tricuspid-secondary) cite is a miscite - the rule does not detect the VHD-079 spec target. Per §16.6(ii) / §1 rule-body verification, miscite with no genuine overlap -> SPEC_ONLY; registryId dropped.',
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 4 close): SPEC_ONLY -> DET_OK. The prior VD-TRICUSPID-SECONDARY miscite is replaced by the purpose-built gap-vhd-079-rheumatic-prophylaxis evaluator: rheumatic heart disease (I05-I09) + no benzathine penicillin (RxNorm 7982) -> secondary prophylaxis. Exact match to the spec target. Prophylaxis duration (age/risk-dependent) is a documented Path-B refinement.',
     },
     'GAP-VHD-088': {
       classification: 'SPEC_ONLY',
@@ -577,12 +587,13 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'MANUAL OVERRIDE 2026-06-10 (VHD audit Batch 5, D-B5-4): PARTIAL -> SPEC_ONLY. The prior VD-PULMONARY-HTN (gap-vd-pulmonary-htn) cite is a miscite - the rule does not detect the VHD-088 spec target. Per §16.6(ii) / §1, miscite with no genuine overlap -> SPEC_ONLY; registryId dropped.',
     },
     'GAP-VHD-099': {
-      classification: 'SPEC_ONLY',
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-vhd-099-mech-valve-pregnancy-anticoag',
       inferredSafetyTag: 'STRUCTURAL_SAFETY',
       inferredSafetyRationale:
         'Mechanical valve + pregnancy 1st trimester: warfarin >5mg/day is teratogenic (warfarin embryopathy) without the spec LMWH-transition protocol; uncovered T1 maternal-fetal safety gap. Structurally-inferred SAFETY (spec carries no SAFETY tag); operator-decided Tier-S ESCALATE-AT-DUA.',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-10 (VHD audit, AUDIT-136): PARTIAL -> SPEC_ONLY. VD-10 (gap-vd-10-pregnancy-risk) is a broad pregnancy + valve-risk rule and does not carry the VHD-099 1st-trimester LMWH dose-transition protocol (warfarin >5mg/day); no genuine detection of the spec target. registryId dropped. Tier-S structural-safety (ESCALATE-AT-DUA).',
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 5 close): SPEC_ONLY -> PARTIAL. RE-CITED to the purpose-built gap-vhd-099-mech-valve-pregnancy-anticoag SAFETY_ALERT evaluator (mechanical Z95.2/Z95.4 + pregnancy O99.4x/O09/Z34/Z33.1/Z3A -> heart-team + MFM anticoagulation SAFETY, warfarin-branch teratogenicity tradeoff, do-NOT-discontinue guardrail). Holds at PARTIAL per §16 underclaim-governs: the spec wants warfarin >5mg/day dose-specificity + 1st-trimester-specific LMWH dose-transition (VHD-100 anti-Xa, VHD-101 delivery plan); warfarin dose and gestational-week precision are not threaded, so the evaluator fires the broader SAFETY referral across trimesters. Tier-S structural-safety (ESCALATE-AT-DUA) retained.',
     },
     'GAP-VHD-100': {
       classification: 'SPEC_ONLY',
@@ -606,9 +617,71 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'MANUAL OVERRIDE 2026-06-10 (VHD audit): DET_OK -> SPEC_ONLY. The 2026-05-04 baseline DET_OK override (VD-8 gap-vd-8-rheumatic-screen) failed re-review under §16.6/§16.5 + clinical-code verification: VD-8 does not genuinely detect the VHD-080 spec target (underclaim governs). registryId dropped.',
     },
     'GAP-VHD-103': {
-      classification: 'SPEC_ONLY',
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-vhd-103-severe-ar-surgical',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-10 (VHD audit): DET_OK -> SPEC_ONLY. The 2026-05-04 baseline DET_OK override (VD-5 gap-vd-5-aortic-regurgitation) failed re-review under §16.6/§16.5 + clinical-code verification: VD-5 does not genuinely detect the VHD-103 spec target (underclaim governs). registryId dropped.',
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 1 close, AUDIT-134): SPEC_ONLY -> PARTIAL. RE-CITED from the superseded VD-5 to the purpose-built gap-vhd-103-severe-ar-surgical evaluator (severe AR + asymptomatic + LVEF <= 55 -> surgical, repair-vs-replace subgroup). Holds at PARTIAL per §16 underclaim-governs: the spec surgical threshold is LVESD >= 50 OR LVEF <= 55%; LVESD is not threaded, so the evaluator covers the LVEF arm only (a severe-AR patient meeting the LVESD threshold with preserved LVEF is not detected). The legacy gap-vd-5-aortic-regurgitation registry entry is retained as a regOrphan for lineage (firing removed in chunk 1).',
+    },
+    // --- v3.0 VHD build: newly DET_OK / PARTIAL (purpose-built evaluators, chunks 1-5, 2026-06-17) ---
+    'GAP-VHD-006': {
+      classification: 'DET_OK',
+      registryId: 'gap-vhd-006-mech-asa-adjunct',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 3 close): newly DET_OK. Purpose-built gap-vhd-006-mech-asa-adjunct (mechanical Z95.2/Z95.4 + warfarin + atherosclerotic disease I25/I70 + no ASA -> low-dose ASA adjunct). Genuinely detects the spec target (mechanical valve without ASA adjunct when indicated; "when indicated" = atherosclerotic disease).',
+    },
+    'GAP-VHD-057': {
+      classification: 'DET_OK',
+      registryId: 'gap-vhd-057-ie-hf-surgery',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 4 close): newly DET_OK. Purpose-built gap-vhd-057-ie-hf-surgery (acute IE I33.0 + heart failure I50 -> urgent surgery indication). Genuinely detects the dx-codable spec target (IE + new/worsening HF). Overlaps the SH-module SH-029 (lumped IE-surgery) - surfaced for operator reconciliation at the close.',
+    },
+    'GAP-VHD-059': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-vhd-059-ie-embolic-surgery',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 4 close): newly PARTIAL. Purpose-built gap-vhd-059-ie-embolic-surgery (IE I33.0 + embolic event I74/I63 + on anticoagulation -> surgery consideration). Holds at PARTIAL per §16 underclaim-governs: the spec axis is "recurrent embolic event on abx" (antibiotic therapy for the IE); the evaluator gates on anticoagulation presence (a narrower/different therapy axis), so an IE+embolic patient not on anticoagulation is not detected. Overlaps SH-029 - surfaced for reconciliation.',
+    },
+    'GAP-VHD-064': {
+      classification: 'DET_OK',
+      registryId: 'gap-vhd-064-prior-ie-dental-prophylaxis',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 4 close): newly DET_OK. Purpose-built gap-vhd-064-prior-ie-dental-prophylaxis (prior IE I33.0/Z86.79 + dental encounter Z01.2x + no prophylaxis antibiotic -> highest-risk dental prophylaxis). Genuinely detects the spec target. Distinct from VHD-063/VD-14 (general prosthetic-valve dental prophylaxis): VHD-064 is the prior-IE-specific highest-risk condition.',
+    },
+    'GAP-VHD-083': {
+      classification: 'DET_OK',
+      registryId: 'gap-vhd-083-rheumatic-af-warfarin',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 4 close): newly DET_OK. Purpose-built gap-vhd-083-rheumatic-af-warfarin (rheumatic I05-I09 + AF I48 + not on warfarin -> warfarin; DOAC-contraindicated SAFETY subgroup, switch-vs-start branch, INVICTUS). Genuinely detects the spec target. Overlaps VD-12 (GAP-VHD-077, general AF+valve OAC) + EP-008 (rheumatic-MS DOAC) - surfaced for operator reconciliation.',
+    },
+    'GAP-VHD-091': {
+      classification: 'DET_OK',
+      registryId: 'gap-vhd-091-dopamine-agonist-valve-surveillance',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 5 close): newly DET_OK. Purpose-built gap-vhd-091-dopamine-agonist-valve-surveillance (cabergoline RxNorm 47579 / pergolide 8047 -> surveillance echo). Genuinely detects the at-risk-drug spec target. Surveillance interval (exposure-duration-dependent) is a documented Path-B refinement.',
+    },
+    'GAP-VHD-092': {
+      classification: 'DET_OK',
+      registryId: 'gap-vhd-092-ergot-alkaloid-valve-surveillance',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 5 close): newly DET_OK. Purpose-built gap-vhd-092-ergot-alkaloid-valve-surveillance (ergotamine RxNorm 4025 / methysergide 6911 -> surveillance echo). Genuinely detects the at-risk-drug spec target. Surveillance interval (exposure-duration-dependent) is a documented Path-B refinement.',
+    },
+    'GAP-VHD-102': {
+      classification: 'DET_OK',
+      registryId: 'gap-vhd-102-ar-surveillance',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 1 close): newly DET_OK. Purpose-built gap-vhd-102-ar-surveillance (aortic regurgitation I35.1/I35.2 + no quantitative echo value on file -> surveillance imaging). Genuinely detects the spec target (AR without annual echo quantification).',
+    },
+    'GAP-VHD-104': {
+      classification: 'DET_OK',
+      registryId: 'gap-vhd-104-mixed-valve-staging',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 1 close): newly DET_OK. Purpose-built gap-vhd-104-mixed-valve-staging (>=2 of AS I35.0 / MS I34.0... / AR-MR valve lesions -> integrated multi-valve staging). Genuinely detects the spec target (combined/mixed valve disease without integrated staging).',
+    },
+    'GAP-VHD-105': {
+      classification: 'DET_OK',
+      registryId: 'gap-vhd-105-mr-quant-triangulation',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 1 close): newly DET_OK. Purpose-built gap-vhd-105-mr-quant-triangulation (mitral I34.0 + regurg grade 2-3 + no EROA/vena-contracta on file -> quantitative triangulation). Genuinely detects the spec target (moderate MR by color/grade only without EROA + VC triangulation).',
     },
   },
   PV: {},
