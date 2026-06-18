@@ -1,7 +1,7 @@
 import React from 'react';
 import { EmptyState } from '../../design-system/EmptyState';
 
-// AUDIT-171 P2 (clinical-content leak remediation): removed the fabricated seeded-PRNG
+// AUDIT-178 P2 (clinical-content leak remediation): removed the fabricated seeded-PRNG
 // patient cohort + HF-specific columns/legend/recommendations that rendered module-blind
 // on all 6 service-line heatmap tabs. Retained as the seam P4 parameterizes by module
 // and wires per-module real data. No clinical claims are authored here.

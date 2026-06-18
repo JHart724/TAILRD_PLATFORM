@@ -141,7 +141,7 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
  return 'text-red-600 bg-red-100';
   };
 
-  // AUDIT-171 P2-addendum: removed dead HF-pillar anticoag helpers (orphaned after the 4-Pillar block excision).
+  // AUDIT-178 P2-addendum: removed dead HF-pillar anticoag helpers (orphaned after the 4-Pillar block excision).
 
   const getAnticoagulationScoreColor = (score: number) => {
  if (score >= 80) return 'text-green-600 bg-green-50';
@@ -149,7 +149,7 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
  return 'text-red-700 bg-red-100';
   };
 
-  // AUDIT-171 P2-addendum: removed dead HF-pillar anticoag helpers (orphaned after the 4-Pillar block excision).
+  // AUDIT-178 P2-addendum: removed dead HF-pillar anticoag helpers (orphaned after the 4-Pillar block excision).
 
   const getAlertColor = (level: 'contraindication' | 'caution' | 'warning') => {
  switch(level) {
@@ -408,7 +408,7 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
  </div>
  </div>
 
- {/* AUDIT-171 P2: HF 4-Pillar GDMT block (ARNi/Beta-Blocker/SGLT2i/MRA) excised - was mislabeled as EP anticoagulation. Per-module EP content deferred to P4. */}
+ {/* AUDIT-178 P2: HF 4-Pillar GDMT block (ARNi/Beta-Blocker/SGLT2i/MRA) excised - was mislabeled as EP anticoagulation. Per-module EP content deferred to P4. */}
 
  {/* Optimization Opportunities */}
  {patient.fullChart.anticoagulation.opportunities.length > 0 && (
