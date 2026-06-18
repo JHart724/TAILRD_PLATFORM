@@ -59,8 +59,11 @@ describe('Structural: Gap rule engine integrity', () => {
     // Then 371 -> 370 by CAD chunk 0 tightenings (2026-06-18, feat/cad-chunk0-tightenings):
     // - net -1: -2 retired dead-drug firings (nicorandil + trimetazidine, AUDIT-175) + 1 CAD-REHAB split into
     //   post-CABG + post-MI (AUDIT-173).
+    // Then 370 -> 376 by CAD chunk 1 (2026-06-18, feat/cad-chunk1-lipid-risk):
+    // - net +6: +7 buildable lipid/risk/etiology gaps (CAD-013 FH + CAD-009 ApoB + CAD-083/084/085/022/026)
+    //   minus 1 retired left-main IVUS over-detector (CAD-IVUS, AUDIT-182, wrong I25.110 code).
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(370);
+    expect(count).toBe(376);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {
