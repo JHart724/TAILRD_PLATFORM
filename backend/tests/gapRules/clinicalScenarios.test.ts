@@ -62,8 +62,11 @@ describe('Structural: Gap rule engine integrity', () => {
     // Then 370 -> 376 by CAD chunk 1 (2026-06-18, feat/cad-chunk1-lipid-risk):
     // - net +6: +7 buildable lipid/risk/etiology gaps (CAD-013 FH + CAD-009 ApoB + CAD-083/084/085/022/026)
     //   minus 1 retired left-main IVUS over-detector (CAD-IVUS, AUDIT-182, wrong I25.110 code).
+    // Then 376 -> 377 by PV chunk 0 (2026-06-18, feat/pv-chunk0-tightenings):
+    // - net +1: the foundational gap-pv-003-abnormal-abi build (abnormal ABI <=0.90 without coded PAD, AUDIT-179);
+    //   the 5 over-credit tightenings (AUDIT-178/180) edit existing rules, they do not add or remove firings.
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(376);
+    expect(count).toBe(377);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

@@ -149,8 +149,8 @@ describe('validateEvidenceObjects - live gapRuleEngine.ts baseline', () => {
   const result = analyzeSource(src, 'gapRuleEngine.ts');
 
   it('finds 376 gaps.push nodes, all with an evidence object', () => {
-    expect(result.pushCount).toBe(376); // 370 + 6 net (CAD chunk 1: +7 lipid/risk/etiology gaps - 1 CAD-IVUS retire, 2026-06-18)
-    expect(result.evidenceCount).toBe(376);
+    expect(result.pushCount).toBe(377); // 376 + 1 (PV chunk 0: gap-pv-003-abnormal-abi build, AUDIT-179, 2026-06-18)
+    expect(result.evidenceCount).toBe(377);
   });
 
   it('reports ZERO inconsistencies (clean baseline post-AUDIT-103)', () => {

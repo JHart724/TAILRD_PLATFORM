@@ -774,7 +774,63 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 1 close): newly DET_OK. Purpose-built gap-vhd-105-mr-quant-triangulation (mitral I34.0 + regurg grade 2-3 + no EROA/vena-contracta on file -> quantitative triangulation). Genuinely detects the spec target (moderate MR by color/grade only without EROA + VC triangulation).',
     },
   },
-  PV: {},
+  PV: {
+    // --- PV chunk 0 (2026-06-18, feat/pv-chunk0-tightenings): AUDIT-178/179/180 ---
+    // DEFERRED-TO-CLOSE (GAP-PV-003 DET_OK): the foundational AUDIT-179 build re-cites GAP-PV-003 to the NEW
+    // evaluator gap-pv-003-abnormal-abi, which only enters PV.code.json when extractCode re-runs at the PV
+    // canonical close. Activating the override now would forward-reference an un-extracted registryId and demote
+    // (applyOverrides.test.ts demoted===0 gate). Per the "defer canonical tax to module close" + §9.2 no-partial-
+    // pipeline discipline, the gapRuleEngine build + registry entry + pvChunk0.test.ts land in chunk 0; this
+    // override is UNCOMMENTED at the PV close (alongside the full extractCode->...->validateCanonical regen):
+    //   'GAP-PV-003': {
+    //     classification: 'DET_OK',
+    //     registryId: 'gap-pv-003-abnormal-abi',
+    //     auditNote:
+    //       'MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-179 RESOLVED): foundational build + re-cite. GAP-PV-003 ("Abnormal ABI <=0.90 without coded PAD") was MIScited by fuzzy name-match to gap-pv-3-antiplatelet (a different concept); no rule read an ABI VALUE threshold. Built gap-pv-003-abnormal-abi (abi_left/abi_right <= 0.90 + !hasPAD; ABI threaded both paths). The >1.40 non-compressible case is routed to PV-004 (not conflated). PARTIAL -> DET_OK.',
+    //   },
+    'GAP-PV-015': {
+      classification: 'DET_OK',
+      registryId: 'gap-pv-6-diabetes-control',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-178 RESOLVED over-credit tightening): PV-6 previously fired on hba1c===undefined (existence-proxy, always-fire). Tightened to a real threshold (hba1c !== undefined && hba1c >= 7.0%, the standard ADA/ACC glycemic target) so only above-target patients fire. Holds DET_OK, now genuinely gated.',
+    },
+    'GAP-PV-033': {
+      classification: 'DET_OK',
+      registryId: 'gap-pv-12-renal-artery',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-178 RESOLVED over-credit tightening): PV-12 (resistant HTN -> renal-artery workup) previously fired without confirming resistant HTN. Tightened to require >= 3 concurrent antihypertensive classes (RAAS + beta-blocker + CCB + diuretic), the operational resistant-HTN definition. Holds DET_OK, now genuinely gated.',
+    },
+    'GAP-PV-071': {
+      classification: 'DET_OK',
+      registryId: 'gap-pv-varicose',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-178 RESOLVED over-credit tightening): PV-VARICOSE (spec = CEAP 3+ symptomatic) previously fired on bare I83 (incl asymptomatic I83.9). Tightened to the complicated/symptomatic subcodes I83.0/I83.1/I83.2/I83.8 (ulcer / inflammation / pain), excluding I83.9. Holds DET_OK.',
+    },
+    'GAP-PV-076': {
+      classification: 'DET_OK',
+      registryId: 'gap-pv-anticoag-vte',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-179 RESOLVED code-mismatch fix): PV-ANTICOAG-VTE (spec = post-PE anticoagulation duration) fired ONLY on I82 (DVT), MISSING the PE population (I26) entirely. Added I26 (PE) so the gap detects its spec population; I82 retained (VTE duration review applies to both). Holds DET_OK.',
+    },
+    'GAP-PV-098': {
+      classification: 'DET_OK',
+      registryId: 'gap-pv-graft-surveillance',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-178 RESOLVED interval build): PV-GRAFT-SURVEILLANCE previously fired on graft_duplex_months===undefined (existence-proxy). Added a genuine interval comparison (overdue when > 12 months OR never documented); graft_duplex_months IS threaded so a recently-surveilled patient (<= 12 mo) now gates out. Holds DET_OK.',
+    },
+    // --- PV-BYPASS-EVAL over-match reconcile (AUDIT-180): one generic bypass-eval rule was cited for 3 distinct
+    //     CLTI / iliac decision gaps. Keep PV-017 (BEST-CLI heart-team, the closest match); demote the 2 over-matches. ---
+    'GAP-PV-018': {
+      classification: 'SPEC_ONLY',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-180): PARTIAL -> SPEC_ONLY. GAP-PV-018 ("CLTI endovascular vs surgical decision, BEST-CLI") was over-matched to the generic gap-pv-bypass-eval rule, which does not encode the endovascular-vs-surgical decision logic (needs anatomic / conduit data not threaded). Cite dropped; PV-017 retains the bypass-eval cite.',
+    },
+    'GAP-PV-024': {
+      classification: 'SPEC_ONLY',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-180): PARTIAL -> SPEC_ONLY. GAP-PV-024 ("TASC II C/D iliac: endovascular vs surgical bypass") was over-matched to the generic gap-pv-bypass-eval rule, which has no TASC II lesion-class or iliac-specific signal (anatomic data not threaded). Cite dropped; PV-017 retains the bypass-eval cite.',
+    },
+  },
 };
 
 function applyOverrides(module: ModuleCode, targetPath: string, codePath: string, allCodes: Map<ModuleCode, CodeExtract>): { applied: number; demoted: number } {

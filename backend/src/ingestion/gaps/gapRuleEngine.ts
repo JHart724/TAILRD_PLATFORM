@@ -698,6 +698,18 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'B',
   },
   {
+    id: 'gap-pv-003-abnormal-abi',
+    name: 'Abnormal ABI Without Coded PAD',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2024 ACC/AHA/SVM/SCAI Guideline for the Management of Lower Extremity Peripheral Artery Disease',
+    guidelineVersion: '2024',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-18',
+    nextReviewDue: '2026-12-18',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B-NR',
+  },
+  {
     id: 'gap-hf-37-raas',
     name: 'ACEi/ARB/ARNi in HFrEF',
     module: 'HEART_FAILURE',
@@ -7074,6 +7086,40 @@ export function evaluateGapRules(
     }
   }
 
+  // Gap PV-003: Abnormal ABI (<=0.90) without a coded PAD diagnosis -> undiagnosed PAD (AUDIT-179 foundational build)
+  // PV chunk 0 (2026-06-18). Guideline: 2024 ACC/AHA/SVM/SCAI Lower Extremity PAD Guideline (Class 1: a resting
+  // ABI <=0.90 is diagnostic of PAD). The module previously had NO rule reading an ABI VALUE threshold - ABI was
+  // threaded (labValues['abi_left'/'abi_right']) but used only as a presence flag (PV-2). This builds the real
+  // abnormal-ABI detection. Subgroup/Path-B: a falsely-elevated ABI >1.40 (non-compressible / calcified vessels)
+  // is the SEPARATE PV-004 gap, NOT conflated here (this gate is the low-abnormal <=0.90 range). The toe-brachial
+  // index (TBI) confirmation arm for borderline / non-compressible vessels is not threaded (Path-B).
+  const abiLeft_PV3 = labValues['abi_left'];
+  const abiRight_PV3 = labValues['abi_right'];
+  const hasLowAbnormalABI = (abiLeft_PV3 !== undefined && abiLeft_PV3 <= 0.9) || (abiRight_PV3 !== undefined && abiRight_PV3 <= 0.9);
+  if (hasLowAbnormalABI && !hasPAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.DOCUMENTATION_GAP,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'Abnormal ABI (<=0.90) without a coded PAD diagnosis: undiagnosed peripheral artery disease',
+      target: 'Formal PAD diagnosis + guideline-directed risk-factor management (statin, antiplatelet, smoking cessation, supervised exercise)',
+      recommendations: {
+        action: 'Consider establishing a peripheral artery disease diagnosis and initiating guideline-directed management (high-intensity statin, antiplatelet, smoking cessation, supervised exercise) for this patient with a resting ABI <=0.90 (diagnostic of PAD) and no PAD diagnosis coded, per 2024 ACC/AHA PAD Guideline',
+        guideline: '2024 ACC/AHA/SVM/SCAI Lower Extremity PAD Guideline',
+        note: 'Subgroup: a resting ABI <=0.90 is diagnostic of PAD (Class 1). A falsely-elevated ABI >1.40 (non-compressible / calcified vessels) is the separate PV-004 gap, not this one. Path-B: toe-brachial index (TBI) confirmation for borderline (0.91-0.99) or non-compressible vessels is not threaded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          `Resting ABI <=0.90 (left ${abiLeft_PV3 ?? 'NA'} / right ${abiRight_PV3 ?? 'NA'})`,
+          'No peripheral artery disease diagnosis (I70.2x / I73.9) coded',
+        ],
+        guidelineSource: '2024 ACC/AHA/SVM/SCAI Guideline for the Management of Lower Extremity Peripheral Artery Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Known PAD (I70.2x / I73.9)', 'Non-compressible ABI >1.40 (see PV-004)', 'Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
   // ============================================================
   // Gap HF-37: ACEi/ARB/ARNi Missing in HFrEF (First pillar of GDMT)
   // ============================================================
@@ -8825,33 +8871,39 @@ export function evaluateGapRules(
     });
   }
 
-  // Gap PV-6: Diabetes Control in PAD
-  // Guideline: 2024 ACC/AHA PAD Guideline, Class 1, LOE B
-  // PAD + diabetes + no HbA1c on file
+  // Gap PV-6: Diabetes Control in PAD - HbA1c above target (PV-015)
+  // Guideline: 2024 ACC/AHA PAD Guideline + ADA Standards of Care, Class 1, LOE B
+  // Tightening (AUDIT-178, PV chunk 0 2026-06-18): the prior rule fired on hba1c===undefined (an existence-proxy
+  // for "not measured", not the spec "A1c target" gap). HbA1c is threaded, so this now reads the real value: an
+  // A1c >= 7.0% in a PAD diabetic is above the standard ADA target (<7% for most adults; Class 1) -> glycemic
+  // optimization. Subgroup/Path-B: the relaxed <8% goal for frail / limited-life-expectancy / high-CV-risk
+  // patients is individualized and not threaded - this surfaces the above-7% population for that judgment.
   if (
     hasPAD &&
     hasDiabetes &&
-    labValues['hba1c'] === undefined &&
+    labValues['hba1c'] !== undefined && labValues['hba1c'] >= 7.0 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
-      type: TherapyGapType.MONITORING_OVERDUE,
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.PERIPHERAL_VASCULAR,
-      status: 'HbA1c monitoring overdue in PAD with diabetes',
-      target: 'HbA1c checked and glycemic control assessed',
+      status: 'HbA1c above target (>=7.0%) in PAD with diabetes: glycemic optimization gap',
+      target: 'HbA1c optimized toward the individualized target (generally <7% for most adults) per ADA / 2024 ACC/AHA PAD',
       recommendations: {
-        action: 'Consider HbA1c monitoring for diabetes management in PAD per 2024 ACC/AHA PAD Guideline',
+        action: 'Consider intensifying glycemic management toward the individualized HbA1c target (generally <7% for most adults; consider a CV-benefit agent such as an SGLT2i or GLP-1 RA) for this PAD patient with HbA1c >= 7.0%, per ADA Standards of Care and the 2024 ACC/AHA PAD Guideline',
+        guideline: '2024 ACC/AHA Peripheral Artery Disease; ADA Standards of Care',
+        note: 'Subgroup-aware: the <7% goal applies to most adults; a relaxed <8% target for frail / limited-life-expectancy / high-CV-risk patients is individualized (Path-B, not threaded). Fires on a threaded HbA1c >= 7.0%, not on missing data.',
       },
       evidence: {
         triggerCriteria: [
           'Peripheral artery disease (I73.9 or I70.2*)',
           'Diabetes mellitus (E11.*)',
-          'No HbA1c value on file',
+          `HbA1c: ${labValues['hba1c']}% (>= 7.0, above the standard target)`,
         ],
-        guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+        guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease; ADA Standards of Care',
         classOfRecommendation: '1',
         levelOfEvidence: 'B',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent HbA1c within guideline interval'],
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Individualized relaxed target (<8%) appropriate'],
       },
     });
   }
@@ -10540,12 +10592,23 @@ export function evaluateGapRules(
     }
   }
 
-  // Gap PV-12: Renal Artery Stenosis Screen
+  // Gap PV-12: Renal Artery Stenosis Screen in RESISTANT HTN + renal impairment (PV-033)
   // Guideline: 2024 ACC/AHA PAD Guideline; 2017 ACC/AHA Hypertension Guideline, Class 2a, LOE C
-  // PAD + HTN + renal impairment (eGFR < 60 or creatinine elevated)
+  // Tightening (AUDIT-178, PV chunk 0 2026-06-18): the prior rule fired on PAD + HTN + egfr<60 with NO
+  // resistant-HTN gate, over-detecting on any HTN+PAD+renal patient despite the "resistant HTN" recommendation.
+  // Add the genuine resistant-HTN signal: on >=3 distinct antihypertensive classes (RAAS / beta-blocker / CCB /
+  // diuretic), using the canonical value sets + section-16-verified codes (diltiazem 3443, verapamil 11170,
+  // spironolactone 9997, nadolol 7226). Path-B: BP control status is not threaded, so this is the apparent-
+  // treatment-resistant proxy (>=3 classes), not the full uncontrolled-on-3 / controlled-on-4 definition.
+  const onRAAS_resHTN = medCodes.some(c => RAAS_CODES_CV.includes(c));
+  const onBB_resHTN = medCodes.some(c => BB_CODES_CV.includes(c) || c === '7226');
+  const onCCB_resHTN = medCodes.some(c => [...codes(RXNORM_DHP_CCB), '3443', '11170'].includes(c));
+  const onDiuretic_resHTN = medCodes.some(c => [...codes(RXNORM_LOOP_DIURETICS), ...codes(RXNORM_THIAZIDES), '9997'].includes(c));
+  const hasResistantHTN_PV12 = [onRAAS_resHTN, onBB_resHTN, onCCB_resHTN, onDiuretic_resHTN].filter(Boolean).length >= 3;
   if (
     hasPAD &&
     hasHTN_PV11 &&
+    hasResistantHTN_PV12 &&
     labValues['egfr'] !== undefined && labValues['egfr'] < 60 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
@@ -16552,9 +16615,15 @@ export function evaluateGapRules(
     });
   }
 
-  // PV-VARICOSE: Varicose Vein Management
+  // PV-VARICOSE: Symptomatic / complicated varicose vein management (PV-071)
   // Guideline: 2024 SVS/AVF Varicose Vein Guidelines, Class 1, LOE B
-  const hasVaricoseVeinsPV = dxCodes.some(c => c.startsWith('I83'));
+  // Tightening (AUDIT-178, PV chunk 0 2026-06-18): the prior rule fired on bare I83 (incl asymptomatic I83.9),
+  // over-detecting; the spec targets CEAP 3+ symptomatic / complicated disease. Tightened to the complicated
+  // subcodes (section-16-verified): I83.0 with ulcer, I83.1 with inflammation, I83.2 with ulcer + inflammation,
+  // I83.8 with pain / other complications - EXCLUDING asymptomatic I83.9.
+  const hasVaricoseVeinsPV = dxCodes.some(c =>
+    c.startsWith('I83.0') || c.startsWith('I83.1') || c.startsWith('I83.2') || c.startsWith('I83.8'),
+  );
   if (hasVaricoseVeinsPV && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
       type: TherapyGapType.REFERRAL_NEEDED,
@@ -16765,11 +16834,18 @@ export function evaluateGapRules(
     }
   }
 
-  // PV-GRAFT-SURVEILLANCE: Bypass Graft Surveillance
+  // PV-GRAFT-SURVEILLANCE: Bypass Graft Surveillance (PV-098)
   // Guideline: 2024 ACC/AHA PAD Guideline + SVS Practice Guidelines, Class 1, LOE B
+  // Tightening (AUDIT-178, PV chunk 0 2026-06-18): added a genuine interval comparison. graft_duplex_months IS
+  // threaded (months since last graft duplex), so the gap now fires when surveillance is overdue (> 12 months,
+  // i.e. past the annual interval) OR never documented (undefined) - a recently-surveilled patient (<= 12 months)
+  // now correctly gates out instead of the prior existence-only proxy.
   if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasVascularGraft = dxCodes.some(c => c.startsWith('Z95.8'));
-    if (hasVascularGraft && hasPAD && labValues['graft_duplex_months'] === undefined) {
+    const graftDuplexMonths_PV98 = labValues['graft_duplex_months'];
+    const graftSurveillanceOverdue =
+      graftDuplexMonths_PV98 === undefined || graftDuplexMonths_PV98 > 12;
+    if (hasVascularGraft && hasPAD && graftSurveillanceOverdue) {
       gaps.push({
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.PERIPHERAL_VASCULAR,
@@ -16795,10 +16871,13 @@ export function evaluateGapRules(
     }
   }
 
-  // PV-ANTICOAG-VTE: VTE Anticoagulation Duration Review
+  // PV-ANTICOAG-VTE: VTE Anticoagulation Duration Review (PV-076)
   // Guideline: 2021 ASH VTE Guidelines + 2020 CHEST Antithrombotic Guideline, Class 1, LOE B
+  // Fix (AUDIT-179, PV chunk 0 2026-06-18): the spec target is post-PE, but the rule fired ONLY on I82 (DVT) -
+  // MISSING the PE population (I26) entirely. Added I26 (pulmonary embolism, section-16-verified) so the gap
+  // detects its spec population; I82 (DVT) is retained since VTE anticoagulation-duration review applies to both.
   if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasVTE = dxCodes.some(c => c.startsWith('I82'));
+    const hasVTE = dxCodes.some(c => c.startsWith('I26') || c.startsWith('I82'));
     const OAC_CODES_VTE = ['11289', '1364430', '1114195', '1037042', '1599538'];
     const onOACvte = medCodes.some(c => OAC_CODES_VTE.includes(c));
     if (hasVTE && onOACvte) {
@@ -16814,7 +16893,7 @@ export function evaluateGapRules(
         },
         evidence: {
           triggerCriteria: [
-            'Venous thromboembolism (I82.*)',
+            'Venous thromboembolism: pulmonary embolism (I26.*) or DVT (I82.*)',
             'On oral anticoagulation therapy',
           ],
           guidelineSource: '2021 ASH Guidelines on VTE Management; 2020 CHEST Guideline on Antithrombotic Therapy for VTE',
