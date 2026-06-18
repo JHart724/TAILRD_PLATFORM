@@ -474,6 +474,42 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
       auditNote:
         'MANUAL OVERRIDE per CAD addendum line 232: cross-module satisfaction. GAP-CAD-027 (Polyvascular COMPASS dual pathway) is satisfied by PV module rule gap-pv-rivaroxaban. Note: this rule is registered under CAD module enum (module: ModuleType.CORONARY_INTERVENTION) despite gap-pv-* naming — naming convention inconsistency tracked at AUDIT-027.',
     },
+    // --- CAD chunk 0 tightenings (2026-06-18, AUDIT-173/174/177) ---
+    'GAP-CAD-029': {
+      classification: 'DET_OK',
+      registryId: 'gap-cad-rehab-cabg',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-173 RESOLVED): RE-CITED from the over-detecting CAD-REHAB (fired on hasCAD alone) to the purpose-built gap-cad-rehab-cabg evaluator (post-CABG Z95.1 + rehab-engagement guard CPT 93797/93798). Now genuinely gated on the post-CABG population the spec targets; DET_OK.',
+    },
+    'GAP-CAD-046': {
+      classification: 'DET_OK',
+      registryId: 'gap-cad-rehab-mi',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-173 RESOLVED): RE-CITED from the over-detecting CAD-REHAB to the purpose-built gap-cad-rehab-mi evaluator (post-MI I21/I22/I25.2 + rehab-engagement guard). Now genuinely gated on the post-MI population; DET_OK.',
+    },
+    'GAP-CAD-061': {
+      classification: 'SPEC_ONLY',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-174): DAPT de-escalation (TWILIGHT/TICO = drop aspirin while ON a P2Y12) was miscited to Gap-50, which detects P2Y12-ABSENCE (the opposite scenario; zero true-positive overlap). No genuine de-escalation evaluator exists (it needs on-DAPT + months-since-PCI, partly un-threaded). Per §16.6(ii) disjoint-target -> SPEC_ONLY; registryId dropped.',
+    },
+    'GAP-CAD-007': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-cad-lipid-panel-fu',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-177): DET_OK -> PARTIAL. CAD-LIPID-PANEL-FU fires on ldl===undefined && total_cholesterol===undefined - an existence-proxy, not the spec "not measured in 12 months" interval (no lipid-panel date/months is threaded, so the >12-month logic cannot be computed). Held at PARTIAL per §16 underclaim-governs (the VD-5 / AUDIT-134 existence-proxy class).',
+    },
+    'GAP-CAD-068': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-cad-ffr',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-177): DET_OK -> PARTIAL. CAD-FFR fires on stress_test===undefined for any CAD-without-recent-MI, with NO borderline-lesion (40-70% stenosis) signal - the spec target. Borderline-stenosis severity is not codable/threaded, so the existence-proxy cannot reach the spec target. Held at PARTIAL.',
+    },
+    'GAP-CAD-018': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-cad-dapt-duration',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-177): DET_OK -> PARTIAL. CAD-DAPT-DURATION status says "assess continued need beyond 12 months" but the trigger only checks aspirin+P2Y12 co-presence - no months-since-PCI/DAPT-start date is threaded, so the duration logic cannot be computed (fires at month 1). Held at PARTIAL (narrative-vs-logic).',
+    },
   },
   VHD: {
     // VHD audit 2026-06-10 (operator-confirmed, Batches 1-5 + two re-derivations): supersedes the stale

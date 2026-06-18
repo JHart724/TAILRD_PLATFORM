@@ -734,14 +734,26 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'B',
   },
   {
-    id: 'gap-cad-cardiac-rehab',
-    name: 'Cardiac Rehab Referral in CAD',
+    id: 'gap-cad-rehab-cabg',
+    name: 'Post-CABG Cardiac Rehab Referral',
     module: 'CORONARY_INTERVENTION',
     guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
     guidelineVersion: '2021',
     guidelineOrg: 'ACC/AHA',
-    lastReviewDate: '2026-04-03',
-    nextReviewDue: '2026-10-03',
+    lastReviewDate: '2026-06-18',
+    nextReviewDue: '2026-12-18',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-cad-rehab-mi',
+    name: 'Post-MI Cardiac Rehab Referral',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
+    guidelineVersion: '2021',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-18',
+    nextReviewDue: '2026-12-18',
     classOfRecommendation: '1',
     levelOfEvidence: 'A',
   },
@@ -3504,30 +3516,6 @@ export const RUNTIME_GAP_REGISTRY = [
     nextReviewDue: '2026-10-03',
     classOfRecommendation: '1',
     levelOfEvidence: 'A',
-  },
-  {
-    id: 'gap-cad-nicorandil',
-    name: 'Nicorandil for Refractory Angina',
-    module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2019 ESC Guideline for Chronic Coronary Syndromes',
-    guidelineVersion: '2019',
-    guidelineOrg: 'ESC',
-    lastReviewDate: '2026-04-03',
-    nextReviewDue: '2026-10-03',
-    classOfRecommendation: '2a',
-    levelOfEvidence: 'B',
-  },
-  {
-    id: 'gap-cad-trimetazidine',
-    name: 'Trimetazidine Consideration in CAD',
-    module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2019 ESC Guideline for Chronic Coronary Syndromes',
-    guidelineVersion: '2019',
-    guidelineOrg: 'ESC',
-    lastReviewDate: '2026-04-03',
-    nextReviewDue: '2026-10-03',
-    classOfRecommendation: '2b',
-    levelOfEvidence: 'B',
   },
   {
     id: 'gap-cad-coronary-cta-fu',
@@ -6555,12 +6543,15 @@ export function evaluateGapRules(
 
   // Gap 50: Premature DAPT Discontinuation (Coronary)
   // Guideline: ACC/AHA 2016 DAPT Guidelines, updated by 2021 ACC/AHA/SCAI Coronary Revascularization
-  // Fires when: CAD/stent patient (I25.* or Z95.5) is missing P2Y12 inhibitor
-  // P2Y12 RxNorm codes: clopidogrel (32968), prasugrel (613391), ticagrelor (1116632)
-  const hasStentOrCAD = hasCAD || dxCodes.some(c => c.startsWith('Z95.5'));
+  // Tightening (AUDIT-174, CAD chunk 0 2026-06-18): the prior gate hasStentOrCAD = hasCAD || Z95.5 over-fired
+  // "P2Y12 not active" on stable chronic CAD, where single antiplatelet therapy suffices. DAPT is guideline-
+  // indicated only in the post-ACS / post-PCI window, so gate on recent ACS (I21/I22, inlined - hasRecentMI is
+  // defined later in this function) OR coronary stent/angioplasty implant status (Z95.5, section-16-verified).
+  // P2Y12 RxNorm codes: clopidogrel (32968), prasugrel (613391), ticagrelor (1116632).
+  const hasDaptIndication = dxCodes.some(c => c.startsWith('I21') || c.startsWith('I22') || c.startsWith('Z95.5'));
   const P2Y12_CODES = ['32968', '613391', '1116632'];
   const onP2Y12 = medCodes.some(c => P2Y12_CODES.includes(c));
-  if (hasStentOrCAD && !onP2Y12) {
+  if (hasDaptIndication && !onP2Y12) {
         if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
         type: TherapyGapType.MEDICATION_MISSING,
@@ -7179,33 +7170,60 @@ export function evaluateGapRules(
     }
   }
 
-  // ============================================================
-  // Gap CAD-REHAB: Cardiac Rehab Referral in CAD
-  // ============================================================
+  // Tightening (AUDIT-173, CAD chunk 0 2026-06-18): the single CAD-REHAB rule fired on hasCAD alone (every CAD
+  // patient), over-detecting. SPLIT into the two guideline-anchored populations the spec gaps actually target:
+  // post-CABG (CAD-029, Z95.1 aortocoronary-bypass-status, section-16-verified) and post-MI (CAD-046, acute
+  // I21/I22 or old I25.2, section-16-verified). Both add a rehab-engagement guard: alreadyInRehab via CPT 93797
+  // (cardiac rehab w/o continuous ECG) / 93798 (with ECG) on threaded procedureCodes. NOTE: 93797/93798 are AMA
+  // CPT 2024 professional cardiac-rehab codes - flagged for operator section-16.7 confirm at the chunk-0 HOLD.
+  const alreadyInCardiacRehab = procedureCodes.includes('93797') || procedureCodes.includes('93798');
+  const hasCABG_rehab = dxCodes.some(c => c.startsWith('Z95.1'));
+  const hasMI_rehab = hasRecentMI || dxCodes.some(c => c.startsWith('I25.2'));
+
+  // CAD-REHAB-CABG: Post-CABG cardiac rehab referral (CAD-029)
   // Guideline: 2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization, Class 1, LOE A
-  // All CAD patients (I25.*) should be referred to cardiac rehabilitation
-  // This is a referral gap, not a medication gap
-  if (hasCAD) {
-        if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-  gaps.push({
-        type: TherapyGapType.REFERRAL_NEEDED,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Cardiac rehabilitation referral not documented',
-        target: 'Cardiac rehab referral placed',
-        recommendations: {
-          action: 'Refer to cardiac rehabilitation per 2021 ACC/AHA Coronary Revascularization, Class 1, LOE A',
-          guideline: '2021 ACC/AHA/SCAI Coronary Artery Revascularization',
-          note: 'Cardiac rehab improves outcomes in all CAD patients, especially post-ACS and post-revascularization',
-        },
-          evidence: {
-            triggerCriteria: ['CAD without cardiac rehabilitation referral'],
-            guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Revascularization',
-            classOfRecommendation: '1',
-            levelOfEvidence: 'A',
-            exclusions: ['Unstable angina', 'Severe functional limitation', 'Hospice/palliative care'],
-          },
-      });
-    }
+  if (hasCABG_rehab && !alreadyInCardiacRehab && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.REFERRAL_NEEDED,
+      module: ModuleType.CORONARY_INTERVENTION,
+      status: 'Post-CABG cardiac rehabilitation referral not documented',
+      target: 'Cardiac rehab referral placed for post-CABG patient',
+      recommendations: {
+        action: 'Refer to cardiac rehabilitation for the post-CABG patient per 2021 ACC/AHA Coronary Revascularization, Class 1, LOE A',
+        guideline: '2021 ACC/AHA/SCAI Coronary Artery Revascularization',
+        note: 'Cardiac rehab is a Class 1 recommendation after CABG. Gated on aortocoronary-bypass status (Z95.1); does not fire if already engaged in rehab (CPT 93797/93798).',
+      },
+      evidence: {
+        triggerCriteria: ['Post-CABG (Z95.1) without documented cardiac rehabilitation referral or engagement'],
+        guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Revascularization',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Already engaged in cardiac rehab (CPT 93797/93798)', 'Severe functional limitation', 'Hospice/palliative care'],
+      },
+    });
+  }
+
+  // CAD-REHAB-MI: Post-MI cardiac rehab referral (CAD-046)
+  // Guideline: 2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization, Class 1, LOE A
+  if (hasMI_rehab && !alreadyInCardiacRehab && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.REFERRAL_NEEDED,
+      module: ModuleType.CORONARY_INTERVENTION,
+      status: 'Post-MI cardiac rehabilitation referral not documented',
+      target: 'Cardiac rehab referral placed for post-MI patient',
+      recommendations: {
+        action: 'Refer to cardiac rehabilitation for the post-MI patient per 2021 ACC/AHA Coronary Revascularization, Class 1, LOE A',
+        guideline: '2021 ACC/AHA/SCAI Coronary Artery Revascularization',
+        note: 'Cardiac rehab is a Class 1 recommendation after MI. Gated on MI (acute I21/I22 or old I25.2); does not fire if already engaged in rehab (CPT 93797/93798).',
+      },
+      evidence: {
+        triggerCriteria: ['Post-MI (I21/I22/I25.2) without documented cardiac rehabilitation referral or engagement'],
+        guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Revascularization',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Already engaged in cardiac rehab (CPT 93797/93798)', 'Severe functional limitation', 'Hospice/palliative care'],
+      },
+    });
   }
 
   // ============================================================
@@ -11593,31 +11611,36 @@ export function evaluateGapRules(
   // NEW CORONARY RULES (CAD-TICAGRELOR-ACS through CAD-LIVER-STATIN)
   // ============================================================
 
-  // CAD-TICAGRELOR-ACS: Ticagrelor in Acute Coronary Syndrome
-  // Guideline: 2021 ACC/AHA/SCAI Revascularization Guideline (PLATO Trial), Class 1, LOE A
+  // CAD-TICAGRELOR-ACS: Potent P2Y12 inhibitor in Acute Coronary Syndrome
+  // Guideline: 2021 ACC/AHA/SCAI Revascularization Guideline (PLATO / TRITON-TIMI 38), Class 1, LOE A
+  // Tightening (AUDIT-176, CAD chunk 0 2026-06-18): the prior gate fired on !onTicagrelor alone, false-firing
+  // a "consider ticagrelor" gap on patients correctly on PRASUGREL (an equally guideline-preferred potent
+  // P2Y12). A patient on EITHER potent P2Y12 meets the ACS need, so also exclude prasugrel (613391). The
+  // recommendation is reframed as the potent-P2Y12 choice (ticagrelor or prasugrel) over clopidogrel.
   if (hasRecentMI && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const onTicagrelorACS = medCodes.includes('1116632');
-    if (!onTicagrelorACS) {
+    const onPrasugrelACS = medCodes.includes('613391');
+    if (!onTicagrelorACS && !onPrasugrelACS) {
       gaps.push({
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider ticagrelor for ACS per PLATO trial evidence',
-        target: 'P2Y12 inhibitor therapy reviewed',
-        medication: 'Ticagrelor',
+        status: 'Consider a potent P2Y12 inhibitor (ticagrelor or prasugrel) for ACS',
+        target: 'Potent P2Y12 inhibitor therapy reviewed',
+        medication: 'Ticagrelor or prasugrel',
         recommendations: {
-          action: 'Consider ticagrelor 90mg BID for ACS per 2021 ACC/AHA/SCAI Guideline (PLATO)',
+          action: 'Consider a potent P2Y12 inhibitor (ticagrelor or prasugrel) over clopidogrel for ACS per 2021 ACC/AHA/SCAI Guideline (PLATO / TRITON-TIMI 38)',
           guideline: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
-          note: 'Recommended for review: ticagrelor reduced CV death, MI, and stroke vs clopidogrel in PLATO',
+          note: 'Recommended for review: a potent P2Y12 (ticagrelor or prasugrel) is preferred over clopidogrel for ACS; fires only when on neither potent agent.',
         },
         evidence: {
           triggerCriteria: [
             'Acute coronary syndrome (I21.*)',
-            'No ticagrelor (RxNorm 1116632) in active medications',
+            'No potent P2Y12 (ticagrelor 1116632 or prasugrel 613391) in active medications',
           ],
-          guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (PLATO Trial)',
+          guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (PLATO / TRITON-TIMI 38)',
           classOfRecommendation: 'Class 1',
           levelOfEvidence: 'LOE A',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Active bleeding', 'Prior intracranial hemorrhage', 'On prasugrel'],
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Active bleeding', 'Prior intracranial hemorrhage', 'On ticagrelor or prasugrel (potent P2Y12 need met)'],
         },
       });
     }
@@ -12515,71 +12538,10 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-NICORANDIL: Nicorandil for Refractory Angina
-  // Guideline: 2019 ESC Chronic Coronary Syndromes Guideline, Class 2a, LOE B
-  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasAngina = dxCodes.some(c => c.startsWith('I20'));
-    const onMaxAntianginal = medCodes.some(c => ['6918', '17767', '7417'].includes(c)); // BB + CCB
-    const onNicorandil = medCodes.includes('29987');
-    if (hasAngina && onMaxAntianginal && !onNicorandil) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_MISSING,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider nicorandil for refractory angina on maximal antianginal therapy',
-        target: 'Nicorandil reviewed for refractory angina management',
-        medication: 'Nicorandil',
-        recommendations: {
-          action: 'Consider nicorandil as add-on antianginal therapy per 2019 ESC CCS Guideline',
-          guideline: '2019 ESC Guideline for Chronic Coronary Syndromes',
-          note: 'Recommended for review: nicorandil reduces angina frequency via potassium channel opening and nitrate-like effects',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Coronary artery disease (I25.*) with angina (I20.*)',
-            'On maximal first-line antianginal therapy (BB + CCB)',
-            'No nicorandil in active medications',
-          ],
-          guidelineSource: '2019 ESC Guideline for Chronic Coronary Syndromes',
-          classOfRecommendation: 'Class 2a',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Concurrent PDE5 inhibitor', 'GI ulceration', 'Hypotension'],
-        },
-      });
-    }
-  }
-
-  // CAD-TRIMETAZIDINE: Trimetazidine Consideration
-  // Guideline: 2019 ESC CCS Guideline, Class 2b, LOE B
-  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasAnginaTMZ = dxCodes.some(c => c.startsWith('I20'));
-    const hasMetabolicTMZ = dxCodes.some(c => c.startsWith('E11') || c.startsWith('E78'));
-    const onTrimetazidine = medCodes.includes('47832');
-    if (hasAnginaTMZ && hasMetabolicTMZ && !onTrimetazidine) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_MISSING,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider trimetazidine for angina with metabolic comorbidities',
-        target: 'Trimetazidine reviewed for metabolic modulation in CAD',
-        medication: 'Trimetazidine',
-        recommendations: {
-          action: 'Consider trimetazidine as metabolic antianginal agent per 2019 ESC CCS Guideline',
-          guideline: '2019 ESC Guideline for Chronic Coronary Syndromes',
-          note: 'Recommended for review: trimetazidine shifts myocardial metabolism from fatty acid to glucose oxidation, reducing ischemia',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Coronary artery disease (I25.*) with angina (I20.*)',
-            'Metabolic comorbidity (diabetes E11 or dyslipidemia E78)',
-            'No trimetazidine in active medications',
-          ],
-          guidelineSource: '2019 ESC Guideline for Chronic Coronary Syndromes',
-          classOfRecommendation: 'Class 2b',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Parkinson disease', 'Severe renal impairment (eGFR<30)', 'Movement disorders'],
-        },
-      });
-    }
-  }
+  // RETIRED 2026-06-18 (CAD chunk 0, AUDIT-175): the nicorandil and trimetazidine gaps are removed. Both were
+  // non-US, ESC-only agents (not in the 2023 ACC/AHA Chronic Coronary Disease Guideline) and their RxCUIs
+  // (nicorandil 29987, trimetazidine 47832) FAIL section-16 - RxNav returns NOT FOUND for both. Neither block
+  // mapped to a covered CAD spec gap. Dead code with unverifiable codes; removed cleanly (firing + registry).
 
   // CAD-CORONARY-CTA-FU: Coronary CTA Follow-Up
   // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 2a, LOE B-NR
@@ -12841,9 +12803,9 @@ export function evaluateGapRules(
         target: 'CCB initiated or alternative vasodilator reviewed',
         medication: 'Diltiazem or Nifedipine',
         recommendations: {
-          action: 'Consider CCB (diltiazem or nifedipine) for vasospastic angina per 2019 ESC CCS Guideline',
+          action: 'Consider a calcium channel blocker (diltiazem or nifedipine) as first-line therapy for confirmed vasospastic angina, and provocation/spasm testing to establish the diagnosis where it is not yet confirmed, per 2019 ESC CCS Guideline',
           guideline: '2019 ESC Guideline for Chronic Coronary Syndromes; JCS 2013 Vasospastic Angina Guideline',
-          note: 'Recommended for review: CCBs are first-line therapy for coronary vasospasm; beta-blockers may worsen vasospasm',
+          note: 'Recommended for review: this rule fires on a coded vasospastic-angina diagnosis (I20.1) without a CCB - CCBs are first-line therapy and beta-blockers may worsen vasospasm. Where vasospasm is suspected but not yet coded, provocation testing (the CAD-037 spec target) confirms the diagnosis (axis-reconciled, AUDIT-177-adjacent).',
         },
         evidence: {
           triggerCriteria: [

@@ -56,8 +56,11 @@ describe('Structural: Gap rule engine integrity', () => {
     // - net +15: +17 new VHD evaluators across 5 chunks (AR/mixed severity, prosthetic dysfunction, mech/bio
     //   anticoag, IE-surgical-dx + rheumatic, pregnancy SAFETY + drug-induced surveillance) minus 2 retired
     //   firings (VD-5 superseded by VHD-103, SH-012 superseded by VHD-068/011).
+    // Then 371 -> 370 by CAD chunk 0 tightenings (2026-06-18, feat/cad-chunk0-tightenings):
+    // - net -1: -2 retired dead-drug firings (nicorandil + trimetazidine, AUDIT-175) + 1 CAD-REHAB split into
+    //   post-CABG + post-MI (AUDIT-173).
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(371);
+    expect(count).toBe(370);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

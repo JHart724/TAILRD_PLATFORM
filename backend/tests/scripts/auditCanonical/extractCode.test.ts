@@ -193,7 +193,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     ['HF', 'HEART_FAILURE', 90], // 56 + 34 (v3.0 HF full buildout batch, 2026-06-15, feat/hf-buildable-gap-batch)
     ['EP', 'ELECTROPHYSIOLOGY', 69], // 48 + 21 (v3.0 EP module buildout, 2026-06-16, feat/ep-chunk1-af-anticoag)
     ['SH', 'STRUCTURAL_HEART', 60], // 25 + 35 (v3.0 SH module close, 2026-06-17, feat/sh-chunk1-as-severity)
-    ['CAD', 'CORONARY_INTERVENTION', 77],
+    ['CAD', 'CORONARY_INTERVENTION', 76], // 77 -> 76 (CAD chunk 0: -2 dead-drug retire + 1 CAD-REHAB split, 2026-06-18)
     ['VHD', 'VALVULAR_DISEASE', 49], // 32 + 17 (v3.0 VHD module close, 2026-06-17, feat/vhd-chunk1-ar-severity)
     ['PV', 'PERIPHERAL_VASCULAR', 33],
   ])('module %s registry has %i entries tagged %s', (code, enumName, count) => {
@@ -210,7 +210,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(15602); // -> 15602 by the v3.0 VHD close + AUDIT-172 reconciliation (2026-06-17); AUDIT-110 = content-anchor remediation scope
+    expect(pannus!.commentLine).toBe(15564); // -> 15564 by CAD chunk 0 tightenings (2026-06-18, net -38 lines above VD-PANNUS); AUDIT-110 = content-anchor remediation scope
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });
@@ -234,7 +234,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
 
   it.each([
     ['SH', 60, 54, 54], // evaluator 55->54 + gapsPush 55->54: SH-012 superseded marker de-tokenized so it is no longer parsed as an evaluator block (v3.0 VHD close, AUDIT-171)
-    ['CAD', 77, 77, 77],
+    ['CAD', 76, 76, 76], // 77 -> 76 (CAD chunk 0: -2 dead-drug retire + 1 CAD-REHAB split, 2026-06-18)
     ['VHD', 49, 48, 48], // v3.0 VHD module close: registry 32->49, evaluator 32->48, gapsPush 32->48
     ['PV', 33, 33, 33],
   ])(

@@ -148,9 +148,9 @@ describe('validateEvidenceObjects - live gapRuleEngine.ts baseline', () => {
   const src = fs.readFileSync(EVALUATOR_PATH, 'utf8');
   const result = analyzeSource(src, 'gapRuleEngine.ts');
 
-  it('finds 371 gaps.push nodes, all with an evidence object', () => {
-    expect(result.pushCount).toBe(371); // 356 + 15 net (v3.0 VHD module close, 2026-06-17, feat/vhd-chunk1-ar-severity)
-    expect(result.evidenceCount).toBe(371);
+  it('finds 370 gaps.push nodes, all with an evidence object', () => {
+    expect(result.pushCount).toBe(370); // 371 - 1 net (CAD chunk 0 tightenings: -2 dead-drug retire + 1 CAD-REHAB split, 2026-06-18)
+    expect(result.evidenceCount).toBe(370);
   });
 
   it('reports ZERO inconsistencies (clean baseline post-AUDIT-103)', () => {
