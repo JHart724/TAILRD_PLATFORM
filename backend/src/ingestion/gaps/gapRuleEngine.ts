@@ -1274,7 +1274,7 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'B',
   },
   {
-    id: 'gap-sh-4-tricuspid-assessment',
+    id: 'gap-sh-022-tricuspid-assessment',
     name: 'Tricuspid Valve Assessment',
     module: 'STRUCTURAL_HEART',
     guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
@@ -10062,8 +10062,10 @@ export function evaluateGapRules(
     });
   }
 
-  // Gap SH-012: SUPERSEDED 2026-06-17 by the type-aware VHD-068 / VHD-011 (v3.0 VHD chunk 2). Firing removed.
-  // Superseded (AUDIT-169): SH-012 was the GENERAL, un-partitioned prosthetic-SVD gap - it gated ANY prosthetic
+  // SUPERSEDED 2026-06-17 by the type-aware VHD-068 / VHD-011 (v3.0 VHD chunk 2) - the legacy SH-012 firing is
+  // removed (comment lead de-tokenized at the VHD close, AUDIT-171, so extractCode no longer parses this retired
+  // marker as an evaluator block; mirrors the clean SH-9 / SH-ASD retirements rather than leaving an evalOrphan).
+  // Superseded (AUDIT-169): the legacy SH-012 was the GENERAL, un-partitioned prosthetic-SVD gap - it gated ANY prosthetic
   // (Z95.2/.3/.4) + elevated AORTIC gradient and applied an SVD/ViV-vs-redo recommendation UNIFORMLY, including to
   // MECHANICAL valves (for which an elevated gradient is thrombosis/pannus, NOT structural deterioration). The
   // chunk-2 partition strictly improves on it: VHD-068 (mechanical Z95.2/.4 -> PVT workup) + VHD-011 (bioprosthetic

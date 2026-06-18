@@ -52,8 +52,12 @@ describe('Structural: Gap rule engine integrity', () => {
     // - net +30: ~33 new SH evaluators across 7 chunks (AS/MR/TR severity, aortic syndromes + genetic dx,
     //   PFO/ASD/IE/PE/ACHD/masses, valve-procedure post-op, CPT-unblocked post-procedure) minus the 3 retired
     //   legacy over-detectors (SH-12 tricuspid AUDIT-167, SH-9 PFO + SH-ASD AUDIT-127/128).
+    // Then 356 -> 371 by the v3.0 VHD module close (2026-06-17, feat/vhd-chunk1-ar-severity):
+    // - net +15: +17 new VHD evaluators across 5 chunks (AR/mixed severity, prosthetic dysfunction, mech/bio
+    //   anticoag, IE-surgical-dx + rheumatic, pregnancy SAFETY + drug-induced surveillance) minus 2 retired
+    //   firings (VD-5 superseded by VHD-103, SH-012 superseded by VHD-068/011).
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(356);
+    expect(count).toBe(371);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

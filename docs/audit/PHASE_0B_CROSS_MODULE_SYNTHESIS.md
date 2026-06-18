@@ -14,9 +14,9 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 | EP | 89 | 42 | 16 | 31 | 58/89 (65.2%) | 47.2% |
 | SH | 88 | 31 | 18 | 39 | 49/88 (55.7%) | 35.2% |
 | CAD | 90 | 29 | 27 | 34 | 56/90 (62.2%) | 32.2% |
-| VHD | 105 | 0 | 11 | 94 | 11/105 (10.5%) | 0.0% |
+| VHD | 105 | 12 | 13 | 80 | 25/105 (23.8%) | 11.4% |
 | PV | 105 | 16 | 14 | 75 | 30/105 (28.6%) | 15.2% |
-| **TOTAL** | **603** | **182** | **111** | **310** | **293/603 (48.6%)** | **30.2%** |
+| **TOTAL** | **603** | **194** | **113** | **296** | **307/603 (50.9%)** | **32.2%** |
 
 ---
 
@@ -28,7 +28,7 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 | EP | 15 | 11 | 1 | 3 | 80.0% |
 | SH | 13 | 7 | 2 | 4 | 69.2% |
 | CAD | 18 | 8 | 4 | 6 | 66.7% |
-| VHD | 8 | 0 | 2 | 6 | 25.0% |
+| VHD | 8 | 2 | 3 | 3 | 62.5% |
 | PV | 7 | 1 | 2 | 4 | 42.9% |
 
 ---
@@ -47,7 +47,7 @@ Per AUDIT_METHODOLOGY.md §6.3, Tier S inclusion requires ALL THREE: (SAFETY-rel
 
 | Spec gap | Module | Spec line | Class | inferredSafetyTag | Rationale |
 |---|---|---:|---|---|---|
-| GAP-VHD-099 | VHD | 914 | SPEC_ONLY | STRUCTURAL_SAFETY | Mechanical valve + pregnancy 1st trimester: warfarin >5mg/day is teratogenic (warfarin embryopathy)  |
+| GAP-VHD-099 | VHD | 914 | PARTIAL_DETECTION | STRUCTURAL_SAFETY | Mechanical valve + pregnancy 1st trimester: warfarin >5mg/day is teratogenic (warfarin embryopathy)  |
 
 ---
 
@@ -101,18 +101,14 @@ Subcategories with 0% any-coverage indicate entire procedural surfaces missing i
 | VHD | Surgical MVR | 7 | 0 | 0 | 7 |
 | VHD | IE General | 8 | 0 | 0 | 8 |
 | VHD | IE Pathogens | 7 | 0 | 0 | 7 |
-| VHD | IE Surgical | 6 | 0 | 0 | 6 |
-| VHD | Rheumatic | 6 | 0 | 0 | 6 |
 | VHD | Carcinoid | 6 | 0 | 0 | 6 |
-| VHD | Drug-Induced | 4 | 0 | 0 | 4 |
-| VHD | Valve Progression | 4 | 0 | 0 | 4 |
 | PV | Vasculitis | 6 | 0 | 0 | 6 |
 | PV | CTEPH | 4 | 0 | 0 | 4 |
 | PV | PAH | 6 | 0 | 0 | 6 |
 | PV | AVM | 3 | 0 | 0 | 3 |
 | PV | Vascular Access | 3 | 0 | 0 | 3 |
 
-**Total: 21 subcategories with 0% any-coverage across 6 modules.**
+**Total: 17 subcategories with 0% any-coverage across 6 modules.**
 
 ---
 
