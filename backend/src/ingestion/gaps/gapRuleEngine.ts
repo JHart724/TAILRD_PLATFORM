@@ -1886,6 +1886,18 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'B-R',
   },
   {
+    id: 'gap-cad-013-fh-cascade',
+    name: 'Familial Hypercholesterolemia Cascade Screening',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2018 AHA/ACC Guideline on the Management of Blood Cholesterol',
+    guidelineVersion: '2018',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-18',
+    nextReviewDue: '2026-12-18',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B-R',
+  },
+  {
     id: 'gap-cad-weight-mgmt',
     name: 'Weight Management in CAD + Obesity',
     module: 'CORONARY_INTERVENTION',
@@ -11516,6 +11528,39 @@ export function evaluateGapRules(
         },
       });
     }
+  }
+
+  // CAD-FH-CASCADE: Familial hypercholesterolemia suspicion (severe LDL) without FH evaluation (CAD-013)
+  // CAD chunk 1 buildout (2026-06-18). Guideline: 2018 AHA/ACC Cholesterol Guideline (Class 1 maximally-tolerated
+  // statin for LDL >= 190; cascade screening of first-degree relatives) + 2023 ACC/AHA Chronic Coronary Disease.
+  // section-16-verified: FH ICD E78.010 (HoFH) / E78.011 (HeFH) / E78.019 (FH unspecified) -> E78.01 prefix
+  // (NLM 2026-06-18); LDL threaded via labValues['ldl'] (LOINC 13457-7 / 18262-6). Threshold: LDL >= 190 mg/dL
+  // is the FH-suspicion cut. Subgroup-aware: the FH-specific action is CASCADE SCREENING of first-degree
+  // relatives + genetic testing (autosomal-dominant, ~50% relative risk), NOT statin initiation alone.
+  const hasFHdx_CAD13 = dxCodes.some(c => c.startsWith('E78.01'));
+  const severeLDL_CAD13 = labValues['ldl'] !== undefined && labValues['ldl'] >= 190;
+  if (severeLDL_CAD13 && !hasFHdx_CAD13 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.SCREENING_DUE,
+      module: ModuleType.CORONARY_INTERVENTION,
+      status: 'Severe LDL elevation (>=190): familial hypercholesterolemia evaluation and cascade screening gap',
+      target: 'FH evaluation (clinical criteria / genetic testing) + cascade screening of first-degree relatives + high-intensity lipid-lowering',
+      recommendations: {
+        action: 'Consider familial hypercholesterolemia evaluation (Dutch Lipid Clinic criteria / genetic testing) with cascade screening of first-degree relatives, alongside high-intensity statin and PCSK9i consideration, for this patient with LDL >= 190 mg/dL per 2018 AHA/ACC Cholesterol Guideline',
+        guideline: '2018 AHA/ACC Cholesterol Guideline; 2023 ACC/AHA Chronic Coronary Disease Guideline',
+        note: 'Subgroup-aware: the FH-specific action is CASCADE SCREENING of first-degree relatives + genetic testing, not statin initiation alone. Fires on suspected/un-worked-up FH (LDL >= 190 without an FH diagnosis E78.01x already coded). Path-B: a secondary-cause exclusion (nephrotic / hypothyroid) and the untreated-vs-on-treatment distinction are not threaded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          `LDL: ${labValues['ldl']} mg/dL (>= 190, the FH-suspicion threshold)`,
+          'No familial hypercholesterolemia diagnosis (E78.010 / E78.011 / E78.019) yet coded',
+        ],
+        guidelineSource: '2018 AHA/ACC Guideline on the Management of Blood Cholesterol',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'FH already evaluated/diagnosed (E78.01x)', 'Secondary cause of severe hypercholesterolemia (nephrotic, hypothyroid)'],
+      },
+    });
   }
 
   // CAD-WEIGHT-MGMT: Weight Management in CAD + Obesity
