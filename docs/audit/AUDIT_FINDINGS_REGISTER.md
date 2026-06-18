@@ -147,6 +147,10 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-161** - Flow inversions + dead navigation paths (UI_CANON §7 flow rules). Re-verified 2026-06-12: the Export utility renders FIRST, above the headline gap metric, in the Executive views - HF `<ExportButton>` `ExecutiveView.tsx:293` vs `<GapIntelligenceCard>` `:360`; CAD `<ExportButton>` `CoronaryExecutiveView.tsx:185` vs `<GapIntelligenceCard>` `:232` (2 modules re-verified, pattern is all 6 per 0C-2a); no data-driven deep-links between the 3 audience tabs (an Exec gap count does not link to the Service-Line detail or the Care-Team action - role-based nav only); orphan routes reachable but absent from the home launcher `MODULES` grid (`App.tsx:520` renders `MODULES.filter(m => m.id !== 'research')`; `/data` + `/patients` are routes `:761/766` with no tile; the revenueCycle module has a view but no `MODULES` entry; `/admin/*`). Remediation = §7 headline-first order + cross-tab deep-links + orphan-route disposition. (Phase 0C-3 UI-canon findings, aesthetic/polish tier; **OPEN** 2026-06-12 - MEDIUM P2 proposed per classify-up (operator leaned LOW-MEDIUM; the Export-above-headline inversion is on every Executive view a CMO sees = customer-facing information-hierarchy defect -> MEDIUM; LOW counter-arg: trivial per-view fix, and the inversion is auto-fixed once AUDIT-151 collapses the 6 Exec views to one canonical-order view); remediation v2.0; operator confirms severity per §18)
 - **AUDIT-081** - User.email encryption-at-rest deferred (blind-index requirement; sister to the AUDIT-014 patient-search pattern) (Phase 3, **OPEN - DEFERRED** per AUDIT-075 D4 option-C) [index line added 2026-06-13 to reconcile a filing-discipline omission - the detail entry (MEDIUM P2) + the BUILD_STATE row predate this index row; DRIFT-47 class]
 - **AUDIT-080** - Zod validation coverage gap (21 of 26 mutating-route files) (Phase 3, **OPEN - PRODUCTION-READINESS GATE**) [index line reconciled to MEDIUM P2 2026-06-13 - relocated here from the LOW (P3) section to match the authoritative detail entry (Severity MEDIUM P2, line ~1414) + BUILD_STATE (MEDIUM P2 production-readiness gate); the LOW P3 index placement was the stale outlier; index-staleness fix per §18 detail-is-source-of-truth, NOT a reclassification; DRIFT-47 class]
+- **AUDIT-173** - CAD-REHAB over-detector: cardiac-rehab gaps GAP-CAD-029 (post-CABG) + GAP-CAD-046 (post-MI) fire on `hasCAD` alone, no CABG/MI procedure gate, no rehab-referral-completion check; every non-hospice CAD patient fires both. (CAD legacy-coverage audit, **OPEN** 2026-06-18 - MEDIUM P2, over-detection, mitigated synthetic/pre-DUA; remediation = CAD buildout tightening chunk) See register AUDIT-173.
+- **AUDIT-174** - CAD-061 DAPT-de-escalation miscite (cited Gap-50 detects P2Y12-ABSENCE, the opposite of de-escalation) + Gap-50 over-detects on stable CAD not needing DAPT. (CAD legacy-coverage audit, **OPEN** 2026-06-18 - MEDIUM P2, miscite/over-detection; CAD-061 -> SPEC_ONLY per §16.6(ii)) See register AUDIT-174.
+- **AUDIT-176** - CAD-015 ticagrelor-blanket: post-ACS DAPT gap recommends ticagrelor for patients appropriately on prasugrel (false-positive; ignores the equivalent-potent-P2Y12 subgroup). (CAD legacy-coverage audit, **OPEN** 2026-06-18 - MEDIUM P2, recommendation-subgroup over-detection; remediation = add `!onPrasugrel` gate) See register AUDIT-176.
+- **AUDIT-177** - CAD existence-proxy / narrative-vs-logic over-credits: CAD-007 + CAD-068 fire on data-ABSENCE not the spec interval/lesion target, CAD-018 claims "beyond 12 months" with no duration logic. (CAD legacy-coverage audit, **OPEN** 2026-06-18 - MEDIUM P2, DET_OK over-credit; CAD-007/068/018 -> PARTIAL) See register AUDIT-177.
 
 ### LOW (P3)
 
@@ -194,6 +198,7 @@ See `docs/audit/AUDIT_FRAMEWORK.md` for full definitions.
 - **AUDIT-144** - Backend freshness-labeling failures (provenance honesty): `godView.ts:118` emits `dataFreshness: 'real-time'` as a hardcoded string wired to nothing (the inline comment `// or timestamp of last data update` admits the unwired intent), and `vbcService` recomputes only on a manual `POST /analytics/vbc/recalculate` (`analytics.ts:667-678`) yet stamps `reportingPeriod: 'YYYY-YTD'` (`vbcService.ts:68`) fronting a point-in-time snapshot as current. Both assert a currency the data does not guarantee. (Service-line aggregation Axis 1 / §20; **OPEN** 2026-06-11 - LOW P3, freshness-labeling honesty, no wrong computation, mitigated synthetic/pre-DUA; remediation v2.0 = wire freshness to an actual compute timestamp; operator confirms severity per §18)
 - **AUDIT-154** - Off-token neutrals (UI_CANON §4.3): standard Tailwind gray hexes bypass the titanium neutral scale. Counts re-run at filing 2026-06-12: 185 off-token gray uses (`#6B7280`=105, `#64748b`=28, `#374151`=15, `#1e293b`=13, `#E5E7EB`=11, `#111827`=8, `#9CA3AF`=4, `#F9FAFB`=1) + 66 `hover:bg-gray` utilities. Remediation = migrate to the titanium scale per the §4.3 mapping (`#6B7280`->titanium-500 etc.). (Phase 0C-3 UI-canon findings, structural/component tier; **OPEN** 2026-06-12 - LOW P3 proposed (pure token hygiene, no user-visible meaning change, mitigated pre-DUA/synthetic); remediation v2.0; operator confirms severity per §18)
 - **AUDIT-162** - Responsive/layout non-conforming residue (UI_CANON §7 responsive mandates). Re-run 2026-06-12: ~16 `grid-cols-2/3/4` with NO breakpoint (named per 0C-2a: ReferralPathwayCard, CommandGrid, CompetitorMarketShare, several HF detail modals, etc.); 38 fixed `w-[Npx]` incl. **`w-[1600px]` and `w-[1800px]`** (hard desktop-width surfaces); 52 `overflow-x-auto` scroll tables; the `ModuleLayout` sticky 3-tab bar does not collapse/scroll on narrow; TopBar search `hidden md:block` (removed, not collapsed). HONEST MITIGATION (re-verified): the platform is substantially responsive - 752 breakpoint usages (sm 26 / md 322 / lg 349 / xl 46 / 2xl 9), 199 files use the grid reflow pattern, 131 chart `ResponsiveContainer` - so this is the specific non-conforming RESIDUE, not a rebuild. Remediation = the §7 responsive mandates (no breakpoint-less grids, no hard layout px-widths, collapsible tab bar). (Phase 0C-3 UI-canon findings, aesthetic/polish tier; **OPEN** 2026-06-12 - LOW P3 proposed (desktop-first is acceptable per §7; the residue is bounded and the app is already substantially responsive; mitigated pre-DUA); remediation v2.0; operator confirms severity per §18)
+- **AUDIT-175** - CAD-NICORANDIL (`29987`) + CAD-TRIMETAZIDINE (`47832`): both RxCUIs NOT FOUND in RxNav (§16 fail); non-US / non-ACC-AHA-guideline drugs (ESC CCS agents); the evaluator blocks map to no covered CAD spec gap (EXTRA over-built rules). (CAD legacy-coverage audit, **OPEN** 2026-06-18 - LOW P3, unverifiable-code + guideline-scope-creep hygiene, no runtime over-credit; remediation = retire both blocks) See register AUDIT-175.
 
 ### INFO
 
@@ -4442,3 +4447,63 @@ Severity column copied verbatim from PHASE_0C_REPORT.md §3 per §18 register-li
 - **Verification:** guard tests in vhdChunk4.test.ts (rheumatic-MS+AF single-fire + non-rheumatic no-over-narrowing), epChunk1.test.ts (I05.0 -> VHD-083 not EP-008; I34.2 retained), shChunk5.test.ts (IE+HF -> VHD-057 not SH-029; embolic + A41 retained). validateCanonical 6/6; validateEvidenceObjects PASS.
 - **Section-16:** I05.x (rheumatic mitral, I05.0-I05.9) NLM-verified; I34.2 (nonrheumatic MS), A41 (sepsis), R65.2 (severe sepsis) retained from the pre-existing verified sets.
 - **Cross-references:** VHD-083 (`gap-vhd-083-rheumatic-af-warfarin`), VHD-057 (`gap-vhd-057-ie-hf-surgery`), VHD-059, VD-12 (`gap-vd-12-af-valve-anticoag`), EP-008 (`gap-ep-008-doac-mitral-stenosis`), SH-029 (`gap-sh-029-ie-early-surgery`); INVICTUS (warfarin superiority in rheumatic AF); 2020 ACC/AHA VHD; 2023 ACC/AHA AFib.
+
+---
+
+### AUDIT-173 - CAD-REHAB over-detector: cardiac-rehab gaps (CAD-029 post-CABG, CAD-046 post-MI) fire on ANY CAD patient with no procedure gate and no referral-completion check
+
+- **Phase:** CAD legacy-coverage audit (read-only, surfaced 2026-06-18, branch `audit/cad-legacy-coverage`). Section-1 rule-body verification.
+- **Severity:** MEDIUM (P2). False-positive over-referral on the entire CAD population; mitigated synthetic/pre-DUA.
+- **Status:** OPEN (surfaced in the read-only audit; remediation = the CAD buildout tightening chunk).
+- **Defect:** the single `CAD-REHAB` evaluator (`gapRuleEngine.ts:7182-7209`) gates ONLY on `hasCAD && !hasContraindication(EXCLUSION_HOSPICE)` and is cited DET_OK for BOTH GAP-CAD-029 (post-CABG rehab) and GAP-CAD-046 (post-MI rehab). It checks neither a CABG signal (Z95.1 / Z48.812 / post-op) for CAD-029, a recent-MI signal (I21/I22) for CAD-046, nor any rehab-referral-already-done exclusion. Every non-hospice CAD patient fires both gaps. The SH-shipped-over-detector class (cf. AUDIT-125).
+- **Impact:** over-detection - both CAD-029 and CAD-046 are over-credited DET_OK on an un-gated rule.
+- **Remediation candidate (buildout tightening chunk):** split CAD-REHAB into a post-CABG-gated (CAD-029) and recent-MI-gated (CAD-046) evaluator, each with a rehab-referral-absent guard; reclassify per the genuine gated detection.
+- **Cross-references:** `gapRuleEngine.ts` CAD-REHAB (`gap-cad-rehab`); GAP-CAD-029 + GAP-CAD-046 crosswalk DET_OK rows; AUDIT-125 (sister over-detector); 2021 ACC/AHA Coronary Revascularization (rehab Class 1).
+
+---
+
+### AUDIT-174 - CAD-061 DAPT-de-escalation miscite + Gap-50 over-detection: the cited Gap-50 detects P2Y12-ABSENCE, the opposite of the de-escalation scenario, and fires for stable CAD that does not need DAPT
+
+- **Phase:** CAD legacy-coverage audit (read-only, 2026-06-18). Section-1 rule-body verification.
+- **Severity:** MEDIUM (P2). Miscite (over-credit) + over-detection; mitigated synthetic/pre-DUA.
+- **Status:** OPEN.
+- **Defect:** (1) MISCITE - GAP-CAD-061 (DAPT de-escalation post-PCI, TWILIGHT/TICO = drop aspirin while ON a P2Y12 inhibitor) is cited DET_OK to the `Gap-50` evaluator (`gapRuleEngine.ts:6556-6581`), but Gap-50 fires on `hasStentOrCAD && !onP2Y12` - i.e. a CAD/stent patient with NO P2Y12 inhibitor (missing DAPT), the clinical OPPOSITE of de-escalation. Zero true-positive overlap with the de-escalation target. (2) OVER-DETECTION - Gap-50's `hasStentOrCAD = hasCAD || Z95.5` includes stable chronic CAD on appropriate aspirin monotherapy, which fires a false "P2Y12 not active" gap (DAPT is for post-ACS/post-PCI, not all CAD).
+- **Impact:** CAD-061 over-credited (disjoint-target miscite -> SPEC_ONLY per §16.6(ii)); Gap-50 over-detects on stable CAD.
+- **Remediation candidate:** reclassify CAD-061 SPEC_ONLY (no genuine de-escalation evaluator; a real one needs on-DAPT + months-since-PCI, partly un-threaded). Tighten Gap-50 to a post-ACS/post-PCI gate (I21/I22/Z95.5 recent) rather than all-CAD.
+- **Cross-references:** `gapRuleEngine.ts` Gap-50 (`gap-50`, the P2Y12-absence rule); GAP-CAD-061 crosswalk; AUDIT-133 (sister disjoint-target miscite); TWILIGHT / TICO / 2021 ACC/AHA/SCAI.
+
+---
+
+### AUDIT-175 - CAD-NICORANDIL + CAD-TRIMETAZIDINE: unverifiable RxCUIs (29987 / 47832 NOT FOUND in RxNav) on non-US, non-ACC/AHA-guideline drugs in evaluator blocks with no covered-spec-gap mapping
+
+- **Phase:** CAD legacy-coverage audit (read-only, 2026-06-18). Section-16 clinical-code verification.
+- **Severity:** LOW (P3). Dead-code / unverifiable-code hygiene; the blocks do not map to any covered CAD spec gap, so no classification is over-credited; mitigated synthetic/pre-DUA.
+- **Status:** OPEN.
+- **Defect:** `CAD-NICORANDIL` (`gapRuleEngine.ts:12518-12549`, RxCUI `29987`) and `CAD-TRIMETAZIDINE` (`:12551-12582`, RxCUI `47832`) both fail §16 - RxNav `properties.json` returns NOT FOUND for both RxCUIs. Nicorandil and trimetazidine are not FDA-approved in the US and are not in the 2023 ACC/AHA Chronic Coronary Disease Guideline (they are ESC CCS agents). Neither block is cited by any covered CAD spec gap in the crosswalk (EXTRA over-built rules).
+- **Impact:** §16 violation (unverifiable codes) + guideline-scope creep (non-US agents); no runtime over-credit (unmapped), but the rules fire recommendations for unavailable drugs.
+- **Remediation candidate:** retire both blocks (supersede-not-delete) in the CAD buildout - non-US agents outside the US guideline scope with unverifiable codes.
+- **Cross-references:** `gapRuleEngine.ts` CAD-NICORANDIL / CAD-TRIMETAZIDINE; AUDIT-104 (sister unverifiable-RxCUI catches); AUDIT_METHODOLOGY.md §16.
+
+---
+
+### AUDIT-176 - CAD-015 ticagrelor-blanket subgroup: post-ACS DAPT gap recommends ticagrelor for patients appropriately on prasugrel (false-positive; ignores the equivalent-potent-P2Y12 subgroup)
+
+- **Phase:** CAD legacy-coverage audit (read-only, 2026-06-18). Recommendation-subgroup check.
+- **Severity:** MEDIUM (P2). False-positive recommendation on an appropriately-treated subgroup; mitigated synthetic/pre-DUA.
+- **Status:** OPEN.
+- **Defect:** `CAD-TICAGRELOR-ACS` (`gapRuleEngine.ts:11596-11624`) fires on `hasRecentMI && !onTicagrelor` and recommends ticagrelor. A post-MI patient correctly on PRASUGREL (an equally guideline-preferred potent P2Y12 per 2021 ACC/AHA/SCAI) is `!onTicagrelor` and fires a false "consider ticagrelor" gap. The detection-correct-recommendation-wrong class (cf. SH-002 TAVR-blanket, VHD-083 INVICTUS). The gap CAD-015 spec is "clopidogrel vs prasugrel/ticagrelor" - the choice, not ticagrelor specifically.
+- **Impact:** over-detection on the prasugrel subgroup; the recommendation should fire only when on neither potent P2Y12 (or on clopidogrel without a high-bleeding-risk reason).
+- **Remediation candidate:** add `!onPrasugrel` (RxCUI 613391) to the gate so a patient on either potent P2Y12 does not fire; frame the recommendation as the potent-P2Y12 choice.
+- **Cross-references:** `gapRuleEngine.ts` CAD-TICAGRELOR-ACS; GAP-CAD-015; AUDIT-172 / VHD-083 (sister recommendation-subgroup); 2021 ACC/AHA/SCAI.
+
+---
+
+### AUDIT-177 - CAD existence-proxy / narrative-vs-logic over-credits: CAD-007 + CAD-068 fire on data-ABSENCE not the spec interval/lesion target, CAD-018 status claims "beyond 12 months" with no duration logic
+
+- **Phase:** CAD legacy-coverage audit (read-only, 2026-06-18). Section-1 rule-body verification (existence-proxy class, the VD-5 / AUDIT-134 pattern).
+- **Severity:** MEDIUM (P2). DET_OK over-credit on existence-proxies / narrative-vs-logic mismatch; mitigated synthetic/pre-DUA.
+- **Status:** OPEN.
+- **Defect:** (1) GAP-CAD-007 (LDL not measured in 12mo) -> `CAD-LIPID-PANEL-FU` (`:12923-12952`) fires on `ldl === undefined && total_cholesterol === undefined` - an existence-proxy, no 12-month interval/date logic. (2) GAP-CAD-068 (borderline-lesion FFR not measured) -> `CAD-FFR` (`:11153-11183`) fires on `stress_test === undefined` for any CAD-without-recent-MI, with NO borderline-lesion signal. (3) GAP-CAD-018 (post-PCI DAPT duration) -> `CAD-DAPT-DURATION` (`:11745-11775`) status says "assess continued need beyond 12 months" but the trigger only checks aspirin+P2Y12 co-presence - no months-since-PCI math; fires at month 1. With AUDIT-070 (FHIR echo/lab LOINCs not ingested), the absence-proxies fire for every FHIR-ingested patient by default.
+- **Impact:** three DET_OK over-credits; CAD-007 + CAD-068 should be PARTIAL (existence-proxy, underclaim governs); CAD-018 should be PARTIAL or gain a duration signal.
+- **Remediation candidate:** reclassify CAD-007 / CAD-068 / CAD-018 to PARTIAL in the buildout; where a real interval/lesion/duration signal is threadable, replace the existence-proxy.
+- **Cross-references:** `gapRuleEngine.ts` CAD-LIPID-PANEL-FU / CAD-FFR / CAD-DAPT-DURATION; AUDIT-134 (the VD-5 existence-proxy precedent); AUDIT-070 (FHIR LOINC ingestion gap that makes absence the default).
