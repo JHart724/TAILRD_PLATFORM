@@ -6,7 +6,7 @@ interface SHBenchmarksPanelProps {
 }
 
 const shBenchmarks: BenchmarkMetric[] = [
-  { metric: 'Quadruple Therapy Rate', ourValue: 68, benchmark: 52, unit: '%', trend: 'up', percentile: 78 },
+  // AUDIT-171 P2: removed HF "Quadruple Therapy Rate" GDMT benchmark (clinical-content leak on SH).
   { metric: 'TAVR Utilization', ourValue: 45, benchmark: 38, unit: '%', trend: 'up', percentile: 72 },
   { metric: 'Target Dose Medical Management', ourValue: 71, benchmark: 65, unit: '%', trend: 'up', percentile: 68 },
   { metric: 'TAVR Referral Adoption', ourValue: 64, benchmark: 48, unit: '%', trend: 'up', percentile: 82 },

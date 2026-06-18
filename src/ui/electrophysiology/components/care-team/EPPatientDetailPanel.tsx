@@ -540,60 +540,7 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
  </div>
  </div>
 
- {/* 4-Pillar Status */}
- <div className="grid grid-cols-2 gap-3 mb-4">
- {Object.entries(patient.fullChart.anticoagulation.pillars).map(([pillar, data]) => (
- <div key={pillar} className={`p-3 rounded-lg border-2 ${getAnticoagulationStatusColor(data.status)}`}>
- <div className="flex items-center gap-2 mb-2">
- {getAnticoagulationStatusIcon(data.status)}
- <span className="font-semibold text-sm capitalize">
- {pillar === 'arni' ? 'ARNi/ACEi/ARB' : 
- pillar === 'betaBlocker' ? 'Beta-Blocker' :
- pillar === 'sglt2i' ? 'SGLT2i' :
- pillar === 'mra' ? 'MRA' : pillar}
- </span>
- </div>
- <div className="text-xs space-y-1">
- {data.currentDrug && (
- <div>
- <span className="text-gray-600">Current:</span>
- <span className="ml-1 font-medium">{data.currentDrug} {data.currentDose}</span>
- </div>
- )}
- {data.targetDose && data.status === 'suboptimal' && (
- <div>
- <span className="text-gray-600">Target:</span>
- <span className="ml-1 font-medium">{data.targetDose}</span>
- </div>
- )}
- {data.reason && (
- <div className="text-gray-600 italic">{data.reason}</div>
- )}
- </div>
-
- {/* Contraindication Alerts */}
- {(() => {
- const alerts = getContraindicationAlerts(pillar);
- return alerts.length > 0 && (
- <div className="mt-2 pt-2 border-t border-gray-200">
- <div className="text-xs font-medium text-gray-700 mb-1 flex items-center gap-1">
- <Shield className="w-3 h-3" />
- Safety Alerts:
- </div>
- <div className="space-y-1">
- {alerts.map((alert, alertIdx) => (
- <div key={alertIdx} className={`flex items-start gap-1 p-1 rounded text-xs ${getAlertColor(alert.level)}`}>
- {getAlertIcon(alert.level)}
- <span className="text-xs leading-tight">{alert.message}</span>
- </div>
- ))}
- </div>
- </div>
- );
- })()}
- </div>
- ))}
- </div>
+ {/* AUDIT-171 P2: HF 4-Pillar GDMT block (ARNi/Beta-Blocker/SGLT2i/MRA) excised - was mislabeled as EP anticoagulation. Per-module EP content deferred to P4. */}
 
  {/* Optimization Opportunities */}
  {patient.fullChart.anticoagulation.opportunities.length > 0 && (
