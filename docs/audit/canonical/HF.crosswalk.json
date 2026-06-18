@@ -14,8 +14,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-35",
         "evaluatorBodyLineRange": [
-          4728,
-          4752
+          4716,
+          4740
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-35-beta-blocker",
@@ -33,12 +33,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-BB-NON-EBM",
         "evaluatorBodyLineRange": [
-          14359,
-          14375
+          14324,
+          14340
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-002-bb-non-ebm",
-        "registryLine": 4139
+        "registryLine": 4127
       },
       "specGapId": "GAP-HF-002",
       "specLine": 125,
@@ -52,12 +52,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-BB-TARGET-DOSE",
         "evaluatorBodyLineRange": [
-          14418,
-          14434
+          14383,
+          14399
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-003-bb-target-dose",
-        "registryLine": 4153
+        "registryLine": 4141
       },
       "specGapId": "GAP-HF-003",
       "specLine": 126,
@@ -71,8 +71,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-37",
         "evaluatorBodyLineRange": [
-          7034,
-          7060
+          7025,
+          7051
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-37-raas",
@@ -90,12 +90,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-ARNI-SWITCH",
         "evaluatorBodyLineRange": [
-          13858,
-          13882
+          13823,
+          13847
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-arni-switch",
-        "registryLine": 2453
+        "registryLine": 2465
       },
       "specGapId": "GAP-HF-005",
       "specLine": 128,
@@ -109,8 +109,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-36",
         "evaluatorBodyLineRange": [
-          4762,
-          4784
+          4750,
+          4772
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-36-mra",
@@ -128,8 +128,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-34",
         "evaluatorBodyLineRange": [
-          4698,
-          4723
+          4686,
+          4711
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-34-sglt2i",
@@ -147,12 +147,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-18",
         "evaluatorBodyLineRange": [
-          4881,
-          4897
+          4869,
+          4885
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-18-vericiguat",
-        "registryLine": 1037
+        "registryLine": 1049
       },
       "specGapId": "GAP-HF-014",
       "specLine": 131,
@@ -166,12 +166,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-30",
         "evaluatorBodyLineRange": [
-          5038,
-          5054
+          5026,
+          5042
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-30-arni-underdosing",
-        "registryLine": 1109
+        "registryLine": 1121
       },
       "specGapId": "GAP-HF-006",
       "specLine": 132,
@@ -185,12 +185,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-MRA-CONTRA",
         "evaluatorBodyLineRange": [
-          14258,
-          14274
+          14223,
+          14239
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-008-mra-contra",
-        "registryLine": 4091
+        "registryLine": 4079
       },
       "specGapId": "GAP-HF-008",
       "specLine": 133,
@@ -204,12 +204,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-K-MONITOR",
         "evaluatorBodyLineRange": [
-          13937,
-          13960
+          13902,
+          13925
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-potassium-monitor",
-        "registryLine": 2477
+        "registryLine": 2489
       },
       "specGapId": "GAP-HF-009",
       "specLine": 134,
@@ -223,12 +223,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-SGLT2I-EGFR-FLOOR",
         "evaluatorBodyLineRange": [
-          14446,
-          14461
+          14411,
+          14426
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-011-sglt2i-egfr-floor",
-        "registryLine": 4165
+        "registryLine": 4153
       },
       "specGapId": "GAP-HF-011",
       "specLine": 135,
@@ -242,12 +242,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-19",
         "evaluatorBodyLineRange": [
-          4907,
-          4923
+          4895,
+          4911
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-19-hydralazine-isdn",
-        "registryLine": 1049
+        "registryLine": 1061
       },
       "specGapId": "GAP-HF-012",
       "specLine": 136,
@@ -261,12 +261,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-17",
         "evaluatorBodyLineRange": [
-          4855,
-          4871
+          4843,
+          4859
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-17-ivabradine",
-        "registryLine": 1025
+        "registryLine": 1037
       },
       "specGapId": "GAP-HF-013",
       "specLine": 137,
@@ -280,12 +280,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-DIGOXIN-HIGH-ELDERLY",
         "evaluatorBodyLineRange": [
-          14476,
-          14493
+          14441,
+          14458
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-015-digoxin-high-elderly",
-        "registryLine": 4177
+        "registryLine": 4165
       },
       "specGapId": "GAP-HF-015",
       "specLine": 138,
@@ -299,12 +299,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-79",
         "evaluatorBodyLineRange": [
-          5220,
-          5240
+          5208,
+          5228
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-79-sglt2i-hfpef",
-        "registryLine": 1205
+        "registryLine": 1217
       },
       "specGapId": "GAP-HF-016",
       "specLine": 143,
@@ -318,12 +318,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-FINERENONE-MREF",
         "evaluatorBodyLineRange": [
-          14177,
-          14193
+          14142,
+          14158
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-017-finerenone-mref",
-        "registryLine": 4055
+        "registryLine": 4043
       },
       "specGapId": "GAP-HF-017",
       "specLine": 144,
@@ -337,12 +337,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-7",
         "evaluatorBodyLineRange": [
-          4802,
-          4818
+          4790,
+          4806
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-7-glp1ra",
-        "registryLine": 1001
+        "registryLine": 1013
       },
       "specGapId": "GAP-HF-018",
       "specLine": 145,
@@ -356,12 +356,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-21",
         "evaluatorBodyLineRange": [
-          4955,
-          4970
+          4943,
+          4958
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-21-hfpef-screening",
-        "registryLine": 1073
+        "registryLine": 1085
       },
       "specGapId": "GAP-HF-019",
       "specLine": 146,
@@ -375,12 +375,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-21",
         "evaluatorBodyLineRange": [
-          4955,
-          4970
+          4943,
+          4958
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-21-hfpef-screening",
-        "registryLine": 1073
+        "registryLine": 1085
       },
       "specGapId": "GAP-HF-020",
       "specLine": 147,
@@ -394,12 +394,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-DEVICE-CRT",
         "evaluatorBodyLineRange": [
-          6373,
-          6395
+          6361,
+          6383
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-device-crt",
-        "registryLine": 857
+        "registryLine": 869
       },
       "specGapId": "GAP-HF-021",
       "specLine": 152,
@@ -413,12 +413,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-ICD-PRIMARY-ISCHEMIC",
         "evaluatorBodyLineRange": [
-          14508,
-          14523
+          14473,
+          14488
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-024-icd-primary-ischemic",
-        "registryLine": 4189
+        "registryLine": 4177
       },
       "specGapId": "GAP-HF-024",
       "specLine": 153,
@@ -432,12 +432,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-ICD-PRIMARY-NICM",
         "evaluatorBodyLineRange": [
-          14539,
-          14554
+          14504,
+          14519
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-025-icd-primary-nicm",
-        "registryLine": 4201
+        "registryLine": 4189
       },
       "specGapId": "GAP-HF-025",
       "specLine": 154,
@@ -451,12 +451,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-ICD-SECONDARY",
         "evaluatorBodyLineRange": [
-          14564,
-          14579
+          14529,
+          14544
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-026-icd-secondary",
-        "registryLine": 4213
+        "registryLine": 4201
       },
       "specGapId": "GAP-HF-026",
       "specLine": 155,
@@ -470,12 +470,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-DEVICE-CRT",
         "evaluatorBodyLineRange": [
-          6373,
-          6395
+          6361,
+          6383
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-device-crt",
-        "registryLine": 857
+        "registryLine": 869
       },
       "specGapId": "GAP-HF-022",
       "specLine": 156,
@@ -489,12 +489,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-DEVICE-CRT",
         "evaluatorBodyLineRange": [
-          6373,
-          6395
+          6361,
+          6383
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-device-crt",
-        "registryLine": 857
+        "registryLine": 869
       },
       "specGapId": "GAP-HF-023",
       "specLine": 157,
@@ -508,12 +508,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-CARDIOMEMS",
         "evaluatorBodyLineRange": [
-          15231,
-          15246
+          15196,
+          15211
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-027-cardiomems",
-        "registryLine": 4501
+        "registryLine": 4489
       },
       "specGapId": "GAP-HF-027",
       "specLine": 158,
@@ -527,12 +527,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-86",
         "evaluatorBodyLineRange": [
-          8979,
-          8998
+          9000,
+          9019
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-86-crt-d-upgrade",
-        "registryLine": 1949
+        "registryLine": 1961
       },
       "specGapId": "GAP-HF-029",
       "specLine": 159,
@@ -556,12 +556,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-LEAD-EXTRACTION",
         "evaluatorBodyLineRange": [
-          14589,
-          14604
+          14554,
+          14569
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-031-lead-extraction",
-        "registryLine": 4225
+        "registryLine": 4213
       },
       "specGapId": "GAP-HF-031",
       "specLine": 161,
@@ -575,12 +575,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-CCM-CANDIDATE",
         "evaluatorBodyLineRange": [
-          14617,
-          14632
+          14582,
+          14597
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-126-ccm-candidate",
-        "registryLine": 4237
+        "registryLine": 4225
       },
       "specGapId": "GAP-HF-126",
       "specLine": 162,
@@ -594,12 +594,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-WCD-BRIDGE",
         "evaluatorBodyLineRange": [
-          14643,
-          14658
+          14608,
+          14623
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-127-wcd-bridge",
-        "registryLine": 4249
+        "registryLine": 4237
       },
       "specGapId": "GAP-HF-127",
       "specLine": 163,
@@ -613,12 +613,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-84",
         "evaluatorBodyLineRange": [
-          8919,
-          8938
+          8940,
+          8959
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-84-transplant-eval",
-        "registryLine": 1925
+        "registryLine": 1937
       },
       "specGapId": "GAP-HF-028",
       "specLine": 168,
@@ -652,12 +652,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-TOLVAPTAN-HYPONATREMIA",
         "evaluatorBodyLineRange": [
-          15121,
-          15136
+          15086,
+          15101
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-132-tolvaptan-hyponatremia",
-        "registryLine": 4453
+        "registryLine": 4441
       },
       "specGapId": "GAP-HF-132",
       "specLine": 171,
@@ -671,12 +671,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-CS-MCS-ESCALATION",
         "evaluatorBodyLineRange": [
-          15150,
-          15165
+          15115,
+          15130
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-133-cs-mcs-escalation",
-        "registryLine": 4465
+        "registryLine": 4453
       },
       "specGapId": "GAP-HF-133",
       "specLine": 172,
@@ -700,12 +700,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-76",
         "evaluatorBodyLineRange": [
-          5171,
-          5186
+          5159,
+          5174
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-76-palliative-care",
-        "registryLine": 1181
+        "registryLine": 1193
       },
       "specGapId": "GAP-HF-044",
       "specLine": 174,
@@ -719,12 +719,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-77",
         "evaluatorBodyLineRange": [
-          5195,
-          5211
+          5183,
+          5199
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-77-diuretic-resistance",
-        "registryLine": 1193
+        "registryLine": 1205
       },
       "specGapId": "GAP-HF-045",
       "specLine": 175,
@@ -748,12 +748,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-INOTROPE-DEPENDENCE",
         "evaluatorBodyLineRange": [
-          15095,
-          15110
+          15060,
+          15075
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-047-inotrope-dependence",
-        "registryLine": 4441
+        "registryLine": 4429
       },
       "specGapId": "GAP-HF-047",
       "specLine": 177,
@@ -797,12 +797,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-IRON-DEF-IV",
         "evaluatorBodyLineRange": [
-          14283,
-          14299
+          14248,
+          14264
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-033-iron-def-iv",
-        "registryLine": 4103
+        "registryLine": 4091
       },
       "specGapId": "GAP-HF-033",
       "specLine": 185,
@@ -816,12 +816,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-IRON-FUNCTIONAL",
         "evaluatorBodyLineRange": [
-          14868,
-          14884
+          14833,
+          14849
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-034-iron-functional",
-        "registryLine": 4357
+        "registryLine": 4345
       },
       "specGapId": "GAP-HF-034",
       "specLine": 186,
@@ -835,12 +835,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-IRON-SCREEN",
         "evaluatorBodyLineRange": [
-          14842,
-          14857
+          14807,
+          14822
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-032-iron-screen",
-        "registryLine": 4345
+        "registryLine": 4333
       },
       "specGapId": "GAP-HF-032",
       "specLine": 187,
@@ -854,12 +854,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-GDMT-INCOMPLETE",
         "evaluatorBodyLineRange": [
-          14934,
-          14949
+          14899,
+          14914
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-036-gdmt-incomplete",
-        "registryLine": 4369
+        "registryLine": 4357
       },
       "specGapId": "GAP-HF-036",
       "specLine": 192,
@@ -873,12 +873,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-37-FU",
         "evaluatorBodyLineRange": [
-          5058,
-          5073
+          5046,
+          5061
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-37-fu-discharge",
-        "registryLine": 1121
+        "registryLine": 1133
       },
       "specGapId": "GAP-HF-035",
       "specLine": 193,
@@ -892,12 +892,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-20",
         "evaluatorBodyLineRange": [
-          4927,
-          4942
+          4915,
+          4930
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-20-cardiac-rehab",
-        "registryLine": 1061
+        "registryLine": 1073
       },
       "specGapId": "GAP-HF-037",
       "specLine": 194,
@@ -941,12 +941,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-26",
         "evaluatorBodyLineRange": [
-          4980,
-          4995
+          4968,
+          4983
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-26-osa-screening",
-        "registryLine": 1085
+        "registryLine": 1097
       },
       "specGapId": "GAP-HF-039",
       "specLine": 198,
@@ -960,12 +960,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-38",
         "evaluatorBodyLineRange": [
-          5077,
-          5092
+          5065,
+          5080
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-38-influenza-vax",
-        "registryLine": 1133
+        "registryLine": 1145
       },
       "specGapId": "GAP-HF-040",
       "specLine": 199,
@@ -999,12 +999,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-90",
         "evaluatorBodyLineRange": [
-          9100,
-          9118
+          9121,
+          9139
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-90-amyloid-biomarker",
-        "registryLine": 1997
+        "registryLine": 2009
       },
       "specGapId": "GAP-HF-051",
       "specLine": 206,
@@ -1018,12 +1018,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-90",
         "evaluatorBodyLineRange": [
-          9100,
-          9118
+          9121,
+          9139
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-90-amyloid-biomarker",
-        "registryLine": 1997
+        "registryLine": 2009
       },
       "specGapId": "GAP-HF-053",
       "specLine": 207,
@@ -1037,12 +1037,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-ATTR-DMT",
         "evaluatorBodyLineRange": [
-          14334,
-          14350
+          14299,
+          14315
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-054-attr-dmt",
-        "registryLine": 4127
+        "registryLine": 4115
       },
       "specGapId": "GAP-HF-054",
       "specLine": 208,
@@ -1056,12 +1056,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-90",
         "evaluatorBodyLineRange": [
-          9100,
-          9118
+          9121,
+          9139
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-90-amyloid-biomarker",
-        "registryLine": 1997
+        "registryLine": 2009
       },
       "specGapId": "GAP-HF-052",
       "specLine": 209,
@@ -1075,12 +1075,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-90",
         "evaluatorBodyLineRange": [
-          9100,
-          9118
+          9121,
+          9139
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-90-amyloid-biomarker",
-        "registryLine": 1997
+        "registryLine": 2009
       },
       "specGapId": "GAP-HF-134",
       "specLine": 210,
@@ -1094,12 +1094,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-90",
         "evaluatorBodyLineRange": [
-          9100,
-          9118
+          9121,
+          9139
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-90-amyloid-biomarker",
-        "registryLine": 1997
+        "registryLine": 2009
       },
       "specGapId": "GAP-HF-055",
       "specLine": 211,
@@ -1113,12 +1113,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-90",
         "evaluatorBodyLineRange": [
-          9100,
-          9118
+          9121,
+          9139
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-90-amyloid-biomarker",
-        "registryLine": 1997
+        "registryLine": 2009
       },
       "specGapId": "GAP-HF-056",
       "specLine": 212,
@@ -1132,12 +1132,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-12",
         "evaluatorBodyLineRange": [
-          4826,
-          4841
+          4814,
+          4829
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-12-hcm-screening",
-        "registryLine": 1013
+        "registryLine": 1025
       },
       "specGapId": "GAP-HF-057",
       "specLine": 217,
@@ -1151,12 +1151,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-12",
         "evaluatorBodyLineRange": [
-          4826,
-          4841
+          4814,
+          4829
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-12-hcm-screening",
-        "registryLine": 1013
+        "registryLine": 1025
       },
       "specGapId": "GAP-HF-135",
       "specLine": 218,
@@ -1170,12 +1170,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-12",
         "evaluatorBodyLineRange": [
-          4826,
-          4841
+          4814,
+          4829
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-12-hcm-screening",
-        "registryLine": 1013
+        "registryLine": 1025
       },
       "specGapId": "GAP-HF-058",
       "specLine": 219,
@@ -1189,12 +1189,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-12",
         "evaluatorBodyLineRange": [
-          4826,
-          4841
+          4814,
+          4829
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-12-hcm-screening",
-        "registryLine": 1013
+        "registryLine": 1025
       },
       "specGapId": "GAP-HF-059",
       "specLine": 220,
@@ -1218,12 +1218,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-89",
         "evaluatorBodyLineRange": [
-          9067,
-          9090
+          9088,
+          9111
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-89-fabry",
-        "registryLine": 1985
+        "registryLine": 1997
       },
       "specGapId": "GAP-HF-060",
       "specLine": 226,
@@ -1237,12 +1237,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-FABRY-ERT",
         "evaluatorBodyLineRange": [
-          14673,
-          14689
+          14638,
+          14654
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-061-fabry-ert",
-        "registryLine": 4261
+        "registryLine": 4249
       },
       "specGapId": "GAP-HF-061",
       "specLine": 227,
@@ -1256,12 +1256,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-SARCOID-AVBLOCK",
         "evaluatorBodyLineRange": [
-          14702,
-          14717
+          14667,
+          14682
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-062-sarcoid-avblock",
-        "registryLine": 4273
+        "registryLine": 4261
       },
       "specGapId": "GAP-HF-062",
       "specLine": 228,
@@ -1275,12 +1275,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-SARCOID-IMMUNOSUPP",
         "evaluatorBodyLineRange": [
-          14728,
-          14744
+          14693,
+          14709
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-063-sarcoid-immunosupp",
-        "registryLine": 4285
+        "registryLine": 4273
       },
       "specGapId": "GAP-HF-063",
       "specLine": 229,
@@ -1304,12 +1304,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-TACHY-CM",
         "evaluatorBodyLineRange": [
-          14757,
-          14772
+          14722,
+          14737
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-065-tachy-cm",
-        "registryLine": 4297
+        "registryLine": 4285
       },
       "specGapId": "GAP-HF-065",
       "specLine": 231,
@@ -1323,12 +1323,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-80",
         "evaluatorBodyLineRange": [
-          5249,
-          5264
+          5237,
+          5252
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-80-cardio-oncology",
-        "registryLine": 1217
+        "registryLine": 1229
       },
       "specGapId": "GAP-HF-066",
       "specLine": 232,
@@ -1342,12 +1342,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-80",
         "evaluatorBodyLineRange": [
-          5249,
-          5264
+          5237,
+          5252
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-80-cardio-oncology",
-        "registryLine": 1217
+        "registryLine": 1229
       },
       "specGapId": "GAP-HF-067",
       "specLine": 233,
@@ -1361,12 +1361,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-80",
         "evaluatorBodyLineRange": [
-          5249,
-          5264
+          5237,
+          5252
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-80-cardio-oncology",
-        "registryLine": 1217
+        "registryLine": 1229
       },
       "specGapId": "GAP-HF-068",
       "specLine": 234,
@@ -1380,12 +1380,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-80",
         "evaluatorBodyLineRange": [
-          5249,
-          5264
+          5237,
+          5252
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-80-cardio-oncology",
-        "registryLine": 1217
+        "registryLine": 1229
       },
       "specGapId": "GAP-HF-069",
       "specLine": 235,
@@ -1399,12 +1399,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-87",
         "evaluatorBodyLineRange": [
-          9011,
-          9029
+          9032,
+          9050
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-87-peripartum",
-        "registryLine": 1961
+        "registryLine": 1973
       },
       "specGapId": "GAP-HF-070",
       "specLine": 236,
@@ -1418,12 +1418,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-LVNC",
         "evaluatorBodyLineRange": [
-          14003,
-          14026
+          13968,
+          13991
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-lvnc",
-        "registryLine": 2501
+        "registryLine": 2513
       },
       "specGapId": "GAP-HF-071",
       "specLine": 237,
@@ -1437,12 +1437,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-TAKOTSUBO-ECHO",
         "evaluatorBodyLineRange": [
-          14783,
-          14798
+          14748,
+          14763
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-072-takotsubo-echo",
-        "registryLine": 4309
+        "registryLine": 4297
       },
       "specGapId": "GAP-HF-072",
       "specLine": 238,
@@ -1456,12 +1456,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-RADIATION-SURV",
         "evaluatorBodyLineRange": [
-          14814,
-          14829
+          14779,
+          14794
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-073-radiation-surv",
-        "registryLine": 4321
+        "registryLine": 4309
       },
       "specGapId": "GAP-HF-073",
       "specLine": 239,
@@ -1475,12 +1475,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-ARVC-ICD",
         "evaluatorBodyLineRange": [
-          14896,
-          14911
+          14861,
+          14876
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-074-arvc-icd",
-        "registryLine": 4333
+        "registryLine": 4321
       },
       "specGapId": "GAP-HF-074",
       "specLine": 240,
@@ -1524,12 +1524,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-CRS4-SCREEN",
         "evaluatorBodyLineRange": [
-          15175,
-          15190
+          15140,
+          15155
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-139-crs4-screen",
-        "registryLine": 4477
+        "registryLine": 4465
       },
       "specGapId": "GAP-HF-139",
       "specLine": 248,
@@ -1543,12 +1543,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-77",
         "evaluatorBodyLineRange": [
-          5195,
-          5211
+          5183,
+          5199
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-77-diuretic-resistance",
-        "registryLine": 1193
+        "registryLine": 1205
       },
       "specGapId": "GAP-HF-140",
       "specLine": 249,
@@ -1592,12 +1592,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-PERICARDITIS-COLCH",
         "evaluatorBodyLineRange": [
-          14310,
-          14326
+          14275,
+          14291
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-143-pericarditis-colch",
-        "registryLine": 4115
+        "registryLine": 4103
       },
       "specGapId": "GAP-HF-143",
       "specLine": 257,
@@ -1611,12 +1611,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-PERICARDITIS-IL1",
         "evaluatorBodyLineRange": [
-          15202,
-          15218
+          15167,
+          15183
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-144-pericarditis-il1",
-        "registryLine": 4489
+        "registryLine": 4477
       },
       "specGapId": "GAP-HF-144",
       "specLine": 258,
@@ -1640,12 +1640,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-LVAD-INR",
         "evaluatorBodyLineRange": [
-          15262,
-          15278
+          15227,
+          15243
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-147-lvad-inr",
-        "registryLine": 4513
+        "registryLine": 4501
       },
       "specGapId": "GAP-HF-147",
       "specLine": 264,
@@ -1659,12 +1659,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-LVAD-GIB",
         "evaluatorBodyLineRange": [
-          15289,
-          15305
+          15254,
+          15270
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-148-lvad-gib",
-        "registryLine": 4525
+        "registryLine": 4513
       },
       "specGapId": "GAP-HF-148",
       "specLine": 265,
@@ -1698,12 +1698,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-TRANSPLANT-CAV",
         "evaluatorBodyLineRange": [
-          15315,
-          15330
+          15280,
+          15295
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-151-transplant-cav",
-        "registryLine": 4537
+        "registryLine": 4525
       },
       "specGapId": "GAP-HF-151",
       "specLine": 268,
@@ -1717,12 +1717,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-TRANSPLANT-BIOPSY",
         "evaluatorBodyLineRange": [
-          15341,
-          15356
+          15306,
+          15321
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-152-transplant-biopsy",
-        "registryLine": 4549
+        "registryLine": 4537
       },
       "specGapId": "GAP-HF-152",
       "specLine": 269,
@@ -1826,12 +1826,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-STAGE-B",
         "evaluatorBodyLineRange": [
-          14961,
-          14976
+          14926,
+          14941
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-076-stage-b",
-        "registryLine": 4381
+        "registryLine": 4369
       },
       "specGapId": "GAP-HF-076",
       "specLine": 291,
@@ -1845,12 +1845,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-AMYLOID-AF-OAC",
         "evaluatorBodyLineRange": [
-          14202,
-          14217
+          14167,
+          14182
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-077-amyloid-af-oac",
-        "registryLine": 4067
+        "registryLine": 4055
       },
       "specGapId": "GAP-HF-077",
       "specLine": 292,
@@ -1864,12 +1864,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-AF-RATE",
         "evaluatorBodyLineRange": [
-          14986,
-          15001
+          14951,
+          14966
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-078-af-rate",
-        "registryLine": 4393
+        "registryLine": 4381
       },
       "specGapId": "GAP-HF-078",
       "specLine": 293,
@@ -1883,12 +1883,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-ANEMIA-HF",
         "evaluatorBodyLineRange": [
-          14099,
-          14126
+          14064,
+          14091
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-anemia-hf",
-        "registryLine": 2549
+        "registryLine": 2561
       },
       "specGapId": "GAP-HF-079",
       "specLine": 294,
@@ -1902,12 +1902,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-THYROID",
         "evaluatorBodyLineRange": [
-          15014,
-          15029
+          14979,
+          14994
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-080-thyroid",
-        "registryLine": 4405
+        "registryLine": 4393
       },
       "specGapId": "GAP-HF-080",
       "specLine": 295,
@@ -1921,12 +1921,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-DM-HBA1C",
         "evaluatorBodyLineRange": [
-          14231,
-          14246
+          14196,
+          14211
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-081-dm-hba1c",
-        "registryLine": 4079
+        "registryLine": 4067
       },
       "specGapId": "GAP-HF-081",
       "specLine": 296,
@@ -1940,12 +1940,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-METFORMIN-RENAL",
         "evaluatorBodyLineRange": [
-          15039,
-          15056
+          15004,
+          15021
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-082-metformin-renal",
-        "registryLine": 4417
+        "registryLine": 4405
       },
       "specGapId": "GAP-HF-082",
       "specLine": 297,
@@ -1959,12 +1959,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-75",
         "evaluatorBodyLineRange": [
-          5147,
-          5162
+          5135,
+          5150
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-75-cardiac-mri",
-        "registryLine": 1169
+        "registryLine": 1181
       },
       "specGapId": "GAP-HF-083",
       "specLine": 298,
@@ -1988,12 +1988,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-INAPPROPRIATE-SHOCKS",
         "evaluatorBodyLineRange": [
-          13652,
-          13674
+          13617,
+          13639
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-inappropriate-shocks",
-        "registryLine": 2429
+        "registryLine": 2441
       },
       "specGapId": "GAP-HF-085",
       "specLine": 300,
@@ -2007,12 +2007,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-PREG-TERATOGEN",
         "evaluatorBodyLineRange": [
-          15066,
-          15082
+          15031,
+          15047
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-086-preg-teratogen",
-        "registryLine": 4429
+        "registryLine": 4417
       },
       "specGapId": "GAP-HF-086",
       "specLine": 301,
@@ -2056,12 +2056,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "HF-29",
         "evaluatorBodyLineRange": [
-          5008,
-          5023
+          4996,
+          5011
         ],
         "evaluatorModule": "HF",
         "registryId": "gap-hf-29-remote-monitoring",
-        "registryLine": 1097
+        "registryLine": 1109
       },
       "specGapId": "GAP-HF-090",
       "specLine": 305,
