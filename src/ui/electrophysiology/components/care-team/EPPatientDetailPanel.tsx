@@ -141,25 +141,7 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
  return 'text-red-600 bg-red-100';
   };
 
-  const getAnticoagulationStatusColor = (status: string) => {
- switch(status) {
- case 'optimal': return 'text-green-600 bg-green-50 border-teal-700';
- case 'suboptimal': return 'text-amber-600 bg-amber-50 border-titanium-300';
- case 'contraindicated': return 'text-red-700 bg-red-100 border-red-300';
- case 'not_started': return 'text-gray-700 bg-gray-100 border-gray-300';
- default: return 'text-gray-700 bg-gray-100 border-gray-300';
- }
-  };
-
-  const getAnticoagulationStatusIcon = (status: string) => {
- switch(status) {
- case 'optimal': return <CheckCircle className="w-4 h-4" />;
- case 'suboptimal': return <Clock className="w-4 h-4" />;
- case 'contraindicated': return <XCircle className="w-4 h-4" />;
- case 'not_started': return <AlertTriangle className="w-4 h-4" />;
- default: return <AlertTriangle className="w-4 h-4" />;
- }
-  };
+  // AUDIT-171 P2-addendum: removed dead HF-pillar anticoag helpers (orphaned after the 4-Pillar block excision).
 
   const getAnticoagulationScoreColor = (score: number) => {
  if (score >= 80) return 'text-green-600 bg-green-50';
@@ -167,121 +149,7 @@ const EPPatientDetailPanel: React.FC<EPPatientDetailPanelProps> = ({ patient, on
  return 'text-red-700 bg-red-100';
   };
 
-  // Anticoagulation Contraindication Checking Functions
-  const checkARNiContraindications = (patient: EPWorklistPatient) => {
- const vitals = patient.fullChart?.vitals;
- const labs = patient.fullChart?.labs;
- const alerts = [];
- 
- if (vitals && parseInt(vitals.bp.split('/')[0]) < 90) {
- alerts.push({ 
- level: 'warning' as const, 
- message: 'Low SBP (<90 mmHg) - monitor closely during titration' 
- });
- }
- if (labs && labs.potassium && labs.potassium > 5.0) {
- alerts.push({ 
- level: 'caution' as const, 
- message: 'Hyperkalemia (K+ >5.0) - consider dose reduction' 
- });
- }
- if (labs && labs.egfr && labs.egfr < 30) {
- alerts.push({ 
- level: 'caution' as const, 
- message: 'Severe renal impairment - nephrology consultation' 
- });
- }
- 
- return alerts;
-  };
-
-  const checkBetaBlockerContraindications = (patient: EPWorklistPatient) => {
- const vitals = patient.fullChart?.vitals;
- const alerts = [];
- 
- if (vitals && vitals.hr < 50) {
- alerts.push({ 
- level: 'contraindication' as const, 
- message: 'Severe bradycardia (HR <50) - avoid beta-blockers' 
- });
- }
- if (vitals && vitals.hr < 60) {
- alerts.push({ 
- level: 'warning' as const, 
- message: 'Bradycardia (HR <60) - use lower starting dose' 
- });
- }
- if (vitals && parseInt(vitals.bp.split('/')[0]) < 90) {
- alerts.push({ 
- level: 'warning' as const, 
- message: 'Hypotension - monitor BP closely' 
- });
- }
- 
- return alerts;
-  };
-
-  const checkSGLT2iContraindications = (patient: EPWorklistPatient) => {
- const labs = patient.fullChart?.labs;
- const alerts = [];
- 
- if (labs && labs.egfr && labs.egfr < 25) {
- alerts.push({ 
- level: 'contraindication' as const, 
- message: 'Severe renal impairment (eGFR <25) - contraindicated' 
- });
- }
- if (labs && labs.egfr && labs.egfr < 30) {
- alerts.push({ 
- level: 'caution' as const, 
- message: 'Moderate renal impairment - monitor closely' 
- });
- }
- if (patient.age > 75) {
- alerts.push({ 
- level: 'warning' as const, 
- message: 'Advanced age - monitor volume status and falls risk' 
- });
- }
- 
- return alerts;
-  };
-
-  const checkMRAContraindications = (patient: EPWorklistPatient) => {
- const labs = patient.fullChart?.labs;
- const alerts = [];
- 
- if (labs && labs.potassium && labs.potassium > 5.0) {
- alerts.push({ 
- level: 'contraindication' as const, 
- message: 'Hyperkalemia (K+ >5.0) - contraindicated' 
- });
- }
- if (labs && labs.potassium && labs.potassium > 4.5) {
- alerts.push({ 
- level: 'caution' as const, 
- message: 'Borderline hyperkalemia - weekly K+ monitoring' 
- });
- }
- if (labs && labs.egfr && labs.egfr < 30) {
- alerts.push({ 
- level: 'contraindication' as const, 
- message: 'Severe renal impairment (eGFR <30) - contraindicated' 
- });
- }
- 
- return alerts;
-  };
-
-  const getContraindicationAlerts = (pillar: string) => {
- switch(pillar) {
- case 'arni': return checkARNiContraindications(patient);
- case 'betaBlocker': return checkBetaBlockerContraindications(patient);
- case 'sglt2i': return checkSGLT2iContraindications(patient);
- case 'mra': return checkMRAContraindications(patient);
- default: return [];
- }
-  };
+  // AUDIT-171 P2-addendum: removed dead HF-pillar anticoag helpers (orphaned after the 4-Pillar block excision).
 
   const getAlertColor = (level: 'contraindication' | 'caution' | 'warning') => {
  switch(level) {
