@@ -4507,3 +4507,28 @@ Severity column copied verbatim from PHASE_0C_REPORT.md §3 per §18 register-li
 - **Impact:** three DET_OK over-credits; CAD-007 + CAD-068 should be PARTIAL (existence-proxy, underclaim governs); CAD-018 should be PARTIAL or gain a duration signal.
 - **Remediation candidate:** reclassify CAD-007 / CAD-068 / CAD-018 to PARTIAL in the buildout; where a real interval/lesion/duration signal is threadable, replace the existence-proxy.
 - **Cross-references:** `gapRuleEngine.ts` CAD-LIPID-PANEL-FU / CAD-FFR / CAD-DAPT-DURATION; AUDIT-134 (the VD-5 existence-proxy precedent); AUDIT-070 (FHIR LOINC ingestion gap that makes absence the default).
+
+> Note: AUDIT-178/179/180 are RESERVED for the PV legacy-coverage audit findings (drafted, pending file at the PV buildout branch). CAD chunk 1 uses AUDIT-181/182.
+
+---
+
+### AUDIT-181 - ApoB slug-thread: apolipoprotein B (LOINC 1884-6) threaded to labValues['apob'] on both paths, unlocking CAD-009 (AUDIT-070 lineage)
+
+- **Phase:** CAD chunk 1 buildout (2026-06-18, branch `feat/cad-chunk1-lipid-risk`). Section-16 + threading.
+- **Severity:** LOW (P3). Threading enabler (additive); converted CAD-009 from Path-B to DET_OK. Mitigated synthetic/pre-DUA.
+- **Status:** RESOLVED 2026-06-18 (CAD chunk 1).
+- **Defect/gap:** apolipoprotein B (a 2023 ACC/AHA CCD residual-risk lipid marker) was NOT threaded anywhere - no LOINC->slug map entry, no CSV column, no patientWriter allow-list/unit/name. So CAD-009 (ApoB residual-risk gap) could not read a value; building it on `labValues['apob']` would have been an always-fire existence-proxy (the AUDIT-177 anti-pattern). The legacy CAD audit over-assumed CAD-009 buildable - the threading check corrected it.
+- **Fix:** section-16-verified ApoB LOINC `1884-6` (Apolipoprotein B [Mass/volume], NLM Clinical Tables; not 9340-1 ratio / 76482-9 moles / 6772-8 deprecated). Threaded on BOTH paths (the AUDIT-170 INR slug-fix lesson - FHIR was the path INR had been missing): (1) FHIR - `'1884-6' -> 'apob'` in `ECHO_LOINC_TO_SLUG` + `'ApoB': ['1884-6']` in `CARDIOVASCULAR_LAB_CODES` (observationService); (2) CSV - `'apob'` in patientWriter labFields + `apob: 'mg/dL'` getUnit + `apob: 'Apolipoprotein B'` getObservationName + `{name:'apob'}` in csvSchema. Guarded by cadChunk1Batch.test.ts (`ECHO_LOINC_TO_SLUG['1884-6'] === 'apob'` + CSV writer carries apob). CAD-009 built DET_OK (CAD + on-statin + `apob >= 90` -> residual atherogenic risk).
+- **Cross-references:** AUDIT-070 (FHIR-ingestion threading-gap lineage); AUDIT-170 (the INR both-paths slug-fix precedent); AUDIT-165 (CSV writer-drop class); `observationService.ts ECHO_LOINC_TO_SLUG`; CAD-009 (`gap-cad-009-apob`); 2023 ACC/AHA Chronic Coronary Disease Guideline.
+
+---
+
+### AUDIT-182 - I25.110 is NOT left main: the existing CAD-IVUS rule mislabels "ASHD with unstable angina" as left-main disease (over-detection); CAD-071 is not ICD-buildable
+
+- **Phase:** CAD chunk 1 buildout (2026-06-18). Section-16 clinical-code verification (surfaced building CAD-071).
+- **Severity:** MEDIUM (P2). Over-detection in a live rule (CAD-IVUS recommends left-main IVUS for every unstable-angina ASHD patient); mitigated synthetic/pre-DUA.
+- **Status:** OPEN (surfaced read-only; remediation = the CAD buildout / tightening).
+- **Defect:** the existing `CAD-IVUS` evaluator gates `const hasLeftMain = dxCodes.some(c => c.startsWith('I25.110'))` treating I25.110 as left-main disease. Section-16 (NLM): **`I25.110` = "Atherosclerotic heart disease of native coronary artery WITH UNSTABLE ANGINA pectoris" - NOT left main.** ICD-10-CM has **no chronic-left-main-disease code** (the only "left main" code is `I21.01`, an acute STEMI involving the left main); chronic left-main disease is an angiographic finding, not a diagnosis code. So (a) CAD-IVUS over-detects (fires "left main IVUS guidance" on the entire unstable-angina ASHD population, ~a very broad I25.110 cohort), and (b) the spec gap GAP-CAD-071 (left-main heart-team review) is **not ICD-buildable** - it was Path-B'd in CAD chunk 1 rather than built on the wrong I25.110 proxy.
+- **Impact:** CAD-IVUS over-detection (wrong-code mislabel); CAD-071 remains SPEC_ONLY (no left-main signal; would need an angiographic/procedure data element not threaded).
+- **Remediation candidate:** re-scope CAD-IVUS to its true target (intravascular imaging for complex/left-main PCI cannot be ICD-gated; gate on a procedure signal or reclassify), and reclassify its crosswalk cite; keep CAD-071 SPEC_ONLY/Path-B pending an angiographic left-main signal.
+- **Cross-references:** `gapRuleEngine.ts` CAD-IVUS (`hasLeftMain = I25.110`); GAP-CAD-071; NLM I25.110 (ASHD + unstable angina) / I21.01 (acute STEMI left main); AUDIT-104 (sister wrong-code class); 2021 ACC/AHA/SCAI Revascularization.
