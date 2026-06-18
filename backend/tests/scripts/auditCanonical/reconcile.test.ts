@@ -146,7 +146,6 @@ describe('reconcile — full integration on canonical extracts', () => {
   });
 
   it.each([
-    ['VHD', 'CLEAN'],
     ['PV', 'CLEAN'],
   ])('module %s reconciles as %s', (code, expectedStatus) => {
     const cfg = MODULE_CONFIGS.find((m) => m.code === code)!;
@@ -156,6 +155,19 @@ describe('reconcile — full integration on canonical extracts', () => {
     expect(r.status).toBe(expectedStatus);
     expect(r.registryOrphans).toHaveLength(0);
     expect(r.evaluatorOrphans).toHaveLength(0);
+  });
+
+  it('VHD reconciles as DIVERGENT post-v3.0-close (legacy VD-5 lineage regOrphan + new gap-vhd-* naming mismatches)', () => {
+    // v3.0 VHD module close (2026-06-17): VHD moved CLEAN -> DIVERGENT. evaluatorOrphans=0 (every evaluator maps),
+    // but VD-5 (gap-vd-5-aortic-regurgitation) is retained as a regOrphan for lineage (firing superseded by
+    // VHD-103, chunk 1), and the 17 new gap-vhd-* registry ids are naming-mismatches against the historical
+    // gap-vd-* prefix (informational only - HF/EP/CAD ship with naming-mismatches and validate 6/6; their
+    // classifications are pinned deterministically via applyOverrides registryId, not the fuzzy match).
+    const cfg = MODULE_CONFIGS.find((m) => m.code === 'VHD')!;
+    const r = buildReconciliation(specs.get('VHD')!, codes.get('VHD')!, cfg.codePrefix);
+    expect(r.status).toBe('DIVERGENT');
+    expect(r.evaluatorOrphans).toHaveLength(0);
+    expect(r.registryOrphans.find((o) => o.registryId === 'gap-vd-5-aortic-regurgitation')).toBeDefined();
   });
 
   it('SH reconciles as DIVERGENT post-v3.0-close (lineage-retained retirements + dedicated-registry reconciliation)', () => {

@@ -734,14 +734,26 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'B',
   },
   {
-    id: 'gap-cad-cardiac-rehab',
-    name: 'Cardiac Rehab Referral in CAD',
+    id: 'gap-cad-rehab-cabg',
+    name: 'Post-CABG Cardiac Rehab Referral',
     module: 'CORONARY_INTERVENTION',
     guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
     guidelineVersion: '2021',
     guidelineOrg: 'ACC/AHA',
-    lastReviewDate: '2026-04-03',
-    nextReviewDue: '2026-10-03',
+    lastReviewDate: '2026-06-18',
+    nextReviewDue: '2026-12-18',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-cad-rehab-mi',
+    name: 'Post-MI Cardiac Rehab Referral',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
+    guidelineVersion: '2021',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-18',
+    nextReviewDue: '2026-12-18',
     classOfRecommendation: '1',
     levelOfEvidence: 'A',
   },
@@ -1274,7 +1286,7 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'B',
   },
   {
-    id: 'gap-sh-4-tricuspid-assessment',
+    id: 'gap-sh-022-tricuspid-assessment',
     name: 'Tricuspid Valve Assessment',
     module: 'STRUCTURAL_HEART',
     guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
@@ -3506,30 +3518,6 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'A',
   },
   {
-    id: 'gap-cad-nicorandil',
-    name: 'Nicorandil for Refractory Angina',
-    module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2019 ESC Guideline for Chronic Coronary Syndromes',
-    guidelineVersion: '2019',
-    guidelineOrg: 'ESC',
-    lastReviewDate: '2026-04-03',
-    nextReviewDue: '2026-10-03',
-    classOfRecommendation: '2a',
-    levelOfEvidence: 'B',
-  },
-  {
-    id: 'gap-cad-trimetazidine',
-    name: 'Trimetazidine Consideration in CAD',
-    module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2019 ESC Guideline for Chronic Coronary Syndromes',
-    guidelineVersion: '2019',
-    guidelineOrg: 'ESC',
-    lastReviewDate: '2026-04-03',
-    nextReviewDue: '2026-10-03',
-    classOfRecommendation: '2b',
-    levelOfEvidence: 'B',
-  },
-  {
     id: 'gap-cad-coronary-cta-fu',
     name: 'Coronary CTA Follow-Up',
     module: 'CORONARY_INTERVENTION',
@@ -3888,6 +3876,130 @@ export const RUNTIME_GAP_REGISTRY = [
     nextReviewDue: '2026-10-03',
     classOfRecommendation: '2a',
     levelOfEvidence: 'B',
+  },
+  // v3.0 VHD buildout chunk 1 registry entries (AR + mixed/integrated valve severity, 2026-06-17).
+  {
+    id: 'gap-vhd-103-severe-ar-surgical',
+    name: 'Severe Asymptomatic AR LV Dysfunction Surgical', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-102-ar-surveillance',
+    name: 'Aortic Regurgitation Surveillance Echo', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-104-mixed-valve-staging',
+    name: 'Mixed Multi-Valve Integrated Staging', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-vhd-105-mr-quant-triangulation',
+    name: 'Moderate MR Quantitative Triangulation', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C-LD',
+  },
+  // v3.0 VHD buildout chunk 2 registry entries (prosthetic-valve dysfunction PVT/SVD partition, 2026-06-17).
+  {
+    id: 'gap-vhd-068-mech-pvt-gradient',
+    name: 'Mechanical Prosthetic Valve Thrombosis Gradient', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-011-bio-svd-gradient',
+    name: 'Bioprosthetic Structural Valve Deterioration Gradient', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'B-NR',
+  },
+  // v3.0 VHD buildout chunk 3 registry entries (mechanical anticoagulation, post INR slug-fix, 2026-06-17).
+  {
+    id: 'gap-vhd-001-subtherapeutic-inr',
+    name: 'Mechanical Valve Sub-Therapeutic INR', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-006-mech-asa-adjunct',
+    name: 'Mechanical Valve ASA Adjunct With Vascular Disease', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'B-NR',
+  },
+  // v3.0 VHD buildout chunk 4 registry entries (IE-surgical-dx + rheumatic, 2026-06-17).
+  {
+    id: 'gap-vhd-057-ie-hf-surgery',
+    name: 'IE With Heart Failure Urgent Surgery', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-059-ie-embolic-surgery',
+    name: 'IE Embolic Event On Therapy Surgery', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-064-prior-ie-dental-prophylaxis',
+    name: 'Prior IE Dental Antibiotic Prophylaxis', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2021 AHA Scientific Statement on Prevention of Infective Endocarditis',
+    guidelineVersion: '2021', guidelineOrg: 'AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-079-rheumatic-prophylaxis',
+    name: 'Rheumatic Heart Disease Benzathine Prophylaxis', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 AHA / World Heart Federation Rheumatic Heart Disease guidance',
+    guidelineVersion: '2020', guidelineOrg: 'AHA/WHF', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-083-rheumatic-af-warfarin',
+    name: 'Rheumatic Heart Disease AF Warfarin', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; INVICTUS',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-R',
+  },
+  // v3.0 VHD chunk 5 registry entries (pregnancy SAFETY + drug-induced valve surveillance, 2026-06-17).
+  {
+    id: 'gap-vhd-098-mech-valve-preconception',
+    name: 'Mechanical Valve Pre-Conception Counseling', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C',
+  },
+  {
+    id: 'gap-vhd-099-mech-valve-pregnancy-anticoag',
+    name: 'Mechanical Valve Pregnancy Anticoagulation SAFETY', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C',
+  },
+  {
+    id: 'gap-vhd-091-dopamine-agonist-valve-surveillance',
+    name: 'Dopamine Agonist Valve Surveillance', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; FDA dopamine-agonist labeling',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'C',
+  },
+  {
+    id: 'gap-vhd-092-ergot-alkaloid-valve-surveillance',
+    name: 'Ergot Alkaloid Valve Surveillance', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'C',
   },
   {
     id: 'gap-pv-critical-limb',
@@ -5448,18 +5560,21 @@ export function evaluateGapRules(
     }
   }
 
-  // EP-008: DOAC contraindicated in moderate-severe mitral stenosis (rheumatic AF requires warfarin).
+  // EP-008: DOAC contraindicated in NONRHEUMATIC moderate-severe mitral stenosis (warfarin required).
   // Guideline: 2023 ACC/AHA/ACCP/HRS AFib + 2020 ACC/AHA VHD, Class 3 (Harm). DOACs are contraindicated in
   //   moderate-severe MS (excluded from RE-LY/ROCKET/ARISTOTLE; INVICTUS confirmed warfarin superiority).
-  // MS codes I05.0 (rheumatic) / I34.2 (nonrheumatic) reuse the verified set from gap-vd-4 (line ~6112).
-  const hasModSevereMS_EP008 = dxCodes.some(c => c.startsWith('I05.0') || c.startsWith('I34.2'));
+  // Reconciliation (AUDIT-172, v3.0 VHD close): NARROWED to nonrheumatic MS (I34.2 only). VHD-083 OWNS the
+  // rheumatic (I05.x) AF anticoagulation recommendation (its on-DOAC branch already says "switch to warfarin"),
+  // so EP-008 dropped rheumatic I05.0 to avoid co-firing with VHD-083 on a rheumatic-MS patient. The rheumatic
+  // case loses no coverage (VHD-083 covers it); EP-008 retains the nonrheumatic-MS DOAC-contraindication.
+  const hasModSevereMS_EP008 = dxCodes.some(c => c.startsWith('I34.2'));
   const onDOAC_EP008 = medCodes.includes('1364430') || medCodes.includes('1114195') || medCodes.includes('1599538') || medCodes.includes('1037042');
   if (hasModSevereMS_EP008 && onDOAC_EP008 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
       type: TherapyGapType.MEDICATION_CONTRAINDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'DOAC contraindicated in moderate-severe mitral stenosis',
-      target: 'Switch from DOAC to warfarin (INR 2.0-3.0) for AF with rheumatic/significant MS',
+      target: 'Switch from DOAC to warfarin (INR 2.0-3.0) for AF with nonrheumatic moderate-severe MS',
       medication: 'Warfarin (RxNorm 11289) in place of the current DOAC',
       recommendations: {
         action: 'Consider switching from DOAC to warfarin per 2023 ACC/AHA AFib + 2020 ACC/AHA VHD Class 3 (Harm)',
@@ -5468,7 +5583,7 @@ export function evaluateGapRules(
       },
       evidence: {
         triggerCriteria: [
-          'Moderate-severe mitral stenosis (I05.0 rheumatic or I34.2 nonrheumatic)',
+          'Nonrheumatic moderate-severe mitral stenosis (I34.2); rheumatic MS (I05.x) is owned by VHD-083 per the AUDIT-172 reconciliation',
           'On a DOAC (apixaban / rivaroxaban / edoxaban / dabigatran)',
         ],
         guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + 2020 ACC/AHA VHD Guideline',
@@ -6428,12 +6543,15 @@ export function evaluateGapRules(
 
   // Gap 50: Premature DAPT Discontinuation (Coronary)
   // Guideline: ACC/AHA 2016 DAPT Guidelines, updated by 2021 ACC/AHA/SCAI Coronary Revascularization
-  // Fires when: CAD/stent patient (I25.* or Z95.5) is missing P2Y12 inhibitor
-  // P2Y12 RxNorm codes: clopidogrel (32968), prasugrel (613391), ticagrelor (1116632)
-  const hasStentOrCAD = hasCAD || dxCodes.some(c => c.startsWith('Z95.5'));
+  // Tightening (AUDIT-174, CAD chunk 0 2026-06-18): the prior gate hasStentOrCAD = hasCAD || Z95.5 over-fired
+  // "P2Y12 not active" on stable chronic CAD, where single antiplatelet therapy suffices. DAPT is guideline-
+  // indicated only in the post-ACS / post-PCI window, so gate on recent ACS (I21/I22, inlined - hasRecentMI is
+  // defined later in this function) OR coronary stent/angioplasty implant status (Z95.5, section-16-verified).
+  // P2Y12 RxNorm codes: clopidogrel (32968), prasugrel (613391), ticagrelor (1116632).
+  const hasDaptIndication = dxCodes.some(c => c.startsWith('I21') || c.startsWith('I22') || c.startsWith('Z95.5'));
   const P2Y12_CODES = ['32968', '613391', '1116632'];
   const onP2Y12 = medCodes.some(c => P2Y12_CODES.includes(c));
-  if (hasStentOrCAD && !onP2Y12) {
+  if (hasDaptIndication && !onP2Y12) {
         if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
   gaps.push({
         type: TherapyGapType.MEDICATION_MISSING,
@@ -7052,33 +7170,63 @@ export function evaluateGapRules(
     }
   }
 
-  // ============================================================
-  // Gap CAD-REHAB: Cardiac Rehab Referral in CAD
-  // ============================================================
+  // Tightening (AUDIT-173, CAD chunk 0 2026-06-18): the single CAD-REHAB rule fired on hasCAD alone (every CAD
+  // patient), over-detecting. SPLIT into the two guideline-anchored populations the spec gaps actually target:
+  // post-CABG (CAD-029, Z95.1 aortocoronary-bypass-status, section-16-verified) and post-MI (CAD-046, acute
+  // I21/I22 or old I25.2, section-16-verified). The CABG/MI gate is the load-bearing over-detection fix.
+  // Path-B (rehab-engagement guard deferred, proxy investigation 2026-06-18): no reliable rehab-participation
+  // signal exists in pre-DUA data - ICD-10-CM has no cardiac-rehab-participation code (it is a service, not a
+  // diagnosis; Z48.812 / Z71.82 are confounders); CPT 93797/93798 are inert (absent from all synthetic/seed
+  // data) and Synthea codes procedures as SNOMED, not CPT. Post-DUA: add a guard reading BOTH CPT 93797/93798
+  // AND the SNOMED cardiac-rehab procedure code. Until then the residual false-positive (re-recommending rehab
+  // to an already-enrolled patient) is an accepted low-harm limitation.
+  const hasCABG_rehab = dxCodes.some(c => c.startsWith('Z95.1'));
+  const hasMI_rehab = hasRecentMI || dxCodes.some(c => c.startsWith('I25.2'));
+
+  // CAD-REHAB-CABG: Post-CABG cardiac rehab referral (CAD-029)
   // Guideline: 2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization, Class 1, LOE A
-  // All CAD patients (I25.*) should be referred to cardiac rehabilitation
-  // This is a referral gap, not a medication gap
-  if (hasCAD) {
-        if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-  gaps.push({
-        type: TherapyGapType.REFERRAL_NEEDED,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Cardiac rehabilitation referral not documented',
-        target: 'Cardiac rehab referral placed',
-        recommendations: {
-          action: 'Refer to cardiac rehabilitation per 2021 ACC/AHA Coronary Revascularization, Class 1, LOE A',
-          guideline: '2021 ACC/AHA/SCAI Coronary Artery Revascularization',
-          note: 'Cardiac rehab improves outcomes in all CAD patients, especially post-ACS and post-revascularization',
-        },
-          evidence: {
-            triggerCriteria: ['CAD without cardiac rehabilitation referral'],
-            guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Revascularization',
-            classOfRecommendation: '1',
-            levelOfEvidence: 'A',
-            exclusions: ['Unstable angina', 'Severe functional limitation', 'Hospice/palliative care'],
-          },
-      });
-    }
+  if (hasCABG_rehab && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.REFERRAL_NEEDED,
+      module: ModuleType.CORONARY_INTERVENTION,
+      status: 'Post-CABG cardiac rehabilitation referral not documented',
+      target: 'Cardiac rehab referral placed for post-CABG patient',
+      recommendations: {
+        action: 'Refer to cardiac rehabilitation for the post-CABG patient per 2021 ACC/AHA Coronary Revascularization, Class 1, LOE A',
+        guideline: '2021 ACC/AHA/SCAI Coronary Artery Revascularization',
+        note: 'Cardiac rehab is a Class 1 recommendation after CABG. Gated on aortocoronary-bypass status (Z95.1). Path-B: the already-enrolled-in-rehab guard is deferred (no reliable pre-DUA rehab-participation signal; CPT 93797/93798 inert, no ICD code); a CPT + SNOMED procedure guard is added post-DUA.',
+      },
+      evidence: {
+        triggerCriteria: ['Post-CABG (Z95.1) without documented cardiac rehabilitation referral'],
+        guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Revascularization',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Severe functional limitation', 'Hospice/palliative care'],
+      },
+    });
+  }
+
+  // CAD-REHAB-MI: Post-MI cardiac rehab referral (CAD-046)
+  // Guideline: 2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization, Class 1, LOE A
+  if (hasMI_rehab && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.REFERRAL_NEEDED,
+      module: ModuleType.CORONARY_INTERVENTION,
+      status: 'Post-MI cardiac rehabilitation referral not documented',
+      target: 'Cardiac rehab referral placed for post-MI patient',
+      recommendations: {
+        action: 'Refer to cardiac rehabilitation for the post-MI patient per 2021 ACC/AHA Coronary Revascularization, Class 1, LOE A',
+        guideline: '2021 ACC/AHA/SCAI Coronary Artery Revascularization',
+        note: 'Cardiac rehab is a Class 1 recommendation after MI. Gated on MI (acute I21/I22 or old I25.2). Path-B: the already-enrolled-in-rehab guard is deferred (no reliable pre-DUA rehab-participation signal; CPT 93797/93798 inert, no ICD code); a CPT + SNOMED procedure guard is added post-DUA.',
+      },
+      evidence: {
+        triggerCriteria: ['Post-MI (I21/I22/I25.2) without documented cardiac rehabilitation referral'],
+        guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Revascularization',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Severe functional limitation', 'Hospice/palliative care'],
+      },
+    });
   }
 
   // ============================================================
@@ -7724,32 +7872,576 @@ export function evaluateGapRules(
     });
   }
 
-  // Gap VD-5: Aortic Regurgitation Monitoring
-  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
-  // Aortic regurgitation (I35.1) requires periodic echo surveillance
-  const hasAorticRegurg = dxCodes.some(c => c.startsWith('I35.1'));
-  if (
-    hasAorticRegurg &&
-    labValues['lvef'] === undefined &&
-    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
-  ) {
+  // ===== v3.0 VHD chunk 1: AR + mixed/integrated valve severity =====
+  // Reads the threaded echo severity (echo-severity unlock PR #404 + SH chunk-3 vena-contracta map-add):
+  // valve_severity (0-5 grade-preserving), aortic_vena_contracta (cm, AR width), mitral_eroa, mitral_regurg_grade,
+  // mitral_vena_contracta, lvef. Severe AR = valve_severity>=5 OR aortic_vena_contracta>=0.6 cm (a vena-contracta
+  // width >=0.6 cm is the guideline severe-AR cut). LVESD is NOT threaded (Path-B arm dropped, documented).
+  const hasAorticRegurg = dxCodes.some(c => c.startsWith('I35.1') || c.startsWith('I35.2'));
+  const severeAR =
+    (labValues['valve_severity'] !== undefined && labValues['valve_severity'] >= 5) ||
+    (labValues['aortic_vena_contracta'] !== undefined && labValues['aortic_vena_contracta'] >= 0.6);
+  const anyAREchoValue =
+    labValues['lvef'] !== undefined || labValues['valve_severity'] !== undefined ||
+    labValues['aortic_vena_contracta'] !== undefined;
+  const symptomaticVHD = dxCodes.some(c =>
+    c.startsWith('I50') || c.startsWith('R55') || c.startsWith('I20') || c.startsWith('R06')
+  );
+
+  // Gap VHD-103: Severe chronic asymptomatic AR with LV dysfunction -> surgical evaluation (AUDIT-134 tightened)
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 AVR for severe AR + LVEF<=55%, or LVESD threshold).
+  // Tightening (AUDIT-134): the prior VD-5 fired on I35.1 + lvef-ABSENT (an echo-existence proxy mis-credited as a
+  // severity gate). Now gated on threaded SEVERE AR (valve_severity>=5 or aortic_vena_contracta>=0.6) + asymptomatic
+  // + LVEF<=55. STANDING SUBGROUP CHECK: AR surgery is subgroup-dependent - valve-sparing root/repair for select
+  // anatomy vs valve replacement (AVR); the recommendation is heart-team repair-vs-replace, not a blanket AVR.
+  // Path-B: the LVESD>=50 mm arm of the Class-1 trigger is not threaded (LVESD unmapped); the LVEF<=55 arm is built.
+  if (hasAorticRegurg && severeAR && !symptomaticVHD
+      && labValues['lvef'] !== undefined && labValues['lvef'] <= 55
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
-      type: TherapyGapType.IMAGING_OVERDUE,
+      type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.VALVULAR_DISEASE,
-      status: 'Echo surveillance overdue for aortic regurgitation',
-      target: 'Transthoracic echocardiogram completed',
+      status: 'Severe asymptomatic AR with LV dysfunction: surgical evaluation gap',
+      target: 'Heart-team aortic valve surgery evaluation (valve-sparing/repair vs replacement)',
       recommendations: {
-        action: 'Consider echocardiographic surveillance for aortic regurgitation per 2020 ACC/AHA VHD',
+        action: 'Consider heart-team aortic valve surgery evaluation (valve-sparing root repair vs aortic valve replacement, by anatomy) for severe asymptomatic aortic regurgitation with LVEF <=55% per 2020 ACC/AHA VHD (Class 1)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Subgroup-aware: repair (valve-sparing/David) for select root anatomy vs replacement (AVR) - heart-team-determined. Path-B: the LVESD>=50 mm Class-1 trigger arm is not threaded; the LVEF<=55 arm is gated.',
       },
       evidence: {
         triggerCriteria: [
-          'Aortic regurgitation (I35.1)',
-          'No recent echocardiogram data available',
+          'Aortic regurgitation (I35.1 or I35.2)',
+          'Severe AR (valve_severity >=5 or aortic vena contracta >=0.6 cm)',
+          'Asymptomatic (no HF/syncope/angina/dyspnea dx)',
+          `LVEF: ${labValues['lvef']}% (<=55, LV dysfunction)`,
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
         classOfRecommendation: '1',
-        levelOfEvidence: 'B',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent echo within guideline interval'],
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Aortic valve already replaced (Z95.2/.3/.4)'],
+      },
+    });
+  }
+
+  // Gap VHD-102: Moderate aortic regurgitation without surveillance echo
+  // Guideline: 2020 ACC/AHA VHD Guideline (periodic surveillance for chronic AR). The existence-proxy is
+  // LEGITIMATE here (a surveillance gap fires on absence of a recent echo, by design). Path-B: AR severity is not
+  // confirmable from the dx alone (I35.1 does not encode grade); this surfaces the AR population due for surveillance.
+  if (hasAorticRegurg && !anyAREchoValue && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Aortic regurgitation without surveillance echo on file',
+      target: 'Periodic surveillance echocardiogram (AR severity grading + LV size/function)',
+      recommendations: {
+        action: 'Consider periodic surveillance echocardiography (AR severity grading and LV size/function) for chronic aortic regurgitation per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Path-B: AR grade is not encoded in the dx; no echo-derived value on file is the surveillance-due proxy. The surveillance interval scales with severity (annual for moderate, every 6-12 mo for severe).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Aortic regurgitation (I35.1 or I35.2)',
+          'No echo-derived value on file (surveillance-due proxy)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent echo within the guideline interval'],
+      },
+    });
+  }
+
+  // Gap VHD-104: Mixed / multi-valve disease without integrated staging
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 integrated assessment when >1 valve lesion; the dominant
+  // lesion drives management). Multi-valve = >=2 of AS (I35.0) / MR (I34.0) / AR (I35.1), or mixed aortic I35.2.
+  const hasAS_VHD = dxCodes.some(c => c.startsWith('I35.0'));
+  const hasMR_VHD = dxCodes.some(c => c.startsWith('I34.0'));
+  const hasAR_VHD = dxCodes.some(c => c.startsWith('I35.1'));
+  const multiValveCount = [hasAS_VHD, hasMR_VHD, hasAR_VHD].filter(Boolean).length;
+  const hasMixedAortic = dxCodes.some(c => c.startsWith('I35.2'));
+  if ((multiValveCount >= 2 || hasMixedAortic) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.SCREENING_DUE,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Mixed / multi-valve disease without integrated severity staging',
+      target: 'Integrated multi-valve severity staging (dominant-lesion-driven management)',
+      recommendations: {
+        action: 'Consider integrated multi-valve severity staging - the dominant lesion drives management, and combined lesions can mask single-valve severity - per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Combined lesions (e.g. AS + MR) alter loading and can under- or over-estimate single-valve severity; integrated staging clarifies the dominant lesion. Path-B: documentation of prior integrated staging is not ingested.',
+      },
+      evidence: {
+        triggerCriteria: [
+          hasMixedAortic ? 'Mixed aortic valve disease (I35.2)' : 'Multiple valve lesions (>=2 of AS I35.0 / MR I34.0 / AR I35.1)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent integrated staging documented'],
+      },
+    });
+  }
+
+  // Gap VHD-105: Moderate MR graded by color Doppler without quantitative triangulation
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 quantitative grading - EROA + vena contracta + regurgitant
+  // volume - especially for moderate MR where color-flow alone is unreliable).
+  const hasModerateMRColor = labValues['mitral_regurg_grade'] !== undefined &&
+    labValues['mitral_regurg_grade'] >= 2 && labValues['mitral_regurg_grade'] <= 3;
+  const hasMRQuant = labValues['mitral_eroa'] !== undefined || labValues['mitral_vena_contracta'] !== undefined;
+  if (hasMR_VHD && hasModerateMRColor && !hasMRQuant && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.SCREENING_DUE,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Moderate MR by color Doppler without quantitative (EROA/vena-contracta) triangulation',
+      target: 'Quantitative MR grading (EROA + vena contracta + regurgitant volume)',
+      recommendations: {
+        action: 'Consider quantitative MR grading (effective regurgitant orifice area + vena contracta + regurgitant volume) for moderate MR graded by color Doppler alone per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Color-flow grading alone is unreliable in the moderate band and can underestimate severe MR; quantitative triangulation reclassifies a meaningful fraction. Path-B: regurgitant-volume is not separately threaded; EROA + vena contracta are the threaded quantitative measures.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mitral regurgitation (I34.0)',
+          `MR grade ${labValues['mitral_regurg_grade']} (moderate band, color Doppler)`,
+          'No quantitative measure on file (EROA and vena contracta both absent)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Quantitative MR assessment already on file'],
+      },
+    });
+  }
+
+  // ===== v3.0 VHD chunk 2: prosthetic-valve dysfunction (PVT vs SVD partition) =====
+  // Reads the threaded prosthetic-valve gradients (aortic_valve_mean_gradient / mitral_valve_mean_gradient) +
+  // the AUDIT-123-corrected Z95.x semantics. STANDING SUBGROUP CHECK: a MECHANICAL valve with an elevated
+  // gradient is prosthetic-valve THROMBOSIS / pannus (-> anticoag/lysis/surgery workup), whereas a BIOPROSTHETIC
+  // valve is structural valve DETERIORATION (-> ViV-TAVR vs redo surgery) - the valve TYPE drives the
+  // recommendation. Mechanical = Z95.2 (generic, treated-as-mechanical) || Z95.4; bioprosthetic = Z95.3 (xenogenic,
+  // definitive). Path-B: the serial gradient-DELTA (rise>=10 mmHg / rise>=50%) and new-PVL arms are not threaded
+  // (no serial/baseline gradients); the ABSOLUTE elevated prosthetic gradient is the proxy (aortic >=20, mitral
+  // >=10 mmHg). The aortic-prosthesis case overlaps SH-012 (general SVD eval, aortic-only) - flagged for the close.
+  const hasMechValve_VHD2 = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.4'));
+  const hasBioValve_VHD2 = dxCodes.some(c => c.startsWith('Z95.3'));
+  const elevatedProstheticGradient_VHD =
+    (labValues['aortic_valve_mean_gradient'] !== undefined && labValues['aortic_valve_mean_gradient'] >= 20) ||
+    (labValues['mitral_valve_mean_gradient'] !== undefined && labValues['mitral_valve_mean_gradient'] >= 10);
+
+  // Gap VHD-068: Mechanical prosthetic valve + elevated gradient -> thrombosis (PVT) workup
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 urgent TTE/TEE + fluoroscopy for suspected prosthetic valve
+  // thrombosis with an elevated gradient).
+  if (hasMechValve_VHD2 && elevatedProstheticGradient_VHD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Mechanical prosthetic valve with elevated gradient: thrombosis (PVT) workup gap',
+      target: 'Prosthetic valve thrombosis workup (TEE + cinefluoroscopy) + anticoagulation review',
+      recommendations: {
+        action: 'Consider urgent prosthetic valve thrombosis workup (transesophageal echo + cinefluoroscopy) and anticoagulation review for a mechanical valve with an elevated gradient; thrombolysis vs surgery is determined by thrombus burden and symptoms, per 2020 ACC/AHA VHD (Class 1)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Subgroup: mechanical valve -> THROMBOSIS/pannus pathway (not SVD). Obstructive PVT is a surgical/thrombolysis emergency. Path-B: the gradient-rise-from-baseline (>=50%) arm is not threaded; the absolute elevated gradient (aortic >=20 / mitral >=10 mmHg) is the proxy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mechanical prosthetic valve (Z95.2 or Z95.4)',
+          'Elevated prosthetic mean gradient (aortic >=20 or mitral >=10 mmHg)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Known stable elevated baseline gradient', 'Recent PVT workup on file'],
+      },
+    });
+  }
+
+  // Gap VHD-011: Bioprosthetic valve + elevated gradient -> structural valve deterioration (SVD) evaluation
+  // Guideline: 2020 ACC/AHA VHD Guideline (SVD with hemodynamic significance -> ViV-TAVR vs redo surgery, Class 2a).
+  if (hasBioValve_VHD2 && elevatedProstheticGradient_VHD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Bioprosthetic valve with elevated gradient: structural deterioration (SVD) evaluation gap',
+      target: 'Structural valve deterioration assessment + redo-intervention candidacy (ViV-TAVR vs redo surgery)',
+      recommendations: {
+        action: 'Consider structural valve deterioration evaluation and redo-intervention candidacy (valve-in-valve TAVR vs redo surgery) for a bioprosthetic valve with an elevated gradient per 2020 ACC/AHA VHD (Class 2a)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Subgroup: bioprosthetic valve -> structural DETERIORATION pathway (not thrombosis). Path-B: the gradient-rise-from-baseline (>=10 mmHg) and new-paravalvular-leak arms are not threaded; the absolute elevated gradient (aortic >=20 / mitral >=10 mmHg) is the proxy. Distinct from the mechanical PVT pathway (VHD-068).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Bioprosthetic (xenogenic) valve (Z95.3)',
+          'Elevated prosthetic mean gradient (aortic >=20 or mitral >=10 mmHg)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Known stable elevated baseline gradient', 'Recent SVD assessment on file'],
+      },
+    });
+  }
+
+  // ===== v3.0 VHD chunk 3: mechanical/bioprosthetic anticoagulation (post INR slug-fix) =====
+  // The AUDIT-170 slug-fix threads INR (LOINC 34714-6 -> 'inr') to labValues['inr'], so the INR-VALUE rules below
+  // can now read it (before the fix the threaded INR never reached them). Mechanical = Z95.2 (generic, treated-as-
+  // mech) || Z95.4 (the AUDIT-123-corrected predicate). Warfarin RxNorm 11289; aspirin 1191.
+  const hasMechValve_VHD3 = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.4'));
+  const onWarfarin_VHD3 = medCodes.includes('11289');
+
+  // Gap VHD-001: Mechanical valve on warfarin with sub-therapeutic INR (AUDIT-133 / post slug-fix)
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 maintain INR in the valve-specific therapeutic range).
+  // Tightening (AUDIT-133): the prior VD-3 only detected INR-ABSENT (monitoring overdue); this is the INR-VALUE gap - a
+  // sub-therapeutic INR is under-anticoagulation (valve-thrombosis / thromboembolism risk). Path-B: the target
+  // range is valve-position-dependent (aortic 2.0-3.0, mitral 2.5-3.5) and position is not codable; INR < 2.0 is
+  // the definite-sub-therapeutic threshold for ANY mechanical valve (the 2.0-2.5 mitral-subtherapeutic band is the
+  // documented Path-B residual). Safety-first: under-anticoagulating a mechanical valve is catastrophic.
+  if (hasMechValve_VHD3 && onWarfarin_VHD3
+      && labValues['inr'] !== undefined && labValues['inr'] < 2.0
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Mechanical valve with sub-therapeutic INR: warfarin management gap',
+      target: 'INR brought into the valve-specific therapeutic range (warfarin dose / adherence review)',
+      recommendations: {
+        action: 'Consider warfarin management (dose adjustment, adherence and time-in-therapeutic-range review) for a mechanical valve with a sub-therapeutic INR per 2020 ACC/AHA VHD (Class 1) - a sub-therapeutic INR is under-anticoagulation with valve-thrombosis and thromboembolism risk',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Subgroup: the INR target is valve-position-dependent (aortic mechanical 2.0-3.0, mitral mechanical 2.5-3.5). Path-B: valve position is not codable, so INR < 2.0 is the definite-sub-therapeutic gate for any mechanical valve; the 2.0-2.5 mitral-subtherapeutic band is not captured.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mechanical prosthetic valve (Z95.2 or Z95.4)',
+          'On warfarin (RxNorm 11289)',
+          `INR: ${labValues['inr']} (<2.0, sub-therapeutic for any mechanical valve)`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recently adjusted dose pending re-check', 'Documented goal-INR override'],
+      },
+    });
+  }
+
+  // Gap VHD-006: Mechanical valve + atherosclerotic disease without low-dose ASA adjunct
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 2a low-dose ASA adjunct to VKA for a mechanical valve WITH
+  // concomitant atherosclerotic vascular disease - the "when indicated" qualifier; routine ASA adjunct without a
+  // vascular indication was downgraded for bleeding risk).
+  const hasAtheroscleroticDz_VHD = dxCodes.some(c => c.startsWith('I25') || c.startsWith('I70'));
+  const onAspirin_VHD6 = medCodes.includes('1191');
+  if (hasMechValve_VHD3 && onWarfarin_VHD3 && hasAtheroscleroticDz_VHD && !onAspirin_VHD6
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Mechanical valve with atherosclerotic disease without low-dose ASA adjunct',
+      target: 'Low-dose aspirin adjunct to warfarin (with the bleeding-risk trade-off documented)',
+      recommendations: {
+        action: 'Consider low-dose aspirin (75-100 mg) adjunct to warfarin for a mechanical valve with concomitant atherosclerotic vascular disease per 2020 ACC/AHA VHD (Class 2a), weighing the incremental bleeding risk',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'The ASA adjunct is indicated by the concomitant vascular disease (the "when indicated" qualifier) - routine ASA adjunct without a vascular indication was downgraded for bleeding risk. Bioprosthetic ASA is a separate gap (VD-ANTIPLATELET).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mechanical prosthetic valve (Z95.2 or Z95.4)',
+          'On warfarin (RxNorm 11289)',
+          'Concomitant atherosclerotic vascular disease (I25 or I70)',
+          'No aspirin on the active medication list',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Active bleeding / high bleeding risk', 'Aspirin intolerance'],
+      },
+    });
+  }
+
+  // ===== v3.0 VHD chunk 4: IE-surgical-indication (dx-driven) + rheumatic =====
+  // The IE early-surgery indications that are dx-CODABLE (HF from valve dysfunction I50; recurrent embolic event)
+  // are buildable per the SH-029 precedent; the culture/vegetation-dependent indications (uncontrolled infection /
+  // persistent bacteremia, large-vegetation embolism prevention) are NOT codable -> Path-B, documented. All ICDs
+  // section-16-verified vs NLM 2026-06-17. benzathine penicillin RxCUI 7982 (RxNav-verified, reused from SH).
+  // OVERLAP FLAGS (for the VHD close): VHD-057/059 overlap the SH-module SH-029 (lumped IE-surgery); VHD-083
+  // overlaps VD-12 (general AF+valve OAC-missing) + EP-008 (rheumatic-MS DOAC-contraindication).
+  const hasIE_VHD = dxCodes.some(c => c.startsWith('I33.0'));
+  const hasRheumatic_VHD = dxCodes.some(c =>
+    c.startsWith('I05') || c.startsWith('I06') || c.startsWith('I07') || c.startsWith('I08') || c.startsWith('I09')
+  );
+  const onBenzathinePCN_VHD = medCodes.includes('7982');
+
+  // Gap VHD-057: Infective endocarditis + heart failure -> urgent surgery indication
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 early/urgent surgery for IE with valve dysfunction causing HF).
+  if (hasIE_VHD && dxCodes.some(c => c.startsWith('I50')) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Infective endocarditis with heart failure: urgent surgery indication gap',
+      target: 'Urgent endocarditis-team valve surgery evaluation (HF from valve dysfunction)',
+      recommendations: {
+        action: 'Consider URGENT valve surgery evaluation for infective endocarditis complicated by heart failure from valve dysfunction per 2020 ACC/AHA VHD (Class 1) - this is the most urgent early-surgery indication',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Subgroup-aware: IE-with-HF is the URGENT (often within days) early-surgery indication, distinct from the elective indications. Path-B: that the HF is FROM the valve lesion (vs incidental) is proxied by the I33.0 + I50 co-occurrence.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Acute/subacute infective endocarditis (I33.0)',
+          'Heart failure (I50) - valve-dysfunction-driven',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Surgery already performed this episode'],
+      },
+    });
+  }
+
+  // Gap VHD-059: Infective endocarditis + embolic event on anticoagulation -> surgery consideration
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 2a surgery for recurrent emboli despite appropriate therapy).
+  const hasEmbolic_VHD = dxCodes.some(c => c.startsWith('I74') || c.startsWith('I63'));
+  const onAnticoag_VHD = ['11289', '1364430', '1114195', '1037042', '1599538'].some(c => medCodes.includes(c));
+  if (hasIE_VHD && hasEmbolic_VHD && onAnticoag_VHD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Infective endocarditis with embolic event on therapy: surgery consideration gap',
+      target: 'Endocarditis-team surgery evaluation for embolism despite appropriate antithrombotic/antimicrobial therapy',
+      recommendations: {
+        action: 'Consider valve surgery evaluation for infective endocarditis with an embolic event despite appropriate therapy per 2020 ACC/AHA VHD (Class 2a) - recurrent embolism on treatment is a surgical indication',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Path-B: a recurrent embolic event despite antimicrobial therapy is the surgical trigger; "on therapy" is proxied by a concurrent anticoagulant, and the embolic dx (I74 arterial / I63 cerebral) is the event proxy. Vegetation-size-driven prophylactic surgery is a separate, echo-morphology-blocked indication.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Acute/subacute infective endocarditis (I33.0)',
+          'Embolic event (I74 arterial or I63 cerebral)',
+          'On anticoagulation (appropriate-therapy proxy)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Surgery already performed this episode'],
+      },
+    });
+  }
+
+  // Gap VHD-064: Prior infective endocarditis + dental procedure without antibiotic prophylaxis
+  // Guideline: 2021 AHA Endocarditis Prevention (Class 1 prophylaxis for previous IE - a highest-risk condition).
+  const hasPriorIE_VHD = hasIE_VHD || dxCodes.some(c => c.startsWith('Z86.79'));
+  const hasDental_VHD = dxCodes.some(c => c.startsWith('Z01.2'));
+  const onProphylaxisAbx_VHD = medCodes.includes('723') || medCodes.includes('2582');
+  if (hasPriorIE_VHD && hasDental_VHD && !onProphylaxisAbx_VHD
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE) && !hasContraindication(dxCodes, EXCLUSION_ALLERGY_DOCUMENTED)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Prior infective endocarditis: dental antibiotic prophylaxis gap',
+      target: 'Endocarditis prophylaxis prescribed prior to dental procedure (previous-IE high-risk condition)',
+      medication: 'Amoxicillin 2g (or clindamycin if penicillin allergic)',
+      recommendations: {
+        action: 'Consider antibiotic prophylaxis prior to the dental procedure for a patient with previous infective endocarditis per 2021 AHA Endocarditis Prevention (Class 1 - previous IE is a highest-risk condition)',
+        guideline: '2021 AHA Scientific Statement on Prevention of Infective Endocarditis',
+        note: 'Previous IE is one of the four highest-risk conditions warranting prophylaxis. Path-B: a clean history-of-IE code is limited - I33.0 (current/recent) or Z86.79 (circulatory history) is the proxy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Previous / current infective endocarditis (I33.0 or Z86.79)',
+          'Dental procedure encounter (Z01.2)',
+          'No prophylaxis antibiotic on the active medication list',
+        ],
+        guidelineSource: '2021 AHA Scientific Statement on Prevention of Infective Endocarditis',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Documented penicillin allergy -- use alternative', 'Non-invasive dental procedure'],
+      },
+    });
+  }
+
+  // Gap VHD-079: Rheumatic heart disease without benzathine penicillin secondary prophylaxis
+  // Guideline: 2020 AHA RHD / WHF (Class 1 secondary prophylaxis - benzathine penicillin G every 3-4 weeks).
+  if (hasRheumatic_VHD && !onBenzathinePCN_VHD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_MISSING,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Rheumatic heart disease without benzathine penicillin secondary prophylaxis',
+      target: 'Benzathine penicillin G secondary prophylaxis (with the duration set by age/risk)',
+      medication: 'Benzathine penicillin G',
+      recommendations: {
+        action: 'Consider benzathine penicillin G secondary prophylaxis for rheumatic heart disease per 2020 AHA/WHF RHD guidance (Class 1)',
+        guideline: '2020 AHA / World Heart Federation Rheumatic Heart Disease guidance',
+        note: 'Subgroup-aware: prophylaxis DURATION is age/risk-dependent (typically 10 years or until age 21 for RHD without carditis; longer - until age 40 or lifelong - for RHD with carditis/residual valve disease). Path-B: the duration nuance and penicillin-allergy alternative (a macrolide) are surfaced for clinician selection.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Chronic rheumatic heart disease (I05-I09)',
+          'No benzathine penicillin on the active medication list',
+        ],
+        guidelineSource: '2020 AHA / World Heart Federation Rheumatic Heart Disease guidance',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Penicillin allergy (use a macrolide alternative)', 'Beyond the indicated prophylaxis duration'],
+      },
+    });
+  }
+
+  // Gap VHD-083: Rheumatic heart disease + AF not on warfarin -> anticoagulation (warfarin, DOAC contraindicated)
+  // Guideline: 2020 ACC/AHA VHD; INVICTUS (warfarin superior to a DOAC in rheumatic AF). SAFETY subgroup: the OAC
+  // for rheumatic-MS-associated AF must be WARFARIN, not a DOAC.
+  const hasAF_VHD4 = dxCodes.some(c => c.startsWith('I48'));
+  const onWarfarin_VHD4 = medCodes.includes('11289');
+  if (hasRheumatic_VHD && hasAF_VHD4 && !onWarfarin_VHD4 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const onDOAC_VHD4 = ['1364430', '1114195', '1037042', '1599538'].some(c => medCodes.includes(c));
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Rheumatic heart disease + atrial fibrillation not on warfarin (DOAC contraindicated)',
+      target: 'Warfarin (INR 2.0-3.0) for rheumatic AF - DOACs are not established in rheumatic mitral stenosis',
+      recommendations: {
+        action: onDOAC_VHD4
+          ? 'SAFETY: Consider switching from the DOAC to warfarin (INR 2.0-3.0) for rheumatic heart disease with atrial fibrillation - DOACs are contraindicated/not established in rheumatic mitral stenosis (INVICTUS showed warfarin superiority) per 2020 ACC/AHA VHD'
+          : 'Consider warfarin (INR 2.0-3.0) for rheumatic heart disease with atrial fibrillation per 2020 ACC/AHA VHD - warfarin is the established anticoagulant (DOACs are not established in rheumatic mitral stenosis)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease; INVICTUS',
+        note: 'SAFETY subgroup: rheumatic-MS-associated AF requires WARFARIN, not a DOAC (the DOAC-contraindication subgroup). Fires whether the patient is on a DOAC (switch) or on no OAC (start warfarin).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Chronic rheumatic heart disease (I05-I09)',
+          'Atrial fibrillation (I48)',
+          onDOAC_VHD4 ? 'On a DOAC (contraindicated in rheumatic MS)' : 'Not on warfarin',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; INVICTUS trial',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Anticoagulation contraindicated', 'Already on warfarin'],
+      },
+    });
+  }
+
+  // ===== v3.0 VHD chunk 5: pregnancy SAFETY (Tier-S) + drug-induced valve surveillance =====
+  // The mechanical-valve-pregnancy anticoagulation scenario is the highest-stakes recommendation-correctness case
+  // in VHD: warfarin is teratogenic (dose-dependent embryopathy, peak 6-12 weeks) BUT a mechanical valve mandates
+  // anticoagulation, so the recommendation is a heart-team + MFM tradeoff, NOT a blanket "stop warfarin". Pregnancy
+  // ICDs section-16-verified vs NLM 2026-06-17: O99.4x circulatory-complicating-pregnancy, O09 high-risk
+  // supervision, Z34 normal supervision, Z33.1 pregnant-state (Z33.2 termination deliberately excluded), Z3A
+  // weeks-gestation. Drug RxCUIs RxNav-verified: cabergoline 47579, pergolide 8047, ergotamine 4025, methysergide
+  // 6911. The fetotoxic-RAAS-in-pregnancy vector is already covered by HF-086 (overlap-flag, not re-authored).
+  const isPregnant_VHD5 = dxCodes.some(c =>
+    c.startsWith('O99.4') || c.startsWith('O09') || c.startsWith('Z34') || c === 'Z33.1' || c.startsWith('Z3A')
+  );
+
+  // Gap VHD-098: Mechanical valve + reproductive-age female, not pregnant -> pre-conception counseling
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 pre-pregnancy counseling; mechanical-valve anticoagulation
+  // planning is the higher-stakes layer above the general VD-10 valve-pregnancy counseling).
+  if (
+    hasMechanicalValve && gender === 'FEMALE' && age >= 18 && age <= 45 &&
+    !isPregnant_VHD5 &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.REFERRAL_NEEDED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Mechanical valve in a reproductive-age patient: pre-conception anticoagulation counseling gap',
+      target: 'Pre-conception cardio-obstetric counseling on the mechanical-valve anticoagulation strategy for pregnancy',
+      recommendations: {
+        action: 'Consider pre-conception cardio-obstetric counseling for this reproductive-age mechanical-valve patient - warfarin is teratogenic, so the anticoagulation plan for any future pregnancy (dose-adjusted warfarin vs LMWH vs UFH by trimester) should be discussed before conception, per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Mechanical-valve-specific layer above VD-10 (general valve-disease pregnancy counseling). Complement to VHD-099, which handles the already-pregnant case.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mechanical prosthetic valve (Z95.2 / Z95.4)',
+          'Female, reproductive age 18-45',
+          'Not currently pregnant',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Currently pregnant (handled by VHD-099)', 'Post-menopausal'],
+      },
+    });
+  }
+
+  // Gap VHD-099: Mechanical valve + pregnancy -> anticoagulation SAFETY management (Tier-S)
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 - therapeutic anticoagulation must be maintained throughout
+  // pregnancy in mechanical-valve patients; the warfarin-vs-LMWH-vs-UFH strategy is a heart-team decision).
+  // SAFETY: warfarin is teratogenic (peak embryopathy 6-12 weeks) but valve thrombosis is life-threatening, so the
+  // action is a heart-team + MFM tradeoff, NEVER a blanket discontinuation. This is the highest-stakes subgroup.
+  if (hasMechanicalValve && isPregnant_VHD5 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const onWarfarin_VHD5 = medCodes.includes('11289');
+    gaps.push({
+      type: TherapyGapType.SAFETY_ALERT,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Mechanical valve in pregnancy: anticoagulation strategy SAFETY review (teratogenicity vs valve-thrombosis tradeoff)',
+      target: 'Cardio-obstetric heart-team + maternal-fetal-medicine management of mechanical-valve anticoagulation in pregnancy',
+      recommendations: {
+        action: onWarfarin_VHD5
+          ? 'SAFETY: Consider urgent cardio-obstetric heart-team and maternal-fetal-medicine referral. Warfarin crosses the placenta with a dose-dependent embryopathy risk (peak 6-12 weeks); the strategy (continued dose-adjusted warfarin vs anti-Xa-monitored LMWH vs UFH, by trimester and warfarin dose) is a heart-team decision - do NOT simply discontinue anticoagulation, as mechanical-valve thrombosis is life-threatening, per 2020 ACC/AHA VHD'
+          : 'SAFETY: Consider cardio-obstetric heart-team and maternal-fetal-medicine referral to confirm a guideline mechanical-valve anticoagulation protocol for pregnancy (anti-Xa-monitored LMWH or dose-adjusted warfarin/UFH by trimester) - therapeutic anticoagulation must be maintained throughout pregnancy, per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Tier-S SAFETY: the recommendation is heart-team + MFM management of the warfarin-teratogenicity-vs-valve-thrombosis tradeoff, NOT a blanket drug change. Path-B: anti-Xa-targeted LMWH monitoring (VHD-100) and the 36-week LMWH/delivery-plan timing (VHD-101) need anti-Xa levels and gestational-week precision that are not threaded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mechanical prosthetic valve (Z95.2 / Z95.4)',
+          'Pregnancy (O99.4x / O09 / Z34 / Z33.1 / Z3A)',
+          onWarfarin_VHD5 ? 'On warfarin (teratogenic - embryopathy risk)' : 'Anticoagulation strategy to be confirmed',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // Gap VHD-091: Dopamine agonist (cabergoline / pergolide) -> drug-induced valve surveillance echo
+  // Guideline: 2020 ACC/AHA VHD Guideline + FDA labeling (ergot-derived dopamine agonists cause serotonergic
+  // valvulopathy; echocardiographic surveillance during chronic therapy).
+  const onDopamineAgonist_VHD5 = medCodes.includes('47579') || medCodes.includes('8047');
+  if (onDopamineAgonist_VHD5 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Ergot-derived dopamine agonist therapy: drug-induced valve disease surveillance echo gap',
+      target: 'Surveillance echocardiogram for ergot-derived dopamine-agonist (cabergoline / pergolide) valvulopathy',
+      recommendations: {
+        action: 'Consider surveillance echocardiography for drug-induced (serotonergic) valvular heart disease in this patient on an ergot-derived dopamine agonist (cabergoline / pergolide), per 2020 ACC/AHA VHD and FDA labeling',
+        guideline: '2020 ACC/AHA Valvular Heart Disease; FDA dopamine-agonist labeling',
+        note: 'Surveillance interval is exposure-duration / dose-dependent (Path-B: cumulative dose is not threaded).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'On an ergot-derived dopamine agonist: cabergoline (RxNorm 47579) or pergolide (RxNorm 8047)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // Gap VHD-092: Ergotamine / methysergide -> drug-induced valve surveillance echo
+  // Guideline: 2020 ACC/AHA VHD Guideline (chronic ergot-alkaloid exposure -> serotonergic valvulopathy;
+  // echocardiographic surveillance).
+  const onErgotAlkaloid_VHD5 = medCodes.includes('4025') || medCodes.includes('6911');
+  if (onErgotAlkaloid_VHD5 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Chronic ergot-alkaloid therapy: drug-induced valve disease surveillance echo gap',
+      target: 'Surveillance echocardiogram for ergot-alkaloid (ergotamine / methysergide) valvulopathy',
+      recommendations: {
+        action: 'Consider surveillance echocardiography for drug-induced (serotonergic) valvular heart disease in this patient on a chronic ergot alkaloid (ergotamine / methysergide), per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Surveillance interval is exposure-duration / dose-dependent (Path-B: cumulative dose is not threaded).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'On a chronic ergot alkaloid: ergotamine (RxNorm 4025) or methysergide (RxNorm 6911)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
       },
     });
   }
@@ -7936,9 +8628,15 @@ export function evaluateGapRules(
   // Guideline: 2023 ACC/AHA AFib Guideline, Class 1, LOE A
   // AF + any valve dx + no oral anticoagulant
   // OAC RxNorm: warfarin (11289), apixaban (1364430), rivaroxaban (1114195), dabigatran (1037042), edoxaban (1599538)
+  // Reconciliation (AUDIT-172, v3.0 VHD close): EXCLUDE rheumatic mitral disease (I05.x). The rheumatic-AF
+  // anticoagulation recommendation is OWNED by the VHD-083 rule (warfarin mandate, DOACs contraindicated per
+  // INVICTUS); the generic VD-12 "may use DOAC" note would be unsafe if it co-fired on a rheumatic-MS patient,
+  // so VD-12 yields to the rheumatic-AF rule here. Non-rheumatic AF + valve still fires VD-12 (no over-narrowing).
+  const hasRheumaticMitral_VD12 = dxCodes.some(c => c.startsWith('I05'));
   if (
     hasAF &&
     hasAnyValveDx &&
+    !hasRheumaticMitral_VD12 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     const OAC_CODES = ['11289', '1364430', '1114195', '1037042', '1599538'];
@@ -8792,9 +9490,14 @@ export function evaluateGapRules(
     c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4')
   );
   const hasDentalProcedure = dxCodes.some(c => c.startsWith('Z01.2'));
+  // Fix (AUDIT-135, 2026-06-17): the therapy-ABSENT guard - the prior rule fired on prosthetic-valve + dental
+  // regardless of whether prophylaxis was already prescribed, over-firing on already-treated patients. Now gates
+  // on the prophylaxis abx being ABSENT. Amoxicillin 723, clindamycin 2582 (RxNav-verified IN).
+  const onProphylaxisAbx_VD14 = medCodes.includes('723') || medCodes.includes('2582');
   if (
     hasProstheticVD14 &&
     hasDentalProcedure &&
+    !onProphylaxisAbx_VD14 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE) &&
     !hasContraindication(dxCodes, EXCLUSION_ALLERGY_DOCUMENTED)
   ) {
@@ -9134,29 +9837,35 @@ export function evaluateGapRules(
 
   // Gap SH-029: Infective endocarditis with an early-surgery indication -> surgery review
   // Guideline: 2020 ACC/AHA VHD (Class 1 early surgery for HF, uncontrolled infection, or embolic events).
-  const hasIEHF_SH = dxCodes.some(c => c.startsWith('I50'));
+  // Reconciliation (AUDIT-172, v3.0 VHD close): SCOPE-NARROWED. The HF arm (I33.0 + I50) was an exact duplicate
+  // of the new granular VHD-057, so it is REMOVED here (VHD-057 owns IE + heart failure). The embolic arm is
+  // retained (broader than VHD-059, which gates on on-anticoagulation - removing it would lose the
+  // embolic-not-anticoagulated population), as is the uncontrolled-infection arm (A41/R65.2, unique to this
+  // rule and not covered by the granular VHD gaps). This is general/native IE, NOT structural-device-specific,
+  // so it is scope-narrowed (not superseded). A benign residual overlap with VHD-059 on the anticoagulated-
+  // embolic subset remains (both surface a consistent surgery-eval recommendation; non-harmful).
   const hasIEEmbolic_SH = dxCodes.some(c => c.startsWith('I74') || c.startsWith('I63'));
   const hasIEUncontrolled_SH = dxCodes.some(c => c.startsWith('A41') || c.startsWith('R65.2'));
-  if (hasIE_SH && (hasIEHF_SH || hasIEEmbolic_SH || hasIEUncontrolled_SH) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  if (hasIE_SH && (hasIEEmbolic_SH || hasIEUncontrolled_SH) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
-      status: 'Infective endocarditis with an early-surgery indication: surgery evaluation gap',
+      status: 'Infective endocarditis with an embolic / uncontrolled-infection surgery indication: surgery evaluation gap',
       target: 'Endocarditis-team early-surgery evaluation completed',
       recommendations: {
-        action: 'Consider early surgery evaluation for infective endocarditis with HF, uncontrolled infection, or embolic events per 2020 ACC/AHA VHD (Class 1)',
+        action: 'Consider early surgery evaluation for infective endocarditis with embolic events or uncontrolled infection per 2020 ACC/AHA VHD (Class 1). For IE with heart failure, see VHD-057.',
         guideline: '2020 ACC/AHA Valvular Heart Disease',
-        note: 'Early-surgery indication present via a threaded proxy (HF I50, embolic I74/I63, or uncontrolled infection A41/R65.2). Path-B: vegetation size + persistent bacteremia duration not threaded.',
+        note: 'Scope-narrowed (AUDIT-172): the IE + heart-failure arm is owned by VHD-057. Early-surgery indication present via a threaded proxy (embolic I74/I63, or uncontrolled infection A41/R65.2). Path-B: vegetation size + persistent bacteremia duration not threaded.',
       },
       evidence: {
         triggerCriteria: [
           'Acute/subacute infective endocarditis (I33.0)',
-          `Early-surgery indication: ${hasIEHF_SH ? 'heart failure' : hasIEEmbolic_SH ? 'embolic event' : 'uncontrolled infection'}`,
+          `Early-surgery indication: ${hasIEEmbolic_SH ? 'embolic event' : 'uncontrolled infection'}`,
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
         classOfRecommendation: 'Class 1',
         levelOfEvidence: 'LOE B-NR',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Surgery already performed this episode'],
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Surgery already performed this episode', 'IE + heart failure (owned by VHD-057)'],
       },
     });
   }
@@ -9389,33 +10098,16 @@ export function evaluateGapRules(
     });
   }
 
-  // Gap SH-012: Prosthetic valve structural deterioration (elevated gradient)
-  // Guideline: 2020 ACC/AHA VHD; rising prosthetic gradient signals structural valve deterioration (SVD).
-  const hasAnyProsthetic_SH12 = dxCodes.some(c => c.startsWith('Z95.2') || c.startsWith('Z95.3') || c.startsWith('Z95.4'));
-  const elevatedProstheticGradient_SH = labValues['aortic_valve_mean_gradient'] !== undefined && labValues['aortic_valve_mean_gradient'] >= 20;
-  if (hasAnyProsthetic_SH12 && elevatedProstheticGradient_SH && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    gaps.push({
-      type: TherapyGapType.PROCEDURE_INDICATED,
-      module: ModuleType.STRUCTURAL_HEART,
-      status: 'Prosthetic valve with elevated gradient: structural deterioration evaluation gap',
-      target: 'Structural valve deterioration assessment + redo-intervention candidacy reviewed',
-      recommendations: {
-        action: 'Consider structural valve deterioration evaluation (and redo-intervention candidacy: valve-in-valve vs redo surgery) for a prosthetic valve with an elevated mean gradient per 2020 ACC/AHA VHD',
-        guideline: '2020 ACC/AHA Valvular Heart Disease',
-        note: 'Path-B: the spec trigger is a gradient RISE >=10 mmHg from baseline; serial/baseline gradients are not threaded, so an absolute elevated prosthetic mean gradient (>=20 mmHg) is the proxy. Native severe AS is handled separately (SH-002, which excludes prosthetic valves).',
-      },
-      evidence: {
-        triggerCriteria: [
-          'Prosthetic valve (Z95.2, Z95.3, or Z95.4)',
-          `Prosthetic mean gradient: ${labValues['aortic_valve_mean_gradient']} mmHg (>=20, elevated for a prosthesis)`,
-        ],
-        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
-        classOfRecommendation: 'Class 1',
-        levelOfEvidence: 'LOE C-LD',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Known stable elevated baseline gradient', 'Recent SVD assessment on file'],
-      },
-    });
-  }
+  // SUPERSEDED 2026-06-17 by the type-aware VHD-068 / VHD-011 (v3.0 VHD chunk 2) - the legacy SH-012 firing is
+  // removed (comment lead de-tokenized at the VHD close, AUDIT-171, so extractCode no longer parses this retired
+  // marker as an evaluator block; mirrors the clean SH-9 / SH-ASD retirements rather than leaving an evalOrphan).
+  // Superseded (AUDIT-169): the legacy SH-012 was the GENERAL, un-partitioned prosthetic-SVD gap - it gated ANY prosthetic
+  // (Z95.2/.3/.4) + elevated AORTIC gradient and applied an SVD/ViV-vs-redo recommendation UNIFORMLY, including to
+  // MECHANICAL valves (for which an elevated gradient is thrombosis/pannus, NOT structural deterioration). The
+  // chunk-2 partition strictly improves on it: VHD-068 (mechanical Z95.2/.4 -> PVT workup) + VHD-011 (bioprosthetic
+  // Z95.3 -> SVD / ViV-vs-redo), each with the type-correct recommendation, AND extended to the MITRAL prosthesis
+  // (mitral_valve_mean_gradient). No coverage lost (aortic still covered, mitral added, type-partition added).
+  // Supersede-not-delete: firing removed here; the SH registry entry is reconciled at the SH/VHD close.
 
   // Gap SH-092: Post-PE CTEPH surveillance
   // Guideline: 2019 ESC PE / 2022 ESC-ERS PH; persistent dyspnea after PE warrants chronic thromboembolic
@@ -10922,31 +11614,36 @@ export function evaluateGapRules(
   // NEW CORONARY RULES (CAD-TICAGRELOR-ACS through CAD-LIVER-STATIN)
   // ============================================================
 
-  // CAD-TICAGRELOR-ACS: Ticagrelor in Acute Coronary Syndrome
-  // Guideline: 2021 ACC/AHA/SCAI Revascularization Guideline (PLATO Trial), Class 1, LOE A
+  // CAD-TICAGRELOR-ACS: Potent P2Y12 inhibitor in Acute Coronary Syndrome
+  // Guideline: 2021 ACC/AHA/SCAI Revascularization Guideline (PLATO / TRITON-TIMI 38), Class 1, LOE A
+  // Tightening (AUDIT-176, CAD chunk 0 2026-06-18): the prior gate fired on !onTicagrelor alone, false-firing
+  // a "consider ticagrelor" gap on patients correctly on PRASUGREL (an equally guideline-preferred potent
+  // P2Y12). A patient on EITHER potent P2Y12 meets the ACS need, so also exclude prasugrel (613391). The
+  // recommendation is reframed as the potent-P2Y12 choice (ticagrelor or prasugrel) over clopidogrel.
   if (hasRecentMI && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const onTicagrelorACS = medCodes.includes('1116632');
-    if (!onTicagrelorACS) {
+    const onPrasugrelACS = medCodes.includes('613391');
+    if (!onTicagrelorACS && !onPrasugrelACS) {
       gaps.push({
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider ticagrelor for ACS per PLATO trial evidence',
-        target: 'P2Y12 inhibitor therapy reviewed',
-        medication: 'Ticagrelor',
+        status: 'Consider a potent P2Y12 inhibitor (ticagrelor or prasugrel) for ACS',
+        target: 'Potent P2Y12 inhibitor therapy reviewed',
+        medication: 'Ticagrelor or prasugrel',
         recommendations: {
-          action: 'Consider ticagrelor 90mg BID for ACS per 2021 ACC/AHA/SCAI Guideline (PLATO)',
+          action: 'Consider a potent P2Y12 inhibitor (ticagrelor or prasugrel) over clopidogrel for ACS per 2021 ACC/AHA/SCAI Guideline (PLATO / TRITON-TIMI 38)',
           guideline: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
-          note: 'Recommended for review: ticagrelor reduced CV death, MI, and stroke vs clopidogrel in PLATO',
+          note: 'Recommended for review: a potent P2Y12 (ticagrelor or prasugrel) is preferred over clopidogrel for ACS; fires only when on neither potent agent.',
         },
         evidence: {
           triggerCriteria: [
             'Acute coronary syndrome (I21.*)',
-            'No ticagrelor (RxNorm 1116632) in active medications',
+            'No potent P2Y12 (ticagrelor 1116632 or prasugrel 613391) in active medications',
           ],
-          guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (PLATO Trial)',
+          guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (PLATO / TRITON-TIMI 38)',
           classOfRecommendation: 'Class 1',
           levelOfEvidence: 'LOE A',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Active bleeding', 'Prior intracranial hemorrhage', 'On prasugrel'],
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Active bleeding', 'Prior intracranial hemorrhage', 'On ticagrelor or prasugrel (potent P2Y12 need met)'],
         },
       });
     }
@@ -11844,71 +12541,10 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-NICORANDIL: Nicorandil for Refractory Angina
-  // Guideline: 2019 ESC Chronic Coronary Syndromes Guideline, Class 2a, LOE B
-  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasAngina = dxCodes.some(c => c.startsWith('I20'));
-    const onMaxAntianginal = medCodes.some(c => ['6918', '17767', '7417'].includes(c)); // BB + CCB
-    const onNicorandil = medCodes.includes('29987');
-    if (hasAngina && onMaxAntianginal && !onNicorandil) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_MISSING,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider nicorandil for refractory angina on maximal antianginal therapy',
-        target: 'Nicorandil reviewed for refractory angina management',
-        medication: 'Nicorandil',
-        recommendations: {
-          action: 'Consider nicorandil as add-on antianginal therapy per 2019 ESC CCS Guideline',
-          guideline: '2019 ESC Guideline for Chronic Coronary Syndromes',
-          note: 'Recommended for review: nicorandil reduces angina frequency via potassium channel opening and nitrate-like effects',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Coronary artery disease (I25.*) with angina (I20.*)',
-            'On maximal first-line antianginal therapy (BB + CCB)',
-            'No nicorandil in active medications',
-          ],
-          guidelineSource: '2019 ESC Guideline for Chronic Coronary Syndromes',
-          classOfRecommendation: 'Class 2a',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Concurrent PDE5 inhibitor', 'GI ulceration', 'Hypotension'],
-        },
-      });
-    }
-  }
-
-  // CAD-TRIMETAZIDINE: Trimetazidine Consideration
-  // Guideline: 2019 ESC CCS Guideline, Class 2b, LOE B
-  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasAnginaTMZ = dxCodes.some(c => c.startsWith('I20'));
-    const hasMetabolicTMZ = dxCodes.some(c => c.startsWith('E11') || c.startsWith('E78'));
-    const onTrimetazidine = medCodes.includes('47832');
-    if (hasAnginaTMZ && hasMetabolicTMZ && !onTrimetazidine) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_MISSING,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider trimetazidine for angina with metabolic comorbidities',
-        target: 'Trimetazidine reviewed for metabolic modulation in CAD',
-        medication: 'Trimetazidine',
-        recommendations: {
-          action: 'Consider trimetazidine as metabolic antianginal agent per 2019 ESC CCS Guideline',
-          guideline: '2019 ESC Guideline for Chronic Coronary Syndromes',
-          note: 'Recommended for review: trimetazidine shifts myocardial metabolism from fatty acid to glucose oxidation, reducing ischemia',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Coronary artery disease (I25.*) with angina (I20.*)',
-            'Metabolic comorbidity (diabetes E11 or dyslipidemia E78)',
-            'No trimetazidine in active medications',
-          ],
-          guidelineSource: '2019 ESC Guideline for Chronic Coronary Syndromes',
-          classOfRecommendation: 'Class 2b',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Parkinson disease', 'Severe renal impairment (eGFR<30)', 'Movement disorders'],
-        },
-      });
-    }
-  }
+  // RETIRED 2026-06-18 (CAD chunk 0, AUDIT-175): the nicorandil and trimetazidine gaps are removed. Both were
+  // non-US, ESC-only agents (not in the 2023 ACC/AHA Chronic Coronary Disease Guideline) and their RxCUIs
+  // (nicorandil 29987, trimetazidine 47832) FAIL section-16 - RxNav returns NOT FOUND for both. Neither block
+  // mapped to a covered CAD spec gap. Dead code with unverifiable codes; removed cleanly (firing + registry).
 
   // CAD-CORONARY-CTA-FU: Coronary CTA Follow-Up
   // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 2a, LOE B-NR
@@ -12170,9 +12806,9 @@ export function evaluateGapRules(
         target: 'CCB initiated or alternative vasodilator reviewed',
         medication: 'Diltiazem or Nifedipine',
         recommendations: {
-          action: 'Consider CCB (diltiazem or nifedipine) for vasospastic angina per 2019 ESC CCS Guideline',
+          action: 'Consider a calcium channel blocker (diltiazem or nifedipine) as first-line therapy for confirmed vasospastic angina, and provocation/spasm testing to establish the diagnosis where it is not yet confirmed, per 2019 ESC CCS Guideline',
           guideline: '2019 ESC Guideline for Chronic Coronary Syndromes; JCS 2013 Vasospastic Angina Guideline',
-          note: 'Recommended for review: CCBs are first-line therapy for coronary vasospasm; beta-blockers may worsen vasospasm',
+          note: 'Recommended for review: this rule fires on a coded vasospastic-angina diagnosis (I20.1) without a CCB - CCBs are first-line therapy and beta-blockers may worsen vasospasm. Where vasospasm is suspected but not yet coded, provocation testing (the CAD-037 spec target) confirms the diagnosis (axis-reconciled, AUDIT-177-adjacent).',
         },
         evidence: {
           triggerCriteria: [

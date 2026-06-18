@@ -2,13 +2,13 @@
 
 **Module:** Coronary Artery Disease (CAD)
 **Spec source:** `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md` §6.4
-**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=77, evaluator=77, gapsPush=77)
+**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=76, evaluator=76, gapsPush=76)
 **Crosswalk:** `docs/audit/canonical/CAD.crosswalk.json` (auditMethod: rule-body-citation-AUDIT-030D)
 **Audit date:** 2026-05-04
 
 ## 1. Summary
 
-Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementation: **29 DET_OK + 27 PARTIAL + 34 SPEC_ONLY** (any-coverage: 56/90 = 62.2%).
+Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementation: **25 DET_OK + 30 PARTIAL + 35 SPEC_ONLY** (any-coverage: 55/90 = 61.1%).
 
 **Tier 1 priority status:** 8 DET_OK + 4 PARTIAL + 6 SPEC_ONLY of 18 T1 gaps (T1 any-coverage: 66.7%).
 
@@ -21,9 +21,9 @@ Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementa
 | Classification | Count | % of total |
 |---|---:|---:|
 | PRODUCTION_GRADE | 0 | 0.0% |
-| DET_OK | 29 | 32.2% |
-| PARTIAL_DETECTION | 27 | 30.0% |
-| SPEC_ONLY | 34 | 37.8% |
+| DET_OK | 25 | 27.8% |
+| PARTIAL_DETECTION | 30 | 33.3% |
+| SPEC_ONLY | 35 | 38.9% |
 | **Total** | **90** | **100.0%** |
 
 **PRODUCTION_GRADE = 0** is platform-wide; gated on closure of AUDIT-001 P0 (test coverage gap). Per AUDIT_METHODOLOGY.md §3.1, no rule classifies PRODUCTION_GRADE until the platform testing baseline is established.
@@ -35,9 +35,9 @@ Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementa
 | Tier | Total | DET_OK | PARTIAL | SPEC_ONLY | Any-coverage % |
 |------|------:|-------:|--------:|----------:|---------------:|
 | **T1** | 18 | 8 | 4 | 6 | 66.7% |
-| **T2** | 55 | 17 | 19 | 19 | 65.5% |
+| **T2** | 55 | 13 | 22 | 20 | 63.6% |
 | **T3** | 17 | 4 | 4 | 9 | 47.1% |
-| **Overall** | **90** | **29** | **27** | **34** | **62.2%** |
+| **Overall** | **90** | **25** | **30** | **35** | **61.1%** |
 
 ---
 
@@ -45,16 +45,16 @@ Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementa
 
 | Subcategory | T1/T2/T3 | DET_OK | PARTIAL | SPEC_ONLY | Coverage |
 |---|---|---:|---:|---:|---:|
-| Lipid Management (13) | 7/4/2 | 8 | 1 | 4 | 69.2% |
+| Lipid Management (13) | 7/4/2 | 7 | 2 | 4 | 69.2% |
 | Primary Prevention (6) | 3/0/3 | 2 | 3 | 1 | 83.3% |
-| DAPT (7) | 2/3/2 | 4 | 2 | 1 | 85.7% |
+| DAPT (7) | 2/3/2 | 2 | 3 | 2 | 71.4% |
 | Post-ACS Therapies (6) | 0/6/0 | 3 | 2 | 1 | 83.3% |
 | STEMI/ACS Timing (5) | 2/3/0 | 0 | 3 | 2 | 60.0% |
 | Polyvascular (2) | 0/2/0 | 0 | 1 | 1 | 50.0% |
 | Post-CABG (2) | 0/2/0 | 1 | 1 | 0 | 100.0% |
 | Chronic CAD (4) | 0/4/0 | 2 | 2 | 0 | 100.0% |
 | MINOCA/INOCA (5) | 0/5/0 | 2 | 3 | 0 | 100.0% |
-| Intracoronary Imaging (3) | 0/3/0 | 1 | 2 | 0 | 100.0% |
+| Intracoronary Imaging (3) | 0/3/0 | 0 | 3 | 0 | 100.0% |
 | Complex PCI (4) | 1/3/0 | 0 | 0 | 4 | 0.0% |
 | Stent Complications (3) | 0/2/1 | 0 | 0 | 3 | 0.0% |
 | Cardiogenic Shock (6) | 2/4/0 | 0 | 0 | 6 | 0.0% |
@@ -94,24 +94,24 @@ Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementa
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-CAD-001 | 590 | DET_OK | `gap-cad-statin` (CAD-STATIN @6468-6499) | auto-verify: preserved-from-addendum |
-| GAP-CAD-002 | 591 | DET_OK | `gap-cad-statin` (CAD-STATIN @6468-6499) | auto-verify: preserved-from-addendum |
-| GAP-CAD-003 | 592 | DET_OK | `gap-cad-ezetimibe` (CAD-EZETIMIBE @6644-6674) | auto-verify: preserved-from-addendum |
-| GAP-CAD-004 | 593 | DET_OK | `gap-cad-pcsk9` (CAD-PCSK9 @10422-10453) | auto-verify: preserved-from-addendum |
-| GAP-CAD-005 | 594 | PARTIAL_DETECTION | `gap-cad-pcsk9` (CAD-PCSK9 @10422-10453) | auto-verify: preserved-from-addendum |
+| GAP-CAD-001 | 590 | DET_OK | `gap-cad-statin` (CAD-STATIN @6586-6617) | auto-verify: preserved-from-addendum |
+| GAP-CAD-002 | 591 | DET_OK | `gap-cad-statin` (CAD-STATIN @6586-6617) | auto-verify: preserved-from-addendum |
+| GAP-CAD-003 | 592 | DET_OK | `gap-cad-ezetimibe` (CAD-EZETIMIBE @6762-6792) | auto-verify: preserved-from-addendum |
+| GAP-CAD-004 | 593 | DET_OK | `gap-cad-pcsk9` (CAD-PCSK9 @11114-11145) | auto-verify: preserved-from-addendum |
+| GAP-CAD-005 | 594 | PARTIAL_DETECTION | `gap-cad-pcsk9` (CAD-PCSK9 @11114-11145) | auto-verify: preserved-from-addendum |
 | GAP-CAD-056 | 595 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-CAD-057 | 596 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-CAD-011 | 607 | PARTIAL_DETECTION | `gap-cad-statin` (CAD-STATIN @6468-6499) | auto-verify: preserved-from-addendum |
-| GAP-CAD-012 | 608 | PARTIAL_DETECTION | `gap-cad-statin` (CAD-STATIN @6468-6499) | auto-verify: preserved-from-addendum |
-| GAP-CAD-014 | 609 | DET_OK | `gap-cad-omega3` (CAD-OMEGA3 @10551-10584) | auto-verify: preserved-from-addendum |
-| GAP-CAD-015 | 617 | DET_OK | `gap-cad-ticagrelor-acs` (CAD-TICAGRELOR-ACS @10927-10953) | + \| Multiple registry ids cited: gap-cad-ticagrelor-acs, gap-cad-prasugrel \| auto-verify: preserved- |
-| GAP-CAD-016 | 618 | DET_OK | `gap-cad-016-prasugrel-stroke-safety` (CAD-016 @11570-11594) | MANUAL OVERRIDE: AUDIT-034 RESOLVED 2026-05-05 — new SAFETY evaluator block added (this PR) covering |
+| GAP-CAD-011 | 607 | PARTIAL_DETECTION | `gap-cad-statin` (CAD-STATIN @6586-6617) | auto-verify: preserved-from-addendum |
+| GAP-CAD-012 | 608 | PARTIAL_DETECTION | `gap-cad-statin` (CAD-STATIN @6586-6617) | auto-verify: preserved-from-addendum |
+| GAP-CAD-014 | 609 | DET_OK | `gap-cad-omega3` (CAD-OMEGA3 @11243-11276) | auto-verify: preserved-from-addendum |
+| GAP-CAD-015 | 617 | DET_OK | `gap-cad-ticagrelor-acs` (CAD-TICAGRELOR-ACS @11623-11650) | + \| Multiple registry ids cited: gap-cad-ticagrelor-acs, gap-cad-prasugrel \| auto-verify: preserved- |
+| GAP-CAD-016 | 618 | DET_OK | `gap-cad-016-prasugrel-stroke-safety` (CAD-016 @12267-12291) | MANUAL OVERRIDE: AUDIT-034 RESOLVED 2026-05-05 — new SAFETY evaluator block added (this PR) covering |
 | GAP-CAD-063 | 638 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-CAD-065 | 639 | PARTIAL_DETECTION | `gap-cad-catheterization` (CAD-CATHETERIZATION @11976-12003) | auto-verify: preserved-from-addendum |
+| GAP-CAD-065 | 639 | PARTIAL_DETECTION | `gap-cad-catheterization` (CAD-CATHETERIZATION @12612-12639) | auto-verify: preserved-from-addendum |
 | GAP-CAD-071 | 683 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-CAD-042 | 698 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-CAD-043 | 699 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-CAD-081 | 717 | DET_OK | `gap-cad-scad` (CAD-SCAD @12097-12125) | +  + \| Multiple registry ids cited: gap-cad-scad, gap-cad-women-specific, gap-cad-young-mi \| auto-ve |
+| GAP-CAD-081 | 717 | DET_OK | `gap-cad-scad` (CAD-SCAD @12733-12761) | +  + \| Multiple registry ids cited: gap-cad-scad, gap-cad-women-specific, gap-cad-young-mi \| auto-ve |
 
 ---
 
@@ -135,9 +135,9 @@ No T1 SPEC_ONLY gaps carry literal BSW pathway tags in CK v4.0 spec text. Pathwa
 
 **For CAD:** Moderate implementation coverage; medication/screening surfaces typically built, procedural surfaces often lighter.
 
-Coverage data: 56/90 any-coverage (62.2%); 29/90 DET_OK only (32.2%); 27 PARTIAL via broad-rule consolidation or partial-trigger match; 34 SPEC_ONLY.
+Coverage data: 55/90 any-coverage (61.1%); 25/90 DET_OK only (27.8%); 30 PARTIAL via broad-rule consolidation or partial-trigger match; 35 SPEC_ONLY.
 
-Rules-per-DET_OK efficiency: 77 registry rules / 29 DET_OK = 2.66.
+Rules-per-DET_OK efficiency: 76 registry rules / 25 DET_OK = 3.04.
 
 ---
 
@@ -154,12 +154,18 @@ Cross-module satisfaction (HF Device Therapy → EP CRT/ICD pattern; CAD-027 →
 
 ## 9. Module-specific findings
 
-### Manual classification overrides (2)
+### Manual classification overrides (8)
 
 Rows where the auto-classifier was wrong and the audit author corrected the classification with explicit reasoning:
 
+- **GAP-CAD-007** (T2, PARTIAL_DETECTION, `gap-cad-lipid-panel-fu` (CAD-LIPID-PANEL-FU)): MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-177): DET_OK -> PARTIAL. CAD-LIPID-PANEL-FU fires on ldl===undefined && total_cholesterol===undefined - an existence-proxy, not the spec "not measured in 12 months" interval (no lipid-panel date/months is threaded, so the >12-month logic cannot be computed). Held at PARTIAL per §16 underclaim-governs (the VD-5 / AUDIT-134 existence-proxy class).
 - **GAP-CAD-016** (T1, DET_OK, `gap-cad-016-prasugrel-stroke-safety` (CAD-016)): MANUAL OVERRIDE: AUDIT-034 RESOLVED 2026-05-05 — new SAFETY evaluator block added (this PR) covering prasugrel + stroke/TIA contraindication per FDA black-box + 2023 ACC/AHA CCD Class 3 (Harm). Closes Tier S queue item. Override pin preserved for stability against auto-classifier matching the broader gap-cad-prasugrel recommendation rule (which fires for opposite scenario: should-be-on-prasugrel without stroke).
+- **GAP-CAD-018** (T2, PARTIAL_DETECTION, `gap-cad-dapt-duration` (CAD-DAPT-DURATION)): MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-177): DET_OK -> PARTIAL. CAD-DAPT-DURATION status says "assess continued need beyond 12 months" but the trigger only checks aspirin+P2Y12 co-presence - no months-since-PCI/DAPT-start date is threaded, so the duration logic cannot be computed (fires at month 1). Held at PARTIAL (narrative-vs-logic).
+- **GAP-CAD-061** (T2, SPEC_ONLY, no cite): MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-174): DAPT de-escalation (TWILIGHT/TICO = drop aspirin while ON a P2Y12) was miscited to Gap-50, which detects P2Y12-ABSENCE (the opposite scenario; zero true-positive overlap). No genuine de-escalation evaluator exists (it needs on-DAPT + months-since-PCI, partly un-threaded). Per §16.6(ii) disjoint-target -> SPEC_ONLY; registryId dropped.
 - **GAP-CAD-027** (T2, PARTIAL_DETECTION, `gap-pv-rivaroxaban` (PV-RIVAROXABAN) cross-module to PV): MANUAL OVERRIDE per CAD addendum line 232: cross-module satisfaction. GAP-CAD-027 (Polyvascular COMPASS dual pathway) is satisfied by PV module rule gap-pv-rivaroxaban. Note: this rule is registered under CAD module enum (module: ModuleType.CORONARY_INTERVENTION) despite gap-pv-* naming — naming convention inconsistency tracked at AUDIT-027.
+- **GAP-CAD-029** (T2, DET_OK, `gap-cad-rehab-cabg` (CAD-REHAB-CABG)): MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-173 RESOLVED): RE-CITED from the over-detecting CAD-REHAB (fired on hasCAD alone) to the purpose-built gap-cad-rehab-cabg evaluator (post-CABG Z95.1 + rehab-engagement guard CPT 93797/93798). Now genuinely gated on the post-CABG population the spec targets; DET_OK.
+- **GAP-CAD-068** (T2, PARTIAL_DETECTION, `gap-cad-ffr` (CAD-FFR)): MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-177): DET_OK -> PARTIAL. CAD-FFR fires on stress_test===undefined for any CAD-without-recent-MI, with NO borderline-lesion (40-70% stenosis) signal - the spec target. Borderline-stenosis severity is not codable/threaded, so the existence-proxy cannot reach the spec target. Held at PARTIAL.
+- **GAP-CAD-046** (T2, DET_OK, `gap-cad-rehab-mi` (CAD-REHAB-MI)): MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-173 RESOLVED): RE-CITED from the over-detecting CAD-REHAB to the purpose-built gap-cad-rehab-mi evaluator (post-MI I21/I22/I25.2 + rehab-engagement guard). Now genuinely gated on the post-MI population; DET_OK.
 
 
 ---
@@ -210,7 +216,7 @@ Per-module wall-clock data lives in `docs/audit/canonical/audit_runs.jsonl` (app
 
 **CAD module: MODERATELY BUILT.**
 
-- 29 DET_OK (32.2%), 27 PARTIAL (30.0%), 34 SPEC_ONLY (37.8%)
+- 25 DET_OK (27.8%), 30 PARTIAL (33.3%), 35 SPEC_ONLY (38.9%)
 - 8/18 T1 priority gaps DET_OK; 6 T1 SPEC_ONLY gaps require v2.0 Phase 1 work
 - Audit method: `rule-body-citation-AUDIT-030D`. Generated from canonical crosswalk on 2026-05-04.
 
