@@ -53,16 +53,22 @@ describe('SH-027 significant ASD -> closure eval', () => {
   });
 });
 
-// ---- SH-029: IE early-surgery indication ----
-describe('SH-029 IE early-surgery indication', () => {
-  it('fires: IE + HF', () => {
-    expect(find(evaluateGapRules([IE, HF], {}, [], 55, 'MALE'), 'Infective endocarditis with an early-surgery indication')).toBeTruthy();
+// ---- SH-029: IE embolic / uncontrolled-infection surgery indication (AUDIT-172 scope-narrowed: HF arm -> VHD-057) ----
+const SEPSIS = 'A41.9'; // uncontrolled-infection proxy (retained in SH-029)
+describe('SH-029 IE embolic / uncontrolled-infection surgery indication (HF arm reconciled to VHD-057)', () => {
+  it('AUDIT-172 reconciliation: IE + HF no longer fires SH-029 (VHD-057 owns it) - single fire via VHD-057', () => {
+    const g = evaluateGapRules([IE, HF], {}, [], 55, 'MALE');
+    expect(find(g, 'embolic / uncontrolled-infection surgery indication')).toBeFalsy();
+    expect(find(g, 'urgent surgery indication gap')).toBeTruthy(); // VHD-057 fires instead
   });
-  it('fires: IE + embolic stroke', () => {
-    expect(find(evaluateGapRules([IE, STROKE], {}, [], 55, 'MALE'), 'Infective endocarditis with an early-surgery indication')).toBeTruthy();
+  it('fires: IE + embolic stroke (embolic arm retained - broader than VHD-059)', () => {
+    expect(find(evaluateGapRules([IE, STROKE], {}, [], 55, 'MALE'), 'embolic / uncontrolled-infection surgery indication')).toBeTruthy();
   });
-  it('gate: IE alone (no early-surgery indication)', () => {
-    expect(find(evaluateGapRules([IE], {}, [], 55, 'MALE'), 'Infective endocarditis with an early-surgery indication')).toBeFalsy();
+  it('fires: IE + uncontrolled infection (A41, unique to SH-029)', () => {
+    expect(find(evaluateGapRules([IE, SEPSIS], {}, [], 55, 'MALE'), 'embolic / uncontrolled-infection surgery indication')).toBeTruthy();
+  });
+  it('gate: IE alone (no embolic / uncontrolled-infection indication)', () => {
+    expect(find(evaluateGapRules([IE], {}, [], 55, 'MALE'), 'embolic / uncontrolled-infection surgery indication')).toBeFalsy();
   });
 });
 

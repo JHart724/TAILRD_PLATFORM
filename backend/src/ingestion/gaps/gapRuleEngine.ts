@@ -5572,18 +5572,21 @@ export function evaluateGapRules(
     }
   }
 
-  // EP-008: DOAC contraindicated in moderate-severe mitral stenosis (rheumatic AF requires warfarin).
+  // EP-008: DOAC contraindicated in NONRHEUMATIC moderate-severe mitral stenosis (warfarin required).
   // Guideline: 2023 ACC/AHA/ACCP/HRS AFib + 2020 ACC/AHA VHD, Class 3 (Harm). DOACs are contraindicated in
   //   moderate-severe MS (excluded from RE-LY/ROCKET/ARISTOTLE; INVICTUS confirmed warfarin superiority).
-  // MS codes I05.0 (rheumatic) / I34.2 (nonrheumatic) reuse the verified set from gap-vd-4 (line ~6112).
-  const hasModSevereMS_EP008 = dxCodes.some(c => c.startsWith('I05.0') || c.startsWith('I34.2'));
+  // Reconciliation (AUDIT-172, v3.0 VHD close): NARROWED to nonrheumatic MS (I34.2 only). VHD-083 OWNS the
+  // rheumatic (I05.x) AF anticoagulation recommendation (its on-DOAC branch already says "switch to warfarin"),
+  // so EP-008 dropped rheumatic I05.0 to avoid co-firing with VHD-083 on a rheumatic-MS patient. The rheumatic
+  // case loses no coverage (VHD-083 covers it); EP-008 retains the nonrheumatic-MS DOAC-contraindication.
+  const hasModSevereMS_EP008 = dxCodes.some(c => c.startsWith('I34.2'));
   const onDOAC_EP008 = medCodes.includes('1364430') || medCodes.includes('1114195') || medCodes.includes('1599538') || medCodes.includes('1037042');
   if (hasModSevereMS_EP008 && onDOAC_EP008 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
       type: TherapyGapType.MEDICATION_CONTRAINDICATED,
       module: ModuleType.ELECTROPHYSIOLOGY,
       status: 'DOAC contraindicated in moderate-severe mitral stenosis',
-      target: 'Switch from DOAC to warfarin (INR 2.0-3.0) for AF with rheumatic/significant MS',
+      target: 'Switch from DOAC to warfarin (INR 2.0-3.0) for AF with nonrheumatic moderate-severe MS',
       medication: 'Warfarin (RxNorm 11289) in place of the current DOAC',
       recommendations: {
         action: 'Consider switching from DOAC to warfarin per 2023 ACC/AHA AFib + 2020 ACC/AHA VHD Class 3 (Harm)',
@@ -5592,7 +5595,7 @@ export function evaluateGapRules(
       },
       evidence: {
         triggerCriteria: [
-          'Moderate-severe mitral stenosis (I05.0 rheumatic or I34.2 nonrheumatic)',
+          'Nonrheumatic moderate-severe mitral stenosis (I34.2); rheumatic MS (I05.x) is owned by VHD-083 per the AUDIT-172 reconciliation',
           'On a DOAC (apixaban / rivaroxaban / edoxaban / dabigatran)',
         ],
         guidelineSource: '2023 ACC/AHA/ACCP/HRS Atrial Fibrillation Guideline + 2020 ACC/AHA VHD Guideline',
@@ -8604,9 +8607,15 @@ export function evaluateGapRules(
   // Guideline: 2023 ACC/AHA AFib Guideline, Class 1, LOE A
   // AF + any valve dx + no oral anticoagulant
   // OAC RxNorm: warfarin (11289), apixaban (1364430), rivaroxaban (1114195), dabigatran (1037042), edoxaban (1599538)
+  // Reconciliation (AUDIT-172, v3.0 VHD close): EXCLUDE rheumatic mitral disease (I05.x). The rheumatic-AF
+  // anticoagulation recommendation is OWNED by the VHD-083 rule (warfarin mandate, DOACs contraindicated per
+  // INVICTUS); the generic VD-12 "may use DOAC" note would be unsafe if it co-fired on a rheumatic-MS patient,
+  // so VD-12 yields to the rheumatic-AF rule here. Non-rheumatic AF + valve still fires VD-12 (no over-narrowing).
+  const hasRheumaticMitral_VD12 = dxCodes.some(c => c.startsWith('I05'));
   if (
     hasAF &&
     hasAnyValveDx &&
+    !hasRheumaticMitral_VD12 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     const OAC_CODES = ['11289', '1364430', '1114195', '1037042', '1599538'];
@@ -9807,29 +9816,35 @@ export function evaluateGapRules(
 
   // Gap SH-029: Infective endocarditis with an early-surgery indication -> surgery review
   // Guideline: 2020 ACC/AHA VHD (Class 1 early surgery for HF, uncontrolled infection, or embolic events).
-  const hasIEHF_SH = dxCodes.some(c => c.startsWith('I50'));
+  // Reconciliation (AUDIT-172, v3.0 VHD close): SCOPE-NARROWED. The HF arm (I33.0 + I50) was an exact duplicate
+  // of the new granular VHD-057, so it is REMOVED here (VHD-057 owns IE + heart failure). The embolic arm is
+  // retained (broader than VHD-059, which gates on on-anticoagulation - removing it would lose the
+  // embolic-not-anticoagulated population), as is the uncontrolled-infection arm (A41/R65.2, unique to this
+  // rule and not covered by the granular VHD gaps). This is general/native IE, NOT structural-device-specific,
+  // so it is scope-narrowed (not superseded). A benign residual overlap with VHD-059 on the anticoagulated-
+  // embolic subset remains (both surface a consistent surgery-eval recommendation; non-harmful).
   const hasIEEmbolic_SH = dxCodes.some(c => c.startsWith('I74') || c.startsWith('I63'));
   const hasIEUncontrolled_SH = dxCodes.some(c => c.startsWith('A41') || c.startsWith('R65.2'));
-  if (hasIE_SH && (hasIEHF_SH || hasIEEmbolic_SH || hasIEUncontrolled_SH) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  if (hasIE_SH && (hasIEEmbolic_SH || hasIEUncontrolled_SH) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
       type: TherapyGapType.PROCEDURE_INDICATED,
       module: ModuleType.STRUCTURAL_HEART,
-      status: 'Infective endocarditis with an early-surgery indication: surgery evaluation gap',
+      status: 'Infective endocarditis with an embolic / uncontrolled-infection surgery indication: surgery evaluation gap',
       target: 'Endocarditis-team early-surgery evaluation completed',
       recommendations: {
-        action: 'Consider early surgery evaluation for infective endocarditis with HF, uncontrolled infection, or embolic events per 2020 ACC/AHA VHD (Class 1)',
+        action: 'Consider early surgery evaluation for infective endocarditis with embolic events or uncontrolled infection per 2020 ACC/AHA VHD (Class 1). For IE with heart failure, see VHD-057.',
         guideline: '2020 ACC/AHA Valvular Heart Disease',
-        note: 'Early-surgery indication present via a threaded proxy (HF I50, embolic I74/I63, or uncontrolled infection A41/R65.2). Path-B: vegetation size + persistent bacteremia duration not threaded.',
+        note: 'Scope-narrowed (AUDIT-172): the IE + heart-failure arm is owned by VHD-057. Early-surgery indication present via a threaded proxy (embolic I74/I63, or uncontrolled infection A41/R65.2). Path-B: vegetation size + persistent bacteremia duration not threaded.',
       },
       evidence: {
         triggerCriteria: [
           'Acute/subacute infective endocarditis (I33.0)',
-          `Early-surgery indication: ${hasIEHF_SH ? 'heart failure' : hasIEEmbolic_SH ? 'embolic event' : 'uncontrolled infection'}`,
+          `Early-surgery indication: ${hasIEEmbolic_SH ? 'embolic event' : 'uncontrolled infection'}`,
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
         classOfRecommendation: 'Class 1',
         levelOfEvidence: 'LOE B-NR',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Surgery already performed this episode'],
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Surgery already performed this episode', 'IE + heart failure (owned by VHD-057)'],
       },
     });
   }

@@ -74,3 +74,19 @@ describe('VHD-083 rheumatic + AF warfarin (DOAC contraindicated)', () => {
     expect(find(evaluateGapRules([RHEUM], {}, [], 65, 'FEMALE'), 'not on warfarin (DOAC contraindicated)')).toBeFalsy();
   });
 });
+
+// ---- AUDIT-172 reconciliation: rheumatic-MS + AF triple-fire -> single fire (VHD-083 owns; VD-12 + EP-008 yield) ----
+const TR = 'I36.1';            // tricuspid regurg - a VD-12 valve dx (I34-I37) to make VD-12 eligible pre-fix
+const NONRHEUM_MR = 'I34.0';   // nonrheumatic mitral insufficiency
+describe('AUDIT-172 rheumatic-AF overlap reconciliation (VHD-083 owns; VD-12/EP-008 narrowed)', () => {
+  it('SAFETY single-fire: rheumatic-MS (I05.0) + AF + valve dx + no OAC -> ONLY VHD-083 fires (warfarin); VD-12 does NOT', () => {
+    const g = evaluateGapRules([RHEUM, AF, TR], {}, [], 68, 'FEMALE');
+    expect(find(g, 'not on warfarin (DOAC contraindicated)')).toBeTruthy();          // VHD-083 (warfarin mandate)
+    expect(find(g, 'Oral anticoagulation missing in AF with valve disease')).toBeFalsy(); // VD-12 yields (no harmful "may use DOAC")
+  });
+  it('no over-narrowing: non-rheumatic AF + valve (I34.0) + no OAC -> VD-12 STILL fires', () => {
+    const g = evaluateGapRules([AF, NONRHEUM_MR], {}, [], 68, 'FEMALE');
+    expect(find(g, 'Oral anticoagulation missing in AF with valve disease')).toBeTruthy(); // VD-12 retained for non-rheumatic
+    expect(find(g, 'not on warfarin (DOAC contraindicated)')).toBeFalsy();                 // VHD-083 does not fire (not rheumatic)
+  });
+});
