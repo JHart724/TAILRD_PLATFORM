@@ -11204,32 +11204,13 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-IVUS: Intravascular Imaging for Left Main
-  // Guideline: 2021 ACC/AHA/SCAI Revascularization Guideline, Class 2a, LOE B-NR
-  // Left main CAD (I25.110) -- consider IVUS/OCT for PCI planning
-  const hasLeftMain = dxCodes.some(c => c.startsWith('I25.110'));
-  if (hasLeftMain && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    gaps.push({
-      type: TherapyGapType.SCREENING_DUE,
-      module: ModuleType.CORONARY_INTERVENTION,
-      status: 'Consider intravascular imaging for left main coronary disease',
-      target: 'IVUS or OCT guidance documented for PCI planning',
-      recommendations: {
-        action: 'Consider intravascular imaging (IVUS or OCT) to guide left main PCI per 2021 ACC/AHA/SCAI Guideline',
-        guideline: '2021 ACC/AHA/SCAI Revascularization Guideline',
-        note: 'Recommended for review: intravascular imaging improves outcomes for left main PCI',
-      },
-      evidence: {
-        triggerCriteria: [
-          'Left main coronary artery disease (I25.110)',
-        ],
-        guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
-        classOfRecommendation: 'Class 2a',
-        levelOfEvidence: 'LOE B-NR',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'CABG planned', 'Contrast allergy'],
-      },
-    });
-  }
+  // RETIRED 2026-06-18 (CAD close, AUDIT-182): the left-main IVUS rule is removed (firing + the I25.110 gate).
+  // It gated on hasLeftMain = I25.110, but section-16 (NLM) confirms I25.110 = "Atherosclerotic heart disease of
+  // native coronary artery with UNSTABLE ANGINA", NOT left main - so it over-fired "left-main IVUS guidance" for
+  // the entire unstable-angina cohort. Left-main disease has NO ICD-10 code (only I21.01 = acute STEMI involving
+  // the left main); it is an angiographic finding, not threaded. The IVUS-for-complex-PCI gaps (CAD-069/070) and
+  // the left-main heart-team gap (CAD-071) are reclassified SPEC_ONLY/Path-B pending an angiographic/procedure
+  // signal. The gap-cad-ivus registry entry is retained as a regOrphan for lineage.
 
   // CAD-FFR: Fractional Flow Reserve for Intermediate Lesions
   // Guideline: 2021 ACC/AHA/SCAI Revascularization Guideline (FAME, FAME 2), Class 1, LOE A

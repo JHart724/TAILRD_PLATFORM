@@ -14,8 +14,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-OAC",
         "evaluatorBodyLineRange": [
-          5314,
-          5377
+          5374,
+          5437
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-oac-afib",
@@ -33,8 +33,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-006",
         "evaluatorBodyLineRange": [
-          5395,
-          5445
+          5455,
+          5505
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-006-dabigatran-renal-safety",
@@ -52,8 +52,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-6",
         "evaluatorBodyLineRange": [
-          8453,
-          8477
+          8513,
+          8537
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-6-doac-mechanical-valve",
@@ -71,8 +71,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-008",
         "evaluatorBodyLineRange": [
-          5572,
-          5595
+          5632,
+          5655
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-008-doac-mitral-stenosis",
@@ -120,8 +120,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-003",
         "evaluatorBodyLineRange": [
-          5462,
-          5491
+          5522,
+          5551
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-003-rivaroxaban-renal-dose",
@@ -139,8 +139,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-004",
         "evaluatorBodyLineRange": [
-          5498,
-          5526
+          5558,
+          5586
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-004-apixaban-underdose-criteria",
@@ -158,8 +158,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-005",
         "evaluatorBodyLineRange": [
-          5533,
-          5561
+          5593,
+          5621
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-005-apixaban-inappropriate-underdose",
@@ -177,8 +177,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-009",
         "evaluatorBodyLineRange": [
-          5602,
-          5625
+          5662,
+          5685
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-009-edoxaban-high-crcl",
@@ -216,8 +216,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-LAAC",
         "evaluatorBodyLineRange": [
-          6247,
-          6282
+          6307,
+          6342
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-laac",
@@ -235,8 +235,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-012",
         "evaluatorBodyLineRange": [
-          5632,
-          5669
+          5692,
+          5729
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-012-laac-high-risk-bleed",
@@ -254,8 +254,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-067",
         "evaluatorBodyLineRange": [
-          6157,
-          6185
+          6217,
+          6245
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-067-post-laac-antithrombotic",
@@ -293,12 +293,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-EARLY-RHYTHM",
         "evaluatorBodyLineRange": [
-          13210,
-          13232
+          13470,
+          13492
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-early-rhythm",
-        "registryLine": 2285
+        "registryLine": 2345
       },
       "specGapId": "GAP-EP-013",
       "specLine": 337,
@@ -312,8 +312,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-014",
         "evaluatorBodyLineRange": [
-          5686,
-          5709
+          5746,
+          5769
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-014-af-ablation-hfref",
@@ -331,8 +331,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-017",
         "evaluatorBodyLineRange": [
-          7080,
-          7105
+          7140,
+          7165
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-017-hfref-non-dhp-ccb",
@@ -350,8 +350,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-SUBCLINICAL-AF",
         "evaluatorBodyLineRange": [
-          10898,
-          10921
+          10958,
+          10981
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-subclinical-af",
@@ -369,8 +369,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-ABLATION",
         "evaluatorBodyLineRange": [
-          6292,
-          6317
+          6352,
+          6377
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-ablation",
@@ -398,8 +398,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-PFA",
         "evaluatorBodyLineRange": [
-          10651,
-          10673
+          10711,
+          10733
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-pfa",
@@ -417,8 +417,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-071",
         "evaluatorBodyLineRange": [
-          5715,
-          5752
+          5775,
+          5812
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-071-post-ablation-oac",
@@ -436,8 +436,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-072",
         "evaluatorBodyLineRange": [
-          5761,
-          5784
+          5821,
+          5844
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-072-redo-af-ablation",
@@ -475,8 +475,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-079",
         "evaluatorBodyLineRange": [
-          6215,
-          6240
+          6275,
+          6300
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-079-wpw-af-avn-blocker",
@@ -494,8 +494,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-074",
         "evaluatorBodyLineRange": [
-          5790,
-          5812
+          5850,
+          5872
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-074-flutter-cti-ablation",
@@ -513,12 +513,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-SVT-ABLATION",
         "evaluatorBodyLineRange": [
-          13278,
-          13300
+          13538,
+          13560
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-svt-ablation",
-        "registryLine": 2309
+        "registryLine": 2369
       },
       "specGapId": "GAP-EP-075",
       "specLine": 354,
@@ -532,8 +532,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-076",
         "evaluatorBodyLineRange": [
-          5821,
-          5844
+          5881,
+          5904
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-076-svt-ablation",
@@ -551,12 +551,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-SVT-ABLATION",
         "evaluatorBodyLineRange": [
-          13278,
-          13300
+          13538,
+          13560
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-svt-ablation",
-        "registryLine": 2309
+        "registryLine": 2369
       },
       "specGapId": "GAP-EP-077",
       "specLine": 356,
@@ -570,8 +570,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-WPW",
         "evaluatorBodyLineRange": [
-          10679,
-          10701
+          10739,
+          10761
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-wpw",
@@ -599,12 +599,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-VT-ABLATION",
         "evaluatorBodyLineRange": [
-          13243,
-          13265
+          13503,
+          13525
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-vt-ablation",
-        "registryLine": 2297
+        "registryLine": 2357
       },
       "specGapId": "GAP-EP-086",
       "specLine": 363,
@@ -618,8 +618,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-020",
         "evaluatorBodyLineRange": [
-          5867,
-          5891
+          5927,
+          5951
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-020-ischemic-vt-ablation",
@@ -637,8 +637,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-021",
         "evaluatorBodyLineRange": [
-          5895,
-          5919
+          5955,
+          5979
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-021-nicm-vt-substrate",
@@ -656,8 +656,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-022",
         "evaluatorBodyLineRange": [
-          5926,
-          5950
+          5986,
+          6010
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-022-vt-ablation-vanish",
@@ -695,12 +695,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-INAPPROPRIATE-SHOCKS",
         "evaluatorBodyLineRange": [
-          13617,
-          13639
+          13877,
+          13899
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-inappropriate-shocks",
-        "registryLine": 2441
+        "registryLine": 2501
       },
       "specGapId": "GAP-EP-089",
       "specLine": 369,
@@ -714,12 +714,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-BRUGADA",
         "evaluatorBodyLineRange": [
-          13314,
-          13336
+          13574,
+          13596
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-brugada",
-        "registryLine": 2321
+        "registryLine": 2381
       },
       "specGapId": "GAP-EP-023",
       "specLine": 374,
@@ -733,8 +733,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-LQTS-BB",
         "evaluatorBodyLineRange": [
-          10854,
-          10881
+          10914,
+          10941
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-lqts-bb",
@@ -752,8 +752,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "Gap-39",
         "evaluatorBodyLineRange": [
-          5284,
-          5309
+          5344,
+          5369
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-39-qtc-safety",
@@ -771,8 +771,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-LQTS-BB",
         "evaluatorBodyLineRange": [
-          10854,
-          10881
+          10914,
+          10941
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-lqts-bb",
@@ -790,12 +790,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-BRUGADA",
         "evaluatorBodyLineRange": [
-          13314,
-          13336
+          13574,
+          13596
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-brugada",
-        "registryLine": 2321
+        "registryLine": 2381
       },
       "specGapId": "GAP-EP-027",
       "specLine": 378,
@@ -809,12 +809,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-BETA-BLOCKER",
         "evaluatorBodyLineRange": [
-          12482,
-          12509
+          12742,
+          12769
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-beta-blocker",
-        "registryLine": 3497
+        "registryLine": 3557
       },
       "specGapId": "GAP-EP-028",
       "specLine": 379,
@@ -828,8 +828,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-LQTS-BB",
         "evaluatorBodyLineRange": [
-          10854,
-          10881
+          10914,
+          10941
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-lqts-bb",
@@ -887,8 +887,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-029",
         "evaluatorBodyLineRange": [
-          5961,
-          5983
+          6021,
+          6043
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-029-pacemaker-class1",
@@ -906,8 +906,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-030",
         "evaluatorBodyLineRange": [
-          6065,
-          6089
+          6125,
+          6149
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-030-brady-avn-blocker-reduce",
@@ -925,8 +925,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-SYNCOPE",
         "evaluatorBodyLineRange": [
-          6461,
-          6486
+          6521,
+          6546
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-syncope",
@@ -944,12 +944,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-PACEMAKER-UPGRADE",
         "evaluatorBodyLineRange": [
-          13413,
-          13435
+          13673,
+          13695
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-pacemaker-upgrade",
-        "registryLine": 2357
+        "registryLine": 2417
       },
       "specGapId": "GAP-EP-032",
       "specLine": 392,
@@ -963,8 +963,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-033",
         "evaluatorBodyLineRange": [
-          6095,
-          6119
+          6155,
+          6179
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-033-af-slow-rate-pacing",
@@ -982,8 +982,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-034",
         "evaluatorBodyLineRange": [
-          5989,
-          6012
+          6049,
+          6072
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-034-cied-infection-extraction",
@@ -1021,8 +1021,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-CSP",
         "evaluatorBodyLineRange": [
-          10616,
-          10639
+          10676,
+          10699
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-csp",
@@ -1050,8 +1050,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-LEAD-INTEGRITY",
         "evaluatorBodyLineRange": [
-          10954,
-          10976
+          11014,
+          11036
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-lead-integrity",
@@ -1069,12 +1069,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-CIED-MRI",
         "evaluatorBodyLineRange": [
-          13551,
-          13572
+          13811,
+          13832
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-cied-mri",
-        "registryLine": 2417
+        "registryLine": 2477
       },
       "specGapId": "GAP-EP-040",
       "specLine": 404,
@@ -1098,12 +1098,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-CIED-MRI",
         "evaluatorBodyLineRange": [
-          13551,
-          13572
+          13811,
+          13832
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-cied-mri",
-        "registryLine": 2417
+        "registryLine": 2477
       },
       "specGapId": "GAP-EP-042",
       "specLine": 406,
@@ -1127,8 +1127,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-092",
         "evaluatorBodyLineRange": [
-          6023,
-          6048
+          6083,
+          6108
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-092-sicd-candidate",
@@ -1146,8 +1146,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-LEAD-INTEGRITY",
         "evaluatorBodyLineRange": [
-          10954,
-          10976
+          11014,
+          11036
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-lead-integrity",
@@ -1165,8 +1165,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-AMIODARONE-MONITOR",
         "evaluatorBodyLineRange": [
-          6390,
-          6418
+          6450,
+          6478
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-amiodarone-monitor",
@@ -1184,8 +1184,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-AMIODARONE-MONITOR",
         "evaluatorBodyLineRange": [
-          6390,
-          6418
+          6450,
+          6478
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-amiodarone-monitor",
@@ -1203,8 +1203,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-AMIODARONE-MONITOR",
         "evaluatorBodyLineRange": [
-          6390,
-          6418
+          6450,
+          6478
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-amiodarone-monitor",
@@ -1222,8 +1222,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-DRONEDARONE",
         "evaluatorBodyLineRange": [
-          10712,
-          10742
+          10772,
+          10802
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-dronedarone",
@@ -1251,8 +1251,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-DOFETILIDE-REMS",
         "evaluatorBodyLineRange": [
-          6425,
-          6453
+          6485,
+          6513
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-dofetilide-rems",
@@ -1280,12 +1280,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-INAPPROPRIATE-SHOCKS",
         "evaluatorBodyLineRange": [
-          13617,
-          13639
+          13877,
+          13899
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-inappropriate-shocks",
-        "registryLine": 2441
+        "registryLine": 2501
       },
       "specGapId": "GAP-EP-050",
       "specLine": 421,
@@ -1299,8 +1299,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-SYNCOPE",
         "evaluatorBodyLineRange": [
-          6461,
-          6486
+          6521,
+          6546
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-syncope",
@@ -1318,8 +1318,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-SYNCOPE",
         "evaluatorBodyLineRange": [
-          6461,
-          6486
+          6521,
+          6546
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-syncope",
@@ -1347,8 +1347,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-097",
         "evaluatorBodyLineRange": [
-          6127,
-          6149
+          6187,
+          6209
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-097-orthostatic-hypotension-med-review",

@@ -510,6 +510,60 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
       auditNote:
         'MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-177): DET_OK -> PARTIAL. CAD-DAPT-DURATION status says "assess continued need beyond 12 months" but the trigger only checks aspirin+P2Y12 co-presence - no months-since-PCI/DAPT-start date is threaded, so the duration logic cannot be computed (fires at month 1). Held at PARTIAL (narrative-vs-logic).',
     },
+    // --- CAD chunk 1 close (2026-06-18): 6 newly DET_OK + the AUDIT-182 CAD-IVUS reclassification ---
+    'GAP-CAD-009': {
+      classification: 'DET_OK',
+      registryId: 'gap-cad-009-apob',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 1, AUDIT-181): newly DET_OK. Purpose-built gap-cad-009-apob (CAD + on-statin + labValues[\'apob\'] >= 90 -> residual atherogenic risk). ApoB LOINC 1884-6 threaded both paths (AUDIT-181 slug-thread), converting CAD-009 from Path-B to a genuine gateable DET_OK.',
+    },
+    'GAP-CAD-083': {
+      classification: 'DET_OK',
+      registryId: 'gap-cad-083-radiation-cad',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 1): newly DET_OK. Purpose-built gap-cad-083-radiation-cad (Z92.3 prior irradiation + CAD -> aggressive risk-factor modification + surveillance). Z92.3 NLM-verified.',
+    },
+    'GAP-CAD-084': {
+      classification: 'DET_OK',
+      registryId: 'gap-cad-084-vasculitis-cad',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 1): newly DET_OK. Purpose-built gap-cad-084-vasculitis-cad (M30.x/M31.x systemic vasculitis + CAD -> coordinated immunosuppression-aware management, distinct from atherosclerotic). M30/M31 NLM-verified.',
+    },
+    'GAP-CAD-085': {
+      classification: 'DET_OK',
+      registryId: 'gap-cad-085-stimulant-cad',
+      inferredSafetyTag: 'STRUCTURAL_SAFETY',
+      inferredSafetyRationale: 'Cocaine/methamphetamine-associated coronary ischemia: the beta-blocker unopposed-alpha caution is a safety-recommendation nuance; the gap fires a SAFETY_ALERT framing CCB/benzo/nitrate preferred acutely and BB cautioned.',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 1): newly DET_OK. Purpose-built gap-cad-085-stimulant-cad (F14.x cocaine / F15.x stimulant + CAD/angina -> SAFETY_ALERT: substance cessation + beta-blocker caution, NOT blanket BB). F14/F15 NLM-verified; 2008 AHA cocaine-chest-pain statement.',
+    },
+    'GAP-CAD-022': {
+      classification: 'DET_OK',
+      registryId: 'gap-cad-022-post-mi-icd',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 1): newly DET_OK. Purpose-built gap-cad-022-post-mi-icd (MI I21/I22/I25.2 + LVEF <= 35 -> primary-prevention ICD evaluation). Path-B: the >=40-day post-MI / >=90-day post-revasc waiting period is not threaded (documented in the gap note); the LVEF<=35 post-MI detection is genuine.',
+    },
+    'GAP-CAD-026': {
+      classification: 'DET_OK',
+      registryId: 'gap-cad-026-polyvascular',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 1): newly DET_OK. Purpose-built gap-cad-026-polyvascular (CAD + PAD I70.2/I73.9 + cerebrovascular I63/I65/Z86.73 = 3-territory -> comprehensive intensified secondary prevention). Reconciled with CAD-027 (the COMPASS rivaroxaban drug-specific axis) as complementary, not redundant.',
+    },
+    'GAP-CAD-069': {
+      classification: 'SPEC_ONLY',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 1 close, AUDIT-182): PARTIAL -> SPEC_ONLY. The prior cite CAD-IVUS was retired (it gated hasLeftMain = I25.110, but I25.110 = ASHD + unstable angina, NOT left main - a wrong-code over-detector). Complex-PCI IVUS guidance needs an angiographic/procedure signal not threaded. registryId dropped.',
+    },
+    'GAP-CAD-070': {
+      classification: 'SPEC_ONLY',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 1 close, AUDIT-182): PARTIAL -> SPEC_ONLY. Same as CAD-069 - the cited CAD-IVUS rule was retired (I25.110 wrong-code). Stent-sizing IVUS underexpansion detection needs an IVUS/angiographic data element not threaded. registryId dropped.',
+    },
+    'GAP-CAD-071': {
+      classification: 'SPEC_ONLY',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 1, AUDIT-182): holds SPEC_ONLY. Left-main heart-team review has NO ICD-10 trigger - I25.110 (the CAD-IVUS proxy) = unstable angina not left main, and the only left-main code is I21.01 (acute STEMI). Chronic left-main disease is an angiographic finding, not threaded. Path-B pending an angiographic signal.',
+    },
   },
   VHD: {
     // VHD audit 2026-06-10 (operator-confirmed, Batches 1-5 + two re-derivations): supersedes the stale

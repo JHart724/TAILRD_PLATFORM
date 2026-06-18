@@ -14,6 +14,14 @@ const find = (gaps: any[], frag: string) =>
 const CAD = 'I25.10', ATORVASTATIN = '83367', ASPIRIN = '1191';
 const RADIATION = 'Z92.3', TAKAYASU = 'M31.4', PAN = 'M30.0', COCAINE = 'F14.10';
 const MI_ACUTE = 'I21.4', MI_OLD = 'I25.2', PAD = 'I70.211', CVD = 'I63.9';
+const UNSTABLE_ANGINA = 'I25.110'; // ASHD + unstable angina - the code CAD-IVUS wrongly treated as left-main
+
+// ---- AUDIT-182: CAD-IVUS left-main over-detector retired ----
+describe('AUDIT-182 CAD-IVUS I25.110-as-left-main over-fire closed', () => {
+  it('regression: I25.110 (unstable angina) does NOT fire a left-main IVUS recommendation', () => {
+    expect(find(evaluateGapRules([UNSTABLE_ANGINA], {}, [], 65, 'MALE'), 'intravascular imaging for left main')).toBeFalsy();
+  });
+});
 
 // ---- ApoB threading (AUDIT-181, both paths) ----
 describe('AUDIT-181 ApoB threading (FHIR + CSV)', () => {
