@@ -195,7 +195,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     ['SH', 'STRUCTURAL_HEART', 60], // 25 + 35 (v3.0 SH module close, 2026-06-17, feat/sh-chunk1-as-severity)
     ['CAD', 'CORONARY_INTERVENTION', 83], // 76 -> 83 (CAD chunk 1: +7 lipid/risk/etiology registry entries; gap-cad-ivus retained as regOrphan, 2026-06-18)
     ['VHD', 'VALVULAR_DISEASE', 49], // 32 + 17 (v3.0 VHD module close, 2026-06-17, feat/vhd-chunk1-ar-severity)
-    ['PV', 'PERIPHERAL_VASCULAR', 34], // 33 -> 34 (PV chunk 0: +1 gap-pv-003-abnormal-abi registry entry, AUDIT-179, 2026-06-18)
+    ['PV', 'PERIPHERAL_VASCULAR', 41], // 33 -> 34 (PV chunk 0: +1 abnormal-abi) -> 41 (PV chunk 1: +7 buildable PV-004/034/038/040/041/058/062, 2026-06-18)
   ])('module %s registry has %i entries tagged %s', (code, enumName, count) => {
     const registry = extractRegistry(lines, enumName);
     expect(registry.length).toBe(count);
@@ -210,7 +210,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(15890); // -> 15890 by PV chunk 0 (2026-06-18, +63 lines: PV-003 build + registry entry + tightening comments above); AUDIT-110 = content-anchor remediation scope
+    expect(pannus!.commentLine).toBe(15975); // -> 15975 by PV chunk 1 (2026-06-18, +85 lines: 7 new PV registry entries above); AUDIT-110 = content-anchor remediation scope
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });
@@ -236,7 +236,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     ['SH', 60, 54, 54], // evaluator 55->54 + gapsPush 55->54: SH-012 superseded marker de-tokenized so it is no longer parsed as an evaluator block (v3.0 VHD close, AUDIT-171)
     ['CAD', 83, 82, 82], // CAD chunk 1: registry 83 (+7 entries), evaluator/push 82 (CAD-IVUS firing retired, AUDIT-182; its registry entry retained as a regOrphan)
     ['VHD', 49, 48, 48], // v3.0 VHD module close: registry 32->49, evaluator 32->48, gapsPush 32->48
-    ['PV', 34, 34, 34], // PV chunk 0: registry/evaluator/push 33->34 (gap-pv-003-abnormal-abi build, AUDIT-179, 2026-06-18)
+    ['PV', 41, 41, 41], // PV chunk 0: 33->34 (abnormal-abi); PV chunk 1: 34->41 (+7 buildable PV-004/034/038/040/041/058/062, 2026-06-18)
   ])(
     'module %s reconciliation counts: registry=%i, evaluator=%i, gapsPush=%i (clean modules)',
     (code, reg, evCount, push) => {

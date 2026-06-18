@@ -65,8 +65,11 @@ describe('Structural: Gap rule engine integrity', () => {
     // Then 376 -> 377 by PV chunk 0 (2026-06-18, feat/pv-chunk0-tightenings):
     // - net +1: the foundational gap-pv-003-abnormal-abi build (abnormal ABI <=0.90 without coded PAD, AUDIT-179);
     //   the 5 over-credit tightenings (AUDIT-178/180) edit existing rules, they do not add or remove firings.
+    // Then 377 -> 384 by PV chunk 1 (2026-06-18, same branch):
+    // - net +7: PV-004 (non-compressible ABI), PV-034 (FMD screen), PV-038 (Takayasu immunosuppression),
+    //   PV-040 (GCA steroid), PV-041 (Buerger cessation), PV-058 (symptomatic carotid), PV-062 (ICAS SAMMPRIS).
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(377);
+    expect(count).toBe(384);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {
