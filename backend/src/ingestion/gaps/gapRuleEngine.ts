@@ -3984,6 +3984,35 @@ export const RUNTIME_GAP_REGISTRY = [
     guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
     classOfRecommendation: '1', levelOfEvidence: 'B-R',
   },
+  // v3.0 VHD chunk 5 registry entries (pregnancy SAFETY + drug-induced valve surveillance, 2026-06-17).
+  {
+    id: 'gap-vhd-098-mech-valve-preconception',
+    name: 'Mechanical Valve Pre-Conception Counseling', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C',
+  },
+  {
+    id: 'gap-vhd-099-mech-valve-pregnancy-anticoag',
+    name: 'Mechanical Valve Pregnancy Anticoagulation SAFETY', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'C',
+  },
+  {
+    id: 'gap-vhd-091-dopamine-agonist-valve-surveillance',
+    name: 'Dopamine Agonist Valve Surveillance', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease; FDA dopamine-agonist labeling',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'C',
+  },
+  {
+    id: 'gap-vhd-092-ergot-alkaloid-valve-surveillance',
+    name: 'Ergot Alkaloid Valve Surveillance', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '2a', levelOfEvidence: 'C',
+  },
   {
     id: 'gap-pv-critical-limb',
     name: 'Critical Limb Ischemia Urgent Evaluation',
@@ -8258,6 +8287,137 @@ export function evaluateGapRules(
         classOfRecommendation: '1',
         levelOfEvidence: 'B-R',
         exclusions: ['Hospice/palliative care (Z51.5)', 'Anticoagulation contraindicated', 'Already on warfarin'],
+      },
+    });
+  }
+
+  // ===== v3.0 VHD chunk 5: pregnancy SAFETY (Tier-S) + drug-induced valve surveillance =====
+  // The mechanical-valve-pregnancy anticoagulation scenario is the highest-stakes recommendation-correctness case
+  // in VHD: warfarin is teratogenic (dose-dependent embryopathy, peak 6-12 weeks) BUT a mechanical valve mandates
+  // anticoagulation, so the recommendation is a heart-team + MFM tradeoff, NOT a blanket "stop warfarin". Pregnancy
+  // ICDs section-16-verified vs NLM 2026-06-17: O99.4x circulatory-complicating-pregnancy, O09 high-risk
+  // supervision, Z34 normal supervision, Z33.1 pregnant-state (Z33.2 termination deliberately excluded), Z3A
+  // weeks-gestation. Drug RxCUIs RxNav-verified: cabergoline 47579, pergolide 8047, ergotamine 4025, methysergide
+  // 6911. The fetotoxic-RAAS-in-pregnancy vector is already covered by HF-086 (overlap-flag, not re-authored).
+  const isPregnant_VHD5 = dxCodes.some(c =>
+    c.startsWith('O99.4') || c.startsWith('O09') || c.startsWith('Z34') || c === 'Z33.1' || c.startsWith('Z3A')
+  );
+
+  // Gap VHD-098: Mechanical valve + reproductive-age female, not pregnant -> pre-conception counseling
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 pre-pregnancy counseling; mechanical-valve anticoagulation
+  // planning is the higher-stakes layer above the general VD-10 valve-pregnancy counseling).
+  if (
+    hasMechanicalValve && gender === 'FEMALE' && age >= 18 && age <= 45 &&
+    !isPregnant_VHD5 &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.REFERRAL_NEEDED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Mechanical valve in a reproductive-age patient: pre-conception anticoagulation counseling gap',
+      target: 'Pre-conception cardio-obstetric counseling on the mechanical-valve anticoagulation strategy for pregnancy',
+      recommendations: {
+        action: 'Consider pre-conception cardio-obstetric counseling for this reproductive-age mechanical-valve patient - warfarin is teratogenic, so the anticoagulation plan for any future pregnancy (dose-adjusted warfarin vs LMWH vs UFH by trimester) should be discussed before conception, per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Mechanical-valve-specific layer above VD-10 (general valve-disease pregnancy counseling). Complement to VHD-099, which handles the already-pregnant case.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mechanical prosthetic valve (Z95.2 / Z95.4)',
+          'Female, reproductive age 18-45',
+          'Not currently pregnant',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Currently pregnant (handled by VHD-099)', 'Post-menopausal'],
+      },
+    });
+  }
+
+  // Gap VHD-099: Mechanical valve + pregnancy -> anticoagulation SAFETY management (Tier-S)
+  // Guideline: 2020 ACC/AHA VHD Guideline (Class 1 - therapeutic anticoagulation must be maintained throughout
+  // pregnancy in mechanical-valve patients; the warfarin-vs-LMWH-vs-UFH strategy is a heart-team decision).
+  // SAFETY: warfarin is teratogenic (peak embryopathy 6-12 weeks) but valve thrombosis is life-threatening, so the
+  // action is a heart-team + MFM tradeoff, NEVER a blanket discontinuation. This is the highest-stakes subgroup.
+  if (hasMechanicalValve && isPregnant_VHD5 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const onWarfarin_VHD5 = medCodes.includes('11289');
+    gaps.push({
+      type: TherapyGapType.SAFETY_ALERT,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Mechanical valve in pregnancy: anticoagulation strategy SAFETY review (teratogenicity vs valve-thrombosis tradeoff)',
+      target: 'Cardio-obstetric heart-team + maternal-fetal-medicine management of mechanical-valve anticoagulation in pregnancy',
+      recommendations: {
+        action: onWarfarin_VHD5
+          ? 'SAFETY: Consider urgent cardio-obstetric heart-team and maternal-fetal-medicine referral. Warfarin crosses the placenta with a dose-dependent embryopathy risk (peak 6-12 weeks); the strategy (continued dose-adjusted warfarin vs anti-Xa-monitored LMWH vs UFH, by trimester and warfarin dose) is a heart-team decision - do NOT simply discontinue anticoagulation, as mechanical-valve thrombosis is life-threatening, per 2020 ACC/AHA VHD'
+          : 'SAFETY: Consider cardio-obstetric heart-team and maternal-fetal-medicine referral to confirm a guideline mechanical-valve anticoagulation protocol for pregnancy (anti-Xa-monitored LMWH or dose-adjusted warfarin/UFH by trimester) - therapeutic anticoagulation must be maintained throughout pregnancy, per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Tier-S SAFETY: the recommendation is heart-team + MFM management of the warfarin-teratogenicity-vs-valve-thrombosis tradeoff, NOT a blanket drug change. Path-B: anti-Xa-targeted LMWH monitoring (VHD-100) and the 36-week LMWH/delivery-plan timing (VHD-101) need anti-Xa levels and gestational-week precision that are not threaded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mechanical prosthetic valve (Z95.2 / Z95.4)',
+          'Pregnancy (O99.4x / O09 / Z34 / Z33.1 / Z3A)',
+          onWarfarin_VHD5 ? 'On warfarin (teratogenic - embryopathy risk)' : 'Anticoagulation strategy to be confirmed',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // Gap VHD-091: Dopamine agonist (cabergoline / pergolide) -> drug-induced valve surveillance echo
+  // Guideline: 2020 ACC/AHA VHD Guideline + FDA labeling (ergot-derived dopamine agonists cause serotonergic
+  // valvulopathy; echocardiographic surveillance during chronic therapy).
+  const onDopamineAgonist_VHD5 = medCodes.includes('47579') || medCodes.includes('8047');
+  if (onDopamineAgonist_VHD5 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Ergot-derived dopamine agonist therapy: drug-induced valve disease surveillance echo gap',
+      target: 'Surveillance echocardiogram for ergot-derived dopamine-agonist (cabergoline / pergolide) valvulopathy',
+      recommendations: {
+        action: 'Consider surveillance echocardiography for drug-induced (serotonergic) valvular heart disease in this patient on an ergot-derived dopamine agonist (cabergoline / pergolide), per 2020 ACC/AHA VHD and FDA labeling',
+        guideline: '2020 ACC/AHA Valvular Heart Disease; FDA dopamine-agonist labeling',
+        note: 'Surveillance interval is exposure-duration / dose-dependent (Path-B: cumulative dose is not threaded).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'On an ergot-derived dopamine agonist: cabergoline (RxNorm 47579) or pergolide (RxNorm 8047)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // Gap VHD-092: Ergotamine / methysergide -> drug-induced valve surveillance echo
+  // Guideline: 2020 ACC/AHA VHD Guideline (chronic ergot-alkaloid exposure -> serotonergic valvulopathy;
+  // echocardiographic surveillance).
+  const onErgotAlkaloid_VHD5 = medCodes.includes('4025') || medCodes.includes('6911');
+  if (onErgotAlkaloid_VHD5 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.IMAGING_OVERDUE,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Chronic ergot-alkaloid therapy: drug-induced valve disease surveillance echo gap',
+      target: 'Surveillance echocardiogram for ergot-alkaloid (ergotamine / methysergide) valvulopathy',
+      recommendations: {
+        action: 'Consider surveillance echocardiography for drug-induced (serotonergic) valvular heart disease in this patient on a chronic ergot alkaloid (ergotamine / methysergide), per 2020 ACC/AHA VHD',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Surveillance interval is exposure-duration / dose-dependent (Path-B: cumulative dose is not threaded).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'On a chronic ergot alkaloid: ergotamine (RxNorm 4025) or methysergide (RxNorm 6911)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
       },
     });
   }
