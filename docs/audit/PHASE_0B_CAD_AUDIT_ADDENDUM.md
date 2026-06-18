@@ -97,21 +97,21 @@ Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementa
 | GAP-CAD-001 | 590 | DET_OK | `gap-cad-statin` (CAD-STATIN @6586-6617) | auto-verify: preserved-from-addendum |
 | GAP-CAD-002 | 591 | DET_OK | `gap-cad-statin` (CAD-STATIN @6586-6617) | auto-verify: preserved-from-addendum |
 | GAP-CAD-003 | 592 | DET_OK | `gap-cad-ezetimibe` (CAD-EZETIMIBE @6762-6792) | auto-verify: preserved-from-addendum |
-| GAP-CAD-004 | 593 | DET_OK | `gap-cad-pcsk9` (CAD-PCSK9 @11111-11142) | auto-verify: preserved-from-addendum |
-| GAP-CAD-005 | 594 | PARTIAL_DETECTION | `gap-cad-pcsk9` (CAD-PCSK9 @11111-11142) | auto-verify: preserved-from-addendum |
+| GAP-CAD-004 | 593 | DET_OK | `gap-cad-pcsk9` (CAD-PCSK9 @11114-11145) | auto-verify: preserved-from-addendum |
+| GAP-CAD-005 | 594 | PARTIAL_DETECTION | `gap-cad-pcsk9` (CAD-PCSK9 @11114-11145) | auto-verify: preserved-from-addendum |
 | GAP-CAD-056 | 595 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-CAD-057 | 596 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-CAD-011 | 607 | PARTIAL_DETECTION | `gap-cad-statin` (CAD-STATIN @6586-6617) | auto-verify: preserved-from-addendum |
 | GAP-CAD-012 | 608 | PARTIAL_DETECTION | `gap-cad-statin` (CAD-STATIN @6586-6617) | auto-verify: preserved-from-addendum |
-| GAP-CAD-014 | 609 | DET_OK | `gap-cad-omega3` (CAD-OMEGA3 @11240-11273) | auto-verify: preserved-from-addendum |
-| GAP-CAD-015 | 617 | DET_OK | `gap-cad-ticagrelor-acs` (CAD-TICAGRELOR-ACS @11620-11647) | + \| Multiple registry ids cited: gap-cad-ticagrelor-acs, gap-cad-prasugrel \| auto-verify: preserved- |
-| GAP-CAD-016 | 618 | DET_OK | `gap-cad-016-prasugrel-stroke-safety` (CAD-016 @12264-12288) | MANUAL OVERRIDE: AUDIT-034 RESOLVED 2026-05-05 — new SAFETY evaluator block added (this PR) covering |
+| GAP-CAD-014 | 609 | DET_OK | `gap-cad-omega3` (CAD-OMEGA3 @11243-11276) | auto-verify: preserved-from-addendum |
+| GAP-CAD-015 | 617 | DET_OK | `gap-cad-ticagrelor-acs` (CAD-TICAGRELOR-ACS @11623-11650) | + \| Multiple registry ids cited: gap-cad-ticagrelor-acs, gap-cad-prasugrel \| auto-verify: preserved- |
+| GAP-CAD-016 | 618 | DET_OK | `gap-cad-016-prasugrel-stroke-safety` (CAD-016 @12267-12291) | MANUAL OVERRIDE: AUDIT-034 RESOLVED 2026-05-05 — new SAFETY evaluator block added (this PR) covering |
 | GAP-CAD-063 | 638 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-CAD-065 | 639 | PARTIAL_DETECTION | `gap-cad-catheterization` (CAD-CATHETERIZATION @12609-12636) | auto-verify: preserved-from-addendum |
+| GAP-CAD-065 | 639 | PARTIAL_DETECTION | `gap-cad-catheterization` (CAD-CATHETERIZATION @12612-12639) | auto-verify: preserved-from-addendum |
 | GAP-CAD-071 | 683 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-CAD-042 | 698 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-CAD-043 | 699 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-CAD-081 | 717 | DET_OK | `gap-cad-scad` (CAD-SCAD @12730-12758) | +  + \| Multiple registry ids cited: gap-cad-scad, gap-cad-women-specific, gap-cad-young-mi \| auto-ve |
+| GAP-CAD-081 | 717 | DET_OK | `gap-cad-scad` (CAD-SCAD @12733-12761) | +  + \| Multiple registry ids cited: gap-cad-scad, gap-cad-women-specific, gap-cad-young-mi \| auto-ve |
 
 ---
 

@@ -22,7 +22,7 @@
     },
     {
       "evaluatorBlockName": "PV-3",
-      "evaluatorCommentLine": 8671,
+      "evaluatorCommentLine": 8674,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-pv-3-antiplatelet",
@@ -30,7 +30,7 @@
     },
     {
       "evaluatorBlockName": "PV-4",
-      "evaluatorCommentLine": 8705,
+      "evaluatorCommentLine": 8708,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-pv-4-smoking-cessation",
@@ -38,7 +38,7 @@
     },
     {
       "evaluatorBlockName": "PV-5",
-      "evaluatorCommentLine": 8735,
+      "evaluatorCommentLine": 8738,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-pv-5-exercise-therapy",
@@ -46,7 +46,7 @@
     },
     {
       "evaluatorBlockName": "PV-6",
-      "evaluatorCommentLine": 8765,
+      "evaluatorCommentLine": 8768,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-pv-6-diabetes-control",
@@ -54,7 +54,7 @@
     },
     {
       "evaluatorBlockName": "PV-7",
-      "evaluatorCommentLine": 8796,
+      "evaluatorCommentLine": 8799,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-pv-7-wound-care",
@@ -62,7 +62,7 @@
     },
     {
       "evaluatorBlockName": "PV-8",
-      "evaluatorCommentLine": 8828,
+      "evaluatorCommentLine": 8831,
       "matchConfidence": 0.75,
       "matchMethod": "similarity",
       "registryId": "gap-pv-8-duplex-followup",
@@ -70,7 +70,7 @@
     },
     {
       "evaluatorBlockName": "PV-9",
-      "evaluatorCommentLine": 8858,
+      "evaluatorCommentLine": 8861,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-pv-9-aaa-screening",
@@ -78,7 +78,7 @@
     },
     {
       "evaluatorBlockName": "PV-10",
-      "evaluatorCommentLine": 10413,
+      "evaluatorCommentLine": 10416,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-pv-10-cilostazol",
@@ -86,7 +86,7 @@
     },
     {
       "evaluatorBlockName": "PV-11",
-      "evaluatorCommentLine": 10446,
+      "evaluatorCommentLine": 10449,
       "matchConfidence": 0.75,
       "matchMethod": "similarity",
       "registryId": "gap-pv-11-acei-pad",
@@ -94,7 +94,7 @@
     },
     {
       "evaluatorBlockName": "PV-12",
-      "evaluatorCommentLine": 10480,
+      "evaluatorCommentLine": 10483,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-pv-12-renal-artery",
@@ -102,7 +102,7 @@
     },
     {
       "evaluatorBlockName": "PV-13",
-      "evaluatorCommentLine": 10509,
+      "evaluatorCommentLine": 10512,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-pv-13-carotid",
@@ -110,7 +110,7 @@
     },
     {
       "evaluatorBlockName": "PV-14",
-      "evaluatorCommentLine": 10539,
+      "evaluatorCommentLine": 10542,
       "matchConfidence": 0.75,
       "matchMethod": "similarity",
       "registryId": "gap-pv-14-foot-exam",
@@ -118,7 +118,7 @@
     },
     {
       "evaluatorBlockName": "PV-15",
-      "evaluatorCommentLine": 10566,
+      "evaluatorCommentLine": 10569,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-pv-15-compression",
@@ -126,7 +126,7 @@
     },
     {
       "evaluatorBlockName": "PV-RIVAROXABAN",
-      "evaluatorCommentLine": 16028,
+      "evaluatorCommentLine": 16031,
       "matchConfidence": 0.563,
       "matchMethod": "similarity",
       "registryId": "gap-pv-rivaroxaban",
@@ -134,7 +134,7 @@
     },
     {
       "evaluatorBlockName": "PV-CLOPIDOGREL",
-      "evaluatorCommentLine": 16060,
+      "evaluatorCommentLine": 16063,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-pv-clopidogrel",
@@ -142,7 +142,7 @@
     },
     {
       "evaluatorBlockName": "PV-BYPASS-EVAL",
-      "evaluatorCommentLine": 16093,
+      "evaluatorCommentLine": 16096,
       "matchConfidence": 0.571,
       "matchMethod": "similarity",
       "registryId": "gap-pv-bypass-eval",
@@ -150,7 +150,7 @@
     },
     {
       "evaluatorBlockName": "PV-ENDOVASCULAR",
-      "evaluatorCommentLine": 16123,
+      "evaluatorCommentLine": 16126,
       "matchConfidence": 0.429,
       "matchMethod": "similarity",
       "registryId": "gap-pv-endovascular",
@@ -158,7 +158,7 @@
     },
     {
       "evaluatorBlockName": "PV-VENOUS-ULCER",
-      "evaluatorCommentLine": 16152,
+      "evaluatorCommentLine": 16155,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-pv-venous-ulcer",
@@ -166,7 +166,7 @@
     },
     {
       "evaluatorBlockName": "PV-DVT-SCREEN",
-      "evaluatorCommentLine": 16180,
+      "evaluatorCommentLine": 16183,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-pv-dvt-screen",
@@ -174,7 +174,7 @@
     },
     {
       "evaluatorBlockName": "PV-PTS-PREVENTION",
-      "evaluatorCommentLine": 16210,
+      "evaluatorCommentLine": 16213,
       "matchConfidence": 0.556,
       "matchMethod": "similarity",
       "registryId": "gap-pv-pts-prevention",
@@ -182,7 +182,7 @@
     },
     {
       "evaluatorBlockName": "PV-MESENTERIC",
-      "evaluatorCommentLine": 16236,
+      "evaluatorCommentLine": 16239,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-pv-mesenteric",
@@ -190,7 +190,7 @@
     },
     {
       "evaluatorBlockName": "PV-THORACIC-OUTLET",
-      "evaluatorCommentLine": 16265,
+      "evaluatorCommentLine": 16268,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-pv-thoracic-outlet",
@@ -198,7 +198,7 @@
     },
     {
       "evaluatorBlockName": "PV-VARICOSE",
-      "evaluatorCommentLine": 16292,
+      "evaluatorCommentLine": 16295,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-pv-varicose",
@@ -206,7 +206,7 @@
     },
     {
       "evaluatorBlockName": "PV-LYMPHEDEMA",
-      "evaluatorCommentLine": 16318,
+      "evaluatorCommentLine": 16321,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-pv-lymphedema",
@@ -214,7 +214,7 @@
     },
     {
       "evaluatorBlockName": "PV-RAYNAUD",
-      "evaluatorCommentLine": 16344,
+      "evaluatorCommentLine": 16347,
       "matchConfidence": 0.286,
       "matchMethod": "similarity",
       "registryId": "gap-pv-raynaud",
@@ -222,7 +222,7 @@
     },
     {
       "evaluatorBlockName": "PV-VASCULAR-REHAB",
-      "evaluatorCommentLine": 16378,
+      "evaluatorCommentLine": 16381,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-pv-vascular-rehab",
@@ -230,7 +230,7 @@
     },
     {
       "evaluatorBlockName": "PV-PENTOXIFYLLINE",
-      "evaluatorCommentLine": 16409,
+      "evaluatorCommentLine": 16412,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-pv-pentoxifylline",
@@ -238,7 +238,7 @@
     },
     {
       "evaluatorBlockName": "PV-NAFTIDROFURYL",
-      "evaluatorCommentLine": 16441,
+      "evaluatorCommentLine": 16444,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-pv-naftidrofuryl",
@@ -246,7 +246,7 @@
     },
     {
       "evaluatorBlockName": "PV-CRITICAL-LIMB",
-      "evaluatorCommentLine": 16476,
+      "evaluatorCommentLine": 16479,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-pv-critical-limb",
@@ -254,7 +254,7 @@
     },
     {
       "evaluatorBlockName": "PV-GRAFT-SURVEILLANCE",
-      "evaluatorCommentLine": 16505,
+      "evaluatorCommentLine": 16508,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-pv-graft-surveillance",
@@ -262,7 +262,7 @@
     },
     {
       "evaluatorBlockName": "PV-ANTICOAG-VTE",
-      "evaluatorCommentLine": 16535,
+      "evaluatorCommentLine": 16538,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-pv-anticoag-vte",

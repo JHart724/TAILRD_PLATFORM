@@ -14,7 +14,6 @@ const PCI = 'Z95.5';         // presence of coronary angioplasty implant and gra
 const MI_ACUTE = 'I21.4';    // acute NSTEMI
 const MI_OLD = 'I25.2';      // old myocardial infarction
 const PRASUGREL = '613391', TICAGRELOR = '1116632', CLOPIDOGREL = '32968';
-const REHAB_CPT = '93797';   // cardiac rehab w/o continuous ECG (AMA CPT)
 
 // ---- Tightening 1 (AUDIT-173): CAD-REHAB split (post-CABG / post-MI), no longer all-CAD ----
 describe('AUDIT-173 CAD-REHAB over-detector split', () => {
@@ -32,10 +31,9 @@ describe('AUDIT-173 CAD-REHAB over-detector split', () => {
   it('no-over-narrowing: old MI (I25.2) also fires the post-MI rehab gap', () => {
     expect(find(evaluateGapRules([MI_OLD], {}, [], 65, 'MALE'), 'Post-MI cardiac rehabilitation referral')).toBeTruthy();
   });
-  it('referral-done guard: post-CABG already engaged in rehab (CPT 93797) does NOT fire', () => {
-    const g = evaluateGapRules([CAD, CABG], {}, [], 65, 'MALE', undefined, [], [REHAB_CPT]);
-    expect(find(g, 'Post-CABG cardiac rehabilitation referral')).toBeFalsy();
-  });
+  // Rehab-engagement guard DROPPED 2026-06-18 (proxy investigation, AUDIT-173): no reliable pre-DUA
+  // rehab-participation signal (ICD has no code; CPT 93797/93798 inert; Synthea codes SNOMED not CPT). The
+  // CABG/MI gate is the load-bearing over-detection fix; the already-enrolled guard is deferred to post-DUA.
 });
 
 // ---- Tightening 2 (AUDIT-174): Gap-50 tightened to the DAPT-indicated window ----

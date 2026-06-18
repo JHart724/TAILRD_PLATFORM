@@ -7173,16 +7173,19 @@ export function evaluateGapRules(
   // Tightening (AUDIT-173, CAD chunk 0 2026-06-18): the single CAD-REHAB rule fired on hasCAD alone (every CAD
   // patient), over-detecting. SPLIT into the two guideline-anchored populations the spec gaps actually target:
   // post-CABG (CAD-029, Z95.1 aortocoronary-bypass-status, section-16-verified) and post-MI (CAD-046, acute
-  // I21/I22 or old I25.2, section-16-verified). Both add a rehab-engagement guard: alreadyInRehab via CPT 93797
-  // (cardiac rehab w/o continuous ECG) / 93798 (with ECG) on threaded procedureCodes. NOTE: 93797/93798 are AMA
-  // CPT 2024 professional cardiac-rehab codes - flagged for operator section-16.7 confirm at the chunk-0 HOLD.
-  const alreadyInCardiacRehab = procedureCodes.includes('93797') || procedureCodes.includes('93798');
+  // I21/I22 or old I25.2, section-16-verified). The CABG/MI gate is the load-bearing over-detection fix.
+  // Path-B (rehab-engagement guard deferred, proxy investigation 2026-06-18): no reliable rehab-participation
+  // signal exists in pre-DUA data - ICD-10-CM has no cardiac-rehab-participation code (it is a service, not a
+  // diagnosis; Z48.812 / Z71.82 are confounders); CPT 93797/93798 are inert (absent from all synthetic/seed
+  // data) and Synthea codes procedures as SNOMED, not CPT. Post-DUA: add a guard reading BOTH CPT 93797/93798
+  // AND the SNOMED cardiac-rehab procedure code. Until then the residual false-positive (re-recommending rehab
+  // to an already-enrolled patient) is an accepted low-harm limitation.
   const hasCABG_rehab = dxCodes.some(c => c.startsWith('Z95.1'));
   const hasMI_rehab = hasRecentMI || dxCodes.some(c => c.startsWith('I25.2'));
 
   // CAD-REHAB-CABG: Post-CABG cardiac rehab referral (CAD-029)
   // Guideline: 2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization, Class 1, LOE A
-  if (hasCABG_rehab && !alreadyInCardiacRehab && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  if (hasCABG_rehab && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.CORONARY_INTERVENTION,
@@ -7191,21 +7194,21 @@ export function evaluateGapRules(
       recommendations: {
         action: 'Refer to cardiac rehabilitation for the post-CABG patient per 2021 ACC/AHA Coronary Revascularization, Class 1, LOE A',
         guideline: '2021 ACC/AHA/SCAI Coronary Artery Revascularization',
-        note: 'Cardiac rehab is a Class 1 recommendation after CABG. Gated on aortocoronary-bypass status (Z95.1); does not fire if already engaged in rehab (CPT 93797/93798).',
+        note: 'Cardiac rehab is a Class 1 recommendation after CABG. Gated on aortocoronary-bypass status (Z95.1). Path-B: the already-enrolled-in-rehab guard is deferred (no reliable pre-DUA rehab-participation signal; CPT 93797/93798 inert, no ICD code); a CPT + SNOMED procedure guard is added post-DUA.',
       },
       evidence: {
-        triggerCriteria: ['Post-CABG (Z95.1) without documented cardiac rehabilitation referral or engagement'],
+        triggerCriteria: ['Post-CABG (Z95.1) without documented cardiac rehabilitation referral'],
         guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Revascularization',
         classOfRecommendation: '1',
         levelOfEvidence: 'A',
-        exclusions: ['Already engaged in cardiac rehab (CPT 93797/93798)', 'Severe functional limitation', 'Hospice/palliative care'],
+        exclusions: ['Severe functional limitation', 'Hospice/palliative care'],
       },
     });
   }
 
   // CAD-REHAB-MI: Post-MI cardiac rehab referral (CAD-046)
   // Guideline: 2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization, Class 1, LOE A
-  if (hasMI_rehab && !alreadyInCardiacRehab && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+  if (hasMI_rehab && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
       type: TherapyGapType.REFERRAL_NEEDED,
       module: ModuleType.CORONARY_INTERVENTION,
@@ -7214,14 +7217,14 @@ export function evaluateGapRules(
       recommendations: {
         action: 'Refer to cardiac rehabilitation for the post-MI patient per 2021 ACC/AHA Coronary Revascularization, Class 1, LOE A',
         guideline: '2021 ACC/AHA/SCAI Coronary Artery Revascularization',
-        note: 'Cardiac rehab is a Class 1 recommendation after MI. Gated on MI (acute I21/I22 or old I25.2); does not fire if already engaged in rehab (CPT 93797/93798).',
+        note: 'Cardiac rehab is a Class 1 recommendation after MI. Gated on MI (acute I21/I22 or old I25.2). Path-B: the already-enrolled-in-rehab guard is deferred (no reliable pre-DUA rehab-participation signal; CPT 93797/93798 inert, no ICD code); a CPT + SNOMED procedure guard is added post-DUA.',
       },
       evidence: {
-        triggerCriteria: ['Post-MI (I21/I22/I25.2) without documented cardiac rehabilitation referral or engagement'],
+        triggerCriteria: ['Post-MI (I21/I22/I25.2) without documented cardiac rehabilitation referral'],
         guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Revascularization',
         classOfRecommendation: '1',
         levelOfEvidence: 'A',
-        exclusions: ['Already engaged in cardiac rehab (CPT 93797/93798)', 'Severe functional limitation', 'Hospice/palliative care'],
+        exclusions: ['Severe functional limitation', 'Hospice/palliative care'],
       },
     });
   }

@@ -13,9 +13,9 @@
       "name": "VD-1"
     },
     {
-      "bodyEndLine": 7446,
-      "bodyStartLine": 7425,
-      "commentLine": 7413,
+      "bodyEndLine": 7449,
+      "bodyStartLine": 7428,
+      "commentLine": 7416,
       "commentLiteral": "// Gap VD-2: Echo Surveillance for Bioprosthetic Valve",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -24,9 +24,9 @@
       "name": "VD-2"
     },
     {
-      "bodyEndLine": 7840,
-      "bodyStartLine": 7816,
-      "commentLine": 7809,
+      "bodyEndLine": 7843,
+      "bodyStartLine": 7819,
+      "commentLine": 7812,
       "commentLiteral": "// Gap VD-3: INR Monitoring for Mechanical Valve",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -35,9 +35,9 @@
       "name": "VD-3"
     },
     {
-      "bodyEndLine": 7870,
-      "bodyStartLine": 7850,
-      "commentLine": 7842,
+      "bodyEndLine": 7873,
+      "bodyStartLine": 7853,
+      "commentLine": 7845,
       "commentLiteral": "// Gap VD-4: Mitral Stenosis Surveillance",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -46,9 +46,9 @@
       "name": "VD-4"
     },
     {
-      "bodyEndLine": 7921,
-      "bodyStartLine": 7897,
-      "commentLine": 7888,
+      "bodyEndLine": 7924,
+      "bodyStartLine": 7900,
+      "commentLine": 7891,
       "commentLiteral": "// Gap VHD-103: Severe chronic asymptomatic AR with LV dysfunction -> surgical evaluation (AUDIT-134 tightened)",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -57,9 +57,9 @@
       "name": "VHD-103"
     },
     {
-      "bodyEndLine": 7949,
-      "bodyStartLine": 7927,
-      "commentLine": 7923,
+      "bodyEndLine": 7952,
+      "bodyStartLine": 7930,
+      "commentLine": 7926,
       "commentLiteral": "// Gap VHD-102: Moderate aortic regurgitation without surveillance echo",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -68,9 +68,9 @@
       "name": "VHD-102"
     },
     {
-      "bodyEndLine": 7980,
-      "bodyStartLine": 7959,
-      "commentLine": 7951,
+      "bodyEndLine": 7983,
+      "bodyStartLine": 7962,
+      "commentLine": 7954,
       "commentLiteral": "// Gap VHD-104: Mixed / multi-valve disease without integrated staging",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -79,9 +79,9 @@
       "name": "VHD-104"
     },
     {
-      "bodyEndLine": 8011,
-      "bodyStartLine": 7988,
-      "commentLine": 7982,
+      "bodyEndLine": 8014,
+      "bodyStartLine": 7991,
+      "commentLine": 7985,
       "commentLiteral": "// Gap VHD-105: Moderate MR graded by color Doppler without quantitative triangulation",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -90,9 +90,9 @@
       "name": "VHD-105"
     },
     {
-      "bodyEndLine": 8053,
-      "bodyStartLine": 8031,
-      "commentLine": 8028,
+      "bodyEndLine": 8056,
+      "bodyStartLine": 8034,
+      "commentLine": 8031,
       "commentLiteral": "// Gap VHD-068: Mechanical prosthetic valve + elevated gradient -> thrombosis (PVT) workup",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -101,9 +101,9 @@
       "name": "VHD-068"
     },
     {
-      "bodyEndLine": 8079,
-      "bodyStartLine": 8057,
-      "commentLine": 8055,
+      "bodyEndLine": 8082,
+      "bodyStartLine": 8060,
+      "commentLine": 8058,
       "commentLiteral": "// Gap VHD-011: Bioprosthetic valve + elevated gradient -> structural valve deterioration (SVD) evaluation",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -112,9 +112,9 @@
       "name": "VHD-011"
     },
     {
-      "bodyEndLine": 8120,
-      "bodyStartLine": 8097,
-      "commentLine": 8088,
+      "bodyEndLine": 8123,
+      "bodyStartLine": 8100,
+      "commentLine": 8091,
       "commentLiteral": "// Gap VHD-001: Mechanical valve on warfarin with sub-therapeutic INR (AUDIT-133 / post slug-fix)",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -123,9 +123,9 @@
       "name": "VHD-001"
     },
     {
-      "bodyEndLine": 8153,
-      "bodyStartLine": 8129,
-      "commentLine": 8122,
+      "bodyEndLine": 8156,
+      "bodyStartLine": 8132,
+      "commentLine": 8125,
       "commentLiteral": "// Gap VHD-006: Mechanical valve + atherosclerotic disease without low-dose ASA adjunct",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -134,9 +134,9 @@
       "name": "VHD-006"
     },
     {
-      "bodyEndLine": 8192,
-      "bodyStartLine": 8170,
-      "commentLine": 8168,
+      "bodyEndLine": 8195,
+      "bodyStartLine": 8173,
+      "commentLine": 8171,
       "commentLiteral": "// Gap VHD-057: Infective endocarditis + heart failure -> urgent surgery indication",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -145,9 +145,9 @@
       "name": "VHD-057"
     },
     {
-      "bodyEndLine": 8221,
-      "bodyStartLine": 8198,
-      "commentLine": 8194,
+      "bodyEndLine": 8224,
+      "bodyStartLine": 8201,
+      "commentLine": 8197,
       "commentLiteral": "// Gap VHD-059: Infective endocarditis + embolic event on anticoagulation -> surgery consideration",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -156,9 +156,9 @@
       "name": "VHD-059"
     },
     {
-      "bodyEndLine": 8253,
-      "bodyStartLine": 8229,
-      "commentLine": 8223,
+      "bodyEndLine": 8256,
+      "bodyStartLine": 8232,
+      "commentLine": 8226,
       "commentLiteral": "// Gap VHD-064: Prior infective endocarditis + dental procedure without antibiotic prophylaxis",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -167,9 +167,9 @@
       "name": "VHD-064"
     },
     {
-      "bodyEndLine": 8280,
-      "bodyStartLine": 8257,
-      "commentLine": 8255,
+      "bodyEndLine": 8283,
+      "bodyStartLine": 8260,
+      "commentLine": 8258,
       "commentLiteral": "// Gap VHD-079: Rheumatic heart disease without benzathine penicillin secondary prophylaxis",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -178,9 +178,9 @@
       "name": "VHD-079"
     },
     {
-      "bodyEndLine": 8313,
-      "bodyStartLine": 8287,
-      "commentLine": 8282,
+      "bodyEndLine": 8316,
+      "bodyStartLine": 8290,
+      "commentLine": 8285,
       "commentLiteral": "// Gap VHD-083: Rheumatic heart disease + AF not on warfarin -> anticoagulation (warfarin, DOAC contraindicated)",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -189,9 +189,9 @@
       "name": "VHD-083"
     },
     {
-      "bodyEndLine": 8357,
-      "bodyStartLine": 8334,
-      "commentLine": 8327,
+      "bodyEndLine": 8360,
+      "bodyStartLine": 8337,
+      "commentLine": 8330,
       "commentLiteral": "// Gap VHD-098: Mechanical valve + reproductive-age female, not pregnant -> pre-conception counseling",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -200,9 +200,9 @@
       "name": "VHD-098"
     },
     {
-      "bodyEndLine": 8390,
-      "bodyStartLine": 8364,
-      "commentLine": 8359,
+      "bodyEndLine": 8393,
+      "bodyStartLine": 8367,
+      "commentLine": 8362,
       "commentLiteral": "// Gap VHD-099: Mechanical valve + pregnancy -> anticoagulation SAFETY management (Tier-S)",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -211,9 +211,9 @@
       "name": "VHD-099"
     },
     {
-      "bodyEndLine": 8417,
-      "bodyStartLine": 8396,
-      "commentLine": 8392,
+      "bodyEndLine": 8420,
+      "bodyStartLine": 8399,
+      "commentLine": 8395,
       "commentLiteral": "// Gap VHD-091: Dopamine agonist (cabergoline / pergolide) -> drug-induced valve surveillance echo",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -222,9 +222,9 @@
       "name": "VHD-091"
     },
     {
-      "bodyEndLine": 8444,
-      "bodyStartLine": 8423,
-      "commentLine": 8419,
+      "bodyEndLine": 8447,
+      "bodyStartLine": 8426,
+      "commentLine": 8422,
       "commentLiteral": "// Gap VHD-092: Ergotamine / methysergide -> drug-induced valve surveillance echo",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -233,9 +233,9 @@
       "name": "VHD-092"
     },
     {
-      "bodyEndLine": 8474,
-      "bodyStartLine": 8450,
-      "commentLine": 8446,
+      "bodyEndLine": 8477,
+      "bodyStartLine": 8453,
+      "commentLine": 8449,
       "commentLiteral": "// Gap VD-6: DOAC Contraindicated in Mechanical Valve",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -244,9 +244,9 @@
       "name": "VD-6"
     },
     {
-      "bodyEndLine": 8503,
-      "bodyStartLine": 8483,
-      "commentLine": 8476,
+      "bodyEndLine": 8506,
+      "bodyStartLine": 8486,
+      "commentLine": 8479,
       "commentLiteral": "// Gap VD-7: Exercise Restriction in Severe AS",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -255,9 +255,9 @@
       "name": "VD-7"
     },
     {
-      "bodyEndLine": 8533,
-      "bodyStartLine": 8513,
-      "commentLine": 8505,
+      "bodyEndLine": 8536,
+      "bodyStartLine": 8516,
+      "commentLine": 8508,
       "commentLiteral": "// Gap VD-8: Rheumatic Heart Disease Screen",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -266,9 +266,9 @@
       "name": "VD-8"
     },
     {
-      "bodyEndLine": 8560,
-      "bodyStartLine": 8541,
-      "commentLine": 8535,
+      "bodyEndLine": 8563,
+      "bodyStartLine": 8544,
+      "commentLine": 8538,
       "commentLiteral": "// Gap VD-9: Endocarditis Education",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -277,9 +277,9 @@
       "name": "VD-9"
     },
     {
-      "bodyEndLine": 8592,
-      "bodyStartLine": 8571,
-      "commentLine": 8562,
+      "bodyEndLine": 8595,
+      "bodyStartLine": 8574,
+      "commentLine": 8565,
       "commentLiteral": "// Gap VD-10: Pregnancy Risk in Valve Disease",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -288,9 +288,9 @@
       "name": "VD-10"
     },
     {
-      "bodyEndLine": 8622,
-      "bodyStartLine": 8601,
-      "commentLine": 8594,
+      "bodyEndLine": 8625,
+      "bodyStartLine": 8604,
+      "commentLine": 8597,
       "commentLiteral": "// Gap VD-11: Bioprosthetic Valve Degeneration Watch",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -299,9 +299,9 @@
       "name": "VD-11"
     },
     {
-      "bodyEndLine": 8665,
-      "bodyStartLine": 8638,
-      "commentLine": 8624,
+      "bodyEndLine": 8668,
+      "bodyStartLine": 8641,
+      "commentLine": 8627,
       "commentLiteral": "// Gap VD-12: Anticoagulation in AF + Valve Disease",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -310,9 +310,9 @@
       "name": "VD-12"
     },
     {
-      "bodyEndLine": 9481,
-      "bodyStartLine": 9456,
-      "commentLine": 9447,
+      "bodyEndLine": 9484,
+      "bodyStartLine": 9459,
+      "commentLine": 9450,
       "commentLiteral": "// Gap VD-13: Anticoagulation First 3 Months Post-Bioprosthetic",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -321,9 +321,9 @@
       "name": "VD-13"
     },
     {
-      "bodyEndLine": 9519,
-      "bodyStartLine": 9500,
-      "commentLine": 9483,
+      "bodyEndLine": 9522,
+      "bodyStartLine": 9503,
+      "commentLine": 9486,
       "commentLiteral": "// Gap VD-14: Dental Prophylaxis in High-Risk Valve",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -332,9 +332,9 @@
       "name": "VD-14"
     },
     {
-      "bodyEndLine": 9548,
-      "bodyStartLine": 9530,
-      "commentLine": 9521,
+      "bodyEndLine": 9551,
+      "bodyStartLine": 9533,
+      "commentLine": 9524,
       "commentLiteral": "// Gap VD-15: Aortic Root Dilation Monitoring",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -343,9 +343,9 @@
       "name": "VD-15"
     },
     {
-      "bodyEndLine": 10345,
-      "bodyStartLine": 10328,
-      "commentLine": 10321,
+      "bodyEndLine": 10348,
+      "bodyStartLine": 10331,
+      "commentLine": 10324,
       "commentLiteral": "// Gap VD-16: Mixed Valve Disease Assessment",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -354,9 +354,9 @@
       "name": "VD-16"
     },
     {
-      "bodyEndLine": 10376,
-      "bodyStartLine": 10358,
-      "commentLine": 10347,
+      "bodyEndLine": 10379,
+      "bodyStartLine": 10361,
+      "commentLine": 10350,
       "commentLiteral": "// Gap VD-17: Hemolysis Monitoring Post-Valve",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -365,9 +365,9 @@
       "name": "VD-17"
     },
     {
-      "bodyEndLine": 10407,
-      "bodyStartLine": 10389,
-      "commentLine": 10378,
+      "bodyEndLine": 10410,
+      "bodyStartLine": 10392,
+      "commentLine": 10381,
       "commentLiteral": "// Gap VD-18: Exercise Testing in Asymptomatic Severe Valve Disease",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -376,9 +376,9 @@
       "name": "VD-18"
     },
     {
-      "bodyEndLine": 15596,
-      "bodyStartLine": 15574,
-      "commentLine": 15564,
+      "bodyEndLine": 15599,
+      "bodyStartLine": 15577,
+      "commentLine": 15567,
       "commentLiteral": "// VD-PANNUS: Prosthetic Valve Pannus/Thrombosis Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -387,9 +387,9 @@
       "name": "VD-PANNUS"
     },
     {
-      "bodyEndLine": 15629,
-      "bodyStartLine": 15607,
-      "commentLine": 15598,
+      "bodyEndLine": 15632,
+      "bodyStartLine": 15610,
+      "commentLine": 15601,
       "commentLiteral": "// VD-RADIATION: Radiation-Associated Valve Disease",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -398,9 +398,9 @@
       "name": "VD-RADIATION"
     },
     {
-      "bodyEndLine": 15661,
-      "bodyStartLine": 15639,
-      "commentLine": 15631,
+      "bodyEndLine": 15664,
+      "bodyStartLine": 15642,
+      "commentLine": 15634,
       "commentLiteral": "// VD-ENDOCARDITIS-SURV: Infective Endocarditis Surveillance",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -409,9 +409,9 @@
       "name": "VD-ENDOCARDITIS-SURV"
     },
     {
-      "bodyEndLine": 15693,
-      "bodyStartLine": 15671,
-      "commentLine": 15663,
+      "bodyEndLine": 15696,
+      "bodyStartLine": 15674,
+      "commentLine": 15666,
       "commentLiteral": "// VD-BICUSPID-AORTOPATHY: Bicuspid Valve Aortopathy Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -420,9 +420,9 @@
       "name": "VD-BICUSPID-AORTOPATHY"
     },
     {
-      "bodyEndLine": 15722,
-      "bodyStartLine": 15701,
-      "commentLine": 15695,
+      "bodyEndLine": 15725,
+      "bodyStartLine": 15704,
+      "commentLine": 15698,
       "commentLiteral": "// VD-ANTICOAG-REVERSAL: Anticoagulation Reversal Emergency Plan",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -431,9 +431,9 @@
       "name": "VD-ANTICOAG-REVERSAL"
     },
     {
-      "bodyEndLine": 15756,
-      "bodyStartLine": 15733,
-      "commentLine": 15724,
+      "bodyEndLine": 15759,
+      "bodyStartLine": 15736,
+      "commentLine": 15727,
       "commentLiteral": "// VD-TRANSCATHETER-MV: Transcatheter Mitral Intervention Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -442,9 +442,9 @@
       "name": "VD-TRANSCATHETER-MV"
     },
     {
-      "bodyEndLine": 15788,
-      "bodyStartLine": 15766,
-      "commentLine": 15758,
+      "bodyEndLine": 15791,
+      "bodyStartLine": 15769,
+      "commentLine": 15761,
       "commentLiteral": "// VD-RHC: Right Heart Catheterization for Valve + PH",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -453,9 +453,9 @@
       "name": "VD-RHC"
     },
     {
-      "bodyEndLine": 15825,
-      "bodyStartLine": 15803,
-      "commentLine": 15790,
+      "bodyEndLine": 15828,
+      "bodyStartLine": 15806,
+      "commentLine": 15793,
       "commentLiteral": "// VD-VALVE-CLINIC: Multidisciplinary Valve Clinic Referral",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -464,9 +464,9 @@
       "name": "VD-VALVE-CLINIC"
     },
     {
-      "bodyEndLine": 15861,
-      "bodyStartLine": 15837,
-      "commentLine": 15832,
+      "bodyEndLine": 15864,
+      "bodyStartLine": 15840,
+      "commentLine": 15835,
       "commentLiteral": "// VD-ECHO-INTERVAL: Echo Surveillance Interval Adherence",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -475,9 +475,9 @@
       "name": "VD-ECHO-INTERVAL"
     },
     {
-      "bodyEndLine": 15893,
-      "bodyStartLine": 15865,
-      "commentLine": 15863,
+      "bodyEndLine": 15896,
+      "bodyStartLine": 15868,
+      "commentLine": 15866,
       "commentLiteral": "// VD-FUNCTIONAL-STATUS: Functional Status Assessment in Valve Disease",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -486,9 +486,9 @@
       "name": "VD-FUNCTIONAL-STATUS"
     },
     {
-      "bodyEndLine": 15922,
-      "bodyStartLine": 15897,
-      "commentLine": 15895,
+      "bodyEndLine": 15925,
+      "bodyStartLine": 15900,
+      "commentLine": 15898,
       "commentLiteral": "// VD-PREOP-ASSESSMENT: Preoperative Assessment for Valve Surgery",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -497,9 +497,9 @@
       "name": "VD-PREOP-ASSESSMENT"
     },
     {
-      "bodyEndLine": 15954,
-      "bodyStartLine": 15926,
-      "commentLine": 15924,
+      "bodyEndLine": 15957,
+      "bodyStartLine": 15929,
+      "commentLine": 15927,
       "commentLiteral": "// VD-PULMONARY-HTN: Pulmonary Hypertension Screen in Valve Disease",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -508,9 +508,9 @@
       "name": "VD-PULMONARY-HTN"
     },
     {
-      "bodyEndLine": 15986,
-      "bodyStartLine": 15958,
-      "commentLine": 15956,
+      "bodyEndLine": 15989,
+      "bodyStartLine": 15961,
+      "commentLine": 15959,
       "commentLiteral": "// VD-TRICUSPID-SECONDARY: Secondary Tricuspid Regurgitation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -519,9 +519,9 @@
       "name": "VD-TRICUSPID-SECONDARY"
     },
     {
-      "bodyEndLine": 16022,
-      "bodyStartLine": 15990,
-      "commentLine": 15988,
+      "bodyEndLine": 16025,
+      "bodyStartLine": 15993,
+      "commentLine": 15991,
       "commentLiteral": "// VD-ANTIPLATELET-BIOPROSTHETIC: Antiplatelet After Bioprosthetic Valve >3 Months",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [

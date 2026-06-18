@@ -201,7 +201,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     expect(registry.length).toBe(count);
   });
 
-  it('VHD evaluator extraction includes VD-PANNUS at line 15602', () => {
+  it('VHD evaluator extraction includes VD-PANNUS at line 15567', () => {
     // AUDIT-110 line-pinned-assertion recurrence: the v3.0 HF buildout shifted gapRuleEngine.ts
     // (10806 -> 11015 -> 11134 ingest signature-expansion -> 12547 by the v3.0 HF FULL buildout
     // batch, 2026-06-15 -> 13601 by the v3.0 EP module buildout, 2026-06-16: 21 new EP evaluators +
@@ -210,7 +210,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(15564); // -> 15564 by CAD chunk 0 tightenings (2026-06-18, net -38 lines above VD-PANNUS); AUDIT-110 = content-anchor remediation scope
+    expect(pannus!.commentLine).toBe(15567); // -> 15567 by CAD chunk 0 + rehab-guard drop (2026-06-18); AUDIT-110 = content-anchor remediation scope
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });
