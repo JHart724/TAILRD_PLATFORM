@@ -1886,6 +1886,66 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'B-R',
   },
   {
+    id: 'gap-cad-013-fh-cascade',
+    name: 'Familial Hypercholesterolemia Cascade Screening',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2018 AHA/ACC Guideline on the Management of Blood Cholesterol',
+    guidelineVersion: '2018',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-18',
+    nextReviewDue: '2026-12-18',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-cad-009-apob',
+    name: 'Apolipoprotein B Residual-Risk Refinement',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2023 ACC/AHA Guideline for the Management of Patients With Chronic Coronary Disease',
+    guidelineVersion: '2023', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-18', nextReviewDue: '2026-12-18',
+    classOfRecommendation: '2a', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-cad-083-radiation-cad',
+    name: 'Radiation-Induced Coronary Disease Surveillance',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2023 ACC/AHA Chronic Coronary Disease Guideline; EACVI/ASE Radiation Heart Disease Consensus',
+    guidelineVersion: '2023', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-18', nextReviewDue: '2026-12-18',
+    classOfRecommendation: '2a', levelOfEvidence: 'C-EO',
+  },
+  {
+    id: 'gap-cad-084-vasculitis-cad',
+    name: 'Vasculitis-Associated Coronary Disease Management',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2021 ACR/VF Guideline for the Management of Vasculitis; 2023 ACC/AHA CCD',
+    guidelineVersion: '2021', guidelineOrg: 'ACR', lastReviewDate: '2026-06-18', nextReviewDue: '2026-12-18',
+    classOfRecommendation: '2a', levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-cad-085-stimulant-cad',
+    name: 'Stimulant-Associated Coronary Disease (BB-caution SAFETY)',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2008 AHA Scientific Statement on Cocaine-Associated Chest Pain and MI',
+    guidelineVersion: '2008', guidelineOrg: 'AHA', lastReviewDate: '2026-06-18', nextReviewDue: '2026-12-18',
+    classOfRecommendation: '2a', levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-cad-022-post-mi-icd',
+    name: 'Post-MI Primary-Prevention ICD Evaluation',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2017 AHA/ACC/HRS Guideline for Ventricular Arrhythmias and Sudden Cardiac Death',
+    guidelineVersion: '2017', guidelineOrg: 'AHA/ACC/HRS', lastReviewDate: '2026-06-18', nextReviewDue: '2026-12-18',
+    classOfRecommendation: '1', levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-cad-026-polyvascular',
+    name: 'Polyvascular Disease Comprehensive Secondary Prevention',
+    module: 'CORONARY_INTERVENTION',
+    guidelineSource: '2023 ACC/AHA Chronic Coronary Disease Guideline; 2024 ACC/AHA PAD Guideline',
+    guidelineVersion: '2023', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-18', nextReviewDue: '2026-12-18',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
     id: 'gap-cad-weight-mgmt',
     name: 'Weight Management in CAD + Obesity',
     module: 'CORONARY_INTERVENTION',
@@ -11144,32 +11204,13 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-IVUS: Intravascular Imaging for Left Main
-  // Guideline: 2021 ACC/AHA/SCAI Revascularization Guideline, Class 2a, LOE B-NR
-  // Left main CAD (I25.110) -- consider IVUS/OCT for PCI planning
-  const hasLeftMain = dxCodes.some(c => c.startsWith('I25.110'));
-  if (hasLeftMain && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    gaps.push({
-      type: TherapyGapType.SCREENING_DUE,
-      module: ModuleType.CORONARY_INTERVENTION,
-      status: 'Consider intravascular imaging for left main coronary disease',
-      target: 'IVUS or OCT guidance documented for PCI planning',
-      recommendations: {
-        action: 'Consider intravascular imaging (IVUS or OCT) to guide left main PCI per 2021 ACC/AHA/SCAI Guideline',
-        guideline: '2021 ACC/AHA/SCAI Revascularization Guideline',
-        note: 'Recommended for review: intravascular imaging improves outcomes for left main PCI',
-      },
-      evidence: {
-        triggerCriteria: [
-          'Left main coronary artery disease (I25.110)',
-        ],
-        guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization',
-        classOfRecommendation: 'Class 2a',
-        levelOfEvidence: 'LOE B-NR',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'CABG planned', 'Contrast allergy'],
-      },
-    });
-  }
+  // RETIRED 2026-06-18 (CAD close, AUDIT-182): the left-main IVUS rule is removed (firing + the I25.110 gate).
+  // It gated on hasLeftMain = I25.110, but section-16 (NLM) confirms I25.110 = "Atherosclerotic heart disease of
+  // native coronary artery with UNSTABLE ANGINA", NOT left main - so it over-fired "left-main IVUS guidance" for
+  // the entire unstable-angina cohort. Left-main disease has NO ICD-10 code (only I21.01 = acute STEMI involving
+  // the left main); it is an angiographic finding, not threaded. The IVUS-for-complex-PCI gaps (CAD-069/070) and
+  // the left-main heart-team gap (CAD-071) are reclassified SPEC_ONLY/Path-B pending an angiographic/procedure
+  // signal. The gap-cad-ivus registry entry is retained as a regOrphan for lineage.
 
   // CAD-FFR: Fractional Flow Reserve for Intermediate Lesions
   // Guideline: 2021 ACC/AHA/SCAI Revascularization Guideline (FAME, FAME 2), Class 1, LOE A
@@ -11516,6 +11557,225 @@ export function evaluateGapRules(
         },
       });
     }
+  }
+
+  // CAD-FH-CASCADE: Familial hypercholesterolemia suspicion (severe LDL) without FH evaluation (CAD-013)
+  // CAD chunk 1 buildout (2026-06-18). Guideline: 2018 AHA/ACC Cholesterol Guideline (Class 1 maximally-tolerated
+  // statin for LDL >= 190; cascade screening of first-degree relatives) + 2023 ACC/AHA Chronic Coronary Disease.
+  // section-16-verified: FH ICD E78.010 (HoFH) / E78.011 (HeFH) / E78.019 (FH unspecified) -> E78.01 prefix
+  // (NLM 2026-06-18); LDL threaded via labValues['ldl'] (LOINC 13457-7 / 18262-6). Threshold: LDL >= 190 mg/dL
+  // is the FH-suspicion cut. Subgroup-aware: the FH-specific action is CASCADE SCREENING of first-degree
+  // relatives + genetic testing (autosomal-dominant, ~50% relative risk), NOT statin initiation alone.
+  const hasFHdx_CAD13 = dxCodes.some(c => c.startsWith('E78.01'));
+  const severeLDL_CAD13 = labValues['ldl'] !== undefined && labValues['ldl'] >= 190;
+  if (severeLDL_CAD13 && !hasFHdx_CAD13 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.SCREENING_DUE,
+      module: ModuleType.CORONARY_INTERVENTION,
+      status: 'Severe LDL elevation (>=190): familial hypercholesterolemia evaluation and cascade screening gap',
+      target: 'FH evaluation (clinical criteria / genetic testing) + cascade screening of first-degree relatives + high-intensity lipid-lowering',
+      recommendations: {
+        action: 'Consider familial hypercholesterolemia evaluation (Dutch Lipid Clinic criteria / genetic testing) with cascade screening of first-degree relatives, alongside high-intensity statin and PCSK9i consideration, for this patient with LDL >= 190 mg/dL per 2018 AHA/ACC Cholesterol Guideline',
+        guideline: '2018 AHA/ACC Cholesterol Guideline; 2023 ACC/AHA Chronic Coronary Disease Guideline',
+        note: 'Subgroup-aware: the FH-specific action is CASCADE SCREENING of first-degree relatives + genetic testing, not statin initiation alone. Fires on suspected/un-worked-up FH (LDL >= 190 without an FH diagnosis E78.01x already coded). Path-B: a secondary-cause exclusion (nephrotic / hypothyroid) and the untreated-vs-on-treatment distinction are not threaded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          `LDL: ${labValues['ldl']} mg/dL (>= 190, the FH-suspicion threshold)`,
+          'No familial hypercholesterolemia diagnosis (E78.010 / E78.011 / E78.019) yet coded',
+        ],
+        guidelineSource: '2018 AHA/ACC Guideline on the Management of Blood Cholesterol',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'FH already evaluated/diagnosed (E78.01x)', 'Secondary cause of severe hypercholesterolemia (nephrotic, hypothyroid)'],
+      },
+    });
+  }
+
+  // CAD-APOB: Apolipoprotein B residual-risk refinement (CAD-009)
+  // CAD chunk 1 buildout (2026-06-18). Guideline: 2023 ACC/AHA Chronic Coronary Disease Guideline (ApoB as a
+  // secondary / residual-risk measurement, esp. with hypertriglyceridemia / metabolic syndrome where LDL
+  // underestimates atherogenic particle burden). section-16: ApoB LOINC 1884-6 (NLM-verified), threaded by the
+  // slug-thread (AUDIT-181) to labValues['apob'] on both FHIR + CSV. Threshold: on-treatment ApoB >= 90 mg/dL is
+  // above the high-risk on-treatment goal (<90; ApoB 90 ~ LDL 100 ~ non-HDL 130) = residual atherogenic burden.
+  // Subgroup: ApoB is an ON-TREATMENT residual marker (gated on on-statin), NOT a primary screen.
+  const STATIN_CODES_APOB = ['83367', '301542', '36567', '42463', '861634'];
+  const onStatinApoB = medCodes.some(c => STATIN_CODES_APOB.includes(c));
+  if (hasCAD && onStatinApoB && labValues['apob'] !== undefined && labValues['apob'] >= 90 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.CORONARY_INTERVENTION,
+      status: 'Elevated apolipoprotein B (>=90 mg/dL) on statin: residual atherogenic risk gap',
+      target: 'Intensify lipid-lowering to lower the residual atherogenic particle burden (ApoB)',
+      recommendations: {
+        action: 'Consider intensifying lipid-lowering therapy (high-intensity statin / ezetimibe / PCSK9i) for residual atherogenic risk - apolipoprotein B >= 90 mg/dL on statin indicates persistent atherogenic particle burden despite treatment, per 2023 ACC/AHA Chronic Coronary Disease Guideline',
+        guideline: '2023 ACC/AHA Chronic Coronary Disease Guideline',
+        note: 'Subgroup-aware: ApoB is an ON-TREATMENT residual-risk refinement (the gap fires only on a statin), most informative when LDL/non-HDL appear at goal but atherogenic burden persists (hypertriglyceridemia / metabolic syndrome). Path-B: the LDL/non-HDL-at-goal discordance is not cross-checked; the ApoB elevation itself is the trigger.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Coronary artery disease (I25.*)',
+          'On a statin (residual on-treatment marker)',
+          `Apolipoprotein B: ${labValues['apob']} mg/dL (>= 90, above the high-risk on-treatment goal)`,
+        ],
+        guidelineSource: '2023 ACC/AHA Guideline for the Management of Patients With Chronic Coronary Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // CAD-RADIATION-CAD: Radiation-induced coronary disease - aggressive risk-factor + surveillance (CAD-083)
+  // Guideline: 2023 ACC/AHA CCD + 2013 EACVI/ASE expert consensus on radiation heart disease. Prior chest/
+  // mediastinal irradiation accelerates CAD (proximal/ostial, often clinically silent), warranting aggressive
+  // secondary prevention + functional/anatomic surveillance. section-16: Z92.3 personal history of irradiation
+  // (NLM-verified).
+  const hasRadiationHx_CAD = dxCodes.some(c => c.startsWith('Z92.3'));
+  if (hasRadiationHx_CAD && hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.FOLLOWUP_OVERDUE,
+      module: ModuleType.CORONARY_INTERVENTION,
+      status: 'Radiation-induced coronary disease: aggressive risk-factor modification + surveillance gap',
+      target: 'Aggressive secondary prevention + functional/anatomic ischemia surveillance for radiation-induced CAD',
+      recommendations: {
+        action: 'Consider aggressive risk-factor modification and periodic functional or anatomic ischemia surveillance for radiation-induced coronary disease (accelerated, often ostial/proximal and clinically silent) per 2023 ACC/AHA CCD and the EACVI/ASE radiation-heart-disease consensus',
+        guideline: '2023 ACC/AHA Chronic Coronary Disease Guideline; 2013 EACVI/ASE Radiation Heart Disease Consensus',
+        note: 'Radiation CAD is accelerated and frequently silent; the surveillance interval and modality are individualized (Path-B: radiation dose / field / interval are not threaded).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Prior irradiation (Z92.3)',
+          'Coronary artery disease (I25.*)',
+        ],
+        guidelineSource: '2023 ACC/AHA Guideline for Chronic Coronary Disease; EACVI/ASE Radiation Heart Disease Consensus',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C-EO',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // CAD-VASCULITIS-CAD: Vasculitis-associated coronary disease - distinct management (CAD-084)
+  // Guideline: 2021 ACR vasculitis guidelines + 2023 ACC/AHA CCD. Coronary involvement in systemic vasculitis
+  // (Takayasu, GCA, PAN, Kawasaki) is inflammatory/aneurysmal, NOT atherosclerotic - management couples
+  // immunosuppression/disease control with the coronary care. section-16: M30.x (PAN M30.0, Kawasaki M30.3),
+  // M31.x (Takayasu M31.4, GCA M31.5/M31.6) - NLM-verified.
+  const hasVasculitis_CAD = dxCodes.some(c => c.startsWith('M30') || c.startsWith('M31'));
+  if (hasVasculitis_CAD && hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.REFERRAL_NEEDED,
+      module: ModuleType.CORONARY_INTERVENTION,
+      status: 'Vasculitis-associated coronary disease: vasculitis-specific coordinated management gap',
+      target: 'Coordinated rheumatology + cardiology management of vasculitis coronary involvement (disease control, not atherosclerotic pathway alone)',
+      recommendations: {
+        action: 'Consider coordinated rheumatology and cardiology evaluation for vasculitis-associated coronary involvement - inflammatory/aneurysmal coronary disease in systemic vasculitis (Takayasu / GCA / PAN / Kawasaki) requires immunosuppression and disease-activity control alongside coronary care, distinct from the atherosclerotic pathway, per 2021 ACR vasculitis guidance',
+        guideline: '2021 ACR Vasculitis Guidelines; 2023 ACC/AHA Chronic Coronary Disease',
+        note: 'Subgroup-aware: vasculitis coronary disease management differs from atherosclerotic CAD (anti-inflammatory + disease control). Path-B: disease-activity markers (ESR/CRP serial) are not gated here.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Systemic vasculitis (M30.x / M31.x)',
+          'Coronary artery disease (I25.*)',
+        ],
+        guidelineSource: '2021 ACR/VF Guideline for the Management of Vasculitis; 2023 ACC/AHA CCD',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // CAD-STIMULANT-CAD: Cocaine/methamphetamine-associated coronary disease (CAD-085) - SAFETY subgroup (BB caution)
+  // Guideline: 2008 AHA Scientific Statement on cocaine-associated chest pain + 2023 ACC/AHA CCD. section-16:
+  // F14.x cocaine, F15.x other stimulant (incl methamphetamine) - NLM-verified. SAFETY: the management is
+  // substance-cessation + acutely benzodiazepines / nitrates / CCB; BETA-BLOCKERS are cautioned acutely
+  // (unopposed alpha-adrenergic coronary vasoconstriction) - the recommendation must NOT blanket BB.
+  const hasStimulantUse_CAD = dxCodes.some(c => c.startsWith('F14') || c.startsWith('F15'));
+  const hasAnginaOrCAD_stim = hasCAD || dxCodes.some(c => c.startsWith('I20'));
+  if (hasStimulantUse_CAD && hasAnginaOrCAD_stim && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.SAFETY_ALERT,
+      module: ModuleType.CORONARY_INTERVENTION,
+      status: 'Stimulant-associated coronary disease: substance cessation + beta-blocker-caution SAFETY review',
+      target: 'Substance-use cessation/treatment + a management plan that accounts for the cocaine/stimulant beta-blocker caution',
+      recommendations: {
+        action: 'Consider substance-use cessation counseling/treatment and a coronary management plan that accounts for the stimulant-specific caution - in cocaine/methamphetamine-associated ischemia, benzodiazepines, nitrates and calcium channel blockers are preferred acutely and beta-blockers are cautioned (unopposed alpha-adrenergic coronary vasoconstriction), per the 2008 AHA Scientific Statement and 2023 ACC/AHA CCD',
+        guideline: '2008 AHA Scientific Statement on Cocaine-Associated Chest Pain; 2023 ACC/AHA Chronic Coronary Disease',
+        note: 'SAFETY subgroup: do NOT blanket-recommend a beta-blocker in active cocaine/stimulant use (unopposed-alpha concern); CCB / benzodiazepine / nitrate are the preferred acute agents. Substance cessation is the primary intervention.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Cocaine (F14.x) or other stimulant / methamphetamine (F15.x) use',
+          'Coronary artery disease (I25.*) or angina (I20.*)',
+        ],
+        guidelineSource: '2008 AHA Scientific Statement on Management of Cocaine-Associated Chest Pain and Myocardial Infarction',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // CAD-POST-MI-ICD: Post-MI primary-prevention ICD evaluation for reduced LVEF (CAD-022)
+  // Guideline: 2017 AHA/ACC/HRS VA/SCD Guideline (Class 1 ICD for LVEF <=35% at >=40 days post-MI / >=90 days
+  // post-revasc, NYHA II-III) + MADIT-II / SCD-HeFT. section-16: MI I21/I22 (acute) or I25.2 (old); LVEF threaded.
+  const hasMI_ICD = hasRecentMI || dxCodes.some(c => c.startsWith('I25.2'));
+  if (hasMI_ICD && labValues['lvef'] !== undefined && labValues['lvef'] <= 35 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.DEVICE_ELIGIBLE,
+      module: ModuleType.CORONARY_INTERVENTION,
+      status: 'Post-MI with LVEF <=35%: primary-prevention ICD evaluation gap',
+      target: 'Primary-prevention ICD evaluation (after the guideline waiting period) for post-MI reduced LVEF',
+      recommendations: {
+        action: 'Consider primary-prevention ICD evaluation for post-MI patients with LVEF <=35% per 2017 AHA/ACC/HRS guideline (MADIT-II / SCD-HeFT), after confirming the >=40-day post-MI (or >=90-day post-revascularization) waiting period and reassessing LVEF',
+        guideline: '2017 AHA/ACC/HRS Guideline for Ventricular Arrhythmias and Sudden Cardiac Death',
+        note: 'Subgroup-aware: the >=40-day post-MI / >=90-day post-revascularization waiting period and the post-period LVEF reassessment are required before implant - Path-B: event timing is not threaded, so this surfaces the LVEF<=35 post-MI population for the timing-gated evaluation rather than asserting immediate eligibility.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Myocardial infarction (acute I21/I22 or old I25.2)',
+          `LVEF: ${labValues['lvef']}% (<=35)`,
+        ],
+        guidelineSource: '2017 AHA/ACC/HRS Guideline for Management of Patients With Ventricular Arrhythmias and the Prevention of Sudden Cardiac Death',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Within the post-MI/post-revasc waiting period', 'ICD already in place (Z95.810)'],
+      },
+    });
+  }
+
+  // CAD-POLYVASCULAR: 3-territory polyvascular disease - comprehensive intensified secondary prevention (CAD-026)
+  // Guideline: 2023 ACC/AHA CCD + 2024 ACC/AHA PAD (polyvascular disease = very-high-risk; aggressive secondary
+  // prevention is Class 1). Fires on the high-burden 3-bed pattern (coronary + peripheral + cerebrovascular).
+  // section-16: PAD I70.2/I73.9; cerebrovascular I63 (infarction) / I65 (precerebral occlusion-stenosis) /
+  // Z86.73 (history of stroke/TIA) - NLM-verified. Reconciliation: the COMPASS rivaroxaban-specific axis is owned
+  // by CAD-027 (PV-RIVAROXABAN); this gap is the comprehensive-intensification flag, not the rivaroxaban drug gap.
+  const hasPAD_026 = dxCodes.some(c => c.startsWith('I70.2') || c.startsWith('I73.9'));
+  const hasCerebrovascular_026 = dxCodes.some(c => c.startsWith('I63') || c.startsWith('I65') || c.startsWith('Z86.73'));
+  if (hasCAD && hasPAD_026 && hasCerebrovascular_026 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.CORONARY_INTERVENTION,
+      status: 'Polyvascular disease (3 territories): comprehensive intensified secondary-prevention gap',
+      target: 'Comprehensive very-high-risk secondary prevention for 3-territory polyvascular disease (high-intensity statin, antithrombotic intensification, BP and glycemic control)',
+      recommendations: {
+        action: 'Consider comprehensive intensified secondary prevention for this very-high-risk 3-territory polyvascular patient (coronary + peripheral + cerebrovascular): high-intensity statin to an aggressive LDL goal, antithrombotic intensification (consider the COMPASS rivaroxaban 2.5 mg BID + aspirin dual-pathway, see CAD-027), and tight blood-pressure and glycemic control, per 2023 ACC/AHA CCD and 2024 ACC/AHA PAD',
+        guideline: '2023 ACC/AHA Chronic Coronary Disease Guideline; 2024 ACC/AHA PAD Guideline',
+        note: 'Reconciliation (overlap): the COMPASS rivaroxaban drug-specific gap is CAD-027 (satisfied by the PV-RIVAROXABAN rule); this gap is the higher-level comprehensive-intensification flag for the 3-bed polyvascular burden - the co-fire is complementary (bundle vs drug), not redundant.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Coronary artery disease (I25.*)',
+          'Peripheral artery disease (I70.2 / I73.9)',
+          'Cerebrovascular disease (I63 / I65 / Z86.73)',
+        ],
+        guidelineSource: '2023 ACC/AHA Guideline for Chronic Coronary Disease; 2024 ACC/AHA/SVM/SCAI Lower Extremity PAD Guideline',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
   }
 
   // CAD-WEIGHT-MGMT: Weight Management in CAD + Obesity

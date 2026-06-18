@@ -47,6 +47,7 @@ export const CAD_COLUMNS: CSVColumn[] = [
   { name: 'ldl', required: false, type: 'number' },
   { name: 'lpa', required: false, type: 'number' },
   { name: 'triglycerides', required: false, type: 'number' },
+  { name: 'apob', required: false, type: 'number' },
 ];
 
 export const SH_COLUMNS: CSVColumn[] = [

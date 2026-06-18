@@ -62,7 +62,10 @@ describe('AUDIT-118 coverage guard - asset covers every medication code the live
   //   CIED_EXTRACTION_CPT / LAAC_CPT - matched against procedureCodes (PR #396), never medCodes, so they never
   //   reach expandToIngredients; they are quoted 5-digit literals only the static scan sees.
   const CPT_CODES = ['93653', '93654', '93656', '33206', '33207', '33208', '33249', '33270', '33274', '33244', '33241', '33234', '33235', '33340'];
-  const NON_DRUG_LITERALS = new Set(['2010', '2012', '2013', '2014', '2016', '2022', '2024', ...CPT_CODES]);
+  // '2008' = guidelineVersion year of the 2008 AHA cocaine-chest-pain Scientific Statement (CAD-085, CAD chunk 1);
+  // a non-RxCUI year literal caught by the registry-array static scan (the other registry years are coincidental
+  // valid RxCUIs already in the IN-map). Allowlisted here, same as the other guideline-year false positives.
+  const NON_DRUG_LITERALS = new Set(['2008', '2010', '2012', '2013', '2014', '2016', '2022', '2024', ...CPT_CODES]);
 
   const QUOTED_RXCUI = /'(\d{3,7})'/g;
 
