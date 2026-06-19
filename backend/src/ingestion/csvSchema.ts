@@ -15,6 +15,25 @@ export const COMMON_COLUMNS: CSVColumn[] = [
   { name: 'secondary_diagnoses', required: false, type: 'pipe_delimited' },
   { name: 'procedures', required: false, type: 'pipe_delimited' },
   { name: 'medications', required: false, type: 'pipe_delimited' },
+  // Hollow-DET_OK repair (AUDIT-184, 2026-06-19): cross-module labs/vitals + derived values the DET_OK rules gate
+  // on but were threaded in NEITHER path. COMMON so every module CSV carries them; the 12 labs/vitals are also
+  // FHIR-mapped (observationService, NLM-verified LOINCs). cac_score/stress_test_months/ccta/graft_duplex_months
+  // are CSV-only (derived/temporal/presence; no verifiable observation LOINC, per the LVESD no-guess rule).
+  { name: 'heart_rate', required: false, type: 'number', validation: { min: 0, max: 300 } },
+  { name: 'systolic_bp', required: false, type: 'number', validation: { min: 0, max: 300 } },
+  { name: 'diastolic_bp', required: false, type: 'number', validation: { min: 0, max: 200 } },
+  { name: 'hemoglobin', required: false, type: 'number', validation: { min: 0, max: 25 } },
+  { name: 'hba1c', required: false, type: 'number', validation: { min: 0, max: 20 } },
+  { name: 'tsh', required: false, type: 'number', validation: { min: 0, max: 100 } },
+  { name: 'creatinine', required: false, type: 'number', validation: { min: 0, max: 20 } },
+  { name: 'crp', required: false, type: 'number', validation: { min: 0, max: 500 } },
+  { name: 'hs_crp', required: false, type: 'number', validation: { min: 0, max: 100 } },
+  { name: 'alt', required: false, type: 'number', validation: { min: 0, max: 5000 } },
+  { name: 'ast', required: false, type: 'number', validation: { min: 0, max: 5000 } },
+  { name: 'cac_score', required: false, type: 'number', validation: { min: 0, max: 10000 } },
+  { name: 'stress_test_months', required: false, type: 'number', validation: { min: 0, max: 600 } },
+  { name: 'ccta', required: false, type: 'number', validation: { min: 0, max: 1 } },
+  { name: 'graft_duplex_months', required: false, type: 'number', validation: { min: 0, max: 600 } },
 ];
 
 export const HF_COLUMNS: CSVColumn[] = [

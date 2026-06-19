@@ -109,6 +109,14 @@ export async function writePatients(
         'tr_regurg_grade', 'tr_regurg_vmax', 'mitral_vena_contracta', 'aortic_vena_contracta', 'tricuspid_vena_contracta',
         // chunk-3 acceptance + chunk-4 path-prep
         'mitral_eroa', 'pasp', 'ascending_aorta',
+        // Hollow-DET_OK repair (AUDIT-184, 2026-06-19): labs/vitals the DET_OK rules gate on but were threaded in
+        // NEITHER path. LOINCs NLM-verified (heart_rate 8867-4, hemoglobin 718-7, hba1c 4548-4, tsh 3016-3,
+        // creatinine 2160-0, crp 1988-5, hs_crp 30522-7, alt 1742-6, ast 1920-8). lpa already present above
+        // (CAD-008 slug-name canonicalized to read 'lpa').
+        'heart_rate', 'systolic_bp', 'diastolic_bp', 'hemoglobin', 'hba1c', 'tsh', 'creatinine', 'crp', 'hs_crp', 'alt', 'ast',
+        // Derived/temporal/presence slugs - CSV-path only (cac_score is CT-derived; the others are months-since /
+        // procedure-presence). No verifiable observation LOINC -> FHIR mapping omitted per the LVESD no-guess rule.
+        'cac_score', 'stress_test_months', 'ccta', 'graft_duplex_months',
       ];
       const observationBatch: any[] = [];
       for (const field of labFields) {
@@ -227,6 +235,10 @@ function getUnit(field: string): string {
     pasp: 'mmHg',
     ascending_aorta: 'cm',
     inr: 'ratio',
+    // Hollow-DET_OK repair (AUDIT-184)
+    heart_rate: 'bpm', systolic_bp: 'mmHg', diastolic_bp: 'mmHg', hemoglobin: 'g/dL', hba1c: '%', tsh: 'mIU/L', creatinine: 'mg/dL',
+    crp: 'mg/L', hs_crp: 'mg/L', alt: 'U/L', ast: 'U/L',
+    cac_score: 'Agatston', stress_test_months: 'months', ccta: 'present', graft_duplex_months: 'months',
   };
   return units[field] || '';
 }
@@ -265,6 +277,13 @@ function getObservationName(field: string): string {
     pasp: 'Pulmonary Artery Systolic Pressure',
     ascending_aorta: 'Ascending Aorta Diameter',
     inr: 'International Normalized Ratio (INR)',
+    // Hollow-DET_OK repair (AUDIT-184)
+    heart_rate: 'Heart Rate', systolic_bp: 'Systolic Blood Pressure', diastolic_bp: 'Diastolic Blood Pressure',
+    hemoglobin: 'Hemoglobin', hba1c: 'Hemoglobin A1c', tsh: 'Thyrotropin (TSH)',
+    creatinine: 'Creatinine', crp: 'C-Reactive Protein', hs_crp: 'High-Sensitivity CRP',
+    alt: 'Alanine Aminotransferase (ALT)', ast: 'Aspartate Aminotransferase (AST)',
+    cac_score: 'Coronary Artery Calcium Score (Agatston)', stress_test_months: 'Months Since Stress Test',
+    ccta: 'Coronary CT Angiography (presence)', graft_duplex_months: 'Months Since Graft Duplex',
   };
   return names[field] || field;
 }

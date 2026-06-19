@@ -102,6 +102,22 @@ export const ECHO_LOINC_TO_SLUG: Record<string, string> = {
   // mapping the FHIR transform would persist observationType = the raw LOINC '1884-6' and threaded ApoB would
   // never reach the gap. Mapping 1884-6 -> 'apob' threads it (CSV path threaded separately in patientWriter).
   '1884-6': 'apob',                                                                   // Apolipoprotein B (NLM LOINC 1884-6, mass/volume mg/dL)
+  // Hollow-DET_OK repair (AUDIT-184, 2026-06-19, AUDIT-070/170/181 lineage): these labs/vitals were READ by
+  // currently-DET_OK rules but threaded in NEITHER path, so the rules were hollow - silent never-fire (gate
+  // requires the value) or always-over-fire (existence-proxy on an unthreaded slug). All LOINCs NLM-verified by
+  // exact-code lookup. Mapping LOINC->slug threads the FHIR persist site; the CSV path is threaded in patientWriter.
+  '8867-4': 'heart_rate',                                                             // Heart rate (NLM 8867-4)
+  '718-7': 'hemoglobin',                                                              // Hemoglobin [Mass/volume] in Blood (NLM 718-7)
+  '4548-4': 'hba1c',                                                                  // Hemoglobin A1c/Hemoglobin.total (NLM 4548-4)
+  '3016-3': 'tsh',                                                                    // Thyrotropin [Units/volume] Serum/Plasma (NLM 3016-3)
+  '2160-0': 'creatinine',                                                             // Creatinine [Mass/volume] Serum/Plasma (NLM 2160-0)
+  '1988-5': 'crp',                                                                    // C reactive protein [Mass/volume] (NLM 1988-5)
+  '30522-7': 'hs_crp',                                                                // hs-CRP [Mass/volume] high-sensitivity (NLM 30522-7)
+  '1742-6': 'alt',                                                                    // Alanine aminotransferase [Enzymatic activity/volume] (NLM 1742-6)
+  '1920-8': 'ast',                                                                    // Aspartate aminotransferase [Enzymatic activity/volume] (NLM 1920-8)
+  '10835-7': 'lpa',                                                                   // Lipoprotein a [Mass/volume] (NLM 10835-7) - CAD-008 slug-name canonicalization
+  '8480-6': 'systolic_bp',                                                            // Systolic blood pressure (NLM 8480-6) - HF-003 repair
+  '8462-4': 'diastolic_bp',                                                           // Diastolic blood pressure (NLM 8462-4)
 };
 
 const VITAL_SIGNS_CODES: Record<string, string[]> = {

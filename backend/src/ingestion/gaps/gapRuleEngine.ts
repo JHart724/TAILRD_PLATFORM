@@ -6883,7 +6883,7 @@ export function evaluateGapRules(
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const prematureASCVD = (gender === 'MALE' && age < 55) || (gender === 'FEMALE' && age < 65);
     if (prematureASCVD) {
-      const hasLpa = labValues['lipoprotein_a'] !== undefined;
+      const hasLpa = labValues['lpa'] !== undefined; // AUDIT-184 slug-name fix: the threaded slug is 'lpa', not 'lipoprotein_a' (was an always-over-fire hollow read)
       if (!hasLpa) {
         gaps.push({
           type: TherapyGapType.SCREENING_DUE,
