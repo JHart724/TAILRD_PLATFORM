@@ -52,8 +52,24 @@ describe('Structural: Gap rule engine integrity', () => {
     // - net +30: ~33 new SH evaluators across 7 chunks (AS/MR/TR severity, aortic syndromes + genetic dx,
     //   PFO/ASD/IE/PE/ACHD/masses, valve-procedure post-op, CPT-unblocked post-procedure) minus the 3 retired
     //   legacy over-detectors (SH-12 tricuspid AUDIT-167, SH-9 PFO + SH-ASD AUDIT-127/128).
+    // Then 356 -> 371 by the v3.0 VHD module close (2026-06-17, feat/vhd-chunk1-ar-severity):
+    // - net +15: +17 new VHD evaluators across 5 chunks (AR/mixed severity, prosthetic dysfunction, mech/bio
+    //   anticoag, IE-surgical-dx + rheumatic, pregnancy SAFETY + drug-induced surveillance) minus 2 retired
+    //   firings (VD-5 superseded by VHD-103, SH-012 superseded by VHD-068/011).
+    // Then 371 -> 370 by CAD chunk 0 tightenings (2026-06-18, feat/cad-chunk0-tightenings):
+    // - net -1: -2 retired dead-drug firings (nicorandil + trimetazidine, AUDIT-175) + 1 CAD-REHAB split into
+    //   post-CABG + post-MI (AUDIT-173).
+    // Then 370 -> 376 by CAD chunk 1 (2026-06-18, feat/cad-chunk1-lipid-risk):
+    // - net +6: +7 buildable lipid/risk/etiology gaps (CAD-013 FH + CAD-009 ApoB + CAD-083/084/085/022/026)
+    //   minus 1 retired left-main IVUS over-detector (CAD-IVUS, AUDIT-182, wrong I25.110 code).
+    // Then 376 -> 377 by PV chunk 0 (2026-06-18, feat/pv-chunk0-tightenings):
+    // - net +1: the foundational gap-pv-003-abnormal-abi build (abnormal ABI <=0.90 without coded PAD, AUDIT-179);
+    //   the 5 over-credit tightenings (AUDIT-178/180) edit existing rules, they do not add or remove firings.
+    // Then 377 -> 384 by PV chunk 1 (2026-06-18, same branch):
+    // - net +7: PV-004 (non-compressible ABI), PV-034 (FMD screen), PV-038 (Takayasu immunosuppression),
+    //   PV-040 (GCA steroid), PV-041 (Buerger cessation), PV-058 (symptomatic carotid), PV-062 (ICAS SAMMPRIS).
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(356);
+    expect(count).toBe(384);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

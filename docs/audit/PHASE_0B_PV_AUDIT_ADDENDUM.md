@@ -2,13 +2,13 @@
 
 **Module:** Peripheral Vascular (PV)
 **Spec source:** `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md` §6.6
-**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=33, evaluator=33, gapsPush=33)
+**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=41, evaluator=41, gapsPush=41)
 **Crosswalk:** `docs/audit/canonical/PV.crosswalk.json` (auditMethod: rule-body-citation-AUDIT-030D)
 **Audit date:** 2026-05-04
 
 ## 1. Summary
 
-Peripheral Vascular has **105 spec gaps** across 20 subcategories. Implementation: **16 DET_OK + 14 PARTIAL + 75 SPEC_ONLY** (any-coverage: 30/105 = 28.6%).
+Peripheral Vascular has **105 spec gaps** across 20 subcategories. Implementation: **21 DET_OK + 14 PARTIAL + 70 SPEC_ONLY** (any-coverage: 35/105 = 33.3%).
 
 **Tier 1 priority status:** 1 DET_OK + 2 PARTIAL + 4 SPEC_ONLY of 7 T1 gaps (T1 any-coverage: 42.9%).
 
@@ -21,9 +21,9 @@ Peripheral Vascular has **105 spec gaps** across 20 subcategories. Implementatio
 | Classification | Count | % of total |
 |---|---:|---:|
 | PRODUCTION_GRADE | 0 | 0.0% |
-| DET_OK | 16 | 15.2% |
+| DET_OK | 21 | 20.0% |
 | PARTIAL_DETECTION | 14 | 13.3% |
-| SPEC_ONLY | 75 | 71.4% |
+| SPEC_ONLY | 70 | 66.7% |
 | **Total** | **105** | **100.0%** |
 
 **PRODUCTION_GRADE = 0** is platform-wide; gated on closure of AUDIT-001 P0 (test coverage gap). Per AUDIT_METHODOLOGY.md §3.1, no rule classifies PRODUCTION_GRADE until the platform testing baseline is established.
@@ -35,9 +35,9 @@ Peripheral Vascular has **105 spec gaps** across 20 subcategories. Implementatio
 | Tier | Total | DET_OK | PARTIAL | SPEC_ONLY | Any-coverage % |
 |------|------:|-------:|--------:|----------:|---------------:|
 | **T1** | 7 | 1 | 2 | 4 | 42.9% |
-| **T2** | 82 | 14 | 10 | 58 | 29.3% |
+| **T2** | 82 | 19 | 10 | 53 | 35.4% |
 | **T3** | 16 | 1 | 2 | 13 | 18.8% |
-| **Overall** | **105** | **16** | **14** | **75** | **28.6%** |
+| **Overall** | **105** | **21** | **14** | **70** | **33.3%** |
 
 ---
 
@@ -45,17 +45,17 @@ Peripheral Vascular has **105 spec gaps** across 20 subcategories. Implementatio
 
 | Subcategory | T1/T2/T3 | DET_OK | PARTIAL | SPEC_ONLY | Coverage |
 |---|---|---:|---:|---:|---:|
-| PAD Detection (7) | 0/7/0 | 0 | 3 | 4 | 42.9% |
+| PAD Detection (7) | 0/7/0 | 1 | 3 | 3 | 57.1% |
 | PAD Prevention (9) | 1/8/0 | 7 | 2 | 0 | 100.0% |
-| CLTI (6) | 2/4/0 | 0 | 2 | 4 | 33.3% |
-| TASC Staging (5) | 0/5/0 | 0 | 1 | 4 | 20.0% |
+| CLTI (6) | 2/4/0 | 0 | 1 | 5 | 16.7% |
+| TASC Staging (5) | 0/5/0 | 0 | 0 | 5 | 0.0% |
 | Mesenteric Ischemia (5) | 0/5/0 | 0 | 1 | 4 | 20.0% |
-| Renal Artery (4) | 0/4/0 | 1 | 0 | 3 | 25.0% |
-| Vasculitis (6) | 0/6/0 | 0 | 0 | 6 | 0.0% |
+| Renal Artery (4) | 0/4/0 | 1 | 1 | 2 | 50.0% |
+| Vasculitis (6) | 0/6/0 | 3 | 0 | 3 | 50.0% |
 | Upper Extremity (5) | 0/5/0 | 1 | 0 | 4 | 20.0% |
 | Raynaud (3) | 0/2/1 | 0 | 1 | 2 | 33.3% |
 | AAA (7) | 2/2/3 | 1 | 0 | 6 | 14.3% |
-| Carotid/CVA (5) | 1/4/0 | 0 | 1 | 4 | 20.0% |
+| Carotid/CVA (5) | 1/4/0 | 1 | 2 | 2 | 60.0% |
 | Venous Disease (9) | 0/9/0 | 3 | 1 | 5 | 44.4% |
 | PE Risk Strat (6) | 0/6/0 | 1 | 0 | 5 | 16.7% |
 | CTEPH (4) | 1/3/0 | 0 | 0 | 4 | 0.0% |
@@ -74,9 +74,9 @@ Peripheral Vascular has **105 spec gaps** across 20 subcategories. Implementatio
 
 | GAP-ID | Spec line | Subcategory | Detection Logic (excerpt) | Spec SAFETY | BSW pathway |
 |---|---:|---|---|---|---|
+| GAP-PV-018 | 956 | CLTI | CLTI + intervention without documented strategy | — | — |
 | GAP-PV-055 | 1017 | AAA | AAA>=5.5 cm male without surgical/endo referral | — | — |
 | GAP-PV-056 | 1018 | AAA | AAA>=5.0 cm female without surgical/endo referral | — | — |
-| GAP-PV-058 | 1028 | Carotid/CVA | Recent stroke/TIA + carotid stenosis>=70% without revasc within 2 weeks | — | — |
 | GAP-PV-079 | 1060 | CTEPH | CTEPH dx without pulmonary thromboendarterectomy eligibility assessment | — | — |
 
 ---
@@ -91,12 +91,12 @@ No EXTRA rules or architectural patterns surfaced. Reconciliation is clean.
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-PV-011 | 942 | DET_OK | `gap-pv-rivaroxaban` (PV-RIVAROXABAN @15397-15425) | auto-verify: preserved-from-addendum |
-| GAP-PV-017 | 955 | PARTIAL_DETECTION | `gap-pv-bypass-eval` (PV-BYPASS-EVAL @15462-15488) | auto-verify: preserved-from-addendum |
-| GAP-PV-018 | 956 | PARTIAL_DETECTION | `gap-pv-bypass-eval` (PV-BYPASS-EVAL @15462-15488) | auto-verify: preserved-from-addendum |
+| GAP-PV-011 | 942 | DET_OK | `gap-pv-rivaroxaban` (PV-RIVAROXABAN @16441-16469) | auto-verify: preserved-from-addendum |
+| GAP-PV-017 | 955 | PARTIAL_DETECTION | `gap-pv-bypass-eval` (PV-BYPASS-EVAL @16506-16532) | auto-verify: preserved-from-addendum |
+| GAP-PV-018 | 956 | SPEC_ONLY | — | MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-180): PARTIAL -> SPEC_ONLY. GAP-PV-018 ("CLTI endovasc |
 | GAP-PV-055 | 1017 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-PV-056 | 1018 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-PV-058 | 1028 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
+| GAP-PV-058 | 1028 | PARTIAL_DETECTION | `gap-pv-058-symptomatic-carotid-revasc` (PV-058 @17168-17190) | MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> PARTIAL. Built gap-pv-058-symptomatic-carotid- |
 | GAP-PV-079 | 1060 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 
 ---
@@ -119,11 +119,11 @@ No T1 SPEC_ONLY gaps carry literal BSW pathway tags in CK v4.0 spec text. Pathwa
 
 ## 7. Working hypothesis verdict
 
-**For PV:** Light implementation coverage; significant v2.0 Phase 1 build work required.
+**For PV:** Moderate implementation coverage; medication/screening surfaces typically built, procedural surfaces often lighter.
 
-Coverage data: 30/105 any-coverage (28.6%); 16/105 DET_OK only (15.2%); 14 PARTIAL via broad-rule consolidation or partial-trigger match; 75 SPEC_ONLY.
+Coverage data: 35/105 any-coverage (33.3%); 21/105 DET_OK only (20.0%); 14 PARTIAL via broad-rule consolidation or partial-trigger match; 70 SPEC_ONLY.
 
-Rules-per-DET_OK efficiency: 33 registry rules / 16 DET_OK = 2.06.
+Rules-per-DET_OK efficiency: 41 registry rules / 21 DET_OK = 1.95.
 
 ---
 
@@ -140,7 +140,25 @@ Cross-module satisfaction (HF Device Therapy → EP CRT/ICD pattern; CAD-027 →
 
 ## 9. Module-specific findings
 
-No manual classification overrides for this module.
+### Manual classification overrides (15)
+
+Rows where the auto-classifier was wrong and the audit author corrected the classification with explicit reasoning:
+
+- **GAP-PV-003** (T2, DET_OK, `gap-pv-003-abnormal-abi` (PV-003)): MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-179 RESOLVED): foundational build + re-cite. GAP-PV-003 ("Abnormal ABI <=0.90 without coded PAD") was MIScited by fuzzy name-match to gap-pv-3-antiplatelet (a different concept); no rule read an ABI VALUE threshold. Built gap-pv-003-abnormal-abi (abi_left/abi_right <= 0.90 + !hasPAD; ABI threaded both paths). The >1.40 non-compressible case is routed to PV-004 (not conflated). PARTIAL -> DET_OK.
+- **GAP-PV-004** (T2, PARTIAL_DETECTION, `gap-pv-004-noncompressible-abi` (PV-004)): MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> PARTIAL. Built gap-pv-004-noncompressible-abi (ABI >1.40 either leg -> non-compressible -> toe-brachial index). Completes the PV-003/004 ABI pair (disjoint ranges, no double-fire). PARTIAL not DET_OK: the spec qualifier "without TBI" is not threaded (TBI is not an ingested observation), so the rule fires on the non-compressible ABI alone and cannot confirm a TBI was not already done.
+- **GAP-PV-015** (T2, DET_OK, `gap-pv-6-diabetes-control` (PV-6)): MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-178 RESOLVED over-credit tightening): PV-6 previously fired on hba1c===undefined (existence-proxy, always-fire). Tightened to a real threshold (hba1c !== undefined && hba1c >= 7.0%, the standard ADA/ACC glycemic target) so only above-target patients fire. Holds DET_OK, now genuinely gated.
+- **GAP-PV-018** (T1, SPEC_ONLY, no cite): MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-180): PARTIAL -> SPEC_ONLY. GAP-PV-018 ("CLTI endovascular vs surgical decision, BEST-CLI") was over-matched to the generic gap-pv-bypass-eval rule, which does not encode the endovascular-vs-surgical decision logic (needs anatomic / conduit data not threaded). Cite dropped; PV-017 retains the bypass-eval cite.
+- **GAP-PV-024** (T2, SPEC_ONLY, no cite): MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-180): PARTIAL -> SPEC_ONLY. GAP-PV-024 ("TASC II C/D iliac: endovascular vs surgical bypass") was over-matched to the generic gap-pv-bypass-eval rule, which has no TASC II lesion-class or iliac-specific signal (anatomic data not threaded). Cite dropped; PV-017 retains the bypass-eval cite.
+- **GAP-PV-033** (T2, DET_OK, `gap-pv-12-renal-artery` (PV-12)): MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-178 RESOLVED over-credit tightening): PV-12 (resistant HTN -> renal-artery workup) previously fired without confirming resistant HTN. Tightened to require >= 3 concurrent antihypertensive classes (RAAS + beta-blocker + CCB + diuretic), the operational resistant-HTN definition. Holds DET_OK, now genuinely gated.
+- **GAP-PV-034** (T2, PARTIAL_DETECTION, `gap-pv-034-fmd-screening` (PV-034)): MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> PARTIAL. Built gap-pv-034-fmd-screening (HTN + age<35 + female + !I77.3). The population gate is fully threaded, but the spec qualifier "without FMD imaging screening" is proxied by diagnosis-absence (!I77.3) - a patient screened-and-negative (no I77.3 coded) would still fire - so PARTIAL not DET_OK. I77.3 NLM-verified.
+- **GAP-PV-038** (T2, DET_OK, `gap-pv-038-takayasu-immunosuppression` (PV-038)): MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> DET_OK. Built gap-pv-038-takayasu-immunosuppression (M31.4 + NOT on glucocorticoid or steroid-sparing, canonical RXNORM_CORTICOSTEROIDS/STEROID_SPARING). Dx + med gate both threaded; the "active" disease-activity qualifier is a documented Path-B refinement (ESR/CRP/imaging not threaded), per the CAD-022 DET_OK-with-Path-B precedent. M31.4 NLM-verified.
+- **GAP-PV-040** (T2, DET_OK, `gap-pv-040-gca-steroid` (PV-040)): MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> DET_OK. Built gap-pv-040-gca-steroid (M31.5/M31.6 + NOT on a glucocorticoid). Dx + med gate both threaded; vision-symptom acuity is a Path-B refinement. Distinct from PV-038 (Takayasu M31.4 - no code overlap). M31.5/M31.6 NLM-verified; tocilizumab (GiACTA) named in the recommendation.
+- **GAP-PV-041** (T2, DET_OK, `gap-pv-041-buerger-cessation` (PV-041)): MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> DET_OK. Built gap-pv-041-buerger-cessation (I73.1 + active tobacco use F17.*/Z72.0). Both signals threaded - clean gate. Subgroup: cessation-is-treatment (disease-modifying in Buerger), distinct from generic PAD cessation (PV-4). I73.1 NLM-verified.
+- **GAP-PV-058** (T1, PARTIAL_DETECTION, `gap-pv-058-symptomatic-carotid-revasc` (PV-058)): MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> PARTIAL. Built gap-pv-058-symptomatic-carotid-revasc (I65.2x + recent I63/G45). The SYMPTOMATIC gate (I63/G45) is threaded and precise (asymptomatic gates out - the standing subgroup-check), but the spec target severity ">=70%" is NOT codable from ICD-10 (I65.2x carries no percentage) and the 2-week timing is not threaded, so the rule fires on symptomatic stenosis of any severity -> PARTIAL. I65.21/22/23/29, I63, G45 NLM-verified.
+- **GAP-PV-062** (T2, DET_OK, `gap-pv-062-intracranial-stenosis-medical` (PV-062)): MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> DET_OK. Built gap-pv-062-intracranial-stenosis-medical (I67.2 + recent I63/G45 + NOT on antiplatelet OR NOT on statin). Dx + event + antithrombotic/statin absence all threaded (coarse but genuine gate); dual-vs-single antiplatelet and statin intensity are documented Path-B refinements. Subgroup: aggressive MEDICAL therapy, NOT stenting (SAMMPRIS). I67.2 NLM-verified.
+- **GAP-PV-071** (T2, DET_OK, `gap-pv-varicose` (PV-VARICOSE)): MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-178 RESOLVED over-credit tightening): PV-VARICOSE (spec = CEAP 3+ symptomatic) previously fired on bare I83 (incl asymptomatic I83.9). Tightened to the complicated/symptomatic subcodes I83.0/I83.1/I83.2/I83.8 (ulcer / inflammation / pain), excluding I83.9. Holds DET_OK.
+- **GAP-PV-076** (T2, DET_OK, `gap-pv-anticoag-vte` (PV-ANTICOAG-VTE)): MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-179 RESOLVED code-mismatch fix): PV-ANTICOAG-VTE (spec = post-PE anticoagulation duration) fired ONLY on I82 (DVT), MISSING the PE population (I26) entirely. Added I26 (PE) so the gap detects its spec population; I82 retained (VTE duration review applies to both). Holds DET_OK.
+- **GAP-PV-098** (T3, DET_OK, `gap-pv-graft-surveillance` (PV-GRAFT-SURVEILLANCE)): MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-178 RESOLVED interval build): PV-GRAFT-SURVEILLANCE previously fired on graft_duplex_months===undefined (existence-proxy). Added a genuine interval comparison (overdue when > 12 months OR never documented); graft_duplex_months IS threaded so a recently-surveilled patient (<= 12 mo) now gates out. Holds DET_OK.
 
 
 ---
@@ -185,9 +203,9 @@ Per-module wall-clock data lives in `docs/audit/canonical/audit_runs.jsonl` (app
 
 ## 14. Audit verdict
 
-**PV module: LIGHTLY BUILT.**
+**PV module: MODERATELY BUILT.**
 
-- 16 DET_OK (15.2%), 14 PARTIAL (13.3%), 75 SPEC_ONLY (71.4%)
+- 21 DET_OK (20.0%), 14 PARTIAL (13.3%), 70 SPEC_ONLY (66.7%)
 - 1/7 T1 priority gaps DET_OK; 4 T1 SPEC_ONLY gaps require v2.0 Phase 1 work
 - Audit method: `rule-body-citation-AUDIT-030D`. Generated from canonical crosswalk on 2026-05-04.
 

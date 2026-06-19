@@ -47,6 +47,7 @@ export const CAD_COLUMNS: CSVColumn[] = [
   { name: 'ldl', required: false, type: 'number' },
   { name: 'lpa', required: false, type: 'number' },
   { name: 'triglycerides', required: false, type: 'number' },
+  { name: 'apob', required: false, type: 'number' },
 ];
 
 export const SH_COLUMNS: CSVColumn[] = [
@@ -82,6 +83,8 @@ export const VD_COLUMNS: CSVColumn[] = [
   { name: 'valve_severity', required: false, type: 'string' },
   { name: 'last_echo_date', required: false, type: 'date' },
   { name: 'surgical_risk', required: false, type: 'string' },
+  // INR for mechanical-valve anticoagulation (AUDIT-170 slug-fix, CSV path). reaches labValues['inr'].
+  { name: 'inr', required: false, type: 'number' },
 ];
 
 export function getModuleColumns(moduleId: string): CSVColumn[] {

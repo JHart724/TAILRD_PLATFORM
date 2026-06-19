@@ -101,6 +101,8 @@ export async function writePatients(
         'lvef', 'bnp', 'nt_probnp', 'ferritin', 'tsat', 'sodium', 'potassium', 'egfr',
         'ldl', 'lpa', 'triglycerides', 'qtc_interval', 'qrs_duration', 'kccq_score',
         'abi_right', 'abi_left',
+        'apob', // residual-risk lipid marker - CAD-009 (AUDIT-181 ApoB slug-thread, CSV path)
+        'inr', // coag lab - mechanical-valve / LVAD / AF anticoag (AUDIT-170 INR slug-fix, CSV path)
         // echo-severity numerics (AUDIT-165 remediation)
         'aortic_valve_vmax', 'aortic_valve_mean_gradient', 'aortic_valve_area', 'mitral_regurg_grade', 'sts_score',
         // TR + vena-contracta numerics (v3.0 SH chunk 3)
@@ -215,6 +217,7 @@ function getUnit(field: string): string {
     kccq_score: 'points',
     abi_right: 'ratio',
     abi_left: 'ratio',
+    apob: 'mg/dL',
     tr_regurg_grade: 'grade',
     tr_regurg_vmax: 'm/s',
     mitral_vena_contracta: 'cm',
@@ -223,6 +226,7 @@ function getUnit(field: string): string {
     mitral_eroa: 'cm2',
     pasp: 'mmHg',
     ascending_aorta: 'cm',
+    inr: 'ratio',
   };
   return units[field] || '';
 }
@@ -251,6 +255,7 @@ function getObservationName(field: string): string {
     kccq_score: 'KCCQ-12 Score',
     abi_right: 'Ankle-Brachial Index (Right)',
     abi_left: 'Ankle-Brachial Index (Left)',
+    apob: 'Apolipoprotein B',
     tr_regurg_grade: 'Tricuspid Regurgitation Grade',
     tr_regurg_vmax: 'Tricuspid Regurgitation Peak Velocity',
     mitral_vena_contracta: 'Mitral Vena Contracta Diameter',
@@ -259,6 +264,7 @@ function getObservationName(field: string): string {
     mitral_eroa: 'Mitral Effective Regurgitant Orifice Area',
     pasp: 'Pulmonary Artery Systolic Pressure',
     ascending_aorta: 'Ascending Aorta Diameter',
+    inr: 'International Normalized Ratio (INR)',
   };
   return names[field] || field;
 }

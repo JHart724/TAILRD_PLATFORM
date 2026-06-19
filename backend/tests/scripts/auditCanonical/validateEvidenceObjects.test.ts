@@ -148,9 +148,9 @@ describe('validateEvidenceObjects - live gapRuleEngine.ts baseline', () => {
   const src = fs.readFileSync(EVALUATOR_PATH, 'utf8');
   const result = analyzeSource(src, 'gapRuleEngine.ts');
 
-  it('finds 356 gaps.push nodes, all with an evidence object', () => {
-    expect(result.pushCount).toBe(356); // 326 + 30 net (v3.0 SH module close, 2026-06-17, feat/sh-chunk1-as-severity)
-    expect(result.evidenceCount).toBe(356);
+  it('finds 376 gaps.push nodes, all with an evidence object', () => {
+    expect(result.pushCount).toBe(384); // 377 + 7 (PV chunk 1: PV-004/034/038/040/041/058/062 buildable batch, 2026-06-18)
+    expect(result.evidenceCount).toBe(384);
   });
 
   it('reports ZERO inconsistencies (clean baseline post-AUDIT-103)', () => {

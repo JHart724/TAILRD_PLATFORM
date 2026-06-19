@@ -76,6 +76,11 @@ describe('ECHO_LOINC_TO_SLUG - verified FHIR echo LOINC mapping', () => {
     expect(ECHO_LOINC_TO_SLUG['77908-2']).toBe('aortic_vena_contracta');    // AV vena contracta diameter
     expect(ECHO_LOINC_TO_SLUG['77917-3']).toBe('tricuspid_vena_contracta'); // TV vena contracta diameter
   });
+  it('threads INR (LOINC 34714-6 -> inr slug) so the mechanical-valve INR cluster can read it (AUDIT-170 slug-fix)', () => {
+    expect(ECHO_LOINC_TO_SLUG['34714-6']).toBe('inr'); // before the fix: persisted as the raw LOINC, never reached labValues['inr']
+    const src = fs.readFileSync(path.join(__dirname, '../../src/ingestion/patientWriter.ts'), 'utf8');
+    expect(src).toContain("'inr'"); // CSV writer allow-list carries inr
+  });
   it('still omits the LOINCs that NLM verification could not confirm (no fabrication)', () => {
     // LVESD returned empty from NLM Clinical Tables -> deliberately absent until verified with alternate terms.
     const slugs = Object.values(ECHO_LOINC_TO_SLUG);

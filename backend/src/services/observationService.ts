@@ -46,6 +46,7 @@ const CARDIOVASCULAR_LAB_CODES: Record<string, string[]> = {
   'LDL': ['13457-7', '18262-6'],
   'HDL': ['2085-9'],
   'Triglycerides': ['2571-8'],
+  'ApoB': ['1884-6'],
   'HbA1c': ['4548-4', '17856-6'],
   'Creatinine': ['2160-0'],
   'eGFR': ['33914-3', '62238-1'],
@@ -91,6 +92,16 @@ export const ECHO_LOINC_TO_SLUG: Record<string, string> = {
   '77913-2': 'mitral_vena_contracta',                                                 // MV vena contracta diameter (NLM-verified)
   '77908-2': 'aortic_vena_contracta',                                                 // AV vena contracta diameter (NLM-verified)
   '77917-3': 'tricuspid_vena_contracta',                                              // TV vena contracta diameter (NLM-verified)
+  // Fix (AUDIT-170, 2026-06-17): INR is a coag lab, not echo, but this is the persist-site LOINC->slug map - the
+  // mechanical-valve INR cluster (VD-3, VHD-001) + the LVAD INR gap read labValues['inr'], but without a slug
+  // mapping the FHIR transform persisted observationType = the raw LOINC '34714-6', so threaded INR never reached
+  // them (AUDIT-070-class silent under-detection). Mapping 34714-6 -> 'inr' threads it to labValues['inr'].
+  '34714-6': 'inr',                                                                   // INR (NLM LOINC 34714-6)
+  // Threading (AUDIT-181, 2026-06-18, AUDIT-070 lineage): apolipoprotein B is a residual-risk lipid marker, not
+  // echo, but this is the persist-site LOINC->slug map - CAD-009 reads labValues['apob'], so without a slug
+  // mapping the FHIR transform would persist observationType = the raw LOINC '1884-6' and threaded ApoB would
+  // never reach the gap. Mapping 1884-6 -> 'apob' threads it (CSV path threaded separately in patientWriter).
+  '1884-6': 'apob',                                                                   // Apolipoprotein B (NLM LOINC 1884-6, mass/volume mg/dL)
 };
 
 const VITAL_SIGNS_CODES: Record<string, string[]> = {
