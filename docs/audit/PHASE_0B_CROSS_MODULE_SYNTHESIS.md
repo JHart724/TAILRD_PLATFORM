@@ -15,8 +15,8 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 | SH | 88 | 31 | 18 | 39 | 49/88 (55.7%) | 35.2% |
 | CAD | 90 | 31 | 28 | 31 | 59/90 (65.6%) | 34.4% |
 | VHD | 105 | 12 | 13 | 80 | 25/105 (23.8%) | 11.4% |
-| PV | 105 | 16 | 14 | 75 | 30/105 (28.6%) | 15.2% |
-| **TOTAL** | **603** | **196** | **114** | **293** | **310/603 (51.4%)** | **32.5%** |
+| PV | 105 | 21 | 14 | 70 | 35/105 (33.3%) | 20.0% |
+| **TOTAL** | **603** | **201** | **114** | **288** | **315/603 (52.2%)** | **33.3%** |
 
 ---
 
@@ -102,7 +102,7 @@ Subcategories with 0% any-coverage indicate entire procedural surfaces missing i
 | VHD | IE General | 8 | 0 | 0 | 8 |
 | VHD | IE Pathogens | 7 | 0 | 0 | 7 |
 | VHD | Carcinoid | 6 | 0 | 0 | 6 |
-| PV | Vasculitis | 6 | 0 | 0 | 6 |
+| PV | TASC Staging | 5 | 0 | 0 | 5 |
 | PV | CTEPH | 4 | 0 | 0 | 4 |
 | PV | PAH | 6 | 0 | 0 | 6 |
 | PV | AVM | 3 | 0 | 0 | 3 |

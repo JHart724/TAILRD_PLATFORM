@@ -776,18 +776,14 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
   },
   PV: {
     // --- PV chunk 0 (2026-06-18, feat/pv-chunk0-tightenings): AUDIT-178/179/180 ---
-    // DEFERRED-TO-CLOSE (GAP-PV-003 DET_OK): the foundational AUDIT-179 build re-cites GAP-PV-003 to the NEW
-    // evaluator gap-pv-003-abnormal-abi, which only enters PV.code.json when extractCode re-runs at the PV
-    // canonical close. Activating the override now would forward-reference an un-extracted registryId and demote
-    // (applyOverrides.test.ts demoted===0 gate). Per the "defer canonical tax to module close" + §9.2 no-partial-
-    // pipeline discipline, the gapRuleEngine build + registry entry + pvChunk0.test.ts land in chunk 0; this
-    // override is UNCOMMENTED at the PV close (alongside the full extractCode->...->validateCanonical regen):
-    //   'GAP-PV-003': {
-    //     classification: 'DET_OK',
-    //     registryId: 'gap-pv-003-abnormal-abi',
-    //     auditNote:
-    //       'MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-179 RESOLVED): foundational build + re-cite. GAP-PV-003 ("Abnormal ABI <=0.90 without coded PAD") was MIScited by fuzzy name-match to gap-pv-3-antiplatelet (a different concept); no rule read an ABI VALUE threshold. Built gap-pv-003-abnormal-abi (abi_left/abi_right <= 0.90 + !hasPAD; ABI threaded both paths). The >1.40 non-compressible case is routed to PV-004 (not conflated). PARTIAL -> DET_OK.',
-    //   },
+    // GAP-PV-003 DET_OK activated at the PV close (the chunk-0 forward-ref to gap-pv-003-abnormal-abi now resolves
+    // because extractCode re-ran in this pipeline).
+    'GAP-PV-003': {
+      classification: 'DET_OK',
+      registryId: 'gap-pv-003-abnormal-abi',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-179 RESOLVED): foundational build + re-cite. GAP-PV-003 ("Abnormal ABI <=0.90 without coded PAD") was MIScited by fuzzy name-match to gap-pv-3-antiplatelet (a different concept); no rule read an ABI VALUE threshold. Built gap-pv-003-abnormal-abi (abi_left/abi_right <= 0.90 + !hasPAD; ABI threaded both paths). The >1.40 non-compressible case is routed to PV-004 (not conflated). PARTIAL -> DET_OK.',
+    },
     'GAP-PV-015': {
       classification: 'DET_OK',
       registryId: 'gap-pv-6-diabetes-control',
@@ -829,6 +825,67 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
       classification: 'SPEC_ONLY',
       auditNote:
         'MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-180): PARTIAL -> SPEC_ONLY. GAP-PV-024 ("TASC II C/D iliac: endovascular vs surgical bypass") was over-matched to the generic gap-pv-bypass-eval rule, which has no TASC II lesion-class or iliac-specific signal (anatomic data not threaded). Cite dropped; PV-017 retains the bypass-eval cite.',
+    },
+    // --- PV chunk 1 (2026-06-18): 7 buildable SPEC_ONLY -> built. 4 DET_OK + 3 PARTIAL (honest underclaim where a
+    //     central spec qualifier is not codable/threaded). ---
+    'GAP-PV-004': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-pv-004-noncompressible-abi',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> PARTIAL. Built gap-pv-004-noncompressible-abi (ABI >1.40 either leg -> non-compressible -> toe-brachial index). Completes the PV-003/004 ABI pair (disjoint ranges, no double-fire). PARTIAL not DET_OK: the spec qualifier "without TBI" is not threaded (TBI is not an ingested observation), so the rule fires on the non-compressible ABI alone and cannot confirm a TBI was not already done.',
+    },
+    'GAP-PV-034': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-pv-034-fmd-screening',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> PARTIAL. Built gap-pv-034-fmd-screening (HTN + age<35 + female + !I77.3). The population gate is fully threaded, but the spec qualifier "without FMD imaging screening" is proxied by diagnosis-absence (!I77.3) - a patient screened-and-negative (no I77.3 coded) would still fire - so PARTIAL not DET_OK. I77.3 NLM-verified.',
+    },
+    'GAP-PV-038': {
+      classification: 'DET_OK',
+      registryId: 'gap-pv-038-takayasu-immunosuppression',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> DET_OK. Built gap-pv-038-takayasu-immunosuppression (M31.4 + NOT on glucocorticoid or steroid-sparing, canonical RXNORM_CORTICOSTEROIDS/STEROID_SPARING). Dx + med gate both threaded; the "active" disease-activity qualifier is a documented Path-B refinement (ESR/CRP/imaging not threaded), per the CAD-022 DET_OK-with-Path-B precedent. M31.4 NLM-verified.',
+    },
+    'GAP-PV-040': {
+      classification: 'DET_OK',
+      registryId: 'gap-pv-040-gca-steroid',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> DET_OK. Built gap-pv-040-gca-steroid (M31.5/M31.6 + NOT on a glucocorticoid). Dx + med gate both threaded; vision-symptom acuity is a Path-B refinement. Distinct from PV-038 (Takayasu M31.4 - no code overlap). M31.5/M31.6 NLM-verified; tocilizumab (GiACTA) named in the recommendation.',
+    },
+    'GAP-PV-041': {
+      classification: 'DET_OK',
+      registryId: 'gap-pv-041-buerger-cessation',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> DET_OK. Built gap-pv-041-buerger-cessation (I73.1 + active tobacco use F17.*/Z72.0). Both signals threaded - clean gate. Subgroup: cessation-is-treatment (disease-modifying in Buerger), distinct from generic PAD cessation (PV-4). I73.1 NLM-verified.',
+    },
+    'GAP-PV-058': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-pv-058-symptomatic-carotid-revasc',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> PARTIAL. Built gap-pv-058-symptomatic-carotid-revasc (I65.2x + recent I63/G45). The SYMPTOMATIC gate (I63/G45) is threaded and precise (asymptomatic gates out - the standing subgroup-check), but the spec target severity ">=70%" is NOT codable from ICD-10 (I65.2x carries no percentage) and the 2-week timing is not threaded, so the rule fires on symptomatic stenosis of any severity -> PARTIAL. I65.21/22/23/29, I63, G45 NLM-verified.',
+    },
+    'GAP-PV-062': {
+      classification: 'DET_OK',
+      registryId: 'gap-pv-062-intracranial-stenosis-medical',
+      auditNote:
+        'MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> DET_OK. Built gap-pv-062-intracranial-stenosis-medical (I67.2 + recent I63/G45 + NOT on antiplatelet OR NOT on statin). Dx + event + antithrombotic/statin absence all threaded (coarse but genuine gate); dual-vs-single antiplatelet and statin intensity are documented Path-B refinements. Subgroup: aggressive MEDICAL therapy, NOT stenting (SAMMPRIS). I67.2 NLM-verified.',
+    },
+    // --- PV chunk 1 Path-B (blocked-pile): 3 of the banked audit "~10 buildable" over-assumed threading; held
+    //     SPEC_ONLY (NOT built) - the always-fire-proxy avoidance, same class as the CAD-chunk-1 ApoB catch. ---
+    'GAP-PV-021': {
+      classification: 'SPEC_ONLY',
+      auditNote:
+        'PATH-B (PV chunk 1, blocked-pile): NOT built. WIfI staging needs wifi_score, which exists ONLY as a type:string column in csvSchema.ts and is NOT wired to labValues (Record<string,number>, populated from the patientWriter labFields allowlist) - so labValues[\'wifi_score\'] is always undefined and a rule on it would always-fire (the AUDIT-177 over-credit anti-pattern). Unblock: a threading PR (AUDIT-070 class) that maps WIfI to a numeric/staged observation.',
+    },
+    'GAP-PV-037': {
+      classification: 'SPEC_ONLY',
+      auditNote:
+        'PATH-B (PV chunk 1, blocked-pile): NOT built. Takayasu serial ESR/CRP monitoring needs ESR/CRP values, but NEITHER is threaded (no observationService FHIR LOINC->slug mapping and not in the CSV labFields allowlist) - labValues[\'crp\']/[\'esr\'] are always undefined, so a value-gated rule cannot work and an existence-proxy would always-fire. Unblock: a threading PR (AUDIT-070 class) mapping ESR + CRP LOINCs both paths.',
+    },
+    'GAP-PV-060': {
+      classification: 'SPEC_ONLY',
+      auditNote:
+        'PATH-B (PV chunk 1, blocked-pile): NOT built. Post-CEA/CAS secondary prevention needs to identify post-carotid-revascularization patients, but there is NO clean post-carotid-revasc ICD-10 code (Z95.820 = peripheral angioplasty status, not carotid; CEA leaves no implant code). Unblock: a procedure/CPT signal (CPT 35301 CEA / 37215-37216 CAS) once procedure threading lands (code-floor), OR a Z-code convention.',
     },
   },
 };
