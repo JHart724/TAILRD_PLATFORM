@@ -181,19 +181,6 @@ const StructuralExecutiveView: React.FC = () => {
 
 	// Fallback structural heart specific benchmarks
 	const benchmarkDetails: Record<string, any> = {
-	'Quadruple Therapy Rate': {
-	benchmarkName: 'Quadruple Therapy Rate',
-	description: 'Percentage of eligible HF patients on all 4 GDMT pillars (ARNI/ACEi/ARB + BB + MRA + SGLT2i)',
-	ourValue: 68,
-	nationalValue: 52,
-	percentile: 78,
-	unit: '%',
-	trendData: [
-	{ month: 'Jun', value: 58 }, { month: 'Jul', value: 60 }, { month: 'Aug', value: 62 },
-	{ month: 'Sep', value: 64 }, { month: 'Oct', value: 66 }, { month: 'Nov', value: 68 }
-	],
-	comparisonData: { top10: 82, top25: 72, top50: 60, national: 52 }
-	},
 	'TAVR Utilization': {
 	benchmarkName: 'TAVR Utilization',
 	description: 'Percentage of severe AS patients evaluated and treated with transcatheter aortic valve replacement',
