@@ -121,3 +121,136 @@ describe('AUDIT-184 silent repaired - HF-081 HbA1c in heart failure', () => {
     expect(find(evaluateGapRules(['I50.22', 'E11.9'], { hba1c: 7.5 }, [], 65, 'MALE'), FRAG)).toBeFalsy();
   });
 });
+
+// =====================================================================================================
+// The remaining 12 SILENT rules - now fire on a qualifying (threaded) value + gate on a non-qualifying one.
+// Each was 0%-sensitivity before AUDIT-184 (the gate-slug was never threaded).
+// =====================================================================================================
+const HF = 'I50.9';
+const HFREF = 'I50.22';
+const CARVEDILOL = '20352';
+const DILTIAZEM = '3443';       // AV-nodal blocker (rate control)
+const APIXABAN = '1364430';
+
+describe('AUDIT-184 silent repaired - HF-003 beta-blocker below target (heart_rate + systolic_bp)', () => {
+  const FRAG = 'HFrEF beta-blocker below target dose';
+  const meds = [{ rxNormCode: CARVEDILOL, doseValue: 12.5 }]; // carvedilol below target 50
+  it('fires: HFrEF on below-target BB + HR 70 + SBP 120', () => {
+    expect(find(evaluateGapRules([HFREF], { lvef: 35, heart_rate: 70, systolic_bp: 120 }, [CARVEDILOL], 65, 'MALE', undefined, meds), FRAG)).toBeTruthy();
+  });
+  it('gate: HR 55 (<60, no uptitration headroom) does NOT fire', () => {
+    expect(find(evaluateGapRules([HFREF], { lvef: 35, heart_rate: 55, systolic_bp: 120 }, [CARVEDILOL], 65, 'MALE', undefined, meds), FRAG)).toBeFalsy();
+  });
+});
+
+describe('AUDIT-184 silent repaired - HF-032 iron studies in anemic HF (hemoglobin)', () => {
+  const FRAG = 'Iron studies overdue in anemic heart failure';
+  it('fires: HF + hemoglobin 10 (<12) + ferritin not measured', () => {
+    expect(find(evaluateGapRules([HF], { hemoglobin: 10 }, [], 70, 'MALE'), FRAG)).toBeTruthy();
+  });
+  it('gate: hemoglobin 13 (>=12) does NOT fire', () => {
+    expect(find(evaluateGapRules([HF], { hemoglobin: 13 }, [], 70, 'MALE'), FRAG)).toBeFalsy();
+  });
+});
+
+describe('AUDIT-184 silent repaired - HF-065 tachycardia-mediated CM (heart_rate)', () => {
+  const FRAG = 'tachycardia-mediated cardiomyopathy';
+  it('fires: HF + LVEF 40 + HR 120 + no rate/rhythm control', () => {
+    expect(find(evaluateGapRules([HF], { lvef: 40, heart_rate: 120 }, [], 60, 'MALE'), FRAG)).toBeTruthy();
+  });
+  it('gate: HR 80 (<=100) does NOT fire', () => {
+    expect(find(evaluateGapRules([HF], { lvef: 40, heart_rate: 80 }, [], 60, 'MALE'), FRAG)).toBeFalsy();
+  });
+});
+
+describe('AUDIT-184 silent repaired - HF-078 chronic AF uncontrolled rate (heart_rate)', () => {
+  const FRAG = 'HF + chronic AF with uncontrolled ventricular rate';
+  it('fires: HF + chronic AF (I48.20) + HR 120 + no rate control', () => {
+    expect(find(evaluateGapRules([HF, 'I48.20'], { heart_rate: 120 }, [], 72, 'MALE'), FRAG)).toBeTruthy();
+  });
+  it('gate: HR 90 (<=110) does NOT fire', () => {
+    expect(find(evaluateGapRules([HF, 'I48.20'], { heart_rate: 90 }, [], 72, 'MALE'), FRAG)).toBeFalsy();
+  });
+});
+
+describe('AUDIT-184 silent repaired - HF-079 anemia workup (hemoglobin)', () => {
+  const FRAG = 'anemia workup for HF patient';
+  it('fires: HF + male hemoglobin 11 (<13 male threshold)', () => {
+    expect(find(evaluateGapRules([HF], { hemoglobin: 11 }, [], 65, 'MALE'), FRAG)).toBeTruthy();
+  });
+  it('gate: hemoglobin 14 does NOT fire', () => {
+    expect(find(evaluateGapRules([HF], { hemoglobin: 14 }, [], 65, 'MALE'), FRAG)).toBeFalsy();
+  });
+});
+
+describe('AUDIT-184 silent repaired - HF-080 untreated thyroid dysfunction (tsh)', () => {
+  const FRAG = 'untreated thyroid dysfunction';
+  it('fires: HF + TSH 12 (>10 overt hypothyroid, untreated)', () => {
+    expect(find(evaluateGapRules([HF], { tsh: 12 }, [], 60, 'FEMALE'), FRAG)).toBeTruthy();
+  });
+  it('gate: TSH 2.0 (euthyroid) does NOT fire', () => {
+    expect(find(evaluateGapRules([HF], { tsh: 2.0 }, [], 60, 'FEMALE'), FRAG)).toBeFalsy();
+  });
+});
+
+describe('AUDIT-184 silent repaired - EP-004 apixaban dose-reduction criteria met (creatinine)', () => {
+  const FRAG = 'Apixaban dose reduction criteria met but on full dose';
+  const fullDose = [{ rxNormCode: APIXABAN, doseValue: 5 }];
+  it('fires: apixaban full dose + age 82 + creatinine 1.8 (>=2 reduction criteria)', () => {
+    expect(find(evaluateGapRules([], { creatinine: 1.8 }, [APIXABAN], 82, 'MALE', undefined, fullDose), FRAG)).toBeTruthy();
+  });
+  it('gate: creatinine 1.0 (<1.5, criterion not met) does NOT fire', () => {
+    expect(find(evaluateGapRules([], { creatinine: 1.0 }, [APIXABAN], 82, 'MALE', undefined, fullDose), FRAG)).toBeFalsy();
+  });
+});
+
+describe('AUDIT-184 silent repaired - EP-005 apixaban inappropriately reduced (creatinine)', () => {
+  const FRAG = 'Apixaban inappropriately reduced without criteria';
+  const lowDose = [{ rxNormCode: APIXABAN, doseValue: 2.5 }];
+  it('fires: apixaban 2.5 + age 60 + creatinine 1.0 (no reduction criteria)', () => {
+    expect(find(evaluateGapRules([], { creatinine: 1.0 }, [APIXABAN], 60, 'MALE', undefined, lowDose), FRAG)).toBeTruthy();
+  });
+  it('gate: creatinine 1.7 (>=1.5, a criterion present) does NOT fire', () => {
+    expect(find(evaluateGapRules([], { creatinine: 1.7 }, [APIXABAN], 60, 'MALE', undefined, lowDose), FRAG)).toBeFalsy();
+  });
+});
+
+describe('AUDIT-184 silent repaired - EP-030 bradycardia on AV-nodal blocker (heart_rate)', () => {
+  const FRAG = 'Bradycardia on AV-nodal blocker';
+  it('fires: HR 45 (<50) on diltiazem, no pacemaker', () => {
+    expect(find(evaluateGapRules([], { heart_rate: 45 }, [DILTIAZEM], 70, 'MALE'), FRAG)).toBeTruthy();
+  });
+  it('gate: HR 60 (>=50) does NOT fire', () => {
+    expect(find(evaluateGapRules([], { heart_rate: 60 }, [DILTIAZEM], 70, 'MALE'), FRAG)).toBeFalsy();
+  });
+});
+
+describe('AUDIT-184 silent repaired - EP-033 chronic AF HR<40 on rate control (heart_rate)', () => {
+  const FRAG = 'Chronic AF with HR<40 on rate control';
+  it('fires: AF (I48.20) + HR 35 (<40) on diltiazem, no pacemaker', () => {
+    expect(find(evaluateGapRules(['I48.20'], { heart_rate: 35 }, [DILTIAZEM], 72, 'MALE'), FRAG)).toBeTruthy();
+  });
+  it('gate: HR 50 (>=40) does NOT fire', () => {
+    expect(find(evaluateGapRules(['I48.20'], { heart_rate: 50 }, [DILTIAZEM], 72, 'MALE'), FRAG)).toBeFalsy();
+  });
+});
+
+describe('AUDIT-184 silent repaired - CAD-023 colchicine residual inflammation (crp)', () => {
+  const FRAG = 'low-dose colchicine for residual inflammatory risk';
+  it('fires: CAD + CRP 5 (>2), not on colchicine', () => {
+    expect(find(evaluateGapRules([CAD], { crp: 5 }, [], 62, 'MALE'), FRAG)).toBeTruthy();
+  });
+  it('gate: CRP 1 (<=2) does NOT fire', () => {
+    expect(find(evaluateGapRules([CAD], { crp: 1 }, [], 62, 'MALE'), FRAG)).toBeFalsy();
+  });
+});
+
+describe('AUDIT-184 silent repaired - CAD-031 ischemia-guided therapy (stress_test_months)', () => {
+  const FRAG = 'ischemia-guided therapy review';
+  it('fires: stable angina (I25.110) + stress test documented (stress_test_months present)', () => {
+    expect(find(evaluateGapRules(['I25.110'], { stress_test_months: 3 }, [], 60, 'MALE'), FRAG)).toBeTruthy();
+  });
+  it('gate: no stress test threaded (the silent-before state) does NOT fire', () => {
+    expect(find(evaluateGapRules(['I25.110'], {}, [], 60, 'MALE'), FRAG)).toBeFalsy();
+  });
+});
