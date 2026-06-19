@@ -14,8 +14,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-STATIN",
         "evaluatorBodyLineRange": [
-          6646,
-          6677
+          6743,
+          6774
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-statin",
@@ -33,8 +33,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-STATIN",
         "evaluatorBodyLineRange": [
-          6646,
-          6677
+          6743,
+          6774
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-statin",
@@ -52,12 +52,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-EZETIMIBE",
         "evaluatorBodyLineRange": [
-          6822,
-          6852
+          6919,
+          6949
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-ezetimibe",
-        "registryLine": 977
+        "registryLine": 1074
       },
       "specGapId": "GAP-CAD-003",
       "specLine": 592,
@@ -71,12 +71,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-PCSK9",
         "evaluatorBodyLineRange": [
-          11174,
-          11205
+          11322,
+          11353
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-pcsk9",
-        "registryLine": 1745
+        "registryLine": 1842
       },
       "specGapId": "GAP-CAD-004",
       "specLine": 593,
@@ -90,12 +90,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-PCSK9",
         "evaluatorBodyLineRange": [
-          11174,
-          11205
+          11322,
+          11353
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-pcsk9",
-        "registryLine": 1745
+        "registryLine": 1842
       },
       "specGapId": "GAP-CAD-005",
       "specLine": 594,
@@ -129,12 +129,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-BEMPEDOIC",
         "evaluatorBodyLineRange": [
-          11528,
-          11560
+          11676,
+          11708
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-bempedoic",
-        "registryLine": 1877
+        "registryLine": 1974
       },
       "specGapId": "GAP-CAD-006",
       "specLine": 597,
@@ -148,12 +148,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-LIPID-PANEL-FU",
         "evaluatorBodyLineRange": [
-          13150,
-          13177
+          13298,
+          13325
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-lipid-panel-fu",
-        "registryLine": 3713
+        "registryLine": 3810
       },
       "specGapId": "GAP-CAD-007",
       "specLine": 598,
@@ -167,12 +167,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-LPA",
         "evaluatorBodyLineRange": [
-          6786,
-          6815
+          6883,
+          6912
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-lpa",
-        "registryLine": 965
+        "registryLine": 1062
       },
       "specGapId": "GAP-CAD-008",
       "specLine": 599,
@@ -196,12 +196,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-APOB",
         "evaluatorBodyLineRange": [
-          11604,
-          11627
+          11752,
+          11775
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-009-apob",
-        "registryLine": 1901
+        "registryLine": 1998
       },
       "specGapId": "GAP-CAD-009",
       "specLine": 601,
@@ -215,12 +215,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-CRP",
         "evaluatorBodyLineRange": [
-          12389,
-          12415
+          12537,
+          12563
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-crp",
-        "registryLine": 3221
+        "registryLine": 3318
       },
       "specGapId": "GAP-CAD-010",
       "specLine": 602,
@@ -234,8 +234,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-STATIN",
         "evaluatorBodyLineRange": [
-          6646,
-          6677
+          6743,
+          6774
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-statin",
@@ -253,8 +253,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-STATIN",
         "evaluatorBodyLineRange": [
-          6646,
-          6677
+          6743,
+          6774
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-statin",
@@ -272,12 +272,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-OMEGA3",
         "evaluatorBodyLineRange": [
-          11284,
-          11317
+          11432,
+          11465
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-omega3",
-        "registryLine": 1793
+        "registryLine": 1890
       },
       "specGapId": "GAP-CAD-014",
       "specLine": 609,
@@ -301,12 +301,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-CALCIUM-SCORE",
         "evaluatorBodyLineRange": [
-          12357,
-          12384
+          12505,
+          12532
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-calcium-score",
-        "registryLine": 3209
+        "registryLine": 3306
       },
       "specGapId": "GAP-CAD-059",
       "specLine": 611,
@@ -320,12 +320,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-FAMILY-SCREEN",
         "evaluatorBodyLineRange": [
-          12323,
-          12352
+          12471,
+          12500
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-family-screen",
-        "registryLine": 3197
+        "registryLine": 3294
       },
       "specGapId": "GAP-CAD-060",
       "specLine": 612,
@@ -339,12 +339,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-TICAGRELOR-ACS",
         "evaluatorBodyLineRange": [
-          11883,
-          11910
+          12031,
+          12058
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-ticagrelor-acs",
-        "registryLine": 3029
+        "registryLine": 3126
       },
       "specGapId": "GAP-CAD-015",
       "specLine": 617,
@@ -358,12 +358,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-016",
         "evaluatorBodyLineRange": [
-          12527,
-          12551
+          12675,
+          12699
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-016-prasugrel-stroke-safety",
-        "registryLine": 3281
+        "registryLine": 3378
       },
       "specGapId": "GAP-CAD-016",
       "specLine": 618,
@@ -377,12 +377,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-DAPT-DURATION",
         "evaluatorBodyLineRange": [
-          12035,
-          12061
+          12183,
+          12209
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-dapt-duration",
-        "registryLine": 3089
+        "registryLine": 3186
       },
       "specGapId": "GAP-CAD-018",
       "specLine": 619,
@@ -406,12 +406,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-ANTICOAG-AF",
         "evaluatorBodyLineRange": [
-          11426,
-          11454
+          11574,
+          11602
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-anticoag-af",
-        "registryLine": 1841
+        "registryLine": 1938
       },
       "specGapId": "GAP-CAD-062",
       "specLine": 621,
@@ -425,12 +425,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-PRASUGREL",
         "evaluatorBodyLineRange": [
-          12555,
-          12586
+          12703,
+          12734
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-prasugrel",
-        "registryLine": 3269
+        "registryLine": 3366
       },
       "specGapId": "GAP-CAD-017",
       "specLine": 622,
@@ -454,12 +454,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-BB-POST-MI",
         "evaluatorBodyLineRange": [
-          6719,
-          6747
+          6816,
+          6844
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-bb-post-mi",
-        "registryLine": 941
+        "registryLine": 1038
       },
       "specGapId": "GAP-CAD-020",
       "specLine": 628,
@@ -473,12 +473,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-ACEI",
         "evaluatorBodyLineRange": [
-          6685,
-          6712
+          6782,
+          6809
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-acei",
-        "registryLine": 929
+        "registryLine": 1026
       },
       "specGapId": "GAP-CAD-021",
       "specLine": 629,
@@ -492,12 +492,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-POST-MI-ICD",
         "evaluatorBodyLineRange": [
-          11724,
-          11746
+          11872,
+          11894
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-022-post-mi-icd",
-        "registryLine": 1933
+        "registryLine": 2030
       },
       "specGapId": "GAP-CAD-022",
       "specLine": 630,
@@ -511,12 +511,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-COLCHICINE",
         "evaluatorBodyLineRange": [
-          11251,
-          11278
+          11399,
+          11426
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-colchicine",
-        "registryLine": 1781
+        "registryLine": 1878
       },
       "specGapId": "GAP-CAD-023",
       "specLine": 631,
@@ -530,12 +530,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-SGLT2-DM",
         "evaluatorBodyLineRange": [
-          11494,
-          11522
+          11642,
+          11670
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-sglt2-dm",
-        "registryLine": 1865
+        "registryLine": 1962
       },
       "specGapId": "GAP-CAD-024",
       "specLine": 632,
@@ -549,12 +549,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-SMOKING",
         "evaluatorBodyLineRange": [
-          6754,
-          6779
+          6851,
+          6876
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-smoking",
-        "registryLine": 953
+        "registryLine": 1050
       },
       "specGapId": "GAP-CAD-025",
       "specLine": 633,
@@ -578,12 +578,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-CATHETERIZATION",
         "evaluatorBodyLineRange": [
-          12872,
-          12899
+          13020,
+          13047
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-catheterization",
-        "registryLine": 3605
+        "registryLine": 3702
       },
       "specGapId": "GAP-CAD-065",
       "specLine": 639,
@@ -607,12 +607,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-CATHETERIZATION",
         "evaluatorBodyLineRange": [
-          12872,
-          12899
+          13020,
+          13047
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-catheterization",
-        "registryLine": 3605
+        "registryLine": 3702
       },
       "specGapId": "GAP-CAD-066",
       "specLine": 641,
@@ -626,12 +626,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-CHEST-PAIN-PROTOCOL",
         "evaluatorBodyLineRange": [
-          13272,
-          13299
+          13420,
+          13447
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-chest-pain-protocol",
-        "registryLine": 3761
+        "registryLine": 3858
       },
       "specGapId": "GAP-CAD-067",
       "specLine": 642,
@@ -645,12 +645,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-POLYVASCULAR",
         "evaluatorBodyLineRange": [
-          11756,
-          11779
+          11904,
+          11927
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-026-polyvascular",
-        "registryLine": 1941
+        "registryLine": 2038
       },
       "specGapId": "GAP-CAD-026",
       "specLine": 647,
@@ -664,12 +664,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-RIVAROXABAN",
         "evaluatorBodyLineRange": [
-          16293,
-          16321
+          16441,
+          16469
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-rivaroxaban",
-        "registryLine": 3341
+        "registryLine": 3438
       },
       "specGapId": "GAP-CAD-027",
       "specLine": 648,
@@ -683,12 +683,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-SECONDARY-PREVENTION",
         "evaluatorBodyLineRange": [
-          13303,
-          13332
+          13451,
+          13480
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-secondary-prevention",
-        "registryLine": 3773
+        "registryLine": 3870
       },
       "specGapId": "GAP-CAD-028",
       "specLine": 653,
@@ -702,12 +702,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-REHAB-CABG",
         "evaluatorBodyLineRange": [
-          7248,
-          7267
+          7379,
+          7398
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-rehab-cabg",
-        "registryLine": 737
+        "registryLine": 834
       },
       "specGapId": "GAP-CAD-029",
       "specLine": 654,
@@ -721,12 +721,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-REVASCULARIZATION",
         "evaluatorBodyLineRange": [
-          11398,
-          11421
+          11546,
+          11569
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-revascularization",
-        "registryLine": 1829
+        "registryLine": 1926
       },
       "specGapId": "GAP-CAD-030",
       "specLine": 659,
@@ -740,12 +740,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-ISCHEMIA-GUIDED",
         "evaluatorBodyLineRange": [
-          12933,
-          12959
+          13081,
+          13107
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-ischemia-guided",
-        "registryLine": 3629
+        "registryLine": 3726
       },
       "specGapId": "GAP-CAD-031",
       "specLine": 660,
@@ -759,12 +759,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-BETA-BLOCKER",
         "evaluatorBodyLineRange": [
-          12742,
-          12769
+          12890,
+          12917
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-beta-blocker",
-        "registryLine": 3557
+        "registryLine": 3654
       },
       "specGapId": "GAP-CAD-032",
       "specLine": 661,
@@ -778,12 +778,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-RANOLAZINE",
         "evaluatorBodyLineRange": [
-          11323,
-          11357
+          11471,
+          11505
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-ranolazine",
-        "registryLine": 1805
+        "registryLine": 1902
       },
       "specGapId": "GAP-CAD-033",
       "specLine": 662,
@@ -797,12 +797,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-MINOCA",
         "evaluatorBodyLineRange": [
-          12963,
-          12989
+          13111,
+          13137
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-minoca",
-        "registryLine": 3641
+        "registryLine": 3738
       },
       "specGapId": "GAP-CAD-034",
       "specLine": 667,
@@ -816,12 +816,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-MINOCA",
         "evaluatorBodyLineRange": [
-          12963,
-          12989
+          13111,
+          13137
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-minoca",
-        "registryLine": 3641
+        "registryLine": 3738
       },
       "specGapId": "GAP-CAD-035",
       "specLine": 668,
@@ -835,12 +835,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-MICROVASCULAR",
         "evaluatorBodyLineRange": [
-          13089,
-          13117
+          13237,
+          13265
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-microvascular",
-        "registryLine": 3689
+        "registryLine": 3786
       },
       "specGapId": "GAP-CAD-036",
       "specLine": 669,
@@ -854,12 +854,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-VASOSPASTIC",
         "evaluatorBodyLineRange": [
-          13053,
-          13085
+          13201,
+          13233
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-vasospastic",
-        "registryLine": 3677
+        "registryLine": 3774
       },
       "specGapId": "GAP-CAD-037",
       "specLine": 670,
@@ -873,12 +873,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-MICROVASCULAR",
         "evaluatorBodyLineRange": [
-          13089,
-          13117
+          13237,
+          13265
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-microvascular",
-        "registryLine": 3689
+        "registryLine": 3786
       },
       "specGapId": "GAP-CAD-038",
       "specLine": 671,
@@ -892,12 +892,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-FFR",
         "evaluatorBodyLineRange": [
-          11218,
-          11245
+          11366,
+          11393
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-ffr",
-        "registryLine": 1769
+        "registryLine": 1866
       },
       "specGapId": "GAP-CAD-068",
       "specLine": 676,
@@ -1061,12 +1061,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-DEPRESSION",
         "evaluatorBodyLineRange": [
-          11815,
-          11840
+          11963,
+          11988
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-depression",
-        "registryLine": 1961
+        "registryLine": 2058
       },
       "specGapId": "GAP-CAD-044",
       "specLine": 708,
@@ -1080,12 +1080,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-INFLUENZA",
         "evaluatorBodyLineRange": [
-          11845,
-          11870
+          11993,
+          12018
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-influenza",
-        "registryLine": 1973
+        "registryLine": 2070
       },
       "specGapId": "GAP-CAD-045",
       "specLine": 709,
@@ -1099,12 +1099,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-REHAB-MI",
         "evaluatorBodyLineRange": [
-          7271,
-          7290
+          7402,
+          7421
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-rehab-mi",
-        "registryLine": 749
+        "registryLine": 846
       },
       "specGapId": "GAP-CAD-046",
       "specLine": 710,
@@ -1118,12 +1118,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-DRIVING",
         "evaluatorBodyLineRange": [
-          12649,
-          12674
+          12797,
+          12822
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-driving",
-        "registryLine": 3317
+        "registryLine": 3414
       },
       "specGapId": "GAP-CAD-079",
       "specLine": 711,
@@ -1137,12 +1137,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-SEXUAL-HEALTH",
         "evaluatorBodyLineRange": [
-          12620,
-          12645
+          12768,
+          12793
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-sexual-health",
-        "registryLine": 3305
+        "registryLine": 3402
       },
       "specGapId": "GAP-CAD-080",
       "specLine": 712,
@@ -1156,12 +1156,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-SCAD",
         "evaluatorBodyLineRange": [
-          12993,
-          13021
+          13141,
+          13169
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-scad",
-        "registryLine": 3653
+        "registryLine": 3750
       },
       "specGapId": "GAP-CAD-081",
       "specLine": 717,
@@ -1175,12 +1175,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-SCAD",
         "evaluatorBodyLineRange": [
-          12993,
-          13021
+          13141,
+          13169
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-scad",
-        "registryLine": 3653
+        "registryLine": 3750
       },
       "specGapId": "GAP-CAD-082",
       "specLine": 718,
@@ -1194,12 +1194,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-RADIATION-CAD",
         "evaluatorBodyLineRange": [
-          11635,
-          11657
+          11783,
+          11805
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-083-radiation-cad",
-        "registryLine": 1909
+        "registryLine": 2006
       },
       "specGapId": "GAP-CAD-083",
       "specLine": 719,
@@ -1213,12 +1213,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-VASCULITIS-CAD",
         "evaluatorBodyLineRange": [
-          11665,
-          11687
+          11813,
+          11835
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-084-vasculitis-cad",
-        "registryLine": 1917
+        "registryLine": 2014
       },
       "specGapId": "GAP-CAD-084",
       "specLine": 720,
@@ -1232,12 +1232,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-STIMULANT-CAD",
         "evaluatorBodyLineRange": [
-          11696,
-          11718
+          11844,
+          11866
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-085-stimulant-cad",
-        "registryLine": 1925
+        "registryLine": 2022
       },
       "specGapId": "GAP-CAD-085",
       "specLine": 721,
@@ -1261,12 +1261,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-CARDIAC-TRANSPLANT-CAD",
         "evaluatorBodyLineRange": [
-          13121,
-          13146
+          13269,
+          13294
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-cardiac-transplant-cad",
-        "registryLine": 3701
+        "registryLine": 3798
       },
       "specGapId": "GAP-CAD-087",
       "specLine": 723,
@@ -1290,12 +1290,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-CARDIAC-CT",
         "evaluatorBodyLineRange": [
-          12483,
-          12509
+          12631,
+          12657
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-cardiac-ct",
-        "registryLine": 3257
+        "registryLine": 3354
       },
       "specGapId": "GAP-CAD-047",
       "specLine": 729,
@@ -1309,12 +1309,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-STRESS-TEST",
         "evaluatorBodyLineRange": [
-          11362,
-          11387
+          11510,
+          11535
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-stress-test",
-        "registryLine": 1817
+        "registryLine": 1914
       },
       "specGapId": "GAP-CAD-048",
       "specLine": 730,
@@ -1328,12 +1328,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-STRESS-TEST",
         "evaluatorBodyLineRange": [
-          11362,
-          11387
+          11510,
+          11535
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-stress-test",
-        "registryLine": 1817
+        "registryLine": 1914
       },
       "specGapId": "GAP-CAD-089",
       "specLine": 731,
@@ -1357,12 +1357,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-BETA-BLOCKER",
         "evaluatorBodyLineRange": [
-          12742,
-          12769
+          12890,
+          12917
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-beta-blocker",
-        "registryLine": 3557
+        "registryLine": 3654
       },
       "specGapId": "GAP-CAD-050",
       "specLine": 737,
@@ -1396,12 +1396,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-RENAL-MONITOR",
         "evaluatorBodyLineRange": [
-          12003,
-          12029
+          12151,
+          12177
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-renal-monitor",
-        "registryLine": 3077
+        "registryLine": 3174
       },
       "specGapId": "GAP-CAD-052",
       "specLine": 744,

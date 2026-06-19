@@ -17,7 +17,7 @@
   "matches": [
     {
       "evaluatorBlockName": "SH-1",
-      "evaluatorCommentLine": 6923,
+      "evaluatorCommentLine": 7020,
       "matchConfidence": 0.429,
       "matchMethod": "similarity",
       "registryId": "gap-sh-1-as-surveillance",
@@ -25,427 +25,427 @@
     },
     {
       "evaluatorBlockName": "SH-002",
-      "evaluatorCommentLine": 7312,
+      "evaluatorCommentLine": 7443,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-sh-2-tavr-eval",
-      "registryLine": 761
+      "registryLine": 858
     },
     {
       "evaluatorBlockName": "SH-006",
-      "evaluatorCommentLine": 7347,
+      "evaluatorCommentLine": 7478,
       "matchConfidence": 0.654,
       "matchMethod": "similarity",
       "registryId": "gap-sh-006-as-asymptomatic-lvef",
-      "registryLine": 773
+      "registryLine": 870
     },
     {
       "evaluatorBlockName": "SH-003",
-      "evaluatorCommentLine": 7378,
+      "evaluatorCommentLine": 7509,
       "matchConfidence": 0.594,
       "matchMethod": "similarity",
       "registryId": "gap-sh-003-lflg-as-dse",
-      "registryLine": 785
+      "registryLine": 882
     },
     {
       "evaluatorBlockName": "SH-004",
-      "evaluatorCommentLine": 7411,
+      "evaluatorCommentLine": 7542,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-sh-004-paradoxical-lflg-as",
-      "registryLine": 797
+      "registryLine": 894
     },
     {
       "evaluatorBlockName": "SH-050",
-      "evaluatorCommentLine": 7444,
+      "evaluatorCommentLine": 7575,
       "matchConfidence": 0.625,
       "matchMethod": "similarity",
       "registryId": "gap-sh-050-as-grading-clarification",
-      "registryLine": 809
+      "registryLine": 906
     },
     {
       "evaluatorBlockName": "SH-014",
-      "evaluatorCommentLine": 7533,
+      "evaluatorCommentLine": 7664,
       "matchConfidence": 0.321,
       "matchMethod": "similarity",
       "registryId": "gap-sh-3-mitral-intervention",
-      "registryLine": 1253
+      "registryLine": 1350
     },
     {
       "evaluatorBlockName": "SH-016",
-      "evaluatorCommentLine": 7568,
+      "evaluatorCommentLine": 7699,
       "matchConfidence": 0.636,
       "matchMethod": "similarity",
       "registryId": "gap-sh-016-mr-primary-af",
-      "registryLine": 1265
+      "registryLine": 1362
     },
     {
       "evaluatorBlockName": "SH-017",
-      "evaluatorCommentLine": 7596,
+      "evaluatorCommentLine": 7727,
       "matchConfidence": 0.583,
       "matchMethod": "similarity",
       "registryId": "gap-sh-017-mr-primary-ph",
-      "registryLine": 1277
+      "registryLine": 1374
     },
     {
       "evaluatorBlockName": "SH-022",
-      "evaluatorCommentLine": 7642,
+      "evaluatorCommentLine": 7773,
       "matchConfidence": 0.077,
       "matchMethod": "similarity",
       "registryId": "gap-sh-022-tricuspid-assessment",
-      "registryLine": 1289
+      "registryLine": 1386
     },
     {
       "evaluatorBlockName": "SH-5",
-      "evaluatorCommentLine": 7734,
+      "evaluatorCommentLine": 7865,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-sh-5-structural-imaging",
-      "registryLine": 1301
+      "registryLine": 1398
     },
     {
       "evaluatorBlockName": "SH-6",
-      "evaluatorCommentLine": 7766,
+      "evaluatorCommentLine": 7897,
       "matchConfidence": 0.75,
       "matchMethod": "similarity",
       "registryId": "gap-sh-6-post-tavr-followup",
-      "registryLine": 1313
+      "registryLine": 1410
     },
     {
       "evaluatorBlockName": "SH-7",
-      "evaluatorCommentLine": 7798,
+      "evaluatorCommentLine": 7929,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-sh-7-endocarditis-prophylaxis",
-      "registryLine": 1325
+      "registryLine": 1422
     },
     {
       "evaluatorBlockName": "SH-8",
-      "evaluatorCommentLine": 7832,
+      "evaluatorCommentLine": 7963,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-sh-8-laa-assessment",
-      "registryLine": 1337
+      "registryLine": 1434
     },
     {
       "evaluatorBlockName": "SH-10",
-      "evaluatorCommentLine": 9265,
+      "evaluatorCommentLine": 9402,
       "matchConfidence": 0.077,
       "matchMethod": "similarity",
       "registryId": "gap-sh-10-mitraclip",
-      "registryLine": 2105
+      "registryLine": 2202
     },
     {
       "evaluatorBlockName": "SH-096",
-      "evaluatorCommentLine": 9987,
+      "evaluatorCommentLine": 10124,
       "matchConfidence": 0.182,
       "matchMethod": "similarity",
       "registryId": "gap-sh-11-tmvr",
-      "registryLine": 2117
+      "registryLine": 2214
     },
     {
       "evaluatorBlockName": "SH-072",
-      "evaluatorCommentLine": 9673,
+      "evaluatorCommentLine": 9810,
       "matchConfidence": 0.167,
       "matchMethod": "similarity",
       "registryId": "gap-sh-12-ttvr",
-      "registryLine": 2129
+      "registryLine": 2226
     },
     {
       "evaluatorBlockName": "SH-13",
-      "evaluatorCommentLine": 9359,
+      "evaluatorCommentLine": 9496,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-sh-13-paravalvular-leak",
-      "registryLine": 2141
+      "registryLine": 2238
     },
     {
       "evaluatorBlockName": "SH-14",
-      "evaluatorCommentLine": 9390,
+      "evaluatorCommentLine": 9527,
       "matchConfidence": 0.75,
       "matchMethod": "similarity",
       "registryId": "gap-sh-14-congenital-adult",
-      "registryLine": 2153
+      "registryLine": 2250
     },
     {
       "evaluatorBlockName": "SH-15",
-      "evaluatorCommentLine": 9418,
+      "evaluatorCommentLine": 9555,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-sh-15-alcohol-septal",
-      "registryLine": 2165
+      "registryLine": 2262
     },
     {
       "evaluatorBlockName": "SH-16",
-      "evaluatorCommentLine": 9447,
+      "evaluatorCommentLine": 9584,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-sh-16-watchman-fu",
-      "registryLine": 2177
+      "registryLine": 2274
     },
     {
       "evaluatorBlockName": "SH-17",
-      "evaluatorCommentLine": 9473,
+      "evaluatorCommentLine": 9610,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-sh-17-3d-echo",
-      "registryLine": 2189
+      "registryLine": 2286
     },
     {
       "evaluatorBlockName": "SH-BICUSPID",
-      "evaluatorCommentLine": 15587,
+      "evaluatorCommentLine": 15735,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-sh-bicuspid-surveillance",
-      "registryLine": 2633
-    },
-    {
-      "evaluatorBlockName": "SH-ROSS",
-      "evaluatorCommentLine": 15617,
-      "matchConfidence": 0.6,
-      "matchMethod": "similarity",
-      "registryId": "gap-sh-ross-procedure",
-      "registryLine": 2645
-    },
-    {
-      "evaluatorBlockName": "SH-VALVE-IN-VALVE",
-      "evaluatorCommentLine": 15648,
-      "matchConfidence": 0.6,
-      "matchMethod": "similarity",
-      "registryId": "gap-sh-valve-in-valve",
-      "registryLine": 2657
-    },
-    {
-      "evaluatorBlockName": "SH-027",
-      "evaluatorCommentLine": 9869,
-      "matchConfidence": 0.375,
-      "matchMethod": "similarity",
-      "registryId": "gap-sh-asd-closure",
-      "registryLine": 2669
-    },
-    {
-      "evaluatorBlockName": "SH-VSD",
-      "evaluatorCommentLine": 15693,
-      "matchConfidence": 0.6,
-      "matchMethod": "similarity",
-      "registryId": "gap-sh-vsd-closure",
-      "registryLine": 2681
-    },
-    {
-      "evaluatorBlockName": "SH-COARCTATION",
-      "evaluatorCommentLine": 15723,
-      "matchConfidence": 0.5,
-      "matchMethod": "similarity",
-      "registryId": "gap-sh-coarctation",
-      "registryLine": 2693
-    },
-    {
-      "evaluatorBlockName": "SH-FONTAN",
-      "evaluatorCommentLine": 15756,
-      "matchConfidence": 0.5,
-      "matchMethod": "similarity",
-      "registryId": "gap-sh-fontan-surveillance",
-      "registryLine": 2705
-    },
-    {
-      "evaluatorBlockName": "SH-CARCINOID",
-      "evaluatorCommentLine": 15788,
-      "matchConfidence": 0.583,
-      "matchMethod": "similarity",
-      "registryId": "gap-sh-carcinoid-valve",
-      "registryLine": 2717
-    },
-    {
-      "evaluatorBlockName": "SH-069",
-      "evaluatorCommentLine": 7672,
-      "matchConfidence": 0.385,
-      "matchMethod": "similarity",
-      "registryId": "gap-sh-069-evoque-ttvr",
       "registryLine": 2730
     },
     {
-      "evaluatorBlockName": "SH-023",
-      "evaluatorCommentLine": 7703,
-      "matchConfidence": 0.545,
+      "evaluatorBlockName": "SH-ROSS",
+      "evaluatorCommentLine": 15765,
+      "matchConfidence": 0.6,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-023-tr-device-lead",
-      "registryLine": 2737
+      "registryId": "gap-sh-ross-procedure",
+      "registryLine": 2742
     },
     {
-      "evaluatorBlockName": "SH-052",
-      "evaluatorCommentLine": 9643,
-      "matchConfidence": 0.385,
+      "evaluatorBlockName": "SH-VALVE-IN-VALVE",
+      "evaluatorCommentLine": 15796,
+      "matchConfidence": 0.6,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-052-marfan-bb-arb",
-      "registryLine": 2744
+      "registryId": "gap-sh-valve-in-valve",
+      "registryLine": 2754
     },
     {
-      "evaluatorBlockName": "SH-074",
-      "evaluatorCommentLine": 9707,
-      "matchConfidence": 0.542,
+      "evaluatorBlockName": "SH-027",
+      "evaluatorCommentLine": 10006,
+      "matchConfidence": 0.375,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-074-typeb-omt",
-      "registryLine": 2751
+      "registryId": "gap-sh-asd-closure",
+      "registryLine": 2766
     },
     {
-      "evaluatorBlockName": "SH-075",
-      "evaluatorCommentLine": 9734,
-      "matchConfidence": 0.65,
+      "evaluatorBlockName": "SH-VSD",
+      "evaluatorCommentLine": 15841,
+      "matchConfidence": 0.6,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-075-typeb-tevar",
-      "registryLine": 2758
+      "registryId": "gap-sh-vsd-closure",
+      "registryLine": 2778
     },
     {
-      "evaluatorBlockName": "SH-054",
-      "evaluatorCommentLine": 9760,
+      "evaluatorBlockName": "SH-COARCTATION",
+      "evaluatorCommentLine": 15871,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-054-turner-surveillance",
-      "registryLine": 2765
+      "registryId": "gap-sh-coarctation",
+      "registryLine": 2790
     },
     {
-      "evaluatorBlockName": "SH-055",
-      "evaluatorCommentLine": 9789,
-      "matchConfidence": 0.4,
+      "evaluatorBlockName": "SH-FONTAN",
+      "evaluatorCommentLine": 15904,
+      "matchConfidence": 0.5,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-055-veds-celiprolol",
-      "registryLine": 2772
+      "registryId": "gap-sh-fontan-surveillance",
+      "registryLine": 2802
     },
     {
-      "evaluatorBlockName": "SH-026",
-      "evaluatorCommentLine": 9837,
-      "matchConfidence": 0.667,
+      "evaluatorBlockName": "SH-CARCINOID",
+      "evaluatorCommentLine": 15936,
+      "matchConfidence": 0.583,
       "matchMethod": "similarity",
-      "registryId": "gap-sh-026-pfo-cryptogenic-closure",
-      "registryLine": 2779
-    },
-    {
-      "evaluatorBlockName": "SH-029",
-      "evaluatorCommentLine": 9898,
-      "matchConfidence": 0.667,
-      "matchMethod": "similarity",
-      "registryId": "gap-sh-029-ie-early-surgery",
-      "registryLine": 2786
-    },
-    {
-      "evaluatorBlockName": "SH-091",
-      "evaluatorCommentLine": 9933,
-      "matchConfidence": 0.292,
-      "matchMethod": "similarity",
-      "registryId": "gap-sh-091-massive-pe-reperfusion",
-      "registryLine": 2793
-    },
-    {
-      "evaluatorBlockName": "SH-101",
-      "evaluatorCommentLine": 9962,
-      "matchConfidence": 0.556,
-      "matchMethod": "similarity",
-      "registryId": "gap-sh-101-eisenmenger-pah",
-      "registryLine": 2800
-    },
-    {
-      "evaluatorBlockName": "SH-099",
-      "evaluatorCommentLine": 10013,
-      "matchConfidence": 0.714,
-      "matchMethod": "similarity",
-      "registryId": "gap-sh-099-ebstein-arrhythmia",
-      "registryLine": 2807
-    },
-    {
-      "evaluatorBlockName": "SH-059",
-      "evaluatorCommentLine": 10075,
-      "matchConfidence": 0.65,
-      "matchMethod": "similarity",
-      "registryId": "gap-sh-059-postavr-antithrombotic",
+      "registryId": "gap-sh-carcinoid-valve",
       "registryLine": 2814
     },
     {
+      "evaluatorBlockName": "SH-069",
+      "evaluatorCommentLine": 7803,
+      "matchConfidence": 0.385,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-069-evoque-ttvr",
+      "registryLine": 2827
+    },
+    {
+      "evaluatorBlockName": "SH-023",
+      "evaluatorCommentLine": 7834,
+      "matchConfidence": 0.545,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-023-tr-device-lead",
+      "registryLine": 2834
+    },
+    {
+      "evaluatorBlockName": "SH-052",
+      "evaluatorCommentLine": 9780,
+      "matchConfidence": 0.385,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-052-marfan-bb-arb",
+      "registryLine": 2841
+    },
+    {
+      "evaluatorBlockName": "SH-074",
+      "evaluatorCommentLine": 9844,
+      "matchConfidence": 0.542,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-074-typeb-omt",
+      "registryLine": 2848
+    },
+    {
+      "evaluatorBlockName": "SH-075",
+      "evaluatorCommentLine": 9871,
+      "matchConfidence": 0.65,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-075-typeb-tevar",
+      "registryLine": 2855
+    },
+    {
+      "evaluatorBlockName": "SH-054",
+      "evaluatorCommentLine": 9897,
+      "matchConfidence": 0.5,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-054-turner-surveillance",
+      "registryLine": 2862
+    },
+    {
+      "evaluatorBlockName": "SH-055",
+      "evaluatorCommentLine": 9926,
+      "matchConfidence": 0.4,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-055-veds-celiprolol",
+      "registryLine": 2869
+    },
+    {
+      "evaluatorBlockName": "SH-026",
+      "evaluatorCommentLine": 9974,
+      "matchConfidence": 0.667,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-026-pfo-cryptogenic-closure",
+      "registryLine": 2876
+    },
+    {
+      "evaluatorBlockName": "SH-029",
+      "evaluatorCommentLine": 10035,
+      "matchConfidence": 0.667,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-029-ie-early-surgery",
+      "registryLine": 2883
+    },
+    {
+      "evaluatorBlockName": "SH-091",
+      "evaluatorCommentLine": 10070,
+      "matchConfidence": 0.292,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-091-massive-pe-reperfusion",
+      "registryLine": 2890
+    },
+    {
+      "evaluatorBlockName": "SH-101",
+      "evaluatorCommentLine": 10099,
+      "matchConfidence": 0.556,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-101-eisenmenger-pah",
+      "registryLine": 2897
+    },
+    {
+      "evaluatorBlockName": "SH-099",
+      "evaluatorCommentLine": 10150,
+      "matchConfidence": 0.714,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-099-ebstein-arrhythmia",
+      "registryLine": 2904
+    },
+    {
+      "evaluatorBlockName": "SH-059",
+      "evaluatorCommentLine": 10212,
+      "matchConfidence": 0.65,
+      "matchMethod": "similarity",
+      "registryId": "gap-sh-059-postavr-antithrombotic",
+      "registryLine": 2911
+    },
+    {
       "evaluatorBlockName": "SH-057",
-      "evaluatorCommentLine": 10105,
+      "evaluatorCommentLine": 10242,
       "matchConfidence": 0.65,
       "matchMethod": "similarity",
       "registryId": "gap-sh-057-postavr-lbbb",
-      "registryLine": 2821
+      "registryLine": 2918
     },
     {
       "evaluatorBlockName": "SH-060",
-      "evaluatorCommentLine": 10133,
+      "evaluatorCommentLine": 10270,
       "matchConfidence": 0.792,
       "matchMethod": "similarity",
       "registryId": "gap-sh-060-postavr-pacing",
-      "registryLine": 2828
+      "registryLine": 2925
     },
     {
       "evaluatorBlockName": "SH-092",
-      "evaluatorCommentLine": 10172,
+      "evaluatorCommentLine": 10309,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-sh-092-cteph-surveillance",
-      "registryLine": 2835
+      "registryLine": 2932
     },
     {
       "evaluatorBlockName": "SH-095",
-      "evaluatorCommentLine": 10201,
+      "evaluatorCommentLine": 10338,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-sh-095-coarctation-surveillance",
-      "registryLine": 2842
+      "registryLine": 2939
     },
     {
       "evaluatorBlockName": "SH-097",
-      "evaluatorCommentLine": 10228,
+      "evaluatorCommentLine": 10365,
       "matchConfidence": 0.429,
       "matchMethod": "similarity",
       "registryId": "gap-sh-097-systemic-rv",
-      "registryLine": 2849
+      "registryLine": 2946
     },
     {
       "evaluatorBlockName": "SH-082",
-      "evaluatorCommentLine": 10270,
+      "evaluatorCommentLine": 10407,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-sh-082-postclosure-antithrombotic",
-      "registryLine": 2856
+      "registryLine": 2953
     },
     {
       "evaluatorBlockName": "SH-083",
-      "evaluatorCommentLine": 10301,
+      "evaluatorCommentLine": 10438,
       "matchConfidence": 0.722,
       "matchMethod": "similarity",
       "registryId": "gap-sh-083-postclosure-surveillance",
-      "registryLine": 2863
+      "registryLine": 2960
     },
     {
       "evaluatorBlockName": "SH-065",
-      "evaluatorCommentLine": 10328,
+      "evaluatorCommentLine": 10465,
       "matchConfidence": 0.813,
       "matchMethod": "similarity",
       "registryId": "gap-sh-065-postteer-echo",
-      "registryLine": 2870
+      "registryLine": 2967
     },
     {
       "evaluatorBlockName": "SH-066",
-      "evaluatorCommentLine": 10354,
+      "evaluatorCommentLine": 10491,
       "matchConfidence": 0.462,
       "matchMethod": "similarity",
       "registryId": "gap-sh-066-recurrent-mr-teer",
-      "registryLine": 2877
+      "registryLine": 2974
     },
     {
       "evaluatorBlockName": "SH-064",
-      "evaluatorCommentLine": 9318,
+      "evaluatorCommentLine": 9455,
       "matchConfidence": 0.154,
       "matchMethod": "similarity",
       "registryId": "gap-sh-016-primary-mr-af",
-      "registryLine": 2912
+      "registryLine": 3009
     },
     {
       "evaluatorBlockName": "SH-103",
-      "evaluatorCommentLine": 10038,
+      "evaluatorCommentLine": 10175,
       "matchConfidence": 0.4,
       "matchMethod": "similarity",
       "registryId": "gap-sh-103-atrial-myxoma",
-      "registryLine": 2926
+      "registryLine": 3023
     }
   ],
   "module": "SH",
@@ -456,37 +456,37 @@
       "evaluatorBlockName": null,
       "reason": "No evaluator body matched via similarity scoring",
       "registryId": "gap-sh-9-pfo-closure",
-      "registryLine": 1349
+      "registryLine": 1446
     },
     {
       "evaluatorBlockName": null,
       "reason": "No evaluator body matched via similarity scoring",
       "registryId": "gap-sh-003-lflg-classical",
-      "registryLine": 2884
+      "registryLine": 2981
     },
     {
       "evaluatorBlockName": null,
       "reason": "No evaluator body matched via similarity scoring",
       "registryId": "gap-sh-004-lflg-paradoxical",
-      "registryLine": 2891
+      "registryLine": 2988
     },
     {
       "evaluatorBlockName": null,
       "reason": "No evaluator body matched via similarity scoring",
       "registryId": "gap-sh-006-asymptomatic-as",
-      "registryLine": 2898
+      "registryLine": 2995
     },
     {
       "evaluatorBlockName": null,
       "reason": "No evaluator body matched via similarity scoring",
       "registryId": "gap-sh-050-moderate-as-grading",
-      "registryLine": 2905
+      "registryLine": 3002
     },
     {
       "evaluatorBlockName": null,
       "reason": "No evaluator body matched via similarity scoring",
       "registryId": "gap-sh-017-primary-mr-pasp",
-      "registryLine": 2919
+      "registryLine": 3016
     }
   ],
   "specGapCount": 88,

@@ -370,3 +370,15 @@ The intersection (Tranche-2 SYNTHEA-EXPANDABLE AND HIGH-PILOT-VALUE) is the cand
 **Optional cleanup (not a new gap):** the VHD LAAC-TEE-follow-up gap detects LAAC via the over-broad `Z95.818` instead of the manufacturer-confirmed `LAAC_CPT` (33340, Boston Scientific Watchman guide) that the EP module already uses. Migrate to 33340 when the CPT-cleanup pass runs. Not blocking; opportunistic.
 
 **Related finding:** AUDIT-168 (RESOLVED 2026-06-17 - the suspect structural CPTs were manufacturer-verified; the confirmed-wrong `0544T/0545T` tricuspid-TEER mislabel was corrected to `0569T/0570T`).
+
+---
+
+## PV chunk-1 threading/code-blocked sub-tranche (NEW, 2026-06-18)
+
+**Source:** the PV chunk-1 buildout §16/threading gate found 3 of the banked PV audit's "~10 buildable" gaps over-assumed threading (the AUDIT-181 ApoB over-assumption class). They were NOT built (avoiding the AUDIT-177 always-fire-proxy), held SPEC_ONLY, and recorded here for the post-modules re-audit. These do NOT change the Section-1 counts (already in the 510 non-DET_OK buckets). See findings register **AUDIT-183**.
+
+| GAP-ID | Module | Title | Blocked element | Tranche | Unblock path |
+|---|---|---|---|---|---|
+| GAP-PV-021 | PV | CLTI: WIfI staging documentation | `wifi_score` is a `type:string` csvSchema column NOT wired to `labValues` (`Record<string,number>`, populated from the patientWriter `labFields` allowlist) - always undefined at the engine | Tranche 3 (process/doc - staging score) | a threading PR (AUDIT-070 class) mapping WIfI to a numeric/staged observation reaching `labValues` |
+| GAP-PV-037 | PV | Takayasu: serial ESR/CRP + imaging surveillance | neither ESR nor CRP is threaded (no observationService FHIR LOINC->slug mapping; not in the CSV `labFields` allowlist) - `labValues['crp']`/`['esr']` always undefined | Tranche 2 (Synthea-expandable numeric) | a threading PR (AUDIT-070 class) mapping ESR + CRP LOINCs on both FHIR + CSV paths |
+| GAP-PV-060 | PV | Post-CEA/CAS antiplatelet + statin continuation | no clean post-carotid-revascularization ICD-10 code (`Z95.820` = peripheral angioplasty status, not carotid; CEA leaves no implant code) | code-floor (procedure-signal) | gate on a carotid-revasc CPT (`35301` CEA / `37215`-`37216` CAS) once procedure threading covers carotid revasc, OR a Z-code convention |

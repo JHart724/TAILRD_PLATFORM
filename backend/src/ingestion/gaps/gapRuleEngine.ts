@@ -698,6 +698,103 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'B',
   },
   {
+    id: 'gap-pv-003-abnormal-abi',
+    name: 'Abnormal ABI Without Coded PAD',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2024 ACC/AHA/SVM/SCAI Guideline for the Management of Lower Extremity Peripheral Artery Disease',
+    guidelineVersion: '2024',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-18',
+    nextReviewDue: '2026-12-18',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B-NR',
+  },
+  // --- PV chunk 1 (2026-06-18): 7 buildable SPEC_ONLY gaps (ABI pair completion, FMD, vasculitis, carotid, ICAS) ---
+  {
+    id: 'gap-pv-004-noncompressible-abi',
+    name: 'Non-Compressible ABI (>1.40) Toe-Brachial Follow-Up',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2024 ACC/AHA/SVM/SCAI Guideline for the Management of Lower Extremity Peripheral Artery Disease',
+    guidelineVersion: '2024',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-18',
+    nextReviewDue: '2026-12-18',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-pv-034-fmd-screening',
+    name: 'Fibromuscular Dysplasia Screening in Young Hypertensive Women',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2014 First International Consensus on the Diagnosis and Management of Fibromuscular Dysplasia; 2019 AHA Scientific Statement',
+    guidelineVersion: '2019',
+    guidelineOrg: 'AHA',
+    lastReviewDate: '2026-06-18',
+    nextReviewDue: '2026-12-18',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'C-EO',
+  },
+  {
+    id: 'gap-pv-038-takayasu-immunosuppression',
+    name: 'Takayasu Arteritis Immunosuppression Gap',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2021 ACR/VF Guideline for the Management of Takayasu Arteritis',
+    guidelineVersion: '2021',
+    guidelineOrg: 'ACR/VF',
+    lastReviewDate: '2026-06-18',
+    nextReviewDue: '2026-12-18',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-pv-040-gca-steroid',
+    name: 'Giant Cell Arteritis Urgent Glucocorticoid Gap',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2021 ACR/VF Guideline for the Management of Giant Cell Arteritis',
+    guidelineVersion: '2021',
+    guidelineOrg: 'ACR/VF',
+    lastReviewDate: '2026-06-18',
+    nextReviewDue: '2026-12-18',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C-LD',
+  },
+  {
+    id: 'gap-pv-041-buerger-cessation',
+    name: 'Buerger Disease Smoking Cessation (Disease-Modifying)',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2024 ACC/AHA PAD Guideline; thromboangiitis obliterans evidence (Olin)',
+    guidelineVersion: '2024',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-18',
+    nextReviewDue: '2026-12-18',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-pv-058-symptomatic-carotid-revasc',
+    name: 'Symptomatic Carotid Stenosis Revascularization Evaluation',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2021 AHA/ASA Secondary Stroke Prevention Guideline; 2011 ASA/ACCF/AHA Carotid Guideline',
+    guidelineVersion: '2021',
+    guidelineOrg: 'AHA/ASA',
+    lastReviewDate: '2026-06-18',
+    nextReviewDue: '2026-12-18',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'A',
+  },
+  {
+    id: 'gap-pv-062-intracranial-stenosis-medical',
+    name: 'Intracranial Atherosclerotic Stenosis Aggressive Medical Therapy (SAMMPRIS)',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2021 AHA/ASA Secondary Stroke Prevention Guideline; SAMMPRIS (NEJM 2011)',
+    guidelineVersion: '2021',
+    guidelineOrg: 'AHA/ASA',
+    lastReviewDate: '2026-06-18',
+    nextReviewDue: '2026-12-18',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B-R',
+  },
+  {
     id: 'gap-hf-37-raas',
     name: 'ACEi/ARB/ARNi in HFrEF',
     module: 'HEART_FAILURE',
@@ -7074,6 +7171,40 @@ export function evaluateGapRules(
     }
   }
 
+  // Gap PV-003: Abnormal ABI (<=0.90) without a coded PAD diagnosis -> undiagnosed PAD (AUDIT-179 foundational build)
+  // PV chunk 0 (2026-06-18). Guideline: 2024 ACC/AHA/SVM/SCAI Lower Extremity PAD Guideline (Class 1: a resting
+  // ABI <=0.90 is diagnostic of PAD). The module previously had NO rule reading an ABI VALUE threshold - ABI was
+  // threaded (labValues['abi_left'/'abi_right']) but used only as a presence flag (PV-2). This builds the real
+  // abnormal-ABI detection. Subgroup/Path-B: a falsely-elevated ABI >1.40 (non-compressible / calcified vessels)
+  // is the SEPARATE PV-004 gap, NOT conflated here (this gate is the low-abnormal <=0.90 range). The toe-brachial
+  // index (TBI) confirmation arm for borderline / non-compressible vessels is not threaded (Path-B).
+  const abiLeft_PV3 = labValues['abi_left'];
+  const abiRight_PV3 = labValues['abi_right'];
+  const hasLowAbnormalABI = (abiLeft_PV3 !== undefined && abiLeft_PV3 <= 0.9) || (abiRight_PV3 !== undefined && abiRight_PV3 <= 0.9);
+  if (hasLowAbnormalABI && !hasPAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.DOCUMENTATION_GAP,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'Abnormal ABI (<=0.90) without a coded PAD diagnosis: undiagnosed peripheral artery disease',
+      target: 'Formal PAD diagnosis + guideline-directed risk-factor management (statin, antiplatelet, smoking cessation, supervised exercise)',
+      recommendations: {
+        action: 'Consider establishing a peripheral artery disease diagnosis and initiating guideline-directed management (high-intensity statin, antiplatelet, smoking cessation, supervised exercise) for this patient with a resting ABI <=0.90 (diagnostic of PAD) and no PAD diagnosis coded, per 2024 ACC/AHA PAD Guideline',
+        guideline: '2024 ACC/AHA/SVM/SCAI Lower Extremity PAD Guideline',
+        note: 'Subgroup: a resting ABI <=0.90 is diagnostic of PAD (Class 1). A falsely-elevated ABI >1.40 (non-compressible / calcified vessels) is the separate PV-004 gap, not this one. Path-B: toe-brachial index (TBI) confirmation for borderline (0.91-0.99) or non-compressible vessels is not threaded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          `Resting ABI <=0.90 (left ${abiLeft_PV3 ?? 'NA'} / right ${abiRight_PV3 ?? 'NA'})`,
+          'No peripheral artery disease diagnosis (I70.2x / I73.9) coded',
+        ],
+        guidelineSource: '2024 ACC/AHA/SVM/SCAI Guideline for the Management of Lower Extremity Peripheral Artery Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Known PAD (I70.2x / I73.9)', 'Non-compressible ABI >1.40 (see PV-004)', 'Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
   // ============================================================
   // Gap HF-37: ACEi/ARB/ARNi Missing in HFrEF (First pillar of GDMT)
   // ============================================================
@@ -8825,33 +8956,39 @@ export function evaluateGapRules(
     });
   }
 
-  // Gap PV-6: Diabetes Control in PAD
-  // Guideline: 2024 ACC/AHA PAD Guideline, Class 1, LOE B
-  // PAD + diabetes + no HbA1c on file
+  // Gap PV-6: Diabetes Control in PAD - HbA1c above target (PV-015)
+  // Guideline: 2024 ACC/AHA PAD Guideline + ADA Standards of Care, Class 1, LOE B
+  // Tightening (AUDIT-178, PV chunk 0 2026-06-18): the prior rule fired on hba1c===undefined (an existence-proxy
+  // for "not measured", not the spec "A1c target" gap). HbA1c is threaded, so this now reads the real value: an
+  // A1c >= 7.0% in a PAD diabetic is above the standard ADA target (<7% for most adults; Class 1) -> glycemic
+  // optimization. Subgroup/Path-B: the relaxed <8% goal for frail / limited-life-expectancy / high-CV-risk
+  // patients is individualized and not threaded - this surfaces the above-7% population for that judgment.
   if (
     hasPAD &&
     hasDiabetes &&
-    labValues['hba1c'] === undefined &&
+    labValues['hba1c'] !== undefined && labValues['hba1c'] >= 7.0 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
     gaps.push({
-      type: TherapyGapType.MONITORING_OVERDUE,
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
       module: ModuleType.PERIPHERAL_VASCULAR,
-      status: 'HbA1c monitoring overdue in PAD with diabetes',
-      target: 'HbA1c checked and glycemic control assessed',
+      status: 'HbA1c above target (>=7.0%) in PAD with diabetes: glycemic optimization gap',
+      target: 'HbA1c optimized toward the individualized target (generally <7% for most adults) per ADA / 2024 ACC/AHA PAD',
       recommendations: {
-        action: 'Consider HbA1c monitoring for diabetes management in PAD per 2024 ACC/AHA PAD Guideline',
+        action: 'Consider intensifying glycemic management toward the individualized HbA1c target (generally <7% for most adults; consider a CV-benefit agent such as an SGLT2i or GLP-1 RA) for this PAD patient with HbA1c >= 7.0%, per ADA Standards of Care and the 2024 ACC/AHA PAD Guideline',
+        guideline: '2024 ACC/AHA Peripheral Artery Disease; ADA Standards of Care',
+        note: 'Subgroup-aware: the <7% goal applies to most adults; a relaxed <8% target for frail / limited-life-expectancy / high-CV-risk patients is individualized (Path-B, not threaded). Fires on a threaded HbA1c >= 7.0%, not on missing data.',
       },
       evidence: {
         triggerCriteria: [
           'Peripheral artery disease (I73.9 or I70.2*)',
           'Diabetes mellitus (E11.*)',
-          'No HbA1c value on file',
+          `HbA1c: ${labValues['hba1c']}% (>= 7.0, above the standard target)`,
         ],
-        guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease',
+        guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease; ADA Standards of Care',
         classOfRecommendation: '1',
         levelOfEvidence: 'B',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent HbA1c within guideline interval'],
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Individualized relaxed target (<8%) appropriate'],
       },
     });
   }
@@ -10540,12 +10677,23 @@ export function evaluateGapRules(
     }
   }
 
-  // Gap PV-12: Renal Artery Stenosis Screen
+  // Gap PV-12: Renal Artery Stenosis Screen in RESISTANT HTN + renal impairment (PV-033)
   // Guideline: 2024 ACC/AHA PAD Guideline; 2017 ACC/AHA Hypertension Guideline, Class 2a, LOE C
-  // PAD + HTN + renal impairment (eGFR < 60 or creatinine elevated)
+  // Tightening (AUDIT-178, PV chunk 0 2026-06-18): the prior rule fired on PAD + HTN + egfr<60 with NO
+  // resistant-HTN gate, over-detecting on any HTN+PAD+renal patient despite the "resistant HTN" recommendation.
+  // Add the genuine resistant-HTN signal: on >=3 distinct antihypertensive classes (RAAS / beta-blocker / CCB /
+  // diuretic), using the canonical value sets + section-16-verified codes (diltiazem 3443, verapamil 11170,
+  // spironolactone 9997, nadolol 7226). Path-B: BP control status is not threaded, so this is the apparent-
+  // treatment-resistant proxy (>=3 classes), not the full uncontrolled-on-3 / controlled-on-4 definition.
+  const onRAAS_resHTN = medCodes.some(c => RAAS_CODES_CV.includes(c));
+  const onBB_resHTN = medCodes.some(c => BB_CODES_CV.includes(c) || c === '7226');
+  const onCCB_resHTN = medCodes.some(c => [...codes(RXNORM_DHP_CCB), '3443', '11170'].includes(c));
+  const onDiuretic_resHTN = medCodes.some(c => [...codes(RXNORM_LOOP_DIURETICS), ...codes(RXNORM_THIAZIDES), '9997'].includes(c));
+  const hasResistantHTN_PV12 = [onRAAS_resHTN, onBB_resHTN, onCCB_resHTN, onDiuretic_resHTN].filter(Boolean).length >= 3;
   if (
     hasPAD &&
     hasHTN_PV11 &&
+    hasResistantHTN_PV12 &&
     labValues['egfr'] !== undefined && labValues['egfr'] < 60 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
@@ -16552,9 +16700,15 @@ export function evaluateGapRules(
     });
   }
 
-  // PV-VARICOSE: Varicose Vein Management
+  // PV-VARICOSE: Symptomatic / complicated varicose vein management (PV-071)
   // Guideline: 2024 SVS/AVF Varicose Vein Guidelines, Class 1, LOE B
-  const hasVaricoseVeinsPV = dxCodes.some(c => c.startsWith('I83'));
+  // Tightening (AUDIT-178, PV chunk 0 2026-06-18): the prior rule fired on bare I83 (incl asymptomatic I83.9),
+  // over-detecting; the spec targets CEAP 3+ symptomatic / complicated disease. Tightened to the complicated
+  // subcodes (section-16-verified): I83.0 with ulcer, I83.1 with inflammation, I83.2 with ulcer + inflammation,
+  // I83.8 with pain / other complications - EXCLUDING asymptomatic I83.9.
+  const hasVaricoseVeinsPV = dxCodes.some(c =>
+    c.startsWith('I83.0') || c.startsWith('I83.1') || c.startsWith('I83.2') || c.startsWith('I83.8'),
+  );
   if (hasVaricoseVeinsPV && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
       type: TherapyGapType.REFERRAL_NEEDED,
@@ -16765,11 +16919,18 @@ export function evaluateGapRules(
     }
   }
 
-  // PV-GRAFT-SURVEILLANCE: Bypass Graft Surveillance
+  // PV-GRAFT-SURVEILLANCE: Bypass Graft Surveillance (PV-098)
   // Guideline: 2024 ACC/AHA PAD Guideline + SVS Practice Guidelines, Class 1, LOE B
+  // Tightening (AUDIT-178, PV chunk 0 2026-06-18): added a genuine interval comparison. graft_duplex_months IS
+  // threaded (months since last graft duplex), so the gap now fires when surveillance is overdue (> 12 months,
+  // i.e. past the annual interval) OR never documented (undefined) - a recently-surveilled patient (<= 12 months)
+  // now correctly gates out instead of the prior existence-only proxy.
   if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasVascularGraft = dxCodes.some(c => c.startsWith('Z95.8'));
-    if (hasVascularGraft && hasPAD && labValues['graft_duplex_months'] === undefined) {
+    const graftDuplexMonths_PV98 = labValues['graft_duplex_months'];
+    const graftSurveillanceOverdue =
+      graftDuplexMonths_PV98 === undefined || graftDuplexMonths_PV98 > 12;
+    if (hasVascularGraft && hasPAD && graftSurveillanceOverdue) {
       gaps.push({
         type: TherapyGapType.MONITORING_OVERDUE,
         module: ModuleType.PERIPHERAL_VASCULAR,
@@ -16795,10 +16956,13 @@ export function evaluateGapRules(
     }
   }
 
-  // PV-ANTICOAG-VTE: VTE Anticoagulation Duration Review
+  // PV-ANTICOAG-VTE: VTE Anticoagulation Duration Review (PV-076)
   // Guideline: 2021 ASH VTE Guidelines + 2020 CHEST Antithrombotic Guideline, Class 1, LOE B
+  // Fix (AUDIT-179, PV chunk 0 2026-06-18): the spec target is post-PE, but the rule fired ONLY on I82 (DVT) -
+  // MISSING the PE population (I26) entirely. Added I26 (pulmonary embolism, section-16-verified) so the gap
+  // detects its spec population; I82 (DVT) is retained since VTE anticoagulation-duration review applies to both.
   if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasVTE = dxCodes.some(c => c.startsWith('I82'));
+    const hasVTE = dxCodes.some(c => c.startsWith('I26') || c.startsWith('I82'));
     const OAC_CODES_VTE = ['11289', '1364430', '1114195', '1037042', '1599538'];
     const onOACvte = medCodes.some(c => OAC_CODES_VTE.includes(c));
     if (hasVTE && onOACvte) {
@@ -16814,7 +16978,7 @@ export function evaluateGapRules(
         },
         evidence: {
           triggerCriteria: [
-            'Venous thromboembolism (I82.*)',
+            'Venous thromboembolism: pulmonary embolism (I26.*) or DVT (I82.*)',
             'On oral anticoagulation therapy',
           ],
           guidelineSource: '2021 ASH Guidelines on VTE Management; 2020 CHEST Guideline on Antithrombotic Therapy for VTE',
@@ -16824,6 +16988,242 @@ export function evaluateGapRules(
         },
       });
     }
+  }
+
+  // ============================================================
+  // Peripheral-vascular chunk-1 buildable batch (2026-06-18)
+  // ============================================================
+
+  // Gap PV-004: Non-compressible ABI (>1.40) without toe-brachial confirmation - the calcified-vessel companion to PV-003
+  // Guideline: 2024 ACC/AHA/SVM/SCAI PAD Guideline - an ABI >1.40 is non-diagnostic (medial calcification /
+  // non-compressible vessels); a toe-brachial index (TBI) is the recommended next test (Class 1). Completes the ABI
+  // pair with the low-abnormal rule: the <=0.90 (PV-003) and >1.40 (this rule) ranges are disjoint, and PV-003
+  // routes the >1.40 patient HERE, so there is no double-fire. Path-B: the TBI value itself is not threaded, so
+  // this fires on the non-compressible ABI finding alone and recommends TBI / alternative perfusion assessment.
+  const abiLeft_PV4 = labValues['abi_left'];
+  const abiRight_PV4 = labValues['abi_right'];
+  const hasNonCompressibleABI = (abiLeft_PV4 !== undefined && abiLeft_PV4 > 1.40) || (abiRight_PV4 !== undefined && abiRight_PV4 > 1.40);
+  if (hasNonCompressibleABI && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.SCREENING_DUE,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'Non-compressible ABI (>1.40): toe-brachial index recommended for perfusion assessment',
+      target: 'Toe-brachial index (TBI) or alternative perfusion study completed to assess limb perfusion',
+      recommendations: {
+        action: 'Consider obtaining a toe-brachial index (TBI) or alternative perfusion assessment for this patient with a non-compressible ABI >1.40 (medial calcification renders the ABI non-diagnostic), per the 2024 ACC/AHA PAD Guideline',
+        guideline: '2024 ACC/AHA/SVM/SCAI Lower Extremity PAD Guideline',
+        note: 'Subgroup: ABI >1.40 = non-compressible / calcified vessels (common in diabetes, CKD), where the ABI cannot exclude PAD. PV-003 handles the low-abnormal <=0.90 range; this is the distinct >1.40 companion (no overlap). Path-B: the TBI value is not threaded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          `Non-compressible ABI >1.40 (left ${abiLeft_PV4 ?? 'NA'} / right ${abiRight_PV4 ?? 'NA'})`,
+        ],
+        guidelineSource: '2024 ACC/AHA/SVM/SCAI Guideline for the Management of Lower Extremity Peripheral Artery Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'TBI already documented', 'Low-abnormal ABI <=0.90 (see PV-003)'],
+      },
+    });
+  }
+
+  // Gap PV-034: Fibromuscular dysplasia (FMD) screening in a young hypertensive woman without an FMD diagnosis
+  // Guideline: 2014 First International Consensus on FMD + 2019 AHA Scientific Statement - FMD is a non-
+  // atherosclerotic arteriopathy that disproportionately causes secondary HTN in young women; imaging screening
+  // (renal/carotid duplex or CTA/MRA) is suggested (Class 2a / expert consensus) for early-onset hypertension.
+  // section-16: I77.3 = Arterial fibromuscular dysplasia (NLM-verified). Subgroup: the gate is the young-female-HTN
+  // population the consensus targets; FMD already coded (I77.3) gates out (already evaluated).
+  const hasFMD_PV34 = dxCodes.some(c => c.startsWith('I77.3'));
+  const isYoungFemaleHTN_PV34 = hasHTN_PV11 && age < 35 && (gender?.toUpperCase() === 'FEMALE' || gender?.toUpperCase() === 'F');
+  if (isYoungFemaleHTN_PV34 && !hasFMD_PV34 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.SCREENING_DUE,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'Consider fibromuscular dysplasia screening in young woman with early-onset hypertension',
+      target: 'FMD imaging screening (renal/carotid duplex, CTA or MRA) considered for secondary-HTN evaluation',
+      recommendations: {
+        action: 'Consider imaging screening for fibromuscular dysplasia (renal artery duplex, CTA or MRA) in this young woman with hypertension, as FMD is an under-recognized non-atherosclerotic cause of secondary hypertension, per the 2014 International FMD Consensus and 2019 AHA Scientific Statement',
+        guideline: '2014 First International Consensus on FMD; 2019 AHA Scientific Statement on FMD',
+        note: 'Subgroup-aware: FMD predominantly affects women and presents as early-onset / resistant HTN; the gate is age<35 + female + HTN. Path-B: a renovascular bruit or resistant-HTN qualifier is not threaded, so this surfaces the demographic-risk population for clinician judgment, not a confirmed FMD case.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Hypertension (I10)',
+          `Age ${age} (<35)`,
+          'Female sex',
+          'No fibromuscular dysplasia diagnosis (I77.3) coded',
+        ],
+        guidelineSource: '2014 First International Consensus on the Diagnosis and Management of Fibromuscular Dysplasia; 2019 AHA Scientific Statement',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C-EO',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'FMD already diagnosed (I77.3)', 'Secondary HTN cause already identified'],
+      },
+    });
+  }
+
+  // Gap PV-038: Takayasu arteritis without immunosuppression on the active medication list
+  // Guideline: 2021 ACR/VF Takayasu Arteritis Guideline - active Takayasu is treated with glucocorticoids PLUS a
+  // non-glucocorticoid (steroid-sparing) immunosuppressive. section-16: M31.4 = Aortic arch syndrome [Takayasu]
+  // (NLM-verified). Gate: M31.4 + NOT on prednisone or a steroid-sparing agent (methotrexate / azathioprine / MMF,
+  // canonical RXNORM_STEROID_SPARING). Path-B: disease-activity (the "active" qualifier - ESR/CRP/imaging) is not
+  // threaded, so this fires on the diagnosis + no-immunosuppression (the untreated case). Distinct from PV-040 (GCA).
+  const hasTakayasu_PV38 = dxCodes.some(c => c.startsWith('M31.4'));
+  const onImmunosuppression_PV38 = medCodes.some(c => codes(RXNORM_CORTICOSTEROIDS).includes(c) || codes(RXNORM_STEROID_SPARING).includes(c));
+  if (hasTakayasu_PV38 && !onImmunosuppression_PV38 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'Takayasu arteritis without immunosuppressive therapy: disease-control gap',
+      target: 'Glucocorticoid + steroid-sparing immunosuppression initiated for large-vessel arteritis',
+      recommendations: {
+        action: 'Consider initiating immunosuppression (a glucocorticoid plus a steroid-sparing agent such as methotrexate, azathioprine, or a biologic) in coordination with rheumatology for this patient with Takayasu arteritis and no immunosuppressive therapy on file, per the 2021 ACR/VF Takayasu Guideline',
+        guideline: '2021 ACR/VF Guideline for the Management of Takayasu Arteritis',
+        note: 'Subgroup-aware: Takayasu (large-vessel arteritis) is managed by rheumatology-coordinated immunosuppression, distinct from atherosclerotic PAD. Path-B: disease-activity markers (ESR/CRP, vessel-wall imaging) are not threaded - the gap fires on the Takayasu diagnosis with NO immunosuppression on the med list.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Takayasu arteritis (M31.4)',
+          'No glucocorticoid or steroid-sparing immunosuppressant on the active medication list',
+        ],
+        guidelineSource: '2021 ACR/VF Guideline for the Management of Takayasu Arteritis',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Immunosuppression already prescribed', 'Documented immunosuppression contraindication'],
+      },
+    });
+  }
+
+  // Gap PV-040: Giant cell arteritis without glucocorticoid - urgent steroid (vision-threatening emergency)
+  // Guideline: 2021 ACR/VF GCA Guideline - GCA is a medical emergency; high-dose glucocorticoids must start
+  // immediately on suspicion to prevent irreversible vision loss, and tocilizumab (IL-6 inhibitor, GiACTA NEJM 2017)
+  // is a glucocorticoid-sparing add-on. section-16: M31.5 = GCA with PMR, M31.6 = other GCA (NLM-verified) -
+  // distinct from Takayasu M31.4 (no overlap with PV-038). Gate: M31.5/M31.6 + NOT on a glucocorticoid.
+  // Path-B: acuity / vision-symptom status is not threaded.
+  const hasGCA_PV40 = dxCodes.some(c => c.startsWith('M31.5') || c.startsWith('M31.6'));
+  const onSteroid_PV40 = medCodes.some(c => codes(RXNORM_CORTICOSTEROIDS).includes(c));
+  if (hasGCA_PV40 && !onSteroid_PV40 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'Giant cell arteritis without glucocorticoid therapy: vision-threatening treatment gap',
+      target: 'Prompt high-dose glucocorticoid initiated (+ tocilizumab consideration) to prevent vision loss',
+      recommendations: {
+        action: 'Consider prompt initiation of high-dose glucocorticoids for this patient with giant cell arteritis and no steroid on file - GCA threatens irreversible vision loss and steroids should not be delayed for biopsy; consider tocilizumab (IL-6 inhibitor) as a glucocorticoid-sparing agent, per the 2021 ACR/VF GCA Guideline',
+        guideline: '2021 ACR/VF Guideline for the Management of Giant Cell Arteritis',
+        note: 'Subgroup-aware: GCA (M31.5/M31.6) is an ophthalmologic emergency - the recommendation is URGENT glucocorticoids, distinct from the Takayasu pathway (PV-038). Tocilizumab (GiACTA) is the steroid-sparing add-on. Path-B: vision-symptom acuity is not threaded.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Giant cell arteritis (M31.5 with PMR or M31.6 other GCA)',
+          'No glucocorticoid on the active medication list',
+        ],
+        guidelineSource: '2021 ACR/VF Guideline for the Management of Giant Cell Arteritis; GiACTA (NEJM 2017)',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Glucocorticoid already prescribed', 'Documented steroid contraindication'],
+      },
+    });
+  }
+
+  // Gap PV-041: Buerger disease (thromboangiitis obliterans) with continued tobacco use - cessation IS the treatment
+  // Guideline: 2024 ACC/AHA PAD Guideline + thromboangiitis-obliterans evidence (Olin) - Buerger is a tobacco-driven
+  // non-atherosclerotic vasculitis; complete tobacco cessation is the ONLY intervention that halts progression and
+  // prevents amputation (disease-modifying, not merely risk-reduction). section-16: I73.1 = Thromboangiitis
+  // obliterans [Buerger's disease] (NLM-verified). Gate: I73.1 + active tobacco use (hasSmoking = F17.* / Z72.0).
+  // Subgroup: cessation-is-treatment - the framing differs from generic PAD risk-factor cessation (PV-4).
+  const hasBuerger_PV41 = dxCodes.some(c => c.startsWith('I73.1'));
+  if (hasBuerger_PV41 && hasSmoking && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.REFERRAL_NEEDED,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'Buerger disease with continued tobacco use: complete cessation is disease-modifying',
+      target: 'Intensive, complete tobacco cessation achieved (the primary disease-modifying intervention)',
+      recommendations: {
+        action: 'Consider intensive tobacco cessation support (counseling plus pharmacotherapy) for this patient with Buerger disease and continued tobacco use - in thromboangiitis obliterans, complete cessation is the single disease-modifying intervention that halts progression and prevents limb loss, per the 2024 ACC/AHA PAD Guideline',
+        guideline: '2024 ACC/AHA PAD Guideline; thromboangiitis obliterans evidence',
+        note: 'Subgroup-aware: unlike atherosclerotic PAD (where cessation is one of several risk-factor measures, PV-4), in Buerger disease cessation IS the treatment - even minimal tobacco/nicotine sustains the disease. The recommendation emphasizes complete cessation, not just reduction.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Thromboangiitis obliterans / Buerger disease (I73.1)',
+          'Active tobacco use (F17.* or Z72.0)',
+        ],
+        guidelineSource: '2024 ACC/AHA Guideline on Peripheral Artery Disease; thromboangiitis obliterans evidence (Olin)',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Tobacco cessation already documented', 'No active tobacco use'],
+      },
+    });
+  }
+
+  // Gap PV-058: Symptomatic carotid stenosis (recent stroke/TIA + carotid stenosis) - urgent revascularization evaluation
+  // Guideline: 2021 AHA/ASA Secondary Stroke Prevention + 2011 ASA/ACCF/AHA Carotid - a recent ipsilateral
+  // stroke/TIA with carotid stenosis >=70% is a Class 1 (LOE A) indication for carotid revascularization (CEA/CAS),
+  // optimally within 2 weeks. section-16: I65.21/22/23/29 = carotid occlusion/stenosis (R/L/bilateral/unspecified);
+  // I63 = cerebral infarction; G45 = TIA (NLM-verified). STANDING SUBGROUP CHECK: this is the SYMPTOMATIC arm
+  // (gated on a co-occurring I63/G45) - asymptomatic carotid stenosis has a weaker, different indication and is NOT
+  // this gap. Path-B: stenosis severity (>=70%) and the 2-week timing are not codable from ICD-10 alone, so the
+  // recommendation is to EVALUATE for revascularization, not a blanket revascularization.
+  const hasCarotidStenosis_PV58 = dxCodes.some(c => c.startsWith('I65.2'));
+  const hasRecentCerebralEvent_PV58 = dxCodes.some(c => c.startsWith('I63') || c.startsWith('G45'));
+  if (hasCarotidStenosis_PV58 && hasRecentCerebralEvent_PV58 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.REFERRAL_NEEDED,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'Symptomatic carotid stenosis: urgent revascularization evaluation recommended for review',
+      target: 'Carotid revascularization (CEA or CAS) evaluation obtained, optimally within 2 weeks of the event',
+      recommendations: {
+        action: 'Consider urgent vascular / neurovascular referral for carotid revascularization evaluation in this patient with a recent stroke/TIA and carotid stenosis - symptomatic stenosis >=70% is a Class 1 indication for CEA/CAS, optimally within 2 weeks, per the 2021 AHA/ASA Secondary Stroke Prevention Guideline',
+        guideline: '2021 AHA/ASA Secondary Stroke Prevention Guideline; 2011 ASA/ACCF/AHA Carotid Guideline',
+        note: 'Subgroup-aware: this is the SYMPTOMATIC carotid arm (gated on a recent I63/G45) - the CEA/CAS indication and urgency differ fundamentally from asymptomatic stenosis (which is NOT this gap). Path-B: stenosis severity (>=70%) and the within-2-weeks timing are not codable from ICD-10, so the recommendation is to evaluate, with the degree-of-stenosis determination part of that evaluation.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Carotid occlusion/stenosis (I65.21/22/23/29)',
+          'Recent ipsilateral cerebral event: stroke (I63) or TIA (G45)',
+        ],
+        guidelineSource: '2021 AHA/ASA Secondary Stroke Prevention Guideline; 2011 ASA/ACCF/AHA Carotid Guideline',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'A',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Carotid revascularization already performed/planned', 'Severe disability precluding benefit', 'Near-total occlusion where revascularization not indicated'],
+      },
+    });
+  }
+
+  // Gap PV-062: Symptomatic intracranial atherosclerotic stenosis without aggressive medical therapy (SAMMPRIS)
+  // Guideline: 2021 AHA/ASA Secondary Stroke Prevention + SAMMPRIS (NEJM 2011) - for symptomatic intracranial
+  // atherosclerotic stenosis, aggressive MEDICAL therapy (dual antiplatelet for 90 days + high-intensity statin +
+  // risk-factor control) is superior to stenting (SAMMPRIS halted early for stenting harm). section-16: I67.2 =
+  // Cerebral atherosclerosis (intracranial); I63 = infarction; G45 = TIA (NLM-verified). Gate: I67.2 + recent
+  // I63/G45 + NOT on antiplatelet OR NOT on a statin. STANDING SUBGROUP CHECK: the recommendation is aggressive
+  // MEDICAL therapy, NOT stenting (the SAMMPRIS lesson). Path-B: dual-vs-single antiplatelet and statin INTENSITY
+  // are not threaded, so this fires when EITHER an antithrombotic or a statin is absent.
+  const hasIntracranialStenosis_PV62 = dxCodes.some(c => c.startsWith('I67.2'));
+  const hasRecentCerebralEvent_PV62 = dxCodes.some(c => c.startsWith('I63') || c.startsWith('G45'));
+  const onAntiplatelet_PV62 = medCodes.includes('1191') || medCodes.some(c => ['32968', '613391', '1116632'].includes(c));
+  const onStatin_PV62 = medCodes.some(c => STATIN_CODES_CV.includes(c));
+  if (hasIntracranialStenosis_PV62 && hasRecentCerebralEvent_PV62 && (!onAntiplatelet_PV62 || !onStatin_PV62) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'Symptomatic intracranial stenosis without aggressive medical therapy (antiplatelet + statin)',
+      target: 'SAMMPRIS-aligned aggressive medical therapy: dual antiplatelet (90 days) + high-intensity statin + risk-factor control',
+      recommendations: {
+        action: 'Consider optimizing aggressive medical therapy (antiplatelet - dual for ~90 days post-event - plus a high-intensity statin and intensive risk-factor control) for this patient with symptomatic intracranial atherosclerotic stenosis, per SAMMPRIS and the 2021 AHA/ASA Guideline; intracranial stenting is NOT recommended as it was inferior to medical therapy',
+        guideline: '2021 AHA/ASA Secondary Stroke Prevention Guideline; SAMMPRIS (NEJM 2011)',
+        note: 'Subgroup-aware: SAMMPRIS showed aggressive MEDICAL therapy superior to stenting for symptomatic intracranial stenosis - the recommendation is medical optimization, explicitly NOT intervention. Path-B: dual-vs-single antiplatelet and statin intensity are not threaded; the gap fires when an antiplatelet OR a statin is absent from the med list.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Intracranial / cerebral atherosclerosis (I67.2)',
+          'Recent cerebral event: stroke (I63) or TIA (G45)',
+          'No antiplatelet OR no statin on the active medication list',
+        ],
+        guidelineSource: '2021 AHA/ASA Secondary Stroke Prevention Guideline; SAMMPRIS (NEJM 2011)',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'On both antiplatelet and statin (therapy adequate)', 'Documented antithrombotic/statin contraindication'],
+      },
+    });
   }
 
   return gaps;

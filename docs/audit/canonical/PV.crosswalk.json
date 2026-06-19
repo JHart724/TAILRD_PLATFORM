@@ -14,8 +14,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-2",
         "evaluatorBodyLineRange": [
-          7052,
-          7075
+          7149,
+          7172
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-2-abi-screening",
@@ -33,8 +33,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-2",
         "evaluatorBodyLineRange": [
-          7052,
-          7075
+          7149,
+          7172
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-2-abi-screening",
@@ -45,30 +45,39 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: Top candidate score=0.261 between PARTIAL and HIGH thresholds; tokenJaccard=0.07; codeOverlap=[I73.9]",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-179 RESOLVED): foundational build + re-cite. GAP-PV-003 (\"Abnormal ABI <=0.90 without coded PAD\") was MIScited by fuzzy name-match to gap-pv-3-antiplatelet (a different concept); no rule read an ABI VALUE threshold. Built gap-pv-003-abnormal-abi (abi_left/abi_right <= 0.90 + !hasPAD; ABI threaded both paths). The >1.40 non-compressible case is routed to PV-004 (not conflated). PARTIAL -> DET_OK.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
-        "evaluatorBlockName": "PV-3",
+        "evaluatorBlockName": "PV-003",
         "evaluatorBodyLineRange": [
-          8741,
-          8766
+          7184,
+          7206
         ],
         "evaluatorModule": "PV",
-        "registryId": "gap-pv-3-antiplatelet",
-        "registryLine": 1481
+        "registryId": "gap-pv-003-abnormal-abi",
+        "registryLine": 701
       },
       "specGapId": "GAP-PV-003",
       "specLine": 933,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> PARTIAL. Built gap-pv-004-noncompressible-abi (ABI >1.40 either leg -> non-compressible -> toe-brachial index). Completes the PV-003/004 ABI pair (disjoint ranges, no double-fire). PARTIAL not DET_OK: the spec qualifier \"without TBI\" is not threaded (TBI is not an ingested observation), so the rule fires on the non-compressible ABI alone and cannot confirm a TBI was not already done.",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-004",
+        "evaluatorBodyLineRange": [
+          17006,
+          17027
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-004-noncompressible-abi",
+        "registryLine": 714
+      },
       "specGapId": "GAP-PV-004",
       "specLine": 934,
       "tier": "T2"
@@ -111,12 +120,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-RIVAROXABAN",
         "evaluatorBodyLineRange": [
-          16293,
-          16321
+          16441,
+          16469
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-rivaroxaban",
-        "registryLine": 3341
+        "registryLine": 3438
       },
       "specGapId": "GAP-PV-011",
       "specLine": 942,
@@ -130,8 +139,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-1",
         "evaluatorBodyLineRange": [
-          7014,
-          7045
+          7111,
+          7142
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-1-pad-statin",
@@ -149,8 +158,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-1",
         "evaluatorBodyLineRange": [
-          7014,
-          7045
+          7111,
+          7142
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-1-pad-statin",
@@ -168,12 +177,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-3",
         "evaluatorBodyLineRange": [
-          8741,
-          8766
+          8872,
+          8897
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-3-antiplatelet",
-        "registryLine": 1481
+        "registryLine": 1578
       },
       "specGapId": "GAP-PV-010",
       "specLine": 945,
@@ -187,12 +196,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-10",
         "evaluatorBodyLineRange": [
-          10484,
-          10507
+          10621,
+          10644
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-10-cilostazol",
-        "registryLine": 2273
+        "registryLine": 2370
       },
       "specGapId": "GAP-PV-012",
       "specLine": 946,
@@ -206,12 +215,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-5",
         "evaluatorBodyLineRange": [
-          8806,
-          8826
+          8937,
+          8957
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-5-exercise-therapy",
-        "registryLine": 1505
+        "registryLine": 1602
       },
       "specGapId": "GAP-PV-013",
       "specLine": 947,
@@ -225,31 +234,31 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-4",
         "evaluatorBodyLineRange": [
-          8776,
-          8796
+          8907,
+          8927
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-4-smoking-cessation",
-        "registryLine": 1493
+        "registryLine": 1590
       },
       "specGapId": "GAP-PV-014",
       "specLine": 948,
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-178 RESOLVED over-credit tightening): PV-6 previously fired on hba1c===undefined (existence-proxy, always-fire). Tightened to a real threshold (hba1c !== undefined && hba1c >= 7.0%, the standard ADA/ACC glycemic target) so only above-target patients fire. Holds DET_OK, now genuinely gated.",
       "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-6",
         "evaluatorBodyLineRange": [
-          8836,
-          8857
+          8971,
+          8994
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-6-diabetes-control",
-        "registryLine": 1517
+        "registryLine": 1614
       },
       "specGapId": "GAP-PV-015",
       "specLine": 949,
@@ -263,12 +272,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-11",
         "evaluatorBodyLineRange": [
-          10517,
-          10541
+          10654,
+          10678
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-11-acei-pad",
-        "registryLine": 2285
+        "registryLine": 2382
       },
       "specGapId": "GAP-PV-016",
       "specLine": 950,
@@ -282,32 +291,23 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-BYPASS-EVAL",
         "evaluatorBodyLineRange": [
-          16358,
-          16384
+          16506,
+          16532
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-bypass-eval",
-        "registryLine": 3365
+        "registryLine": 3462
       },
       "specGapId": "GAP-PV-017",
       "specLine": 955,
       "tier": "T1"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-180): PARTIAL -> SPEC_ONLY. GAP-PV-018 (\"CLTI endovascular vs surgical decision, BEST-CLI\") was over-matched to the generic gap-pv-bypass-eval rule, which does not encode the endovascular-vs-surgical decision logic (needs anatomic / conduit data not threaded). Cite dropped; PV-017 retains the bypass-eval cite.",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "PV-BYPASS-EVAL",
-        "evaluatorBodyLineRange": [
-          16358,
-          16384
-        ],
-        "evaluatorModule": "PV",
-        "registryId": "gap-pv-bypass-eval",
-        "registryLine": 3365
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-PV-018",
       "specLine": 956,
       "tier": "T1"
@@ -333,7 +333,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "PATH-B (PV chunk 1, blocked-pile): NOT built. WIfI staging needs wifi_score, which exists ONLY as a type:string column in csvSchema.ts and is NOT wired to labValues (Record<string,number>, populated from the patientWriter labFields allowlist) - so labValues['wifi_score'] is always undefined and a rule on it would always-fire (the AUDIT-177 over-credit anti-pattern). Unblock: a threading PR (AUDIT-070 class) that maps WIfI to a numeric/staged observation.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -363,20 +363,11 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: broad-rule consolidation: PV-BYPASS-EVAL top-matches 2 spec gaps in subcategory \"TASC Staging\"; tokenJaccard=0.08; nameOverlap=1",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-180): PARTIAL -> SPEC_ONLY. GAP-PV-024 (\"TASC II C/D iliac: endovascular vs surgical bypass\") was over-matched to the generic gap-pv-bypass-eval rule, which has no TASC II lesion-class or iliac-specific signal (anatomic data not threaded). Cite dropped; PV-017 retains the bypass-eval cite.",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "PV-BYPASS-EVAL",
-        "evaluatorBodyLineRange": [
-          16358,
-          16384
-        ],
-        "evaluatorModule": "PV",
-        "registryId": "gap-pv-bypass-eval",
-        "registryLine": 3365
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-PV-024",
       "specLine": 966,
       "tier": "T2"
@@ -439,12 +430,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-MESENTERIC",
         "evaluatorBodyLineRange": [
-          16501,
-          16526
+          16649,
+          16674
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-mesenteric",
-        "registryLine": 3425
+        "registryLine": 3522
       },
       "specGapId": "GAP-PV-030",
       "specLine": 976,
@@ -471,30 +462,39 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-178 RESOLVED over-credit tightening): PV-12 (resistant HTN -> renal-artery workup) previously fired without confirming resistant HTN. Tightened to require >= 3 concurrent antihypertensive classes (RAAS + beta-blocker + CCB + diuretic), the operational resistant-HTN definition. Holds DET_OK, now genuinely gated.",
       "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-12",
         "evaluatorBodyLineRange": [
-          10551,
-          10570
+          10699,
+          10718
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-12-renal-artery",
-        "registryLine": 2297
+        "registryLine": 2394
       },
       "specGapId": "GAP-PV-033",
       "specLine": 983,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> PARTIAL. Built gap-pv-034-fmd-screening (HTN + age<35 + female + !I77.3). The population gate is fully threaded, but the spec qualifier \"without FMD imaging screening\" is proxied by diagnosis-absence (!I77.3) - a patient screened-and-negative (no I77.3 coded) would still fire - so PARTIAL not DET_OK. I77.3 NLM-verified.",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-034",
+        "evaluatorBodyLineRange": [
+          17037,
+          17061
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-034-fmd-screening",
+        "registryLine": 726
+      },
       "specGapId": "GAP-PV-034",
       "specLine": 984,
       "tier": "T2"
@@ -520,7 +520,7 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "PATH-B (PV chunk 1, blocked-pile): NOT built. Takayasu serial ESR/CRP monitoring needs ESR/CRP values, but NEITHER is threaded (no observationService FHIR LOINC->slug mapping and not in the CSV labFields allowlist) - labValues['crp']/['esr'] are always undefined, so a value-gated rule cannot work and an existence-proxy would always-fire. Unblock: a threading PR (AUDIT-070 class) mapping ESR + CRP LOINCs both paths.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -530,11 +530,20 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> DET_OK. Built gap-pv-038-takayasu-immunosuppression (M31.4 + NOT on glucocorticoid or steroid-sparing, canonical RXNORM_CORTICOSTEROIDS/STEROID_SPARING). Dx + med gate both threaded; the \"active\" disease-activity qualifier is a documented Path-B refinement (ESR/CRP/imaging not threaded), per the CAD-022 DET_OK-with-Path-B precedent. M31.4 NLM-verified.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-038",
+        "evaluatorBodyLineRange": [
+          17071,
+          17093
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-038-takayasu-immunosuppression",
+        "registryLine": 738
+      },
       "specGapId": "GAP-PV-038",
       "specLine": 992,
       "tier": "T2"
@@ -550,21 +559,39 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> DET_OK. Built gap-pv-040-gca-steroid (M31.5/M31.6 + NOT on a glucocorticoid). Dx + med gate both threaded; vision-symptom acuity is a Path-B refinement. Distinct from PV-038 (Takayasu M31.4 - no code overlap). M31.5/M31.6 NLM-verified; tocilizumab (GiACTA) named in the recommendation.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-040",
+        "evaluatorBodyLineRange": [
+          17103,
+          17125
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-040-gca-steroid",
+        "registryLine": 750
+      },
       "specGapId": "GAP-PV-040",
       "specLine": 994,
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> DET_OK. Built gap-pv-041-buerger-cessation (I73.1 + active tobacco use F17.*/Z72.0). Both signals threaded - clean gate. Subgroup: cessation-is-treatment (disease-modifying in Buerger), distinct from generic PAD cessation (PV-4). I73.1 NLM-verified.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-041",
+        "evaluatorBodyLineRange": [
+          17134,
+          17156
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-041-buerger-cessation",
+        "registryLine": 762
+      },
       "specGapId": "GAP-PV-041",
       "specLine": 995,
       "tier": "T2"
@@ -607,12 +634,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-THORACIC-OUTLET",
         "evaluatorBodyLineRange": [
-          16531,
-          16553
+          16679,
+          16701
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-thoracic-outlet",
-        "registryLine": 3437
+        "registryLine": 3534
       },
       "specGapId": "GAP-PV-045",
       "specLine": 1003,
@@ -646,12 +673,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-RAYNAUD",
         "evaluatorBodyLineRange": [
-          16613,
-          16639
+          16767,
+          16793
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-raynaud",
-        "registryLine": 3473
+        "registryLine": 3570
       },
       "specGapId": "GAP-PV-049",
       "specLine": 1010,
@@ -705,12 +732,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-9",
         "evaluatorBodyLineRange": [
-          8930,
-          8951
+          9067,
+          9088
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-9-aaa-screening",
-        "registryLine": 1553
+        "registryLine": 1650
       },
       "specGapId": "GAP-PV-051",
       "specLine": 1019,
@@ -757,11 +784,20 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> PARTIAL. Built gap-pv-058-symptomatic-carotid-revasc (I65.2x + recent I63/G45). The SYMPTOMATIC gate (I63/G45) is threaded and precise (asymptomatic gates out - the standing subgroup-check), but the spec target severity \">=70%\" is NOT codable from ICD-10 (I65.2x carries no percentage) and the 2-week timing is not threaded, so the rule fires on symptomatic stenosis of any severity -> PARTIAL. I65.21/22/23/29, I63, G45 NLM-verified.",
+      "classification": "PARTIAL_DETECTION",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-058",
+        "evaluatorBodyLineRange": [
+          17168,
+          17190
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-058-symptomatic-carotid-revasc",
+        "registryLine": 774
+      },
       "specGapId": "GAP-PV-058",
       "specLine": 1028,
       "tier": "T1"
@@ -774,19 +810,19 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-13",
         "evaluatorBodyLineRange": [
-          10578,
-          10600
+          10726,
+          10748
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-13-carotid",
-        "registryLine": 2309
+        "registryLine": 2406
       },
       "specGapId": "GAP-PV-059",
       "specLine": 1029,
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
+      "auditNotes": "PATH-B (PV chunk 1, blocked-pile): NOT built. Post-CEA/CAS secondary prevention needs to identify post-carotid-revascularization patients, but there is NO clean post-carotid-revasc ICD-10 code (Z95.820 = peripheral angioplasty status, not carotid; CEA leaves no implant code). Unblock: a procedure/CPT signal (CPT 35301 CEA / 37215-37216 CAS) once procedure threading lands (code-floor), OR a Z-code convention.",
       "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
@@ -806,11 +842,20 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "— | auto-verify: No candidate evaluator block above PARTIAL_MATCH",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> DET_OK. Built gap-pv-062-intracranial-stenosis-medical (I67.2 + recent I63/G45 + NOT on antiplatelet OR NOT on statin). Dx + event + antithrombotic/statin absence all threaded (coarse but genuine gate); dual-vs-single antiplatelet and statin intensity are documented Path-B refinements. Subgroup: aggressive MEDICAL therapy, NOT stenting (SAMMPRIS). I67.2 NLM-verified.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "PV-062",
+        "evaluatorBodyLineRange": [
+          17204,
+          17227
+        ],
+        "evaluatorModule": "PV",
+        "registryId": "gap-pv-062-intracranial-stenosis-medical",
+        "registryLine": 786
+      },
       "specGapId": "GAP-PV-062",
       "specLine": 1032,
       "tier": "T2"
@@ -843,12 +888,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-DVT-SCREEN",
         "evaluatorBodyLineRange": [
-          16446,
-          16471
+          16594,
+          16619
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-dvt-screen",
-        "registryLine": 3401
+        "registryLine": 3498
       },
       "specGapId": "GAP-PV-065",
       "specLine": 1039,
@@ -872,12 +917,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-PTS-PREVENTION",
         "evaluatorBodyLineRange": [
-          16476,
-          16497
+          16624,
+          16645
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-pts-prevention",
-        "registryLine": 3413
+        "registryLine": 3510
       },
       "specGapId": "GAP-PV-067",
       "specLine": 1041,
@@ -911,31 +956,31 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-15",
         "evaluatorBodyLineRange": [
-          10638,
-          10656
+          10786,
+          10804
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-15-compression",
-        "registryLine": 2333
+        "registryLine": 2430
       },
       "specGapId": "GAP-PV-070",
       "specLine": 1044,
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-178 RESOLVED over-credit tightening): PV-VARICOSE (spec = CEAP 3+ symptomatic) previously fired on bare I83 (incl asymptomatic I83.9). Tightened to the complicated/symptomatic subcodes I83.0/I83.1/I83.2/I83.8 (ulcer / inflammation / pain), excluding I83.9. Holds DET_OK.",
       "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-VARICOSE",
         "evaluatorBodyLineRange": [
-          16558,
-          16579
+          16712,
+          16733
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-varicose",
-        "registryLine": 3449
+        "registryLine": 3546
       },
       "specGapId": "GAP-PV-071",
       "specLine": 1045,
@@ -982,19 +1027,19 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-179 RESOLVED code-mismatch fix): PV-ANTICOAG-VTE (spec = post-PE anticoagulation duration) fired ONLY on I82 (DVT), MISSING the PE population (I26) entirely. Added I26 (PE) so the gap detects its spec population; I82 retained (VTE duration review applies to both). Holds DET_OK.",
       "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-ANTICOAG-VTE",
         "evaluatorBodyLineRange": [
-          16800,
-          16827
+          16964,
+          16991
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-anticoag-vte",
-        "registryLine": 4089
+        "registryLine": 4186
       },
       "specGapId": "GAP-PV-076",
       "specLine": 1054,
@@ -1178,12 +1223,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-LYMPHEDEMA",
         "evaluatorBodyLineRange": [
-          16584,
-          16605
+          16738,
+          16759
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-lymphedema",
-        "registryLine": 3461
+        "registryLine": 3558
       },
       "specGapId": "GAP-PV-094",
       "specLine": 1092,
@@ -1197,12 +1242,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-LYMPHEDEMA",
         "evaluatorBodyLineRange": [
-          16584,
-          16605
+          16738,
+          16759
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-lymphedema",
-        "registryLine": 3461
+        "registryLine": 3558
       },
       "specGapId": "GAP-PV-095",
       "specLine": 1093,
@@ -1229,19 +1274,19 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-178 RESOLVED interval build): PV-GRAFT-SURVEILLANCE previously fired on graft_duplex_months===undefined (existence-proxy). Added a genuine interval comparison (overdue when > 12 months OR never documented); graft_duplex_months IS threaded so a recently-surveilled patient (<= 12 mo) now gates out. Holds DET_OK.",
       "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-GRAFT-SURVEILLANCE",
         "evaluatorBodyLineRange": [
-          16770,
-          16796
+          16928,
+          16957
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-graft-surveillance",
-        "registryLine": 4077
+        "registryLine": 4174
       },
       "specGapId": "GAP-PV-098",
       "specLine": 1100,
@@ -1275,12 +1320,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-14",
         "evaluatorBodyLineRange": [
-          10609,
-          10627
+          10757,
+          10775
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-14-foot-exam",
-        "registryLine": 2321
+        "registryLine": 2418
       },
       "specGapId": "GAP-PV-101",
       "specLine": 1107,
