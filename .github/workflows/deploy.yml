@@ -38,7 +38,7 @@ jobs:
       run_build: ${{ steps.smoke_gate.outputs.run_build }}
 
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       # AUDIT-107 option-(B) rung 2: deploy-time hold on the most recent DECISIVE
       # smoke JOB conclusion on main. Placed first (after checkout, before build) so
@@ -218,7 +218,7 @@ jobs:
     if: ${{ needs.deploy.outputs.run_build == 'true' && vars.DEPLOY_FRONTEND_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
         with:
