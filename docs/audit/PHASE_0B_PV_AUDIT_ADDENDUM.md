@@ -2,13 +2,13 @@
 
 **Module:** Peripheral Vascular (PV)
 **Spec source:** `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md` §6.6
-**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=41, evaluator=41, gapsPush=41)
+**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=45, evaluator=45, gapsPush=45)
 **Crosswalk:** `docs/audit/canonical/PV.crosswalk.json` (auditMethod: rule-body-citation-AUDIT-030D)
 **Audit date:** 2026-05-04
 
 ## 1. Summary
 
-Peripheral Vascular has **105 spec gaps** across 20 subcategories. Implementation: **21 DET_OK + 14 PARTIAL + 70 SPEC_ONLY** (any-coverage: 35/105 = 33.3%).
+Peripheral Vascular has **105 spec gaps** across 20 subcategories. Implementation: **25 DET_OK + 14 PARTIAL + 66 SPEC_ONLY** (any-coverage: 39/105 = 37.1%).
 
 **Tier 1 priority status:** 1 DET_OK + 2 PARTIAL + 4 SPEC_ONLY of 7 T1 gaps (T1 any-coverage: 42.9%).
 
@@ -21,9 +21,9 @@ Peripheral Vascular has **105 spec gaps** across 20 subcategories. Implementatio
 | Classification | Count | % of total |
 |---|---:|---:|
 | PRODUCTION_GRADE | 0 | 0.0% |
-| DET_OK | 21 | 20.0% |
+| DET_OK | 25 | 23.8% |
 | PARTIAL_DETECTION | 14 | 13.3% |
-| SPEC_ONLY | 70 | 66.7% |
+| SPEC_ONLY | 66 | 62.9% |
 | **Total** | **105** | **100.0%** |
 
 **PRODUCTION_GRADE = 0** is platform-wide; gated on closure of AUDIT-001 P0 (test coverage gap). Per AUDIT_METHODOLOGY.md §3.1, no rule classifies PRODUCTION_GRADE until the platform testing baseline is established.
@@ -35,9 +35,9 @@ Peripheral Vascular has **105 spec gaps** across 20 subcategories. Implementatio
 | Tier | Total | DET_OK | PARTIAL | SPEC_ONLY | Any-coverage % |
 |------|------:|-------:|--------:|----------:|---------------:|
 | **T1** | 7 | 1 | 2 | 4 | 42.9% |
-| **T2** | 82 | 19 | 10 | 53 | 35.4% |
+| **T2** | 82 | 23 | 10 | 49 | 40.2% |
 | **T3** | 16 | 1 | 2 | 13 | 18.8% |
-| **Overall** | **105** | **21** | **14** | **70** | **33.3%** |
+| **Overall** | **105** | **25** | **14** | **66** | **37.1%** |
 
 ---
 
@@ -51,15 +51,15 @@ Peripheral Vascular has **105 spec gaps** across 20 subcategories. Implementatio
 | TASC Staging (5) | 0/5/0 | 0 | 0 | 5 | 0.0% |
 | Mesenteric Ischemia (5) | 0/5/0 | 0 | 1 | 4 | 20.0% |
 | Renal Artery (4) | 0/4/0 | 1 | 1 | 2 | 50.0% |
-| Vasculitis (6) | 0/6/0 | 3 | 0 | 3 | 50.0% |
+| Vasculitis (6) | 0/6/0 | 4 | 0 | 2 | 66.7% |
 | Upper Extremity (5) | 0/5/0 | 1 | 0 | 4 | 20.0% |
 | Raynaud (3) | 0/2/1 | 0 | 1 | 2 | 33.3% |
 | AAA (7) | 2/2/3 | 1 | 0 | 6 | 14.3% |
 | Carotid/CVA (5) | 1/4/0 | 1 | 2 | 2 | 60.0% |
 | Venous Disease (9) | 0/9/0 | 3 | 1 | 5 | 44.4% |
 | PE Risk Strat (6) | 0/6/0 | 1 | 0 | 5 | 16.7% |
-| CTEPH (4) | 1/3/0 | 0 | 0 | 4 | 0.0% |
-| PAH (6) | 0/6/0 | 0 | 0 | 6 | 0.0% |
+| CTEPH (4) | 1/3/0 | 1 | 0 | 3 | 25.0% |
+| PAH (6) | 0/6/0 | 2 | 0 | 4 | 33.3% |
 | AVM (3) | 0/0/3 | 0 | 0 | 3 | 0.0% |
 | Vascular Access (3) | 0/0/3 | 0 | 0 | 3 | 0.0% |
 | Lymphatic/Misc (2) | 0/0/2 | 0 | 2 | 0 | 100.0% |
@@ -91,12 +91,12 @@ No EXTRA rules or architectural patterns surfaced. Reconciliation is clean.
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-PV-011 | 942 | DET_OK | `gap-pv-rivaroxaban` (PV-RIVAROXABAN @16441-16469) | auto-verify: preserved-from-addendum |
-| GAP-PV-017 | 955 | PARTIAL_DETECTION | `gap-pv-bypass-eval` (PV-BYPASS-EVAL @16506-16532) | auto-verify: preserved-from-addendum |
+| GAP-PV-011 | 942 | DET_OK | `gap-pv-rivaroxaban` (PV-RIVAROXABAN @16514-16542) | auto-verify: preserved-from-addendum |
+| GAP-PV-017 | 955 | PARTIAL_DETECTION | `gap-pv-bypass-eval` (PV-BYPASS-EVAL @16579-16605) | auto-verify: preserved-from-addendum |
 | GAP-PV-018 | 956 | SPEC_ONLY | — | MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-180): PARTIAL -> SPEC_ONLY. GAP-PV-018 ("CLTI endovasc |
 | GAP-PV-055 | 1017 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-PV-056 | 1018 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-PV-058 | 1028 | PARTIAL_DETECTION | `gap-pv-058-symptomatic-carotid-revasc` (PV-058 @17168-17190) | MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> PARTIAL. Built gap-pv-058-symptomatic-carotid- |
+| GAP-PV-058 | 1028 | PARTIAL_DETECTION | `gap-pv-058-symptomatic-carotid-revasc` (PV-058 @17241-17263) | MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> PARTIAL. Built gap-pv-058-symptomatic-carotid- |
 | GAP-PV-079 | 1060 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 
 ---
@@ -121,9 +121,9 @@ No T1 SPEC_ONLY gaps carry literal BSW pathway tags in CK v4.0 spec text. Pathwa
 
 **For PV:** Moderate implementation coverage; medication/screening surfaces typically built, procedural surfaces often lighter.
 
-Coverage data: 35/105 any-coverage (33.3%); 21/105 DET_OK only (20.0%); 14 PARTIAL via broad-rule consolidation or partial-trigger match; 70 SPEC_ONLY.
+Coverage data: 39/105 any-coverage (37.1%); 25/105 DET_OK only (23.8%); 14 PARTIAL via broad-rule consolidation or partial-trigger match; 66 SPEC_ONLY.
 
-Rules-per-DET_OK efficiency: 41 registry rules / 21 DET_OK = 1.95.
+Rules-per-DET_OK efficiency: 45 registry rules / 25 DET_OK = 1.80.
 
 ---
 
@@ -205,7 +205,7 @@ Per-module wall-clock data lives in `docs/audit/canonical/audit_runs.jsonl` (app
 
 **PV module: MODERATELY BUILT.**
 
-- 21 DET_OK (20.0%), 14 PARTIAL (13.3%), 70 SPEC_ONLY (66.7%)
+- 25 DET_OK (23.8%), 14 PARTIAL (13.3%), 66 SPEC_ONLY (62.9%)
 - 1/7 T1 priority gaps DET_OK; 4 T1 SPEC_ONLY gaps require v2.0 Phase 1 work
 - Audit method: `rule-body-citation-AUDIT-030D`. Generated from canonical crosswalk on 2026-05-04.
 
