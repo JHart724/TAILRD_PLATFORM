@@ -2,9 +2,9 @@
   "codeSource": "backend/src/ingestion/gaps/gapRuleEngine.ts",
   "evaluatorBlocks": [
     {
-      "bodyEndLine": 5539,
-      "bodyStartLine": 5514,
-      "commentLine": 5510,
+      "bodyEndLine": 5565,
+      "bodyStartLine": 5540,
+      "commentLine": 5536,
       "commentLiteral": "// Gap 39: QTc Safety Alert (EP)",
       "commentPattern": "GAP_N",
       "gapsPushIds": [
@@ -13,9 +13,9 @@
       "name": "Gap-39"
     },
     {
-      "bodyEndLine": 5607,
-      "bodyStartLine": 5544,
-      "commentLine": 5541,
+      "bodyEndLine": 5633,
+      "bodyStartLine": 5570,
+      "commentLine": 5567,
       "commentLiteral": "// Gap EP-OAC: Oral Anticoagulation Missing in AFib — full CHA₂DS₂-VASc scoring",
       "commentPattern": "GAP_MOD_NAME",
       "gapsPushIds": [
@@ -24,9 +24,9 @@
       "name": "EP-OAC"
     },
     {
-      "bodyEndLine": 5675,
-      "bodyStartLine": 5625,
-      "commentLine": 5610,
+      "bodyEndLine": 5701,
+      "bodyStartLine": 5651,
+      "commentLine": 5636,
       "commentLiteral": "// EP-006 SAFETY: Dabigatran contraindicated in CrCl<30 severe renal impairment",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -36,9 +36,9 @@
       "name": "EP-006"
     },
     {
-      "bodyEndLine": 5721,
-      "bodyStartLine": 5692,
-      "commentLine": 5687,
+      "bodyEndLine": 5747,
+      "bodyStartLine": 5718,
+      "commentLine": 5713,
       "commentLiteral": "// EP-003: Rivaroxaban renal dose not adjusted for CrCl.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -47,9 +47,9 @@
       "name": "EP-003"
     },
     {
-      "bodyEndLine": 5756,
-      "bodyStartLine": 5728,
-      "commentLine": 5723,
+      "bodyEndLine": 5782,
+      "bodyStartLine": 5754,
+      "commentLine": 5749,
       "commentLiteral": "// EP-004: Apixaban dose-reduction criteria met but on full 5 mg dose.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -58,9 +58,9 @@
       "name": "EP-004"
     },
     {
-      "bodyEndLine": 5791,
-      "bodyStartLine": 5763,
-      "commentLine": 5758,
+      "bodyEndLine": 5817,
+      "bodyStartLine": 5789,
+      "commentLine": 5784,
       "commentLiteral": "// EP-005: Apixaban inappropriately reduced to 2.5 mg without dose-reduction criteria (reduced efficacy).",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -69,9 +69,9 @@
       "name": "EP-005"
     },
     {
-      "bodyEndLine": 5825,
-      "bodyStartLine": 5802,
-      "commentLine": 5793,
+      "bodyEndLine": 5851,
+      "bodyStartLine": 5828,
+      "commentLine": 5819,
       "commentLiteral": "// EP-008: DOAC contraindicated in NONRHEUMATIC moderate-severe mitral stenosis (warfarin required).",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -80,9 +80,9 @@
       "name": "EP-008"
     },
     {
-      "bodyEndLine": 5855,
-      "bodyStartLine": 5832,
-      "commentLine": 5827,
+      "bodyEndLine": 5881,
+      "bodyStartLine": 5858,
+      "commentLine": 5853,
       "commentLiteral": "// EP-009: Edoxaban reduced efficacy at high CrCl (CrCl>95).",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -91,9 +91,9 @@
       "name": "EP-009"
     },
     {
-      "bodyEndLine": 5899,
-      "bodyStartLine": 5862,
-      "commentLine": 5857,
+      "bodyEndLine": 5925,
+      "bodyStartLine": 5888,
+      "commentLine": 5883,
       "commentLiteral": "// EP-012: LAAC evaluation for high stroke risk with prior major bleed.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -102,9 +102,9 @@
       "name": "EP-012"
     },
     {
-      "bodyEndLine": 5939,
-      "bodyStartLine": 5916,
-      "commentLine": 5913,
+      "bodyEndLine": 5965,
+      "bodyStartLine": 5942,
+      "commentLine": 5939,
       "commentLiteral": "// EP-014: AF ablation not referred in HFrEF (CASTLE-AF). COR 2a.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -113,9 +113,9 @@
       "name": "EP-014"
     },
     {
-      "bodyEndLine": 5982,
-      "bodyStartLine": 5945,
-      "commentLine": 5941,
+      "bodyEndLine": 6008,
+      "bodyStartLine": 5971,
+      "commentLine": 5967,
       "commentLiteral": "// EP-071: Anticoagulation not continued after AF ablation. COR 1.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -124,9 +124,9 @@
       "name": "EP-071"
     },
     {
-      "bodyEndLine": 6014,
-      "bodyStartLine": 5991,
-      "commentLine": 5984,
+      "bodyEndLine": 6040,
+      "bodyStartLine": 6017,
+      "commentLine": 6010,
       "commentLiteral": "// EP-072: Redo AF ablation evaluation after recurrence. COR 2a.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -135,9 +135,9 @@
       "name": "EP-072"
     },
     {
-      "bodyEndLine": 6042,
-      "bodyStartLine": 6020,
-      "commentLine": 6016,
+      "bodyEndLine": 6068,
+      "bodyStartLine": 6046,
+      "commentLine": 6042,
       "commentLiteral": "// EP-074: CTI ablation not offered for typical atrial flutter. COR 1.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -146,9 +146,9 @@
       "name": "EP-074"
     },
     {
-      "bodyEndLine": 6074,
-      "bodyStartLine": 6051,
-      "commentLine": 6044,
+      "bodyEndLine": 6100,
+      "bodyStartLine": 6077,
+      "commentLine": 6070,
       "commentLiteral": "// EP-076: SVT ablation not offered for recurrent SVT on antiarrhythmic. COR 1.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -157,9 +157,9 @@
       "name": "EP-076"
     },
     {
-      "bodyEndLine": 6121,
-      "bodyStartLine": 6097,
-      "commentLine": 6094,
+      "bodyEndLine": 6147,
+      "bodyStartLine": 6123,
+      "commentLine": 6120,
       "commentLiteral": "// EP-020: VT catheter ablation not offered for ischemic VT on antiarrhythmic. COR 2a.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -168,9 +168,9 @@
       "name": "EP-020"
     },
     {
-      "bodyEndLine": 6149,
-      "bodyStartLine": 6125,
-      "commentLine": 6123,
+      "bodyEndLine": 6175,
+      "bodyStartLine": 6151,
+      "commentLine": 6149,
       "commentLiteral": "// EP-021: VT substrate evaluation not pursued in non-ischemic cardiomyopathy. COR 2a.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -179,9 +179,9 @@
       "name": "EP-021"
     },
     {
-      "bodyEndLine": 6180,
-      "bodyStartLine": 6156,
-      "commentLine": 6151,
+      "bodyEndLine": 6206,
+      "bodyStartLine": 6182,
+      "commentLine": 6177,
       "commentLiteral": "// EP-022: VT ablation not considered before amiodarone escalation (VANISH). COR 2a.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -190,9 +190,9 @@
       "name": "EP-022"
     },
     {
-      "bodyEndLine": 6213,
-      "bodyStartLine": 6191,
-      "commentLine": 6182,
+      "bodyEndLine": 6239,
+      "bodyStartLine": 6217,
+      "commentLine": 6208,
       "commentLiteral": "// EP-029: Pacemaker not implanted for Class I bradycardia indication. COR 1.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -201,9 +201,9 @@
       "name": "EP-029"
     },
     {
-      "bodyEndLine": 6242,
-      "bodyStartLine": 6219,
-      "commentLine": 6215,
+      "bodyEndLine": 6268,
+      "bodyStartLine": 6245,
+      "commentLine": 6241,
       "commentLiteral": "// EP-034 (covers EP-090): Full CIED system extraction not performed for device infection. COR 1.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -212,9 +212,9 @@
       "name": "EP-034"
     },
     {
-      "bodyEndLine": 6278,
-      "bodyStartLine": 6253,
-      "commentLine": 6244,
+      "bodyEndLine": 6304,
+      "bodyStartLine": 6279,
+      "commentLine": 6270,
       "commentLiteral": "// EP-092: S-ICD not considered for young primary-prevention ICD candidate without pacing need. COR 2a.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -223,9 +223,9 @@
       "name": "EP-092"
     },
     {
-      "bodyEndLine": 6319,
-      "bodyStartLine": 6295,
-      "commentLine": 6289,
+      "bodyEndLine": 6345,
+      "bodyStartLine": 6321,
+      "commentLine": 6315,
       "commentLiteral": "// EP-030: Symptomatic bradycardia on AV-nodal blocker - reduce/stop the drug before a pacer decision. COR 1.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -234,9 +234,9 @@
       "name": "EP-030"
     },
     {
-      "bodyEndLine": 6349,
-      "bodyStartLine": 6325,
-      "commentLine": 6321,
+      "bodyEndLine": 6375,
+      "bodyStartLine": 6351,
+      "commentLine": 6347,
       "commentLiteral": "// EP-033: Chronic AF with awake HR<40 on rate-control - adjust meds vs permanent pacing. COR.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -245,9 +245,9 @@
       "name": "EP-033"
     },
     {
-      "bodyEndLine": 6379,
-      "bodyStartLine": 6357,
-      "commentLine": 6351,
+      "bodyEndLine": 6405,
+      "bodyStartLine": 6383,
+      "commentLine": 6377,
       "commentLiteral": "// EP-097: Orthostatic hypotension on BP-lowering therapy - medication review. COR 1.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -256,9 +256,9 @@
       "name": "EP-097"
     },
     {
-      "bodyEndLine": 6415,
-      "bodyStartLine": 6387,
-      "commentLine": 6381,
+      "bodyEndLine": 6441,
+      "bodyStartLine": 6413,
+      "commentLine": 6407,
       "commentLiteral": "// EP-067: Post-LAAC antithrombotic protocol - patient on NO antithrombotic after LAAC. COR.",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -267,9 +267,9 @@
       "name": "EP-067"
     },
     {
-      "bodyEndLine": 6470,
-      "bodyStartLine": 6445,
-      "commentLine": 6418,
+      "bodyEndLine": 6496,
+      "bodyStartLine": 6471,
+      "commentLine": 6444,
       "commentLiteral": "// EP-079 CRITICAL: Pre-excited AF + AVN blocker contraindicated (risk of VF)",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -278,9 +278,9 @@
       "name": "EP-079"
     },
     {
-      "bodyEndLine": 6512,
-      "bodyStartLine": 6477,
-      "commentLine": 6473,
+      "bodyEndLine": 6538,
+      "bodyStartLine": 6503,
+      "commentLine": 6499,
       "commentLiteral": "// EP-LAAC: LAAC Device Evaluation for AFib with OAC Contraindication",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -289,9 +289,9 @@
       "name": "EP-LAAC"
     },
     {
-      "bodyEndLine": 6547,
-      "bodyStartLine": 6522,
-      "commentLine": 6515,
+      "bodyEndLine": 6573,
+      "bodyStartLine": 6548,
+      "commentLine": 6541,
       "commentLiteral": "// EP-ABLATION: AFib catheter-ablation candidate (symptomatic AF on antiarrhythmic, NOT yet ablated)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -300,9 +300,9 @@
       "name": "EP-ABLATION"
     },
     {
-      "bodyEndLine": 6580,
-      "bodyStartLine": 6554,
-      "commentLine": 6550,
+      "bodyEndLine": 6606,
+      "bodyStartLine": 6580,
+      "commentLine": 6576,
       "commentLiteral": "// EP-DEVICE-ICD: ICD Evaluation in HFrEF",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -311,9 +311,9 @@
       "name": "EP-DEVICE-ICD"
     },
     {
-      "bodyEndLine": 6613,
-      "bodyStartLine": 6591,
-      "commentLine": 6583,
+      "bodyEndLine": 6639,
+      "bodyStartLine": 6617,
+      "commentLine": 6609,
       "commentLiteral": "// EP-DEVICE-CRT: CRT Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -322,9 +322,9 @@
       "name": "EP-DEVICE-CRT"
     },
     {
-      "bodyEndLine": 6648,
-      "bodyStartLine": 6620,
-      "commentLine": 6616,
+      "bodyEndLine": 6674,
+      "bodyStartLine": 6646,
+      "commentLine": 6642,
       "commentLiteral": "// EP-AMIODARONE-MONITOR: Amiodarone Toxicity Monitoring",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -333,9 +333,9 @@
       "name": "EP-AMIODARONE-MONITOR"
     },
     {
-      "bodyEndLine": 6683,
-      "bodyStartLine": 6655,
-      "commentLine": 6651,
+      "bodyEndLine": 6709,
+      "bodyStartLine": 6681,
+      "commentLine": 6677,
       "commentLiteral": "// EP-DOFETILIDE-REMS: Dofetilide REMS Compliance",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -344,9 +344,9 @@
       "name": "EP-DOFETILIDE-REMS"
     },
     {
-      "bodyEndLine": 6716,
-      "bodyStartLine": 6691,
-      "commentLine": 6686,
+      "bodyEndLine": 6742,
+      "bodyStartLine": 6717,
+      "commentLine": 6712,
       "commentLiteral": "// EP-SYNCOPE: Syncope Workup",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -355,9 +355,9 @@
       "name": "EP-SYNCOPE"
     },
     {
-      "bodyEndLine": 6745,
-      "bodyStartLine": 6724,
-      "commentLine": 6719,
+      "bodyEndLine": 6771,
+      "bodyStartLine": 6750,
+      "commentLine": 6745,
       "commentLiteral": "// EP-REMOTE-MONITORING: Device Remote Monitoring",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -366,9 +366,9 @@
       "name": "EP-REMOTE-MONITORING"
     },
     {
-      "bodyEndLine": 7435,
-      "bodyStartLine": 7330,
-      "commentLine": 7318,
+      "bodyEndLine": 7461,
+      "bodyStartLine": 7356,
+      "commentLine": 7344,
       "commentLiteral": "// Gap EP-RC + EP-017: Rate Control in AFib (HFrEF-aware)",
       "commentPattern": "GAP_MOD_NAME",
       "gapsPushIds": [
@@ -378,9 +378,9 @@
       "name": "EP-RC"
     },
     {
-      "bodyEndLine": 7369,
-      "bodyStartLine": 7344,
-      "commentLine": 7341,
+      "bodyEndLine": 7395,
+      "bodyStartLine": 7370,
+      "commentLine": 7367,
       "commentLiteral": "// EP-017 SAFETY: HFrEF + on non-DHP CCB → fire SAFETY gap (Class 3 Harm).",
       "commentPattern": "ID_N",
       "gapsPushIds": [
@@ -389,9 +389,9 @@
       "name": "EP-017"
     },
     {
-      "bodyEndLine": 10920,
-      "bodyStartLine": 10897,
-      "commentLine": 10883,
+      "bodyEndLine": 11099,
+      "bodyStartLine": 11076,
+      "commentLine": 11062,
       "commentLiteral": "// EP-CSP: Conduction System Pacing Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -400,9 +400,9 @@
       "name": "EP-CSP"
     },
     {
-      "bodyEndLine": 10954,
-      "bodyStartLine": 10932,
-      "commentLine": 10922,
+      "bodyEndLine": 11133,
+      "bodyStartLine": 11111,
+      "commentLine": 11101,
       "commentLiteral": "// EP-PFA: Pulsed Field Ablation Candidacy",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -411,9 +411,9 @@
       "name": "EP-PFA"
     },
     {
-      "bodyEndLine": 10982,
-      "bodyStartLine": 10960,
-      "commentLine": 10956,
+      "bodyEndLine": 11161,
+      "bodyStartLine": 11139,
+      "commentLine": 11135,
       "commentLiteral": "// EP-WPW: WPW Syndrome Detection",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -422,9 +422,9 @@
       "name": "EP-WPW"
     },
     {
-      "bodyEndLine": 11023,
-      "bodyStartLine": 10993,
-      "commentLine": 10984,
+      "bodyEndLine": 11202,
+      "bodyStartLine": 11172,
+      "commentLine": 11163,
       "commentLiteral": "// EP-DRONEDARONE: Dronedarone Contraindication Check",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -433,9 +433,9 @@
       "name": "EP-DRONEDARONE"
     },
     {
-      "bodyEndLine": 11057,
-      "bodyStartLine": 11029,
-      "commentLine": 11025,
+      "bodyEndLine": 11236,
+      "bodyStartLine": 11208,
+      "commentLine": 11204,
       "commentLiteral": "// EP-FLUTTER-OAC: Atrial Flutter OAC",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -444,9 +444,9 @@
       "name": "EP-FLUTTER-OAC"
     },
     {
-      "bodyEndLine": 11092,
-      "bodyStartLine": 11068,
-      "commentLine": 11059,
+      "bodyEndLine": 11271,
+      "bodyStartLine": 11247,
+      "commentLine": 11238,
       "commentLiteral": "// EP-IST-IVABRADINE: Inappropriate Sinus Tachycardia Treatment",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -455,9 +455,9 @@
       "name": "EP-IST-IVABRADINE"
     },
     {
-      "bodyEndLine": 11124,
-      "bodyStartLine": 11102,
-      "commentLine": 11094,
+      "bodyEndLine": 11303,
+      "bodyStartLine": 11281,
+      "commentLine": 11273,
       "commentLiteral": "// EP-PVC-CM: PVC-Induced Cardiomyopathy Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -466,9 +466,9 @@
       "name": "EP-PVC-CM"
     },
     {
-      "bodyEndLine": 11162,
-      "bodyStartLine": 11135,
-      "commentLine": 11126,
+      "bodyEndLine": 11341,
+      "bodyStartLine": 11314,
+      "commentLine": 11305,
       "commentLiteral": "// EP-LQTS-BB: Long QT Syndrome Beta-Blocker",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -477,9 +477,9 @@
       "name": "EP-LQTS-BB"
     },
     {
-      "bodyEndLine": 11202,
-      "bodyStartLine": 11179,
-      "commentLine": 11164,
+      "bodyEndLine": 11381,
+      "bodyStartLine": 11358,
+      "commentLine": 11343,
       "commentLiteral": "// EP-SUBCLINICAL-AF: Subclinical AF Detection in Device Patients (PROXY)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -488,9 +488,9 @@
       "name": "EP-SUBCLINICAL-AF"
     },
     {
-      "bodyEndLine": 11230,
-      "bodyStartLine": 11208,
-      "commentLine": 11204,
+      "bodyEndLine": 11409,
+      "bodyStartLine": 11387,
+      "commentLine": 11383,
       "commentLiteral": "// EP-ICD-PROGRAMMING: ICD Programming Optimization",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -499,9 +499,9 @@
       "name": "EP-ICD-PROGRAMMING"
     },
     {
-      "bodyEndLine": 11257,
-      "bodyStartLine": 11235,
-      "commentLine": 11232,
+      "bodyEndLine": 11436,
+      "bodyStartLine": 11414,
+      "commentLine": 11411,
       "commentLiteral": "// EP-LEAD-INTEGRITY: Lead Integrity Monitoring",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -510,9 +510,9 @@
       "name": "EP-LEAD-INTEGRITY"
     },
     {
-      "bodyEndLine": 11291,
-      "bodyStartLine": 11268,
-      "commentLine": 11259,
+      "bodyEndLine": 11470,
+      "bodyStartLine": 11447,
+      "commentLine": 11438,
       "commentLiteral": "// EP-AAD-POST-ABLATION: Antiarrhythmic Review Post-Ablation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -521,9 +521,9 @@
       "name": "EP-AAD-POST-ABLATION"
     },
     {
-      "bodyEndLine": 11319,
-      "bodyStartLine": 11297,
-      "commentLine": 11293,
+      "bodyEndLine": 11498,
+      "bodyStartLine": 11476,
+      "commentLine": 11472,
       "commentLiteral": "// EP-SECONDARY-ICD: Secondary Prevention ICD",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -532,9 +532,9 @@
       "name": "EP-SECONDARY-ICD"
     },
     {
-      "bodyEndLine": 11350,
-      "bodyStartLine": 11328,
-      "commentLine": 11321,
+      "bodyEndLine": 11529,
+      "bodyStartLine": 11507,
+      "commentLine": 11500,
       "commentLiteral": "// EP-ACHD-ARRHYTHMIA: Adult CHD Arrhythmia Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -543,9 +543,9 @@
       "name": "EP-ACHD-ARRHYTHMIA"
     },
     {
-      "bodyEndLine": 11385,
-      "bodyStartLine": 11363,
-      "commentLine": 11352,
+      "bodyEndLine": 11564,
+      "bodyStartLine": 11542,
+      "commentLine": 11531,
       "commentLiteral": "// EP-TORSADES: Torsades Risk with Multiple QT-Prolonging Drugs",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -554,9 +554,9 @@
       "name": "EP-TORSADES"
     },
     {
-      "bodyEndLine": 13713,
-      "bodyStartLine": 13691,
-      "commentLine": 13682,
+      "bodyEndLine": 13892,
+      "bodyStartLine": 13870,
+      "commentLine": 13861,
       "commentLiteral": "// EP-EARLY-RHYTHM: Early Rhythm Control in Newly Diagnosed AF",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -565,9 +565,9 @@
       "name": "EP-EARLY-RHYTHM"
     },
     {
-      "bodyEndLine": 13746,
-      "bodyStartLine": 13724,
-      "commentLine": 13715,
+      "bodyEndLine": 13925,
+      "bodyStartLine": 13903,
+      "commentLine": 13894,
       "commentLiteral": "// EP-VT-ABLATION: VT Ablation Referral",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -576,9 +576,9 @@
       "name": "EP-VT-ABLATION"
     },
     {
-      "bodyEndLine": 13781,
-      "bodyStartLine": 13759,
-      "commentLine": 13748,
+      "bodyEndLine": 13960,
+      "bodyStartLine": 13938,
+      "commentLine": 13927,
       "commentLiteral": "// EP-SVT-ABLATION: SVT Ablation Referral",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -587,9 +587,9 @@
       "name": "EP-SVT-ABLATION"
     },
     {
-      "bodyEndLine": 13817,
-      "bodyStartLine": 13795,
-      "commentLine": 13783,
+      "bodyEndLine": 13996,
+      "bodyStartLine": 13974,
+      "commentLine": 13962,
       "commentLiteral": "// EP-BRUGADA: Brugada Syndrome Screening (PROXY)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -598,9 +598,9 @@
       "name": "EP-BRUGADA"
     },
     {
-      "bodyEndLine": 13851,
-      "bodyStartLine": 13828,
-      "commentLine": 13819,
+      "bodyEndLine": 14030,
+      "bodyStartLine": 14007,
+      "commentLine": 13998,
       "commentLiteral": "// EP-ARVC: ARVC Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -609,9 +609,9 @@
       "name": "EP-ARVC"
     },
     {
-      "bodyEndLine": 13884,
-      "bodyStartLine": 13862,
-      "commentLine": 13853,
+      "bodyEndLine": 14063,
+      "bodyStartLine": 14041,
+      "commentLine": 14032,
       "commentLiteral": "// EP-CARDIAC-SARCOID-EP: Cardiac Sarcoid Arrhythmia Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -620,9 +620,9 @@
       "name": "EP-CARDIAC-SARCOID-EP"
     },
     {
-      "bodyEndLine": 13916,
-      "bodyStartLine": 13894,
-      "commentLine": 13886,
+      "bodyEndLine": 14095,
+      "bodyStartLine": 14073,
+      "commentLine": 14065,
       "commentLiteral": "// EP-PACEMAKER-UPGRADE: Pacemaker to CRT Upgrade Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -631,9 +631,9 @@
       "name": "EP-PACEMAKER-UPGRADE"
     },
     {
-      "bodyEndLine": 13957,
-      "bodyStartLine": 13924,
-      "commentLine": 13918,
+      "bodyEndLine": 14136,
+      "bodyStartLine": 14103,
+      "commentLine": 14097,
       "commentLiteral": "// EP-AF-STROKE-RISK: CHA2DS2-VASc Formal Documentation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -642,9 +642,9 @@
       "name": "EP-AF-STROKE-RISK"
     },
     {
-      "bodyEndLine": 13986,
-      "bodyStartLine": 13965,
-      "commentLine": 13959,
+      "bodyEndLine": 14165,
+      "bodyStartLine": 14144,
+      "commentLine": 14138,
       "commentLiteral": "// EP-CARDIOVERSION-TIMING: Cardioversion Timing Assessment",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -653,9 +653,9 @@
       "name": "EP-CARDIOVERSION-TIMING"
     },
     {
-      "bodyEndLine": 14024,
-      "bodyStartLine": 13994,
-      "commentLine": 13988,
+      "bodyEndLine": 14203,
+      "bodyStartLine": 14173,
+      "commentLine": 14167,
       "commentLiteral": "// EP-TEE-PRE-CV: TEE Before Cardioversion",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -664,9 +664,9 @@
       "name": "EP-TEE-PRE-CV"
     },
     {
-      "bodyEndLine": 14053,
-      "bodyStartLine": 14032,
-      "commentLine": 14026,
+      "bodyEndLine": 14232,
+      "bodyStartLine": 14211,
+      "commentLine": 14205,
       "commentLiteral": "// EP-CIED-MRI: MRI-Conditional CIED Documentation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -675,9 +675,9 @@
       "name": "EP-CIED-MRI"
     },
     {
-      "bodyEndLine": 14085,
-      "bodyStartLine": 14063,
-      "commentLine": 14055,
+      "bodyEndLine": 14264,
+      "bodyStartLine": 14242,
+      "commentLine": 14234,
       "commentLiteral": "// EP-GENERATOR-REPLACEMENT: Generator Replacement Planning",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -686,9 +686,9 @@
       "name": "EP-GENERATOR-REPLACEMENT"
     },
     {
-      "bodyEndLine": 14120,
-      "bodyStartLine": 14098,
-      "commentLine": 14087,
+      "bodyEndLine": 14299,
+      "bodyStartLine": 14277,
+      "commentLine": 14266,
       "commentLiteral": "// EP-INAPPROPRIATE-SHOCKS: ICD Inappropriate Shock Workup (PROXY; serves GAP-EP-050 + GAP-EP-089)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -697,9 +697,9 @@
       "name": "EP-INAPPROPRIATE-SHOCKS"
     },
     {
-      "bodyEndLine": 14150,
-      "bodyStartLine": 14129,
-      "commentLine": 14122,
+      "bodyEndLine": 14329,
+      "bodyStartLine": 14308,
+      "commentLine": 14301,
       "commentLiteral": "// EP-EXERCISE-EP: Exercise Testing for Exercise-Induced Arrhythmia",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -708,9 +708,9 @@
       "name": "EP-EXERCISE-EP"
     },
     {
-      "bodyEndLine": 14183,
-      "bodyStartLine": 14161,
-      "commentLine": 14152,
+      "bodyEndLine": 14362,
+      "bodyStartLine": 14340,
+      "commentLine": 14331,
       "commentLiteral": "// EP-AF-CATHETER-TIMING: AF Ablation Timing Optimization",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -719,9 +719,9 @@
       "name": "EP-AF-CATHETER-TIMING"
     },
     {
-      "bodyEndLine": 14221,
-      "bodyStartLine": 14191,
-      "commentLine": 14189,
+      "bodyEndLine": 14400,
+      "bodyStartLine": 14370,
+      "commentLine": 14368,
       "commentLiteral": "// EP-PILL-IN-POCKET: Pill-in-Pocket Strategy for Paroxysmal AF",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -730,9 +730,9 @@
       "name": "EP-PILL-IN-POCKET"
     },
     {
-      "bodyEndLine": 14249,
-      "bodyStartLine": 14225,
-      "commentLine": 14223,
+      "bodyEndLine": 14428,
+      "bodyStartLine": 14404,
+      "commentLine": 14402,
       "commentLiteral": "// EP-LEFT-ATRIAL-SIZE: Left Atrial Size Documentation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -741,9 +741,9 @@
       "name": "EP-LEFT-ATRIAL-SIZE"
     },
     {
-      "bodyEndLine": 14280,
-      "bodyStartLine": 14253,
-      "commentLine": 14251,
+      "bodyEndLine": 14459,
+      "bodyStartLine": 14432,
+      "commentLine": 14430,
       "commentLiteral": "// EP-ANTICOAG-SCORE-REASSESS: Annual CHA2DS2-VASc Reassessment",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -752,9 +752,9 @@
       "name": "EP-ANTICOAG-SCORE-REASSESS"
     },
     {
-      "bodyEndLine": 17449,
-      "bodyStartLine": 17430,
-      "commentLine": 17424,
+      "bodyEndLine": 17628,
+      "bodyStartLine": 17609,
+      "commentLine": 17603,
       "commentLiteral": "// Gap EP-010: rivaroxaban without take-with-food counseling -> >=15 mg dose bioavailability",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -763,9 +763,9 @@
       "name": "EP-010"
     },
     {
-      "bodyEndLine": 17477,
-      "bodyStartLine": 17458,
-      "commentLine": 17451,
+      "bodyEndLine": 17656,
+      "bodyStartLine": 17637,
+      "commentLine": 17630,
       "commentLiteral": "// Gap EP-049: class IC antiarrhythmic (flecainide / propafenone) in structural heart disease -> SAFETY (CAST)",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -1156,7 +1156,7 @@
       "levelOfEvidence": "B-R",
       "name": "Conduction System Pacing Evaluation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1735
+      "registryLine": 1747
     },
     {
       "classOfRecommendation": "2a",
@@ -1166,7 +1166,7 @@
       "levelOfEvidence": "B-NR",
       "name": "Pulsed Field Ablation Candidacy",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1747
+      "registryLine": 1759
     },
     {
       "classOfRecommendation": "1",
@@ -1176,7 +1176,7 @@
       "levelOfEvidence": "B",
       "name": "WPW Syndrome Detection",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1759
+      "registryLine": 1771
     },
     {
       "classOfRecommendation": "3 (Harm)",
@@ -1186,7 +1186,7 @@
       "levelOfEvidence": "B-R",
       "name": "Dronedarone Contraindication Check",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1771
+      "registryLine": 1783
     },
     {
       "classOfRecommendation": "1",
@@ -1196,7 +1196,7 @@
       "levelOfEvidence": "B-NR",
       "name": "Atrial Flutter OAC",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1783
+      "registryLine": 1795
     },
     {
       "classOfRecommendation": "2a",
@@ -1206,7 +1206,7 @@
       "levelOfEvidence": "C",
       "name": "Inappropriate Sinus Tachycardia Treatment",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1795
+      "registryLine": 1807
     },
     {
       "classOfRecommendation": "1",
@@ -1216,7 +1216,7 @@
       "levelOfEvidence": "B-NR",
       "name": "PVC-Induced Cardiomyopathy Screening",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1807
+      "registryLine": 1819
     },
     {
       "classOfRecommendation": "1",
@@ -1226,7 +1226,7 @@
       "levelOfEvidence": "B",
       "name": "Long QT Beta-Blocker",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1819
+      "registryLine": 1831
     },
     {
       "classOfRecommendation": "2a",
@@ -1236,7 +1236,7 @@
       "levelOfEvidence": "B-R",
       "name": "Subclinical AF Detection in Device Patients",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1831
+      "registryLine": 1843
     },
     {
       "classOfRecommendation": "1",
@@ -1246,7 +1246,7 @@
       "levelOfEvidence": "A",
       "name": "ICD Programming Optimization",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1843
+      "registryLine": 1855
     },
     {
       "classOfRecommendation": "1",
@@ -1256,7 +1256,7 @@
       "levelOfEvidence": "B",
       "name": "Lead Integrity Monitoring",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1855
+      "registryLine": 1867
     },
     {
       "classOfRecommendation": "2a",
@@ -1266,7 +1266,7 @@
       "levelOfEvidence": "B-NR",
       "name": "Antiarrhythmic Review Post-Ablation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1867
+      "registryLine": 1879
     },
     {
       "classOfRecommendation": "1",
@@ -1276,7 +1276,7 @@
       "levelOfEvidence": "A",
       "name": "Secondary Prevention ICD",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1879
+      "registryLine": 1891
     },
     {
       "classOfRecommendation": "1",
@@ -1286,7 +1286,7 @@
       "levelOfEvidence": "B",
       "name": "Adult CHD Arrhythmia Screening",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1891
+      "registryLine": 1903
     },
     {
       "classOfRecommendation": "1",
@@ -1296,7 +1296,7 @@
       "levelOfEvidence": "B-NR",
       "name": "Torsades Risk with QT-Prolonging Drugs",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 1903
+      "registryLine": 1915
     },
     {
       "classOfRecommendation": "2a",
@@ -1306,7 +1306,7 @@
       "levelOfEvidence": "B-R",
       "name": "Early Rhythm Control in New AF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2515
+      "registryLine": 2527
     },
     {
       "classOfRecommendation": "1",
@@ -1316,7 +1316,7 @@
       "levelOfEvidence": "B-R",
       "name": "VT Ablation Referral",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2527
+      "registryLine": 2539
     },
     {
       "classOfRecommendation": "1",
@@ -1326,7 +1326,7 @@
       "levelOfEvidence": "B-NR",
       "name": "SVT Ablation Referral",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2539
+      "registryLine": 2551
     },
     {
       "classOfRecommendation": "1",
@@ -1336,7 +1336,7 @@
       "levelOfEvidence": "C",
       "name": "Brugada Syndrome Screening",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2551
+      "registryLine": 2563
     },
     {
       "classOfRecommendation": "1",
@@ -1346,7 +1346,7 @@
       "levelOfEvidence": "B",
       "name": "ARVC Screening",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2563
+      "registryLine": 2575
     },
     {
       "classOfRecommendation": "1",
@@ -1356,7 +1356,7 @@
       "levelOfEvidence": "B-NR",
       "name": "Cardiac Sarcoid Arrhythmia Screen",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2575
+      "registryLine": 2587
     },
     {
       "classOfRecommendation": "2a",
@@ -1366,7 +1366,7 @@
       "levelOfEvidence": "B",
       "name": "Pacemaker to CRT Upgrade Evaluation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2587
+      "registryLine": 2599
     },
     {
       "classOfRecommendation": "1",
@@ -1376,7 +1376,7 @@
       "levelOfEvidence": "B",
       "name": "CHA2DS2-VASc Formal Calculation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2599
+      "registryLine": 2611
     },
     {
       "classOfRecommendation": "1",
@@ -1386,7 +1386,7 @@
       "levelOfEvidence": "B-NR",
       "name": "Perioperative Anticoagulation Management",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2611
+      "registryLine": 2623
     },
     {
       "classOfRecommendation": "1",
@@ -1396,7 +1396,7 @@
       "levelOfEvidence": "B-NR",
       "name": "Cardioversion Timing Assessment",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2623
+      "registryLine": 2635
     },
     {
       "classOfRecommendation": "1",
@@ -1406,7 +1406,7 @@
       "levelOfEvidence": "B",
       "name": "TEE Before Cardioversion",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2635
+      "registryLine": 2647
     },
     {
       "classOfRecommendation": "1",
@@ -1416,7 +1416,7 @@
       "levelOfEvidence": "B",
       "name": "MRI-Conditional CIED Documentation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2647
+      "registryLine": 2659
     },
     {
       "classOfRecommendation": "1",
@@ -1426,7 +1426,7 @@
       "levelOfEvidence": "C",
       "name": "Generator Replacement Planning",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2659
+      "registryLine": 2671
     },
     {
       "classOfRecommendation": "1",
@@ -1436,7 +1436,7 @@
       "levelOfEvidence": "B",
       "name": "ICD Inappropriate Shock Workup",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2671
+      "registryLine": 2683
     },
     {
       "classOfRecommendation": "2a",
@@ -1446,7 +1446,7 @@
       "levelOfEvidence": "B",
       "name": "Exercise Testing for Arrhythmia",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 2683
+      "registryLine": 2695
     },
     {
       "classOfRecommendation": "2a",
@@ -1456,7 +1456,7 @@
       "levelOfEvidence": "B-R",
       "name": "AF Ablation Timing Optimization",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 3691
+      "registryLine": 3703
     },
     {
       "classOfRecommendation": "2a",
@@ -1466,7 +1466,7 @@
       "levelOfEvidence": "B",
       "name": "Pill-in-Pocket Strategy for Paroxysmal AF",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 4003
+      "registryLine": 4015
     },
     {
       "classOfRecommendation": "1",
@@ -1476,7 +1476,7 @@
       "levelOfEvidence": "B",
       "name": "Left Atrial Size Documentation",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 4015
+      "registryLine": 4027
     },
     {
       "classOfRecommendation": "1",
@@ -1486,7 +1486,7 @@
       "levelOfEvidence": "B",
       "name": "Annual CHA2DS2-VASc Reassessment",
       "nextReviewDue": "2026-10-03",
-      "registryLine": 4027
+      "registryLine": 4039
     }
   ]
 }

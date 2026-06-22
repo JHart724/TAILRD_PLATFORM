@@ -71,8 +71,12 @@ describe('Structural: Gap rule engine integrity', () => {
     // Then 384 -> 390 by the T0 net-new batch (2026-06-19, feat/t0-authoring-sweep):
     // - net +6: PV-042 (Behcet immunosuppression), PV-081 (CTEPH riociguat), PV-084 (PAH ERA+PDE5i),
     //   PV-085 (PAH sotatercept), EP-010 (rivaroxaban food counseling), EP-049 (class IC in structural HD - CAST safety).
+    // Then 390 -> 394 by the T1-broader LVESD batch (2026-06-22, feat/t1-broader-lvesd):
+    // - net +4: GAP-VHD-103 LVESD-dilation 2nd arm (Class 2a, the AR COR fork), SH-024 (TR + RV dysfunction
+    //   TAPSE/FAC), VHD-060 (IE large vegetation), VHD-100 (mech-valve-pregnancy anti-Xa). LVESD threading itself
+    //   yielded 0 direct net-new (SH-014/SH-018 enhancements gate on already-threaded LVEF/EROA).
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(390);
+    expect(count).toBe(394);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

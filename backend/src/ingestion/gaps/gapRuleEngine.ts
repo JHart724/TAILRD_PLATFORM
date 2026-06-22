@@ -1456,6 +1456,18 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'B',
   },
   {
+    id: 'gap-sh-024-tr-rv-dysfunction',
+    name: 'Severe TR RV dysfunction (TAPSE/FAC) intervention timing',
+    module: 'STRUCTURAL_HEART',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020',
+    guidelineOrg: 'ACC/AHA',
+    lastReviewDate: '2026-06-22',
+    nextReviewDue: '2026-12-22',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'C-LD',
+  },
+  {
     id: 'gap-sh-022-tricuspid-assessment',
     name: 'Tricuspid Valve Assessment',
     module: 'STRUCTURAL_HEART',
@@ -4113,6 +4125,20 @@ export const RUNTIME_GAP_REGISTRY = [
     name: 'Severe Asymptomatic AR LV Dysfunction Surgical', module: 'VALVULAR_DISEASE',
     guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
     guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-17', nextReviewDue: '2026-12-17',
+    classOfRecommendation: '1', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-060-ie-large-vegetation',
+    name: 'IE Large Mobile Vegetation Early Surgery', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-22', nextReviewDue: '2026-12-22',
+    classOfRecommendation: '2b', levelOfEvidence: 'B-NR',
+  },
+  {
+    id: 'gap-vhd-100-mech-valve-pregnancy-antixa',
+    name: 'Mechanical Valve Pregnancy LMWH Anti-Xa Monitoring', module: 'VALVULAR_DISEASE',
+    guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+    guidelineVersion: '2020', guidelineOrg: 'ACC/AHA', lastReviewDate: '2026-06-22', nextReviewDue: '2026-12-22',
     classOfRecommendation: '1', levelOfEvidence: 'B-NR',
   },
   {
@@ -7734,11 +7760,16 @@ export function evaluateGapRules(
   const secondaryMRContext = hasHF && labValues['lvef'] !== undefined && labValues['lvef'] < 50;
   const symptomaticMR = dxCodes.some(c => c.startsWith('R06') || c.startsWith('R00') || c.startsWith('I50'));
 
-  // Gap SH-014: Severe PRIMARY MR - surgical referral. COR 1 (symptomatic) / 2a (asymptomatic + LV trigger).
+  // Gap SH-014: Severe PRIMARY MR - surgical referral. COR 1 (symptomatic) / Class 1 (asymptomatic + LV trigger).
   // Tightening (AUDIT-125): the prior rule fired on I34.0 + (LVEF<60 OR symptomatic) with NO severity gate (over-
   // detected mild/moderate MR). Now gated on the threaded severe-MR severity + PRIMARY context.
+  // T1-broader LVESD arm (2026-06-22): added the LVESD>=40 mm LV-dilation trigger (CSV-threaded). 2020 ACC/AHA VHD
+  // makes asymptomatic severe primary MR + (LVEF<=60% OR LVESD>=40 mm) a Class 1 surgery indication; the LVESD arm
+  // catches the preserved-EF-but-dilated-LV patient the LVEF<=60 gate alone missed. Sensitivity enhancement only.
   if (hasMitralRegurg && severeMR && !secondaryMRContext
-      && (symptomaticMR || (labValues['lvef'] !== undefined && labValues['lvef'] <= 60))
+      && (symptomaticMR
+          || (labValues['lvef'] !== undefined && labValues['lvef'] <= 60)
+          || (labValues['lvesd'] !== undefined && labValues['lvesd'] >= 40))
       && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     gaps.push({
       type: TherapyGapType.PROCEDURE_INDICATED,
@@ -7752,14 +7783,14 @@ export function evaluateGapRules(
         // functional-MR patient. Repair-vs-replacement is heart-team-determined by valve anatomy.
         action: 'Refer to heart valve team for mitral valve surgery (repair preferred over replacement) per 2020 ACC/AHA VHD (Class 1)',
         guideline: '2020 ACC/AHA Valvular Heart Disease',
-        note: 'Class 1 when symptomatic; the asymptomatic-with-LV-trigger subset (LVEF 30-60% or LV dilation) is a Class 2a indication. Severe PRIMARY (degenerative) MR warrants surgical MV repair (durable, preferred) over replacement. Distinct from SECONDARY/functional MR (GDMT-first then TEER per COAPT), which is excluded here.',
+        note: 'Class 1 when symptomatic; in the 2020 guideline the asymptomatic-with-LV-trigger subset (LVEF <=60% or LVESD >=40 mm) was strengthened to a Class 1 indication. Severe PRIMARY (degenerative) MR warrants surgical MV repair (durable, preferred) over replacement. Distinct from SECONDARY/functional MR (GDMT-first then TEER per COAPT), which is excluded here.',
       },
       evidence: {
         triggerCriteria: [
           'Mitral regurgitation (I34.0)',
           'Severe MR (EROA >=0.40, regurg grade >=4, or valve_severity >=5)',
           'Primary/degenerative context (not HF+LVEF<50 secondary/functional MR)',
-          'Symptomatic (R06/R00/I50) or LVEF <=60%',
+          'Symptomatic (R06/R00/I50), LVEF <=60%, or LVESD >=40 mm (LV-dilation trigger)',
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
         classOfRecommendation: '1',
@@ -7842,6 +7873,42 @@ export function evaluateGapRules(
   // CIED lead presence (Z95.0 pacemaker, Z95.810 ICD) partitions SH-023 (lead present) vs SH-069 (no lead),
   // so for any severe symptomatic-TR patient exactly one device-pathway gap layers onto SH-022.
   const hasCIEDLead_TR = dxCodes.some(c => c.startsWith('Z95.0') || c.startsWith('Z95.810'));
+
+  // Gap SH-024: Severe TR + RV systolic dysfunction (TAPSE<17 mm OR FAC<35%) -> heart-team intervention-timing
+  // evaluation. T1-broader PART 2 (2026-06-22): RV dysfunction by TAPSE/FAC predicts the worst survival in severe
+  // TR and intervention before irreversible RV failure improves outcomes (2020 ACC/AHA VHD, severe-TR intervention
+  // Class 2a). Gated on the PRE-SYMPTOMATIC subset (!trCongestionSymptoms) so it partitions cleanly from SH-022
+  // (severe symptomatic TR -> transcatheter eval): mutually exclusive on congestion symptoms, no double-fire.
+  // CSV-threaded tapse/fac. Path-B: the optimal TAPSE-based referral threshold is not guideline-established; <17 mm
+  // is the ASE RV-systolic-dysfunction cut, surfaced for heart-team review (not an intervention mandate).
+  if (hasTRdx && severeTR && !trCongestionSymptoms
+      && ((labValues['tapse'] !== undefined && labValues['tapse'] < 17)
+          || (labValues['fac'] !== undefined && labValues['fac'] < 35))
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.STRUCTURAL_HEART,
+      status: 'Severe TR with RV systolic dysfunction (TAPSE<17 or FAC<35): intervention-timing evaluation gap',
+      target: 'Heart valve team evaluation for tricuspid intervention timing before irreversible RV failure',
+      recommendations: {
+        action: 'Consider heart valve team evaluation for tricuspid intervention timing in severe tricuspid regurgitation with developing RV systolic dysfunction (TAPSE <17 mm or FAC <35%), as intervention before irreversible RV failure improves outcomes, per 2020 ACC/AHA VHD (Class 2a)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Class 2a (consider): severe TR + RV systolic dysfunction by TAPSE <17 mm / FAC <35% (ASE cut), in the pre-symptomatic subset (distinct from SH-022 severe symptomatic TR). Path-B: the optimal TAPSE-based referral threshold is not guideline-established; surfaced for heart-team review.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Tricuspid regurgitation (I36.1)',
+          'Severe TR (tr_regurg_grade >=4 or valve_severity >=5)',
+          'RV systolic dysfunction (TAPSE <17 mm or FAC <35%)',
+          'Pre-symptomatic (no right-heart congestion R60/R16/R18/I50.81 - partitions from SH-022)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'C-LD',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Advanced/irreversible RV failure (TAPSE <13 mm - reverse-remodeling unlikely)'],
+      },
+    });
+  }
 
   // Gap SH-022: Severe TR -> transcatheter (T-TEER/TTVR) evaluation gap (AUDIT-125 severity-gated)
   // Guideline: 2020 ACC/AHA VHD Guideline (Class 2a for severe symptomatic TR); TRILUMINATE / CLASP-TR.
@@ -8187,6 +8254,42 @@ export function evaluateGapRules(
     });
   }
 
+  // LVESD-dilation arm of GAP-VHD-103: severe asymptomatic AR + PRESERVED LVEF (>55%) + LVESD >50 mm -> AVR eval.
+  // T1-broader fork-fix (2026-06-22): the LVESD>50 mm trigger with preserved EF is a Class 2a indication (2020
+  // ACC/AHA VHD, Stage C2: LVEF<=55 OR LVESD>50 mm / indexed >25 mm/m2), DISTINCT in COR from the LVEF<=55 arm above
+  // (a Class-1 indication). It is a SECOND push under the same spec gap GAP-VHD-103 (not a separate spec id): the
+  // two arms carry different evidence COR (2a here vs 1 above) and are mutually exclusive on LVEF (>55 here vs <=55
+  // above), so no double-fire. Folding LVESD>50 into the Class-1 push would mis-tag a Class-2a trigger. CSV-threaded.
+  if (hasAorticRegurg && severeAR && !symptomaticVHD
+      && labValues['lvef'] !== undefined && labValues['lvef'] > 55
+      && labValues['lvesd'] !== undefined && labValues['lvesd'] > 50
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Severe asymptomatic AR with preserved EF and LV dilation (LVESD >50 mm): surgical evaluation gap',
+      target: 'Heart-team aortic valve surgery evaluation (valve-sparing/repair vs replacement)',
+      recommendations: {
+        action: 'Consider heart-team aortic valve surgery evaluation (valve-sparing root repair vs aortic valve replacement, by anatomy) for severe asymptomatic aortic regurgitation with preserved LVEF and LVESD >50 mm per 2020 ACC/AHA VHD (Class 2a)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Class 2a (Stage C2 LV-dilation trigger): preserved LVEF (>55%) with LVESD >50 mm (or indexed >25 mm/m2). Subgroup-aware: valve-sparing/repair for select root anatomy vs replacement (AVR), heart-team-determined. Distinct from the Class-1 LVEF <=55% trigger (VHD-103).',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Aortic regurgitation (I35.1 or I35.2)',
+          'Severe AR (valve_severity >=5 or aortic vena contracta >=0.6 cm)',
+          'Asymptomatic (no HF/syncope/angina/dyspnea dx)',
+          `Preserved LVEF: ${labValues['lvef']}% (>55%)`,
+          `LVESD: ${labValues['lvesd']} mm (>50, severe LV dilation)`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Aortic valve already replaced (Z95.2/.3/.4)'],
+      },
+    });
+  }
+
   // Gap VHD-102: Moderate aortic regurgitation without surveillance echo
   // Guideline: 2020 ACC/AHA VHD Guideline (periodic surveillance for chronic AR). The existence-proxy is
   // LEGITIMATE here (a surveillance gap fires on absence of a recent echo, by design). Path-B: AR severity is not
@@ -8487,6 +8590,40 @@ export function evaluateGapRules(
     });
   }
 
+  // Gap VHD-060: Infective endocarditis + large mobile vegetation (>10 mm), no prior embolic event -> early-surgery
+  // consideration to PREVENT a first embolism. T1-broader PART 2 (2026-06-22): unblocks the vegetation-size arm that
+  // the embolic-arm gap (gap-vhd-059) explicitly deferred ("vegetation-size-driven prophylactic surgery is a
+  // separate, echo-morphology-blocked indication"). COR 2b (2020 ACC/AHA VHD / 2014 AHA IE): an isolated mobile
+  // vegetation >10 mm WITHOUT an embolic event is "surgery may be considered" (the Class-2a recurrent-embolism arm
+  // is the separate gap-vhd-059). Gated on !hasEmbolic_VHD so the two partition cleanly (no embolic event here vs
+  // embolic event there): no double-fire. CSV-threaded vegetation_size (TEE morphology, no clean LOINC, no-guess).
+  if (hasIE_VHD && !hasEmbolic_VHD
+      && labValues['vegetation_size'] !== undefined && labValues['vegetation_size'] > 10
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.PROCEDURE_INDICATED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Infective endocarditis with large mobile vegetation (>10 mm): early-surgery consideration gap',
+      target: 'Endocarditis-team early-surgery evaluation to prevent embolism from a large mobile vegetation',
+      recommendations: {
+        action: 'Consider endocarditis-team early-surgery evaluation for infective endocarditis with a large mobile vegetation (>10 mm) to reduce the risk of a first embolic event per 2020 ACC/AHA VHD (Class 2b)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Class 2b: an isolated large mobile vegetation (>10 mm) without an embolic event is a "surgery may be considered" prophylactic indication, distinct from the Class-2a recurrent-embolism-on-therapy arm (VHD-059). Path-B: vegetation MOBILITY and leaflet location (anterior mitral) refine the indication but are not threaded; size is the threaded proxy.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Acute/subacute infective endocarditis (I33.0)',
+          'Large mobile vegetation (vegetation_size >10 mm)',
+          'No embolic event yet (not I74/I63 - prophylactic, partitions from VHD-059)',
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '2b',
+        levelOfEvidence: 'B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Prohibitive operative risk', 'Surgery already performed this episode'],
+      },
+    });
+  }
+
   // Gap VHD-064: Prior infective endocarditis + dental procedure without antibiotic prophylaxis
   // Guideline: 2021 AHA Endocarditis Prevention (Class 1 prophylaxis for previous IE - a highest-risk condition).
   const hasPriorIE_VHD = hasIE_VHD || dxCodes.some(c => c.startsWith('Z86.79'));
@@ -8651,6 +8788,43 @@ export function evaluateGapRules(
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
         classOfRecommendation: '1',
         levelOfEvidence: 'C',
+        exclusions: ['Hospice/palliative care (Z51.5)'],
+      },
+    });
+  }
+
+  // Gap VHD-100: Mechanical valve + pregnancy + on LMWH with anti-Xa NOT in the therapeutic peak range (0.8-1.2
+  // U/mL) -> dose adjustment. T1-broader PART 2 (2026-06-22): unblocks the anti-Xa-monitoring arm (slug threaded
+  // both-paths, LOINC 31159-7 NLM-verified). 2020 ACC/AHA VHD: dose-adjusted LMWH in mechanical-valve pregnancy must
+  // target a peak (4-6 h post-dose) anti-Xa of 0.8-1.2 U/mL (Class 1). DISTINCT from VHD-099 (the broad
+  // teratogenicity-vs-thrombosis STRATEGY review): VHD-100 fires only for a patient ALREADY on LMWH with a measured
+  // out-of-range anti-Xa - a specific dose-titration action, not the which-anticoagulant decision. The overlap with
+  // gap-vhd-099 is intentional and non-redundant (different actions); reconciled in the close note.
+  const onLMWH_VHD100 = ['67108', '67109', '69646'].some(c => medCodes.includes(c));
+  if (hasMechanicalValve && isPregnant_VHD5 && onLMWH_VHD100
+      && labValues['anti_xa'] !== undefined
+      && (labValues['anti_xa'] < 0.8 || labValues['anti_xa'] > 1.2)
+      && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.VALVULAR_DISEASE,
+      status: 'Mechanical valve in pregnancy on LMWH: anti-Xa out of therapeutic range (0.8-1.2 U/mL) dose adjustment gap',
+      target: 'LMWH dose adjusted to a peak (4-6 h post-dose) anti-Xa of 0.8-1.2 U/mL',
+      recommendations: {
+        action: 'Consider LMWH dose adjustment for a pregnant mechanical-valve patient whose peak anti-Xa is outside 0.8-1.2 U/mL - subtherapeutic levels risk valve thrombosis and supratherapeutic levels risk bleeding, per 2020 ACC/AHA VHD (Class 1)',
+        guideline: '2020 ACC/AHA Valvular Heart Disease',
+        note: 'Class 1: in mechanical-valve pregnancy, dose-adjusted LMWH must target a peak (4-6 h post-dose) anti-Xa of 0.8-1.2 U/mL. Distinct from VHD-099 (the strategy/which-anticoagulant SAFETY review); VHD-100 is the on-LMWH dose-titration action. Path-B: peak-vs-trough timing of the anti-Xa draw is not threaded - the value is assumed to be the protocol peak.',
+      },
+      evidence: {
+        triggerCriteria: [
+          'Mechanical prosthetic valve (Z95.2 / Z95.4)',
+          'Pregnancy (O99.4x / O09 / Z34 / Z33.1 / Z3A)',
+          'On low-molecular-weight heparin (enoxaparin / dalteparin / tinzaparin)',
+          `Anti-Xa: ${labValues['anti_xa']} U/mL (outside the 0.8-1.2 therapeutic peak range)`,
+        ],
+        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B-NR',
         exclusions: ['Hospice/palliative care (Z51.5)'],
       },
     });
@@ -9480,6 +9654,9 @@ export function evaluateGapRules(
   // valve_severity>=4 OR EROA>=0.30 OR regurg grade>=3, the COAPT band), and (b) STANDING SUBGROUP CHECK - the
   // recommendation BRANCHES on GDMT status: GDMT-naive -> "optimize GDMT first, then TEER if MR persists";
   // GDMT-optimized -> TEER candidacy. Path-B: GDMT proxy = BB + RAASi present (the HF Pattern-C minimum).
+  // T1-broader COAPT eligibility (2026-06-22): added the LVESD<=70 mm exclusion (CSV-threaded). COAPT enrolled
+  // LVESD <=70 mm; a TEER recommendation should NOT fire for LVESD >70 mm (outside the trial-eligible band). The
+  // gate is permissive on undefined so LVESD-absent patients are unaffected. Specificity tightening only.
   const hasMR10 = dxCodes.some(c => c.startsWith('I34.0'));
   const modSevereSecondaryMR =
     (labValues['valve_severity'] !== undefined && labValues['valve_severity'] >= 4) ||
@@ -9490,6 +9667,7 @@ export function evaluateGapRules(
     hasMR10 &&
     labValues['lvef'] !== undefined && labValues['lvef'] < 50 &&
     modSevereSecondaryMR &&
+    (labValues['lvesd'] === undefined || labValues['lvesd'] <= 70) &&
     age > 75 &&
     !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
   ) {
@@ -9516,11 +9694,12 @@ export function evaluateGapRules(
           `LVEF: ${labValues['lvef']}% (<50%)`,
           `Age: ${age} (>75, high surgical risk proxy)`,
           `GDMT status: ${onGDMT_SH10 ? 'on BB + RAASi (optimized)' : 'NOT on BB + RAASi (optimize first)'}`,
+          'COAPT-eligible LV size (LVESD <=70 mm or not measured)',
         ],
         guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease (COAPT Trial)',
         classOfRecommendation: 'Class 2a',
         levelOfEvidence: 'LOE B-R',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Severe mitral annular calcification', 'Life expectancy < 1 year'],
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Severe mitral annular calcification', 'Life expectancy < 1 year', 'LVESD >70 mm (outside COAPT eligibility)'],
       },
     });
   }

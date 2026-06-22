@@ -149,8 +149,8 @@ describe('validateEvidenceObjects - live gapRuleEngine.ts baseline', () => {
   const result = analyzeSource(src, 'gapRuleEngine.ts');
 
   it('finds 376 gaps.push nodes, all with an evidence object', () => {
-    expect(result.pushCount).toBe(390); // 384 + 6 (T0 net-new batch: PV-042/081/084/085 + EP-010/049, 2026-06-19)
-    expect(result.evidenceCount).toBe(390);
+    expect(result.pushCount).toBe(394); // 390 + 4 (T1-broader LVESD batch: VHD-103 LVESD-arm + SH-024 + VHD-060 + VHD-100, 2026-06-22)
+    expect(result.evidenceCount).toBe(394);
   });
 
   it('reports ZERO inconsistencies (clean baseline post-AUDIT-103)', () => {

@@ -192,9 +192,9 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
   it.each([
     ['HF', 'HEART_FAILURE', 90], // 56 + 34 (v3.0 HF full buildout batch, 2026-06-15, feat/hf-buildable-gap-batch)
     ['EP', 'ELECTROPHYSIOLOGY', 71], // 48 + 21 (v3.0 EP buildout) -> 71 (T0 net-new: +2 EP-010/049, 2026-06-19)
-    ['SH', 'STRUCTURAL_HEART', 60], // 25 + 35 (v3.0 SH module close, 2026-06-17, feat/sh-chunk1-as-severity)
+    ['SH', 'STRUCTURAL_HEART', 61], // 60 -> 61 (T1-broader PART 2: +1 gap-sh-024-tr-rv-dysfunction, 2026-06-22)
     ['CAD', 'CORONARY_INTERVENTION', 83], // 76 -> 83 (CAD chunk 1: +7 lipid/risk/etiology registry entries; gap-cad-ivus retained as regOrphan, 2026-06-18)
-    ['VHD', 'VALVULAR_DISEASE', 49], // 32 + 17 (v3.0 VHD module close, 2026-06-17, feat/vhd-chunk1-ar-severity)
+    ['VHD', 'VALVULAR_DISEASE', 51], // 49 -> 51 (T1-broader PART 2: +2 gap-vhd-060 + gap-vhd-100; VHD-103 LVESD arm is a 2nd push under the existing registry entry, 2026-06-22)
     ['PV', 'PERIPHERAL_VASCULAR', 45], // 33 -> 34 (chunk 0) -> 41 (chunk 1) -> 45 (T0 net-new: +4 PV-042/081/084/085, 2026-06-19)
   ])('module %s registry has %i entries tagged %s', (code, enumName, count) => {
     const registry = extractRegistry(lines, enumName);
@@ -210,7 +210,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(16048); // -> 16048 by the T0 net-new batch (2026-06-19, +73 lines: 6 new registry entries above); AUDIT-110 = content-anchor remediation scope
+    expect(pannus!.commentLine).toBe(16227); // -> 16227 by the T1-broader LVESD batch (2026-06-22, +179 lines: SH-024/VHD-060/VHD-100/VHD-103-LVESD evaluators + registries above); AUDIT-110 = content-anchor remediation scope
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });
@@ -233,9 +233,9 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
   });
 
   it.each([
-    ['SH', 60, 54, 54], // evaluator 55->54 + gapsPush 55->54: SH-012 superseded marker de-tokenized so it is no longer parsed as an evaluator block (v3.0 VHD close, AUDIT-171)
+    ['SH', 61, 55, 55], // T1-broader PART 2: registry 60->61, evaluator 54->55, gapsPush 54->55 (+1 gap-sh-024-tr-rv-dysfunction, 2026-06-22)
     ['CAD', 83, 82, 82], // CAD chunk 1: registry 83 (+7 entries), evaluator/push 82 (CAD-IVUS firing retired, AUDIT-182; its registry entry retained as a regOrphan)
-    ['VHD', 49, 48, 48], // v3.0 VHD module close: registry 32->49, evaluator 32->48, gapsPush 32->48
+    ['VHD', 51, 50, 51], // T1-broader: registry 49->51 (+VHD-060/100), evaluator 48->50 (+2 parsed blocks), gapsPush 48->51 (+3: VHD-060/100 + the VHD-103 LVESD 2nd arm push folded into the VHD-103 block)
     ['PV', 45, 45, 45], // chunk0 33->34; chunk1 34->41; T0 net-new 41->45 (+4 PV-042/081/084/085, 2026-06-19)
   ])(
     'module %s reconciliation counts: registry=%i, evaluator=%i, gapsPush=%i (clean modules)',
