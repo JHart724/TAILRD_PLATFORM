@@ -117,6 +117,11 @@ export async function writePatients(
         // Derived/temporal/presence slugs - CSV-path only (cac_score is CT-derived; the others are months-since /
         // procedure-presence). No verifiable observation LOINC -> FHIR mapping omitted per the LVESD no-guess rule.
         'cac_score', 'stress_test_months', 'ccta', 'graft_duplex_months',
+        // T1-broader LVESD batch (2026-06-22): LV end-systolic dimension (mm), CSV-only (no verifiable LOINC).
+        'lvesd',
+        // T1-broader PART 2 (2026-06-22): tapse/fac (RV function, echo, CSV-only) + vegetation_size (TEE, CSV-only)
+        // + anti_xa (Heparin anti-Xa, LOINC 31159-7 NLM-verified, also FHIR-mapped - the one both-paths slug).
+        'tapse', 'fac', 'vegetation_size', 'anti_xa',
       ];
       const observationBatch: any[] = [];
       for (const field of labFields) {
@@ -239,6 +244,8 @@ function getUnit(field: string): string {
     heart_rate: 'bpm', systolic_bp: 'mmHg', diastolic_bp: 'mmHg', hemoglobin: 'g/dL', hba1c: '%', tsh: 'mIU/L', creatinine: 'mg/dL',
     crp: 'mg/L', hs_crp: 'mg/L', alt: 'U/L', ast: 'U/L',
     cac_score: 'Agatston', stress_test_months: 'months', ccta: 'present', graft_duplex_months: 'months',
+    lvesd: 'mm',
+    tapse: 'mm', fac: '%', vegetation_size: 'mm', anti_xa: 'U/mL',
   };
   return units[field] || '';
 }
@@ -284,6 +291,9 @@ function getObservationName(field: string): string {
     alt: 'Alanine Aminotransferase (ALT)', ast: 'Aspartate Aminotransferase (AST)',
     cac_score: 'Coronary Artery Calcium Score (Agatston)', stress_test_months: 'Months Since Stress Test',
     ccta: 'Coronary CT Angiography (presence)', graft_duplex_months: 'Months Since Graft Duplex',
+    lvesd: 'LV End-Systolic Dimension',
+    tapse: 'Tricuspid Annular Plane Systolic Excursion (TAPSE)', fac: 'RV Fractional Area Change',
+    vegetation_size: 'Endocarditis Vegetation Size', anti_xa: 'Heparin Anti-Xa Activity',
   };
   return names[field] || field;
 }

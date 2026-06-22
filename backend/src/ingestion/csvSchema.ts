@@ -34,6 +34,10 @@ export const COMMON_COLUMNS: CSVColumn[] = [
   { name: 'stress_test_months', required: false, type: 'number', validation: { min: 0, max: 600 } },
   { name: 'ccta', required: false, type: 'number', validation: { min: 0, max: 1 } },
   { name: 'graft_duplex_months', required: false, type: 'number', validation: { min: 0, max: 600 } },
+  // T1-broader LVESD batch (2026-06-22): LV end-systolic dimension (mm). CSV-only - NLM could not verify a clean
+  // LOINC for LVESD, so per the no-guess rule the FHIR map is omitted (same pattern as cac_score). Gates the
+  // severe-MR (>=40), severe-AR (>=50), and COAPT-TEER (<=70) surgical/eligibility thresholds.
+  { name: 'lvesd', required: false, type: 'number', validation: { min: 0, max: 120 } },
 ];
 
 export const HF_COLUMNS: CSVColumn[] = [
@@ -88,6 +92,11 @@ export const SH_COLUMNS: CSVColumn[] = [
   { name: 'mitral_eroa', required: false, type: 'number' },
   { name: 'pasp', required: false, type: 'number' },
   { name: 'ascending_aorta', required: false, type: 'number' },
+  // T1-broader PART 2 (2026-06-22): RV systolic function for the TR + RV-dysfunction gap (SH-024). tapse (mm) and
+  // fac (RV fractional area change, %) are echo-derived - NLM has no clean simple-measurement LOINC, so CSV-only
+  // per the no-guess rule (lvesd/cac_score pattern). TAPSE <17 mm / FAC <35% is the RV-systolic-dysfunction cut.
+  { name: 'tapse', required: false, type: 'number', validation: { min: 0, max: 50 } },
+  { name: 'fac', required: false, type: 'number', validation: { min: 0, max: 100 } },
 ];
 
 export const PV_COLUMNS: CSVColumn[] = [
@@ -104,6 +113,12 @@ export const VD_COLUMNS: CSVColumn[] = [
   { name: 'surgical_risk', required: false, type: 'string' },
   // INR for mechanical-valve anticoagulation (AUDIT-170 slug-fix, CSV path). reaches labValues['inr'].
   { name: 'inr', required: false, type: 'number' },
+  // T1-broader PART 2 (2026-06-22): vegetation_size (mm, TEE-derived -> CSV-only, no clean LOINC) gates the IE
+  // large-vegetation surgical-consideration gap (VHD-060, >10 mm). anti_xa (Heparin anti-Xa activity, U/mL) gates
+  // the mechanical-valve-pregnancy LMWH-monitoring gap (VHD-100, target 0.8-1.2); anti_xa is ALSO FHIR-mapped
+  // (LOINC 31159-7, NLM exact-verified) in observationService - the one both-paths slug in this batch.
+  { name: 'vegetation_size', required: false, type: 'number', validation: { min: 0, max: 80 } },
+  { name: 'anti_xa', required: false, type: 'number', validation: { min: 0, max: 5 } },
 ];
 
 export function getModuleColumns(moduleId: string): CSVColumn[] {

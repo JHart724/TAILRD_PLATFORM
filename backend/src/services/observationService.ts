@@ -118,6 +118,7 @@ export const ECHO_LOINC_TO_SLUG: Record<string, string> = {
   '10835-7': 'lpa',                                                                   // Lipoprotein a [Mass/volume] (NLM 10835-7) - CAD-008 slug-name canonicalization
   '8480-6': 'systolic_bp',                                                            // Systolic blood pressure (NLM 8480-6) - HF-003 repair
   '8462-4': 'diastolic_bp',                                                           // Diastolic blood pressure (NLM 8462-4)
+  '31159-7': 'anti_xa',                                                               // Heparin anti Xa [Units/volume] activity (NLM 31159-7 exact-verified) - VHD-100 LMWH monitoring
 };
 
 const VITAL_SIGNS_CODES: Record<string, string[]> = {

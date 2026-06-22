@@ -455,8 +455,9 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
       auditNote: 'v3.0 SH close: GAP-SH-015 has no distinct evaluator after the MR block split (the chunk-2 MR build covers GAP-SH-014/016/017). The stale SH-3 cite is cleared. SPEC_ONLY.',
     },
     'GAP-SH-024': {
-      classification: 'SPEC_ONLY',
-      auditNote: 'v3.0 SH close: GAP-SH-024 (RV dysfunction in TR: TAPSE<17 or FAC<35) is data-blocked - TAPSE/FAC are not threaded (echo-morphology). The stale SH-4 cite (pre-rename tricuspid block) is cleared. SPEC_ONLY / data-blocked.',
+      classification: 'DET_OK',
+      registryId: 'gap-sh-024-tr-rv-dysfunction',
+      auditNote: 'BUILT 2026-06-22 (T1-broader PART 2): SPEC_ONLY (data-blocked) -> DET_OK. The TAPSE/FAC data-block is lifted - tapse/fac are now CSV-threaded (echo-morphology, no clean LOINC, no-guess). Purpose-built gap-sh-024-tr-rv-dysfunction (severe TR I36.1 + RV systolic dysfunction TAPSE < 17 mm or FAC < 35%, pre-symptomatic) -> heart-team intervention-timing eval. 2020 ACC/AHA VHD severe-TR intervention Class 2a (LOE C-LD); TAPSE < 17 = ASE RV-dysfunction cut (section-16). Partitions from SH-022 (severe symptomatic TR) on !congestion - no double-fire. Guarded by t1BroaderPart2.test.ts.',
     },
     'GAP-SH-080': {
       classification: 'SPEC_ONLY',
@@ -689,9 +690,10 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 5 close): SPEC_ONLY -> PARTIAL. RE-CITED to the purpose-built gap-vhd-099-mech-valve-pregnancy-anticoag SAFETY_ALERT evaluator (mechanical Z95.2/Z95.4 + pregnancy O99.4x/O09/Z34/Z33.1/Z3A -> heart-team + MFM anticoagulation SAFETY, warfarin-branch teratogenicity tradeoff, do-NOT-discontinue guardrail). Holds at PARTIAL per §16 underclaim-governs: the spec wants warfarin >5mg/day dose-specificity + 1st-trimester-specific LMWH dose-transition (VHD-100 anti-Xa, VHD-101 delivery plan); warfarin dose and gestational-week precision are not threaded, so the evaluator fires the broader SAFETY referral across trimesters. Tier-S structural-safety (ESCALATE-AT-DUA) retained.',
     },
     'GAP-VHD-100': {
-      classification: 'SPEC_ONLY',
+      classification: 'DET_OK',
+      registryId: 'gap-vhd-100-mech-valve-pregnancy-antixa',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-10 (VHD audit, AUDIT-136): PARTIAL -> SPEC_ONLY. VD-10 (gap-vd-10-pregnancy-risk) does not carry the VHD-100 anti-Xa monitoring protocol (peak anti-Xa 0.8-1.2 on LMWH); no genuine detection of the spec target. registryId dropped.',
+        'BUILT 2026-06-22 (T1-broader PART 2): SPEC_ONLY (data-blocked AUDIT-136) -> DET_OK. The anti-Xa data-block is lifted - anti_xa is now threaded BOTH-paths (LOINC 31159-7, NLM exact-verified). Purpose-built gap-vhd-100-mech-valve-pregnancy-antixa (mechanical valve Z95.2/Z95.4 + pregnancy + on LMWH enoxaparin 67108/dalteparin 67109/tinzaparin 69646 + anti-Xa outside 0.8-1.2 U/mL) -> dose adjustment. Class 1 (LOE B-NR); anti-Xa peak range 0.8-1.2 U/mL section-16-verified. Intentional non-redundant overlap with VHD-099 (which-anticoagulant strategy review) - VHD-100 is the distinct on-LMWH dose-titration action. Guarded by t1BroaderPart2.test.ts.',
     },
     'GAP-VHD-101': {
       classification: 'SPEC_ONLY',
@@ -710,10 +712,16 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'MANUAL OVERRIDE 2026-06-10 (VHD audit): DET_OK -> SPEC_ONLY. The 2026-05-04 baseline DET_OK override (VD-8 gap-vd-8-rheumatic-screen) failed re-review under §16.6/§16.5 + clinical-code verification: VD-8 does not genuinely detect the VHD-080 spec target (underclaim governs). registryId dropped.',
     },
     'GAP-VHD-103': {
-      classification: 'PARTIAL_DETECTION',
+      classification: 'DET_OK',
       registryId: 'gap-vhd-103-severe-ar-surgical',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 1 close, AUDIT-134): SPEC_ONLY -> PARTIAL. RE-CITED from the superseded VD-5 to the purpose-built gap-vhd-103-severe-ar-surgical evaluator (severe AR + asymptomatic + LVEF <= 55 -> surgical, repair-vs-replace subgroup). Holds at PARTIAL per §16 underclaim-governs: the spec surgical threshold is LVESD >= 50 OR LVEF <= 55%; LVESD is not threaded, so the evaluator covers the LVEF arm only (a severe-AR patient meeting the LVESD threshold with preserved LVEF is not detected). The legacy gap-vd-5-aortic-regurgitation registry entry is retained as a regOrphan for lineage (firing removed in chunk 1).',
+        'UPDATED 2026-06-22 (T1-broader LVESD batch): PARTIAL -> DET_OK. The LVESD arm that held this at PARTIAL (per AUDIT-134) is now built. gap-vhd-103-severe-ar-surgical covers the LVEF <= 55% Class-1 arm; the companion gap-vhd-103b-severe-ar-lvesd-dilation (severe asymptomatic AR + preserved LVEF > 55 + LVESD > 50 -> AVR, Class 2a - the COR-correct fork, NOT folded into the Class-1 push) covers the LVESD > 50 mm arm. Both spec surgical triggers (LVESD >= 50 OR LVEF <= 55%) are now detected. gap-vhd-103b is retained as a regOrphan-for-lineage (no separate spec id; serves the GAP-VHD-103 LVESD arm). LVESD CSV-threaded (no clean LOINC, no-guess). Guarded by t1BroaderLvesd.test.ts.',
+    },
+    'GAP-VHD-060': {
+      classification: 'DET_OK',
+      registryId: 'gap-vhd-060-ie-large-vegetation',
+      auditNote:
+        'BUILT 2026-06-22 (T1-broader PART 2): SPEC_ONLY -> DET_OK. Purpose-built gap-vhd-060-ie-large-vegetation (IE I33.0 + isolated mobile vegetation > 10 mm + no embolic event) -> early-surgery consideration. Class 2b (2020 ACC/AHA VHD / 2014 AHA IE): an isolated > 10 mm vegetation WITHOUT an embolic event is "surgery may be considered" (section-16); partitions from VHD-059 (recurrent-embolism-on-therapy, Class 2a) on !embolic - no double-fire. vegetation_size CSV-threaded (TEE, no clean LOINC). Guarded by t1BroaderPart2.test.ts.',
     },
     // --- v3.0 VHD build: newly DET_OK / PARTIAL (purpose-built evaluators, chunks 1-5, 2026-06-17) ---
     'GAP-VHD-006': {

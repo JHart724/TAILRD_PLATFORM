@@ -24,8 +24,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-002",
         "evaluatorBodyLineRange": [
-          7522,
-          7549
+          7548,
+          7575
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-2-tavr-eval",
@@ -43,12 +43,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-003",
         "evaluatorBodyLineRange": [
-          7589,
-          7613
+          7615,
+          7639
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-003-lflg-classical",
-        "registryLine": 3054
+        "registryLine": 3066
       },
       "specGapId": "GAP-SH-003",
       "specLine": 447,
@@ -62,12 +62,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-006",
         "evaluatorBodyLineRange": [
-          7555,
-          7580
+          7581,
+          7606
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-006-asymptomatic-as",
-        "registryLine": 3068
+        "registryLine": 3080
       },
       "specGapId": "GAP-SH-006",
       "specLine": 448,
@@ -81,12 +81,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-004",
         "evaluatorBodyLineRange": [
-          7622,
-          7646
+          7648,
+          7672
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-004-lflg-paradoxical",
-        "registryLine": 3061
+        "registryLine": 3073
       },
       "specGapId": "GAP-SH-004",
       "specLine": 449,
@@ -100,8 +100,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-1",
         "evaluatorBodyLineRange": [
-          7098,
-          7122
+          7124,
+          7148
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-1-as-surveillance",
@@ -119,8 +119,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-1",
         "evaluatorBodyLineRange": [
-          7098,
-          7122
+          7124,
+          7148
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-1-as-surveillance",
@@ -138,12 +138,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-COMPLETE-REVASC",
         "evaluatorBodyLineRange": [
-          13124,
-          13150
+          13303,
+          13329
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-complete-revasc",
-        "registryLine": 3787
+        "registryLine": 3799
       },
       "specGapId": "GAP-SH-048",
       "specLine": 452,
@@ -167,12 +167,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-050",
         "evaluatorBodyLineRange": [
-          7655,
-          7677
+          7681,
+          7703
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-050-moderate-as-grading",
-        "registryLine": 3075
+        "registryLine": 3087
       },
       "specGapId": "GAP-SH-050",
       "specLine": 454,
@@ -196,12 +196,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-052",
         "evaluatorBodyLineRange": [
-          9857,
-          9881
+          10036,
+          10060
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-052-marfan-bb-arb",
-        "registryLine": 2914
+        "registryLine": 2926
       },
       "specGapId": "GAP-SH-052",
       "specLine": 460,
@@ -225,12 +225,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-054",
         "evaluatorBodyLineRange": [
-          9975,
-          9997
+          10154,
+          10176
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-054-turner-surveillance",
-        "registryLine": 2935
+        "registryLine": 2947
       },
       "specGapId": "GAP-SH-054",
       "specLine": 462,
@@ -244,12 +244,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-055",
         "evaluatorBodyLineRange": [
-          10003,
-          10025
+          10182,
+          10204
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-055-veds-celiprolol",
-        "registryLine": 2942
+        "registryLine": 2954
       },
       "specGapId": "GAP-SH-055",
       "specLine": 463,
@@ -263,12 +263,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-BICUSPID",
         "evaluatorBodyLineRange": [
-          15815,
-          15836
+          15994,
+          16015
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-bicuspid-surveillance",
-        "registryLine": 2803
+        "registryLine": 2815
       },
       "specGapId": "GAP-SH-008",
       "specLine": 464,
@@ -282,12 +282,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-BICUSPID",
         "evaluatorBodyLineRange": [
-          15815,
-          15836
+          15994,
+          16015
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-bicuspid-surveillance",
-        "registryLine": 2803
+        "registryLine": 2815
       },
       "specGapId": "GAP-SH-009",
       "specLine": 465,
@@ -301,12 +301,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-10",
         "evaluatorBodyLineRange": [
-          9495,
-          9526
+          9673,
+          9705
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-10-mitraclip",
-        "registryLine": 2275
+        "registryLine": 2287
       },
       "specGapId": "GAP-SH-010",
       "specLine": 466,
@@ -330,12 +330,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-VALVE-IN-VALVE",
         "evaluatorBodyLineRange": [
-          15883,
-          15905
+          16062,
+          16084
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-valve-in-valve",
-        "registryLine": 2827
+        "registryLine": 2839
       },
       "specGapId": "GAP-SH-061",
       "specLine": 472,
@@ -349,12 +349,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-6",
         "evaluatorBodyLineRange": [
-          7980,
-          8000
+          8047,
+          8067
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-6-post-tavr-followup",
-        "registryLine": 1483
+        "registryLine": 1495
       },
       "specGapId": "GAP-SH-012",
       "specLine": 473,
@@ -368,12 +368,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-13",
         "evaluatorBodyLineRange": [
-          9580,
-          9598
+          9759,
+          9777
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-13-paravalvular-leak",
-        "registryLine": 2311
+        "registryLine": 2323
       },
       "specGapId": "GAP-SH-013",
       "specLine": 474,
@@ -387,12 +387,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-057",
         "evaluatorBodyLineRange": [
-          10319,
-          10341
+          10498,
+          10520
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-057-postavr-lbbb",
-        "registryLine": 2991
+        "registryLine": 3003
       },
       "specGapId": "GAP-SH-057",
       "specLine": 475,
@@ -416,12 +416,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-059",
         "evaluatorBodyLineRange": [
-          10288,
-          10313
+          10467,
+          10492
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-059-postavr-antithrombotic",
-        "registryLine": 2984
+        "registryLine": 2996
       },
       "specGapId": "GAP-SH-059",
       "specLine": 477,
@@ -435,12 +435,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-060",
         "evaluatorBodyLineRange": [
-          10347,
-          10369
+          10526,
+          10548
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-060-postavr-pacing",
-        "registryLine": 2998
+        "registryLine": 3010
       },
       "specGapId": "GAP-SH-060",
       "specLine": 478,
@@ -464,12 +464,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-6",
         "evaluatorBodyLineRange": [
-          7980,
-          8000
+          8047,
+          8067
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-6-post-tavr-followup",
-        "registryLine": 1483
+        "registryLine": 1495
       },
       "specGapId": "GAP-SH-011",
       "specLine": 480,
@@ -483,8 +483,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-014",
         "evaluatorBodyLineRange": [
-          7742,
-          7770
+          7773,
+          7801
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-3-mitral-intervention",
@@ -512,12 +512,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-10",
         "evaluatorBodyLineRange": [
-          9495,
-          9526
+          9673,
+          9705
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-10-mitraclip",
-        "registryLine": 2275
+        "registryLine": 2287
       },
       "specGapId": "GAP-SH-018",
       "specLine": 487,
@@ -541,12 +541,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-064",
         "evaluatorBodyLineRange": [
-          9539,
-          9558
+          9718,
+          9737
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-016-primary-mr-af",
-        "registryLine": 3082
+        "registryLine": 3094
       },
       "specGapId": "GAP-SH-016",
       "specLine": 489,
@@ -560,12 +560,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-017",
         "evaluatorBodyLineRange": [
-          7803,
-          7827
+          7834,
+          7858
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-017-primary-mr-pasp",
-        "registryLine": 3089
+        "registryLine": 3101
       },
       "specGapId": "GAP-SH-017",
       "specLine": 490,
@@ -589,12 +589,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-096",
         "evaluatorBodyLineRange": [
-          10199,
-          10221
+          10378,
+          10400
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-11-tmvr",
-        "registryLine": 2287
+        "registryLine": 2299
       },
       "specGapId": "GAP-SH-064",
       "specLine": 492,
@@ -608,12 +608,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-065",
         "evaluatorBodyLineRange": [
-          10540,
-          10562
+          10719,
+          10741
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-065-postteer-echo",
-        "registryLine": 3040
+        "registryLine": 3052
       },
       "specGapId": "GAP-SH-065",
       "specLine": 493,
@@ -627,12 +627,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-066",
         "evaluatorBodyLineRange": [
-          10570,
-          10592
+          10749,
+          10771
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-066-recurrent-mr-teer",
-        "registryLine": 3047
+        "registryLine": 3059
       },
       "specGapId": "GAP-SH-066",
       "specLine": 494,
@@ -646,12 +646,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-4",
         "evaluatorBodyLineRange": [
-          8117,
-          8137
+          8184,
+          8204
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-4-mitral-stenosis",
-        "registryLine": 1543
+        "registryLine": 1555
       },
       "specGapId": "GAP-SH-020",
       "specLine": 499,
@@ -695,12 +695,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-022",
         "evaluatorBodyLineRange": [
-          7852,
-          7936
+          7919,
+          8003
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-022-tricuspid-assessment",
-        "registryLine": 1459
+        "registryLine": 1471
       },
       "specGapId": "GAP-SH-022",
       "specLine": 507,
@@ -714,12 +714,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-069",
         "evaluatorBodyLineRange": [
-          7882,
-          7905
+          7949,
+          7972
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-069-evoque-ttvr",
-        "registryLine": 2900
+        "registryLine": 2912
       },
       "specGapId": "GAP-SH-069",
       "specLine": 508,
@@ -753,23 +753,32 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-023",
         "evaluatorBodyLineRange": [
-          7912,
-          7935
+          7979,
+          8002
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-023-tr-device-lead",
-        "registryLine": 2907
+        "registryLine": 2919
       },
       "specGapId": "GAP-SH-023",
       "specLine": 511,
       "tier": "T3"
     },
     {
-      "auditNotes": "v3.0 SH close: GAP-SH-024 (RV dysfunction in TR: TAPSE<17 or FAC<35) is data-blocked - TAPSE/FAC are not threaded (echo-morphology). The stale SH-4 cite (pre-rename tricuspid block) is cleared. SPEC_ONLY / data-blocked.",
-      "classification": "SPEC_ONLY",
+      "auditNotes": "BUILT 2026-06-22 (T1-broader PART 2): SPEC_ONLY (data-blocked) -> DET_OK. The TAPSE/FAC data-block is lifted - tapse/fac are now CSV-threaded (echo-morphology, no clean LOINC, no-guess). Purpose-built gap-sh-024-tr-rv-dysfunction (severe TR I36.1 + RV systolic dysfunction TAPSE < 17 mm or FAC < 35%, pre-symptomatic) -> heart-team intervention-timing eval. 2020 ACC/AHA VHD severe-TR intervention Class 2a (LOE C-LD); TAPSE < 17 = ASE RV-dysfunction cut (section-16). Partitions from SH-022 (severe symptomatic TR) on !congestion - no double-fire. Guarded by t1BroaderPart2.test.ts.",
+      "classification": "DET_OK",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": null,
+      "ruleBodyCite": {
+        "evaluatorBlockName": "SH-024",
+        "evaluatorBodyLineRange": [
+          7887,
+          7911
+        ],
+        "evaluatorModule": "SH",
+        "registryId": "gap-sh-024-tr-rv-dysfunction",
+        "registryLine": 1459
+      },
       "specGapId": "GAP-SH-024",
       "specLine": 512,
       "tier": "T3"
@@ -782,12 +791,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-075",
         "evaluatorBodyLineRange": [
-          9946,
-          9968
+          10125,
+          10147
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-075-typeb-tevar",
-        "registryLine": 2928
+        "registryLine": 2940
       },
       "specGapId": "GAP-SH-075",
       "specLine": 517,
@@ -821,12 +830,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-074",
         "evaluatorBodyLineRange": [
-          9919,
-          9942
+          10098,
+          10121
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-074-typeb-omt",
-        "registryLine": 2921
+        "registryLine": 2933
       },
       "specGapId": "GAP-SH-074",
       "specLine": 520,
@@ -890,12 +899,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-026",
         "evaluatorBodyLineRange": [
-          10053,
-          10077
+          10232,
+          10256
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-026-pfo-cryptogenic-closure",
-        "registryLine": 2949
+        "registryLine": 2961
       },
       "specGapId": "GAP-SH-026",
       "specLine": 530,
@@ -909,12 +918,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-027",
         "evaluatorBodyLineRange": [
-          10083,
-          10106
+          10262,
+          10285
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-asd-closure",
-        "registryLine": 2839
+        "registryLine": 2851
       },
       "specGapId": "GAP-SH-027",
       "specLine": 531,
@@ -938,12 +947,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-082",
         "evaluatorBodyLineRange": [
-          10483,
-          10536
+          10662,
+          10715
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-082-postclosure-antithrombotic",
-        "registryLine": 3026
+        "registryLine": 3038
       },
       "specGapId": "GAP-SH-082",
       "specLine": 533,
@@ -957,12 +966,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-083",
         "evaluatorBodyLineRange": [
-          10513,
-          10535
+          10692,
+          10714
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-083-postclosure-surveillance",
-        "registryLine": 3033
+        "registryLine": 3045
       },
       "specGapId": "GAP-SH-083",
       "specLine": 534,
@@ -1046,12 +1055,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-091",
         "evaluatorBodyLineRange": [
-          10148,
-          10170
+          10327,
+          10349
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-091-massive-pe-reperfusion",
-        "registryLine": 2963
+        "registryLine": 2975
       },
       "specGapId": "GAP-SH-091",
       "specLine": 550,
@@ -1075,12 +1084,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-092",
         "evaluatorBodyLineRange": [
-          10387,
-          10409
+          10566,
+          10588
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-092-cteph-surveillance",
-        "registryLine": 3005
+        "registryLine": 3017
       },
       "specGapId": "GAP-SH-092",
       "specLine": 552,
@@ -1114,12 +1123,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-029",
         "evaluatorBodyLineRange": [
-          10119,
-          10141
+          10298,
+          10320
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-029-ie-early-surgery",
-        "registryLine": 2956
+        "registryLine": 2968
       },
       "specGapId": "GAP-SH-029",
       "specLine": 559,
@@ -1143,12 +1152,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-COARCTATION",
         "evaluatorBodyLineRange": [
-          15953,
-          15975
+          16132,
+          16154
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-coarctation",
-        "registryLine": 2863
+        "registryLine": 2875
       },
       "specGapId": "GAP-SH-094",
       "specLine": 565,
@@ -1172,12 +1181,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-097",
         "evaluatorBodyLineRange": [
-          10442,
-          10463
+          10621,
+          10642
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-097-systemic-rv",
-        "registryLine": 3019
+        "registryLine": 3031
       },
       "specGapId": "GAP-SH-097",
       "specLine": 567,
@@ -1191,12 +1200,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-099",
         "evaluatorBodyLineRange": [
-          10225,
-          10246
+          10404,
+          10425
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-099-ebstein-arrhythmia",
-        "registryLine": 2977
+        "registryLine": 2989
       },
       "specGapId": "GAP-SH-099",
       "specLine": 568,
@@ -1220,12 +1229,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-101",
         "evaluatorBodyLineRange": [
-          10174,
-          10195
+          10353,
+          10374
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-101-eisenmenger-pah",
-        "registryLine": 2970
+        "registryLine": 2982
       },
       "specGapId": "GAP-SH-101",
       "specLine": 570,
@@ -1239,12 +1248,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-095",
         "evaluatorBodyLineRange": [
-          10415,
-          10436
+          10594,
+          10615
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-095-coarctation-surveillance",
-        "registryLine": 3012
+        "registryLine": 3024
       },
       "specGapId": "GAP-SH-095",
       "specLine": 571,
@@ -1258,12 +1267,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-FONTAN",
         "evaluatorBodyLineRange": [
-          15986,
-          16007
+          16165,
+          16186
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-fontan-surveillance",
-        "registryLine": 2875
+        "registryLine": 2887
       },
       "specGapId": "GAP-SH-098",
       "specLine": 572,
@@ -1287,12 +1296,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-103",
         "evaluatorBodyLineRange": [
-          10250,
-          10271
+          10429,
+          10450
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-103-atrial-myxoma",
-        "registryLine": 3096
+        "registryLine": 3108
       },
       "specGapId": "GAP-SH-103",
       "specLine": 578,
@@ -1316,12 +1325,12 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-15",
         "evaluatorBodyLineRange": [
-          9637,
-          9655
+          9816,
+          9834
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-15-alcohol-septal",
-        "registryLine": 2335
+        "registryLine": 2347
       },
       "specGapId": "GAP-SH-105",
       "specLine": 584,

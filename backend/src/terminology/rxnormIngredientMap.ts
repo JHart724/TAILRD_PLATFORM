@@ -4316,6 +4316,9 @@ export const RXNORM_INGREDIENT_MAP: Readonly<Record<string, readonly string[]>> 
   // tadalafil 358263 (PDE5i); riociguat 1439816 (sGC stimulator); sotatercept 2678930 (activin-signaling inhibitor).
   '358274': ['358274'], '75207': ['75207'], '1442132': ['1442132'],
   '136411': ['136411'], '358263': ['358263'], '1439816': ['1439816'], '2678930': ['2678930'],
+  // T1-broader PART 2 (2026-06-22): LMWH ingredient (IN) RxCUIs, RxNav-verified (tty=IN). Identity entries.
+  // enoxaparin 67108 / dalteparin 67109 / tinzaparin 69646 - VHD-100 mechanical-valve-pregnancy anti-Xa monitoring.
+  '67108': ['67108'], '67109': ['67109'], '69646': ['69646'],
 });
 
 /** The ingredient-IN universe this map was generated over (for the coverage guard). */

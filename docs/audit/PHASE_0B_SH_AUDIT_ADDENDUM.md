@@ -2,13 +2,13 @@
 
 **Module:** Structural Heart (SH)
 **Spec source:** `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md` §6.3
-**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=60, evaluator=54, gapsPush=54)
+**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=61, evaluator=55, gapsPush=55)
 **Crosswalk:** `docs/audit/canonical/SH.crosswalk.json` (auditMethod: rule-body-citation-AUDIT-030D)
 **Audit date:** 2026-06-08
 
 ## 1. Summary
 
-Structural Heart has **88 spec gaps** across 14 subcategories. Implementation: **31 DET_OK + 18 PARTIAL + 39 SPEC_ONLY** (any-coverage: 49/88 = 55.7%).
+Structural Heart has **88 spec gaps** across 14 subcategories. Implementation: **32 DET_OK + 18 PARTIAL + 38 SPEC_ONLY** (any-coverage: 50/88 = 56.8%).
 
 **Tier 1 priority status:** 7 DET_OK + 2 PARTIAL + 4 SPEC_ONLY of 13 T1 gaps (T1 any-coverage: 69.2%).
 
@@ -21,9 +21,9 @@ Structural Heart has **88 spec gaps** across 14 subcategories. Implementation: *
 | Classification | Count | % of total |
 |---|---:|---:|
 | PRODUCTION_GRADE | 0 | 0.0% |
-| DET_OK | 31 | 35.2% |
+| DET_OK | 32 | 36.4% |
 | PARTIAL_DETECTION | 18 | 20.5% |
-| SPEC_ONLY | 39 | 44.3% |
+| SPEC_ONLY | 38 | 43.2% |
 | **Total** | **88** | **100.0%** |
 
 **PRODUCTION_GRADE = 0** is platform-wide; gated on closure of AUDIT-001 P0 (test coverage gap). Per AUDIT_METHODOLOGY.md §3.1, no rule classifies PRODUCTION_GRADE until the platform testing baseline is established.
@@ -36,8 +36,8 @@ Structural Heart has **88 spec gaps** across 14 subcategories. Implementation: *
 |------|------:|-------:|--------:|----------:|---------------:|
 | **T1** | 13 | 7 | 2 | 4 | 69.2% |
 | **T2** | 58 | 20 | 12 | 26 | 55.2% |
-| **T3** | 17 | 4 | 4 | 9 | 47.1% |
-| **Overall** | **88** | **31** | **18** | **39** | **55.7%** |
+| **T3** | 17 | 5 | 4 | 8 | 52.9% |
+| **Overall** | **88** | **32** | **18** | **38** | **56.8%** |
 
 ---
 
@@ -50,7 +50,7 @@ Structural Heart has **88 spec gaps** across 14 subcategories. Implementation: *
 | TAVR Post-op (9) | 1/7/1 | 5 | 2 | 2 | 77.8% |
 | Mitral Regurg (10) | 4/6/0 | 5 | 2 | 3 | 70.0% |
 | Mitral Stenosis (4) | 0/4/0 | 0 | 1 | 3 | 25.0% |
-| Tricuspid (6) | 1/3/2 | 1 | 2 | 3 | 50.0% |
+| Tricuspid (6) | 1/3/2 | 2 | 2 | 2 | 66.7% |
 | Aortic Disease (9) | 1/4/4 | 1 | 1 | 7 | 22.2% |
 | PFO/ASD (6) | 0/5/1 | 2 | 2 | 2 | 66.7% |
 | Pulmonary HTN (5) | 0/4/1 | 0 | 0 | 5 | 0.0% |
@@ -79,12 +79,12 @@ Structural Heart has **88 spec gaps** across 14 subcategories. Implementation: *
 
 **Registry-without-evaluator (6):** registry entries with no matching evaluator block body.
 
-- `gap-sh-9-pfo-closure` (registry line 1519): No evaluator body matched via similarity scoring
-- `gap-sh-003-lflg-classical` (registry line 3054): No evaluator body matched via similarity scoring
-- `gap-sh-004-lflg-paradoxical` (registry line 3061): No evaluator body matched via similarity scoring
-- `gap-sh-006-asymptomatic-as` (registry line 3068): No evaluator body matched via similarity scoring
-- `gap-sh-050-moderate-as-grading` (registry line 3075): No evaluator body matched via similarity scoring
-- `gap-sh-017-primary-mr-pasp` (registry line 3089): No evaluator body matched via similarity scoring
+- `gap-sh-9-pfo-closure` (registry line 1531): No evaluator body matched via similarity scoring
+- `gap-sh-003-lflg-classical` (registry line 3066): No evaluator body matched via similarity scoring
+- `gap-sh-004-lflg-paradoxical` (registry line 3073): No evaluator body matched via similarity scoring
+- `gap-sh-006-asymptomatic-as` (registry line 3080): No evaluator body matched via similarity scoring
+- `gap-sh-050-moderate-as-grading` (registry line 3087): No evaluator body matched via similarity scoring
+- `gap-sh-017-primary-mr-pasp` (registry line 3101): No evaluator body matched via similarity scoring
 
 
 ---
@@ -94,18 +94,18 @@ Structural Heart has **88 spec gaps** across 14 subcategories. Implementation: *
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
 | GAP-SH-001 | 445 | SPEC_ONLY | — | v3.0 SH close: GAP-SH-001 (asymptomatic very-severe AS, EARLY-TAVR heart-team) has no distinct evalu |
-| GAP-SH-002 | 446 | DET_OK | `gap-sh-2-tavr-eval` (SH-002 @7522-7549) | v3.0 SH chunk 1 (AUDIT-125 tightened): severe symptomatic AS -> AVR now gates on concordant severe A |
-| GAP-SH-003 | 447 | DET_OK | `gap-sh-003-lflg-classical` (SH-003 @7589-7613) | v3.0 SH chunk 1: classical low-flow low-gradient AS (LVEF<50 + AVA<1.0 + mean gradient<40) -> dobuta |
-| GAP-SH-006 | 448 | DET_OK | `gap-sh-006-asymptomatic-as` (SH-006 @7555-7580) | v3.0 SH chunk 1: asymptomatic severe AS + LVEF<55 -> AVR evaluation (Class IIa; LVEF<50 Class 1). Co |
-| GAP-SH-061 | 472 | DET_OK | `gap-sh-valve-in-valve` (SH-VALVE-IN-VALVE @15883-15905) | RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-123 fixed - ViV (SH-VALVE-IN-VALVE) is |
-| GAP-SH-014 | 485 | DET_OK | `gap-sh-3-mitral-intervention` (SH-014 @7742-7770) | v3.0 SH chunk 2 (AUDIT-125 tightened): severe PRIMARY MR (EROA>=0.40 / grade>=4 / valve_severity>=5) |
+| GAP-SH-002 | 446 | DET_OK | `gap-sh-2-tavr-eval` (SH-002 @7548-7575) | v3.0 SH chunk 1 (AUDIT-125 tightened): severe symptomatic AS -> AVR now gates on concordant severe A |
+| GAP-SH-003 | 447 | DET_OK | `gap-sh-003-lflg-classical` (SH-003 @7615-7639) | v3.0 SH chunk 1: classical low-flow low-gradient AS (LVEF<50 + AVA<1.0 + mean gradient<40) -> dobuta |
+| GAP-SH-006 | 448 | DET_OK | `gap-sh-006-asymptomatic-as` (SH-006 @7581-7606) | v3.0 SH chunk 1: asymptomatic severe AS + LVEF<55 -> AVR evaluation (Class IIa; LVEF<50 Class 1). Co |
+| GAP-SH-061 | 472 | DET_OK | `gap-sh-valve-in-valve` (SH-VALVE-IN-VALVE @16062-16084) | RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-123 fixed - ViV (SH-VALVE-IN-VALVE) is |
+| GAP-SH-014 | 485 | DET_OK | `gap-sh-3-mitral-intervention` (SH-014 @7773-7801) | v3.0 SH chunk 2 (AUDIT-125 tightened): severe PRIMARY MR (EROA>=0.40 / grade>=4 / valve_severity>=5) |
 | GAP-SH-015 | 486 | SPEC_ONLY | — | v3.0 SH close: GAP-SH-015 has no distinct evaluator after the MR block split (the chunk-2 MR build c |
-| GAP-SH-018 | 487 | PARTIAL_DETECTION | `gap-sh-10-mitraclip` (SH-10 @9495-9526) | (broad MR + LVEF<50) \| auto-verify: preserved-from-addendum |
+| GAP-SH-018 | 487 | PARTIAL_DETECTION | `gap-sh-10-mitraclip` (SH-10 @9673-9705) | (broad MR + LVEF<50) \| auto-verify: preserved-from-addendum |
 | GAP-SH-019 | 488 | SPEC_ONLY | — | â€” \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-SH-022 | 507 | DET_OK | `gap-sh-022-tricuspid-assessment` (SH-022 @7852-7936) | RESOLVED 2026-06-17 (v3.0 SH close; registryId migrated 2026-06-17 v3.0 VHD close, AUDIT-171): PARTI |
-| GAP-SH-075 | 517 | PARTIAL_DETECTION | `gap-sh-075-typeb-tevar` (SH-075 @9946-9968) | v3.0 SH chunk 4: complicated type-B dissection (malperfusion proxy K55.0x/N17/I74.3-5) -> urgent TEV |
+| GAP-SH-022 | 507 | DET_OK | `gap-sh-022-tricuspid-assessment` (SH-022 @7919-8003) | RESOLVED 2026-06-17 (v3.0 SH close; registryId migrated 2026-06-17 v3.0 VHD close, AUDIT-171): PARTI |
+| GAP-SH-075 | 517 | PARTIAL_DETECTION | `gap-sh-075-typeb-tevar` (SH-075 @10125-10147) | v3.0 SH chunk 4: complicated type-B dissection (malperfusion proxy K55.0x/N17/I74.3-5) -> urgent TEV |
 | GAP-SH-090 | 549 | SPEC_ONLY | — | â€” \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-SH-091 | 550 | DET_OK | `gap-sh-091-massive-pe-reperfusion` (SH-091 @10148-10170) | v3.0 SH chunk 5: massive PE (I26.0x) + cardiogenic shock (R57.0) -> reperfusion (lysis/embolectomy/E |
+| GAP-SH-091 | 550 | DET_OK | `gap-sh-091-massive-pe-reperfusion` (SH-091 @10327-10349) | v3.0 SH chunk 5: massive PE (I26.0x) + cardiogenic shock (R57.0) -> reperfusion (lysis/embolectomy/E |
 
 ---
 
@@ -129,9 +129,9 @@ No T1 SPEC_ONLY gaps carry literal BSW pathway tags in CK v4.0 spec text. Pathwa
 
 **For SH:** Moderate implementation coverage; medication/screening surfaces typically built, procedural surfaces often lighter.
 
-Coverage data: 49/88 any-coverage (55.7%); 31/88 DET_OK only (35.2%); 18 PARTIAL via broad-rule consolidation or partial-trigger match; 39 SPEC_ONLY.
+Coverage data: 50/88 any-coverage (56.8%); 32/88 DET_OK only (36.4%); 18 PARTIAL via broad-rule consolidation or partial-trigger match; 38 SPEC_ONLY.
 
-Rules-per-DET_OK efficiency: 60 registry rules / 31 DET_OK = 1.94.
+Rules-per-DET_OK efficiency: 61 registry rules / 32 DET_OK = 1.91.
 
 ---
 
@@ -207,7 +207,7 @@ Per-module wall-clock data lives in `docs/audit/canonical/audit_runs.jsonl` (app
 
 **SH module: MODERATELY BUILT.**
 
-- 31 DET_OK (35.2%), 18 PARTIAL (20.5%), 39 SPEC_ONLY (44.3%)
+- 32 DET_OK (36.4%), 18 PARTIAL (20.5%), 38 SPEC_ONLY (43.2%)
 - 7/13 T1 priority gaps DET_OK; 4 T1 SPEC_ONLY gaps require v2.0 Phase 1 work
 - Audit method: `rule-body-citation-AUDIT-030D`. Generated from canonical crosswalk on 2026-06-08.
 
