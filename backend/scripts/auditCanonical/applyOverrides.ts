@@ -248,6 +248,9 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
     'GAP-EP-033': { classification: 'DET_OK', registryId: 'gap-ep-033-af-slow-rate-pacing', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 4): AF + HR<40 + rate-control + no pacemaker. Path-B awake pattern. 2023 AFib + 2018 Brady, Class 2a. SPEC_ONLY -> DET_OK.' },
     'GAP-EP-097': { classification: 'DET_OK', registryId: 'gap-ep-097-orthostatic-hypotension-med-review', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 4): orthostatic hypotension (I95.1) + BP-lowering agent (incl RxNav-verified RXNORM_ALPHA_BLOCKERS). 2017 Syncope, Class 1. SPEC_ONLY -> DET_OK.' },
     'GAP-EP-067': { classification: 'DET_OK', registryId: 'gap-ep-067-post-laac-antithrombotic', auditNote: 'BUILT 2026-06-16 (v3.0 EP chunk 4): LAAC (CPT 33340) + no antithrombotic (OAC/P2Y12/aspirin). Standing subgroup check: antiplatelet-based, bleed-aware rec. 2023 AFib + IFU, Class 2a. SPEC_ONLY -> DET_OK.' },
+    // --- T0 net-new batch (2026-06-19): 2 EP gaps, dx+med only, codes RxNav/NLM-verified ---
+    'GAP-EP-010': { classification: 'DET_OK', registryId: 'gap-ep-010-rivaroxaban-food', auditNote: 'BUILT 2026-06-19 (T0 net-new): rivaroxaban (1114195) -> take-with-food counseling (>=15mg absorption). Path-B dose. FDA Xarelto PI, Class 1. SPEC_ONLY -> DET_OK.' },
+    'GAP-EP-049': { classification: 'DET_OK', registryId: 'gap-ep-049-class-ic-structural', auditNote: 'BUILT 2026-06-19 (T0 net-new): SAFETY - class IC (flecainide 4441 / propafenone 8754) + structural HD (I25/I21/I22/I42/I50). CAST contraindication (SAFETY_ALERT). 2017 VA Guideline, Class 3 (Harm). SPEC_ONLY -> DET_OK.' },
   },
   SH: {
     // SH audit 2026-06-08 (operator-approved, Batches 1-5 + Batch-5 STEP-0 re-verification): 10
@@ -887,6 +890,11 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
       auditNote:
         'PATH-B (PV chunk 1, blocked-pile): NOT built. Post-CEA/CAS secondary prevention needs to identify post-carotid-revascularization patients, but there is NO clean post-carotid-revasc ICD-10 code (Z95.820 = peripheral angioplasty status, not carotid; CEA leaves no implant code). Unblock: a procedure/CPT signal (CPT 35301 CEA / 37215-37216 CAS) once procedure threading lands (code-floor), OR a Z-code convention.',
     },
+    // --- T0 net-new batch (2026-06-19): 4 PV pharmacotherapy gaps, dx+med only, all codes NLM/RxNav-verified ---
+    'GAP-PV-042': { classification: 'DET_OK', registryId: 'gap-pv-042-behcet-vascular', auditNote: 'BUILT 2026-06-19 (T0 net-new): Behcet (M35.2) + vascular thrombosis (I82/I80) + no immunosuppression -> disease control (immunosuppression primary, not anticoag alone). EULAR 2018, Class 1. SPEC_ONLY -> DET_OK.' },
+    'GAP-PV-081': { classification: 'DET_OK', registryId: 'gap-pv-081-cteph-riociguat', auditNote: 'BUILT 2026-06-19 (T0 net-new): CTEPH (I27.24 - NLM exact-code-verified, the spec original; an earlier mis-correction to I27.22=left-heart-PH was caught) + no riociguat (1439816). Path-B operability. CHEST-1, Class 1. SPEC_ONLY -> DET_OK.' },
+    'GAP-PV-084': { classification: 'DET_OK', registryId: 'gap-pv-084-pah-combination', auditNote: 'BUILT 2026-06-19 (T0 net-new): Group-1 PAH (I27.0/I27.21) + not on ERA(358274/75207/1442132)+PDE5i(136411/358263) combination. AMBITION, Class 1. SPEC_ONLY -> DET_OK.' },
+    'GAP-PV-085': { classification: 'DET_OK', registryId: 'gap-pv-085-pah-sotatercept', auditNote: 'BUILT 2026-06-19 (T0 net-new): Group-1 PAH on background ERA+PDE5i + no sotatercept (2678930). No double-fire with PV-084 (mutually exclusive). STELLAR, Class 2a. SPEC_ONLY -> DET_OK.' },
   },
 };
 

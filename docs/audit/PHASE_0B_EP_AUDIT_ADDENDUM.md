@@ -2,17 +2,17 @@
 
 **Module:** Electrophysiology (EP)
 **Spec source:** `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md` §6.2
-**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=69, evaluator=68, gapsPush=70)
+**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=71, evaluator=70, gapsPush=72)
 **Crosswalk:** `docs/audit/canonical/EP.crosswalk.json` (auditMethod: rule-body-citation-AUDIT-030D)
 **Audit date:** 2026-06-08
 
 ## 1. Summary
 
-Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: **42 DET_OK + 16 PARTIAL + 31 SPEC_ONLY** (any-coverage: 58/89 = 65.2%).
+Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: **44 DET_OK + 16 PARTIAL + 29 SPEC_ONLY** (any-coverage: 60/89 = 67.4%).
 
 **Tier 1 priority status:** 11 DET_OK + 1 PARTIAL + 3 SPEC_ONLY of 15 T1 gaps (T1 any-coverage: 80.0%).
 
-**Spec-explicit SAFETY-tagged gaps:** 7 total; 6 covered (DET_OK), 1 uncovered. Uncovered SAFETY gaps qualify for Tier S triage queue per §6.3.
+**Spec-explicit SAFETY-tagged gaps:** 7 total; 7 covered (DET_OK), 0 uncovered. All SAFETY gaps covered.
 
 ---
 
@@ -21,9 +21,9 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 | Classification | Count | % of total |
 |---|---:|---:|
 | PRODUCTION_GRADE | 0 | 0.0% |
-| DET_OK | 42 | 47.2% |
+| DET_OK | 44 | 49.4% |
 | PARTIAL_DETECTION | 16 | 18.0% |
-| SPEC_ONLY | 31 | 34.8% |
+| SPEC_ONLY | 29 | 32.6% |
 | **Total** | **89** | **100.0%** |
 
 **PRODUCTION_GRADE = 0** is platform-wide; gated on closure of AUDIT-001 P0 (test coverage gap). Per AUDIT_METHODOLOGY.md §3.1, no rule classifies PRODUCTION_GRADE until the platform testing baseline is established.
@@ -35,9 +35,9 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 | Tier | Total | DET_OK | PARTIAL | SPEC_ONLY | Any-coverage % |
 |------|------:|-------:|--------:|----------:|---------------:|
 | **T1** | 15 | 11 | 1 | 3 | 80.0% |
-| **T2** | 62 | 31 | 13 | 18 | 71.0% |
-| **T3** | 12 | 0 | 2 | 10 | 16.7% |
-| **Overall** | **89** | **42** | **16** | **31** | **65.2%** |
+| **T2** | 62 | 32 | 13 | 17 | 72.6% |
+| **T3** | 12 | 1 | 2 | 9 | 25.0% |
+| **Overall** | **89** | **44** | **16** | **29** | **67.4%** |
 
 ---
 
@@ -45,7 +45,7 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 | Subcategory | T1/T2/T3 | DET_OK | PARTIAL | SPEC_ONLY | Coverage |
 |---|---|---:|---:|---:|---:|
-| AF Anticoagulation (13) | 6/6/1 | 8 | 0 | 5 | 61.5% |
+| AF Anticoagulation (13) | 6/6/1 | 9 | 0 | 4 | 69.2% |
 | LAAC (5) | 2/3/0 | 3 | 0 | 2 | 60.0% |
 | Rhythm Control (11) | 4/6/1 | 8 | 0 | 3 | 72.7% |
 | Atrial Tachy/SVT (7) | 1/5/1 | 3 | 3 | 1 | 85.7% |
@@ -53,7 +53,7 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 | Channelopathies (11) | 0/6/5 | 3 | 4 | 4 | 63.6% |
 | Pacing (9) | 0/9/0 | 5 | 2 | 2 | 77.8% |
 | CIED Management (8) | 0/7/1 | 1 | 4 | 3 | 62.5% |
-| AAD Safety (8) | 0/8/0 | 5 | 1 | 2 | 75.0% |
+| AAD Safety (8) | 0/8/0 | 6 | 1 | 1 | 87.5% |
 | Syncope (6) | 0/4/2 | 2 | 1 | 3 | 50.0% |
 | Cardiac Arrest (4) | 1/2/1 | 0 | 0 | 4 | 0.0% |
 
@@ -75,7 +75,7 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 **Registry-without-evaluator (1):** registry entries with no matching evaluator block body.
 
-- `gap-ep-anticoag-interruption` (registry line 2538): No evaluator body matched via similarity scoring
+- `gap-ep-anticoag-interruption` (registry line 2611): No evaluator body matched via similarity scoring
 
 **Naming convention mismatches (1):** registry IDs not following `gap-ep-` convention.
 
@@ -88,20 +88,20 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-EP-001 | 311 | DET_OK | `gap-ep-oac-afib` (EP-OAC @5471-5534) | UN-CAP + verify 2026-06-16 (v3.0 EP close) PARTIAL -> DET_OK: AUDIT-118 remediated (medCodes ingredi |
-| GAP-EP-006 | 312 | DET_OK | `gap-ep-006-dabigatran-renal-safety` (EP-006 @5552-5602) | UN-CAP + verify 2026-06-16 (v3.0 EP close) PARTIAL -> DET_OK: AUDIT-118 remediated (dabigatran IN 10 |
-| GAP-EP-007 | 313 | DET_OK | `gap-vd-6-doac-mechanical-valve` (VD-6 @8644-8668) **[cross-module: VHD]** | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033; expandToIngredients ingredie |
-| GAP-EP-008 | 314 | DET_OK | `gap-ep-008-doac-mitral-stenosis` (EP-008 @5729-5752) | BUILT 2026-06-16 (v3.0 EP chunk 1): DOAC + moderate-severe MS (I05.0/I34.2). 2020 VHD / INVICTUS, Cl |
+| GAP-EP-001 | 311 | DET_OK | `gap-ep-oac-afib` (EP-OAC @5544-5607) | UN-CAP + verify 2026-06-16 (v3.0 EP close) PARTIAL -> DET_OK: AUDIT-118 remediated (medCodes ingredi |
+| GAP-EP-006 | 312 | DET_OK | `gap-ep-006-dabigatran-renal-safety` (EP-006 @5625-5675) | UN-CAP + verify 2026-06-16 (v3.0 EP close) PARTIAL -> DET_OK: AUDIT-118 remediated (dabigatran IN 10 |
+| GAP-EP-007 | 313 | DET_OK | `gap-vd-6-doac-mechanical-valve` (VD-6 @8717-8741) **[cross-module: VHD]** | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033; expandToIngredients ingredie |
+| GAP-EP-008 | 314 | DET_OK | `gap-ep-008-doac-mitral-stenosis` (EP-008 @5802-5825) | BUILT 2026-06-16 (v3.0 EP chunk 1): DOAC + moderate-severe MS (I05.0/I34.2). 2020 VHD / INVICTUS, Cl |
 | GAP-EP-064 | 315 | SPEC_ONLY | — | — (no pharmacy fill data integration) \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
 | GAP-EP-065 | 316 | SPEC_ONLY | — | — (no pharmacy fill data integration) \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
-| GAP-EP-011 | 328 | DET_OK | `gap-ep-laac` (EP-LAAC @6404-6439) | RESOLVED 2026-06-16 (v3.0 EP close) PARTIAL -> DET_OK: AUDIT-120 fixed. The bare Z88 (allergy-status |
-| GAP-EP-012 | 329 | DET_OK | `gap-ep-012-laac-high-risk-bleed` (EP-012 @5789-5826) | BUILT 2026-06-16 (v3.0 EP chunk 1): distinct LAAC evaluator (CHA2DS2-VASc>=3 + prior major bleed inc |
-| GAP-EP-013 | 337 | DET_OK | `gap-ep-early-rhythm` (EP-EARLY-RHYTHM @13618-13640) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-EARLY-RHYTHM is an AAD-A |
-| GAP-EP-014 | 338 | DET_OK | `gap-ep-014-af-ablation-hfref` (EP-014 @5843-5866) | BUILT 2026-06-16 (v3.0 EP chunk 2): AF (non-flutter) + LVEF<=35 + no CPT 93656. CASTLE-AF, Class 2a. |
-| GAP-EP-017 | 339 | DET_OK | `gap-ep-017-hfref-non-dhp-ccb` (EP-017 @7271-7296) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The Class-3-Harm HFrEF + no |
-| GAP-EP-018 | 340 | DET_OK | `gap-ep-subclinical-af` (EP-SUBCLINICAL-AF @11106-11129) | line 6819+ \| auto-verify: preserved-from-addendum |
-| GAP-EP-079 | 352 | DET_OK | `gap-ep-079-wpw-af-avn-blocker` (EP-079 @6372-6397) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The CRITICAL WPW+AF AVN-blo |
-| GAP-EP-086 | 363 | PARTIAL_DETECTION | `gap-ep-vt-ablation` (EP-VT-ABLATION @13651-13673) | line 9162+ (broad VT+ICD trigger, not VT-storm-specific) \| auto-verify: preserved-from-addendum |
+| GAP-EP-011 | 328 | DET_OK | `gap-ep-laac` (EP-LAAC @6477-6512) | RESOLVED 2026-06-16 (v3.0 EP close) PARTIAL -> DET_OK: AUDIT-120 fixed. The bare Z88 (allergy-status |
+| GAP-EP-012 | 329 | DET_OK | `gap-ep-012-laac-high-risk-bleed` (EP-012 @5862-5899) | BUILT 2026-06-16 (v3.0 EP chunk 1): distinct LAAC evaluator (CHA2DS2-VASc>=3 + prior major bleed inc |
+| GAP-EP-013 | 337 | DET_OK | `gap-ep-early-rhythm` (EP-EARLY-RHYTHM @13691-13713) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-EARLY-RHYTHM is an AAD-A |
+| GAP-EP-014 | 338 | DET_OK | `gap-ep-014-af-ablation-hfref` (EP-014 @5916-5939) | BUILT 2026-06-16 (v3.0 EP chunk 2): AF (non-flutter) + LVEF<=35 + no CPT 93656. CASTLE-AF, Class 2a. |
+| GAP-EP-017 | 339 | DET_OK | `gap-ep-017-hfref-non-dhp-ccb` (EP-017 @7344-7369) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The Class-3-Harm HFrEF + no |
+| GAP-EP-018 | 340 | DET_OK | `gap-ep-subclinical-af` (EP-SUBCLINICAL-AF @11179-11202) | line 6819+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-079 | 352 | DET_OK | `gap-ep-079-wpw-af-avn-blocker` (EP-079 @6445-6470) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The CRITICAL WPW+AF AVN-blo |
+| GAP-EP-086 | 363 | PARTIAL_DETECTION | `gap-ep-vt-ablation` (EP-VT-ABLATION @13724-13746) | line 9162+ (broad VT+ICD trigger, not VT-storm-specific) \| auto-verify: preserved-from-addendum |
 | GAP-EP-099 | 436 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 
 ---
@@ -126,9 +126,9 @@ No T1 SPEC_ONLY gaps carry literal BSW pathway tags in CK v4.0 spec text. Pathwa
 
 **For EP:** Strong implementation coverage; module is broadly built.
 
-Coverage data: 58/89 any-coverage (65.2%); 42/89 DET_OK only (47.2%); 16 PARTIAL via broad-rule consolidation or partial-trigger match; 31 SPEC_ONLY.
+Coverage data: 60/89 any-coverage (67.4%); 44/89 DET_OK only (49.4%); 16 PARTIAL via broad-rule consolidation or partial-trigger match; 29 SPEC_ONLY.
 
-Rules-per-DET_OK efficiency: 69 registry rules / 42 DET_OK = 1.64.
+Rules-per-DET_OK efficiency: 71 registry rules / 44 DET_OK = 1.61.
 
 ---
 
@@ -212,7 +212,7 @@ Per-module wall-clock data lives in `docs/audit/canonical/audit_runs.jsonl` (app
 
 **EP module: BROADLY BUILT.**
 
-- 42 DET_OK (47.2%), 16 PARTIAL (18.0%), 31 SPEC_ONLY (34.8%)
+- 44 DET_OK (49.4%), 16 PARTIAL (18.0%), 29 SPEC_ONLY (32.6%)
 - 11/15 T1 priority gaps DET_OK; 3 T1 SPEC_ONLY gaps require v2.0 Phase 1 work
 - Audit method: `rule-body-citation-AUDIT-030D`. Generated from canonical crosswalk on 2026-06-08.
 
