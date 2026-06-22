@@ -68,8 +68,11 @@ describe('Structural: Gap rule engine integrity', () => {
     // Then 377 -> 384 by PV chunk 1 (2026-06-18, same branch):
     // - net +7: PV-004 (non-compressible ABI), PV-034 (FMD screen), PV-038 (Takayasu immunosuppression),
     //   PV-040 (GCA steroid), PV-041 (Buerger cessation), PV-058 (symptomatic carotid), PV-062 (ICAS SAMMPRIS).
+    // Then 384 -> 390 by the T0 net-new batch (2026-06-19, feat/t0-authoring-sweep):
+    // - net +6: PV-042 (Behcet immunosuppression), PV-081 (CTEPH riociguat), PV-084 (PAH ERA+PDE5i),
+    //   PV-085 (PAH sotatercept), EP-010 (rivaroxaban food counseling), EP-049 (class IC in structural HD - CAST safety).
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(384);
+    expect(count).toBe(390);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

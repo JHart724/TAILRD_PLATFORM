@@ -4311,6 +4311,11 @@ export const RXNORM_INGREDIENT_MAP: Readonly<Record<string, readonly string[]>> 
   '999991': ['17767', '321064', '5487'],
   '999995': ['17767', '321064', '5487'],
   '999996': ['17767', '321064', '5487'],
+  // T0 net-new batch (2026-06-19): PAH/CTEPH ingredient (IN) RxCUIs, RxNav-verified (tty=IN). Identity entries
+  // (an IN expands to itself). ambrisentan 358274 / bosentan 75207 / macitentan 1442132 (ERA); sildenafil 136411 /
+  // tadalafil 358263 (PDE5i); riociguat 1439816 (sGC stimulator); sotatercept 2678930 (activin-signaling inhibitor).
+  '358274': ['358274'], '75207': ['75207'], '1442132': ['1442132'],
+  '136411': ['136411'], '358263': ['358263'], '1439816': ['1439816'], '2678930': ['2678930'],
 });
 
 /** The ingredient-IN universe this map was generated over (for the coverage guard). */

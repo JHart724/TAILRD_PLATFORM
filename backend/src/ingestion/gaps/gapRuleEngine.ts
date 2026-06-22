@@ -794,6 +794,79 @@ export const RUNTIME_GAP_REGISTRY = [
     classOfRecommendation: '1',
     levelOfEvidence: 'B-R',
   },
+  // --- T0 net-new batch (2026-06-19): 6 confirmed buildable-now gaps (dx+med only, all codes NLM/RxNav-verified) ---
+  {
+    id: 'gap-pv-042-behcet-vascular',
+    name: 'Behcet Vascular Involvement: Immunosuppression',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2018 EULAR Recommendations for the Management of Behcet Syndrome',
+    guidelineVersion: '2018',
+    guidelineOrg: 'EULAR',
+    lastReviewDate: '2026-06-19',
+    nextReviewDue: '2026-12-19',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-pv-081-cteph-riociguat',
+    name: 'CTEPH Medical Therapy: Riociguat',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2022 ESC/ERS Pulmonary Hypertension Guideline; CHEST-1 (riociguat)',
+    guidelineVersion: '2022',
+    guidelineOrg: 'ESC/ERS',
+    lastReviewDate: '2026-06-19',
+    nextReviewDue: '2026-12-19',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-pv-084-pah-combination',
+    name: 'PAH Initial Combination Therapy (ERA + PDE5i)',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2022 ESC/ERS Pulmonary Hypertension Guideline; AMBITION',
+    guidelineVersion: '2022',
+    guidelineOrg: 'ESC/ERS',
+    lastReviewDate: '2026-06-19',
+    nextReviewDue: '2026-12-19',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'B',
+  },
+  {
+    id: 'gap-pv-085-pah-sotatercept',
+    name: 'PAH Sotatercept Add-On to Background Therapy (STELLAR)',
+    module: 'PERIPHERAL_VASCULAR',
+    guidelineSource: '2024 ESC/ERS PH update; STELLAR (sotatercept, NEJM 2023)',
+    guidelineVersion: '2024',
+    guidelineOrg: 'ESC/ERS',
+    lastReviewDate: '2026-06-19',
+    nextReviewDue: '2026-12-19',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-R',
+  },
+  {
+    id: 'gap-ep-010-rivaroxaban-food',
+    name: 'Rivaroxaban Food-Administration Counseling',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: 'FDA Xarelto Prescribing Information (>=15 mg with food)',
+    guidelineVersion: '2024',
+    guidelineOrg: 'FDA',
+    lastReviewDate: '2026-06-19',
+    nextReviewDue: '2026-12-19',
+    classOfRecommendation: '1',
+    levelOfEvidence: 'C',
+  },
+  {
+    id: 'gap-ep-049-class-ic-structural',
+    name: 'Class IC Antiarrhythmic in Structural Heart Disease (SAFETY, CAST)',
+    module: 'ELECTROPHYSIOLOGY',
+    guidelineSource: '2017 AHA/ACC/HRS Ventricular Arrhythmia Guideline; CAST (NEJM 1991)',
+    guidelineVersion: '2017',
+    guidelineOrg: 'AHA/ACC/HRS',
+    lastReviewDate: '2026-06-19',
+    nextReviewDue: '2026-12-19',
+    classOfRecommendation: '3',
+    levelOfEvidence: 'A',
+  },
   {
     id: 'gap-hf-37-raas',
     name: 'ACEi/ARB/ARNi in HFrEF',
@@ -17222,6 +17295,183 @@ export function evaluateGapRules(
         classOfRecommendation: '1',
         levelOfEvidence: 'B-R',
         exclusions: ['Hospice/palliative care (Z51.5)', 'On both antiplatelet and statin (therapy adequate)', 'Documented antithrombotic/statin contraindication'],
+      },
+    });
+  }
+
+  // ============================================================
+  // T0 net-new batch (2026-06-19): 6 confirmed buildable-now gaps (dx+med only; all codes NLM/RxNav-verified)
+  // ============================================================
+
+  // Gap PV-042: Behcet vascular thrombosis without immunosuppression -> disease control is primary (not anticoag alone)
+  // Guideline: 2018 EULAR Behcet Recommendations, Class 1, LOE B. section-16: M35.2 = Behcet disease; I82.* DVT /
+  // I80.* thrombophlebitis (NLM-verified). Subgroup-aware: Behcet vascular thrombosis is INFLAMMATORY (vessel-wall),
+  // so immunosuppression (glucocorticoid + steroid-sparing / colchicine) is primary; anticoagulation alone is
+  // insufficient and risks bleeding with a co-existent pulmonary-artery aneurysm.
+  const hasBehcet_PV42 = dxCodes.some(c => c.startsWith('M35.2'));
+  const hasVascularThrombosis_PV42 = dxCodes.some(c => c.startsWith('I82') || c.startsWith('I80'));
+  const onImmunosuppression_PV42 = medCodes.some(c => codes(RXNORM_CORTICOSTEROIDS).includes(c) || codes(RXNORM_STEROID_SPARING).includes(c) || c === '2683');
+  if (hasBehcet_PV42 && hasVascularThrombosis_PV42 && !onImmunosuppression_PV42 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'Behcet vascular thrombosis without immunosuppression: inflammatory thrombosis needs disease control',
+      target: 'Immunosuppression (glucocorticoid + steroid-sparing / colchicine) initiated for inflammatory vascular Behcet',
+      recommendations: {
+        action: 'Consider initiating immunosuppression (a glucocorticoid plus a steroid-sparing agent such as azathioprine, or colchicine) in coordination with rheumatology for this patient with Behcet vascular thrombosis - in Behcet the thrombosis is inflammatory (vessel-wall), so disease control is primary and anticoagulation alone is insufficient, per the 2018 EULAR Behcet Recommendations',
+        guideline: '2018 EULAR Recommendations for the Management of Behcet Syndrome',
+        note: 'Subgroup-aware: Behcet vascular thrombosis is INFLAMMATORY - immunosuppression is the primary therapy; anticoagulation alone does not address the vessel-wall inflammation and carries bleed risk if a pulmonary-artery aneurysm co-exists.',
+      },
+      evidence: {
+        triggerCriteria: ['Behcet disease (M35.2)', 'Vascular thrombosis (I82.* / I80.*)', 'No immunosuppression on the active medication list'],
+        guidelineSource: '2018 EULAR Recommendations for the Management of Behcet Syndrome',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Immunosuppression already prescribed', 'Documented immunosuppression contraindication'],
+      },
+    });
+  }
+
+  // Gap PV-081: CTEPH without riociguat -> PH-specific therapy for inoperable/persistent CTEPH
+  // Guideline: 2022 ESC/ERS PH Guideline + CHEST-1, Class 1, LOE B. section-16: I27.24 = Chronic thromboembolic
+  // pulmonary hypertension (NLM exact-code-verified - the spec's original code; an earlier mis-correction to I27.22
+  // = PH due to left heart disease was caught and reverted); riociguat RxNav IN 1439816. Subgroup/Path-B: riociguat
+  // is for INOPERABLE or post-PTE persistent/recurrent CTEPH; operability is a surgical-team determination not
+  // codable, so this surfaces CTEPH-on-no-riociguat for that operability review (not a blanket riociguat start).
+  const hasCTEPH_PV81 = dxCodes.some(c => c.startsWith('I27.24'));
+  const onRiociguat_PV81 = medCodes.includes('1439816');
+  if (hasCTEPH_PV81 && !onRiociguat_PV81 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'CTEPH without riociguat: PH-specific therapy gap (operability review)',
+      target: 'Pulmonary endarterectomy candidacy assessed; riociguat for inoperable/persistent CTEPH',
+      recommendations: {
+        action: 'Consider referral to a CTEPH/PH center for pulmonary endarterectomy (PTE) candidacy assessment and, for inoperable or post-PTE persistent/recurrent disease, riociguat - the approved PH-specific therapy for CTEPH, per the 2022 ESC/ERS PH Guideline and CHEST-1',
+        guideline: '2022 ESC/ERS Pulmonary Hypertension Guideline; CHEST-1',
+        note: 'Subgroup-aware: PTE (surgery) is first-line for operable CTEPH; riociguat is for INOPERABLE or post-PTE persistent disease. Path-B: operability is a surgical-team determination not codable, so this surfaces the CTEPH-without-riociguat population for that review, not a blanket riociguat start.',
+      },
+      evidence: {
+        triggerCriteria: ['Chronic thromboembolic pulmonary hypertension (I27.24)', 'Not on riociguat'],
+        guidelineSource: '2022 ESC/ERS Pulmonary Hypertension Guideline; CHEST-1',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Riociguat already prescribed', 'PTE planned/performed', 'Riociguat contraindication (pregnancy, concomitant nitrate/PDE5i)'],
+      },
+    });
+  }
+
+  // Gap PV-084: Group-1 PAH without ERA + PDE5i initial combination therapy
+  // Guideline: 2022 ESC/ERS PH Guideline + AMBITION, Class 1, LOE B. section-16: I27.0 = primary (idiopathic) PAH,
+  // I27.21 = secondary PAH (NLM-verified Group-1 codes, distinct from I27.22 left-heart / I27.23 lung / I27.24
+  // CTEPH); ERA RxNav IN ambrisentan 358274 / bosentan 75207 / macitentan 1442132; PDE5i IN sildenafil 136411 /
+  // tadalafil 358263. Subgroup-aware: initial COMBINATION (ERA+PDE5i) for low-/intermediate-risk Group-1 PAH
+  // (AMBITION) - the gap is the missing combination, gated to Group-1 PAH (not the other PH groups).
+  const hasPAH_T0 = dxCodes.some(c => c.startsWith('I27.0') || c.startsWith('I27.21'));
+  const ERA_CODES_PAH = ['358274', '75207', '1442132'];
+  const PDE5I_CODES_PAH = ['136411', '358263'];
+  const onERA_PAH = medCodes.some(c => ERA_CODES_PAH.includes(c));
+  const onPDE5i_PAH = medCodes.some(c => PDE5I_CODES_PAH.includes(c));
+  if (hasPAH_T0 && !(onERA_PAH && onPDE5i_PAH) && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'Group-1 PAH without ERA + PDE5i combination therapy',
+      target: 'Initial combination therapy (endothelin-receptor antagonist + PDE5 inhibitor) initiated for Group-1 PAH',
+      recommendations: {
+        action: 'Consider initial oral combination therapy with an endothelin-receptor antagonist (ambrisentan, bosentan, or macitentan) plus a PDE5 inhibitor (sildenafil or tadalafil), at a PH center, for this patient with Group-1 PAH not on the combination, per the 2022 ESC/ERS PH Guideline and AMBITION',
+        guideline: '2022 ESC/ERS Pulmonary Hypertension Guideline; AMBITION',
+        note: 'Subgroup-aware: the guideline recommends initial ERA+PDE5i COMBINATION for low-/intermediate-risk Group-1 PAH (AMBITION); high-risk patients warrant upfront prostacyclin (a separate escalation). Gated to Group-1 PAH (I27.0/I27.21), not Group-2/3/4 PH.',
+      },
+      evidence: {
+        triggerCriteria: ['Group-1 PAH (I27.0 idiopathic / I27.21 secondary PAH)', 'Not on the ERA + PDE5i combination'],
+        guidelineSource: '2022 ESC/ERS Pulmonary Hypertension Guideline; AMBITION',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'B',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Already on ERA + PDE5i', 'On a prostacyclin-based high-risk regimen', 'Group-2/3/4 PH (left-heart/lung/CTEPH)'],
+      },
+    });
+  }
+
+  // Gap PV-085: Group-1 PAH on background ERA+PDE5i without sotatercept add-on (STELLAR)
+  // Guideline: 2024 ESC/ERS PH update + STELLAR, Class 2a, LOE B-R. section-16: I27.0/I27.21 (as PV-084);
+  // sotatercept RxNav IN 2678930. Subgroup-aware: sotatercept (activin-signaling inhibitor) is an ADD-ON for
+  // intermediate-/high-risk Group-1 PAH ALREADY on background therapy - the gate REQUIRES background ERA+PDE5i
+  // present, so it does NOT fire on a treatment-naive patient (PV-084's population). No double-fire: PV-084 fires
+  // when NOT on combination; PV-085 fires when ON combination without sotatercept (mutually exclusive).
+  const onSotatercept_PV85 = medCodes.includes('2678930');
+  if (hasPAH_T0 && onERA_PAH && onPDE5i_PAH && !onSotatercept_PV85 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.MEDICATION_NOT_OPTIMIZED,
+      module: ModuleType.PERIPHERAL_VASCULAR,
+      status: 'PAH on background combination therapy without sotatercept add-on (STELLAR)',
+      target: 'Sotatercept add-on considered for Group-1 PAH on background therapy at intermediate/high risk',
+      recommendations: {
+        action: 'Consider adding sotatercept (an activin-signaling inhibitor) to background therapy for this patient with Group-1 PAH already on an ERA + PDE5i combination - STELLAR showed improved exercise capacity and risk reduction in intermediate/high-risk patients on background therapy, per the 2024 ESC/ERS PH update',
+        guideline: '2024 ESC/ERS PH update; STELLAR (NEJM 2023)',
+        note: 'Subgroup-aware: sotatercept is an ADD-ON to maximal background therapy (STELLAR enrolled patients on stable background PAH drugs), for intermediate/high risk. The gate REQUIRES background ERA+PDE5i present, so it does NOT fire on a treatment-naive patient. Path-B: risk-stratification (REVEAL/WHO-FC) is not threaded.',
+      },
+      evidence: {
+        triggerCriteria: ['Group-1 PAH (I27.0 / I27.21)', 'On background ERA + PDE5i combination', 'Not on sotatercept'],
+        guidelineSource: '2024 ESC/ERS PH update; STELLAR (NEJM 2023)',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B-R',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Sotatercept already prescribed', 'Low-risk on stable therapy', 'Sotatercept contraindication'],
+      },
+    });
+  }
+
+  // Gap EP-010: rivaroxaban without take-with-food counseling -> >=15 mg dose bioavailability
+  // Guideline: FDA Xarelto Prescribing Information, Class 1, LOE C. section-16: rivaroxaban RxNav IN 1114195.
+  // Subgroup-aware: rivaroxaban >=15 mg (AF/VTE-treatment doses) MUST be taken WITH FOOD (fasting absorption drops
+  // ~40%); the 2.5 mg COMPASS/CAD-PAD dose does not require food. Path-B: dose is not threaded, so this surfaces
+  // the rivaroxaban population for the take-with-food counseling check (an adherence/documentation gap).
+  const onRivaroxaban_EP10 = medCodes.includes('1114195');
+  if (onRivaroxaban_EP10 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.DOCUMENTATION_GAP,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'Rivaroxaban: confirm take-with-food counseling for the >=15 mg dose',
+      target: 'Take-with-food administration counseling documented (>=15 mg rivaroxaban absorption)',
+      recommendations: {
+        action: 'Consider confirming and documenting take-with-food counseling for this patient on rivaroxaban - the >=15 mg doses (AF/VTE treatment) must be taken with food, as fasting absorption falls ~40% and sub-therapeutic levels raise thromboembolic risk, per the FDA Xarelto Prescribing Information',
+        guideline: 'FDA Xarelto (rivaroxaban) Prescribing Information',
+        note: 'Subgroup-aware: only the >=15 mg doses require food; the 2.5 mg COMPASS/CAD-PAD dose does not. Path-B: the dose is not threaded, so this surfaces the rivaroxaban population for the counseling check.',
+      },
+      evidence: {
+        triggerCriteria: ['On rivaroxaban (RxNorm IN 1114195)'],
+        guidelineSource: 'FDA Xarelto (rivaroxaban) Prescribing Information',
+        classOfRecommendation: '1',
+        levelOfEvidence: 'C',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'On the 2.5 mg dose (food not required)', 'Counseling already documented'],
+      },
+    });
+  }
+
+  // Gap EP-049: class IC antiarrhythmic (flecainide / propafenone) in structural heart disease -> SAFETY (CAST)
+  // Guideline: 2017 AHA/ACC/HRS VA Guideline, Class 3 (Harm), LOE A. section-16: flecainide RxNav IN 4441,
+  // propafenone IN 8754; structural HD = CAD (I25), MI (I21/I22), cardiomyopathy (I42), HF (I50) (NLM-verified).
+  // Subgroup-aware SAFETY: CAST showed class IC AADs INCREASE mortality in CAD / prior-MI / structural-HD - this is
+  // a contraindication alert, not a soft suggestion; the agent should be switched to a structurally-safe one.
+  const onClassIC_EP49 = medCodes.includes('4441') || medCodes.includes('8754');
+  const hasStructuralHD_EP49 = dxCodes.some(c => c.startsWith('I25') || c.startsWith('I21') || c.startsWith('I22') || c.startsWith('I42') || c.startsWith('I50'));
+  if (onClassIC_EP49 && hasStructuralHD_EP49 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    gaps.push({
+      type: TherapyGapType.SAFETY_ALERT,
+      module: ModuleType.ELECTROPHYSIOLOGY,
+      status: 'SAFETY: class IC antiarrhythmic (flecainide/propafenone) contraindicated in structural heart disease',
+      target: 'Class IC antiarrhythmic discontinued; switch to a structurally-safe agent (amiodarone/sotalol/dofetilide)',
+      recommendations: {
+        action: 'Recommended for urgent review: this patient is on a class IC antiarrhythmic (flecainide or propafenone) WITH structural heart disease (CAD / prior MI / cardiomyopathy / HF) - the CAST trial showed class IC agents INCREASE mortality in this population. Consider discontinuing and switching to a structurally-safe antiarrhythmic (amiodarone, sotalol, or dofetilide), per the 2017 AHA/ACC/HRS VA Guideline (Class 3, Harm)',
+        guideline: '2017 AHA/ACC/HRS Ventricular Arrhythmia Guideline; CAST (NEJM 1991)',
+        note: 'Subgroup-aware SAFETY: class IC AADs are contraindicated (Class 3 Harm) in CAD / prior-MI / structural HD - CAST showed increased mortality. This is a contraindication alert, not a soft suggestion; the agent should be changed. Lone-AF without structural disease is the appropriate-use exception.',
+      },
+      evidence: {
+        triggerCriteria: ['On a class IC antiarrhythmic (flecainide 4441 / propafenone 8754)', 'Structural heart disease (CAD I25 / MI I21-I22 / cardiomyopathy I42 / HF I50)'],
+        guidelineSource: '2017 AHA/ACC/HRS Ventricular Arrhythmia Guideline; CAST',
+        classOfRecommendation: '3',
+        levelOfEvidence: 'A',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'No structural heart disease (lone AF - class IC appropriate)', 'Agent already discontinued'],
       },
     });
   }
