@@ -3,7 +3,7 @@ import { APIResponse } from '../types';
 import { authenticateToken, authorizeHospital, authorizeModule, authorizeView, AuthenticatedRequest } from '../middleware/auth';
 import prisma from '../lib/prisma';
 import { logger } from '../utils/logger';
-import { buildFfrDecisionSupport } from './decisionSupport';
+import { buildFfrDecisionSupport, buildGdmtGapAnalysis } from './decisionSupport';
 
 const router = Router();
 
@@ -371,73 +371,49 @@ router.get('/heart-failure/patients', async (req: AuthenticatedRequest, res: Res
 });
 
 // Advanced GDMT Gap Analysis endpoint
-router.post('/heart-failure/gdmt-gaps', (req, res) => {
-  const { populationFilters } = req.body;
-  
-  // Simulate population-level GDMT gap analysis
-  const gapAnalysis = {
-    totalPatients: 1247,
-    gapBreakdown: {
-      aceArb: {
-        eligible: 1156,
-        prescribed: 1031,
-        atTargetDose: 892,
-        gapCount: 264,
-        opportunities: [
-          { type: 'Not Prescribed', count: 125, priority: 'high' },
-          { type: 'Under-dosed', count: 139, priority: 'medium' }
-        ]
-      },
-      betaBlocker: {
-        eligible: 1203,
-        prescribed: 1104,
-        atTargetDose: 967,
-        gapCount: 236,
-        opportunities: [
-          { type: 'Not Prescribed', count: 99, priority: 'high' },
-          { type: 'Under-dosed', count: 137, priority: 'medium' }
-        ]
-      },
-      mra: {
-        eligible: 892,
-        prescribed: 681,
-        atTargetDose: 523,
-        gapCount: 369,
-        opportunities: [
-          { type: 'Not Prescribed', count: 211, priority: 'high' },
-          { type: 'Under-dosed', count: 158, priority: 'medium' }
-        ]
-      },
-      sglt2i: {
-        eligible: 1089,
-        prescribed: 676,
-        atTargetDose: 589,
-        gapCount: 500,
-        opportunities: [
-          { type: 'Not Prescribed', count: 413, priority: 'high' },
-          { type: 'Under-dosed', count: 87, priority: 'medium' }
-        ]
-      }
-    },
-    priorityPatients: [
-      { id: 'HF001', name: 'Sarah Johnson', gaps: ['SGLT2i Missing', 'MRA Under-dosed'], priority: 'high', estimatedBenefit: '$12,450/year' },
-      { id: 'HF003', name: 'Jennifer Williams', gaps: ['Beta-blocker Under-dosed'], priority: 'medium', estimatedBenefit: '$8,200/year' },
-      { id: 'HF005', name: 'Robert Chen', gaps: ['ACE/ARB Missing', 'SGLT2i Missing'], priority: 'high', estimatedBenefit: '$15,600/year' }
-    ],
-    qualityMetrics: {
-      overallOptimization: 74.3,
-      benchmark: 85.0,
-      improvement: '+12.1% vs last quarter',
-      target: 90.0
-    }
-  };
-
-  res.json({
-    success: true,
-    data: gapAnalysis,
-    message: 'GDMT gap analysis completed',
-    timestamp: new Date().toISOString()
-  } as APIResponse);
+// Population-level GDMT gap analysis. AUDIT-188 (2026-06-22): replaced a whole-endpoint silent-mock (fabricated
+// totalPatients/breakdown + priorityPatients with invented NAMES 'Sarah Johnson' + estimatedBenefit dollars +
+// fabricated qualityMetrics) with a real, hospitalId-scoped therapyGap query. Patient refs are internal UUIDs
+// only (never names - PHI); fields the gap engine does not store are null EmptyState, never fabricated. The pure
+// builder (buildGdmtGapAnalysis) lives in ./decisionSupport and is unit-tested. Mirrors the HF dashboard GET.
+router.post('/heart-failure/gdmt-gaps', async (req: AuthenticatedRequest, res: Response) => {
+  const hospitalId = isSuperAdmin(req) ? undefined : req.user?.hospitalId;
+  if (!hospitalId && !isSuperAdmin(req)) {
+    return res.status(401).json({ success: false, error: 'Not authenticated' } as APIResponse);
+  }
+  try {
+    const hfPatientWhere = {
+      ...(hospitalId && { hospitalId }),
+      isActive: true,
+      OR: [
+        { heartFailurePatient: true },
+        { therapyGaps: { some: { module: 'HEART_FAILURE' as const, resolvedAt: null } } },
+      ],
+    };
+    const openMedGapWhere = {
+      ...(hospitalId && { hospitalId }),
+      module: 'HEART_FAILURE' as const,
+      resolvedAt: null,
+      gapType: { in: ['MEDICATION_MISSING', 'MEDICATION_UNDERDOSED'] as ('MEDICATION_MISSING' | 'MEDICATION_UNDERDOSED')[] },
+    };
+    const [totalPatients, medGaps] = await Promise.all([
+      prisma.patient.count({ where: hfPatientWhere }),
+      prisma.therapyGap.findMany({
+        where: openMedGapWhere,
+        select: { id: true, patientId: true, gapType: true, medication: true, targetStatus: true, identifiedAt: true },
+        orderBy: { identifiedAt: 'desc' },
+      }),
+    ]);
+    res.json({
+      success: true,
+      data: { ...buildGdmtGapAnalysis(totalPatients, medGaps), source: 'database' },
+      message: 'GDMT gap analysis completed',
+      timestamp: new Date().toISOString(),
+    } as APIResponse);
+  } catch (error) {
+    logger.error('Failed to build HF GDMT gap analysis', { error: error instanceof Error ? error.message : String(error) });
+    res.status(500).json({ success: false, error: 'Failed to load Heart Failure GDMT gap analysis' } as APIResponse);
+  }
 });
 
 // Heart Failure Phenotype Detection endpoint
