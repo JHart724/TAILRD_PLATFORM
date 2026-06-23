@@ -3,6 +3,7 @@ import { APIResponse } from '../types';
 import { authenticateToken, authorizeHospital, authorizeModule, authorizeView, AuthenticatedRequest } from '../middleware/auth';
 import prisma from '../lib/prisma';
 import { logger } from '../utils/logger';
+import { buildFfrDecisionSupport } from './decisionSupport';
 
 const router = Router();
 
@@ -1744,31 +1745,16 @@ router.get('/coronary-intervention/patients', async (req: AuthenticatedRequest, 
   }
 });
 
+// FFR/iFR physiological-assessment decision support (FAME / DEFINE-FLAIR). The pure builder lives in
+// ./decisionSupport (modules.ts uses `export = router`, which cannot coexist with named exports), where it
+// is unit-tested. AUDIT-187 (2026-06-22): the prior inline handler also returned a hardcoded `qualityMetrics`
+// block (ffrUtilization '68.4%' / benchmark '75%' / '+$1.2M annual revenue') - a fabricated population stat +
+// revenue projection on a single-patient endpoint, computed from nothing and consumed by no client. Dropped.
 router.post('/coronary-intervention/ffr-decision', (req, res) => {
   const { patientData } = req.body;
-  const stenosisPercent = patientData.stenosisPercent || 60;
-  const ffrValue = patientData.ffrValue;
-  const ifrValue = patientData.ifrValue;
-  let recommendation = 'Defer revascularization';
-  let evidenceLevel = 'Class I, Level A';
-  if (ffrValue !== undefined) {
-    recommendation = ffrValue <= 0.80 ? 'Revascularization recommended (FFR-positive)' : 'Medical therapy recommended (FFR-negative)';
-  } else if (ifrValue !== undefined) {
-    recommendation = ifrValue <= 0.89 ? 'Revascularization recommended (iFR-positive)' : 'Medical therapy recommended (iFR-negative)';
-  } else if (stenosisPercent >= 90) {
-    recommendation = 'Revascularization recommended (severe stenosis)';
-  } else if (stenosisPercent >= 50 && stenosisPercent < 90) {
-    recommendation = 'Physiological assessment recommended (FFR/iFR)';
-    evidenceLevel = 'Class I, Level A - FAME/DEFINE-FLAIR trials';
-  }
   res.json({
     success: true,
-    data: {
-      patientId: patientData.id, stenosisPercent, ffrValue, ifrValue, recommendation, evidenceLevel,
-      revenueImplication: ffrValue !== undefined || ifrValue !== undefined ? 'Physiological assessment documented - higher reimbursement' : 'Consider adding FFR/iFR for quality and revenue',
-      qualityMetrics: { ffrUtilization: '68.4%', benchmark: '75%', improvementOpportunity: '+$1.2M annual revenue with optimal FFR utilization' },
-      timestamp: new Date().toISOString()
-    },
+    data: { ...buildFfrDecisionSupport(patientData), timestamp: new Date().toISOString() },
     message: 'FFR/iFR decision support completed', timestamp: new Date().toISOString()
   } as APIResponse);
 });
@@ -1952,10 +1938,9 @@ router.post('/peripheral-vascular/wifi-classification', (req, res) => {
         shortTerm: clinicalStage >= 2 ? ['Angiography and revascularization planning', 'Multidisciplinary wound care'] : ['Supervised exercise therapy', 'Risk factor modification'],
         longTerm: ['Surveillance duplex ultrasound', 'Cardiovascular risk reduction', 'Diabetes management if applicable']
       },
-      revenueImplication: {
-        drgCategory: clinicalStage >= 3 ? 'DRG 252 (Peripheral Vascular Procedures)' : 'DRG 253 (Other Vascular Procedures)',
-        estimatedReimbursement: clinicalStage >= 3 ? '$58,000-$95,000' : '$14,500-$52,000'
-      },
+      // AUDIT-187 (2026-06-22): dropped the hardcoded `revenueImplication` block (estimatedReimbursement
+      // '$58,000-$95,000' / '$14,500-$52,000') - the same fabricated-figure defect as the FFR endpoint: a
+      // hardcoded reimbursement range presented as data on a per-patient decision endpoint, consumed by no client.
       guidelines: 'SVS/ESVS 2019 CLTI Guidelines', timestamp: new Date().toISOString()
     },
     message: 'WIfI classification completed', timestamp: new Date().toISOString()
