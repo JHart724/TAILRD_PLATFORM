@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, AlertTriangle, Zap, Clock, Activity, User, ChevronRight, Shield, Heart, Pill, AlertCircle, X, Thermometer, Droplets, Users, FileText, Calendar, CheckCircle } from 'lucide-react';
+import { Bell, AlertTriangle, Clock, Activity, User, ChevronRight, Shield, Heart, Pill, AlertCircle, X, Thermometer, Droplets, Users, CheckCircle } from 'lucide-react';
 
 interface EPAlert {
   id: string;
@@ -332,20 +332,6 @@ const EPAlertDashboard: React.FC = () => {
  </div>
  </div>
 
- <div className="flex gap-3 pt-4 border-t border-gray-200">
- <button className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
- <Zap className="w-4 h-4" />
- Emergency EP Consult
- </button>
- <button className="flex items-center gap-2 px-4 py-2 bg-chrome-600 text-white rounded-lg hover:bg-chrome-700 transition-colors">
- <Calendar className="w-4 h-4" />
- Schedule EP
- </button>
- <button className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
- <FileText className="w-4 h-4" />
- Generate Orders
- </button>
- </div>
  </div>
  </div>
  </div>

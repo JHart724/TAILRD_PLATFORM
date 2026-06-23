@@ -375,7 +375,7 @@ const PeripheralExecutiveView: React.FC = () => {
 	tableData={activeModal.includes('252') ? drgDetailData['DRG 252'] : drgDetailData['DRG 253']}
 	columns={drgColumns}
 	onClose={() => setActiveModal(null)}
-	onExport={() => {}}
+	onExport={undefined}
 	/>
 	)}
 

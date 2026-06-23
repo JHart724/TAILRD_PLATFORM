@@ -166,9 +166,6 @@ const EPActionQueue: React.FC = () => {
  Mark Complete
  </button>
  )}
- <button className="px-4 py-2 bg-gradient-to-r from-titanium-100 to-titanium-200 text-titanium-800 text-sm rounded-lg hover:from-titanium-200 hover:to-titanium-300 transition-all duration-300 flex items-center gap-2 font-medium">
- View Details
- </button>
  </div>
  </div>
  ))}

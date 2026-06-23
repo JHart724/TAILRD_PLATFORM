@@ -173,17 +173,7 @@ const EPFollowUpQueue: React.FC = () => {
  </div>
  )}
 
- <div className="flex items-center justify-between">
- <div className="flex gap-2">
- {item.priority === 'overdue' && (
- <button className="px-3 py-1 bg-red-600 text-white text-xs rounded-md hover:bg-red-700 transition-colors">
- Contact Now
- </button>
- )}
- <button className="px-3 py-1 bg-chrome-600 text-white text-xs rounded-md hover:bg-chrome-700 transition-colors">
- Reschedule
- </button>
- </div>
+ <div className="flex items-center justify-end">
  <div className="flex items-center gap-1 text-sm text-porsche-600 hover:text-porsche-700">
  <span>View Details</span>
  <ChevronRight className="w-4 h-4" />

@@ -230,7 +230,9 @@ const EPPatientWorklist: React.FC = () => {
  <TrendingUp className="w-4 h-4" />
  Review Patient
  </button>
- <button className="px-4 py-2 bg-gradient-to-r from-titanium-100 to-titanium-200 text-titanium-800 text-sm rounded-lg hover:from-titanium-200 hover:to-titanium-300 transition-all duration-300 transform hover:scale-105 hover:shadow-md flex items-center gap-2 font-medium border border-titanium-300">
+ <button
+ onClick={() => setSelectedPatient(patient)}
+ className="px-4 py-2 bg-gradient-to-r from-titanium-100 to-titanium-200 text-titanium-800 text-sm rounded-lg hover:from-titanium-200 hover:to-titanium-300 transition-all duration-300 transform hover:scale-105 hover:shadow-md flex items-center gap-2 font-medium border border-titanium-300">
  <ExternalLink className="w-4 h-4" />
  Open Chart
  </button>

@@ -3,7 +3,7 @@ import { Lock } from 'lucide-react';
 import SectionCard from '../../../design-system/SectionCard';
 
 const carmonaGradient: React.CSSProperties = {
-  background: 'linear-gradient(145deg, #8C1F32, #9B2438, #7A1A2E)',
+  background: 'linear-gradient(145deg, #1A3B5C, #2C4A60, #1A3B5C)',
 };
 
 interface QuartileMetric {

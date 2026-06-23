@@ -107,7 +107,7 @@ function calcOpportunity(lever: Lever, targetVal: number): number {
 }
 
 const carmonaGradient: React.CSSProperties = {
-  background: 'linear-gradient(145deg, #8C1F32, #9B2438, #7A1A2E)',
+  background: 'linear-gradient(145deg, #1A3B5C, #2C4A60, #1A3B5C)',
 };
 
 const SliderRow: React.FC<{
@@ -156,8 +156,8 @@ const SliderRow: React.FC<{
         onChange={(e) => onChange(Number(e.target.value))}
         className="w-full h-2 rounded-full appearance-none cursor-pointer"
         style={{
-          accentColor: '#8C1F32',
-          background: `linear-gradient(to right, #8C1F32 0%, #8C1F32 ${
+          accentColor: '#2C4A60',
+          background: `linear-gradient(to right, #2C4A60 0%, #2C4A60 ${
             ((value - lever.min) / (lever.max - lever.min)) * 100
           }%, #E5E7EB ${
             ((value - lever.min) / (lever.max - lever.min)) * 100

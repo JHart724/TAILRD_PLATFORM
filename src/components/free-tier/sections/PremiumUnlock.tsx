@@ -50,7 +50,7 @@ const PremiumUnlock: React.FC = () => {
             </p>
           </div>
           <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3">
-            <button type="button" className="inline-flex items-center gap-2 px-8 py-3.5 text-white font-body font-bold text-base rounded-xl transition-all duration-200 hover:-translate-y-0.5" style={{ background: 'linear-gradient(145deg, #8C1F32 0%, #9B2438 40%, #7A1A2E 100%)', boxShadow: '0 1px 4px rgba(0,0,0,0.2), 0 1px 0 rgba(255,255,255,0.14) inset', border: 'none' }}>
+            <button type="button" className="inline-flex items-center gap-2 px-8 py-3.5 text-white font-body font-bold text-base rounded-xl transition-all duration-200 hover:-translate-y-0.5" style={{ background: 'linear-gradient(145deg, #1A3B5C 0%, #2C4A60 40%, #1A3B5C 100%)', boxShadow: '0 1px 4px rgba(0,0,0,0.2), 0 1px 0 rgba(255,255,255,0.14) inset', border: 'none' }}>
               Connect EHR &amp; See Your Patients →
               <ArrowRight className="w-5 h-5" />
             </button>
