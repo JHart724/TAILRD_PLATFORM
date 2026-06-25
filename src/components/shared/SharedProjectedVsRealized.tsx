@@ -21,6 +21,15 @@ const formatMoney = (amount: number): string => {
   return `$${amount.toLocaleString()}`;
 };
 
+// AUDIT-301: a revenue Gap (projected minus realized) is a non-alarm negative, not a clinical alarm,
+// so it uses the amber data-negative tokens, never carmine (--sem-critical). Exported so the regression
+// harness can assert the token mapping directly (jsdom strips var() from serialized inline style).
+export const GAP_NEGATIVE_TOKENS = {
+  bg: 'var(--sem-data-negative-bg)',
+  border: 'var(--sem-data-negative-border)',
+  ink: 'var(--sem-data-negative-ink)',
+};
+
 const SharedProjectedVsRealized: React.FC<SharedProjectedVsRealizedProps> = ({
   title = 'Projected vs Realized Revenue', subtitle = 'Year-to-Date Performance',
   monthlyData, onMonthClick, className = '',
@@ -56,9 +65,9 @@ const SharedProjectedVsRealized: React.FC<SharedProjectedVsRealizedProps> = ({
  <div className="text-xs font-medium mb-1" style={{ color: '#2C4A60' }}>Total Realized</div>
  <div className="text-xl font-bold" style={{ color: '#2C4A60' }}>{formatMoney(totalRealized)}</div>
  </div>
- <div className="p-4 rounded-lg" style={{ background: '#FDF2F3', border: '1px solid #F5C0C8' }}>
- <div className="text-xs font-medium mb-1" style={{ color: '#9B2438' }}>Gap</div>
- <div className="text-xl font-bold" style={{ color: '#9B2438' }}>{formatMoney(gap)}</div>
+ <div className="p-4 rounded-lg" style={{ background: GAP_NEGATIVE_TOKENS.bg, border: `1px solid ${GAP_NEGATIVE_TOKENS.border}` }}>
+ <div className="text-xs font-medium mb-1" style={{ color: GAP_NEGATIVE_TOKENS.ink }}>Gap</div>
+ <div className="text-xl font-bold" style={{ color: GAP_NEGATIVE_TOKENS.ink }}>{formatMoney(gap)}</div>
  </div>
  </div>
 
