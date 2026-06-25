@@ -712,7 +712,7 @@ export const coronaryCareTeamConfig: CareTeamViewConfig = {
   moduleName: 'Coronary Intervention',
   moduleDescription: 'Comprehensive coronary intervention care coordination, PCI optimization, and CABG workflows',
   moduleIcon: Heart,
-  primaryColor: 'medical-red',
+  primaryColor: 'porsche',
   tabs: coronaryTabs,
   tabContent: {
  dashboard: CoronaryDashboard,
