@@ -26,6 +26,9 @@ import { ChartTheme } from '../ChartTheme';
 import { EmptyState } from '../EmptyState';
 import { Spinner, LoadingState } from '../Spinner';
 
+import SharedProjectedVsRealized, { GAP_NEGATIVE_TOKENS } from '../../components/shared/SharedProjectedVsRealized';
+import { coronaryCareTeamConfig } from '../../ui/coronaryIntervention/config/careTeamConfig';
+
 let container: HTMLDivElement;
 let root: Root;
 
@@ -159,5 +162,34 @@ describe('ChartTheme - locked section 8 values', () => {
     expect(ChartTheme.axis.tickColor).toBe('#636D80');
     expect(ChartTheme.axis.tickFontSize).toBe(11);
     expect(ChartTheme.grid.strokeWidth).toBe(0.5);
+  });
+});
+
+// ---- AUDIT-301: pre-existing carmine removed from non-critical financial/benchmark/nav states ----
+describe('AUDIT-301 - carmine off non-critical states', () => {
+  const sampleMonths = [
+    { month: 'Jan', projected: 1000000, realized: 700000 },
+    { month: 'Feb', projected: 1200000, realized: 900000 },
+  ];
+
+  it('SharedProjectedVsRealized Gap card uses amber data-negative tokens, never carmine #9B2438', () => {
+    const html = render(<SharedProjectedVsRealized monthlyData={sampleMonths} />);
+    expect(html).toContain('Gap');
+    // the alarm-red carmine + its old tint pair must be gone from the revenue Gap card
+    expect(html).not.toContain('9B2438');
+    expect(html).not.toContain('FDF2F3');
+    expect(html).not.toContain('F5C0C8');
+    // resolves to the amber non-alarm tokens (asserted on the exported mapping; jsdom strips var() from inline style)
+    expect(GAP_NEGATIVE_TOKENS.ink).toBe('var(--sem-data-negative-ink)');
+    expect(GAP_NEGATIVE_TOKENS.bg).toBe('var(--sem-data-negative-bg)');
+    expect(GAP_NEGATIVE_TOKENS.border).toBe('var(--sem-data-negative-border)');
+    expect(JSON.stringify(GAP_NEGATIVE_TOKENS)).not.toContain('9B2438');
+  });
+
+  it('CAD care-team nav primaryColor is porsche (navy), never medical-red', () => {
+    // primaryColor is the single source driving CoronaryCareTeamView.getColorClasses; the
+    // 'porsche' case yields bg-porsche-50/text-porsche-600 (navy), 'medical-red' the red selected-state.
+    expect(coronaryCareTeamConfig.primaryColor).toBe('porsche');
+    expect(coronaryCareTeamConfig.primaryColor).not.toBe('medical-red');
   });
 });

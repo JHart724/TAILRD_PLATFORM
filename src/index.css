@@ -73,6 +73,7 @@
   --sem-success-ink: #0F6E56;
   --sem-data-negative-bg: #FAEEDA;     /* non-alarm amber (never red) */
   --sem-data-negative-ink: #854F0B;
+  --sem-data-negative-border: #E8C88A; /* amber tint border for non-alarm negative cards (AUDIT-301) */
   --sem-selection-bg: #E6EEF5;         /* navy-tinted, not red */
   --sem-selection-ink: #2C4A60;
   --sem-provenance-bg: #E6F1FB;        /* demo/estimate badges - blue */
