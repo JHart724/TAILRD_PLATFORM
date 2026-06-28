@@ -15,9 +15,20 @@ import {
 } from './snomedCrosswalk';
 import { ECHO_LOINC_TO_SLUG } from '../services/observationService';
 
+/**
+ * A structured medication row carried from the multi-file path to patientWriter so the
+ * RxNorm code, name, and start date persist as a Medication entity the gap engine reads.
+ * (The single-file path does not emit this; patientWriter no-ops when it is absent.)
+ */
+export interface MedicationRecord {
+  rxNormCode: string;       // Synthea medications.csv CODE (RxNorm) - what expandToIngredients consumes
+  medicationName: string;   // medications.csv DESCRIPTION (falls back to the code if blank)
+  startDate: string | null; // medications.csv START, if present
+}
+
 export interface ParsedRow {
   rowNumber: number;
-  data: Record<string, string | number | boolean | string[] | null>;
+  data: Record<string, string | number | boolean | string[] | MedicationRecord[] | null>;
   errors: Array<{ field: string; message: string }>;
   warnings: Array<{ field: string; message: string }>;
 }
@@ -427,13 +438,19 @@ export function parseMultiFileCSV(input: MultiFileInput): MultiFileParseResult {
     }
     parsedRow.data.procedures = procCodes;
 
-    // --- medications: RxNorm, passed through raw (engine gates GDMT on RxNorm) ---
+    // --- medications: RxNorm, passed through raw (engine gates GDMT on RxNorm). The code pipe is the
+    //     parity/visibility shape; medication_records is the structured, persistence-bearing field
+    //     patientWriter consumes (rxNormCode + name + start date). ---
     const medCodes: string[] = [];
+    const medRecords: MedicationRecord[] = [];
     for (const m of medicationsByPatient.get(pid) || []) {
       const code = m['code'] || '';
-      if (code) medCodes.push(code);
+      if (!code) continue;
+      medCodes.push(code);
+      medRecords.push({ rxNormCode: code, medicationName: m['description'] || code, startDate: m['start'] || null });
     }
     parsedRow.data.medications = medCodes;
+    parsedRow.data.medication_records = medRecords;
 
     validRows.push(parsedRow);
   }

@@ -76,6 +76,14 @@ describe('parseMultiFileCSV - happy path (parse + join + crosswalk)', () => {
     expect(r.procedureCodesUntranslated).toBe(1); // SNOMED procedure left raw (no SNOMED->CPT map)
   });
 
+  it('emits structured medication_records (rxNormCode + name + startDate) for persistence', () => {
+    const r = parseMultiFileCSV(fullInput());
+    const p1 = r.validRows.find(row => row.data.patient_id === 'P1')!;
+    expect(p1.data.medication_records).toEqual([
+      { rxNormCode: '197361', medicationName: 'Lisinopril 10 MG Oral Tablet', startDate: '2021-02-01' },
+    ]);
+  });
+
   it('derives demographics from the patients spine (age numeric, sex from GENDER)', () => {
     const r = parseMultiFileCSV(fullInput());
     const p1 = r.validRows.find(row => row.data.patient_id === 'P1')!;

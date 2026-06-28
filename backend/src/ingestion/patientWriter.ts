@@ -1,6 +1,6 @@
 import prisma from '../lib/prisma';
-import { ParsedRow } from './csvParser';
-import { Gender, ObservationCategory, ConditionCategory, ConditionClinicalStatus, ConditionVerificationStatus } from '@prisma/client';
+import { ParsedRow, MedicationRecord } from './csvParser';
+import { Gender, ObservationCategory, ConditionCategory, ConditionClinicalStatus, ConditionVerificationStatus, MedicationStatus } from '@prisma/client';
 
 export interface WriteResult {
   patientsCreated: number;
@@ -198,6 +198,41 @@ export async function writePatients(
       if (observationBatch.length > 0) {
         await prisma.observation.createMany({ data: observationBatch });
         result.observationsWritten += observationBatch.length;
+      }
+
+      // Additive (PHASE 2.5): persist assembled RxNorm medications as ACTIVE Medication rows so the gap
+      // engine's medication-present path can evaluate on-therapy status. Both runners load
+      // `medications: { where: { status: 'ACTIVE' } }` then build medCodes via expandToIngredients(rxNormCode)
+      // for the GDMT 4-pillar matchers - so persisting rxNormCode + status ACTIVE is what makes a med
+      // satisfy the on-therapy check. The multi-file path emits structured medication_records; the
+      // single-file path emits none -> no-op (single-file behavior preserved). Deterministic id keyed on
+      // (patient, rxNormCode) dedups repeat/refill rows to one ACTIVE row per drug (presence-based GDMT)
+      // and makes re-ingest idempotent, mirroring the condition-upsert pattern above. medicationName is the
+      // required column (DESCRIPTION, falling back to the code); dose is left null (Synthea med rows carry
+      // no structured dose) so dose-dependent gates under-fire as documented, like the unpersisted procedures.
+      const medRecords = row.data.medication_records;
+      if (Array.isArray(medRecords)) {
+        const seenRx = new Set<string>();
+        for (const m of medRecords as MedicationRecord[]) {
+          if (!m || typeof m !== 'object' || !m.rxNormCode) continue;
+          if (seenRx.has(m.rxNormCode)) continue;
+          seenRx.add(m.rxNormCode);
+          const medId = `${dbPatient.id}-rx-${m.rxNormCode}`;
+          await prisma.medication.upsert({
+            where: { id: medId },
+            update: { status: MedicationStatus.ACTIVE },
+            create: {
+              id: medId,
+              patientId: dbPatient.id,
+              hospitalId,
+              medicationName: m.medicationName || m.rxNormCode,
+              rxNormCode: m.rxNormCode,
+              status: MedicationStatus.ACTIVE,
+              startDate: m.startDate ? new Date(m.startDate) : null,
+            },
+          });
+          result.observationsWritten++;
+        }
       }
     } catch (err) {
       result.errors.push({ patientId, error: (err as Error).message });
