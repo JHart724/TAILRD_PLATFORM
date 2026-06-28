@@ -84,6 +84,37 @@ export async function writePatients(
         result.observationsWritten++;
       }
 
+      // Additive (PHASE 2): write secondary_diagnoses as Conditions too. The single-file path parses
+      // secondary_diagnoses (COMMON_COLUMNS, pipe-delimited) but historically dropped them here (same
+      // AUDIT-165 silent-drop class as the echo fields); the multi-file path threads a patient's full
+      // condition list as primary + secondary. This is purely additive: the primary write above is
+      // unchanged, and absent/empty secondary_diagnoses is a no-op. Each is an ICD-10-CM code (already
+      // crosswalked from SNOMED in the multi-file path, or supplied directly in the single-file path).
+      const secondaryDx = row.data.secondary_diagnoses;
+      if (Array.isArray(secondaryDx)) {
+        for (const dx of secondaryDx) {
+          if (!dx || typeof dx !== 'string') continue;
+          if (dx === primaryDx) continue; // primary already written above
+          const secId = `${dbPatient.id}-${dx}`;
+          await prisma.condition.upsert({
+            where: { id: secId },
+            update: { clinicalStatus: ConditionClinicalStatus.ACTIVE },
+            create: {
+              id: secId,
+              patientId: dbPatient.id,
+              hospitalId,
+              conditionName: dx,
+              icd10Code: dx,
+              category: ConditionCategory.ENCOUNTER_DIAGNOSIS,
+              clinicalStatus: ConditionClinicalStatus.ACTIVE,
+              verificationStatus: ConditionVerificationStatus.CONFIRMED,
+              onsetDate: encounterDateStr ? new Date(encounterDateStr) : new Date(),
+            },
+          });
+          result.observationsWritten++;
+        }
+      }
+
       // Write lab observations (batched to avoid N+1)
       // ECHO_FIELDS (v3.0 echo-severity threading, 2026-06-17): valve-severity numerics from csvSchema
       // SH_COLUMNS. Previously parsed + validated by csvParser then SILENTLY DROPPED here (AUDIT-165) -
