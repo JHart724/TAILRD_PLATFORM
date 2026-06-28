@@ -35,7 +35,11 @@ import { ECHO_LOINC_TO_SLUG } from '../services/observationService';
 import { detectPHI } from '../ingestion/phiDetector';
 import { writePatients } from '../ingestion/patientWriter';
 import { runGapDetection } from '../ingestion/gapDetectionRunner';
-import { HospitalType, SubscriptionTier } from '@prisma/client';
+import { evaluateGapRules } from '../ingestion/gaps/gapRuleEngine';
+import { expandToIngredients } from '../terminology/expandToIngredients';
+// Reuse the runner's EXPORTED staleness constants so the projection mirrors the real run exactly (no drift).
+import { ECHO_CUTOFF_MS, LAB_CUTOFF_MS, IMAGING_TYPES } from '../ingestion/runGapDetectionForPatient';
+import { HospitalType, SubscriptionTier, Gender } from '@prisma/client';
 
 // ---------------------------------------------------------------------------
 // Config
@@ -219,6 +223,63 @@ function assembleRow(pid: string, rowNumber: number): ParsedRow {
   return { rowNumber, data, errors: [], warnings: [] };
 }
 
+function mapGender(sex: string | null): Gender {
+  if (!sex) return Gender.UNKNOWN;
+  const s = sex.toUpperCase();
+  if (s === 'M' || s === 'MALE') return Gender.MALE;
+  if (s === 'F' || s === 'FEMALE') return Gender.FEMALE;
+  return Gender.OTHER;
+}
+
+// ---------------------------------------------------------------------------
+// In-memory gap PROJECTION (read-only, no DB). Mirrors both runners' per-patient transform: dxCodes from
+// crosswalked ICD-10, labValues with the runner's staleness cutoffs (IMAGING 365d / LAB 180d), medCodes via
+// expandToIngredients, age + gender, race undefined (patientWriter does not write race -> the real run also
+// sees null), procedureCodes [] (procedures are not persisted). Calls the engine's pure evaluateGapRules -
+// the same function both runners call - so the dry-run projects what --execute would actually produce.
+// ---------------------------------------------------------------------------
+function projectGapDistribution(): { byModule: Record<string, number>; totalGaps: number; patientsWithGaps: number } {
+  const byModule: Record<string, number> = {};
+  let totalGaps = 0;
+  let patientsWithGaps = 0;
+  const now = Date.now();
+
+  for (const pid of spine.keys()) {
+    const sp = spine.get(pid)!;
+    const dx = dxByPatient.get(pid) || [];
+
+    const labValues: Record<string, number> = {};
+    const slots = labsByPatient.get(pid);
+    if (slots) {
+      for (const [slug, slot] of slots) {
+        if (slot.date) {
+          const ageMs = now - new Date(slot.date).getTime();
+          const cutoff = IMAGING_TYPES.has(slug) ? ECHO_CUTOFF_MS : LAB_CUTOFF_MS;
+          if (ageMs > cutoff) continue; // stale -> excluded, mirroring the runner
+        }
+        labValues[slug] = slot.value;
+      }
+    }
+
+    const medsMap = medsByPatient.get(pid);
+    const medCodes = expandToIngredients(medsMap ? [...medsMap.keys()] : []);
+    const meds = medsMap
+      ? [...medsMap.values()].map((m) => ({
+          rxNormCode: m.rxNormCode, doseValue: null, doseUnit: null,
+          genericName: null, medicationName: m.medicationName, startDate: m.startDate,
+        }))
+      : [];
+
+    const gaps = evaluateGapRules(dx, labValues, medCodes, sp.age ?? 0, mapGender(sp.sex), undefined, meds as any, []);
+    if (gaps.length > 0) patientsWithGaps++;
+    for (const g of gaps) {
+      byModule[g.module] = (byModule[g.module] || 0) + 1;
+      totalGaps++;
+    }
+  }
+  return { byModule, totalGaps, patientsWithGaps };
+}
+
 // ---------------------------------------------------------------------------
 // Fresh-hospital provisioning (create passes the BAA guard; baaExecuted is set via the CoveredEntity
 // service path - NOT a direct write, per the schema's "do NOT write directly" rule). See the staged plan:
@@ -274,6 +335,15 @@ async function main(): Promise<void> {
     patientsWithLabs: labsByPatient.size,
     patientsWithMeds: medsByPatient.size,
     procedureCodesUntranslated,
+  });
+
+  // Projected per-module gap distribution (read-only; what --execute would produce).
+  const projection = projectGapDistribution();
+  logger.info('[proof] PROJECTED per-module gap distribution (no write)', {
+    patients: pids.length,
+    patientsWithGaps: projection.patientsWithGaps,
+    totalGaps: projection.totalGaps,
+    byModule: projection.byModule,
   });
 
   if (!EXECUTE) {
