@@ -41,7 +41,7 @@ export interface ParseResult {
   headerErrors: string[];
 }
 
-function parseCSVLine(line: string): string[] {
+export function parseCSVLine(line: string): string[] {
   const result: string[] = [];
   let current = '';
   let inQuotes = false;
