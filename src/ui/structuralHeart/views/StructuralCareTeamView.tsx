@@ -87,7 +87,7 @@ const StructuralCareTeamView: React.FC = () => {
  { id: 'patients', label: 'Patients', icon: Users, description: 'TAVR and structural heart patients' },
  { id: 'clinical-gaps', label: 'Clinical Gaps', icon: AlertTriangle, description: 'SH clinical gap detection dashboard' },
  { id: 'workflow', label: 'Workflow', icon: Calendar, description: 'Heart team workflows' },
- { id: 'hospital-alerts', label: 'Hospital Alerts', icon: Heart, description: 'Real-time structural heart hospital alerts' },
+ { id: 'hospital-alerts', label: 'Hospital Alerts', icon: Heart, description: 'Structural heart hospital alerts' },
  { id: 'safety', label: 'Safety', icon: Shield, description: 'Risk assessment & monitoring' },
  { id: 'calculator', label: 'STS Risk Score', icon: Gauge, description: 'Surgical risk calculator' },
  { id: 'clinicaltools', label: 'Clinical Intelligence', icon: Stethoscope, description: 'Phenotype classification, contraindication checking, and procedure tracking' },

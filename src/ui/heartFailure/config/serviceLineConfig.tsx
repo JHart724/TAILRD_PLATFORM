@@ -275,7 +275,7 @@ const HFAdvancedTherapyPipeline: React.FC = () => {
         <Zap className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
         <div>
           <h4 className="text-sm font-semibold text-blue-900 mb-1">Automated Advanced Therapy Triage</h4>
-          <p className="text-sm text-blue-800">&#9889; Patients automatically identified from EHR integration</p>
+          <p className="text-sm text-blue-800">&#9889; Patients automatically identified from structured demo data</p>
         </div>
       </div>
 
@@ -388,7 +388,7 @@ const heartFailureTabs: ServiceLineTabConfig[] = [
  id: 'clinical-gap-detection',
  label: 'Gap Detection (25-Gap)',
  icon: Target,
- description: 'AI-driven HF gap detection: ATTR-CM, iron deficiency, finerenone, GLP-1/HFpEF, HCM myosin inhibitor, CardioMEMS, CASTLE-AF, ivabradine, vericiguat, H-ISDN/A-HeFT, cardiac rehab, undiagnosed HFpEF, DANISH ICD, OSA-HF, RPM, ARNi underdosing, loop-without-MRA, hyponatremia, NT-proBNP monitoring, cardiac MRI, palliative care, diuretic resistance, predischarge NT-proBNP, functional MR/COAPT (cross-module), ATTR-CM+AS co-detection (cross-module). All gap detection criteria, risk scores, and composite calculators are automatically computed from structured EHR data ingested via EHR integration — no manual data entry or chart review required.'
+ description: 'Guideline-based HF gap detection: ATTR-CM, iron deficiency, finerenone, GLP-1/HFpEF, HCM myosin inhibitor, CardioMEMS, CASTLE-AF, ivabradine, vericiguat, H-ISDN/A-HeFT, cardiac rehab, undiagnosed HFpEF, DANISH ICD, OSA-HF, RPM, ARNi underdosing, loop-without-MRA, hyponatremia, NT-proBNP monitoring, cardiac MRI, palliative care, diuretic resistance, predischarge NT-proBNP, functional MR/COAPT (cross-module), ATTR-CM+AS co-detection (cross-module). All gap detection criteria, risk scores, and composite calculators are automatically computed from structured patient data (live EHR integration pending). No manual data entry or chart review required.'
   },
   {
  id: 'pro-outcomes',

@@ -536,7 +536,7 @@ const EPDeviceAblationPipeline: React.FC = () => {
           <Zap className="w-5 h-5 text-teal-700 mt-0.5 flex-shrink-0" />
           <div>
             <h3 className="text-base font-semibold text-titanium-900 mb-1">Automated Pipeline Detection</h3>
-            <p className="text-sm text-titanium-600">&#9889; Patients automatically identified from EHR integration</p>
+            <p className="text-sm text-titanium-600">&#9889; Patients automatically identified from structured demo data</p>
           </div>
         </div>
       </div>
@@ -644,7 +644,7 @@ const electrophysiologyTabs: ServiceLineTabConfig[] = [
  id: 'clinical-support',
  label: 'Clinical Decision Support',
  icon: Brain,
- description: 'AI-powered EP clinical decision support tools'
+ description: 'Guideline-based EP clinical decision support tools'
   },
   {
  id: 'automated-support',
@@ -692,7 +692,7 @@ const electrophysiologyTabs: ServiceLineTabConfig[] = [
  id: 'ep-clinical-gap-detection',
  label: 'Gap Detection (20-Gap)',
  icon: Zap,
- description: 'AI-driven EP gap detection: LAAC, CSP/CRT, PFA re-ablation, CASTLE-AF, DANISH ICD, OSA-AF, WPW, amiodarone monitoring, OAC monotherapy (cross-module), persistent AF rhythm control, cryptogenic stroke ILR, dofetilide REMS safety, dronedarone contraindication, IST ivabradine, flutter ablation, device battery EOL safety, PVC cardiomyopathy, LQTS beta-blocker, carotid/stroke, Fontan All gap detection criteria, risk scores, and composite calculators are automatically computed from structured EHR data ingested via EHR integration — no manual data entry or chart review required.'
+ description: 'Guideline-based EP gap detection: LAAC, CSP/CRT, PFA re-ablation, CASTLE-AF, DANISH ICD, OSA-AF, WPW, amiodarone monitoring, OAC monotherapy (cross-module), persistent AF rhythm control, cryptogenic stroke ILR, dofetilide REMS safety, dronedarone contraindication, IST ivabradine, flutter ablation, device battery EOL safety, PVC cardiomyopathy, LQTS beta-blocker, carotid/stroke, Fontan All gap detection criteria, risk scores, and composite calculators are automatically computed from structured patient data (live EHR integration pending). No manual data entry or chart review required.'
   }
 ];
 

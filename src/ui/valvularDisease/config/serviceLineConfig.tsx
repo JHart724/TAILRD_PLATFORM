@@ -336,7 +336,7 @@ const valvularDiseaseTabs: ServiceLineTabConfig[] = [
  id: 'vd-clinical-gap-detection',
  label: 'Clinical Gap Detection',
  icon: AlertTriangle,
- description: 'AI-driven clinical gap detection for valvular disease therapy gaps and safety alerts'
+ description: 'Guideline-based clinical gap detection for valvular disease therapy gaps and safety alerts'
   },
   {
  id: 'quality',

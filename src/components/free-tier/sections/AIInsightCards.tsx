@@ -116,7 +116,7 @@ const carmonaGradient: React.CSSProperties = {
 const AIPoweredBadge: React.FC = () => (
   <span className="bg-slate-100 text-slate-700 text-xs font-medium px-2 py-0.5 rounded-full flex items-center gap-1">
     <Sparkles className="w-3 h-3" />
-    AI Powered
+    Guideline-Based
   </span>
 );
 
@@ -126,13 +126,13 @@ const AIInsightCards: React.FC = () => {
 
   return (
     <SectionCard
-      title="AI-Detected Insights"
-      subtitle="Machine learning analysis of your population · Patient details require Premium"
+      title="Guideline-Based Insights"
+      subtitle="Guideline-based analysis of your population - Patient details require Premium"
       headerRight={<AIPoweredBadge />}
     >
       {/* Section-level summary */}
       <div className="bg-chrome-50 border border-chrome-100 rounded-xl px-4 py-3 mb-4 flex items-center justify-between">
-        <span className="text-sm text-titanium-700">571 patients identified across 6 AI-detected gaps</span>
+        <span className="text-sm text-titanium-700">571 patients identified across 6 guideline-based gaps</span>
         <span className="font-data font-semibold text-teal-700">Est. $11.2M opportunity</span>
       </div>
 

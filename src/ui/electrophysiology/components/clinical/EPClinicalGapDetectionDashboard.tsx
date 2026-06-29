@@ -4102,7 +4102,7 @@ const renderCHA2DS2Display = (patient: EPGapPatient): React.ReactNode => {
       </h5>
       <p className="text-xs text-blue-600 mb-2 flex items-center gap-1">
         <Zap className="w-3 h-3 text-blue-500" />
-        Auto-calculated from structured EHR data
+        Auto-calculated from structured patient data (demo)
       </p>
       <div className="grid grid-cols-3 gap-2 text-sm">
         <div><span className="text-blue-600 font-medium">AF Type:</span> <span className="text-blue-900">{afType}</span></div>
@@ -4152,7 +4152,7 @@ const renderKCCQTrend = (patient: EPGapPatient): React.ReactNode => {
       </h5>
       <p className="text-xs text-blue-600 flex items-center gap-1">
         <Zap className="w-3 h-3 text-blue-500" />
-        Auto-calculated from EHR flowsheet data
+        Auto-calculated from demo flowsheet data
       </p>
     </div>
   );
@@ -4842,7 +4842,7 @@ const EPClinicalGapDetectionDashboard: React.FC = () => {
                                     {Object.entries(pt.keyValues).map(([k, v]) => (
                                       <div key={k} className="flex justify-between text-sm">
                                         <dt className="text-titanium-600">{k}:</dt>
-                                        <dd className="font-medium text-titanium-900" title="Automatically calculated from EHR-sourced data via EHR integration. No manual entry required.">{v}<span title="Automatically calculated from EHR-sourced data via EHR integration. No manual entry required."><Info className="w-3 h-3 text-blue-400 inline-block ml-1 cursor-help" /></span></dd>
+                                        <dd className="font-medium text-titanium-900" title="Automatically calculated from structured demo data. EHR integration pending.">{v}<span title="Automatically calculated from structured demo data. EHR integration pending."><Info className="w-3 h-3 text-blue-400 inline-block ml-1 cursor-help" /></span></dd>
                                       </div>
                                     ))}
                                   </dl>

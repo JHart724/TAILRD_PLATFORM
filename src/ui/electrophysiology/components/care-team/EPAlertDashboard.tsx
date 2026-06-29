@@ -185,7 +185,7 @@ const EPAlertDashboard: React.FC = () => {
  <div className="flex items-center justify-between mb-4">
  <h3 className="text-lg font-semibold text-titanium-900 flex items-center gap-2">
  <Bell className="w-5 h-5 text-red-500" />
- EP Real-Time Alerts
+ EP Alerts
  </h3>
  <div className="flex items-center gap-2">
  <div className="flex items-center gap-1">

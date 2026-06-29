@@ -282,7 +282,7 @@ const PADReportingSystem: React.FC = () => {
  type: 'limb-salvage', 
  label: 'Limb Salvage Performance', 
  icon: Shield, 
- description: 'Real-time limb preservation outcomes',
+ description: 'Limb preservation outcomes',
  color: 'text-teal-700'
  },
  { 
@@ -484,7 +484,7 @@ const PADReportingSystem: React.FC = () => {
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  {[
  { id: 'pad-screening-standard', name: 'PAD Screening Report', description: 'Comprehensive screening rates and diagnostic accuracy analysis' },
- { id: 'limb-salvage-comprehensive', name: 'Limb Salvage Analytics', description: 'Real-time limb preservation outcomes and success metrics' },
+ { id: 'limb-salvage-comprehensive', name: 'Limb Salvage Analytics', description: 'Limb preservation outcomes and success metrics' },
  { id: 'wound-care-tracking', name: 'Wound Care Outcomes', description: 'Healing progression tracking and intervention effectiveness' },
  { id: 'cli-comprehensive', name: 'CLI Monitoring Report', description: 'Critical limb ischemia detection and response time analytics' },
  { id: 'access-site-analysis', name: 'Access Site Optimization', description: 'Procedure access site complications and optimization strategies' },

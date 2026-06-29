@@ -98,7 +98,7 @@ const EPCareTeamView: React.FC = () => {
  { id: 'clinical-gaps', label: 'Clinical Gaps', icon: AlertTriangle, description: 'EP clinical gap detection dashboard' },
  { id: 'workflow', label: 'Workflow', icon: Target, description: 'EP workflow optimization' },
  { id: 'safety', label: 'Safety', icon: Shield, description: 'EP safety screening' },
- { id: 'hospital-alerts', label: 'Hospital Alerts', icon: Heart, description: 'Real-time EP hospital alerts' },
+ { id: 'hospital-alerts', label: 'Hospital Alerts', icon: Heart, description: 'EP hospital alerts' },
  { id: 'clinicaltools', label: 'Clinical Intelligence', icon: Stethoscope, description: 'Phenotype classification, risk calculators, and clinical decision support' },
  { id: 'team', label: 'Team', icon: UserCheck, description: 'EP team coordination' },
  { id: 'documentation', label: 'Documentation', icon: FileText, description: 'EP documentation' }

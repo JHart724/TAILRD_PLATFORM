@@ -816,7 +816,7 @@ const valvularTabs: StandardTabConfig[] = [
  id: 'clinical-gaps',
  label: 'Clinical Gaps',
  icon: Target,
- description: 'AI-driven clinical gap detection for valvular disease'
+ description: 'Guideline-based clinical gap detection for valvular disease'
   },
   {
  id: 'workflow',

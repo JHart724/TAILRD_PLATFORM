@@ -3303,7 +3303,7 @@ const PVClinicalGapDetectionDashboard: React.FC<PVClinicalGapDetectionDashboardP
         )}
         {!categoryFilter && (
           <p className="text-sm text-titanium-600 mb-4">
-            AI-driven detection of evidence-based PV therapy gaps and polyvascular cross-module opportunities.
+            Guideline-based detection of evidence-based PV therapy gaps and polyvascular cross-module opportunities.
           </p>
         )}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -3603,7 +3603,7 @@ const PVClinicalGapDetectionDashboard: React.FC<PVClinicalGapDetectionDashboardP
                                     {Object.entries(pt.keyValues).map(([k, v]) => (
                                       <div key={k} className="flex justify-between text-sm">
                                         <dt className="text-titanium-600">{k}:</dt>
-                                        <dd className="font-medium text-titanium-900" title="Automatically calculated from EHR-sourced data via EHR integration. No manual entry required.">{v}<span title="Automatically calculated from EHR-sourced data via EHR integration. No manual entry required."><Info className="w-3 h-3 text-blue-400 inline-block ml-1 cursor-help" /></span></dd>
+                                        <dd className="font-medium text-titanium-900" title="Automatically calculated from structured demo data. EHR integration pending.">{v}<span title="Automatically calculated from structured demo data. EHR integration pending."><Info className="w-3 h-3 text-blue-400 inline-block ml-1 cursor-help" /></span></dd>
                                       </div>
                                     ))}
                                   </dl>

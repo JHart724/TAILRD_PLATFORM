@@ -353,7 +353,7 @@ const EPAutomatedClinicalSupport: React.FC = () => {
  Automated Clinical Decision Support
  </h2>
  <p className="text-titanium-600">
- AI-powered risk assessment and treatment recommendations from automated EHR analysis
+ Guideline-based risk assessment and treatment recommendations from automated clinical analysis
  </p>
  </div>
  </div>

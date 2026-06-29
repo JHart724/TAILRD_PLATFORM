@@ -43,7 +43,7 @@ const ValvularServiceLineView: React.FC = () => {
       color: '#C4982A',
       colorBg: 'rgba(196, 152, 42, 0.10)',
       tabs: [
-        { id: 'clinical-gap-detection', label: 'Gap Detection', icon: AlertTriangle, description: 'AI-driven clinical gap detection' },
+        { id: 'clinical-gap-detection', label: 'Gap Detection', icon: AlertTriangle, description: 'Guideline-based clinical gap detection' },
       ],
     },
     {

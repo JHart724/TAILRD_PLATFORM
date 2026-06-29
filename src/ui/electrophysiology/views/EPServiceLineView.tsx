@@ -193,7 +193,7 @@ const EPServiceLineView: React.FC = () => {
       color: '#C4982A',
       colorBg: 'rgba(196, 152, 42, 0.10)',
       tabs: [
-        { id: 'gap-detection', label: 'Gap Detection', icon: Search, description: 'AI-driven EP clinical gap detection' },
+        { id: 'gap-detection', label: 'Gap Detection', icon: Search, description: 'Guideline-based EP clinical gap detection' },
       ],
     },
     {

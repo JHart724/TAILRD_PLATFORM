@@ -50,7 +50,7 @@ const StructuralServiceLineView: React.FC = () => {
       color: '#C4982A',
       colorBg: 'rgba(196, 152, 42, 0.10)',
       tabs: [
-        { id: 'gap-detection', label: 'Gap Detection', icon: Search, description: 'AI-driven clinical gap detection across structural heart gaps' },
+        { id: 'gap-detection', label: 'Gap Detection', icon: Search, description: 'Guideline-based clinical gap detection across structural heart gaps' },
       ],
     },
     {
