@@ -75,8 +75,14 @@ describe('Structural: Gap rule engine integrity', () => {
     // - net +4: GAP-VHD-103 LVESD-dilation 2nd arm (Class 2a, the AR COR fork), SH-024 (TR + RV dysfunction
     //   TAPSE/FAC), VHD-060 (IE large vegetation), VHD-100 (mech-valve-pregnancy anti-Xa). LVESD threading itself
     //   yielded 0 direct net-new (SH-014/SH-018 enhancements gate on already-threaded LVEF/EROA).
+    // Then 394 -> 378 by AUDIT-184 CAD-EXT (2026-06-29, this branch): 16 hollow/SPEC_ONLY CAD over-fire rules
+    // RETIRED (10 hollow PHQ/Z-code-discriminator, CAD-FFR stress_test slug-mismatch, CAD-BNP/CAD-CRP/CAD-LIVER
+    // operator-confirmed SPEC_ONLY, CAD-STRESS de-dup with CAD-ECHO, women-specific primary-prevention).
+    // NOT suppressed: CAD-CALCIUM-SCORE + CAD-CCTA (real single-file-threaded slugs), post-MI REHAB (dx-gated,
+    // AUDIT-173 accepted), the 8 KEPT monitoring rules, all med-absence/threshold rules. CAD-STATIN dose-branch
+    // was gated (no gaps.push removed). Pre-existing hollow-read defect surfaced by the Synthea proof dry-run.
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(394);
+    expect(count).toBe(378);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

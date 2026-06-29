@@ -132,3 +132,109 @@ export function getModuleColumns(moduleId: string): CSVColumn[] {
   };
   return [...COMMON_COLUMNS, ...(moduleMap[moduleId] || [])];
 }
+
+// ---------------------------------------------------------------------------
+// PHASE 2: multi-file normalized (Epic-extract shape) per-entity input schemas.
+//
+// The single-file wide schema above (COMMON_COLUMNS + module columns) is the
+// LEGACY denormalized upload path and is left intact. The schemas below describe
+// the PRODUCTION client contract: a SET of normalized entity files (one per
+// resource type), the shape Epic Clarity/Caboodle SQL extracts emit and the
+// shape the S3 Synthea csv/ export already matches.
+//
+// Each entity file declares the code system its CODE column carries. SNOMED code
+// columns are routed through snomedCrosswalk at parse time (Phase 1); ICD10
+// columns (a real Epic ICD-10-CM feed) bypass the crosswalk. Header names here
+// are the lowercased form the parser normalizes raw headers to (Synthea headers
+// have no spaces, so this is a plain lowercase of the verified header).
+// ---------------------------------------------------------------------------
+
+/** The code system carried by an entity file's CODE column (drives crosswalk routing). */
+export type EntityCodeSystem = 'SNOMED' | 'ICD10' | 'LOINC' | 'RxNorm' | 'CPT' | 'none';
+
+/** One normalized entity file's input contract. */
+export interface EntityFileSchema {
+  /** Stable entity key used by the multi-file parser (also the MultiFileInput field name). */
+  entity: 'patients' | 'conditions' | 'procedures' | 'observations' | 'medications' | 'encounters';
+  /** Canonical file name in the extract set (for structured error messages). */
+  fileName: string;
+  /** Headers that MUST be present (lowercased). Missing any -> structured error, never a silent default. */
+  requiredHeaders: string[];
+  /** The column that joins this row to a patient (lowercased). For patients.csv this is the primary key. */
+  patientIdColumn: string;
+  /** The column carrying the clinical code, if any (lowercased). */
+  codeColumn?: string;
+  /** The code system of codeColumn; SNOMED is crosswalked, ICD10 bypasses, LOINC/RxNorm pass through by slug/raw. */
+  codeSystem?: EntityCodeSystem;
+}
+
+export const PATIENTS_SCHEMA: EntityFileSchema = {
+  entity: 'patients',
+  fileName: 'patients.csv',
+  requiredHeaders: ['id', 'birthdate', 'gender'],
+  patientIdColumn: 'id',
+};
+
+export const CONDITIONS_SCHEMA: EntityFileSchema = {
+  entity: 'conditions',
+  fileName: 'conditions.csv',
+  requiredHeaders: ['patient', 'code', 'description'],
+  patientIdColumn: 'patient',
+  codeColumn: 'code',
+  codeSystem: 'SNOMED', // Synthea conditions are SNOMED CT -> crosswalk to ICD-10-CM (Phase 1)
+};
+
+export const PROCEDURES_SCHEMA: EntityFileSchema = {
+  entity: 'procedures',
+  fileName: 'procedures.csv',
+  requiredHeaders: ['patient', 'code', 'description'],
+  patientIdColumn: 'patient',
+  codeColumn: 'code',
+  codeSystem: 'SNOMED', // Synthea procedures are SNOMED; NO authoritative SNOMED->CPT map -> procedure gaps under-fire (expected)
+};
+
+export const OBSERVATIONS_SCHEMA: EntityFileSchema = {
+  entity: 'observations',
+  fileName: 'observations.csv',
+  requiredHeaders: ['patient', 'code', 'value'],
+  patientIdColumn: 'patient',
+  codeColumn: 'code',
+  codeSystem: 'LOINC', // mapped onto engine lab slugs via ECHO_LOINC_TO_SLUG (observationService bridge)
+};
+
+export const MEDICATIONS_SCHEMA: EntityFileSchema = {
+  entity: 'medications',
+  fileName: 'medications.csv',
+  requiredHeaders: ['patient', 'code', 'description'],
+  patientIdColumn: 'patient',
+  codeColumn: 'code',
+  codeSystem: 'RxNorm', // Synthea med CODE is RxNorm; the engine gates GDMT on RxNorm -> passes through raw
+};
+
+export const ENCOUNTERS_SCHEMA: EntityFileSchema = {
+  entity: 'encounters',
+  fileName: 'encounters.csv',
+  requiredHeaders: ['patient', 'start'],
+  patientIdColumn: 'patient',
+  codeColumn: 'code',
+  codeSystem: 'none', // encounter class code is not gated on; used only to source the latest encounter date
+};
+
+/** All entity schemas, keyed by entity. */
+export const ENTITY_SCHEMAS: Record<EntityFileSchema['entity'], EntityFileSchema> = {
+  patients: PATIENTS_SCHEMA,
+  conditions: CONDITIONS_SCHEMA,
+  procedures: PROCEDURES_SCHEMA,
+  observations: OBSERVATIONS_SCHEMA,
+  medications: MEDICATIONS_SCHEMA,
+  encounters: ENCOUNTERS_SCHEMA,
+};
+
+/**
+ * Entities REQUIRED for a meaningful gap-detection run. Absence of any of these is a structured
+ * error (no silent default): patients is the demographic spine, conditions gate diagnosis-based
+ * rules, observations carry the lab/echo values the rules threshold on. procedures, medications,
+ * and encounters ENRICH but are optional - their absence is recorded as a structured warning.
+ */
+export const REQUIRED_ENTITIES: ReadonlyArray<EntityFileSchema['entity']> = ['patients', 'conditions', 'observations'];
+export const OPTIONAL_ENTITIES: ReadonlyArray<EntityFileSchema['entity']> = ['procedures', 'medications', 'encounters'];

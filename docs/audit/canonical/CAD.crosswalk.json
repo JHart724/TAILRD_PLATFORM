@@ -208,20 +208,11 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "AUDIT-184 CAD-EXT 2026-06-29: CAD-CRP (hs-CRP residual-risk, Class 2b optional) RETIRED -> SPEC_ONLY; gaps.push removed.",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "CAD-CRP",
-        "evaluatorBodyLineRange": [
-          12789,
-          12815
-        ],
-        "evaluatorModule": "CAD",
-        "registryId": "gap-cad-crp",
-        "registryLine": 3403
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-CAD-010",
       "specLine": 602,
       "tier": "T3"
@@ -313,20 +304,11 @@
       "tier": "T3"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "AUDIT-184 CAD-EXT 2026-06-29: CAD-FAMILY-SCREEN (Z82.4/Z80.0 never threaded, hollow) RETIRED -> SPEC_ONLY; gaps.push removed.",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "CAD-FAMILY-SCREEN",
-        "evaluatorBodyLineRange": [
-          12723,
-          12752
-        ],
-        "evaluatorModule": "CAD",
-        "registryId": "gap-cad-family-screen",
-        "registryLine": 3379
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-CAD-060",
       "specLine": 612,
       "tier": "T3"
@@ -885,20 +867,11 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-177): DET_OK -> PARTIAL. CAD-FFR fires on stress_test===undefined for any CAD-without-recent-MI, with NO borderline-lesion (40-70% stenosis) signal - the spec target. Borderline-stenosis severity is not codable/threaded, so the existence-proxy cannot reach the spec target. Held at PARTIAL.",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "MANUAL OVERRIDE 2026-06-29 (AUDIT-184 CAD-EXT): PARTIAL -> SPEC_ONLY. CAD-FFR RETIRED - it read labValues[stress_test] but the only threaded slug is stress_test_months (name mismatch), so it was hollow (always-fire) in all paths; runtime gaps.push removed. Registry entry orphaned (left-main precedent).",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "CAD-FFR",
-        "evaluatorBodyLineRange": [
-          11618,
-          11645
-        ],
-        "evaluatorModule": "CAD",
-        "registryId": "gap-cad-ffr",
-        "registryLine": 1951
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-CAD-068",
       "specLine": 676,
       "tier": "T2"
@@ -1054,39 +1027,21 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "AUDIT-184 CAD-EXT 2026-06-29: CAD-DEPRESSION (PHQ-2/PHQ-9 never threaded, hollow) RETIRED -> SPEC_ONLY; gaps.push removed.",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "CAD-DEPRESSION",
-        "evaluatorBodyLineRange": [
-          12215,
-          12240
-        ],
-        "evaluatorModule": "CAD",
-        "registryId": "gap-cad-depression",
-        "registryLine": 2143
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-CAD-044",
       "specLine": 708,
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "AUDIT-184 CAD-EXT 2026-06-29: CAD-INFLUENZA (Z23 never in conditions, hollow) RETIRED -> SPEC_ONLY; gaps.push removed.",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "CAD-INFLUENZA",
-        "evaluatorBodyLineRange": [
-          12245,
-          12270
-        ],
-        "evaluatorModule": "CAD",
-        "registryId": "gap-cad-influenza",
-        "registryLine": 2155
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-CAD-045",
       "specLine": 709,
       "tier": "T2"
@@ -1111,39 +1066,21 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "AUDIT-184 CAD-EXT 2026-06-29: CAD-DRIVING (Z73.6/Z02.4 never threaded, hollow) RETIRED -> SPEC_ONLY; gaps.push removed.",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "CAD-DRIVING",
-        "evaluatorBodyLineRange": [
-          13049,
-          13074
-        ],
-        "evaluatorModule": "CAD",
-        "registryId": "gap-cad-driving",
-        "registryLine": 3499
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-CAD-079",
       "specLine": 711,
       "tier": "T3"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "AUDIT-184 CAD-EXT 2026-06-29: CAD-SEXUAL-HEALTH (Z70 never threaded, hollow) RETIRED -> SPEC_ONLY; gaps.push removed.",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "CAD-SEXUAL-HEALTH",
-        "evaluatorBodyLineRange": [
-          13020,
-          13045
-        ],
-        "evaluatorModule": "CAD",
-        "registryId": "gap-cad-sexual-health",
-        "registryLine": 3487
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-CAD-080",
       "specLine": 712,
       "tier": "T3"
@@ -1302,39 +1239,21 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "+ | Multiple registry ids cited: gap-cad-stress-test, gap-cad-nuclear-stress | auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "AUDIT-184 CAD-EXT 2026-06-29: CAD-STRESS-TEST (de-dup with CAD-ECHO via !lvef; stress_test arm hollow) RETIRED -> SPEC_ONLY; gaps.push removed.",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "CAD-STRESS-TEST",
-        "evaluatorBodyLineRange": [
-          11762,
-          11787
-        ],
-        "evaluatorModule": "CAD",
-        "registryId": "gap-cad-stress-test",
-        "registryLine": 1999
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-CAD-048",
       "specLine": 730,
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "PARTIAL_DETECTION",
+      "auditNotes": "AUDIT-184 CAD-EXT 2026-06-29: CAD-STRESS-TEST (second crosswalk row; de-dup with CAD-ECHO) RETIRED -> SPEC_ONLY; gaps.push removed.",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "CAD-STRESS-TEST",
-        "evaluatorBodyLineRange": [
-          11762,
-          11787
-        ],
-        "evaluatorModule": "CAD",
-        "registryId": "gap-cad-stress-test",
-        "registryLine": 1999
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-CAD-089",
       "specLine": 731,
       "tier": "T3"

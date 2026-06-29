@@ -6841,8 +6841,13 @@ export function evaluateGapRules(
   // (structured-data / fail-loud, sibling to the L-code data-quality pattern).
   if (hasCAD) {
     const statinStatus = highIntensityStatinStatus(meds);
-    if (statinStatus !== 'on_high_intensity' && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-      const doseUnknown = statinStatus === 'agent_dose_unknown';
+    // SPEC_ONLY note (AUDIT-184 CAD-EXT, operator decision 2026-06-29): suppress the dose-unknown branch. A dose-less feed
+    // (Synthea, and any source without structured dose) yields statinStatus 'agent_dose_unknown' for any
+    // statin-present patient -> firing a hard therapy gap on structurally-absent dose over-fired (100%). Per the
+    // ARNI data-present precedent (HF-30), require dose data: fire ONLY the genuine not-on-high-intensity gap,
+    // NOT the dose-unknown (data-quality) case. A real Epic feed carries dose and fires this correctly.
+    if (statinStatus !== 'on_high_intensity' && statinStatus !== 'agent_dose_unknown' && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+      const doseUnknown = statinStatus === 'agent_dose_unknown'; // now always false (dose-unknown gated out above); retained for body shape
       gaps.push({
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.CORONARY_INTERVENTION,
@@ -11612,37 +11617,11 @@ export function evaluateGapRules(
   // the left-main heart-team gap (CAD-071) are reclassified SPEC_ONLY/Path-B pending an angiographic/procedure
   // signal. The gap-cad-ivus registry entry is retained as a regOrphan for lineage.
 
-  // CAD-FFR: Fractional Flow Reserve for Intermediate Lesions
-  // Guideline: 2021 ACC/AHA/SCAI Revascularization Guideline (FAME, FAME 2), Class 1, LOE A
-  // CAD + borderline/intermediate stenosis proxy (CAD without MI = stable CAD)
-  if (hasCAD && !hasRecentMI && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    // Stable CAD without documented stress test as proxy for intermediate lesion needing FFR
-    const hasStressTestFFR = labValues['stress_test'] !== undefined;
-    if (!hasStressTestFFR) {
-      gaps.push({
-        type: TherapyGapType.SCREENING_DUE,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider physiologic assessment (FFR/iFR) for intermediate coronary lesions',
-        target: 'FFR/iFR or stress testing completed for functional assessment',
-        recommendations: {
-          action: 'Consider fractional flow reserve (FFR) or instantaneous wave-free ratio (iFR) for intermediate lesions per FAME/FAME 2',
-          guideline: '2021 ACC/AHA/SCAI Revascularization Guideline',
-          note: 'Recommended for review: FFR-guided PCI improves outcomes compared to angiography-guided alone',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Coronary artery disease (I25.*)',
-            'No recent MI (stable CAD proxy for intermediate lesions)',
-            'No stress test result available',
-          ],
-          guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (FAME, FAME 2)',
-          classOfRecommendation: 'Class 1',
-          levelOfEvidence: 'LOE A',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Recent revascularization', 'Non-candidate for PCI'],
-        },
-      });
-    }
-  }
+  // CAD-FFR RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT slug-mismatch, 2026-06-29). Gated on
+  // !labValues['stress_test'] - there is NO 'stress_test' threaded slug (the only related slug is the
+  // CSV-only 'stress_test_months', itself unthreaded by the FHIR/multi-file path), so it is always undefined
+  // -> fired for ~all stable (non-MI) CAD patients. No real threaded slug exists -> SPEC_ONLY. Suppressed;
+  // registry entry orphaned. (RETIRE precedent)
 
   // CAD-COLCHICINE: Anti-Inflammatory Therapy with Colchicine
   // Guideline: 2023 AHA/ACC Update: Colchicine for ASCVD (COLCOT, LoDoCo2), Class 2b, LOE A
@@ -11756,35 +11735,10 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-STRESS-TEST: Stress Test Follow-up
-  // Guideline: 2021 ACC/AHA Chest Pain Guideline, Class 1, LOE B
-  // CAD + no recent imaging (no LVEF and no stress test as proxy)
-  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasImagingProxy = labValues['lvef'] !== undefined || labValues['stress_test'] !== undefined;
-    if (!hasImagingProxy) {
-      gaps.push({
-        type: TherapyGapType.IMAGING_OVERDUE,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider periodic stress testing or imaging follow-up in CAD',
-        target: 'Stress test or functional imaging completed',
-        recommendations: {
-          action: 'Consider stress testing or cardiac imaging for CAD follow-up per 2021 ACC/AHA Chest Pain Guideline',
-          guideline: '2021 ACC/AHA Chest Pain Guideline',
-          note: 'Recommended for review: periodic functional assessment guides management in stable CAD',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Coronary artery disease (I25.*)',
-            'No LVEF or stress test result in recent observations',
-          ],
-          guidelineSource: '2021 ACC/AHA Guideline for the Evaluation and Diagnosis of Chest Pain',
-          classOfRecommendation: 'Class 1',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Recent revascularization with documented follow-up'],
-        },
-      });
-    }
-  }
+  // CAD-STRESS-TEST RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT de-dup, 2026-06-29). Gated on
+  // !(lvef|stress_test): the lvef arm DUPLICATES CAD-ECHO-CAD (which is KEPT and carries the real
+  // no-echo-in-12mo overdue gap via the 365d staleness window), and the stress_test arm is the same
+  // unthreaded-slug hollow as CAD-FFR. Redundant + partly hollow -> SPEC_ONLY. Suppressed; registry orphaned.
 
   // CAD-REVASCULARIZATION: Revascularization Assessment
   // Guideline: 2021 ACC/AHA/SCAI Revascularization Guideline (STICH, REVIVED-BCIS2), Class 2a, LOE B
@@ -12209,65 +12163,15 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-DEPRESSION: Depression Screening in CAD
-  // Guideline: 2008 AHA Science Advisory: Depression and CHD (reaffirmed 2021), Class 1, LOE B
-  // CAD + no depression screening (PHQ-2/PHQ-9 not in labs)
-  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasPHQ = labValues['phq2'] !== undefined || labValues['phq9'] !== undefined;
-    if (!hasPHQ) {
-      gaps.push({
-        type: TherapyGapType.SCREENING_DUE,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider depression screening for CAD patient',
-        target: 'PHQ-2 or PHQ-9 screening completed',
-        recommendations: {
-          action: 'Consider routine depression screening (PHQ-2/PHQ-9) for CAD patient per AHA Science Advisory',
-          guideline: '2008 AHA Science Advisory on Depression and CHD (reaffirmed 2021)',
-          note: 'Recommended for review: depression is common in CAD (15-20%) and independently associated with worse outcomes',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Coronary artery disease (I25.*)',
-            'No PHQ-2 or PHQ-9 screening result in observations',
-          ],
-          guidelineSource: '2008 AHA Science Advisory: Depression and CHD (reaffirmed 2021)',
-          classOfRecommendation: 'Class 1',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Active psychiatric treatment documented'],
-        },
-      });
-    }
-  }
+  // CAD-DEPRESSION RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on !hasPHQ (phq2/phq9), a
+  // depression-screening score NEVER threaded by any ingestion path (no LOINC map, no schema column) -> the
+  // negation was always true -> fired for 100% of CAD patients (zero discriminating signal). Suppressed
+  // (no runtime gaps.push) pending a real PHQ screening signal; registry entry orphaned for canonical
+  // lineage. Pre-existing hollow-read defect surfaced by the Synthea proof dry-run. (left-main RETIRE precedent)
 
-  // CAD-INFLUENZA: Influenza Vaccination in CAD
-  // Guideline: 2019 ACC/AHA Primary Prevention Guideline, Class 1, LOE B
-  // CAD + no flu vaccine documented (Z23 = encounter for immunization)
-  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasVaccine = dxCodes.some(c => c.startsWith('Z23'));
-    if (!hasVaccine) {
-      gaps.push({
-        type: TherapyGapType.MONITORING_OVERDUE,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider annual influenza vaccination for CAD patient',
-        target: 'Influenza vaccination administered or documented',
-        recommendations: {
-          action: 'Consider annual influenza vaccination for cardiovascular risk reduction per 2019 ACC/AHA Guideline',
-          guideline: '2019 ACC/AHA Primary Prevention Guideline',
-          note: 'Recommended for review: influenza vaccination reduces CV events and mortality in CAD patients',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Coronary artery disease (I25.*)',
-            'No immunization encounter (Z23) documented',
-          ],
-          guidelineSource: '2019 ACC/AHA Guideline on Primary Prevention of CVD',
-          classOfRecommendation: 'Class 1',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Egg allergy (severe)', 'Prior severe vaccine reaction'],
-        },
-      });
-    }
-  }
+  // CAD-INFLUENZA RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on !Z23 (immunization
+  // encounter). Immunizations are not Conditions, so Z23 never reaches dxCodes -> always true -> fired 100%
+  // of CAD patients. Suppressed pending a real immunization signal; registry entry orphaned. (RETIRE precedent)
 
 
   // ============================================================
@@ -12368,34 +12272,9 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-BNP-CAD: BNP/NT-proBNP Monitoring in CAD
-  // Guideline: 2022 AHA/ACC/HFSA HF Guideline, Class 2a, LOE B
-  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasBNPcad = labValues['bnp'] !== undefined || labValues['nt_probnp'] !== undefined;
-    if (!hasBNPcad) {
-      gaps.push({
-        type: TherapyGapType.MONITORING_OVERDUE,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider BNP/NT-proBNP measurement for CAD risk stratification',
-        target: 'Natriuretic peptide level documented',
-        recommendations: {
-          action: 'Consider BNP or NT-proBNP to assess for subclinical HF and guide prognosis per 2022 AHA/ACC/HFSA Guideline',
-          guideline: '2022 AHA/ACC/HFSA HF Guideline',
-          note: 'Recommended for review: natriuretic peptides help identify CAD patients at risk for HF development',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Coronary artery disease (I25.*)',
-            'No BNP or NT-proBNP in observations',
-          ],
-          guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
-          classOfRecommendation: 'Class 2a',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Known HF with recent BNP monitoring'],
-        },
-      });
-    }
-  }
+  // CAD-BNP-CAD RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, operator decision 2026-06-29). Routine BNP/NT-proBNP
+  // in CAD WITHOUT heart failure is not a guideline care gap (Class 2a, subclinical-HF screen); on absence it
+  // fired for ~all CAD patients. Suppressed (operator-confirmed); registry entry orphaned. (RETIRE precedent)
 
   // CAD-RENAL-MONITOR: Renal Function Monitoring on ACEi in CAD
   // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 1, LOE B
@@ -12628,131 +12507,28 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-ACTIVITY: Physical Activity Counseling in CAD
-  // Guideline: 2019 ACC/AHA Primary Prevention Guideline, Class 1, LOE A
-  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasRehabCodeAct = dxCodes.some(c => c.startsWith('Z50.0') || c.startsWith('Z71.3'));
-    if (!hasRehabCodeAct) {
-      gaps.push({
-        type: TherapyGapType.REFERRAL_NEEDED,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider physical activity counseling for CAD patient',
-        target: 'Physical activity counseling or cardiac rehab referral documented',
-        recommendations: {
-          action: 'Consider structured physical activity counseling (150 min/wk moderate or 75 min/wk vigorous)',
-          guideline: '2019 ACC/AHA Guideline on the Primary Prevention of Cardiovascular Disease',
-          note: 'Recommended for review: regular physical activity reduces all-cause and CV mortality in CAD',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Coronary artery disease (I25.*)',
-            'No physical activity counseling or cardiac rehab encounter documented',
-          ],
-          guidelineSource: '2019 ACC/AHA Guideline on the Primary Prevention of Cardiovascular Disease',
-          classOfRecommendation: 'Class 1',
-          levelOfEvidence: 'LOE A',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Severe mobility limitation', 'Unstable angina'],
-        },
-      });
-    }
-  }
+  // CAD-ACTIVITY RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on !(Z50.0|Z71.3) counseling
+  // encounter codes, never present in dxCodes -> always true -> fired 100% of CAD patients. Suppressed
+  // pending a real counseling signal; registry entry orphaned. (RETIRE precedent)
 
-  // CAD-DIET: Dietary Counseling in CAD with Obesity
-  // Guideline: 2019 ACC/AHA Primary Prevention Guideline, Class 1, LOE A
-  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasObesityDiet = dxCodes.some(c => c.startsWith('E66'));
-    const hasDietCounsel = dxCodes.some(c => c.startsWith('Z71.3'));
-    if (hasObesityDiet && !hasDietCounsel) {
-      gaps.push({
-        type: TherapyGapType.REFERRAL_NEEDED,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider dietary counseling for CAD patient with obesity',
-        target: 'Dietary counseling or nutrition referral documented',
-        recommendations: {
-          action: 'Consider referral for dietary counseling emphasizing Mediterranean or DASH diet pattern',
-          guideline: '2019 ACC/AHA Guideline on the Primary Prevention of Cardiovascular Disease',
-          note: 'Recommended for review: dietary intervention reduces CV events in CAD with obesity',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Coronary artery disease (I25.*)',
-            'Obesity (E66.*)',
-            'No dietary counseling (Z71.3) documented',
-          ],
-          guidelineSource: '2019 ACC/AHA Guideline on the Primary Prevention of Cardiovascular Disease',
-          classOfRecommendation: 'Class 1',
-          levelOfEvidence: 'LOE A',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Active eating disorder'],
-        },
-      });
-    }
-  }
+  // CAD-DIET RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on obesity (E66, real) AND !Z71.3
+  // dietary-counseling code, which is never threaded -> fired for 100% of obese CAD patients. Suppressed
+  // pending a real counseling signal; registry entry orphaned. (RETIRE precedent)
 
-  // CAD-PSYCHOSOCIAL: Psychosocial Assessment in Elderly CAD
-  // Guideline: 2019 ACC/AHA Primary Prevention Guideline, Class 2a, LOE B
-  if (hasCAD && age > 65 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasPsychAssessCad = dxCodes.some(c => c.startsWith('Z13.3') || c.startsWith('Z04.6'));
-    if (!hasPsychAssessCad) {
-      gaps.push({
-        type: TherapyGapType.SCREENING_DUE,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider psychosocial assessment for elderly CAD patient',
-        target: 'Psychosocial assessment documented',
-        recommendations: {
-          action: 'Consider psychosocial assessment including depression, anxiety, social isolation, and cognitive screening',
-          guideline: '2019 ACC/AHA Guideline on the Primary Prevention of Cardiovascular Disease',
-          note: 'Recommended for review: psychosocial factors independently predict adverse CV outcomes in elderly',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Coronary artery disease (I25.*)',
-            `Age: ${age} (>65)`,
-            'No psychosocial assessment documented',
-          ],
-          guidelineSource: '2019 ACC/AHA Guideline on the Primary Prevention of Cardiovascular Disease',
-          classOfRecommendation: 'Class 2a',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Active psychiatric treatment documented'],
-        },
-      });
-    }
-  }
+  // CAD-PSYCHOSOCIAL RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on age>65 (real) AND
+  // !(Z13.3|Z04.6) screening-encounter codes, never threaded -> fired for 100% of elderly CAD patients.
+  // Suppressed pending a real assessment signal; registry entry orphaned. (RETIRE precedent)
 
-  // CAD-FAMILY-SCREEN: Premature CAD Family Screening
-  // Guideline: 2018 ACC/AHA Cholesterol Guideline, Class 2a, LOE B
-  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const prematureCADfam = (gender === 'MALE' && age < 55) || (gender === 'FEMALE' && age < 65);
-    if (prematureCADfam) {
-      const hasFamilyScreenFam = dxCodes.some(c => c.startsWith('Z82.4') || c.startsWith('Z80.0'));
-      if (!hasFamilyScreenFam) {
-        gaps.push({
-          type: TherapyGapType.SCREENING_DUE,
-          module: ModuleType.CORONARY_INTERVENTION,
-          status: 'Consider family screening for premature CAD',
-          target: 'Family history screening and cascade lipid testing documented',
-          recommendations: {
-            action: 'Consider familial hypercholesterolemia cascade screening for first-degree relatives',
-            guideline: '2018 ACC/AHA Guideline on the Management of Blood Cholesterol',
-            note: 'Recommended for review: premature CAD warrants family screening for FH and early CV prevention',
-          },
-          evidence: {
-            triggerCriteria: [
-              'Coronary artery disease (I25.*)',
-              `Premature onset: age ${age}, gender ${gender ?? 'unknown'}`,
-              'No family screening documented (Z82.4/Z80.0)',
-            ],
-            guidelineSource: '2018 ACC/AHA Guideline on the Management of Blood Cholesterol',
-            classOfRecommendation: 'Class 2a',
-            levelOfEvidence: 'LOE B',
-            exclusions: ['Hospice/palliative care (Z51.5)', 'Known FH already documented'],
-          },
-        });
-      }
-    }
-  }
+  // CAD-FAMILY-SCREEN RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on premature age (real)
+  // AND !(Z82.4|Z80.0) family-history codes, never threaded -> fired for 100% of premature-CAD patients.
+  // Suppressed pending a real family-history signal; registry entry orphaned. (RETIRE precedent)
 
   // CAD-CALCIUM-SCORE: Coronary Artery Calcium Score for Intermediate Risk
   // Guideline: 2019 ACC/AHA Primary Prevention Guideline, Class 2a, LOE B-NR
+  // NOTE (AUDIT-184 CAD-EXT, 2026-06-29): KEPT firing. cac_score IS a real threaded slug (csvSchema single-file
+  // column; AUDIT-184-closed) so this rule discriminates in the single-file path. It over-fires ONLY in the
+  // multi-file/FHIR path because cac_score is a CSV-only slug not threaded there - a known data-threading
+  // limitation (lvesd/tapse class), NOT a rule defect. Not suppressed.
   const hasHypertensionCAC = dxCodes.some(c => c.startsWith('I10') || c.startsWith('I11'));
   if (!hasCAD && (hasDiabetes || hasHypertensionCAC) && age >= 40 && age <= 75 && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasCACscore = labValues['cac_score'] !== undefined;
@@ -12783,102 +12559,23 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-CRP: CRP Monitoring in CAD on Statin
-  // Guideline: 2018 ACC/AHA Cholesterol Guideline (CANTOS Trial), Class 2b, LOE B-R
-  const STATIN_CODES_CRP_NEW = ['83367', '301542', '36567', '42463', '861634'];
-  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const onStatinCRPnew = medCodes.some(c => STATIN_CODES_CRP_NEW.includes(c));
-    if (onStatinCRPnew && labValues['crp'] === undefined && labValues['hs_crp'] === undefined) {
-      gaps.push({
-        type: TherapyGapType.MONITORING_OVERDUE,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider hs-CRP measurement for residual inflammatory risk in CAD on statin',
-        target: 'hs-CRP level documented',
-        recommendations: {
-          action: 'Consider hs-CRP to assess residual inflammatory risk per CANTOS trial evidence',
-          guideline: '2018 ACC/AHA Guideline on the Management of Blood Cholesterol',
-          note: 'Recommended for review: elevated hs-CRP on statin may identify patients benefiting from anti-inflammatory therapy',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Coronary artery disease (I25.*)',
-            'On statin therapy',
-            'No CRP or hs-CRP in observations',
-          ],
-          guidelineSource: '2018 ACC/AHA Guideline on the Management of Blood Cholesterol (CANTOS Trial)',
-          classOfRecommendation: 'Class 2b',
-          levelOfEvidence: 'LOE B-R',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Active infection', 'Autoimmune disease'],
-        },
-      });
-    }
-  }
+  // CAD-CRP RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, operator decision 2026-06-29). hs-CRP residual-risk
+  // measurement is a Class 2b OPTIONAL screen, not a universal care gap; on absence of crp/hs_crp it fired
+  // for ~all on-statin CAD patients. Suppressed (operator-confirmed); registry entry orphaned. (RETIRE precedent)
 
-  // CAD-ADVANCE-DIR: Advance Directive Discussion in Severe CAD
-  // Guideline: 2022 AHA/ACC/HFSA HF Guideline, Class 1, LOE C
-  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const lvefAdvDir = labValues['lvef'];
-    if (lvefAdvDir !== undefined && lvefAdvDir < 30) {
-      const hasAdvDirDoc = dxCodes.some(c => c.startsWith('Z66') || c.startsWith('Z76.89'));
-      if (!hasAdvDirDoc) {
-        gaps.push({
-          type: TherapyGapType.REFERRAL_NEEDED,
-          module: ModuleType.CORONARY_INTERVENTION,
-          status: 'Consider advance directive discussion for CAD patient with severe LV dysfunction',
-          target: 'Advance directive or goals-of-care discussion documented',
-          recommendations: {
-            action: 'Consider advance directive and goals-of-care discussion per AHA/ACC palliative care guidance',
-            guideline: '2022 AHA/ACC/HFSA HF Guideline; AHA Palliative Care Scientific Statement',
-            note: 'Recommended for review: patients with LVEF<30% benefit from early advance care planning',
-          },
-          evidence: {
-            triggerCriteria: [
-              'Coronary artery disease (I25.*)',
-              `LVEF: ${lvefAdvDir}% (<30%)`,
-              'No advance directive (Z66) documented',
-            ],
-            guidelineSource: '2022 AHA/ACC/HFSA HF Guideline; AHA Palliative Care Scientific Statement',
-            classOfRecommendation: 'Class 1',
-            levelOfEvidence: 'LOE C',
-            exclusions: ['Hospice/palliative care already active (Z51.5)', 'Advance directive already documented'],
-          },
-        });
-      }
-    }
-  }
+  // CAD-ADVANCE-DIR RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on lvef<30 (real) AND
+  // !(Z66|Z76.89) advance-directive codes, never threaded -> always true in the lvef<30 cohort. Suppressed
+  // pending a real advance-directive signal; registry entry orphaned. (RETIRE precedent)
 
-  // CAD-PALLIATIVE: Palliative Care Referral in Refractory CAD
-  // Guideline: 2022 AHA/ACC/HFSA HF Guideline, Class 1, LOE B
-  if (hasCAD && age > 80 && hasAnginaNitro && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasPalliativeRefCad = dxCodes.some(c => c.startsWith('Z51.5') || c.startsWith('Z51.89'));
-    if (!hasPalliativeRefCad) {
-      gaps.push({
-        type: TherapyGapType.REFERRAL_NEEDED,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider palliative care referral for elderly patient with refractory angina',
-        target: 'Palliative care consultation documented',
-        recommendations: {
-          action: 'Consider palliative care referral for symptom management and quality of life in refractory angina',
-          guideline: '2022 AHA/ACC/HFSA HF Guideline; AHA Palliative Care Scientific Statement',
-          note: 'Recommended for review: palliative care improves symptom burden and quality of life in refractory CV disease',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Coronary artery disease (I25.*)',
-            `Age: ${age} (>80)`,
-            'Angina pectoris (I20.*) present',
-          ],
-          guidelineSource: '2022 AHA/ACC/HFSA HF Guideline; AHA Palliative Care Scientific Statement',
-          classOfRecommendation: 'Class 1',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Already receiving palliative care (Z51.5)'],
-        },
-      });
-    }
-  }
+  // CAD-PALLIATIVE RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on age>80+angina (real) AND
+  // !(Z51.5|Z51.89) palliative codes, never threaded -> always true in that narrow cohort. Suppressed pending
+  // a real palliative-referral signal; registry entry orphaned. (RETIRE precedent)
 
   // CAD-CARDIAC-CT: Cardiac CT Angiography for Stable Chest Pain
   // Guideline: 2022 ACC/AHA Chest Pain Guideline (SCOT-HEART, PROMISE), Class 1, LOE A
+  // NOTE (AUDIT-184 CAD-EXT, 2026-06-29): KEPT firing. ccta IS a real threaded slug (csvSchema single-file
+  // column; AUDIT-184-closed) so this rule discriminates in the single-file path. Over-fires ONLY in the
+  // multi-file/FHIR path (ccta CSV-only, not threaded there) - a known data-threading limitation, NOT a defect.
   const hasStableChestPainCT = dxCodes.some(c => c === 'I20.9');
   if (hasStableChestPainCT && !hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
     const hasCCTAct = labValues['ccta'] !== undefined;
@@ -13015,93 +12712,18 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-SEXUAL-HEALTH: Sexual Health Counseling Post-MI
-  // Guideline: 2012 AHA/ACC Scientific Statement on Sexual Activity and CVD, Class 2a, LOE B
-  if (hasRecentMI && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasSexCounsel = dxCodes.some(c => c.startsWith('Z70'));
-    if (!hasSexCounsel) {
-      gaps.push({
-        type: TherapyGapType.SCREENING_DUE,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider sexual health counseling for post-MI patient',
-        target: 'Sexual activity counseling documented',
-        recommendations: {
-          action: 'Consider sexual health counseling per 2012 AHA/ACC Scientific Statement on Sexual Activity and CVD',
-          guideline: '2012 AHA/ACC Scientific Statement on Sexual Activity and Cardiovascular Disease',
-          note: 'Recommended for review: patients can typically resume sexual activity 1 week post-MI if stable',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Acute MI (I21.*)',
-            'No sexual health counseling (Z70) documented',
-          ],
-          guidelineSource: '2012 AHA/ACC Scientific Statement on Sexual Activity and Cardiovascular Disease',
-          classOfRecommendation: 'Class 2a',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Unstable angina', 'Uncompensated HF'],
-        },
-      });
-    }
-  }
+  // CAD-SEXUAL-HEALTH RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on hasRecentMI (real) AND
+  // !Z70 sexual-counseling code, never threaded -> always true -> fired for 100% of post-MI patients.
+  // Suppressed pending a real counseling signal; registry entry orphaned. (RETIRE precedent)
 
-  // CAD-DRIVING: Post-MI Driving Restriction Documentation
-  // Guideline: 2012 ACCF/AHA Stable Ischemic Heart Disease Guideline, Class 1, LOE C
-  if (hasRecentMI && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasDrivingDocMI = dxCodes.some(c => c.startsWith('Z73.6') || c.startsWith('Z02.4'));
-    if (!hasDrivingDocMI) {
-      gaps.push({
-        type: TherapyGapType.SCREENING_DUE,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider documenting driving restrictions for post-MI patient',
-        target: 'Post-MI driving restriction counseling documented',
-        recommendations: {
-          action: 'Consider documenting driving restriction counseling (typically 1-2 weeks private, 4-6 weeks commercial post-MI)',
-          guideline: '2012 ACCF/AHA Stable Ischemic Heart Disease Guideline',
-          note: 'Recommended for review: post-MI patients should be counseled on temporary driving restrictions',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Acute MI (I21.*)',
-            'No driving restriction documentation (Z73.6/Z02.4)',
-          ],
-          guidelineSource: '2012 ACCF/AHA/ACP/AATS/PCNA/SCAI/STS Guideline for Stable Ischemic Heart Disease',
-          classOfRecommendation: 'Class 1',
-          levelOfEvidence: 'LOE C',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Non-driver'],
-        },
-      });
-    }
-  }
+  // CAD-DRIVING RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on hasRecentMI (real) AND
+  // !(Z73.6|Z02.4) driving-counseling codes, never threaded -> fired for 100% of post-MI patients.
+  // Suppressed pending a real counseling signal; registry entry orphaned. (RETIRE precedent)
 
-  // CAD-LIVER-STATIN: Liver Function Monitoring on Statin in CAD
-  // Guideline: 2018 ACC/AHA Cholesterol Guideline, Class 1, LOE B
-  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const onStatinLiverNew = medCodes.some(c => STATIN_CODES_CRP_NEW.includes(c));
-    if (onStatinLiverNew && labValues['alt'] === undefined && labValues['ast'] === undefined) {
-      gaps.push({
-        type: TherapyGapType.MONITORING_OVERDUE,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider liver function monitoring for CAD patient on statin therapy',
-        target: 'ALT/AST levels documented',
-        recommendations: {
-          action: 'Consider hepatic transaminase panel (ALT/AST) for statin safety monitoring per 2018 ACC/AHA Guideline',
-          guideline: '2018 ACC/AHA Guideline on the Management of Blood Cholesterol',
-          note: 'Recommended for review: baseline and as-needed liver function testing recommended with statin therapy',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Coronary artery disease (I25.*)',
-            'On statin therapy',
-            'No ALT or AST in observations',
-          ],
-          guidelineSource: '2018 ACC/AHA Guideline on the Management of Blood Cholesterol',
-          classOfRecommendation: 'Class 1',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Known hepatic disease with monitoring plan'],
-        },
-      });
-    }
-  }
+  // CAD-LIVER-STATIN RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, operator decision 2026-06-29). The 2018 ACC/AHA
+  // Cholesterol Guideline DEPRECATED routine periodic LFT monitoring on statins (baseline only); firing a
+  // "no ALT/AST" gap for every on-statin CAD patient contradicts the guideline. Suppressed (operator-confirmed);
+  // registry entry orphaned. Also removes the last use of STATIN_CODES_CRP_NEW (dropped with CAD-CRP). (RETIRE precedent)
   // ============================================================
   // FINAL BATCH: 26 CORONARY RULES (CAD-ASPIRIN-PRIMARY through CAD-SLEEP-APNEA-CAD)
   // ============================================================
@@ -13731,38 +13353,11 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-WOMEN-SPECIFIC: Women-Specific CAD Screening
-  // Guideline: 2019 ACC/AHA Primary Prevention + AHA CVD in Women Statement, Class 1, LOE B
-  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const isFemaleOver50 = gender === 'FEMALE' && age > 50;
-    const hasRiskFactors = dxCodes.some(c =>
-      c.startsWith('I10') || c.startsWith('E78') || c.startsWith('E11') || c.startsWith('F17')
-    );
-    if (isFemaleOver50 && hasRiskFactors && !hasCAD) {
-      gaps.push({
-        type: TherapyGapType.MONITORING_OVERDUE,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider women-specific CAD risk assessment for female patient with cardiovascular risk factors',
-        target: 'Sex-specific CVD risk assessment and screening reviewed',
-        recommendations: {
-          action: 'Consider women-specific CAD risk assessment including coronary artery calcium scoring per AHA CVD in Women Statement',
-          guideline: '2019 ACC/AHA Primary Prevention Guideline; AHA Cardiovascular Disease in Women Scientific Statement',
-          note: 'Recommended for review: women have unique CAD presentations and risk factors including preeclampsia history and autoimmune conditions',
-        },
-        evidence: {
-          triggerCriteria: [
-            `Female patient, age ${age} (>50)`,
-            'Cardiovascular risk factors (HTN, dyslipidemia, DM, or smoking)',
-            'No established CAD diagnosis',
-          ],
-          guidelineSource: '2019 ACC/AHA Primary Prevention Guideline; AHA Cardiovascular Disease in Women Scientific Statement',
-          classOfRecommendation: 'Class 1',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Known CAD on treatment', 'Recent comprehensive CVD screening'],
-        },
-      });
-    }
-  }
+  // CAD-WOMEN-SPECIFIC RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, operator decision 2026-06-29). This is a
+  // PRIMARY-PREVENTION screening rule (gates !hasCAD, fires on female>50 + a real risk-factor dx) mis-filed in
+  // CORONARY_INTERVENTION, and it has NO already-assessed completion guard -> fires for the whole qualifying
+  // demographic. Suppressed from the CAD count (operator-confirmed); registry entry orphaned. DEFERRED FUTURE
+  // WORK (do NOT build now): re-module into a primary-prevention surface WITH a completion guard. (RETIRE precedent)
 
   // CAD-YOUNG-MI: Young MI Workup
   // Guideline: 2022 ACC/AHA Chest Pain Guideline, Class 1, LOE C-LD
