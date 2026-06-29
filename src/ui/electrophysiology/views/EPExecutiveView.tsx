@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useModuleDashboard } from '../../../hooks/useModuleDashboard';
 import { DollarSign, Users, TrendingUp, Target, ChevronRight, Zap, Search } from 'lucide-react';
-import BaseExecutiveView from '../../../components/shared/BaseExecutiveView';
-import KPICard from '../../../components/shared/KPICard';
 import ExportButton from '../../../components/shared/ExportButton';
 import ZipHeatMap from '../../../components/shared/ZipHeatMap';
 import { ExportData } from '../../../utils/dataExport';

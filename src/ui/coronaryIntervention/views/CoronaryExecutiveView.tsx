@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useModuleDashboard } from '../../../hooks/useModuleDashboard';
 import { DollarSign, Users, TrendingUp, Target, Activity, Heart, Zap, Search } from 'lucide-react';
-import BaseExecutiveView from '../../../components/shared/BaseExecutiveView';
+import SharedDRGPerformance from '../../../components/shared/SharedDRGPerformance';
 import { coronaryInterventionConfig } from '../config/executiveConfig';
 import ExportButton from '../../../components/shared/ExportButton';
 import ZipHeatMap from '../../../components/shared/ZipHeatMap';
@@ -404,8 +404,8 @@ const CoronaryExecutiveView: React.FC = () => {
  </div>
  </div>
 
- {/* Base Executive View - DRG Performance */}
- <BaseExecutiveView config={coronaryInterventionConfig} />
+ {/* DRG Performance + CMI (de-duplicated: BaseExecutiveView's duplicate KPI row + min-h-screen page wrapper dropped; AUDIT-302 Layer 2 PR 1) */}
+ <SharedDRGPerformance config={coronaryInterventionConfig} />
 
  {/* Month Detail Modal */}
  {selectedMonth && (
