@@ -50,8 +50,24 @@ const CSV_PREFIX = process.env.SYNTHEA_CSV_PREFIX || 'synthea/nyc-population-202
 const PROOF_HOSPITAL_ID = process.env.PROOF_HOSPITAL_ID || 'demo-synthea-proof';
 const WRITE_BATCH = parseInt(process.env.PROOF_WRITE_BATCH || '500', 10);
 const EXECUTE = process.argv.includes('--execute'); // mutating path; default = dry-run
+// --sample=N: representative fast preview. Reads the first N patients from patients.csv and (because Synthea
+// CSVs are patient-GROUPED) early-stops each child file once it has passed that patient region, so only ~N/total
+// of each file is streamed. 0 = full population. Sample mode is DRY-RUN-only (never writes); the projected
+// per-module gap distribution is reported for the sample and extrapolated x(total/N).
+const SAMPLE = parseInt((process.argv.find(a => a.startsWith('--sample='))?.split('=')[1]) || '0', 10);
+const SAMPLE_MARGIN_ROWS = 5000; // after the contiguous sample region, stop a child file once this many consecutive non-sample rows pass
+const sampleSet = new Set<string>(); // sample patient ids (populated in ingestPatients when SAMPLE > 0)
 
 const KEY = (name: string): string => `${CSV_PREFIX}${name}`;
+
+/** Per-child-file early-stop state for sample mode (patient-grouped files -> sample rows are contiguous at the front). */
+interface SampleGate { seen: number; miss: number; }
+function sampleDecision(pid: string, g: SampleGate): 'use' | 'skip' | 'stop' {
+  if (SAMPLE <= 0) return 'use';
+  if (sampleSet.has(pid)) { g.seen++; g.miss = 0; return 'use'; }
+  if (g.seen > 0 && ++g.miss > SAMPLE_MARGIN_ROWS) return 'stop';
+  return 'skip';
+}
 
 // ---------------------------------------------------------------------------
 // Bounded per-patient accumulators (keyed by Synthea patient id)
@@ -72,11 +88,12 @@ let procedureCodesUntranslated = 0;
 // ---------------------------------------------------------------------------
 async function forEachRow(
   name: string,
-  onRow: (cells: string[], idx: (header: string) => number) => void,
+  onRow: (cells: string[], idx: (header: string) => number) => void | boolean, // return false to early-stop
 ): Promise<number> {
   const resp = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: KEY(name) }));
   if (!resp.Body) throw new Error(`Empty S3 body for ${KEY(name)}`);
-  const rl = readline.createInterface({ input: resp.Body as Readable, crlfDelay: Infinity });
+  const body = resp.Body as Readable;
+  const rl = readline.createInterface({ input: body, crlfDelay: Infinity });
   let idxOf: ((header: string) => number) | null = null;
   let rows = 0;
   for await (const line of rl) {
@@ -88,8 +105,9 @@ async function forEachRow(
       idxOf = (h: string): number => (h in headerMap ? headerMap[h] : -1);
       continue;
     }
-    onRow(cells, idxOf);
+    const cont = onRow(cells, idxOf);
     rows++;
+    if (cont === false) { rl.close(); body.destroy(); break; } // early-stop (sample mode): close S3 stream now
   }
   return rows;
 }
@@ -111,21 +129,27 @@ function ageFromBirthdate(birthdate: string): number | null {
 async function ingestPatients(): Promise<string[][]> {
   const phiSample: string[][] = []; // projected (Id, BIRTHDATE, GENDER) only - never SSN/ADDRESS
   const n = await forEachRow('patients.csv', (cells, idx) => {
+    if (SAMPLE > 0 && spine.size >= SAMPLE) return false; // sample mode: stop after first N patients
     const id = (cells[idx('id')] || '').trim();
     if (!id) return;
     const birthdate = (cells[idx('birthdate')] || '').trim();
     const gender = (cells[idx('gender')] || '').trim();
     spine.set(id, { age: ageFromBirthdate(birthdate), sex: gender || null });
+    if (SAMPLE > 0) sampleSet.add(id);
     if (phiSample.length < 100) phiSample.push([id, birthdate, gender]);
   });
-  logger.info('[proof] patients streamed', { rows: n, spine: spine.size });
+  logger.info('[proof] patients streamed', { rows: n, spine: spine.size, sample: SAMPLE > 0 ? SAMPLE : 'full' });
   return phiSample;
 }
 
 async function ingestConditions(): Promise<void> {
   const condSys: CodeSystem = 'SNOMED';
+  const gate: SampleGate = { seen: 0, miss: 0 };
   await forEachRow('conditions.csv', (cells, idx) => {
     const pid = (cells[idx('patient')] || '').trim();
+    const d = sampleDecision(pid, gate);
+    if (d === 'stop') return false;
+    if (d === 'skip') return;
     const code = (cells[idx('code')] || '').trim();
     if (!pid || !code) return;
     const res = resolveConditionIcd10(code, condSys);
@@ -140,11 +164,15 @@ async function ingestConditions(): Promise<void> {
 
 async function ingestObservations(): Promise<void> {
   // 4.7GB - the hot path. Keep ONLY CV-relevant LOINCs (ECHO_LOINC_TO_SLUG keys); drop the rest unbuffered.
+  const gate: SampleGate = { seen: 0, miss: 0 };
   await forEachRow('observations.csv', (cells, idx) => {
+    const pid = (cells[idx('patient')] || '').trim();
+    const d = sampleDecision(pid, gate);
+    if (d === 'stop') return false;
+    if (d === 'skip') return;
     const loinc = (cells[idx('code')] || '').trim();
     const slug = ECHO_LOINC_TO_SLUG[loinc];
     if (!slug) return;
-    const pid = (cells[idx('patient')] || '').trim();
     if (!pid) return;
     const value = parseFloat((cells[idx('value')] || '').trim());
     if (isNaN(value)) return;
@@ -158,8 +186,12 @@ async function ingestObservations(): Promise<void> {
 }
 
 async function ingestMedications(): Promise<void> {
+  const gate: SampleGate = { seen: 0, miss: 0 };
   await forEachRow('medications.csv', (cells, idx) => {
     const pid = (cells[idx('patient')] || '').trim();
+    const d = sampleDecision(pid, gate);
+    if (d === 'stop') return false;
+    if (d === 'skip') return;
     const code = (cells[idx('code')] || '').trim();
     if (!pid || !code) return;
     let byRx = medsByPatient.get(pid);
@@ -177,7 +209,12 @@ async function ingestMedications(): Promise<void> {
 
 async function ingestProcedures(): Promise<void> {
   // SNOMED procedures: no authoritative SNOMED->CPT map -> count only (expected under-fire, not persisted).
+  const gate: SampleGate = { seen: 0, miss: 0 };
   await forEachRow('procedures.csv', (cells, idx) => {
+    const pid = (cells[idx('patient')] || '').trim();
+    const d = sampleDecision(pid, gate);
+    if (d === 'stop') return false;
+    if (d === 'skip') return;
     const code = (cells[idx('code')] || '').trim();
     if (code) procedureCodesUntranslated++;
   });
@@ -185,8 +222,12 @@ async function ingestProcedures(): Promise<void> {
 }
 
 async function ingestEncounters(): Promise<void> {
+  const gate: SampleGate = { seen: 0, miss: 0 };
   await forEachRow('encounters.csv', (cells, idx) => {
     const pid = (cells[idx('patient')] || '').trim();
+    const d = sampleDecision(pid, gate);
+    if (d === 'stop') return false;
+    if (d === 'skip') return;
     const start = (cells[idx('start')] || '').trim();
     if (!pid || !start) return;
     const prev = encDateByPatient.get(pid);
@@ -306,7 +347,11 @@ async function ensureProofHospital(): Promise<void> {
 // Main
 // ---------------------------------------------------------------------------
 async function main(): Promise<void> {
-  logger.info('[proof] start', { execute: EXECUTE, hospital: PROOF_HOSPITAL_ID, bucket: BUCKET, prefix: CSV_PREFIX });
+  logger.info('[proof] start', { execute: EXECUTE, sample: SAMPLE > 0 ? SAMPLE : 'full', hospital: PROOF_HOSPITAL_ID, bucket: BUCKET, prefix: CSV_PREFIX });
+
+  if (SAMPLE > 0 && EXECUTE) {
+    throw new Error('[proof] ABORT: --sample is a DRY-RUN-only representative preview and must never write. Run the full population (no --sample) for --execute.');
+  }
 
   const phiSample = await ingestPatients();
 
@@ -339,11 +384,17 @@ async function main(): Promise<void> {
 
   // Projected per-module gap distribution (read-only; what --execute would produce).
   const projection = projectGapDistribution();
+  const extrapolated: Record<string, number> | undefined =
+    SAMPLE > 0 && pids.length > 0
+      ? Object.fromEntries(Object.entries(projection.byModule).map(([m, c]) => [m, Math.round(c * (25571 / pids.length))]))
+      : undefined;
   logger.info('[proof] PROJECTED per-module gap distribution (no write)', {
+    mode: SAMPLE > 0 ? `SAMPLE(${pids.length} of 25571, x${(25571 / Math.max(pids.length, 1)).toFixed(1)})` : 'FULL',
     patients: pids.length,
     patientsWithGaps: projection.patientsWithGaps,
     totalGaps: projection.totalGaps,
     byModule: projection.byModule,
+    ...(extrapolated ? { extrapolatedFullByModule: extrapolated } : {}),
   });
 
   if (!EXECUTE) {
