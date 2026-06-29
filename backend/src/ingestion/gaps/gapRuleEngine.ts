@@ -6841,7 +6841,7 @@ export function evaluateGapRules(
   // (structured-data / fail-loud, sibling to the L-code data-quality pattern).
   if (hasCAD) {
     const statinStatus = highIntensityStatinStatus(meds);
-    // AUDIT-184 CAD-EXT (operator decision 2026-06-29): suppress the dose-unknown branch. A dose-less feed
+    // SPEC_ONLY note (AUDIT-184 CAD-EXT, operator decision 2026-06-29): suppress the dose-unknown branch. A dose-less feed
     // (Synthea, and any source without structured dose) yields statinStatus 'agent_dose_unknown' for any
     // statin-present patient -> firing a hard therapy gap on structurally-absent dose over-fired (100%). Per the
     // ARNI data-present precedent (HF-30), require dose data: fire ONLY the genuine not-on-high-intensity gap,
@@ -11617,7 +11617,7 @@ export function evaluateGapRules(
   // the left-main heart-team gap (CAD-071) are reclassified SPEC_ONLY/Path-B pending an angiographic/procedure
   // signal. The gap-cad-ivus registry entry is retained as a regOrphan for lineage.
 
-  // CAD-FFR: RETIRED -> SPEC_ONLY (AUDIT-184 CAD-EXT slug-mismatch, 2026-06-29). Gated on
+  // CAD-FFR RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT slug-mismatch, 2026-06-29). Gated on
   // !labValues['stress_test'] - there is NO 'stress_test' threaded slug (the only related slug is the
   // CSV-only 'stress_test_months', itself unthreaded by the FHIR/multi-file path), so it is always undefined
   // -> fired for ~all stable (non-MI) CAD patients. No real threaded slug exists -> SPEC_ONLY. Suppressed;
@@ -11735,7 +11735,7 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-STRESS-TEST: RETIRED -> SPEC_ONLY (AUDIT-184 CAD-EXT de-dup, 2026-06-29). Gated on
+  // CAD-STRESS-TEST RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT de-dup, 2026-06-29). Gated on
   // !(lvef|stress_test): the lvef arm DUPLICATES CAD-ECHO-CAD (which is KEPT and carries the real
   // no-echo-in-12mo overdue gap via the 365d staleness window), and the stress_test arm is the same
   // unthreaded-slug hollow as CAD-FFR. Redundant + partly hollow -> SPEC_ONLY. Suppressed; registry orphaned.
@@ -12163,13 +12163,13 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-DEPRESSION: RETIRED -> SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on !hasPHQ (phq2/phq9), a
+  // CAD-DEPRESSION RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on !hasPHQ (phq2/phq9), a
   // depression-screening score NEVER threaded by any ingestion path (no LOINC map, no schema column) -> the
   // negation was always true -> fired for 100% of CAD patients (zero discriminating signal). Suppressed
   // (no runtime gaps.push) pending a real PHQ screening signal; registry entry orphaned for canonical
   // lineage. Pre-existing hollow-read defect surfaced by the Synthea proof dry-run. (left-main RETIRE precedent)
 
-  // CAD-INFLUENZA: RETIRED -> SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on !Z23 (immunization
+  // CAD-INFLUENZA RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on !Z23 (immunization
   // encounter). Immunizations are not Conditions, so Z23 never reaches dxCodes -> always true -> fired 100%
   // of CAD patients. Suppressed pending a real immunization signal; registry entry orphaned. (RETIRE precedent)
 
@@ -12272,7 +12272,7 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-BNP-CAD: RETIRED -> SPEC_ONLY (AUDIT-184 CAD-EXT, operator decision 2026-06-29). Routine BNP/NT-proBNP
+  // CAD-BNP-CAD RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, operator decision 2026-06-29). Routine BNP/NT-proBNP
   // in CAD WITHOUT heart failure is not a guideline care gap (Class 2a, subclinical-HF screen); on absence it
   // fired for ~all CAD patients. Suppressed (operator-confirmed); registry entry orphaned. (RETIRE precedent)
 
@@ -12507,19 +12507,19 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-ACTIVITY: RETIRED -> SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on !(Z50.0|Z71.3) counseling
+  // CAD-ACTIVITY RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on !(Z50.0|Z71.3) counseling
   // encounter codes, never present in dxCodes -> always true -> fired 100% of CAD patients. Suppressed
   // pending a real counseling signal; registry entry orphaned. (RETIRE precedent)
 
-  // CAD-DIET: RETIRED -> SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on obesity (E66, real) AND !Z71.3
+  // CAD-DIET RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on obesity (E66, real) AND !Z71.3
   // dietary-counseling code, which is never threaded -> fired for 100% of obese CAD patients. Suppressed
   // pending a real counseling signal; registry entry orphaned. (RETIRE precedent)
 
-  // CAD-PSYCHOSOCIAL: RETIRED -> SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on age>65 (real) AND
+  // CAD-PSYCHOSOCIAL RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on age>65 (real) AND
   // !(Z13.3|Z04.6) screening-encounter codes, never threaded -> fired for 100% of elderly CAD patients.
   // Suppressed pending a real assessment signal; registry entry orphaned. (RETIRE precedent)
 
-  // CAD-FAMILY-SCREEN: RETIRED -> SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on premature age (real)
+  // CAD-FAMILY-SCREEN RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on premature age (real)
   // AND !(Z82.4|Z80.0) family-history codes, never threaded -> fired for 100% of premature-CAD patients.
   // Suppressed pending a real family-history signal; registry entry orphaned. (RETIRE precedent)
 
@@ -12559,15 +12559,15 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-CRP: RETIRED -> SPEC_ONLY (AUDIT-184 CAD-EXT, operator decision 2026-06-29). hs-CRP residual-risk
+  // CAD-CRP RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, operator decision 2026-06-29). hs-CRP residual-risk
   // measurement is a Class 2b OPTIONAL screen, not a universal care gap; on absence of crp/hs_crp it fired
   // for ~all on-statin CAD patients. Suppressed (operator-confirmed); registry entry orphaned. (RETIRE precedent)
 
-  // CAD-ADVANCE-DIR: RETIRED -> SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on lvef<30 (real) AND
+  // CAD-ADVANCE-DIR RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on lvef<30 (real) AND
   // !(Z66|Z76.89) advance-directive codes, never threaded -> always true in the lvef<30 cohort. Suppressed
   // pending a real advance-directive signal; registry entry orphaned. (RETIRE precedent)
 
-  // CAD-PALLIATIVE: RETIRED -> SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on age>80+angina (real) AND
+  // CAD-PALLIATIVE RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on age>80+angina (real) AND
   // !(Z51.5|Z51.89) palliative codes, never threaded -> always true in that narrow cohort. Suppressed pending
   // a real palliative-referral signal; registry entry orphaned. (RETIRE precedent)
 
@@ -12712,15 +12712,15 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-SEXUAL-HEALTH: RETIRED -> SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on hasRecentMI (real) AND
+  // CAD-SEXUAL-HEALTH RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on hasRecentMI (real) AND
   // !Z70 sexual-counseling code, never threaded -> always true -> fired for 100% of post-MI patients.
   // Suppressed pending a real counseling signal; registry entry orphaned. (RETIRE precedent)
 
-  // CAD-DRIVING: RETIRED -> SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on hasRecentMI (real) AND
+  // CAD-DRIVING RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, 2026-06-29). Gated on hasRecentMI (real) AND
   // !(Z73.6|Z02.4) driving-counseling codes, never threaded -> fired for 100% of post-MI patients.
   // Suppressed pending a real counseling signal; registry entry orphaned. (RETIRE precedent)
 
-  // CAD-LIVER-STATIN: RETIRED -> SPEC_ONLY (AUDIT-184 CAD-EXT, operator decision 2026-06-29). The 2018 ACC/AHA
+  // CAD-LIVER-STATIN RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, operator decision 2026-06-29). The 2018 ACC/AHA
   // Cholesterol Guideline DEPRECATED routine periodic LFT monitoring on statins (baseline only); firing a
   // "no ALT/AST" gap for every on-statin CAD patient contradicts the guideline. Suppressed (operator-confirmed);
   // registry entry orphaned. Also removes the last use of STATIN_CODES_CRP_NEW (dropped with CAD-CRP). (RETIRE precedent)
@@ -13353,7 +13353,7 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-WOMEN-SPECIFIC: RETIRED -> SPEC_ONLY (AUDIT-184 CAD-EXT, operator decision 2026-06-29). This is a
+  // CAD-WOMEN-SPECIFIC RETIRED to SPEC_ONLY (AUDIT-184 CAD-EXT, operator decision 2026-06-29). This is a
   // PRIMARY-PREVENTION screening rule (gates !hasCAD, fires on female>50 + a real risk-factor dx) mis-filed in
   // CORONARY_INTERVENTION, and it has NO already-assessed completion guard -> fires for the whole qualifying
   // demographic. Suppressed from the CAD count (operator-confirmed); registry entry orphaned. DEFERRED FUTURE

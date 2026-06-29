@@ -503,11 +503,23 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
         'MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-177): DET_OK -> PARTIAL. CAD-LIPID-PANEL-FU fires on ldl===undefined && total_cholesterol===undefined - an existence-proxy, not the spec "not measured in 12 months" interval (no lipid-panel date/months is threaded, so the >12-month logic cannot be computed). Held at PARTIAL per §16 underclaim-governs (the VD-5 / AUDIT-134 existence-proxy class).',
     },
     'GAP-CAD-068': {
-      classification: 'PARTIAL_DETECTION',
-      registryId: 'gap-cad-ffr',
+      classification: 'SPEC_ONLY',
       auditNote:
-        'MANUAL OVERRIDE 2026-06-18 (CAD chunk 0, AUDIT-177): DET_OK -> PARTIAL. CAD-FFR fires on stress_test===undefined for any CAD-without-recent-MI, with NO borderline-lesion (40-70% stenosis) signal - the spec target. Borderline-stenosis severity is not codable/threaded, so the existence-proxy cannot reach the spec target. Held at PARTIAL.',
+        'MANUAL OVERRIDE 2026-06-29 (AUDIT-184 CAD-EXT): PARTIAL -> SPEC_ONLY. CAD-FFR RETIRED - it read labValues[stress_test] but the only threaded slug is stress_test_months (name mismatch), so it was hollow (always-fire) in all paths; runtime gaps.push removed. Registry entry orphaned (left-main precedent).',
     },
+    // --- AUDIT-184 CAD extension (2026-06-29): hollow CAD over-fire cluster RETIRED -> SPEC_ONLY ---
+    // These crosswalk rows cite evaluator blocks whose runtime gaps.push was removed (proof-surfaced hollow
+    // over-fire on never-threaded PHQ/Z-code discriminators, plus operator-confirmed Class 2b SPEC_ONLY and a
+    // CAD-ECHO de-dup). registryId dropped (orphaned, left-main precedent). The other 8 suppressed rules are
+    // registry-only (no crosswalk row) and become accepted registry-orphans automatically.
+    'GAP-CAD-010': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-184 CAD-EXT 2026-06-29: CAD-CRP (hs-CRP residual-risk, Class 2b optional) RETIRED -> SPEC_ONLY; gaps.push removed.' },
+    'GAP-CAD-044': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-184 CAD-EXT 2026-06-29: CAD-DEPRESSION (PHQ-2/PHQ-9 never threaded, hollow) RETIRED -> SPEC_ONLY; gaps.push removed.' },
+    'GAP-CAD-045': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-184 CAD-EXT 2026-06-29: CAD-INFLUENZA (Z23 never in conditions, hollow) RETIRED -> SPEC_ONLY; gaps.push removed.' },
+    'GAP-CAD-048': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-184 CAD-EXT 2026-06-29: CAD-STRESS-TEST (de-dup with CAD-ECHO via !lvef; stress_test arm hollow) RETIRED -> SPEC_ONLY; gaps.push removed.' },
+    'GAP-CAD-089': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-184 CAD-EXT 2026-06-29: CAD-STRESS-TEST (second crosswalk row; de-dup with CAD-ECHO) RETIRED -> SPEC_ONLY; gaps.push removed.' },
+    'GAP-CAD-060': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-184 CAD-EXT 2026-06-29: CAD-FAMILY-SCREEN (Z82.4/Z80.0 never threaded, hollow) RETIRED -> SPEC_ONLY; gaps.push removed.' },
+    'GAP-CAD-079': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-184 CAD-EXT 2026-06-29: CAD-DRIVING (Z73.6/Z02.4 never threaded, hollow) RETIRED -> SPEC_ONLY; gaps.push removed.' },
+    'GAP-CAD-080': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-184 CAD-EXT 2026-06-29: CAD-SEXUAL-HEALTH (Z70 never threaded, hollow) RETIRED -> SPEC_ONLY; gaps.push removed.' },
     'GAP-CAD-018': {
       classification: 'PARTIAL_DETECTION',
       registryId: 'gap-cad-dapt-duration',
