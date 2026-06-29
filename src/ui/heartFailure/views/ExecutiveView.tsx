@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { DollarSign, Users, TrendingUp, Target, ChevronRight, Zap, Info, Search } from 'lucide-react';
 import { getHeartFailureDashboard, HFDashboardData } from '../../../services/api';
-import BaseExecutiveView from '../../../components/shared/BaseExecutiveView';
-import KPICard from '../../../components/shared/KPICard';
 import { heartFailureConfig } from '../config/executiveConfig';
 import ExportButton from '../../../components/shared/ExportButton';
-import FinancialROIWaterfall from '../components/executive/FinancialROIWaterfall';
 import ZipHeatMap from '../../../components/shared/ZipHeatMap';
 import ROIWaterfall from '../components/ROIWaterfall';
 import BenchmarksPanel from '../components/BenchmarksPanel';
