@@ -265,7 +265,7 @@ const PeripheralServiceLineView: React.FC = () => {
     {
       label: 'Gap & Opportunity',
       tabs: [
-        { id: 'gap-detection', label: 'Gap Detection', icon: Search, description: 'AI-driven PV clinical gap detection' },
+        { id: 'gap-detection', label: 'Gap Detection', icon: Search, description: 'Guideline-based PV clinical gap detection' },
       ],
     },
     {

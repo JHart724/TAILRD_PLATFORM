@@ -5789,7 +5789,7 @@ function renderSAQTrend(pt: CADGapPatient): React.ReactNode {
       )}
       <p className="text-xs text-blue-500 flex items-center gap-1">
         <Zap className="w-3 h-3 text-blue-400 flex-shrink-0" />
-        Auto-calculated from EHR flowsheet data (SAQ &copy; Dr. John Spertus, UMKC)
+        Auto-calculated from demo flowsheet data (SAQ &copy; Dr. John Spertus, UMKC)
       </p>
     </div>
   );
@@ -6211,7 +6211,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
           Clinical Gap Detection — Coronary Intervention Module
         </h3>
         <div className="text-sm text-titanium-600 mb-4 flex items-center gap-3">
-            <span>AI-driven detection of evidence-based CAD therapy gaps and cross-module opportunities.</span>
+            <span>Guideline-based detection of evidence-based CAD therapy gaps and cross-module opportunities.</span>
             <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${dashboardLoading ? 'bg-slate-100 text-slate-600 animate-pulse' : hasLiveData ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
               {dashboardLoading ? 'Loading...' : hasLiveData ? 'Live Data' : 'Demo Data'}
             </span>
@@ -6520,7 +6520,7 @@ const CADClinicalGapDetectionDashboard: React.FC = () => {
                                     {Object.entries(pt.keyValues).map(([k, v]) => (
                                       <div key={k} className="flex justify-between text-sm">
                                         <dt className="text-titanium-600">{k}:</dt>
-                                        <dd className="font-medium text-titanium-900" title="Automatically calculated from EHR-sourced data via EHR integration. No manual entry required.">{v}<span title="Automatically calculated from EHR-sourced data via EHR integration. No manual entry required."><Info className="w-3 h-3 text-blue-400 inline-block ml-1 cursor-help" /></span></dd>
+                                        <dd className="font-medium text-titanium-900" title="Automatically calculated from structured demo data. EHR integration pending.">{v}<span title="Automatically calculated from structured demo data. EHR integration pending."><Info className="w-3 h-3 text-blue-400 inline-block ml-1 cursor-help" /></span></dd>
                                       </div>
                                     ))}
                                   </dl>

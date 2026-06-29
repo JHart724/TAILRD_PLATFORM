@@ -292,7 +292,7 @@ const TAVRAnalyticsDashboard: React.FC = () => {
  <div className="flex items-center justify-between">
  <div>
  <h2 className="text-3xl font-bold text-titanium-900 mb-2">Advanced TAVR Analytics Dashboard</h2>
- <p className="text-titanium-600">Real-time structural heart program analytics with risk stratification and outcomes tracking</p>
+ <p className="text-titanium-600">Structural heart program analytics with risk stratification and outcomes tracking</p>
  </div>
  
  <div className="flex items-center gap-4">

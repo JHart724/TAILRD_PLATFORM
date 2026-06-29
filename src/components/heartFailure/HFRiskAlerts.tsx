@@ -66,7 +66,7 @@ const HFRiskAlerts: React.FC = () => {
 
   return (
  <div className="space-y-4">
- <h3 className="text-lg font-semibold text-titanium-900">Real-Time Risk Alerts</h3>
+ <h3 className="text-lg font-semibold text-titanium-900">Risk Alerts</h3>
  
  {alerts.map((alert) => {
  const Icon = getAlertIcon(alert.type);

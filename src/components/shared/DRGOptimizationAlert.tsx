@@ -57,7 +57,7 @@ const DRGOptimizationAlert: React.FC<DRGOptimizationAlertProps> = ({
  <TrendingUp className="w-5 h-5 text-teal-700" />
  {title}
  </h3>
- <p className="text-sm text-titanium-600">Real-time identification of coding improvements</p>
+ <p className="text-sm text-titanium-600">Identification of coding improvements</p>
  </div>
  <div className="text-right">
  <div className="text-2xl font-bold text-teal-700">

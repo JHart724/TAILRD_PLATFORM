@@ -39,7 +39,7 @@ const KCCQOutcomesPanel: React.FC = () => {
             </p>
             <div className="flex items-center gap-2 mt-2 mb-4">
               <Zap className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-              <span className="text-xs text-blue-600 font-medium">Auto-calculated from EHR data &middot; No manual entry required</span>
+              <span className="text-xs text-blue-600 font-medium">Demo data &middot; EHR integration pending</span>
             </div>
           </div>
         </div>

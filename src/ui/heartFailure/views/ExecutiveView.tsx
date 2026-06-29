@@ -311,7 +311,7 @@ const ExecutiveView: React.FC = () => {
        </div>
        <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-100 rounded-lg px-3 py-1.5">
          <Zap className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-         <span className="text-xs text-blue-700 font-medium">Auto-calculated from EHR integration</span>
+         <span className="text-xs text-blue-700 font-medium">Demo data &middot; EHR integration pending</span>
        </div>
      </div>
    </div>

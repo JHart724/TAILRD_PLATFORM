@@ -379,7 +379,7 @@ function renderEligibilityChecker(gapId: string, patient: HFGapPatient): React.R
         </p>
         <p className="text-xs text-teal-700 flex items-center gap-1 mt-1">
           <Zap className="w-3 h-3 text-teal-700 flex-shrink-0" />
-          Auto-calculated from structured EHR data
+          Auto-calculated from structured patient data (demo)
         </p>
       </div>
     );
@@ -523,7 +523,7 @@ function renderKCCQTrend(patient: HFGapPatient): React.ReactNode {
       <div className="text-sm text-gray-500">{kccqTrendResult.display}</div>
       <p className="text-xs text-gray-500 flex items-center gap-1">
         <Zap className="w-3 h-3 text-gray-500 flex-shrink-0" />
-        Auto-calculated from EHR flowsheet data
+        Auto-calculated from demo flowsheet data
       </p>
     </div>
   );
@@ -1275,7 +1275,7 @@ const ClinicalGapDetectionDashboard: React.FC = () => {
                                       {Object.entries(pt.keyValues).map(([k, v]) => (
                                         <div key={k} className="flex justify-between text-sm">
                                           <dt className="text-titanium-600">{k}:</dt>
-                                          <dd className="font-medium text-titanium-900" title="Automatically calculated from EHR-sourced data via EHR integration. No manual entry required.">{v}<span title="Automatically calculated from EHR-sourced data via EHR integration. No manual entry required."><Info className="w-3 h-3 text-blue-400 inline-block ml-1 cursor-help" /></span></dd>
+                                          <dd className="font-medium text-titanium-900" title="Automatically calculated from structured demo data. EHR integration pending.">{v}<span title="Automatically calculated from structured demo data. EHR integration pending."><Info className="w-3 h-3 text-blue-400 inline-block ml-1 cursor-help" /></span></dd>
                                         </div>
                                       ))}
                                     </dl>

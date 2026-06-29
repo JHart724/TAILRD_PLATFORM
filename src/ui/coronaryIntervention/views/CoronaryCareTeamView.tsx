@@ -148,7 +148,7 @@ const CoronaryCareTeamView: React.FC = () => {
  id: 'checklist',
  label: 'Protected PCI',
  icon: ClipboardCheck,
- description: 'Real-time procedure checklist and monitoring for high-risk PCI cases'
+ description: 'Procedure checklist and monitoring for high-risk PCI cases'
  },
  {
  id: 'worklist',

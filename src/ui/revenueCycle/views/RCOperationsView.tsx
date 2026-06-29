@@ -198,7 +198,7 @@ const RCOperationsView: React.FC = () => {
  <div className="metal-card">
  <div className="px-6 py-4 border-b border-titanium-200 bg-gradient-to-r from-titanium-50 to-[#f0f5fa]/40">
  <h3 className="text-lg font-semibold text-titanium-900 mb-2">Claims Processing Pipeline</h3>
- <p className="text-sm text-titanium-600">Real-time workflow status and bottlenecks</p>
+ <p className="text-sm text-titanium-600">Workflow status and bottlenecks</p>
  </div>
  
  <div className="p-6">

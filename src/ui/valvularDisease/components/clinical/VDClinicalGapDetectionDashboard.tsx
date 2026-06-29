@@ -3487,7 +3487,7 @@ const VDClinicalGapDetectionDashboard: React.FC<VDClinicalGapDetectionDashboardP
         )}
         {!categoryFilter && (
           <p className="text-sm text-titanium-600 mb-4">
-            AI-driven detection of evidence-based valvular disease therapy gaps, surveillance deficiencies, and safety opportunities.
+            Guideline-based detection of evidence-based valvular disease therapy gaps, surveillance deficiencies, and safety opportunities.
             21 active gap rules covering AS surveillance, post-TAVR quality, anticoagulation safety, BAV aortopathy, endocarditis prophylaxis, HALT screening, intervention referral, mitral repair quality, tricuspid intervention, valve-in-valve TAVR, concomitant AF, heart team documentation, prosthesis mismatch, aortic root, INR monitoring, TEER eligibility, PVE safety, pacemaker risk, bioprosthetic surveillance, TMVR candidacy, and AS+CAD strategy.
           </p>
         )}
@@ -3796,7 +3796,7 @@ const VDClinicalGapDetectionDashboard: React.FC<VDClinicalGapDetectionDashboardP
                                     {Object.entries(pt.keyValues).map(([k, v]) => (
                                       <div key={k} className="flex justify-between text-sm">
                                         <dt className="text-titanium-600">{k}:</dt>
-                                        <dd className="font-medium text-titanium-900" title="Automatically calculated from EHR-sourced data via EHR integration. No manual entry required.">{v}<span title="Automatically calculated from EHR-sourced data via EHR integration. No manual entry required."><Info className="w-3 h-3 text-blue-400 inline-block ml-1 cursor-help" /></span></dd>
+                                        <dd className="font-medium text-titanium-900" title="Automatically calculated from structured demo data. EHR integration pending.">{v}<span title="Automatically calculated from structured demo data. EHR integration pending."><Info className="w-3 h-3 text-blue-400 inline-block ml-1 cursor-help" /></span></dd>
                                       </div>
                                     ))}
                                   </dl>

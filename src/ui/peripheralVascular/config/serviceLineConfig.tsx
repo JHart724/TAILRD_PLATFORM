@@ -492,7 +492,7 @@ const PVVascularPipeline: React.FC = () => {
           <Zap className="w-5 h-5 text-arterial-600 mt-0.5 flex-shrink-0" />
           <div>
             <h4 className="text-sm font-bold text-titanium-900">Automated Vascular Pipeline Detection</h4>
-            <p className="text-xs text-titanium-600 mt-1">&#9889; Patients automatically identified from EHR integration</p>
+            <p className="text-xs text-titanium-600 mt-1">&#9889; Patients automatically identified from structured demo data</p>
           </div>
         </div>
       </div>
@@ -683,7 +683,7 @@ const peripheralVascularTabs: ServiceLineTabConfig[] = [
  id: 'pv-clinical-gap-detection',
  label: 'Gap Detection (12-Gap)',
  icon: Activity,
- description: 'AI-driven PV gap detection: COMPASS dual-pathway, ABI screening, supervised exercise therapy, AAA screening, PAD dual-pathway no CAD, renal artery stenosis, mesenteric ischemia, cilostazol underuse, venous ulcer compression, unprovoked VTE anticoagulation, IVC filter without AC safety, May-Thurner syndrome All gap detection criteria, risk scores, and composite calculators are automatically computed from structured EHR data ingested via EHR integration — no manual data entry or chart review required.'
+ description: 'Guideline-based PV gap detection: COMPASS dual-pathway, ABI screening, supervised exercise therapy, AAA screening, PAD dual-pathway no CAD, renal artery stenosis, mesenteric ischemia, cilostazol underuse, venous ulcer compression, unprovoked VTE anticoagulation, IVC filter without AC safety, May-Thurner syndrome All gap detection criteria, risk scores, and composite calculators are automatically computed from structured patient data (live EHR integration pending). No manual data entry or chart review required.'
   }
 ];
 

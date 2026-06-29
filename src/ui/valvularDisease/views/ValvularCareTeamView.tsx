@@ -99,10 +99,10 @@ const ValvularCareTeamView: React.FC = () => {
   const tabs = [
  { id: 'dashboard', label: 'Dashboard', icon: Activity, description: 'Valve care team overview' },
  { id: 'patients', label: 'Patients', icon: Users, description: 'Valve patient management' },
- { id: 'clinical-gaps', label: 'Clinical Gaps', icon: AlertTriangle, description: 'AI-driven clinical gap detection' },
+ { id: 'clinical-gaps', label: 'Clinical Gaps', icon: AlertTriangle, description: 'Guideline-based clinical gap detection' },
  { id: 'surgical-planning', label: 'Surgical Planning', icon: Scissors, description: 'Surgical planning checklist' },
  { id: 'surveillance', label: 'Valve Surveillance', icon: Eye, description: 'Repaired valve surveillance' },
- { id: 'worklist', label: 'Valve Worklist', icon: ListTodo, description: 'Comprehensive valve worklist' },
+ { id: 'worklist', label: 'Surgical Referral Network', icon: ListTodo, description: 'Valve surgical referral network' },
  { id: 'clinicaltools', label: 'Clinical Intelligence', icon: Stethoscope, description: 'Phenotype classification, risk calculators, and clinical decision support' },
  { id: 'safety', label: 'Safety', icon: Shield, description: 'Risk assessment & monitoring' },
  { id: 'team', label: 'Team', icon: Users, description: 'Team collaboration' },

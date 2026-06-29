@@ -464,7 +464,7 @@ const PCINetworkVisualization: React.FC = () => {
  <div className="flex items-center justify-between">
  <div>
  <h3 className="text-2xl font-bold text-titanium-900">PCI Network Visualization</h3>
- <p className="text-titanium-600">Real-time coronary intervention pathways and door-to-balloon optimization</p>
+ <p className="text-titanium-600">Coronary intervention pathways and door-to-balloon optimization</p>
  <div className="flex items-center gap-2 mt-2 text-sm text-titanium-500">
  <Clock className="w-4 h-4" />
  <span>Last updated: {currentTime.toLocaleTimeString()}</span>

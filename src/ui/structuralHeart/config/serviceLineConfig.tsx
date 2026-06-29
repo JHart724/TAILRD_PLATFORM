@@ -347,7 +347,7 @@ const TAVRCandidatePipeline: React.FC = () => {
         <Zap className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
         <div>
           <h4 className="text-sm font-semibold text-blue-900 mb-1">Automated Structural Heart Pipeline Identification</h4>
-          <p className="text-sm text-blue-800">&#9889; Patients automatically identified from EHR integration</p>
+          <p className="text-sm text-blue-800">&#9889; Patients automatically identified from structured demo data</p>
         </div>
       </div>
 
@@ -689,7 +689,7 @@ const structuralHeartTabs: ServiceLineTabConfig[] = [
  id: 'sh-clinical-gap-detection',
  label: 'Gap Detection (8-Gap)',
  icon: Target,
- description: 'AI-driven structural gap detection: Gap 3 (Severe AS), Gap 5 (Functional MR/COAPT), Gap 8 (Tricuspid), Gap 79 (Moderate AS surveillance), Gap 80 (Post-TAVR echo), Gap 81 (Rheumatic MS warfarin safety), Gap 82 (BAV aortopathy), Gap 83 (Endocarditis prophylaxis) All gap detection criteria, risk scores, and composite calculators are automatically computed from structured EHR data ingested via EHR integration — no manual data entry or chart review required.'
+ description: 'Guideline-based structural gap detection: Gap 3 (Severe AS), Gap 5 (Functional MR/COAPT), Gap 8 (Tricuspid), Gap 79 (Moderate AS surveillance), Gap 80 (Post-TAVR echo), Gap 81 (Rheumatic MS warfarin safety), Gap 82 (BAV aortopathy), Gap 83 (Endocarditis prophylaxis) All gap detection criteria, risk scores, and composite calculators are automatically computed from structured patient data (live EHR integration pending). No manual data entry or chart review required.'
   }
 ];
 
