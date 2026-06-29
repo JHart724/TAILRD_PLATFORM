@@ -210,7 +210,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(16227); // -> 16227 by the T1-broader LVESD batch (2026-06-22, +179 lines: SH-024/VHD-060/VHD-100/VHD-103-LVESD evaluators + registries above); AUDIT-110 = content-anchor remediation scope
+    expect(pannus!.commentLine).toBe(15822); // 16227 -> 15822 by AUDIT-184 CAD-EXT (2026-06-29): 16 hollow CAD rules RETIRED above this line shifted it up ~405 lines (content-anchor; AUDIT-110 remediation scope)
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });
@@ -234,7 +234,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
 
   it.each([
     ['SH', 61, 55, 55], // T1-broader PART 2: registry 60->61, evaluator 54->55, gapsPush 54->55 (+1 gap-sh-024-tr-rv-dysfunction, 2026-06-22)
-    ['CAD', 83, 82, 82], // CAD chunk 1: registry 83 (+7 entries), evaluator/push 82 (CAD-IVUS firing retired, AUDIT-182; its registry entry retained as a regOrphan)
+    ['CAD', 83, 66, 66], // AUDIT-184 CAD-EXT (2026-06-29): evaluator/push 82 -> 66 (16 hollow CAD over-fire rules RETIRED -> SPEC_ONLY); registry stays 83 (suppressed rules' entries retained as regOrphans, left-main precedent)
     ['VHD', 51, 50, 51], // T1-broader: registry 49->51 (+VHD-060/100), evaluator 48->50 (+2 parsed blocks), gapsPush 48->51 (+3: VHD-060/100 + the VHD-103 LVESD 2nd arm push folded into the VHD-103 block)
     ['PV', 45, 45, 45], // chunk0 33->34; chunk1 34->41; T0 net-new 41->45 (+4 PV-042/081/084/085, 2026-06-19)
   ])(

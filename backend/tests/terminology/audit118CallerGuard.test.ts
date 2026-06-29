@@ -17,15 +17,20 @@ describe('AUDIT-118 caller guard - expandToIngredients is the one medCodes path'
     'ingestion/runGapDetectionForPatient.ts',
     'ingestion/gapDetectionRunner.ts',
   ];
+  // AUDIT-184 CAD-EXT (2026-06-29): the PHASE 4 proof-run script reuses the engine for an in-memory dry-run
+  // projection (no DB). It is NOT a runtime runner, but it IS a compliant evaluateGapRules caller - it routes
+  // medCodes through expandToIngredients (asserted below), preserving the AUDIT-118 one-path invariant.
+  const DIAGNOSTIC_CALLERS = ['scripts/syntheaProofRun.ts'];
+  const ALL_CALLERS = [...RUNNERS, ...DIAGNOSTIC_CALLERS];
 
-  it('both gap runners route medCodes through expandToIngredients', () => {
-    for (const rel of RUNNERS) {
+  it('every evaluateGapRules caller routes medCodes through expandToIngredients (the one-path invariant)', () => {
+    for (const rel of ALL_CALLERS) {
       const src = read(rel);
       expect(src).toMatch(/expandToIngredients\s*\(/);
     }
   });
 
-  it('every evaluateGapRules caller in src/ is one of the two known runners (no bypassing path)', () => {
+  it('every evaluateGapRules caller in src/ is a known compliant caller (no bypassing path)', () => {
     const hits: string[] = [];
     const walk = (dir: string) => {
       for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -42,7 +47,7 @@ describe('AUDIT-118 caller guard - expandToIngredients is the one medCodes path'
       }
     };
     walk(SRC);
-    expect(hits.sort()).toEqual([...RUNNERS].sort());
+    expect(hits.sort()).toEqual([...ALL_CALLERS].sort());
   });
 
   it('raw .rxNormCode access inside the engine is confined to dose/temporal resolvers (not presence)', () => {

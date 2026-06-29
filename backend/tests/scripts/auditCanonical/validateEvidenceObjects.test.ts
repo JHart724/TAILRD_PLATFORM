@@ -148,9 +148,11 @@ describe('validateEvidenceObjects - live gapRuleEngine.ts baseline', () => {
   const src = fs.readFileSync(EVALUATOR_PATH, 'utf8');
   const result = analyzeSource(src, 'gapRuleEngine.ts');
 
-  it('finds 376 gaps.push nodes, all with an evidence object', () => {
-    expect(result.pushCount).toBe(394); // 390 + 4 (T1-broader LVESD batch: VHD-103 LVESD-arm + SH-024 + VHD-060 + VHD-100, 2026-06-22)
-    expect(result.evidenceCount).toBe(394);
+  it('finds all gaps.push nodes, each with an evidence object', () => {
+    // 394 -> 378 by AUDIT-184 CAD-EXT (2026-06-29): 16 hollow/SPEC_ONLY CAD over-fire rules RETIRED (their
+    // gaps.push + evidence removed). Sibling count-guard to clinicalScenarios.test.ts. Pre-existing defect, proof-surfaced.
+    expect(result.pushCount).toBe(378);
+    expect(result.evidenceCount).toBe(378);
   });
 
   it('reports ZERO inconsistencies (clean baseline post-AUDIT-103)', () => {
