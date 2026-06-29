@@ -140,18 +140,19 @@ describe('AUDIT-101 CAD high-intensity statin: exclusions (only hospice is gate-
   });
 });
 
-describe('AUDIT-101 CAD high-intensity statin: edge cases', () => {
-  it('ED1 (dose-unknown qualified-fire): CAD + atorvastatin with NO doseValue -> QUALIFIED fire, not definite', () => {
+describe('AUDIT-101 CAD high-intensity statin: edge cases (dose-unknown SUPPRESSED by AUDIT-184 CAD-EXT 2026-06-29)', () => {
+  // Operator decision: do NOT emit a hard therapy gap when statin dose is structurally absent (Synthea / any
+  // dose-less feed). The dose-unknown 'qualified fire' over-fired 100% of statin-present CAD; per the ARNI
+  // data-present precedent the gate now requires dose data. A real Epic feed carries dose and fires correctly.
+  it('ED1 (dose-unknown SUPPRESSED): CAD + atorvastatin with NO doseValue -> NO gap (was QUALIFIED fire)', () => {
     const gaps = run([CAD], [med(RX_ATORVA, null, 'mg', 'atorvastatin')]);
-    expect(cadQualified(gaps)).toBeDefined();
+    expect(cadQualified(gaps)).toBeUndefined();
     expect(cadDefinite(gaps)).toBeUndefined();
-    // Fail-loud, not a definite therapy-gap assertion: confirm-or-intensify language.
-    expect(cadQualified(gaps).recommendations.action).toMatch(/confirm current dose or intensify/i);
   });
 
-  it('ED2: CAD + atorvastatin "40" but doseUnit not mg (e.g. "g") -> treated as unknown -> QUALIFIED fire', () => {
+  it('ED2 (dose-unknown SUPPRESSED): CAD + atorvastatin "40" doseUnit not mg -> treated as unknown -> NO gap', () => {
     const gaps = run([CAD], [med(RX_ATORVA, 40, 'g', 'atorvastatin')]);
-    expect(cadQualified(gaps)).toBeDefined();
+    expect(cadQualified(gaps)).toBeUndefined();
     expect(cadDefinite(gaps)).toBeUndefined();
   });
 });

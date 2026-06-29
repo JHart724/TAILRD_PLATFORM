@@ -33,12 +33,14 @@ describe('AUDIT-184 over-fire CLOSED - CAD-008 Lp(a) screening', () => {
   });
 });
 
-describe('AUDIT-184 over-fire CLOSED - CAD-010 hs-CRP residual-risk', () => {
+describe('AUDIT-184 CAD-EXT - CAD-010 hs-CRP residual-risk now SPEC_ONLY (operator decision 2026-06-29)', () => {
   const FRAG = 'hs-CRP measurement for residual inflammatory risk';
-  it('fires: CAD on statin with no CRP measured', () => {
-    expect(find(evaluateGapRules([CAD], {}, [ATORVASTATIN], 60, 'MALE'), FRAG)).toBeTruthy();
+  // Operator-confirmed SPEC_ONLY: hs-CRP residual-risk is a Class 2b OPTIONAL screen, not a universal care
+  // gap; firing it on mere absence over-fired ~all on-statin CAD. Reverses the original AUDIT-184 closure.
+  it('SPEC_ONLY: does NOT fire for CAD on statin with no CRP', () => {
+    expect(find(evaluateGapRules([CAD], {}, [ATORVASTATIN], 60, 'MALE'), FRAG)).toBeFalsy();
   });
-  it('CLOSED: CAD on statin WITH crp present no longer over-fires', () => {
+  it('SPEC_ONLY: does NOT fire with crp present either', () => {
     expect(find(evaluateGapRules([CAD], { crp: 1.0 }, [ATORVASTATIN], 60, 'MALE'), FRAG)).toBeFalsy();
   });
 });
