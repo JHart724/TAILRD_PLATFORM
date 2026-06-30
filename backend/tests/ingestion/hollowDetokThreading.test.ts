@@ -13,12 +13,14 @@ import { getModuleColumns } from '../../src/ingestion/csvSchema';
 import * as fs from 'fs';
 import * as path from 'path';
 
-// The CSV labFields allowlist lives inline in patientWriter; read it statically (it is the threading gate).
+// The CSV lab-field allowlist lives in patientWriter; read it statically (it is the threading gate).
+// AUDIT-192 (2026-06-29): the batched-write rewrite hoisted this from an inline `const labFields = [...]`
+// to a module-level `const LAB_FIELDS: readonly string[] = [...]`; the slug list is unchanged.
 const patientWriterSrc = fs.readFileSync(
   path.join(__dirname, '../../src/ingestion/patientWriter.ts'),
   'utf8',
 );
-const labFieldsBlock = patientWriterSrc.match(/const labFields = \[([\s\S]*?)\];/)![1];
+const labFieldsBlock = patientWriterSrc.match(/const LAB_FIELDS[^[]*\[([\s\S]*?)\];/)![1];
 const labFields = new Set([...labFieldsBlock.matchAll(/'([a-z0-9_]+)'/g)].map((m) => m[1]));
 
 // All csv schema column names across every module view.

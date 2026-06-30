@@ -1,23 +1,23 @@
 /**
- * PHASE 2.5: medication persistence in patientWriter.
+ * PHASE 2.5 medication persistence, re-verified for the AUDIT-192 BATCHED write path.
  *
- * Proves the additive medication write: an assembled RxNorm medication persists as an ACTIVE Medication
- * row in the exact shape both gap runners read (`medications: { where: { status: 'ACTIVE' } }` ->
- * `m.rxNormCode` -> expandToIngredients), that the persisted code is consumable by that engine path, and
- * that absent medications is a no-op (single-file path preserved). prisma is mocked (no live DB), mirroring
- * the established procedureMedDateThreading.test.ts pattern.
+ * patientWriter now persists via createMany (the tenant-guard-EXEMPT bulk path) instead of per-row upsert.
+ * Proves an assembled RxNorm medication still persists as an ACTIVE Medication row in the exact shape both gap
+ * runners read (status ACTIVE -> rxNormCode -> expandToIngredients), the deterministic id dedups refills, the
+ * persisted code is engine-consumable, and absent medications is a no-op. prisma is mocked (no live DB).
  */
 jest.mock('../../src/lib/prisma', () => ({
   __esModule: true,
   default: {
     patient: {
-      findUnique: jest.fn().mockResolvedValue(null), // new patient
-      create: jest.fn().mockResolvedValue({ id: 'db-P1' }),
-      update: jest.fn().mockResolvedValue({ id: 'db-P1' }),
+      findMany: jest.fn().mockResolvedValue([]), // fresh tenant: no existing patients
+      createMany: jest.fn().mockResolvedValue({ count: 1 }),
+      updateMany: jest.fn().mockResolvedValue({ count: 1 }),
     },
-    condition: { upsert: jest.fn().mockResolvedValue({}) },
+    condition: { createMany: jest.fn().mockResolvedValue({ count: 1 }), updateMany: jest.fn().mockResolvedValue({ count: 0 }) },
+    medication: { createMany: jest.fn().mockResolvedValue({ count: 1 }), updateMany: jest.fn().mockResolvedValue({ count: 0 }) },
     observation: { createMany: jest.fn().mockResolvedValue({ count: 0 }) },
-    medication: { upsert: jest.fn().mockResolvedValue({}) },
+    $transaction: jest.fn().mockResolvedValue([]),
   },
 }));
 
@@ -27,7 +27,7 @@ import { ParsedRow } from '../../src/ingestion/csvParser';
 import { expandToIngredients } from '../../src/terminology/expandToIngredients';
 import { MedicationStatus } from '@prisma/client';
 
-const med = (prisma as any).medication.upsert as jest.Mock;
+const medCreate = (prisma as any).medication.createMany as jest.Mock;
 
 const rowWithMed = (): ParsedRow => ({
   rowNumber: 2,
@@ -48,42 +48,43 @@ const rowWithMed = (): ParsedRow => ({
 
 beforeEach(() => jest.clearAllMocks());
 
-describe('patientWriter - medication persistence (PHASE 2.5)', () => {
-  it('persists an assembled RxNorm medication as an ACTIVE Medication row in the shape the engine reads', async () => {
+describe('patientWriter - medication persistence via batched createMany (PHASE 2.5 / AUDIT-192)', () => {
+  it('persists an assembled RxNorm medication as an ACTIVE Medication row in the engine-read shape', async () => {
     const result = await writePatients([rowWithMed()], 'h1', 'job1', 'hf');
-    expect(result.errors).toEqual([]); // no swallowed per-row failure
-    expect(med).toHaveBeenCalledTimes(1);
-    const arg = med.mock.calls[0][0];
-    expect(arg.create.rxNormCode).toBe('197361');
-    expect(arg.create.status).toBe(MedicationStatus.ACTIVE); // both runners filter on status ACTIVE
-    expect(arg.create.patientId).toBe('db-P1');
-    expect(arg.create.hospitalId).toBe('h1');
-    expect(arg.create.medicationName).toBe('Lisinopril 10 MG Oral Tablet');
-    expect(arg.where.id).toBe('db-P1-rx-197361'); // deterministic id -> idempotent re-ingest + per-drug dedup
+    expect(result.errors).toEqual([]);
+    expect(medCreate).toHaveBeenCalledTimes(1);
+    const arg = medCreate.mock.calls[0][0];
+    expect(arg.skipDuplicates).toBe(true);
+    const med = arg.data[0];
+    expect(med.rxNormCode).toBe('197361');
+    expect(med.status).toBe(MedicationStatus.ACTIVE); // both runners filter on status ACTIVE
+    expect(med.hospitalId).toBe('h1');
+    expect(med.patientId).toBe('h1::P1'); // deterministic patient id (hospital::mrn)
+    expect(med.id).toBe('h1::P1-rx-197361'); // deterministic -> idempotent re-ingest + per-drug dedup
+    expect(med.medicationName).toBe('Lisinopril 10 MG Oral Tablet');
   });
 
-  it('the persisted rxNormCode is consumable by the engine medication-present path (expandToIngredients)', () => {
-    // The runners build medCodes = expandToIngredients(rxNormCode). 197361 (lisinopril SCD) expands to its
-    // ingredient IN 17767, which the GDMT value sets gate on - so a persisted 197361 satisfies the on-therapy check.
+  it('the persisted rxNormCode is engine-consumable (expandToIngredients 197361 -> ingredient 17767)', () => {
     const expanded = expandToIngredients(['197361']);
-    expect(expanded).toContain('197361'); // raw code kept
-    expect(expanded).toContain('17767');  // lisinopril ingredient IN added
+    expect(expanded).toContain('197361');
+    expect(expanded).toContain('17767');
   });
 
-  it('dedups repeat/refill rows of the same drug to a single ACTIVE row', async () => {
+  it('dedups repeat/refill rows of the same drug to a single ACTIVE row in the createMany batch', async () => {
     const row = rowWithMed();
     (row.data.medication_records as any[]).push(
       { rxNormCode: '197361', medicationName: 'Lisinopril 10 MG Oral Tablet', startDate: '2022-05-01' }, // refill
     );
     await writePatients([row], 'h1', 'job1', 'hf');
-    expect(med).toHaveBeenCalledTimes(1); // one upsert for the drug, not two
+    expect(medCreate).toHaveBeenCalledTimes(1);
+    expect(medCreate.mock.calls[0][0].data.filter((m: any) => m.rxNormCode === '197361')).toHaveLength(1);
   });
 
   it('absent medications is a no-op (single-file path preserved)', async () => {
     const row = rowWithMed();
-    delete (row.data as any).medication_records; // single-file path emits no medication_records
+    delete (row.data as any).medication_records;
     const result = await writePatients([row], 'h1', 'job1', 'hf');
     expect(result.errors).toEqual([]);
-    expect(med).not.toHaveBeenCalled();
+    expect(medCreate).not.toHaveBeenCalled();
   });
 });
