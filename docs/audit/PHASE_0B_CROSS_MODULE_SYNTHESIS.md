@@ -13,10 +13,10 @@ Aggregate audit findings across all 6 active modules (HF, EP, SH, CAD, VHD, PV).
 | HF | 126 | 64 | 25 | 37 | 89/126 (70.6%) | 50.8% |
 | EP | 89 | 44 | 16 | 29 | 60/89 (67.4%) | 49.4% |
 | SH | 88 | 32 | 18 | 38 | 50/88 (56.8%) | 36.4% |
-| CAD | 90 | 31 | 28 | 31 | 59/90 (65.6%) | 34.4% |
+| CAD | 90 | 28 | 22 | 40 | 50/90 (55.6%) | 31.1% |
 | VHD | 105 | 15 | 12 | 78 | 27/105 (25.7%) | 14.3% |
 | PV | 105 | 25 | 14 | 66 | 39/105 (37.1%) | 23.8% |
-| **TOTAL** | **603** | **211** | **113** | **279** | **324/603 (53.7%)** | **35.0%** |
+| **TOTAL** | **603** | **208** | **107** | **288** | **315/603 (52.2%)** | **34.5%** |
 
 ---
 
@@ -94,6 +94,7 @@ Subcategories with 0% any-coverage indicate entire procedural surfaces missing i
 | HF | Genetics | 3 | 0 | 0 | 3 |
 | EP | Cardiac Arrest | 4 | 0 | 0 | 4 |
 | SH | Pulmonary HTN | 5 | 0 | 0 | 5 |
+| CAD | Intracoronary Imaging | 3 | 0 | 0 | 3 |
 | CAD | Complex PCI | 4 | 0 | 0 | 4 |
 | CAD | Stent Complications | 3 | 0 | 0 | 3 |
 | CAD | Cardiogenic Shock | 6 | 0 | 0 | 6 |
@@ -106,7 +107,7 @@ Subcategories with 0% any-coverage indicate entire procedural surfaces missing i
 | PV | AVM | 3 | 0 | 0 | 3 |
 | PV | Vascular Access | 3 | 0 | 0 | 3 |
 
-**Total: 15 subcategories with 0% any-coverage across 6 modules.**
+**Total: 16 subcategories with 0% any-coverage across 6 modules.**
 
 ---
 

@@ -113,14 +113,14 @@ Valvular Heart Disease has **105 spec gaps** across 18 subcategories. Implementa
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-VHD-001 | 753 | DET_OK | `gap-vhd-001-subtherapeutic-inr` (VHD-001 @8467-8490) | MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 3 close, AUDIT-133 RESOLVED): SPEC_ONLY -> DET_OK. The 20 |
-| GAP-VHD-005 | 754 | PARTIAL_DETECTION | `gap-vd-6-doac-mechanical-valve` (VD-6 @8891-8915) | MANUAL OVERRIDE 2026-06-10 (VHD audit): DET_OK -> PARTIAL per §16.6(i) concept-match / AUDIT-123 + § |
+| GAP-VHD-001 | 753 | DET_OK | `gap-vhd-001-subtherapeutic-inr` (VHD-001 @8472-8495) | MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 3 close, AUDIT-133 RESOLVED): SPEC_ONLY -> DET_OK. The 20 |
+| GAP-VHD-005 | 754 | PARTIAL_DETECTION | `gap-vd-6-doac-mechanical-valve` (VD-6 @8896-8920) | MANUAL OVERRIDE 2026-06-10 (VHD audit): DET_OK -> PARTIAL per §16.6(i) concept-match / AUDIT-123 + § |
 | GAP-VHD-050 | 830 | SPEC_ONLY | — | No S. aureus + TEE rule in evaluator. \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
-| GAP-VHD-057 | 841 | DET_OK | `gap-vhd-057-ie-hf-surgery` (VHD-057 @8540-8562) | MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 4 close): newly DET_OK. Purpose-built gap-vhd-057-ie-hf-s |
+| GAP-VHD-057 | 841 | DET_OK | `gap-vhd-057-ie-hf-surgery` (VHD-057 @8545-8567) | MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 4 close): newly DET_OK. Purpose-built gap-vhd-057-ie-hf-s |
 | GAP-VHD-058 | 842 | SPEC_ONLY | — | No IE + abscess surgical rule. \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-VHD-061 | 843 | SPEC_ONLY | — | No PVE dehiscence/fistula rule. \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-VHD-068 | 860 | PARTIAL_DETECTION | `gap-vhd-068-mech-pvt-gradient` (VHD-068 @8401-8423) | MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 2 close): RE-CITED from the broad VD-PANNUS to the purpos |
-| GAP-VHD-099 | 914 | PARTIAL_DETECTION | `gap-vhd-099-mech-valve-pregnancy-anticoag` (VHD-099 @8768-8794) | MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 5 close): SPEC_ONLY -> PARTIAL. RE-CITED to the purpose-b |
+| GAP-VHD-068 | 860 | PARTIAL_DETECTION | `gap-vhd-068-mech-pvt-gradient` (VHD-068 @8406-8428) | MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 2 close): RE-CITED from the broad VD-PANNUS to the purpos |
+| GAP-VHD-099 | 914 | PARTIAL_DETECTION | `gap-vhd-099-mech-valve-pregnancy-anticoag` (VHD-099 @8773-8799) | MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 5 close): SPEC_ONLY -> PARTIAL. RE-CITED to the purpose-b |
 
 ---
 
