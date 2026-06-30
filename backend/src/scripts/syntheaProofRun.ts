@@ -28,7 +28,6 @@ import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { Readable } from 'stream';
 import * as readline from 'readline';
 import prisma from '../lib/prisma';
-import { logger } from '../utils/logger';
 import { parseCSVLine, ParsedRow, MedicationRecord } from '../ingestion/csvParser';
 import { resolveConditionIcd10, CrosswalkReporter, CodeSystem } from '../ingestion/snomedCrosswalk';
 import { ECHO_LOINC_TO_SLUG } from '../services/observationService';
@@ -59,6 +58,14 @@ const SAMPLE_MARGIN_ROWS = 5000; // after the contiguous sample region, stop a c
 const sampleSet = new Set<string>(); // sample patient ids (populated in ingestPatients when SAMPLE > 0)
 
 const KEY = (name: string): string => `${CSV_PREFIX}${name}`;
+
+// AUDIT-192 (2026-06-29): the winston `logger` (utils/logger) does not reach CloudWatch in production (file
+// transport), so the [proof] progress markers were INVISIBLE during the 25,571-patient --execute run
+// (verification had to go via a DB query). console.log writes to stdout, which the ECS awslogs driver always
+// ships to CloudWatch - use it for the script's own progress/result logging so future runs are observable.
+function plog(message: string, data?: Record<string, unknown>): void {
+  console.log(message + (data ? ' ' + JSON.stringify(data) : ''));
+}
 
 /** Per-child-file early-stop state for sample mode (patient-grouped files -> sample rows are contiguous at the front). */
 interface SampleGate { seen: number; miss: number; }
@@ -138,7 +145,7 @@ async function ingestPatients(): Promise<string[][]> {
     if (SAMPLE > 0) sampleSet.add(id);
     if (phiSample.length < 100) phiSample.push([id, birthdate, gender]);
   });
-  logger.info('[proof] patients streamed', { rows: n, spine: spine.size, sample: SAMPLE > 0 ? SAMPLE : 'full' });
+  plog('[proof] patients streamed', { rows: n, spine: spine.size, sample: SAMPLE > 0 ? SAMPLE : 'full' });
   return phiSample;
 }
 
@@ -159,7 +166,7 @@ async function ingestConditions(): Promise<void> {
     for (const icd of res.icd10) if (!list.includes(icd)) list.push(icd);
     dxByPatient.set(pid, list);
   });
-  logger.info('[proof] conditions streamed', { patientsWithDx: dxByPatient.size });
+  plog('[proof] conditions streamed', { patientsWithDx: dxByPatient.size });
 }
 
 async function ingestObservations(): Promise<void> {
@@ -182,7 +189,7 @@ async function ingestObservations(): Promise<void> {
     const prev = slots.get(slug);
     if (!prev || date >= prev.date) slots.set(slug, { value, date }); // latest-wins
   });
-  logger.info('[proof] observations streamed', { patientsWithLabs: labsByPatient.size });
+  plog('[proof] observations streamed', { patientsWithLabs: labsByPatient.size });
 }
 
 async function ingestMedications(): Promise<void> {
@@ -204,7 +211,7 @@ async function ingestMedications(): Promise<void> {
       });
     }
   });
-  logger.info('[proof] medications streamed', { patientsWithMeds: medsByPatient.size });
+  plog('[proof] medications streamed', { patientsWithMeds: medsByPatient.size });
 }
 
 async function ingestProcedures(): Promise<void> {
@@ -218,7 +225,7 @@ async function ingestProcedures(): Promise<void> {
     const code = (cells[idx('code')] || '').trim();
     if (code) procedureCodesUntranslated++;
   });
-  logger.info('[proof] procedures streamed (untranslated)', { procedureCodesUntranslated });
+  plog('[proof] procedures streamed (untranslated)', { procedureCodesUntranslated });
 }
 
 async function ingestEncounters(): Promise<void> {
@@ -233,7 +240,7 @@ async function ingestEncounters(): Promise<void> {
     const prev = encDateByPatient.get(pid);
     if (!prev || start > prev) encDateByPatient.set(pid, start);
   });
-  logger.info('[proof] encounters streamed', { patientsWithEnc: encDateByPatient.size });
+  plog('[proof] encounters streamed', { patientsWithEnc: encDateByPatient.size });
 }
 
 // ---------------------------------------------------------------------------
@@ -328,7 +335,7 @@ function projectGapDistribution(): { byModule: Record<string, number>; totalGaps
 // ---------------------------------------------------------------------------
 async function ensureProofHospital(): Promise<void> {
   const existing = await prisma.hospital.findUnique({ where: { id: PROOF_HOSPITAL_ID } });
-  if (existing) { logger.info('[proof] hospital exists', { id: PROOF_HOSPITAL_ID }); return; }
+  if (existing) { plog('[proof] hospital exists', { id: PROOF_HOSPITAL_ID }); return; }
   await prisma.hospital.create({
     data: {
       id: PROOF_HOSPITAL_ID,
@@ -340,14 +347,14 @@ async function ensureProofHospital(): Promise<void> {
       subscriptionTier: SubscriptionTier.ENTERPRISE, subscriptionStart: new Date(), maxUsers: 1,
     },
   });
-  logger.info('[proof] hospital created', { id: PROOF_HOSPITAL_ID });
+  plog('[proof] hospital created', { id: PROOF_HOSPITAL_ID });
 }
 
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 async function main(): Promise<void> {
-  logger.info('[proof] start', { execute: EXECUTE, sample: SAMPLE > 0 ? SAMPLE : 'full', hospital: PROOF_HOSPITAL_ID, bucket: BUCKET, prefix: CSV_PREFIX });
+  plog('[proof] start', { execute: EXECUTE, sample: SAMPLE > 0 ? SAMPLE : 'full', hospital: PROOF_HOSPITAL_ID, bucket: BUCKET, prefix: CSV_PREFIX });
 
   if (SAMPLE > 0 && EXECUTE) {
     throw new Error('[proof] ABORT: --sample is a DRY-RUN-only representative preview and must never write. Run the full population (no --sample) for --execute.');
@@ -368,13 +375,13 @@ async function main(): Promise<void> {
   await ingestEncounters();
 
   const unmapped = reporter.report();
-  logger.info('[proof] crosswalk report', {
+  plog('[proof] crosswalk report', {
     totalMapped: unmapped.totalMapped, totalUnmapped: unmapped.totalUnmapped,
     distinctUnmapped: unmapped.unmappedCodes.length,
   });
 
   const pids = [...spine.keys()];
-  logger.info('[proof] assembly summary', {
+  plog('[proof] assembly summary', {
     patients: pids.length,
     patientsWithDx: dxByPatient.size,
     patientsWithLabs: labsByPatient.size,
@@ -388,7 +395,7 @@ async function main(): Promise<void> {
     SAMPLE > 0 && pids.length > 0
       ? Object.fromEntries(Object.entries(projection.byModule).map(([m, c]) => [m, Math.round(c * (25571 / pids.length))]))
       : undefined;
-  logger.info('[proof] PROJECTED per-module gap distribution (no write)', {
+  plog('[proof] PROJECTED per-module gap distribution (no write)', {
     mode: SAMPLE > 0 ? `SAMPLE(${pids.length} of 25571, x${(25571 / Math.max(pids.length, 1)).toFixed(1)})` : 'FULL',
     patients: pids.length,
     patientsWithGaps: projection.patientsWithGaps,
@@ -398,7 +405,7 @@ async function main(): Promise<void> {
   });
 
   if (!EXECUTE) {
-    logger.warn('[proof] DRY-RUN complete - no hospital created, no patients written, no gap detection run. Pass --execute (post-snapshot, post-GO) to write.');
+    plog('[proof] DRY-RUN complete - no hospital created, no patients written, no gap detection run. Pass --execute (post-snapshot, post-GO) to write.');
     return;
   }
 
@@ -420,10 +427,10 @@ async function main(): Promise<void> {
     const r = await writePatients(batch, PROOF_HOSPITAL_ID, `proof-${Date.now()}`, 'multi');
     written += r.patientsCreated + r.patientsUpdated;
   }
-  logger.info('[proof] write complete', { patientsWritten: written });
+  plog('[proof] write complete', { patientsWritten: written });
 
   const gapResult = await runGapDetection(PROOF_HOSPITAL_ID);
-  logger.info('[proof] gap detection complete', { ...gapResult });
+  plog('[proof] gap detection complete', { ...gapResult });
 
   // Per-module gap distribution (the proof's headline invariant).
   const byModule = await prisma.therapyGap.groupBy({
@@ -431,11 +438,11 @@ async function main(): Promise<void> {
     where: { hospitalId: PROOF_HOSPITAL_ID },
     _count: { _all: true },
   });
-  logger.info('[proof] per-module gap distribution', {
+  plog('[proof] per-module gap distribution', {
     distribution: byModule.map((m) => ({ module: m.module, gaps: m._count._all })),
   });
 }
 
 main()
   .then(() => process.exit(0))
-  .catch((err) => { logger.error('[proof] failed', { error: err instanceof Error ? err.message : String(err) }); process.exit(1); });
+  .catch((err) => { plog('[proof] failed', { error: err instanceof Error ? err.message : String(err) }); process.exit(1); });
