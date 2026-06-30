@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useModuleDashboard } from '../../../hooks/useModuleDashboard';
-import BaseExecutiveView from '../../../components/shared/BaseExecutiveView';
+import SharedDRGPerformance from '../../../components/shared/SharedDRGPerformance';
 import { valvularDiseaseConfig } from '../config/executiveConfig';
 import ExportButton from '../../../components/shared/ExportButton';
 import { ExportData } from '../../../utils/dataExport';
@@ -356,8 +356,8 @@ const ValvularExecutiveView: React.FC = () => {
  </div>
  </div>
 
- {/* ── Base Executive View (existing shared component) ── */}
- <BaseExecutiveView config={config} />
+ {/* DRG Performance + CMI (de-duplicated: BaseExecutiveView duplicate KPI row + min-h-screen page wrapper dropped; AUDIT-302 Layer 2 PR 2) */}
+ <SharedDRGPerformance config={config} variant="alertOnly" />
 
  {/* ── Modals ──────────────────────────────────────────── */}
  {activeModal?.startsWith('drg-') && (
