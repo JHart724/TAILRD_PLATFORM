@@ -3,8 +3,16 @@ import { DollarSign } from 'lucide-react';
 import DRGOptimizationAlert from './DRGOptimizationAlert';
 import { ExecutiveViewConfig } from './BaseExecutiveView';
 
+type SharedDRGVariant = 'full' | 'alertOnly';
+
 interface SharedDRGPerformanceProps {
   config: ExecutiveViewConfig;
+  /**
+   * 'full' (default): DRGOptimizationAlert + DRG performance cards + Case Mix Index analysis (CAD uses this).
+   * 'alertOnly': render ONLY the DRGOptimizationAlert. The caller (VHD/PV) already renders its own bespoke
+   * (clickable) DRG cards + CMI grid, so emitting the cards + CMI here would duplicate them.
+   */
+  variant?: SharedDRGVariant;
 }
 
 /**
@@ -13,10 +21,13 @@ interface SharedDRGPerformanceProps {
  * Executive view render the DRG/CMI block ONCE, without dragging in BaseExecutiveView's full-page
  * min-h-screen wrapper or its (duplicate) 4-KPI row. The rendered markup of this block is byte-identical
  * to what BaseExecutiveView renders for it; only the page wrapper + KPI row are dropped at the call site.
- * AUDIT-302 Layer 2, PR 1 (CAD pilot). BaseExecutiveView is intentionally left intact for the other
- * modules until PR 2.
+ *
+ * The variant prop scopes how much of the block renders: 'full' (default, CAD) is the whole block;
+ * 'alertOnly' (VHD/PV) renders only the DRGOptimizationAlert, because those views already render their
+ * own bespoke clickable DRG cards + CMI grid - so emitting the cards + CMI here would duplicate them.
+ * AUDIT-302 Layer 2, PR 1 (CAD pilot) + PR 2 (VHD/PV alertOnly).
  */
-const SharedDRGPerformance: React.FC<SharedDRGPerformanceProps> = ({ config }) => {
+const SharedDRGPerformance: React.FC<SharedDRGPerformanceProps> = ({ config, variant = 'full' }) => {
   const { drgTitle, drgDescription, drgOpportunities, drgMetrics, drgPerformanceCards } = config;
 
   return (
@@ -29,7 +40,8 @@ const SharedDRGPerformance: React.FC<SharedDRGPerformanceProps> = ({ config }) =
         showPatientInfo={true}
       />
 
-      {/* DRG Financial Performance */}
+      {/* DRG Financial Performance + CMI - full mode only; alertOnly callers (VHD/PV) render their own bespoke cards + CMI */}
+      {variant === 'full' && (
       <div className="metal-card relative z-10">
         <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
           <h3 className="text-lg font-semibold text-titanium-900 mb-2">{drgTitle}</h3>
@@ -97,6 +109,7 @@ const SharedDRGPerformance: React.FC<SharedDRGPerformanceProps> = ({ config }) =
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 };
