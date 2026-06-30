@@ -178,7 +178,7 @@ The platform detects therapy gaps across 6 cardiovascular modules. Target: appro
 
 Production is LIVE (since April 7, 2026): backend on ECS Fargate at api.tailrd-heart.com, Aurora Serverless v2 PostgreSQL (RDS-to-Aurora cutover 2026-04-29), CloudFront + ALB, ElastiCache Redis, Secrets Manager, CI/CD GitHub Actions -> ECR -> ECS (new task def per commit). Staging is live (CloudFormation stack `tailrd-staging`). Not yet done: frontend deploy + app.tailrd-heart.com DNS; staging CI/CD job.
 
-**Last known working task definition:** `tailrd-backend:324` (2026-06-23, /health healthy + login + 6/6-module dashboard source=database smoke PASS on Aurora at main HEAD `f16c6c0`, AUDIT-188 real gap-engine query for /heart-failure/gdmt-gaps (substantive backend, defuses latent-HIGH), PR #420. Prior: `:323` (`3b567d3`, AUDIT-188 docs filing #419, docs-only auto-deploy), `:322` (`bae8630`, AUDIT-187(b) drop fabricated revenue constants #418), `:319` (`6469796`, AUDIT-186 LVESD batch #414), `:317` (`5f42e05`, AUDIT-184 hollow-DET_OK repair, 12 slugs + 8 over-fires, #412), `:316` (`577a20c`, docs task-def bump #411), `:315` (`dab6afe`, PV module close #410, 6/6 smoke), `:314` (`9c67bde`, AUDIT-300 UI clinical-content-leak), `:313` (`0ae6144`, CAD chunk-1 close), `:312` (`4e0ae70`, CAD chunk-0). Update after every deploy.
+**Last known working task definition:** `tailrd-backend:332` (2026-06-30, Post-Deploy Smoke Test PASS at main HEAD `974828e`, running image SHA = merge SHA verified, AUDIT-192 batched ingestion-write path + AUDIT-193 follow-up filing, PR #431. Prior: `:324` (2026-06-23, /health healthy + login + 6/6-module dashboard source=database smoke PASS on Aurora at main HEAD `f16c6c0`, AUDIT-188 real gap-engine query for /heart-failure/gdmt-gaps (substantive backend, defuses latent-HIGH), PR #420), `:323` (`3b567d3`, AUDIT-188 docs filing #419, docs-only auto-deploy), `:322` (`bae8630`, AUDIT-187(b) drop fabricated revenue constants #418), `:319` (`6469796`, AUDIT-186 LVESD batch #414), `:317` (`5f42e05`, AUDIT-184 hollow-DET_OK repair, 12 slugs + 8 over-fires, #412), `:316` (`577a20c`, docs task-def bump #411), `:315` (`dab6afe`, PV module close #410, 6/6 smoke), `:314` (`9c67bde`, AUDIT-300 UI clinical-content-leak), `:313` (`0ae6144`, CAD chunk-1 close), `:312` (`4e0ae70`, CAD chunk-0). Update after every deploy.
 
 The full deployment-state record (Aurora endpoints, Day 10 cutover summary, staging endpoints, RDS decommission status, env flags) is the authoritative section at the top of `PRODUCTION_READINESS.md` (root); update it there after every cutover or deploy milestone.
 
@@ -287,7 +287,7 @@ Narrative post-mortems for the April 7 2026 outage (var-in-auth, migration-befor
 ## 17. ECS Deployment Runbook
 - **Container won't start, no logs:** Module import error or Prisma mismatch. Pull and run locally.
 - **Roll back first:** `aws ecs update-service --cluster tailrd-production-cluster --service tailrd-production-backend --task-definition tailrd-backend:LAST_WORKING`. Never leave production down while debugging.
-- **Last known working task def:** `tailrd-backend:324` (kept in sync with section 9 / `PRODUCTION_READINESS.md`).
+- **Last known working task def:** `tailrd-backend:332` (kept in sync with section 9 / `PRODUCTION_READINESS.md`).
 
 ## 18. Phase 2 Operating Rules
 
