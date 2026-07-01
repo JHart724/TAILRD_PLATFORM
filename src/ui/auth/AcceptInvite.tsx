@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import TailrdLogo from '../../components/TailrdLogo';
+import Logo from '../../components/TailrdLogo';
 import { Eye, EyeOff, Check, X, Shield, ArrowLeft, Loader2 } from 'lucide-react';
 
 // ─── Types ──────────────────────────────────────────────────────────────────────
@@ -146,7 +146,7 @@ const AcceptInvite: React.FC = () => {
           </div>
           <div className="relative z-10 text-center max-w-md">
             <div className="mb-8">
-              <TailrdLogo size="large" variant="dark" />
+              <Logo variant="wordmark" size="large" />
             </div>
             <h1 className="font-display text-4xl font-bold text-white mb-4 tracking-tight">TAILRD</h1>
             <p className="font-body text-lg text-chrome-200 leading-relaxed">Cardiovascular Intelligence Platform</p>
@@ -159,7 +159,7 @@ const AcceptInvite: React.FC = () => {
         <div className="flex-1 flex items-center justify-center bg-white p-6 sm:p-8 lg:p-12">
           <div className="w-full max-w-md">
             <div className="flex justify-center mb-8 lg:hidden">
-              <TailrdLogo size="large" variant="light" />
+              <Logo variant="wordmark" size="large" surface="light" />
             </div>
             <div className="bg-white rounded-xl shadow-chrome-card border border-titanium-200 p-8 text-center">
               <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -219,7 +219,7 @@ const AcceptInvite: React.FC = () => {
         </div>
         <div className="relative z-10 text-center max-w-md">
           <div className="mb-8">
-            <TailrdLogo size="large" variant="dark" />
+            <Logo variant="wordmark" size="large" />
           </div>
           <h1 className="font-display text-4xl font-bold text-white mb-4 tracking-tight">TAILRD</h1>
           <p className="font-body text-lg text-chrome-200 leading-relaxed">Cardiovascular Intelligence Platform</p>
@@ -233,7 +233,7 @@ const AcceptInvite: React.FC = () => {
         <div className="w-full max-w-md">
           {/* Mobile Logo */}
           <div className="flex justify-center mb-8 lg:hidden">
-            <TailrdLogo size="large" variant="light" />
+            <Logo variant="wordmark" size="large" surface="light" />
           </div>
 
           {/* Form Card */}

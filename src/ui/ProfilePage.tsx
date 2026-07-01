@@ -1,7 +1,30 @@
 import React from 'react';
-import { User, Mail, Phone, Building, Award, BookOpen } from 'lucide-react';
+import { Mail, Award } from 'lucide-react';
+import { useAuth } from '../auth/AuthContext';
+
+/**
+ * Identity (name / role / department / email) is read from the authenticated
+ * user (useAuth().state.user) -- the same source the UserMenu uses -- so the
+ * profile reflects who is actually signed in.
+ *
+ * Credentialing fields (NPI, medical license, board certification, specialty,
+ * training) plus phone/office are NOT carried on the auth user record, so they
+ * are shown as an honest interim state ("Not on file") rather than fabricated
+ * (AUDIT-304: previously hardcoded to "Dr. Sarah Williams" with invented codes).
+ */
+const NOT_ON_FILE = 'Not on file';
 
 export default function ProfilePage() {
+  const { state } = useAuth();
+  const user = state.user;
+
+  const fullName = user ? `${user.firstName} ${user.lastName}`.trim() : NOT_ON_FILE;
+  const initials =
+    ((user?.firstName?.[0] ?? '') + (user?.lastName?.[0] ?? '')).toUpperCase() || '?';
+  const roleLine = user
+    ? [user.title, user.department].filter(Boolean).join(' - ') || NOT_ON_FILE
+    : NOT_ON_FILE;
+
   return (
     <div className="max-w-4xl mx-auto">
       <h1 className="text-2xl font-semibold text-chrome-100 font-display mb-2">Profile</h1>
@@ -18,16 +41,11 @@ export default function ProfilePage() {
                 border: '2px solid rgba(168, 197, 221, 0.3)',
               }}
             >
-              <span className="text-2xl font-bold text-white">DS</span>
+              <span className="text-2xl font-bold text-white">{initials}</span>
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-semibold text-chrome-100 mb-1">Dr. Sarah Williams, MD, FACC</h2>
-              <p className="text-chrome-400 text-sm mb-3">Cardiology Director — Cardiovascular Service Line</p>
-              <div className="flex flex-wrap gap-2">
-                <span className="badge-info">Heart Failure</span>
-                <span className="badge-info">Electrophysiology</span>
-                <span className="badge-info">Structural Heart</span>
-              </div>
+              <h2 className="text-xl font-semibold text-chrome-100 mb-1">{fullName}</h2>
+              <p className="text-chrome-400 text-sm mb-3">{roleLine}</p>
             </div>
           </div>
         </section>
@@ -41,19 +59,19 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-3">
               <label className="text-xs text-chrome-500 block mb-1">Email</label>
-              <p className="text-sm text-chrome-200">sarah.williams@hospital.org</p>
-            </div>
-            <div className="p-3">
-              <label className="text-xs text-chrome-500 block mb-1">Phone</label>
-              <p className="text-sm text-chrome-200">(555) 234-5678</p>
+              <p className="text-sm text-chrome-200">{user?.email || NOT_ON_FILE}</p>
             </div>
             <div className="p-3">
               <label className="text-xs text-chrome-500 block mb-1">Department</label>
-              <p className="text-sm text-chrome-200">Cardiovascular Medicine</p>
+              <p className="text-sm text-chrome-200">{user?.department || NOT_ON_FILE}</p>
+            </div>
+            <div className="p-3">
+              <label className="text-xs text-chrome-500 block mb-1">Phone</label>
+              <p className="text-sm text-chrome-500 italic">{NOT_ON_FILE}</p>
             </div>
             <div className="p-3">
               <label className="text-xs text-chrome-500 block mb-1">Office</label>
-              <p className="text-sm text-chrome-200">Heart Center, Suite 420</p>
+              <p className="text-sm text-chrome-500 italic">{NOT_ON_FILE}</p>
             </div>
           </div>
         </section>
@@ -64,19 +82,21 @@ export default function ProfilePage() {
             <Award className="w-5 h-5 text-chrome-400" />
             Credentials &amp; Specialty
           </h2>
+          <p className="text-xs text-chrome-500 mb-4">
+            Credentialing details are not yet captured in your account. Contact your administrator to add them.
+          </p>
           <div className="space-y-3">
-            {[
-              { label: 'Board Certification', value: 'ABIM — Cardiovascular Disease' },
-              { label: 'NPI', value: '1234567890' },
-              { label: 'Medical License', value: 'Active — State Medical Board' },
-              { label: 'Specialty Focus', value: 'Advanced Heart Failure, GDMT Optimization' },
-              { label: 'Training', value: 'Fellowship — Advanced HF & Transplant Cardiology' },
-            ].map((item) => (
-              <div key={item.label} className="flex items-center justify-between p-3 rounded-lg hover:bg-white/[0.03]">
-                <span className="text-sm text-chrome-400">{item.label}</span>
-                <span className="text-sm text-chrome-200">{item.value}</span>
-              </div>
-            ))}
+            {['Board Certification', 'NPI', 'Medical License', 'Specialty Focus', 'Training'].map(
+              (label) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-white/[0.03]"
+                >
+                  <span className="text-sm text-chrome-400">{label}</span>
+                  <span className="text-sm text-chrome-500 italic">{NOT_ON_FILE}</span>
+                </div>
+              )
+            )}
           </div>
         </section>
       </div>

@@ -1,13 +1,14 @@
 import React, { useState, useMemo, useCallback, lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import CountUp from 'react-countup';
-import TailrdLogo from './components/TailrdLogo';
+import Logo from './components/TailrdLogo';
 import { Heart, Activity, Zap, Stethoscope, GitBranch, CircuitBoard, FlaskConical, DollarSign, Target, Users, AlertTriangle, Brain, BarChart3, ArrowRight, ArrowLeft, TrendingUp } from 'lucide-react';
 import { ErrorBoundary } from './components/shared/ErrorFallback';
 import { ToastContainer } from './components/shared/Toast';
 import { errorHandler } from './utils/ErrorHandler';
 import { roundTo } from './utils/formatters';
 import { AuthProvider } from './auth/AuthContext';
+import { NotificationProvider } from './components/notifications';
 import { initializeTheme } from './theme';
 import AppShell from './design-system/AppShell';
 
@@ -459,7 +460,7 @@ function MainDashboard(): JSX.Element {
  
  {/* Brand */}
  <div className="mb-2">
- <TailrdLogo size="medium" variant="light" />
+ <Logo variant="wordmark" size="medium" surface="light" />
  </div>
  
  {/* Loading message */}
@@ -482,12 +483,6 @@ function MainDashboard(): JSX.Element {
  
   <div className="relative z-10 min-h-screen p-8">
  <div className="max-w-7xl mx-auto space-y-8">
- {/* Clean Professional Medical Header */}
- <div>
- <TailrdLogo size="large" variant="light" className="mb-3" />
- <p className="text-lg text-titanium-600 font-light">Precision Cardiovascular Care Platform</p>
- </div>
- 
  {/* Cardiovascular Service Line - Slightly darker than modules */}
  <div className="flex justify-center mb-8">
  <button
@@ -622,6 +617,7 @@ export default function App(): JSX.Element {
   return (
  <ErrorBoundary module="Application" component="App">
  <AuthProvider>
+ <NotificationProvider>
  <BrowserRouter>
  <ScrollToTop />
  <ToastContainer position="bottom-right" />
@@ -645,7 +641,7 @@ export default function App(): JSX.Element {
  
  {/* Brand */}
  <div className="mb-2">
- <TailrdLogo size="medium" variant="light" />
+ <Logo variant="wordmark" size="medium" surface="light" />
  </div>
  
  {/* Loading message */}
@@ -786,6 +782,7 @@ export default function App(): JSX.Element {
  </Routes>
  </Suspense>
  </BrowserRouter>
+ </NotificationProvider>
  </AuthProvider>
  </ErrorBoundary>
   );

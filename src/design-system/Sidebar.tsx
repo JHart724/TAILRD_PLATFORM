@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Logo from '../components/TailrdLogo';
 import {
   Heart,
   Zap,
@@ -107,14 +108,10 @@ export default function Sidebar() {
         {expanded && (
           <button
             onClick={() => navigate('/dashboard')}
-            className="font-display text-lg tracking-wide hover:opacity-80 transition-opacity sidebar-logo-text"
-            style={{
-              background: 'linear-gradient(135deg, #C8D4DC 0%, #8FA8BC 40%, #F0F5FA 60%, #C8D4DC 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}
+            className="hover:opacity-80 transition-opacity"
+            aria-label="TAILRD HEART - go to dashboard"
           >
-            TAILRD
+            <Logo variant="wordmark" size="small" />
           </button>
         )}
         <button

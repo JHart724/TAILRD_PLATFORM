@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { toast } from './shared/Toast';
-import { 
+import { useNotifications } from './notifications';
+import {
   User, 
   Settings, 
   LogOut, 
@@ -17,7 +18,6 @@ import {
   Lock,
   Palette,
   Database,
-  Clock,
   UserCog
 } from 'lucide-react';
 
@@ -38,6 +38,8 @@ const UserMenu: React.FC<UserMenuProps> = ({
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { logout } = useAuth();
+  // Single source of truth for the unread badge (same count the bell + panel show) -- AUDIT-304
+  const { unreadCount } = useNotifications();
 
   useEffect(() => {
  const handleClickOutside = (event: MouseEvent) => {
@@ -56,7 +58,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
  items: [
  { icon: User, label: 'My Profile', badge: null, action: () => navigate('/profile') },
  { icon: Settings, label: 'Preferences', badge: null, action: () => navigate('/settings') },
- { icon: Bell, label: 'Notifications', badge: '3', badgeColor: 'bg-red-500', action: () => toast.info('Notifications', 'You have 3 unread notifications.') },
+ { icon: Bell, label: 'Notifications', badge: unreadCount > 0 ? String(unreadCount) : null, badgeColor: 'bg-red-500', action: () => toast.info('Notifications', `You have ${unreadCount} unread notification${unreadCount === 1 ? '' : 's'}.`) },
  ]
  },
  {
@@ -65,7 +67,6 @@ const UserMenu: React.FC<UserMenuProps> = ({
  { icon: Activity, label: 'My Patients', badge: '47', badgeColor: 'bg-porsche-500', action: () => navigate('/dashboard') },
  { icon: FileText, label: 'Reports & Analytics', badge: null, action: () => navigate('/dashboard') },
  { icon: Users, label: 'Care Teams', badge: null, action: () => navigate('/dashboard') },
- { icon: Clock, label: 'Recent Activity', badge: null, action: () => toast.info('Recent Activity', 'Activity log coming in a future update.') },
  ]
  },
  {

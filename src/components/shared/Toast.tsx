@@ -89,16 +89,21 @@ const Toast: React.FC<ToastProps> = ({ toast, onDismiss }) => {
  }
   };
 
+  // Enter/leave animation uses ONLY a vertical translate + opacity + scale, never a horizontal one.
+  // A full-width horizontal slide-in previously pushed the card one card-width to the right; if that
+  // enter transition did not resolve to its aligned rest position, the card sat ~one width off the
+  // right edge of the viewport (outside its correctly-anchored container). A small vertical nudge
+  // (8px) can only move the card up/down, so it can never render off-screen horizontally (AUDIT-304).
   return (
  <div
  className={`transform transition-all duration-200 ease-chrome ${
  isVisible && !isLeaving
- ? 'translate-x-0 opacity-100 scale-100'
- : 'translate-x-full opacity-0 scale-95'
+ ? 'translate-y-0 opacity-100 scale-100'
+ : 'translate-y-2 opacity-0 scale-95'
  }`}
  >
  <div
- className="max-w-sm w-full bg-white border border-titanium-200 rounded-lg shadow-chrome-elevated overflow-hidden flex"
+ className="w-[min(24rem,calc(100vw-2rem))] bg-white border border-titanium-200 rounded-lg shadow-chrome-elevated overflow-hidden flex"
  >
  {/* Left accent bar */}
  <div className={`w-1 flex-shrink-0 ${getAccentColor()}`} />
@@ -108,11 +113,11 @@ const Toast: React.FC<ToastProps> = ({ toast, onDismiss }) => {
  {getIcon()}
  </div>
 
- <div className="ml-3 w-0 flex-1">
- <div className="text-sm font-body font-semibold text-titanium-900">
+ <div className="ml-3 min-w-0 flex-1">
+ <div className="text-sm font-body font-semibold text-titanium-900 break-words">
  {toast.title}
  </div>
- <div className="mt-1 text-sm font-body text-titanium-600">
+ <div className="mt-1 text-sm font-body text-titanium-600 break-words">
  {toast.message}
  </div>
 
@@ -231,21 +236,22 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
   }, [addToast, clearAllToasts]);
 
   const getPositionClasses = () => {
+ // Corner offset is right-6/left-6 (24px) so a right-edge scrollbar does not clip the toast (AUDIT-304).
  switch (position) {
  case 'top-left':
- return 'top-4 left-4';
+ return 'top-6 left-6';
  case 'top-center':
- return 'top-4 left-1/2 transform -translate-x-1/2';
+ return 'top-6 left-1/2 transform -translate-x-1/2';
  case 'top-right':
- return 'top-4 right-4';
+ return 'top-6 right-6';
  case 'bottom-left':
- return 'bottom-4 left-4';
+ return 'bottom-6 left-6';
  case 'bottom-center':
- return 'bottom-4 left-1/2 transform -translate-x-1/2';
+ return 'bottom-6 left-1/2 transform -translate-x-1/2';
  case 'bottom-right':
- return 'bottom-4 right-4';
+ return 'bottom-6 right-6';
  default:
- return 'top-4 right-4';
+ return 'top-6 right-6';
  }
   };
 

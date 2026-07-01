@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
-import TailrdLogo from '../../components/TailrdLogo';
+import Logo from '../../components/TailrdLogo';
 import { Eye, EyeOff, Lock, Shield } from 'lucide-react';
 import { toast } from '../../components/shared/Toast';
 
@@ -49,7 +49,6 @@ const SuperAdminLogin: React.FC = () => {
         // In demo mode, role is always super-admin; in prod, verify role from state after login
         // The login dispatches LOGIN_SUCCESS which updates state asynchronously.
         // We navigate to /admin and let the ProtectedRoute guard handle role checks.
-        toast.success('Login Successful', 'Welcome to TAILRD Administration');
         navigate('/admin', { replace: true });
       }
     } catch (err: any) {
@@ -82,13 +81,13 @@ const SuperAdminLogin: React.FC = () => {
             </div>
           </div>
           <div className="mb-8">
-            <TailrdLogo size="large" variant="dark" />
+            <Logo variant="wordmark" size="large" />
           </div>
           <h1 className="font-display text-3xl font-bold text-white mb-4 tracking-tight">
             TAILRD Administration
           </h1>
           <p className="font-body text-lg text-red-200/80 leading-relaxed">
-            Restricted Access — Authorized Personnel Only
+            Restricted Access - Authorized Personnel Only
           </p>
           <div className="mt-8 w-16 h-0.5 bg-white/40 mx-auto rounded-full" />
           <p className="mt-6 font-body text-sm text-red-200/50">
@@ -102,7 +101,7 @@ const SuperAdminLogin: React.FC = () => {
         <div className="w-full max-w-md">
           {/* Mobile Logo (visible only on small screens) */}
           <div className="flex justify-center mb-8 lg:hidden">
-            <TailrdLogo size="large" variant="light" />
+            <Logo variant="wordmark" size="large" surface="light" />
           </div>
 
           {/* Form Card */}
