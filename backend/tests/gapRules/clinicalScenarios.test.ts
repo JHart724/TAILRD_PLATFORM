@@ -82,11 +82,12 @@ describe('Structural: Gap rule engine integrity', () => {
     // AUDIT-173 accepted), the 8 KEPT monitoring rules, all med-absence/threshold rules. CAD-STATIN dose-branch
     // was gated (no gaps.push removed). Pre-existing hollow-read defect surfaced by the Synthea proof dry-run.
     // Then 378 -> 367 by AUDIT-194 Part A (2026-06-30): 11 hollow over-fire rules RETIRED across HF (-5:
-    // HF-37-FU/HF-38/HF-74/HF-90/HF-91) + VHD (-6: VD-7/VD-16/VD-ECHO-INTERVAL/VD-FUNCTIONAL-STATUS/
-    // VD-PREOP-ASSESSMENT/VD-PULMONARY-HTN). Cross-module hollow-read sweep (section-20 pattern-class
-    // extension of CAD-EXT); 3 KEPT (HF-20/VD-18/VD-10, do-not-over-correct). audit194Suppress.test.ts guards.
+    // HF-37-FU/HF-38/HF-74/HF-90/HF-91) + VHD (-6). Then 367 -> 369 by AUDIT-194-B1 (2026-07-01): HF-74 + HF-90
+    // RESTORED (+2) - nt_probnp (LOINC 33762-6) threaded, so they are no longer hollow (fire on real absence of
+    // a natriuretic peptide, not ~100%). HF-37-FU/HF-38/HF-91 stay permanently retired. audit194Suppress +
+    // audit194B1Threading guard.
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(367);
+    expect(count).toBe(369);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

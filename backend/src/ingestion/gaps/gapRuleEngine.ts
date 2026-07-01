@@ -5333,13 +5333,33 @@ export function evaluateGapRules(
     });
   }
 
-  // HF-74 SPEC_ONLY-PENDING-THREADING (AUDIT-194 Part A, 2026-06-30). Gated on bnp===undefined &&
-  // nt_probnp===undefined -> both slugs are never threaded by the FHIR/observation path (no ECHO_LOINC_TO_SLUG
-  // mapping) -> the negation is always true -> fired ~100% of HF patients. Suppressed to stop the false
-  // positive, but NOT a permanent retire: the negated signal is clinically real and threadable. RESTORE the
-  // firing when BNP/NT-proBNP are threaded (Part B work item AUDIT-194-B1: thread LOINC 30934-4 BNP + 33762-6
-  // NT-proBNP into observationService ECHO_LOINC_TO_SLUG; also un-darkens the silent HF-18/21/77/85/92 gates).
-  // registry entry orphaned. (AUDIT-184-CAD-EXT RETIRE precedent)
+  // Gap HF-74: NT-proBNP Serial Monitoring in HF
+  // Guideline: 2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure
+  // RESTORED (AUDIT-194-B1 / Threading Tranche 1, 2026-07-01): NT-proBNP (LOINC 33762-6, source-confirmed present
+  // in the Synthea observations feed) is now threaded into ECHO_LOINC_TO_SLUG, so this is NO LONGER hollow. The
+  // gate fires only for HF patients genuinely lacking any natriuretic peptide on record (a real monitoring gap
+  // for a subset), NOT ~100%. BNP (33747-0/30934-4) is ABSENT from Synthea and stays real-EHR-only; the bnp===
+  // undefined half is always true for Synthea but the nt_probnp===undefined half now discriminates.
+  if (
+    hasHF &&
+    labValues['bnp'] === undefined && labValues['nt_probnp'] === undefined &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MONITORING_OVERDUE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'NT-proBNP/BNP monitoring not documented in HF',
+      target: 'Serial natriuretic peptide measurement obtained',
+      recommendations: { action: 'Consider serial NT-proBNP/BNP monitoring per 2022 AHA/ACC/HFSA' },
+      evidence: {
+        triggerCriteria: ['Heart failure diagnosis', 'No recent BNP or NT-proBNP value on record'],
+        guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
+        classOfRecommendation: '2a',
+        levelOfEvidence: 'B',
+        exclusions: ['Recent natriuretic peptide within 3 months', 'Hospice/palliative care'],
+      },
+    });
+  }
 
   // Gap HF-75: Cardiac MRI Referral for Non-Ischemic Cardiomyopathy
   // Guideline: 2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure
@@ -9498,10 +9518,33 @@ export function evaluateGapRules(
   // Gap HF-90: Amyloid Biomarker Follow-up
   // Guideline: 2023 ACC Expert Consensus on Cardiac Amyloidosis
   // Known ATTR (E85.*) + no recent BNP/NT-proBNP
-  // HF-90 SPEC_ONLY-PENDING-THREADING (AUDIT-194 Part A, 2026-06-30). Same bnp===undefined &&
-  // nt_probnp===undefined double-negation as HF-74, gated on E85 (amyloidosis) -> fired ~100% of the E85
-  // cohort. Suppressed to stop the false positive; NOT a permanent retire - RESTORE when BNP/NT-proBNP are
-  // threaded (Part B work item AUDIT-194-B1, same thread as HF-74). registry entry orphaned. (RETIRE precedent)
+  // RESTORED (AUDIT-194-B1 / Threading Tranche 1, 2026-07-01): NT-proBNP (LOINC 33762-6) now threaded, so the
+  // nt_probnp===undefined half discriminates - fires only for E85 patients genuinely lacking a natriuretic
+  // peptide, NOT ~100% of the E85 cohort. BNP stays real-EHR-only (absent from Synthea).
+  const hasATTR90 = dxCodes.some(c => c.startsWith('E85'));
+  if (
+    hasATTR90 &&
+    labValues['bnp'] === undefined && labValues['nt_probnp'] === undefined &&
+    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
+  ) {
+    gaps.push({
+      type: TherapyGapType.MONITORING_OVERDUE,
+      module: ModuleType.HEART_FAILURE,
+      status: 'Amyloid biomarker follow-up overdue (no recent BNP/NT-proBNP)',
+      target: 'Serial natriuretic peptide and troponin monitoring completed',
+      recommendations: { action: 'Consider serial BNP/NT-proBNP and troponin monitoring for cardiac amyloidosis per 2023 ACC Expert Consensus' },
+      evidence: {
+        triggerCriteria: [
+          'Known amyloidosis (E85.*)',
+          'No recent BNP or NT-proBNP value on file',
+        ],
+        guidelineSource: '2023 ACC Expert Consensus Decision Pathway on Comprehensive Multidisciplinary Care for Cardiac Amyloidosis',
+        classOfRecommendation: 'Class 1',
+        levelOfEvidence: 'LOE B-NR',
+        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent natriuretic peptide within follow-up interval'],
+      },
+    });
+  }
 
   // Gap HF-91: CSA/OSA Treatment in HF
   // Guideline: 2022 AHA/ACC/HFSA HF Guideline; SERVE-HF trial

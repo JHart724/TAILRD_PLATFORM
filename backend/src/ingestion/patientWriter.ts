@@ -51,6 +51,7 @@ const ECHO_FIELDS: ReadonlySet<string> = new Set([
 // (see AUDIT-165 / AUDIT-181 / AUDIT-184 / LVESD-batch lineage in getObservationName below).
 const LAB_FIELDS: readonly string[] = [
   'lvef', 'bnp', 'nt_probnp', 'ferritin', 'tsat', 'sodium', 'potassium', 'egfr',
+  'bmi', // AUDIT-194-B1 / Threading Tranche 1: bmi was the one confirmed-present slug not already in LAB_FIELDS; added so the synthea/CSV write path persists it (LOINC 39156-5 threaded in ECHO_LOINC_TO_SLUG)
   'ldl', 'lpa', 'triglycerides', 'qtc_interval', 'qrs_duration', 'kccq_score', 'abi_right', 'abi_left',
   'apob', 'inr',
   'aortic_valve_vmax', 'aortic_valve_mean_gradient', 'aortic_valve_area', 'mitral_regurg_grade', 'sts_score',
@@ -394,6 +395,7 @@ function getUnit(field: string): string {
     sodium: 'mEq/L',
     potassium: 'mEq/L',
     egfr: 'mL/min/1.73m2',
+    bmi: 'kg/m2',
     ldl: 'mg/dL',
     lpa: 'nmol/L',
     triglycerides: 'mg/dL',
@@ -438,6 +440,7 @@ function getObservationName(field: string): string {
     sodium: 'Sodium',
     potassium: 'Potassium',
     egfr: 'Estimated GFR',
+    bmi: 'Body Mass Index',
     ldl: 'LDL Cholesterol',
     lpa: 'Lipoprotein(a)',
     triglycerides: 'Triglycerides',

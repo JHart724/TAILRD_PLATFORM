@@ -91,12 +91,12 @@ No EXTRA rules or architectural patterns surfaced. Reconciliation is clean.
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-PV-011 | 942 | DET_OK | `gap-pv-rivaroxaban` (PV-RIVAROXABAN @16070-16098) | auto-verify: preserved-from-addendum |
-| GAP-PV-017 | 955 | PARTIAL_DETECTION | `gap-pv-bypass-eval` (PV-BYPASS-EVAL @16135-16161) | auto-verify: preserved-from-addendum |
+| GAP-PV-011 | 942 | DET_OK | `gap-pv-rivaroxaban` (PV-RIVAROXABAN @16113-16141) | auto-verify: preserved-from-addendum |
+| GAP-PV-017 | 955 | PARTIAL_DETECTION | `gap-pv-bypass-eval` (PV-BYPASS-EVAL @16178-16204) | auto-verify: preserved-from-addendum |
 | GAP-PV-018 | 956 | SPEC_ONLY | — | MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-180): PARTIAL -> SPEC_ONLY. GAP-PV-018 ("CLTI endovasc |
 | GAP-PV-055 | 1017 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-PV-056 | 1018 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-PV-058 | 1028 | PARTIAL_DETECTION | `gap-pv-058-symptomatic-carotid-revasc` (PV-058 @16797-16819) | MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> PARTIAL. Built gap-pv-058-symptomatic-carotid- |
+| GAP-PV-058 | 1028 | PARTIAL_DETECTION | `gap-pv-058-symptomatic-carotid-revasc` (PV-058 @16840-16862) | MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> PARTIAL. Built gap-pv-058-symptomatic-carotid- |
 | GAP-PV-079 | 1060 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 
 ---
