@@ -1,13 +1,26 @@
 import prisma from '../lib/prisma';
-import { ParsedRow, MedicationRecord } from './csvParser';
+import { ParsedRow, MedicationRecord, ConditionRecord } from './csvParser';
 import { Gender, ObservationCategory, ConditionCategory, ConditionClinicalStatus, ConditionVerificationStatus, MedicationStatus } from '@prisma/client';
+
+// AUDIT-193: the recurring monthly extract model. 'full' = a complete snapshot (a med/dx absent from it is no
+// longer on the active list -> deactivate-diff runs). 'delta' = an incremental extract (absence means unchanged,
+// NOT ended -> deactivate-diff is SKIPPED; only explicit STOP dates deactivate). Default 'full'.
+export type ExtractMode = 'full' | 'delta';
 
 export interface WriteResult {
   patientsCreated: number;
   patientsUpdated: number;
   observationsWritten: number;
   errors: Array<{ patientId: string; error: string }>;
+  // AUDIT-193: structured, fail-loud completeness errors. Populated when the deactivate-diff is ABORTED because
+  // the extract looks truncated (below the patient-count band) - surfaced, never a silent mass-deactivate.
+  completenessErrors: Array<{ hospitalId: string; message: string }>;
 }
+
+// AUDIT-193: deactivate-diff aborts if the new extract's distinct-patient count is below this fraction of the
+// tenant's stored patient count. Legitimate monthly churn is low single digits; a >10% drop signals a truncated
+// extract, not real attrition. Operator decision (2026-06-30).
+const COMPLETENESS_MIN_FRACTION = 0.9;
 
 // AUDIT-192 (2026-06-29): BATCHED write path. The prior per-row loop did findUnique + per-Condition /
 // per-Medication upsert per patient -> ~12 serial Aurora round-trips per patient (~300K for the 25,571-patient
@@ -53,12 +66,34 @@ export async function writePatients(
   hospitalId: string,
   _uploadJobId: string,
   _moduleId: string,
+  extractMode: ExtractMode = 'full',
 ): Promise<WriteResult> {
-  const result: WriteResult = { patientsCreated: 0, patientsUpdated: 0, observationsWritten: 0, errors: [] };
+  const result: WriteResult = { patientsCreated: 0, patientsUpdated: 0, observationsWritten: 0, errors: [], completenessErrors: [] };
+
+  // AUDIT-193 completeness guard (computed ONCE, whole-extract - the deactivate-diff is an extract-level concern,
+  // not per-batch). The deactivate-diff runs ONLY in full-snapshot mode AND when the extract is not truncated.
+  // STOP-parse (explicit end dates) runs in BOTH modes regardless - an explicit STOP is unambiguous.
+  let canDeactivate = extractMode === 'full';
+  if (canDeactivate) {
+    const distinctNew = new Set(
+      rows.map((r) => r.data.patient_id).filter((x): x is string => typeof x === 'string' && x.length > 0),
+    ).size;
+    const storedCount = await prisma.patient.count({ where: { hospitalId } });
+    if (storedCount > 0 && distinctNew < COMPLETENESS_MIN_FRACTION * storedCount) {
+      // Fail loud: the extract has far fewer patients than are stored -> likely truncated/failed export. Abort the
+      // deactivate-diff to avoid mass false-deactivation; STOP-parse still applies. Surfaced, never silent.
+      canDeactivate = false;
+      result.completenessErrors.push({
+        hospitalId,
+        message: `IngestCompletenessError: extract has ${distinctNew} distinct patients, below ${Math.round(COMPLETENESS_MIN_FRACTION * 100)}% of the ${storedCount} stored for this tenant. Deactivate-diff ABORTED (fail-loud) to avoid mass false-deactivation on a truncated extract; explicit-STOP deactivation still applied.`,
+      });
+    }
+  }
+
   for (let i = 0; i < rows.length; i += WRITE_BATCH) {
     const batch = rows.slice(i, i + WRITE_BATCH);
     try {
-      await writeBatch(batch, hospitalId, result);
+      await writeBatch(batch, hospitalId, result, canDeactivate);
     } catch (err) {
       // Batch-level isolation: a malformed row fails its 500-row batch (coarser than per-row), recorded here;
       // the ingest continues with the next batch (the snapshot + fresh-tenant model bound the blast radius).
@@ -70,7 +105,7 @@ export async function writePatients(
 
 /** Write one sub-batch of patients + their conditions/medications/observations via createMany (guard-exempt),
  *  with hospitalId-scoped lookup/update for the re-ingest path. */
-async function writeBatch(batch: ParsedRow[], hospitalId: string, result: WriteResult): Promise<void> {
+async function writeBatch(batch: ParsedRow[], hospitalId: string, result: WriteResult, canDeactivate: boolean): Promise<void> {
   const valid = batch.filter((r) => typeof r.data.patient_id === 'string' && (r.data.patient_id as string).length > 0);
   if (valid.length === 0) return;
   const mrns = [...new Set(valid.map((r) => r.data.patient_id as string))];
@@ -138,19 +173,30 @@ async function writeBatch(batch: ParsedRow[], hospitalId: string, result: WriteR
     const onsetDate = encDateStr ? new Date(encDateStr) : new Date();
 
     // Conditions: primary + secondary diagnoses (deduped per patient). Deterministic id -> idempotent re-ingest.
+    // AUDIT-193: a dx with a STOP date (from condition_records) is written RESOLVED + abatementDate; else ACTIVE.
     const dxSet = new Set<string>();
     const primaryDx = r.data.primary_diagnosis;
     if (typeof primaryDx === 'string' && primaryDx) dxSet.add(primaryDx);
     const secondaryDx = r.data.secondary_diagnoses;
     if (Array.isArray(secondaryDx)) for (const dx of secondaryDx) if (typeof dx === 'string' && dx) dxSet.add(dx);
+    const condStopByDx = new Map<string, string | null>();
+    const condRecords = r.data.condition_records;
+    if (Array.isArray(condRecords)) {
+      for (const cr of condRecords as ConditionRecord[]) {
+        if (cr && typeof cr === 'object' && typeof cr.icd10Code === 'string') condStopByDx.set(cr.icd10Code, cr.stopDate ?? null);
+      }
+    }
     for (const dx of dxSet) {
+      const stop = condStopByDx.get(dx) ?? null;
+      const resolved = stop !== null;
       conditions.push({
         id: `${pid}-${dx}`, patientId: pid, hospitalId,
         conditionName: dx, icd10Code: dx,
         category: ConditionCategory.ENCOUNTER_DIAGNOSIS,
-        clinicalStatus: ConditionClinicalStatus.ACTIVE,
+        clinicalStatus: resolved ? ConditionClinicalStatus.RESOLVED : ConditionClinicalStatus.ACTIVE,
         verificationStatus: ConditionVerificationStatus.CONFIRMED,
         onsetDate,
+        abatementDate: resolved ? new Date(stop as string) : null,
       });
     }
 
@@ -184,17 +230,22 @@ async function writeBatch(batch: ParsedRow[], hospitalId: string, result: WriteR
       });
     }
 
-    // Medications: one ACTIVE row per drug (deduped). Deterministic id -> idempotent re-ingest.
+    // Medications: one row per drug (deduped). Deterministic id -> idempotent re-ingest.
+    // AUDIT-193: a med with a STOP date is written DISCONTINUED + endDate; else ACTIVE.
     const medRecords = r.data.medication_records;
     if (Array.isArray(medRecords)) {
       const seenRx = new Set<string>();
       for (const m of medRecords as MedicationRecord[]) {
         if (!m || typeof m !== 'object' || !m.rxNormCode || seenRx.has(m.rxNormCode)) continue;
         seenRx.add(m.rxNormCode);
+        const stop = m.stopDate ?? null;
+        const discontinued = stop !== null;
         meds.push({
           id: `${pid}-rx-${m.rxNormCode}`, patientId: pid, hospitalId,
           medicationName: m.medicationName || m.rxNormCode, rxNormCode: m.rxNormCode,
-          status: MedicationStatus.ACTIVE, startDate: m.startDate ? new Date(m.startDate) : null,
+          status: discontinued ? MedicationStatus.DISCONTINUED : MedicationStatus.ACTIVE,
+          startDate: m.startDate ? new Date(m.startDate) : null,
+          endDate: discontinued ? new Date(stop as string) : null,
         });
       }
     }
@@ -214,25 +265,85 @@ async function writeBatch(batch: ParsedRow[], hospitalId: string, result: WriteR
     result.observationsWritten += c.count;
   }
 
-  // 7. Re-ingest update pass (ONLY when patients pre-existed): re-affirm existing Condition/Medication rows
-  //    so they are UPDATED, not silently skipped by createMany's skipDuplicates. ONE bounded updateMany each
-  //    (uniform data; hospitalId in where -> guard passes). Skipped entirely on a fresh tenant (all net-new).
-  //    NOTE (scope): the writer currently persists everything ACTIVE and does NOT parse medications.csv STOP /
-  //    conditions.csv status, so true discontinuation/resolution is not yet captured on either path - this
-  //    re-affirm is the per-field-update hook; status-change capture (parse STOP + deactivate-absent diff) is a
-  //    separate follow-up. Per-row differing data (when added) would move to the $transaction pattern (step 4).
+  // 7. Re-ingest STATUS-CHANGE pass (AUDIT-193; ONLY when patients pre-existed). createMany(skipDuplicates)
+  //    inserts net-new rows but SKIPS existing ids, so existing rows keep their prior status. This pass updates
+  //    them, split by the status we built from STOP: rows still present-and-ongoing -> re-affirm ACTIVE (clear
+  //    any prior end date); rows present-with-a-STOP -> DISCONTINUED/RESOLVED + end/abatement date. All bounded:
+  //    ONE updateMany for the uniform ACTIVE set, ONE $transaction of updateMany for the per-row-dated ended set
+  //    (mirrors the step-4 lastAssessment pattern - one round-trip, NOT N serial). Skipped on a fresh tenant.
   if (isReingest) {
-    if (conditions.length > 0) {
+    // Conditions: partition the built rows by clinicalStatus.
+    const condActiveIds = conditions.filter((c) => c.clinicalStatus === ConditionClinicalStatus.ACTIVE).map((c) => c.id as string);
+    const condEnded = conditions.filter((c) => c.clinicalStatus === ConditionClinicalStatus.RESOLVED);
+    if (condActiveIds.length > 0) {
       await prisma.condition.updateMany({
-        where: { id: { in: conditions.map((c) => c.id as string) }, hospitalId },
-        data: { clinicalStatus: ConditionClinicalStatus.ACTIVE },
+        where: { id: { in: condActiveIds }, hospitalId },
+        data: { clinicalStatus: ConditionClinicalStatus.ACTIVE, abatementDate: null },
       });
     }
-    if (meds.length > 0) {
+    if (condEnded.length > 0) {
+      await prisma.$transaction(
+        condEnded.map((c) =>
+          prisma.condition.updateMany({
+            where: { id: c.id as string, hospitalId },
+            data: { clinicalStatus: ConditionClinicalStatus.RESOLVED, abatementDate: c.abatementDate as Date | null },
+          }),
+        ),
+      );
+    }
+    // Medications: partition the built rows by status.
+    const medActiveIds = meds.filter((m) => m.status === MedicationStatus.ACTIVE).map((m) => m.id as string);
+    const medEnded = meds.filter((m) => m.status === MedicationStatus.DISCONTINUED);
+    if (medActiveIds.length > 0) {
       await prisma.medication.updateMany({
-        where: { id: { in: meds.map((m) => m.id as string) }, hospitalId },
-        data: { status: MedicationStatus.ACTIVE },
+        where: { id: { in: medActiveIds }, hospitalId },
+        data: { status: MedicationStatus.ACTIVE, endDate: null },
       });
+    }
+    if (medEnded.length > 0) {
+      await prisma.$transaction(
+        medEnded.map((m) =>
+          prisma.medication.updateMany({
+            where: { id: m.id as string, hospitalId },
+            data: { status: MedicationStatus.DISCONTINUED, endDate: m.endDate as Date | null },
+          }),
+        ),
+      );
+    }
+
+    // 8. Deactivate-diff (AUDIT-193; GUARDED - only when canDeactivate = full-snapshot mode AND the completeness
+    //    band passed). For patients PRESENT in this batch (per-patient scoping: an entirely-absent patient is
+    //    never processed, so their rows are never touched), find their existing ACTIVE rows whose id is NOT in
+    //    the new extract -> deactivate (the row dropped off the active list). INACTIVE (not RESOLVED) since there
+    //    is no explicit resolution date - it just left the snapshot. Two findMany + two updateMany (bounded).
+    if (canDeactivate) {
+      const presentPatientIds = [...idByMrn.values()];
+      if (presentPatientIds.length > 0) {
+        const newCondIds = new Set(conditions.map((c) => c.id as string));
+        const newMedIds = new Set(meds.map((m) => m.id as string));
+        const existingActiveConds = await prisma.condition.findMany({
+          where: { hospitalId, patientId: { in: presentPatientIds }, clinicalStatus: ConditionClinicalStatus.ACTIVE },
+          select: { id: true },
+        });
+        const absentCondIds = existingActiveConds.map((c) => c.id).filter((id) => !newCondIds.has(id));
+        if (absentCondIds.length > 0) {
+          await prisma.condition.updateMany({
+            where: { id: { in: absentCondIds }, hospitalId },
+            data: { clinicalStatus: ConditionClinicalStatus.INACTIVE },
+          });
+        }
+        const existingActiveMeds = await prisma.medication.findMany({
+          where: { hospitalId, patientId: { in: presentPatientIds }, status: MedicationStatus.ACTIVE },
+          select: { id: true },
+        });
+        const absentMedIds = existingActiveMeds.map((m) => m.id).filter((id) => !newMedIds.has(id));
+        if (absentMedIds.length > 0) {
+          await prisma.medication.updateMany({
+            where: { id: { in: absentMedIds }, hospitalId },
+            data: { status: MedicationStatus.DISCONTINUED },
+          });
+        }
+      }
     }
   }
 }

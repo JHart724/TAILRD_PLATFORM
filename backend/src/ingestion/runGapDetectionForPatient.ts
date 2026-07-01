@@ -38,7 +38,15 @@ export async function runGapDetectionForPatient(
     const patient = await prisma.patient.findFirst({
       where: { id: patientId, hospitalId },
       include: {
-        conditions: true,
+        // AUDIT-193 companion fix (also fixes a standing latent bug independent of re-ingest): only ACTIVE-class
+        // conditions drive gap detection. Previously `conditions: true` included ALL conditions regardless of
+        // clinicalStatus, so a RESOLVED/INACTIVE condition still fired gaps for EVERY patient - wrong. We exclude
+        // exactly the two deactivation values the writer sets (RESOLVED = explicit STOP; INACTIVE = dropped off a
+        // full-snapshot extract). notIn (NOT ==ACTIVE) deliberately KEEPS genuinely-active RECURRENCE/RELAPSE
+        // firing - the redox path folds those into 'active', but ingestSynthea stores the raw uppercased FHIR code,
+        // so a literal ==ACTIVE filter would wrongly drop them. Medications already filter status ACTIVE (so a
+        // DISCONTINUED med drops correctly) - the asymmetry is why this condition filter was the missing half.
+        conditions: { where: { clinicalStatus: { notIn: ['RESOLVED', 'INACTIVE'] } } },
         medications: { where: { status: 'ACTIVE' } },
         observations: { orderBy: { observedDateTime: 'desc' } },
         procedures: true, // v3.0 ingest work-unit 1: procedure codes thread to the engine

@@ -76,12 +76,28 @@ describe('parseMultiFileCSV - happy path (parse + join + crosswalk)', () => {
     expect(r.procedureCodesUntranslated).toBe(1); // SNOMED procedure left raw (no SNOMED->CPT map)
   });
 
-  it('emits structured medication_records (rxNormCode + name + startDate) for persistence', () => {
+  it('emits structured medication_records (rxNormCode + name + startDate + stopDate) for persistence', () => {
     const r = parseMultiFileCSV(fullInput());
     const p1 = r.validRows.find(row => row.data.patient_id === 'P1')!;
+    // AUDIT-193: stopDate threaded (null when the medications.csv row has no STOP -> ongoing).
     expect(p1.data.medication_records).toEqual([
-      { rxNormCode: '197361', medicationName: 'Lisinopril 10 MG Oral Tablet', startDate: '2021-02-01' },
+      { rxNormCode: '197361', medicationName: 'Lisinopril 10 MG Oral Tablet', startDate: '2021-02-01', stopDate: null },
     ]);
+  });
+
+  it('AUDIT-193: reads STOP on medications.csv + conditions.csv into stopDate / condition_records', () => {
+    const input = fullInput();
+    // give P1 a discontinued med and a resolved condition (STOP populated)
+    input.medications = `START,STOP,PATIENT,PAYER,ENCOUNTER,CODE,DESCRIPTION
+2021-02-01,2021-08-01,P1,PAY1,E2,197361,Lisinopril 10 MG Oral Tablet`;
+    input.conditions = `START,STOP,PATIENT,ENCOUNTER,SYSTEM,CODE,DESCRIPTION
+2020-01-01,2021-09-01,P1,E1,http://snomed.info/sct,49436004,Atrial fibrillation`;
+    const r = parseMultiFileCSV(input);
+    const p1 = r.validRows.find(row => row.data.patient_id === 'P1')!;
+    expect((p1.data.medication_records as any[])[0].stopDate).toBe('2021-08-01');
+    // 49436004 -> I48.91; its condition_record carries the resolution date.
+    const cr = (p1.data.condition_records as any[]).find(c => c.icd10Code === 'I48.91');
+    expect(cr.stopDate).toBe('2021-09-01');
   });
 
   it('derives demographics from the patients spine (age numeric, sex from GENDER)', () => {
