@@ -24,11 +24,22 @@ export interface MedicationRecord {
   rxNormCode: string;       // Synthea medications.csv CODE (RxNorm) - what expandToIngredients consumes
   medicationName: string;   // medications.csv DESCRIPTION (falls back to the code if blank)
   startDate: string | null; // medications.csv START, if present
+  // AUDIT-193: medications.csv STOP (discontinuation date). Optional field; absent/undefined/empty = ongoing.
+  // Threaded so the writer can mark a discontinued med DISCONTINUED+endDate on re-ingest instead of re-affirming
+  // it ACTIVE. Optional (not required) so the single-file path and the proof-script accumulator compile unchanged.
+  stopDate?: string | null;
+}
+
+// AUDIT-193: one condition with its resolution signal. icd10Code is post-crosswalk (SNOMED -> ICD-10).
+// stopDate = conditions.csv STOP (abatement/resolution date); absent/empty = ongoing.
+export interface ConditionRecord {
+  icd10Code: string;
+  stopDate: string | null;
 }
 
 export interface ParsedRow {
   rowNumber: number;
-  data: Record<string, string | number | boolean | string[] | MedicationRecord[] | null>;
+  data: Record<string, string | number | boolean | string[] | MedicationRecord[] | ConditionRecord[] | null>;
   errors: Array<{ field: string; message: string }>;
   warnings: Array<{ field: string; message: string }>;
 }
@@ -385,14 +396,23 @@ export function parseMultiFileCSV(input: MultiFileInput): MultiFileParseResult {
     if (age === null) parsedRow.warnings.push({ field: 'age', message: `unparseable BIRTHDATE '${birthdate}'` });
 
     // --- conditions -> crosswalk SNOMED -> ICD-10 (ICD10 bypasses); first = primary, rest = secondary ---
+    // AUDIT-193: also carry each dx's STOP (resolution) date in condition_records. active-wins on dedup: if a dx
+    // appears both ongoing (no stop) and resolved (has stop) across rows, the ongoing occurrence wins (a dx that
+    // is active anywhere is active). A dx with only a stop date -> resolved.
     const icd10s: string[] = [];
+    const stopByIcd = new Map<string, string | null>();
     let latestConditionDate = '';
     for (const c of conditionsByPatient.get(pid) || []) {
       const code = c[condSchema.codeColumn as string] || '';
       if (!code) continue;
       const res = resolveConditionIcd10(code, condSchema.codeSystem as CodeSystem);
       reporter.record(res, code);
-      for (const icd of res.icd10) if (!icd10s.includes(icd)) icd10s.push(icd);
+      const stop = (c['stop'] || '').trim() || null;
+      for (const icd of res.icd10) {
+        if (!icd10s.includes(icd)) icd10s.push(icd);
+        // active-wins: null (ongoing) overrides a prior stop; a stop does not override a prior null.
+        if (!stopByIcd.has(icd) || stop === null) stopByIcd.set(icd, stop);
+      }
       const start = c['start'] || '';
       if (start > latestConditionDate) latestConditionDate = start;
     }
@@ -403,6 +423,7 @@ export function parseMultiFileCSV(input: MultiFileInput): MultiFileParseResult {
       parsedRow.data.primary_diagnosis = null;
       parsedRow.data.secondary_diagnoses = [];
     }
+    parsedRow.data.condition_records = icd10s.map((icd) => ({ icd10Code: icd, stopDate: stopByIcd.get(icd) ?? null }));
 
     // --- encounter_date: latest encounter START, else latest condition START, else null ---
     let latestEncounterDate = '';
@@ -447,7 +468,8 @@ export function parseMultiFileCSV(input: MultiFileInput): MultiFileParseResult {
       const code = m['code'] || '';
       if (!code) continue;
       medCodes.push(code);
-      medRecords.push({ rxNormCode: code, medicationName: m['description'] || code, startDate: m['start'] || null });
+      // AUDIT-193: thread STOP (discontinuation date; absent = ongoing) so re-ingest can mark the med DISCONTINUED.
+      medRecords.push({ rxNormCode: code, medicationName: m['description'] || code, startDate: m['start'] || null, stopDate: (m['stop'] || '').trim() || null });
     }
     parsedRow.data.medications = medCodes;
     parsedRow.data.medication_records = medRecords;

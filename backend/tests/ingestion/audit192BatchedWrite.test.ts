@@ -18,9 +18,11 @@ jest.mock('../../src/lib/prisma', () => ({
       findMany: jest.fn().mockResolvedValue([]),
       createMany: jest.fn().mockResolvedValue({ count: 0 }),
       updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+      count: jest.fn().mockResolvedValue(0), // AUDIT-193 completeness guard
     },
-    condition: { createMany: jest.fn().mockResolvedValue({ count: 0 }), updateMany: jest.fn().mockResolvedValue({ count: 0 }) },
-    medication: { createMany: jest.fn().mockResolvedValue({ count: 0 }), updateMany: jest.fn().mockResolvedValue({ count: 0 }) },
+    // AUDIT-193: findMany added for the deactivate-diff (existing ACTIVE rows lookup).
+    condition: { createMany: jest.fn().mockResolvedValue({ count: 0 }), updateMany: jest.fn().mockResolvedValue({ count: 0 }), findMany: jest.fn().mockResolvedValue([]) },
+    medication: { createMany: jest.fn().mockResolvedValue({ count: 0 }), updateMany: jest.fn().mockResolvedValue({ count: 0 }), findMany: jest.fn().mockResolvedValue([]) },
     observation: { createMany: jest.fn().mockResolvedValue({ count: 0 }) },
     $transaction: jest.fn().mockResolvedValue([]),
   },
