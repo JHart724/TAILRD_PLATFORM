@@ -210,7 +210,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(15822); // 16227 -> 15822 by AUDIT-184 CAD-EXT (2026-06-29): 16 hollow CAD rules RETIRED above this line shifted it up ~405 lines (content-anchor; AUDIT-110 remediation scope)
+    expect(pannus!.commentLine).toBe(15697); // 15822 -> 15697 by AUDIT-194 Part A (2026-06-30): 7 hollow HF+VHD rules RETIRED above this line (HF-37-FU/38/74/90/91 + VD-7/VD-16) shifted it up ~125 lines (content-anchor; prior 16227 -> 15822 was AUDIT-184 CAD-EXT)
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });
@@ -235,7 +235,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
   it.each([
     ['SH', 61, 55, 55], // T1-broader PART 2: registry 60->61, evaluator 54->55, gapsPush 54->55 (+1 gap-sh-024-tr-rv-dysfunction, 2026-06-22)
     ['CAD', 83, 66, 66], // AUDIT-184 CAD-EXT (2026-06-29): evaluator/push 82 -> 66 (16 hollow CAD over-fire rules RETIRED -> SPEC_ONLY); registry stays 83 (suppressed rules' entries retained as regOrphans, left-main precedent)
-    ['VHD', 51, 50, 51], // T1-broader: registry 49->51 (+VHD-060/100), evaluator 48->50 (+2 parsed blocks), gapsPush 48->51 (+3: VHD-060/100 + the VHD-103 LVESD 2nd arm push folded into the VHD-103 block)
+    ['VHD', 51, 47, 45], // AUDIT-194 Part A (2026-06-30): evaluator 50->47, gapsPush 51->45 (6 hollow VHD over-fire rules RETIRED: VD-7/VD-16/VD-ECHO-INTERVAL/VD-FUNCTIONAL-STATUS/VD-PREOP-ASSESSMENT/VD-PULMONARY-HTN); registry stays 51 (suppressed rules' registry entries retained as regOrphans, RETIRE precedent)
     ['PV', 45, 45, 45], // chunk0 33->34; chunk1 34->41; T0 net-new 41->45 (+4 PV-042/081/084/085, 2026-06-19)
   ])(
     'module %s reconciliation counts: registry=%i, evaluator=%i, gapsPush=%i (clean modules)',

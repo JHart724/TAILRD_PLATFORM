@@ -157,17 +157,21 @@ describe('reconcile — full integration on canonical extracts', () => {
     expect(r.evaluatorOrphans).toHaveLength(0);
   });
 
-  it('VHD reconciles as DIVERGENT post-v3.0-close (legacy VD-5 lineage regOrphan + new gap-vhd-* naming mismatches)', () => {
-    // v3.0 VHD module close (2026-06-17): VHD moved CLEAN -> DIVERGENT. evaluatorOrphans=0 (every evaluator maps),
-    // but VD-5 (gap-vd-5-aortic-regurgitation) is retained as a regOrphan for lineage (firing superseded by
-    // VHD-103, chunk 1), and the 17 new gap-vhd-* registry ids are naming-mismatches against the historical
-    // gap-vd-* prefix (informational only - HF/EP/CAD ship with naming-mismatches and validate 6/6; their
-    // classifications are pinned deterministically via applyOverrides registryId, not the fuzzy match).
+  it('VHD reconciles as DIVERGENT post-AUDIT-194 (4 suppressed-rule regOrphans + gap-vhd-* naming mismatches)', () => {
+    // v3.0 VHD module close (2026-06-17): VHD moved CLEAN -> DIVERGENT. evaluatorOrphans=0 (every evaluator maps).
+    // AUDIT-194 Part A (2026-06-30): 6 hollow VHD over-fire rules RETIRED; the 4 that carried a registry entry
+    // (gap-vd-echo-interval, gap-vd-functional-status, gap-vd-preop-assessment, gap-vd-pulmonary-htn) are now
+    // regOrphans (their evaluator gaps.push removed). The legacy gap-vd-5-aortic-regurgitation, previously the
+    // sole regOrphan, is now re-paired by the greedy fuzzy matcher (freed by the removed evaluators) - the known
+    // fuzzy-match fragility (AUDIT-106); classifications are pinned deterministically via applyOverrides, not the
+    // fuzzy match, and validateCanonical stays 6/6.
     const cfg = MODULE_CONFIGS.find((m) => m.code === 'VHD')!;
     const r = buildReconciliation(specs.get('VHD')!, codes.get('VHD')!, cfg.codePrefix);
     expect(r.status).toBe('DIVERGENT');
     expect(r.evaluatorOrphans).toHaveLength(0);
-    expect(r.registryOrphans.find((o) => o.registryId === 'gap-vd-5-aortic-regurgitation')).toBeDefined();
+    const orphanIds = r.registryOrphans.map((o) => o.registryId);
+    expect(orphanIds).toContain('gap-vd-echo-interval');
+    expect(orphanIds).toContain('gap-vd-pulmonary-htn');
   });
 
   it('SH reconciles as DIVERGENT post-v3.0-close (lineage-retained retirements + dedicated-registry reconciliation)', () => {

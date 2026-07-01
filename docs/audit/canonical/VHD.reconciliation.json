@@ -1,33 +1,33 @@
 {
   "countDivergences": [
     {
-      "delta": 1,
-      "explanation": "1 extra gaps.push call(s) without compound-comment block to account for them. Possible: registry-without-evaluator entry firing inline, OR evaluator block emitting multiple gaps.",
+      "delta": -2,
+      "explanation": "-2 extra gaps.push call(s) without compound-comment block to account for them. Possible: registry-without-evaluator entry firing inline, OR evaluator block emitting multiple gaps.",
       "kind": "GAPS_PUSH_VS_EVALUATOR",
       "observed": {
-        "evaluatorCount": 50,
-        "gapsPushCount": 51,
+        "evaluatorCount": 47,
+        "gapsPushCount": 45,
         "registryCount": 51
       }
     },
     {
-      "delta": 1,
-      "explanation": "1 more registry entries than evaluator blocks. Suggests detection-without-registry rules OR registry-without-evaluator entries (look at orphan lists).",
+      "delta": 4,
+      "explanation": "4 more registry entries than evaluator blocks. Suggests detection-without-registry rules OR registry-without-evaluator entries (look at orphan lists).",
       "kind": "REGISTRY_VS_EVALUATOR",
       "observed": {
-        "evaluatorCount": 50,
-        "gapsPushCount": 51,
+        "evaluatorCount": 47,
+        "gapsPushCount": 45,
         "registryCount": 51
       }
     }
   ],
-  "evaluatorBlockCount": 50,
+  "evaluatorBlockCount": 47,
   "evaluatorOrphans": [],
-  "gapsPushCount": 51,
+  "gapsPushCount": 45,
   "matches": [
     {
       "evaluatorBlockName": "VD-1",
-      "evaluatorCommentLine": 7159,
+      "evaluatorCommentLine": 7119,
       "matchConfidence": 0.583,
       "matchMethod": "similarity",
       "registryId": "gap-vd-1-mechanical-valve-anticoag",
@@ -35,7 +35,7 @@
     },
     {
       "evaluatorBlockName": "VD-2",
-      "evaluatorCommentLine": 7711,
+      "evaluatorCommentLine": 7671,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-vd-2-bioprosthetic-echo",
@@ -43,7 +43,7 @@
     },
     {
       "evaluatorBlockName": "VD-3",
-      "evaluatorCommentLine": 8148,
+      "evaluatorCommentLine": 8108,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-vd-3-inr-monitoring",
@@ -51,15 +51,23 @@
     },
     {
       "evaluatorBlockName": "VD-4",
-      "evaluatorCommentLine": 8181,
+      "evaluatorCommentLine": 8141,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-vd-4-mitral-stenosis",
       "registryLine": 1555
     },
     {
+      "evaluatorBlockName": "VD-16",
+      "evaluatorCommentLine": 10674,
+      "matchConfidence": 0.05,
+      "matchMethod": "similarity",
+      "registryId": "gap-vd-5-aortic-regurgitation",
+      "registryLine": 1567
+    },
+    {
       "evaluatorBlockName": "VD-6",
-      "evaluatorCommentLine": 8892,
+      "evaluatorCommentLine": 8852,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-vd-6-doac-mechanical-valve",
@@ -67,15 +75,15 @@
     },
     {
       "evaluatorBlockName": "VD-7",
-      "evaluatorCommentLine": 8922,
-      "matchConfidence": 0.667,
+      "evaluatorCommentLine": 8882,
+      "matchConfidence": 0.053,
       "matchMethod": "similarity",
       "registryId": "gap-vd-7-exercise-restriction-as",
       "registryLine": 1591
     },
     {
       "evaluatorBlockName": "VD-8",
-      "evaluatorCommentLine": 8951,
+      "evaluatorCommentLine": 8887,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-vd-8-rheumatic-screen",
@@ -83,7 +91,7 @@
     },
     {
       "evaluatorBlockName": "VD-9",
-      "evaluatorCommentLine": 8981,
+      "evaluatorCommentLine": 8917,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-vd-9-endocarditis-education",
@@ -91,7 +99,7 @@
     },
     {
       "evaluatorBlockName": "VD-10",
-      "evaluatorCommentLine": 9008,
+      "evaluatorCommentLine": 8944,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-vd-10-pregnancy-risk",
@@ -99,7 +107,7 @@
     },
     {
       "evaluatorBlockName": "VD-11",
-      "evaluatorCommentLine": 9040,
+      "evaluatorCommentLine": 8976,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-vd-11-bioprosthetic-degeneration",
@@ -107,7 +115,7 @@
     },
     {
       "evaluatorBlockName": "VD-12",
-      "evaluatorCommentLine": 9070,
+      "evaluatorCommentLine": 9006,
       "matchConfidence": 0.786,
       "matchMethod": "similarity",
       "registryId": "gap-vd-12-af-valve-anticoag",
@@ -115,7 +123,7 @@
     },
     {
       "evaluatorBlockName": "VD-13",
-      "evaluatorCommentLine": 9904,
+      "evaluatorCommentLine": 9797,
       "matchConfidence": 0.875,
       "matchMethod": "similarity",
       "registryId": "gap-vd-13-anticoag-first3mo",
@@ -123,7 +131,7 @@
     },
     {
       "evaluatorBlockName": "VD-14",
-      "evaluatorCommentLine": 9940,
+      "evaluatorCommentLine": 9833,
       "matchConfidence": 0.75,
       "matchMethod": "similarity",
       "registryId": "gap-vd-14-dental-prophylaxis",
@@ -131,7 +139,7 @@
     },
     {
       "evaluatorBlockName": "VD-15",
-      "evaluatorCommentLine": 9978,
+      "evaluatorCommentLine": 9871,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-vd-15-aortic-root",
@@ -139,7 +147,7 @@
     },
     {
       "evaluatorBlockName": "VD-16",
-      "evaluatorCommentLine": 10778,
+      "evaluatorCommentLine": 10671,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-vd-16-mixed-valve",
@@ -147,7 +155,7 @@
     },
     {
       "evaluatorBlockName": "VD-17",
-      "evaluatorCommentLine": 10804,
+      "evaluatorCommentLine": 10679,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-vd-17-hemolysis",
@@ -155,7 +163,7 @@
     },
     {
       "evaluatorBlockName": "VD-18",
-      "evaluatorCommentLine": 10835,
+      "evaluatorCommentLine": 10710,
       "matchConfidence": 0.778,
       "matchMethod": "similarity",
       "registryId": "gap-vd-18-exercise-testing",
@@ -163,7 +171,7 @@
     },
     {
       "evaluatorBlockName": "VD-PANNUS",
-      "evaluatorCommentLine": 15822,
+      "evaluatorCommentLine": 15697,
       "matchConfidence": 0.643,
       "matchMethod": "similarity",
       "registryId": "gap-vd-prosthetic-pannus",
@@ -171,7 +179,7 @@
     },
     {
       "evaluatorBlockName": "VD-RADIATION",
-      "evaluatorCommentLine": 15856,
+      "evaluatorCommentLine": 15731,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-vd-radiation-valve",
@@ -179,7 +187,7 @@
     },
     {
       "evaluatorBlockName": "VD-ENDOCARDITIS-SURV",
-      "evaluatorCommentLine": 15889,
+      "evaluatorCommentLine": 15764,
       "matchConfidence": 0.583,
       "matchMethod": "similarity",
       "registryId": "gap-vd-infective-endo",
@@ -187,7 +195,7 @@
     },
     {
       "evaluatorBlockName": "VD-BICUSPID-AORTOPATHY",
-      "evaluatorCommentLine": 15921,
+      "evaluatorCommentLine": 15796,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-vd-bicuspid-aneurysm",
@@ -195,7 +203,7 @@
     },
     {
       "evaluatorBlockName": "VD-ANTICOAG-REVERSAL",
-      "evaluatorCommentLine": 15953,
+      "evaluatorCommentLine": 15828,
       "matchConfidence": 0.571,
       "matchMethod": "similarity",
       "registryId": "gap-vd-anticoag-reversal",
@@ -203,7 +211,7 @@
     },
     {
       "evaluatorBlockName": "VD-TRANSCATHETER-MV",
-      "evaluatorCommentLine": 15982,
+      "evaluatorCommentLine": 15857,
       "matchConfidence": 0.714,
       "matchMethod": "similarity",
       "registryId": "gap-vd-transcatheter-mv",
@@ -211,7 +219,7 @@
     },
     {
       "evaluatorBlockName": "VD-RHC",
-      "evaluatorCommentLine": 16016,
+      "evaluatorCommentLine": 15891,
       "matchConfidence": 0.563,
       "matchMethod": "similarity",
       "registryId": "gap-vd-right-heart-cath",
@@ -219,47 +227,15 @@
     },
     {
       "evaluatorBlockName": "VD-VALVE-CLINIC",
-      "evaluatorCommentLine": 16048,
+      "evaluatorCommentLine": 15923,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-vd-valve-clinic-referral",
       "registryLine": 3199
     },
     {
-      "evaluatorBlockName": "VD-ECHO-INTERVAL",
-      "evaluatorCommentLine": 16090,
-      "matchConfidence": 0.667,
-      "matchMethod": "similarity",
-      "registryId": "gap-vd-echo-interval",
-      "registryLine": 4051
-    },
-    {
-      "evaluatorBlockName": "VD-FUNCTIONAL-STATUS",
-      "evaluatorCommentLine": 16121,
-      "matchConfidence": 0.714,
-      "matchMethod": "similarity",
-      "registryId": "gap-vd-functional-status",
-      "registryLine": 4063
-    },
-    {
-      "evaluatorBlockName": "VD-PREOP-ASSESSMENT",
-      "evaluatorCommentLine": 16153,
-      "matchConfidence": 0.714,
-      "matchMethod": "similarity",
-      "registryId": "gap-vd-preop-assessment",
-      "registryLine": 4075
-    },
-    {
-      "evaluatorBlockName": "VD-PULMONARY-HTN",
-      "evaluatorCommentLine": 16182,
-      "matchConfidence": 0.75,
-      "matchMethod": "similarity",
-      "registryId": "gap-vd-pulmonary-htn",
-      "registryLine": 4087
-    },
-    {
       "evaluatorBlockName": "VD-TRICUSPID-SECONDARY",
-      "evaluatorCommentLine": 16214,
+      "evaluatorCommentLine": 15996,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-vd-tricuspid-secondary",
@@ -267,7 +243,7 @@
     },
     {
       "evaluatorBlockName": "VD-ANTIPLATELET-BIOPROSTHETIC",
-      "evaluatorCommentLine": 16246,
+      "evaluatorCommentLine": 16028,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-vd-antiplatelet-bioprosthetic",
@@ -275,7 +251,7 @@
     },
     {
       "evaluatorBlockName": "VHD-103",
-      "evaluatorCommentLine": 8227,
+      "evaluatorCommentLine": 8187,
       "matchConfidence": 0.571,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-103-severe-ar-surgical",
@@ -283,7 +259,7 @@
     },
     {
       "evaluatorBlockName": "VHD-060",
-      "evaluatorCommentLine": 8598,
+      "evaluatorCommentLine": 8558,
       "matchConfidence": 0.438,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-060-ie-large-vegetation",
@@ -291,7 +267,7 @@
     },
     {
       "evaluatorBlockName": "VHD-100",
-      "evaluatorCommentLine": 8801,
+      "evaluatorCommentLine": 8761,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-100-mech-valve-pregnancy-antixa",
@@ -299,7 +275,7 @@
     },
     {
       "evaluatorBlockName": "VHD-102",
-      "evaluatorCommentLine": 8298,
+      "evaluatorCommentLine": 8258,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-102-ar-surveillance",
@@ -307,7 +283,7 @@
     },
     {
       "evaluatorBlockName": "VHD-104",
-      "evaluatorCommentLine": 8326,
+      "evaluatorCommentLine": 8286,
       "matchConfidence": 0.7,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-104-mixed-valve-staging",
@@ -315,7 +291,7 @@
     },
     {
       "evaluatorBlockName": "VHD-105",
-      "evaluatorCommentLine": 8357,
+      "evaluatorCommentLine": 8317,
       "matchConfidence": 0.542,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-105-mr-quant-triangulation",
@@ -323,7 +299,7 @@
     },
     {
       "evaluatorBlockName": "VHD-068",
-      "evaluatorCommentLine": 8403,
+      "evaluatorCommentLine": 8363,
       "matchConfidence": 0.682,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-068-mech-pvt-gradient",
@@ -331,7 +307,7 @@
     },
     {
       "evaluatorBlockName": "VHD-011",
-      "evaluatorCommentLine": 8430,
+      "evaluatorCommentLine": 8390,
       "matchConfidence": 0.636,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-011-bio-svd-gradient",
@@ -339,7 +315,7 @@
     },
     {
       "evaluatorBlockName": "VHD-001",
-      "evaluatorCommentLine": 8463,
+      "evaluatorCommentLine": 8423,
       "matchConfidence": 0.536,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-001-subtherapeutic-inr",
@@ -347,7 +323,7 @@
     },
     {
       "evaluatorBlockName": "VHD-006",
-      "evaluatorCommentLine": 8497,
+      "evaluatorCommentLine": 8457,
       "matchConfidence": 0.625,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-006-mech-asa-adjunct",
@@ -355,7 +331,7 @@
     },
     {
       "evaluatorBlockName": "VHD-057",
-      "evaluatorCommentLine": 8543,
+      "evaluatorCommentLine": 8503,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-057-ie-hf-surgery",
@@ -363,7 +339,7 @@
     },
     {
       "evaluatorBlockName": "VHD-059",
-      "evaluatorCommentLine": 8569,
+      "evaluatorCommentLine": 8529,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-059-ie-embolic-surgery",
@@ -371,7 +347,7 @@
     },
     {
       "evaluatorBlockName": "VHD-064",
-      "evaluatorCommentLine": 8632,
+      "evaluatorCommentLine": 8592,
       "matchConfidence": 0.545,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-064-prior-ie-dental-prophylaxis",
@@ -379,7 +355,7 @@
     },
     {
       "evaluatorBlockName": "VHD-079",
-      "evaluatorCommentLine": 8664,
+      "evaluatorCommentLine": 8624,
       "matchConfidence": 0.636,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-079-rheumatic-prophylaxis",
@@ -387,7 +363,7 @@
     },
     {
       "evaluatorBlockName": "VHD-083",
-      "evaluatorCommentLine": 8691,
+      "evaluatorCommentLine": 8651,
       "matchConfidence": 0.538,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-083-rheumatic-af-warfarin",
@@ -395,7 +371,7 @@
     },
     {
       "evaluatorBlockName": "VHD-098",
-      "evaluatorCommentLine": 8736,
+      "evaluatorCommentLine": 8696,
       "matchConfidence": 0.615,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-098-mech-valve-preconception",
@@ -403,7 +379,7 @@
     },
     {
       "evaluatorBlockName": "VHD-099",
-      "evaluatorCommentLine": 8768,
+      "evaluatorCommentLine": 8728,
       "matchConfidence": 0.727,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-099-mech-valve-pregnancy-anticoag",
@@ -411,7 +387,7 @@
     },
     {
       "evaluatorBlockName": "VHD-091",
-      "evaluatorCommentLine": 8838,
+      "evaluatorCommentLine": 8798,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-091-dopamine-agonist-valve-surveillance",
@@ -419,7 +395,7 @@
     },
     {
       "evaluatorBlockName": "VHD-092",
-      "evaluatorCommentLine": 8865,
+      "evaluatorCommentLine": 8825,
       "matchConfidence": 0.45,
       "matchMethod": "similarity",
       "registryId": "gap-vhd-092-ergot-alkaloid-valve-surveillance",
@@ -548,8 +524,26 @@
     {
       "evaluatorBlockName": null,
       "reason": "No evaluator body matched via similarity scoring",
-      "registryId": "gap-vd-5-aortic-regurgitation",
-      "registryLine": 1567
+      "registryId": "gap-vd-echo-interval",
+      "registryLine": 4051
+    },
+    {
+      "evaluatorBlockName": null,
+      "reason": "No evaluator body matched via similarity scoring",
+      "registryId": "gap-vd-functional-status",
+      "registryLine": 4063
+    },
+    {
+      "evaluatorBlockName": null,
+      "reason": "No evaluator body matched via similarity scoring",
+      "registryId": "gap-vd-preop-assessment",
+      "registryLine": 4075
+    },
+    {
+      "evaluatorBlockName": null,
+      "reason": "No evaluator body matched via similarity scoring",
+      "registryId": "gap-vd-pulmonary-htn",
+      "registryLine": 4087
     }
   ],
   "specGapCount": 105,

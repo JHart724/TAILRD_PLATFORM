@@ -46,6 +46,17 @@ interface Override {
 
 export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
   HF: {
+    // --- AUDIT-194 Part A (2026-06-30): HF hollow over-fire cluster RETIRED -> SPEC_ONLY (runtime gaps.push
+    // removed; the cited evaluator block is now a marker comment). The other suppressed HF rules (HF-74, HF-91)
+    // have NO crosswalk row -> accepted registry-only orphans, no override. See CLAUDE.md section 20. ---
+    'GAP-HF-004': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-194 Part A 2026-06-30: HF-37-FU (discharge-followup, bare hasHF with no discharge/followup signal, non-functional) RETIRED -> SPEC_ONLY; gaps.push removed. DET_OK -> SPEC_ONLY.' },
+    'GAP-HF-040': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-194 Part A 2026-06-30: HF-38 (influenza, bare hasHF, Z23 never in conditions - IDENTICAL to already-retired CAD-INFLUENZA, the section-20 pattern-class-sweep precedent) RETIRED -> SPEC_ONLY; gaps.push removed. DET_OK -> SPEC_ONLY.' },
+    'GAP-HF-051': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-194 Part A 2026-06-30: HF-90 (amyloid biomarker, bnp/nt_probnp unthreaded double-negation, hollow) SPEC_ONLY-pending-threading (restore on BNP thread, Part B AUDIT-194-B1); gaps.push removed. PARTIAL -> SPEC_ONLY.' },
+    'GAP-HF-052': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-194 Part A 2026-06-30: HF-90 (amyloid biomarker, unthreaded bnp/nt_probnp) SPEC_ONLY-pending-threading (Part B AUDIT-194-B1); gaps.push removed. PARTIAL -> SPEC_ONLY.' },
+    'GAP-HF-053': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-194 Part A 2026-06-30: HF-90 (amyloid biomarker, unthreaded bnp/nt_probnp) SPEC_ONLY-pending-threading (Part B AUDIT-194-B1); gaps.push removed. PARTIAL -> SPEC_ONLY.' },
+    'GAP-HF-055': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-194 Part A 2026-06-30: HF-90 (amyloid biomarker, unthreaded bnp/nt_probnp) SPEC_ONLY-pending-threading (Part B AUDIT-194-B1); gaps.push removed. PARTIAL -> SPEC_ONLY.' },
+    'GAP-HF-056': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-194 Part A 2026-06-30: HF-90 (amyloid biomarker, unthreaded bnp/nt_probnp) SPEC_ONLY-pending-threading (Part B AUDIT-194-B1); gaps.push removed. PARTIAL -> SPEC_ONLY.' },
+    'GAP-HF-134': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-194 Part A 2026-06-30: HF-90 (amyloid biomarker, unthreaded bnp/nt_probnp) SPEC_ONLY-pending-threading (Part B AUDIT-194-B1); gaps.push removed. PARTIAL -> SPEC_ONLY.' },
     // (GAP-HF-073 + GAP-HF-151 prior MANUAL OVERRIDE SPEC_ONLY entries removed 2026-06-15: both now have
     //  authored evaluators in the v3.0 HF full buildout batch -> DET_OK entries below.)
     // v3.0 HF buildout calibration sample (2026-06-15): 8 new evaluators authored + firing

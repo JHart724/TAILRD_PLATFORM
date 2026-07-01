@@ -5297,43 +5297,18 @@ export function evaluateGapRules(
     });
   }
 
-  // Gap HF-37-FU: Discharge Follow-up in HF
-  // Guideline: 2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure
-  if (hasHF && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    gaps.push({
-      type: TherapyGapType.FOLLOWUP_OVERDUE,
-      module: ModuleType.HEART_FAILURE,
-      status: 'Post-discharge follow-up not documented within 7 days',
-      target: 'Follow-up visit within 7 days of discharge',
-      recommendations: { action: 'Guideline suggests early post-discharge follow-up within 7 days per 2022 AHA/ACC/HFSA' },
-      evidence: {
-        triggerCriteria: ['Heart failure diagnosis', 'Encounter present (discharge proxy)'],
-        guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
-        classOfRecommendation: '1',
-        levelOfEvidence: 'B',
-        exclusions: ['Follow-up already scheduled', 'Hospice/palliative care'],
-      },
-    });
-  }
+  // HF-37-FU RETIRED to SPEC_ONLY (AUDIT-194 Part A, 2026-06-30). Gated on bare hasHF: it claimed a
+  // "post-discharge follow-up within 7 days" recency check but read NO discharge date and NO follow-up
+  // encounter -> unconditional -> fired ~100% of HF patients (non-functional as written). Suppressed (no
+  // runtime gaps.push) pending a real discharge + follow-up-encounter signal; registry entry orphaned.
+  // (AUDIT-184-CAD-EXT RETIRE precedent)
 
-  // Gap HF-38: Influenza Vaccination in HF
-  // Guideline: 2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure
-  if (hasHF && !hasContraindication(dxCodes, [...EXCLUSION_HOSPICE, ...EXCLUSION_ALLERGY_DOCUMENTED])) {
-    gaps.push({
-      type: TherapyGapType.MONITORING_OVERDUE,
-      module: ModuleType.HEART_FAILURE,
-      status: 'Influenza vaccination status not documented in HF',
-      target: 'Annual influenza vaccination administered or documented',
-      recommendations: { action: 'Recommended for review: annual influenza vaccination per 2022 AHA/ACC/HFSA' },
-      evidence: {
-        triggerCriteria: ['Heart failure diagnosis (I50.*)'],
-        guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
-        classOfRecommendation: '1',
-        levelOfEvidence: 'B',
-        exclusions: ['Documented egg allergy or vaccine contraindication', 'Hospice/palliative care'],
-      },
-    });
-  }
+  // HF-38 RETIRED to SPEC_ONLY (AUDIT-194 Part A, 2026-06-30). Gated on bare hasHF with no immunization
+  // signal: vaccination status (Z23) is an immunization encounter, not a Condition, so it never reaches
+  // dxCodes -> always "undocumented" -> fired ~100% of HF patients. This is the IDENTICAL rule to
+  // CAD-INFLUENZA, which was RETIRED under AUDIT-184-CAD-EXT yet left LIVE here - the concrete proof that
+  // the CAD fix addressed the instance, not the class (see CLAUDE.md section 20 pattern-class-sweep
+  // precedent). Suppressed pending a real immunization signal; registry entry orphaned. (RETIRE precedent)
 
   // Gap HF-73: Hyponatremia Monitoring in HF
   // Guideline: 2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure
@@ -5358,28 +5333,13 @@ export function evaluateGapRules(
     });
   }
 
-  // Gap HF-74: NT-proBNP Serial Monitoring in HF
-  // Guideline: 2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure
-  if (
-    hasHF &&
-    labValues['bnp'] === undefined && labValues['nt_probnp'] === undefined &&
-    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
-  ) {
-    gaps.push({
-      type: TherapyGapType.MONITORING_OVERDUE,
-      module: ModuleType.HEART_FAILURE,
-      status: 'NT-proBNP/BNP monitoring not documented in HF',
-      target: 'Serial natriuretic peptide measurement obtained',
-      recommendations: { action: 'Consider serial NT-proBNP/BNP monitoring per 2022 AHA/ACC/HFSA' },
-      evidence: {
-        triggerCriteria: ['Heart failure diagnosis', 'No recent BNP or NT-proBNP value on record'],
-        guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure',
-        classOfRecommendation: '2a',
-        levelOfEvidence: 'B',
-        exclusions: ['Recent natriuretic peptide within 3 months', 'Hospice/palliative care'],
-      },
-    });
-  }
+  // HF-74 SPEC_ONLY-PENDING-THREADING (AUDIT-194 Part A, 2026-06-30). Gated on bnp===undefined &&
+  // nt_probnp===undefined -> both slugs are never threaded by the FHIR/observation path (no ECHO_LOINC_TO_SLUG
+  // mapping) -> the negation is always true -> fired ~100% of HF patients. Suppressed to stop the false
+  // positive, but NOT a permanent retire: the negated signal is clinically real and threadable. RESTORE the
+  // firing when BNP/NT-proBNP are threaded (Part B work item AUDIT-194-B1: thread LOINC 30934-4 BNP + 33762-6
+  // NT-proBNP into observationService ECHO_LOINC_TO_SLUG; also un-darkens the silent HF-18/21/77/85/92 gates).
+  // registry entry orphaned. (AUDIT-184-CAD-EXT RETIRE precedent)
 
   // Gap HF-75: Cardiac MRI Referral for Non-Ischemic Cardiomyopathy
   // Guideline: 2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure
@@ -8919,34 +8879,10 @@ export function evaluateGapRules(
     }
   }
 
-  // Gap VD-7: Exercise Restriction in Severe AS
-  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE C
-  // Severe AS (I35.0) + age > 65 should have exercise restriction documentation
-  if (
-    hasAorticStenosis &&
-    age > 65 &&
-    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
-  ) {
-    gaps.push({
-      type: TherapyGapType.DOCUMENTATION_GAP,
-      module: ModuleType.VALVULAR_DISEASE,
-      status: 'Exercise restriction documentation recommended for review in severe AS',
-      target: 'Exercise restriction counseling documented',
-      recommendations: {
-        action: 'Consider documenting exercise restriction counseling for severe aortic stenosis per 2020 ACC/AHA VHD',
-      },
-      evidence: {
-        triggerCriteria: [
-          'Severe aortic stenosis (I35.0)',
-          `Age: ${age} (> 65 threshold)`,
-        ],
-        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
-        classOfRecommendation: '1',
-        levelOfEvidence: 'C',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Already documented exercise restriction'],
-      },
-    });
-  }
+  // VD-7 RETIRED to SPEC_ONLY (AUDIT-194 Part A, 2026-06-30). Gated on AS dx + age>65 only, with NO
+  // "counseling documented" signal to discriminate -> a DOCUMENTATION_GAP that fired ~100% of AS-over-65
+  // patients (zero discriminating signal, over-broad). Suppressed pending a real counseling-documentation
+  // signal; registry entry orphaned. (AUDIT-184-CAD-EXT RETIRE precedent)
 
   // Gap VD-8: Rheumatic Heart Disease Screen
   // Guideline: 2020 AHA RHD Scientific Statement, Class 1, LOE B
@@ -9562,63 +9498,20 @@ export function evaluateGapRules(
   // Gap HF-90: Amyloid Biomarker Follow-up
   // Guideline: 2023 ACC Expert Consensus on Cardiac Amyloidosis
   // Known ATTR (E85.*) + no recent BNP/NT-proBNP
-  const hasATTR90 = dxCodes.some(c => c.startsWith('E85'));
-  if (
-    hasATTR90 &&
-    labValues['bnp'] === undefined && labValues['nt_probnp'] === undefined &&
-    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
-  ) {
-    gaps.push({
-      type: TherapyGapType.MONITORING_OVERDUE,
-      module: ModuleType.HEART_FAILURE,
-      status: 'Amyloid biomarker follow-up overdue (no recent BNP/NT-proBNP)',
-      target: 'Serial natriuretic peptide and troponin monitoring completed',
-      recommendations: { action: 'Consider serial BNP/NT-proBNP and troponin monitoring for cardiac amyloidosis per 2023 ACC Expert Consensus' },
-      evidence: {
-        triggerCriteria: [
-          'Known amyloidosis (E85.*)',
-          'No recent BNP or NT-proBNP value on file',
-        ],
-        guidelineSource: '2023 ACC Expert Consensus Decision Pathway on Comprehensive Multidisciplinary Care for Cardiac Amyloidosis',
-        classOfRecommendation: 'Class 1',
-        levelOfEvidence: 'LOE B-NR',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent natriuretic peptide within follow-up interval'],
-      },
-    });
-  }
+  // HF-90 SPEC_ONLY-PENDING-THREADING (AUDIT-194 Part A, 2026-06-30). Same bnp===undefined &&
+  // nt_probnp===undefined double-negation as HF-74, gated on E85 (amyloidosis) -> fired ~100% of the E85
+  // cohort. Suppressed to stop the false positive; NOT a permanent retire - RESTORE when BNP/NT-proBNP are
+  // threaded (Part B work item AUDIT-194-B1, same thread as HF-74). registry entry orphaned. (RETIRE precedent)
 
   // Gap HF-91: CSA/OSA Treatment in HF
   // Guideline: 2022 AHA/ACC/HFSA HF Guideline; SERVE-HF trial
   // G47.3 (sleep apnea) + HF + no CPAP/ASV proxy (absence of E11.65 durable medical equipment)
-  const hasSleepApnea91 = dxCodes.some(c => c.startsWith('G47.3'));
-  if (
-    hasSleepApnea91 &&
-    hasHF &&
-    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
-  ) {
-    // Proxy for no CPAP/ASV: check if sleep treatment-related code is absent
-    const hasCPAPproxy = dxCodes.some(c => c.startsWith('Z99.8')); // Dependence on other enabling machines
-    if (!hasCPAPproxy) {
-      gaps.push({
-        type: TherapyGapType.MONITORING_OVERDUE,
-        module: ModuleType.HEART_FAILURE,
-        status: 'Sleep-disordered breathing treatment not documented in HF',
-        target: 'Sleep apnea treatment plan initiated or documented',
-        recommendations: { action: 'Consider sleep apnea treatment evaluation in HF per 2022 AHA/ACC/HFSA (note: ASV contraindicated in CSA with HFrEF per SERVE-HF)' },
-        evidence: {
-          triggerCriteria: [
-            'Sleep apnea diagnosis (G47.3)',
-            'Heart failure diagnosis (I50.*)',
-            'No CPAP/ASV therapy documented',
-          ],
-          guidelineSource: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure; SERVE-HF trial',
-          classOfRecommendation: 'Class 2a',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'ASV contraindicated in CSA with HFrEF (SERVE-HF)', 'Already on established CPAP therapy'],
-        },
-      });
-    }
-  }
+  // HF-91 RETIRED to SPEC_ONLY (AUDIT-194 Part A, 2026-06-30). Gated on !Z99.8 (dependence on enabling
+  // machines) as a proxy for "no CPAP/ASV". Z99.8 is both a broken clinical proxy (machine-dependence is not
+  // CPAP use) AND an uncrosswalked status code that never reaches dxCodes -> the negation is always true ->
+  // fired ~100% of the (G47.3 + HF) cohort. Unlike the BNP rules there is no clean threadable "on CPAP"
+  // signal (DME/procedure, not a lab), so this is a permanent retire, not pending-threading. Suppressed;
+  // registry entry orphaned. (AUDIT-184-CAD-EXT RETIRE precedent)
 
   // Gap HF-92: Volume Status Monitoring in HF
   // Guideline: 2022 AHA/ACC/HFSA HF Guideline
@@ -10778,28 +10671,10 @@ export function evaluateGapRules(
   // Gap VD-16: Mixed Valve Disease Assessment
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE C
   // Concurrent AS + AR (I35.2 mixed aortic valve disease)
-  const hasMixedAorticValve = dxCodes.some(c => c.startsWith('I35.2'));
-  if (
-    hasMixedAorticValve &&
-    !hasContraindication(dxCodes, EXCLUSION_HOSPICE)
-  ) {
-    gaps.push({
-      type: TherapyGapType.SCREENING_DUE,
-      module: ModuleType.VALVULAR_DISEASE,
-      status: 'Mixed aortic valve disease assessment recommended for review',
-      target: 'Comprehensive hemodynamic evaluation of mixed AS/AR completed',
-      recommendations: { action: 'Consider comprehensive assessment of mixed aortic valve disease per 2020 ACC/AHA VHD' },
-      evidence: {
-        triggerCriteria: [
-          'Mixed aortic valve disease -- concurrent AS and AR (I35.2)',
-        ],
-        guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
-        classOfRecommendation: 'Class 1',
-        levelOfEvidence: 'LOE C',
-        exclusions: ['Hospice/palliative care (Z51.5)', 'Recent comprehensive valve assessment on file'],
-      },
-    });
-  }
+  // VD-16 RETIRED to SPEC_ONLY (AUDIT-194 Part A, 2026-06-30). Gated on bare I35.2 (mixed aortic valve)
+  // with NO severity/assessment discriminator -> a SCREENING_DUE that fired 100% of I35.2 patients (zero
+  // discriminating signal, over-broad; re-fires every run with no resolution signal). Suppressed pending a
+  // real assessment-completed signal; registry entry orphaned. (AUDIT-184-CAD-EXT RETIRE precedent)
 
   // Gap VD-17: Hemolysis Monitoring Post-Valve
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE C
@@ -16087,129 +15962,36 @@ export function evaluateGapRules(
   // FINAL BATCH: 6 VALVULAR RULES (VD-ECHO-INTERVAL through VD-ANTIPLATELET-BIOPROSTHETIC)
   // ============================================================
 
-  // VD-ECHO-INTERVAL: Echo Surveillance Interval Adherence
-  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
-  const hasAnyValveDxFB = dxCodes.some(c =>
-    c.startsWith('I34') || c.startsWith('I35') || c.startsWith('I36') || c.startsWith('I37') || c.startsWith('I05') || c.startsWith('I06') || c.startsWith('I07') || c.startsWith('I08')
-  );
-  if (hasAnyValveDxFB && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    if (labValues['echo_months'] === undefined) {
-      gaps.push({
-        type: TherapyGapType.MONITORING_OVERDUE,
-        module: ModuleType.VALVULAR_DISEASE,
-        status: 'Consider echocardiographic surveillance interval review for valve disease',
-        target: 'Echo surveillance completed per guideline-recommended intervals',
-        recommendations: {
-          action: 'Consider echocardiogram per surveillance intervals in 2020 ACC/AHA VHD Guideline (annual for severe, 1-2yr for moderate)',
-          guideline: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
-          note: 'Recommended for review: regular echo surveillance detects disease progression and optimizes intervention timing',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Valvular heart disease (I34-I37, I05-I08)',
-            'No recent echocardiogram documented in observations',
-          ],
-          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
-          classOfRecommendation: 'Class 1',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Trace/trivial regurgitation only', 'Recent echo <3 months'],
-        },
-      });
-    }
-  }
+  // VD-ECHO-INTERVAL SPEC_ONLY-PENDING-THREADING (AUDIT-194 Part A, 2026-06-30). Gated on
+  // echo_months===undefined -> echo_months (months since last echo) is not threaded -> always true -> fired
+  // ~100% of any-valve-dx patients (I34-I37, I05-I08) - the broadest VHD over-fire. Suppressed to stop the
+  // false positive; NOT a permanent retire. The signal is DERIVABLE from the echo observation dates already
+  // ingested, but not trivially: the runner threads labValues as slug->number only (no dates reach the
+  // engine; see runGapDetectionForPatient), so restoring this correctly needs (a) runner derivation of
+  // echo_months from the most-recent IMAGING_TYPES observedDateTime (pre-staleness-filter), (b) matching
+  // projection change, (c) rule logic to fire on undefined || >= interval, plus section-16 verification and
+  // tests. RESTORE via Part B work item AUDIT-194-B3 (echo_months derivation). registry entry orphaned.
+  // (AUDIT-184-CAD-EXT RETIRE precedent)
 
-  // VD-FUNCTIONAL-STATUS: Functional Status Assessment in Valve Disease
-  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE C
-  if (hasAnyValveDxFB && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasValveSxFS = dxCodes.some(c =>
-      c.startsWith('R06') || c.startsWith('R53') || c.startsWith('R55') || c.startsWith('R00')
-    );
-    if (hasValveSxFS && labValues['nyha_class'] === undefined) {
-      gaps.push({
-        type: TherapyGapType.MONITORING_OVERDUE,
-        module: ModuleType.VALVULAR_DISEASE,
-        status: 'Consider functional status assessment (NYHA class) for symptomatic valve disease',
-        target: 'NYHA functional class and exercise capacity documented',
-        recommendations: {
-          action: 'Consider formal NYHA classification and 6-minute walk test per 2020 ACC/AHA VHD Guideline',
-          guideline: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
-          note: 'Recommended for review: symptom onset is a key trigger for valve intervention; formal assessment prevents missed indications',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Valvular heart disease (I34-I37, I05-I08)',
-            'Symptoms present (dyspnea R06, fatigue R53, syncope R55, palpitations R00)',
-            'No NYHA class documented in observations',
-          ],
-          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
-          classOfRecommendation: 'Class 1',
-          levelOfEvidence: 'LOE C',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'NYHA recently documented', 'Mild valve disease only'],
-        },
-      });
-    }
-  }
+  // VD-FUNCTIONAL-STATUS RETIRED to SPEC_ONLY (AUDIT-194 Part A, 2026-06-30). Gated on symptom dx +
+  // nyha_class===undefined -> nyha_class is a clinician-assigned functional class, not a threadable lab/
+  // observation (no LOINC, no schema column) -> the negation is always true -> fired ~100% of symptomatic
+  // valve patients. Permanent retire (no clean threadable NYHA signal), not pending-threading. Suppressed;
+  // registry entry orphaned. (AUDIT-184-CAD-EXT RETIRE precedent)
 
-  // VD-PREOP-ASSESSMENT: Preoperative Assessment for Valve Surgery
-  // Guideline: 2020 ACC/AHA VHD Guideline, Class 1, LOE B
-  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasSevereValve = dxCodes.some(c => c.startsWith('I35.0') || c.startsWith('I34.0') || c.startsWith('I35.2'));
-    if (hasSevereValve && labValues['sts_score'] === undefined) {
-      gaps.push({
-        type: TherapyGapType.MONITORING_OVERDUE,
-        module: ModuleType.VALVULAR_DISEASE,
-        status: 'Consider preoperative risk assessment for potential valve intervention',
-        target: 'STS risk score and heart team evaluation documented',
-        recommendations: {
-          action: 'Consider STS risk score calculation and multidisciplinary heart team review per 2020 ACC/AHA VHD Guideline',
-          guideline: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
-          note: 'Recommended for review: STS score and heart team assessment guide surgical vs transcatheter approach selection',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Severe valvular disease (I35.0 AS, I34.0 MR, I35.2 AR)',
-            'No STS risk score documented',
-          ],
-          guidelineSource: '2020 ACC/AHA Guideline for Management of Patients with Valvular Heart Disease',
-          classOfRecommendation: 'Class 1',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'STS score recently calculated', 'Patient declines intervention'],
-        },
-      });
-    }
-  }
+  // VD-PREOP-ASSESSMENT RETIRED to SPEC_ONLY (AUDIT-194 Part A, 2026-06-30). Gated on severe-valve dx +
+  // sts_score===undefined -> the STS risk score is a computed surgical-risk score, not a threadable
+  // observation (no LOINC, no schema column) -> the negation is always true -> fired ~100% of severe-valve
+  // (I35.0/I34.0/I35.2) patients. Permanent retire (no clean threadable STS signal), not pending-threading.
+  // Suppressed; registry entry orphaned. (AUDIT-184-CAD-EXT RETIRE precedent)
 
-  // VD-PULMONARY-HTN: Pulmonary Hypertension Screen in Valve Disease
-  // Guideline: 2022 ESC/ERS PH Guidelines + 2020 ACC/AHA VHD Guideline, Class 1, LOE B
-  if (hasAnyValveDxFB && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasDyspneaVD = dxCodes.some(c => c.startsWith('R06'));
-    const noPH = !dxCodes.some(c => c.startsWith('I27'));
-    if (hasDyspneaVD && noPH && labValues['pasp'] === undefined) {
-      gaps.push({
-        type: TherapyGapType.MONITORING_OVERDUE,
-        module: ModuleType.VALVULAR_DISEASE,
-        status: 'Consider pulmonary hypertension screening in valve disease patient with dyspnea',
-        target: 'PASP estimated via echocardiography or right heart catheterization reviewed',
-        recommendations: {
-          action: 'Consider echo-estimated PASP and RV function assessment per 2022 ESC/ERS PH + 2020 ACC/AHA VHD Guidelines',
-          guideline: '2022 ESC/ERS Guidelines for Diagnosis and Treatment of Pulmonary Hypertension',
-          note: 'Recommended for review: secondary PH in valve disease affects surgical timing and post-operative outcomes',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Valvular heart disease (I34-I37, I05-I08)',
-            'Dyspnea (R06.*)',
-            'No pulmonary hypertension diagnosis (I27)',
-            'No PASP documented in observations',
-          ],
-          guidelineSource: '2022 ESC/ERS Guidelines for Diagnosis and Treatment of Pulmonary Hypertension',
-          classOfRecommendation: 'Class 1',
-          levelOfEvidence: 'LOE B',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Known PH on treatment', 'Recent RHC <6 months'],
-        },
-      });
-    }
-  }
+  // VD-PULMONARY-HTN SPEC_ONLY-PENDING-THREADING (AUDIT-194 Part A, 2026-06-30). Gated on valve dx +
+  // dyspnea (R06) + no PH dx (I27) + pasp===undefined -> pasp (pulmonary artery systolic pressure) is an
+  // echo-derived value with a LOINC but is not threaded into ECHO_LOINC_TO_SLUG -> the negation is always
+  // true -> fired ~100% of (valve + dyspnea + no-PH) patients. Suppressed to stop the false positive; NOT a
+  // permanent retire - the signal is clinically real and threadable. RESTORE when PASP is threaded (Part B
+  // work item AUDIT-194-B2: thread the echo PASP LOINC into observationService). registry entry orphaned.
+  // (AUDIT-184-CAD-EXT RETIRE precedent)
 
   // VD-TRICUSPID-SECONDARY: Secondary Tricuspid Regurgitation
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 2a, LOE B-NR
