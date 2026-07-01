@@ -1,189 +1,106 @@
-# PATH TO ROBUST - TAILRD HEART PLATFORM v2.1 (Report-Spine Reorganization)
+# PATH TO ROBUST - TAILRD HEART PLATFORM (reconciled current authority)
 
 **Author:** Jonathan Hart
-**Version:** v2.1
-**Date:** 2026-06-04
-**Status:** ACTIVE (operator-approved 2026-06-04) - reorganizes v2.0 (2026-05-20) around the report-deliverable spine; supersedes v2.0.
-**Operator decision (2026-06-04):** v2.1 label confirmed; fingerprint-first NOT-adopted disposition confirmed (Section 7); **cut-line = A-as-60-day-milestone within C's extend-posture** - all-6 module trust + report class (a) per-module inventories land in the 60-day window; classes (b) service-line cuts / (c) 4-pathway ROI / (d) research-registry continue immediately after off the SAME spine; NO scope cut (Section 8: cut-line A milestone executed under cut-line C extend-timeline posture).
-**Supersedes:** v2.0 (2026-05-20); v1.2 archived at `docs/PATH_TO_ROBUST_v1.2_ARCHIVE.md`
-**Companions:** `docs/audit/AUDIT_METHODOLOGY.md`, `docs/audit/AUDIT_FINDINGS_REGISTER.md`, `BUILD_STATE.md`, `docs/planning/V2_HARVEST_PLATFORM_HARDENING.md`, `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md`, `CLAUDE.md`
+**Version:** v3.1 (current-state reconciliation + forward path)
+**Date:** 2026-07-01
+**Status:** ACTIVE - the SINGLE canonical strategic authority. This file (`docs/PATH_TO_ROBUST.md`) is always-current by construction: the anti-drift structure is one canonical filename, updated in place. **SUPERSEDES v3.0** (`docs/PATH_TO_ROBUST_v3.0.md`, the 2026-06-14 audit-to-build pivot), which is archived as the build-model predecessor. v3.1 reconciles the plan to the state after the ingestion foundation, the gap-engine honesty sweep, and the re-ingest-correctness work landed (2026-06-18 .. 2026-07-01), and records the decided forward path.
+**Lineage:** v1.2 archived (`docs/PATH_TO_ROBUST_v1.2_ARCHIVE.md`) -> v2.1 report-spine (`docs/PATH_TO_ROBUST.md` history) -> v3.0 build-execution (`docs/PATH_TO_ROBUST_v3.0.md`, ARCHIVED) -> **v3.1 this file (current)**. v3.0's 5-track build-model + 4-gate model are carried forward here (Section 2), re-sequenced; the full v3.0 track detail remains on disk in the archived file.
+**Companions:** `docs/audit/AUDIT_FINDINGS_REGISTER.md`, `BUILD_STATE.md`, `docs/audit/AUDIT_METHODOLOGY.md`, `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md`, `docs/design/UI_CANON.md`, `docs/design/UI_DESIGN_DECISIONS.md`, `CLAUDE.md`.
 
-**Version-number note (operator decision):** this draft is labeled v2.1 to avoid two distinct documents both named "v2.0" in history (the 2026-05-20 v2.0 was framed around the 603-gap production-grade build; this reorganizes the SAME scope around the report deliverable). If you prefer to keep the "v2.0" label, say so and I will rename - no content changes.
-
----
-
-## 1. Mission + the reorganizing principle
-
-Ship a fully production-grade TAILRD platform across 6 active cardiovascular modules: Heart Failure (126 gaps), Electrophysiology (89), Structural Heart (88), Coronary Artery Disease (90), Surgical Valvular Heart Disease (105), Peripheral Vascular (105). **603 active structured clinical decision gaps** (90 T1 + 391 T2 + 122 T3, verified at PR #290 matrix verification). Cross-module / Disparities / Safety (CX; 105 gaps) deferred per the 2026-05-03 operator decision; revisit at v3.0.
-
-**The reorganizing principle (the change from v2.0):** the 60-day deliverable is **DATA OUTPUTS IN REPORTS** covering all 6 modules + the service-line tier + research/registry outputs. **Platform-UX work queues behind report-critical work.** v2.0 sequenced by tier (T1 bespoke UI -> T2 templated -> T3 catalog); v2.1 sequences by what a report needs to be correct and complete, and treats bespoke UI polish as downstream of report integrity. The gap-detection engine, the clinical-code correctness, and the classification metadata all exist to feed reports a health-system executive trusts; the report is the product surface that matters first.
-
-This is not a scope change - all 603 gaps, all 6 modules, service-line, and research/registry remain in scope. It is a **sequencing change**: report-critical work first, UI polish second.
+**Off-repo discipline (CLAUDE.md §12):** operator-side commitments (stakeholder relationships, dates, spec-acquisition partnerships) stay operator-side. This plan references such dependencies as "operator-side" without detail. No calendar dates or stakeholder commitments live in this document; effort is person-effort, wall-clock stays operator-side.
 
 ---
 
-## 2. Strategic posture (carried forward verbatim from v2.0; hyphen-normalized per DRIFT-44)
+## 1. Current State + Forward Path (READ THIS FIRST - the reconciliation core)
 
-These are operator-codified and carried forward unchanged:
+### 1.1 DONE this session (merged to main, proven)
 
-- **Operating principle:** enterprise / Palantir-grade across all dimensions per operator 2026-05-07 codification. Depth is the default. UI polish is tiered (T1 bespoke, T2 templated, T3 catalog). Every gap is real. Solo execution.
-- **Extend-timeline-not-scope (2026-05-03):** when audit findings force a choice between timeline and scope, extend timeline; do not reduce scope. Module Parity Principle preserved. All Tier 1+2+3 gaps in scope (CX deferred, revisit at v3.0). Research / registry backend in scope.
-- **Robust-over-consistent-with-existing (2026-05-07):** "We do it right; we don't cut time." Tech debt is named via an AUDIT entry, not propagated; path-of-least-resistance framing is a drift indicator (DRIFT-33 + DRIFT-36).
-- **Path B (depth) + Path A (tiered UI) combined:** Path B is default (every gap properly implemented: detection logic + citations + calculator where applicable); Path A layers on top (T1 bespoke, T2 templated, T3 catalog). **Parallel module advancement, not serial** (Module Parity Principle; anti-HF-first explicit).
-- **Module Parity Principle (§13 of v2.0, carried as Section 5 here):** uniform depth across all 6 active modules. No phase is complete until all 6 are at parity for that phase. Gap-type batching across modules is preferred over module-by-module serialization. Shared UI patterns + shared test harnesses are first-class deliverables (parity by construction). Audit module parity at every checkpoint; drift > 2 days triggers rebalancing. The instinct to "polish HF more" or "PV does not need that" is a rejected anti-pattern.
-- **Off-repo discipline (CLAUDE.md §12):** operator-side commitments stay operator-side. No specific dates, deliverables, or stakeholder commitments are surfaced in this plan document. This plan is the in-repo strategic anchor, not the stakeholder communication surface.
+The data foundation the rest of the platform depends on is now built and honest. Three arcs closed:
 
----
+- **Ingestion foundation (merged #430 / #431).** The multi-file Epic-extract path (patients / conditions / observations / medications / procedures / encounters as normalized entity files), the SNOMED -> ICD-10 crosswalk (25 verified mappings), medication + secondary-diagnosis persistence, and the **AUDIT-192 batched write path** (createMany over the tenant-guard-exempt path; ~302K serial Aurora round-trips -> ~5-8 per 500-patient batch, ~1160x reduction, zero tenant-guard violations). Proven end-to-end on the **25,571-patient Synthea population** (the proof `--execute` write). This is the substrate every downstream consumer (coverage, trials, registry) reads.
+- **Gap-engine honesty - the hollow over-fire class swept (merged #430 / #434).** The hollow-read defect (a rule whose discriminating gate negates a signal NO ingestion path threads -> tautology -> fires ~100% of its dx-eligible cohort, shipping false positives) was diagnosed as a CODING PATTERN, not a module property, and swept across all modules: **AUDIT-184-CAD-EXT** retired 16 CAD rules to SPEC_ONLY; **AUDIT-194 Part A** retired 11 HF+VHD rules (with 3 legitimate rules deliberately PRESERVED - the do-not-over-correct discipline); **SH verified clean** of the over-fire class; EP/PV minor (benign documentation prompts / one PV rule). Runtime `gaps.push` 394 -> 378 -> 367. The discipline is codified as **CLAUDE.md §20 (Pattern-Class Sweep)**. HF-38 (influenza) was the byte-identical rule to the already-retired CAD-INFLUENZA left live in HF - the concrete proof the class-sweep was necessary.
+- **Re-ingest correctness (merged #435).** **AUDIT-193**: STOP-parse deactivation (medications.csv + conditions.csv STOP -> DISCONTINUED+endDate / RESOLVED+abatementDate), a guarded deactivate-diff (absent-row deactivation, full-snapshot-mode-only, gated by a 90% patient-count band + per-patient scoping + a fail-loud IngestCompletenessError), and an explicit extract-mode flag (full | delta). Includes the **runner conditions-filter latent-bug fix**: the runner previously included ALL conditions regardless of clinicalStatus, so a RESOLVED condition fired gaps for EVERY patient (wrong independent of re-ingest) - fixed to exclude RESOLVED/INACTIVE while preserving genuinely-active RECURRENCE/RELAPSE. The AUDIT-192 round-trip win is preserved (bounded per batch).
 
-## 3. The report spine (THE CENTRAL ARCHITECTURAL DECISION)
+Supporting: **AUDIT-191** all-module canonical refresh (merged #433) corrected the coverage synthesis to the honest figure below; task-def at `:332`.
 
-The single most important decision in v2.1: **one data spine carries a gap from detection to every report class.** Everything report-facing routes through it. The convergence, named explicitly:
+### 1.2 Honest coverage (underclaim; AUDIT-191-corrected)
 
-```
-stable gap ids  (absorbs AUDIT-106)
-      |
-      v
-per-rule manifests  (V2-harvest Section 2 artifact; YAML, one per gap rule)
-   carrying: clinical basis (guideline + COR/LOE + stable KB anchor),
-             FHIR inputs, logic reference, exclusions,
-             THREE-AXIS CLASSIFICATION + BSW ROI PATHWAY TAGS, risk_class
-      |
-      v
-backend report engine  (reads manifests + live detection output)
-      |
-      v
-the four report classes:
-   (a) per-module gap inventories x6
-   (b) service-line cuts  (three-axis: workflow stage / BSW ROI pathway / cross-cutting tags)
-   (c) 4-pathway BSW ROI rollup  (from REAL detection sources, not mock)
-   (d) research / registry extracts  (cohort-format + registry-format)
-```
+**315 / 603 = 52.2% buildable** (DET_OK + PARTIAL against 603 spec gaps), the AUDIT-191-corrected synthesis figure, reconciling to the AUDIT-183 all-6-module-complete milestone. This is a DOWNWARD honesty correction: the hollow over-fire retirements removed false coverage (a transiently-inflated 53.7% was corrected to 52.2%). No rounding up. The remaining ~47.8% is SPEC_ONLY (author-new) plus PARTIAL upgrades - the clinical buildout backlog (Section 2, Track A).
 
-**Why this is the central decision:** the 2026-06-03 report-pipeline inventory (Appendix A) found the backend report engine ABSENT, the three-axis service-line classification ABSENT, the executive ROI rollup a hardcoded mock shell, and research/registry export ABSENT. Existing reporting is client-side CSV/PDF over largely-mock data for ~3-4 of 6 modules. So the report deliverable is **mostly greenfield**, and every report class depends on the same upstream artifacts. Building four report classes against four ad-hoc data paths would re-create the mock-surface problem (AUDIT-099) at the report layer. One spine, four consumers.
+### 1.3 Architecture - 8 modules
 
-**The manifest IS the classification carrier.** The V2-harvest Section 2 per-rule manifest is not a documentation nicety; it is the data structure that carries the three-axis classification (workflow stage / BSW ROI pathway / cross-cutting tags) and the risk_class. The service-line cuts (class b) and the 4-pathway ROI rollup (class c) are projections over the manifest's classification fields joined to live detection output. Without the manifests there is no structured classification to cut by - which is exactly why class (b) is ABSENT today.
+The platform is **8 modules**, not 6:
+- **6 clinical:** Heart Failure, Electrophysiology, Structural Heart, Coronary Intervention, Valvular Disease, Peripheral Vascular (each with Executive / Service-Line / Care-Team tiers).
+- **7th - Service Line** (`src/ui/revenueCycle/`): the cross-cutting service-line / commercial surface (VBC quality-measure work, ROI rollups, aggregation-correctness - the AUDIT-140/143/145/146 family).
+- **8th - Registry / Trials** (`src/ui/research/`, "Beta"): clinical-trial eligibility matching + registry abstraction. A fully-built 3-tier frontend on a **flat-zero backend** (no schema, no routes, no matching logic - AUDIT-148). This is the backend now being built.
 
-**The AUDIT-106 stable-id fix is the shared structural prerequisite.** Manifests require a stable `id` on every inline `gaps.push` node so each manifest binds to exactly one rule. That `id` back-reference IS the AUDIT-106 structural prerequisite (the A<->B shared join key whose absence makes A<->B provenance consistency un-gateable today). **One structural fix serves both:** it unblocks AUDIT-106's deferred A<->B validator pass AND gives the manifests their binding key. This fix is the first item on the critical path (Section 6, Phase R0).
+### 1.4 Current forward path (the decided step-by-step order)
 
-**Pipeline-sibling discipline (V2-harvest Section 2 HARD requirement):** the manifest tooling and the report engine are built as siblings of the existing auditCanonical pipeline (the `extractCode.ts` / `validateEvidenceObjects.ts` family), reusing the AST-extraction + canonical-JSON conventions. NOT a parallel toolchain. KB references use stable anchor IDs, never raw line ranges (the catch-#89 / KB-parse-coupling failure mode); adding anchor IDs to `CLINICAL_KNOWLEDGE_BASE_v4.0.md` is part of this work.
+Threading is the next node because the ingestion foundation and the honesty sweep are done; the highest-leverage remaining move is to raise the SIGNAL the engine sees. **The threading workstream serves THREE consumers and is threaded ONCE for all three** (do not thread three times):
+
+1. **THREADING (next node - AUDIT-070 / AUDIT-194 Part B, expanded).** Thread the currently-dark signals into the ingestion path (observationService LOINC map + procedure/device code paths). It (a) raises honest gap coverage on the live clinical modules, (b) restores the 4 interim-suppressed AUDIT-194 rules (HF-74 + HF-90 BNP/NT-proBNP -> B1; VD-PULMONARY-HTN PASP -> B2; VD-ECHO-INTERVAL echo_months -> B3), (c) lights up the ~50 dark under-fire rules (EP/SH/VHD gating POSITIVELY on unthreaded device-status Z-codes, procedureCodes, and labs - the mechanical/bioprosthetic-valve + device families that currently fire 0%), (d) reduces the trial-matcher INDETERMINATE rate, and (e) is the prerequisite for registry-abstraction (registry fields need the procedure/device/outcome data threading unlocks). Detail: fold in v3.0 A.5's element-type ingestion worklist (echo-morphology 34, genetic-molecular 23, device-interrogation 12, ECG-morphology 10); the **quantitative-echo numeric feed is the single highest-leverage target** (142 gaps across Tranche 1+2). Same AUDIT-070 threading-ceiling lineage. Named ceiling: BNP/NT-proBNP, PASP, echo_months, eGFR, QTc/QRS, ABI, procedure/device codes, race, genetics are the signals NOT yet threaded; every rule or trial-criterion that depends on them is capped until threaded.
+
+2. **TRIALS backend (8th module - AUDIT-148 remediation).** Build the honest matcher after/alongside threading so it launches on the fuller signal set. Load-bearing design decisions (from the STAGE-1 registry inventory): (a) **honest matching semantics** - ELIGIBLE / INELIGIBLE / **INDETERMINATE**, and NEVER assert eligibility on an unthreaded signal (the trial analog of the hollow-over-fire discipline); (b) **substrate reuse** - a shared `buildPatientEvalContext()` refactored from the `runGapDetection` per-patient assembly (dxCodes / labValues / medCodes / age / gender / meds / procedureCodes), so the matcher inherits the crosswalks, LOINC threading, and re-ingest correctness for free (reuse the substrate, separate the matcher; a trial criterion is data-driven, NOT a gap RULE); (c) **per-criterion detail output** (which criteria met / failed / indeterminate); (d) **curated structured criteria** (author structured inclusion/exclusion for a priority trial set - NOT NLP-parse CT.gov free-text, which is error-prone and a clinical-risk path); (e) **preserve the honest live ClinicalTrials.gov discovery feed** (the AUDIT-147 counter-example: static condition query, no PHI sent). Slice-based - the matcher first (schema + `buildPatientEvalContext` + service + one wired endpoint); frontend wiring is UI-track (the `src/ui/research/` views + the already-defined `api.ts` contract are currently unwired). Remediates AUDIT-148's core defect (an absent capability framed as paywalled).
+
+3. **REGISTRY-ABSTRACTION (phase 3).** Map the ingested patient data into registry submission specs (NCDR / STS / GWTG families). **GATED on** (i) the registry data dictionaries - an **operator-side dependency** (via the partner relationship; referenced as operator-side, not detailed in-repo per the off-repo discipline) - and (ii) the threading above (registry fields require the procedure / device / outcome data that threading unlocks). This carries the **highest correctness bar** on the platform (regulatory submission), so the INDETERMINATE / human-review discipline applies most strictly here: no auto-populated registry field asserted on an unthreaded or inferred signal.
 
 ---
 
-## 4. Report-correctness gating (sequenced EARLY)
+## 2. The build model (v3.0's 5 tracks + 4 gates, carried forward, re-sequenced)
 
-**A wrong number in a BSW-facing report is worse than a missing report.** Three known clinical-correctness defects produce wrong report numbers and are sequenced BEFORE any report class ships:
+v3.0's audit-to-build track model is preserved as the build backlog; it is not contradicted by v3.1, only re-sequenced now that the ingestion foundation is done and threading is the next node. The exhaustive per-item detail is in the archived `docs/PATH_TO_ROBUST_v3.0.md`; the load-bearing structure is carried here.
 
-- **AUDIT-101 (HIGH, OPEN)** - `gap-cad-statin` ingredient-level `STATIN_CODES` cannot encode high-intensity dose, so the high-intensity-statin gap silently fails to fire for patients not on a high-intensity statin. In a report this is an undercount of a guideline-directed-therapy gap - the worst kind of wrong number (it tells a CMO there is no gap when there is). Must be fixed before CAD lipid gaps appear in any report.
-- **AUDIT-070 (OPEN)** - `observationService.CARDIOVASCULAR_LAB_CODES` lacks ABI LOINC mappings, so FHIR-ingested ABI patients never reach the PAD screening rule (CSV path unaffected). In a report this is a silent miss of PAD gaps for FHIR-sourced cohorts. Must be fixed before PV reports ship against FHIR-ingested data.
-- **AUDIT-016 §10.7 legacy-purpose carryover** - ~10 `patients.firstName` envelopes carry the legacy V2 encryption purpose (`phi-migration-v0v1-to-v2`) rather than the canonical purpose. This is a content/purpose-discriminator divergence INVISIBLE to a plaintext-prefix census (the AUDIT-108 backfill did not and could not address it). It is not broken data today (the rows decrypt under the legacy purpose), but any report path that reads those patient rows under the canonical purpose would fail. Must close before patient-data reports ship. Tracked under AUDIT-016; sequenced into Phase R0.
+### 2.1 Gate model (the external condition that must hold before an item is true)
 
-**The golden-dataset suite (V2-harvest Section 1) is the standing protection for report integrity.** Per-gap version-pinned synthetic (Synthea) cohorts - true positives that MUST fire, near-miss true negatives, one patient per exclusion path, boundary cases - run BLOCKING on merge to main with a per-patient diff, plus targeted PR runs via a gap-rule-to-cohort dependency map. The intentional-change protocol (expected.json update + clinical sign-off in the same PR with rendered diff) makes a report-number change a reviewed, signed event rather than a silent regression. This reuses the clean-baseline hard-gate discipline of the evidence-object validator (PR #337). The golden suite is what keeps report numbers correct as the engine and the rules evolve; it is built in Phase R0 alongside the manifest schema, before report classes are authored.
+- **Gate 1 - BEFORE-DUA** (real PHI flows / real clinicians act): clinical-safety (AUDIT-117 dabigatran, AUDIT-124 bioprosthetic over-anticoagulation, AUDIT-136 mech-valve-in-pregnancy Tier-S), match-engine correctness (AUDIT-118 - see Track A.0), FHIR-path detection (AUDIT-070 ABI, now folded into the THREADING node), auth/PHI (AUDIT-010/012/014/020/003).
+- **Gate 2 - BEFORE-COMMERCIAL-CLAIM** (advertise/sell): build the real feature, do not disclose-and-defer. AUDIT-145 (VBC quality-measure service - Service Line / 7th module), **AUDIT-148 (research / trial-matching - 8th module, the TRIALS node in Section 1.4)**; provenance honesty on customer surfaces (AUDIT-099/147/146/140/141/144).
+- **Gate 3 - PRODUCTION-READINESS** (operational/infra before real traffic): AUDIT-014, AUDIT-011 Phase d (tenant strict-mode soak-gated), AUDIT-085 (prod-Aurora migration path), AUDIT-080 (Zod on mutating routes), AUDIT-081/077/076.
+- **Gate 4 - AFTER** (no external gate; sequenced by dependency/value): pure tech debt + lowest-value infra (Section 5).
 
----
+### 2.2 The five tracks
 
-## 5. All-6-module coverage on the critical path
+- **Track A - CLINICAL (correctness + the 528-gap buildout).** A.0 the matcher fix (AUDIT-118 ingredient-normalize, with the bound post-fix cascade-flip pass) FIRST; A.1 the ~128 medication-dependent gaps build on the fixed matcher; A.2 the ~475 non-medication gaps parallel-safe from day one; A.3 the independent detection-correctness fixes; A.4 the surgical peri-operative KB-completeness tranche (AUDIT-163 anchor); A.5 the DUA-deferred / data-blocked tranche (tracked not built) - **the threading node in Section 1.4 is the forward face of A.5 + AUDIT-070**, now expanded with the AUDIT-194 Part B items and the ~50 dark-rule set. Buildout by module (SPEC_ONLY / PARTIAL): HF 61/43, EP 42/39, SH 58/30, CAD 34/27, VHD 94/11, PV 75/14 = 364 SPEC_ONLY + 164 PARTIAL = 528, tier-ordered within each module. NOTE: these buildout counts predate this session's hollow retirements (CAD 16, HF+VHD 11 -> SPEC_ONLY); the SPEC_ONLY denominators shift accordingly and are reconciled per module at buildout time against the live crosswalk, not predicted here.
+- **Track B - UI REBUILD** (build-to `UI_CANON.md` + `UI_DESIGN_DECISIONS.md`): AUDIT-152 primitives -> AUDIT-151 consolidation (18 -> 3 views) -> AUDIT-152 migration (826/905) -> polish (157/158/159/160) -> auto-resolved (161/153/154/155/149). AUDIT-099 (non-HF Exec wiring) waits on Track C. The trials/registry frontend wiring (Section 1.4 step 2/3) is a Track B consumer.
+- **Track C - AGGREGATION / COMMERCIAL** (the 7th + 8th module backends): AUDIT-140 (kill cross-module double-count), AUDIT-145 (VBC service - build real), **AUDIT-148 (trials - build real, the Section 1.4 TRIALS node)**, AUDIT-143/146/147/141/144 (provenance honesty). Registry-abstraction (Section 1.4 step 3) extends this track.
+- **Track D - SECURITY / PHI / AUTH:** AUDIT-010/012/014/020/080/081/003/077/076/002.
+- **Track E - INFRA / OPERATIONAL:** AUDIT-085/111->131/130/110/072/074/079/038 + tech debt 004/005/006.
 
-**All-6 coverage rule (report-scoped Module Parity):** no module's outputs ship in a BSW-facing report without its per-gap clinical-code audit complete to the §16 standard. A report that is rigorous in HF/CAD/PV and unaudited in EP/SH/VHD is a report that publishes unverified numbers for half the platform - exactly the credibility failure the Module Parity Principle exists to prevent.
+### 2.3 Re-sequenced ordering (the change v3.1 makes)
 
-- **Done:** HF, CAD, PV have Phase 0B audit addenda (per-module §8 implications: PV 4 T1 SPEC_ONLY + 2 PARTIAL + 1 DET_OK, verdict LIGHTLY BUILT; HF 7 SPEC_ONLY + 14 PARTIAL + 8 DET_OK; CAD 8/18 T1 DET_OK, MODERATELY BUILT).
-- **On the critical path:** EP, SH, VHD per-gap clinical-code audits to the §16 standard (external-source verification of every RxNorm/LOINC/ICD-10 constant; codebase trust insufficient). These three modules' numbers are NOT report-trustworthy until audited. They gate their modules' report outputs.
-- **Empirical wall-clock logging starts at EP** per AUDIT-028 / methodology §7 (the empirical floor: rule-body + spec-citation ~95-120min per ~90-gap module; AUDIT-030.D multi-pattern ~120-150min). EP is the first new data point that calibrates the v2.1 timeline math (Section 8); log it to `audit_runs.jsonl`.
-- **CROSS_MODULE_WORKFLOW_MATRIX retro-mapping after EP:** once EP is audited, retro-map the cross-module satisfaction cases (the Phase 0B §11 material: e.g. HF GAP-HF-021/024/025/026 satisfied by EP device evaluators) into a workflow matrix so service-line cuts (class b) reflect real cross-module dependencies, not per-module silos.
-- **AUDIT-118 retroactive reconciliation (v2.0 cross-module synthesis input; filed 2026-06-08 from the EP audit; NOT a re-audit, NOT a register reopen):** the merged PV/HF/CAD **medication-based DET_OK** classifications predate AUDIT-118 + the §16.5 modifier, so they may **overstate coverage** - any DET_OK whose detection asserts "patient is ON drug X" by exact-ingredient-membership with no ingredient->descendant expansion is capped at PARTIAL_DETECTION under §16.5 until AUDIT-118 is remediated (exempt: descendant-enumerated value sets or the AUDIT-101 resolver). The EP Batch-1 cascade flipped 7 EP gaps on this basis; PV/HF/CAD were not re-examined. **At v2.0 Module-Parity reconciliation, re-apply the §16.5 modifier to the PV/HF/CAD medication-presence DET_OK set against the completed 0B baseline** before any of those DET_OK counts are reported as trustworthy. (This is the report-correctness reason the §16.5 cap exists; it does not reopen the 0B register entries - it is a forward reconciliation gate.)
-
----
-
-## 6. The phases (reorganized around the report spine)
-
-Tier 1/2/3 UI build and the production-readiness gate items from v2.0 are NOT removed; they fold into / queue behind these report-critical phases per the reorganizing principle. Hours are AUDIT-028-multiplied estimates (Section 8); they are ranges, not commitments.
-
-### Phase R0 - Spine foundations (the critical-path prerequisites)
-- **AUDIT-106 stable-`gaps.push`-`id` fix** (shared prerequisite: manifests + A<->B validator). FIRST item.
-- **Per-rule manifest schema + tooling** as a sibling of the auditCanonical pipeline; stable KB anchor IDs added to `CLINICAL_KNOWLEDGE_BASE_v4.0.md`.
-- **Golden-dataset harness** (Section 1): blocking-on-merge gate + intentional-change protocol + dependency map. Seed cohorts for the already-audited modules first.
-- **Report-correctness findings:** AUDIT-101, AUDIT-070, AUDIT-016 §10.7 closed (Section 4).
-- Production-readiness gate items that block any production report path (AUDIT-109 error logging, the AUDIT-107 smoke - see Block 2 - are sequenced here as report-deploy prerequisites).
-
-### Phase R1 - Module trust + classification (all-6 parity)
-- **EP, SH, VHD per-gap audits** to §16 (Section 5), with EP first + wall-clock logging.
-- **Per-module manifests authored** carrying the three-axis classification + BSW ROI pathway tags + risk_class, for all 6 modules (the classification carrier exists only once manifests do).
-- **Six module risk files** (V2-harvest Section 4, ISO-14971-aligned; HF first; clinical sign-off per file; risk_class in manifests references them).
-
-### Phase R2 - Report engine + the four classes
-- **Backend report engine** reading manifests + live detection output (greenfield; the central spine consumer).
-- **Class (a) per-module gap inventories x6** - the first and simplest projection.
-- **Class (b) service-line cuts** - three-axis projection over manifest classification + the CROSS_MODULE_WORKFLOW_MATRIX.
-- **Class (c) 4-pathway BSW ROI rollup** - from REAL detection sources (replacing the mock `ROICalculationEngine` shell), structured around the four BSW pathways.
-- **Class (d) research / registry extracts** - cohort-format + registry-format export (greenfield; the Approval-token gating of V2-harvest Section 3 feeds the Pattern-2 scoping audit before any write-back design).
-
-### Phases beyond R2 (queue behind reports)
-- Tier 1 bespoke UI (90 gaps), Tier 2 templated UI (391), Tier 3 catalog (122) - the v2.0 build, now downstream of report integrity.
-- Phase 0C UI/UX gate cluster, DESIGN_SYSTEM_SPEC.md, the 14 HIGH P1 GATE items not already pulled forward as report prerequisites.
+v3.0's critical path was "Track A clinical buildout is the longest chain." That remains true for pilot-readiness. v3.1's refinement: the **ingestion foundation is DONE** (it was implicit in v3.0 A.5's "PR #396 threading"; now fully built and proven at scale), so the immediate next node is **THREADING** (Section 1.4 step 1) - it is the single move that raises signal for the clinical buildout (Track A coverage), the trials matcher (Track C / 8th module), and registry-abstraction (Track C phase 3) at once. Lead still with any before-DUA safety + the AUDIT-118 matcher fix where they gate correctness; then threading; then trials backend; then registry-abstraction. "Concurrent" means interleavable by solo operator attention, never simultaneous.
 
 ---
 
-## 7. Deferred list with explicit triggers
+## 3. Estimates (AUDIT-028 discipline - honest, ranges not commitments)
 
-Recorded so each is picked up when - and only when - its trigger fires. None is in the 60-day report window unless its trigger states otherwise.
+Method unchanged from v3.0: raw scope and AI-assisted wall-clock are different units, never conflated without a stated multiplier; the 2026-05 arc demonstrated robust-standard work at ~2-4x the naive budget; greenfield backend has no prior multiplier and is the largest estimation risk. Wall-clock is attention-bound (one solo operator), not parallelism-bound; calendar dates stay operator-side.
 
-- **Front door / login button + frontend production deploy decision.** Trigger: the first report class is ready to demo to a BSW-facing reviewer (reports need a way in). Until then the backend report engine + API is the deliverable; the frontend production deploy + app.tailrd-heart.com DNS is a separate decision.
-- **AUDIT-099 restructure (non-HF Executive fabricated-KPI surfaces).** Trigger: an interim client-side export ships against those surfaces. **Minimum viable interim = Demo-Data badging IF any existing client export ships before the backend report engine lands** - never publish a fabricated number without a Demo-Data indicator. Full restructure (HF-style backend wiring) queues behind the report engine.
-- **Smoke blocking posture beyond a failure alert.** Trigger: a green post-rotation smoke baseline exists (Block 2 ships the alert-only posture now; deploy-gating is a later operator decision once the smoke is reliably green).
-- **Phase 0C (full UI/UX gate cluster).** Trigger: report classes (a)-(d) shipped; UI polish is platform-UX, queued behind reports per the reorganizing principle.
-- **AUDIT-080 (Zod validation coverage, 21 of 26 mutating routes).** Phased: the mutating routes on the report-engine API path are validated as those routes are built; the remaining routes phase in behind.
-- **V2-harvest deferred capabilities (Section 6):** execution-mode separation (trigger: a research partnership reaches scoped data-access requirements); plugin / MCP-style extension surface (trigger: a third customer integration that does not fit the EHR path, OR a major scale milestone).
-- **V2-harvest open decision (Section 7):** fingerprint-first audit logging stays deferred - architecturally incompatible with the deployed V2-envelope + per-record EncryptionContext architecture. **Disposition for v2.1 (per the required trade-off note): NOT adopted.** The encryption-with-context architecture is live across the full PHI surface (AUDIT-016 V2 envelopes + the 2026-06-04 AUDIT-108 backfill). Reversing to fingerprint-first would require re-architecting the deployed PHI encryption + every read-path context reconstruction, for an audit-channel benefit that the existing CloudTrail kms:Decrypt EncryptionContext payload already largely provides. Trade-off recorded; decision is to keep the deployed architecture. Reopen only if a concrete audit-channel requirement the current architecture cannot meet is named.
+Newly-calibrated by this session (data points to carry into future estimates): the ingestion foundation + honesty sweep + re-ingest arc landed as a sequence of scoped, tested, single-finding PRs (#430-435) - the demonstrated cadence for backend-correctness work at the robust standard. The threading node is partly greenfield (new LOINC/procedure ingestion paths) and partly mechanical (restore the 4 suppressed rules once their signals thread); the trials matcher is greenfield (schema + service, needs scoping); registry-abstraction is greenfield AND operator-side-gated (needs the data dictionaries before it can be scoped). Underclaim until each first data point lands.
 
 ---
 
-## 8. Timeline math (AUDIT-028; underclaim)
+## 4. Success criteria / definition of pilot-ready
 
-**Method (AUDIT-028 work-mix):** raw scope (gap counts, lines of greenfield engine) and AI-assisted wall-clock are different units; they cannot be conflated without a stated multiplier. The 2026-05 arc is the calibration data: audit + gate-item work ran ~2-4x the raw budget (Phase 4/5/0C: ~25-40h actual vs ~10-20h budget). Greenfield backend (the report engine, the manifest tooling, the registry extracts) has no prior multiplier and is the largest estimation risk.
-
-**Raw-scope inventory for the 60-day report window:**
-- Spine foundations (R0): AUDIT-106 id fix + manifest schema/tooling + golden harness + KB anchors + 3 correctness findings (101/070/§10.7). Greenfield tooling + clinical-code fixes.
-- Module trust (R1): EP + SH + VHD audits (3 modules x the §16 per-gap floor) + 6 modules of manifests + 6 risk files.
-- Report engine + 4 classes (R2): greenfield backend engine + 4 report classes, of which (b) three-axis, (c) real-source ROI, (d) registry are entirely greenfield.
-
-**Honest verdict: all-6 audits + service-line + research/registry, built to the robust-first standard, do NOT credibly fit 60 days.** The greenfield report engine + three-axis classification + 4-pathway real-source ROI + registry extracts alone is a multi-week backend build BEFORE the per-module manifests and the EP/SH/VHD audits that gate trustworthy numbers. Applying the 2-4x audit multiplier to the gate-item portions and treating the engine as unestimated-greenfield, the full scope reads as a 10-14 week effort, not 8-9. **No date is promised here that the math does not support** (per AUDIT-028 + the off-repo discipline, specific dates stay operator-side regardless).
-
-**EP is the first new empirical data point.** Its wall-clock (logged per Section 5) recalibrates this estimate; the timeline is updated as EP, then SH, then VHD logs land. Underclaim until the data is in.
-
-**Cut-line options for the operator (choose the 60-day boundary):**
-- **Cut-line A (depth-first, fewest classes):** Phase R0 + R1 (all-6 module trust + manifests + correctness gating + golden harness) + report class (a) per-module inventories x6. Defers service-line cuts (b), real-source ROI (c), registry (d) to a second window. Delivers trustworthy, all-6, per-module numbers - the credibility floor - and the spine that makes (b)/(c)/(d) fast afterward.
-- **Cut-line B (breadth-first, fewer modules):** all four report classes (a)-(d), but only for the already-audited modules (HF/CAD/PV) in the window, with EP/SH/VHD audits + their report outputs in the second window. Delivers the full report taxonomy but violates the all-6 parity rule on day 60 (flagged as a parity exception requiring explicit operator acceptance).
-- **Cut-line C (extend the window):** keep all-6 + all-4-classes; extend past 60 days per the extend-timeline-not-scope posture. Consistent with the strategic posture; requires the off-repo commitment window to move.
-
-**Recommendation (operator decides):** Cut-line A. It honors the Module Parity Principle (all-6, no parity exception), it sequences correctness before breadth (a wrong number is worse than a missing report class), and it front-loads the spine so the remaining classes are projections rather than new builds. But this is an operator scope/timeline call, not an agent call.
+BSW goes on the REBUILT and perfected platform (the operator decision baked into v3.0) only when ALL hold:
+- **Clinical safety:** before-DUA safety items closed; the matcher fixed and medication-presence rules proven on product-coded meds (golden-cohort negatives).
+- **Clinical completeness at parity:** the buildout authored to the robust standard, all-6 modules at equal depth, every gap carrying its evidence object + §16-verified codes. Coverage reported honestly (Section 1.2), underclaimed, never rounded up.
+- **Signal honesty:** the threading ceiling is named on every surface that depends on an unthreaded signal; no gap, trial-match, or registry field asserts on a signal no ingestion path threads (the hollow-over-fire / INDETERMINATE discipline, platform-wide).
+- **PHI / auth correctness + production-readiness:** Track D core + AUDIT-085/080/014 closed; tenant isolation enforced.
+- **UI to canon:** 18 -> 3 consolidation + component migration complete; no fabricated-KPI surface without provenance.
+- **Commercial honesty:** the 7th (VBC / AUDIT-145) and 8th (trials / AUDIT-148) module backends built real, or - if any commercial surface is shown - honestly provenance-labeled; no advertise-as-paywalled-but-absent capability.
 
 ---
 
-## 9. Success criteria + document discipline
+## 5. What is explicitly deferred (AFTER) - intentional, not accidental
 
-- **Report integrity:** every report number is backed by an audited rule (all-6 §16) and protected by a golden-cohort gate; the intentional-change protocol makes every number-change a signed event.
-- **Module parity:** all 6 modules at equal report depth for any shipped class (no parity exception without explicit operator acceptance per Cut-line B).
-- **Spine, not silos:** the four report classes are projections over one manifest + detection spine; no ad-hoc per-class data path.
-- **Posture preserved:** robust-first, extend-timeline-over-scope-cuts, off-repo discipline, named-tech-debt-not-propagated - all carried verbatim (Section 2).
-- **Document discipline:** v2.1 supersedes v2.0 on operator approval; CX revisit at v3.0 unchanged; DRIFT-44 hyphen-only; severity copied register-literal per §18.
+Carried from v3.0 Section 7: pure tech debt (AUDIT-002 :any, AUDIT-004 @ts-nocheck removal, AUDIT-005 god-files, AUDIT-006 deps, AUDIT-008/021 INFO); lowest-value infra (AUDIT-072/074/079/038/007/110/130/111->131); process/latent (AUDIT-137 VHD baseline meta, AUDIT-106 provenance join-key - foundational only if a report spine is re-adopted, AUDIT-142 latent re-creation site). None blocks pilot-readiness.
 
 ---
 
-## Appendix A - Report-pipeline inventory verdict table (2026-06-03, reproduced)
+## 6. Document discipline + lineage
 
-Backend has no report engine (only `ReportGeneration` analytics telemetry at `analytics.ts:443/473`, a `godView.ts:434` stub, and audit/patient-data JSON exports). Reporting is client-side (jsPDF/xlsx/CSV) over largely-mock data.
-
-| Output class | Verdict | Evidence (file:line) |
-|---|---|---|
-| (a) Per-module gap inventories x6 | **PARTIAL** | Client-side CSV for CAD (`CoronaryWorklist.tsx:306`), EP (`EPWorklist.tsx:334`), PV (`PeripheralWorklist.tsx:298`) + generic `TherapyGapDashboard.tsx:215`. HF/SH/VHD have no dedicated worklist CSV. No backend report path. Over loaded/mock data. |
-| (b) Service-line cuts (three-axis: workflow stage / BSW ROI pathway / cross-cutting tags) | **ABSENT** | No `workflowStage` / `bswPathway` / `crossCutting` classification field exists. `serviceLineConfig.tsx` is JSX layout, not a consumable taxonomy. Nothing consumes a three-axis cut. |
-| (c) Executive ROI rollup across 4 BSW pathways | **PARTIAL (mock shell)** | `ROICalculationEngine.tsx` has `calculateROI` (`:164`) + `exportROIReport` (`:210`), but `roiMetrics` (`:121`) is hardcoded mock (no fetch), not structured around the 4 BSW pathways, not a backend rollup. |
-| (d) Research/registry outputs (cohort-extract / registry-format) | **ABSENT** | Aspirational only: `openapi.ts:9`, `featureFlags.registryAssist` (flag, no impl), mock registry events. `dataRequests /export` is single-patient, not cohort. No cohort-extract or registry-format export code. |
-
-**Net:** the report deliverable is mostly greenfield - client-side CSV/PDF over mock data for ~3-4 of 6 modules and a mock ROI shell; the backend report engine, the three-axis classification, the 4-pathway ROI rollup, and any cohort/registry export are absent. Cross-ref AUDIT-099 (non-HF executive surfaces render hardcoded data, so even existing client exports often export mock).
-
-## Appendix B - Open decisions surfaced for the operator
-
-1. **Version label:** v2.1 vs keeping "v2.0" (header note). My call: v2.1 for lineage clarity; rename on request.
-2. **Cut-line A / B / C** (Section 8): the 60-day boundary. My recommendation: A.
-3. **AUDIT-108 severity-index reconciliation:** the register severity-index one-liner (line 42) still reads OPEN-flavored while the AUDIT-108 detail Status + BUILD_STATE row are RESOLVED 2026-06-04. A 1-line register-index reconciliation is needed (kept out of this PR per scope discipline). Flagging for a separate ledger pass.
-4. **Fingerprint-first (Section 7):** disposition recorded as NOT adopted with the trade-off note; confirm or reopen.
+- **Single canonical authority:** `docs/PATH_TO_ROBUST.md` is always the current plan. Update in place; do not fork a new version-numbered file (the v2.1 -> v3.0 fork was itself a drift source, resolved here). Prior versions are archived with SUPERSEDED headers.
+- **Supersession:** v3.1 supersedes v3.0 (archived); v3.0 superseded v2.1; v1.2 archived. The which-doc-is-live ambiguity is closed - this file is live.
+- **Honesty:** underclaim coverage (Section 1.2), name the threading ceiling, no aspirational dates, severity copied register-literal per §18, tech debt named via an AUDIT entry not propagated.
+- **Off-repo discipline (CLAUDE.md §12):** operator-side commitments (the registry-dictionary partnership, stakeholder dates) stay operator-side; effort is person-effort, wall-clock operator-side.
+- **DRIFT-44:** hyphen-only, `->` for arrows, `§` the only permitted non-ASCII.

@@ -1,9 +1,11 @@
-# PATH TO ROBUST v3.0 - TAILRD HEART PLATFORM (Audit-to-Build Pivot)
+# PATH TO ROBUST v3.0 - TAILRD HEART PLATFORM (Audit-to-Build Pivot) [ARCHIVED]
+
+> **SUPERSEDED 2026-07-01 by `docs/PATH_TO_ROBUST.md` (v3.1).** This v3.0 build-execution plan is archived as the build-model predecessor. v3.1 reconciled the plan to the state after the ingestion foundation, the gap-engine honesty sweep, and the re-ingest-correctness work landed (#430-435), records the 8-module architecture and the honest 315/603 = 52.2% coverage, and set the current forward path (threading -> trials backend -> registry-abstraction). v3.0's 5-track + 4-gate build-model is carried forward into v3.1 Section 2 (re-sequenced); the exhaustive per-item track detail below is retained for reference. Do NOT plan from this file - `docs/PATH_TO_ROBUST.md` is the single live authority.
 
 **Author:** Jonathan Hart
-**Version:** v3.0 (build-execution plan)
-**Date:** 2026-06-14
-**Status:** ACTIVE strategic plan for the build phase (operator-approved 2026-06-14). **SUPERSEDES v2.1** (`docs/PATH_TO_ROBUST.md`, the 2026-06-04 report-spine reorganization) as the active strategic authority. v3.0 is the build-execution authority; v2.1's report-deliverable lens is subsumed into v3.0's track model (the prior report-class organization - per-module inventories, service-line cuts, ROI rollup, research/registry extracts - is carried as the commercial/aggregation and clinical deliverables of Tracks A and C rather than as a separate spine). v2.1 is archived as the report-lens predecessor.
+**Version:** v3.0 (build-execution plan) - ARCHIVED, superseded by v3.1
+**Date:** 2026-06-14 (archived 2026-07-01)
+**Status:** ARCHIVED. Was: ACTIVE strategic plan for the build phase (operator-approved 2026-06-14), which **SUPERSEDED v2.1** (`docs/PATH_TO_ROBUST.md`, the 2026-06-04 report-spine reorganization) as the active strategic authority. Now itself superseded by v3.1 (the reconciled `docs/PATH_TO_ROBUST.md`). v3.0 is the build-execution authority; v2.1's report-deliverable lens is subsumed into v3.0's track model (the prior report-class organization - per-module inventories, service-line cuts, ROI rollup, research/registry extracts - is carried as the commercial/aggregation and clinical deliverables of Tracks A and C rather than as a separate spine). v2.1 is archived as the report-lens predecessor.
 **Authored against:** the v3.0 PATH_TO_ROBUST Step 1 corrected inventory (73 OPEN findings + 528-gap clinical buildout, severities reconciled per Step 1.5 / PR #389), the Step 2 gate + dependency + parallelization resolution, and the Step 2.5 AUDIT-118 match-engine verification (CONFIRMED HIGH P1).
 **Companions / cited corpus:** `docs/PATH_TO_ROBUST.md` (the on-disk report-spine plan - see the lineage note below), `docs/audit/AUDIT_FINDINGS_REGISTER.md`, `docs/audit/AUDIT_METHODOLOGY.md`, `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md`, `docs/design/UI_CANON.md`, `docs/design/UI_DESIGN_DECISIONS.md`, `BUILD_STATE.md`, `CLAUDE.md`.
 
