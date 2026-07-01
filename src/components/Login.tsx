@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { Eye, EyeOff, Lock } from 'lucide-react';
 import { toast } from '../components/shared/Toast';
+import Logo from './TailrdLogo';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -44,7 +45,6 @@ const Login: React.FC = () => {
       const success = await login(email, password);
 
       if (success) {
-        toast.success('Login Successful', `Welcome back!`);
         navigate('/dashboard', { replace: true });
       }
     } catch (err: any) {
@@ -81,26 +81,6 @@ const Login: React.FC = () => {
 
       {/* Main content */}
       <div className="relative z-10 w-full max-w-lg px-6">
-        {/* Brand header — matching website typography */}
-        <div className="text-center mb-10">
-          <h1 className="text-5xl font-black tracking-tight mb-3" style={{ letterSpacing: '-1.5px' }}>
-            <span style={{ color: '#1A2F4A' }}>TAILRD</span>
-            <span className="mx-3 text-3xl font-light" style={{ color: '#CBD5E1' }}>|</span>
-            <span
-              style={{
-                background: 'linear-gradient(135deg, #5C1A1A 0%, #7A1A2E 50%, #B85858 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              HEART
-            </span>
-          </h1>
-          <p className="text-sm text-gray-400 tracking-widest uppercase" style={{ letterSpacing: '2px' }}>
-            Cardiovascular Intelligence Platform
-          </p>
-        </div>
-
         {/* Glassmorphic login card */}
         <div
           className="rounded-2xl p-8 sm:p-10"
@@ -112,8 +92,14 @@ const Login: React.FC = () => {
             boxShadow: '0 8px 32px rgba(26, 47, 74, 0.08), 0 2px 8px rgba(26, 47, 74, 0.04)',
           }}
         >
-          <h2 className="text-xl font-bold text-gray-900 mb-1">Sign In</h2>
-          <p className="text-sm text-gray-500 mb-7">Access your cardiovascular analytics dashboard</p>
+          {/* Brand header - the white-background logo image sits ON the white card so its box blends away (AUDIT-304) */}
+          <div className="text-center mb-8">
+            <Logo variant="full" size="large" className="mb-3" />
+            <p className="text-sm text-gray-400 tracking-widest uppercase" style={{ letterSpacing: '2px' }}>
+              Cardiovascular Intelligence Platform
+            </p>
+          </div>
+          <h2 className="text-xl font-bold text-gray-900 mb-6">Sign In</h2>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
@@ -224,7 +210,7 @@ const Login: React.FC = () => {
           {/* SSO Login */}
           <div className="mt-4 pt-4 border-t border-gray-200">
             <button
-              onClick={() => { window.location.href = '/api/sso/login'; }}
+              onClick={() => toast.info('Single sign-on', 'SSO is not yet configured - contact your IT administrator.')}
               type="button"
               className="w-full py-2.5 px-4 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
             >
@@ -232,11 +218,6 @@ const Login: React.FC = () => {
             </button>
           </div>
         </div>
-
-        {/* Footer text */}
-        <p className="text-center text-xs text-gray-400 mt-8">
-          Secure access for authorized cardiovascular care teams
-        </p>
       </div>
     </div>
   );

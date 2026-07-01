@@ -12,13 +12,12 @@ import {
 } from 'lucide-react';
 import CareGapOrchestrationCard from './CareGapOrchestrationCard';
 import {
-  MOCK_NOTIFICATIONS,
   MOCK_ORCHESTRATIONS,
-  type CareGapNotification,
   type SeverityLevel,
 } from './notificationMockData';
+import { useNotifications } from './NotificationContext';
 
-// ── Helpers ─────────────────────────────────────────────────
+// --- Helpers ---
 
 function formatTimestamp(iso: string): string {
   const d = new Date(iso);
@@ -51,7 +50,7 @@ const typeIcons: Record<string, React.ElementType> = {
   resolution: CheckCircle,
 };
 
-// ── Component ───────────────────────────────────────────────
+// --- Component ---
 
 interface Props {
   isOpen: boolean;
@@ -60,7 +59,9 @@ interface Props {
 
 export default function NotificationPanel({ isOpen, onClose }: Props) {
   const [activeTab, setActiveTab] = useState<'notifications' | 'orchestration'>('notifications');
-  const [notifications, setNotifications] = useState<CareGapNotification[]>(MOCK_NOTIFICATIONS);
+  // Single source of truth: unreadCount / mark handlers come from the shared
+  // NotificationProvider, so the TopBar bell + UserMenu badge stay in sync (AUDIT-304).
+  const { notifications, unreadCount, markRead, markAllRead } = useNotifications();
 
   // Escape key closes panel
   const handleEscape = useCallback(
@@ -76,21 +77,6 @@ export default function NotificationPanel({ isOpen, onClose }: Props) {
       return () => document.removeEventListener('keydown', handleEscape);
     }
   }, [isOpen, handleEscape]);
-
-  const unreadCount = useMemo(
-    () => notifications.filter((n) => !n.isRead).length,
-    [notifications]
-  );
-
-  const markRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
-    );
-  };
-
-  const markAllRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
-  };
 
   // Sort: unread first, then by timestamp
   const sortedNotifications = useMemo(() => {
@@ -125,7 +111,7 @@ export default function NotificationPanel({ isOpen, onClose }: Props) {
         role="dialog"
         aria-label="Notification Center"
       >
-        {/* ── Header ── */}
+        {/* -- Header -- */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-titanium-200 flex-shrink-0">
           <div className="flex items-center gap-3">
             <Bell size={18} className="text-chrome-600" />
@@ -147,7 +133,7 @@ export default function NotificationPanel({ isOpen, onClose }: Props) {
           </button>
         </div>
 
-        {/* ── Tabs ── */}
+        {/* -- Tabs -- */}
         <div className="flex border-b border-titanium-200 flex-shrink-0">
           <button
             onClick={() => setActiveTab('notifications')}
@@ -182,7 +168,7 @@ export default function NotificationPanel({ isOpen, onClose }: Props) {
           </button>
         </div>
 
-        {/* ── Content ── */}
+        {/* -- Content -- */}
         <div className="flex-1 overflow-y-auto">
           {activeTab === 'notifications' && (
             <div>
@@ -317,7 +303,7 @@ export default function NotificationPanel({ isOpen, onClose }: Props) {
           )}
         </div>
 
-        {/* ── Footer ── */}
+        {/* -- Footer -- */}
         <div className="flex-shrink-0 px-5 py-3 border-t border-titanium-200 bg-chrome-50/50">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-data text-titanium-400">

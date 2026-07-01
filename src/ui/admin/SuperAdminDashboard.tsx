@@ -12,7 +12,7 @@ import {
   RefreshCw,
   ServerOff,
 } from 'lucide-react';
-import TailrdLogo from '../../components/TailrdLogo';
+import Logo from '../../components/TailrdLogo';
 import { toFixed } from '../../utils/formatters';
 
 import { DATA_SOURCE } from '../../config/dataSource';
@@ -91,7 +91,7 @@ const SuperAdminDashboard: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button onClick={() => navigate('/dashboard')} className="hover:opacity-75 transition-opacity">
-                <TailrdLogo />
+                <Logo variant="wordmark" surface="light" />
               </button>
               <div>
                 <h1 className="text-2xl font-bold text-chrome-800">TAILRD Super Admin</h1>

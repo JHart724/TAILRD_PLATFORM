@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Bell, Search } from 'lucide-react';
-import { NotificationPanel } from '../components/notifications';
+import { NotificationPanel, useNotifications } from '../components/notifications';
 import UserMenu from '../components/UserMenu';
 import { useAuth } from '../auth/AuthContext';
 
@@ -48,7 +48,14 @@ export default function TopBar({ moduleName, viewName }: TopBarProps) {
   const { state } = useAuth();
   const apiStatus = useApiHealth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { unreadCount } = useNotifications();
   const user = state.user;
+
+  // Clear the search field on route change so a stale query does not persist across pages (AUDIT-304)
+  useEffect(() => {
+    setSearchQuery('');
+  }, [location.pathname]);
 
   const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
@@ -156,15 +163,18 @@ export default function TopBar({ moduleName, viewName }: TopBarProps) {
             aria-label="Notifications"
           >
             <Bell size={18} />
-            {isDemoMode && (
+            {unreadCount > 0 && (
               <span
-                className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full"
+                className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full text-[10px] font-semibold text-white leading-none"
                 style={{
                   background: '#7A1A2E',
                   border: '1.5px solid rgba(253,254,255,0.9)',
                   boxShadow: '0 0 4px rgba(122,26,46,0.6)',
                 }}
-              />
+                aria-label={`${unreadCount} unread notifications`}
+              >
+                {unreadCount}
+              </span>
             )}
           </button>
           <UserMenu
