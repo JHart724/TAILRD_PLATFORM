@@ -14,8 +14,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-2",
         "evaluatorBodyLineRange": [
-          7213,
-          7236
+          7233,
+          7256
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-2-abi-screening",
@@ -33,8 +33,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-2",
         "evaluatorBodyLineRange": [
-          7213,
-          7236
+          7233,
+          7256
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-2-abi-screening",
@@ -52,8 +52,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-003",
         "evaluatorBodyLineRange": [
-          7248,
-          7270
+          7268,
+          7290
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-003-abnormal-abi",
@@ -71,8 +71,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-004",
         "evaluatorBodyLineRange": [
-          16635,
-          16656
+          16678,
+          16699
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-004-noncompressible-abi",
@@ -120,8 +120,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-RIVAROXABAN",
         "evaluatorBodyLineRange": [
-          16070,
-          16098
+          16113,
+          16141
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-rivaroxaban",
@@ -139,8 +139,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-1",
         "evaluatorBodyLineRange": [
-          7175,
-          7206
+          7195,
+          7226
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-1-pad-statin",
@@ -158,8 +158,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-1",
         "evaluatorBodyLineRange": [
-          7175,
-          7206
+          7195,
+          7226
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-1-pad-statin",
@@ -177,8 +177,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-3",
         "evaluatorBodyLineRange": [
-          9060,
-          9085
+          9080,
+          9105
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-3-antiplatelet",
@@ -196,8 +196,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-10",
         "evaluatorBodyLineRange": [
-          10753,
-          10776
+          10796,
+          10819
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-10-cilostazol",
@@ -215,8 +215,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-5",
         "evaluatorBodyLineRange": [
-          9125,
-          9145
+          9145,
+          9165
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-5-exercise-therapy",
@@ -234,8 +234,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-4",
         "evaluatorBodyLineRange": [
-          9095,
-          9115
+          9115,
+          9135
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-4-smoking-cessation",
@@ -253,8 +253,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-6",
         "evaluatorBodyLineRange": [
-          9159,
-          9182
+          9179,
+          9202
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-6-diabetes-control",
@@ -272,8 +272,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-11",
         "evaluatorBodyLineRange": [
-          10786,
-          10810
+          10829,
+          10853
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-11-acei-pad",
@@ -291,8 +291,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-BYPASS-EVAL",
         "evaluatorBodyLineRange": [
-          16135,
-          16161
+          16178,
+          16204
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-bypass-eval",
@@ -430,8 +430,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-MESENTERIC",
         "evaluatorBodyLineRange": [
-          16278,
-          16303
+          16321,
+          16346
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-mesenteric",
@@ -469,8 +469,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-12",
         "evaluatorBodyLineRange": [
-          10831,
-          10850
+          10874,
+          10893
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-12-renal-artery",
@@ -488,8 +488,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-034",
         "evaluatorBodyLineRange": [
-          16666,
-          16690
+          16709,
+          16733
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-034-fmd-screening",
@@ -537,8 +537,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-038",
         "evaluatorBodyLineRange": [
-          16700,
-          16722
+          16743,
+          16765
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-038-takayasu-immunosuppression",
@@ -566,8 +566,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-040",
         "evaluatorBodyLineRange": [
-          16732,
-          16754
+          16775,
+          16797
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-040-gca-steroid",
@@ -585,8 +585,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-041",
         "evaluatorBodyLineRange": [
-          16763,
-          16785
+          16806,
+          16828
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-041-buerger-cessation",
@@ -604,8 +604,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-042",
         "evaluatorBodyLineRange": [
-          16870,
-          16889
+          16913,
+          16932
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-042-behcet-vascular",
@@ -643,8 +643,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-THORACIC-OUTLET",
         "evaluatorBodyLineRange": [
-          16308,
-          16330
+          16351,
+          16373
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-thoracic-outlet",
@@ -682,8 +682,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-RAYNAUD",
         "evaluatorBodyLineRange": [
-          16396,
-          16422
+          16439,
+          16465
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-raynaud",
@@ -741,8 +741,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-9",
         "evaluatorBodyLineRange": [
-          9255,
-          9276
+          9275,
+          9296
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-9-aaa-screening",
@@ -800,8 +800,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-058",
         "evaluatorBodyLineRange": [
-          16797,
-          16819
+          16840,
+          16862
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-058-symptomatic-carotid-revasc",
@@ -819,8 +819,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-13",
         "evaluatorBodyLineRange": [
-          10858,
-          10880
+          10901,
+          10923
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-13-carotid",
@@ -858,8 +858,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-062",
         "evaluatorBodyLineRange": [
-          16833,
-          16856
+          16876,
+          16899
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-062-intracranial-stenosis-medical",
@@ -897,8 +897,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-DVT-SCREEN",
         "evaluatorBodyLineRange": [
-          16223,
-          16248
+          16266,
+          16291
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-dvt-screen",
@@ -926,8 +926,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-PTS-PREVENTION",
         "evaluatorBodyLineRange": [
-          16253,
-          16274
+          16296,
+          16317
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-pts-prevention",
@@ -965,8 +965,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-15",
         "evaluatorBodyLineRange": [
-          10918,
-          10936
+          10961,
+          10979
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-15-compression",
@@ -984,8 +984,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-VARICOSE",
         "evaluatorBodyLineRange": [
-          16341,
-          16362
+          16384,
+          16405
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-varicose",
@@ -1043,8 +1043,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-ANTICOAG-VTE",
         "evaluatorBodyLineRange": [
-          16593,
-          16620
+          16636,
+          16663
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-anticoag-vte",
@@ -1102,8 +1102,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-081",
         "evaluatorBodyLineRange": [
-          16899,
-          16918
+          16942,
+          16961
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-081-cteph-riociguat",
@@ -1141,8 +1141,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-084",
         "evaluatorBodyLineRange": [
-          16931,
-          16950
+          16974,
+          16993
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-084-pah-combination",
@@ -1160,8 +1160,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-085",
         "evaluatorBodyLineRange": [
-          16959,
-          16978
+          17002,
+          17021
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-085-pah-sotatercept",
@@ -1259,8 +1259,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-LYMPHEDEMA",
         "evaluatorBodyLineRange": [
-          16367,
-          16388
+          16410,
+          16431
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-lymphedema",
@@ -1278,8 +1278,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-LYMPHEDEMA",
         "evaluatorBodyLineRange": [
-          16367,
-          16388
+          16410,
+          16431
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-lymphedema",
@@ -1317,8 +1317,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-GRAFT-SURVEILLANCE",
         "evaluatorBodyLineRange": [
-          16557,
-          16586
+          16600,
+          16629
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-graft-surveillance",
@@ -1356,8 +1356,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-14",
         "evaluatorBodyLineRange": [
-          10889,
-          10907
+          10932,
+          10950
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-14-foot-exam",

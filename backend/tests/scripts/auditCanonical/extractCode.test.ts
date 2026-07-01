@@ -210,7 +210,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(15697); // 15822 -> 15697 by AUDIT-194 Part A (2026-06-30): 7 hollow HF+VHD rules RETIRED above this line (HF-37-FU/38/74/90/91 + VD-7/VD-16) shifted it up ~125 lines (content-anchor; prior 16227 -> 15822 was AUDIT-184 CAD-EXT)
+    expect(pannus!.commentLine).toBe(15740); // 15697 -> 15740 by AUDIT-194-B1 (2026-07-01): HF-74 + HF-90 RESTORED above this line (+43 lines). (Prior 15822 -> 15697 was AUDIT-194 Part A; 16227 -> 15822 was AUDIT-184 CAD-EXT.) Content-anchor.
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });

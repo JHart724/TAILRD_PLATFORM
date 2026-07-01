@@ -119,6 +119,22 @@ export const ECHO_LOINC_TO_SLUG: Record<string, string> = {
   '8480-6': 'systolic_bp',                                                            // Systolic blood pressure (NLM 8480-6) - HF-003 repair
   '8462-4': 'diastolic_bp',                                                           // Diastolic blood pressure (NLM 8462-4)
   '31159-7': 'anti_xa',                                                               // Heparin anti Xa [Units/volume] activity (NLM 31159-7 exact-verified) - VHD-100 LMWH monitoring
+  // === AUDIT-194-B1 / Threading Tranche 1 (cheap serum labs) - source-confirmed against the Synthea
+  // observations.csv feed (verify-don't-assume: every LOINC below was found PRESENT in the source with the
+  // exact code + LOINC long-common-name + units, NOT assumed from CARDIOVASCULAR_LAB_CODES). Sample counts are
+  // from the first ~334K-row (60MB) chunk of observations.csv. Threading closes the AUDIT-070 pattern (these
+  // LOINCs were dropped by the persist-site slug filter). NOTE: Synthea emits several analytes under the
+  // "in Blood" LOINC variant, NOT the textbook serum/plasma code - the source-confirmed variant is used here.
+  '33914-3': 'egfr',                                                                  // eGFR MDRD (source count 4959; matches CARDIOVASCULAR_LAB_CODES)
+  '33762-6': 'nt_probnp', '71425-3': 'nt_probnp',                                     // NT-proBNP serum/plasma + blood (source 172 + 14). BNP (33747-0/30934-4) is ABSENT from Synthea -> not threaded; the bnp slug stays honestly dark (real-EHR-only). Restores HF-74/HF-90.
+  '2276-4': 'ferritin',                                                               // Ferritin serum/plasma (source 269) - HF iron-deficiency cluster
+  '6298-4': 'potassium', '2823-3': 'potassium',                                       // Potassium in Blood (source 3896) + serum/plasma variant - MRA/RAASi safety
+  '18262-6': 'ldl',                                                                   // LDL cholesterol direct (source 1884) - CAD lipid
+  '2947-0': 'sodium', '2951-2': 'sodium',                                             // Sodium in Blood (source 3896) + serum/plasma variant - hyponatremia
+  '2502-3': 'tsat',                                                                   // Iron saturation [Mass Fraction] % (source-present) - HF iron
+  '39156-5': 'bmi',                                                                   // Body mass index (BMI) [Ratio] kg/m2 (source 4669)
+  '2571-8': 'triglycerides',                                                          // Triglyceride serum/plasma (source 1884)
+  '38483-4': 'creatinine',                                                            // Creatinine in Blood (source 3896) - COMPLETENESS add; 2160-0 serum/plasma already threaded above (additive, both variants -> slug)
 };
 
 const VITAL_SIGNS_CODES: Record<string, string[]> = {

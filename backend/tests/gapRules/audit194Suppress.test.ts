@@ -27,12 +27,24 @@ describe('AUDIT-194 HF: hollow over-fire rules SUPPRESSED (fire their former ove
     expect(fired([HF], {}, 'Post-discharge follow-up')).toBe(false));
   it('HF-38 influenza suppressed (bare hasHF, no Z23 - identical to retired CAD-INFLUENZA)', () =>
     expect(fired([HF], {}, 'Influenza vaccination status')).toBe(false));
-  it('HF-74 NT-proBNP monitoring suppressed-pending-threading (bnp/nt_probnp unthreaded)', () =>
-    expect(fired([HF], {}, 'NT-proBNP/BNP monitoring not documented')).toBe(false));
-  it('HF-90 amyloid biomarker suppressed-pending-threading (E85, bnp/nt_probnp unthreaded)', () =>
-    expect(fired(['E85.4'], {}, 'Amyloid biomarker follow-up')).toBe(false));
+  // HF-74 + HF-90 RESTORED by AUDIT-194-B1 (Threading Tranche 1): nt_probnp (LOINC 33762-6) is now threaded,
+  // so they are no longer hollow. They fire only when the patient lacks a natriuretic peptide (a real gap) -
+  // see the AUDIT-194-B1 restore-and-not-hollow block below. They are intentionally NOT in the suppressed set.
   it('HF-91 sleep-apnea suppressed (G47.3+HF, !Z99.8 broken proxy)', () =>
     expect(fired([HF, 'G47.30'], {}, 'Sleep-disordered breathing treatment')).toBe(false));
+});
+
+describe('AUDIT-194-B1 Threading Tranche 1: HF-74/HF-90 RESTORED, fire only on real absence (NOT hollow)', () => {
+  // Threading nt_probnp makes the gate discriminate: fires when the patient has NO natriuretic peptide (real
+  // monitoring gap for a subset), does NOT fire when nt_probnp is present -> not the ~100% hollow over-fire.
+  it('HF-74 fires for an HF patient with NO natriuretic peptide (real gap)', () =>
+    expect(fired([HF], {}, 'NT-proBNP/BNP monitoring not documented')).toBe(true));
+  it('HF-74 does NOT fire when nt_probnp IS present (threaded signal discriminates - not hollow)', () =>
+    expect(fired([HF], { nt_probnp: 450 }, 'NT-proBNP/BNP monitoring not documented')).toBe(false));
+  it('HF-90 fires for an E85 amyloid patient with NO natriuretic peptide (real gap)', () =>
+    expect(fired(['E85.4'], {}, 'Amyloid biomarker follow-up')).toBe(true));
+  it('HF-90 does NOT fire when nt_probnp IS present (not hollow)', () =>
+    expect(fired(['E85.4'], { nt_probnp: 900 }, 'Amyloid biomarker follow-up')).toBe(false));
 });
 
 describe('AUDIT-194 VHD: hollow over-fire rules SUPPRESSED (fire their former over-fire condition)', () => {
