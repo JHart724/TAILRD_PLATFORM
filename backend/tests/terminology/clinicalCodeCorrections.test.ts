@@ -584,17 +584,21 @@ describe('AUDIT-102: gap-cad-pcsk9 PCSK9_CODES corrected to evolocumab/alirocuma
     expect(src).not.toMatch(/PCSK9_CODES\s*=\s*\[[^\]]*'1657974'/);
     expect(src).not.toMatch(/PCSK9_CODES\s*=\s*\[[^\]]*'1659149'/);
   });
-  it('positive: real evolocumab (1665684) or alirocumab (1659152) suppresses the PCSK9 gap', () => {
-    expect(evaluateGapRules(['I25.10'], labs, ['83367'], 65)
-      .find(g => g.status && g.status.includes('Consider PCSK9 inhibitor'))).toBeDefined();
-    expect(evaluateGapRules(['I25.10'], labs, ['83367', '1665684'], 65)
-      .find(g => g.status && g.status.includes('Consider PCSK9 inhibitor'))).toBeUndefined();
-    expect(evaluateGapRules(['I25.10'], labs, ['83367', '1659152'], 65)
-      .find(g => g.status && g.status.includes('Consider PCSK9 inhibitor'))).toBeUndefined();
+  // AUDIT-195 (2026-07-03): CAD-PCSK9 consolidated into gap-cad-lipid-intensification (status
+  // 'LDL not at goal on statin - intensify lipid therapy'). PCSK9i alone no longer suppresses the
+  // gap (Step 1 ezetimibe remains available); the maximal state is on statin + ezetimibe + PCSK9i.
+  // These assertions preserve the AUDIT-102 code-correctness intent (correct PCSK9i RxNorms
+  // participate in suppression; the old wrong code does not) under the consolidated semantics.
+  const intensify = (g: { status?: string }) => !!g.status && g.status.includes('intensify lipid therapy');
+  it('positive: with ezetimibe present, real evolocumab (1665684) or alirocumab (1659152) reaches maximal -> gap suppressed', () => {
+    // on statin + ezetimibe only, LDL>70: Step 2 (PCSK9i) still available -> fires
+    expect(evaluateGapRules(['I25.10'], labs, ['83367', '341248'], 65).find(intensify)).toBeDefined();
+    // + correct PCSK9i -> on both add-ons -> maximal -> suppressed
+    expect(evaluateGapRules(['I25.10'], labs, ['83367', '341248', '1665684'], 65).find(intensify)).toBeUndefined();
+    expect(evaluateGapRules(['I25.10'], labs, ['83367', '341248', '1659152'], 65).find(intensify)).toBeUndefined();
   });
-  it('negative: OLD code 1657974 (tocilizumab) no longer suppresses -> gap still fires', () => {
-    expect(evaluateGapRules(['I25.10'], labs, ['83367', '1657974'], 65)
-      .find(g => g.status && g.status.includes('Consider PCSK9 inhibitor'))).toBeDefined();
+  it('negative: OLD code 1657974 (tocilizumab) is not a PCSK9i -> not maximal -> gap still fires', () => {
+    expect(evaluateGapRules(['I25.10'], labs, ['83367', '341248', '1657974'], 65).find(intensify)).toBeDefined();
   });
 });
 
