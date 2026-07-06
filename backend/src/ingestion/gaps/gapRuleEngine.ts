@@ -1144,16 +1144,16 @@ export const RUNTIME_GAP_REGISTRY = [
     levelOfEvidence: 'B',
   },
   {
-    id: 'gap-cad-ezetimibe',
-    name: 'Ezetimibe Add-on Therapy',
+    id: 'gap-cad-lipid-intensification',
+    name: 'Stepwise Lipid Intensification (Ezetimibe then PCSK9i)',
     module: 'CORONARY_INTERVENTION',
-    guidelineSource: '2018 ACC/AHA Guideline on the Management of Blood Cholesterol (IMPROVE-IT)',
+    guidelineSource: '2018 AHA/ACC Guideline on the Management of Blood Cholesterol (IMPROVE-IT; FOURIER; ODYSSEY OUTCOMES)',
     guidelineVersion: '2018',
     guidelineOrg: 'ACC/AHA',
-    lastReviewDate: '2026-04-03',
-    nextReviewDue: '2026-10-03',
-    classOfRecommendation: '1',
-    levelOfEvidence: 'A',
+    lastReviewDate: '2026-07-03',
+    nextReviewDue: '2027-01-03',
+    classOfRecommendation: '2a',
+    levelOfEvidence: 'B-R',
   },
   {
     id: 'gap-cad-diabetes-control',
@@ -6996,37 +6996,67 @@ export function evaluateGapRules(
   }
 
   // ============================================================
-  // CAD-EZETIMIBE: Ezetimibe Add-on Therapy
+  // CAD-LIPID-INTENSIFICATION: Stepwise non-statin lipid intensification (consolidated)
   // ============================================================
-  // Guideline: 2018 ACC/AHA Cholesterol Guideline (IMPROVE-IT), Class 1, LOE A
-  // CAD + on statin + LDL >70
+  // Guideline: 2018 AHA/ACC Guideline on the Management of Blood Cholesterol - stepwise
+  // non-statin add-on for very-high-risk ASCVD on maximally tolerated statin with LDL >=70 mg/dL:
+  //   Step 1: add ezetimibe            (COR 2a, LOE B-R, IMPROVE-IT)
+  //   Step 2: add PCSK9 inhibitor if LDL remains >70 on statin + ezetimibe (COR 2a, LOE A, FOURIER/ODYSSEY)
+  //
+  // Consolidation rationale (finding AUDIT-195, 2026-07-03): the former separate gap-cad-ezetimibe
+  // and gap-cad-pcsk9 gaps are merged into ONE gap. Both gated on the identical population
+  // (CAD + on-statin + LDL>70), differing only in the already-on-add-on negation, so in Synthea
+  // (no patient is on either specialty add-on) they double-fired for the same LDL-not-at-goal cohort
+  // (exact 2.00x redundancy). This fires once per patient and carries both add-on options in guideline
+  // order. Consolidation, NOT suppression: the LDL-not-at-goal gap is a real secondary-prevention item
+  // and still fires for the real subset. The former gap-cad-pcsk9 is retired to SPEC_ONLY
+  // (consolidated-into; provenance preserved in the crosswalk).
+  //
+  // COR correction (finding AUDIT-196, 2026-07-03): the former gap-cad-ezetimibe carried
+  // classOfRecommendation 'Class 1', a COR over-statement - ezetimibe add-on is COR 2a LOE B-R per
+  // the 2018 guideline; only the statin itself is Class 1. Corrected to Class 2a in the consolidated rule.
+  //
+  // RxNorm: ezetimibe 341248; PCSK9i evolocumab 1665684 / alirocumab 1659152 (AUDIT-102-verified).
   if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const STATIN_CODES_EZE = ['83367', '301542', '36567', '42463'];
-    const onStatinEze = medCodes.some(c => STATIN_CODES_EZE.includes(c));
+    const STATIN_CODES_LIPID = ['83367', '301542', '36567', '42463'];
+    const onStatinLipid = medCodes.some(c => STATIN_CODES_LIPID.includes(c));
     const onEzetimibe = medCodes.includes('341248');
-    if (onStatinEze && !onEzetimibe && labValues['ldl'] !== undefined && labValues['ldl'] > 70) {
+    const PCSK9_CODES = ['1665684', '1659152']; // AUDIT-102: evolocumab, alirocumab
+    const onPCSK9 = medCodes.some(c => PCSK9_CODES.includes(c));
+    // Fire once while any guideline-ordered add-on step remains available. On both add-ons
+    // (maximal non-statin therapy) the gap does not fire.
+    if (
+      onStatinLipid &&
+      labValues['ldl'] !== undefined &&
+      labValues['ldl'] > 70 &&
+      (!onEzetimibe || !onPCSK9)
+    ) {
       gaps.push({
         type: TherapyGapType.MEDICATION_MISSING,
         module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider ezetimibe add-on for LDL not at goal on statin',
-        target: 'Ezetimibe initiated or LDL at goal (<70 mg/dL)',
-        medication: 'Ezetimibe',
+        status: 'LDL not at goal on statin - intensify lipid therapy',
+        target: 'LDL at goal (<70 mg/dL) via stepwise non-statin add-on (ezetimibe, then PCSK9i)',
+        medication: 'Ezetimibe (step 1); Evolocumab or Alirocumab (step 2)',
         recommendations: {
-          action: 'Consider adding ezetimibe to statin therapy per 2018 ACC/AHA Cholesterol Guideline (IMPROVE-IT)',
-          guideline: '2018 ACC/AHA Cholesterol Guideline',
-          note: 'Recommended for review: LDL >70 mg/dL on maximally tolerated statin in ASCVD patient',
+          action:
+            'Consider stepwise lipid intensification per 2018 AHA/ACC Cholesterol Guideline. ' +
+            'Step 1: add ezetimibe (COR 2a, LOE B-R, IMPROVE-IT). ' +
+            'Step 2: if LDL remains >70 mg/dL on maximally tolerated statin plus ezetimibe, ' +
+            'add a PCSK9 inhibitor (COR 2a, LOE A, FOURIER/ODYSSEY).',
+          guideline: '2018 AHA/ACC Guideline on the Management of Blood Cholesterol',
+          note: 'Recommended for review: LDL >70 mg/dL on maximally tolerated statin in ASCVD patient. Both non-statin add-on options preserved as guideline-ordered steps.',
         },
         evidence: {
           triggerCriteria: [
             'Coronary artery disease (I25.*)',
             'Currently on statin therapy',
             `LDL: ${labValues['ldl']} mg/dL (>70)`,
-            'Ezetimibe not in active medications (RxNorm 341248)',
+            'At least one non-statin add-on not active (ezetimibe RxNorm 341248 and/or PCSK9i 1665684/1659152)',
           ],
-          guidelineSource: '2018 ACC/AHA Guideline on the Management of Blood Cholesterol (IMPROVE-IT trial)',
-          classOfRecommendation: 'Class 1',
-          levelOfEvidence: 'LOE A',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Ezetimibe allergy or intolerance'],
+          guidelineSource: '2018 AHA/ACC Guideline on the Management of Blood Cholesterol (IMPROVE-IT; FOURIER; ODYSSEY OUTCOMES)',
+          classOfRecommendation: 'Class 2a',
+          levelOfEvidence: 'LOE B-R (ezetimibe step); LOE A (PCSK9i step)',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'Ezetimibe or PCSK9i allergy or intolerance'],
         },
       });
     }
@@ -11490,42 +11520,17 @@ export function evaluateGapRules(
   // NEW CORONARY RULES (CAD-PCSK9 through CAD-INFLUENZA)
   // ============================================================
 
-  // CAD-PCSK9: PCSK9 Inhibitor Consideration
-  // Guideline: 2018 ACC/AHA Cholesterol Guideline (FOURIER, ODYSSEY), Class 2a, LOE A
-  // CAD + on max statin + LDL still >70
-  // RxNorm: evolocumab (1665684), alirocumab (1659152) -- AUDIT-102: was 1657974 = tocilizumab, 1659149 = piperacillin/tazobactam
-  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const STATIN_CODES_PCSK9 = ['83367', '301542', '36567', '42463'];
-    const onStatinPCSK9 = medCodes.some(c => STATIN_CODES_PCSK9.includes(c));
-    const PCSK9_CODES = ['1665684', '1659152']; // AUDIT-102: evolocumab, alirocumab (was 1657974 tocilizumab, 1659149 pip/tazo)
-    const onPCSK9 = medCodes.some(c => PCSK9_CODES.includes(c));
-    if (onStatinPCSK9 && !onPCSK9 && labValues['ldl'] !== undefined && labValues['ldl'] > 70) {
-      gaps.push({
-        type: TherapyGapType.MEDICATION_MISSING,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider PCSK9 inhibitor for LDL not at goal on maximally tolerated statin',
-        target: 'PCSK9 inhibitor therapy initiated or LDL <70 mg/dL achieved',
-        medication: 'Evolocumab or Alirocumab',
-        recommendations: {
-          action: 'Consider PCSK9 inhibitor for persistent LDL >70 on maximally tolerated statin per 2018 ACC/AHA Cholesterol Guideline',
-          guideline: '2018 ACC/AHA Cholesterol Guideline (FOURIER, ODYSSEY)',
-          note: 'Recommended for review: PCSK9i reduce LDL by ~60% and decrease CV events in ASCVD patients',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Coronary artery disease (I25.*)',
-            'Currently on statin therapy',
-            `LDL: ${labValues['ldl']} mg/dL (>70)`,
-            'No PCSK9 inhibitor in active medications',
-          ],
-          guidelineSource: '2018 ACC/AHA Guideline on Management of Blood Cholesterol (FOURIER, ODYSSEY)',
-          classOfRecommendation: 'Class 2a',
-          levelOfEvidence: 'LOE A',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'PCSK9i allergy or intolerance'],
-        },
-      });
-    }
-  }
+  // RETIRED 2026-07-03 (AUDIT-195 lipid-intensification consolidation): the former standalone
+  // PCSK9-inhibitor rule (registry id gap-cad-pcsk9, block was named CAD-PCSK9) is consolidated
+  // into the single CAD-LIPID-INTENSIFICATION gap above as Step 2 of the stepwise ladder. (Comment
+  // deliberately does NOT begin with the "CAD-PCSK9:" block-header token so extractCode does not
+  // re-detect it as a live evaluator block - same style as the AUDIT-182 left-main retirement.)
+  // It shared the identical
+  // population gate with the ezetimibe gap (CAD + on-statin + LDL>70) and double-fired for the same
+  // LDL-not-at-goal cohort. Firing block removed here (gaps.push 369 -> 368); the RUNTIME_GAP_REGISTRY
+  // metadata entry (id gap-cad-pcsk9) is retained and reclassified SPEC_ONLY for provenance (see
+  // applyOverrides.ts), matching AUDIT-184/194 retirement discipline. The PCSK9i RxNorm codes
+  // (1665684 evolocumab, 1659152 alirocumab; AUDIT-102-verified) now live in the consolidated block above.
 
   // RETIRED 2026-06-18 (CAD close, AUDIT-182): the left-main IVUS rule is removed (firing + the I25.110 gate).
   // It gated on hasLeftMain = I25.110, but section-16 (NLM) confirms I25.110 = "Atherosclerotic heart disease of

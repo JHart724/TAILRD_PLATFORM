@@ -425,6 +425,14 @@ If reconciliation surfaces an evaluator orphan whose comment line matches a patt
 
 This rule is what AUDIT-030.D codifies: "Comment-pattern surface area for evaluator-block detection must be empirically complete before audit conclusions are trustworthy."
 
+### 5.4 Retirement-comment discipline (do NOT start a retirement comment with a live-block token)
+
+When a rule is retired (firing `gaps.push` removed, registry entry retained as an accepted regOrphan), the **replacement comment MUST NOT begin with a line-leading token that `extractCode` detects as a live evaluator block** - i.e. not `// {MOD}-{NAME}:` (ID_NAME), `// {MOD}-{N}` (ID_N), `// Gap {MOD}-{N}` (GAP_MOD_N/GAP_MOD_NAME), nor `// {PREFIX}-{NNN}` shapes such as `// AUDIT-195:`. If it does, the phantom block is re-detected as live and its brace-walker **swallows the NEXT rule's `gaps.push`**, corrupting the evaluator count and mis-attributing the adjacent rule's detection.
+
+**The safe style (AUDIT-182 left-main precedent, reaffirmed AUDIT-195):** start the retirement comment with a plain word - `// RETIRED 2026-07-03 (AUDIT-195 ...): the former {block-name} rule is ...`. Likewise, inside a LIVE evaluator block's comment body, do not begin a line with a `{PREFIX}-{NNN}` token (e.g. `// AUDIT-195 (...):` as a standalone line was re-detected as a spurious block); fold the finding tag mid-sentence (`// Consolidation rationale (finding AUDIT-195, ...):`).
+
+**Mechanical check:** after any retirement or consolidation, run `extractCode.ts --module {MOD}` and confirm the evaluator count moved by exactly the expected delta (retirement: -1 per removed firing block; a spurious re-detection shows as an unexpected +1/+2 and an adjacent rule's `gaps.push` attributed to the phantom block).
+
 ---
 
 ## 6. SAFETY-tag classification rules

@@ -86,8 +86,14 @@ describe('Structural: Gap rule engine integrity', () => {
     // RESTORED (+2) - nt_probnp (LOINC 33762-6) threaded, so they are no longer hollow (fire on real absence of
     // a natriuretic peptide, not ~100%). HF-37-FU/HF-38/HF-91 stay permanently retired. audit194Suppress +
     // audit194B1Threading guard.
+    // Then 369 -> 368 by AUDIT-195 (2026-07-03): the two redundant CAD lipid gaps (CAD-EZETIMIBE +
+    // CAD-PCSK9), which gated on the identical population (CAD + on-statin + LDL>70) and double-fired
+    // for the same LDL-not-at-goal cohort (exact 2.00x on the full-population proof), CONSOLIDATED into
+    // ONE stepwise gap-cad-lipid-intensification (Step 1 ezetimibe, Step 2 PCSK9i). One gaps.push removed
+    // (CAD-PCSK9 firing block retired -> SPEC_ONLY); gap-cad-ezetimibe repurposed to the consolidated
+    // rule. Consolidation, NOT suppression. audit195LipidConsolidation guard.
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(369);
+    expect(count).toBe(368);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

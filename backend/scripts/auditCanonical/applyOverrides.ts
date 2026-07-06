@@ -536,6 +536,29 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
     'GAP-CAD-060': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-184 CAD-EXT 2026-06-29: CAD-FAMILY-SCREEN (Z82.4/Z80.0 never threaded, hollow) RETIRED -> SPEC_ONLY; gaps.push removed.' },
     'GAP-CAD-079': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-184 CAD-EXT 2026-06-29: CAD-DRIVING (Z73.6/Z02.4 never threaded, hollow) RETIRED -> SPEC_ONLY; gaps.push removed.' },
     'GAP-CAD-080': { classification: 'SPEC_ONLY', auditNote: 'AUDIT-184 CAD-EXT 2026-06-29: CAD-SEXUAL-HEALTH (Z70 never threaded, hollow) RETIRED -> SPEC_ONLY; gaps.push removed.' },
+    // --- AUDIT-195/196 lipid-intensification consolidation (2026-07-03) ---
+    // The former separate CAD-EZETIMIBE + CAD-PCSK9 gaps gated on the identical population
+    // (CAD + on-statin + LDL>70) and double-fired for the same LDL-not-at-goal cohort (exact 2.00x
+    // redundancy proven on the demo-synthea-threaded full-population write: ezetimibe 2180 = pcsk9
+    // 2180 = distinct-patients 2180). Consolidated into ONE stepwise rule gap-cad-lipid-intensification
+    // (Step 1 ezetimibe, Step 2 PCSK9i) that fires once per patient. Consolidation, NOT suppression:
+    // the LDL-not-at-goal gap is a real Class-I secondary-prevention item and still fires for the subset.
+    'GAP-CAD-003': {
+      classification: 'DET_OK',
+      registryId: 'gap-cad-lipid-intensification',
+      auditNote:
+        'AUDIT-195 2026-07-03: RE-CITED from gap-cad-ezetimibe to the consolidated gap-cad-lipid-intensification (Step 1 ezetimibe anchor). DET_OK - the consolidated rule detects the "add ezetimibe for LDL>=70 on statin" spec intent. AUDIT-196 folded in: the former gap-cad-ezetimibe carried COR Class 1 LOE A, a COR over-statement; ezetimibe add-on is COR 2a LOE B-R per the 2018 AHA/ACC Blood Cholesterol Guideline (only the statin is Class 1). Consolidated rule now carries Class 2a.',
+    },
+    'GAP-CAD-004': {
+      classification: 'SPEC_ONLY',
+      auditNote:
+        'AUDIT-195 2026-07-03: gap-cad-pcsk9 RETIRED -> SPEC_ONLY; gaps.push removed (consolidated into gap-cad-lipid-intensification Step 2). registryId dropped (no dedicated PCSK9 detector remains), matching AUDIT-184/194 retirement discipline. The consolidated rule fires for the shared LDL>70-on-statin population and surfaces the PCSK9i step, but does not verify the spec precondition "on statin + ezetimibe first", so SPEC_ONLY is the underclaim-conservative call (section 16). Provenance: consolidated-into gap-cad-lipid-intensification.',
+    },
+    'GAP-CAD-005': {
+      classification: 'SPEC_ONLY',
+      auditNote:
+        'AUDIT-195 2026-07-03: former PARTIAL_DETECTION via gap-cad-pcsk9 (now retired) -> SPEC_ONLY. GAP-CAD-005 targets the extreme-risk LDL<55 goal (polyvascular/recurrent); the consolidated gap-cad-lipid-intensification uses the LDL>70 threshold, so no dedicated detector for the <55 extreme-risk intent remains. registryId dropped. Provenance: PCSK9 detector consolidated-into gap-cad-lipid-intensification.',
+    },
     'GAP-CAD-018': {
       classification: 'PARTIAL_DETECTION',
       registryId: 'gap-cad-dapt-duration',
