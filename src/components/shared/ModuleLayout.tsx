@@ -15,7 +15,9 @@ export interface ModuleConfig {
   description: string;
   icon: LucideIcon;
   color: string;
-  patientCount: string;
+  /** Optional legacy field - never rendered by ModuleLayout; hardcoded values here
+      conflict with the live dashboard counts (HF Exec batch 1 dead-config cleanup). */
+  patientCount?: string;
   views: ModuleView[];
   components: Record<string, React.ComponentType>;
 }

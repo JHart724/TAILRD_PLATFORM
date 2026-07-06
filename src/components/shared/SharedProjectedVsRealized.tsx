@@ -13,6 +13,9 @@ export interface SharedProjectedVsRealizedProps {
   monthlyData: MonthData[];
   onMonthClick?: (monthData: MonthData) => void;
   className?: string;
+  /** Optional sublabel under the Gap total, stating what the gap IS (e.g. tying it
+      to a module's at-risk decomposition) so it never reads as an unrelated number. */
+  gapSublabel?: string;
 }
 
 const formatMoney = (amount: number): string => {
@@ -32,7 +35,7 @@ export const GAP_NEGATIVE_TOKENS = {
 
 const SharedProjectedVsRealized: React.FC<SharedProjectedVsRealizedProps> = ({
   title = 'Projected vs Realized Revenue', subtitle = 'Year-to-Date Performance',
-  monthlyData, onMonthClick, className = '',
+  monthlyData, onMonthClick, className = '', gapSublabel,
 }) => {
   const maxValue = Math.max(...monthlyData.map(d => d.projected));
   const totalProjected = monthlyData.reduce((sum, d) => sum + d.projected, 0);
@@ -68,6 +71,9 @@ const SharedProjectedVsRealized: React.FC<SharedProjectedVsRealizedProps> = ({
  <div className="p-4 rounded-lg" style={{ background: GAP_NEGATIVE_TOKENS.bg, border: `1px solid ${GAP_NEGATIVE_TOKENS.border}` }}>
  <div className="text-xs font-medium mb-1" style={{ color: GAP_NEGATIVE_TOKENS.ink }}>Gap</div>
  <div className="text-xl font-bold" style={{ color: GAP_NEGATIVE_TOKENS.ink }}>{formatMoney(gap)}</div>
+ {gapSublabel && (
+ <div className="text-[11px] mt-1 leading-snug" style={{ color: GAP_NEGATIVE_TOKENS.ink }}>{gapSublabel}</div>
+ )}
  </div>
  </div>
 

@@ -11,7 +11,7 @@ import OpportunityHeatmap from '../components/OpportunityHeatmap';
 import { ExportData } from '../../../utils/dataExport';
 import { toFixed } from '../../../utils/formatters';
 import { HFExecutiveSummary } from '../../../components/heartFailure/HFExecutiveSummary';
-import GapIntelligenceCard from '../../../components/shared/GapIntelligenceCard';
+import GapIntelligenceSection from '../components/executive/GapIntelligenceSection';
 import GapResponseRateCard from '../../../components/shared/GapResponseRateCard';
 import PredictiveMetricsBanner from '../../../components/shared/PredictiveMetricsBanner';
 import { RevenuePipelineCard, RevenueAtRiskCard, TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
@@ -21,6 +21,19 @@ import HFMonthDetailModal from '../../../components/heartFailure/HFMonthDetailMo
 import HFBenchmarkDetailModal from '../../../components/heartFailure/HFBenchmarkDetailModal';
 import HFRevenueOpportunityModal from '../../../components/heartFailure/HFRevenueOpportunityModal';
 import BaseDetailModal from '../../../components/shared/BaseDetailModal';
+import DemoDataBadge from '../../../components/shared/DemoDataBadge';
+import {
+  HF_DEMO_ANNUAL_OPPORTUNITY_M,
+  HF_DEMO_WATERFALL,
+  HF_DEMO_CATEGORY_DETAIL,
+  HF_DEMO_PIPELINE,
+  HF_DEMO_AT_RISK,
+  HF_DEMO_PREDICTIVE,
+  HF_DEMO_FACILITIES,
+  HF_DEMO_DOC_OPPORTUNITIES,
+  HF_DEMO_DOC_PIPELINE_SUMMARY,
+  formatDemoDollars,
+} from '../config/hfDemoFinancials';
 import { Heart } from 'lucide-react';
 
 const ExecutiveView: React.FC = () => {
@@ -45,45 +58,34 @@ const ExecutiveView: React.FC = () => {
     return () => { cancelled = true; };
   }, []);
 
-  // Get category-specific revenue and patient data
+  // Get category-specific revenue and patient data (single demo model - hfDemoFinancials)
   const getCategoryData = (category: string) => {
- const categoryData: Record<string, { revenue: number; patientCount: number }> = {
- GDMT: { revenue: 2400000, patientCount: 1050 },
- Devices: { revenue: 1800000, patientCount: 80 },
- Phenotypes: { revenue: 1200000, patientCount: 105 },
- '340B': { revenue: 800000, patientCount: 460 }
- };
- return categoryData[category] || { revenue: 0, patientCount: 0 };
+    return HF_DEMO_CATEGORY_DETAIL[category] || { revenue: 0, patientCount: 0 };
   };
 
-  // Generate breakdown data for month detail modal
+  // Month drill-down breakdown: split the clicked month's projected/realized by the
+  // SAME category shares as the annual waterfall (GDMT/Devices/Phenotypes/340B); the
+  // last category absorbs rounding so the breakdown sums exactly to the month.
   const generateMonthBreakdown = (month: string, projected: number, realized: number) => {
- // Calculate proportional breakdown based on annual totals
- const projectedRatio = projected / 1000000; // Base ratio
- const realizedRatio = realized / 1000000;
- 
- return [
- { 
- category: 'GDMT', 
- projected: Math.round(projectedRatio * 400000), 
- realized: Math.round(realizedRatio * 380000) 
- },
- { 
- category: 'Devices', 
- projected: Math.round(projectedRatio * 300000), 
- realized: Math.round(realizedRatio * 290000) 
- },
- { 
- category: 'Phenotypes', 
- projected: Math.round(projectedRatio * 200000), 
- realized: Math.round(realizedRatio * 190000) 
- },
- { 
- category: '340B', 
- projected: Math.round(projectedRatio * 100000), 
- realized: Math.round(realizedRatio * 95000) 
- }
- ];
+    const cats = [
+      { category: 'GDMT', share: HF_DEMO_WATERFALL.gdmt_revenue },
+      { category: 'Devices', share: HF_DEMO_WATERFALL.devices_revenue },
+      { category: 'Phenotypes', share: HF_DEMO_WATERFALL.phenotypes_revenue },
+      { category: '340B', share: HF_DEMO_WATERFALL._340b_revenue },
+    ];
+    const total = HF_DEMO_WATERFALL.total_revenue;
+    let projAlloc = 0;
+    let realAlloc = 0;
+    return cats.map((c, i) => {
+      if (i === cats.length - 1) {
+        return { category: c.category, projected: projected - projAlloc, realized: realized - realAlloc };
+      }
+      const p = Math.round((projected * c.share) / total);
+      const r = Math.round((realized * c.share) / total);
+      projAlloc += p;
+      realAlloc += r;
+      return { category: c.category, projected: p, realized: r };
+    });
   };
 
   // Handle month click from ProjectedVsRealizedChart
@@ -257,26 +259,30 @@ const ExecutiveView: React.FC = () => {
  setSelectedZip(zipCode);
   };
 
-  // Generate export data
+  // Generate export data - rows agree with the on-screen values: live rows read the
+  // dashboard fetch; demo rows read the single hfDemoFinancials model; fabricated
+  // targets/variances with no source are exported as '-' (HF Exec batch 1).
   const generateExportData = (): ExportData => {
+ const s = dashboard?.summary;
+ const gdmtRate = s && s.totalPatients > 0 ? `${Math.round((s.gdmtOptimized / s.totalPatients) * 100)}%` : 'pending';
  return {
  filename: 'heart-failure-executive-report',
  title: 'Heart Failure Executive Dashboard',
  headers: ['Metric', 'Value', 'Target', 'Variance'],
  rows: [
- ['Total Revenue Opportunity', heartFailureConfig.kpiData.totalOpportunity, '$70M', '-$1.2M'],
- ['Patient Population', heartFailureConfig.kpiData.totalPatients, '2,500', '-6'],
- ['GDMT Optimization', heartFailureConfig.kpiData.gdmtOptimization, '50%', '-12%'],
- ['Avg Revenue per Patient', heartFailureConfig.kpiData.avgRoi, '$30,000', '-$2,400'],
- ['Current CMI', heartFailureConfig.drgMetrics.currentCMI, '2.30', '-0.02'],
- ['Documentation Rate', heartFailureConfig.drgMetrics.documentationRate, '95%', '-3.8%'],
- ['Average LOS', heartFailureConfig.drgMetrics.avgLOS, '3.5 days', '+0.3 days'],
+ ['Total Revenue Opportunity (demo model)', `$${HF_DEMO_ANNUAL_OPPORTUNITY_M.toFixed(1)}M`, '-', '-'],
+ ['Patient Population (live)', s ? s.totalPatients.toLocaleString() : 'pending', '-', '-'],
+ ['GDMT Optimized - no open med gaps (live)', gdmtRate, '-', '-'],
+ ['Open Therapy Gaps (live)', s ? s.totalOpenGaps.toLocaleString() : 'pending', '-', '-'],
+ ['Current CMI (demo)', heartFailureConfig.drgMetrics.currentCMI, '2.30', '-0.02'],
+ ['Documentation Rate (demo)', heartFailureConfig.drgMetrics.documentationRate, '95%', '-3.8%'],
+ ['Average LOS (demo)', heartFailureConfig.drgMetrics.avgLOS, '3.5 days', '-0.3 days'],
  ],
  metadata: {
  reportDate: new Date().toISOString(),
  module: 'Heart Failure',
- dataSource: 'TAILRD Analytics Platform',
- lastUpdated: '2024-01-15T10:30:00Z'
+ dataSource: 'TAILRD Analytics Platform (live gap data + labeled demo financial model)',
+ lastUpdated: new Date().toISOString()
  }
  };
   };
@@ -295,8 +301,8 @@ const ExecutiveView: React.FC = () => {
  />
  </div>
 
- {/* #1: Enhanced Interactive Executive Summary */}
- <HFExecutiveSummary />
+ {/* #1: Enhanced Interactive Executive Summary - shares the single dashboard fetch (no duplicate request) */}
+ <HFExecutiveSummary dashboard={dashboard} loading={dashboardLoading} error={dashboardError} />
 
  {/* KCCQ Patient-Reported Outcomes Executive Card */}
  <div className="metal-card relative z-10 mb-6">
@@ -313,20 +319,17 @@ const ExecutiveView: React.FC = () => {
      </div>
    </div>
    <div className="p-6">
-     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+     {/* Patient-total tile removed: the summary row above is now the tier's single
+         live patient-total card (no duplicate-label conflict). */}
+     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
        {dashboardLoading ? (
-         <div className="col-span-4 animate-pulse h-24 bg-titanium-100 rounded-xl" />
+         <div className="col-span-3 animate-pulse h-24 bg-titanium-100 rounded-xl" />
        ) : dashboardError ? (
-         <div className="col-span-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+         <div className="col-span-3 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
            Failed to load Heart Failure metrics: {dashboardError}
          </div>
        ) : dashboard && dashboard.summary.totalPatients > 0 ? (
          <>
-           <div className="bg-white rounded-xl p-4 border border-titanium-200 shadow-sm">
-             <div className="text-sm text-titanium-600 mb-1">Total HF Patients</div>
-             <div className="text-3xl font-bold text-titanium-900">{dashboard.summary.totalPatients.toLocaleString()}</div>
-             <div className="text-xs text-titanium-500 mt-1">Active HF panel</div>
-           </div>
            <div className="bg-white rounded-xl p-4 border border-red-200 shadow-sm">
              <div className="text-sm text-titanium-600 mb-1">Open Therapy Gaps</div>
              <div className="text-3xl font-bold text-red-600">{dashboard.summary.totalOpenGaps.toLocaleString()}</div>
@@ -344,7 +347,7 @@ const ExecutiveView: React.FC = () => {
            </div>
          </>
        ) : (
-         <div className="col-span-4 p-6 text-center text-titanium-500 text-sm">
+         <div className="col-span-3 p-6 text-center text-titanium-500 text-sm">
            No Heart Failure patients in this hospital yet.
          </div>
        )}
@@ -352,23 +355,9 @@ const ExecutiveView: React.FC = () => {
    </div>
  </div>
 
- {/* Clinical Gap Intelligence — derived from real gap breakdown */}
- {dashboard && (
-   <GapIntelligenceCard data={{
-     totalGaps: Object.keys(dashboard.summary.gapsByType).length,
-     categories: [
-       { name: 'Medication', patients: dashboard.summary.gapsByType['MEDICATION_MISSING'] ?? 0, color: '#2C4A60' },
-       { name: 'Safety', patients: dashboard.summary.gapsByType['SAFETY_ALERT'] ?? 0, color: '#9B2438' },
-       { name: 'Monitoring', patients: dashboard.summary.gapsByType['MONITORING_OVERDUE'] ?? 0, color: '#4A6880' },
-       { name: 'Follow-up', patients: dashboard.summary.gapsByType['FOLLOWUP_OVERDUE'] ?? 0, color: '#C8D4DC' },
-     ],
-     topGaps: Object.entries(dashboard.summary.gapsByType)
-       .sort((a, b) => b[1] - a[1])
-       .slice(0, 5)
-       .map(([name, patients]) => ({ name: name.replace(/_/g, ' '), patients, opportunity: '—' })),
-     safetyAlert: `${dashboard.summary.totalOpenGaps} open gaps across ${dashboard.summary.totalPatients} patients`,
-   }} />
- )}
+ {/* Clinical Gap Intelligence - live open-gap count + per-type breakdown, with an
+     honest frame when offline/loading (GapIntelligenceSection; batch 1 addendum 2). */}
+ <GapIntelligenceSection dashboard={dashboard} loading={dashboardLoading} error={dashboardError} />
 
  {/* Gap Response Rate — care team action tracking */}
  <GapResponseRateCard
@@ -377,24 +366,10 @@ const ExecutiveView: React.FC = () => {
    timeRange="30d"
  />
 
- {/* Forward-Looking Executive Cards */}
- <RevenuePipelineCard data={{
-   quarters: [
-     { quarter: 'Q1 2026', revenue: 2800000, procedures: 23, confidence: 'high' },
-     { quarter: 'Q2 2026', revenue: 2100000, procedures: 18, confidence: 'moderate' },
-     { quarter: 'Q3 2026', revenue: 1600000, procedures: 14, confidence: 'moderate' },
-     { quarter: 'Q4 2026', revenue: 1200000, procedures: 10, confidence: 'low' },
-   ],
-   totalProjected12Month: 7700000,
- }} />
- <RevenueAtRiskCard data={{
-   immediatePatients: 89,
-   immediateRevenue: 4200000,
-   deferralRevenue: 2800000,
-   cumulativeRisk12Month: 9100000,
-   deferralCostPerMonth: 700000,
- }} />
- <TrajectoryTrendsCard data={{
+ {/* Forward-Looking Executive Cards - single demo model (hfDemoFinancials), demo-labeled */}
+ <RevenuePipelineCard data={HF_DEMO_PIPELINE} demoData />
+ <RevenueAtRiskCard data={HF_DEMO_AT_RISK} demoData immediateNote="= the YTD projected-realized gap" />
+ <TrajectoryTrendsCard demoData data={{
    worseningRapidPct: 18,
    worseningRapidCount: 216,
    meanDeclineRate: '2.3 pts/month KCCQ',
@@ -408,33 +383,31 @@ const ExecutiveView: React.FC = () => {
    ],
  }} />
 
- {/* Predictive Metrics Banner */}
- <PredictiveMetricsBanner data={{
+ {/* Predictive Metrics Banner - dollars reconciled to the single demo model */}
+ <PredictiveMetricsBanner demoData data={{
    thresholdIn90Days: 47,
-   quarterlyActionableRevenue: 4200000,
-   totalIdentifiedRevenue: 14000000,
+   quarterlyActionableRevenue: HF_DEMO_PREDICTIVE.quarterlyActionableRevenue,
+   totalIdentifiedRevenue: HF_DEMO_PREDICTIVE.totalIdentifiedRevenue,
    rapidDeteriorationCount: 216,
    avgTimeToEvent: 8,
-   projectedRevenueCurrentRate: 5200000,
-   projectedRevenueSystematic: 11200000,
+   projectedRevenueCurrentRate: HF_DEMO_PREDICTIVE.projectedRevenueCurrentRate,
+   projectedRevenueSystematic: HF_DEMO_PREDICTIVE.projectedRevenueSystematic,
  }} />
 
  {/* #2: Revenue Opportunity Waterfall */}
  <div className="metal-card relative z-10 mb-6">
  <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
+ <div className="flex items-center justify-between">
+ <div>
  <h3 className="text-xl font-bold text-titanium-900 mb-1">Revenue Opportunity Waterfall</h3>
  <p className="text-sm text-titanium-600">Annual revenue opportunity by intervention category</p>
  </div>
+ <DemoDataBadge />
+ </div>
+ </div>
  <div className="p-6">
- <ROIWaterfall 
- data={{
- gdmt_revenue: 2.4,
- devices_revenue: 1.8,
- phenotypes_revenue: 1.2,
- _340b_revenue: 0.8,
- total_revenue: 6.2,
- realized_revenue: 3.1
- }}
+ <ROIWaterfall
+ data={HF_DEMO_WATERFALL}
  onCategoryClick={setSelectedWaterfallCategory}
  />
  </div>
@@ -445,19 +418,29 @@ const ExecutiveView: React.FC = () => {
  {/* Projected vs Realized */}
  <div className="metal-card">
  <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
+ <div className="flex items-center justify-between">
+ <div>
  <h3 className="text-lg font-semibold text-titanium-900 mb-1">Projected vs Realized Revenue</h3>
  <p className="text-sm text-titanium-600">Revenue tracking and variance analysis</p>
+ </div>
+ <DemoDataBadge />
+ </div>
  </div>
  <div className="p-6">
  <ProjectedVsRealizedChart onMonthClick={handleMonthClick} />
  </div>
  </div>
 
- {/* Benchmarks Panel */}
+ {/* Benchmarks Panel - the national-comparison/percentile layer has no data source yet */}
  <div className="metal-card">
  <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
+ <div className="flex items-center justify-between">
+ <div>
  <h3 className="text-lg font-semibold text-titanium-900 mb-1">Performance Benchmarks</h3>
  <p className="text-sm text-titanium-600">Industry comparisons and targets</p>
+ </div>
+ <DemoDataBadge label="Demo benchmarks - national comparison pending" />
+ </div>
  </div>
  <div className="p-6">
  <BenchmarksPanel onBenchmarkClick={handleBenchmarkClick} />
@@ -465,20 +448,20 @@ const ExecutiveView: React.FC = () => {
  </div>
  </div>
 
- {/* #5: Revenue by Facility */}
+ {/* #5: Revenue by Facility - facility decomposition of the same demo total */}
  <div className="metal-card relative z-10 mb-6">
  <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
+ <div className="flex items-center justify-between">
+ <div>
  <h3 className="text-lg font-semibold text-titanium-900 mb-1">Revenue by Facility</h3>
  <p className="text-sm text-titanium-600">Facility-level performance and opportunities</p>
  </div>
+ <DemoDataBadge />
+ </div>
+ </div>
  <div className="p-6">
- <OpportunityHeatmap 
- data={[
- { site_id: 'Main Campus - HF Clinic', opp_revenue: 2100000, rank: 1 },
- { site_id: 'West Campus - HF Center', opp_revenue: 1800000, rank: 2 },
- { site_id: 'North Campus - HF Clinic', opp_revenue: 1600000, rank: 3 },
- { site_id: 'Community Medical Center - HF Unit', opp_revenue: 700000, rank: 4 }
- ]}
+ <OpportunityHeatmap
+ data={HF_DEMO_FACILITIES}
  onFacilityClick={handleFacilityClick}
  />
  </div>
@@ -506,26 +489,29 @@ const ExecutiveView: React.FC = () => {
  <div className="flex-1">
  <div className="flex items-center mb-3">
  <TrendingUp className="w-6 h-6 text-teal-700 mr-2" />
- <h3 className="text-xl font-bold">Revenue Opportunities Pipeline</h3>
+ <h3 className="text-xl font-bold mr-3">Revenue Opportunities Pipeline</h3>
+ <DemoDataBadge label="Demo data - DRG billing source pending" />
  </div>
- <div className="text-5xl font-bold text-teal-700 mb-2">$127,240</div>
- <div className="text-gray-600 text-lg mb-4">23 high-priority documentation opportunities identified</div>
- 
+ {/* Headline + sub-cards DERIVED from the same 23-row demo set - arithmetic cannot diverge
+     (was: a hand-typed headline disagreeing with its own sub-cards in both dollars and count). */}
+ <div className="text-5xl font-bold text-teal-700 mb-2">{formatDemoDollars(HF_DEMO_DOC_PIPELINE_SUMMARY.totalDollars)}</div>
+ <div className="text-gray-600 text-lg mb-4">{HF_DEMO_DOC_PIPELINE_SUMMARY.count} documentation opportunities identified</div>
+
  <div className="grid grid-cols-3 gap-4 mt-4">
  <div className="rounded-lg p-3 border" style={{ background: '#FDF2F3', borderColor: '#F5C0C8' }}>
  <div className="text-sm text-gray-600">High Priority</div>
- <div className="text-2xl font-bold" style={{ color: '#9B2438' }}>8</div>
- <div className="text-sm" style={{ color: '#8B6914' }}>$68,600</div>
+ <div className="text-2xl font-bold" style={{ color: '#9B2438' }}>{HF_DEMO_DOC_PIPELINE_SUMMARY.high.count}</div>
+ <div className="text-sm" style={{ color: '#8B6914' }}>{formatDemoDollars(HF_DEMO_DOC_PIPELINE_SUMMARY.high.dollars)}</div>
  </div>
  <div className="rounded-lg p-3 border" style={{ background: '#FAF6E8', borderColor: '#D4B85C' }}>
  <div className="text-sm text-gray-600">Medium Priority</div>
- <div className="text-2xl font-bold" style={{ color: '#8B6914' }}>12</div>
- <div className="text-sm" style={{ color: '#8B6914' }}>$50,240</div>
+ <div className="text-2xl font-bold" style={{ color: '#8B6914' }}>{HF_DEMO_DOC_PIPELINE_SUMMARY.medium.count}</div>
+ <div className="text-sm" style={{ color: '#8B6914' }}>{formatDemoDollars(HF_DEMO_DOC_PIPELINE_SUMMARY.medium.dollars)}</div>
  </div>
  <div className="rounded-lg p-3 border" style={{ background: '#F0F5FA', borderColor: '#C8D4DC' }}>
- <div className="text-sm text-gray-600">Due This Week</div>
- <div className="text-2xl font-bold" style={{ color: '#4A6880' }}>8</div>
- <div className="text-sm text-gray-500">Urgent action</div>
+ <div className="text-sm text-gray-600">Low Priority</div>
+ <div className="text-2xl font-bold" style={{ color: '#4A6880' }}>{HF_DEMO_DOC_PIPELINE_SUMMARY.low.count}</div>
+ <div className="text-sm text-gray-500">{formatDemoDollars(HF_DEMO_DOC_PIPELINE_SUMMARY.low.dollars)}</div>
  </div>
  </div>
  </div>
@@ -542,8 +528,13 @@ const ExecutiveView: React.FC = () => {
 
  <div className="metal-card relative z-10 mb-6">
  <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
+ <div className="flex items-center justify-between">
+ <div>
  <h3 className="text-lg font-semibold text-titanium-900 mb-2">{heartFailureConfig.drgTitle}</h3>
  <p className="text-sm text-titanium-600">{heartFailureConfig.drgDescription}</p>
+ </div>
+ <DemoDataBadge label="Demo data - DRG billing source pending" />
+ </div>
  </div>
  
  <div className="p-6">
@@ -585,10 +576,11 @@ const ExecutiveView: React.FC = () => {
  <h4 className="font-semibold text-titanium-900 mb-4">{heartFailureConfig.moduleName} Case Mix Index (CMI) Analysis</h4>
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
  <div className="text-center">
- {/* Current CMI → Chrome Blue */}
+ {/* Current CMI -> Chrome Blue. Variance corrected: 2.28 vs the 2.30 target = -0.02
+     (was a self-contradictory hardcoded positive variance beside the -0.02 export row). */}
  <div className="text-2xl font-bold" style={{ color: '#2C4A60' }}>{heartFailureConfig.drgMetrics.currentCMI}</div>
  <div className="text-sm text-titanium-600">Current CMI</div>
- <div className="text-xs text-teal-700">+0.28 vs target</div>
+ <div className="text-xs text-titanium-500">-0.02 vs 2.30 target</div>
  </div>
  <div className="text-center">
  {/* Monthly Opportunity → Metallic Gold */}
@@ -650,31 +642,7 @@ const ExecutiveView: React.FC = () => {
  {/* Revenue Opportunity Modal */}
  {showOpportunityModal && (
  <HFRevenueOpportunityModal
- opportunities={[
- { priority: 'High', revenueImpact: 8420, drgUpgrade: 'DRG 293 → 291', dueDate: '2025-11-15' },
- { priority: 'High', revenueImpact: 6180, drgUpgrade: 'DRG 292 → 291', dueDate: '2025-11-14' },
- { priority: 'High', revenueImpact: 7350, drgUpgrade: 'DRG 293 → 291', dueDate: '2025-11-13' },
- { priority: 'Medium', revenueImpact: 4750, drgUpgrade: 'DRG 293 → 292', dueDate: '2025-11-16' },
- { priority: 'Medium', revenueImpact: 3920, drgUpgrade: 'DRG 292 → 291', dueDate: '2025-11-17' },
- { priority: 'Medium', revenueImpact: 5280, drgUpgrade: 'DRG 293 → 292', dueDate: '2025-11-18' },
- { priority: 'High', revenueImpact: 9150, drgUpgrade: 'DRG 293 → 291', dueDate: '2025-11-19' },
- { priority: 'Medium', revenueImpact: 4410, drgUpgrade: 'DRG 294 → 292', dueDate: '2025-11-20' },
- { priority: 'Low', revenueImpact: 2890, drgUpgrade: 'DRG 294 → 293', dueDate: '2025-11-21' },
- { priority: 'High', revenueImpact: 6740, drgUpgrade: 'DRG 292 → 291', dueDate: '2025-11-22' },
- { priority: 'Medium', revenueImpact: 3560, drgUpgrade: 'DRG 293 → 292', dueDate: '2025-11-23' },
- { priority: 'Low', revenueImpact: 2150, drgUpgrade: 'DRG 294 → 293', dueDate: '2025-11-24' },
- { priority: 'High', revenueImpact: 8890, drgUpgrade: 'DRG 293 → 291', dueDate: '2025-11-25' },
- { priority: 'Medium', revenueImpact: 4980, drgUpgrade: 'DRG 292 → 291', dueDate: '2025-11-26' },
- { priority: 'Low', revenueImpact: 3210, drgUpgrade: 'DRG 294 → 293', dueDate: '2025-11-27' },
- { priority: 'High', revenueImpact: 7620, drgUpgrade: 'DRG 293 → 291', dueDate: '2025-11-28' },
- { priority: 'Medium', revenueImpact: 4100, drgUpgrade: 'DRG 294 → 292', dueDate: '2025-11-29' },
- { priority: 'Low', revenueImpact: 2750, drgUpgrade: 'DRG 294 → 293', dueDate: '2025-11-30' },
- { priority: 'High', revenueImpact: 8320, drgUpgrade: 'DRG 292 → 291', dueDate: '2025-12-01' },
- { priority: 'Medium', revenueImpact: 3840, drgUpgrade: 'DRG 293 → 292', dueDate: '2025-12-02' },
- { priority: 'Low', revenueImpact: 2980, drgUpgrade: 'DRG 294 → 293', dueDate: '2025-12-03' },
- { priority: 'High', revenueImpact: 9480, drgUpgrade: 'DRG 293 → 291', dueDate: '2025-12-04' },
- { priority: 'Medium', revenueImpact: 4650, drgUpgrade: 'DRG 292 → 291', dueDate: '2025-12-05' }
- ]}
+ opportunities={HF_DEMO_DOC_OPPORTUNITIES}
  onClose={() => setShowOpportunityModal(false)}
  onViewDetails={() => {
  // Navigate to Service Line view
