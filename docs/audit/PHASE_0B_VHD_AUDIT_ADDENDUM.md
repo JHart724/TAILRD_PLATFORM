@@ -2,7 +2,7 @@
 
 **Module:** Valvular Heart Disease (VHD)
 **Spec source:** `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md` §6.5
-**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=51, evaluator=47, gapsPush=45)
+**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=51, evaluator=48, gapsPush=46)
 **Crosswalk:** `docs/audit/canonical/VHD.crosswalk.json` (auditMethod: rule-body-citation-AUDIT-030D)
 **Audit date:** 2026-06-10
 
@@ -80,9 +80,8 @@ Valvular Heart Disease has **105 spec gaps** across 18 subcategories. Implementa
 
 ## 4.6 — EXTRA rules + architectural patterns
 
-**Registry-without-evaluator (4):** registry entries with no matching evaluator block body.
+**Registry-without-evaluator (3):** registry entries with no matching evaluator block body.
 
-- `gap-vd-echo-interval` (registry line 4051): No evaluator body matched via similarity scoring
 - `gap-vd-functional-status` (registry line 4063): No evaluator body matched via similarity scoring
 - `gap-vd-preop-assessment` (registry line 4075): No evaluator body matched via similarity scoring
 - `gap-vd-pulmonary-htn` (registry line 4087): No evaluator body matched via similarity scoring

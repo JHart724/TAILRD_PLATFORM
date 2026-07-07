@@ -16010,16 +16010,48 @@ export function evaluateGapRules(
   // FINAL BATCH: 6 VALVULAR RULES (VD-ECHO-INTERVAL through VD-ANTIPLATELET-BIOPROSTHETIC)
   // ============================================================
 
-  // VD-ECHO-INTERVAL SPEC_ONLY-PENDING-THREADING (AUDIT-194 Part A, 2026-06-30). Gated on
-  // echo_months===undefined -> echo_months (months since last echo) is not threaded -> always true -> fired
-  // ~100% of any-valve-dx patients (I34-I37, I05-I08) - the broadest VHD over-fire. Suppressed to stop the
-  // false positive; NOT a permanent retire. The signal is DERIVABLE from the echo observation dates already
-  // ingested, but not trivially: the runner threads labValues as slug->number only (no dates reach the
-  // engine; see runGapDetectionForPatient), so restoring this correctly needs (a) runner derivation of
-  // echo_months from the most-recent IMAGING_TYPES observedDateTime (pre-staleness-filter), (b) matching
-  // projection change, (c) rule logic to fire on undefined || >= interval, plus section-16 verification and
-  // tests. RESTORE via Part B work item AUDIT-194-B3 (echo_months derivation). registry entry orphaned.
-  // (AUDIT-184-CAD-EXT RETIRE precedent)
+  // VD-ECHO-INTERVAL: Echocardiographic surveillance interval adherence (registry gap-vd-echo-interval).
+  // Guideline: 2020 ACC/AHA VHD Guideline - periodic surveillance echocardiography for known valvular heart
+  // disease; the recommended interval is severity-dependent (severe asymptomatic 6-12 months, moderate 1-2
+  // years, mild 3-5 years). COR 1, LOE B.
+  // RESTORED 2026-07-03 (AUDIT-194-B3, Threading Tranche 2) from SPEC_ONLY-pending-threading. echo_months is
+  // now DERIVED in the runner (deriveEchoMonths: most-recent echo PROCEDURE date [SNOMED 40701008 / 433236007
+  // / 105376000, Synthea-source-confirmed] union the lvef observation date, computed on the UNFILTERED set
+  // before the 365-day staleness filter). HOLLOW-SAFE gate: fire ONLY on a documented-but-stale echo
+  // (echo_months !== undefined && >= 12), NEVER on echo_months===undefined (no echo on record) - the
+  // never-fire-on-absence discipline that reverses the AUDIT-194 ~100% hollow over-fire. Classified
+  // PARTIAL_DETECTION: the flat 12-month threshold approximates the guideline's SEVERITY-dependent interval
+  // (severity, e.g. valve_severity, is Synthea-absent / real-EHR-only, so it cannot stratify pre-DUA); the
+  // severity-stratified interval is a documented Path-B refinement (section-16 underclaim-governs).
+  if (!hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+    const hasAnyValveDx = dxCodes.some(c =>
+      c.startsWith('I34') || c.startsWith('I35') || c.startsWith('I36') || c.startsWith('I37') ||
+      c.startsWith('I05') || c.startsWith('I06') || c.startsWith('I07') || c.startsWith('I08'),
+    );
+    if (hasAnyValveDx && labValues['echo_months'] !== undefined && labValues['echo_months'] >= 12) {
+      gaps.push({
+        type: TherapyGapType.IMAGING_OVERDUE,
+        module: ModuleType.VALVULAR_DISEASE,
+        status: 'Surveillance echocardiography overdue in valvular heart disease',
+        target: 'Surveillance echocardiogram per guideline serial-imaging interval',
+        recommendations: {
+          action: 'Consider surveillance echocardiography per the 2020 ACC/AHA VHD Guideline serial-imaging intervals (severity-dependent) - the most recent echocardiogram on record is >=12 months ago',
+          guideline: '2020 ACC/AHA Guideline for the Management of Patients with Valvular Heart Disease',
+          note: 'Fires only on a documented-but-stale echo (echo_months >= 12, derived from echo procedure / lvef dates); a patient with no echo on record does not fire (never-fire-on-absence). Flat 12-month threshold approximates the severity-dependent interval (severity un-threaded pre-DUA).',
+        },
+        evidence: {
+          triggerCriteria: [
+            'Valvular heart disease (I05-I08, I34-I37)',
+            'Most-recent echocardiogram >= 12 months ago (echo_months, derived from echo procedure SNOMED 40701008/433236007/105376000 union lvef observation date)',
+          ],
+          guidelineSource: '2020 ACC/AHA Guideline for the Management of Patients with Valvular Heart Disease (serial-imaging surveillance intervals)',
+          classOfRecommendation: 'Class 1',
+          levelOfEvidence: 'LOE B',
+          exclusions: ['Hospice/palliative care (Z51.5)', 'No echocardiogram on record (echo_months undefined - does not fire)'],
+        },
+      });
+    }
+  }
 
   // VD-FUNCTIONAL-STATUS RETIRED to SPEC_ONLY (AUDIT-194 Part A, 2026-06-30). Gated on symptom dx +
   // nyha_class===undefined -> nyha_class is a clinician-assigned functional class, not a threadable lab/
@@ -16033,13 +16065,15 @@ export function evaluateGapRules(
   // (I35.0/I34.0/I35.2) patients. Permanent retire (no clean threadable STS signal), not pending-threading.
   // Suppressed; registry entry orphaned. (AUDIT-184-CAD-EXT RETIRE precedent)
 
-  // VD-PULMONARY-HTN SPEC_ONLY-PENDING-THREADING (AUDIT-194 Part A, 2026-06-30). Gated on valve dx +
-  // dyspnea (R06) + no PH dx (I27) + pasp===undefined -> pasp (pulmonary artery systolic pressure) is an
-  // echo-derived value with a LOINC but is not threaded into ECHO_LOINC_TO_SLUG -> the negation is always
-  // true -> fired ~100% of (valve + dyspnea + no-PH) patients. Suppressed to stop the false positive; NOT a
-  // permanent retire - the signal is clinically real and threadable. RESTORE when PASP is threaded (Part B
-  // work item AUDIT-194-B2: thread the echo PASP LOINC into observationService). registry entry orphaned.
-  // (AUDIT-184-CAD-EXT RETIRE precedent)
+  // VD-PULMONARY-HTN SPEC_ONLY REAL-EHR-ONLY (AUDIT-194 Part A 2026-06-30; re-tagged AUDIT-194-B3 2026-07-03).
+  // Gated on valve dx + dyspnea (R06) + no PH dx (I27) + pasp===undefined -> pasp (pulmonary artery systolic
+  // pressure) fired ~100% of (valve + dyspnea + no-PH) patients. Re-tagged from pending-threading to
+  // real-EHR-only because the Threading-Tranche-2 source-check (AUDIT-194-B3) found pasp is ABSENT from Synthea
+  // (0 PASP observations in a 1.05M-row observations.csv sample; the entire echo-morphometric cluster is
+  // real-EHR-only - even the 13 already-mapped echo-valve LOINCs return 0 Synthea rows). Threading cannot
+  // help pre-DUA; this waits for real-EHR data (or a Synthea-generation investment, filed separately). If
+  // ever restored on real-EHR, the non-hollow gate is pasp !== undefined && pasp > 35 (never on absence).
+  // registry entry orphaned. (AUDIT-184-CAD-EXT RETIRE precedent)
 
   // VD-TRICUSPID-SECONDARY: Secondary Tricuspid Regurgitation
   // Guideline: 2020 ACC/AHA VHD Guideline, Class 2a, LOE B-NR

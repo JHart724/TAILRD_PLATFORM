@@ -628,8 +628,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-RIVAROXABAN",
         "evaluatorBodyLineRange": [
-          16118,
-          16146
+          16152,
+          16180
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-rivaroxaban",

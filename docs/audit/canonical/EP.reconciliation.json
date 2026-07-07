@@ -227,7 +227,7 @@
     },
     {
       "evaluatorBlockName": "EP-010",
-      "evaluatorCommentLine": 17028,
+      "evaluatorCommentLine": 17062,
       "matchConfidence": 0.333,
       "matchMethod": "similarity",
       "registryId": "gap-ep-010-rivaroxaban-food",
@@ -235,7 +235,7 @@
     },
     {
       "evaluatorBlockName": "EP-049",
-      "evaluatorCommentLine": 17055,
+      "evaluatorCommentLine": 17089,
       "matchConfidence": 0.615,
       "matchMethod": "similarity",
       "registryId": "gap-ep-049-class-ic-structural",
