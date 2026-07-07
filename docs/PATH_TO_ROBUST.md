@@ -25,7 +25,7 @@ Supporting: **AUDIT-191** all-module canonical refresh (merged #433) corrected t
 
 ### 1.2 Honest coverage (underclaim; AUDIT-191-corrected)
 
-**315 / 603 = 52.2% buildable** (DET_OK + PARTIAL against 603 spec gaps), the AUDIT-191-corrected synthesis figure, reconciling to the AUDIT-183 all-6-module-complete milestone. This is a DOWNWARD honesty correction: the hollow over-fire retirements removed false coverage (a transiently-inflated 53.7% was corrected to 52.2%). No rounding up. The remaining ~47.8% is SPEC_ONLY (author-new) plus PARTIAL upgrades - the clinical buildout backlog (Section 2, Track A).
+**311 / 603 = 51.6% buildable** (DET_OK 205 + PARTIAL 106 against 603 spec gaps), the live derived-from-crosswalk synthesis figure (`PHASE_0B_CROSS_MODULE_SYNTHESIS.md` TOTAL row, validateCanonical 6/6). RECONCILED 2026-07-03 (supersedes the prior **315 / 603 = 52.2%**, which had gone stale by 4 gaps): the any-coverage total went 315 (AUDIT-183 all-6-module-complete milestone, 2026-06-18) -> 313 (AUDIT-194-B1) -> 311 (AUDIT-195 retired GAP-CAD-004/005 -> SPEC_ONLY), and the component split shifted 201/114/288 -> 205/106/292 (DET_OK +4, PARTIAL -8) across AUDIT-191/194-B1. This is a DOWNWARD honesty correction: the hollow over-fire retirements removed false coverage (a transiently-inflated 53.7% -> 52.2% -> the true 51.6%). No rounding up. The remaining ~48.4% is SPEC_ONLY (author-new) plus PARTIAL upgrades - the clinical buildout backlog (Section 2, Track A).
 
 ### 1.3 Architecture - 8 modules
 
