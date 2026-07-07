@@ -5,25 +5,25 @@
       "explanation": "-2 extra gaps.push call(s) without compound-comment block to account for them. Possible: registry-without-evaluator entry firing inline, OR evaluator block emitting multiple gaps.",
       "kind": "GAPS_PUSH_VS_EVALUATOR",
       "observed": {
-        "evaluatorCount": 47,
-        "gapsPushCount": 45,
+        "evaluatorCount": 48,
+        "gapsPushCount": 46,
         "registryCount": 51
       }
     },
     {
-      "delta": 4,
-      "explanation": "4 more registry entries than evaluator blocks. Suggests detection-without-registry rules OR registry-without-evaluator entries (look at orphan lists).",
+      "delta": 3,
+      "explanation": "3 more registry entries than evaluator blocks. Suggests detection-without-registry rules OR registry-without-evaluator entries (look at orphan lists).",
       "kind": "REGISTRY_VS_EVALUATOR",
       "observed": {
-        "evaluatorCount": 47,
-        "gapsPushCount": 45,
+        "evaluatorCount": 48,
+        "gapsPushCount": 46,
         "registryCount": 51
       }
     }
   ],
-  "evaluatorBlockCount": 47,
+  "evaluatorBlockCount": 48,
   "evaluatorOrphans": [],
-  "gapsPushCount": 45,
+  "gapsPushCount": 46,
   "matches": [
     {
       "evaluatorBlockName": "VD-1",
@@ -234,8 +234,16 @@
       "registryLine": 3199
     },
     {
+      "evaluatorBlockName": "VD-ECHO-INTERVAL",
+      "evaluatorCommentLine": 16013,
+      "matchConfidence": 0.444,
+      "matchMethod": "similarity",
+      "registryId": "gap-vd-echo-interval",
+      "registryLine": 4051
+    },
+    {
       "evaluatorBlockName": "VD-TRICUSPID-SECONDARY",
-      "evaluatorCommentLine": 16044,
+      "evaluatorCommentLine": 16078,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-vd-tricuspid-secondary",
@@ -243,7 +251,7 @@
     },
     {
       "evaluatorBlockName": "VD-ANTIPLATELET-BIOPROSTHETIC",
-      "evaluatorCommentLine": 16076,
+      "evaluatorCommentLine": 16110,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-vd-antiplatelet-bioprosthetic",
@@ -521,12 +529,6 @@
   ],
   "registryCount": 51,
   "registryOrphans": [
-    {
-      "evaluatorBlockName": null,
-      "reason": "No evaluator body matched via similarity scoring",
-      "registryId": "gap-vd-echo-interval",
-      "registryLine": 4051
-    },
     {
       "evaluatorBlockName": null,
       "reason": "No evaluator body matched via similarity scoring",

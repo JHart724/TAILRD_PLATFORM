@@ -497,9 +497,20 @@
       "name": "VD-VALVE-CLINIC"
     },
     {
-      "bodyEndLine": 16074,
-      "bodyStartLine": 16046,
-      "commentLine": 16044,
+      "bodyEndLine": 16054,
+      "bodyStartLine": 16026,
+      "commentLine": 16013,
+      "commentLiteral": "// VD-ECHO-INTERVAL: Echocardiographic surveillance interval adherence (registry gap-vd-echo-interval).",
+      "commentPattern": "ID_NAME",
+      "gapsPushIds": [
+        "Surveillance echocardiography overdue in valvular heart disease"
+      ],
+      "name": "VD-ECHO-INTERVAL"
+    },
+    {
+      "bodyEndLine": 16108,
+      "bodyStartLine": 16080,
+      "commentLine": 16078,
       "commentLiteral": "// VD-TRICUSPID-SECONDARY: Secondary Tricuspid Regurgitation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -508,9 +519,9 @@
       "name": "VD-TRICUSPID-SECONDARY"
     },
     {
-      "bodyEndLine": 16110,
-      "bodyStartLine": 16078,
-      "commentLine": 16076,
+      "bodyEndLine": 16144,
+      "bodyStartLine": 16112,
+      "commentLine": 16110,
       "commentLiteral": "// VD-ANTIPLATELET-BIOPROSTHETIC: Antiplatelet After Bioprosthetic Valve >3 Months",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -519,7 +530,7 @@
       "name": "VD-ANTIPLATELET-BIOPROSTHETIC"
     }
   ],
-  "gapsPushCount": 45,
+  "gapsPushCount": 46,
   "module": "VHD",
   "moduleTagPattern": "module: ModuleType.VALVULAR_DISEASE",
   "registry": [

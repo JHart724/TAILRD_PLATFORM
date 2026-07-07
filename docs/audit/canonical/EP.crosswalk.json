@@ -206,8 +206,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-010",
         "evaluatorBodyLineRange": [
-          17034,
-          17053
+          17068,
+          17087
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-010-rivaroxaban-food",
@@ -1279,8 +1279,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "EP-049",
         "evaluatorBodyLineRange": [
-          17062,
-          17081
+          17096,
+          17115
         ],
         "evaluatorModule": "EP",
         "registryId": "gap-ep-049-class-ic-structural",

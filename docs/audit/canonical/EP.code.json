@@ -752,9 +752,9 @@
       "name": "EP-ANTICOAG-SCORE-REASSESS"
     },
     {
-      "bodyEndLine": 17053,
-      "bodyStartLine": 17034,
-      "commentLine": 17028,
+      "bodyEndLine": 17087,
+      "bodyStartLine": 17068,
+      "commentLine": 17062,
       "commentLiteral": "// Gap EP-010: rivaroxaban without take-with-food counseling -> >=15 mg dose bioavailability",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -763,9 +763,9 @@
       "name": "EP-010"
     },
     {
-      "bodyEndLine": 17081,
-      "bodyStartLine": 17062,
-      "commentLine": 17055,
+      "bodyEndLine": 17115,
+      "bodyStartLine": 17096,
+      "commentLine": 17089,
       "commentLiteral": "// Gap EP-049: class IC antiarrhythmic (flecainide / propafenone) in structural heart disease -> SAFETY (CAST)",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [

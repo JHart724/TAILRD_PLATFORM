@@ -5,6 +5,7 @@
 import prisma from '../lib/prisma';
 import { logger } from '../utils/logger';
 import { evaluateGapRules } from './gaps/gapRuleEngine';
+import { deriveEchoMonths } from './echoRecency';
 import { expandToIngredients } from '../terminology/expandToIngredients';
 import { Prisma } from '@prisma/client';
 
@@ -70,6 +71,13 @@ export async function runGapDetectionForPatient(
       }
       labValues[obs.observationType] = obs.valueNumeric;
     }
+    // AUDIT-194-B3 (Threading Tranche 2): derive echo_months = months since the most-recent echo
+    // (echo procedure date union lvef observation date) from the UNFILTERED sets - deliberately BEFORE the
+    // ECHO_CUTOFF staleness filter above, because a >12-month-old echo is exactly what VD-ECHO-INTERVAL must
+    // catch and would otherwise be dropped. undefined (no echo on record) is NOT written -> the surveillance
+    // rule never fires on absence (see gapRuleEngine VD-ECHO-INTERVAL, never-fire-on-absence discipline).
+    const echoMonths = deriveEchoMonths(patient.observations, patient.procedures ?? [], now);
+    if (echoMonths !== undefined) labValues['echo_months'] = echoMonths;
     // AUDIT-118: ingredient-expand at construction so product-coded (SCD/SBD)
     // meds match the ingredient-level (TTY=IN) value sets. medCodes MUST be
     // built via expandToIngredients(); raw membership silently under-detects.

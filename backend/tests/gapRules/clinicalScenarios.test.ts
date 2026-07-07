@@ -92,8 +92,11 @@ describe('Structural: Gap rule engine integrity', () => {
     // ONE stepwise gap-cad-lipid-intensification (Step 1 ezetimibe, Step 2 PCSK9i). One gaps.push removed
     // (CAD-PCSK9 firing block retired -> SPEC_ONLY); gap-cad-ezetimibe repurposed to the consolidated
     // rule. Consolidation, NOT suppression. audit195LipidConsolidation guard.
+    // Then 368 -> 369 by AUDIT-194-B3 (2026-07-03): VD-ECHO-INTERVAL RESTORED (+1 gaps.push) - echo_months
+    // now derived in the runner from echo-procedure dates union lvef date; hollow-safe gate (echo_months>=12,
+    // never on undefined). audit194B3EchoInterval guard.
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(368);
+    expect(count).toBe(369);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

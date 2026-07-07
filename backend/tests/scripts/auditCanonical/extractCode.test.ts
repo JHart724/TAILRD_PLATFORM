@@ -235,7 +235,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
   it.each([
     ['SH', 61, 55, 55], // T1-broader PART 2: registry 60->61, evaluator 54->55, gapsPush 54->55 (+1 gap-sh-024-tr-rv-dysfunction, 2026-06-22)
     ['CAD', 83, 65, 65], // AUDIT-184 CAD-EXT (2026-06-29): evaluator/push 82 -> 66 (16 hollow CAD over-fire rules RETIRED -> SPEC_ONLY); registry stays 83 (suppressed rules' entries retained as regOrphans, left-main precedent). AUDIT-195 (2026-07-03): evaluator/push 66 -> 65 (CAD-EZETIMIBE + CAD-PCSK9 CONSOLIDATED into one gap-cad-lipid-intensification; CAD-PCSK9 firing block retired -> SPEC_ONLY, registry entry retained as regOrphan so registry stays 83)
-    ['VHD', 51, 47, 45], // AUDIT-194 Part A (2026-06-30): evaluator 50->47, gapsPush 51->45 (6 hollow VHD over-fire rules RETIRED: VD-7/VD-16/VD-ECHO-INTERVAL/VD-FUNCTIONAL-STATUS/VD-PREOP-ASSESSMENT/VD-PULMONARY-HTN); registry stays 51 (suppressed rules' registry entries retained as regOrphans, RETIRE precedent)
+    ['VHD', 51, 48, 46], // AUDIT-194 Part A (2026-06-30): evaluator 50->47, gapsPush 51->45 (6 hollow VHD over-fire rules RETIRED: VD-7/VD-16/VD-ECHO-INTERVAL/VD-FUNCTIONAL-STATUS/VD-PREOP-ASSESSMENT/VD-PULMONARY-HTN); registry stays 51 (suppressed rules' registry entries retained as regOrphans, RETIRE precedent). AUDIT-194-B3 (2026-07-03): evaluator 47->48, gapsPush 45->46 (VD-ECHO-INTERVAL RESTORED - echo_months derived from echo-procedure dates, hollow-safe echo_months>=12 gate); registry stays 51 (gap-vd-echo-interval entry was already present)
     ['PV', 45, 45, 45], // chunk0 33->34; chunk1 34->41; T0 net-new 41->45 (+4 PV-042/081/084/085, 2026-06-19)
   ])(
     'module %s reconciliation counts: registry=%i, evaluator=%i, gapsPush=%i (clean modules)',
