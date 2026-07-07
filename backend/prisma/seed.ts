@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import prisma from '../src/lib/prisma';
+import { CURATED_TRIALS } from '../src/services/trialSeed'; // AUDIT-148 Slice 1
 
 async function main() {
   console.log('🌱 Starting database seed...');
@@ -596,6 +597,28 @@ async function main() {
   }
 
   console.log('Group B clinical intelligence data seeded!');
+
+  // AUDIT-148 Slice 1: curated global clinical-trial catalog (hospitalId null = visible to all tenants).
+  // Idempotent: replace the global CURATED set on each seed. Exercises all three match states.
+  await prisma.trialMatch.deleteMany({ where: { trial: { provenance: 'CURATED', hospitalId: null } } });
+  await prisma.clinicalTrial.deleteMany({ where: { provenance: 'CURATED', hospitalId: null } });
+  for (const t of CURATED_TRIALS) {
+    await prisma.clinicalTrial.create({
+      data: {
+        nctId: t.nctId,
+        name: t.name,
+        module: t.module as any,
+        phase: t.phase,
+        status: t.status,
+        provenance: 'CURATED',
+        criteria: t.criteria as any,
+        enrollmentTarget: t.enrollmentTarget,
+        currentEnrollment: t.currentEnrollment,
+        hospitalId: null,
+      },
+    });
+  }
+  console.log(`AUDIT-148: seeded ${CURATED_TRIALS.length} curated clinical trials (global catalog)`);
 
   console.log('Database seeded successfully!');
   console.log('\nDemo Users Created:');

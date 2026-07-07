@@ -72,6 +72,8 @@ model Hospital {
   riskScoreAssessments        RiskScoreAssessment[]
   interventionTracking        InterventionTracking[]
   contraindicationAssessments ContraindicationAssessment[]
+  clinicalTrials              ClinicalTrial[] // AUDIT-148 Slice 1: tenant-scoped curated trials (null hospitalId = global)
+  trialMatches                TrialMatch[] // AUDIT-148 Slice 1: clinical-trial eligibility matches
   recommendations             Recommendation[]
 
   // New clinical models
@@ -346,6 +348,7 @@ model Patient {
   riskScoreAssessments        RiskScoreAssessment[]
   interventionTracking        InterventionTracking[]
   contraindicationAssessments ContraindicationAssessment[]
+  trialMatches                TrialMatch[] // AUDIT-148 Slice 1: clinical-trial eligibility matches
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -2638,4 +2641,83 @@ model DrugInteractionAlert {
   @@index([patientId, status])
   @@index([hospitalId, severity])
   @@map("drug_interaction_alerts")
+}
+
+// ============================================================
+// AUDIT-148 Slice 1: Trials backend (Registry/Trials, the 8th module)
+// Templated off DeviceEligibility (hospitalId-scoped + Json criteria). Curated structured trials
+// (matchable) coexist with the honest client-side ClinicalTrials.gov discovery feed (AUDIT-147).
+// ============================================================
+
+enum TrialMatchStatus {
+  ELIGIBLE // all criteria threaded AND met (inclusion met, exclusion not violated)
+  INELIGIBLE // a threaded criterion fails
+  INDETERMINATE // a criterion references an unthreaded / Synthea-absent signal - NEVER assert ELIGIBLE
+}
+
+enum TrialProvenance {
+  CURATED // structured, hand-authored, section-16-verified criteria (matchable)
+  CTGOV_LIVE // sourced from the ClinicalTrials.gov discovery feed (browse-only; not structured-matchable)
+}
+
+// A clinical trial with structured, matchable eligibility criteria. hospitalId null = global curated
+// catalog visible to all tenants; a non-null hospitalId scopes a trial to one tenant.
+model ClinicalTrial {
+  id    String  @id @default(cuid())
+  nctId String? // ClinicalTrials.gov NCT identifier (nullable for internal curated trials)
+  name  String
+  module     ModuleType? // primary clinical module, optional
+  phase      String?
+  status     String? // recruiting status
+  provenance TrialProvenance @default(CURATED)
+
+  // Structured criterion array (see criteria JSON element shape in the matcher). Templated on
+  // DeviceEligibility.criteria Json - avoids a brittle per-criterion table for the curated seed.
+  criteria Json
+
+  enrollmentTarget  Int?
+  currentEnrollment Int?
+
+  // Optional tenant scope (null = global curated catalog)
+  hospitalId String?
+  hospital   Hospital? @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  matches TrialMatch[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([module])
+  @@index([hospitalId])
+  @@map("clinical_trials")
+}
+
+// The honest per-patient match result for a trial: ELIGIBLE / INELIGIBLE / INDETERMINATE, with the
+// per-criterion verdicts and the named unthreaded signals (the transparency AUDIT-148 exists to fix).
+model TrialMatch {
+  id String @id @default(cuid())
+
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  trialId String
+  trial   ClinicalTrial @relation(fields: [trialId], references: [id], onDelete: Restrict)
+
+  status TrialMatchStatus
+
+  // [{ criterionId, polarity, verdict: MET|FAILED|UNEVALUABLE, missingSignal? }]
+  criteriaResults Json
+
+  // The unthreaded / Synthea-absent signal names that forced INDETERMINATE (e.g. ["bnp","pasp"]).
+  indeterminateSignals String[]
+
+  evaluatedAt DateTime  @default(now())
+  evaluatedBy String?
+
+  @@unique([patientId, trialId, hospitalId])
+  @@index([hospitalId, trialId, status])
+  @@map("trial_matches")
 }

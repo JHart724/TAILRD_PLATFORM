@@ -24,10 +24,18 @@ describe('AUDIT-118 caller guard - expandToIngredients is the one medCodes path'
   const ALL_CALLERS = [...RUNNERS, ...DIAGNOSTIC_CALLERS];
 
   it('every evaluateGapRules caller routes medCodes through expandToIngredients (the one-path invariant)', () => {
-    for (const rel of ALL_CALLERS) {
-      const src = read(rel);
-      expect(src).toMatch(/expandToIngredients\s*\(/);
+    // AUDIT-148 Slice 1 (2026-07-07): the two runtime runners now assemble the per-patient context (incl
+    // ingredient-expanded medCodes) via the shared buildPatientEvalContext, which is THE single
+    // expandToIngredients site for the runners. syntheaProofRun (diagnostic dry-run) still expands inline.
+    // The one-path invariant is preserved transitively: runner -> buildPatientEvalContext -> expandToIngredients.
+    for (const rel of RUNNERS) {
+      expect(read(rel)).toMatch(/buildPatientEvalContext\s*\(/);
     }
+    for (const rel of DIAGNOSTIC_CALLERS) {
+      expect(read(rel)).toMatch(/expandToIngredients\s*\(/);
+    }
+    // the shared assembly is the one expandToIngredients path for the runners
+    expect(read('ingestion/buildPatientEvalContext.ts')).toMatch(/expandToIngredients\s*\(/);
   });
 
   it('every evaluateGapRules caller in src/ is a known compliant caller (no bypassing path)', () => {

@@ -291,6 +291,7 @@ app.use('/api/gaps', require('./routes/gaps').default);
 app.use('/api/users', require('./routes/invite').default);
 app.use('/api/mfa', require('./routes/mfa').default);
 app.use('/api/notifications', require('./routes/notifications').default);
+app.use('/api/trials', require('./routes/trials').default); // AUDIT-148 Slice 1: trials backend (8th module)
 
 app.use('*', (req, res) => {
   res.status(404).json({
