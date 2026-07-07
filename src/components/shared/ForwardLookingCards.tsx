@@ -1,6 +1,7 @@
 import React from 'react';
 import { TrendingUp, TrendingDown, Clock, AlertTriangle, DollarSign, Activity, Zap } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell } from 'recharts';
+import DemoDataBadge from './DemoDataBadge';
 
 // ---------------------------------------------------------------------------
 // Revenue Pipeline Card — Forward Projection
@@ -20,9 +21,11 @@ export interface RevenuePipelineData {
 
 interface RevenuePipelineCardProps {
   data: RevenuePipelineData;
+  /** No backend source feeds this card yet - render the honesty badge (HF Exec batch 1). */
+  demoData?: boolean;
 }
 
-export const RevenuePipelineCard: React.FC<RevenuePipelineCardProps> = ({ data }) => {
+export const RevenuePipelineCard: React.FC<RevenuePipelineCardProps> = ({ data, demoData = false }) => {
   const confidenceColors: Record<string, string> = {
     high: '#2C4A60',
     moderate: '#4A6880',
@@ -46,9 +49,12 @@ export const RevenuePipelineCard: React.FC<RevenuePipelineCardProps> = ({ data }
               12-month projected: <span className="font-bold text-teal-700">${(data.totalProjected12Month / 1_000_000).toFixed(1)}M</span> based on patient trajectory
             </p>
           </div>
-          <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-lg px-3 py-1.5">
-            <TrendingUp className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
-            <span className="text-xs text-slate-700 font-medium">Trajectory-based</span>
+          <div className="flex items-center gap-2">
+            {demoData && <DemoDataBadge />}
+            <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-lg px-3 py-1.5">
+              <TrendingUp className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
+              <span className="text-xs text-slate-700 font-medium">Trajectory-based</span>
+            </div>
           </div>
         </div>
       </div>
@@ -120,9 +126,14 @@ export interface RevenueAtRiskData {
 
 interface RevenueAtRiskCardProps {
   data: RevenueAtRiskData;
+  /** No backend source feeds this card yet - render the honesty badge (HF Exec batch 1). */
+  demoData?: boolean;
+  /** Optional cross-reference appended to the This-Quarter sublabel (e.g. tying the
+      immediate slice to the Projected-vs-Realized gap so the numbers read as related). */
+  immediateNote?: string;
 }
 
-export const RevenueAtRiskCard: React.FC<RevenueAtRiskCardProps> = ({ data }) => {
+export const RevenueAtRiskCard: React.FC<RevenueAtRiskCardProps> = ({ data, demoData = false, immediateNote }) => {
   return (
     <div className="metal-card relative z-10 mb-6">
       <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
@@ -131,9 +142,12 @@ export const RevenueAtRiskCard: React.FC<RevenueAtRiskCardProps> = ({ data }) =>
             <h3 className="text-lg font-semibold text-titanium-900">Revenue at Risk — Deferral Impact</h3>
             <p className="text-sm text-titanium-600">Financial impact if current gaps are not addressed</p>
           </div>
-          <div className="flex items-center gap-1.5 bg-red-50 border border-red-100 rounded-lg px-3 py-1.5">
-            <AlertTriangle className="w-3.5 h-3.5 text-red-500 flex-shrink-0" />
-            <span className="text-xs text-red-700 font-medium">Action Required</span>
+          <div className="flex items-center gap-2">
+            {demoData && <DemoDataBadge />}
+            <div className="flex items-center gap-1.5 bg-red-50 border border-red-100 rounded-lg px-3 py-1.5">
+              <AlertTriangle className="w-3.5 h-3.5 text-red-500 flex-shrink-0" />
+              <span className="text-xs text-red-700 font-medium">Action Required</span>
+            </div>
           </div>
         </div>
       </div>
@@ -150,7 +164,7 @@ export const RevenueAtRiskCard: React.FC<RevenueAtRiskCardProps> = ({ data }) =>
               ${(data.immediateRevenue / 1_000_000).toFixed(1)}M
             </div>
             <div className="text-xs mt-1" style={{ color: '#9B2438' }}>
-              {data.immediatePatients} patients in immediate time horizon
+              {data.immediatePatients} patients in immediate time horizon{immediateNote ? ` ${immediateNote}` : ''}
             </div>
           </div>
 
@@ -210,9 +224,11 @@ export interface TrajectoryTrendsData {
 
 interface TrajectoryTrendsCardProps {
   data: TrajectoryTrendsData;
+  /** No backend source feeds this card yet - render the honesty badge (HF Exec batch 1). */
+  demoData?: boolean;
 }
 
-export const TrajectoryTrendsCard: React.FC<TrajectoryTrendsCardProps> = ({ data }) => {
+export const TrajectoryTrendsCard: React.FC<TrajectoryTrendsCardProps> = ({ data, demoData = false }) => {
   return (
     <div className="metal-card relative z-10 mb-6">
       <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
@@ -221,9 +237,12 @@ export const TrajectoryTrendsCard: React.FC<TrajectoryTrendsCardProps> = ({ data
             <h3 className="text-lg font-semibold text-titanium-900">Patient Trajectory — Population Health</h3>
             <p className="text-sm text-titanium-600">{data.totalFlaggedPatients.toLocaleString()} flagged patients with trajectory data</p>
           </div>
-          <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-lg px-3 py-1.5">
-            <Activity className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
-            <span className="text-xs text-slate-700 font-medium">Trajectory-aware</span>
+          <div className="flex items-center gap-2">
+            {demoData && <DemoDataBadge />}
+            <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-lg px-3 py-1.5">
+              <Activity className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
+              <span className="text-xs text-slate-700 font-medium">Trajectory-aware</span>
+            </div>
           </div>
         </div>
       </div>

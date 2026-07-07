@@ -1,6 +1,8 @@
 import React from 'react';
 import { Zap, TrendingUp, AlertTriangle, Clock, DollarSign, Target } from 'lucide-react';
 
+import DemoDataBadge from './DemoDataBadge';
+
 export interface PredictiveMetricsData {
   thresholdIn90Days: number;
   quarterlyActionableRevenue: number;
@@ -13,9 +15,11 @@ export interface PredictiveMetricsData {
 
 interface PredictiveMetricsBannerProps {
   data: PredictiveMetricsData;
+  /** No backend source feeds this banner yet - render the honesty badge (HF Exec batch 1). */
+  demoData?: boolean;
 }
 
-const PredictiveMetricsBanner: React.FC<PredictiveMetricsBannerProps> = ({ data }) => {
+const PredictiveMetricsBanner: React.FC<PredictiveMetricsBannerProps> = ({ data, demoData = false }) => {
   const accelerationPotential = data.projectedRevenueSystematic - data.projectedRevenueCurrentRate;
 
   return (
@@ -26,9 +30,12 @@ const PredictiveMetricsBanner: React.FC<PredictiveMetricsBannerProps> = ({ data 
             <h3 className="text-lg font-semibold text-titanium-900">Predictive Intelligence — Platform Metrics</h3>
             <p className="text-sm text-titanium-600">Forward-looking metrics uniquely derived from trajectory analysis</p>
           </div>
-          <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-lg px-3 py-1.5">
-            <Zap className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
-            <span className="text-xs text-slate-700 font-medium">TAILRD Predictive</span>
+          <div className="flex items-center gap-2">
+            {demoData && <DemoDataBadge />}
+            <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-lg px-3 py-1.5">
+              <Zap className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
+              <span className="text-xs text-slate-700 font-medium">TAILRD Predictive</span>
+            </div>
           </div>
         </div>
       </div>

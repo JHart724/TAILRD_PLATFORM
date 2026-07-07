@@ -11,7 +11,6 @@ const HFModule: React.FC = () => {
  description: 'GDMT optimization and population health management across the continuum',
  icon: Heart,
  color: 'text-red-600',
- patientCount: '2,847',
  views: [
  {
  id: 'executive',

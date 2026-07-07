@@ -26,7 +26,9 @@ export const heartFailureConfig: ExecutiveViewConfig = {
   drgOpportunities: hfDRGOpportunities,
   drgMetrics: {
  currentCMI: '2.28',
- monthlyOpportunity: '+$387K',
+ // Aligned to the open documentation pipeline in hfDemoFinancials ($125,620 across
+ // 23 items, rounded) - was an unsourced larger figure contradicting the pipeline card.
+ monthlyOpportunity: '+$126K',
  documentationRate: '91.2%',
  avgLOS: '3.2 days',
  losBenchmark: '-0.8 days vs benchmark'

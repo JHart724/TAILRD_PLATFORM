@@ -57,10 +57,15 @@ const GapResponseRateCard: React.FC<GapResponseRateCardProps> = ({
               Care team actions on detected gaps ({timeRange})
             </p>
           </div>
-          <div className="flex items-center gap-1.5 bg-chrome-50 border border-chrome-100 rounded-lg px-3 py-1.5">
-            <Activity className="w-3.5 h-3.5 text-chrome-600 flex-shrink-0" />
-            <span className="text-xs text-chrome-700 font-medium">Live tracking</span>
-          </div>
+          {/* No response-rate endpoint exists yet; the old unconditional live-label pill
+              was a false live claim on empty data (CLAUDE.md sect-14 class). Show an
+              honest pending badge until real data arrives. */}
+          {!hasData && (
+            <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-100 rounded-lg px-3 py-1.5">
+              <Activity className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+              <span className="text-xs text-blue-700 font-medium">EHR integration pending</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -72,7 +77,7 @@ const GapResponseRateCard: React.FC<GapResponseRateCardProps> = ({
         ) : !hasData ? (
           <div className="h-48 flex flex-col items-center justify-center text-center">
             <Activity className="w-8 h-8 text-titanium-300 mb-3" />
-            <p className="text-sm text-titanium-500 font-medium">No response data yet</p>
+            <p className="text-sm text-titanium-500 font-medium">No response data yet - EHR integration pending</p>
             <p className="text-xs text-titanium-400 mt-1 max-w-sm">
               Response rates will appear here as care teams interact with gap detection dashboards.
             </p>
