@@ -216,12 +216,9 @@ const ExecutiveView: React.FC = () => {
  }
   };
 
-  // Facility-level drill-down is deferred to Sprint C (wire to real provider
-  // data from backend). Click is a no-op to avoid rendering fake provider
-  // names.
-  const handleFacilityClick = (_facilityName: string) => {
-    // TODO(Sprint-C): fetch /api/modules/heart-failure/facilities and open modal
-  };
+  // Facility drill-down intentionally NOT wired: no facility-level detail exists in
+  // the demo model or the dashboard contract, so the card renders without a click
+  // affordance (OpportunityHeatmap only shows cursor/hover when a handler is passed).
 
   // Handle revenue opportunity click
   const handleOpportunityClick = () => {
@@ -330,17 +327,17 @@ const ExecutiveView: React.FC = () => {
          </div>
        ) : dashboard && dashboard.summary.totalPatients > 0 ? (
          <>
-           <div className="bg-white rounded-xl p-4 border border-red-200 shadow-sm">
+           <div className="bg-white rounded-xl p-4 border border-titanium-200 shadow-sm">
              <div className="text-sm text-titanium-600 mb-1">Open Therapy Gaps</div>
              <div className="text-3xl font-bold text-red-600">{dashboard.summary.totalOpenGaps.toLocaleString()}</div>
              <div className="text-xs text-red-500 mt-1">Recommended for review</div>
            </div>
-           <div className="bg-white rounded-xl p-4 border border-titanium-300 shadow-sm">
+           <div className="bg-white rounded-xl p-4 border border-titanium-200 shadow-sm">
              <div className="text-sm text-titanium-600 mb-1">GDMT Optimized</div>
              <div className="text-3xl font-bold text-teal-700">{dashboard.summary.gdmtOptimized.toLocaleString()}</div>
              <div className="text-xs text-teal-500 mt-1">No unresolved medication gaps</div>
            </div>
-           <div className="bg-white rounded-xl p-4 border border-[#f5c6cf] shadow-sm">
+           <div className="bg-white rounded-xl p-4 border border-titanium-200 shadow-sm">
              <div className="text-sm text-titanium-600 mb-1">Device Candidates</div>
              <div className="text-3xl font-bold text-red-600">{dashboard.summary.deviceCandidates.toLocaleString()}</div>
              <div className="text-xs text-red-600 mt-1">Eligible, not yet implanted</div>
@@ -368,8 +365,8 @@ const ExecutiveView: React.FC = () => {
 
  {/* Forward-Looking Executive Cards - single demo model (hfDemoFinancials), demo-labeled */}
  <RevenuePipelineCard data={HF_DEMO_PIPELINE} demoData />
- <RevenueAtRiskCard data={HF_DEMO_AT_RISK} demoData immediateNote="= the YTD projected-realized gap" />
- <TrajectoryTrendsCard demoData data={{
+ <RevenueAtRiskCard data={HF_DEMO_AT_RISK} demoData cleanSurface immediateNote="= the YTD projected-realized gap" />
+ <TrajectoryTrendsCard demoData cleanSurface data={{
    worseningRapidPct: 18,
    worseningRapidCount: 216,
    meanDeclineRate: '2.3 pts/month KCCQ',
@@ -384,7 +381,7 @@ const ExecutiveView: React.FC = () => {
  }} />
 
  {/* Predictive Metrics Banner - dollars reconciled to the single demo model */}
- <PredictiveMetricsBanner demoData data={{
+ <PredictiveMetricsBanner demoData cleanSurface data={{
    thresholdIn90Days: 47,
    quarterlyActionableRevenue: HF_DEMO_PREDICTIVE.quarterlyActionableRevenue,
    totalIdentifiedRevenue: HF_DEMO_PREDICTIVE.totalIdentifiedRevenue,
@@ -462,7 +459,6 @@ const ExecutiveView: React.FC = () => {
  <div className="p-6">
  <OpportunityHeatmap
  data={HF_DEMO_FACILITIES}
- onFacilityClick={handleFacilityClick}
  />
  </div>
  </div>
@@ -481,9 +477,9 @@ const ExecutiveView: React.FC = () => {
 
  {/* #7: Revenue Opportunities Pipeline - Executive Summary */}
  <div className="mb-6">
- <div 
+ <div
  onClick={() => setShowOpportunityModal(true)}
- className="bg-gradient-to-br from-[#f0f4f8] to-[#e8eef3] rounded-lg border-2 border-titanium-300 p-8 cursor-pointer hover:shadow-lg transition-shadow"
+ className="bg-white rounded-lg border-2 border-titanium-300 p-8 cursor-pointer hover:shadow-lg transition-shadow"
  >
  <div className="flex items-start justify-between">
  <div className="flex-1">
@@ -497,18 +493,20 @@ const ExecutiveView: React.FC = () => {
  <div className="text-5xl font-bold text-teal-700 mb-2">{formatDemoDollars(HF_DEMO_DOC_PIPELINE_SUMMARY.totalDollars)}</div>
  <div className="text-gray-600 text-lg mb-4">{HF_DEMO_DOC_PIPELINE_SUMMARY.count} documentation opportunities identified</div>
 
+ {/* White-card treatment (batch 2): white sub-card surfaces, titanium borders,
+     the priority signal carried by the solid count/value accents only. */}
  <div className="grid grid-cols-3 gap-4 mt-4">
- <div className="rounded-lg p-3 border" style={{ background: '#FDF2F3', borderColor: '#F5C0C8' }}>
+ <div className="rounded-lg p-3 border bg-white border-titanium-200">
  <div className="text-sm text-gray-600">High Priority</div>
  <div className="text-2xl font-bold" style={{ color: '#9B2438' }}>{HF_DEMO_DOC_PIPELINE_SUMMARY.high.count}</div>
  <div className="text-sm" style={{ color: '#8B6914' }}>{formatDemoDollars(HF_DEMO_DOC_PIPELINE_SUMMARY.high.dollars)}</div>
  </div>
- <div className="rounded-lg p-3 border" style={{ background: '#FAF6E8', borderColor: '#D4B85C' }}>
+ <div className="rounded-lg p-3 border bg-white border-titanium-200">
  <div className="text-sm text-gray-600">Medium Priority</div>
  <div className="text-2xl font-bold" style={{ color: '#8B6914' }}>{HF_DEMO_DOC_PIPELINE_SUMMARY.medium.count}</div>
  <div className="text-sm" style={{ color: '#8B6914' }}>{formatDemoDollars(HF_DEMO_DOC_PIPELINE_SUMMARY.medium.dollars)}</div>
  </div>
- <div className="rounded-lg p-3 border" style={{ background: '#F0F5FA', borderColor: '#C8D4DC' }}>
+ <div className="rounded-lg p-3 border bg-white border-titanium-200">
  <div className="text-sm text-gray-600">Low Priority</div>
  <div className="text-2xl font-bold" style={{ color: '#4A6880' }}>{HF_DEMO_DOC_PIPELINE_SUMMARY.low.count}</div>
  <div className="text-sm text-gray-500">{formatDemoDollars(HF_DEMO_DOC_PIPELINE_SUMMARY.low.dollars)}</div>
@@ -517,7 +515,13 @@ const ExecutiveView: React.FC = () => {
  </div>
  
  <div className="ml-6">
- <button className="px-6 py-3 bg-chrome-600 text-white rounded-lg hover:bg-chrome-700 font-semibold flex items-center">
+ {/* Explicit handler (batch 2): previously relied on event-bubble to the parent card;
+     same idempotent action, so bubbling stays harmless. */}
+ <button
+ type="button"
+ onClick={() => setShowOpportunityModal(true)}
+ className="px-6 py-3 bg-chrome-600 text-white rounded-lg hover:bg-chrome-700 font-semibold flex items-center"
+ >
  View Pipeline Details
  <ChevronRight className="w-5 h-5 ml-2" />
  </button>
@@ -540,18 +544,20 @@ const ExecutiveView: React.FC = () => {
  <div className="p-6">
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
  {heartFailureConfig.drgPerformanceCards.map((card, index) => {
- // DRG 291 (MCC, highest) → Metallic Gold; DRG 292 (CC, mid) → Chrome Blue mid; DRG 293 (lowest) → Carmona Red
+ // White-card treatment (batch 2): the DRG tier signal is carried by the solid
+ // accent on the $ icon + value only (DRG 291 gold, 292 chrome-deep, 293 carmine).
+ // Cards are display-only by design: case-level drill-down needs a real DRG
+ // billing source (no click affordance is rendered).
  const drgColors = [
- { value: '#C4982A', bg: '#FAF6E8', border: '#D4B85C' },
- { value: '#4A6880', bg: '#F0F5FA', border: '#C8D4DC' },
- { value: '#9B2438', bg: '#FDF2F3', border: '#F5C0C8' },
+ { value: '#C4982A' },
+ { value: '#4A6880' },
+ { value: '#9B2438' },
  ];
  const dc = drgColors[index] || drgColors[0];
  return (
  <div
  key={card.title}
- className="rounded-xl p-4 border shadow-lg transition-all duration-300"
- style={{ background: `linear-gradient(to right, white, ${dc.bg})`, borderColor: dc.border }}
+ className="rounded-xl p-4 border shadow-lg transition-all duration-300 bg-white border-titanium-200"
  >
  <div className="flex items-center gap-3 mb-3">
  <DollarSign className="w-8 h-8" style={{ color: dc.value }} />
@@ -637,17 +643,13 @@ const ExecutiveView: React.FC = () => {
  />
  )}
 
- {/* Facility Detail Modal deferred to Sprint C — see handleFacilityClick */}
-
- {/* Revenue Opportunity Modal */}
+ {/* Revenue Opportunity Modal. The view-details prop is intentionally NOT passed: its
+     button claimed Service-Line navigation the tier cannot do (tabs are in-page state,
+     no deep-link) - omitting the prop removes the dead control. */}
  {showOpportunityModal && (
  <HFRevenueOpportunityModal
  opportunities={HF_DEMO_DOC_OPPORTUNITIES}
  onClose={() => setShowOpportunityModal(false)}
- onViewDetails={() => {
- // Navigate to Service Line view
- setShowOpportunityModal(false);
- }}
  />
  )}
 

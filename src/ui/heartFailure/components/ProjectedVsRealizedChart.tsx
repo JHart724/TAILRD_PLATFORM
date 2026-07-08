@@ -16,6 +16,7 @@ const ProjectedVsRealizedChart: React.FC<ProjectedVsRealizedChartProps> = ({ onM
     monthlyData={HF_DEMO_PVR.months}
     onMonthClick={onMonthClick}
     gapSublabel="Immediate at-risk slice (this quarter) - see Revenue at Risk"
+    cleanSurface
   />
 );
 

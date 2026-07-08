@@ -121,20 +121,23 @@ interface HFExecutiveSummaryProps {
 export const HFExecutiveSummary: React.FC<HFExecutiveSummaryProps> = ({ dashboard, loading = false, error = null }) => {
   const [selectedKPI, setSelectedKPI] = useState<KPICardDef | null>(null);
 
+  // White-card treatment (batch 2, EP Gap-Intelligence reference): every KPI card is a
+  // white surface with a titanium border; the metric's semantic color survives ONLY as
+  // the solid accent on the icon + value (stroke). Pastel bg/border tints removed.
   const getColorClasses = (color: string) => {
     const colors: any = {
-      // Chrome Blue - patient volume / clinical data
-      blue: { bg: 'bg-[#EFF4F8]', border: 'border-[#B8C9D9]', text: 'text-teal-700', icon: 'text-teal-700', stroke: '#2C4A60' },
+      // Chrome Blue (navy) - patient volume / clinical data
+      blue: { icon: 'text-teal-700', stroke: '#2C4A60' },
       // Metallic Gold - revenue / financial opportunity
-      green: { bg: 'bg-amber-50', border: 'border-[#E0CC80]', text: 'text-[#7A5810]', icon: 'text-amber-600', stroke: '#C4982A' },
+      green: { icon: 'text-amber-600', stroke: '#C4982A' },
       // Carmona Red - risk / critical
-      red: { bg: 'bg-red-50', border: 'border-[#F5C0C8]', text: 'text-red-600', icon: 'text-red-500', stroke: '#9B2438' },
+      red: { icon: 'text-red-500', stroke: '#9B2438' },
       // Steel Teal - device / procedure metrics
-      orange: { bg: 'bg-[#EEF8FA]', border: 'border-[#A8D8E4]', text: 'text-[#1A6878]', icon: 'text-[#1A6878]', stroke: '#1A6878' },
+      orange: { icon: 'text-[#1A6878]', stroke: '#1A6878' },
       // Racing Green - clinical quality / GDMT
-      teal: { bg: 'bg-[#EEF6F2]', border: 'border-[#A8D0BC]', text: 'text-green-600', icon: 'text-green-600', stroke: '#2D6147' },
+      teal: { icon: 'text-green-600', stroke: '#2D6147' },
       // Copper Bronze - captured / realized value
-      copper: { bg: 'bg-[#FAF3EC]', border: 'border-[#DDBA98]', text: 'text-[#7A4A1E]', icon: 'text-[#8B5A2B]', stroke: '#8B5A2B' },
+      copper: { icon: 'text-[#8B5A2B]', stroke: '#8B5A2B' },
     };
     return colors[color] || colors.blue;
   };
@@ -182,7 +185,7 @@ export const HFExecutiveSummary: React.FC<HFExecutiveSummaryProps> = ({ dashboar
               <button
                 key={kpi.id}
                 onClick={() => setSelectedKPI(kpi)}
-                className={`${colors.bg} ${colors.border} border-2 rounded-lg p-5 text-left hover:shadow-lg transition-all cursor-pointer`}
+                className="bg-white border-titanium-200 border-2 rounded-lg p-5 text-left hover:shadow-lg transition-all cursor-pointer"
               >
                 <div className="flex items-start justify-between mb-3">
                   <Icon className={`${colors.icon} w-8 h-8`} />

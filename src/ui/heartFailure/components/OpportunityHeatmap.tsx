@@ -37,14 +37,9 @@ const OpportunityHeatmap: React.FC<OpportunityHeatmapProps> = ({ data, onFacilit
  <div className="space-y-4">
  {data.map((site) => {
  const percentage = (site.opp_revenue / maxRevenue) * 100;
+ // White-card treatment (batch 2): solid single-color fills - the rank chip,
+ // left border, and revenue bar all carry the same flat rank color (no gradients).
  const rankColor = site.rank === 1 ? '#2C4A60' : site.rank === 2 ? '#1A6878' : site.rank === 3 ? '#8B5A2B' : '#4A7FA5';
- const rankGradient = site.rank === 1
- ? 'linear-gradient(to right, #4A7FA5, #2C4A60)'
- : site.rank === 2
- ? 'linear-gradient(to right, #6DB5A0, #1A6878)'
- : site.rank === 3
- ? 'linear-gradient(to right, #ECC89E, #8B5A2B)'
- : 'linear-gradient(to right, #8FA8BC, #4A7FA5)';
 
  return (
  <div
@@ -73,7 +68,7 @@ const OpportunityHeatmap: React.FC<OpportunityHeatmapProps> = ({ data, onFacilit
  <div className="w-full bg-titanium-200 rounded-full h-3 overflow-hidden">
  <div
  className="h-full rounded-full transition-all duration-500"
- style={{ width: `${percentage}%`, background: rankGradient }}
+ style={{ width: `${percentage}%`, background: rankColor }}
  ></div>
  </div>
  </div>
