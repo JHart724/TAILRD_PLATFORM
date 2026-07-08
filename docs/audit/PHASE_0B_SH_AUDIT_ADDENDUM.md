@@ -97,7 +97,7 @@ Structural Heart has **88 spec gaps** across 14 subcategories. Implementation: *
 | GAP-SH-002 | 446 | DET_OK | `gap-sh-2-tavr-eval` (SH-002 @7563-7590) | v3.0 SH chunk 1 (AUDIT-125 tightened): severe symptomatic AS -> AVR now gates on concordant severe A |
 | GAP-SH-003 | 447 | DET_OK | `gap-sh-003-lflg-classical` (SH-003 @7630-7654) | v3.0 SH chunk 1: classical low-flow low-gradient AS (LVEF<50 + AVA<1.0 + mean gradient<40) -> dobuta |
 | GAP-SH-006 | 448 | DET_OK | `gap-sh-006-asymptomatic-as` (SH-006 @7596-7621) | v3.0 SH chunk 1: asymptomatic severe AS + LVEF<55 -> AVR evaluation (Class IIa; LVEF<50 Class 1). Co |
-| GAP-SH-061 | 472 | DET_OK | `gap-sh-valve-in-valve` (SH-VALVE-IN-VALVE @15580-15602) | RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-123 fixed - ViV (SH-VALVE-IN-VALVE) is |
+| GAP-SH-061 | 472 | DET_OK | `gap-sh-valve-in-valve` (SH-VALVE-IN-VALVE @15567-15589) | RESOLVED 2026-06-17 (v3.0 SH close): PARTIAL -> DET_OK. AUDIT-123 fixed - ViV (SH-VALVE-IN-VALVE) is |
 | GAP-SH-014 | 485 | DET_OK | `gap-sh-3-mitral-intervention` (SH-014 @7788-7816) | v3.0 SH chunk 2 (AUDIT-125 tightened): severe PRIMARY MR (EROA>=0.40 / grade>=4 / valve_severity>=5) |
 | GAP-SH-015 | 486 | SPEC_ONLY | — | v3.0 SH close: GAP-SH-015 has no distinct evaluator after the MR block split (the chunk-2 MR build c |
 | GAP-SH-018 | 487 | PARTIAL_DETECTION | `gap-sh-10-mitraclip` (SH-10 @9644-9676) | (broad MR + LVEF<50) \| auto-verify: preserved-from-addendum |

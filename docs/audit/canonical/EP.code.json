@@ -554,9 +554,9 @@
       "name": "EP-TORSADES"
     },
     {
-      "bodyEndLine": 13410,
-      "bodyStartLine": 13388,
-      "commentLine": 13379,
+      "bodyEndLine": 13397,
+      "bodyStartLine": 13375,
+      "commentLine": 13366,
       "commentLiteral": "// EP-EARLY-RHYTHM: Early Rhythm Control in Newly Diagnosed AF",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -565,9 +565,9 @@
       "name": "EP-EARLY-RHYTHM"
     },
     {
-      "bodyEndLine": 13443,
-      "bodyStartLine": 13421,
-      "commentLine": 13412,
+      "bodyEndLine": 13430,
+      "bodyStartLine": 13408,
+      "commentLine": 13399,
       "commentLiteral": "// EP-VT-ABLATION: VT Ablation Referral",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -576,9 +576,9 @@
       "name": "EP-VT-ABLATION"
     },
     {
-      "bodyEndLine": 13478,
-      "bodyStartLine": 13456,
-      "commentLine": 13445,
+      "bodyEndLine": 13465,
+      "bodyStartLine": 13443,
+      "commentLine": 13432,
       "commentLiteral": "// EP-SVT-ABLATION: SVT Ablation Referral",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -587,9 +587,9 @@
       "name": "EP-SVT-ABLATION"
     },
     {
-      "bodyEndLine": 13514,
-      "bodyStartLine": 13492,
-      "commentLine": 13480,
+      "bodyEndLine": 13501,
+      "bodyStartLine": 13479,
+      "commentLine": 13467,
       "commentLiteral": "// EP-BRUGADA: Brugada Syndrome Screening (PROXY)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -598,9 +598,9 @@
       "name": "EP-BRUGADA"
     },
     {
-      "bodyEndLine": 13548,
-      "bodyStartLine": 13525,
-      "commentLine": 13516,
+      "bodyEndLine": 13535,
+      "bodyStartLine": 13512,
+      "commentLine": 13503,
       "commentLiteral": "// EP-ARVC: ARVC Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -609,9 +609,9 @@
       "name": "EP-ARVC"
     },
     {
-      "bodyEndLine": 13581,
-      "bodyStartLine": 13559,
-      "commentLine": 13550,
+      "bodyEndLine": 13568,
+      "bodyStartLine": 13546,
+      "commentLine": 13537,
       "commentLiteral": "// EP-CARDIAC-SARCOID-EP: Cardiac Sarcoid Arrhythmia Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -620,9 +620,9 @@
       "name": "EP-CARDIAC-SARCOID-EP"
     },
     {
-      "bodyEndLine": 13613,
-      "bodyStartLine": 13591,
-      "commentLine": 13583,
+      "bodyEndLine": 13600,
+      "bodyStartLine": 13578,
+      "commentLine": 13570,
       "commentLiteral": "// EP-PACEMAKER-UPGRADE: Pacemaker to CRT Upgrade Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -631,9 +631,9 @@
       "name": "EP-PACEMAKER-UPGRADE"
     },
     {
-      "bodyEndLine": 13654,
-      "bodyStartLine": 13621,
-      "commentLine": 13615,
+      "bodyEndLine": 13641,
+      "bodyStartLine": 13608,
+      "commentLine": 13602,
       "commentLiteral": "// EP-AF-STROKE-RISK: CHA2DS2-VASc Formal Documentation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -642,9 +642,9 @@
       "name": "EP-AF-STROKE-RISK"
     },
     {
-      "bodyEndLine": 13683,
-      "bodyStartLine": 13662,
-      "commentLine": 13656,
+      "bodyEndLine": 13670,
+      "bodyStartLine": 13649,
+      "commentLine": 13643,
       "commentLiteral": "// EP-CARDIOVERSION-TIMING: Cardioversion Timing Assessment",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -653,9 +653,9 @@
       "name": "EP-CARDIOVERSION-TIMING"
     },
     {
-      "bodyEndLine": 13721,
-      "bodyStartLine": 13691,
-      "commentLine": 13685,
+      "bodyEndLine": 13708,
+      "bodyStartLine": 13678,
+      "commentLine": 13672,
       "commentLiteral": "// EP-TEE-PRE-CV: TEE Before Cardioversion",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -664,9 +664,9 @@
       "name": "EP-TEE-PRE-CV"
     },
     {
-      "bodyEndLine": 13750,
-      "bodyStartLine": 13729,
-      "commentLine": 13723,
+      "bodyEndLine": 13737,
+      "bodyStartLine": 13716,
+      "commentLine": 13710,
       "commentLiteral": "// EP-CIED-MRI: MRI-Conditional CIED Documentation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -675,9 +675,9 @@
       "name": "EP-CIED-MRI"
     },
     {
-      "bodyEndLine": 13782,
-      "bodyStartLine": 13760,
-      "commentLine": 13752,
+      "bodyEndLine": 13769,
+      "bodyStartLine": 13747,
+      "commentLine": 13739,
       "commentLiteral": "// EP-GENERATOR-REPLACEMENT: Generator Replacement Planning",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -686,9 +686,9 @@
       "name": "EP-GENERATOR-REPLACEMENT"
     },
     {
-      "bodyEndLine": 13817,
-      "bodyStartLine": 13795,
-      "commentLine": 13784,
+      "bodyEndLine": 13804,
+      "bodyStartLine": 13782,
+      "commentLine": 13771,
       "commentLiteral": "// EP-INAPPROPRIATE-SHOCKS: ICD Inappropriate Shock Workup (PROXY; serves GAP-EP-050 + GAP-EP-089)",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -697,9 +697,9 @@
       "name": "EP-INAPPROPRIATE-SHOCKS"
     },
     {
-      "bodyEndLine": 13847,
-      "bodyStartLine": 13826,
-      "commentLine": 13819,
+      "bodyEndLine": 13834,
+      "bodyStartLine": 13813,
+      "commentLine": 13806,
       "commentLiteral": "// EP-EXERCISE-EP: Exercise Testing for Exercise-Induced Arrhythmia",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -708,9 +708,9 @@
       "name": "EP-EXERCISE-EP"
     },
     {
-      "bodyEndLine": 13880,
-      "bodyStartLine": 13858,
-      "commentLine": 13849,
+      "bodyEndLine": 13867,
+      "bodyStartLine": 13845,
+      "commentLine": 13836,
       "commentLiteral": "// EP-AF-CATHETER-TIMING: AF Ablation Timing Optimization",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -719,9 +719,9 @@
       "name": "EP-AF-CATHETER-TIMING"
     },
     {
-      "bodyEndLine": 13918,
-      "bodyStartLine": 13888,
-      "commentLine": 13886,
+      "bodyEndLine": 13905,
+      "bodyStartLine": 13875,
+      "commentLine": 13873,
       "commentLiteral": "// EP-PILL-IN-POCKET: Pill-in-Pocket Strategy for Paroxysmal AF",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -730,9 +730,9 @@
       "name": "EP-PILL-IN-POCKET"
     },
     {
-      "bodyEndLine": 13946,
-      "bodyStartLine": 13922,
-      "commentLine": 13920,
+      "bodyEndLine": 13933,
+      "bodyStartLine": 13909,
+      "commentLine": 13907,
       "commentLiteral": "// EP-LEFT-ATRIAL-SIZE: Left Atrial Size Documentation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -741,9 +741,9 @@
       "name": "EP-LEFT-ATRIAL-SIZE"
     },
     {
-      "bodyEndLine": 13977,
-      "bodyStartLine": 13950,
-      "commentLine": 13948,
+      "bodyEndLine": 13964,
+      "bodyStartLine": 13937,
+      "commentLine": 13935,
       "commentLiteral": "// EP-ANTICOAG-SCORE-REASSESS: Annual CHA2DS2-VASc Reassessment",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -752,9 +752,9 @@
       "name": "EP-ANTICOAG-SCORE-REASSESS"
     },
     {
-      "bodyEndLine": 17087,
-      "bodyStartLine": 17068,
-      "commentLine": 17062,
+      "bodyEndLine": 17074,
+      "bodyStartLine": 17055,
+      "commentLine": 17049,
       "commentLiteral": "// Gap EP-010: rivaroxaban without take-with-food counseling -> >=15 mg dose bioavailability",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [
@@ -763,9 +763,9 @@
       "name": "EP-010"
     },
     {
-      "bodyEndLine": 17115,
-      "bodyStartLine": 17096,
-      "commentLine": 17089,
+      "bodyEndLine": 17102,
+      "bodyStartLine": 17083,
+      "commentLine": 17076,
       "commentLiteral": "// Gap EP-049: class IC antiarrhythmic (flecainide / propafenone) in structural heart disease -> SAFETY (CAST)",
       "commentPattern": "GAP_MOD_N",
       "gapsPushIds": [

@@ -2,13 +2,13 @@
 
 **Module:** Coronary Artery Disease (CAD)
 **Spec source:** `docs/clinical/CLINICAL_KNOWLEDGE_BASE_v4.0.md` §6.4
-**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=83, evaluator=65, gapsPush=65)
+**Code source:** `backend/src/ingestion/gaps/gapRuleEngine.ts` (registry=83, evaluator=64, gapsPush=64)
 **Crosswalk:** `docs/audit/canonical/CAD.crosswalk.json` (auditMethod: rule-body-citation-AUDIT-030D)
 **Audit date:** 2026-05-04
 
 ## 1. Summary
 
-Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementation: **27 DET_OK + 21 PARTIAL + 42 SPEC_ONLY** (any-coverage: 48/90 = 53.3%).
+Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementation: **26 DET_OK + 21 PARTIAL + 43 SPEC_ONLY** (any-coverage: 47/90 = 52.2%).
 
 **Tier 1 priority status:** 7 DET_OK + 3 PARTIAL + 8 SPEC_ONLY of 18 T1 gaps (T1 any-coverage: 55.6%).
 
@@ -21,9 +21,9 @@ Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementa
 | Classification | Count | % of total |
 |---|---:|---:|
 | PRODUCTION_GRADE | 0 | 0.0% |
-| DET_OK | 27 | 30.0% |
+| DET_OK | 26 | 28.9% |
 | PARTIAL_DETECTION | 21 | 23.3% |
-| SPEC_ONLY | 42 | 46.7% |
+| SPEC_ONLY | 43 | 47.8% |
 | **Total** | **90** | **100.0%** |
 
 **PRODUCTION_GRADE = 0** is platform-wide; gated on closure of AUDIT-001 P0 (test coverage gap). Per AUDIT_METHODOLOGY.md §3.1, no rule classifies PRODUCTION_GRADE until the platform testing baseline is established.
@@ -35,9 +35,9 @@ Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementa
 | Tier | Total | DET_OK | PARTIAL | SPEC_ONLY | Any-coverage % |
 |------|------:|-------:|--------:|----------:|---------------:|
 | **T1** | 18 | 7 | 3 | 8 | 55.6% |
-| **T2** | 55 | 14 | 17 | 24 | 56.4% |
+| **T2** | 55 | 13 | 17 | 25 | 54.5% |
 | **T3** | 17 | 6 | 1 | 10 | 41.2% |
-| **Overall** | **90** | **27** | **21** | **42** | **53.3%** |
+| **Overall** | **90** | **26** | **21** | **43** | **52.2%** |
 
 ---
 
@@ -52,7 +52,7 @@ Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementa
 | STEMI/ACS Timing (5) | 2/3/0 | 0 | 3 | 2 | 60.0% |
 | Polyvascular (2) | 0/2/0 | 1 | 1 | 0 | 100.0% |
 | Post-CABG (2) | 0/2/0 | 1 | 1 | 0 | 100.0% |
-| Chronic CAD (4) | 0/4/0 | 2 | 2 | 0 | 100.0% |
+| Chronic CAD (4) | 0/4/0 | 1 | 2 | 1 | 75.0% |
 | MINOCA/INOCA (5) | 0/5/0 | 2 | 3 | 0 | 100.0% |
 | Intracoronary Imaging (3) | 0/3/0 | 0 | 0 | 3 | 0.0% |
 | Complex PCI (4) | 1/3/0 | 0 | 0 | 4 | 0.0% |
@@ -85,7 +85,7 @@ Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementa
 
 ## 4.6 — EXTRA rules + architectural patterns
 
-**Registry-without-evaluator (18):** registry entries with no matching evaluator block body.
+**Registry-without-evaluator (19):** registry entries with no matching evaluator block body.
 
 - `gap-cad-lpa` (registry line 1135): No evaluator body matched via similarity scoring
 - `gap-cad-pcsk9` (registry line 1927): No evaluator body matched via similarity scoring
@@ -104,6 +104,7 @@ Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementa
 - `gap-cad-sexual-health` (registry line 3487): No evaluator body matched via similarity scoring
 - `gap-cad-driving` (registry line 3499): No evaluator body matched via similarity scoring
 - `gap-cad-liver-statin` (registry line 3511): No evaluator body matched via similarity scoring
+- `gap-cad-ischemia-guided` (registry line 3811): No evaluator body matched via similarity scoring
 - `gap-cad-women-specific` (registry line 3967): No evaluator body matched via similarity scoring
 
 **Naming convention mismatches (1):** registry IDs not following `gap-cad-` convention.
@@ -134,7 +135,7 @@ Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementa
 | GAP-CAD-071 | 683 | SPEC_ONLY | — | MANUAL OVERRIDE 2026-06-18 (CAD chunk 1, AUDIT-182): holds SPEC_ONLY. Left-main heart-team review ha |
 | GAP-CAD-042 | 698 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-CAD-043 | 699 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-CAD-081 | 717 | DET_OK | `gap-cad-scad` (CAD-SCAD @12938-12966) | +  + \| Multiple registry ids cited: gap-cad-scad, gap-cad-women-specific, gap-cad-young-mi \| auto-ve |
+| GAP-CAD-081 | 717 | DET_OK | `gap-cad-scad` (CAD-SCAD @12925-12953) | +  + \| Multiple registry ids cited: gap-cad-scad, gap-cad-women-specific, gap-cad-young-mi \| auto-ve |
 
 ---
 
@@ -158,9 +159,9 @@ No T1 SPEC_ONLY gaps carry literal BSW pathway tags in CK v4.0 spec text. Pathwa
 
 **For CAD:** Moderate implementation coverage; medication/screening surfaces typically built, procedural surfaces often lighter.
 
-Coverage data: 48/90 any-coverage (53.3%); 27/90 DET_OK only (30.0%); 21 PARTIAL via broad-rule consolidation or partial-trigger match; 42 SPEC_ONLY.
+Coverage data: 47/90 any-coverage (52.2%); 26/90 DET_OK only (28.9%); 21 PARTIAL via broad-rule consolidation or partial-trigger match; 43 SPEC_ONLY.
 
-Rules-per-DET_OK efficiency: 83 registry rules / 27 DET_OK = 3.07.
+Rules-per-DET_OK efficiency: 83 registry rules / 26 DET_OK = 3.19.
 
 ---
 
@@ -248,7 +249,7 @@ Per-module wall-clock data lives in `docs/audit/canonical/audit_runs.jsonl` (app
 
 **CAD module: MODERATELY BUILT.**
 
-- 27 DET_OK (30.0%), 21 PARTIAL (23.3%), 42 SPEC_ONLY (46.7%)
+- 26 DET_OK (28.9%), 21 PARTIAL (23.3%), 43 SPEC_ONLY (47.8%)
 - 7/18 T1 priority gaps DET_OK; 8 T1 SPEC_ONLY gaps require v2.0 Phase 1 work
 - Audit method: `rule-body-citation-AUDIT-030D`. Generated from canonical crosswalk on 2026-05-04.
 

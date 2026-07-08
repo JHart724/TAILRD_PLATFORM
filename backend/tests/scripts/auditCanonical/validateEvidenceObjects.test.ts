@@ -155,9 +155,10 @@ describe('validateEvidenceObjects - live gapRuleEngine.ts baseline', () => {
     // 369 -> 368 by AUDIT-195 (2026-07-03): CAD-EZETIMIBE + CAD-PCSK9 CONSOLIDATED into one
     // gap-cad-lipid-intensification (one gaps.push removed, CAD-PCSK9 firing block retired -> SPEC_ONLY).
     // Then 368 -> 369 by AUDIT-194-B3 (2026-07-03): VD-ECHO-INTERVAL RESTORED (echo_months derivation,
-    // hollow-safe gate). Sibling count-guard to clinicalScenarios.test.ts.
-    expect(result.pushCount).toBe(369);
-    expect(result.evidenceCount).toBe(369);
+    // hollow-safe gate). Then 369 -> 368 by AUDIT-197 (2026-07-08): CAD-ISCHEMIA-GUIDED RETIRED -> SPEC_ONLY
+    // (presence-as-proxy defect). Sibling count-guard to clinicalScenarios.test.ts.
+    expect(result.pushCount).toBe(368);
+    expect(result.evidenceCount).toBe(368);
   });
 
   it('reports ZERO inconsistencies (clean baseline post-AUDIT-103)', () => {

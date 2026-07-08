@@ -409,9 +409,9 @@
       "name": "VD-18"
     },
     {
-      "bodyEndLine": 15777,
-      "bodyStartLine": 15755,
-      "commentLine": 15745,
+      "bodyEndLine": 15764,
+      "bodyStartLine": 15742,
+      "commentLine": 15732,
       "commentLiteral": "// VD-PANNUS: Prosthetic Valve Pannus/Thrombosis Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -420,9 +420,9 @@
       "name": "VD-PANNUS"
     },
     {
-      "bodyEndLine": 15810,
-      "bodyStartLine": 15788,
-      "commentLine": 15779,
+      "bodyEndLine": 15797,
+      "bodyStartLine": 15775,
+      "commentLine": 15766,
       "commentLiteral": "// VD-RADIATION: Radiation-Associated Valve Disease",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -431,9 +431,9 @@
       "name": "VD-RADIATION"
     },
     {
-      "bodyEndLine": 15842,
-      "bodyStartLine": 15820,
-      "commentLine": 15812,
+      "bodyEndLine": 15829,
+      "bodyStartLine": 15807,
+      "commentLine": 15799,
       "commentLiteral": "// VD-ENDOCARDITIS-SURV: Infective Endocarditis Surveillance",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -442,9 +442,9 @@
       "name": "VD-ENDOCARDITIS-SURV"
     },
     {
-      "bodyEndLine": 15874,
-      "bodyStartLine": 15852,
-      "commentLine": 15844,
+      "bodyEndLine": 15861,
+      "bodyStartLine": 15839,
+      "commentLine": 15831,
       "commentLiteral": "// VD-BICUSPID-AORTOPATHY: Bicuspid Valve Aortopathy Screening",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -453,9 +453,9 @@
       "name": "VD-BICUSPID-AORTOPATHY"
     },
     {
-      "bodyEndLine": 15903,
-      "bodyStartLine": 15882,
-      "commentLine": 15876,
+      "bodyEndLine": 15890,
+      "bodyStartLine": 15869,
+      "commentLine": 15863,
       "commentLiteral": "// VD-ANTICOAG-REVERSAL: Anticoagulation Reversal Emergency Plan",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -464,9 +464,9 @@
       "name": "VD-ANTICOAG-REVERSAL"
     },
     {
-      "bodyEndLine": 15937,
-      "bodyStartLine": 15914,
-      "commentLine": 15905,
+      "bodyEndLine": 15924,
+      "bodyStartLine": 15901,
+      "commentLine": 15892,
       "commentLiteral": "// VD-TRANSCATHETER-MV: Transcatheter Mitral Intervention Evaluation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -475,9 +475,9 @@
       "name": "VD-TRANSCATHETER-MV"
     },
     {
-      "bodyEndLine": 15969,
-      "bodyStartLine": 15947,
-      "commentLine": 15939,
+      "bodyEndLine": 15956,
+      "bodyStartLine": 15934,
+      "commentLine": 15926,
       "commentLiteral": "// VD-RHC: Right Heart Catheterization for Valve + PH",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -486,9 +486,9 @@
       "name": "VD-RHC"
     },
     {
-      "bodyEndLine": 16006,
-      "bodyStartLine": 15984,
-      "commentLine": 15971,
+      "bodyEndLine": 15993,
+      "bodyStartLine": 15971,
+      "commentLine": 15958,
       "commentLiteral": "// VD-VALVE-CLINIC: Multidisciplinary Valve Clinic Referral",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -497,9 +497,9 @@
       "name": "VD-VALVE-CLINIC"
     },
     {
-      "bodyEndLine": 16054,
-      "bodyStartLine": 16026,
-      "commentLine": 16013,
+      "bodyEndLine": 16041,
+      "bodyStartLine": 16013,
+      "commentLine": 16000,
       "commentLiteral": "// VD-ECHO-INTERVAL: Echocardiographic surveillance interval adherence (registry gap-vd-echo-interval).",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -508,9 +508,9 @@
       "name": "VD-ECHO-INTERVAL"
     },
     {
-      "bodyEndLine": 16108,
-      "bodyStartLine": 16080,
-      "commentLine": 16078,
+      "bodyEndLine": 16095,
+      "bodyStartLine": 16067,
+      "commentLine": 16065,
       "commentLiteral": "// VD-TRICUSPID-SECONDARY: Secondary Tricuspid Regurgitation",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [
@@ -519,9 +519,9 @@
       "name": "VD-TRICUSPID-SECONDARY"
     },
     {
-      "bodyEndLine": 16144,
-      "bodyStartLine": 16112,
-      "commentLine": 16110,
+      "bodyEndLine": 16131,
+      "bodyStartLine": 16099,
+      "commentLine": 16097,
       "commentLiteral": "// VD-ANTIPLATELET-BIOPROSTHETIC: Antiplatelet After Bioprosthetic Valve >3 Months",
       "commentPattern": "ID_NAME",
       "gapsPushIds": [

@@ -130,8 +130,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-LIPID-PANEL-FU",
         "evaluatorBodyLineRange": [
-          13095,
-          13122
+          13082,
+          13109
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-lipid-panel-fu",
@@ -590,8 +590,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-CHEST-PAIN-PROTOCOL",
         "evaluatorBodyLineRange": [
-          13217,
-          13244
+          13204,
+          13231
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-chest-pain-protocol",
@@ -628,8 +628,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "PV-RIVAROXABAN",
         "evaluatorBodyLineRange": [
-          16152,
-          16180
+          16139,
+          16167
         ],
         "evaluatorModule": "PV",
         "registryId": "gap-pv-rivaroxaban",
@@ -647,8 +647,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-SECONDARY-PREVENTION",
         "evaluatorBodyLineRange": [
-          13248,
-          13277
+          13235,
+          13264
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-secondary-prevention",
@@ -697,20 +697,11 @@
       "tier": "T2"
     },
     {
-      "auditNotes": "auto-verify: preserved-from-addendum",
-      "classification": "DET_OK",
+      "auditNotes": "AUDIT-197 2026-07-08: CAD-ISCHEMIA-GUIDED (gap-cad-ischemia-guided) RETIRED -> SPEC_ONLY; firing block removed (gaps.push 369 -> 368). PRESENCE-AS-PROXY defect: gated hasModerateIschemia = labValues[stress_test_months] !== undefined, treating test-EXISTENCE as ischemia-PRESENCE (test-presence != disease-presence; self-admitted by the proxy comment + \"Prior stress test documented\" triggerCriteria). Never fired (stress_test_months unthreaded -> always undefined) and could not discriminate ischemia, so DET_OK was an over-claim -> SPEC_ONLY. Moderate ischemia is a RESULT finding (abnormal stress-test result / reversible perfusion defect / ischemic-burden %), Synthea-ABSENT / unthreaded everywhere = real-EHR-only. registryId dropped. RESTORE PATH (real-EHR only): re-key on a threaded abnormal-stress-RESULT / ischemic-burden signal, NEVER stress_test_months (threading the recency slug would resurrect the false-positive - the reason Tranche 2 deferred it). 2021 ACC/AHA/SCAI (ISCHEMIA trial) COR 2a context preserved. section-20 single-instance (CAD-NUCLEAR-STRESS fire-on-absence is a distinct legitimate care-gap, untouched).",
+      "classification": "SPEC_ONLY",
       "inferredSafetyRationale": null,
       "inferredSafetyTag": null,
-      "ruleBodyCite": {
-        "evaluatorBlockName": "CAD-ISCHEMIA-GUIDED",
-        "evaluatorBodyLineRange": [
-          12878,
-          12904
-        ],
-        "evaluatorModule": "CAD",
-        "registryId": "gap-cad-ischemia-guided",
-        "registryLine": 3811
-      },
+      "ruleBodyCite": null,
       "specGapId": "GAP-CAD-031",
       "specLine": 660,
       "tier": "T2"
@@ -761,8 +752,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-MINOCA",
         "evaluatorBodyLineRange": [
-          12908,
-          12934
+          12895,
+          12921
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-minoca",
@@ -780,8 +771,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-MINOCA",
         "evaluatorBodyLineRange": [
-          12908,
-          12934
+          12895,
+          12921
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-minoca",
@@ -799,8 +790,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-MICROVASCULAR",
         "evaluatorBodyLineRange": [
-          13034,
-          13062
+          13021,
+          13049
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-microvascular",
@@ -818,8 +809,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-VASOSPASTIC",
         "evaluatorBodyLineRange": [
-          12998,
-          13030
+          12985,
+          13017
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-vasospastic",
@@ -837,8 +828,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-MICROVASCULAR",
         "evaluatorBodyLineRange": [
-          13034,
-          13062
+          13021,
+          13049
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-microvascular",
@@ -1075,8 +1066,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-SCAD",
         "evaluatorBodyLineRange": [
-          12938,
-          12966
+          12925,
+          12953
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-scad",
@@ -1094,8 +1085,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-SCAD",
         "evaluatorBodyLineRange": [
-          12938,
-          12966
+          12925,
+          12953
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-scad",
@@ -1180,8 +1171,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "CAD-CARDIAC-TRANSPLANT-CAD",
         "evaluatorBodyLineRange": [
-          13066,
-          13091
+          13053,
+          13078
         ],
         "evaluatorModule": "CAD",
         "registryId": "gap-cad-cardiac-transplant-cad",

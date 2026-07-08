@@ -12873,35 +12873,22 @@ export function evaluateGapRules(
     }
   }
 
-  // CAD-ISCHEMIA-GUIDED: Ischemia-Guided Therapy Review
-  // Guideline: 2021 ACC/AHA/SCAI (ISCHEMIA Trial), Class 2a, LOE B-R
-  if (hasCAD && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-    const hasStableAnginaISC = dxCodes.some(c => c.startsWith('I25.11') || c.startsWith('I20.8'));
-    const hasModerateIschemia = labValues['stress_test_months'] !== undefined; // proxy for stress test done
-    if (hasStableAnginaISC && hasModerateIschemia) {
-      gaps.push({
-        type: TherapyGapType.MONITORING_OVERDUE,
-        module: ModuleType.CORONARY_INTERVENTION,
-        status: 'Consider ischemia-guided therapy review per ISCHEMIA trial evidence',
-        target: 'Optimal medical therapy vs revascularization strategy reviewed',
-        recommendations: {
-          action: 'Consider ischemia-guided management approach per ISCHEMIA trial and 2021 ACC/AHA/SCAI Guideline',
-          guideline: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (ISCHEMIA Trial)',
-          note: 'Recommended for review: ISCHEMIA trial showed initial conservative strategy was non-inferior to routine invasive strategy for stable CAD',
-        },
-        evidence: {
-          triggerCriteria: [
-            'Stable coronary artery disease (I25.11/I20.8)',
-            'Prior stress test documented',
-          ],
-          guidelineSource: '2021 ACC/AHA/SCAI Guideline for Coronary Artery Revascularization (ISCHEMIA Trial)',
-          classOfRecommendation: 'Class 2a',
-          levelOfEvidence: 'LOE B-R',
-          exclusions: ['Hospice/palliative care (Z51.5)', 'Left main disease', 'LVEF <35%', 'Unacceptable angina on OMT'],
-        },
-      });
-    }
-  }
+  // RETIRED to SPEC_ONLY 2026-07-08 (AUDIT-197): the former CAD-ISCHEMIA-GUIDED rule (registry
+  // gap-cad-ischemia-guided, GAP-CAD-031) gated on `hasModerateIschemia = labValues['stress_test_months']
+  // !== undefined` - a PRESENCE-AS-PROXY defect: it treated the mere existence of a stress test as evidence
+  // of moderate ischemia (test-presence != disease-presence; the variable was named for a finding but bound
+  // to a bare existence check, self-admitted by the "proxy for stress test done" comment and the "Prior
+  // stress test documented" triggerCriteria). It neither fired today (stress_test_months is unthreaded ->
+  // always undefined) nor could it discriminate ischemia, so the DET_OK crosswalk classification was an
+  // over-claim. Moderate ischemia is a RESULT finding (abnormal stress-test result / reversible perfusion
+  // defect / ischemic-burden %), which is Synthea-ABSENT and unthreaded everywhere (real-EHR-only).
+  // Reclassified GAP-CAD-031 DET_OK -> SPEC_ONLY (see applyOverrides.ts); firing block removed (gaps.push
+  // 369 -> 368). Do NOT thread stress_test_months to activate this - threading a recency slug would
+  // resurrect the false-positive (this rule is exactly why Threading Tranche 2 deferred stress_test_months).
+  // RESTORE PATH (real-EHR only): re-key on a threaded abnormal-stress-RESULT / ischemic-burden signal,
+  // NEVER the stress_test_months recency slug; the 2021 ACC/AHA/SCAI (ISCHEMIA trial) COR 2a context is
+  // preserved for the eventual real-EHR rule. (AUDIT-194 real-EHR-only + AUDIT-182 plain-word-first
+  // retirement precedent; comment deliberately does NOT begin with a CAD-*/PREFIX-NNN block token.)
 
   // CAD-MINOCA: MINOCA Workup
   // Guideline: 2022 ACC/AHA Chest Pain Guideline + AHA MINOCA Scientific Statement, Class 1, LOE B-NR

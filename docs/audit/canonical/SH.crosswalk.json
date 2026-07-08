@@ -263,8 +263,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-BICUSPID",
         "evaluatorBodyLineRange": [
-          15512,
-          15533
+          15499,
+          15520
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-bicuspid-surveillance",
@@ -282,8 +282,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-BICUSPID",
         "evaluatorBodyLineRange": [
-          15512,
-          15533
+          15499,
+          15520
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-bicuspid-surveillance",
@@ -330,8 +330,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-VALVE-IN-VALVE",
         "evaluatorBodyLineRange": [
-          15580,
-          15602
+          15567,
+          15589
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-valve-in-valve",
@@ -1152,8 +1152,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-COARCTATION",
         "evaluatorBodyLineRange": [
-          15650,
-          15672
+          15637,
+          15659
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-coarctation",
@@ -1267,8 +1267,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "SH-FONTAN",
         "evaluatorBodyLineRange": [
-          15683,
-          15704
+          15670,
+          15691
         ],
         "evaluatorModule": "SH",
         "registryId": "gap-sh-fontan-surveillance",
