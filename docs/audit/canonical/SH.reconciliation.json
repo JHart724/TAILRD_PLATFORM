@@ -201,7 +201,7 @@
     },
     {
       "evaluatorBlockName": "SH-BICUSPID",
-      "evaluatorCommentLine": 15505,
+      "evaluatorCommentLine": 15492,
       "matchConfidence": 0.667,
       "matchMethod": "similarity",
       "registryId": "gap-sh-bicuspid-surveillance",
@@ -209,7 +209,7 @@
     },
     {
       "evaluatorBlockName": "SH-ROSS",
-      "evaluatorCommentLine": 15535,
+      "evaluatorCommentLine": 15522,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-sh-ross-procedure",
@@ -217,7 +217,7 @@
     },
     {
       "evaluatorBlockName": "SH-VALVE-IN-VALVE",
-      "evaluatorCommentLine": 15566,
+      "evaluatorCommentLine": 15553,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-sh-valve-in-valve",
@@ -233,7 +233,7 @@
     },
     {
       "evaluatorBlockName": "SH-VSD",
-      "evaluatorCommentLine": 15611,
+      "evaluatorCommentLine": 15598,
       "matchConfidence": 0.6,
       "matchMethod": "similarity",
       "registryId": "gap-sh-vsd-closure",
@@ -241,7 +241,7 @@
     },
     {
       "evaluatorBlockName": "SH-COARCTATION",
-      "evaluatorCommentLine": 15641,
+      "evaluatorCommentLine": 15628,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-sh-coarctation",
@@ -249,7 +249,7 @@
     },
     {
       "evaluatorBlockName": "SH-FONTAN",
-      "evaluatorCommentLine": 15674,
+      "evaluatorCommentLine": 15661,
       "matchConfidence": 0.5,
       "matchMethod": "similarity",
       "registryId": "gap-sh-fontan-surveillance",
@@ -257,7 +257,7 @@
     },
     {
       "evaluatorBlockName": "SH-CARCINOID",
-      "evaluatorCommentLine": 15706,
+      "evaluatorCommentLine": 15693,
       "matchConfidence": 0.583,
       "matchMethod": "similarity",
       "registryId": "gap-sh-carcinoid-valve",

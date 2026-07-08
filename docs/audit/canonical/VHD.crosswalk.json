@@ -200,8 +200,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-ANTIPLATELET-BIOPROSTHETIC",
         "evaluatorBodyLineRange": [
-          16112,
-          16144
+          16099,
+          16131
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-antiplatelet-bioprosthetic",
@@ -448,8 +448,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-TRICUSPID-SECONDARY",
         "evaluatorBodyLineRange": [
-          16080,
-          16108
+          16067,
+          16095
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-tricuspid-secondary",
@@ -1116,8 +1116,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-RADIATION",
         "evaluatorBodyLineRange": [
-          15788,
-          15810
+          15775,
+          15797
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-radiation-valve",
@@ -1135,8 +1135,8 @@
       "ruleBodyCite": {
         "evaluatorBlockName": "VD-RADIATION",
         "evaluatorBodyLineRange": [
-          15788,
-          15810
+          15775,
+          15797
         ],
         "evaluatorModule": "VHD",
         "registryId": "gap-vd-radiation-valve",

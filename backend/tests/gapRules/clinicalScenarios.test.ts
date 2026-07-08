@@ -95,8 +95,11 @@ describe('Structural: Gap rule engine integrity', () => {
     // Then 368 -> 369 by AUDIT-194-B3 (2026-07-03): VD-ECHO-INTERVAL RESTORED (+1 gaps.push) - echo_months
     // now derived in the runner from echo-procedure dates union lvef date; hollow-safe gate (echo_months>=12,
     // never on undefined). audit194B3EchoInterval guard.
+    // Then 369 -> 368 by AUDIT-197 (2026-07-08): CAD-ISCHEMIA-GUIDED RETIRED -> SPEC_ONLY (-1 gaps.push) -
+    // presence-as-proxy defect (hasModerateIschemia bound to stress_test_months !== undefined = test-presence,
+    // not ischemia); moderate-ischemia RESULT finding is Synthea-absent/real-EHR-only. audit197 guard.
     const count = (content.match(/gaps\.push\(\{/g) || []).length;
-    expect(count).toBe(369);
+    expect(count).toBe(368);
   });
 
   it('all gap rules have evidence.guidelineSource', () => {

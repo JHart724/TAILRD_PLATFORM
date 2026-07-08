@@ -247,12 +247,16 @@ describe('AUDIT-184 silent repaired - CAD-023 colchicine residual inflammation (
   });
 });
 
-describe('AUDIT-184 silent repaired - CAD-031 ischemia-guided therapy (stress_test_months)', () => {
+describe('AUDIT-197 RETIRED - CAD-031 ischemia-guided therapy (was the AUDIT-184-repaired presence-as-proxy)', () => {
   const FRAG = 'ischemia-guided therapy review';
-  it('fires: stable angina (I25.110) + stress test documented (stress_test_months present)', () => {
-    expect(find(evaluateGapRules(['I25.110'], { stress_test_months: 3 }, [], 60, 'MALE'), FRAG)).toBeTruthy();
+  // AUDIT-184 had "repaired" this rule to fire on stress_test_months presence. AUDIT-197 (2026-07-08) found
+  // that WAS the defect: hasModerateIschemia bound to stress_test_months !== undefined is a PRESENCE-AS-PROXY
+  // (test-presence != moderate ischemia; the finding is a RESULT signal, Synthea-absent/real-EHR-only). The
+  // rule is RETIRED to SPEC_ONLY (GAP-CAD-031 DET_OK -> SPEC_ONLY) and no longer fires under ANY input.
+  it('RETIRED: does NOT fire even with stress test documented (the former presence-as-proxy false-positive path)', () => {
+    expect(find(evaluateGapRules(['I25.110'], { stress_test_months: 3 }, [], 60, 'MALE'), FRAG)).toBeFalsy();
   });
-  it('gate: no stress test threaded (the silent-before state) does NOT fire', () => {
+  it('RETIRED: does NOT fire with no stress test either', () => {
     expect(find(evaluateGapRules(['I25.110'], {}, [], 60, 'MALE'), FRAG)).toBeFalsy();
   });
 });

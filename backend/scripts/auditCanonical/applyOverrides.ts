@@ -559,6 +559,11 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
       auditNote:
         'AUDIT-195 2026-07-03: former PARTIAL_DETECTION via gap-cad-pcsk9 (now retired) -> SPEC_ONLY. GAP-CAD-005 targets the extreme-risk LDL<55 goal (polyvascular/recurrent); the consolidated gap-cad-lipid-intensification uses the LDL>70 threshold, so no dedicated detector for the <55 extreme-risk intent remains. registryId dropped. Provenance: PCSK9 detector consolidated-into gap-cad-lipid-intensification.',
     },
+    'GAP-CAD-031': {
+      classification: 'SPEC_ONLY',
+      auditNote:
+        'AUDIT-197 2026-07-08: CAD-ISCHEMIA-GUIDED (gap-cad-ischemia-guided) RETIRED -> SPEC_ONLY; firing block removed (gaps.push 369 -> 368). PRESENCE-AS-PROXY defect: gated hasModerateIschemia = labValues[stress_test_months] !== undefined, treating test-EXISTENCE as ischemia-PRESENCE (test-presence != disease-presence; self-admitted by the proxy comment + "Prior stress test documented" triggerCriteria). Never fired (stress_test_months unthreaded -> always undefined) and could not discriminate ischemia, so DET_OK was an over-claim -> SPEC_ONLY. Moderate ischemia is a RESULT finding (abnormal stress-test result / reversible perfusion defect / ischemic-burden %), Synthea-ABSENT / unthreaded everywhere = real-EHR-only. registryId dropped. RESTORE PATH (real-EHR only): re-key on a threaded abnormal-stress-RESULT / ischemic-burden signal, NEVER stress_test_months (threading the recency slug would resurrect the false-positive - the reason Tranche 2 deferred it). 2021 ACC/AHA/SCAI (ISCHEMIA trial) COR 2a context preserved. section-20 single-instance (CAD-NUCLEAR-STRESS fire-on-absence is a distinct legitimate care-gap, untouched).',
+    },
     'GAP-CAD-018': {
       classification: 'PARTIAL_DETECTION',
       registryId: 'gap-cad-dapt-duration',

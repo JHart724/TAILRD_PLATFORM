@@ -210,7 +210,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(15745); // 15740 -> 15745 by AUDIT-195 (2026-07-03): lipid-intensification consolidation net +5 lines above this content-anchor. (Prior 15697 -> 15740 was AUDIT-194-B1; 15822 -> 15697 AUDIT-194 Part A; 16227 -> 15822 AUDIT-184 CAD-EXT.) Content-anchor.
+    expect(pannus!.commentLine).toBe(15732); // 15745 -> 15732 by AUDIT-197 (2026-07-08): CAD-ISCHEMIA-GUIDED retirement removed net -13 lines above this content-anchor. (Prior 15740 -> 15745 AUDIT-195; 15697 -> 15740 AUDIT-194-B1; 15822 -> 15697 AUDIT-194 Part A; 16227 -> 15822 AUDIT-184 CAD-EXT.) Content-anchor.
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });
@@ -234,7 +234,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
 
   it.each([
     ['SH', 61, 55, 55], // T1-broader PART 2: registry 60->61, evaluator 54->55, gapsPush 54->55 (+1 gap-sh-024-tr-rv-dysfunction, 2026-06-22)
-    ['CAD', 83, 65, 65], // AUDIT-184 CAD-EXT (2026-06-29): evaluator/push 82 -> 66 (16 hollow CAD over-fire rules RETIRED -> SPEC_ONLY); registry stays 83 (suppressed rules' entries retained as regOrphans, left-main precedent). AUDIT-195 (2026-07-03): evaluator/push 66 -> 65 (CAD-EZETIMIBE + CAD-PCSK9 CONSOLIDATED into one gap-cad-lipid-intensification; CAD-PCSK9 firing block retired -> SPEC_ONLY, registry entry retained as regOrphan so registry stays 83)
+    ['CAD', 83, 64, 64], // AUDIT-184 CAD-EXT (2026-06-29): evaluator/push 82 -> 66 (16 hollow CAD over-fire rules RETIRED -> SPEC_ONLY); registry stays 83 (suppressed rules' entries retained as regOrphans, left-main precedent). AUDIT-195 (2026-07-03): evaluator/push 66 -> 65 (CAD-EZETIMIBE + CAD-PCSK9 CONSOLIDATED into one gap-cad-lipid-intensification; CAD-PCSK9 firing block retired -> SPEC_ONLY, registry entry retained as regOrphan so registry stays 83). AUDIT-197 (2026-07-08): evaluator/push 65 -> 64 (CAD-ISCHEMIA-GUIDED presence-as-proxy defect RETIRED -> SPEC_ONLY; gap-cad-ischemia-guided registry entry retained as regOrphan so registry stays 83)
     ['VHD', 51, 48, 46], // AUDIT-194 Part A (2026-06-30): evaluator 50->47, gapsPush 51->45 (6 hollow VHD over-fire rules RETIRED: VD-7/VD-16/VD-ECHO-INTERVAL/VD-FUNCTIONAL-STATUS/VD-PREOP-ASSESSMENT/VD-PULMONARY-HTN); registry stays 51 (suppressed rules' registry entries retained as regOrphans, RETIRE precedent). AUDIT-194-B3 (2026-07-03): evaluator 47->48, gapsPush 45->46 (VD-ECHO-INTERVAL RESTORED - echo_months derived from echo-procedure dates, hollow-safe echo_months>=12 gate); registry stays 51 (gap-vd-echo-interval entry was already present)
     ['PV', 45, 45, 45], // chunk0 33->34; chunk1 34->41; T0 net-new 41->45 (+4 PV-042/081/084/085, 2026-06-19)
   ])(
