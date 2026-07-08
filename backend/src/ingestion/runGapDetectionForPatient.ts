@@ -5,23 +5,13 @@
 import prisma from '../lib/prisma';
 import { logger } from '../utils/logger';
 import { evaluateGapRules } from './gaps/gapRuleEngine';
-import { deriveEchoMonths } from './echoRecency';
-import { expandToIngredients } from '../terminology/expandToIngredients';
+import { buildPatientEvalContext } from './buildPatientEvalContext';
 import { Prisma } from '@prisma/client';
 
-export const ECHO_CUTOFF_MS = 365 * 24 * 60 * 60 * 1000;
-export const LAB_CUTOFF_MS = 180 * 24 * 60 * 60 * 1000;
-export const IMAGING_TYPES = new Set([
-  'lvef', 'LVEF', 'qrs_duration', 'QRS_DURATION', 'echo_lvef', 'lv_ejection_fraction',
-  // v3.0 echo-severity threading (2026-06-17): valve echo measurements get the 365-day ECHO freshness window
-  // (echos are ~annual), not the 180-day LAB cutoff. Covers both the CSV slugs and the path-2 FHIR slugs.
-  'aortic_valve_vmax', 'aortic_valve_mean_gradient', 'aortic_valve_area', 'mitral_regurg_grade',
-  'mitral_eroa', 'mitral_valve_area', 'valve_severity', 'sts_score',
-  // TR + vena-contracta (v3.0 SH chunk 3)
-  'tr_regurg_grade', 'tr_regurg_vmax', 'mitral_vena_contracta', 'aortic_vena_contracta', 'tricuspid_vena_contracta',
-  // PASP (echo-derived) + ascending aorta dimension (v3.0 SH chunk 3 acceptance + chunk 4)
-  'pasp', 'ascending_aorta',
-]);
+// AUDIT-148 Slice 1 (STEP 1): the per-patient context assembly + these constants moved to the shared
+// buildPatientEvalContext (single source, also consumed by gapDetectionRunner + the trial matcher).
+// Re-exported here so syntheaProofRun (which imports them from this module) is unaffected.
+export { ECHO_CUTOFF_MS, LAB_CUTOFF_MS, IMAGING_TYPES } from './buildPatientEvalContext';
 
 export async function runGapDetectionForPatient(
   patientId: string,
@@ -58,47 +48,13 @@ export async function runGapDetectionForPatient(
       return;
     }
 
-    const dxCodes = patient.conditions.map((c: any) => c.icd10Code).filter(Boolean);
-    const labValues: Record<string, number> = {};
-    const now = Date.now();
-    for (const obs of patient.observations) {
-      if (obs.valueNumeric === null) continue;
-      if (labValues[obs.observationType] !== undefined) continue;
-      if (obs.observedDateTime) {
-        const ageMs = now - new Date(obs.observedDateTime).getTime();
-        const cutoff = IMAGING_TYPES.has(obs.observationType) ? ECHO_CUTOFF_MS : LAB_CUTOFF_MS;
-        if (ageMs > cutoff) continue;
-      }
-      labValues[obs.observationType] = obs.valueNumeric;
-    }
-    // AUDIT-194-B3 (Threading Tranche 2): derive echo_months = months since the most-recent echo
-    // (echo procedure date union lvef observation date) from the UNFILTERED sets - deliberately BEFORE the
-    // ECHO_CUTOFF staleness filter above, because a >12-month-old echo is exactly what VD-ECHO-INTERVAL must
-    // catch and would otherwise be dropped. undefined (no echo on record) is NOT written -> the surveillance
-    // rule never fires on absence (see gapRuleEngine VD-ECHO-INTERVAL, never-fire-on-absence discipline).
-    const echoMonths = deriveEchoMonths(patient.observations, patient.procedures ?? [], now);
-    if (echoMonths !== undefined) labValues['echo_months'] = echoMonths;
-    // AUDIT-118: ingredient-expand at construction so product-coded (SCD/SBD)
-    // meds match the ingredient-level (TTY=IN) value sets. medCodes MUST be
-    // built via expandToIngredients(); raw membership silently under-detects.
-    const medCodes = expandToIngredients(
-      patient.medications.map((m: any) => m.rxNormCode).filter(Boolean),
-    );
-    // AUDIT-101: thread dose-bearing medication records so dose-dependent gates
-    // (high-intensity statin) can test strength, not ingredient presence.
-    const meds = patient.medications.map((m: any) => ({
-      rxNormCode: m.rxNormCode ?? null,
-      doseValue: m.doseValue ?? null,
-      doseUnit: m.doseUnit ?? null,
-      genericName: m.genericName ?? null,
-      medicationName: m.medicationName ?? null,
-      startDate: m.startDate ?? null, // v3.0 ingest work-unit 1: thread med start-date (FHIR authoredOn)
-    }));
-    // v3.0 ingest work-unit 1: procedure codes (CPT + SNOMED) for procedure-gated gaps.
-    const procedureCodes = (patient.procedures ?? []).flatMap((p: any) => [p.cptCode, p.snomedCode]).filter(Boolean);
-    const age = Math.floor((Date.now() - patient.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+    // AUDIT-148 Slice 1 (STEP 1): per-patient context assembled by the shared buildPatientEvalContext
+    // (behavior-neutral extraction of the former inline logic; identical output, proven by
+    // buildPatientEvalContext.test.ts). Includes the AUDIT-194-B3 echo_months derivation.
+    const { dxCodes, labValues, medCodes, meds, age, gender, race, procedureCodes } =
+      buildPatientEvalContext(patient, Date.now());
 
-    const detectedGaps = evaluateGapRules(dxCodes, labValues, medCodes, age, patient.gender, patient.race ?? undefined, meds, procedureCodes);
+    const detectedGaps = evaluateGapRules(dxCodes, labValues, medCodes, age, gender, race, meds, procedureCodes);
 
     // Load existing gaps for this patient
     const existingGaps = await prisma.therapyGap.findMany({
