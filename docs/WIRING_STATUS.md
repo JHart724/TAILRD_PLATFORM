@@ -18,6 +18,7 @@ Moved out of `CLAUDE.md` on 2026-06-01 to keep the always-loaded project-instruc
 - Admin user activity (GET /api/admin/users/:id/activity - Sprint B-1a, PR #96)
 - **Heart Failure module (Sprint B-1 PR-A through PR-C, PRs #98-#102):**
   - Executive View: KPI cards, Gap Intelligence card (dashboard endpoint)
+    - 2026-07-07 (PR #442 `4e6987e` + batch 2): summary KPIs (patient total / GDMT-optimized / device candidates / open-gaps) wired to HFDashboardData; all revenue figures reconciled to the single demo model (`hfDemoFinancials.ts`) with DemoDataBadge on every mock-fed card; honest offline/loading/empty states; dead controls removed + white-card restyle (AUDIT-099 HF-side lineage)
   - Care Team View: GDMT pillars, safety alerts, recent activity (dashboard endpoint)
   - Patient Worklist: real patient roster with gap badges (worklist endpoint)
   - Care Gap Analyzer: gap breakdown with patient drill-down (dashboard + worklist)

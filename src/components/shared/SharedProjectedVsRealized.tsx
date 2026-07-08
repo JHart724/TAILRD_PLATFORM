@@ -16,6 +16,10 @@ export interface SharedProjectedVsRealizedProps {
   /** Optional sublabel under the Gap total, stating what the gap IS (e.g. tying it
       to a module's at-risk decomposition) so it never reads as an unrelated number. */
   gapSublabel?: string;
+  /** White-card treatment (HF Exec batch 2): the two blue totals boxes go white with
+      titanium borders (accent stays in the value text). The Gap box KEEPS its semantic
+      data-negative tokens (AUDIT-301). Opt-in so other modules render unchanged. */
+  cleanSurface?: boolean;
 }
 
 const formatMoney = (amount: number): string => {
@@ -35,7 +39,7 @@ export const GAP_NEGATIVE_TOKENS = {
 
 const SharedProjectedVsRealized: React.FC<SharedProjectedVsRealizedProps> = ({
   title = 'Projected vs Realized Revenue', subtitle = 'Year-to-Date Performance',
-  monthlyData, onMonthClick, className = '', gapSublabel,
+  monthlyData, onMonthClick, className = '', gapSublabel, cleanSurface = false,
 }) => {
   const maxValue = Math.max(...monthlyData.map(d => d.projected));
   const totalProjected = monthlyData.reduce((sum, d) => sum + d.projected, 0);
@@ -60,11 +64,11 @@ const SharedProjectedVsRealized: React.FC<SharedProjectedVsRealizedProps> = ({
  </div>
 
  <div className="grid grid-cols-3 gap-4 mb-6">
- <div className="p-4 rounded-lg" style={{ background: '#F0F5FA', border: '1px solid #C8D4DC' }}>
+ <div className="p-4 rounded-lg" style={{ background: cleanSurface ? '#FFFFFF' : '#F0F5FA', border: '1px solid #C8D4DC' }}>
  <div className="text-xs font-medium mb-1" style={{ color: '#4A7FA5' }}>Total Projected</div>
  <div className="text-xl font-bold" style={{ color: '#4A7FA5' }}>{formatMoney(totalProjected)}</div>
  </div>
- <div className="p-4 rounded-lg" style={{ background: '#EFF4F8', border: '1px solid #C8D4DC' }}>
+ <div className="p-4 rounded-lg" style={{ background: cleanSurface ? '#FFFFFF' : '#EFF4F8', border: '1px solid #C8D4DC' }}>
  <div className="text-xs font-medium mb-1" style={{ color: '#2C4A60' }}>Total Realized</div>
  <div className="text-xl font-bold" style={{ color: '#2C4A60' }}>{formatMoney(totalRealized)}</div>
  </div>

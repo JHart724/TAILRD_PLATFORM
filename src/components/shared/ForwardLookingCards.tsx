@@ -131,9 +131,16 @@ interface RevenueAtRiskCardProps {
   /** Optional cross-reference appended to the This-Quarter sublabel (e.g. tying the
       immediate slice to the Projected-vs-Realized gap so the numbers read as related). */
   immediateNote?: string;
+  /** White-card treatment (HF Exec batch 2): white box surfaces + titanium borders,
+      color kept only as the solid icon/value accents. Opt-in so other modules render
+      unchanged until their own restyle passes. */
+  cleanSurface?: boolean;
 }
 
-export const RevenueAtRiskCard: React.FC<RevenueAtRiskCardProps> = ({ data, demoData = false, immediateNote }) => {
+export const RevenueAtRiskCard: React.FC<RevenueAtRiskCardProps> = ({ data, demoData = false, immediateNote, cleanSurface = false }) => {
+  const boxStyle = (tint: React.CSSProperties): React.CSSProperties | undefined =>
+    cleanSurface ? undefined : tint;
+  const boxClass = `border rounded-xl p-4${cleanSurface ? ' bg-white border-titanium-200' : ''}`;
   return (
     <div className="metal-card relative z-10 mb-6">
       <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
@@ -155,7 +162,7 @@ export const RevenueAtRiskCard: React.FC<RevenueAtRiskCardProps> = ({ data, demo
       <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* This Quarter → Carmona Red (risk/critical) */}
-          <div className="border rounded-xl p-4" style={{ background: '#FDF2F3', borderColor: '#F5C0C8' }}>
+          <div className={boxClass} style={boxStyle({ background: '#FDF2F3', borderColor: '#F5C0C8' })}>
             <div className="flex items-center gap-2 mb-2">
               <Clock className="w-4 h-4" style={{ color: '#9B2438' }} />
               <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#9B2438' }}>This Quarter</span>
@@ -169,7 +176,7 @@ export const RevenueAtRiskCard: React.FC<RevenueAtRiskCardProps> = ({ data, demo
           </div>
 
           {/* If Deferred → Metallic Gold (revenue at risk = opportunity cost) */}
-          <div className="border rounded-xl p-4" style={{ background: '#FAF6E8', borderColor: '#D4B85C' }}>
+          <div className={boxClass} style={boxStyle({ background: '#FAF6E8', borderColor: '#D4B85C' })}>
             <div className="flex items-center gap-2 mb-2">
               <TrendingDown className="w-4 h-4" style={{ color: '#8B6914' }} />
               <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#8B6914' }}>If Deferred Past Q2</span>
@@ -183,7 +190,7 @@ export const RevenueAtRiskCard: React.FC<RevenueAtRiskCardProps> = ({ data, demo
           </div>
 
           {/* 12-Month Cumulative → Chrome Blue mid (efficiency / total) */}
-          <div className="border rounded-xl p-4" style={{ background: '#F0F5FA', borderColor: '#C8D4DC' }}>
+          <div className={boxClass} style={boxStyle({ background: '#F0F5FA', borderColor: '#C8D4DC' })}>
             <div className="flex items-center gap-2 mb-2">
               <DollarSign className="w-4 h-4" style={{ color: '#4A6880' }} />
               <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#4A6880' }}>12-Month Cumulative</span>
@@ -226,9 +233,15 @@ interface TrajectoryTrendsCardProps {
   data: TrajectoryTrendsData;
   /** No backend source feeds this card yet - render the honesty badge (HF Exec batch 1). */
   demoData?: boolean;
+  /** White-card treatment (HF Exec batch 2): opt-in white boxes + titanium borders;
+      other modules render unchanged until their own restyle passes. */
+  cleanSurface?: boolean;
 }
 
-export const TrajectoryTrendsCard: React.FC<TrajectoryTrendsCardProps> = ({ data, demoData = false }) => {
+export const TrajectoryTrendsCard: React.FC<TrajectoryTrendsCardProps> = ({ data, demoData = false, cleanSurface = false }) => {
+  const boxStyle = (tint: React.CSSProperties): React.CSSProperties | undefined =>
+    cleanSurface ? undefined : tint;
+  const boxClass = `border rounded-xl p-4${cleanSurface ? ' bg-white border-titanium-200' : ''}`;
   return (
     <div className="metal-card relative z-10 mb-6">
       <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
@@ -250,21 +263,21 @@ export const TrajectoryTrendsCard: React.FC<TrajectoryTrendsCardProps> = ({ data
       <div className="p-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Worsening rapidly → Carmona Red (risk/alert) */}
-          <div className="border rounded-xl p-4" style={{ background: '#FDF2F3', borderColor: '#F5C0C8' }}>
+          <div className={boxClass} style={boxStyle({ background: '#FDF2F3', borderColor: '#F5C0C8' })}>
             <div className="text-3xl font-bold" style={{ color: '#9B2438' }}>{data.worseningRapidPct}%</div>
             <div className="text-xs mt-1" style={{ color: '#9B2438' }}>
               of flagged patients worsening rapidly ({data.worseningRapidCount} patients)
             </div>
           </div>
           {/* Mean decline rate → Steel Teal (efficiency/LOS-type metric) */}
-          <div className="border rounded-xl p-4" style={{ background: '#EEF8FA', borderColor: '#A8D8E4' }}>
+          <div className={boxClass} style={boxStyle({ background: '#EEF8FA', borderColor: '#A8D8E4' })}>
             <div className="text-lg font-bold" style={{ color: '#1A6878' }}>{data.meanDeclineRate}</div>
             <div className="text-xs mt-1" style={{ color: '#1A6878' }}>
               mean decline across {data.declineMetric} gap population
             </div>
           </div>
           {/* Threshold in 30 days → Chrome Blue mid (count) */}
-          <div className="border rounded-xl p-4" style={{ background: '#F0F5FA', borderColor: '#C8D4DC' }}>
+          <div className={boxClass} style={boxStyle({ background: '#F0F5FA', borderColor: '#C8D4DC' })}>
             <div className="text-3xl font-bold" style={{ color: '#4A6880' }}>{data.thresholdIn30Days}</div>
             <div className="text-xs mt-1" style={{ color: '#4A6880' }}>
               patients projected to reach clinical threshold in next 30 days

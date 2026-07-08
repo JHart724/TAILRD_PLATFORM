@@ -22,6 +22,8 @@ import GapResponseRateCard from '../../components/shared/GapResponseRateCard';
 import GapIntelligenceSection from '../../ui/heartFailure/components/executive/GapIntelligenceSection';
 import ProjectedVsRealizedChart from '../../ui/heartFailure/components/ProjectedVsRealizedChart';
 import { RevenuePipelineCard, RevenueAtRiskCard } from '../../components/shared/ForwardLookingCards';
+import PredictiveMetricsBanner from '../../components/shared/PredictiveMetricsBanner';
+import OpportunityHeatmap from '../../ui/heartFailure/components/OpportunityHeatmap';
 import type { HFDashboardData } from '../../services/api';
 import {
   HF_DEMO_ANNUAL_OPPORTUNITY_M,
@@ -298,5 +300,75 @@ describe('HF Exec batch 1 - demo badges present where no backend source exists',
     expect(badgeUses).toBeGreaterThanOrEqual(6);
     // RevenuePipeline, RevenueAtRisk, Trajectory, PredictiveMetricsBanner
     expect(demoProps).toBeGreaterThanOrEqual(4);
+  });
+});
+
+// ================= HF Exec batch 2 - dead controls + white-card restyle =================
+
+describe('HF Exec batch 2 - dead controls removed', () => {
+  const view = src('../../ui/heartFailure/views/ExecutiveView.tsx');
+  it('facility no-op handler + click affordance are gone from the view', () => {
+    expect(view).not.toContain('handleFacilityClick');
+    expect(view).not.toContain('onFacilityClick');
+  });
+  it('OpportunityHeatmap renders NO click affordance when no handler is passed', () => {
+    const html = render(<OpportunityHeatmap data={HF_DEMO_FACILITIES} />);
+    expect(html).not.toContain('cursor-pointer');
+    expect(html).toContain('Main Campus - HF Clinic'); // card still renders its rows
+  });
+  it('View Pipeline Details button has an explicit handler (no bubble-only reliance)', () => {
+    // parent card onClick + explicit button onClick = at least 2 direct openers
+    const openers = view.split('onClick={() => setShowOpportunityModal(true)}').length - 1;
+    expect(openers).toBeGreaterThanOrEqual(2);
+    expect(view).toContain('View Pipeline Details');
+  });
+  it('the dead "View Details in Service Line" modal button is not rendered (prop omitted)', () => {
+    expect(view).not.toContain('onViewDetails');
+  });
+});
+
+describe('HF Exec batch 2 - white-card restyle (EP Gap-Intelligence reference)', () => {
+  it('HFExecutiveSummary KPI cards: pastel tints gone, white surface + titanium border', () => {
+    const s = src('../../components/heartFailure/HFExecutiveSummary.tsx');
+    expect(s).not.toContain('bg-amber-50');
+    expect(s).not.toContain('bg-red-50');
+    expect(s).not.toContain('bg-[#EFF4F8]');
+    expect(s).not.toContain('bg-[#EEF8FA]');
+    const html = render(<HFExecutiveSummary dashboard={FAKE_DASHBOARD} />);
+    expect(html).toContain('bg-white border-titanium-200');
+  });
+  it('ExecutiveView: pipeline-card gradient + DRG tint gradients removed', () => {
+    const view = src('../../ui/heartFailure/views/ExecutiveView.tsx');
+    expect(view).not.toContain('bg-gradient-to-br from-[#f0f4f8]');
+    expect(view).not.toContain('linear-gradient(to right, white');
+  });
+  it('OpportunityHeatmap: no gradient fills remain (flat solid rank colors)', () => {
+    expect(src('../../ui/heartFailure/components/OpportunityHeatmap.tsx')).not.toContain('linear-gradient');
+  });
+  it('RevenueAtRiskCard: cleanSurface renders white boxes; default keeps the tint (other modules unchanged)', () => {
+    const clean = render(<RevenueAtRiskCard data={HF_DEMO_AT_RISK} cleanSurface />);
+    expect(clean).toContain('bg-white border-titanium-200');
+    expect(clean).not.toContain('rgb(253, 242, 243)'); // #FDF2F3 tint gone
+    const tinted = render(<RevenueAtRiskCard data={HF_DEMO_AT_RISK} />);
+    expect(tinted).toContain('rgb(253, 242, 243)'); // untouched without the prop
+  });
+  it('PredictiveMetricsBanner: cleanSurface renders white boxes; default keeps the tint', () => {
+    const data = {
+      thresholdIn90Days: 1, quarterlyActionableRevenue: 1, totalIdentifiedRevenue: 1,
+      rapidDeteriorationCount: 1, avgTimeToEvent: 1, projectedRevenueCurrentRate: 1, projectedRevenueSystematic: 2,
+    };
+    const clean = render(<PredictiveMetricsBanner data={data} cleanSurface />);
+    expect(clean).toContain('bg-white border border-titanium-200');
+    expect(clean).not.toContain('bg-red-50/70');
+    const tinted = render(<PredictiveMetricsBanner data={data} />);
+    expect(tinted).toContain('bg-red-50/70');
+  });
+  it('P-v-R totals boxes go white under cleanSurface (Gap box keeps its sem tokens)', () => {
+    const chart = src('../../ui/heartFailure/components/ProjectedVsRealizedChart.tsx');
+    expect(chart).toContain('cleanSurface');
+    const html = render(<ProjectedVsRealizedChart />);
+    expect(html).toContain('rgb(255, 255, 255)'); // white totals boxes
+    const shared = src('../../components/shared/SharedProjectedVsRealized.tsx');
+    expect(shared).toContain('GAP_NEGATIVE_TOKENS.bg'); // semantic Gap box untouched
   });
 });
