@@ -80,8 +80,9 @@ describe('parseMultiFileCSV - happy path (parse + join + crosswalk)', () => {
     const r = parseMultiFileCSV(fullInput());
     const p1 = r.validRows.find(row => row.data.patient_id === 'P1')!;
     // AUDIT-193: stopDate threaded (null when the medications.csv row has no STOP -> ongoing).
+    // AUDIT-199-B: doseValue/doseUnit parsed from the DESCRIPTION ("Lisinopril 10 MG" -> 10 mg).
     expect(p1.data.medication_records).toEqual([
-      { rxNormCode: '197361', medicationName: 'Lisinopril 10 MG Oral Tablet', startDate: '2021-02-01', stopDate: null },
+      { rxNormCode: '197361', medicationName: 'Lisinopril 10 MG Oral Tablet', startDate: '2021-02-01', stopDate: null, doseValue: 10, doseUnit: 'mg' },
     ]);
   });
 

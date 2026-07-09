@@ -13,10 +13,12 @@ const find = (gaps: any[], statusFragment: string) =>
 // ---- CHUNK 1: GDMT + Device Therapy ----
 
 describe('HF-003 BB below target dose', () => {
-  it('fires: HFrEF on carvedilol 12.5 (<50 target), HR/SBP have headroom', () => {
+  it('kept-suppressed (AUDIT-199-B-BB): carvedilol 12.5 (<50) does NOT fire pending BID/total-daily handling', () => {
+    // Post-AUDIT-199-B doseValue is parsed, so this rule would otherwise activate; AUDIT_199B_DOSE_RULE_SUPPRESSED
+    // keeps it dose-unknown-suppressed (per-tablet mg vs total-daily target + BID not threaded).
     const g = evaluateGapRules([HF], { lvef: 30, heart_rate: 70, systolic_bp: 120 }, ['20352'], 60, 'MALE', undefined,
       [{ rxNormCode: '20352', doseValue: 12.5 }]);
-    expect(find(g, 'beta-blocker below target dose')).toBeTruthy();
+    expect(find(g, 'beta-blocker below target dose')).toBeFalsy();
   });
   it('gates: carvedilol at target 50', () => {
     const g = evaluateGapRules([HF], { lvef: 30, heart_rate: 70, systolic_bp: 120 }, ['20352'], 60, 'MALE', undefined,
@@ -46,10 +48,12 @@ describe('HF-011 SGLT2i deferred below eGFR floor', () => {
 });
 
 describe('HF-015 high-dose digoxin elderly + CKD', () => {
-  it('fires: age 80, eGFR 40, digoxin 0.25', () => {
+  it('kept-suppressed (AUDIT-199-B-DIG): age 80 + eGFR 40 + digoxin 0.25 does NOT fire pending tablet-vs-daily/mcg handling', () => {
+    // Post-AUDIT-199-B doseValue is parsed; AUDIT_199B_DOSE_RULE_SUPPRESSED keeps digoxin suppressed until the
+    // mcg/mg + tablet-vs-daily threshold is re-confirmed at the rule.
     const g = evaluateGapRules([HF], { egfr: 40 }, ['3407'], 80, 'FEMALE', undefined,
       [{ rxNormCode: '3407', doseValue: 0.25 }]);
-    expect(find(g, 'high-dose digoxin')).toBeTruthy();
+    expect(find(g, 'high-dose digoxin')).toBeFalsy();
   });
   it('gates: digoxin 0.125 (at safe dose)', () => {
     const g = evaluateGapRules([HF], { egfr: 40 }, ['3407'], 80, 'FEMALE', undefined,
@@ -502,9 +506,11 @@ describe('Legacy HF-006: ARNI underdosing - dose gate added', () => {
     const g = evaluateGapRules(['I50.20'], {}, ['1656339'], 60);
     expect(find(g, 'dose optimization review')).toBeFalsy();
   });
-  it('fires: ARNI dose 24 (<97 target)', () => {
+  it('kept-suppressed (AUDIT-199-B-ARNI): ARNI dose 24 (<97) does NOT fire pending compound-component handling', () => {
+    // Post-AUDIT-199-B the sacubitril/valsartan compound parses to null anyway, and
+    // AUDIT_199B_DOSE_RULE_SUPPRESSED keeps the rule suppressed even for a directly-supplied component dose.
     const g = evaluateGapRules(['I50.20'], {}, ['1656339'], 60, 'MALE', undefined, [{ rxNormCode: '1656339', doseValue: 24 }]);
-    expect(find(g, 'dose optimization review')).toBeTruthy();
+    expect(find(g, 'dose optimization review')).toBeFalsy();
   });
   it('gates: ARNI at target dose 97', () => {
     const g = evaluateGapRules(['I50.20'], {}, ['1656339'], 60, 'MALE', undefined, [{ rxNormCode: '1656339', doseValue: 97 }]);

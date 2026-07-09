@@ -82,31 +82,31 @@ Valvular Heart Disease has **105 spec gaps** across 18 subcategories. Implementa
 
 **Registry-without-evaluator (3):** registry entries with no matching evaluator block body.
 
-- `gap-vd-functional-status` (registry line 4063): No evaluator body matched via similarity scoring
-- `gap-vd-preop-assessment` (registry line 4075): No evaluator body matched via similarity scoring
-- `gap-vd-pulmonary-htn` (registry line 4087): No evaluator body matched via similarity scoring
+- `gap-vd-functional-status` (registry line 4078): No evaluator body matched via similarity scoring
+- `gap-vd-preop-assessment` (registry line 4090): No evaluator body matched via similarity scoring
+- `gap-vd-pulmonary-htn` (registry line 4102): No evaluator body matched via similarity scoring
 
 **Naming convention mismatches (19):** registry IDs not following `gap-vd-` convention.
 
-- `gap-vhd-103-severe-ar-surgical` (line 4124): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-060-ie-large-vegetation` (line 4131): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-100-mech-valve-pregnancy-antixa` (line 4138): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-102-ar-surveillance` (line 4145): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-104-mixed-valve-staging` (line 4152): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-105-mr-quant-triangulation` (line 4159): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-068-mech-pvt-gradient` (line 4167): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-011-bio-svd-gradient` (line 4174): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-001-subtherapeutic-inr` (line 4182): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-006-mech-asa-adjunct` (line 4189): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-057-ie-hf-surgery` (line 4197): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-059-ie-embolic-surgery` (line 4204): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-064-prior-ie-dental-prophylaxis` (line 4211): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-079-rheumatic-prophylaxis` (line 4218): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-083-rheumatic-af-warfarin` (line 4225): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-098-mech-valve-preconception` (line 4233): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-099-mech-valve-pregnancy-anticoag` (line 4240): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-091-dopamine-agonist-valve-surveillance` (line 4247): expected prefix `gap-vd-`, got `gap-vhd-`
-- `gap-vhd-092-ergot-alkaloid-valve-surveillance` (line 4254): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-103-severe-ar-surgical` (line 4139): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-060-ie-large-vegetation` (line 4146): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-100-mech-valve-pregnancy-antixa` (line 4153): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-102-ar-surveillance` (line 4160): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-104-mixed-valve-staging` (line 4167): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-105-mr-quant-triangulation` (line 4174): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-068-mech-pvt-gradient` (line 4182): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-011-bio-svd-gradient` (line 4189): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-001-subtherapeutic-inr` (line 4197): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-006-mech-asa-adjunct` (line 4204): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-057-ie-hf-surgery` (line 4212): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-059-ie-embolic-surgery` (line 4219): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-064-prior-ie-dental-prophylaxis` (line 4226): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-079-rheumatic-prophylaxis` (line 4233): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-083-rheumatic-af-warfarin` (line 4240): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-098-mech-valve-preconception` (line 4248): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-099-mech-valve-pregnancy-anticoag` (line 4255): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-091-dopamine-agonist-valve-surveillance` (line 4262): expected prefix `gap-vd-`, got `gap-vhd-`
+- `gap-vhd-092-ergot-alkaloid-valve-surveillance` (line 4269): expected prefix `gap-vd-`, got `gap-vhd-`
 
 
 ---
@@ -115,14 +115,14 @@ Valvular Heart Disease has **105 spec gaps** across 18 subcategories. Implementa
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-VHD-001 | 753 | DET_OK | `gap-vhd-001-subtherapeutic-inr` (VHD-001 @8489-8512) | MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 3 close, AUDIT-133 RESOLVED): SPEC_ONLY -> DET_OK. The 20 |
-| GAP-VHD-005 | 754 | PARTIAL_DETECTION | `gap-vd-6-doac-mechanical-valve` (VD-6 @8913-8937) | MANUAL OVERRIDE 2026-06-10 (VHD audit): DET_OK -> PARTIAL per §16.6(i) concept-match / AUDIT-123 + § |
+| GAP-VHD-001 | 753 | DET_OK | `gap-vhd-001-subtherapeutic-inr` (VHD-001 @8506-8529) | MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 3 close, AUDIT-133 RESOLVED): SPEC_ONLY -> DET_OK. The 20 |
+| GAP-VHD-005 | 754 | PARTIAL_DETECTION | `gap-vd-6-doac-mechanical-valve` (VD-6 @8930-8954) | MANUAL OVERRIDE 2026-06-10 (VHD audit): DET_OK -> PARTIAL per §16.6(i) concept-match / AUDIT-123 + § |
 | GAP-VHD-050 | 830 | SPEC_ONLY | — | No S. aureus + TEE rule in evaluator. \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
-| GAP-VHD-057 | 841 | DET_OK | `gap-vhd-057-ie-hf-surgery` (VHD-057 @8562-8584) | MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 4 close): newly DET_OK. Purpose-built gap-vhd-057-ie-hf-s |
+| GAP-VHD-057 | 841 | DET_OK | `gap-vhd-057-ie-hf-surgery` (VHD-057 @8579-8601) | MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 4 close): newly DET_OK. Purpose-built gap-vhd-057-ie-hf-s |
 | GAP-VHD-058 | 842 | SPEC_ONLY | — | No IE + abscess surgical rule. \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-VHD-061 | 843 | SPEC_ONLY | — | No PVE dehiscence/fistula rule. \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-VHD-068 | 860 | PARTIAL_DETECTION | `gap-vhd-068-mech-pvt-gradient` (VHD-068 @8423-8445) | MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 2 close): RE-CITED from the broad VD-PANNUS to the purpos |
-| GAP-VHD-099 | 914 | PARTIAL_DETECTION | `gap-vhd-099-mech-valve-pregnancy-anticoag` (VHD-099 @8790-8816) | MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 5 close): SPEC_ONLY -> PARTIAL. RE-CITED to the purpose-b |
+| GAP-VHD-068 | 860 | PARTIAL_DETECTION | `gap-vhd-068-mech-pvt-gradient` (VHD-068 @8440-8462) | MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 2 close): RE-CITED from the broad VD-PANNUS to the purpos |
+| GAP-VHD-099 | 914 | PARTIAL_DETECTION | `gap-vhd-099-mech-valve-pregnancy-anticoag` (VHD-099 @8807-8833) | MANUAL OVERRIDE 2026-06-17 (v3.0 VHD chunk 5 close): SPEC_ONLY -> PARTIAL. RE-CITED to the purpose-b |
 
 ---
 

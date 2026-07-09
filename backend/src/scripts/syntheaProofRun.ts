@@ -28,7 +28,7 @@ import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { Readable } from 'stream';
 import * as readline from 'readline';
 import prisma from '../lib/prisma';
-import { parseCSVLine, ParsedRow, MedicationRecord } from '../ingestion/csvParser';
+import { parseCSVLine, ParsedRow, MedicationRecord, parseDoseFromDescription } from '../ingestion/csvParser';
 import { resolveConditionIcd10, CrosswalkReporter, CodeSystem } from '../ingestion/snomedCrosswalk';
 import { ECHO_LOINC_TO_SLUG } from '../services/observationService';
 import { detectPHI } from '../ingestion/phiDetector';
@@ -312,10 +312,15 @@ function projectGapDistribution(): { byModule: Record<string, number>; totalGaps
     const medsMap = medsByPatient.get(pid);
     const medCodes = expandToIngredients(medsMap ? [...medsMap.keys()] : []);
     const meds = medsMap
-      ? [...medsMap.values()].map((m) => ({
-          rxNormCode: m.rxNormCode, doseValue: null, doseUnit: null,
-          genericName: null, medicationName: m.medicationName, startDate: m.startDate,
-        }))
+      ? [...medsMap.values()].map((m) => {
+          // AUDIT-199-B: mirror the ingest parse so the projection reflects dose-aware production behavior
+          // (previously hardcoded doseValue null -> the proof under-reported the statin coverage gain).
+          const { doseValue, doseUnit } = parseDoseFromDescription(m.medicationName);
+          return {
+            rxNormCode: m.rxNormCode, doseValue, doseUnit,
+            genericName: null, medicationName: m.medicationName, startDate: m.startDate,
+          };
+        })
       : [];
 
     const gaps = evaluateGapRules(dx, labValues, medCodes, sp.age ?? 0, mapGender(sp.sex), undefined, meds as any, []);

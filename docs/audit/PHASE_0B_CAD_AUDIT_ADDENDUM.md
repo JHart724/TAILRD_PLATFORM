@@ -87,29 +87,29 @@ Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementa
 
 **Registry-without-evaluator (19):** registry entries with no matching evaluator block body.
 
-- `gap-cad-lpa` (registry line 1135): No evaluator body matched via similarity scoring
-- `gap-cad-pcsk9` (registry line 1927): No evaluator body matched via similarity scoring
-- `gap-cad-ivus` (registry line 1939): No evaluator body matched via similarity scoring
-- `gap-cad-ffr` (registry line 1951): No evaluator body matched via similarity scoring
-- `gap-cad-stress-test` (registry line 1999): No evaluator body matched via similarity scoring
-- `gap-cad-depression` (registry line 2143): No evaluator body matched via similarity scoring
-- `gap-cad-influenza` (registry line 2155): No evaluator body matched via similarity scoring
-- `gap-cad-bnp-cad` (registry line 3247): No evaluator body matched via similarity scoring
-- `gap-cad-activity` (registry line 3343): No evaluator body matched via similarity scoring
-- `gap-cad-diet` (registry line 3355): No evaluator body matched via similarity scoring
-- `gap-cad-psychosocial` (registry line 3367): No evaluator body matched via similarity scoring
-- `gap-cad-crp` (registry line 3403): No evaluator body matched via similarity scoring
-- `gap-cad-advance-dir` (registry line 3415): No evaluator body matched via similarity scoring
-- `gap-cad-palliative` (registry line 3427): No evaluator body matched via similarity scoring
-- `gap-cad-sexual-health` (registry line 3487): No evaluator body matched via similarity scoring
-- `gap-cad-driving` (registry line 3499): No evaluator body matched via similarity scoring
-- `gap-cad-liver-statin` (registry line 3511): No evaluator body matched via similarity scoring
-- `gap-cad-ischemia-guided` (registry line 3811): No evaluator body matched via similarity scoring
-- `gap-cad-women-specific` (registry line 3967): No evaluator body matched via similarity scoring
+- `gap-cad-lpa` (registry line 1150): No evaluator body matched via similarity scoring
+- `gap-cad-pcsk9` (registry line 1942): No evaluator body matched via similarity scoring
+- `gap-cad-ivus` (registry line 1954): No evaluator body matched via similarity scoring
+- `gap-cad-ffr` (registry line 1966): No evaluator body matched via similarity scoring
+- `gap-cad-stress-test` (registry line 2014): No evaluator body matched via similarity scoring
+- `gap-cad-depression` (registry line 2158): No evaluator body matched via similarity scoring
+- `gap-cad-influenza` (registry line 2170): No evaluator body matched via similarity scoring
+- `gap-cad-bnp-cad` (registry line 3262): No evaluator body matched via similarity scoring
+- `gap-cad-activity` (registry line 3358): No evaluator body matched via similarity scoring
+- `gap-cad-diet` (registry line 3370): No evaluator body matched via similarity scoring
+- `gap-cad-psychosocial` (registry line 3382): No evaluator body matched via similarity scoring
+- `gap-cad-crp` (registry line 3418): No evaluator body matched via similarity scoring
+- `gap-cad-advance-dir` (registry line 3430): No evaluator body matched via similarity scoring
+- `gap-cad-palliative` (registry line 3442): No evaluator body matched via similarity scoring
+- `gap-cad-sexual-health` (registry line 3502): No evaluator body matched via similarity scoring
+- `gap-cad-driving` (registry line 3514): No evaluator body matched via similarity scoring
+- `gap-cad-liver-statin` (registry line 3526): No evaluator body matched via similarity scoring
+- `gap-cad-ischemia-guided` (registry line 3826): No evaluator body matched via similarity scoring
+- `gap-cad-women-specific` (registry line 3982): No evaluator body matched via similarity scoring
 
 **Naming convention mismatches (1):** registry IDs not following `gap-cad-` convention.
 
-- `gap-50-dapt` (line 305): expected prefix `gap-cad-`, got `gap-50-`
+- `gap-50-dapt` (line 320): expected prefix `gap-cad-`, got `gap-50-`
 
 
 ---
@@ -118,24 +118,24 @@ Coronary Artery Disease has **90 spec gaps** across 18 subcategories. Implementa
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-CAD-001 | 590 | DET_OK | `gap-cad-statin` (CAD-STATIN @6822-6858) | auto-verify: preserved-from-addendum |
-| GAP-CAD-002 | 591 | DET_OK | `gap-cad-statin` (CAD-STATIN @6822-6858) | auto-verify: preserved-from-addendum |
-| GAP-CAD-003 | 592 | DET_OK | `gap-cad-lipid-intensification` (CAD-LIPID-INTENSIFICATION @7020-7063) | AUDIT-195 2026-07-03: RE-CITED from gap-cad-ezetimibe to the consolidated gap-cad-lipid-intensificat |
+| GAP-CAD-001 | 590 | DET_OK | `gap-cad-statin` (CAD-STATIN @6839-6875) | auto-verify: preserved-from-addendum |
+| GAP-CAD-002 | 591 | DET_OK | `gap-cad-statin` (CAD-STATIN @6839-6875) | auto-verify: preserved-from-addendum |
+| GAP-CAD-003 | 592 | DET_OK | `gap-cad-lipid-intensification` (CAD-LIPID-INTENSIFICATION @7037-7080) | AUDIT-195 2026-07-03: RE-CITED from gap-cad-ezetimibe to the consolidated gap-cad-lipid-intensificat |
 | GAP-CAD-004 | 593 | SPEC_ONLY | — | AUDIT-195 2026-07-03: gap-cad-pcsk9 RETIRED -> SPEC_ONLY; gaps.push removed (consolidated into gap-c |
 | GAP-CAD-005 | 594 | SPEC_ONLY | — | AUDIT-195 2026-07-03: former PARTIAL_DETECTION via gap-cad-pcsk9 (now retired) -> SPEC_ONLY. GAP-CAD |
 | GAP-CAD-056 | 595 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-CAD-057 | 596 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-CAD-011 | 607 | PARTIAL_DETECTION | `gap-cad-statin` (CAD-STATIN @6822-6858) | auto-verify: preserved-from-addendum |
-| GAP-CAD-012 | 608 | PARTIAL_DETECTION | `gap-cad-statin` (CAD-STATIN @6822-6858) | auto-verify: preserved-from-addendum |
-| GAP-CAD-014 | 609 | DET_OK | `gap-cad-omega3` (CAD-OMEGA3 @11593-11626) | auto-verify: preserved-from-addendum |
-| GAP-CAD-015 | 617 | DET_OK | `gap-cad-ticagrelor-acs` (CAD-TICAGRELOR-ACS @12117-12144) | + \| Multiple registry ids cited: gap-cad-ticagrelor-acs, gap-cad-prasugrel \| auto-verify: preserved- |
-| GAP-CAD-016 | 618 | DET_OK | `gap-cad-016-prasugrel-stroke-safety` (CAD-016 @12554-12578) | MANUAL OVERRIDE: AUDIT-034 RESOLVED 2026-05-05 — new SAFETY evaluator block added (this PR) covering |
+| GAP-CAD-011 | 607 | PARTIAL_DETECTION | `gap-cad-statin` (CAD-STATIN @6839-6875) | auto-verify: preserved-from-addendum |
+| GAP-CAD-012 | 608 | PARTIAL_DETECTION | `gap-cad-statin` (CAD-STATIN @6839-6875) | auto-verify: preserved-from-addendum |
+| GAP-CAD-014 | 609 | DET_OK | `gap-cad-omega3` (CAD-OMEGA3 @11610-11643) | auto-verify: preserved-from-addendum |
+| GAP-CAD-015 | 617 | DET_OK | `gap-cad-ticagrelor-acs` (CAD-TICAGRELOR-ACS @12134-12161) | + \| Multiple registry ids cited: gap-cad-ticagrelor-acs, gap-cad-prasugrel \| auto-verify: preserved- |
+| GAP-CAD-016 | 618 | DET_OK | `gap-cad-016-prasugrel-stroke-safety` (CAD-016 @12571-12595) | MANUAL OVERRIDE: AUDIT-034 RESOLVED 2026-05-05 — new SAFETY evaluator block added (this PR) covering |
 | GAP-CAD-063 | 638 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-CAD-065 | 639 | PARTIAL_DETECTION | `gap-cad-catheterization` (CAD-CATHETERIZATION @12824-12851) | auto-verify: preserved-from-addendum |
+| GAP-CAD-065 | 639 | PARTIAL_DETECTION | `gap-cad-catheterization` (CAD-CATHETERIZATION @12841-12868) | auto-verify: preserved-from-addendum |
 | GAP-CAD-071 | 683 | SPEC_ONLY | — | MANUAL OVERRIDE 2026-06-18 (CAD chunk 1, AUDIT-182): holds SPEC_ONLY. Left-main heart-team review ha |
 | GAP-CAD-042 | 698 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-CAD-043 | 699 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-CAD-081 | 717 | DET_OK | `gap-cad-scad` (CAD-SCAD @12932-12960) | +  + \| Multiple registry ids cited: gap-cad-scad, gap-cad-women-specific, gap-cad-young-mi \| auto-ve |
+| GAP-CAD-081 | 717 | DET_OK | `gap-cad-scad` (CAD-SCAD @12949-12977) | +  + \| Multiple registry ids cited: gap-cad-scad, gap-cad-women-specific, gap-cad-young-mi \| auto-ve |
 
 ---
 
