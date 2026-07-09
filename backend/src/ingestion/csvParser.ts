@@ -28,6 +28,58 @@ export interface MedicationRecord {
   // Threaded so the writer can mark a discontinued med DISCONTINUED+endDate on re-ingest instead of re-affirming
   // it ACTIVE. Optional (not required) so the single-file path and the proof-script accumulator compile unchanged.
   stopDate?: string | null;
+  // AUDIT-199-B (2026-07-09): the mg strength parsed out of medicationName (the DESCRIPTION), so the dose-aware
+  // gap rules can discriminate on dose instead of degrading to agent_dose_unknown. Optional; null when the
+  // DESCRIPTION carries no parseable single-agent strength. See parseDoseFromDescription.
+  doseValue?: number | null;
+  doseUnit?: string | null;
+}
+
+// AUDIT-199-B (2026-07-09): recognized single-agent statin ingredient names, used ONLY to decide whether a
+// COMPOUND DESCRIPTION ("A MG / B MG") may safely yield its first strength token (see parseDoseFromDescription).
+const STATIN_AGENT_NAME_RE = /(atorvastatin|rosuvastatin|simvastatin|pravastatin|lovastatin|pitavastatin|fluvastatin)/i;
+
+/**
+ * AUDIT-199-B (2026-07-09): parse the numeric mg strength out of a Synthea medications.csv DESCRIPTION
+ * ("Atorvastatin 80 MG Oral Tablet" -> 80) so the dose-aware gap rules can discriminate on dose.
+ *
+ * SCOPED slice: only the statin (+DOAC) rules consume doseValue; the engine keeps BB-target / digoxin / ARNI
+ * dose-unknown-suppressed pending their own follow-ons (AUDIT-199-B-BB / -DIG / -ARNI).
+ *
+ * Handling:
+ *   - single "N MG"                  -> N (mg)                      [the statin / DOAC case]
+ *   - "N MCG"                        -> N/1000 (normalize mcg -> mg)
+ *   - COMPOUND "A MG / B MG"         -> the FIRST strength token ONLY IF the first agent (text before the
+ *                                       first "/") is a recognized single-agent statin; otherwise null. This
+ *                                       deliberately hands NO value to the ARNI rule (sacubitril/valsartan),
+ *                                       which stays suppressed regardless, and avoids mis-assigning a
+ *                                       non-statin component's strength (e.g. amlodipine in a Caduet combo).
+ *   - no MG/MCG token                -> null
+ * doseUnit is normalized to 'mg' whenever a value is returned (the engine's mg-threshold checks assume mg).
+ */
+export function parseDoseFromDescription(
+  description: string | null | undefined,
+): { doseValue: number | null; doseUnit: string | null } {
+  if (!description) return { doseValue: null, doseUnit: null };
+  const tokens = [...description.matchAll(/(\d+(?:\.\d+)?)\s*(mg|mcg)\b/gi)];
+  if (tokens.length === 0) return { doseValue: null, doseUnit: null };
+
+  let chosen: RegExpMatchArray;
+  if (tokens.length === 1) {
+    chosen = tokens[0];
+  } else {
+    // Compound / multi-strength string: only accept the first token when the leading agent is a single-agent
+    // statin (statins are single-strength; the compound-statin combos - Caduet, Vytorin - list the statin
+    // SECOND, so they fall through to null and stay agent_dose_unknown -> suppressed, never wrong-fired).
+    const firstAgent = description.split('/')[0];
+    if (!STATIN_AGENT_NAME_RE.test(firstAgent)) return { doseValue: null, doseUnit: null };
+    chosen = tokens[0];
+  }
+
+  let value = parseFloat(chosen[1]);
+  if (!isFinite(value) || value <= 0) return { doseValue: null, doseUnit: null };
+  if (chosen[2].toLowerCase() === 'mcg') value = value / 1000; // normalize mcg -> mg
+  return { doseValue: value, doseUnit: 'mg' };
 }
 
 // AUDIT-193: one condition with its resolution signal. icd10Code is post-crosswalk (SNOMED -> ICD-10).
@@ -469,7 +521,10 @@ export function parseMultiFileCSV(input: MultiFileInput): MultiFileParseResult {
       if (!code) continue;
       medCodes.push(code);
       // AUDIT-193: thread STOP (discontinuation date; absent = ongoing) so re-ingest can mark the med DISCONTINUED.
-      medRecords.push({ rxNormCode: code, medicationName: m['description'] || code, startDate: m['start'] || null, stopDate: (m['stop'] || '').trim() || null });
+      // AUDIT-199-B: parse the mg strength out of the DESCRIPTION into doseValue/doseUnit for the dose-aware rules.
+      const medName = m['description'] || code;
+      const { doseValue, doseUnit } = parseDoseFromDescription(medName);
+      medRecords.push({ rxNormCode: code, medicationName: medName, startDate: m['start'] || null, stopDate: (m['stop'] || '').trim() || null, doseValue, doseUnit });
     }
     parsedRow.data.medications = medCodes;
     parsedRow.data.medication_records = medRecords;

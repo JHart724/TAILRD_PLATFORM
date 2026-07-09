@@ -137,8 +137,10 @@ const APIXABAN = '1364430';
 describe('AUDIT-184 silent repaired - HF-003 beta-blocker below target (heart_rate + systolic_bp)', () => {
   const FRAG = 'HFrEF beta-blocker below target dose';
   const meds = [{ rxNormCode: CARVEDILOL, doseValue: 12.5 }]; // carvedilol below target 50
-  it('fires: HFrEF on below-target BB + HR 70 + SBP 120', () => {
-    expect(find(evaluateGapRules([HFREF], { lvef: 35, heart_rate: 70, systolic_bp: 120 }, [CARVEDILOL], 65, 'MALE', undefined, meds), FRAG)).toBeTruthy();
+  it('kept-suppressed (AUDIT-199-B-BB): below-target BB + HR 70 + SBP 120 does NOT fire (dose-parse suppression pending BID handling)', () => {
+    // AUDIT-199-B parses doseValue, which would otherwise activate this rule; AUDIT_199B_DOSE_RULE_SUPPRESSED
+    // keeps it suppressed (per-tablet mg vs total-daily target + BID not threaded). Re-enable at AUDIT-199-B-BB.
+    expect(find(evaluateGapRules([HFREF], { lvef: 35, heart_rate: 70, systolic_bp: 120 }, [CARVEDILOL], 65, 'MALE', undefined, meds), FRAG)).toBeFalsy();
   });
   it('gate: HR 55 (<60, no uptitration headroom) does NOT fire', () => {
     expect(find(evaluateGapRules([HFREF], { lvef: 35, heart_rate: 55, systolic_bp: 120 }, [CARVEDILOL], 65, 'MALE', undefined, meds), FRAG)).toBeFalsy();

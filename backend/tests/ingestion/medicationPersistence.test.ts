@@ -88,4 +88,24 @@ describe('patientWriter - medication persistence via batched createMany (PHASE 2
     expect(result.errors).toEqual([]);
     expect(medCreate).not.toHaveBeenCalled();
   });
+
+  // AUDIT-199-B: the parsed doseValue/doseUnit round-trip through the writer to the Medication row the
+  // dose-aware gap rules read (csvParser parses from DESCRIPTION -> MedicationRecord -> createMany).
+  it('persists doseValue + doseUnit onto the Medication row when the record carries them (AUDIT-199-B)', async () => {
+    const row = rowWithMed();
+    (row.data.medication_records as any[]) = [
+      { rxNormCode: '83367', medicationName: 'Atorvastatin 20 MG Oral Tablet', startDate: '2021-02-01', doseValue: 20, doseUnit: 'mg' },
+    ];
+    await writePatients([row], 'h1', 'job1', 'hf');
+    const med = medCreate.mock.calls[0][0].data[0];
+    expect(med.doseValue).toBe(20);
+    expect(med.doseUnit).toBe('mg');
+  });
+
+  it('persists null doseValue when the record has none (single-file / unparsed path unchanged)', async () => {
+    await writePatients([rowWithMed()], 'h1', 'job1', 'hf'); // rowWithMed() record has no doseValue
+    const med = medCreate.mock.calls[0][0].data[0];
+    expect(med.doseValue).toBeNull();
+    expect(med.doseUnit).toBeNull();
+  });
 });

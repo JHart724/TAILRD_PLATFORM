@@ -247,6 +247,10 @@ async function writeBatch(batch: ParsedRow[], hospitalId: string, result: WriteR
           status: discontinued ? MedicationStatus.DISCONTINUED : MedicationStatus.ACTIVE,
           startDate: m.startDate ? new Date(m.startDate) : null,
           endDate: discontinued ? new Date(stop as string) : null,
+          // AUDIT-199-B: persist the parsed mg strength (csvParser.parseDoseFromDescription) so the dose-aware
+          // gap rules read a real dose from the DB. null when the DESCRIPTION carried no parseable strength.
+          doseValue: m.doseValue ?? null,
+          doseUnit: m.doseUnit ?? null,
         });
       }
     }

@@ -85,6 +85,21 @@ const HIGH_INTENSITY_STATIN_MIN_MG: Record<string, number> = {
   [RXNORM_ROSUVASTATIN_IN]: 20,
 };
 
+// AUDIT-199-B SCOPED ACTIVATION (2026-07-09): doseValue is now parsed + persisted from the Synthea
+// medications.csv DESCRIPTION (csvParser.parseDoseFromDescription), so the STATIN rules (CAD-STATIN / PV-1 via
+// highIntensityStatinStatus) and the DOAC rules (EP-003/004/005, gated on threaded eGFR/age/creatinine) become
+// honestly dose-discriminating. Three dose-dependent rules are DELIBERATELY KEPT dose-unknown-suppressed because
+// a raw single-tablet doseValue is unsafe for them until their own follow-on lands:
+//   HF-30 ARNI      (AUDIT-199-B-ARNI): sacubitril/valsartan is a COMPOUND string - the target-vs-component mg is
+//                                       ambiguous (parseDoseFromDescription returns null for the ARNI compound).
+//   HF-BB-TARGET    (AUDIT-199-B-BB):   the target is TOTAL-DAILY but the DESCRIPTION mg is PER-TABLET; a BID
+//                                       carvedilol 25mg (=50/day, at target) would mis-read as below-target.
+//   HF-DIGOXIN      (AUDIT-199-B-DIG):  tablet-vs-daily + the mcg/mg normalization must be re-confirmed at the
+//                                       rule threshold (0.125 mg/day) before activation.
+// This flag preserves their prior never-fire-on-dose-less behavior regardless of the now-present doseValue.
+// Remove the guard from each rule individually as its follow-on lands (do NOT flip this flag globally).
+const AUDIT_199B_DOSE_RULE_SUPPRESSED: boolean = true;
+
 /**
  * A medication with the dose fields threaded from the Medication record.
  * Legacy callers that pass only a flat code list are adapted to this shape
@@ -5273,7 +5288,9 @@ export function evaluateGapRules(
   // (sacubitril component of the 97/103 mg target tablet). No dose data -> suppressed (avoids the
   // over-fire). Data-limit (Path-B, HF-003 precedent): ingredient-coded entries matched; product-coded
   // or dose-less entries under-detect (safe direction); doseValue interpretation (component vs total) flagged.
-  const hfARNIUnderdosed = meds.some((m: any) => m.rxNormCode === '1656339' &&
+  // AUDIT-199-B-ARNI: kept dose-unknown-suppressed (compound sacubitril/valsartan component ambiguity); the
+  // suppression flag preserves the prior never-fire behavior now that doseValue is parsed for other rules.
+  const hfARNIUnderdosed = !AUDIT_199B_DOSE_RULE_SUPPRESSED && meds.some((m: any) => m.rxNormCode === '1656339' &&
     m.doseValue !== null && m.doseValue !== undefined && m.doseValue < 97);
   if (
     hasHF &&
@@ -14542,7 +14559,9 @@ export function evaluateGapRules(
     [RXNORM_GDMT.METOPROLOL_SUCCINATE]: 200,
     [RXNORM_GDMT.BISOPROLOL]: 10,
   };
-  const hfBBBelowTarget = meds.some((m: any) =>
+  // AUDIT-199-B-BB: kept dose-unknown-suppressed (per-tablet mg vs total-daily target + BID not threaded); the
+  // suppression flag preserves the prior never-fire behavior now that doseValue is parsed for other rules.
+  const hfBBBelowTarget = !AUDIT_199B_DOSE_RULE_SUPPRESSED && meds.some((m: any) =>
     m.rxNormCode !== null && m.doseValue !== null && m.doseValue !== undefined &&
     hfBBTarget[m.rxNormCode] !== undefined && m.doseValue < hfBBTarget[m.rxNormCode]
   );
@@ -14601,7 +14620,9 @@ export function evaluateGapRules(
   // Guideline: 2019 AGS Beers Criteria + 2022 AHA/ACC/HFSA - avoid digoxin >0.125 mg/day in age>75 or
   // CKD (reduced clearance -> toxicity). COR 3 (Harm). Data-limit: dose check matches digoxin entries
   // with doseValue>0.125; tablet-vs-daily ambiguity flagged.
-  const hfHighDoseDigoxin = meds.some((m: any) =>
+  // AUDIT-199-B-DIG: kept dose-unknown-suppressed (tablet-vs-daily + mcg/mg threshold re-confirmation needed);
+  // the suppression flag preserves the prior never-fire behavior now that doseValue is parsed for other rules.
+  const hfHighDoseDigoxin = !AUDIT_199B_DOSE_RULE_SUPPRESSED && meds.some((m: any) =>
     m.rxNormCode !== null && DIGOXIN_CODES_CV.includes(m.rxNormCode) &&
     m.doseValue !== null && m.doseValue !== undefined && m.doseValue > 0.125
   );
