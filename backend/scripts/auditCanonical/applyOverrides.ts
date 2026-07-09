@@ -842,6 +842,13 @@ export const OVERRIDES: Record<ModuleCode, Record<string, Override>> = {
     },
   },
   PV: {
+    // --- AUDIT-199 (2026-07-08): PV-1 PAD-statin un-propagated section-20 sibling correction ---
+    'GAP-PV-008': {
+      classification: 'PARTIAL_DETECTION',
+      registryId: 'gap-pv-1-pad-statin',
+      auditNote:
+        'AUDIT-199 2026-07-08: DET_OK -> PARTIAL_DETECTION. PV-1 (gap-pv-1-pad-statin) is the un-propagated section-20 sibling of the AUDIT-184 CAD-EXT dose-unknown suppression: AUDIT-184 gated the dose-unknown branch out of the CAD-STATIN gate but never applied the identical change to this PAD rule, so on a dose-less feed (Synthea) the agent_dose_unknown branch fired for ~100% of PAD patients (HF-38 / CAD-INFLUENZA fix-the-instance-not-the-class redux). Fix: the PV-1 gate now also excludes agent_dose_unknown, mirroring CAD-STATIN exactly. The DET_OK was an over-claim (fired the dose-unknown branch on ~100% of PAD patients, no discriminating signal), mirroring the GAP-CAD-031 correction. PARTIAL not SPEC_ONLY (underclaim-governs): PV-1 STILL fires the genuine not_high_intensity gap - a PAD patient with NO atorvastatin/rosuvastatin agent is a real Class 1 care gap (2024 ACC/AHA PAD + the 2018 ACC/AHA Cholesterol high-intensity tier) - so it detects a real subset but is dose-blind to the moderate-dose-should-intensify cohort (suppressed as agent_dose_unknown) = partial. Durable dose-parse threading tracked as AUDIT-199-B. gaps.push unchanged (block retained; fire-rate + classification only).',
+    },
     // --- PV chunk 0 (2026-06-18, feat/pv-chunk0-tightenings): AUDIT-178/179/180 ---
     // GAP-PV-003 DET_OK activated at the PV close (the chunk-0 forward-ref to gap-pv-003-abnormal-abi now resolves
     // because extractCode re-ran in this pipeline).

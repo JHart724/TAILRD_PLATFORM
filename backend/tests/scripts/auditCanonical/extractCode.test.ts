@@ -210,7 +210,7 @@ describe('extractCode — integration against gapRuleEngine.ts', () => {
     const blocks = extractEvaluatorBlocksForModule(lines, cfg.enumName, cfg.codePrefix);
     const pannus = blocks.find((b) => b.name === 'VD-PANNUS');
     expect(pannus).toBeDefined();
-    expect(pannus!.commentLine).toBe(15732); // 15745 -> 15732 by AUDIT-197 (2026-07-08): CAD-ISCHEMIA-GUIDED retirement removed net -13 lines above this content-anchor. (Prior 15740 -> 15745 AUDIT-195; 15697 -> 15740 AUDIT-194-B1; 15822 -> 15697 AUDIT-194 Part A; 16227 -> 15822 AUDIT-184 CAD-EXT.) Content-anchor.
+    expect(pannus!.commentLine).toBe(15739); // 15732 -> 15739 by AUDIT-199 (2026-07-08): PV-1 dose-unknown suppression comment added net +7 lines above this content-anchor. (Prior 15745 -> 15732 AUDIT-197; 15740 -> 15745 AUDIT-195; 15697 -> 15740 AUDIT-194-B1; 15822 -> 15697 AUDIT-194 Part A; 16227 -> 15822 AUDIT-184 CAD-EXT.) Content-anchor.
     expect(pannus!.commentPattern).toBe('ID_NAME');
     expect(pannus!.bodyEndLine).toBeGreaterThan(pannus!.bodyStartLine);
   });
