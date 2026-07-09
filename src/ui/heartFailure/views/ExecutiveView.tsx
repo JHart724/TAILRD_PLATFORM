@@ -12,10 +12,7 @@ import { ExportData } from '../../../utils/dataExport';
 import { toFixed } from '../../../utils/formatters';
 import { HFExecutiveSummary } from '../../../components/heartFailure/HFExecutiveSummary';
 import GapIntelligenceSection from '../components/executive/GapIntelligenceSection';
-import GapResponseRateCard from '../../../components/shared/GapResponseRateCard';
-import PredictiveMetricsBanner from '../../../components/shared/PredictiveMetricsBanner';
-import { RevenuePipelineCard, RevenueAtRiskCard, TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
-import type { RevenuePipelineData, RevenueAtRiskData, TrajectoryTrendsData } from '../../../components/shared/ForwardLookingCards';
+import ForwardOutlookPanel from '../components/executive/ForwardOutlookPanel';
 import { HFRevenueWaterfallModal } from '../../../components/heartFailure/HFRevenueWaterfallModal';
 import HFMonthDetailModal from '../../../components/heartFailure/HFMonthDetailModal';
 import HFBenchmarkDetailModal from '../../../components/heartFailure/HFBenchmarkDetailModal';
@@ -26,9 +23,6 @@ import {
   HF_DEMO_ANNUAL_OPPORTUNITY_M,
   HF_DEMO_WATERFALL,
   HF_DEMO_CATEGORY_DETAIL,
-  HF_DEMO_PIPELINE,
-  HF_DEMO_AT_RISK,
-  HF_DEMO_PREDICTIVE,
   HF_DEMO_FACILITIES,
   HF_DEMO_DOC_OPPORTUNITIES,
   HF_DEMO_DOC_PIPELINE_SUMMARY,
@@ -288,108 +282,25 @@ const ExecutiveView: React.FC = () => {
  <div className="min-h-screen p-6 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #EAEFF4 0%, #F2F5F8 50%, #ECF0F4 100%)' }}>
  
  <div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
- {/* Export Button - Clean Integration */}
- <div className="flex justify-end mb-6">
- <ExportButton 
+ {/* Tier header - Export folded in as a right-aligned utility (closes the AUDIT-161
+     export-above-headline inversion for HF; the first SECTION is now the KPI summary). */}
+ <div className="flex items-center justify-between mb-2">
+ <h2 className="text-2xl font-bold font-display text-titanium-800">Heart Failure Executive Dashboard</h2>
+ <ExportButton
  data={generateExportData()}
  variant="outline"
- size="md"
- className="shadow-lg hover:shadow-xl transition-all duration-300"
+ size="sm"
+ className="shadow-sm hover:shadow-md transition-all duration-300"
  />
  </div>
 
- {/* #1: Enhanced Interactive Executive Summary - shares the single dashboard fetch (no duplicate request) */}
+ {/* 1. KPI summary - single live render of patients / open gaps / GDMT / devices
+     (the dissolved KCCQ block's live tiles are merged in; PRO framing lives on the
+     Service Line PRO-Outcomes tab) + the 3 demo-labeled financial cards. */}
  <HFExecutiveSummary dashboard={dashboard} loading={dashboardLoading} error={dashboardError} />
 
- {/* KCCQ Patient-Reported Outcomes Executive Card */}
- <div className="metal-card relative z-10 mb-6">
-   <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
-     <div className="flex items-center justify-between">
-       <div>
-         <h3 className="text-lg font-semibold text-titanium-900 mb-1">Patient-Reported Outcomes (KCCQ)</h3>
-         <p className="text-sm text-titanium-600">Kansas City Cardiomyopathy Questionnaire &mdash; developed by Dr. John Spertus, Saint Luke&rsquo;s Mid America Heart Institute / UMKC</p>
-       </div>
-       <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-100 rounded-lg px-3 py-1.5">
-         <Zap className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-         <span className="text-xs text-blue-700 font-medium">Demo data &middot; EHR integration pending</span>
-       </div>
-     </div>
-   </div>
-   <div className="p-6">
-     {/* Patient-total tile removed: the summary row above is now the tier's single
-         live patient-total card (no duplicate-label conflict). */}
-     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-       {dashboardLoading ? (
-         <div className="col-span-3 animate-pulse h-24 bg-titanium-100 rounded-xl" />
-       ) : dashboardError ? (
-         <div className="col-span-3 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
-           Failed to load Heart Failure metrics: {dashboardError}
-         </div>
-       ) : dashboard && dashboard.summary.totalPatients > 0 ? (
-         <>
-           <div className="bg-white rounded-xl p-4 border border-titanium-200 shadow-sm">
-             <div className="text-sm text-titanium-600 mb-1">Open Therapy Gaps</div>
-             <div className="text-3xl font-bold text-red-600">{dashboard.summary.totalOpenGaps.toLocaleString()}</div>
-             <div className="text-xs text-red-500 mt-1">Recommended for review</div>
-           </div>
-           <div className="bg-white rounded-xl p-4 border border-titanium-200 shadow-sm">
-             <div className="text-sm text-titanium-600 mb-1">GDMT Optimized</div>
-             <div className="text-3xl font-bold text-teal-700">{dashboard.summary.gdmtOptimized.toLocaleString()}</div>
-             <div className="text-xs text-teal-500 mt-1">No unresolved medication gaps</div>
-           </div>
-           <div className="bg-white rounded-xl p-4 border border-titanium-200 shadow-sm">
-             <div className="text-sm text-titanium-600 mb-1">Device Candidates</div>
-             <div className="text-3xl font-bold text-red-600">{dashboard.summary.deviceCandidates.toLocaleString()}</div>
-             <div className="text-xs text-red-600 mt-1">Eligible, not yet implanted</div>
-           </div>
-         </>
-       ) : (
-         <div className="col-span-3 p-6 text-center text-titanium-500 text-sm">
-           No Heart Failure patients in this hospital yet.
-         </div>
-       )}
-     </div>
-   </div>
- </div>
-
- {/* Clinical Gap Intelligence - live open-gap count + per-type breakdown, with an
-     honest frame when offline/loading (GapIntelligenceSection; batch 1 addendum 2). */}
+ {/* 2. Clinical Gap Intelligence - the problem, sized and decomposed. */}
  <GapIntelligenceSection dashboard={dashboard} loading={dashboardLoading} error={dashboardError} />
-
- {/* Gap Response Rate — care team action tracking */}
- <GapResponseRateCard
-   rates={[]}
-   overallRate={0}
-   timeRange="30d"
- />
-
- {/* Forward-Looking Executive Cards - single demo model (hfDemoFinancials), demo-labeled */}
- <RevenuePipelineCard data={HF_DEMO_PIPELINE} demoData />
- <RevenueAtRiskCard data={HF_DEMO_AT_RISK} demoData cleanSurface immediateNote="= the YTD projected-realized gap" />
- <TrajectoryTrendsCard demoData cleanSurface data={{
-   worseningRapidPct: 18,
-   worseningRapidCount: 216,
-   meanDeclineRate: '2.3 pts/month KCCQ',
-   declineMetric: 'HF',
-   thresholdIn30Days: 4,
-   totalFlaggedPatients: 1200,
-   keyInsights: [
-     '89 ATTR-CM patients identified with 7-signal detection -- 23 with rapid cardiac biomarker trajectory',
-     'KCCQ below 45 (hospitalization threshold) projected for 4 patients within 30 days',
-     'CardioMEMS-eligible patients averaging 2.1 hospitalizations/year -- trajectory predicts 3.4/year without intervention',
-   ],
- }} />
-
- {/* Predictive Metrics Banner - dollars reconciled to the single demo model */}
- <PredictiveMetricsBanner demoData cleanSurface data={{
-   thresholdIn90Days: 47,
-   quarterlyActionableRevenue: HF_DEMO_PREDICTIVE.quarterlyActionableRevenue,
-   totalIdentifiedRevenue: HF_DEMO_PREDICTIVE.totalIdentifiedRevenue,
-   rapidDeteriorationCount: 216,
-   avgTimeToEvent: 8,
-   projectedRevenueCurrentRate: HF_DEMO_PREDICTIVE.projectedRevenueCurrentRate,
-   projectedRevenueSystematic: HF_DEMO_PREDICTIVE.projectedRevenueSystematic,
- }} />
 
  {/* #2: Revenue Opportunity Waterfall */}
  <div className="metal-card relative z-10 mb-6">
@@ -407,6 +318,87 @@ const ExecutiveView: React.FC = () => {
  data={HF_DEMO_WATERFALL}
  onCategoryClick={setSelectedWaterfallCategory}
  />
+ </div>
+ </div>
+
+ <div className="metal-card relative z-10 mb-6">
+ <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
+ <div className="flex items-center justify-between">
+ <div>
+ <h3 className="text-lg font-semibold text-titanium-900 mb-2">{heartFailureConfig.drgTitle}</h3>
+ <p className="text-sm text-titanium-600">{heartFailureConfig.drgDescription}</p>
+ </div>
+ <DemoDataBadge label="Demo data - DRG billing source pending" />
+ </div>
+ </div>
+ 
+ <div className="p-6">
+ <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+ {heartFailureConfig.drgPerformanceCards.map((card, index) => {
+ // White-card treatment (batch 2): the DRG tier signal is carried by the solid
+ // accent on the $ icon + value only (DRG 291 gold, 292 chrome-deep, 293 carmine).
+ // Cards are display-only by design: case-level drill-down needs a real DRG
+ // billing source (no click affordance is rendered).
+ const drgColors = [
+ { value: '#C4982A' },
+ { value: '#4A6880' },
+ { value: '#9B2438' },
+ ];
+ const dc = drgColors[index] || drgColors[0];
+ return (
+ <div
+ key={card.title}
+ className="rounded-xl p-4 border shadow-lg transition-all duration-300 bg-white border-titanium-200"
+ >
+ <div className="flex items-center gap-3 mb-3">
+ <DollarSign className="w-8 h-8" style={{ color: dc.value }} />
+ <div>
+ <div className="font-semibold text-neutral-800">{card.title}</div>
+ <div className="text-2xl font-bold" style={{ color: dc.value }}>{card.value}</div>
+ </div>
+ </div>
+ <div className="text-sm text-teal-500 mb-2">
+ {card.caseCount}
+ </div>
+ <div className={`text-sm ${card.isPositive ? 'text-teal-700' : 'text-medical-red-600'}`}>
+ {card.variance}
+ </div>
+ </div>
+ );
+ })}
+ </div>
+
+ {/* Case Mix Index Performance */}
+ <div className="bg-white rounded-xl p-4 border border-titanium-200 shadow-lg">
+ <h4 className="font-semibold text-titanium-900 mb-4">{heartFailureConfig.moduleName} Case Mix Index (CMI) Analysis</h4>
+ <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+ <div className="text-center">
+ {/* Current CMI -> Chrome Blue. Variance corrected: 2.28 vs the 2.30 target = -0.02
+     (was a self-contradictory hardcoded positive variance beside the -0.02 export row). */}
+ <div className="text-2xl font-bold" style={{ color: '#2C4A60' }}>{heartFailureConfig.drgMetrics.currentCMI}</div>
+ <div className="text-sm text-titanium-600">Current CMI</div>
+ <div className="text-xs text-titanium-500">-0.02 vs 2.30 target</div>
+ </div>
+ <div className="text-center">
+ {/* Monthly Opportunity -> Metallic Gold */}
+ <div className="text-2xl font-bold" style={{ color: '#8B6914' }}>{heartFailureConfig.drgMetrics.monthlyOpportunity}</div>
+ <div className="text-sm text-titanium-600">Monthly Opportunity</div>
+ <div className="text-xs text-titanium-500">From DRG optimization</div>
+ </div>
+ <div className="text-center">
+ {/* Documentation Rate -> Racing Green */}
+ <div className="text-2xl font-bold" style={{ color: '#2D6147' }}>{heartFailureConfig.drgMetrics.documentationRate}</div>
+ <div className="text-sm text-titanium-600">Documentation Rate</div>
+ <div className="text-xs text-titanium-500">CC/MCC capture</div>
+ </div>
+ <div className="text-center">
+ {/* Avg LOS -> Steel Teal (efficiency metric) */}
+ <div className="text-2xl font-bold" style={{ color: '#1A6878' }}>{heartFailureConfig.drgMetrics.avgLOS}</div>
+ <div className="text-sm text-titanium-600">Avg LOS</div>
+ <div className="text-xs text-teal-700">{heartFailureConfig.drgMetrics.losBenchmark}</div>
+ </div>
+ </div>
+ </div>
  </div>
  </div>
 
@@ -444,6 +436,10 @@ const ExecutiveView: React.FC = () => {
  </div>
  </div>
  </div>
+
+ {/* 6. Forward Outlook - consolidated 12-month projection (replaces the former
+     pipeline / at-risk / predictive trio; one panel, one demo model). */}
+ <ForwardOutlookPanel />
 
  {/* #5: Revenue by Facility - facility decomposition of the same demo total */}
  <div className="metal-card relative z-10 mb-6">
@@ -525,87 +521,6 @@ const ExecutiveView: React.FC = () => {
  View Pipeline Details
  <ChevronRight className="w-5 h-5 ml-2" />
  </button>
- </div>
- </div>
- </div>
- </div>
-
- <div className="metal-card relative z-10 mb-6">
- <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
- <div className="flex items-center justify-between">
- <div>
- <h3 className="text-lg font-semibold text-titanium-900 mb-2">{heartFailureConfig.drgTitle}</h3>
- <p className="text-sm text-titanium-600">{heartFailureConfig.drgDescription}</p>
- </div>
- <DemoDataBadge label="Demo data - DRG billing source pending" />
- </div>
- </div>
- 
- <div className="p-6">
- <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
- {heartFailureConfig.drgPerformanceCards.map((card, index) => {
- // White-card treatment (batch 2): the DRG tier signal is carried by the solid
- // accent on the $ icon + value only (DRG 291 gold, 292 chrome-deep, 293 carmine).
- // Cards are display-only by design: case-level drill-down needs a real DRG
- // billing source (no click affordance is rendered).
- const drgColors = [
- { value: '#C4982A' },
- { value: '#4A6880' },
- { value: '#9B2438' },
- ];
- const dc = drgColors[index] || drgColors[0];
- return (
- <div
- key={card.title}
- className="rounded-xl p-4 border shadow-lg transition-all duration-300 bg-white border-titanium-200"
- >
- <div className="flex items-center gap-3 mb-3">
- <DollarSign className="w-8 h-8" style={{ color: dc.value }} />
- <div>
- <div className="font-semibold text-neutral-800">{card.title}</div>
- <div className="text-2xl font-bold" style={{ color: dc.value }}>{card.value}</div>
- </div>
- </div>
- <div className="text-sm text-teal-500 mb-2">
- {card.caseCount}
- </div>
- <div className={`text-sm ${card.isPositive ? 'text-teal-700' : 'text-medical-red-600'}`}>
- {card.variance}
- </div>
- </div>
- );
- })}
- </div>
-
- {/* Case Mix Index Performance */}
- <div className="bg-white rounded-xl p-4 border border-titanium-200 shadow-lg">
- <h4 className="font-semibold text-titanium-900 mb-4">{heartFailureConfig.moduleName} Case Mix Index (CMI) Analysis</h4>
- <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
- <div className="text-center">
- {/* Current CMI -> Chrome Blue. Variance corrected: 2.28 vs the 2.30 target = -0.02
-     (was a self-contradictory hardcoded positive variance beside the -0.02 export row). */}
- <div className="text-2xl font-bold" style={{ color: '#2C4A60' }}>{heartFailureConfig.drgMetrics.currentCMI}</div>
- <div className="text-sm text-titanium-600">Current CMI</div>
- <div className="text-xs text-titanium-500">-0.02 vs 2.30 target</div>
- </div>
- <div className="text-center">
- {/* Monthly Opportunity → Metallic Gold */}
- <div className="text-2xl font-bold" style={{ color: '#8B6914' }}>{heartFailureConfig.drgMetrics.monthlyOpportunity}</div>
- <div className="text-sm text-titanium-600">Monthly Opportunity</div>
- <div className="text-xs text-titanium-500">From DRG optimization</div>
- </div>
- <div className="text-center">
- {/* Documentation Rate → Racing Green */}
- <div className="text-2xl font-bold" style={{ color: '#2D6147' }}>{heartFailureConfig.drgMetrics.documentationRate}</div>
- <div className="text-sm text-titanium-600">Documentation Rate</div>
- <div className="text-xs text-titanium-500">CC/MCC capture</div>
- </div>
- <div className="text-center">
- {/* Avg LOS → Steel Teal (efficiency metric) */}
- <div className="text-2xl font-bold" style={{ color: '#1A6878' }}>{heartFailureConfig.drgMetrics.avgLOS}</div>
- <div className="text-sm text-titanium-600">Avg LOS</div>
- <div className="text-xs text-teal-700">{heartFailureConfig.drgMetrics.losBenchmark}</div>
- </div>
  </div>
  </div>
  </div>
