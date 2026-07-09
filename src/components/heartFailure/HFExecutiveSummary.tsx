@@ -43,6 +43,15 @@ const KPI_DEFS: KPICardDef[] = [
     live: true,
   },
   {
+    // Promoted from the dissolved KCCQ block (IA batch 3): the tier's core gap-burden
+    // number now renders ONCE, here, from the same dashboard fetch.
+    id: 'open-gaps',
+    label: 'Open Therapy Gaps',
+    icon: AlertCircle,
+    color: 'red',
+    live: true,
+  },
+  {
     id: 'gdmt-optimized',
     label: 'GDMT Optimized (no open med gaps)',
     icon: Activity,
@@ -152,6 +161,8 @@ export const HFExecutiveSummary: React.FC<HFExecutiveSummaryProps> = ({ dashboar
     switch (id) {
       case 'total-patients':
         return { value: s.totalPatients.toLocaleString(), subtext: 'Active HF panel (database)' };
+      case 'open-gaps':
+        return { value: s.totalOpenGaps.toLocaleString(), subtext: 'Recommended for review (database)' };
       case 'gdmt-optimized': {
         const rate = s.totalPatients > 0 ? Math.round((s.gdmtOptimized / s.totalPatients) * 100) : null;
         return {

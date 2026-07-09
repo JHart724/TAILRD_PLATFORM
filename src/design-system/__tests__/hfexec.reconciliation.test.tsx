@@ -20,6 +20,7 @@ import { act } from 'react-dom/test-utils';
 import { HFExecutiveSummary } from '../../components/heartFailure/HFExecutiveSummary';
 import GapResponseRateCard from '../../components/shared/GapResponseRateCard';
 import GapIntelligenceSection from '../../ui/heartFailure/components/executive/GapIntelligenceSection';
+import ForwardOutlookPanel from '../../ui/heartFailure/components/executive/ForwardOutlookPanel';
 import ProjectedVsRealizedChart from '../../ui/heartFailure/components/ProjectedVsRealizedChart';
 import { RevenuePipelineCard, RevenueAtRiskCard } from '../../components/shared/ForwardLookingCards';
 import PredictiveMetricsBanner from '../../components/shared/PredictiveMetricsBanner';
@@ -292,14 +293,14 @@ describe('HF Exec batch 1 - demo badges present where no backend source exists',
     const html = render(<RevenueAtRiskCard data={HF_DEMO_AT_RISK} />);
     expect(html).not.toContain('Demo data - EHR integration pending');
   });
-  it('ExecutiveView marks every mock-fed financial surface (badge usages + demoData props)', () => {
+  it('ExecutiveView marks every mock-fed financial surface (badge usages)', () => {
     const s = src('../../ui/heartFailure/views/ExecutiveView.tsx');
     const badgeUses = s.split('<DemoDataBadge').length - 1;
-    const demoProps = s.split('demoData').length - 1;
     // ROIWaterfall, Projected-vs-Realized, Benchmarks, Facility, doc-pipeline, DRG/CMI headers
+    // (the forward trio's demoData call sites were consolidated into ForwardOutlookPanel,
+    // which carries its own DemoDataBadge - asserted in the batch-3 describes).
     expect(badgeUses).toBeGreaterThanOrEqual(6);
-    // RevenuePipeline, RevenueAtRisk, Trajectory, PredictiveMetricsBanner
-    expect(demoProps).toBeGreaterThanOrEqual(4);
+    expect(src('../../ui/heartFailure/components/executive/ForwardOutlookPanel.tsx')).toContain('<DemoDataBadge');
   });
 });
 
@@ -370,5 +371,92 @@ describe('HF Exec batch 2 - white-card restyle (EP Gap-Intelligence reference)',
     expect(html).toContain('rgb(255, 255, 255)'); // white totals boxes
     const shared = src('../../components/shared/SharedProjectedVsRealized.tsx');
     expect(shared).toContain('GAP_NEGATIVE_TOKENS.bg'); // semantic Gap box untouched
+  });
+});
+
+// ================= HF Exec batch 3 - IA restructure =================
+
+describe('HF Exec batch 3 - ruled render order', () => {
+  const view = src('../../ui/heartFailure/views/ExecutiveView.tsx');
+  it('sections render in the exec-narrative order (summary -> gaps -> waterfall -> DRG -> P-v-R -> forward -> facility -> ZIP)', () => {
+    const order = [
+      '<HFExecutiveSummary',
+      '<GapIntelligenceSection',
+      '#2: Revenue Opportunity Waterfall',
+      'drgTitle', // DRG/CMI block promoted from last position
+      '#3 & #4', // P-v-R + Benchmarks
+      '<ForwardOutlookPanel />',
+      '#5: Revenue by Facility',
+      '#6: Geographic',
+    ];
+    let prev = -1;
+    order.forEach((marker) => {
+      const idx = view.indexOf(marker);
+      expect(idx).toBeGreaterThan(prev);
+      prev = idx;
+    });
+  });
+  it('Export folded into the tier header (no standalone export section; AUDIT-161 HF inversion closed)', () => {
+    expect(view).not.toContain('Export Button - Clean Integration');
+    expect(view).toContain('Heart Failure Executive Dashboard'); // the new headline
+    // the header (title + ExportButton) renders BEFORE the KPI summary
+    expect(view.indexOf('<ExportButton')).toBeLessThan(view.indexOf('<HFExecutiveSummary'));
+    expect(view.indexOf('Heart Failure Executive Dashboard')).toBeLessThan(view.indexOf('<ExportButton'));
+  });
+});
+
+describe('HF Exec batch 3 - relocations + consolidation absences on the exec tier', () => {
+  const view = src('../../ui/heartFailure/views/ExecutiveView.tsx');
+  it('the forward trio + banner are gone from the view (consolidated into ForwardOutlookPanel)', () => {
+    expect(view).not.toContain('RevenuePipelineCard');
+    expect(view).not.toContain('RevenueAtRiskCard');
+    expect(view).not.toContain('TrajectoryTrendsCard');
+    expect(view).not.toContain('PredictiveMetricsBanner');
+  });
+  it('Gap Response Rate no longer renders on the exec tier', () => {
+    expect(view).not.toContain('GapResponseRateCard');
+  });
+  it('the KCCQ block is dissolved (no PRO framing on the exec tier)', () => {
+    expect(view).not.toContain('Patient-Reported Outcomes');
+    expect(view).not.toContain('Spertus');
+  });
+  it('single render of the gap-burden value: the summary owns it, the view has no duplicate tile', () => {
+    // The view's only remaining occurrence is the export-row LABEL (report data, not a
+    // rendered tile); the on-screen card lives solely in HFExecutiveSummary.
+    expect(view.split('Open Therapy Gaps').length - 1).toBe(1);
+    expect(view).toContain("'Open Therapy Gaps (live)'");
+    const summary = src('../../components/heartFailure/HFExecutiveSummary.tsx');
+    expect(summary.split("label: 'Open Therapy Gaps'").length - 1).toBe(1);
+  });
+});
+
+describe('HF Exec batch 3 - consolidated ForwardOutlookPanel', () => {
+  it('renders all three figure-sets from the single demo model', () => {
+    const html = render(<ForwardOutlookPanel />);
+    // pipeline: total + a quarter
+    expect(html).toContain('$3.1M projected over 12 months');
+    expect(html).toContain('Q1 2026');
+    // at-risk split + cross-reference sublabel
+    expect(html).toContain('$1.4M');
+    expect(html).toContain('$2.1M');
+    expect(html).toContain('= the YTD projected-realized gap');
+    // capture-rate composite (current vs systematic vs acceleration = 5.6 - 3.1 = 2.5)
+    expect(html).toContain('$5.6M');
+    expect(html).toContain('$2.5M');
+    // demo-badged
+    expect(html).toContain('Demo data - EHR integration pending');
+  });
+});
+
+describe('HF Exec batch 3 - Service Line carries the relocated content', () => {
+  const sl = src('../../ui/heartFailure/views/ServiceLineView.tsx');
+  it('gap-detection tab renders the relocated GapResponseRateCard', () => {
+    expect(sl).toContain('GapResponseRateCard');
+  });
+  it('risk-heatmap tab renders the relocated TrajectoryTrendsCard', () => {
+    expect(sl).toContain('TrajectoryTrendsCard');
+  });
+  it('the SL PRO-Outcomes panel carries the KCCQ framing (Spertus attribution present)', () => {
+    expect(src('../../ui/heartFailure/components/service-line/KCCQOutcomesPanel.tsx')).toContain('Spertus');
   });
 });

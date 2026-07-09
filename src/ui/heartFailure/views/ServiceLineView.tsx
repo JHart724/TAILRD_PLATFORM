@@ -14,6 +14,10 @@ import KCCQOutcomesPanel from '../components/service-line/KCCQOutcomesPanel';
 import PhenotypeDetection from '../components/PhenotypeDetectionChart';
 import DeviceUnderutilizationPanel from '../../../components/therapyGap/DeviceUnderutilizationPanel';
 import CrossReferralEngine from '../../../components/crossReferral/CrossReferralEngine';
+// Relocated from the Executive tier (HF Exec IA batch 3): operational content
+// belongs on the Service Line tier.
+import GapResponseRateCard from '../../../components/shared/GapResponseRateCard';
+import { TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
 
 type TabId =
   | 'gdmt'
@@ -98,7 +102,26 @@ const ServiceLineView: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'gdmt': return <GDMTAnalyticsDashboard />;
-      case 'heatmap': return <PatientRiskHeatmap />;
+      case 'heatmap': return (
+        <div className="space-y-6">
+          <PatientRiskHeatmap />
+          {/* Relocated from the Executive tier (IA batch 3): worsening-population
+              trajectory detail is Service Line population-health content. */}
+          <TrajectoryTrendsCard demoData cleanSurface data={{
+            worseningRapidPct: 18,
+            worseningRapidCount: 216,
+            meanDeclineRate: '2.3 pts/month KCCQ',
+            declineMetric: 'HF',
+            thresholdIn30Days: 4,
+            totalFlaggedPatients: 1200,
+            keyInsights: [
+              '89 ATTR-CM patients identified with 7-signal detection -- 23 with rapid cardiac biomarker trajectory',
+              'KCCQ below 45 (hospitalization threshold) projected for 4 patients within 30 days',
+              'CardioMEMS-eligible patients averaging 2.1 hospitalizations/year -- trajectory predicts 3.4/year without intervention',
+            ],
+          }} />
+        </div>
+      );
       case 'providers': return <ProviderScorecard />;
       case 'devices': return <DevicePathwayFunnel />;
       case 'phenotype-detection': return <PhenotypeDetection />;
@@ -109,7 +132,15 @@ const ServiceLineView: React.FC = () => {
       case 'device-underutil': return <DeviceUnderutilizationPanel />;
       case 'cross-referral': return <CrossReferralEngine />;
       case 'gap-detection':
-        return <ClinicalGapDetectionDashboard />;
+        return (
+          <div className="space-y-6">
+            <ClinicalGapDetectionDashboard />
+            {/* Relocated from the Executive tier (IA batch 3): care-team action
+                telemetry is Service Line operational content. Honest empty state
+                until a response-rate source exists. */}
+            <GapResponseRateCard rates={[]} overallRate={0} timeRange="30d" />
+          </div>
+        );
       default: return <ClinicalGapDetectionDashboard />;
     }
   };

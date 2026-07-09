@@ -93,7 +93,7 @@ Per `docs/PATH_TO_ROBUST.md` §5.
 |---|---|---|---|---|
 | 1 | HF — care team | HF | care team | **CANONICAL** (Phase 0B canonical addendum, AUDIT-030 citation-verified) |
 | 2 | HF — service line | HF | service line | file-count inventory only |
-| 3 | HF — executive | HF | executive | file-count inventory only; AUDIT-099 HF-side remediation MERGED 2026-07-07 (PR #442 `4e6987e`: contract-wired KPIs + single demo financial model + honesty badges; batch 2 dead-controls + white-card restyle follow-on) |
+| 3 | HF — executive | HF | executive | file-count inventory only; AUDIT-099 HF-side remediation MERGED 2026-07-07 (PR #442 `4e6987e`: contract-wired KPIs + single demo financial model + honesty badges; batch 2 dead-controls + white-card restyle follow-on); IA restructure 2026-07-08 (batch 3, AUDIT-304 HF exemplar: 15 -> 8+1 panels in exec-narrative order, forward trio consolidated to one panel, KCCQ block dissolved into the KPI summary, Gap Response Rate + Trajectory relocated to Service Line, Export folded into the tier header closing the HF AUDIT-161 inversion; doc-pipeline placement PENDING operator tab ruling - no SL CDI surface exists) |
 | 4 | EP — care team | EP | care team | **CANONICAL** (Phase 0B canonical addendum) |
 | 5 | EP — service line | EP | service line | NOT STARTED |
 | 6 | EP — executive | EP | executive | NOT STARTED |
