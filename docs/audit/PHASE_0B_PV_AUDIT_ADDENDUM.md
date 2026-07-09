@@ -8,7 +8,7 @@
 
 ## 1. Summary
 
-Peripheral Vascular has **105 spec gaps** across 20 subcategories. Implementation: **25 DET_OK + 14 PARTIAL + 66 SPEC_ONLY** (any-coverage: 39/105 = 37.1%).
+Peripheral Vascular has **105 spec gaps** across 20 subcategories. Implementation: **24 DET_OK + 15 PARTIAL + 66 SPEC_ONLY** (any-coverage: 39/105 = 37.1%).
 
 **Tier 1 priority status:** 1 DET_OK + 2 PARTIAL + 4 SPEC_ONLY of 7 T1 gaps (T1 any-coverage: 42.9%).
 
@@ -21,8 +21,8 @@ Peripheral Vascular has **105 spec gaps** across 20 subcategories. Implementatio
 | Classification | Count | % of total |
 |---|---:|---:|
 | PRODUCTION_GRADE | 0 | 0.0% |
-| DET_OK | 25 | 23.8% |
-| PARTIAL_DETECTION | 14 | 13.3% |
+| DET_OK | 24 | 22.9% |
+| PARTIAL_DETECTION | 15 | 14.3% |
 | SPEC_ONLY | 66 | 62.9% |
 | **Total** | **105** | **100.0%** |
 
@@ -35,9 +35,9 @@ Peripheral Vascular has **105 spec gaps** across 20 subcategories. Implementatio
 | Tier | Total | DET_OK | PARTIAL | SPEC_ONLY | Any-coverage % |
 |------|------:|-------:|--------:|----------:|---------------:|
 | **T1** | 7 | 1 | 2 | 4 | 42.9% |
-| **T2** | 82 | 23 | 10 | 49 | 40.2% |
+| **T2** | 82 | 22 | 11 | 49 | 40.2% |
 | **T3** | 16 | 1 | 2 | 13 | 18.8% |
-| **Overall** | **105** | **25** | **14** | **66** | **37.1%** |
+| **Overall** | **105** | **24** | **15** | **66** | **37.1%** |
 
 ---
 
@@ -46,7 +46,7 @@ Peripheral Vascular has **105 spec gaps** across 20 subcategories. Implementatio
 | Subcategory | T1/T2/T3 | DET_OK | PARTIAL | SPEC_ONLY | Coverage |
 |---|---|---:|---:|---:|---:|
 | PAD Detection (7) | 0/7/0 | 1 | 3 | 3 | 57.1% |
-| PAD Prevention (9) | 1/8/0 | 7 | 2 | 0 | 100.0% |
+| PAD Prevention (9) | 1/8/0 | 6 | 3 | 0 | 100.0% |
 | CLTI (6) | 2/4/0 | 0 | 1 | 5 | 16.7% |
 | TASC Staging (5) | 0/5/0 | 0 | 0 | 5 | 0.0% |
 | Mesenteric Ischemia (5) | 0/5/0 | 0 | 1 | 4 | 20.0% |
@@ -91,12 +91,12 @@ No EXTRA rules or architectural patterns surfaced. Reconciliation is clean.
 
 | GAP-ID | Spec line | Class | Rule body cite | Notes |
 |---|---:|---|---|---|
-| GAP-PV-011 | 942 | DET_OK | `gap-pv-rivaroxaban` (PV-RIVAROXABAN @16139-16167) | auto-verify: preserved-from-addendum |
-| GAP-PV-017 | 955 | PARTIAL_DETECTION | `gap-pv-bypass-eval` (PV-BYPASS-EVAL @16204-16230) | auto-verify: preserved-from-addendum |
+| GAP-PV-011 | 942 | DET_OK | `gap-pv-rivaroxaban` (PV-RIVAROXABAN @16146-16174) | auto-verify: preserved-from-addendum |
+| GAP-PV-017 | 955 | PARTIAL_DETECTION | `gap-pv-bypass-eval` (PV-BYPASS-EVAL @16211-16237) | auto-verify: preserved-from-addendum |
 | GAP-PV-018 | 956 | SPEC_ONLY | — | MANUAL OVERRIDE 2026-06-18 (PV chunk 0, AUDIT-180): PARTIAL -> SPEC_ONLY. GAP-PV-018 ("CLTI endovasc |
 | GAP-PV-055 | 1017 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 | GAP-PV-056 | 1018 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
-| GAP-PV-058 | 1028 | PARTIAL_DETECTION | `gap-pv-058-symptomatic-carotid-revasc` (PV-058 @16866-16888) | MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> PARTIAL. Built gap-pv-058-symptomatic-carotid- |
+| GAP-PV-058 | 1028 | PARTIAL_DETECTION | `gap-pv-058-symptomatic-carotid-revasc` (PV-058 @16873-16895) | MANUAL OVERRIDE 2026-06-18 (PV chunk 1): SPEC_ONLY -> PARTIAL. Built gap-pv-058-symptomatic-carotid- |
 | GAP-PV-079 | 1060 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 
 ---
@@ -121,9 +121,9 @@ No T1 SPEC_ONLY gaps carry literal BSW pathway tags in CK v4.0 spec text. Pathwa
 
 **For PV:** Moderate implementation coverage; medication/screening surfaces typically built, procedural surfaces often lighter.
 
-Coverage data: 39/105 any-coverage (37.1%); 25/105 DET_OK only (23.8%); 14 PARTIAL via broad-rule consolidation or partial-trigger match; 66 SPEC_ONLY.
+Coverage data: 39/105 any-coverage (37.1%); 24/105 DET_OK only (22.9%); 15 PARTIAL via broad-rule consolidation or partial-trigger match; 66 SPEC_ONLY.
 
-Rules-per-DET_OK efficiency: 45 registry rules / 25 DET_OK = 1.80.
+Rules-per-DET_OK efficiency: 45 registry rules / 24 DET_OK = 1.88.
 
 ---
 
@@ -205,7 +205,7 @@ Per-module wall-clock data lives in `docs/audit/canonical/audit_runs.jsonl` (app
 
 **PV module: MODERATELY BUILT.**
 
-- 25 DET_OK (23.8%), 14 PARTIAL (13.3%), 66 SPEC_ONLY (62.9%)
+- 24 DET_OK (22.9%), 15 PARTIAL (14.3%), 66 SPEC_ONLY (62.9%)
 - 1/7 T1 priority gaps DET_OK; 4 T1 SPEC_ONLY gaps require v2.0 Phase 1 work
 - Audit method: `rule-body-citation-AUDIT-030D`. Generated from canonical crosswalk on 2026-05-04.
 

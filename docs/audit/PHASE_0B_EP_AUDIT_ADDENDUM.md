@@ -90,18 +90,18 @@ Electrophysiology has **89 spec gaps** across 11 subcategories. Implementation: 
 |---|---:|---|---|---|
 | GAP-EP-001 | 311 | DET_OK | `gap-ep-oac-afib` (EP-OAC @5550-5613) | UN-CAP + verify 2026-06-16 (v3.0 EP close) PARTIAL -> DET_OK: AUDIT-118 remediated (medCodes ingredi |
 | GAP-EP-006 | 312 | DET_OK | `gap-ep-006-dabigatran-renal-safety` (EP-006 @5631-5681) | UN-CAP + verify 2026-06-16 (v3.0 EP close) PARTIAL -> DET_OK: AUDIT-118 remediated (dabigatran IN 10 |
-| GAP-EP-007 | 313 | DET_OK | `gap-vd-6-doac-mechanical-valve` (VD-6 @8906-8930) **[cross-module: VHD]** | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033; expandToIngredients ingredie |
+| GAP-EP-007 | 313 | DET_OK | `gap-vd-6-doac-mechanical-valve` (VD-6 @8913-8937) **[cross-module: VHD]** | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033; expandToIngredients ingredie |
 | GAP-EP-008 | 314 | DET_OK | `gap-ep-008-doac-mitral-stenosis` (EP-008 @5808-5831) | BUILT 2026-06-16 (v3.0 EP chunk 1): DOAC + moderate-severe MS (I05.0/I34.2). 2020 VHD / INVICTUS, Cl |
 | GAP-EP-064 | 315 | SPEC_ONLY | — | — (no pharmacy fill data integration) \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
 | GAP-EP-065 | 316 | SPEC_ONLY | — | — (no pharmacy fill data integration) \| auto-verify: No candidate evaluator block above PARTIAL_MATC |
 | GAP-EP-011 | 328 | DET_OK | `gap-ep-laac` (EP-LAAC @6483-6518) | RESOLVED 2026-06-16 (v3.0 EP close) PARTIAL -> DET_OK: AUDIT-120 fixed. The bare Z88 (allergy-status |
 | GAP-EP-012 | 329 | DET_OK | `gap-ep-012-laac-high-risk-bleed` (EP-012 @5868-5905) | BUILT 2026-06-16 (v3.0 EP chunk 1): distinct LAAC evaluator (CHA2DS2-VASc>=3 + prior major bleed inc |
-| GAP-EP-013 | 337 | DET_OK | `gap-ep-early-rhythm` (EP-EARLY-RHYTHM @13375-13397) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-EARLY-RHYTHM is an AAD-A |
+| GAP-EP-013 | 337 | DET_OK | `gap-ep-early-rhythm` (EP-EARLY-RHYTHM @13382-13404) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). EP-EARLY-RHYTHM is an AAD-A |
 | GAP-EP-014 | 338 | DET_OK | `gap-ep-014-af-ablation-hfref` (EP-014 @5922-5945) | BUILT 2026-06-16 (v3.0 EP chunk 2): AF (non-flutter) + LVEF<=35 + no CPT 93656. CASTLE-AF, Class 2a. |
-| GAP-EP-017 | 339 | DET_OK | `gap-ep-017-hfref-non-dhp-ccb` (EP-017 @7385-7410) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The Class-3-Harm HFrEF + no |
-| GAP-EP-018 | 340 | DET_OK | `gap-ep-subclinical-af` (EP-SUBCLINICAL-AF @11311-11334) | line 6819+ \| auto-verify: preserved-from-addendum |
+| GAP-EP-017 | 339 | DET_OK | `gap-ep-017-hfref-non-dhp-ccb` (EP-017 @7392-7417) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The Class-3-Harm HFrEF + no |
+| GAP-EP-018 | 340 | DET_OK | `gap-ep-subclinical-af` (EP-SUBCLINICAL-AF @11318-11341) | line 6819+ \| auto-verify: preserved-from-addendum |
 | GAP-EP-079 | 352 | DET_OK | `gap-ep-079-wpw-af-avn-blocker` (EP-079 @6451-6476) | UN-CAP 2026-06-14 PARTIAL -> DET_OK: AUDIT-118 remediated (fix 125f033). The CRITICAL WPW+AF AVN-blo |
-| GAP-EP-086 | 363 | PARTIAL_DETECTION | `gap-ep-vt-ablation` (EP-VT-ABLATION @13408-13430) | line 9162+ (broad VT+ICD trigger, not VT-storm-specific) \| auto-verify: preserved-from-addendum |
+| GAP-EP-086 | 363 | PARTIAL_DETECTION | `gap-ep-vt-ablation` (EP-VT-ABLATION @13415-13437) | line 9162+ (broad VT+ICD trigger, not VT-storm-specific) \| auto-verify: preserved-from-addendum |
 | GAP-EP-099 | 436 | SPEC_ONLY | — | — \| auto-verify: No candidate evaluator block above PARTIAL_MATCH |
 
 ---

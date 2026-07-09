@@ -7219,13 +7219,20 @@ export function evaluateGapRules(
   // Dose-aware detection (AUDIT-101) via highIntensityStatinStatus, shared with the
   // CAD high-intensity gate. Identical prior ingredient-set defect (could not
   // encode dose; wrongly included simvastatin/pravastatin) is corrected here too.
-  // Fires for everyone not on high-intensity, with a QUALIFIED status on
-  // documented-statin / undocumented-dose (fail-loud, never silent-suppress).
   const hasPAD = dxCodes.some(c => c.startsWith('I73.9') || c.startsWith('I70.2'));
   if (hasPAD) {
     const padStatinStatus = highIntensityStatinStatus(meds);
-    if (padStatinStatus !== 'on_high_intensity' && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
-      const doseUnknown = padStatinStatus === 'agent_dose_unknown';
+    // Suppress the dose-unknown branch (AUDIT-199, 2026-07-08): propagate the AUDIT-184 CAD-EXT
+    // suppression (the CAD-STATIN gate above) to this un-propagated sibling. AUDIT-184 gated the
+    // dose-unknown branch out of the CAD high-intensity gate but never applied the identical change to
+    // this PAD rule (the section-20 fix-the-instance-not-the-class miss, HF-38 / CAD-INFLUENZA redux). A
+    // dose-less feed (Synthea, and any source without structured dose) yields 'agent_dose_unknown' for
+    // any statin-present PAD patient -> firing a hard therapy gap on structurally-absent dose over-fired
+    // (~100% of PAD patients). Per the ARNI data-present precedent (HF-30), require dose data: fire ONLY
+    // the genuine not-on-high-intensity gap, NOT the dose-unknown (data-quality) case. A real Epic feed
+    // carries dose and fires this correctly. Durable dose-parse threading tracked as AUDIT-199-B.
+    if (padStatinStatus !== 'on_high_intensity' && padStatinStatus !== 'agent_dose_unknown' && !hasContraindication(dxCodes, EXCLUSION_HOSPICE)) {
+      const doseUnknown = padStatinStatus === 'agent_dose_unknown'; // now always false (dose-unknown gated out above); retained for body shape
       gaps.push({
           type: TherapyGapType.MEDICATION_MISSING,
           module: ModuleType.PERIPHERAL_VASCULAR,

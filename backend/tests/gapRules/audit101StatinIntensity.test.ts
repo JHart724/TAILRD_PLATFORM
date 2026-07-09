@@ -181,9 +181,12 @@ describe('AUDIT-101 PAD high-intensity statin (Q4 sibling, 2024 ACC/AHA PAD Guid
     expect(anyPadStatin(run([PAD_ATH], [med(RX_ATORVA, 40, 'mg', 'atorvastatin')]))).toBeUndefined();
   });
 
-  it('PAD + atorvastatin dose-unknown -> QUALIFIED fire', () => {
+  it('PAD + atorvastatin dose-unknown -> SUPPRESSED (AUDIT-199: dose-unknown branch gated out, mirrors CAD ED1)', () => {
+    // AUDIT-199 (2026-07-08): propagated the AUDIT-184 CAD-EXT dose-unknown suppression to this PAD sibling.
+    // A dose-less feed yields agent_dose_unknown for any statin-present PAD patient; the qualified fire over-fired
+    // ~100% of PAD patients, so the gate now requires dose data (ARNI data-present precedent). See audit199PadStatinSuppress.
     const gaps = run([PAD], [med(RX_ATORVA, null, 'mg', 'atorvastatin')]);
-    expect(padQualified(gaps)).toBeDefined();
+    expect(padQualified(gaps)).toBeUndefined();
     expect(padDefinite(gaps)).toBeUndefined();
   });
 
