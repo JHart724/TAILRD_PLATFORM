@@ -23,10 +23,17 @@ export interface GapIntelligenceData {
 
 interface GapIntelligenceCardProps {
   data: GapIntelligenceData;
+  /** Opt-in (AUDIT-304 EP convergence): when the categories are DEMO (not derived from
+      real gapsByType), pass the real panel size so the headline reads live patients
+      instead of the fabricated category-sum. HF omits it (its categories are real). */
+  totalPatients?: number;
+  /** Opt-in: badge the donut/top-gaps composition as demo when the headline is live
+      but the breakdown detail is illustrative. */
+  compositionDemo?: boolean;
 }
 
-const GapIntelligenceCard: React.FC<GapIntelligenceCardProps> = ({ data }) => {
-  const totalPatients = data.categories.reduce((sum, c) => sum + c.patients, 0);
+const GapIntelligenceCard: React.FC<GapIntelligenceCardProps> = ({ data, totalPatients: totalPatientsOverride, compositionDemo = false }) => {
+  const totalPatients = totalPatientsOverride ?? data.categories.reduce((sum, c) => sum + c.patients, 0);
 
   return (
     <div className="metal-card relative z-10 mb-6">
@@ -47,7 +54,12 @@ const GapIntelligenceCard: React.FC<GapIntelligenceCardProps> = ({ data }) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Gap Category Breakdown - PieChart */}
           <div>
-            <h4 className="text-sm font-semibold text-titanium-700 mb-3">Gap Category Breakdown</h4>
+            <div className="flex items-center gap-2 mb-3">
+              <h4 className="text-sm font-semibold text-titanium-700">Gap Category Breakdown</h4>
+              {compositionDemo && (
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700">Demo composition</span>
+              )}
+            </div>
             <div className="flex items-center gap-4">
               <div className="w-[140px] h-[140px]">
                 <ResponsiveContainer width="100%" height="100%">

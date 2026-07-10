@@ -1,27 +1,22 @@
 import React from 'react';
 import SharedProjectedVsRealized, { MonthData } from '../../../components/shared/SharedProjectedVsRealized';
+import { EP_DEMO_PVR } from '../config/epDemoFinancials';
 
 interface EPProjectedVsRealizedChartProps {
   onMonthClick?: (monthData: MonthData) => void;
 }
 
-const epMonthlyData: MonthData[] = [
-  { month: 'Jan', projected: 850000, realized: 520000 },
-  { month: 'Feb', projected: 920000, realized: 610000 },
-  { month: 'Mar', projected: 1050000, realized: 720000 },
-  { month: 'Apr', projected: 980000, realized: 680000 },
-  { month: 'May', projected: 1120000, realized: 810000 },
-  { month: 'Jun', projected: 1200000, realized: 890000 },
-  { month: 'Jul', projected: 1150000, realized: 850000 },
-  { month: 'Aug', projected: 1280000, realized: 950000 },
-  { month: 'Sep', projected: 1350000, realized: 980000 },
-  { month: 'Oct', projected: 1400000, realized: 1050000 },
-];
-
+// Monthly series comes from the single EP demo financial model (EP_DEMO_PVR), a
+// stated slice of the $8.9M annual-opportunity model - the panel's Total Projected /
+// Total Realized / Gap are reduced from this series, so they can no longer drift from
+// the rest of the tier (AUDIT-304 EP convergence; mirrors the HF exemplar). Was: a
+// hand-typed 10-month array whose totals implied a second, contradictory revenue family.
 const EPProjectedVsRealizedChart: React.FC<EPProjectedVsRealizedChartProps> = ({ onMonthClick }) => (
   <SharedProjectedVsRealized
- monthlyData={epMonthlyData}
- onMonthClick={onMonthClick}
+    monthlyData={EP_DEMO_PVR.months}
+    onMonthClick={onMonthClick}
+    gapSublabel="Immediate at-risk slice (this quarter) - see Revenue at Risk"
+    cleanSurface
   />
 );
 

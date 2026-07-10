@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Building2, MapPin, DollarSign, Users, TrendingUp, Target } from 'lucide-react';
 import { toFixed } from '../../../utils/formatters';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import DemoDataBadge from '../../../components/shared/DemoDataBadge';
 
 interface CategoryBreakdown {
   category: string;
@@ -89,6 +90,11 @@ const EPFacilityDetailModal: React.FC<EPFacilityDetailModalProps> = ({
  <div className="flex items-center mt-1 text-gray-600">
  <MapPin className="w-4 h-4 mr-1" />
  <span>{location}</span>
+ </div>
+ {/* This facility drill-down is fabricated detail (no per-facility source
+     exists); the badge marks the entire modal content as demo. */}
+ <div className="mt-2">
+ <DemoDataBadge label="Demo data - facility detail source pending" />
  </div>
  </div>
  </div>
