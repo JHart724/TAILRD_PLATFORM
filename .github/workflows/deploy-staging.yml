@@ -23,6 +23,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      issues: write       # AUDIT-111 non-silent gate: file/update a staging-deploy-failure alert issue
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
@@ -103,3 +104,25 @@ jobs:
           done
           echo "ERROR: Staging deploy did not stabilize in 5 minutes"
           exit 1
+
+      # AUDIT-111 non-silent gate (detection only): make a red staging deploy VISIBLE.
+      # Mirrors the AUDIT-107 deploy-hold-issue pattern in deploy.yml (dedup by title,
+      # comment-if-open else create). This does NOT change the merge flow or gate production
+      # or make staging blocking (that is the separate AUDIT-107-ladder / required-check
+      # decision) - it only converts a silent post-merge red into a visible, actionable issue.
+      - name: Alert on staging deploy failure (AUDIT-111 non-silent gate)
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set +e   # fail-open: the alert step must never mask or override the real failure conclusion
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          TITLE="Staging deploy failed on main"
+          BODY="The Build & Deploy to Staging workflow FAILED. Run: ${RUN_URL}. Commit: ${{ github.sha }}. Failing step: the staging ECS deploy / health-verify (or an earlier build step - see the run log). This is a DETECTION alert (AUDIT-111 non-silent gate); it does NOT block merge or gate production. Resolve the staging failure (DB / env / image cause) then re-run the workflow. See register AUDIT-111 / AUDIT-025."
+          EXISTING="$(gh issue list --state open --search 'Staging deploy failed on main in:title' --json number --jq '.[0].number' 2>/dev/null || echo '')"
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "Staging deploy failed again: ${RUN_URL} (commit ${{ github.sha }})." 2>/dev/null || echo "::warning::staging-failure alert comment failed to post; the red run is still the signal."
+          else
+            gh issue create --title "$TITLE" --body "$BODY" 2>/dev/null || echo "::warning::staging-failure alert issue create failed; the red run is still the signal."
+          fi
