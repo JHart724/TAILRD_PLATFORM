@@ -33,6 +33,7 @@ Moved out of `CLAUDE.md` on 2026-06-01 to keep the always-loaded project-instruc
 
 ## NOT wired (hardcoded mock data)
 - EP, Coronary, Structural, Valvular, Peripheral module views (5 of 6 modules)
+  - **EP Executive tier - PARTIAL (AUDIT-304 EP convergence, in PR `feat/ep-exec-convergence`, 2026-07-09):** the new `EPExecutiveSummary` reads the live EP dashboard contract (`useModuleDashboard('electrophysiology')` -> `EPDashboardData`: patient total / open gaps / device candidates) with honest loading/error/empty states, and the Gap Intelligence headline reads the live `totalOpenGaps` across the real `totalPatients`. All revenue/financial surfaces (waterfall, DRG/CMI, P-v-R, benchmarks, facility, pipeline, forward outlook) remain DEMO by design (no backend revenue source; reconciled to one derived `epDemoFinancials` model, each surface DemoDataBadge-marked). Rest of EP (Service Line, Care Team) still hardcoded mock. Endpoint already emits the wired fields (no backend change).
 - Notification panel (mock data in sub-components, not wired to GET /api/notifications yet)
 - All admin tabs (users, audit, config, data, health systems, customer success)
 - Phenotype screening panel

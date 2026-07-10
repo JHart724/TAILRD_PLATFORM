@@ -7,7 +7,8 @@ import { ExportData } from '../../../utils/dataExport';
 import EPROIWaterfall from '../components/EPROIWaterfall';
 import EPBenchmarksPanel from '../components/BenchmarksPanel';
 import EPProjectedVsRealizedChart from '../components/EPProjectedVsRealizedChart';
-// import EPExecutiveSummary from '../components/EPExecutiveSummary';
+import EPExecutiveSummary, { EPDashboardData } from '../components/EPExecutiveSummary';
+import EPForwardOutlookPanel from '../components/EPForwardOutlookPanel';
 import EPRevenueWaterfallModal from '../components/EPRevenueWaterfallModal';
 import EPMonthDetailModal from '../components/EPMonthDetailModal';
 import EPBenchmarkDetailModal from '../../../components/electrophysiology/EPBenchmarkDetailModal';
@@ -18,17 +19,24 @@ import { modulesClinicalData } from '../../../config/allModulesClinicalData';
 import { getOrdinalSuffix, formatMillions, toFixed, roundTo } from '../../../utils/formatters';
 import BaseDetailModal from '../../../components/shared/BaseDetailModal';
 import GapIntelligenceCard from '../../../components/shared/GapIntelligenceCard';
-import GapResponseRateCard from '../../../components/shared/GapResponseRateCard';
-import PredictiveMetricsBanner from '../../../components/shared/PredictiveMetricsBanner';
-import { RevenuePipelineCard, RevenueAtRiskCard, TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
-import type { RevenuePipelineData, RevenueAtRiskData, TrajectoryTrendsData } from '../../../components/shared/ForwardLookingCards';
+import DemoDataBadge from '../../../components/shared/DemoDataBadge';
+import {
+  EP_DEMO_WATERFALL,
+  EP_DEMO_CATEGORY_DETAIL,
+  EP_DEMO_CATEGORIES,
+  EP_DEMO_TOPGAPS,
+  EP_DEMO_SAFETY_ALERT,
+} from '../config/epDemoFinancials';
 import { Heart } from 'lucide-react';
 
 // Get electrophysiology data
 const electrophysiologyData = modulesClinicalData.electrophysiology;
 
 const ElectrophysiologyExecutiveView: React.FC = () => {
-  const { data: dashboard, loading: dashboardLoading, error: dashboardError } = useModuleDashboard('electrophysiology');
+  // useModuleDashboard returns `data: any`; the EP dashboard endpoint emits the
+  // EPDashboardData contract (patient/gap/device counts), so type it here to drop `any`.
+  const { data: dashboardRaw, loading: dashboardLoading, error: dashboardError } = useModuleDashboard('electrophysiology');
+  const dashboard = (dashboardRaw as EPDashboardData | null) ?? null;
   const [selectedWaterfallCategory, setSelectedWaterfallCategory] = useState<'Ablation Therapy' | 'Devices' | 'Phenotypes' | '340B' | null>(null);
   const [selectedMonth, setSelectedMonth] = useState<any>(null);
   const [selectedBenchmark, setSelectedBenchmark] = useState<any>(null);
@@ -37,39 +45,12 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
   const [selectedDRG, setSelectedDRG] = useState<any>(null);
   const [selectedZip, setSelectedZip] = useState<string | null>(null);
 
-  // Map display names to internal names
-  const mapCategory = (category: 'Ablation Therapy' | 'Devices' | 'Phenotypes' | '340B'): 'ValveTherapy' | 'Devices' | 'Arrhythmias' | '340B' => {
-	const mapping = {
-	'Ablation Therapy': 'ValveTherapy' as const,
-	'Devices': 'Devices' as const,
-	'Phenotypes': 'Arrhythmias' as const,
-	'340B': '340B' as const
-	};
-	return mapping[category];
-  };
-
-  // Get category-specific revenue and patient data from electrophysiology data
-  const getCategoryData = (category: 'Ablation Therapy' | 'Devices' | 'Phenotypes' | '340B' | 'ValveTherapy' | 'Arrhythmias') => {
-	// Map to internal name if needed
-	const internalCategory = typeof category === 'string' && (category === 'Ablation Therapy' || category === 'Devices' || category === 'Phenotypes' || category === '340B')
-	? mapCategory(category as 'Ablation Therapy' | 'Devices' | 'Phenotypes' | '340B')
-	: category as 'ValveTherapy' | 'Devices' | 'Arrhythmias' | '340B';
-
-	// Try to get from electrophysiology data first
-	if (electrophysiologyData.revenueCategories) {
-	const categoryData = electrophysiologyData.revenueCategories.find(
-	cat => cat.internalName === internalCategory
-	);
-	if (categoryData) return categoryData;
-	}
-	// Fallback electrophysiology data
-	const fallbackData: Record<string, { revenue: number; patientCount: number }> = {
-	ValveTherapy: { revenue: 4200000, patientCount: 124 }, // Ablation
-	Devices: { revenue: 3100000, patientCount: 89 }, // LAAC
-	Arrhythmias: { revenue: 1800000, patientCount: 45 }, // TriClip
-	'340B': { revenue: 1200000, patientCount: 67 } // BAV/Other
-	};
-	return fallbackData[internalCategory] || { revenue: 0, patientCount: 0 };
+  // Category revenue + patient detail for the waterfall drill-down modal - a stated
+  // decomposition of the single epDemoFinancials model (was: bespoke fallback literals
+  // that disagreed with the waterfall totals).
+  const getCategoryData = (category: 'Ablation Therapy' | 'Devices' | 'Phenotypes' | '340B') => {
+	const key = category === 'Ablation Therapy' ? 'Ablation' : category;
+	return EP_DEMO_CATEGORY_DETAIL[key] || { revenue: 0, patientCount: 0 };
   };
 
   const getFacilityData = (facilityName: string) => {
@@ -101,48 +82,81 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 	return drgs.find(d => d.code === code);
   };
 
-  const getMonthData = (month: string) => {
-	// Fallback electrophysiology monthly data
-	const monthlyData = [
-	{ month: 'Jan', devices: 189, revenue: 5890000, breakdown: [{ category: 'ValveTherapy', projected: 400000, realized: 380000 }] },
-	{ month: 'Feb', devices: 167, revenue: 5234000, breakdown: [{ category: 'ValveTherapy', projected: 350000, realized: 330000 }] }
-	];
-	return monthlyData.find(m => m.month === month);
+  // Build the EPDRGDetailModal's expected shape from a DRG card object. The card data
+  // (electrophysiologyData.drgs) carries `cases` as a numeric COUNT, but the modal
+  // expects `cases` to be a Case[] array - passing the number crashed the modal with
+  // "cases is not iterable" (`[...cases]`). This maps the card fields to the modal
+  // contract and synthesizes a well-formed demo case list so the drill-down (kept
+  // as an intentional affordance, DemoDataBadge'd) renders instead of throwing.
+  const getEPDRGDetailData = (code: string) => {
+	const drg: any = getDRGData(code);
+	if (!drg) return null;
+	const volume = drg.cases ?? drg.caseCount ?? 0;
+	const avgReimbursement = drg.reimbursement ?? drg.avgReimbursement ?? 0;
+	const marginPct = drg.margin ?? 0;
+	const avgCost = drg.cost ?? Math.round(avgReimbursement * (1 - marginPct / 100));
+	// Deterministic (no Math.random) de-identified demo cases; fixed variation factors
+	// keep the list reproducible. No per-case billing source exists, so this is demo
+	// detail behind the modal's DemoDataBadge.
+	const ageRanges = ['55-64', '65-74', '75-84', '65-74', '55-64', '75-84', '85+', '65-74', '55-64', '75-84'];
+	const losFactors = [0.8, 1.0, 1.2, 0.9, 1.1, 1.3, 0.7, 1.0, 1.15, 0.95];
+	const costFactors = [0.92, 1.0, 1.08, 0.95, 1.05, 1.12, 0.88, 1.0, 1.06, 0.97];
+	const revFactors = [1.05, 1.0, 0.96, 1.02, 0.98, 0.94, 1.08, 1.0, 0.97, 1.03];
+	const baseLos = 2.8;
+	const cases = ageRanges.map((ageRange, i) => {
+	const cost = Math.round(avgCost * costFactors[i]);
+	const revenue = Math.round(avgReimbursement * revFactors[i]);
+	const caseMargin = revenue - cost;
+	const marginPercent = revenue ? (caseMargin / revenue) * 100 : 0;
+	return {
+	caseId: `EP-${drg.code}-${String(i + 1).padStart(2, '0')}`,
+	ageRange,
+	los: Math.round(baseLos * losFactors[i] * 10) / 10,
+	cost,
+	revenue,
+	margin: caseMargin,
+	marginPercent,
+	};
+	});
+	return {
+	drgCode: drg.code,
+	description: drg.name ?? `DRG ${drg.code}`,
+	volume,
+	avgReimbursement,
+	totalRevenue: avgReimbursement * volume,
+	avgLos: baseLos,
+	avgCost,
+	margin: marginPct,
+	targetLos: 3.0,
+	hospitalAvgLos: 3.0,
+	nationalBenchmarkLos: 3.2,
+	cases,
+	};
   };
 
-  // Generate breakdown data for month detail modal using electrophysiology data
+  // Month drill-down breakdown: split the clicked month's projected/realized by the
+  // SAME category shares as the annual waterfall (Ablation/Devices/Phenotypes/340B);
+  // the last category absorbs rounding so the breakdown sums exactly to the month.
   const generateMonthBreakdown = (month: string, projected: number, realized: number) => {
-	const monthData = getMonthData(month);
-	if (monthData && monthData.breakdown) {
-	return monthData.breakdown;
-	}
-
-	// Fallback calculation if specific month data not found
-	const projectedRatio = projected / 1000000;
-	const realizedRatio = realized / 1000000;
-
-	return [
-	{
-	category: 'ValveTherapy',
-	projected: Math.round(projectedRatio * 400000),
-	realized: Math.round(realizedRatio * 380000)
-	},
-	{
-	category: 'Devices',
-	projected: Math.round(projectedRatio * 300000),
-	realized: Math.round(realizedRatio * 290000)
-	},
-	{
-	category: 'Arrhythmias',
-	projected: Math.round(projectedRatio * 200000),
-	realized: Math.round(realizedRatio * 190000)
-	},
-	{
-	category: '340B',
-	projected: Math.round(projectedRatio * 100000),
-	realized: Math.round(realizedRatio * 95000)
-	}
+	const cats = [
+	{ category: 'Ablation', share: EP_DEMO_WATERFALL.ablation_revenue },
+	{ category: 'Devices', share: EP_DEMO_WATERFALL.devices_revenue },
+	{ category: 'Phenotypes', share: EP_DEMO_WATERFALL.phenotypes_revenue },
+	{ category: '340B', share: EP_DEMO_WATERFALL._340b_revenue },
 	];
+	const total = EP_DEMO_WATERFALL.total_revenue;
+	let projAlloc = 0;
+	let realAlloc = 0;
+	return cats.map((c, i) => {
+	if (i === cats.length - 1) {
+	return { category: c.category, projected: projected - projAlloc, realized: realized - realAlloc };
+	}
+	const p = Math.round((projected * c.share) / total);
+	const r = Math.round((realized * c.share) / total);
+	projAlloc += p;
+	realAlloc += r;
+	return { category: c.category, projected: p, realized: r };
+	});
   };
 
   // Handle month click from ProjectedVsRealizedChart
@@ -478,304 +492,289 @@ const ElectrophysiologyExecutiveView: React.FC = () => {
 	<div className="min-h-screen p-6 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #EAEFF4 0%, #F2F5F8 50%, #ECF0F4 100%)' }}>
 
 	<div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
-	{dashboardLoading && <div className="text-titanium-500 text-sm animate-pulse">Loading live data...</div>}
-	{/* Export Button - Clean Integration */}
-	<div className="flex justify-end mb-6">
-	<ExportButton
-	data={generateExportData()}
-	variant="outline"
-	size="md"
-	className="shadow-lg hover:shadow-xl transition-all duration-300"
-	/>
-	</div>
+      {/* Tier header - Export folded in as a right-aligned utility (closes the EP-side
+          AUDIT-161 export-above-headline inversion; the first SECTION is now the KPI
+          summary, matching the HF exemplar). */}
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-2xl font-bold font-display text-titanium-800">Electrophysiology Executive Dashboard</h2>
+        <ExportButton
+          data={generateExportData()}
+          variant="outline"
+          size="sm"
+          className="shadow-sm hover:shadow-md transition-all duration-300"
+        />
+      </div>
 
-		{/* Clinical Gap Intelligence */}
-	<GapIntelligenceCard data={{
-	  totalGaps: dashboard?.summary?.totalOpenGaps ?? 20,
-	  categories: [
-	    { name: 'Therapy', patients: 680, color: '#2C4A60' },
-	    { name: 'Safety', patients: 290, color: '#9B2438' },
-	    { name: 'Growth', patients: 350, color: '#4A6880' },
-	    { name: 'Quality', patients: 410, color: '#C8D4DC' },
-	  ],
-	  topGaps: [
-	    { name: 'LAAC Candidates', patients: 185, opportunity: '$4.1M' },
-	    { name: 'CSP/CRT Upgrade', patients: 120, opportunity: '$2.6M' },
-	    { name: 'Dofetilide REMS', patients: 95, opportunity: '$2.1M' },
-	    { name: 'PFA Re-ablation', patients: 78, opportunity: '$1.8M' },
-	    { name: 'Device Battery', patients: 62, opportunity: '$1.4M' },
-	  ],
-	  safetyAlert: 'CRITICAL: 134 patients \u00b7 HIGH: 156 patients',
-	}} />
+      {/* 1. KPI summary - live patients / open gaps / device candidates (the tier
+          previously rendered NO live KPI summary) + 3 demo-labeled financial cards. */}
+      <EPExecutiveSummary dashboard={dashboard} loading={dashboardLoading} error={dashboardError} />
 
-	{/* Gap Response Rate — care team action tracking */}
-	<GapResponseRateCard
-	  rates={[]}
-	  overallRate={0}
-	  timeRange="30d"
-	/>
+      {/* 2. Clinical Gap Intelligence - live headline (totalOpenGaps + real totalPatients),
+          demo-badged composition (donut / top-gaps / safety are illustrative). */}
+      <GapIntelligenceCard
+        data={{
+          totalGaps: dashboard?.summary?.totalOpenGaps ?? 0,
+          categories: EP_DEMO_CATEGORIES,
+          topGaps: EP_DEMO_TOPGAPS,
+          safetyAlert: EP_DEMO_SAFETY_ALERT,
+        }}
+        totalPatients={dashboard?.summary?.totalPatients ?? 0}
+        compositionDemo
+      />
 
-	{/* Forward-Looking Executive Cards */}
-	<RevenuePipelineCard data={{
-	  quarters: [
-	    { quarter: 'Q1 2026', revenue: 3200000, procedures: 28, confidence: 'high' },
-	    { quarter: 'Q2 2026', revenue: 2400000, procedures: 21, confidence: 'moderate' },
-	    { quarter: 'Q3 2026', revenue: 1900000, procedures: 16, confidence: 'moderate' },
-	    { quarter: 'Q4 2026', revenue: 1400000, procedures: 12, confidence: 'low' },
-	  ],
-	  totalProjected12Month: 8900000,
-	}} />
-	<RevenueAtRiskCard data={{
-	  immediatePatients: 134,
-	  immediateRevenue: 4100000,
-	  deferralRevenue: 2600000,
-	  cumulativeRisk12Month: 8400000,
-	  deferralCostPerMonth: 680000,
-	}} />
-	<TrajectoryTrendsCard data={{
-	  worseningRapidPct: 22,
-	  worseningRapidCount: 290,
-	  meanDeclineRate: 'QTc trend monitoring',
-	  declineMetric: 'EP',
-	  thresholdIn30Days: 8,
-	  totalFlaggedPatients: 730,
-	  keyInsights: [
-	    '134 LAAC candidates with CHA2DS2-VASc >= 4 -- anticoagulation-related bleeding trajectory increasing',
-	    'PVC burden trending above ablation threshold in 12 patients -- reversibility window narrowing',
-	    '8 patients with QTc > 480ms and worsening electrolyte trends -- immediate review needed',
-	  ],
-	}} />
+      {/* 3. Revenue Opportunity Waterfall - single demo model (epDemoFinancials). */}
+      <div className="metal-card relative z-10 mb-6">
+        <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-xl font-bold text-titanium-900 mb-1">Ablation & LAAC Revenue Opportunity</h3>
+              <p className="text-sm text-titanium-600">Annual revenue opportunity by electrophysiology intervention</p>
+            </div>
+            <DemoDataBadge />
+          </div>
+        </div>
+        <div className="p-6">
+          <EPROIWaterfall
+            data={{
+              gdmt_revenue: EP_DEMO_WATERFALL.ablation_revenue,
+              devices_revenue: EP_DEMO_WATERFALL.devices_revenue,
+              phenotypes_revenue: EP_DEMO_WATERFALL.phenotypes_revenue,
+              _340b_revenue: EP_DEMO_WATERFALL._340b_revenue,
+              total_revenue: EP_DEMO_WATERFALL.total_revenue,
+              realized_revenue: EP_DEMO_WATERFALL.realized_revenue,
+            }}
+            onCategoryClick={setSelectedWaterfallCategory}
+          />
+        </div>
+      </div>
 
-	{/* Predictive Metrics Banner */}
-	<PredictiveMetricsBanner data={{
-	  thresholdIn90Days: 42,
-	  quarterlyActionableRevenue: 4100000,
-	  totalIdentifiedRevenue: 12800000,
-	  rapidDeteriorationCount: 134,
-	  avgTimeToEvent: 7,
-	  projectedRevenueCurrentRate: 4800000,
-	  projectedRevenueSystematic: 10200000,
-	}} />
+      {/* 4. DRG / CMI performance - promoted from last to sit with the financials
+          (matching the HF exemplar order). Clickable DRG cards preserved. */}
+      <div className="metal-card relative z-10 mb-6">
+        <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-titanium-900 mb-2">Electrophysiology DRG Performance</h3>
+              <p className="text-sm text-titanium-600">Key DRG categories and financial performance metrics</p>
+            </div>
+            <DemoDataBadge label="Demo data - DRG billing source pending" />
+          </div>
+        </div>
 
-	{/* #2: Revenue Opportunity Waterfall */}
-	<div className="metal-card relative z-10 mb-6">
-	<div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
-	<h3 className="text-xl font-bold text-titanium-900 mb-1">Ablation & LAAC Revenue Opportunity</h3>
-	<p className="text-sm text-titanium-600">Annual revenue opportunity by electrophysiology intervention</p>
-	</div>
-	<div className="p-6">
-	<EPROIWaterfall
-	data={{
-	gdmt_revenue: getCategoryData('ValveTherapy').revenue / 1000000,
-	devices_revenue: getCategoryData('Devices').revenue / 1000000,
-	phenotypes_revenue: getCategoryData('Arrhythmias').revenue / 1000000,
-	_340b_revenue: getCategoryData('340B').revenue / 1000000,
-	total_revenue: 10.3,
-	realized_revenue: 3.1
-	}}
-	onCategoryClick={setSelectedWaterfallCategory}
-	/>
-	</div>
-	</div>
+        <div className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            {(electrophysiologyData.drgs?.slice(0, 3) || [getDRGData('266'), getDRGData('267'), getDRGData('269')]).filter(Boolean).map((drg, index) => {
+              const drgCode = drg.code;
+              const drgColors = [
+                { value: '#C4982A', bg: '#FAF6E8', border: '#D4B85C' },
+                { value: '#4A6880', bg: '#F0F5FA', border: '#C8D4DC' },
+                { value: '#9B2438', bg: '#FDF2F3', border: '#F5C0C8' },
+              ];
+              const dc = drgColors[index] || drgColors[0];
+              return (
+                <div
+                  key={drg.code}
+                  onClick={() => {
+                    const drgData = getEPDRGDetailData(drgCode);
+                    if (drgData) setSelectedDRG(drgData);
+                  }}
+                  className="rounded-xl p-4 border shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+                  style={{ background: `linear-gradient(to right, white, ${dc.bg})`, borderColor: dc.border }}
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <DollarSign className="w-8 h-8" style={{ color: dc.value }} />
+                    <div>
+                      <div className="font-semibold text-neutral-800">{drg.name}</div>
+                      <div className="text-2xl font-bold" style={{ color: dc.value }}>${toFixed(drg.reimbursement / 1000, 0)}K</div>
+                    </div>
+                  </div>
+                  <div className="text-sm text-teal-500 mb-2">
+                    {drg.cases} cases
+                  </div>
+                  <div className="text-sm" style={{ color: drg.margin > 30 ? '#2C4A60' : '#9B2438' }}>
+                    {toFixed(drg.margin, 1)}% margin
+                  </div>
+                </div>
+              );
+            })}
+          </div>
 
-	{/* #3 & #4: Projected vs Realized Revenue and Benchmarks */}
-	<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 relative z-10 mb-6">
-	{/* Projected vs Realized */}
-	<div className="metal-card">
-	<div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
-	<h3 className="text-lg font-semibold text-titanium-900 mb-1">Projected vs Realized Revenue</h3>
-	<p className="text-sm text-titanium-600">Revenue tracking and variance analysis</p>
-	</div>
-	<div className="p-6">
-	<EPProjectedVsRealizedChart onMonthClick={handleMonthClick} />
-	</div>
-	</div>
+          {/* Case Mix Index Performance */}
+          <div className="bg-white rounded-xl p-4 border border-titanium-200 shadow-lg">
+            <h4 className="font-semibold text-titanium-900 mb-4">Electrophysiology Case Mix Index (CMI) Analysis</h4>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold" style={{ color: '#2C4A60' }}>3.78</div>
+                <div className="text-sm text-titanium-600">Current CMI</div>
+                <div className="text-xs text-teal-700">+0.28 vs target</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold" style={{ color: '#8B6914' }}>$524K</div>
+                <div className="text-sm text-titanium-600">Monthly Opportunity</div>
+                <div className="text-xs text-titanium-500">From DRG optimization</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold" style={{ color: '#2D6147' }}>96.2%</div>
+                <div className="text-sm text-titanium-600">Documentation Rate</div>
+                <div className="text-xs text-titanium-500">CC/MCC capture</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold" style={{ color: '#1A6878' }}>2.8</div>
+                <div className="text-sm text-titanium-600">Avg LOS</div>
+                <div className="text-xs text-teal-700">vs 3.2 benchmark</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-	{/* Benchmarks Panel */}
-	<div className="metal-card">
-	<div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
-	<h3 className="text-lg font-semibold text-titanium-900 mb-1">Performance Benchmarks</h3>
-	<p className="text-sm text-titanium-600">Industry comparisons and targets</p>
-	</div>
-	<div className="p-6">
-	<EPBenchmarksPanel onBenchmarkClick={handleBenchmarkClick} />
-	</div>
-	</div>
-	</div>
+      {/* 5. Projected vs Realized + Benchmarks */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 relative z-10 mb-6">
+        <div className="metal-card">
+          <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-titanium-900 mb-1">Projected vs Realized Revenue</h3>
+                <p className="text-sm text-titanium-600">Revenue tracking and variance analysis</p>
+              </div>
+              <DemoDataBadge />
+            </div>
+          </div>
+          <div className="p-6">
+            <EPProjectedVsRealizedChart onMonthClick={handleMonthClick} />
+          </div>
+        </div>
 
-	{/* #5: Revenue by Facility */}
-	<div className="metal-card relative z-10 mb-6">
-	<div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
-	<h3 className="text-lg font-semibold text-titanium-900 mb-1">Revenue by Facility</h3>
-	<p className="text-sm text-titanium-600">Facility-level performance and opportunities</p>
-	</div>
-	<div className="p-6">
-	<h4 className="text-lg font-semibold text-titanium-900 mb-4">Facility Revenue Opportunities</h4>
-	<div className="space-y-3">
-	{[
-	{ facility: 'Main Campus', current: '$4.2M', potential: '$5.8M', opportunity: '$1.6M', devices: 247 },
-	{ facility: 'North Center', current: '$2.1M', potential: '$3.2M', opportunity: '$1.1M', devices: 156 },
-	{ facility: 'South Campus', current: '$1.8M', potential: '$2.7M', opportunity: '$0.9M', devices: 134 },
-	{ facility: 'Heart Institute', current: '$1.6M', potential: '$2.1M', opportunity: '$0.5M', devices: 89 }
-	].map((item, index) => (
-	<div
-	key={item.facility}
-	onClick={() => handleFacilityClick(item.facility)}
-	className="bg-white p-4 rounded-lg border border-titanium-200 hover:border-porsche-300 transition-colors cursor-pointer"
-	>
-	<div className="flex items-center justify-between">
-	<div className="flex-1">
-	<div className="font-semibold text-titanium-900">{item.facility}</div>
-	<div className="text-sm text-titanium-600">{item.devices} devices annually</div>
-	</div>
-	<div className="text-right">
-	<div className="font-bold text-teal-700">{item.opportunity}</div>
-	<div className="text-xs text-titanium-500">{item.current} → {item.potential}</div>
-	</div>
-	</div>
-	</div>
-	))}
-	</div>
-	</div>
-	</div>
+        <div className="metal-card">
+          <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-titanium-900 mb-1">Performance Benchmarks</h3>
+                <p className="text-sm text-titanium-600">Industry comparisons and targets</p>
+              </div>
+              <DemoDataBadge label="Demo benchmarks - national comparison pending" />
+            </div>
+          </div>
+          <div className="p-6">
+            <EPBenchmarksPanel onBenchmarkClick={handleBenchmarkClick} />
+          </div>
+        </div>
+      </div>
 
-	{/* #6: Geographic Heat Map */}
-	<div className="mb-6">
-	<ZipHeatMap
-	title="AFib & Arrhythmia Risk & Readmission Hotspots"
-	data={epZipData}
-	onZipClick={handleZipClick}
-	centerLat={40.7589}
-	centerLng={-73.9851}
-	zoom={12}
-	/>
-	</div>
+      {/* 6. Forward Outlook - consolidated 12-month projection (replaces the former
+          pipeline / at-risk / trajectory / predictive cluster; one panel, one demo
+          model). Its DemoDataBadge is internal to the panel. */}
+      <EPForwardOutlookPanel />
 
-	{/* #7: Revenue Opportunities Pipeline - Executive Summary */}
-	<div className="mb-6">
-	<div
-	onClick={() => setShowOpportunityModal(true)}
-	className="bg-gradient-to-br from-[#f0f4f8] to-[#e8eef3] rounded-lg border-2 border-titanium-300 p-8 cursor-pointer hover:shadow-lg transition-shadow"
-	>
-	<div className="flex items-start justify-between">
-	<div className="flex-1">
-	<div className="flex items-center mb-3">
-	<TrendingUp className="w-6 h-6 text-teal-700 mr-2" />
-	<h3 className="text-xl font-bold">Revenue Opportunities Pipeline</h3>
-	</div>
-	<div className="text-5xl font-bold text-teal-700 mb-2">$127,240</div>
-	<div className="text-gray-600 text-lg mb-4">23 high-priority documentation opportunities identified</div>
+      {/* 7. Revenue by Facility - clickable facility list opens a fabricated-detail
+          modal (demo-badged); the affordance is preserved. */}
+      <div className="metal-card relative z-10 mb-6">
+        <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-titanium-900 mb-1">Revenue by Facility</h3>
+              <p className="text-sm text-titanium-600">Facility-level performance and opportunities</p>
+            </div>
+            <DemoDataBadge />
+          </div>
+        </div>
+        <div className="p-6">
+          <h4 className="text-lg font-semibold text-titanium-900 mb-4">Facility Revenue Opportunities</h4>
+          <div className="space-y-3">
+            {[
+              { facility: 'Main Campus', current: '$4.2M', potential: '$5.8M', opportunity: '$1.6M', devices: 247 },
+              { facility: 'North Center', current: '$2.1M', potential: '$3.2M', opportunity: '$1.1M', devices: 156 },
+              { facility: 'South Campus', current: '$1.8M', potential: '$2.7M', opportunity: '$0.9M', devices: 134 },
+              { facility: 'Heart Institute', current: '$1.6M', potential: '$2.1M', opportunity: '$0.5M', devices: 89 }
+            ].map((item) => (
+              <div
+                key={item.facility}
+                onClick={() => handleFacilityClick(item.facility)}
+                className="bg-white p-4 rounded-lg border border-titanium-200 hover:border-porsche-300 transition-colors cursor-pointer"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="font-semibold text-titanium-900">{item.facility}</div>
+                    <div className="text-sm text-titanium-600">{item.devices} devices annually</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-bold text-teal-700">{item.opportunity}</div>
+                    <div className="text-xs text-titanium-500">{item.current} &rarr; {item.potential}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-	<div className="grid grid-cols-3 gap-4 mt-4">
-	<div className="rounded-lg p-3 border" style={{ background: '#FDF2F3', borderColor: '#F5C0C8' }}>
-	<div className="text-sm text-gray-600">High Priority</div>
-	<div className="text-2xl font-bold" style={{ color: '#9B2438' }}>8</div>
-	<div className="text-sm" style={{ color: '#8B6914' }}>$68,600</div>
-	</div>
-	<div className="rounded-lg p-3 border" style={{ background: '#FAF6E8', borderColor: '#D4B85C' }}>
-	<div className="text-sm text-gray-600">Medium Priority</div>
-	<div className="text-2xl font-bold" style={{ color: '#8B6914' }}>12</div>
-	<div className="text-sm" style={{ color: '#8B6914' }}>$50,240</div>
-	</div>
-	<div className="rounded-lg p-3 border" style={{ background: '#F0F5FA', borderColor: '#C8D4DC' }}>
-	<div className="text-sm text-gray-600">Due This Week</div>
-	<div className="text-2xl font-bold" style={{ color: '#4A6880' }}>8</div>
-	<div className="text-sm text-gray-500">Urgent action</div>
-	</div>
-	</div>
-	</div>
+      {/* 8. Geographic Heat Map */}
+      <div className="mb-6">
+        <ZipHeatMap
+          title="AFib & Arrhythmia Risk & Readmission Hotspots"
+          data={epZipData}
+          onZipClick={handleZipClick}
+          centerLat={40.7589}
+          centerLng={-73.9851}
+          zoom={12}
+        />
+      </div>
 
-	<div className="ml-6">
-	<button className="px-6 py-3 bg-chrome-600 text-white rounded-lg hover:bg-chrome-700 font-semibold flex items-center">
-	View Pipeline Details
-	<ChevronRight className="w-5 h-5 ml-2" />
-	</button>
-	</div>
-	</div>
-	</div>
-	</div>
+      {/* Revenue Opportunities Pipeline - kept near the financials cluster (physically
+          last, matching the HF exemplar), demo-badged. */}
+      <div className="mb-6">
+        <div
+          onClick={() => setShowOpportunityModal(true)}
+          className="bg-gradient-to-br from-[#f0f4f8] to-[#e8eef3] rounded-lg border-2 border-titanium-300 p-8 cursor-pointer hover:shadow-lg transition-shadow"
+        >
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <div className="flex items-center mb-3">
+                <TrendingUp className="w-6 h-6 text-teal-700 mr-2" />
+                <h3 className="text-xl font-bold mr-3">Revenue Opportunities Pipeline</h3>
+                <DemoDataBadge label="Demo data - DRG billing source pending" />
+              </div>
+              <div className="text-5xl font-bold text-teal-700 mb-2">$127,240</div>
+              <div className="text-gray-600 text-lg mb-4">23 high-priority documentation opportunities identified</div>
 
-	<div className="metal-card relative z-10 mb-6">
-	<div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
-	<h3 className="text-lg font-semibold text-titanium-900 mb-2">Electrophysiology DRG Performance</h3>
-	<p className="text-sm text-titanium-600">Key DRG categories and financial performance metrics</p>
-	</div>
+              <div className="grid grid-cols-3 gap-4 mt-4">
+                <div className="rounded-lg p-3 border" style={{ background: '#FDF2F3', borderColor: '#F5C0C8' }}>
+                  <div className="text-sm text-gray-600">High Priority</div>
+                  <div className="text-2xl font-bold" style={{ color: '#9B2438' }}>8</div>
+                  <div className="text-sm" style={{ color: '#8B6914' }}>$68,600</div>
+                </div>
+                <div className="rounded-lg p-3 border" style={{ background: '#FAF6E8', borderColor: '#D4B85C' }}>
+                  <div className="text-sm text-gray-600">Medium Priority</div>
+                  <div className="text-2xl font-bold" style={{ color: '#8B6914' }}>12</div>
+                  <div className="text-sm" style={{ color: '#8B6914' }}>$50,240</div>
+                </div>
+                <div className="rounded-lg p-3 border" style={{ background: '#F0F5FA', borderColor: '#C8D4DC' }}>
+                  <div className="text-sm text-gray-600">Due This Week</div>
+                  <div className="text-2xl font-bold" style={{ color: '#4A6880' }}>8</div>
+                  <div className="text-sm text-gray-500">Urgent action</div>
+                </div>
+              </div>
+            </div>
 
-	<div className="p-6">
-	<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-	{(electrophysiologyData.drgs?.slice(0, 3) || [getDRGData('266'), getDRGData('267'), getDRGData('269')]).filter(Boolean).map((drg, index) => {
-	const drgCode = drg.code;
-	// Index 0 (MCC, highest) → Metallic Gold; Index 1 (CC, mid) → Chrome Blue mid; Index 2 (lowest) → Carmona Red
-	const drgColors = [
-	{ value: '#C4982A', bg: '#FAF6E8', border: '#D4B85C' },
-	{ value: '#4A6880', bg: '#F0F5FA', border: '#C8D4DC' },
-	{ value: '#9B2438', bg: '#FDF2F3', border: '#F5C0C8' },
-	];
-	const dc = drgColors[index] || drgColors[0];
-	return (
-	<div
-	key={drg.code}
-	onClick={() => {
-	const drgData = getDRGData(drgCode);
-	if (drgData) setSelectedDRG(drgData);
-	}}
-	className="rounded-xl p-4 border shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
-	style={{ background: `linear-gradient(to right, white, ${dc.bg})`, borderColor: dc.border }}
-	>
-	<div className="flex items-center gap-3 mb-3">
-	<DollarSign className="w-8 h-8" style={{ color: dc.value }} />
-	<div>
-	<div className="font-semibold text-neutral-800">{drg.name}</div>
-	<div className="text-2xl font-bold" style={{ color: dc.value }}>${toFixed(drg.reimbursement / 1000, 0)}K</div>
-	</div>
-	</div>
-	<div className="text-sm text-teal-500 mb-2">
-	{drg.cases} cases
-	</div>
-	<div className="text-sm" style={{ color: drg.margin > 30 ? '#2C4A60' : '#9B2438' }}>
-	{toFixed(drg.margin, 1)}% margin
-	</div>
-	</div>
-	);
-	})}
-	</div>
+            <div className="ml-6">
+              {/* Explicit handler: previously relied on event-bubble to the parent card;
+                  same idempotent action, so bubbling stays harmless. */}
+              <button
+                type="button"
+                onClick={() => setShowOpportunityModal(true)}
+                className="px-6 py-3 bg-chrome-600 text-white rounded-lg hover:bg-chrome-700 font-semibold flex items-center"
+              >
+                View Pipeline Details
+                <ChevronRight className="w-5 h-5 ml-2" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-	{/* Case Mix Index Performance */}
-	<div className="bg-white rounded-xl p-4 border border-titanium-200 shadow-lg">
-	<h4 className="font-semibold text-titanium-900 mb-4">Electrophysiology Case Mix Index (CMI) Analysis</h4>
-	<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-	<div className="text-center">
-	{/* Current CMI → Chrome Blue */}
-	<div className="text-2xl font-bold" style={{ color: '#2C4A60' }}>3.78</div>
-	<div className="text-sm text-titanium-600">Current CMI</div>
-	<div className="text-xs text-teal-700">+0.28 vs target</div>
-	</div>
-	<div className="text-center">
-	{/* Monthly Opportunity → Metallic Gold */}
-	<div className="text-2xl font-bold" style={{ color: '#8B6914' }}>$524K</div>
-	<div className="text-sm text-titanium-600">Monthly Opportunity</div>
-	<div className="text-xs text-titanium-500">From DRG optimization</div>
-	</div>
-	<div className="text-center">
-	{/* Documentation Rate → Racing Green */}
-	<div className="text-2xl font-bold" style={{ color: '#2D6147' }}>96.2%</div>
-	<div className="text-sm text-titanium-600">Documentation Rate</div>
-	<div className="text-xs text-titanium-500">CC/MCC capture</div>
-	</div>
-	<div className="text-center">
-	{/* Avg LOS → Steel Teal */}
-	<div className="text-2xl font-bold" style={{ color: '#1A6878' }}>2.8</div>
-	<div className="text-sm text-titanium-600">Avg LOS</div>
-	<div className="text-xs text-teal-700">vs 3.2 benchmark</div>
-	</div>
-	</div>
-	</div>
-	</div>
-	</div>
+      </div>
 
-	</div>
-
-	{/* Revenue Waterfall Modal */}
+      	{/* Revenue Waterfall Modal */}
 	{selectedWaterfallCategory && (
 	<EPRevenueWaterfallModal
 	category={selectedWaterfallCategory}

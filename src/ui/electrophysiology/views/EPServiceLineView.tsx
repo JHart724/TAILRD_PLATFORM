@@ -19,6 +19,10 @@ import EPClinicalGapDetectionDashboard from '../components/clinical/EPClinicalGa
 import EPPhenotypeDetectionChart from '../components/EPPhenotypeDetectionChart';
 import EPOutcomesTrends from '../components/executive/EPOutcomesTrends';
 import ServiceLineKPIBanner from '../../../components/shared/ServiceLineKPIBanner';
+// Relocated from the EP Executive tier (AUDIT-304 IA convergence): care-team action
+// telemetry and worsening-population trajectory are Service Line content, not exec KPIs.
+import GapResponseRateCard from '../../../components/shared/GapResponseRateCard';
+import { TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
 import { electrophysiologyServiceLineConfig } from '../config/serviceLineConfig';
 
 // Electrophysiology Analytics Dashboard
@@ -233,7 +237,26 @@ const EPServiceLineView: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'analytics': return <ElectrophysiologyAnalytics />;
-      case 'heatmap': return <PatientRiskHeatmap />;
+      case 'heatmap': return (
+        <div className="space-y-6">
+          <PatientRiskHeatmap />
+          {/* Relocated from the Executive tier (AUDIT-304 IA convergence): worsening-
+              population trajectory detail is Service Line population-health content. */}
+          <TrajectoryTrendsCard demoData cleanSurface data={{
+            worseningRapidPct: 22,
+            worseningRapidCount: 290,
+            meanDeclineRate: 'QTc trend monitoring',
+            declineMetric: 'EP',
+            thresholdIn30Days: 8,
+            totalFlaggedPatients: 730,
+            keyInsights: [
+              '134 LAAC candidates with CHA2DS2-VASc >= 4 -- anticoagulation-related bleeding trajectory increasing',
+              'PVC burden trending above ablation threshold in 12 patients -- reversibility window narrowing',
+              '8 patients with QTc > 480ms and worsening electrolyte trends -- immediate review needed',
+            ],
+          }} />
+        </div>
+      );
       case 'phenotype-detection': return <EPPhenotypeDetectionChart />;
       case 'arrhythmia': return <ArrhythmiaManagement />;
       case 'laac-risk': return <LAACRiskDashboard />;
@@ -248,7 +271,15 @@ const EPServiceLineView: React.FC = () => {
       case 'outcomes-cohort': return <EPOutcomesByCohort />;
       case 'reporting': return <AutomatedReportingSystem />;
       case 'gap-detection':
-        return <EPClinicalGapDetectionDashboard />;
+        return (
+          <div className="space-y-6">
+            <EPClinicalGapDetectionDashboard />
+            {/* Relocated from the Executive tier (AUDIT-304 IA convergence): care-team
+                action telemetry is Service Line operational content. Honest empty
+                state until a response-rate source exists. */}
+            <GapResponseRateCard rates={[]} overallRate={0} timeRange="30d" />
+          </div>
+        );
       default: return <ElectrophysiologyAnalytics />;
     }
   };
