@@ -74,6 +74,7 @@ model Hospital {
   contraindicationAssessments ContraindicationAssessment[]
   clinicalTrials              ClinicalTrial[] // AUDIT-148 Slice 1: tenant-scoped curated trials (null hospitalId = global)
   trialMatches                TrialMatch[] // AUDIT-148 Slice 1: clinical-trial eligibility matches
+  registryCases               RegistryCase[] // AUDIT-148 Slice 2: registry submission cases (tenant-scoped)
   recommendations             Recommendation[]
 
   // New clinical models
@@ -349,6 +350,7 @@ model Patient {
   interventionTracking        InterventionTracking[]
   contraindicationAssessments ContraindicationAssessment[]
   trialMatches                TrialMatch[] // AUDIT-148 Slice 1: clinical-trial eligibility matches
+  registryCases               RegistryCase[] // AUDIT-148 Slice 2: registry submission cases
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -2720,4 +2722,44 @@ model TrialMatch {
   @@unique([patientId, trialId, hospitalId])
   @@index([hospitalId, trialId, status])
   @@map("trial_matches")
+}
+
+// AUDIT-148 Slice 2: a curated registry submission case (NCDR / STS / GWTG-style) with a
+// DRAFT -> SUBMITTED -> APPROVED workflow. hospitalId scopes the case to one tenant (ALWAYS from the
+// verified JWT, never the request body/params). `fields` is the flexible registry data payload,
+// templated on the ClinicalTrial.criteria / DeviceEligibility Json pattern (avoids a brittle per-field
+// table). Slice 2 ships the model + the READ endpoint; the mutations (update fields / approve) are
+// Slice 3 (PHI-adjacent clinical decisions needing audit-log + authz + workflow-transition rules).
+enum RegistryCaseStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+model RegistryCase {
+  id String @id @default(cuid())
+
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  registryType String // NCDR / STS / GWTG / ...
+  status       RegistryCaseStatus @default(DRAFT)
+
+  // Flexible registry data payload (Record<string,any> on the frontend).
+  fields Json
+
+  // Approval audit (set by the Slice-3 approve mutation; null until approved).
+  approvedBy String?
+  approvedAt DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([patientId, registryType, hospitalId])
+  @@index([hospitalId, registryType, status])
+  @@map("registry_cases")
 }

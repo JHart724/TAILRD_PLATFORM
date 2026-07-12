@@ -9,6 +9,19 @@
 //   ICD-10 (CMS ICD-10-CM 2024): I50.2 Systolic (congestive) heart failure; I25.10 ASHD of native
 //     coronary artery without angina; I27.0 Primary pulmonary hypertension; E85.82 Wild-type
 //     transthyretin-related (ATTRwt) amyloidosis. (All also in use in gapRuleEngine.ts.)
+//
+// AUDIT-149 (2026-07-10) Synthea-coarse-coding calibration: the SNOMED->ICD-10 crosswalk emits ONLY
+// UNSPECIFIED codes (snomedCrosswalk.ts: 414545008 -> I25.9 ischemic heart disease; 84114007 /
+// 88805009 -> I50.9 heart failure), and the matcher prefix-matches (dx.startsWith(code)). So a specific
+// seed code fails to match the coarse Synthea dx ('I50.9'.startsWith('I50.2') is false) -> 0 ELIGIBLE.
+// Trials 1-2 therefore use the BROAD prefixes 'I50' / 'I25' (which match I50.9/I25.9 AND the specific
+// I50.2/I25.10). This is clinically SOUND, not a compromise: HFrEF is defined as HF + LVEF<=40, so the
+// threaded LVEF<=40 gate does the real discrimination and the specific dx code is redundant with it;
+// likewise CAD is I25 + (threaded LDL>=70) + on-statin. REAL-EHR-CORRECT CODES (post-DUA, where coding
+// is specific): trial 1 = I50.2 (systolic HF); trial 2 = I25.10 (ASHD w/o angina) - retained here in this
+// note so the specific codes are not lost; swap the prefix back to the specific code once real-EHR
+// specific coding is available. Trials 3-4 (I27.0 PH / E85.82 ATTR) are UNCHANGED: they are the intentional
+// INDETERMINATE demos (pasp/bnp are UNEVALUABLE regardless of dx), so their dx-code match is moot.
 //   RxNorm (RxNav IN, codebase-verified in cardiovascularValuesets.ts): 1488564 dapagliflozin,
 //     1545653 empagliflozin (SGLT2i); 83367 atorvastatin (statin).
 //   Lab slugs: lvef + ldl are THREADED-and-Synthea-present (matchable); pasp + bnp are intentionally
@@ -39,7 +52,7 @@ export const CURATED_TRIALS: CuratedTrialSeed[] = [
     // Fully threadable: dx + age + LVEF (threaded) + SGLT2i exclusion (RxNorm). Produces ELIGIBLE
     // (HFrEF adult, LVEF<=40, not on SGLT2i) and INELIGIBLE (already on SGLT2i, or LVEF>40).
     criteria: [
-      { criterionId: 'hf-dx', polarity: 'inclusion', type: 'dx', codes: ['I50.2'] },
+      { criterionId: 'hf-dx', polarity: 'inclusion', type: 'dx', codes: ['I50'] }, // AUDIT-149: prefix (Synthea I50.9); real-EHR specific = I50.2. LVEF<=40 gate does the HFrEF discrimination.
       { criterionId: 'age-adult', polarity: 'inclusion', type: 'age', op: '>=', value: 18 },
       { criterionId: 'lvef-reduced', polarity: 'inclusion', type: 'lab', slug: 'lvef', op: '<=', value: 40 },
       { criterionId: 'sglt2i-naive', polarity: 'exclusion', type: 'med', codes: ['1488564', '1545653'] },
@@ -57,7 +70,7 @@ export const CURATED_TRIALS: CuratedTrialSeed[] = [
     // Fully threadable: CAD dx + age + LDL (threaded) + on-statin (RxNorm). ELIGIBLE = CAD adult on a
     // statin with LDL>=70; INELIGIBLE = LDL<70 or not on a statin.
     criteria: [
-      { criterionId: 'cad-dx', polarity: 'inclusion', type: 'dx', codes: ['I25.10'] },
+      { criterionId: 'cad-dx', polarity: 'inclusion', type: 'dx', codes: ['I25'] }, // AUDIT-149: prefix (Synthea I25.9); real-EHR specific = I25.10. LDL>=70 + on-statin do the real filter.
       { criterionId: 'age-40', polarity: 'inclusion', type: 'age', op: '>=', value: 40 },
       { criterionId: 'ldl-elevated', polarity: 'inclusion', type: 'lab', slug: 'ldl', op: '>=', value: 70 },
       { criterionId: 'on-statin', polarity: 'inclusion', type: 'med', codes: ['83367'] },
