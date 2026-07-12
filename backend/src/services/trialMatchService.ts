@@ -92,6 +92,18 @@ export function evaluateCriterion(c: TrialCriterion, ctx: PatientEvalContext): C
       return { ...base, verdict: met ? 'MET' : 'FAILED' };
     }
     case 'procedure': {
+      // AUDIT-201: mirror the lab two-stage UNEVALUABLE pattern (:107-116, the exemplar). procedureCodes
+      // is built from patient.procedures; an EMPTY list is AMBIGUOUS - it means EITHER "this patient
+      // genuinely had no procedure" OR "procedures are not threaded for this patient/tenant", and the
+      // context cannot distinguish the two (both yield []). So an empty list is UNEVALUABLE - err toward
+      // unknown, NEVER a false definite negative. This matters because AUDIT-201 makes a FAILED verdict
+      // load-bearing (a violation now short-circuits to INELIGIBLE); a FAILED on absent data would become
+      // a false definite INELIGIBLE (the mirror of a false-ELIGIBLE). Only a NON-EMPTY procedure list is a
+      // populated signal in which a no-match is a genuine FAILED (same threading-completeness caveat as
+      // dx/med: a specific procedure that happened but was not threaded can still under-detect, unchanged).
+      if (!ctx.procedureCodes || ctx.procedureCodes.length === 0) {
+        return { ...base, verdict: 'UNEVALUABLE', missingSignal: 'procedure' };
+      }
       const met = (c.codes ?? []).some(code => ctx.procedureCodes.includes(code));
       return { ...base, verdict: met ? 'MET' : 'FAILED' };
     }
@@ -120,9 +132,16 @@ export function evaluateCriterion(c: TrialCriterion, ctx: PatientEvalContext): C
 }
 
 /**
- * Evaluate a whole trial for a patient. INDETERMINATE if ANY criterion is UNEVALUABLE (never ELIGIBLE
- * with an unknown). Otherwise INELIGIBLE if any threaded criterion is violated (inclusion FAILED or
- * exclusion MET), else ELIGIBLE.
+ * Evaluate a whole trial for a patient. Precedence (AUDIT-201): a definite VIOLATION wins over an unknown.
+ *   INELIGIBLE     if any threaded criterion is definitively violated (inclusion FAILED or exclusion MET) -
+ *                  a FAILED is a definite NEGATIVE on data we DO have, so we report it even when another
+ *                  criterion is UNEVALUABLE ("already excluded, stop"). Load-bearing safety: every FAILED
+ *                  path rests on present, threaded data (dx/med/age/sex/lab guarded; procedure UNEVALUABLE
+ *                  when procedureCodes is empty) - never a FAILED on absent data, which would be a false
+ *                  definite INELIGIBLE (the mirror of a false-ELIGIBLE).
+ *   INDETERMINATE  else, if any criterion is UNEVALUABLE (no violation, >=1 unknown - the true
+ *                  "one test away" worklist; an UNEVALUABLE exclusion resolves here, NEVER to ELIGIBLE).
+ *   ELIGIBLE       else (all criteria threaded AND met - never ELIGIBLE with an unknown; unchanged).
  */
 export function evaluateTrialMatch(trial: MatchableTrial, ctx: PatientEvalContext): TrialMatchResult {
   const criteriaResults: CriterionResult[] = [];
@@ -144,6 +163,9 @@ export function evaluateTrialMatch(trial: MatchableTrial, ctx: PatientEvalContex
     }
   }
 
-  const status: TrialMatchStatus = anyUnevaluable ? 'INDETERMINATE' : anyViolation ? 'INELIGIBLE' : 'ELIGIBLE';
+  // AUDIT-201: a definite violation short-circuits to INELIGIBLE even when another criterion is
+  // UNEVALUABLE. INDETERMINATE only when NO violation AND >=1 unevaluable. ELIGIBLE unchanged - it still
+  // requires anyUnevaluable === false, so an unevaluable EXCLUSION resolves INDETERMINATE, never ELIGIBLE.
+  const status: TrialMatchStatus = anyViolation ? 'INELIGIBLE' : anyUnevaluable ? 'INDETERMINATE' : 'ELIGIBLE';
   return { status, criteriaResults, indeterminateSignals };
 }
