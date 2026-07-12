@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { X, ArrowUpDown, Download } from 'lucide-react';
 import { toFixed } from '../../utils/formatters';
+import DemoDataBadge from './DemoDataBadge';
 
 export interface SummaryMetric {
   label: string;
@@ -31,6 +32,9 @@ export interface BaseDetailModalProps<T extends Record<string, any>> {
   columns?: ColumnConfig<T>[];
   maxTableRows?: number;
   customContent?: React.ReactNode;
+  /** Opt-in (AUDIT-304 CAD convergence): render a DemoDataBadge in the modal header,
+      marking demo-derived detail. Default off so every other modal usage is unchanged. */
+  demoBadge?: boolean;
   onClose: () => void;
   onExport?: () => void;
   className?: string;
@@ -60,7 +64,7 @@ export const formatPercent = (value: number, showSign = false): string => {
 function BaseDetailModal<T extends Record<string, any>>({
   title, subtitle, description, icon, summaryMetrics, chartSections,
   tableTitle, tableData, columns, maxTableRows = 10, customContent,
-  onClose, onExport, className = '',
+  demoBadge = false, onClose, onExport, className = '',
 }: BaseDetailModalProps<T>) {
   const [sortField, setSortField] = useState<keyof T | null>(null);
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
@@ -116,6 +120,7 @@ function BaseDetailModal<T extends Record<string, any>>({
  </div>
  </div>
  <div className="flex items-center gap-2">
+ {demoBadge && <DemoDataBadge />}
  {onExport && (
  <button onClick={onExport} className="p-2 rounded-lg text-titanium-400 hover:text-titanium-600 hover:bg-titanium-100 transition-colors ease-chrome" title="Export">
  <Download className="w-5 h-5" />

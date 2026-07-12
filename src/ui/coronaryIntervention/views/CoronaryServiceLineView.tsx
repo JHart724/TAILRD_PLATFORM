@@ -14,6 +14,10 @@ import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNet
 import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
 import CrossReferralEngine from '../../../components/crossReferral/CrossReferralEngine';
 import ServiceLineKPIBanner from '../../../components/shared/ServiceLineKPIBanner';
+// Relocated from the CAD Executive tier (AUDIT-304 IA convergence): care-team action
+// telemetry and worsening-population trajectory are Service Line content, not exec KPIs.
+import GapResponseRateCard from '../../../components/shared/GapResponseRateCard';
+import { TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
 
 type TabId = 'analytics' | 'risk-heatmap' | 'grace' | 'timi' | 'syntax' | 'cabg-vs-pci' | 'protected-pci' | 'multi-arterial' | 'on-off-pump' | 'safety' | 'gap-detection' | 'network' | 'care-network' | 'cross-referral' | 'saq-outcomes' | 'outcomes' | 'reporting';
 
@@ -631,13 +635,40 @@ const CoronaryServiceLineView: React.FC = () => {
  case 'saq-outcomes':
  return <SAQOutcomesPanel />;
  case 'risk-heatmap':
- return <PatientRiskHeatmap />;
+ return (
+ <div className="space-y-6">
+ <PatientRiskHeatmap />
+ {/* Relocated from the Executive tier (AUDIT-304 IA convergence): worsening-
+     population trajectory detail is Service Line population-health content. */}
+ <TrajectoryTrendsCard demoData cleanSurface data={{
+ worseningRapidPct: 15,
+ worseningRapidCount: 234,
+ meanDeclineRate: '1.8 pts/month SAQ decline',
+ declineMetric: 'CAD',
+ thresholdIn30Days: 6,
+ totalFlaggedPatients: 900,
+ keyInsights: [
+ '156 post-ACS patients without PCSK9i -- LDL trajectory shows continued elevation',
+ 'SAQ declining in 34% of chronic angina patients -- intervention conversion window narrowing',
+ 'Post-CABG graft surveillance gap: 23 patients >8 years out with >40% SVG failure probability',
+ ],
+ }} />
+ </div>
+ );
  case 'care-network':
  return <CareTeamNetworkGraph />;
  case 'cross-referral':
  return <CrossReferralEngine />;
  case 'gap-detection':
- return <CADClinicalGapDetectionDashboard />;
+ return (
+ <div className="space-y-6">
+ <CADClinicalGapDetectionDashboard />
+ {/* Relocated from the Executive tier (AUDIT-304 IA convergence): care-team
+     action telemetry is Service Line operational content. Honest empty state
+     until a response-rate source exists. */}
+ <GapResponseRateCard rates={[]} overallRate={0} timeRange="30d" />
+ </div>
+ );
  default:
  return <GRACEScoreCalculator />;
  }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { DollarSign } from 'lucide-react';
 import DRGOptimizationAlert from './DRGOptimizationAlert';
+import DemoDataBadge from './DemoDataBadge';
 import { ExecutiveViewConfig } from './BaseExecutiveView';
 
 type SharedDRGVariant = 'full' | 'alertOnly';
@@ -13,6 +14,9 @@ interface SharedDRGPerformanceProps {
    * (clickable) DRG cards + CMI grid, so emitting the cards + CMI here would duplicate them.
    */
   variant?: SharedDRGVariant;
+  /** Opt-in (AUDIT-304 CAD convergence): render a DemoDataBadge in the full-variant
+      header, marking the demo DRG/CMI figures. Default off so VHD/PV render unchanged. */
+  demoBadge?: boolean;
 }
 
 /**
@@ -27,7 +31,7 @@ interface SharedDRGPerformanceProps {
  * own bespoke clickable DRG cards + CMI grid - so emitting the cards + CMI here would duplicate them.
  * AUDIT-302 Layer 2, PR 1 (CAD pilot) + PR 2 (VHD/PV alertOnly).
  */
-const SharedDRGPerformance: React.FC<SharedDRGPerformanceProps> = ({ config, variant = 'full' }) => {
+const SharedDRGPerformance: React.FC<SharedDRGPerformanceProps> = ({ config, variant = 'full', demoBadge = false }) => {
   const { drgTitle, drgDescription, drgOpportunities, drgMetrics, drgPerformanceCards } = config;
 
   return (
@@ -44,8 +48,13 @@ const SharedDRGPerformance: React.FC<SharedDRGPerformanceProps> = ({ config, var
       {variant === 'full' && (
       <div className="metal-card relative z-10">
         <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
-          <h3 className="text-lg font-semibold text-titanium-900 mb-2">{drgTitle}</h3>
-          <p className="text-sm text-titanium-600">{drgDescription}</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-titanium-900 mb-2">{drgTitle}</h3>
+              <p className="text-sm text-titanium-600">{drgDescription}</p>
+            </div>
+            {demoBadge && <DemoDataBadge label="Demo data - DRG billing source pending" />}
+          </div>
         </div>
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">

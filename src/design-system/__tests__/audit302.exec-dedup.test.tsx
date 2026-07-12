@@ -69,12 +69,16 @@ describe('AUDIT-302 PR1 - CoronaryExecutiveView de-dup (asserted-at-source)', ()
     expect(s).not.toContain('import BaseExecutiveView');
     expect(s).not.toContain('<BaseExecutiveView');
   });
-  it('renders the focused SharedDRGPerformance instead', () => {
-    expect(s).toContain('<SharedDRGPerformance config={coronaryInterventionConfig} />');
+  it('renders the focused SharedDRGPerformance instead (now demo-badged - AUDIT-304)', () => {
+    expect(s).toContain('<SharedDRGPerformance config={coronaryInterventionConfig} demoBadge');
   });
-  it('preserves the single bespoke wired KPI row (dashboard live hook intact)', () => {
-    expect(s).toContain('dashboard?.summary?.totalPatients');
-    expect(s).toContain('?? coronaryInterventionConfig.kpiData.totalPatients');
+  it('preserves the live dashboard hook, now flowing through CADExecutiveSummary (AUDIT-304 convergence)', () => {
+    // AUDIT-304 CAD convergence: the inline live-with-config-fallback KPI tile is extracted
+    // into CADExecutiveSummary, which reads the live contract; the config fallback behind the
+    // live field (the AUDIT-099 core defect) is retired.
+    expect(s).toContain("useModuleDashboard('coronary-intervention')");
+    expect(s).toContain('<CADExecutiveSummary dashboard={dashboard}');
+    expect(s).not.toContain('?? coronaryInterventionConfig.kpiData.totalPatients');
   });
 });
 

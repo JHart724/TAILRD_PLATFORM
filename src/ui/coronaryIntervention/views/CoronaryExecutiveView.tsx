@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useModuleDashboard } from '../../../hooks/useModuleDashboard';
-import { DollarSign, Users, TrendingUp, Target, Activity, Heart, Zap, Search } from 'lucide-react';
+import { DollarSign, Target, Heart } from 'lucide-react';
 import SharedDRGPerformance from '../../../components/shared/SharedDRGPerformance';
 import { coronaryInterventionConfig } from '../config/executiveConfig';
 import ExportButton from '../../../components/shared/ExportButton';
@@ -9,31 +9,32 @@ import SharedROIWaterfall from '../../../components/shared/SharedROIWaterfall';
 import SharedBenchmarksPanel from '../../../components/shared/SharedBenchmarksPanel';
 import SharedProjectedVsRealized from '../../../components/shared/SharedProjectedVsRealized';
 import BaseDetailModal from '../../../components/shared/BaseDetailModal';
-import CADFinancialWaterfall from '../components/executive/CADFinancialWaterfall';
+import DemoDataBadge from '../../../components/shared/DemoDataBadge';
 import GapIntelligenceCard from '../../../components/shared/GapIntelligenceCard';
-import GapResponseRateCard from '../../../components/shared/GapResponseRateCard';
-import PredictiveMetricsBanner from '../../../components/shared/PredictiveMetricsBanner';
-import { RevenuePipelineCard, RevenueAtRiskCard, TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
-import type { RevenuePipelineData, RevenueAtRiskData, TrajectoryTrendsData } from '../../../components/shared/ForwardLookingCards';
+import CADExecutiveSummary, { CADDashboardData } from '../components/CADExecutiveSummary';
+import CADForwardOutlookPanel from '../components/CADForwardOutlookPanel';
 import { ExportData } from '../../../utils/dataExport';
 import { getOrdinalSuffix, formatMillions, toFixed, roundTo } from '../../../utils/formatters';
+import {
+  CAD_DEMO_WATERFALL,
+  CAD_DEMO_ROI_CATEGORIES,
+  CAD_DEMO_ANNUAL_OPPORTUNITY_M,
+  CAD_DEMO_PVR,
+  CAD_DEMO_CATEGORIES,
+  CAD_DEMO_TOPGAPS,
+  CAD_DEMO_SAFETY_ALERT,
+} from '../config/cadDemoFinancials';
 
 const CoronaryExecutiveView: React.FC = () => {
-  const { data: dashboard, loading: dashboardLoading, error: dashboardError } = useModuleDashboard('coronary-intervention');
+  // useModuleDashboard returns `data: any`; the CAD dashboard endpoint emits the
+  // CADDashboardData contract (patient/gap/device counts), so type it here to drop `any`.
+  const { data: dashboardRaw, loading: dashboardLoading, error: dashboardError } = useModuleDashboard('coronary-intervention');
+  const dashboard = (dashboardRaw as CADDashboardData | null) ?? null;
   const [selectedMonth, setSelectedMonth] = useState<any>(null);
   const [selectedBenchmark, setSelectedBenchmark] = useState<any>(null);
   const [selectedDRG, setSelectedDRG] = useState<any>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedZip, setSelectedZip] = useState<string | null>(null);
-
-  // Coronary-specific revenue categories
-  const roiCategories = [
- { label: 'Complex PCI', value: 24800000, color: 'bg-porsche-500' },
- { label: 'STEMI Protocol', value: 18600000, color: 'bg-crimson-500' },
- { label: 'FFR/iFR Guidance', value: 12400000, color: 'bg-arterial-500' },
- { label: 'Cath Lab Efficiency', value: 8900000, color: 'bg-teal-500' },
- { label: 'Stent Optimization', value: 6200000, color: 'bg-[#64748b]' },
-  ];
 
   // Coronary benchmark metrics
   const benchmarks = [
@@ -43,20 +44,6 @@ const CoronaryExecutiveView: React.FC = () => {
  { metric: 'FFR Utilization', ourValue: 42, benchmark: 35, unit: '%', trend: 'up' as const, percentile: 74 },
  { metric: 'In-Hospital Mortality', ourValue: 2.1, benchmark: 3.8, unit: '%', trend: 'down' as const, percentile: 85, lowerIsBetter: true },
  { metric: 'Radial Access Rate', ourValue: 78, benchmark: 65, unit: '%', trend: 'up' as const, percentile: 80 },
-  ];
-
-  // Monthly projected vs realized data
-  const monthlyData = [
- { month: 'Jan', projected: 7200000, realized: 5800000 },
- { month: 'Feb', projected: 7400000, realized: 6100000 },
- { month: 'Mar', projected: 7800000, realized: 6500000 },
- { month: 'Apr', projected: 7500000, realized: 6200000 },
- { month: 'May', projected: 7900000, realized: 6800000 },
- { month: 'Jun', projected: 8200000, realized: 7100000 },
- { month: 'Jul', projected: 8000000, realized: 6900000 },
- { month: 'Aug', projected: 8400000, realized: 7400000 },
- { month: 'Sep', projected: 8600000, realized: 7600000 },
- { month: 'Oct', projected: 8800000, realized: 7900000 },
   ];
 
   // DRG data for drill-down modals
@@ -160,8 +147,8 @@ const CoronaryExecutiveView: React.FC = () => {
  title: 'Coronary Intervention Executive Dashboard',
  headers: ['Metric', 'Value', 'Target', 'Variance'],
  rows: [
- ['Total Revenue Opportunity', coronaryInterventionConfig.kpiData.totalOpportunity, '$95M', '-$5.6M'],
- ['Patient Population', coronaryInterventionConfig.kpiData.totalPatients, '3,000', '-153'],
+ ['Total Revenue Opportunity (gap-closure, demo)', `$${CAD_DEMO_ANNUAL_OPPORTUNITY_M.toFixed(1)}M`, '-', '-'],
+ ['Patient Population (live)', dashboard?.summary?.totalPatients?.toLocaleString() ?? 'pending', '-', '-'],
  ['Procedural Success Rate', coronaryInterventionConfig.kpiData.gdmtOptimization, '96%', '-2%'],
  ['Avg Revenue per Patient', coronaryInterventionConfig.kpiData.avgRoi, '$33,000', '-$1,600'],
  ['Current CMI', coronaryInterventionConfig.drgMetrics.currentCMI, '3.10', '-0.16'],
@@ -180,234 +167,124 @@ const CoronaryExecutiveView: React.FC = () => {
  <div className="min-h-screen p-6 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #EAEFF4 0%, #F2F5F8 50%, #ECF0F4 100%)' }}>
 
  <div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
- {dashboardLoading && <div className="text-titanium-500 text-sm animate-pulse">Loading live data...</div>}
- <div className="flex justify-end mb-6">
- <ExportButton
- data={generateExportData()}
- variant="outline"
- size="md"
- className="shadow-metal-2 hover:shadow-metal-3 transition-all duration-300"
- />
- </div>
+      {/* Tier header - Export folded in as a right-aligned utility (closes the CAD-side
+          AUDIT-161 export-above-headline inversion; the first SECTION is now the KPI
+          summary, matching the HF/EP/SH exemplar). */}
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-2xl font-bold font-display text-titanium-800">Coronary Intervention Executive Dashboard</h2>
+        <ExportButton
+          data={generateExportData()}
+          variant="outline"
+          size="sm"
+          className="shadow-sm hover:shadow-md transition-all duration-300"
+        />
+      </div>
 
- {/* SAQ Patient-Reported Outcomes Executive Card */}
- <div className="metal-card relative z-10 mb-6">
-   <div className="px-6 py-4 border-b border-titanium-200 bg-white/80">
-     <div className="flex items-center justify-between">
-       <div>
-         <h3 className="text-lg font-semibold text-titanium-900 mb-1">Patient-Reported Outcomes (SAQ)</h3>
-         <p className="text-sm text-titanium-600">Seattle Angina Questionnaire &mdash; developed by Dr. John Spertus, Saint Luke&rsquo;s Mid America Heart Institute / UMKC</p>
-       </div>
-       <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-100 rounded-lg px-3 py-1.5">
-         <Zap className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-         <span className="text-xs text-blue-700 font-medium">Demo data &middot; EHR integration pending</span>
-       </div>
-     </div>
-   </div>
-   <div className="p-6">
-     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-       {/* Population Mean → Chrome Blue (patient count metric) */}
-       <div className="rounded-xl p-4 border shadow-sm" style={{ background: '#EFF4F8', borderColor: '#B8C9D9' }}>
-         <div className="text-sm text-titanium-600 mb-1">Mean SAQ Angina Frequency</div>
-         <div className="text-3xl font-bold" style={{ color: '#2C4A60' }}>61.8</div>
-         <div className="text-xs text-titanium-500 mt-1">Population average</div>
-       </div>
-       {/* Mean Improvement → Racing Green (clinical quality) */}
-       <div className="rounded-xl p-4 border shadow-sm" style={{ background: '#EEF6F2', borderColor: '#A8D0BC' }}>
-         <div className="text-sm text-titanium-600 mb-1">Mean Improvement (Post-Revasc)</div>
-         <div className="text-3xl font-bold" style={{ color: '#2D6147' }}>+18.4</div>
-         <div className="text-xs mt-1" style={{ color: '#2D6147' }}>pts at 90 days post-intervention</div>
-       </div>
-       {/* Severe Angina Burden → Carmona Red (risk/alert) */}
-       <div className="rounded-xl p-4 border shadow-sm" style={{ background: '#FDF2F3', borderColor: '#F5C0C8' }}>
-         <div className="text-sm text-titanium-600 mb-1">Severe Angina Burden (SAQ &lt;50)</div>
-         <div className="text-3xl font-bold" style={{ color: '#9B2438' }}>234</div>
-         <div className="text-xs mt-1" style={{ color: '#9B2438' }}>Intervention evaluation needed</div>
-       </div>
-     </div>
-   </div>
- </div>
+      {/* 1. KPI summary - live patients / open gaps / device candidates + 3 demo cards.
+          The SAQ PRO card + the inline KPI block are dissolved: live tiles merged here,
+          PRO framing lives on the CAD SL saq-outcomes tab (SAQOutcomesPanel). */}
+      <CADExecutiveSummary dashboard={dashboard} loading={dashboardLoading} error={dashboardError} />
 
- {/* Clinical Gap Intelligence */}
- <GapIntelligenceCard data={{
-   totalGaps: dashboard?.summary?.totalOpenGaps ?? 26,
-   categories: [
-     { name: 'Therapy', patients: 900, color: '#2C4A60' },
-     { name: 'Safety', patients: 340, color: '#9B2438' },
-     { name: 'Growth', patients: 280, color: '#4A6880' },
-     { name: 'Quality', patients: 620, color: '#C8D4DC' },
-     { name: 'Deprescribing', patients: 190, color: '#64748b' },
-   ],
-   topGaps: [
-     { name: 'Heart Team Review', patients: 180, opportunity: '$3.4M' },
-     { name: 'Complete Revasc', patients: 145, opportunity: '$2.8M' },
-     { name: 'PCSK9i Post-ACS', patients: 210, opportunity: '$2.2M' },
-     { name: 'CTO Referral', patients: 95, opportunity: '$1.9M' },
-     { name: 'Statin Intensity', patients: 340, opportunity: '$1.6M' },
-   ],
-   safetyAlert: 'CRITICAL: 156 patients \u00b7 HIGH: 184 patients',
- }} />
+      {/* 2. Clinical Gap Intelligence - live headline (totalOpenGaps + real totalPatients),
+          demo-badged composition (donut / top-gaps / safety are illustrative). */}
+      <GapIntelligenceCard
+        data={{
+          totalGaps: dashboard?.summary?.totalOpenGaps ?? 0,
+          categories: CAD_DEMO_CATEGORIES,
+          topGaps: CAD_DEMO_TOPGAPS,
+          safetyAlert: CAD_DEMO_SAFETY_ALERT,
+        }}
+        totalPatients={dashboard?.summary?.totalPatients ?? 0}
+        compositionDemo
+      />
 
- {/* Gap Response Rate — care team action tracking */}
- <GapResponseRateCard
-   rates={[]}
-   overallRate={0}
-   timeRange="30d"
- />
+      {/* 3. Revenue Opportunity Waterfall - the SINGLE consolidated waterfall, fed from
+          the one $11.2M cadDemoFinancials model (the redundant 70.9M / 50.9M waterfalls
+          are removed; program revenue is not an exec-tier gap-opportunity figure). */}
+      <div className="metal-card mb-6">
+        <div className="px-6 py-4 border-b border-titanium-200 bg-white/80 rounded-t-2xl">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-xl font-bold text-titanium-900 mb-1">Revenue Opportunity Waterfall</h3>
+              <p className="text-sm text-titanium-500">Annual gap-closure opportunity by coronary intervention category</p>
+            </div>
+            <DemoDataBadge />
+          </div>
+        </div>
+        <div className="p-6">
+          <SharedROIWaterfall
+            categories={CAD_DEMO_ROI_CATEGORIES}
+            totalRevenue={CAD_DEMO_WATERFALL.total_revenue * 1000000}
+            realizedRevenue={CAD_DEMO_WATERFALL.realized_revenue * 1000000}
+            onCategoryClick={(label) => setSelectedCategory(label)}
+          />
+        </div>
+      </div>
 
- {/* Forward-Looking Executive Cards */}
- <RevenuePipelineCard data={{
-   quarters: [
-     { quarter: 'Q1 2026', revenue: 2400000, procedures: 32, confidence: 'high' },
-     { quarter: 'Q2 2026', revenue: 1800000, procedures: 24, confidence: 'moderate' },
-     { quarter: 'Q3 2026', revenue: 1400000, procedures: 18, confidence: 'moderate' },
-     { quarter: 'Q4 2026', revenue: 1000000, procedures: 14, confidence: 'low' },
-   ],
-   totalProjected12Month: 6600000,
- }} />
- <RevenueAtRiskCard data={{
-   immediatePatients: 156,
-   immediateRevenue: 3400000,
-   deferralRevenue: 2200000,
-   cumulativeRisk12Month: 7800000,
-   deferralCostPerMonth: 570000,
- }} />
- <TrajectoryTrendsCard data={{
-   worseningRapidPct: 15,
-   worseningRapidCount: 234,
-   meanDeclineRate: '1.8 pts/month SAQ decline',
-   declineMetric: 'CAD',
-   thresholdIn30Days: 6,
-   totalFlaggedPatients: 900,
-   keyInsights: [
-     '156 post-ACS patients without PCSK9i -- LDL trajectory shows continued elevation',
-     'SAQ declining in 34% of chronic angina patients -- intervention conversion window narrowing',
-     'Post-CABG graft surveillance gap: 23 patients >8 years out with >40% SVG failure probability',
-   ],
- }} />
+      {/* 4. DRG / CMI performance - promoted from last (SharedDRGPerformance, demo-badged
+          via the new opt-in demoBadge prop; VHD/PV render unchanged). */}
+      <SharedDRGPerformance config={coronaryInterventionConfig} demoBadge />
 
- {/* Predictive Metrics Banner */}
- <PredictiveMetricsBanner data={{
-   thresholdIn90Days: 38,
-   quarterlyActionableRevenue: 3400000,
-   totalIdentifiedRevenue: 11200000,
-   rapidDeteriorationCount: 156,
-   avgTimeToEvent: 10,
-   projectedRevenueCurrentRate: 4100000,
-   projectedRevenueSystematic: 8800000,
- }} />
+      {/* 5. Projected vs Realized + Benchmarks */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div className="metal-card">
+          <div className="px-6 py-4 border-b border-titanium-200 bg-white/80 rounded-t-2xl">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-titanium-900 mb-1">Projected vs Realized Revenue</h3>
+                <p className="text-sm text-titanium-500">Revenue tracking and variance analysis</p>
+              </div>
+              <DemoDataBadge />
+            </div>
+          </div>
+          <div className="p-6">
+            <SharedProjectedVsRealized
+              monthlyData={CAD_DEMO_PVR.months}
+              onMonthClick={handleMonthClick}
+              gapSublabel="Immediate at-risk slice (this quarter) - see Revenue at Risk"
+              cleanSurface
+            />
+          </div>
+        </div>
+        <div className="metal-card">
+          <div className="px-6 py-4 border-b border-titanium-200 bg-white/80 rounded-t-2xl">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-titanium-900 mb-1">Performance Benchmarks</h3>
+                <p className="text-sm text-titanium-500">National comparison metrics</p>
+              </div>
+              <DemoDataBadge label="Demo benchmarks - national comparison pending" />
+            </div>
+          </div>
+          <div className="p-6">
+            <SharedBenchmarksPanel
+              benchmarks={benchmarks}
+              subtitle="Your System vs National Percentiles (2025 Data)"
+              dataSource="ACC NCDR CathPCI Registry 2024"
+              lastUpdated="October 2025"
+              onBenchmarkClick={(metric) => setSelectedBenchmark(getBenchmarkDetails(metric))}
+            />
+          </div>
+        </div>
+      </div>
 
- {/* KPI Summary Cards */}
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
- {/* Patient Population → Chrome Blue */}
- <div className="metal-card p-6" style={{ background: '#EFF4F8', borderColor: '#B8C9D9' }}>
- <div className="flex items-center gap-3 mb-3">
- <div className="p-2 rounded-lg" style={{ background: '#B8C9D9' }}><Users className="w-6 h-6" style={{ color: '#2C4A60' }} /></div>
- <span className="text-sm font-medium text-titanium-600">Patient Population</span>
- </div>
- <div className="text-3xl font-bold" style={{ color: '#2C4A60' }}>{dashboard?.summary?.totalPatients?.toLocaleString() ?? coronaryInterventionConfig.kpiData.totalPatients}</div>
- <div className="text-sm text-titanium-500 mt-1">{coronaryInterventionConfig.kpiData.totalPatientsSub}</div>
- </div>
- {/* Revenue Opportunity → Metallic Gold */}
- <div className="metal-card p-6" style={{ background: '#FAF6E8', borderColor: '#D4B85C' }}>
- <div className="flex items-center gap-3 mb-3">
- <div className="p-2 rounded-lg" style={{ background: '#D4B85C' }}><DollarSign className="w-6 h-6" style={{ color: '#8B6914' }} /></div>
- <span className="text-sm font-medium text-titanium-600">Revenue Opportunity</span>
- </div>
- <div className="text-3xl font-bold" style={{ color: '#8B6914' }}>{coronaryInterventionConfig.kpiData.totalOpportunity}</div>
- <div className="text-sm text-titanium-500 mt-1">{coronaryInterventionConfig.kpiData.totalOpportunitySub}</div>
- </div>
- {/* Procedural Success → Racing Green */}
- <div className="metal-card p-6" style={{ background: '#EEF6F2', borderColor: '#A8D0BC' }}>
- <div className="flex items-center gap-3 mb-3">
- <div className="p-2 rounded-lg" style={{ background: '#A8D0BC' }}><Activity className="w-6 h-6" style={{ color: '#2D6147' }} /></div>
- <span className="text-sm font-medium text-titanium-600">Procedural Success</span>
- </div>
- <div className="text-3xl font-bold" style={{ color: '#2D6147' }}>{coronaryInterventionConfig.kpiData.gdmtOptimization}</div>
- <div className="text-sm text-titanium-500 mt-1">{coronaryInterventionConfig.kpiData.gdmtOptimizationSub}</div>
- </div>
- {/* Avg Revenue / Patient → Copper Bronze */}
- <div className="metal-card p-6" style={{ background: '#FAF3EC', borderColor: '#DDBA98' }}>
- <div className="flex items-center gap-3 mb-3">
- <div className="p-2 rounded-lg" style={{ background: '#DDBA98' }}><TrendingUp className="w-6 h-6" style={{ color: '#8B5A2B' }} /></div>
- <span className="text-sm font-medium text-titanium-600">Avg Revenue / Patient</span>
- </div>
- <div className="text-3xl font-bold" style={{ color: '#8B5A2B' }}>{coronaryInterventionConfig.kpiData.avgRoi}</div>
- <div className="text-sm text-titanium-500 mt-1">{coronaryInterventionConfig.kpiData.avgRoiSub}</div>
- </div>
- </div>
+      {/* 6. Forward Outlook - consolidated 12-month projection (replaces the former
+          pipeline / at-risk / trajectory / predictive cluster). Its DemoDataBadge is internal. */}
+      <CADForwardOutlookPanel />
 
- {/* Revenue Opportunity Waterfall */}
- <div className="metal-card mb-6">
- <div className="px-6 py-4 border-b border-titanium-200 bg-white/80 rounded-t-2xl">
- <h3 className="text-xl font-bold text-titanium-900 mb-1">Revenue Opportunity Waterfall</h3>
- <p className="text-sm text-titanium-500">Annual revenue opportunity by coronary intervention category</p>
- </div>
- <div className="p-6">
- <SharedROIWaterfall
- categories={roiCategories}
- totalRevenue={70900000}
- realizedRevenue={52200000}
- onCategoryClick={(label) => setSelectedCategory(label)}
- />
- </div>
- </div>
+      {/* 7. Geographic Heat Map */}
+      <div className="mb-6">
+        <ZipHeatMap
+          title="High-Risk CAD/DM + Chest Pain Geographic Distribution"
+          data={coronaryZipData}
+          onZipClick={handleZipClick}
+          centerLat={40.7589}
+          centerLng={-73.9851}
+          zoom={12}
+        />
+      </div>
 
- {/* 2-Column: Projected vs Realized + Benchmarks */}
- <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
- <div className="metal-card">
- <div className="px-6 py-4 border-b border-titanium-200 bg-white/80 rounded-t-2xl">
- <h3 className="text-lg font-semibold text-titanium-900 mb-1">Projected vs Realized Revenue</h3>
- <p className="text-sm text-titanium-500">Revenue tracking and variance analysis</p>
- </div>
- <div className="p-6">
- <SharedProjectedVsRealized monthlyData={monthlyData} onMonthClick={handleMonthClick} />
- </div>
- </div>
- <div className="metal-card">
- <div className="px-6 py-4 border-b border-titanium-200 bg-white/80 rounded-t-2xl">
- <h3 className="text-lg font-semibold text-titanium-900 mb-1">Performance Benchmarks</h3>
- <p className="text-sm text-titanium-500">National comparison metrics</p>
- </div>
- <div className="p-6">
- <SharedBenchmarksPanel
- benchmarks={benchmarks}
- subtitle="Your System vs National Percentiles (2025 Data)"
- dataSource="ACC NCDR CathPCI Registry 2024"
- lastUpdated="October 2025"
- onBenchmarkClick={(metric) => setSelectedBenchmark(getBenchmarkDetails(metric))}
- />
- </div>
- </div>
- </div>
-
- {/* Geographic Heat Map */}
- <div className="mb-6">
- <ZipHeatMap
- title="High-Risk CAD/DM + Chest Pain Geographic Distribution"
- data={coronaryZipData}
- onZipClick={handleZipClick}
- centerLat={40.7589}
- centerLng={-73.9851}
- zoom={12}
- />
- </div>
-
- {/* Financial ROI Waterfall */}
- <div className="metal-card mb-6">
- <div className="px-6 py-4 border-b border-titanium-200 bg-white/80 rounded-t-2xl">
- <h3 className="text-xl font-bold text-titanium-900 mb-1">Coronary Intervention ROI Analysis</h3>
- <p className="text-sm text-titanium-500">Revenue opportunity by intervention with patient-level impact</p>
- </div>
- <div className="p-6">
- <CADFinancialWaterfall />
- </div>
- </div>
-
- {/* DRG Performance + CMI (de-duplicated: BaseExecutiveView's duplicate KPI row + min-h-screen page wrapper dropped; AUDIT-302 Layer 2 PR 1) */}
- <SharedDRGPerformance config={coronaryInterventionConfig} />
-
- {/* Month Detail Modal */}
+       {/* Month Detail Modal */}
  {selectedMonth && (
  <BaseDetailModal
  title={`${selectedMonth.month} Revenue Analysis`}
@@ -487,19 +364,22 @@ const CoronaryExecutiveView: React.FC = () => {
  />
  )}
 
- {/* Category Detail Modal */}
+ {/* Category Detail Modal - reads the single cadDemoFinancials model; realized/gap
+     shares are DERIVED from the model's realized ratio (no unsourced multipliers). */}
  {selectedCategory && (() => {
- const cat = roiCategories.find(c => c.label === selectedCategory);
+ const cat = CAD_DEMO_ROI_CATEGORIES.find(c => c.label === selectedCategory);
+ const realizedRatio = CAD_DEMO_WATERFALL.realized_revenue / CAD_DEMO_WATERFALL.total_revenue;
  return (
  <BaseDetailModal
  title={selectedCategory}
  subtitle="Revenue Opportunity Category Detail"
  icon={<DollarSign className="w-6 h-6" />}
+ demoBadge
  summaryMetrics={[
  { label: 'Annual Opportunity', value: cat ? `${toFixed(cat.value / 1000000, 1)}M` : '\u2014', colorScheme: 'porsche' },
- { label: 'Share of Total', value: cat ? `${toFixed(cat.value / 70900000 * 100, 1)}%` : '\u2014' },
- { label: 'Realized', value: `${toFixed((cat?.value || 0) * 0.74 / 1000000, 1)}M`, colorScheme: 'green' },
- { label: 'Gap', value: `${toFixed((cat?.value || 0) * 0.26 / 1000000, 1)}M`, colorScheme: 'amber' },
+ { label: 'Share of Total', value: cat ? `${toFixed(cat.value / (CAD_DEMO_ANNUAL_OPPORTUNITY_M * 1000000) * 100, 1)}%` : '\u2014' },
+ { label: 'Realized', value: `${toFixed((cat?.value || 0) * realizedRatio / 1000000, 1)}M`, colorScheme: 'green' },
+ { label: 'Gap', value: `${toFixed((cat?.value || 0) * (1 - realizedRatio) / 1000000, 1)}M`, colorScheme: 'amber' },
  ]}
  onClose={() => setSelectedCategory(null)}
  />
