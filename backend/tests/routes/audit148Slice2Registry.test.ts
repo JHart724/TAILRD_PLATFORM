@@ -31,10 +31,19 @@ describe('AUDIT-148 Slice 2 registry route: tenant isolation from the JWT', () =
   });
 });
 
-describe('AUDIT-148 Slice 2 registry route: READ-ONLY (mutations are Slice 3)', () => {
-  it('exposes only a GET; no POST/PATCH/PUT/DELETE in Slice 2', () => {
+describe('AUDIT-148 registry route surface', () => {
+  // SUPERSEDED 2026-07-12 (AUDIT-148 Slice 3): Slice 2 was READ-ONLY (GET only); Slice 3 deliberately
+  // adds the mutations (PATCH /cases/:caseId + POST .../submit /approve /reject). The prior assertion
+  // (`not.toMatch(/router\.(post|patch...)/)`) encoded a Slice-2-only invariant and is replaced by the
+  // Slice-3 surface below. The mutation behavior itself is covered by tests/api/trialsRegistrySlice3.test.ts.
+  it('still exposes the Slice-2 GET read endpoint', () => {
     expect(ROUTE).toMatch(/router\.get\(/);
-    expect(ROUTE).not.toMatch(/router\.(post|patch|put|delete)\(/);
+  });
+  it('exposes the Slice-3 mutations (update/submit/approve/reject)', () => {
+    expect(ROUTE).toMatch(/router\.patch\(['"]\/cases\/:caseId['"]/);
+    expect(ROUTE).toMatch(/router\.post\(['"]\/cases\/:caseId\/submit['"]/);
+    expect(ROUTE).toMatch(/router\.post\(['"]\/cases\/:caseId\/approve['"]/);
+    expect(ROUTE).toMatch(/router\.post\(['"]\/cases\/:caseId\/reject['"]/);
   });
   it('logs counts only, never PHI', () => {
     const logLines = ROUTE.split('\n').filter(l => /logger\.(info|error|warn)/.test(l));
