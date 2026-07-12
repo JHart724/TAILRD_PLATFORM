@@ -13,6 +13,10 @@ import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNet
 import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
 import CrossReferralEngine from '../../../components/crossReferral/CrossReferralEngine';
 import ServiceLineKPIBanner from '../../../components/shared/ServiceLineKPIBanner';
+// Relocated from the SH Executive tier (AUDIT-304 IA convergence): care-team action
+// telemetry and worsening-population trajectory are Service Line content, not exec KPIs.
+import GapResponseRateCard from '../../../components/shared/GapResponseRateCard';
+import { TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
 
 type TabId = 'tavr' | 'teer-mitral' | 'teer-tricuspid' | 'tmvr' | 'pfo-asd' | 'gap-detection' | 'sts-risk' | 'risk-heatmap' | 'quality' | 'outcomes' | 'referrals' | 'provider-scorecard' | 'cross-referral' | 'care-network' | 'phenotype-detection' | 'reporting';
 
@@ -365,11 +369,38 @@ const StructuralServiceLineView: React.FC = () => {
       case 'reporting':
         return <AutomatedReportingSystem />;
       case 'risk-heatmap':
-        return <PatientRiskHeatmap />;
+        return (
+          <div className="space-y-6">
+            <PatientRiskHeatmap />
+            {/* Relocated from the Executive tier (AUDIT-304 IA convergence): worsening-
+                population trajectory detail is Service Line population-health content. */}
+            <TrajectoryTrendsCard demoData cleanSurface data={{
+              worseningRapidPct: 20,
+              worseningRapidCount: 166,
+              meanDeclineRate: '0.18 m/s/year Vmax progression',
+              declineMetric: 'SH',
+              thresholdIn30Days: 5,
+              totalFlaggedPatients: 830,
+              keyInsights: [
+                '28 patients with rapid AS progression (>0.2 m/s/year) -- projected severe threshold within 12 months',
+                '134 moderate AS patients under surveillance -- 23 projected to reach severe threshold this year',
+                'BAV aortopathy: 8 patients with growth rate >0.4cm/year approaching surgical threshold',
+              ],
+            }} />
+          </div>
+        );
       case 'care-network':
         return <CareTeamNetworkGraph />;
       case 'gap-detection':
-        return <SHClinicalGapDetectionDashboard />;
+        return (
+          <div className="space-y-6">
+            <SHClinicalGapDetectionDashboard />
+            {/* Relocated from the Executive tier (AUDIT-304 IA convergence): care-team
+                action telemetry is Service Line operational content. Honest empty
+                state until a response-rate source exists. */}
+            <GapResponseRateCard rates={[]} overallRate={0} timeRange="30d" />
+          </div>
+        );
       case 'provider-scorecard':
         return <SHProviderScorecard />;
       case 'phenotype-detection':
