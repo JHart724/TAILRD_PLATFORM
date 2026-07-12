@@ -128,6 +128,14 @@ const HIPAA_GRADE_ACTIONS = new Set<string>([
   'SIGNED_BAA_RETRIEVED',
   'PHI_FLOW_BLOCKED_BAA_NOT_EXECUTED',
   'HOSPITAL_BAA_CACHE_UPDATED',
+  // AUDIT-148 Slice 3 - registry-case human sign-off transitions. Approve/reject
+  // are the maker-checker sign-off events (a QUALITY_DIRECTOR/admin attests a
+  // patient's registry submission); DB write failure throws so the route returns
+  // 500 rather than record a sign-off that was never durably persisted. The
+  // create/update/submit events (TRIAL_REFERRAL_CREATED, REGISTRY_CASE_UPDATED,
+  // REGISTRY_CASE_SUBMITTED) are audited best-effort - not in this set.
+  'REGISTRY_CASE_APPROVED',
+  'REGISTRY_CASE_REJECTED',
 ]);
 
 // ─── Types ──────────────────────────────────────────────────────────────────────

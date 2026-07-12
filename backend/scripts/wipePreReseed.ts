@@ -44,6 +44,7 @@ export const CHILD_TABLES = [
   "phenotype", "recommendation", "riskScoreAssessment",
   "trialMatch", // AUDIT-148 Slice 1: patient-FK (non-null patientId, onDelete: Restrict). clinical_trials has no patient FK (global catalog), so it is NOT wiped by a patient re-seed.
   "registryCase", // AUDIT-148 Slice 2: patient-FK (non-null patientId, onDelete: Restrict) - MUST be wiped before patient, same as trialMatch.
+  "trialReferral", // AUDIT-148 Slice 3: patient-FK (non-null patientId, onDelete: Restrict) - MUST be wiped before patient, same as trialMatch.
 ] as const;
 
 export const WIPE_ORDER = [...CHILD_TABLES, "patient"] as const;

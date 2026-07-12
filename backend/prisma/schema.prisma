@@ -75,6 +75,7 @@ model Hospital {
   clinicalTrials              ClinicalTrial[] // AUDIT-148 Slice 1: tenant-scoped curated trials (null hospitalId = global)
   trialMatches                TrialMatch[] // AUDIT-148 Slice 1: clinical-trial eligibility matches
   registryCases               RegistryCase[] // AUDIT-148 Slice 2: registry submission cases (tenant-scoped)
+  trialReferrals              TrialReferral[] // AUDIT-148 Slice 3: patient-to-trial referrals (tenant-scoped)
   recommendations             Recommendation[]
 
   // New clinical models
@@ -351,6 +352,7 @@ model Patient {
   contraindicationAssessments ContraindicationAssessment[]
   trialMatches                TrialMatch[] // AUDIT-148 Slice 1: clinical-trial eligibility matches
   registryCases               RegistryCase[] // AUDIT-148 Slice 2: registry submission cases
+  trialReferrals              TrialReferral[] // AUDIT-148 Slice 3: patient-to-trial referrals
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -2684,7 +2686,8 @@ model ClinicalTrial {
   hospitalId String?
   hospital   Hospital? @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
 
-  matches TrialMatch[]
+  matches   TrialMatch[]
+  referrals TrialReferral[] // AUDIT-148 Slice 3: patient-to-trial referrals to this trial
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -2756,10 +2759,57 @@ model RegistryCase {
   approvedBy String?
   approvedAt DateTime?
 
+  // AUDIT-148 Slice 3: maker-checker fields. createdBy / updatedBy record the acting user (JWT userId).
+  // Slice 3 enforces ROLE-level maker-checker (create/update vs approve/reject are distinct role sets);
+  // PERSON-level (approver != createdBy) is NOT enforced this slice but the fields exist so it can be
+  // turned on later with NO further migration.
+  createdBy String?
+  updatedBy String?
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
   @@unique([patientId, registryType, hospitalId])
   @@index([hospitalId, registryType, status])
   @@map("registry_cases")
+}
+
+// AUDIT-148 Slice 3: a TrialReferral is a DURABLE HUMAN CLINICAL DECISION (a coordinator referred a
+// patient to a trial) - a SEPARATE EVENT, NOT a field on TrialMatch (which is re-evaluated/upserted every
+// match run, so a referral stamped on it would be overwritten or orphaned). Mirrors the CrossReferral
+// event-model shape. FDA-CDS: the platform RECORDS that a clinician (referredBy) chose to refer; it never
+// auto-refers. NOT gated on matchStatus - a coordinator can refer an INDETERMINATE patient precisely to
+// get the missing test (gating on ELIGIBLE would make the AUDIT-201 one-test-away worklist unreferable);
+// matchStatusAtReferral records what the honest matcher said at referral time, for the trail only.
+enum TrialReferralStatus {
+  PENDING
+  CONTACTED
+  ENROLLED
+  DECLINED
+}
+
+model TrialReferral {
+  id String @id @default(cuid())
+
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  hospitalId String
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  trialId String
+  trial   ClinicalTrial @relation(fields: [trialId], references: [id], onDelete: Restrict)
+
+  referredBy String // the acting clinician (JWT userId) - a human decided, not the system
+  referredAt DateTime @default(now())
+  status     TrialReferralStatus @default(PENDING)
+  notes      String?
+
+  // The honest match verdict at the moment of referral (ELIGIBLE / INELIGIBLE / INDETERMINATE) - recorded
+  // for the audit trail, NEVER a gate on whether the referral is allowed.
+  matchStatusAtReferral TrialMatchStatus
+
+  @@unique([patientId, trialId, hospitalId])
+  @@index([hospitalId, trialId, status])
+  @@map("trial_referrals")
 }

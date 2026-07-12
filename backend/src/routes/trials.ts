@@ -9,9 +9,11 @@
 // Tenant isolation: hospitalId ALWAYS from the verified JWT (req.user.hospitalId), NEVER the body/params.
 
 import { Router, Response } from 'express';
+import { body, validationResult } from 'express-validator';
 import prisma from '../lib/prisma';
 import { APIResponse, UserRole } from '../types';
 import { authenticateToken, authorizeRole, requireMFA, AuthenticatedRequest } from '../middleware/auth';
+import { writeAuditLog } from '../middleware/auditLogger';
 import { logger } from '../utils/logger';
 import { buildPatientEvalContext } from '../ingestion/buildPatientEvalContext';
 import { evaluateTrialMatch, TrialCriterion } from '../services/trialMatchService';
@@ -115,6 +117,112 @@ router.get('/:trialId/eligible-patients', authenticateToken, requireMFA, authori
         error: error instanceof Error ? error.message : String(error),
       });
       res.status(500).json(fail('Failed to evaluate trial eligibility'));
+    }
+  });
+
+/**
+ * POST /api/trials/:trialId/refer
+ * Record that a clinician REFERRED a patient to a trial. This is the trials module's first WRITE of a
+ * clinical decision - the platform RECORDS a human's decision, it does not enroll anyone (FDA-CDS: the
+ * coordinator decides, we durably capture who/when/what).
+ *
+ * NOT gated on matchStatus: a coordinator may refer an INDETERMINATE patient precisely to drive the one
+ * missing test, so ELIGIBLE, INELIGIBLE and INDETERMINATE are ALL accepted. The honest verdict at the
+ * moment of referral is captured in matchStatusAtReferral for the audit trail only - it does not block.
+ *
+ * Tenant isolation: hospitalId ALWAYS from the verified JWT. A trial or patient outside the tenant is
+ * unreachable and returns 404 (never 403 - we do not leak the existence of another tenant's rows).
+ */
+router.post('/:trialId/refer', authenticateToken, requireMFA, authorizeRole(TRIAL_ROLES),
+  [
+    body('patientId').isString().notEmpty().withMessage('patientId is required'),
+    body('notes').optional().isString().isLength({ max: 1000 }).withMessage('notes must be <= 1000 chars'),
+  ],
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(fail('Validation failed'));
+      }
+
+      const hospitalId = req.user!.hospitalId; // tenant scope from the verified JWT, never body/params
+      const referredBy = req.user!.userId;     // the acting clinician
+      const { trialId } = req.params;
+      const { patientId, notes } = req.body as { patientId: string; notes?: string };
+
+      // Trial must be visible to this tenant (global curated OR tenant-owned); else 404.
+      const trial = await prisma.clinicalTrial.findFirst({
+        where: { id: trialId, ...tenantTrialWhere(hospitalId) },
+      });
+      if (!trial) {
+        return res.status(404).json(fail('Trial not found'));
+      }
+
+      // Patient must belong to this tenant; a cross-tenant patient is unreachable -> 404 (no existence leak).
+      const patient = await prisma.patient.findFirst({
+        where: { id: patientId, hospitalId },
+        include: {
+          conditions: { where: { clinicalStatus: { notIn: ['RESOLVED', 'INACTIVE'] } } },
+          medications: { where: { status: 'ACTIVE' } },
+          observations: { orderBy: { observedDateTime: 'desc' } },
+          procedures: true,
+        },
+      });
+      if (!patient) {
+        return res.status(404).json(fail('Patient not found'));
+      }
+
+      // Honest verdict at referral time - recorded for the trail, NOT a gate.
+      const ctx = buildPatientEvalContext(patient as any, Date.now());
+      const match = evaluateTrialMatch(
+        { id: trial.id, criteria: trial.criteria as unknown as TrialCriterion[] }, ctx,
+      );
+
+      let referral;
+      try {
+        referral = await prisma.trialReferral.create({
+          data: {
+            patientId,
+            hospitalId,
+            trialId,
+            referredBy,
+            notes: notes ?? null,
+            matchStatusAtReferral: match.status,
+          },
+        });
+      } catch (createError: any) {
+        // @@unique([patientId, trialId, hospitalId]) - this patient is already referred to this trial.
+        if (createError?.code === 'P2002') {
+          return res.status(409).json(fail('Patient already referred to this trial'));
+        }
+        throw createError;
+      }
+
+      // Audit the clinical-decision WRITE. Internal UUIDs only in the durable record - never patient PHI.
+      await writeAuditLog(
+        req, 'TRIAL_REFERRAL_CREATED', 'TrialReferral', referral.id,
+        `Clinician referred a patient to trial ${trialId} (match status at referral: ${match.status})`,
+        null,
+        { patientId, trialId, matchStatusAtReferral: match.status },
+      );
+
+      logger.info('Trial referral created', { hospitalId, trialId, referralId: referral.id, matchStatusAtReferral: match.status });
+
+      res.status(201).json(ok({
+        referralId: referral.id,
+        patientId: referral.patientId,
+        trialId: referral.trialId,
+        status: referral.status,
+        matchStatusAtReferral: referral.matchStatusAtReferral,
+        referredBy: referral.referredBy,
+        referredAt: referral.referredAt.toISOString(),
+      }));
+    } catch (error) {
+      logger.error('Trial referral failed', {
+        hospitalId: req.user?.hospitalId, trialId: req.params.trialId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      res.status(500).json(fail('Failed to create trial referral'));
     }
   });
 
