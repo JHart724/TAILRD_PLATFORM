@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Building2, MapPin, DollarSign, Users, TrendingUp, Target } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { toFixed } from '../../../utils/formatters';
+import DemoDataBadge from '../../../components/shared/DemoDataBadge';
 
 interface CategoryBreakdown {
   category: string;
@@ -90,6 +91,11 @@ const SHFacilityDetailModal: React.FC<SHFacilityDetailModalProps> = ({
  <MapPin className="w-4 h-4 mr-1" />
  <span>{location}</span>
  </div>
+ {/* This facility drill-down is fabricated detail (no per-facility source
+     exists); the badge marks the entire modal content as demo. */}
+ <div className="mt-2">
+ <DemoDataBadge label="Demo data - facility detail source pending" />
+ </div>
  </div>
  </div>
  <button
@@ -128,7 +134,7 @@ const SHFacilityDetailModal: React.FC<SHFacilityDetailModalProps> = ({
  <Target className="w-8 h-8 text-teal-700" />
  </div>
  <div className="text-2xl font-bold text-teal-700 mb-1">
- {valveTherapyRate}%
+ {Number.isFinite(valveTherapyRate) ? `${valveTherapyRate}%` : '-'}
  </div>
  <div className="text-sm text-teal-700">Valve Therapy Optimization Rate</div>
  </div>
@@ -234,11 +240,11 @@ const SHFacilityDetailModal: React.FC<SHFacilityDetailModalProps> = ({
  provider.valveTherapyRate >= 70 ? 'text-chrome-600' : 
  provider.valveTherapyRate >= 60 ? 'text-gray-500' : 'text-red-600'
  }`}>
- {provider.valveTherapyRate}%
+ {Number.isFinite(provider.valveTherapyRate) ? `${provider.valveTherapyRate}%` : '-'}
  </span>
  </td>
  <td className="py-3 text-right font-bold text-gray-900">
- {formatMoney(provider.revenueImpact)}
+ {Number.isFinite(provider.revenueImpact) ? formatMoney(provider.revenueImpact) : '-'}
  </td>
  </tr>
  ))}
@@ -266,7 +272,7 @@ const SHFacilityDetailModal: React.FC<SHFacilityDetailModalProps> = ({
  </div>
  <div className="flex justify-between mb-2">
  <span className="text-chrome-700">Avg Valve Therapy Rate:</span>
- <span className="font-medium text-chrome-900">{valveTherapyRate}%</span>
+ <span className="font-medium text-chrome-900">{Number.isFinite(valveTherapyRate) ? `${valveTherapyRate}%` : '-'}</span>
  </div>
  </div>
  </div>

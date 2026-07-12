@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, DollarSign, Clock, TrendingDown, TrendingUp, BarChart3, ArrowUpDown } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { toFixed } from '../../../utils/formatters';
+import DemoDataBadge from '../../../components/shared/DemoDataBadge';
 
 interface Case {
   caseId: string;
@@ -49,6 +50,15 @@ const SHDRGDetailModal: React.FC<SHDRGDetailModalProps> = ({
 }) => {
   const [sortField, setSortField] = useState<SortField>('marginPercent');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+
+  // Robustness (AUDIT-304 SH DRG drill-down fix): the DRG feed is demo and may not
+  // carry a case-level array. NEVER spread/iterate a non-array - the prior crash was
+  // `[...(cases || [])]` where `cases` was the numeric case COUNT (45), and `45 || []`
+  // is `45` (truthy), so the guard was FALSE safety and `[...45]` threw "cases is not
+  // iterable", taking the whole module to the error boundary. Array.isArray coerces
+  // correctly; an empty list renders an honest empty state instead of throwing.
+  const caseList: Case[] = Array.isArray(cases) ? cases : [];
+  const hasCases = caseList.length > 0;
 
   const formatMoney = (amount: number): string => {
  if (amount >= 1000000) return `$${toFixed(amount / 1000000, 1)}M`;
@@ -105,7 +115,7 @@ const SHDRGDetailModal: React.FC<SHDRGDetailModalProps> = ({
  }
   };
 
-  const sortedCases = [...(cases || [])].sort((a, b) => {
+  const sortedCases = [...caseList].sort((a, b) => {
  const aVal = a[sortField];
  const bVal = b[sortField];
  const multiplier = sortDirection === 'asc' ? 1 : -1;
@@ -143,8 +153,13 @@ const SHDRGDetailModal: React.FC<SHDRGDetailModalProps> = ({
  <h2 className="text-2xl font-bold text-titanium-900">DRG {drgCode}</h2>
  <p className="text-lg text-titanium-700 mt-1">{description}</p>
  <p className="text-sm text-titanium-600 mt-1">
- Q4 2025 Performance • {volume.toLocaleString()} cases
+ Q4 2025 Performance - {(volume ?? 0).toLocaleString()} cases
  </p>
+ <div className="mt-2">
+ {/* This DRG drill-down is demo detail (no per-case billing source exists);
+     the badge marks the modal content as demo, mirroring the facility modal. */}
+ <DemoDataBadge label="Demo data - DRG billing source pending" />
+ </div>
  </div>
  </div>
  <button
@@ -279,56 +294,64 @@ const SHDRGDetailModal: React.FC<SHDRGDetailModalProps> = ({
  <div className="bg-titanium-50 rounded-xl p-6 border border-titanium-200">
  <h3 className="text-xl font-semibold text-titanium-900 mb-6">Case Performance Summary</h3>
  
- {/* Performance Indicators */}
+ {/* Performance Indicators (honest empty state when no case-level detail) */}
+ {hasCases ? (
  <div className="space-y-4 mb-6">
  <div className="bg-white rounded-lg p-4 border border-titanium-200">
  <div className="flex justify-between items-center">
- <span className="text-titanium-700">Cases Above Target Margin (≥20%)</span>
+ <span className="text-titanium-700">Cases Above Target Margin (&gt;= 20%)</span>
  <div className="text-right">
  <div className="text-xl font-bold text-teal-700">
- {(cases || []).filter(c => c.marginPercent >= 20).length}
+ {caseList.filter(c => c.marginPercent >= 20).length}
  </div>
  <div className="text-sm text-titanium-500">
- {(cases?.length ? toFixed((cases.filter(c => c.marginPercent >= 20).length / cases.length) * 100, 1) : 0)}%
+ {toFixed((caseList.filter(c => c.marginPercent >= 20).length / caseList.length) * 100, 1)}%
  </div>
  </div>
  </div>
  </div>
- 
+
  <div className="bg-white rounded-lg p-4 border border-titanium-200">
  <div className="flex justify-between items-center">
  <span className="text-titanium-700">Cases Below Target LOS</span>
  <div className="text-right">
  <div className="text-xl font-bold text-porsche-600">
- {(cases || []).filter(c => c.los <= targetLos).length}
+ {caseList.filter(c => c.los <= targetLos).length}
  </div>
  <div className="text-sm text-titanium-500">
- {(cases?.length ? toFixed((cases.filter(c => c.los <= targetLos).length / cases.length) * 100, 1) : 0)}%
+ {toFixed((caseList.filter(c => c.los <= targetLos).length / caseList.length) * 100, 1)}%
  </div>
  </div>
  </div>
  </div>
- 
+
  <div className="bg-white rounded-lg p-4 border border-titanium-200">
  <div className="flex justify-between items-center">
  <span className="text-titanium-700">Average Case Margin</span>
  <div className="text-right">
  <div className="text-xl font-bold text-titanium-900">
- {formatMoney((cases?.length ? cases.reduce((sum, c) => sum + c.margin, 0) / cases.length : 0))}
+ {formatMoney(caseList.reduce((sum, c) => sum + c.margin, 0) / caseList.length)}
  </div>
  <div className="text-sm text-titanium-500">
- {(cases?.length ? toFixed(cases.reduce((sum, c) => sum + c.marginPercent, 0) / cases.length, 1) : 0)}%
+ {toFixed(caseList.reduce((sum, c) => sum + c.marginPercent, 0) / caseList.length, 1)}%
  </div>
  </div>
  </div>
  </div>
  </div>
+ ) : (
+ <div className="bg-white rounded-lg p-6 border border-titanium-200 text-center mb-6">
+ <p className="text-sm font-medium text-titanium-700">No case-level detail - demo DRG data</p>
+ <p className="text-xs text-titanium-500 mt-1">Per-case performance requires a billing data source (pending).</p>
+ </div>
+ )}
  </div>
  </div>
 
  {/* Case Distribution Table */}
  <div className="bg-titanium-50 rounded-xl p-6 border border-titanium-200">
  <h3 className="text-xl font-semibold text-titanium-900 mb-6">Top 10 Case Performance (De-identified)</h3>
+ {hasCases ? (
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
@@ -419,6 +442,12 @@ const SHDRGDetailModal: React.FC<SHDRGDetailModalProps> = ({
  </tbody>
  </table>
  </div>
+ ) : (
+ <div className="bg-white rounded-lg p-6 border border-titanium-200 text-center">
+ <p className="text-sm font-medium text-titanium-700">No case-level detail - demo DRG data</p>
+ <p className="text-xs text-titanium-500 mt-1">Per-case rows require a billing data source (pending).</p>
+ </div>
+ )}
  </div>
 
  {/* Close Button */}
