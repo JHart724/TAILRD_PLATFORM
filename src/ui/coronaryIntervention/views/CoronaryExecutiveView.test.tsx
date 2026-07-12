@@ -95,7 +95,7 @@ describe('CoronaryExecutiveView - wired totalOpenGaps (AUDIT-098)', () => {
     expect(container.textContent || '').toContain('4,321');
   });
 
-  test('falls back to the inline literal when the dashboard has no summary', async () => {
+  test('falls back to an honest 0 (not a fabricated 26 default) when the dashboard has no summary', async () => {
     mockUseModuleDashboard.mockReturnValue({
       data: null,
       loading: false,
@@ -104,8 +104,9 @@ describe('CoronaryExecutiveView - wired totalOpenGaps (AUDIT-098)', () => {
 
     await render();
 
-    // ?? fallback still works post-collapse: no real data -> inline 26.
+    // AUDIT-304 CAD convergence: the fabricated `?? 26` default is retired; an absent
+    // dashboard now yields 0 (the honest "no live count" value), never a fake 26.
     expect(mockCaptured.gapData).toBeDefined();
-    expect(mockCaptured.gapData.totalGaps).toBe(26);
+    expect(mockCaptured.gapData.totalGaps).toBe(0);
   });
 });
