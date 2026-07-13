@@ -4,6 +4,7 @@ import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
 import { logger } from '../utils/logger';
 import { CrossReferralService, ReferralType, ReferralStatus, ReferralPriority, ModuleType, ReferralUrgency } from '../services/crossReferralService';
+import { writeAuditLog } from '../middleware/auditLogger';
 import { body, param, query, validationResult } from 'express-validator';
 
 const router = Router();
@@ -332,6 +333,14 @@ router.put('/:id/status',
         notes
       );
 
+      // AUDIT-203: HIPAA-grade audit of the status-transition clinical decision (id/status only, no PHI).
+      await writeAuditLog(
+        req, 'CROSS_REFERRAL_STATUS_CHANGED', 'CrossReferral', referralId,
+        `Cross-module referral status changed to ${status}`,
+        { status: referral.status },
+        { status },
+      );
+
       res.json({
         success: true,
         data: {
@@ -533,6 +542,14 @@ router.post('/',
         priority as ReferralUrgency,
         req.user?.userId!,
         clinicalContext ? JSON.stringify(clinicalContext) : undefined
+      );
+
+      // AUDIT-203: HIPAA-grade audit of the referral clinical decision (ids/modules only, no PHI).
+      await writeAuditLog(
+        req, 'CROSS_REFERRAL_CREATED', 'CrossReferral', newReferral.id,
+        `Clinician created a cross-module referral (${fromModule} -> ${toModule})`,
+        null,
+        { patientId, fromModule, toModule, priority },
       );
 
       res.status(201).json({

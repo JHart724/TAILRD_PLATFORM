@@ -4,6 +4,7 @@ import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, requireMFA, AuthenticatedRequest } from '../middleware/auth';
 import { logger } from '../utils/logger';
 import { PhenotypeService, PhenotypeDetectionResult, PhenotypeType, PhenotypeStatus } from '../services/phenotypeService';
+import { writeAuditLog } from '../middleware/auditLogger';
 import { body, param, query, validationResult } from 'express-validator';
 
 const router = Router();
@@ -174,6 +175,15 @@ router.post('/screen/:patientId',
 
       // Trigger phenotype screening
       const detected = await service.runPhenotypeScreening(patientId, hospitalId);
+
+      // AUDIT-203: best-effort audit of the automated screening run (count/id only, no PHI). The
+      // clinician CONFIRM decision (PUT /:id/confirm) is the HIPAA-grade event.
+      await writeAuditLog(
+        req, 'PHENOTYPE_SCREENED', 'Phenotype', patientId,
+        `Phenotype screening run (${detected.length} detected)`,
+        null,
+        { patientId, detectedCount: detected.length },
+      );
 
       res.json({
         success: true,
@@ -377,6 +387,14 @@ router.put('/:id/confirm',
         ? phenotype.hospitalId
         : req.user!.hospitalId;
       await service.updatePhenotypeStatus(phenotypeId, writeHospitalId, newStatus, req.user?.userId);
+
+      // AUDIT-203: HIPAA-grade audit of the clinician confirm/reject decision (status only, no PHI).
+      await writeAuditLog(
+        req, 'PHENOTYPE_CONFIRMED', 'Phenotype', phenotypeId,
+        `Phenotype ${action} decision recorded`,
+        { status: phenotype.status },
+        { status: newStatus, action },
+      );
 
       res.json({
         success: true,

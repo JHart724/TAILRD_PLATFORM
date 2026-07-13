@@ -136,6 +136,22 @@ const HIPAA_GRADE_ACTIONS = new Set<string>([
   // REGISTRY_CASE_SUBMITTED) are audited best-effort - not in this set.
   'REGISTRY_CASE_APPROVED',
   'REGISTRY_CASE_REJECTED',
+  // AUDIT-203 - clinical-decision writes across the referrals / clinicalIntelligence /
+  // phenotypes routes. These are the definitive clinician decisions in each path
+  // (a cross-module referral, a risk/intervention record, a contraindication OVERRIDE,
+  // a phenotype CONFIRMATION); a silent audit-DB failure must 500 the route rather than
+  // record a clinical decision that was never durably logged. The best-effort siblings
+  // (CONTRAINDICATION_ASSESSED create, PHENOTYPE_SCREENED automated run, and the
+  // SESSION_REVOKED / SECURITY_SETTINGS_CHANGED security events) are audited but NOT
+  // in this set - their audit is best-effort so an audit-DB blip cannot block a
+  // security-critical password reset or session revocation.
+  'CROSS_REFERRAL_CREATED',
+  'CROSS_REFERRAL_STATUS_CHANGED',
+  'RISK_SCORE_ASSESSED',
+  'INTERVENTION_CREATED',
+  'INTERVENTION_UPDATED',
+  'CONTRAINDICATION_OVERRIDDEN',
+  'PHENOTYPE_CONFIRMED',
 ]);
 
 // ─── Types ──────────────────────────────────────────────────────────────────────

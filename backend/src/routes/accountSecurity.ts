@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { APIResponse } from '../types';
 import { authenticateToken, authorizeRole, AuthenticatedRequest } from '../middleware/auth';
 import { sendEmail, buildPasswordResetEmail } from '../services/emailService';
+import { writeAuditLog } from '../middleware/auditLogger';
 import prisma from '../lib/prisma';
 
 const router = Router();
@@ -171,6 +172,15 @@ router.post('/password-reset/confirm', async (req: AuthenticatedRequest, res: Re
       data: { isActive: false },
     });
 
+    // AUDIT-203: best-effort security-event audit. Pre-auth flow: the acting user is anonymous, so the
+    // affected user is recorded in resourceId + newValues (never the password or token).
+    await writeAuditLog(
+      req, 'SECURITY_SETTINGS_CHANGED', 'User', user.id,
+      'Password reset via token',
+      null,
+      { change: 'password-reset', userId: user.id },
+    );
+
     return res.json({
       success: true,
       message: 'Password has been reset successfully. Please log in with your new password.',
@@ -263,6 +273,14 @@ router.post('/change-password', authenticateToken, async (req: AuthenticatedRequ
         data: { isActive: false },
       });
     }
+
+    // AUDIT-203: best-effort security-event audit (no password material, ever).
+    await writeAuditLog(
+      req, 'SECURITY_SETTINGS_CHANGED', 'User', userId,
+      'Password changed by user',
+      null,
+      { change: 'password' },
+    );
 
     return res.json({
       success: true,
@@ -378,6 +396,14 @@ router.delete('/sessions/:sessionId', authenticateToken, async (req: Authenticat
       data: { isActive: false },
     });
 
+    // AUDIT-203: best-effort security-event audit.
+    await writeAuditLog(
+      req, 'SESSION_REVOKED', 'LoginSession', sessionId,
+      'Session revoked by user',
+      null,
+      { userId, sessionId },
+    );
+
     return res.json({
       success: true,
       message: 'Session revoked',
@@ -413,6 +439,14 @@ router.delete('/sessions', authenticateToken, async (req: AuthenticatedRequest, 
       },
       data: { isActive: false },
     });
+
+    // AUDIT-203: best-effort security-event audit (bulk self-revoke).
+    await writeAuditLog(
+      req, 'SESSION_REVOKED', 'LoginSession', null,
+      `Revoked ${result.count} session(s) (self, current preserved)`,
+      null,
+      { userId, revokedCount: result.count },
+    );
 
     return res.json({
       success: true,
@@ -475,6 +509,15 @@ router.post(
         targetUserId: userId,
         sessionsRevoked: result.count,
       });
+
+      // AUDIT-203: best-effort security-event audit of the super-admin force-revoke (acting admin is
+      // stamped by writeAuditLog as userId; the target user is in newValues).
+      await writeAuditLog(
+        req, 'SESSION_REVOKED', 'LoginSession', null,
+        `Super-admin revoked ${result.count} session(s) for a user`,
+        null,
+        { targetUserId: userId, revokedCount: result.count },
+      );
 
       return res.json({
         success: true,
