@@ -11,6 +11,7 @@ import {
   createGDMTAssessmentSchema,
 } from '../validation/clinicalSchemas';
 import { assessGDMT, GDMTAssessmentInput } from '../services/gdmtEngine';
+import { writeAuditLog } from '../middleware/auditLogger';
 
 const router = Router();
 
@@ -63,6 +64,14 @@ router.post('/risk-scores', async (req: AuthenticatedRequest, res: Response) => 
     const assessment = await prisma.riskScoreAssessment.create({
       data: { ...(validation.data as any), hospitalId: req.user!.hospitalId },
     });
+
+    // AUDIT-203: HIPAA-grade audit of the risk-assessment clinical write (ids/category only, no PHI).
+    await writeAuditLog(
+      req, 'RISK_SCORE_ASSESSED', 'RiskScoreAssessment', assessment.id,
+      'Risk score assessment recorded',
+      null,
+      { patientId: assessment.patientId, scoreType: assessment.scoreType, riskCategory: assessment.riskCategory },
+    );
 
     res.status(201).json({
       success: true,
@@ -173,6 +182,14 @@ router.post('/interventions', async (req: AuthenticatedRequest, res: Response) =
       data: { ...(validation.data as any), hospitalId: req.user!.hospitalId },
     });
 
+    // AUDIT-203: HIPAA-grade audit of the intervention clinical write (ids/module only, no PHI).
+    await writeAuditLog(
+      req, 'INTERVENTION_CREATED', 'InterventionTracking', intervention.id,
+      'Intervention record created',
+      null,
+      { patientId: intervention.patientId, module: intervention.module, category: intervention.category },
+    );
+
     res.status(201).json({
       success: true,
       data: intervention,
@@ -216,6 +233,14 @@ router.patch('/interventions/:id/status', async (req: AuthenticatedRequest, res:
         ...(complications && { complications }),
       },
     });
+
+    // AUDIT-203: HIPAA-grade audit of the intervention status transition (status only, no PHI).
+    await writeAuditLog(
+      req, 'INTERVENTION_UPDATED', 'InterventionTracking', updated.id,
+      'Intervention status updated',
+      { status: existing.status },
+      { status: updated.status },
+    );
 
     res.json({
       success: true,
@@ -330,6 +355,14 @@ router.post('/contraindications', async (req: AuthenticatedRequest, res: Respons
       data: { ...(validation.data as any), hospitalId: req.user!.hospitalId },
     });
 
+    // AUDIT-203: best-effort audit of the assessment create (the high-stakes OVERRIDE below is HIPAA-grade).
+    await writeAuditLog(
+      req, 'CONTRAINDICATION_ASSESSED', 'ContraindicationAssessment', assessment.id,
+      'Contraindication assessment created',
+      null,
+      { patientId: assessment.patientId, module: assessment.module, level: assessment.level },
+    );
+
     res.status(201).json({
       success: true,
       data: assessment,
@@ -368,6 +401,15 @@ router.patch('/contraindications/:id/override', async (req: AuthenticatedRequest
       where: { id, hospitalId },
       data: { overriddenBy, overrideReason },
     });
+
+    // AUDIT-203: HIPAA-grade audit of the high-stakes clinical OVERRIDE. Carries before/after AND the
+    // overriding user (writeAuditLog stamps req.user.userId; overriddenBy is the attested clinician).
+    await writeAuditLog(
+      req, 'CONTRAINDICATION_OVERRIDDEN', 'ContraindicationAssessment', updated.id,
+      'Contraindication overridden',
+      { overriddenBy: existing.overriddenBy, overrideReason: existing.overrideReason },
+      { overriddenBy, overrideReason },
+    );
 
     res.json({
       success: true,
