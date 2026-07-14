@@ -16,23 +16,48 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { validateCrosswalk, summarizeValidation, Crosswalk } from './crosswalkSchema';
+import { validateCrosswalk, summarizeValidation, Crosswalk, ValidationResult } from './crosswalkSchema';
 import { SpecExtract, CodeExtract, ModuleCode } from './lib/types';
 import { MODULE_CONFIGS, CANONICAL_OUTPUT_DIR } from './lib/modules';
 
-function main(): void {
+// AUDIT-206: the validation logic is a PURE function so callers (the CLI main() below AND the jest
+// regression test) can assert on the returned object without spawning a subprocess. The jest test used to
+// spawnSync('npx tsx ...') and scrape stdout, which flaked under worker contention (a 30s subprocess cap
+// starved past). The authoritative spawn-time gate is still auditCanonical.yml (it invokes main() via
+// `npx tsx`); this in-process path is the fast, deterministic duplicate.
+
+export type ModuleValidationStatus = 'VALIDATED' | 'SKIPPED_NO_SPEC' | 'SKIPPED_NO_CROSSWALK';
+
+export interface ModuleValidation {
+  readonly code: ModuleCode;
+  readonly status: ModuleValidationStatus;
+  readonly result?: ValidationResult; // present iff status === 'VALIDATED'
+  readonly summary?: string;           // summarizeValidation(result), present iff VALIDATED
+}
+
+export interface CanonicalValidation {
+  readonly valid: boolean;             // true iff modulesValidated > 0 AND no missing extract AND no INVALID module (the exit-0 condition)
+  readonly modulesValidated: number;
+  readonly missingExtract?: string;    // path of the first missing *.code.json (the exit-2 condition)
+  readonly results: readonly ModuleValidation[];
+}
+
+/**
+ * Pure validation of the 6 canonical crosswalks. Reads the extracts, runs validateCrosswalk per module,
+ * and RETURNS the aggregate - it does NOT console.log or process.exit (the CLI main() does that).
+ */
+export function runValidation(): CanonicalValidation {
   // Pre-load all module code extracts for cross-module cite validation
   const allCodeExtracts = new Map<ModuleCode, CodeExtract>();
   for (const cfg of MODULE_CONFIGS) {
     const cp = path.join(CANONICAL_OUTPUT_DIR, `${cfg.code}.code.json`);
     if (!fs.existsSync(cp)) {
-      console.error(`ERROR: missing ${cp}. Run extractCode --all first.`);
-      process.exit(2);
+      return { valid: false, modulesValidated: 0, missingExtract: cp, results: [] };
     }
     allCodeExtracts.set(cfg.code, JSON.parse(fs.readFileSync(cp, 'utf8')) as CodeExtract);
   }
 
-  console.log('=== validateCanonical ===');
+  const results: ModuleValidation[] = [];
   let anyInvalid = false;
   let modulesValidated = 0;
 
@@ -40,11 +65,11 @@ function main(): void {
     const sp = path.join(CANONICAL_OUTPUT_DIR, `${cfg.code}.spec.json`);
     const xp = path.join(CANONICAL_OUTPUT_DIR, `${cfg.code}.crosswalk.json`);
     if (!fs.existsSync(sp)) {
-      console.error(`  ${cfg.code}: SKIPPED — missing spec.json`);
+      results.push({ code: cfg.code, status: 'SKIPPED_NO_SPEC' });
       continue;
     }
     if (!fs.existsSync(xp)) {
-      console.log(`  ${cfg.code}: NO CANONICAL CROSSWALK (skipped)`);
+      results.push({ code: cfg.code, status: 'SKIPPED_NO_CROSSWALK' });
       continue;
     }
     const spec = JSON.parse(fs.readFileSync(sp, 'utf8')) as SpecExtract;
@@ -52,10 +77,40 @@ function main(): void {
     const xw = JSON.parse(fs.readFileSync(xp, 'utf8')) as Crosswalk;
 
     const r = validateCrosswalk(xw, spec, code, allCodeExtracts);
-    console.log(`  ${cfg.code}: ${summarizeValidation(r)}`);
+    results.push({ code: cfg.code, status: 'VALIDATED', result: r, summary: summarizeValidation(r) });
     modulesValidated++;
+    if (!r.valid) anyInvalid = true;
+  }
+
+  return { valid: modulesValidated > 0 && !anyInvalid, modulesValidated, results };
+}
+
+/**
+ * CLI entrypoint - behavior byte-equivalent to the pre-AUDIT-206 main(): same stdout/stderr and same
+ * exit codes (0 all valid / 1 any invalid / 2 missing-extract or nothing-to-validate). The dedicated
+ * auditCanonical.yml gate invokes this via `npx tsx` and is UNCHANGED.
+ */
+function main(): void {
+  const v = runValidation();
+
+  if (v.missingExtract) {
+    console.error(`ERROR: missing ${v.missingExtract}. Run extractCode --all first.`);
+    process.exit(2);
+  }
+
+  console.log('=== validateCanonical ===');
+  for (const m of v.results) {
+    if (m.status === 'SKIPPED_NO_SPEC') {
+      console.error(`  ${m.code}: SKIPPED - missing spec.json`);
+      continue;
+    }
+    if (m.status === 'SKIPPED_NO_CROSSWALK') {
+      console.log(`  ${m.code}: NO CANONICAL CROSSWALK (skipped)`);
+      continue;
+    }
+    const r = m.result!;
+    console.log(`  ${m.code}: ${m.summary}`);
     if (!r.valid) {
-      anyInvalid = true;
       for (const e of r.errors.slice(0, 5)) {
         console.log(`    ERROR ${e.code} at ${e.path}: ${e.message.slice(0, 120)}`);
       }
@@ -65,12 +120,12 @@ function main(): void {
     }
   }
 
-  if (modulesValidated === 0) {
+  if (v.modulesValidated === 0) {
     console.error('ERROR: no canonical crosswalks found to validate.');
     process.exit(2);
   }
 
-  process.exit(anyInvalid ? 1 : 0);
+  process.exit(v.valid ? 0 : 1);
 }
 
 if (require.main === module) {
