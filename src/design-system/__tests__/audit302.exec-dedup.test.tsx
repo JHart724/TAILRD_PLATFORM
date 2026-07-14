@@ -125,9 +125,17 @@ describe('AUDIT-302 PR2 - VHD/PV ExecutiveView de-dup (asserted-at-source)', () 
       expect(s).toContain('DRG Summary Metrics');              // bespoke CMI grid
       expect(s).toContain("activeModal?.startsWith('drg-')");  // bespoke drg modal handler
     });
-    it(`${name}: preserves the bespoke wired KPI row (dashboard live hook intact)`, () => {
+    it(`${name}: preserves the live dashboard hook (config-fallback state depends on convergence)`, () => {
       expect(s).toContain('dashboard?.summary?.totalPatients');
-      expect(s).toContain('?? config.kpiData.totalPatients');
+      if (name === 'PeripheralExecutiveView') {
+        // PV is not yet AUDIT-304-converged: it still renders the inline live-with-config-fallback KPI tile.
+        expect(s).toContain('?? config.kpiData.totalPatients');
+      } else {
+        // VHD is AUDIT-304-converged: the inline KPI tile is extracted into VHDExecutiveSummary and
+        // the config fallback behind the live field (the AUDIT-099 core defect) is retired.
+        expect(s).toContain('<VHDExecutiveSummary dashboard={dashboard}');
+        expect(s).not.toContain('?? config.kpiData.totalPatients');
+      }
     });
   });
 });

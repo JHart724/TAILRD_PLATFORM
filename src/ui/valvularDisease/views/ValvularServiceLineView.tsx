@@ -7,6 +7,10 @@ import ValvularSurgicalNetworkVisualization from '../components/ValvularSurgical
 import VDClinicalGapDetectionDashboard from '../components/clinical/VDClinicalGapDetectionDashboard';
 import AutomatedReportingSystem from '../../../components/reporting/AutomatedReportingSystem';
 import ServiceLineKPIBanner from '../../../components/shared/ServiceLineKPIBanner';
+// Relocated from the VHD Executive tier (AUDIT-304 IA convergence): care-team action
+// telemetry and worsening-population trajectory are Service Line content, not exec KPIs.
+import GapResponseRateCard from '../../../components/shared/GapResponseRateCard';
+import { TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
 
 type TabId = 'bicuspid' | 'ross' | 'repair-vs-replace' | 'echo-surveillance' | 'clinical-gap-detection' | 'heatmap' | 'network' | 'analytics' | 'outcomes' | 'quality' | 'reporting';
 
@@ -78,7 +82,26 @@ const ValvularServiceLineView: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'heatmap':
-        return <ValvePatientHeatmap />;
+        return (
+          <div className="space-y-6">
+            <ValvePatientHeatmap />
+            {/* Relocated from the Executive tier (AUDIT-304 IA convergence): worsening-
+                population trajectory detail is Service Line population-health content. */}
+            <TrajectoryTrendsCard demoData cleanSurface data={{
+              worseningRapidPct: 14,
+              worseningRapidCount: 52,
+              meanDeclineRate: 'AS Vmax progression',
+              declineMetric: 'VD',
+              thresholdIn30Days: 2,
+              totalFlaggedPatients: 372,
+              keyInsights: [
+                '134 moderate AS patients -- 18 with rapid Vmax progression projected to reach severe within 12 months',
+                '31 post-TAVR patients with potential HALT -- neurologic trajectory monitoring active',
+                'BAV aortopathy: 56 patients under surveillance, 6 approaching surgical threshold',
+              ],
+            }} />
+          </div>
+        );
       case 'network':
         return <ValvularSurgicalNetworkVisualization />;
       case 'bicuspid':
@@ -520,7 +543,15 @@ const ValvularServiceLineView: React.FC = () => {
       case 'reporting':
         return <AutomatedReportingSystem />;
       case 'clinical-gap-detection':
-        return <VDClinicalGapDetectionDashboard />;
+        return (
+          <div className="space-y-6">
+            <VDClinicalGapDetectionDashboard />
+            {/* Relocated from the Executive tier (AUDIT-304 IA convergence): care-team
+                action telemetry is Service Line operational content. Honest empty state
+                until a response-rate source exists. */}
+            <GapResponseRateCard rates={[]} overallRate={0} timeRange="30d" />
+          </div>
+        );
       default:
         return <ValvePatientHeatmap />;
     }

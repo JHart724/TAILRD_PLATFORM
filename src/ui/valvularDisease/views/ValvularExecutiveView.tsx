@@ -5,17 +5,24 @@ import { valvularDiseaseConfig } from '../config/executiveConfig';
 import ExportButton from '../../../components/shared/ExportButton';
 import { ExportData } from '../../../utils/dataExport';
 import ZipHeatMap from '../../../components/shared/ZipHeatMap';
-import SharedROIWaterfall, { WaterfallCategory } from '../../../components/shared/SharedROIWaterfall';
+import SharedROIWaterfall from '../../../components/shared/SharedROIWaterfall';
 import SharedBenchmarksPanel, { BenchmarkMetric } from '../../../components/shared/SharedBenchmarksPanel';
-import SharedProjectedVsRealized, { MonthData } from '../../../components/shared/SharedProjectedVsRealized';
+import SharedProjectedVsRealized from '../../../components/shared/SharedProjectedVsRealized';
 import BaseDetailModal from '../../../components/shared/BaseDetailModal';
+import DemoDataBadge from '../../../components/shared/DemoDataBadge';
 import { getOrdinalSuffix, formatMillions, toFixed, roundTo } from '../../../utils/formatters';
 import GapIntelligenceCard from '../../../components/shared/GapIntelligenceCard';
-import GapResponseRateCard from '../../../components/shared/GapResponseRateCard';
-import PredictiveMetricsBanner from '../../../components/shared/PredictiveMetricsBanner';
-import { RevenuePipelineCard, RevenueAtRiskCard, TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
-import type { RevenuePipelineData, RevenueAtRiskData, TrajectoryTrendsData } from '../../../components/shared/ForwardLookingCards';
-import { Zap, Search } from 'lucide-react';
+import VHDExecutiveSummary, { VHDDashboardData } from '../components/VHDExecutiveSummary';
+import VHDForwardOutlookPanel from '../components/VHDForwardOutlookPanel';
+import {
+  VHD_DEMO_WATERFALL,
+  VHD_DEMO_ROI_CATEGORIES,
+  VHD_DEMO_ANNUAL_OPPORTUNITY_M,
+  VHD_DEMO_PVR,
+  VHD_DEMO_CATEGORIES,
+  VHD_DEMO_TOPGAPS,
+  VHD_DEMO_SAFETY_ALERT,
+} from '../config/vhdDemoFinancials';
 
 // ── Icons ──────────────────────────────────────────────────────────
 const HeartIcon = () => (
@@ -49,30 +56,9 @@ const valvularBenchmarks: BenchmarkMetric[] = [
   { metric: 'Post-Op Readmission Rate', ourValue: 8.4, benchmark: 9.1, unit: '%', trend: 'down', percentile: 74, lowerIsBetter: true },
 ];
 
-// ── Revenue Waterfall Categories ───────────────────────────────────
-const valvularWaterfallCategories: WaterfallCategory[] = [
-  { label: 'Surgical vs Interventional', value: 18400000, color: '#8B6914' },
-  { label: 'Valve Severity Assessment', value: 12600000, color: '#1E3347' },
-  { label: 'Echo Integration', value: 8200000, color: '#2C4A60' },
-  { label: 'Guideline Implementation', value: 6800000, color: '#3E6275' },
-  { label: 'Follow-up Protocol', value: 4200000, color: '#4A6880' },
-];
 
-// ── Monthly Projected vs Realized ──────────────────────────────────
-const valvularMonthlyData: MonthData[] = [
-  { month: 'Jul', projected: 4200000, realized: 3650000 },
-  { month: 'Aug', projected: 4350000, realized: 3780000 },
-  { month: 'Sep', projected: 4100000, realized: 3920000 },
-  { month: 'Oct', projected: 4500000, realized: 3850000 },
-  { month: 'Nov', projected: 4300000, realized: 4100000 },
-  { month: 'Dec', projected: 4600000, realized: 3700000 },
-  { month: 'Jan', projected: 4800000, realized: 4250000 },
-  { month: 'Feb', projected: 4400000, realized: 4180000 },
-  { month: 'Mar', projected: 4700000, realized: 4350000 },
-  { month: 'Apr', projected: 4550000, realized: 4020000 },
-  { month: 'May', projected: 4900000, realized: 4500000 },
-  { month: 'Jun', projected: 5100000, realized: 4680000 },
-];
+
+
 
 // ── DRG Drill-Down Data ────────────────────────────────────────────
 const drgDetailData = {
@@ -131,7 +117,10 @@ const valvularZipData = [
 ];
 
 const ValvularExecutiveView: React.FC = () => {
-  const { data: dashboard, loading: dashboardLoading, error: dashboardError } = useModuleDashboard('valvular-disease');
+  // useModuleDashboard returns `data: any`; the VHD dashboard endpoint emits the
+  // VHDDashboardData contract (patient/gap/device counts), so type it here to drop `any`.
+  const { data: dashboardRaw, loading: dashboardLoading, error: dashboardError } = useModuleDashboard('valvular-disease');
+  const dashboard = (dashboardRaw as VHDDashboardData | null) ?? null;
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const config = valvularDiseaseConfig;
 
@@ -144,8 +133,8 @@ const ValvularExecutiveView: React.FC = () => {
  title: 'Valvular Disease Executive Dashboard',
  headers: ['Metric', 'Value', 'Target', 'Variance'],
  rows: [
- ['Total Revenue Opportunity', config.kpiData.totalOpportunity, '$58M', '-$6.3M'],
- ['Patient Population', config.kpiData.totalPatients, '1,500', '-158'],
+ ['Total Revenue Opportunity (gap-closure, demo)', `$${VHD_DEMO_ANNUAL_OPPORTUNITY_M.toFixed(1)}M`, '-', '-'],
+ ['Patient Population (live)', dashboard?.summary?.totalPatients?.toLocaleString() ?? 'pending', '-', '-'],
  ['Optimal Therapy Rate', config.kpiData.gdmtOptimization, '85%', '-14%'],
  ['Avg Revenue per Patient', config.kpiData.avgRoi, '$42,000', '-$3,500'],
  ['Current CMI', config.drgMetrics.currentCMI, '2.35', '-0.23'],
@@ -160,210 +149,188 @@ const ValvularExecutiveView: React.FC = () => {
  },
   });
 
-  // ── KPI Cards Data ─────────────────────────────────────────────
-  // Colors: Chrome Blue (patients), Metallic Gold (revenue), Racing Green (quality), Copper Bronze (avg revenue)
-  const kpiCards = [
- { label: 'Total Patients', value: dashboard?.summary?.totalPatients?.toLocaleString() ?? config.kpiData.totalPatients, sub: config.kpiData.totalPatientsSub, icon: <HeartIcon />, valueColor: '#2C4A60', bg: '#EFF4F8', border: '#B8C9D9' },
- { label: 'Revenue Opportunity', value: config.kpiData.totalOpportunity, sub: config.kpiData.totalOpportunitySub, icon: <DollarIcon />, valueColor: '#8B6914', bg: '#FAF6E8', border: '#D4B85C' },
- { label: 'Optimal Therapy Rate', value: config.kpiData.gdmtOptimization, sub: config.kpiData.gdmtOptimizationSub, icon: <ChartIcon />, valueColor: '#2D6147', bg: '#EEF6F2', border: '#A8D0BC' },
- { label: 'Avg Revenue / Patient', value: config.kpiData.avgRoi, sub: config.kpiData.avgRoiSub, icon: <TrendUpIcon />, valueColor: '#8B5A2B', bg: '#FAF3EC', border: '#DDBA98' },
-  ];
+
 
   return (
  <div className="min-h-screen p-6 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #EAEFF4 0%, #F2F5F8 50%, #ECF0F4 100%)' }}>
 
  <div className="relative z-10 max-w-[1800px] mx-auto space-y-6">
- {dashboardLoading && <div className="text-titanium-500 text-sm animate-pulse">Loading live data...</div>}
- <div className="flex justify-end mb-6">
- <ExportButton
- data={generateExportData()}
- variant="outline"
- size="md"
- className="shadow-lg hover:shadow-xl transition-all duration-300"
- />
- </div>
+      {/* Tier header - Export folded in as a right-aligned utility (closes the VHD-side
+          AUDIT-161 export-above-headline inversion; the first SECTION is now the KPI
+          summary, matching the HF/EP/SH/CAD exemplar). */}
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-2xl font-bold font-display text-titanium-800">Valvular Disease Executive Dashboard</h2>
+        <ExportButton
+          data={generateExportData()}
+          variant="outline"
+          size="sm"
+          className="shadow-sm hover:shadow-md transition-all duration-300"
+        />
+      </div>
 
- {/* Clinical Gap Intelligence */}
- <GapIntelligenceCard data={{
-   totalGaps: dashboard?.summary?.totalOpenGaps ?? 6,
-   categories: [
-     { name: 'Quality', patients: 313, color: '#C8D4DC' },
-     { name: 'Safety', patients: 59, color: '#9B2438' },
-   ],
-   topGaps: [
-     { name: 'Moderate AS Surveillance', patients: 134, opportunity: '$1.8M' },
-     { name: 'BAV Aortopathy', patients: 56, opportunity: '$1.2M' },
-     { name: 'HALT Screening', patients: 31, opportunity: '$620K' },
-     { name: 'Post-TAVR Echo', patients: 34, opportunity: '$420K' },
-     { name: 'Rheumatic MS', patients: 28, opportunity: '$340K' },
-   ],
-   safetyAlert: 'CRITICAL: 31 patients \u00b7 HIGH: 28 patients',
- }} />
+      {/* 1. KPI summary - live patients / open gaps / device candidates + 3 demo cards. */}
+      <VHDExecutiveSummary dashboard={dashboard} loading={dashboardLoading} error={dashboardError} />
 
- {/* Gap Response Rate — care team action tracking */}
- <GapResponseRateCard
-   rates={[]}
-   overallRate={0}
-   timeRange="30d"
- />
+      {/* 2. Clinical Gap Intelligence - live headline (totalOpenGaps + real totalPatients),
+          demo-badged composition (donut / top-gaps / safety are illustrative). */}
+      <GapIntelligenceCard
+        data={{
+          totalGaps: dashboard?.summary?.totalOpenGaps ?? 0,
+          categories: VHD_DEMO_CATEGORIES,
+          topGaps: VHD_DEMO_TOPGAPS,
+          safetyAlert: VHD_DEMO_SAFETY_ALERT,
+        }}
+        totalPatients={dashboard?.summary?.totalPatients ?? 0}
+        compositionDemo
+      />
 
- {/* Forward-Looking Executive Cards */}
- <RevenuePipelineCard data={{
-   quarters: [
-     { quarter: 'Q1 2026', revenue: 1200000, procedures: 12, confidence: 'high' },
-     { quarter: 'Q2 2026', revenue: 900000, procedures: 9, confidence: 'moderate' },
-     { quarter: 'Q3 2026', revenue: 600000, procedures: 6, confidence: 'moderate' },
-     { quarter: 'Q4 2026', revenue: 400000, procedures: 4, confidence: 'low' },
-   ],
-   totalProjected12Month: 3100000,
- }} />
- <RevenueAtRiskCard data={{
-   immediatePatients: 31,
-   immediateRevenue: 1800000,
-   deferralRevenue: 600000,
-   cumulativeRisk12Month: 2800000,
-   deferralCostPerMonth: 300000,
- }} />
- <TrajectoryTrendsCard data={{
-   worseningRapidPct: 14,
-   worseningRapidCount: 52,
-   meanDeclineRate: 'AS Vmax progression',
-   declineMetric: 'VD',
-   thresholdIn30Days: 2,
-   totalFlaggedPatients: 372,
-   keyInsights: [
-     '134 moderate AS patients -- 18 with rapid Vmax progression projected to reach severe within 12 months',
-     '31 post-TAVR patients with potential HALT -- neurologic trajectory monitoring active',
-     'BAV aortopathy: 56 patients under surveillance, 6 approaching surgical threshold',
-   ],
- }} />
+      {/* 3. Revenue Opportunity Waterfall - the SINGLE re-scoped waterfall, fed from the
+          one $5.3M vhdDemoFinancials model (total === category-sum by construction; the
+          $51.7M / $38.2M / ~$55M program-revenue figures are removed - program revenue is
+          not an exec-tier gap-opportunity figure). */}
+      <div className="metal-card mb-6">
+        <div className="px-6 py-4 border-b border-titanium-200 bg-white/80 rounded-t-2xl">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-xl font-bold text-titanium-900 mb-1">Revenue Opportunity Waterfall</h3>
+              <p className="text-sm text-titanium-500">Annual gap-closure opportunity by valvular intervention category</p>
+            </div>
+            <DemoDataBadge />
+          </div>
+        </div>
+        <div className="p-6">
+          <SharedROIWaterfall
+            categories={VHD_DEMO_ROI_CATEGORIES}
+            totalRevenue={VHD_DEMO_WATERFALL.total_revenue * 1000000}
+            realizedRevenue={VHD_DEMO_WATERFALL.realized_revenue * 1000000}
+            onCategoryClick={(label) => setActiveModal(`category-${label}`)}
+          />
+        </div>
+      </div>
 
- {/* Predictive Metrics Banner */}
- <PredictiveMetricsBanner data={{
-   thresholdIn90Days: 18,
-   quarterlyActionableRevenue: 1800000,
-   totalIdentifiedRevenue: 5300000,
-   rapidDeteriorationCount: 31,
-   avgTimeToEvent: 12,
-   projectedRevenueCurrentRate: 1900000,
-   projectedRevenueSystematic: 4100000,
- }} />
+      {/* 4. DRG Performance cards + CMI - promoted from dead-last (after the ZIP map);
+          the bespoke clickable cards stay (fed well-formed drgDetailData arrays), demo-badged. */}
+      <div className="metal-card p-6 mb-6">
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="text-xl font-bold text-titanium-900">{config.drgTitle}</h3>
+          <DemoDataBadge label="Demo data - DRG billing source pending" />
+        </div>
+        <p className="text-sm text-titanium-500 mb-6">{config.drgDescription}</p>
 
- {/* ── KPI Summary Cards ─────────────────────────────────── */}
- <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
- {kpiCards.map((kpi) => (
- <div key={kpi.label} className="metal-card p-5 group hover:shadow-metal-3 transition-all duration-300" style={{ background: kpi.bg, borderColor: kpi.border }}>
- <div className="flex items-center justify-between mb-3">
- <span className="text-titanium-500 text-sm font-medium">{kpi.label}</span>
- <span className="opacity-60 group-hover:opacity-100 transition-opacity" style={{ color: kpi.valueColor }}>{kpi.icon}</span>
- </div>
- <div className="text-3xl font-bold mb-1" style={{ color: kpi.valueColor }}>{kpi.value}</div>
- <div className="text-xs text-titanium-400">{kpi.sub}</div>
- </div>
- ))}
- </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          {config.drgPerformanceCards.map((drg, i) => {
+            // Index 0 (MCC, highest) -> Metallic Gold; Index 1 (CC, mid) -> Chrome Blue mid; Index 2 (lowest) -> Carmona Red
+            const drgColors = [
+              { value: '#C4982A', bg: '#FAF6E8', border: '#D4B85C' },
+              { value: '#4A6880', bg: '#F0F5FA', border: '#C8D4DC' },
+              { value: '#9B2438', bg: '#FDF2F3', border: '#F5C0C8' },
+            ];
+            const dc = drgColors[i] || drgColors[0];
+            return (
+              <button
+                key={drg.title}
+                onClick={() => setActiveModal(`drg-${drg.title}`)}
+                className="text-left p-4 rounded-xl border transition-all duration-200 group"
+                style={{ background: dc.bg, borderColor: dc.border }}
+              >
+                <div className="text-sm text-titanium-500 mb-1">{drg.title}</div>
+                <div className="text-2xl font-bold mb-2" style={{ color: dc.value }}>{drg.value}</div>
+                <div className="text-xs text-titanium-400 mb-1">{drg.caseCount}</div>
+                <div className="text-xs font-medium" style={{ color: drg.isPositive ? '#2C4A60' : '#9B2438' }}>
+                  {drg.variance}
+                </div>
+              </button>
+            );
+          })}
+        </div>
 
- {/* ── Financial Analytics Row ──────────────────────────── */}
- <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
- <SharedROIWaterfall
- categories={valvularWaterfallCategories}
- totalRevenue={51700000}
- realizedRevenue={38200000}
- onCategoryClick={(label) => setActiveModal(`category-${label}`)}
- />
- <SharedProjectedVsRealized
- title="Monthly Revenue: Projected vs Realized"
- subtitle="Valve procedure revenue tracking over 12 months"
- monthlyData={valvularMonthlyData}
- onMonthClick={(m) => setActiveModal(`month-${m.month}`)}
- />
- </div>
+        {/* DRG Summary Metrics */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-titanium-200">
+          <div>
+            <div className="text-xs text-titanium-400 mb-1">Current CMI</div>
+            <div className="text-lg font-bold" style={{ color: '#2C4A60' }}>{config.drgMetrics.currentCMI}</div>
+          </div>
+          <div>
+            <div className="text-xs text-titanium-400 mb-1">Monthly Opportunity</div>
+            <div className="text-lg font-bold" style={{ color: '#8B6914' }}>{config.drgMetrics.monthlyOpportunity}</div>
+          </div>
+          <div>
+            <div className="text-xs text-titanium-400 mb-1">Documentation Rate</div>
+            <div className="text-lg font-bold" style={{ color: '#2D6147' }}>{config.drgMetrics.documentationRate}</div>
+          </div>
+          <div>
+            <div className="text-xs text-titanium-400 mb-1">Avg LOS</div>
+            <div className="text-lg font-bold" style={{ color: '#1A6878' }}>{config.drgMetrics.avgLOS}</div>
+          </div>
+        </div>
+      </div>
 
- {/* ── Benchmarks Panel ─────────────────────────────────── */}
- <SharedBenchmarksPanel
- title="Valvular Disease Clinical Benchmarks"
- subtitle="Performance metrics against national standards and peer institutions"
- benchmarks={valvularBenchmarks}
- dataSource="STS National Database & TVT Registry"
- lastUpdated="March 2026"
- onBenchmarkClick={(metric) => setActiveModal(`benchmark-${metric}`)}
- />
+      {/* DRGOptimizationAlert (SharedDRGPerformance alertOnly) - stays adjacent to the DRG panel. */}
+      <SharedDRGPerformance config={config} variant="alertOnly" />
 
- {/* ── Geographic Heat Map ───────────────────────────────── */}
- <ZipHeatMap
- title="Stage C/D Valve Disease Care Gap Distribution"
- data={valvularZipData}
- onZipClick={handleZipClick}
- centerLat={40.7589}
- centerLng={-73.9851}
- zoom={12}
- />
+      {/* 5. Projected vs Realized + Benchmarks */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div className="metal-card">
+          <div className="px-6 py-4 border-b border-titanium-200 bg-white/80 rounded-t-2xl">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-titanium-900 mb-1">Projected vs Realized Revenue</h3>
+                <p className="text-sm text-titanium-500">Valve procedure revenue tracking and variance analysis</p>
+              </div>
+              <DemoDataBadge />
+            </div>
+          </div>
+          <div className="p-6">
+            <SharedProjectedVsRealized
+              monthlyData={VHD_DEMO_PVR.months}
+              onMonthClick={(m) => setActiveModal(`month-${m.month}`)}
+              gapSublabel="Immediate at-risk slice (this quarter) - see Revenue at Risk"
+              cleanSurface
+            />
+          </div>
+        </div>
+        <div className="metal-card">
+          <div className="px-6 py-4 border-b border-titanium-200 bg-white/80 rounded-t-2xl">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-titanium-900 mb-1">Valvular Disease Clinical Benchmarks</h3>
+                <p className="text-sm text-titanium-500">National comparison metrics</p>
+              </div>
+              <DemoDataBadge label="Demo benchmarks - national comparison pending" />
+            </div>
+          </div>
+          <div className="p-6">
+            <SharedBenchmarksPanel
+              benchmarks={valvularBenchmarks}
+              subtitle="Performance metrics against national standards and peer institutions"
+              dataSource="STS National Database & TVT Registry"
+              lastUpdated="March 2026"
+              onBenchmarkClick={(metric) => setActiveModal(`benchmark-${metric}`)}
+            />
+          </div>
+        </div>
+      </div>
 
- {/* ── DRG Performance Cards ───────────────────────────── */}
- <div className="metal-card p-6">
- <h3 className="text-xl font-bold text-titanium-900 mb-1">{config.drgTitle}</h3>
- <p className="text-sm text-titanium-500 mb-6">{config.drgDescription}</p>
+      {/* 6. Forward Outlook - consolidated 12-month projection (replaces the former
+          pipeline / at-risk / trajectory / predictive cluster). Its DemoDataBadge is internal. */}
+      <VHDForwardOutlookPanel />
 
- <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
- {config.drgPerformanceCards.map((drg, i) => {
- // Index 0 (MCC, highest) → Metallic Gold; Index 1 (CC, mid) → Chrome Blue mid; Index 2 (lowest) → Carmona Red
- const drgColors = [
- { value: '#C4982A', bg: '#FAF6E8', border: '#D4B85C' },
- { value: '#4A6880', bg: '#F0F5FA', border: '#C8D4DC' },
- { value: '#9B2438', bg: '#FDF2F3', border: '#F5C0C8' },
- ];
- const dc = drgColors[i] || drgColors[0];
- return (
- <button
- key={drg.title}
- onClick={() => setActiveModal(`drg-${drg.title}`)}
- className="text-left p-4 rounded-xl border transition-all duration-200 group"
- style={{ background: dc.bg, borderColor: dc.border }}
- >
- <div className="text-sm text-titanium-500 mb-1">{drg.title}</div>
- <div className="text-2xl font-bold mb-2" style={{ color: dc.value }}>{drg.value}</div>
- <div className="text-xs text-titanium-400 mb-1">{drg.caseCount}</div>
- <div className="text-xs font-medium" style={{ color: drg.isPositive ? '#2C4A60' : '#9B2438' }}>
- {drg.variance}
- </div>
- </button>
- );
- })}
- </div>
+      {/* 7. Geographic Heat Map */}
+      <ZipHeatMap
+        title="Stage C/D Valve Disease Care Gap Distribution"
+        data={valvularZipData}
+        onZipClick={handleZipClick}
+        centerLat={40.7589}
+        centerLng={-73.9851}
+        zoom={12}
+      />
 
- {/* DRG Summary Metrics */}
- <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-titanium-200">
- <div>
- <div className="text-xs text-titanium-400 mb-1">Current CMI</div>
- {/* Chrome Blue */}
- <div className="text-lg font-bold" style={{ color: '#2C4A60' }}>{config.drgMetrics.currentCMI}</div>
- </div>
- <div>
- <div className="text-xs text-titanium-400 mb-1">Monthly Opportunity</div>
- {/* Metallic Gold */}
- <div className="text-lg font-bold" style={{ color: '#8B6914' }}>{config.drgMetrics.monthlyOpportunity}</div>
- </div>
- <div>
- <div className="text-xs text-titanium-400 mb-1">Documentation Rate</div>
- {/* Racing Green */}
- <div className="text-lg font-bold" style={{ color: '#2D6147' }}>{config.drgMetrics.documentationRate}</div>
- </div>
- <div>
- <div className="text-xs text-titanium-400 mb-1">Avg LOS</div>
- {/* Steel Teal */}
- <div className="text-lg font-bold" style={{ color: '#1A6878' }}>{config.drgMetrics.avgLOS}</div>
- </div>
- </div>
- </div>
-
- {/* DRG Performance + CMI (de-duplicated: BaseExecutiveView duplicate KPI row + min-h-screen page wrapper dropped; AUDIT-302 Layer 2 PR 2) */}
- <SharedDRGPerformance config={config} variant="alertOnly" />
-
- {/* ── Modals ──────────────────────────────────────────── */}
- {activeModal?.startsWith('drg-') && (
+      {/* Modals */}
+       {activeModal?.startsWith('drg-') && (
  <BaseDetailModal
  title={activeModal.replace('drg-', '')}
  subtitle="Case-level financial detail"
+ demoBadge
  icon={<DollarIcon />}
  summaryMetrics={[
  { label: 'Total Cases', value: activeModal.includes('216') ? '156' : activeModal.includes('217') ? '247' : '89' },
@@ -375,7 +342,6 @@ const ValvularExecutiveView: React.FC = () => {
  tableData={activeModal.includes('216') ? drgDetailData['DRG 216'] : drgDetailData['DRG 217']}
  columns={drgColumns}
  onClose={() => setActiveModal(null)}
- onExport={() => console.log('Exporting DRG detail')}
  />
  )}
 
@@ -383,9 +349,10 @@ const ValvularExecutiveView: React.FC = () => {
  <BaseDetailModal
  title={`${activeModal.replace('month-', '')} Revenue Detail`}
  subtitle="Monthly projected vs realized breakdown"
+ demoBadge
  icon={<ChartIcon />}
  summaryMetrics={(() => {
- const m = valvularMonthlyData.find(d => activeModal.includes(d.month));
+ const m = VHD_DEMO_PVR.months.find(d => activeModal.includes(d.month));
  if (!m) return [];
  const gap = m.projected - m.realized;
  return [
@@ -403,6 +370,7 @@ const ValvularExecutiveView: React.FC = () => {
  <BaseDetailModal
  title={activeModal.replace('benchmark-', '')}
  subtitle="Benchmark performance detail"
+ demoBadge
  icon={<TrendUpIcon />}
  summaryMetrics={(() => {
  const b = valvularBenchmarks.find(m => activeModal.includes(m.metric));
@@ -420,17 +388,19 @@ const ValvularExecutiveView: React.FC = () => {
 
  {activeModal?.startsWith('category-') && (() => {
  const label = activeModal.replace('category-', '');
- const cat = valvularWaterfallCategories.find(c => c.label === label);
+ const cat = VHD_DEMO_ROI_CATEGORIES.find(c => c.label === label);
+ const realizedRatio = VHD_DEMO_WATERFALL.realized_revenue / VHD_DEMO_WATERFALL.total_revenue;
  return (
  <BaseDetailModal
  title={label}
  subtitle="Revenue Opportunity Category Detail"
+ demoBadge
  icon={<DollarIcon />}
  summaryMetrics={[
  { label: 'Annual Opportunity', value: cat ? `${toFixed(cat.value / 1000000, 1)}M` : 'N/A', colorScheme: 'porsche' },
- { label: 'Share of Total', value: cat ? `${toFixed((cat.value / 51700000) * 100, 1)}%` : 'N/A' },
- { label: 'Realized', value: `${toFixed((cat?.value || 0) * 0.74 / 1000000, 1)}M`, colorScheme: 'green' },
- { label: 'Gap', value: `${toFixed((cat?.value || 0) * 0.26 / 1000000, 1)}M`, colorScheme: 'amber' },
+ { label: 'Share of Total', value: cat ? `${toFixed((cat.value / (VHD_DEMO_ANNUAL_OPPORTUNITY_M * 1000000)) * 100, 1)}%` : 'N/A' },
+ { label: 'Realized', value: `${toFixed((cat?.value || 0) * realizedRatio / 1000000, 1)}M`, colorScheme: 'green' },
+ { label: 'Gap', value: `${toFixed((cat?.value || 0) * (1 - realizedRatio) / 1000000, 1)}M`, colorScheme: 'amber' },
  ]}
  onClose={() => setActiveModal(null)}
  />
@@ -444,6 +414,7 @@ const ValvularExecutiveView: React.FC = () => {
  <BaseDetailModal
  title={`ZIP Code ${zipCode}`}
  subtitle="Valve Disease Care Gap Patient Summary"
+ demoBadge
  icon={<HeartIcon />}
  summaryMetrics={[
  { label: 'Patients', value: zipInfo?.patientCount?.toString() || '0', colorScheme: 'porsche' },
