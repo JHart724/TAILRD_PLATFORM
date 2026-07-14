@@ -70,6 +70,12 @@ jobs:
         working-directory: backend
         run: npx tsc --noEmit
 
+      # AUDIT-204: type-check-coverage gate. Fails on any unsanctioned leading-block // @ts-nocheck
+      # (precise - JSDoc prose / mid-file mentions do not trip it), cross-checked vs the section-14 list.
+      - name: Verify type-check coverage (no unsanctioned @ts-nocheck)
+        working-directory: backend
+        run: npx tsx scripts/checkTsNocheck.ts
+
   # ─── Test ──────────────────────────────────────────────────────────────────────
   test:
     name: Jest Tests
