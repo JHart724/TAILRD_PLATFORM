@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Clinical Gap Rule Scenario Tests — Comprehensive Coverage
  *

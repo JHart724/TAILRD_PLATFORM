@@ -304,7 +304,7 @@ Narrative post-mortems for the April 7 2026 outage (var-in-auth, migration-befor
 
 ### 3-check pre-push gate
 Before every `git push`, verify:
-1. `grep -r "@ts-nocheck" backend/src/ | grep -v node_modules` → must return nothing
+1. `cd backend && npx tsx scripts/checkTsNocheck.ts` -> must exit 0 (AUDIT-204 precise type-check-coverage detector: honors only a leading `//` directive and cross-checks the section-14 sanctioned list; replaces the old coarse `grep -r "@ts-nocheck"` that false-matched JSDoc prose. Also enforced in CI, TypeScript Check job.)
 2. `grep -rn "new PrismaClient" backend/src/ | grep -v lib/prisma.ts | grep -v node_modules` → must return nothing
 3. `grep -rn "\bvar " backend/src/ --include="*.ts" | grep -v node_modules | grep -v "process.env"` → must return nothing
 

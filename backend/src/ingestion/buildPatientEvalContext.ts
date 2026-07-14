@@ -52,7 +52,8 @@ export interface PatientEvalContext {
  * call site so labValues staleness, echo_months, and age are computed against a single clock).
  *
  * Uses `any` for the patient to avoid stale-Prisma-client type friction under WSL (per section 14);
- * the runners are @ts-nocheck and pass Prisma rows directly.
+ * the runners suppress type-checking on their Prisma-row inputs and pass rows directly. (This file
+ * itself is type-checked - it carries NO suppression directive; see AUDIT-204.)
  */
 export function buildPatientEvalContext(patient: any, nowMs: number): PatientEvalContext {
   const dxCodes: string[] = patient.conditions.map((c: any) => c.icd10Code).filter(Boolean);

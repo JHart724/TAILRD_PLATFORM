@@ -111,14 +111,16 @@ else
     | grep -v node_modules | head -5
 fi
 
-# ── @ts-nocheck ─────────────────────────────────────
+# --- @ts-nocheck coverage (AUDIT-204 precise detector) ---------------
+# Replaces the old coarse `grep "@ts-nocheck"` (which matched JSDoc prose / string literals and raised
+# a false positive on buildPatientEvalContext.ts). The detector honors only leading `//` line directives
+# and cross-checks the section-14 sanctioned list; it is the same check CI runs.
 echo ""
-echo "[ 7/7 ] @ts-nocheck additions..."
-NEW_NOCHECK=$(git diff --cached 2>/dev/null | grep "^+" | grep "@ts-nocheck" | wc -l | tr -d ' ')
-if [ "$NEW_NOCHECK" -eq 0 ]; then
-  pass "No new @ts-nocheck directives added"
+echo "[ 7/7 ] Type-check coverage (unsanctioned @ts-nocheck)..."
+if (cd backend && npx tsx scripts/checkTsNocheck.ts) 2>/dev/null; then
+  pass "No unsanctioned @ts-nocheck directives (section-14 list respected)"
 else
-  fail "Found $NEW_NOCHECK new @ts-nocheck directives — fix the types instead"
+  fail "Unsanctioned @ts-nocheck found - remove it and fix the types, or add to section 14 + the detector's SANCTIONED set"
 fi
 
 # ── Summary ─────────────────────────────────────────
