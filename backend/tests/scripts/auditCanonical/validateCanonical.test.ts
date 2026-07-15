@@ -1,52 +1,52 @@
 /**
  * Regression test for validateCanonical.ts.
  *
- * Catches the bug class that surfaced on PR #234 first CI run: workflow Gate 5
- * had inline TypeScript with relative imports that resolved against /tmp/ instead
- * of the script's actual location, causing MODULE_NOT_FOUND.
+ * AUDIT-206: this test now calls runValidation() IN-PROCESS rather than spawning
+ * `npx tsx validateCanonical.ts` as a subprocess. The old spawnSync approach flaked
+ * under full-parallel jest load - the cold `npx tsx` child (TS compile + validation)
+ * exceeded the 30s spawnSync cap when CPU-starved, got SIGTERM'd, and result.status
+ * came back null, failing expect(result.status).toBe(0). In-process there is no
+ * subprocess to starve, so it runs in ~ms, deterministically.
  *
- * This test spawns the script as CI does + asserts:
- *   - Imports resolve cleanly (no MODULE_NOT_FOUND)
- *   - Script runs to completion
- *   - All 6 module crosswalks validate as VALID (exit code 0)
+ * The spawn-time import-resolution guarantee (the original PR #234 MODULE_NOT_FOUND
+ * guard) is covered by the DEDICATED gate: .github/workflows/auditCanonical.yml runs
+ * `npx tsx scripts/auditCanonical/validateCanonical.ts` and is the authoritative
+ * "Audit Canonical Gates" check. This test asserts the SAME 6/6 crosswalk-validity
+ * invariant that main() exits on, against the returned object.
  */
 
-import { spawnSync } from 'child_process';
+import { runValidation } from '../../../scripts/auditCanonical/validateCanonical';
 import * as path from 'path';
 import * as fs from 'fs';
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..', '..', '..');
 const SCRIPT_PATH = path.resolve(REPO_ROOT, 'backend', 'scripts', 'auditCanonical', 'validateCanonical.ts');
+const CANONICAL_DIR = path.resolve(REPO_ROOT, 'docs', 'audit', 'canonical');
 
 describe('validateCanonical.ts', () => {
   it('script file exists', () => {
     expect(fs.existsSync(SCRIPT_PATH)).toBe(true);
   });
 
-  it('runs without import-resolution errors and exits 0 against canonical crosswalks', () => {
-    // Skip if canonical artifacts haven't been generated yet (fresh checkout w/o extract run)
-    const canonicalDir = path.resolve(REPO_ROOT, 'docs', 'audit', 'canonical');
-    if (!fs.existsSync(canonicalDir)) {
-      // Treat as inconclusive rather than failure — extract producers may not have been run
+  it('all 6 module crosswalks validate (in-process; the 6/6 canonical-validity invariant)', () => {
+    // Inconclusive on a fresh checkout that has not run the extract producers.
+    if (!fs.existsSync(CANONICAL_DIR)) {
       return;
     }
 
-    const result = spawnSync('npx', ['tsx', SCRIPT_PATH], {
-      cwd: path.resolve(REPO_ROOT, 'backend'),
-      encoding: 'utf8',
-      shell: true,
-      timeout: 30000,
-    });
+    const v = runValidation();
 
-    // The bug we're guarding against: MODULE_NOT_FOUND error in stderr
-    expect(result.stderr).not.toMatch(/Cannot find module/);
-    expect(result.stderr).not.toMatch(/MODULE_NOT_FOUND/);
-
-    // Script should exit 0 (all canonical crosswalks valid)
-    expect(result.status).toBe(0);
-
-    // Stdout should contain the validateCanonical banner + at least one VALID line
-    expect(result.stdout).toMatch(/=== validateCanonical ===/);
-    expect(result.stdout).toMatch(/VALID/);
-  }, 30000);
+    // No missing *.code.json (the exit-2 condition).
+    expect(v.missingExtract).toBeUndefined();
+    // All 6 modules were validated (spec + crosswalk present for each).
+    expect(v.modulesValidated).toBe(6);
+    // Every crosswalk is VALID -> the aggregate is valid (the exit-0 condition).
+    expect(v.valid).toBe(true);
+    // And no individual VALIDATED module is INVALID (belt-and-suspenders on the same invariant).
+    for (const m of v.results) {
+      if (m.status === 'VALIDATED') {
+        expect(m.result!.valid).toBe(true);
+      }
+    }
+  });
 });
