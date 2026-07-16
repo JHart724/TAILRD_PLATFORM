@@ -14,6 +14,8 @@ import PatientRiskHeatmap from '../../../components/visualizations/PatientRiskHe
 import CareTeamNetworkGraph from '../../../components/visualizations/CareTeamNetworkGraph';
 
 import ServiceLineKPIBanner from '../../../components/shared/ServiceLineKPIBanner';
+import GapResponseRateCard from '../../../components/shared/GapResponseRateCard';
+import { TrajectoryTrendsCard } from '../../../components/shared/ForwardLookingCards';
 
 import { peripheralVascularServiceLineConfig } from '../config/serviceLineConfig';
 
@@ -287,7 +289,27 @@ const PeripheralServiceLineView: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'analytics': return <PeripheralVascularAnalytics />;
-      case 'heatmap': return <PatientRiskHeatmap />;
+      case 'heatmap':
+        return (
+          <div className="space-y-6">
+            <PatientRiskHeatmap />
+            {/* Relocated from the Executive tier (AUDIT-304 IA convergence): worsening-
+                population trajectory detail is Service Line population-health content. */}
+            <TrajectoryTrendsCard demoData cleanSurface data={{
+              worseningRapidPct: 16,
+              worseningRapidCount: 110,
+              meanDeclineRate: 'ABI decline 0.08/year',
+              declineMetric: 'PV',
+              thresholdIn30Days: 3,
+              totalFlaggedPatients: 690,
+              keyInsights: [
+                '48 critical limb ischemia patients with ABI declining below 0.4 -- intervention window narrowing',
+                'VTE recurrence risk: 23 patients with HERDOO2 >= 2 on anticoagulation reassessment timeline',
+                'AAA screening gap: 12 patients with aortic diameter approaching 5.5cm threshold',
+              ],
+            }} />
+          </div>
+        );
       case 'providers': return <PeripheralVascularProviderScorecard />;
       case 'calculators': return <PADRiskCalculators />;
       case 'wifi': return <WIfIClassification />;
@@ -300,7 +322,15 @@ const PeripheralServiceLineView: React.FC = () => {
       case 'quality': return <PADQualityMetrics />;
       case 'reporting': return <PADReportingSystem />;
       case 'gap-detection':
-        return <PVClinicalGapDetectionDashboard />;
+        return (
+          <div className="space-y-6">
+            <PVClinicalGapDetectionDashboard />
+            {/* Relocated from the Executive tier (AUDIT-304 IA convergence): care-team
+                action telemetry is Service Line operational content. Honest empty state
+                until a response-rate source exists. */}
+            <GapResponseRateCard rates={[]} overallRate={0} timeRange="30d" />
+          </div>
+        );
       default: return <PeripheralVascularAnalytics />;
     }
   };

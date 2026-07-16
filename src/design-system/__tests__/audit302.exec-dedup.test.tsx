@@ -125,17 +125,17 @@ describe('AUDIT-302 PR2 - VHD/PV ExecutiveView de-dup (asserted-at-source)', () 
       expect(s).toContain('DRG Summary Metrics');              // bespoke CMI grid
       expect(s).toContain("activeModal?.startsWith('drg-')");  // bespoke drg modal handler
     });
-    it(`${name}: preserves the live dashboard hook (config-fallback state depends on convergence)`, () => {
+    it(`${name}: preserves the live dashboard hook, now flowing through the module summary (AUDIT-304 convergence)`, () => {
       expect(s).toContain('dashboard?.summary?.totalPatients');
-      if (name === 'PeripheralExecutiveView') {
-        // PV is not yet AUDIT-304-converged: it still renders the inline live-with-config-fallback KPI tile.
-        expect(s).toContain('?? config.kpiData.totalPatients');
-      } else {
-        // VHD is AUDIT-304-converged: the inline KPI tile is extracted into VHDExecutiveSummary and
-        // the config fallback behind the live field (the AUDIT-099 core defect) is retired.
-        expect(s).toContain('<VHDExecutiveSummary dashboard={dashboard}');
-        expect(s).not.toContain('?? config.kpiData.totalPatients');
-      }
+      // Both VHD and PV are now AUDIT-304-converged (PV is the final view of the 6-view arc):
+      // the inline live-with-config-fallback KPI tile is extracted into the module
+      // ExecutiveSummary and the config fallback behind the live field (the AUDIT-099 core
+      // defect) is retired.
+      const summaryTag = name === 'ValvularExecutiveView'
+        ? '<VHDExecutiveSummary dashboard={dashboard}'
+        : '<PVExecutiveSummary dashboard={dashboard}';
+      expect(s).toContain(summaryTag);
+      expect(s).not.toContain('?? config.kpiData.totalPatients');
     });
   });
 });
