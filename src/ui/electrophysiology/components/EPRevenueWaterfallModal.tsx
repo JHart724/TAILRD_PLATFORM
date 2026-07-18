@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { X, Users, DollarSign, TrendingUp, ExternalLink } from 'lucide-react';
 import { toFixed } from '../../../utils/formatters';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
@@ -103,7 +104,7 @@ export const EPRevenueWaterfallModal: React.FC<EPRevenueWaterfallModalProps> = (
  return null;
   };
 
-  return (
+  return createPortal(
  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
  <div className="bg-white rounded-lg max-w-6xl w-full mx-4 max-h-[90vh] overflow-y-auto">
  <div className="flex justify-between items-start p-6 border-b border-gray-200">
@@ -238,7 +239,8 @@ export const EPRevenueWaterfallModal: React.FC<EPRevenueWaterfallModalProps> = (
  </div>
  </div>
  </div>
- </div>
+ </div>,
+  document.body
   );
 };
 

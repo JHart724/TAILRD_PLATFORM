@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { X, TrendingUp, AlertCircle, Clock, Eye, DollarSign } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { toFixed } from '../../utils/formatters';
@@ -136,7 +137,7 @@ const HFRevenueOpportunityModal: React.FC<HFRevenueOpportunityModalProps> = ({
  return null;
   };
 
-  return (
+  return createPortal(
  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
  <div className="bg-white rounded-2xl max-w-6xl w-full mx-4 max-h-[90vh] overflow-y-auto">
  
@@ -353,7 +354,8 @@ const HFRevenueOpportunityModal: React.FC<HFRevenueOpportunityModalProps> = ({
  </div>
  </div>
  </div>
- </div>
+ </div>,
+  document.body
   );
 };
 

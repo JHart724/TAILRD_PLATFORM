@@ -535,6 +535,7 @@ const ExecutiveView: React.FC = () => {
  category={selectedWaterfallCategory}
  totalRevenue={getCategoryData(selectedWaterfallCategory).revenue}
  patientCount={getCategoryData(selectedWaterfallCategory).patientCount}
+ demoBadge
  onClose={() => setSelectedWaterfallCategory(null)}
  />
  )}

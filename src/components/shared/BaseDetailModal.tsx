@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { X, ArrowUpDown, Download } from 'lucide-react';
 import { toFixed } from '../../utils/formatters';
 import DemoDataBadge from './DemoDataBadge';
@@ -103,7 +104,21 @@ function BaseDetailModal<T extends Record<string, any>>({
  return String(value ?? '');
   };
 
-  return (
+  // AUDIT-305 (stacking half): portal the overlay to document.body.
+  //
+  // Rendering inline left this overlay inside the module page wrapper's `relative z-10`
+  // stacking context, so the z-50 below was scoped INSIDE that context and never competed
+  // at the root - the whole wrapper composites as one z-10 layer. Two symptoms followed
+  // once the containing-block half landed and the modals became visible at all: the
+  // sidebar (z-40) painted over the modal's left edge on every module, and Leaflet's map
+  // panes (z-400..z-700, inside the same wrapper) painted over the ZIP modal.
+  //
+  // Portaling escapes the wrapper's stacking context entirely, so z-50 - the app's
+  // established overlay convention (66 uses; the sidebar is z-40) - finally applies at the
+  // root, beating both the sidebar and the entire wrapper subtree (Leaflet's 700 is trapped
+  // inside the wrapper's 10). The z-index value is unchanged; the portal is what makes it
+  // effective.
+  return createPortal(
  <div className="fixed inset-0 bg-[rgba(13,38,64,0.50)] flex items-center justify-center z-50" onClick={onClose}>
  <div
  className={`bg-white rounded-2xl shadow-chrome-elevated border border-titanium-200 max-w-7xl w-full mx-4 max-h-[90vh] overflow-y-auto ${className}`}
@@ -207,7 +222,8 @@ function BaseDetailModal<T extends Record<string, any>>({
  </div>
  </div>
  </div>
- </div>
+ </div>,
+ document.body
   );
 }
 

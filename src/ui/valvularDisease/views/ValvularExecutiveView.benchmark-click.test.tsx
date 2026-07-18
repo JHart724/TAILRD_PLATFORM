@@ -89,8 +89,10 @@ describe('VHD Exec convergence - benchmark modal click path', () => {
     });
     expect(clicked).toBe(true);
 
-    // the click sets activeModal -> the benchmark BaseDetailModal renders, demo-badged
-    const html = container.innerHTML;
+    // the click sets activeModal -> the benchmark BaseDetailModal renders, demo-badged.
+    // AUDIT-305: the modal portals to document.body (escaping the page wrapper's stacking
+    // context), so read the document, not the mount container.
+    const html = document.body.innerHTML;
     expect(html).toContain('Benchmark performance detail'); // modal subtitle
     expect(html).toContain('TAVR 30-Day Mortality'); // modal title (the clicked metric)
     expect(html).toContain('Demo data - EHR integration pending'); // its DemoDataBadge

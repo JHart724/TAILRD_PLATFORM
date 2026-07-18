@@ -317,6 +317,7 @@ const CoronaryExecutiveView: React.FC = () => {
  title={selectedBenchmark.benchmarkName}
  subtitle="National Benchmark Comparison"
  description={selectedBenchmark.description}
+ demoBadge
  icon={<Target className="w-6 h-6" />}
  summaryMetrics={[
  { label: 'Our Performance', value: `${selectedBenchmark.ourValue}${selectedBenchmark.unit}`, colorScheme: 'porsche' },
