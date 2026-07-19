@@ -132,13 +132,17 @@ export const EPExecutiveSummary: React.FC<EPExecutiveSummaryProps> = ({ dashboar
     if (loading) return { value: '...', subtext: 'Loading live data' };
     if (error || !dashboard) return { value: '-', subtext: 'Live data unavailable' };
     const s = dashboard.summary;
+      // AUDIT-099 guard hardening (2026-07-19): these live reads were unguarded, so a
+      // partial summary payload (any field absent) threw a TypeError and crashed the
+      // whole Executive summary card. CAD/VHD/PV already carry `?.` + `?? '-'`; EP/SH
+      // never got it. Same form applied - a missing field renders an honest dash.
     switch (id) {
       case 'total-patients':
-        return { value: s.totalPatients.toLocaleString(), subtext: 'Active EP panel (database)' };
+        return { value: s.totalPatients?.toLocaleString() ?? '-', subtext: 'Active EP panel (database)' };
       case 'open-gaps':
-        return { value: s.totalOpenGaps.toLocaleString(), subtext: 'Recommended for review (database)' };
+        return { value: s.totalOpenGaps?.toLocaleString() ?? '-', subtext: 'Recommended for review (database)' };
       case 'device-candidates':
-        return { value: s.deviceCandidates.toLocaleString(), subtext: 'Eligible, not yet implanted (database)' };
+        return { value: s.deviceCandidates?.toLocaleString() ?? '-', subtext: 'Eligible, not yet implanted (database)' };
       default:
         return { value: '-', subtext: '' };
     }

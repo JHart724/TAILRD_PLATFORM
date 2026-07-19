@@ -66,6 +66,15 @@ function configText(node: unknown, acc: string[] = []): string[] {
   return acc;
 }
 
+// Strip comments before asserting on MECHANISM, so an explanatory comment that NAMES the
+// removed construct cannot re-trip the guard. (Same lesson as the coarse `grep @ts-nocheck`
+// that false-matched JSDoc prose: a detector that reads prose is a false-positive generator.)
+function codeOnly(sourceText: string): string {
+  return sourceText
+    .replace(/\/\*[\s\S]*?\*\//g, '')   // block comments, incl. {/* jsx */}
+    .replace(/^\s*\/\/.*$/gm, '');       // whole-line // comments
+}
+
 function src(rel: string): string {
   return fs.readFileSync(path.resolve(__dirname, rel), 'utf8');
 }
@@ -223,5 +232,60 @@ describe('AUDIT-303 Real-time extension - asserted-at-source (charts / views / p
       expect(s).toContain(present);
       expect(s).not.toContain(absent);
     });
+  });
+});
+
+// ---------------- The guards the 2026-06-27 label sweep LACKED (added 2026-07-19) ----------------
+// The sweep recorded "ALL LABEL remediation COMPLETE", but the 2026-07-18 state audit found two
+// live claims it had missed. Both were invisible to this suite because it only ever asserted over
+// serviceLineConfig / careTeamConfig objects - never over App.tsx's MODULES grid, and never over
+// the mechanism behind a "Live" label. These assertions close both blind spots.
+describe('AUDIT-303 blind-spot guards - MODULES tile copy + fake-live mechanisms', () => {
+  it('App.tsx MODULES descriptions carry no AI/ML capability claim (the EP tile survived the sweep)', () => {
+    const s = codeOnly(src('../../App.tsx'));
+    expect(s).not.toContain('AI-powered');
+    expect(s).not.toContain('AI-driven');
+    // the approved replacement copy is in place on the EP tile
+    expect(s).toContain('guideline-based risk stratification');
+  });
+
+  it('TAVRAnalyticsDashboard synthesizes no motion: no setInterval, no Math.random, no live affordance', () => {
+    const s = codeOnly(src('../../ui/structuralHeart/components/TAVRAnalyticsDashboard.tsx'));
+    // the mechanism: a 4s interval drifted clinical quality metrics via Math.random()
+    expect(s).not.toContain('setInterval');
+    expect(s).not.toContain('Math.random');
+    // the affordance that advertised it as real
+    expect(s).not.toContain('Live Updates');
+    expect(s).not.toContain('animate-spin');
+    expect(s).not.toContain('isLiveMode');
+    // Bare "Live <X>" headings too: the first sweep matched 'Live Updates' and isLiveMode
+    // but missed a "Live TAVR Performance Dashboard" <h3>, which the operator's Chrome
+    // verify caught. This tier is entirely static demo data, so NO user-facing "Live"
+    // claim belongs in it at all - assert the word, not one phrasing of it.
+    expect(s).not.toContain('Live');
+    // and it states its real provenance instead
+    expect(s).toContain('DemoDataBadge');
+  });
+
+  it('no UI file pairs setInterval with Math.random (the fake-live class, section-20 invariant)', () => {
+    // Class-level: a timer that mutates rendered values through a random-number generator is
+    // fabricated motion regardless of which component does it. Asserted over the whole tree so a
+    // future reintroduction fails here rather than shipping behind a "Live" pill.
+    const root = path.resolve(__dirname, '../..');
+    const offenders: string[] = [];
+    const walk = (dir: string) => {
+      for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+        const p = path.join(dir, e.name);
+        if (e.isDirectory()) { walk(p); continue; }
+        if (!/\.tsx?$/.test(e.name)) continue;
+        if (/__tests__|\.test\.tsx?$/.test(p)) continue; // this file names both strings
+        const t = codeOnly(fs.readFileSync(p, 'utf8'));
+        if (t.includes('setInterval') && t.includes('Math.random')) {
+          offenders.push(path.relative(root, p));
+        }
+      }
+    };
+    walk(root);
+    expect(offenders).toEqual([]);
   });
 });

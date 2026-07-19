@@ -138,7 +138,7 @@ const MODULES: Module[] = [
  id: "ep",
  name: "Electrophysiology",
  shortName: "EP",
- description: "Enhanced automated AFib screening to LAAC procedures with AI-powered risk assessment",
+ description: "Enhanced automated AFib screening to LAAC procedures with guideline-based risk stratification",
  functional: true,
  patients: 4312,
  procedures: 3684,
