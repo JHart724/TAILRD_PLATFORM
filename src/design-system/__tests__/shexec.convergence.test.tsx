@@ -57,7 +57,10 @@ function render(el: React.ReactElement): string {
   act(() => {
     root.render(el);
   });
-  return container.innerHTML;
+  // AUDIT-305: detail modals portal to document.body to escape the page wrapper's
+  // stacking context, so container.innerHTML would miss any portaled overlay. body
+  // contains the mount container PLUS any portal, so this covers both cases.
+  return document.body.innerHTML;
 }
 
 function src(rel: string): string {

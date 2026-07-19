@@ -1,12 +1,19 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { X, Users, DollarSign, TrendingUp, ExternalLink } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { toFixed } from '../../utils/formatters';
+import DemoDataBadge from '../shared/DemoDataBadge';
 
 interface HFRevenueWaterfallModalProps {
   category: 'GDMT' | 'Devices' | 'Phenotypes' | '340B';
   totalRevenue: number;
   patientCount: number;
+  /** AUDIT-305 incidental: opt-in DemoDataBadge in the header, matching the
+      BaseDetailModal / SharedDRGPerformance convention. This modal's subcategory
+      figures are demo-derived, and its sibling category modals already carry the
+      badge. Default off so any other usage renders unchanged. */
+  demoBadge?: boolean;
   onClose: () => void;
 }
 
@@ -76,6 +83,7 @@ export const HFRevenueWaterfallModal: React.FC<HFRevenueWaterfallModalProps> = (
   category,
   totalRevenue,
   patientCount,
+  demoBadge = false,
   onClose
 }) => {
   const subcategoryData = getSubcategoryData(category);
@@ -103,7 +111,7 @@ export const HFRevenueWaterfallModal: React.FC<HFRevenueWaterfallModalProps> = (
  return null;
   };
 
-  return (
+  return createPortal(
  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
  <div className="bg-white rounded-lg max-w-6xl w-full mx-4 max-h-[90vh] overflow-y-auto">
  <div className="flex justify-between items-start p-6 border-b border-gray-200">
@@ -133,12 +141,15 @@ export const HFRevenueWaterfallModal: React.FC<HFRevenueWaterfallModalProps> = (
  </div>
  </div>
  </div>
+ <div className="flex items-center gap-2">
+ {demoBadge && <DemoDataBadge />}
  <button
  onClick={onClose}
  className="text-gray-500 hover:text-gray-700"
  >
  <X className="w-6 h-6" />
  </button>
+ </div>
  </div>
 
  <div className="p-6">
@@ -238,7 +249,8 @@ export const HFRevenueWaterfallModal: React.FC<HFRevenueWaterfallModalProps> = (
  </div>
  </div>
  </div>
- </div>
+ </div>,
+  document.body
   );
 };
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Users, DollarSign, Zap, TrendingUp, TrendingDown, AlertCircle, Activity, Stethoscope, X } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
@@ -189,7 +190,7 @@ export const SHExecutiveSummary: React.FC<SHExecutiveSummaryProps> = ({ dashboar
         </div>
       </div>
 
-      {selectedKPI && (
+      {selectedKPI && createPortal(
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-3xl w-full mx-4">
             <div className="flex justify-between items-start mb-4">
@@ -253,7 +254,7 @@ export const SHExecutiveSummary: React.FC<SHExecutiveSummaryProps> = ({ dashboar
             )}
           </div>
         </div>
-      )}
+      , document.body)}
     </>
   );
 };

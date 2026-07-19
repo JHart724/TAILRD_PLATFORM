@@ -330,22 +330,31 @@ module.exports = {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0.6' },
         },
+        // AUDIT-305: entry animations MUST end at `transform: none`, never an identity
+        // transform like translateY(0). Any non-none transform - even an identity one -
+        // makes the element a containing block for its position:fixed descendants, so a
+        // `fixed inset-0` modal inside an animated wrapper positions against the wrapper
+        // (the full scrollable page) instead of the viewport and opens far off-screen.
+        // `none` interpolates as the identity transform, so the animation is unchanged.
         'fade-up': {
           '0%': { opacity: '0', transform: 'translateY(8px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
+          '100%': { opacity: '1', transform: 'none' },
         },
         'shimmer-chrome': {
           '0%': { 'background-position': '-200% 0' },
           '100%': { 'background-position': '200% 0' },
         },
+        // AUDIT-305 class-sweep: same retained-identity-transform shape as fade-up
+        // (forwards fill + an identity final frame). Currently unused, fixed anyway so
+        // the trap cannot return the moment either is used as a wrapper.
         'count-up': {
           '0%': { opacity: '0', transform: 'translateY(4px)' },
           '60%': { opacity: '1' },
-          '100%': { transform: 'translateY(0)' },
+          '100%': { transform: 'none' },
         },
         'slide-in-left': {
           '0%': { transform: 'translateX(-100%)', opacity: '0' },
-          '100%': { transform: 'translateX(0)', opacity: '1' },
+          '100%': { transform: 'none', opacity: '1' },
         },
         'gradient-x': {
           '0%, 100%': { 'background-size': '200% 200%', 'background-position': 'left center' },
@@ -362,12 +371,18 @@ module.exports = {
       },
 
       // ─── Animations ───────────────────────────────────────────
+      // AUDIT-305: the entry animations carry NO `forwards` fill. Each one's final frame
+      // is identity-equivalent to the element's natural resting state, so the fill was a
+      // visual no-op that only served to RETAIN a transform - which is what created the
+      // containing block that broke fixed-position modals. Dropping the fill plus the
+      // `transform: none` final frames above removes the retained transform by two
+      // independent mechanisms.
       animation: {
         'pulse-glow':      'pulse-glow 2s ease-in-out infinite',
-        'fade-up':         'fade-up 0.3s ease-out forwards',
+        'fade-up':         'fade-up 0.3s ease-out',
         'shimmer-chrome':  'shimmer-chrome 1.8s ease-in-out infinite',
-        'count-up':        'count-up 0.5s ease-out forwards',
-        'slide-in-left':   'slide-in-left 0.2s ease-out forwards',
+        'count-up':        'count-up 0.5s ease-out',
+        'slide-in-left':   'slide-in-left 0.2s ease-out',
         'gradient-x':      'gradient-x 15s ease infinite',
         'float':           'float 6s ease-in-out infinite',
         'shimmer':         'shimmer 2s linear infinite',

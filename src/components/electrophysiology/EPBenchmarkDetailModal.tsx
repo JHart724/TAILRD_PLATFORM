@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { X, TrendingUp, TrendingDown } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { getOrdinalSuffix, roundTo, formatDelta, toFixed } from '../../utils/formatters';
@@ -35,7 +36,7 @@ const EPBenchmarkDetailModal: React.FC<EPBenchmarkDetailModalProps> = ({
   const isPositiveTrend = delta > 0;
   const trendPercentage = Math.abs((delta / nationalValue) * 100);
 
-  return (
+  return createPortal(
  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
  <div className="bg-white rounded-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
  <div className="flex justify-between items-start p-6 border-b border-gray-200">
@@ -146,7 +147,8 @@ const EPBenchmarkDetailModal: React.FC<EPBenchmarkDetailModalProps> = ({
  </div>
  </div>
  </div>
- </div>
+ </div>,
+  document.body
   );
 };
 

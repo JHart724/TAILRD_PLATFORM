@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Users, DollarSign, Activity, TrendingUp, TrendingDown, Heart, Stethoscope, AlertCircle, X, Zap } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import type { HFDashboardData } from '../../services/api';
@@ -223,7 +224,7 @@ export const HFExecutiveSummary: React.FC<HFExecutiveSummaryProps> = ({ dashboar
       </div>
 
       {/* Detail modal */}
-      {selectedKPI && (
+      {selectedKPI && createPortal(
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-3xl w-full mx-4">
             <div className="flex justify-between items-start mb-4">
@@ -292,7 +293,7 @@ export const HFExecutiveSummary: React.FC<HFExecutiveSummaryProps> = ({ dashboar
             )}
           </div>
         </div>
-      )}
+      , document.body)}
     </>
   );
 };

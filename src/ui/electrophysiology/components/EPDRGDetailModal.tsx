@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X, DollarSign, Clock, TrendingDown, TrendingUp, BarChart3, ArrowUpDown } from 'lucide-react';
 import { toFixed } from '../../../utils/formatters';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
@@ -140,7 +141,7 @@ const EPDRGDetailModal: React.FC<EPDRGDetailModalProps> = ({
  return null;
   };
 
-  return (
+  return createPortal(
  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
  <div className="bg-white rounded-2xl max-w-7xl w-full mx-4 max-h-[90vh] overflow-y-auto">
  
@@ -460,7 +461,8 @@ const EPDRGDetailModal: React.FC<EPDRGDetailModalProps> = ({
  </div>
  </div>
  </div>
- </div>
+ </div>,
+  document.body
   );
 };
 
